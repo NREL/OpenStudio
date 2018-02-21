@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -32,18 +32,22 @@
 #include "ModelAPI.hpp"
 #include "ResourceObject.hpp"
 
+#include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
+#include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
+
 namespace openstudio {
 namespace model {
 
   class StandardsInformationMaterial;
+  class MaterialPropertyMoisturePenetrationDepthSettings;
 
 namespace detail{
   class Material_Impl;
 }
 
 /** A Material is a ResourceObject that serves as a base class for all objects that can be used
- *  in \link LayeredConstruction LayeredConstructions \endlink. It also provides Attributes for 
- *  'thickness', 'getVisibleTransmiattance', 'interiorVisibleAbsorptance', and 
+ *  in \link LayeredConstruction LayeredConstructions \endlink. It also provides Attributes for
+ *  'thickness', 'getVisibleTransmiattance', 'interiorVisibleAbsorptance', and
  *  'exteriorVisibleAbsorptance'. */
 class MODEL_API Material : public ResourceObject {
  public:
@@ -56,8 +60,8 @@ class MODEL_API Material : public ResourceObject {
   /** @name Getters */
   //@{
 
-  /** Get the thickness of the material. Virtual implementation. For some materials, 0.0 is always 
-   *  returned. 
+  /** Get the thickness of the material. Virtual implementation. For some materials, 0.0 is always
+   *  returned.
    *
    *  Attribute Name: 'thickness' */
   double thickness() const;
@@ -67,12 +71,12 @@ class MODEL_API Material : public ResourceObject {
    *  Attribute Name: 'getVisibleTransmittance' */
   boost::optional<double> getVisibleTransmittance() const;
 
-  /** Get the interiorVisibleAbsorptance of the material. Virtual implementation. 
+  /** Get the interiorVisibleAbsorptance of the material. Virtual implementation.
    *
    *  Attribute Name: 'interiorVisibleAbsorptance' */
   boost::optional<double> interiorVisibleAbsorptance() const;
 
-  /** Get the exteriorVisibleAbsorptance of the material. Virtual implementation. 
+  /** Get the exteriorVisibleAbsorptance of the material. Virtual implementation.
    *
    *  Attribute Name: 'exteriorVisibleAbsorptance' */
   boost::optional<double> exteriorVisibleAbsorptance() const;
@@ -84,10 +88,25 @@ class MODEL_API Material : public ResourceObject {
   /** @name Setters */
   //@{
 
-  /** Set thickness to value (m). For some materials, false is always returned. 
+  /** Set thickness to value (m). For some materials, false is always returned.
    *
    *  Attribute Name: 'thickness' */
   bool setThickness(double value);
+
+  // if material property moisture penetration depth settings already exists, do nothing and return nil; creates the material property moisture penetration depth settings if it does not already exist and return it
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor,
+                                                                                                                           double moistureEquationCoefficientA,
+                                                                                                                           double moistureEquationCoefficientB,
+                                                                                                                           double moistureEquationCoefficientC,
+                                                                                                                           double moistureEquationCoefficientD,
+                                                                                                                           double coatingLayerThickness,
+                                                                                                                           double coatingLayerWaterVaporDiffusionResistanceFactor);
+
+  // returns the material property moisture penetration depth settings if set
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
+
+  // resets the material property moisture penetration depth settings
+  void resetMaterialPropertyMoisturePenetrationDepthSettings();
 
   //@}
  protected:
@@ -101,7 +120,7 @@ class MODEL_API Material : public ResourceObject {
 
   Material(IddObjectType type,const Model& model);
 
-  explicit Material(std::shared_ptr<detail::Material_Impl> impl);  
+  explicit Material(std::shared_ptr<detail::Material_Impl> impl);
 
   /// @endcond
  private:

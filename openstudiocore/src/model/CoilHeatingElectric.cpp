@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -85,7 +85,12 @@ namespace detail {
   const std::vector<std::string>& CoilHeatingElectric_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Heating Coil Air Heating Energy");
+      result.push_back("Heating Coil Air Heating Rate");
+      result.push_back("Heating Coil Electric Energy");
+      result.push_back("Heating Coil Electric Power");
     }
     return result;
   }
@@ -155,7 +160,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingElectric_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
+  bool CoilHeatingElectric_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
     bool result = false;
     if (nominalCapacity) {
       result = setDouble(OS_Coil_Heating_ElectricFields::NominalCapacity, nominalCapacity.get());
@@ -163,6 +168,7 @@ namespace detail {
       result = setString(OS_Coil_Heating_ElectricFields::NominalCapacity, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CoilHeatingElectric_Impl::resetNominalCapacity() {
@@ -175,8 +181,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingElectric_Impl::setTemperatureSetpointNode(Node & temperatureSetpointNode) {
-    setPointer(OS_Coil_Heating_ElectricFields::TemperatureSetpointNodeName, temperatureSetpointNode.handle());
+  bool CoilHeatingElectric_Impl::setTemperatureSetpointNode(Node & temperatureSetpointNode) {
+    return setPointer(OS_Coil_Heating_ElectricFields::TemperatureSetpointNodeName, temperatureSetpointNode.handle());;
   }
 
   void CoilHeatingElectric_Impl::resetTemperatureSetpointNode() {
@@ -427,6 +433,23 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<double> CoilHeatingElectric_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  void CoilHeatingElectric_Impl::autosize() {
+    autosizeNominalCapacity();
+  }
+
+  void CoilHeatingElectric_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingElectric::CoilHeatingElectric(const Model& model, Schedule & schedule )
@@ -483,8 +506,8 @@ void CoilHeatingElectric::resetEfficiency() {
   getImpl<detail::CoilHeatingElectric_Impl>()->resetEfficiency();
 }
 
-void CoilHeatingElectric::setNominalCapacity(double nominalCapacity) {
-  getImpl<detail::CoilHeatingElectric_Impl>()->setNominalCapacity(nominalCapacity);
+bool CoilHeatingElectric::setNominalCapacity(double nominalCapacity) {
+  return getImpl<detail::CoilHeatingElectric_Impl>()->setNominalCapacity(nominalCapacity);
 }
 
 void CoilHeatingElectric::resetNominalCapacity() {
@@ -495,8 +518,8 @@ void CoilHeatingElectric::autosizeNominalCapacity() {
   getImpl<detail::CoilHeatingElectric_Impl>()->autosizeNominalCapacity();
 }
 
-void CoilHeatingElectric::setTemperatureSetpointNode(Node & temperatureSetpointNode) {
-  getImpl<detail::CoilHeatingElectric_Impl>()->setTemperatureSetpointNode(temperatureSetpointNode);
+bool CoilHeatingElectric::setTemperatureSetpointNode(Node & temperatureSetpointNode) {
+  return getImpl<detail::CoilHeatingElectric_Impl>()->setTemperatureSetpointNode(temperatureSetpointNode);
 }
 
 void CoilHeatingElectric::resetTemperatureSetpointNode() {
@@ -525,11 +548,14 @@ boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingElectric::optionalAirfl
 
 /// @cond
 CoilHeatingElectric::CoilHeatingElectric(std::shared_ptr<detail::CoilHeatingElectric_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> CoilHeatingElectric::autosizedNominalCapacity() const {
+    return getImpl<detail::CoilHeatingElectric_Impl>()->autosizedNominalCapacity();
+  }
 
 } // model
 
 } // openstudio
-

@@ -96,15 +96,15 @@ namespace detail {
     return GeneratorFuelCellWaterSupply::iddObjectType();
   }
 
-  // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
-  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  // This will clone both the GeneratorFuelCellWaterSupply and its linked GeneratorFuelCell
+  // and will return a reference to the GeneratorFuelCellWaterSupply
   ModelObject GeneratorFuelCellWaterSupply_Impl::clone(Model model) const {
 
     // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
     GeneratorFuelCell fs = fuelCell();
     GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
 
-    // We get the clone of the parent generator's MTHR so we can return that
+    // We get the clone of the parent generator's GeneratorFuelCellWaterSupply so we can return that
     GeneratorFuelCellWaterSupply hxClone = fsClone.waterSupply();
 
 
@@ -124,10 +124,10 @@ namespace detail {
     boost::optional<CurveQuadratic> curveQ;
     boost::optional<CurveCubic> curveC;
 
-    if (curveC = reformerWaterPumpPowerFunctionofFuelRateCurve()) {
+    if ( (curveC = reformerWaterPumpPowerFunctionofFuelRateCurve()) ) {
       result.push_back(curveC.get());
     }
-    if (curveQ = reformerWaterFlowRateFunctionofFuelRateCurve()) {
+    if ( (curveQ = reformerWaterFlowRateFunctionofFuelRateCurve()) ) {
       result.push_back(curveQ.get());
     }
 
@@ -211,9 +211,10 @@ namespace detail {
     return result;
   }
 
-  void GeneratorFuelCellWaterSupply_Impl::setPumpHeatLossFactor(double pumpHeatLossFactor) {
+  bool GeneratorFuelCellWaterSupply_Impl::setPumpHeatLossFactor(double pumpHeatLossFactor) {
     bool result = setDouble(OS_Generator_FuelCell_WaterSupplyFields::PumpHeatLossFactor, pumpHeatLossFactor);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellWaterSupply_Impl::resetPumpHeatLossFactor() {
@@ -448,8 +449,8 @@ bool GeneratorFuelCellWaterSupply::setReformerWaterPumpPowerFunctionofFuelRateCu
   return getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->setReformerWaterPumpPowerFunctionofFuelRateCurve(cubicCurves);
 }
 
-void GeneratorFuelCellWaterSupply::setPumpHeatLossFactor(double pumpHeatLossFactor) {
-  getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->setPumpHeatLossFactor(pumpHeatLossFactor);
+bool GeneratorFuelCellWaterSupply::setPumpHeatLossFactor(double pumpHeatLossFactor) {
+  return getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->setPumpHeatLossFactor(pumpHeatLossFactor);
 }
 
 void GeneratorFuelCellWaterSupply::resetPumpHeatLossFactor() {
@@ -486,10 +487,9 @@ GeneratorFuelCell GeneratorFuelCellWaterSupply::fuelCell() const {
 
 /// @cond
 GeneratorFuelCellWaterSupply::GeneratorFuelCellWaterSupply(std::shared_ptr<detail::GeneratorFuelCellWaterSupply_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 
 } // model
 } // openstudio
-

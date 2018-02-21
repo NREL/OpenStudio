@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -67,9 +67,9 @@ OptionalString UtilityCost_Charge_Block_Impl::tariffName() const
   return getString(OS_UtilityCost_Charge_BlockFields::TariffName);
 }
 
-void UtilityCost_Charge_Block_Impl::setTariffName(const std::string& str)
+bool UtilityCost_Charge_Block_Impl::setTariffName(const std::string& str)
 {
-  setString(OS_UtilityCost_Charge_BlockFields::TariffName,str);
+  return setString(OS_UtilityCost_Charge_BlockFields::TariffName,str);;
 }
 
 OptionalString UtilityCost_Charge_Block_Impl::sourceVariable() const
@@ -77,9 +77,9 @@ OptionalString UtilityCost_Charge_Block_Impl::sourceVariable() const
   return getString(OS_UtilityCost_Charge_BlockFields::SourceVariable);
 }
 
-void UtilityCost_Charge_Block_Impl::setSourceVariable(const std::string& str)
+bool UtilityCost_Charge_Block_Impl::setSourceVariable(const std::string& str)
 {
-  setString(OS_UtilityCost_Charge_BlockFields::SourceVariable,str);
+  return setString(OS_UtilityCost_Charge_BlockFields::SourceVariable,str);;
 }
 
 OptionalString UtilityCost_Charge_Block_Impl::season() const
@@ -87,9 +87,9 @@ OptionalString UtilityCost_Charge_Block_Impl::season() const
   return getString(OS_UtilityCost_Charge_BlockFields::Season);
 }
 
-void UtilityCost_Charge_Block_Impl::setSeason(const std::string& str)
+bool UtilityCost_Charge_Block_Impl::setSeason(const std::string& str)
 {
-  setString(OS_UtilityCost_Charge_BlockFields::Season,str);
+  return setString(OS_UtilityCost_Charge_BlockFields::Season,str);;
 }
 
 OptionalString UtilityCost_Charge_Block_Impl::categoryVariableName() const
@@ -97,9 +97,9 @@ OptionalString UtilityCost_Charge_Block_Impl::categoryVariableName() const
   return getString(OS_UtilityCost_Charge_BlockFields::CategoryVariableName);
 }
 
-void UtilityCost_Charge_Block_Impl::setCategoryVariableName(const std::string& str)
+bool UtilityCost_Charge_Block_Impl::setCategoryVariableName(const std::string& str)
 {
-  setString(OS_UtilityCost_Charge_BlockFields::CategoryVariableName,str);
+  return setString(OS_UtilityCost_Charge_BlockFields::CategoryVariableName,str);;
 }
 
 OptionalString UtilityCost_Charge_Block_Impl::remainingIntoVariable() const
@@ -107,9 +107,9 @@ OptionalString UtilityCost_Charge_Block_Impl::remainingIntoVariable() const
   return getString(OS_UtilityCost_Charge_BlockFields::RemainingIntoVariable);
 }
 
-void UtilityCost_Charge_Block_Impl::setRemainingIntoVariable(const std::string& str)
+bool UtilityCost_Charge_Block_Impl::setRemainingIntoVariable(const std::string& str)
 {
-  setString(OS_UtilityCost_Charge_BlockFields::RemainingIntoVariable,str);
+  return setString(OS_UtilityCost_Charge_BlockFields::RemainingIntoVariable,str);;
 }
 
 boost::optional<std::string> UtilityCost_Charge_Block_Impl::blockSizeValueOrVariableName(unsigned index) const {
@@ -211,7 +211,7 @@ UtilityCost_Charge_Block::UtilityCost_Charge_Block(const Model& model)
 
 // constructor
 UtilityCost_Charge_Block::UtilityCost_Charge_Block(std::shared_ptr<detail::UtilityCost_Charge_Block_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 OptionalString UtilityCost_Charge_Block::tariffName() const
@@ -219,9 +219,9 @@ OptionalString UtilityCost_Charge_Block::tariffName() const
   return getImpl<detail::UtilityCost_Charge_Block_Impl>()->tariffName();
 }
 
-void UtilityCost_Charge_Block::setTariffName(const std::string& str)
+bool UtilityCost_Charge_Block::setTariffName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Charge_Block_Impl>()->setTariffName(str);
+  return getImpl<detail::UtilityCost_Charge_Block_Impl>()->setTariffName(str);
 }
 
 OptionalString UtilityCost_Charge_Block::sourceVariable() const
@@ -229,9 +229,9 @@ OptionalString UtilityCost_Charge_Block::sourceVariable() const
   return getImpl<detail::UtilityCost_Charge_Block_Impl>()->sourceVariable();
 }
 
-void UtilityCost_Charge_Block::setSourceVariable(const std::string& str)
+bool UtilityCost_Charge_Block::setSourceVariable(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Charge_Block_Impl>()->setSourceVariable(str);
+  return getImpl<detail::UtilityCost_Charge_Block_Impl>()->setSourceVariable(str);
 }
 
 OptionalString UtilityCost_Charge_Block::season() const
@@ -239,9 +239,9 @@ OptionalString UtilityCost_Charge_Block::season() const
   return getImpl<detail::UtilityCost_Charge_Block_Impl>()->season();
 }
 
-void UtilityCost_Charge_Block::setSeason(const std::string& str)
+bool UtilityCost_Charge_Block::setSeason(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Charge_Block_Impl>()->setSeason(str);
+  return getImpl<detail::UtilityCost_Charge_Block_Impl>()->setSeason(str);
 }
 
 OptionalString UtilityCost_Charge_Block::categoryVariableName() const
@@ -249,9 +249,9 @@ OptionalString UtilityCost_Charge_Block::categoryVariableName() const
   return getImpl<detail::UtilityCost_Charge_Block_Impl>()->categoryVariableName();
 }
 
-void UtilityCost_Charge_Block::setCategoryVariableName(const std::string& str)
+bool UtilityCost_Charge_Block::setCategoryVariableName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Charge_Block_Impl>()->setCategoryVariableName(str);
+  return getImpl<detail::UtilityCost_Charge_Block_Impl>()->setCategoryVariableName(str);
 }
 
 OptionalString UtilityCost_Charge_Block::remainingIntoVariable() const
@@ -259,9 +259,9 @@ OptionalString UtilityCost_Charge_Block::remainingIntoVariable() const
   return getImpl<detail::UtilityCost_Charge_Block_Impl>()->remainingIntoVariable();
 }
 
-void UtilityCost_Charge_Block::setRemainingIntoVariable(const std::string& str)
+bool UtilityCost_Charge_Block::setRemainingIntoVariable(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Charge_Block_Impl>()->setRemainingIntoVariable(str);
+  return getImpl<detail::UtilityCost_Charge_Block_Impl>()->setRemainingIntoVariable(str);
 }
 
 boost::optional<std::string> UtilityCost_Charge_Block::blockSizeValueOrVariableName(
@@ -271,7 +271,7 @@ boost::optional<std::string> UtilityCost_Charge_Block::blockSizeValueOrVariableN
 }
 
 bool UtilityCost_Charge_Block::setBlockSizeValueOrVariableName(
-    unsigned index, const std::string& str) 
+    unsigned index, const std::string& str)
 {
   return getImpl<detail::UtilityCost_Charge_Block_Impl>()->setBlockSizeValueOrVariableName(index,str);
 }
@@ -303,4 +303,4 @@ IddObjectType UtilityCost_Charge_Block::iddObjectType()
 }
 
 } // model
-} // openstudio
+} // openstudio

@@ -378,7 +378,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     #set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EXTCONF_H=<osruby_config.h> -DRUBY_EMBEDDED /bigobj /wd4996") ## /wd4996 suppresses deprecated warning
     set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
   elseif(UNIX)
-    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    # If 'AppleClang' or 'Clang'
+    if("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(Apple)?Clang$")
       # Prevent excessive warnings from generated swig files, suppress deprecated declarations
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
     else()
@@ -460,7 +461,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   ####          if(NOT (\"\${MATCHVAR}\" STREQUAL \"\${PREREQNAME}\"))
   ####            file(APPEND \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"DL::dlopen \\\"\\\#{File.dirname(__FILE__)}/\${PREREQNAME}\\\"\n\")
   ####          endif()
-  ####        endif()
+  ####      endif()
   ####      endif()
 
   ####    endforeach()
@@ -521,17 +522,32 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set(PYTHON_AUTODOC -features autodoc=1)
     endif()
 
+
+    # Add the -py3 flag if the version used is Python 3
+    set(SWIG_PYTHON_3_FLAG "")
+    if (PYTHON_VERSION_MAJOR) 
+      if (PYTHON_VERSION_MAJOR EQUAL 3)
+        set(SWIG_PYTHON_3_FLAG -py3)
+        message(STATUS "${MODULE} - Building SWIG Bindings for Python 3")
+      else()
+        message(STATUS "${MODULE} - Building SWIG Bindings for Python 2")
+      endif()
+    else()
+      message(STATUS "${MODULE} - Couldnt determine version of Python - Building SWIG Bindings for Python 2")
+    endif()
+
     add_custom_command(
       OUTPUT "${SWIG_WRAPPER_FULL_PATH}"
       COMMAND "${SWIG_EXECUTABLE}"
-               "-python" "-c++" ${PYTHON_AUTODOC}
-               -outdir ${PYTHON_GENERATED_SRC_DIR} "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
-               -module "${MODULE}"
-               -o "${SWIG_WRAPPER_FULL_PATH}"
-               "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}
+              "-python" ${SWIG_PYTHON_3_FLAG} "-c++" ${PYTHON_AUTODOC} 
+              -outdir ${PYTHON_GENERATED_SRC_DIR} "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
+              -module "${MODULE}"
+              -o "${SWIG_WRAPPER_FULL_PATH}"
+              "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}
       DEPENDS ${this_depends}
     )
 
+    
     set_source_files_properties(${SWIG_WRAPPER_FULL_PATH} PROPERTIES GENERATED TRUE)
     set_source_files_properties(${PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -88,7 +88,7 @@ class MODEL_API SiteWaterMainsTemperature : public ModelObject {
   void resetTemperatureSchedule();
 
   /** Also sets calculation method to 'Correlation'. */
-  void setAnnualAverageOutdoorAirTemperature(double annualAverageOutdoorAirTemperature);
+  bool setAnnualAverageOutdoorAirTemperature(double annualAverageOutdoorAirTemperature);
 
   /** Also sets calculation method to 'Correlation'. */
   bool setAnnualAverageOutdoorAirTemperature(const Quantity& annualAverageOutdoorAirTemperature);
@@ -133,4 +133,3 @@ typedef std::vector<SiteWaterMainsTemperature> SiteWaterMainsTemperatureVector;
 } // openstudio
 
 #endif // MODEL_SITEWATERMAINSTEMPERATURE_HPP
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -60,21 +60,21 @@ TEST_F(ModelFixture,CoilCoolingLowTempRadiantConstFlow_SetGetFields) {
                                             coolingLowWaterTempSched,
                                             coolingHighControlTempSched,
                                             coolingLowControlTempSched);
- 
+
   EXPECT_TRUE(testCC.setCoolingHighWaterTemperatureSchedule(coolingHighWaterTempSched));
   boost::optional<Schedule> sch1 = testCC.coolingHighWaterTemperatureSchedule();
   EXPECT_EQ(*sch1,coolingHighWaterTempSched);
 
-  
+
   EXPECT_TRUE(testCC.setCoolingLowWaterTemperatureSchedule(coolingLowWaterTempSched));
   boost::optional<Schedule> sch2 = testCC.coolingLowWaterTemperatureSchedule();
   EXPECT_EQ(*sch2,coolingLowWaterTempSched);
 
-  
+
   EXPECT_TRUE(testCC.setCoolingHighControlTemperatureSchedule(coolingHighControlTempSched));
   boost::optional<Schedule> sch3 = testCC.coolingHighControlTemperatureSchedule();
   EXPECT_EQ(*sch3,coolingHighControlTempSched);
-  
+
 
   EXPECT_TRUE(testCC.setCoolingLowControlTemperatureSchedule(coolingLowControlTempSched));
   boost::optional<Schedule> sch4 = testCC.coolingLowControlTemperatureSchedule();

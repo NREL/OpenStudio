@@ -29,4 +29,4 @@
 %import <model/ModelRefrigeration.i>
 %import <model/ModelGenerators.i>
 
-#endif //MODEL_I 
+#endif //MODEL_I

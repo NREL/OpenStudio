@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -91,7 +91,78 @@ namespace detail {
   const std::vector<std::string>& RefrigerationSystem_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // TODO: Implement checks
+      // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE CASES AND/OR WALKINS:
+      result.push_back("Refrigeration System Total Compressor Electric Power");
+      result.push_back("Refrigeration System Total Compressor Electric Energy");
+      result.push_back("Refrigeration System Average Compressor COP");
+      result.push_back("Refrigeration System Total Compressor Heat Transfer Rate");
+      result.push_back("Refrigeration System Total Compressor Heat Transfer Energy");
+      result.push_back("Refrigeration System Total Cases and Walk Ins Heat Transfer Rate");
+      result.push_back("Refrigeration System Total Cases and Walk Ins Heat Transfer Energy");
+      result.push_back("Refrigeration System Total Transferred Load Heat Transfer Rate");
+      result.push_back("Refrigeration System Total Transferred Load Heat Transfer Energy");
+      result.push_back("Refrigeration System Total Suction Pipe Heat Gain Rate");
+      result.push_back("Refrigeration System Total Suction Pipe Heat Gain Energy");
+      result.push_back("Refrigeration System Net Rejected Heat Transfer Rate");
+      result.push_back("Refrigeration System Net Rejected Heat Transfer Energy");
+      result.push_back("Refrigeration System Estimated Refrigerant Inventory Mass");
+      result.push_back("Refrigeration System Liquid Suction Subcooler Heat Transfer Rate");
+      result.push_back("Refrigeration System Liquid Suction Subcooler Heat Transfer Energy");
+      result.push_back("Refrigeration System Estimated Refrigerant Inventory");
+      result.push_back("Refrigeration System Estimated Refrigerant Mass Flow Rate");
+      result.push_back("Refrigeration System Condensing Temperature");
+      result.push_back("Refrigeration System Evaporating Temperature");
+      result.push_back("Refrigeration System Suction Pipe Suction Temperature");
+      result.push_back("Refrigeration System Thermostatic Expansion Valve Liquid Temperature");
+      result.push_back("Refrigeration System Estimated High Stage Refrigerant Mass Flow Rate");
+      result.push_back("Refrigeration System Total High Stage Compressor Electric Energy");
+      result.push_back("Refrigeration System Total High Stage Compressor Electric Power");
+      result.push_back("Refrigeration System Total High Stage Compressor Heat Transfer Energy");
+      result.push_back("Refrigeration System Total High Stage Compressor Heat Transfer Rate");
+      result.push_back("Refrigeration System Total Low and High Stage Compressor Electric Energy");
+      result.push_back("Refrigeration System Total Low Stage Compressor Electric Energy");
+      result.push_back("Refrigeration System Total Low Stage Compressor Electric Power");
+      result.push_back("Refrigeration System Total Low Stage Compressor Heat Transfer Energy");
+      result.push_back("Refrigeration System Total Low Stage Compressor Heat Transfer Rate");
+      result.push_back("Refrigeration System Estimated Low Stage Refrigerant Mass Flow Rate");
+      // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE AIR CHILLERS:
+      result.push_back("Refrigeration Air Chiller System Total Compressor Electric Power");
+      result.push_back("Refrigeration Air Chiller System Total Compressor Electric Energy");
+      result.push_back("Refrigeration Air Chiller System Average Compressor COP");
+      result.push_back("Refrigeration Air Chiller System Total Compressor Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Total Compressor Heat Transfer Energy");
+      result.push_back("Refrigeration Air Chiller System Total Air Chiller Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Total Case and Walk In Heat Transfer Energy");
+      result.push_back("Refrigeration Air Chiller System Total Transferred Load Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Total Transferred Load Heat Transfer Energy");
+      result.push_back("Refrigeration Air Chiller System Total Suction Pipe Heat Gain Rate");
+      result.push_back("Refrigeration Air Chiller System Total Suction Pipe Heat Gain Energy");
+      result.push_back("Refrigeration Air Chiller System Net Rejected Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Net Rejected Heat Transfer Energy");
+      result.push_back("Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Energy");
+      result.push_back("Refrigeration Air Chiller System Estimated Refrigerant Inventory Mass");
+      result.push_back("Refrigeration Air Chiller System Estimated Refrigerant Mass Flow Rate");
+      result.push_back("Refrigeration Air Chiller System Intercooler Temperature");
+      result.push_back("Refrigeration Air Chiller System Intercooler Pressure");
+      result.push_back("Refrigeration Air Chiller System Condensing Temperature");
+      result.push_back("Refrigeration Air Chiller System Evaporating Temperature");
+      result.push_back("Refrigeration Air Chiller System Suction Temperature");
+      result.push_back("Refrigeration Air Chiller System TXV Liquid Temperature");
+      result.push_back("Refrigeration Air Chiller System Estimated High Stage Refrigerant Mass Flow Rate");
+      result.push_back("Refrigeration Air Chiller System Total High Stage Compressor Electric Energy");
+      result.push_back("Refrigeration Air Chiller System Total High Stage Compressor Electric Power");
+      result.push_back("Refrigeration Air Chiller System Total High Stage Compressor Heat Transfer Energy");
+      result.push_back("Refrigeration Air Chiller System Total High Stage Compressor Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Total Low and High Stage Compressor Electric Energy");
+      result.push_back("Refrigeration Air Chiller System Total Low Stage Compressor Electric Energy");
+      result.push_back("Refrigeration Air Chiller System Total Low Stage Compressor Electric Power");
+      result.push_back("Refrigeration Air Chiller System Total Low Stage Compressor Heat Transfer Energy");
+      result.push_back("Refrigeration Air Chiller System Total Low Stage Compressor Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Estimated Low Stage Refrigerant Mass Flow Rate");
     }
     return result;
   }
@@ -352,14 +423,14 @@ namespace detail {
             modelObjectList->removeModelObject(elem);
           }
       }
-    }  
+    }
   }
 
   template <class T>
   void RefrigerationSystem_Impl::removeTemplate( const T & modelObject, boost::optional<ModelObjectList>& modelObjectList ) {
     if( modelObjectList ) {
       modelObjectList->removeModelObject(modelObject);
-    }  
+    }
   }
 
   template <class T>
@@ -524,9 +595,10 @@ namespace detail {
     return result;
   }
 
-  void RefrigerationSystem_Impl::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
+  bool RefrigerationSystem_Impl::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
     bool result = setDouble(OS_Refrigeration_SystemFields::MinimumCondensingTemperature, minimumCondensingTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   bool RefrigerationSystem_Impl::setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType) {
@@ -578,9 +650,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSystem_Impl::setSumUASuctionPiping(double sumUASuctionPiping) {
+  bool RefrigerationSystem_Impl::setSumUASuctionPiping(double sumUASuctionPiping) {
     bool result = setDouble(OS_Refrigeration_SystemFields::SumUASuctionPiping, sumUASuctionPiping);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSystem_Impl::resetSumUASuctionPiping() {
@@ -605,9 +678,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationSystem_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_SystemFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSystem_Impl::resetEndUseSubcategory() {
@@ -625,9 +699,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationSystem_Impl::setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness) {
+  bool RefrigerationSystem_Impl::setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness) {
     bool result = setDouble(OS_Refrigeration_SystemFields::ShellandCoilIntercoolerEffectiveness, shellandCoilIntercoolerEffectiveness);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationSystem_Impl::resetShellandCoilIntercoolerEffectiveness() {
@@ -901,8 +976,8 @@ bool RefrigerationSystem::setRefrigerationCondenser(const ModelObject& refrigera
   return getImpl<detail::RefrigerationSystem_Impl>()->setRefrigerationCondenser(refrigerationCondenser);
 }
 
-void RefrigerationSystem::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
-  getImpl<detail::RefrigerationSystem_Impl>()->setMinimumCondensingTemperature(minimumCondensingTemperature);
+bool RefrigerationSystem::setMinimumCondensingTemperature(double minimumCondensingTemperature) {
+  return getImpl<detail::RefrigerationSystem_Impl>()->setMinimumCondensingTemperature(minimumCondensingTemperature);
 }
 
 bool RefrigerationSystem::setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType) {
@@ -933,8 +1008,8 @@ void RefrigerationSystem::resetLiquidSuctionHeatExchangerSubcooler() {
   getImpl<detail::RefrigerationSystem_Impl>()->resetLiquidSuctionHeatExchangerSubcooler();
 }
 
-void RefrigerationSystem::setSumUASuctionPiping(double sumUASuctionPiping) {
-  getImpl<detail::RefrigerationSystem_Impl>()->setSumUASuctionPiping(sumUASuctionPiping);
+bool RefrigerationSystem::setSumUASuctionPiping(double sumUASuctionPiping) {
+  return getImpl<detail::RefrigerationSystem_Impl>()->setSumUASuctionPiping(sumUASuctionPiping);
 }
 
 void RefrigerationSystem::resetSumUASuctionPiping() {
@@ -949,8 +1024,8 @@ void RefrigerationSystem::resetSuctionPipingZone() {
   getImpl<detail::RefrigerationSystem_Impl>()->resetSuctionPipingZone();
 }
 
-void RefrigerationSystem::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationSystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationSystem::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationSystem_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationSystem::resetEndUseSubcategory() {
@@ -965,8 +1040,8 @@ void RefrigerationSystem::resetIntercoolerType() {
   getImpl<detail::RefrigerationSystem_Impl>()->resetIntercoolerType();
 }
 
-void RefrigerationSystem::setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness) {
-  getImpl<detail::RefrigerationSystem_Impl>()->setShellandCoilIntercoolerEffectiveness(shellandCoilIntercoolerEffectiveness);
+bool RefrigerationSystem::setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness) {
+  return getImpl<detail::RefrigerationSystem_Impl>()->setShellandCoilIntercoolerEffectiveness(shellandCoilIntercoolerEffectiveness);
 }
 
 void RefrigerationSystem::resetShellandCoilIntercoolerEffectiveness() {
@@ -975,10 +1050,9 @@ void RefrigerationSystem::resetShellandCoilIntercoolerEffectiveness() {
 
 /// @cond
 RefrigerationSystem::RefrigerationSystem(std::shared_ptr<detail::RefrigerationSystem_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 
 } // model
-} // openstudio
-
+} // openstudio

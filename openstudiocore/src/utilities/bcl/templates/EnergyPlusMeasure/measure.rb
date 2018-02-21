@@ -2,7 +2,7 @@
 # http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/
 
 # start the measure
-class EnergyPlusMeasureName < OpenStudio::Ruleset::WorkspaceUserScript
+class EnergyPlusMeasureName < OpenStudio::Measure::EnergyPlusMeasure
 
   # human readable name
   def name
@@ -21,22 +21,22 @@ class EnergyPlusMeasureName < OpenStudio::Ruleset::WorkspaceUserScript
 
   # define the arguments that the user will input
   def arguments(workspace)
-    args = OpenStudio::Ruleset::OSArgumentVector.new
+    args = OpenStudio::Measure::OSArgumentVector.new
 
     # the name of the zone to add to the model
-    zone_name = OpenStudio::Ruleset::OSArgument.makeStringArgument("zone_name", true)
+    zone_name = OpenStudio::Measure::OSArgument.makeStringArgument("zone_name", true)
     zone_name.setDisplayName("New zone name")
     zone_name.setDescription("This name will be used as the name of the new zone.")
     args << zone_name
 
     return args
-  end 
+  end
 
   # define what happens when the measure is run
   def run(workspace, runner, user_arguments)
     super(workspace, runner, user_arguments)
 
-    # use the built-in error checking 
+    # use the built-in error checking
     if !runner.validateUserArguments(arguments(workspace), user_arguments)
       return false
     end
@@ -49,7 +49,7 @@ class EnergyPlusMeasureName < OpenStudio::Ruleset::WorkspaceUserScript
       runner.registerError("Empty zone name was entered.")
       return false
     end
-    
+
     # get all thermal zones in the starting model
     zones = workspace.getObjectsByType("Zone".to_IddObjectType)
 
@@ -58,7 +58,7 @@ class EnergyPlusMeasureName < OpenStudio::Ruleset::WorkspaceUserScript
 
     # add a new zone to the model with the new name
     # http://apps1.eere.energy.gov/buildings/energyplus/pdfs/inputoutputreference.pdf#nameddest=Zone
-    new_zone_string = "    
+    new_zone_string = "
     Zone,
       #{zone_name},            !- Name
       0,                       !- Direction of Relative North {deg}
@@ -81,12 +81,12 @@ class EnergyPlusMeasureName < OpenStudio::Ruleset::WorkspaceUserScript
     # report final condition of model
     finishing_zones = workspace.getObjectsByType("Zone".to_IddObjectType)
     runner.registerFinalCondition("The building finished with #{finishing_zones.size} zones.")
-    
+
     return true
- 
+
   end
 
-end 
+end
 
 # register the measure to be used by the application
 EnergyPlusMeasureName.new.registerWithApplication

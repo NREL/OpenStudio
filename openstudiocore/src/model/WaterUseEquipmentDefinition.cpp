@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -64,10 +64,13 @@ namespace detail {
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {}
 
+  // TODO: remove
   const std::vector<std::string>& WaterUseEquipmentDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: output is listed in WaterUseEquipment instead
     }
     return result;
   }
@@ -111,9 +114,10 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterUse_Equipment_DefinitionFields::LatentFractionScheduleName);
   }
 
-  void WaterUseEquipmentDefinition_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool WaterUseEquipmentDefinition_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_WaterUse_Equipment_DefinitionFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void WaterUseEquipmentDefinition_Impl::resetEndUseSubcategory() {
@@ -304,8 +308,8 @@ boost::optional<Schedule> WaterUseEquipmentDefinition::latentFractionSchedule() 
   return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->latentFractionSchedule();
 }
 
-void WaterUseEquipmentDefinition::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool WaterUseEquipmentDefinition::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void WaterUseEquipmentDefinition::resetEndUseSubcategory() {
@@ -346,7 +350,7 @@ void WaterUseEquipmentDefinition::resetLatentFractionSchedule() {
 
 /// @cond
 WaterUseEquipmentDefinition::WaterUseEquipmentDefinition(std::shared_ptr<detail::WaterUseEquipmentDefinition_Impl> impl)
-  : SpaceLoadDefinition(impl)
+  : SpaceLoadDefinition(std::move(impl))
 {}
 /// @endcond
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -104,7 +104,7 @@ namespace detail {
     bool isMultiplierDefaulted() const;
 
     boost::optional<double> ceilingHeight() const;
-    
+
     OSOptionalQuantity getCeilingHeight(bool returnIP=false) const;
 
     bool isCeilingHeightDefaulted() const;
@@ -112,7 +112,7 @@ namespace detail {
     bool isCeilingHeightAutocalculated() const;
 
     boost::optional<double> volume() const;
-    
+
     OSOptionalQuantity getVolume(bool returnIP=false) const;
 
     bool isVolumeDefaulted() const;
@@ -134,13 +134,13 @@ namespace detail {
     boost::optional<ZoneControlHumidistat> zoneControlHumidistat() const;
 
     double fractionofZoneControlledbyPrimaryDaylightingControl() const;
-    
+
     Quantity getFractionofZoneControlledbyPrimaryDaylightingControl(bool returnIP=false) const;
 
     bool isFractionofZoneControlledbyPrimaryDaylightingControlDefaulted() const;
 
     double fractionofZoneControlledbySecondaryDaylightingControl() const;
-    
+
     Quantity getFractionofZoneControlledbySecondaryDaylightingControl(bool returnIP=false) const;
 
     bool isFractionofZoneControlledbySecondaryDaylightingControlDefaulted() const;
@@ -153,20 +153,20 @@ namespace detail {
 
     void resetMultiplier();
 
-    void setCeilingHeight(boost::optional<double> ceilingHeight);
+    bool setCeilingHeight(boost::optional<double> ceilingHeight);
 
-    void setCeilingHeight(double ceilingHeight);
-    
+    bool setCeilingHeight(double ceilingHeight);
+
     bool setCeilingHeight(const OSOptionalQuantity& ceilingHeight);
 
     void resetCeilingHeight();
 
     void autocalculateCeilingHeight();
 
-    void setVolume(boost::optional<double> volume);
+    bool setVolume(boost::optional<double> volume);
 
-    void setVolume(double volume);
-    
+    bool setVolume(double volume);
+
     bool setVolume(const OSOptionalQuantity& volume);
 
     void resetVolume();
@@ -185,7 +185,7 @@ namespace detail {
 
     void resetZoneOutsideConvectionAlgorithm();
 
-    void setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName);
+    bool setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName);
 
     bool setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint& thermostat);
 
@@ -204,13 +204,13 @@ namespace detail {
     void resetZoneControlContaminantController();
 
     bool setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl);
-    
+
     bool setFractionofZoneControlledbyPrimaryDaylightingControl(const Quantity& fractionofZoneControlledbyPrimaryDaylightingControl);
 
     void resetFractionofZoneControlledbyPrimaryDaylightingControl();
 
     bool setFractionofZoneControlledbySecondaryDaylightingControl(double fractionofZoneControlledbySecondaryDaylightingControl);
-    
+
     bool setFractionofZoneControlledbySecondaryDaylightingControl(const Quantity& fractionofZoneControlledbySecondaryDaylightingControl);
 
     void resetFractionofZoneControlledbySecondaryDaylightingControl();
@@ -243,7 +243,7 @@ namespace detail {
 
     void resetIlluminanceMap();
 
-    bool setDaylightingControlsAndIlluminanceMaps(const boost::optional<DaylightingControl>& primaryDaylightingControl, 
+    bool setDaylightingControlsAndIlluminanceMaps(const boost::optional<DaylightingControl>& primaryDaylightingControl,
                                                   const boost::optional<DaylightingControl>& secondaryDaylightingControl,
                                                   const boost::optional<IlluminanceMap>& illuminanceMap);
 
@@ -291,7 +291,7 @@ namespace detail {
 
     /** Returns the lighting power (W) in this thermal zone. Does not include space multiplier. Does include lighting multiplier. */
     double lightingPower() const;
-    
+
     /** Returns the lighting power density (W/m^2) of this thermal zone. Does not include space multiplier. Does include lighting multiplier. */
     double lightingPowerPerFloorArea() const;
 
@@ -345,13 +345,13 @@ namespace detail {
     /// Combines all spaces referencing this zone into a single space referencing this zone.
     /// If this zone has no spaces referencing it, then an uninitialized optional space is returned.
     /// If this zone has one space referencing it, then that space is returned.
-    /// If this zone is referenced by more than one space, then geometry from all spaces is added to a single zone.  
+    /// If this zone is referenced by more than one space, then geometry from all spaces is added to a single zone.
     /// The space origin is at the minimum x, y, z coordinate of all space origins, direction of relative north is preserved if same for all spaces.
-    /// If all spaces reference the same building story then that is preserved, otherwise it is cleared. 
-    /// If all spaces reference the same space type then that is preserved, otherwise space loads from the space type are applied to the new space directly. 
-    /// Direct child space loads are converted to absolute levels.  
-    /// Constructions and schedules are hard applied to all child surfaces and loads.  
-    /// Surfaces referencing other surfaces within the space are converted to interior partitions.  
+    /// If all spaces reference the same building story then that is preserved, otherwise it is cleared.
+    /// If all spaces reference the same space type then that is preserved, otherwise space loads from the space type are applied to the new space directly.
+    /// Direct child space loads are converted to absolute levels.
+    /// Constructions and schedules are hard applied to all child surfaces and loads.
+    /// Surfaces referencing other surfaces within the space are converted to interior partitions.
     boost::optional<Space> combineSpaces();
 
     SizingZone sizingZone() const;
@@ -364,7 +364,7 @@ namespace detail {
 
     bool useIdealAirLoads() const;
 
-    void setUseIdealAirLoads(bool useIdealAirLoads);
+    bool setUseIdealAirLoads(bool useIdealAirLoads);
 
     bool addToNode(Node & node) override;
 
@@ -372,13 +372,13 @@ namespace detail {
 
     PortList exhaustPortList() const;
 
-    void addEquipment(const ModelObject & equipment);
+    bool addEquipment(const ModelObject & equipment);
 
-    void removeEquipment(const ModelObject & equipment);
+    bool removeEquipment(const ModelObject & equipment);
 
-    void setCoolingPriority(const ModelObject & equipment, unsigned priority);
+    bool setCoolingPriority(const ModelObject & equipment, unsigned priority);
 
-    void setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+    bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
 
     std::vector<ModelObject> equipmentInHeatingOrder();
 
@@ -414,7 +414,7 @@ namespace detail {
 
    private:
     REGISTER_LOGGER("openstudio.model.ThermalZone");
-    
+
     openstudio::OSOptionalQuantity ceilingHeight_SI() const;
     openstudio::OSOptionalQuantity ceilingHeight_IP() const;
     openstudio::OSOptionalQuantity volume_SI() const;
@@ -422,7 +422,7 @@ namespace detail {
     openstudio::Quantity fractionofZoneControlledbyPrimaryDaylightingControl_SI() const;
     openstudio::Quantity fractionofZoneControlledbyPrimaryDaylightingControl_IP() const;
     openstudio::Quantity fractionofZoneControlledbySecondaryDaylightingControl_SI() const;
-    openstudio::Quantity fractionofZoneControlledbySecondaryDaylightingControl_IP() const;    
+    openstudio::Quantity fractionofZoneControlledbySecondaryDaylightingControl_IP() const;
 
     boost::optional<ModelObject> thermostatSetpointDualSetpointAsModelObject() const;
     boost::optional<ModelObject> zoneControlHumidistatAsModelObject() const;
@@ -447,4 +447,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_THERMALZONE_IMPL_HPP
-

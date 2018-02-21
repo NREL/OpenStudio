@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -98,11 +98,12 @@ namespace detail {
     return value;
   }
 
-  void BuildingStory_Impl::setNominalZCoordinate(double nominalZCoordinate) {
+  bool BuildingStory_Impl::setNominalZCoordinate(double nominalZCoordinate) {
     bool result = setDouble(OS_BuildingStoryFields::NominalZCoordinate, nominalZCoordinate);
     OS_ASSERT(result);
+    return result;
   }
-  
+
   void BuildingStory_Impl::resetNominalZCoordinate() {
     bool result = setString(OS_BuildingStoryFields::NominalZCoordinate, "");
     OS_ASSERT(result);
@@ -157,7 +158,7 @@ namespace detail {
   {
     setString(OS_BuildingStoryFields::DefaultScheduleSetName, "");
   }
- 
+
   boost::optional<RenderingColor> BuildingStory_Impl::renderingColor() const
   {
     return getObject<ModelObject>().getModelObjectTarget<RenderingColor>(OS_BuildingStoryFields::GroupRenderingName);
@@ -178,7 +179,7 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectSources<Space>(
         Space::iddObjectType());
   }
-  
+
   boost::optional<ModelObject> BuildingStory_Impl::defaultConstructionSetAsModelObject() const {
     OptionalModelObject result;
     OptionalDefaultConstructionSet object = defaultConstructionSet();
@@ -278,8 +279,8 @@ boost::optional<double> BuildingStory::nominalFloortoCeilingHeight() const {
   return getImpl<detail::BuildingStory_Impl>()->nominalFloortoCeilingHeight();
 }
 
-void BuildingStory::setNominalZCoordinate(double nominalZCoordinate) {
-  getImpl<detail::BuildingStory_Impl>()->setNominalZCoordinate(nominalZCoordinate);
+bool BuildingStory::setNominalZCoordinate(double nominalZCoordinate) {
+  return getImpl<detail::BuildingStory_Impl>()->setNominalZCoordinate(nominalZCoordinate);
 }
 
 void BuildingStory::resetNominalZCoordinate() {
@@ -354,11 +355,10 @@ std::vector<Space> BuildingStory::spaces() const
 
 /// @cond
 BuildingStory::BuildingStory(std::shared_ptr<detail::BuildingStory_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 
 
 } // model
 } // openstudio
-

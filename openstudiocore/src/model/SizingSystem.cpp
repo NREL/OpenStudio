@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,6 +30,10 @@
 #include "SizingSystem_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "ControllerOutdoorAir.hpp"
+#include "ControllerOutdoorAir_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
@@ -37,6 +41,7 @@
 #include <utilities/idd/OS_Sizing_System_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/sql/SqlFile.hpp"
 
 namespace openstudio {
 
@@ -396,34 +401,40 @@ bool SizingSystem_Impl::setMinimumSystemAirFlowRatio(double minimumSystemAirFlow
   return result;
 }
 
-void SizingSystem_Impl::setPreheatDesignTemperature(double preheatDesignTemperature) {
+bool SizingSystem_Impl::setPreheatDesignTemperature(double preheatDesignTemperature) {
   bool result = setDouble(OS_Sizing_SystemFields::PreheatDesignTemperature, preheatDesignTemperature);
   OS_ASSERT(result);
+  return result;
 }
 
-void SizingSystem_Impl::setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio) {
+bool SizingSystem_Impl::setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio) {
   bool result = setDouble(OS_Sizing_SystemFields::PreheatDesignHumidityRatio, preheatDesignHumidityRatio);
   OS_ASSERT(result);
+  return result;
 }
 
-void SizingSystem_Impl::setPrecoolDesignTemperature(double precoolDesignTemperature) {
+bool SizingSystem_Impl::setPrecoolDesignTemperature(double precoolDesignTemperature) {
   bool result = setDouble(OS_Sizing_SystemFields::PrecoolDesignTemperature, precoolDesignTemperature);
   OS_ASSERT(result);
+  return result;
 }
 
-void SizingSystem_Impl::setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio) {
+bool SizingSystem_Impl::setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio) {
   bool result = setDouble(OS_Sizing_SystemFields::PrecoolDesignHumidityRatio, precoolDesignHumidityRatio);
   OS_ASSERT(result);
+  return result;
 }
 
-void SizingSystem_Impl::setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature) {
+bool SizingSystem_Impl::setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature) {
   bool result = setDouble(OS_Sizing_SystemFields::CentralCoolingDesignSupplyAirTemperature, centralCoolingDesignSupplyAirTemperature);
   OS_ASSERT(result);
+  return result;
 }
 
-void SizingSystem_Impl::setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature) {
+bool SizingSystem_Impl::setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature) {
   bool result = setDouble(OS_Sizing_SystemFields::CentralHeatingDesignSupplyAirTemperature, centralHeatingDesignSupplyAirTemperature);
   OS_ASSERT(result);
+  return result;
 }
 
 bool SizingSystem_Impl::setSizingOption(std::string sizingOption) {
@@ -436,7 +447,7 @@ void SizingSystem_Impl::resetSizingOption() {
   OS_ASSERT(result);
 }
 
-void SizingSystem_Impl::setAllOutdoorAirinCooling(bool allOutdoorAirinCooling) {
+bool SizingSystem_Impl::setAllOutdoorAirinCooling(bool allOutdoorAirinCooling) {
   bool result = false;
   if (allOutdoorAirinCooling) {
     result = setString(OS_Sizing_SystemFields::AllOutdoorAirinCooling, "Yes");
@@ -444,6 +455,7 @@ void SizingSystem_Impl::setAllOutdoorAirinCooling(bool allOutdoorAirinCooling) {
     result = setString(OS_Sizing_SystemFields::AllOutdoorAirinCooling, "No");
   }
   OS_ASSERT(result);
+  return result;
 }
 
 void SizingSystem_Impl::resetAllOutdoorAirinCooling() {
@@ -451,7 +463,7 @@ void SizingSystem_Impl::resetAllOutdoorAirinCooling() {
   OS_ASSERT(result);
 }
 
-void SizingSystem_Impl::setAllOutdoorAirinHeating(bool allOutdoorAirinHeating) {
+bool SizingSystem_Impl::setAllOutdoorAirinHeating(bool allOutdoorAirinHeating) {
   bool result = false;
   if (allOutdoorAirinHeating) {
     result = setString(OS_Sizing_SystemFields::AllOutdoorAirinHeating, "Yes");
@@ -459,6 +471,7 @@ void SizingSystem_Impl::setAllOutdoorAirinHeating(bool allOutdoorAirinHeating) {
     result = setString(OS_Sizing_SystemFields::AllOutdoorAirinHeating, "No");
   }
   OS_ASSERT(result);
+  return result;
 }
 
 void SizingSystem_Impl::resetAllOutdoorAirinHeating() {
@@ -466,9 +479,10 @@ void SizingSystem_Impl::resetAllOutdoorAirinHeating() {
   OS_ASSERT(result);
 }
 
-void SizingSystem_Impl::setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio) {
+bool SizingSystem_Impl::setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio) {
   bool result = setDouble(OS_Sizing_SystemFields::CentralCoolingDesignSupplyAirHumidityRatio, centralCoolingDesignSupplyAirHumidityRatio);
   OS_ASSERT(result);
+  return result;
 }
 
 void SizingSystem_Impl::resetCentralCoolingDesignSupplyAirHumidityRatio() {
@@ -476,9 +490,10 @@ void SizingSystem_Impl::resetCentralCoolingDesignSupplyAirHumidityRatio() {
   OS_ASSERT(result);
 }
 
-void SizingSystem_Impl::setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio) {
+bool SizingSystem_Impl::setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio) {
   bool result = setDouble(OS_Sizing_SystemFields::CentralHeatingDesignSupplyAirHumidityRatio, centralHeatingDesignSupplyAirHumidityRatio);
   OS_ASSERT(result);
+  return result;
 }
 
 void SizingSystem_Impl::resetCentralHeatingDesignSupplyAirHumidityRatio() {
@@ -644,15 +659,228 @@ AirLoopHVAC SizingSystem_Impl::airLoopHVAC() const
   return wo.cast<AirLoopHVAC>();
 }
 
-void SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
+bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
 {
   if( model() != airLoopHVAC.model() )
   {
-    return;
+    LOG(Error, "Cannot set an AirLoopHVAC that isn't part of the same model for " << briefDescription());
+    return false;
+  }
+  bool result = this->setPointer(OS_Sizing_SystemFields::AirLoopName, airLoopHVAC.handle());
+  OS_ASSERT(result);
+  return result;
+}
+
+  boost::optional<double> SizingSystem_Impl::autosizedDesignOutdoorAirFlowRate() const {
+    boost::optional<double> result;
+
+    // Get the parent AirLoopHVAC
+    boost::optional<AirLoopHVAC> parAirLoop = airLoopHVAC();
+
+    // Get the OA system
+    boost::optional<AirLoopHVACOutdoorAirSystem> oaSys = parAirLoop->airLoopHVACOutdoorAirSystem();
+    if (!oaSys) {
+      LOG(Debug, "This object's parent AirLoopHVAC has no AirLoopHVACOutdoorAirSystem, cannot retrieve the autosizedDesignOutdoorAirFlowRate.");
+      return result;
+    }
+
+    // Get the OA Controller
+    ControllerOutdoorAir oaController = oaSys->getControllerOutdoorAir();
+
+    return oaController.getAutosizedValue("Maximum Outdoor Air Flow Rate", "m3/s");
   }
 
-  OS_ASSERT(this->setPointer(OS_Sizing_SystemFields::AirLoopName, airLoopHVAC.handle()));
-}
+  boost::optional<double> SizingSystem_Impl::autosizedCoolingDesignCapacity() const {
+    boost::optional < double > result;
+
+    std::string capacityType = "Cooling";
+
+    // Get the parent AirLoopHVAC
+    AirLoopHVAC parAirLoop = airLoopHVAC();
+
+    // Get the name of the air loop
+    if (!parAirLoop.name()) {
+      LOG(Warn, "This object's parent AirLoopHVAC does not have a name, cannot retrieve the autosized " + capacityType + " Design Capacity.");
+      return result;
+    }
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string sqlName = parAirLoop.name().get();
+    boost::to_upper(sqlName);
+
+    // Check that the model has a sql file
+    if (!model().sqlFile()) {
+      LOG(Warn, "This model has no sql file, cannot retrieve the autosized " + capacityType + " Design Capacity.");
+      return result;
+    }
+
+    // Query the Intialization Summary -> System Sizing Information table to get
+    // the row names that contains information for this component.
+    std::stringstream rowsQuery;
+    rowsQuery << "SELECT RowName ";
+    rowsQuery << "FROM tabulardatawithstrings ";
+    rowsQuery << "WHERE ReportName='Initialization Summary' ";
+    rowsQuery << "AND ReportForString='Entire Facility' ";
+    rowsQuery << "AND TableName = 'System Sizing Information' ";
+    rowsQuery << "AND Value='" + sqlName + "'";
+
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+
+    // Warn if the query failed
+    if (!rowNames) {
+      LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary System Sizing table.");
+      return result;
+    }
+
+    // Query each row of the Intialization Summary -> System Sizing table
+    // that contains this component to get the desired value.
+    for (std::string rowName : rowNames.get()) {
+      std::stringstream rowCheckQuery;
+      rowCheckQuery << "SELECT Value ";
+      rowCheckQuery << "FROM tabulardatawithstrings ";
+      rowCheckQuery << "WHERE ReportName='Initialization Summary' ";
+      rowCheckQuery << "AND ReportForString='Entire Facility' ";
+      rowCheckQuery << "AND TableName = 'System Sizing Information' ";
+      rowCheckQuery << "AND RowName='" << rowName << "' ";
+      rowCheckQuery << "AND Value='" << capacityType << "'";
+      boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery.str());
+      // Check if the query succeeded
+      if (!rowValueName) {
+        continue;
+      }
+      // This is the right row
+      std::stringstream valQuery;
+      valQuery << "SELECT Value ";
+      valQuery << "FROM tabulardatawithstrings ";
+      valQuery << "WHERE ReportName='Initialization Summary' ";
+      valQuery << "AND ReportForString='Entire Facility' ";
+      valQuery << "AND TableName = 'System Sizing Information' ";
+      valQuery << "AND ColumnName='User Design Capacity' ";
+      valQuery << "AND RowName='" << rowName << "' ";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      // Check if the query succeeded
+      if (val) {
+        result = val.get();
+        break;
+      }
+    }
+
+    if (!result) {
+      LOG(Debug, "The autosized value query for " + capacityType + " Design Capacity of " + sqlName + " returned no value.");
+    }
+
+    return result;
+
+  }
+
+  boost::optional<double> SizingSystem_Impl::autosizedHeatingDesignCapacity() const {
+    boost::optional < double > result;
+
+    std::string capacityType = "Heating";
+
+    // Get the parent AirLoopHVAC
+    AirLoopHVAC parAirLoop = airLoopHVAC();
+
+    // Get the name of the air loop
+    if (!parAirLoop.name()) {
+      LOG(Debug, "This object's parent AirLoopHVAC does not have a name, cannot retrieve the autosized " + capacityType + " Design Capacity.");
+      return result;
+    }
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string sqlName = parAirLoop.name().get();
+    boost::to_upper(sqlName);
+
+    // Check that the model has a sql file
+    if (!model().sqlFile()) {
+      LOG(Warn, "This model has no sql file, cannot retrieve the autosized " + capacityType + " Design Capacity.");
+      return result;
+    }
+
+    // Query the Intialization Summary -> System Sizing Information table to get
+    // the row names that contains information for this component.
+    std::stringstream rowsQuery;
+    rowsQuery << "SELECT RowName ";
+    rowsQuery << "FROM tabulardatawithstrings ";
+    rowsQuery << "WHERE ReportName='Initialization Summary' ";
+    rowsQuery << "AND ReportForString='Entire Facility' ";
+    rowsQuery << "AND TableName = 'System Sizing Information' ";
+    rowsQuery << "AND Value='" + sqlName + "'";
+
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+
+    // Warn if the query failed
+    if (!rowNames) {
+      LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary System Sizing table.");
+      return result;
+    }
+
+    // Query each row of the Intialization Summary -> System Sizing table
+    // that contains this component to get the desired value.
+    for (std::string rowName : rowNames.get()) {
+      std::stringstream rowCheckQuery;
+      rowCheckQuery << "SELECT Value ";
+      rowCheckQuery << "FROM tabulardatawithstrings ";
+      rowCheckQuery << "WHERE ReportName='Initialization Summary' ";
+      rowCheckQuery << "AND ReportForString='Entire Facility' ";
+      rowCheckQuery << "AND TableName = 'System Sizing Information' ";
+      rowCheckQuery << "AND RowName='" << rowName << "' ";
+      rowCheckQuery << "AND Value='" << capacityType << "'";
+      boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery.str());
+      // Check if the query succeeded
+      if (!rowValueName) {
+        continue;
+      }
+      // This is the right row
+      std::stringstream valQuery;
+      valQuery << "SELECT Value ";
+      valQuery << "FROM tabulardatawithstrings ";
+      valQuery << "WHERE ReportName='Initialization Summary' ";
+      valQuery << "AND ReportForString='Entire Facility' ";
+      valQuery << "AND TableName = 'System Sizing Information' ";
+      valQuery << "AND ColumnName='User Design Capacity' ";
+      valQuery << "AND RowName='" << rowName << "' ";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      // Check if the query succeeded
+      if (val) {
+        result = val.get();
+        break;
+      }
+    }
+
+    if (!result) {
+      LOG(Debug, "The autosized value query for " + capacityType + " Design Capacity of " + sqlName + " returned no value.");
+    }
+
+    return result;
+  }
+
+  void SizingSystem_Impl::autosize() {
+    autosizeDesignOutdoorAirFlowRate();
+    autosizeCoolingDesignCapacity();
+    autosizeHeatingDesignCapacity();
+  }
+
+  void SizingSystem_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignOutdoorAirFlowRate();
+    if (val) {
+      setDesignOutdoorAirFlowRate(val.get());
+    }
+
+    val = autosizedCoolingDesignCapacity();
+    if (val) {
+      setCoolingDesignCapacity(val.get());
+    }
+
+    val = autosizedHeatingDesignCapacity();
+    if (val) {
+      setHeatingDesignCapacity(val.get());
+    }
+
+  }
 
 } // detail
 
@@ -959,28 +1187,28 @@ bool SizingSystem::setMinimumSystemAirFlowRatio(double minimumSystemAirFlowRatio
   return getImpl<detail::SizingSystem_Impl>()->setMinimumSystemAirFlowRatio(minimumSystemAirFlowRatio);
 }
 
-void SizingSystem::setPreheatDesignTemperature(double preheatDesignTemperature) {
-  getImpl<detail::SizingSystem_Impl>()->setPreheatDesignTemperature(preheatDesignTemperature);
+bool SizingSystem::setPreheatDesignTemperature(double preheatDesignTemperature) {
+  return getImpl<detail::SizingSystem_Impl>()->setPreheatDesignTemperature(preheatDesignTemperature);
 }
 
-void SizingSystem::setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio) {
-  getImpl<detail::SizingSystem_Impl>()->setPreheatDesignHumidityRatio(preheatDesignHumidityRatio);
+bool SizingSystem::setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio) {
+  return getImpl<detail::SizingSystem_Impl>()->setPreheatDesignHumidityRatio(preheatDesignHumidityRatio);
 }
 
-void SizingSystem::setPrecoolDesignTemperature(double precoolDesignTemperature) {
-  getImpl<detail::SizingSystem_Impl>()->setPrecoolDesignTemperature(precoolDesignTemperature);
+bool SizingSystem::setPrecoolDesignTemperature(double precoolDesignTemperature) {
+  return getImpl<detail::SizingSystem_Impl>()->setPrecoolDesignTemperature(precoolDesignTemperature);
 }
 
-void SizingSystem::setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio) {
-  getImpl<detail::SizingSystem_Impl>()->setPrecoolDesignHumidityRatio(precoolDesignHumidityRatio);
+bool SizingSystem::setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio) {
+  return getImpl<detail::SizingSystem_Impl>()->setPrecoolDesignHumidityRatio(precoolDesignHumidityRatio);
 }
 
-void SizingSystem::setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature) {
-  getImpl<detail::SizingSystem_Impl>()->setCentralCoolingDesignSupplyAirTemperature(centralCoolingDesignSupplyAirTemperature);
+bool SizingSystem::setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature) {
+  return getImpl<detail::SizingSystem_Impl>()->setCentralCoolingDesignSupplyAirTemperature(centralCoolingDesignSupplyAirTemperature);
 }
 
-void SizingSystem::setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature) {
-  getImpl<detail::SizingSystem_Impl>()->setCentralHeatingDesignSupplyAirTemperature(centralHeatingDesignSupplyAirTemperature);
+bool SizingSystem::setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature) {
+  return getImpl<detail::SizingSystem_Impl>()->setCentralHeatingDesignSupplyAirTemperature(centralHeatingDesignSupplyAirTemperature);
 }
 
 bool SizingSystem::setSizingOption(std::string sizingOption) {
@@ -991,32 +1219,32 @@ void SizingSystem::resetSizingOption() {
   getImpl<detail::SizingSystem_Impl>()->resetSizingOption();
 }
 
-void SizingSystem::setAllOutdoorAirinCooling(bool allOutdoorAirinCooling) {
-  getImpl<detail::SizingSystem_Impl>()->setAllOutdoorAirinCooling(allOutdoorAirinCooling);
+bool SizingSystem::setAllOutdoorAirinCooling(bool allOutdoorAirinCooling) {
+  return getImpl<detail::SizingSystem_Impl>()->setAllOutdoorAirinCooling(allOutdoorAirinCooling);
 }
 
 void SizingSystem::resetAllOutdoorAirinCooling() {
   getImpl<detail::SizingSystem_Impl>()->resetAllOutdoorAirinCooling();
 }
 
-void SizingSystem::setAllOutdoorAirinHeating(bool allOutdoorAirinHeating) {
-  getImpl<detail::SizingSystem_Impl>()->setAllOutdoorAirinHeating(allOutdoorAirinHeating);
+bool SizingSystem::setAllOutdoorAirinHeating(bool allOutdoorAirinHeating) {
+  return getImpl<detail::SizingSystem_Impl>()->setAllOutdoorAirinHeating(allOutdoorAirinHeating);
 }
 
 void SizingSystem::resetAllOutdoorAirinHeating() {
   getImpl<detail::SizingSystem_Impl>()->resetAllOutdoorAirinHeating();
 }
 
-void SizingSystem::setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio) {
-  getImpl<detail::SizingSystem_Impl>()->setCentralCoolingDesignSupplyAirHumidityRatio(centralCoolingDesignSupplyAirHumidityRatio);
+bool SizingSystem::setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio) {
+  return getImpl<detail::SizingSystem_Impl>()->setCentralCoolingDesignSupplyAirHumidityRatio(centralCoolingDesignSupplyAirHumidityRatio);
 }
 
 void SizingSystem::resetCentralCoolingDesignSupplyAirHumidityRatio() {
   getImpl<detail::SizingSystem_Impl>()->resetCentralCoolingDesignSupplyAirHumidityRatio();
 }
 
-void SizingSystem::setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio) {
-  getImpl<detail::SizingSystem_Impl>()->setCentralHeatingDesignSupplyAirHumidityRatio(centralHeatingDesignSupplyAirHumidityRatio);
+bool SizingSystem::setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio) {
+  return getImpl<detail::SizingSystem_Impl>()->setCentralHeatingDesignSupplyAirHumidityRatio(centralHeatingDesignSupplyAirHumidityRatio);
 }
 
 void SizingSystem::resetCentralHeatingDesignSupplyAirHumidityRatio() {
@@ -1144,18 +1372,37 @@ AirLoopHVAC SizingSystem::airLoopHVAC() const
   return getImpl<detail::SizingSystem_Impl>()->airLoopHVAC();
 }
 
-void SizingSystem::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
+bool SizingSystem::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
 {
-  getImpl<detail::SizingSystem_Impl>()->setAirLoopHVAC(airLoopHVAC);
+  return getImpl<detail::SizingSystem_Impl>()->setAirLoopHVAC(airLoopHVAC);
 }
 
 /// @cond
 SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> SizingSystem::autosizedDesignOutdoorAirFlowRate() const {
+    return getImpl<detail::SizingSystem_Impl>()->autosizedDesignOutdoorAirFlowRate();
+  }
+
+  boost::optional<double> SizingSystem::autosizedCoolingDesignCapacity() const {
+    return getImpl<detail::SizingSystem_Impl>()->autosizedCoolingDesignCapacity();
+  }
+
+  boost::optional<double> SizingSystem::autosizedHeatingDesignCapacity() const {
+    return getImpl<detail::SizingSystem_Impl>()->autosizedHeatingDesignCapacity();
+  }
+
+  void SizingSystem::autosize() {
+    return getImpl<detail::SizingSystem_Impl>()->autosize();
+  }
+
+  void SizingSystem::applySizingValues() {
+    return getImpl<detail::SizingSystem_Impl>()->applySizingValues();
+  }
 
 } // model
 
 } // openstudio
-

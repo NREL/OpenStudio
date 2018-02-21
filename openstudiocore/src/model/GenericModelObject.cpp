@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -69,7 +69,7 @@ IddObjectType GenericModelObject_Impl::iddObjectType() const
 }// detail
 
 GenericModelObject::GenericModelObject(std::shared_ptr<detail::GenericModelObject_Impl> p)
-  :  ModelObject(p)
+  :  ModelObject(std::move(p))
 {}
 
 } // model

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,19 +38,19 @@
 
 namespace openstudio {
 
-DataError::DataError(unsigned fieldIndex, const IdfObject& object, DataErrorType errorType) 
-  : m_scope(Scope::Field), 
-    m_type(errorType), 
-    m_fieldIndex(fieldIndex), 
+DataError::DataError(unsigned fieldIndex, const IdfObject& object, DataErrorType errorType)
+  : m_scope(Scope::Field),
+    m_type(errorType),
+    m_fieldIndex(fieldIndex),
     m_objectHandle(object.handle()),
     m_objectType(object.iddObject().type())
 {
-  // construct field-level error  
+  // construct field-level error
   OptionalString oName = object.name();
   if (oName) { m_objectName = *oName; }
 }
 
-DataError::DataError(const IdfObject& object, DataErrorType errorType) 
+DataError::DataError(const IdfObject& object, DataErrorType errorType)
   : m_scope(Scope::Object),
     m_type(errorType),
     m_fieldIndex(0),
@@ -62,7 +62,7 @@ DataError::DataError(const IdfObject& object, DataErrorType errorType)
   if (oName) { m_objectName = *oName; }
 }
 
-DataError::DataError(DataErrorType errorType) 
+DataError::DataError(DataErrorType errorType)
   : m_scope(Scope::Collection),
     m_type(errorType),
     m_fieldIndex(0)
@@ -70,7 +70,7 @@ DataError::DataError(DataErrorType errorType)
   // construct collection-level error
 }
 
-DataError::DataError(DataErrorType errorType, IddObjectType objectType) 
+DataError::DataError(DataErrorType errorType, IddObjectType objectType)
   : m_scope(Scope::Collection),
     m_type(errorType),
     m_fieldIndex(0),
@@ -88,8 +88,8 @@ DataErrorType DataError::type() const {
 }
 
 unsigned DataError::fieldIdentifier() const {
-  if (scope() != Scope::Field) { 
-    LOG_AND_THROW("There is no field identifier for this DataError, which has scope " 
+  if (scope() != Scope::Field) {
+    LOG_AND_THROW("There is no field identifier for this DataError, which has scope "
                   << scope().valueDescription() << ".");
   }
   return m_fieldIndex;
@@ -122,10 +122,10 @@ bool DataError::operator!=(const DataError& otherError) const {
 
 bool DataErrorLess::operator()(const DataError& left, const DataError& right) const {
   // order first by error type, since listed in order of severity
-  if (left.type() != right.type()) { 
+  if (left.type() != right.type()) {
     return left.type() < right.type();
   }
-  // within type order by collection, then object, then field-level, since 
+  // within type order by collection, then object, then field-level, since
   // collection-level is generally the most severe (IddFile missing, for instance)
   if (left.scope() != right.scope()) {
     return left.scope() > right.scope();
@@ -136,7 +136,7 @@ bool DataErrorLess::operator()(const DataError& left, const DataError& right) co
       return istringLess(left.objectName(),right.objectName());
     }
   }
-  // if objectType exists, order by that next, since Idd Files are in a 
+  // if objectType exists, order by that next, since Idd Files are in a
   // semi-logical order
   if ((left.objectType() != boost::none) && (right.objectType() != boost::none)) {
     return left.objectType().get() < right.objectType().get();
@@ -159,7 +159,7 @@ bool DataErrorLess::operator()(const DataError& left, const DataError& right) co
 }
 
 std::ostream& operator<<(std::ostream& os,const DataError& error) {
-  
+
   os << std::setw(11) << std::left << error.scope().valueName() << "level data error of type ";
   os << std::setw(18) << std::left << error.type().valueName() << "." << std::endl;
 

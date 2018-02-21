@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,7 +44,7 @@ namespace detail {
 
 } // detail
 
-/** BoilerHotWater is a StraightComponent that wraps the OpenStudio IDD object 
+/** BoilerHotWater is a StraightComponent that wraps the OpenStudio IDD object
  *  'OS:Boiler:HotWater'. */
 class MODEL_API BoilerHotWater : public StraightComponent {
  public:
@@ -117,6 +117,8 @@ class MODEL_API BoilerHotWater : public StraightComponent {
 
   bool isSizingFactorDefaulted() const;
 
+  std::string endUseSubcategory() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -140,7 +142,7 @@ class MODEL_API BoilerHotWater : public StraightComponent {
 
   void resetNormalizedBoilerEfficiencyCurve();
 
-  void setDesignWaterOutletTemperature(double designWaterOutletTemperature);
+  bool setDesignWaterOutletTemperature(double designWaterOutletTemperature);
 
   void resetDesignWaterOutletTemperature();
 
@@ -166,7 +168,7 @@ class MODEL_API BoilerHotWater : public StraightComponent {
 
   // TODO: Handle Non-Extensible IddField Boiler Water Outlet Node Name.
 
-  void setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit);
+  bool setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit);
 
   void resetWaterOutletUpperTemperatureLimit();
 
@@ -181,6 +183,12 @@ class MODEL_API BoilerHotWater : public StraightComponent {
   bool setSizingFactor(double sizingFactor);
 
   void resetSizingFactor();
+
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
   //@}
  protected:
@@ -209,5 +217,4 @@ typedef std::vector<BoilerHotWater> BoilerHotWaterVector;
 } // model
 } // openstudio
 
-#endif // MODEL_BOILERHOTWATER_HPP
-
+#endif // MODEL_BOILERHOTWATER_HPP

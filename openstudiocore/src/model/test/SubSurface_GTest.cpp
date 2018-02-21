@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -305,7 +305,7 @@ TEST_F(ModelFixture, AdjacentSubSurface2)
   EXPECT_FALSE(window2.adjacentSubSurface());
 
   EXPECT_TRUE(wall1.setAdjacentSurface(wall2));
-  
+
   EXPECT_TRUE(window1.setAdjacentSubSurface(window2));
   EXPECT_EQ("OperableWindow", window1.subSurfaceType());
   EXPECT_EQ("OperableWindow", window2.subSurfaceType());
@@ -403,7 +403,7 @@ TEST_F(ModelFixture, AdjacentSubSurface3)
   EXPECT_EQ(1, window2.multiplier());
 
   window1.resetMultiplier();
-  
+
   EXPECT_TRUE(window1.setAdjacentSubSurface(window2));
   EXPECT_EQ(1, window1.multiplier());
   EXPECT_EQ(1, window2.multiplier());
@@ -620,8 +620,8 @@ TEST_F(ModelFixture, SkylightPattern_SingleSurface)
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
-  std::vector<Point3dVector> pattern; 
-  std::vector<SubSurface> skylights; 
+  std::vector<Point3dVector> pattern;
+  std::vector<SubSurface> skylights;
 
   // no geometry yet
   pattern = building.generateSkylightPattern(0.00, 1.5, 1);
@@ -634,7 +634,7 @@ TEST_F(ModelFixture, SkylightPattern_SingleSurface)
   vertices.push_back(Point3d(30,0,0));
   vertices.push_back(Point3d(30,20,0));
   vertices.push_back(Point3d(0,20,0));
-  
+
   Surface roof(vertices, model);
   roof.setSpace(space);
   EXPECT_DOUBLE_EQ(600.0, roof.grossArea());
@@ -719,8 +719,8 @@ TEST_F(ModelFixture, SkylightPattern_SingleSurface2)
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
-  std::vector<Point3dVector> pattern; 
-  std::vector<SubSurface> skylights; 
+  std::vector<Point3dVector> pattern;
+  std::vector<SubSurface> skylights;
 
   // no geometry yet
   pattern = building.generateSkylightPattern(0.00, 1.5, 1);
@@ -733,7 +733,7 @@ TEST_F(ModelFixture, SkylightPattern_SingleSurface2)
   vertices.push_back(Point3d(40,-10,0));
   vertices.push_back(Point3d(40,10,0));
   vertices.push_back(Point3d(10,10,0));
-  
+
   Surface roof(vertices, model);
   roof.setSpace(space);
   EXPECT_DOUBLE_EQ(600.0, roof.grossArea());
@@ -802,7 +802,7 @@ void checkExpectedSkylightRatios(const Model& model, double expectedRoofArea, do
       double netRoofArea = surface.netArea();
       double skylightToRoofRatio = surface.skylightToRoofRatio();
       double skylightArea = skylightToRoofRatio*grossRoofArea;
-      
+
       EXPECT_NEAR(netRoofArea, grossRoofArea-skylightArea, 0.001);
 
       totalGrossRoofArea += multiplier*grossRoofArea;
@@ -821,8 +821,8 @@ TEST_F(ModelFixture, SkylightPattern_PerimCore)
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
-  std::vector<Point3dVector> pattern; 
-  std::vector<SubSurface> skylights; 
+  std::vector<Point3dVector> pattern;
+  std::vector<SubSurface> skylights;
 
   // no geometry yet
   pattern = building.generateSkylightPattern(0.00, 1.5, 1);
@@ -924,8 +924,8 @@ TEST_F(ModelFixture, SkylightPattern_PerimCore_Rotated)
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
-  std::vector<Point3dVector> pattern; 
-  std::vector<SubSurface> skylights; 
+  std::vector<Point3dVector> pattern;
+  std::vector<SubSurface> skylights;
 
   // no geometry yet
   pattern = building.generateSkylightPattern(0.00, 1.5, 1);
@@ -1127,7 +1127,7 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
   Space space(model);
   roof.setSpace(space);
   wall.setSpace(space);
-  
+
   {
     // normal 0,1,0 on bottom edge
     vertices.clear();

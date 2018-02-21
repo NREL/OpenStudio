@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -70,7 +70,12 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACBaseboardConvectiveElectric_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Baseboard Total Heating Rate");
+      result.push_back("Baseboard Total Heating Energy");
+      result.push_back("Baseboard Electric Energy");
+      result.push_back("Baseboard Electric Power");
     }
     return result;
   }
@@ -142,12 +147,13 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACBaseboardConvectiveElectric_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
+  bool ZoneHVACBaseboardConvectiveElectric_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
     bool result(false);
     if (nominalCapacity) {
       result = setDouble(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::NominalCapacity, nominalCapacity.get());
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool ZoneHVACBaseboardConvectiveElectric_Impl::setNominalCapacity(const OSOptionalQuantity& nominalCapacity) {
@@ -235,7 +241,7 @@ namespace detail {
   {
     return 0; // this object has no inlet or outlet node
   }
-  
+
   boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveElectric_Impl::thermalZone()
   {
     ModelObject thisObject = this->getObject<ModelObject>();
@@ -251,7 +257,7 @@ namespace detail {
     }
     return boost::none;
   }
-  
+
   bool ZoneHVACBaseboardConvectiveElectric_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
     Model m = this->model();
@@ -274,12 +280,29 @@ namespace detail {
 
     return true;
   }
-  
+
   void ZoneHVACBaseboardConvectiveElectric_Impl::removeFromThermalZone()
   {
     if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
       thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
     }
+  }
+
+  boost::optional<double> ZoneHVACBaseboardConvectiveElectric_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+  }
+
+  void ZoneHVACBaseboardConvectiveElectric_Impl::autosize() {
+    autosizeNominalCapacity();
+  }
+
+  void ZoneHVACBaseboardConvectiveElectric_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
   }
 
 } // detail
@@ -334,8 +357,8 @@ bool ZoneHVACBaseboardConvectiveElectric::setAvailabilitySchedule(Schedule& sche
   return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-void ZoneHVACBaseboardConvectiveElectric::setNominalCapacity(double nominalCapacity) {
-  getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->setNominalCapacity(nominalCapacity);
+bool ZoneHVACBaseboardConvectiveElectric::setNominalCapacity(double nominalCapacity) {
+  return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->setNominalCapacity(nominalCapacity);
 }
 
 bool ZoneHVACBaseboardConvectiveElectric::setNominalCapacity(const Quantity& nominalCapacity) {
@@ -357,7 +380,7 @@ bool ZoneHVACBaseboardConvectiveElectric::setEfficiency(const Quantity& efficien
 void ZoneHVACBaseboardConvectiveElectric::resetEfficiency() {
   getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->resetEfficiency();
 }
-  
+
 boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveElectric::thermalZone()
 {
   return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->thermalZone();
@@ -375,10 +398,13 @@ void ZoneHVACBaseboardConvectiveElectric::removeFromThermalZone()
 
 /// @cond
 ZoneHVACBaseboardConvectiveElectric::ZoneHVACBaseboardConvectiveElectric(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveElectric_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 
+  boost::optional<double> ZoneHVACBaseboardConvectiveElectric::autosizedNominalCapacity() const {
+    return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->autosizedNominalCapacity();
+  }
+
 } // model
 } // openstudio
-

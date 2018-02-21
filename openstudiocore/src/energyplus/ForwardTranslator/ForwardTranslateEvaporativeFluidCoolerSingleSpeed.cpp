@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -55,8 +55,8 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
   IdfObject idfObject(IddObjectType::EvaporativeFluidCooler_SingleSpeed);
 
   m_idfObjects.push_back(idfObject);
- 
- //Name  
+
+ //Name
   s = modelObject.name();
   if(s)
   {
@@ -79,8 +79,8 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
     idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::WaterOutletNodeName,temp->name().get());
   }
 
-  
-  // DesignAirFlowRate 
+
+  // DesignAirFlowRate
 
   if( (d = modelObject.designAirFlowRate()) )
   {
@@ -90,9 +90,9 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRate,"Autosize");
   }
-  
+
    // FanPoweratDesignAirFlowRate
-  
+
   if( (d = modelObject.fanPoweratDesignAirFlowRate()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower,d.get());
@@ -102,8 +102,8 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
     idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower,"Autosize");
   }
 
-     
-  // DesignWaterFlowRate 
+
+  // DesignWaterFlowRate
 
   if( (d = modelObject.designWaterFlowRate()) )
   {
@@ -115,20 +115,20 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
   }
 
   // DesignSprayWaterFlowRate
-  
+
   if( (d = modelObject.designSprayWaterFlowRate()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignSprayWaterFlowRate,d.get());
   }
 
-  
+
  // PerformanceInputMethod
 
   if( (s = modelObject.performanceInputMethod()) )
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::PerformanceInputMethod,s.get());
   }
- 
+
 // OutdoorAirInletNodeName
 
   idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::OutdoorAirInletNodeName,"");
@@ -140,7 +140,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::StandardDesignCapacity,d.get());
   }
- 
+
   // UFactorTimesAreaValueatDesignAirFlowRate
 
   if( (d = modelObject.ufactorTimesAreaValueatDesignAirFlowRate()) )
@@ -160,7 +160,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::UserSpecifiedDesignCapacity,d.get());
   }
 
-    
+
 // DesignEnteringWaterTemperature
 
   if( (d = modelObject.designEnteringWaterTemperature()) )
@@ -187,14 +187,14 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::CapacityControl,s.get());
   }
-  
+
    // SizingFactor
 
   if( (d = modelObject.sizingFactor()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::SizingFactor,d.get());
-  } 
- 
+  }
+
   // EvaporationLossMode
 
   if( (s = modelObject.evaporationLossMode()) )
@@ -222,9 +222,9 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
   {
     idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::BlowdownCalculationMode,s.get());
   }
-  
+
   // BlowdownConcentrationRatio
-  
+
   if( (d = modelObject.blowdownConcentrationRatio()) )
   {
     idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::BlowdownConcentrationRatio,d.get());

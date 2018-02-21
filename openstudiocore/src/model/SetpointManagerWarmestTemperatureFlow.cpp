@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -156,7 +156,7 @@ SetpointManagerWarmestTemperatureFlow::SetpointManagerWarmestTemperatureFlow(con
   OS_ASSERT(getImpl<detail::SetpointManagerWarmestTemperatureFlow_Impl>());
 
   setControlVariable("Temperature");
-  setMinimumSetpointTemperature(12.0); 
+  setMinimumSetpointTemperature(12.0);
   setMaximumSetpointTemperature(18.0);
   setStrategy("TemperatureFirst");
   setMinimumTurndownRatio(0.2);
@@ -230,7 +230,7 @@ void SetpointManagerWarmestTemperatureFlow::resetSetpointNode() {
 
 /// @cond
 SetpointManagerWarmestTemperatureFlow::SetpointManagerWarmestTemperatureFlow(std::shared_ptr<detail::SetpointManagerWarmestTemperatureFlow_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

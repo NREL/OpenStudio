@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -250,7 +250,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void OutputMeter_Impl::setMeterFileOnly(bool meterFileOnly) {
+  bool OutputMeter_Impl::setMeterFileOnly(bool meterFileOnly) {
     bool result = false;
     if (meterFileOnly) {
       result = setString(OS_Output_MeterFields::MeterFileOnly, "True");
@@ -258,6 +258,7 @@ namespace detail {
       result = setString(OS_Output_MeterFields::MeterFileOnly, "False");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void OutputMeter_Impl::resetMeterFileOnly() {
@@ -265,7 +266,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void OutputMeter_Impl::setCumulative(bool cumulative) {
+  bool OutputMeter_Impl::setCumulative(bool cumulative) {
     bool result = false;
     if (cumulative) {
       result = setString(OS_Output_MeterFields::Cumulative, "True");
@@ -273,6 +274,7 @@ namespace detail {
       result = setString(OS_Output_MeterFields::Cumulative, "False");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void OutputMeter_Impl::resetCumulative() {
@@ -429,7 +431,7 @@ namespace detail {
       }else if (openstudio::istringEqual(frequency, "Timestep")){
           frequency = "Zone Timestep";
       }else if (openstudio::istringEqual(frequency, "Detailed")){
-          frequency = "HVAC System Timestep"; 
+          frequency = "HVAC System Timestep";
       }
 
       // currently the key value is not associated with the meter, it is part of the name
@@ -576,16 +578,16 @@ void OutputMeter::resetReportingFrequency() {
   getImpl<detail::OutputMeter_Impl>()->resetReportingFrequency();
 }
 
-void OutputMeter::setMeterFileOnly(bool meterFileOnly) {
-  getImpl<detail::OutputMeter_Impl>()->setMeterFileOnly(meterFileOnly);
+bool OutputMeter::setMeterFileOnly(bool meterFileOnly) {
+  return getImpl<detail::OutputMeter_Impl>()->setMeterFileOnly(meterFileOnly);
 }
 
 void OutputMeter::resetMeterFileOnly() {
   getImpl<detail::OutputMeter_Impl>()->resetMeterFileOnly();
 }
 
-void OutputMeter::setCumulative(bool cumulative) {
-  getImpl<detail::OutputMeter_Impl>()->setCumulative(cumulative);
+bool OutputMeter::setCumulative(bool cumulative) {
+  return getImpl<detail::OutputMeter_Impl>()->setCumulative(cumulative);
 }
 
 void OutputMeter::resetCumulative() {
@@ -664,11 +666,10 @@ bool MeterFuelTypeEquals(const OutputMeter& meter,const FuelType& ft) {
 
 /// @cond
 OutputMeter::OutputMeter(std::shared_ptr<detail::OutputMeter_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 
 
 } // model
 } // openstudio
-

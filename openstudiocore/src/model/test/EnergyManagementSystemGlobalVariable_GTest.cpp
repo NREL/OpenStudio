@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,9 +46,18 @@ using std::string;
 TEST_F(ModelFixture, EMSGlobalVariable_EMSGlobalVariable)
 {
   Model model;
-    
+
   // add global variable
-  EnergyManagementSystemGlobalVariable var(model, "glob var");
+  unsigned n1 = model.objects().size();
+  EnergyManagementSystemGlobalVariable var(model, "glob_var");
   EXPECT_EQ("glob_var", var.nameString());
+  unsigned n2 = model.objects().size();
+  EXPECT_EQ(n1 + 1, n2);
+
+  //should crash and not create any new objects
+  n1 = model.objects().size();
+  EXPECT_ANY_THROW(EnergyManagementSystemGlobalVariable var(model, "glob var"));
+  n2 = model.objects().size();
+  EXPECT_EQ(n1, n2);
 }
 

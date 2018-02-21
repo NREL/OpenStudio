@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -66,9 +66,9 @@ OptionalInt UtilityCost_Qualify_Impl::numberOfMonths() const
   return getInt(OS_UtilityCost_QualifyFields::NumberofMonths);
 }
 
-void UtilityCost_Qualify_Impl::setNumberOfMonths(int num)
+bool UtilityCost_Qualify_Impl::setNumberOfMonths(int num)
 {
-  setInt(OS_UtilityCost_QualifyFields::NumberofMonths,num);
+  return setInt(OS_UtilityCost_QualifyFields::NumberofMonths,num);;
 }
 
 OptionalString UtilityCost_Qualify_Impl::tariffName() const
@@ -76,9 +76,9 @@ OptionalString UtilityCost_Qualify_Impl::tariffName() const
   return getString(OS_UtilityCost_QualifyFields::TariffName);
 }
 
-void UtilityCost_Qualify_Impl::setTariffName(const std::string& str)
+bool UtilityCost_Qualify_Impl::setTariffName(const std::string& str)
 {
-  setString(OS_UtilityCost_QualifyFields::TariffName,str);
+  return setString(OS_UtilityCost_QualifyFields::TariffName,str);;
 }
 
 OptionalString UtilityCost_Qualify_Impl::variableName() const
@@ -86,9 +86,9 @@ OptionalString UtilityCost_Qualify_Impl::variableName() const
   return getString(OS_UtilityCost_QualifyFields::VariableName);
 }
 
-void UtilityCost_Qualify_Impl::setVariableName(const std::string& str)
+bool UtilityCost_Qualify_Impl::setVariableName(const std::string& str)
 {
-  setString(OS_UtilityCost_QualifyFields::VariableName,str);
+  return setString(OS_UtilityCost_QualifyFields::VariableName,str);;
 }
 
 OptionalString UtilityCost_Qualify_Impl::qualifyType() const
@@ -96,9 +96,9 @@ OptionalString UtilityCost_Qualify_Impl::qualifyType() const
   return getString(OS_UtilityCost_QualifyFields::QualifyType);
 }
 
-void UtilityCost_Qualify_Impl::setQualifyType(const std::string& str)
+bool UtilityCost_Qualify_Impl::setQualifyType(const std::string& str)
 {
-  setString(OS_UtilityCost_QualifyFields::QualifyType,str);
+  return setString(OS_UtilityCost_QualifyFields::QualifyType,str);;
 }
 
 OptionalString UtilityCost_Qualify_Impl::thresholdValueOrVariableName() const
@@ -106,9 +106,9 @@ OptionalString UtilityCost_Qualify_Impl::thresholdValueOrVariableName() const
   return getString(OS_UtilityCost_QualifyFields::ThresholdValueorVariableName);
 }
 
-void UtilityCost_Qualify_Impl::setThresholdValueOrVariableName(const std::string& str)
+bool UtilityCost_Qualify_Impl::setThresholdValueOrVariableName(const std::string& str)
 {
-  setString(OS_UtilityCost_QualifyFields::ThresholdValueorVariableName,str);
+  return setString(OS_UtilityCost_QualifyFields::ThresholdValueorVariableName,str);;
 }
 
 OptionalString UtilityCost_Qualify_Impl::season() const
@@ -116,9 +116,9 @@ OptionalString UtilityCost_Qualify_Impl::season() const
   return getString(OS_UtilityCost_QualifyFields::Season);
 }
 
-void UtilityCost_Qualify_Impl::setSeason(const std::string& str)
+bool UtilityCost_Qualify_Impl::setSeason(const std::string& str)
 {
-  setString(OS_UtilityCost_QualifyFields::Season,str);
+  return setString(OS_UtilityCost_QualifyFields::Season,str);;
 }
 
 OptionalString UtilityCost_Qualify_Impl::thresholdTest() const
@@ -126,9 +126,9 @@ OptionalString UtilityCost_Qualify_Impl::thresholdTest() const
   return getString(OS_UtilityCost_QualifyFields::ThresholdTest);
 }
 
-void UtilityCost_Qualify_Impl::setThresholdTest(const std::string& str)
+bool UtilityCost_Qualify_Impl::setThresholdTest(const std::string& str)
 {
-  setString(OS_UtilityCost_QualifyFields::ThresholdTest,str);
+  return setString(OS_UtilityCost_QualifyFields::ThresholdTest,str);;
 }
 
 // return the parent object in the hierarchy
@@ -178,7 +178,7 @@ UtilityCost_Qualify::UtilityCost_Qualify(const Model& model)
 
 // constructor
 UtilityCost_Qualify::UtilityCost_Qualify(std::shared_ptr<detail::UtilityCost_Qualify_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 OptionalInt UtilityCost_Qualify::numberOfMonths() const
@@ -186,19 +186,9 @@ OptionalInt UtilityCost_Qualify::numberOfMonths() const
   return getImpl<detail::UtilityCost_Qualify_Impl>()->numberOfMonths();
 }
 
-void UtilityCost_Qualify::setNumberOfMonths(int num)
+bool UtilityCost_Qualify::setNumberOfMonths(int num)
 {
-  getImpl<detail::UtilityCost_Qualify_Impl>()->setNumberOfMonths(num);
-}
-
-OptionalString UtilityCost_Qualify::name() const
-{
-  return getImpl<detail::UtilityCost_Qualify_Impl>()->name();
-}
-
-void UtilityCost_Qualify::setName(const std::string& str)
-{
-  getImpl<detail::UtilityCost_Qualify_Impl>()->setName(str);
+  return getImpl<detail::UtilityCost_Qualify_Impl>()->setNumberOfMonths(num);
 }
 
 OptionalString UtilityCost_Qualify::tariffName() const
@@ -206,9 +196,9 @@ OptionalString UtilityCost_Qualify::tariffName() const
   return getImpl<detail::UtilityCost_Qualify_Impl>()->tariffName();
 }
 
-void UtilityCost_Qualify::setTariffName(const std::string& str)
+bool UtilityCost_Qualify::setTariffName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Qualify_Impl>()->setTariffName(str);
+  return getImpl<detail::UtilityCost_Qualify_Impl>()->setTariffName(str);
 }
 
 OptionalString UtilityCost_Qualify::variableName() const
@@ -216,9 +206,9 @@ OptionalString UtilityCost_Qualify::variableName() const
   return getImpl<detail::UtilityCost_Qualify_Impl>()->variableName();
 }
 
-void UtilityCost_Qualify::setVariableName(const std::string& str)
+bool UtilityCost_Qualify::setVariableName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Qualify_Impl>()->setVariableName(str);
+  return getImpl<detail::UtilityCost_Qualify_Impl>()->setVariableName(str);
 }
 
 OptionalString UtilityCost_Qualify::qualifyType() const
@@ -226,9 +216,9 @@ OptionalString UtilityCost_Qualify::qualifyType() const
   return getImpl<detail::UtilityCost_Qualify_Impl>()->qualifyType();
 }
 
-void UtilityCost_Qualify::setQualifyType(const std::string& str)
+bool UtilityCost_Qualify::setQualifyType(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Qualify_Impl>()->setQualifyType(str);
+  return getImpl<detail::UtilityCost_Qualify_Impl>()->setQualifyType(str);
 }
 
 OptionalString UtilityCost_Qualify::thresholdValueOrVariableName() const
@@ -236,9 +226,9 @@ OptionalString UtilityCost_Qualify::thresholdValueOrVariableName() const
   return getImpl<detail::UtilityCost_Qualify_Impl>()->thresholdValueOrVariableName();
 }
 
-void UtilityCost_Qualify::setThresholdValueOrVariableName(const std::string& str)
+bool UtilityCost_Qualify::setThresholdValueOrVariableName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Qualify_Impl>()->setThresholdValueOrVariableName(str);
+  return getImpl<detail::UtilityCost_Qualify_Impl>()->setThresholdValueOrVariableName(str);
 }
 
 OptionalString UtilityCost_Qualify::season() const
@@ -246,9 +236,9 @@ OptionalString UtilityCost_Qualify::season() const
   return getImpl<detail::UtilityCost_Qualify_Impl>()->season();
 }
 
-void UtilityCost_Qualify::setSeason(const std::string& str)
+bool UtilityCost_Qualify::setSeason(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Qualify_Impl>()->setSeason(str);
+  return getImpl<detail::UtilityCost_Qualify_Impl>()->setSeason(str);
 }
 
 OptionalString UtilityCost_Qualify::thresholdTest() const
@@ -256,9 +246,9 @@ OptionalString UtilityCost_Qualify::thresholdTest() const
   return getImpl<detail::UtilityCost_Qualify_Impl>()->thresholdTest();
 }
 
-void UtilityCost_Qualify::setThresholdTest(const std::string& str)
+bool UtilityCost_Qualify::setThresholdTest(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Qualify_Impl>()->setThresholdTest(str);
+  return getImpl<detail::UtilityCost_Qualify_Impl>()->setThresholdTest(str);
 }
 
 IddObjectType UtilityCost_Qualify::iddObjectType()

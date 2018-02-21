@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -113,7 +113,7 @@ namespace detail {
     return isEmpty(OS_ZoneAirMassFlowConservationFields::InfiltrationBalancingZones);
   }
 
-  void ZoneAirMassFlowConservation_Impl::setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance) {
+  bool ZoneAirMassFlowConservation_Impl::setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance) {
     bool result = false;
     if (adjustZoneMixingForZoneAirMassFlowBalance) {
       result = setString(OS_ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "Yes");
@@ -121,6 +121,7 @@ namespace detail {
       result = setString(OS_ZoneAirMassFlowConservationFields::AdjustZoneMixingForZoneAirMassFlowBalance, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void ZoneAirMassFlowConservation_Impl::resetAdjustZoneMixingForZoneAirMassFlowBalance() {
@@ -211,8 +212,8 @@ bool ZoneAirMassFlowConservation::isInfiltrationBalancingZonesDefaulted() const{
   return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->isInfiltrationBalancingZonesDefaulted();
 }
 
-void ZoneAirMassFlowConservation::setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance) {
-  getImpl<detail::ZoneAirMassFlowConservation_Impl>()->setAdjustZoneMixingForZoneAirMassFlowBalance(adjustZoneMixingForZoneAirMassFlowBalance);
+bool ZoneAirMassFlowConservation::setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance) {
+  return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->setAdjustZoneMixingForZoneAirMassFlowBalance(adjustZoneMixingForZoneAirMassFlowBalance);
 }
 
 void ZoneAirMassFlowConservation::resetAdjustZoneMixingForZoneAirMassFlowBalance() {
@@ -242,7 +243,7 @@ bool ZoneAirMassFlowConservation::setInfiltrationBalancingZones(const std::strin
   return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->setInfiltrationBalancingZones(infiltrationBalancingZones);
 }
 
-void ZoneAirMassFlowConservation::resetInfiltrationBalancingZones() 
+void ZoneAirMassFlowConservation::resetInfiltrationBalancingZones()
 {
   getImpl<detail::ZoneAirMassFlowConservation_Impl>()->resetInfiltrationBalancingZones();
 }
@@ -250,7 +251,7 @@ void ZoneAirMassFlowConservation::resetInfiltrationBalancingZones()
 
 /// @cond
 ZoneAirMassFlowConservation::ZoneAirMassFlowConservation(std::shared_ptr<detail::ZoneAirMassFlowConservation_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 ZoneAirMassFlowConservation::ZoneAirMassFlowConservation(Model& model)
   : ModelObject(ZoneAirMassFlowConservation::iddObjectType(),model)
@@ -260,4 +261,3 @@ ZoneAirMassFlowConservation::ZoneAirMassFlowConservation(Model& model)
 
 } // model
 } // openstudio
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -95,8 +95,68 @@ namespace detail{
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& CoilHeatingGas_Impl::outputVariableNames() const
   {
+    // TODO: static until return of ModelObject is changed
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Common variables
+      result.push_back("Heating Coil Air Heating Energy");
+      result.push_back("Heating Coil Air Heating Rate");
+
+      // This is the parasitic electric load associated with the coil operation, such as an inducer fan
+      result.push_back("Heating Coil Electric Energy");
+      result.push_back("Heating Coil Electric Power");
+
+      result.push_back("Heating Coil Runtime Fraction");
+
+      // As of E+ 8;6, this maps to Coil:Heating:Fuel
+      // Fuel type specific
+      // TODO: DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
+      // until then, make this include all possible outputVariableNames for class regardless of fuelType
+      // std::string fuelType = this->fuelType();
+      // => ["NaturalGas", "Propane", "PropaneGas", "Diesel", "Gasoline", "FuelOil#1", "FuelOil#2", "OtherFuel1", "OtherFuel2"]
+      //         result.push_back("Heating Coil <Fuel Type> Energy");
+      // if (fuelType == "NaturalGas") {
+        result.push_back("Heating Coil Gas Energy");
+        result.push_back("Heating Coil Gas Rate");
+        result.push_back("Heating Coil Ancillary Gas Energy");
+        result.push_back("Heating Coil Ancillary Gas Rate");
+      // } else if ( (fuelType == "PropaneGas") || (fuelType == "Propane") ) {
+        result.push_back("Heating Coil Propane Energy");
+        result.push_back("Heating Coil Propane Rate");
+        result.push_back("Heating Coil Ancillary Propane Energy");
+        result.push_back("Heating Coil Ancillary Propane Rate");
+      // } else if (fuelType == "FuelOil#1") {
+        result.push_back("Heating Coil FuelOil#1 Energy");
+        result.push_back("Heating Coil FuelOil#1 Rate");
+        result.push_back("Heating Coil Ancillary FuelOil#1 Energy");
+        result.push_back("Heating Coil Ancillary FuelOil#1 Rate");
+      // } else if (fuelType == "FuelOil#2") {
+        result.push_back("Heating Coil FuelOil#2 Energy");
+        result.push_back("Heating Coil FuelOil#2 Rate");
+        result.push_back("Heating Coil Ancillary FuelOil#2 Energy");
+        result.push_back("Heating Coil Ancillary FuelOil#2 Rate");
+      // } else if (fuelType == "Diesel") {
+        result.push_back("Heating Coil Diesel Energy");
+        result.push_back("Heating Coil Diesel Rate");
+        result.push_back("Heating Coil Ancillary Diesel Energy");
+        result.push_back("Heating Coil Ancillary Diesel Rate");
+      // } else if (fuelType == "Gasoline") {
+        result.push_back("Heating Coil Gasoline Energy");
+        result.push_back("Heating Coil Gasoline Rate");
+        result.push_back("Heating Coil Ancillary Gasoline Energy");
+        result.push_back("Heating Coil Ancillary Gasoline Rate");
+      // } else if (fuelType == "OtherFuel1") {
+        result.push_back("Heating Coil OtherFuel1 Energy");
+        result.push_back("Heating Coil OtherFuel1 Rate");
+        result.push_back("Heating Coil Ancillary OtherFuel1 Energy");
+        result.push_back("Heating Coil Ancillary OtherFuel1 Rate");
+      // } else if (fuelType == "OtherFuel2") {
+        result.push_back("Heating Coil OtherFuel2 Energy");
+        result.push_back("Heating Coil OtherFuel2 Rate");
+        result.push_back("Heating Coil Ancillary OtherFuel2 Energy");
+        result.push_back("Heating Coil Ancillary OtherFuel2 Rate");
+      // }
     }
     return result;
   }
@@ -168,9 +228,9 @@ namespace detail{
     return this->getDouble(OS_Coil_Heating_GasFields::GasBurnerEfficiency).get();
   }
 
-  void CoilHeatingGas_Impl::setGasBurnerEfficiency(double val)
+  bool CoilHeatingGas_Impl::setGasBurnerEfficiency(double val)
   {
-    this->setDouble(OS_Coil_Heating_GasFields::GasBurnerEfficiency,val);
+    return this->setDouble(OS_Coil_Heating_GasFields::GasBurnerEfficiency,val);
   }
 
   double CoilHeatingGas_Impl::parasiticElectricLoad() const
@@ -178,9 +238,9 @@ namespace detail{
     return this->getDouble(OS_Coil_Heating_GasFields::ParasiticElectricLoad).get();
   }
 
-  void CoilHeatingGas_Impl::setParasiticElectricLoad(double val)
+  bool CoilHeatingGas_Impl::setParasiticElectricLoad(double val)
   {
-    this->setDouble(OS_Coil_Heating_GasFields::ParasiticElectricLoad,val);
+    return this->setDouble(OS_Coil_Heating_GasFields::ParasiticElectricLoad,val);
   }
 
   double CoilHeatingGas_Impl::parasiticGasLoad() const
@@ -188,9 +248,9 @@ namespace detail{
     return this->getDouble(OS_Coil_Heating_GasFields::ParasiticGasLoad).get();
   }
 
-  void CoilHeatingGas_Impl::setParasiticGasLoad(double val)
+  bool CoilHeatingGas_Impl::setParasiticGasLoad(double val)
   {
-    this->setDouble(OS_Coil_Heating_GasFields::ParasiticGasLoad,val);
+    return this->setDouble(OS_Coil_Heating_GasFields::ParasiticGasLoad,val);
   }
 
   boost::optional<HVACComponent> CoilHeatingGas_Impl::containingHVACComponent() const
@@ -363,7 +423,7 @@ namespace detail{
     return result;
   }
 
-  void CoilHeatingGas_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
+  bool CoilHeatingGas_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
     bool result(false);
     if (nominalCapacity) {
       result = setDouble(OS_Coil_Heating_GasFields::NominalCapacity, nominalCapacity.get());
@@ -373,6 +433,7 @@ namespace detail{
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool CoilHeatingGas_Impl::setNominalCapacity(const OSOptionalQuantity& nominalCapacity) {
@@ -491,6 +552,23 @@ namespace detail{
     return boost::none;
   }
 
+  boost::optional<double> CoilHeatingGas_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  void CoilHeatingGas_Impl::autosize() {
+    autosizeNominalCapacity();
+  }
+
+  void CoilHeatingGas_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+  }
+
 }// detail
 
 // create a new CoilHeatingGas object in the model's workspace
@@ -526,7 +604,7 @@ CoilHeatingGas::CoilHeatingGas(const Model& model)
 }
 
 CoilHeatingGas::CoilHeatingGas(std::shared_ptr<detail::CoilHeatingGas_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 Schedule CoilHeatingGas::availabilitySchedule() const
@@ -571,9 +649,9 @@ double CoilHeatingGas::gasBurnerEfficiency() const
   return getImpl<detail::CoilHeatingGas_Impl>()->gasBurnerEfficiency();
 }
 
-void CoilHeatingGas::setGasBurnerEfficiency(double val)
+bool CoilHeatingGas::setGasBurnerEfficiency(double val)
 {
-  getImpl<detail::CoilHeatingGas_Impl>()->setGasBurnerEfficiency(val);
+  return getImpl<detail::CoilHeatingGas_Impl>()->setGasBurnerEfficiency(val);
 }
 
 double CoilHeatingGas::parasiticElectricLoad() const
@@ -581,9 +659,9 @@ double CoilHeatingGas::parasiticElectricLoad() const
   return getImpl<detail::CoilHeatingGas_Impl>()->parasiticElectricLoad();
 }
 
-void CoilHeatingGas::setParasiticElectricLoad(double val)
+bool CoilHeatingGas::setParasiticElectricLoad(double val)
 {
-  getImpl<detail::CoilHeatingGas_Impl>()->setParasiticElectricLoad(val);
+  return getImpl<detail::CoilHeatingGas_Impl>()->setParasiticElectricLoad(val);
 }
 
 double CoilHeatingGas::parasiticGasLoad() const
@@ -591,9 +669,9 @@ double CoilHeatingGas::parasiticGasLoad() const
   return getImpl<detail::CoilHeatingGas_Impl>()->parasiticGasLoad();
 }
 
-void CoilHeatingGas::setParasiticGasLoad(double val)
+bool CoilHeatingGas::setParasiticGasLoad(double val)
 {
-  getImpl<detail::CoilHeatingGas_Impl>()->setParasiticGasLoad(val);
+  return getImpl<detail::CoilHeatingGas_Impl>()->setParasiticGasLoad(val);
 }
 
 boost::optional<double> CoilHeatingGas::nominalCapacity() const {
@@ -608,8 +686,8 @@ bool CoilHeatingGas::isNominalCapacityAutosized() const {
   return getImpl<detail::CoilHeatingGas_Impl>()->isNominalCapacityAutosized();
 }
 
-void CoilHeatingGas::setNominalCapacity(double nominalCapacity) {
-  getImpl<detail::CoilHeatingGas_Impl>()->setNominalCapacity(nominalCapacity);
+bool CoilHeatingGas::setNominalCapacity(double nominalCapacity) {
+  return getImpl<detail::CoilHeatingGas_Impl>()->setNominalCapacity(nominalCapacity);
 }
 
 bool CoilHeatingGas::setNominalCapacity(const Quantity& nominalCapacity) {
@@ -653,6 +731,10 @@ boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas::optionalAirflowNet
 {
   return getImpl<detail::CoilHeatingGas_Impl>()->optionalAirflowNetworkEquivalentDuct();
 }
+
+  boost::optional<double> CoilHeatingGas::autosizedNominalCapacity() const {
+    return getImpl<detail::CoilHeatingGas_Impl>()->autosizedNominalCapacity();
+  }
 
 } // model
 } // openstudio

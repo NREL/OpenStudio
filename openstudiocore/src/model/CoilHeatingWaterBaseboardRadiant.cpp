@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -96,7 +96,7 @@ namespace detail {
   boost::optional<ZoneHVACComponent> CoilHeatingWaterBaseboardRadiant_Impl::containingZoneHVACComponent() const
   {
     // this coil can only be found in a ZoneHVACBaseboardRadiantConvectiveWater
-    // check all ZoneHVACBaseboardRadiantConvectiveWaters in the model, seeing if this coil 
+    // check all ZoneHVACBaseboardRadiantConvectiveWaters in the model, seeing if this coil
     // is inside of one of them.  Return the one it is inside of
 
     auto const zoneHVACBaseboardRadiantConvectiveWaters = this->model().getConcreteModelObjects<ZoneHVACBaseboardRadiantConvectiveWater>();
@@ -109,7 +109,7 @@ namespace detail {
       }
     }
 
-    // if the coil isn't inside any zonehvacbaseboards (which currently should never happen), return nothing  
+    // if the coil isn't inside any zonehvacbaseboards (which currently should never happen), return nothing
     return boost::none;
   }
 
@@ -224,12 +224,13 @@ namespace detail {
     return result;
   }
 
-  void CoilHeatingWaterBaseboardRadiant_Impl::setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate) {
+  bool CoilHeatingWaterBaseboardRadiant_Impl::setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate) {
     bool result(false);
     if (maximumWaterFlowRate) {
       result = setDouble(OS_Coil_Heating_Water_Baseboard_RadiantFields::MaximumWaterFlowRate, maximumWaterFlowRate.get());
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CoilHeatingWaterBaseboardRadiant_Impl::autosizeMaximumWaterFlowRate() {
@@ -240,6 +241,45 @@ namespace detail {
   bool CoilHeatingWaterBaseboardRadiant_Impl::setConvergenceTolerance(double convergenceTolerance) {
     bool result = setDouble(OS_Coil_Heating_Water_Baseboard_RadiantFields::ConvergenceTolerance, convergenceTolerance);
     return result;
+  }
+
+  boost::optional<double> CoilHeatingWaterBaseboardRadiant_Impl::autosizedHeatingDesignCapacity() const {
+    boost::optional < double > result;
+    // Get the containing ZoneHVAC equipment and get its autosized value
+    auto parentHVAC = containingZoneHVACComponent();
+    if (!parentHVAC) {
+      return result;
+    }
+    return parentHVAC->getAutosizedValue("Design Size Heating Design Capacity", "W");
+  }
+
+  boost::optional<double> CoilHeatingWaterBaseboardRadiant_Impl::autosizedMaximumWaterFlowRate() const {
+    boost::optional < double > result;
+    // Get the containing ZoneHVAC equipment and get its autosized value
+    auto parentHVAC = containingZoneHVACComponent();
+    if (!parentHVAC) {
+      return result;
+    }
+    return parentHVAC->getAutosizedValue("Design Size Maximum Water Flow Rate", "m3/s");
+  }
+
+  void CoilHeatingWaterBaseboardRadiant_Impl::autosize() {
+    autosizeHeatingDesignCapacity();
+    autosizeMaximumWaterFlowRate();
+  }
+
+  void CoilHeatingWaterBaseboardRadiant_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedHeatingDesignCapacity();
+    if (val) {
+      setHeatingDesignCapacity(val.get());
+    }
+
+    val = autosizedMaximumWaterFlowRate();
+    if (val) {
+      setMaximumWaterFlowRate(val.get());
+    }
+
   }
 
 } // detail
@@ -343,8 +383,8 @@ bool CoilHeatingWaterBaseboardRadiant::setFractionofAutosizedHeatingDesignCapaci
   return getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->setFractionofAutosizedHeatingDesignCapacity(fractionofAutosizedHeatingDesignCapacity);
 }
 
-void CoilHeatingWaterBaseboardRadiant::setMaximumWaterFlowRate(double maximumWaterFlowRate) {
-  getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->setMaximumWaterFlowRate(maximumWaterFlowRate);
+bool CoilHeatingWaterBaseboardRadiant::setMaximumWaterFlowRate(double maximumWaterFlowRate) {
+  return getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->setMaximumWaterFlowRate(maximumWaterFlowRate);
 }
 
 void CoilHeatingWaterBaseboardRadiant::autosizeMaximumWaterFlowRate() {
@@ -357,10 +397,17 @@ bool CoilHeatingWaterBaseboardRadiant::setConvergenceTolerance(double convergenc
 
 /// @cond
 CoilHeatingWaterBaseboardRadiant::CoilHeatingWaterBaseboardRadiant(std::shared_ptr<detail::CoilHeatingWaterBaseboardRadiant_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 
+  boost::optional<double> CoilHeatingWaterBaseboardRadiant::autosizedHeatingDesignCapacity() const {
+    return getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->autosizedHeatingDesignCapacity();
+  }
+
+  boost::optional<double> CoilHeatingWaterBaseboardRadiant::autosizedMaximumWaterFlowRate() const {
+    return getImpl<detail::CoilHeatingWaterBaseboardRadiant_Impl>()->autosizedMaximumWaterFlowRate();
+  }
+
 } // model
 } // openstudio
-

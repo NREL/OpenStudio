@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -153,7 +153,7 @@ void LuminaireDefinitionInspectorView::attach(openstudio::model::LuminaireDefini
   );
 
   // m_fractionRadiantEdit->bind(luminaireDefinition,"fractionRadiant",m_isIP);
-  m_lightingPowerEdit->bind(
+  m_fractionRadiantEdit->bind(
     m_isIP,
     *m_luminaireDefinition,
     DoubleGetter(std::bind(&model::LuminaireDefinition::fractionRadiant, m_luminaireDefinition.get_ptr())),
@@ -165,7 +165,7 @@ void LuminaireDefinitionInspectorView::attach(openstudio::model::LuminaireDefini
   );
 
   // m_fractionVisibleEdit->bind(luminaireDefinition,"fractionVisible",m_isIP);
-  m_lightingPowerEdit->bind(
+  m_fractionVisibleEdit->bind(
     m_isIP,
     *m_luminaireDefinition,
     DoubleGetter(std::bind(&model::LuminaireDefinition::fractionVisible, m_luminaireDefinition.get_ptr())),
@@ -177,7 +177,7 @@ void LuminaireDefinitionInspectorView::attach(openstudio::model::LuminaireDefini
   );
 
   // m_returnAirFractionEdit->bind(luminaireDefinition,"returnAirFraction",m_isIP);
-  m_lightingPowerEdit->bind(
+  m_returnAirFractionEdit->bind(
     m_isIP,
     *m_luminaireDefinition,
     DoubleGetter(std::bind(&model::LuminaireDefinition::returnAirFraction, m_luminaireDefinition.get_ptr())),

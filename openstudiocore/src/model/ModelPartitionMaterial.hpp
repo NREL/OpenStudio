@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,8 +42,8 @@ namespace detail{
 /** ModelPartitionMaterial is an abstract class derived from Material.
  *
  *  The ModelPartitionMaterial class is the base class for materials that should
- *  exist as the only layer in a Construction.  ModelPartitionMaterial objects 
- *  are typically used for the \link Construction Constructions\endlink of \link Surface Surfaces\endlink 
+ *  exist as the only layer in a Construction.  ModelPartitionMaterial objects
+ *  are typically used for the \link Construction Constructions\endlink of \link Surface Surfaces\endlink
  *  that are virtual boundaries between two \link Space Spaces\endlink. */
 class MODEL_API ModelPartitionMaterial : public Material {
  public:
@@ -54,7 +54,7 @@ class MODEL_API ModelPartitionMaterial : public Material {
 
   //@}
  protected:
-  /// @cond 
+  /// @cond
   typedef detail::ModelPartitionMaterial_Impl ImplType;
 
   friend class Model;
@@ -63,7 +63,7 @@ class MODEL_API ModelPartitionMaterial : public Material {
 
   ModelPartitionMaterial(IddObjectType type, const Model& model);
 
-  explicit ModelPartitionMaterial(std::shared_ptr<detail::ModelPartitionMaterial_Impl> impl);  
+  explicit ModelPartitionMaterial(std::shared_ptr<detail::ModelPartitionMaterial_Impl> impl);
 
   /// @endcond
  private:

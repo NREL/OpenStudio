@@ -42,11 +42,11 @@ Updating EnergyPlus
 If a new version of EnergyPlus is to be incorporated into OpenStudio
 - Upload the 3 versions (Windows 64, Ubuntu, and Linux) to S3's folder `openstudio-resources/dependencies`
 - In the ./openstudiocore folder, update `CMakeLists.txt` following
-	- ENERGYPLUS_VERSION_MAJOR
-	- ENERGYPLUS_VERSION_MINOR
-	- ENERGYPLUS_VERSION_PATCH
-	- ENERGYPLUS_BUILD_SHA
-	- ENERGYPLUS_EXPECTED_HASH (In 3 places: Win 32, Win 64, Darwin, and Linux)
+    - ENERGYPLUS_VERSION_MAJOR
+    - ENERGYPLUS_VERSION_MINOR
+    - ENERGYPLUS_VERSION_PATCH
+    - ENERGYPLUS_BUILD_SHA
+    - ENERGYPLUS_EXPECTED_HASH (In 3 places: Win 32, Win 64, Darwin, and Linux)
 
 Note: use HashTab, or similar, to determine the MD5 hash value for each file referenced above.
 
@@ -74,6 +74,91 @@ If this is a major release
 - With Git, merge `develop` into `master`.
 
 
+DView Builds
+======
+
+Ubuntu
+------
+With Git, pull `iteration` branch.
+
+Ensure the correct version of wxWidgets is installed (currently 3.1.0, us "apt-get install libwxgtk3.0-dev")
+
+In a command window:
+
+    cd openstudio/buildMeta
+    ccmake ../
+
+In CMake check the following:
+
+- BUILD\_DVIEW
+- CMAKE\_BUILD\_TYPE = Release
+
+In CMake type the following:
+
+    c
+    g
+
+In a command window:
+
+    make DView
+
+Compress folder DView-install with DView, and upload to S3 (tar -zcvf DView-osx.tar.gz DView-install).
+
+Windows 64-bit
+--------------
+With Git, pull `iteration` branch.
+
+Ensure the correct version of wxWidgets is installed (currently 3.1.0)
+
+In CMake, select current 64-bit compiler
+
+Point CMake to the top folder for source, and buildMeta folder for binaries
+
+In CMake check the following:
+
+- BUILD\_DVIEW
+
+Press `Configure` and `Generate` in CMake
+
+In Visual Studio:
+
+- Open OpenStudioMeta.sln
+- Select **Release** Solution Configuration
+
+Compress folder DView-install with DView, and upload to S3.
+
+Mac
+---
+With Git, pull `iteration` branch.
+
+Ensure the correct version of wxWidgets is installed (currently 3.1.0)
+
+In a command window:
+
+    cd openstudio/buildMeta
+    ccmake ../
+
+In CMake check the following:
+
+- BUILD\_DVIEW
+- CMAKE\_BUILD\_TYPE = Release
+
+In CMake type the following:
+
+    c
+    g
+
+In a command window:
+```bash
+make DView –j16
+# When done:
+⌘ + q (to quit a Mac app)
+```
+
+Locate the folder DView-install, right click and use Mac's compression algorithm. Upload to S3.
+
+Update all DView MD5 values in openstudiocore/cmakelists.txt and upload to OpenStusio's GitHub repository.
+
 OpenStudio 2 Builds
 ======
 
@@ -86,10 +171,11 @@ With Git, pull `iteration` branch.
 In a command window:
 
     cd openstudio/build
-	ccmake ../openstudiocore
+    ccmake ../openstudiocore
 
 In CMake check the following:
 
+- BUILD\_DVIEW
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - CMAKE\_BUILD\_TYPE = Release
@@ -105,13 +191,13 @@ In CMake **check** the following:
 
 In CMake type the following:
 
-	c
-	g
+    c
+    g
 
 In a command window:
 
-	make –j16 (16 indicates the number of cores used, the max number allowed by VMware 12)
-	make package
+    make –j16 (16 indicates the number of cores used, the max number allowed by VMware 12)
+    make package
 
 Copy .deb package from VM to Windows
 
@@ -127,6 +213,7 @@ In CMake check the following:
 
 - BUILD\_CSHARP\_BINDINGS
 - BUILD\_DOCUMENTATION
+- BUILD\_DVIEW
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - BUILD\_PAT
@@ -153,11 +240,12 @@ With Git, pull `iteration` branch.
 
 In a command window:
 
-	cd openstudio/build
-	ccmake ../openstudiocore
+    cd openstudio/build
+    ccmake ../openstudiocore
 
 In CMake check the following:
 
+- BUILD\_DVIEW
 - BUILD\_OS\_APP
 - BUILD\_PACKAGE
 - BUILD\_PAT
@@ -175,8 +263,8 @@ In CMake **check** the following:
 
 In CMake type the following:
 
-	c
-	g
+    c
+    g
 
 In a command window:
 
@@ -243,9 +331,9 @@ https://github.com/NREL/OpenStudio/releases
 - Select "Draft a new release"
 - Set tag version = vX.Y.Z
 - If this is a major release
-	- Set Target = `master`
+    - Set Target = `master`
 - Else If this is an iteration build
-	- Set Target = `iteration`
+    - Set Target = `iteration`
 - Set Release title = OpenStudio vX.Y.Z
 - Check "This is a pre-release" for an iteration build
 - Select "Save draft"
@@ -336,9 +424,9 @@ In folder `developer\ruby`
 ### Get the stats
 In folder `developer\ruby`, open Git Bash and type the following
 
-	gem install github_api
-	ruby GitHubIssueStats.rb
-	ruby GitHubIssueStats.rb > out.txt
+    gem install github_api
+    ruby GitHubIssueStats.rb
+    ruby GitHubIssueStats.rb > out.txt
 
 Open out.txt, and paste data into CHANGELOG.md
 
@@ -366,11 +454,11 @@ SketchUp Extension Signature
 =========
 Check if either file below has been updated:
 - `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.rb` (Note: not valid in OS2.x)
-- `openstudiocore/sketchup_plugin/plugin/OpenStudio/Startup.rb` 
+- `openstudiocore/sketchup_plugin/plugin/OpenStudio/Startup.rb`
 
 If either file was updated, the SketchUp Extension Signature must be updated in
 - `openstudiocore/sketchup_plugin/plugin/OpenStudio/OpenStudio.hash`
- 
+
 To do this: (Note: not valid in OS2.x)
 - Build an OpenStudio package
 - Zip the contents (OpenStudio.rb and OpenStudio folder) in `build\_CPack_Packages\win64\NSIS\OpenStudio-x.y.z.sha-Win64\Ruby\Plugins`
@@ -396,7 +484,7 @@ With Git, make feature branch of OpenStudio-server develop, and name it "OS.x.y.
 
 - In `server\lib\openstudio_server\version.rb`, update VERSION_EXT to `-OS.x.y.z.sha` (ex: `-OS.1.12.2.462ae9e746`).
 - In `CHANGELOG.md`, add new server and openstudio versions (ex: `Version 1.19.1-OS.1.12.2.462ae9e746`, `OpenStudio 1.12.2.462ae9e746`).
-- In `vagrant\chef\roles\openstudio.rb`, update version and version_revision (ex: `1.12.2`, `462ae9e746`) 
+- In `vagrant\chef\roles\openstudio.rb`, update version and version_revision (ex: `1.12.2`, `462ae9e746`)
 
 With Git, commit above files to new branch (Commit Message = `Bump OpenStudio version to OS.x.y.z.sha`)
 With Git, submit pull request
@@ -419,11 +507,9 @@ In the top level of your docker-openstudio folder, modify `Dockerfile`
 
 - Update OPENSTUDIO_VERSION with current version (X.Y.Z)
 - Update OPENSTUDIO_SHA with current SHA
-- (optional) test that the new Dockerfile works by running `docker build -t test-openstudio .` after starting the docker-machine to make sure that it completes successfully
 
-With Git, commit Dockerfile (Commit Message = Bump OpenStudio version to OS.x.y.z.sha)
- 
-Verify master branch built successfully at https://hub.docker.com/r/nrel/openstudio/builds/
+With Git, commit Dockerfile (Commit Message = Bump OpenStudio version to OS.x.y.z.sha), 
 
-In a command window:
-- In the top level of your docker-openstudio folder, run `git tag -a X.Y.Z` and annotate with 'X.Y.Z Release'
+Travis CI will build, test, and deploy the container. If there is an issue, the committer will receive an email with the error.
+
+There is no need to tag releases anymore.

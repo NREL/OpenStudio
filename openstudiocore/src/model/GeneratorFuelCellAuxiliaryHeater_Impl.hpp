@@ -64,9 +64,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -101,19 +101,19 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setExcessAirRatio(double excessAirRatio);
+    bool setExcessAirRatio(double excessAirRatio);
 
     void resetExcessAirRatio();
 
-    void setAncillaryPowerConstantTerm(double ancillaryPowerConstantTerm);
+    bool setAncillaryPowerConstantTerm(double ancillaryPowerConstantTerm);
 
     void resetAncillaryPowerConstantTerm();
 
-    void setAncillaryPowerLinearTerm(double ancillaryPowerLinearTerm);
+    bool setAncillaryPowerLinearTerm(double ancillaryPowerLinearTerm);
 
     void resetAncillaryPowerLinearTerm();
 
-    void setSkinLossUFactorTimesAreaValue(double skinLossUFactorTimesAreaValue);
+    bool setSkinLossUFactorTimesAreaValue(double skinLossUFactorTimesAreaValue);
 
     void resetSkinLossUFactorTimesAreaValue();
 
@@ -129,26 +129,26 @@ namespace detail {
 
     void resetHeatingCapacityUnits();
 
-    void setMaximumHeatingCapacityinWatts(double maximumHeatingCapacityinWatts);
+    bool setMaximumHeatingCapacityinWatts(double maximumHeatingCapacityinWatts);
 
     void resetMaximumHeatingCapacityinWatts();
 
-    void setMinimumHeatingCapacityinWatts(double minimumHeatingCapacityinWatts);
+    bool setMinimumHeatingCapacityinWatts(double minimumHeatingCapacityinWatts);
 
     void resetMinimumHeatingCapacityinWatts();
 
-    void setMaximumHeatingCapacityinKmolperSecond(double maximumHeatingCapacityinKmolperSecond);
+    bool setMaximumHeatingCapacityinKmolperSecond(double maximumHeatingCapacityinKmolperSecond);
 
     void resetMaximumHeatingCapacityinKmolperSecond();
 
-    void setMinimumHeatingCapacityinKmolperSecond(double minimumHeatingCapacityinKmolperSecond);
+    bool setMinimumHeatingCapacityinKmolperSecond(double minimumHeatingCapacityinKmolperSecond);
 
     void resetMinimumHeatingCapacityinKmolperSecond();
 
     //@}
     /** @name Other */
     //@{
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
     virtual std::vector<IddObjectType> allowableChildTypes() const;
 
@@ -165,4 +165,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_GENERATORFUELCELLAUXILIARYHEATER_IMPL_HPP
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -305,7 +305,7 @@ void ZoneCapacitanceMultiplierResearchSpecial::resetCarbonDioxideCapacityMultipl
 
 /// @cond
 ZoneCapacitanceMultiplierResearchSpecial::ZoneCapacitanceMultiplierResearchSpecial(std::shared_ptr<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 ZoneCapacitanceMultiplierResearchSpecial::ZoneCapacitanceMultiplierResearchSpecial(Model& model)
   : ModelObject(ZoneCapacitanceMultiplierResearchSpecial::iddObjectType(),model)

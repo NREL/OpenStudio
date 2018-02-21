@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -140,7 +140,7 @@ namespace detail {
 
   boost::optional<OutputVariable> EnergyManagementSystemSensor_Impl::optionalOutputVariable() const {
     //Note: Cant do /object-list implementation since Auto Naming of Objects causes issues.
-    //      Instead, doing an /alpha getString implementation 
+    //      Instead, doing an /alpha getString implementation
     //return getObject<ModelObject>().getModelObjectTarget<OutputVariable>(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
     boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
     const Model m = this->model();
@@ -158,7 +158,7 @@ namespace detail {
 
   boost::optional<OutputMeter> EnergyManagementSystemSensor_Impl::optionalOutputMeter() const {
     //Note: Cant do /object-list implementation since Auto Naming of Objects causes issues.
-    //      Instead, doing an /alpha getString implementation 
+    //      Instead, doing an /alpha getString implementation
     //return getObject<ModelObject>().getModelObjectTarget<OutputMeter>(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
     boost::optional<std::string> handle = getString(OS_EnergyManagementSystem_SensorFields::OutputVariableorOutputMeterName);
     const Model m = this->model();
@@ -184,6 +184,10 @@ EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model, c
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s OutputVariable to "
       << outvar.briefDescription() << ".");
+  }
+  if (!outvar.isKeyValueDefaulted()) {
+    std::string key = outvar.keyValue();
+    setKeyName(key);
   }
 }
 
@@ -254,7 +258,7 @@ bool EnergyManagementSystemSensor::setOutputVariableOrMeterName(const std::strin
 
 /// @cond
 EnergyManagementSystemSensor::EnergyManagementSystemSensor(std::shared_ptr<detail::EnergyManagementSystemSensor_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

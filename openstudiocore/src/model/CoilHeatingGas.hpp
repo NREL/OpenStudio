@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -108,19 +108,19 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
   double gasBurnerEfficiency() const;
 
   /** Sets the value of the GasBurnerEfficiency field. **/
-  void setGasBurnerEfficiency(double value);
+  bool setGasBurnerEfficiency(double value);
 
   /** Returns the value of the ParasiticElectricLoad field. **/
   double parasiticElectricLoad() const;
 
   /** Sets the value of the ParasiticElectricLoad field. **/
-  void setParasiticElectricLoad(double value);
+  bool setParasiticElectricLoad(double value);
 
   /** Returns the value of the ParasiticGasLoad field. **/
   double parasiticGasLoad() const;
 
   /** Sets the value of the ParasiticGasLoad field. **/
-  void setParasiticGasLoad(double value);
+  bool setParasiticGasLoad(double value);
 
   boost::optional<double> nominalCapacity() const;
 
@@ -128,7 +128,7 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
 
   bool isNominalCapacityAutosized() const;
 
-  void setNominalCapacity(double nominalCapacity);
+  bool setNominalCapacity(double nominalCapacity);
 
   bool setNominalCapacity(const Quantity& nominalCapacity);
 
@@ -148,6 +148,7 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
   /** Returns the attached equivalent duct object, if any. */
   boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
 
+  boost::optional<double> autosizedNominalCapacity() const ;
   //@}
  protected:
 
@@ -178,4 +179,3 @@ typedef std::vector<CoilHeatingGas> CoilHeatingGasVector;
 } // openstudio
 
 #endif // MODEL_COILHEATINGGAS_HPP
-

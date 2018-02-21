@@ -49,7 +49,7 @@ private:
     QList< Entry > d_entries;
 };
 
-void QwtLegendMap::insert( const QVariant &itemInfo, 
+void QwtLegendMap::insert( const QVariant &itemInfo,
     const QList<QWidget *> &widgets )
 {
     for ( int i = 0; i < d_entries.size(); i++ )
@@ -341,7 +341,7 @@ QwtLegendData::Mode QwtLegend::defaultItemMode() const
 }
 
 /*!
-  The contents widget is the only child of the viewport of 
+  The contents widget is the only child of the viewport of
   the internal QScrollArea and the parent widget of all legend items.
 
   \return Container widget of the legend items
@@ -370,7 +370,7 @@ QScrollBar *QwtLegend::verticalScrollBar() const
 }
 
 /*!
-  The contents widget is the only child of the viewport of 
+  The contents widget is the only child of the viewport of
   the internal QScrollArea and the parent widget of all legend items.
 
   \return Container widget of the legend items
@@ -387,7 +387,7 @@ const QWidget *QwtLegend::contentsWidget() const
   \param itemInfo Info for an item
   \param data List of legend entry attributes for the item
  */
-void QwtLegend::updateLegend( const QVariant &itemInfo, 
+void QwtLegend::updateLegend( const QVariant &itemInfo,
     const QList<QwtLegendData> &data )
 {
     QList<QWidget *> widgetList = legendWidgets( itemInfo );
@@ -440,7 +440,7 @@ void QwtLegend::updateLegend( const QVariant &itemInfo,
 
         updateTabOrder();
     }
-    
+
     for ( int i = 0; i < data.size(); i++ )
         updateWidget( widgetList[i], data[i] );
 }
@@ -452,7 +452,7 @@ void QwtLegend::updateLegend( const QVariant &itemInfo,
 
   \param data Attributes of the legend entry
   \return Widget representing data on the legend
-  
+
   \note updateWidget() will called soon after createWidget()
         with the same attributes.
  */
@@ -470,7 +470,7 @@ QWidget *QwtLegend::createWidget( const QwtLegendData &data ) const
 }
 
 /*!
-  \brief Update the widget 
+  \brief Update the widget
 
   \param widget Usually a QwtLegendLabel
   \param data Attributes to be displayed
@@ -540,7 +540,7 @@ int QwtLegend::heightForWidth( int width ) const
 
 
 /*!
-  Handle QEvent::ChildRemoved andQEvent::LayoutRequest events 
+  Handle QEvent::ChildRemoved andQEvent::LayoutRequest events
   for the contentsWidget().
 
   \param object Object to be filtered
@@ -556,7 +556,7 @@ bool QwtLegend::eventFilter( QObject *object, QEvent *event )
         {
             case QEvent::ChildRemoved:
             {
-                const QChildEvent *ce = 
+                const QChildEvent *ce =
                     static_cast<const QChildEvent *>(event);
                 if ( ce->child()->isWidgetType() )
                 {
@@ -584,7 +584,7 @@ bool QwtLegend::eventFilter( QObject *object, QEvent *event )
                      */
                     QApplication::postEvent( parentWidget(),
                         new QEvent( QEvent::LayoutRequest ) );
-                }                
+                }
                 break;
             }
             default:
@@ -644,11 +644,11 @@ void QwtLegend::itemChecked( bool on )
 
   \param painter Painter
   \param rect Bounding rectangle
-  \param fillBackground When true, fill rect with the widget background 
+  \param fillBackground When true, fill rect with the widget background
 
   \sa renderLegend() is used by QwtPlotRenderer - not by QwtLegend itself
 */
-void QwtLegend::renderLegend( QPainter *painter, 
+void QwtLegend::renderLegend( QPainter *painter,
     const QRectF &rect, bool fillBackground ) const
 {
     if ( d_data->itemMap.isEmpty() )
@@ -663,7 +663,7 @@ void QwtLegend::renderLegend( QPainter *painter,
         }
     }
 
-    const QwtDynGridLayout *legendLayout = 
+    const QwtDynGridLayout *legendLayout =
         qobject_cast<QwtDynGridLayout *>( contentsWidget()->layout() );
     if ( legendLayout == NULL )
         return;
@@ -671,7 +671,7 @@ void QwtLegend::renderLegend( QPainter *painter,
     int left, right, top, bottom;
     getContentsMargins( &left, &top, &right, &bottom );
 
-    QRect layoutRect; 
+    QRect layoutRect;
     layoutRect.setLeft( qCeil( rect.left() ) + left );
     layoutRect.setTop( qCeil( rect.top() ) + top );
     layoutRect.setRight( qFloor( rect.right() ) - right );
@@ -706,12 +706,12 @@ void QwtLegend::renderLegend( QPainter *painter,
   \param painter Painter
   \param widget Widget representing a legend entry
   \param rect Bounding rectangle
-  \param fillBackground When true, fill rect with the widget background 
+  \param fillBackground When true, fill rect with the widget background
 
   \note When widget is not derived from QwtLegendLabel renderItem
         does nothing beside the background
 */
-void QwtLegend::renderItem( QPainter *painter, 
+void QwtLegend::renderItem( QPainter *painter,
     const QWidget *widget, const QRectF &rect, bool fillBackground ) const
 {
     if ( fillBackground )
@@ -732,7 +732,7 @@ void QwtLegend::renderItem( QPainter *painter,
         const QSizeF sz = icon.defaultSize();
 
         const QRectF iconRect( rect.x() + label->margin(),
-            rect.center().y() - 0.5 * sz.height(), 
+            rect.center().y() - 0.5 * sz.height(),
             sz.width(), sz.height() );
 
         icon.render( painter, iconRect, Qt::KeepAspectRatio );
@@ -794,7 +794,7 @@ bool QwtLegend::isEmpty() const
 /*!
     Return the extent, that is needed for the scrollbars
 
-    \param orientation Orientation ( 
+    \param orientation Orientation (
     \return The width of the vertical scrollbar for Qt::Horizontal and v.v.
  */
 int QwtLegend::scrollExtent( Qt::Orientation orientation ) const

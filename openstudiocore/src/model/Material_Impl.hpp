@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,13 +44,13 @@ class StandardsInformationMaterial;
 namespace detail {
 
   class MODEL_API Material_Impl : public ResourceObject_Impl {
-    
 
-    
 
-    
-    
-    
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -59,10 +59,10 @@ namespace detail {
     // Construct completely new object.
     Material_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // Construct from existing workspace object (typically when Model is being constructed 
+    // Construct from existing workspace object (typically when Model is being constructed
     // from Workspace).
-    Material_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                  Model_Impl* model, 
+    Material_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                  Model_Impl* model,
                   bool keepHandle);
 
     // Clone copy constructor.
@@ -94,6 +94,21 @@ namespace detail {
 
     /** Set thickness to value (m). For some materials, false is always returned. */
     virtual bool setThickness(double value);
+
+    // if material property moisture penetration depth settings already exists, do nothing and return nil; creates the material property moisture penetration depth settings if it does not already exist and return it;
+    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor,
+                                                                                                                             double moistureEquationCoefficientA,
+                                                                                                                             double moistureEquationCoefficientB,
+                                                                                                                             double moistureEquationCoefficientC,
+                                                                                                                             double moistureEquationCoefficientD,
+                                                                                                                             double coatingLayerThickness,
+                                                                                                                             double coatingLayerWaterVaporDiffusionResistanceFactor);
+
+    // returns the material property moisture penetration depth settings if set
+    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
+
+    // resets the material property moisture penetration depth settings
+    void resetMaterialPropertyMoisturePenetrationDepthSettings();
 
     //@}
 

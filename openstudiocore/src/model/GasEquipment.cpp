@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,6 +40,8 @@
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "Model.hpp"
+
 
 #include <utilities/idd/OS_GasEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -74,7 +76,34 @@ namespace detail {
   const std::vector<std::string>& GasEquipment_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Gas Equipment Gas Rate");
+      result.push_back("Gas Equipment Gas Energy");
+      result.push_back("Gas Equipment Radiant Heating Energy");
+      result.push_back("Gas Equipment Convective Heating Energy");
+      result.push_back("Gas Equipment Latent Gain Energy");
+      result.push_back("Gas Equipment Lost Heat Energy");
+      result.push_back("Gas Equipment Total Heating Energy");
+      result.push_back("Gas Equipment Radiant Heating Rate");
+      result.push_back("Gas Equipment Convective Heating Rate");
+      result.push_back("Gas Equipment Latent Gain Rate");
+      result.push_back("Gas Equipment Lost Heat Rate");
+      result.push_back("Gas Equipment Total Heating Rate");
+
+      // Reported in ThermalZone
+      //result.push_back("Zone Gas Equipment Gas Rate");
+      //result.push_back("Zone Gas Equipment Gas Energy");
+      //result.push_back("Zone Gas Equipment Radiant Heating Energy");
+      //result.push_back("Zone Gas Equipment Radiant Heating Rate");
+      //result.push_back("Zone Gas Equipment Convective Heating Energy");
+      //result.push_back("Zone Gas Equipment Convective Heating Rate");
+      //result.push_back("Zone Gas Equipment Latent Gain Energy");
+      //result.push_back("Zone Gas Equipment Latent Gain Rate");
+      //result.push_back("Zone Gas Equipment Lost Heat Energy");
+      //result.push_back("Zone Gas Equipment Lost Heat Rate");
+      //result.push_back("Zone Gas Equipment Total Heating Energy");
+      //result.push_back("Zone Gas Equipment Total Heating Rate");
     }
     return result;
   }
@@ -175,9 +204,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GasEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool GasEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_GasEquipmentFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void GasEquipment_Impl::resetEndUseSubcategory() {
@@ -331,6 +361,16 @@ GasEquipment::GasEquipment(const GasEquipmentDefinition& gasEquipmentDefinition)
   : SpaceLoadInstance(GasEquipment::iddObjectType(),gasEquipmentDefinition)
 {
   OS_ASSERT(getImpl<detail::GasEquipment_Impl>());
+
+  /*
+   *Schedule sch = this->model().alwaysOnDiscreteSchedule();
+   *bool test = this->setSchedule(sch);
+   *OS_ASSERT(test);
+   *test = this->setMultiplier(1.0);
+   *OS_ASSERT(test);
+   */
+  bool test = this->setEndUseSubcategory("General");
+  OS_ASSERT(test);
 }
 
 IddObjectType GasEquipment::iddObjectType() {
@@ -354,8 +394,8 @@ void GasEquipment::resetMultiplier() {
   getImpl<detail::GasEquipment_Impl>()->resetMultiplier();
 }
 
-void GasEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::GasEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool GasEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::GasEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void GasEquipment::resetEndUseSubcategory() {
@@ -418,7 +458,7 @@ double GasEquipment::getPowerPerPerson(double floorArea, double numPeople) const
 
 /// @cond
 GasEquipment::GasEquipment(std::shared_ptr<detail::GasEquipment_Impl> impl)
-  : SpaceLoadInstance(impl)
+  : SpaceLoadInstance(std::move(impl))
 {}
 /// @endcond
 

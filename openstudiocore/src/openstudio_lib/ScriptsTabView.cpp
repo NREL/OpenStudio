@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -109,7 +109,7 @@ void ScriptsTabView::openUpdateMeasuresDlg()
   openstudio::OSAppBase * app = OSAppBase::instance();
 
   app->currentDocument()->disable();
- 
+
   WorkflowJSON workflow = app->currentDocument()->model().workflowJSON();
 
   m_syncMeasuresDialog = boost::shared_ptr<SyncMeasuresDialog>(new SyncMeasuresDialog(workflow,&(app->measureManager())));

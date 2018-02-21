@@ -100,7 +100,7 @@
 ! End SimMetaData
 ! Number of Zones: 130
 
-  Version,8.7;
+  Version,8.8;
 
   Timestep,6;
 
@@ -2066,7 +2066,7 @@
     Floor 1 Cafe Inlet Nodes,!- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Cafe Air Node,   !- Zone Air Node Name
-    Floor 1 Cafe Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Cafe Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Cafe Inlet Nodes,!- Name
@@ -2795,7 +2795,7 @@
     Floor 1 Clean Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Clean Air Node,  !- Zone Air Node Name
-    Floor 1 Clean Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Clean Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Clean Inlet Nodes,  !- Name
@@ -3241,7 +3241,7 @@
     Floor 1 Conference Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Conference Air Node,  !- Zone Air Node Name
-    Floor 1 Conference Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Conference Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Conference Inlet Nodes,  !- Name
@@ -3671,7 +3671,7 @@
     Floor 1 Dining Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Dining Air Node, !- Zone Air Node Name
-    Floor 1 Dining Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Dining Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Dining Inlet Nodes,  !- Name
@@ -4101,7 +4101,7 @@
     Floor 1 Elevator Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Elevator Air Node,  !- Zone Air Node Name
-    Floor 1 Elevator Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Elevator Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Elevator Inlet Nodes,  !- Name
@@ -4531,7 +4531,7 @@
     Floor 1 Exam Inlet Nodes,!- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Exam Air Node,   !- Zone Air Node Name
-    Floor 1 Exam Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Exam Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Exam Inlet Nodes,!- Name
@@ -4900,7 +4900,7 @@
     EquipmentLevel,          !- Design Level Calculation Method
     348963.0687,             !- Design Level {W}
     ,                        !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0.0000,                  !- Fraction Latent
     0.5000,                  !- Fraction Radiant
     0.0000,                  !- Fraction Lost
@@ -4973,7 +4973,7 @@
     Floor 1 Food Storage Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Food Storage Air Node,  !- Zone Air Node Name
-    Floor 1 Food Storage Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Food Storage Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Food Storage Inlet Nodes,  !- Name
@@ -5544,7 +5544,7 @@
     Floor 1 Gas Storage Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Floor 1 Gas Storage Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Gas Storage Air Node,  !- Zone Air Node Name
-    Floor 1 Gas Storage Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Gas Storage Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Gas Storage Inlet Nodes,  !- Name
@@ -5975,7 +5975,7 @@
     Floor 1 Imaging Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Imaging Air Node,!- Zone Air Node Name
-    Floor 1 Imaging Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Imaging Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Imaging Inlet Nodes,  !- Name
@@ -6344,7 +6344,7 @@
     EquipmentLevel,          !- Design Level Calculation Method
     348963.0687,             !- Design Level {W}
     ,                        !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0.0000,                  !- Fraction Latent
     0.5000,                  !- Fraction Radiant
     0.0000,                  !- Fraction Lost
@@ -6417,7 +6417,7 @@
     Floor 1 Kitchen Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Floor 1 Kitchen Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Kitchen Air Node,!- Zone Air Node Name
-    Floor 1 Kitchen Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Kitchen Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Kitchen Inlet Nodes,  !- Name
@@ -6878,7 +6878,7 @@
     Floor 1 Lab 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Lab 1 Air Node,  !- Zone Air Node Name
-    Floor 1 Lab 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Lab 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Lab 1 Inlet Nodes,  !- Name
@@ -7336,7 +7336,7 @@
     Floor 1 Lab 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Lab 2 Air Node,  !- Zone Air Node Name
-    Floor 1 Lab 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Lab 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Lab 2 Inlet Nodes,  !- Name
@@ -7722,7 +7722,7 @@
     EquipmentLevel,          !- Design Level Calculation Method
     22360.1861,              !- Design Level {W}
     ,                        !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0.0000,                  !- Fraction Latent
     0.5000,                  !- Fraction Radiant
     0.0000,                  !- Fraction Lost
@@ -7795,7 +7795,7 @@
     Floor 1 Laundry Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Floor 1 Laundry Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Laundry Air Node,!- Zone Air Node Name
-    Floor 1 Laundry Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Laundry Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Laundry Inlet Nodes,  !- Name
@@ -8275,7 +8275,7 @@
     Floor 1 Lobby Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Lobby Air Node,  !- Zone Air Node Name
-    Floor 1 Lobby Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Lobby Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Lobby Inlet Nodes,  !- Name
@@ -8660,7 +8660,7 @@
     Floor 1 Lounge Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Lounge Air Node, !- Zone Air Node Name
-    Floor 1 Lounge Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Lounge Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Lounge Inlet Nodes,  !- Name
@@ -9069,7 +9069,7 @@
     Floor 1 Mech 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Mech 1 Air Node, !- Zone Air Node Name
-    Floor 1 Mech 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Mech 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Mech 1 Inlet Nodes,  !- Name
@@ -9526,7 +9526,7 @@
     Floor 1 Mech 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Mech 2 Air Node, !- Zone Air Node Name
-    Floor 1 Mech 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Mech 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Mech 2 Inlet Nodes,  !- Name
@@ -9956,7 +9956,7 @@
     Floor 1 Office 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Office 1 Air Node,  !- Zone Air Node Name
-    Floor 1 Office 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Office 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Office 1 Inlet Nodes,  !- Name
@@ -10386,7 +10386,7 @@
     Floor 1 Office 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Office 2 Air Node,  !- Zone Air Node Name
-    Floor 1 Office 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Office 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Office 2 Inlet Nodes,  !- Name
@@ -10832,7 +10832,7 @@
     Floor 1 Office 3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Office 3 Air Node,  !- Zone Air Node Name
-    Floor 1 Office 3 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Office 3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Office 3 Inlet Nodes,  !- Name
@@ -11262,7 +11262,7 @@
     Floor 1 Office 3 Perimeter 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Office 3 Perimeter 1 Air Node,  !- Zone Air Node Name
-    Floor 1 Office 3 Perimeter 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Office 3 Perimeter 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Office 3 Perimeter 1 Inlet Nodes,  !- Name
@@ -11692,7 +11692,7 @@
     Floor 1 Office 3 Perimeter 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Office 3 Perimeter 2 Air Node,  !- Zone Air Node Name
-    Floor 1 Office 3 Perimeter 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Office 3 Perimeter 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Office 3 Perimeter 2 Inlet Nodes,  !- Name
@@ -12138,7 +12138,7 @@
     Floor 1 Office 3 Perimeter 3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Office 3 Perimeter 3 Air Node,  !- Zone Air Node Name
-    Floor 1 Office 3 Perimeter 3 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Office 3 Perimeter 3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Office 3 Perimeter 3 Inlet Nodes,  !- Name
@@ -12568,7 +12568,7 @@
     Floor 1 Patient Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Patient Air Node,!- Zone Air Node Name
-    Floor 1 Patient Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Patient Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Patient Inlet Nodes,  !- Name
@@ -12953,7 +12953,7 @@
     Floor 1 Pharmacy Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Pharmacy Air Node,  !- Zone Air Node Name
-    Floor 1 Pharmacy Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Pharmacy Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Pharmacy Inlet Nodes,  !- Name
@@ -13338,7 +13338,7 @@
     Floor 1 Physical Therapy Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Physical Therapy Air Node,  !- Zone Air Node Name
-    Floor 1 Physical Therapy Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Physical Therapy Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Physical Therapy Inlet Nodes,  !- Name
@@ -13747,7 +13747,7 @@
     Floor 1 Receiving Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Receiving Air Node,  !- Zone Air Node Name
-    Floor 1 Receiving Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Receiving Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Receiving Inlet Nodes,  !- Name
@@ -14177,7 +14177,7 @@
     Floor 1 Reception Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Reception Air Node,  !- Zone Air Node Name
-    Floor 1 Reception Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Reception Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Reception Inlet Nodes,  !- Name
@@ -14534,7 +14534,7 @@
     Floor 1 Soil Inlet Nodes,!- Zone Air Inlet Node or NodeList Name
     Floor 1 Soil Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Soil Air Node,   !- Zone Air Node Name
-    Floor 1 Soil Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Soil Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Soil Inlet Nodes,!- Name
@@ -14900,7 +14900,7 @@
     Floor 1 Storage Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Storage Air Node,!- Zone Air Node Name
-    Floor 1 Storage Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Storage Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Storage Inlet Nodes,  !- Name
@@ -15285,7 +15285,7 @@
     Floor 1 Waiting Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 1 Waiting Air Node,!- Zone Air Node Name
-    Floor 1 Waiting Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 1 Waiting Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 1 Waiting Inlet Nodes,  !- Name
@@ -15731,7 +15731,7 @@
     Floor 2 Chapel Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Chapel Air Node, !- Zone Air Node Name
-    Floor 2 Chapel Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Chapel Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Chapel Inlet Nodes,  !- Name
@@ -16116,7 +16116,7 @@
     Floor 2 Clean 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Clean 1 Air Node,!- Zone Air Node Name
-    Floor 2 Clean 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Clean 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Clean 1 Inlet Nodes,  !- Name
@@ -16501,7 +16501,7 @@
     Floor 2 Clean 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Clean 2 Air Node,!- Zone Air Node Name
-    Floor 2 Clean 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Clean 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Clean 2 Inlet Nodes,  !- Name
@@ -16910,7 +16910,7 @@
     Floor 2 Corridor Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Corridor Air Node,  !- Zone Air Node Name
-    Floor 2 Corridor Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Corridor Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Corridor Inlet Nodes,  !- Name
@@ -17340,7 +17340,7 @@
     Floor 2 Elevator Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Elevator Air Node,  !- Zone Air Node Name
-    Floor 2 Elevator Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Elevator Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Elevator Inlet Nodes,  !- Name
@@ -17786,7 +17786,7 @@
     Floor 2 Exam 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Exam 1 Air Node, !- Zone Air Node Name
-    Floor 2 Exam 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Exam 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Exam 1 Inlet Nodes,  !- Name
@@ -18171,7 +18171,7 @@
     Floor 2 Exam 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Exam 2 Air Node, !- Zone Air Node Name
-    Floor 2 Exam 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Exam 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Exam 2 Inlet Nodes,  !- Name
@@ -18556,7 +18556,7 @@
     Floor 2 Exam 3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Exam 3 Air Node, !- Zone Air Node Name
-    Floor 2 Exam 3 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Exam 3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Exam 3 Inlet Nodes,  !- Name
@@ -18957,7 +18957,7 @@
     Floor 2 Exam 4 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Exam 4 Air Node, !- Zone Air Node Name
-    Floor 2 Exam 4 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Exam 4 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Exam 4 Inlet Nodes,  !- Name
@@ -19387,7 +19387,7 @@
     Floor 2 Gift Shop Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Gift Shop Air Node,  !- Zone Air Node Name
-    Floor 2 Gift Shop Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Gift Shop Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Gift Shop Inlet Nodes,  !- Name
@@ -19800,7 +19800,7 @@
     Floor 2 Imaging 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Imaging 1 Air Node,  !- Zone Air Node Name
-    Floor 2 Imaging 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Imaging 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Imaging 1 Inlet Nodes,  !- Name
@@ -20274,7 +20274,7 @@
     Floor 2 Imaging 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Imaging 2 Air Node,  !- Zone Air Node Name
-    Floor 2 Imaging 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Imaging 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Imaging 2 Inlet Nodes,  !- Name
@@ -20748,7 +20748,7 @@
     Floor 2 Imaging 3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Imaging 3 Air Node,  !- Zone Air Node Name
-    Floor 2 Imaging 3 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Imaging 3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Imaging 3 Inlet Nodes,  !- Name
@@ -21167,7 +21167,7 @@
     Floor 2 Lab 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Lab 1 Air Node,  !- Zone Air Node Name
-    Floor 2 Lab 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Lab 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Lab 1 Inlet Nodes,  !- Name
@@ -21596,7 +21596,7 @@
     Floor 2 Lab 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Lab 2 Air Node,  !- Zone Air Node Name
-    Floor 2 Lab 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Lab 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Lab 2 Inlet Nodes,  !- Name
@@ -21981,7 +21981,7 @@
     Floor 2 Lockers Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Floor 2 Lockers Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Lockers Air Node,!- Zone Air Node Name
-    Floor 2 Lockers Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Lockers Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Lockers Inlet Nodes,  !- Name
@@ -22384,7 +22384,7 @@
     Floor 2 Lounge 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Lounge 1 Air Node,  !- Zone Air Node Name
-    Floor 2 Lounge 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Lounge 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Lounge 1 Inlet Nodes,  !- Name
@@ -22830,7 +22830,7 @@
     Floor 2 Lounge 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Lounge 2 Air Node,  !- Zone Air Node Name
-    Floor 2 Lounge 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Lounge 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Lounge 2 Inlet Nodes,  !- Name
@@ -23243,7 +23243,7 @@
     Floor 2 Nurse Station 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Nurse Station 1 Air Node,  !- Zone Air Node Name
-    Floor 2 Nurse Station 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Nurse Station 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Nurse Station 1 Inlet Nodes,  !- Name
@@ -23717,7 +23717,7 @@
     Floor 2 Nurse Station 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Nurse Station 2 Air Node,  !- Zone Air Node Name
-    Floor 2 Nurse Station 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Nurse Station 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Nurse Station 2 Inlet Nodes,  !- Name
@@ -24102,7 +24102,7 @@
     Floor 2 Office 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Office 1 Air Node,  !- Zone Air Node Name
-    Floor 2 Office 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Office 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Office 1 Inlet Nodes,  !- Name
@@ -24532,7 +24532,7 @@
     Floor 2 Office 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Office 2 Air Node,  !- Zone Air Node Name
-    Floor 2 Office 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Office 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Office 2 Inlet Nodes,  !- Name
@@ -24917,7 +24917,7 @@
     Floor 2 Office 3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Office 3 Air Node,  !- Zone Air Node Name
-    Floor 2 Office 3 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Office 3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Office 3 Inlet Nodes,  !- Name
@@ -25363,7 +25363,7 @@
     Floor 2 Office 4 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Office 4 Air Node,  !- Zone Air Node Name
-    Floor 2 Office 4 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Office 4 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Office 4 Inlet Nodes,  !- Name
@@ -25891,7 +25891,7 @@
     Floor 2 Operating Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Operating Air Node,  !- Zone Air Node Name
-    Floor 2 Operating Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Operating Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Operating Inlet Nodes,  !- Name
@@ -26365,7 +26365,7 @@
     Floor 2 PACU Inlet Nodes,!- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 PACU Air Node,   !- Zone Air Node Name
-    Floor 2 PACU Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 PACU Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 PACU Inlet Nodes,!- Name
@@ -26795,7 +26795,7 @@
     Floor 2 Patient 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Patient 1 Air Node,  !- Zone Air Node Name
-    Floor 2 Patient 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Patient 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Patient 1 Inlet Nodes,  !- Name
@@ -27180,7 +27180,7 @@
     Floor 2 Patient 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Patient 2 Air Node,  !- Zone Air Node Name
-    Floor 2 Patient 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Patient 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Patient 2 Inlet Nodes,  !- Name
@@ -27593,7 +27593,7 @@
     Floor 2 Procedure 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Procedure 1 Air Node,  !- Zone Air Node Name
-    Floor 2 Procedure 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Procedure 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Procedure 1 Inlet Nodes,  !- Name
@@ -28006,7 +28006,7 @@
     Floor 2 Procedure 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Procedure 2 Air Node,  !- Zone Air Node Name
-    Floor 2 Procedure 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Procedure 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Procedure 2 Inlet Nodes,  !- Name
@@ -28436,7 +28436,7 @@
     Floor 2 Reception Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Reception Air Node,  !- Zone Air Node Name
-    Floor 2 Reception Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Reception Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Reception Inlet Nodes,  !- Name
@@ -28866,7 +28866,7 @@
     Floor 2 Restroom 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Floor 2 Restroom 1 Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Restroom 1 Air Node,  !- Zone Air Node Name
-    Floor 2 Restroom 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Restroom 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Restroom 1 Inlet Nodes,  !- Name
@@ -29314,7 +29314,7 @@
     Floor 2 Restroom 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Floor 2 Restroom 2 Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Restroom 2 Air Node,  !- Zone Air Node Name
-    Floor 2 Restroom 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Restroom 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Restroom 2 Inlet Nodes,  !- Name
@@ -29689,7 +29689,7 @@
     Floor 2 Soil 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Floor 2 Soil 1 Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Soil 1 Air Node, !- Zone Air Node Name
-    Floor 2 Soil 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Soil 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Soil 1 Inlet Nodes,  !- Name
@@ -30064,7 +30064,7 @@
     Floor 2 Soil 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Floor 2 Soil 2 Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Soil 2 Air Node, !- Zone Air Node Name
-    Floor 2 Soil 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Soil 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Soil 2 Inlet Nodes,  !- Name
@@ -30414,7 +30414,7 @@
     EquipmentLevel,          !- Design Level Calculation Method
     9520.3319,               !- Design Level {W}
     ,                        !- Power per Zone Floor Area {W/m2}
-    ,                        !- Power per Person {W/Person}
+    ,                        !- Power per Person {W/person}
     0.0000,                  !- Fraction Latent
     0.5000,                  !- Fraction Radiant
     0.0000,                  !- Fraction Lost
@@ -30487,7 +30487,7 @@
     Floor 2 Sterilizing Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Floor 2 Sterilizing Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Sterilizing Air Node,  !- Zone Air Node Name
-    Floor 2 Sterilizing Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Sterilizing Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Sterilizing Inlet Nodes,  !- Name
@@ -30853,7 +30853,7 @@
     Floor 2 Storage 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Storage 1 Air Node,  !- Zone Air Node Name
-    Floor 2 Storage 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Storage 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Storage 1 Inlet Nodes,  !- Name
@@ -31201,7 +31201,7 @@
     Floor 2 Storage 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Storage 2 Air Node,  !- Zone Air Node Name
-    Floor 2 Storage 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Storage 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Storage 2 Inlet Nodes,  !- Name
@@ -31614,7 +31614,7 @@
     Floor 2 Trauma Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Trauma Air Node, !- Zone Air Node Name
-    Floor 2 Trauma Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Trauma Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Trauma Inlet Nodes,  !- Name
@@ -32050,7 +32050,7 @@
     Floor 2 Triage Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Floor 2 Triage Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Triage Air Node, !- Zone Air Node Name
-    Floor 2 Triage Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Triage Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Triage Inlet Nodes,  !- Name
@@ -32514,7 +32514,7 @@
     Floor 2 Waiting Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 2 Waiting Air Node,!- Zone Air Node Name
-    Floor 2 Waiting Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 2 Waiting Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 2 Waiting Inlet Nodes,  !- Name
@@ -32899,7 +32899,7 @@
     Floor 3 Clean Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Clean Air Node,  !- Zone Air Node Name
-    Floor 3 Clean Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Clean Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Clean Inlet Nodes,  !- Name
@@ -33361,7 +33361,7 @@
     Floor 3 Elevator Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Elevator Air Node,  !- Zone Air Node Name
-    Floor 3 Elevator Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Elevator Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Elevator Inlet Nodes,  !- Name
@@ -33746,7 +33746,7 @@
     Floor 3 Exam Inlet Nodes,!- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Exam Air Node,   !- Zone Air Node Name
-    Floor 3 Exam Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Exam Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Exam Inlet Nodes,!- Name
@@ -34226,7 +34226,7 @@
     Floor 3 ICU Inlet Nodes, !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 ICU Air Node,    !- Zone Air Node Name
-    Floor 3 ICU Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 ICU Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 ICU Inlet Nodes, !- Name
@@ -34684,7 +34684,7 @@
     Floor 3 Nurse Station 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Nurse Station 1 Air Node,  !- Zone Air Node Name
-    Floor 3 Nurse Station 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Nurse Station 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Nurse Station 1 Inlet Nodes,  !- Name
@@ -35158,7 +35158,7 @@
     Floor 3 Nurse Station 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Nurse Station 2 Air Node,  !- Zone Air Node Name
-    Floor 3 Nurse Station 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Nurse Station 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Nurse Station 2 Inlet Nodes,  !- Name
@@ -35588,7 +35588,7 @@
     Floor 3 Nursery Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Nursery Air Node,!- Zone Air Node Name
-    Floor 3 Nursery Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Nursery Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Nursery Inlet Nodes,  !- Name
@@ -36018,7 +36018,7 @@
     Floor 3 Office Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Office Air Node, !- Zone Air Node Name
-    Floor 3 Office Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Office Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Office Inlet Nodes,  !- Name
@@ -36476,7 +36476,7 @@
     Floor 3 Operating Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Operating Air Node,  !- Zone Air Node Name
-    Floor 3 Operating Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Operating Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Operating Inlet Nodes,  !- Name
@@ -36922,7 +36922,7 @@
     Floor 3 Patient 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Patient 1 Air Node,  !- Zone Air Node Name
-    Floor 3 Patient 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Patient 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Patient 1 Inlet Nodes,  !- Name
@@ -37368,7 +37368,7 @@
     Floor 3 Patient 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Patient 2 Air Node,  !- Zone Air Node Name
-    Floor 3 Patient 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Patient 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Patient 2 Inlet Nodes,  !- Name
@@ -37830,7 +37830,7 @@
     Floor 3 Patient 3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Patient 3 Air Node,  !- Zone Air Node Name
-    Floor 3 Patient 3 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Patient 3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Patient 3 Inlet Nodes,  !- Name
@@ -38276,7 +38276,7 @@
     Floor 3 Patient 4 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Patient 4 Air Node,  !- Zone Air Node Name
-    Floor 3 Patient 4 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Patient 4 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Patient 4 Inlet Nodes,  !- Name
@@ -38685,7 +38685,7 @@
     Floor 3 Patient Corridor 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Patient Corridor 1 Air Node,  !- Zone Air Node Name
-    Floor 3 Patient Corridor 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Patient Corridor 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Patient Corridor 1 Inlet Nodes,  !- Name
@@ -39094,7 +39094,7 @@
     Floor 3 Patient Corridor 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Patient Corridor 2 Air Node,  !- Zone Air Node Name
-    Floor 3 Patient Corridor 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Patient Corridor 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Patient Corridor 2 Inlet Nodes,  !- Name
@@ -39552,7 +39552,7 @@
     Floor 3 Procedure Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Procedure Air Node,  !- Zone Air Node Name
-    Floor 3 Procedure Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Procedure Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Procedure Inlet Nodes,  !- Name
@@ -39909,7 +39909,7 @@
     Floor 3 Soil Inlet Nodes,!- Zone Air Inlet Node or NodeList Name
     Floor 3 Soil Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Soil Air Node,   !- Zone Air Node Name
-    Floor 3 Soil Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Soil Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Soil Inlet Nodes,!- Name
@@ -40320,7 +40320,7 @@
     Floor 3 Supply Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Supply Air Node, !- Zone Air Node Name
-    Floor 3 Supply Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Supply Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Supply Inlet Nodes,  !- Name
@@ -40756,7 +40756,7 @@
     Floor 3 Triage Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Floor 3 Triage Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Triage Air Node, !- Zone Air Node Name
-    Floor 3 Triage Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Triage Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Triage Inlet Nodes,  !- Name
@@ -41204,7 +41204,7 @@
     Floor 3 Waiting Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 3 Waiting Air Node,!- Zone Air Node Name
-    Floor 3 Waiting Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 3 Waiting Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 3 Waiting Inlet Nodes,  !- Name
@@ -41589,7 +41589,7 @@
     Floor 4-6 Clean Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 4-6 Clean Air Node,!- Zone Air Node Name
-    Floor 4-6 Clean Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 4-6 Clean Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 4-6 Clean Inlet Nodes,  !- Name
@@ -42051,7 +42051,7 @@
     Floor 4-6 Elevator Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 4-6 Elevator Air Node,  !- Zone Air Node Name
-    Floor 4-6 Elevator Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 4-6 Elevator Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 4-6 Elevator Inlet Nodes,  !- Name
@@ -42509,7 +42509,7 @@
     Floor 4-6 Nurse Station Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 4-6 Nurse Station Air Node,  !- Zone Air Node Name
-    Floor 4-6 Nurse Station Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 4-6 Nurse Station Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 4-6 Nurse Station Inlet Nodes,  !- Name
@@ -42939,7 +42939,7 @@
     Floor 4-6 Office Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 4-6 Office Air Node,  !- Zone Air Node Name
-    Floor 4-6 Office Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 4-6 Office Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 4-6 Office Inlet Nodes,  !- Name
@@ -43385,7 +43385,7 @@
     Floor 4-6 Patient 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 4-6 Patient 1 Air Node,  !- Zone Air Node Name
-    Floor 4-6 Patient 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 4-6 Patient 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 4-6 Patient 1 Inlet Nodes,  !- Name
@@ -43831,7 +43831,7 @@
     Floor 4-6 Patient 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 4-6 Patient 2 Air Node,  !- Zone Air Node Name
-    Floor 4-6 Patient 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 4-6 Patient 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 4-6 Patient 2 Inlet Nodes,  !- Name
@@ -44277,7 +44277,7 @@
     Floor 4-6 Patient 3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 4-6 Patient 3 Air Node,  !- Zone Air Node Name
-    Floor 4-6 Patient 3 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 4-6 Patient 3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 4-6 Patient 3 Inlet Nodes,  !- Name
@@ -44723,7 +44723,7 @@
     Floor 4-6 Patient 4 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 4-6 Patient 4 Air Node,  !- Zone Air Node Name
-    Floor 4-6 Patient 4 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 4-6 Patient 4 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 4-6 Patient 4 Inlet Nodes,  !- Name
@@ -45132,7 +45132,7 @@
     Floor 4-6 Patient Corridor 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 4-6 Patient Corridor 1 Air Node,  !- Zone Air Node Name
-    Floor 4-6 Patient Corridor 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 4-6 Patient Corridor 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 4-6 Patient Corridor 1 Inlet Nodes,  !- Name
@@ -45541,7 +45541,7 @@
     Floor 4-6 Patient Corridor 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 4-6 Patient Corridor 2 Air Node,  !- Zone Air Node Name
-    Floor 4-6 Patient Corridor 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 4-6 Patient Corridor 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 4-6 Patient Corridor 2 Inlet Nodes,  !- Name
@@ -45898,7 +45898,7 @@
     Floor 4-6 Soil Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     Floor 4-6 Soil Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 4-6 Soil Air Node, !- Zone Air Node Name
-    Floor 4-6 Soil Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 4-6 Soil Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 4-6 Soil Inlet Nodes,  !- Name
@@ -46309,7 +46309,7 @@
     Floor 4-6 Supply Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 4-6 Supply Air Node,  !- Zone Air Node Name
-    Floor 4-6 Supply Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 4-6 Supply Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 4-6 Supply Inlet Nodes,  !- Name
@@ -46694,7 +46694,7 @@
     Floor 7 Clean Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 7 Clean Air Node,  !- Zone Air Node Name
-    Floor 7 Clean Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 7 Clean Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 7 Clean Inlet Nodes,  !- Name
@@ -47156,7 +47156,7 @@
     Floor 7 Elevator Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 7 Elevator Air Node,  !- Zone Air Node Name
-    Floor 7 Elevator Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 7 Elevator Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 7 Elevator Inlet Nodes,  !- Name
@@ -47614,7 +47614,7 @@
     Floor 7 Nurse Station Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 7 Nurse Station Air Node,  !- Zone Air Node Name
-    Floor 7 Nurse Station Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 7 Nurse Station Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 7 Nurse Station Inlet Nodes,  !- Name
@@ -48044,7 +48044,7 @@
     Floor 7 Office Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 7 Office Air Node, !- Zone Air Node Name
-    Floor 7 Office Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 7 Office Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 7 Office Inlet Nodes,  !- Name
@@ -48490,7 +48490,7 @@
     Floor 7 Patient 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 7 Patient 1 Air Node,  !- Zone Air Node Name
-    Floor 7 Patient 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 7 Patient 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 7 Patient 1 Inlet Nodes,  !- Name
@@ -48936,7 +48936,7 @@
     Floor 7 Patient 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 7 Patient 2 Air Node,  !- Zone Air Node Name
-    Floor 7 Patient 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 7 Patient 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 7 Patient 2 Inlet Nodes,  !- Name
@@ -49382,7 +49382,7 @@
     Floor 7 Patient 3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 7 Patient 3 Air Node,  !- Zone Air Node Name
-    Floor 7 Patient 3 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 7 Patient 3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 7 Patient 3 Inlet Nodes,  !- Name
@@ -49828,7 +49828,7 @@
     Floor 7 Patient 4 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 7 Patient 4 Air Node,  !- Zone Air Node Name
-    Floor 7 Patient 4 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 7 Patient 4 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 7 Patient 4 Inlet Nodes,  !- Name
@@ -50237,7 +50237,7 @@
     Floor 7 Patient Corridor 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 7 Patient Corridor 1 Air Node,  !- Zone Air Node Name
-    Floor 7 Patient Corridor 1 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 7 Patient Corridor 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 7 Patient Corridor 1 Inlet Nodes,  !- Name
@@ -50646,7 +50646,7 @@
     Floor 7 Patient Corridor 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 7 Patient Corridor 2 Air Node,  !- Zone Air Node Name
-    Floor 7 Patient Corridor 2 Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 7 Patient Corridor 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 7 Patient Corridor 2 Inlet Nodes,  !- Name
@@ -51003,7 +51003,7 @@
     Floor 7 Soil Inlet Nodes,!- Zone Air Inlet Node or NodeList Name
     Floor 7 Soil Exhaust Nodes,  !- Zone Air Exhaust Node or NodeList Name
     Floor 7 Soil Air Node,   !- Zone Air Node Name
-    Floor 7 Soil Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 7 Soil Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 7 Soil Inlet Nodes,!- Name
@@ -51414,7 +51414,7 @@
     Floor 7 Supply Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     Floor 7 Supply Air Node, !- Zone Air Node Name
-    Floor 7 Supply Return Air Node Name;  !- Zone Return Air Node Name
+    Floor 7 Supply Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     Floor 7 Supply Inlet Nodes,  !- Name
@@ -51799,7 +51799,7 @@
     MOB Floor 1 Core Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 1 Core Air Node,  !- Zone Air Node Name
-    MOB Floor 1 Core Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 1 Core Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 1 Core Inlet Nodes,  !- Name
@@ -52229,7 +52229,7 @@
     MOB Floor 1 Perimeter 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 1 Perimeter 1 Air Node,  !- Zone Air Node Name
-    MOB Floor 1 Perimeter 1 Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 1 Perimeter 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 1 Perimeter 1 Inlet Nodes,  !- Name
@@ -52659,7 +52659,7 @@
     MOB Floor 1 Perimeter 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 1 Perimeter 2 Air Node,  !- Zone Air Node Name
-    MOB Floor 1 Perimeter 2 Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 1 Perimeter 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 1 Perimeter 2 Inlet Nodes,  !- Name
@@ -53089,7 +53089,7 @@
     MOB Floor 1 Perimeter 3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 1 Perimeter 3 Air Node,  !- Zone Air Node Name
-    MOB Floor 1 Perimeter 3 Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 1 Perimeter 3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 1 Perimeter 3 Inlet Nodes,  !- Name
@@ -53474,7 +53474,7 @@
     MOB Floor 2-4 Core Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 2-4 Core Air Node,  !- Zone Air Node Name
-    MOB Floor 2-4 Core Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 2-4 Core Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 2-4 Core Inlet Nodes,  !- Name
@@ -53904,7 +53904,7 @@
     MOB Floor 2-4 Perimeter 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 2-4 Perimeter 1 Air Node,  !- Zone Air Node Name
-    MOB Floor 2-4 Perimeter 1 Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 2-4 Perimeter 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 2-4 Perimeter 1 Inlet Nodes,  !- Name
@@ -54334,7 +54334,7 @@
     MOB Floor 2-4 Perimeter 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 2-4 Perimeter 2 Air Node,  !- Zone Air Node Name
-    MOB Floor 2-4 Perimeter 2 Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 2-4 Perimeter 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 2-4 Perimeter 2 Inlet Nodes,  !- Name
@@ -54764,7 +54764,7 @@
     MOB Floor 2-4 Perimeter 3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 2-4 Perimeter 3 Air Node,  !- Zone Air Node Name
-    MOB Floor 2-4 Perimeter 3 Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 2-4 Perimeter 3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 2-4 Perimeter 3 Inlet Nodes,  !- Name
@@ -55194,7 +55194,7 @@
     MOB Floor 2-4 Perimeter 4 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 2-4 Perimeter 4 Air Node,  !- Zone Air Node Name
-    MOB Floor 2-4 Perimeter 4 Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 2-4 Perimeter 4 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 2-4 Perimeter 4 Inlet Nodes,  !- Name
@@ -55579,7 +55579,7 @@
     MOB Floor 5 Core Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 5 Core Air Node,  !- Zone Air Node Name
-    MOB Floor 5 Core Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 5 Core Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 5 Core Inlet Nodes,  !- Name
@@ -56009,7 +56009,7 @@
     MOB Floor 5 Perimeter 1 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 5 Perimeter 1 Air Node,  !- Zone Air Node Name
-    MOB Floor 5 Perimeter 1 Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 5 Perimeter 1 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 5 Perimeter 1 Inlet Nodes,  !- Name
@@ -56439,7 +56439,7 @@
     MOB Floor 5 Perimeter 2 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 5 Perimeter 2 Air Node,  !- Zone Air Node Name
-    MOB Floor 5 Perimeter 2 Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 5 Perimeter 2 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 5 Perimeter 2 Inlet Nodes,  !- Name
@@ -56869,7 +56869,7 @@
     MOB Floor 5 Perimeter 3 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 5 Perimeter 3 Air Node,  !- Zone Air Node Name
-    MOB Floor 5 Perimeter 3 Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 5 Perimeter 3 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 5 Perimeter 3 Inlet Nodes,  !- Name
@@ -57321,7 +57321,7 @@
     MOB Floor 5 Perimeter 4 Inlet Nodes,  !- Zone Air Inlet Node or NodeList Name
     ,                        !- Zone Air Exhaust Node or NodeList Name
     MOB Floor 5 Perimeter 4 Air Node,  !- Zone Air Node Name
-    MOB Floor 5 Perimeter 4 Return Air Node Name;  !- Zone Return Air Node Name
+    MOB Floor 5 Perimeter 4 Return Air Node Name;  !- Zone Return Air Node or NodeList Name
 
   NodeList,
     MOB Floor 5 Perimeter 4 Inlet Nodes,  !- Name
@@ -64779,12 +64779,12 @@
     1.25,                    !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
     ,                        !- High Speed Nominal Capacity {W}
     ,                        !- Low Speed Nominal Capacity {W}
-    ,                        !- Low Speed Nominal Capacity Sizing Factor
+    0.5,                     !- Low Speed Nominal Capacity Sizing Factor
     ,                        !- Free Convection Nominal Capacity {W}
-    ,                        !- Free Convection Nominal Capacity Sizing Factor
-    ,                        !- Design Inlet Air Dry-Bulb Temperature {C}
+    0.1,                     !- Free Convection Nominal Capacity Sizing Factor
+    35.0,                    !- Design Inlet Air Dry-Bulb Temperature {C}
     0.5,                     !- Design Inlet Air Wet-Bulb Temperature {C}
-    ,                        !- Design Approach Temperature {deltaC}
+    Autosize,                !- Design Approach Temperature {deltaC}
     0.1,                     !- Design Range Temperature {deltaC}
     0.0,                     !- Basin Heater Capacity {W/K}
     2.0,                     !- Basin Heater Setpoint Temperature {C}
@@ -65434,7 +65434,7 @@
     54.000,57.000,60.000,63.000,66.000,69.000,72.000;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     Pressure,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name
@@ -65447,7 +65447,7 @@
     2.5140E+06,2.6878E+06,2.8712E+06,3.0648E+06,3.2696E+06,3.4873E+06,3.7237E+06;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name
@@ -65460,7 +65460,7 @@
     2.8503E+05,2.9092E+05,2.9713E+05,3.0380E+05,3.1118E+05,3.2003E+05,3.3838E+05;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name
@@ -65473,7 +65473,7 @@
     3.8051E+05,3.7970E+05,3.7840E+05,3.7641E+05,3.7333E+05,3.6807E+05,3.5017E+05;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     Density,                 !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name
@@ -65486,7 +65486,7 @@
     8.6809E+02,8.4225E+02,8.1331E+02,7.7993E+02,7.3937E+02,6.8403E+02,5.3572E+02;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     Density,                 !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name
@@ -65499,7 +65499,7 @@
     1.5738E+02,1.7447E+02,1.9468E+02,2.1937E+02,2.5127E+02,2.9783E+02,4.3624E+02;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name
@@ -65512,7 +65512,7 @@
     2.1155E+03,2.2842E+03,2.5312E+03,2.9356E+03,3.7387E+03,6.2011E+03,1.6723E+05;
 
   FluidProperties:Saturated,
-    R404a,                   !- Name
+    R404a,                   !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R404aSaturatedTemperatures,  !- Temperature Values Name
@@ -67357,7 +67357,7 @@
     Comm Elect;              !- Group Name
 
   UtilityCost:Charge:Block,
-    AnnualEnergyCharge,      !- Name
+    AnnualEnergyCharge,      !- Utility Cost Charge Block Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67374,7 +67374,7 @@
     0.058320;                !- Block 4 Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Block,
-    AnnualDemandBaseCharge,  !- Name
+    AnnualDemandBaseCharge,  !- Utility Cost Charge Block Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67389,7 +67389,7 @@
     0.046965;                !- Block 3 Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    FuelCostAdjustEnergyCharge,  !- Name
+    FuelCostAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67397,7 +67397,7 @@
     0.002028;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    QualPollutionControlAdjustEnergyCharge,  !- Name
+    QualPollutionControlAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67405,7 +67405,7 @@
     0.000536;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SoxNoxRiderAdjustEnergyCharge,  !- Name
+    SoxNoxRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67413,7 +67413,7 @@
     0.001127;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    DSMRiderAdjustEnergyCharge,  !- Name
+    DSMRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67421,7 +67421,7 @@
     -0.000370;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    PurchPowerTrackerAdjustEnergyCharge,  !- Name
+    PurchPowerTrackerAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67429,7 +67429,7 @@
     -0.000031;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    MidwestISOAdjustEnergyCharge,  !- Name
+    MidwestISOAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67437,7 +67437,7 @@
     -0.000216;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    CleanCoalRiderEnergyCharge,  !- Name
+    CleanCoalRiderEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67445,7 +67445,7 @@
     0.000833;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Qualify,
-    MinDemand75kw,           !- Name
+    MinDemand75kw,           !- Utility Cost Qualify Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Minimum,                 !- Qualify Type
@@ -67455,7 +67455,7 @@
     12;                      !- Number of Months
 
   UtilityCost:Charge:Simple,
-    TaxofeightPercent,       !- Name
+    TaxofeightPercent,       !- Utility Cost Charge Simple Name
     PSI_LLF_LowLoadFactorService,  !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -67481,7 +67481,7 @@
     Comm Elect;              !- Group Name
 
   UtilityCost:Charge:Block,
-    AnnualEnergyCharge,      !- Name
+    AnnualEnergyCharge,      !- Utility Cost Charge Block Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67498,7 +67498,7 @@
     0.041179;                !- Block 4 Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    FuelCostAdjustEnergyCharge,  !- Name
+    FuelCostAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67506,7 +67506,7 @@
     0.002028;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    QualPollutionControlAdjustEnergyCharge,  !- Name
+    QualPollutionControlAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67514,7 +67514,7 @@
     0.000536;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    SoxNoxRiderAdjustEnergyCharge,  !- Name
+    SoxNoxRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67522,7 +67522,7 @@
     0.001127;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    DSMRiderAdjustEnergyCharge,  !- Name
+    DSMRiderAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67530,7 +67530,7 @@
     0.000021;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    PurchPowerTrackerAdjustEnergyCharge,  !- Name
+    PurchPowerTrackerAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67538,7 +67538,7 @@
     0.000034;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    MidwestISOAdjustEnergyCharge,  !- Name
+    MidwestISOAdjustEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67546,7 +67546,7 @@
     -0.000203;               !- Cost per Unit Value or Variable Name
 
   UtilityCost:Charge:Simple,
-    CleanCoalRiderEnergyCharge,  !- Name
+    CleanCoalRiderEnergyCharge,  !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67554,7 +67554,7 @@
     0.000807;                !- Cost per Unit Value or Variable Name
 
   UtilityCost:Qualify,
-    MaxDemand75kw,           !- Name
+    MaxDemand75kw,           !- Utility Cost Qualify Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     TotalDemand,             !- Variable Name
     Maximum,                 !- Qualify Type
@@ -67564,7 +67564,7 @@
     1;                       !- Number of Months
 
   UtilityCost:Charge:Simple,
-    TaxofeightPercent,       !- Name
+    TaxofeightPercent,       !- Utility Cost Charge Simple Name
     PSI_CS_CommercialElectricService,  !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season
@@ -67588,7 +67588,7 @@
     Comm Gas;                !- Group Name
 
   UtilityCost:Charge:Simple,
-    MonthlyRateGasCharge,    !- Name
+    MonthlyRateGasCharge,    !- Utility Cost Charge Simple Name
     IN_EIAMonthlyRateGas,    !- Tariff Name
     totalEnergy,             !- Source Variable
     Annual,                  !- Season
@@ -67612,7 +67612,7 @@
     7.63;                    !- November Value
 
   UtilityCost:Charge:Simple,
-    TaxofEightPercent,       !- Name
+    TaxofEightPercent,       !- Utility Cost Charge Simple Name
     IN_EIAMonthlyRateGas,    !- Tariff Name
     SubTotal,                !- Source Variable
     Annual,                  !- Season

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -250,7 +250,7 @@ struct ModelObjectNameSorter{
           QString("F"),
           m_isIP,
           ProxyAdapter(&model::SizingZone::zoneCoolingDesignSupplyAirTemperature, &model::ThermalZone::sizingZone),
-          ProxyAdapter(static_cast<void (model::SizingZone::*)(double)>(&model::SizingZone::setZoneCoolingDesignSupplyAirTemperature),
+          ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setZoneCoolingDesignSupplyAirTemperature),
           &model::ThermalZone::sizingZone));
       }
       else if (field == ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE){
@@ -260,7 +260,7 @@ struct ModelObjectNameSorter{
           QString("F"),
           m_isIP,
           ProxyAdapter(&model::SizingZone::zoneHeatingDesignSupplyAirTemperature, &model::ThermalZone::sizingZone),
-          ProxyAdapter(static_cast<void (model::SizingZone::*)(double)>(&model::SizingZone::setZoneHeatingDesignSupplyAirTemperature),
+          ProxyAdapter(static_cast<bool (model::SizingZone::*)(double)>(&model::SizingZone::setZoneHeatingDesignSupplyAirTemperature),
           &model::ThermalZone::sizingZone));
       }
       else if (field == ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO){

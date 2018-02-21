@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,8 +43,8 @@ namespace detail {
  *
  *  ShadowCalculation defines how often shadowing calculations should be performed in EnergyPlus simulations
  *  as well as how many overlapping figures can be considered in a shadow calculation.
- *  ShadowCalculation does not have a public constructor because it is a unique ModelObject.  
- *  To get the ShadowCalculation object for a Model or create one if it does not yet exist use model.getUniqueObject<ShadowCalculation>().  
+ *  ShadowCalculation does not have a public constructor because it is a unique ModelObject.
+ *  To get the ShadowCalculation object for a Model or create one if it does not yet exist use model.getUniqueObject<ShadowCalculation>().
  *  To get the ShadowCalculation object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<ShadowCalculation>().
  */
 class MODEL_API ShadowCalculation : public ModelObject {

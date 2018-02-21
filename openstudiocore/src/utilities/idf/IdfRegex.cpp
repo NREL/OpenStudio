@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,21 +50,21 @@ namespace idfRegex{
   // matches[2], after new line
   const boost::regex &commentOnlyLine(){
     const static boost::regex result("^[\\s\\t]*[!]([^\\n]*)[\\n]?(.*)");
-    return result; 
+    return result;
   }
 
-  // Match content and comment 
+  // Match content and comment
   // matches[1], the content (may include multiple fields)
   // matches[2], the comment
   const boost::regex &contentAndCommentLine(){
     const static boost::regex result("^([^!,;]*)[,;]?[\\s\\t]*[!]?(.*)"); //("^((?:[^!,;]*[,;])*)[\\s\\t]*[!]?(.*)");
-    return result; 
+    return result;
   }
 
   // Match object end in the idf
   const boost::regex &objectEnd(){
     const static boost::regex result("^[^!]*?[;].*");
-    return result; 
+    return result;
   }
 
   // Match line with an object type and name
@@ -72,7 +72,7 @@ namespace idfRegex{
   // matches[2], after first separator and before second separator
   const boost::regex &objectTypeAndName(){
     const static boost::regex result("^([^!]*?)[,;]([^!]*?)[,;]");
-    return result; 
+    return result;
   }
 
   // Match line with either a ',' or a ';' that are not preceded by '!'
@@ -81,26 +81,26 @@ namespace idfRegex{
   // matches[3], after new line
   const boost::regex &line(){
     const static boost::regex result("^([^!]*?)[,;]" + optionalNewLinestring());
-    return result; 
+    return result;
   }
 
   // Match an autosize field
   const boost::regex &autosize(){
     const static boost::regex result("autosize", boost::regex_constants::icase);
-    return result; 
+    return result;
   }
 
   // Match an autocalculate field
   const boost::regex &autocalculate(){
     const static boost::regex result("autocalculate", boost::regex_constants::icase);
-    return result; 
+    return result;
   }
 
   // Match line with '##def' preceded only by whitespace
   // matches[1], the imf section name
   const boost::regex &imfSection(){
     const static boost::regex result("^[\\s\\t]*##[\\s\\t]*def[\\s\\t]*(.*?)\\[(.*?)\\]");
-    return result; 
+    return result;
   }
 
   const boost::regex &imfSectionEnd() {

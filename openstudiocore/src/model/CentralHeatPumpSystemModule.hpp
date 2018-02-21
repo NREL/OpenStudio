@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -36,6 +36,7 @@ namespace openstudio {
 namespace model {
 
 class ChillerHeaterPerformanceElectricEIR;
+class CentralHeatPumpSystem;
 class Schedule;
 
 namespace detail {
@@ -80,6 +81,9 @@ class MODEL_API CentralHeatPumpSystemModule : public ParentObject {
   //@}
   /** @name Other */
   //@{
+
+  // Convenience function to return parent CentralHeatPumpSystem
+  boost::optional<CentralHeatPumpSystem> centralHeatPumpSystem() const;
 
   //@}
  protected:

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -80,7 +80,8 @@ class MODEL_API ZoneHVACComponent : public HVACComponent
   /** Detaches this ZoneHVACComponent from the associated ThermalZone.
    *  If there is no attached ThermalZone there is no effect.
    *  If the ThermalZone is attached via an AirLoopHVAC object (as a result of addToNode()),
-   *  then this method will reverse the effects of addToNode.
+   *  then this method will reverse the effects of addToNode, and also detach the ZoneHVACComponent
+   *  from the AirLoopHVAC object.
    **/
   void removeFromThermalZone();
 
@@ -88,12 +89,42 @@ class MODEL_API ZoneHVACComponent : public HVACComponent
    *  The node must be located between a ThermalZone and a AirTerminalSingleDuctInletSideMixer object.
    *  This is used to feed an AirLoopHVAC structure (such as a DOAS, or any built up system) into a ZoneHVACComponent.
    *  If the ZoneHVACComponent object is already attached to a thermalZone() then it will first be detached using removeFromThermalZone().
+   *
+   *  Certain OpenStudio objects derived from the ZoneHVACComponent type,
+   *  can be used as AirLoopHVAC supply components.
+   *  One example is the AirLoopHVACUnitarySystem, which can be used as both
+   *  a ZoneHVACComponent and a AirLoopHVAC component. In these cases
+   *  addToNode can be used to add those components to the supply side of an
+   *  AirLoopHVAC system.
    **/
   bool addToNode(Node & node);
 
   /** Returns the AirLoopHVAC attached to this ZoneHVACComponent.
    *  The AirLoopHVAC object would have been attached via addToNode */
   boost::optional<AirLoopHVAC> airLoopHVAC() const;
+
+  /** If this ZoneHVACComponent is used as a supply component
+   *  on an AirLoopHVAC system, then this method will detach
+   *  this ZoneHVACComponent from the AirLoopHVAC system, otherwise
+   *  this method does nothing.
+   *
+   *  Certain OpenStudio objects derived from the ZoneHVACComponent type,
+   *  can be used as AirLoopHVAC supply components.
+   *  One example is the AirLoopHVACUnitarySystem, which can be used as both
+   *  a ZoneHVACComponent and a AirLoopHVAC component.
+   *
+   *  If this ZoneHVACComponent is on the demand side of AirLoopHVAC,
+   *  between a ThermalZone and a AirTerminalSingleDuctInletSideMixer,
+   *  then use the method removeFromThermalZone, instead of removeFromAirLoopHVAC
+   *  to detach this ZoneHVACComponent from the zone and air system.
+   **/
+  bool removeFromAirLoopHVAC();
+
+  /** Provided for backwards compatibility, use inletNode instead **/
+  boost::optional<ModelObject> airInletModelObject() const;
+
+  /** Provided for backwards compatibility, use outletNode instead **/
+  boost::optional<ModelObject> airOutletModelObject() const;
 
   protected:
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,13 +46,13 @@
 
 namespace openstudio {
 
-StartupView::StartupView( QWidget * parent ) 
+StartupView::StartupView( QWidget * parent )
   : QWidget( parent )
 {
   m_templateListModel = std::shared_ptr<TemplateListModel>( new TemplateListModel() );
 
   setStyleSheet("openstudio--StartupView { background: #E6E6E6; }");
-  
+
 #ifdef Q_OS_MAC
   setWindowFlags(Qt::FramelessWindowHint);
 #else
@@ -84,7 +84,7 @@ StartupView::StartupView( QWidget * parent )
   importButton->setIcon(importIcon);
   importButton->setIconSize(QSize(40,40));
   connect(importButton, &QToolButton::clicked, this, &StartupView::importClicked);
-/*  
+/*
   QToolButton * importSDDButton = new QToolButton();
   importSDDButton->setText("Import SDD");
   importSDDButton->setStyleSheet("QToolButton { font: bold; }");
@@ -198,7 +198,7 @@ void StartupView::paintEvent(QPaintEvent *event)
   painter.setRenderHint(QPainter::Antialiasing);
 
   QImage leftHeader = QImage(":/images/image_header.png");
-  painter.drawImage(0,0,leftHeader);  
+  painter.drawImage(0,0,leftHeader);
 
   QImage centerHeader = QImage(":/images/header-backgnd-1px-wide.png");
 
@@ -207,7 +207,7 @@ void StartupView::paintEvent(QPaintEvent *event)
        i < width();
        i++ )
   {
-    painter.drawImage(i,0,centerHeader);  
+    painter.drawImage(i,0,centerHeader);
   }
 }
 
@@ -218,7 +218,7 @@ QSize StartupView::sizeHint() const
 
 void StartupView::mousePressEvent(QMouseEvent *event)
 {
-  if (event->button() == Qt::LeftButton) 
+  if (event->button() == Qt::LeftButton)
   {
     if( event->y() < 50 )
     {
@@ -235,7 +235,7 @@ void StartupView::mousePressEvent(QMouseEvent *event)
 
 void StartupView::mouseMoveEvent(QMouseEvent *event)
 {
-  if(event->buttons() & Qt::LeftButton) 
+  if(event->buttons() & Qt::LeftButton)
   {
     if( _move )
     {
@@ -247,7 +247,7 @@ void StartupView::mouseMoveEvent(QMouseEvent *event)
 
 void StartupView::newFromTemplateSlot()
 {
-  switch(m_listView->currentIndex().row()) 
+  switch(m_listView->currentIndex().row())
   {
     case NEWFROMTEMPLATE_EMPTY:
     {
@@ -290,9 +290,9 @@ void StartupView::showDetailsForItem( const QModelIndex & index )
   if( ! description.isEmpty() )
   {
     auto descriptionLabel = new QTextEdit(description);
-    
+
     descriptionLabel->setStyleSheet("QTextEdit { border: none; }");
-    
+
     descriptionLabel->setReadOnly(true);
 
     layout->addWidget(descriptionLabel);
@@ -338,7 +338,7 @@ QVariant TemplateListModel::data( const QModelIndex & index, int role ) const
   {
     return QSize(100,100);
   }
-  else if( role == Qt::ToolTipRole ) 
+  else if( role == Qt::ToolTipRole )
   {
     switch( index.row() )
     {
@@ -356,7 +356,7 @@ QVariant TemplateListModel::data( const QModelIndex & index, int role ) const
       }
     }
   }
-  else if( role == Qt::WhatsThisRole ) 
+  else if( role == Qt::WhatsThisRole )
   {
     switch( index.row() )
     {

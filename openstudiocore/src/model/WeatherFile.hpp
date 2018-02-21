@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -52,13 +52,13 @@ namespace detail {
  *  EnergyPlus requires the weather file for simulation be named in.epw and located in the same directory as the input IDF file.
  *  The WeatherFile object provides a mechanism for an OpenStudio Model to reference a weather file in a more permanent way.
  *  The RunManager is able to locate the actual weather file needed and place it in the EnergyPlus run directory at simulation time.
- *  WeatherFile does not have a public constructor because it is a unique ModelObject.  
- *  To get the WeatherFile object for a Model or create one if it does not yet exist use model.getUniqueObject<WeatherFile>().  
+ *  WeatherFile does not have a public constructor because it is a unique ModelObject.
+ *  To get the WeatherFile object for a Model or create one if it does not yet exist use model.getUniqueObject<WeatherFile>().
  *  To get the WeatherFile object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<WeatherFile>().
  */
 class MODEL_API WeatherFile : public ModelObject {
  public:
-  
+
    /** @name Constructors and Destructors */
   //@{
   virtual ~WeatherFile() {}
@@ -106,15 +106,15 @@ class MODEL_API WeatherFile : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setCity(std::string city);
+  bool setCity(std::string city);
 
-  void setStateProvinceRegion(std::string stateProvinceRegion);
+  bool setStateProvinceRegion(std::string stateProvinceRegion);
 
-  void setCountry(std::string country);
+  bool setCountry(std::string country);
 
-  void setDataSource(std::string dataSource);
+  bool setDataSource(std::string dataSource);
 
-  void setWMONumber(std::string wMONumber);
+  bool setWMONumber(std::string wMONumber);
 
   bool setLatitude(double latitude);
 
@@ -126,15 +126,15 @@ class MODEL_API WeatherFile : public ModelObject {
 
   void resetElevation();
 
-  //void setUrl(boost::optional<std::string> url);
+  //bool setUrl(boost::optional<std::string> url);
 
-  //void setUrl(std::string url);
+  //bool setUrl(std::string url);
 
   //void resetUrl();
 
-  //void setChecksum(boost::optional<std::string> checksum);
+  //bool setChecksum(boost::optional<std::string> checksum);
 
-  //void setChecksum(std::string checksum);
+  //bool setChecksum(std::string checksum);
 
   //void resetChecksum();
 
@@ -147,7 +147,7 @@ class MODEL_API WeatherFile : public ModelObject {
   if url field is relative. */
   boost::optional<EpwFile> file(const openstudio::path& dir=openstudio::path()) const;
 
-  /** Save the url as relative to basePath, or just keep the file name and extension if 
+  /** Save the url as relative to basePath, or just keep the file name and extension if
   *  basePath.empty(). */
   bool makeUrlRelative(const openstudio::path& basePath=openstudio::path());
 
@@ -186,4 +186,3 @@ typedef std::vector<WeatherFile> WeatherFileVector;
 } // openstudio
 
 #endif // MODEL_WEATHERFILE_HPP
-

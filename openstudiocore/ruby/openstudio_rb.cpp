@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,13 +39,13 @@ Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
 #elif defined(Q_OS_WIN)
   Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #elif defined(Q_OS_LINUX)
-  Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);  
+  Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);
 #endif
 
-inline void initResources() { 
+inline void initResources() {
 
   #ifndef SHARED_OS_LIBS
-    Q_INIT_RESOURCE(modeleditorlib); 
+    Q_INIT_RESOURCE(modeleditorlib);
   #endif // SHARED_OS_LIBS
 
 }
@@ -77,37 +77,37 @@ def show_output(result)
   applicability = result.value.value
   if applicability ==  -1
     puts "#{applicability} = Not Applicable"
-  elsif applicability == 0 
+  elsif applicability == 0
     puts "#{applicability} = Success"
-  elsif applicability == 1 
+  elsif applicability == 1
     puts "#{applicability} = Fail"
   end
- 
+
   puts "**INITIAL CONDITION**"
   if result.stepInitialCondition.empty?
     #do nothing
   else
     puts result.stepInitialCondition.get
-  end  
-      
+  end
+
   puts "**FINAL CONDITION**"
   if result.stepFinalCondition.empty?
     #do nothing
   else
     puts result.stepFinalCondition.get
-  end    
-  
-  puts "**INFO MESSAGES**"  
+  end
+
+  puts "**INFO MESSAGES**"
   result.stepInfo.each do |info_msg|
     puts "#{info_msg}"
   end
 
-  puts "**WARNING MESSAGES**"  
+  puts "**WARNING MESSAGES**"
   result.stepWarnings.each do |info_msg|
     puts "#{info_msg}"
   end
 
-  puts "**ERROR MESSAGES**"  
+  puts "**ERROR MESSAGES**"
   result.stepErrors.each do |info_msg|
     puts "#{info_msg}"
   end
@@ -126,7 +126,7 @@ def show_output(result)
 
   puts "" #space between measures for readability in output
   puts ""
-  
+
 end
 )END";
 

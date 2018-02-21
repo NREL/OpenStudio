@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,51 +50,51 @@ boost::optional<IdfObject> ForwardTranslator::translateSiteGroundTemperatureBuil
   m_idfObjects.push_back(idfObject);
 
   if (!modelObject.isJanuaryGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::JanuaryGroundTemperature, modelObject.januaryGroundTemperature()); 
+    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::JanuaryGroundTemperature, modelObject.januaryGroundTemperature());
   }
 
   if (!modelObject.isFebruaryGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::FebruaryGroundTemperature, modelObject.februaryGroundTemperature()); 
+    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::FebruaryGroundTemperature, modelObject.februaryGroundTemperature());
   }
 
   if (!modelObject.isMarchGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::MarchGroundTemperature, modelObject.marchGroundTemperature()); 
+    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::MarchGroundTemperature, modelObject.marchGroundTemperature());
   }
 
   if (!modelObject.isAprilGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::AprilGroundTemperature, modelObject.aprilGroundTemperature()); 
+    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::AprilGroundTemperature, modelObject.aprilGroundTemperature());
   }
 
   if (!modelObject.isMayGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::MayGroundTemperature, modelObject.mayGroundTemperature()); 
+    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::MayGroundTemperature, modelObject.mayGroundTemperature());
   }
 
   if (!modelObject.isJuneGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::JuneGroundTemperature, modelObject.juneGroundTemperature()); 
+    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::JuneGroundTemperature, modelObject.juneGroundTemperature());
   }
 
   if (!modelObject.isJulyGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::JulyGroundTemperature, modelObject.julyGroundTemperature()); 
+    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::JulyGroundTemperature, modelObject.julyGroundTemperature());
   }
 
   if (!modelObject.isAugustGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::AugustGroundTemperature, modelObject.augustGroundTemperature()); 
+    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::AugustGroundTemperature, modelObject.augustGroundTemperature());
   }
 
   if (!modelObject.isSeptemberGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::SeptemberGroundTemperature, modelObject.septemberGroundTemperature()); 
+    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::SeptemberGroundTemperature, modelObject.septemberGroundTemperature());
   }
 
   if (!modelObject.isOctoberGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::OctoberGroundTemperature, modelObject.octoberGroundTemperature()); 
+    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::OctoberGroundTemperature, modelObject.octoberGroundTemperature());
   }
 
   if (!modelObject.isNovemberGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::NovemberGroundTemperature, modelObject.novemberGroundTemperature()); 
+    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::NovemberGroundTemperature, modelObject.novemberGroundTemperature());
   }
 
   if (!modelObject.isDecemberGroundTemperatureDefaulted()){
-    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::DecemberGroundTemperature, modelObject.decemberGroundTemperature()); 
+    idfObject.setDouble(Site_GroundTemperature_BuildingSurfaceFields::DecemberGroundTemperature, modelObject.decemberGroundTemperature());
   }
 
   return idfObject;

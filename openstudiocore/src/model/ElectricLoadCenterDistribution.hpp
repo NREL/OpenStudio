@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -49,10 +49,10 @@ namespace detail {
 
 } // detail
 
-/** ElectricLoadCenterDistribution is a ParentObject that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Distribution'. 
+/** ElectricLoadCenterDistribution is a ParentObject that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Distribution'.
  *  There is no ElectricLoadCenter:Generators object in OpenStudio.  Instead, the ElectricLoadCenterDistribution object references
  *  a model object list which references all of the associated generators.  The rated electric power, availability schedule, and thermal
- *  to electric power ratio fields are contained in the generator objects themselves rather than the ElectricLoadCenter:Generators 
+ *  to electric power ratio fields are contained in the generator objects themselves rather than the ElectricLoadCenter:Generators
  *  as in EnergyPlus. Electric storage and transformers will be added at a later date.
 */
 class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
@@ -143,7 +143,7 @@ class MODEL_API ElectricLoadCenterDistribution : public ParentObject {
   // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
   Schedule storageControlUtilityDemandTargetFractionSchedule() const;
   bool isStorageControlUtilityDemandTargetFractionScheduleDefaulted() const;
-  
+
 
   //@}
   /** @name Setters */

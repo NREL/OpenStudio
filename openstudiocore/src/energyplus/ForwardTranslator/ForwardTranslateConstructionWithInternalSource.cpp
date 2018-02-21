@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,14 +50,14 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateConstructionWithInternalSource( model::ConstructionWithInternalSource & modelObject )
 {
-  
+
   IdfObject idfObject( openstudio::IddObjectType::Construction_InternalSource );
 
   m_idfObjects.push_back(idfObject);
 
   //Name
   idfObject.setString(Construction_InternalSourceFields::Name, modelObject.name().get());
-  
+
   //Source Present After Layer Number
   idfObject.setInt(Construction_InternalSourceFields::SourcePresentAfterLayerNumber, modelObject.sourcePresentAfterLayerNumber());
 
@@ -69,7 +69,7 @@ namespace energyplus {
 
   // Tube Spacing
   idfObject.setDouble(Construction_InternalSourceFields::TubeSpacing, modelObject.tubeSpacing());
-  
+
   //Layers
   MaterialVector layers = modelObject.layers();
 

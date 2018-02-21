@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -85,7 +85,14 @@ namespace detail {
   const std::vector<std::string>& WaterHeaterHeatPump_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // WaterHeater:HeatPump:PumpedCondenser
+      result.push_back("Water Heater Compressor Part Load Ratio");
+      result.push_back("Water Heater On Cycle Ancillary Electric Power");
+      result.push_back("Water Heater On Cycle Ancillary Electric Energy");
+      result.push_back("Water Heater Off Cycle Ancillary Electric Power");
+      result.push_back("Water Heater Off Cycle Ancillary Electric Energy");
     }
     return result;
   }
@@ -493,10 +500,10 @@ namespace detail {
       waterToWaterTank->removeFromSecondaryPlantLoop();
     } else {
       // All tanks are WaterToWaterComponent at this time, but the api says they could be any HVACComponent,
-      // so this is a little dangerous. Consider enhanced APIs to remove HVACComponent from system. 
+      // so this is a little dangerous. Consider enhanced APIs to remove HVACComponent from system.
       // Something we currently don't have.
       // Ideally remove would just take care of all of this, but the way ParentObject::remove works out children remove methods
-      // aren't being called cleanly. 
+      // aren't being called cleanly.
       LOG_AND_THROW("Unsupported tank " << t_tank.briefDescription() << " attached to WaterHeaterHeatPump " << briefDescription());
     }
 
@@ -535,6 +542,33 @@ namespace detail {
     }
 
     return result;
+  }
+
+  boost::optional<double> WaterHeaterHeatPump_Impl::autosizedCondenserWaterFlowRate() const {
+    return getAutosizedValue("Design Size Condenser Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> WaterHeaterHeatPump_Impl::autosizedEvaporatorAirFlowRate() const {
+    return getAutosizedValue("Design Size Evaporator Air Flow Rate", "m3/s");
+  }
+
+  void WaterHeaterHeatPump_Impl::autosize() {
+    autosizeCondenserWaterFlowRate();
+    autosizeEvaporatorAirFlowRate();
+  }
+
+  void WaterHeaterHeatPump_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedCondenserWaterFlowRate();
+    if (val) {
+      setCondenserWaterFlowRate(val.get());
+    }
+
+    val = autosizedEvaporatorAirFlowRate();
+    if (val) {
+      setEvaporatorAirFlowRate(val.get());
+    }
+
   }
 
 } // detail
@@ -856,9 +890,17 @@ bool WaterHeaterHeatPump::setControlSensorLocationInStratifiedTank(std::string c
 
 /// @cond
 WaterHeaterHeatPump::WaterHeaterHeatPump(std::shared_ptr<detail::WaterHeaterHeatPump_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> WaterHeaterHeatPump::autosizedCondenserWaterFlowRate() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->autosizedCondenserWaterFlowRate();
+  }
+
+  boost::optional<double> WaterHeaterHeatPump::autosizedEvaporatorAirFlowRate() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->autosizedEvaporatorAirFlowRate();
+  }
 
 } // model
 } // openstudio

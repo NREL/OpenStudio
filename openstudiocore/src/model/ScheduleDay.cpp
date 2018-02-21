@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -151,12 +151,12 @@ namespace detail {
     return !getObject<ScheduleDay>().getModelObjectTarget<ScheduleTypeLimits>(OS_Schedule_DayFields::ScheduleTypeLimitsName);
   }
 
-  bool ScheduleDay_Impl::interpolatetoTimestep() const 
+  bool ScheduleDay_Impl::interpolatetoTimestep() const
   {
     return getBooleanFieldValue(OS_Schedule_DayFields::InterpolatetoTimestep);
   }
 
-  bool ScheduleDay_Impl::isInterpolatetoTimestepDefaulted() const 
+  bool ScheduleDay_Impl::isInterpolatetoTimestepDefaulted() const
   {
     return isEmpty(OS_Schedule_DayFields::InterpolatetoTimestep);
   }
@@ -272,12 +272,12 @@ namespace detail {
     return false;
   }
 
-  void ScheduleDay_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep) 
+  bool ScheduleDay_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep)
   {
-    setBooleanFieldValue(OS_Schedule_DayFields::InterpolatetoTimestep,interpolatetoTimestep);
+    return setBooleanFieldValue(OS_Schedule_DayFields::InterpolatetoTimestep,interpolatetoTimestep);;
   }
 
-  void ScheduleDay_Impl::resetInterpolatetoTimestep() 
+  void ScheduleDay_Impl::resetInterpolatetoTimestep()
   {
     bool result = setString(OS_Schedule_DayFields::InterpolatetoTimestep, "");
     OS_ASSERT(result);
@@ -285,6 +285,15 @@ namespace detail {
 
   bool ScheduleDay_Impl::addValue(const openstudio::Time& untilTime, double value) {
     if (untilTime.totalMinutes() <= 0.5 || untilTime.totalDays() > 1.0) {
+      return false;
+    }
+
+    // Check validity, cannot be NaN, Inf, etc
+    if (std::isinf(value)) {
+      LOG(Warn, "Cannot setDouble to Infinity for " << this->briefDescription());
+      return false;
+    } else if (std::isnan(value)) {
+      LOG(Warn, "Cannot setDouble to a NaN for " << this->briefDescription());
       return false;
     }
 
@@ -337,7 +346,7 @@ namespace detail {
 
 
   boost::optional<double> ScheduleDay_Impl::removeValue(const openstudio::Time& time){
-    
+
     boost::optional<unsigned> timeIndex;
 
     std::vector<openstudio::Time> times = this->times();
@@ -349,7 +358,7 @@ namespace detail {
     }
 
     if (!timeIndex){
-      return boost::none; 
+      return boost::none;
     }
 
     boost::optional<double> result;
@@ -478,8 +487,8 @@ boost::optional<Quantity> ScheduleDay::getValueAsQuantity(const openstudio::Time
   return getImpl<detail::ScheduleDay_Impl>()->getValueAsQuantity(time,returnIP);
 }
 
-void ScheduleDay::setInterpolatetoTimestep(bool interpolatetoTimestep) {
-  getImpl<detail::ScheduleDay_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
+bool ScheduleDay::setInterpolatetoTimestep(bool interpolatetoTimestep) {
+  return getImpl<detail::ScheduleDay_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
 }
 
 void ScheduleDay::resetInterpolatetoTimestep() {
@@ -505,11 +514,10 @@ void ScheduleDay::clearValues()
 
 /// @cond
 ScheduleDay::ScheduleDay(std::shared_ptr<detail::ScheduleDay_Impl> impl)
-  : ScheduleBase(impl)
+  : ScheduleBase(std::move(impl))
 {}
 /// @endcond
 
 
 } // model
 } // openstudio
-

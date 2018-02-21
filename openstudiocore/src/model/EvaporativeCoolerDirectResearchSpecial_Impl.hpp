@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,13 +39,6 @@ class Curve;
 namespace detail {
 
   class MODEL_API EvaporativeCoolerDirectResearchSpecial_Impl : public StraightComponent_Impl {
-    
-
-    
-    
-    
-
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -92,11 +85,11 @@ namespace detail {
 
     double coolerEffectiveness() const;
 
-    void setCoolerEffectiveness( double value );
+    bool setCoolerEffectiveness( double value );
 
     boost::optional<double> recirculatingWaterPumpPowerConsumption() const;
 
-    void setRecirculatingWaterPumpPowerConsumption( double value );
+    bool setRecirculatingWaterPumpPowerConsumption( double value );
 
     void autosizeRecirculatingWaterPumpPowerConsumption();
 
@@ -104,15 +97,15 @@ namespace detail {
 
     boost::optional<Node> sensorNode() const;
 
-    void setSensorNode( const Node & node );
+    bool setSensorNode( const Node & node );
 
     double driftLossFraction() const;
 
-    void setDriftLossFraction( double value );
+    bool setDriftLossFraction( double value );
 
     double blowdownConcentrationRatio() const;
 
-    void setBlowdownConcentrationRatio( double value );
+    bool setBlowdownConcentrationRatio( double value );
 
     boost::optional<Curve> effectivenessFlowRatioModifierCurve() const;
 
@@ -122,7 +115,7 @@ namespace detail {
 
     double waterPumpPowerSizingFactor() const;
 
-    void setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
+    bool setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
 
     boost::optional<Curve> waterPumpPowerModifierCurve() const;
 
@@ -132,11 +125,19 @@ namespace detail {
 
     boost::optional<double> primaryAirDesignFlowRate() const;
 
-    void setPrimaryAirDesignFlowRate( double value );
+    bool setPrimaryAirDesignFlowRate( double value );
 
     void autosizePrimaryAirDesignFlowRate();
 
     bool isPrimaryAirDesignFlowRateAutosized() const;
+
+    boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
+
+    boost::optional<double> autosizedPrimaryAirDesignFlowRate() const ;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
 
    private:
 
@@ -153,4 +154,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_EVAPORATIVECOOLERDIRECTRESEARCHSPECIAL_IMPL_HPP
-

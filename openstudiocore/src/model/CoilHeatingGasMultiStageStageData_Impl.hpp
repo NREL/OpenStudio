@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -31,6 +31,7 @@
 
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
+#include "../model/CoilHeatingGasMultiStage.hpp"
 
 namespace openstudio {
 namespace model {
@@ -77,6 +78,12 @@ namespace detail {
 
     double parasiticElectricLoad() const;
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
     //@}
     /** @name Setters */
     //@{
@@ -87,11 +94,15 @@ namespace detail {
 
     void autosizeNominalCapacity();
 
-    void setParasiticElectricLoad(double StageParasiticElectricLoad);
+    bool setParasiticElectricLoad(double StageParasiticElectricLoad);
 
     //@}
     /** @name Other */
     //@{
+
+    // Used to determine the index of this performance data in the
+    // list of stages in the parent object.
+    boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> stageIndexAndParentCoil() const;
 
     //@}
    protected:
@@ -105,4 +116,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILHEATINGGASMULTISTAGESTAGEDATA_IMPL_HPP
-

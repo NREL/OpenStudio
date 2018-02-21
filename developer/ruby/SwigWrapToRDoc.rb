@@ -1,7 +1,7 @@
 # Then modifies SWIG wrappers so they can be parsed by rdoc
 # and calls rdoc.
 #
-# Inputs: 
+# Inputs:
 #   ARGV[0] - path to build dir
 #   ARGV[1] - path to swig generated file
 #   ARGV[2] - name of the module to be generated
@@ -55,10 +55,10 @@ str.gsub!(/static VALUE\n/,"static VALUE ")
 strArray = str.split("\/\*")
 orphanDoc = []
 rbDefineBlockInd = strArray.length
-strArray.each_index {|i|    
+strArray.each_index {|i|
 
   # process last part of file, which includes rb_define calls
-  if strArray[i].index(/SWIGEXPORT void Init_/) != nil then 
+  if strArray[i].index(/SWIGEXPORT void Init_/) != nil then
     rbDefineBlockInd = i
 
     # simplify rb_define_class_under statement for derived classes
@@ -69,7 +69,7 @@ strArray.each_index {|i|
   end
 
   # process blocks that include rdoc comments, delete all others
-  if strArray[i].index(/Document-[\w]*: /) == nil then 
+  if strArray[i].index(/Document-[\w]*: /) == nil then
     strArray[i] = ''
   else
     # change derived class documentation
@@ -87,7 +87,7 @@ strArray.each_index {|i|
     # break documentation away from rest
     brokenBlock = strArray[i].split(/\*\//)
     if brokenBlock.size() != 2
-      warn "After splitting on /*, and then */, expected an array of size 2, but got an array of size " + 
+      warn "After splitting on /*, and then */, expected an array of size 2, but got an array of size " +
            brokenBlock.size().to_s + "."
     end
 
@@ -102,8 +102,8 @@ strArray.each_index {|i|
     brokenBlock[1].each_line {|ln|
 
       # possible keeper lines
-      if (ln.match(/static VALUE/) != nil) || 
-         (ln.match(/_wrap_/) != nil) || 
+      if (ln.match(/static VALUE/) != nil) ||
+         (ln.match(/_wrap_/) != nil) ||
          (ln.match(/swig_class/) != nil) then
         ln.sub!(" {","")                         # get rid of hanging open brackets
         if ln.match(/__SWIG_\d+/) == nil         # not an overloaded function
@@ -187,7 +187,7 @@ strArray.each_index {|i|
             break
           else
             # delete from strArray[k]
-            replace = true    
+            replace = true
             next
           end
         end
@@ -198,7 +198,7 @@ strArray.each_index {|i|
         end
       }
 
-      if replace 
+      if replace
         brokenBlock[1] = keepers
         strArray[k] = brokenBlock[0]
         strArray[k] << "*/\n" << brokenBlock[1] << "\n"
@@ -223,7 +223,7 @@ strArray.each_index {|i|
   if subStr != '' then
     str << "/*" << subStr
   end
-}  
+}
 
 puts "Writing file #{output_dir}#{name}.cxx"
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -68,10 +68,10 @@ boost::optional<IdfObject> ForwardTranslator::translateLoadProfilePlant( LoadPro
       idfObject.setString(LoadProfile_PlantFields::LoadScheduleName,_schedule->name().get());
     }
   }
-  
+
   // PeakFlowRate
   if( (value = modelObject.peakFlowRate()) ) {
-    idfObject.setDouble(LoadProfile_PlantFields::PeakFlowRate,value.get()); 
+    idfObject.setDouble(LoadProfile_PlantFields::PeakFlowRate,value.get());
   }
 
   // FlowRateFractionScheduleName

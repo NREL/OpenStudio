@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -58,16 +58,16 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
   boost::optional<std::string> s;
   boost::optional<double> value;
   boost::optional<Node> node;
-  
+
   // Make sure the modelObject gets put into the map, and the new idfObject gets put into the final file.
   // Also sets the idfObjects name
 
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::Coil_Heating_WaterToAirHeatPump_EquationFit,modelObject);
-  
+
   // Object Name
   //std::string baseName = idfObject.name().get();
 
-  // Water Inlet Node Name  
+  // Water Inlet Node Name
   if( boost::optional<ModelObject> mo = modelObject.waterInletModelObject() )
   {
     if( boost::optional<Node> node = mo->optionalCast<Node>() )
@@ -75,7 +75,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
       idfObject.setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterInletNodeName,node->name().get());
     }
   }
-  
+
   // Water Outlet Node Name
   if( boost::optional<ModelObject> mo = modelObject.waterOutletModelObject() )
   {
@@ -84,7 +84,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
       idfObject.setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterOutletNodeName,node->name().get());
     }
   }
-  
+
   //Air Inlet Node Name
   if( boost::optional<ModelObject> mo = modelObject.airInletModelObject() )
   {
@@ -112,7 +112,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
   {
     idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate,value.get());
   }
-  
+
   //Rated Water Flow Rate
   if( modelObject.isRatedWaterFlowRateAutosized())
   {
@@ -121,9 +121,9 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
   else if((value = modelObject.ratedWaterFlowRate()))
   {
     idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate,value.get());
-  }  
+  }
 
-  
+
   // Rated Heating Capacity
   if( modelObject.isRatedHeatingCapacityAutosized())
   {
@@ -132,26 +132,26 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
   else if((value = modelObject.ratedHeatingCapacity()))
   {
     idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::GrossRatedHeatingCapacity,value.get());
-  }  
+  }
 
   // Heating Coefficient of Performance
   if((value = modelObject.ratedHeatingCoefficientofPerformance()))
   {
     idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::GrossRatedHeatingCOP,value.get());
   }
-  
+
   //Heating Capacity Coefficient 1
   if((value = modelObject.heatingCapacityCoefficient1()))
   {
     idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient1,value.get());
   }
-  
+
   //Heating Capacity Coefficient 2
   if((value = modelObject.heatingCapacityCoefficient2()))
   {
     idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient2,value.get());
   }
-  
+
   //Heating Capacity Coefficient 3
   if((value = modelObject.heatingCapacityCoefficient3()))
   {
@@ -163,7 +163,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
   {
     idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCoefficient4,value.get());
   }
-  
+
   //Heating Capacity Coefficient 5
   if((value = modelObject.heatingCapacityCoefficient5()))
   {
@@ -199,7 +199,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
   {
     idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCoefficient5,value.get());
   }
- 
+
   return idfObject;
 }
 

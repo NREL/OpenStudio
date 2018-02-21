@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -66,7 +66,7 @@ TEST_F(ModelFixture, ModelMerger_Initial) {
   // first model is empty
 
   // second model has spaces
-  
+
   // object#_model#
   std::vector<Point3d> floorprint1_2;
   floorprint1_2.push_back(Point3d(0, 10, 0));
@@ -162,7 +162,7 @@ TEST_F(ModelFixture, ModelMerger_Merge) {
   // first model is empty
 
   // second model has spaces
-  
+
   // object#_model#
   std::vector<Point3d> floorprint1_1;
   floorprint1_1.push_back(Point3d(0, 10, 0));
@@ -319,7 +319,7 @@ TEST_F(ModelFixture, ModelMerger_Clobber) {
   // first model is empty
 
   // second model has spaces
-  
+
   // object#_model#
   std::vector<Point3d> floorprint1_1;
   floorprint1_1.push_back(Point3d(0, 10, 0));
@@ -476,7 +476,7 @@ TEST_F(ModelFixture, ModelMerger_Remove) {
   // first model has spaces
 
   // second model is empty
-  
+
   // object#_model#
   std::vector<Point3d> floorprint1_1;
   floorprint1_1.push_back(Point3d(0, 10, 0));
@@ -535,4 +535,109 @@ TEST_F(ModelFixture, ModelMerger_Remove) {
   EXPECT_EQ(0u, model2.getConcreteModelObjects<Surface>().size());
   EXPECT_EQ(0u, model2.getConcreteModelObjects<SubSurface>().size());
   EXPECT_EQ(0u, model2.getConcreteModelObjects<ThermalZone>().size());
+}
+
+TEST_F(ModelFixture, ModelMerger_ThermalZone) {
+
+  // merge new space and new zone into existing empty model
+  {
+    Model model1;
+    Model model2;
+    std::map<UUID, UUID> handleMapping;
+
+    ThermalZone zone2(model2);
+    zone2.setName("New Zone");
+
+    Space space2(model2);
+    space2.setName("New Space");
+    space2.setThermalZone(zone2);
+
+    EXPECT_EQ(0u, model1.getConcreteModelObjects<Space>().size());
+    EXPECT_EQ(0u, model1.getConcreteModelObjects<ThermalZone>().size());
+    EXPECT_EQ(1u, model2.getConcreteModelObjects<Space>().size());
+    EXPECT_EQ(1u, model2.getConcreteModelObjects<ThermalZone>().size());
+
+    // do merge
+    ModelMerger merger;
+    merger.mergeModels(model1, model2, handleMapping);
+
+    EXPECT_EQ(1u, model1.getConcreteModelObjects<Space>().size());
+    EXPECT_EQ(1u, model1.getConcreteModelObjects<ThermalZone>().size());
+    EXPECT_EQ(1u, model2.getConcreteModelObjects<Space>().size());
+    EXPECT_EQ(1u, model2.getConcreteModelObjects<ThermalZone>().size());
+
+    ASSERT_TRUE(model1.getConcreteModelObjectByName<Space>("New Space"));
+    ASSERT_TRUE(model1.getConcreteModelObjectByName<ThermalZone>("New Zone"));
+    ASSERT_TRUE(model1.getConcreteModelObjectByName<Space>("New Space")->thermalZone());
+    EXPECT_EQ("New Zone", model1.getConcreteModelObjectByName<Space>("New Space")->thermalZone()->nameString());
+  }
+
+  // merge new space and new zone into existing model with same
+  {
+    Model model1;
+    Model model2;
+    std::map<UUID, UUID> handleMapping;
+
+    ThermalZone zone1(model1);
+
+    Space space1(model1);
+
+    ThermalZone zone2(model2);
+    zone2.setName("New Zone");
+
+    Space space2(model2);
+    space2.setName("New Space");
+    space2.setThermalZone(zone2);
+
+    handleMapping.insert(std::make_pair(space1.handle(), space2.handle()));
+    handleMapping.insert(std::make_pair(zone1.handle(), zone2.handle()));
+
+    EXPECT_EQ(1u, model1.getConcreteModelObjects<Space>().size());
+    EXPECT_EQ(1u, model1.getConcreteModelObjects<ThermalZone>().size());
+    EXPECT_EQ(1u, model2.getConcreteModelObjects<Space>().size());
+    EXPECT_EQ(1u, model2.getConcreteModelObjects<ThermalZone>().size());
+
+    // do merge
+    ModelMerger merger;
+    merger.mergeModels(model1, model2, handleMapping);
+
+    EXPECT_EQ(1u, model1.getConcreteModelObjects<Space>().size());
+    EXPECT_EQ(1u, model1.getConcreteModelObjects<ThermalZone>().size());
+    EXPECT_EQ(1u, model2.getConcreteModelObjects<Space>().size());
+    EXPECT_EQ(1u, model2.getConcreteModelObjects<ThermalZone>().size());
+
+    ASSERT_TRUE(model1.getConcreteModelObjectByName<Space>("New Space"));
+    ASSERT_TRUE(model1.getConcreteModelObjectByName<ThermalZone>("New Zone"));
+    ASSERT_TRUE(model1.getConcreteModelObjectByName<Space>("New Space")->thermalZone());
+    EXPECT_EQ("New Zone", model1.getConcreteModelObjectByName<Space>("New Space")->thermalZone()->nameString());
+  }
+
+  // merge new empty model with exsting model
+  {
+    Model model1;
+    Model model2;
+    std::map<UUID, UUID> handleMapping;
+
+    ThermalZone zone1(model1);
+    zone1.setName("Current Zone");
+
+    Space space1(model1);
+    space1.setName("Current Space");
+    space1.setThermalZone(zone1);
+
+    EXPECT_EQ(1u, model1.getConcreteModelObjects<Space>().size());
+    EXPECT_EQ(1u, model1.getConcreteModelObjects<ThermalZone>().size());
+    EXPECT_EQ(0u, model2.getConcreteModelObjects<Space>().size());
+    EXPECT_EQ(0u, model2.getConcreteModelObjects<ThermalZone>().size());
+
+    // do merge
+    ModelMerger merger;
+    merger.mergeModels(model1, model2, handleMapping);
+
+    EXPECT_EQ(0u, model1.getConcreteModelObjects<Space>().size());
+    EXPECT_EQ(0u, model1.getConcreteModelObjects<ThermalZone>().size());
+    EXPECT_EQ(0u, model2.getConcreteModelObjects<Space>().size());
+    EXPECT_EQ(0u, model2.getConcreteModelObjects<ThermalZone>().size());
+
+  }
 }

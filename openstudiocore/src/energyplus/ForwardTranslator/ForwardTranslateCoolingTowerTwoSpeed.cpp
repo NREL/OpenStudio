@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -327,6 +327,30 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerTwoSpeed( Coo
   if( (d = modelObject.sizingFactor()) )
   {
     idfObject.setDouble(CoolingTower_TwoSpeedFields::SizingFactor,d.get());
+  }
+
+  if( (d = modelObject.designInletAirDryBulbTemperature()) ) {
+    idfObject.setDouble(openstudio::CoolingTower_TwoSpeedFields::DesignInletAirDryBulbTemperature,d.get());
+  }
+
+  if( (d = modelObject.designInletAirWetBulbTemperature()) ) {
+    idfObject.setDouble(openstudio::CoolingTower_TwoSpeedFields::DesignInletAirWetBulbTemperature,d.get());
+  }
+
+  if( modelObject.isDesignApproachTemperatureAutosized() ) {
+    idfObject.setString(openstudio::CoolingTower_TwoSpeedFields::DesignApproachTemperature,"Autosize");
+  } else if( (d = modelObject.designApproachTemperature()) ) {
+    idfObject.setDouble(openstudio::CoolingTower_TwoSpeedFields::DesignApproachTemperature,d.get());
+  }
+
+  if( modelObject.isDesignRangeTemperatureAutosized() ) {
+    idfObject.setString(openstudio::CoolingTower_TwoSpeedFields::DesignRangeTemperature,"Autosize");
+  } else if( (d = modelObject.designApproachTemperature()) ) {
+    idfObject.setDouble(openstudio::CoolingTower_TwoSpeedFields::DesignRangeTemperature,d.get());
+  }
+
+  if( (s = modelObject.endUseSubcategory()) ) {
+    idfObject.setString(openstudio::CoolingTower_TwoSpeedFields::EndUseSubcategory,s.get());
   }
 
   return idfObject;

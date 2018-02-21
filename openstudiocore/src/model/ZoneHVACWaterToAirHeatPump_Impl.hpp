@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -68,7 +68,7 @@ namespace detail {
     //@{
 
     virtual ModelObject clone(Model model) const override;
-   
+
     virtual std::vector<IdfObject> remove() override;
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
@@ -152,6 +152,24 @@ namespace detail {
     bool isFanPlacementDefaulted() const;
     boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
 
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
@@ -161,7 +179,7 @@ namespace detail {
     bool setSupplyAirFlowRateDuringCoolingOperation(boost::optional<double> supplyAirFlowRateDuringCoolingOperation);
 
     bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
-    
+
     void resetSupplyAirFlowRateDuringCoolingOperation();
 
     void autosizeSupplyAirFlowRateDuringCoolingOperation();
@@ -185,9 +203,9 @@ namespace detail {
     bool setOutdoorAirFlowRateDuringCoolingOperation(boost::optional<double> outdoorAirFlowRateDuringCoolingOperation);
 
     bool setOutdoorAirFlowRateDuringCoolingOperation(double outdoorAirFlowRateDuringCoolingOperation);
-    
+
     void resetOutdoorAirFlowRateDuringCoolingOperation();
-    
+
     void autosizeOutdoorAirFlowRateDuringCoolingOperation();
 
     bool setOutdoorAirFlowRateDuringHeatingOperation(boost::optional<double> outdoorAirFlowRateDuringHeatingOperation);
@@ -243,7 +261,7 @@ namespace detail {
     bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
 
     void resetMaximumSupplyAirTemperaturefromSupplementalHeater();
-    
+
     void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
     bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(boost::optional<double> maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -78,7 +78,7 @@ class OSQuantityEdit2: public QWidget, public Nano::Observer {
   Q_OBJECT
  public:
 
-  OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits, 
+  OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits,
                   const std::string& ipUnits, bool isIP, QWidget * parent = nullptr);
 
   virtual ~OSQuantityEdit2();
@@ -199,7 +199,7 @@ class OSQuantityEdit2: public QWidget, public Nano::Observer {
 /** \deprecated Use OSQuantityEdit2. */
 // class OSQuantityEdit: public QWidget, public Nano::Observer {
 //   Q_OBJECT
-  
+
 //  public:
 
 //   OSQuantityEdit(bool isIP, QWidget * parent = nullptr);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -189,11 +189,11 @@ class MODEL_API EvaporativeFluidCoolerSingleSpeed : public StraightComponent {
 
   void resetEvaporationLossMode();
 
-  void setEvaporationLossFactor(double evaporationLossFactor);
+  bool setEvaporationLossFactor(double evaporationLossFactor);
 
   void resetEvaporationLossFactor();
 
-  void setDriftLossPercent(double driftLossPercent);
+  bool setDriftLossPercent(double driftLossPercent);
 
   void resetDriftLossPercent();
 
@@ -212,6 +212,16 @@ class MODEL_API EvaporativeFluidCoolerSingleSpeed : public StraightComponent {
   //@}
   /** @name Other */
   //@{
+
+  boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedUfactorTimesAreaValueatDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+
 
   //@}
  protected:
@@ -238,5 +248,4 @@ typedef std::vector<EvaporativeFluidCoolerSingleSpeed> EvaporativeFluidCoolerSin
 } // model
 } // openstudio
 
-#endif // MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_HPP
-
+#endif // MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_HPP

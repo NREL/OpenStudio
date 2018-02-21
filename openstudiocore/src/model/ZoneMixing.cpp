@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -295,7 +295,7 @@ namespace detail {
 
   bool ZoneMixing_Impl::setSourceZone(const ThermalZone& zone) {
     bool result(false);
-    
+
     // source zone cannot be the same as this zone
     if (zone.handle() != this->zone().handle()){
       result = setPointer(OS_ZoneMixingFields::SourceZoneName, zone.handle());
@@ -308,10 +308,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneMixing_Impl::setDeltaTemperature(double deltaTemperature) {
+  bool ZoneMixing_Impl::setDeltaTemperature(double deltaTemperature) {
     bool result = setDouble(OS_ZoneMixingFields::DeltaTemperature, deltaTemperature);
     OS_ASSERT(result);
     resetDeltaTemperatureSchedule();
+    return result;
   }
 
   void ZoneMixing_Impl::resetDeltaTemperature() {
@@ -526,8 +527,8 @@ void ZoneMixing::resetSourceZone() {
   getImpl<detail::ZoneMixing_Impl>()->resetSourceZone();
 }
 
-void ZoneMixing::setDeltaTemperature(double deltaTemperature) {
-  getImpl<detail::ZoneMixing_Impl>()->setDeltaTemperature(deltaTemperature);
+bool ZoneMixing::setDeltaTemperature(double deltaTemperature) {
+  return getImpl<detail::ZoneMixing_Impl>()->setDeltaTemperature(deltaTemperature);
 }
 
 void ZoneMixing::resetDeltaTemperature() {
@@ -592,7 +593,7 @@ void ZoneMixing::resetMaximumOutdoorTemperatureSchedule() {
 
 /// @cond
 ZoneMixing::ZoneMixing(std::shared_ptr<detail::ZoneMixing_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

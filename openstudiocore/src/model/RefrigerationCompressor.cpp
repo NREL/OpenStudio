@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -73,7 +73,21 @@ namespace detail {
   const std::vector<std::string>& RefrigerationCompressor_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // TODO: Implement checks
+      // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE CASES AND/OR WALKINS:
+      result.push_back("Refrigeration Compressor Electric Power");
+      result.push_back("Refrigeration Compressor Electric Energy");
+      result.push_back("Refrigeration Compressor Heat Transfer Rate");
+      result.push_back("Refrigeration Compressor Heat Transfer Energy");
+      result.push_back("Refrigeration Compressor Run Time Fraction");
+      // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE AIR CHILLERS:
+      result.push_back("Refrigeration Air Chiller System Compressor Electric Power");
+      result.push_back("Refrigeration Air Chiller System Compressor Electric Energy");
+      result.push_back("Refrigeration Air Chiller System Compressor Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Compressor Heat Transfer Energy");
+      result.push_back("Refrigeration Chiller Compressor Run TimeFraction");
     }
     return result;
   }
@@ -191,7 +205,7 @@ namespace detail {
     return result;
   }
 
-  void RefrigerationCompressor_Impl::setRatedSuperheat(boost::optional<double> ratedSuperheat) {
+  bool RefrigerationCompressor_Impl::setRatedSuperheat(boost::optional<double> ratedSuperheat) {
     bool result(false);
     if (ratedSuperheat) {
       result = setDouble(OS_Refrigeration_CompressorFields::RatedSuperheat, ratedSuperheat.get());
@@ -202,6 +216,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCompressor_Impl::resetRatedSuperheat() {
@@ -209,7 +224,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCompressor_Impl::setRatedReturnGasTemperature(boost::optional<double> ratedReturnGasTemperature) {
+  bool RefrigerationCompressor_Impl::setRatedReturnGasTemperature(boost::optional<double> ratedReturnGasTemperature) {
     bool result(false);
     if (ratedReturnGasTemperature) {
       result = setDouble(OS_Refrigeration_CompressorFields::RatedReturnGasTemperature, ratedReturnGasTemperature.get());
@@ -220,6 +235,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCompressor_Impl::resetRatedReturnGasTemperature() {
@@ -227,7 +243,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCompressor_Impl::setRatedLiquidTemperature(boost::optional<double> ratedLiquidTemperature) {
+  bool RefrigerationCompressor_Impl::setRatedLiquidTemperature(boost::optional<double> ratedLiquidTemperature) {
     bool result(false);
     if (ratedLiquidTemperature) {
       result = setDouble(OS_Refrigeration_CompressorFields::RatedLiquidTemperature, ratedLiquidTemperature.get());
@@ -238,6 +254,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCompressor_Impl::resetRatedLiquidTemperature() {
@@ -245,7 +262,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCompressor_Impl::setRatedSubcooling(boost::optional<double> ratedSubcooling) {
+  bool RefrigerationCompressor_Impl::setRatedSubcooling(boost::optional<double> ratedSubcooling) {
     bool result(false);
     if (ratedSubcooling) {
       result = setDouble(OS_Refrigeration_CompressorFields::RatedSubcooling, ratedSubcooling.get());
@@ -256,6 +273,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCompressor_Impl::resetRatedSubcooling() {
@@ -263,9 +281,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCompressor_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCompressor_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_CompressorFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCompressor_Impl::resetEndUseSubcategory() {
@@ -331,7 +350,7 @@ RefrigerationCompressor::RefrigerationCompressor(const Model& model)
   : ParentObject(RefrigerationCompressor::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::RefrigerationCompressor_Impl>());
-  
+
   CurveBicubic powerCurve = CurveBicubic(model);
   powerCurve.setName("Refrigeration Compressor Power Curve");
   powerCurve.setCoefficient1Constant(4451.46);
@@ -374,7 +393,7 @@ RefrigerationCompressor::RefrigerationCompressor(const Model& model)
   capacityCurve.setInputUnitTypeforX("Temperature");
   capacityCurve.setInputUnitTypeforY("Temperature");
   capacityCurve.setOutputUnitType("Capacity");
-  
+
   ok = setRefrigerationCompressorCapacityCurve(capacityCurve);
   OS_ASSERT(ok);
 
@@ -447,40 +466,40 @@ bool RefrigerationCompressor::setRefrigerationCompressorCapacityCurve(const Curv
   return getImpl<detail::RefrigerationCompressor_Impl>()->setRefrigerationCompressorCapacityCurve(curveBicubic);
 }
 
-void RefrigerationCompressor::setRatedSuperheat(double ratedSuperheat) {
-  getImpl<detail::RefrigerationCompressor_Impl>()->setRatedSuperheat(ratedSuperheat);
+bool RefrigerationCompressor::setRatedSuperheat(double ratedSuperheat) {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->setRatedSuperheat(ratedSuperheat);
 }
 
 void RefrigerationCompressor::resetRatedSuperheat() {
   getImpl<detail::RefrigerationCompressor_Impl>()->resetRatedSuperheat();
 }
 
-void RefrigerationCompressor::setRatedReturnGasTemperature(double ratedReturnGasTemperature) {
-  getImpl<detail::RefrigerationCompressor_Impl>()->setRatedReturnGasTemperature(ratedReturnGasTemperature);
+bool RefrigerationCompressor::setRatedReturnGasTemperature(double ratedReturnGasTemperature) {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->setRatedReturnGasTemperature(ratedReturnGasTemperature);
 }
 
 void RefrigerationCompressor::resetRatedReturnGasTemperature() {
   getImpl<detail::RefrigerationCompressor_Impl>()->resetRatedReturnGasTemperature();
 }
 
-void RefrigerationCompressor::setRatedLiquidTemperature(double ratedLiquidTemperature) {
-  getImpl<detail::RefrigerationCompressor_Impl>()->setRatedLiquidTemperature(ratedLiquidTemperature);
+bool RefrigerationCompressor::setRatedLiquidTemperature(double ratedLiquidTemperature) {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->setRatedLiquidTemperature(ratedLiquidTemperature);
 }
 
 void RefrigerationCompressor::resetRatedLiquidTemperature() {
   getImpl<detail::RefrigerationCompressor_Impl>()->resetRatedLiquidTemperature();
 }
 
-void RefrigerationCompressor::setRatedSubcooling(double ratedSubcooling) {
-  getImpl<detail::RefrigerationCompressor_Impl>()->setRatedSubcooling(ratedSubcooling);
+bool RefrigerationCompressor::setRatedSubcooling(double ratedSubcooling) {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->setRatedSubcooling(ratedSubcooling);
 }
 
 void RefrigerationCompressor::resetRatedSubcooling() {
   getImpl<detail::RefrigerationCompressor_Impl>()->resetRatedSubcooling();
 }
 
-void RefrigerationCompressor::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationCompressor_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationCompressor::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationCompressor::resetEndUseSubcategory() {
@@ -513,10 +532,9 @@ void RefrigerationCompressor::resetTranscriticalCompressorCapacityCurve() {
 
 /// @cond
 RefrigerationCompressor::RefrigerationCompressor(std::shared_ptr<detail::RefrigerationCompressor_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 
 } // model
-} // openstudio
-
+} // openstudio

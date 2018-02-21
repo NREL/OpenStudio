@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,7 +41,7 @@ class QTextEdit;
 class QVBoxLayout;
 
 namespace openstudio{
-  
+
 
 class InputCheckBox;
 
@@ -109,9 +109,9 @@ class DoubleInputView : public InputView
 
   DoubleInputView();
   virtual ~DoubleInputView() {}
-  
+
   QLineEdit * lineEdit;
-  
+
   void setName(const std::string& name, const boost::optional<std::string>& units, const boost::optional<std::string>& description);
 
   void setIncomplete(bool incomplete) override;

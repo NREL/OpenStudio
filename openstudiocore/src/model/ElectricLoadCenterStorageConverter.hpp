@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -62,10 +62,10 @@ class MODEL_API ElectricLoadCenterStorageConverter : public ParentObject {
   static IddObjectType iddObjectType();
 
   static std::vector<std::string> powerConversionEfficiencyMethodValues();
-  
+
   /** @name Getters */
   //@{
-    
+
   boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
   Schedule availabilitySchedule() const;

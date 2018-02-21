@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -58,7 +58,7 @@ HVACTemplateHelperDialog::HVACTemplateHelperDialog(const model::Model & model, Q
   auto divider1 = new QFrame();
   divider1->setFrameShape(QFrame::HLine);
   divider1->setFrameShadow(QFrame::Sunken);
-  mainVLayout->addWidget(divider1); 
+  mainVLayout->addWidget(divider1);
 
   auto scrollArea = new QScrollArea();
   mainVLayout->addWidget(scrollArea);
@@ -96,7 +96,7 @@ HVACTemplateHelperDialog::HVACTemplateHelperDialog(const model::Model & model, Q
   auto divider2 = new QFrame();
   divider2->setFrameShape(QFrame::HLine);
   divider2->setFrameShadow(QFrame::Sunken);
-  mainVLayout->addWidget(divider2); 
+  mainVLayout->addWidget(divider2);
 
   mainVLayout->addStretch();
 
@@ -135,7 +135,7 @@ std::vector<model::ThermalZone> HVACTemplateHelperDialog::selectedZones()
 
     i++;
   }
-   
+
   return result;
 }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -82,7 +82,30 @@ namespace detail {
   const std::vector<std::string>& EvaporativeFluidCoolerSingleSpeed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Cooling Tower Fan Electric Power");
+      result.push_back("Cooling Tower Fan Electric Energy");
+      result.push_back("Cooling Tower Heat Transfer Rate");
+      result.push_back("Cooling Tower Inlet Temperature");
+      result.push_back("Cooling Tower Outlet Temperature");
+      result.push_back("Cooling Tower Mass Flow Rate");
+      result.push_back("Cooling Tower Bypass Fraction");
+      result.push_back("Cooling Tower Make Up Water Volume Flow Rate");
+      result.push_back("Cooling Tower Make Up Water Volume");
+      result.push_back("Cooling Tower Water Evaporation Volume Flow Rate");
+      result.push_back("Cooling Tower Water Evaporation Volume");
+      result.push_back("Cooling Tower Water Drift Volume Flow Rate");
+      result.push_back("Evaporative Fluid Cooler Water Drift");
+      result.push_back("Cooling Tower Water Blowdown Volume Flow Rate");
+      result.push_back("Cooling Tower Water Blowdown Volume");
+      result.push_back("Cooling Tower Make Up Mains Water Volume");
+      // If Supply Water Storage Tank Name is specified:
+      // TODO: not implemented for now
+      //result.push_back("Cooling Tower Storage Tank Water Volume Flow Rate");
+      //result.push_back("Cooling Tower Storage Tank Water Volume");
+      //result.push_back("Cooling Tower Starved Storage Tank Water Volume Flow Rate");
+      //result.push_back("Cooling Tower Starved Storage Tank Water Volume");
     }
     return result;
   }
@@ -103,12 +126,12 @@ namespace detail {
     return result;
   }
 
-    unsigned EvaporativeFluidCoolerSingleSpeed_Impl::inletPort() 
+    unsigned EvaporativeFluidCoolerSingleSpeed_Impl::inletPort()
   {
     return OS_EvaporativeFluidCooler_SingleSpeedFields::WaterInletNodeName;
   }
 
-  unsigned EvaporativeFluidCoolerSingleSpeed_Impl::outletPort() 
+  unsigned EvaporativeFluidCoolerSingleSpeed_Impl::outletPort()
   {
     return OS_EvaporativeFluidCooler_SingleSpeedFields::WaterOutletNodeName;
   }
@@ -483,7 +506,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EvaporativeFluidCoolerSingleSpeed_Impl::setEvaporationLossFactor(boost::optional<double> evaporationLossFactor) {
+  bool EvaporativeFluidCoolerSingleSpeed_Impl::setEvaporationLossFactor(boost::optional<double> evaporationLossFactor) {
     bool result(false);
     if (evaporationLossFactor) {
       result = setDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::EvaporationLossFactor, evaporationLossFactor.get());
@@ -493,6 +516,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetEvaporationLossFactor() {
@@ -500,9 +524,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void EvaporativeFluidCoolerSingleSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
+  bool EvaporativeFluidCoolerSingleSpeed_Impl::setDriftLossPercent(double driftLossPercent) {
     bool result = setDouble(OS_EvaporativeFluidCooler_SingleSpeedFields::DriftLossPercent, driftLossPercent);
     OS_ASSERT(result);
+    return result;
   }
 
   void EvaporativeFluidCoolerSingleSpeed_Impl::resetDriftLossPercent() {
@@ -585,13 +610,60 @@ namespace detail {
     return true;
   }
 
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::autosizedDesignAirFlowRate() const {
+    return getAutosizedValue("Design Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::autosizedFanPoweratDesignAirFlowRate() const {
+    return getAutosizedValue("Fan Power at Design Air Flow Rate", "W");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::autosizedUfactorTimesAreaValueatDesignAirFlowRate() const {
+    return getAutosizedValue("U-Factor Times Area Value at Design Air Flow Rate", "W/C");
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::autosizedDesignWaterFlowRate() const {
+    return getAutosizedValue("Design Water Flow Rate", "m3/s");
+  }
+
+  void EvaporativeFluidCoolerSingleSpeed_Impl::autosize() {
+    autosizeDesignAirFlowRate();
+    autosizeFanPoweratDesignAirFlowRate();
+    autosizeUfactorTimesAreaValueatDesignAirFlowRate();
+    autosizeDesignWaterFlowRate();
+  }
+
+  void EvaporativeFluidCoolerSingleSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignAirFlowRate();
+    if (val) {
+      setDesignAirFlowRate(val.get());
+    }
+
+    val = autosizedFanPoweratDesignAirFlowRate();
+    if (val) {
+      setFanPoweratDesignAirFlowRate(val.get());
+    }
+
+    val = autosizedUfactorTimesAreaValueatDesignAirFlowRate();
+    if (val) {
+      setUfactorTimesAreaValueatDesignAirFlowRate(val.get());
+    }
+
+    val = autosizedDesignWaterFlowRate();
+    if (val) {
+      setDesignWaterFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(const Model& model)
   : StraightComponent(EvaporativeFluidCoolerSingleSpeed::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>());
- 
+
   autosizeDesignAirFlowRate();
   autosizeFanPoweratDesignAirFlowRate();
   setDesignSprayWaterFlowRate(0.03);
@@ -869,16 +941,16 @@ void EvaporativeFluidCoolerSingleSpeed::resetEvaporationLossMode() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetEvaporationLossMode();
 }
 
-void EvaporativeFluidCoolerSingleSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
-  getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
+bool EvaporativeFluidCoolerSingleSpeed::setEvaporationLossFactor(double evaporationLossFactor) {
+  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setEvaporationLossFactor(evaporationLossFactor);
 }
 
 void EvaporativeFluidCoolerSingleSpeed::resetEvaporationLossFactor() {
   getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetEvaporationLossFactor();
 }
 
-void EvaporativeFluidCoolerSingleSpeed::setDriftLossPercent(double driftLossPercent) {
-  getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
+bool EvaporativeFluidCoolerSingleSpeed::setDriftLossPercent(double driftLossPercent) {
+  return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDriftLossPercent(driftLossPercent);
 }
 
 void EvaporativeFluidCoolerSingleSpeed::resetDriftLossPercent() {
@@ -911,10 +983,25 @@ void EvaporativeFluidCoolerSingleSpeed::resetBlowdownMakeupWaterUsageSchedule() 
 
 /// @cond
 EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(std::shared_ptr<detail::EvaporativeFluidCoolerSingleSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 
-} // model
-} // openstudio
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed::autosizedDesignAirFlowRate() const {
+    return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->autosizedDesignAirFlowRate();
+  }
 
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed::autosizedFanPoweratDesignAirFlowRate() const {
+    return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->autosizedFanPoweratDesignAirFlowRate();
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed::autosizedUfactorTimesAreaValueatDesignAirFlowRate() const {
+    return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->autosizedUfactorTimesAreaValueatDesignAirFlowRate();
+  }
+
+  boost::optional<double> EvaporativeFluidCoolerSingleSpeed::autosizedDesignWaterFlowRate() const {
+    return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->autosizedDesignWaterFlowRate();
+  }
+
+} // model
+} // openstudio

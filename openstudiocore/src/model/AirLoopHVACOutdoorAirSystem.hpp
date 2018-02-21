@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -138,7 +138,7 @@ class MODEL_API AirLoopHVACOutdoorAirSystem : public HVACComponent {
   ControllerOutdoorAir getControllerOutdoorAir() const;
 
   /** Sets the ControllerOutdoorAir object associated with the AirLoopHVACOutdoorAirSystem. **/
-  void setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir );
+  bool setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir );
 
   /** Reimplemented from HVACComponent. **/
   boost::optional<AirLoopHVAC> airLoop() const;

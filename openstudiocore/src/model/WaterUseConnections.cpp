@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -78,7 +78,29 @@ namespace detail {
   const std::vector<std::string>& WaterUseConnections_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Water Use Connections Hot Water Mass Flow Rate");
+      result.push_back("Water Use Connections Cold Water Mass Flow Rate");
+      result.push_back("Water Use Connections Total Mass Flow Rate");
+      result.push_back("Water Use Connections Drain Water Mass Flow Rate");
+      result.push_back("Water Use Connections Heat Recovery Mass Flow Rate");
+      result.push_back("Water Use Connections Hot Water Volume Flow Rate");
+      result.push_back("Water Use Connections Cold Water Volume Flow Rate");
+      result.push_back("Water Use Connections Total Volume Flow Rate");
+      result.push_back("Water Use Connections Hot Water Volume");
+      result.push_back("Water Use Connections Cold Water Volume");
+      result.push_back("Water Use Connections Total Volume");
+      result.push_back("Water Use Connections Hot Water Temperature");
+      result.push_back("Water Use Connections Cold Water Temperature");
+      result.push_back("Water Use Connections Drain Water Temperature");
+      result.push_back("Water Use Connections Return Water Temperature");
+      result.push_back("Water Use Connections Waste Water Temperature");
+      result.push_back("Water Use Connections Heat Recovery Water Temperature");
+      result.push_back("Water Use Connections Heat Recovery Effectiveness");
+      result.push_back("Water Use Connections Heat Recovery Rate");
+      result.push_back("Water Use Connections Heat Recovery Energy");
+      result.push_back("Water Use Connections Plant Hot Water Energy");
     }
     return result;
   }
@@ -191,7 +213,7 @@ namespace detail {
   {
     return OS_WaterUse_ConnectionsFields::InletNodeName;
   }
-  
+
   unsigned WaterUseConnections_Impl::outletPort()
   {
     return OS_WaterUse_ConnectionsFields::OutletNodeName;
@@ -208,7 +230,7 @@ namespace detail {
       WorkspaceExtensibleGroup group = elem.cast<WorkspaceExtensibleGroup>();
 
       boost::optional<WorkspaceObject> wo = group.getTarget(OS_WaterUse_ConnectionsExtensibleFields::WaterUseEquipmentName);
-       
+
       if( wo )
       {
         WaterUseEquipment equipment = wo->cast<WaterUseEquipment>();
@@ -219,11 +241,11 @@ namespace detail {
 
     return result;
   }
-  
+
   bool WaterUseConnections_Impl::addWaterUseEquipment(const WaterUseEquipment & waterUseEquipment)
   {
     bool result = false;
-  
+
     if( waterUseEquipment.model() == model() )
     {
       WorkspaceExtensibleGroup group = getObject<WaterUseConnections>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
@@ -235,7 +257,7 @@ namespace detail {
 
     return result;
   }
-  
+
   bool WaterUseConnections_Impl::removeWaterUseEquipment(WaterUseEquipment & _waterUseEquipment)
   {
     std::vector<WaterUseEquipment> equipment = waterUseEquipment();
@@ -334,7 +356,7 @@ bool WaterUseConnections::removeWaterUseEquipment(WaterUseEquipment & waterUseEq
 
 /// @cond
 WaterUseConnections::WaterUseConnections(std::shared_ptr<detail::WaterUseConnections_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 

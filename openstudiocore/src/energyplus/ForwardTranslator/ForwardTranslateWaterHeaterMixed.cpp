@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -221,12 +221,12 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
   }
 
   // OnCycleParasiticFuelType
-  
+
   s = modelObject.onCycleParasiticFuelType();
   if( s )
   {
     idfObject.setString(WaterHeater_MixedFields::OnCycleParasiticFuelType,s.get());
-  } 
+  }
 
   // OnCycleParasiticHeatFractiontoTank
 
@@ -309,7 +309,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
   }
 
   // OffCycleLossFractiontoThermalZone
-  
+
   value = modelObject.offCycleLossFractiontoThermalZone();
   if( value )
   {
@@ -325,7 +325,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
   }
 
   // OnCycleLossFractiontoThermalZone
-  
+
   value = modelObject.onCycleLossFractiontoThermalZone();
   if( value )
   {
@@ -464,7 +464,32 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
     idfObject.setDouble(WaterHeater_MixedFields::IndirectWaterHeatingRecoveryTime,value.get());
   }
 
-  idfObject.setString(WaterHeater_MixedFields::SourceSideFlowControlMode,"IndirectHeatPrimarySetpoint");
+  // SourceSideFlowControlMode
+  s = modelObject.sourceSideFlowControlMode();
+  if( s )
+  {
+    idfObject.setString(WaterHeater_MixedFields::SourceSideFlowControlMode,s.get());
+
+    if ( openstudio::istringEqual("IndirectHeatAlternateSetpoint", s.get()) ) {
+      // IndirectAlternateSetpointTemperatureScheduleName
+      schedule = modelObject.indirectAlternateSetpointTemperatureSchedule();
+      if( schedule  ) {
+        translateAndMapModelObject(schedule.get());
+        idfObject.setString(WaterHeater_MixedFields::IndirectAlternateSetpointTemperatureScheduleName,schedule->name().get());
+      } else {
+        LOG(Error, "Something really wrong happened, the Source Side Control Mode is set to 'IndirectHeatAlternateSetpoint' yet "
+                   "there is no IndirectAlternateSetpointTemperatureScheduleName which is impossible per model logic for "
+                   << modelObject.briefDescription());
+      }
+    }
+
+  }
+
+
+  // EndUseSubcategory
+  if( (s = modelObject.endUseSubcategory()) ) {
+    idfObject.setString(WaterHeater_MixedFields::EndUseSubcategory,s.get());
+  }
 
   return boost::optional<IdfObject>(idfObject);
 }

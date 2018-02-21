@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -300,6 +300,32 @@ namespace detail {
     return value;
   }
 
+  bool EnergyManagementSystemOutputVariable_Impl::exportToBCVTB() const {
+    boost::optional<std::string> value = getString(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB, true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "True");
+  }
+
+  bool EnergyManagementSystemOutputVariable_Impl::isExportToBCVTBDefaulted() const {
+    return isEmpty(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB);
+  }
+
+  bool EnergyManagementSystemOutputVariable_Impl::setExportToBCVTB(bool exportToBCVTB) {
+    bool result = false;
+    if (exportToBCVTB) {
+      result = setString(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB, "True");
+    } else {
+      result = setString(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB, "False");
+    }
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void EnergyManagementSystemOutputVariable_Impl::resetExportToBCVTB() {
+    bool result = setString(OS_EnergyManagementSystem_OutputVariableFields::ExportToBCVTB, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const Model& model, const std::string eMSVariableName)
@@ -320,7 +346,7 @@ EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(const
   bool ok = setEMSVariableName(object);
   if (!ok) {
     remove();
-    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to " 
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s eMSVariableName to "
       << object.briefDescription() << ".");
   }
   setUpdateFrequency("ZoneTimestep");
@@ -548,12 +574,27 @@ bool EnergyManagementSystemOutputVariable::setEMSVariableName(const EnergyManage
   return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setEMSVariableName(object);
 }
 
+bool EnergyManagementSystemOutputVariable::exportToBCVTB() const {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->exportToBCVTB();
+}
+
+bool EnergyManagementSystemOutputVariable::isExportToBCVTBDefaulted() const {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->isExportToBCVTBDefaulted();
+}
+
+bool EnergyManagementSystemOutputVariable::setExportToBCVTB(bool exportToBCVTB) {
+  return getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->setExportToBCVTB(exportToBCVTB);
+}
+
+void EnergyManagementSystemOutputVariable::resetExportToBCVTB() {
+  getImpl<detail::EnergyManagementSystemOutputVariable_Impl>()->resetExportToBCVTB();
+}
+
 /// @cond
 EnergyManagementSystemOutputVariable::EnergyManagementSystemOutputVariable(std::shared_ptr<detail::EnergyManagementSystemOutputVariable_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 
 } // model
 } // openstudio
-

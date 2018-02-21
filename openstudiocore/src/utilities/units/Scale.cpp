@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -76,21 +76,21 @@ namespace openstudio{
   }
 
   /** Static constant defining SI prefix for 10^24. */
-  const Scale& yotta() 
+  const Scale& yotta()
   {
     static Scale Y = {"Y", "yotta",24,1.0E24};
     return Y;
   }
 
   /** Static constant defining SI prefix for 10^21. */
-  const Scale& zetta() 
+  const Scale& zetta()
   {
     static Scale Z = {"Z", "zetta",21,1.0E21};
     return Z;
   }
 
   /** Static constant defining SI prefix for 10^18. */
-  const Scale& exa() 
+  const Scale& exa()
   {
     static Scale E = {"E", "exa",18,1.0E18};
     return E;
@@ -123,7 +123,7 @@ namespace openstudio{
     static Scale M = {"M", "mega",6,1.0E6};
     return M;
   }
-  
+
   /** Static constant defining SI prefix for 10^5. */
   UTILITIES_API const Scale& hectokilo()
   {
@@ -216,7 +216,7 @@ namespace openstudio{
   }
 
   /** Static constant defining SI prefix for 10^{-12} */
-  const Scale& pico() 
+  const Scale& pico()
   {
     static Scale p = {"p", "pico",-12,1.0E-12};
     return p;
@@ -237,14 +237,14 @@ namespace openstudio{
   }
 
   /** Static constant defining SI prefix for 10^{-21} */
-  const Scale& zepto() 
+  const Scale& zepto()
   {
     static Scale z = {"z", "zepto",-21,1.0E-21};
     return z;
   }
 
   /** Static constant defining SI prefix for 10^{-24} */
-  const Scale& yocto() 
+  const Scale& yocto()
   {
     static Scale y = {"y", "yocto",-24,1.0E-24};
     return y;

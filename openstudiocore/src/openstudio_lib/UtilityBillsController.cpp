@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -60,7 +60,7 @@ UtilityBillsController::UtilityBillsController(const model::Model& model)
 
 void UtilityBillsController::onAddObject(const openstudio::IddObjectType& iddObjectType)
 {
-  OSItemSelector* itemSelector = this->subTabView()->itemSelector(); 
+  OSItemSelector* itemSelector = this->subTabView()->itemSelector();
   UtilityBillAllFuelTypesListView * utilityBillAllFuelTypesListView = qobject_cast<UtilityBillAllFuelTypesListView *>(itemSelector);
   OS_ASSERT(utilityBillAllFuelTypesListView);
   FuelType fuelType = utilityBillAllFuelTypesListView->currentFuelType();

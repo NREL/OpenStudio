@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -181,7 +181,7 @@ DaylightingDeviceShelf::DaylightingDeviceShelf(const SubSurface& subSurface)
   }
 
   bool test = setPointer(OS_DaylightingDevice_ShelfFields::WindowName, subSurface.handle());
-  OS_ASSERT(test); 
+  OS_ASSERT(test);
 }
 
 IddObjectType DaylightingDeviceShelf::iddObjectType() {
@@ -224,7 +224,7 @@ SubSurface DaylightingDeviceShelf::subSurface() const
 
 /// @cond
 DaylightingDeviceShelf::DaylightingDeviceShelf(std::shared_ptr<detail::DaylightingDeviceShelf_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

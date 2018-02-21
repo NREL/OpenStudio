@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -79,8 +79,18 @@ TEST_F(IdfFixture, IdfFile_Workspace_DefaultConstructor)
 {
   Workspace workspaceNone(StrictnessLevel::None);
   EXPECT_TRUE(workspaceNone.isValid());
+  // Make sure the default is IddFileType::EnergyPlus
+  EXPECT_EQ(IddFileType::EnergyPlus, workspaceNone.iddFileType().value());
+
   Workspace workspaceDraft(StrictnessLevel::Draft);
   EXPECT_TRUE(workspaceDraft.isValid());
+  EXPECT_EQ(IddFileType::EnergyPlus, workspaceDraft.iddFileType().value());
+
+  // Test an OpenStudio one
+  Workspace workspaceOS(StrictnessLevel::Draft, IddFileType::OpenStudio);
+  EXPECT_TRUE(workspaceOS.isValid());
+  EXPECT_EQ(IddFileType::OpenStudio, workspaceOS.iddFileType().value());
+
   EXPECT_ANY_THROW(Workspace workspaceFinal(StrictnessLevel::Final));
 }
 
@@ -88,6 +98,10 @@ TEST_F(IdfFixture, IdfFile_Workspace_Roundtrip)
 {
   ASSERT_TRUE(epIdfFile.objects().size() > 0);
   Workspace workspace(epIdfFile,StrictnessLevel::None);
+
+  // make sure this also creates an IddFileType::EnergyPlus
+  EXPECT_EQ(IddFileType::EnergyPlus, workspace.iddFileType().value());
+
   IdfFile copyOfIdfFile = workspace.toIdfFile();
   // until == available, print out for diff
   openstudio::path outPath = outDir/toPath("passedThroughWorkspace.idf");
@@ -490,23 +504,23 @@ TEST_F(IdfFixture, Workspace_SameNameNotReference)
 
   EXPECT_TRUE(w1->handle () != w2->handle ());
 
-  ASSERT_TRUE(object1->getString(Output_MeterFields::Name));
-  EXPECT_EQ("", object1->getString(Output_MeterFields::Name).get());
+  ASSERT_TRUE(object1->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("", object1->getString(Output_MeterFields::KeyName).get());
 
-  ASSERT_TRUE(object2->getString(Output_MeterFields::Name));
-  EXPECT_EQ("", object2->getString(Output_MeterFields::Name).get());
+  ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("", object2->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object1->setString(Output_MeterFields::Name, "Gas:Facility"));
-  ASSERT_TRUE(object1->getString(Output_MeterFields::Name));
-  EXPECT_EQ("Gas:Facility", object1->getString(Output_MeterFields::Name).get());
+  EXPECT_TRUE(object1->setString(Output_MeterFields::KeyName, "Gas:Facility"));
+  ASSERT_TRUE(object1->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("Gas:Facility", object1->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object2->setString(Output_MeterFields::Name, "Gas:Building"));
-  ASSERT_TRUE(object2->getString(Output_MeterFields::Name));
-  EXPECT_EQ("Gas:Building", object2->getString(Output_MeterFields::Name).get());
+  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "Gas:Building"));
+  ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("Gas:Building", object2->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object2->setString(Output_MeterFields::Name, "Gas:Facility"));
-  ASSERT_TRUE(object2->getString(Output_MeterFields::Name));
-  EXPECT_EQ("Gas:Facility", object2->getString(Output_MeterFields::Name).get());
+  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "Gas:Facility"));
+  ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
+  EXPECT_EQ("Gas:Facility", object2->getString(Output_MeterFields::KeyName).get());
 
 }
 
@@ -1289,7 +1303,7 @@ TEST_F(IdfFixture, Workspace_SpecialNames) {
   EXPECT_TRUE(lights2.setString(LightsFields::ZoneorZoneListName, "Office, Hallway, and Other Zone"));
   ASSERT_TRUE(lights2.getTarget(LightsFields::ZoneorZoneListName));
   EXPECT_EQ(zone.handle(), lights2.getTarget(LightsFields::ZoneorZoneListName).get().handle());
-} 
+}
 
 TEST_F(IdfFixture,Workspace_AvoidingNameClashes_IdfObject) {
   // create workspace with one object
@@ -1473,7 +1487,7 @@ TEST_F(IdfFixture,Workspace_LocateURLs) {
   // DLM: replace with OS_WeatherFileFields
 
   // create workspace with single TDV object in it
-  Workspace ws;
+  Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject owo = ws.addObject(IdfObject(IddObjectType::OS_WeatherFile));
   ASSERT_TRUE(owo);
   WorkspaceObject epw = *owo;
@@ -2069,7 +2083,7 @@ TEST_F(IdfFixture, Workspace_DaylightingControlsZoneName)
 
 }
 
-TEST_F(IdfFixture, Workspace_NextName) 
+TEST_F(IdfFixture, Workspace_NextName)
 {
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
@@ -2106,7 +2120,7 @@ TEST_F(IdfFixture, Workspace_NextName)
   EXPECT_EQ("Zone 2", ws.nextName(IddObjectType::Zone, true));
 }
 
-TEST_F(IdfFixture, Workspace_GetObjectsByNameUUID) 
+TEST_F(IdfFixture, Workspace_GetObjectsByNameUUID)
 {
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 

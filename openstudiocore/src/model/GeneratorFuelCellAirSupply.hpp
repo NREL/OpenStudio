@@ -68,7 +68,7 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
                                       const CurveQuadratic& electricPowerCurve,
                                       const CurveQuadratic& fuelRateCurve,
                                       const CurveCubic& blowerPowerCurve);
-  
+
   virtual ~GeneratorFuelCellAirSupply() {}
 
   //@}
@@ -137,7 +137,7 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
 
   bool setAirSupplyRateCalculationMode(const std::string& airSupplyRateCalculationMode);
 
-  void setStoichiometricRatio(double stoichiometricRatio);
+  bool setStoichiometricRatio(double stoichiometricRatio);
 
   void resetStoichiometricRatio();
 
@@ -145,7 +145,7 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
 
   void resetAirRateFunctionofElectricPowerCurve();
 
-  void setAirRateAirTemperatureCoefficient(double airRateAirTemperatureCoefficient);
+  bool setAirRateAirTemperatureCoefficient(double airRateAirTemperatureCoefficient);
 
   void resetAirRateAirTemperatureCoefficient();
 
@@ -191,4 +191,3 @@ typedef std::vector<GeneratorFuelCellAirSupply> GeneratorFuelCellAirSupplyVector
 } // openstudio
 
 #endif // MODEL_GENERATORFUELCELLAIRSUPPLY_HPP
-

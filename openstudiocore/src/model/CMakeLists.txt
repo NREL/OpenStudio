@@ -41,8 +41,11 @@ set(${target_name}_src
   ThreeJSReverseTranslator.cpp
   ModelMerger.hpp
   ModelMerger.cpp
-  
+
   ConcreteModelObjects.hpp
+  AdditionalProperties.hpp
+  AdditionalProperties_Impl.hpp
+  AdditionalProperties.cpp
   AirConditionerVariableRefrigerantFlow.hpp
   AirConditionerVariableRefrigerantFlow_Impl.hpp
   AirConditionerVariableRefrigerantFlow.cpp
@@ -151,9 +154,15 @@ set(${target_name}_src
   AirLoopHVACZoneSplitter.hpp
   AirLoopHVACZoneSplitter_Impl.hpp
   AirLoopHVACZoneSplitter.cpp
+  AirTerminalDualDuctConstantVolume.hpp
+  AirTerminalDualDuctConstantVolume_Impl.hpp
+  AirTerminalDualDuctConstantVolume.cpp
   AirTerminalDualDuctVAV.hpp
   AirTerminalDualDuctVAV_Impl.hpp
   AirTerminalDualDuctVAV.cpp
+  AirTerminalDualDuctVAVOutdoorAir.hpp
+  AirTerminalDualDuctVAVOutdoorAir_Impl.hpp
+  AirTerminalDualDuctVAVOutdoorAir.cpp
   AirTerminalSingleDuctInletSideMixer.hpp
   AirTerminalSingleDuctInletSideMixer_Impl.hpp
   AirTerminalSingleDuctInletSideMixer.cpp
@@ -196,6 +205,9 @@ set(${target_name}_src
   AvailabilityManager.hpp
   AvailabilityManager_Impl.hpp
   AvailabilityManager.cpp
+  AvailabilityManagerAssignmentList.hpp
+  AvailabilityManagerAssignmentList_Impl.hpp
+  AvailabilityManagerAssignmentList.cpp
   AvailabilityManagerOptimumStart.hpp
   AvailabilityManagerOptimumStart_Impl.hpp
   AvailabilityManagerOptimumStart.cpp
@@ -211,6 +223,28 @@ set(${target_name}_src
   AvailabilityManagerNightCycle.hpp
   AvailabilityManagerNightCycle_Impl.hpp
   AvailabilityManagerNightCycle.cpp
+  AvailabilityManagerHighTemperatureTurnOn.hpp
+  AvailabilityManagerHighTemperatureTurnOn_Impl.hpp
+  AvailabilityManagerHighTemperatureTurnOn.cpp
+  AvailabilityManagerHighTemperatureTurnOff.hpp
+  AvailabilityManagerHighTemperatureTurnOff_Impl.hpp
+  AvailabilityManagerHighTemperatureTurnOff.cpp
+  AvailabilityManagerLowTemperatureTurnOn.hpp
+  AvailabilityManagerLowTemperatureTurnOn_Impl.hpp
+  AvailabilityManagerLowTemperatureTurnOn.cpp
+  AvailabilityManagerLowTemperatureTurnOff.hpp
+  AvailabilityManagerLowTemperatureTurnOff_Impl.hpp
+  AvailabilityManagerLowTemperatureTurnOff.cpp
+  AvailabilityManagerScheduled.hpp
+  AvailabilityManagerScheduled_Impl.hpp
+  AvailabilityManagerScheduled.cpp
+  AvailabilityManagerScheduledOn.hpp
+  AvailabilityManagerScheduledOn_Impl.hpp
+  AvailabilityManagerScheduledOn.cpp
+  AvailabilityManagerScheduledOff.hpp
+  AvailabilityManagerScheduledOff_Impl.hpp
+  AvailabilityManagerScheduledOff.cpp
+
   Blind.hpp
   Blind_Impl.hpp
   Blind.cpp
@@ -592,12 +626,69 @@ set(${target_name}_src
   EvaporativeFluidCoolerTwoSpeed.hpp
   EvaporativeFluidCoolerTwoSpeed_Impl.hpp
   EvaporativeFluidCoolerTwoSpeed.cpp
+  ExteriorLoadInstance.hpp
+  ExteriorLoadInstance_Impl.hpp
+  ExteriorLoadInstance.cpp
+  ExteriorLoadDefinition.hpp
+  ExteriorLoadDefinition_Impl.hpp
+  ExteriorLoadDefinition.cpp
   ExteriorLights.hpp
   ExteriorLights_Impl.hpp
   ExteriorLights.cpp
   ExteriorLightsDefinition.hpp
   ExteriorLightsDefinition_Impl.hpp
   ExteriorLightsDefinition.cpp
+  ExteriorFuelEquipment.hpp
+  ExteriorFuelEquipment_Impl.hpp
+  ExteriorFuelEquipment.cpp
+  ExteriorFuelEquipmentDefinition.hpp
+  ExteriorFuelEquipmentDefinition_Impl.hpp
+  ExteriorFuelEquipmentDefinition.cpp
+  ExteriorWaterEquipment.hpp
+  ExteriorWaterEquipment_Impl.hpp
+  ExteriorWaterEquipment.cpp
+  ExteriorWaterEquipmentDefinition.hpp
+  ExteriorWaterEquipmentDefinition_Impl.hpp
+  ExteriorWaterEquipmentDefinition.cpp
+  ExternalInterface.cpp
+  ExternalInterface.hpp
+  ExternalInterface_Impl.hpp
+  ExternalInterfaceActuator.hpp
+  ExternalInterfaceActuator_Impl.hpp
+  ExternalInterfaceActuator.cpp
+  ExternalInterfaceFunctionalMockupUnitExportFromVariable.hpp
+  ExternalInterfaceFunctionalMockupUnitExportFromVariable_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitExportFromVariable.cpp
+  ExternalInterfaceFunctionalMockupUnitExportToActuator.hpp
+  ExternalInterfaceFunctionalMockupUnitExportToActuator_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitExportToActuator.cpp
+  ExternalInterfaceFunctionalMockupUnitExportToSchedule.hpp
+  ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitExportToSchedule.cpp
+  ExternalInterfaceFunctionalMockupUnitExportToVariable.hpp
+  ExternalInterfaceFunctionalMockupUnitExportToVariable_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitExportToVariable.cpp
+  ExternalInterfaceFunctionalMockupUnitImport.hpp
+  ExternalInterfaceFunctionalMockupUnitImport_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitImport.cpp
+  ExternalInterfaceFunctionalMockupUnitImportFromVariable.hpp
+  ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitImportFromVariable.cpp
+  ExternalInterfaceFunctionalMockupUnitImportToActuator.hpp
+  ExternalInterfaceFunctionalMockupUnitImportToActuator_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitImportToActuator.cpp
+  ExternalInterfaceFunctionalMockupUnitImportToSchedule.hpp
+  ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitImportToSchedule.cpp
+  ExternalInterfaceFunctionalMockupUnitImportToVariable.hpp
+  ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl.hpp
+  ExternalInterfaceFunctionalMockupUnitImportToVariable.cpp
+  ExternalInterfaceSchedule.hpp
+  ExternalInterfaceSchedule_Impl.hpp
+  ExternalInterfaceSchedule.cpp
+  ExternalInterfaceVariable.hpp
+  ExternalInterfaceVariable_Impl.hpp
+  ExternalInterfaceVariable.cpp
   Facility.hpp
   Facility_Impl.hpp
   Facility.cpp
@@ -625,6 +716,12 @@ set(${target_name}_src
   FluidCoolerTwoSpeed.hpp
   FluidCoolerTwoSpeed_Impl.hpp
   FluidCoolerTwoSpeed.cpp
+  FoundationKiva.hpp
+  FoundationKiva_Impl.hpp
+  FoundationKiva.cpp  
+  FoundationKivaSettings.hpp
+  FoundationKivaSettings_Impl.hpp
+  FoundationKivaSettings.cpp
   Gas.hpp
   Gas_Impl.hpp
   Gas.cpp
@@ -804,6 +901,9 @@ set(${target_name}_src
   MaterialPropertyGlazingSpectralData.hpp
   MaterialPropertyGlazingSpectralData_Impl.hpp
   MaterialPropertyGlazingSpectralData.cpp
+  MaterialPropertyMoisturePenetrationDepthSettings.hpp
+  MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp
+  MaterialPropertyMoisturePenetrationDepthSettings.cpp
   MeterCustom.hpp
   MeterCustom_Impl.hpp
   MeterCustom.cpp
@@ -1256,7 +1356,10 @@ set(${target_name}_src
   SurfacePropertyConvectionCoefficients_Impl.hpp
   SurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   SurfacePropertyConvectionCoefficientsMultipleSurface.hpp
-  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp
+  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp  
+  SurfacePropertyExposedFoundationPerimeter.cpp
+  SurfacePropertyExposedFoundationPerimeter.hpp
+  SurfacePropertyExposedFoundationPerimeter_Impl.hpp  
   SurfacePropertyOtherSideCoefficients.cpp
   SurfacePropertyOtherSideCoefficients.hpp
   SurfacePropertyOtherSideCoefficients_Impl.hpp
@@ -1510,6 +1613,7 @@ if(UNIX OR MINGW)
 endif()
 
 set(${target_name}_test_src
+  test/AdditionalProperties_GTest.cpp
   test/AirConditionerVariableRefrigerantFlow_GTest.cpp
   test/AirflowNetworkCrack_GTest.cpp
   test/AirflowNetworkDetailedOpening_GTest.cpp
@@ -1531,7 +1635,9 @@ set(${target_name}_test_src
   test/AirLoopHVACUnitarySystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
+  test/AirTerminalDualDuctConstantVolume_GTest.cpp
   test/AirTerminalDualDuctVAV_GTest.cpp
+  test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
   test/AirTerminalSingleDuctInletSideMixer_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeFourPipeInduction_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
@@ -1544,19 +1650,28 @@ set(${target_name}_test_src
   test/AirTerminalSingleDuctVAVHeatAndCoolReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVHeatAndCoolNoReheat_GTest.cpp
   test/Alpha1_GTest.cpp
+  test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp
   test/AvailabilityManagerHybridVentilation_GTest.cpp
   test/AvailabilityManagerOptimumStart_GTest.cpp
   test/AvailabilityManagerDifferentialThermostat_GTest.cpp
   test/AvailabilityManagerNightVentilation_GTest.cpp
+  test/AvailabilityManagerHighTemperatureTurnOn_GTest.cpp
+  test/AvailabilityManagerHighTemperatureTurnOff_GTest.cpp
+  test/AvailabilityManagerLowTemperatureTurnOn_GTest.cpp
+  test/AvailabilityManagerLowTemperatureTurnOff_GTest.cpp
+  test/AvailabilityManagerScheduled_GTest.cpp
+  test/AvailabilityManagerScheduledOn_GTest.cpp
+  test/AvailabilityManagerScheduledOff_GTest.cpp
+
   test/Blind_GTest.cpp
   test/BoilerHotWater_GTest.cpp
   test/BoilerSteam_GTest.cpp
   test/BuildingStory_GTest.cpp
   test/BuildingUnit_GTest.cpp
   test/Building_GTest.cpp
-  #test/CentralHeatPumpSystem_GTest.cpp
-  #test/CentralHeatPumpSystem_GTest.cpp
+  test/CentralHeatPumpSystem_GTest.cpp
+  # test/CentralHeatPumpSystemModule_GTest.cpp => Included in the above
   test/ChillerAbsorption_GTest.cpp
   test/ChillerAbsorptionIndirect_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
@@ -1640,6 +1755,22 @@ set(${target_name}_test_src
   test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/EvaporativeFluidCoolerTwoSpeed_GTest.cpp
+  test/ExteriorLights_GTest.cpp
+  test/ExteriorFuelEquipment_GTest.cpp
+  test/ExteriorWaterEquipment_GTest.cpp
+  test/ExternalInterface_GTest.cpp
+  test/ExternalInterfaceActuator_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitExportFromVariable_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitExportToActuator_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitExportToSchedule_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitExportToVariable_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitImport_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitImportFromVariable_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitImportToActuator_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitImportToSchedule_GTest.cpp
+  test/ExternalInterfaceFunctionalMockupUnitImportToVariable_GTest.cpp
+  test/ExternalInterfaceSchedule_GTest.cpp
+  test/ExternalInterfaceVariable_GTest.cpp
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp
   test/FanConstantVolume_GTest.cpp
@@ -1649,6 +1780,8 @@ set(${target_name}_test_src
   test/FloorplanJSForwardTranslator_GTest.cpp
   test/FluidCoolerSingleSpeed_GTest.cpp
   test/FluidCoolerTwoSpeed_GTest.cpp
+  test/FoundationKiva_GTest.cpp
+  test/FoundationKivaSettings_GTest.cpp
   test/GasEquipment_GTest.cpp
   test/GasMixture_GTest.cpp
   test/Gas_GTest.cpp
@@ -1689,6 +1822,7 @@ set(${target_name}_test_src
   test/MasslessOpaqueMaterial_GTest.cpp
   test/Material_GTest.cpp
   test/MaterialPropertyGlazingSpectralData_GTest.cpp
+  test/MaterialPropertyMoisturePenetrationDepthSettings_GTest.cpp
   test/MeterCustom_GTest.cpp
   test/MeterCustomDecrement_GTest.cpp
   test/ModelFixture.cpp
@@ -1807,6 +1941,7 @@ set(${target_name}_test_src
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
+  test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/ThermalStorageIceDetailed_GTest.cpp

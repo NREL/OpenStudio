@@ -12,6 +12,15 @@
     <rule IddField="Outlet Node" Access="HIDDEN"/>
     <rule IddField="Induced Air Outlet Node" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_CentralHeatPumpSystem">
+    <rule IddField="Cooling Loop Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Cooling Loop Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Loop Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Loop Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heating Loop Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heating Loop Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Chiller Heater Module List Name" Access="LOCKED"/>
+  </POLICY>
   <POLICY IddObjectType="OS_CoolingTower_SingleSpeed">
     <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
@@ -212,7 +221,6 @@
     <rule IddField="Cooling Coil Name" Access="HIDDEN"/>
     <rule IddField="Supplemental Heating Coil Name" Access="HIDDEN"/>
     <rule IddField="Design Specification Multispeed Heat Pump Object Name" Access="HIDDEN"/>
-    <rule IddField="Control Type" Access="HIDDEN"/>
     <rule IddField="Outdoor Dry-Bulb Temperature Sensor Node Name" Access="HIDDEN"/>
     <rule IddField="Design Specification Multispeed Object Name" Access="LOCKED"/>
   </POLICY>
@@ -557,6 +565,11 @@
     <rule IddField="Basin Heater Setpoint Temperature" Access="HIDDEN"/>
     <rule IddField="Basin Heater Operating Schedule Name" Access="HIDDEN"/>
     <rule IddField="Condenser Type" Access="HIDDEN"/>
+
+    <!-- REMOVE ONCE IMPLEMENTED IN SDK -->
+    <rule IddField="Condenser Heat Recovery Relative Capacity Fraction" Access="HIDDEN"/>
+    <rule IddField="Heat Recovery Inlet High Temperature Limit Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Heat Recovery Leaving Temperature Setpoint Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Chiller_Absorption_Indirect">
     <rule IddField="Chilled Water Inlet Node Name" Access="HIDDEN"/>
@@ -674,6 +687,16 @@
     <rule IddField="Hot Air Inlet Node" Access="HIDDEN"/>
     <rule IddField="Cold Air Inlet Node" Access="HIDDEN"/>
     <rule IddField="Design Specification Outdoor Air Object" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_DualDuct_VAV_OutdoorAir">
+    <rule IddField="Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Outdoor Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Recirculated Air Inlet Node" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_DualDuct_ConstantVolume">
+    <rule IddField="Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Hot Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Cold Air Inlet Node" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_AirTerminal_SingleDuct_InletSideMixer">
     <rule IddField="Terminal Unit Outlet" Access="HIDDEN"/>
@@ -1470,9 +1493,9 @@
     <rule IddField="Fraction Radiant" Access="LOCKED"/>
     <rule IddField="Sensible Heat Fraction" Access="LOCKED"/>
     <rule IddField="Carbon Dioxide Generation Rate" Access="LOCKED"/>
-    <rule IddField="Enable ASHRAE 55 Comfort Warnings" Access="LOCKED"/>
-    <rule IddField="Mean Radiant Temperature Calculation Type" Access="LOCKED"/>
-    <rule IddField="Thermal Comfort Model Type" Access="LOCKED"/>
+    <rule IddField="Enable ASHRAE 55 Comfort Warnings" Access="FREE"/>
+    <rule IddField="Mean Radiant Temperature Calculation Type" Access="FREE"/>
+    <rule IddField="Thermal Comfort Model Type" Access="FREE"/>
   </POLICY>
   <POLICY IddObjectType="OS_Lights_Definition">
     <rule IddField="Name" Access="LOCKED"/>

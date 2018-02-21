@@ -1,0 +1,50 @@
+/* These are all the variables for Key="Environment"
+ * Available by default in E+
+ * https://github.com/NREL/EnergyPlus/blob/d48fea0080e1d2befc982570c33eabc81e69335f/src/EnergyPlus/WeatherManager.cc#L715
+ */
+const std::vector<std::string>& Environment_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty())
+    {
+      result.push_back("Site Outdoor Air Drybulb Temperature");
+      result.push_back("Site Outdoor Air Dewpoint Temperature");
+      result.push_back("Site Outdoor Air Wetbulb Temperature");
+      result.push_back("Site Outdoor Air Humidity Ratio");
+      result.push_back("Site Outdoor Air Relative Humidity");
+      result.push_back("Site Outdoor Air Barometric Pressure");
+      result.push_back("Site Wind Speed");
+      result.push_back("Site Wind Direction");
+      result.push_back("Site Sky Temperature");
+      result.push_back("Site Horizontal Infrared Radiation Rate per Area");
+      result.push_back("Site Diffuse Solar Radiation Rate per Area");
+      result.push_back("Site Direct Solar Radiation Rate per Area");
+      result.push_back("Site Precipitation Depth");
+      result.push_back("Site Ground Reflected Solar Radiation Rate per Area");
+      result.push_back("Site Ground Temperature");
+      result.push_back("Site Surface Ground Temperature");
+      result.push_back("Site Deep Ground Temperature");
+      result.push_back("Site Simple Factor Model Ground Temperature");
+      result.push_back("Site Outdoor Air Enthalpy");
+      result.push_back("Site Outdoor Air Density");
+      result.push_back("Site Solar Azimuth Angle");
+      result.push_back("Site Solar Altitude Angle");
+      result.push_back("Site Solar Hour Angle");
+      result.push_back("Site Rain Status");
+      result.push_back("Site Snow on Ground Status");
+      result.push_back("Site Exterior Horizontal Sky Illuminance");
+      result.push_back("Site Exterior Horizontal Beam Illuminance");
+      result.push_back("Site Exterior Beam Normal Illuminance");
+      result.push_back("Site Sky Diffuse Solar Radiation Luminous Efficacy");
+      result.push_back("Site Beam Solar Radiation Luminous Efficacy");
+      result.push_back("Site Daylighting Model Sky Clearness");
+      result.push_back("Site Daylighting Model Sky Brightness");
+      result.push_back("Site Daylight Saving Time Status");
+      result.push_back("Site Day Type Index");
+      result.push_back("Site Mains Water Temperature");
+    }
+    return result;
+  }
+
+
+

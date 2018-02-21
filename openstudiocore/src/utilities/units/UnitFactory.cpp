@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -692,7 +692,7 @@ std::string extractUnitString(const std::string& text) {
     // main match at 1, 5, 9, or 13
     for (unsigned i = 1; i < 14; i += 4) {
       result = std::string(m[i].first,m[i].second);
-      if (!result.empty()) { 
+      if (!result.empty()) {
         return result;
       }
     }
@@ -720,7 +720,7 @@ std::string extractUnitString(const std::string& text) {
 std::string convertToStandardForm(const std::string& unitString) {
   std::string result(unitString);
   if (isDirectScaledUnit(unitString)) {
-    std::pair<std::string,std::pair<unsigned,std::string> > fragments = 
+    std::pair<std::string,std::pair<unsigned,std::string> > fragments =
         decomposeDirectScaledUnit(unitString);
     ScaleConstant s;
     s = ScaleFactory::instance().createScale(-static_cast<int>(fragments.second.first));

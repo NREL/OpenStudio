@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -49,11 +49,11 @@ struct IddFactoryOutFile {
                     const openstudio::path& outPath,
                     const std::string& outFileHeader);
 
-  IddFactoryOutFile(const IddFactoryOutFile& other) { 
+  IddFactoryOutFile(const IddFactoryOutFile& other) {
     throw std::runtime_error("Cannot copy IddFactoryOutFiles.");
   }
 
-  IddFactoryOutFile operator=(const IddFactoryOutFile& other) { 
+  IddFactoryOutFile operator=(const IddFactoryOutFile& other) {
     throw std::runtime_error("Cannot copy IddFactoryOutFiles.");
   }
 
@@ -69,7 +69,7 @@ struct GenerateIddFactoryOutFiles {
   IddFactoryOutFile iddFactoryCxx;
   std::vector< std::shared_ptr<IddFactoryOutFile> > iddFactoryIddFileCxxs;
   std::map<std::string,std::pair<std::string,bool> > checksumMap; // filename, (checksum, encountered)
-  
+
   GenerateIddFactoryOutFiles(const path& outPath,
                              const std::string& outFileHeader,
                              const std::vector<IddFileFactoryData>& iddFiles);

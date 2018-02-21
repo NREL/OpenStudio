@@ -9,9 +9,11 @@
 !    8.5;                    !- Version Identifier
 !  Version,
 !    8.6;                    !- Version Identifier
-
 !  Version,
 !    8.7;                    !- Version Identifier
+
+!  Version,
+!    8.8;                    !- Version Identifier
 
   FluidProperties:Name,
     R134a,                   !- Fluid Name
@@ -44,7 +46,7 @@
     92.000,94.000,101.060;
 
   FluidProperties:Saturated,
-    R134a,                   !- Name
+    R134a,                   !- Fluid Name
     Pressure,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R134aSaturatedTemperatures,  !- Temperature Values Name
@@ -65,7 +67,7 @@
     0.3379E+07,0.3519E+07,0.4059E+07;
 
   FluidProperties:Saturated,
-    R134a,                   !- Name
+    R134a,                   !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R134aSaturatedTemperatures,  !- Temperature Values Name
@@ -86,7 +88,7 @@
     0.3476E+06,0.3526E+06,0.3896E+06;
 
   FluidProperties:Saturated,
-    R134a,                   !- Name
+    R134a,                   !- Fluid Name
     Enthalpy,                !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R134aSaturatedTemperatures,  !- Temperature Values Name
@@ -107,7 +109,7 @@
     0.4239E+06,0.4219E+06,0.3896E+06;
 
   FluidProperties:Saturated,
-    R134a,                   !- Name
+    R134a,                   !- Fluid Name
     Density,                 !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R134aSaturatedTemperatures,  !- Temperature Values Name
@@ -128,7 +130,7 @@
     0.8144E+03,0.7878E+03,0.5119E+03;
 
   FluidProperties:Saturated,
-    R134a,                   !- Name
+    R134a,                   !- Fluid Name
     Density,                 !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R134aSaturatedTemperatures,  !- Temperature Values Name
@@ -149,7 +151,7 @@
     0.2343E+03,0.2551E+03,0.5119E+03;
 
   FluidProperties:Saturated,
-    R134a,                   !- Name
+    R134a,                   !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     Fluid,                   !- Fluid Phase
     R134aSaturatedTemperatures,  !- Temperature Values Name
@@ -170,7 +172,7 @@
     0.3072E+04,0.3567E+04,0.0000E+00;
 
   FluidProperties:Saturated,
-    R134a,                   !- Name
+    R134a,                   !- Fluid Name
     SpecificHeat,            !- Fluid Property Type
     FluidGas,                !- Fluid Phase
     R134aSaturatedTemperatures,  !- Temperature Values Name

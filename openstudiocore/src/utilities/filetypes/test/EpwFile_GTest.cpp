@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -65,7 +65,8 @@ TEST(Filetypes, EpwFile)
     EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), epwFile.startDayOfWeek());
     EXPECT_EQ(Date(MonthOfYear::Jan, 1), epwFile.startDate());
     EXPECT_EQ(Date(MonthOfYear::Dec, 31), epwFile.endDate());
-  }catch(...){
+    EXPECT_FALSE(epwFile.isActual());
+  } catch (...) {
     ASSERT_TRUE(false);
   }
 }
@@ -162,7 +163,8 @@ TEST(Filetypes, EpwFile_Data)
     EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), epwFile.startDayOfWeek());
     EXPECT_EQ(Date(MonthOfYear::Jan, 1), epwFile.startDate());
     EXPECT_EQ(Date(MonthOfYear::Dec, 31), epwFile.endDate());
-  }catch(...){
+    EXPECT_FALSE(epwFile.isActual());
+  } catch (...) {
     ASSERT_TRUE(false);
   }
 }
@@ -309,7 +311,8 @@ TEST(Filetypes, EpwFile_TMY)
     EXPECT_EQ(Date(MonthOfYear::Jan, 1), epwFile.startDate());
     EXPECT_EQ(Date(MonthOfYear::Dec, 31), epwFile.endDate());
     EXPECT_EQ(365, (epwFile.endDate() - epwFile.startDate()).totalDays() + 1);
-  }catch(...){
+    EXPECT_FALSE(epwFile.isActual());
+  } catch (...) {
     ASSERT_TRUE(false);
   }
 }
@@ -350,6 +353,7 @@ TEST(Filetypes, EpwFile_AMY)
     EXPECT_EQ(Date(MonthOfYear::Jan, 1, 1999), epwFile.startDate());
     EXPECT_EQ(Date(MonthOfYear::Dec, 31, 1999), epwFile.endDate());
     EXPECT_EQ(365, (epwFile.endDate() - epwFile.startDate()).totalDays() + 1);
+    EXPECT_TRUE(epwFile.isActual());
   }catch(...){
     ASSERT_TRUE(false);
   }
@@ -380,7 +384,8 @@ TEST(Filetypes, EpwFile_Wrap_AMY)
     EXPECT_EQ(Date(MonthOfYear::Apr, 10, 1999), epwFile.startDate());
     EXPECT_EQ(Date(MonthOfYear::Apr, 8, 2000), epwFile.endDate()); // 2000 is a leap year
     EXPECT_EQ(365, (epwFile.endDate() - epwFile.startDate()).totalDays() + 1);
-  }catch(...){
+    EXPECT_TRUE(epwFile.isActual());
+  } catch (...) {
     ASSERT_TRUE(false);
   }
 }

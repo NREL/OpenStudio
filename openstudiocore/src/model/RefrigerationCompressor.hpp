@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -95,23 +95,23 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
 
   bool setRefrigerationCompressorCapacityCurve(const CurveBicubic& curveBicubic);
 
-  void setRatedSuperheat(double ratedSuperheat);
+  bool setRatedSuperheat(double ratedSuperheat);
 
   void resetRatedSuperheat();
 
-  void setRatedReturnGasTemperature(double ratedReturnGasTemperature);
+  bool setRatedReturnGasTemperature(double ratedReturnGasTemperature);
 
   void resetRatedReturnGasTemperature();
 
-  void setRatedLiquidTemperature(double ratedLiquidTemperature);
+  bool setRatedLiquidTemperature(double ratedLiquidTemperature);
 
   void resetRatedLiquidTemperature();
 
-  void setRatedSubcooling(double ratedSubcooling);
+  bool setRatedSubcooling(double ratedSubcooling);
 
   void resetRatedSubcooling();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 
@@ -156,5 +156,4 @@ typedef std::vector<RefrigerationCompressor> RefrigerationCompressorVector;
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONCOMPRESSOR_HPP
-
+#endif // MODEL_REFRIGERATIONCOMPRESSOR_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -65,7 +65,7 @@ namespace detail{
   }
 
   SetpointManagerScheduled_Impl::SetpointManagerScheduled_Impl(
-      const SetpointManagerScheduled_Impl& other, 
+      const SetpointManagerScheduled_Impl& other,
       Model_Impl* model,
       bool keepHandles)
     : SetpointManager_Impl(other,model,keepHandles)
@@ -233,10 +233,10 @@ namespace detail{
   }
 
 } // detail
-  
+
 SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
                                                    Schedule& schedule)
-  : SetpointManager(SetpointManagerScheduled::iddObjectType(),model) 
+  : SetpointManager(SetpointManagerScheduled::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SetpointManagerScheduled_Impl>());
   bool ok = setControlVariable("Temperature");
@@ -268,7 +268,7 @@ SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
 }
 
 SetpointManagerScheduled::SetpointManagerScheduled(std::shared_ptr<detail::SetpointManagerScheduled_Impl> p)
-  : SetpointManager(p)
+  : SetpointManager(std::move(p))
 {
 }
 

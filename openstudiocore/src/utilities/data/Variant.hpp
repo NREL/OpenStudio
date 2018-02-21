@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,11 +38,11 @@
 #include <boost/variant.hpp>
 
 namespace openstudio {
-  
+
 /** \class VariantType
- *  \brief A listing of data types that can be held in a Variant. 
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro 
- *  call is: 
+ *  \brief A listing of data types that can be held in a Variant.
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
+ *  call is:
  *  \code
 OPENSTUDIO_ENUM( VariantType,
   ((Boolean)(Boolean)(0))
@@ -89,7 +89,7 @@ class UTILITIES_API Variant {
  private:
 
   REGISTER_LOGGER("openstudio.Variant");
-  
+
   VariantType m_type;
   boost::variant< bool, int, double, std::string > m_value;
 

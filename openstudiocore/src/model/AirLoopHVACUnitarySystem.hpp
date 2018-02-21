@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,7 +30,7 @@
 #define MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP
 
 #include "ModelAPI.hpp"
-#include "WaterToAirComponent.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 
@@ -48,7 +48,7 @@ namespace detail {
 } // detail
 
 /** AirLoopHVACUnitarySystem is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:UnitarySystem'. */
-class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
+class MODEL_API AirLoopHVACUnitarySystem : public ZoneHVACComponent {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -78,9 +78,9 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
   /** @name Getters */
   //@{
 
-  //std::string controlType() const;
+  std::string controlType() const;
 
-  //bool isControlTypeDefaulted() const;
+  bool isControlTypeDefaulted() const;
 
   boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;
 
@@ -228,9 +228,9 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
   /** @name Setters */
   //@{
 
-  //bool setControlType(std::string controlType);
+  bool setControlType(std::string controlType);
 
-  //void resetControlType();
+  void resetControlType();
 
   bool setControllingZoneorThermostatLocation(const ThermalZone& thermalZone);
 
@@ -268,7 +268,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   void resetCoolingCoil();
 
-  void setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil);
+  bool setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil);
 
   void resetUseDOASDXCoolingCoil();
 
@@ -359,17 +359,17 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
 
-  void setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
+  bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
 
   void resetMaximumSupplyAirTemperature();
 
   void autosizeMaximumSupplyAirTemperature();
 
-  void setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+  bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
 
   void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
-  void setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName);
+  bool setOutdoorDryBulbTemperatureSensorNodeName(std::string outdoorDryBulbTemperatureSensorNodeName);
 
   void resetOutdoorDryBulbTemperatureSensorNodeName();
 
@@ -413,6 +413,16 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
   /** @name Other */
   //@{
 
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const ;
+
+  boost::optional<double> autosizedMaximumSupplyAirTemperature() const ;
+
+
+
   //@}
  protected:
   /// @cond
@@ -438,5 +448,4 @@ typedef std::vector<AirLoopHVACUnitarySystem> AirLoopHVACUnitarySystemVector;
 } // model
 } // openstudio
 
-#endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP
-
+#endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP

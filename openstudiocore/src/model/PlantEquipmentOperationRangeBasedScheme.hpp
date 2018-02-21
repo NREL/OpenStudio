@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,9 +41,9 @@ namespace detail{
   class PlantEquipmentOperationRangeBasedScheme_Impl;
 }
 
-/** PlantEquipmentOperationRangeBasedScheme instances 
- * will be created with a single continuous load range between a minimum and maximum bound. 
- * This continuum can be subdivided to create multiple discrete ranges with different equipment assignments. 
+/** PlantEquipmentOperationRangeBasedScheme instances
+ * will be created with a single continuous load range between a minimum and maximum bound.
+ * This continuum can be subdivided to create multiple discrete ranges with different equipment assignments.
  * Ranges are identified by the value of their upper limit. A load range is allowed to be empty.
  * This interface is similar to ScheduleDay in OpenStudio, where an entire continuum must be filled in.
  * Here some ranges in the continuum maybe be empty (no equipment), signaling that the no equipment operates during
@@ -62,22 +62,22 @@ class MODEL_API PlantEquipmentOperationRangeBasedScheme : public PlantEquipmentO
   /** The maximum limit of the range based operation scheme. No load range can operate above this value. */
   double maximumUpperLimit() const;
 
-  /** The minimum limit of the range based operation scheme. No load range can operate below this value. 
+  /** The minimum limit of the range based operation scheme. No load range can operate below this value.
     * This is where the first load range will begin from. A default constructed PlantEquipmentOperationRangeBasedScheme will
     * have a single range defined between the minimumLowerLimit and the maximumUpperLimit. */
   double minimumLowerLimit() const;
 
-  /** Add a new load range, using the adjacent range as the lower limit, and "upperLimit" as the upper limit of the new range. 
+  /** Add a new load range, using the adjacent range as the lower limit, and "upperLimit" as the upper limit of the new range.
     * Returns true if the load range was succesfully added. Duplicates wil be removed from the equipment vector **/
   bool addLoadRange(double upperLimit, const std::vector<HVACComponent> & equipment);
 
-  /** Remove an existing load range identified by its upper limit. 
+  /** Remove an existing load range identified by its upper limit.
     * Every operation scheme in OpenStudio must span the entire continuum between 0 and a predefined upper limit,
-    * therefore it is not possible to remove the largest upper limit. Return the hvac equipment that was on the range. 
+    * therefore it is not possible to remove the largest upper limit. Return the hvac equipment that was on the range.
     * The next "higher" load range fills in the place in the load continum that the removed range occupied. */
   std::vector<HVACComponent> removeLoadRange(double upperLimit);
 
-  /** Return a vector of all of the load range upper limits. 
+  /** Return a vector of all of the load range upper limits.
     * A default constructed load range scheme, will return a vector with one element. */
   std::vector<double> loadRangeUpperLimits() const;
 
@@ -87,7 +87,7 @@ class MODEL_API PlantEquipmentOperationRangeBasedScheme : public PlantEquipmentO
   /** Add an HVACComponent instance to an existing load range. */
   bool addEquipment(double upperLimit, const HVACComponent & equipment);
 
-  /** Replace HVACComponent instances assigned to an existing load range. 
+  /** Replace HVACComponent instances assigned to an existing load range.
    *  This is useful for reording equipment.
    *  */
   bool replaceEquipment(double upperLimit, const std::vector<HVACComponent> & equipment);
@@ -97,7 +97,7 @@ class MODEL_API PlantEquipmentOperationRangeBasedScheme : public PlantEquipmentO
     * after a load operation scheme is default constructed. */
   bool addEquipment(const HVACComponent & equipment);
 
-  /** Replace HVACComponent instances assigned to the highest load range. 
+  /** Replace HVACComponent instances assigned to the highest load range.
    *  This is useful for reording equipment.
    * */
   bool replaceEquipment(const std::vector<HVACComponent> & equipment);
@@ -111,7 +111,7 @@ class MODEL_API PlantEquipmentOperationRangeBasedScheme : public PlantEquipmentO
   /** Remove all load ranges except the default range. All equipment will be removed. */
   void clearLoadRanges();
 
-  /// @cond 
+  /// @cond
 
   typedef detail::PlantEquipmentOperationRangeBasedScheme_Impl ImplType;
 
@@ -121,7 +121,7 @@ class MODEL_API PlantEquipmentOperationRangeBasedScheme : public PlantEquipmentO
 
   REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationRangeBasedScheme");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -79,7 +79,9 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Air Terminal VAV Damper Position");
     }
     return result;
   }
@@ -216,9 +218,10 @@ namespace detail {
     return result;
   }
 
-  void AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::setAirOutlet(std::string airOutlet) {
+  bool AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::setAirOutlet(std::string airOutlet) {
     bool result = setString(OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AirOutlet, airOutlet);
     OS_ASSERT(result);
+    return result;
   }
 
   bool AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::setConvergenceTolerance(double convergenceTolerance) {
@@ -235,12 +238,12 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::ReheatCoil);
   }
 
-  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::inletPort() 
+  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::inletPort()
   {
     return OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AirInlet;
   }
 
-  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::outletPort() 
+  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::outletPort()
   {
     return OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AirOutlet;
   }
@@ -275,7 +278,7 @@ namespace detail {
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-              
+
               _model.connect( inletNode,
                               inletNode.outletPort(),
                               this->getObject<ModelObject>(),
@@ -293,7 +296,7 @@ namespace detail {
                 thermalZone->addEquipment(mo);
               }
 
-              return true; 
+              return true;
             }
           }
         }
@@ -312,7 +315,7 @@ namespace detail {
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
+
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
@@ -389,10 +392,37 @@ namespace detail {
     HVACComponent coil = this->reheatCoil();
 
     HVACComponent coilClone = coil.clone(model).cast<HVACComponent>();
-    
+
     modelObjectClone.setReheatCoil(coilClone);
 
     return modelObjectClone;
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::autosizedMaximumAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::autosizedMaximumHotWaterorSteamFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Reheat Water Flow Rate", "m3/s");
+  }
+
+  void AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::autosize() {
+    autosizeMaximumAirFlowRate();
+    autosizeMaximumHotWaterorSteamFlowRate();
+  }
+
+  void AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumAirFlowRate();
+    if (val) {
+      setMaximumAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumHotWaterorSteamFlowRate();
+    if (val) {
+      setMaximumHotWaterorSteamFlowRate(val.get());
+    }
+
   }
 
 } // detail
@@ -504,10 +534,17 @@ bool AirTerminalSingleDuctVAVHeatAndCoolReheat::setMaximumReheatAirTemperature(d
 
 /// @cond
 AirTerminalSingleDuctVAVHeatAndCoolReheat::AirTerminalSingleDuctVAVHeatAndCoolReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 
+  boost::optional<double> AirTerminalSingleDuctVAVHeatAndCoolReheat::autosizedMaximumAirFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl>()->autosizedMaximumAirFlowRate();
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVHeatAndCoolReheat::autosizedMaximumHotWaterorSteamFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl>()->autosizedMaximumHotWaterorSteamFlowRate();
+  }
+
 } // model
 } // openstudio
-

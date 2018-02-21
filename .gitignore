@@ -5,6 +5,7 @@ test_fails.txt
 /build/
 /build_debug/
 /build-debug/
+/build-meta/
 /build_release/
 /build-release/
 /build_64/
@@ -20,4 +21,7 @@ test_fails.txt
 
 *.sublime-project
 cmake-build-debug
+
+developer/msvc/Visualizers/all_concat.natvis
+.vscode/
 

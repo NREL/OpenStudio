@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -268,9 +268,10 @@ namespace detail {
     return result;
   }
 
-  void ShadingSurfaceGroup_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
+  bool ShadingSurfaceGroup_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
     bool result = setDouble(OS_ShadingSurfaceGroupFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void ShadingSurfaceGroup_Impl::resetDirectionofRelativeNorth() {
@@ -278,9 +279,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ShadingSurfaceGroup_Impl::setXOrigin(double xOrigin, bool driverMethod) {
+  bool ShadingSurfaceGroup_Impl::setXOrigin(double xOrigin, bool driverMethod) {
     bool result = setDouble(OS_ShadingSurfaceGroupFields::XOrigin, xOrigin, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void ShadingSurfaceGroup_Impl::resetXOrigin() {
@@ -288,9 +290,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ShadingSurfaceGroup_Impl::setYOrigin(double yOrigin, bool driverMethod) {
+  bool ShadingSurfaceGroup_Impl::setYOrigin(double yOrigin, bool driverMethod) {
     bool result = setDouble(OS_ShadingSurfaceGroupFields::YOrigin, yOrigin, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void ShadingSurfaceGroup_Impl::resetYOrigin() {
@@ -298,9 +301,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ShadingSurfaceGroup_Impl::setZOrigin(double zOrigin, bool driverMethod) {
+  bool ShadingSurfaceGroup_Impl::setZOrigin(double zOrigin, bool driverMethod) {
     bool result = setDouble(OS_ShadingSurfaceGroupFields::ZOrigin, zOrigin, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void ShadingSurfaceGroup_Impl::resetZOrigin() {
@@ -536,11 +540,10 @@ void ShadingSurfaceGroup::resetShadedObject()
 
 /// @cond
 ShadingSurfaceGroup::ShadingSurfaceGroup(std::shared_ptr<detail::ShadingSurfaceGroup_Impl> impl)
-  : PlanarSurfaceGroup(impl)
+  : PlanarSurfaceGroup(std::move(impl))
 {}
 /// @endcond
 
 
 } // model
 } // openstudio
-

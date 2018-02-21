@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -33,26 +33,26 @@ require 'minitest/autorun'
 class SkyTemperature_Test < MiniTest::Unit::TestCase
 
   def test_construction_and_parentage
-  
+
     model = OpenStudio::Model::Model.new
-    
+
     # no parent when no Site and parent not explicitly set
     skyTemperature = OpenStudio::Model::SkyTemperature.new(model)
     opo = skyTemperature.parent
     assert_equal(true,opo.empty?)
-    
+
     site = model.getSite
     opo = skyTemperature.parent
     assert_equal(false,opo.empty?)
     skyTempParent = opo.get
     assert(skyTempParent == site)
-    
+
     # make skyTemperature apply to a RunPeriod
     runPeriod = model.getRunPeriod
     assert(skyTemperature.setParent(runPeriod))
     assert_equal(0,site.children.size)
     assert_equal(1,runPeriod.children.size)
-    
+
     # make new SkyTemperature that will be immediately parented by site
     globalSkyTemperature = OpenStudio::Model::SkyTemperature.new(model)
     opo = globalSkyTemperature.parent
@@ -61,7 +61,7 @@ class SkyTemperature_Test < MiniTest::Unit::TestCase
     assert(globalSkyTempParent == site)
     assert_equal(1,site.children.size)
     assert_equal(1,runPeriod.children.size)
-  
+
   end
-    
+
 end

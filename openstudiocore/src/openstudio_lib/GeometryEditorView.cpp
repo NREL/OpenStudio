@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,6 +50,12 @@
 #include "../model/ShadingSurfaceGroup_Impl.hpp"
 #include "../model/Site.hpp"
 #include "../model/Site_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Checksum.hpp"
@@ -59,6 +65,7 @@
 
 #include <utilities/idd/IddEnums.hxx>
 
+#include <QFile>
 #include <QDialog>
 #include <QTcpServer>
 #include <QComboBox>
@@ -71,6 +78,8 @@
 #include <QWebEnginePage>
 #include <QWebEngineSettings>
 
+int CHECKFORUPDATEMSEC = 5000;
+
 namespace openstudio {
 
 GeometryEditorView::GeometryEditorView(bool isIP,
@@ -79,7 +88,7 @@ GeometryEditorView::GeometryEditorView(bool isIP,
 : QWidget(parent)
 {
   QVBoxLayout *layout = new QVBoxLayout;
-  
+
   EditorWebView* webView = new EditorWebView(isIP, model, this);
   layout->addWidget(webView);
 
@@ -193,7 +202,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
   connect(m_view, &QWebEngineView::loadProgress, this, &EditorWebView::onLoadProgress);
   connect(m_view, &QWebEngineView::loadStarted, this, &EditorWebView::onLoadStarted);
   connect(m_view, &QWebEngineView::renderProcessTerminated, this, &EditorWebView::onRenderProcessTerminated);
-  
+
   // Qt 5.8 and higher
   //m_view->setAttribute(QWebEngineSettings::WebAttribute::AllowRunningInsecureContent, true);
 
@@ -221,6 +230,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
       // floorplan loaded correctly
 
       // update with current model content
+      // at this point you may have removed objects in the app, so tell updateFloorplanJS to remove missing objects
       model::FloorplanJSForwardTranslator ft;
       m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, true);
 
@@ -235,6 +245,8 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
         QMessageBox::warning(this, "Updating Floorplan", errorsAndWarnings);
       }
 
+      std::string contents2 = m_floorplan->toJSON();
+
       // start the editor
       m_newImportGeometry->setEnabled(false);
       m_geometryEditorStarted = true;
@@ -246,13 +258,13 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
     }
 
   } else {
-    if ((model.getConcreteModelObjects<model::Space>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurfaceGroup>().size() > 0) || (model.getConcreteModelObjects<model::BuildingStory>().size() > 0)){
+    if ((model.getConcreteModelObjects<model::Surface>().size() > 0) || (model.getConcreteModelObjects<model::SubSurface>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurface>().size() > 0)){
       m_newImportGeometry->setEnabled(false);
       m_view->load(QUrl("qrc:///library/geometry_editor_start.html"));
     } else{
       m_view->load(QUrl("qrc:///library/geometry_editor_start.html"));
     }
-    
+
   }
 }
 
@@ -357,7 +369,7 @@ void EditorWebView::translateExport()
   if (!errorsAndWarnings.isEmpty()){
     QMessageBox::warning(this, "Creating Model From Floorplan", errorsAndWarnings);
   }
-  
+
   if (model){
     m_exportModel = *model;
     m_exportModelHandleMapping = rt.handleMapping();
@@ -366,7 +378,7 @@ void EditorWebView::translateExport()
     m_exportModel = model::Model();
     m_exportModelHandleMapping.clear();
   }
-  
+
 }
 
 void EditorWebView::startEditor()
@@ -398,12 +410,12 @@ void EditorWebView::startEditor()
 
     if (m_isIP){
       config["units"] = "ft";
-      config["initialGridSize"] = 4;
+      config["initialGridSize"] = 15;
     }else{
       config["units"] = "m";
-      config["initialGridSize"] = 1;
+      config["initialGridSize"] = 5;
     }
-    
+
     boost::optional<model::Site> site = m_model.getOptionalUniqueModelObject<model::Site>();
     if (site){
       double latitude = site->latitude();
@@ -435,6 +447,33 @@ void EditorWebView::startEditor()
     m_javascriptRunning = true;
 
     QString javascript = QString("window.api.init();");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
+    }
+  }
+
+  // customize css
+  {
+    OS_ASSERT(!m_javascriptRunning);
+
+    m_javascriptRunning = true;
+
+    QFile cssFile(":/library/geometry_editor.css");
+    bool test = cssFile.open(QFile::ReadOnly | QFile::Text);
+    OS_ASSERT(test);
+    QTextStream cssStream(&cssFile);
+    QString css = cssStream.readAll();
+    cssFile.close();
+
+    QString javascript = "const rules = `\n";
+    javascript += css;
+    javascript += "`;\n\
+const style = document.createElement('style')\n\
+style.type = 'text/css';\n\
+style.innerHTML = rules;\n\
+document.head.appendChild(style);\n";
+
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
     while (m_javascriptRunning){
       OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
@@ -497,7 +536,7 @@ void EditorWebView::startEditor()
 
   // start checking for updates
   m_versionNumber = 0;
-  m_checkForUpdateTimer->start(1000);
+  m_checkForUpdateTimer->start(CHECKFORUPDATEMSEC);
 
   m_document->enable();
 }
@@ -532,7 +571,7 @@ void EditorWebView::saveExport()
 
     std::string contents = m_export.value<QString>().toStdString();
 
-    // DLM: should we compare checksums and only 
+    // DLM: should we compare checksums and only
     openstudio::path out = floorplanPath();
     if (!out.empty()){
       if (checksum(contents) != checksum(out)){
@@ -550,7 +589,7 @@ void EditorWebView::saveExport()
 
 void EditorWebView::previewExport()
 {
-  // do the export 
+  // do the export
   doExport();
 
   // translate the exported floorplan
@@ -601,7 +640,7 @@ void EditorWebView::previewExport()
 
 void EditorWebView::mergeExport()
 {
-  // do the export 
+  // do the export
   doExport();
 
   // translate the exported floorplan
@@ -628,7 +667,6 @@ void EditorWebView::mergeExport()
   // make sure handles get updated in floorplan and the exported string
   model::FloorplanJSForwardTranslator ft;
   m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, false);
-  m_export = QString::fromStdString(m_floorplan->toJSON());
 
   errorsAndWarnings.clear();
   for (const auto& error : ft.errors()){
@@ -641,6 +679,25 @@ void EditorWebView::mergeExport()
     QMessageBox::warning(this, "Updating Floorplan", errorsAndWarnings);
   }
 
+  OS_ASSERT(!m_javascriptRunning);
+  m_javascriptRunning = true;
+
+  // import updated floorplan back into editor
+  OS_ASSERT(m_floorplan);
+  std::string json = m_floorplan->toJSON(false);
+
+  QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+  //QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+  m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+  while (m_javascriptRunning){
+    OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
+  }
+
+  //m_export = QString::fromStdString(m_floorplan->toJSON());
+
+  // DLM: call doExport again just to be sure we get the freshest content
+  doExport();
+
   // save the exported floorplan
   saveExport();
 
@@ -652,7 +709,7 @@ void EditorWebView::checkForUpdate()
 {
   if (!m_javascriptRunning){
     m_javascriptRunning = true;
-    
+
     // DLM: don't disable and enable the tabs, too distracting
     //m_document->disable();
 
@@ -660,15 +717,31 @@ void EditorWebView::checkForUpdate()
 
     QString javascript = QString("window.versionNumber;");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_versionNumber = v.toUInt();  m_javascriptRunning = false; });
+
+    // DLM: the javascript engine appears to stop when a file dialog is launched by the editor (e.g. to import an image)
+    int processEventsTime = 200;
+    boost::posix_time::ptime start = boost::posix_time::microsec_clock::universal_time();
     while (m_javascriptRunning){
+      // if the javascript is taking too long to evaluate, bail out here
+      // DLM: multiply elapsed time by two, we want to make sure we have half of the time between update checks to process other events
+      int elapsed = 2 * (boost::posix_time::microsec_clock::universal_time() - start).total_milliseconds();
+      if (elapsed > CHECKFORUPDATEMSEC){
+        break;
+      }
       // DLM: instead ignore user events
-      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
+      // DLM: this is a problem during file dialogs launched by the editor
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, processEventsTime);
     }
 
     //m_document->enable();
 
-    if (currentVersionNumber != m_versionNumber){
-      onChanged();
+    if (m_javascriptRunning){
+      // DLM: do not set this to false, we will require the javascript to complete
+      //m_javascriptRunning = false;
+    } else{
+      if (currentVersionNumber != m_versionNumber){
+        onChanged();
+      }
     }
   }
 }
@@ -678,7 +751,7 @@ void EditorWebView::onChanged()
   m_document->markAsModified();
 }
 
-void EditorWebView::onUnitSystemChange(bool t_isIP) 
+void EditorWebView::onUnitSystemChange(bool t_isIP)
 {
   if (m_geometryEditorStarted){
     QMessageBox::warning(this, "Units Change", "Changing unit system for existing floorplan is not currently supported.  Reload tab to change units.");

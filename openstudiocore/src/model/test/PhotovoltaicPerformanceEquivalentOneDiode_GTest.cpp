@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -107,7 +107,7 @@ TEST_F(ModelFixture, PhotovoltaicPerformanceEquivalentOneDiode_Instantiate) {
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.openCircuitVoltage(), value);
   photovoltaicPerformanceEquivalentOneDiode.resetOpenCircuitVoltage();
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.openCircuitVoltage(), 21.6);
-  
+
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.referenceTemperature(), 25);
   EXPECT_TRUE(photovoltaicPerformanceEquivalentOneDiode.isReferenceTemperatureDefaulted());
   result = photovoltaicPerformanceEquivalentOneDiode.setReferenceTemperature(value);
@@ -179,7 +179,7 @@ TEST_F(ModelFixture, PhotovoltaicPerformanceEquivalentOneDiode_Instantiate) {
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.totalHeatCapacity(), value);
   photovoltaicPerformanceEquivalentOneDiode.resetTotalHeatCapacity();
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.totalHeatCapacity(), 50000);
- 
+
   EXPECT_EQ(photovoltaicPerformanceEquivalentOneDiode.temperatureCoefficientofShortCircuitCurrent(), 0.02);
   EXPECT_TRUE(photovoltaicPerformanceEquivalentOneDiode.isTemperatureCoefficientofShortCircuitCurrentDefaulted());
   photovoltaicPerformanceEquivalentOneDiode.setTemperatureCoefficientofShortCircuitCurrent(value);

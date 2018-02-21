@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -133,7 +133,7 @@ QWidget * WorkflowSectionItemDelegate::view(QSharedPointer<OSListItem> dataSourc
     QSharedPointer<WorkflowStepController> workflowStepController = workflowSectionItem->workflowStepController();
 
     if (QSharedPointer<MeasureStepController> measureStepController = qSharedPointerCast<MeasureStepController>(workflowStepController)){
-      
+
       QSharedPointer<MeasureStepItemDelegate> measureStepItemDelegate = QSharedPointer<MeasureStepItemDelegate>(new MeasureStepItemDelegate());
 
       MeasureType measureType = measureStepController->measureType();
@@ -164,8 +164,8 @@ WorkflowStepController::WorkflowStepController(openstudio::BaseApp *t_app)
 
 MeasureStepController::MeasureStepController(MeasureType measureType, openstudio::BaseApp *t_app)
   : WorkflowStepController(t_app),
-    m_app(t_app),
-    m_measureType(measureType)
+    m_measureType(measureType),
+    m_app(t_app)
 {
 }
 
@@ -262,7 +262,7 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
     QString errorMessage("Failed to add measure: \n\n");
     errorMessage += QString::fromStdString(e.what());
     QMessageBox::information(m_app->mainWidget(), QString("Failed to add measure"), errorMessage);
-  
+
     if (document){
       document->enable();
     }
@@ -307,7 +307,7 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
   //measureStep.setDisplayName(name); // DLM: TODO
   measureStep.setDescription(projectMeasure->description());
   measureStep.setModelerDescription(projectMeasure->modelerDescription());
-      
+
   WorkflowJSON workflowJSON = m_app->currentModel()->workflowJSON();
 
   std::vector<MeasureStep> measureSteps = workflowJSON.getMeasureSteps(m_measureType);
@@ -324,10 +324,10 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
   emit modelReset();
 }
 
-void MeasureStepController::moveUp(MeasureStep step)  
+void MeasureStepController::moveUp(MeasureStep step)
 {
   std::vector<MeasureStep> oldMeasureSteps = measureSteps();
-  
+
   bool found = false;
   size_t i;
   size_t n = oldMeasureSteps.size();
@@ -356,7 +356,7 @@ void MeasureStepController::moveUp(MeasureStep step)
 void MeasureStepController::moveDown(MeasureStep step)
 {
   std::vector<MeasureStep> oldMeasureSteps = measureSteps();
-  
+
   bool found = false;
   size_t i;
   size_t n = oldMeasureSteps.size();
@@ -383,14 +383,15 @@ void MeasureStepController::moveDown(MeasureStep step)
 
 MeasureStepItem::MeasureStepItem(MeasureType measureType, MeasureStep step, openstudio::BaseApp *t_app)
   : OSListItem(),
-    m_app(t_app),
     m_measureType(measureType),
-    m_step(step)
+    m_step(step),
+    m_app(t_app)
+
 {
 }
 
 QString MeasureStepItem::name() const
-{ 
+{
   QString result;
   if (boost::optional<std::string> name = m_step.name()){
     return result = QString::fromStdString(*name);
@@ -628,9 +629,9 @@ QWidget * MeasureStepItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     // Up and down buttons
 
     connect(workflowStepView->upButton, &QPushButton::clicked, measureStepItem.data(), &MeasureStepItem::moveUp);
-    
+
     connect(workflowStepView->downButton, &QPushButton::clicked, measureStepItem.data(), &MeasureStepItem::moveDown);
-    
+
 
 
     return workflowStepView;

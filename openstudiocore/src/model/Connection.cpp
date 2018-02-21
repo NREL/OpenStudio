@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -49,16 +49,16 @@ namespace detail {
     OS_ASSERT(idfObject.iddObject().type() == Connection::iddObjectType());
   }
 
-  Connection_Impl::Connection_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                   Model_Impl* model, 
+  Connection_Impl::Connection_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                   Model_Impl* model,
                                    bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == Connection::iddObjectType());
   }
 
-  Connection_Impl::Connection_Impl(const Connection_Impl& other, 
-                                   Model_Impl* model, 
+  Connection_Impl::Connection_Impl(const Connection_Impl& other,
+                                   Model_Impl* model,
                                    bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {}
@@ -68,8 +68,8 @@ namespace detail {
 
 
   // Get all output variable names that could be associated with this object.
-  const std::vector<std::string>& Connection_Impl::outputVariableNames() const 
-  { 
+  const std::vector<std::string>& Connection_Impl::outputVariableNames() const
+  {
     static StringVector result;
     if (result.empty()) {
     }
@@ -82,7 +82,7 @@ namespace detail {
 
   boost::optional<ModelObject>  Connection_Impl::sourceObject()
   {
-    if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::SourceObject) ) 
+    if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::SourceObject) )
       { return oCandidate->optionalCast<ModelObject>(); }
     return boost::none;
   }
@@ -94,7 +94,7 @@ namespace detail {
 
   boost::optional<ModelObject> Connection_Impl::targetObject()
   {
-    if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::TargetObject) ) 
+    if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::TargetObject) )
       { return oCandidate->optionalCast<ModelObject>(); }
     return boost::none;
   }
@@ -104,24 +104,24 @@ namespace detail {
     return this->getUnsigned(openstudio::OS_ConnectionFields::InletPort).get();
   }
 
-  void Connection_Impl::setSourceObject(ModelObject object)
+  bool Connection_Impl::setSourceObject(ModelObject object)
   {
-    setPointer(openstudio::OS_ConnectionFields::SourceObject,object.handle());
+    return setPointer(openstudio::OS_ConnectionFields::SourceObject,object.handle());;
   }
 
-  void Connection_Impl::setSourceObjectPort(unsigned port)
+  bool Connection_Impl::setSourceObjectPort(unsigned port)
   {
-    this->setUnsigned(openstudio::OS_ConnectionFields::OutletPort,port);
+    return this->setUnsigned(openstudio::OS_ConnectionFields::OutletPort,port);
   }
 
-  void Connection_Impl::setTargetObject(ModelObject object)
+  bool Connection_Impl::setTargetObject(ModelObject object)
   {
-    setPointer(openstudio::OS_ConnectionFields::TargetObject,object.handle());
+    return setPointer(openstudio::OS_ConnectionFields::TargetObject,object.handle());;
   }
 
-  void Connection_Impl::setTargetObjectPort(unsigned port)
+  bool Connection_Impl::setTargetObjectPort(unsigned port)
   {
-    this->setUnsigned(openstudio::OS_ConnectionFields::InletPort,port);
+    return this->setUnsigned(openstudio::OS_ConnectionFields::InletPort,port);
   }
 
 } // detail
@@ -133,7 +133,7 @@ Connection::Connection(const Model& model)
 }
 
 Connection::Connection(std::shared_ptr<detail::Connection_Impl> p)
-  : ModelObject(p)
+  : ModelObject(std::move(p))
 {}
 
 OptionalModelObject Connection::sourceObject()
@@ -156,22 +156,22 @@ OptionalUnsigned Connection::targetObjectPort()
   return getImpl<detail::Connection_Impl>()->targetObjectPort();
 }
 
-void Connection::setSourceObject(ModelObject object)
+bool Connection::setSourceObject(ModelObject object)
 {
   return getImpl<detail::Connection_Impl>()->setSourceObject(object);
 }
 
-void Connection::setSourceObjectPort(unsigned port)
+bool Connection::setSourceObjectPort(unsigned port)
 {
   return getImpl<detail::Connection_Impl>()->setSourceObjectPort(port);
 }
 
-void Connection::setTargetObject(ModelObject object)
+bool Connection::setTargetObject(ModelObject object)
 {
   return getImpl<detail::Connection_Impl>()->setTargetObject(object);
 }
 
-void Connection::setTargetObjectPort(unsigned port)
+bool Connection::setTargetObjectPort(unsigned port)
 {
   return getImpl<detail::Connection_Impl>()->setTargetObjectPort(port);
 }

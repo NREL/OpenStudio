@@ -77,10 +77,10 @@ endif()
 
 add_custom_command(TARGET openstudio_rb
   POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb $<TARGET_FILE_DIR:openstudio_rb>/openstudio.rb 
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb $<TARGET_FILE_DIR:openstudio_rb>/openstudio.rb
 )
 
-target_link_libraries(openstudio_rb 
+target_link_libraries(openstudio_rb
   init_openstudio
   ruby_OpenStudioModelEditor
   openstudio_airflow_static
@@ -97,16 +97,16 @@ target_link_libraries(openstudio_rb
 
 if( UNIX AND NOT APPLE )
   # DLM: dependencies of Qt Static plugins do not seem to be linked in to openstudio.so on Unix. Force these to link fully.
-  target_link_libraries(openstudio_rb 
+  target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libxcb-static.a" -Wl,--no-whole-archive
   )
-  target_link_libraries(openstudio_rb 
+  target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a" -Wl,--no-whole-archive
   )
-  target_link_libraries(openstudio_rb 
+  target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a" -Wl,--no-whole-archive
   )
-  target_link_libraries(openstudio_rb 
+  target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5Sql.a" -Wl,--no-whole-archive
   )
 endif()

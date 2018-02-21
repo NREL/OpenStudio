@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,16 +42,16 @@ namespace detail {
 
   /** DefaultSubSurfaceConstructions_Impl is a ResourceObject_Impl that is the implementation class for DefaultSubSurfaceConstructions.*/
   class MODEL_API DefaultSubSurfaceConstructions_Impl : public ResourceObject_Impl {
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -69,9 +69,9 @@ namespace detail {
     virtual ~DefaultSubSurfaceConstructions_Impl() {}
 
     //@}
-    
+
     virtual const std::vector<std::string>& outputVariableNames() const override;
-    
+
     virtual IddObjectType iddObjectType() const override;
 
     /** @name Getters */
@@ -80,7 +80,7 @@ namespace detail {
     boost::optional<ConstructionBase> fixedWindowConstruction() const;
 
     boost::optional<ConstructionBase> operableWindowConstruction() const;
-    
+
     boost::optional<ConstructionBase> doorConstruction() const;
 
     boost::optional<ConstructionBase> glassDoorConstruction() const;

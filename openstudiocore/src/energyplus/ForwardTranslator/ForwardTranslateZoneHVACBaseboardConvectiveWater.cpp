@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -57,18 +57,18 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvectiveWater(
     ZoneHVACBaseboardConvectiveWater & modelObject )
 {
-  // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in 
+  // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in
   // the final file. Also set's the idfObject's name.
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneHVAC_Baseboard_Convective_Water,modelObject);
 
   boost::optional<std::string> s;
   boost::optional<double> value;
   boost::optional<ModelObject> temp;
-  //get the heating coil as a straight component, cast it to optional HT coil, if cast is successful, 
+  //get the heating coil as a straight component, cast it to optional HT coil, if cast is successful,
   //get the object of class CoilHeatingWaterBaseboard
   StraightComponent coilStraight = modelObject.heatingCoil();
   boost::optional<CoilHeatingWaterBaseboard>  coilOptionalHeatBBConvWater = coilStraight.optionalCast<CoilHeatingWaterBaseboard>();
-  
+
   // AvailabilityScheduleName
   Schedule availabilitySchedule = modelObject.availabilitySchedule();
   translateAndMapModelObject(availabilitySchedule);
@@ -84,7 +84,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvecti
     // Heating Design Capacity - introduced in 8.2.0 and not yet supported in OS
     idfObject.setString(ZoneHVAC_Baseboard_Convective_WaterFields::HeatingDesignCapacity,"Autosize");
 
-    // Inlet Node Name 
+    // Inlet Node Name
     temp = coilHeatBBConvWater.inletModelObject();
     if(temp)
     {
@@ -95,7 +95,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACBaseboardConvecti
       }
     }
 
-    // Outlet Node Name 
+    // Outlet Node Name
     temp = coilHeatBBConvWater.outletModelObject();
     if(temp)
     {

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -85,7 +85,7 @@ namespace detail {
 
     void resetCapacityProvidingSystem();
 
-    void setOutletControlTemperature(boost::optional<double> outletControlTemperature);
+    bool setOutletControlTemperature(boost::optional<double> outletControlTemperature);
 
     void resetOutletControlTemperature();
 
@@ -105,4 +105,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_REFRIGERATIONSUBCOOLERMECHANICAL_IMPL_HPP
-

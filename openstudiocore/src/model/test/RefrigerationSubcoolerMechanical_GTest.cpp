@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,29 +43,29 @@ using namespace openstudio::model;
 TEST_F(ModelFixture,RefrigerationSubcoolerMechanical_RefrigerationSubcoolerMechanical)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-  
-  ASSERT_EXIT ( 
-  {  
-     Model m; 
+
+  ASSERT_EXIT (
+  {
+     Model m;
      RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,RefrigerationSubcoolerMechanical_iddObjectType)
-{    
-  Model m; 
+{
+  Model m;
   RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
 
   EXPECT_EQ( refrigerationSubcoolerMechanical.iddObjectType(), IddObjectType::OS_Refrigeration_Subcooler_Mechanical);
 }
 
 TEST_F(ModelFixture,RefrigerationSubcoolerMechanical_CapacityProvidingSystem)
-{    
-  Model m; 
-  
+{
+  Model m;
+
   RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
   RefrigerationSystem refrigerationSystem = RefrigerationSystem(m);
 
@@ -77,12 +77,12 @@ TEST_F(ModelFixture,RefrigerationSubcoolerMechanical_CapacityProvidingSystem)
 }
 
 TEST_F(ModelFixture,RefrigerationSubcoolerMechanical_OutletControlTemperature)
-{    
-  Model m; 
+{
+  Model m;
   RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
 
   EXPECT_EQ( 10.0, refrigerationSubcoolerMechanical.outletControlTemperature() );  // Brian's value
-  
+
   refrigerationSubcoolerMechanical.setOutletControlTemperature(15.0);
   EXPECT_EQ( 15.0, refrigerationSubcoolerMechanical.outletControlTemperature() );
 
@@ -122,8 +122,8 @@ TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_RemoveRefrigerationSystem)
 
 TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneOneModelWithDefaultData)
 {
-  Model m; 
-  
+  Model m;
+
   RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
   RefrigerationSystem refrigerationSystem = RefrigerationSystem(m);
 
@@ -139,8 +139,8 @@ TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneOneModelWithDefaultDa
 
 TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneOneModelWithCustomData)
 {
-  Model m; 
-  
+  Model m;
+
   RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
   RefrigerationSystem refrigerationSystem = RefrigerationSystem(m);
   refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
@@ -157,8 +157,8 @@ TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneOneModelWithCustomDat
 
 TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneTwoModelWithDefaultData)
 {
-  Model model; 
-  
+  Model model;
+
   RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(model);
   RefrigerationSystem refrigerationSystem = RefrigerationSystem(model);
 
@@ -178,7 +178,7 @@ TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneTwoModelWithDefaultDa
   EXPECT_NE(refrigerationSubcoolerMechanicalClone.handle(), refrigerationSubcoolerMechanical.handle());
   EXPECT_NE(refrigerationSubcoolerMechanicalClone2.handle(), refrigerationSubcoolerMechanical.handle());
   EXPECT_NE(refrigerationSubcoolerMechanicalClone2.handle(), refrigerationSubcoolerMechanicalClone.handle());
-  
+
   EXPECT_FALSE(refrigerationSubcoolerMechanicalClone.capacityProvidingSystem());
   EXPECT_FALSE(refrigerationSubcoolerMechanicalClone2.capacityProvidingSystem());
   EXPECT_EQ(10.0, refrigerationSubcoolerMechanicalClone2.outletControlTemperature());

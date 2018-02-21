@@ -5,7 +5,7 @@
   #include <utilities/core/PathWatcher.hpp>
 %}
 
-%feature("director") PathWatcher;  
+%feature("director") PathWatcher;
 
 %include <utilities/core/PathWatcher.hpp>
 

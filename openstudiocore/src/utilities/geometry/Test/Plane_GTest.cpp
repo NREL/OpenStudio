@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -37,7 +37,7 @@
 using namespace openstudio;
 
 void checkPlaneFromPointAndNormal(const Plane& plane, const Point3d& point, const Vector3d& normal)
-{ 
+{
   Vector3d reverseNormal = normal.reverseVector();
 
   EXPECT_DOUBLE_EQ(1.0, normal.dot(plane.outwardNormal()));
@@ -195,7 +195,7 @@ TEST_F(GeometryFixture, Plane_FromPoints2)
   points.push_back(Point3d(1,1,0));
   points.push_back(Point3d(1,0,0));
   points.push_back(Point3d(0,0,0));
-  
+
   Plane p1(points);
   Plane p2(Point3d(0,1,0), Vector3d(0,0,-1));
 
@@ -213,7 +213,7 @@ TEST_F(GeometryFixture, Plane_FromPoints3)
 
   Point3d point(5,0,2);
   Vector3d normal(1,0,0);
-  
+
   Plane p1(points);
   Plane p2(point, normal);
 
@@ -242,7 +242,7 @@ TEST_F(GeometryFixture, Plane_FromPoints4)
 
   Point3d point(0,-2,0);
   Vector3d normal(0,-1,0);
-  
+
   Plane p1(points);
   Plane p2(point, normal);
 
@@ -272,7 +272,7 @@ TEST_F(GeometryFixture, Plane_FromPoints4_Small)
 
   Point3d point(10,10,0);
   Vector3d normal(0,0,1);
-  
+
   Plane p1(points);
   Plane p2(point, normal);
 
@@ -304,7 +304,7 @@ TEST_F(GeometryFixture, Plane_FromPoints_NotEqual)
   points2.push_back(Point3d(0,0,2));
   points2.push_back(Point3d(1,0,2));
   points2.push_back(Point3d(1,1,2));
-  
+
   Plane p1(points1);
   Plane p2(points2);
 
@@ -327,7 +327,7 @@ TEST_F(GeometryFixture, Plane_FromPoints_Reverse)
   points2.push_back(Point3d(0,0,2));
   points2.push_back(Point3d(1,0,2));
   points2.push_back(Point3d(1,1,2));
-  
+
   Plane p1(points1);
   Plane p2(points2);
 
@@ -350,7 +350,7 @@ TEST_F(GeometryFixture, Plane_FromPoints_Separated_X)
   points2.push_back(Point3d(20,0,0));
   points2.push_back(Point3d(20,1,0));
   points2.push_back(Point3d(20,1,1));
-  
+
   Plane p1(points1);
   Plane p2(points2);
 
@@ -376,7 +376,7 @@ TEST_F(GeometryFixture, Plane_FromPoints_Reverse_Separated_X)
   points2.push_back(Point3d(-20,1,0));
   points2.push_back(Point3d(-20,0,0));
   points2.push_back(Point3d(-20,0,1));
-  
+
   Plane p1(points1);
   Plane p2(points2);
 
@@ -401,7 +401,7 @@ TEST_F(GeometryFixture, Plane_FromPoints_Separated_Y)
   points2.push_back(Point3d(0,10,0));
   points2.push_back(Point3d(1,10,0));
   points2.push_back(Point3d(1,10,1));
-  
+
   Plane p1(points1);
   Plane p2(points2);
 
@@ -427,7 +427,7 @@ TEST_F(GeometryFixture, Plane_FromPoints_Reverse_Separated_Y)
   points2.push_back(Point3d(1,20,0));
   points2.push_back(Point3d(0,20,0));
   points2.push_back(Point3d(0,20,1));
-  
+
   Plane p1(points1);
   Plane p2(points2);
 
@@ -452,7 +452,7 @@ TEST_F(GeometryFixture, Plane_FromPoints_Separated_Z)
   points2.push_back(Point3d(0,0,-10));
   points2.push_back(Point3d(1,0,-10));
   points2.push_back(Point3d(1,1,-10));
-  
+
   Plane p1(points1);
   Plane p2(points2);
 
@@ -478,7 +478,7 @@ TEST_F(GeometryFixture, Plane_FromPoints_Reverse_Separated_Z)
   points2.push_back(Point3d(1,0,-20));
   points2.push_back(Point3d(0,0,-20));
   points2.push_back(Point3d(0,1,-20));
-  
+
   Plane p1(points1);
   Plane p2(points2);
 

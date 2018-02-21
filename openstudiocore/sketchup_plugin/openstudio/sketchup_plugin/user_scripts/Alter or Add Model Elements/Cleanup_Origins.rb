@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -33,22 +33,22 @@ class CleanupOrigins < OpenStudio::Ruleset::ModelUserScript
   def name
     return "Cleanup Origins"
   end
-  
+
   # returns a vector of arguments, the runner will present these arguments to the user
   # then pass in the results on run
   def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
-    
+
     return result
   end
-  
+
   def cleanup_group(group)
       boundingBox = group.transformation*group.boundingBox
-      
+
       if boundingBox.isEmpty
-        return 
+        return
       end
-      
+
       matrix = OpenStudio::Matrix.new(4,4,0)
       matrix[0,0] = 1
       matrix[1,1] = 1
@@ -70,22 +70,22 @@ class CleanupOrigins < OpenStudio::Ruleset::ModelUserScript
     model.getSpaces.each do |space|
       next if not runner.inSelection(space)
       cleanup_group(space)
-      
+
       space.shadingSurfaceGroups.each do |group|
         cleanup_group(group)
       end
-      
+
       space.interiorPartitionSurfaceGroups.each do |group|
         cleanup_group(group)
       end
     end
-    
+
     # now do shading surfaces
     model.getShadingSurfaceGroups.each do |group|
       next if not runner.inSelection(group)
       cleanup_group(group)
     end
-    
+
     # now do interior partition surface groups
     model.getInteriorPartitionSurfaceGroups.each do |group|
       next if not runner.inSelection(group)

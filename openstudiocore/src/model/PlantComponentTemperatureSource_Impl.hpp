@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -89,6 +89,12 @@ namespace detail {
 
     boost::optional<Schedule> sourceTemperatureSchedule() const;
 
+  boost::optional<double> autosizedDesignVolumeFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
@@ -99,7 +105,7 @@ namespace detail {
 
     bool setTemperatureSpecificationType(std::string temperatureSpecificationType);
 
-    void setSourceTemperature(boost::optional<double> sourceTemperature);
+    bool setSourceTemperature(boost::optional<double> sourceTemperature);
 
     void resetSourceTemperature();
 
@@ -127,4 +133,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_PLANTCOMPONENTTEMPERATURESOURCE_IMPL_HPP
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -91,6 +91,7 @@
 #define THERMALZONE "Thermal Zone"
 #define THERMALZONENAME "Thermal Zone Name"
 #define SPACETYPE "Space Type"
+#define SUBSURFACETYPE "SubSurface Type"
 #define SPACENAME "Space Name"
 #define LOADTYPE "Load Type"
 #define WINDEXPOSURE "Wind Exposure"
@@ -197,6 +198,25 @@ namespace openstudio {
     connect(m_spaceTypeFilter, &QComboBox::currentTextChanged, this, &openstudio::SpacesSubtabGridView::spaceTypeFilterChanged);
 
     layout->addWidget(m_spaceTypeFilter, Qt::AlignTop | Qt::AlignLeft);
+    layout->addStretch();
+    m_filterGridLayout->addLayout(layout, m_filterGridLayout->rowCount() - 1, m_filterGridLayout->columnCount());
+  }
+
+  void SpacesSubtabGridView::showSubSurfaceTypeFilter()
+  {
+    auto layout = new QVBoxLayout();
+
+    auto label = new QLabel();
+    label->setText(SUBSURFACETYPE);
+    label->setObjectName("H3");
+    layout->addWidget(label, Qt::AlignTop | Qt::AlignLeft);
+
+    m_subSurfaceTypeFilter = new QComboBox();
+    initializeSubSurfaceTypeFilter();
+    m_subSurfaceTypeFilter->setFixedWidth(OSItem::ITEM_WIDTH);
+    connect(m_subSurfaceTypeFilter, &QComboBox::currentTextChanged, this, &openstudio::SpacesSubtabGridView::subSurfaceTypeFilterChanged);
+
+    layout->addWidget(m_subSurfaceTypeFilter, Qt::AlignTop | Qt::AlignLeft);
     layout->addStretch();
     m_filterGridLayout->addLayout(layout, m_filterGridLayout->rowCount() - 1, m_filterGridLayout->columnCount());
   }
@@ -373,6 +393,7 @@ namespace openstudio {
   {
     m_spaceTypeFilter->clear();
     m_spaceTypeFilter->addItem(ALL);
+    m_spaceTypeFilter->addItem(UNASSIGNED);
     auto spacetypes = this->m_model.getConcreteModelObjects<model::SpaceType>();
     std::sort(spacetypes.begin(), spacetypes.end(), ModelObjectNameSorter());
     for (auto st : spacetypes)
@@ -382,6 +403,17 @@ namespace openstudio {
         temp = st.name().get().c_str();
       }
       m_spaceTypeFilter->addItem(temp);
+    }
+  }
+
+  void SpacesSubtabGridView::initializeSubSurfaceTypeFilter()
+  {
+    m_subSurfaceTypeFilter->clear();
+    m_subSurfaceTypeFilter->addItem(ALL);
+    auto subSurfacetypes = model::SubSurface::validSubSurfaceTypeValues();
+    for (auto sst : subSurfacetypes)
+    {
+      m_subSurfaceTypeFilter->addItem(sst.c_str());
     }
   }
 
@@ -583,6 +615,35 @@ namespace openstudio {
         auto spaceType = obj.cast<model::Space>().spaceType();
         if (!spaceType || !spaceType->name() || (spaceType && spaceType->name() && spaceType->name().get().c_str() != text)) {
           m_objectsFilterdBySpaceType.insert(obj);
+        }
+      }
+    }
+
+   filterChanged();
+  }
+
+  void SpacesSubtabGridView::subSurfaceTypeFilterChanged(const QString& text)
+  {
+    m_objectsFilterdBySubSurfaceType.clear();
+
+    if (text == ALL) {
+      // nothing to filter
+    }
+    else {
+      for (auto obj : this->m_gridController->m_modelObjects) {
+        auto objFiltered = false;
+        auto surfaces = obj.cast<model::Space>().surfaces();
+        for (auto surface : surfaces) {
+          auto subsurfaces = surface.subSurfaces();
+          for (auto subsurface : subsurfaces) {
+            auto subsurfaceType = subsurface.subSurfaceType();
+            if (subsurfaceType.c_str() != text) {
+              m_objectsFilterdBySubSurfaceType.insert(obj);
+              objFiltered = true;
+              break;
+            }
+          }
+          if (objFiltered) break;
         }
       }
     }
@@ -816,6 +877,12 @@ namespace openstudio {
       }
     }
 
+    for (auto obj : m_objectsFilterdBySubSurfaceType) {
+      if (allFilteredObjects.count(obj) == 0) {
+        allFilteredObjects.insert(obj);
+      }
+    }
+
     for (auto obj : m_objectsFilteredBySpaceName) {
       if (allFilteredObjects.count(obj) == 0) {
         allFilteredObjects.insert(obj);
@@ -866,8 +933,12 @@ namespace openstudio {
 
   void SpacesSubtabGridView::purgeObjects(const IddObjectType& iddObjectType)
   {
-    for (auto mo : this->m_model.getConcreteModelObjects<model::Space>()){
-      mo.remove();
+    // Purge Spaces. The logic is to remove spaces that don't have a thermalZone nor surfaces
+    for (auto mo : this->m_model.getConcreteModelObjects<model::Space>())
+    {
+      if ( (!mo.thermalZone()) && (mo.surfaces().empty()) ) {
+        mo.remove();
+      }
     }
   }
 

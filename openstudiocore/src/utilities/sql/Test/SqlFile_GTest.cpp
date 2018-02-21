@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -297,24 +297,24 @@ TEST_F(SqlFileFixture, CreateSqlFile)
 }
 
 TEST_F(SqlFileFixture, AnnualTotalCosts) {
-  
+
   // Total annual costs for all fuel types
-  EXPECT_NEAR(205284016.81, *(sqlFile2.annualTotalUtilityCost()), 0.1);
+  EXPECT_NEAR(194619758.82, *(sqlFile2.annualTotalUtilityCost()), 0.1);
 
   // Costs by fuel type
-  EXPECT_NEAR(28423.6, *(sqlFile2.annualTotalCost(FuelType::Electricity)), 0.1);
-  EXPECT_NEAR(427.75, *(sqlFile2.annualTotalCost(FuelType::Gas)), 0.1);
-  EXPECT_NEAR(331.01, *(sqlFile2.annualTotalCost(FuelType::DistrictCooling)), 0.1);
-  EXPECT_NEAR(833.54, *(sqlFile2.annualTotalCost(FuelType::DistrictHeating)), 0.1);
+  EXPECT_NEAR(28168.44, *(sqlFile2.annualTotalCost(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(428.86, *(sqlFile2.annualTotalCost(FuelType::Gas)), 0.1);
+  EXPECT_NEAR(324.24, *(sqlFile2.annualTotalCost(FuelType::DistrictCooling)), 0.1);
+  EXPECT_NEAR(836.37, *(sqlFile2.annualTotalCost(FuelType::DistrictHeating)), 0.1);
   EXPECT_NEAR(0.91, *(sqlFile2.annualTotalCost(FuelType::Water)), 0.1);
-  EXPECT_NEAR(205254000, *(sqlFile2.annualTotalCost(FuelType::FuelOil_1)), 100);
+  EXPECT_NEAR(194590000, *(sqlFile2.annualTotalCost(FuelType::FuelOil_1)), 100);
 
   // Costs by total building area by fuel type
-  EXPECT_NEAR(11.84, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(11.73, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1);
   EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Gas)), 0.1);
 
   // Costs by conditioned building area by fuel type
-  EXPECT_NEAR(11.84, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(11.73, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Electricity)), 0.1);
   EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Gas)), 0.1);
 
 }
@@ -344,7 +344,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   EXPECT_EQ(expected.major(), actual.major());
   EXPECT_EQ(expected.minor(), actual.minor());
   EXPECT_EQ(expected.patch(), actual.patch());
- 
+
   ASSERT_TRUE(sqlFile->hoursSimulated());
   EXPECT_EQ(8760.0, sqlFile->hoursSimulated().get()) << name;
   ASSERT_TRUE(sqlFile->netSiteEnergy());
@@ -376,7 +376,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     //EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
     EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(0, 23, 59, 59)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
- 
+
   { // Timestep
     openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Timestep", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
@@ -432,7 +432,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
     EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
- 
+
   { // Monthly
     openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Monthly", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
@@ -448,8 +448,8 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
     EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
-  
-  { // RunPeriod - synonymous with Environment and Annual 
+
+  { // RunPeriod - synonymous with Environment and Annual
     openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "RunPeriod", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
     ts = sqlFile->timeSeries(availableEnvPeriods[0], "Run Period", "Zone Mean Air Temperature", "Main Zone");
@@ -484,10 +484,10 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
 }
 
 TEST_F(SqlFileFixture, Regressions) {
-  // these files were created by running the 1ZoneEvapCooler.idf example file 
+  // these files were created by running the 1ZoneEvapCooler.idf example file
   // adding the Output:SQLite,SimpleAndTabular object as well as several output variables
   // and using the USA_CO_Golden-NREL.724666_TMY3.epw weather file
-  
+
   regressionTestSqlFile("1ZoneEvapCooler-V7-0-0.sql", 42.25, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V7-1-0.sql", 42.05, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V7-2-0.sql", 43.28, 20, 20);

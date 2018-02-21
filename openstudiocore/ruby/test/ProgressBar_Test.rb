@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -32,15 +32,15 @@ require 'minitest/autorun'
 
 module OpenStudio
   class MyProgressBar < ProgressBar
-    
+
     def initialize
       super
       @@called = false
     end
-    
+
     def self.called
       return @@called
-    end 
+    end
 
     def onPercentageUpdated(percentage)
       self.setWindowTitle(percentage.to_s)
@@ -51,13 +51,13 @@ module OpenStudio
 end
 
 class ProgressBar_Test < MiniTest::Unit::TestCase
-  
+
   # def setup
   # end
 
   # def teardown
   # end
-  
+
   def test_basic
     pb = OpenStudio::ProgressBar::new()
     for i in (0..100)
@@ -66,7 +66,7 @@ class ProgressBar_Test < MiniTest::Unit::TestCase
       sleep(0.01)
     end
   end
-  
+
   def test_advanced
     pb1 = OpenStudio::ProgressBar::new()
     pb2 = OpenStudio::ProgressBar::new()
@@ -78,7 +78,7 @@ class ProgressBar_Test < MiniTest::Unit::TestCase
       sleep(0.01)
     end
   end
-  
+
   def test_idf
     pb = OpenStudio::ProgressBar::new()
     pb.setWindowTitle("Loading Idf")
@@ -89,12 +89,12 @@ class ProgressBar_Test < MiniTest::Unit::TestCase
 
     oIdfFile = OpenStudio::IdfFile.load(idfPath,"EnergyPlus".to_IddFileType, pb)
     assert(oIdfFile.empty? == false)
-    
+
     ws = OpenStudio::Workspace.new()
     ws.connectProgressBar(pb)
     ws.addObjects(oIdfFile.get.objects)
   end
-  
+
   def test_idf_derived
     pb = OpenStudio::MyProgressBar::new()
     assert((not OpenStudio::MyProgressBar::called))
@@ -105,19 +105,19 @@ class ProgressBar_Test < MiniTest::Unit::TestCase
 
     oIdfFile = OpenStudio::IdfFile.load(idfPath,"EnergyPlus".to_IddFileType, pb)
     assert(oIdfFile.empty? == false)
-    
+
     ws = OpenStudio::Workspace.new()
     ws.connectProgressBar(pb)
-    
+
     ws.addObjects(oIdfFile.get.objects)
     assert(OpenStudio::MyProgressBar::called)
-    
+
     pb = nil
     GC.start
-    
+
     ws.addObjects(oIdfFile.get.objects)
   end
-  
+
   def test_idf_derived_destructor
     # load IdfFile
     idfPath = OpenStudio::Path.new($OpenStudio_ResourcePath + "resultsviewer/SmallOffice/SmallOffice.idf")
@@ -125,21 +125,21 @@ class ProgressBar_Test < MiniTest::Unit::TestCase
 
     oIdfFile = OpenStudio::IdfFile.load(idfPath,"EnergyPlus".to_IddFileType)
     assert(oIdfFile.empty? == false)
-    
+
     ws = OpenStudio::Workspace.new()
 
     pb = OpenStudio::MyProgressBar::new()
     assert((not OpenStudio::MyProgressBar::called))
     ws.connectProgressBar(pb)
-    ws.disconnectProgressBar(pb) 
+    ws.disconnectProgressBar(pb)
 
 
     assert((not OpenStudio::MyProgressBar::called))
     ws.addObjects(oIdfFile.get.objects)
     assert((not OpenStudio::MyProgressBar::called))
-   
+
   end
-  
+
 end
 
 

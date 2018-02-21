@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -107,7 +107,7 @@ Schedule::Schedule(IddObjectType type,const Model& model)
 
 // constructor from impl
 Schedule::Schedule(std::shared_ptr<detail::Schedule_Impl> impl)
-  : ScheduleBase(impl)
+  : ScheduleBase(std::move(impl))
 {
   OS_ASSERT(getImpl<detail::Schedule_Impl>());
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -74,7 +74,27 @@ namespace detail {
   const std::vector<std::string>& HeatExchangerAirToAirSensibleAndLatent_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Heat Exchanger Sensible Heating Rate");
+      result.push_back("Heat Exchanger Sensible Heating Energy");
+      result.push_back("Heat Exchanger Latent Gain Rate");
+      result.push_back("Heat Exchanger Latent Gain Energy");
+      result.push_back("Heat Exchanger Total Heating Rate");
+      result.push_back("Heat Exchanger Total Heating Energy");
+      result.push_back("Heat Exchanger Sensible Cooling Rate");
+      result.push_back("Heat Exchanger Sensible Cooling Energy");
+      result.push_back("Heat Exchanger Latent Cooling Rate");
+      result.push_back("Heat Exchanger Latent Cooling Energy");
+      result.push_back("Heat Exchanger Total Cooling Rate");
+      result.push_back("Heat Exchanger Total Cooling Energy");
+      result.push_back("Heat Exchanger Electric Power");
+      result.push_back("Heat Exchanger Electric Energy");
+      result.push_back("Heat Exchanger Sensible Effectiveness");
+      result.push_back("Heat Exchanger Latent Effectiveness");
+      result.push_back("Heat Exchanger Supply Air Bypass Mass Flow Rate");
+      result.push_back("Heat Exchanger Exhaust Air Bypass Mass Flow Rate");
+      result.push_back("Heat Exchanger Defrost Time Fraction");
     }
     return result;
   }
@@ -458,8 +478,8 @@ namespace detail {
     return setNominalElectricPower(value.get());
   }
 
-  void HeatExchangerAirToAirSensibleAndLatent_Impl::setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl) {
-    setBooleanFieldValue(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletTemperatureControl, supplyAirOutletTemperatureControl);
+  bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl) {
+    return setBooleanFieldValue(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletTemperatureControl, supplyAirOutletTemperatureControl);;
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent_Impl::setHeatExchangerType(std::string heatExchangerType) {
@@ -472,9 +492,10 @@ namespace detail {
     return result;
   }
 
-  void HeatExchangerAirToAirSensibleAndLatent_Impl::setThresholdTemperature(double thresholdTemperature) {
+  bool HeatExchangerAirToAirSensibleAndLatent_Impl::setThresholdTemperature(double thresholdTemperature) {
     bool result = setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::ThresholdTemperature, thresholdTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent_Impl::setThresholdTemperature(const Quantity& thresholdTemperature) {
@@ -555,8 +576,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void HeatExchangerAirToAirSensibleAndLatent_Impl::setEconomizerLockout(bool economizerLockout) {
-    setBooleanFieldValue(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::EconomizerLockout, economizerLockout);
+  bool HeatExchangerAirToAirSensibleAndLatent_Impl::setEconomizerLockout(bool economizerLockout) {
+    return setBooleanFieldValue(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::EconomizerLockout, economizerLockout);;
   }
 
   boost::optional<Schedule> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalAvailabilitySchedule() const {
@@ -736,6 +757,23 @@ namespace detail {
       return myAFN[0];
     }
     return boost::none;
+  }
+
+  boost::optional<double> HeatExchangerAirToAirSensibleAndLatent_Impl::autosizedNominalSupplyAirFlowRate() const {
+    return getAutosizedValue("Design Size Nominal Supply Air Flow Rate", "m3/s");
+  }
+
+  void HeatExchangerAirToAirSensibleAndLatent_Impl::autosize() {
+    autosizeNominalSupplyAirFlowRate();
+  }
+
+  void HeatExchangerAirToAirSensibleAndLatent_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalSupplyAirFlowRate();
+    if (val) {
+      setNominalSupplyAirFlowRate(val.get());
+    }
+
   }
 
 } // detail
@@ -1013,8 +1051,8 @@ bool HeatExchangerAirToAirSensibleAndLatent::setNominalElectricPower(const Quant
   return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setNominalElectricPower(nominalElectricPower);
 }
 
-void HeatExchangerAirToAirSensibleAndLatent::setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl) {
-  getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setSupplyAirOutletTemperatureControl(supplyAirOutletTemperatureControl);
+bool HeatExchangerAirToAirSensibleAndLatent::setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl) {
+  return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setSupplyAirOutletTemperatureControl(supplyAirOutletTemperatureControl);
 }
 
 bool HeatExchangerAirToAirSensibleAndLatent::setHeatExchangerType(std::string heatExchangerType) {
@@ -1025,8 +1063,8 @@ bool HeatExchangerAirToAirSensibleAndLatent::setFrostControlType(std::string fro
   return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setFrostControlType(frostControlType);
 }
 
-void HeatExchangerAirToAirSensibleAndLatent::setThresholdTemperature(double thresholdTemperature) {
-  getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setThresholdTemperature(thresholdTemperature);
+bool HeatExchangerAirToAirSensibleAndLatent::setThresholdTemperature(double thresholdTemperature) {
+  return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setThresholdTemperature(thresholdTemperature);
 }
 
 bool HeatExchangerAirToAirSensibleAndLatent::setThresholdTemperature(const Quantity& thresholdTemperature) {
@@ -1061,8 +1099,8 @@ void HeatExchangerAirToAirSensibleAndLatent::resetRateofDefrostTimeFractionIncre
   getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->resetRateofDefrostTimeFractionIncrease();
 }
 
-void HeatExchangerAirToAirSensibleAndLatent::setEconomizerLockout(bool economizerLockout) {
-  getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setEconomizerLockout(economizerLockout);
+bool HeatExchangerAirToAirSensibleAndLatent::setEconomizerLockout(bool economizerLockout) {
+  return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setEconomizerLockout(economizerLockout);
 }
 
 AirflowNetworkEquivalentDuct HeatExchangerAirToAirSensibleAndLatent::airflowNetworkEquivalentDuct(double length, double diameter)
@@ -1077,10 +1115,13 @@ boost::optional<AirflowNetworkEquivalentDuct> HeatExchangerAirToAirSensibleAndLa
 
 /// @cond
 HeatExchangerAirToAirSensibleAndLatent::HeatExchangerAirToAirSensibleAndLatent(std::shared_ptr<detail::HeatExchangerAirToAirSensibleAndLatent_Impl> impl)
-  : AirToAirComponent(impl)
+  : AirToAirComponent(std::move(impl))
 {}
 /// @endcond
 
+  boost::optional<double> HeatExchangerAirToAirSensibleAndLatent::autosizedNominalSupplyAirFlowRate() const {
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->autosizedNominalSupplyAirFlowRate();
+  }
+
 } // model
 } // openstudio
-

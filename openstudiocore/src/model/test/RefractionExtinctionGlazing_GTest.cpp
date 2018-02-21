@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -60,7 +60,7 @@ TEST_F(ModelFixture,RefractionExtinctionGlazing_SolarIndexofRefraction_Quantity)
   RefractionExtinctionGlazing refractionExtinctionGlazing(model);
 
   Unit units = refractionExtinctionGlazing.getSolarIndexofRefraction(true).units(); // Get IP units.
-  
+
   // Bounds: 1.0 < value
 
   double value(1.0);
@@ -153,7 +153,7 @@ TEST_F(ModelFixture,RefractionExtinctionGlazing_InfraredHemisphericalEmissivity_
   RefractionExtinctionGlazing refractionExtinctionGlazing(model);
 
   Unit units = refractionExtinctionGlazing.getInfraredHemisphericalEmissivity(true).units(); // Get IP units.
-  
+
   // Bounds: 0.0 < value < 1.0
 
   double value(1.0);

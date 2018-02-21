@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -104,7 +104,7 @@ public:
 class RemoveButton : public QPushButton
 {
   Q_OBJECT
-  
+
   public:
 
   RemoveButton(QWidget * parent = nullptr);
@@ -114,7 +114,7 @@ class RemoveButton : public QPushButton
 class SofterRemoveButton : public QPushButton
 {
   Q_OBJECT
-  
+
   public:
 
   SofterRemoveButton(QWidget * parent = nullptr);
@@ -125,7 +125,7 @@ class SofterRemoveButton : public QPushButton
 class AddScriptButton : public QPushButton
 {
   Q_OBJECT
-  
+
   public:
 
   AddScriptButton(QWidget * parent = nullptr);
@@ -145,9 +145,9 @@ class DuplicateButton : public QPushButton
 class SofterDuplicateButton : public QPushButton
 {
   Q_OBJECT
- 
+
  public:
-  
+
   SofterDuplicateButton(QWidget * parent = nullptr);
   virtual ~SofterDuplicateButton() {}
 };

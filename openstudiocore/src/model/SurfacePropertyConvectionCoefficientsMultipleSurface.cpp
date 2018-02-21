@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -159,7 +159,7 @@ namespace detail {
     bool result = setString(OS_SurfaceProperty_ConvectionCoefficients_MultipleSurfaceFields::ConvectionCoefficient1Location, "");
     OS_ASSERT(result);
   }
-  
+
 
   bool SurfacePropertyConvectionCoefficientsMultipleSurface_Impl::setConvectionCoefficient1Type(const std::string& convectionCoefficient1Type) {
     bool result = setString(OS_SurfaceProperty_ConvectionCoefficients_MultipleSurfaceFields::ConvectionCoefficient1Type, convectionCoefficient1Type);
@@ -438,7 +438,7 @@ void SurfacePropertyConvectionCoefficientsMultipleSurface::resetConvectionCoeffi
 
 /// @cond
 SurfacePropertyConvectionCoefficientsMultipleSurface::SurfacePropertyConvectionCoefficientsMultipleSurface(std::shared_ptr<detail::SurfacePropertyConvectionCoefficientsMultipleSurface_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -178,6 +178,10 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   // translate Version first
   model::Version version = model.getUniqueModelObject<model::Version>();
   translateAndMapModelObject(version);
+
+  // translate Timestep second (this initializes it if need be)
+  model::Timestep timestep = model.getUniqueModelObject<model::Timestep>();
+  translateAndMapModelObject(timestep);
 
   // resolve surface marching conflicts before combining thermal zones or removing spaces
   // as those operations may change search distances
@@ -418,6 +422,15 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   translateConstructions(model);
   translateSchedules(model);
 
+  // Translate the Outdoor Air Node
+  {
+    auto node = model.outdoorAirNode();
+    // Create a new IddObjectType::OutdoorAir_Node
+    IdfObject idfObject(IddObjectType::OutdoorAir_Node);
+    m_idfObjects.push_back(idfObject);
+    idfObject.setName(node.name().get());
+  }
+
   // get air loops in sorted order
   std::vector<AirLoopHVAC> airLoops = model.getConcreteModelObjects<AirLoopHVAC>();
   std::sort(airLoops.begin(), airLoops.end(), WorkspaceObjectNameLess());
@@ -522,6 +535,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
 
   switch(modelObject.iddObject().type().value())
   {
+  case openstudio::IddObjectType::OS_AdditionalProperties :
+    {
+      // no op
+      break;
+    }
   case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow :
     {
       model::AirConditionerVariableRefrigerantFlow vrf = modelObject.cast<AirConditionerVariableRefrigerantFlow>();
@@ -546,10 +564,22 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVACSupplyPlenum(airLoopHVACSupplyPlenum);
       break;
     }
+  case openstudio::IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume :
+    {
+      auto mo = modelObject.cast<AirTerminalDualDuctConstantVolume>();
+      retVal = translateAirTerminalDualDuctConstantVolume(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV :
     {
       auto mo = modelObject.cast<AirTerminalDualDuctVAV>();
       retVal = translateAirTerminalDualDuctVAV(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir :
+    {
+      auto mo = modelObject.cast<AirTerminalDualDuctVAVOutdoorAir>();
+      retVal = translateAirTerminalDualDuctVAVOutdoorAir(mo);
       break;
     }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction :
@@ -662,11 +692,27 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_AvailabilityManagerAssignmentList :
     {
-      return retVal;
+      auto mo = modelObject.cast<AvailabilityManagerAssignmentList>();
+      retVal = translateAvailabilityManagerAssignmentList(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_AvailabilityManager_Scheduled :
     {
-      return retVal;
+      auto mo = modelObject.cast<AvailabilityManagerScheduled>();
+      retVal = translateAvailabilityManagerScheduled(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_ScheduledOn :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerScheduledOn>();
+      retVal = translateAvailabilityManagerScheduledOn(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_ScheduledOff :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerScheduledOff>();
+      retVal = translateAvailabilityManagerScheduledOff(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_Material_AirWall :
     {
@@ -702,6 +748,30 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       auto mo = modelObject.cast<AvailabilityManagerNightCycle>();
       retVal = translateAvailabilityManagerNightCycle(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOn :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerHighTemperatureTurnOn>();
+      retVal = translateAvailabilityManagerHighTemperatureTurnOn(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOff :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerHighTemperatureTurnOff>();
+      retVal = translateAvailabilityManagerHighTemperatureTurnOff(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOn :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerLowTemperatureTurnOn>();
+      retVal = translateAvailabilityManagerLowTemperatureTurnOn(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOff :
+    {
+      auto mo = modelObject.cast<AvailabilityManagerLowTemperatureTurnOff>();
+      retVal = translateAvailabilityManagerLowTemperatureTurnOff(mo);
       break;
     }
   case openstudio::IddObjectType::OS_Boiler_HotWater :
@@ -1476,6 +1546,109 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       break;
     }
+
+  case openstudio::IddObjectType::OS_Exterior_FuelEquipment :
+    {
+      model::ExteriorFuelEquipment mo = modelObject.cast<ExteriorFuelEquipment>();
+      retVal = translateExteriorFuelEquipment(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Exterior_FuelEquipment_Definition:
+    {
+      // no-op
+      break;
+    }
+
+  case openstudio::IddObjectType::OS_Exterior_WaterEquipment :
+    {
+      model::ExteriorWaterEquipment mo = modelObject.cast<ExteriorWaterEquipment>();
+      retVal = translateExteriorWaterEquipment(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Exterior_WaterEquipment_Definition:
+    {
+      // no-op
+      break;
+    }
+
+  case openstudio::IddObjectType::OS_ExternalInterface :
+    {
+      model::ExternalInterface ei = modelObject.cast<ExternalInterface>();
+      retVal = translateExternalInterface(ei);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ExternalInterface_Actuator :
+    {
+      model::ExternalInterfaceActuator ei = modelObject.cast<ExternalInterfaceActuator>();
+      retVal = translateExternalInterfaceActuator(ei);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_From_Variable:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitExportFromVariable ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitExportFromVariable>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitExportFromVariable(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Actuator:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitExportToActuator ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitExportToActuator>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitExportToActuator(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Schedule:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitExportToSchedule ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitExportToSchedule>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitExportToSchedule(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Variable:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitExportToVariable ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitExportToVariable>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitExportToVariable(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitImport ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitImport>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitImport(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_From_Variable:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitImportFromVariable ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitImportFromVariable>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitImportFromVariable(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Actuator:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitImportToActuator ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitImportToActuator>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitImportToActuator(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Schedule:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitImportToSchedule ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitImportToSchedule>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitImportToSchedule(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Variable:
+  {
+    model::ExternalInterfaceFunctionalMockupUnitImportToVariable ei = modelObject.cast<ExternalInterfaceFunctionalMockupUnitImportToVariable>();
+    retVal = translateExternalInterfaceFunctionalMockupUnitImportToVariable(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_Schedule:
+  {
+    model::ExternalInterfaceSchedule ei = modelObject.cast<ExternalInterfaceSchedule>();
+    retVal = translateExternalInterfaceSchedule(ei);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ExternalInterface_Variable:
+  {
+    model::ExternalInterfaceVariable ei = modelObject.cast<ExternalInterfaceVariable>();
+    retVal = translateExternalInterfaceVariable(ei);
+    break;
+  }
   case openstudio::IddObjectType::OS_Facility :
     {
       // no-op
@@ -1518,11 +1691,29 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateFluidCoolerTwoSpeed(fluidCoolerTwoSpeed);
     break;
   }
+  case openstudio::IddObjectType::OS_Foundation_Kiva:
+  {
+    model::FoundationKiva kiva = modelObject.cast<FoundationKiva>();
+    retVal = translateFoundationKiva(kiva);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Foundation_Kiva_Settings:
+  {
+    model::FoundationKivaSettings kivaSettings = modelObject.cast<FoundationKivaSettings>();
+    retVal = translateFoundationKivaSettings(kivaSettings);
+    break;
+  }
   case openstudio::IddObjectType::OS_Generator_MicroTurbine:
   {
-    // Will also translate the Generator:MicroTurbine:HeatRecovery if there is one
-    model::GeneratorMicroTurbine temp = modelObject.cast<GeneratorMicroTurbine>();
-    retVal = translateGeneratorMicroTurbine(temp);
+    // Will also translate the Generator:MicroTurbine:HeatRecovery if there is one attached to the Generator:MicroTurbine
+    model::GeneratorMicroTurbine mchp = modelObject.cast<GeneratorMicroTurbine>();
+    retVal = translateGeneratorMicroTurbine(mchp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_MicroTurbine_HeatRecovery:
+  {
+    // no-op, just Log a Trace message
+    LOG(Trace, "OS_Generator_MicroTurbine_HeatRecovery is not translated by itself but in the parent GeneratorMicroTurbine");
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell:
@@ -1859,6 +2050,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::MaterialPropertyGlazingSpectralData spectralData = modelObject.cast<MaterialPropertyGlazingSpectralData>();
       retVal = translateMaterialPropertyGlazingSpectralData(spectralData);
+      break;
+    }
+  case openstudio::IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings :
+    {
+      model::MaterialPropertyMoisturePenetrationDepthSettings empd = modelObject.cast<MaterialPropertyMoisturePenetrationDepthSettings>();
+      retVal = translateMaterialPropertyMoisturePenetrationDepthSettings(empd);
       break;
     }
   case openstudio::IddObjectType::OS_Material_RoofVegetation :
@@ -2570,6 +2767,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateSurfacePropertyConvectionCoefficientsMultipleSurface(obj);
     break;
   }
+  case openstudio::IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter:
+  {
+    model::SurfacePropertyExposedFoundationPerimeter obj = modelObject.cast<SurfacePropertyExposedFoundationPerimeter>();
+    retVal = translateSurfacePropertyExposedFoundationPerimeter(obj);
+    break;
+  }
   case openstudio::IddObjectType::OS_SurfaceProperty_OtherSideCoefficients:
   {
     model::SurfacePropertyOtherSideCoefficients obj = modelObject.cast<SurfacePropertyOtherSideCoefficients>();
@@ -3027,6 +3230,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_SizingPeriod_DesignDay);
   result.push_back(IddObjectType::OS_SizingPeriod_WeatherFileConditionType);
   result.push_back(IddObjectType::OS_SizingPeriod_WeatherFileDays);
+  result.push_back(IddObjectType::OS_Foundation_Kiva);
+  result.push_back(IddObjectType::OS_Foundation_Kiva_Settings);
 
   result.push_back(IddObjectType::OS_UtilityCost_Charge_Block);
   result.push_back(IddObjectType::OS_UtilityCost_Charge_Simple);
@@ -3075,6 +3280,9 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_SpaceInfiltration_DesignFlowRate);
   result.push_back(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea);
   result.push_back(IddObjectType::OS_Exterior_Lights);
+  result.push_back(IddObjectType::OS_Exterior_FuelEquipment);
+  result.push_back(IddObjectType::OS_Exterior_WaterEquipment);
+
 
   result.push_back(IddObjectType::OS_AirLoopHVAC);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ControllerList);
@@ -3083,10 +3291,16 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryCoolOnly);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ZoneMixer);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ZoneSplitter);
+  result.push_back(IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume);
+  result.push_back(IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir);
   result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam);
   result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled);
+
+  // TODO: @kbenne is this needed here?
+  // Does this mean these objects get translated even if not connected to anything?
   result.push_back(IddObjectType::OS_AvailabilityManagerAssignmentList);
   result.push_back(IddObjectType::OS_AvailabilityManager_Scheduled);
+
   result.push_back(IddObjectType::OS_Chiller_Electric_EIR);
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_SingleSpeed);
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_TwoSpeed);
@@ -3182,6 +3396,19 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_EnergyManagementSystem_TrendVariable);
   result.push_back(IddObjectType::OS_Output_EnergyManagementSystem);
 
+  result.push_back(IddObjectType::OS_ExternalInterface);
+  result.push_back(IddObjectType::OS_ExternalInterface_Actuator);
+  result.push_back(IddObjectType::OS_ExternalInterface_Schedule);
+  result.push_back(IddObjectType::OS_ExternalInterface_Variable);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_From_Variable);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Actuator);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Schedule);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitExport_To_Variable);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_From_Variable);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Actuator);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Schedule);
+  result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Variable);
   return result;
 }
 
@@ -3189,6 +3416,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
 {
   std::vector<IddObjectType> iddObjectTypes;
   iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_GlazingSpectralData);
+  iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings);
   iddObjectTypes.push_back(IddObjectType::OS_Material);
   iddObjectTypes.push_back(IddObjectType::OS_Material_AirGap);
   iddObjectTypes.push_back(IddObjectType::OS_Material_AirWall);
@@ -3223,6 +3451,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
 
   iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);
   iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);
+  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);
   iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
 
   for (const IddObjectType& iddObjectType : iddObjectTypes){

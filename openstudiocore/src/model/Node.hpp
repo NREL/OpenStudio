@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -60,13 +60,13 @@ namespace detail {
 
 /** Node is a ModelObject that defines a point in an EnergyPlus HVAC topology where fluid conditions are known and
  *  control devices can be applied.  EnergyPlus IDD does not define a Node object, however the concept of a node
- *  is central to modeling HVAC systems in EnergyPlus. 
+ *  is central to modeling HVAC systems in EnergyPlus.
  */
 class MODEL_API Node : public StraightComponent {
 
  public:
 
-  /** Constructs a new Node object and places it inside the 
+  /** Constructs a new Node object and places it inside the
    *  model.  The object is fully initialized with all companion objects.
    */
   explicit Node(const Model& model);
@@ -169,7 +169,7 @@ class MODEL_API Node : public StraightComponent {
 
   friend class openstudio::detail::IdfObject_Impl;
 
-  /// @cond 
+  /// @cond
 
   typedef detail::Node_Impl ImplType;
 
@@ -179,7 +179,7 @@ class MODEL_API Node : public StraightComponent {
 
   REGISTER_LOGGER("openstudio.model.Node");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -273,7 +273,7 @@ LocationView::LocationView(bool isIP,
     ashraeClimateZone = climateZones.appendClimateZone(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear(), "");
   }
   //ashraeClimateZone.setType(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDocumentName(), model::ClimateZones::ashraeDefaultYear());
-  
+
   std::string ashraeClimateZoneValue = ashraeClimateZone.value();
   auto idx = m_ashraeClimateZone->findText(toQString(ashraeClimateZoneValue));
   OS_ASSERT(idx != -1);
@@ -345,7 +345,7 @@ LocationView::LocationView(bool isIP,
 
   // ***** Add Main Horizontal Line *****
   scrollLayout->addWidget(mainHLine);
-  
+
   // ***** Design Days *****
   label = new QLabel("Design Days");
   label->setObjectName("H2");
@@ -445,7 +445,7 @@ void LocationView::saveQSettings() const
   QString applicationName = QCoreApplication::applicationName();
   QSettings settings(organizationName, applicationName);
   settings.setValue("m_lastEpwPathOpened", m_lastEpwPathOpened);
-  settings.setValue("m_lastDdyPathOpened", m_lastDdyPathOpened);  
+  settings.setValue("m_lastDdyPathOpened", m_lastDdyPathOpened);
 }
 
 void LocationView::update()
@@ -548,7 +548,7 @@ void LocationView::clearSiteInfo()
 // ***** SLOTS *****
 void LocationView::onWeatherFileBtnClicked()
 {
-  QString fileTypes("Files (*.epw)");
+  QString fileTypes("EPW Files (*.epw);; All Files (*.*)");
 
   QString lastPath = m_lastEpwPathOpened;
   if (lastPath.isEmpty() && m_lastDdyPathOpened.isEmpty()){
@@ -559,9 +559,9 @@ void LocationView::onWeatherFileBtnClicked()
     lastPath = path.replace(".ddy", ".epw");
   }
 
-  QString fileName = QFileDialog::getOpenFileName(this,"Open EPW File",lastPath,fileTypes);
+  QString fileName = QFileDialog::getOpenFileName(this,"Open Weather File",lastPath,fileTypes);
   if(!fileName.isEmpty()){
-    
+
     openstudio::path epwPath = toPath(fileName);
     openstudio::path newPath = toPath(m_modelTempDir) / toPath("resources/files") / epwPath.filename();
     openstudio::path previousEPWPath;
@@ -571,9 +571,9 @@ void LocationView::onWeatherFileBtnClicked()
     ss.setLogLevel(Error);
 
     try{
-      
+
       boost::optional<openstudio::model::WeatherFile> weatherFile = m_model.getOptionalUniqueModelObject<model::WeatherFile>();
-      
+
       if (weatherFile){
         boost::optional<openstudio::path> temp = weatherFile->path();
         if (temp){
@@ -584,11 +584,11 @@ void LocationView::onWeatherFileBtnClicked()
           }
         }
       }
-      
+
       // duplicate code in OSDocument::fixWeatherFilePath
 
       openstudio::filesystem::copy_file(epwPath, newPath, openstudio::filesystem::copy_option::overwrite_if_exists);
-      
+
       // this can throw
       EpwFile epwFile(newPath);
 
@@ -646,7 +646,7 @@ void LocationView::onWeatherFileBtnClicked()
       openstudio::filesystem::remove_all(newPath);
 
       QMessageBox box(QMessageBox::Warning, "Failed To Set Weather File", QString("Failed To Set Weather File To ") + fileName, QMessageBox::Ok);
-      box.setDetailedText(toQString(ss.string())); 
+      box.setDetailedText(toQString(ss.string()));
       box.exec();
 
       boost::optional<model::WeatherFile> weatherFile = m_model.weatherFile();
@@ -693,14 +693,14 @@ void LocationView::onDesignDayBtnClicked()
         if((iddObjectType == IddObjectType::SizingPeriod_DesignDay) ||
            (iddObjectType == IddObjectType::SizingPeriod_WeatherFileDays) ||
            (iddObjectType == IddObjectType::SizingPeriod_WeatherFileConditionType)){
-           
+
           ddyWorkspace.addObject(idfObject);
         }
       }
 
       energyplus::ReverseTranslator reverseTranslator;
       model::Model ddyModel = reverseTranslator.translateWorkspace(ddyWorkspace);
-          
+
       // Use a heuristic based on the ddy files provided by EnergyPlus
       // Filter out the days that are not helpful.
       if (!ddyModel.objects().empty()){
@@ -717,14 +717,14 @@ void LocationView::onDesignDayBtnClicked()
           boost::optional<std::string> name;
           name = designDay.name();
 
-          if( name ) 
+          if( name )
           {
-            QString qname = QString::fromStdString(name.get()); 
+            QString qname = QString::fromStdString(name.get());
 
-            if( qname.contains("99%") ) 
+            if( qname.contains("99%") )
             {
               days99.push_back(designDay);
-            } 
+            }
             else if( qname.contains("99.6%") )
             {
               days99_6.push_back(designDay);
@@ -746,7 +746,7 @@ void LocationView::onDesignDayBtnClicked()
               unknownDay = true;
             }
           }
-          
+
         }
 
         // Pick only the most stringent design points
@@ -799,17 +799,17 @@ void LocationView::checkNumDesignDays()
 
   if (empty) {
     QMessageBox box(QMessageBox::Warning,
-      "No Design Days in DDY File", 
+      "No Design Days in DDY File",
       "This DDY file does not contain any valid design days.  Check the DDY file itself for errors or omissions.",
       QMessageBox::Ok);
-    box.exec();  
+    box.exec();
   }
 }
 
 void LocationView::onASHRAEClimateZoneChanged(const QString& climateZone)
 {
   model::ClimateZones climateZones = m_model.getUniqueModelObject<model::ClimateZones>();
-    
+
   model::ClimateZone ashraeClimateZone = climateZones.getClimateZone(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear());
   ashraeClimateZone.setValue(toString(climateZone));
 }

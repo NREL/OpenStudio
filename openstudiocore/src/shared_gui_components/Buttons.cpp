@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -67,7 +67,7 @@ OrangeButton::OrangeButton(QWidget * parent)
   style.append("border-radius: 4px; ");
   style.append("border: 1px solid #949393; ");
   style.append("background: qlineargradient(x1:0,y1:0,x2:0,y2:1, ");
-  style.append("                             stop: 0 #FDBC3B, "); 
+  style.append("                             stop: 0 #FDBC3B, ");
   style.append("                             stop: 1 #F47920 ); ");
   style.append("height: 22px; ");
   style.append("font-size: 12px; ");
@@ -89,7 +89,7 @@ GrayButton::GrayButton(QWidget * parent)
   style.append("border-radius: 4px; ");
   style.append("border: 1px solid #949393; ");
   style.append("background: qlineargradient(x1:0,y1:0,x2:0,y2:1, ");
-  style.append("                             stop: 0 #F2F2F2, "); 
+  style.append("                             stop: 0 #F2F2F2, ");
   style.append("                             stop: 1 #A5A5A5 ); ");
   style.append("height: 22px; ");
   style.append("font-size: 12px; ");
@@ -100,14 +100,14 @@ GrayButton::GrayButton(QWidget * parent)
 
   style.append("QPushButton:pressed { ");
   style.append("background: qlineargradient(x1:0,y1:0,x2:0,y2:1, ");
-  style.append("                             stop: 0 #262626, "); 
+  style.append("                             stop: 0 #262626, ");
   style.append("                             stop: 1 #535353 ); ");
   style.append("color: white; ");
   style.append("} ");
 
   style.append("QPushButton:checked { ");
   style.append("background: qlineargradient(x1:0,y1:0,x2:0,y2:1, ");
-  style.append("                             stop: 0 #262626, "); 
+  style.append("                             stop: 0 #262626, ");
   style.append("                             stop: 1 #535353 ); ");
   style.append("color: white; ");
   style.append("} ");
@@ -125,7 +125,7 @@ BlueButton::BlueButton(QWidget * parent)
   style.append("border-radius: 4px; ");
   style.append("border: 1px solid #093A07; ");
   style.append("background: qlineargradient(x1:0,y1:0,x2:0,y2:1, ");
-  style.append("                             stop: 0 #C8DAF1, "); 
+  style.append("                             stop: 0 #C8DAF1, ");
   style.append("                             stop: 1 #39679E ); ");
   style.append("height: 22px; ");
   style.append("font-size: 12px; ");
@@ -136,14 +136,14 @@ BlueButton::BlueButton(QWidget * parent)
 
   style.append("QPushButton:pressed { ");
   style.append("background: qlineargradient(x1:0,y1:0,x2:0,y2:1, ");
-  style.append("                             stop: 0 #262626, "); 
+  style.append("                             stop: 0 #262626, ");
   style.append("                             stop: 1 #535353 ); ");
   style.append("color: white; ");
   style.append("} ");
 
   style.append("QPushButton:checked { ");
   style.append("background: qlineargradient(x1:0,y1:0,x2:0,y2:1, ");
-  style.append("                             stop: 0 #262626, "); 
+  style.append("                             stop: 0 #262626, ");
   style.append("                             stop: 1 #535353 ); ");
   style.append("color: white; ");
   style.append("} ");

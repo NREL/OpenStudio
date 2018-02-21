@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -120,7 +120,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   bool isFractionofZoneControlledbyPrimaryDaylightingControlDefaulted() const;
 
   double fractionofZoneControlledbySecondaryDaylightingControl() const;
-  
+
   Quantity getFractionofZoneControlledbySecondaryDaylightingControl(bool returnIP=false) const;
 
   bool isFractionofZoneControlledbySecondaryDaylightingControlDefaulted() const;
@@ -135,20 +135,20 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   void resetMultiplier();
 
-  void setCeilingHeight(boost::optional<double> ceilingHeight);
-  
-  void setCeilingHeight(double ceilingHeight);
-  
+  bool setCeilingHeight(boost::optional<double> ceilingHeight);
+
+  bool setCeilingHeight(double ceilingHeight);
+
   bool setCeilingHeight(const Quantity& ceilingHeight);
 
   void resetCeilingHeight();
 
   void autocalculateCeilingHeight();
 
-  void setVolume(boost::optional<double> volume);
+  bool setVolume(boost::optional<double> volume);
 
-  void setVolume(double volume);
-  
+  bool setVolume(double volume);
+
   bool setVolume(const Quantity& volume);
 
   void resetVolume();
@@ -167,7 +167,7 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   void resetZoneOutsideConvectionAlgorithm();
 
-  void setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName);
+  bool setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName);
 
   /** \deprecated */
   bool setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint & thermostat);
@@ -188,13 +188,13 @@ class MODEL_API ThermalZone : public HVACComponent {
   void resetZoneControlContaminantController();
 
   bool setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl);
-  
+
   bool setFractionofZoneControlledbyPrimaryDaylightingControl(const Quantity& fractionofZoneControlledbyPrimaryDaylightingControl);
 
   void resetFractionofZoneControlledbyPrimaryDaylightingControl();
 
   bool setFractionofZoneControlledbySecondaryDaylightingControl(double fractionofZoneControlledbySecondaryDaylightingControl);
-  
+
   bool setFractionofZoneControlledbySecondaryDaylightingControl(const Quantity& fractionofZoneControlledbySecondaryDaylightingControl);
 
   void resetFractionofZoneControlledbySecondaryDaylightingControl();
@@ -277,7 +277,7 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   /** Returns the lighting power (W) in this thermal zone. Does not include space multiplier. Does include lighting multiplier. */
   double lightingPower() const;
-  
+
   /** Returns the lighting power density (W/m^2) of this thermal zone. Does not include space multiplier. Does include lighting multiplier. */
   double lightingPowerPerFloorArea() const;
 
@@ -328,13 +328,13 @@ class MODEL_API ThermalZone : public HVACComponent {
   /// Combines all spaces referencing this zone into a single space referencing this zone.
   /// If this zone has no spaces referencing it, then an uninitialized optional space is returned.
   /// If this zone has one space referencing it, then that space is returned.
-  /// If this zone is referenced by more than one space, then geometry from all spaces is added to a single zone.  
+  /// If this zone is referenced by more than one space, then geometry from all spaces is added to a single zone.
   /// The space origin is at the minimum x, y, z coordinate of all space origins, direction of relative north is preserved if same for all spaces.
-  /// If all spaces reference the same building story then that is preserved, otherwise it is cleared. 
-  /// If all spaces reference the same space type then that is preserved, otherwise space loads from the space type are applied to the new space directly. 
-  /// Direct child space loads are converted to absolute levels.  
-  /// Constructions and schedules are hard applied to all child surfaces and loads.  
-  /// Surfaces referencing other surfaces within the space are converted to interior partitions.  
+  /// If all spaces reference the same building story then that is preserved, otherwise it is cleared.
+  /// If all spaces reference the same space type then that is preserved, otherwise space loads from the space type are applied to the new space directly.
+  /// Direct child space loads are converted to absolute levels.
+  /// Constructions and schedules are hard applied to all child surfaces and loads.
+  /// Surfaces referencing other surfaces within the space are converted to interior partitions.
   boost::optional<Space> combineSpaces();
 
   /** Removes connections to all other HVACComponent objects */
@@ -353,7 +353,7 @@ class MODEL_API ThermalZone : public HVACComponent {
    *  If the ThermalZone is later added to a loop useIdealAirLoads
    *  will be reset to false.
    */
-  void setUseIdealAirLoads(bool useIdealAirLoads);
+  bool setUseIdealAirLoads(bool useIdealAirLoads);
 
   bool addToNode(Node & node);
 
@@ -361,29 +361,29 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   PortList exhaustPortList() const;
 
-  /** Add new equipment setting the heating and cooling priorities 
+  /** Add new equipment setting the heating and cooling priorities
    *  to the next available priority level.
    *  Air terminals associated with AirLoopHVAC will be moved to first priority.
    *  This method is relatively dumb.  It will add any model object to the list
    *  even if it is not hvac equipment.  That might change in the future.
    */
-  void addEquipment(const ModelObject & equipment);
+  bool addEquipment(const ModelObject & equipment);
 
   /** Remove equipment from the EquipmentList.
-    * This will not remove the equipment from the model or 
+    * This will not remove the equipment from the model or
     * disconnect any node connections.  Use only if you know what you are doing.
     */
-  void removeEquipment(const ModelObject & equipment);
+  bool removeEquipment(const ModelObject & equipment);
 
   /** Set cooling priority of equipment.
-   *  Asserts when equipment is not in the ZoneHVACEquipmentList
+   *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
-  void setCoolingPriority(const ModelObject & equipment, unsigned priority);
+  bool setCoolingPriority(const ModelObject & equipment, unsigned priority);
 
   /** Set heating priority of equipment.
-   *  Asserts when equipment is not in the ZoneHVACEquipmentList
+   *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
-  void setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+  bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
 
   /** Return all equipment.  Order is determined by heating priority */
   std::vector<ModelObject> equipmentInHeatingOrder();
@@ -391,7 +391,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   /** Return all equipment.  Order is determined by cooling priority */
   std::vector<ModelObject> equipmentInCoolingOrder();
 
-  /** Return true if the ThermalZone is attached to 
+  /** Return true if the ThermalZone is attached to
   *   an AirLoopHVACSupplyPlenum or AirLoopHVACReturnPlenum
   */
   bool isPlenum() const;
@@ -480,4 +480,3 @@ typedef std::vector<ThermalZone> ThermalZoneVector;
 } // openstudio
 
 #endif // MODEL_THERMALZONE_HPP
-

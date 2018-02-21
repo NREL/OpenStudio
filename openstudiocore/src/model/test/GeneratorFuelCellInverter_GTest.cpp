@@ -70,5 +70,5 @@ TEST_F(ModelFixture, FuelCellInverter2) {
   inverter.resetInverterEfficiencyCalculationMode();
   EXPECT_EQ("Constant", inverter.inverterEfficiencyCalculationMode());
   EXPECT_EQ(1.0, inverter.inverterEfficiency());
-  
+
 }

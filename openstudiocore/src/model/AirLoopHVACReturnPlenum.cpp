@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -181,7 +181,7 @@ namespace detail {
     {
       mixer = nodeAirLoop->zoneMixer();
 
-      if( ! (outletObj && mixer && (outletObj.get() == mixer.get()) ) ) 
+      if( ! (outletObj && mixer && (outletObj.get() == mixer.get()) ) )
       {
         result = false;
       }
@@ -245,7 +245,7 @@ namespace detail {
 
     return addBranchForZoneImpl(thermalZone,t_terminal);
   }
-  
+
   bool AirLoopHVACReturnPlenum_Impl::addBranchForZone(openstudio::model::ThermalZone & thermalZone, HVACComponent & terminal)
   {
     boost::optional<HVACComponent> t_terminal = terminal;
@@ -298,7 +298,7 @@ namespace detail {
            it != t_inletModelObjects.rend();
            ++it )
       {
-        unsigned branchIndex = branchIndexForInletModelObject(*it); 
+        unsigned branchIndex = branchIndexForInletModelObject(*it);
         unsigned t_inletPort = inletPort(branchIndex);
         unsigned connectedObjectOutletPort = connectedObjectPort(t_inletPort).get();
 
@@ -372,7 +372,7 @@ bool AirLoopHVACReturnPlenum::addBranchForZone(openstudio::model::ThermalZone & 
 
 /// @cond
 AirLoopHVACReturnPlenum::AirLoopHVACReturnPlenum(std::shared_ptr<detail::AirLoopHVACReturnPlenum_Impl> impl)
-  : Mixer(impl)
+  : Mixer(std::move(impl))
 {}
 /// @endcond
 

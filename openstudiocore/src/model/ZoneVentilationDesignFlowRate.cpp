@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -28,6 +28,7 @@
 
 #include "ZoneVentilationDesignFlowRate.hpp"
 #include "ZoneVentilationDesignFlowRate_Impl.hpp"
+
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ThermalZone.hpp"
@@ -37,6 +38,7 @@
 #include "ZoneHVACEquipmentList_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_ZoneVentilation_DesignFlowRate_FieldEnums.hxx>
@@ -73,7 +75,24 @@ namespace detail {
   const std::vector<std::string>& ZoneVentilationDesignFlowRate_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: all variables reported at the zone level
+      //result.push_back("Zone Ventilation Sensible Heat Loss Energy");
+      //result.push_back("Zone Ventilation Sensible Heat Gain Energy");
+      //result.push_back("Zone Ventilation Latent Heat Loss Energy");
+      //result.push_back("Zone Ventilation Latent Heat Gain Energy");
+      //result.push_back("Zone Ventilation Total Heat Loss Energy");
+      //result.push_back("Zone Ventilation Total Heat Gain Energy");
+      //result.push_back("Zone Ventilation Current Density Volume Flow Rate");
+      //result.push_back("Zone Ventilation Standard Density Volume Flow Rate");
+      //result.push_back("Zone Ventilation Current Density Volume");
+      //result.push_back("Zone Ventilation Standard Density Volume");
+      //result.push_back("Zone Ventilation Mass");
+      //result.push_back("Zone Ventilation Mass Flow Rate");
+      //result.push_back("Zone Ventilation Air Change Rate");
+      //result.push_back("Zone Ventilation Fan Electric Energy");
+      //result.push_back("Zone Ventilation Air Inlet Temperature");
     }
     return result;
   }
@@ -259,27 +278,89 @@ namespace detail {
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod) {
+    LOG(Warn, "ZoneVentilationDesignFlowRate::setDesignFlowRateCalculationMethod has been deprecated and will be removed in a future release, the design flow rate calculation method is set during the call to setDesignFlowRate, setFlowRateperZoneFloorArea, setAirChangesperHour, etc");
     bool result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, designFlowRateCalculationMethod);
     return result;
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setDesignFlowRate(double designFlowRate) {
-    bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, designFlowRate);
+    bool result = true;
+    if (designFlowRate < 0){
+      result = false;
+    } else {
+      // This is the only case where it could really fail, if the user passed NaN/Inf
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, designFlowRate);
+      if (result) {
+        result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Zone");
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.0);
+        OS_ASSERT(result);
+      }
+    }
     return result;
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea) {
-    bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, flowRateperZoneFloorArea);
+    bool result = true;
+    if (flowRateperZoneFloorArea < 0){
+      result = false;
+    } else {
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, flowRateperZoneFloorArea);
+      if (result) {
+        result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Area");
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.0);
+        OS_ASSERT(result);
+      }
+    }
     return result;
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setFlowRateperPerson(double flowRateperPerson) {
-    bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, flowRateperPerson);
+    bool result = true;
+    if (flowRateperPerson < 0){
+      result = false;
+    } else {
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, flowRateperPerson);
+      if (result) {
+        result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Person");
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.0);
+        OS_ASSERT(result);
+      }
+    }
     return result;
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setAirChangesperHour(double airChangesperHour) {
-    bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, airChangesperHour);
+    bool result = true;
+    if (airChangesperHour < 0){
+      result = false;
+    } else {
+      result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::AirChangesperHour, airChangesperHour);
+      if (result) {
+        result = setString(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "AirChanges/Hour");
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.0);
+        OS_ASSERT(result);
+        result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.0);
+        OS_ASSERT(result);
+      }
+    }
     return result;
   }
 
@@ -298,24 +379,28 @@ namespace detail {
     return result;
   }
 
-  void ZoneVentilationDesignFlowRate_Impl::setConstantTermCoefficient(double constantTermCoefficient) {
+  bool ZoneVentilationDesignFlowRate_Impl::setConstantTermCoefficient(double constantTermCoefficient) {
     bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::ConstantTermCoefficient, constantTermCoefficient);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ZoneVentilationDesignFlowRate_Impl::setTemperatureTermCoefficient(double temperatureTermCoefficient) {
+  bool ZoneVentilationDesignFlowRate_Impl::setTemperatureTermCoefficient(double temperatureTermCoefficient) {
     bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::TemperatureTermCoefficient, temperatureTermCoefficient);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ZoneVentilationDesignFlowRate_Impl::setVelocityTermCoefficient(double velocityTermCoefficient) {
+  bool ZoneVentilationDesignFlowRate_Impl::setVelocityTermCoefficient(double velocityTermCoefficient) {
     bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::VelocityTermCoefficient, velocityTermCoefficient);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ZoneVentilationDesignFlowRate_Impl::setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient) {
+  bool ZoneVentilationDesignFlowRate_Impl::setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient) {
     bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::VelocitySquaredTermCoefficient, velocitySquaredTermCoefficient);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setMinimumIndoorTemperature(double minimumIndoorTemperature) {
@@ -426,7 +511,7 @@ namespace detail {
   {
     return 0; // this object has no inlet or outlet node
   }
-  
+
   boost::optional<ThermalZone> ZoneVentilationDesignFlowRate_Impl::thermalZone()
   {
     ModelObject thisObject = this->getObject<ModelObject>();
@@ -442,7 +527,7 @@ namespace detail {
     }
     return boost::none;
   }
-  
+
   bool ZoneVentilationDesignFlowRate_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
     Model m = this->model();
@@ -463,7 +548,7 @@ namespace detail {
 
     return true;
   }
-  
+
   void ZoneVentilationDesignFlowRate_Impl::removeFromThermalZone()
   {
     if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
@@ -483,11 +568,9 @@ ZoneVentilationDesignFlowRate::ZoneVentilationDesignFlowRate(const Model& model)
     setSchedule(schedule);
   }
 
-  setDesignFlowRateCalculationMethod("AirChanges/Hour");
-  setDesignFlowRate(0.0);
-  setFlowRateperZoneFloorArea(0.0);
-  setFlowRateperPerson(0.0);
+  // This automatically switches the Calculation Method to "AirChanges/Hour"
   setAirChangesperHour(5.0);
+
   setVentilationType("Natural");
   setFanPressureRise(0.0);
   setFanTotalEfficiency(1.0);
@@ -649,20 +732,20 @@ bool ZoneVentilationDesignFlowRate::setFanTotalEfficiency(double fanTotalEfficie
   return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setFanTotalEfficiency(fanTotalEfficiency);
 }
 
-void ZoneVentilationDesignFlowRate::setConstantTermCoefficient(double constantTermCoefficient) {
-  getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setConstantTermCoefficient(constantTermCoefficient);
+bool ZoneVentilationDesignFlowRate::setConstantTermCoefficient(double constantTermCoefficient) {
+  return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setConstantTermCoefficient(constantTermCoefficient);
 }
 
-void ZoneVentilationDesignFlowRate::setTemperatureTermCoefficient(double temperatureTermCoefficient) {
-  getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setTemperatureTermCoefficient(temperatureTermCoefficient);
+bool ZoneVentilationDesignFlowRate::setTemperatureTermCoefficient(double temperatureTermCoefficient) {
+  return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setTemperatureTermCoefficient(temperatureTermCoefficient);
 }
 
-void ZoneVentilationDesignFlowRate::setVelocityTermCoefficient(double velocityTermCoefficient) {
-  getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setVelocityTermCoefficient(velocityTermCoefficient);
+bool ZoneVentilationDesignFlowRate::setVelocityTermCoefficient(double velocityTermCoefficient) {
+  return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setVelocityTermCoefficient(velocityTermCoefficient);
 }
 
-void ZoneVentilationDesignFlowRate::setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient) {
-  getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setVelocitySquaredTermCoefficient(velocitySquaredTermCoefficient);
+bool ZoneVentilationDesignFlowRate::setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient) {
+  return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setVelocitySquaredTermCoefficient(velocitySquaredTermCoefficient);
 }
 
 bool ZoneVentilationDesignFlowRate::setMinimumIndoorTemperature(double minimumIndoorTemperature) {
@@ -731,10 +814,9 @@ bool ZoneVentilationDesignFlowRate::setMaximumWindSpeed(double maximumWindSpeed)
 
 /// @cond
 ZoneVentilationDesignFlowRate::ZoneVentilationDesignFlowRate(std::shared_ptr<detail::ZoneVentilationDesignFlowRate_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 
 } // model
 } // openstudio
-

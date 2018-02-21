@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -90,19 +90,19 @@ class MODEL_API FanConstantVolume : public StraightComponent {
   bool setAvailabilitySchedule(Schedule& s);
 
   /** Sets the value of the FanEfficiency field. **/
-  void setFanEfficiency(double value);
+  bool setFanEfficiency(double value);
 
   /** Sets the value of the PressureRise field. **/
-  void setPressureRise(double value);
+  bool setPressureRise(double value);
 
   /** Sets the value of the MotorEfficiency field. **/
-  void setMotorEfficiency(double value);
+  bool setMotorEfficiency(double value);
 
   /** Sets the value of the MotorInAirStreamFraction field. **/
-  void setMotorInAirstreamFraction(double value);
+  bool setMotorInAirstreamFraction(double value);
 
   /** Sets the value of the EndUseSubcategory field. **/
-  void setEndUseSubcategory(std::string value);
+  bool setEndUseSubcategory(std::string value);
 
   //@}
 
@@ -122,6 +122,8 @@ class MODEL_API FanConstantVolume : public StraightComponent {
 
   AirflowNetworkFan airflowNetworkFan();
   boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
+
+  boost::optional<double> autosizedMaximumFlowRate() const ;
 
  protected:
   friend class Model;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -433,13 +433,13 @@ SolarCollectorPerformanceIntegralCollectorStorage::SolarCollectorPerformanceInte
 {
   OS_ASSERT(getImpl<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl>());
 
-  // non-idd defaults from HP_wICSSolarCollector.idf 
+  // non-idd defaults from HP_wICSSolarCollector.idf
   bool ok = true;
   ok = setGrossArea(2.9800);
   OS_ASSERT(ok);
   ok = setCollectorWaterVolume(0.1862);
   OS_ASSERT(ok);
-  
+
 }
 
 IddObjectType SolarCollectorPerformanceIntegralCollectorStorage::iddObjectType() {
@@ -733,7 +733,7 @@ void SolarCollectorPerformanceIntegralCollectorStorage::resetEmissivityOfAbsorbe
 
 /// @cond
 SolarCollectorPerformanceIntegralCollectorStorage::SolarCollectorPerformanceIntegralCollectorStorage(std::shared_ptr<detail::SolarCollectorPerformanceIntegralCollectorStorage_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

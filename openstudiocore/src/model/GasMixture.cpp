@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -736,7 +736,7 @@ GasMixture::GasMixture(const Model& model,
   : GasLayer(GasMixture::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::GasMixture_Impl>());
-  
+
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();
@@ -1011,7 +1011,7 @@ void GasMixture::resetGas4Fraction() {
 
 /// @cond
 GasMixture::GasMixture(std::shared_ptr<detail::GasMixture_Impl> impl)
-  : GasLayer(impl)
+  : GasLayer(std::move(impl))
 {}
 /// @endcond
 

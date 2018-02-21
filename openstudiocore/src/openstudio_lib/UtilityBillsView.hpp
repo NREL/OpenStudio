@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -151,7 +151,7 @@ private:
   bool m_showPeak;
 
   QWidget * m_billingPeriodHeaderWidget;
-  
+
   QButtonGroup * m_buttonGroup;
 
   OSLineEdit2 * m_name;
@@ -179,7 +179,7 @@ private:
 
   int m_hiddenWidgetIndex;
   int m_visibleWidgetIndex;
-  
+
 signals:
   void showSubTabView(bool showSubTabView);
   void enableAddNewObjectButton(bool enable);

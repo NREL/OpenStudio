@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -33,6 +33,8 @@
 #include "Curve_Impl.hpp"
 #include "LifeCycleCost.hpp"
 #include "Component.hpp"
+#include "AdditionalProperties.hpp"
+#include "AdditionalProperties_Impl.hpp"
 
 #include "../utilities/idf/Workspace_Impl.hpp"
 
@@ -53,13 +55,13 @@ namespace detail {
     : ModelObject_Impl(type, model)
   {}
 
-  ParentObject_Impl::ParentObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                       Model_Impl* model, 
+  ParentObject_Impl::ParentObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                       Model_Impl* model,
                                        bool keepHandle)
     : ModelObject_Impl(other, model,keepHandle)
   {}
-  
-  ParentObject_Impl::ParentObject_Impl(const ParentObject_Impl& other, 
+
+  ParentObject_Impl::ParentObject_Impl(const ParentObject_Impl& other,
                                        Model_Impl* model,
                                        bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
@@ -82,23 +84,23 @@ namespace detail {
     //  std::vector<IdfObject> removed = object.remove();
     //  result.insert(result.end(), removed.begin(), removed.end());
     //}
-      
-    // subTree includes this object, make sure to include costs as well 
+
+    // subTree includes this object, make sure to include costs as well
     auto subTree = getRecursiveChildren(getObject<ParentObject>(), true);
     // drop the Curve instances
-    // Perhaps this could be done in the getRecursiveChildren, but this way 
+    // Perhaps this could be done in the getRecursiveChildren, but this way
     // the getRecursiveChildren method might be less surprising
     // This is probably the unique situation where you want to get children minus curves
     auto isCurve = [](const ModelObject & modelObject) {
       return modelObject.optionalCast<Curve>();
     };
-    auto end = std::remove_if(subTree.begin(), subTree.end(), isCurve); 
+    auto end = std::remove_if(subTree.begin(), subTree.end(), isCurve);
     std::vector<ModelObject> noCurvesSubTree(subTree.begin(),end);
 
     for (const ModelObject& object : noCurvesSubTree) {
       result.push_back(object.idfObject());
     }
-      
+
     bool ok = model().removeObjects(getHandles<ModelObject>(noCurvesSubTree));
     if (!ok) { result.clear(); }
 
@@ -107,7 +109,7 @@ namespace detail {
 
   /// get a vector of allowable children types
   std::vector<IddObjectType> ParentObject_Impl::allowableChildTypes() const
-  { 
+  {
     IddObjectTypeVector result;
     return result;
   }
@@ -125,15 +127,15 @@ namespace detail {
   }
 
 } // detail
- 
+
 ParentObject::ParentObject(IddObjectType type,const Model& model)
   : ModelObject(type,model)
-{ 
+{
   OS_ASSERT(getImpl<detail::ParentObject_Impl>());
 }
 
 ParentObject::ParentObject(std::shared_ptr<detail::ParentObject_Impl> p)
-  : ModelObject(p)
+  : ModelObject(std::move(p))
 {  }
 
 /// return any children objects in the hierarchy
@@ -148,16 +150,19 @@ std::vector<IddObjectType> ParentObject::allowableChildTypes() const
   return getImpl<detail::ParentObject_Impl>()->allowableChildTypes();
 }
 
-std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCosts) {
+std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCostsAndAdditionalProperties) {
   std::set<Handle> resultSet;
   std::pair<HandleSet::const_iterator,bool> insertResult;
   std::vector<ModelObject> result;
   resultSet.insert(object.handle());
   result.push_back(object);
 
-  if (includeLifeCycleCosts){
+  if (includeLifeCycleCostsAndAdditionalProperties){
     for (const LifeCycleCost& lifeCycleCost : object.lifeCycleCosts()){
       result.push_back(lifeCycleCost);
+    }
+    if (object.hasAdditionalProperties()){
+      result.push_back(object.additionalProperties());
     }
   }
 
@@ -169,21 +174,24 @@ std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool i
     parents.pop_front();
 
     // parent's costs have already been added
-    
+
     for (const ModelObject& child : currentParent.children()) {
       insertResult = resultSet.insert(child.handle());
       if (insertResult.second) {
         result.push_back(child);
 
-        if (includeLifeCycleCosts){
+        if (includeLifeCycleCostsAndAdditionalProperties){
           for (const LifeCycleCost& lifeCycleCost : child.lifeCycleCosts()){
             result.push_back(lifeCycleCost);
+          }
+          if (child.hasAdditionalProperties()){
+            result.push_back(child.additionalProperties());
           }
         }
 
         OptionalParentObject opo = child.optionalCast<ParentObject>();
-        if (opo) { 
-          parents.push_back(*opo); 
+        if (opo) {
+          parents.push_back(*opo);
         }
       }
     }

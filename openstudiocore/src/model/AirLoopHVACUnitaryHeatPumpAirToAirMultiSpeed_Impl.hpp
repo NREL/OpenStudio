@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -146,6 +146,30 @@ namespace detail {
 
     bool isSpeed4SupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
+  boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  boost::optional<double> autosizedSpeed1SupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSpeed2SupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSpeed3SupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSpeed4SupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSpeed1SupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSpeed2SupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSpeed3SupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSpeed4SupplyAirFlowRateDuringCoolingOperation() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
@@ -172,7 +196,7 @@ namespace detail {
 
     bool setSupplementalHeatingCoil(const HVACComponent& coil);
 
-    void setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
+    bool setMaximumSupplyAirTemperaturefromSupplementalHeater(boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater);
 
     void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
@@ -251,4 +275,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRLOOPHVACUNITARYHEATPUMPAIRTOAIRMULTISPEED_IMPL_HPP
-

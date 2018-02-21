@@ -35,13 +35,13 @@
     os << *self;
     return os.str();
   }
-  
+
   std::string __hash__() const{
     std::ostringstream os;
     os << *self;
     return os.str();
   }
-  
+
   int __cmp__(const Date& other) const{
     if (*self < other){
         return -1;
@@ -52,4 +52,4 @@
   }
 };
 
-#endif //UTILITIES_TIME_DATE_I 
+#endif //UTILITIES_TIME_DATE_I

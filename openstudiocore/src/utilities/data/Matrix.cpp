@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -28,14 +28,15 @@
 
 #include "Matrix.hpp"
 
-#include "../core/Optional.hpp"
 #include "../math/FloatCompare.hpp"
 
 #include <random>
+#include <set>
 
 // this should all be moved to a utilities/core/Random.h
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
+#include <boost/optional.hpp>
 
 namespace openstudio{
 
@@ -68,8 +69,8 @@ namespace openstudio{
   {
     double result = 0.0;
 
-    unsigned M = x.size();
-    unsigned N = y.size();
+    size_t M = x.size();
+    size_t N = y.size();
 
     if ((M != v.size1()) || (N != v.size2())){
       return result;
@@ -164,7 +165,7 @@ namespace openstudio{
   /// assumes that x and y are strictly increasing
   Vector interp(const Vector& x, const Vector& y, const Matrix& v, const Vector& xi, double yi, InterpMethod interpMethod, ExtrapMethod extrapMethod)
   {
-    unsigned M = x.size();
+    size_t M = x.size();
 
     Vector result(M);
 
@@ -183,7 +184,7 @@ namespace openstudio{
   /// assumes that x and y are strictly increasing
   Vector interp(const Vector& x, const Vector& y, const Matrix& v, double xi, const Vector& yi, InterpMethod interpMethod, ExtrapMethod extrapMethod)
   {
-    unsigned N = y.size();
+    size_t N = y.size();
 
     Vector result(N);
 
@@ -202,8 +203,8 @@ namespace openstudio{
   /// assumes that x and y are strictly increasing
   Matrix interp(const Vector& x, const Vector& y, const Matrix& v, const Vector& xi, const Vector& yi, InterpMethod interpMethod, ExtrapMethod extrapMethod)
   {
-    unsigned M = x.size();
-    unsigned N = y.size();
+    size_t M = x.size();
+    size_t N = y.size();
 
     Matrix result(M, N);
 
@@ -241,11 +242,11 @@ namespace openstudio{
   /// take the natural logarithm of a Matrix
   Matrix log(const Matrix& v)
   {
-    unsigned M = v.size1();
-    unsigned N = v.size2();
+    size_t M = v.size1();
+    size_t N = v.size2();
     Matrix result(M, N);
-    for (unsigned i = 0; i < M; ++i){
-      for (unsigned j = 0; j < N; ++j){
+    for (size_t i = 0; i < M; ++i){
+      for (size_t j = 0; j < N; ++j){
         result(i,j) = std::log(v(i,j));
       }
     }
@@ -256,11 +257,11 @@ namespace openstudio{
   Matrix log(const Matrix& v, double base)
   {
     double logBase = std::log(base);
-    unsigned M = v.size1();
-    unsigned N = v.size2();
+    size_t M = v.size1();
+    size_t N = v.size2();
     Matrix result(M, N);
-    for (unsigned i = 0; i < M; ++i){
-      for (unsigned j = 0; j < N; ++j){
+    for (size_t i = 0; i < M; ++i){
+      for (size_t j = 0; j < N; ++j){
         result(i,j) = std::log(v(i,j)) / logBase;
       }
     }
@@ -284,7 +285,7 @@ namespace openstudio{
     // ETH@20120723 Started seeing this as DataFixture.Matrix_RandMatrix hanging on Windows 7,
     // with BoostPro installer.
     // handle degenerate case
-    OptionalDouble singlePoint;
+    boost::optional<double> singlePoint;
     if (equal(a,b)) {
       singlePoint = (a + b) / 2.0;
     }
@@ -349,7 +350,7 @@ namespace openstudio{
   double mean(const Matrix& matrix)
   {
     double avg = 0;
-    unsigned N = matrix.size1()*matrix.size2();
+    size_t N = matrix.size1()*matrix.size2();
     if (N > 0){
       avg = sum(matrix) / N;
     }
@@ -362,8 +363,8 @@ namespace openstudio{
     double tol = 0.001;
 
     std::vector<std::vector<unsigned> > result;
-    
-    unsigned N = matrix.size1();
+
+    size_t N = matrix.size1();
     if (N != matrix.size2()){
       return result;
     }
@@ -395,7 +396,7 @@ namespace openstudio{
     // raise A to the Nth power, maximum distance between two nodes
     for (unsigned i = 0; i < N; ++i){
       A = prod(A,A);
-    } 
+    }
 
     std::set<unsigned> added;
     for (unsigned i = 0; i < N; ++i){

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -83,12 +83,12 @@ TEST_F(IddFixture,IddFactory_IddFile)
   EXPECT_TRUE(file.objects().size() == objects.size());
   // required objects
   EXPECT_TRUE(file.requiredObjects().size() > 0);
-  EXPECT_TRUE(file.requiredObjects().size() == 
+  EXPECT_TRUE(file.requiredObjects().size() ==
               IddFactory::instance().getRequiredObjects(IddFileType::OpenStudio).size());
   EXPECT_TRUE(file.requiredObjects().size() <= IddFactory::instance().requiredObjects().size());
   // unique objects
   EXPECT_TRUE(file.uniqueObjects().size() > 0);
-  EXPECT_TRUE(file.uniqueObjects().size() == 
+  EXPECT_TRUE(file.uniqueObjects().size() ==
               IddFactory::instance().getUniqueObjects(IddFileType::OpenStudio).size());
   EXPECT_TRUE(file.uniqueObjects().size() <= IddFactory::instance().uniqueObjects().size());
 
@@ -147,7 +147,7 @@ TEST_F(IddFixture,IddFactory_IddObjects)
   EXPECT_TRUE(object == *candidate);
   EXPECT_EQ("Lights", object.name());
   ASSERT_TRUE(object.nonextensibleFields().size() > static_cast<unsigned>(0));
-  EXPECT_EQ("Return Air Fraction Function of Plenum Temperature Coefficient 2",
+  EXPECT_EQ("Return Air Heat Gain Node Name",
             object.nonextensibleFields().back().name());
 
   OptionalIddField field = object.getField(0);
@@ -181,12 +181,12 @@ TEST_F(IddFixture,IddFactory_ObjectFinder) {
       // or fields that are \autosizable with no default or a default other than 'autosize'.
       for (const IddField& iddField : object.nonextensibleFields()) {
         if (iddField.properties().autocalculatable && (!iddField.properties().stringDefault ||
-            !istringEqual("autocalculate",iddField.properties().stringDefault.get()))) 
+            !istringEqual("autocalculate",iddField.properties().stringDefault.get())))
         {
           return true;
         }
         if (iddField.properties().autosizable && (!iddField.properties().stringDefault ||
-            !istringEqual("autosize",iddField.properties().stringDefault.get()))) 
+            !istringEqual("autosize",iddField.properties().stringDefault.get())))
         {
           return true;
         }
@@ -300,13 +300,13 @@ TEST_F(IddFixture,IddFactory_Units) {
           }
           else {
             badUnits.insert(ipUnit->standardString());
-            LOG(Debug,"Unable to convert unit " << *ipUnit << " to IDD/SI units " << *siUnit 
+            LOG(Debug,"Unable to convert unit " << *ipUnit << " to IDD/SI units " << *siUnit
                 << " for field '" << field.name() << "' in IddObject '" << object.name() << "'.");
           }
         }
         else {
           badUnits.insert(*iddUnits);
-          LOG(Debug,"Unable to instantiate ipUnit for field " << field.name() << " in IddObject " 
+          LOG(Debug,"Unable to instantiate ipUnit for field " << field.name() << " in IddObject "
               << object.name() << ", which has units " << *siUnit << ".");
         }
       }
@@ -372,7 +372,7 @@ TEST_F(IddFixture,IddFactory_OpenStudioUnits_SubTest2) {
           EXPECT_EQ("kg_{H2O}/kg_{air}",siUnit->prettyString());
           break;
         }
-      }  
+      }
     }
     if (found) {
       break;
@@ -401,7 +401,7 @@ TEST_F(IddFixture,IddFactory_OpenStudioUnits_SubTest3) {
           EXPECT_EQ("crgal^3/min",ipUnit->standardString());
           EXPECT_EQ("gal/min",ipUnit->prettyString());
         }
-      }  
+      }
     }
   }
   EXPECT_TRUE(found);

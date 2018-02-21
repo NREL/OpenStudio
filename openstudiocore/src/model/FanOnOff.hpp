@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -103,7 +103,7 @@ class MODEL_API FanOnOff : public StraightComponent {
 
   void resetFanEfficiency();
 
-  void setPressureRise(double pressureRise);
+  bool setPressureRise(double pressureRise);
 
   bool setMaximumFlowRate(double maximumFlowRate);
 
@@ -119,25 +119,26 @@ class MODEL_API FanOnOff : public StraightComponent {
 
   void resetMotorInAirstreamFraction();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 
   //@}
-  
+
   /** @name Curves */
-  
+
   Curve fanPowerRatioFunctionofSpeedRatioCurve() const;
   bool setFanPowerRatioFunctionofSpeedRatioCurve( const Curve& curve );
-  
+
   Curve fanEfficiencyRatioFunctionofSpeedRatioCurve() const;
   bool setFanEfficiencyRatioFunctionofSpeedRatioCurve( const Curve& curve );
-  
+
   //@{
 
   AirflowNetworkFan airflowNetworkFan();
   boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
 
+  boost::optional<double> autosizedMaximumFlowRate() const ;
   //@}
  protected:
   /// @cond
@@ -164,4 +165,3 @@ typedef std::vector<FanOnOff> FanOnOffVector;
 } // openstudio
 
 #endif // MODEL_FANONOFF_HPP
-

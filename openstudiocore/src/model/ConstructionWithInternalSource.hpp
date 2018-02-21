@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,8 +39,8 @@ namespace detail{
   class ConstructionWithInternalSource_Impl;
 }
 
-/** ConstructionWithInternalSource is a LayeredConstruction that wraps EnergyPlus IDD object 
- *  'Construction:InternalSource'. ConstructionWithInternalSource is identical to Construction, 
+/** ConstructionWithInternalSource is a LayeredConstruction that wraps EnergyPlus IDD object
+ *  'Construction:InternalSource'. ConstructionWithInternalSource is identical to Construction,
  *  except that it contains an embedded heat source. */
 class MODEL_API ConstructionWithInternalSource : public LayeredConstruction {
  public:
@@ -57,32 +57,32 @@ class MODEL_API ConstructionWithInternalSource : public LayeredConstruction {
 
   virtual ~ConstructionWithInternalSource() {}
 
-  /// The source is located after layer number.  Must be >= 1 and <= numLayers-1. 
+  /// The source is located after layer number.  Must be >= 1 and <= numLayers-1.
   /// Defaults to 1.
   int sourcePresentAfterLayerNumber() const;
   bool setSourcePresentAfterLayerNumber(int sourcePresentAfterLayerNumber);
 
-  /// A separate temperature calculation occurs after layer number.  
+  /// A separate temperature calculation occurs after layer number.
   /// Must be >= 1 and <= numLayers-1. Defaults to 1.
   int temperatureCalculationRequestedAfterLayerNumber() const;
   bool setTemperatureCalculationRequestedAfterLayerNumber(int temperatureCalculationRequestedAfterLayerNumber);
 
-  /// A value of 1 states that the user is only interested in a one-dimensional calculation. 
-  /// This is appropriate for electric resistance heating and for hydronic heating 
-  /// (when boiler/hot water heater performance is not affected by return and supply water 
-  /// temperatures). A value of 1 will trigger a two-dimensional solution for this surface only. 
-  /// This may be necessary for hydronic radiant cooling situations since chiller performance is 
+  /// A value of 1 states that the user is only interested in a one-dimensional calculation.
+  /// This is appropriate for electric resistance heating and for hydronic heating
+  /// (when boiler/hot water heater performance is not affected by return and supply water
+  /// temperatures). A value of 1 will trigger a two-dimensional solution for this surface only.
+  /// This may be necessary for hydronic radiant cooling situations since chiller performance is
   /// affected by the water temperatures provided.  Defaults to 1.
   int dimensionsForTheCTFCalculation() const;
   bool setDimensionsForTheCTFCalculation(int dimensionsForTheCTFCalculation);
 
-  /// How far apart in meters the hydronic tubing or electrical resistance wires are spaced 
-  /// in the direction perpendicular to the main direction of heat transfer. 
-  /// Note that this parameter is only used for two-dimensional solutions. 
+  /// How far apart in meters the hydronic tubing or electrical resistance wires are spaced
+  /// in the direction perpendicular to the main direction of heat transfer.
+  /// Note that this parameter is only used for two-dimensional solutions.
   /// Defaults to 0.154 meters.
   double tubeSpacing() const;
   bool setTubeSpacing(double tubeSpacing);
-  
+
   //@}
   /** @name Static Methods */
   //@{
@@ -101,7 +101,7 @@ class MODEL_API ConstructionWithInternalSource : public LayeredConstruction {
   friend class detail::ConstructionWithInternalSource_Impl;
 
   explicit ConstructionWithInternalSource(
-      std::shared_ptr<detail::ConstructionWithInternalSource_Impl> impl);  
+      std::shared_ptr<detail::ConstructionWithInternalSource_Impl> impl);
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.ConstructionWithInternalSource");

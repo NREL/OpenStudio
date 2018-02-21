@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -241,9 +241,10 @@ namespace detail {
     return result;
   }
 
-  void ThermochromicGlazing_Impl::setOpticalDataTemperature(double value) {
+  bool ThermochromicGlazing_Impl::setOpticalDataTemperature(double value) {
     bool result = setDouble(OS_WindowMaterial_GlazingGroup_ThermochromicExtensibleFields::OpticalDataTemperature,value);
     OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -268,7 +269,7 @@ IddObjectType ThermochromicGlazing::iddObjectType() {
 
 /// @cond
 ThermochromicGlazing::ThermochromicGlazing(std::shared_ptr<detail::ThermochromicGlazing_Impl> impl)
-  : Glazing(impl)
+  : Glazing(std::move(impl))
 {}
 /// @endcond
 
@@ -276,10 +277,9 @@ double ThermochromicGlazing::opticalDataTemperature() const {
   return getImpl<detail::ThermochromicGlazing_Impl>()->opticalDataTemperature();
 }
 
-void ThermochromicGlazing::setOpticalDataTemperature(double value) {
+bool ThermochromicGlazing::setOpticalDataTemperature(double value) {
   return getImpl<detail::ThermochromicGlazing_Impl>()->setOpticalDataTemperature(value);
 }
 
 } // model
 } // openstudio
-

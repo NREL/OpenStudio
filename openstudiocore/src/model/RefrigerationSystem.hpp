@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -185,7 +185,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   */
   bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser);
 
-  void setMinimumCondensingTemperature(double minimumCondensingTemperature);
+  bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
   bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
 
@@ -201,7 +201,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   void resetLiquidSuctionHeatExchangerSubcooler();
 
-  void setSumUASuctionPiping(double sumUASuctionPiping);
+  bool setSumUASuctionPiping(double sumUASuctionPiping);
 
   void resetSumUASuctionPiping();
 
@@ -209,7 +209,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   void resetSuctionPipingZone();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 
@@ -217,7 +217,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   void resetIntercoolerType();
 
-  void setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
+  bool setShellandCoilIntercoolerEffectiveness(double shellandCoilIntercoolerEffectiveness);
 
   void resetShellandCoilIntercoolerEffectiveness();
 
@@ -250,5 +250,4 @@ typedef std::vector<RefrigerationSystem> RefrigerationSystemVector;
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONSYSTEM_HPP
-
+#endif // MODEL_REFRIGERATIONSYSTEM_HPP

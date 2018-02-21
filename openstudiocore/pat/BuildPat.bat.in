@@ -1,6 +1,6 @@
 set PATH=%PATH%;${GIT_DIR}
 setx GYP_MSVS_VERSION 2013
-"${CMAKE_COMMAND}" -E tar xfz "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}.zip" 
+"${CMAKE_COMMAND}" -E tar xfz "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}.zip"
 rmdir "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT" /S /Q 2>nul
 move "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}" "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT"
 chdir "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT"

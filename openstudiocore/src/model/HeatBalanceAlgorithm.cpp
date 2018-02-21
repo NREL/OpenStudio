@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -352,7 +352,7 @@ void HeatBalanceAlgorithm::resetMaximumSurfaceConvectionHeatTransferCoefficientV
 /// @cond
 /// constructor
 HeatBalanceAlgorithm::HeatBalanceAlgorithm(std::shared_ptr<detail::HeatBalanceAlgorithm_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {
 }
 

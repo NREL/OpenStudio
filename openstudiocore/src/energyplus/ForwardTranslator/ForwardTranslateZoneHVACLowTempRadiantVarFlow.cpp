@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -176,7 +176,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 
     // Heating Design Capacity - introduced in 8.2.0 and not yet supported in OS
     idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HeatingDesignCapacity,"Autosize");
-    
+
     // field Maximum Hot Water Flow
     if( coilHeat.isMaximumHotWaterFlowAutosized() )
     {

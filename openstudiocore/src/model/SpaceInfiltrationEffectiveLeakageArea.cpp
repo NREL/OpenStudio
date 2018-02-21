@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -52,7 +52,7 @@ namespace model {
 namespace detail {
 
   SpaceInfiltrationEffectiveLeakageArea_Impl::SpaceInfiltrationEffectiveLeakageArea_Impl(
-      const IdfObject& idfObject,                                                                                  
+      const IdfObject& idfObject,
       Model_Impl* model,
       bool keepHandle)
     : SpaceLoad_Impl(idfObject,model,keepHandle)
@@ -378,7 +378,7 @@ bool SpaceInfiltrationEffectiveLeakageArea::setWindCoefficient(const Quantity& w
 /// @cond
 SpaceInfiltrationEffectiveLeakageArea::SpaceInfiltrationEffectiveLeakageArea(
     std::shared_ptr<detail::SpaceInfiltrationEffectiveLeakageArea_Impl> impl)
-  : SpaceLoad(impl)
+  : SpaceLoad(std::move(impl))
 {}
 /// @endcond
 

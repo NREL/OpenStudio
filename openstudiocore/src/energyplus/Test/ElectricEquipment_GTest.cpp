@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -206,7 +206,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
 
   ElectricEquipmentDefinition definition2(model);
   definition2.setDesignLevel(100);
-  
+
   ElectricEquipment electricEquipment2(definition2);
   electricEquipment2.setSpaceType(spaceType2);
   electricEquipment2.setMultiplier(2);

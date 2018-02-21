@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -79,7 +79,12 @@ namespace detail{
   const std::vector<std::string>& AirTerminalSingleDuctUncontrolled_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Air Terminal Sensible Heating Energy");
+      result.push_back("Zone Air Terminal Sensible Cooling Energy");
+      result.push_back("Zone Air Terminal Sensible Heating Rate");
+      result.push_back("Zone Air Terminal Sensible Cooling Rate");
     }
     return result;
   }
@@ -143,7 +148,7 @@ namespace detail{
 
       if( boost::optional<PortList> portList = outlet->optionalCast<PortList>() )
       {
-        thermalZone = portList->thermalZone(); 
+        thermalZone = portList->thermalZone();
       }
 
       if( thermalZone || (outlet->optionalCast<Mixer>() && node.airLoopHVAC()) )
@@ -299,11 +304,28 @@ namespace detail{
     OS_ASSERT(result);
   }
 
+  boost::optional<double> AirTerminalSingleDuctUncontrolled_Impl::autosizedMaximumAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Air Flow Rate", "m3/s");
+  }
+
+  void AirTerminalSingleDuctUncontrolled_Impl::autosize() {
+    autosizeMaximumAirFlowRate();
+  }
+
+  void AirTerminalSingleDuctUncontrolled_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumAirFlowRate();
+    if (val) {
+      setMaximumAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalSingleDuctUncontrolled::AirTerminalSingleDuctUncontrolled(const Model& model,
                                                                      Schedule & availabilitySchedule)
-  : StraightComponent(AirTerminalSingleDuctUncontrolled::iddObjectType(),model) 
+  : StraightComponent(AirTerminalSingleDuctUncontrolled::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>());
 
@@ -323,7 +345,7 @@ bool AirTerminalSingleDuctUncontrolled::setAvailabilitySchedule(Schedule & sched
 }
 
 AirTerminalSingleDuctUncontrolled::AirTerminalSingleDuctUncontrolled(std::shared_ptr<detail::AirTerminalSingleDuctUncontrolled_Impl> p)
-  : StraightComponent(p)
+  : StraightComponent(std::move(p))
 {}
 
 IddObjectType AirTerminalSingleDuctUncontrolled::iddObjectType() {
@@ -354,6 +376,10 @@ bool AirTerminalSingleDuctUncontrolled::setMaximumAirFlowRate(const Quantity& ma
 void AirTerminalSingleDuctUncontrolled::autosizeMaximumAirFlowRate() {
   getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->autosizeMaximumAirFlowRate();
 }
+
+  boost::optional<double> AirTerminalSingleDuctUncontrolled::autosizedMaximumAirFlowRate() const {
+    return getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->autosizedMaximumAirFlowRate();
+  }
 
 } // model
 } // openstudio

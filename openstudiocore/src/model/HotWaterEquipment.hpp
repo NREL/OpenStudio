@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,7 +44,7 @@ namespace detail {
 
 } // detail
 
-/** HotWaterEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object 
+/** HotWaterEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object
  *  'OS:HotWaterEquipment'. Its fields are derived from the EnergyPlus IDD object
  *  'HotWaterEquipment'. \sa HotWaterEquipmentDefinition
  */
@@ -95,7 +95,7 @@ class MODEL_API HotWaterEquipment : public SpaceLoadInstance {
 
   void resetMultiplier();
 
-  void setEndUseSubcategory(std::string endUseSubcategory);
+  bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
 
@@ -103,15 +103,15 @@ class MODEL_API HotWaterEquipment : public SpaceLoadInstance {
   /** @name Other */
   //@{
 
-  /** Returns the design level represented by this instance, assuming floorArea (m^2) and 
+  /** Returns the design level represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
   double getDesignLevel(double floorArea, double numPeople) const;
 
-  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and 
+  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
   double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and 
+  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
   double getPowerPerPerson(double floorArea, double numPeople) const;
 

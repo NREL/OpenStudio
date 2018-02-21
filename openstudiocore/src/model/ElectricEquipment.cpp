@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,6 +40,7 @@
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/OS_ElectricEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -74,7 +75,34 @@ namespace detail {
   const std::vector<std::string>& ElectricEquipment_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Electric Equipment Electric Power");
+      result.push_back("Electric Equipment Electric Energy");
+      result.push_back("Electric Equipment Radiant Heating Energy");
+      result.push_back("Electric Equipment Radiant Heating Rate");
+      result.push_back("Electric Equipment Convective Heating Energy");
+      result.push_back("Electric Equipment Convective Heating Rate");
+      result.push_back("Electric Equipment Latent Gain Energy");
+      result.push_back("Electric Equipment Latent Gain Rate");
+      result.push_back("Electric Equipment Lost Heat Energy");
+      result.push_back("Electric Equipment Lost Heat Rate");
+      result.push_back("Electric Equipment Total Heating Energy");
+      result.push_back("Electric Equipment Total Heating Rate");
+
+      // Reported in ThermalZone
+      //result.push_back("Zone Electric Equipment Electric Power");
+      //result.push_back("Zone Electric Equipment Electric Energy");
+      //result.push_back("Zone Electric Equipment Radiant Heating Energy");
+      //result.push_back("Zone Electric Equipment Radiant Heating Rate");
+      //result.push_back("Zone Electric Equipment Convective Heating Energy");
+      //result.push_back("Zone Electric Equipment Convective Heating Rate");
+      //result.push_back("Zone Electric Equipment Latent Gain Energy");
+      //result.push_back("Zone Electric Equipment Latent Gain Rate");
+      //result.push_back("Zone Electric Equipment Lost Heat Energy");
+      //result.push_back("Zone Electric Equipment Lost Heat Rate");
+      //result.push_back("Zone Electric Equipment Total Heating Energy");
+      //result.push_back("Zone Electric Equipment Total Heating Rate");
     }
     return result;
   }
@@ -175,9 +203,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ElectricEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool ElectricEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_ElectricEquipmentFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void ElectricEquipment_Impl::resetEndUseSubcategory() {
@@ -346,6 +375,17 @@ ElectricEquipment::ElectricEquipment(const ElectricEquipmentDefinition& electric
   : SpaceLoadInstance(ElectricEquipment::iddObjectType(),electricEquipmentDefinition)
 {
   OS_ASSERT(getImpl<detail::ElectricEquipment_Impl>());
+
+  /*
+   *Schedule sch = this->model().alwaysOnDiscreteSchedule();
+   *bool test = this->setSchedule(sch);
+   *OS_ASSERT(test);
+   *test = this->setMultiplier(1.0);
+   *OS_ASSERT(test);
+   */
+  bool test = this->setEndUseSubcategory("General");
+  OS_ASSERT(test);
+
 }
 
 IddObjectType ElectricEquipment::iddObjectType() {
@@ -369,8 +409,8 @@ void ElectricEquipment::resetMultiplier() {
   getImpl<detail::ElectricEquipment_Impl>()->resetMultiplier();
 }
 
-void ElectricEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::ElectricEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool ElectricEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::ElectricEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void ElectricEquipment::resetEndUseSubcategory() {
@@ -433,7 +473,7 @@ double ElectricEquipment::getPowerPerPerson(double floorArea, double numPeople) 
 
 /// @cond
 ElectricEquipment::ElectricEquipment(std::shared_ptr<detail::ElectricEquipment_Impl> impl)
-  : SpaceLoadInstance(impl)
+  : SpaceLoadInstance(std::move(impl))
 {}
 /// @endcond
 

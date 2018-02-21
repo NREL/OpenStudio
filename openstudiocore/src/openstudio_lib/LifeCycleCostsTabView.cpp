@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -75,7 +75,7 @@ LifeCycleCostsView::~LifeCycleCostsView()
 void LifeCycleCostsView::createWidgets()
 {
 
-  QRadioButton * radioButton = nullptr; 
+  QRadioButton * radioButton = nullptr;
 
   QLabel * label = nullptr;
 
@@ -98,7 +98,7 @@ void LifeCycleCostsView::createWidgets()
   label->setText("Performed using constant dollar methodology.  The base date and service date are assumed to be January 1, 2012.");
   label->setObjectName("H3");
   vLayout->addWidget(label);
-  
+
   label = new QLabel();
   label->setText("<a href=\"http://www1.eere.energy.gov/femp/program/lifecycle.html\">http://www1.eere.energy.gov/femp/program/lifecycle.html</a>");
   label->setOpenExternalLinks(true);
@@ -165,11 +165,11 @@ void LifeCycleCostsView::createWidgets()
   gridLayout->addLayout(vLayout,0,1,Qt::AlignLeft);
 
   gridLayout->setColumnStretch(100,100);
-  
+
   mainLayout->addLayout(gridLayout);
 
   // NIST radio buttons
-  
+
   vLayout = new QVBoxLayout();
   vLayout->setSpacing(5);
 
@@ -191,9 +191,9 @@ void LifeCycleCostsView::createWidgets()
   vLayout->addWidget(radioButton);
 
   mainLayout->addLayout(vLayout);
-  
+
   // stacked widget
-  
+
   m_stackedWidget = new QStackedWidget();
   m_stackedWidget->addWidget(createNistWidget());
   m_stackedWidget->addWidget(createInflationRatesWidget());
@@ -545,7 +545,7 @@ void LifeCycleCostsView::attach(openstudio::model::LifeCycleCostParameters & lif
       boost::optional<DoubleSetter>(std::bind(&model::LifeCycleCostParameters::setWaterInflation,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1)),
       boost::optional<NoFailAction>(std::bind(&model::LifeCycleCostParameters::resetWaterInflation,m_lifeCycleCostParameters.get_ptr())));
   }
- 
+
   OS_ASSERT(m_fempGroup->button(0));
   QString type = m_lifeCycleCostParameters->analysisType().c_str();
   if(type == "FEMP"){
@@ -558,7 +558,7 @@ void LifeCycleCostsView::attach(openstudio::model::LifeCycleCostParameters & lif
     // should never get here
     OS_ASSERT(false);
   }
-  
+
   OS_ASSERT(m_nistGroup->button(0));
   bool useNist = m_lifeCycleCostParameters->useNISTFuelEscalationRates();
   if(useNist){
@@ -591,7 +591,7 @@ void LifeCycleCostsView::detach()
 ////// SLOTS ///////
 
 void LifeCycleCostsView::fempGroupClicked(int index)
-{  
+{
   // 0 = FEMP, 1 = Custom
   // DLM: model object actually lets analysis length change under FEMP, it just can't be > 25
   // DLM: analysis length can't be > 30 when using NIST fuel escalation

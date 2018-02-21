@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -61,6 +61,8 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   static std::vector<std::string> pumpControlTypeValues();
 
+  static std::vector<std::string> designPowerSizingMethodValues();
+
   /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Flow Rate" **/
   boost::optional<double> ratedFlowRate() const;
 
@@ -68,7 +70,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   bool isRatedFlowRateAutosized() const;
 
-  void setRatedFlowRate(double ratedFlowRate);
+  bool setRatedFlowRate(double ratedFlowRate);
 
   bool setRatedFlowRate(const Quantity& ratedFlowRate);
 
@@ -83,7 +85,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   bool isRatedPumpHeadDefaulted() const;
 
-  void setRatedPumpHead(double ratedPumpHead);
+  bool setRatedPumpHead(double ratedPumpHead);
 
   bool setRatedPumpHead(const Quantity& ratedPumpHead);
 
@@ -96,7 +98,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   bool isRatedPowerConsumptionAutosized() const;
 
-  void setRatedPowerConsumption(double ratedPowerConsumption);
+  bool setRatedPowerConsumption(double ratedPowerConsumption);
 
   bool setRatedPowerConsumption(const Quantity& ratedPowerConsumption);
 
@@ -152,7 +154,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   OSOptionalQuantity getImpellerDiameter(bool returnIP=false) const;
 
-  void setImpellerDiameter(double impellerDiameter);
+  bool setImpellerDiameter(double impellerDiameter);
 
   bool setImpellerDiameter(const Quantity& impellerDiameter);
 
@@ -162,7 +164,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   OSOptionalQuantity getRotationalSpeed(bool returnIP=false) const;
 
-  void setRotationalSpeed(double rotationalSpeed);
+  bool setRotationalSpeed(double rotationalSpeed);
 
   bool setRotationalSpeed(const Quantity& rotationalSpeed);
 
@@ -183,6 +185,22 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
   bool setSkinLossRadiativeFraction(const Quantity& skinLossRadiativeFraction);
 
   void resetSkinLossRadiativeFraction();
+
+  boost::optional<double> autosizedRatedFlowRate() const ;
+
+  boost::optional<double> autosizedRatedPowerConsumption() const ;
+
+  std::string designPowerSizingMethod() const;
+
+  bool setDesignPowerSizingMethod(const std::string & designPowerSizingMethod);
+
+  double designElectricPowerPerUnitFlowRate() const;
+
+  bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+  double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
+  bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
 
  protected:
 
@@ -212,5 +230,4 @@ typedef std::vector<PumpConstantSpeed> PumpConstantSpeedVector;
 } // model
 } // openstudio
 
-#endif // MODEL_PUMPCONSTANTSPEED_HPP
-
+#endif // MODEL_PUMPCONSTANTSPEED_HPP

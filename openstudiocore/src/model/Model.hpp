@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -56,7 +56,9 @@ class WeatherFile;
 class Component;
 class ComponentData;
 class Schedule;
+class Node;
 class SpaceType;
+class FoundationKivaSettings;
 
 namespace detail {
   class Model_Impl;
@@ -110,6 +112,10 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get the Building object if there is one, this implementation uses a cached reference to the Building
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<Building>(). */
   boost::optional<Building> building() const;
+  
+  /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
+  boost::optional<FoundationKivaSettings> foundationKivaSettings() const;  
 
   /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
@@ -122,7 +128,7 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
   boost::optional<YearDescription> yearDescription() const;
-  
+
   /** Get or create the YearDescription object if there is one, then call method from YearDescription. */
   // DLM: this is due to issues exporting the model::YearDescription object because of name conflict with utilities::YearDescription.
   boost::optional<int> calendarYear() const;
@@ -130,7 +136,7 @@ class MODEL_API Model : public openstudio::Workspace {
   bool isDayofWeekforStartDayDefaulted() const;
   bool isLeapYear() const;
   bool isIsLeapYearDefaulted() const;
-  void setCalendarYear(int calendarYear);
+  bool setCalendarYear(int calendarYear);
   void resetCalendarYear();
   bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
   void resetDayofWeekforStartDay();
@@ -150,17 +156,33 @@ class MODEL_API Model : public openstudio::Workspace {
    *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOnDiscreteSchedule() const;
 
+  /** Get the always on schedule with discrete type limits name. */
+  std::string alwaysOnDiscreteScheduleName() const;
+
   /** Get an always off schedule with discrete type limits if there is one.
    *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOffDiscreteSchedule() const;
+
+  /** Get the always off schedule with discrete type limits name. */
+  std::string alwaysOffDiscreteScheduleName() const;
 
   /** Get an always on schedule with continuous type limits if there is one.
   *  create a new schedule if necessary and add it to the model */
   Schedule alwaysOnContinuousSchedule() const;
 
+  /** Get the always on schedule with continuous type limits name.*/
+  std::string alwaysOnContinuousScheduleName() const;
+
+  /** Get a Node named 'Model Outdoor Air Node' (intended to be forward translated to an OutdoorAir:Node) and not connected to a PlantLoop or AirLoopHVAC.
+  *  create a new Node if necessary and add it to the model */
+  Node outdoorAirNode() const;
+
   /** Get the space type used for plenums if there is one.
    *  Create a new space type if necessary and add it to the model */
   SpaceType plenumSpaceType() const;
+
+  /** Get the space type name used for plenums. */
+  std::string plenumSpaceTypeName() const;
 
   //@}
   /** @name Setters */
@@ -416,6 +438,28 @@ class MODEL_API Model : public openstudio::Workspace {
   /// @cond
   detail::Model_Impl* rawImpl() const;
   /// @endcond
+
+  /** For each object in the model with autosizable fields,
+   *  sets all autosizable fields to 'autosize'.
+   *  Fields that previously contained hard-sized
+   *  values will be overwritten by 'autosize.'
+   */
+  void autosize();
+
+  /** For each object in the model with autosizable fields,
+   *  retrieves the autosized values from the sizing run and then
+   *  sets these values in the object explicitly.
+   *  Requires a sql file with sizing run results from a
+   *  previous simulation.
+   *  For example, if a ChillerElectricEIR's Reference Capacity
+   *  was previously autosized to 120,000W by the sizing run,
+   *  this method would find the 120,000W in the sql file and then
+   *  set the Reference Capacity field to 120,000W explicitly.  Next
+   *  time a simulation is run, the chiller's capacity will be 120,000W,
+   *  it will not be autosized during the sizing run.
+   */
+  void applySizingValues();
+
  protected:
   /// @cond
   typedef detail::Model_Impl ImplType;

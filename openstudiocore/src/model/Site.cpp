@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -164,7 +164,7 @@ namespace detail {
     // shading surface groups
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups = this->shadingSurfaceGroups();
     result.insert(result.end(),shadingSurfaceGroups.begin(),shadingSurfaceGroups.end());
-
+    
     return result;
   }
 
@@ -191,6 +191,17 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      result.push_back("Site Outdoor Air Drybulb Temperature");
+      result.push_back("Site Outdoor Air Wetbulb Temperature");
+      result.push_back("Site Direct Solar Radiation Rate per Area");
+      result.push_back("Site Diffuse Solar Radiation Rate per Area");
+      result.push_back("Site Exterior Beam Normal Illuminance");
+      result.push_back("Site Exterior Horizontal Beam Illuminance");
+      result.push_back("Site Exterior Horizontal Sky Illuminance");
+      result.push_back("Site Beam Solar Radiation Luminous Efficacy");
+      result.push_back("Site Sky Diffuse Solar Radiation Luminous Efficacy");
+      result.push_back("Site Daylighting Model Sky Clearness");
+      result.push_back("Site Daylighting Model Sky Brightness");
     }
     return result;
   }
@@ -378,6 +389,7 @@ namespace detail {
     return !climateZones.setActiveClimateZone(institution).empty();
   }
 */
+
 } // detail
 
 IddObjectType Site::iddObjectType() {
@@ -530,9 +542,10 @@ bool Site::setActiveClimateZoneInstitution(const std::string& institution) {
   return getImpl<detail::Site_Impl>()->setActiveClimateZoneInstitution(institution);
 }
 */
+
 /// @cond
 Site::Site(std::shared_ptr<detail::Site_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 Site::Site(Model& model)

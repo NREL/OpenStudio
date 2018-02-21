@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -31,14 +31,14 @@ require 'openstudio'
 require 'minitest/autorun'
 
 class Space_Test < MiniTest::Unit::TestCase
-  
+
   def test_Space
     workspace = OpenStudio::Workspace.new
     model = OpenStudio::Model::Model.new
 
     # add a space
     space = OpenStudio::Model::Space.new(model)
-    
+
     # test name attributes
     space.setName("Space")
     attribute = space.getAttribute("name")

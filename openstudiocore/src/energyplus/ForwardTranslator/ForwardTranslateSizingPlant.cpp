@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -66,7 +66,7 @@ PlantSizingType plantSizingType(const ModelObject & component)
     case openstudio::IddObjectType::OS_DistrictHeating :
     {
       return PlantSizingType::HOTWATER;
-    }      
+    }
     case openstudio::IddObjectType::OS_Chiller_Electric_EIR :
     {
       return PlantSizingType::CHILLEDWATER;
@@ -86,7 +86,7 @@ PlantSizingType plantSizingType(const ModelObject & component)
     case openstudio::IddObjectType::OS_DistrictCooling :
     {
       return PlantSizingType::CHILLEDWATER;
-    }      
+    }
     case openstudio::IddObjectType::OS_CoolingTower_SingleSpeed :
     {
       return PlantSizingType::CONDENSER;
@@ -131,7 +131,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingPlant( SizingPlant 
 
   if( (modelObject.designLoopExitTemperature() < 0.01) && (modelObject.loopDesignTemperatureDifference() < 0.01) )
   {
-    const auto & components = modelObject.plantLoop().supplyComponents(); 
+    const auto & components = modelObject.plantLoop().supplyComponents();
     if( std::find_if(components.begin(),components.end(),condensorCheck) != components.end() ) {
       modelObject.setLoopType("Condenser");
       modelObject.setDesignLoopExitTemperature(29.4);
@@ -167,7 +167,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingPlant( SizingPlant 
   {
     idfObject.setString(Sizing_PlantFields::LoopType,s.get());
   }
-  
+
   // DesignLoopExitTemperature
 
   value = modelObject.designLoopExitTemperature();

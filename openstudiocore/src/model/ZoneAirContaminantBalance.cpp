@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -96,7 +96,15 @@ namespace detail {
   const std::vector<std::string>& ZoneAirContaminantBalance_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Reported in ThermalZone
+      // The following output variables are available when Carbon Dioxide Concentration = Yes.
+      //result.push_back("Zone Air CO2 Internal Gain Volume Flow Rate");
+      //result.push_back("Zone Air CO2 Concentration");
+      // The following output variable is available when Generic Contaminant Concentration = Yes.
+      //result.push_back("Zone Generic Air Contaminant Generation Volume Flow Rate");
+      //result.push_back("Zone Air Generic Air Contaminant Concentration");
     }
     return result;
   }
@@ -127,8 +135,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneAirContaminantBalanceFields::OutdoorCarbonDioxideScheduleName);
   }
 
-  void ZoneAirContaminantBalance_Impl::setCarbonDioxideConcentration(bool carbonDioxideConcentration) {
-    setBooleanFieldValue(OS_ZoneAirContaminantBalanceFields::CarbonDioxideConcentration, carbonDioxideConcentration);
+  bool ZoneAirContaminantBalance_Impl::setCarbonDioxideConcentration(bool carbonDioxideConcentration) {
+    return setBooleanFieldValue(OS_ZoneAirContaminantBalanceFields::CarbonDioxideConcentration, carbonDioxideConcentration);;
   }
 
   void ZoneAirContaminantBalance_Impl::resetCarbonDioxideConcentration() {
@@ -193,8 +201,13 @@ boost::optional<Schedule> ZoneAirContaminantBalance::outdoorCarbonDioxideSchedul
   return getImpl<detail::ZoneAirContaminantBalance_Impl>()->outdoorCarbonDioxideSchedule();
 }
 
-void ZoneAirContaminantBalance::setCarbonDioxideConcentration(bool carbonDioxideConcentration) {
-  getImpl<detail::ZoneAirContaminantBalance_Impl>()->setCarbonDioxideConcentration(carbonDioxideConcentration);
+bool ZoneAirContaminantBalance::setCarbonDioxideConcentration(bool carbonDioxideConcentration) {
+  return getImpl<detail::ZoneAirContaminantBalance_Impl>()->setCarbonDioxideConcentration(carbonDioxideConcentration);
+}
+
+void ZoneAirContaminantBalance::setCarbonDioxideConcentrationNoFail(bool carbonDioxideConcentration) {
+  bool result = getImpl<detail::ZoneAirContaminantBalance_Impl>()->setCarbonDioxideConcentration(carbonDioxideConcentration);
+  OS_ASSERT(result);
 }
 
 void ZoneAirContaminantBalance::resetCarbonDioxideConcentration() {
@@ -211,7 +224,7 @@ void ZoneAirContaminantBalance::resetOutdoorCarbonDioxideSchedule() {
 
 /// @cond
 ZoneAirContaminantBalance::ZoneAirContaminantBalance(std::shared_ptr<detail::ZoneAirContaminantBalance_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 
 ZoneAirContaminantBalance::ZoneAirContaminantBalance(Model& model)
@@ -224,4 +237,3 @@ ZoneAirContaminantBalance::ZoneAirContaminantBalance(Model& model)
 
 } // model
 } // openstudio
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,30 +40,7 @@ namespace detail {
 
   /** BoilerHotWater_Impl is a StraightComponent_Impl that is the implementation class for BoilerHotWater.*/
   class MODEL_API BoilerHotWater_Impl : public StraightComponent_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
    public:
 
     /** @name Constructors and Destructors */
@@ -94,6 +71,14 @@ namespace detail {
     virtual unsigned inletPort() override;
 
     virtual unsigned outletPort() override;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    virtual bool addToNode(Node & node) override;
+
+    virtual ModelObject clone(Model model) const override;
 
     //@}
     /** @name Getters */
@@ -147,6 +132,13 @@ namespace detail {
 
     bool isSizingFactorDefaulted() const;
 
+    boost::optional<double> autosizedNominalCapacity() const ;
+
+    boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+    std::string endUseSubcategory() const;
+
+
     //@}
     /** @name Setters */
     //@{
@@ -161,17 +153,15 @@ namespace detail {
 
     bool setNominalThermalEfficiency(double nominalThermalEfficiency);
 
-    bool setEfficiencyCurveTemperatureEvaluationVariable(
-        boost::optional<std::string> efficiencyCurveTemperatureEvaluationVariable);
+    bool setEfficiencyCurveTemperatureEvaluationVariable(boost::optional<std::string> efficiencyCurveTemperatureEvaluationVariable);
 
     void resetEfficiencyCurveTemperatureEvaluationVariable();
 
-    bool setNormalizedBoilerEfficiencyCurve(
-        const boost::optional<Curve>& normalizedBoilerEfficiencyCurve);
+    bool setNormalizedBoilerEfficiencyCurve(const boost::optional<Curve>& normalizedBoilerEfficiencyCurve);
 
     void resetNormalizedBoilerEfficiencyCurve();
 
-    void setDesignWaterOutletTemperature(boost::optional<double> designWaterOutletTemperature);
+    bool setDesignWaterOutletTemperature(boost::optional<double> designWaterOutletTemperature);
 
     void resetDesignWaterOutletTemperature();
 
@@ -197,7 +187,7 @@ namespace detail {
 
     // TODO: Handle Non-Extensible IddField Boiler Water Outlet Node Name.
 
-    void setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit);
+    bool setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit);
 
     void resetWaterOutletUpperTemperatureLimit();
 
@@ -213,9 +203,7 @@ namespace detail {
 
     void resetSizingFactor();
 
-    bool addToNode(Node & node) override;
-
-    ModelObject clone(Model model) const override;
+    bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
     //@}
    private:
@@ -233,4 +221,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_BOILERHOTWATER_IMPL_HPP
+#endif // MODEL_BOILERHOTWATER_IMPL_HPP

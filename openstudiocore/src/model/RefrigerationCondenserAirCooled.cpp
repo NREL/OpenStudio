@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -75,7 +75,29 @@ namespace detail {
   const std::vector<std::string>& RefrigerationCondenserAirCooled_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // TODO: implement checks
+      // FOR CONDENSERS COOLING SYSTEMS SERVING CASES AND/OR WALKINS:
+      result.push_back("Refrigeration System Condenser Fan Electric Power");
+      result.push_back("Refrigeration System Condenser Fan Electric Energy");
+      result.push_back("Refrigeration System Condenser Heat Transfer Rate");
+      result.push_back("Refrigeration System Condenser Heat Transfer Energy");
+      result.push_back("Refrigeration System Condenser Total Recovered Heat Transfer Rate");
+      result.push_back("Refrigeration System Condenser Non Refrigeration Recovered Heat Transfer Rate");
+      result.push_back("Refrigeration System Condenser Heat Recovered for Non-Refrigeration Purposes Energy");
+      result.push_back("Refrigeration System Condenser Defrost Recovered Heat Transfer Rate");
+      result.push_back("Refrigeration System Condenser Defrost Recovered Heat Transfer Energy");
+      // FOR CONDENSERS COOLING SYSTEMS SERVING AIR CHILLERS:
+      result.push_back("Refrigeration System Condenser Fan Electric Power");
+      result.push_back("Refrigeration System Condenser Fan Electric Consumption");
+      result.push_back("Refrigeration Air Chiller System Condenser Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Condenser Heat Transfer Energy");
+      result.push_back("Refrigeration Air Chiller System Condenser Total Recovered Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Energy");
+      result.push_back("Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Rate");
+      result.push_back("Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Energy");
     }
     return result;
   }
@@ -271,9 +293,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool RefrigerationCondenserAirCooled_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Refrigeration_Condenser_AirCooledFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserAirCooled_Impl::resetEndUseSubcategory() {
@@ -281,9 +304,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserAirCooled_Impl::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
+  bool RefrigerationCondenserAirCooled_Impl::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondenserRefrigerantOperatingChargeInventory, condenserRefrigerantOperatingChargeInventory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserAirCooled_Impl::resetCondenserRefrigerantOperatingChargeInventory() {
@@ -291,9 +315,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserAirCooled_Impl::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
+  bool RefrigerationCondenserAirCooled_Impl::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondensateReceiverRefrigerantInventory, condensateReceiverRefrigerantInventory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserAirCooled_Impl::resetCondensateReceiverRefrigerantInventory() {
@@ -301,9 +326,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RefrigerationCondenserAirCooled_Impl::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
+  bool RefrigerationCondenserAirCooled_Impl::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
     bool result = setDouble(OS_Refrigeration_Condenser_AirCooledFields::CondensatePipingRefrigerantInventory, condensatePipingRefrigerantInventory);
     OS_ASSERT(result);
+    return result;
   }
 
   void RefrigerationCondenserAirCooled_Impl::resetCondensatePipingRefrigerantInventory() {
@@ -465,32 +491,32 @@ void RefrigerationCondenserAirCooled::resetAirInletZone() {
   getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->resetAirInletZone();
 }
 
-void RefrigerationCondenserAirCooled::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool RefrigerationCondenserAirCooled::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void RefrigerationCondenserAirCooled::resetEndUseSubcategory() {
   getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->resetEndUseSubcategory();
 }
 
-void RefrigerationCondenserAirCooled::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
-  getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setCondenserRefrigerantOperatingChargeInventory(condenserRefrigerantOperatingChargeInventory);
+bool RefrigerationCondenserAirCooled::setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory) {
+  return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setCondenserRefrigerantOperatingChargeInventory(condenserRefrigerantOperatingChargeInventory);
 }
 
 void RefrigerationCondenserAirCooled::resetCondenserRefrigerantOperatingChargeInventory() {
   getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->resetCondenserRefrigerantOperatingChargeInventory();
 }
 
-void RefrigerationCondenserAirCooled::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
-  getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setCondensateReceiverRefrigerantInventory(condensateReceiverRefrigerantInventory);
+bool RefrigerationCondenserAirCooled::setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory) {
+  return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setCondensateReceiverRefrigerantInventory(condensateReceiverRefrigerantInventory);
 }
 
 void RefrigerationCondenserAirCooled::resetCondensateReceiverRefrigerantInventory() {
   getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->resetCondensateReceiverRefrigerantInventory();
 }
 
-void RefrigerationCondenserAirCooled::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
-  getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setCondensatePipingRefrigerantInventory(condensatePipingRefrigerantInventory);
+bool RefrigerationCondenserAirCooled::setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory) {
+  return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->setCondensatePipingRefrigerantInventory(condensatePipingRefrigerantInventory);
 }
 
 void RefrigerationCondenserAirCooled::resetCondensatePipingRefrigerantInventory() {
@@ -499,10 +525,9 @@ void RefrigerationCondenserAirCooled::resetCondensatePipingRefrigerantInventory(
 
 /// @cond
 RefrigerationCondenserAirCooled::RefrigerationCondenserAirCooled(std::shared_ptr<detail::RefrigerationCondenserAirCooled_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 
 } // model
-} // openstudio
-
+} // openstudio

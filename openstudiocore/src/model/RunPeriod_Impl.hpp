@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -65,16 +65,16 @@ namespace detail {
     bool getUseWeatherFileSnowInd() const;
     int getNumTimePeriodRepeats() const;
 
-    void setBeginMonth(int month);
-    void setBeginDayOfMonth(int day);
-    void setEndMonth(int month);
-    void setEndDayOfMonth(int day);
-    void setUseWeatherFileHolidays(bool use);
-    void setUseWeatherFileDaylightSavings(bool use);
-    void setApplyWeekendHolidayRule(bool apply);
-    void setUseWeatherFileRainInd(bool rainInd);
-    void setUseWeatherFileSnowInd(bool snowInd);
-    void setNumTimePeriodRepeats(int numRepeats);
+    bool setBeginMonth(int month);
+    bool setBeginDayOfMonth(int day);
+    bool setEndMonth(int month);
+    bool setEndDayOfMonth(int day);
+    bool setUseWeatherFileHolidays(bool use);
+    bool setUseWeatherFileDaylightSavings(bool use);
+    bool setApplyWeekendHolidayRule(bool apply);
+    bool setUseWeatherFileRainInd(bool rainInd);
+    bool setUseWeatherFileSnowInd(bool snowInd);
+    bool setNumTimePeriodRepeats(int numRepeats);
 
     // ensure that this object does not contain the date 2/29
     void ensureNoLeapDays();
@@ -117,4 +117,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_RUNPERIOD_IMPL_HPP
+#endif // MODEL_RUNPERIOD_IMPL_HPP

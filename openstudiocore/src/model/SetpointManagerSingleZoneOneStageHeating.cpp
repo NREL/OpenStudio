@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -135,14 +135,16 @@ namespace detail {
     return result;
   }
 
-  void SetpointManagerSingleZoneOneStageHeating_Impl::setHeatingStageOnSupplyAirSetpointTemperature(double heatingStageOnSupplyAirSetpointTemperature) {
+  bool SetpointManagerSingleZoneOneStageHeating_Impl::setHeatingStageOnSupplyAirSetpointTemperature(double heatingStageOnSupplyAirSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_SingleZone_OneStageHeatingFields::HeatingStageOnSupplyAirSetpointTemperature, heatingStageOnSupplyAirSetpointTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
-  void SetpointManagerSingleZoneOneStageHeating_Impl::setHeatingStageOffSupplyAirSetpointTemperature(double heatingStageOffSupplyAirSetpointTemperature) {
+  bool SetpointManagerSingleZoneOneStageHeating_Impl::setHeatingStageOffSupplyAirSetpointTemperature(double heatingStageOffSupplyAirSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_SingleZone_OneStageHeatingFields::HeatingStageOffSupplyAirSetpointTemperature, heatingStageOffSupplyAirSetpointTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   bool SetpointManagerSingleZoneOneStageHeating_Impl::setControlZone(const ThermalZone& thermalZone) {
@@ -210,12 +212,12 @@ bool SetpointManagerSingleZoneOneStageHeating::setControlVariable(const std::str
   return getImpl<detail::SetpointManagerSingleZoneOneStageHeating_Impl>()->setControlVariable(controlVariable);
 }
 
-void SetpointManagerSingleZoneOneStageHeating::setHeatingStageOnSupplyAirSetpointTemperature(double heatingStageOnSupplyAirSetpointTemperature) {
-  getImpl<detail::SetpointManagerSingleZoneOneStageHeating_Impl>()->setHeatingStageOnSupplyAirSetpointTemperature(heatingStageOnSupplyAirSetpointTemperature);
+bool SetpointManagerSingleZoneOneStageHeating::setHeatingStageOnSupplyAirSetpointTemperature(double heatingStageOnSupplyAirSetpointTemperature) {
+  return getImpl<detail::SetpointManagerSingleZoneOneStageHeating_Impl>()->setHeatingStageOnSupplyAirSetpointTemperature(heatingStageOnSupplyAirSetpointTemperature);
 }
 
-void SetpointManagerSingleZoneOneStageHeating::setHeatingStageOffSupplyAirSetpointTemperature(double heatingStageOffSupplyAirSetpointTemperature) {
-  getImpl<detail::SetpointManagerSingleZoneOneStageHeating_Impl>()->setHeatingStageOffSupplyAirSetpointTemperature(heatingStageOffSupplyAirSetpointTemperature);
+bool SetpointManagerSingleZoneOneStageHeating::setHeatingStageOffSupplyAirSetpointTemperature(double heatingStageOffSupplyAirSetpointTemperature) {
+  return getImpl<detail::SetpointManagerSingleZoneOneStageHeating_Impl>()->setHeatingStageOffSupplyAirSetpointTemperature(heatingStageOffSupplyAirSetpointTemperature);
 }
 
 bool SetpointManagerSingleZoneOneStageHeating::setControlZone(const ThermalZone& thermalZone) {
@@ -228,10 +230,9 @@ void SetpointManagerSingleZoneOneStageHeating::resetControlZone() {
 
 /// @cond
 SetpointManagerSingleZoneOneStageHeating::SetpointManagerSingleZoneOneStageHeating(std::shared_ptr<detail::SetpointManagerSingleZoneOneStageHeating_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 
 } // model
 } // openstudio
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -112,7 +112,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
   if (currentSchedule){
     currentScheduleTypeLimits = currentSchedule->scheduleTypeLimits();
   }
- 
+
   // Scene
 
   m_dayScheduleScene = new DayScheduleScene(this,m_scheduleDay);
@@ -176,7 +176,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
   zoomButtonGroup->addButton(hourlyZoomButton);
 
   hourlyZoomButton->setText("Hourly");
- 
+
   connect(hourlyZoomButton, &QPushButton::clicked, this, &ScheduleDayView::setHourlyZoom);
   zoomButtonLayout->addWidget(hourlyZoomButton);
   zoomButtonLayout->addSpacing(10);
@@ -189,7 +189,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
   zoomButtonGroup->addButton(quarterHourlyZoomButton);
 
   quarterHourlyZoomButton->setText("15 Minutes");
- 
+
   connect(quarterHourlyZoomButton, &QPushButton::clicked, this, &ScheduleDayView::setQuarterHourlyZoom);
   zoomButtonLayout->addWidget(quarterHourlyZoomButton);
   zoomButtonLayout->addSpacing(10);
@@ -200,9 +200,9 @@ ScheduleDayView::ScheduleDayView(bool isIP,
   oneMinuteZommButton->setCheckable(true);
 
   zoomButtonGroup->addButton(oneMinuteZommButton);
-  
+
   oneMinuteZommButton->setText("1 Minute");
- 
+
   connect(oneMinuteZommButton, &QPushButton::clicked, this, &ScheduleDayView::setOneMinuteZoom);
   zoomButtonLayout->addWidget(oneMinuteZommButton);
 
@@ -361,7 +361,7 @@ double ScheduleDayView::snap() const
 void ScheduleDayView::setHourlyZoom()
 {
   m_zoom = 1.0;
-  
+
   m_snap = 3600.0;
 
   emit zoomChanged(m_zoom);
@@ -464,7 +464,7 @@ ScheduleLimitsView::ScheduleLimitsView(bool isIP,
   // Lower Limit
 
   // Note: QDoubleSpinBox are used, rather than OSQuantityEdit2
-  // because limits are not connected via Q_PROPERTY. 
+  // because limits are not connected via Q_PROPERTY.
   m_lowerViewLimitSpinBox = new QDoubleSpinBox();
   m_lowerViewLimitSpinBox->setFixedWidth(100);
 
@@ -482,7 +482,7 @@ ScheduleLimitsView::ScheduleLimitsView(bool isIP,
 
   m_upperViewLimitSpinBox = new QDoubleSpinBox();
   m_upperViewLimitSpinBox->setFixedWidth(100);
- 
+
   connect(m_upperViewLimitSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
           scheduleDayView, &ScheduleDayView::onUpperViewLimitChanged);
 
@@ -710,7 +710,7 @@ void ScheduleDayEditor::paintEvent ( QPaintEvent * event )
 
   double startTimeSeconds = scheduleDayView()->focusStartTime();
   double endTimeSeconds = scheduleDayView()->focusEndTime();
-  
+
   double xstart = MARGINLEFT;
   double xend = width() - MARGINRIGHT;
 
@@ -819,7 +819,7 @@ void ScheduleDayEditor::updateKeyboardPrompt(const QString& keyboardPrompt)
 
     this->update();
   }
-  
+
 }
 
 CalendarSegmentItem::CalendarSegmentItem( QGraphicsItem * parent )
@@ -831,7 +831,7 @@ CalendarSegmentItem::CalendarSegmentItem( QGraphicsItem * parent )
     m_endTime(SCENEWIDTH),
     m_isOutOfTypeLimits(false)
 {
-  setAcceptHoverEvents(true); 
+  setAcceptHoverEvents(true);
 
   setToolTip("Double click to cut segment");
 
@@ -1057,7 +1057,7 @@ void CalendarSegmentItem::setValue(double value)
   float fullscalevalue = lowerLimitValue + value * (upperLimitValue - lowerLimitValue);
 
   QString tooltip = QString::number(fullscalevalue,'g',3);
-  
+
   boost::optional<Unit> units = scene()->scheduleDayView()->units();
   if (units){
     if (!units->standardString().empty()){
@@ -1067,7 +1067,7 @@ void CalendarSegmentItem::setValue(double value)
     }
   }
 
-  tooltip.append(" - Double click to cut segment"); 
+  tooltip.append(" - Double click to cut segment");
 
   setToolTip(tooltip);
 }
@@ -1199,11 +1199,11 @@ double VCalendarSegmentItem::length() const
 void VCalendarSegmentItem::updateLength()
 {
   CalendarSegmentItem * previousCalendarItem = this->previousCalendarItem();
-  
+
   CalendarSegmentItem * nextCalendarItem = this->nextCalendarItem();
-  
+
   double nextY = nextCalendarItem->pos().y() + nextCalendarItem->boundingRect().height() / 2.0;
-  
+
   double prevY = previousCalendarItem->pos().y() + previousCalendarItem->boundingRect().height() / 2.0;
 
   double length = std::fabs(nextY - prevY);
@@ -1219,7 +1219,7 @@ void VCalendarSegmentItem::updateLength()
     else
     {
       this->setPos(this->pos().x(),prevY);
-    
+
       this->setLength(length);
     }
   }
@@ -1234,7 +1234,7 @@ void VCalendarSegmentItem::updateLength()
     else
     {
       this->setPos(this->pos().x(),nextY);
-    
+
       this->setLength(length + 1.0);
     }
   }
@@ -1282,7 +1282,7 @@ void VCalendarSegmentItem::setTime(double time)
   setX(newX);
 
   previousCalendarItem()->setEndTime(time);
-  
+
   nextCalendarItem()->setStartTime(time);
 }
 
@@ -1440,7 +1440,7 @@ DayScheduleOverview::DayScheduleOverview(ScheduleDayView * scheduleRuleView)
 
 void DayScheduleOverview::onZoomChange(double newZoom)
 {
-  updateFocusRectangleGeometry();  
+  updateFocusRectangleGeometry();
 }
 
 void DayScheduleOverview::updateFocusRectangleGeometry()
@@ -1490,7 +1490,7 @@ void DayScheduleOverview::mouseMoveEvent(QMouseEvent * event)
 
     if( m_scheduleRuleView->setFocusStartTime(proposedStartTime) )
     {
-      event->accept(); 
+      event->accept();
     }
   }
 
@@ -1502,7 +1502,7 @@ void DayScheduleOverview::mousePressEvent(QMouseEvent * event)
   if( (timeAt(event->pos().x()) <= m_scheduleRuleView->focusEndTime()) && (timeAt(event->pos().x()) >= m_scheduleRuleView->focusStartTime()) )
   {
     m_isMouseDown = true;
-  
+
     m_lastMousePos = timeAt(event->pos().x());
 
     event->accept();
@@ -1512,7 +1512,7 @@ void DayScheduleOverview::mousePressEvent(QMouseEvent * event)
 void DayScheduleOverview::mouseReleaseEvent(QMouseEvent * event)
 {
   m_isMouseDown = false;
-  
+
   m_lastMousePos = 0;
 
   event->accept();
@@ -1541,7 +1541,7 @@ void DaySchedulePlotArea::updateKeyboardPrompt()
     {
 
       if (m_keyboardInputValue.isEmpty()){
-        
+
         ScheduleDayView * scheduleDayView = scene()->scheduleDayView();
 
         double upperLimit = scheduleDayView->upperViewLimit();
@@ -1564,7 +1564,7 @@ void DaySchedulePlotArea::updateKeyboardPrompt()
       //  }
       //}
 
-    } 
+    }
     else if (dynamic_cast<VCalendarSegmentItem *>(m_currentHoverItem))
     {
       result = "Drag vertical line to adjust";
@@ -1584,7 +1584,7 @@ QGraphicsItem * DaySchedulePlotArea::segmentAt(QPoint point) const
 
   QPointF scenepoint = mapToScene(point);
 
-  return scene()->segmentAt(scenepoint.x(),scenepoint.y(),zoom);  
+  return scene()->segmentAt(scenepoint.x(),scenepoint.y(),zoom);
 }
 
 int DaySchedulePlotArea::timeAt(double x) const
@@ -1647,7 +1647,7 @@ void DaySchedulePlotArea::mouseDoubleClickEvent(QMouseEvent * event)
       }
 
       scene()->addSegment(newTime);
-      
+
       event->accept();
 
       emit dayScheduleSceneChanged(scene(),scene()->scheduleDayView()->lowerViewLimit(),scene()->scheduleDayView()->upperViewLimit());
@@ -1655,7 +1655,7 @@ void DaySchedulePlotArea::mouseDoubleClickEvent(QMouseEvent * event)
     else if( VCalendarSegmentItem * calendarItem = dynamic_cast<VCalendarSegmentItem *>(item) )
     {
       calendarItem->remove();
-      
+
       event->accept();
 
       emit dayScheduleSceneChanged(scene(),scene()->scheduleDayView()->lowerViewLimit(),scene()->scheduleDayView()->upperViewLimit());
@@ -1665,7 +1665,7 @@ void DaySchedulePlotArea::mouseDoubleClickEvent(QMouseEvent * event)
 
 void DaySchedulePlotArea::mouseMoveEvent(QMouseEvent * event)
 {
-  QPointF scenePos = mapToScene(event->pos()); 
+  QPointF scenePos = mapToScene(event->pos());
 
   m_currentHoverItem = nullptr;
   m_keyboardInputValue.clear();
@@ -1765,7 +1765,7 @@ void DaySchedulePlotArea::mouseMoveEvent(QMouseEvent * event)
         }
 
         calendarItem->setTime(newTime);
-  
+
         scene()->update();
       }
     }
@@ -1823,8 +1823,8 @@ void DaySchedulePlotArea::mouseMoveEvent(QMouseEvent * event)
 
 void DaySchedulePlotArea::mousePressEvent(QMouseEvent * event)
 {
-  m_lastScenePos = mapToScene(event->pos()); 
-  
+  m_lastScenePos = mapToScene(event->pos());
+
   m_currentItem = nullptr;
 
   m_currentHoverItem = nullptr;
@@ -1897,7 +1897,7 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
           double scaledValue = (value - lowerLimit) / (upperLimit - lowerLimit);
 
           calendarItem->setValue(scaledValue);
-        
+
           calendarItem->setHovering(false);
 
           m_currentHoverItem = nullptr;
@@ -1907,20 +1907,20 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
           emit dayScheduleSceneChanged(scene(), lowerLimit, upperLimit);
         }
 
-      } 
+      }
       else if (event->key() == Qt::Key_Minus)
       {
 
         m_keyboardInputValue = event->text();
         updateKeyboardPrompt();
 
-      } 
+      }
       else if (event->key() == Qt::Key_Backspace)
       {
         m_keyboardInputValue.chop(1);
         updateKeyboardPrompt();
 
-      } 
+      }
       else if (event->key() == Qt::Key_0 ||
                event->key() == Qt::Key_1 ||
                event->key() == Qt::Key_2 ||
@@ -1933,11 +1933,11 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
                event->key() == Qt::Key_9
              )
       {
-        
+
         m_keyboardInputValue.append(event->text());
         updateKeyboardPrompt();
 
-      } 
+      }
       else if (event->key() == Qt::Key_Period)
       {
         if (!m_keyboardInputValue.contains(".")){
@@ -1961,7 +1961,7 @@ DayScheduleScene::DayScheduleScene(ScheduleDayView * scheduleDayView, const mode
   setSceneRect(0,0,SCENEWIDTH,SCENEHEIGHT);
 
   m_scheduleDay.getImpl<model::detail::ScheduleDay_Impl>().get()->onChange.connect<DayScheduleScene, &DayScheduleScene::scheduleRefresh>(this);
-  
+
   refresh();
   //scheduleRefresh();
 }
@@ -1974,7 +1974,7 @@ model::ScheduleDay DayScheduleScene::scheduleDay() const
 void DayScheduleScene::scheduleRefresh()
 {
   m_dirty = true;
-  
+
   QTimer::singleShot(0,this,SLOT(refresh()));
 }
 
@@ -1982,7 +1982,7 @@ void DayScheduleScene::refresh()
 {
   if( m_dirty )
   {
-    clearSegments();  
+    clearSegments();
 
     std::vector<openstudio::Time> times = m_scheduleDay.times();
 
@@ -2002,7 +2002,7 @@ void DayScheduleScene::refresh()
     // The min and max values of the schedule as it appears on the screen
     double minvalue = * std::min_element(realvalues.begin(),realvalues.end());
     double maxvalue = * std::max_element(realvalues.begin(),realvalues.end());
-    
+
     m_scheduleDayView->setMaximumScheduleValue(maxvalue);
     m_scheduleDayView->setMinimumScheduleValue(minvalue);
 
@@ -2130,7 +2130,7 @@ boost::optional<double> DayScheduleScene::valueAt(double time) const
 
   return boost::none;
 }
-  
+
 void DayScheduleScene::addSegment(double untilTime,double value)
 {
   CalendarSegmentItem * segment = addSegment(untilTime);
@@ -2253,7 +2253,7 @@ QGraphicsItem * DayScheduleScene::segmentAt(double x,double y, double zoom) cons
     {
       result = segment;
     }
-    
+
     if( ! result )
     {
       if( VCalendarSegmentItem * item = segment->nextVCalendarItem() )
@@ -2267,7 +2267,7 @@ QGraphicsItem * DayScheduleScene::segmentAt(double x,double y, double zoom) cons
         }
       }
     }
-    
+
     if( ! result )
     {
       if( VCalendarSegmentItem * item = segment->previousVCalendarItem() )

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -81,10 +81,13 @@ namespace detail {
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {}
 
+  // TODO: remove
   const std::vector<std::string>& LightsDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: output is listed in Lights instead
     }
     return result;
   }
@@ -192,14 +195,16 @@ namespace detail {
       if (*lightingLevel < 0){
         result = false;
       }else{
-        result = setString(OS_Lights_DefinitionFields::DesignLevelCalculationMethod, "LightingLevel");
-        OS_ASSERT(result);
+        // This one could return false for good reasons, if NaN of Infinity was passed
         result = setDouble(OS_Lights_DefinitionFields::LightingLevel, lightingLevel.get());
-        OS_ASSERT(result);
-        result = setString(OS_Lights_DefinitionFields::WattsperSpaceFloorArea, "");
-        OS_ASSERT(result);
-        result = setString(OS_Lights_DefinitionFields::WattsperPerson, "");
-        OS_ASSERT(result);
+        if (result) {
+          result = setString(OS_Lights_DefinitionFields::DesignLevelCalculationMethod, "LightingLevel");
+          OS_ASSERT(result);
+          result = setString(OS_Lights_DefinitionFields::WattsperSpaceFloorArea, "");
+          OS_ASSERT(result);
+          result = setString(OS_Lights_DefinitionFields::WattsperPerson, "");
+          OS_ASSERT(result);
+        }
       }
     } else {
       if (istringEqual("LightingLevel", this->designLevelCalculationMethod())){
@@ -215,14 +220,16 @@ namespace detail {
       if (*wattsperSpaceFloorArea < 0){
         result = false;
       }else{
-        result = setString(OS_Lights_DefinitionFields::DesignLevelCalculationMethod, "Watts/Area");
-        OS_ASSERT(result);
-        result = setString(OS_Lights_DefinitionFields::LightingLevel, "");
-        OS_ASSERT(result);
+        // This one could return false for good reasons, if NaN of Infinity was passed
         result = setDouble(OS_Lights_DefinitionFields::WattsperSpaceFloorArea, wattsperSpaceFloorArea.get());
-        OS_ASSERT(result);
-        result = setString(OS_Lights_DefinitionFields::WattsperPerson, "");
-        OS_ASSERT(result);
+        if (result) {
+          result = setString(OS_Lights_DefinitionFields::DesignLevelCalculationMethod, "Watts/Area");
+          OS_ASSERT(result);
+          result = setString(OS_Lights_DefinitionFields::LightingLevel, "");
+          OS_ASSERT(result);
+          result = setString(OS_Lights_DefinitionFields::WattsperPerson, "");
+          OS_ASSERT(result);
+        }
       }
     } else {
       if (istringEqual("Watts/Area", this->designLevelCalculationMethod())){
@@ -238,14 +245,16 @@ namespace detail {
       if (*wattsperPerson < 0){
         result = false;
       }else{
-        result = setString(OS_Lights_DefinitionFields::DesignLevelCalculationMethod, "Watts/Person");
-        OS_ASSERT(result);
-        result = setString(OS_Lights_DefinitionFields::LightingLevel, "");
-        OS_ASSERT(result);
-        result = setString(OS_Lights_DefinitionFields::WattsperSpaceFloorArea, "");
-        OS_ASSERT(result);
+        // This one could return false for good reasons, if NaN of Infinity was passed
         result = setDouble(OS_Lights_DefinitionFields::WattsperPerson, wattsperPerson.get());
-        OS_ASSERT(result);
+        if (result) {
+          result = setString(OS_Lights_DefinitionFields::DesignLevelCalculationMethod, "Watts/Person");
+          OS_ASSERT(result);
+          result = setString(OS_Lights_DefinitionFields::LightingLevel, "");
+          OS_ASSERT(result);
+          result = setString(OS_Lights_DefinitionFields::WattsperSpaceFloorArea, "");
+          OS_ASSERT(result);
+        }
       }
     } else {
       if (istringEqual("Watts/Person", this->designLevelCalculationMethod())){
@@ -285,7 +294,7 @@ namespace detail {
   //  OS_ASSERT(result);
   //}
 
-  void LightsDefinition_Impl::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
+  bool LightsDefinition_Impl::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
     bool result = false;
     if (returnAirFractionCalculatedfromPlenumTemperature) {
       result = setString(OS_Lights_DefinitionFields::ReturnAirFractionCalculatedfromPlenumTemperature, "Yes");
@@ -293,6 +302,7 @@ namespace detail {
       result = setString(OS_Lights_DefinitionFields::ReturnAirFractionCalculatedfromPlenumTemperature, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void LightsDefinition_Impl::resetReturnAirFractionCalculatedfromPlenumTemperature() {
@@ -337,7 +347,7 @@ namespace detail {
     return 0.0;
   }
 
-  double LightsDefinition_Impl::getPowerPerFloorArea(double floorArea, double numPeople) const 
+  double LightsDefinition_Impl::getPowerPerFloorArea(double floorArea, double numPeople) const
   {
     std::string method = designLevelCalculationMethod();
 
@@ -385,7 +395,7 @@ namespace detail {
   }
 
   bool LightsDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method,
-                                                              double floorArea, 
+                                                              double floorArea,
                                                               double numPeople)
   {
     std::string wmethod(method);
@@ -400,7 +410,7 @@ namespace detail {
     else if (wmethod == "watts/person") {
       return setWattsperPerson(getPowerPerPerson(floorArea,numPeople));
     }
-    
+
     return false;
   }
 
@@ -523,8 +533,8 @@ void LightsDefinition::resetReturnAirFraction() {
   getImpl<detail::LightsDefinition_Impl>()->resetReturnAirFraction();
 }
 
-void LightsDefinition::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
-  getImpl<detail::LightsDefinition_Impl>()->setReturnAirFractionCalculatedfromPlenumTemperature(returnAirFractionCalculatedfromPlenumTemperature);
+bool LightsDefinition::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
+  return getImpl<detail::LightsDefinition_Impl>()->setReturnAirFractionCalculatedfromPlenumTemperature(returnAirFractionCalculatedfromPlenumTemperature);
 }
 
 void LightsDefinition::resetReturnAirFractionCalculatedfromPlenumTemperature() {
@@ -559,8 +569,8 @@ double LightsDefinition::getPowerPerPerson(double floorArea, double numPeople) c
   return getImpl<detail::LightsDefinition_Impl>()->getPowerPerPerson(floorArea,numPeople);
 }
 
-bool LightsDefinition::setDesignLevelCalculationMethod(const std::string& method, 
-                                     double floorArea, 
+bool LightsDefinition::setDesignLevelCalculationMethod(const std::string& method,
+                                     double floorArea,
                                      double numPeople)
 {
   return getImpl<detail::LightsDefinition_Impl>()->setDesignLevelCalculationMethod(method,floorArea,numPeople);
@@ -568,10 +578,9 @@ bool LightsDefinition::setDesignLevelCalculationMethod(const std::string& method
 
 /// @cond
 LightsDefinition::LightsDefinition(std::shared_ptr<detail::LightsDefinition_Impl> impl)
-  : SpaceLoadDefinition(impl)
+  : SpaceLoadDefinition(std::move(impl))
 {}
 /// @endcond
 
 } // model
 } // openstudio
-

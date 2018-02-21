@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -71,11 +71,11 @@ namespace swig {
     GC_VALUE();
 
     GC_VALUE(const GC_VALUE& item);
-    
+
     GC_VALUE(VALUE obj);
-    
+
     ~GC_VALUE();
-    
+
     GC_VALUE & operator=(const GC_VALUE& item);
 
     operator VALUE() const;

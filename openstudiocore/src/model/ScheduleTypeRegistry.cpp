@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -157,7 +157,9 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed","Supply Air Fan Operating Mode Schedule","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"AirLoopHVACUnitarySystem","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirLoopHVACUnitarySystem","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
+    {"AirTerminalDualDuctConstantVolume","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalDualDuctVAV","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"AirTerminalDualDuctVAVOutdoorAir","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctConstantVolumeCooledBeam","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctConstantVolumeFourPipeInduction","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctConstantVolumeReheat","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
@@ -170,7 +172,6 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"AirTerminalSingleDuctVAVNoReheat","Minimum Air Flow Fraction","minimumAirFlowFractionSchedule",true,"",0.0,1.0},
     {"AirTerminalSingleDuctVAVHeatAndCoolNoReheat","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctVAVHeatAndCoolReheat","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
-    {"AvailabilityManagerScheduled","Availability","schedule",false,"Availability",0.0,1.0},
     {"AvailabilityManagerHybridVentilation","Ventilation Control Mode Schedule","ventilationControlModeSchedule",false,"",0.0,4.0},
     {"AvailabilityManagerHybridVentilation","Minimum Outdoor Ventilation Air Schedule","minimumOutdoorVentilationAirSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"AvailabilityManagerHybridVentilation","AirflowNetwork Control Type Schedule","airflowNetworkControlTypeSchedule",false,"ControlMode",0.0,1.0},
@@ -178,6 +179,10 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"AvailabilityManagerNightVentilation","Applicability Schedule","applicabilitySchedule",false,"Availability",0.0,1.0},
     {"AvailabilityManagerNightVentilation","Ventilation Temperature Schedule","ventilationTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"AvailabilityManagerOptimumStart","Applicability Schedule","applicabilitySchedule",false,"Availability",0.0,1.0},
+    {"AvailabilityManagerLowTemperatureTurnOff","Applicability Schedule","applicabilitySchedule",false,"Availability",0.0,1.0},
+    {"AvailabilityManagerScheduled","Availability Manager Scheduled", "schedule",false,"Availability",0.0,1.0},
+    {"AvailabilityManagerScheduledOn","Availability Manager Scheduled On", "schedule",false,"Availability",0.0,1.0},
+    {"AvailabilityManagerScheduledOff","Availability Manager Scheduled Off", "schedule",false,"Availability",0.0,1.0},
     {"CentralHeatPumpSystem","Ancillary Operation","ancillaryOperationSchedule",false,"Availability",0.0,1.0},
     {"CentralHeatPumpSystemModule","Chiller Heater Modules Control","chillerHeaterModulesControlSchedule",false,"Availability",0.0,1.0},
     {"ChillerElectricEIR","Basin Heater","basinHeaterSchedule",false,"Availability",0.0,1.0},
@@ -250,13 +255,15 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"EvaporativeFluidCoolerSingleSpeed","Blowdown Makeup Water Usage","blowdownMakeupWaterUsageSchedule",true,"VolumetricFlowRate",0.0,OptionalDouble()},
     {"EvaporativeFluidCoolerTwoSpeed","Blowdown Makeup Water Usage","blowdownMakeupWaterUsageSchedule",true,"VolumetricFlowRate",0.0,OptionalDouble()},
     {"ExteriorLights","Exterior Lights","schedule",true,"",0.0,1.0},
+    {"ExteriorFuelEquipment","Exterior FuelEquipment","schedule",true,"",0.0,1.0},
+    {"ExteriorWaterEquipment","Exterior WaterEquipment","schedule",true,"",0.0,1.0},
     {"FanConstantVolume","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanOnOff","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanVariableVolume","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanZoneExhaust","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanZoneExhaust","Flow Fraction","flowFractionSchedule",true,"Dimensionless",0.0,1.0},
     {"FanZoneExhaust","Minimum Zone Temperature Limit","minimumZoneTemperatureLimitSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
-    {"FanZoneExhaust","Balanced Exhaust Fraction","balancedExhaustFractionSchedule",true,"Dimensionless",0.0,1.0},    
+    {"FanZoneExhaust","Balanced Exhaust Fraction","balancedExhaustFractionSchedule",true,"Dimensionless",0.0,1.0},
     {"GasEquipment","Gas Equipment","schedule",true,"",0.0,1.0},
     {"GeneratorFuelSupply", "Fuel Temperature", "fuelTemperatureScheduleName", true,"Temperature", 0.0, 100.0},
     {"GeneratorFuelCellWaterSupply", "Water Temperature", "waterTemperatureScheduleName", true, "Temperature", 0.0, 100.0},
@@ -346,6 +353,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"WaterHeaterMixed","Ambient Temperature","ambientTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterHeaterMixed","Use Flow Rate Fraction","useFlowRateFractionSchedule",true,"",0.0,1.0},
     {"WaterHeaterMixed","Cold Water Supply Temperature","coldWaterSupplyTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"WaterHeaterMixed","Indirect Alternate Setpoint Temperature","indirectAlternateSetpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterHeaterHeatPump","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"WaterHeaterHeatPump","Compressor Setpoint Temperature Schedule","compressorSetpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterHeaterHeatPump","Inlet Air Temperature Schedule","inletAirTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},

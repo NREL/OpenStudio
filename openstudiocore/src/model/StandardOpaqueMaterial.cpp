@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -729,7 +729,7 @@ void StandardOpaqueMaterial::resetVisibleAbsorptance() {
 
 /// @cond
 StandardOpaqueMaterial::StandardOpaqueMaterial(std::shared_ptr<detail::StandardOpaqueMaterial_Impl> impl)
-  : OpaqueMaterial(impl)
+  : OpaqueMaterial(std::move(impl))
 {}
 /// @endcond
 

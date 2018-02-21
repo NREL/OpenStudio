@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -72,7 +72,9 @@ namespace detail {
   const std::vector<std::string>& InternalMass_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not sure
     }
     return result;
   }
@@ -109,7 +111,7 @@ namespace detail {
     if (surfaceAreaperPerson){
       return internalMassDefinition.setSurfaceArea(*surfaceAreaperPerson * space->numberOfPeople());
     }
-  
+
     return false;
   }
 
@@ -253,6 +255,10 @@ InternalMass::InternalMass(const InternalMassDefinition& internalMassDefinition)
   : SpaceLoadInstance(InternalMass::iddObjectType(),internalMassDefinition)
 {
   OS_ASSERT(getImpl<detail::InternalMass_Impl>());
+
+  bool test = this->setMultiplier(1.0);
+  OS_ASSERT(test);
+
 }
 
 IddObjectType InternalMass::iddObjectType() {
@@ -308,7 +314,7 @@ boost::optional<SurfacePropertyConvectionCoefficients> InternalMass::surfaceProp
 
 /// @cond
 InternalMass::InternalMass(std::shared_ptr<detail::InternalMass_Impl> impl)
-  : SpaceLoadInstance(impl)
+  : SpaceLoadInstance(std::move(impl))
 {}
 /// @endcond
 

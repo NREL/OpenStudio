@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -64,7 +64,7 @@ ResultsTabView::ResultsTabView(const QString & tabLabel,
   }
 }
 
-void ResultsTabView::onUnitSystemChange(bool t_isIP) 
+void ResultsTabView::onUnitSystemChange(bool t_isIP)
 {
   LOG(Debug, "onUnitSystemChange " << t_isIP << " reloading results");
   m_resultsView->onUnitSystemChange(t_isIP);
@@ -77,7 +77,7 @@ ResultsView::ResultsView(QWidget *t_parent)
     m_isIP(true),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh")),
-    m_openResultsViewerBtn(new QPushButton("Open ResultsViewer\nfor Detailed Reports"))
+    m_openDViewBtn(new QPushButton("Open DView for\nDetailed Reports"))
 {
 
   auto mainLayout = new QVBoxLayout;
@@ -85,8 +85,8 @@ ResultsView::ResultsView(QWidget *t_parent)
 
   connect(m_refreshBtn, &QPushButton::clicked, this, &ResultsView::refreshClicked);
 
-  connect(m_openResultsViewerBtn, &QPushButton::clicked, this, &ResultsView::openResultsViewerClicked);
-  
+  connect(m_openDViewBtn, &QPushButton::clicked, this, &ResultsView::openDViewClicked);
+
   auto hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
 
@@ -110,7 +110,7 @@ ResultsView::ResultsView(QWidget *t_parent)
   hLayout->addWidget(m_refreshBtn, 0, Qt::AlignVCenter);
   m_refreshBtn->setVisible(true);
 
-  hLayout->addWidget(m_openResultsViewerBtn, 0, Qt::AlignVCenter);
+  hLayout->addWidget(m_openDViewBtn, 0, Qt::AlignVCenter);
 
   m_view = new QWebEngineView(this);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
@@ -120,7 +120,7 @@ ResultsView::ResultsView(QWidget *t_parent)
   connect(m_view, &QWebEngineView::loadProgress, this, &ResultsView::onLoadProgress);
   connect(m_view, &QWebEngineView::loadStarted, this, &ResultsView::onLoadStarted);
   connect(m_view, &QWebEngineView::renderProcessTerminated, this, &ResultsView::onRenderProcessTerminated);
-  
+
   // Qt 5.8 and higher
   //m_view->setAttribute(QWebEngineSettings::WebAttribute::AllowRunningInsecureContent, true);
 
@@ -129,7 +129,7 @@ ResultsView::ResultsView(QWidget *t_parent)
 
   //mainLayout->addWidget(m_view, 10, Qt::AlignTop);
   mainLayout->addWidget(m_view);
-  
+
 }
 
 ResultsView::~ResultsView()
@@ -142,23 +142,19 @@ void ResultsView::refreshClicked()
   m_view->triggerPageAction(QWebEnginePage::ReloadAndBypassCache);
 }
 
-void ResultsView::openResultsViewerClicked()
+void ResultsView::openDViewClicked()
 {
-  LOG(Debug, "openResultsViewerClicked");
+  LOG(Debug, "openDViewClicked");
 
 #ifdef Q_OS_MAC
-  openstudio::path resultsviewer
-    = openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("../../../ResultsViewer.app/Contents/MacOS/ResultsViewer");
+  openstudio::path dview
+    = openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("../../../DView.app/Contents/MacOS/DView");
 #else
-  openstudio::path resultsviewer
-    = openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("ResultsViewer");
+  openstudio::path dview
+    = openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("DView");
 #endif
 
   QStringList args;
-
-  // instruct ResultsViewer to make its own copies of the sql files passed in and to clean them up
-  // when done
-  args.push_back("--maketempcopies"); 
 
   if (!m_sqlFilePath.empty())
   {
@@ -170,13 +166,13 @@ void ResultsView::openResultsViewerClicked()
     args.push_back(openstudio::toQString(m_radianceResultsPath));
   }
 
-  if (!QProcess::startDetached(openstudio::toQString(resultsviewer), args))
+  if (!QProcess::startDetached(openstudio::toQString(dview), args))
   {
-    QMessageBox::critical(this, "Unable to launch ResultsViewer", "ResultsViewer was not found in the expected location:\n" + openstudio::toQString(resultsviewer));
+    QMessageBox::critical(this, "Unable to launch DView", "DView was not found in the expected location:\n" + openstudio::toQString(dview));
   }
 }
 
-void ResultsView::onUnitSystemChange(bool t_isIP) 
+void ResultsView::onUnitSystemChange(bool t_isIP)
 {
   LOG(Debug, "onUnitSystemChange " << t_isIP << " reloading results");
   m_isIP = t_isIP;
@@ -226,9 +222,9 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir, con
   std::vector<openstudio::path> radout;
   std::vector<openstudio::path> reports;
 
-  for ( openstudio::filesystem::recursive_directory_iterator end, dir(t_runDir); 
-        dir != end; 
-        ++dir ) 
+  for ( openstudio::filesystem::recursive_directory_iterator end, dir(t_runDir);
+        dir != end;
+        ++dir )
   {
     openstudio::path p = *dir;
     if        (openstudio::toString(p.filename()) == "eplusout.sql") {
@@ -245,9 +241,9 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir, con
   LOG(Debug, "Looking for existing results in: " << openstudio::toString(t_reportsDir));
 
   if( openstudio::filesystem::exists(t_reportsDir) ) {
-    for ( openstudio::filesystem::directory_iterator end, dir(t_reportsDir); 
-          dir != end; 
-          ++dir ) 
+    for ( openstudio::filesystem::directory_iterator end, dir(t_reportsDir);
+          dir != end;
+          ++dir )
     {
       openstudio::path p = *dir;
       if (openstudio::toString(p.extension()) == ".html" || openstudio::toString(p.extension()) == ".htm") {
@@ -317,7 +313,7 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
   //      LOG(Debug, "Tree finished, error getting html file");
   //      // no html file exists
   //    }
-  //  } 
+  //  }
   //} catch (const std::exception &e) {
   //  LOG(Debug, "Tree finished, error getting status: " << e.what());
   //} catch (...) {
@@ -340,11 +336,11 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
     fullPathString.prepend("file:///");
 
     if (openstudio::toString(report.filename()) == "eplustbl.html" || openstudio::toString(report.filename()) == "eplustbl.htm"){
-      
+
       m_comboBox->addItem("EnergyPlus Results",fullPathString);
 
     }else{
-      
+
       ++num;
 
       if (file.open(QFile::ReadOnly)){

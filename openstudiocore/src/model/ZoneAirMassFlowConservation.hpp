@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -85,7 +85,7 @@ class MODEL_API ZoneAirMassFlowConservation : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
+  bool setAdjustZoneMixingForZoneAirMassFlowBalance(bool adjustZoneMixingForZoneAirMassFlowBalance);
 
   void resetAdjustZoneMixingForZoneAirMassFlowBalance();
 
@@ -96,7 +96,7 @@ class MODEL_API ZoneAirMassFlowConservation : public ModelObject {
   void resetSourceZoneInfiltrationTreatment();
 
   bool setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod);
-  
+
   void resetInfiltrationBalancingMethod();
 
   bool setInfiltrationBalancingZones(const std::string& infiltrationBalancingZones);
@@ -135,4 +135,3 @@ typedef std::vector<ZoneAirMassFlowConservation> ZoneAirMassFlowConservationVect
 } // openstudio
 
 #endif // MODEL_ZONEAIRMASSFLOWCONSERVATION_HPP
-

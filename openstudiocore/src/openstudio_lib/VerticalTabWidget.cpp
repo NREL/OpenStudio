@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -125,7 +125,7 @@ void VerticalTabWidget::select()
     } else {
       index++;
     }
-  } 
+  }
 
   setCurrentIndex(index);
 }
@@ -154,7 +154,7 @@ void VerticalTabWidget::setCurrentIndex(int index)
   int yPos = 25;
 
   for(unsigned i = 0; i < m_tabButtons.size(); i++)
-  {  
+  {
     QPushButton * button = m_tabButtons[i];
 
     button->move(0,yPos);
@@ -172,12 +172,12 @@ void VerticalTabWidget::setCurrentIndex(int index)
       // Ignore clicks to the already active tab
       if(currentIndex != index){
         currentIndex = index;
-        
+
         style.append("QPushButton { background-color: blue; background-image: url(\"");
         style.append(imagePath);
         style.append("\"); border: none; background-repeat: 0; }");
 
-        button->setStyleSheet(style); 
+        button->setStyleSheet(style);
 
         currentIndex = index;
 
@@ -199,7 +199,7 @@ void VerticalTabWidget::setCurrentIndex(int index)
         style.append("\"); border: none; background-color: red; background-repeat: 0; }");
       }
 
-      button->setStyleSheet(style); 
+      button->setStyleSheet(style);
     }
   }
 }

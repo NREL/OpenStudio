@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -130,14 +130,12 @@
 namespace openstudio {
 
   OSDocument::OSDocument(openstudio::model::Model library,
-    openstudio::model::Model hvacLibrary,
     const openstudio::path &resourcesPath,
     openstudio::model::OptionalModel model,
     QString filePath, bool isPlugin,
     int startTabIndex, int startSubTabIndex)
     : OSQObjectController(),
     m_compLibrary(library),
-    m_hvacCompLibrary(hvacLibrary),
     m_resourcesPath(resourcesPath),
     m_onlineMeasuresBclDialog(nullptr),
     m_onlineBclDialog(nullptr),
@@ -147,9 +145,6 @@ namespace openstudio {
     m_startTabIndex(startTabIndex),
     m_startSubTabIndex(startSubTabIndex)
   {
-    m_combinedCompLibrary = model::Model(m_compLibrary.clone());
-    m_combinedCompLibrary.insertObjects(m_hvacCompLibrary.objects());
-
     QFile data(":openstudiolib.qss");
 
     static QString style;
@@ -200,6 +195,7 @@ namespace openstudio {
     connect(m_mainWindow, &MainWindow::importSDDClicked, this, &OSDocument::importSDDClicked);
     connect(m_mainWindow, &MainWindow::importIFCClicked, this, &OSDocument::importIFCClicked);
     connect(m_mainWindow, &MainWindow::loadFileClicked, this, &OSDocument::loadFileClicked);
+    connect(m_mainWindow, &MainWindow::changeDefaultLibrariesClicked, this, &OSDocument::changeDefaultLibrariesClicked);
     connect(m_mainWindow, &MainWindow::loadLibraryClicked, this, &OSDocument::loadLibraryClicked);
     connect(m_mainWindow, &MainWindow::newClicked, this, &OSDocument::newClicked);
     connect(m_mainWindow, &MainWindow::exitClicked, this, &OSDocument::exitClicked);
@@ -405,7 +401,7 @@ namespace openstudio {
       ":images/on_space_types_tab.png",
       ":images/off_space_types_tab.png",
       ":images/disabled_space_types_tab.png");
-        
+
     // Geometry
     m_mainWindow->addVerticalTabButton(GEOMETRY,
       "Geometry",
@@ -883,7 +879,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(OUTPUT_VARIABLES, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(SIMULATION_SETTINGS, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(RUBY_SCRIPTS, false);
-    m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, false); 
+    m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, false);
     m_mainWindow->verticalTabWidget()->enableTabButton(RESULTS_SUMMARY, false);
 
     m_mainWindow->verticalTabWidget()->refreshTabButtons();
@@ -907,7 +903,7 @@ namespace openstudio {
     m_mainWindow->verticalTabWidget()->enableTabButton(OUTPUT_VARIABLES, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(SIMULATION_SETTINGS, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(RUBY_SCRIPTS, true);
-    m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, true); 
+    m_mainWindow->verticalTabWidget()->enableTabButton(RUN_SIMULATION, true);
     m_mainWindow->verticalTabWidget()->enableTabButton(RESULTS_SUMMARY, true);
 
     m_mainWindow->verticalTabWidget()->refreshTabButtons();
@@ -1003,7 +999,7 @@ namespace openstudio {
           epwInUserPath = searchFilesDir / *weatherFilePath;
           if (boost::filesystem::exists(epwInUserPath)){
             epwInUserPathChecksum = checksum(epwInUserPath);
-          } 
+          }
         }
       }
 
@@ -1162,6 +1158,10 @@ namespace openstudio {
 
     m_mainWindow->view()->selectSubTabByIndex(m_subTabId);
 
+    bool enableFileImportActions = true;
+    bool enablePreferencesActions = true;
+    bool enableComponentsMeasuresActions = true;
+
     switch (m_mainTabId)
     {
     case SITE:
@@ -1181,6 +1181,9 @@ namespace openstudio {
       break;
     case GEOMETRY:
       m_mainRightColumnController->configureForGeometrySubTab(m_subTabId);
+      enableFileImportActions = false;
+      enablePreferencesActions = false;
+      enableComponentsMeasuresActions = false;
       break;
     case FACILITY:
       m_mainRightColumnController->configureForFacilitySubTab(m_subTabId);
@@ -1220,6 +1223,10 @@ namespace openstudio {
     default:
       break;
     }
+
+    m_mainWindow->enableFileImportActions(enableFileImportActions);
+    m_mainWindow->enablePreferencesActions(enablePreferencesActions);
+    m_mainWindow->enableComponentsMeasuresActions(enableComponentsMeasuresActions);
 
     //m_mainWindow->selectHorizontalTab(LIBRARY);
 
@@ -1355,7 +1362,7 @@ namespace openstudio {
 
     WorkflowJSON workflow = m_model.workflowJSON();
     std::vector<WorkflowStep> steps;
-      
+
     // standard report measure
     bool srmAdded = false;
     boost::optional<BCLMeasure> srm = standardReportMeasure();
@@ -1387,7 +1394,7 @@ namespace openstudio {
         return;
       }
     }
-       
+
     if (!srmAdded){
       QMessageBox::warning(mainWindow(), "OpenStudio Results Measure Not Found", "Could not find or download OpenStudio Results Measure.");
       enable();
@@ -1432,6 +1439,7 @@ namespace openstudio {
       // saves the model to modelTempDir / m_savePath.filename()
       // also copies the temp files to user location
       bool saved = saveModel(this->model(), modelPath, toPath(m_modelTempDir));
+      OS_ASSERT(saved);
 
       this->setSavePath(toQString(modelPath));
 
@@ -1504,6 +1512,7 @@ namespace openstudio {
       // saves the model to modelTempDir / filePath.filename()
       // also copies the temp files to user location
       bool saved = saveModel(this->model(), modelPath, toPath(m_modelTempDir));
+      OS_ASSERT(saved);
 
       this->setSavePath(toQString(modelPath));
 
@@ -1525,30 +1534,7 @@ namespace openstudio {
   {
     m_compLibrary = model;
 
-    m_combinedCompLibrary = model::Model(m_compLibrary.clone());
-    m_combinedCompLibrary.insertObjects(m_hvacCompLibrary.objects());
-
     onVerticalTabSelected(m_mainTabId);
-  }
-
-  openstudio::model::Model OSDocument::hvacComponentLibrary() const
-  {
-    return m_hvacCompLibrary;
-  }
-
-  void OSDocument::setHVACComponentLibrary(const openstudio::model::Model& model)
-  {
-    m_hvacCompLibrary = model;
-
-    m_combinedCompLibrary = model::Model(m_compLibrary.clone());
-    m_combinedCompLibrary.insertObjects(m_hvacCompLibrary.objects());
-
-    onVerticalTabSelected(m_mainTabId);
-  }
-
-  openstudio::model::Model OSDocument::combinedComponentLibrary() const
-  {
-    return m_combinedCompLibrary;
   }
 
   bool OSDocument::fromModel(const OSItemId& itemId) const
@@ -1558,11 +1544,7 @@ namespace openstudio {
 
   bool OSDocument::fromComponentLibrary(const OSItemId& itemId) const
   {
-    bool fromCompLibrary = (itemId.sourceId() == modelToSourceId(m_compLibrary));
-    bool fromHVACCompLibrary = (itemId.sourceId() == modelToSourceId(m_hvacCompLibrary));
-    bool fromCombinedCompLibrary = (itemId.sourceId() == modelToSourceId(m_combinedCompLibrary));
-    bool result = (fromCompLibrary || fromHVACCompLibrary || fromCombinedCompLibrary);
-    return result;
+    return (itemId.sourceId() == modelToSourceId(m_compLibrary));
   }
 
   bool OSDocument::fromBCL(const OSItemId& itemId) const
@@ -1602,18 +1584,11 @@ namespace openstudio {
       Handle handle(toUUID(itemId.itemId()));
       return m_model.getModelObject<model::ModelObject>(handle);
     }
+
     else if (fromComponentLibrary(itemId)){
       if (itemId.sourceId() == modelToSourceId(m_compLibrary)){
         Handle handle(toUUID(itemId.itemId()));
         return m_compLibrary.getModelObject<model::ModelObject>(handle);
-      }
-      else if (itemId.sourceId() == modelToSourceId(m_hvacCompLibrary)){
-        Handle handle(toUUID(itemId.itemId()));
-        return m_hvacCompLibrary.getModelObject<model::ModelObject>(handle);
-      }
-      else if (itemId.sourceId() == modelToSourceId(m_combinedCompLibrary)){
-        Handle handle(toUUID(itemId.itemId()));
-        return m_combinedCompLibrary.getModelObject<model::ModelObject>(handle);
       }
     }
 

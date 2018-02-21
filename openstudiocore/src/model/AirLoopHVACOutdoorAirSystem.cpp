@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -101,7 +101,10 @@ namespace detail {
   const std::vector<std::string>& AirLoopHVACOutdoorAirSystem_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not Appropriate: No variables available
+      // The impact of using outside air/mechanical ventilation is described in the section: Outdoor Air Ventilation Outputs.
     }
     return result;
   }
@@ -155,9 +158,9 @@ namespace detail {
     return this->getTarget(openstudio::OS_AirLoopHVAC_OutdoorAirSystemFields::ControllerName)->cast<ControllerOutdoorAir>();
   }
 
-  void AirLoopHVACOutdoorAirSystem_Impl::setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir )
+  bool AirLoopHVACOutdoorAirSystem_Impl::setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir )
   {
-    this->setPointer(openstudio::OS_AirLoopHVAC_OutdoorAirSystemFields::ControllerName,controllerOutdoorAir.handle());
+    return this->setPointer(openstudio::OS_AirLoopHVAC_OutdoorAirSystemFields::ControllerName,controllerOutdoorAir.handle());
   }
 
   ModelObject AirLoopHVACOutdoorAirSystem_Impl::clone(Model model) const
@@ -683,7 +686,7 @@ AirLoopHVACOutdoorAirSystem::AirLoopHVACOutdoorAirSystem(Model & model, const Co
 
 AirLoopHVACOutdoorAirSystem::AirLoopHVACOutdoorAirSystem(
     std::shared_ptr<detail::AirLoopHVACOutdoorAirSystem_Impl> impl)
-  : HVACComponent(impl)
+  : HVACComponent(std::move(impl))
 {
 }
 
@@ -732,9 +735,9 @@ ControllerOutdoorAir AirLoopHVACOutdoorAirSystem::getControllerOutdoorAir() cons
   return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->getControllerOutdoorAir();
 }
 
-void AirLoopHVACOutdoorAirSystem::setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir )
+bool AirLoopHVACOutdoorAirSystem::setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir )
 {
-  getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->setControllerOutdoorAir(controllerOutdoorAir);
+  return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->setControllerOutdoorAir(controllerOutdoorAir);
 }
 
 ModelObject AirLoopHVACOutdoorAirSystem::clone(Model model) const

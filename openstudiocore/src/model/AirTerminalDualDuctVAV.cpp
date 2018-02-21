@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -250,6 +250,23 @@ namespace detail {
     return HVACComponent_Impl::isRemovable();
   }
 
+  boost::optional<double> AirTerminalDualDuctVAV_Impl::autosizedMaximumDamperAirFlowRate() const {
+    return getAutosizedValue("Maximum Air Flow Rate", "m3/s");
+  }
+
+  void AirTerminalDualDuctVAV_Impl::autosize() {
+    autosizeMaximumDamperAirFlowRate();
+  }
+
+  void AirTerminalDualDuctVAV_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumDamperAirFlowRate();
+    if (val) {
+      setMaximumDamperAirFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 AirTerminalDualDuctVAV::AirTerminalDualDuctVAV(const Model& model)
@@ -321,11 +338,26 @@ void AirTerminalDualDuctVAV::resetDesignSpecificationOutdoorAirObject() {
   getImpl<detail::AirTerminalDualDuctVAV_Impl>()->resetDesignSpecificationOutdoorAirObject();
 }
 
+/*
+ *void AirTerminalDualDuctVAV::autosize() {
+ *  getImpl<detail::AirTerminalDualDuctVAV_Impl>()->autosize();
+ *}
+ *
+ *void AirTerminalDualDuctVAV::applySizingValues() {
+ *  getImpl<detail::AirTerminalDualDuctVAV_Impl>()->applySizingValues();
+ *}
+ */
+
+
 /// @cond
 AirTerminalDualDuctVAV::AirTerminalDualDuctVAV(std::shared_ptr<detail::AirTerminalDualDuctVAV_Impl> impl)
-  : Mixer(impl)
+  : Mixer(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> AirTerminalDualDuctVAV::autosizedMaximumDamperAirFlowRate() const {
+    return getImpl<detail::AirTerminalDualDuctVAV_Impl>()->autosizedMaximumDamperAirFlowRate();
+  }
 
 } // model
 } // openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -61,8 +61,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
+    // TODO: remove
     virtual const std::vector<std::string>& outputVariableNames() const override;
-    
+
     virtual IddObjectType iddObjectType() const override;
 
     //@}
@@ -73,11 +74,11 @@ namespace detail {
 
     boost::optional<double> numberofPeople() const;
 
-    boost::optional<double> peopleperSpaceFloorArea() const; 
+    boost::optional<double> peopleperSpaceFloorArea() const;
 
     boost::optional<double> spaceFloorAreaperPerson() const;
 
-    double fractionRadiant() const;    
+    double fractionRadiant() const;
 
     boost::optional<double> sensibleHeatFraction() const;
 
@@ -111,22 +112,22 @@ namespace detail {
     bool setNumberofPeople(boost::optional<double> numberofPeople);
 
     bool setPeopleperSpaceFloorArea(boost::optional<double> peopleperSpaceFloorArea);
-    
+
     bool setSpaceFloorAreaperPerson(boost::optional<double> spaceFloorAreaperPerson);
 
     bool setFractionRadiant(double fractionRadiant);
 
-    bool setSensibleHeatFraction(double sensibleHeatFraction);  
+    bool setSensibleHeatFraction(double sensibleHeatFraction);
 
     void resetSensibleHeatFraction();
 
     void autocalculateSensibleHeatFraction();
 
     bool setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate);
-    
+
     void resetCarbonDioxideGenerationRate();
 
-    void setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings);
+    bool setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings);
 
     void resetEnableASHRAE55ComfortWarnings();
 
@@ -153,15 +154,15 @@ namespace detail {
     /** Returns the m^2/person represented by this definition, assuming floorArea (m^2). */
     double getFloorAreaPerPerson(double floorArea) const;
 
-    /** If method is a \link validNumberOfPeopleCalculationMethodValues valid number of people 
-     *  calculation method \endlnk, changes this definition to an equivalent number of people, 
+    /** If method is a \link validNumberOfPeopleCalculationMethodValues valid number of people
+     *  calculation method \endlnk, changes this definition to an equivalent number of people,
      *  under the assumption of floorArea (m^2). */
     bool setNumberOfPeopleCalculationMethod(const std::string& method,double floorArea);
 
     //@}
    private:
     REGISTER_LOGGER("openstudio.model.PeopleDefinition");
-    
+
     std::vector<std::string> numberofPeopleCalculationMethodValues() const;
     std::vector<std::string> meanRadiantTemperatureCalculationTypeValues() const;
     std::vector<std::string> thermalComfortModelTypeValues() const;
@@ -173,4 +174,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_PEOPLEDEFINITION_IMPL_HPP
-

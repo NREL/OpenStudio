@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -114,7 +114,7 @@ TEST_F(ModelFixture, OtherEquipment_EndUseSubcategory)
   OtherEquipment equipment(definition);
 
   EXPECT_EQ(equipment.endUseSubcategory(), "General");
-  EXPECT_TRUE(equipment.isEndUseSubcategoryDefaulted());
+  EXPECT_FALSE(equipment.isEndUseSubcategoryDefaulted());
   EXPECT_TRUE(equipment.setEndUseSubcategory("Category A"));
   EXPECT_EQ(equipment.endUseSubcategory(), "Category A");
   EXPECT_TRUE(equipment.setEndUseSubcategory("Category B"));

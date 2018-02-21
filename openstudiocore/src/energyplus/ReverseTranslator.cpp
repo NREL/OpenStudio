@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -90,7 +90,8 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
 
     if (!idfFile->isValid(StrictnessLevel::Draft)){
 
-      LOG(Error, "Idf file at path ='" << toString(path) << "' is not valid to draft strictness");
+      LOG(Error, "Idf file at path ='" << toString(path) << "' is not valid to draft strictness.");
+      LOG(Error, "Check that IDF is of correct version and that all fields are valid against Energy+.idd.");
       LOG(Error, idfFile->validityReport(StrictnessLevel::Draft));
       return boost::none;
 
@@ -480,7 +481,17 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::Exterior_Lights :
     {
-      //modelObject = translateExteriorLights(workspaceObject);
+      modelObject = translateExteriorLights(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Exterior_FuelEquipment :
+    {
+      modelObject = translateExteriorFuelEquipment(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Exterior_WaterEquipment :
+    {
+      modelObject = translateExteriorWaterEquipment(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::ElectricLoadCenter_Storage_Simple :
@@ -492,7 +503,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     {
       modelObject = translateElectricLoadCenterStorageConverter(workspaceObject);
       break;
-    }  
+    }
   case openstudio::IddObjectType::EnergyManagementSystem_Actuator:
   {
     modelObject = translateEnergyManagementSystemActuator(workspaceObject);
@@ -942,7 +953,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::ZoneHVAC_EquipmentList :
     {
       //modelObject = translateZoneHVACEquipmentList(workspaceObject);
-      break; 
+      break;
     }
   case openstudio::IddObjectType::ZoneHVAC_IdealLoadsAirSystem :
     {

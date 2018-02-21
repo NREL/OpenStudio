@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -72,7 +72,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPump( 
+boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPump(
     ZoneHVACWaterToAirHeatPump& modelObject)
 {
   boost::optional<std::string> s;
@@ -148,7 +148,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
 
   // Outdoor Air Mixer
   if( translateMixer() ) {
-    std::string oaMixerName = baseName + " OA Mixer";  
+    std::string oaMixerName = baseName + " OA Mixer";
 
     IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);
     _outdoorAirMixer.setName(oaMixerName);
@@ -198,7 +198,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
   if( modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() )
   {
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::NoLoadSupplyAirFlowRate,"Autosize");
-  } 
+  }
   else if( (value = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisNeeded()) )
   {
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::NoLoadSupplyAirFlowRate,value.get());
@@ -224,7 +224,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
     idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatingOutdoorAirFlowRate,value.get());
   }
 
-  // OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded  
+  // OutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded
   if( modelObject.isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() )
   {
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::NoLoadOutdoorAirFlowRate,"Autosize");
@@ -281,14 +281,14 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
     }
   }
 
-  // HeatingCoilObjectType and Name  
+  // HeatingCoilObjectType and Name
   HVACComponent heatingCoil = modelObject.heatingCoil();
 
   if( boost::optional<IdfObject> _heatingCoil = translateAndMapModelObject(heatingCoil) )
   {
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilObjectType,_heatingCoil->iddObject().name() );
 
-    idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName,_heatingCoil->name().get() ); 
+    idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName,_heatingCoil->name().get() );
 
     if( _heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_WaterToAirHeatPump_EquationFit ) {
       _heatingCoil->setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirInletNodeName,coolingCoilOutletNodeName);
@@ -406,7 +406,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
   // MaximumSupplyAirTemperaturefromSupplementalHeater
   if( modelObject.isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() )
   {
-    idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater,"Autosize"); 
+    idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater,"Autosize");
   }
   else if( (value = modelObject.maximumSupplyAirTemperaturefromSupplementalHeater()) )
   {

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -54,12 +54,12 @@ void UnitsFixture::TearDown() {
 }
 
 // initialize static members
-void UnitsFixture::SetUpTestCase() 
+void UnitsFixture::SetUpTestCase()
 {
   logFile = FileLogSink(toPath("./UnitsFixture.log"));
   logFile->setLogLevel(Debug);
   Logger::instance().standardOutLogger().disable();
-  
+
   tol = 1.0E-8;
 
   openstudio::DoubleVector vals = openstudio::toStandardVector(openstudio::randVector(0.0,1000.0,8760u));

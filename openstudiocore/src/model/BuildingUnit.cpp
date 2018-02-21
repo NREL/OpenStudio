@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,6 +38,7 @@
 #include "Space_Impl.hpp"
 #include "RenderingColor.hpp"
 #include "RenderingColor_Impl.hpp"
+#include "AdditionalProperties.hpp"
 #include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_BuildingUnit_FieldEnums.hxx>
@@ -122,198 +123,76 @@ namespace detail {
 
   std::vector<std::string> BuildingUnit_Impl::featureNames() const
   {
-    std::set<std::string> nameSet;
-    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
-      boost::optional<std::string> name = group.getString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureName);
-      OS_ASSERT(name);
-      nameSet.insert(*name);
-    }
-    std::vector<std::string> names;
-    names.assign(nameSet.begin(), nameSet.end());
-    return names;
-  }
-
-  boost::optional<ModelExtensibleGroup> BuildingUnit_Impl::getFeatureGroupByName(const std::string &name) const {
-
-    for (ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
-      const boost::optional<std::string> featureName(group.getString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureName));
-      OS_ASSERT(featureName);
-      if (*featureName == name) {
-        return group;
-      }
-    }
-    return boost::none;
+    return this->additionalProperties().featureNames();
   }
 
   boost::optional<std::string> BuildingUnit_Impl::getFeatureDataType(const std::string &name) const
   {
-    boost::optional<std::string> dataType;
-    boost::optional<ModelExtensibleGroup> group(getFeatureGroupByName(name));
-    if (group) {
-      dataType = group->getString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureDataType);
-      OS_ASSERT(dataType);
-    } else {
-      dataType = boost::none;
-    }
-    return dataType;
-  }
-
-  boost::optional<std::string> BuildingUnit_Impl::getFeatureStringAndCheckForType(const std::string& name, const std::string& expectedDataType) const
-  {
-    boost::optional<std::string> value;
-    boost::optional<ModelExtensibleGroup> group(getFeatureGroupByName(name));
-    if (group) {
-      boost::optional<std::string> dataType(group->getString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureDataType));
-      OS_ASSERT(dataType);
-      if (*dataType == expectedDataType) {
-        value = group->getString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureValue);
-      } else {
-        value = boost::none;
-      }
-    } else {
-      value = boost::none;
-    }
-    return value;
+    return this->additionalProperties().getFeatureDataType(name);
   }
 
   boost::optional<std::string> BuildingUnit_Impl::getFeatureAsString(const std::string& name) const
   {
-    return getFeatureStringAndCheckForType(name, "String");
+    return this->additionalProperties().getFeatureAsString(name);
   }
 
   boost::optional<double> BuildingUnit_Impl::getFeatureAsDouble(const std::string& name) const
   {
-    boost::optional<std::string> strValue(getFeatureStringAndCheckForType(name, "Double"));
-    boost::optional<double> value;
-    if (strValue) {
-      try {
-        value = boost::lexical_cast<double>(*strValue);
-      } catch (boost::bad_lexical_cast) {
-        LOG(Error, "Value: " + *strValue + ", not castable to type double.")
-        value = boost::none;
-      }
-    } else {
-      value = boost::none;
-    }
-    return value;
+    return this->additionalProperties().getFeatureAsDouble(name);
   }
 
   boost::optional<int> BuildingUnit_Impl::getFeatureAsInteger(const std::string& name) const
   {
-    boost::optional<std::string> strValue(getFeatureStringAndCheckForType(name, "Integer"));
-    boost::optional<int> value;
-    if (strValue) {
-      try {
-        value = boost::lexical_cast<int>(*strValue);
-      } catch (boost::bad_lexical_cast) {
-        LOG(Error, "Value: " + *strValue + ", not castable to type integer.")
-        value = boost::none;
-      }
-    } else {
-      value = boost::none;
-    }
-    return value;
+    return this->additionalProperties().getFeatureAsInteger(name);
   }
 
   boost::optional<bool> BuildingUnit_Impl::getFeatureAsBoolean(const std::string& name) const
   {
-    boost::optional<std::string> strValue(getFeatureStringAndCheckForType(name, "Boolean"));
-    boost::optional<bool> value;
-    if (strValue) {
-      if (*strValue == "false") {
-        value = false;
-      } else if (*strValue == "true") {
-        value = true;
-      } else {
-        LOG(Error, "Value: " + *strValue + ", not castable to type boolean.")
-        value = boost::none;
-      }
-    } else {
-      value = boost::none;
-    }
-    return value;
+    return this->additionalProperties().getFeatureAsBoolean(name);
   }
 
   std::vector<std::string> BuildingUnit_Impl::suggestedFeatures() const
   {
     std::set<std::string> availableFeatureNames;
+    for (const auto& v : this->additionalProperties().suggestedFeatureNames()){
+      availableFeatureNames.insert(v);
+    }
     availableFeatureNames.insert("NumberOfBedrooms");
     availableFeatureNames.insert("NumberOfBathrooms");
-    for (const BuildingUnit& bldgUnit : this->model().getConcreteModelObjects<BuildingUnit>()) {
-      for (const std::string& featureName : bldgUnit.featureNames()) {
-        availableFeatureNames.insert(featureName);
-      }
-    }
+
     std::vector<std::string> retvals;
     retvals.assign(availableFeatureNames.begin(), availableFeatureNames.end());
     return retvals;
   }
 
-  bool BuildingUnit_Impl::setFeatureGroupDataTypeAndValue(const std::string& name, const std::string& dataType, const std::string& value)
-  {
-    boost::optional<ModelExtensibleGroup> group(getFeatureGroupByName(name));
-    if (group) {
-      const bool dataTypeOK = group->setString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureDataType, dataType, false);
-      const bool valueOK = group->setString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureValue, value, false);
-      // Since we're doing this checking in the public setters, these should always return true.
-      OS_ASSERT(dataTypeOK);
-      OS_ASSERT(valueOK);
-      this->emitChangeSignals();
-      return true;
-    } else {
-      std::vector<std::string> temp;
-      temp.push_back(name);
-      temp.push_back(dataType);
-      temp.push_back(value);
-      ModelExtensibleGroup newgroup = pushExtensibleGroup(temp).cast<ModelExtensibleGroup>();
-      return (!newgroup.empty());
-    }
-  }
-
   bool BuildingUnit_Impl::setFeature(const std::string& name, const std::string& value)
   {
-    return setFeatureGroupDataTypeAndValue(name, "String", value);
+    return this->additionalProperties().setFeature(name, value);
   }
 
   bool BuildingUnit_Impl::setFeature(const std::string& name, const char* value)
   {
-    return setFeature(name, std::string(value));
+    return this->additionalProperties().setFeature(name, value);
   }
 
   bool BuildingUnit_Impl::setFeature(const std::string& name, double value)
   {
-    return setFeatureGroupDataTypeAndValue(name, "Double", boost::lexical_cast<std::string>(value));
+    return this->additionalProperties().setFeature(name, value);
   }
 
   bool BuildingUnit_Impl::setFeature(const std::string& name, int value)
   {
-    return setFeatureGroupDataTypeAndValue(name, "Integer", boost::lexical_cast<std::string>(value));
+    return this->additionalProperties().setFeature(name, value);
   }
 
   bool BuildingUnit_Impl::setFeature(const std::string& name, bool value)
   {
-    std::string strValue(boost::lexical_cast<std::string>(value));
-    if (value) {
-      strValue = "true";
-    } else {
-      strValue = "false";
-    }
-    return setFeatureGroupDataTypeAndValue(name, "Boolean", strValue);
+    return this->additionalProperties().setFeature(name, value);
   }
 
   bool BuildingUnit_Impl::resetFeature(const std::string& name)
   {
-    unsigned n_groups = numExtensibleGroups();
-    for (unsigned i=0; i < n_groups; ++i) {
-      ModelExtensibleGroup group = getExtensibleGroup(i).cast<ModelExtensibleGroup>();
-      const boost::optional<std::string> featureName(group.getString(OS_BuildingUnitExtensibleFields::BuildingUnitFeatureName));
-      OS_ASSERT(featureName);
-      if (*featureName == name) {
-        eraseExtensibleGroup(i);
-        return true;
-      }
-    }
-    return false;
+    return this->additionalProperties().resetFeature(name);
   }
 
 } //detail
@@ -448,7 +327,7 @@ bool BuildingUnit::resetFeature(const std::string& name)
 
 /// @cond
 BuildingUnit::BuildingUnit(std::shared_ptr<detail::BuildingUnit_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

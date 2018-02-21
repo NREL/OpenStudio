@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -69,7 +69,14 @@ namespace detail {
   const std::vector<std::string>& FluidCoolerSingleSpeed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Cooling Tower Fan Electric Power");
+      result.push_back("Cooling Tower Fan Electric Energy");
+      result.push_back("Cooling Tower Heat Transfer Rate");
+      result.push_back("Cooling Tower Inlet Temperature");
+      result.push_back("Cooling Tower Outlet Temperature");
+      result.push_back("Cooling Tower Mass Flow Rate");
     }
     return result;
   }
@@ -279,6 +286,53 @@ namespace detail {
     return false;
   }
 
+  boost::optional<double> FluidCoolerSingleSpeed_Impl::autosizedDesignAirFlowRateUfactorTimesAreaValue() const {
+    return getAutosizedValue("Fluid cooler UA value at design air flow rate based on nominal capacity input", "W/K");
+  }
+
+  boost::optional<double> FluidCoolerSingleSpeed_Impl::autosizedDesignWaterFlowRate() const {
+    return getAutosizedValue("Design Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> FluidCoolerSingleSpeed_Impl::autosizedDesignAirFlowRate() const {
+    return getAutosizedValue("Design Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> FluidCoolerSingleSpeed_Impl::autosizedDesignAirFlowRateFanPower() const {
+    return getAutosizedValue("Fan Power at Design Air Flow Rate", "W");
+  }
+
+  void FluidCoolerSingleSpeed_Impl::autosize() {
+    autosizeDesignAirFlowRateUfactorTimesAreaValue();
+    autosizeDesignWaterFlowRate();
+    autosizeDesignAirFlowRate();
+    autosizeDesignAirFlowRateFanPower();
+  }
+
+  void FluidCoolerSingleSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignAirFlowRateUfactorTimesAreaValue();
+    if (val) {
+      setDesignAirFlowRateUfactorTimesAreaValue(val.get());
+    }
+
+    val = autosizedDesignWaterFlowRate();
+    if (val) {
+      setDesignWaterFlowRate(val.get());
+    }
+
+    val = autosizedDesignAirFlowRate();
+    if (val) {
+      setDesignAirFlowRate(val.get());
+    }
+
+    val = autosizedDesignAirFlowRateFanPower();
+    if (val) {
+      setDesignAirFlowRateFanPower(val.get());
+    }
+
+  }
+
 } // detail
 
 FluidCoolerSingleSpeed::FluidCoolerSingleSpeed(const Model& model)
@@ -424,9 +478,25 @@ void FluidCoolerSingleSpeed::resetOutdoorAirInletNode() {
 
 /// @cond
 FluidCoolerSingleSpeed::FluidCoolerSingleSpeed(std::shared_ptr<detail::FluidCoolerSingleSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> FluidCoolerSingleSpeed::autosizedDesignAirFlowRateUfactorTimesAreaValue() const {
+    return getImpl<detail::FluidCoolerSingleSpeed_Impl>()->autosizedDesignAirFlowRateUfactorTimesAreaValue();
+  }
+
+  boost::optional<double> FluidCoolerSingleSpeed::autosizedDesignWaterFlowRate() const {
+    return getImpl<detail::FluidCoolerSingleSpeed_Impl>()->autosizedDesignWaterFlowRate();
+  }
+
+  boost::optional<double> FluidCoolerSingleSpeed::autosizedDesignAirFlowRate() const {
+    return getImpl<detail::FluidCoolerSingleSpeed_Impl>()->autosizedDesignAirFlowRate();
+  }
+
+  boost::optional<double> FluidCoolerSingleSpeed::autosizedDesignAirFlowRateFanPower() const {
+    return getImpl<detail::FluidCoolerSingleSpeed_Impl>()->autosizedDesignAirFlowRateFanPower();
+  }
 
 } // model
 } // openstudio

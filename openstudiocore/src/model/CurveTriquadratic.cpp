@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -68,7 +68,12 @@ namespace detail {
   const std::vector<std::string>& CurveTriquadratic_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Performance Curve Output Value");
+      result.push_back("Performance Curve Input Variable 1 Value");
+      result.push_back("Performance Curve Input Variable 2 Value");
+      result.push_back("Performance Curve Input Variable 3 Value");
     }
     return result;
   }
@@ -348,7 +353,7 @@ namespace detail {
     return isEmpty(OS_Curve_TriquadraticFields::OutputUnitType);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient1Constant(boost::optional<double> coefficient1Constant) {
+  bool CurveTriquadratic_Impl::setCoefficient1Constant(boost::optional<double> coefficient1Constant) {
     bool result = false;
     if (coefficient1Constant) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient1Constant, coefficient1Constant.get());
@@ -356,6 +361,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient1Constant, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient1Constant() {
@@ -363,7 +369,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient2xPOW2(boost::optional<double> coefficient2xPOW2) {
+  bool CurveTriquadratic_Impl::setCoefficient2xPOW2(boost::optional<double> coefficient2xPOW2) {
     bool result = false;
     if (coefficient2xPOW2) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient2x_POW_2, coefficient2xPOW2.get());
@@ -371,6 +377,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient2x_POW_2, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient2xPOW2() {
@@ -378,7 +385,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient3x(boost::optional<double> coefficient3x) {
+  bool CurveTriquadratic_Impl::setCoefficient3x(boost::optional<double> coefficient3x) {
     bool result = false;
     if (coefficient3x) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient3x, coefficient3x.get());
@@ -386,6 +393,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient3x, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient3x() {
@@ -393,7 +401,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient4yPOW2(boost::optional<double> coefficient4yPOW2) {
+  bool CurveTriquadratic_Impl::setCoefficient4yPOW2(boost::optional<double> coefficient4yPOW2) {
     bool result = false;
     if (coefficient4yPOW2) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient4y_POW_2, coefficient4yPOW2.get());
@@ -401,6 +409,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient4y_POW_2, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient4yPOW2() {
@@ -408,7 +417,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient5y(boost::optional<double> coefficient5y) {
+  bool CurveTriquadratic_Impl::setCoefficient5y(boost::optional<double> coefficient5y) {
     bool result = false;
     if (coefficient5y) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient5y, coefficient5y.get());
@@ -416,6 +425,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient5y, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient5y() {
@@ -423,7 +433,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient6zPOW2(boost::optional<double> coefficient6zPOW2) {
+  bool CurveTriquadratic_Impl::setCoefficient6zPOW2(boost::optional<double> coefficient6zPOW2) {
     bool result = false;
     if (coefficient6zPOW2) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient6z_POW_2, coefficient6zPOW2.get());
@@ -431,6 +441,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient6z_POW_2, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient6zPOW2() {
@@ -438,7 +449,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient7z(boost::optional<double> coefficient7z) {
+  bool CurveTriquadratic_Impl::setCoefficient7z(boost::optional<double> coefficient7z) {
     bool result = false;
     if (coefficient7z) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient7z, coefficient7z.get());
@@ -446,6 +457,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient7z, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient7z() {
@@ -453,7 +465,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient8xPOW2TIMESYPOW2(boost::optional<double> coefficient8xPOW2TIMESYPOW2) {
+  bool CurveTriquadratic_Impl::setCoefficient8xPOW2TIMESYPOW2(boost::optional<double> coefficient8xPOW2TIMESYPOW2) {
     bool result = false;
     if (coefficient8xPOW2TIMESYPOW2) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient8x_POW_2_TIMES_y_POW_2, coefficient8xPOW2TIMESYPOW2.get());
@@ -461,6 +473,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient8x_POW_2_TIMES_y_POW_2, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient8xPOW2TIMESYPOW2() {
@@ -468,7 +481,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient9xTIMESY(boost::optional<double> coefficient9xTIMESY) {
+  bool CurveTriquadratic_Impl::setCoefficient9xTIMESY(boost::optional<double> coefficient9xTIMESY) {
     bool result = false;
     if (coefficient9xTIMESY) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient9x_TIMES_y, coefficient9xTIMESY.get());
@@ -476,6 +489,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient9x_TIMES_y, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient9xTIMESY() {
@@ -483,7 +497,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient10xTIMESYPOW2(boost::optional<double> coefficient10xTIMESYPOW2) {
+  bool CurveTriquadratic_Impl::setCoefficient10xTIMESYPOW2(boost::optional<double> coefficient10xTIMESYPOW2) {
     bool result = false;
     if (coefficient10xTIMESYPOW2) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient10x_TIMES_y_POW_2, coefficient10xTIMESYPOW2.get());
@@ -491,6 +505,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient10x_TIMES_y_POW_2, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient10xTIMESYPOW2() {
@@ -498,7 +513,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient11xPOW2TIMESY(boost::optional<double> coefficient11xPOW2TIMESY) {
+  bool CurveTriquadratic_Impl::setCoefficient11xPOW2TIMESY(boost::optional<double> coefficient11xPOW2TIMESY) {
     bool result = false;
     if (coefficient11xPOW2TIMESY) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient11x_POW_2_TIMES_y, coefficient11xPOW2TIMESY.get());
@@ -506,6 +521,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient11x_POW_2_TIMES_y, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient11xPOW2TIMESY() {
@@ -513,7 +529,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient12xPOW2TIMESZPOW2(boost::optional<double> coefficient12xPOW2TIMESZPOW2) {
+  bool CurveTriquadratic_Impl::setCoefficient12xPOW2TIMESZPOW2(boost::optional<double> coefficient12xPOW2TIMESZPOW2) {
     bool result = false;
     if (coefficient12xPOW2TIMESZPOW2) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient12x_POW_2_TIMES_z_POW_2, coefficient12xPOW2TIMESZPOW2.get());
@@ -521,6 +537,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient12x_POW_2_TIMES_z_POW_2, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient12xPOW2TIMESZPOW2() {
@@ -528,7 +545,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient13xTIMESZ(boost::optional<double> coefficient13xTIMESZ) {
+  bool CurveTriquadratic_Impl::setCoefficient13xTIMESZ(boost::optional<double> coefficient13xTIMESZ) {
     bool result = false;
     if (coefficient13xTIMESZ) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient13x_TIMES_z, coefficient13xTIMESZ.get());
@@ -536,6 +553,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient13x_TIMES_z, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient13xTIMESZ() {
@@ -543,7 +561,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient14xTIMESZPOW2(boost::optional<double> coefficient14xTIMESZPOW2) {
+  bool CurveTriquadratic_Impl::setCoefficient14xTIMESZPOW2(boost::optional<double> coefficient14xTIMESZPOW2) {
     bool result = false;
     if (coefficient14xTIMESZPOW2) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient14x_TIMES_z_POW_2, coefficient14xTIMESZPOW2.get());
@@ -551,6 +569,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient14x_TIMES_z_POW_2, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient14xTIMESZPOW2() {
@@ -558,7 +577,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient15xPOW2TIMESZ(boost::optional<double> coefficient15xPOW2TIMESZ) {
+  bool CurveTriquadratic_Impl::setCoefficient15xPOW2TIMESZ(boost::optional<double> coefficient15xPOW2TIMESZ) {
     bool result = false;
     if (coefficient15xPOW2TIMESZ) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient15x_POW_2_TIMES_z, coefficient15xPOW2TIMESZ.get());
@@ -566,6 +585,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient15x_POW_2_TIMES_z, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient15xPOW2TIMESZ() {
@@ -573,7 +593,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient16yPOW2TIMESZPOW2(boost::optional<double> coefficient16yPOW2TIMESZPOW2) {
+  bool CurveTriquadratic_Impl::setCoefficient16yPOW2TIMESZPOW2(boost::optional<double> coefficient16yPOW2TIMESZPOW2) {
     bool result = false;
     if (coefficient16yPOW2TIMESZPOW2) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient16y_POW_2_TIMES_z_POW_2, coefficient16yPOW2TIMESZPOW2.get());
@@ -581,6 +601,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient16y_POW_2_TIMES_z_POW_2, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient16yPOW2TIMESZPOW2() {
@@ -588,7 +609,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient17yTIMESZ(boost::optional<double> coefficient17yTIMESZ) {
+  bool CurveTriquadratic_Impl::setCoefficient17yTIMESZ(boost::optional<double> coefficient17yTIMESZ) {
     bool result = false;
     if (coefficient17yTIMESZ) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient17y_TIMES_z, coefficient17yTIMESZ.get());
@@ -596,6 +617,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient17y_TIMES_z, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient17yTIMESZ() {
@@ -603,7 +625,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient18yTIMESZPOW2(boost::optional<double> coefficient18yTIMESZPOW2) {
+  bool CurveTriquadratic_Impl::setCoefficient18yTIMESZPOW2(boost::optional<double> coefficient18yTIMESZPOW2) {
     bool result = false;
     if (coefficient18yTIMESZPOW2) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient18y_TIMES_z_POW_2, coefficient18yTIMESZPOW2.get());
@@ -611,6 +633,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient18y_TIMES_z_POW_2, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient18yTIMESZPOW2() {
@@ -618,7 +641,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient19yPOW2TIMESZ(boost::optional<double> coefficient19yPOW2TIMESZ) {
+  bool CurveTriquadratic_Impl::setCoefficient19yPOW2TIMESZ(boost::optional<double> coefficient19yPOW2TIMESZ) {
     bool result = false;
     if (coefficient19yPOW2TIMESZ) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient19y_POW_2_TIMES_z, coefficient19yPOW2TIMESZ.get());
@@ -626,6 +649,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient19y_POW_2_TIMES_z, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient19yPOW2TIMESZ() {
@@ -633,7 +657,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient20xPOW2TIMESYPOW2TIMESZPOW2(boost::optional<double> coefficient20xPOW2TIMESYPOW2TIMESZPOW2) {
+  bool CurveTriquadratic_Impl::setCoefficient20xPOW2TIMESYPOW2TIMESZPOW2(boost::optional<double> coefficient20xPOW2TIMESYPOW2TIMESZPOW2) {
     bool result = false;
     if (coefficient20xPOW2TIMESYPOW2TIMESZPOW2) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient20x_POW_2_TIMES_y_POW_2_TIMES_z_POW_2, coefficient20xPOW2TIMESYPOW2TIMESZPOW2.get());
@@ -641,6 +665,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient20x_POW_2_TIMES_y_POW_2_TIMES_z_POW_2, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient20xPOW2TIMESYPOW2TIMESZPOW2() {
@@ -648,7 +673,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient21xPOW2TIMESYPOW2TIMESZ(boost::optional<double> coefficient21xPOW2TIMESYPOW2TIMESZ) {
+  bool CurveTriquadratic_Impl::setCoefficient21xPOW2TIMESYPOW2TIMESZ(boost::optional<double> coefficient21xPOW2TIMESYPOW2TIMESZ) {
     bool result = false;
     if (coefficient21xPOW2TIMESYPOW2TIMESZ) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient21x_POW_2_TIMES_y_POW_2_TIMES_z, coefficient21xPOW2TIMESYPOW2TIMESZ.get());
@@ -656,6 +681,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient21x_POW_2_TIMES_y_POW_2_TIMES_z, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient21xPOW2TIMESYPOW2TIMESZ() {
@@ -663,7 +689,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient22xPOW2TIMESYTIMESZPOW2(boost::optional<double> coefficient22xPOW2TIMESYTIMESZPOW2) {
+  bool CurveTriquadratic_Impl::setCoefficient22xPOW2TIMESYTIMESZPOW2(boost::optional<double> coefficient22xPOW2TIMESYTIMESZPOW2) {
     bool result = false;
     if (coefficient22xPOW2TIMESYTIMESZPOW2) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient22x_POW_2_TIMES_y_TIMES_z_POW_2, coefficient22xPOW2TIMESYTIMESZPOW2.get());
@@ -671,6 +697,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient22x_POW_2_TIMES_y_TIMES_z_POW_2, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient22xPOW2TIMESYTIMESZPOW2() {
@@ -678,7 +705,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient23xTIMESYPOW2TIMESZPOW2(boost::optional<double> coefficient23xTIMESYPOW2TIMESZPOW2) {
+  bool CurveTriquadratic_Impl::setCoefficient23xTIMESYPOW2TIMESZPOW2(boost::optional<double> coefficient23xTIMESYPOW2TIMESZPOW2) {
     bool result = false;
     if (coefficient23xTIMESYPOW2TIMESZPOW2) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient23x_TIMES_y_POW_2_TIMES_z_POW_2, coefficient23xTIMESYPOW2TIMESZPOW2.get());
@@ -686,6 +713,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient23x_TIMES_y_POW_2_TIMES_z_POW_2, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient23xTIMESYPOW2TIMESZPOW2() {
@@ -693,7 +721,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient24xPOW2TIMESYTIMESZ(boost::optional<double> coefficient24xPOW2TIMESYTIMESZ) {
+  bool CurveTriquadratic_Impl::setCoefficient24xPOW2TIMESYTIMESZ(boost::optional<double> coefficient24xPOW2TIMESYTIMESZ) {
     bool result = false;
     if (coefficient24xPOW2TIMESYTIMESZ) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient24x_POW_2_TIMES_y_TIMES_z, coefficient24xPOW2TIMESYTIMESZ.get());
@@ -701,6 +729,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient24x_POW_2_TIMES_y_TIMES_z, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient24xPOW2TIMESYTIMESZ() {
@@ -708,7 +737,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient25xTIMESYPOW2TIMESZ(boost::optional<double> coefficient25xTIMESYPOW2TIMESZ) {
+  bool CurveTriquadratic_Impl::setCoefficient25xTIMESYPOW2TIMESZ(boost::optional<double> coefficient25xTIMESYPOW2TIMESZ) {
     bool result = false;
     if (coefficient25xTIMESYPOW2TIMESZ) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient25x_TIMES_y_POW_2_TIMES_z, coefficient25xTIMESYPOW2TIMESZ.get());
@@ -716,6 +745,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient25x_TIMES_y_POW_2_TIMES_z, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient25xTIMESYPOW2TIMESZ() {
@@ -723,7 +753,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient26xTIMESYTIMESZPOW2(boost::optional<double> coefficient26xTIMESYTIMESZPOW2) {
+  bool CurveTriquadratic_Impl::setCoefficient26xTIMESYTIMESZPOW2(boost::optional<double> coefficient26xTIMESYTIMESZPOW2) {
     bool result = false;
     if (coefficient26xTIMESYTIMESZPOW2) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient26x_TIMES_y_TIMES_z_POW_2, coefficient26xTIMESYTIMESZPOW2.get());
@@ -731,6 +761,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient26x_TIMES_y_TIMES_z_POW_2, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient26xTIMESYTIMESZPOW2() {
@@ -738,7 +769,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setCoefficient27xTIMESYTIMESZ(boost::optional<double> coefficient27xTIMESYTIMESZ) {
+  bool CurveTriquadratic_Impl::setCoefficient27xTIMESYTIMESZ(boost::optional<double> coefficient27xTIMESYTIMESZ) {
     bool result = false;
     if (coefficient27xTIMESYTIMESZ) {
       result = setDouble(OS_Curve_TriquadraticFields::Coefficient27x_TIMES_y_TIMES_z, coefficient27xTIMESYTIMESZ.get());
@@ -746,6 +777,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::Coefficient27x_TIMES_y_TIMES_z, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetCoefficient27xTIMESYTIMESZ() {
@@ -753,7 +785,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setMinimumValueofx(boost::optional<double> minimumValueofx) {
+  bool CurveTriquadratic_Impl::setMinimumValueofx(boost::optional<double> minimumValueofx) {
     bool result = false;
     if (minimumValueofx) {
       result = setDouble(OS_Curve_TriquadraticFields::MinimumValueofx, minimumValueofx.get());
@@ -761,6 +793,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::MinimumValueofx, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetMinimumValueofx() {
@@ -768,7 +801,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setMaximumValueofx(boost::optional<double> maximumValueofx) {
+  bool CurveTriquadratic_Impl::setMaximumValueofx(boost::optional<double> maximumValueofx) {
     bool result = false;
     if (maximumValueofx) {
       result = setDouble(OS_Curve_TriquadraticFields::MaximumValueofx, maximumValueofx.get());
@@ -776,6 +809,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::MaximumValueofx, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetMaximumValueofx() {
@@ -783,7 +817,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setMinimumValueofy(boost::optional<double> minimumValueofy) {
+  bool CurveTriquadratic_Impl::setMinimumValueofy(boost::optional<double> minimumValueofy) {
     bool result = false;
     if (minimumValueofy) {
       result = setDouble(OS_Curve_TriquadraticFields::MinimumValueofy, minimumValueofy.get());
@@ -791,6 +825,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::MinimumValueofy, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetMinimumValueofy() {
@@ -798,7 +833,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setMaximumValueofy(boost::optional<double> maximumValueofy) {
+  bool CurveTriquadratic_Impl::setMaximumValueofy(boost::optional<double> maximumValueofy) {
     bool result = false;
     if (maximumValueofy) {
       result = setDouble(OS_Curve_TriquadraticFields::MaximumValueofy, maximumValueofy.get());
@@ -806,6 +841,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::MaximumValueofy, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetMaximumValueofy() {
@@ -813,7 +849,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setMinimumValueofz(boost::optional<double> minimumValueofz) {
+  bool CurveTriquadratic_Impl::setMinimumValueofz(boost::optional<double> minimumValueofz) {
     bool result = false;
     if (minimumValueofz) {
       result = setDouble(OS_Curve_TriquadraticFields::MinimumValueofz, minimumValueofz.get());
@@ -821,6 +857,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::MinimumValueofz, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetMinimumValueofz() {
@@ -828,7 +865,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setMaximumValueofz(boost::optional<double> maximumValueofz) {
+  bool CurveTriquadratic_Impl::setMaximumValueofz(boost::optional<double> maximumValueofz) {
     bool result = false;
     if (maximumValueofz) {
       result = setDouble(OS_Curve_TriquadraticFields::MaximumValueofz, maximumValueofz.get());
@@ -836,6 +873,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::MaximumValueofz, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetMaximumValueofz() {
@@ -843,7 +881,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveTriquadratic_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_TriquadraticFields::MinimumCurveOutput, minimumCurveOutput.get());
@@ -851,6 +889,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::MinimumCurveOutput, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetMinimumCurveOutput() {
@@ -858,7 +897,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveTriquadratic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveTriquadratic_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_TriquadraticFields::MaximumCurveOutput, maximumCurveOutput.get());
@@ -866,6 +905,7 @@ namespace detail {
       result = setString(OS_Curve_TriquadraticFields::MaximumCurveOutput, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveTriquadratic_Impl::resetMaximumCurveOutput() {
@@ -1118,280 +1158,280 @@ bool CurveTriquadratic::isOutputUnitTypeDefaulted() const {
   return getImpl<detail::CurveTriquadratic_Impl>()->isOutputUnitTypeDefaulted();
 }
 
-void CurveTriquadratic::setCoefficient1Constant(double coefficient1Constant) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient1Constant(coefficient1Constant);
+bool CurveTriquadratic::setCoefficient1Constant(double coefficient1Constant) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient1Constant(coefficient1Constant);
 }
 
 void CurveTriquadratic::resetCoefficient1Constant() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient1Constant();
 }
 
-void CurveTriquadratic::setCoefficient2xPOW2(double coefficient2xPOW2) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient2xPOW2(coefficient2xPOW2);
+bool CurveTriquadratic::setCoefficient2xPOW2(double coefficient2xPOW2) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient2xPOW2(coefficient2xPOW2);
 }
 
 void CurveTriquadratic::resetCoefficient2xPOW2() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient2xPOW2();
 }
 
-void CurveTriquadratic::setCoefficient3x(double coefficient3x) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient3x(coefficient3x);
+bool CurveTriquadratic::setCoefficient3x(double coefficient3x) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient3x(coefficient3x);
 }
 
 void CurveTriquadratic::resetCoefficient3x() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient3x();
 }
 
-void CurveTriquadratic::setCoefficient4yPOW2(double coefficient4yPOW2) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient4yPOW2(coefficient4yPOW2);
+bool CurveTriquadratic::setCoefficient4yPOW2(double coefficient4yPOW2) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient4yPOW2(coefficient4yPOW2);
 }
 
 void CurveTriquadratic::resetCoefficient4yPOW2() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient4yPOW2();
 }
 
-void CurveTriquadratic::setCoefficient5y(double coefficient5y) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient5y(coefficient5y);
+bool CurveTriquadratic::setCoefficient5y(double coefficient5y) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient5y(coefficient5y);
 }
 
 void CurveTriquadratic::resetCoefficient5y() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient5y();
 }
 
-void CurveTriquadratic::setCoefficient6zPOW2(double coefficient6zPOW2) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient6zPOW2(coefficient6zPOW2);
+bool CurveTriquadratic::setCoefficient6zPOW2(double coefficient6zPOW2) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient6zPOW2(coefficient6zPOW2);
 }
 
 void CurveTriquadratic::resetCoefficient6zPOW2() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient6zPOW2();
 }
 
-void CurveTriquadratic::setCoefficient7z(double coefficient7z) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient7z(coefficient7z);
+bool CurveTriquadratic::setCoefficient7z(double coefficient7z) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient7z(coefficient7z);
 }
 
 void CurveTriquadratic::resetCoefficient7z() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient7z();
 }
 
-void CurveTriquadratic::setCoefficient8xPOW2TIMESYPOW2(double coefficient8xPOW2TIMESYPOW2) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient8xPOW2TIMESYPOW2(coefficient8xPOW2TIMESYPOW2);
+bool CurveTriquadratic::setCoefficient8xPOW2TIMESYPOW2(double coefficient8xPOW2TIMESYPOW2) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient8xPOW2TIMESYPOW2(coefficient8xPOW2TIMESYPOW2);
 }
 
 void CurveTriquadratic::resetCoefficient8xPOW2TIMESYPOW2() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient8xPOW2TIMESYPOW2();
 }
 
-void CurveTriquadratic::setCoefficient9xTIMESY(double coefficient9xTIMESY) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient9xTIMESY(coefficient9xTIMESY);
+bool CurveTriquadratic::setCoefficient9xTIMESY(double coefficient9xTIMESY) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient9xTIMESY(coefficient9xTIMESY);
 }
 
 void CurveTriquadratic::resetCoefficient9xTIMESY() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient9xTIMESY();
 }
 
-void CurveTriquadratic::setCoefficient10xTIMESYPOW2(double coefficient10xTIMESYPOW2) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient10xTIMESYPOW2(coefficient10xTIMESYPOW2);
+bool CurveTriquadratic::setCoefficient10xTIMESYPOW2(double coefficient10xTIMESYPOW2) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient10xTIMESYPOW2(coefficient10xTIMESYPOW2);
 }
 
 void CurveTriquadratic::resetCoefficient10xTIMESYPOW2() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient10xTIMESYPOW2();
 }
 
-void CurveTriquadratic::setCoefficient11xPOW2TIMESY(double coefficient11xPOW2TIMESY) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient11xPOW2TIMESY(coefficient11xPOW2TIMESY);
+bool CurveTriquadratic::setCoefficient11xPOW2TIMESY(double coefficient11xPOW2TIMESY) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient11xPOW2TIMESY(coefficient11xPOW2TIMESY);
 }
 
 void CurveTriquadratic::resetCoefficient11xPOW2TIMESY() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient11xPOW2TIMESY();
 }
 
-void CurveTriquadratic::setCoefficient12xPOW2TIMESZPOW2(double coefficient12xPOW2TIMESZPOW2) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient12xPOW2TIMESZPOW2(coefficient12xPOW2TIMESZPOW2);
+bool CurveTriquadratic::setCoefficient12xPOW2TIMESZPOW2(double coefficient12xPOW2TIMESZPOW2) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient12xPOW2TIMESZPOW2(coefficient12xPOW2TIMESZPOW2);
 }
 
 void CurveTriquadratic::resetCoefficient12xPOW2TIMESZPOW2() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient12xPOW2TIMESZPOW2();
 }
 
-void CurveTriquadratic::setCoefficient13xTIMESZ(double coefficient13xTIMESZ) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient13xTIMESZ(coefficient13xTIMESZ);
+bool CurveTriquadratic::setCoefficient13xTIMESZ(double coefficient13xTIMESZ) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient13xTIMESZ(coefficient13xTIMESZ);
 }
 
 void CurveTriquadratic::resetCoefficient13xTIMESZ() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient13xTIMESZ();
 }
 
-void CurveTriquadratic::setCoefficient14xTIMESZPOW2(double coefficient14xTIMESZPOW2) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient14xTIMESZPOW2(coefficient14xTIMESZPOW2);
+bool CurveTriquadratic::setCoefficient14xTIMESZPOW2(double coefficient14xTIMESZPOW2) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient14xTIMESZPOW2(coefficient14xTIMESZPOW2);
 }
 
 void CurveTriquadratic::resetCoefficient14xTIMESZPOW2() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient14xTIMESZPOW2();
 }
 
-void CurveTriquadratic::setCoefficient15xPOW2TIMESZ(double coefficient15xPOW2TIMESZ) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient15xPOW2TIMESZ(coefficient15xPOW2TIMESZ);
+bool CurveTriquadratic::setCoefficient15xPOW2TIMESZ(double coefficient15xPOW2TIMESZ) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient15xPOW2TIMESZ(coefficient15xPOW2TIMESZ);
 }
 
 void CurveTriquadratic::resetCoefficient15xPOW2TIMESZ() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient15xPOW2TIMESZ();
 }
 
-void CurveTriquadratic::setCoefficient16yPOW2TIMESZPOW2(double coefficient16yPOW2TIMESZPOW2) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient16yPOW2TIMESZPOW2(coefficient16yPOW2TIMESZPOW2);
+bool CurveTriquadratic::setCoefficient16yPOW2TIMESZPOW2(double coefficient16yPOW2TIMESZPOW2) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient16yPOW2TIMESZPOW2(coefficient16yPOW2TIMESZPOW2);
 }
 
 void CurveTriquadratic::resetCoefficient16yPOW2TIMESZPOW2() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient16yPOW2TIMESZPOW2();
 }
 
-void CurveTriquadratic::setCoefficient17yTIMESZ(double coefficient17yTIMESZ) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient17yTIMESZ(coefficient17yTIMESZ);
+bool CurveTriquadratic::setCoefficient17yTIMESZ(double coefficient17yTIMESZ) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient17yTIMESZ(coefficient17yTIMESZ);
 }
 
 void CurveTriquadratic::resetCoefficient17yTIMESZ() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient17yTIMESZ();
 }
 
-void CurveTriquadratic::setCoefficient18yTIMESZPOW2(double coefficient18yTIMESZPOW2) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient18yTIMESZPOW2(coefficient18yTIMESZPOW2);
+bool CurveTriquadratic::setCoefficient18yTIMESZPOW2(double coefficient18yTIMESZPOW2) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient18yTIMESZPOW2(coefficient18yTIMESZPOW2);
 }
 
 void CurveTriquadratic::resetCoefficient18yTIMESZPOW2() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient18yTIMESZPOW2();
 }
 
-void CurveTriquadratic::setCoefficient19yPOW2TIMESZ(double coefficient19yPOW2TIMESZ) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient19yPOW2TIMESZ(coefficient19yPOW2TIMESZ);
+bool CurveTriquadratic::setCoefficient19yPOW2TIMESZ(double coefficient19yPOW2TIMESZ) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient19yPOW2TIMESZ(coefficient19yPOW2TIMESZ);
 }
 
 void CurveTriquadratic::resetCoefficient19yPOW2TIMESZ() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient19yPOW2TIMESZ();
 }
 
-void CurveTriquadratic::setCoefficient20xPOW2TIMESYPOW2TIMESZPOW2(double coefficient20xPOW2TIMESYPOW2TIMESZPOW2) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient20xPOW2TIMESYPOW2TIMESZPOW2(coefficient20xPOW2TIMESYPOW2TIMESZPOW2);
+bool CurveTriquadratic::setCoefficient20xPOW2TIMESYPOW2TIMESZPOW2(double coefficient20xPOW2TIMESYPOW2TIMESZPOW2) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient20xPOW2TIMESYPOW2TIMESZPOW2(coefficient20xPOW2TIMESYPOW2TIMESZPOW2);
 }
 
 void CurveTriquadratic::resetCoefficient20xPOW2TIMESYPOW2TIMESZPOW2() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient20xPOW2TIMESYPOW2TIMESZPOW2();
 }
 
-void CurveTriquadratic::setCoefficient21xPOW2TIMESYPOW2TIMESZ(double coefficient21xPOW2TIMESYPOW2TIMESZ) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient21xPOW2TIMESYPOW2TIMESZ(coefficient21xPOW2TIMESYPOW2TIMESZ);
+bool CurveTriquadratic::setCoefficient21xPOW2TIMESYPOW2TIMESZ(double coefficient21xPOW2TIMESYPOW2TIMESZ) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient21xPOW2TIMESYPOW2TIMESZ(coefficient21xPOW2TIMESYPOW2TIMESZ);
 }
 
 void CurveTriquadratic::resetCoefficient21xPOW2TIMESYPOW2TIMESZ() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient21xPOW2TIMESYPOW2TIMESZ();
 }
 
-void CurveTriquadratic::setCoefficient22xPOW2TIMESYTIMESZPOW2(double coefficient22xPOW2TIMESYTIMESZPOW2) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient22xPOW2TIMESYTIMESZPOW2(coefficient22xPOW2TIMESYTIMESZPOW2);
+bool CurveTriquadratic::setCoefficient22xPOW2TIMESYTIMESZPOW2(double coefficient22xPOW2TIMESYTIMESZPOW2) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient22xPOW2TIMESYTIMESZPOW2(coefficient22xPOW2TIMESYTIMESZPOW2);
 }
 
 void CurveTriquadratic::resetCoefficient22xPOW2TIMESYTIMESZPOW2() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient22xPOW2TIMESYTIMESZPOW2();
 }
 
-void CurveTriquadratic::setCoefficient23xTIMESYPOW2TIMESZPOW2(double coefficient23xTIMESYPOW2TIMESZPOW2) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient23xTIMESYPOW2TIMESZPOW2(coefficient23xTIMESYPOW2TIMESZPOW2);
+bool CurveTriquadratic::setCoefficient23xTIMESYPOW2TIMESZPOW2(double coefficient23xTIMESYPOW2TIMESZPOW2) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient23xTIMESYPOW2TIMESZPOW2(coefficient23xTIMESYPOW2TIMESZPOW2);
 }
 
 void CurveTriquadratic::resetCoefficient23xTIMESYPOW2TIMESZPOW2() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient23xTIMESYPOW2TIMESZPOW2();
 }
 
-void CurveTriquadratic::setCoefficient24xPOW2TIMESYTIMESZ(double coefficient24xPOW2TIMESYTIMESZ) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient24xPOW2TIMESYTIMESZ(coefficient24xPOW2TIMESYTIMESZ);
+bool CurveTriquadratic::setCoefficient24xPOW2TIMESYTIMESZ(double coefficient24xPOW2TIMESYTIMESZ) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient24xPOW2TIMESYTIMESZ(coefficient24xPOW2TIMESYTIMESZ);
 }
 
 void CurveTriquadratic::resetCoefficient24xPOW2TIMESYTIMESZ() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient24xPOW2TIMESYTIMESZ();
 }
 
-void CurveTriquadratic::setCoefficient25xTIMESYPOW2TIMESZ(double coefficient25xTIMESYPOW2TIMESZ) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient25xTIMESYPOW2TIMESZ(coefficient25xTIMESYPOW2TIMESZ);
+bool CurveTriquadratic::setCoefficient25xTIMESYPOW2TIMESZ(double coefficient25xTIMESYPOW2TIMESZ) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient25xTIMESYPOW2TIMESZ(coefficient25xTIMESYPOW2TIMESZ);
 }
 
 void CurveTriquadratic::resetCoefficient25xTIMESYPOW2TIMESZ() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient25xTIMESYPOW2TIMESZ();
 }
 
-void CurveTriquadratic::setCoefficient26xTIMESYTIMESZPOW2(double coefficient26xTIMESYTIMESZPOW2) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient26xTIMESYTIMESZPOW2(coefficient26xTIMESYTIMESZPOW2);
+bool CurveTriquadratic::setCoefficient26xTIMESYTIMESZPOW2(double coefficient26xTIMESYTIMESZPOW2) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient26xTIMESYTIMESZPOW2(coefficient26xTIMESYTIMESZPOW2);
 }
 
 void CurveTriquadratic::resetCoefficient26xTIMESYTIMESZPOW2() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient26xTIMESYTIMESZPOW2();
 }
 
-void CurveTriquadratic::setCoefficient27xTIMESYTIMESZ(double coefficient27xTIMESYTIMESZ) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient27xTIMESYTIMESZ(coefficient27xTIMESYTIMESZ);
+bool CurveTriquadratic::setCoefficient27xTIMESYTIMESZ(double coefficient27xTIMESYTIMESZ) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setCoefficient27xTIMESYTIMESZ(coefficient27xTIMESYTIMESZ);
 }
 
 void CurveTriquadratic::resetCoefficient27xTIMESYTIMESZ() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetCoefficient27xTIMESYTIMESZ();
 }
 
-void CurveTriquadratic::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setMinimumValueofx(minimumValueofx);
+bool CurveTriquadratic::setMinimumValueofx(double minimumValueofx) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
 void CurveTriquadratic::resetMinimumValueofx() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetMinimumValueofx();
 }
 
-void CurveTriquadratic::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setMaximumValueofx(maximumValueofx);
+bool CurveTriquadratic::setMaximumValueofx(double maximumValueofx) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
 void CurveTriquadratic::resetMaximumValueofx() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetMaximumValueofx();
 }
 
-void CurveTriquadratic::setMinimumValueofy(double minimumValueofy) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setMinimumValueofy(minimumValueofy);
+bool CurveTriquadratic::setMinimumValueofy(double minimumValueofy) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setMinimumValueofy(minimumValueofy);
 }
 
 void CurveTriquadratic::resetMinimumValueofy() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetMinimumValueofy();
 }
 
-void CurveTriquadratic::setMaximumValueofy(double maximumValueofy) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setMaximumValueofy(maximumValueofy);
+bool CurveTriquadratic::setMaximumValueofy(double maximumValueofy) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setMaximumValueofy(maximumValueofy);
 }
 
 void CurveTriquadratic::resetMaximumValueofy() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetMaximumValueofy();
 }
 
-void CurveTriquadratic::setMinimumValueofz(double minimumValueofz) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setMinimumValueofz(minimumValueofz);
+bool CurveTriquadratic::setMinimumValueofz(double minimumValueofz) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setMinimumValueofz(minimumValueofz);
 }
 
 void CurveTriquadratic::resetMinimumValueofz() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetMinimumValueofz();
 }
 
-void CurveTriquadratic::setMaximumValueofz(double maximumValueofz) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setMaximumValueofz(maximumValueofz);
+bool CurveTriquadratic::setMaximumValueofz(double maximumValueofz) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setMaximumValueofz(maximumValueofz);
 }
 
 void CurveTriquadratic::resetMaximumValueofz() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetMaximumValueofz();
 }
 
-void CurveTriquadratic::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveTriquadratic::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveTriquadratic::resetMinimumCurveOutput() {
   getImpl<detail::CurveTriquadratic_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveTriquadratic::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveTriquadratic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveTriquadratic::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveTriquadratic_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveTriquadratic::resetMaximumCurveOutput() {
@@ -1432,10 +1472,9 @@ void CurveTriquadratic::resetOutputUnitType() {
 
 /// @cond
 CurveTriquadratic::CurveTriquadratic(std::shared_ptr<detail::CurveTriquadratic_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 
 } // model
 } // openstudio
-

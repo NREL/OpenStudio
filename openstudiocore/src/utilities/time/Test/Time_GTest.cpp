@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -61,14 +61,14 @@ TEST(Time, FracDaysConstructor)
 TEST(Time, MixedConstructor)
 {
   EXPECT_EQ(Time(0,1,0,0), Time(0,0,60,0));
-  EXPECT_EQ(Time(0,-1,0,0), Time(0,0,-60,0)); 
+  EXPECT_EQ(Time(0,-1,0,0), Time(0,0,-60,0));
   EXPECT_EQ(Time(0,1,30,0), Time(0,0,90,0));
-  EXPECT_EQ(Time(0,-1,-30,0), Time(0,0,-90,0)); 
-  EXPECT_EQ(Time(0,1,0,0), Time(0,1,1,-60)); 
-  EXPECT_EQ(Time(0,1,0,0), Time(0,1,-1,60)); 
-  EXPECT_EQ(Time(0,0,59,0), Time(0,1,-1,0)); 
-  EXPECT_EQ(Time(0,1,30,0), Time(1.5/24.0)); 
-  EXPECT_EQ(Time(0,-1,-30,0), Time(-1.5/24.0)); 
+  EXPECT_EQ(Time(0,-1,-30,0), Time(0,0,-90,0));
+  EXPECT_EQ(Time(0,1,0,0), Time(0,1,1,-60));
+  EXPECT_EQ(Time(0,1,0,0), Time(0,1,-1,60));
+  EXPECT_EQ(Time(0,0,59,0), Time(0,1,-1,0));
+  EXPECT_EQ(Time(0,1,30,0), Time(1.5/24.0));
+  EXPECT_EQ(Time(0,-1,-30,0), Time(-1.5/24.0));
 }
 
 TEST(Time, StringConstructor)

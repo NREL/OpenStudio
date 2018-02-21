@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -171,32 +171,32 @@ bool PlanarSurfaceGroup::isZOriginDefaulted() const {
   return getImpl<detail::PlanarSurfaceGroup_Impl>()->isZOriginDefaulted();
 }
 
-void PlanarSurfaceGroup::setDirectionofRelativeNorth(double directionofRelativeNorth) {
-  getImpl<detail::PlanarSurfaceGroup_Impl>()->setDirectionofRelativeNorth(directionofRelativeNorth);
+bool PlanarSurfaceGroup::setDirectionofRelativeNorth(double directionofRelativeNorth) {
+  return getImpl<detail::PlanarSurfaceGroup_Impl>()->setDirectionofRelativeNorth(directionofRelativeNorth);
 }
 
 void PlanarSurfaceGroup::resetDirectionofRelativeNorth() {
   getImpl<detail::PlanarSurfaceGroup_Impl>()->resetDirectionofRelativeNorth();
 }
 
-void PlanarSurfaceGroup::setXOrigin(double xOrigin) {
-  getImpl<detail::PlanarSurfaceGroup_Impl>()->setXOrigin(xOrigin);
+bool PlanarSurfaceGroup::setXOrigin(double xOrigin) {
+  return getImpl<detail::PlanarSurfaceGroup_Impl>()->setXOrigin(xOrigin);
 }
 
 void PlanarSurfaceGroup::resetXOrigin() {
   getImpl<detail::PlanarSurfaceGroup_Impl>()->resetXOrigin();
 }
 
-void PlanarSurfaceGroup::setYOrigin(double yOrigin) {
-  getImpl<detail::PlanarSurfaceGroup_Impl>()->setYOrigin(yOrigin);
+bool PlanarSurfaceGroup::setYOrigin(double yOrigin) {
+  return getImpl<detail::PlanarSurfaceGroup_Impl>()->setYOrigin(yOrigin);
 }
 
 void PlanarSurfaceGroup::resetYOrigin() {
   getImpl<detail::PlanarSurfaceGroup_Impl>()->resetYOrigin();
 }
 
-void PlanarSurfaceGroup::setZOrigin(double zOrigin) {
-  getImpl<detail::PlanarSurfaceGroup_Impl>()->setZOrigin(zOrigin);
+bool PlanarSurfaceGroup::setZOrigin(double zOrigin) {
+  return getImpl<detail::PlanarSurfaceGroup_Impl>()->setZOrigin(zOrigin);
 }
 
 void PlanarSurfaceGroup::resetZOrigin() {
@@ -236,7 +236,7 @@ openstudio::BoundingBox PlanarSurfaceGroup::boundingBox() const
 
 /// @cond
 PlanarSurfaceGroup::PlanarSurfaceGroup(std::shared_ptr<detail::PlanarSurfaceGroup_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

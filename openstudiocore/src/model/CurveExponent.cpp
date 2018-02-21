@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -68,7 +68,10 @@ namespace detail {
   const std::vector<std::string>& CurveExponent_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Performance Curve Output Value");
+      result.push_back("Performance Curve Input Variable 1 Value");
     }
     return result;
   }
@@ -146,32 +149,37 @@ namespace detail {
     return isEmpty(OS_Curve_ExponentFields::OutputUnitType);
   }
 
-  void CurveExponent_Impl::setCoefficient1Constant(double coefficient1Constant) {
+  bool CurveExponent_Impl::setCoefficient1Constant(double coefficient1Constant) {
     bool result = setDouble(OS_Curve_ExponentFields::Coefficient1Constant, coefficient1Constant);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponent_Impl::setCoefficient2Constant(double coefficient2Constant) {
+  bool CurveExponent_Impl::setCoefficient2Constant(double coefficient2Constant) {
     bool result = setDouble(OS_Curve_ExponentFields::Coefficient2Constant, coefficient2Constant);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponent_Impl::setCoefficient3Constant(double coefficient3Constant) {
+  bool CurveExponent_Impl::setCoefficient3Constant(double coefficient3Constant) {
     bool result = setDouble(OS_Curve_ExponentFields::Coefficient3Constant, coefficient3Constant);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponent_Impl::setMinimumValueofx(double minimumValueofx) {
+  bool CurveExponent_Impl::setMinimumValueofx(double minimumValueofx) {
     bool result = setDouble(OS_Curve_ExponentFields::MinimumValueofx, minimumValueofx);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponent_Impl::setMaximumValueofx(double maximumValueofx) {
+  bool CurveExponent_Impl::setMaximumValueofx(double maximumValueofx) {
     bool result = setDouble(OS_Curve_ExponentFields::MaximumValueofx, maximumValueofx);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CurveExponent_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
+  bool CurveExponent_Impl::setMinimumCurveOutput(boost::optional<double> minimumCurveOutput) {
     bool result = false;
     if (minimumCurveOutput) {
       result = setDouble(OS_Curve_ExponentFields::MinimumCurveOutput, minimumCurveOutput.get());
@@ -179,6 +187,7 @@ namespace detail {
       result = setString(OS_Curve_ExponentFields::MinimumCurveOutput, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveExponent_Impl::resetMinimumCurveOutput() {
@@ -186,7 +195,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CurveExponent_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
+  bool CurveExponent_Impl::setMaximumCurveOutput(boost::optional<double> maximumCurveOutput) {
     bool result = false;
     if (maximumCurveOutput) {
       result = setDouble(OS_Curve_ExponentFields::MaximumCurveOutput, maximumCurveOutput.get());
@@ -194,6 +203,7 @@ namespace detail {
       result = setString(OS_Curve_ExponentFields::MaximumCurveOutput, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CurveExponent_Impl::resetMaximumCurveOutput() {
@@ -297,36 +307,36 @@ bool CurveExponent::isOutputUnitTypeDefaulted() const {
   return getImpl<detail::CurveExponent_Impl>()->isOutputUnitTypeDefaulted();
 }
 
-void CurveExponent::setCoefficient1Constant(double coefficient1Constant) {
-  getImpl<detail::CurveExponent_Impl>()->setCoefficient1Constant(coefficient1Constant);
+bool CurveExponent::setCoefficient1Constant(double coefficient1Constant) {
+  return getImpl<detail::CurveExponent_Impl>()->setCoefficient1Constant(coefficient1Constant);
 }
 
-void CurveExponent::setCoefficient2Constant(double coefficient2Constant) {
-  getImpl<detail::CurveExponent_Impl>()->setCoefficient2Constant(coefficient2Constant);
+bool CurveExponent::setCoefficient2Constant(double coefficient2Constant) {
+  return getImpl<detail::CurveExponent_Impl>()->setCoefficient2Constant(coefficient2Constant);
 }
 
-void CurveExponent::setCoefficient3Constant(double coefficient3Constant) {
-  getImpl<detail::CurveExponent_Impl>()->setCoefficient3Constant(coefficient3Constant);
+bool CurveExponent::setCoefficient3Constant(double coefficient3Constant) {
+  return getImpl<detail::CurveExponent_Impl>()->setCoefficient3Constant(coefficient3Constant);
 }
 
-void CurveExponent::setMinimumValueofx(double minimumValueofx) {
-  getImpl<detail::CurveExponent_Impl>()->setMinimumValueofx(minimumValueofx);
+bool CurveExponent::setMinimumValueofx(double minimumValueofx) {
+  return getImpl<detail::CurveExponent_Impl>()->setMinimumValueofx(minimumValueofx);
 }
 
-void CurveExponent::setMaximumValueofx(double maximumValueofx) {
-  getImpl<detail::CurveExponent_Impl>()->setMaximumValueofx(maximumValueofx);
+bool CurveExponent::setMaximumValueofx(double maximumValueofx) {
+  return getImpl<detail::CurveExponent_Impl>()->setMaximumValueofx(maximumValueofx);
 }
 
-void CurveExponent::setMinimumCurveOutput(double minimumCurveOutput) {
-  getImpl<detail::CurveExponent_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
+bool CurveExponent::setMinimumCurveOutput(double minimumCurveOutput) {
+  return getImpl<detail::CurveExponent_Impl>()->setMinimumCurveOutput(minimumCurveOutput);
 }
 
 void CurveExponent::resetMinimumCurveOutput() {
   getImpl<detail::CurveExponent_Impl>()->resetMinimumCurveOutput();
 }
 
-void CurveExponent::setMaximumCurveOutput(double maximumCurveOutput) {
-  getImpl<detail::CurveExponent_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
+bool CurveExponent::setMaximumCurveOutput(double maximumCurveOutput) {
+  return getImpl<detail::CurveExponent_Impl>()->setMaximumCurveOutput(maximumCurveOutput);
 }
 
 void CurveExponent::resetMaximumCurveOutput() {
@@ -351,10 +361,9 @@ void CurveExponent::resetOutputUnitType() {
 
 /// @cond
 CurveExponent::CurveExponent(std::shared_ptr<detail::CurveExponent_Impl> impl)
-  : Curve(impl)
+  : Curve(std::move(impl))
 {}
 /// @endcond
 
 } // model
-} // openstudio
-
+} // openstudio

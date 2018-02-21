@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -153,7 +153,7 @@ class MODEL_API BillingPeriod : public ModelExtensibleGroup {
 typedef std::vector<BillingPeriod> BillingPeriodVector;
 
 
-/** UtilityBill is a ModelObject that wraps the OpenStudio IDD object 'OS:UtilityBill'. 
+/** UtilityBill is a ModelObject that wraps the OpenStudio IDD object 'OS:UtilityBill'.
     This object allows the user to enter in actual fuel usage for model calibration.
 */
 class MODEL_API UtilityBill : public ModelObject {

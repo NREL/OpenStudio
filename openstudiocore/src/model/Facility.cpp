@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,6 +39,10 @@
 #include "ConstructionBase_Impl.hpp"
 #include "ExteriorLights.hpp"
 #include "ExteriorLights_Impl.hpp"
+#include "ExteriorFuelEquipment.hpp"
+#include "ExteriorFuelEquipment_Impl.hpp"
+#include "ExteriorWaterEquipment.hpp"
+#include "ExteriorWaterEquipment_Impl.hpp"
 #include "LifeCycleCostParameters.hpp"
 #include "LifeCycleCostParameters_Impl.hpp"
 #include "OutputMeter.hpp"
@@ -114,6 +118,12 @@ namespace detail {
     ExteriorLightsVector exteriorLights = this->exteriorLights();
     result.insert(result.end(),exteriorLights.begin(),exteriorLights.end());
 
+    ExteriorFuelEquipmentVector exteriorFuelEquipments = this->exteriorFuelEquipments();
+    result.insert(result.end(),exteriorFuelEquipments.begin(),exteriorFuelEquipments.end());
+
+    ExteriorWaterEquipmentVector exteriorWaterEquipments = this->exteriorWaterEquipments();
+    result.insert(result.end(),exteriorWaterEquipments.begin(),exteriorWaterEquipments.end());
+
     return result;
   }
 
@@ -153,7 +163,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   boost::optional<OutputMeter> Facility_Impl::getMeterByFuelType(
     const FuelType& fuelType,
     const std::string& reportingFrequency,
@@ -165,8 +175,8 @@ namespace detail {
       if (meter.fuelType() && (meter.fuelType() == fuelType)) {
         if (istringEqual(meter.reportingFrequency(),reportingFrequency)) {
           OptionalEndUseType meterEndUseType = meter.endUseType();
-          if ((!endUseType && !meterEndUseType) || 
-              (endUseType && meterEndUseType && (*meterEndUseType == *endUseType))) 
+          if ((!endUseType && !meterEndUseType) ||
+              (endUseType && meterEndUseType && (*meterEndUseType == *endUseType)))
           {
             OptionalString meterSpecificEndUse = meter.specificEndUse();
             if ((!specificEndUse && !meterSpecificEndUse) ||
@@ -188,6 +198,14 @@ namespace detail {
 
   std::vector<ExteriorLights> Facility_Impl::exteriorLights() const {
     return model().getConcreteModelObjects<ExteriorLights>();
+  }
+
+  std::vector<ExteriorFuelEquipment> Facility_Impl::exteriorFuelEquipments() const {
+    return model().getConcreteModelObjects<ExteriorFuelEquipment>();
+  }
+
+  std::vector<ExteriorWaterEquipment> Facility_Impl::exteriorWaterEquipments() const {
+    return model().getConcreteModelObjects<ExteriorWaterEquipment>();
   }
 
   OptionalDouble Facility_Impl::totalSiteEnergy() const
@@ -1310,7 +1328,7 @@ namespace detail {
     }
     return OptionalDouble();
   }
-  
+
   OptionalDouble Facility_Impl::hoursCoolingSetpointNotMet() const
   {
     OptionalSqlFile mySqlFile = model().sqlFile();
@@ -1343,7 +1361,7 @@ namespace detail {
 
   boost::optional<CalibrationResult> Facility_Impl::calibrationResult() const
   {
-    boost::optional<CalibrationResult> result; 
+    boost::optional<CalibrationResult> result;
 
     OptionalSqlFile mySqlFile = model().sqlFile();
     if (mySqlFile && mySqlFile->connectionOpen())
@@ -1351,7 +1369,7 @@ namespace detail {
       result = CalibrationResult();
       for (const model::UtilityBill& utilityBill : this->model().getConcreteModelObjects<model::UtilityBill>()){
         CalibrationUtilityBill calibrationUtilityBill(utilityBill.name().get(), utilityBill.fuelType(),
-          utilityBill.meterInstallLocation(), utilityBill.meterSpecificInstallLocation(), 
+          utilityBill.meterInstallLocation(), utilityBill.meterSpecificInstallLocation(),
           utilityBill.meterEndUseCategory(), utilityBill.meterSpecificEndUse(), utilityBill.consumptionUnit(),
           utilityBill.consumptionUnitConversionFactor(), utilityBill.peakDemandUnit(), utilityBill.peakDemandUnitConversionFactor(),
           utilityBill.timestepsInPeakDemandWindow(), utilityBill.minutesInPeakDemandWindow(), utilityBill.numberBillingPeriodsInCalculations(),
@@ -1400,10 +1418,20 @@ namespace detail {
     return result;
   }
 
+  std::vector<ModelObject> Facility_Impl::exteriorFuelEquipmentAsModelObjects() const {
+    ModelObjectVector result = castVector<ModelObject>(exteriorFuelEquipments());
+    return result;
+  }
+
+  std::vector<ModelObject> Facility_Impl::exteriorWaterEquipmentAsModelObjects() const {
+    ModelObjectVector result = castVector<ModelObject>(exteriorWaterEquipments());
+    return result;
+  }
+
 }// detail
 
 Facility::Facility(std::shared_ptr<detail::Facility_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 
 Facility::Facility(Model& model)
@@ -2020,6 +2048,14 @@ boost::optional<OutputMeter> Facility::getMeterByFuelType(
 
 std::vector<ExteriorLights> Facility::exteriorLights() const {
   return getImpl<detail::Facility_Impl>()->exteriorLights();
+}
+
+std::vector<ExteriorFuelEquipment> Facility::exteriorFuelEquipments() const {
+  return getImpl<detail::Facility_Impl>()->exteriorFuelEquipments();
+}
+
+std::vector<ExteriorWaterEquipment> Facility::exteriorWaterEquipments() const {
+  return getImpl<detail::Facility_Impl>()->exteriorWaterEquipments();
 }
 
 std::vector<FuelType> Facility::fossilFuels() {

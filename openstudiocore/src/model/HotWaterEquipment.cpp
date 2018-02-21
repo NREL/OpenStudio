@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,6 +40,7 @@
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/OS_HotWaterEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -74,7 +75,34 @@ namespace detail {
   const std::vector<std::string>& HotWaterEquipment_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Hot Water Equipment District Heating Rate");
+      result.push_back("Hot Water Equipment District Heating Energy");
+      result.push_back("Hot Water Equipment Radiant Heating Energy");
+      result.push_back("Hot Water Equipment Radiant Heating Rate");
+      result.push_back("Hot Water Equipment Convective Heating Energy");
+      result.push_back("Hot Water Equipment Convective Heating Rate");
+      result.push_back("Hot Water Equipment Latent Gain Energy");
+      result.push_back("Hot Water Equipment Latent Gain Rate");
+      result.push_back("Hot Water Equipment Lost Heat Energy");
+      result.push_back("Hot Water Equipment Lost Heat Rate");
+      result.push_back("Hot Water Equipment Total Heating Energy");
+      result.push_back("Hot Water Equipment Total Heating Rate");
+
+      // Reported in ThermalZone
+      //result.push_back("Zone Hot Water Equipment District Heating Rate");
+      //result.push_back("Zone Hot Water Equipment District Heating Energy");
+      //result.push_back("Zone Hot Water Equipment Radiant Heating Energy");
+      //result.push_back("Zone Hot Water Equipment Radiant Heating Rate");
+      //result.push_back("Zone Hot Water Equipment Convective Heating Energy");
+      //result.push_back("Zone Hot Water Equipment Convective Heating Rate");
+      //result.push_back("Zone Hot Water Equipment Latent Gain Energy");
+      //result.push_back("Zone Hot Water Equipment Latent Gain Rate");
+      //result.push_back("Zone Hot Water Equipment Lost Heat Energy");
+      //result.push_back("Zone Hot Water Equipment Lost Heat Rate");
+      //result.push_back("Zone Hot Water Equipment Total Heating Energy");
+      //result.push_back("Zone Hot Water Equipment Total Heating Rate");
     }
     return result;
   }
@@ -175,9 +203,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void HotWaterEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool HotWaterEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_HotWaterEquipmentFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void HotWaterEquipment_Impl::resetEndUseSubcategory() {
@@ -308,6 +337,16 @@ HotWaterEquipment::HotWaterEquipment(const HotWaterEquipmentDefinition& hotWater
   : SpaceLoadInstance(HotWaterEquipment::iddObjectType(),hotWaterEquipmentDefinition)
 {
   OS_ASSERT(getImpl<detail::HotWaterEquipment_Impl>());
+
+  /*
+   *Schedule sch = this->model().alwaysOnDiscreteSchedule();
+   *bool test = this->setSchedule(sch);
+   *OS_ASSERT(test);
+   *test = this->setMultiplier(1.0);
+   *OS_ASSERT(test);
+   */
+  bool test = this->setEndUseSubcategory("General");
+  OS_ASSERT(test);
 }
 
 IddObjectType HotWaterEquipment::iddObjectType() {
@@ -331,8 +370,8 @@ void HotWaterEquipment::resetMultiplier() {
   getImpl<detail::HotWaterEquipment_Impl>()->resetMultiplier();
 }
 
-void HotWaterEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::HotWaterEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool HotWaterEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::HotWaterEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void HotWaterEquipment::resetEndUseSubcategory() {
@@ -364,7 +403,7 @@ HotWaterEquipmentDefinition HotWaterEquipment::hotWaterEquipmentDefinition() con
   return getImpl<detail::HotWaterEquipment_Impl>()->hotWaterEquipmentDefinition();
 }
 
-bool HotWaterEquipment::setHotWaterEquipmentDefinition(const HotWaterEquipmentDefinition& hotWaterEquipmentDefinition) 
+bool HotWaterEquipment::setHotWaterEquipmentDefinition(const HotWaterEquipmentDefinition& hotWaterEquipmentDefinition)
 {
   return getImpl<detail::HotWaterEquipment_Impl>()->setHotWaterEquipmentDefinition(hotWaterEquipmentDefinition);
 }
@@ -383,7 +422,7 @@ double HotWaterEquipment::getPowerPerPerson(double floorArea, double numPeople) 
 
 /// @cond
 HotWaterEquipment::HotWaterEquipment(std::shared_ptr<detail::HotWaterEquipment_Impl> impl)
-  : SpaceLoadInstance(impl)
+  : SpaceLoadInstance(std::move(impl))
 {}
 /// @endcond
 

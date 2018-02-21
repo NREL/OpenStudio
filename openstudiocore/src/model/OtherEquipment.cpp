@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,6 +40,7 @@
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/OS_OtherEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -75,7 +76,32 @@ namespace detail {
   const std::vector<std::string>& OtherEquipment_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Other Equipment Fuel Rate");
+      result.push_back("Other Equipment Fuel Energy");
+      result.push_back("Other Equipment Radiant Heating Energy");
+      result.push_back("Other Equipment Radiant Heating Rate");
+      result.push_back("Other Equipment Convective Heating Energy");
+      result.push_back("Other Equipment Convective Heating Rate");
+      result.push_back("Other Equipment Latent Gain Energy");
+      result.push_back("Other Equipment Latent Gain Rate");
+      result.push_back("Other Equipment Lost Heat Energy");
+      result.push_back("Other Equipment Lost Heat Rate");
+      result.push_back("Other Equipment Total Heating Energy");
+      result.push_back("Other Equipment Total Heating Rate");
+
+      // Reported in ThermalZone
+      //result.push_back("Zone Other Equipment Radiant Heating Energy");
+      //result.push_back("Zone Other Equipment Radiant Heating Rate");
+      //result.push_back("Zone Other Equipment Convective Heating Energy");
+      //result.push_back("Zone Other Equipment Convective Heating Rate");
+      //result.push_back("Zone Other Equipment Latent Gain Energy");
+      //result.push_back("Zone Other Equipment Latent Gain Rate");
+      //result.push_back("Zone Other Equipment Lost Heat Energy");
+      //result.push_back("Zone Other Equipment Lost Heat Rate");
+      //result.push_back("Zone Other Equipment Total Heating Energy");
+      //result.push_back("Zone Other Equipment Total Heating Rate");
     }
     return result;
   }
@@ -98,7 +124,7 @@ namespace detail {
 
   bool OtherEquipment_Impl::hardSize() {
     OptionalSpace space = this->space();
-    if (!space) { 
+    if (!space) {
       return false;
     }
 
@@ -315,6 +341,14 @@ OtherEquipment::OtherEquipment(const OtherEquipmentDefinition& definition)
   : SpaceLoadInstance(OtherEquipment::iddObjectType(),definition)
 {
   OS_ASSERT(getImpl<detail::OtherEquipment_Impl>());
+
+  /*
+   *Schedule sch = this->model().alwaysOnDiscreteSchedule();
+   *setSchedule(sch);
+   *setMultiplier(1.0);
+   *setFuelType("NaturalGas");
+   */
+  setEndUseSubcategory("General");
 }
 
 IddObjectType OtherEquipment::iddObjectType() {
@@ -406,7 +440,7 @@ double OtherEquipment::getPowerPerPerson(double floorArea, double numPeople) con
 
 /// @cond
 OtherEquipment::OtherEquipment(std::shared_ptr<detail::OtherEquipment_Impl> impl)
-  : SpaceLoadInstance(impl)
+  : SpaceLoadInstance(std::move(impl))
 {}
 /// @endcond
 

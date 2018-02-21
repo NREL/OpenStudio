@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -114,7 +114,7 @@ namespace model {
       }
       return result;
     }
-  
+
 
   boost::optional<Schedule> SolarCollectorPerformancePhotovoltaicThermalSimple_Impl::thermalConversionEfficiencySchedule() const {
     boost::optional<Schedule> result;
@@ -138,10 +138,10 @@ namespace model {
     bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_SimpleFields::FractionofSurfaceAreawithActiveThermalCollector, fractionofSurfaceAreawithActiveThermalCollector);
     return result;
   }
-      
+
 
   bool SolarCollectorPerformancePhotovoltaicThermalSimple_Impl::setThermalConversionEfficiency(double fixedThermalConversionEfficiency) {
-    
+
     bool result = setDouble(OS_SolarCollectorPerformance_PhotovoltaicThermal_SimpleFields::ValueforThermalConversionEfficiencyifFixed, fixedThermalConversionEfficiency);
     if (result){
       result = setString(OS_SolarCollectorPerformance_PhotovoltaicThermal_SimpleFields::ThermalConversionEfficiencyInputModeType, "Fixed");
@@ -261,7 +261,7 @@ void SolarCollectorPerformancePhotovoltaicThermalSimple::resetFrontSurfaceEmitta
 
 /// @cond
 SolarCollectorPerformancePhotovoltaicThermalSimple::SolarCollectorPerformancePhotovoltaicThermalSimple(std::shared_ptr<detail::SolarCollectorPerformancePhotovoltaicThermalSimple_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

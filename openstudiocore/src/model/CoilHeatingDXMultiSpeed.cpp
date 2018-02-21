@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -84,7 +84,24 @@ namespace detail {
   const std::vector<std::string>& CoilHeatingDXMultiSpeed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Heating Coil Total Heating Rate");
+      result.push_back("Heating Coil Total Heating Energy");
+      result.push_back("Heating Coil Electric Power");
+      result.push_back("Heating Coil Electric Energy");
+      result.push_back("Heating Coil Defrost Electric Power");
+      result.push_back("Heating Coil Defrost Electric Energy");
+      result.push_back("Heating Coil Defrost Gas Rate");
+      result.push_back("Heating Coil Defrost Gas Energy");
+      result.push_back("Heating Coil Crankcase Heater Electric Power");
+      result.push_back("Heating Coil Crankcase Heater Electric Energy");
+      result.push_back("Heating Coil Runtime Fraction");
+      // TODO: Implement this
+      // If Fuel Type is not Electricity:
+      // result.push_back("Heating Coil <Fuel Type> Rate");
+      // result.push_back("Heating Coil <Fuel Type> Energy");
+
     }
     return result;
   }
@@ -212,12 +229,13 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingDXMultiSpeed_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+  bool CoilHeatingDXMultiSpeed_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
     bool result = setDouble(OS_Coil_Heating_DX_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, minimumOutdoorDryBulbTemperatureforCompressorOperation);
     OS_ASSERT(result);
+    return result;
   }
 
-  void CoilHeatingDXMultiSpeed_Impl::setOutdoorDryBulbTemperaturetoTurnOnCompressor(boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor) {
+  bool CoilHeatingDXMultiSpeed_Impl::setOutdoorDryBulbTemperaturetoTurnOnCompressor(boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor) {
     bool result(false);
     if (outdoorDryBulbTemperaturetoTurnOnCompressor) {
       result = setDouble(OS_Coil_Heating_DX_MultiSpeedFields::OutdoorDryBulbTemperaturetoTurnOnCompressor, outdoorDryBulbTemperaturetoTurnOnCompressor.get());
@@ -227,6 +245,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void CoilHeatingDXMultiSpeed_Impl::resetOutdoorDryBulbTemperaturetoTurnOnCompressor() {
@@ -294,8 +313,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingDXMultiSpeed_Impl::setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1) {
-    setBooleanFieldValue(OS_Coil_Heating_DX_MultiSpeedFields::ApplyPartLoadFractiontoSpeedsGreaterthan1, applyPartLoadFractiontoSpeedsGreaterthan1);
+  bool CoilHeatingDXMultiSpeed_Impl::setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1) {
+    return setBooleanFieldValue(OS_Coil_Heating_DX_MultiSpeedFields::ApplyPartLoadFractiontoSpeedsGreaterthan1, applyPartLoadFractiontoSpeedsGreaterthan1);;
   }
 
   bool CoilHeatingDXMultiSpeed_Impl::setFuelType(std::string fuelType) {
@@ -463,6 +482,23 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<double> CoilHeatingDXMultiSpeed_Impl::autosizedResistiveDefrostHeaterCapacity() const {
+    return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "");
+  }
+
+  void CoilHeatingDXMultiSpeed_Impl::autosize() {
+    autosizeResistiveDefrostHeaterCapacity();
+  }
+
+  void CoilHeatingDXMultiSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedResistiveDefrostHeaterCapacity();
+    if (val) {
+      setResistiveDefrostHeaterCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 CoilHeatingDXMultiSpeed::CoilHeatingDXMultiSpeed(const Model& model)
@@ -588,12 +624,12 @@ void CoilHeatingDXMultiSpeed::resetAvailabilitySchedule() {
   getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->resetAvailabilitySchedule();
 }
 
-void CoilHeatingDXMultiSpeed::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
-  getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
+bool CoilHeatingDXMultiSpeed::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+  return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
 }
 
-void CoilHeatingDXMultiSpeed::setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor) {
-  getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setOutdoorDryBulbTemperaturetoTurnOnCompressor(outdoorDryBulbTemperaturetoTurnOnCompressor);
+bool CoilHeatingDXMultiSpeed::setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor) {
+  return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setOutdoorDryBulbTemperaturetoTurnOnCompressor(outdoorDryBulbTemperaturetoTurnOnCompressor);
 }
 
 void CoilHeatingDXMultiSpeed::resetOutdoorDryBulbTemperaturetoTurnOnCompressor() {
@@ -640,8 +676,8 @@ void CoilHeatingDXMultiSpeed::autosizeResistiveDefrostHeaterCapacity() {
   getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->autosizeResistiveDefrostHeaterCapacity();
 }
 
-void CoilHeatingDXMultiSpeed::setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1) {
-  getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setApplyPartLoadFractiontoSpeedsGreaterthan1(applyPartLoadFractiontoSpeedsGreaterthan1);
+bool CoilHeatingDXMultiSpeed::setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1) {
+  return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setApplyPartLoadFractiontoSpeedsGreaterthan1(applyPartLoadFractiontoSpeedsGreaterthan1);
 }
 
 bool CoilHeatingDXMultiSpeed::setFuelType(std::string fuelType) {
@@ -680,10 +716,13 @@ boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDXMultiSpeed::optionalA
 
 /// @cond
 CoilHeatingDXMultiSpeed::CoilHeatingDXMultiSpeed(std::shared_ptr<detail::CoilHeatingDXMultiSpeed_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 
+  boost::optional<double> CoilHeatingDXMultiSpeed::autosizedResistiveDefrostHeaterCapacity() const {
+    return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->autosizedResistiveDefrostHeaterCapacity();
+  }
+
 } // model
 } // openstudio
-

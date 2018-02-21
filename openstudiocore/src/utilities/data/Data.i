@@ -2,12 +2,12 @@
 #define UTILITIES_DATA_DATA_I
 
 %{
-  #include <QDomDocument> 
+  #include <QDomDocument>
   #include <boost/function.hpp>
   #include <utilities/data/DataEnums.hpp>
   #include <utilities/data/Tag.hpp>
   #include <utilities/data/Variant.hpp>
-  
+
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
   #include <utilities/units/BTUUnit.hpp>
@@ -20,7 +20,7 @@
   #include <utilities/units/MPHUnit.hpp>
   #include <utilities/units/SIUnit.hpp>
   #include <utilities/units/ThermUnit.hpp>
-  #include <utilities/units/WhUnit.hpp>  
+  #include <utilities/units/WhUnit.hpp>
 %}
 
 %template(InstallLocationTypeVector) std::vector<openstudio::InstallLocationType>;
@@ -36,7 +36,7 @@
 %template(BuildingSectorVector) std::vector<openstudio::BuildingSector>;
 %template(OptionalBuildingSector) boost::optional<openstudio::BuildingSector>;
 
-%ignore std::vector<openstudio::Tag>::vector(size_type); 
+%ignore std::vector<openstudio::Tag>::vector(size_type);
 %ignore std::vector<openstudio::Tag>::resize(size_type);
 %template(OptionalTag) boost::optional<openstudio::Tag>;
 %template(TagVector) std::vector<openstudio::Tag>;
@@ -51,4 +51,4 @@
 %include <utilities/data/TimeSeries.i>
 %include <utilities/data/Tag.hpp>
 
-#endif //UTILITIES_DATA_DATA_I 
+#endif //UTILITIES_DATA_DATA_I

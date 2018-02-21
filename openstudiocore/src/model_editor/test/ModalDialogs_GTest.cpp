@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -55,7 +55,7 @@ using namespace openstudio;
 TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Cancel)
 {
   Model model;
-  
+
   std::vector<IddObjectType> typesToDisplay;
   typesToDisplay.push_back(Space::iddObjectType());
 
@@ -77,7 +77,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Cancel)
 TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Ok)
 {
   Model model;
-  
+
   std::vector<IddObjectType> typesToDisplay;
   typesToDisplay.push_back(Space::iddObjectType());
 
@@ -101,7 +101,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_Cancel)
   Model model;
   Space space1(model);
   Space space2(model);
-  
+
   std::vector<IddObjectType> typesToDisplay;
   typesToDisplay.push_back(Space::iddObjectType());
 
@@ -114,7 +114,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_Cancel)
   std::shared_ptr<TestButton> button(new TestButton);
 
   QObject::connect(button.get(), &TestButton::clicked, modelObjectSelectorDialog.get(), &ModelObjectSelectorDialog::onPushButtonCancel);
-  
+
   button->doClick();
 
   EXPECT_FALSE(watcher.selectedModelObject());

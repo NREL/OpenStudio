@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -450,7 +450,7 @@ namespace detail {
     case openstudio::IddObjectType::OS_EnergyManagementSystem_Subroutine:; // deliberate fall through
     case openstudio::IddObjectType::EnergyManagementSystem_TrendVariable:; // deliberate fall through
     case openstudio::IddObjectType::OS_EnergyManagementSystem_TrendVariable:; // deliberate fall through
-      // replace ‘ ‘ with ‘_’
+      // replace ï¿½ ï¿½ with ï¿½_ï¿½
       std::replace(newName.begin(), newName.end(), ' ', '_');
       break;
     //case openstudio::IddObjectType::EnergyManagementSystem_OutputVariable:; // deliberate fall through
@@ -1137,14 +1137,14 @@ namespace detail {
   }
 
   bool IdfObject_Impl::isValid(StrictnessLevel level) const {
-    return isValid(level,true);
+    return isValid(level,false);
   }
 
-  bool IdfObject_Impl::isValid(StrictnessLevel level,bool checkNames) const {
+  bool IdfObject_Impl::isValid(StrictnessLevel level, bool checkNames) const {
     return (validityReport(level,checkNames).numErrors() == 0);
   }
 
-  ValidityReport IdfObject_Impl::validityReport(StrictnessLevel level,bool checkNames) const {
+  ValidityReport IdfObject_Impl::validityReport(StrictnessLevel level, bool checkNames) const {
     ValidityReport report(level,getObject<IdfObject>());
     this->populateValidityReport(report,checkNames);
     return report;
@@ -1826,6 +1826,8 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
         else{
           return false;
         }
+      } else {
+        // integers can't be NaN or Infinity
       }
     }
 
@@ -1852,6 +1854,16 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
               << m_iddObject.name() << " has 'autosize' as its value even though it is autocalculable.");
         }
         else {
+          return false;
+        }
+      } else{
+        if (std::isnan(*value)) {
+          LOG(Warn, "Cannot set field " << index << ", '" << iddField.name() << "', an object of type "
+              << m_iddObject.name() << " to NaN.");
+          return false;
+        }else if (std::isinf(*value)) {
+          LOG(Warn, "Cannot set field " << index << ", '" << iddField.name() << "', an object of type "
+              << m_iddObject.name() << " to Infinity.");
           return false;
         }
       }
@@ -2022,23 +2034,77 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
 
   std::string IdfObject_Impl::encodeString(const std::string& value) const
   {
-    std::string result(value);
-    boost::replace_all(result, ",", "&#44");
-    boost::replace_all(result, ";", "&#59");
-    boost::replace_all(result, "!", "&#33");
-    boost::replace_all(result, "\n", "&#10");
-    boost::replace_all(result, "\r", "&#13");
+    std::string result;
+    result.reserve(value.size() * 1.25);
+    for (auto const & s : value) {
+      switch (s) {
+        case '\n':
+          result.append("&#10");
+          break;
+        case '\r':
+          result.append("&#13");
+          break;
+        case ',':
+          result.append("&#44");
+          break;
+        case ';':
+          result.append("&#59");
+          break;
+        case '!':
+          result.append("&#33");
+          break;
+        default:
+          result.push_back(s);
+          break;
+      }
+    }
     return result;
   }
 
   std::string IdfObject_Impl::decodeString(const std::string& value) const
   {
-    std::string result(value);
-    boost::replace_all(result, "&#44", ",");
-    boost::replace_all(result, "&#59", ";");
-    boost::replace_all(result, "&#33", "!");
-    boost::replace_all(result, "&#10", "\n");
-    boost::replace_all(result, "&#13", "\r");
+    std::string result;
+    char c;
+    bool special_char = false;
+    auto const max_length = value.size();
+    auto const length = max_length - 3;
+    // auto const * str = value.c_str();
+    result.reserve(max_length);
+
+    for (size_t i = 0; i < max_length; ++i) {
+      if (i < length && value[i] == '&' && value[i + 1] == '#') {
+        if (value[i + 2] == '1') {
+          if (value[i + 3] == '0') {
+            special_char = true;
+            c = '\n'; // "&#10"
+          }
+          else if (value[i + 3] == '3') {
+            special_char = true;
+            c = '\r'; // "&#13"
+          }
+        }
+        else if (value[i + 2] == '3' && value[i + 3] == '3') {
+          special_char = true;
+          c = '!'; // "&#33"
+        }
+        else if (value[i + 2] == '4' && value[i + 3] == '4') {
+          special_char = true;
+          c = ','; // "&#44"
+        }
+        else if (value[i + 2] == '5' && value[i + 3] == '9') {
+          special_char = true;
+          c = ';'; // "&#59"
+        }
+      }
+
+      if (special_char) {
+        special_char = false;
+        i += 3;
+        result.push_back(c);
+      } else {
+        result.push_back(value[i]);
+      }
+    }
     return result;
   }
 
@@ -2060,7 +2126,7 @@ IdfObject::IdfObject(const IddObject& iddObject, bool fastName)
 }
 
 IdfObject::IdfObject(std::shared_ptr<detail::IdfObject_Impl> impl):
-  m_impl(impl)
+  m_impl(std::move(impl))
 {
   OS_ASSERT(m_impl);
 }
@@ -2274,8 +2340,8 @@ std::vector<unsigned> IdfObject::requiredFields() const {
   return m_impl->requiredFields();
 }
 
-bool IdfObject::isValid(StrictnessLevel level) const {
-  return m_impl->isValid(level);
+bool IdfObject::isValid(StrictnessLevel level, bool checkNames) const {
+  return m_impl->isValid(level, checkNames);
 }
 
 ValidityReport IdfObject::validityReport(StrictnessLevel level, bool checkNames) const {

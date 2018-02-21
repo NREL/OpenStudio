@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -90,7 +90,13 @@ namespace detail {
   const std::vector<std::string>& WaterHeaterHeatPumpWrappedCondenser_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Water Heater Compressor Part Load Ratio");
+      result.push_back("Water Heater On Cycle Ancillary Electric Power");
+      result.push_back("Water Heater On Cycle Ancillary Electric Energy");
+      result.push_back("Water Heater Off Cycle Ancillary Electric Power");
+      result.push_back("Water Heater Off Cycle Ancillary Electric Energy");
     }
     return result;
   }
@@ -540,10 +546,10 @@ namespace detail {
       waterToWaterTank->removeFromSecondaryPlantLoop();
     } else {
       // All tanks are WaterToWaterComponent at this time, but the api says they could be any HVACComponent,
-      // so this is a little dangerous. Consider enhanced APIs to remove HVACComponent from system. 
+      // so this is a little dangerous. Consider enhanced APIs to remove HVACComponent from system.
       // Something we currently don't have.
       // Ideally remove would just take care of all of this, but the way ParentObject::remove works out children remove methods
-      // aren't being called cleanly. 
+      // aren't being called cleanly.
       LOG_AND_THROW("Unsupported tank " << t_tank.briefDescription() << " attached to WaterHeaterHeatPump " << briefDescription());
     }
 
@@ -945,7 +951,7 @@ void WaterHeaterHeatPumpWrappedCondenser::resetControlSensor2HeightInStratifiedT
 
 /// @cond
 WaterHeaterHeatPumpWrappedCondenser::WaterHeaterHeatPumpWrappedCondenser(std::shared_ptr<detail::WaterHeaterHeatPumpWrappedCondenser_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

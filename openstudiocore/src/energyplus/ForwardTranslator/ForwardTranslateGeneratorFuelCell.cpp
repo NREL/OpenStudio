@@ -64,7 +64,7 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCell(GeneratorFuelCell & modelObject)
 {
-  
+
   IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell, modelObject);
   //Name
   boost::optional<std::string> s = modelObject.name();
@@ -126,7 +126,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCell(Generat
   }
 
   return pcm;
-  
+
 }
 
 } // energyplus

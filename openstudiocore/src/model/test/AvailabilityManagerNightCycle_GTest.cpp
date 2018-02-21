@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,6 +30,7 @@
 #include "ModelFixture.hpp"
 #include "../AvailabilityManagerNightCycle.hpp"
 #include "../AvailabilityManagerNightCycle_Impl.hpp"
+#include "../ThermalZone.hpp"
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
 
@@ -50,3 +51,88 @@ TEST_F(ModelFixture,AvailabilityManagerNightCycle) {
     ::testing::ExitedWithCode(0), "" );
 }
 
+
+TEST_F(ModelFixture, AvailabilityManagerNightCycle_zoneLists)
+{
+  Model m;
+
+  AvailabilityManagerNightCycle avm(m);
+
+  ThermalZone z1(m);
+  ThermalZone z2(m);
+  ThermalZone z3(m);
+  ThermalZone z4(m);
+  ThermalZone z5(m);
+
+  // Deprecated
+  // Cannot run this on Windows, treats warnings as errors
+  // EXPECT_TRUE(avm.setControlThermalZone(z1));
+  // EXPECT_TRUE(avm.controlThermalZone());
+  // EXPECT_EQ(avm.controlThermalZone().get(), z1);
+  // EXPECT_EQ(1, avm.controlThermalZones().size());
+  // EXPECT_EQ(z1, avm.controlThermalZones()[0]);
+
+  std::vector<ThermalZone> v;
+  v.push_back(z1);
+  v.push_back(z2);
+  EXPECT_TRUE(avm.setControlThermalZones(v));
+  EXPECT_EQ(2, avm.controlThermalZones().size());
+  EXPECT_EQ(0, avm.coolingControlThermalZones().size());
+  EXPECT_EQ(0, avm.heatingControlThermalZones().size());
+  EXPECT_EQ(0, avm.heatingZoneFansOnlyThermalZones().size());
+
+  // Deprecated method should return the first zone if more than one
+  // Cannot run this on Windows, treats warnings as errors
+  // EXPECT_TRUE(avm.controlThermalZone());
+  // EXPECT_EQ(avm.controlThermalZone().get(), z1);
+
+  avm.resetControlThermalZones();
+  EXPECT_EQ(0, avm.controlThermalZones().size());
+
+  std::vector<ThermalZone> v2;
+  v2.push_back(z1);
+  v2.push_back(z3);
+  EXPECT_TRUE(avm.setCoolingControlThermalZones(v2));
+  EXPECT_EQ(0, avm.controlThermalZones().size());
+  EXPECT_EQ(2, avm.coolingControlThermalZones().size());
+  EXPECT_EQ(0, avm.heatingControlThermalZones().size());
+  EXPECT_EQ(0, avm.heatingZoneFansOnlyThermalZones().size());
+
+  std::vector<ThermalZone> v3;
+  v3.push_back(z1);
+  v3.push_back(z3);
+  v3.push_back(z5);
+  EXPECT_TRUE(avm.setHeatingControlThermalZones(v3));
+  EXPECT_EQ(0, avm.controlThermalZones().size());
+  EXPECT_EQ(2, avm.coolingControlThermalZones().size());
+  EXPECT_EQ(3, avm.heatingControlThermalZones().size());
+  EXPECT_EQ(0, avm.heatingZoneFansOnlyThermalZones().size());
+
+  std::vector<ThermalZone> v4;
+  v4.push_back(z4);
+  EXPECT_TRUE(avm.setHeatingZoneFansOnlyThermalZones(v4));
+  EXPECT_EQ(0, avm.controlThermalZones().size());
+  EXPECT_EQ(2, avm.coolingControlThermalZones().size());
+  EXPECT_EQ(3, avm.heatingControlThermalZones().size());
+  EXPECT_EQ(1, avm.heatingZoneFansOnlyThermalZones().size());
+
+
+  avm.resetCoolingControlThermalZones();
+  EXPECT_EQ(0, avm.controlThermalZones().size());
+  EXPECT_EQ(0, avm.coolingControlThermalZones().size());
+  EXPECT_EQ(3, avm.heatingControlThermalZones().size());
+  EXPECT_EQ(1, avm.heatingZoneFansOnlyThermalZones().size());
+
+  avm.resetHeatingZoneFansOnlyThermalZones();
+  EXPECT_EQ(0, avm.controlThermalZones().size());
+  EXPECT_EQ(0, avm.coolingControlThermalZones().size());
+  EXPECT_EQ(3, avm.heatingControlThermalZones().size());
+  EXPECT_EQ(0, avm.heatingZoneFansOnlyThermalZones().size());
+
+  avm.resetHeatingControlThermalZones();
+  EXPECT_EQ(0, avm.controlThermalZones().size());
+  EXPECT_EQ(0, avm.coolingControlThermalZones().size());
+  EXPECT_EQ(0, avm.heatingControlThermalZones().size());
+  EXPECT_EQ(0, avm.heatingZoneFansOnlyThermalZones().size());
+
+}

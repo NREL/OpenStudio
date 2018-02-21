@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -151,7 +151,7 @@ TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
   fan_pcm.setName("Best Program Calling Manager");
   //get calling points
   std::vector<std::string> calling_points = fan_pcm.validCallingPointValues();
-  
+
   //check if BeginNewEnviornment is in callingpoints.
   bool finds = (std::find(calling_points.begin(), calling_points.end(), "BeginNewEnvironment") != calling_points.end());
   EXPECT_EQ(true, finds);
@@ -216,7 +216,7 @@ TEST_F(ModelFixture, EMSProgramCallingManager_EMSProgramCallingManager)
   fan_pcm.erasePrograms();
   //now 0 programs
   EXPECT_EQ(0, fan_pcm.programs().size());
-  
+
   //create vector of programs
   std::vector<EnergyManagementSystemProgram> new_programs;
   new_programs.push_back(fan_program_1);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -27,7 +27,7 @@
  **********************************************************************************************************************/
 
 #ifndef MODEL_CFACTORUNDERGROUNDWALLCONSTRUCTION_IMPL_HPP
-#define MODEL_CFACTORUNDERGROUNDWALLCONSTRUCTION_IMPL_HPP 
+#define MODEL_CFACTORUNDERGROUNDWALLCONSTRUCTION_IMPL_HPP
 
 #include "ConstructionBase_Impl.hpp"
 
@@ -39,15 +39,15 @@ namespace model {
 namespace detail {
 
   class MODEL_API CFactorUndergroundWallConstruction_Impl : public ConstructionBase_Impl {
-    
 
-    
-    
-        
 
-    
-    
-        
+
+
+
+
+
+
+
 
    public:
 
@@ -55,8 +55,8 @@ namespace detail {
     CFactorUndergroundWallConstruction_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    CFactorUndergroundWallConstruction_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                            Model_Impl* model, 
+    CFactorUndergroundWallConstruction_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                            Model_Impl* model,
                                             bool keepHandle);
 
     CFactorUndergroundWallConstruction_Impl(const CFactorUndergroundWallConstruction_Impl& other,
@@ -103,7 +103,7 @@ namespace detail {
   private:
     openstudio::Quantity cFactor_SI() const;
     openstudio::Quantity cFactor_IP() const;
-    
+
     openstudio::Quantity height_SI() const;
     openstudio::Quantity height_IP() const;
 

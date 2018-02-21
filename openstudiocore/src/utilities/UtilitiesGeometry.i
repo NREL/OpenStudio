@@ -10,7 +10,7 @@
 #define UTILITIES_TEMPLATE_EXT
 
 %include <utilities/core/CommonInclude.i>
-%import <utilities/core/CommonImport.i> 
+%import <utilities/core/CommonImport.i>
 %import <utilities/UtilitiesPlot.i>
 
 //Ignore common stream related functions
@@ -36,7 +36,7 @@
   #include <utilities/core/Application.hpp>
   #include <utilities/idf/IdfObject.hpp>
   #include <utilities/idf/WorkspaceObject.hpp>
- 
+
 %}
 
 

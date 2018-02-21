@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -76,7 +76,24 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACDehumidifierDX_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Dehumidifier Sensible Heating Rate");
+      result.push_back("Zone Dehumidifier Sensible Heating Energy");
+      result.push_back("Zone Dehumidifier Removed Water Mass Flow Rate");
+      result.push_back("Zone Dehumidifier Removed Water Mass");
+      result.push_back("Zone Dehumidifier Electric Power");
+      result.push_back("Zone Dehumidifier Electric Energy");
+      result.push_back("Zone Dehumidifier Off Cycle Parasitic Electric Power");
+      result.push_back("Zone Dehumidifier Off Cycle Parasitic Electric Energy");
+      result.push_back("Zone Dehumidifier Part Load Ratio");
+      result.push_back("Zone Dehumidifier Runtime Fraction");
+      result.push_back("Zone Dehumidifier Outlet Air Temperature");
+      // If Condensate Collection Water Storage Tank Name is specified:
+      // Not implemented for now
+      // TODO: change if it becomes implemented, and change the "static" above
+      // result.push_back("Zone Dehumidifier Condensate Volume Flow Rate");
+      // result.push_back("Zone Dehumidifier Condensate Volume");
     }
     return result;
   }
@@ -239,14 +256,16 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACDehumidifierDX_Impl::setMinimumDryBulbTemperatureforDehumidifierOperation(double minimumDryBulbTemperatureforDehumidifierOperation) {
+  bool ZoneHVACDehumidifierDX_Impl::setMinimumDryBulbTemperatureforDehumidifierOperation(double minimumDryBulbTemperatureforDehumidifierOperation) {
     bool result = setDouble(OS_ZoneHVAC_Dehumidifier_DXFields::MinimumDryBulbTemperatureforDehumidifierOperation, minimumDryBulbTemperatureforDehumidifierOperation);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ZoneHVACDehumidifierDX_Impl::setMaximumDryBulbTemperatureforDehumidifierOperation(double maximumDryBulbTemperatureforDehumidifierOperation) {
+  bool ZoneHVACDehumidifierDX_Impl::setMaximumDryBulbTemperatureforDehumidifierOperation(double maximumDryBulbTemperatureforDehumidifierOperation) {
     bool result = setDouble(OS_ZoneHVAC_Dehumidifier_DXFields::MaximumDryBulbTemperatureforDehumidifierOperation, maximumDryBulbTemperatureforDehumidifierOperation);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ZoneHVACDehumidifierDX_Impl::setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad) {
@@ -455,12 +474,12 @@ bool ZoneHVACDehumidifierDX::setPartLoadFractionCorrelationCurve(const Curve& cu
   return getImpl<detail::ZoneHVACDehumidifierDX_Impl>()->setPartLoadFractionCorrelationCurve(curve);
 }
 
-void ZoneHVACDehumidifierDX::setMinimumDryBulbTemperatureforDehumidifierOperation(double minimumDryBulbTemperatureforDehumidifierOperation) {
-  getImpl<detail::ZoneHVACDehumidifierDX_Impl>()->setMinimumDryBulbTemperatureforDehumidifierOperation(minimumDryBulbTemperatureforDehumidifierOperation);
+bool ZoneHVACDehumidifierDX::setMinimumDryBulbTemperatureforDehumidifierOperation(double minimumDryBulbTemperatureforDehumidifierOperation) {
+  return getImpl<detail::ZoneHVACDehumidifierDX_Impl>()->setMinimumDryBulbTemperatureforDehumidifierOperation(minimumDryBulbTemperatureforDehumidifierOperation);
 }
 
-void ZoneHVACDehumidifierDX::setMaximumDryBulbTemperatureforDehumidifierOperation(double maximumDryBulbTemperatureforDehumidifierOperation) {
-  getImpl<detail::ZoneHVACDehumidifierDX_Impl>()->setMaximumDryBulbTemperatureforDehumidifierOperation(maximumDryBulbTemperatureforDehumidifierOperation);
+bool ZoneHVACDehumidifierDX::setMaximumDryBulbTemperatureforDehumidifierOperation(double maximumDryBulbTemperatureforDehumidifierOperation) {
+  return getImpl<detail::ZoneHVACDehumidifierDX_Impl>()->setMaximumDryBulbTemperatureforDehumidifierOperation(maximumDryBulbTemperatureforDehumidifierOperation);
 }
 
 bool ZoneHVACDehumidifierDX::setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad) {
@@ -477,10 +496,9 @@ bool ZoneHVACDehumidifierDX::setOffCycleParasiticElectricLoad(double offCyclePar
 
 /// @cond
 ZoneHVACDehumidifierDX::ZoneHVACDehumidifierDX(std::shared_ptr<detail::ZoneHVACDehumidifierDX_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 
 } // model
 } // openstudio
-

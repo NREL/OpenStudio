@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,11 +47,11 @@ namespace detail {
 
     SetpointManagerFollowOutdoorAirTemperature_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerFollowOutdoorAirTemperature_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                                         Model_Impl* model, 
+    SetpointManagerFollowOutdoorAirTemperature_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                         Model_Impl* model,
                                          bool keepHandle);
 
-    SetpointManagerFollowOutdoorAirTemperature_Impl(const SetpointManagerFollowOutdoorAirTemperature_Impl& other, 
+    SetpointManagerFollowOutdoorAirTemperature_Impl(const SetpointManagerFollowOutdoorAirTemperature_Impl& other,
                                          Model_Impl* model,
                                          bool keepHandles);
 
@@ -73,19 +73,19 @@ namespace detail {
 
     std::string referenceTemperatureType() const;
 
-    void setReferenceTemperatureType(const std::string & value);
+    bool setReferenceTemperatureType(const std::string & value);
 
     double offsetTemperatureDifference() const;
 
-    void setOffsetTemperatureDifference(double value);
+    bool setOffsetTemperatureDifference(double value);
 
     double maximumSetpointTemperature() const;
 
-    void setMaximumSetpointTemperature(double value);
+    bool setMaximumSetpointTemperature(double value);
 
     double minimumSetpointTemperature() const;
 
-    void setMinimumSetpointTemperature(double value);
+    bool setMinimumSetpointTemperature(double value);
 
     virtual boost::optional<Node> setpointNode() const override;
 

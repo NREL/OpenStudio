@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,7 +45,7 @@ namespace detail {
 } // detail
 
 /** InternalMass is a SpaceLoadInstance that wraps the OpenStudio IDD object 'OS_InternalMass'.
- *  Its fields are derived from the EnergyPlus IDD object 'InternalMass'. 
+ *  Its fields are derived from the EnergyPlus IDD object 'InternalMass'.
  *  \sa InternalMassDefinition
  */
 class MODEL_API InternalMass : public SpaceLoadInstance {
@@ -85,15 +85,15 @@ class MODEL_API InternalMass : public SpaceLoadInstance {
   /** @name Other */
   //@{
 
-  /** Returns the surfaceArea if possible based on the underlying data of 
+  /** Returns the surfaceArea if possible based on the underlying data of
    *  internalMassDefinition(). */
   boost::optional<double> surfaceArea() const;
 
-  /** Returns the surfaceAreaPerFloorArea if possible based on the underlying data of 
+  /** Returns the surfaceAreaPerFloorArea if possible based on the underlying data of
    *  internalMassDefinition(). */
   boost::optional<double> surfaceAreaPerFloorArea() const;
 
-  /** Returns the surfaceAreaPerPerson if possible based on the underlying data of 
+  /** Returns the surfaceAreaPerPerson if possible based on the underlying data of
    *  internalMassDefinition(). */
   boost::optional<double> surfaceAreaPerPerson() const;
 
@@ -101,11 +101,11 @@ class MODEL_API InternalMass : public SpaceLoadInstance {
    *  and numPeople. */
   double getSurfaceArea(double floorArea, double numPeople) const;
 
-  /** Returns the m^2/m^2 of construction surface area per floor area represented by this 
+  /** Returns the m^2/m^2 of construction surface area per floor area represented by this
    *  instance, assuming floorArea (m^2) and numPeople. */
   double getSurfaceAreaPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the m^2/person of construction surface area represented by this instance, assuming 
+  /** Returns the m^2/person of construction surface area represented by this instance, assuming
    *  floorArea (m^2) and numPeople. */
   double getSurfaceAreaPerPerson(double floorArea, double numPeople) const;
 

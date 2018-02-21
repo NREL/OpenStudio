@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -31,6 +31,11 @@
 #include "StandardsInformationMaterial.hpp"
 #include "StandardsInformationMaterial_Impl.hpp"
 
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
+#include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
+
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -42,12 +47,12 @@ namespace detail {
     : ResourceObject_Impl(idfObject, model, keepHandle)
   {}
 
-  Material_Impl::Material_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                               Model_Impl* model, 
+  Material_Impl::Material_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                               Model_Impl* model,
                                bool keepHandle)
     : ResourceObject_Impl(other, model, keepHandle)
   {}
-  
+
   Material_Impl::Material_Impl(const Material_Impl& other,Model_Impl* model,bool keepHandle)
     : ResourceObject_Impl(other, model, keepHandle)
   {}
@@ -55,6 +60,10 @@ namespace detail {
   std::vector<ModelObject> Material_Impl::children() const
   {
     std::vector<ModelObject> results(castVector<ModelObject>(getObject<Material>().getModelObjectSources<StandardsInformationMaterial>()));
+
+    if (boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> empd = this->materialPropertyMoisturePenetrationDepthSettings()) {
+      results.push_back(empd.get());
+    }
 
     return results;
   }
@@ -81,11 +90,46 @@ namespace detail {
     return StandardsInformationMaterial(getObject<Material>());
   }
 
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> Material_Impl::createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor,
+                                                                                                                                          double moistureEquationCoefficientA,
+                                                                                                                                          double moistureEquationCoefficientB,
+                                                                                                                                          double moistureEquationCoefficientC,
+                                                                                                                                          double moistureEquationCoefficientD,
+                                                                                                                                          double coatingLayerThickness,
+                                                                                                                                          double coatingLayerWaterVaporDiffusionResistanceFactor) {
+    Material thisMaterial = getObject<Material>();
+    std::vector<MaterialPropertyMoisturePenetrationDepthSettings> empds = thisMaterial.getModelObjectSources<MaterialPropertyMoisturePenetrationDepthSettings>(MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType());
+    if (!empds.empty()) {
+      return boost::none;
+    }
+
+    MaterialPropertyMoisturePenetrationDepthSettings empd(thisMaterial, waterVaporDiffusionResistanceFactor, moistureEquationCoefficientA, moistureEquationCoefficientB, moistureEquationCoefficientC, moistureEquationCoefficientD, coatingLayerThickness, coatingLayerWaterVaporDiffusionResistanceFactor);
+    return empd;
+  }
+
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> Material_Impl::materialPropertyMoisturePenetrationDepthSettings() const {
+    std::vector<MaterialPropertyMoisturePenetrationDepthSettings> empds = getObject<ModelObject>().getModelObjectSources<MaterialPropertyMoisturePenetrationDepthSettings>(MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType());
+    if (empds.empty()) {
+      // no error
+    } else if (empds.size() == 1) {
+      return empds[0];
+    } else {
+      // error
+    }
+    return boost::none;
+  }
+
+  void Material_Impl::resetMaterialPropertyMoisturePenetrationDepthSettings() {
+    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> empd = this->materialPropertyMoisturePenetrationDepthSettings();
+    if (empd) {
+      empd->remove();
+    }
+  }
 
 } // detail
 
 Material::Material(IddObjectType type,const Model& model)
-  : ResourceObject(type,model) 
+  : ResourceObject(type,model)
 {
   OS_ASSERT(getImpl<detail::Material_Impl>());
 }
@@ -115,9 +159,29 @@ StandardsInformationMaterial Material::standardsInformation() const
   return getImpl<detail::Material_Impl>()->standardsInformation();
 }
 
+boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> Material::createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor,
+                                                                                                                                   double moistureEquationCoefficientA,
+                                                                                                                                   double moistureEquationCoefficientB,
+                                                                                                                                   double moistureEquationCoefficientC,
+                                                                                                                                   double moistureEquationCoefficientD,
+                                                                                                                                   double coatingLayerThickness,
+                                                                                                                                   double coatingLayerWaterVaporDiffusionResistanceFactor)
+{
+  return getImpl<detail::Material_Impl>()->createMaterialPropertyMoisturePenetrationDepthSettings(waterVaporDiffusionResistanceFactor, moistureEquationCoefficientA, moistureEquationCoefficientB, moistureEquationCoefficientC, moistureEquationCoefficientD, coatingLayerThickness, coatingLayerWaterVaporDiffusionResistanceFactor);
+}
+
+boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> Material::materialPropertyMoisturePenetrationDepthSettings() const
+{
+  return getImpl<detail::Material_Impl>()->materialPropertyMoisturePenetrationDepthSettings();
+}
+
+void Material::resetMaterialPropertyMoisturePenetrationDepthSettings() {
+  getImpl<detail::Material_Impl>()->resetMaterialPropertyMoisturePenetrationDepthSettings();
+}
+
 /// @cond
 Material::Material(std::shared_ptr<detail::Material_Impl> impl)
-  : ResourceObject(impl)
+  : ResourceObject(std::move(impl))
 {}
 /// @endcond
 

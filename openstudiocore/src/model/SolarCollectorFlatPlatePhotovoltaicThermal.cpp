@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -178,7 +178,7 @@ namespace detail {
       LOG_AND_THROW(briefDescription() << " does not have an Solar Collector Performance attached.");
     }
     return value.get();
-  
+
   }
 
   boost::optional<PlanarSurface> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::surface() const {
@@ -281,6 +281,23 @@ namespace detail {
     return setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName, performance.handle());
   }
 
+  boost::optional<double> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::autosizedDesignFlowRate() const {
+    return getAutosizedValue("Design Size Design Flow Rate", "m3/s");
+  }
+
+  void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::autosize() {
+    autosizeDesignFlowRate();
+  }
+
+  void SolarCollectorFlatPlatePhotovoltaicThermal_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedDesignFlowRate();
+    if (val) {
+      setDesignFlowRate(val.get());
+    }
+
+  }
+
 } // detail
 
 SolarCollectorFlatPlatePhotovoltaicThermal::SolarCollectorFlatPlatePhotovoltaicThermal(const Model& model)
@@ -357,9 +374,13 @@ void SolarCollectorFlatPlatePhotovoltaicThermal::autosizeDesignFlowRate() {
 
 /// @cond
 SolarCollectorFlatPlatePhotovoltaicThermal::SolarCollectorFlatPlatePhotovoltaicThermal(std::shared_ptr<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> SolarCollectorFlatPlatePhotovoltaicThermal::autosizedDesignFlowRate() const {
+    return getImpl<detail::SolarCollectorFlatPlatePhotovoltaicThermal_Impl>()->autosizedDesignFlowRate();
+  }
 
 } // model
 } // openstudio

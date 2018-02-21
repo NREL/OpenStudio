@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -143,17 +143,17 @@ TEST_F(IdfFixture,IdfExtensibleGroup_Setters) {
   ASSERT_EQ(static_cast<unsigned>(4),eg.numFields());
 
   // setUnsigned
-  OptionalUnsigned ou = eg.getUnsigned(2,true); 
+  OptionalUnsigned ou = eg.getUnsigned(2,true);
   ASSERT_TRUE(ou);
   EXPECT_EQ(static_cast<unsigned>(1),*ou);
-  EXPECT_TRUE(eg.setUnsigned(2,5)); 
+  EXPECT_TRUE(eg.setUnsigned(2,5));
   ou = eg.getUnsigned(2);
   ASSERT_TRUE(ou);
   EXPECT_EQ(static_cast<unsigned>(5),*ou);
 
-  // setInt  
+  // setInt
   OptionalInt oi = eg.getInt(3,true);
-  ASSERT_TRUE(oi); 
+  ASSERT_TRUE(oi);
   EXPECT_EQ(1,*oi);
   EXPECT_TRUE(eg.setInt(3,4));
   oi = eg.getInt(3);
@@ -170,13 +170,13 @@ TEST_F(IdfFixture,IdfExtensibleGroup_Setters) {
 }
 
 TEST_F(IdfFixture,IdfExtensibleGroup_Queries) {
-  
+
   Workspace ws(epIdfFile);
 
   IddObjectType objType(IddObjectType::AvailabilityManagerAssignmentList);
   WorkspaceObjectVector objs = ws.getObjectsByType(objType);
   ASSERT_TRUE(objs.size() > 0);
-  
+
   // empty
   IdfExtensibleGroup eg = objs[0].getExtensibleGroup(1);
   EXPECT_TRUE(eg.empty());
@@ -426,7 +426,7 @@ TEST_F(IdfFixture,ExtensibleGroup_Insert) {
 
 TEST_F(IdfFixture,ExtensibleGroup_Erase) {
   // IdfObject
-  IdfObject idfConstruction(IddObjectType::Construction);  
+  IdfObject idfConstruction(IddObjectType::Construction);
   StringVector values(1,"Brick");
   IdfExtensibleGroup eg = idfConstruction.pushExtensibleGroup(values);
   ASSERT_FALSE(eg.empty());
@@ -470,7 +470,7 @@ TEST_F(IdfFixture,ExtensibleGroup_Erase) {
 
   // WorkspaceObject
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus); // test that bad data inserts fail, nulls ok
-  
+
   // add some objects
   IdfObjectVector objects;
   objects.push_back(IdfObject(IddObjectType::Construction));
@@ -553,7 +553,7 @@ TEST_F(IdfFixture,ExtensibleGroup_Clone) {
 
   // WorkspaceObject
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
-  
+
   // add some objects
   IdfObjectVector objects;
   objects.push_back(IdfObject(IddObjectType::Construction));
@@ -574,21 +574,21 @@ TEST_F(IdfFixture,ExtensibleGroup_Clone) {
   OptionalWorkspaceObject oTarget = wsLayer0.getTarget(0);
   ASSERT_TRUE(oTarget);
   EXPECT_TRUE(*oTarget == wsObjects[1]);
-  
+
   IdfExtensibleGroup newLayer = layer0.pushClone();
   ASSERT_FALSE(newLayer.empty());
   WorkspaceExtensibleGroup wsNewLayer = newLayer.cast<WorkspaceExtensibleGroup>();
   oTarget = wsNewLayer.getTarget(0);
   ASSERT_TRUE(oTarget);
   EXPECT_TRUE(*oTarget == wsObjects[1]);
-  
+
   newLayer = layer0.insertClone(1);
   ASSERT_FALSE(newLayer.empty());
   wsNewLayer = newLayer.cast<WorkspaceExtensibleGroup>();
   oTarget = wsNewLayer.getTarget(0);
   ASSERT_TRUE(oTarget);
   EXPECT_TRUE(*oTarget == wsObjects[1]);
-  
+
   newLayer = layer0.insertClone(1);
   ASSERT_FALSE(newLayer.empty());
   wsNewLayer = newLayer.cast<WorkspaceExtensibleGroup>();

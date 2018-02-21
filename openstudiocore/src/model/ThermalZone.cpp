@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -197,66 +197,265 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+
+      /*
+       * Zone Thermal Output
+       */
+
+      // Outdoor
       result.push_back("Zone Outdoor Air Drybulb Temperature");
       result.push_back("Zone Outdoor Air Wetbulb Temperature");
       result.push_back("Zone Outdoor Air Wind Speed");
+
+      // Internal
       result.push_back("Zone Total Internal Radiant Heating Energy");
+      result.push_back("Zone Total Internal Radiant Heating Rate");
       result.push_back("Zone Total Internal Visible Radiation Heating Energy");
+      result.push_back("Zone Total Internal Visible Radiation Heating Rate");
       result.push_back("Zone Total Internal Convective Heating Energy");
+      result.push_back("Zone Total Internal Convective Heating Rate");
       result.push_back("Zone Total Internal Latent Gain Energy");
+      result.push_back("Zone Total Internal Latent Gain Rate");
       result.push_back("Zone Total Internal Total Heating Energy");
-      result.push_back("Zone People Occupant Count");
-      result.push_back("Zone People Radiant Heating Energy");
-      result.push_back("Zone People Convective Heating Energy");
-      result.push_back("Zone People Sensible Heating Energy");
-      result.push_back("Zone People Latent Gain Energy");
-      result.push_back("Zone People Total Heating Energy");
-      result.push_back("Zone Lights Electric Power");
-      result.push_back("Zone Lights Radiant Heating Energy");
-      result.push_back("Zone Lights Visible Radiation Heating Energy");
-      result.push_back("Zone Lights Convective Heating Energy");
-      result.push_back("Zone Lights Return Air Heating Energy");
-      result.push_back("Zone Lights Total Heating Energy");
-      result.push_back("Zone Lights Electric Energy");
-      result.push_back("Zone Electric Equipment Radiant Heating Energy");
-      result.push_back("Zone Electric Equipment Convective Heating Energy");
-      result.push_back("Zone Electric Equipment Latent Gain Energy");
-      result.push_back("Zone Electric Equipment Lost Heat Energy");
-      result.push_back("Zone Electric Equipment Total Heating Energy");
-      result.push_back("Zone Electric Equipment Electric Energy");
-      result.push_back("Zone Electric Equipment Electric Power");
-      result.push_back("Zone Electric Equipment Radiant Heating Energy");
-      result.push_back("Zone Electric Equipment Latent Gain Energy");
-      result.push_back("Zone Electric Equipment Lost Heat Energy");
-      result.push_back("Zone Electric Equipment Total Heating Energy");
-      result.push_back("Zone Electric Equipment Electric Energy");
-      result.push_back("Zone Windows Total Transmitted Solar Radiation Rate");
-      result.push_back("Zone Exterior Windows Total Transmitted Beam Solar Radiation Rate");
-      result.push_back("Zone Interior Windows Total Transmitted Beam Solar Radiation Rate");
-      result.push_back("Zone Exterior Windows Total Transmitted Diffuse Solar Radiation Rate");
-      result.push_back("Zone Interior Windows Total Transmitted Diffuse Solar Radiation Rate");
-      result.push_back("Zone Windows Total Heat Gain Rate");
-      result.push_back("Zone Windows Total Heat Loss Rate");
-      result.push_back("Zone Windows Total Transmitted Solar Radiation Energy");
-      result.push_back("Zone Exterior Windows Total Transmitted Beam Solar Radiation Energy");
-      result.push_back("Zone Interior Windows Total Transmitted Beam Solar Radiation Energy");
-      result.push_back("Zone Exterior Windows Total Transmitted Diffuse Solar Radiation Rate");
-      result.push_back("Zone Interior Windows Total Transmitted Diffuse Solar Radiation Rate");
-      result.push_back("Zone Windows Total Heat Gain Energy");
-      result.push_back("Zone Windows Total Heat Loss Energy");
+      result.push_back("Zone Total Internal Total Heating Rate");
+
+      // Temperatures and RH
+      result.push_back("Zone Mean Air Temperature"); // Zone level
+      result.push_back("Zone Air Temperature"); // HVAC level
+      result.push_back("Zone Mean Air Dewpoint Temperature");
       result.push_back("Zone Mean Radiant Temperature");
-      result.push_back("Zone Mean Air Temperature");
       result.push_back("Zone Operative Temperature");
-      result.push_back("Zone Mean Air Humidity Ratio");
+      result.push_back("Zone Air Humidity Ratio");
+      result.push_back("Zone Air Relative Humidity");
+
+      // Heat Balance
       result.push_back("Zone Air Heat Balance Internal Convective Heat Gain Rate");
       result.push_back("Zone Air Heat Balance Surface Convection Rate");
       result.push_back("Zone Air Heat Balance Interzone Air Transfer Rate");
       result.push_back("Zone Air Heat Balance Outdoor Air Transfer Rate");
       result.push_back("Zone Air Heat Balance System Air Transfer Rate");
+      result.push_back("Zone Air Heat Balance System Convective Heat Gain Rate");
       result.push_back("Zone Air Heat Balance Air Energy Storage Rate");
+      result.push_back("Zone Air Heat Balance Deviation Rate");
+
+      // Air System
+      result.push_back("Zone Air System Sensible Heating Energy");
+      result.push_back("Zone Air System Sensible Cooling Energy");
+      result.push_back("Zone Air System Sensible Heating Rate");
+      result.push_back("Zone Air System Sensible Cooling Rate");
+
+      /*
+       * Zone Outputs from LOADS: Equipment, People, Lights
+       */
+
+      // TODO:: All of this section should be dynamic (if no ElectricEquipment, don't propose the output...)
+
+      // Electric Equipment
+      result.push_back("Zone Electric Equipment Electric Power");
+      result.push_back("Zone Electric Equipment Electric Energy");
+      result.push_back("Zone Electric Equipment Radiant Heating Energy");
+      result.push_back("Zone Electric Equipment Radiant Heating Rate");
+      result.push_back("Zone Electric Equipment Convective Heating Energy");
+      result.push_back("Zone Electric Equipment Convective Heating Rate");
+      result.push_back("Zone Electric Equipment Latent Gain Energy");
+      result.push_back("Zone Electric Equipment Latent Gain Rate");
+      result.push_back("Zone Electric Equipment Lost Heat Energy");
+      result.push_back("Zone Electric Equipment Lost Heat Rate");
+      result.push_back("Zone Electric Equipment Total Heating Energy");
+      result.push_back("Zone Electric Equipment Total Heating Rate");
+
+      // Gas Equipment
+      result.push_back("Zone Gas Equipment Gas Rate");
+      result.push_back("Zone Gas Equipment Gas Energy");
+      result.push_back("Zone Gas Equipment Radiant Heating Energy");
+      result.push_back("Zone Gas Equipment Radiant Heating Rate");
+      result.push_back("Zone Gas Equipment Convective Heating Energy");
+      result.push_back("Zone Gas Equipment Convective Heating Rate");
+      result.push_back("Zone Gas Equipment Latent Gain Energy");
+      result.push_back("Zone Gas Equipment Latent Gain Rate");
+      result.push_back("Zone Gas Equipment Lost Heat Energy");
+      result.push_back("Zone Gas Equipment Lost Heat Rate");
+      result.push_back("Zone Gas Equipment Total Heating Energy");
+      result.push_back("Zone Gas Equipment Total Heating Rate");
+
+      // HotWater Equipment
+      result.push_back("Zone Hot Water Equipment District Heating Rate");
+      result.push_back("Zone Hot Water Equipment District Heating Energy");
+      result.push_back("Zone Hot Water Equipment Radiant Heating Energy");
+      result.push_back("Zone Hot Water Equipment Radiant Heating Rate");
+      result.push_back("Zone Hot Water Equipment Convective Heating Energy");
+      result.push_back("Zone Hot Water Equipment Convective Heating Rate");
+      result.push_back("Zone Hot Water Equipment Latent Gain Energy");
+      result.push_back("Zone Hot Water Equipment Latent Gain Rate");
+      result.push_back("Zone Hot Water Equipment Lost Heat Energy");
+      result.push_back("Zone Hot Water Equipment Lost Heat Rate");
+      result.push_back("Zone Hot Water Equipment Total Heating Energy");
+      result.push_back("Zone Hot Water Equipment Total Heating Rate");
+
+      // Lights
+      // TODO: if zone.spaces.select{|s| s.lights.size > 0}.size > 0
+      result.push_back("Zone Lights Electric Power");
+      result.push_back("Zone Lights Radiant Heating Energy");
+      result.push_back("Zone Lights Radiant Heating Rate");
+      result.push_back("Zone Lights Visible Radiation Heating Energy");
+      result.push_back("Zone Lights Visible Radiation Heating Rate");
+      result.push_back("Zone Lights Convective Heating Energy");
+      result.push_back("Zone Lights Convective Heating Rate");
+      result.push_back("Zone Lights Return Air Heating Energy");
+      result.push_back("Zone Lights Return Air Heating Rate");
+      result.push_back("Zone Lights Total Heating Energy");
+      result.push_back("Zone Lights Total Heating Rate");
+      result.push_back("Zone Lights Electric Energy");
+
+      // OtherEquipment
+      result.push_back("Zone Other Equipment Radiant Heating Energy");
+      result.push_back("Zone Other Equipment Radiant Heating Rate");
+      result.push_back("Zone Other Equipment Convective Heating Energy");
+      result.push_back("Zone Other Equipment Convective Heating Rate");
+      result.push_back("Zone Other Equipment Latent Gain Energy");
+      result.push_back("Zone Other Equipment Latent Gain Rate");
+      result.push_back("Zone Other Equipment Lost Heat Energy");
+      result.push_back("Zone Other Equipment Lost Heat Rate");
+      result.push_back("Zone Other Equipment Total Heating Energy");
+      result.push_back("Zone Other Equipment Total Heating Rate");
+
+      // People
+      result.push_back("Zone People Occupant Count");
+      result.push_back("Zone People Radiant Heating Energy");
+      result.push_back("Zone People Radiant Heating Rate");
+      result.push_back("Zone People Convective Heating Energy");
+      result.push_back("Zone People Convective Heating Rate");
+      result.push_back("Zone People Sensible Heating Energy");
+      result.push_back("Zone People Sensible Heating Rate");
+      result.push_back("Zone People Latent Gain Energy");
+      result.push_back("Zone People Latent Gain Rate");
+      result.push_back("Zone People Total Heating Energy");
+      result.push_back("Zone People Total Heating Rate");
+
+      // TODO: check if has thermal comfort enabled
+      // Ruby pseudo code...
+      //zone.spaces.each do |s|
+        //next if s.people.size == 0
+        //s.people.each do |p|
+          //pd = p.peopleDefinition
+          //next if pd.numThermalComfortModelTypes == 0
+          //for i in (0..pd.numThermalComfortModelTypes-1)
+            //t = pd.getThermalComfortModelType(i)
+            //if t in ["Fanger", "Pierce", "KSU", "AdaptiveASH55", "AdaptiveCEN15251"]
+              //puts t
+            //end
+          //end
+        //end
+      //end
+      // JM: Not sure which model outputs these, maybe all
+      result.push_back("Zone Thermal Comfort Mean Radiant Temperature");
+      result.push_back("Zone Thermal Comfort Operative Temperature");
+      result.push_back("Zone Thermal Comfort Clothing Surface Temperature");
+      // if Fanger
+      result.push_back("Zone Thermal Comfort Fanger Model PMV");
+      result.push_back("Zone Thermal Comfort Fanger Model PPD");
+      // if Pierce
+      result.push_back("Zone Thermal Comfort Pierce Model Effective Temperature PMV");
+      result.push_back("Zone Thermal Comfort Pierce Model Standard Effective Temperature PMV");
+      result.push_back("Zone Thermal Comfort Pierce Model Discomfort Index");
+      result.push_back("Zone Thermal Comfort Pierce Model Thermal Sensation Index");
+      // if KSU
+      result.push_back("Zone Thermal Comfort KSU Model Thermal Sensation Index");
+      // if AdaptiveASH55
+      result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model 80%% Acceptability Status");
+      result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model 90%% Acceptability Status");
+      result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model Running Average Outdoor Air Temperature");
+      result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model Temperature");
+      // if AdaptiveCEN15251
+      result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Category I Status");
+      result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Category II Status");
+      result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Category III Status");
+      result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Running Average Outdoor Air Temperature");
+      result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Temperature");
+
+
+
+      // Steam Equipment
+      result.push_back("Zone Steam Equipment District Heating Rate");
+      result.push_back("Zone Steam Equipment District Heating Energy");
+      result.push_back("Zone Steam Equipment Radiant Heating Energy");
+      result.push_back("Zone Steam Equipment Radiant Heating Rate");
+      result.push_back("Zone Steam Equipment Convective Heating Energy");
+      result.push_back("Zone Steam Equipment Convective Heating Rate");
+      result.push_back("Zone Steam Equipment Latent Gain Energy");
+      result.push_back("Zone Steam Equipment Latent Gain Rate");
+      result.push_back("Zone Steam Equipment Lost Heat Energy");
+      result.push_back("Zone Steam Equipment Lost Heat Rate");
+      result.push_back("Zone Steam Equipment Total Heating Energy");
+      result.push_back("Zone Steam Equipment Total Heating Rate");
+
+      /*
+       * Zone Outputs from Daylighting Controls
+       */
+
+      result.push_back("Daylighting Lighting Power Multiplier");
+
+      // DLM: this is a static list so no dynamic
+      //if (primaryDaylightingControl()){
+        result.push_back("Daylighting Reference Point 1 Illuminance");
+        result.push_back("Daylighting Reference Point 1 Glare Index");
+        result.push_back("Daylighting Reference Point 1 Glare Index Setpoint Exceeded Time");
+        result.push_back("Daylighting Reference Point 1 Daylight Illuminance Setpoint Exceeded Time");
+      //}
+      
+      //if (secondaryDaylightingControl()){
+        result.push_back("Daylighting Reference Point 2 Illuminance");
+        result.push_back("Daylighting Reference Point 2 Glare Index");
+        result.push_back("Daylighting Reference Point 2 Glare Index Setpoint Exceeded Time");
+        result.push_back("Daylighting Reference Point 2 Daylight Illuminance Setpoint Exceeded Time");
+      //}
+
+
+      /*
+       * Zone Outputs from Surfaces
+       */
+
+
+      // Opaque
+      // Output variables applicable to opaque heat transfer surfaces (FLOOR, WALL, ROOF, DOOR).
+      // if Output:Diagnostics is used
+      //result.push_back("Zone Opaque Surface Inside Face Conduction");
+      //result.push_back("Zone Opaque Surface Inside Faces Total Conduction Heat Gain Rate");
+      //result.push_back("Zone Opaque Surface Inside Faces Total Conduction Heat Loss Rate");
+      //result.push_back("Zone Opaque Surface Inside Faces Total Conduction Heat Gain Energy");
+      //result.push_back("Zone Opaque Surface Inside Faces Total Conduction Heat Loss Energy");
+      //result.push_back("Zone Opaque Surface Outside Face Conduction");
+      //result.push_back("Zone Opaque Surface Outside Face Conduction Gain");
+      //result.push_back("Zone Opaque Surface Outside Face Conduction Loss");
+
+      // Window
+      result.push_back("Zone Windows Total Transmitted Solar Radiation Rate");
+      result.push_back("Zone Windows Total Transmitted Solar Radiation Energy");
+
+      result.push_back("Zone Windows Total Heat Gain Rate");
+      result.push_back("Zone Windows Total Heat Gain Energy");
+      result.push_back("Zone Windows Total Heat Loss Rate");
+      result.push_back("Zone Windows Total Heat Loss Energy");
+
+      result.push_back("Zone Exterior Windows Total Transmitted Beam Solar Radiation Rate");
+      result.push_back("Zone Exterior Windows Total Transmitted Beam Solar Radiation Energy");
+      result.push_back("Zone Exterior Windows Total Transmitted Diffuse Solar Radiation Rate");
+      result.push_back("Zone Exterior Windows Total Transmitted Diffuse Solar Radiation Energy");
+
+      result.push_back("Zone Interior Windows Total Transmitted Beam Solar Radiation Rate");
+      result.push_back("Zone Interior Windows Total Transmitted Beam Solar Radiation Energy");
+      result.push_back("Zone Interior Windows Total Transmitted Diffuse Solar Radiation Rate");
+      result.push_back("Zone Interior Windows Total Transmitted Diffuse Solar Radiation Energy");
+
+      /*
+       * Zone Outputs from other
+       */
+
+      // Infiltration
+      // If infiltration is used
       result.push_back("Zone Infiltration Sensible Heat Loss Energy");
       result.push_back("Zone Infiltration Sensible Heat Gain Energy");
-      result.push_back("Zone Infiltration Sensible Heat Gain Energy");
+      result.push_back("Zone Infiltration Latent Heat Loss Energy");
       result.push_back("Zone Infiltration Latent Heat Gain Energy");
       result.push_back("Zone Infiltration Total Heat Loss Energy");
       result.push_back("Zone Infiltration Total Heat Gain Energy");
@@ -265,23 +464,40 @@ namespace detail {
       result.push_back("Zone Infiltration Current Density Volume");
       result.push_back("Zone Infiltration Standard Density Volume");
       result.push_back("Zone Infiltration Mass");
+      result.push_back("Zone Infiltration Mass Flow Rate");
       result.push_back("Zone Infiltration Air Change Rate");
-      result.push_back("Zone Air System Sensible Heating Energy");
-      result.push_back("Zone Air System Sensible Cooling Energy");
-      result.push_back("Zone Air System Sensible Heating Rate");
-      result.push_back("Zone Air System Sensible Cooling Rate");
-      result.push_back("Zone Air Temperature");
-      result.push_back("Zone Thermostat Air Temperature");
-      result.push_back("Zone Air Humidity Ratio");
-      result.push_back("Zone Air Relative Humidity");
+
+
+      // ZoneVentilation:DesignFlowRate
+      result.push_back("Zone Ventilation Sensible Heat Loss Energy");
+      result.push_back("Zone Ventilation Sensible Heat Gain Energy");
+      result.push_back("Zone Ventilation Latent Heat Loss Energy");
+      result.push_back("Zone Ventilation Latent Heat Gain Energy");
+      result.push_back("Zone Ventilation Total Heat Loss Energy");
+      result.push_back("Zone Ventilation Total Heat Gain Energy");
+      result.push_back("Zone Ventilation Current Density Volume Flow Rate");
+      result.push_back("Zone Ventilation Standard Density Volume Flow Rate");
+      result.push_back("Zone Ventilation Current Density Volume");
+      result.push_back("Zone Ventilation Standard Density Volume");
+      result.push_back("Zone Ventilation Mass");
+      result.push_back("Zone Ventilation Mass Flow Rate");
+      result.push_back("Zone Ventilation Air Change Rate");
+      result.push_back("Zone Ventilation Fan Electric Energy");
+      result.push_back("Zone Ventilation Air Inlet Temperature");
+
+
+
       result.push_back("Zone Predicted Sensible Load to Setpoint Heat Transfer Rate");
       result.push_back("Zone Predicted Sensible Load to Heating Setpoint Heat Transfer Rate");
       result.push_back("Zone Predicted Sensible Load to Cooling Setpoint Heat Transfer Rate");
       result.push_back("Zone Predicted Moisture Load Moisture Transfer Rate");
       result.push_back("Zone Predicted Moisture Load to Humidifying Setpoint Moisture Transfer Rate");
       result.push_back("Zone Predicted Moisture Load to Dehumidifying Setpoint Moisture Transfer Rate");
+
+      result.push_back("Zone Thermostat Control Type");
       result.push_back("Zone Thermostat Heating Setpoint Temperature");
       result.push_back("Zone Thermostat Cooling Setpoint Temperature");
+
       result.push_back("Zone Mechanical Ventilation No Load Heat Removal Energy");
       result.push_back("Zone Mechanical Ventilation Cooling Load Increase Energy");
       result.push_back("Zone Mechanical Ventilation Cooling Load Increase Energy Due to Overheating Energy");
@@ -302,7 +518,39 @@ namespace detail {
       result.push_back("Zone Mechanical Ventilation Current Density Volume Flow Rate");
       result.push_back("Zone Mechanical Ventilation Current Density Volume");
       result.push_back("Zone Mechanical Ventilation Air Changes per Hour");
-      result.push_back("Zone Thermostat Control Type");
+
+
+      // ZoneContaminantAirBalance
+      // The following output variables are available when Carbon Dioxide Concentration = Yes.
+      result.push_back("Zone Air CO2 Internal Gain Volume Flow Rate");
+      result.push_back("Zone Air CO2 Concentration");
+      // The following output variable is available when Generic Contaminant Concentration = Yes.
+      result.push_back("Zone Generic Air Contaminant Generation Volume Flow Rate");
+      result.push_back("Zone Air Generic Air Contaminant Concentration");
+
+      // Refrigeration:AirChiller
+      // TODO: implement test to see if AirChiller.
+      result.push_back("Refrigeration Zone Air Chiller Sensible Cooling Rate");
+      result.push_back("Refrigeration Zone Air Chiller Sensible Cooling Energy");
+      result.push_back("Refrigeration Zone Air Chiller Heating Rate");
+      result.push_back("Refrigeration Zone Air Chiller Heating Energy");
+      result.push_back("Refrigeration Zone Air Chiller Latent Cooling Rate");
+      result.push_back("Refrigeration Zone Air Chiller Latent Cooling Energy");
+      result.push_back("Refrigeration Zone Air Chiller Total Cooling Rate");
+      result.push_back("Refrigeration Zone Air Chiller Total Cooling Energy");
+      result.push_back("Refrigeration Zone Air Chiller Water Removed Mass Flow Rate");
+
+      // RefrigerationWalkin
+      // TODO: test
+      result.push_back("Refrigeration Walk In Zone Sensible Cooling Rate");
+      result.push_back("Refrigeration Walk In Zone Sensible Cooling Energy");
+      result.push_back("Refrigeration Walk In Zone Sensible Heating Rate");
+      result.push_back("Refrigeration Walk In Zone Sensible Heating Energy");
+      result.push_back("Refrigeration Walk In Zone Latent Rate");
+      result.push_back("Refrigeration Walk In Zone Latent Energy");
+
+
+
     }
     return result;
   }
@@ -432,7 +680,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ThermalZone_Impl::setCeilingHeight(boost::optional<double> ceilingHeight) {
+  bool ThermalZone_Impl::setCeilingHeight(boost::optional<double> ceilingHeight) {
     bool result = false;
     if (ceilingHeight) {
       result = setDouble(OS_ThermalZoneFields::CeilingHeight, ceilingHeight.get());
@@ -440,11 +688,13 @@ namespace detail {
       result = setString(OS_ThermalZoneFields::CeilingHeight, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalZone_Impl::setCeilingHeight(double ceilingHeight) {
+  bool ThermalZone_Impl::setCeilingHeight(double ceilingHeight) {
     bool result = setDouble(OS_ThermalZoneFields::CeilingHeight, ceilingHeight);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ThermalZone_Impl::setCeilingHeight(const OSOptionalQuantity& ceilingHeight) {
@@ -467,7 +717,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ThermalZone_Impl::setVolume(boost::optional<double> volume) {
+  bool ThermalZone_Impl::setVolume(boost::optional<double> volume) {
     bool result = false;
     if (volume) {
       result = setDouble(OS_ThermalZoneFields::Volume, volume.get());
@@ -475,11 +725,13 @@ namespace detail {
       result = setString(OS_ThermalZoneFields::Volume, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
-  void ThermalZone_Impl::setVolume(double volume) {
+  bool ThermalZone_Impl::setVolume(double volume) {
     bool result = setDouble(OS_ThermalZoneFields::Volume, volume);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ThermalZone_Impl::setVolume(const OSOptionalQuantity& volume) {
@@ -542,18 +794,35 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ThermalZone_Impl::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
+  bool ThermalZone_Impl::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
     bool result = setString(OS_ThermalZoneFields::ZoneConditioningEquipmentListName, zoneConditioningEquipmentListName);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl) {
+
+    double secondaryFrac = fractionofZoneControlledbySecondaryDaylightingControl();
+    if ( (fractionofZoneControlledbyPrimaryDaylightingControl + secondaryFrac) > 1.0) {
+      LOG(Error, "Fraction of Zone Controlled by Secondary Daylight Control is " << secondaryFrac
+          << " and you supplied a Primary Fraction of " << fractionofZoneControlledbyPrimaryDaylightingControl
+          << " which would result in a sum greater than 1.0");
+      return false;
+    }
     bool result = setDouble(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl, fractionofZoneControlledbyPrimaryDaylightingControl);
     return result;
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbyPrimaryDaylightingControl(const Quantity& fractionofZoneControlledbyPrimaryDaylightingControl) {
-    return setQuantity(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl,fractionofZoneControlledbyPrimaryDaylightingControl);
+    // Get double
+    OptionalDouble value = getDoubleFromQuantity(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl,
+                                                 fractionofZoneControlledbyPrimaryDaylightingControl);
+    if (!value) {
+      return false;
+    } else {
+      // Call the method with the double, where the sanity check is
+      return setFractionofZoneControlledbyPrimaryDaylightingControl(value.get());
+    }
   }
 
   void ThermalZone_Impl::resetFractionofZoneControlledbyPrimaryDaylightingControl() {
@@ -562,12 +831,27 @@ namespace detail {
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbySecondaryDaylightingControl(double fractionofZoneControlledbySecondaryDaylightingControl) {
+    double primaryFrac = fractionofZoneControlledbyPrimaryDaylightingControl();
+    if ( (fractionofZoneControlledbySecondaryDaylightingControl + primaryFrac) > 1.0) {
+      LOG(Error, "Fraction of Zone Controlled by Primary Daylight Control is " << primaryFrac
+          << " and you supplied a Secondary Fraction of " << fractionofZoneControlledbySecondaryDaylightingControl
+          << " which would result in a sum greater than 1.0");
+      return false;
+    }
     bool result = setDouble(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl, fractionofZoneControlledbySecondaryDaylightingControl);
     return result;
   }
 
   bool ThermalZone_Impl::setFractionofZoneControlledbySecondaryDaylightingControl(const Quantity& fractionofZoneControlledbySecondaryDaylightingControl) {
-    return setQuantity(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl,fractionofZoneControlledbySecondaryDaylightingControl);
+    // Get double
+    OptionalDouble value = getDoubleFromQuantity(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl,
+                                                 fractionofZoneControlledbySecondaryDaylightingControl);
+    if (!value) {
+      return false;
+    } else {
+      // Call the method with the double, where the sanity check is
+      return setFractionofZoneControlledbySecondaryDaylightingControl(value.get());
+    }
   }
 
   void ThermalZone_Impl::resetFractionofZoneControlledbySecondaryDaylightingControl() {
@@ -1566,13 +1850,20 @@ namespace detail {
   void ThermalZone_Impl::disconnect()
   {
     PortList pl = inletPortList();
+    // This returns a 0-indexed for the extensible fields
+    // unsigned plPortIndex = pl.airLoopHVACPortIndex();
+    // This is the actual field index, used in disconnect
+    // unsigned plPort = pl.port(plPortIndex);
+
     unsigned plPort = pl.airLoopHVACPort();
 
     ModelObject mo = this->getObject<ModelObject>();
     Model _model = this->model();
 
-    _model.disconnect(pl,plPort);
-    _model.disconnect(mo,returnAirPort());
+    if (plPort != pl.nextPort()) {
+      _model.disconnect(pl, plPort);
+    }
+    _model.disconnect(mo, returnAirPort());
   }
 
   bool ThermalZone_Impl::useIdealAirLoads() const
@@ -1582,11 +1873,13 @@ namespace detail {
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
-  void ThermalZone_Impl::setUseIdealAirLoads(bool useIdealAirLoads)
+  bool ThermalZone_Impl::setUseIdealAirLoads(bool useIdealAirLoads)
   {
+    bool result = true;
+
     if (useIdealAirLoads)
     {
-      setString(OS_ThermalZoneFields::UseIdealAirLoads, "Yes");
+      result &= setString(OS_ThermalZoneFields::UseIdealAirLoads, "Yes");
 
       std::vector<ModelObject> comps = this->equipment();
 
@@ -1599,13 +1892,15 @@ namespace detail {
       {
         ThermalZone thisObject = this->getObject<ThermalZone>();
 
-        airLoop->removeBranchForZone(thisObject);
+        result &= airLoop->removeBranchForZone(thisObject);
       }
+
     }
     else
     {
-      setString(OS_ThermalZoneFields::UseIdealAirLoads, "No");
+      result &= setString(OS_ThermalZoneFields::UseIdealAirLoads, "No");
     }
+    return result;
   }
 
   openstudio::OSOptionalQuantity ThermalZone_Impl::ceilingHeight_SI() const {
@@ -2000,24 +2295,24 @@ namespace detail {
     }
   }
 
-  void ThermalZone_Impl::addEquipment(const ModelObject & equipment)
+  bool ThermalZone_Impl::addEquipment(const ModelObject & equipment)
   {
-    zoneHVACEquipmentList().addEquipment(equipment);
+    return zoneHVACEquipmentList().addEquipment(equipment);
   }
 
-  void ThermalZone_Impl::removeEquipment(const ModelObject & equipment)
+  bool ThermalZone_Impl::removeEquipment(const ModelObject & equipment)
   {
-    zoneHVACEquipmentList().removeEquipment(equipment);
+    return zoneHVACEquipmentList().removeEquipment(equipment);
   }
 
-  void ThermalZone_Impl::setCoolingPriority(const ModelObject & equipment, unsigned priority)
+  bool ThermalZone_Impl::setCoolingPriority(const ModelObject & equipment, unsigned priority)
   {
-    zoneHVACEquipmentList().setCoolingPriority(equipment,priority);
+    return zoneHVACEquipmentList().setCoolingPriority(equipment,priority);
   }
 
-  void ThermalZone_Impl::setHeatingPriority(const ModelObject & equipment, unsigned priority)
+  bool ThermalZone_Impl::setHeatingPriority(const ModelObject & equipment, unsigned priority)
   {
-    zoneHVACEquipmentList().setHeatingPriority(equipment,priority);
+    return zoneHVACEquipmentList().setHeatingPriority(equipment,priority);
   }
 
   std::vector<ModelObject> ThermalZone_Impl::equipment() const
@@ -2603,12 +2898,12 @@ void ThermalZone::resetMultiplier() {
   getImpl<detail::ThermalZone_Impl>()->resetMultiplier();
 }
 
-void ThermalZone::setCeilingHeight(boost::optional<double> ceilingHeight) {
-  getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
+bool ThermalZone::setCeilingHeight(boost::optional<double> ceilingHeight) {
+  return getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
 }
 
-void ThermalZone::setCeilingHeight(double ceilingHeight) {
-  getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
+bool ThermalZone::setCeilingHeight(double ceilingHeight) {
+  return getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
 }
 
 bool ThermalZone::setCeilingHeight(const Quantity& ceilingHeight) {
@@ -2623,12 +2918,12 @@ void ThermalZone::autocalculateCeilingHeight() {
   getImpl<detail::ThermalZone_Impl>()->autocalculateCeilingHeight();
 }
 
-void ThermalZone::setVolume(boost::optional<double> volume) {
-  getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
+bool ThermalZone::setVolume(boost::optional<double> volume) {
+  return getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
 }
 
-void ThermalZone::setVolume(double volume) {
-  getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
+bool ThermalZone::setVolume(double volume) {
+  return getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
 }
 
 bool ThermalZone::setVolume(const Quantity& volume) {
@@ -2667,8 +2962,8 @@ void ThermalZone::resetZoneOutsideConvectionAlgorithm() {
   getImpl<detail::ThermalZone_Impl>()->resetZoneOutsideConvectionAlgorithm();
 }
 
-void ThermalZone::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
-  getImpl<detail::ThermalZone_Impl>()->setZoneConditioningEquipmentListName(zoneConditioningEquipmentListName);
+bool ThermalZone::setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName) {
+  return getImpl<detail::ThermalZone_Impl>()->setZoneConditioningEquipmentListName(zoneConditioningEquipmentListName);
 }
 
 bool ThermalZone::setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl) {
@@ -2937,9 +3232,9 @@ bool ThermalZone::useIdealAirLoads() const
   return getImpl<detail::ThermalZone_Impl>()->useIdealAirLoads();
 }
 
-void ThermalZone::setUseIdealAirLoads(bool useIdealAirLoads)
+bool ThermalZone::setUseIdealAirLoads(bool useIdealAirLoads)
 {
-  getImpl<detail::ThermalZone_Impl>()->setUseIdealAirLoads(useIdealAirLoads);
+  return getImpl<detail::ThermalZone_Impl>()->setUseIdealAirLoads(useIdealAirLoads);
 }
 
 SizingZone ThermalZone::sizingZone() const
@@ -2962,19 +3257,19 @@ PortList ThermalZone::exhaustPortList() const
   return getImpl<detail::ThermalZone_Impl>()->exhaustPortList();
 }
 
-void ThermalZone::addEquipment(const ModelObject & equipment)
+bool ThermalZone::addEquipment(const ModelObject & equipment)
 {
-  getImpl<detail::ThermalZone_Impl>()->addEquipment(equipment);
+  return getImpl<detail::ThermalZone_Impl>()->addEquipment(equipment);
 }
 
-void ThermalZone::setCoolingPriority(const ModelObject & equipment, unsigned priority)
+bool ThermalZone::setCoolingPriority(const ModelObject & equipment, unsigned priority)
 {
-  getImpl<detail::ThermalZone_Impl>()->setCoolingPriority(equipment,priority);
+  return getImpl<detail::ThermalZone_Impl>()->setCoolingPriority(equipment,priority);
 }
 
-void ThermalZone::setHeatingPriority(const ModelObject & equipment, unsigned priority)
+bool ThermalZone::setHeatingPriority(const ModelObject & equipment, unsigned priority)
 {
-  getImpl<detail::ThermalZone_Impl>()->setHeatingPriority(equipment,priority);
+  return getImpl<detail::ThermalZone_Impl>()->setHeatingPriority(equipment,priority);
 }
 
 std::vector<ModelObject> ThermalZone::equipment() const
@@ -2992,9 +3287,9 @@ std::vector<ModelObject> ThermalZone::equipmentInCoolingOrder()
   return getImpl<detail::ThermalZone_Impl>()->equipmentInCoolingOrder();
 }
 
-void ThermalZone::removeEquipment(const ModelObject & equipment)
+bool ThermalZone::removeEquipment(const ModelObject & equipment)
 {
-  getImpl<detail::ThermalZone_Impl>()->removeEquipment(equipment);
+  return getImpl<detail::ThermalZone_Impl>()->removeEquipment(equipment);
 }
 
 bool ThermalZone::isPlenum() const
@@ -3084,7 +3379,7 @@ boost::optional<AirflowNetworkZone> ThermalZone::optionalAirflowNetworkZone() co
 
 /// @cond
 ThermalZone::ThermalZone(std::shared_ptr<detail::ThermalZone_Impl> impl)
-  : HVACComponent(impl)
+  : HVACComponent(std::move(impl))
 {}
 /// @endcond
 

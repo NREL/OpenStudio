@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -31,6 +31,7 @@
 
 #include "ComponentWatcher.hpp"
 #include "Building.hpp"
+#include "FoundationKivaSettings.hpp"
 #include "LifeCycleCostParameters.hpp"
 #include "RunPeriod.hpp"
 #include "YearDescription.hpp"
@@ -67,6 +68,7 @@ class ModelObject;
 class Component;
 class ComponentData;
 class Schedule;
+class Node;
 class SpaceType;
 
 namespace detail {
@@ -75,7 +77,7 @@ namespace detail {
 
   /** Container for the OpenStudio Building Model hierarchy. */
   class MODEL_API Model_Impl : public openstudio::detail::Workspace_Impl {
-    
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -138,10 +140,14 @@ namespace detail {
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<Building>(). */
     boost::optional<Building> building() const;
 
+    /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
+    boost::optional<FoundationKivaSettings> foundationKivaSettings() const;    
+    
     /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
     boost::optional<LifeCycleCostParameters> lifeCycleCostParameters() const;
-    
+
     /** Get the RunPeriod object if there is one, this implementation uses a cached reference to the RunPeriod
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<RunPeriod>(). */
     boost::optional<RunPeriod> runPeriod() const;
@@ -149,7 +155,7 @@ namespace detail {
     /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
     boost::optional<YearDescription> yearDescription() const;
-      
+
     /** Get or create the YearDescription object if there is one, then call method from YearDescription. */
     // DLM: this is due to issues exporting the model::YearDescription object because of name conflict with utilities::YearDescription.
     boost::optional<int> calendarYear() const;
@@ -157,7 +163,7 @@ namespace detail {
     bool isDayofWeekforStartDayDefaulted() const;
     bool isLeapYear() const;
     bool isIsLeapYearDefaulted() const;
-    void setCalendarYear(int calendarYear);
+    bool setCalendarYear(int calendarYear);
     void resetCalendarYear();
     bool setDayofWeekforStartDay(std::string dayofWeekforStartDay);
     void resetDayofWeekforStartDay();
@@ -175,11 +181,21 @@ namespace detail {
 
     Schedule alwaysOnDiscreteSchedule() const;
 
+    std::string alwaysOnDiscreteScheduleName() const;
+
     Schedule alwaysOffDiscreteSchedule() const;
+
+    std::string alwaysOffDiscreteScheduleName() const;
 
     Schedule alwaysOnContinuousSchedule() const;
 
+    std::string alwaysOnContinuousScheduleName() const;
+
+    Node outdoorAirNode() const;
+
     SpaceType plenumSpaceType() const;
+
+    std::string plenumSpaceTypeName() const;
 
     //@}
     /** @name Setters */
@@ -252,7 +268,9 @@ namespace detail {
 
     virtual void reportInitialModelObjects();
 
-   
+    void autosize();
+
+    void applySizingValues();
 
    private:
     // explicitly unimplemented copy constructor
@@ -278,6 +296,7 @@ namespace detail {
   private:
 
     mutable boost::optional<Building> m_cachedBuilding;
+    mutable boost::optional<FoundationKivaSettings> m_cachedFoundationKivaSettings;
     mutable boost::optional<LifeCycleCostParameters> m_cachedLifeCycleCostParameters;
     mutable boost::optional<RunPeriod> m_cachedRunPeriod;
     mutable boost::optional<YearDescription> m_cachedYearDescription;
@@ -286,6 +305,7 @@ namespace detail {
   // private slots:
     void clearCachedData();
     void clearCachedBuilding(const Handle& handle);
+    void clearCachedFoundationKivaSettings(const Handle& handle);
     void clearCachedLifeCycleCostParameters(const Handle& handle);
     void clearCachedRunPeriod(const Handle& handle);
     void clearCachedYearDescription(const Handle& handle);

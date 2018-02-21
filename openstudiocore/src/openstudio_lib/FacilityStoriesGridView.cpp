@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,6 +47,10 @@
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/RenderingColor.hpp"
 #include "../model/RenderingColor_Impl.hpp"
+
+// For purgeObjects
+#include "../model/Space.hpp"
+
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idd/IddEnums.hxx"
@@ -175,8 +179,11 @@ namespace openstudio {
 
   void FacilityStoriesGridView::purgeObjects(const IddObjectType& iddObjectType)
   {
-    for (auto mo : this->m_model.getConcreteModelObjects<model::BuildingStory>()){
-      mo.remove();
+    // If no spaces in the story -> remove
+    for (model::BuildingStory story : this->m_model.getConcreteModelObjects<model::BuildingStory>()){
+      if (story.spaces().empty()){
+        story.remove();
+      }
     }
   }
 
@@ -234,7 +241,7 @@ namespace openstudio {
     //m_itemSelectorButtons->enableAddButton();
     //m_itemSelectorButtons->enableCopyButton();
     m_itemSelectorButtons->enableRemoveButton();
-    m_itemSelectorButtons->enablePurgeButton();
+    //m_itemSelectorButtons->enablePurgeButton();
   }
 
   void FacilityStoriesGridView::onClearSelection()
@@ -242,7 +249,7 @@ namespace openstudio {
     //m_itemSelectorButtons->disableAddButton();
     //m_itemSelectorButtons->disableCopyButton();
     m_itemSelectorButtons->disableRemoveButton();
-    m_itemSelectorButtons->disablePurgeButton();
+    //m_itemSelectorButtons->disablePurgeButton();
   }
 
   FacilityStoriesGridController::FacilityStoriesGridController(bool isIP,

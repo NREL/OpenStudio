@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -75,7 +75,12 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACBaseboardRadiantConvectiveElectric_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Baseboard Total Heating Rate");
+      result.push_back("Baseboard Total Heating Energy");
+      result.push_back("Baseboard Electric Energy");
+      result.push_back("Baseboard Electric Power");
     }
     return result;
   }
@@ -147,8 +152,8 @@ namespace detail {
     }
   }
 
-  std::vector<Surface> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::surfaces() const {    
-    
+  std::vector<Surface> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::surfaces() const {
+
     //vector to hold all of the surfaces that this radiant system is attached to
     std::vector<Surface> surfaces;
 
@@ -157,12 +162,12 @@ namespace detail {
 
       //loop through all the spaces in this zone
       for (auto const & space : thermalZone->spaces()){
-    
+
         //loop through all the surfaces in this space
         for (auto const & surface : space.surfaces()){
           surfaces.push_back(surface);
         }
-      }    
+      }
     }
 
     return surfaces;
@@ -278,6 +283,23 @@ namespace detail {
 
   boost::optional<Schedule> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::optionalAvailabilitySchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_Baseboard_RadiantConvective_ElectricFields::AvailabilityScheduleName);
+  }
+
+  boost::optional<double> ZoneHVACBaseboardRadiantConvectiveElectric_Impl::autosizedHeatingDesignCapacity() const {
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+  }
+
+  void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::autosize() {
+    autosizeHeatingDesignCapacity();
+  }
+
+  void ZoneHVACBaseboardRadiantConvectiveElectric_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedHeatingDesignCapacity();
+    if (val) {
+      setHeatingDesignCapacity(val.get());
+    }
+
   }
 
 } // detail
@@ -401,9 +423,13 @@ void ZoneHVACBaseboardRadiantConvectiveElectric::removeFromThermalZone() {
 
 /// @cond
 ZoneHVACBaseboardRadiantConvectiveElectric::ZoneHVACBaseboardRadiantConvectiveElectric(std::shared_ptr<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACBaseboardRadiantConvectiveElectric::autosizedHeatingDesignCapacity() const {
+    return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->autosizedHeatingDesignCapacity();
+  }
 
 } // model
 } // openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -69,10 +69,13 @@ namespace detail {
     : PhotovoltaicPerformance_Impl(other,model,keepHandle)
   {}
 
+  // TODO: remove
   const std::vector<std::string>& PhotovoltaicPerformanceSimple_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: no specific variables
     }
     return result;
   }
@@ -165,9 +168,10 @@ namespace detail {
     setDefaultFixedEfficiency();
   }
 
-  void PhotovoltaicPerformanceSimple_Impl::setDefaultFixedEfficiency() {
+  bool PhotovoltaicPerformanceSimple_Impl::setDefaultFixedEfficiency() {
     bool result = setFixedEfficiency(0.12);
     OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -229,10 +233,9 @@ void PhotovoltaicPerformanceSimple::resetEfficiencySchedule() {
 
 /// @cond
 PhotovoltaicPerformanceSimple::PhotovoltaicPerformanceSimple(std::shared_ptr<detail::PhotovoltaicPerformanceSimple_Impl> impl)
-  : PhotovoltaicPerformance(impl)
+  : PhotovoltaicPerformance(std::move(impl))
 {}
 /// @endcond
 
 } // model
 } // openstudio
-

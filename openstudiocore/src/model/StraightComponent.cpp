@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -59,19 +59,19 @@ StraightComponent_Impl::StraightComponent_Impl(IddObjectType type, Model_Impl* m
 
 StraightComponent_Impl::StraightComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : HVACComponent_Impl(idfObject, model, keepHandle)
-{ 
+{
 }
 
 StraightComponent_Impl::StraightComponent_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other, 
-    Model_Impl* model, 
+    const openstudio::detail::WorkspaceObject_Impl& other,
+    Model_Impl* model,
     bool keepHandle)
   : HVACComponent_Impl(other,model,keepHandle)
 {
 }
 
-StraightComponent_Impl::StraightComponent_Impl(const StraightComponent_Impl& other, 
-                                               Model_Impl* model, 
+StraightComponent_Impl::StraightComponent_Impl(const StraightComponent_Impl& other,
+                                               Model_Impl* model,
                                                bool keepHandles)
   : HVACComponent_Impl(other,model,keepHandles)
 {
@@ -160,7 +160,7 @@ std::vector<HVACComponent> StraightComponent_Impl::edges(const boost::optional<H
 
 bool StraightComponent_Impl::addToNode(Node & node)
 {
-  Model _model = node.model(); 
+  Model _model = node.model();
   ModelObject thisModelObject = getObject<ModelObject>();
   auto t_loop = node.loop();
   auto t_oaSystem = node.airLoopHVACOutdoorAirSystem();
@@ -210,8 +210,8 @@ ModelObject StraightComponent_Impl::clone(Model model) const
 {
   StraightComponent mo =  HVACComponent_Impl::clone( model ).cast<StraightComponent>();
 
-  mo.setString(mo.inletPort(),""); 
-  mo.setString(mo.outletPort(),""); 
+  mo.setString(mo.inletPort(),"");
+  mo.setString(mo.outletPort(),"");
 
   return mo;
 }
@@ -222,10 +222,10 @@ StraightComponent::StraightComponent(IddObjectType type,const Model& model)
   : HVACComponent(type,model)
 {
   OS_ASSERT(getImpl<detail::StraightComponent_Impl>());
-}     
+}
 
 StraightComponent::StraightComponent(std::shared_ptr<detail::StraightComponent_Impl> p)
-  : HVACComponent(p)
+  : HVACComponent(std::move(p))
 {}
 
 unsigned StraightComponent::inletPort()

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -113,13 +113,13 @@ class MODEL_API HeaderedPumpsVariableSpeed : public StraightComponent {
 
   void autosizeTotalRatedFlowRate();
 
-  void setNumberofPumpsinBank(int numberofPumpsinBank);
+  bool setNumberofPumpsinBank(int numberofPumpsinBank);
 
   bool setFlowSequencingControlScheme(std::string flowSequencingControlScheme);
 
-  void setRatedPumpHead(double ratedPumpHead);
+  bool setRatedPumpHead(double ratedPumpHead);
 
-  void setRatedPowerConsumption(double ratedPowerConsumption);
+  bool setRatedPowerConsumption(double ratedPowerConsumption);
 
   void autosizeRatedPowerConsumption();
 
@@ -127,13 +127,13 @@ class MODEL_API HeaderedPumpsVariableSpeed : public StraightComponent {
 
   bool setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream);
 
-  void setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve);
+  bool setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve);
 
-  void setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve);
+  bool setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve);
 
-  void setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve);
+  bool setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve);
 
-  void setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve);
+  bool setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve);
 
   bool setMinimumFlowRateFraction(double minimumFlowRateFraction);
 
@@ -152,6 +152,12 @@ class MODEL_API HeaderedPumpsVariableSpeed : public StraightComponent {
   //@}
   /** @name Other */
   //@{
+
+  boost::optional<double> autosizedTotalRatedFlowRate() const ;
+
+  boost::optional<double> autosizedRatedPowerConsumption() const ;
+
+
 
   //@}
  protected:
@@ -178,5 +184,4 @@ typedef std::vector<HeaderedPumpsVariableSpeed> HeaderedPumpsVariableSpeedVector
 } // model
 } // openstudio
 
-#endif // MODEL_HEADEREDPUMPSVARIABLESPEED_HPP
-
+#endif // MODEL_HEADEREDPUMPSVARIABLESPEED_HPP

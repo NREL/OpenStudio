@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -170,7 +170,7 @@ namespace gbxml {
     // gbXML attributes not mapped directly to IDF, but needed to map
 
     // {F, C, K, R}
-    QString temperatureUnit = element.attribute("temperatureUnit"); 
+    QString temperatureUnit = element.attribute("temperatureUnit");
     if (temperatureUnit.contains("F", Qt::CaseInsensitive)){
       m_temperatureUnit = UnitFactory::instance().createUnit("F").get();
     }else if (temperatureUnit.contains("C", Qt::CaseInsensitive)){
@@ -186,7 +186,7 @@ namespace gbxml {
 
     // {Kilometers, Centimeters, Millimeters, Meters, Miles, Yards, Feet, Inches}
     // TODO: still need some help with some units
-    QString lengthUnit = element.attribute("lengthUnit"); 
+    QString lengthUnit = element.attribute("lengthUnit");
     if (lengthUnit.contains("Kilometers", Qt::CaseInsensitive)){
       //m_lengthUnit = UnitFactory::instance().createUnit("F").get();
     }else if (lengthUnit.contains("Centimeters", Qt::CaseInsensitive)){
@@ -214,26 +214,26 @@ namespace gbxml {
 
     // {SquareKilometers, SquareMeters, SquareCentimeters, SquareMillimeters, SquareMiles, SquareYards, SquareFeet, SquareInches}
     // TODO: still need some help with some units
-    QString areaUnit = element.attribute("areaUnit"); 
+    QString areaUnit = element.attribute("areaUnit");
 
     // {CubicKilometers, CubicMeters, CubicCentimeters, CubicMillimeters, CubicMiles, CubicYards, CubicFeet, CubicInches}
     // TODO: still need some help with some units
-    QString volumeUnit = element.attribute("volumeUnit"); 
+    QString volumeUnit = element.attribute("volumeUnit");
 
     // {true, false}
-    QString useSIUnitsForResults = element.attribute("useSIUnitsForResults"); 
+    QString useSIUnitsForResults = element.attribute("useSIUnitsForResults");
     if (useSIUnitsForResults.contains("False", Qt::CaseInsensitive)){
       m_useSIUnitsForResults = false;
     }else{
       m_useSIUnitsForResults = true;
     }
 
-    // do materials before constructions 
+    // do materials before constructions
     QDomNodeList materialElements = element.elementsByTagName("Material");
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Materials"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(materialElements.count()); 
+      m_progressBar->setMaximum(materialElements.count());
       m_progressBar->setValue(0);
     }
 
@@ -241,7 +241,7 @@ namespace gbxml {
       QDomElement materialElement = materialElements.at(i).toElement();
       boost::optional<model::ModelObject> material = translateMaterial(materialElement, doc, model);
       OS_ASSERT(material); // Krishnan, what type of error handling do you want?
-      
+
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
@@ -253,7 +253,7 @@ namespace gbxml {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Constructions"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(constructionElements.count()); 
+      m_progressBar->setMaximum(constructionElements.count());
       m_progressBar->setValue(0);
     }
 
@@ -261,18 +261,18 @@ namespace gbxml {
       QDomElement constructionElement = constructionElements.at(i).toElement();
       boost::optional<model::ModelObject> construction = translateConstruction(constructionElement, layerElements, doc, model);
       OS_ASSERT(construction); // Krishnan, what type of error handling do you want?
-      
+
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
-    
+
     // do window type before sub surfaces
     QDomNodeList windowTypeElements = element.elementsByTagName("WindowType");
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Window Types"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(windowTypeElements.count()); 
+      m_progressBar->setMaximum(windowTypeElements.count());
       m_progressBar->setValue(0);
     }
 
@@ -280,7 +280,7 @@ namespace gbxml {
       QDomElement windowTypeElement = windowTypeElements.at(i).toElement();
       boost::optional<model::ModelObject> construction = translateWindowType(windowTypeElement, doc, model);
       OS_ASSERT(construction); // Krishnan, what type of error handling do you want?
-      
+
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
@@ -291,7 +291,7 @@ namespace gbxml {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Schedules"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(scheduleElements.count()); 
+      m_progressBar->setMaximum(scheduleElements.count());
       m_progressBar->setValue(0);
     }
 
@@ -299,7 +299,7 @@ namespace gbxml {
       QDomElement scheduleElement = scheduleElements.at(i).toElement();
       boost::optional<model::ModelObject> schedule = translateSchedule(scheduleElement, doc, model);
       OS_ASSERT(schedule); // Krishnan, what type of error handling do you want?
-      
+
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
@@ -310,7 +310,7 @@ namespace gbxml {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Zones"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(zoneElements.count()); 
+      m_progressBar->setMaximum(zoneElements.count());
       m_progressBar->setValue(0);
     }
 
@@ -318,7 +318,7 @@ namespace gbxml {
       QDomElement zoneElement = zoneElements.at(i).toElement();
       boost::optional<model::ModelObject> zone = translateThermalZone(zoneElement, doc, model);
       OS_ASSERT(zone); // Krishnan, what type of error handling do you want?
-      
+
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
@@ -349,7 +349,7 @@ namespace gbxml {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Surfaces"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(surfaceElements.count()); 
+      m_progressBar->setMaximum(surfaceElements.count());
       m_progressBar->setValue(0);
     }
 
@@ -360,7 +360,7 @@ namespace gbxml {
       }catch(const std::exception&){
         LOG(Error, "Could not translate surface " << surfaceElements.at(i).toElement());
       }
-      
+
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
@@ -383,7 +383,7 @@ namespace gbxml {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Building Stories"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(storyElements.count()); 
+      m_progressBar->setMaximum(storyElements.count());
       m_progressBar->setValue(0);
     }
 
@@ -400,7 +400,7 @@ namespace gbxml {
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Spaces"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(spaceElements.count()); 
+      m_progressBar->setMaximum(spaceElements.count());
       m_progressBar->setValue(0);
     }
 
@@ -415,7 +415,7 @@ namespace gbxml {
 
     return building;
   }
- 
+
   boost::optional<model::ModelObject> ReverseTranslator::translateBuildingStory(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
   {
     openstudio::model::BuildingStory story(model);
@@ -565,7 +565,7 @@ namespace gbxml {
       result = shadingSurface;
 
     }else if (surfaceType.contains("FreestandingColumn") || surfaceType.contains("EmbeddedColumn")){
-  
+
       // do not handle these
       return boost::none;
 
@@ -600,29 +600,29 @@ namespace gbxml {
       // set surface type
       // wall types
       if (surfaceType.contains("ExteriorWall")){
-        surface.setSurfaceType("Wall"); 
+        surface.setSurfaceType("Wall");
       }else if (surfaceType.contains("InteriorWall")){
-        surface.setSurfaceType("Wall"); 
+        surface.setSurfaceType("Wall");
       }else if (surfaceType.contains("UndergroundWall")){
-        surface.setSurfaceType("Wall"); 
+        surface.setSurfaceType("Wall");
       // roof types
       }else if (surfaceType.contains("Roof")){
-        surface.setSurfaceType("RoofCeiling"); 
+        surface.setSurfaceType("RoofCeiling");
       }else if (surfaceType.contains("Ceiling")){
         surface.setSurfaceType("RoofCeiling");
       }else if (surfaceType.contains("UndergroundCeiling")){
         surface.setSurfaceType("RoofCeiling");
       // floor types
       }else if (surfaceType.contains("UndergroundSlab")){
-        surface.setSurfaceType("Floor"); 
+        surface.setSurfaceType("Floor");
       }else if (surfaceType.contains("SlabOnGrade")){
-        surface.setSurfaceType("Floor"); 
+        surface.setSurfaceType("Floor");
       }else if (surfaceType.contains("InteriorFloor")){
-        surface.setSurfaceType("Floor"); 
+        surface.setSurfaceType("Floor");
       }else if (surfaceType.contains("RaisedFloor")){
-        surface.setSurfaceType("Floor"); 
+        surface.setSurfaceType("Floor");
       }else if (surfaceType.contains("ExposedFloor")){
-        surface.setSurfaceType("Floor"); 
+        surface.setSurfaceType("Floor");
       } else if (surfaceType.contains("Air")){
         // this type can be wall, roof, or floor.  just use default surface type based on vertices.
       }
@@ -713,7 +713,7 @@ namespace gbxml {
         if (adjacentSpaceIt != m_idToObjectMap.end()){
           boost::optional<model::Space> adjacentSpace = adjacentSpaceIt->second.optionalCast<openstudio::model::Space>();
           if (adjacentSpace){
-            // DLM: we have issues if interior ceilings/floors are mislabeled, override surface type for adjacent surfaces 
+            // DLM: we have issues if interior ceilings/floors are mislabeled, override surface type for adjacent surfaces
             // http://code.google.com/p/cbecc/issues/detail?id=471
             std::string currentSurfaceType = surface.surfaceType();
             surface.assignDefaultSurfaceType();
@@ -739,7 +739,7 @@ namespace gbxml {
     openstudio::model::Model model = surface.model();
 
     boost::optional<model::ModelObject> result;
-      
+
     std::vector<openstudio::Point3d> vertices;
 
     QDomNode planarGeometryElement = element.firstChildElement("PlanarGeometry");
@@ -761,7 +761,7 @@ namespace gbxml {
       double y = QuantityConverter::instance().convert(yQuantity, targetUnit)->value();
       double z = QuantityConverter::instance().convert(zQuantity, targetUnit)->value();
       */
-          
+
       double x = m_lengthMultiplier*coordinateElements.at(0).toElement().text().toDouble();
       double y = m_lengthMultiplier*coordinateElements.at(1).toElement().text().toDouble();
       double z = m_lengthMultiplier*coordinateElements.at(2).toElement().text().toDouble();
@@ -783,17 +783,17 @@ namespace gbxml {
     // translate openingType
     QString openingType = element.attribute("openingType");
     if (openingType.contains("FixedWindow")){
-      subSurface.setSubSurfaceType("FixedWindow"); 
+      subSurface.setSubSurfaceType("FixedWindow");
     }else if (openingType.contains("OperableWindow")){
-      subSurface.setSubSurfaceType("OperableWindow"); 
+      subSurface.setSubSurfaceType("OperableWindow");
     }else if (openingType.contains("FixedSkylight")){
-      subSurface.setSubSurfaceType("Skylight"); 
+      subSurface.setSubSurfaceType("Skylight");
     }else if (openingType.contains("OperableSkylight")){
-      subSurface.setSubSurfaceType("Skylight"); 
+      subSurface.setSubSurfaceType("Skylight");
     }else if (openingType.contains("SlidingDoor")){
-      subSurface.setSubSurfaceType("GlassDoor"); 
+      subSurface.setSubSurfaceType("GlassDoor");
     }else if (openingType.contains("NonSlidingDoor")){
-      subSurface.setSubSurfaceType("Door"); 
+      subSurface.setSubSurfaceType("Door");
     } else if (openingType.contains("Air")){
       // use default sub surface type?
     }
@@ -818,7 +818,7 @@ namespace gbxml {
         airWall->setLayer(airWallMaterial);
       }
       subSurface.setConstruction(*airWall);
-      
+
     } else{
 
       // translate construction

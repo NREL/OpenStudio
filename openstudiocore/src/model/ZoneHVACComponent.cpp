@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -165,11 +165,18 @@ namespace detail {
     boost::optional<ThermalZone> thermalZone = this->thermalZone();
     boost::optional<AirLoopHVAC> airLoopHVAC = this->airLoopHVAC();
     Model m = this->model();
+    ZoneHVACComponent mo = getObject<ZoneHVACComponent>();
 
+    bool inletSideMixer = false;
     if( airLoopHVAC ) {
-      removeFromAirLoopHVAC();
+      if( airLoopHVAC->demandComponent(mo.handle()) ) {
+        inletSideMixer = true;
+      }
+    }
+
+    if( inletSideMixer ) {
+      removeFromInletSideMixer();
     } else if( thermalZone ) {
-      ZoneHVACComponent mo = getObject<ZoneHVACComponent>();
 
       if( auto t_inletNode = inletNode() ) {
         t_inletNode->disconnect();
@@ -230,26 +237,28 @@ namespace detail {
   {
     removeFromThermalZone();
 
+    removeFromAirLoopHVAC();
+
     return HVACComponent_Impl::remove();
   }
 
   bool ZoneHVACComponent_Impl::addToNode(Node & node)
   {
     bool result = false;
-  
+
     boost::optional<ThermalZone> thermalZone;
     boost::optional<AirTerminalSingleDuctInletSideMixer> terminal;
-  
+
     if( boost::optional<ModelObject> outlet = node.outletModelObject() ) {
       if( boost::optional<PortList> pl = outlet->optionalCast<PortList>() ) {
         thermalZone = pl->thermalZone();
       }
     }
-  
+
     if( boost::optional<ModelObject> inlet = node.inletModelObject() ) {
       terminal = inlet->optionalCast<AirTerminalSingleDuctInletSideMixer>();
     }
-  
+
     if( thermalZone && terminal ) {
       if( this->thermalZone() ) {
         removeFromThermalZone();
@@ -279,11 +288,11 @@ namespace detail {
 
       result = true;
     }
-  
+
     return result;
   }
 
-  void ZoneHVACComponent_Impl::removeFromAirLoopHVAC()
+  void ZoneHVACComponent_Impl::removeFromInletSideMixer()
   {
     if( boost::optional<AirLoopHVAC> t_airLoopHVAC = airLoopHVAC() ) {
       boost::optional<Node> t_inletNode = inletNode();
@@ -291,24 +300,25 @@ namespace detail {
       boost::optional<Node> t_outletNode = outletNode();
       OS_ASSERT(t_outletNode);
 
-      unsigned targetPort = t_outletNode->connectedObjectPort(t_outletNode->outletPort()).get();
-      ModelObject targetModelObject = t_outletNode->connectedObject(t_outletNode->outletPort()).get();
-      t_outletNode->disconnect();
-      t_outletNode->remove();
+      if( t_airLoopHVAC->demandComponent(t_inletNode->handle()) ) {
+        unsigned targetPort = t_outletNode->connectedObjectPort(t_outletNode->outletPort()).get();
+        ModelObject targetModelObject = t_outletNode->connectedObject(t_outletNode->outletPort()).get();
+        t_outletNode->disconnect();
+        t_outletNode->remove();
 
-      Model t_model = model();
-      t_model.connect( t_inletNode.get(), t_inletNode->outletPort(),
-                       targetModelObject, targetPort );
+        Model t_model = model();
+        t_model.connect( t_inletNode.get(), t_inletNode->outletPort(),
+                         targetModelObject, targetPort );
 
-      std::vector<AirTerminalSingleDuctInletSideMixer> terminalMixers = 
-        subsetCastVector<AirTerminalSingleDuctInletSideMixer>(t_airLoopHVAC->demandComponents(t_airLoopHVAC->demandInletNode(),t_inletNode.get()));
-      if( ! terminalMixers.empty() ) {
-        if( boost::optional<Node> secondaryNode = terminalMixers.front().secondaryAirInletNode() ) {
-          secondaryNode->disconnect();
-          secondaryNode->remove();
+        std::vector<AirTerminalSingleDuctInletSideMixer> terminalMixers =
+          subsetCastVector<AirTerminalSingleDuctInletSideMixer>(t_airLoopHVAC->demandComponents(t_airLoopHVAC->demandInletNode(),t_inletNode.get()));
+        if( ! terminalMixers.empty() ) {
+          if( boost::optional<Node> secondaryNode = terminalMixers.front().secondaryAirInletNode() ) {
+            secondaryNode->disconnect();
+            secondaryNode->remove();
+          }
         }
       }
-
     }
   }
 
@@ -330,17 +340,59 @@ namespace detail {
     return edges;
   }
 
+  bool ZoneHVACComponent_Impl::removeFromAirLoopHVAC()
+  {
+    if( auto t_loop = airLoopHVAC() ) {
+      if( auto t_oaSystem = t_loop->airLoopHVACOutdoorAirSystem() ) {
+        if( t_oaSystem->oaComponent(handle()) ) {
+          return HVACComponent_Impl::removeFromLoop(t_oaSystem->outboardOANode().get(),
+                 t_oaSystem.get(),
+                 inletPort(),
+                 outletPort());
+        } else if( t_oaSystem->reliefComponent(handle()) ) {
+          return HVACComponent_Impl::removeFromLoop(t_oaSystem.get(),
+                 t_oaSystem->outboardReliefNode().get(),
+                 inletPort(),
+                 outletPort());
+        }
+      } else  {
+        if( t_loop->supplyComponent(handle()) ) {
+          return HVACComponent_Impl::removeFromLoop(t_loop->supplyInletNode(),
+                 t_loop->supplyOutletNode(),
+                 inletPort(),
+                 outletPort());
+        }
+      }
+    }
+
+    return false;
+  }
+
+  boost::optional<ModelObject> ZoneHVACComponent_Impl::airInletModelObject() const
+  {
+    auto node = inletNode();
+    if( node ) return node->cast<ModelObject>();
+    return boost::none;
+  }
+
+  boost::optional<ModelObject> ZoneHVACComponent_Impl::airOutletModelObject() const
+  {
+    auto node = outletNode();
+    if( node ) return node->cast<ModelObject>();
+    return boost::none;
+  }
+
 } // detail
 
 ZoneHVACComponent::ZoneHVACComponent(std::shared_ptr<detail::ZoneHVACComponent_Impl> p)
-  : HVACComponent(p)
+  : HVACComponent(std::move(p))
 {}
 
 ZoneHVACComponent::ZoneHVACComponent(IddObjectType type,const Model& model)
   : HVACComponent(type,model)
 {
   OS_ASSERT(getImpl<detail::ZoneHVACComponent_Impl>());
-}     
+}
 
 std::vector<ModelObject> ZoneHVACComponent::children() const
 {
@@ -390,6 +442,21 @@ bool ZoneHVACComponent::addToNode(Node & node)
 boost::optional<AirLoopHVAC> ZoneHVACComponent::airLoopHVAC() const
 {
   return getImpl<detail::ZoneHVACComponent_Impl>()->airLoopHVAC();
+}
+
+bool ZoneHVACComponent::removeFromAirLoopHVAC()
+{
+  return getImpl<detail::ZoneHVACComponent_Impl>()->removeFromAirLoopHVAC();
+}
+
+boost::optional<ModelObject> ZoneHVACComponent::airInletModelObject() const
+{
+  return getImpl<detail::ZoneHVACComponent_Impl>()->airInletModelObject();
+}
+
+boost::optional<ModelObject> ZoneHVACComponent::airOutletModelObject() const
+{
+  return getImpl<detail::ZoneHVACComponent_Impl>()->airOutletModelObject();
 }
 
 } // model

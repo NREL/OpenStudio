@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -81,7 +81,7 @@ namespace detail {
   bool FFactorGroundFloorConstruction_Impl::isSolarDiffusing() const { return false; }
 
   bool FFactorGroundFloorConstruction_Impl::isModelPartition() const { return false; }
-  
+
   int FFactorGroundFloorConstruction_Impl::renderingColorIndex() const
   {
     return OS_Construction_FfactorGroundFloorFields::SurfaceRenderingName;
@@ -281,7 +281,7 @@ bool FFactorGroundFloorConstruction::setPerimeterExposed(const Quantity& perimet
 /// @cond
 FFactorGroundFloorConstruction::FFactorGroundFloorConstruction(
     std::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl)
-  : ConstructionBase(impl)
+  : ConstructionBase(std::move(impl))
 {}
 /// @endcond
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -77,7 +77,7 @@ class MEASURE_API ReportingMeasure : public OSMeasure {
   /** This method is called on all reporting measures immediately before the E+
    *  simulation. The code that injects these objects into the IDF checks that
    *  only objects of allowed types are added to prevent changes that impact
-   *  energy use. The injector code also prevents duplicate report requests. 
+   *  energy use. The injector code also prevents duplicate report requests.
    *  The default implementation of this method returns an empty vector.
    *  The runner allows the user to load the last osm/idf and to log messages.
    * The argument map is available with the arguments for the reporting measure. */

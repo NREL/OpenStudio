@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -519,7 +519,7 @@ double TimeSeries_Impl::valueAtSecondsFromFirstReport(long secondsFromFirstRepor
 
   if (m_intervalLength) {
 
-    // before the start of the first interval 
+    // before the start of the first interval
     if (secondsFromFirstReport <= -m_intervalLength->totalSeconds()) {
       LOG(Debug, "Cannot compute value " << secondsFromFirstReport << " seconds before first reporting time when interval length is " << *m_intervalLength);
     } else if (secondsFromFirstReport > duration) {

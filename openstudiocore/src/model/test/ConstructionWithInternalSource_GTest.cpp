@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -69,7 +69,7 @@ TEST(ConstructionWithInternalSource, FromLayers)
   EXPECT_THROW((ConstructionWithInternalSource(layers)), std::exception);
 
   EXPECT_EQ(0, model.getModelObjects<ConstructionWithInternalSource>().size());
-  
+
   layers.push_back(exterior);
 
   EXPECT_EQ(1u, layers.size());
@@ -94,29 +94,27 @@ TEST(ConstructionWithInternalSource, FromLayers)
   EXPECT_FALSE(construction.setTemperatureCalculationRequestedAfterLayerNumber(3));
   EXPECT_EQ(1, construction.temperatureCalculationRequestedAfterLayerNumber());
 
-  EXPECT_FALSE(construction.eraseLayer(1));
-  EXPECT_EQ(2u, construction.numLayers());
+  EXPECT_TRUE(construction.eraseLayer(1));
+  EXPECT_EQ(1u, construction.numLayers());
 
   EXPECT_FALSE(construction.setLayers(MaterialVector()));
-  EXPECT_EQ(2u, construction.numLayers());
+  EXPECT_EQ(1u, construction.numLayers());
 
   MaterialVector testLayers = construction.layers();
-  ASSERT_EQ(static_cast<unsigned>(2),testLayers.size());
+  ASSERT_EQ(static_cast<unsigned>(1),testLayers.size());
   EXPECT_TRUE(testLayers[0] == exterior);
-  EXPECT_TRUE(testLayers[1] == interior);
 
   testLayers.push_back(interior);
   testLayers.push_back(exterior);
 
   EXPECT_TRUE(construction.setLayers(testLayers));
-  EXPECT_EQ(4u, construction.numLayers());
+  EXPECT_EQ(3u, construction.numLayers());
 
   testLayers = construction.layers();
-  ASSERT_EQ(static_cast<unsigned>(4),testLayers.size());
+  ASSERT_EQ(static_cast<unsigned>(3),testLayers.size());
   EXPECT_TRUE(testLayers[0] == exterior);
   EXPECT_TRUE(testLayers[1] == interior);
-  EXPECT_TRUE(testLayers[2] == interior);
-  EXPECT_TRUE(testLayers[3] == exterior);
+  EXPECT_TRUE(testLayers[2] == exterior);
 
   EXPECT_TRUE(construction.setSourcePresentAfterLayerNumber(3));
   EXPECT_EQ(3, construction.sourcePresentAfterLayerNumber());

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -148,7 +148,7 @@ void MeasureManager::saveTempModel(const path& tempDir)
   waitForStarted();
 
   boost::optional<model::Model> model = m_app->currentModel();
-  
+
   // DLM: don't get tempDir from app because this requires OSDocument and we may call saveTempModel from OSDocument ctor
   //boost::optional<path> tempDir2 = m_app->tempDir();
 
@@ -227,21 +227,21 @@ boost::optional<BCLMeasure> MeasureManager::getMeasure(const UUID & id)
 
   // search my measures
   it = m_myMeasures.find(id);
-  if( it != m_myMeasures.end() ) { 
+  if( it != m_myMeasures.end() ) {
     if (result){
       LOG(Error, "UUID of user measure at '" << it->second.directory() << "' conflicts with other measure, measure at '" << result->directory() << "' will be used instead");
     }else{
-      result = it->second; 
+      result = it->second;
     }
   }
 
   // search bcl measures
   it = m_bclMeasures.find(id);
-  if( it != m_bclMeasures.end() ) {     
+  if( it != m_bclMeasures.end() ) {
     if (result){
       LOG(Error, "UUID of bcl measure at '" << it->second.directory() << "' conflicts with other measure, measure at '" << result->directory() << "' will be used instead");
     }else{
-      result = it->second; 
+      result = it->second;
     }
   }
 
@@ -287,7 +287,7 @@ BCLMeasure MeasureManager::insertReplaceMeasure(const UUID &t_id)
     connect(cancel, &QPushButton::pressed, &dialog, &QDialog::reject);
 
     connect(apply, &QPushButton::pressed, &dialog, &QDialog::accept);
-    
+
     mainContentVLayout->addLayout(buttons);
 
     if (dialog.exec() == QDialog::Accepted)
@@ -317,7 +317,7 @@ BCLMeasure MeasureManager::insertReplaceMeasure(const UUID &t_id)
   } else if (existingMeasure) {
     return *existingMeasure;
   }
-  
+
   boost::optional<BCLMeasure> projectmeasure = workflowJSON.addMeasure(*measure);
   if (!projectmeasure){
     LOG(Info, "WorkflowJSON::addMeasure failed");
@@ -424,7 +424,7 @@ void MeasureManager::updateMeasures(const std::vector<BCLMeasure>& newMeasures, 
       auto horizontalSpacer = new QSpacerItem(330, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
       QGridLayout* layout = static_cast<QGridLayout*>(messageBox->layout());
       layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
-      
+
       messageBox->exec();
       delete messageBox;
     }
@@ -594,7 +594,7 @@ boost::optional<measure::OSArgument> MeasureManager::getArgument(const measure::
       std::string defaultValue = argument.get("default_value", Json::Value("")).asString();
       result->setDefaultValue(defaultValue);
     }
-        
+
   } else if (type.value() == measure::OSArgumentType::Separator){
 
     result = measure::OSArgument::makeSeparatorArgument(name, modelDependent);
@@ -733,7 +733,7 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
   if (updateUserMeasures) {
     checkForUpdates(BCLMeasure::userMeasuresDir(), false);
   }
-   
+
   if (!m_mutex.tryLock()) {
     return;
   }
@@ -762,7 +762,7 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
       m_myMeasures.insert(std::pair<UUID,BCLMeasure>(measure.uuid(),measure));
     }
   }
- 
+
   std::vector<BCLMeasure> localBCLMeasures = BCLMeasure::localBCLMeasures();
   for( auto & measure : localBCLMeasures )
   {
@@ -820,7 +820,7 @@ bool MeasureManager::reset()
   if (!m_mutex.tryLock()){
     return false;
   }
-  
+
   QUrl url(m_url);
   url.setPath("/reset");
 
@@ -861,7 +861,7 @@ bool MeasureManager::checkForLocalBCLUpdates()
   if (!m_mutex.tryLock()){
     return false;
   }
-  
+
   QUrl url(m_url);
   url.setPath("/bcl_measures");
 

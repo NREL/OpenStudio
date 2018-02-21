@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,7 +39,7 @@ namespace detail{
   class WindowDataFile_Impl;
 }
 
-/** WindowDataFile is a ConstructionBase that wraps EnergyPlus IDD object 
+/** WindowDataFile is a ConstructionBase that wraps EnergyPlus IDD object
  *  'Construction:WindowDataFile'. WindowDataFile is an alternative to Construction that isFenestration. */
 class MODEL_API WindowDataFile : public ConstructionBase {
  public:
@@ -65,7 +65,7 @@ class MODEL_API WindowDataFile : public ConstructionBase {
   friend class openstudio::IdfObject;
   friend class detail::WindowDataFile_Impl;
 
-  explicit WindowDataFile(std::shared_ptr<detail::WindowDataFile_Impl> impl);  
+  explicit WindowDataFile(std::shared_ptr<detail::WindowDataFile_Impl> impl);
 
   /// @endcond
  private:

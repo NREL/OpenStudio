@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -31,13 +31,13 @@ require 'openstudio'
 require 'minitest/autorun'
 
 class DateTime_Test < MiniTest::Unit::TestCase
-  
+
   # def setup
   # end
 
   # def teardown
   # end
-  
+
   def test_normalization
 
     baseDate = OpenStudio::Date.new("Jan".to_MonthOfYear, 1, 2008)
@@ -113,13 +113,13 @@ class DateTime_Test < MiniTest::Unit::TestCase
     testDateTime -= OpenStudio::Time.new(1,23,59,59)
     assert(testDateTime.date() == OpenStudio::Date.new("Dec".to_MonthOfYear, 30, 2007))
   end
-  
+
   def test_to_s
     baseDate = OpenStudio::Date.new("Jan".to_MonthOfYear, 1, 2008)
 
     testDateTime = OpenStudio::DateTime.new(baseDate)
     assert(!testDateTime.to_s.nil?)
-    
+
     testDateTime += OpenStudio::Time.new(1,1,1,1)
     assert(!testDateTime.to_s.nil?)
   end

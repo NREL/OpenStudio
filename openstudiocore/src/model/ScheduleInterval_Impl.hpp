@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -27,7 +27,7 @@
  **********************************************************************************************************************/
 
 #ifndef MODEL_SCHEDULEINTERVAL_IMPL_HPP
-#define MODEL_SCHEDULEINTERVAL_IMPL_HPP 
+#define MODEL_SCHEDULEINTERVAL_IMPL_HPP
 
 #include "Schedule_Impl.hpp"
 
@@ -49,8 +49,8 @@ namespace detail {
     ScheduleInterval_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    ScheduleInterval_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                         Model_Impl* model, 
+    ScheduleInterval_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                         Model_Impl* model,
                          bool keepHandle);
 
     ScheduleInterval_Impl(const ScheduleInterval_Impl& other, Model_Impl* model,bool keepHandle);

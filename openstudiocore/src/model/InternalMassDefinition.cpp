@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -225,7 +225,7 @@ namespace detail {
     return 0.0;
   }
 
-  double InternalMassDefinition_Impl::getSurfaceAreaPerFloorArea(double floorArea, 
+  double InternalMassDefinition_Impl::getSurfaceAreaPerFloorArea(double floorArea,
                                                                       double numPeople) const
   {
     std::string method = designLevelCalculationMethod();
@@ -250,7 +250,7 @@ namespace detail {
     return 0.0;
   }
 
-  double InternalMassDefinition_Impl::getSurfaceAreaPerPerson(double floorArea, 
+  double InternalMassDefinition_Impl::getSurfaceAreaPerPerson(double floorArea,
                                                               double numPeople) const
   {
     std::string method = designLevelCalculationMethod();
@@ -405,7 +405,7 @@ bool InternalMassDefinition::setDesignLevelCalculationMethod(const std::string& 
 
 /// @cond
 InternalMassDefinition::InternalMassDefinition(std::shared_ptr<detail::InternalMassDefinition_Impl> impl)
-  : SpaceLoadDefinition(impl)
+  : SpaceLoadDefinition(std::move(impl))
 {}
 /// @endcond
 

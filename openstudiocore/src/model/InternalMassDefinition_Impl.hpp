@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,48 +43,48 @@ namespace detail {
 
   /** InternalMassDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for InternalMassDefinition.*/
   class MODEL_API InternalMassDefinition_Impl : public SpaceLoadDefinition_Impl {
-    
 
-    
 
-    
-    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceArea_SI 
-               READ surfaceArea_SI 
+
+
+
+    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceArea_SI
+               READ surfaceArea_SI
                WRITE setSurfaceArea);
-    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceArea_IP 
-               READ surfaceArea_IP 
+    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceArea_IP
+               READ surfaceArea_IP
                WRITE setSurfaceArea);
 
-    Q_PROPERTY(boost::optional<double> surfaceAreaperSpaceFloorArea 
-               READ surfaceAreaperSpaceFloorArea 
+    Q_PROPERTY(boost::optional<double> surfaceAreaperSpaceFloorArea
+               READ surfaceAreaperSpaceFloorArea
                WRITE setSurfaceAreaperSpaceFloorArea);
-    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceAreaperSpaceFloorArea_SI 
-               READ surfaceAreaperSpaceFloorArea_SI 
+    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceAreaperSpaceFloorArea_SI
+               READ surfaceAreaperSpaceFloorArea_SI
                WRITE setSurfaceAreaperSpaceFloorArea);
-    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceAreaperSpaceFloorArea_IP 
-               READ surfaceAreaperSpaceFloorArea_IP 
+    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceAreaperSpaceFloorArea_IP
+               READ surfaceAreaperSpaceFloorArea_IP
                WRITE setSurfaceAreaperSpaceFloorArea);
 
-    Q_PROPERTY(boost::optional<double> surfaceAreaperPerson 
-               READ surfaceAreaperPerson 
+    Q_PROPERTY(boost::optional<double> surfaceAreaperPerson
+               READ surfaceAreaperPerson
                WRITE setSurfaceAreaperPerson);
-    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceAreaperPerson_SI 
-               READ surfaceAreaperPerson_SI 
+    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceAreaperPerson_SI
+               READ surfaceAreaperPerson_SI
                WRITE setSurfaceAreaperPerson);
-    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceAreaperPerson_IP 
-               READ surfaceAreaperPerson_IP 
+    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceAreaperPerson_IP
+               READ surfaceAreaperPerson_IP
                WRITE setSurfaceAreaperPerson);
 
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> construction 
-               READ constructionAsModelObject 
-               WRITE setConstructionAsModelObject 
+    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> construction
+               READ constructionAsModelObject
+               WRITE setConstructionAsModelObject
                RESET resetConstruction);
 
- 
-//    
-//    
-//    
-//    
+
+//
+//
+//
+//
 
 
    public:
@@ -161,20 +161,20 @@ namespace detail {
     /** @name Other */
     //@{
 
-    /** Returns the construction surface area represented by this definition, assuming floorArea 
+    /** Returns the construction surface area represented by this definition, assuming floorArea
      *  (m^2) and numPeople. */
     double getSurfaceArea(double floorArea, double numPeople) const;
 
-    /** Returns the m^2/m^2 of construction surface area per floor area represented by this 
+    /** Returns the m^2/m^2 of construction surface area per floor area represented by this
      *  definition, assuming floorArea (m^2) and numPeople. */
     double getSurfaceAreaPerFloorArea(double floorArea, double numPeople) const;
 
-    /** Returns the m^2/person of construction surface area represented by this definition, assuming 
+    /** Returns the m^2/person of construction surface area represented by this definition, assuming
      *  floorArea (m^2) and numPeople. */
     double getSurfaceAreaPerPerson(double floorArea, double numPeople) const;
 
-    /** If method is a \link validDesignLevelCalculationMethodValues valid design level calculation 
-     *  method \endlink, changes this definition to an equivalent construction surface area, under 
+    /** If method is a \link validDesignLevelCalculationMethodValues valid design level calculation
+     *  method \endlink, changes this definition to an equivalent construction surface area, under
      *  the assumptions of floorArea (m^2) and numPeople. */
     bool setDesignLevelCalculationMethod(const std::string& method,
                                          double floorArea,

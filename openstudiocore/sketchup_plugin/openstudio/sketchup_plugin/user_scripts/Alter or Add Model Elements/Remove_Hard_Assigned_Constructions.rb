@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -33,14 +33,14 @@ class RemoveHardAssignedConstructions < OpenStudio::Ruleset::ModelUserScript
   def name
     return "Remove Hard Assigned Constructions"
   end
-  
+
   # returns a vector of arguments, the runner will present these arguments to the user
   # then pass in the results on run
   def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
     return result
   end
-    
+
   # override run to implement the functionality of your script
   # model is an OpenStudio::Model::Model, runner is a OpenStudio::Ruleset::UserScriptRunner
   def run(model, runner, user_arguments)
@@ -53,14 +53,14 @@ class RemoveHardAssignedConstructions < OpenStudio::Ruleset::ModelUserScript
       runner.registerAsNotApplicable("Operation canceled, your model was not altered.")
       return true
     end
-    
+
     planar_surfaces = model.getPlanarSurfaces
-    
+
     planar_surfaces.each do |planar_surface|
       planar_surface.resetConstruction
     end
-    
-    return true    
+
+    return true
   end
 
 end

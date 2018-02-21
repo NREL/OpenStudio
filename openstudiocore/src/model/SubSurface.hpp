@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -142,7 +142,7 @@ class MODEL_API SubSurface : public PlanarSurface {
   //@}
 
   // TODO: test that area is correct with multiplier
-  
+
   /// get the surface
   boost::optional<Surface> surface() const;
 
@@ -156,7 +156,7 @@ class MODEL_API SubSurface : public PlanarSurface {
   /// which are adjacent
   bool setAdjacentSubSurface(SubSurface& subSurface);
 
-  /// reset the adjacent subsurface, will clear references on both this and adjacent sub surface 
+  /// reset the adjacent subsurface, will clear references on both this and adjacent sub surface
   void resetAdjacentSubSurface();
 
   /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
@@ -187,12 +187,12 @@ class MODEL_API SubSurface : public PlanarSurface {
   std::string outsideBoundaryCondition() const;
 
   /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors. */
-  // DLM: todo add argument for horizontal offset 
+  // DLM: todo add argument for horizontal offset
   boost::optional<ShadingSurface> addOverhang(double depth, double offset);
 
-  /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors. 
+  /** Add an overhang to the sub surface, only valid for fixed windows, operable windows, and glass doors.
    *  Offset is a fraction of the total window height, projection factor is based on height and offset. */
-  // DLM: todo add argument for horizontal offset 
+  // DLM: todo add argument for horizontal offset
   boost::optional<ShadingSurface> addOverhangByProjectionFactor(double projectionFactor, double offsetFraction);
 
   // DLM: todo add methods to create fins
@@ -206,7 +206,7 @@ class MODEL_API SubSurface : public PlanarSurface {
   /** Get the daylighting light shelf associated with this sub surface if there is one. */
   boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
 
-  /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window, 
+  /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window,
    * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
   boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
 
@@ -236,7 +236,7 @@ class MODEL_API SubSurface : public PlanarSurface {
   REGISTER_LOGGER("openstudio.model.SubSurface");
 };
 
-/// Applys a skylight pattern to exterior roofs in selected spaces. 
+/// Applys a skylight pattern to exterior roofs in selected spaces.
 /// Pattern should be in Building coordinates, on the z = 0 plane, with normal in positive z direction.
 /// Returns new sub surfaces created.
 MODEL_API std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d> >& pattern, const std::vector<Space>& spaces, const boost::optional<ConstructionBase>& construction);

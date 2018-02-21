@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -160,7 +160,7 @@ ModelObjectTreeItem::ModelObjectTreeItem(const openstudio::model::ModelObject& m
   this->setStyle(0, "");
 
   m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onNameChange.connect<ModelObjectTreeItem, &ModelObjectTreeItem::changeName>(this);
-   
+
   m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onChange.connect<ModelObjectTreeItem, &ModelObjectTreeItem::change>(this);
 
   m_modelObject->getImpl<model::detail::ModelObject_Impl>().get()->onRelationshipChange.connect<ModelObjectTreeItem, &ModelObjectTreeItem::changeRelationship>(this);
@@ -219,7 +219,7 @@ std::vector<ModelObjectTreeItem*> ModelObjectTreeItem::children() const
     QTreeWidgetItem* child = this->child(i);
     ModelObjectTreeItem* modelObjectTreeItem = dynamic_cast<ModelObjectTreeItem*>(child);
     OS_ASSERT(modelObjectTreeItem);
-    result.push_back(modelObjectTreeItem);  
+    result.push_back(modelObjectTreeItem);
   }
 
   return result;
@@ -234,7 +234,7 @@ std::vector<ModelObjectTreeItem*> ModelObjectTreeItem::recursiveChildren() const
     QTreeWidgetItem* child = this->child(i);
     ModelObjectTreeItem* modelObjectTreeItem = dynamic_cast<ModelObjectTreeItem*>(child);
     OS_ASSERT(modelObjectTreeItem);
-    result.push_back(modelObjectTreeItem);  
+    result.push_back(modelObjectTreeItem);
 
     std::vector<ModelObjectTreeItem*> childChildren = modelObjectTreeItem->recursiveChildren();
     result.insert(result.end(), childChildren.begin(), childChildren.end());
@@ -389,7 +389,7 @@ void ModelObjectTreeItem::refreshTree()
 {
   // refresh each top level object
   QTreeWidget* treeWidget = this->treeWidget();
-  
+
   int N = treeWidget->topLevelItemCount();
   for (int i = 0; i < N; ++i){
     QTreeWidgetItem* treeItem = treeWidget->topLevelItem(i);
@@ -586,7 +586,7 @@ std::vector<model::ModelObject> ModelObjectTreeItem::defaultedModelObjectChildre
 {
   return std::vector<model::ModelObject>();
 }
-    
+
 void ModelObjectTreeItem::addNonModelObjectChild(const std::string& child)
 {
   ModelObjectTreeItem* treeItem = new ModelObjectTreeItem(child, this->model(), this);
@@ -616,7 +616,7 @@ void ModelObjectTreeItem::changeName()
 
 ///////////////////// SiteShading ////////////////////////////////////////////////
 
-SiteShadingTreeItem::SiteShadingTreeItem(const openstudio::model::Model& model, 
+SiteShadingTreeItem::SiteShadingTreeItem(const openstudio::model::Model& model,
                                          QTreeWidgetItem* parent )
                                          : ModelObjectTreeItem(SiteShadingTreeItem::itemName(), model, parent)
 {
@@ -655,7 +655,7 @@ void SiteShadingTreeItem::addModelObjectChild(const model::ModelObject& child, b
 
 ///////////////////// ShadingSurfaceGroup ////////////////////////////////////////////////
 
-ShadingSurfaceGroupTreeItem::ShadingSurfaceGroupTreeItem(const openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup, 
+ShadingSurfaceGroupTreeItem::ShadingSurfaceGroupTreeItem(const openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup,
                                                          QTreeWidgetItem* parent )
   : ModelObjectTreeItem(shadingSurfaceGroup, false, m_type, parent)
 {
@@ -685,7 +685,7 @@ void ShadingSurfaceGroupTreeItem::addModelObjectChild(const model::ModelObject& 
 
 ///////////////////// Building ////////////////////////////////////////////////
 
-BuildingTreeItem::BuildingTreeItem(const openstudio::model::Building& building, 
+BuildingTreeItem::BuildingTreeItem(const openstudio::model::Building& building,
                                    const openstudio::IddObjectType& sortByType,
                                    QTreeWidgetItem* parent)
   : ModelObjectTreeItem(building, false, m_type, parent), m_sortByType(sortByType)
@@ -769,7 +769,7 @@ void BuildingTreeItem::addNonModelObjectChild(const std::string& child)
 
 ///////////////////// BuildingShading ////////////////////////////////////////////////
 
-BuildingShadingTreeItem::BuildingShadingTreeItem(const openstudio::model::Model& model, 
+BuildingShadingTreeItem::BuildingShadingTreeItem(const openstudio::model::Model& model,
                                          QTreeWidgetItem* parent )
                                          : ModelObjectTreeItem(BuildingShadingTreeItem::itemName(), model, parent)
 {
@@ -991,7 +991,7 @@ std::vector<model::ModelObject> SpaceTypeTreeItem::defaultedModelObjectChildren(
   boost::optional<model::ModelObject> modelObject = this->modelObject();
   OS_ASSERT(modelObject);
   model::SpaceType spaceType = modelObject->cast<model::SpaceType>();
-  
+
   // get spaces that inherit this space type as default
   for (const model::Space& space : spaceType.spaces()){
     if (space.isSpaceTypeDefaulted()){
@@ -1307,7 +1307,7 @@ void InteriorPartitionsTreeItem::addModelObjectChild(const model::ModelObject& c
 
 ///////////////////// InteriorPartitionSurfaceGroup ////////////////////////////////////////////////
 
-InteriorPartitionSurfaceGroupTreeItem::InteriorPartitionSurfaceGroupTreeItem(const openstudio::model::InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup, 
+InteriorPartitionSurfaceGroupTreeItem::InteriorPartitionSurfaceGroupTreeItem(const openstudio::model::InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup,
                                                                              QTreeWidgetItem* parent)
   : ModelObjectTreeItem(interiorPartitionSurfaceGroup, false, m_type, parent)
 {
@@ -1319,7 +1319,7 @@ std::vector<model::ModelObject> InteriorPartitionSurfaceGroupTreeItem::modelObje
   boost::optional<model::ModelObject> modelObject = this->modelObject();
   OS_ASSERT(modelObject);
   model::InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup = modelObject->cast<model::InteriorPartitionSurfaceGroup>();
-  
+
   std::vector<model::InteriorPartitionSurface> interiorPartitionSurfaces = interiorPartitionSurfaceGroup.interiorPartitionSurfaces();
   std::vector<model::ModelObject> result(interiorPartitionSurfaces.begin(), interiorPartitionSurfaces.end());
   std::sort(result.begin(), result.end(), WorkspaceObjectNameLess());

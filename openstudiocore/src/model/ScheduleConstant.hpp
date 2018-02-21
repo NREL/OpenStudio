@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -66,9 +66,9 @@ class MODEL_API ScheduleConstant : public Schedule {
   /** @name Setters */
   //@{
 
-  void setValue(double value);
+  bool setValue(double value);
 
-  /** Sets this ScheduleConstant's value if scheduleTypeLimits() is set and value can be properly 
+  /** Sets this ScheduleConstant's value if scheduleTypeLimits() is set and value can be properly
    *  converted to the 'SI' units so implied. */
   bool setValue(const Quantity& value);
 

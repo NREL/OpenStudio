@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -84,7 +84,7 @@ void AbstractButtonItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
   }
 }
 
-ButtonItem::ButtonItem(const QPixmap & image, const QPixmap & downImage, 
+ButtonItem::ButtonItem(const QPixmap & image, const QPixmap & downImage,
                        const QPixmap & hoverImage, QGraphicsItem * parent)
   : QGraphicsObject(parent),
     m_mouseDown(false),
@@ -145,8 +145,8 @@ void ButtonItem::hoverLeaveEvent(QGraphicsSceneHoverEvent * event)
   event->accept();
 }
 
-void ButtonItem::paint(QPainter *painter, 
-           const QStyleOptionGraphicsItem *option, 
+void ButtonItem::paint(QPainter *painter,
+           const QStyleOptionGraphicsItem *option,
            QWidget *widget)
 {
   if( m_mouseDown )
@@ -196,8 +196,8 @@ GridLayoutItem::GridLayoutItem()
 GridLayoutItem::~GridLayoutItem()
 {
   QList<QGraphicsItem *> itemList = childItems();
-  for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
-       it < itemList.end(); 
+  for( QList<QGraphicsItem *>::iterator it = itemList.begin();
+       it < itemList.end();
        ++it )
   {
     delete *it;
@@ -265,8 +265,8 @@ void GridLayoutItem::refreshAllItemViews()
   prepareGeometryChange();
 
   QList<QGraphicsItem *> itemList = childItems();
-  for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
-       it < itemList.end(); 
+  for( QList<QGraphicsItem *>::iterator it = itemList.begin();
+       it < itemList.end();
        ++it )
   {
     delete *it;
@@ -456,7 +456,7 @@ int GridLayoutItem::columns() const
   return 2;
 }
 
-std::pair<int,int> GridLayoutItem::gridPos(int index) 
+std::pair<int,int> GridLayoutItem::gridPos(int index)
 {
   int row = 0;
   int column = 0;
@@ -467,7 +467,7 @@ std::pair<int,int> GridLayoutItem::gridPos(int index)
 
     row = index / _columns;
 
-    column = index % _columns;  
+    column = index % _columns;
   }
 
   return std::pair<int,int>(row,column);

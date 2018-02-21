@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,29 +38,29 @@ namespace detail {
 
   /** CurveBicubic_Impl is a Curve_Impl that is the implementation class for CurveBicubic.*/
   class MODEL_API CurveBicubic_Impl : public Curve_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     /** @name Constructors and Destructors */
@@ -142,39 +142,39 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setCoefficient1Constant(double coefficient1Constant);
+    bool setCoefficient1Constant(double coefficient1Constant);
 
-    void setCoefficient2x(double coefficient2x);
+    bool setCoefficient2x(double coefficient2x);
 
-    void setCoefficient3xPOW2(double coefficient3xPOW2);
+    bool setCoefficient3xPOW2(double coefficient3xPOW2);
 
-    void setCoefficient4y(double coefficient4y);
+    bool setCoefficient4y(double coefficient4y);
 
-    void setCoefficient5yPOW2(double coefficient5yPOW2);
+    bool setCoefficient5yPOW2(double coefficient5yPOW2);
 
-    void setCoefficient6xTIMESY(double coefficient6xTIMESY);
+    bool setCoefficient6xTIMESY(double coefficient6xTIMESY);
 
-    void setCoefficient7xPOW3(double coefficient7xPOW3);
+    bool setCoefficient7xPOW3(double coefficient7xPOW3);
 
-    void setCoefficient8yPOW3(double coefficient8yPOW3);
+    bool setCoefficient8yPOW3(double coefficient8yPOW3);
 
-    void setCoefficient9xPOW2TIMESY(double coefficient9xPOW2TIMESY);
+    bool setCoefficient9xPOW2TIMESY(double coefficient9xPOW2TIMESY);
 
-    void setCoefficient10xTIMESYPOW2(double coefficient10xTIMESYPOW2);
+    bool setCoefficient10xTIMESYPOW2(double coefficient10xTIMESYPOW2);
 
-    void setMinimumValueofx(double minimumValueofx);
+    bool setMinimumValueofx(double minimumValueofx);
 
-    void setMaximumValueofx(double maximumValueofx);
+    bool setMaximumValueofx(double maximumValueofx);
 
-    void setMinimumValueofy(double minimumValueofy);
+    bool setMinimumValueofy(double minimumValueofy);
 
-    void setMaximumValueofy(double maximumValueofy);
+    bool setMaximumValueofy(double maximumValueofy);
 
-    void setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
+    bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
 
     void resetMinimumCurveOutput();
 
-    void setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
+    bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
 
     void resetMaximumCurveOutput();
 
@@ -205,5 +205,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEBICUBIC_IMPL_HPP
-
+#endif // MODEL_CURVEBICUBIC_IMPL_HPP

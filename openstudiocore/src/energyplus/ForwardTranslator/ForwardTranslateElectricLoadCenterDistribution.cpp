@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -69,15 +69,15 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
 
   idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorOperationSchemeType, modelObject.generatorOperationSchemeType());
 
-  if (optD = modelObject.demandLimitSchemePurchasedElectricDemandLimit()) {
+  if ( (optD = modelObject.demandLimitSchemePurchasedElectricDemandLimit()) ) {
     idfObject.setDouble(ElectricLoadCenter_DistributionFields::GeneratorDemandLimitSchemePurchasedElectricDemandLimit, optD.get());
   }
 
-  if (schedule = modelObject.trackScheduleSchemeSchedule()) {
+  if ( (schedule = modelObject.trackScheduleSchemeSchedule()) ) {
     idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackScheduleNameSchemeScheduleName, schedule->name().get());
   }
 
-  if ( optS = modelObject.trackMeterSchemeMeterName() ) {
+  if ( (optS = modelObject.trackMeterSchemeMeterName()) ) {
     idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackMeterSchemeMeterName, (*optS) );
   }
 
@@ -121,19 +121,19 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
     }
   }
 
-  // NEW
+  // NEW: Note all of these checks should have been implemented in ElectricLoadCenter_Impl::validityCheck...
 
   // Logic based on Electrical Buss Type to translate or not translate inverters, storage
   std::string bussType = modelObject.electricalBussType();
- 
+
   // Translate the buss Type already
   idfObject.setString(ElectricLoadCenter_DistributionFields::ElectricalBussType, bussType);
-  
+
   /// Inverter and Buss Type
   boost::optional<Inverter> inverter = modelObject.inverter();
   bool bussWithInverter = (bussType == "DirectCurrentWithInverter" ||
     bussType == "DirectCurrentWithInverterDCStorage" ||
-    bussType == "DirectCurrentWithInverterACStorage"); 
+    bussType == "DirectCurrentWithInverterACStorage");
 
   // Case 1: There is an inverter and a Buss with inverter: all good
   if (inverter && bussWithInverter) {
@@ -141,7 +141,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
     if (inverterIdf) {
       idfObject.setString(ElectricLoadCenter_DistributionFields::InverterName, inverterIdf->name().get());
     }
-      
+
     // Case 2: if there's an inverter, but the buss is not compatible, we issue a Warning and don't translate the inverter
   } else if (inverter && !bussWithInverter) {
       LOG(Warn, modelObject.briefDescription() << ": Your Electric Buss Type '" << bussType
@@ -154,8 +154,8 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
         << "' Requires an inverter but you didn't specify one");
   }
   // Case 4: there's no inverter and a buss type without inverter: nothing needs to be done
-  
-  
+
+
   /// Storage & Buss Type
   boost::optional<ElectricalStorage> electricalStorage = modelObject.electricalStorage();
   bool bussWithStorage = (bussType == "AlternatingCurrentWithStorage" ||
@@ -164,7 +164,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
 
   // Case 1: There is a Storage object and a Buss with Storage: all good
   if (electricalStorage && bussWithStorage) {
-    
+
     // Translate the storage object itself
     boost::optional<IdfObject> storageIdf = translateAndMapModelObject(*electricalStorage);
     if (storageIdf) {
@@ -185,10 +185,24 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
     // Minimum Storage State of Charge Fraction, defaults
     idfObject.setDouble(ElectricLoadCenter_DistributionFields::MinimumStorageStateofChargeFraction, modelObject.minimumStorageStateofChargeFraction());
 
+
+    // Translate any storage converter if there is one, store it into a bool so we can check if present when mandatory
+    bool has_storage_conv = false;
+    // Storage Converter Object Name - This is actually a mandatory field
+    boost::optional<ElectricLoadCenterStorageConverter> elcConv = modelObject.storageConverter();
+    if (elcConv) {
+      // If the buss is compatible, we translate the invert
+      boost::optional<IdfObject> storageConverterIdf = translateAndMapModelObject(*elcConv);
+      if (storageConverterIdf) {
+        has_storage_conv = true;
+        idfObject.setString(ElectricLoadCenter_DistributionFields::StorageConverterObjectName, storageConverterIdf->name().get());
+      }
+    }
+
     /// Further testing based on storageOperationScheme
     if (storageOperationScheme == "TrackMeterDemandStoreExcessOnSite") {
       // Storage Control Track Meter Name, required if operation = TrackMeterDemandStoreExcessOnSite or it'll produce a fatal
-      if (optS = modelObject.storageControlTrackMeterName()) {
+      if ( (optS = modelObject.storageControlTrackMeterName()) ) {
         idfObject.setString(ElectricLoadCenter_DistributionFields::StorageControlTrackMeterName, (*optS));
       } else {
         LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
@@ -196,21 +210,14 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
       }
 
     } else if (storageOperationScheme == "TrackChargeDischargeSchedules") {
-      // Storage Converter Object Name
-      boost::optional<ElectricLoadCenterStorageConverter> elcConv = modelObject.storageConverter();
-      if (elcConv) {
-        // If the buss is compatible, we translate the invert
-        boost::optional<IdfObject> storageConverterIdf = translateAndMapModelObject(*elcConv);
-        if (storageConverterIdf) {
-          idfObject.setString(ElectricLoadCenter_DistributionFields::StorageConverterObjectName, storageConverterIdf->name().get());
-        }
-      } else {
+      // Storage Converter Object Name - This is actually a mandatory field
+      if( !has_storage_conv ) {
         LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
           << " but you didn't specify the required 'Storage Converter Object Name'");
       }
 
       // Design Storage Control Charge Power
-      if (optD = modelObject.designStorageControlChargePower()) {
+      if ( (optD = modelObject.designStorageControlChargePower()) ) {
         idfObject.setDouble(ElectricLoadCenter_DistributionFields::DesignStorageControlChargePower, optD.get());
       } else {
         LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
@@ -218,7 +225,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
       }
 
       // Design Storage Control Discharge Power
-      if (optD = modelObject.designStorageControlDischargePower()) {
+      if ( (optD = modelObject.designStorageControlDischargePower()) ) {
         idfObject.setDouble(ElectricLoadCenter_DistributionFields::DesignStorageControlDischargePower, optD.get());
       } else {
         LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
@@ -226,7 +233,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
       }
 
       // Storage Charge Power Fraction Schedule Name
-      if (schedule = modelObject.storageChargePowerFractionSchedule()) {
+      if ( (schedule = modelObject.storageChargePowerFractionSchedule()) ) {
         idfObject.setString(ElectricLoadCenter_DistributionFields::StorageChargePowerFractionScheduleName, schedule->name().get());
       } else {
         LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
@@ -234,7 +241,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
       }
 
       // Discharge Power Fraction Schedule Name
-      if (schedule = modelObject.storageDischargePowerFractionSchedule()) {
+      if ( (schedule = modelObject.storageDischargePowerFractionSchedule()) ) {
         idfObject.setString(ElectricLoadCenter_DistributionFields::StorageDischargePowerFractionScheduleName, schedule->name().get());
       } else {
         LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
@@ -242,22 +249,14 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
       }
 
     } else if (storageOperationScheme == "FacilityDemandLeveling") {
-      // Storage Converter Object Name
-      //boost::optional<ElectricLoadCenterStorageConverter> storageConverter = modelObject.storageConverter();
-      //if (storageConverter) {
-      //  // If the buss is compatible, we translate the invert
-      //  boost::optional<IdfObject> storageConverterIdf = translateAndMapModelObject(*storageConverter);
-      //  if (storageConverterIdf) {
-      //    idfObject.setString(ElectricLoadCenter_DistributionFields
-      //      ::StorageConverterObjectName, storageConverterIdf->name().get());
-      //  }
-      //} else {
-      //  LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
-      //    << " but you didn't specify the required 'Storage Converter Object Name'");
-      //}
+      // Storage Converter Object Name - This is actually a mandatory field
+      if( !has_storage_conv ) {
+        LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
+          << " but you didn't specify the required 'Storage Converter Object Name'");
+      }
 
       // Design Storage Control Charge Power
-      if (optD = modelObject.designStorageControlChargePower()) {
+      if ( (optD = modelObject.designStorageControlChargePower()) ) {
         idfObject.setDouble(ElectricLoadCenter_DistributionFields::DesignStorageControlChargePower, optD.get());
       } else {
         LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
@@ -265,7 +264,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
       }
 
       // Design Storage Control Discharge Power
-      if (optD = modelObject.designStorageControlDischargePower()) {
+      if ( (optD = modelObject.designStorageControlDischargePower()) ) {
         idfObject.setDouble(ElectricLoadCenter_DistributionFields::DesignStorageControlDischargePower, optD.get());
       } else {
         LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme
@@ -273,7 +272,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
       }
 
       // Storage Control Utility Demand Target
-      if (optD = modelObject.storageControlUtilityDemandTarget()) {
+      if ( (optD = modelObject.storageControlUtilityDemandTarget()) ) {
         idfObject.setDouble(ElectricLoadCenter_DistributionFields::StorageControlUtilityDemandTarget, optD.get());
       } else {
         LOG(Error, modelObject.briefDescription() << ": You set the Storage Operation Scheme to " << storageOperationScheme

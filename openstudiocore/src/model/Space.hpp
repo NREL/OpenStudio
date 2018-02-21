@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -102,7 +102,7 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /** @name Setters */
   //@{
 
-  void setPartofTotalFloorArea(bool partofTotalFloorArea);
+  bool setPartofTotalFloorArea(bool partofTotalFloorArea);
 
   void resetPartofTotalFloorArea();
 
@@ -214,10 +214,10 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   std::vector<SteamEquipment> steamEquipment() const;
 
   /// Returns all OtherEquipment in this space.
-  std::vector<OtherEquipment> otherEquipment() const;  
+  std::vector<OtherEquipment> otherEquipment() const;
 
   /// Returns all WaterUseEquipment in this space.
-  std::vector<WaterUseEquipment> waterUseEquipment() const; 
+  std::vector<WaterUseEquipment> waterUseEquipment() const;
 
   /// Returns all DaylightingControls in this space.
   std::vector<DaylightingControl> daylightingControls() const;
@@ -273,15 +273,15 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Does include people multiplier in calculation.
   double numberOfPeople() const;
 
-  /** Sets the number of people in this space by using people()[0], if it exists, as a template 
-   *  for the remaining People and People definition parameters. All other people() in this 
+  /** Sets the number of people in this space by using people()[0], if it exists, as a template
+   *  for the remaining People and People definition parameters. All other people() in this
    *  SpaceType will be removed, the SpaceType will be made unique and modified, if necessary, and
    *  the final People object will be attached directly to this Space, not to a SpaceType. */
   bool setNumberOfPeople(double numberOfPeople);
 
-  /** Sets the number of people in this space using templatePeople as a template for the remaining 
-   *  People and People definition parameters. All other people() in this SpaceType will be 
-   *  removed, the SpaceType will be made unique and modified, if necessary, and the final People 
+  /** Sets the number of people in this space using templatePeople as a template for the remaining
+   *  People and People definition parameters. All other people() in this SpaceType will be
+   *  removed, the SpaceType will be made unique and modified, if necessary, and the final People
    *  object will be attached directly to this Space, not to a SpaceType. */
   bool setNumberOfPeople(double numberOfPeople, const People& templatePeople);
 
@@ -290,16 +290,16 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Does include people multiplier in calculation.
   double peoplePerFloorArea() const;
 
-  /** Sets the people per floor area in this space by using people()[0], if it exists, as a 
-   *  template for the remaining People and People definition parameters. All other people() in 
-   *  this SpaceType will be removed, the SpaceType will be made unique and modified, if 
-   *  necessary, and the final People object will be attached directly to this Space, not to a 
+  /** Sets the people per floor area in this space by using people()[0], if it exists, as a
+   *  template for the remaining People and People definition parameters. All other people() in
+   *  this SpaceType will be removed, the SpaceType will be made unique and modified, if
+   *  necessary, and the final People object will be attached directly to this Space, not to a
    *  SpaceType. */
   bool setPeoplePerFloorArea(double peoplePerFloorArea);
 
-  /** Sets the people per floor area in this space using templatePeople as a template for the 
-   *  remaining People and People definition parameters. All other people() in this SpaceType will 
-   *  be removed, the SpaceType will be made unique and modified, if necessary, and the final 
+  /** Sets the people per floor area in this space using templatePeople as a template for the
+   *  remaining People and People definition parameters. All other people() in this SpaceType will
+   *  be removed, the SpaceType will be made unique and modified, if necessary, and the final
    *  People object will be attached directly to this Space, not to a SpaceType. */
   bool setPeoplePerFloorArea(double peoplePerFloorArea, const People& templatePeople);
 
@@ -308,16 +308,16 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Does include people multiplier in calculation.
   double floorAreaPerPerson() const;
 
-  /** Sets the floor area per person in this space by using people()[0], if it exists, as a 
-   *  template for the remaining People and People definition parameters. All other people() in 
-   *  this SpaceType will be removed, the SpaceType will be made unique and modified, if 
-   *  necessary, and the final People object will be attached directly to this Space, not to a 
+  /** Sets the floor area per person in this space by using people()[0], if it exists, as a
+   *  template for the remaining People and People definition parameters. All other people() in
+   *  this SpaceType will be removed, the SpaceType will be made unique and modified, if
+   *  necessary, and the final People object will be attached directly to this Space, not to a
    *  SpaceType. */
   bool setFloorAreaPerPerson(double floorAreaPerPerson);
 
-  /** Sets the floor area per person in this Space using templatePeople as a template for the 
-   *  remaining People and People definition parameters. All other people() in this SpaceType will 
-   *  be removed, the SpaceType will be made unique and modified, if necessary, and the final 
+  /** Sets the floor area per person in this Space using templatePeople as a template for the
+   *  remaining People and People definition parameters. All other people() in this SpaceType will
+   *  be removed, the SpaceType will be made unique and modified, if necessary, and the final
    *  People object will be attached directly to this Space, not to a SpaceType. */
   bool setFloorAreaPerPerson(double floorAreaPerPerson, const People& templatePeople);
 
@@ -326,15 +326,15 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Does include lighting multiplier in calculation.
   double lightingPower() const;
 
-  /** Sets the lighting power in this space by using lights()[0], if it exists, as a template 
-   *  for the remaining Lights and Lights Definition parameters. All other lights() and luminaires() 
+  /** Sets the lighting power in this space by using lights()[0], if it exists, as a template
+   *  for the remaining Lights and Lights Definition parameters. All other lights() and luminaires()
    *  in this space will be removed, the SpaceType will be made unique and modified, if necessary, and
    *  the final Lights object will be attached directly to this Space, not to a SpaceType. */
   bool setLightingPower(double lightingPower);
 
-  /** Sets the lighting power in this space using templateLights as a template for the remaining 
-   *  Lights and Lights Definition parameters. All other lights() and luminaires in this space 
-   *  will be removed, the SpaceType will be made unique and modified, if necessary, and the final 
+  /** Sets the lighting power in this space using templateLights as a template for the remaining
+   *  Lights and Lights Definition parameters. All other lights() and luminaires in this space
+   *  will be removed, the SpaceType will be made unique and modified, if necessary, and the final
    *  Lights object will be attached directly to this Space, not to a SpaceType. */
   bool setLightingPower(double lightingPower, const Lights& templateLights);
 
@@ -343,16 +343,16 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Does include lighting multiplier in calculation.
   double lightingPowerPerFloorArea() const;
 
-  /** Sets the lighting power per floor area in this space by using lights()[0], if it exists, as a 
-   *  template for the remaining Lights and Lights Definition parameters. All other lights() and 
-   *  luminaires() in this space will be removed, the SpaceType will be made unique and modified, if 
-   *  necessary, and the final Lights object will be attached directly to this Space, not to a 
+  /** Sets the lighting power per floor area in this space by using lights()[0], if it exists, as a
+   *  template for the remaining Lights and Lights Definition parameters. All other lights() and
+   *  luminaires() in this space will be removed, the SpaceType will be made unique and modified, if
+   *  necessary, and the final Lights object will be attached directly to this Space, not to a
    *  SpaceType. */
   bool setLightingPowerPerFloorArea(double lightingPowerPerFloorArea);
 
-  /** Sets the lighting power per floor area in this space using templateLights as a template for 
-   *  the remaining Lights and Lights Definition parameters. All other lights() and luminaires() 
-   *  in this space will be removed, the SpaceType will be made unique and modified, if necessary, 
+  /** Sets the lighting power per floor area in this space using templateLights as a template for
+   *  the remaining Lights and Lights Definition parameters. All other lights() and luminaires()
+   *  in this space will be removed, the SpaceType will be made unique and modified, if necessary,
    *  and the final Lights object will be attached directly to this Space, not to a SpaceType. */
   bool setLightingPowerPerFloorArea(double lightingPowerPerFloorArea, const Lights& templateLights);
 
@@ -361,16 +361,16 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Does include lighting multiplier in calculation.
   double lightingPowerPerPerson() const;
 
-  /** Sets the lighting power per person in this space by using lights()[0], if it exists, as a 
-   *  template for the remaining Lights and Lights Definition parameters. All other lights() and 
-   *  luminaires() in this space will be removed, the SpaceType will be made unique and modified, if 
-   *  necessary, and the final Lights object will be attached directly to this Space, not to a 
+  /** Sets the lighting power per person in this space by using lights()[0], if it exists, as a
+   *  template for the remaining Lights and Lights Definition parameters. All other lights() and
+   *  luminaires() in this space will be removed, the SpaceType will be made unique and modified, if
+   *  necessary, and the final Lights object will be attached directly to this Space, not to a
    *  SpaceType. */
   bool setLightingPowerPerPerson(double lightingPowerPerPerson);
 
-  /** Sets the lighting power per person in this space using templateLights as a template for 
-   *  the remaining Lights and Lights Definition parameters. All other lights() and luminaires() 
-   *  in this space will be removed, the SpaceType will be made unique and modified, if necessary, 
+  /** Sets the lighting power per person in this space using templateLights as a template for
+   *  the remaining Lights and Lights Definition parameters. All other lights() and luminaires()
+   *  in this space will be removed, the SpaceType will be made unique and modified, if necessary,
    *  and the final Lights object will be attached directly to this Space, not to a SpaceType. */
   bool setLightingPowerPerPerson(double lightingPowerPerPerson, const Lights& templateLights);
 
@@ -379,19 +379,19 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Does include equipment multiplier in calculation.
   double electricEquipmentPower() const;
 
-  /** Sets the electric equipment power in this space by using electricEquipment()[0], if it 
-   *  exists, as a template for the remaining ElectricEquipment and ElectricEquipment Definition 
-   *  parameters. All other electricEquipment() in this space will be removed, the SpaceType will 
-   *  be made unique and modified, if necessary, and the final ElectricEquipment object will be 
+  /** Sets the electric equipment power in this space by using electricEquipment()[0], if it
+   *  exists, as a template for the remaining ElectricEquipment and ElectricEquipment Definition
+   *  parameters. All other electricEquipment() in this space will be removed, the SpaceType will
+   *  be made unique and modified, if necessary, and the final ElectricEquipment object will be
    *  attached directly to this Space, not to a SpaceType. */
   bool setElectricEquipmentPower(double electricEquipmentPower);
 
-  /** Sets the electric equipment power in this space using templateElectricEquipment as a 
-   *  template for the remaining ElectricEquipment and ElectricEquipment Definition parameters. 
-   *  All other electricEquipment() in this space will be removed, the SpaceType will be made 
-   *  unique and modified, if necessary, and the final ElectricEquipment object will be attached 
+  /** Sets the electric equipment power in this space using templateElectricEquipment as a
+   *  template for the remaining ElectricEquipment and ElectricEquipment Definition parameters.
+   *  All other electricEquipment() in this space will be removed, the SpaceType will be made
+   *  unique and modified, if necessary, and the final ElectricEquipment object will be attached
    *  directly to this Space, not to a SpaceType. */
-  bool setElectricEquipmentPower(double electricEquipmentPower, 
+  bool setElectricEquipmentPower(double electricEquipmentPower,
                                  const ElectricEquipment& templateElectricEquipment);
 
   /** Returns the electric equipment power density (W/m^2) of this space. */
@@ -399,20 +399,20 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Does include equipment multiplier in calculation.
   double electricEquipmentPowerPerFloorArea() const;
 
-  /** Sets the electric equipment power per floor area in this space by using 
-   *  electricEquipment()[0], if it exists, as a template for the remaining ElectricEquipment 
-   *  and ElectricEquipment Definition parameters. All other electricEquipment() in this space 
-   *  will be removed, the SpaceType will be made unique and modified, if necessary, and the 
-   *  final ElectricEquipment object will be attached directly to this Space, not to a 
+  /** Sets the electric equipment power per floor area in this space by using
+   *  electricEquipment()[0], if it exists, as a template for the remaining ElectricEquipment
+   *  and ElectricEquipment Definition parameters. All other electricEquipment() in this space
+   *  will be removed, the SpaceType will be made unique and modified, if necessary, and the
+   *  final ElectricEquipment object will be attached directly to this Space, not to a
    *  SpaceType. */
   bool setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea);
 
-  /** Sets the electric equipment power per floor area in this space using 
-   *  templateElectricEquipment as a template for the remaining ElectricEquipment and 
-   *  ElectricEquipment Definition parameters. All other electricEquipment() in this space will 
-   *  be removed, the SpaceType will be made unique and modified, if necessary, and the final 
+  /** Sets the electric equipment power per floor area in this space using
+   *  templateElectricEquipment as a template for the remaining ElectricEquipment and
+   *  ElectricEquipment Definition parameters. All other electricEquipment() in this space will
+   *  be removed, the SpaceType will be made unique and modified, if necessary, and the final
    *  ElectricEquipment object will be attached directly to this Space, not to a SpaceType. */
-  bool setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea, 
+  bool setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea,
                                              const ElectricEquipment& templateElectricEquipment);
 
   /** Returns the electric equipment power per person (W/person) of this space. */
@@ -421,18 +421,18 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   double electricEquipmentPowerPerPerson() const;
 
   /** Sets the electric equipment power per person in this space by using electricEquipment()[0],
-   *  if it exists, as a template for the remaining ElectricEquipment and ElectricEquipment 
-   *  Definition parameters. All other electricEquipment() in this space will be removed, the 
-   *  SpaceType will be made unique and modified, if necessary, and the final ElectricEquipment 
+   *  if it exists, as a template for the remaining ElectricEquipment and ElectricEquipment
+   *  Definition parameters. All other electricEquipment() in this space will be removed, the
+   *  SpaceType will be made unique and modified, if necessary, and the final ElectricEquipment
    *  object will be attached directly to this Space, not to a SpaceType. */
   bool setElectricEquipmentPowerPerPerson(double electricEquipmentPowerPerPerson);
 
-  /** Sets the electric equipment power per person in this space using templateElectricEquipment 
-   *  as a template for the remaining ElectricEquipment and ElectricEquipment Definition 
-   *  parameters. All other electricEquipment() in this space will be removed, the SpaceType will 
-   *  be made unique and modified, if necessary, and the final ElectricEquipment object will be 
+  /** Sets the electric equipment power per person in this space using templateElectricEquipment
+   *  as a template for the remaining ElectricEquipment and ElectricEquipment Definition
+   *  parameters. All other electricEquipment() in this space will be removed, the SpaceType will
+   *  be made unique and modified, if necessary, and the final ElectricEquipment object will be
    *  attached directly to this Space, not to a SpaceType. */
-  bool setElectricEquipmentPowerPerPerson(double electricEquipmentPowerPerPerson, 
+  bool setElectricEquipmentPowerPerPerson(double electricEquipmentPowerPerPerson,
                                           const ElectricEquipment& templateElectricEquipment);
 
   /** Returns the gas equipment power (W) of this space. */
@@ -440,19 +440,19 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Does include equipment multiplier in calculation.
   double gasEquipmentPower() const;
 
-  /** Sets the gas equipment power in this space by using gasEquipment()[0], if it 
-   *  exists, as a template for the remaining GasEquipment and GasEquipment Definition 
-   *  parameters. All other gasEquipment() in this space will be removed, the SpaceType will 
-   *  be made unique and modified, if necessary, and the final GasEquipment object will be 
+  /** Sets the gas equipment power in this space by using gasEquipment()[0], if it
+   *  exists, as a template for the remaining GasEquipment and GasEquipment Definition
+   *  parameters. All other gasEquipment() in this space will be removed, the SpaceType will
+   *  be made unique and modified, if necessary, and the final GasEquipment object will be
    *  attached directly to this Space, not to a SpaceType. */
   bool setGasEquipmentPower(double gasEquipmentPower);
 
-  /** Sets the gas equipment power in this space using templateGasEquipment as a 
-   *  template for the remaining GasEquipment and GasEquipment Definition parameters. 
-   *  All other gasEquipment() in this space will be removed, the SpaceType will be made 
-   *  unique and modified, if necessary, and the final GasEquipment object will be attached 
+  /** Sets the gas equipment power in this space using templateGasEquipment as a
+   *  template for the remaining GasEquipment and GasEquipment Definition parameters.
+   *  All other gasEquipment() in this space will be removed, the SpaceType will be made
+   *  unique and modified, if necessary, and the final GasEquipment object will be attached
    *  directly to this Space, not to a SpaceType. */
-  bool setGasEquipmentPower(double gasEquipmentPower, 
+  bool setGasEquipmentPower(double gasEquipmentPower,
                             const GasEquipment& templateGasEquipment);
 
   /** Returns the gas equipment power density (W/m^2) of this space. */
@@ -460,20 +460,20 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Does include equipment multiplier in calculation.
   double gasEquipmentPowerPerFloorArea() const;
 
-  /** Sets the gas equipment power per floor area in this space by using 
-   *  gasEquipment()[0], if it exists, as a template for the remaining GasEquipment 
-   *  and GasEquipment Definition parameters. All other gasEquipment() in this space 
-   *  will be removed, the SpaceType will be made unique and modified, if necessary, and the 
-   *  final GasEquipment object will be attached directly to this Space, not to a 
+  /** Sets the gas equipment power per floor area in this space by using
+   *  gasEquipment()[0], if it exists, as a template for the remaining GasEquipment
+   *  and GasEquipment Definition parameters. All other gasEquipment() in this space
+   *  will be removed, the SpaceType will be made unique and modified, if necessary, and the
+   *  final GasEquipment object will be attached directly to this Space, not to a
    *  SpaceType. */
   bool setGasEquipmentPowerPerFloorArea(double gasEquipmentPowerPerFloorArea);
 
-  /** Sets the gas equipment power per floor area in this space using 
-   *  templateGasEquipment as a template for the remaining GasEquipment and 
-   *  GasEquipment Definition parameters. All other gasEquipment() in this space will 
-   *  be removed, the SpaceType will be made unique and modified, if necessary, and the final 
+  /** Sets the gas equipment power per floor area in this space using
+   *  templateGasEquipment as a template for the remaining GasEquipment and
+   *  GasEquipment Definition parameters. All other gasEquipment() in this space will
+   *  be removed, the SpaceType will be made unique and modified, if necessary, and the final
    *  GasEquipment object will be attached directly to this Space, not to a SpaceType. */
-  bool setGasEquipmentPowerPerFloorArea(double gasEquipmentPowerPerFloorArea, 
+  bool setGasEquipmentPowerPerFloorArea(double gasEquipmentPowerPerFloorArea,
                                         const GasEquipment& templateGasEquipment);
 
   /** Returns the gas equipment power per person (W/person) of this space. */
@@ -482,18 +482,18 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   double gasEquipmentPowerPerPerson() const;
 
   /** Sets the gas equipment power per person in this space by using gasEquipment()[0],
-   *  if it exists, as a template for the remaining GasEquipment and GasEquipment 
-   *  Definition parameters. All other gasEquipment() in this space will be removed, the 
-   *  SpaceType will be made unique and modified, if necessary, and the final GasEquipment 
+   *  if it exists, as a template for the remaining GasEquipment and GasEquipment
+   *  Definition parameters. All other gasEquipment() in this space will be removed, the
+   *  SpaceType will be made unique and modified, if necessary, and the final GasEquipment
    *  object will be attached directly to this Space, not to a SpaceType. */
   bool setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson);
 
-  /** Sets the gas equipment power per person in this space using templateGasEquipment 
-   *  as a template for the remaining GasEquipment and GasEquipment Definition 
-   *  parameters. All other gasEquipment() in this space will be removed, the SpaceType will 
-   *  be made unique and modified, if necessary, and the final GasEquipment object will be 
+  /** Sets the gas equipment power per person in this space using templateGasEquipment
+   *  as a template for the remaining GasEquipment and GasEquipment Definition
+   *  parameters. All other gasEquipment() in this space will be removed, the SpaceType will
+   *  be made unique and modified, if necessary, and the final GasEquipment object will be
    *  attached directly to this Space, not to a SpaceType. */
-  bool setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson, 
+  bool setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson,
                                      const GasEquipment& templateGasEquipment);
 
   /** Returns the infiltration design flow rate (m^3/s) in the space. Ignores
@@ -599,14 +599,14 @@ MODEL_API void matchSurfaces(std::vector<Space>& spaces);
 MODEL_API void unmatchSurfaces(std::vector<Space>& spaces);
 
 /// Returns a suggested pattern for skylights targeting a skylight to floor ratio with desired sizes.
-/// Pattern will be generated in the grid coordinate system, specified by directionOfRelativeNorth. 
+/// Pattern will be generated in the grid coordinate system, specified by directionOfRelativeNorth.
 /// directionOfRelativeNorth is rotation of grid clockwise from the Building North Axis, in units of degrees.
-/// If you want to align skylights with building coordinate system pass directionOfRelativeNorth = 0.  
+/// If you want to align skylights with building coordinate system pass directionOfRelativeNorth = 0.
 /// If you want to align skylights with a space's coordinate system pass in that space's directionofRelativeNorth.
 /// Resulting pattern will be in Building coordinates, on the z = 0 plane, with normal in positive z direction.
-MODEL_API std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Space>& spaces, 
+MODEL_API std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Space>& spaces,
                                                                      double directionOfRelativeNorth,
-                                                                     double skylightToProjectedFloorRatio, 
+                                                                     double skylightToProjectedFloorRatio,
                                                                      double desiredWidth, double desiredHeight);
 
 /** \relates Space*/

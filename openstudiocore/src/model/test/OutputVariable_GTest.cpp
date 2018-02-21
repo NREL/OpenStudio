@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -73,6 +73,13 @@ TEST_F(ModelFixture, OutputVariable_ThermalZone)
   OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
   EXPECT_EQ("*", lightsElectricPower.keyValue());
   EXPECT_EQ("Zone Lights Electric Power", lightsElectricPower.variableName());
+  //Check BCVTB
+  EXPECT_FALSE(lightsElectricPower.exportToBCVTB());
+  EXPECT_TRUE(lightsElectricPower.isExportToBCVTBDefaulted());
+  lightsElectricPower.setExportToBCVTB(true);
+  EXPECT_TRUE(lightsElectricPower.exportToBCVTB());
+  lightsElectricPower.resetExportToBCVTB();
+  EXPECT_FALSE(lightsElectricPower.exportToBCVTB());
 
   // add Zone Lights Radiant Heating Energy to only zone1
   OutputVariable lightsRadiantHeatGain("Zone Lights Radiant Heating Energy", model);
@@ -108,7 +115,7 @@ TEST_F(ModelFixture, MapOfAllOutputVariables)
     }
   }
 
-  // add all variables to map, allow only one variable per variable name in this application 
+  // add all variables to map, allow only one variable per variable name in this application
   for (OutputVariable outputVariable : model.getModelObjects<OutputVariable>()){
     if (outputVariableMap[outputVariable.variableName()]){
       // already have output variable for this name, then remove this object

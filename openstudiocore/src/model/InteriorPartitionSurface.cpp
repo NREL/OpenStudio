@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -51,7 +51,7 @@ namespace model {
 namespace detail {
 
   InteriorPartitionSurface_Impl::InteriorPartitionSurface_Impl(const IdfObject& idfObject,
-                                                               Model_Impl* model, 
+                                                               Model_Impl* model,
                                                                bool keepHandle)
     : PlanarSurface_Impl(idfObject,model,keepHandle)
   {
@@ -158,7 +158,7 @@ namespace detail {
   }
 
   boost::optional<Space> InteriorPartitionSurface_Impl::space() const
-  { 
+  {
     boost::optional<Space> result;
     boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup = this->interiorPartitionSurfaceGroup();
     if (interiorPartitionSurfaceGroup){
@@ -198,7 +198,7 @@ namespace detail {
     return result;
   }
 
-  void InteriorPartitionSurface_Impl::setConverttoInternalMass(bool converttoInternalMass) {
+  bool InteriorPartitionSurface_Impl::setConverttoInternalMass(bool converttoInternalMass) {
     bool result = false;
     if (converttoInternalMass) {
       result = setString(OS_InteriorPartitionSurfaceFields::ConverttoInternalMass, "Yes");
@@ -206,6 +206,7 @@ namespace detail {
       result = setString(OS_InteriorPartitionSurfaceFields::ConverttoInternalMass, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void InteriorPartitionSurface_Impl::resetConverttoInternalMass() {
@@ -270,7 +271,7 @@ namespace detail {
 
   bool InteriorPartitionSurface_Impl::setInteriorPartitionSurfaceGroup(const InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup)
   {
-    return setPointer(OS_InteriorPartitionSurfaceFields::InteriorPartitionSurfaceGroupName, 
+    return setPointer(OS_InteriorPartitionSurfaceFields::InteriorPartitionSurfaceGroupName,
                       interiorPartitionSurfaceGroup.handle());
   }
 
@@ -354,8 +355,8 @@ bool InteriorPartitionSurface::isNumberofVerticesAutocalculated() const {
   return getImpl<detail::InteriorPartitionSurface_Impl>()->isNumberofVerticesAutocalculated();
 }
 
-void InteriorPartitionSurface::setConverttoInternalMass(bool converttoInternalMass) {
-  getImpl<detail::InteriorPartitionSurface_Impl>()->setConverttoInternalMass(converttoInternalMass);
+bool InteriorPartitionSurface::setConverttoInternalMass(bool converttoInternalMass) {
+  return getImpl<detail::InteriorPartitionSurface_Impl>()->setConverttoInternalMass(converttoInternalMass);
 }
 
 void InteriorPartitionSurface::resetConverttoInternalMass() {
@@ -411,11 +412,10 @@ boost::optional<DaylightingDeviceShelf> InteriorPartitionSurface::daylightingDev
 
 /// @cond
 InteriorPartitionSurface::InteriorPartitionSurface(std::shared_ptr<detail::InteriorPartitionSurface_Impl> impl)
-  : PlanarSurface(impl)
+  : PlanarSurface(std::move(impl))
 {}
 /// @endcond
 
 
 } // model
 } // openstudio
-

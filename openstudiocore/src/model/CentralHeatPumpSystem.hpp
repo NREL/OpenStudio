@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -52,6 +52,9 @@ class MODEL_API CentralHeatPumpSystem : public WaterToWaterComponent {
   /** @name Constructors and Destructors */
   //@{
 
+  /* This constructor adds a chiller heater module list to store your CentralHeatPumpSystemModules, but it doesn't add a CentralHeatPumpSystemModule
+   * At least one CentralHeatPumpSystemModule is needed for this object to work correctly (and be translated) to EnergyPlus.
+   */
   explicit CentralHeatPumpSystem(const Model& model);
 
   virtual ~CentralHeatPumpSystem() {}
@@ -94,6 +97,15 @@ class MODEL_API CentralHeatPumpSystem : public WaterToWaterComponent {
   void removeAllModules();
 
   std::vector<CentralHeatPumpSystemModule> modules() const;
+
+  /** Convenience Function to return the Cooling Loop **/
+  boost::optional<PlantLoop> coolingPlantLoop() const;
+
+  /** Convenience Function to return the Source Loop **/
+  boost::optional<PlantLoop> sourcePlantLoop() const;
+
+  /** Convenience Function to return the Heating Loop **/
+  boost::optional<PlantLoop> heatingPlantLoop() const;
 
   //@}
  protected:

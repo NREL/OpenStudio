@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,7 +47,7 @@ namespace detail{
  *
  *  LifeCycleCostParameters is a unique object which defines important parameters for life cycle analysis such as the length of the study,
  *  inflation rates, discounting convention, etc.
- *   
+ *
  */
 class MODEL_API LifeCycleCostParameters : public ParentObject {
  public:
@@ -82,7 +82,7 @@ class MODEL_API LifeCycleCostParameters : public ParentObject {
   bool isConstantDollarAnalysis() const;
 
   boost::optional<double> realDiscountRate() const;
-  
+
   boost::optional<double> nominalDiscountRate() const;
 
   boost::optional<double> inflation() const;
@@ -172,7 +172,7 @@ class MODEL_API LifeCycleCostParameters : public ParentObject {
 
   /// This cannot be set when analysis type is FEMP or when inflation approach is "ConstantDollar"
   bool setInflation(double inflation);
-  
+
   bool setBaseDateMonth(const MonthOfYear& baseDateMonth);
 
   void resetBaseDateMonth();
@@ -268,7 +268,7 @@ class MODEL_API LifeCycleCostParameters : public ParentObject {
 
   void resetWaterInflation();
 
-  //@}  
+  //@}
 
   /// Returns the IddObjectType.
   static IddObjectType iddObjectType();

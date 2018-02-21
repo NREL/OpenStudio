@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -72,12 +72,11 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   public:
 
   OSDocument( openstudio::model::Model library,
-              openstudio::model::Model hvacLibrary,
               const openstudio::path &resourcesPath,
               openstudio::model::OptionalModel model = boost::none,
-              QString filePath = QString(), 
-              bool isPlugin = false, 
-              int startTabIndex = 0, 
+              QString filePath = QString(),
+              bool isPlugin = false,
+              int startTabIndex = 0,
               int startSubTabIndex = 0);
 
   virtual ~OSDocument();
@@ -116,15 +115,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // Sets the component library associated with this document.
   void setComponentLibrary(const openstudio::model::Model& model);
 
-  // Returns the hvac component library associated with this document.
-  openstudio::model::Model hvacComponentLibrary() const;
-
-  // Sets the hvac component library associated with this document.
-  void setHVACComponentLibrary(const openstudio::model::Model& model);
-
-  // Returns a compiled component library with hvac components
-  openstudio::model::Model combinedComponentLibrary() const;
-
   // Returns true if OSItemId's source is the model
   bool fromModel(const OSItemId& itemId) const;
 
@@ -141,7 +131,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // does not return model object from BCL
   boost::optional<model::ModelObject> getModelObject(const OSItemId& itemId) const;
 
-  // Retrieves the Component identified by itemId from the local bcl library, 
+  // Retrieves the Component identified by itemId from the local bcl library,
   // updates it to the current version and returns it.
   boost::optional<model::Component> getComponent(const OSItemId& itemId) const;
 
@@ -169,14 +159,14 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
     SIMULATION_SETTINGS,
     RUBY_SCRIPTS,
     RUN_SIMULATION,
-    RESULTS_SUMMARY 
+    RESULTS_SUMMARY
   };
 
   enum HorizontalTabID
   {
     MY_MODEL,
     LIBRARY,
-    EDIT 
+    EDIT
   };
 
   std::shared_ptr<MainRightColumnController> mainRightColumnController() const;
@@ -199,6 +189,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void loadFileClicked();
 
   void osmDropped(QString path);
+
+  void changeDefaultLibrariesClicked();
 
   void loadLibraryClicked();
 
@@ -261,7 +253,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
  private slots:
 
-  void onVerticalTabSelected(int id); 
+  void onVerticalTabSelected(int id);
 
   void inspectModelObject(model::OptionalModelObject &, bool readOnly);
 
@@ -272,7 +264,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void toggleUnits(bool displayIP);
 
   void openLibDlg();
- 
+
   void on_closeBclDlg();
 
   void on_closeMeasuresBclDlg();
@@ -317,7 +309,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void setSavePath(const QString & savePath);
 
   // When opening an OSM, check the model for a weather file, if a weather file is listed
-  // copy it into the temp directory.  If the listed weather file cannot be found, remove the 
+  // copy it into the temp directory.  If the listed weather file cannot be found, remove the
   // weather file object.  Returns false if the user's weather file is reset, returns true otherwise.
   bool fixWeatherFileInTemp(bool opening);
 
@@ -332,8 +324,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   openstudio::model::Model m_compLibrary;
 
   openstudio::model::Model m_hvacCompLibrary;
-
-  openstudio::model::Model m_combinedCompLibrary;
 
   openstudio::path m_resourcesPath;
 

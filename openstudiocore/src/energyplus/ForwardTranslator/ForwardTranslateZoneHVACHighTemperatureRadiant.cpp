@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -77,7 +77,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACHighTemperatureRa
       idfObject.setString(ZoneHVAC_HighTemperatureRadiantFields::AvailabilityScheduleName,_schedule->name().get());
     }
   }
-  
+
   //field Zone Name
   boost::optional<std::string> thermalZoneName;
   if( boost::optional<ThermalZone> zone = modelObject.thermalZone() )
@@ -97,7 +97,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACHighTemperatureRa
   else if( (value = modelObject.maximumPowerInput()) )
   {
     idfObject.setDouble(ZoneHVAC_HighTemperatureRadiantFields::HeatingDesignCapacity,value.get());
-  } 
+  }
 
   //FuelType
   if( (s = modelObject.fuelType()) )
@@ -134,7 +134,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACHighTemperatureRa
   {
     idfObject.setString(ZoneHVAC_HighTemperatureRadiantFields::TemperatureControlType,s.get());
   }
-  
+
   //HeatingThrottlingRange
   if( (value = modelObject.heatingThrottlingRange()) )
   {
@@ -159,8 +159,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACHighTemperatureRa
   }
 
   //get rid of any existing surface (just to be safe)
-  idfObject.clearExtensibleGroups();  
- 
+  idfObject.clearExtensibleGroups();
+
   //aggregator for total area; will be used to create weighted area
   double totalAreaOfNonFloorSurfaces = 0;
   double totalAreaOfFloorSurfaces = 0;
@@ -181,11 +181,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACHighTemperatureRa
   //loop through all the surfaces, adding them and their flow fractions (weighted per-area)
   for (const Surface& surface : modelObject.getImpl<model::detail::ZoneHVACHighTemperatureRadiant_Impl>()->surfaces()){
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
-    group.setString(ZoneHVAC_HighTemperatureRadiantExtensibleFields::SurfaceName, surface.name().get());        
+    group.setString(ZoneHVAC_HighTemperatureRadiantExtensibleFields::SurfaceName, surface.name().get());
     if( istringEqual(surface.surfaceType(),"Floor") ) {
-      group.setDouble(ZoneHVAC_HighTemperatureRadiantExtensibleFields::FractionofRadiantEnergytoSurface, (surface.grossArea()/totalAreaOfFloorSurfaces * fractionOnFloor) );     
+      group.setDouble(ZoneHVAC_HighTemperatureRadiantExtensibleFields::FractionofRadiantEnergytoSurface, (surface.grossArea()/totalAreaOfFloorSurfaces * fractionOnFloor) );
     } else {
-      group.setDouble(ZoneHVAC_HighTemperatureRadiantExtensibleFields::FractionofRadiantEnergytoSurface, (surface.grossArea()/totalAreaOfNonFloorSurfaces * fractionOnNonFloor) );     
+      group.setDouble(ZoneHVAC_HighTemperatureRadiantExtensibleFields::FractionofRadiantEnergytoSurface, (surface.grossArea()/totalAreaOfNonFloorSurfaces * fractionOnNonFloor) );
     }
   }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -82,6 +82,8 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   //@}
 
   static IddObjectType iddObjectType();
+
+  std::vector<std::string> condenserTypeValues() const;
 
   /** @name Getters */
   //@{
@@ -229,85 +231,85 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   bool setAvailabilitySchedule(Schedule& schedule );
 
   /** Sets the value of the RatedCOP field. **/
-  void setRatedCOP( boost::optional<double> value );
+  bool setRatedCOP( boost::optional<double> value );
 
-  void setRatedCOP( double value );
+  bool setRatedCOP( double value );
 
   /** Sets the value of the RatedEvaporatorFanPowerPerVolumeFlowRate field. **/
-  void setRatedEvaporatorFanPowerPerVolumeFlowRate( boost::optional<double> value );
+  bool setRatedEvaporatorFanPowerPerVolumeFlowRate( boost::optional<double> value );
 
-  void setRatedEvaporatorFanPowerPerVolumeFlowRate( double value );
+  bool setRatedEvaporatorFanPowerPerVolumeFlowRate( double value );
 
   /** Sets the CurveBiquadratic referred to by the TotalCoolingCapacityFunctionOfTemperatureCurveName field. **/
-  void setTotalCoolingCapacityFunctionOfTemperatureCurve( const Curve& curve );
+  bool setTotalCoolingCapacityFunctionOfTemperatureCurve( const Curve& curve );
 
   /** Sets the CurveQuadratic referred to by the TotalCoolingCapacityFunctionOfFlowFractionCurnveName field. **/
-  void setTotalCoolingCapacityFunctionOfFlowFractionCurve( const Curve& curve );
+  bool setTotalCoolingCapacityFunctionOfFlowFractionCurve( const Curve& curve );
 
   /** Sets the CurveBiquadratic referred to by the EnergyInputRatioFunctionOfTemperatureCurveName field. **/
-  void setEnergyInputRatioFunctionOfTemperatureCurve( const Curve& curve );
+  bool setEnergyInputRatioFunctionOfTemperatureCurve( const Curve& curve );
 
   /** Sets the CurveQuadratic referred to by the EnergyInputRatioFunctionOfFlowFractionCurveName field. **/
-  void setEnergyInputRatioFunctionOfFlowFractionCurve( const Curve& curve );  
+  bool setEnergyInputRatioFunctionOfFlowFractionCurve( const Curve& curve );
 
   /** Sets the CurveQuadratic referred to by the PartLoadFractionCorrelationCurveName field. **/
-  void setPartLoadFractionCorrelationCurve( const Curve & curve );
+  bool setPartLoadFractionCorrelationCurve( const Curve & curve );
 
   /** Sets the value of the NominalTimeForCondensateRemovalToBegin field. **/
-  void setNominalTimeForCondensateRemovalToBegin( boost::optional<double> value );
+  bool setNominalTimeForCondensateRemovalToBegin( boost::optional<double> value );
 
-  void setNominalTimeForCondensateRemovalToBegin( double value );
+  bool setNominalTimeForCondensateRemovalToBegin( double value );
 
   /** Sets the value of the RatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity field. **/
-  void setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity( boost::optional<double> value );
+  bool setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity( boost::optional<double> value );
 
-  void setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity( double value );
+  bool setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity( double value );
 
   /** Sets the value of the MaximumCyclingRate field. **/
-  void setMaximumCyclingRate( boost::optional<double> value );  
+  bool setMaximumCyclingRate( boost::optional<double> value );
 
-  void setMaximumCyclingRate( double value );
+  bool setMaximumCyclingRate( double value );
 
   /** Sets the value of the latentCapacityTimeConstant field. **/
-  void setLatentCapacityTimeConstant( boost::optional<double> value );
+  bool setLatentCapacityTimeConstant( boost::optional<double> value );
 
-  void setLatentCapacityTimeConstant( double value );
+  bool setLatentCapacityTimeConstant( double value );
 
-  void setCondenserAirInletNodeName(const boost::optional<std::string>&);
+  bool setCondenserAirInletNodeName(const boost::optional<std::string>&);
 
   /** Sets the value of the CondenserType field.
    *  Options are AirCooled and EvaporativelyCooled.
    */
-  void setCondenserType( const std::string& value );
+  bool setCondenserType( const std::string& value );
 
   /** Sets the value of the EvaporativeCondenserEffectiveness field. **/
-  void setEvaporativeCondenserEffectiveness( boost::optional<double> value );
+  bool setEvaporativeCondenserEffectiveness( boost::optional<double> value );
 
-  void setEvaporativeCondenserEffectiveness( double value );
+  bool setEvaporativeCondenserEffectiveness( double value );
 
   /** Sets the value of the EvaporativeCondenserAirFlowRate field.
       if value==false then set field to "autosize"
   **/
-  void setEvaporativeCondenserAirFlowRate( boost::optional<double> value );
+  bool setEvaporativeCondenserAirFlowRate( boost::optional<double> value );
 
-  void setEvaporativeCondenserAirFlowRate( double value );
+  bool setEvaporativeCondenserAirFlowRate( double value );
 
   /** Sets the value of the EvaporativeCondenserPumpRatedPowerConsumption field.
       if value==false then set field to "autosize"
   **/
-  void setEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
+  bool setEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
 
-  void setEvaporativeCondenserPumpRatedPowerConsumption( double value );
+  bool setEvaporativeCondenserPumpRatedPowerConsumption( double value );
 
   /** Sets the value of the crankcaseHeaterCapacity field. **/
-  void setCrankcaseHeaterCapacity( boost::optional<double> value );  
+  bool setCrankcaseHeaterCapacity( boost::optional<double> value );
 
-  void setCrankcaseHeaterCapacity( double value );
+  bool setCrankcaseHeaterCapacity( double value );
 
   /** Sets the value of the MaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation field. **/
-  void setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation( boost::optional<double> value );
+  bool setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation( boost::optional<double> value );
 
-  void setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation( double value );
+  bool setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation( double value );
 
   //getSupplyWaterStorageTankName
   //setSupplyWaterStorageTankName
@@ -316,14 +318,14 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   //setCondensateCollectionWaterStorageTankName
 
   /** Sets the value of the BasinHeaterCapacity field. **/
-  void setBasinHeaterCapacity( boost::optional<double> value );
+  bool setBasinHeaterCapacity( boost::optional<double> value );
 
-  void setBasinHeaterCapacity( double value );
+  bool setBasinHeaterCapacity( double value );
 
   /** Sets the value of the BasinHeaterSetpointTemperature field. **/
-  void setBasinHeaterSetpointTemperature( boost::optional<double> value );
+  bool setBasinHeaterSetpointTemperature( boost::optional<double> value );
 
-  void setBasinHeaterSetpointTemperature( double value );
+  bool setBasinHeaterSetpointTemperature( double value );
 
   /** Sets the Schedule referred to by the BasinHeaterOperatingSchedule field. **/
   bool setBasinHeaterOperatingSchedule(Schedule& schedule );
@@ -373,6 +375,18 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct(double length, double diameter);
   /** Returns true is there is an attached equivalent duct object. */
   bool hasAirflowNetworkEquivalentDuct() const;
+
+  // Autosizing methods
+
+  boost::optional <double> autosizedRatedAirFlowRate() const;
+
+  boost::optional <double> autosizedRatedTotalCoolingCapacity() const;
+
+  boost::optional <double> autosizedRatedSensibleHeatRatio() const;
+
+  boost::optional <double> autosizedEvaporativeCondenserAirFlowRate() const;
+
+  boost::optional <double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
   //@}
  protected:

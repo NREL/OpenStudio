@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -142,6 +142,21 @@ namespace detail {
       return false;
     }
 
+    // check the values
+    openstudio::Vector values = timeSeries.values();
+    for (const auto& value : values){
+      // Get the position
+      int pos = &value-&values[0];
+      // Check validity, cannot be NaN, Inf, etc
+      if (std::isinf(value)) {
+        LOG(Warn, "There is Infinity on position " << pos <<" in the timeSeries provided for " << this->briefDescription());
+        return false;
+      } else if (std::isnan(value)) {
+        LOG(Warn, "There is a NaN on position " << pos <<" in the timeSeries provided for " << this->briefDescription());
+        return false;
+      }
+    }
+
     // at this point we are going to change the object
     clearExtensibleGroups(false);
 
@@ -165,7 +180,6 @@ namespace detail {
     }
 
     // set the values
-    openstudio::Vector values = timeSeries.values();
     for (unsigned i = 0; i < values.size(); ++i){
       std::vector<std::string> temp;
       temp.push_back(toString(values[i]));
@@ -219,7 +233,7 @@ namespace detail {
     return isEmpty(OS_Schedule_FixedIntervalFields::OutOfRangeValue);
   }
 
-  void ScheduleFixedInterval_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod) {
+  bool ScheduleFixedInterval_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod) {
     bool result = false;
     if (interpolatetoTimestep) {
       result = setString(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep, "Yes", driverMethod);
@@ -227,6 +241,7 @@ namespace detail {
       result = setString(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep, "No", driverMethod);
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void ScheduleFixedInterval_Impl::resetInterpolatetoTimestep(bool driverMethod) {
@@ -249,9 +264,10 @@ namespace detail {
     return result;
   }
 
-  void ScheduleFixedInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
+  bool ScheduleFixedInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
     bool result = setDouble(OS_Schedule_FixedIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void ScheduleFixedInterval_Impl::resetOutOfRangeValue(bool driverMethod) {
@@ -315,8 +331,8 @@ bool ScheduleFixedInterval::isOutOfRangeValueDefaulted() const {
   return getImpl<detail::ScheduleFixedInterval_Impl>()->isOutOfRangeValueDefaulted();
 }
 
-void ScheduleFixedInterval::setInterpolatetoTimestep(bool interpolatetoTimestep) {
-  getImpl<detail::ScheduleFixedInterval_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
+bool ScheduleFixedInterval::setInterpolatetoTimestep(bool interpolatetoTimestep) {
+  return getImpl<detail::ScheduleFixedInterval_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
 }
 
 void ScheduleFixedInterval::resetInterpolatetoTimestep() {
@@ -335,8 +351,8 @@ bool ScheduleFixedInterval::setIntervalLength(double intervalLength) {
   return getImpl<detail::ScheduleFixedInterval_Impl>()->setIntervalLength(intervalLength);
 }
 
-void ScheduleFixedInterval::setOutOfRangeValue(double outOfRangeValue) {
-  getImpl<detail::ScheduleFixedInterval_Impl>()->setOutOfRangeValue(outOfRangeValue);
+bool ScheduleFixedInterval::setOutOfRangeValue(double outOfRangeValue) {
+  return getImpl<detail::ScheduleFixedInterval_Impl>()->setOutOfRangeValue(outOfRangeValue);
 }
 
 void ScheduleFixedInterval::resetOutOfRangeValue() {
@@ -345,11 +361,10 @@ void ScheduleFixedInterval::resetOutOfRangeValue() {
 
 /// @cond
 ScheduleFixedInterval::ScheduleFixedInterval(std::shared_ptr<detail::ScheduleFixedInterval_Impl> impl)
-  : ScheduleInterval(impl)
+  : ScheduleInterval(std::move(impl))
 {}
 /// @endcond
 
 
 } // model
-} // openstudio
-
+} // openstudio

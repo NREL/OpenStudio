@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -82,7 +82,7 @@ namespace detail {
   IddObjectType DaylightRedirectionDevice_Impl::iddObjectType() const {
     return DaylightRedirectionDevice::iddObjectType();
   }
-  
+
   std::string DaylightRedirectionDevice_Impl::daylightRedirectionDeviceType() const {
     OptionalString os = getString(OS_WindowMaterial_DaylightRedirectionDeviceFields::DaylightRedirectionDeviceType,true);
     OS_ASSERT(os);
@@ -138,7 +138,7 @@ void DaylightRedirectionDevice::resetDaylightRedirectionDeviceType() {
 
 /// @cond
 DaylightRedirectionDevice::DaylightRedirectionDevice(std::shared_ptr<detail::DaylightRedirectionDevice_Impl> impl)
-  : ShadingMaterial(impl)
+  : ShadingMaterial(std::move(impl))
 {}
 /// @endcond
 

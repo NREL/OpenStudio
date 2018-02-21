@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -52,7 +52,7 @@ TEST_F(ModelFixture,CoilHeatingWaterBaseboard_Test) {
   coilHeatingWaterBaseboard.setUFactorTimesAreaValue(500);
   boost::optional<double> testUAValue = coilHeatingWaterBaseboard.uFactorTimesAreaValue();
   EXPECT_EQ((*testUAValue),500);
- 
+
   //default UFactorTimesAreaValue should be autosize
   EXPECT_FALSE(coilHeatingWaterBaseboard.isUFactorTimesAreaValueDefaulted());
   coilHeatingWaterBaseboard.resetUFactorTimesAreaValue();
@@ -74,7 +74,7 @@ TEST_F(ModelFixture,CoilHeatingWaterBaseboard_Test) {
   coilHeatingWaterBaseboard.setConvergenceTolerance(0.005);
   boost::optional<double> testHCT = coilHeatingWaterBaseboard.convergenceTolerance();
   EXPECT_EQ((*testHCT),0.005);
- 
+
   EXPECT_FALSE(coilHeatingWaterBaseboard.isConvergenceToleranceDefaulted());
   coilHeatingWaterBaseboard.resetConvergenceTolerance();
   EXPECT_EQ(coilHeatingWaterBaseboard.convergenceTolerance(),0.001);
@@ -92,13 +92,13 @@ TEST_F(ModelFixture,CoilHeatingWaterBaseboard_Test) {
 
   // add the coil
     EXPECT_TRUE(coilBBConv.addToNode(node));
-   
+
   // disconnect the coil and check if it works
     coilBBConv.disconnect();
   /* get a vector of demand equipment on the plantloop called hotwaterPlant,
      we know that plantloop.demandcomponents() returns a variable type std::vector<ModelObject>
      and we want to make sure that the vector is empty, because we have removed the coil */
-  
+
   // variable type variable name = plant loop class object function(), no argument goes back to default
     std::vector<ModelObject> hotwaterdemandComponents = hotWaterPlant.demandComponents();
     EXPECT_EQ(hotwaterdemandComponents.size(),0);

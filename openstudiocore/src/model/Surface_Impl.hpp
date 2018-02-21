@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,6 +46,7 @@ class ConstructionBase;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class SurfacePropertyConfectionCoefficients;
+class FoundationKiva;
 
 namespace detail {
 
@@ -79,6 +80,8 @@ namespace detail {
     virtual std::vector<ModelObject> children() const override;
 
     virtual std::vector<IdfObject> remove() override;
+
+    virtual ModelObject clone(Model model) const override;
 
     virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
@@ -257,6 +260,21 @@ namespace detail {
     AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage);
 
     boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
+
+    bool setAdjacentFoundation(const FoundationKiva& kiva);
+
+    boost::optional<FoundationKiva> adjacentFoundation() const;
+
+    void resetAdjacentFoundation();
+
+    // if surface property exposed foundation perimeter already exists, do nothing and return nil; creates the surface property exposed foundation perimeter if it does not already exist and return it;
+    boost::optional<SurfacePropertyExposedFoundationPerimeter> createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter);
+
+    // returns the surface property exposed foundation perimeter if set
+    boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter() const;
+
+    // resets the surface property exposed foundation perimeter
+    void resetSurfacePropertyExposedFoundationPerimeter();
 
    protected:
    private:

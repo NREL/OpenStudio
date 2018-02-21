@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -119,7 +119,7 @@ namespace detail {
     return isEmpty(OS_Schedule_VariableIntervalFields::OutOfRangeValue);
   }
 
-  void ScheduleVariableInterval_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod) {
+  bool ScheduleVariableInterval_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod) {
     bool result = false;
     if (interpolatetoTimestep) {
       result = setString(OS_Schedule_VariableIntervalFields::InterpolatetoTimestep, "Yes", driverMethod);
@@ -127,6 +127,7 @@ namespace detail {
       result = setString(OS_Schedule_VariableIntervalFields::InterpolatetoTimestep, "No", driverMethod);
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void ScheduleVariableInterval_Impl::resetInterpolatetoTimestep(bool driverMethod) {
@@ -144,9 +145,10 @@ namespace detail {
     return result;
   }
 
-  void ScheduleVariableInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
+  bool ScheduleVariableInterval_Impl::setOutOfRangeValue(double outOfRangeValue, bool driverMethod) {
     bool result = setDouble(OS_Schedule_VariableIntervalFields::OutOfRangeValue, outOfRangeValue, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void ScheduleVariableInterval_Impl::resetOutOfRangeValue(bool driverMethod) {
@@ -224,6 +226,20 @@ namespace detail {
 
   bool ScheduleVariableInterval_Impl::setTimeSeries(const openstudio::TimeSeries& timeSeries)
   {
+    // check the values
+    openstudio::Vector values = timeSeries.values();
+    for (const auto& value : values){
+      // Get the position
+      int pos = &value-&values[0];
+      // Check validity, cannot be NaN, Inf, etc
+      if (std::isinf(value)) {
+        LOG(Warn, "There is Infinity on position " << pos <<" in the timeSeries provided for " << this->briefDescription());
+        return false;
+      } else if (std::isnan(value)) {
+        LOG(Warn, "There is a NaN on position " << pos <<" in the timeSeries provided for " << this->briefDescription());
+        return false;
+      }
+    }
 
     clearExtensibleGroups(false);
 
@@ -240,7 +256,6 @@ namespace detail {
 
     // set the values
     std::vector<long> secondsFromFirstReport = timeSeries.secondsFromFirstReport();
-    openstudio::Vector values = timeSeries.values();
     for (unsigned i = 0; i < values.size(); ++i){
       DateTime dateTime = firstReportDateTime + Time(0,0,0,secondsFromFirstReport[i]);
       Date date = dateTime.date();
@@ -256,7 +271,7 @@ namespace detail {
       ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
       OS_ASSERT(!group.empty());
     }
-    
+
     this->emitChangeSignals();
 
     return true;
@@ -299,8 +314,8 @@ bool ScheduleVariableInterval::isOutOfRangeValueDefaulted() const {
   return getImpl<detail::ScheduleVariableInterval_Impl>()->isOutOfRangeValueDefaulted();
 }
 
-void ScheduleVariableInterval::setInterpolatetoTimestep(bool interpolatetoTimestep) {
-  getImpl<detail::ScheduleVariableInterval_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
+bool ScheduleVariableInterval::setInterpolatetoTimestep(bool interpolatetoTimestep) {
+  return getImpl<detail::ScheduleVariableInterval_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
 }
 
 void ScheduleVariableInterval::resetInterpolatetoTimestep() {
@@ -315,8 +330,8 @@ bool ScheduleVariableInterval::setStartDay(int startDay) {
   return getImpl<detail::ScheduleVariableInterval_Impl>()->setStartDay(startDay);
 }
 
-void ScheduleVariableInterval::setOutOfRangeValue(double outOfRangeValue) {
-  getImpl<detail::ScheduleVariableInterval_Impl>()->setOutOfRangeValue(outOfRangeValue);
+bool ScheduleVariableInterval::setOutOfRangeValue(double outOfRangeValue) {
+  return getImpl<detail::ScheduleVariableInterval_Impl>()->setOutOfRangeValue(outOfRangeValue);
 }
 
 void ScheduleVariableInterval::resetOutOfRangeValue() {
@@ -325,11 +340,10 @@ void ScheduleVariableInterval::resetOutOfRangeValue() {
 
 /// @cond
 ScheduleVariableInterval::ScheduleVariableInterval(std::shared_ptr<detail::ScheduleVariableInterval_Impl> impl)
-  : ScheduleInterval(impl)
+  : ScheduleInterval(std::move(impl))
 {}
 /// @endcond
 
 
 } // model
-} // openstudio
-
+} // openstudio

@@ -21,7 +21,7 @@
     <DisplayString>{{ size={data_.root_plus_size_.size_} }}</DisplayString>
     <Expand>
         <LinkedListItems>
-            <Size>data_.root_plus_size_.size_</Size> 
+            <Size>data_.root_plus_size_.size_</Size>
             <HeadPointer>data_.root_plus_size_.root_.next_</HeadPointer>
             <NextPointer>next_</NextPointer>
             <ValueNode>*(($T1 *) this)</ValueNode>
@@ -35,7 +35,7 @@
     <DisplayString>{{ size={data_.root_plus_size_.size_} }}</DisplayString>
     <Expand>
         <LinkedListItems>
-            <Size>data_.root_plus_size_.size_</Size> 
+            <Size>data_.root_plus_size_.size_</Size>
             <HeadPointer>data_.root_plus_size_.root_.next_</HeadPointer>
             <NextPointer>next_</NextPointer>
             <ValueNode>*(($T1*)this)</ValueNode>

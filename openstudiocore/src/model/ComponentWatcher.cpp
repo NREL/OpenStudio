@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,7 +30,7 @@
 #include "ComponentWatcher_Impl.hpp"
 
 #include "Model.hpp"
-#include "Model_Impl.hpp" 
+#include "Model_Impl.hpp"
 
 #include "ModelObject.hpp"
 #include "ModelObject_Impl.hpp"
@@ -120,7 +120,7 @@ namespace detail {
   }
 
   void ComponentWatcher_Impl::objectRemove(const Handle& handleOfRemovedObject) {
-    
+
     // no ComponentData means no Component to watch
     if (handleOfRemovedObject == m_componentData.handle()) {
       this->obsolete.nano_emit(componentWatcher());
@@ -207,7 +207,7 @@ std::shared_ptr<detail::ComponentWatcher_Impl> ComponentWatcher::getImpl() const
 }
 
 ComponentWatcher::ComponentWatcher(std::shared_ptr<detail::ComponentWatcher_Impl> impl)
-  : m_impl(impl)
+  : m_impl(std::move(impl))
 {}
 /// @endcond
 

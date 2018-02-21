@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -63,11 +63,13 @@ class MainMenu : public QMenuBar
 
   void loadFileClicked();
 
+  void changeDefaultLibrariesClicked();
+
   void loadLibraryClicked();
 
-  void revertFileClicked(); 
+  void revertFileClicked();
 
-  void saveAsFileClicked(); 
+  void saveAsFileClicked();
 
   void saveFileClicked();
 
@@ -123,11 +125,23 @@ class MainMenu : public QMenuBar
 
   QAction * m_revertToSavedAction;
 
+  std::vector<QAction *> m_fileImportActions;
+
+  std::vector<QAction *> m_preferencesActions;
+
+  std::vector<QAction *> m_componentsMeasuresActions;
+
   bool m_isIP;
 
   public slots:
 
   void enableRevertToSavedAction(bool enable);
+
+  void enableFileImportActions(bool enable);
+
+  void enablePreferencesActions(bool enable);
+
+  void enableComponentsMeasuresActions(bool enable);
 
   private slots:
 

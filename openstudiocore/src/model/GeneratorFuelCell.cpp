@@ -92,7 +92,26 @@ namespace detail {
   const std::vector<std::string>& GeneratorFuelCell_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Generator Produced Electric Power");
+      result.push_back("Generator Produced Electric Energy");
+      result.push_back("Generator Produced Thermal Rate");
+      result.push_back("Generator Produced Thermal Energy");
+      result.push_back("Generator Fuel HHV Basis Energy");
+      result.push_back("Generator Fuel HHV Basis Rate");
+      result.push_back("Generator Fuel LHV Basis Energy");
+      result.push_back("Generator Fuel Consumption Rate LHV Basis");
+      result.push_back("FuelCell Heat Loss Rate to Zone");
+      result.push_back("FuelCell Heat Loss Energy to Zone");
+      result.push_back("FuelCell Convection Heat Loss Rate to Zone");
+      result.push_back("FuelCell Radiation Heat Loss Rate to Zone");
+
+      // From FuelSupply object
+      result.push_back("Generator Fuel Compressor Electric Power");
+      result.push_back("Generator Fuel Compressor Electric Energy");
+      result.push_back("Generator Fuel Compressor Skin Heat Loss Rate");
+
     }
     return result;
   }
@@ -196,33 +215,33 @@ namespace detail {
 
     if (boost::optional<GeneratorFuelCellPowerModule> pm = powerModule()) {
       result.push_back(pm.get());
-      if (curveQ = powerModule().efficiencyCurve()) {
+      if ( (curveQ = powerModule().efficiencyCurve()) ) {
         result.push_back(curveQ.get());
       }
-      if (curveQ = powerModule().skinLossQuadraticCurve()) {
+      if ( (curveQ = powerModule().skinLossQuadraticCurve()) ) {
         result.push_back(curveQ.get());
       }
     }
 
     if (boost::optional<GeneratorFuelCellAirSupply> as = airSupply()) {
       result.push_back(as.get());
-      if (curveC = airSupply().blowerPowerCurve()) {
+      if ( (curveC = airSupply().blowerPowerCurve()) ) {
         result.push_back(curveC.get());
       }
-      if (curveQ = airSupply().airRateFunctionofElectricPowerCurve()) {
+      if ( (curveQ = airSupply().airRateFunctionofElectricPowerCurve()) ) {
         result.push_back(curveQ.get());
       }
-      if (curveQ = airSupply().airRateFunctionofFuelRateCurve()) {
+      if ( (curveQ = airSupply().airRateFunctionofFuelRateCurve()) ) {
         result.push_back(curveQ.get());
       }
     }
 
     if (boost::optional<GeneratorFuelCellWaterSupply> ws = waterSupply()) {
       result.push_back(ws.get());
-      if (curveC = waterSupply().reformerWaterPumpPowerFunctionofFuelRateCurve()) {
+      if ( (curveC = waterSupply().reformerWaterPumpPowerFunctionofFuelRateCurve()) ) {
         result.push_back(curveC.get());
       }
-      if (curveQ = waterSupply().reformerWaterFlowRateFunctionofFuelRateCurve()) {
+      if ( (curveQ = waterSupply().reformerWaterFlowRateFunctionofFuelRateCurve()) ) {
         result.push_back(curveQ.get());
       }
     }
@@ -237,7 +256,7 @@ namespace detail {
 
     if (boost::optional<GeneratorFuelCellInverter> in = inverter()) {
       result.push_back(in.get());
-      if (curveQ = inverter().efficiencyFunctionofDCPowerCurve()) {
+      if ( (curveQ = inverter().efficiencyFunctionofDCPowerCurve()) ) {
         result.push_back(curveQ.get());
       }
     }
@@ -248,7 +267,7 @@ namespace detail {
 
     if (boost::optional<GeneratorFuelSupply> fs = fuelSupply()) {
       result.push_back(fs.get());
-      if (curveC = fuelSupply().compressorPowerMultiplierFunctionofFuelRateCurve()) {
+      if ( (curveC = fuelSupply().compressorPowerMultiplierFunctionofFuelRateCurve()) ) {
         result.push_back(curveC.get());
       }
     }
@@ -271,7 +290,7 @@ namespace detail {
     return schedule;
   }
 
-  // Convenience method to go fetch the connected GeneratorMicroTurbineHeatRecovery's 'Rated Thermal to Electrical Power Ratio'
+  // Convenience method to go fetch the connected GeneratorFuelCell's 'Rated Thermal to Electrical Power Ratio'
   boost::optional<double> GeneratorFuelCell_Impl::ratedThermaltoElectricalPowerRatio() const {
     boost::optional<double> temp;
     return temp;
@@ -636,7 +655,7 @@ void GeneratorFuelCell::resetStackCooler() {
 
 /// @cond
 GeneratorFuelCell::GeneratorFuelCell(std::shared_ptr<detail::GeneratorFuelCell_Impl> impl)
-  : Generator(impl)
+  : Generator(std::move(impl))
 {}
 /// @endcond
 

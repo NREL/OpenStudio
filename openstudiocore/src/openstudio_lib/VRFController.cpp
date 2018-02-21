@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -150,12 +150,12 @@ void VRFController::onVRFSystemViewDrop(const OSItemId & itemid)
   if( doc->fromComponentLibrary(itemid) )
   {
     boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
-    OS_ASSERT(mo); 
+    OS_ASSERT(mo);
 
-    if( boost::optional<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminal 
+    if( boost::optional<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminal
           = mo->optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>() )
     {
-      model::ZoneHVACTerminalUnitVariableRefrigerantFlow terminalClone = 
+      model::ZoneHVACTerminalUnitVariableRefrigerantFlow terminalClone =
         terminal->clone(m_currentSystem->model()).cast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
       m_currentSystem->addTerminal(terminalClone);
 
@@ -187,7 +187,7 @@ void VRFController::onVRFSystemViewZoneDrop(const OSItemId & itemid)
   if( doc->fromModel(itemid) )
   {
     boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
-    OS_ASSERT(mo); 
+    OS_ASSERT(mo);
     if( boost::optional<model::ThermalZone> thermalZone = mo->optionalCast<model::ThermalZone>() )
     {
       std::vector<model::ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = m_currentSystem->terminals();
@@ -219,7 +219,7 @@ void VRFController::onVRFTerminalViewDrop(const OSItemId & terminalId, const OSI
   if( doc->fromModel(thermalZoneId) )
   {
     auto mo = doc->getModelObject(thermalZoneId);
-    OS_ASSERT(mo); 
+    OS_ASSERT(mo);
     if( auto thermalZone = mo->optionalCast<model::ThermalZone>() )
     {
       if( (mo = doc->getModelObject(terminalId)) ) {
@@ -426,7 +426,7 @@ void VRFSystemListController::removeSystem(model::AirConditionerVariableRefriger
   if( ! terminals.empty() )
   {
     QMessageBox message(m_vrfController->vrfView());
-    
+
     QString text;
     int size = (int)terminals.size();
     if( size == 1 )
@@ -539,7 +539,7 @@ QGraphicsObject * VRFSystemItemDelegate::view(QSharedPointer<OSListItem> dataSou
     connect(vrfSystemMiniView->removeButtonItem, &RemoveButtonItem::mouseClicked, listItem.data(), &VRFSystemListItem::remove);
 
     connect(vrfSystemMiniView->zoomInButtonItem, &ZoomInButtonItem::mouseClicked, listItem.data(), &VRFSystemListItem::zoomInOnSystem);
-    
+
     vrfSystemMiniView->setName(listItem->systemName());
     vrfSystemMiniView->setNumberOfZones(listItem->numberOfConnectedZones());
     vrfSystemMiniView->setNumberOfTerminals(listItem->numberOfConnectedTerminals());

@@ -26,19 +26,19 @@
   #include <model/ModelObject.hpp>
   #include <model/Component.hpp>
   #include <openstudio_lib/FileOperations.hpp>
-  
+
   using namespace openstudio;
-  
+
   // to be ignored
   class QAction;
   class QDomNode;
   class QDomElement;
   class QDomDocument;
   class QNetworkAccessManager;
-  class QThread;  
-  class QComboBox;  
-  class QMainWindow;  
-  class QDialog;  
+  class QThread;
+  class QComboBox;
+  class QMainWindow;
+  class QDialog;
   namespace openstudio{
     class ProgressBar;
     class UpdateManager;
@@ -72,4 +72,4 @@
 
 %include <openstudio_lib/FileOperations.hpp>
 
-#endif //OPENSTUDIOLIB_I 
+#endif //OPENSTUDIOLIB_I

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -134,7 +134,7 @@ class MODEL_API ZoneHVACPackagedTerminalAirConditioner : public ZoneHVACComponen
 
   bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
 
-  void setOutdoorAirMixerName(std::string outdoorAirMixerName);
+  bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
 
   bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
 
@@ -164,26 +164,40 @@ class MODEL_API ZoneHVACPackagedTerminalAirConditioner : public ZoneHVACComponen
 
   void autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void setSupplyAirFan( HVACComponent & fan );
+  bool setSupplyAirFan( HVACComponent & fan );
 
-  void setHeatingCoil( HVACComponent & heatingCoil );
+  bool setHeatingCoil( HVACComponent & heatingCoil );
 
-  void setCoolingCoil( HVACComponent & coolingCoil );
+  bool setCoolingCoil( HVACComponent & coolingCoil );
 
   bool setFanPlacement(std::string fanPlacement);
 
   void resetFanPlacement();
 
-  /** Sets the supply air fan operating mode schedule. Values of zero indicate that the fan 
-   *  cycles on and off with the active (heating or cooling) coil. Other values operate the 
+  /** Sets the supply air fan operating mode schedule. Values of zero indicate that the fan
+   *  cycles on and off with the active (heating or cooling) coil. Other values operate the
    *  fan continuously. */
   bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
   void resetSupplyAirFanOperatingModeSchedule();
-  
+
   //@}
   /** @name Other */
   //@{
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+
 
   //@}
  protected:
@@ -213,4 +227,3 @@ typedef std::vector<ZoneHVACPackagedTerminalAirConditioner> ZoneHVACPackagedTerm
 } // openstudio
 
 #endif // MODEL_ZONEHVACPACKAGEDTERMINALAIRCONDITIONER_HPP
-

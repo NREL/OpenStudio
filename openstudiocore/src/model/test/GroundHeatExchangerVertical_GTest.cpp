@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,20 +43,20 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     GroundHeatExchangerVertical testObject = GroundHeatExchangerVertical(model);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture, GroundHeatExchangerVertical_Connections)
 {
-  Model m; 
-  GroundHeatExchangerVertical testObject(m); 
+  Model m;
+  GroundHeatExchangerVertical testObject(m);
 
   Node inletNode(m);
   Node outletNode(m);
@@ -66,7 +66,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_Connections)
 
   ASSERT_TRUE( testObject.inletModelObject() );
   ASSERT_TRUE( testObject.outletModelObject() );
- 
+
   EXPECT_EQ( inletNode.handle(), testObject.inletModelObject()->handle() );
   EXPECT_EQ( outletNode.handle(), testObject.outletModelObject()->handle() );
 }
@@ -106,7 +106,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_addToNode)
 
 TEST_F(ModelFixture, GroundHeatExchangerVertical_AddRemoveSupplyBranchForComponent)
 {
-  Model model; 
+  Model model;
   GroundHeatExchangerVertical testObject(model);
 
   PlantLoop plantLoop(model);
@@ -114,7 +114,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_AddRemoveSupplyBranchForCompone
   EXPECT_TRUE(plantLoop.addSupplyBranchForComponent(testObject));
   EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
   EXPECT_NE((unsigned)9, plantLoop.supplyComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
   EXPECT_TRUE(testObject.outletPort());
 
@@ -125,7 +125,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_AddRemoveSupplyBranchForCompone
 
 TEST_F(ModelFixture, GroundHeatExchangerVertical_AddDemandBranchForComponent)
 {
-  Model model; 
+  Model model;
   GroundHeatExchangerVertical testObject(model);
 
   PlantLoop plantLoop(model);
@@ -137,7 +137,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_AddDemandBranchForComponent)
 
 TEST_F(ModelFixture, GroundHeatExchangerVertical_AddToNodeTwoSameObjects)
 {
-  Model model; 
+  Model model;
   GroundHeatExchangerVertical testObject(model);
 
   PlantLoop plantLoop(model);
@@ -145,12 +145,12 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_AddToNodeTwoSameObjects)
   Node supplyOutletNode = plantLoop.supplyOutletNode();
   testObject.addToNode(supplyOutletNode);
   supplyOutletNode = plantLoop.supplyOutletNode();
-  EXPECT_FALSE(testObject.addToNode(supplyOutletNode)); 
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
 }
 
 TEST_F(ModelFixture, GroundHeatExchangerVertical_Remove)
 {
-  Model model; 
+  Model model;
   GroundHeatExchangerVertical testObject(model);
 
   PlantLoop plantLoop(model);

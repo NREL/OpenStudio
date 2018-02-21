@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -51,9 +51,9 @@ namespace model {
 namespace detail {
 
   ExteriorLights_Impl::ExteriorLights_Impl(const IdfObject& idfObject,
-                                           Model_Impl* model, 
+                                           Model_Impl* model,
                                            bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : ExteriorLoadInstance_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ExteriorLights::iddObjectType());
   }
@@ -61,7 +61,7 @@ namespace detail {
   ExteriorLights_Impl::ExteriorLights_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ExteriorLoadInstance_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ExteriorLights::iddObjectType());
   }
@@ -69,7 +69,7 @@ namespace detail {
   ExteriorLights_Impl::ExteriorLights_Impl(const ExteriorLights_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ExteriorLoadInstance_Impl(other,model,keepHandle)
   {}
 
   boost::optional<ParentObject> ExteriorLights_Impl::parent() const {
@@ -79,10 +79,13 @@ namespace detail {
   const std::vector<std::string>& ExteriorLights_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Exterior Lights Electric Power");
+      result.push_back("Exterior Lights Electric Energy");
     }
     return result;
-  }  
+  }
 
   IddObjectType ExteriorLights_Impl::iddObjectType() const {
     return ExteriorLights::iddObjectType();
@@ -100,10 +103,26 @@ namespace detail {
     return result;
   }
 
+  int ExteriorLights_Impl::definitionIndex() const {
+    return OS_Exterior_LightsFields::ExteriorLightsDefinitionName;
+  }
+
   ExteriorLightsDefinition ExteriorLights_Impl::exteriorLightsDefinition() const {
-    boost::optional<ExteriorLightsDefinition> value = getObject<ModelObject>().getModelObjectTarget<ExteriorLightsDefinition>(OS_Exterior_LightsFields::ExteriorLightsDefinitionName);
-    OS_ASSERT(value);
-    return value.get();
+     return this->definition().cast<ExteriorLightsDefinition>();
+  }
+
+  bool ExteriorLights_Impl::setExteriorLightsDefinition(const ExteriorLightsDefinition& exteriorLightsDefinition) {
+    return this->setPointer(this->definitionIndex(), exteriorLightsDefinition.handle());
+  }
+
+  bool ExteriorLights_Impl::setDefinition(const ExteriorLoadDefinition& definition)
+  {
+    bool result = false;
+    boost::optional<ExteriorLightsDefinition> exteriorLightsDefinition = definition.optionalCast<ExteriorLightsDefinition>();
+    if (exteriorLightsDefinition){
+      result = setExteriorLightsDefinition(*exteriorLightsDefinition);
+    }
+    return result;
   }
 
   boost::optional<Schedule> ExteriorLights_Impl::schedule() const {
@@ -140,10 +159,6 @@ namespace detail {
     return isEmpty(OS_Exterior_LightsFields::EndUseSubcategory);
   }
 
-  bool ExteriorLights_Impl::setExteriorLightsDefinition(const ExteriorLightsDefinition& exteriorLightsDefinition) {
-    bool result = setPointer(OS_Exterior_LightsFields::ExteriorLightsDefinitionName, exteriorLightsDefinition.handle());
-    return result;
-  }
 
   bool ExteriorLights_Impl::setSchedule(Schedule& schedule) {
     bool result = ModelObject_Impl::setSchedule(OS_Exterior_LightsFields::ScheduleName,
@@ -178,9 +193,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ExteriorLights_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+  bool ExteriorLights_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
     bool result = setString(OS_Exterior_LightsFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void ExteriorLights_Impl::resetEndUseSubcategory() {
@@ -239,7 +255,7 @@ namespace detail {
 
 ExteriorLights::ExteriorLights(const ExteriorLightsDefinition& definition,
                                bool useControlOptionAstronomicalClock)
-  : ModelObject(ExteriorLights::iddObjectType(),definition.model())
+  : ExteriorLoadInstance(ExteriorLights::iddObjectType(),definition)
 {
   OS_ASSERT(getImpl<detail::ExteriorLights_Impl>());
 
@@ -254,11 +270,18 @@ ExteriorLights::ExteriorLights(const ExteriorLightsDefinition& definition,
     ok = setControlOption("AstronomicalClock");
     OS_ASSERT(ok);
   }
+
+  /*
+   *ok = this->setMultiplier(1.0);
+   *OS_ASSERT(ok);
+   */
+  ok = this->setEndUseSubcategory("General");
+  OS_ASSERT(ok);
 }
 
 ExteriorLights::ExteriorLights(const ExteriorLightsDefinition& definition,
                                Schedule& schedule)
-  : ModelObject(ExteriorLights::iddObjectType(),definition.model())
+  : ExteriorLoadInstance(ExteriorLights::iddObjectType(),definition)
 {
   OS_ASSERT(getImpl<detail::ExteriorLights_Impl>());
 
@@ -270,6 +293,13 @@ ExteriorLights::ExteriorLights(const ExteriorLightsDefinition& definition,
     LOG_AND_THROW("Could not set " << briefDescription() << "'s schedule to "
                   << schedule.briefDescription() << ".");
   }
+
+  /*
+   *ok = this->setMultiplier(1.0);
+   *OS_ASSERT(ok);
+   */
+  ok = this->setEndUseSubcategory("General");
+  OS_ASSERT(ok);
 }
 
 IddObjectType ExteriorLights::iddObjectType() {
@@ -346,8 +376,8 @@ void ExteriorLights::resetMultiplier() {
   getImpl<detail::ExteriorLights_Impl>()->resetMultiplier();
 }
 
-void ExteriorLights::setEndUseSubcategory(std::string endUseSubcategory) {
-  getImpl<detail::ExteriorLights_Impl>()->setEndUseSubcategory(endUseSubcategory);
+bool ExteriorLights::setEndUseSubcategory(std::string endUseSubcategory) {
+  return getImpl<detail::ExteriorLights_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void ExteriorLights::resetEndUseSubcategory() {
@@ -360,7 +390,7 @@ Facility ExteriorLights::facility() const {
 
 /// @cond
 ExteriorLights::ExteriorLights(std::shared_ptr<detail::ExteriorLights_Impl> impl)
-  : ModelObject(impl)
+  : ExteriorLoadInstance(std::move(impl))
 {}
 /// @endcond
 

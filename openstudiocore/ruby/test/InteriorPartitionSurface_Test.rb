@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -31,7 +31,7 @@ require 'openstudio'
 require 'minitest/autorun'
 
 class InteriorPartitionSurface_Test < MiniTest::Unit::TestCase
-  
+
   def test_hierarchy
     workspace = OpenStudio::Workspace.new
     model = OpenStudio::Model::Model.new
@@ -76,7 +76,7 @@ class InteriorPartitionSurface_Test < MiniTest::Unit::TestCase
     assert_equal(group.handle(), surface.parent().get.handle())
     assert((not surface.parent().get.parent().empty?))
     assert_equal(space.handle(), surface.parent().get.parent().get.handle())
-    
+
     # clone the space
     clone = space.clone(model)
     spaceClone = model.getSpace(clone.handle())

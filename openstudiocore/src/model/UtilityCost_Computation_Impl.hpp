@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,7 +38,7 @@ namespace model {
 namespace detail {
 
 class MODEL_API UtilityCost_Computation_Impl : public ParentObject_Impl{
-  
+
 public:
   // constructor
   UtilityCost_Computation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
@@ -55,7 +55,7 @@ public:
   virtual ~UtilityCost_Computation_Impl(){}
 
   OptionalString tariffName() const;
-  void setTariffName(const std::string& str);
+  bool setTariffName(const std::string& str);
 
   /** Compute step index. Index starts at 0. */
   boost::optional<std::string> computeStep(unsigned index) const;
@@ -90,4 +90,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_COMPUTATION_IMPL_HPP
+#endif // MODEL_UTILITYCOST_COMPUTATION_IMPL_HPP

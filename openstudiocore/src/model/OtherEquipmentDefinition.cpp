@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,7 +38,7 @@
 
 #include "../utilities/core/Assert.hpp"
 
-#include <boost/algorithm/string.hpp>  
+#include <boost/algorithm/string.hpp>
 
 namespace openstudio {
 namespace model {
@@ -64,8 +64,8 @@ namespace detail {
                            OtherEquipmentDefinition,0,OS_OtherEquipment_Definition,FractionLost)
 
 
-  OtherEquipmentDefinition_Impl::OtherEquipmentDefinition_Impl(const IdfObject& idfObject, 
-                                                               Model_Impl* model, 
+  OtherEquipmentDefinition_Impl::OtherEquipmentDefinition_Impl(const IdfObject& idfObject,
+                                                               Model_Impl* model,
                                                                bool keepHandle)
     : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
   {
@@ -88,10 +88,13 @@ namespace detail {
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {}
 
+  // TODO: remove
   const std::vector<std::string>& OtherEquipmentDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: output is listed in OtherEquipment instead
     }
     return result;
   }
@@ -161,7 +164,7 @@ namespace detail {
     } else {
       result = setString(OS_OtherEquipment_DefinitionFields::DesignLevel, "");
     }
-  
+
     return result;
   }
 
@@ -242,7 +245,7 @@ namespace detail {
     return 0.0;
   }
 
-  double OtherEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea, 
+  double OtherEquipmentDefinition_Impl::getPowerPerFloorArea(double floorArea,
                                                                   double numPeople) const
   {
     std::string method = designLevelCalculationMethod();
@@ -290,9 +293,9 @@ namespace detail {
     OS_ASSERT(false);
     return 0.0;
   }
- 
-  bool OtherEquipmentDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method, 
-                                                                      double floorArea, 
+
+  bool OtherEquipmentDefinition_Impl::setDesignLevelCalculationMethod(const std::string& method,
+                                                                      double floorArea,
                                                                       double numPeople)
   {
     std::string wmethod(method);
@@ -308,7 +311,7 @@ namespace detail {
     else if (wmethod == "watts/person") {
       return setWattsperPerson(getPowerPerPerson(floorArea,numPeople));
     }
-    
+
     return false;
   }
 
@@ -371,8 +374,8 @@ bool OtherEquipmentDefinition::isFractionLostDefaulted() const {
   return getImpl<detail::OtherEquipmentDefinition_Impl>()->isFractionLostDefaulted();
 }
 
-void OtherEquipmentDefinition::setDesignLevel(double designLevel) {
-  getImpl<detail::OtherEquipmentDefinition_Impl>()->setDesignLevel(designLevel);
+bool OtherEquipmentDefinition::setDesignLevel(double designLevel) {
+  return getImpl<detail::OtherEquipmentDefinition_Impl>()->setDesignLevel(designLevel);
 }
 
 bool OtherEquipmentDefinition::setWattsperSpaceFloorArea(double wattsperSpaceFloorArea) {
@@ -420,8 +423,8 @@ double OtherEquipmentDefinition::getPowerPerPerson(double floorArea, double numP
   return getImpl<detail::OtherEquipmentDefinition_Impl>()->getPowerPerPerson(floorArea,numPeople);
 }
 
-bool OtherEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method, 
-                                     double floorArea, 
+bool OtherEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& method,
+                                     double floorArea,
                                      double numPeople)
 {
   return getImpl<detail::OtherEquipmentDefinition_Impl>()->setDesignLevelCalculationMethod(method,floorArea,numPeople);
@@ -429,7 +432,7 @@ bool OtherEquipmentDefinition::setDesignLevelCalculationMethod(const std::string
 
 /// @cond
 OtherEquipmentDefinition::OtherEquipmentDefinition(std::shared_ptr<detail::OtherEquipmentDefinition_Impl> impl)
-  : SpaceLoadDefinition(impl)
+  : SpaceLoadDefinition(std::move(impl))
 {}
 /// @endcond
 

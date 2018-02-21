@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -112,7 +112,7 @@ TEST_F(UnitsFixture, QuantityConverter_IPandSIUsingSystem)
   }
 }
 
-TEST_F(UnitsFixture,QuantityConverter_BTUandIPUsingSystem) 
+TEST_F(UnitsFixture,QuantityConverter_BTUandIPUsingSystem)
 {
   LOG(Debug, "QuantityConverter_BTUandIPUsingSystem");
 
@@ -180,7 +180,7 @@ TEST_F(UnitsFixture,QuantityConverter_BTUandIPUsingSystem)
   }
 }
 
-TEST_F(UnitsFixture,QuantityConverter_CFMandSIUsingSystem) 
+TEST_F(UnitsFixture,QuantityConverter_CFMandSIUsingSystem)
 {
   LOG(Debug, "QuantityConverter_CFMandSIUsingSystem");
 

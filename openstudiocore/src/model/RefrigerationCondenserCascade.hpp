@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -83,7 +83,7 @@ class MODEL_API RefrigerationCondenserCascade : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setRatedCondensingTemperature(double ratedCondensingTemperature);
+  bool setRatedCondensingTemperature(double ratedCondensingTemperature);
 
   bool setRatedApproachTemperatureDifference(double ratedApproachTemperatureDifference);
 
@@ -95,15 +95,15 @@ class MODEL_API RefrigerationCondenserCascade : public ModelObject {
 
   void resetCondensingTemperatureControlType();
 
-  void setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
+  bool setCondenserRefrigerantOperatingChargeInventory(double condenserRefrigerantOperatingChargeInventory);
 
   void resetCondenserRefrigerantOperatingChargeInventory();
 
-  void setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
+  bool setCondensateReceiverRefrigerantInventory(double condensateReceiverRefrigerantInventory);
 
   void resetCondensateReceiverRefrigerantInventory();
 
-  void setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
+  bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
 
   void resetCondensatePipingRefrigerantInventory();
 
@@ -136,5 +136,4 @@ typedef std::vector<RefrigerationCondenserCascade> RefrigerationCondenserCascade
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONCONDENSERCASCADE_HPP
-
+#endif // MODEL_REFRIGERATIONCONDENSERCASCADE_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -95,20 +95,20 @@ namespace detail {
     // loop through extensible groups and return vector of programs
     std::vector<EnergyManagementSystemProgram> result;
     auto groups = extensibleGroups();
-    
+
     for (const auto & elem : groups) {
       WorkspaceExtensibleGroup group = elem.cast<WorkspaceExtensibleGroup>();
       boost::optional<WorkspaceObject> wo = group.getTarget(OS_EnergyManagementSystem_ProgramCallingManagerExtensibleFields::ProgramName);
       if (wo){
         EnergyManagementSystemProgram program = wo->cast<EnergyManagementSystemProgram>();
         result.push_back(program);
-      }  
+      }
     }
     return result;
   }
 
   boost::optional<EnergyManagementSystemProgram> EnergyManagementSystemProgramCallingManager_Impl::getProgram(unsigned index) const {
-    //return program at index 
+    //return program at index
     boost::optional<EnergyManagementSystemProgram> result;
     auto groups = extensibleGroups();
     unsigned sizeOfGroup = numExtensibleGroups();
@@ -239,7 +239,7 @@ bool EnergyManagementSystemProgramCallingManager::setPrograms(const std::vector<
 
 /// @cond
 EnergyManagementSystemProgramCallingManager::EnergyManagementSystemProgramCallingManager(std::shared_ptr<detail::EnergyManagementSystemProgramCallingManager_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 

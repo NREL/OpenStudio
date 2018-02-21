@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -101,6 +101,10 @@ namespace detail {
     static std::vector<std::string> result;
     if (result.empty())
     {
+      result.push_back("Fan Electric Power");
+      result.push_back("Fan Rise in Air Temperature");
+      result.push_back("Fan Electric Energy");
+      result.push_back("Fan Runtime Fraction");
     }
     return result;
   }
@@ -253,10 +257,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanOnOff_Impl::setPressureRise(double pressureRise)
+  bool FanOnOff_Impl::setPressureRise(double pressureRise)
   {
     bool result = setDouble(OS_Fan_OnOffFields::PressureRise, pressureRise);
     OS_ASSERT(result);
+    return result;
   }
 
   bool FanOnOff_Impl::setMaximumFlowRate(boost::optional<double> maximumFlowRate)
@@ -319,10 +324,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanOnOff_Impl::setEndUseSubcategory(std::string endUseSubcategory)
+  bool FanOnOff_Impl::setEndUseSubcategory(std::string endUseSubcategory)
   {
     bool result = setString(OS_Fan_OnOffFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void FanOnOff_Impl::resetEndUseSubcategory()
@@ -525,6 +531,22 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<double> FanOnOff_Impl::autosizedMaximumFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
+  }
+
+  void FanOnOff_Impl::autosize() {
+    autosizeMaximumFlowRate();
+  }
+
+  void FanOnOff_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumFlowRate();
+    if (val) {
+      setMaximumFlowRate(val.get());
+    }
+
+  }
 } // detail
 
 FanOnOff::FanOnOff(const Model& model)
@@ -670,9 +692,9 @@ double FanOnOff::pressureRise() const
   return getImpl<detail::FanOnOff_Impl>()->pressureRise();
 }
 
-void FanOnOff::setPressureRise(double pressureRise)
+bool FanOnOff::setPressureRise(double pressureRise)
 {
-  getImpl<detail::FanOnOff_Impl>()->setPressureRise(pressureRise);
+  return getImpl<detail::FanOnOff_Impl>()->setPressureRise(pressureRise);
 }
 
 // Field Maximum Flow Rate
@@ -777,9 +799,9 @@ bool FanOnOff::isEndUseSubcategoryDefaulted() const
 
 // Field End-Use Subcategory
 
-void FanOnOff::setEndUseSubcategory(std::string endUseSubcategory)
+bool FanOnOff::setEndUseSubcategory(std::string endUseSubcategory)
 {
-  getImpl<detail::FanOnOff_Impl>()->setEndUseSubcategory(endUseSubcategory);
+  return getImpl<detail::FanOnOff_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void FanOnOff::resetEndUseSubcategory()
@@ -799,10 +821,13 @@ boost::optional<AirflowNetworkFan> FanOnOff::optionalAirflowNetworkFan() const
 
 /// @cond
 FanOnOff::FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl)
-  : StraightComponent(impl)
+  : StraightComponent(std::move(impl))
 {}
 /// @endcond
 
+  boost::optional<double> FanOnOff::autosizedMaximumFlowRate() const {
+    return getImpl<detail::FanOnOff_Impl>()->autosizedMaximumFlowRate();
+  }
+
 } // model
 } // openstudio
-

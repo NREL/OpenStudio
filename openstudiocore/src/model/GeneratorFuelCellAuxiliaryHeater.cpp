@@ -83,15 +83,15 @@ namespace detail {
     return GeneratorFuelCellAuxiliaryHeater::iddObjectType();
   }
 
-  // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
-  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  // This will clone both the GeneratorFuelCellAuxiliaryHeater and its linked GeneratorFuelCell
+  // and will return a reference to the GeneratorFuelCellAuxiliaryHeater
   ModelObject GeneratorFuelCellAuxiliaryHeater_Impl::clone(Model model) const {
 
     // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
     GeneratorFuelCell fs = fuelCell();
     GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
 
-    // We get the clone of the parent generator's MTHR so we can return that
+    // We get the clone of the parent generator's GeneratorFuelCellAuxiliaryHeater so we can return that
     GeneratorFuelCellAuxiliaryHeater hxClone = fsClone.auxiliaryHeater();
 
 
@@ -220,9 +220,10 @@ namespace detail {
     return value.get();
   }
 
-  void GeneratorFuelCellAuxiliaryHeater_Impl::setExcessAirRatio(double excessAirRatio) {
+  bool GeneratorFuelCellAuxiliaryHeater_Impl::setExcessAirRatio(double excessAirRatio) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::ExcessAirRatio, excessAirRatio);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetExcessAirRatio() {
@@ -230,9 +231,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellAuxiliaryHeater_Impl::setAncillaryPowerConstantTerm(double ancillaryPowerConstantTerm) {
+  bool GeneratorFuelCellAuxiliaryHeater_Impl::setAncillaryPowerConstantTerm(double ancillaryPowerConstantTerm) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerConstantTerm, ancillaryPowerConstantTerm);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetAncillaryPowerConstantTerm() {
@@ -240,9 +242,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellAuxiliaryHeater_Impl::setAncillaryPowerLinearTerm(double ancillaryPowerLinearTerm) {
+  bool GeneratorFuelCellAuxiliaryHeater_Impl::setAncillaryPowerLinearTerm(double ancillaryPowerLinearTerm) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::AncillaryPowerLinearTerm, ancillaryPowerLinearTerm);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetAncillaryPowerLinearTerm() {
@@ -250,9 +253,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellAuxiliaryHeater_Impl::setSkinLossUFactorTimesAreaValue(double skinLossUFactorTimesAreaValue) {
+  bool GeneratorFuelCellAuxiliaryHeater_Impl::setSkinLossUFactorTimesAreaValue(double skinLossUFactorTimesAreaValue) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::SkinLossUFactorTimesAreaValue, skinLossUFactorTimesAreaValue);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetSkinLossUFactorTimesAreaValue() {
@@ -292,9 +296,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellAuxiliaryHeater_Impl::setMaximumHeatingCapacityinWatts(double maximumHeatingCapacityinWatts) {
+  bool GeneratorFuelCellAuxiliaryHeater_Impl::setMaximumHeatingCapacityinWatts(double maximumHeatingCapacityinWatts) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinWatts, maximumHeatingCapacityinWatts);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetMaximumHeatingCapacityinWatts() {
@@ -302,9 +307,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellAuxiliaryHeater_Impl::setMinimumHeatingCapacityinWatts(double minimumHeatingCapacityinWatts) {
+  bool GeneratorFuelCellAuxiliaryHeater_Impl::setMinimumHeatingCapacityinWatts(double minimumHeatingCapacityinWatts) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinWatts, minimumHeatingCapacityinWatts);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetMinimumHeatingCapacityinWatts() {
@@ -312,9 +318,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellAuxiliaryHeater_Impl::setMaximumHeatingCapacityinKmolperSecond(double maximumHeatingCapacityinKmolperSecond) {
+  bool GeneratorFuelCellAuxiliaryHeater_Impl::setMaximumHeatingCapacityinKmolperSecond(double maximumHeatingCapacityinKmolperSecond) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::MaximumHeatingCapacityinKmolperSecond, maximumHeatingCapacityinKmolperSecond);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetMaximumHeatingCapacityinKmolperSecond() {
@@ -322,9 +329,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellAuxiliaryHeater_Impl::setMinimumHeatingCapacityinKmolperSecond(double minimumHeatingCapacityinKmolperSecond) {
+  bool GeneratorFuelCellAuxiliaryHeater_Impl::setMinimumHeatingCapacityinKmolperSecond(double minimumHeatingCapacityinKmolperSecond) {
     bool result = setDouble(OS_Generator_FuelCell_AuxiliaryHeaterFields::MinimumHeatingCapacityinKmolperSecond, minimumHeatingCapacityinKmolperSecond);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellAuxiliaryHeater_Impl::resetMinimumHeatingCapacityinKmolperSecond() {
@@ -406,32 +414,32 @@ double GeneratorFuelCellAuxiliaryHeater::minimumHeatingCapacityinKmolperSecond()
   return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->minimumHeatingCapacityinKmolperSecond();
 }
 
-void GeneratorFuelCellAuxiliaryHeater::setExcessAirRatio(double excessAirRatio) {
-  getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setExcessAirRatio(excessAirRatio);
+bool GeneratorFuelCellAuxiliaryHeater::setExcessAirRatio(double excessAirRatio) {
+  return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setExcessAirRatio(excessAirRatio);
 }
 
 void GeneratorFuelCellAuxiliaryHeater::resetExcessAirRatio() {
   getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->resetExcessAirRatio();
 }
 
-void GeneratorFuelCellAuxiliaryHeater::setAncillaryPowerConstantTerm(double ancillaryPowerConstantTerm) {
-  getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setAncillaryPowerConstantTerm(ancillaryPowerConstantTerm);
+bool GeneratorFuelCellAuxiliaryHeater::setAncillaryPowerConstantTerm(double ancillaryPowerConstantTerm) {
+  return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setAncillaryPowerConstantTerm(ancillaryPowerConstantTerm);
 }
 
 void GeneratorFuelCellAuxiliaryHeater::resetAncillaryPowerConstantTerm() {
   getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->resetAncillaryPowerConstantTerm();
 }
 
-void GeneratorFuelCellAuxiliaryHeater::setAncillaryPowerLinearTerm(double ancillaryPowerLinearTerm) {
-  getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setAncillaryPowerLinearTerm(ancillaryPowerLinearTerm);
+bool GeneratorFuelCellAuxiliaryHeater::setAncillaryPowerLinearTerm(double ancillaryPowerLinearTerm) {
+  return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setAncillaryPowerLinearTerm(ancillaryPowerLinearTerm);
 }
 
 void GeneratorFuelCellAuxiliaryHeater::resetAncillaryPowerLinearTerm() {
   getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->resetAncillaryPowerLinearTerm();
 }
 
-void GeneratorFuelCellAuxiliaryHeater::setSkinLossUFactorTimesAreaValue(double skinLossUFactorTimesAreaValue) {
-  getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setSkinLossUFactorTimesAreaValue(skinLossUFactorTimesAreaValue);
+bool GeneratorFuelCellAuxiliaryHeater::setSkinLossUFactorTimesAreaValue(double skinLossUFactorTimesAreaValue) {
+  return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setSkinLossUFactorTimesAreaValue(skinLossUFactorTimesAreaValue);
 }
 
 void GeneratorFuelCellAuxiliaryHeater::resetSkinLossUFactorTimesAreaValue() {
@@ -462,32 +470,32 @@ void GeneratorFuelCellAuxiliaryHeater::resetHeatingCapacityUnits() {
   getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->resetHeatingCapacityUnits();
 }
 
-void GeneratorFuelCellAuxiliaryHeater::setMaximumHeatingCapacityinWatts(double maximumHeatingCapacityinWatts) {
-  getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setMaximumHeatingCapacityinWatts(maximumHeatingCapacityinWatts);
+bool GeneratorFuelCellAuxiliaryHeater::setMaximumHeatingCapacityinWatts(double maximumHeatingCapacityinWatts) {
+  return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setMaximumHeatingCapacityinWatts(maximumHeatingCapacityinWatts);
 }
 
 void GeneratorFuelCellAuxiliaryHeater::resetMaximumHeatingCapacityinWatts() {
   getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->resetMaximumHeatingCapacityinWatts();
 }
 
-void GeneratorFuelCellAuxiliaryHeater::setMinimumHeatingCapacityinWatts(double minimumHeatingCapacityinWatts) {
-  getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setMinimumHeatingCapacityinWatts(minimumHeatingCapacityinWatts);
+bool GeneratorFuelCellAuxiliaryHeater::setMinimumHeatingCapacityinWatts(double minimumHeatingCapacityinWatts) {
+  return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setMinimumHeatingCapacityinWatts(minimumHeatingCapacityinWatts);
 }
 
 void GeneratorFuelCellAuxiliaryHeater::resetMinimumHeatingCapacityinWatts() {
   getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->resetMinimumHeatingCapacityinWatts();
 }
 
-void GeneratorFuelCellAuxiliaryHeater::setMaximumHeatingCapacityinKmolperSecond(double maximumHeatingCapacityinKmolperSecond) {
-  getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setMaximumHeatingCapacityinKmolperSecond(maximumHeatingCapacityinKmolperSecond);
+bool GeneratorFuelCellAuxiliaryHeater::setMaximumHeatingCapacityinKmolperSecond(double maximumHeatingCapacityinKmolperSecond) {
+  return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setMaximumHeatingCapacityinKmolperSecond(maximumHeatingCapacityinKmolperSecond);
 }
 
 void GeneratorFuelCellAuxiliaryHeater::resetMaximumHeatingCapacityinKmolperSecond() {
   getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->resetMaximumHeatingCapacityinKmolperSecond();
 }
 
-void GeneratorFuelCellAuxiliaryHeater::setMinimumHeatingCapacityinKmolperSecond(double minimumHeatingCapacityinKmolperSecond) {
-  getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setMinimumHeatingCapacityinKmolperSecond(minimumHeatingCapacityinKmolperSecond);
+bool GeneratorFuelCellAuxiliaryHeater::setMinimumHeatingCapacityinKmolperSecond(double minimumHeatingCapacityinKmolperSecond) {
+  return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->setMinimumHeatingCapacityinKmolperSecond(minimumHeatingCapacityinKmolperSecond);
 }
 
 void GeneratorFuelCellAuxiliaryHeater::resetMinimumHeatingCapacityinKmolperSecond() {
@@ -500,10 +508,9 @@ GeneratorFuelCell GeneratorFuelCellAuxiliaryHeater::fuelCell() const {
 
 /// @cond
 GeneratorFuelCellAuxiliaryHeater::GeneratorFuelCellAuxiliaryHeater(std::shared_ptr<detail::GeneratorFuelCellAuxiliaryHeater_Impl> impl)
-  : ModelObject(impl)
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 
 } // model
 } // openstudio
-

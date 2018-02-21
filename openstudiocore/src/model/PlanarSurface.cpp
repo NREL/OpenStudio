@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -111,7 +111,7 @@ namespace model {
       // connect signals
       this->PlanarSurface_Impl::onChange.connect<PlanarSurface_Impl, &PlanarSurface_Impl::clearCachedVariables>(this);
     }
-    
+
     boost::optional<ConstructionBase> PlanarSurface_Impl::construction() const
     {
       boost::optional<std::pair<ConstructionBase, int> > result = this->constructionWithSearchDistance();
@@ -569,7 +569,7 @@ namespace model {
         default:
           break;
         }
-        
+
       }
       return result;
     }
@@ -583,7 +583,7 @@ namespace model {
     {
       return getObject<ModelObject>().getModelObjectSources<SurfacePropertyConvectionCoefficients>();
     }
-    
+
     boost::optional<ModelObject> PlanarSurface_Impl::constructionAsModelObject() const
     {
       return static_cast<boost::optional<ModelObject> >(this->construction());
@@ -645,7 +645,7 @@ PlanarSurface::PlanarSurface(IddObjectType type, const std::vector<Point3d>& ver
 }
 
 PlanarSurface::PlanarSurface(std::shared_ptr<detail::PlanarSurface_Impl> p)
-  : ParentObject(p)
+  : ParentObject(std::move(p))
 {}
 
 boost::optional<ConstructionBase> PlanarSurface::construction() const

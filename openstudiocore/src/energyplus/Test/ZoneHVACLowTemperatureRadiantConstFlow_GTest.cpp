@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -67,7 +67,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions) 
+TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions)
 {
   //make the example model
   Model model = model::exampleModel();
@@ -85,7 +85,7 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions)
     ScheduleConstant heatingLowWaterTempSched(model);
     ScheduleConstant heatingHighControlTempSched(model);
     ScheduleConstant heatingLowControlTempSched(model);
-  
+
     availabilitySched.setValue(1.0);
     coolingHighWaterTempSched.setValue(15.0);
     coolingLowWaterTempSched.setValue(10.0);
@@ -104,14 +104,14 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions)
     //set the coils
     testRad.setHeatingCoil(testHC);
     testRad.setCoolingCoil(testCC);
-    
+
     //add it to the thermal zone
     testRad.addToThermalZone(thermalZone);
 
     //attach to ceilings
     testRad.setRadiantSurfaceType("Ceilings");
 
-    //test that "surfaces" method returns 0 since no 
+    //test that "surfaces" method returns 0 since no
     //ceilings have an internal source construction
     EXPECT_EQ(0,testRad.surfaces().size());
 
@@ -147,6 +147,6 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions)
     }
   }
 
-} 
+}
 
 

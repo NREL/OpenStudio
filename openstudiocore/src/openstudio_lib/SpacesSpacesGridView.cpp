@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -114,7 +114,7 @@ namespace openstudio {
     //m_itemSelectorButtons->enableAddButton();
     //m_itemSelectorButtons->enableCopyButton();
     m_itemSelectorButtons->enableRemoveButton();
-    m_itemSelectorButtons->enablePurgeButton();
+    // m_itemSelectorButtons->enablePurgeButton();
   }
 
   void SpacesSpacesGridView::onClearSelection()
@@ -122,7 +122,7 @@ namespace openstudio {
     //m_itemSelectorButtons->disableAddButton();
     //m_itemSelectorButtons->disableCopyButton();
     m_itemSelectorButtons->disableRemoveButton();
-    m_itemSelectorButtons->disablePurgeButton();
+    // m_itemSelectorButtons->disablePurgeButton();
   }
 
   SpacesSpacesGridController::SpacesSpacesGridController(bool isIP,

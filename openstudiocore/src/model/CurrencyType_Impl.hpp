@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -55,7 +55,7 @@ class MODEL_API CurrencyType_Impl : public ParentObject_Impl{
   virtual ~CurrencyType_Impl(){}
 
   OptionalString  monetaryUnit() const;
-  void setMonetaryUnit(const std::string& str);
+  bool setMonetaryUnit(const std::string& str);
 
   // return the parent object in the hierarchy
   virtual boost::optional<ParentObject> parent() const override;
@@ -83,4 +83,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_CURRENCYTYPE_IMPL_HPP
+#endif // MODEL_CURRENCYTYPE_IMPL_HPP

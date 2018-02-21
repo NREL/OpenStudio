@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -68,7 +68,7 @@ namespace detail {
         }
       }
     }
-    
+
     return result;
   }
 
@@ -329,7 +329,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setExternalFileName(boost::optional<std::string> externalFileName) {
+  bool TableMultiVariableLookup_Impl::setExternalFileName(boost::optional<std::string> externalFileName) {
     bool result(false);
     if (externalFileName) {
       result = setString(OS_Table_MultiVariableLookupFields::ExternalFileName, externalFileName.get());
@@ -339,6 +339,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetExternalFileName() {
@@ -366,7 +367,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setNormalizationReference(boost::optional<double> normalizationReference) {
+  bool TableMultiVariableLookup_Impl::setNormalizationReference(boost::optional<double> normalizationReference) {
     bool result(false);
     if (normalizationReference) {
       result = setDouble(OS_Table_MultiVariableLookupFields::NormalizationReference, normalizationReference.get());
@@ -376,6 +377,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetNormalizationReference() {
@@ -383,7 +385,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setMinimumValueofX1(boost::optional<double> minimumValueofX1) {
+  bool TableMultiVariableLookup_Impl::setMinimumValueofX1(boost::optional<double> minimumValueofX1) {
     bool result(false);
     if (minimumValueofX1) {
       result = setDouble(OS_Table_MultiVariableLookupFields::MinimumValueofX1, minimumValueofX1.get());
@@ -393,6 +395,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetMinimumValueofX1() {
@@ -400,7 +403,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setMaximumValueofX1(boost::optional<double> maximumValueofX1) {
+  bool TableMultiVariableLookup_Impl::setMaximumValueofX1(boost::optional<double> maximumValueofX1) {
     bool result(false);
     if (maximumValueofX1) {
       result = setDouble(OS_Table_MultiVariableLookupFields::MaximumValueofX1, maximumValueofX1.get());
@@ -410,6 +413,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetMaximumValueofX1() {
@@ -417,7 +421,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setMinimumValueofX2(boost::optional<double> minimumValueofX2) {
+  bool TableMultiVariableLookup_Impl::setMinimumValueofX2(boost::optional<double> minimumValueofX2) {
     bool result(false);
     if (minimumValueofX2) {
       result = setDouble(OS_Table_MultiVariableLookupFields::MinimumValueofX2, minimumValueofX2.get());
@@ -427,6 +431,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetMinimumValueofX2() {
@@ -434,7 +439,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setMaximumValueofX2(boost::optional<double> maximumValueofX2) {
+  bool TableMultiVariableLookup_Impl::setMaximumValueofX2(boost::optional<double> maximumValueofX2) {
     bool result(false);
     if (maximumValueofX2) {
       result = setDouble(OS_Table_MultiVariableLookupFields::MaximumValueofX2, maximumValueofX2.get());
@@ -444,6 +449,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetMaximumValueofX2() {
@@ -451,7 +457,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setMinimumValueofX3(boost::optional<double> minimumValueofX3) {
+  bool TableMultiVariableLookup_Impl::setMinimumValueofX3(boost::optional<double> minimumValueofX3) {
     bool result(false);
     if (minimumValueofX3) {
       result = setDouble(OS_Table_MultiVariableLookupFields::MinimumValueofX3, minimumValueofX3.get());
@@ -461,6 +467,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetMinimumValueofX3() {
@@ -468,7 +475,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setMaximumValueofX3(boost::optional<double> maximumValueofX3) {
+  bool TableMultiVariableLookup_Impl::setMaximumValueofX3(boost::optional<double> maximumValueofX3) {
     bool result(false);
     if (maximumValueofX3) {
       result = setDouble(OS_Table_MultiVariableLookupFields::MaximumValueofX3, maximumValueofX3.get());
@@ -478,6 +485,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetMaximumValueofX3() {
@@ -485,7 +493,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setMinimumValueofX4(boost::optional<double> minimumValueofX4) {
+  bool TableMultiVariableLookup_Impl::setMinimumValueofX4(boost::optional<double> minimumValueofX4) {
     bool result(false);
     if (minimumValueofX4) {
       result = setDouble(OS_Table_MultiVariableLookupFields::MinimumValueofX4, minimumValueofX4.get());
@@ -495,6 +503,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetMinimumValueofX4() {
@@ -502,7 +511,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setMaximumValueofX4(boost::optional<double> maximumValueofX4) {
+  bool TableMultiVariableLookup_Impl::setMaximumValueofX4(boost::optional<double> maximumValueofX4) {
     bool result(false);
     if (maximumValueofX4) {
       result = setDouble(OS_Table_MultiVariableLookupFields::MaximumValueofX4, maximumValueofX4.get());
@@ -512,6 +521,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetMaximumValueofX4() {
@@ -519,7 +529,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setMinimumValueofX5(boost::optional<double> minimumValueofX5) {
+  bool TableMultiVariableLookup_Impl::setMinimumValueofX5(boost::optional<double> minimumValueofX5) {
     bool result(false);
     if (minimumValueofX5) {
       result = setDouble(OS_Table_MultiVariableLookupFields::MinimumValueofX5, minimumValueofX5.get());
@@ -529,6 +539,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetMinimumValueofX5() {
@@ -536,7 +547,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setMaximumValueofX5(boost::optional<double> maximumValueofX5) {
+  bool TableMultiVariableLookup_Impl::setMaximumValueofX5(boost::optional<double> maximumValueofX5) {
     bool result(false);
     if (maximumValueofX5) {
       result = setDouble(OS_Table_MultiVariableLookupFields::MaximumValueofX5, maximumValueofX5.get());
@@ -546,6 +557,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetMaximumValueofX5() {
@@ -553,7 +565,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setMinimumTableOutput(boost::optional<double> minimumTableOutput) {
+  bool TableMultiVariableLookup_Impl::setMinimumTableOutput(boost::optional<double> minimumTableOutput) {
     bool result(false);
     if (minimumTableOutput) {
       result = setDouble(OS_Table_MultiVariableLookupFields::MinimumTableOutput, minimumTableOutput.get());
@@ -563,6 +575,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetMinimumTableOutput() {
@@ -570,7 +583,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void TableMultiVariableLookup_Impl::setMaximumTableOutput(boost::optional<double> maximumTableOutput) {
+  bool TableMultiVariableLookup_Impl::setMaximumTableOutput(boost::optional<double> maximumTableOutput) {
     bool result(false);
     if (maximumTableOutput) {
       result = setDouble(OS_Table_MultiVariableLookupFields::MaximumTableOutput, maximumTableOutput.get());
@@ -580,6 +593,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void TableMultiVariableLookup_Impl::resetMaximumTableOutput() {
@@ -679,11 +693,11 @@ namespace detail {
           ++it)
       {
         IdfExtensibleGroup eg = getObject<model::TableMultiVariableLookup>().pushExtensibleGroup();
-        eg.setDouble(0,*it);  
+        eg.setDouble(0,*it);
       }
 
       IdfExtensibleGroup eg = getObject<model::TableMultiVariableLookup>().pushExtensibleGroup();
-      eg.setDouble(0,t_yValue);  
+      eg.setDouble(0,t_yValue);
     }
 
     return true;
@@ -771,7 +785,7 @@ namespace detail {
     xValues[0] = x1;
     return addPoint(xValues,yValue);
   }
-  
+
   bool TableMultiVariableLookup_Impl::addPoint(double x1, double x2, double yValue)
   {
     std::vector<double> xValues(2);
@@ -779,7 +793,7 @@ namespace detail {
     xValues[1] = x2;
     return addPoint(xValues,yValue);
   }
-  
+
   bool TableMultiVariableLookup_Impl::addPoint(double x1, double x2, double x3, double yValue)
   {
     std::vector<double> xValues(3);
@@ -788,7 +802,7 @@ namespace detail {
     xValues[2] = x3;
     return addPoint(xValues,yValue);
   }
-  
+
   bool TableMultiVariableLookup_Impl::addPoint(double x1, double x2, double x3, double x4, double yValue)
   {
     std::vector<double> xValues(4);
@@ -798,7 +812,7 @@ namespace detail {
     xValues[3] = x4;
     return addPoint(xValues,yValue);
   }
-  
+
   bool TableMultiVariableLookup_Impl::addPoint(double x1, double x2, double x3, double x4, double x5, double yValue)
   {
     std::vector<double> xValues(5);
@@ -1050,104 +1064,104 @@ void TableMultiVariableLookup::resetTableDataFormat() {
   getImpl<detail::TableMultiVariableLookup_Impl>()->resetTableDataFormat();
 }
 
-void TableMultiVariableLookup::setNormalizationReference(double normalizationReference) {
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setNormalizationReference(normalizationReference);
+bool TableMultiVariableLookup::setNormalizationReference(double normalizationReference) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setNormalizationReference(normalizationReference);
 }
 
 void TableMultiVariableLookup::resetNormalizationReference() {
   getImpl<detail::TableMultiVariableLookup_Impl>()->resetNormalizationReference();
 }
 
-void TableMultiVariableLookup::setMinimumValueofX1(double minimumValueofX1) {
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setMinimumValueofX1(minimumValueofX1);
+bool TableMultiVariableLookup::setMinimumValueofX1(double minimumValueofX1) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setMinimumValueofX1(minimumValueofX1);
 }
 
 void TableMultiVariableLookup::resetMinimumValueofX1() {
   getImpl<detail::TableMultiVariableLookup_Impl>()->resetMinimumValueofX1();
 }
 
-void TableMultiVariableLookup::setMaximumValueofX1(double maximumValueofX1) {
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setMaximumValueofX1(maximumValueofX1);
+bool TableMultiVariableLookup::setMaximumValueofX1(double maximumValueofX1) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setMaximumValueofX1(maximumValueofX1);
 }
 
 void TableMultiVariableLookup::resetMaximumValueofX1() {
   getImpl<detail::TableMultiVariableLookup_Impl>()->resetMaximumValueofX1();
 }
 
-void TableMultiVariableLookup::setMinimumValueofX2(double minimumValueofX2) {
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setMinimumValueofX2(minimumValueofX2);
+bool TableMultiVariableLookup::setMinimumValueofX2(double minimumValueofX2) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setMinimumValueofX2(minimumValueofX2);
 }
 
 void TableMultiVariableLookup::resetMinimumValueofX2() {
   getImpl<detail::TableMultiVariableLookup_Impl>()->resetMinimumValueofX2();
 }
 
-void TableMultiVariableLookup::setMaximumValueofX2(double maximumValueofX2) {
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setMaximumValueofX2(maximumValueofX2);
+bool TableMultiVariableLookup::setMaximumValueofX2(double maximumValueofX2) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setMaximumValueofX2(maximumValueofX2);
 }
 
 void TableMultiVariableLookup::resetMaximumValueofX2() {
   getImpl<detail::TableMultiVariableLookup_Impl>()->resetMaximumValueofX2();
 }
 
-void TableMultiVariableLookup::setMinimumValueofX3(double minimumValueofX3) {
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setMinimumValueofX3(minimumValueofX3);
+bool TableMultiVariableLookup::setMinimumValueofX3(double minimumValueofX3) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setMinimumValueofX3(minimumValueofX3);
 }
 
 void TableMultiVariableLookup::resetMinimumValueofX3() {
   getImpl<detail::TableMultiVariableLookup_Impl>()->resetMinimumValueofX3();
 }
 
-void TableMultiVariableLookup::setMaximumValueofX3(double maximumValueofX3) {
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setMaximumValueofX3(maximumValueofX3);
+bool TableMultiVariableLookup::setMaximumValueofX3(double maximumValueofX3) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setMaximumValueofX3(maximumValueofX3);
 }
 
 void TableMultiVariableLookup::resetMaximumValueofX3() {
   getImpl<detail::TableMultiVariableLookup_Impl>()->resetMaximumValueofX3();
 }
 
-void TableMultiVariableLookup::setMinimumValueofX4(double minimumValueofX4) {
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setMinimumValueofX4(minimumValueofX4);
+bool TableMultiVariableLookup::setMinimumValueofX4(double minimumValueofX4) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setMinimumValueofX4(minimumValueofX4);
 }
 
 void TableMultiVariableLookup::resetMinimumValueofX4() {
   getImpl<detail::TableMultiVariableLookup_Impl>()->resetMinimumValueofX4();
 }
 
-void TableMultiVariableLookup::setMaximumValueofX4(double maximumValueofX4) {
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setMaximumValueofX4(maximumValueofX4);
+bool TableMultiVariableLookup::setMaximumValueofX4(double maximumValueofX4) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setMaximumValueofX4(maximumValueofX4);
 }
 
 void TableMultiVariableLookup::resetMaximumValueofX4() {
   getImpl<detail::TableMultiVariableLookup_Impl>()->resetMaximumValueofX4();
 }
 
-void TableMultiVariableLookup::setMinimumValueofX5(double minimumValueofX5) {
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setMinimumValueofX5(minimumValueofX5);
+bool TableMultiVariableLookup::setMinimumValueofX5(double minimumValueofX5) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setMinimumValueofX5(minimumValueofX5);
 }
 
 void TableMultiVariableLookup::resetMinimumValueofX5() {
   getImpl<detail::TableMultiVariableLookup_Impl>()->resetMinimumValueofX5();
 }
 
-void TableMultiVariableLookup::setMaximumValueofX5(double maximumValueofX5) {
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setMaximumValueofX5(maximumValueofX5);
+bool TableMultiVariableLookup::setMaximumValueofX5(double maximumValueofX5) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setMaximumValueofX5(maximumValueofX5);
 }
 
 void TableMultiVariableLookup::resetMaximumValueofX5() {
   getImpl<detail::TableMultiVariableLookup_Impl>()->resetMaximumValueofX5();
 }
 
-void TableMultiVariableLookup::setMinimumTableOutput(double minimumTableOutput) {
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setMinimumTableOutput(minimumTableOutput);
+bool TableMultiVariableLookup::setMinimumTableOutput(double minimumTableOutput) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setMinimumTableOutput(minimumTableOutput);
 }
 
 void TableMultiVariableLookup::resetMinimumTableOutput() {
   getImpl<detail::TableMultiVariableLookup_Impl>()->resetMinimumTableOutput();
 }
 
-void TableMultiVariableLookup::setMaximumTableOutput(double maximumTableOutput) {
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setMaximumTableOutput(maximumTableOutput);
+bool TableMultiVariableLookup::setMaximumTableOutput(double maximumTableOutput) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setMaximumTableOutput(maximumTableOutput);
 }
 
 void TableMultiVariableLookup::resetMaximumTableOutput() {
@@ -1260,10 +1274,9 @@ std::vector<double> TableMultiVariableLookup::xValues(int i) const
 
 /// @cond
 TableMultiVariableLookup::TableMultiVariableLookup(std::shared_ptr<detail::TableMultiVariableLookup_Impl> impl)
-  : Curve(std::dynamic_pointer_cast<detail::Curve_Impl>(impl))
+  : Curve(std::dynamic_pointer_cast<detail::Curve_Impl>(std::move(impl)))
 {}
 /// @endcond
 
 } // model
-} // openstudio
-
+} // openstudio

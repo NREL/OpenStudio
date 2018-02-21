@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,51 +50,51 @@ namespace detail {
 
   /** Luminaire_Impl is a SpaceLoadInstance_Impl that is the implementation class for Luminaire.*/
   class MODEL_API Luminaire_Impl : public SpaceLoadInstance_Impl {
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
 
-    
-    
 
-    
 
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -114,9 +114,9 @@ namespace detail {
     //@}
     /** @name Virtual Methods */
     //@{
-    
+
     virtual const std::vector<std::string>& outputVariableNames() const override;
-    
+
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
@@ -193,31 +193,31 @@ namespace detail {
 
     void resetSchedule();
 
-    void setPositionXcoordinate(double positionXcoordinate);
+    bool setPositionXcoordinate(double positionXcoordinate);
 
     bool setPositionXcoordinate(const Quantity& positionXcoordinate);
 
-    void setPositionYcoordinate(double positionYcoordinate);
+    bool setPositionYcoordinate(double positionYcoordinate);
 
     bool setPositionYcoordinate(const Quantity& positionYcoordinate);
 
-    void setPositionZcoordinate(double positionZcoordinate);
+    bool setPositionZcoordinate(double positionZcoordinate);
 
     bool setPositionZcoordinate(const Quantity& positionZcoordinate);
 
-    void setPsiRotationAroundXaxis(double psiRotationAroundXaxis);
+    bool setPsiRotationAroundXaxis(double psiRotationAroundXaxis);
 
     bool setPsiRotationAroundXaxis(const Quantity& psiRotationAroundXaxis);
 
     void resetPsiRotationAroundXaxis();
 
-    void setThetaRotationAroundYaxis(double thetaRotationAroundYaxis);
+    bool setThetaRotationAroundYaxis(double thetaRotationAroundYaxis);
 
     bool setThetaRotationAroundYaxis(const Quantity& thetaRotationAroundYaxis);
 
     void resetThetaRotationAroundYaxis();
 
-    void setPhiRotationAroundZaxis(double phiRotationAroundZaxis);
+    bool setPhiRotationAroundZaxis(double phiRotationAroundZaxis);
 
     bool setPhiRotationAroundZaxis(const Quantity& phiRotationAroundZaxis);
 
@@ -233,7 +233,7 @@ namespace detail {
 
     void resetMultiplier();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -295,4 +295,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_LUMINAIRE_IMPL_HPP
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -73,7 +73,63 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACIdealLoadsAirSystem_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Ideal Loads Supply Air Sensible Heating Energy");
+      result.push_back("Zone Ideal Loads Supply Air Total Heating Energy");
+      result.push_back("Zone Ideal Loads Supply Air Sensible Cooling Energy");
+      result.push_back("Zone Ideal Loads Supply Air Latent Cooling Energy");
+      result.push_back("Zone Ideal Loads Supply Air Total Cooling Energy");
+      result.push_back("Zone Ideal Loads Supply Air Latent Heating Energy");
+      result.push_back("Zone Ideal Loads Zone Sensible Heating Energy");
+      result.push_back("Zone Ideal Loads Zone Latent Heating Energy");
+      result.push_back("Zone Ideal Loads Zone Total Heating Energy");
+      result.push_back("Zone Ideal Loads Zone Sensible Cooling Energy");
+      result.push_back("Zone Ideal Loads Zone Latent Cooling Energy");
+      result.push_back("Zone Ideal Loads Zone Total Cooling Energy");
+      result.push_back("Zone Ideal Loads Outdoor Air Sensible Heating Energy");
+      result.push_back("Zone Ideal Loads Outdoor Air Latent Heating Energy");
+      result.push_back("Zone Ideal Loads Outdoor Air Total Heating Energy");
+      result.push_back("Zone Ideal Loads Outdoor Air Sensible Cooling Energy");
+      result.push_back("Zone Ideal Loads Outdoor Air Latent Cooling Energy");
+      result.push_back("Zone Ideal Loads Outdoor Air Total Cooling Energy");
+      result.push_back("Zone Ideal Loads Heat Recovery Sensible Heating Energy");
+      result.push_back("Zone Ideal Loads Heat Recovery Latent Heating Energy");
+      result.push_back("Zone Ideal Loads Heat Recovery Total Heating Energy");
+      result.push_back("Zone Ideal Loads Heat Recovery Sensible Cooling Energy");
+      result.push_back("Zone Ideal Loads Heat Recovery Latent Cooling Energy");
+      result.push_back("Zone Ideal Loads Heat Recovery Total Cooling Energy");
+      result.push_back("Zone Ideal Loads Supply Air Sensible Heating Rate");
+      result.push_back("Zone Ideal Loads Supply Air Latent Heating Rate");
+      result.push_back("Zone Ideal Loads Supply Air Total Heating Rate");
+      result.push_back("Zone Ideal Loads Supply Air Sensible Cooling Rate");
+      result.push_back("Zone Ideal Loads Supply Air Latent Cooling Rate");
+      result.push_back("Zone Ideal Loads Supply Air Total Cooling Rate");
+      result.push_back("Zone Ideal Loads Zone Sensible Heating Rate");
+      result.push_back("Zone Ideal Loads Zone Latent Heating Rate");
+      result.push_back("Zone Ideal Loads Zone Total Heating Rate");
+      result.push_back("Zone Ideal Loads Zone Sensible Cooling Rate");
+      result.push_back("Zone Ideal Loads Zone Latent Cooling Rate");
+      result.push_back("Zone Ideal Loads Zone Total Cooling Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Sensible Heating Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Latent Heating Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Total Heating Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Sensible Cooling Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Latent Cooling Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Total Cooling Rate");
+      result.push_back("Zone Ideal Loads Heat Recovery Sensible Heating Rate");
+      result.push_back("Zone Ideal Loads Heat Recovery Latent Heating Rate");
+      result.push_back("Zone Ideal Loads Heat Recovery Total Heating Rate");
+      result.push_back("Zone Ideal Loads Heat Recovery Sensible Cooling Rate");
+      result.push_back("Zone Ideal Loads Heat Recovery Latent Cooling Rate");
+      result.push_back("Zone Ideal Loads Heat Recovery Total Cooling Rate");
+      result.push_back("Zone Ideal Loads Economizer Active Time");
+      result.push_back("Zone Ideal Loads Heat Recovery Active Time");
+      result.push_back("Zone Ideal Loads Hybrid Ventilation Available Status");
+      result.push_back("Zone Ideal Loads Outdoor Air Mass Flow Rate");
+      result.push_back("Zone Ideal Loads Outdoor Air Standard Density Volume Flow Rate");
+      result.push_back("Zone Ideal Loads Supply Air Mass Flow Rate");
+      result.push_back("Zone Ideal Loads Supply Air Standard Density Volume Flow Rate");
     }
     return result;
   }
@@ -999,6 +1055,53 @@ namespace detail {
     return true;
   }
 
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::autosizedMaximumHeatingAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Heating Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::autosizedMaximumSensibleHeatingCapacity() const {
+    return getAutosizedValue("Design Size Maximum Sensible Heating Capacity", "W");
+  }
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::autosizedMaximumCoolingAirFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Cooling Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::autosizedMaximumTotalCoolingCapacity() const {
+    return getAutosizedValue("Design Size Maximum Total Cooling Capacity", "W");
+  }
+
+  void ZoneHVACIdealLoadsAirSystem_Impl::autosize() {
+    autosizeMaximumHeatingAirFlowRate();
+    autosizeMaximumSensibleHeatingCapacity();
+    autosizeMaximumCoolingAirFlowRate();
+    autosizeMaximumTotalCoolingCapacity();
+  }
+
+  void ZoneHVACIdealLoadsAirSystem_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumHeatingAirFlowRate();
+    if (val) {
+      setMaximumHeatingAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumSensibleHeatingCapacity();
+    if (val) {
+      setMaximumSensibleHeatingCapacity(val.get());
+    }
+
+    val = autosizedMaximumCoolingAirFlowRate();
+    if (val) {
+      setMaximumCoolingAirFlowRate(val.get());
+    }
+
+    val = autosizedMaximumTotalCoolingCapacity();
+    if (val) {
+      setMaximumTotalCoolingCapacity(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACIdealLoadsAirSystem::ZoneHVACIdealLoadsAirSystem(const Model& model)
@@ -1488,9 +1591,25 @@ void ZoneHVACIdealLoadsAirSystem::resetLatentHeatRecoveryEffectiveness() {
 
 /// @cond
 ZoneHVACIdealLoadsAirSystem::ZoneHVACIdealLoadsAirSystem(std::shared_ptr<detail::ZoneHVACIdealLoadsAirSystem_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem::autosizedMaximumHeatingAirFlowRate() const {
+    return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->autosizedMaximumHeatingAirFlowRate();
+  }
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem::autosizedMaximumSensibleHeatingCapacity() const {
+    return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->autosizedMaximumSensibleHeatingCapacity();
+  }
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem::autosizedMaximumCoolingAirFlowRate() const {
+    return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->autosizedMaximumCoolingAirFlowRate();
+  }
+
+  boost::optional<double> ZoneHVACIdealLoadsAirSystem::autosizedMaximumTotalCoolingCapacity() const {
+    return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->autosizedMaximumTotalCoolingCapacity();
+  }
 
 } // model
 } // openstudio

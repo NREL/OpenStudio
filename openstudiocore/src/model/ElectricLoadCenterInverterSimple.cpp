@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -73,7 +73,20 @@ namespace detail {
   const std::vector<std::string>& ElectricLoadCenterInverterSimple_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Inverter DC to AC Efficiency");
+      result.push_back("Inverter DC Input Electric Power");
+      result.push_back("Inverter DC Input Electric Energy");
+      result.push_back("Inverter AC Output Electric Power");
+      result.push_back("Inverter AC Output Electric Energy");
+      result.push_back("Inverter Conversion Loss Power");
+      result.push_back("Inverter Conversion Loss Energy");
+      result.push_back("Inverter Conversion Loss Decrement Energy");
+      result.push_back("Inverter Thermal Loss Rate");
+      result.push_back("Inverter Thermal Loss Energy");
+      result.push_back("Inverter Ancillary AC Electric Power");
+      result.push_back("Inverter Ancillary AC Electric Energy");
     }
     return result;
   }
@@ -222,7 +235,7 @@ void ElectricLoadCenterInverterSimple::resetInverterEfficiency() {
 
 /// @cond
 ElectricLoadCenterInverterSimple::ElectricLoadCenterInverterSimple(std::shared_ptr<detail::ElectricLoadCenterInverterSimple_Impl> impl)
-  : Inverter(impl)
+  : Inverter(std::move(impl))
 {}
 /// @endcond
 

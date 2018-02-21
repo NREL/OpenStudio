@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -129,7 +129,7 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   void autosizeLowFanSpeedUfactorTimesAreaValue();
 
-  void setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
+  bool setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
 
   bool setHighSpeedNominalCapacity(double highSpeedNominalCapacity);
 
@@ -137,7 +137,7 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   void autosizeLowSpeedNominalCapacity();
 
-  void setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor);
+  bool setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor);
 
   bool setDesignEnteringWaterTemperature(double designEnteringWaterTemperature);
 
@@ -161,13 +161,13 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
 
   void autosizeLowFanSpeedAirFlowRate();
 
-  void setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
+  bool setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
 
   bool setLowFanSpeedFanPower(double lowFanSpeedFanPower);
 
   void autosizeLowFanSpeedFanPower();
 
-  void setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
+  bool setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
 
   bool setOutdoorAirInletNode(const Node& node);
 
@@ -176,6 +176,24 @@ class MODEL_API FluidCoolerTwoSpeed : public StraightComponent {
   //@}
   /** @name Other */
   //@{
+
+  boost::optional<double> autosizedHighFanSpeedUfactorTimesAreaValue() const ;
+
+  boost::optional<double> autosizedLowFanSpeedUfactorTimesAreaValue() const ;
+
+  boost::optional<double> autosizedLowSpeedNominalCapacity() const ;
+
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  boost::optional<double> autosizedHighFanSpeedAirFlowRate() const ;
+
+  boost::optional<double> autosizedHighFanSpeedFanPower() const ;
+
+  boost::optional<double> autosizedLowFanSpeedAirFlowRate() const ;
+
+  boost::optional<double> autosizedLowFanSpeedFanPower() const ;
+
+
 
   //@}
  protected:
@@ -202,4 +220,4 @@ typedef std::vector<FluidCoolerTwoSpeed> FluidCoolerTwoSpeedVector;
 } // model
 } // openstudio
 
-#endif // MODEL_FLUIDCOOLERTWOSPEED_HPP
+#endif // MODEL_FLUIDCOOLERTWOSPEED_HPP

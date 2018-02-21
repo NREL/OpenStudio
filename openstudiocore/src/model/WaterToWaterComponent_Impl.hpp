@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -49,8 +49,8 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
 
   WaterToWaterComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  WaterToWaterComponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                             Model_Impl* model, 
+  WaterToWaterComponent_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                             Model_Impl* model,
                              bool keepHandle);
 
   WaterToWaterComponent_Impl(const WaterToWaterComponent_Impl& other, Model_Impl* model, bool keepHandles);
@@ -87,18 +87,30 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
 
   void disconnect() override;
 
-  boost::optional<PlantLoop> plantLoop() const override;
+  /*
+   * This method checks for presence of the WaterToWaterComponent on the supply side of plantLoops
+   * and checks that it isn't the tertiary plant loop
+   */
+  virtual boost::optional<PlantLoop> plantLoop() const override;
 
+ /*
+  * This method checks for presence of the WaterToWaterComponent on the demand side of plantLoops
+  * and checks that it isn't the tertiary plant loop
+  */
   boost::optional<PlantLoop> secondaryPlantLoop() const;
 
   bool removeFromPlantLoop();
 
-  bool removeFromSecondaryPlantLoop();
+  virtual bool removeFromSecondaryPlantLoop();
 
   virtual unsigned tertiaryInletPort() const;
 
   virtual unsigned tertiaryOutletPort() const;
 
+ /*
+  * This method checks for presence of the WaterToWaterComponent on either the supply or demand side of plantLoops
+  * and does an extra check for actual node: the tertiaryOutletModelObject has to be on the plant loop too
+  */
   boost::optional<PlantLoop> tertiaryPlantLoop() const;
 
   bool removeFromTertiaryPlantLoop();

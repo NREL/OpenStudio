@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,52 +47,52 @@ namespace detail {
 
   /** PumpConstantSpeed_Impl is a StraightComponent_Impl that is the implementation class for PumpConstantSpeed.*/
   class MODEL_API PumpConstantSpeed_Impl : public StraightComponent_Impl {
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
 
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    public:
 
     PumpConstantSpeed_Impl(const IdfObject& idfObject,
@@ -167,7 +167,7 @@ namespace detail {
 
     OSOptionalQuantity getSkinLossRadiativeFraction(bool returnIP=false) const;
 
-    void setRatedFlowRate(boost::optional<double> ratedFlowRate);
+    bool setRatedFlowRate(boost::optional<double> ratedFlowRate);
 
     bool setRatedFlowRate(const OSOptionalQuantity& ratedFlowRate);
 
@@ -175,13 +175,13 @@ namespace detail {
 
     void autosizeRatedFlowRate();
 
-    void setRatedPumpHead(double ratedPumpHead);
+    bool setRatedPumpHead(double ratedPumpHead);
 
     bool setRatedPumpHead(const Quantity& ratedPumpHead);
 
     void resetRatedPumpHead();
 
-    void setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
+    bool setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
 
     bool setRatedPowerConsumption(const OSOptionalQuantity& ratedPowerConsumption);
 
@@ -213,13 +213,13 @@ namespace detail {
 
     void resetPumpCurve();
 
-    void setImpellerDiameter(boost::optional<double> impellerDiameter);
+    bool setImpellerDiameter(boost::optional<double> impellerDiameter);
 
     bool setImpellerDiameter(const OSOptionalQuantity& impellerDiameter);
 
     void resetImpellerDiameter();
 
-    void setRotationalSpeed(boost::optional<double> rotationalSpeed);
+    bool setRotationalSpeed(boost::optional<double> rotationalSpeed);
 
     bool setRotationalSpeed(const OSOptionalQuantity& rotationalSpeed);
 
@@ -240,6 +240,26 @@ namespace detail {
     unsigned outletPort() override;
 
     bool addToNode(Node & node) override;
+
+    boost::optional<double> autosizedRatedFlowRate() const ;
+
+    boost::optional<double> autosizedRatedPowerConsumption() const ;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    std::string designPowerSizingMethod() const;
+
+    bool setDesignPowerSizingMethod(const std::string & designPowerSizingMethod);
+
+    double designElectricPowerPerUnitFlowRate() const;
+
+    bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+    double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
+    bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
 
    protected:
 
@@ -282,5 +302,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_PUMPCONSTANTSPEED_IMPL_HPP
-
+#endif // MODEL_PUMPCONSTANTSPEED_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,10 +44,10 @@ namespace detail {
 } // detail
 
 /** ScheduleBase is a ResourceObject that serves as a base class for Schedule and ScheduleDay,
- *  that is, objects with ScheduleTypeLimits. This class provides getters and setters for 
- *  ScheduleTypeLimits. Note that while users can explicitly set their own ScheduleTypeLimits, 
- *  we recommend using the \link ScheduleTypeRegistrySingleton ScheduleTypeRegistry\endlink and 
- *  related non-member functions, or letting user \link ModelObject ModelObjects\endlink set 
+ *  that is, objects with ScheduleTypeLimits. This class provides getters and setters for
+ *  ScheduleTypeLimits. Note that while users can explicitly set their own ScheduleTypeLimits,
+ *  we recommend using the \link ScheduleTypeRegistrySingleton ScheduleTypeRegistry\endlink and
+ *  related non-member functions, or letting user \link ModelObject ModelObjects\endlink set
  *  this field, instead. */
 class MODEL_API ScheduleBase : public ResourceObject {
  public:
@@ -67,12 +67,12 @@ class MODEL_API ScheduleBase : public ResourceObject {
   /** @name Setters */
   //@{
 
-  /** Returns true if scheduleTypeLimits is compatible with this object and is actually set. 
+  /** Returns true if scheduleTypeLimits is compatible with this object and is actually set.
    *  The operation will fail if the Schedule or ScheduleDay is in use in a way that restricts
-   *  the allowable ScheduleTypeLimits and the new value (scheduleTypeLimits) is incompatible 
-   *  with that use. For instance, if a Schedule is used with a Lights object, then only 
+   *  the allowable ScheduleTypeLimits and the new value (scheduleTypeLimits) is incompatible
+   *  with that use. For instance, if a Schedule is used with a Lights object, then only
    *  properly configured fractional ScheduleTypeLimits will succeed. ScheduleDay objects used
-   *  in a ScheduleRuleset or a ScheduleRule are restricted to use ScheduleTypeLimits compatible 
+   *  in a ScheduleRuleset or a ScheduleRule are restricted to use ScheduleTypeLimits compatible
    *  with those of their (ScheduleRuleset or ScheduleRule) parent. */
   bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
 

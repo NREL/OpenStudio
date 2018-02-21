@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -136,9 +136,10 @@ ApplyMeasureNowDialog::~ApplyMeasureNowDialog()
   // restore app state, the app's library controller was swapped out in createWidgets
   openstudio::OSAppBase * app = OSAppBase::instance();
   if (app){
-    app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
+    app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController());
 
     // restore the model's workflow JSON
+    // DLM: this is not sufficient if the OSM is being reloaded
     app->currentModel()->setWorkflowJSON(m_modelWorkflowJSON);
   }
 
@@ -169,7 +170,7 @@ void ApplyMeasureNowDialog::createWidgets()
 
   m_argumentsFailedTextEdit = new QTextEdit(FAILED_ARG_TEXT);
   m_argumentsFailedTextEdit->setReadOnly(true);
-  
+
   m_editController = QSharedPointer<EditController>( new EditController(true) );
   bool onlyShowModelMeasures = true;
   m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(app,onlyShowModelMeasures) );
@@ -177,7 +178,7 @@ void ApplyMeasureNowDialog::createWidgets()
   m_localLibraryController->localLibraryView->addBCLMeasureButton->setVisible(false);
 
   // DLM: this is changing application state, needs to be undone in the destructor
-  app->measureManager().setLibraryController(m_localLibraryController); 
+  app->measureManager().setLibraryController(m_localLibraryController);
   app->currentDocument()->disable();
   app->measureManager().updateMeasuresLists();
   app->currentDocument()->enable();
@@ -212,7 +213,7 @@ void ApplyMeasureNowDialog::createWidgets()
   layout->addWidget(label,0,Qt::AlignCenter);
   layout->addWidget(busyWidget,0,Qt::AlignCenter);
   layout->addStretch();
-  
+
   widget = new QWidget();
   widget->setLayout(layout);
   m_runningPageIdx = m_mainPaneStackedWidget->addWidget(widget);
@@ -235,9 +236,9 @@ void ApplyMeasureNowDialog::createWidgets()
   layout->addWidget(m_jobPath);
   layout->addWidget(m_jobItemView,0,Qt::AlignTop);
 
-  layout->addStretch(); 
+  layout->addStretch();
 
-  m_showAdvancedOutput = new QPushButton("Advanced Output"); 
+  m_showAdvancedOutput = new QPushButton("Advanced Output");
   connect(m_showAdvancedOutput, &QPushButton::clicked, this, &ApplyMeasureNowDialog::showAdvancedOutput);
 
   //layout->addStretch();
@@ -316,7 +317,7 @@ void ApplyMeasureNowDialog::displayMeasure()
     std::vector<WorkflowStep> steps;
     steps.push_back(step);
     m_tempWorkflowJSON.setWorkflowSteps(steps);
-    
+
     m_tempWorkflowJSON.save();
 
     m_currentMeasureStepItem = QSharedPointer<measuretab::MeasureStepItem>(new measuretab::MeasureStepItem(MeasureType::ModelMeasure, step, app));
@@ -351,7 +352,8 @@ void ApplyMeasureNowDialog::runMeasure()
   this->okButton()->hide();
   this->backButton()->hide();
 
-  openstudio::OSAppBase * app = OSAppBase::instance();
+  // TODO: Unused Variable app
+  // openstudio::OSAppBase * app = OSAppBase::instance();
 
   removeWorkingDir();
 
@@ -363,7 +365,7 @@ void ApplyMeasureNowDialog::runMeasure()
 
   m_runProcess = new QProcess(this);
   connect(m_runProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &ApplyMeasureNowDialog::displayResults);
-    
+
   QStringList paths;
   paths << QCoreApplication::applicationDirPath();
   auto openstudioExePath = QStandardPaths::findExecutable("openstudio", paths);
@@ -429,7 +431,7 @@ void ApplyMeasureNowDialog::displayResults()
     m_advancedOutput += "<b>Standard Error:</b>\n";
     m_advancedOutput += qstderr;
     m_advancedOutput += QString("\n");
-     
+
     openstudio::path logPath =  m_workingDir / toPath("run/run.log");
     m_advancedOutput += "<b>run.log:</b>\n";
     QFile file(toQString(logPath));
@@ -443,10 +445,10 @@ void ApplyMeasureNowDialog::displayResults()
     m_advancedOutput += QString("\n");
 
     m_advancedOutput.replace("\n", "<br>");
-   
+
   }catch(std::exception&){
   }
- 
+
 }
 
 void ApplyMeasureNowDialog::removeWorkingDir()
@@ -472,7 +474,7 @@ DataPointJobHeaderView::DataPointJobHeaderView()
   mainHLayout->addWidget(toggleButton);
 
   m_name = new QLabel();
-  
+
   mainHLayout->addWidget(m_name);
   mainHLayout->addStretch();
 
@@ -518,7 +520,7 @@ void DataPointJobHeaderView::setStatus(const std::string& status, bool isCancele
   {
     m_status->setText(toQString(status));
   } else {
-   m_status->setText("Canceled");  
+   m_status->setText("Canceled");
   }
 }
 
@@ -635,8 +637,8 @@ DataPointJobItemView::DataPointJobItemView()
 
   m_dataPointJobHeaderView = new DataPointJobHeaderView();
   setHeader(m_dataPointJobHeaderView);
- 
-  m_dataPointJobContentView = new DataPointJobContentView(); 
+
+  m_dataPointJobContentView = new DataPointJobContentView();
   setContent(m_dataPointJobContentView);
 }
 
@@ -805,7 +807,7 @@ void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)
   if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx){
     e->ignore();
     return;
-  } 
+  }
 
   e->accept();
 }
@@ -816,7 +818,7 @@ void ApplyMeasureNowDialog::disableOkButton(bool disable)
 }
 
 void ApplyMeasureNowDialog::showAdvancedOutput()
-{ 
+{
   if(m_advancedOutput.isEmpty()){
     QMessageBox::information(this, QString("Advanced Output"), QString("No advanced output."));
   }else{

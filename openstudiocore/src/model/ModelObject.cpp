@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,6 +38,12 @@
 #include "ResourceObject_Impl.hpp"
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
+#include "CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
+#include "CoilPerformanceDXCooling.hpp"
+#include "CoilPerformanceDXCooling_Impl.hpp"
+#include "AdditionalProperties.hpp"
+#include "AdditionalProperties_Impl.hpp"
 
 #include "ScheduleTypeRegistry.hpp"
 #include "Schedule.hpp"
@@ -624,6 +630,151 @@ namespace detail {
     return keyValue;
   }
 
+  /** Gets the autosized component value from the sql file **/
+  boost::optional<double> ModelObject_Impl::getAutosizedValue(std::string valueName, std::string units) const {
+    boost::optional < double > result;
+
+    // Get the object name
+    if (!name()) {
+      LOG(Warn, "This object does not have a name, cannot retrieve the autosized value '" + valueName + "'.");
+      return result;
+    }
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string sqlName = name().get();
+    boost::to_upper(sqlName);
+
+    // Get the object type and transform to the way it is recorded
+    // in the sql file
+    std::string sqlObjectType = iddObject().type().valueDescription();
+    boost::replace_all(sqlObjectType, "OS:", "");
+
+    // Special logic to deal with EnergyPlus inconsistencies
+    if (sqlObjectType == "CoilPerformance:DX:Cooling") {
+      // Get the parent object
+      boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> parentCoil;
+      auto coilTwoSpdHumCtrls = this->model().getConcreteModelObjects<CoilCoolingDXTwoStageWithHumidityControlMode>();
+      for (const auto & coilInModel : coilTwoSpdHumCtrls) {
+        // Check the coil performance objects in this coil to see if one of them is this object
+        auto coilPerf = coilInModel.normalModeStage1CoilPerformance();
+        if (coilPerf) {
+          if (coilPerf->handle() == this->handle()) {
+            parentCoil = coilInModel;
+            break;
+          }
+        }
+
+        coilPerf = coilInModel.normalModeStage1Plus2CoilPerformance();
+        if (coilPerf) {
+          if (coilPerf->handle() == this->handle()) {
+            parentCoil = coilInModel;
+            break;
+          }
+        }
+
+        coilPerf = coilInModel.dehumidificationMode1Stage1CoilPerformance();
+        if (coilPerf) {
+          if (coilPerf->handle() == this->handle()) {
+            parentCoil = coilInModel;
+            break;
+          }
+        }
+
+        coilPerf = coilInModel.dehumidificationMode1Stage1Plus2CoilPerformance();
+        if (coilPerf) {
+          if (coilPerf->handle() == this->handle()) {
+            parentCoil = coilInModel;
+            break;
+          }
+        }
+      }
+
+      if (!parentCoil) {
+        LOG(Warn, "The CoilPerformance:DX:Cooling object called " + sqlName + " does not have a parent CoilCoolingDXTwoStageWithHumidityControlMode, cannot retrieve the autosized value.");
+        return result;
+      }
+
+      std::string parSqlName = parentCoil->name().get();
+      boost::to_upper(parSqlName);
+      // Join the parent and child object names, like:
+      // COIL COOLING DX TWO STAGE WITH HUMIDITY CONTROL MODE 1:COIL PERFORMANCE DX COOLING 1
+      sqlName = parSqlName + std::string(":") + sqlName;
+    }
+
+    // Check that the model has a sql file
+    if (!model().sqlFile()) {
+      LOG(Warn, "This model has no sql file, cannot retrieve the autosized value '" + valueName + "'.");
+      return result;
+    }
+
+    // Query the Intialization Summary -> Component Sizing table to get
+    // the row names that contains information for this component.
+    std::stringstream rowsQuery;
+    rowsQuery << "SELECT RowName ";
+    rowsQuery << "FROM tabulardatawithstrings ";
+    rowsQuery << "WHERE ReportName='Initialization Summary' ";
+    rowsQuery << "AND ReportForString='Entire Facility' ";
+    rowsQuery << "AND TableName = 'Component Sizing Information' ";
+    rowsQuery << "AND Value='" + sqlName + "'";
+
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+
+    // Warn if the query failed
+    if (!rowNames) {
+      LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Component Sizing table.");
+      return result;
+    }
+
+    // Query each row of the Intialization Summary -> Component Sizing table
+    // that contains this component to get the desired value.
+    std::string valueNameAndUnits = valueName + std::string(" [") + units + std::string("]");
+    if (units == "") {
+      valueNameAndUnits = valueName;
+    } else if (units == "typo_in_energyplus") {
+      valueNameAndUnits = valueName + std::string(" []");
+    }
+
+    for (std::string rowName : rowNames.get()) {
+      std::stringstream rowCheckQuery;
+      rowCheckQuery << "SELECT Value ";
+      rowCheckQuery << "FROM tabulardatawithstrings ";
+      rowCheckQuery << "WHERE ReportName='Initialization Summary' ";
+      rowCheckQuery << "AND ReportForString='Entire Facility' ";
+      rowCheckQuery << "AND TableName = 'Component Sizing Information' ";
+      rowCheckQuery << "AND RowName='" << rowName << "' ";
+      rowCheckQuery << "AND Value='" << valueNameAndUnits << "'";
+      boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery.str());
+      // Check if the query succeeded
+      if (!rowValueName) {
+        continue;
+      }
+      // This is the right row
+      std::stringstream valQuery;
+      valQuery << "SELECT Value ";
+      valQuery << "FROM tabulardatawithstrings ";
+      valQuery << "WHERE ReportName='Initialization Summary' ";
+      valQuery << "AND ReportForString='Entire Facility' ";
+      valQuery << "AND TableName = 'Component Sizing Information' ";
+      valQuery << "AND ColumnName='Value' ";
+      valQuery << "AND RowName='" << rowName << "' ";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      // Check if the query succeeded
+      if (val) {
+        result = val.get();
+        break;
+      }
+    }
+
+
+    if (!result) {
+      LOG(Debug, "The autosized value query for " + valueNameAndUnits + " of " + sqlName + " returned no value.");
+    }
+
+    return result;
+
+  }
+
   //void ModelObject_Impl::connect(unsigned outletPort, ModelObject target, unsigned inletPort)
   //{
   //  OptionalConnection connection = getOutletConnection(outletPort);
@@ -843,6 +994,12 @@ namespace detail {
     std::vector<LifeCycleCost> lifeCycleCosts = this->lifeCycleCosts();
     toAdd.insert(toAdd.end(), lifeCycleCosts.begin(), lifeCycleCosts.end());
 
+    // add additional properties
+    AdditionalPropertiesVector props = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
+    toAdd.insert(toAdd.end(), props.begin(), props.end());
+
+    std::string s = toString(this->handle());
+
     // If same model, non-recursive insert of resources should be sufficient.
     Model m = this->model();
     if (model == m) {
@@ -850,9 +1007,9 @@ namespace detail {
       WorkspaceObjectVector toInsert = castVector<WorkspaceObject>(resources);
       result = m.addAndInsertObjects(toAdd,toInsert);
       // adding this better have worked
-      OS_ASSERT(result.size() == 1u + lifeCycleCosts.size() + resources.size());
+      OS_ASSERT(result.size() == 1u + lifeCycleCosts.size() + props.size() + resources.size());
       // inserting resources better have worked
-      unsigned i = 1 + lifeCycleCosts.size();
+      unsigned i = 1 + lifeCycleCosts.size() + props.size();
       for (const ResourceObject& resource : resources) {
         OS_ASSERT(result[i] == resource);
         ++i;
@@ -875,9 +1032,10 @@ namespace detail {
   {
     std::vector<IdfObject> result;
     std::vector<IdfObject> removedCosts = this->removeLifeCycleCosts();
+    std::vector<IdfObject> removedProperties = this->removeAdditionalProperties();
     result = WorkspaceObject_Impl::remove();
     result.insert(result.end(), removedCosts.begin(), removedCosts.end());
-
+    result.insert(result.end(), removedProperties.begin(), removedProperties.end());
     return result;
   }
 
@@ -923,7 +1081,7 @@ namespace detail {
     return false;
   }
 
-  void ModelObject_Impl::setBooleanFieldValue(unsigned index, bool value) {
+  bool ModelObject_Impl::setBooleanFieldValue(unsigned index, bool value) {
     bool ok(true);
     if (value) {
       ok = setString(index,"Yes");
@@ -934,6 +1092,7 @@ namespace detail {
     if (!ok) {
       LOG_AND_THROW("Unable to set boolean field " << index << " in " << briefDescription() << ".");
     }
+    return true;
   }
 
   bool ModelObject_Impl::setSchedule(unsigned index,
@@ -977,6 +1136,43 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> ModelObject_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
     return std::vector<ScheduleTypeKey>();
+  }
+
+  AdditionalProperties ModelObject_Impl::additionalProperties() const {
+    AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
+    if (candidates.size() > 1) {
+      for (unsigned i = 1, n = candidates.size(); i < n; ++i) {
+        // do a merge before removing
+        candidates[0].merge(candidates[i]);
+        candidates[i].remove();
+      }
+      LOG(Warn,"Removed extraneous ModelObjectAdditionalProperties objects pointing to " << briefDescription() << ".");
+    }
+    if (!candidates.empty()) {
+      return candidates[0];
+    }
+    return AdditionalProperties(getObject<ModelObject>());
+  }
+
+
+  std::vector<IdfObject> ModelObject_Impl::removeAdditionalProperties()
+  {
+    std::vector<IdfObject> removed;
+    AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
+    for (AdditionalProperties& candidate : candidates){
+      std::vector<IdfObject> tmp = candidate.remove();
+      removed.insert(removed.end(), tmp.begin(), tmp.end());
+    }
+    return removed;
+  }
+
+  bool ModelObject_Impl::hasAdditionalProperties() const {
+    bool result = false;
+    AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
+    if (candidates.size() > 0) {
+      result = true;
+    }
+    return result;
   }
 
 } // detail
@@ -1159,6 +1355,19 @@ bool ModelObject::setParent(ParentObject& newParent)
   return getImpl<detail::ModelObject_Impl>()->setParent(newParent);
 }
 
+AdditionalProperties ModelObject::additionalProperties() const {
+  return getImpl<detail::ModelObject_Impl>()->additionalProperties();
+}
+
+bool ModelObject::hasAdditionalProperties() const {
+  return getImpl<detail::ModelObject_Impl>()->hasAdditionalProperties();
+}
+
+std::vector<IdfObject> ModelObject::removeAdditionalProperties()
+{
+  return getImpl<detail::ModelObject_Impl>()->removeAdditionalProperties();
+}
+
 ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
   : WorkspaceObject(model.getImpl<detail::Model_Impl>()->createObject(IdfObject(type, fastName),false))
 {
@@ -1168,7 +1377,7 @@ ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
   // add to Workspace
   openstudio::detail::WorkspaceObject_ImplPtrVector impls;
   impls.push_back(getImpl<openstudio::detail::WorkspaceObject_Impl>());
-  model.getImpl<detail::Model_Impl>()->addObjects(impls);
+  model.getImpl<detail::Model_Impl>()->addObjects(impls,false);
   // object should be initialized and ready to go
   if (!getImpl<detail::ModelObject_Impl>()->initialized()){
     LOG_AND_THROW("ModelObject not initialized: " << std::endl << getImpl<openstudio::detail::WorkspaceObject_Impl>()->idfObject());
@@ -1176,8 +1385,14 @@ ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
 }
 
 ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p)
-  : WorkspaceObject(p)
+  : WorkspaceObject(std::move(p))
 {}
+
+/** Gets the autosized component value from the sql file **/
+boost::optional<double> ModelObject::getAutosizedValue(std::string valueName, std::string units) const
+{
+  return getImpl<detail::ModelObject_Impl>()->getAutosizedValue(valueName, units);
+}
 
 } // model
 } // openstudio

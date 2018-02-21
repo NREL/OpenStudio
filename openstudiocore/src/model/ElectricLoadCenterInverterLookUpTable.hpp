@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -104,15 +104,15 @@ class MODEL_API ElectricLoadCenterInverterLookUpTable : public Inverter {
 
   void resetRadiativeFraction();
 
-  void setRatedMaximumContinuousOutputPower(double ratedMaximumContinuousOutputPower);
+  bool setRatedMaximumContinuousOutputPower(double ratedMaximumContinuousOutputPower);
 
   void resetRatedMaximumContinuousOutputPower();
 
-  void setNightTareLossPower(double nightTareLossPower);
+  bool setNightTareLossPower(double nightTareLossPower);
 
   void resetNightTareLossPower();
 
-  void setNominalVoltageInput(double nominalVoltageInput);
+  bool setNominalVoltageInput(double nominalVoltageInput);
 
   void resetNominalVoltageInput();
 
@@ -182,4 +182,3 @@ typedef std::vector<ElectricLoadCenterInverterLookUpTable> ElectricLoadCenterInv
 } // openstudio
 
 #endif // MODEL_ELECTRICLOADCENTERINVERTERLOOKUPTABLE_HPP
-

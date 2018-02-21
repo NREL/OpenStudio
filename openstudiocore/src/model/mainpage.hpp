@@ -4,28 +4,28 @@ namespace model {
 /** \mainpage OpenStudio Model
  *
  *  \section overview_model Overview
- *  
- *  An OpenStudio Model (\ref introduction_model) represents a single building energy model, 
- *  either complete (simulatable with EnergyPlus) or partial. It is composed of a collection of 
+ *
+ *  An OpenStudio Model (\ref introduction_model) represents a single building energy model,
+ *  either complete (simulatable with EnergyPlus) or partial. It is composed of a collection of
  *  \link ModelObject ModelObjects \endlink (\ref modelobject), which are polymorphic, that is,
- *  ModelObject is the base class from which more specific object types are derived. Each leaf of 
- *  the inheritance tree wraps a specific data object type that is ultimately defined by the 
+ *  ModelObject is the base class from which more specific object types are derived. Each leaf of
+ *  the inheritance tree wraps a specific data object type that is ultimately defined by the
  *  OpenStudio.idd file. The following classes form the foundation of the OpenStudio Model:
- *  
+ *
  *  \li Model
  *  \li Component
  *  \li ModelObject
  *  \li ParentObject
  *  \li ResourceObject
  *
- *  The specific model object types can largely be broken down into the categories of simulation 
- *  settings; output data; resources; site and location; geometry; building loads; advanced daylighting; 
- *  heating, ventilation and air conditioning (HVAC) systems; 
- *  economics; and standards. We will now list the most important classes in each of these 
- *  categories. The lists are not meant to be exhaustive, but rather to give an intuitive sense 
- *  of what is and is not currently covered by the OpenStudio Model. Throughout, some of the 
+ *  The specific model object types can largely be broken down into the categories of simulation
+ *  settings; output data; resources; site and location; geometry; building loads; advanced daylighting;
+ *  heating, ventilation and air conditioning (HVAC) systems;
+ *  economics; and standards. We will now list the most important classes in each of these
+ *  categories. The lists are not meant to be exhaustive, but rather to give an intuitive sense
+ *  of what is and is not currently covered by the OpenStudio Model. Throughout, some of the
  *  classes will be concrete (have a one-to-one mapping with an object in OpenStudio.idd), and
- *  some will be abstract (provide a higher level interface to multiple Idd objects).  
+ *  some will be abstract (provide a higher level interface to multiple Idd objects).
  *
  *  \subsection simulation_settings_classes Simulation Settings
  *
@@ -61,6 +61,8 @@ namespace model {
  *  \li LuminaireDefinition
  *  \li PeopleDefinition
  *  \li ExteriorLightsDefinition
+ *  \li ExteriorFuelEquipmentDefinition
+ *  \li ExteriorWaterEquipmentDefinition
  *
  *  \subsection site_location_classes Site and Location
  *
@@ -94,6 +96,8 @@ namespace model {
  *  \li SpaceInfiltrationDesignFlowRate
  *  \li DesignSpecificationOutdoorAir
  *  \li ExteriorLights
+ *  \li ExteriorFuelEquipment
+ *  \li ExteriorWaterEquipment
  *
  *  \subsection advanced_daylighting_classes Advanced Daylighting
  *
@@ -126,27 +130,27 @@ namespace model {
  *
  *  \subsection economics_classes Economics
  *
- *  This subsection of the model is not fully developed. Classes like ComponentCost_LineItem, 
+ *  This subsection of the model is not fully developed. Classes like ComponentCost_LineItem,
  *  and UtilityCost_Tariff are available, but we expect to do a full refactor of this area of
  *  the model as time allows.
  *
  *  \subsection standards_classes Standards
  *
  *  This subsection of the model is not fully developed. BuildingStandardsInformation,
- *  ConstructionBaseStandardsInformation, and ClimateZones are examples of this type 
+ *  ConstructionBaseStandardsInformation, and ClimateZones are examples of this type
  *  of object.
  *
  *  \subsection other_links Other Links
  *
- *  The following links may also be of general interest. Attributes and relationships are a way to 
- *  access simple (no arguments to get, and one argument to set) ModelObject methods using strings, 
+ *  The following links may also be of general interest. Attributes and relationships are a way to
+ *  access simple (no arguments to get, and one argument to set) ModelObject methods using strings,
  *  rather than directly navigating the inheritance hierarchy.
  *
  *  \li \ref attributes "Attribute"
  *  \li \ref attributes "Relationship"
  *  \li \ref components
  *  \li \link ConcreteModelObjects.hpp Alphabetical List of Concrete ModelObjects \endlink
- *  \li \ref modelobject_hierachy "Concrete ModelObjects in Parent-Child Tree" 
+ *  \li \ref modelobject_hierachy "Concrete ModelObjects in Parent-Child Tree"
  *
  *  \section introduction_model What is the Openstudio Model?
  *
@@ -608,7 +612,7 @@ namespace model {
  *  std::vector<ModelObject>, and Building also has a method \link Building::spaces() spaces()
  *  \endlink that returns the same data as a std::vector<Space>. The Schedule associated with a
  *  Lights object can be found through the std::vector<ResourceObject> returned by
- *  Schedule::resources(), and also through the method Lights::schedule(). Lights also has the 
+ *  Schedule::resources(), and also through the method Lights::schedule(). Lights also has the
  *  method \link Lights::setSchedule setSchedule(const Schedule&) \endlink.
  *
  *  Connections join multiple ModelObjects together via designated points called ports. Connections
@@ -617,12 +621,12 @@ namespace model {
  *  connected to a particular port using ModelObject::connectedObject.  New Connections are made using the
  *  openstudio::model::Model::connect function.
  *
- *  ModelObject connections are similar to EnergyPlus nodes, however a connection between ports is 
- *  more general than a node connection in Energyplus.  In the OpenStudio model, connections serve 
- *  the same role as nodes in EnergyPlus, but OpenStudio connections can be applied in contexts other 
- *  than the EnergyPlus system nodes. OpenStudio's connections and ports can be used any time one 
- *  ModelObject can be arbitrarily connected to another ModelObject. For example, EnergyPlus EMS 
- *  sensors and actuators could be thought of as source and target ports, and a connection could be 
+ *  ModelObject connections are similar to EnergyPlus nodes, however a connection between ports is
+ *  more general than a node connection in Energyplus.  In the OpenStudio model, connections serve
+ *  the same role as nodes in EnergyPlus, but OpenStudio connections can be applied in contexts other
+ *  than the EnergyPlus system nodes. OpenStudio's connections and ports can be used any time one
+ *  ModelObject can be arbitrarily connected to another ModelObject. For example, EnergyPlus EMS
+ *  sensors and actuators could be thought of as source and target ports, and a connection could be
  *  made between the two.
  *
  *  \subsection modelobject_hierachy Parent-Child Hierarchy
@@ -664,8 +668,8 @@ namespace model {
  *            <li>ShadingSurface (PlanarSurface)
  *          </ul>
  *      </ul>
- *    <li> YearDescription (ParentObject, unique) 
- *      <ul>         
+ *    <li> YearDescription (ParentObject, unique)
+ *      <ul>
  *        <li> RunPeriodControlSpecialDays (ModelObject)
  *        <li> RunPeriodControlDaylightSavingTime (ModelObject, unique)
  *      </ul>
@@ -690,7 +694,9 @@ namespace model {
  *    <li> Facility (ParentObject, unique)
  *      <ul>
  *        <li> Meter (ModelObject)
- *        <li> ExteriorLights (ModelObject)
+ *        <li> ExteriorLights (ExteriorLoadInstance)
+ *        <li> ExteriorFuelEquipment (ExteriorLoadInstance)
+ *        <li> ExteriorWaterEquipment (ExteriorLoadInstance)
  *        <li> Building (ParentObject, unique)
  *          <ul>
  *            <li> BuildingStandardsInformation (ModelObject, unique)
@@ -748,7 +754,7 @@ namespace model {
  *    <li> AvailabilityManagerScheduled (ParentObject)
  *    <li> ControllerMechanicalVentilation (ParentObject)
  *    <li> AirLoopHVACOutdoorAirSystem (HVACComponent)
- *      <ul>    
+ *      <ul>
  *        <li> ControllerOutdoorAir (ParentObject)
  *      </ul>
  *    <li> ControllerWaterCoil (HVACComponent)
@@ -820,7 +826,7 @@ namespace model {
  *    <li> CurveQuadratic (Curve)
  *    <li> CurveQuadraticLinear (Curve)
  *    <li> CurveQuartic (Curve)
- *    <li> CurveRectangularHyperbola1 (Curve) 
+ *    <li> CurveRectangularHyperbola1 (Curve)
  *    <li> CurveRectangularHyperbola2 (Curve)
  *    <li> CurveSigmoid (Curve)
  *    <li> CurveTriquadratic (Curve)
@@ -904,7 +910,9 @@ namespace model {
  *    <li> LightsDefinition (SpaceLoadDefinition)
  *    <li> LuminaireDefinition (SpaceLoadDefinition)
  *    <li> PeopleDefinition (SpaceLoadDefinition)
- *    <li> ExteriorLightsDefinition (ResourceObject)
+ *    <li> ExteriorLightsDefinition (ExteriorLoadDefinition)
+ *    <li> ExteriorFuelEquipmentDefinition (ExteriorLoadDefinition)
+ *    <li> ExteriorWaterEquipmentDefinition (ExteriorLoadDefinition)
  *    <li> DesignSpecificationOutdoorAir (ResourceObject)
  *    <li> CurrencyType (ParentObject)
  *    <li> LifeCycleCost_UsePriceEscalation (ParentObject)
@@ -943,7 +951,7 @@ namespace model {
  *  \subsubsection newmodel Create a New Model
  *
  *  There are four constructors available for Model. The default constructor creates a new Model
- *  with a single Version object in it. Version objects are not returned by Model::objects or 
+ *  with a single Version object in it. Version objects are not returned by Model::objects or
  *  counted by Model::numObjects.
  *
  *  \code
@@ -962,13 +970,13 @@ namespace model {
  *  Model model = *oModel;
  *  \endcode
  *
- *  UNLESS that OSM file might be from an old version of OpenStudio, in which case the version 
+ *  UNLESS that OSM file might be from an old version of OpenStudio, in which case the version
  *  translator should be used:
  *
  *  \code
  *  osversion::VersionTranslator translator;
  *  OptionalModel oModel = translator.loadModel(modelFilePath);
- *  if (!oModel) { 
+ *  if (!oModel) {
  *    LOG_AND_THROW("Unable to open and translate '" << toString(modelFilePath) << "'.");
  *  }
  *  Model model = *oModel;
@@ -1043,7 +1051,7 @@ namespace model {
  *  by other objects. Connections are broken by object removal, but the adjacent object is left
  *  behind, unless it happens to also be a child of the removed object. However, when a resource or
  *  child object is removed, its user objects or parents may also be removed, if the relationship
- *  is a required one for the user/parent. For instance, SpaceLoadDefinition::remove also removes 
+ *  is a required one for the user/parent. For instance, SpaceLoadDefinition::remove also removes
  *  all of its SpaceLoadDefinition::instances, since a SpaceLoadInstance cannot exist without its
  *  definition.
  *
@@ -1114,7 +1122,7 @@ namespace model {
  *
  *  Because Model and ModelObject publicly inherit from Workspace and WorkspaceObject, methods of
  *  Workspace and WorkspaceObject are directly available for use through Model and ModelObject.
- *  Use of these methods is discouraged where it is not necessary as these data model-level 
+ *  Use of these methods is discouraged where it is not necessary as these data model-level
  *  modifications bypass the best-practice logic built into classes derived from ModelObject.
  *
  *  \link ModelObject ModelObjects \endlink (and WorkspaceObjects and IdfObjects) also use the
@@ -1198,9 +1206,9 @@ namespace model {
  *
  *  The concept of Attributes and Relationships have recently been added to ModelObject for generic
  *  access to object methods for user interface development, constructing (energy-efficiency) measures,
- *  and writing codes and standards.  Attributes and Relationships are both implemented using the Qt 
- *  property system.  A Qt property can be read and written using the generic functions without knowing 
- *  anything about the owning class except the property's name.  For example, the Space ModelObject has 
+ *  and writing codes and standards.  Attributes and Relationships are both implemented using the Qt
+ *  property system.  A Qt property can be read and written using the generic functions without knowing
+ *  anything about the owning class except the property's name.  For example, the Space ModelObject has
  *  a method named floorArea.  This method can be accessed through the typed interface as:
  *
  *  \code
@@ -1220,26 +1228,26 @@ namespace model {
  *  Attributes can be read only, or allow read and write access (limited to calling a setter
  *  function taking a single argument).  A list of all attribute names for each ModelObject can be
  *  accessed using ModelObject::attributeNames, the user can check if the attribute is settable using
- *  ModelObject::isSettableAttribute(const std::string& name), and the user can check if the 
- *  attribute is optional using isOptionalAttribute(const std::string& name).  Relationships are very 
- *  similar to Attributes except that Attributes deal with simple, plain-old-data (POD) values (e.g. 
- *  bool, int, double, OSOptionalQuantity etc.) while Relationships deal with ModelObject values. 
- *  The Attribute class is documented in the utilities sub-project, the Relationship class is 
+ *  ModelObject::isSettableAttribute(const std::string& name), and the user can check if the
+ *  attribute is optional using isOptionalAttribute(const std::string& name).  Relationships are very
+ *  similar to Attributes except that Attributes deal with simple, plain-old-data (POD) values (e.g.
+ *  bool, int, double, OSOptionalQuantity etc.) while Relationships deal with ModelObject values.
+ *  The Attribute class is documented in the utilities sub-project, the Relationship class is
  *  documented in the model sub-project.
  *
  *  \section components What is a Component?
  *
  *  A Component is a partial Model that can be created from a ModelObject and then shared between
  *  models or with other modelers. When ModelObject::createComponent is called, ModelObject::clone
- *  is used to copy that object (the primary object) and related objects (often the children and 
- *  resources of the object, evaluated recursively) into a new, blank Component. A Component is a 
- *  Model that satisfies a few additional constraints. 
+ *  is used to copy that object (the primary object) and related objects (often the children and
+ *  resources of the object, evaluated recursively) into a new, blank Component. A Component is a
+ *  Model that satisfies a few additional constraints.
  *
  *  \link Component Components\endlink always contain one ComponentData object, which
- *  provides a place to list all the objects in the Component, as well as universal identifiers 
+ *  provides a place to list all the objects in the Component, as well as universal identifiers
  *  and timestamps used to keep track of the Component as it travels to and from local and remote
- *  Building Component Libraries (BCLs). The contents list is always headed by the primary object, 
- *  which induces a parent-child tree plus resource and connection relationships on the rest of 
+ *  Building Component Libraries (BCLs). The contents list is always headed by the primary object,
+ *  which induces a parent-child tree plus resource and connection relationships on the rest of
  *  objects. For instance, a Construction Component would have a Construction object as its
  *  primary object, and would likely also contain a number of Material objects (resources of
  *  the Construction), and a ComponentCost_LineItem object (child of the Construction).
@@ -1265,8 +1273,8 @@ namespace model {
  *  primary ModelObject and the ComponentData object. If either of those objects are removed, the
  *  Component is invalidated and throws an exception. Once created, Components can be saved for
  *  future use, or directly used in another Model. To save a Component for future use, it should be
- *  added to a local BCL, and/or uploaded to the online %Building %Component Library. (These 
- *  features are currently under development. Please see the documentation for utilities/bcl and 
+ *  added to a local BCL, and/or uploaded to the online %Building %Component Library. (These
+ *  features are currently under development. Please see the documentation for utilities/bcl and
  *  http://bcl.nrel.gov/.)
  *
  *  To use a Component (either directly, or deserialized from a building component library) in a
@@ -1282,7 +1290,7 @@ namespace model {
  *  coherent pieces of input data through a series of related models, between similar research
  *  project models, or to ensure that the appropriate components are used for building energy
  *  standards compliance.
- *  
+ *
  *  An example of using the component created above:
  *  \code
  *  if (constructions.size() > 0) {

@@ -10,6 +10,8 @@
     <file>images/air_loop_icon.png</file>
     <file>images/air_terminal_inlet_mixer.png</file>
     <file>images/airterminal_dualduct_vav.png</file>
+    <file>images/airterminal_dualduct_vav_outdoorair.png</file>
+    <file>images/airterminal_dualduct_constantvolume.png</file>
     <file>images/arrow.png</file>
     <file>images/baseboard_electric.png</file>
     <file>images/baseboard_water.png</file>
@@ -18,6 +20,7 @@
     <file>images/bug.png</file>
     <file>images/cancel_simulation_button.png</file>
     <file>images/cav_reheat.png</file>
+    <file>images/centralheatpumpsystem.png</file>
     <file>images/chilled_beam.png</file>
     <file>images/chiller_absorption_direct.png</file>
     <file>images/chiller_absorption_indirect.png</file>
@@ -340,6 +343,7 @@
     <file>images/mini_icons/building.png</file>
     <file>images/mini_icons/building_story.png</file>
     <file>images/mini_icons/cav_reheat.png</file>
+    <file>images/mini_icons/centralheatpumpsystem.png</file>
     <file>images/mini_icons/chilled_beam.png</file>
     <file>images/mini_icons/chiller_air.png</file>
     <file>images/mini_icons/coil_ht_dx_singlespeed_mini.png</file>
@@ -421,6 +425,8 @@
     <file>images/mini_icons/mini_air_cooled.png</file>
     <file>images/mini_icons/mini_air_terminal_inlet_mixer.png</file>
     <file>images/mini_icons/airterminal_dualduct_vav.png</file>
+    <file>images/mini_icons/airterminal_dualduct_vav_outdoorair.png</file>
+    <file>images/mini_icons/airterminal_dualduct_constantvolume.png</file>
     <file>images/mini_icons/mini_chiller_absorption_direct.png</file>
     <file>images/mini_icons/mini_chiller_absorption_indirect.png</file>
     <file>images/mini_icons/mini_coil_system_water.png</file>
@@ -543,6 +549,7 @@
 
     <file>library/tid_api.xml</file>
     <file>library/embeddable_geometry_editor.html</file>
+    <file>library/geometry_editor.css</file>
     <file>library/geometry_editor_start.html</file>
     <file>library/geometry_preview.html</file>
     

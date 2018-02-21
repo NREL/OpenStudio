@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -960,7 +960,7 @@ namespace detail {
 
     if (dataChange){
       this->onDataChange.nano_emit();
-    } 
+    }
 
     this->onChange.nano_emit();
 
@@ -1375,7 +1375,7 @@ IdfObject WorkspaceObject::idfObject() const {
 // PROTECTED
 
 WorkspaceObject::WorkspaceObject(std::shared_ptr<detail::WorkspaceObject_Impl> impl)
-  : IdfObject(impl)
+  : IdfObject(std::move(impl))
 {}
 
 std::ostream& operator<<(std::ostream& os, const WorkspaceObject& workspaceObject)

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -156,7 +156,7 @@ namespace detail {
     return isEmpty(OS_YearDescriptionFields::IsLeapYear);
   }
 
-  void YearDescription_Impl::setCalendarYear(boost::optional<int> calendarYear) {
+  bool YearDescription_Impl::setCalendarYear(boost::optional<int> calendarYear) {
     bool wasLeapYear = this->isLeapYear();
 
     bool result = false;
@@ -170,7 +170,9 @@ namespace detail {
     OS_ASSERT(result);
 
     bool isLeapYear = this->isLeapYear();
+    // TODO: should really capture the output of updateModelLeapYear here...
     updateModelLeapYear(wasLeapYear, isLeapYear);
+    return result;
   }
 
   void YearDescription_Impl::resetCalendarYear() {
@@ -372,8 +374,8 @@ bool YearDescription::isIsLeapYearDefaulted() const {
   return getImpl<detail::YearDescription_Impl>()->isIsLeapYearDefaulted();
 }
 
-void YearDescription::setCalendarYear(int calendarYear) {
-  getImpl<detail::YearDescription_Impl>()->setCalendarYear(calendarYear);
+bool YearDescription::setCalendarYear(int calendarYear) {
+  return getImpl<detail::YearDescription_Impl>()->setCalendarYear(calendarYear);
 }
 
 void YearDescription::resetCalendarYear() {
@@ -422,7 +424,7 @@ openstudio::Date YearDescription::makeDate(unsigned dayOfYear)
 
 /// @cond
 YearDescription::YearDescription(std::shared_ptr<detail::YearDescription_Impl> impl)
-  : ParentObject(impl)
+  : ParentObject(std::move(impl))
 {}
 YearDescription::YearDescription(Model& model)
   : ParentObject(YearDescription::iddObjectType(),model)

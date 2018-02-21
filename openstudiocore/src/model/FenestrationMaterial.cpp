@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -37,7 +37,7 @@ namespace model {
 namespace detail {
 
   FenestrationMaterial_Impl::FenestrationMaterial_Impl(const IdfObject& idfObject,
-                                                       Model_Impl* model, 
+                                                       Model_Impl* model,
                                                        bool keepHandle)
     : Material_Impl(idfObject, model, keepHandle)
   {}
@@ -190,7 +190,7 @@ FenestrationMaterial::FenestrationMaterial(IddObjectType type,const Model& model
 
 FenestrationMaterial::FenestrationMaterial(
     std::shared_ptr<detail::FenestrationMaterial_Impl> impl)
-  : Material(impl)
+  : Material(std::move(impl))
 {}
 /// @endcond
 

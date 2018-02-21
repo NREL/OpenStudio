@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,7 +39,7 @@ using namespace boost;
 using namespace openstudio;
 
 TEST_F(IddFixture, IddField_Properties) {
-  
+
   OptionalIddObject candidate = IddFactory::instance().getObject(IddObjectType::Zone);
   ASSERT_TRUE(candidate);
   IddObject iddZone = *candidate;
@@ -48,10 +48,10 @@ TEST_F(IddFixture, IddField_Properties) {
   IddObject iddZoneList = *candidate;
 
   // ==, != operators
-  ASSERT_TRUE(iddZone.nonextensibleFields().size() > 2); 
+  ASSERT_TRUE(iddZone.nonextensibleFields().size() > 2);
   ASSERT_TRUE(iddZoneList.nonextensibleFields().size() > 0);
   EXPECT_TRUE(iddZone.nonextensibleFields()[0].properties() == iddZone.nonextensibleFields()[0].properties());
-  // ETH@20100326 Would expect these to be the same--probably only differ by note/memo. 
+  // ETH@20100326 Would expect these to be the same--probably only differ by note/memo.
   // Is that the behavior we want?
   EXPECT_FALSE(iddZone.nonextensibleFields()[0].properties() == iddZoneList.nonextensibleFields()[0].properties());
   EXPECT_TRUE(iddZone.nonextensibleFields()[2].properties() != iddZoneList.nonextensibleFields()[0].properties());

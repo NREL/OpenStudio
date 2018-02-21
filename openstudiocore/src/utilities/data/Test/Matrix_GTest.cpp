@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -134,7 +134,7 @@ TEST_F(DataFixture,Matrix_Prod)
 
   x(0) = 1.0;
   x(1) = 0.5;
-  
+
   Matrix C = prod(A,B);
   Vector y = prod(B,x);
 
@@ -161,10 +161,10 @@ TEST_F(DataFixture,Matrix_OuterProd)
   Matrix A = outerProd(x,y);
 
   EXPECT_DOUBLE_EQ(0.0,A(0,0));
-  EXPECT_DOUBLE_EQ(1.0,A(0,1)); 
+  EXPECT_DOUBLE_EQ(1.0,A(0,1));
   EXPECT_DOUBLE_EQ(2.0,A(0,2));
-  EXPECT_DOUBLE_EQ(0.0,A(1,0)); 
-  EXPECT_DOUBLE_EQ(2.0,A(1,1)); 
+  EXPECT_DOUBLE_EQ(0.0,A(1,0));
+  EXPECT_DOUBLE_EQ(2.0,A(1,1));
   EXPECT_DOUBLE_EQ(4.0,A(1,2));
 
 }
@@ -240,7 +240,7 @@ TEST_F(DataFixture, Matrix_FindConnectedComponents)
     result = findConnectedComponents(A);
     EXPECT_TRUE(result.empty());
   }
-    
+
   // empty
   {
     Matrix A(0,0,0.0);

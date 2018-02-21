@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -109,7 +109,7 @@ class MODEL_API GeneratorPhotovoltaic : public Generator {
 
   void resetNumberOfModulesInSeries();
 
-  void setRatedElectricPowerOutput(double ratedElectricPowerOutput);
+  bool setRatedElectricPowerOutput(double ratedElectricPowerOutput);
 
   void resetRatedElectricPowerOutput();
 
@@ -149,4 +149,3 @@ typedef std::vector<GeneratorPhotovoltaic> GeneratorPhotovoltaicVector;
 } // openstudio
 
 #endif // MODEL_GENERATORPHOTOVOLTAIC_HPP
-

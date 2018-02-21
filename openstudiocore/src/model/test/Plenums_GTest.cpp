@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -53,14 +53,14 @@ TEST_F(ModelFixture,Plenums)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-     model::Model m; 
+  ASSERT_EXIT (
+  {
+     model::Model m;
 
-     model::AirLoopHVACReturnPlenum returnPlenum(m); 
-     model::AirLoopHVACSupplyPlenum supplyPlenum(m); 
+     model::AirLoopHVACReturnPlenum returnPlenum(m);
+     model::AirLoopHVACSupplyPlenum supplyPlenum(m);
 
-     exit(0); 
+     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 
@@ -156,7 +156,7 @@ TEST_F(ModelFixture,Plenums)
     airLoop.addBranchForZone(conditionedZone1,terminal);
     EXPECT_EQ(12u,airLoop.demandComponents().size());
 
-    
+
     {
       auto t_zoneSplitters = airLoop.zoneSplitters();
       EXPECT_EQ(2u,t_zoneSplitters.size());
@@ -164,23 +164,23 @@ TEST_F(ModelFixture,Plenums)
       EXPECT_EQ(2u,airLoop.demandInletNodes().size());
     }
 
-    ASSERT_EXIT ( 
-    {  
+    ASSERT_EXIT (
+    {
       conditionedZone1.removeSupplyPlenum();
       conditionedZone1.removeSupplyPlenum(0);
       conditionedZone1.removeSupplyPlenum(1);
-      exit(0); 
+      exit(0);
     } ,
       ::testing::ExitedWithCode(0), "" );
 
     EXPECT_TRUE(conditionedZone1.setSupplyPlenum(supplyPlenumZone));
     EXPECT_EQ(14u,airLoop.demandComponents().size());
 
-    auto zoneSplitters = airLoop.zoneSplitters(); 
+    auto zoneSplitters = airLoop.zoneSplitters();
     EXPECT_EQ(2u,zoneSplitters.size());
 
     {
-      auto demandComps = airLoop.demandComponents(zoneSplitters[0],conditionedZone1); 
+      auto demandComps = airLoop.demandComponents(zoneSplitters[0],conditionedZone1);
       auto plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(demandComps);
       EXPECT_EQ(1u,plenums.size());
     }
@@ -189,11 +189,11 @@ TEST_F(ModelFixture,Plenums)
     EXPECT_EQ(12u,airLoop.demandComponents().size());
 
     {
-      auto demandComps = airLoop.demandComponents(zoneSplitters[0],conditionedZone1); 
+      auto demandComps = airLoop.demandComponents(zoneSplitters[0],conditionedZone1);
       auto plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(demandComps);
       EXPECT_EQ(0u,plenums.size());
     }
-    
+
   }
 }
 

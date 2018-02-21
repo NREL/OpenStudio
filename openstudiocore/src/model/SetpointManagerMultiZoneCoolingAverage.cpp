@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -174,7 +174,7 @@ bool SetpointManagerMultiZoneCoolingAverage::setMaximumSetpointTemperature(doubl
 
 /// @cond
 SetpointManagerMultiZoneCoolingAverage::SetpointManagerMultiZoneCoolingAverage(std::shared_ptr<detail::SetpointManagerMultiZoneCoolingAverage_Impl> impl)
-  : SetpointManager(impl)
+  : SetpointManager(std::move(impl))
 {}
 /// @endcond
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,19 +42,19 @@ TEST_F(ModelFixture,CoilWaterHeatingAirToWaterHeatPump)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  EXPECT_EXIT ( 
-  {  
-    Model m; 
-    CoilWaterHeatingAirToWaterHeatPump coil(m); 
+  EXPECT_EXIT (
+  {
+    Model m;
+    CoilWaterHeatingAirToWaterHeatPump coil(m);
     coil.remove();
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 
   {
-    Model m; 
-    CoilWaterHeatingAirToWaterHeatPump coil(m); 
+    Model m;
+    CoilWaterHeatingAirToWaterHeatPump coil(m);
     {
       auto curve = coil.heatingCapacityFunctionofTemperatureCurve();
       EXPECT_FALSE(curve.handle().isNull());
@@ -65,7 +65,7 @@ TEST_F(ModelFixture,CoilWaterHeatingAirToWaterHeatPump)
       EXPECT_FALSE(curve.handle().isNull());
     }
 
-    { 
+    {
       auto curve = coil.heatingCapacityFunctionofWaterFlowFractionCurve();
       EXPECT_FALSE(curve.handle().isNull());
     }
@@ -92,7 +92,7 @@ TEST_F(ModelFixture,CoilWaterHeatingAirToWaterHeatPump)
   }
 
   {
-    Model m; 
+    Model m;
 
     TableMultiVariableLookup heatingCapacityFunctionofTemperatureCurve(m,1);
     TableMultiVariableLookup heatingCapacityFunctionofAirFlowFractionCurve(m,1);
@@ -121,7 +121,7 @@ TEST_F(ModelFixture,CoilWaterHeatingAirToWaterHeatPump)
       EXPECT_FALSE(curve.handle().isNull());
     }
 
-    { 
+    {
       auto curve = coil.heatingCapacityFunctionofWaterFlowFractionCurve();
       EXPECT_FALSE(curve.handle().isNull());
     }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -63,12 +63,12 @@ class OSLoadNamePixmapLineEdit : public QWidget {
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<BasicQuery> isDefaulted=boost::none);
 
-  void bind(model::ModelObject& modelObject, 
+  void bind(model::ModelObject& modelObject,
             OptionalStringGetter get,
             boost::optional<StringSetter> set=boost::none,
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<BasicQuery> isDefaulted=boost::none);
-  
+
   void bind(model::ModelObject& modelObject,
             OptionalStringGetterBoolArg get,
             boost::optional<StringSetterOptionalStringReturn> set,

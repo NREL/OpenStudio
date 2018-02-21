@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -159,7 +159,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
   }
 
   // SupplyAirFanName
-  
+
   HVACComponent fan = modelObject.supplyAirFan();
 
   boost::optional<IdfObject> _fan = translateAndMapModelObject(fan);
@@ -172,7 +172,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
   }
 
   // HeatingCoilName
-  
+
   boost::optional<IdfObject> _heatingCoil;
 
   HVACComponent heatingCoil = modelObject.heatingCoil();
@@ -225,7 +225,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilObjectType,
       _supplementalHeatingCoil->iddObject().name());
 
-    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilName,_supplementalHeatingCoil->name().get()); 
+    idfObject.setString(AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilName,_supplementalHeatingCoil->name().get());
   }
 
   // MaximumSupplyAirTemperaturefromSupplementalHeater
@@ -336,18 +336,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     {
       if( airOutletNodeName )
       {
-        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName,airOutletNodeName.get()); 
+        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName,airOutletNodeName.get());
 
-        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName,nodeName); 
+        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName,nodeName);
       }
     }
     else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric )
     {
       if( airOutletNodeName )
       {
-        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,airOutletNodeName.get()); 
+        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,airOutletNodeName.get());
 
-        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,nodeName); 
+        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,nodeName);
       }
     }
   }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -87,7 +87,7 @@ ModelObject ZoneHVACBaseboardConvectiveWater_Impl::clone(Model model) const
 
     if( model == this->model() ) {
       if( auto plant = t_heatingCoil.plantLoop() ) {
-        plant->addDemandBranchForComponent(heatingCoilClone); 
+        plant->addDemandBranchForComponent(heatingCoilClone);
       }
     }
 
@@ -110,7 +110,17 @@ std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove()
   const std::vector<std::string>& ZoneHVACBaseboardConvectiveWater_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Baseboard Total Heating Rate");
+      result.push_back("Baseboard Total Heating Energy");
+      result.push_back("Baseboard Hot Water Energy");
+      result.push_back("Baseboard Hot Water Mass Flow Rate");
+      result.push_back("Baseboard Air Mass Flow Rate");
+      result.push_back("Baseboard Air Inlet Temperature");
+      result.push_back("Baseboard Air Outlet Temperature");
+      result.push_back("Baseboard Water Inlet Temperature");
+      result.push_back("Baseboard Water Outlet Temperature");
     }
     return result;
   }
@@ -321,7 +331,7 @@ void ZoneHVACBaseboardConvectiveWater::removeFromThermalZone()
 }
 /// @cond
 ZoneHVACBaseboardConvectiveWater::ZoneHVACBaseboardConvectiveWater(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveWater_Impl> impl)
-  : ZoneHVACComponent(impl)
+  : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
 

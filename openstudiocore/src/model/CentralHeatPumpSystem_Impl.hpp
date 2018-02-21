@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -71,17 +71,30 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    // CoolingLoop
     virtual unsigned supplyInletPort() override;
-
     virtual unsigned supplyOutletPort() override;
-
+    // SourceLoop
     virtual unsigned demandInletPort() override;
-
     virtual unsigned demandOutletPort() override;
-
+    // HeatingLoop
     virtual unsigned tertiaryInletPort() const override;
-
     virtual unsigned tertiaryOutletPort() const override;
+
+
+    /* This function will perform a check if trying to add it to a node that is on the supply side of a plant loop.
+     * If:
+     *     - the node is on the supply side of a loop
+     *     - the CentralHeatPumpSystem already has a cooling loop (supply side)
+     *     - the node isn't on the cooling loop itself
+     *     - the CentralHeatPumpSystem doesn't have a heating (tertiary) loop,
+     * then it tries to add it to the Tertiary loop.
+     * In all other cases, it will call the base class' method WaterToWaterComponent_Impl::addToNode()
+     */
+    virtual bool addToNode(Node & node) override;
+
+    /* Restricts addToTertiaryNode to a node that is on the supply side of a plant loop (tertiary = Heating Loop) */
+    virtual bool addToTertiaryNode(Node & node) override;
 
     //@}
     /** @name Getters */
@@ -122,6 +135,23 @@ namespace detail {
     bool setChillerHeaterModuleList(const boost::optional<ModelObjectList>& modelObjectList);
 
     void resetChillerHeaterModuleList();
+
+    /** Convenience Function to return the Cooling Loop **/
+    boost::optional<PlantLoop> coolingPlantLoop() const;
+
+    /** Convenience Function to return the Source Loop **/
+    boost::optional<PlantLoop> sourcePlantLoop() const;
+
+    /** Convenience Function to return the Heating Loop **/
+    boost::optional<PlantLoop> heatingPlantLoop() const;
+
+
+    // TODO: Need to override the clone, allowableChildTypes and children methods
+    ModelObject clone(Model model) const override;
+
+    // std::vector<IddObjectType> allowableChildTypes() const override;
+
+    // std::vector<ModelObject> children() const override;
 
     //@}
    protected:

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,24 +41,7 @@ namespace detail {
 
   /** AirTerminalSingleDuctParallelPIUReheat_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctParallelPIUReheat.*/
   class MODEL_API AirTerminalSingleDuctParallelPIUReheat_Impl : public StraightComponent_Impl {
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -139,33 +122,51 @@ namespace detail {
 
     bool isConvergenceToleranceDefaulted() const;
 
+  boost::optional<double> autosizedMaximumPrimaryAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumSecondaryAirFlowRate() const ;
+
+  boost::optional<double> autosizedMinimumPrimaryAirFlowFraction() const ;
+
+  boost::optional<double> autosizedFanOnFlowFraction() const ;
+
+  boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
 
+
+    // TODO: @macumber all of these should have a return type of bool, and shouldn't accept boost::optional double (or at least be overloaded to accept a
+    // double too), see https://github.com/NREL/OpenStudio/issues/2620 and https://github.com/jmarrec/OpenStudio/commit/5d295638aea240becc14a45641ea72a413e1c360
+    // and https://github.com/NREL/OpenStudio/pull/2589
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    void setMaximumPrimaryAirFlowRate(boost::optional<double> maximumPrimaryAirFlowRate);
+    bool setMaximumPrimaryAirFlowRate(boost::optional<double> maximumPrimaryAirFlowRate);
 
     void autosizeMaximumPrimaryAirFlowRate();
 
-    void setMaximumSecondaryAirFlowRate(boost::optional<double> maximumSecondaryAirFlowRate);
+    bool setMaximumSecondaryAirFlowRate(boost::optional<double> maximumSecondaryAirFlowRate);
 
     void autosizeMaximumSecondaryAirFlowRate();
 
-    void setMinimumPrimaryAirFlowFraction(boost::optional<double> minimumPrimaryAirFlowFraction);
+    bool setMinimumPrimaryAirFlowFraction(boost::optional<double> minimumPrimaryAirFlowFraction);
 
     void autosizeMinimumPrimaryAirFlowFraction();
 
-    void setFanOnFlowFraction(boost::optional<double> fanOnFlowFraction);
+    bool setFanOnFlowFraction(boost::optional<double> fanOnFlowFraction);
 
     void autosizeFanOnFlowFraction();
 
-    void setFan( HVACComponent & hvacComponent );
+    bool setFan( HVACComponent & hvacComponent );
 
-    void setReheatCoil( HVACComponent & hvacComponent );
+    bool setReheatCoil( HVACComponent & hvacComponent );
 
-    void setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate);
+    bool setMaximumHotWaterorSteamFlowRate(boost::optional<double> maximumHotWaterorSteamFlowRate);
 
     void resetMaximumHotWaterorSteamFlowRate();
 
@@ -183,7 +184,7 @@ namespace detail {
     // Use carefully.  Removing (or moving) plenum will leave model in invalid state
     bool setInducedAirPlenumZone(ThermalZone & thermalZone);
 
-    void setFanAvailabilitySchedule(Schedule & schedule);
+    bool setFanAvailabilitySchedule(Schedule & schedule);
 
     //@}
    protected:
@@ -206,4 +207,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTPARALLELPIUREHEAT_IMPL_HPP
-

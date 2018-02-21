@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -114,8 +114,8 @@ namespace detail {
   // copy constructor, used for clone
   Model_Impl::Model_Impl(const Model_Impl& other, bool keepHandles)
     : Workspace_Impl(other, keepHandles),
-      m_workflowJSON(WorkflowJSON(other.m_workflowJSON)),
-      m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
+      m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile)),
+      m_workflowJSON(WorkflowJSON(other.m_workflowJSON))
   {
     // notice we are cloning the workflow and sqlfile too, if necessary
     // careful not to call anything that calls shared_from_this here, this is not yet constructed
@@ -127,8 +127,8 @@ namespace detail {
                          bool keepHandles,
                          StrictnessLevel level)
     : Workspace_Impl(other,hs,keepHandles,level),
-      m_workflowJSON(WorkflowJSON(other.m_workflowJSON)),
-      m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
+      m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile)),
+      m_workflowJSON(WorkflowJSON(other.m_workflowJSON))
   {
     // notice we are cloning the workflow and sqlfile too, if necessary
   }
@@ -206,6 +206,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   result = std::shared_ptr<_className##_Impl>(new _className##_Impl(object,this,keepHandle)); \
 }
 
+    REGISTER_CONSTRUCTOR(AdditionalProperties);
     REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(AirflowNetworkConstantPressureDrop);
     REGISTER_CONSTRUCTOR(AirflowNetworkCrack);
@@ -239,7 +240,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitarySystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneMixer);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneSplitter);
+    REGISTER_CONSTRUCTOR(AirTerminalDualDuctConstantVolume);
     REGISTER_CONSTRUCTOR(AirTerminalDualDuctVAV);
+    REGISTER_CONSTRUCTOR(AirTerminalDualDuctVAVOutdoorAir);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctInletSideMixer);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeCooledBeam);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
@@ -252,11 +255,19 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVHeatAndCoolReheat);
     REGISTER_CONSTRUCTOR(AirWallMaterial);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerAssignmentList);
     REGISTER_CONSTRUCTOR(AvailabilityManagerNightCycle);
     REGISTER_CONSTRUCTOR(AvailabilityManagerOptimumStart);
     REGISTER_CONSTRUCTOR(AvailabilityManagerHybridVentilation);
     REGISTER_CONSTRUCTOR(AvailabilityManagerDifferentialThermostat);
     REGISTER_CONSTRUCTOR(AvailabilityManagerNightVentilation);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerHighTemperatureTurnOn);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerHighTemperatureTurnOff);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerLowTemperatureTurnOn);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerLowTemperatureTurnOff);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerScheduled);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerScheduledOn);
+    REGISTER_CONSTRUCTOR(AvailabilityManagerScheduledOff);
     REGISTER_CONSTRUCTOR(Blind);
     REGISTER_CONSTRUCTOR(BoilerHotWater);
     REGISTER_CONSTRUCTOR(BoilerSteam);
@@ -383,6 +394,23 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(EvaporativeFluidCoolerTwoSpeed);
     REGISTER_CONSTRUCTOR(ExteriorLights);
     REGISTER_CONSTRUCTOR(ExteriorLightsDefinition);
+    REGISTER_CONSTRUCTOR(ExteriorFuelEquipment);
+    REGISTER_CONSTRUCTOR(ExteriorFuelEquipmentDefinition);
+    REGISTER_CONSTRUCTOR(ExteriorWaterEquipment);
+    REGISTER_CONSTRUCTOR(ExteriorWaterEquipmentDefinition);
+    REGISTER_CONSTRUCTOR(ExternalInterface);
+    REGISTER_CONSTRUCTOR(ExternalInterfaceActuator);
+    REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitExportFromVariable);
+    REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitExportToActuator);
+    REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitExportToSchedule);
+    REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitExportToVariable);
+    REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitImport);
+    REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitImportFromVariable);
+    REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitImportToActuator);
+    REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitImportToSchedule);
+    REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitImportToVariable);
+    REGISTER_CONSTRUCTOR(ExternalInterfaceSchedule);
+    REGISTER_CONSTRUCTOR(ExternalInterfaceVariable);
     REGISTER_CONSTRUCTOR(Facility);
     REGISTER_CONSTRUCTOR(FanConstantVolume);
     REGISTER_CONSTRUCTOR(FanOnOff);
@@ -391,6 +419,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(FFactorGroundFloorConstruction);
     REGISTER_CONSTRUCTOR(FluidCoolerSingleSpeed);
     REGISTER_CONSTRUCTOR(FluidCoolerTwoSpeed);
+    REGISTER_CONSTRUCTOR(FoundationKiva);
+    REGISTER_CONSTRUCTOR(FoundationKivaSettings);
     REGISTER_CONSTRUCTOR(Gas);
     REGISTER_CONSTRUCTOR(GasEquipment);
     REGISTER_CONSTRUCTOR(GasEquipmentDefinition);
@@ -440,6 +470,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Luminaire);
     REGISTER_CONSTRUCTOR(LuminaireDefinition);
     REGISTER_CONSTRUCTOR(MaterialPropertyGlazingSpectralData);
+    REGISTER_CONSTRUCTOR(MaterialPropertyMoisturePenetrationDepthSettings);
     REGISTER_CONSTRUCTOR(MasslessOpaqueMaterial);
     REGISTER_CONSTRUCTOR(MeterCustom);
     REGISTER_CONSTRUCTOR(MeterCustomDecrement);
@@ -571,6 +602,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Surface);
     REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficients)
     REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficientsMultipleSurface);
+    REGISTER_CONSTRUCTOR(SurfacePropertyExposedFoundationPerimeter);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
     REGISTER_CONSTRUCTOR(TableMultiVariableLookup);
@@ -668,6 +700,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   } \
 }
 
+    REGISTER_COPYCONSTRUCTORS(AdditionalProperties);
     REGISTER_COPYCONSTRUCTORS(AirConditionerVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkConstantPressureDrop);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkCrack);
@@ -701,7 +734,9 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitarySystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneMixer);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneSplitter);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalDualDuctConstantVolume);
     REGISTER_COPYCONSTRUCTORS(AirTerminalDualDuctVAV);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalDualDuctVAVOutdoorAir);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctInletSideMixer);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeCooledBeam);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
@@ -714,11 +749,19 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVHeatAndCoolReheat);
     REGISTER_COPYCONSTRUCTORS(AirWallMaterial);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerAssignmentList);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerNightCycle);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerOptimumStart);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerHybridVentilation);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerDifferentialThermostat);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerNightVentilation);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerHighTemperatureTurnOn);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerHighTemperatureTurnOff);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerLowTemperatureTurnOn);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerLowTemperatureTurnOff);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerScheduled);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerScheduledOn);
+    REGISTER_COPYCONSTRUCTORS(AvailabilityManagerScheduledOff);
     REGISTER_COPYCONSTRUCTORS(Blind);
     REGISTER_COPYCONSTRUCTORS(BoilerHotWater);
     REGISTER_COPYCONSTRUCTORS(BoilerSteam);
@@ -845,6 +888,23 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(EvaporativeFluidCoolerTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(ExteriorLights);
     REGISTER_COPYCONSTRUCTORS(ExteriorLightsDefinition);
+    REGISTER_COPYCONSTRUCTORS(ExteriorFuelEquipment);
+    REGISTER_COPYCONSTRUCTORS(ExteriorFuelEquipmentDefinition);
+    REGISTER_COPYCONSTRUCTORS(ExteriorWaterEquipment);
+    REGISTER_COPYCONSTRUCTORS(ExteriorWaterEquipmentDefinition);
+    REGISTER_COPYCONSTRUCTORS(ExternalInterface);
+    REGISTER_COPYCONSTRUCTORS(ExternalInterfaceActuator);
+    REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitExportFromVariable);
+    REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitExportToActuator);
+    REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitExportToSchedule);
+    REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitExportToVariable);
+    REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitImport);
+    REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitImportFromVariable);
+    REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitImportToActuator);
+    REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitImportToSchedule);
+    REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitImportToVariable);
+    REGISTER_COPYCONSTRUCTORS(ExternalInterfaceSchedule);
+    REGISTER_COPYCONSTRUCTORS(ExternalInterfaceVariable);
     REGISTER_COPYCONSTRUCTORS(Facility);
     REGISTER_COPYCONSTRUCTORS(FanConstantVolume);
     REGISTER_COPYCONSTRUCTORS(FanOnOff);
@@ -853,6 +913,8 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(FFactorGroundFloorConstruction);
     REGISTER_COPYCONSTRUCTORS(FluidCoolerSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(FluidCoolerTwoSpeed);
+    REGISTER_COPYCONSTRUCTORS(FoundationKiva);
+    REGISTER_COPYCONSTRUCTORS(FoundationKivaSettings);
     REGISTER_COPYCONSTRUCTORS(Gas);
     REGISTER_COPYCONSTRUCTORS(GasEquipment);
     REGISTER_COPYCONSTRUCTORS(GasEquipmentDefinition);
@@ -902,6 +964,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Luminaire);
     REGISTER_COPYCONSTRUCTORS(LuminaireDefinition);
     REGISTER_COPYCONSTRUCTORS(MaterialPropertyGlazingSpectralData);
+    REGISTER_COPYCONSTRUCTORS(MaterialPropertyMoisturePenetrationDepthSettings);
     REGISTER_COPYCONSTRUCTORS(MasslessOpaqueMaterial);
     REGISTER_COPYCONSTRUCTORS(MeterCustom);
     REGISTER_COPYCONSTRUCTORS(MeterCustomDecrement);
@@ -1033,6 +1096,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Surface);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficientsMultipleSurface);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyExposedFoundationPerimeter);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
     REGISTER_COPYCONSTRUCTORS(TableMultiVariableLookup);
@@ -1145,6 +1209,21 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     return m_cachedBuilding;
   }
+  
+  boost::optional<FoundationKivaSettings> Model_Impl::foundationKivaSettings() const
+  {
+    if (m_cachedFoundationKivaSettings){
+      return m_cachedFoundationKivaSettings;
+    }
+
+    boost::optional<FoundationKivaSettings> result = this->model().getOptionalUniqueModelObject<FoundationKivaSettings>();
+    if (result){
+      m_cachedFoundationKivaSettings = result;
+      result->getImpl<FoundationKivaSettings_Impl>().get()->FoundationKivaSettings_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedFoundationKivaSettings>(const_cast<openstudio::model::detail::Model_Impl *>(this));
+    }
+
+    return m_cachedFoundationKivaSettings;
+  }  
 
   boost::optional<LifeCycleCostParameters> Model_Impl::lifeCycleCostParameters() const
   {
@@ -1236,13 +1315,13 @@ if (_className::iddObjectType() == typeToCreate) { \
     return m_cachedYearDescription->isIsLeapYearDefaulted();
   }
 
-  void Model_Impl::setCalendarYear(int calendarYear)
+  bool Model_Impl::setCalendarYear(int calendarYear)
   {
     if (!m_cachedYearDescription){
       m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
     }
     OS_ASSERT(m_cachedYearDescription);
-    m_cachedYearDescription->setCalendarYear(calendarYear);
+    return m_cachedYearDescription->setCalendarYear(calendarYear);
   }
 
   void Model_Impl::resetCalendarYear()
@@ -1352,7 +1431,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
   Schedule Model_Impl::alwaysOffDiscreteSchedule() const
   {
-    std::string alwaysOffName("Always Off Discrete");
+    std::string alwaysOffName = this->alwaysOffDiscreteScheduleName();
 
     std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 
@@ -1362,6 +1441,8 @@ if (_className::iddObjectType() == typeToCreate) { \
       {
         if( istringEqual(name.get(),alwaysOffName) )
         {
+          // DLM: if a schedule matches the name but not these other properties we should reclaim the name or at least warn
+
           if( equal<double>(schedule.value(),0.0) )
           {
             if( boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits() )
@@ -1402,9 +1483,14 @@ if (_className::iddObjectType() == typeToCreate) { \
     return schedule;
   }
 
+  std::string Model_Impl::alwaysOffDiscreteScheduleName() const
+  {
+    return "Always Off Discrete";
+  }
+
   Schedule Model_Impl::alwaysOnDiscreteSchedule() const
   {
-    std::string alwaysOnName("Always On Discrete");
+    std::string alwaysOnName = this->alwaysOnDiscreteScheduleName();
 
     std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 
@@ -1414,6 +1500,8 @@ if (_className::iddObjectType() == typeToCreate) { \
       {
         if( istringEqual(name.get(),alwaysOnName) )
         {
+          // DLM: if a schedule matches the name but not these other properties we should reclaim the name or at least warn
+
           if( equal<double>(schedule.value(),1.0) )
           {
             if( boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits() )
@@ -1454,9 +1542,14 @@ if (_className::iddObjectType() == typeToCreate) { \
     return schedule;
   }
 
+  std::string Model_Impl::alwaysOnDiscreteScheduleName() const
+  {
+    return "Always On Discrete";
+  }
+
   Schedule Model_Impl::alwaysOnContinuousSchedule() const
   {
-    std::string alwaysOnName("Always On Continuous");
+    std::string alwaysOnName = this->alwaysOnContinuousScheduleName();
 
     std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 
@@ -1466,6 +1559,8 @@ if (_className::iddObjectType() == typeToCreate) { \
       {
         if (istringEqual(name.get(), alwaysOnName))
         {
+          // DLM: if a schedule matches the name but not these other properties we should reclaim the name or at least warn
+
           if (equal<double>(schedule.value(), 1.0))
           {
             if (boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits())
@@ -1506,9 +1601,14 @@ if (_className::iddObjectType() == typeToCreate) { \
     return schedule;
   }
 
+  std::string Model_Impl::alwaysOnContinuousScheduleName() const
+  {
+    return "Always On Continuous";
+  }
+
   SpaceType Model_Impl::plenumSpaceType() const
   {
-    std::string plenumSpaceTypeName("Plenum Space Type");
+    std::string plenumSpaceTypeName = this->plenumSpaceTypeName();
 
     std::vector<SpaceType> spaceTypes = model().getConcreteModelObjects<SpaceType>();
 
@@ -1528,6 +1628,39 @@ if (_className::iddObjectType() == typeToCreate) { \
     spaceType.setName(plenumSpaceTypeName);
 
     return spaceType;
+  }
+
+  std::string Model_Impl::plenumSpaceTypeName() const
+  {
+    return "Plenum Space Type";
+  }
+
+  Node Model_Impl::outdoorAirNode() const
+  {
+    std::string outdoorAirNodeName("Model Outdoor Air Node");
+
+    std::vector<Node> nodes = model().getConcreteModelObjects<Node>();
+
+    // Search for a node with the right name and not connected to any PlantLoop or AirLoopHVAC
+    for( const auto & node : nodes )
+    {
+      if( boost::optional<std::string> name = node.name() )
+      {
+        if( istringEqual(name.get(),outdoorAirNodeName) )
+        {
+          if( !node.plantLoop() && !node.airLoopHVAC() )
+          {
+            return node;
+          }
+        }
+      }
+    }
+
+    // Otherwise, create it
+    Node node(model());
+    node.setName(outdoorAirNodeName);
+
+    return node;
   }
 
   WorkflowJSON Model_Impl::workflowJSON() const
@@ -1791,6 +1924,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     Handle dummy;
     clearCachedBuilding(dummy);
+    clearCachedFoundationKivaSettings(dummy);
     clearCachedLifeCycleCostParameters(dummy);
     clearCachedRunPeriod(dummy);
     clearCachedYearDescription(dummy);
@@ -1801,6 +1935,11 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     m_cachedBuilding.reset();
   }
+  
+  void Model_Impl::clearCachedFoundationKivaSettings(const Handle &)
+  {
+    m_cachedFoundationKivaSettings.reset();
+  }  
 
   void Model_Impl::clearCachedLifeCycleCostParameters(const Handle &handle)
   {
@@ -1821,6 +1960,61 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     m_cachedWeatherFile.reset();
   }
+
+  void Model_Impl::autosize() {
+    for (auto optModelObj : objects()) {
+      if (auto modelObj = optModelObj.optionalCast<HVACComponent>()) { // HVACComponent
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<Loop>()) { // Loop
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData
+        modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData
+        modelObj->autosize();
+      }
+    }
+    return;
+  }
+
+  void Model_Impl::applySizingValues() {
+    for (auto optModelObj : objects()) {
+      if (auto modelObj = optModelObj.optionalCast<HVACComponent>()) { // HVACComponent
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<Loop>()) { // Loop
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<SizingZone>()) { // SizingZone
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<SizingSystem>()) { // SizingSystem
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilPerformanceDXCooling>()) { // CoilPerformanceDXCooling
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) { // CoilHeatingDXMultiSpeedStageData
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) { // CoilHeatingGasMultiStageStageData
+        modelObj->applySizingValues();
+      }
+    }
+    return;
+  }
+
 } // detail
 
 Model::Model()
@@ -1910,12 +2104,17 @@ boost::optional<Model> Model::load(const path& osmPath, const path& workflowJSON
 
 
 Model::Model(std::shared_ptr<detail::Model_Impl> p)
-  : Workspace(p)
+  : Workspace(std::move(p))
 {}
 
 boost::optional<Building> Model::building() const
 {
   return getImpl<detail::Model_Impl>()->building();
+}
+
+boost::optional<FoundationKivaSettings> Model::foundationKivaSettings() const
+{
+  return getImpl<detail::Model_Impl>()->foundationKivaSettings();
 }
 
 boost::optional<LifeCycleCostParameters> Model::lifeCycleCostParameters() const
@@ -1958,9 +2157,9 @@ bool Model::isIsLeapYearDefaulted() const
   return getImpl<detail::Model_Impl>()->isIsLeapYearDefaulted();
 }
 
-void Model::setCalendarYear(int calendarYear)
+bool Model::setCalendarYear(int calendarYear)
 {
-  getImpl<detail::Model_Impl>()->setCalendarYear(calendarYear);
+  return getImpl<detail::Model_Impl>()->setCalendarYear(calendarYear);
 }
 
 void Model::resetCalendarYear()
@@ -2023,9 +2222,19 @@ Schedule Model::alwaysOffDiscreteSchedule() const
   return getImpl<detail::Model_Impl>()->alwaysOffDiscreteSchedule();
 }
 
+std::string Model::alwaysOffDiscreteScheduleName() const
+{
+  return getImpl<detail::Model_Impl>()->alwaysOffDiscreteScheduleName();
+}
+
 Schedule Model::alwaysOnDiscreteSchedule() const
 {
   return getImpl<detail::Model_Impl>()->alwaysOnDiscreteSchedule();
+}
+
+std::string Model::alwaysOnDiscreteScheduleName() const
+{
+  return getImpl<detail::Model_Impl>()->alwaysOnDiscreteScheduleName();
 }
 
 Schedule Model::alwaysOnContinuousSchedule() const
@@ -2033,11 +2242,25 @@ Schedule Model::alwaysOnContinuousSchedule() const
   return getImpl<detail::Model_Impl>()->alwaysOnContinuousSchedule();
 }
 
+std::string Model::alwaysOnContinuousScheduleName() const
+{
+  return getImpl<detail::Model_Impl>()->alwaysOnContinuousScheduleName();
+}
+
+Node Model::outdoorAirNode() const
+{
+  return getImpl<detail::Model_Impl>()->outdoorAirNode();
+}
+
 SpaceType Model::plenumSpaceType() const
 {
   return getImpl<detail::Model_Impl>()->plenumSpaceType();
 }
 
+std::string Model::plenumSpaceTypeName() const
+{
+  return getImpl<detail::Model_Impl>()->plenumSpaceTypeName();
+}
 openstudio::WorkflowJSON Model::workflowJSON() const
 {
   return getImpl<detail::Model_Impl>()->workflowJSON();
@@ -3270,6 +3493,14 @@ void addExampleConstructions(Model& model) {
   interiorPartition.setName("Interior Partition");
   defaultConstructions.setInteriorPartitionConstruction(interiorPartition);
   opaqueMaterials.clear();
+}
+
+void Model::autosize() {
+  return getImpl<detail::Model_Impl>()->autosize();
+}
+
+void Model::applySizingValues() {
+  return getImpl<detail::Model_Impl>()->applySizingValues();
 }
 
 } // model
