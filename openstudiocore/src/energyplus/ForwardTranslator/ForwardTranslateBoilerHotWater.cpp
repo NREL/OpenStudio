@@ -199,6 +199,11 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerHotWater( BoilerHot
     idfObject.setDouble(Boiler_HotWaterFields::SizingFactor,value.get());
   }
 
+  // End Use Subcategory
+  if( (s = modelObject.endUseSubcategory()) ) {
+    idfObject.setString(Boiler_HotWaterFields::EndUseSubcategory,s.get());
+  }
+
   return boost::optional<IdfObject>(idfObject);
 }
 

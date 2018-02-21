@@ -41,29 +41,6 @@ namespace detail {
   /** BoilerHotWater_Impl is a StraightComponent_Impl that is the implementation class for BoilerHotWater.*/
   class MODEL_API BoilerHotWater_Impl : public StraightComponent_Impl {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
 
     /** @name Constructors and Destructors */
@@ -94,6 +71,14 @@ namespace detail {
     virtual unsigned inletPort() override;
 
     virtual unsigned outletPort() override;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    virtual bool addToNode(Node & node) override;
+
+    virtual ModelObject clone(Model model) const override;
 
     //@}
     /** @name Getters */
@@ -147,13 +132,12 @@ namespace detail {
 
     bool isSizingFactorDefaulted() const;
 
-  boost::optional<double> autosizedNominalCapacity() const ;
+    boost::optional<double> autosizedNominalCapacity() const ;
 
-  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+    boost::optional<double> autosizedDesignWaterFlowRate() const ;
 
-  virtual void autosize() override;
+    std::string endUseSubcategory() const;
 
-  virtual void applySizingValues() override;
 
     //@}
     /** @name Setters */
@@ -169,13 +153,11 @@ namespace detail {
 
     bool setNominalThermalEfficiency(double nominalThermalEfficiency);
 
-    bool setEfficiencyCurveTemperatureEvaluationVariable(
-        boost::optional<std::string> efficiencyCurveTemperatureEvaluationVariable);
+    bool setEfficiencyCurveTemperatureEvaluationVariable(boost::optional<std::string> efficiencyCurveTemperatureEvaluationVariable);
 
     void resetEfficiencyCurveTemperatureEvaluationVariable();
 
-    bool setNormalizedBoilerEfficiencyCurve(
-        const boost::optional<Curve>& normalizedBoilerEfficiencyCurve);
+    bool setNormalizedBoilerEfficiencyCurve(const boost::optional<Curve>& normalizedBoilerEfficiencyCurve);
 
     void resetNormalizedBoilerEfficiencyCurve();
 
@@ -221,9 +203,7 @@ namespace detail {
 
     void resetSizingFactor();
 
-    bool addToNode(Node & node) override;
-
-    ModelObject clone(Model model) const override;
+    bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
     //@}
    private:

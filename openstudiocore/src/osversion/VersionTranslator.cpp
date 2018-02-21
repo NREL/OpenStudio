@@ -3849,6 +3849,83 @@ std::string VersionTranslator::update_2_4_1_to_2_4_2(const IdfFile& idf_2_4_1, c
 
       m_new.push_back(additionalProperties);
       ss << additionalProperties;
+
+    } else if (iddname == "OS:Boiler:HotWater") {
+      auto iddObject = idd_2_4_2.getObject("OS:Boiler:HotWater");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+      newObject.setString(18,"General");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+    } else if (iddname == "OS:Boiler:Steam") {
+      auto iddObject = idd_2_4_2.getObject("OS:Boiler:Steam");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+      newObject.setString(16,"General");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+    } else if (iddname == "OS:WaterHeater:Mixed") {
+      auto iddObject = idd_2_4_2.getObject("OS:WaterHeater:Mixed");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      // Source Side Flow Control Mode
+      newObject.setString(40,"IndirectHeatPrimarySetpoint");
+
+      // Indirect Alternate Setpoint Temperature Schedule Name: nothing to do, leave empty
+
+      // End Use Subcategory
+      newObject.setString(42,"General");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+    } else if (iddname == "OS:Chiller:Electric:EIR") {
+      auto iddObject = idd_2_4_2.getObject("OS:Chiller:Electric:EIR");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      // Condenser Heat Recovery Relative Capacity Fraction: this is an optional
+      // but in E+ code (ChillerElectricEIR.cc > GetElectricEIRChillerInput() around line 655)
+      // if omitted (and heat recovery is used), it defaults to 1.0
+      // newObject.setDouble(32, 1.0);
+
+      // Heat Recovery Inlet High Temperature Limit Schedule Name: leave empty
+
+
+      // Heat Recovery Leaving Temperature Setpoint Node Name: leave empty
+
+      // endUseSubcategory
+      newObject.setString(34,"General");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+    // Default case
     } else {
       ss << object;
     }

@@ -353,6 +353,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"WaterHeaterMixed","Ambient Temperature","ambientTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterHeaterMixed","Use Flow Rate Fraction","useFlowRateFractionSchedule",true,"",0.0,1.0},
     {"WaterHeaterMixed","Cold Water Supply Temperature","coldWaterSupplyTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"WaterHeaterMixed","Indirect Alternate Setpoint Temperature","indirectAlternateSetpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterHeaterHeatPump","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"WaterHeaterHeatPump","Compressor Setpoint Temperature Schedule","compressorSetpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterHeaterHeatPump","Inlet Air Temperature Schedule","inletAirTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},

@@ -74,6 +74,8 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   static std::vector<std::string> ambientTemperatureIndicatorValues();
 
+  static std::vector<std::string> sourceSideFlowControlModeValues();
+
   /** @name Getters */
   //@{
 
@@ -228,6 +230,12 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
   Quantity getIndirectWaterHeatingRecoveryTime(bool returnIP=false) const;
 
   bool isIndirectWaterHeatingRecoveryTimeDefaulted() const;
+
+  std::string sourceSideFlowControlMode() const;
+
+  boost::optional<Schedule> indirectAlternateSetpointTemperatureSchedule() const;
+
+  std::string endUseSubcategory() const;
 
   //@}
   /** @name Setters */
@@ -417,15 +425,26 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   void resetIndirectWaterHeatingRecoveryTime();
 
-  boost::optional<double> autosizedTankVolume() const ;
+  boost::optional<double> autosizedTankVolume() const;
 
-  boost::optional<double> autosizedHeaterMaximumCapacity() const ;
+  boost::optional<double> autosizedHeaterMaximumCapacity() const;
 
-  boost::optional<double> autosizedUseSideDesignFlowRate() const ;
+  boost::optional<double> autosizedUseSideDesignFlowRate() const;
 
-  boost::optional<double> autosizedSourceSideDesignFlowRate() const ;
+  boost::optional<double> autosizedSourceSideDesignFlowRate() const;
 
+  /* This will not accept 'IndirectHeatAlternateSetpoint' as a control mode, you should instead use 'setIndirectAlternateSetpointTemperatureSchedule'.
+   * For any other modes ('StorageTank', 'IndirectHeatPrimarySetpoint'), this resets the indirect alternate setpoint temperature schedule
+   */
+  bool setSourceSideFlowControlMode(const std::string & sourceSideFlowControlMode);
 
+  /* This will automatically switch the Source Side Flow Control Mode to 'IndirectHeatAlternateSetpoint' */
+  bool setIndirectAlternateSetpointTemperatureSchedule(Schedule& indirectAlternateSetpointTemperatureSchedule);
+
+  /* This will automatically reset the Source Side Flow Control Mode to default 'IndirectHeatPrimarySetpoint' */
+  void resetIndirectAlternateSetpointTemperatureSchedule();
+
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
   //@}
  protected:

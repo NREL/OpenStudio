@@ -176,6 +176,11 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerSteam( BoilerSteam 
     idfObject.setDouble(Boiler_SteamFields::SizingFactor,value.get());
   }
 
+  // End Use Subcategory
+  if( (s = modelObject.endUseSubcategory()) ) {
+    idfObject.setString(Boiler_SteamFields::EndUseSubcategory,s.get());
+  }
+
   return boost::optional<IdfObject>(idfObject);
 }
 

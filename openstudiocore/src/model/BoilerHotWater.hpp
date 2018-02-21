@@ -117,6 +117,8 @@ class MODEL_API BoilerHotWater : public StraightComponent {
 
   bool isSizingFactorDefaulted() const;
 
+  std::string endUseSubcategory() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -186,7 +188,7 @@ class MODEL_API BoilerHotWater : public StraightComponent {
 
   boost::optional<double> autosizedDesignWaterFlowRate() const ;
 
-
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
   //@}
  protected:
