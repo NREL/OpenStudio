@@ -75,15 +75,22 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    /*
     template <typename T> boost::optional<T> fan() const
     {
       return getObject<ModelObject>().getModelObjectTarget<T>(OS_AirflowNetworkFanFields::FanName);
     }
+    */
+
+    boost::optional<FanConstantVolume> fanConstantVolume() const;
+    boost::optional<FanVariableVolume> fanVariableVolume() const;
+    boost::optional<FanOnOff> fanOnOff() const;
 
     //@}
     /** @name Setters */
     //@{
 
+    /*
     template <typename T> bool setFan(const typename std::enable_if<
       std::is_same<FanConstantVolume, T>::value ||
       std::is_same<FanVariableVolume, T>::value ||
@@ -92,6 +99,8 @@ namespace detail {
     {
       return setPointer(OS_AirflowNetworkFanFields::FanName, fan.handle());
     }
+    */
+
     void resetFan();
 
     //@}
