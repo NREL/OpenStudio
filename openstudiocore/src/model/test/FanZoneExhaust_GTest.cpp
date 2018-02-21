@@ -35,6 +35,12 @@
 #include "../Node_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
+#include "../AirflowNetworkZoneExhaustFan.hpp"
+#include "../AirflowNetworkZoneExhaustFan_Impl.hpp"
+#include "../AirflowNetworkCrack.hpp"
+#include "../AirflowNetworkCrack_Impl.hpp"
+#include "../AirflowNetworkReferenceCrackConditions.hpp"
+#include "../AirflowNetworkReferenceCrackConditions_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -75,3 +81,23 @@ TEST_F(ModelFixture, FanZoneExhaust_AddToAndRemoveFromThermalZone)
   EXPECT_FALSE(testObject.thermalZone());
   EXPECT_EQ(0u, thermalZone.equipment().size());
 }
+
+TEST_F(ModelFixture, FanZoneExhaust_AddAFNZoneExhaustFan)
+{
+  Model model;
+  FanZoneExhaust testObject = FanZoneExhaust(model);
+  ThermalZone thermalZone(model);
+
+  EXPECT_FALSE(testObject.optionalAirflowNetworkZoneExhaustFan());
+
+  AirflowNetworkCrack crack(model, 1.0, 0.5);
+  EXPECT_EQ(1, crack.airMassFlowCoefficient());
+  EXPECT_EQ(0.5, crack.airMassFlowExponent());
+  EXPECT_FALSE(crack.referenceCrackConditions());
+
+  auto afnobject = testObject.airflowNetworkZoneExhaustFan(crack);
+
+  ASSERT_TRUE(afnobject.crack());
+  EXPECT_EQ(crack, afnobject.crack().get());
+}
+

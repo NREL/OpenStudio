@@ -100,6 +100,8 @@
 #include "SetpointManagerSingleZoneHeating_Impl.hpp"
 #include "ZoneMixing.hpp"
 #include "ZoneMixing_Impl.hpp"
+#include "AirflowNetworkZone.hpp"
+#include "AirflowNetworkZone_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -163,6 +165,11 @@ namespace detail {
     // remove once we have gridview for these
     for (const auto& mixing : supplyZoneMixing()){
       result.push_back(mixing);
+    }
+
+    boost::optional<AirflowNetworkZone> afnz = optionalAirflowNetworkZone();
+    if (afnz) {
+      result.push_back(afnz.get());
     }
 
     return result;
@@ -2366,6 +2373,11 @@ namespace detail {
 
     // DLM: do not clone zone mixing objects
 
+    if (auto t_afnzone = optionalAirflowNetworkZone()) {
+      auto afnzoneClone = t_afnzone->clone(model).cast<AirflowNetworkZone>();
+      afnzoneClone.setThermalZone(tz);
+    }
+
     return tz;
   }
 
@@ -2743,6 +2755,27 @@ namespace detail {
     }
   }
 
+  AirflowNetworkZone ThermalZone_Impl::airflowNetworkZone()
+  {
+    boost::optional<AirflowNetworkZone> opt = optionalAirflowNetworkZone();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkZone(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkZone> ThermalZone_Impl::optionalAirflowNetworkZone() const
+  {
+    std::vector<AirflowNetworkZone> myAFNZones = getObject<ModelObject>().getModelObjectSources<AirflowNetworkZone>(AirflowNetworkZone::iddObjectType());
+    auto count = myAFNZones.size();
+    if (count == 1) {
+      return myAFNZones[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork Zone attached, returning first.");
+      return myAFNZones[0];
+    }
+    return boost::none;
+  }
 } // detail
 
 ThermalZone::ThermalZone(const Model& model)
@@ -3332,6 +3365,16 @@ bool ThermalZone::setZoneControlContaminantController(const ZoneControlContamina
 void ThermalZone::resetZoneControlContaminantController()
 {
   getImpl<detail::ThermalZone_Impl>()->resetZoneControlContaminantController();
+}
+
+AirflowNetworkZone ThermalZone::airflowNetworkZone()
+{
+  return getImpl<detail::ThermalZone_Impl>()->airflowNetworkZone();
+}
+
+boost::optional<AirflowNetworkZone> ThermalZone::optionalAirflowNetworkZone() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->optionalAirflowNetworkZone();
 }
 
 /// @cond

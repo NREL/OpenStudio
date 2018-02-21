@@ -29,6 +29,8 @@
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVACZoneSplitter.hpp"
 #include "AirLoopHVACZoneSplitter_Impl.hpp"
+#include "AirflowNetworkDistributionNode.hpp"
+#include "AirflowNetworkDistributionNode_Impl.hpp"
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
 #include "Node.hpp"
@@ -85,6 +87,16 @@ namespace detail{
 
   IddObjectType AirLoopHVACZoneSplitter_Impl::iddObjectType() const {
     return AirLoopHVACZoneSplitter::iddObjectType();
+  }
+
+  std::vector<ModelObject> AirLoopHVACZoneSplitter_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+
+    return result;
   }
 
   std::vector<openstudio::IdfObject> AirLoopHVACZoneSplitter_Impl::remove()
@@ -169,6 +181,28 @@ namespace detail{
     return zones;
   }
 
+  AirflowNetworkDistributionNode AirLoopHVACZoneSplitter_Impl::airflowNetworkDistributionNode()
+  {
+    boost::optional<AirflowNetworkDistributionNode> opt = optionalAirflowNetworkDistributionNode();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkDistributionNode(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkDistributionNode> AirLoopHVACZoneSplitter_Impl::optionalAirflowNetworkDistributionNode() const
+  {
+    std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
+    auto count = myAFNItems.size();
+    if (count == 1) {
+      return myAFNItems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork DistributionNode attached, returning first.");
+      return myAFNItems[0];
+    }
+    return boost::none;
+  }
+
 } // detail
 
 AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(const Model& model)
@@ -214,6 +248,16 @@ std::vector<ThermalZone> AirLoopHVACZoneSplitter::thermalZones()
 void AirLoopHVACZoneSplitter::disconnect()
 {
   return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->disconnect();
+}
+
+AirflowNetworkDistributionNode AirLoopHVACZoneSplitter::airflowNetworkDistributionNode()
+{
+  return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->airflowNetworkDistributionNode();
+}
+
+boost::optional<AirflowNetworkDistributionNode> AirLoopHVACZoneSplitter::optionalAirflowNetworkDistributionNode() const
+{
+  return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->optionalAirflowNetworkDistributionNode();
 }
 
 } // model

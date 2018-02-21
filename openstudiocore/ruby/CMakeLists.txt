@@ -39,6 +39,7 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioUtilitiesFileTypes
  ruby_OpenStudioUtilitiesUnits
  ruby_OpenStudioModelHVAC
+ ruby_OpenStudioModelAirflow
  ruby_OpenStudioUtilities
  ruby_OpenStudioUtilitiesGeometry
  ruby_OpenStudioMeasure

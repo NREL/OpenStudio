@@ -167,6 +167,10 @@ namespace detail {
   virtual void applySizingValues() override;
 
     //@}
+
+    AirflowNetworkFan airflowNetworkFan();
+    boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
+
    //protected:
    private:
     REGISTER_LOGGER("openstudio.model.FanOnOff");

@@ -38,6 +38,8 @@
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
@@ -300,7 +302,10 @@ namespace detail {
   }
 
   std::vector<ModelObject> CoilCoolingDXMultiSpeed_Impl::children() const {
-    return subsetCastVector<ModelObject>(stages());
+    std::vector<ModelObject> result = subsetCastVector<ModelObject>(stages());
+    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+    return result;
   }
 
   std::vector<CoilCoolingDXMultiSpeedStageData> CoilCoolingDXMultiSpeed_Impl::stages() const {
@@ -342,6 +347,35 @@ namespace detail {
   bool CoilCoolingDXMultiSpeed_Impl::addToNode(Node & node)
   {
     return false;
+  }
+
+  AirflowNetworkEquivalentDuct CoilCoolingDXMultiSpeed_Impl::airflowNetworkEquivalentDuct(double length, double diameter)
+  {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = optionalAirflowNetworkEquivalentDuct();
+    if (opt) {
+      if (opt->airPathLength() != length){
+        opt->setAirPathLength(length);
+      }
+      if (opt->airPathHydraulicDiameter() != diameter){
+        opt->setAirPathHydraulicDiameter(diameter);
+      }
+      return opt.get();
+    }
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXMultiSpeed_Impl::optionalAirflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>
+      (AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return boost::none;
   }
 
 } // detail
@@ -476,6 +510,16 @@ std::vector<CoilCoolingDXMultiSpeedStageData> CoilCoolingDXMultiSpeed::stages() 
 
 void CoilCoolingDXMultiSpeed::addStage(CoilCoolingDXMultiSpeedStageData& stage) {
   return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->addStage(stage);
+}
+
+AirflowNetworkEquivalentDuct CoilCoolingDXMultiSpeed::airflowNetworkEquivalentDuct(double length, double diameter)
+{
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->airflowNetworkEquivalentDuct(length, diameter);
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXMultiSpeed::optionalAirflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->optionalAirflowNetworkEquivalentDuct();
 }
 
 /// @cond

@@ -43,6 +43,8 @@
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Coil_Heating_DX_MultiSpeed_FieldEnums.hxx>
@@ -348,6 +350,10 @@ namespace detail {
     if ( auto const curve = defrostEnergyInputRatioFunctionofTemperatureCurve() ) {
       children.push_back( curve.get() );
     }
+
+    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    children.insert(children.end(), myAFNItems.begin(), myAFNItems.end());
+
     return children;
   }
 
@@ -447,6 +453,33 @@ namespace detail {
     }
 
     return result;
+  }
+
+  AirflowNetworkEquivalentDuct CoilHeatingDXMultiSpeed_Impl::airflowNetworkEquivalentDuct(double length, double diameter)
+  {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = optionalAirflowNetworkEquivalentDuct();
+    if (opt) {
+      if (opt->airPathLength() != length){
+        opt->setAirPathLength(length);
+      }
+      if (opt->airPathHydraulicDiameter() != diameter){
+        opt->setAirPathHydraulicDiameter(diameter);
+      }
+    }
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDXMultiSpeed_Impl::optionalAirflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return boost::none;
   }
 
   boost::optional<double> CoilHeatingDXMultiSpeed_Impl::autosizedResistiveDefrostHeaterCapacity() const {
@@ -671,6 +704,16 @@ void CoilHeatingDXMultiSpeed::removeAllStages() {
   getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeAllStages();
 }
 
+AirflowNetworkEquivalentDuct CoilHeatingDXMultiSpeed::airflowNetworkEquivalentDuct(double length, double diameter)
+{
+  return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->airflowNetworkEquivalentDuct(length, diameter);
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDXMultiSpeed::optionalAirflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->optionalAirflowNetworkEquivalentDuct();
+}
+
 /// @cond
 CoilHeatingDXMultiSpeed::CoilHeatingDXMultiSpeed(std::shared_ptr<detail::CoilHeatingDXMultiSpeed_Impl> impl)
   : StraightComponent(std::move(impl))
@@ -682,4 +725,4 @@ CoilHeatingDXMultiSpeed::CoilHeatingDXMultiSpeed(std::shared_ptr<detail::CoilHea
   }
 
 } // model
-} // openstudio
+} // openstudio

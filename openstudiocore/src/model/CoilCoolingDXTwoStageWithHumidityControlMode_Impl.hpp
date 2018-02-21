@@ -157,6 +157,9 @@ namespace detail {
     /** @name Other */
     //@{
 
+    AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
+
     //@}
    protected:
    private:

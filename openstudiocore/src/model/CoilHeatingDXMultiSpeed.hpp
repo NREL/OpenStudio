@@ -39,6 +39,7 @@ namespace model {
 class Schedule;
 class Curve;
 class CoilHeatingDXMultiSpeedStageData;
+class AirflowNetworkEquivalentDuct;
 
 namespace detail {
 
@@ -155,9 +156,13 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
   /** Remove all stages **/
   void removeAllStages();
 
+  /** Creates a new equivalent duct object if an object is not already attached. */
+  AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct(double length, double diameter);
+  
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
+
   boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
-
-
 
   //@}
  protected:
@@ -184,4 +189,4 @@ typedef std::vector<CoilHeatingDXMultiSpeed> CoilHeatingDXMultiSpeedVector;
 } // model
 } // openstudio
 
-#endif // MODEL_COILHEATINGDXMULTISPEED_HPP
+#endif // MODEL_COILHEATINGDXMULTISPEED_HPP

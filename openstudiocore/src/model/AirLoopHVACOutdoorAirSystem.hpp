@@ -45,6 +45,7 @@ namespace detail {
 class AvailabilityManagerScheduled;
 class ControllerOutdoorAir;
 class Node;
+class AirflowNetworkDistributionNode;
 
 /** AirLoopHVACOutdoorAirSystem is an HVACComponent that wraps the IDD object
  *  named "OS:AirLoopHVAC:OutdoorAirSystem"
@@ -141,6 +142,10 @@ class MODEL_API AirLoopHVACOutdoorAirSystem : public HVACComponent {
 
   /** Reimplemented from HVACComponent. **/
   boost::optional<AirLoopHVAC> airLoop() const;
+
+  AirflowNetworkDistributionNode airflowNetworkDistributionNode();
+
+  boost::optional<AirflowNetworkDistributionNode> optionalAirflowNetworkDistributionNode() const;
 
   static IddObjectType iddObjectType();
 

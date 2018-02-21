@@ -63,6 +63,8 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/OSOptionalQuantity.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -958,6 +960,32 @@ namespace detail{
     return false;
   }
 
+  AirflowNetworkEquivalentDuct CoilCoolingDXSingleSpeed_Impl::airflowNetworkEquivalentDuct(double length, double diameter)
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  bool CoilCoolingDXSingleSpeed_Impl::hasAirflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return true;
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return true;
+    }
+    return false;
+  }
+
   // Autosizing methods
   void CoilCoolingDXSingleSpeed_Impl::autosize() {
     autosizeRatedTotalCoolingCapacity();
@@ -1611,6 +1639,16 @@ void CoilCoolingDXSingleSpeed::autosizeRatedAirFlowRate() {
   getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizeRatedAirFlowRate();
 }
 
+AirflowNetworkEquivalentDuct CoilCoolingDXSingleSpeed::airflowNetworkEquivalentDuct(double length, double diameter)
+{
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->airflowNetworkEquivalentDuct(length, diameter);
+}
+
+bool CoilCoolingDXSingleSpeed::hasAirflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->hasAirflowNetworkEquivalentDuct();
+}
+
 // Autosizing methods
 
 boost::optional <double> CoilCoolingDXSingleSpeed::autosizedRatedAirFlowRate() const {
@@ -1632,7 +1670,6 @@ boost::optional<double> CoilCoolingDXSingleSpeed::autosizedEvaporativeCondenserA
 boost::optional<double> CoilCoolingDXSingleSpeed::autosizedEvaporativeCondenserPumpRatedPowerConsumption()  const {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedEvaporativeCondenserPumpRatedPowerConsumption();
 }
-
 
 } // model
 } // openstudio

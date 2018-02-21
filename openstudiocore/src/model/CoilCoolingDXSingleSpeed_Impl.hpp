@@ -267,6 +267,9 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
+    AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct(double length, double diameter);
+    bool hasAirflowNetworkEquivalentDuct() const;
+
     //@}
    private:
 

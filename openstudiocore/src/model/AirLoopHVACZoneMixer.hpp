@@ -35,6 +35,8 @@
 namespace openstudio {
 namespace model {
 
+class AirflowNetworkDistributionNode;
+
 namespace detail {
   class AirLoopHVACZoneMixer_Impl;
 } // detail
@@ -76,6 +78,11 @@ class MODEL_API AirLoopHVACZoneMixer : public Mixer {
   friend class Model;
 
   friend class openstudio::IdfObject;
+
+
+  AirflowNetworkDistributionNode airflowNetworkDistributionNode();
+
+  boost::optional<AirflowNetworkDistributionNode> optionalAirflowNetworkDistributionNode() const;
 
   /// @cond
 
