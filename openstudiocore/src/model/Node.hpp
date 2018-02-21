@@ -157,9 +157,9 @@ class MODEL_API Node : public StraightComponent {
 
   static IddObjectType iddObjectType();
 
-  boost::optional<AirflowNetworkDistributionNode> createAirflowNetworkDistributionNode();
+  AirflowNetworkDistributionNode airflowNetworkDistributionNode();
 
-  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
+  boost::optional<AirflowNetworkDistributionNode> optionalAirflowNetworkDistributionNode() const;
 
  protected:
 

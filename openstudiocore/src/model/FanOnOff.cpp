@@ -503,16 +503,16 @@ namespace detail {
     return boost::none;
   }
 
-  boost::optional<AirflowNetworkFan> FanOnOff_Impl::createAirflowNetworkFan()
+  AirflowNetworkFan FanOnOff_Impl::airflowNetworkFan()
   {
-    auto opt = airflowNetworkFan();
+    auto opt = optionalAirflowNetworkFan();
     if (opt) {
-      return boost::none;
+      return opt.get();
     }
     return AirflowNetworkFan(model(), handle());
   }
 
-  boost::optional<AirflowNetworkFan> FanOnOff_Impl::airflowNetworkFan() const
+  boost::optional<AirflowNetworkFan> FanOnOff_Impl::optionalAirflowNetworkFan() const
   {
     std::vector<AirflowNetworkFan> myAFNitems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkFan>(AirflowNetworkFan::iddObjectType());
     auto count = myAFNitems.size();
@@ -787,14 +787,14 @@ void FanOnOff::resetEndUseSubcategory()
   getImpl<detail::FanOnOff_Impl>()->resetEndUseSubcategory();
 }
 
-boost::optional<AirflowNetworkFan> FanOnOff::createAirflowNetworkFan()
-{
-  return getImpl<detail::FanOnOff_Impl>()->createAirflowNetworkFan();
-}
-
-boost::optional<AirflowNetworkFan> FanOnOff::airflowNetworkFan() const
+AirflowNetworkFan FanOnOff::airflowNetworkFan()
 {
   return getImpl<detail::FanOnOff_Impl>()->airflowNetworkFan();
+}
+
+boost::optional<AirflowNetworkFan> FanOnOff::optionalAirflowNetworkFan() const
+{
+  return getImpl<detail::FanOnOff_Impl>()->optionalAirflowNetworkFan();
 }
 
 /// @cond

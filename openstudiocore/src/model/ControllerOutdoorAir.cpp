@@ -654,16 +654,22 @@ namespace detail {
     return result;
   }
 
-  boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir_Impl::createAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack)
+  AirflowNetworkOutdoorAirflow ControllerOutdoorAir_Impl::airflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack)
   {
-    boost::optional<AirflowNetworkOutdoorAirflow> opt = airflowNetworkOutdoorAirflow();
+    boost::optional<AirflowNetworkOutdoorAirflow> opt = optionalAirflowNetworkOutdoorAirflow();
     if (opt) {
-      return boost::none;
+      boost::optional<AirflowNetworkCrack> oldCrack = opt->crack();
+      if (oldCrack){
+        if (oldCrack->handle() == crack.handle()){
+          return opt.get();
+        }
+      }
+      opt->remove();
     }
     return AirflowNetworkOutdoorAirflow(model(), crack, handle());
   }
 
-  boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir_Impl::airflowNetworkOutdoorAirflow()
+  boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir_Impl::optionalAirflowNetworkOutdoorAirflow() const
   {
     std::vector<AirflowNetworkOutdoorAirflow> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkOutdoorAirflow>(AirflowNetworkOutdoorAirflow::iddObjectType());
     auto count = myAFNItems.size();
@@ -708,7 +714,7 @@ ControllerOutdoorAir::ControllerOutdoorAir(const Model& model)
 
   ControllerMechanicalVentilation controllerMechanicalVentilation(model);
   setControllerMechanicalVentilation(controllerMechanicalVentilation);
-  
+
 }
 
 ControllerOutdoorAir::ControllerOutdoorAir(std::shared_ptr<detail::ControllerOutdoorAir_Impl> impl)
@@ -1013,14 +1019,14 @@ void ControllerOutdoorAir::resetTimeofDayEconomizerControlSchedule()
   getImpl<detail::ControllerOutdoorAir_Impl>()->resetTimeofDayEconomizerControlSchedule();
 }
 
-boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir::createAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack)
+AirflowNetworkOutdoorAirflow ControllerOutdoorAir::airflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack)
 {
-  return getImpl<detail::ControllerOutdoorAir_Impl>()->createAirflowNetworkOutdoorAirflow(crack);
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->airflowNetworkOutdoorAirflow(crack);
 }
 
-boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir::airflowNetworkOutdoorAirflow()
+boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir::optionalAirflowNetworkOutdoorAirflow() const
 {
-  return getImpl<detail::ControllerOutdoorAir_Impl>()->airflowNetworkOutdoorAirflow();
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->optionalAirflowNetworkOutdoorAirflow();
 }
 
 } // model

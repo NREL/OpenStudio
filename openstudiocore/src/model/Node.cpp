@@ -64,8 +64,8 @@ namespace detail{
     OS_ASSERT(idfObject.iddObject().type() == Node::iddObjectType());
   }
 
-  Node_Impl::Node_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                       Model_Impl* model, 
+  Node_Impl::Node_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                       Model_Impl* model,
                        bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
   {
@@ -309,12 +309,12 @@ namespace detail{
   {
     return false;
   }
-  
+
   ModelObject Node_Impl::clone(Model model) const
   {
     return StraightComponent_Impl::clone( model );
   }
-  
+
   bool Node_Impl::isRemovable() const
   {
     if( this->loop() )
@@ -373,16 +373,16 @@ namespace detail{
     return false;
   }
 
-  boost::optional<AirflowNetworkDistributionNode> Node_Impl::createAirflowNetworkDistributionNode()
+  AirflowNetworkDistributionNode Node_Impl::airflowNetworkDistributionNode()
   {
-    boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();
+    boost::optional<AirflowNetworkDistributionNode> opt = optionalAirflowNetworkDistributionNode();
     if (opt) {
-      return boost::none;
+      return opt.get();
     }
     return AirflowNetworkDistributionNode(model(), handle());
   }
 
-  boost::optional<AirflowNetworkDistributionNode> Node_Impl::airflowNetworkDistributionNode() const
+  boost::optional<AirflowNetworkDistributionNode> Node_Impl::optionalAirflowNetworkDistributionNode() const
   {
     std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
     auto count = myAFNItems.size();
@@ -528,14 +528,14 @@ IddObjectType Node::iddObjectType() {
   return result;
 }
 
-boost::optional<AirflowNetworkDistributionNode> Node::createAirflowNetworkDistributionNode()
-{
-  return getImpl<detail::Node_Impl>()->createAirflowNetworkDistributionNode();
-}
-
-boost::optional<AirflowNetworkDistributionNode> Node::airflowNetworkDistributionNode() const
+AirflowNetworkDistributionNode Node::airflowNetworkDistributionNode()
 {
   return getImpl<detail::Node_Impl>()->airflowNetworkDistributionNode();
+}
+
+boost::optional<AirflowNetworkDistributionNode> Node::optionalAirflowNetworkDistributionNode() const
+{
+  return getImpl<detail::Node_Impl>()->optionalAirflowNetworkDistributionNode();
 }
 
 } // model

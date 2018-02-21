@@ -236,8 +236,8 @@ namespace detail {
 
     unsigned secondaryAirOutletPort() override;
 
-    boost::optional<AirflowNetworkEquivalentDuct> createAirflowNetworkEquivalentDuct(double length, double diameter);
-    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+    AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
 
     //@}
 

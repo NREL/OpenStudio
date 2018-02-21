@@ -180,8 +180,8 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
 
   std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  boost::optional<AirflowNetworkOutdoorAirflow> createAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack);
-  boost::optional<AirflowNetworkOutdoorAirflow> airflowNetworkOutdoorAirflow();
+  AirflowNetworkOutdoorAirflow airflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack);
+  boost::optional<AirflowNetworkOutdoorAirflow> optionalAirflowNetworkOutdoorAirflow() const;
 
  private:
 

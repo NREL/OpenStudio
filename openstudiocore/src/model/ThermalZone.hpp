@@ -448,10 +448,10 @@ class MODEL_API ThermalZone : public HVACComponent {
   std::vector<ZoneMixing> exhaustZoneMixing() const;
 
   /** Creates an AirflowNetworkZone object if an object is not already attached. */
-  boost::optional<AirflowNetworkZone> createAirflowNetworkZone();
+  AirflowNetworkZone airflowNetworkZone();
 
   /** Returns the attached AirflowNetworkZone if there is one */
-  boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
+  boost::optional<AirflowNetworkZone> optionalAirflowNetworkZone() const;
 
   //@}
  protected:

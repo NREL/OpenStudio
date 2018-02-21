@@ -143,8 +143,8 @@ class MODEL_API ControllerOutdoorAir : public ParentObject {
 
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
-  boost::optional<AirflowNetworkOutdoorAirflow> createAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack);
-  boost::optional<AirflowNetworkOutdoorAirflow> airflowNetworkOutdoorAirflow();
+  AirflowNetworkOutdoorAirflow airflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack);
+  boost::optional<AirflowNetworkOutdoorAirflow> optionalAirflowNetworkOutdoorAirflow() const;
 
   virtual std::vector<openstudio::IdfObject> remove();
 

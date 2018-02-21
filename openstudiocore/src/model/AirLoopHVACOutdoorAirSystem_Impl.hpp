@@ -109,9 +109,9 @@ namespace detail {
     boost::optional<ModelObject> oaComponent(openstudio::Handle handle);
     boost::optional<ModelObject> reliefComponent(openstudio::Handle handle);
 
-    boost::optional<AirflowNetworkDistributionNode> createAirflowNetworkDistributionNode();
+    AirflowNetworkDistributionNode airflowNetworkDistributionNode();
 
-    boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
+    boost::optional<AirflowNetworkDistributionNode> optionalAirflowNetworkDistributionNode() const;
 
    private:
     REGISTER_LOGGER("openstudio.model.AirLoopHVACOutdoorAirSystem");

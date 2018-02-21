@@ -30,7 +30,7 @@
 #define MODEL_AIRFLOWNETWORKHORIZONTALOPENING_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include <model/AirflowNetworkComponent_Impl.hpp>
 
 namespace openstudio {
 namespace model {
@@ -38,7 +38,7 @@ namespace model {
 namespace detail {
 
 /** AirflowNetworkHorizontalOpening_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkHorizontalOpening.*/
-class MODEL_API AirflowNetworkHorizontalOpening_Impl : public ModelObject_Impl
+class MODEL_API AirflowNetworkHorizontalOpening_Impl : public AirflowNetworkComponent_Impl
 {
 public:
   /** @name Constructors and Destructors */

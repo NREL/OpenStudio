@@ -79,9 +79,9 @@ class MODEL_API AirLoopHVACZoneSplitter_Impl : public Splitter_Impl {
 
   void disconnect() override;
 
-  boost::optional<AirflowNetworkDistributionNode> createAirflowNetworkDistributionNode();
+  AirflowNetworkDistributionNode airflowNetworkDistributionNode();
 
-  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
+  boost::optional<AirflowNetworkDistributionNode> optionalAirflowNetworkDistributionNode() const;
 
   private:
 

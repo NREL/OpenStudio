@@ -217,7 +217,7 @@ namespace detail {
 
   bool FanVariableVolume_Impl::isMotorEfficiencyDefaulted() const {
     return isEmpty(OS_Fan_VariableVolumeFields::MotorEfficiency);
-  }  
+  }
 
   double FanVariableVolume_Impl::motorInAirstreamFraction() const {
     boost::optional<double> value = getDouble(OS_Fan_VariableVolumeFields::MotorInAirstreamFraction,true);
@@ -668,7 +668,7 @@ namespace detail {
           fanCount += subsetCastVector<FanVariableVolume>(oaSystem->components()).size();
         }
 
-        if( StraightComponent_Impl::addToNode(node) ) 
+        if( StraightComponent_Impl::addToNode(node) )
         {
           SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
           return true;
@@ -852,16 +852,16 @@ namespace detail {
     return boost::none;
   }
 
-  boost::optional<AirflowNetworkFan> FanVariableVolume_Impl::createAirflowNetworkFan()
+  AirflowNetworkFan FanVariableVolume_Impl::airflowNetworkFan()
   {
-    auto opt = airflowNetworkFan();
+    auto opt = optionalAirflowNetworkFan();
     if (opt) {
-      return boost::none;
+      return opt.get();
     }
     return AirflowNetworkFan(model(), handle());
   }
 
-  boost::optional<AirflowNetworkFan> FanVariableVolume_Impl::airflowNetworkFan() const
+  boost::optional<AirflowNetworkFan> FanVariableVolume_Impl::optionalAirflowNetworkFan() const
   {
     std::vector<AirflowNetworkFan> myAFNitems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkFan>(AirflowNetworkFan::iddObjectType());
     auto count = myAFNitems.size();
@@ -1241,14 +1241,14 @@ void FanVariableVolume::resetEndUseSubcategory() {
   getImpl<detail::FanVariableVolume_Impl>()->resetEndUseSubcategory();
 }
 
-boost::optional<AirflowNetworkFan> FanVariableVolume::createAirflowNetworkFan()
-{
-  return getImpl<detail::FanVariableVolume_Impl>()->createAirflowNetworkFan();
-}
-
-boost::optional<AirflowNetworkFan> FanVariableVolume::airflowNetworkFan() const
+AirflowNetworkFan FanVariableVolume::airflowNetworkFan()
 {
   return getImpl<detail::FanVariableVolume_Impl>()->airflowNetworkFan();
+}
+
+boost::optional<AirflowNetworkFan> FanVariableVolume::optionalAirflowNetworkFan() const
+{
+  return getImpl<detail::FanVariableVolume_Impl>()->optionalAirflowNetworkFan();
 }
 
 /// @cond

@@ -385,16 +385,21 @@ namespace detail {
     return result;
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
+  AirflowNetworkEquivalentDuct CoilCoolingDXTwoStageWithHumidityControlMode_Impl::airflowNetworkEquivalentDuct(double length, double diameter)
   {
-    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    boost::optional<AirflowNetworkEquivalentDuct> opt = optionalAirflowNetworkEquivalentDuct();
     if (opt) {
-      return boost::none;
+      if (opt->airPathLength() != length){
+        opt->setAirPathLength(length);
+      }
+      if (opt->airPathHydraulicDiameter() != diameter){
+        opt->setAirPathHydraulicDiameter(diameter);
+      }
     }
     return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::airflowNetworkEquivalentDuct() const
+  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::optionalAirflowNetworkEquivalentDuct() const
   {
     std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>
       (AirflowNetworkEquivalentDuct::iddObjectType());
@@ -606,7 +611,7 @@ CoilCoolingDXTwoStageWithHumidityControlMode::CoilCoolingDXTwoStageWithHumidityC
       partLoadFractionCorrelationCurve);
 
     coilPerformanceDXCooling.setGrossRatedCoolingCOP(2.7);
-    coilPerformanceDXCooling.setFractionofAirFlowBypassedAroundCoil(0.5); 
+    coilPerformanceDXCooling.setFractionofAirFlowBypassedAroundCoil(0.5);
 
     setDehumidificationMode1Stage1CoilPerformance(coilPerformanceDXCooling);
   }
@@ -666,7 +671,7 @@ CoilCoolingDXTwoStageWithHumidityControlMode::CoilCoolingDXTwoStageWithHumidityC
       partLoadFractionCorrelationCurve);
 
     coilPerformanceDXCooling.setGrossRatedCoolingCOP(2.7);
-    coilPerformanceDXCooling.setFractionofAirFlowBypassedAroundCoil(0.0); 
+    coilPerformanceDXCooling.setFractionofAirFlowBypassedAroundCoil(0.0);
 
     setDehumidificationMode1Stage1Plus2CoilPerformance(coilPerformanceDXCooling);
   }
@@ -796,14 +801,14 @@ void CoilCoolingDXTwoStageWithHumidityControlMode::resetBasinHeaterOperatingSche
   getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->resetBasinHeaterOperatingSchedule();
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode::createAirflowNetworkEquivalentDuct(double length, double diameter)
+AirflowNetworkEquivalentDuct CoilCoolingDXTwoStageWithHumidityControlMode::airflowNetworkEquivalentDuct(double length, double diameter)
 {
-  return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->createAirflowNetworkEquivalentDuct(length, diameter);
+  return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->airflowNetworkEquivalentDuct(length, diameter);
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode::airflowNetworkEquivalentDuct() const
+boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode::optionalAirflowNetworkEquivalentDuct() const
 {
-  return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->airflowNetworkEquivalentDuct();
+  return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->optionalAirflowNetworkEquivalentDuct();
 }
 
 /// @cond

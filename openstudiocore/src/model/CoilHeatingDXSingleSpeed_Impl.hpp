@@ -224,8 +224,8 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
 
   //@}
 
-  boost::optional<AirflowNetworkEquivalentDuct> createAirflowNetworkEquivalentDuct(double length, double diameter);
-  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+  AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct(double length, double diameter);
+  boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
 
  protected:
  private:

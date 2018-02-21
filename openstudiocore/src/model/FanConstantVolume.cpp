@@ -219,7 +219,7 @@ namespace detail {
           fanCount += subsetCastVector<FanVariableVolume>(oaSystem->components()).size();
         }
 
-        if( StraightComponent_Impl::addToNode(node) ) 
+        if( StraightComponent_Impl::addToNode(node) )
         {
           SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
           return true;
@@ -457,16 +457,16 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<AirflowNetworkFan> FanConstantVolume_Impl::createAirflowNetworkFan()
+  AirflowNetworkFan FanConstantVolume_Impl::airflowNetworkFan()
   {
-    auto opt = airflowNetworkFan();
+    auto opt = optionalAirflowNetworkFan();
     if (opt) {
-      return boost::none;
+      return opt.get();
     }
     return AirflowNetworkFan(model(), handle());
   }
 
-  boost::optional<AirflowNetworkFan> FanConstantVolume_Impl::airflowNetworkFan() const
+  boost::optional<AirflowNetworkFan> FanConstantVolume_Impl::optionalAirflowNetworkFan() const
   {
     std::vector<AirflowNetworkFan> myAFNitems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkFan>(AirflowNetworkFan::iddObjectType());
     auto count = myAFNitems.size();
@@ -598,14 +598,14 @@ void FanConstantVolume::autosizeMaximumFlowRate() {
   getImpl<detail::FanConstantVolume_Impl>()->autosizeMaximumFlowRate();
 }
 
-boost::optional<AirflowNetworkFan> FanConstantVolume::createAirflowNetworkFan()
-{
-  return getImpl<detail::FanConstantVolume_Impl>()->createAirflowNetworkFan();
-}
-
-boost::optional<AirflowNetworkFan> FanConstantVolume::airflowNetworkFan() const
+AirflowNetworkFan FanConstantVolume::airflowNetworkFan()
 {
   return getImpl<detail::FanConstantVolume_Impl>()->airflowNetworkFan();
+}
+
+boost::optional<AirflowNetworkFan> FanConstantVolume::optionalAirflowNetworkFan() const
+{
+  return getImpl<detail::FanConstantVolume_Impl>()->optionalAirflowNetworkFan();
 }
 
 } // model

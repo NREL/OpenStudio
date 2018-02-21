@@ -73,8 +73,8 @@ namespace detail {
   }
 
   AirLoopHVACOutdoorAirSystem_Impl::AirLoopHVACOutdoorAirSystem_Impl(
-      const AirLoopHVACOutdoorAirSystem_Impl& other, 
-      Model_Impl* model, 
+      const AirLoopHVACOutdoorAirSystem_Impl& other,
+      Model_Impl* model,
       bool keepHandle)
     : HVACComponent_Impl(other,model,keepHandle)
   {}
@@ -97,7 +97,7 @@ namespace detail {
     return result;
   }
 
-  // Get all output variable names that could be associated with this object. 
+  // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& AirLoopHVACOutdoorAirSystem_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -181,7 +181,7 @@ namespace detail {
     //    model.connect( comp.get(), comp->outletPort(),
     //                   lastModelObject, lastPort );
     //    lastModelObject = modelObject;
-    //    lastPort = comp->inletPort(); 
+    //    lastPort = comp->inletPort();
     //  }
     //}
 
@@ -213,7 +213,7 @@ namespace detail {
   }
 
   std::vector<IdfObject> AirLoopHVACOutdoorAirSystem_Impl::remove()
-  { 
+  {
     // Handle h = this->handle();
 
     ModelObjectVector modelObjects;
@@ -242,25 +242,25 @@ namespace detail {
     {
       OptionalNode targetModelObject;
       OptionalNode sourceModelObject;
-      targetModelObject = this->mixedAirModelObject()->optionalCast<Node>(); 
+      targetModelObject = this->mixedAirModelObject()->optionalCast<Node>();
       sourceModelObject = this->returnAirModelObject()->optionalCast<Node>();
       OptionalUnsigned targetPort = this->connectedObjectPort(openstudio::OS_AirLoopHVAC_OutdoorAirSystemFields::MixedAirNodeName);
       OptionalUnsigned sourcePort = this->connectedObjectPort(openstudio::OS_AirLoopHVAC_OutdoorAirSystemFields::ReturnAirStreamNodeName);
-      
+
       OptionalModelObject target2ModelObject = targetModelObject->outletModelObject();
       OptionalModelObject source2ModelObject = sourceModelObject->inletModelObject();
       OptionalUnsigned target2Port = targetModelObject->connectedObjectPort(targetModelObject->outletPort());
       OptionalUnsigned source2Port = sourceModelObject->connectedObjectPort(sourceModelObject->inletPort());
-      
+
       OptionalAirLoopHVAC airLoop = this->airLoop();
       OptionalNode supplyInletNode = airLoop->supplyInletNode();
       OptionalNode supplyOutletNode = OptionalNode(airLoop->supplyOutletNodes().front());
-      
+
       model().disconnect(getObject<ModelObject>(),returnAirPort());
       model().disconnect(getObject<ModelObject>(),mixedAirPort());
 
       // If the component is stuck directly between the inlet and outlet node.
-      if( supplyInletNode->handle() == sourceModelObject->handle() 
+      if( supplyInletNode->handle() == sourceModelObject->handle()
           &&
           supplyOutletNode->handle() == targetModelObject->handle() )
       {
@@ -282,7 +282,7 @@ namespace detail {
     }
 
     getControllerOutdoorAir().remove();
-    
+
     return ModelObject_Impl::remove();
   }
 
@@ -300,11 +300,11 @@ namespace detail {
   std::vector<ModelObject> AirLoopHVACOutdoorAirSystem_Impl::oaComponents() const
   {
     std::vector<ModelObject> modelObjects;
-    
+
     OptionalModelObject modelObject;
 
     modelObject = this->outdoorAirModelObject();
-    
+
     while(modelObject)
     {
       if(OptionalStraightComponent comp = modelObject->optionalCast<StraightComponent>())
@@ -334,11 +334,11 @@ namespace detail {
   std::vector<ModelObject> AirLoopHVACOutdoorAirSystem_Impl::reliefComponents() const
   {
     std::vector<ModelObject> modelObjects;
-    
+
     OptionalModelObject modelObject;
 
     modelObject = this->reliefAirModelObject();
-    
+
     while(modelObject)
     {
       OptionalNode node = modelObject->optionalCast<Node>();
@@ -405,9 +405,9 @@ namespace detail {
   {
     OptionalAirLoopHVAC result;
 
-    AirLoopHVACVector airLoops = this->model().getConcreteModelObjects<AirLoopHVAC>(); 
+    AirLoopHVACVector airLoops = this->model().getConcreteModelObjects<AirLoopHVAC>();
     AirLoopHVACVector::iterator it;
-    
+
     for( it = airLoops.begin();
          it != airLoops.end();
          ++it )
@@ -429,11 +429,11 @@ namespace detail {
   {
     std::vector<ModelObject> result;
     result = this->oaComponents();
-    
+
     std::vector<ModelObject> reliefComponents = this->reliefComponents();
-    
+
     result.insert(result.end(),reliefComponents.begin(),reliefComponents.end());
-    
+
     return result;
   }
 
@@ -493,7 +493,7 @@ namespace detail {
 
   bool AirLoopHVACOutdoorAirSystem_Impl::addToNode(Node & node)
   {
-    Model _model = node.model(); 
+    Model _model = node.model();
     ModelObject thisModelObject = getObject<ModelObject>();
 
     if( OptionalAirLoopHVAC optionalAirLoop = node.airLoopHVAC() )
@@ -546,7 +546,7 @@ namespace detail {
           _model.connect( oldSourceModelObject, oldOutletPort,
                           newNode, newNode.inletPort() );
           _model.connect( newNode, newNode.outletPort(),
-                          thisModelObject, returnAirPort() );                        
+                          thisModelObject, returnAirPort() );
           _model.connect( thisModelObject, mixedAirPort(),
                           oldTargetModelObject, oldInletPort );
           return true;
@@ -557,7 +557,7 @@ namespace detail {
           unsigned oldInletPort = node.connectedObjectPort( node.outletPort() ).get();
           ModelObject oldSourceModelObject = node;
           ModelObject oldTargetModelObject = node.connectedObject( node.outletPort() ).get();
-    
+
           Node newNode( _model );
           _model.connect( oldSourceModelObject, oldOutletPort,
                           thisModelObject, returnAirPort() );
@@ -637,16 +637,16 @@ namespace detail {
     return false;
   }
 
-  boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem_Impl::createAirflowNetworkDistributionNode()
+  AirflowNetworkDistributionNode AirLoopHVACOutdoorAirSystem_Impl::airflowNetworkDistributionNode()
   {
-    boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();
+    boost::optional<AirflowNetworkDistributionNode> opt = optionalAirflowNetworkDistributionNode();
     if (opt) {
-      return boost::none;
+      return opt.get();
     }
     return AirflowNetworkDistributionNode(model(), handle());
   }
 
-  boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem_Impl::airflowNetworkDistributionNode() const
+  boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem_Impl::optionalAirflowNetworkDistributionNode() const
   {
     std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
     auto count = myAFNItems.size();
@@ -672,7 +672,7 @@ AirLoopHVACOutdoorAirSystem::AirLoopHVACOutdoorAirSystem(Model & model, const Co
 
   // Children.
 
-  setControllerOutdoorAir(controller); 
+  setControllerOutdoorAir(controller);
 
   Node oaNode(model);
   model.connect(oaNode,oaNode.outletPort(),outdoorAirSystem,outdoorAirPort());
@@ -802,14 +802,14 @@ IddObjectType AirLoopHVACOutdoorAirSystem::iddObjectType() {
   return result;
 }
 
-boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem::createAirflowNetworkDistributionNode()
-{
-  return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->createAirflowNetworkDistributionNode();
-}
-
-boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem::airflowNetworkDistributionNode() const
+AirflowNetworkDistributionNode AirLoopHVACOutdoorAirSystem::airflowNetworkDistributionNode()
 {
   return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->airflowNetworkDistributionNode();
+}
+
+boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem::optionalAirflowNetworkDistributionNode() const
+{
+  return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->optionalAirflowNetworkDistributionNode();
 }
 
 } // model

@@ -464,16 +464,21 @@ namespace detail{
     return false;
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
+  AirflowNetworkEquivalentDuct CoilHeatingGas_Impl::airflowNetworkEquivalentDuct(double length, double diameter)
   {
-    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    boost::optional<AirflowNetworkEquivalentDuct> opt = optionalAirflowNetworkEquivalentDuct();
     if (opt) {
-      return boost::none;
+      if (opt->airPathLength() != length){
+        opt->setAirPathLength(length);
+      }
+      if (opt->airPathHydraulicDiameter() != diameter){
+        opt->setAirPathHydraulicDiameter(diameter);
+      }
     }
     return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas_Impl::airflowNetworkEquivalentDuct() const
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas_Impl::optionalAirflowNetworkEquivalentDuct() const
   {
     std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
     auto count = myAFN.size();
@@ -639,14 +644,14 @@ IddObjectType CoilHeatingGas::iddObjectType() {
   return result;
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas::createAirflowNetworkEquivalentDuct(double length, double diameter)
+AirflowNetworkEquivalentDuct CoilHeatingGas::airflowNetworkEquivalentDuct(double length, double diameter)
 {
-  return getImpl<detail::CoilHeatingGas_Impl>()->createAirflowNetworkEquivalentDuct(length, diameter);
+  return getImpl<detail::CoilHeatingGas_Impl>()->airflowNetworkEquivalentDuct(length, diameter);
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas::airflowNetworkEquivalentDuct() const
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas::optionalAirflowNetworkEquivalentDuct() const
 {
-  return getImpl<detail::CoilHeatingGas_Impl>()->airflowNetworkEquivalentDuct();
+  return getImpl<detail::CoilHeatingGas_Impl>()->optionalAirflowNetworkEquivalentDuct();
 }
 
 } // model

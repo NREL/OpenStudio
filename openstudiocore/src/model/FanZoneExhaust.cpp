@@ -125,7 +125,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   boost::optional<ThermalZone> FanZoneExhaust_Impl::thermalZone()
   {
     boost::optional<ThermalZone> result;
@@ -148,8 +148,8 @@ namespace detail {
     }
 
     return result;
-  }  
-  
+  }
+
   bool FanZoneExhaust_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
     Model m = this->model();
@@ -177,7 +177,7 @@ namespace detail {
 
     m.connect(exhaustNode,exhaustNode.outletPort(),mo,this->inletPort());
 
-    // Node (Exhaust Fan Outlet Node) 
+    // Node (Exhaust Fan Outlet Node)
 
     Node exhaustFanOutletNode(m);
 
@@ -217,7 +217,7 @@ namespace detail {
   {
     return OS_Fan_ZoneExhaustFields::AirOutletNodeName;
   }
-  
+
   std::string FanZoneExhaust_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_Fan_ZoneExhaustFields::EndUseSubcategory,true);
     OS_ASSERT(value);
@@ -331,16 +331,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<AirflowNetworkZoneExhaustFan> FanZoneExhaust_Impl::createAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack)
+  AirflowNetworkZoneExhaustFan FanZoneExhaust_Impl::airflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack)
   {
-    boost::optional<AirflowNetworkZoneExhaustFan> opt = airflowNetworkZoneExhaustFan();
+    boost::optional<AirflowNetworkZoneExhaustFan> opt = optionalAirflowNetworkZoneExhaustFan();
     if (opt) {
-      return boost::none;
+      boost::optional<AirflowNetworkCrack> oldCrack = opt->crack();
+      if (oldCrack){
+        if (oldCrack->handle() == crack.handle()){
+          return opt.get();
+        }
+      }
+      opt->remove();
     }
     return AirflowNetworkZoneExhaustFan(model(), crack, handle());
   }
 
-  boost::optional<AirflowNetworkZoneExhaustFan> FanZoneExhaust_Impl::airflowNetworkZoneExhaustFan()
+  boost::optional<AirflowNetworkZoneExhaustFan> FanZoneExhaust_Impl::optionalAirflowNetworkZoneExhaustFan() const
   {
     std::vector<AirflowNetworkZoneExhaustFan> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkZoneExhaustFan>(AirflowNetworkZoneExhaustFan::iddObjectType());
     auto count = myAFNItems.size();
@@ -467,14 +473,14 @@ void FanZoneExhaust::resetBalancedExhaustFractionSchedule() {
   getImpl<detail::FanZoneExhaust_Impl>()->resetBalancedExhaustFractionSchedule();
 }
 
-boost::optional<AirflowNetworkZoneExhaustFan> FanZoneExhaust::createAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack)
+AirflowNetworkZoneExhaustFan FanZoneExhaust::airflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack)
 {
-  return getImpl<detail::FanZoneExhaust_Impl>()->createAirflowNetworkZoneExhaustFan(crack);
+  return getImpl<detail::FanZoneExhaust_Impl>()->airflowNetworkZoneExhaustFan(crack);
 }
 
-boost::optional<AirflowNetworkZoneExhaustFan> FanZoneExhaust::airflowNetworkZoneExhaustFan()
+boost::optional<AirflowNetworkZoneExhaustFan> FanZoneExhaust::optionalAirflowNetworkZoneExhaustFan() const
 {
-  return getImpl<detail::FanZoneExhaust_Impl>()->airflowNetworkZoneExhaustFan();
+  return getImpl<detail::FanZoneExhaust_Impl>()->optionalAirflowNetworkZoneExhaustFan();
 }
 
 /// @cond

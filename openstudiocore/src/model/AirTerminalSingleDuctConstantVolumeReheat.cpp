@@ -127,12 +127,12 @@ namespace detail {
     return value.get();
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeReheat_Impl::inletPort() 
+  unsigned AirTerminalSingleDuctConstantVolumeReheat_Impl::inletPort()
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeReheat_Impl::outletPort() 
+  unsigned AirTerminalSingleDuctConstantVolumeReheat_Impl::outletPort()
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::AirOutletNodeName;
   }
@@ -167,7 +167,7 @@ namespace detail {
                               sourcePort.get(),
                               inletNode,
                               inletNode.inletPort() );
-              
+
               _model.connect( inletNode,
                               inletNode.outletPort(),
                               this->getObject<ModelObject>(),
@@ -185,7 +185,7 @@ namespace detail {
                 thermalZone->addEquipment(mo);
               }
 
-              return true; 
+              return true;
             }
           }
         }
@@ -204,7 +204,7 @@ namespace detail {
 
     boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
     boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
-    
+
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
@@ -283,7 +283,7 @@ namespace detail {
     HVACComponent coil = this->reheatCoil();
 
     HVACComponent coilClone = coil.clone(model).cast<HVACComponent>();
-    
+
     modelObjectClone.setReheatCoil(coilClone);
 
     return modelObjectClone;
@@ -416,7 +416,7 @@ namespace detail {
     if( result )
     {
       result = this->setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_ReheatFields::ReheatCoilName,coil.handle());
-    } 
+    }
 
     return result;
   }
@@ -524,16 +524,22 @@ namespace detail {
     return true;
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> AirTerminalSingleDuctConstantVolumeReheat_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
+  AirflowNetworkEquivalentDuct AirTerminalSingleDuctConstantVolumeReheat_Impl::airflowNetworkEquivalentDuct(double length, double diameter)
   {
-    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    boost::optional<AirflowNetworkEquivalentDuct> opt = optionalAirflowNetworkEquivalentDuct();
     if (opt) {
-      return boost::none;
+      if (opt->airPathLength() != length){
+        opt->setAirPathLength(length);
+      }
+      if (opt->airPathHydraulicDiameter() != diameter){
+        opt->setAirPathHydraulicDiameter(diameter);
+      }
+      return opt.get();
     }
     return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> AirTerminalSingleDuctConstantVolumeReheat_Impl::airflowNetworkEquivalentDuct() const
+  boost::optional<AirflowNetworkEquivalentDuct> AirTerminalSingleDuctConstantVolumeReheat_Impl::optionalAirflowNetworkEquivalentDuct() const
   {
     std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
     auto count = myAFN.size();
@@ -548,10 +554,10 @@ namespace detail {
 
 } // detail
 
-AirTerminalSingleDuctConstantVolumeReheat::AirTerminalSingleDuctConstantVolumeReheat(const Model& model, 
+AirTerminalSingleDuctConstantVolumeReheat::AirTerminalSingleDuctConstantVolumeReheat(const Model& model,
                                                                 Schedule& availabilitySchedule,
                                                                 HVACComponent& coil)
-  : StraightComponent(AirTerminalSingleDuctConstantVolumeReheat::iddObjectType(),model) 
+  : StraightComponent(AirTerminalSingleDuctConstantVolumeReheat::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>());
 
@@ -687,14 +693,14 @@ void AirTerminalSingleDuctConstantVolumeReheat::resetMaximumReheatAirTemperature
   getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->resetMaximumReheatAirTemperature();
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> AirTerminalSingleDuctConstantVolumeReheat::createAirflowNetworkEquivalentDuct(double length, double diameter)
+AirflowNetworkEquivalentDuct AirTerminalSingleDuctConstantVolumeReheat::airflowNetworkEquivalentDuct(double length, double diameter)
 {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->createAirflowNetworkEquivalentDuct(length, diameter);
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->airflowNetworkEquivalentDuct(length, diameter);
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> AirTerminalSingleDuctConstantVolumeReheat::airflowNetworkEquivalentDuct() const
+boost::optional<AirflowNetworkEquivalentDuct> AirTerminalSingleDuctConstantVolumeReheat::optionalAirflowNetworkEquivalentDuct() const
 {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->airflowNetworkEquivalentDuct();
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl>()->optionalAirflowNetworkEquivalentDuct();
 }
 
 /// @cond

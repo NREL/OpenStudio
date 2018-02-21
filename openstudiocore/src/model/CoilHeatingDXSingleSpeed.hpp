@@ -216,9 +216,10 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
   //@}
 
   /** Creates a new equivalent duct object if an object is not already attached. */
-  boost::optional<AirflowNetworkEquivalentDuct> createAirflowNetworkEquivalentDuct(double length, double diameter);
+  AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct(double length, double diameter);
+  
   /** Returns the attached equivalent duct object, if any. */
-  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+  boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
 
  protected:
   /// @cond

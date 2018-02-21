@@ -44,7 +44,7 @@ namespace detail {
   AirflowNetworkHorizontalOpening_Impl::AirflowNetworkHorizontalOpening_Impl(const IdfObject& idfObject,
                                                                              Model_Impl* model,
                                                                              bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : AirflowNetworkComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkHorizontalOpening::iddObjectType());
   }
@@ -52,7 +52,7 @@ namespace detail {
   AirflowNetworkHorizontalOpening_Impl::AirflowNetworkHorizontalOpening_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                              Model_Impl* model,
                                                                              bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AirflowNetworkHorizontalOpening::iddObjectType());
   }
@@ -60,7 +60,7 @@ namespace detail {
   AirflowNetworkHorizontalOpening_Impl::AirflowNetworkHorizontalOpening_Impl(const AirflowNetworkHorizontalOpening_Impl& other,
                                                                              Model_Impl* model,
                                                                              bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AirflowNetworkHorizontalOpening_Impl::outputVariableNames() const
@@ -142,7 +142,7 @@ namespace detail {
 AirflowNetworkHorizontalOpening::AirflowNetworkHorizontalOpening(const Model& model,
   double massFlowCoefficientWhenOpeningisClosed,
   double dischargeCoefficient)
-  : ModelObject(AirflowNetworkHorizontalOpening::iddObjectType(), model)
+  : AirflowNetworkComponent(AirflowNetworkHorizontalOpening::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkHorizontalOpening_Impl>());
 
@@ -157,7 +157,7 @@ AirflowNetworkHorizontalOpening::AirflowNetworkHorizontalOpening(const Model& mo
   double massFlowExponentWhenOpeningisClosed,
   double slopingPlaneAngle,
   double dischargeCoefficient)
-  : ModelObject(AirflowNetworkHorizontalOpening::iddObjectType(), model)
+  : AirflowNetworkComponent(AirflowNetworkHorizontalOpening::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkHorizontalOpening_Impl>());
 
@@ -225,7 +225,7 @@ bool AirflowNetworkHorizontalOpening::setDischargeCoefficient(double dischargeCo
 
 /// @cond
 AirflowNetworkHorizontalOpening::AirflowNetworkHorizontalOpening(std::shared_ptr<detail::AirflowNetworkHorizontalOpening_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkComponent(impl)
 {}
 /// @endcond
 

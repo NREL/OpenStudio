@@ -119,8 +119,8 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
   /** @name Other */
   //@{
 
-  boost::optional<AirflowNetworkZoneExhaustFan> createAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack);
-  boost::optional<AirflowNetworkZoneExhaustFan> airflowNetworkZoneExhaustFan();
+  AirflowNetworkZoneExhaustFan airflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack);
+  boost::optional<AirflowNetworkZoneExhaustFan> optionalAirflowNetworkZoneExhaustFan() const;
 
   //@}
  protected:

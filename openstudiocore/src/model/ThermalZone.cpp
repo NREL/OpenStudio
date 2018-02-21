@@ -167,7 +167,7 @@ namespace detail {
       result.push_back(mixing);
     }
 
-    boost::optional<AirflowNetworkZone> afnz = airflowNetworkZone();
+    boost::optional<AirflowNetworkZone> afnz = optionalAirflowNetworkZone();
     if (afnz) {
       result.push_back(afnz.get());
     }
@@ -1194,7 +1194,7 @@ namespace detail {
           if (surface.isAirWall()){
             needToSetFloorArea = true;
             break;
-          } 
+          }
 
           auto adjacentSurface = surface.adjacentSurface();
           if (adjacentSurface){
@@ -1204,7 +1204,7 @@ namespace detail {
               if (adjacentThermalZone){
                 if (adjacentThermalZone->handle() == this->handle())
                 {
-                  // this surface is completely inside the zone, need to set floor area since this surface will be removed 
+                  // this surface is completely inside the zone, need to set floor area since this surface will be removed
                   needToSetFloorArea = true;
                   break;
                 }
@@ -1291,7 +1291,7 @@ namespace detail {
     // set E+ floor area here if needed, this is only used for reporting total building area
     // loads are hard sized according to OpenStudio space floor area
     if (needToSetFloorArea){
-      
+
       // do not allow per area loads in the space type since we are overriding floor area
       spaceType.reset();
 
@@ -2078,7 +2078,7 @@ namespace detail {
 
     // DLM: do not clone zone mixing objects
 
-    if (auto t_afnzone = airflowNetworkZone()) {
+    if (auto t_afnzone = optionalAirflowNetworkZone()) {
       auto afnzoneClone = t_afnzone->clone(model).cast<AirflowNetworkZone>();
       afnzoneClone.setThermalZone(tz);
     }
@@ -2460,7 +2460,16 @@ namespace detail {
     }
   }
 
-  boost::optional<AirflowNetworkZone> ThermalZone_Impl::airflowNetworkZone() const
+  AirflowNetworkZone ThermalZone_Impl::airflowNetworkZone()
+  {
+    boost::optional<AirflowNetworkZone> opt = optionalAirflowNetworkZone();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkZone(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkZone> ThermalZone_Impl::optionalAirflowNetworkZone() const
   {
     std::vector<AirflowNetworkZone> myAFNZones = getObject<ModelObject>().getModelObjectSources<AirflowNetworkZone>(AirflowNetworkZone::iddObjectType());
     auto count = myAFNZones.size();
@@ -2472,17 +2481,6 @@ namespace detail {
     }
     return boost::none;
   }
-
-  boost::optional<AirflowNetworkZone> ThermalZone_Impl::createAirflowNetworkZone()
-  {
-    boost::optional<AirflowNetworkZone> opt = airflowNetworkZone();
-    if (opt) {
-      return boost::none;
-    }
-    return AirflowNetworkZone(model(), handle());
-  }
-
-
 } // detail
 
 ThermalZone::ThermalZone(const Model& model)
@@ -3074,14 +3072,14 @@ void ThermalZone::resetZoneControlContaminantController()
   getImpl<detail::ThermalZone_Impl>()->resetZoneControlContaminantController();
 }
 
-boost::optional<AirflowNetworkZone> ThermalZone::createAirflowNetworkZone()
-{
-  return getImpl<detail::ThermalZone_Impl>()->createAirflowNetworkZone();
-}
-
-boost::optional<AirflowNetworkZone> ThermalZone::airflowNetworkZone() const
+AirflowNetworkZone ThermalZone::airflowNetworkZone()
 {
   return getImpl<detail::ThermalZone_Impl>()->airflowNetworkZone();
+}
+
+boost::optional<AirflowNetworkZone> ThermalZone::optionalAirflowNetworkZone() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->optionalAirflowNetworkZone();
 }
 
 /// @cond

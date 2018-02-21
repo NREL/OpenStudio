@@ -284,13 +284,13 @@ class MODEL_API Surface : public PlanarSurface {
    *  Returns false is this surface has any current sub surfaces or if there is an adjacent surface.*/
   std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
 
-  boost::optional<AirflowNetworkSurface> createAirflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage);
-  boost::optional<AirflowNetworkSurface> createAirflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage);
-  boost::optional<AirflowNetworkSurface> createAirflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage);
-  boost::optional<AirflowNetworkSurface> createAirflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage);
-  boost::optional<AirflowNetworkSurface> createAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage);
+  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage);
+  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage);
+  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage);
+  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage);
+  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage);
 
-  boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
+  boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
 
  protected:
   /// @cond

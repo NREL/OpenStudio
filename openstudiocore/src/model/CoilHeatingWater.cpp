@@ -97,7 +97,7 @@ namespace detail{
   bool CoilHeatingWater_Impl::addToNode(Node & node)
   {
     bool success =  WaterToAirComponent_Impl::addToNode( node );
-    
+
     if( success && (! containingHVACComponent()) && (! containingZoneHVACComponent()) ) {
       if( boost::optional<ModelObject> _waterInletModelObject = waterInletModelObject() ) {
         if( auto oldController = controllerWaterCoil() ) {
@@ -552,16 +552,21 @@ namespace detail{
     return false;
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingWater_Impl::createAirflowNetworkEquivalentDuct(double length, double diameter)
+  AirflowNetworkEquivalentDuct CoilHeatingWater_Impl::airflowNetworkEquivalentDuct(double length, double diameter)
   {
-    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    boost::optional<AirflowNetworkEquivalentDuct> opt = optionalAirflowNetworkEquivalentDuct();
     if (opt) {
-      return boost::none;
+      if (opt->airPathLength() != length){
+        opt->setAirPathLength(length);
+      }
+      if (opt->airPathHydraulicDiameter() != diameter){
+        opt->setAirPathHydraulicDiameter(diameter);
+      }
     }
     return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingWater_Impl::airflowNetworkEquivalentDuct() const
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingWater_Impl::optionalAirflowNetworkEquivalentDuct() const
   {
     std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
     auto count = myAFN.size();
@@ -588,7 +593,7 @@ CoilHeatingWater::CoilHeatingWater(const Model& model)
   : WaterToAirComponent(CoilHeatingWater::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilHeatingWater_Impl>());
-  
+
   auto availableSchedule = model.alwaysOnDiscreteSchedule();
   setAvailableSchedule(availableSchedule);
 }
@@ -747,14 +752,14 @@ boost::optional<ControllerWaterCoil> CoilHeatingWater::controllerWaterCoil()
   return getImpl<detail::CoilHeatingWater_Impl>()->controllerWaterCoil();
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingWater::createAirflowNetworkEquivalentDuct(double length, double diameter)
+AirflowNetworkEquivalentDuct CoilHeatingWater::airflowNetworkEquivalentDuct(double length, double diameter)
 {
-  return getImpl<detail::CoilHeatingWater_Impl>()->createAirflowNetworkEquivalentDuct(length, diameter);
+  return getImpl<detail::CoilHeatingWater_Impl>()->airflowNetworkEquivalentDuct(length, diameter);
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingWater::airflowNetworkEquivalentDuct() const
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingWater::optionalAirflowNetworkEquivalentDuct() const
 {
-  return getImpl<detail::CoilHeatingWater_Impl>()->airflowNetworkEquivalentDuct();
+  return getImpl<detail::CoilHeatingWater_Impl>()->optionalAirflowNetworkEquivalentDuct();
 }
 
 } // model
