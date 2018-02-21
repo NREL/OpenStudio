@@ -172,8 +172,8 @@ namespace detail {
 
     //@}
 
-    AirflowNetworkFan airflowNetworkFan();
-    boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
+    AirflowNetworkFan getAirflowNetworkFan();
+    boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
 
    //protected:
    private:

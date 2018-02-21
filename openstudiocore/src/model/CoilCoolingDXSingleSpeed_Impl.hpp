@@ -271,7 +271,8 @@ namespace detail {
 
     virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct(double length, double diameter);
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+
     bool hasAirflowNetworkEquivalentDuct() const;
 
     //@}

@@ -490,9 +490,9 @@ namespace detail {
     return boost::none;
   }
 
-  AirflowNetworkEquivalentDuct CoilCoolingWater_Impl::airflowNetworkEquivalentDuct(double length, double diameter)
+  AirflowNetworkEquivalentDuct CoilCoolingWater_Impl::getAirflowNetworkEquivalentDuct(double length, double diameter)
   {
-    boost::optional<AirflowNetworkEquivalentDuct> opt = optionalAirflowNetworkEquivalentDuct();
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
     if (opt) {
       if (opt->airPathLength() != length){
         opt->setAirPathLength(length);
@@ -505,7 +505,7 @@ namespace detail {
     return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingWater_Impl::optionalAirflowNetworkEquivalentDuct() const
+  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingWater_Impl::airflowNetworkEquivalentDuct() const
   {
     std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>
       (AirflowNetworkEquivalentDuct::iddObjectType());
@@ -809,14 +809,14 @@ boost::optional<ControllerWaterCoil> CoilCoolingWater::controllerWaterCoil()
   return getImpl<detail::CoilCoolingWater_Impl>()->controllerWaterCoil();
 }
 
-AirflowNetworkEquivalentDuct CoilCoolingWater::airflowNetworkEquivalentDuct(double length, double diameter)
+AirflowNetworkEquivalentDuct CoilCoolingWater::getAirflowNetworkEquivalentDuct(double length, double diameter)
 {
-  return getImpl<detail::CoilCoolingWater_Impl>()->airflowNetworkEquivalentDuct(length, diameter);
+  return getImpl<detail::CoilCoolingWater_Impl>()->getAirflowNetworkEquivalentDuct(length, diameter);
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingWater::optionalAirflowNetworkEquivalentDuct() const
+boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingWater::airflowNetworkEquivalentDuct() const
 {
-  return getImpl<detail::CoilCoolingWater_Impl>()->optionalAirflowNetworkEquivalentDuct();
+  return getImpl<detail::CoilCoolingWater_Impl>()->airflowNetworkEquivalentDuct();
 }
 
   boost::optional<double> CoilCoolingWater::autosizedDesignWaterFlowRate() const {

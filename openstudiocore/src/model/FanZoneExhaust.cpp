@@ -346,9 +346,9 @@ namespace detail {
     return types;
   }
   
-  AirflowNetworkZoneExhaustFan FanZoneExhaust_Impl::airflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack)
+  AirflowNetworkZoneExhaustFan FanZoneExhaust_Impl::getAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack)
   {
-    boost::optional<AirflowNetworkZoneExhaustFan> opt = optionalAirflowNetworkZoneExhaustFan();
+    boost::optional<AirflowNetworkZoneExhaustFan> opt = airflowNetworkZoneExhaustFan();
     if (opt) {
       boost::optional<AirflowNetworkCrack> oldCrack = opt->crack();
       if (oldCrack){
@@ -361,7 +361,7 @@ namespace detail {
     return AirflowNetworkZoneExhaustFan(model(), crack, handle());
   }
 
-  boost::optional<AirflowNetworkZoneExhaustFan> FanZoneExhaust_Impl::optionalAirflowNetworkZoneExhaustFan() const
+  boost::optional<AirflowNetworkZoneExhaustFan> FanZoneExhaust_Impl::airflowNetworkZoneExhaustFan() const
   {
     std::vector<AirflowNetworkZoneExhaustFan> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkZoneExhaustFan>(AirflowNetworkZoneExhaustFan::iddObjectType());
     auto count = myAFNItems.size();
@@ -488,14 +488,14 @@ void FanZoneExhaust::resetBalancedExhaustFractionSchedule() {
   getImpl<detail::FanZoneExhaust_Impl>()->resetBalancedExhaustFractionSchedule();
 }
 
-AirflowNetworkZoneExhaustFan FanZoneExhaust::airflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack)
+AirflowNetworkZoneExhaustFan FanZoneExhaust::getAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack)
 {
-  return getImpl<detail::FanZoneExhaust_Impl>()->airflowNetworkZoneExhaustFan(crack);
+  return getImpl<detail::FanZoneExhaust_Impl>()->getAirflowNetworkZoneExhaustFan(crack);
 }
 
-boost::optional<AirflowNetworkZoneExhaustFan> FanZoneExhaust::optionalAirflowNetworkZoneExhaustFan() const
+boost::optional<AirflowNetworkZoneExhaustFan> FanZoneExhaust::airflowNetworkZoneExhaustFan() const
 {
-  return getImpl<detail::FanZoneExhaust_Impl>()->optionalAirflowNetworkZoneExhaustFan();
+  return getImpl<detail::FanZoneExhaust_Impl>()->airflowNetworkZoneExhaustFan();
 }
 
 /// @cond
@@ -505,4 +505,4 @@ FanZoneExhaust::FanZoneExhaust(std::shared_ptr<detail::FanZoneExhaust_Impl> impl
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

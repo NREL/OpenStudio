@@ -641,16 +641,16 @@ namespace detail {
     return false;
   }
 
-  AirflowNetworkDistributionNode AirLoopHVACOutdoorAirSystem_Impl::airflowNetworkDistributionNode()
+  AirflowNetworkDistributionNode AirLoopHVACOutdoorAirSystem_Impl::getAirflowNetworkDistributionNode()
   {
-    boost::optional<AirflowNetworkDistributionNode> opt = optionalAirflowNetworkDistributionNode();
+    boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();
     if (opt) {
       return opt.get();
     }
     return AirflowNetworkDistributionNode(model(), handle());
   }
 
-  boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem_Impl::optionalAirflowNetworkDistributionNode() const
+  boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem_Impl::airflowNetworkDistributionNode() const
   {
     std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
     auto count = myAFNItems.size();
@@ -806,14 +806,14 @@ IddObjectType AirLoopHVACOutdoorAirSystem::iddObjectType() {
   return result;
 }
 
-AirflowNetworkDistributionNode AirLoopHVACOutdoorAirSystem::airflowNetworkDistributionNode()
+AirflowNetworkDistributionNode AirLoopHVACOutdoorAirSystem::getAirflowNetworkDistributionNode()
 {
-  return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->airflowNetworkDistributionNode();
+  return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->getAirflowNetworkDistributionNode();
 }
 
-boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem::optionalAirflowNetworkDistributionNode() const
+boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem::airflowNetworkDistributionNode() const
 {
-  return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->optionalAirflowNetworkDistributionNode();
+  return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->airflowNetworkDistributionNode();
 }
 
 } // model

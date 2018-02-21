@@ -131,9 +131,9 @@ namespace detail {
 
     virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    AirflowNetworkDistributionNode airflowNetworkDistributionNode();
+    AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
-    boost::optional<AirflowNetworkDistributionNode> optionalAirflowNetworkDistributionNode() const;
+    boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
    private:
 

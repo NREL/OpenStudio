@@ -141,8 +141,8 @@ namespace detail {
     /** @name Other */
     //@{
 
-    AirflowNetworkZoneExhaustFan airflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack);
-    boost::optional<AirflowNetworkZoneExhaustFan> optionalAirflowNetworkZoneExhaustFan() const;
+    AirflowNetworkZoneExhaustFan getAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack);
+    boost::optional<AirflowNetworkZoneExhaustFan> airflowNetworkZoneExhaustFan() const;
 
     //@}
    protected:

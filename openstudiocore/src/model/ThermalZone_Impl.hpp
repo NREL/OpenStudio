@@ -411,8 +411,8 @@ namespace detail {
 
     boost::optional<HVACComponent> airLoopHVACTerminal() const;
 
-    AirflowNetworkZone airflowNetworkZone();
-    boost::optional<AirflowNetworkZone> optionalAirflowNetworkZone() const;
+    AirflowNetworkZone getAirflowNetworkZone();
+    boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
 
    protected:
 
