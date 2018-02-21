@@ -52,6 +52,8 @@
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirflowNetworkFan.hpp"
+#include "AirflowNetworkFan_Impl.hpp"
 #include "SetpointManagerMixedAir.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
@@ -459,6 +461,28 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  AirflowNetworkFan FanConstantVolume_Impl::getAirflowNetworkFan()
+  {
+    auto opt = airflowNetworkFan();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkFan(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkFan> FanConstantVolume_Impl::airflowNetworkFan() const
+  {
+    std::vector<AirflowNetworkFan> myAFNitems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkFan>(AirflowNetworkFan::iddObjectType());
+    auto count = myAFNitems.size();
+    if (count == 1) {
+      return myAFNitems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFNitems[0];
+    }
+    return boost::none;
+  }
+
   boost::optional<double> FanConstantVolume_Impl::autosizedMaximumFlowRate() const {
     return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
   }
@@ -595,9 +619,18 @@ void FanConstantVolume::autosizeMaximumFlowRate() {
   getImpl<detail::FanConstantVolume_Impl>()->autosizeMaximumFlowRate();
 }
 
-  boost::optional<double> FanConstantVolume::autosizedMaximumFlowRate() const {
-    return getImpl<detail::FanConstantVolume_Impl>()->autosizedMaximumFlowRate();
-  }
+AirflowNetworkFan FanConstantVolume::getAirflowNetworkFan()
+{
+  return getImpl<detail::FanConstantVolume_Impl>()->getAirflowNetworkFan();
+}
 
+boost::optional<AirflowNetworkFan> FanConstantVolume::airflowNetworkFan() const
+{
+  return getImpl<detail::FanConstantVolume_Impl>()->airflowNetworkFan();
+}
+
+boost::optional<double> FanConstantVolume::autosizedMaximumFlowRate() const {
+  return getImpl<detail::FanConstantVolume_Impl>()->autosizedMaximumFlowRate();
+}
 } // model
 } // openstudio

@@ -39,6 +39,7 @@ namespace model {
 
 class Schedule;
 class Curve;
+class AirflowNetworkFan;
 
 namespace detail {
 
@@ -134,10 +135,10 @@ class MODEL_API FanOnOff : public StraightComponent {
 
   //@{
 
+  AirflowNetworkFan getAirflowNetworkFan();
+  boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
+
   boost::optional<double> autosizedMaximumFlowRate() const ;
-
-
-
   //@}
  protected:
   /// @cond
@@ -163,4 +164,4 @@ typedef std::vector<FanOnOff> FanOnOffVector;
 } // model
 } // openstudio
 
-#endif // MODEL_FANONOFF_HPP
+#endif // MODEL_FANONOFF_HPP

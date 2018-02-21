@@ -35,6 +35,8 @@ namespace openstudio {
 
 namespace model {
 
+class AirflowNetworkDistributionNode;
+
 namespace detail{
 
 class MODEL_API AirLoopHVACZoneMixer_Impl : public Mixer_Impl
@@ -60,6 +62,8 @@ class MODEL_API AirLoopHVACZoneMixer_Impl : public Mixer_Impl
   // Get all output variable names that could be associated with this object.
   virtual const std::vector<std::string>& outputVariableNames() const override;
 
+  virtual std::vector<ModelObject> children() const override;
+
   virtual IddObjectType iddObjectType() const override;
 
   std::vector<openstudio::IdfObject> remove() override;
@@ -75,6 +79,10 @@ class MODEL_API AirLoopHVACZoneMixer_Impl : public Mixer_Impl
   virtual ModelObject clone(Model model) const override;
 
   void disconnect() override;
+
+  AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
+
+  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
  private:
 

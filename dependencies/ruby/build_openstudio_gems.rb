@@ -53,6 +53,11 @@ if !File.exists?(bundle_exe)
   raise "Required bundle executable not found"
 end
 
+if File.exists?('Gemfile.lock')
+  puts 'Removing Gemfile.lock'
+  FileUtils.rm('Gemfile.lock')
+end
+
 system_call("#{bundle_exe} _#{bundle_version}_ install --without=test --path='#{install_dir}'")
 
 FileUtils.rm_rf("#{install_dir}/ruby/#{ruby_gem_dir}/cache")
@@ -78,10 +83,12 @@ puts "standards_gem_dir = #{standards_gem_dir}"
 puts "workflow_gem_dir = #{workflow_gem_dir}"
 
 # clean up standards gem
-FileUtils.rm_rf("#{standards_gem_dir}/.git")
-FileUtils.rm_rf("#{standards_gem_dir}/measures")
-FileUtils.rm_rf("#{standards_gem_dir}/openstudio-standards/test")
-FileUtils.rm_rf("#{standards_gem_dir}/openstudio-standards/docs")
+FileUtils.rm_rf("#{standards_gem_dir}/.git") # If installed from Github
+FileUtils.rm_rf("#{standards_gem_dir}/.circleci") # If installed from Github
+FileUtils.rm_rf("#{standards_gem_dir}/.vscode") # If installed from Github
+FileUtils.rm_rf("#{standards_gem_dir}/test") # If installed from Github
+FileUtils.rm_rf("#{standards_gem_dir}/docs") # If installed from Github
+# Remove Canadian weather files
 Dir.glob("#{standards_gem_dir}/data/weather/*").each do |f|
   if /CAN_/.match(f)
     FileUtils.rm_f(f)

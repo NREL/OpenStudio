@@ -1,6 +1,6 @@
 
 OS:Version,
-  {de09e553-501b-482c-8f3a-f24d04bcbf5e}, !- Handle
+  {9793bc78-0ad3-4e2c-ad9c-026d1d7c594a}, !- Handle
   2.4.1;                                  !- Version Identifier
 
 ! Always OnOff Discrete Schedule Type Limits
@@ -542,15 +542,15 @@ OS:CoolingTower:SingleSpeed,
   0.33,                                   !- Cell Minimum  Water Flow Rate Fraction
   2.5,                                    !- Cell Maximum Water Flow Rate Fraction
   1,                                      !- Sizing Factor
-  ,                                       !- Free Convection Air Flow Rate Sizing Factor
-  ,                                       !- Free Convection U-Factor Times Area Value Sizing Factor
-  ,                                       !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
-  ,                                       !- Free Convection Nominal Capacity Sizing Factor
-  ,                                       !- Design Inlet Air Dry-Bulb Temperature {C}
-  ,                                       !- Design Inlet Air Wet-Bulb Temperature {C}
-  ,                                       !- Design Approach Temperature {deltaC}
-  ,                                       !- Design Range Temperature {deltaC}
-  ;                                       !- End-Use Subcategory
+  0.1,                                    !- Free Convection Air Flow Rate Sizing Factor
+  0.1,                                    !- Free Convection U-Factor Times Area Value Sizing Factor
+  1.25,                                   !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
+  0.1,                                    !- Free Convection Nominal Capacity Sizing Factor
+  35.0,                                   !- Design Inlet Air Dry-Bulb Temperature {C}
+  25.6,                                   !- Design Inlet Air Wet-Bulb Temperature {C}
+  Autosize,                               !- Design Approach Temperature {deltaC}
+  Autosize,                               !- Design Range Temperature {deltaC}
+  General;                                !- End-Use Subcategory
 
 OS:Curve:Biquadratic,
   {43241c62-f9aa-470c-877b-aed134698156}, ! Handle
@@ -1369,37 +1369,37 @@ OS:Curve:Cubic,
   10;                                     !- Maximum Value of x
 
 OS:Chiller:Electric:EIR,
-  {849d9618-ded0-4983-b57f-090fa2a756c0}, ! Handle
-  Chiller - Air Cooled,                   ! Name
-  Autosize,                               ! Reference Capacity {W}
-  5.5,                                    ! Reference COP {W/W}
-  ,                                       ! Reference Leaving Chilled Water Temperature {C}
-  ,                                       ! Reference Entering Condenser Fluid Temperature {C}
-  ,                                       ! Reference Chilled Water Flow Rate {m3/s}
-  ,                                       ! Reference Condenser Fluid Flow Rate {m3/s}
-  {238cb0b4-afac-4115-8524-7778555d6cfb}, ! Cooling Capacity Function of Temperature Curve Name
-  {50d61daa-6f6c-414f-ac1a-30a0507bc220}, ! Electric Input to Cooling Output Ratio Function of Temperature Curve Name
-  {a8baa337-01eb-4156-a748-1c5028aa6282}, ! Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
-  ,                                       ! Minimum Part Load Ratio
-  ,                                       ! Maximum Part Load Ratio
-  ,                                       ! Optimum Part Load Ratio
-  ,                                       ! Minimum Unloading Ratio
-  ,                                       ! Chilled Water Inlet Node Name
-  ,                                       ! Chilled Water Outlet Node Name
-  ,                                       ! Condenser Inlet Node Name
-  ,                                       ! Condenser Outlet Node Name
-  ,                                       ! Condenser Type
-  ,                                       ! Condenser Fan Power Ratio {W/W}
-  ,                                       ! Compressor Motor Efficiency
-  ,                                       ! Leaving Chilled Water Lower Temperature Limit {C}
-  ,                                       ! Chiller Flow Mode
-  0,                                      ! Design Heat Recovery Water Flow Rate {m3/s}
-  ,                                       ! Heat Recovery Inlet Node Name
-  ,                                       ! Heat Recovery Outlet Node Name
-  1,                                      ! Sizing Factor
-  0,                                      ! Basin Heater Capacity {W/K}
-  10,                                     ! Basin Heater Setpoint Temperature {C}
-  ;                                       ! Basin Heater Operating Schedule Name
+  {849d9618-ded0-4983-b57f-090fa2a756c0}, !- Handle
+  Chiller - Air Cooled,                   !- Name
+  Autosize,                               !- Reference Capacity {W}
+  5.5,                                    !- Reference COP {W/W}
+  ,                                       !- Reference Leaving Chilled Water Temperature {C}
+  ,                                       !- Reference Entering Condenser Fluid Temperature {C}
+  ,                                       !- Reference Chilled Water Flow Rate {m3/s}
+  ,                                       !- Reference Condenser Fluid Flow Rate {m3/s}
+  {238cb0b4-afac-4115-8524-7778555d6cfb}, !- Cooling Capacity Function of Temperature Curve Name
+  {50d61daa-6f6c-414f-ac1a-30a0507bc220}, !- Electric Input to Cooling Output Ratio Function of Temperature Curve Name
+  {a8baa337-01eb-4156-a748-1c5028aa6282}, !- Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
+  ,                                       !- Minimum Part Load Ratio
+  ,                                       !- Maximum Part Load Ratio
+  ,                                       !- Optimum Part Load Ratio
+  ,                                       !- Minimum Unloading Ratio
+  ,                                       !- Chilled Water Inlet Node Name
+  ,                                       !- Chilled Water Outlet Node Name
+  ,                                       !- Condenser Inlet Node Name
+  ,                                       !- Condenser Outlet Node Name
+  AirCooled,                              !- Condenser Type
+  ,                                       !- Condenser Fan Power Ratio {W/W}
+  ,                                       !- Compressor Motor Efficiency
+  ,                                       !- Leaving Chilled Water Lower Temperature Limit {C}
+  ,                                       !- Chiller Flow Mode
+  0,                                      !- Design Heat Recovery Water Flow Rate {m3/s}
+  ,                                       !- Heat Recovery Inlet Node Name
+  ,                                       !- Heat Recovery Outlet Node Name
+  1,                                      !- Sizing Factor
+  0,                                      !- Basin Heater Capacity {W/K}
+  10,                                     !- Basin Heater Setpoint Temperature {C}
+  ;                                       !- Basin Heater Operating Schedule Name
 
 OS:Curve:Biquadratic,
   {238cb0b4-afac-4115-8524-7778555d6cfb}, ! Handle
@@ -1495,7 +1495,7 @@ OS:Chiller:Electric:EIR,
   ,                                       !- Chilled Water Outlet Node Name
   ,                                       !- Condenser Inlet Node Name
   ,                                       !- Condenser Outlet Node Name
-  ,                                       !- Condenser Type
+  AirCooled,                              !- Condenser Type
   ,                                       !- Condenser Fan Power Ratio {W/W}
   ,                                       !- Compressor Motor Efficiency
   ,                                       !- Leaving Chilled Water Lower Temperature Limit {C}
@@ -1584,22 +1584,22 @@ OS:Coil:Heating:Water,
   ;                                       ! Rated Ratio for Air and Water Convection
 
 OS:Pump:VariableSpeed,
-  {c04fc7dc-8d89-416a-95ef-55ad62300ac5}, ! Handle
-  Var Spd Pump,                           ! Name
-  ,                                       ! Inlet Node Name
-  ,                                       ! Outlet Node Name
-  ,                                       ! Rated Flow Rate {m3/s}
-  ,                                       ! Rated Pump Head {Pa}
-  ,                                       ! Rated Power Consumption {W}
-  ,                                       ! Motor Efficiency
-  ,                                       ! Fraction of Motor Inefficiencies to Fluid Stream
-  ,                                       ! Coefficient 1 of the Part Load Performance Curve
-  ,                                       ! Coefficient 2 of the Part Load Performance Curve
-  ,                                       ! Coefficient 3 of the Part Load Performance Curve
-  ,                                       ! Coefficient 4 of the Part Load Performance Curve
-  ,                                       ! Minimum Flow Rate {m3/s}
-  ,                                       ! Pump Control Type
-  ,                                       ! Pump Flow Rate Schedule Name
+  {c04fc7dc-8d89-416a-95ef-55ad62300ac5}, !- Handle
+  Var Spd Pump,                           !- Name
+  ,                                       !- Inlet Node Name
+  ,                                       !- Outlet Node Name
+  ,                                       !- Rated Flow Rate {m3/s}
+  ,                                       !- Rated Pump Head {Pa}
+  ,                                       !- Rated Power Consumption {W}
+  ,                                       !- Motor Efficiency
+  ,                                       !- Fraction of Motor Inefficiencies to Fluid Stream
+  ,                                       !- Coefficient 1 of the Part Load Performance Curve
+  ,                                       !- Coefficient 2 of the Part Load Performance Curve
+  ,                                       !- Coefficient 3 of the Part Load Performance Curve
+  ,                                       !- Coefficient 4 of the Part Load Performance Curve
+  ,                                       !- Minimum Flow Rate {m3/s}
+  ,                                       !- Pump Control Type
+  ,                                       !- Pump Flow Rate Schedule Name
   ,                                       !- Pump Curve Name
   ,                                       !- Impeller Diameter {m}
   ,                                       !- VFD Control Type
@@ -1609,11 +1609,11 @@ OS:Pump:VariableSpeed,
   ,                                       !- Minimum RPM Schedule {Rotations Per Minute}
   ,                                       !- Maximum RPM Schedule {Rotations Per Minute}
   ,                                       !- Zone Name
-  ,                                       !- Skin Loss Radiative Fraction
-  ,                                       !- Design Power Sizing Method
-  ,                                       !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
-  ,                                       !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
-  ;                                       !- Design Minimum Flow Rate Fraction
+  0.5,                                    !- Skin Loss Radiative Fraction
+  PowerPerFlowPerPressure,                !- Design Power Sizing Method
+  348701.1,                               !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
+  1.282051282,                            !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
+  0.0;                                    !- Design Minimum Flow Rate Fraction
 
 OS:Pump:ConstantSpeed,
   {179abade-266d-45a5-a002-0bfe1caeeb23}, !- Handle
@@ -1632,9 +1632,9 @@ OS:Pump:ConstantSpeed,
   ,                                       !- Rotational Speed {rev/min}
   ,                                       !- Zone
   ,                                       !- Skin Loss Radiative Fraction
-  ,                                       !- Design Power Sizing Method
-  ,                                       !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
-  ;                                       !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
+  PowerPerFlowPerPressure,                !- Design Power Sizing Method
+  348701.1,                               !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
+  1.282051282;                            !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
 
 OS:HeaderedPumps:ConstantSpeed,
   {19902d0d-e3a7-4725-9f85-cc1bd897b8f9}, !- Handle
@@ -4560,7 +4560,7 @@ OS:CoolingTower:VariableSpeed,
   ,                                       !- Cell Minimum  Water Flow Rate Fraction
   ,                                       !- Cell Maximum Water Flow Rate Fraction
   1,                                      !- Sizing Factor
-  ;                                       !- End-Use Subcategory
+  General;                                !- End-Use Subcategory
 
 OS:Curve:Cubic,
   {07e95396-18cf-4b45-8c39-d1c6d9b569a4}, !- Handle
@@ -4604,7 +4604,7 @@ OS:CoolingTower:VariableSpeed,
   ,                                       !- Cell Minimum  Water Flow Rate Fraction
   ,                                       !- Cell Maximum Water Flow Rate Fraction
   0.33,                                   !- Sizing Factor
-  ;                                       !- End-Use Subcategory
+  General;                                !- End-Use Subcategory
 
 OS:Curve:Cubic,
   {ef3db801-9ea9-468f-8d25-da4759413263}, !- Handle
@@ -4695,7 +4695,7 @@ OS:CoolingTower:VariableSpeed,
   ,                                       !- Cell Minimum  Water Flow Rate Fraction
   ,                                       !- Cell Maximum Water Flow Rate Fraction
   0.33,                                   !- Sizing Factor
-  ;                                       !- End-Use Subcategory
+  General;                                !- End-Use Subcategory
 
 OS:Curve:Cubic,
   {e9ae406d-ab3e-4461-8418-7af997698c00}, !- Handle
@@ -7848,11 +7848,11 @@ OS:CoolingTower:TwoSpeed,
   ,                                       !- Cell Minimum  Water Flow Rate Fraction
   ,                                       !- Cell Maximum Water Flow Rate Fraction
   1,                                      !- Sizing Factor
-  ,                                       !- Design Inlet Air Dry-Bulb Temperature {C}
-  ,                                       !- Design Inlet Air Wet-Bulb Temperature {C}
-  ,                                       !- Design Approach Temperature {deltaC}
-  ,                                       !- Design Range Temperature {deltaC}
-  ;                                       !- End-Use Subcategory
+  35.0,                                   !- Design Inlet Air Dry-Bulb Temperature {C}
+  25.6,                                   !- Design Inlet Air Wet-Bulb Temperature {C}
+  Autosize,                               !- Design Approach Temperature {deltaC}
+  Autosize,                               !- Design Range Temperature {deltaC}
+  General;                                !- End-Use Subcategory
 
 OS:Coil:Heating:Water,
   {852ba7c2-6dca-42d0-b8d0-523404c57aa0}, !- Handle
@@ -11492,4 +11492,332 @@ OS:EnergyManagementSystem:ProgramCallingManager,
   PCUD_SimProgramCallingManager,          !- Name
   UserDefinedComponentModel,              !- EnergyPlus Model Calling Point
   {b52a712e-59aa-40f9-8649-cda114806841}; !- Program Name 1
+
+OS:AvailabilityManager:DifferentialThermostat,
+  {a1d77522-772f-4092-98f9-4bf87ecb3cd5}, !- Handle
+  AVM Differential Tstat,                 !- Name
+  ,                                       !- Hot Node
+  ,                                       !- Cold Node
+  10,                                     !- Temperature Difference On Limit {deltaC}
+  2;                                      !- Temperature Difference Off Limit {deltaC}
+
+OS:AvailabilityManager:HighTemperatureTurnOff,
+  {fe41f7e3-c345-4123-91a5-4ec7c89cb4d5}, !- Handle
+  AVM HighTempTurnOff,                    !- Name
+  ,                                       !- Sensor Node Name
+  30;                                     !- Temperature {C}
+
+OS:AvailabilityManager:HighTemperatureTurnOn,
+  {ebaeaad3-9cb1-4222-8593-0516b099da4c}, !- Handle
+  AVM HighTempTurnOn,                     !- Name
+  ,                                       !- Sensor Node Name
+  30;                                     !- Temperature {C}
+
+OS:AvailabilityManager:LowTemperatureTurnOff,
+  {547e47b5-db9e-4ace-b120-46c12f6adbbb}, !- Handle
+  AVM LowTempTurnOff,                     !- Name
+  ,                                       !- Sensor Node Name
+  30,                                     !- Temperature {C}
+  ;                                       !- Applicability Schedule Name
+
+OS:AvailabilityManager:LowTemperatureTurnOn,
+  {c5b31c8e-2702-4670-99fe-ab8f16128d40}, !- Handle
+  AVM LowTempTurnOn,                      !- Name
+  ,                                       !- Sensor Node Name
+  30;                                     !- Temperature {C}
+
+OS:AvailabilityManager:Scheduled,
+  {701e420b-6d49-45c0-9075-5ba2d046eebf}, !- Handle
+  AVM Scheduled,                          !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}; !- Schedule Name
+
+OS:AvailabilityManager:NightCycle,
+  {057d50db-daf1-4590-9194-ecba8c21971f}, !- Handle
+  AVM Night Cycle,                        !- Name
+  ,                                       !- Applicability Schedule
+  ,                                       !- Fan Schedule
+  ,                                       !- Control Type
+  1,                                      !- Thermostat Tolerance {deltaC}
+  ,                                       !- Cycling Run Time Control Type
+  3600,                                   !- Cycling Run Time {s}
+  {56234c2d-2f03-4e4c-9d10-a252fd81fabf}, !- Control Zone or Zone List Name
+  {e7e40ed4-ba97-4699-bcbd-29a9bd143be3}, !- Cooling Control Zone or Zone List Name
+  {6cf0e4db-8743-4c6f-a877-ff5f8052d22b}, !- Heating Control Zone or Zone List Name
+  {60c54475-7d5a-41bc-816e-f93781901dbf}; !- Heating Zone Fans Only Zone or Zone List Name
+
+OS:ModelObjectList,
+  {56234c2d-2f03-4e4c-9d10-a252fd81fabf}, !- Handle
+  Availability Manager Night Cycle 1 Heating Zone Fans Only Zone List; !- Name
+
+OS:ModelObjectList,
+  {e7e40ed4-ba97-4699-bcbd-29a9bd143be3}, !- Handle
+  {904e9d82-8956-4180-bbb0-44194d3a0adf}; !- Name
+
+OS:ModelObjectList,
+  {6cf0e4db-8743-4c6f-a877-ff5f8052d22b}, !- Handle
+  {d4b1d5ee-b1a8-4b6d-8c30-2a2fc1e0550c}; !- Name
+
+OS:ModelObjectList,
+  {60c54475-7d5a-41bc-816e-f93781901dbf}, !- Handle
+  {44416744-4eb1-4d78-ba7f-1b7710e6a127}; !- Name
+
+OS:AvailabilityManager:OptimumStart,
+  {6adf6668-a046-480a-a61e-5e54377d05af}, !- Handle
+  AVM OptimumStart,                       !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Applicability Schedule
+  ,                                       !- Fan Schedule
+  MaximumofZoneList,                      !- Control Type
+  ,                                       !- Control Zone
+  ,                                       !- Zone List
+  6,                                      !- Maximum Value for Optimum Start Time {hr}
+  AdaptiveTemperatureGradient,            !- Control Algorithm
+  3,                                      !- Constant Temperature Gradient during Cooling {deltaC/hr}
+  3,                                      !- Constant Temperature Gradient during Heating {deltaC/hr}
+  2,                                      !- Initial Temperature Gradient during Cooling {deltaC/hr}
+  2,                                      !- Initial Temperature Gradient during Heating {deltaC/hr}
+  2,                                      !- Constant Start Time {hr}
+  3;                                      !- Number of Previous Days {days}
+
+OS:AvailabilityManager:NightVentilation,
+  {9a6114e3-de9c-4dee-a55a-2a789af09c9a}, !- Handle
+  AVM Night Ventilation,                  !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Applicability Schedule
+  ,                                       !- Fan Schedule
+  ,                                       !- Ventilation Temperature Schedule
+  2,                                      !- Ventilation Temperature Difference {deltaC}
+  15,                                     !- Ventilation Temperature Low Limit {C}
+  0.333,                                  !- Night Venting Flow Fraction
+  ;                                       !- Control Zone
+
+OS:AvailabilityManager:HybridVentilation,
+  {d3e7f014-44d1-4d1d-80ab-373ba37fb92e}, !- Handle
+  AVM Hybrid Ventilation,                 !- Name
+  ,                                       !- Controlled Zone
+  {af470d46-ff4a-45ee-b481-34f638e19d33}, !- Ventilation Control Mode Schedule
+  Yes,                                    !- Use Weather File Rain Indicators
+  40,                                     !- Maximum Wind Speed {m/s}
+  20,                                     !- Minimum Outdoor Temperature {C}
+  30,                                     !- Maximum Outdoor Temperature {C}
+  20000,                                  !- Minimum Outdoor Enthalpy {J/kg}
+  30000,                                  !- Maximum Outdoor Enthalpy {J/kg}
+  15,                                     !- Minimum Outdoor Dewpoint {C}
+  30,                                     !- Maximum Outdoor Dewpoint {C}
+  {7dc5420f-8388-40b0-9aae-b754d05da38f}; !- Minimum Outdoor Ventilation Air Schedule
+
+OS:Schedule:Ruleset,
+  {af470d46-ff4a-45ee-b481-34f638e19d33}, !- Handle
+  AVM Hybrid Ventilation Control Mode Schedule, !- Name
+  {19aed973-104b-44bf-a59f-1d47bc7f2dcc}, !- Schedule Type Limits Name
+  {cd9b992b-d6f3-43ae-81b2-3437b743aa52}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {cd9b992b-d6f3-43ae-81b2-3437b743aa52}, !- Handle
+  AVM Hybrid Ventilation Control Mode Schedule DefaultDay, !- Name
+  {19aed973-104b-44bf-a59f-1d47bc7f2dcc}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {19aed973-104b-44bf-a59f-1d47bc7f2dcc}, !- Handle
+  Integer,                                !- Name
+  0,                                      !- Lower Limit Value
+  4,                                      !- Upper Limit Value
+  Discrete;                               !- Numeric Type
+
+OS:Schedule:Ruleset,
+  {7dc5420f-8388-40b0-9aae-b754d05da38f}, !- Handle
+  AVM Hybrid Ventilation Min OA Schedule, !- Name
+  {dfe136f8-1a1a-4263-a38c-0055df8cb82e}, !- Schedule Type Limits Name
+  {35966a45-19aa-479e-bfc5-beef62a7e102}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {35966a45-19aa-479e-bfc5-beef62a7e102}, !- Handle
+  AVM Hybrid Ventilation Min OA Schedule defaultDay, !- Name
+  {dfe136f8-1a1a-4263-a38c-0055df8cb82e}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:AvailabilityManager:ScheduledOn,
+  {639439d4-3dc4-4219-98cf-1f0ffd90e850}, !- Handle
+  AVM Scheduled On,                       !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}; !- Schedule Name
+
+OS:AvailabilityManager:ScheduledOff,
+  {c07413b0-8393-4090-9ad8-698943d6bca4}, !- Handle
+  AVM Scheduled Off,                      !- Name
+  {b267e42b-9691-4116-8393-70bb1197dc5b}; !- Schedule Name
+
+OS:CentralHeatPumpSystem,
+  {fa6abaac-a8d9-4c9a-8ad2-7486be5cb4ef}, !- Handle
+  Central Heat Pump System,               !- Name
+  SmartMixing,                            !- Control Method
+  ,                                       !- Cooling Loop Inlet Node Name
+  ,                                       !- Cooling Loop Outlet Node Name
+  ,                                       !- Source Loop Inlet Node Name
+  ,                                       !- Source Loop Outlet Node Name
+  ,                                       !- Heating Loop Inlet Node Name
+  ,                                       !- Heating Loop Outlet Node Name
+  0,                                      !- Ancillary Power {W}
+  ,                                       !- Ancillary Operation Schedule Name
+  {47dd2450-59da-45d2-af3f-c283c837f62a}; !- Chiller Heater Module List Name
+
+OS:ModelObjectList,
+  {47dd2450-59da-45d2-af3f-c283c837f62a}, !- Handle
+  Central Heat Pump System Chiller Heater Module List, !- Name
+  {c0817e1e-b9b5-4eaf-8931-93aa61b7165d}; !- Model Object 1
+
+OS:CentralHeatPumpSystem:Module,
+  {c0817e1e-b9b5-4eaf-8931-93aa61b7165d}, !- Handle
+  Central Heat Pump System Module 1,      !- Name
+  {00f1b297-4d53-4db4-af84-8ebdf8f139a7}, !- Chiller Heater Modules Performance Component Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Chiller Heater Modules Control Schedule Name
+  1;                                      !- Number of Chiller Heater Modules
+
+OS:ChillerHeaterPerformance:Electric:EIR,
+  {00f1b297-4d53-4db4-af84-8ebdf8f139a7}, !- Handle
+  Chiller Heater Performance Electric EIR 1, !- Name
+  autosize,                               !- Reference Cooling Mode Evaporator Capacity {W}
+  1.5,                                    !- Reference Cooling Mode COP {W/W}
+  6.67,                                   !- Reference Cooling Mode Leaving Chilled Water Temperature {C}
+  29.4,                                   !- Reference Cooling Mode Entering Condenser Fluid Temperature {C}
+  35,                                     !- Reference Cooling Mode Leaving Condenser Water Temperature {C}
+  0.74,                                   !- Reference Heating Mode Cooling Capacity Ratio
+  1.38,                                   !- Reference Heating Mode Cooling Power Input Ratio
+  6.67,                                   !- Reference Heating Mode Leaving Chilled Water Temperature {C}
+  60,                                     !- Reference Heating Mode Leaving Condenser Water Temperature {C}
+  29.44,                                  !- Reference Heating Mode Entering Condenser Fluid Temperature {C}
+  5,                                      !- Heating Mode Entering Chilled Water Temperature Low Limit {C}
+  VariableFlow,                           !- Chilled Water Flow Mode Type
+  autosize,                               !- Design Chilled Water Flow Rate {m3/s}
+  autosize,                               !- Design Condenser Water Flow Rate {m3/s}
+  0.0003525,                              !- Design Hot Water Flow Rate {m3/s}
+  1,                                      !- Compressor Motor Efficiency
+  WaterCooled,                            !- Condenser Type
+  EnteringCondenser,                      !- Cooling Mode Temperature Curve Condenser Water Independent Variable
+  {fa8fea21-481d-4d13-95d3-7c90a7f98ab0}, !- Cooling Mode Cooling Capacity Function of Temperature Curve Name
+  {48e95985-9331-4dca-83e6-03a8997132c6}, !- Cooling Mode Electric Input to Cooling Output Ratio Function of Temperature Curve Name
+  {5241ab14-2e51-42a5-9982-0669caf63104}, !- Cooling Mode Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
+  1,                                      !- Cooling Mode Cooling Capacity Optimum Part Load Ratio
+  LeavingCondenser,                       !- Heating Mode Temperature Curve Condenser Water Independent Variable
+  {4ace40e3-de55-4391-a5df-10ec4ce7b2e2}, !- Heating Mode Cooling Capacity Function of Temperature Curve Name
+  {aa9650e0-3bc1-4d89-b36d-22de55e13382}, !- Heating Mode Electric Input to Cooling Output Ratio Function of Temperature Curve Name
+  {c1e585b1-9bce-42fc-bea2-af72151a9d48}, !- Heating Mode Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
+  1,                                      !- Heating Mode Cooling Capacity Optimum Part Load Ratio
+  1;                                      !- Sizing Factor
+
+OS:Curve:Biquadratic,
+  {fa8fea21-481d-4d13-95d3-7c90a7f98ab0}, !- Handle
+  Chiller Heater Performance Electric EIR 1 coolingModeccFT, !- Name
+  0.950829,                               !- Coefficient1 Constant
+  0.03419327,                             !- Coefficient2 x
+  0.000266642,                            !- Coefficient3 x**2
+  -0.001733397,                           !- Coefficient4 y
+  -0.0001762417,                          !- Coefficient5 y**2
+  -3.69198e-05,                           !- Coefficient6 x*y
+  4.44,                                   !- Minimum Value of x
+  12.78,                                  !- Maximum Value of x
+  12.78,                                  !- Minimum Value of y
+  29.44,                                  !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Dimensionless;                          !- Output Unit Type
+
+OS:Curve:Biquadratic,
+  {48e95985-9331-4dca-83e6-03a8997132c6}, !- Handle
+  Chiller Heater Performance Electric EIR 1 coolingModeEIRFT, !- Name
+  0.7362431,                              !- Coefficient1 Constant
+  0.02136491,                             !- Coefficient2 x
+  0.0003638909,                           !- Coefficient3 x**2
+  -0.004284947,                           !- Coefficient4 y
+  0.0003389817,                           !- Coefficient5 y**2
+  -0.0003632396,                          !- Coefficient6 x*y
+  4.44,                                   !- Minimum Value of x
+  12.78,                                  !- Maximum Value of x
+  12.78,                                  !- Minimum Value of y
+  29.44,                                  !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Dimensionless;                          !- Output Unit Type
+
+OS:Curve:Biquadratic,
+  {4ace40e3-de55-4391-a5df-10ec4ce7b2e2}, !- Handle
+  Chiller Heater Performance Electric EIR 1 heatingModeccFT, !- Name
+  0.9415266,                              !- Coefficient1 Constant
+  0.05527431,                             !- Coefficient2 x
+  0.0003573558,                           !- Coefficient3 x**2
+  0.001258391,                            !- Coefficient4 y
+  -6.420546e-05,                          !- Coefficient5 y**2
+  -0.0005350989,                          !- Coefficient6 x*y
+  4.44,                                   !- Minimum Value of x
+  15.56,                                  !- Maximum Value of x
+  25,                                     !- Minimum Value of y
+  57.22,                                  !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Dimensionless;                          !- Output Unit Type
+
+OS:Curve:Biquadratic,
+  {aa9650e0-3bc1-4d89-b36d-22de55e13382}, !- Handle
+  Chiller Heater Performance Electric EIR 1 heatingModeEIRFT, !- Name
+  0.2286246,                              !- Coefficient1 Constant
+  0.02498714,                             !- Coefficient2 x
+  -1.267106e-05,                          !- Coefficient3 x**2
+  0.009327184,                            !- Coefficient4 y
+  5.892037e-05,                           !- Coefficient5 y**2
+  -0.0003268512,                          !- Coefficient6 x*y
+  4.44,                                   !- Minimum Value of x
+  15.56,                                  !- Maximum Value of x
+  25,                                     !- Minimum Value of y
+  57.22,                                  !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Dimensionless;                          !- Output Unit Type
+
+OS:Curve:Bicubic,
+  {5241ab14-2e51-42a5-9982-0669caf63104}, !- Handle
+  Chiller Heater Performance Electric EIR 1 coolingModeEIRFPLR, !- Name
+  0,                                      !- Coefficient1 Constant
+  1.22895,                                !- Coefficient2 x
+  -0.751383,                              !- Coefficient3 x**2
+  0,                                      !- Coefficient4 y
+  0,                                      !- Coefficient5 y**2
+  0,                                      !- Coefficient6 x*y
+  0.517396,                               !- Coefficient7 x**3
+  0,                                      !- Coefficient8 y**3
+  0,                                      !- Coefficient9 x**2*y
+  0,                                      !- Coefficient10 x*y**2
+  0.2,                                    !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  1;                                      !- Maximum Value of y
+
+OS:Curve:Bicubic,
+  {c1e585b1-9bce-42fc-bea2-af72151a9d48}, !- Handle
+  Chiller Heater Performance Electric EIR 1 heatingModeEIRFPLR, !- Name
+  0,                                      !- Coefficient1 Constant
+  1.12853,                                !- Coefficient2 x
+  -0.0264962,                             !- Coefficient3 x**2
+  0,                                      !- Coefficient4 y
+  0,                                      !- Coefficient5 y**2
+  0,                                      !- Coefficient6 x*y
+  -0.103811,                              !- Coefficient7 x**3
+  0,                                      !- Coefficient8 y**3
+  0,                                      !- Coefficient9 x**2*y
+  0,                                      !- Coefficient10 x*y**2
+  0.3,                                    !- Minimum Value of x
+  1,                                      !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  1;                                      !- Maximum Value of y
 

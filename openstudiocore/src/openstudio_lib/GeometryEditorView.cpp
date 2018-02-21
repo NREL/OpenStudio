@@ -65,6 +65,7 @@
 
 #include <utilities/idd/IddEnums.hxx>
 
+#include <QFile>
 #include <QDialog>
 #include <QTcpServer>
 #include <QComboBox>
@@ -446,6 +447,33 @@ void EditorWebView::startEditor()
     m_javascriptRunning = true;
 
     QString javascript = QString("window.api.init();");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
+    }
+  }
+
+  // customize css
+  {
+    OS_ASSERT(!m_javascriptRunning);
+
+    m_javascriptRunning = true;
+
+    QFile cssFile(":/library/geometry_editor.css");
+    bool test = cssFile.open(QFile::ReadOnly | QFile::Text);
+    OS_ASSERT(test);
+    QTextStream cssStream(&cssFile);
+    QString css = cssStream.readAll();
+    cssFile.close();
+
+    QString javascript = "const rules = `\n";
+    javascript += css;
+    javascript += "`;\n\
+const style = document.createElement('style')\n\
+style.type = 'text/css';\n\
+style.innerHTML = rules;\n\
+document.head.appendChild(style);\n";
+
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
     while (m_javascriptRunning){
       OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);

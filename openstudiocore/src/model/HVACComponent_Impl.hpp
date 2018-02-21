@@ -49,12 +49,6 @@ namespace detail {
 
 class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
 
-
-
-
-
-
-
  public:
 
   HVACComponent_Impl( IddObjectType type, Model_Impl* model);

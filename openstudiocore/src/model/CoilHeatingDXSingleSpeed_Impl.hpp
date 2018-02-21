@@ -42,33 +42,7 @@ namespace detail {
 
 /** CoilHeatingDXSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingDXSingleSpeed.*/
 class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- public:
+   public:
   /** @name Constructors and Destructors */
   //@{
 
@@ -258,6 +232,10 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
   bool addToNode(Node & node) override;
 
   //@}
+
+  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
  protected:
  private:
   REGISTER_LOGGER("openstudio.model.CoilHeatingDXSingleSpeed");

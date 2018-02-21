@@ -39,7 +39,14 @@
 #include "../EnergyManagementSystemProgramCallingManager.hpp"
 #include "../EnergyManagementSystemActuator.hpp"
 
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+
+//using namespace openstudio::model;
+using namespace openstudio::energyplus;
 using namespace openstudio::model;
+using namespace openstudio;
 
 TEST_F(ModelFixture, PlantComponentUserDefined_PlantComponentUserDefined)
 {
@@ -101,7 +108,14 @@ TEST_F(ModelFixture, PlantComponentUserDefined_addToNode) {
   EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
   PlantComponentUserDefined testObjectClone = testObject.clone(m).cast<PlantComponentUserDefined>();
+  EXPECT_TRUE(testObject.designVolumeFlowRateActuator());
+  EXPECT_TRUE(testObjectClone.designVolumeFlowRateActuator());
+  EXPECT_TRUE(testObjectClone.designVolumeFlowRateActuator().get().actuatedComponent());
+  //EXPECT_EQ(testObjectClone.designVolumeFlowRateActuator().get().actuatedComponent().get().handle(), testObjectClone.handle());
+  EXPECT_EQ(testObjectClone.designVolumeFlowRateActuator().get().actuatedComponent().get().handle(), testObject.handle());
+  m.save(toPath("./PlantComponentUserDefinedTest.osm"), true);
   supplyOutletNode = plantLoop.supplyOutletNode();
+  m.save(toPath("./PlantComponentUserDefinedTestAfter.osm"), true);
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
   EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
   EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
@@ -220,5 +234,8 @@ TEST_F(ModelFixture, PlantComponentUserDefined_constructor) {
   EXPECT_TRUE(b1.optimalLoadingCapacityActuator());
   EXPECT_TRUE(b1.outletTemperatureActuator());
   EXPECT_TRUE(b1.massFlowRateActuator());
+
+  EXPECT_TRUE(b1.designVolumeFlowRateActuator().get().actuatedComponent());
+  EXPECT_EQ(b1.handle(),b1.designVolumeFlowRateActuator().get().actuatedComponent().get().handle());
 
 }

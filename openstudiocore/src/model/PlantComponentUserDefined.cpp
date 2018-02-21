@@ -482,9 +482,9 @@ PlantComponentUserDefined::PlantComponentUserDefined(const Model& model)
   mfrActuator.setName("PCUD_Mdot_Request");
   ok = setMassFlowRateActuator(mfrActuator);
   OS_ASSERT(ok);
-  
+
   //setup Main Program and Manager
-  /*  
+  /*
   EnergyManagementSystemProgram mainProgram(model);
   mainProgram.setName("PCUD_MainProgram");
 

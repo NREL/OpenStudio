@@ -68,6 +68,8 @@ class OutputVariable;
 class OutputMeterMeter;
 class Connection;
 
+class AdditionalProperties;
+
 namespace detail {
   class Model_Impl;
   class ModelObject_Impl;
@@ -270,6 +272,16 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
    * impl.
    */
   IddObjectType iddObjectType() const;
+
+  /** Returns this object's additional properties, constructing a new object if necessary.
+  *   This method will throw if called on an AddditionalProperties object. */
+  AdditionalProperties additionalProperties() const;
+
+  /** Returns true if this object has additional properties. */
+  bool hasAdditionalProperties() const;
+
+  /** Removes all additional properties that refer to this object. Returns removed objects. */
+  std::vector<IdfObject> removeAdditionalProperties();
 
   //@}
   /** @name Setters */

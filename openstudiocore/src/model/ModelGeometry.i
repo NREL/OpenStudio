@@ -88,6 +88,8 @@ class DesignSpecificationOutdoorAir;
 class SpaceLoadInstance;
 class SpaceLoadDefinition;
 class GeneratorPhotovoltaic;
+%feature("valuewrapper") AirflowNetworkSurface;
+class AirflowNetworkSurface;
 
 class ExteriorLights;
 class ExteriorFuelEquipment;

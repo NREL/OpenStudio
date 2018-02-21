@@ -207,6 +207,9 @@ endif()
 
 install(TARGETS openstudio DESTINATION bin COMPONENT "CLI")
 
+install(FILES measure_manager.rb DESTINATION Ruby COMPONENT "RubyAPI")
+install(FILES measure_manager_server.rb DESTINATION Ruby COMPONENT "RubyAPI")
+
 if( BUILD_PAT )
   if( APPLE )
     install(TARGETS openstudio

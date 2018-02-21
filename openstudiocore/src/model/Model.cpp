@@ -206,7 +206,29 @@ if (_className::iddObjectType() == typeToCreate) { \
   result = std::shared_ptr<_className##_Impl>(new _className##_Impl(object,this,keepHandle)); \
 }
 
+    REGISTER_CONSTRUCTOR(AdditionalProperties);
     REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlow);
+    REGISTER_CONSTRUCTOR(AirflowNetworkConstantPressureDrop);
+    REGISTER_CONSTRUCTOR(AirflowNetworkCrack);
+    REGISTER_CONSTRUCTOR(AirflowNetworkDetailedOpening);
+    REGISTER_CONSTRUCTOR(AirflowNetworkDistributionLinkage);
+    REGISTER_CONSTRUCTOR(AirflowNetworkDistributionNode);
+    REGISTER_CONSTRUCTOR(AirflowNetworkDuct);
+    REGISTER_CONSTRUCTOR(AirflowNetworkDuctViewFactors);
+    REGISTER_CONSTRUCTOR(AirflowNetworkEffectiveLeakageArea);
+    REGISTER_CONSTRUCTOR(AirflowNetworkEquivalentDuct);
+    REGISTER_CONSTRUCTOR(AirflowNetworkExternalNode);
+    REGISTER_CONSTRUCTOR(AirflowNetworkFan);
+    REGISTER_CONSTRUCTOR(AirflowNetworkHorizontalOpening);
+    REGISTER_CONSTRUCTOR(AirflowNetworkLeakageRatio);
+    REGISTER_CONSTRUCTOR(AirflowNetworkOccupantVentilationControl);
+    REGISTER_CONSTRUCTOR(AirflowNetworkOutdoorAirflow);
+    REGISTER_CONSTRUCTOR(AirflowNetworkReferenceCrackConditions);
+    REGISTER_CONSTRUCTOR(AirflowNetworkSimpleOpening);
+    REGISTER_CONSTRUCTOR(AirflowNetworkSimulationControl);
+    REGISTER_CONSTRUCTOR(AirflowNetworkSurface);
+    REGISTER_CONSTRUCTOR(AirflowNetworkZone);
+    REGISTER_CONSTRUCTOR(AirflowNetworkZoneExhaustFan);
     REGISTER_CONSTRUCTOR(AirGap);
     REGISTER_CONSTRUCTOR(AirLoopHVAC);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass);
@@ -679,7 +701,29 @@ if (_className::iddObjectType() == typeToCreate) { \
   } \
 }
 
+    REGISTER_COPYCONSTRUCTORS(AdditionalProperties);
     REGISTER_COPYCONSTRUCTORS(AirConditionerVariableRefrigerantFlow);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkConstantPressureDrop);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkCrack);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkDetailedOpening);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkDistributionLinkage);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkDistributionNode);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkDuct);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkDuctViewFactors);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkEffectiveLeakageArea);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkEquivalentDuct);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkExternalNode);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkFan);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkHorizontalOpening);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkLeakageRatio);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkOccupantVentilationControl);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkOutdoorAirflow);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkReferenceCrackConditions);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimpleOpening);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimulationControl);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkSurface);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkZone);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkZoneExhaustFan);
     REGISTER_COPYCONSTRUCTORS(AirGap);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVAC);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass);
