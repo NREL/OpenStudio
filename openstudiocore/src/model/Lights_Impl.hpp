@@ -154,6 +154,10 @@ namespace detail {
     /** Returns the output variable related to lights that actually use the Zone key **/
     const std::vector<std::string>& zoneLevelOutputVariableNames() const;
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
    protected:
 

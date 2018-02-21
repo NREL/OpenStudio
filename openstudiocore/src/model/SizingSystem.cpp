@@ -882,6 +882,44 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
 
   }
 
+  std::vector<EMSActuatorNames> SizingSystem_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Sizing:System", "Main Supply Volume Flow Rate"},
+                                            {"Sizing:System", "Main Supply Coincident Peak Cooling Mass Flow Rate"},
+                                            {"Sizing:System", "Main Supply Coincident Peak Heating Mass Flow Rate"},
+                                            {"Sizing:System", "Main Supply Noncoincident Peak Cooling Mass Flow Rate"},
+                                            {"Sizing:System", "Main Supply Noncoincident Peak Heating Mass Flow Rate"},
+                                            {"Sizing:System", "Main Heating Volume Flow Rate"},
+                                            {"Sizing:System", "Main Cooling Volume Flow Rate"}};
+    return actuators;
+  }
+
+  std::vector<std::string> SizingSystem_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Intermediate Air System Main Supply Volume Flow Rate",
+                                   "Intermediate Air System Coincident Peak Cooling Mass Flow Rate",
+                                   "Intermediate Air System Coincident Peak Heating Mass Flow Rate",
+                                   "Intermediate Air System Noncoincident Peak Cooling Mass Flow Rate",
+                                   "Intermediate Air System Noncoincident Peak Heating Mass Flow Rate",
+                                   "Intermediate Air System Heating Volume Flow Rate",
+                                   "Intermediate Air System Cooling Volume Flow Rate"
+                                   "Air System Cooling Design Sensible Capacity",
+                                   "Air System Cooling Design Total Capacity",
+                                   "Air System Heating Design Sensible Capacity",
+                                   "Air System Preheating Design Sensible Capacity",
+                                   "Air System Outdoor Air Design Volume Flow Rate",
+                                   "Air System Cooling Design Mixed Air Temperature",
+                                   "Air System Cooling Design Mixed Air Humidity Ratio",
+                                   "Air System Cooling Design Return Air Temperature",
+                                   "Air System Cooling Design Return Air Humidity Ratio",
+                                   "Air System Cooling Design Outdoor Air Temperature",
+                                   "Air System Cooling Design Outdoor Air Humidity Ratio",
+                                   "Air System Heating Design Mixed Air Temperature",
+                                   "Air System Heating Design Mixed Air Humidity Ratio",
+                                   "Air System Heating Design Return Air Temperature",
+                                   "Air System Heating Design Return Air Humidity Ratio",
+                                   "Air System Heating Design Outdoor Air Temperature",
+                                   "Air System Heating Design Outdoor Air Humidity Ratio"};
+    return types;
+  }
 } // detail
 
 SizingSystem::SizingSystem(const Model& model, const AirLoopHVAC & airLoopHVAC)

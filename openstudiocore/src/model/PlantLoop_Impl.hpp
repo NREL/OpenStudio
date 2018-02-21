@@ -230,6 +230,10 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual void applySizingValues() override;
 
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
+
   // AVM
   // Impl_only
   virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const override;

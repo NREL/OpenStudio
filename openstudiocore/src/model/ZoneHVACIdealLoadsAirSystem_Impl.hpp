@@ -184,17 +184,21 @@ namespace detail {
 
     bool isLatentHeatRecoveryEffectivenessDefaulted() const;
 
-  boost::optional<double> autosizedMaximumHeatingAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumHeatingAirFlowRate() const ;
 
-  boost::optional<double> autosizedMaximumSensibleHeatingCapacity() const ;
+    boost::optional<double> autosizedMaximumSensibleHeatingCapacity() const ;
 
-  boost::optional<double> autosizedMaximumCoolingAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumCoolingAirFlowRate() const ;
 
-  boost::optional<double> autosizedMaximumTotalCoolingCapacity() const ;
+    boost::optional<double> autosizedMaximumTotalCoolingCapacity() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */

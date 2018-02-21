@@ -159,6 +159,15 @@ namespace detail {
     // nothing to do
   }
 
+  std::vector<EMSActuatorNames> ScheduleConstant_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Schedule:Constant", "Schedule Value"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ScheduleConstant_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 // create a new ScheduleConstant object in the model's workspace

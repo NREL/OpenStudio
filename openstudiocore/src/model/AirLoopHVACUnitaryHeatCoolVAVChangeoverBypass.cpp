@@ -555,6 +555,22 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"AirLoopHVAC:UnitaryHeatCool", "Autosized Supply Air Flow Rate"},
+                                            {"AirLoopHVAC:UnitaryHeatCool", "Autosized Supply Air Flow Rate During Cooling Operation"},
+                                            {"AirLoopHVAC:UnitaryHeatCool", "Autosized Supply Air Flow Rate During Heating Operation"},
+                                            {"AirLoopHVAC:UnitaryHeatCool", "Autosized Supply Air Flow Rate During No Heating or Cooling Operation"},
+                                            {"Unitary HVAC", "Sensible Load Request"},
+                                            {"Unitary HVAC", "Moisture Load Request"}};
+    return actuators;
+  }
+
+  std::vector<std::string> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Unitary HVAC Design Heating Capacity",
+                                   "Unitary HVAC Design Cooling Capacity"};
+    return types;
+  }
+
 } // detail
 
 AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(const Model& model,

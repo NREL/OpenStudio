@@ -89,6 +89,10 @@ namespace detail {
 
     boost::optional<Quantity> getValue(bool returnIP=false) const;
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Setters */
     //@{

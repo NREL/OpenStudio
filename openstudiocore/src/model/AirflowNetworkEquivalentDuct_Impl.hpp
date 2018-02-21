@@ -72,10 +72,14 @@ namespace detail {
     //@{
 
     boost::optional<StraightComponent> straightComponent() const;
+
+    /*
     template <typename T> boost::optional<T> component() const
     {
       return getObject<ModelObject>().getModelObjectTarget<T>(OS_AirflowNetworkEquivalentDuctFields::ComponentName);
     }
+    */
+
     boost::optional<std::string> coilObjectType() const;
     boost::optional<std::string> heatExchangerObjectType() const;
     boost::optional<std::string> terminalUnitObjectType() const;

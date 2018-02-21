@@ -60,6 +60,8 @@ class OutputVariable;
 class Meter;
 class Connection;
 
+class EMSActuatorNames;
+
 class AdditionalProperties;
 
 namespace detail {
@@ -237,6 +239,10 @@ namespace detail {
      *
      *  REIMPLEMENT IN ALL CONCRETE MODELOBJECTS THAT CAN POINT TO SCHEDULES. */
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const;
 
     //@}
     /** @name HVAC System Connections */

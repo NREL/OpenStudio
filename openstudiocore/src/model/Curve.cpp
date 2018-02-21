@@ -83,6 +83,15 @@ namespace detail {
     return evaluate(values);
   }
 
+  std::vector<EMSActuatorNames> Curve_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Curve", "Curve Result"}};
+    return actuators;
+  }
+
+  std::vector<std::string> Curve_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 int Curve::numVariables() const {

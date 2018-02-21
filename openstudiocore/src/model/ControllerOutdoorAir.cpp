@@ -725,6 +725,17 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> ControllerOutdoorAir_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "Outdoor Air Controller", "Air Mass Flow Rate" } };
+    return actuators;
+  }
+
+  std::vector<std::string> ControllerOutdoorAir_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Outdoor Air Controller Maximum Mass Flow Rate",
+                                    "Outdoor Air Controller Minimum Mass Flow Rate"};
+    return types;
+
+  }
 } // detail
 
 // create a new ControllerOutdoorAir object in the model's workspace

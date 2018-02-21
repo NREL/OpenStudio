@@ -208,7 +208,7 @@ IddObjectType AirflowNetworkEquivalentDuct::iddObjectType()
 
 boost::optional<StraightComponent> AirflowNetworkEquivalentDuct::straightComponent() const
 {
-  return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->component<StraightComponent>();
+  return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->straightComponent();
 }
 
 boost::optional<std::string> AirflowNetworkEquivalentDuct::coilObjectType() const

@@ -43,21 +43,6 @@ namespace detail {
 
   /** People_Impl is a SpaceLoadInstance_Impl that is the implementation class for People.*/
   class MODEL_API People_Impl : public SpaceLoadInstance_Impl {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -190,6 +175,10 @@ namespace detail {
 
     /** Returns the m^2/person represented by this instance, assuming floorArea (m^2). */
     double getFloorAreaPerPerson(double floorArea) const;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
    protected:
