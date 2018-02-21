@@ -498,7 +498,7 @@
 #include "AirflowNetworkDetailedOpening_Impl.hpp"
 #include "AirflowNetworkDistributionNode_Impl.hpp"
 #include "AirflowNetworkDuct_Impl.hpp"
-#include "AirflowNetworkDuctviewFactors_Impl.hpp"
+#include "AirflowNetworkDuctViewFactors_Impl.hpp"
 #include "AirflowNetworkEffectiveLeakageArea_Impl.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include "AirflowNetworkExternalNode_Impl.hpp"
