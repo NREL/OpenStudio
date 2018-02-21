@@ -36,7 +36,7 @@
 #include "AirflowNetworkDetailedOpening.hpp"
 #include "AirflowNetworkDistributionNode.hpp"
 #include "AirflowNetworkDuct.hpp"
-#include "AirflowNetworkDuctviewFactors.hpp"
+#include "AirflowNetworkDuctViewFactors.hpp"
 #include "AirflowNetworkEffectiveLeakageArea.hpp"
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkExternalNode.hpp"
