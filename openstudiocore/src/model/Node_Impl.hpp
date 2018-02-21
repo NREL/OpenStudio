@@ -127,9 +127,9 @@ namespace detail {
 
     bool isConnected(const ModelObject & modelObject);
 
-    AirflowNetworkDistributionNode airflowNetworkDistributionNode();
+    AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
-    boost::optional<AirflowNetworkDistributionNode> optionalAirflowNetworkDistributionNode() const;
+    boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
    private:
 

@@ -196,10 +196,10 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
   boost::optional<ControllerWaterCoil> controllerWaterCoil();
 
   /** Creates a new equivalent duct object if an object is not already attached. */
-  AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct(double length, double diameter);
+  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
   
   /** Returns the attached equivalent duct object, if any. */
-  boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
+  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
   boost::optional<double> autosizedDesignWaterFlowRate() const ;
 

@@ -135,8 +135,8 @@ class MODEL_API FanOnOff : public StraightComponent {
 
   //@{
 
-  AirflowNetworkFan airflowNetworkFan();
-  boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
+  AirflowNetworkFan getAirflowNetworkFan();
+  boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
 
   boost::optional<double> autosizedMaximumFlowRate() const ;
   //@}

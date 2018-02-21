@@ -143,9 +143,9 @@ class MODEL_API AirLoopHVACOutdoorAirSystem : public HVACComponent {
   /** Reimplemented from HVACComponent. **/
   boost::optional<AirLoopHVAC> airLoop() const;
 
-  AirflowNetworkDistributionNode airflowNetworkDistributionNode();
+  AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
-  boost::optional<AirflowNetworkDistributionNode> optionalAirflowNetworkDistributionNode() const;
+  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
   static IddObjectType iddObjectType();
 

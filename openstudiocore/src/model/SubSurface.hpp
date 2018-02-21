@@ -210,13 +210,13 @@ class MODEL_API SubSurface : public PlanarSurface {
    * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
   boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
 
-  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage);
-  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage);
-  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage);
-  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage);
-  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage);
 
-  boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
+  boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
   // DLM: todo add methods to create light shelves by projection factor
 

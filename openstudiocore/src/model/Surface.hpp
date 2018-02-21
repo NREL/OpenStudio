@@ -289,13 +289,13 @@ class MODEL_API Surface : public PlanarSurface {
    *  Returns false is this surface has any current sub surfaces or if there is an adjacent surface.*/
   std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
 
-  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage);
-  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage);
-  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage);
-  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage);
-  AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage);
 
-  boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
+  boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
   bool setAdjacentFoundation(const FoundationKiva& kiva);
   

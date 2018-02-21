@@ -46,7 +46,7 @@ TEST_F(ModelFixture, AirflowNetwork_DistributionNode)
 
   AirflowNetworkDistributionNode afnnode(model);
 
-  AirflowNetworkDistributionNode afnnode2 = node.airflowNetworkDistributionNode();
+  AirflowNetworkDistributionNode afnnode2 = node.getAirflowNetworkDistributionNode();
 
   ASSERT_TRUE(afnnode2.node());
   EXPECT_EQ(node, afnnode2.node().get());

@@ -455,9 +455,9 @@ namespace detail {
     return result;
   }
 
-  AirflowNetworkEquivalentDuct CoilHeatingDXMultiSpeed_Impl::airflowNetworkEquivalentDuct(double length, double diameter)
+  AirflowNetworkEquivalentDuct CoilHeatingDXMultiSpeed_Impl::getAirflowNetworkEquivalentDuct(double length, double diameter)
   {
-    boost::optional<AirflowNetworkEquivalentDuct> opt = optionalAirflowNetworkEquivalentDuct();
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
     if (opt) {
       if (opt->airPathLength() != length){
         opt->setAirPathLength(length);
@@ -469,7 +469,7 @@ namespace detail {
     return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDXMultiSpeed_Impl::optionalAirflowNetworkEquivalentDuct() const
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDXMultiSpeed_Impl::airflowNetworkEquivalentDuct() const
   {
     std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
     auto count = myAFN.size();
@@ -704,14 +704,14 @@ void CoilHeatingDXMultiSpeed::removeAllStages() {
   getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeAllStages();
 }
 
-AirflowNetworkEquivalentDuct CoilHeatingDXMultiSpeed::airflowNetworkEquivalentDuct(double length, double diameter)
+AirflowNetworkEquivalentDuct CoilHeatingDXMultiSpeed::getAirflowNetworkEquivalentDuct(double length, double diameter)
 {
-  return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->airflowNetworkEquivalentDuct(length, diameter);
+  return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->getAirflowNetworkEquivalentDuct(length, diameter);
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDXMultiSpeed::optionalAirflowNetworkEquivalentDuct() const
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDXMultiSpeed::airflowNetworkEquivalentDuct() const
 {
-  return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->optionalAirflowNetworkEquivalentDuct();
+  return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->airflowNetworkEquivalentDuct();
 }
 
 /// @cond
