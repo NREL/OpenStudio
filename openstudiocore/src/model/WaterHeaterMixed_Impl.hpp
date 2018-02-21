@@ -46,139 +46,6 @@ namespace detail {
 
   class MODEL_API WaterHeaterMixed_Impl : public WaterToWaterComponent_Impl {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -214,6 +81,13 @@ namespace detail {
     virtual unsigned demandInletPort() override;
 
     virtual unsigned demandOutletPort() override;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
 
     //@}
     /** @name Getters */
@@ -371,17 +245,19 @@ namespace detail {
 
     bool isIndirectWaterHeatingRecoveryTimeDefaulted() const;
 
-  boost::optional<double> autosizedTankVolume() const ;
+    boost::optional<double> autosizedTankVolume() const;
 
-  boost::optional<double> autosizedHeaterMaximumCapacity() const ;
+    boost::optional<double> autosizedHeaterMaximumCapacity() const;
 
-  boost::optional<double> autosizedUseSideDesignFlowRate() const ;
+    boost::optional<double> autosizedUseSideDesignFlowRate() const;
 
-  boost::optional<double> autosizedSourceSideDesignFlowRate() const ;
+    boost::optional<double> autosizedSourceSideDesignFlowRate() const;
 
-  virtual void autosize() override;
+    std::string sourceSideFlowControlMode() const;
 
-  virtual void applySizingValues() override;
+    boost::optional<Schedule> indirectAlternateSetpointTemperatureSchedule() const;
+
+    std::string endUseSubcategory() const;
 
     //@}
     /** @name Setters */
@@ -571,7 +447,12 @@ namespace detail {
 
     void resetIndirectWaterHeatingRecoveryTime();
 
-    boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+    bool setSourceSideFlowControlMode(const std::string & sourceSideFlowControlMode);
+
+    bool setIndirectAlternateSetpointTemperatureSchedule(Schedule& indirectAlternateSetpointTemperatureSchedule);
+    void resetIndirectAlternateSetpointTemperatureSchedule();
+
+    bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
     //@}
    protected:
@@ -629,6 +510,7 @@ namespace detail {
     openstudio::OSOptionalQuantity sourceSideDesignFlowRate_IP() const;
     openstudio::Quantity indirectWaterHeatingRecoveryTime_SI() const;
     openstudio::Quantity indirectWaterHeatingRecoveryTime_IP() const;
+    std::vector<std::string> sourceSideFlowControlModeValues() const;
 
     boost::optional<ModelObject> setpointTemperatureScheduleAsModelObject() const;
     boost::optional<ModelObject> partLoadFactorCurveAsModelObject() const;
@@ -637,12 +519,17 @@ namespace detail {
     boost::optional<ModelObject> useFlowRateFractionScheduleAsModelObject() const;
     boost::optional<ModelObject> coldWaterSupplyTemperatureScheduleAsModelObject() const;
 
+    boost::optional<ModelObject> indirectAlternateSetpointTemperatureScheduleAsModelObject() const;
+
     bool setSetpointTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setPartLoadFactorCurveAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setAmbientTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setAmbientTemperatureThermalZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setUseFlowRateFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setColdWaterSupplyTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+
+    bool setIndirectAlternateSetpointTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+
   };
 
 } // detail

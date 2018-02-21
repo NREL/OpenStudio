@@ -9,7 +9,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 
-project(OpenStudio VERSION 2.4.1)
+project(OpenStudio VERSION 2.4.2)
 
 include(ExternalProject)
 include(CPackComponent)
@@ -572,8 +572,11 @@ endif()
 
 # openstudio gems
 
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170627.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "537c1e958a24ac55f4e2ed5e1d943553")
+# to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
+# next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
+# upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20180218.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "cfc3cea06972c823ce468c6fd0c69b1e")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -589,6 +592,8 @@ if( NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
 
   file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/openstudio-gems")
   execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  
+  file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/src/cli/embedded_files")
 endif()
 
 # OpenSSL / libssh support
@@ -647,7 +652,7 @@ if( BUILD_DVIEW )
   if(NOT EXISTS ${DVIEW_INSTALL_DIR})
     if( WIN32 )
       set(DVIEW_ZIP_FILENAME "DView-windows.zip")
-      set(DVIEW_ZIP_EXPECTED_MD5 "2964786830bbd28cd3e186b4da001946")
+      set(DVIEW_ZIP_EXPECTED_MD5 "da1e0b0a564126118bfc510606470ee3")
     elseif( APPLE )
       set(DVIEW_ZIP_FILENAME "DView-osx.tar.gz")
       set(DVIEW_ZIP_EXPECTED_MD5 "24d225aa500b344816c4f8239641d5aa")
@@ -1414,6 +1419,9 @@ if(BUILD_DOCUMENTATION)
   endforeach()
 
   # Set up dependencies after all targets have been created
+  add_dependencies(openstudio_utilities
+    CreateEmbeddedSource
+  )
   add_dependencies(openstudio_utilities_doc
     openstudio_utilities_idd_doc
   )

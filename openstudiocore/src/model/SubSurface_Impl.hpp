@@ -35,6 +35,8 @@
 namespace openstudio {
 namespace model {
 
+class AirflowNetworkComponent;
+class AirflowNetworkSurface;
 class Surface;
 class SubSurface;
 class ShadingSurface;
@@ -262,6 +264,10 @@ namespace detail {
     /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window,
      * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
     boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
+
+    AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage);
+
+    boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
 
    protected:
 

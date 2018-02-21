@@ -171,6 +171,10 @@ namespace detail {
   virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
+
+    AirflowNetworkFan airflowNetworkFan();
+    boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
+
    //protected:
    private:
     REGISTER_LOGGER("openstudio.model.FanOnOff");

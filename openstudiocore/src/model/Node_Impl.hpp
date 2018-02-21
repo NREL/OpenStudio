@@ -43,6 +43,7 @@ class SetpointManagerFollowOutdoorAirTemperature;
 class SetpointManagerOutdoorAirReset;
 class SetpointManagerWarmest;
 class SetpointManager;
+class AirflowNetworkDistributionNode;
 
 namespace detail {
 
@@ -129,6 +130,10 @@ namespace detail {
     virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
     virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+    AirflowNetworkDistributionNode airflowNetworkDistributionNode();
+
+    boost::optional<AirflowNetworkDistributionNode> optionalAirflowNetworkDistributionNode() const;
 
    private:
 

@@ -52,6 +52,8 @@ class SetpointManagerWarmest;
 
 class SetpointManager;
 
+class AirflowNetworkDistributionNode;
+
 namespace detail {
   class Node_Impl;
 } // detail
@@ -154,6 +156,10 @@ class MODEL_API Node : public StraightComponent {
   std::vector<IdfObject> remove();
 
   static IddObjectType iddObjectType();
+
+  AirflowNetworkDistributionNode airflowNetworkDistributionNode();
+
+  boost::optional<AirflowNetworkDistributionNode> optionalAirflowNetworkDistributionNode() const;
 
  protected:
 

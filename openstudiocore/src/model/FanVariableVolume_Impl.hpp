@@ -47,6 +47,7 @@ namespace detail {
  *  class for FanVariableVolume.*/
   class MODEL_API FanVariableVolume_Impl : public StraightComponent_Impl {
    public:
+
     /** @name Constructors and Destructors */
     //@{
 
@@ -246,6 +247,9 @@ namespace detail {
 
     void resetEndUseSubcategory();
 
+    AirflowNetworkFan airflowNetworkFan();
+    boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
+
     //@}
   protected:
   private:
@@ -291,4 +295,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_FANVARIABLEVOLUME_IMPL_HPP
+#endif // MODEL_FANVARIABLEVOLUME_IMPL_HPP

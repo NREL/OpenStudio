@@ -136,7 +136,10 @@ namespace detail {
 
     void autosizeMaximumFlowRate();
 
-    boost::optional<double> autosizedMaximumFlowRate() const ;
+    AirflowNetworkFan airflowNetworkFan();
+    boost::optional<AirflowNetworkFan> optionalAirflowNetworkFan() const;
+
+  boost::optional<double> autosizedMaximumFlowRate() const ;
 
     virtual void autosize() override;
 

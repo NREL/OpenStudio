@@ -46,6 +46,8 @@
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "SetpointManagerMixedAir.hpp"
+#include "AirflowNetworkFan.hpp"
+#include "AirflowNetworkFan_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_Fan_VariableVolume_FieldEnums.hxx>
@@ -855,6 +857,28 @@ namespace detail {
     return boost::none;
   }
 
+  AirflowNetworkFan FanVariableVolume_Impl::airflowNetworkFan()
+  {
+    auto opt = optionalAirflowNetworkFan();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkFan(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkFan> FanVariableVolume_Impl::optionalAirflowNetworkFan() const
+  {
+    std::vector<AirflowNetworkFan> myAFNitems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkFan>(AirflowNetworkFan::iddObjectType());
+    auto count = myAFNitems.size();
+    if (count == 1) {
+      return myAFNitems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFNitems[0];
+    }
+    return boost::none;
+  }
+
   boost::optional<double> FanVariableVolume_Impl::autosizedMaximumFlowRate() const {
     return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
   }
@@ -1254,6 +1278,16 @@ void FanVariableVolume::resetEndUseSubcategory() {
   getImpl<detail::FanVariableVolume_Impl>()->resetEndUseSubcategory();
 }
 
+AirflowNetworkFan FanVariableVolume::airflowNetworkFan()
+{
+  return getImpl<detail::FanVariableVolume_Impl>()->airflowNetworkFan();
+}
+
+boost::optional<AirflowNetworkFan> FanVariableVolume::optionalAirflowNetworkFan() const
+{
+  return getImpl<detail::FanVariableVolume_Impl>()->optionalAirflowNetworkFan();
+}
+
 /// @cond
 FanVariableVolume::FanVariableVolume(std::shared_ptr<detail::FanVariableVolume_Impl> impl)
   : StraightComponent(std::move(impl))
@@ -1265,4 +1299,4 @@ FanVariableVolume::FanVariableVolume(std::shared_ptr<detail::FanVariableVolume_I
   }
 
 } // model
-} // openstudio
+} // openstudio

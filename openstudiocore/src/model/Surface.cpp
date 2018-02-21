@@ -52,6 +52,18 @@
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 #include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
+#include "AirflowNetworkSurface.hpp"
+#include "AirflowNetworkSurface_Impl.hpp"
+#include "AirflowNetworkDetailedOpening.hpp"
+#include "AirflowNetworkDetailedOpening_Impl.hpp"
+#include "AirflowNetworkCrack.hpp"
+#include "AirflowNetworkCrack_Impl.hpp"
+#include "AirflowNetworkSimpleOpening.hpp"
+#include "AirflowNetworkSimpleOpening_Impl.hpp"
+#include "AirflowNetworkEffectiveLeakageArea.hpp"
+#include "AirflowNetworkEffectiveLeakageArea_Impl.hpp"
+#include "AirflowNetworkHorizontalOpening.hpp"
+#include "AirflowNetworkHorizontalOpening_Impl.hpp"
 #include "FoundationKiva.hpp"
 #include "FoundationKiva_Impl.hpp"
 #include "SurfacePropertyExposedFoundationPerimeter.hpp"
@@ -127,6 +139,9 @@ namespace detail {
    // subSurfaces
    SubSurfaceVector subSurfaces = this->subSurfaces();
    result.insert(result.end(), subSurfaces.begin(), subSurfaces.end());
+
+   std::vector<AirflowNetworkSurface> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+   result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
 
    if (boost::optional<SurfacePropertyExposedFoundationPerimeter> prop = this->surfacePropertyExposedFoundationPerimeter()) {
      result.push_back(prop.get());
@@ -1858,12 +1873,48 @@ namespace detail {
     return result;
   }
 
+  AirflowNetworkSurface Surface_Impl::airflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage)
+  {
+    boost::optional<AirflowNetworkSurface> result = optionalAirflowNetworkSurface();
+    if (result){
+      boost::optional<AirflowNetworkComponent> leakageComponent = result->leakageComponent();
+      if (leakageComponent){
+        if (leakageComponent->handle() == surfaceAirflowLeakage.handle()){
+          return result.get();
+        } else{
+          result->remove();
+        }
+      } else{
+        result->remove();
+      }
+    }
+    return AirflowNetworkSurface(this->model(), surfaceAirflowLeakage.handle(), this->handle());
+  }
+
   bool Surface_Impl::setAdjacentFoundation(const FoundationKiva& kiva) {
     bool result = this->setPointer(OS_SurfaceFields::OutsideBoundaryConditionObject, kiva.handle());
     OS_ASSERT(result);
     result = this->setString(OS_SurfaceFields::OutsideBoundaryCondition, "Foundation");
     OS_ASSERT(result);
     return result;
+  }
+
+  boost::optional<AirflowNetworkSurface> Surface_Impl::optionalAirflowNetworkSurface() const
+  {
+    std::vector<AirflowNetworkSurface> myAFNSurfs = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+    boost::optional<Surface> other = adjacentSurface();
+    if (other) {
+      std::vector<AirflowNetworkSurface> adjAFNSurfs = other.get().getImpl<detail::Surface_Impl>()->getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+      myAFNSurfs.insert(myAFNSurfs.end(), adjAFNSurfs.begin(), adjAFNSurfs.end());
+    }
+    auto count = myAFNSurfs.size();
+    if (count == 1) {
+      return myAFNSurfs[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork Surface attached, returning first.");
+      return myAFNSurfs[0];
+    }
+    return boost::none;
   }
 
   boost::optional<FoundationKiva> Surface_Impl::adjacentFoundation() const {
@@ -2300,6 +2351,35 @@ std::ostream& operator<<(std::ostream& os, const SurfaceIntersection& surfaceInt
   return os;
 }
 
+AirflowNetworkSurface Surface::airflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage)
+{
+  return getImpl<detail::Surface_Impl>()->airflowNetworkSurface(surfaceAirflowLeakage);
+}
+
+AirflowNetworkSurface Surface::airflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage)
+{
+  return getImpl<detail::Surface_Impl>()->airflowNetworkSurface(surfaceAirflowLeakage);
+}
+
+AirflowNetworkSurface Surface::airflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage)
+{
+  return getImpl<detail::Surface_Impl>()->airflowNetworkSurface(surfaceAirflowLeakage);
+}
+
+AirflowNetworkSurface Surface::airflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage)
+{
+  return getImpl<detail::Surface_Impl>()->airflowNetworkSurface(surfaceAirflowLeakage);
+}
+
+AirflowNetworkSurface Surface::airflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage)
+{
+  return getImpl<detail::Surface_Impl>()->airflowNetworkSurface(surfaceAirflowLeakage);
+}
+
+boost::optional<AirflowNetworkSurface> Surface::optionalAirflowNetworkSurface() const
+{
+  return getImpl<detail::Surface_Impl>()->optionalAirflowNetworkSurface();
+}
 
 } // model
 } // openstudio

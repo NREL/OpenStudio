@@ -749,6 +749,19 @@ namespace detail {
 
   }
 
+
+  std::string BoilerSteam_Impl::endUseSubcategory() const {
+    auto value = getString(OS_Boiler_SteamFields::EndUseSubcategory,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool BoilerSteam_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_Boiler_SteamFields::EndUseSubcategory,endUseSubcategory);
+  }
+
+
+
 } // detail
 
 BoilerSteam::BoilerSteam(const Model& model)
@@ -768,6 +781,7 @@ BoilerSteam::BoilerSteam(const Model& model)
   setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(0.1);
   setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(0.1);
   setSizingFactor(1.0);
+  setEndUseSubcategory("General");
 }
 
 IddObjectType BoilerSteam::iddObjectType() {
@@ -1018,6 +1032,15 @@ bool BoilerSteam::setSizingFactor(const Quantity& sizingFactor) {
 void BoilerSteam::resetSizingFactor() {
   getImpl<detail::BoilerSteam_Impl>()->resetSizingFactor();
 }
+
+std::string BoilerSteam::endUseSubcategory() const {
+  return getImpl<detail::BoilerSteam_Impl>()->endUseSubcategory();
+}
+
+bool BoilerSteam::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::BoilerSteam_Impl>()->setEndUseSubcategory(endUseSubcategory);
+}
+
 
 /// @cond
 BoilerSteam::BoilerSteam(std::shared_ptr<detail::BoilerSteam_Impl> impl)

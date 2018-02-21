@@ -87,6 +87,10 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   virtual unsigned tertiaryOutletPort() const override;
 
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
   //@}
   boost::optional<double> referenceCapacity() const;
 
@@ -188,9 +192,7 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const ;
 
-  virtual void autosize() override;
-
-  virtual void applySizingValues() override;
+  std::string endUseSubcategory() const;
 
   //@}
   /** @name Setters */
@@ -317,6 +319,22 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
   bool setBasinHeaterSchedule(Schedule & schedule );
 
   void resetBasinHeaterSchedule();
+
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
+
+  // TODO
+  /*
+   *N18, \field Condenser Heat Recovery Relative Capacity Fraction
+   *     \note This optional field is the fraction of total rejected heat that can be recovered at full load
+   *     \type real
+   *     \minimum 0.0
+   *     \maximum 1.0
+   *A15, \field Heat Recovery Inlet High Temperature Limit Schedule Name
+   *     \note This optional schedule of temperatures will turn off heat recovery if inlet exceeds the value
+   *     \type object-list
+   *     \object-list ScheduleNames
+   *A16, \field Heat Recovery Leaving Temperature Setpoint Node Name
+   */
 
   //@}
  protected:

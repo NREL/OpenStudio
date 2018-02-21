@@ -42,11 +42,11 @@ Updating EnergyPlus
 If a new version of EnergyPlus is to be incorporated into OpenStudio
 - Upload the 3 versions (Windows 64, Ubuntu, and Linux) to S3's folder `openstudio-resources/dependencies`
 - In the ./openstudiocore folder, update `CMakeLists.txt` following
-	- ENERGYPLUS_VERSION_MAJOR
-	- ENERGYPLUS_VERSION_MINOR
-	- ENERGYPLUS_VERSION_PATCH
-	- ENERGYPLUS_BUILD_SHA
-	- ENERGYPLUS_EXPECTED_HASH (In 3 places: Win 32, Win 64, Darwin, and Linux)
+    - ENERGYPLUS_VERSION_MAJOR
+    - ENERGYPLUS_VERSION_MINOR
+    - ENERGYPLUS_VERSION_PATCH
+    - ENERGYPLUS_BUILD_SHA
+    - ENERGYPLUS_EXPECTED_HASH (In 3 places: Win 32, Win 64, Darwin, and Linux)
 
 Note: use HashTab, or similar, to determine the MD5 hash value for each file referenced above.
 
@@ -86,7 +86,7 @@ Ensure the correct version of wxWidgets is installed (currently 3.1.0, us "apt-g
 In a command window:
 
     cd openstudio/buildMeta
-	ccmake ../
+    ccmake ../
 
 In CMake check the following:
 
@@ -95,14 +95,14 @@ In CMake check the following:
 
 In CMake type the following:
 
-	c
-	g
+    c
+    g
 
 In a command window:
 
-	make DView
+    make DView
 
-Compress folder DView-install with DView, and upload to S3.
+Compress folder DView-install with DView, and upload to S3 (tar -zcvf DView-osx.tar.gz DView-install).
 
 Windows 64-bit
 --------------
@@ -135,8 +135,8 @@ Ensure the correct version of wxWidgets is installed (currently 3.1.0)
 
 In a command window:
 
-	cd openstudio/buildMeta
-	ccmake ../
+    cd openstudio/buildMeta
+    ccmake ../
 
 In CMake check the following:
 
@@ -145,8 +145,8 @@ In CMake check the following:
 
 In CMake type the following:
 
-	c
-	g
+    c
+    g
 
 In a command window:
 ```bash
@@ -171,7 +171,7 @@ With Git, pull `iteration` branch.
 In a command window:
 
     cd openstudio/build
-	ccmake ../openstudiocore
+    ccmake ../openstudiocore
 
 In CMake check the following:
 
@@ -191,13 +191,13 @@ In CMake **check** the following:
 
 In CMake type the following:
 
-	c
-	g
+    c
+    g
 
 In a command window:
 
-	make –j16 (16 indicates the number of cores used, the max number allowed by VMware 12)
-	make package
+    make –j16 (16 indicates the number of cores used, the max number allowed by VMware 12)
+    make package
 
 Copy .deb package from VM to Windows
 
@@ -240,8 +240,8 @@ With Git, pull `iteration` branch.
 
 In a command window:
 
-	cd openstudio/build
-	ccmake ../openstudiocore
+    cd openstudio/build
+    ccmake ../openstudiocore
 
 In CMake check the following:
 
@@ -263,8 +263,8 @@ In CMake **check** the following:
 
 In CMake type the following:
 
-	c
-	g
+    c
+    g
 
 In a command window:
 
@@ -331,9 +331,9 @@ https://github.com/NREL/OpenStudio/releases
 - Select "Draft a new release"
 - Set tag version = vX.Y.Z
 - If this is a major release
-	- Set Target = `master`
+    - Set Target = `master`
 - Else If this is an iteration build
-	- Set Target = `iteration`
+    - Set Target = `iteration`
 - Set Release title = OpenStudio vX.Y.Z
 - Check "This is a pre-release" for an iteration build
 - Select "Save draft"
@@ -424,9 +424,9 @@ In folder `developer\ruby`
 ### Get the stats
 In folder `developer\ruby`, open Git Bash and type the following
 
-	gem install github_api
-	ruby GitHubIssueStats.rb
-	ruby GitHubIssueStats.rb > out.txt
+    gem install github_api
+    ruby GitHubIssueStats.rb
+    ruby GitHubIssueStats.rb > out.txt
 
 Open out.txt, and paste data into CHANGELOG.md
 

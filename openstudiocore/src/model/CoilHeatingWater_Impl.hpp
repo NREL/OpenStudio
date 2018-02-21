@@ -39,10 +39,7 @@ class Schedule;
 namespace detail {
 
   class MODEL_API CoilHeatingWater_Impl : public WaterToAirComponent_Impl {
-
-
-
-  public:
+      public:
     /** @name Constructors and Destructors */
     //@{
 
@@ -69,6 +66,8 @@ namespace detail {
     virtual ModelObject clone(Model model) const override;
 
     virtual IddObjectType iddObjectType() const override;
+
+    virtual std::vector<ModelObject> children() const override;
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
@@ -155,6 +154,14 @@ namespace detail {
   virtual void applySizingValues() override;
 
     //@}
+    /** @name Other */
+    //@{
+
+    AirflowNetworkEquivalentDuct airflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> optionalAirflowNetworkEquivalentDuct() const;
+
+    //@}
+
   private:
     REGISTER_LOGGER("openstudio.model.CoilHeatingWater");
 
@@ -168,4 +175,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_COILHEATINGWATER_IMPL_HPP
+#endif // MODEL_COILHEATINGWATER_IMPL_HPP

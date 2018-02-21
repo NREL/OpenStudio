@@ -67,6 +67,8 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual std::vector<ModelObject> children() const override;
+
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     virtual boost::optional<ThermalZone> thermalZone() override;
@@ -138,6 +140,9 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    AirflowNetworkZoneExhaustFan airflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack);
+    boost::optional<AirflowNetworkZoneExhaustFan> optionalAirflowNetworkZoneExhaustFan() const;
 
     //@}
    protected:
