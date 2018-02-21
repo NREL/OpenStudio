@@ -1887,10 +1887,10 @@ namespace detail {
       } else{
         result->remove();
       }
-
+    }
     return AirflowNetworkSurface(this->model(), surfaceAirflowLeakage.handle(), this->handle());
   }
-  
+
   bool Surface_Impl::setAdjacentFoundation(const FoundationKiva& kiva) {
     bool result = this->setPointer(OS_SurfaceFields::OutsideBoundaryConditionObject, kiva.handle());
     OS_ASSERT(result);
@@ -1898,9 +1898,6 @@ namespace detail {
     OS_ASSERT(result);
     return result;
   }
-
-  }
-
 
   boost::optional<AirflowNetworkSurface> Surface_Impl::optionalAirflowNetworkSurface() const
   {
