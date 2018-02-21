@@ -49,12 +49,12 @@ TEST_F(ModelFixture, FanZoneExhaust_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     FanZoneExhaust testObject = FanZoneExhaust(model);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -64,7 +64,7 @@ TEST_F(ModelFixture, FanZoneExhaust_AddToAndRemoveFromThermalZone)
   Model model;
   FanZoneExhaust testObject = FanZoneExhaust(model);
   ThermalZone thermalZone(model);
-  
+
   // Add to thermal zone
   EXPECT_TRUE(testObject.addToThermalZone(thermalZone));
   boost::optional<ThermalZone> testThermalZone = testObject.thermalZone();
@@ -75,7 +75,7 @@ TEST_F(ModelFixture, FanZoneExhaust_AddToAndRemoveFromThermalZone)
   // Check inlet and outlet nodes
   EXPECT_TRUE(testObject.inletNode());
   EXPECT_TRUE(testObject.outletNode());
-  
+
   // Remove from thermal zone
   testObject.removeFromThermalZone();
   EXPECT_FALSE(testObject.thermalZone());
@@ -88,18 +88,15 @@ TEST_F(ModelFixture, FanZoneExhaust_AddAFNZoneExhaustFan)
   FanZoneExhaust testObject = FanZoneExhaust(model);
   ThermalZone thermalZone(model);
 
-  EXPECT_FALSE(testObject.airflowNetworkZoneExhaustFan());
+  EXPECT_FALSE(testObject.optionalAirflowNetworkZoneExhaustFan());
 
   AirflowNetworkCrack crack(model, 1.0, 0.5);
   EXPECT_EQ(1, crack.airMassFlowCoefficient());
   EXPECT_EQ(0.5, crack.airMassFlowExponent());
   EXPECT_FALSE(crack.referenceCrackConditions());
-  
-  auto optobject = testObject.createAirflowNetworkZoneExhaustFan(crack);
 
-  ASSERT_TRUE(optobject);
+  auto afnobject = testObject.airflowNetworkZoneExhaustFan(crack);
 
-  auto afnobject = optobject.get();
   ASSERT_TRUE(afnobject.crack());
   EXPECT_EQ(crack, afnobject.crack().get());
 }
