@@ -670,9 +670,9 @@ namespace detail {
     return result;
   }
 
-  AirflowNetworkOutdoorAirflow ControllerOutdoorAir_Impl::airflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack)
+  AirflowNetworkOutdoorAirflow ControllerOutdoorAir_Impl::getAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack)
   {
-    boost::optional<AirflowNetworkOutdoorAirflow> opt = optionalAirflowNetworkOutdoorAirflow();
+    boost::optional<AirflowNetworkOutdoorAirflow> opt = airflowNetworkOutdoorAirflow();
     if (opt) {
       boost::optional<AirflowNetworkCrack> oldCrack = opt->crack();
       if (oldCrack){
@@ -685,7 +685,7 @@ namespace detail {
     return AirflowNetworkOutdoorAirflow(model(), crack, handle());
   }
 
-  boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir_Impl::optionalAirflowNetworkOutdoorAirflow() const
+  boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir_Impl::airflowNetworkOutdoorAirflow() const
   {
     std::vector<AirflowNetworkOutdoorAirflow> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkOutdoorAirflow>(AirflowNetworkOutdoorAirflow::iddObjectType());
     auto count = myAFNItems.size();
@@ -1062,14 +1062,14 @@ void ControllerOutdoorAir::resetTimeofDayEconomizerControlSchedule()
   getImpl<detail::ControllerOutdoorAir_Impl>()->resetTimeofDayEconomizerControlSchedule();
 }
 
-AirflowNetworkOutdoorAirflow ControllerOutdoorAir::airflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack)
+AirflowNetworkOutdoorAirflow ControllerOutdoorAir::getAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack)
 {
-  return getImpl<detail::ControllerOutdoorAir_Impl>()->airflowNetworkOutdoorAirflow(crack);
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->getAirflowNetworkOutdoorAirflow(crack);
 }
 
-boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir::optionalAirflowNetworkOutdoorAirflow() const
+boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir::airflowNetworkOutdoorAirflow() const
 {
-  return getImpl<detail::ControllerOutdoorAir_Impl>()->optionalAirflowNetworkOutdoorAirflow();
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->airflowNetworkOutdoorAirflow();
 }
 
   boost::optional<double> ControllerOutdoorAir::autosizedMinimumOutdoorAirFlowRate() const {

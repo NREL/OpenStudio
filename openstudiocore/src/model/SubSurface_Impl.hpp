@@ -265,9 +265,9 @@ namespace detail {
      * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
     boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
 
-    AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage);
+    AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage);
 
-    boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
+    boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
    protected:
 

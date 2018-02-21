@@ -70,14 +70,14 @@ TEST_F(ModelFixture, FanZoneExhaust_AddAFNOutdoorAirflow)
   Model model;
   ControllerOutdoorAir controller(model);
 
-  EXPECT_FALSE(controller.optionalAirflowNetworkOutdoorAirflow());
+  EXPECT_FALSE(controller.airflowNetworkOutdoorAirflow());
 
   AirflowNetworkCrack crack(model, 1.0, 0.5);
   EXPECT_EQ(1, crack.airMassFlowCoefficient());
   EXPECT_EQ(0.5, crack.airMassFlowExponent());
   EXPECT_FALSE(crack.referenceCrackConditions());
 
-  auto afnobject = controller.airflowNetworkOutdoorAirflow(crack);
+  auto afnobject = controller.getAirflowNetworkOutdoorAirflow(crack);
 
   ASSERT_TRUE(afnobject.crack());
   EXPECT_EQ(crack, afnobject.crack().get());

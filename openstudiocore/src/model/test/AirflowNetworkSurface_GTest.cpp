@@ -123,7 +123,7 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_SetVertices)
   points.push_back(Point3d(1, 1, 0));
   Surface surface(points, model);
   EXPECT_EQ("RoofCeiling", surface.surfaceType());
-  EXPECT_TRUE(!surface.optionalAirflowNetworkSurface());
+  EXPECT_TRUE(!surface.airflowNetworkSurface());
   EXPECT_EQ("Outdoors", surface.outsideBoundaryCondition());
 
   AirflowNetworkCrack crack0(model, 1.0, 0.5);
@@ -136,9 +136,9 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_SetVertices)
   EXPECT_EQ(0.65, crack1.airMassFlowExponent());
   EXPECT_FALSE(crack1.referenceCrackConditions());
 
-  AirflowNetworkSurface afnsurf = surface.airflowNetworkSurface(crack0);
+  AirflowNetworkSurface afnsurf = surface.getAirflowNetworkSurface(crack0);
   EXPECT_EQ(surface, afnsurf.surface());
-  boost::optional<AirflowNetworkSurface> optsurf = surface.optionalAirflowNetworkSurface();
+  boost::optional<AirflowNetworkSurface> optsurf = surface.airflowNetworkSurface();
   ASSERT_TRUE(optsurf);
   EXPECT_EQ(afnsurf, optsurf.get());
   ASSERT_TRUE(afnsurf.leakageComponent());
@@ -173,15 +173,15 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_Clone) {
   EXPECT_FALSE(crack0.referenceCrackConditions());
 
   // construct AFN Surface
-  auto afnsurf = surface.airflowNetworkSurface(crack0);
+  auto afnsurf = surface.getAirflowNetworkSurface(crack0);
   ASSERT_EQ(surface, afnsurf.surface());
-  auto optsurf = surface.optionalAirflowNetworkSurface();
+  auto optsurf = surface.airflowNetworkSurface();
   ASSERT_TRUE(optsurf);
   EXPECT_EQ(afnsurf, optsurf.get());
 
   // clone should copy the AFN surface
   Surface clone1 = surface.clone().cast<Surface>();
-  boost::optional<AirflowNetworkSurface> optsurf1 = clone1.optionalAirflowNetworkSurface();
+  boost::optional<AirflowNetworkSurface> optsurf1 = clone1.airflowNetworkSurface();
   ASSERT_TRUE(optsurf1);
   ASSERT_NE(optsurf, optsurf1);
   ASSERT_TRUE(optsurf1.get().leakageComponent());
@@ -189,7 +189,7 @@ TEST_F(ModelFixture, AirflowNetwork_Surface_Clone) {
 
   // even if through ModelObject
   Surface clone2 = surface.cast<ModelObject>().clone().cast<Surface>();
-  boost::optional<AirflowNetworkSurface> optsurf2 = clone2.optionalAirflowNetworkSurface();
+  boost::optional<AirflowNetworkSurface> optsurf2 = clone2.airflowNetworkSurface();
   ASSERT_TRUE(optsurf2);
   ASSERT_TRUE(optsurf2.get().leakageComponent());
   EXPECT_EQ(crack0, optsurf2.get().leakageComponent().get());
@@ -210,7 +210,7 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSurface)
   Surface wall1(vertices, model);
   wall1.setSpace(space1);
   EXPECT_FALSE(wall1.adjacentSurface());
-  EXPECT_FALSE(wall1.optionalAirflowNetworkSurface());
+  EXPECT_FALSE(wall1.airflowNetworkSurface());
   EXPECT_EQ("Outdoors", wall1.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", wall1.sunExposure());
   EXPECT_EQ("WindExposed", wall1.windExposure());
@@ -221,7 +221,7 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSurface)
   Surface wall2(vertices, model);
   wall2.setSpace(space2);
   EXPECT_FALSE(wall2.adjacentSurface());
-  EXPECT_FALSE(wall2.optionalAirflowNetworkSurface());
+  EXPECT_FALSE(wall2.airflowNetworkSurface());
   EXPECT_EQ("Outdoors", wall2.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", wall2.sunExposure());
   EXPECT_EQ("WindExposed", wall2.windExposure());
@@ -237,8 +237,8 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSurface)
   EXPECT_EQ("Surface", wall2.outsideBoundaryCondition());
   EXPECT_EQ("NoSun", wall2.sunExposure());
   EXPECT_EQ("NoWind", wall2.windExposure());
-  EXPECT_FALSE(wall1.optionalAirflowNetworkSurface());
-  EXPECT_FALSE(wall2.optionalAirflowNetworkSurface());
+  EXPECT_FALSE(wall1.airflowNetworkSurface());
+  EXPECT_FALSE(wall2.airflowNetworkSurface());
 
   AirflowNetworkCrack crack0(model, 1.0, 0.5);
   EXPECT_EQ(1, crack0.airMassFlowCoefficient());
@@ -246,12 +246,12 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSurface)
   EXPECT_FALSE(crack0.referenceCrackConditions());
 
   // construct AFN Surface
-  auto afnsurf = wall1.airflowNetworkSurface(crack0);
+  auto afnsurf = wall1.getAirflowNetworkSurface(crack0);
   ASSERT_EQ(wall1, afnsurf.surface());
-  auto optsurf = wall1.optionalAirflowNetworkSurface();
+  auto optsurf = wall1.airflowNetworkSurface();
   ASSERT_TRUE(optsurf);
   EXPECT_EQ(afnsurf, optsurf.get());
-  optsurf = wall2.optionalAirflowNetworkSurface();
+  optsurf = wall2.airflowNetworkSurface();
   ASSERT_TRUE(optsurf);
   EXPECT_EQ(afnsurf, optsurf.get());
 
@@ -264,10 +264,10 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSurface)
   EXPECT_EQ("Outdoors", wall2.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", wall2.sunExposure());
   EXPECT_EQ("WindExposed", wall2.windExposure());
-  optsurf = wall1.optionalAirflowNetworkSurface();
+  optsurf = wall1.airflowNetworkSurface();
   ASSERT_TRUE(optsurf);
   EXPECT_EQ(afnsurf, optsurf.get());
-  optsurf = wall2.optionalAirflowNetworkSurface();
+  optsurf = wall2.airflowNetworkSurface();
   ASSERT_FALSE(optsurf);
 }
 
@@ -321,8 +321,8 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSubSurface)
   window1.setSurface(wall1);
   window2.setSurface(wall2);
 
-  EXPECT_FALSE(window1.optionalAirflowNetworkSurface());
-  EXPECT_FALSE(window2.optionalAirflowNetworkSurface());
+  EXPECT_FALSE(window1.airflowNetworkSurface());
+  EXPECT_FALSE(window2.airflowNetworkSurface());
 
   EXPECT_TRUE(window1.setAdjacentSubSurface(window2));
   EXPECT_TRUE(window1.setAdjacentSubSurface(window2));
@@ -335,9 +335,9 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSubSurface)
   EXPECT_FALSE(crack0.referenceCrackConditions());
 
   // construct AFN Surface
-  auto afnsurf = window1.airflowNetworkSurface(crack0);
+  auto afnsurf = window1.getAirflowNetworkSurface(crack0);
   ASSERT_EQ(window1, afnsurf.surface());
-  auto optsurf = window1.optionalAirflowNetworkSurface();
+  auto optsurf = window1.airflowNetworkSurface();
   ASSERT_TRUE(optsurf);
   EXPECT_EQ(afnsurf, optsurf.get());
 
@@ -346,7 +346,7 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSubSurface)
   ASSERT_TRUE(window2.adjacentSubSurface());
   EXPECT_EQ(window1.handle(), window2.adjacentSubSurface()->handle());
 
-  optsurf = window2.optionalAirflowNetworkSurface();
+  optsurf = window2.airflowNetworkSurface();
   ASSERT_TRUE(optsurf);
   EXPECT_EQ(afnsurf, optsurf.get());
 
@@ -356,10 +356,10 @@ TEST_F(ModelFixture, AirflowNetwork_AdjacentSubSurface)
   EXPECT_FALSE(window1.adjacentSubSurface());
   EXPECT_FALSE(window2.adjacentSubSurface());
 
-  optsurf = window1.optionalAirflowNetworkSurface();
+  optsurf = window1.airflowNetworkSurface();
   ASSERT_TRUE(optsurf);
   EXPECT_EQ(afnsurf, optsurf.get());
-  optsurf = window2.optionalAirflowNetworkSurface();
+  optsurf = window2.airflowNetworkSurface();
   ASSERT_FALSE(optsurf);
 
 }

@@ -182,7 +182,7 @@ IddObjectType AirflowNetworkSimulationControl_Impl::iddObjectType() const {
   return AirflowNetworkSimulationControl::iddObjectType();
 }
 
-boost::optional<std::string> AirflowNetworkSimulationControl_Impl::airflowNetworkControl() const 
+boost::optional<std::string> AirflowNetworkSimulationControl_Impl::airflowNetworkControl() const
 {
   return getString(OS_AirflowNetworkSimulationControlFields::AirflowNetworkControl,true);
 }
@@ -201,7 +201,7 @@ void AirflowNetworkSimulationControl_Impl::resetAirflowNetworkControl() {
   OS_ASSERT(result);
 }
 
-boost::optional<std::string> AirflowNetworkSimulationControl_Impl::windPressureCoefficientType() const 
+boost::optional<std::string> AirflowNetworkSimulationControl_Impl::windPressureCoefficientType() const
 {
   return getString(OS_AirflowNetworkSimulationControlFields::WindPressureCoefficientType,true);
 }

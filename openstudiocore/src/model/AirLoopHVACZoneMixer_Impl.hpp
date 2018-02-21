@@ -80,9 +80,9 @@ class MODEL_API AirLoopHVACZoneMixer_Impl : public Mixer_Impl
 
   void disconnect() override;
 
-  AirflowNetworkDistributionNode airflowNetworkDistributionNode();
+  AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
-  boost::optional<AirflowNetworkDistributionNode> optionalAirflowNetworkDistributionNode() const;
+  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
  private:
 

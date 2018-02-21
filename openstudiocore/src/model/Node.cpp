@@ -419,16 +419,16 @@ namespace detail{
     return false;
   }
 
-  AirflowNetworkDistributionNode Node_Impl::airflowNetworkDistributionNode()
+  AirflowNetworkDistributionNode Node_Impl::getAirflowNetworkDistributionNode()
   {
-    boost::optional<AirflowNetworkDistributionNode> opt = optionalAirflowNetworkDistributionNode();
+    boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();
     if (opt) {
       return opt.get();
     }
     return AirflowNetworkDistributionNode(model(), handle());
   }
 
-  boost::optional<AirflowNetworkDistributionNode> Node_Impl::optionalAirflowNetworkDistributionNode() const
+  boost::optional<AirflowNetworkDistributionNode> Node_Impl::airflowNetworkDistributionNode() const
   {
     std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
     auto count = myAFNItems.size();
@@ -574,14 +574,14 @@ IddObjectType Node::iddObjectType() {
   return result;
 }
 
-AirflowNetworkDistributionNode Node::airflowNetworkDistributionNode()
+AirflowNetworkDistributionNode Node::getAirflowNetworkDistributionNode()
 {
-  return getImpl<detail::Node_Impl>()->airflowNetworkDistributionNode();
+  return getImpl<detail::Node_Impl>()->getAirflowNetworkDistributionNode();
 }
 
-boost::optional<AirflowNetworkDistributionNode> Node::optionalAirflowNetworkDistributionNode() const
+boost::optional<AirflowNetworkDistributionNode> Node::airflowNetworkDistributionNode() const
 {
-  return getImpl<detail::Node_Impl>()->optionalAirflowNetworkDistributionNode();
+  return getImpl<detail::Node_Impl>()->airflowNetworkDistributionNode();
 }
 
 } // model

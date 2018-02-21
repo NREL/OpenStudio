@@ -80,9 +80,9 @@ class MODEL_API AirLoopHVACZoneMixer : public Mixer {
   friend class openstudio::IdfObject;
 
 
-  AirflowNetworkDistributionNode airflowNetworkDistributionNode();
+  AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
-  boost::optional<AirflowNetworkDistributionNode> optionalAirflowNetworkDistributionNode() const;
+  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
   /// @cond
 

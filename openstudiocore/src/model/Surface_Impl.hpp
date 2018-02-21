@@ -257,9 +257,9 @@ namespace detail {
 
     std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
 
-    AirflowNetworkSurface airflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage);
+    AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage);
 
-    boost::optional<AirflowNetworkSurface> optionalAirflowNetworkSurface() const;
+    boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
     bool setAdjacentFoundation(const FoundationKiva& kiva);
 
