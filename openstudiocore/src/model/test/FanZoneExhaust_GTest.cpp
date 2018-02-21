@@ -88,14 +88,14 @@ TEST_F(ModelFixture, FanZoneExhaust_AddAFNZoneExhaustFan)
   FanZoneExhaust testObject = FanZoneExhaust(model);
   ThermalZone thermalZone(model);
 
-  EXPECT_FALSE(testObject.optionalAirflowNetworkZoneExhaustFan());
+  EXPECT_FALSE(testObject.airflowNetworkZoneExhaustFan());
 
   AirflowNetworkCrack crack(model, 1.0, 0.5);
   EXPECT_EQ(1, crack.airMassFlowCoefficient());
   EXPECT_EQ(0.5, crack.airMassFlowExponent());
   EXPECT_FALSE(crack.referenceCrackConditions());
 
-  auto afnobject = testObject.airflowNetworkZoneExhaustFan(crack);
+  auto afnobject = testObject.getAirflowNetworkZoneExhaustFan(crack);
 
   ASSERT_TRUE(afnobject.crack());
   EXPECT_EQ(crack, afnobject.crack().get());

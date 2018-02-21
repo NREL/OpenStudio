@@ -254,9 +254,9 @@ namespace detail {
     return boost::none;
   }
 
-  AirflowNetworkEquivalentDuct CoilHeatingDesuperheater_Impl::airflowNetworkEquivalentDuct(double length, double diameter)
+  AirflowNetworkEquivalentDuct CoilHeatingDesuperheater_Impl::getAirflowNetworkEquivalentDuct(double length, double diameter)
   {
-    boost::optional<AirflowNetworkEquivalentDuct> opt = optionalAirflowNetworkEquivalentDuct();
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
     if (opt) {
       if (opt->airPathLength() != length){
         opt->setAirPathLength(length);
@@ -268,7 +268,7 @@ namespace detail {
     return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDesuperheater_Impl::optionalAirflowNetworkEquivalentDuct() const
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDesuperheater_Impl::airflowNetworkEquivalentDuct() const
   {
     std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>
       (AirflowNetworkEquivalentDuct::iddObjectType());
@@ -355,14 +355,14 @@ void CoilHeatingDesuperheater::resetParasiticElectricLoad() {
   getImpl<detail::CoilHeatingDesuperheater_Impl>()->resetParasiticElectricLoad();
 }
 
-AirflowNetworkEquivalentDuct CoilHeatingDesuperheater::airflowNetworkEquivalentDuct(double length, double diameter)
+AirflowNetworkEquivalentDuct CoilHeatingDesuperheater::getAirflowNetworkEquivalentDuct(double length, double diameter)
 {
-  return getImpl<detail::CoilHeatingDesuperheater_Impl>()->airflowNetworkEquivalentDuct(length, diameter);
+  return getImpl<detail::CoilHeatingDesuperheater_Impl>()->getAirflowNetworkEquivalentDuct(length, diameter);
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDesuperheater::optionalAirflowNetworkEquivalentDuct() const
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDesuperheater::airflowNetworkEquivalentDuct() const
 {
-  return getImpl<detail::CoilHeatingDesuperheater_Impl>()->optionalAirflowNetworkEquivalentDuct();
+  return getImpl<detail::CoilHeatingDesuperheater_Impl>()->airflowNetworkEquivalentDuct();
 }
 
 /// @cond

@@ -732,9 +732,9 @@ namespace detail {
     return OS_HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNode;
   }
 
-  AirflowNetworkEquivalentDuct HeatExchangerAirToAirSensibleAndLatent_Impl::airflowNetworkEquivalentDuct(double length, double diameter)
+  AirflowNetworkEquivalentDuct HeatExchangerAirToAirSensibleAndLatent_Impl::getAirflowNetworkEquivalentDuct(double length, double diameter)
   {
-    boost::optional<AirflowNetworkEquivalentDuct> opt = optionalAirflowNetworkEquivalentDuct();
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
     if (opt) {
       if (opt->airPathLength() != length){
         opt->setAirPathLength(length);
@@ -746,7 +746,7 @@ namespace detail {
     return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
   }
 
-  boost::optional<AirflowNetworkEquivalentDuct> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalAirflowNetworkEquivalentDuct() const
+  boost::optional<AirflowNetworkEquivalentDuct> HeatExchangerAirToAirSensibleAndLatent_Impl::airflowNetworkEquivalentDuct() const
   {
     std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
     auto count = myAFN.size();
@@ -1103,14 +1103,14 @@ bool HeatExchangerAirToAirSensibleAndLatent::setEconomizerLockout(bool economize
   return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setEconomizerLockout(economizerLockout);
 }
 
-AirflowNetworkEquivalentDuct HeatExchangerAirToAirSensibleAndLatent::airflowNetworkEquivalentDuct(double length, double diameter)
+AirflowNetworkEquivalentDuct HeatExchangerAirToAirSensibleAndLatent::getAirflowNetworkEquivalentDuct(double length, double diameter)
 {
-  return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->airflowNetworkEquivalentDuct(length, diameter);
+  return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->getAirflowNetworkEquivalentDuct(length, diameter);
 }
 
-boost::optional<AirflowNetworkEquivalentDuct> HeatExchangerAirToAirSensibleAndLatent::optionalAirflowNetworkEquivalentDuct() const
+boost::optional<AirflowNetworkEquivalentDuct> HeatExchangerAirToAirSensibleAndLatent::airflowNetworkEquivalentDuct() const
 {
-  return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->optionalAirflowNetworkEquivalentDuct();
+  return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->airflowNetworkEquivalentDuct();
 }
 
 /// @cond

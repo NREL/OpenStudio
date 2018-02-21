@@ -1873,9 +1873,9 @@ namespace detail {
     return result;
   }
 
-  AirflowNetworkSurface Surface_Impl::airflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage)
+  AirflowNetworkSurface Surface_Impl::getAirflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage)
   {
-    boost::optional<AirflowNetworkSurface> result = optionalAirflowNetworkSurface();
+    boost::optional<AirflowNetworkSurface> result = airflowNetworkSurface();
     if (result){
       boost::optional<AirflowNetworkComponent> leakageComponent = result->leakageComponent();
       if (leakageComponent){
@@ -1899,7 +1899,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<AirflowNetworkSurface> Surface_Impl::optionalAirflowNetworkSurface() const
+  boost::optional<AirflowNetworkSurface> Surface_Impl::airflowNetworkSurface() const
   {
     std::vector<AirflowNetworkSurface> myAFNSurfs = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
     boost::optional<Surface> other = adjacentSurface();
@@ -2333,34 +2333,34 @@ std::ostream& operator<<(std::ostream& os, const SurfaceIntersection& surfaceInt
   return os;
 }
 
-AirflowNetworkSurface Surface::airflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage)
+AirflowNetworkSurface Surface::getAirflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage)
 {
-  return getImpl<detail::Surface_Impl>()->airflowNetworkSurface(surfaceAirflowLeakage);
+  return getImpl<detail::Surface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
 }
 
-AirflowNetworkSurface Surface::airflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage)
+AirflowNetworkSurface Surface::getAirflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage)
 {
-  return getImpl<detail::Surface_Impl>()->airflowNetworkSurface(surfaceAirflowLeakage);
+  return getImpl<detail::Surface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
 }
 
-AirflowNetworkSurface Surface::airflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage)
+AirflowNetworkSurface Surface::getAirflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage)
 {
-  return getImpl<detail::Surface_Impl>()->airflowNetworkSurface(surfaceAirflowLeakage);
+  return getImpl<detail::Surface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
 }
 
-AirflowNetworkSurface Surface::airflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage)
+AirflowNetworkSurface Surface::getAirflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage)
 {
-  return getImpl<detail::Surface_Impl>()->airflowNetworkSurface(surfaceAirflowLeakage);
+  return getImpl<detail::Surface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
 }
 
-AirflowNetworkSurface Surface::airflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage)
+AirflowNetworkSurface Surface::getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage)
 {
-  return getImpl<detail::Surface_Impl>()->airflowNetworkSurface(surfaceAirflowLeakage);
+  return getImpl<detail::Surface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
 }
 
-boost::optional<AirflowNetworkSurface> Surface::optionalAirflowNetworkSurface() const
+boost::optional<AirflowNetworkSurface> Surface::airflowNetworkSurface() const
 {
-  return getImpl<detail::Surface_Impl>()->optionalAirflowNetworkSurface();
+  return getImpl<detail::Surface_Impl>()->airflowNetworkSurface();
 }
 
 } // model

@@ -144,16 +144,16 @@ namespace detail {
     }
   }
 
-  AirflowNetworkDistributionNode AirLoopHVACZoneMixer_Impl::airflowNetworkDistributionNode()
+  AirflowNetworkDistributionNode AirLoopHVACZoneMixer_Impl::getAirflowNetworkDistributionNode()
   {
-    boost::optional<AirflowNetworkDistributionNode> opt = optionalAirflowNetworkDistributionNode();
+    boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();
     if (opt) {
       return opt.get();
     }
     return AirflowNetworkDistributionNode(model(), handle());
   }
 
-  boost::optional<AirflowNetworkDistributionNode> AirLoopHVACZoneMixer_Impl::optionalAirflowNetworkDistributionNode() const
+  boost::optional<AirflowNetworkDistributionNode> AirLoopHVACZoneMixer_Impl::airflowNetworkDistributionNode() const
   {
     std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
     auto count = myAFNItems.size();
@@ -220,14 +220,14 @@ IddObjectType AirLoopHVACZoneMixer::iddObjectType() {
   return result;
 }
 
-AirflowNetworkDistributionNode AirLoopHVACZoneMixer::airflowNetworkDistributionNode()
+AirflowNetworkDistributionNode AirLoopHVACZoneMixer::getAirflowNetworkDistributionNode()
 {
-  return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->airflowNetworkDistributionNode();
+  return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->getAirflowNetworkDistributionNode();
 }
 
-boost::optional<AirflowNetworkDistributionNode> AirLoopHVACZoneMixer::optionalAirflowNetworkDistributionNode() const
+boost::optional<AirflowNetworkDistributionNode> AirLoopHVACZoneMixer::airflowNetworkDistributionNode() const
 {
-  return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->optionalAirflowNetworkDistributionNode();
+  return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->airflowNetworkDistributionNode();
 }
 
 } // model
