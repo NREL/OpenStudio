@@ -174,6 +174,10 @@ namespace detail {
 
   virtual void applySizingValues() override;
 
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+    
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
    private:
 
     REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVReheat");

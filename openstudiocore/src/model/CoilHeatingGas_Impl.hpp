@@ -39,8 +39,7 @@ class Curve;
 namespace detail {
 
   class MODEL_API CoilHeatingGas_Impl : public StraightComponent_Impl {
-
-  public:
+      public:
     /** @name Constructors and Destructors */
     //2{
 
@@ -133,6 +132,9 @@ namespace detail {
     ModelObject clone(Model model) const override;
 
     bool addToNode(Node & node) override;
+
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
   boost::optional<double> autosizedNominalCapacity() const ;
 

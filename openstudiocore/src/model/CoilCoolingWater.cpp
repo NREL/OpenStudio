@@ -43,6 +43,9 @@
 #include "ZoneHVACComponent_Impl.hpp"
 #include "ZoneHVACFourPipeFanCoil.hpp"
 #include "ZoneHVACFourPipeFanCoil_Impl.hpp"
+
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp"
 #include <utilities/idd/OS_Coil_Cooling_Water_FieldEnums.hxx>
@@ -95,6 +98,14 @@ namespace detail {
 
   IddObjectType CoilCoolingWater_Impl::iddObjectType() const {
     return CoilCoolingWater::iddObjectType();
+  }
+
+  std::vector<ModelObject> CoilCoolingWater_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+    return result;
   }
 
   std::vector<ScheduleTypeKey> CoilCoolingWater_Impl::getScheduleTypeKeys(const Schedule& schedule) const
@@ -479,6 +490,35 @@ namespace detail {
     return boost::none;
   }
 
+  AirflowNetworkEquivalentDuct CoilCoolingWater_Impl::getAirflowNetworkEquivalentDuct(double length, double diameter)
+  {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    if (opt) {
+      if (opt->airPathLength() != length){
+        opt->setAirPathLength(length);
+      }
+      if (opt->airPathHydraulicDiameter() != diameter){
+        opt->setAirPathHydraulicDiameter(diameter);
+      }
+      return opt.get();
+    }
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingWater_Impl::airflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>
+      (AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return boost::none;
+  }
+
   boost::optional<double> CoilCoolingWater_Impl::autosizedDesignWaterFlowRate() const {
     return getAutosizedValue("Design Size Design Water Flow Rate", "m3/s");
   }
@@ -769,6 +809,16 @@ boost::optional<ControllerWaterCoil> CoilCoolingWater::controllerWaterCoil()
   return getImpl<detail::CoilCoolingWater_Impl>()->controllerWaterCoil();
 }
 
+AirflowNetworkEquivalentDuct CoilCoolingWater::getAirflowNetworkEquivalentDuct(double length, double diameter)
+{
+  return getImpl<detail::CoilCoolingWater_Impl>()->getAirflowNetworkEquivalentDuct(length, diameter);
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingWater::airflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::CoilCoolingWater_Impl>()->airflowNetworkEquivalentDuct();
+}
+
   boost::optional<double> CoilCoolingWater::autosizedDesignWaterFlowRate() const {
     return getImpl<detail::CoilCoolingWater_Impl>()->autosizedDesignWaterFlowRate();
   }
@@ -798,4 +848,4 @@ boost::optional<ControllerWaterCoil> CoilCoolingWater::controllerWaterCoil()
   }
 
 } // model
-} // openstudio
+} // openstudio

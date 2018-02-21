@@ -192,6 +192,10 @@ namespace detail {
     {
       result.push_back(ScheduleTypeKey("WaterHeaterMixed","Cold Water Supply Temperature"));
     }
+    if (std::find(b,e,OS_WaterHeater_MixedFields::IndirectAlternateSetpointTemperatureScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("WaterHeaterMixed","Indirect Alternate Setpoint Temperature"));
+    }
     return result;
   }
 
@@ -1714,6 +1718,113 @@ namespace detail {
 
   }
 
+  std::string WaterHeaterMixed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_WaterHeater_MixedFields::EndUseSubcategory,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool WaterHeaterMixed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_WaterHeater_MixedFields::EndUseSubcategory,endUseSubcategory);
+  }
+
+
+  std::vector<std::string> WaterHeaterMixed_Impl::sourceSideFlowControlModeValues() const {
+    return WaterHeaterMixed::sourceSideFlowControlModeValues();
+  }
+
+  std::string WaterHeaterMixed_Impl::sourceSideFlowControlMode() const {
+    boost::optional<std::string> value = getString(OS_WaterHeater_MixedFields::SourceSideFlowControlMode,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool WaterHeaterMixed_Impl::setSourceSideFlowControlMode(const std::string & sourceSideFlowControlMode) {
+
+    bool result = false;
+
+    // Do not accept IndirectHeatAlternateSetpoint unless there is already a schedule that is set
+    if ( openstudio::istringEqual("IndirectHeatAlternateSetpoint", sourceSideFlowControlMode) )
+    {
+      if (!indirectAlternateSetpointTemperatureSchedule()) {
+        LOG(Warn, "If you want to use a Source Side Flow Control Mode of 'IndirectHeatAlternateSetpoint', "
+                  "use setIndirectAlternateSetpointTemperatureSchedule(schedule) instead for " << briefDescription());
+        return false;
+      }
+    }
+    // If other than IndirectHeatAlternateSetpoint, Reset the indirect alternate setpoint temp schedule
+    else
+    {
+      // Have to do this before resetting the schedule, in case a bad (per IDD) value other than 'IndirectHeatAlternateSetpoint' is provided
+      result = setString(OS_WaterHeater_MixedFields::SourceSideFlowControlMode, sourceSideFlowControlMode);
+
+      if (result && indirectAlternateSetpointTemperatureSchedule()) {
+        LOG(Info, "Resetting the 'Indirect Alternate Setpoint Temperature Schedule Name' for " << briefDescription());
+        setString(OS_WaterHeater_MixedFields::IndirectAlternateSetpointTemperatureScheduleName, "");
+      }
+
+    }
+
+    return result;
+
+  }
+
+
+  boost::optional<Schedule> WaterHeaterMixed_Impl::indirectAlternateSetpointTemperatureSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_MixedFields::IndirectAlternateSetpointTemperatureScheduleName);
+  }
+
+  bool WaterHeaterMixed_Impl::setIndirectAlternateSetpointTemperatureSchedule(Schedule& indirectAlternateSetpointTemperatureSchedule) {
+    bool result = setSchedule(OS_WaterHeater_MixedFields::IndirectAlternateSetpointTemperatureScheduleName,
+                              "WaterHeaterMixed",
+                              "Indirect Alternate Setpoint Temperature",
+                              indirectAlternateSetpointTemperatureSchedule);
+    // Also set the source Side Flow Control Mode accordingly
+    if (result && !openstudio::istringEqual("IndirectHeatAlternateSetpoint", sourceSideFlowControlMode()) ) {
+      LOG(Info, "Setting the Source Side Flow Control Mode to 'IndirectHeatAlternateSetpoint' for " << briefDescription());
+      result = setString(OS_WaterHeater_MixedFields::SourceSideFlowControlMode, "IndirectHeatAlternateSetpoint");
+    }
+    return result;
+  }
+
+  void WaterHeaterMixed_Impl::resetIndirectAlternateSetpointTemperatureSchedule() {
+    bool result = setString(OS_WaterHeater_MixedFields::IndirectAlternateSetpointTemperatureScheduleName, "");
+    OS_ASSERT(result);
+    // Reset the Source Side Flow Control Mode to the default "IndirectHeatPrimarySetpoint"
+    if ( openstudio::istringEqual("IndirectHeatAlternateSetpoint", sourceSideFlowControlMode()) ) {
+      LOG(Info, "Resetting the Source Side Flow Control Mode to the default 'IndirectHeatPrimarySetpoint' for " << briefDescription());
+      result = setString(OS_WaterHeater_MixedFields::SourceSideFlowControlMode, "IndirectHeatPrimarySetpoint");
+    }
+    OS_ASSERT(result);
+  }
+
+  boost::optional<ModelObject> WaterHeaterMixed_Impl::indirectAlternateSetpointTemperatureScheduleAsModelObject() const {
+    OptionalModelObject result;
+    OptionalSchedule intermediate = indirectAlternateSetpointTemperatureSchedule();
+    if (intermediate) {
+      result = *intermediate;
+    }
+    return result;
+  }
+
+  bool WaterHeaterMixed_Impl::setIndirectAlternateSetpointTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+    if (modelObject) {
+      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+      if (intermediate) {
+        Schedule schedule(*intermediate);
+        return setIndirectAlternateSetpointTemperatureSchedule(schedule);
+      }
+      else {
+        return false;
+      }
+    }
+    else {
+      resetIndirectAlternateSetpointTemperatureSchedule();
+    }
+    return true;
+  }
+
+
 } // detail
 
 WaterHeaterMixed::WaterHeaterMixed(const Model& model)
@@ -1748,6 +1859,9 @@ WaterHeaterMixed::WaterHeaterMixed(const Model& model)
   ScheduleRuleset setpoint_schedule(model);
   setpoint_schedule.defaultDaySchedule().addValue(Time(0,24,0,0),60.0);
   setSetpointTemperatureSchedule(setpoint_schedule);
+
+  setSourceSideFlowControlMode("IndirectHeatPrimarySetpoint");
+  setEndUseSubcategory("General");
 }
 
 IddObjectType WaterHeaterMixed::iddObjectType() {
@@ -2449,6 +2563,40 @@ bool WaterHeaterMixed::setIndirectWaterHeatingRecoveryTime(const Quantity& indir
 
 void WaterHeaterMixed::resetIndirectWaterHeatingRecoveryTime() {
   getImpl<detail::WaterHeaterMixed_Impl>()->resetIndirectWaterHeatingRecoveryTime();
+}
+
+
+std::vector<std::string> WaterHeaterMixed::sourceSideFlowControlModeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_WaterHeater_MixedFields::SourceSideFlowControlMode);
+}
+
+std::string WaterHeaterMixed::sourceSideFlowControlMode() const {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->sourceSideFlowControlMode();
+}
+
+bool WaterHeaterMixed::setSourceSideFlowControlMode(const std::string & sourceSideFlowControlMode) {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->setSourceSideFlowControlMode(sourceSideFlowControlMode);
+}
+
+
+boost::optional<Schedule> WaterHeaterMixed::indirectAlternateSetpointTemperatureSchedule() const {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->indirectAlternateSetpointTemperatureSchedule();
+}
+
+bool WaterHeaterMixed::setIndirectAlternateSetpointTemperatureSchedule(Schedule& indirectAlternateSetpointTemperatureSchedule) {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->setIndirectAlternateSetpointTemperatureSchedule(indirectAlternateSetpointTemperatureSchedule);
+}
+void WaterHeaterMixed::resetIndirectAlternateSetpointTemperatureSchedule() {
+  getImpl<detail::WaterHeaterMixed_Impl>()->resetIndirectAlternateSetpointTemperatureSchedule();
+}
+
+std::string WaterHeaterMixed::endUseSubcategory() const {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->endUseSubcategory();
+}
+
+bool WaterHeaterMixed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 /// @cond

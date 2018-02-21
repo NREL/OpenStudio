@@ -53,6 +53,8 @@
 #include "Node_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include <utilities/idd/OS_Coil_Heating_Gas_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -497,6 +499,9 @@ namespace detail{
       result.push_back(curve.get());
     }
 
+    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+
     return result;
   }
 
@@ -518,6 +523,33 @@ namespace detail{
     }
 
     return false;
+  }
+
+  AirflowNetworkEquivalentDuct CoilHeatingGas_Impl::getAirflowNetworkEquivalentDuct(double length, double diameter)
+  {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    if (opt) {
+      if (opt->airPathLength() != length){
+        opt->setAirPathLength(length);
+      }
+      if (opt->airPathHydraulicDiameter() != diameter){
+        opt->setAirPathHydraulicDiameter(diameter);
+      }
+    }
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas_Impl::airflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return boost::none;
   }
 
   boost::optional<double> CoilHeatingGas_Impl::autosizedNominalCapacity() const {
@@ -688,6 +720,16 @@ void CoilHeatingGas::resetPartLoadFractionCorrelationCurve()
 IddObjectType CoilHeatingGas::iddObjectType() {
   IddObjectType result(IddObjectType::OS_Coil_Heating_Gas);
   return result;
+}
+
+AirflowNetworkEquivalentDuct CoilHeatingGas::getAirflowNetworkEquivalentDuct(double length, double diameter)
+{
+  return getImpl<detail::CoilHeatingGas_Impl>()->getAirflowNetworkEquivalentDuct(length, diameter);
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingGas::airflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::CoilHeatingGas_Impl>()->airflowNetworkEquivalentDuct();
 }
 
   boost::optional<double> CoilHeatingGas::autosizedNominalCapacity() const {

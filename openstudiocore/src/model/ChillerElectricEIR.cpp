@@ -866,6 +866,17 @@ namespace detail {
 
   }
 
+  std::string ChillerElectricEIR_Impl::endUseSubcategory() const {
+    auto value = getString(OS_Chiller_Electric_EIRFields::EndUseSubcategory,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ChillerElectricEIR_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_Chiller_Electric_EIRFields::EndUseSubcategory,endUseSubcategory);
+  }
+
+
 } // detail
 
 ChillerElectricEIR::ChillerElectricEIR(const Model& model,
@@ -895,6 +906,9 @@ ChillerElectricEIR::ChillerElectricEIR(const Model& model,
   setBasinHeaterSetpointTemperature(10.0);
 
   resetBasinHeaterSchedule();
+
+  setEndUseSubcategory("General");
+
 }
 
 ChillerElectricEIR::ChillerElectricEIR(const Model& model)
@@ -946,6 +960,9 @@ ChillerElectricEIR::ChillerElectricEIR(const Model& model)
   setBasinHeaterCapacity(0.0);
   setBasinHeaterSetpointTemperature(10.0);
   resetBasinHeaterSchedule();
+
+  setEndUseSubcategory("General");
+
 }
 
 IddObjectType ChillerElectricEIR::iddObjectType() {
@@ -1402,6 +1419,14 @@ void ChillerElectricEIR::resetBasinHeaterSchedule()
 boost::optional<Schedule> ChillerElectricEIR::basinHeaterSchedule() const
 {
   return getImpl<detail::ChillerElectricEIR_Impl>()->basinHeaterSchedule();
+}
+
+std::string ChillerElectricEIR::endUseSubcategory() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->endUseSubcategory();
+}
+
+bool ChillerElectricEIR::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 /// @cond

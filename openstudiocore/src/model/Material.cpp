@@ -65,10 +65,6 @@ namespace detail {
       results.push_back(empd.get());
     }
 
-    if (boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> empd = this->materialPropertyMoisturePenetrationDepthSettings()) {
-      results.push_back(empd.get());
-    }
-
     return results;
   }
 

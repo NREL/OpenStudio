@@ -40,6 +40,7 @@ class OSOptionalQuantity;
 namespace model {
 
 class Schedule;
+class AirflowNetworkEquivalentDuct;
 
 namespace detail {
 
@@ -201,6 +202,9 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
   boost::optional<double> autosizedNominalSupplyAirFlowRate() const ;
 
 
+
+  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
  protected:
 

@@ -179,6 +179,10 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   model::Version version = model.getUniqueModelObject<model::Version>();
   translateAndMapModelObject(version);
 
+  // translate Timestep second (this initializes it if need be)
+  model::Timestep timestep = model.getUniqueModelObject<model::Timestep>();
+  translateAndMapModelObject(timestep);
+
   // resolve surface marching conflicts before combining thermal zones or removing spaces
   // as those operations may change search distances
   resolveMatchedSurfaceConstructionConflicts(model);
@@ -448,6 +452,9 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     translateAndMapModelObject(plantLoop);
   }
 
+  // translate AFN
+  translateAirflowNetwork(model);
+
   // now loop over all objects
   for (const IddObjectType& iddObjectType : iddObjectsToTranslate()){
 
@@ -528,6 +535,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
 
   switch(modelObject.iddObject().type().value())
   {
+  case openstudio::IddObjectType::OS_AdditionalProperties :
+    {
+      // no op
+      break;
+    }
   case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow :
     {
       model::AirConditionerVariableRefrigerantFlow vrf = modelObject.cast<AirConditionerVariableRefrigerantFlow>();
@@ -2760,7 +2772,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     model::SurfacePropertyExposedFoundationPerimeter obj = modelObject.cast<SurfacePropertyExposedFoundationPerimeter>();
     retVal = translateSurfacePropertyExposedFoundationPerimeter(obj);
     break;
-  }  
+  }
   case openstudio::IddObjectType::OS_SurfaceProperty_OtherSideCoefficients:
   {
     model::SurfacePropertyOtherSideCoefficients obj = modelObject.cast<SurfacePropertyOtherSideCoefficients>();
@@ -3522,6 +3534,252 @@ void ForwardTranslator::translateSchedules(const model::Model & model)
     translateAndMapModelObject(schedule);
     schedule = model.alwaysOnContinuousSchedule();
     translateAndMapModelObject(schedule);
+  }
+}
+
+void ForwardTranslator::translateAirflowNetwork(const model::Model & model)
+{
+  // translate AFN if there is a simulation control object
+  boost::optional<model::AirflowNetworkSimulationControl> afnSimulationControl = model.getOptionalUniqueModelObject<model::AirflowNetworkSimulationControl>();
+  if (afnSimulationControl) {
+    translateAirflowNetworkSimulationControl(afnSimulationControl.get());
+
+    // Zones
+    std::vector<model::AirflowNetworkZone> zones = model.getConcreteModelObjects<model::AirflowNetworkZone>();
+    std::sort(zones.begin(), zones.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : zones) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkZone(modelObject);
+    }
+
+    // Reference Crack Conditions
+    std::vector<model::AirflowNetworkReferenceCrackConditions> refcracks = model.getConcreteModelObjects<model::AirflowNetworkReferenceCrackConditions>();
+    std::sort(refcracks.begin(), refcracks.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : refcracks) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkReferenceCrackConditions(modelObject);
+    }
+
+    // Cracks
+    std::vector<model::AirflowNetworkCrack> cracks = model.getConcreteModelObjects<model::AirflowNetworkCrack>();
+    std::sort(cracks.begin(), cracks.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : cracks) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkCrack(modelObject);
+    }
+
+    // Effective Leakage Area
+    std::vector<model::AirflowNetworkEffectiveLeakageArea> elas = model.getConcreteModelObjects<model::AirflowNetworkEffectiveLeakageArea>();
+    std::sort(elas.begin(), elas.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : elas) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkEffectiveLeakageArea(modelObject);
+    }
+
+    // Simple Openings
+    std::vector<model::AirflowNetworkSimpleOpening> simples = model.getConcreteModelObjects<model::AirflowNetworkSimpleOpening>();
+    std::sort(simples.begin(), simples.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : simples) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkSimpleOpening(modelObject);
+    }
+
+    // Detailed Openings
+    std::vector<model::AirflowNetworkDetailedOpening> detaileds = model.getConcreteModelObjects<model::AirflowNetworkDetailedOpening>();
+    std::sort(detaileds.begin(), detaileds.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : detaileds) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkDetailedOpening(modelObject);
+    }
+
+    // Horizontal Openings
+    std::vector<model::AirflowNetworkHorizontalOpening> horzs = model.getConcreteModelObjects<model::AirflowNetworkHorizontalOpening>();
+    std::sort(horzs.begin(), horzs.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : horzs) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkHorizontalOpening(modelObject);
+    }
+
+    // Surfaces
+    std::vector<model::AirflowNetworkSurface> surfs = model.getConcreteModelObjects<model::AirflowNetworkSurface>();
+    std::sort(surfs.begin(), surfs.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : surfs) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkSurface(modelObject);
+    }
+
+    // Nodes
+    std::vector<model::AirflowNetworkDistributionNode> nodes = model.getConcreteModelObjects<model::AirflowNetworkDistributionNode>();
+    std::sort(nodes.begin(), nodes.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : nodes) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkDistributionNode(modelObject);
+    }
+
+    // Linkages
+    std::vector<model::AirflowNetworkDistributionLinkage> links = model.getConcreteModelObjects<model::AirflowNetworkDistributionLinkage>();
+    std::sort(links.begin(), links.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : links) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkDistributionLinkage(modelObject);
+    }
+
+    // External Nodes
+    std::vector<model::AirflowNetworkExternalNode> exts = model.getConcreteModelObjects<model::AirflowNetworkExternalNode>();
+    std::sort(exts.begin(), exts.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : exts) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkExternalNode(modelObject);
+    }
+
+    // Zone Exhaust Fan
+    std::vector<model::AirflowNetworkZoneExhaustFan> zefs = model.getConcreteModelObjects<model::AirflowNetworkZoneExhaustFan>();
+    std::sort(zefs.begin(), zefs.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : zefs) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkZoneExhaustFan(modelObject);
+    }
+
+    // Duct
+    std::vector<model::AirflowNetworkDuct> ducts = model.getConcreteModelObjects<model::AirflowNetworkDuct>();
+    std::sort(ducts.begin(), ducts.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : ducts) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkDuct(modelObject);
+    }
+
+    // Equivalent Duct
+    std::vector<model::AirflowNetworkEquivalentDuct> equivds = model.getConcreteModelObjects<model::AirflowNetworkEquivalentDuct>();
+    std::sort(equivds.begin(), equivds.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : equivds) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkEquivalentDuct(modelObject);
+    }
+
+    // Leakage Ratio
+    std::vector<model::AirflowNetworkLeakageRatio> lrs = model.getConcreteModelObjects<model::AirflowNetworkLeakageRatio>();
+    std::sort(lrs.begin(), lrs.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : lrs) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkLeakageRatio(modelObject);
+    }
+
+    // Constant Pressure Drops
+    std::vector<model::AirflowNetworkConstantPressureDrop> constps = model.getConcreteModelObjects<model::AirflowNetworkConstantPressureDrop>();
+    std::sort(constps.begin(), constps.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : constps) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkConstantPressureDrop(modelObject);
+    }
+
+    // Outdoor Air Flow
+    std::vector<model::AirflowNetworkOutdoorAirflow> oafs = model.getConcreteModelObjects<model::AirflowNetworkOutdoorAirflow>();
+    std::sort(oafs.begin(), oafs.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : oafs) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkOutdoorAirflow(modelObject);
+    }
+
+    // Duct VFs
+    std::vector<model::AirflowNetworkDuctViewFactors> ductvfs = model.getConcreteModelObjects<model::AirflowNetworkDuctViewFactors>();
+    std::sort(ductvfs.begin(), ductvfs.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : ductvfs) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkDuctViewFactors(modelObject);
+    }
+
+    // Occupant Ventilation Control
+    std::vector<model::AirflowNetworkOccupantVentilationControl> occvcs = model.getConcreteModelObjects<model::AirflowNetworkOccupantVentilationControl>();
+    std::sort(occvcs.begin(), occvcs.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : occvcs) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkOccupantVentilationControl(modelObject);
+    }
+
+  } else {
+
+    int count = 0;
+
+    // Zones
+    std::vector<model::AirflowNetworkZone> zones = model.getConcreteModelObjects<model::AirflowNetworkZone>();
+    count += zones.size();
+
+    // Reference Crack Conditions
+    std::vector<model::AirflowNetworkReferenceCrackConditions> refcracks = model.getConcreteModelObjects<model::AirflowNetworkReferenceCrackConditions>();
+    count += refcracks.size();
+
+    // Cracks
+    std::vector<model::AirflowNetworkCrack> cracks = model.getConcreteModelObjects<model::AirflowNetworkCrack>();
+    count += cracks.size();
+
+    // Effective Leakage Area
+    std::vector<model::AirflowNetworkEffectiveLeakageArea> elas = model.getConcreteModelObjects<model::AirflowNetworkEffectiveLeakageArea>();
+    count += elas.size();
+
+    // Simple Openings
+    std::vector<model::AirflowNetworkSimpleOpening> simples = model.getConcreteModelObjects<model::AirflowNetworkSimpleOpening>();
+    count += simples.size();
+
+    // Detailed Openings
+    std::vector<model::AirflowNetworkDetailedOpening> detaileds = model.getConcreteModelObjects<model::AirflowNetworkDetailedOpening>();
+    count += detaileds.size();
+
+    // Horizontal Openings
+    std::vector<model::AirflowNetworkHorizontalOpening> horzs = model.getConcreteModelObjects<model::AirflowNetworkHorizontalOpening>();
+    count += horzs.size();
+
+    // Surfaces
+    std::vector<model::AirflowNetworkSurface> surfs = model.getConcreteModelObjects<model::AirflowNetworkSurface>();
+    count += surfs.size();
+
+    // Nodes
+    std::vector<model::AirflowNetworkDistributionNode> nodes = model.getConcreteModelObjects<model::AirflowNetworkDistributionNode>();
+    count += nodes.size();
+
+    // Linkages
+    std::vector<model::AirflowNetworkDistributionLinkage> links = model.getConcreteModelObjects<model::AirflowNetworkDistributionLinkage>();
+    count += links.size();
+
+    // External Nodes
+    std::vector<model::AirflowNetworkExternalNode> exts = model.getConcreteModelObjects<model::AirflowNetworkExternalNode>();
+    count += exts.size();
+
+    // Zone Exhaust Fan
+    std::vector<model::AirflowNetworkZoneExhaustFan> zefs = model.getConcreteModelObjects<model::AirflowNetworkZoneExhaustFan>();
+    count += zefs.size();
+
+    // Duct
+    std::vector<model::AirflowNetworkDuct> ducts = model.getConcreteModelObjects<model::AirflowNetworkDuct>();
+    count += ducts.size();
+
+    // Equivalent Duct
+    std::vector<model::AirflowNetworkEquivalentDuct> equivds = model.getConcreteModelObjects<model::AirflowNetworkEquivalentDuct>();
+    count += equivds.size();
+
+    // Leakage Ratio
+    std::vector<model::AirflowNetworkLeakageRatio> lrs = model.getConcreteModelObjects<model::AirflowNetworkLeakageRatio>();
+    count += lrs.size();
+
+    // Constant Pressure Drops
+    std::vector<model::AirflowNetworkConstantPressureDrop> constps = model.getConcreteModelObjects<model::AirflowNetworkConstantPressureDrop>();
+    count += constps.size();
+
+    // Outdoor Air Flow
+    std::vector<model::AirflowNetworkOutdoorAirflow> oafs = model.getConcreteModelObjects<model::AirflowNetworkOutdoorAirflow>();
+    count += oafs.size();
+
+    // Duct VFs
+    std::vector<model::AirflowNetworkDuctViewFactors> ductvfs = model.getConcreteModelObjects<model::AirflowNetworkDuctViewFactors>();
+    count += ductvfs.size();
+
+    // Occupant Ventilation Control
+    std::vector<model::AirflowNetworkOccupantVentilationControl> occvcs = model.getConcreteModelObjects<model::AirflowNetworkOccupantVentilationControl>();
+    count += occvcs.size();
+
+    if (count) {
+      LOG(Warn, "No AirflowNetworkSimulationControl found in model, skipping forward translation of " << count << " AirflowNetwork objects.");
+    }
+
   }
 }
 

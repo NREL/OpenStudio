@@ -44,6 +44,12 @@ class WindowPropertyFrameAndDivider;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class SurfacePropertyConvectionCoefficients;
+class AirflowNetworkSurface;
+class AirflowNetworkDetailedOpening;
+class AirflowNetworkSimpleOpening;
+class AirflowNetworkCrack;
+class AirflowNetworkEffectiveLeakageArea;
+class AirflowNetworkHorizontalOpening;
 
 namespace detail {
 
@@ -203,6 +209,14 @@ class MODEL_API SubSurface : public PlanarSurface {
   /** Add a daylighting light shelf associated with this sub surface.  Only succeeds if this is a fixed window,
    * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
   boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
+
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage);
+
+  boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
   // DLM: todo add methods to create light shelves by projection factor
 

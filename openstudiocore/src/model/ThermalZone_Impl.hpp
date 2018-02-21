@@ -52,6 +52,7 @@ class SizingZone;
 class PortList;
 class ZoneMixing;
 class ZoneHVACEquipmentList;
+class AirflowNetworkZone;
 
 namespace detail {
 
@@ -405,6 +406,9 @@ namespace detail {
     std::vector<ZoneMixing> exhaustZoneMixing() const;
 
     boost::optional<HVACComponent> airLoopHVACTerminal() const;
+
+    AirflowNetworkZone getAirflowNetworkZone();
+    boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
 
    protected:
 

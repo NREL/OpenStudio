@@ -35,6 +35,10 @@
 #include "Node_Impl.hpp"
 #include "PortList.hpp"
 #include "PortList_Impl.hpp"
+#include "AirflowNetworkZoneExhaustFan.hpp"
+#include "AirflowNetworkZoneExhaustFan_Impl.hpp"
+#include "AirflowNetworkCrack.hpp"
+#include "AirflowNetworkCrack_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -94,6 +98,14 @@ namespace detail {
 
   IddObjectType FanZoneExhaust_Impl::iddObjectType() const {
     return FanZoneExhaust::iddObjectType();
+  }
+
+  std::vector<ModelObject> FanZoneExhaust_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    std::vector<AirflowNetworkZoneExhaustFan> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkZoneExhaustFan>(AirflowNetworkZoneExhaustFan::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+    return result;
   }
 
   std::vector<ScheduleTypeKey> FanZoneExhaust_Impl::getScheduleTypeKeys(const Schedule& schedule) const
@@ -327,6 +339,34 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  AirflowNetworkZoneExhaustFan FanZoneExhaust_Impl::getAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack)
+  {
+    boost::optional<AirflowNetworkZoneExhaustFan> opt = airflowNetworkZoneExhaustFan();
+    if (opt) {
+      boost::optional<AirflowNetworkCrack> oldCrack = opt->crack();
+      if (oldCrack){
+        if (oldCrack->handle() == crack.handle()){
+          return opt.get();
+        }
+      }
+      opt->remove();
+    }
+    return AirflowNetworkZoneExhaustFan(model(), crack, handle());
+  }
+
+  boost::optional<AirflowNetworkZoneExhaustFan> FanZoneExhaust_Impl::airflowNetworkZoneExhaustFan() const
+  {
+    std::vector<AirflowNetworkZoneExhaustFan> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkZoneExhaustFan>(AirflowNetworkZoneExhaustFan::iddObjectType());
+    auto count = myAFNItems.size();
+    if (count == 1) {
+      return myAFNItems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork ZoneExhaustFan attached, returning first.");
+      return myAFNItems[0];
+    }
+    return boost::none;
+  }
+
 } // detail
 
 FanZoneExhaust::FanZoneExhaust(const Model& model)
@@ -441,6 +481,16 @@ void FanZoneExhaust::resetBalancedExhaustFractionSchedule() {
   getImpl<detail::FanZoneExhaust_Impl>()->resetBalancedExhaustFractionSchedule();
 }
 
+AirflowNetworkZoneExhaustFan FanZoneExhaust::getAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack)
+{
+  return getImpl<detail::FanZoneExhaust_Impl>()->getAirflowNetworkZoneExhaustFan(crack);
+}
+
+boost::optional<AirflowNetworkZoneExhaustFan> FanZoneExhaust::airflowNetworkZoneExhaustFan() const
+{
+  return getImpl<detail::FanZoneExhaust_Impl>()->airflowNetworkZoneExhaustFan();
+}
+
 /// @cond
 FanZoneExhaust::FanZoneExhaust(std::shared_ptr<detail::FanZoneExhaust_Impl> impl)
   : ZoneHVACComponent(std::move(impl))
@@ -448,4 +498,4 @@ FanZoneExhaust::FanZoneExhaust(std::shared_ptr<detail::FanZoneExhaust_Impl> impl
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

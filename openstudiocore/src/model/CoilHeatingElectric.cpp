@@ -51,6 +51,8 @@
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include <utilities/idd/OS_Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
@@ -95,6 +97,14 @@ namespace detail {
 
   IddObjectType CoilHeatingElectric_Impl::iddObjectType() const {
     return CoilHeatingElectric::iddObjectType();
+  }
+
+  std::vector<ModelObject> CoilHeatingElectric_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+    return result;
   }
 
   std::vector<ScheduleTypeKey> CoilHeatingElectric_Impl::getScheduleTypeKeys(const Schedule& schedule) const
@@ -396,6 +406,33 @@ namespace detail {
     return false;
   }
 
+  AirflowNetworkEquivalentDuct CoilHeatingElectric_Impl::getAirflowNetworkEquivalentDuct(double length, double diameter)
+  {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    if (opt) {
+      if (opt->airPathLength() != length){
+        opt->setAirPathLength(length);
+      }
+      if (opt->airPathHydraulicDiameter() != diameter){
+        opt->setAirPathHydraulicDiameter(diameter);
+      }
+    }
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingElectric_Impl::airflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return boost::none;
+  }
+
   boost::optional<double> CoilHeatingElectric_Impl::autosizedNominalCapacity() const {
     return getAutosizedValue("Design Size Nominal Capacity", "W");
   }
@@ -499,6 +536,16 @@ bool CoilHeatingElectric::setAvailabilitySchedule( Schedule & schedule )
   return getImpl<detail::CoilHeatingElectric_Impl>()->setAvailabilitySchedule(schedule);
 }
 
+AirflowNetworkEquivalentDuct CoilHeatingElectric::getAirflowNetworkEquivalentDuct(double length, double diameter)
+{
+  return getImpl<detail::CoilHeatingElectric_Impl>()->getAirflowNetworkEquivalentDuct(length, diameter);
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingElectric::airflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::CoilHeatingElectric_Impl>()->airflowNetworkEquivalentDuct();
+}
+
 /// @cond
 CoilHeatingElectric::CoilHeatingElectric(std::shared_ptr<detail::CoilHeatingElectric_Impl> impl)
   : StraightComponent(std::move(impl))
@@ -511,4 +558,4 @@ CoilHeatingElectric::CoilHeatingElectric(std::shared_ptr<detail::CoilHeatingElec
 
 } // model
 
-} // openstudio
+} // openstudio

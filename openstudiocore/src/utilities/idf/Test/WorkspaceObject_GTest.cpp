@@ -405,6 +405,28 @@ TEST_F(IdfFixture, WorkspaceObject_OS_DaylightingDevice_Shelf)
   OptionalWorkspaceObject obj1 = ws.getObject(w1->handle());
   ASSERT_TRUE(obj1);
   EXPECT_TRUE(obj1->setPointer(OS_DaylightingDevice_ShelfFields::InsideShelfName, w2->handle()));
+  ASSERT_TRUE(obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName));
+  EXPECT_EQ(w2->nameString(), obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName).get());
+
+  // check that you can set string with pointer
+  EXPECT_TRUE(obj1->setString(OS_DaylightingDevice_ShelfFields::InsideShelfName, ""));
+  ASSERT_TRUE(obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName));
+  EXPECT_EQ("", obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName).get());
+
+  // check that you can set string with pointer
+  EXPECT_TRUE(obj1->setString(OS_DaylightingDevice_ShelfFields::InsideShelfName, toString(w2->handle())));
+  ASSERT_TRUE(obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName));
+  EXPECT_EQ(w2->nameString(), obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName).get());
+
+  // check that you cannot set string with bad pointer
+  EXPECT_FALSE(obj1->setString(OS_DaylightingDevice_ShelfFields::InsideShelfName, toString(w1->handle())));
+  ASSERT_TRUE(obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName));
+  EXPECT_EQ(w2->nameString(), obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName).get());
+
+  // check that you cannot set string with bad pointer
+  EXPECT_FALSE(obj1->setString(OS_DaylightingDevice_ShelfFields::InsideShelfName, toString(createUUID())));
+  ASSERT_TRUE(obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName));
+  EXPECT_EQ(w2->nameString(), obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName).get());
 }
 
 //TEST_F(IdfFixture, WorkspaceObject_OS_AirLoopHVAC_ZoneSplitter)
