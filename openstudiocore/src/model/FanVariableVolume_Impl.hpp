@@ -46,7 +46,8 @@ namespace detail {
   /** FanVariableVolume_Impl is a StraightComponent_Impl that is the implementation
  *  class for FanVariableVolume.*/
   class MODEL_API FanVariableVolume_Impl : public StraightComponent_Impl {
-      public:
+   public:
+
     /** @name Constructors and Destructors */
     //@{
 
@@ -155,6 +156,10 @@ namespace detail {
   virtual void autosize() override;
 
   virtual void applySizingValues() override;
+
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */

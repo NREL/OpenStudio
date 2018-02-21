@@ -590,6 +590,16 @@ namespace detail {
     return true;
   }
 
+  std::vector<EMSActuatorNames> People_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "People", "Number of People" } };
+    return actuators;
+  }
+
+  std::vector<std::string> People_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "People Count Design Level" };
+    return types;
+  }
+
 } // detail
 
 People::People(const PeopleDefinition& peopleDefinition)

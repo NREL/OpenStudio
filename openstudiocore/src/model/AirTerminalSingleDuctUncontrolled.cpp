@@ -321,6 +321,16 @@ namespace detail{
 
   }
 
+  std::vector<EMSActuatorNames> AirTerminalSingleDuctUncontrolled_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"AirTerminal:SingleDuct:Uncontrolled", "Mass Flow Rate"}};
+    return actuators;
+  }
+
+  std::vector<std::string> AirTerminalSingleDuctUncontrolled_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"AirTerminal:SingleDuct:Uncontrolled Maximum Mass Flow Rate"};
+    return types;
+  }
+
 } // detail
 
 AirTerminalSingleDuctUncontrolled::AirTerminalSingleDuctUncontrolled(const Model& model,

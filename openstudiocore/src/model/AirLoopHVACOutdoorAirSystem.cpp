@@ -49,6 +49,7 @@
 #include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utility>
 
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"

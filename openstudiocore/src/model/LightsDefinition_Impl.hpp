@@ -219,6 +219,10 @@ namespace detail {
                                          double floorArea,
                                          double numPeople);
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
    protected:
    private:

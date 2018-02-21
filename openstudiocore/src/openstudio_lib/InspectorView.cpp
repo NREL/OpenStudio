@@ -37,6 +37,7 @@
 #include "OSItem.hpp"
 #include "OSDocument.hpp"
 #include "ZoneChooserView.hpp"
+#include "EMSInspectorView.hpp"
 
 #include "../model/AirLoopHVACReturnPlenum.hpp"
 #include "../model/AirLoopHVACReturnPlenum_Impl.hpp"
@@ -822,9 +823,19 @@ GenericInspectorView::GenericInspectorView( QWidget * parent )
   connect(this, &GenericInspectorView::toggleUnitsClicked, m_inspectorGadget, &InspectorGadget::toggleUnitsClicked);
   connect(m_inspectorGadget, &InspectorGadget::workspaceObjectRemoved, this, &BaseInspectorView::workspaceObjectRemoved);
 
-  m_libraryTabWidget->addTab( m_inspectorGadget,"","");
-                              //":images/components_icon_pressed.png",
-                              //":images/components_icon_off.png" );
+  m_libraryTabWidget->addTab( m_inspectorGadget,
+                              ":images/properties_icon_on.png",
+                              ":images/properties_icon_off.png" );
+
+  m_emsActuatorView = new EMSInspectorView(nullptr, EMSInspectorView::Type::ACTUATOR);
+  m_libraryTabWidget->addTab( m_emsActuatorView,
+                              ":images/controller_icon_on.png",
+                              ":images/controller_icon_off.png" );
+
+  m_emsSensorView = new EMSInspectorView(nullptr, EMSInspectorView::Type::SENSOR);
+  m_libraryTabWidget->addTab( m_emsSensorView,
+                              ":images/controller_icon_on.png",
+                              ":images/controller_icon_off.png" );
 }
 
 void GenericInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP )
@@ -842,6 +853,8 @@ void GenericInspectorView::layoutModelObject( model::ModelObject & modelObject, 
     m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
   }
   m_inspectorGadget->layoutModelObj(modelObject, force, recursive, locked, hideChildren);
+  m_emsActuatorView->layoutModelObject(modelObject);
+  m_emsSensorView->layoutModelObject(modelObject);
 }
 
 NewPlenumDialog::NewPlenumDialog(QWidget * parent)

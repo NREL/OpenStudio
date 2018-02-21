@@ -1756,6 +1756,16 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> AirLoopHVAC_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"AirLoopHVAC", "Availability Status"}}; //takes value 0,1,2,3
+    return actuators;
+  }
+
+  std::vector<std::string> AirLoopHVAC_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
+
 } // detail
 
 AirLoopHVAC::AirLoopHVAC(Model& model, bool dualDuct)

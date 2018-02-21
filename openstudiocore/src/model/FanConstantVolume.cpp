@@ -96,14 +96,8 @@ namespace detail {
 
   const std::vector<std::string>& FanConstantVolume_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Fan Electric Power");
-      result.push_back("Fan Rise in Air Temperature");
-      result.push_back("Fan Electric Energy");
-    }
-    return result;
+    static std::vector<std::string> results{"Fan Electric Power", "Fan Rise in Air Temperature", "Fan Heat Gain to Air", "Fan Electric Energy", "Fan Air Mass Flow Rate"};
+    return results;
   }
 
   IddObjectType FanConstantVolume_Impl::iddObjectType() const {
@@ -498,6 +492,21 @@ namespace detail {
       setMaximumFlowRate(val.get());
     }
 
+  }
+
+  std::vector<EMSActuatorNames> FanConstantVolume_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Fan","Fan Air Mass Flow Rate"},
+                                            {"Fan","Fan Pressure Rise"},
+                                            {"Fan","Fan Total Efficiency"},
+                                            {"Fan","Fan Autosized Air Flow Rate"}};
+    return actuators;
+  }
+
+  std::vector<std::string> FanConstantVolume_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Fan Maximum Mass Flow Rate",
+                                   "Fan Nominal Pressure Rise",
+                                   "Fan Nominal Total Efficiency"};
+    return types;
   }
 
 } // detail

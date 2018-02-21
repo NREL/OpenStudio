@@ -72,6 +72,7 @@ namespace detail {
  *  actuaters could be thought of as source and target ports, where a connection can be made between the two.
  *
  */
+
 class MODEL_API HVACComponent : public ParentObject
 {
   public:

@@ -229,6 +229,13 @@ InspectorGadget {
   border-left: 1px solid black;
 }
 
+openstudio--EMSInspectorView {
+  padding: 0;
+  margin: 0;
+  background: yellow;
+  border-left: 1px solid black;
+}
+
 QScrollArea {
   padding: 0;
   margin: 0;
@@ -278,11 +285,19 @@ QLineEdit#IDFcomment {
   font: italic;
 
 }
+
+QWidget#IGHeader{
+ background: #808080;
+ /*border-bottom: 1px solid black; */
+ margin:0px;
+}
+
 QFrame#IGHeader{
  background: #808080;
  /*border-bottom: 1px solid black; */
  margin:0px;
 }
+
 QLineEdit#IDFHeaderComment{
   border:0px;
   margin:2px;

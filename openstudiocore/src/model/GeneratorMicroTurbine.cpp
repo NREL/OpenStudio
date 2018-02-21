@@ -720,6 +720,17 @@ namespace detail {
   }
   */
 
+  std::vector<EMSActuatorNames> GeneratorMicroTurbine_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "On-Site Generator Control", "Requested Power" } };
+    return actuators;
+  }
+
+  std::vector<std::string> GeneratorMicroTurbine_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Generator Nominal Maximum Power",
+      "Generator Nominal Thermal To Electric Ratio" };
+    return types;
+  }
+
 } // detail
 
 GeneratorMicroTurbine::GeneratorMicroTurbine(const Model& model)
