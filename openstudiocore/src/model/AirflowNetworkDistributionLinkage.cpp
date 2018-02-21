@@ -145,6 +145,24 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<AirflowNetworkComponent>(OS_AirflowNetworkDistributionLinkageFields::ComponentName);
   }
 
+  bool AirflowNetworkDistributionLinkage_Impl::setNode1(const AirflowNetworkNode& airflowNetworkNode)
+  {
+    bool result = setPointer(OS_AirflowNetworkDistributionLinkageFields::Node1Name, airflowNetworkNode.handle());
+    return result;
+  }
+
+  bool AirflowNetworkDistributionLinkage_Impl::setNode2(const AirflowNetworkNode& airflowNetworkNode)
+  {
+    bool result = setPointer(OS_AirflowNetworkDistributionLinkageFields::Node2Name, airflowNetworkNode.handle());
+    return result;
+  }
+
+  bool AirflowNetworkDistributionLinkage_Impl::setComponent(const AirflowNetworkComponent& airflowNetworkComponent)
+  {
+    bool result = setPointer(OS_AirflowNetworkDistributionLinkageFields::ComponentName, airflowNetworkComponent.handle());
+    return result;
+  }
+
 } // detail
 
 AirflowNetworkDistributionLinkage::AirflowNetworkDistributionLinkage(const Model& model, const AirflowNetworkNode &node1,
@@ -192,17 +210,17 @@ boost::optional<ThermalZone> AirflowNetworkDistributionLinkage::thermalZone() co
 
 bool AirflowNetworkDistributionLinkage::setNode1(const AirflowNetworkNode& airflowNetworkNode)
 {
-  return getImpl<detail::AirflowNetworkDistributionLinkage_Impl>()->setNode1<AirflowNetworkNode>(airflowNetworkNode);
+  return getImpl<detail::AirflowNetworkDistributionLinkage_Impl>()->setNode1(airflowNetworkNode);
 }
 
 bool AirflowNetworkDistributionLinkage::setNode2(const AirflowNetworkNode& airflowNetworkNode)
 {
-  return getImpl<detail::AirflowNetworkDistributionLinkage_Impl>()->setNode2<AirflowNetworkNode>(airflowNetworkNode);
+  return getImpl<detail::AirflowNetworkDistributionLinkage_Impl>()->setNode2(airflowNetworkNode);
 }
 
 bool AirflowNetworkDistributionLinkage::setComponent(const AirflowNetworkComponent& airflowNetworkComponent)
 {
-  return getImpl<detail::AirflowNetworkDistributionLinkage_Impl>()->setComponent<AirflowNetworkComponent>(airflowNetworkComponent);
+  return getImpl<detail::AirflowNetworkDistributionLinkage_Impl>()->setComponent(airflowNetworkComponent);
 }
 
 bool AirflowNetworkDistributionLinkage::setThermalZone(const ThermalZone& zone)
