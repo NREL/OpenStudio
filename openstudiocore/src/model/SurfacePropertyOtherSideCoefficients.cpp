@@ -70,6 +70,7 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      result.push_back("Average, Surface Other Side Coefficients Exterior Air Drybulb Temperature");
     }
     return result;
   }

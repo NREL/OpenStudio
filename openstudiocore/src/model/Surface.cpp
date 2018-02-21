@@ -1962,6 +1962,24 @@ namespace detail {
     }
   }
 
+  std::vector<EMSActuatorNames> Surface_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Surface", "Interior Surface Convection Heat Transfer Coefficient"},
+                                            {"Surface", "Exterior Surface Convection Heat Transfer Coefficient"},
+                                            {"Surface", "Outdoor Air Drybulb Temperature"},
+                                            {"Surface", "Outdoor Air Wetbulb Temperature"},
+                                            {"Surface", "Outdoor Air Wind Speed"},
+                                            {"Surface", "Outdoor Air Wind Direction"},
+                                            {"Surface", "Construction State"},
+                                            {"Window Shading Control", "Control Status"},
+                                            {"Window Shading Control", "Slat Angle"}};
+    return actuators;
+  }
+
+  std::vector<std::string> Surface_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
+  
 } // detail
 
 Surface::Surface(const std::vector<Point3d>& vertices, const Model& model)

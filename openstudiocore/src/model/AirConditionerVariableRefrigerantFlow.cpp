@@ -1997,6 +1997,16 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> AirConditionerVariableRefrigerantFlow_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "Variable Refrigerant Flow Heat Pump", "Operating Mode" } };
+    return actuators;
+  }
+
+  std::vector<std::string> AirConditionerVariableRefrigerantFlow_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
+
 } // detail
 
 

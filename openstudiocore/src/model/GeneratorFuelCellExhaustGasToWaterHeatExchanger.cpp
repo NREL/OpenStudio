@@ -513,6 +513,17 @@ namespace detail {
     return false;
   }
 
+  std::vector<EMSActuatorNames> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "On-Site Generator Control", "Requested Power" } };
+    return actuators;
+  }
+
+  std::vector<std::string> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Generator Nominal Maximum Power",
+      "Generator Nominal Thermal To Electric Ratio" };
+    return types;
+  }
+
 } // detail
 
 GeneratorFuelCellExhaustGasToWaterHeatExchanger::GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model,

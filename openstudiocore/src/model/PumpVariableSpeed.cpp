@@ -89,6 +89,7 @@ namespace detail {
       result.push_back("Pump Fluid Heat Gain Energy");
       result.push_back("Pump Outlet Temperature");
       result.push_back("Pump Mass Flow Rate");
+      result.push_back("Pump Operating Pumps Count");
 
       // The Key is the Pump, not the zone, so it's right to report here
       // EnergyPlus/Pumps.cc::GetPumpInput()
@@ -1161,6 +1162,17 @@ namespace detail {
   void PumpVariableSpeed_Impl::resetZone() {
     bool result = setString(OS_Pump_VariableSpeedFields::ZoneName, "");
     OS_ASSERT(result);
+  }
+
+  std::vector<EMSActuatorNames> PumpVariableSpeed_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Pump", "Pump Mass Flow Rate"},
+                                            {"Pump", "Pump Pressure Rise"}};
+    return actuators;
+  }
+
+  std::vector<std::string> PumpVariableSpeed_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Pump Maximum Mass Flow Rate"};
+    return types;
   }
 
 } // detail

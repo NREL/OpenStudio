@@ -1103,6 +1103,36 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> SizingZone_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Sizing:Zone", "Zone Design Heating Air Mass Flow Rate"},
+                                            {"Sizing:Zone", "Zone Design Cooling Air Mass Flow Rate"},
+                                            {"Sizing:Zone", "Zone Design Heating Load"},
+                                            {"Sizing:Zone", "Zone Design Cooling Load"},
+                                            {"Sizing:Zone", "Zone Design Heating Vol Flow"},
+                                            {"Sizing:Zone", "Zone Design Cooling Vol Flow"}};
+    return actuators;
+  }
+
+  std::vector<std::string> SizingZone_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Final Zone Design Heating Air Mass Flow Rate",
+                                   "Intermediate Zone Design Heating Air Mass Flow Rate",
+                                   "Final Zone Design Cooling Air Mass Flow Rate",
+                                   "Intermediate Zone Design Cooling Air Mass Flow Rate",
+                                   "Final Zone Design Heating Load",
+                                   "Intermediate Zone Design Heating Load",
+                                   "Final Zone Design Cooling Load",
+                                   "Intermediate Zone Design Cooling Load",
+                                   "Final Zone Design Heating Air Density",
+                                   "Intermediate Zone Design Heating Air Density",
+                                   "Final Zone Design Cooling Air Density",
+                                   "Intermediate Zone Design Cooling Air Density",
+                                   "Final Zone Design Heating Volume Flow",
+                                   "Intermediate Zone Design Heating Volume Flow",
+                                   "Final Zone Design Cooling Volume Flow",
+                                   "Intermediate Zone Design Cooling Volume Flow",
+                                   "Zone Outdoor Air Design Volume Flow Rate"};
+    return types;
+  }
 } // detail
 
 SizingZone::SizingZone(const Model& model, const ThermalZone & thermalZone)

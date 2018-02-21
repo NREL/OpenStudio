@@ -127,6 +127,10 @@ namespace detail {
 
     bool isConnected(const ModelObject & modelObject);
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
     boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;

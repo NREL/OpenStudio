@@ -41,17 +41,12 @@ namespace detail {
   /** SteamEquipmentDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for SteamEquipmentDefinition.*/
   class MODEL_API SteamEquipmentDefinition_Impl : public SpaceLoadDefinition_Impl {
 
-
-
-
-
     Q_PROPERTY(openstudio::OSOptionalQuantity designLevel_SI
                READ designLevel_SI
                WRITE setDesignLevel);
     Q_PROPERTY(openstudio::OSOptionalQuantity designLevel_IP
                READ designLevel_IP
                WRITE setDesignLevel);
-
 
     Q_PROPERTY(openstudio::OSOptionalQuantity wattsperSpaceFloorArea_SI
                READ wattsperSpaceFloorArea_SI
@@ -60,15 +55,12 @@ namespace detail {
                READ wattsperSpaceFloorArea_IP
                WRITE setWattsperSpaceFloorArea);
 
-
     Q_PROPERTY(openstudio::OSOptionalQuantity wattsperPerson_SI
                READ wattsperPerson_SI
                WRITE setWattsperPerson);
     Q_PROPERTY(openstudio::OSOptionalQuantity wattsperPerson_IP
                READ wattsperPerson_IP
                WRITE setWattsperPerson);
-
-
 
     Q_PROPERTY(openstudio::Quantity fractionRadiant_SI
                READ fractionRadiant_SI
@@ -77,16 +69,12 @@ namespace detail {
                READ fractionRadiant_IP
                WRITE setFractionRadiant);
 
-
-
     Q_PROPERTY(openstudio::Quantity fractionLatent_SI
                READ fractionLatent_SI
                WRITE setFractionLatent);
     Q_PROPERTY(openstudio::Quantity fractionLatent_IP
                READ fractionLatent_IP
                WRITE setFractionLatent);
-
-
 
     Q_PROPERTY(openstudio::Quantity fractionLost_SI
                READ fractionLost_SI
@@ -201,6 +189,10 @@ namespace detail {
     bool setDesignLevelCalculationMethod(const std::string& method,
                                          double floorArea,
                                          double numPeople);
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
    protected:

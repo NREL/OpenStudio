@@ -305,6 +305,17 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> ZoneHVACBaseboardConvectiveElectric_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "ZoneBaseboard:OutdoorTemperatureControlled", "Power Level" } };
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneHVACBaseboardConvectiveElectric_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Simple Zone Baseboard Capacity At Low Temperature",
+                                    "Simple Zone Baseboard Capacity At High Temperature"};
+    return types;
+  }
+
 } // detail
 
 ZoneHVACBaseboardConvectiveElectric::ZoneHVACBaseboardConvectiveElectric(const Model& model)
