@@ -11374,6 +11374,164 @@ OS:AirTerminal:DualDuct:ConstantVolume,
   ,                                       !- Cold Air Inlet Node
   autosize;                               !- Maximum Air Flow Rate {m3/s}
 
+OS:AvailabilityManager:DifferentialThermostat,
+  {a1d77522-772f-4092-98f9-4bf87ecb3cd5}, !- Handle
+  AVM Differential Tstat,                 !- Name
+  ,                                       !- Hot Node
+  ,                                       !- Cold Node
+  10,                                     !- Temperature Difference On Limit {deltaC}
+  2;                                      !- Temperature Difference Off Limit {deltaC}
+
+OS:AvailabilityManager:HighTemperatureTurnOff,
+  {fe41f7e3-c345-4123-91a5-4ec7c89cb4d5}, !- Handle
+  AVM HighTempTurnOff,                    !- Name
+  ,                                       !- Sensor Node Name
+  30;                                     !- Temperature {C}
+
+OS:AvailabilityManager:HighTemperatureTurnOn,
+  {ebaeaad3-9cb1-4222-8593-0516b099da4c}, !- Handle
+  AVM HighTempTurnOn,                     !- Name
+  ,                                       !- Sensor Node Name
+  30;                                     !- Temperature {C}
+
+OS:AvailabilityManager:LowTemperatureTurnOff,
+  {547e47b5-db9e-4ace-b120-46c12f6adbbb}, !- Handle
+  AVM LowTempTurnOff,                     !- Name
+  ,                                       !- Sensor Node Name
+  30,                                     !- Temperature {C}
+  ;                                       !- Applicability Schedule Name
+
+OS:AvailabilityManager:LowTemperatureTurnOn,
+  {c5b31c8e-2702-4670-99fe-ab8f16128d40}, !- Handle
+  AVM LowTempTurnOn,                      !- Name
+  ,                                       !- Sensor Node Name
+  30;                                     !- Temperature {C}
+
+OS:AvailabilityManager:Scheduled,
+  {701e420b-6d49-45c0-9075-5ba2d046eebf}, !- Handle
+  AVM Scheduled,                          !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}; !- Schedule Name
+
+OS:AvailabilityManager:NightCycle,
+  {057d50db-daf1-4590-9194-ecba8c21971f}, !- Handle
+  AVM Night Cycle,                        !- Name
+  ,                                       !- Applicability Schedule
+  ,                                       !- Fan Schedule
+  ,                                       !- Control Type
+  1,                                      !- Thermostat Tolerance {deltaC}
+  ,                                       !- Cycling Run Time Control Type
+  3600,                                   !- Cycling Run Time {s}
+  {56234c2d-2f03-4e4c-9d10-a252fd81fabf}, !- Control Zone or Zone List Name
+  {e7e40ed4-ba97-4699-bcbd-29a9bd143be3}, !- Cooling Control Zone or Zone List Name
+  {6cf0e4db-8743-4c6f-a877-ff5f8052d22b}, !- Heating Control Zone or Zone List Name
+  {60c54475-7d5a-41bc-816e-f93781901dbf}; !- Heating Zone Fans Only Zone or Zone List Name
+
+OS:ModelObjectList,
+  {56234c2d-2f03-4e4c-9d10-a252fd81fabf}, !- Handle
+  Availability Manager Night Cycle 1 Heating Zone Fans Only Zone List; !- Name
+
+OS:ModelObjectList,
+  {e7e40ed4-ba97-4699-bcbd-29a9bd143be3}, !- Handle
+  {904e9d82-8956-4180-bbb0-44194d3a0adf}; !- Name
+
+OS:ModelObjectList,
+  {6cf0e4db-8743-4c6f-a877-ff5f8052d22b}, !- Handle
+  {d4b1d5ee-b1a8-4b6d-8c30-2a2fc1e0550c}; !- Name
+
+OS:ModelObjectList,
+  {60c54475-7d5a-41bc-816e-f93781901dbf}, !- Handle
+  {44416744-4eb1-4d78-ba7f-1b7710e6a127}; !- Name
+
+OS:AvailabilityManager:OptimumStart,
+  {6adf6668-a046-480a-a61e-5e54377d05af}, !- Handle
+  AVM OptimumStart,                       !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Applicability Schedule
+  ,                                       !- Fan Schedule
+  MaximumofZoneList,                      !- Control Type
+  ,                                       !- Control Zone
+  ,                                       !- Zone List
+  6,                                      !- Maximum Value for Optimum Start Time {hr}
+  AdaptiveTemperatureGradient,            !- Control Algorithm
+  3,                                      !- Constant Temperature Gradient during Cooling {deltaC/hr}
+  3,                                      !- Constant Temperature Gradient during Heating {deltaC/hr}
+  2,                                      !- Initial Temperature Gradient during Cooling {deltaC/hr}
+  2,                                      !- Initial Temperature Gradient during Heating {deltaC/hr}
+  2,                                      !- Constant Start Time {hr}
+  3;                                      !- Number of Previous Days {days}
+
+OS:AvailabilityManager:NightVentilation,
+  {9a6114e3-de9c-4dee-a55a-2a789af09c9a}, !- Handle
+  AVM Night Ventilation,                  !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Applicability Schedule
+  ,                                       !- Fan Schedule
+  ,                                       !- Ventilation Temperature Schedule
+  2,                                      !- Ventilation Temperature Difference {deltaC}
+  15,                                     !- Ventilation Temperature Low Limit {C}
+  0.333,                                  !- Night Venting Flow Fraction
+  ;                                       !- Control Zone
+
+OS:AvailabilityManager:HybridVentilation,
+  {d3e7f014-44d1-4d1d-80ab-373ba37fb92e}, !- Handle
+  AVM Hybrid Ventilation,                 !- Name
+  ,                                       !- Controlled Zone
+  {af470d46-ff4a-45ee-b481-34f638e19d33}, !- Ventilation Control Mode Schedule
+  Yes,                                    !- Use Weather File Rain Indicators
+  40,                                     !- Maximum Wind Speed {m/s}
+  20,                                     !- Minimum Outdoor Temperature {C}
+  30,                                     !- Maximum Outdoor Temperature {C}
+  20000,                                  !- Minimum Outdoor Enthalpy {J/kg}
+  30000,                                  !- Maximum Outdoor Enthalpy {J/kg}
+  15,                                     !- Minimum Outdoor Dewpoint {C}
+  30,                                     !- Maximum Outdoor Dewpoint {C}
+  {7dc5420f-8388-40b0-9aae-b754d05da38f}; !- Minimum Outdoor Ventilation Air Schedule
+
+OS:Schedule:Ruleset,
+  {af470d46-ff4a-45ee-b481-34f638e19d33}, !- Handle
+  AVM Hybrid Ventilation Control Mode Schedule, !- Name
+  {19aed973-104b-44bf-a59f-1d47bc7f2dcc}, !- Schedule Type Limits Name
+  {cd9b992b-d6f3-43ae-81b2-3437b743aa52}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {cd9b992b-d6f3-43ae-81b2-3437b743aa52}, !- Handle
+  AVM Hybrid Ventilation Control Mode Schedule DefaultDay, !- Name
+  {19aed973-104b-44bf-a59f-1d47bc7f2dcc}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  1;                                      !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {19aed973-104b-44bf-a59f-1d47bc7f2dcc}, !- Handle
+  Integer,                                !- Name
+  0,                                      !- Lower Limit Value
+  4,                                      !- Upper Limit Value
+  Discrete;                               !- Numeric Type
+
+OS:Schedule:Ruleset,
+  {7dc5420f-8388-40b0-9aae-b754d05da38f}, !- Handle
+  AVM Hybrid Ventilation Min OA Schedule, !- Name
+  {dfe136f8-1a1a-4263-a38c-0055df8cb82e}, !- Schedule Type Limits Name
+  {35966a45-19aa-479e-bfc5-beef62a7e102}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {35966a45-19aa-479e-bfc5-beef62a7e102}, !- Handle
+  AVM Hybrid Ventilation Min OA Schedule defaultDay, !- Name
+  {dfe136f8-1a1a-4263-a38c-0055df8cb82e}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+
+OS:AvailabilityManager:ScheduledOn,
+  {639439d4-3dc4-4219-98cf-1f0ffd90e850}, !- Handle
+  AVM Scheduled On,                       !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}; !- Schedule Name
+
+OS:AvailabilityManager:ScheduledOff,
+  {c07413b0-8393-4090-9ad8-698943d6bca4}, !- Handle
+  AVM Scheduled Off,                      !- Name
+  {b267e42b-9691-4116-8393-70bb1197dc5b}; !- Schedule Name
+
 OS:CentralHeatPumpSystem,
   {fa6abaac-a8d9-4c9a-8ad2-7486be5cb4ef}, !- Handle
   Central Heat Pump System,               !- Name

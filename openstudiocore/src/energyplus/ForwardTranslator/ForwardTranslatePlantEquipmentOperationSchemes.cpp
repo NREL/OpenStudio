@@ -27,6 +27,8 @@
  **********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
+#include "ForwardTranslatePlantEquipmentOperationSchemes.hpp"
+
 #include "../../model/Model.hpp"
 #include "../../model/PlantLoop.hpp"
 #include "../../model/PlantLoop_Impl.hpp"
@@ -119,6 +121,7 @@
 #include "../../model/GeneratorMicroTurbine_Impl.hpp"
 
 using namespace openstudio::model;
+using namespace openstudio::energyplus;
 
 using namespace std;
 
@@ -340,11 +343,13 @@ boost::optional<double> flowrate(const HVACComponent & component)
   return result;
 }
 
-enum class ComponentType {HEATING, COOLING, BOTH, NONE};
+// Now using an HPP
+// enum class ComponentType {HEATING, COOLING, BOTH, NONE};
 
 
 // Forward declaration (needed because componentType and plantLoopType call each other)
-ComponentType componentType(const HVACComponent & component);
+// Now using an HPP
+// ComponentType componentType(const HVACComponent & component);
 
 /*
  * Check the overall type of a plantLoop by checking what is on the supply side

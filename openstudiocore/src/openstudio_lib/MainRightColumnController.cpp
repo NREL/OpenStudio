@@ -1159,6 +1159,23 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass, "AirLoopHVAC Unitary VAV Changeover Bypass");
 
 
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_Scheduled, "Availability Manager Scheduled");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_ScheduledOn, "Availability Manager Scheduled On");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_ScheduledOff, "Availability Manager Scheduled Off");
+
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOn, "Availability Manager Low Temperature Turn On");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOff, "Availability Manager Low Temperature Turn Off");
+
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOn, "Availability Manager High Temperature Turn On");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOff, "Availability Manager High Temperature Turn Off");
+
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_DifferentialThermostat, "Availability Manager Differential Thermostat");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_OptimumStart, "Availability Manager Optimum Start");
+
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_NightCycle, "Availability Manager Night Cycle");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_NightVentilation, "Availability Manager Night Ventilation");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_HybridVentilation, "Availability Manager Hybrid Ventilation");
+
   setLibraryView(libraryWidget);
 
   m_horizontalTabWidget->setCurrentId(LIBRARY);
