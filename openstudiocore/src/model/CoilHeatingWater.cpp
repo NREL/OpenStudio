@@ -65,8 +65,10 @@
 #include "AirTerminalSingleDuctSeriesPIUReheat.hpp"
 #include "AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp"
 #include "AirflowNetworkEquivalentDuct.hpp"
-#include "AirflowNetworkEquivalentDuct_Impl.hpp"#include "Model.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
+#include "Model.hpp"
 #include <utilities/idd/OS_Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
