@@ -12,6 +12,15 @@
     <rule IddField="Outlet Node" Access="HIDDEN"/>
     <rule IddField="Induced Air Outlet Node" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_CentralHeatPumpSystem">
+    <rule IddField="Cooling Loop Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Cooling Loop Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Loop Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Source Loop Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heating Loop Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heating Loop Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Chiller Heater Module List Name" Access="LOCKED"/>
+  </POLICY>
   <POLICY IddObjectType="OS_CoolingTower_SingleSpeed">
     <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>

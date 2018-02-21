@@ -34,6 +34,13 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/BoilerHotWater.hpp"
 #include "../../model/BoilerHotWater_Impl.hpp"
+
+#include "../../model/CentralHeatPumpSystem.hpp"
+#include "../../model/CentralHeatPumpSystem_Impl.hpp"
+#include "../../model/CentralHeatPumpSystemModule.hpp"
+#include "../../model/ChillerHeaterPerformanceElectricEIR.hpp"
+
+
 #include "../../model/ChillerElectricEIR.hpp"
 #include "../../model/ChillerElectricEIR_Impl.hpp"
 #include "../../model/ChillerAbsorptionIndirect.hpp"
@@ -190,6 +197,16 @@ boost::optional<double> flowrate(const HVACComponent & component)
     }
     case openstudio::IddObjectType::OS_DistrictHeating :
     {
+      break;
+    }
+    case openstudio::IddObjectType::OS_CentralHeatPumpSystem :
+    {
+      // TODO: JM define behavior needed here...
+      // Probably check if all modules have a ChillerHeaterPerformanceComponent
+      // that has a flow rate hardsized, and multiple by the number of performance comp
+      // Better to add a method to centralheatpumpsystem, for eg "totalDesignFlowRate"
+      // Problem is that you need to know which loop is requesting this since there are three
+      // "Design XXX Water Flow Rate" (XXX= Chilled Water, Condenser Water, or Hot Water)
       break;
     }
     case openstudio::IddObjectType::OS_Chiller_Electric_EIR :
@@ -441,6 +458,18 @@ ComponentType componentType(const HVACComponent & component)
     {
       return ComponentType::HEATING;
     }
+    case openstudio::IddObjectType::OS_CentralHeatPumpSystem :
+    {
+      // Note (JM): This really depends on which loop is calling this...
+
+      // This component has a tertiary loop, and is placed on the supply side of TWO loops: Heating and Cooling
+      // If it's the supplyLoop (= cooling), we should probably have a PlantEquipmentOperation::CoolingLoad
+      // If it's the tertiaryLoop (= heating), PlantEquipmentOperation::HeatingLoad
+      // Returning BOTH will place it on a PlantEquipmentOperation::Uncontrolled
+
+      // As a result, this is handled in coolingComponents() and heatingComponents() directly
+      return ComponentType::NONE;
+    }
     case openstudio::IddObjectType::OS_Chiller_Electric_EIR :
     {
       return ComponentType::COOLING;
@@ -635,8 +664,19 @@ std::vector<HVACComponent> coolingComponents(const PlantLoop & plantLoop)
 {
   std::vector<HVACComponent> result;
 
-  for( const auto & comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents()) ) {
-    if( componentType(comp) == ComponentType::COOLING ) {
+  for( const auto & comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents()) )
+  {
+    // Special case for CentralHeatPumpSystem. If plantLoop = central_hp.coolingLoop, we add it
+    if (comp.iddObject().type().value() == openstudio::IddObjectType::OS_CentralHeatPumpSystem) {
+      CentralHeatPumpSystem central_hp = comp.cast<CentralHeatPumpSystem>();
+      if (central_hp.coolingPlantLoop().is_initialized()) {
+        if (plantLoop.handle() == central_hp.coolingPlantLoop()->handle()) {
+          result.push_back(operationSchemeComponent(comp));
+        }
+      }
+
+    // Regular case
+    } else if( componentType(comp) == ComponentType::COOLING ) {
       result.push_back(operationSchemeComponent(comp));
     }
   }
@@ -649,7 +689,17 @@ std::vector<HVACComponent> heatingComponents(const PlantLoop & plantLoop)
   std::vector<HVACComponent> result;
 
   for( const auto & comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents()) ) {
-    if( componentType(comp) == ComponentType::HEATING ) {
+    // Special case for CentralHeatPumpSystem. If plantLoop = central_hp.heatingPlantLoop, we add it
+    if (comp.iddObject().type().value() == openstudio::IddObjectType::OS_CentralHeatPumpSystem) {
+      CentralHeatPumpSystem central_hp = comp.cast<CentralHeatPumpSystem>();
+      if (central_hp.heatingPlantLoop().is_initialized()) {
+        if (plantLoop.handle() == central_hp.heatingPlantLoop()->handle()) {
+          result.push_back(operationSchemeComponent(comp));
+        }
+      }
+
+    // Regular case
+    } else if( componentType(comp) == ComponentType::HEATING ) {
       result.push_back(operationSchemeComponent(comp));
     }
   }

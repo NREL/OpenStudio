@@ -501,10 +501,15 @@ void HVACLayoutController::addLibraryObjectToModelNode(OSItemId itemid, model::H
   }
 
   if( object ) {
+
     if( boost::optional<model::HVACComponent> hvacComponent = object->optionalCast<model::HVACComponent>() )
     {
       if( boost::optional<model::Node> node = comp.optionalCast<model::Node>() )
       {
+        // Note: Julien Marrec, 2018-01-04
+        // When you have a WaterToWaterComponent that has a tertiaryPlantLoop, you should override the addToNode method
+        // to call addToTertiaryNode when needed. This will work with addSupplyBranchForComponent (etc) too
+        // Take a look at CentralHeatPumpSystem::addToNode (and CentralHeatPumpSystem::addToTertiaryNode) for an actual example
         added = hvacComponent->addToNode(node.get());
       }
       else if( boost::optional<model::Splitter> splitter = comp.optionalCast<model::Splitter>() )
@@ -586,20 +591,28 @@ void HVACLayoutController::removeModelObject(model::ModelObject & modelObject)
     {
       boost::optional<model::PlantLoop> plant = comp->plantLoop();
       boost::optional<model::PlantLoop> secondaryPlant = comp->secondaryPlantLoop();
+      boost::optional<model::PlantLoop> tertiaryPlant = comp->tertiaryPlantLoop();
 
-      if( plant && secondaryPlant )
-      {
-        if( plant.get() == loop.get() )
-        {
-          comp->removeFromPlantLoop();
-
-          return;
+      // If it's on at least two plantLoops, we disconnect it from the current loop only (instead of deleting) and return
+      if (plant ? (secondaryPlant || tertiaryPlant) : (secondaryPlant && tertiaryPlant)) {
+        if (plant) {
+          if( plant.get() == loop.get() ) {
+            comp->removeFromPlantLoop();
+            return;
+          }
         }
-        if( secondaryPlant.get() == loop.get() )
-        {
-          comp->removeFromSecondaryPlantLoop();
-
-          return;
+        if (secondaryPlant) {
+          if( secondaryPlant.get() == loop.get() )
+          {
+            comp->removeFromSecondaryPlantLoop();
+            return;
+          }
+        }
+        if (tertiaryPlant) {
+          if( tertiaryPlant.get() == loop.get() ) {
+            comp->removeFromTertiaryPlantLoop();
+            return;
+          }
         }
       }
     }
@@ -691,11 +704,15 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
 
     if( boost::optional<model::WaterToWaterComponent> comp = modelObject.optionalCast<model::WaterToWaterComponent>() )
     {
-      if( boost::optional<model::PlantLoop> loop = comp->plantLoop() )
+      boost::optional<model::PlantLoop> primaryPlantLoop = comp->plantLoop();
+      boost::optional<model::PlantLoop> secondaryPlantLoop = comp->secondaryPlantLoop();
+
+      // From primary, go to secondary
+      if( primaryPlantLoop )
       {
-        if( t_currentLoop.get() == loop.get() )
+        if( t_currentLoop.get() == primaryPlantLoop.get() )
         {
-          if( boost::optional<model::PlantLoop> secondaryPlantLoop = comp->secondaryPlantLoop() )
+          if( secondaryPlantLoop )
           {
             m_hvacSystemsController->setCurrentHandle(toQString(secondaryPlantLoop->handle()));
 
@@ -704,18 +721,55 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
         }
       }
 
-      if( boost::optional<model::PlantLoop> loop = comp->secondaryPlantLoop() )
+      // From secondary, go to primary
+      if( secondaryPlantLoop )
       {
-        if( t_currentLoop.get() == loop.get() )
+        if( t_currentLoop.get() == secondaryPlantLoop.get() )
         {
-          if( boost::optional<model::PlantLoop> plantLoop = comp->plantLoop() )
+          if( primaryPlantLoop )
           {
-            m_hvacSystemsController->setCurrentHandle(toQString(plantLoop->handle()));
+            m_hvacSystemsController->setCurrentHandle(toQString(primaryPlantLoop->handle()));
 
             return;
           }
         }
       }
+
+      // From tertiary, go to either primary or secondary, whichever is on the other side
+      // eg if tertiary = supply => go to secondary (demand)
+      //    if tertiary = demand => go to primary (supply)
+      boost::optional<model::PlantLoop> tertiaryPlantLoop = comp->tertiaryPlantLoop();
+
+      if(tertiaryPlantLoop )
+      {
+
+        if( t_currentLoop.get() == tertiaryPlantLoop.get() )
+        {
+
+          // If the comp is on the supply side of the current=tertiary loop
+          // Jump to the demand side of the other loop, that is secondaryLoop
+          if( tertiaryPlantLoop->supplyComponent(comp->handle()) )
+          {
+            if( secondaryPlantLoop )
+            {
+              m_hvacSystemsController->setCurrentHandle(toQString(secondaryPlantLoop->handle()));
+              return;
+            }
+          }
+
+          // Else it's on the demand side, so jump to primary=supply
+          else
+          {
+            if( primaryPlantLoop )
+            {
+              m_hvacSystemsController->setCurrentHandle(toQString(primaryPlantLoop->handle()));
+              return;
+            }
+          }
+        } // End if currentLoop = loop
+
+      } // End if tertiaryPlantLoop()
+
     }
   }
 }
