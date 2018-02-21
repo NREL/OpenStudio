@@ -36,6 +36,8 @@
 namespace openstudio {
 namespace model {
 
+class HVACComponent;
+
 namespace detail {
 
   /** AirflowNetworkDistributionNode_Impl is a AirflowNetworkNode_Impl that is the implementation class for AirflowNetworkDistributionNode.*/
@@ -70,7 +72,7 @@ namespace detail {
     //@}
     /** @name Getters */
     //@{
-
+    /*
     template <typename T> boost::optional<typename std::enable_if<std::is_same<AirLoopHVACZoneMixer, T>::value ||
       std::is_same<AirLoopHVACZoneSplitter, T>::value ||
       std::is_same<AirLoopHVACOutdoorAirSystem, T>::value || //::type> component() const
@@ -81,6 +83,17 @@ namespace detail {
     {
       return getObject<ModelObject>().getModelObjectTarget<T>(OS_AirflowNetworkDistributionNodeFields::ComponentNameorNodeName);
     }
+    */
+
+    boost::optional<HVACComponent> component() const;
+
+    boost::optional<Node> node() const;
+
+    boost::optional<AirLoopHVACZoneMixer> airLoopHVACZoneMixer() const;
+
+    boost::optional<AirLoopHVACZoneSplitter> airLoopHVACZoneSplitter() const;
+
+    boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
     double nodeHeight() const;
 

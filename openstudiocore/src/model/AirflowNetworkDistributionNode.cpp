@@ -84,6 +84,31 @@ namespace detail {
     return AirflowNetworkDistributionNode::iddObjectType();
   }
 
+  boost::optional<HVACComponent> AirflowNetworkDistributionNode_Impl::component() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirflowNetworkDistributionNodeFields::ComponentNameorNodeName);
+  }
+
+  boost::optional<Node> AirflowNetworkDistributionNode_Impl::node() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_AirflowNetworkDistributionNodeFields::ComponentNameorNodeName);
+  }
+
+  boost::optional<AirLoopHVACZoneMixer> AirflowNetworkDistributionNode_Impl::airLoopHVACZoneMixer() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<AirLoopHVACZoneMixer>(OS_AirflowNetworkDistributionNodeFields::ComponentNameorNodeName);
+  }
+
+  boost::optional<AirLoopHVACZoneSplitter> AirflowNetworkDistributionNode_Impl::airLoopHVACZoneSplitter() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<AirLoopHVACZoneSplitter>(OS_AirflowNetworkDistributionNodeFields::ComponentNameorNodeName);
+  }
+
+  boost::optional<AirLoopHVACOutdoorAirSystem> AirflowNetworkDistributionNode_Impl::airLoopHVACOutdoorAirSystem() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<AirLoopHVACOutdoorAirSystem>(OS_AirflowNetworkDistributionNodeFields::ComponentNameorNodeName);
+  }
+
   double AirflowNetworkDistributionNode_Impl::nodeHeight() const {
     boost::optional<double> value = getDouble(OS_AirflowNetworkDistributionNodeFields::NodeHeight,true);
     OS_ASSERT(value);
@@ -131,22 +156,22 @@ IddObjectType AirflowNetworkDistributionNode::iddObjectType() {
 
 boost::optional<Node> AirflowNetworkDistributionNode::node() const
 {
-  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->component<Node>();
+  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->node();
 }
 
 boost::optional<AirLoopHVACZoneMixer> AirflowNetworkDistributionNode::airLoopHVACZoneMixer() const
 {
-  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->component<AirLoopHVACZoneMixer>();
+  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->airLoopHVACZoneMixer();
 }
 
 boost::optional<AirLoopHVACZoneSplitter> AirflowNetworkDistributionNode::airLoopHVACZoneSplitter() const
 {
-  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->component<AirLoopHVACZoneSplitter>();
+  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->airLoopHVACZoneSplitter();
 }
 
 boost::optional<AirLoopHVACOutdoorAirSystem> AirflowNetworkDistributionNode::airLoopHVACOutdoorAirSystem() const
 {
-  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->component<AirLoopHVACOutdoorAirSystem>();
+  return getImpl<detail::AirflowNetworkDistributionNode_Impl>()->airLoopHVACOutdoorAirSystem();
 }
 
 //OAMixerOutdoorAirStreamNode
