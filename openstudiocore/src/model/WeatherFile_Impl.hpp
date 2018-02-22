@@ -45,19 +45,6 @@ namespace detail {
 
   /** WeatherFile_Impl is a ModelObject_Impl that is the implementation class for WeatherFile.*/
   class MODEL_API WeatherFile_Impl : public ModelObject_Impl {
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -115,6 +102,10 @@ namespace detail {
     boost::optional<openstudio::path> path() const;
 
     boost::optional<std::string> checksum() const;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */

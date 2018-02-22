@@ -735,6 +735,16 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Refrigeration_SystemFields::CompressorListName);
   }
 
+  std::vector<EMSActuatorNames> RefrigerationSystem_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Refrigeration:System", "Minimum Condensing Temperature"}};
+    return actuators;
+  }
+
+  std::vector<std::string> RefrigerationSystem_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
+
 } // detail
 
 RefrigerationSystem::RefrigerationSystem(const Model& model)

@@ -369,6 +369,16 @@ namespace detail {
     return false;
   }
 
+  std::vector<EMSActuatorNames> GasEquipmentDefinition_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "GasEquipment", "Gas Power Level" } };
+    return actuators;
+  }
+
+  std::vector<std::string> GasEquipmentDefinition_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Gas Process Power Design Level" };
+    return types;
+  }
+
 } // detail
 
 GasEquipmentDefinition::GasEquipmentDefinition(const Model& model)

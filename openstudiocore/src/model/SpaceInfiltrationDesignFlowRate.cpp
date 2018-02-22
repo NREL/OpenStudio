@@ -616,6 +616,15 @@ namespace detail {
     return true;
   }
 
+  std::vector<EMSActuatorNames> SpaceInfiltrationDesignFlowRate_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Zone Infiltration", "Air Exchange Flow Rate"}};
+    return actuators;
+  }
+
+  std::vector<std::string> SpaceInfiltrationDesignFlowRate_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 SpaceInfiltrationDesignFlowRate::SpaceInfiltrationDesignFlowRate(const Model& model)

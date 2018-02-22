@@ -91,6 +91,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
+    /*
     template <typename T> bool setNode1(const T& airflowNetworkNode)
     {
       bool result = setPointer(OS_AirflowNetworkDistributionLinkageFields::Node1Name, airflowNetworkNode.handle());
@@ -108,6 +109,13 @@ namespace detail {
       bool result = setPointer(OS_AirflowNetworkDistributionLinkageFields::ComponentName, airflowNetworkComponent.handle());
       return result;
     }
+    */
+
+    bool setNode1(const AirflowNetworkNode& airflowNetworkNode);
+
+    bool setNode2(const AirflowNetworkNode& airflowNetworkNode);
+
+    bool setComponent(const AirflowNetworkComponent& airflowNetworkComponent);
 
     // TODO: Check argument type. From object lists, some candidates are: Zone.
     bool setThermalZone(const ThermalZone& zone);

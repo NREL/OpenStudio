@@ -1138,6 +1138,14 @@ namespace detail {
     return std::vector<ScheduleTypeKey>();
   }
 
+  std::vector<EMSActuatorNames> ModelObject_Impl::emsActuatorNames() const {
+    return std::vector<EMSActuatorNames>();
+  }
+
+  std::vector<std::string> ModelObject_Impl::emsInternalVariableNames() const {
+    return std::vector<std::string>();
+  }
+  
   AdditionalProperties ModelObject_Impl::additionalProperties() const {
     AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
     if (candidates.size() > 1) {
@@ -1153,7 +1161,6 @@ namespace detail {
     }
     return AdditionalProperties(getObject<ModelObject>());
   }
-
 
   std::vector<IdfObject> ModelObject_Impl::removeAdditionalProperties()
   {
@@ -1392,6 +1399,26 @@ ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p)
 boost::optional<double> ModelObject::getAutosizedValue(std::string valueName, std::string units) const
 {
   return getImpl<detail::ModelObject_Impl>()->getAutosizedValue(valueName, units);
+}
+
+std::vector<EMSActuatorNames> ModelObject::emsActuatorNames() const {
+  return getImpl<detail::ModelObject_Impl>()->emsActuatorNames();
+}
+
+std::vector<std::string> ModelObject::emsInternalVariableNames() const {
+  return getImpl<detail::ModelObject_Impl>()->emsInternalVariableNames();
+}
+
+EMSActuatorNames::EMSActuatorNames(const std::string & componentTypeName, const std::string & controlTypeName)
+  : m_componentTypeName(componentTypeName),
+  m_controlTypeName(controlTypeName) {}
+
+std::string EMSActuatorNames::controlTypeName() const {
+  return m_controlTypeName;
+}
+
+std::string EMSActuatorNames::componentTypeName() const {
+  return m_componentTypeName;
 }
 
 } // model

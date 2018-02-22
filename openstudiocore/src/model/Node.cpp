@@ -419,6 +419,28 @@ namespace detail{
     return false;
   }
 
+  std::vector<EMSActuatorNames> Node_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"System Node Setpoint", "Temperature Setpoint"},
+                                            {"System Node Setpoint", "Temperature Minimum Setpoint"},
+                                            {"System Node Setpoint", "Temperature Maximum Setpoint"},
+                                            {"System Node Setpoint", "Humidity Ratio Setpoint"},
+                                            {"System Node Setpoint", "Humidity Ratio Maximum Setpoint"},
+                                            {"System Node Setpoint", "Humidity Ratio Minimum Setpoint"},
+                                            {"System Node Setpoint", "Mass Flow Rate Setpoint"},
+                                            {"System Node Setpoint", "Mass Flow Rate Maximum Available Setpoint"},
+                                            {"System Node Setpoint", "Mass Flow Rate Minimum Available Setpoint"},
+                                            {"Outdoor Air System Node", "Drybulb Temperature"},
+                                            {"Outdoor Air System Node", "Wetbulb Temperature"},
+                                            {"Outdoor Air System Node", "Wind Speed"},
+                                            {"Outdoor Air System Node", "Wind Direction"}};
+    return actuators;
+  }
+
+  std::vector<std::string> Node_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
+  
   AirflowNetworkDistributionNode Node_Impl::getAirflowNetworkDistributionNode()
   {
     boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();

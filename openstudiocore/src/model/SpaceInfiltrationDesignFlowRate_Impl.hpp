@@ -42,23 +42,6 @@ namespace detail {
 
   /** SpaceInfiltrationDesignFlowRate_Impl is a SpaceLoad_Impl that is the implementation class for SpaceInfiltrationDesignFlowRate.*/
   class MODEL_API SpaceInfiltrationDesignFlowRate_Impl : public SpaceLoad_Impl {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -129,6 +112,10 @@ namespace detail {
     double velocitySquaredTermCoefficient() const;
 
     bool isVelocitySquaredTermCoefficientDefaulted() const;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */

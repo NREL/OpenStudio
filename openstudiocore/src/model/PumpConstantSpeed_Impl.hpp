@@ -47,52 +47,6 @@ namespace detail {
 
   /** PumpConstantSpeed_Impl is a StraightComponent_Impl that is the implementation class for PumpConstantSpeed.*/
   class MODEL_API PumpConstantSpeed_Impl : public StraightComponent_Impl {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
 
     PumpConstantSpeed_Impl(const IdfObject& idfObject,
@@ -260,6 +214,10 @@ namespace detail {
     double designShaftPowerPerUnitFlowRatePerUnitHead() const;
 
     bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
    protected:
 

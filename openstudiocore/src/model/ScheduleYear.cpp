@@ -281,6 +281,15 @@ namespace detail {
     }
   }
 
+  std::vector<EMSActuatorNames> ScheduleYear_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Schedule:Year", "Schedule Value"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ScheduleYear_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 ScheduleYear::ScheduleYear(const Model& model)

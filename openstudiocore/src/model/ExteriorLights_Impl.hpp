@@ -78,6 +78,9 @@ namespace detail {
 
     virtual bool setDefinition(const ExteriorLoadDefinition& definition) override;
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Getters */

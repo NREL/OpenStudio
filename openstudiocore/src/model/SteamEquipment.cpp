@@ -315,6 +315,16 @@ namespace detail {
     return true;
   }
 
+  std::vector<EMSActuatorNames> SteamEquipment_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "SteamEquipment", "District Heating Power Level" } };
+    return actuators;
+  }
+
+  std::vector<std::string> SteamEquipment_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Process Steam District Heat Design Level" };
+    return types;
+  }
+
 } // detail
 
 SteamEquipment::SteamEquipment(const SteamEquipmentDefinition& definition)
