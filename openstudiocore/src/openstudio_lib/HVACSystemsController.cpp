@@ -1126,10 +1126,10 @@ void HVACControlsController::update()
       m_hvacAirLoopControlsView->hvacOperationViewSwitcher->setView(m_systemAvailabilityDropZone);
 
       // Allow clicking on the Schedule to see it in the right column inspector
-      QObject::connect(m_systemAvailabilityDropZone,
-                       &OSDropZone::itemClicked,
-                       systemAvailabilityVectorController,
-                       &SystemAvailabilityVectorController::onDropZoneItemClicked);
+      connect(m_systemAvailabilityDropZone,
+        &OSDropZone::itemClicked,
+        systemAvailabilityVectorController,
+        &SystemAvailabilityVectorController::onDropZoneItemClicked);
 
       // Night Cycle Control
 
@@ -1280,10 +1280,10 @@ void HVACControlsController::update()
         m_scheduledSPMView->supplyAirTemperatureViewSwitcher->setView(m_supplyAirTempScheduleDropZone);
 
         // Allow clicking on the Schedule to see it in the right column inspector
-        QObject::connect(m_supplyAirTempScheduleDropZone,
-                         &OSDropZone::itemClicked,
-                         supplyAirTempScheduleVectorController,
-                         &SupplyAirTempScheduleVectorController::onDropZoneItemClicked);
+        connect(m_supplyAirTempScheduleDropZone,
+          &OSDropZone::itemClicked,
+          supplyAirTempScheduleVectorController,
+          &SupplyAirTempScheduleVectorController::onDropZoneItemClicked);
       }
       else if( _spm && ( spmFOAT = _spm->optionalCast<model::SetpointManagerFollowOutdoorAirTemperature>() ) )
       {
@@ -1371,10 +1371,10 @@ void HVACControlsController::update()
       m_hvacAirLoopControlsView->availabilityManagerViewSwitcher->setView(m_availabilityManagerDropZone);
 
       // When clicking on the drop zone item, pull it on the MainRightColumnController
-      QObject::connect(m_availabilityManagerDropZone,
-                       &OSDropZone::itemClicked,
-                       availabilityManagerObjectVectorController,
-                       &AvailabilityManagerObjectVectorController::onDropZoneItemClicked);
+      connect(m_availabilityManagerDropZone,
+        &OSDropZone::itemClicked,
+        availabilityManagerObjectVectorController,
+        &AvailabilityManagerObjectVectorController::onDropZoneItemClicked);
 
       m_hvacAirLoopControlsView->setUpdatesEnabled(true);
 
@@ -1476,10 +1476,10 @@ void HVACControlsController::update()
       m_hvacPlantLoopControlsView->availabilityManagerViewSwitcher->setView(m_availabilityManagerDropZone);
 
       // When clicking on the drop zone item, pull it on the MainRightColumnController
-      QObject::connect(m_availabilityManagerDropZone,
-                       &OSDropZone::itemClicked,
-                       availabilityManagerObjectVectorController,
-                       &AvailabilityManagerObjectVectorController::onDropZoneItemClicked);
+      connect(m_availabilityManagerDropZone,
+        &OSDropZone::itemClicked,
+        availabilityManagerObjectVectorController,
+        &AvailabilityManagerObjectVectorController::onDropZoneItemClicked);
 
       m_hvacPlantLoopControlsView->setUpdatesEnabled(true);
 
