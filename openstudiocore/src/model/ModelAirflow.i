@@ -17,7 +17,7 @@
 
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelAirflow
-  
+
 #endif
 
 // May be able to remove these includes once they are included by concrete classes
@@ -89,7 +89,7 @@ SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
   %inline {
     namespace openstudio {
       namespace model {
-        openstudio::model::AirflowNetworkZone getAirflowNetworkZone(const openstudio::model::ThermalZone& zone){
+        openstudio::model::AirflowNetworkZone getAirflowNetworkZone(openstudio::model::ThermalZone& zone){
           return zone.getAirflowNetworkZone();
         }
         boost::optional<openstudio::model::AirflowNetworkZone> getOptionalAirflowNetworkZone(const openstudio::model::ThermalZone& zone){
@@ -109,10 +109,10 @@ SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
 #if defined(SWIGCSHARP)
   //%pragma(csharp) imclassimports=%{
   %pragma(csharp) moduleimports=%{
-  
+
     using System;
     using System.Runtime.InteropServices;
-        
+
     public partial class ThermalZone : HVACComponent {
       public AirflowNetworkZone getAirflowNetworkZone()
       {
@@ -126,8 +126,8 @@ SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
       //{
       //  return OpenStudio.OpenStudioModelAirflow.removeAirflowNetworkZone(this);
       //}
-    }  
+    }
   %}
 #endif
 
-#endif 
+#endif
