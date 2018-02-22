@@ -53,6 +53,9 @@ class_names.each_index do |i|
     #dot_in += "  #{display_class_name} -> #{display_module_name};\n"
     
     File.readlines(file_name).each do |line|
+ 
+      line = line.gsub(/\/\/.*$/,'').gsub(/\/\*.*$/,'').gsub(/\*.*$/,'')
+    
       class_names.each do |other_class_name|
       
         other_module_name = class_to_module[other_class_name]
@@ -67,7 +70,7 @@ class_names.each_index do |i|
         #puts "#{module_name} #{module_index} points to #{other_module_name} #{other_module_index}"
         next if module_index > other_module_index
         
-        if /#{other_class_name}/.match(line)
+        if /\b#{other_class_name}\b/.match(line)
           dot_in += "  #{display_module_name} -> #{display_other_module_name};\n"
           report_out += "#{class_name} in module #{module_name} points to #{other_class_name} in module #{other_module_name}:\n"
           report_out += "#{line}\n\n"
