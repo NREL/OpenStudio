@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,6 +42,10 @@ namespace openstudio
   namespace model
   {
 
+    /** FloorplanJSForwardTranslator updates a FloorspaceJS JSON with content from an OpenStudio Model. This update does not
+    *   convert OpenStudio Model geometry to FloorspaceJS format.  The update is only for non-geometrical data.  For example,
+    *   a Space's name and handle may be updated in the FloorspaceJS JSON but a Space's floorprint will not be updated.
+    */
     MODEL_API class FloorplanJSForwardTranslator
     {
     public:
@@ -62,7 +66,7 @@ namespace openstudio
 
       StringStreamLogSink m_logSink;
     };
-  
+
   }
 }
 #endif //MODEL_FLOORPLANJSFORWARDTRANSLATOR_HPP

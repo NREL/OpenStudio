@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -81,9 +81,9 @@ class MODEL_API AvailabilityManagerDifferentialThermostat : public AvailabilityM
 
   void resetColdNode();
 
-  void setTemperatureDifferenceOnLimit(double temperatureDifferenceOnLimit);
+  bool setTemperatureDifferenceOnLimit(double temperatureDifferenceOnLimit);
 
-  void setTemperatureDifferenceOffLimit(double temperatureDifferenceOffLimit);
+  bool setTemperatureDifferenceOffLimit(double temperatureDifferenceOffLimit);
 
   //@}
   /** @name Other */
@@ -115,4 +115,3 @@ typedef std::vector<AvailabilityManagerDifferentialThermostat> AvailabilityManag
 } // openstudio
 
 #endif // MODEL_AVAILABILITYMANAGERDIFFERENTIALTHERMOSTAT_HPP
-

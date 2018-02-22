@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -125,9 +125,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
     {
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CoolingCapacityRatioModifierFunctionofLowTemperatureCurveName,_curve->name().get());
-    } 
+    }
   }
-  
+
   // CoolingCapacityRatioBoundaryCurveName
 
   if( boost::optional<model::Curve> curve = modelObject.coolingCapacityRatioBoundaryCurve() )
@@ -139,7 +139,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // CoolingCapacityRatioModifierFunctionofHighTemperatureCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.coolingCapacityRatioModifierFunctionofHighTemperatureCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -147,7 +147,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CoolingCapacityRatioModifierFunctionofHighTemperatureCurveName,_curve->name().get());
     }
   }
-  
+
   // CoolingEnergyInputRatioModifierFunctionofLowTemperatureCurveName
 
   if( boost::optional<model::Curve> curve = modelObject.coolingEnergyInputRatioModifierFunctionofLowTemperatureCurve() )
@@ -189,7 +189,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // CoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.coolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -197,9 +197,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CoolingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurveName,_curve->name().get());
     }
   }
-  
+
   // CoolingCombinationRatioCorrectionFactorCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.coolingCombinationRatioCorrectionFactorCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -209,17 +209,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // CoolingPartLoadFractionCorrelationCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.coolingPartLoadFractionCorrelationCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
     {
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CoolingPartLoadFractionCorrelationCurveName,_curve->name().get());
     }
-  }  
+  }
 
   // RatedTotalHeatingCapacity
-  
+
   if( modelObject.isRatedTotalHeatingCapacityAutosized() )
   {
     idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::GrossRatedHeatingCapacity,"Autosize");
@@ -235,23 +235,23 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::RatedHeatingCapacitySizingRatio,value.get());
   }
-  
+
   // RatedHeatingCOP
 
   if( (value = modelObject.ratedHeatingCOP()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedHeatingCOP,value.get());
   }
-  
+
   // MinimumOutdoorTemperatureinHeatingMode
-  
+
   if( (value = modelObject.minimumOutdoorTemperatureinHeatingMode()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumOutdoorTemperatureinHeatingMode,value.get());
   }
-  
+
   // MaximumOutdoorTemperatureinHeatingMode
-  
+
   if( (value = modelObject.maximumOutdoorTemperatureinHeatingMode()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorTemperatureinHeatingMode,value.get());
@@ -266,7 +266,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatingCapacityRatioModifierFunctionofLowTemperatureCurveName,_curve->name().get());
     }
   }
-  
+
   // HeatingCapacityRatioBoundaryCurveName
 
   if( boost::optional<model::Curve> curve = modelObject.heatingCapacityRatioBoundaryCurve() )
@@ -276,9 +276,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatingCapacityRatioBoundaryCurveName,_curve->name().get());
     }
   }
-  
+
   // HeatingCapacityRatioModifierFunctionofHighTemperatureCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.heatingCapacityRatioModifierFunctionofHighTemperatureCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -288,7 +288,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // HeatingEnergyInputRatioModifierFunctionofLowTemperatureCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.heatingEnergyInputRatioModifierFunctionofLowTemperatureCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -305,10 +305,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
     {
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatingEnergyInputRatioBoundaryCurveName,_curve->name().get());
     }
-  }  
+  }
 
   // HeatingEnergyInputRatioModifierFunctionofHighTemperatureCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.heatingEnergyInputRatioModifierFunctionofHighTemperatureCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -335,7 +335,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // HeatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.heatingEnergyInputRatioModifierFunctionofHighPartLoadRatioCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -345,7 +345,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // HeatingCombinationRatioCorrectionFactorCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.heatingCombinationRatioCorrectionFactorCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -386,7 +386,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // ThermostatPriorityScheduleName
-  
+
   if( boost::optional<model::Schedule> schedule = modelObject.thermostatPrioritySchedule() )
   {
     if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
@@ -396,7 +396,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // HeatPumpWasteHeatRecovery
-  
+
   if( modelObject.heatPumpWasteHeatRecovery() )
   {
     idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatPumpWasteHeatRecovery,"Yes");
@@ -405,9 +405,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   {
     idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatPumpWasteHeatRecovery,"No");
   }
-  
+
   // EquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode
-  
+
   if( (value = modelObject.equivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::EquivalentPipingLengthusedforPipingCorrectionFactorinCoolingMode,value.get());
@@ -419,9 +419,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::VerticalHeightusedforPipingCorrectionFactor,value.get());
   }
-  
+
   // PipingCorrectionFactorforLengthinCoolingModeCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.pipingCorrectionFactorforLengthinCoolingModeCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -431,21 +431,21 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // PipingCorrectionFactorforHeightinCoolingModeCoefficient
-  
+
   if( (value = modelObject.pipingCorrectionFactorforHeightinCoolingModeCoefficient()) )
   {
-    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::PipingCorrectionFactorforHeightinCoolingModeCoefficient,value.get()); 
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::PipingCorrectionFactorforHeightinCoolingModeCoefficient,value.get());
   }
 
   // EquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode
-  
+
   if( (value = modelObject.equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::EquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode,value.get());
   }
-  
+
   // PipingCorrectionFactorforLengthinHeatingModeCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.pipingCorrectionFactorforLengthinHeatingModeCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -455,7 +455,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // PipingCorrectionFactorforHeightinHeatingModeCoefficient
-  
+
   if( (value = modelObject.pipingCorrectionFactorforHeightinHeatingModeCoefficient()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::PipingCorrectionFactorforHeightinHeatingModeCoefficient,value.get());
@@ -467,24 +467,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::CrankcaseHeaterPowerperCompressor,value.get());
   }
-  
+
   // NumberofCompressors
-  
+
   {
     int number = modelObject.numberofCompressors();
 
     idfObject.setUnsigned(AirConditioner_VariableRefrigerantFlowFields::NumberofCompressors,(unsigned)number);
   }
-  
+
   // RatioofCompressorSizetoTotalCompressorCapacity
-  
+
   if( (value = modelObject.ratioofCompressorSizetoTotalCompressorCapacity()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::RatioofCompressorSizetoTotalCompressorCapacity,value.get());
   }
-  
+
   // MaximumOutdoorDrybulbTemperatureforCrankcaseHeater
-  
+
   if( (value = modelObject.maximumOutdoorDrybulbTemperatureforCrankcaseHeater()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeater,value.get());
@@ -496,16 +496,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   {
     idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::DefrostStrategy,s.get());
   }
-  
+
   // DefrostControl
-  
+
   if( (s = modelObject.defrostControl()) )
   {
     idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::DefrostControl,s.get());
   }
-  
+
   // DefrostEnergyInputRatioModifierFunctionofTemperatureCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.defrostEnergyInputRatioModifierFunctionofTemperatureCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -533,12 +533,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // MaximumOutdoorDrybulbTemperatureforDefrostOperation
-  
+
   if( (value = modelObject.maximumOutdoorDrybulbTemperatureforDefrostOperation()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorDrybulbTemperatureforDefrostOperation,value.get());
   }
-  
+
   // CondenserInletNodeName
 
   if( boost::optional<model::ModelObject> mo = modelObject.inletModelObject() )
@@ -548,7 +548,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserInletNodeName,_mo->name().get());
     }
   }
-  
+
   // CondenserOutletNodeName
 
   if( boost::optional<model::ModelObject> mo = modelObject.outletModelObject() )
@@ -558,9 +558,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserOutletNodeName,_mo->name().get());
     }
   }
-  
+
   // WaterCondenserVolumeFlowRate
-  
+
   if( modelObject.isWaterCondenserVolumeFlowRateAutosized() )
   {
     idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::WaterCondenserVolumeFlowRate,"Autosize");
@@ -589,7 +589,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // EvaporativeCondenserPumpRatedPowerConsumption
-  
+
   if( modelObject.isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() )
   {
     idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::EvaporativeCondenserPumpRatedPowerConsumption,"Autosize");
@@ -600,12 +600,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // BasinHeaterCapacity
-  
+
   if( (value = modelObject.basinHeaterCapacity()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::BasinHeaterCapacity,value.get());
   }
-  
+
   // BasinHeaterSetpointTemperature
 
   if( (value = modelObject.basinHeaterSetpointTemperature()) )
@@ -631,21 +631,21 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // MinimumOutdoorTemperatureinHeatRecoveryMode
-  
+
   if( (value = modelObject.minimumOutdoorTemperatureinHeatRecoveryMode()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MinimumOutdoorTemperatureinHeatRecoveryMode,value.get());
   }
 
   // MaximumOutdoorTemperatureinHeatRecoveryMode
-  
+
   if( (value = modelObject.maximumOutdoorTemperatureinHeatingMode()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorTemperatureinHeatRecoveryMode,value.get());
   }
 
   // HeatRecoveryCoolingCapacityModifierCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.heatRecoveryCoolingCapacityModifierCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -655,21 +655,21 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // InitialHeatRecoveryCoolingCapacityFraction
-  
+
   if( (value = modelObject.initialHeatRecoveryCoolingEnergyFraction()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryCoolingCapacityFraction,value.get());
   }
 
   // HeatRecoveryCoolingCapacityTimeConstant
-  
+
   if( (value = modelObject.heatRecoveryCoolingCapacityTimeConstant()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryCoolingCapacityTimeConstant,value.get());
   }
 
   // HeatRecoveryCoolingEnergyModifierCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.heatRecoveryCoolingEnergyModifierCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -690,10 +690,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   if( (value = modelObject.heatRecoveryCoolingEnergyTimeConstant()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryCoolingEnergyTimeConstant,value.get());
-  }  
+  }
 
   // HeatRecoveryHeatingCapacityModifierCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.heatRecoveryHeatingCapacityModifierCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -703,7 +703,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // InitialHeatRecoveryHeatingCapacityFraction
-  
+
   if( (value = modelObject.initialHeatRecoveryHeatingCapacityFraction()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryHeatingCapacityFraction,value.get());
@@ -717,7 +717,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // HeatRecoveryHeatingEnergyModifierCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.heatRecoveryHeatingEnergyModifierCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
@@ -741,7 +741,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // Terminal Unit List
-  
+
   IdfObject _zoneTerminalUnitList(IddObjectType::ZoneTerminalUnitList);
 
   std::string terminalUnitListName = modelObject.name().get() + " Terminal List";
@@ -759,7 +759,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
     boost::optional<IdfObject> _terminal = translateAndMapModelObject(terminal);
 
     OS_ASSERT(_terminal);
-     
+
     IdfExtensibleGroup eg = _zoneTerminalUnitList.pushExtensibleGroup();
 
     eg.setString(ZoneTerminalUnitListExtensibleFields::ZoneTerminalUnitName,_terminal->name().get());
@@ -774,7 +774,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   else
   {
     idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserType,"AirCooled");
-  }  
+  }
 
   // CondenserInletNodeName
 
@@ -810,7 +810,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
   else if( (value = modelObject.waterCondenserVolumeFlowRate()) )
   {
-    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::WaterCondenserVolumeFlowRate,value.get()); 
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::WaterCondenserVolumeFlowRate,value.get());
   }
 
   // EvaporativeCondenserEffectiveness
@@ -854,7 +854,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   if( (value = modelObject.basinHeaterSetpointTemperature()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::BasinHeaterSetpointTemperature,value.get());
-  } 
+  }
 
   // BasinHeaterOperatingScheduleName
 
@@ -867,7 +867,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // FuelType
-  
+
   if( (s = modelObject.fuelType()) )
   {
     idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::FuelType,s.get());
@@ -894,7 +894,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
     {
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryCoolingCapacityModifierCurveName,_curve->name().get());
-    } 
+    }
   }
 
   // InitialHeatRecoveryCoolingCapacityFraction
@@ -918,18 +918,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
     {
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryCoolingEnergyModifierCurveName,_curve->name().get());
-    } 
+    }
   }
 
   // InitialHeatRecoveryCoolingEnergyFraction
-  
+
   if( (value = modelObject.initialHeatRecoveryCoolingEnergyFraction()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryCoolingEnergyFraction,value.get());
   }
 
   // HeatRecoveryCoolingEnergyTimeConstant
-  
+
   if( (value = modelObject.heatRecoveryCoolingEnergyTimeConstant()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryCoolingEnergyTimeConstant,value.get());
@@ -942,39 +942,39 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
     {
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryHeatingCapacityModifierCurveName,_curve->name().get());
-    } 
+    }
   }
-  
+
   // InitialHeatRecoveryHeatingCapacityFraction
 
   if( (value = modelObject.initialHeatRecoveryHeatingCapacityFraction()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryHeatingCapacityFraction,value.get());
   }
-  
+
   // HeatRecoveryHeatingCapacityTimeConstant
 
   if( (value = modelObject.heatRecoveryHeatingCapacityTimeConstant()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryHeatingCapacityTimeConstant,value.get());
   }
-  
+
   // HeatRecoveryHeatingEnergyModifierCurveName
-  
+
   if( boost::optional<model::Curve> curve = modelObject.heatRecoveryHeatingEnergyModifierCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
     {
       idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::HeatRecoveryHeatingEnergyModifierCurveName,_curve->name().get());
-    } 
+    }
   }
 
   // InitialHeatRecoveryHeatingEnergyFraction
-  
+
   if( (value = modelObject.initialHeatRecoveryHeatingEnergyFraction()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::InitialHeatRecoveryHeatingEnergyFraction,value.get());
-  } 
+  }
 
   // HeatRecoveryHeatingEnergyTimeConstant
 

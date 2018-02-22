@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -95,7 +95,17 @@ boost::optional<ElectricLoadCenterDistribution> Generator_Impl::electricLoadCent
   }
   return boost::none;
 }
+/*
+std::vector<EMSActuatorNames> Generator_Impl::emsActuatorNames() const {
+  std::vector<EMSActuatorNames> actuators{{"On-Site Generator Control", "Requested Power"}};
+  return actuators;
+}
 
+std::vector<std::string> Generator_Impl::emsInternalVariableNames() const {
+  std::vector<std::string> types{"Generator Nominal Maximum Power",
+                                 "Generator Nominal Thermal To Electric Ratio"};
+  return types;
+} */
 } // detail
 
 Generator::Generator(IddObjectType type,const Model& model)

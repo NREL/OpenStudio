@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -29,6 +29,8 @@
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVACZoneSplitter.hpp"
 #include "AirLoopHVACZoneSplitter_Impl.hpp"
+#include "AirflowNetworkDistributionNode.hpp"
+#include "AirflowNetworkDistributionNode_Impl.hpp"
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
 #include "Node.hpp"
@@ -78,12 +80,23 @@ namespace detail{
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      // Not Appropriate: No variables available
     }
     return result;
   }
 
   IddObjectType AirLoopHVACZoneSplitter_Impl::iddObjectType() const {
     return AirLoopHVACZoneSplitter::iddObjectType();
+  }
+
+  std::vector<ModelObject> AirLoopHVACZoneSplitter_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+
+    return result;
   }
 
   std::vector<openstudio::IdfObject> AirLoopHVACZoneSplitter_Impl::remove()
@@ -168,6 +181,28 @@ namespace detail{
     return zones;
   }
 
+  AirflowNetworkDistributionNode AirLoopHVACZoneSplitter_Impl::getAirflowNetworkDistributionNode()
+  {
+    boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkDistributionNode(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkDistributionNode> AirLoopHVACZoneSplitter_Impl::airflowNetworkDistributionNode() const
+  {
+    std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
+    auto count = myAFNItems.size();
+    if (count == 1) {
+      return myAFNItems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork DistributionNode attached, returning first.");
+      return myAFNItems[0];
+    }
+    return boost::none;
+  }
+
 } // detail
 
 AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(const Model& model)
@@ -213,6 +248,16 @@ std::vector<ThermalZone> AirLoopHVACZoneSplitter::thermalZones()
 void AirLoopHVACZoneSplitter::disconnect()
 {
   return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->disconnect();
+}
+
+AirflowNetworkDistributionNode AirLoopHVACZoneSplitter::getAirflowNetworkDistributionNode()
+{
+  return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->getAirflowNetworkDistributionNode();
+}
+
+boost::optional<AirflowNetworkDistributionNode> AirLoopHVACZoneSplitter::airflowNetworkDistributionNode() const
+{
+  return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->airflowNetworkDistributionNode();
 }
 
 } // model

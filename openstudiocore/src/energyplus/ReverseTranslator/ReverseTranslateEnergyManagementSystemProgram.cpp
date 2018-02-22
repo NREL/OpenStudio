@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -60,7 +60,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
 
   //make sure all other objects are translated first
   for (const WorkspaceObject& workspaceObject : m_workspace.objects()) {
-    if ((workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_Program) 
+    if ((workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_Program)
       && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_Subroutine)
       && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_ProgramCallingManager)
       && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_MeteredOutputVariable)

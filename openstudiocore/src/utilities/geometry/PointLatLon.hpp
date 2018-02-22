@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,11 +47,11 @@ namespace openstudio{
   class Point3d;
 
   /* PointLatLon represents a point on the Earth's (reference ellipsoid) surface, an optional height parameter is available
-  ** for points above or below the geoid surface.  Currently only the WGS84 ellipsoid is supported, 
-  ** other systems may be added in the future. When one PointLatLon is taken as an origin, it can be used to 
+  ** for points above or below the geoid surface.  Currently only the WGS84 ellipsoid is supported,
+  ** other systems may be added in the future. When one PointLatLon is taken as an origin, it can be used to
   ** translate other PointLatLon's into either a local Cartesian coordinate system (centered on the origin, with z up and y oriented North)
-  ** or the UTM (Universal Transverse Mercator) zone which contains the origin. The origin PointLatLon can be used to 
-  ** translate Point3d's in either local Cartesian or UTM coordinate systems back to lat/lon.  
+  ** or the UTM (Universal Transverse Mercator) zone which contains the origin. The origin PointLatLon can be used to
+  ** translate Point3d's in either local Cartesian or UTM coordinate systems back to lat/lon.
   */
   class UTILITIES_API PointLatLon{
   public:
@@ -126,6 +126,10 @@ namespace openstudio{
 
   // vector of PointLatLon
   typedef std::vector<PointLatLon> PointLatLonVector;
+
+  /// compute distance in meters between two points on the Earth's surface
+  /// lat and lon are specified in degrees
+  UTILITIES_API double getDistanceLatLon(double lat1, double lon1, double lat2, double lon2);
 
 } // openstudio
 

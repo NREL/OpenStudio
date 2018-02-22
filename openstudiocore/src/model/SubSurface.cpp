@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -56,6 +56,18 @@
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 #include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
+#include "AirflowNetworkSurface.hpp"
+#include "AirflowNetworkSurface_Impl.hpp"
+#include "AirflowNetworkDetailedOpening.hpp"
+#include "AirflowNetworkDetailedOpening_Impl.hpp"
+#include "AirflowNetworkCrack.hpp"
+#include "AirflowNetworkCrack_Impl.hpp"
+#include "AirflowNetworkSimpleOpening.hpp"
+#include "AirflowNetworkSimpleOpening_Impl.hpp"
+#include "AirflowNetworkEffectiveLeakageArea.hpp"
+#include "AirflowNetworkEffectiveLeakageArea_Impl.hpp"
+#include "AirflowNetworkHorizontalOpening.hpp"
+#include "AirflowNetworkHorizontalOpening_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -122,6 +134,9 @@ namespace detail {
     if (daylightingDeviceShelf){
       result.push_back(*daylightingDeviceShelf);
     }
+    std::vector<AirflowNetworkSurface> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+
     return result;
   }
 
@@ -135,12 +150,21 @@ namespace detail {
     return ParentObject_Impl::remove();
   }
 
+  ModelObject SubSurface_Impl::clone(Model model) const
+  {
+    return ParentObject_Impl::clone(model);
+  }
+
   const std::vector<std::string>& SubSurface_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
     if (result.empty()){
       result.push_back("Surface Inside Face Temperature");
       result.push_back("Surface Outside Face Temperature");
+      result.push_back("Daylighting Window Reference Point 1 View Luminance");
+      result.push_back("Daylighting Window Reference Point 1 Illuminance");
+      result.push_back("Daylighting Window Reference Point 2 View Luminance");
+      result.push_back("Daylighting Window Reference Point 2 Illuminance");
     }
     return result;
   }
@@ -1092,6 +1116,43 @@ namespace detail {
     return true;
   }
 
+  AirflowNetworkSurface SubSurface_Impl::getAirflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage)
+  {
+    boost::optional<AirflowNetworkSurface> result = airflowNetworkSurface();
+    if (result){
+      boost::optional<AirflowNetworkComponent> leakageComponent = result->leakageComponent();
+      if (leakageComponent){
+        if (leakageComponent->handle() == surfaceAirflowLeakage.handle()){
+          return result.get();
+        } else{
+          result->remove();
+        }
+      } else{
+        result->remove();
+      }
+    }
+
+    return AirflowNetworkSurface(this->model(), surfaceAirflowLeakage.handle(), this->handle());
+  }
+
+  boost::optional<AirflowNetworkSurface> SubSurface_Impl::airflowNetworkSurface() const
+  {
+    std::vector<AirflowNetworkSurface> myAFNSurfs = getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+    boost::optional<SubSurface> other = adjacentSubSurface();
+    if (other) {
+      std::vector<AirflowNetworkSurface> adjAFNSurfs = other.get().getImpl<detail::SubSurface_Impl>()->getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
+      myAFNSurfs.insert(myAFNSurfs.end(), adjAFNSurfs.begin(), adjAFNSurfs.end());
+    }
+    auto count = myAFNSurfs.size();
+    if (count == 1) {
+      return myAFNSurfs[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork Surface attached, returning first.");
+      return myAFNSurfs[0];
+    }
+    return boost::none;
+  }
+
 } // detail
 
 SubSurface::SubSurface(const std::vector<Point3d>& vertices, const Model& model)
@@ -1367,6 +1428,35 @@ std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point
   return result;
 }
 
+AirflowNetworkSurface SubSurface::getAirflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage)
+{
+  return getImpl<detail::SubSurface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
+}
+
+AirflowNetworkSurface SubSurface::getAirflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage)
+{
+  return getImpl<detail::SubSurface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
+}
+
+AirflowNetworkSurface SubSurface::getAirflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage)
+{
+  return getImpl<detail::SubSurface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
+}
+
+AirflowNetworkSurface SubSurface::getAirflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage)
+{
+  return getImpl<detail::SubSurface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
+}
+
+AirflowNetworkSurface SubSurface::getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage)
+{
+  return getImpl<detail::SubSurface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
+}
+
+boost::optional<AirflowNetworkSurface> SubSurface::airflowNetworkSurface() const
+{
+  return getImpl<detail::SubSurface_Impl>()->airflowNetworkSurface();
+}
 
 } // model
 } // openstudio

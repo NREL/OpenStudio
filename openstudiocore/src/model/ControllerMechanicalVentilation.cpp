@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -72,7 +72,9 @@ namespace detail {
   const std::vector<std::string>& ControllerMechanicalVentilation_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: no specific output
     }
     return result;
   }
@@ -130,8 +132,8 @@ namespace detail {
     return result;
   }
 
-  void ControllerMechanicalVentilation_Impl::setDemandControlledVentilation(bool demandControlledVentilation) {
-    setBooleanFieldValue(OS_Controller_MechanicalVentilationFields::DemandControlledVentilation, demandControlledVentilation);
+  bool ControllerMechanicalVentilation_Impl::setDemandControlledVentilation(bool demandControlledVentilation) {
+    return setBooleanFieldValue(OS_Controller_MechanicalVentilationFields::DemandControlledVentilation, demandControlledVentilation);
     //if (demandControlledVentilation) {
     //  setBooleanFieldValue(OS_Controller_MechanicalVentilationFields::DemandControlledVentilation, true);
     //} else {
@@ -247,8 +249,13 @@ bool ControllerMechanicalVentilation::setAvailabilitySchedule(Schedule& schedule
   return getImpl<detail::ControllerMechanicalVentilation_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-void ControllerMechanicalVentilation::setDemandControlledVentilation(bool demandControlledVentilation) {
-  getImpl<detail::ControllerMechanicalVentilation_Impl>()->setDemandControlledVentilation(demandControlledVentilation);
+bool ControllerMechanicalVentilation::setDemandControlledVentilation(bool demandControlledVentilation) {
+  return getImpl<detail::ControllerMechanicalVentilation_Impl>()->setDemandControlledVentilation(demandControlledVentilation);
+}
+
+void ControllerMechanicalVentilation::setDemandControlledVentilationNoFail(bool demandControlledVentilation) {
+  bool result = getImpl<detail::ControllerMechanicalVentilation_Impl>()->setDemandControlledVentilation(demandControlledVentilation);
+  OS_ASSERT(result);
 }
 
 void ControllerMechanicalVentilation::resetDemandControlledVentilation() {

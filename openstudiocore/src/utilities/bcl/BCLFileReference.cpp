@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -113,7 +113,7 @@ namespace openstudio{
   {
     m_checksum = checksum;
   }
-  
+
   void BCLFileReference::setSoftwareProgram(const std::string& softwareProgram)
   {
     m_softwareProgram = softwareProgram;
@@ -162,7 +162,7 @@ namespace openstudio{
       QDomElement softwareProgramVersionElement = doc.createElement("identifier");
       versionElement.appendChild(softwareProgramVersionElement);
       softwareProgramVersionElement.appendChild(doc.createTextNode(toQString(m_softwareProgramVersion)));
-    
+
       if (m_minCompatibleVersion){
         QDomElement minCompatibleVersionElement = doc.createElement("min_compatible");
         versionElement.appendChild(minCompatibleVersionElement);
@@ -210,7 +210,7 @@ namespace openstudio{
     QDomElement element = doc.createElement(QString("File"));
     doc.appendChild(element);
     file.writeValues(doc, element);
-    
+
     QString str;
     QTextStream qts(&str);
     doc.save(qts, 2);

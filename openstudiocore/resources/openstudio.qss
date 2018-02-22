@@ -169,7 +169,7 @@ QSplitter::handle::horizontal {
   width: 1;
 }
 
-QToolButton { 
+QToolButton {
   border: none;
 }
 

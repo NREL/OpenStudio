@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,18 +40,7 @@ namespace detail {
 
 /** ControllerWaterCoil_Impl is a HVACComponent_Impl that is the implementation class for ControllerWaterCoil.*/
 class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
-  
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
  public:
 
   /** @name Constructors and Destructors */
@@ -97,6 +86,14 @@ class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
 
   bool isMinimumActuatedFlowDefaulted() const;
 
+  boost::optional<double> autosizedControllerConvergenceTolerance() const ;
+
+  boost::optional<double> autosizedMaximumActuatedFlow() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
   //@}
   /** @name Setters */
   //@{
@@ -113,19 +110,19 @@ class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
 
   void resetActuatorVariable();
 
-  void setControllerConvergenceTolerance(boost::optional<double> controllerConvergenceTolerance);
+  bool setControllerConvergenceTolerance(boost::optional<double> controllerConvergenceTolerance);
 
   void resetControllerConvergenceTolerance();
 
   void autosizeControllerConvergenceTolerance();
 
-  void setMaximumActuatedFlow(boost::optional<double> maximumActuatedFlow);
+  bool setMaximumActuatedFlow(boost::optional<double> maximumActuatedFlow);
 
   void resetMaximumActuatedFlow();
 
   void autosizeMaximumActuatedFlow();
 
-  void setMinimumActuatedFlow(double minimumActuatedFlow);
+  bool setMinimumActuatedFlow(double minimumActuatedFlow);
 
   void resetMinimumActuatedFlow();
 
@@ -135,11 +132,11 @@ class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
 
   boost::optional<Node> actuatorNode() const;
 
-  void setSensorNode( Node & node );
+  bool setSensorNode( Node & node );
 
-  void setActuatorNode( Node & node );
+  bool setActuatorNode( Node & node );
 
-  void setWaterCoil( const HVACComponent & comp );
+  bool setWaterCoil( const HVACComponent & comp );
 
   boost::optional<HVACComponent> waterCoil() const;
 
@@ -157,4 +154,3 @@ class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
 } // openstudio
 
 #endif // MODEL_CONTROLLERWATERCOIL_IMPL_HPP
-

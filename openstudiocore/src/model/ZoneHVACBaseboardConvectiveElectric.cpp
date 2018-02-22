@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -70,7 +70,12 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACBaseboardConvectiveElectric_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Baseboard Total Heating Rate");
+      result.push_back("Baseboard Total Heating Energy");
+      result.push_back("Baseboard Electric Energy");
+      result.push_back("Baseboard Electric Power");
     }
     return result;
   }
@@ -142,12 +147,13 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACBaseboardConvectiveElectric_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
+  bool ZoneHVACBaseboardConvectiveElectric_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
     bool result(false);
     if (nominalCapacity) {
       result = setDouble(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::NominalCapacity, nominalCapacity.get());
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool ZoneHVACBaseboardConvectiveElectric_Impl::setNominalCapacity(const OSOptionalQuantity& nominalCapacity) {
@@ -282,6 +288,34 @@ namespace detail {
     }
   }
 
+  boost::optional<double> ZoneHVACBaseboardConvectiveElectric_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+  }
+
+  void ZoneHVACBaseboardConvectiveElectric_Impl::autosize() {
+    autosizeNominalCapacity();
+  }
+
+  void ZoneHVACBaseboardConvectiveElectric_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+  }
+
+  std::vector<EMSActuatorNames> ZoneHVACBaseboardConvectiveElectric_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "ZoneBaseboard:OutdoorTemperatureControlled", "Power Level" } };
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneHVACBaseboardConvectiveElectric_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Simple Zone Baseboard Capacity At Low Temperature",
+                                    "Simple Zone Baseboard Capacity At High Temperature"};
+    return types;
+  }
+
 } // detail
 
 ZoneHVACBaseboardConvectiveElectric::ZoneHVACBaseboardConvectiveElectric(const Model& model)
@@ -334,8 +368,8 @@ bool ZoneHVACBaseboardConvectiveElectric::setAvailabilitySchedule(Schedule& sche
   return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-void ZoneHVACBaseboardConvectiveElectric::setNominalCapacity(double nominalCapacity) {
-  getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->setNominalCapacity(nominalCapacity);
+bool ZoneHVACBaseboardConvectiveElectric::setNominalCapacity(double nominalCapacity) {
+  return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->setNominalCapacity(nominalCapacity);
 }
 
 bool ZoneHVACBaseboardConvectiveElectric::setNominalCapacity(const Quantity& nominalCapacity) {
@@ -379,6 +413,9 @@ ZoneHVACBaseboardConvectiveElectric::ZoneHVACBaseboardConvectiveElectric(std::sh
 {}
 /// @endcond
 
+  boost::optional<double> ZoneHVACBaseboardConvectiveElectric::autosizedNominalCapacity() const {
+    return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->autosizedNominalCapacity();
+  }
+
 } // model
 } // openstudio
-

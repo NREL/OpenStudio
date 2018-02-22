@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,22 +38,13 @@ class ModelObject;
 class AirLoopHVAC;
 class ControllerOutdoorAir;
 class Node;
+class AirflowNetworkDistributionNode;
 
 namespace detail {
 
   // derive AirLoopHVACOutdoorAirSystem_Impl from ModelObject_Impl to override virtual methods
   class MODEL_API AirLoopHVACOutdoorAirSystem_Impl : public HVACComponent_Impl{
-    
-
-    
-    
-    
-    
-    
-    
-    
    public:
-
     // constructor
     AirLoopHVACOutdoorAirSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
@@ -93,7 +84,7 @@ namespace detail {
 
     ControllerOutdoorAir getControllerOutdoorAir() const;
 
-    void setControllerOutdoorAir(const ControllerOutdoorAir& controllerOutdoorAir );
+    bool setControllerOutdoorAir(const ControllerOutdoorAir& controllerOutdoorAir );
 
     virtual ModelObject clone(Model model) const override;
 
@@ -115,6 +106,10 @@ namespace detail {
     boost::optional<ModelObject> component(openstudio::Handle handle);
     boost::optional<ModelObject> oaComponent(openstudio::Handle handle);
     boost::optional<ModelObject> reliefComponent(openstudio::Handle handle);
+
+    AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
+
+    boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
    private:
     REGISTER_LOGGER("openstudio.model.AirLoopHVACOutdoorAirSystem");

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -37,18 +37,18 @@ namespace model {
 
 namespace detail {
 
-class MODEL_API ConnectorMixer_Impl : public Mixer_Impl 
+class MODEL_API ConnectorMixer_Impl : public Mixer_Impl
 {
  public:
 
   ConnectorMixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  ConnectorMixer_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                            Model_Impl* model, 
+  ConnectorMixer_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                            Model_Impl* model,
                             bool keepHandle);
 
-  ConnectorMixer_Impl(const ConnectorMixer_Impl& other, 
-                            Model_Impl* model, 
+  ConnectorMixer_Impl(const ConnectorMixer_Impl& other,
+                            Model_Impl* model,
                             bool keepHandle);
 
   virtual ~ConnectorMixer_Impl();
@@ -62,7 +62,7 @@ class MODEL_API ConnectorMixer_Impl : public Mixer_Impl
   unsigned outletPort() const override;
 
   unsigned inletPort(unsigned branchIndex) const override;
-  
+
   unsigned nextInletPort() const override;
 
   virtual bool addToNode(Node & node) override;

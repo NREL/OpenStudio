@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -79,7 +79,7 @@ namespace bimserver {
       void processIFCList(QStringList ifcList);
       /// process success cases for createProject, checkInIFC, and login
       void processSucessCases(QString sucessCase);
-      /// process all failure cases if BIMserver outputs an exception. Print it 
+      /// process all failure cases if BIMserver outputs an exception. Print it
       void processFailureCases(QString failureCase);
       /// OSM string is retrieved
       void processOSMRetrieved(QString osmString);

@@ -1,31 +1,31 @@
 # - Find EnergyPlus, the main assumption of this finder is that EnergyPlus
-#   is installed in the default location, or is pointed to by environment 
+#   is installed in the default location, or is pointed to by environment
 #   variable ENERGYPLUSDIR.
 #
 # We anticipate energyPlus builds from the official release as well as internal
-# pre-release and post-release bug fixes.  The official release is installed in 
+# pre-release and post-release bug fixes.  The official release is installed in
 # 'EnergyPlusV${Major}-${Minor}-${Patch}', the internal releases are installed in
-# 'EnergyPlusV${Major}-${Minor}-${Patch}-${Build}'.  This finder assumes that 
-# internal releases of the same major/minor/patch versions are prefered to official 
+# 'EnergyPlusV${Major}-${Minor}-${Patch}-${Build}'.  This finder assumes that
+# internal releases of the same major/minor/patch versions are prefered to official
 # release builds.
 #
 # The module defines the following variables:
 #  ENERGYPLUS_FOUND - was a compatible version of EnergyPlus found
 #  ENERGYPLUS_EXE - path to the EnergyPlus executable
-#  ENERGYPLUS_IDD - path to the idd 
-#  ENERGYPLUS_WEATHER_DIR - path to the weather dir 
+#  ENERGYPLUS_IDD - path to the idd
+#  ENERGYPLUS_WEATHER_DIR - path to the weather dir
 #
 # Example usage:
 #  find_package(EnergyPlus 5.0.0) # find release or internal versions, prefers internal builds
 #  find_package(EnergyPlus 5.0.0.15) # find only internal versions of specific build
-#  find_package(EnergyPlus 5.0.0 EXACT) # find only release 
+#  find_package(EnergyPlus 5.0.0 EXACT) # find only release
 #  find_package(EnergyPlus 5.0.0.15 EXACT) # find only internal version of specific build
 
 # Update for 8.2.0 and above:
 # As of version 8.2.0, EnergyPlus has a build SHA instead of a possible fourth digit in the version string.
 # Finding a specific build with the syntax find_package(EnergyPlus 5.0.0.15) is meaningless for these versions.
-# Instead this module will consider the variable ENERGYPLUS_BUILD_SHA, and if set it will only succeed in 
-# finding EnergyPlus if a version of EnergyPlus with that SHA has been found.  This behavior is independent of 
+# Instead this module will consider the variable ENERGYPLUS_BUILD_SHA, and if set it will only succeed in
+# finding EnergyPlus if a version of EnergyPlus with that SHA has been found.  This behavior is independent of
 # the keyword "EXACT" in the find_package signature. In other words having ENERGYPLUS_BUILD_SHA defined implies EXACT.
 
 #=============================================================================
@@ -73,10 +73,10 @@ foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
     string(REGEX MATCH "[0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z]" BUILD_SHA "${BUILD_SHA_LINE}")
     set(ENERGYPLUS_GE_8_2_0 true)
   endif()
- 
+
   # set is match false
   set(IS_MATCH FALSE)
-  
+
   # if a build SHA is provided then assume we need an exact match
   if(ENERGYPLUS_GE_8_2_0 AND ENERGYPLUS_BUILD_SHA)
     if(${VERSION} VERSION_EQUAL ${EnergyPlus_FIND_VERSION})
@@ -99,7 +99,7 @@ foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
       endif()
     endif()
   endif()
-  
+
   # if match, try to find program and other variables
   if(IS_MATCH)
     if(${VERSION_MAJOR_MINOR} VERSION_LESS "8.0.0")
@@ -120,7 +120,7 @@ foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
   if(IS_MATCH AND (EXISTS "${ENERGYPLUS_EXE}") AND (EXISTS "${ENERGYPLUS_IDD}") AND (EXISTS "${ENERGYPLUS_WEATHER_DIR}"))
     break()
   endif()
-  
+
 endforeach()
 
 mark_as_advanced(
@@ -132,7 +132,7 @@ mark_as_advanced(
 # These checks may seem redundant to above, but here we add log messages.
 # We also check that found version still matches what is requested.
 # This is important because found version is cached and may "stick" even after the requested version changes in the project.
-# find_package_handle_standard_args takes this into account except it doesn't know that E+ is not backwards 
+# find_package_handle_standard_args takes this into account except it doesn't know that E+ is not backwards
 # compatible and it also doesn't know about EnergyPlus build SHA.
 if(ENERGYPLUS_GE_8_2_0 AND ENERGYPLUS_BUILD_SHA)
   if(NOT (ENERGYPLUS_BUILD_SHA STREQUAL BUILD_SHA))

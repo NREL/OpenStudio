@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -50,7 +50,7 @@ class AirLoopHVACUnitaryHeatPumpAirToAir_Impl;
 
 /** AirLoopHVACUnitaryHeatPumpAirToAir is a StraightComponent that wraps the
  *  OpenStudio IDD object 'OS:AirLoopHVAC:UnitaryHeatPump:AirToAir'. */
-class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent 
+class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
 {
   public:
   /** @name Constructors and Destructors */
@@ -75,9 +75,9 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
 
   /** @name Getters */
   //@{
-  
+
   Schedule availabilitySchedule() const;
-  
+
   /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
   boost::optional<double> supplyAirFlowRateDuringCoolingOperation() const;
 
@@ -102,7 +102,7 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
   HVACComponent coolingCoil() const;
 
   HVACComponent supplementalHeatingCoil() const;
-  
+
   boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
 
   bool isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const;
@@ -119,7 +119,7 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
    *  of zero correspond to AUTO fan operation (fan cycles on and off with coils to meet load).
    *  Other values indicate that the supply fan is to run continuously. */
   boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
-  
+
   std::string dehumidificationControlType() const;
 
   bool isDehumidificationControlTypeDefaulted() const;
@@ -129,7 +129,7 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
   //@{
 
   bool setAvailabilitySchedule(Schedule& schedule);
-  
+
   bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
 
   void autosizeSupplyAirFlowRateDuringCoolingOperation();
@@ -144,19 +144,19 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
 
   void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void setControllingZone( ThermalZone & zone );
+  bool setControllingZone( ThermalZone & zone );
 
   void resetControllingZone();
 
-  void setSupplyAirFan( HVACComponent & hvacComponent );
+  bool setSupplyAirFan( HVACComponent & hvacComponent );
 
-  void setHeatingCoil( HVACComponent & hvacComponent );
+  bool setHeatingCoil( HVACComponent & hvacComponent );
 
-  void setCoolingCoil( HVACComponent & hvacComponent );
+  bool setCoolingCoil( HVACComponent & hvacComponent );
 
-  void setSupplementalHeatingCoil( HVACComponent & hvacComponent );
-    
-  void setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
+  bool setSupplementalHeatingCoil( HVACComponent & hvacComponent );
+
+  bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
 
   void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
@@ -167,11 +167,11 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
   bool setFanPlacement(std::string fanPlacement);
 
   void resetFanPlacement();
- 
-  void setSupplyAirFanOperatingModeSchedule(Schedule & schedule);
+
+  bool setSupplyAirFanOperatingModeSchedule(Schedule & schedule);
 
   void resetSupplyAirFanOperatingModeSchedule();
-  
+
   bool setDehumidificationControlType(std::string dehumidificationControlType);
 
   void resetDehumidificationControlType();
@@ -179,6 +179,16 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
   //@}
   /** @name Other */
   //@{
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
+
+
 
   //@}
  protected:
@@ -209,4 +219,3 @@ typedef std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> AirLoopHVACUnitaryHeatPu
 } // openstudio
 
 #endif // MODEL_AIRLOOPHVACUNITARYHEATPUMPAIRTOAIR_HPP
-

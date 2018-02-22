@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,7 +46,7 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGas) {
     Model model;
-    
+
     ScheduleConstant scheduleConstant(model);
     CoilHeatingGas coilHeatingGas(model, scheduleConstant);
     coilHeatingGas.setGasBurnerEfficiency(0.6);
@@ -54,10 +54,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGas) {
     coilHeatingGas.setParasiticElectricLoad(48.0);
     coilHeatingGas.setParasiticGasLoad(51.0);
     coilHeatingGas.setFuelType("PropaneGas");
-    
+
     ForwardTranslator forwardTranslator;
     Workspace workspace = forwardTranslator.translateModel(model);
-    
+
     WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::Coil_Heating_Fuel));
     EXPECT_EQ(1u, idfObjs.size());
     WorkspaceObject coil(idfObjs[0]);

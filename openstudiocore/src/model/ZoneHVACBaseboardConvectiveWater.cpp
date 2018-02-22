@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -110,7 +110,17 @@ std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove()
   const std::vector<std::string>& ZoneHVACBaseboardConvectiveWater_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Baseboard Total Heating Rate");
+      result.push_back("Baseboard Total Heating Energy");
+      result.push_back("Baseboard Hot Water Energy");
+      result.push_back("Baseboard Hot Water Mass Flow Rate");
+      result.push_back("Baseboard Air Mass Flow Rate");
+      result.push_back("Baseboard Air Inlet Temperature");
+      result.push_back("Baseboard Air Outlet Temperature");
+      result.push_back("Baseboard Water Inlet Temperature");
+      result.push_back("Baseboard Water Outlet Temperature");
     }
     return result;
   }
@@ -267,6 +277,18 @@ std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove()
       thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
     }
   }
+
+  std::vector<EMSActuatorNames> ZoneHVACBaseboardConvectiveWater_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "ZoneBaseboard:OutdoorTemperatureControlled", "Power Level" } };
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneHVACBaseboardConvectiveWater_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Simple Zone Baseboard Capacity At Low Temperature",
+      "Simple Zone Baseboard Capacity At High Temperature" };
+    return types;
+  }
+
 } // detail
 
 ZoneHVACBaseboardConvectiveWater::ZoneHVACBaseboardConvectiveWater(const Model& model, Schedule& availabilitySchedule,StraightComponent& heatingCoilBaseboard)

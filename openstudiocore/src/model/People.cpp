@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -78,13 +78,52 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+
       result.push_back("People Occupant Count");
       result.push_back("People Radiant Heating Energy");
+      result.push_back("People Radiant Heating Rate");
       result.push_back("People Convective Heating Energy");
+      result.push_back("People Convective Heating Rate");
       result.push_back("People Sensible Heating Energy");
+      result.push_back("People Sensible Heating Rate");
       result.push_back("People Latent Gain Energy");
+      result.push_back("People Latent Gain Rate");
       result.push_back("People Total Heating Energy");
+      result.push_back("People Total Heating Rate");
       result.push_back("People Air Temperature");
+      result.push_back("People Air Relative Humidity");
+
+      // Reported in ThermalZone
+      //result.push_back("Zone People Occupant Count");
+      //result.push_back("Zone People Radiant Heating Energy");
+      //result.push_back("Zone People Radiant Heating Rate");
+      //result.push_back("Zone People Convective Heating Energy");
+      //result.push_back("Zone People Convective Heating Rate");
+      //result.push_back("Zone People Sensible Heating Energy");
+      //result.push_back("Zone People Sensible Heating Rate");
+      //result.push_back("Zone People Latent Gain Energy");
+      //result.push_back("Zone People Latent Gain Rate");
+      //result.push_back("Zone People Total Heating Energy");
+      //result.push_back("Zone People Total Heating Rate");
+      //result.push_back("Zone Thermal Comfort Mean Radiant Temperature");
+      //result.push_back("Zone Thermal Comfort Operative Temperature");
+      //result.push_back("Zone Thermal Comfort Fanger Model PMV");
+      //result.push_back("Zone Thermal Comfort Fanger Model PPD");
+      //result.push_back("Zone Thermal Comfort Clothing Surface Temperature");
+      //result.push_back("Zone Thermal Comfort Pierce Model Effective Temperature PMV");
+      //result.push_back("Zone Thermal Comfort Pierce Model Standard Effective Temperature PMV");
+      //result.push_back("Zone Thermal Comfort Pierce Model Discomfort Index");
+      //result.push_back("Zone Thermal Comfort Pierce Model Thermal Sensation Index");
+      //result.push_back("Zone Thermal Comfort KSU Model Thermal Sensation Index");
+      //result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model 80%% Acceptability Status");
+      //result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model 90%% Acceptability Status");
+      //result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model Running Average Outdoor Air Temperature");
+      //result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model Temperature");
+      //result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Category I Status");
+      //result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Category II Status");
+      //result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Category III Status");
+      //result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Running Average Outdoor Air Temperature");
+      //result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Temperature");
     }
     return result;
   }
@@ -384,9 +423,12 @@ namespace detail {
   }
 
   boost::optional<double> People_Impl::spaceFloorAreaPerPerson() const {
-    OptionalDouble temp = peoplePerFloorArea();
+    OptionalDouble temp = peopleDefinition().spaceFloorAreaperPerson();
     if (temp) {
-      return 1.0 / temp.get();
+      double mult = multiplier();
+      if (mult > 0) {
+        return temp.get() / mult;
+      }
     }
     return temp;
   }
@@ -546,6 +588,16 @@ namespace detail {
       resetAirVelocitySchedule();
     }
     return true;
+  }
+
+  std::vector<EMSActuatorNames> People_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "People", "Number of People" } };
+    return actuators;
+  }
+
+  std::vector<std::string> People_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "People Count Design Level" };
+    return types;
   }
 
 } // detail

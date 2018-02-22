@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,7 +41,7 @@ class QTimer;
 
 namespace openstudio {
 
-  /** Class for watching either a file or directory, QFileSystemWatcher has issues when watching 
+  /** Class for watching either a file or directory, QFileSystemWatcher has issues when watching
    **  many files so it is not recommended to use too many of these objects.
    **/
   class UTILITIES_API PathWatcher : public QObject{
@@ -53,7 +53,7 @@ namespace openstudio {
       /// constructor with path
 
       /// if path is a directory it must exist at time of construction, no periodic checks are performed for directory
-      /// if path is not a directory it is assumed to be a regular file which may or may not exist at construction, 
+      /// if path is not a directory it is assumed to be a regular file which may or may not exist at construction,
       /// a timer is used to periodically check for changes to the file
       /// msec is the timer delay to check for updates to the file, msec does not apply if the path is a directory
       PathWatcher(const openstudio::path& p, int msec = 1000);
@@ -77,7 +77,7 @@ namespace openstudio {
       bool dirty() const;
 
       /// reset state to clean
-      void clearState(); 
+      void clearState();
 
       /// for files, called when watched file is added if watcher enabled
       virtual void onPathAdded();
@@ -92,7 +92,7 @@ namespace openstudio {
 
     public slots:
 
-      /// called when file/directory is added or removed or when directory is removed 
+      /// called when file/directory is added or removed or when directory is removed
       void directoryChanged(const QString& path);
 
       /// called when file is modified or removed

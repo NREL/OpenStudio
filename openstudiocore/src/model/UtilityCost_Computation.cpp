@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -67,9 +67,9 @@ OptionalString UtilityCost_Computation_Impl::tariffName() const
   return getString(OS_UtilityCost_ComputationFields::TariffName);
 }
 
-void UtilityCost_Computation_Impl::setTariffName(const std::string& str)
+bool UtilityCost_Computation_Impl::setTariffName(const std::string& str)
 {
-  setString(OS_UtilityCost_ComputationFields::TariffName,str);
+  return setString(OS_UtilityCost_ComputationFields::TariffName,str);;
 }
 
 boost::optional<std::string> UtilityCost_Computation_Impl::computeStep(unsigned index) const {
@@ -150,24 +150,14 @@ UtilityCost_Computation::UtilityCost_Computation(std::shared_ptr<detail::Utility
   : ParentObject(std::move(impl))
 {}
 
-OptionalString UtilityCost_Computation::name() const
-{
-  return getImpl<detail::UtilityCost_Computation_Impl>()->name();
-}
-
-void UtilityCost_Computation::setName(const std::string& str)
-{
-  getImpl<detail::UtilityCost_Computation_Impl>()->setName(str);
-}
-
 OptionalString UtilityCost_Computation::tariffName() const
 {
   return getImpl<detail::UtilityCost_Computation_Impl>()->tariffName();
 }
 
-void UtilityCost_Computation::setTariffName(const std::string& str)
+bool UtilityCost_Computation::setTariffName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Computation_Impl>()->setTariffName(str);
+  return getImpl<detail::UtilityCost_Computation_Impl>()->setTariffName(str);
 }
 
 boost::optional<std::string> UtilityCost_Computation::computeStep(unsigned index) const {

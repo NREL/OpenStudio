@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -75,7 +75,24 @@ namespace detail {
   const std::vector<std::string>& ZoneVentilationDesignFlowRate_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: all variables reported at the zone level
+      //result.push_back("Zone Ventilation Sensible Heat Loss Energy");
+      //result.push_back("Zone Ventilation Sensible Heat Gain Energy");
+      //result.push_back("Zone Ventilation Latent Heat Loss Energy");
+      //result.push_back("Zone Ventilation Latent Heat Gain Energy");
+      //result.push_back("Zone Ventilation Total Heat Loss Energy");
+      //result.push_back("Zone Ventilation Total Heat Gain Energy");
+      //result.push_back("Zone Ventilation Current Density Volume Flow Rate");
+      //result.push_back("Zone Ventilation Standard Density Volume Flow Rate");
+      //result.push_back("Zone Ventilation Current Density Volume");
+      //result.push_back("Zone Ventilation Standard Density Volume");
+      //result.push_back("Zone Ventilation Mass");
+      //result.push_back("Zone Ventilation Mass Flow Rate");
+      //result.push_back("Zone Ventilation Air Change Rate");
+      //result.push_back("Zone Ventilation Fan Electric Energy");
+      //result.push_back("Zone Ventilation Air Inlet Temperature");
     }
     return result;
   }
@@ -362,24 +379,28 @@ namespace detail {
     return result;
   }
 
-  void ZoneVentilationDesignFlowRate_Impl::setConstantTermCoefficient(double constantTermCoefficient) {
+  bool ZoneVentilationDesignFlowRate_Impl::setConstantTermCoefficient(double constantTermCoefficient) {
     bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::ConstantTermCoefficient, constantTermCoefficient);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ZoneVentilationDesignFlowRate_Impl::setTemperatureTermCoefficient(double temperatureTermCoefficient) {
+  bool ZoneVentilationDesignFlowRate_Impl::setTemperatureTermCoefficient(double temperatureTermCoefficient) {
     bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::TemperatureTermCoefficient, temperatureTermCoefficient);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ZoneVentilationDesignFlowRate_Impl::setVelocityTermCoefficient(double velocityTermCoefficient) {
+  bool ZoneVentilationDesignFlowRate_Impl::setVelocityTermCoefficient(double velocityTermCoefficient) {
     bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::VelocityTermCoefficient, velocityTermCoefficient);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ZoneVentilationDesignFlowRate_Impl::setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient) {
+  bool ZoneVentilationDesignFlowRate_Impl::setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient) {
     bool result = setDouble(OS_ZoneVentilation_DesignFlowRateFields::VelocitySquaredTermCoefficient, velocitySquaredTermCoefficient);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ZoneVentilationDesignFlowRate_Impl::setMinimumIndoorTemperature(double minimumIndoorTemperature) {
@@ -535,6 +556,15 @@ namespace detail {
     }
   }
 
+  std::vector<EMSActuatorNames> ZoneVentilationDesignFlowRate_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Zone Ventilation", "Air Exchange Flow Rate"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneVentilationDesignFlowRate_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 ZoneVentilationDesignFlowRate::ZoneVentilationDesignFlowRate(const Model& model)
@@ -711,20 +741,20 @@ bool ZoneVentilationDesignFlowRate::setFanTotalEfficiency(double fanTotalEfficie
   return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setFanTotalEfficiency(fanTotalEfficiency);
 }
 
-void ZoneVentilationDesignFlowRate::setConstantTermCoefficient(double constantTermCoefficient) {
-  getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setConstantTermCoefficient(constantTermCoefficient);
+bool ZoneVentilationDesignFlowRate::setConstantTermCoefficient(double constantTermCoefficient) {
+  return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setConstantTermCoefficient(constantTermCoefficient);
 }
 
-void ZoneVentilationDesignFlowRate::setTemperatureTermCoefficient(double temperatureTermCoefficient) {
-  getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setTemperatureTermCoefficient(temperatureTermCoefficient);
+bool ZoneVentilationDesignFlowRate::setTemperatureTermCoefficient(double temperatureTermCoefficient) {
+  return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setTemperatureTermCoefficient(temperatureTermCoefficient);
 }
 
-void ZoneVentilationDesignFlowRate::setVelocityTermCoefficient(double velocityTermCoefficient) {
-  getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setVelocityTermCoefficient(velocityTermCoefficient);
+bool ZoneVentilationDesignFlowRate::setVelocityTermCoefficient(double velocityTermCoefficient) {
+  return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setVelocityTermCoefficient(velocityTermCoefficient);
 }
 
-void ZoneVentilationDesignFlowRate::setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient) {
-  getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setVelocitySquaredTermCoefficient(velocitySquaredTermCoefficient);
+bool ZoneVentilationDesignFlowRate::setVelocitySquaredTermCoefficient(double velocitySquaredTermCoefficient) {
+  return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setVelocitySquaredTermCoefficient(velocitySquaredTermCoefficient);
 }
 
 bool ZoneVentilationDesignFlowRate::setMinimumIndoorTemperature(double minimumIndoorTemperature) {
@@ -799,4 +829,3 @@ ZoneVentilationDesignFlowRate::ZoneVentilationDesignFlowRate(std::shared_ptr<det
 
 } // model
 } // openstudio
-

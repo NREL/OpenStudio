@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -27,7 +27,7 @@
  **********************************************************************************************************************/
 
 #include <gtest/gtest.h>
-/*
+
 #include "ModelFixture.hpp"
 #include "../Site.hpp"
 #include "../Site_Impl.hpp"
@@ -44,58 +44,21 @@
 #include "../WeatherFileDays.hpp"
 #include "../WeatherFileDays_Impl.hpp"
 
-#include "../../energyplus/ReverseTranslator.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
-void testSiteObjectInRealFile(Model& model,bool childrenExpected) {
-
-  OptionalSite oSite = model.getOptionalUniqueModelObject<Site>();
-  EXPECT_TRUE(oSite);
-  Site site = *oSite;
-  unsigned numSiteChildren = site.children().size();
-  if (childrenExpected) { EXPECT_TRUE(numSiteChildren > 0); }
-
-  DesignDay designDay(model);
-  EXPECT_EQ(++numSiteChildren,site.children().size());
-
-  SkyTemperature skyTemperature(model);
-  EXPECT_EQ(++numSiteChildren,site.children().size());
-
-  OptionalWeatherFile owf = model.getOptionalUniqueModelObject<WeatherFile>();
-  if (!owf) {
-    WeatherFile weatherFile = model.getUniqueModelObject<WeatherFile>();
-    EXPECT_EQ(++numSiteChildren,site.children().size());
+TEST_F(ModelFixture, Site_Outputvariables) {
+  Model model;
+  EXPECT_FALSE(model.getOptionalUniqueModelObject<Site>());
+  Site site = model.getUniqueModelObject<Site>();
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<Site>());
+  std::vector<std::string> variables = site.outputVariableNames();
+  EXPECT_FALSE(variables.empty());
+  std::vector<std::string> variables2 = site.outputVariableNames();
+  ASSERT_EQ(variables.size(), variables2.size());
+  for (size_t i = 0; i < variables.size(); ++i){
+    EXPECT_EQ(variables[i], variables2[i]);
   }
-
-  WeatherFileConditionType weatherFileConditionType(model);
-  EXPECT_EQ(++numSiteChildren,site.children().size());
-
-  WeatherFileDays weatherFileDays(model);
-  EXPECT_EQ(++numSiteChildren,site.children().size());
-
+  EXPECT_EQ(site.outputVariableNames(), site.outputVariableNames());
+  EXPECT_EQ(site.outputVariableNames().front(), site.outputVariableNames().front());
 }
-
-TEST_F(ModelFixture, Site_5ZoneAirCooled) {
-  Workspace workspace(idfFile);
-  energyplus::ReverseTranslator translator(workspace);
-  OptionalModel oModel = translator.convert();
-  ASSERT_TRUE(oModel);
-  Model model = *oModel;
-
-  SCOPED_TRACE("5ZoneAirCooled");
-  testSiteObjectInRealFile(model,true);
-}
-
-TEST_F(ModelFixture, Site_Daylighting) {
-  Workspace workspace(daylightingIdfFile);
-  energyplus::ReverseTranslator translator(workspace);
-  OptionalModel oModel = translator.convert();
-  ASSERT_TRUE(oModel);
-  Model model = *oModel;
-
-  SCOPED_TRACE("Daylighting");
-  testSiteObjectInRealFile(model,true);
-}
-*/

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -78,17 +78,17 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
 
   std::string fanName = fan.name().get() + "Press Actuator";
   fanActuator.setName(fanName);
-  
+
   fanActuator.setActuatedComponentControlType(fanControlType);
 
-  EXPECT_EQ(fan, fanActuator.actuatedComponent());
+  EXPECT_EQ(fan, fanActuator.actuatedComponent().get());
   EXPECT_EQ(fanControlType, fanActuator.actuatedComponentControlType());
- 
+
   fanActuator.setActuatedComponentType(ComponentType);
   EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
 
   fanActuator.setActuatedComponent(fan2);
-  EXPECT_EQ(fan2, fanActuator.actuatedComponent());
+  EXPECT_EQ(fan2, fanActuator.actuatedComponent().get());
 
   //add electric equipment actuator
   ElectricEquipmentDefinition definition(model);
@@ -104,7 +104,7 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
 
   equipActuator.setActuatedComponentControlType(equipControlType);
 
-  EXPECT_EQ(electricEquipment, equipActuator.actuatedComponent());
+  EXPECT_EQ(electricEquipment, equipActuator.actuatedComponent().get());
   EXPECT_EQ(equipControlType, equipActuator.actuatedComponentControlType());
 
   equipActuator.setActuatedComponentType(ComponentType);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -34,7 +34,7 @@
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include <cmath> 
+#include <cmath>
 #include <iomanip>
 #include <sstream>
 
@@ -64,8 +64,8 @@ std::string toUnderscoreCase(const std::string& s) {
   //std::string result = toLowerCamelCase(s);
   //result = boost::regex_replace(result,boost::regex("(.)([A-Z])"),"$1_\\l$2");
 
-  std::string result = boost::replace_all_copy(s, "OpenStudio", "Openstudio");  
-  boost::replace_all(result, "EnergyPlus", "Energyplus");  
+  std::string result = boost::replace_all_copy(s, "OpenStudio", "Openstudio");
+  boost::replace_all(result, "EnergyPlus", "Energyplus");
 
   //http://stackoverflow.com/questions/1509915/converting-camel-case-to-underscore-case-in-ruby
   // DLM: there is a to_underscore method in the BCL gem, this should be synchronized
@@ -105,30 +105,46 @@ std::string iddObjectNameToIdfObjectName(const std::string& s) {
   return result;
 }
 
-std::string toNeatString(double value, 
-                         unsigned numFractionalDigits, 
+std::string toNeatString(double value,
+                         unsigned numFractionalDigits,
                          bool applyCommas)
 {
-  std::stringstream ss;
-  ss << std::fixed << std::setprecision(numFractionalDigits) << value;
-  std::string result = ss.str();
-  if (applyCommas) {
-    boost::smatch m;
-    bool ok = boost::regex_match(result,
-                                 m,
-                                 boost::regex("(-?[0-9]{1,3})([0-9]{3})*(\\.[0-9]+|$)"),
-                                 boost::match_extra);
-    OS_ASSERT(ok);
-    ss.str("");
-    ss << std::string(m[1].first,m[1].second);
-    for (std::string::const_iterator start = m[1].second; start != m[3].first; ) {
-      std::string::const_iterator end = start;
-      ++(++(++end));
-      ss << "," << std::string(start,end);
-      start = end;
+
+  std::string result;
+
+  if (std::isinf(value)) {
+    if (value > 0) {
+      result = "+Inf";
+    } else {
+      result = "-Inf";
     }
-    ss << std::string(m[3].first,m[3].second);
+  } else if (std::isnan(value)) {
+    result = "NaN";
+
+  } else {
+
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(numFractionalDigits) << value;
     result = ss.str();
+
+    if (applyCommas) {
+      boost::smatch m;
+      bool ok = boost::regex_match(result,
+          m,
+          boost::regex("(-?[0-9]{1,3})([0-9]{3})*(\\.[0-9]+|$)"),
+          boost::match_extra);
+      OS_ASSERT(ok);
+      ss.str("");
+      ss << std::string(m[1].first,m[1].second);
+      for (std::string::const_iterator start = m[1].second; start != m[3].first; ) {
+        std::string::const_iterator end = start;
+        ++(++(++end));
+        ss << "," << std::string(start,end);
+        start = end;
+      }
+      ss << std::string(m[3].first,m[3].second);
+      result = ss.str();
+    }
   }
   return result;
 }
@@ -167,7 +183,7 @@ unsigned numFractionalDigits(double value,unsigned numSigFigs) {
 }
 
 std::pair<unsigned,unsigned> numFractionalDigits(const std::vector<double>& values,
-                                                 unsigned numSigFigs) 
+                                                 unsigned numSigFigs)
 {
   if (numSigFigs == 0u) {
     LOG_FREE_AND_THROW("openstudio.core.StringHelpers","Number of significant figures must be > 0.");
@@ -204,7 +220,7 @@ double toNumSigFigs(double value, unsigned numSigFigs) {
 
   double absValue = fabs(value);
   bool negative = (value != absValue);
-  
+
   double orderOfMagnitude = floor(log10(absValue)); // 1683 => 3
                                                     // 0.001683892 => -3
   //                             X.XXXXX             add more sig-figs

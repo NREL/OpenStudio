@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -611,8 +611,8 @@ namespace detail {
     /// Inverter and Buss Type
     boost::optional<Inverter> inv = inverter();
     bool bussWithInverter = (bussType == "DirectCurrentWithInverter" ||
-      bussType == "DirectCurrentWithInverterDCStorage" ||
-      bussType == "DirectCurrentWithInverterACStorage");
+                             bussType == "DirectCurrentWithInverterDCStorage" ||
+                             bussType == "DirectCurrentWithInverterACStorage");
 
     // Case 1: There is an inverter and a Buss with inverter: all good
     if (inv && bussWithInverter) {
@@ -637,8 +637,8 @@ namespace detail {
     /// Storage & Buss Type
     boost::optional<ElectricalStorage> elcSto = electricalStorage();
     bool bussWithStorage = (bussType == "AlternatingCurrentWithStorage" ||
-      bussType == "DirectCurrentWithInverterDCStorage" ||
-      bussType == "DirectCurrentWithInverterACStorage");
+                            bussType == "DirectCurrentWithInverterDCStorage" ||
+                            bussType == "DirectCurrentWithInverterACStorage");
 
     // Case 1: There is a Storage object and a Buss with Storage: all good
     if (elcSto && bussWithStorage) {

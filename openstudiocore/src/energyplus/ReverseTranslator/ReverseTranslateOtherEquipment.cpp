@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -64,7 +64,7 @@ OptionalModelObject ReverseTranslator::translateOtherEquipment(
 
   // create the definition
   openstudio::model::OtherEquipmentDefinition definition(m_model);
-  
+
   OptionalString s = workspaceObject.name();
   if(s){
     definition.setName(*s + " Definition");
@@ -158,7 +158,7 @@ OptionalModelObject ReverseTranslator::translateOtherEquipment(
   if (s) {
     otherEquipment.setEndUseSubcategory(*s);
   }
-       
+
   return otherEquipment;
 }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,19 +43,19 @@ TEST_F(ModelFixture,AirTerminalSingleDuctUncontrolled_AirTerminalSingleDuctUncon
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
-    Model m; 
+  ASSERT_EXIT (
+  {
+    Model m;
     Schedule s = m.alwaysOnDiscreteSchedule();
     AirTerminalSingleDuctUncontrolled testObject(m,s);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,AirTerminalSingleDuctUncontrolled_addToNode) {
-  Model m; 
+  Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   AirTerminalSingleDuctUncontrolled testObject(m,s);
 
@@ -81,7 +81,7 @@ TEST_F(ModelFixture,AirTerminalSingleDuctUncontrolled_addToNode) {
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 
   AirTerminalSingleDuctUncontrolled testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctUncontrolled>();
-  
+
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
   EXPECT_EQ( (unsigned)8, airLoop.demandComponents().size() );
 }

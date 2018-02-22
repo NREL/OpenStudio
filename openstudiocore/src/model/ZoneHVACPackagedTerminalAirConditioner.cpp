@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -126,7 +126,25 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACPackagedTerminalAirConditioner_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Packaged Terminal Air Conditioner Total Heating Rate");
+      result.push_back("Zone Packaged Terminal Air Conditioner Total Heating Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Total Cooling Rate");
+      result.push_back("Zone Packaged Terminal Air Conditioner Total Cooling Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Sensible Heating Rate");
+      result.push_back("Zone Packaged Terminal Air Conditioner Sensible Heating Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Sensible Cooling Rate");
+      result.push_back("Zone Packaged Terminal Air Conditioner Sensible Cooling Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Latent Heating Rate");
+      result.push_back("Zone Packaged Terminal Air Conditioner Latent Heating Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Latent Cooling Rate");
+      result.push_back("Zone Packaged Terminal Air Conditioner Latent Cooling Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Electric Power");
+      result.push_back("Zone Packaged Terminal Air Conditioner Electric Energy");
+      result.push_back("Zone Packaged Terminal Air Conditioner Fan Part Load Ratio");
+      result.push_back("Zone Packaged Terminal Air Conditioner Compressor Part Load Ratio");
+      result.push_back("Zone Packaged Terminal Air Conditioner Fan Availability Status");
     }
     return result;
   }
@@ -332,9 +350,10 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+  bool ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
     bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerName, outdoorAirMixerName);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ZoneHVACPackagedTerminalAirConditioner_Impl::setSupplyAirFlowRateDuringCoolingOperation(boost::optional<double> supplyAirFlowRateDuringCoolingOperation) {
@@ -437,7 +456,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ZoneHVACPackagedTerminalAirConditioner_Impl::setSupplyAirFan( HVACComponent & fan )
+  bool ZoneHVACPackagedTerminalAirConditioner_Impl::setSupplyAirFan( HVACComponent & fan )
   {
     bool isAllowedType = false;
 
@@ -450,13 +469,16 @@ namespace detail {
       isAllowedType = true;
     }
 
-    if( isAllowedType )
-    {
-      setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFanName,fan.handle());
+    if( isAllowedType ) {
+      return setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFanName,fan.handle());
+    } else {
+      LOG(Warn, "Invalid Fan Type (expected FanConstantVolume or FanOnOff, not '" << fan.iddObjectType().valueName()
+             << "') for " << briefDescription());
+      return false;
     }
   }
 
-  void ZoneHVACPackagedTerminalAirConditioner_Impl::setHeatingCoil( HVACComponent & heatingCoil )
+  bool ZoneHVACPackagedTerminalAirConditioner_Impl::setHeatingCoil( HVACComponent & heatingCoil )
   {
     bool isAllowedType = false;
 
@@ -473,13 +495,17 @@ namespace detail {
       isAllowedType = true;
     }
 
-    if( isAllowedType )
-    {
-      setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::HeatingCoilName,heatingCoil.handle());
+    if( isAllowedType ) {
+      return setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::HeatingCoilName,heatingCoil.handle());
+    } else {
+      LOG(Warn, "Invalid Heating Coil Type (expected CoilHeatingGas, CoilHeatingElectric, or CoilHeatingWater, not '"
+                << heatingCoil.iddObjectType().valueName() << "')  for " << briefDescription());
+      return false;
     }
+
   }
 
-  void ZoneHVACPackagedTerminalAirConditioner_Impl::setCoolingCoil( HVACComponent & coolingCoil )
+  bool ZoneHVACPackagedTerminalAirConditioner_Impl::setCoolingCoil( HVACComponent & coolingCoil )
   {
     bool isAllowedType = false;
 
@@ -488,9 +514,12 @@ namespace detail {
       isAllowedType = true;
     }
 
-    if( isAllowedType )
-    {
-      setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName,coolingCoil.handle());
+    if( isAllowedType ) {
+      return setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName,coolingCoil.handle());
+    } else {
+      LOG(Warn, "Invalid Cooling Coil Type (expected CoilCoolingDXSingleSpeed, not '" << coolingCoil.iddObjectType().valueName()
+             << "') for " << briefDescription());
+      return false;
     }
   }
 
@@ -620,6 +649,73 @@ namespace detail {
     return true;
   }
 
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
+    return getAutosizedValue("Design Size Cooling Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
+    return getAutosizedValue("Design Size Heating Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getAutosizedValue("Design Size No Load Supply Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Cooling Operation", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::autosizedOutdoorAirFlowRateDuringHeatingOperation() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate During Heating Operation", "m3/s");
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getAutosizedValue("Design Size Outdoor Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
+  }
+
+  void ZoneHVACPackagedTerminalAirConditioner_Impl::autosize() {
+    autosizeSupplyAirFlowRateDuringCoolingOperation();
+    autosizeSupplyAirFlowRateDuringHeatingOperation();
+    autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeOutdoorAirFlowRateDuringCoolingOperation();
+    autosizeOutdoorAirFlowRateDuringHeatingOperation();
+    autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  void ZoneHVACPackagedTerminalAirConditioner_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedSupplyAirFlowRateDuringCoolingOperation();
+    if (val) {
+      setSupplyAirFlowRateDuringCoolingOperation(val.get());
+    }
+
+    val = autosizedSupplyAirFlowRateDuringHeatingOperation();
+    if (val) {
+      setSupplyAirFlowRateDuringHeatingOperation(val.get());
+    }
+
+    val = autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    if (val) {
+      setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateDuringCoolingOperation();
+    if (val) {
+      setOutdoorAirFlowRateDuringCoolingOperation(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateDuringHeatingOperation();
+    if (val) {
+      setOutdoorAirFlowRateDuringHeatingOperation(val.get());
+    }
+
+    val = autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    if (val) {
+      setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACPackagedTerminalAirConditioner::ZoneHVACPackagedTerminalAirConditioner( const Model& model,
@@ -743,8 +839,8 @@ bool ZoneHVACPackagedTerminalAirConditioner::setOutdoorAirMixerObjectType(std::s
   return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setOutdoorAirMixerObjectType(outdoorAirMixerObjectType);
 }
 
-void ZoneHVACPackagedTerminalAirConditioner::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
-  getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
+bool ZoneHVACPackagedTerminalAirConditioner::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+  return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
 }
 
 bool ZoneHVACPackagedTerminalAirConditioner::setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation) {
@@ -845,9 +941,9 @@ HVACComponent ZoneHVACPackagedTerminalAirConditioner::supplyAirFan() const
   return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->supplyAirFan();
 }
 
-void ZoneHVACPackagedTerminalAirConditioner::setSupplyAirFan( HVACComponent & fan )
+bool ZoneHVACPackagedTerminalAirConditioner::setSupplyAirFan( HVACComponent & fan )
 {
-  getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setSupplyAirFan(fan);
+  return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setSupplyAirFan(fan);
 }
 
 HVACComponent ZoneHVACPackagedTerminalAirConditioner::heatingCoil() const
@@ -855,9 +951,9 @@ HVACComponent ZoneHVACPackagedTerminalAirConditioner::heatingCoil() const
   return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->heatingCoil();
 }
 
-void ZoneHVACPackagedTerminalAirConditioner::setHeatingCoil( HVACComponent & heatingCoil )
+bool ZoneHVACPackagedTerminalAirConditioner::setHeatingCoil( HVACComponent & heatingCoil )
 {
-  getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setHeatingCoil(heatingCoil);
+  return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setHeatingCoil(heatingCoil);
 }
 
 HVACComponent ZoneHVACPackagedTerminalAirConditioner::coolingCoil() const
@@ -865,11 +961,34 @@ HVACComponent ZoneHVACPackagedTerminalAirConditioner::coolingCoil() const
   return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->coolingCoil();
 }
 
-void ZoneHVACPackagedTerminalAirConditioner::setCoolingCoil( HVACComponent & coolingCoil )
+bool ZoneHVACPackagedTerminalAirConditioner::setCoolingCoil( HVACComponent & coolingCoil )
 {
-  getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setCoolingCoil(coolingCoil);
+  return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setCoolingCoil(coolingCoil);
 }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->autosizedSupplyAirFlowRateDuringCoolingOperation();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner::autosizedSupplyAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->autosizedSupplyAirFlowRateDuringHeatingOperation();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner::autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner::autosizedOutdoorAirFlowRateDuringCoolingOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->autosizedOutdoorAirFlowRateDuringCoolingOperation();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner::autosizedOutdoorAirFlowRateDuringHeatingOperation() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->autosizedOutdoorAirFlowRateDuringHeatingOperation();
+  }
+
+  boost::optional<double> ZoneHVACPackagedTerminalAirConditioner::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
 
 } // model
 } // openstudio
-

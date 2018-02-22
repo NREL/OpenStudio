@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -189,9 +189,19 @@ namespace detail {
 
   const std::vector<std::string>& Site_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-    }
+    static const std::vector<std::string> result = {
+      "Site Outdoor Air Drybulb Temperature",
+      "Site Outdoor Air Wetbulb Temperature",
+      "Site Direct Solar Radiation Rate per Area",
+      "Site Diffuse Solar Radiation Rate per Area",
+      "Site Exterior Beam Normal Illuminance",
+      "Site Exterior Horizontal Beam Illuminance",
+      "Site Exterior Horizontal Sky Illuminance",
+      "Site Beam Solar Radiation Luminous Efficacy",
+      "Site Sky Diffuse Solar Radiation Luminous Efficacy",
+      "Site Daylighting Model Sky Clearness",
+      "Site Daylighting Model Sky Brightness"
+    };
     return result;
   }
 
@@ -378,6 +388,23 @@ namespace detail {
     return !climateZones.setActiveClimateZone(institution).empty();
   }
 */
+
+  std::vector<EMSActuatorNames> Site_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Weather Data", "Outdoor Dry Bulb"},
+                                            {"Weather Data", "Outdoor Dew Point"},
+                                            {"Weather Data", "Outdoor Relative Humidity"},
+                                            {"Weather Data", "Diffuse Solar"},
+                                            {"Weather Data", "Direct Solar"},
+                                            {"Weather Data", "Wind Speed"},
+                                            {"Weather Data", "Wind Direction"},
+    };
+    return actuators;
+  }
+
+  std::vector<std::string> Site_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 IddObjectType Site::iddObjectType() {
@@ -530,6 +557,7 @@ bool Site::setActiveClimateZoneInstitution(const std::string& institution) {
   return getImpl<detail::Site_Impl>()->setActiveClimateZoneInstitution(institution);
 }
 */
+
 /// @cond
 Site::Site(std::shared_ptr<detail::Site_Impl> impl)
   : ParentObject(std::move(impl))

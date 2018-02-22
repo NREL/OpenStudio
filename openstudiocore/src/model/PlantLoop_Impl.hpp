@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,6 +44,7 @@ class PlantEquipmentOperationScheme;
 class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationCoolingLoad;
 class AvailabilityManager;
+class AvailabilityManagerAssignmentList;
 
 
 namespace detail {
@@ -63,37 +64,39 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual ~PlantLoop_Impl() {}
 
+  //@}
+  /** @name Virtual Methods */
+  //@{
+
+  virtual const std::vector<std::string>& outputVariableNames() const override;
+
   virtual IddObjectType iddObjectType() const override;
+
+
 
   std::string loadDistributionScheme();
 
   bool setLoadDistributionScheme(std::string scheme);
 
-  boost::optional<AvailabilityManager> availabilityManager() const;
-
-  bool setAvailabilityManager(const AvailabilityManager & availabilityManager);
-
-  void resetAvailabilityManager();
-
   std::string fluidType();
 
   bool setFluidType( const std::string & value );
 
-  void setGlycolConcentration(int glycolConcentration);
+  bool setGlycolConcentration(int glycolConcentration);
 
   int glycolConcentration() const;
 
   double maximumLoopTemperature();
 
-  void setMaximumLoopTemperature( double value );
+  bool setMaximumLoopTemperature( double value );
 
   double minimumLoopTemperature();
 
-  void setMinimumLoopTemperature( double value );
+  bool setMinimumLoopTemperature( double value );
 
   boost::optional<double> maximumLoopFlowRate();
 
-  void setMaximumLoopFlowRate( double value );
+  bool setMaximumLoopFlowRate( double value );
 
   bool isMaximumLoopFlowRateAutosized();
 
@@ -101,7 +104,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   boost::optional<double> minimumLoopFlowRate();
 
-  void setMinimumLoopFlowRate( double value );
+  bool setMinimumLoopFlowRate( double value );
 
   bool isMinimumLoopFlowRateAutosized();
 
@@ -109,7 +112,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   boost::optional<double> plantLoopVolume();
 
-  void setPlantLoopVolume( double value );
+  bool setPlantLoopVolume( double value );
 
   bool isPlantLoopVolumeAutocalculated();
 
@@ -189,19 +192,19 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   Mixer supplyMixer() const;
 
-  void setSupplyMixer(Mixer const & mixer);
+  bool setSupplyMixer(Mixer const & mixer);
 
   Splitter supplySplitter() const;
 
-  void setSupplySplitter(Splitter const & splitter);
+  bool setSupplySplitter(Splitter const & splitter);
 
   Mixer demandMixer() override;
 
-  void setDemandMixer(Mixer const & mixer);
+  bool setDemandMixer(Mixer const & mixer);
 
   Splitter demandSplitter() override;
 
-  void setDemandSplitter(Splitter const & splitter);
+  bool setDemandSplitter(Splitter const & splitter);
 
   bool addSupplyBranchForComponent( HVACComponent component );
 
@@ -213,11 +216,41 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   Node loopTemperatureSetpointNode();
 
-  void setLoopTemperatureSetpointNode( Node & node );
+  bool setLoopTemperatureSetpointNode( Node & node );
 
   std::vector<ModelObject> children() const override;
 
   SizingPlant sizingPlant() const;
+
+  boost::optional<double> autosizedMaximumLoopFlowRate() const ;
+
+  boost::optional<double> autosizedPlantLoopVolume() const;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+  // AVM
+  // Impl_only
+  virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const override;
+
+
+  std::vector<AvailabilityManager> availabilityManagers() const;
+  bool setAvailabilityManagers(const std::vector<AvailabilityManager> & avms);
+  void resetAvailabilityManagers();
+
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager);
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority);
+
+  unsigned availabilityManagerPriority(const AvailabilityManager & availabilityManager) const;
+  bool setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority);
+
+  bool removeAvailabilityManager(const AvailabilityManager& avm);
+  bool removeAvailabilityManager(unsigned priority);
 
  private:
 
@@ -236,4 +269,3 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 } // openstudio
 
 #endif // MODEL_PLANTLOOP_IMPL_HPP
-

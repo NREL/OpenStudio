@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,7 +30,6 @@
 #include "Intersection.hpp"
 #include "Transformation.hpp"
 #include "Point3d.hpp"
-#include "PointLatLon.hpp"
 #include "Vector3d.hpp"
 
 #include "../core/Assert.hpp"
@@ -70,7 +69,7 @@ namespace openstudio{
   OptionalVector3d getNewallVector(const Point3dVector& points)
   {
     OptionalVector3d result;
-    unsigned N = points.size();
+    size_t N = points.size();
     if (N >= 3){
       Vector3d vec;
       for (unsigned i = 1; i < N-1; ++i){
@@ -105,11 +104,11 @@ namespace openstudio{
       Transformation alignFace = Transformation::alignFace(points);
       Point3dVector surfacePoints = alignFace.inverse()*points;
 
-      unsigned N = surfacePoints.size();
+      size_t N = surfacePoints.size();
       double A = 0;
       double cx = 0;
       double cy = 0;
-      for (unsigned i = 0; i < N; ++i){
+      for (size_t i = 0; i < N; ++i){
         double x1, x2, y1, y2;
         if (i == N-1){
           x1 = surfacePoints[i].x();
@@ -143,7 +142,7 @@ namespace openstudio{
   /// reorder points to upper-left-corner convention
   Point3dVector reorderULC(const Point3dVector& points)
   {
-    unsigned N = points.size();
+    size_t N = points.size();
     if (N < 3){
       return Point3dVector();
     }
@@ -180,7 +179,15 @@ namespace openstudio{
 
   std::vector<Point3d> removeCollinear(const Point3dVector& points, double tol)
   {
-    unsigned N = points.size();
+    Transformation t = Transformation::alignFace(points);
+    std::vector<Point3d> result = t*simplify(t.inverse()*points, true, tol);
+    return result;
+  }
+
+
+  std::vector<Point3d> removeCollinearLegacy(const Point3dVector& points, double tol)
+  {
+    size_t N = points.size();
     if (N < 3){
       return points;
     }
@@ -221,6 +228,60 @@ namespace openstudio{
       }
     }
 
+    size_t iBegin = 0;
+    size_t iEnd = result.size();
+
+    bool resizeBegin = true;
+    while (resizeBegin){
+      resizeBegin = false;
+      unsigned N = iEnd - iBegin;
+      if (N > 3){
+        Vector3d a = (result[iBegin] - result[iEnd - 1]);
+        Vector3d b = (result[iBegin + 1] - result[iBegin]);
+        if (a.normalize()){
+          if (b.normalize()){
+            double d = a.dot(b);
+            if (d >= 1.0 - tol){
+              iBegin++;
+              resizeBegin = true;
+            }
+          } else{
+            iBegin++;
+            resizeBegin = true;
+          }
+        } else{
+          iBegin++;
+          resizeBegin = true;
+        }
+      }
+    }
+
+    bool resizeEnd = true;
+    while (resizeEnd){
+      resizeEnd = false;
+      unsigned N = iEnd - iBegin;
+      if (N > 3){
+        Vector3d a = (result[iEnd - 1] - result[iEnd - 2]);
+        Vector3d b = (result[iBegin] - result[iEnd - 1]);
+        if (a.normalize()){
+          if (b.normalize()){
+            double d = a.dot(b);
+            if (d >= 1.0 - tol){
+              iEnd--;
+              resizeEnd = true;
+            }
+          } else{
+            iEnd--;
+            resizeEnd = true;
+          }
+        } else{
+          iEnd--;
+          resizeEnd = true;
+        }
+      }
+    }
+
+    result = std::vector<Point3d>(result.begin() + iBegin, result.begin() + iEnd);
     return result;
   }
 
@@ -302,43 +363,43 @@ namespace openstudio{
     double e = E1.dot(BminusP);
     // double f = BminusP.dot(BminusP); // unused
 
-    double det = a*c-b*b; 
-    double s = b*e-c*d; 
+    double det = a*c-b*b;
+    double s = b*e-c*d;
     double t = b*d-a*e;
 
     Point3d closestPoint;
 
     if ( s+t <= det ) {
-      if ( s < 0 ) {  
-        if ( t < 0 ) { 
-          //region 4, closest to point triangle[0] 
+      if ( s < 0 ) {
+        if ( t < 0 ) {
+          //region 4, closest to point triangle[0]
           return getDistance(point, triangle[0]);
-        } else { 
-          //region 3, closest to line triangle[0] to triangle[2] 
+        } else {
+          //region 3, closest to line triangle[0] to triangle[2]
           std::vector<Point3d> line;
           line.push_back(triangle[0]);
           line.push_back(triangle[2]);
-          return getDistancePointToLineSegment(point, line); 
-        } 
-      } else if ( t < 0 ) { 
-        //region 5, closest to line triangle[0] to triangle[1] 
+          return getDistancePointToLineSegment(point, line);
+        }
+      } else if ( t < 0 ) {
+        //region 5, closest to line triangle[0] to triangle[1]
         std::vector<Point3d> line;
         line.push_back(triangle[0]);
         line.push_back(triangle[1]);
         return getDistancePointToLineSegment(point, line);
-      } else { 
+      } else {
         //region 0, closest point is inside triangle
         double invDet = 1.0/det;
         closestPoint = B + invDet*s*E0 + invDet*t*E1;
       }
     } else {
-      if ( s < 0 ) { 
+      if ( s < 0 ) {
         //region 2, closest to point triangle[2]
         return getDistance(point, triangle[2]);
-      } else if ( t < 0 ) { 
+      } else if ( t < 0 ) {
         //region 6, closest to point triangle[1]
         return getDistance(point, triangle[1]);
-      } else { 
+      } else {
         //region 1, closest to line triangle[1] to triangle[2]
         std::vector<Point3d> line;
         line.push_back(triangle[1]);
@@ -346,7 +407,7 @@ namespace openstudio{
         return getDistancePointToLineSegment(point, line);
       }
     }
-  
+
     Vector3d diff = point-closestPoint;
     return diff.length();
   }
@@ -359,19 +420,9 @@ namespace openstudio{
     return acos(working1.dot(working2));
   }
 
-  /// compute distance in meters between two points on the Earth's surface
-  /// lat and lon are specified in degrees
-  double getDistanceLatLon(double lat1, double lon1, double lat2, double lon2)
-  {
-    PointLatLon p1(lat1, lon1);
-    PointLatLon p2(lat2, lon2);
-    return (p1 - p2);
-  }
-
-
   bool circularEqual(const Point3dVector& points1, const Point3dVector& points2, double tol)
   {
-    unsigned N = points1.size();
+    size_t N = points1.size();
     if (N != points2.size()){
       return false;
     }
@@ -383,7 +434,7 @@ namespace openstudio{
     bool result = false;
 
     // look for a common starting point
-    for (unsigned i = 0; i < N; ++i){
+    for (size_t i = 0; i < N; ++i){
       if (getDistance(points1[0], points2[i]) <= tol){
 
         result = true;
@@ -467,8 +518,8 @@ namespace openstudio{
     TPPLPoly outerPoly; // must be counter-clockwise, input vertices are clockwise
     outerPoly.Init(vertices.size());
     outerPoly.SetHole(false);
-    unsigned n = vertices.size();
-    for(unsigned i = 0; i < n; ++i){
+    size_t n = vertices.size();
+    for(size_t i = 0; i < n; ++i){
 
       // should all have zero z coordinate now
       double z = vertices[n-i-1].z();
@@ -521,6 +572,10 @@ namespace openstudio{
       test = pp.Triangulate_MONO(&polys, &resultPolys);
     }
     if (test == 0){
+      //std::stringstream ss;
+      //ss << "Vertices: " << vertices << std::endl;
+      //for (const auto& hole : holes){ ss << "Hole:" << hole << std::endl; }
+      //std::string testStr = ss.str();
       LOG_FREE(Error, "utilities.geometry.computeTriangulation", "Failed to partition polygon");
       return result;
     }
@@ -555,12 +610,261 @@ namespace openstudio{
     }
     return result;
   }
-  
+
   std::vector<Point3d> reverse(const Point3dVector& vertices)
   {
     std::vector<Point3d> result(vertices);
     std::reverse(result.begin(), result.end());
     return result;
+  }
+
+  bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio,
+    double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
+    double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor,
+    const Point3dVector& vertices, Point3dVector& viewVertices,
+    Point3dVector& daylightingVertices, Point3dVector& exteriorShadingVertices,
+    Point3dVector& interiorShelfVertices)
+  {
+    // check inputs for reasonableness
+    double totalWWR = viewGlassToWallRatio + daylightingGlassToWallRatio;
+    if (totalWWR == 0){
+      // requesting no glass? remove existing windows?
+      return false;
+    }else if (totalWWR < 0.0 || totalWWR >= 1.0){
+      return false;
+    }
+
+    boost::optional<double> grossArea = getArea(vertices);
+    if (!grossArea){
+      return false;
+    }
+
+    Transformation transformation = Transformation::alignFace(vertices);
+    Point3dVector faceVertices = transformation.inverse() * vertices;
+
+    if (faceVertices.empty()){
+      return false;
+    }
+
+    bool doViewGlass = (viewGlassToWallRatio > 0);
+    bool doDaylightGlass = (daylightingGlassToWallRatio > 0);
+    bool doExteriorShading = (doViewGlass && (exteriorShadingProjectionFactor > 0));
+    bool doInteriorShelf = (doDaylightGlass && (interiorShelfProjectionFactor > 0));
+    bool doViewAndDaylightGlass = (doViewGlass && doDaylightGlass);
+
+    // ignore these user arguments?
+    if (!doViewGlass){
+      desiredViewGlassSillHeight = 0.0;
+    }
+    if (!doDaylightGlass){
+      desiredDaylightingGlassHeaderHeight = 0.0;
+    }
+
+    // new coordinate system has z' in direction of outward normal, y' is up
+    double xmin = std::numeric_limits<double>::max();
+    double xmax = std::numeric_limits<double>::min();
+    double ymin = std::numeric_limits<double>::max();
+    double ymax = std::numeric_limits<double>::min();
+    for (const Point3d& faceVertex : faceVertices){
+      xmin = std::min(xmin, faceVertex.x());
+      xmax = std::max(xmax, faceVertex.x());
+      ymin = std::min(ymin, faceVertex.y());
+      ymax = std::max(ymax, faceVertex.y());
+    }
+    if ((xmin > xmax) || (ymin > ymax)){
+      return false;
+    }
+
+    double oneInch = 0.0254;
+
+    // DLM: preserve a 1" gap between window and edge to keep SketchUp happy
+    double minGlassToEdgeDistance = oneInch;
+    double minViewToDaylightDistance = 0;
+    if (doViewAndDaylightGlass){
+      minViewToDaylightDistance = oneInch;
+    }
+
+    // wall parameters
+    double wallWidth = xmax - xmin;
+    double wallHeight = ymax - ymin;
+    double wallArea = wallWidth*wallHeight;
+
+    if (wallWidth < 2*minGlassToEdgeDistance){
+      return false;
+    }
+
+    if (wallHeight < 2*minGlassToEdgeDistance + minViewToDaylightDistance){
+      return false;
+    }
+
+    // check against actual surface area to ensure this is a rectangle?
+    if (std::abs(wallArea - grossArea.get()) > oneInch*oneInch){
+      return false;
+    }
+
+    double maxWindowArea = wallArea - 2*wallHeight*minGlassToEdgeDistance - (wallWidth-2*minGlassToEdgeDistance)*(2*minGlassToEdgeDistance + minViewToDaylightDistance);
+    double requestedViewArea = viewGlassToWallRatio*wallArea;
+    double requestedDaylightingArea = daylightingGlassToWallRatio*wallArea;
+    double requestedTotalWindowArea = totalWWR*wallArea;
+
+    if (requestedTotalWindowArea > maxWindowArea){
+      return false;
+    }
+
+    // view glass parameters
+    double viewMinX = 0;
+    double viewMinY = 0;
+    double viewWidth = 0;
+    double viewHeight = 0;
+
+    // daylighting glass parameters
+    double daylightingWidth = 0;
+    double daylightingHeight = 0;
+    double daylightingMinX = 0;
+    double daylightingMinY = 0;
+
+    // initial free parameters
+    double viewWidthInset = minGlassToEdgeDistance;
+    double viewSillHeight = std::max(desiredViewGlassSillHeight, minGlassToEdgeDistance);
+    double daylightingWidthInset = minGlassToEdgeDistance;
+    double daylightingHeaderHeight = std::max(desiredDaylightingGlassHeaderHeight, minGlassToEdgeDistance);
+
+    bool converged = false;
+    for (unsigned i = 0; i < 100; ++i){
+
+      // view glass parameters
+      viewMinX = viewWidthInset;
+      viewMinY = viewSillHeight;
+      viewWidth = wallWidth - 2*viewWidthInset;
+      viewHeight = requestedViewArea/viewWidth;
+
+      // daylighting glass parameters
+      daylightingWidth = wallWidth - 2*daylightingWidthInset;
+      daylightingHeight = requestedDaylightingArea/daylightingWidth;
+      daylightingMinX = viewWidthInset;
+      daylightingMinY = wallHeight - daylightingHeaderHeight - daylightingHeight;
+
+      if (viewMinY + viewHeight + minViewToDaylightDistance > daylightingMinY){
+        // windows overlap or exceed maximum size
+
+        if (doViewAndDaylightGlass){
+
+          // try shrinking vertical offsets
+          viewSillHeight = std::max(viewSillHeight - oneInch, minGlassToEdgeDistance);
+          daylightingHeaderHeight = std::max(daylightingHeaderHeight - oneInch, minGlassToEdgeDistance);
+
+        }else if (doViewGlass){
+
+          // solve directly
+          viewSillHeight = wallHeight - minGlassToEdgeDistance - viewHeight;
+
+          if (viewSillHeight < minGlassToEdgeDistance){
+            // cannot make window this large
+            return false;
+          }
+
+        }else if (doDaylightGlass){
+
+          // solve directly
+          daylightingHeaderHeight = wallHeight - minGlassToEdgeDistance - daylightingHeight;
+
+          if (daylightingHeaderHeight < minGlassToEdgeDistance){
+            // cannot make window this large
+            return false;
+          }
+
+        }
+
+      }else{
+
+        converged = true;
+        break;
+
+      }
+    }
+
+    if (!converged){
+      return false;
+    }
+
+    Point3dVector surfacePolygon;
+    for (const Point3d& point : faceVertices){
+      if (std::abs(point.z()) > 0.001){
+        LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface point z not on plane, z =" << point.z());
+      }
+      surfacePolygon.push_back(Point3d(point.x(),point.y(), 0.0));
+    }
+    std::reverse(surfacePolygon.begin(), surfacePolygon.end());
+
+    if (doViewGlass){
+      viewVertices.push_back(Point3d(viewMinX, viewMinY + viewHeight, 0));
+      viewVertices.push_back(Point3d(viewMinX, viewMinY, 0));
+      viewVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY, 0));
+      viewVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, 0));
+
+      Point3dVector windowPolygon;
+      for (const Point3d& point : viewVertices){
+        if (std::abs(point.z()) > 0.001){
+          LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface point z not on plane, z =" << point.z());
+        }
+        windowPolygon.push_back(Point3d(point.x(),point.y(), 0.0));
+      }
+
+      // sub surface must be fully contained by base surface
+      for (const Point3d& point : windowPolygon){
+        if (!within(point, surfacePolygon, 0.001)){
+          std::cout << "point: " << point << std::endl;
+          std::cout << "surfacePolygon: " << surfacePolygon << std::endl;
+          LOG_FREE(Debug, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface does not fully contain SubSurface");
+          return false;
+        }
+      }
+    }
+
+    if (doDaylightGlass){
+      daylightingVertices.push_back(Point3d(daylightingMinX, daylightingMinY + daylightingHeight, 0));
+      daylightingVertices.push_back(Point3d(daylightingMinX, daylightingMinY, 0));
+      daylightingVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, 0));
+      daylightingVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY + daylightingHeight, 0));
+
+      Point3dVector windowPolygon;
+      for (const Point3d& point : daylightingVertices){
+        if (std::abs(point.z()) > 0.001){
+          LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface point z not on plane, z =" << point.z());
+        }
+        windowPolygon.push_back(Point3d(point.x(),point.y(), 0.0));
+      }
+
+      // sub surface must be fully contained by base surface
+      for (const Point3d& point : windowPolygon){
+        if (!within(point, surfacePolygon, 0.001)){
+          LOG_FREE(Debug, "utilities.geometry.applyViewAndDaylightingGlassRatios", "Surface does not fully contain SubSurface");
+          return false;
+        }
+      }
+    }
+
+    if (doExteriorShading) {
+      exteriorShadingVertices.push_back(Point3d(viewMinX, viewMinY + viewHeight, 0));
+      exteriorShadingVertices.push_back(Point3d(viewMinX, viewMinY + viewHeight, exteriorShadingProjectionFactor*viewHeight));
+      exteriorShadingVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, exteriorShadingProjectionFactor*viewHeight));
+      exteriorShadingVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, 0));
+    }
+
+    if (doInteriorShelf) {
+      interiorShelfVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, 0));
+      interiorShelfVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY, -interiorShelfProjectionFactor*daylightingHeight));
+      interiorShelfVertices.push_back(Point3d(daylightingMinX, daylightingMinY, -interiorShelfProjectionFactor*daylightingHeight));
+      interiorShelfVertices.push_back(Point3d(daylightingMinX, daylightingMinY, 0));
+    }
+
+    // put all vertices back into input coordinate system
+    viewVertices = transformation*viewVertices;
+    daylightingVertices = transformation*daylightingVertices;
+    exteriorShadingVertices = transformation*exteriorShadingVertices;
+    interiorShelfVertices = transformation*interiorShelfVertices;
+
+    return true;
   }
 
 } // openstudio

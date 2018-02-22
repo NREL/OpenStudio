@@ -90,17 +90,17 @@
 </Type>
 
 <Type Name="boost::container::deque&lt;*&gt;">
-    <DisplayString>{{ size={(sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1)) * 
-        (members_.m_finish.m_node - members_.m_start.m_node - 1) + (members_.m_finish.m_cur - members_.m_finish.m_first) + 
+    <DisplayString>{{ size={(sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1)) *
+        (members_.m_finish.m_node - members_.m_start.m_node - 1) + (members_.m_finish.m_cur - members_.m_finish.m_first) +
         (members_.m_start.m_last - members_.m_start.m_cur)} }}</DisplayString>
     <Expand>
-        <Item Name="[size]" ExcludeView="simple">(sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1)) * 
-        (members_.m_finish.m_node - members_.m_start.m_node - 1) + (members_.m_finish.m_cur - members_.m_finish.m_first) + 
+        <Item Name="[size]" ExcludeView="simple">(sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1)) *
+        (members_.m_finish.m_node - members_.m_start.m_node - 1) + (members_.m_finish.m_cur - members_.m_finish.m_first) +
         (members_.m_start.m_last - members_.m_start.m_cur)</Item>
         <Item Name="[buffer_size]" ExcludeView="simple">sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1)</Item>
         <IndexListItems>
-            <Size>(sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1)) * 
-            (members_.m_finish.m_node - members_.m_start.m_node - 1) + (members_.m_finish.m_cur - members_.m_finish.m_first) + 
+            <Size>(sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1)) *
+            (members_.m_finish.m_node - members_.m_start.m_node - 1) + (members_.m_finish.m_cur - members_.m_finish.m_first) +
             (members_.m_start.m_last - members_.m_start.m_cur)</Size>
             <ValueNode>members_.m_start.m_node[(($i + (members_.m_start.m_cur - members_.m_start.m_first)) / (sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1)))][($i + (members_.m_start.m_cur - members_.m_start.m_first)) % (sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1))]</ValueNode>
         </IndexListItems>
@@ -240,12 +240,12 @@
 
 <!-- boost <= 1.54 -->
 <Type Name="boost::container::stable_vector&lt;*&gt;">
-    <DisplayString>{{ size={index.members_.m_size ? index.members_.m_size - ExtraPointers : 0} }}</DisplayString> 
+    <DisplayString>{{ size={index.members_.m_size ? index.members_.m_size - ExtraPointers : 0} }}</DisplayString>
     <Expand>
         <Item Name="[size]" ExcludeView="simple">index.members_.m_size ? index.members_.m_size - ExtraPointers : 0</Item>
         <IndexListItems>
             <Size>index.members_.m_size ? index.members_.m_size - ExtraPointers : 0</Size>
-            <ValueNode>((boost::container::stable_vector_detail::node_type&lt;void *,$T1&gt;*)index.members_.m_start[$i])->value</ValueNode> 
+            <ValueNode>((boost::container::stable_vector_detail::node_type&lt;void *,$T1&gt;*)index.members_.m_start[$i])->value</ValueNode>
         </IndexListItems>
     </Expand>
 </Type>
@@ -260,12 +260,12 @@
 
 <!-- boost 1.55 >= -->
 <Type Name="boost::container::stable_vector&lt;*,*&gt;">
-    <DisplayString>{{ size={index.m_holder.m_size ? index.m_holder.m_size - ExtraPointers : 0} }}</DisplayString> 
+    <DisplayString>{{ size={index.m_holder.m_size ? index.m_holder.m_size - ExtraPointers : 0} }}</DisplayString>
     <Expand>
         <Item Name="[size]" ExcludeView="simple">index.m_holder.m_size ? index.m_holder.m_size - ExtraPointers : 0</Item>
         <IndexListItems>
             <Size>index.m_holder.m_size ? index.m_holder.m_size - ExtraPointers : 0</Size>
-            <ValueNode>((boost::container::stable_vector_detail::node_type&lt;void *,$T1&gt;*)index.m_holder.m_start[$i])->value</ValueNode> 
+            <ValueNode>((boost::container::stable_vector_detail::node_type&lt;void *,$T1&gt;*)index.m_holder.m_start[$i])->value</ValueNode>
         </IndexListItems>
     </Expand>
 </Type>

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -60,6 +60,8 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "AvailabilityManagerAssignmentList.hpp"
+#include "AvailabilityManagerAssignmentList_Impl.hpp"
 #include "AvailabilityManager.hpp"
 #include "AvailabilityManager_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -92,8 +94,40 @@ PlantLoop_Impl::PlantLoop_Impl(const PlantLoop_Impl& other,
                                    Model_Impl* model,
                                    bool keepHandle)
   : Loop_Impl(other,model,keepHandle)
-{
-}
+{}
+
+  const std::vector<std::string>& PlantLoop_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    if (result.empty())
+    {
+      result.push_back("Plant Supply Side Cooling Demand Rate");
+      result.push_back("Plant Supply Side Heating Demand Rate");
+      result.push_back("Plant Supply Side Inlet Mass Flow Rate");
+      result.push_back("Plant Supply Side Inlet Temperature");
+      result.push_back("Plant Supply Side Outlet Temperature");
+      result.push_back("Plant Supply Side Not Distributed Demand Rate");
+      result.push_back("Plant Supply Side Unmet Demand Rate");
+      result.push_back("Plant Solver Sub Iteration Count");
+      result.push_back("Plant Solver Half Loop Calls Count");
+      result.push_back("Debug Plant Loop Bypass Fraction");
+      result.push_back("Debug Plant Last Simulated Loop Side");
+      result.push_back("Plant Common Pipe Mass Flow Rate");
+      result.push_back("Plant Common Pipe Temperature");
+      result.push_back("Plant Common Pipe Flow Direction Status");
+      result.push_back("Plant Common Pipe Primary Mass Flow Rate");
+      result.push_back("Plant Common Pipe Secondary Mass Flow Rate");
+      result.push_back("Primary Side Common Pipe Flow Direction");
+      result.push_back("Secondary Side Common Pipe Flow Direction");
+      result.push_back("Plant Common Pipe Primary to Secondary Mass Flow Rate");
+      result.push_back("Plant Common Pipe Secondary to Primary Mass Flow Rate");
+      result.push_back("Plant System Cycle On Off Status");
+      result.push_back("Plant Demand Side Loop Pressure Difference");
+      result.push_back("Plant Supply Side Loop Pressure Difference");
+      result.push_back("Plant Loop Pressure Difference");
+    }
+    return result;
+  }
 
 std::vector<openstudio::IdfObject> PlantLoop_Impl::remove()
 {
@@ -102,9 +136,7 @@ std::vector<openstudio::IdfObject> PlantLoop_Impl::remove()
   ModelObjectVector modelObjects;
   ModelObjectVector::iterator it;
 
-  if( auto t_availabilityManager = availabilityManager() ) {
-    t_availabilityManager->remove();
-  }
+  availabilityManagerAssignmentList().remove();
 
   modelObjects = supplyComponents();
   for(it = modelObjects.begin();
@@ -169,11 +201,12 @@ IddObjectType PlantLoop_Impl::iddObjectType() const {
 ModelObject PlantLoop_Impl::clone(Model model) const
 {
   PlantLoop plantLoopClone = Loop_Impl::clone(model).cast<PlantLoop>();
-  if( auto mo = availabilityManager() ) {
-    auto clone = mo->clone(model).cast<AvailabilityManager>();
-    plantLoopClone.setAvailabilityManager(clone);
-  } else {
-    plantLoopClone.setString(OS_PlantLoopFields::AvailabilityManagerName,"");
+
+  {
+    // Perhaps call a clone(Loop loop) instead...
+    AvailabilityManagerAssignmentList avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
+    avmListClone.setName(plantLoopClone.name().get() + " AvailabilityManagerAssigmentList");
+    plantLoopClone.setPointer(OS_PlantLoopFields::AvailabilityManagerListName, avmListClone.handle());
   }
 
   return plantLoopClone;
@@ -250,10 +283,7 @@ bool PlantLoop_Impl::addSupplyBranchForComponent( HVACComponent component )
         if ( (node->outletModelObject().get() == mixer) &&
               (node->inletModelObject().get() == splitter) )
         {
-          if( component.addToNode(node.get()) )
-          {
-            return true;
-          }
+          return component.addToNode(node.get());
         }
       }
     }
@@ -479,10 +509,11 @@ Mixer PlantLoop_Impl::supplyMixer() const
   return supplyComponents( IddObjectType::OS_Connector_Mixer ).front().cast<Mixer>();
 }
 
-void PlantLoop_Impl::setSupplyMixer(Mixer const & mixer)
+bool PlantLoop_Impl::setSupplyMixer(Mixer const & mixer)
 {
   auto result = setPointer(OS_PlantLoopFields::SupplyMixerName,mixer.handle());
   OS_ASSERT(result);
+  return result;
 }
 
 Splitter PlantLoop_Impl::supplySplitter() const
@@ -492,10 +523,11 @@ Splitter PlantLoop_Impl::supplySplitter() const
   return supplyComponents( IddObjectType::OS_Connector_Splitter ).front().cast<Splitter>();
 }
 
-void PlantLoop_Impl::setSupplySplitter(Splitter const & splitter)
+bool PlantLoop_Impl::setSupplySplitter(Splitter const & splitter)
 {
   auto result = setPointer(OS_PlantLoopFields::SupplySplitterName,splitter.handle());
   OS_ASSERT(result);
+  return result;
 }
 
 Mixer PlantLoop_Impl::demandMixer()
@@ -505,10 +537,11 @@ Mixer PlantLoop_Impl::demandMixer()
   return demandComponents( IddObjectType::OS_Connector_Mixer ).front().cast<Mixer>();
 }
 
-void PlantLoop_Impl::setDemandMixer(Mixer const & mixer)
+bool PlantLoop_Impl::setDemandMixer(Mixer const & mixer)
 {
   auto result = setPointer(OS_PlantLoopFields::DemandMixerName,mixer.handle());
   OS_ASSERT(result);
+  return result;
 }
 
 Splitter PlantLoop_Impl::demandSplitter()
@@ -518,10 +551,11 @@ Splitter PlantLoop_Impl::demandSplitter()
   return demandComponents( IddObjectType::OS_Connector_Splitter ).front().cast<Splitter>();
 }
 
-void PlantLoop_Impl::setDemandSplitter(Splitter const & splitter)
+bool PlantLoop_Impl::setDemandSplitter(Splitter const & splitter)
 {
   auto result = setPointer(OS_PlantLoopFields::DemandSplitterName,splitter.handle());
   OS_ASSERT(result);
+  return result;
 }
 
 std::string PlantLoop_Impl::loadDistributionScheme()
@@ -541,35 +575,14 @@ bool PlantLoop_Impl::setLoadDistributionScheme(std::string scheme)
   return setString(OS_PlantLoopFields::LoadDistributionScheme,scheme);
 }
 
-boost::optional<AvailabilityManager> PlantLoop_Impl::availabilityManager() const {
-  return getObject<ModelObject>().getModelObjectTarget<AvailabilityManager>(OS_PlantLoopFields::AvailabilityManagerName);
-}
-
-bool PlantLoop_Impl::setAvailabilityManager(const AvailabilityManager & availabilityManager) {
-  auto type = availabilityManager.iddObjectType();
-  if( type == IddObjectType::OS_AvailabilityManager_NightCycle ||
-      type == IddObjectType::OS_AvailabilityManager_HybridVentilation ||
-      type == IddObjectType::OS_AvailabilityManager_NightVentilation ||
-      type == IddObjectType::OS_AvailabilityManager_OptimumStart ||
-      type == IddObjectType::OS_AvailabilityManager_DifferentialThermostat) {
-    return setPointer(OS_PlantLoopFields::AvailabilityManagerName, availabilityManager.handle());
-  }
-  return false;
-}
-
-void PlantLoop_Impl::resetAvailabilityManager() {
-  bool result = setString(OS_PlantLoopFields::AvailabilityManagerName, "");
-  OS_ASSERT(result);
-}
-
 double PlantLoop_Impl::maximumLoopTemperature()
 {
   return getDouble(OS_PlantLoopFields::MaximumLoopTemperature,true).get();
 }
 
-void PlantLoop_Impl::setMaximumLoopTemperature( double value )
+bool PlantLoop_Impl::setMaximumLoopTemperature( double value )
 {
-  setDouble(OS_PlantLoopFields::MaximumLoopTemperature,value);
+  return setDouble(OS_PlantLoopFields::MaximumLoopTemperature,value);;
 }
 
 double PlantLoop_Impl::minimumLoopTemperature()
@@ -577,9 +590,9 @@ double PlantLoop_Impl::minimumLoopTemperature()
   return getDouble(OS_PlantLoopFields::MinimumLoopTemperature,true).get();
 }
 
-void PlantLoop_Impl::setMinimumLoopTemperature( double value )
+bool PlantLoop_Impl::setMinimumLoopTemperature( double value )
 {
-  setDouble(OS_PlantLoopFields::MinimumLoopTemperature,value);
+  return setDouble(OS_PlantLoopFields::MinimumLoopTemperature,value);;
 }
 
 boost::optional<double> PlantLoop_Impl::maximumLoopFlowRate()
@@ -587,9 +600,9 @@ boost::optional<double> PlantLoop_Impl::maximumLoopFlowRate()
   return getDouble(OS_PlantLoopFields::MaximumLoopFlowRate,true);
 }
 
-void PlantLoop_Impl::setMaximumLoopFlowRate( double value )
+bool PlantLoop_Impl::setMaximumLoopFlowRate( double value )
 {
-  setDouble(OS_PlantLoopFields::MaximumLoopFlowRate,value);
+  return setDouble(OS_PlantLoopFields::MaximumLoopFlowRate,value);;
 }
 
 bool PlantLoop_Impl::isMaximumLoopFlowRateAutosized()
@@ -612,9 +625,9 @@ boost::optional<double> PlantLoop_Impl::minimumLoopFlowRate()
   return getDouble(OS_PlantLoopFields::MinimumLoopFlowRate,true);
 }
 
-void PlantLoop_Impl::setMinimumLoopFlowRate( double value )
+bool PlantLoop_Impl::setMinimumLoopFlowRate( double value )
 {
-  setDouble(OS_PlantLoopFields::MinimumLoopFlowRate,value);
+  return setDouble(OS_PlantLoopFields::MinimumLoopFlowRate,value);;
 }
 
 bool PlantLoop_Impl::isMinimumLoopFlowRateAutosized()
@@ -637,9 +650,9 @@ boost::optional<double> PlantLoop_Impl::plantLoopVolume()
   return getDouble(OS_PlantLoopFields::PlantLoopVolume,true);
 }
 
-void PlantLoop_Impl::setPlantLoopVolume( double value )
+bool PlantLoop_Impl::setPlantLoopVolume( double value )
 {
-  setDouble(OS_PlantLoopFields::PlantLoopVolume,value);
+  return setDouble(OS_PlantLoopFields::PlantLoopVolume,value);;
 }
 
 bool PlantLoop_Impl::isPlantLoopVolumeAutocalculated()
@@ -671,8 +684,8 @@ int PlantLoop_Impl::glycolConcentration() const {
   return getInt(OS_PlantLoopFields::GlycolConcentration,true).get();
 }
 
-void PlantLoop_Impl::setGlycolConcentration(int glycolConcentration) {
-  setInt(OS_PlantLoopFields::GlycolConcentration, glycolConcentration);
+bool PlantLoop_Impl::setGlycolConcentration(int glycolConcentration) {
+  return setInt(OS_PlantLoopFields::GlycolConcentration, glycolConcentration);;
 }
 
 Node PlantLoop_Impl::loopTemperatureSetpointNode()
@@ -686,12 +699,13 @@ Node PlantLoop_Impl::loopTemperatureSetpointNode()
   return node.get();
 }
 
-void PlantLoop_Impl::setLoopTemperatureSetpointNode( Node & node )
+bool PlantLoop_Impl::setLoopTemperatureSetpointNode( Node & node )
 {
   if( node.model() == this->model() )
   {
-    setPointer(OS_PlantLoopFields::LoopTemperatureSetpointNodeName,node.handle());
+    return setPointer(OS_PlantLoopFields::LoopTemperatureSetpointNodeName,node.handle());
   }
+  return false;
 }
 
 std::vector<ModelObject> PlantLoop_Impl::children() const
@@ -871,6 +885,120 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
     setString(OS_PlantLoopFields::ComponentSetpointOperationSchemeSchedule, "");
   }
 
+  boost::optional<double> PlantLoop_Impl::autosizedMaximumLoopFlowRate() const {
+    return getAutosizedValue("Maximum Loop Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> PlantLoop_Impl::autosizedPlantLoopVolume() const {
+    return getAutosizedValue("Plant Loop Volume", "m3");
+  }
+
+  void PlantLoop_Impl::autosize() {
+    autosizeMaximumLoopFlowRate();
+    autocalculatePlantLoopVolume();
+  }
+
+  void PlantLoop_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumLoopFlowRate();
+    if (val) {
+      setMaximumLoopFlowRate(val.get());
+    }
+
+    val = autosizedPlantLoopVolume();
+    if (val) {
+      setPlantLoopVolume(val.get());
+    }
+
+  }
+
+  // AVM section
+  AvailabilityManagerAssignmentList PlantLoop_Impl::availabilityManagerAssignmentList() const
+  {
+    boost::optional<AvailabilityManagerAssignmentList> avmList =  getObject<ModelObject>().getModelObjectTarget<AvailabilityManagerAssignmentList>(OS_PlantLoopFields::AvailabilityManagerListName);
+    if (avmList) {
+      return avmList.get();
+    } else {
+      LOG_AND_THROW(briefDescription() << "doesn't have an AvailabilityManagerAssignmentList assigned, which shouldn't happen");
+    }
+  }
+
+
+  bool PlantLoop_Impl::addAvailabilityManager(const AvailabilityManager & availabilityManager)
+  {
+    auto type = availabilityManager.iddObjectType();
+
+    // should be all types but NightCycle and NightVentilation (AirLoopHVAC);
+    // and not HybridVentilation (AirLoop, and special, stand-alone)
+    if( type == IddObjectType::OS_AvailabilityManager_NightCycle ||
+        type == IddObjectType::OS_AvailabilityManager_HybridVentilation ||
+        type == IddObjectType::OS_AvailabilityManager_NightVentilation ) {
+      LOG(Warn, "Wrong AVM Type for a PlantLoop: " << availabilityManager.briefDescription());
+      return false;
+    } else {
+      return availabilityManagerAssignmentList().addAvailabilityManager(availabilityManager);
+    }
+  }
+
+  bool PlantLoop_Impl::addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority)
+  {
+    return availabilityManagerAssignmentList().addAvailabilityManager(availabilityManager, priority);
+  }
+
+  std::vector<AvailabilityManager> PlantLoop_Impl::availabilityManagers() const
+  {
+    // TODO: add the AVM Scheduled
+    return availabilityManagerAssignmentList().availabilityManagers();
+  }
+
+  bool PlantLoop_Impl::setAvailabilityManagers(const std::vector<AvailabilityManager> & avms)
+  {
+    return availabilityManagerAssignmentList().setAvailabilityManagers(avms);
+  }
+
+    void PlantLoop_Impl::resetAvailabilityManagers()
+  {
+    // TODO: should this affect the AVM Scheduled?
+    availabilityManagerAssignmentList().resetAvailabilityManagers();
+  }
+
+
+  bool PlantLoop_Impl::setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority)
+  {
+    return availabilityManagerAssignmentList().setAvailabilityManagerPriority(availabilityManager, priority);
+  }
+
+  unsigned PlantLoop_Impl::availabilityManagerPriority(const AvailabilityManager & availabilityManager) const
+  {
+    return availabilityManagerAssignmentList().availabilityManagerPriority(availabilityManager);
+  }
+
+  bool PlantLoop_Impl::removeAvailabilityManager(const AvailabilityManager& avm) {
+    return availabilityManagerAssignmentList().removeAvailabilityManager(avm);
+  }
+
+  bool PlantLoop_Impl::removeAvailabilityManager(unsigned priority) {
+    return availabilityManagerAssignmentList().removeAvailabilityManager(priority);
+  }
+
+  std::vector<EMSActuatorNames> PlantLoop_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Plant Loop Overall", "On/Off Supervisory"},
+                                            {"Supply Side Half Loop", "On/Off Supervisory"},
+                                            {"Demand Side Half Loop", "On/Off Supervisory"},
+                                            {"Plant Equipment Operation", "Distributed Load Rate"}}; //gets plantequipOperationScheme
+    //DYNAMIC
+    //{"Supply Side Branch", "On/Off Supervisory"}
+    //{"Demand Side Branch", "On/Off Supervisory"}
+    //{"Plant Component *", "On/Off Supervisory"}
+    return actuators;
+  }
+
+  std::vector<std::string> PlantLoop_Impl::emsInternalVariableNames() const {
+    //"Component Remaining Current Demand Rate" is dynamic for the plantloop components
+    std::vector<std::string> types{"Supply Side Current Demand Rate"};
+    return types;
+  }
+
 } // detail
 
 PlantLoop::PlantLoop(Model& model)
@@ -947,26 +1075,17 @@ PlantLoop::PlantLoop(Model& model)
   setString(OS_PlantLoopFields::PlantLoopDemandCalculationScheme,"");
   setString(OS_PlantLoopFields::CommonPipeSimulation,"");
   setString(OS_PlantLoopFields::PressureSimulationType,"");
+
+  // AvailabilityManagerAssignmentList
+  AvailabilityManagerAssignmentList avmList(*this);
+  setPointer(OS_PlantLoopFields::AvailabilityManagerListName, avmList.handle());
 }
 
 PlantLoop::PlantLoop(std::shared_ptr<detail::PlantLoop_Impl> impl)
   : Loop(std::move(impl))
 {}
 
-boost::optional<AvailabilityManager> PlantLoop::availabilityManager() const
-{
-  return getImpl<detail::PlantLoop_Impl>()->availabilityManager();
-}
 
-bool PlantLoop::setAvailabilityManager(const AvailabilityManager& availabilityManager)
-{
-  return getImpl<detail::PlantLoop_Impl>()->setAvailabilityManager(availabilityManager);
-}
-
-void PlantLoop::resetAvailabilityManager()
-{
-  return getImpl<detail::PlantLoop_Impl>()->resetAvailabilityManager();
-}
 
 std::vector<IdfObject> PlantLoop::remove()
 {
@@ -1078,9 +1197,9 @@ double PlantLoop::maximumLoopTemperature()
   return getImpl<detail::PlantLoop_Impl>()->maximumLoopTemperature();
 }
 
-void PlantLoop::setMaximumLoopTemperature( double value )
+bool PlantLoop::setMaximumLoopTemperature( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setMaximumLoopTemperature( value );
+  return getImpl<detail::PlantLoop_Impl>()->setMaximumLoopTemperature( value );
 }
 
 double PlantLoop::minimumLoopTemperature()
@@ -1088,9 +1207,9 @@ double PlantLoop::minimumLoopTemperature()
   return getImpl<detail::PlantLoop_Impl>()->minimumLoopTemperature();
 }
 
-void PlantLoop::setMinimumLoopTemperature( double value )
+bool PlantLoop::setMinimumLoopTemperature( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setMinimumLoopTemperature( value );
+  return getImpl<detail::PlantLoop_Impl>()->setMinimumLoopTemperature( value );
 }
 
 boost::optional<double> PlantLoop::maximumLoopFlowRate()
@@ -1098,9 +1217,9 @@ boost::optional<double> PlantLoop::maximumLoopFlowRate()
   return getImpl<detail::PlantLoop_Impl>()->maximumLoopFlowRate();
 }
 
-void PlantLoop::setMaximumLoopFlowRate( double value )
+bool PlantLoop::setMaximumLoopFlowRate( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setMaximumLoopFlowRate( value );
+  return getImpl<detail::PlantLoop_Impl>()->setMaximumLoopFlowRate( value );
 }
 
 bool PlantLoop::isMaximumLoopFlowRateAutosized()
@@ -1118,9 +1237,9 @@ boost::optional<double> PlantLoop::minimumLoopFlowRate()
   return getImpl<detail::PlantLoop_Impl>()->minimumLoopFlowRate();
 }
 
-void PlantLoop::setMinimumLoopFlowRate( double value )
+bool PlantLoop::setMinimumLoopFlowRate( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setMinimumLoopFlowRate( value );
+  return getImpl<detail::PlantLoop_Impl>()->setMinimumLoopFlowRate( value );
 }
 
 bool PlantLoop::isMinimumLoopFlowRateAutosized()
@@ -1138,9 +1257,9 @@ boost::optional<double> PlantLoop::plantLoopVolume()
   return getImpl<detail::PlantLoop_Impl>()->plantLoopVolume();
 }
 
-void PlantLoop::setPlantLoopVolume( double value )
+bool PlantLoop::setPlantLoopVolume( double value )
 {
-  getImpl<detail::PlantLoop_Impl>()->setPlantLoopVolume( value );
+  return getImpl<detail::PlantLoop_Impl>()->setPlantLoopVolume( value );
 }
 
 bool PlantLoop::isPlantLoopVolumeAutocalculated()
@@ -1173,8 +1292,8 @@ int PlantLoop::glycolConcentration() const {
   return getImpl<detail::PlantLoop_Impl>()->glycolConcentration();
 }
 
-void PlantLoop::setGlycolConcentration(int glycolConcentration) {
-  getImpl<detail::PlantLoop_Impl>()->setGlycolConcentration(glycolConcentration);
+bool PlantLoop::setGlycolConcentration(int glycolConcentration) {
+  return getImpl<detail::PlantLoop_Impl>()->setGlycolConcentration(glycolConcentration);
 }
 
 Node PlantLoop::loopTemperatureSetpointNode()
@@ -1182,9 +1301,9 @@ Node PlantLoop::loopTemperatureSetpointNode()
   return getImpl<detail::PlantLoop_Impl>()->loopTemperatureSetpointNode();
 }
 
-void PlantLoop::setLoopTemperatureSetpointNode( Node & node )
+bool PlantLoop::setLoopTemperatureSetpointNode( Node & node )
 {
-  getImpl<detail::PlantLoop_Impl>()->setLoopTemperatureSetpointNode( node );
+  return getImpl<detail::PlantLoop_Impl>()->setLoopTemperatureSetpointNode( node );
 }
 
 SizingPlant PlantLoop::sizingPlant() const
@@ -1306,6 +1425,86 @@ void PlantLoop::resetComponentSetpointOperationSchemeSchedule() {
   getImpl<detail::PlantLoop_Impl>()->resetComponentSetpointOperationSchemeSchedule();
 }
 
+boost::optional<double> PlantLoop::autosizedMaximumLoopFlowRate() const {
+  return getImpl<detail::PlantLoop_Impl>()->autosizedMaximumLoopFlowRate();
+}
+
+boost::optional<double> PlantLoop::autosizedPlantLoopVolume() const {
+  return getImpl<detail::PlantLoop_Impl>()->autosizedPlantLoopVolume();
+}
+
+/* Prefered way to interact with the Availability Managers */
+std::vector<AvailabilityManager> PlantLoop::availabilityManagers() const
+{
+  return getImpl<detail::PlantLoop_Impl>()->availabilityManagers();
+}
+
+bool PlantLoop::setAvailabilityManagers(const std::vector<AvailabilityManager> & avms)
+{
+  return getImpl<detail::PlantLoop_Impl>()->setAvailabilityManagers(avms);
+}
+
+void PlantLoop::resetAvailabilityManagers()
+{
+  return getImpl<detail::PlantLoop_Impl>()->resetAvailabilityManagers();
+}
+
+bool PlantLoop::addAvailabilityManager(const AvailabilityManager & availabilityManager)
+{
+  return getImpl<detail::PlantLoop_Impl>()->addAvailabilityManager(availabilityManager);
+}
+// End prefered way
+
+
+bool PlantLoop::addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority)
+{
+  return getImpl<detail::PlantLoop_Impl>()->addAvailabilityManager(availabilityManager, priority);
+}
+
+
+unsigned PlantLoop::availabilityManagerPriority(const AvailabilityManager & availabilityManager) const
+{
+  return getImpl<detail::PlantLoop_Impl>()->availabilityManagerPriority(availabilityManager);
+}
+
+bool PlantLoop::setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority)
+{
+  return getImpl<detail::PlantLoop_Impl>()->setAvailabilityManagerPriority(availabilityManager, priority);
+}
+
+bool PlantLoop::removeAvailabilityManager(const AvailabilityManager & availabilityManager)
+{
+  return getImpl<detail::PlantLoop_Impl>()->removeAvailabilityManager(availabilityManager);
+}
+
+bool PlantLoop::removeAvailabilityManager(const unsigned priority)
+{
+  return getImpl<detail::PlantLoop_Impl>()->removeAvailabilityManager(priority);
+}
+
+
+// TODO: START DEPRECATED SECTION
+
+  boost::optional<AvailabilityManager> PlantLoop::availabilityManager() const {
+    boost::optional<AvailabilityManager> avm;
+    std::vector<AvailabilityManager> avmVector = availabilityManagers();
+    if (avmVector.size() > 0) {
+      avm = avmVector[0];
+    }
+    return avm;
+  }
+
+  bool PlantLoop::setAvailabilityManager(const AvailabilityManager& availabilityManager) {
+    std::vector<AvailabilityManager> avmVector;
+    avmVector.push_back(availabilityManager);
+    return setAvailabilityManagers(avmVector);
+  }
+  void PlantLoop::resetAvailabilityManager() {
+    resetAvailabilityManagers();
+  }
+
+// END DEPRECATED
+
+
 } // model
 } // openstudio
-

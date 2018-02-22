@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -79,7 +79,18 @@ namespace detail {
   const std::vector<std::string>& HeatExchangerFluidToFluid_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Fluid Heat Exchanger Heat Transfer Rate");
+      result.push_back("Fluid Heat Exchanger Heat Transfer Energy");
+      result.push_back("Fluid Heat Exchanger Loop Supply Side Mass Flow Rate");
+      result.push_back("Fluid Heat Exchanger Loop Supply Side Inlet Temperature");
+      result.push_back("Fluid Heat Exchanger Loop Supply Side Outlet Temperature");
+      result.push_back("Fluid Heat Exchanger Loop Demand Side Mass Flow Rate");
+      result.push_back("Fluid Heat Exchanger Loop Demand Side Inlet Temperature");
+      result.push_back("Fluid Heat Exchanger Loop Demand Side Outlet Temperature");
+      result.push_back("Fluid Heat Exchanger Operation Status");
+      result.push_back("Fluid Heat Exchanger Effectiveness");
     }
     return result;
   }
@@ -366,7 +377,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void HeatExchangerFluidToFluid_Impl::setOperationMinimumTemperatureLimit(boost::optional<double> operationMinimumTemperatureLimit) {
+  bool HeatExchangerFluidToFluid_Impl::setOperationMinimumTemperatureLimit(boost::optional<double> operationMinimumTemperatureLimit) {
     bool result(false);
     if (operationMinimumTemperatureLimit) {
       result = setDouble(OS_HeatExchanger_FluidToFluidFields::OperationMinimumTemperatureLimit, operationMinimumTemperatureLimit.get());
@@ -376,6 +387,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void HeatExchangerFluidToFluid_Impl::resetOperationMinimumTemperatureLimit() {
@@ -383,7 +395,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void HeatExchangerFluidToFluid_Impl::setOperationMaximumTemperatureLimit(boost::optional<double> operationMaximumTemperatureLimit) {
+  bool HeatExchangerFluidToFluid_Impl::setOperationMaximumTemperatureLimit(boost::optional<double> operationMaximumTemperatureLimit) {
     bool result(false);
     if (operationMaximumTemperatureLimit) {
       result = setDouble(OS_HeatExchanger_FluidToFluidFields::OperationMaximumTemperatureLimit, operationMaximumTemperatureLimit.get());
@@ -393,6 +405,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void HeatExchangerFluidToFluid_Impl::resetOperationMaximumTemperatureLimit() {
@@ -418,6 +431,43 @@ namespace detail {
   unsigned HeatExchangerFluidToFluid_Impl::demandOutletPort()
   {
     return OS_HeatExchanger_FluidToFluidFields::LoopDemandSideOutletNode;
+  }
+
+  boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedLoopDemandSideDesignFlowRate() const {
+    return getAutosizedValue("Loop Demand Side Design Fluid Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedLoopSupplySideDesignFlowRate() const {
+    return getAutosizedValue("Loop Supply Side Design Fluid Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> HeatExchangerFluidToFluid_Impl::autosizedHeatExchangerUFactorTimesAreaValue() const {
+    return getAutosizedValue("Heat Exchanger U-Factor Times Area Value", "W/C");
+  }
+
+  void HeatExchangerFluidToFluid_Impl::autosize() {
+    autosizeLoopDemandSideDesignFlowRate();
+    autosizeLoopSupplySideDesignFlowRate();
+    autosizeHeatExchangerUFactorTimesAreaValue();
+  }
+
+  void HeatExchangerFluidToFluid_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedLoopDemandSideDesignFlowRate();
+    if (val) {
+      setLoopDemandSideDesignFlowRate(val.get());
+    }
+
+    val = autosizedLoopSupplySideDesignFlowRate();
+    if (val) {
+      setLoopSupplySideDesignFlowRate(val.get());
+    }
+
+    val = autosizedHeatExchangerUFactorTimesAreaValue();
+    if (val) {
+      setHeatExchangerUFactorTimesAreaValue(val.get());
+    }
+
   }
 
 } // detail
@@ -652,16 +702,16 @@ void HeatExchangerFluidToFluid::resetSizingFactor() {
   getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetSizingFactor();
 }
 
-void HeatExchangerFluidToFluid::setOperationMinimumTemperatureLimit(double operationMinimumTemperatureLimit) {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setOperationMinimumTemperatureLimit(operationMinimumTemperatureLimit);
+bool HeatExchangerFluidToFluid::setOperationMinimumTemperatureLimit(double operationMinimumTemperatureLimit) {
+  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setOperationMinimumTemperatureLimit(operationMinimumTemperatureLimit);
 }
 
 void HeatExchangerFluidToFluid::resetOperationMinimumTemperatureLimit() {
   getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetOperationMinimumTemperatureLimit();
 }
 
-void HeatExchangerFluidToFluid::setOperationMaximumTemperatureLimit(double operationMaximumTemperatureLimit) {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setOperationMaximumTemperatureLimit(operationMaximumTemperatureLimit);
+bool HeatExchangerFluidToFluid::setOperationMaximumTemperatureLimit(double operationMaximumTemperatureLimit) {
+  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setOperationMaximumTemperatureLimit(operationMaximumTemperatureLimit);
 }
 
 void HeatExchangerFluidToFluid::resetOperationMaximumTemperatureLimit() {
@@ -674,6 +724,17 @@ HeatExchangerFluidToFluid::HeatExchangerFluidToFluid(std::shared_ptr<detail::Hea
 {}
 /// @endcond
 
+  boost::optional<double> HeatExchangerFluidToFluid::autosizedLoopDemandSideDesignFlowRate() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizedLoopDemandSideDesignFlowRate();
+  }
+
+  boost::optional<double> HeatExchangerFluidToFluid::autosizedLoopSupplySideDesignFlowRate() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizedLoopSupplySideDesignFlowRate();
+  }
+
+  boost::optional<double> HeatExchangerFluidToFluid::autosizedHeatExchangerUFactorTimesAreaValue() const {
+    return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->autosizedHeatExchangerUFactorTimesAreaValue();
+  }
+
 } // model
 } // openstudio
-

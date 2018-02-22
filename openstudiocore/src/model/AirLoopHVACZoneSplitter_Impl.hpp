@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -35,6 +35,7 @@ namespace openstudio {
 namespace model {
 
 class ThermalZone;
+class AirflowNetworkDistributionNode;
 
 namespace detail {
 
@@ -62,6 +63,8 @@ class MODEL_API AirLoopHVACZoneSplitter_Impl : public Splitter_Impl {
 
   virtual IddObjectType iddObjectType() const override;
 
+  virtual std::vector<ModelObject> children() const override;
+
   std::vector<openstudio::IdfObject> remove() override;
 
   unsigned inletPort() override;
@@ -75,6 +78,10 @@ class MODEL_API AirLoopHVACZoneSplitter_Impl : public Splitter_Impl {
   boost::optional<ModelObject> zoneEquipmentForBranch(int branchIndex);
 
   void disconnect() override;
+
+  AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
+
+  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
   private:
 

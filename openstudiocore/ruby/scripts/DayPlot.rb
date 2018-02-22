@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -42,7 +42,7 @@ CSV.open(ARGV[0], 'r') do |row|
   next if row.nil?
   next if row.empty?
   next if /^\#\#/.match(row[0])
-  
+
   if not read_header1
     ## OpenStudio Daylight Simulation Results file
     read_header1 = true
@@ -50,37 +50,37 @@ CSV.open(ARGV[0], 'r') do |row|
     ## Header: xmin ymin z xmax ymin z xmax ymax z xspacing yspacing
     read_header2 = true
   else
-  
+
     if row[0].nil?
       raise "Null data in illuminance map file"
     end
-    
+
     ## Data: month,day,time,directNormalIllumimance(external),diffuseHorizontalIlluminance(external),pointIlluminance [lux]
     date = OpenStudio::Date.new(OpenStudio::MonthOfYear.new(row[0].to_i), row[1].to_i)
     time = OpenStudio::Time.new(row[2])
     dateTime = OpenStudio::DateTime.new(date, time)
-    
+
     dateTimes << dateTime
     directNormalIllumimances << row[3].to_f
     diffuseHorizontalIlluminances << row[4].to_f
-    
+
     sum = 0
     illuminances = Array.new
     row[5..-1].each do |illuminance|
-    
+
       if illuminance.to_f < 0
         puts "Warning illuminance #{illuminance} less than zero at #{dateTime}, will be reset to 0"
         illuminance = 0
       end
-      
+
       sum += illuminance.to_f
       illuminances << illuminance.to_f
     end
     averageIlluminances << sum/illuminances.size.to_f
     pointIlluminances << illuminances
-  
+
   end
-  
+
 end
 
 n = dateTimes.size
@@ -100,7 +100,7 @@ end
 directNormalIllumimanceData = OpenStudio::VectorLinePlotData::create(dateTimeVector, directNormalIllumimanceVector)
 diffuseHorizontalIlluminanceData = OpenStudio::VectorLinePlotData::create(dateTimeVector, diffuseHorizontalIlluminanceVector)
 averageIlluminanceData = OpenStudio::VectorLinePlotData::create(dateTimeVector, averageIlluminanceVector)
-  
+
 lp = OpenStudio::LinePlot::create().get
 lp.linePlotData(directNormalIllumimanceData, "Direct Normal Illuminance", OpenStudio::Color.new(OpenStudio::Black))
 lp.linePlotData(diffuseHorizontalIlluminanceData, "Diffuse Horizontal Illuminance", OpenStudio::Color.new(OpenStudio::Red))

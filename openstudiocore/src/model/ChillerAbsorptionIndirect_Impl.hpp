@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -67,6 +67,13 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual unsigned supplyInletPort() override;
+    virtual unsigned supplyOutletPort() override;
+    virtual unsigned demandInletPort() override;
+    virtual unsigned demandOutletPort() override;
+    virtual unsigned tertiaryInletPort() const override;
+    virtual unsigned tertiaryOutletPort() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -129,6 +136,20 @@ namespace detail {
 
     double sizingFactor() const;
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  boost::optional<double> autosizedNominalPumpingPower() const ;
+
+  boost::optional<double> autosizedDesignChilledWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignCondenserWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignGeneratorFluidFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
@@ -147,11 +168,11 @@ namespace detail {
 
     bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
 
-    void setDesignCondenserInletTemperature(double designCondenserInletTemperature);
+    bool setDesignCondenserInletTemperature(double designCondenserInletTemperature);
 
-    void setCondenserInletTemperatureLowerLimit(double condenserInletTemperatureLowerLimit);
+    bool setCondenserInletTemperatureLowerLimit(double condenserInletTemperatureLowerLimit);
 
-    void setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
+    bool setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
 
     bool setDesignChilledWaterFlowRate(boost::optional<double> designChilledWaterFlowRate);
 
@@ -177,13 +198,14 @@ namespace detail {
 
     bool setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(const Curve& curve);
 
+    // TODO: This needs to be set automatically based on plant loop connected to it
     bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
 
-    void setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate);
+    bool setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate);
 
     void autosizeDesignGeneratorFluidFlowRate();
 
-    void setTemperatureLowerLimitGeneratorInlet(double temperatureLowerLimitGeneratorInlet);
+    bool setTemperatureLowerLimitGeneratorInlet(double temperatureLowerLimitGeneratorInlet);
 
     bool setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator);
 
@@ -194,13 +216,6 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-
-    unsigned supplyInletPort() override;
-    unsigned supplyOutletPort() override;
-    unsigned demandInletPort() override;
-    unsigned demandOutletPort() override;
-    unsigned tertiaryInletPort() const override;
-    unsigned tertiaryOutletPort() const override;
 
     std::vector<ModelObject> children() const override;
     ModelObject clone(Model model) const override;
@@ -224,5 +239,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CHILLERABSORPTIONINDIRECT_IMPL_HPP
-
+#endif // MODEL_CHILLERABSORPTIONINDIRECT_IMPL_HPP

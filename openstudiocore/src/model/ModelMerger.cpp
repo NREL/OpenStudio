@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -49,12 +49,19 @@
 #include "InteriorPartitionSurface_Impl.hpp"
 #include "PlanarSurfaceGroup.hpp"
 #include "PlanarSurfaceGroup_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
 #include "Space.hpp"
 #include "Space_Impl.hpp"
 #include "DefaultConstructionSet.hpp"
 #include "DefaultConstructionSet_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
 #include "ShadingSurfaceGroup.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
+#include "DaylightingControl.hpp"
+#include "DaylightingControl_Impl.hpp"
+
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
@@ -79,7 +86,7 @@ namespace openstudio
     {
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
-      m_logSink.setThreadId(QThread::currentThread());    
+      m_logSink.setThreadId(QThread::currentThread());
     }
 
     std::vector<LogMessage> ModelMerger::warnings() const
@@ -116,7 +123,7 @@ namespace openstudio
       }
       return boost::none;
     }
-    
+
     boost::optional<UUID> ModelMerger::getCurrentModelHandle(const UUID& newHandle)
     {
       auto it = m_newToCurrentHandleMapping.find(newHandle);
@@ -141,6 +148,11 @@ namespace openstudio
         currentSurface.remove();
       }
 
+      // remove current shadingSurfaceGroups
+      for (auto& shadingSurfaceGroup : currentSpace.shadingSurfaceGroups()){
+        shadingSurfaceGroup.remove();
+      }
+
       // add new surfaces
       for (const auto& newSurface : newSpace.surfaces()){
         // DLM: this should probably be moved to a mergeSurface method
@@ -163,7 +175,44 @@ namespace openstudio
         }
       }
 
-      // DLM: TODO shadingSurfaceGroups
+      // add new shadingSurfaceGroups
+      for (const auto& newShadingSurfaceGroup : newSpace.shadingSurfaceGroups()){
+
+        // check if this already merged via a window clone
+        if (m_newMergedHandles.find(newShadingSurfaceGroup.handle()) != m_newMergedHandles.end()){
+          continue;
+        }
+
+        ShadingSurfaceGroup clone = newShadingSurfaceGroup.clone(m_currentModel).cast<ShadingSurfaceGroup>();
+        clone.setSpace(currentSpace);
+
+        m_newMergedHandles.insert(newShadingSurfaceGroup.handle());
+        m_currentToNewHandleMapping[clone.handle()] = newShadingSurfaceGroup.handle();
+        m_newToCurrentHandleMapping[newShadingSurfaceGroup.handle()] = clone.handle();
+
+        boost::optional<SubSurface> newShadedSubSurface = newShadingSurfaceGroup.shadedSubSurface();
+        if (newShadedSubSurface){
+          boost::optional<UUID> currentSubSurfaceHandle = getCurrentModelHandle(newShadedSubSurface->handle());
+          if (currentSubSurfaceHandle){
+            boost::optional<SubSurface> currentSubSurface = m_currentModel.getModelObject<SubSurface>(*currentSubSurfaceHandle);
+            if (currentSubSurface){
+              clone.setShadedSubSurface(*currentSubSurface);
+            }
+          }
+        }
+
+        boost::optional<Surface> newShadedSurface = newShadingSurfaceGroup.shadedSurface();
+        if (newShadedSurface){
+          boost::optional<UUID> currentSurfaceHandle = getCurrentModelHandle(newShadedSurface->handle());
+          if (currentSurfaceHandle){
+            boost::optional<Surface> currentSurface = m_currentModel.getModelObject<Surface>(*currentSurfaceHandle);
+            if (currentSurface){
+              clone.setShadedSurface(*currentSurface);
+            }
+          }
+        }
+      }
+
       // DLM: TODO interiorPartitionSurfaceGroups
 
       // thermal zone
@@ -231,6 +280,46 @@ namespace openstudio
         currentSpace.resetDefaultConstructionSet();
       }
 
+      // remove current daylightingControls
+      for (auto& daylightingControl : currentSpace.daylightingControls()){
+        daylightingControl.remove();
+      }
+
+      // add new daylightingControls
+      for (const auto& newDaylightingControl : newSpace.daylightingControls()){
+
+        DaylightingControl clone = newDaylightingControl.clone(m_currentModel).cast<DaylightingControl>();
+        clone.setSpace(currentSpace);
+
+        m_newMergedHandles.insert(newDaylightingControl.handle());
+        m_currentToNewHandleMapping[clone.handle()] = newDaylightingControl.handle();
+        m_newToCurrentHandleMapping[newDaylightingControl.handle()] = clone.handle();
+
+        // hook up daylighting control to thermal zone
+        for (const auto& newThermalZone : newDaylightingControl.getModelObjectSources<ThermalZone>()){
+          boost::optional<DaylightingControl> primaryDaylightingControl = newThermalZone.primaryDaylightingControl();
+          boost::optional<DaylightingControl> secondaryDaylightingControl = newThermalZone.secondaryDaylightingControl();
+
+          if (primaryDaylightingControl && (primaryDaylightingControl->handle() == newDaylightingControl.handle())){
+            boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(newThermalZone);
+            if (currentObject){
+              ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+              currentThermalZone.setPrimaryDaylightingControl(clone);
+              currentThermalZone.setFractionofZoneControlledbyPrimaryDaylightingControl(newThermalZone.fractionofZoneControlledbyPrimaryDaylightingControl());
+            }
+
+          } else if (secondaryDaylightingControl && (secondaryDaylightingControl->handle() == newDaylightingControl.handle())){
+            boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(newThermalZone);
+            if (currentObject){
+              ThermalZone currentThermalZone = currentObject->cast<ThermalZone>();
+              currentThermalZone.setSecondaryDaylightingControl(clone);
+              currentThermalZone.setFractionofZoneControlledbySecondaryDaylightingControl(newThermalZone.fractionofZoneControlledbySecondaryDaylightingControl());
+            }
+          }
+
+        }
+
+      }
     }
 
     void ModelMerger::mergeThermalZone(ThermalZone& currentThermalZone, const ThermalZone& newThermalZone)
@@ -243,9 +332,43 @@ namespace openstudio
 
       currentThermalZone.setName(newThermalZone.nameString());
 
-      // DLM: TODO multiplier
-      // DLM: TODO ceilingHeight
-      // DLM: TODO volume
+      // rendering color
+      boost::optional<RenderingColor> newColor = newThermalZone.renderingColor();
+      if (newColor){
+        boost::optional<RenderingColor> currentColor = currentThermalZone.renderingColor();
+        if (currentColor){
+          currentColor->setRenderingRedValue(newColor->renderingRedValue());
+          currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
+          currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
+          currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
+        } else{
+          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentThermalZone.model());
+          OS_ASSERT(currentColor);
+          currentThermalZone.setRenderingColor(*currentColor);
+        }
+      }
+
+      // multiplier
+      if (newThermalZone.isMultiplierDefaulted()){
+        currentThermalZone.resetMultiplier();
+      } else{
+        currentThermalZone.setMultiplier(newThermalZone.multiplier());
+      }
+
+      // ceilingHeight
+      if (newThermalZone.isCeilingHeightDefaulted() || newThermalZone.isCeilingHeightAutocalculated()){
+        currentThermalZone.resetCeilingHeight();
+      } else{
+        currentThermalZone.setCeilingHeight(newThermalZone.ceilingHeight());
+      }
+
+      // volume
+      if (newThermalZone.isVolumeDefaulted() || newThermalZone.isVolumeAutocalculated()){
+        currentThermalZone.resetVolume();
+      } else{
+        currentThermalZone.setVolume(newThermalZone.volume());
+      }
+
       // DLM: TODO zoneInsideConvectionAlgorithm
       // DLM: TODO zoneOutsideConvectionAlgorithm
       // DLM: TODO zoneConditioningEquipmentListName ?
@@ -254,7 +377,7 @@ namespace openstudio
       // DLM: TODO zoneControlContaminantController
       // DLM: TODO sizingZone
     }
-  
+
     void ModelMerger::mergeSpaceType(SpaceType& currentSpaceType, const SpaceType& newSpaceType)
     {
       if (m_newMergedHandles.find(newSpaceType.handle()) != m_newMergedHandles.end()){
@@ -277,14 +400,51 @@ namespace openstudio
       } else{
         currentSpaceType.resetDefaultConstructionSet();
       }
-        
-      // DLM: TODO default schedule set
 
-      // DLM: TODO rendering color
+      // default schedule set
+      if (boost::optional<DefaultScheduleSet> newDefaultScheduleSet = newSpaceType.defaultScheduleSet()){
+        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultScheduleSet);
+        if (currentObject){
+          DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
+          currentSpaceType.setDefaultScheduleSet(currentDefaultScheduleSet);
+        } else{
+          currentSpaceType.resetDefaultScheduleSet();
+        }
+      } else{
+        currentSpaceType.resetDefaultScheduleSet();
+      }
 
-      // DLM: TODO standardsBuildingType
+      // rendering color
+      boost::optional<RenderingColor> newColor = newSpaceType.renderingColor();
+      if (newColor){
+        boost::optional<RenderingColor> currentColor = currentSpaceType.renderingColor();
+        if (currentColor){
+          currentColor->setRenderingRedValue(newColor->renderingRedValue());
+          currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
+          currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
+          currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
+        } else{
+          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentSpaceType.model());
+          OS_ASSERT(currentColor);
+          currentSpaceType.setRenderingColor(*currentColor);
+        }
+      }
 
-      // DLM: TODO standardsSpaceType
+      // standardsBuildingType
+      boost::optional<std::string> newStandardsBuildingType = newSpaceType.standardsBuildingType();
+      if (newStandardsBuildingType){
+        currentSpaceType.setStandardsBuildingType(*newStandardsBuildingType);
+      } else {
+        currentSpaceType.resetStandardsBuildingType();
+      }
+
+      // standardsSpaceType
+      boost::optional<std::string> newStandardsSpaceType = newSpaceType.standardsSpaceType();
+      if (newStandardsSpaceType){
+        currentSpaceType.setStandardsSpaceType(*newStandardsSpaceType);
+      } else {
+        currentSpaceType.resetStandardsSpaceType();
+      }
 
       // bring over child loads
       for (const auto& newChild : newSpaceType.children()){
@@ -303,19 +463,71 @@ namespace openstudio
 
       currentBuildingStory.setName(newBuildingStory.nameString());
 
-      // DLM: TODO nominalZCoordinate() const;
+      // rendering color
+      boost::optional<RenderingColor> newColor = newBuildingStory.renderingColor();
+      if (newColor){
+        boost::optional<RenderingColor> currentColor = currentBuildingStory.renderingColor();
+        if (currentColor){
+          currentColor->setRenderingRedValue(newColor->renderingRedValue());
+          currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
+          currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
+          currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
+        } else{
+          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingStory.model());
+          OS_ASSERT(currentColor);
+          currentBuildingStory.setRenderingColor(*currentColor);
+        }
+      }
 
-      // DLM: TODO nominalFloortoFloorHeight() const;
+      // nominalZCoordinate
+      boost::optional<double> newNominalZCoordinate = newBuildingStory.nominalZCoordinate();
+      if (newNominalZCoordinate){
+        currentBuildingStory.setNominalZCoordinate(*newNominalZCoordinate);
+      } else {
+        currentBuildingStory.resetNominalZCoordinate();
+      }
 
-      // DLM: TODO nominalFloortoCeilingHeight() const;
+      // nominalFloortoFloorHeight
+      boost::optional<double> newNominalFloortoFloorHeight = newBuildingStory.nominalFloortoFloorHeight();
+      if (newNominalFloortoFloorHeight){
+        currentBuildingStory.setNominalFloortoFloorHeight(*newNominalFloortoFloorHeight);
+      } else {
+        currentBuildingStory.resetNominalFloortoFloorHeight();
+      }
 
-      // DLM: TODO spaces() const;
+      // nominalFloortoCeilingHeight
+      boost::optional<double> newNominalFloortoCeilingHeight = newBuildingStory.nominalFloortoCeilingHeight();
+      if (newNominalFloortoCeilingHeight){
+        currentBuildingStory.setNominalFloortoCeilingHeight(*newNominalFloortoCeilingHeight);
+      } else {
+        currentBuildingStory.resetNominalFloortoCeilingHeight();
+      }
 
-      // DLM: TODO defaultConstructionSet() const;
+      //default construction set.
+      if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newBuildingStory.defaultConstructionSet()){
+        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
+        if (currentObject){
+          DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+          currentBuildingStory.setDefaultConstructionSet(currentDefaultConstructionSet);
+        } else{
+          currentBuildingStory.resetDefaultConstructionSet();
+        }
+      } else{
+        currentBuildingStory.resetDefaultConstructionSet();
+      }
 
-      // DLM: TODO defaultScheduleSet() const;
-
-      // DLM: TODO renderingColor() const;
+      // default schedule set
+      if (boost::optional<DefaultScheduleSet> newDefaultScheduleSet = newBuildingStory.defaultScheduleSet()){
+        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultScheduleSet);
+        if (currentObject){
+          DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
+          currentBuildingStory.setDefaultScheduleSet(currentDefaultScheduleSet);
+        } else{
+          currentBuildingStory.resetDefaultScheduleSet();
+        }
+      } else{
+        currentBuildingStory.resetDefaultScheduleSet();
+      }
 
     }
 
@@ -329,11 +541,24 @@ namespace openstudio
 
       currentBuildingUnit.setName(newBuildingUnit.nameString());
 
-      // DLM: TODO renderingColor() const;
+      // rendering color
+      boost::optional<RenderingColor> newColor = newBuildingUnit.renderingColor();
+      if (newColor){
+        boost::optional<RenderingColor> currentColor = currentBuildingUnit.renderingColor();
+        if (currentColor){
+          currentColor->setRenderingRedValue(newColor->renderingRedValue());
+          currentColor->setRenderingGreenValue(newColor->renderingGreenValue());
+          currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
+          currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
+        } else{
+          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingUnit.model());
+          OS_ASSERT(currentColor);
+          currentBuildingUnit.setRenderingColor(*currentColor);
+        }
+      }
 
-      // DLM: TODO buildingUnitType() const;
-
-      // DLM: TODO spaces() const;
+      // buildingUnitType
+      currentBuildingUnit.setBuildingUnitType(newBuildingUnit.buildingUnitType());
 
       // DLM: TODO featureNames() const;
     }
@@ -404,12 +629,12 @@ namespace openstudio
         default:
           LOG(Error, "No constructor registered for IddObjectType " << iddObjectType.valueName());
         }
-            
+
         OS_ASSERT(currentObject);
         m_currentToNewHandleMapping[currentObject->handle()] = newObject.handle();
         m_newToCurrentHandleMapping[newObject.handle()] = currentObject->handle();
       }
-          
+
       // merge objects
       switch (iddObjectType.value()){
       case IddObjectType::OS_Space:
@@ -475,6 +700,9 @@ namespace openstudio
       m_currentToNewHandleMapping = handleMapping;
       m_newToCurrentHandleMapping.clear();
       for (const auto& it : handleMapping){
+        if (m_newToCurrentHandleMapping.find(it.second) != m_newToCurrentHandleMapping.end()){
+          LOG(Error, "Multiple entries in current model refer to handle '" << toString(it.second) << "' in new model");
+        }
         m_newToCurrentHandleMapping[it.second] = it.first;
       }
 
@@ -502,6 +730,17 @@ namespace openstudio
         }
       }
     }
-    
+
+    std::vector<IddObjectType> ModelMerger::iddObjectTypesToMerge() const
+    {
+      return m_iddObjectTypesToMerge;
+    }
+
+    bool ModelMerger::setIddObjectTypesToMerge(const std::vector<IddObjectType>& iddObjectTypesToMerge)
+    {
+      LOG(Error, "setIddObjectTypesToMerge is not yet implemented");
+      return false;
+    }
+
   }//model
 }//openstudio

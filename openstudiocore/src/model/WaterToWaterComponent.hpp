@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -103,7 +103,7 @@ class MODEL_API WaterToWaterComponent : public HVACComponent
    */
   bool removeFromSecondaryPlantLoop();
 
-  /** Tertiary plant loop applies to a limited number of WaterToWaterComponent types that 
+  /** Tertiary plant loop applies to a limited number of WaterToWaterComponent types that
    *  interact with three plant systems.  One example is a water cooled chiller with heat recovery,
    *  which can be connected to a chilled water, condenser, and heat recovery plant simultaneously.
    */
@@ -114,7 +114,7 @@ class MODEL_API WaterToWaterComponent : public HVACComponent
    */
   bool removeFromTertiaryPlantLoop();
 
-  /** Add this WaterToWaterComponent to a tertiaryPlantLoop by making connections to the 
+  /** Add this WaterToWaterComponent to a tertiaryPlantLoop by making connections to the
    *  tertiary inlet and outlet.
    */
   virtual bool addToTertiaryNode(Node & node);
@@ -133,7 +133,7 @@ class MODEL_API WaterToWaterComponent : public HVACComponent
 
   friend class openstudio::IdfObject;
 
-  /// @cond 
+  /// @cond
 
   typedef detail::WaterToWaterComponent_Impl ImplType;
 
@@ -143,7 +143,7 @@ class MODEL_API WaterToWaterComponent : public HVACComponent
 
   REGISTER_LOGGER("openstudio.model.WaterToWaterComponent");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

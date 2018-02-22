@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -160,18 +160,21 @@ namespace detail {
     return newCHP;
   }
 
-  // Return allowable child types: curves and Generator:MicroTurbine
+  // Return allowable child types: Generator:MicroTurbine
   std::vector<IddObjectType> GeneratorMicroTurbine_Impl::allowableChildTypes() const
   {
     std::vector<IddObjectType> result;
     result.push_back(IddObjectType::OS_Generator_MicroTurbine_HeatRecovery);
-    result.push_back(IddObjectType::OS_Curve_Biquadratic);
-    result.push_back(IddObjectType::OS_Curve_Cubic);
-    result.push_back(IddObjectType::OS_Curve_Quadratic);
+    // Curves are now resources object, no need
+    /*
+     *result.push_back(IddObjectType::OS_Curve_Biquadratic);
+     *result.push_back(IddObjectType::OS_Curve_Cubic);
+     *result.push_back(IddObjectType::OS_Curve_Quadratic);
+     */
     return result;
   }
 
-  // Returns the children object: max of 7 curves and a the GeneratorMicroTurbineHeatRecovery if it exists
+  // Returns the children object: GeneratorMicroTurbineHeatRecovery if it exists
   std::vector<ModelObject> GeneratorMicroTurbine_Impl::children() const
   {
     std::vector<ModelObject> result;
@@ -182,30 +185,32 @@ namespace detail {
       result.push_back(mo.get());
     }
 
-    // Should I include curves in there? Even now that then can be shared (resources)
-    Curve curve = electricalPowerFunctionofTemperatureandElevationCurve();
-    result.push_back(curve);
+    // Curves are now resources object, no need
 
-    curve = electricalEfficiencyFunctionofTemperatureCurve();
-    result.push_back(curve);
-
-    curve = electricalEfficiencyFunctionofPartLoadRatioCurve();
-    result.push_back(curve);
-
-    if (oCurve = exhaustAirFlowRateFunctionofTemperatureCurve()) {
-      result.push_back(oCurve.get());
-    }
-    if (oCurve = exhaustAirFlowRateFunctionofPartLoadRatioCurve()) {
-      result.push_back(oCurve.get());
-    }
-
-    if (oCurve = exhaustAirTemperatureFunctionofTemperatureCurve()) {
-      result.push_back(oCurve.get());
-    }
-    if (oCurve = exhaustAirTemperatureFunctionofPartLoadRatioCurve()) {
-      result.push_back(oCurve.get());
-    }
-
+    /*
+     *Curve curve = electricalPowerFunctionofTemperatureandElevationCurve();
+     *result.push_back(curve);
+     *
+     *curve = electricalEfficiencyFunctionofTemperatureCurve();
+     *result.push_back(curve);
+     *
+     *curve = electricalEfficiencyFunctionofPartLoadRatioCurve();
+     *result.push_back(curve);
+     *
+     *if ( (oCurve = exhaustAirFlowRateFunctionofTemperatureCurve()) ) {
+     *  result.push_back(oCurve.get());
+     *}
+     *if ( (oCurve = exhaustAirFlowRateFunctionofPartLoadRatioCurve()) ) {
+     *  result.push_back(oCurve.get());
+     *}
+     *
+     *if ( (oCurve = exhaustAirTemperatureFunctionofTemperatureCurve()) ) {
+     *  result.push_back(oCurve.get());
+     *}
+     *if ( (oCurve = exhaustAirTemperatureFunctionofPartLoadRatioCurve() )) {
+     *  result.push_back(oCurve.get());
+     *}
+     */
 
 
     return result;
@@ -483,9 +488,10 @@ namespace detail {
     return result;
   }
 
-  void GeneratorMicroTurbine_Impl::setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature) {
+  bool GeneratorMicroTurbine_Impl::setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature) {
     bool result = setDouble(OS_Generator_MicroTurbineFields::ReferenceCombustionAirInletTemperature, referenceCombustionAirInletTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorMicroTurbine_Impl::resetReferenceCombustionAirInletTemperature() {
@@ -670,9 +676,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorMicroTurbine_Impl::setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature) {
+  bool GeneratorMicroTurbine_Impl::setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature) {
     bool result = setDouble(OS_Generator_MicroTurbineFields::NominalExhaustAirOutletTemperature, nominalExhaustAirOutletTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorMicroTurbine_Impl::resetNominalExhaustAirOutletTemperature() {
@@ -712,6 +719,17 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Generator_MicroTurbineFields::ElectricalEfficiencyFunctionofPartLoadRatioCurveName);
   }
   */
+
+  std::vector<EMSActuatorNames> GeneratorMicroTurbine_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "On-Site Generator Control", "Requested Power" } };
+    return actuators;
+  }
+
+  std::vector<std::string> GeneratorMicroTurbine_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Generator Nominal Maximum Power",
+      "Generator Nominal Thermal To Electric Ratio" };
+    return types;
+  }
 
 } // detail
 
@@ -801,6 +819,7 @@ IddObjectType GeneratorMicroTurbine::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_MicroTurbine);
 }
 
+// TODO: standardize on either fooValues or validFooValues
 std::vector<std::string> GeneratorMicroTurbine::validFuelTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Generator_MicroTurbineFields::FuelType);
@@ -987,8 +1006,8 @@ bool GeneratorMicroTurbine::setReferenceElectricalEfficiencyUsingLowerHeatingVal
   return getImpl<detail::GeneratorMicroTurbine_Impl>()->setReferenceElectricalEfficiencyUsingLowerHeatingValue(referenceElectricalEfficiencyUsingLowerHeatingValue);
 }
 
-void GeneratorMicroTurbine::setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature) {
-  getImpl<detail::GeneratorMicroTurbine_Impl>()->setReferenceCombustionAirInletTemperature(referenceCombustionAirInletTemperature);
+bool GeneratorMicroTurbine::setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setReferenceCombustionAirInletTemperature(referenceCombustionAirInletTemperature);
 }
 
 void GeneratorMicroTurbine::resetReferenceCombustionAirInletTemperature() {
@@ -1122,8 +1141,8 @@ void GeneratorMicroTurbine::resetExhaustAirFlowRateFunctionofPartLoadRatioCurve(
   getImpl<detail::GeneratorMicroTurbine_Impl>()->resetExhaustAirFlowRateFunctionofPartLoadRatioCurve();
 }
 
-void GeneratorMicroTurbine::setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature) {
-  getImpl<detail::GeneratorMicroTurbine_Impl>()->setNominalExhaustAirOutletTemperature(nominalExhaustAirOutletTemperature);
+bool GeneratorMicroTurbine::setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature) {
+  return getImpl<detail::GeneratorMicroTurbine_Impl>()->setNominalExhaustAirOutletTemperature(nominalExhaustAirOutletTemperature);
 }
 
 void GeneratorMicroTurbine::resetNominalExhaustAirOutletTemperature() {
@@ -1155,4 +1174,3 @@ GeneratorMicroTurbine::GeneratorMicroTurbine(std::shared_ptr<detail::GeneratorMi
 
 } // model
 } // openstudio
-

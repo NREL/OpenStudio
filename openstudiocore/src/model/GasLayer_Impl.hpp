@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,17 +43,17 @@ namespace detail {
 
   class MODEL_API GasLayer_Impl : public FenestrationMaterial_Impl {
    public:
-   
+
     /** @name Constructors and Destructors */
     //@{
 
     // Construct completely new object.
     GasLayer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // Construct from existing workspace object (typically when Model is being constructed 
+    // Construct from existing workspace object (typically when Model is being constructed
     // from Workspace).
-    GasLayer_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-                  Model_Impl* model, 
+    GasLayer_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                  Model_Impl* model,
                   bool keepHandle);
 
     // Clone copy constructor.

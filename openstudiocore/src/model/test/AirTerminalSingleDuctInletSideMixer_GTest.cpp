@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,17 +46,17 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     AirTerminalSingleDuctInletSideMixer testObject = AirTerminalSingleDuctInletSideMixer(model);
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
 TEST_F(ModelFixture,AirTerminalSingleDuctInletSideMixer_addToNode) {
-  Model m; 
+  Model m;
   AirTerminalSingleDuctInletSideMixer testObject(m);
 
   AirLoopHVAC airLoop(m);
@@ -101,9 +101,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddToNodeWithThermalZon
 
   EXPECT_TRUE(testObject.addToNode(inletNode));
   EXPECT_EQ((unsigned)9, airLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddAirTerminalToPlantLoopAddDemandBranchForComponent)
@@ -123,9 +123,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddAirTerminalToPlantLo
   EXPECT_FALSE(plantLoop.addDemandBranchForComponent(testObject));
   EXPECT_EQ((unsigned)9, airLoop.demandComponents().size());
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBranchForZoneWithThermalZone)
@@ -138,9 +138,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBr
 
   EXPECT_TRUE(airLoop.addBranchForZone(thermalZone, testObject));
   EXPECT_EQ((unsigned)9, airLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBranchForHVACComponent)
@@ -152,9 +152,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBr
 
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObject));
   EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBranchForHVACComponentWithThermalZone)
@@ -169,9 +169,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddObjectByAirLoopAddBr
 
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObject));
   EXPECT_EQ((unsigned)10, airLoop.demandComponents().size());
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddToNodeTwoSameObjects)
@@ -185,9 +185,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_AddToNodeTwoSameObjects
   testObject.addToNode(inletNode);
   inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
   EXPECT_FALSE(testObject.addToNode(inletNode));
-  
+
   EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctInletSideMixer_IsRemovable)

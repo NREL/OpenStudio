@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -155,8 +155,8 @@ void RefrigerationSystemMiniView::setName(const QString & name)
   update();
 }
 
-void RefrigerationSystemMiniView::paint( QPainter *painter, 
-                                         const QStyleOptionGraphicsItem *option, 
+void RefrigerationSystemMiniView::paint( QPainter *painter,
+                                         const QStyleOptionGraphicsItem *option,
                                          QWidget *widget )
 {
   // Background and Border
@@ -268,37 +268,37 @@ void RefrigerationSystemView::adjustLayout()
 
   // Condenser
 
-  refrigerationCondenserView->setPos(centerXPos() - refrigerationCondenserView->boundingRect().width() / 2, 
+  refrigerationCondenserView->setPos(centerXPos() - refrigerationCondenserView->boundingRect().width() / 2,
                                      verticalSpacing);
 
   // Mechanical Sub Cooler
 
-  refrigerationSubCoolerView->setPos(leftXPos() - refrigerationSubCoolerView->boundingRect().width() / 2, 
+  refrigerationSubCoolerView->setPos(leftXPos() - refrigerationSubCoolerView->boundingRect().width() / 2,
                                      refrigerationCondenserView->y() + refrigerationCondenserView->boundingRect().height() + verticalSpacing);
 
   // Heat Reclaim
 
-  refrigerationHeatReclaimView->setPos(rightXPos() - refrigerationHeatReclaimView->boundingRect().width() / 2, 
+  refrigerationHeatReclaimView->setPos(rightXPos() - refrigerationHeatReclaimView->boundingRect().width() / 2,
                                        refrigerationCondenserView->y() + refrigerationCondenserView->boundingRect().height() + verticalSpacing);
-  
+
   // Compressor
 
-  refrigerationCompressorView->setPos(rightXPos() - refrigerationCompressorView->boundingRect().width() / 2, 
+  refrigerationCompressorView->setPos(rightXPos() - refrigerationCompressorView->boundingRect().width() / 2,
                                       refrigerationHeatReclaimView->y() + refrigerationHeatReclaimView->boundingRect().height() + verticalSpacing);
 
   // SHX
 
-  refrigerationSHXView->setPos(leftXPos() - refrigerationSHXView->boundingRect().width() / 2, 
+  refrigerationSHXView->setPos(leftXPos() - refrigerationSHXView->boundingRect().width() / 2,
                                refrigerationSubCoolerView->y() + refrigerationSubCoolerView->boundingRect().height() + verticalSpacing);
 
   // Cases
 
-  refrigerationCasesView->setPos(centerXPos() - refrigerationCasesView->boundingRect().width() / 2, 
+  refrigerationCasesView->setPos(centerXPos() - refrigerationCasesView->boundingRect().width() / 2,
                                  refrigerationSHXView->y() + refrigerationSHXView->boundingRect().height() + verticalSpacing);
 
   // Cascade or Secondary
 
-  refrigerationSecondaryView->setPos(centerXPos() - refrigerationSecondaryView->boundingRect().width() / 2, 
+  refrigerationSecondaryView->setPos(centerXPos() - refrigerationSecondaryView->boundingRect().width() / 2,
                                  refrigerationCasesView->y() + refrigerationCasesView->boundingRect().height() + verticalSpacing);
 
   if( QGraphicsScene * _scene = scene() )
@@ -307,8 +307,8 @@ void RefrigerationSystemView::adjustLayout()
   }
 }
 
-void RefrigerationSystemView::paint( QPainter *painter, 
-                                     const QStyleOptionGraphicsItem *option, 
+void RefrigerationSystemView::paint( QPainter *painter,
+                                     const QStyleOptionGraphicsItem *option,
                                      QWidget *widget )
 {
   // Background and Border
@@ -379,8 +379,8 @@ QRectF RefrigerationSystemView::boundingRect() const
                       refrigerationHeatReclaimView->boundingRect().width() : refrigerationCompressorView->boundingRect().width();
 
   double x = margin +
-             refrigerationSubCoolerView->boundingRect().width() + 
-             margin + 
+             refrigerationSubCoolerView->boundingRect().width() +
+             margin +
              refrigerationCondenserView->boundingRect().width() +
              margin +
              rightWidth +
@@ -397,7 +397,7 @@ int RefrigerationSystemView::leftXPos() const
 
 int RefrigerationSystemView::centerXPos() const
 {
-  return margin + 
+  return margin +
          refrigerationSubCoolerView->boundingRect().width() +
          margin +
          (refrigerationCondenserView->boundingRect().width() / 2.0);
@@ -410,7 +410,7 @@ int RefrigerationSystemView::rightXPos() const
   double rightWidth = refrigerationHeatReclaimView->boundingRect().width() > refrigerationCompressorView->boundingRect().width() ?
                       refrigerationHeatReclaimView->boundingRect().width() : refrigerationCompressorView->boundingRect().width();
 
-  return margin + 
+  return margin +
          refrigerationSubCoolerView->boundingRect().width() +
          margin +
          refrigerationCondenserView->boundingRect().width() +
@@ -481,8 +481,8 @@ void RefrigerationCasesView::setExpanded(bool exapanded)
   adjustLayout();
 }
 
-void RefrigerationCasesView::paint( QPainter *painter, 
-                                    const QStyleOptionGraphicsItem *option, 
+void RefrigerationCasesView::paint( QPainter *painter,
+                                    const QStyleOptionGraphicsItem *option,
                                     QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -493,7 +493,7 @@ void RefrigerationCasesView::paint( QPainter *painter,
 
   painter->drawRect(boundingRect());
 
-  painter->drawRect(_displayCasesRect); 
+  painter->drawRect(_displayCasesRect);
 
   painter->drawPixmap(_displayCasesRect.x(),
                       _displayCasesRect.y(),
@@ -504,7 +504,7 @@ void RefrigerationCasesView::paint( QPainter *painter,
 
   QRectF _walkinRect = walkinCasesRect();
 
-  painter->drawRect(_walkinRect); 
+  painter->drawRect(_walkinRect);
 
   painter->drawPixmap(_walkinRect.x(),
                       _walkinRect.y(),
@@ -538,8 +538,8 @@ QRectF RefrigerationCasesView::summaryRect()
 
   return QRectF(0,0,
                 RefrigerationSystemView::margin / 2.0 + RefrigerationCasesDropZoneView::size().width() +
-                RefrigerationSystemView::margin / 2.0 + displayCasesRect().width() + 
-                RefrigerationSystemView::margin / 2.0 + walkinCasesRect().width() + 
+                RefrigerationSystemView::margin / 2.0 + displayCasesRect().width() +
+                RefrigerationSystemView::margin / 2.0 + walkinCasesRect().width() +
                 RefrigerationSystemView::margin / 2.0,
                 length);
 }
@@ -559,8 +559,8 @@ QSizeF RefrigerationCasesView::size() const
 
     if( numberOfCases > 0 )
     {
-      height = casePos(numberOfCases - 1).y() + 
-               RefrigerationCaseDetailView::size().height() + 
+      height = casePos(numberOfCases - 1).y() +
+               RefrigerationCaseDetailView::size().height() +
                RefrigerationSystemView::margin / 2.0;
     }
     else
@@ -735,8 +735,8 @@ QRectF RefrigerationCaseDetailView::iconRect()
   return QRectF(0,0,RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight);
 }
 
-void RefrigerationCaseDetailView::paint( QPainter *painter, 
-            const QStyleOptionGraphicsItem *option, 
+void RefrigerationCaseDetailView::paint( QPainter *painter,
+            const QStyleOptionGraphicsItem *option,
             QWidget * widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -828,8 +828,8 @@ void RefrigerationCondenserView::onRemoveButtonClicked()
   update();
 }
 
-void RefrigerationCondenserView::paint( QPainter *painter, 
-                                        const QStyleOptionGraphicsItem *option, 
+void RefrigerationCondenserView::paint( QPainter *painter,
+                                        const QStyleOptionGraphicsItem *option,
                                         QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -935,8 +935,8 @@ QRectF RefrigerationCompressorDetailView::boundingRect() const
   return QRectF(0,0,size().width(),size().height());
 }
 
-void RefrigerationCompressorDetailView::paint( QPainter *painter, 
-                                               const QStyleOptionGraphicsItem *option, 
+void RefrigerationCompressorDetailView::paint( QPainter *painter,
+                                               const QStyleOptionGraphicsItem *option,
                                                QWidget * widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -962,8 +962,8 @@ QRectF RefrigerationCompressorDropZoneView::boundingRect() const
   return QRectF(0,0,100,RefrigerationCompressorView::height() - RefrigerationSystemView::margin);
 }
 
-void RefrigerationCompressorDropZoneView::paint( QPainter *painter, 
-                                         const QStyleOptionGraphicsItem *option, 
+void RefrigerationCompressorDropZoneView::paint( QPainter *painter,
+                                         const QStyleOptionGraphicsItem *option,
                                          QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -1031,8 +1031,8 @@ RefrigerationCompressorView::RefrigerationCompressorView()
   adjustLayout();
 }
 
-void RefrigerationCompressorView::paint( QPainter *painter, 
-                                         const QStyleOptionGraphicsItem *option, 
+void RefrigerationCompressorView::paint( QPainter *painter,
+                                         const QStyleOptionGraphicsItem *option,
                                          QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -1046,7 +1046,7 @@ QRectF RefrigerationCompressorView::boundingRect() const
 {
   return QRectF(0,0,
                 RefrigerationSystemView::margin / 2.0 + refrigerationCompressorDropZoneView->boundingRect().width() +
-                m_compressorDetailViews.size() * (RefrigerationCompressorDetailView::size().width() + RefrigerationSystemView::margin / 2.0) 
+                m_compressorDetailViews.size() * (RefrigerationCompressorDetailView::size().width() + RefrigerationSystemView::margin / 2.0)
                 + RefrigerationSystemView::margin / 2.0
                 ,height());
 }
@@ -1065,8 +1065,8 @@ QRectF RefrigerationCasesDropZoneView::boundingRect() const
   return QRectF(0,0,size().width(),size().height());
 }
 
-void RefrigerationCasesDropZoneView::paint( QPainter *painter, 
-                                         const QStyleOptionGraphicsItem *option, 
+void RefrigerationCasesDropZoneView::paint( QPainter *painter,
+                                         const QStyleOptionGraphicsItem *option,
                                          QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -1093,8 +1093,8 @@ RefrigerationSubCoolerView::RefrigerationSubCoolerView()
   setId(OSItemId());
 }
 
-void RefrigerationSubCoolerView::paint( QPainter *painter, 
-                                         const QStyleOptionGraphicsItem *option, 
+void RefrigerationSubCoolerView::paint( QPainter *painter,
+                                         const QStyleOptionGraphicsItem *option,
                                          QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -1182,8 +1182,8 @@ void RefrigerationSubCoolerView::mouseReleaseEvent(QGraphicsSceneMouseEvent * ev
   }
 }
 
-void RefrigerationHeatReclaimView::paint( QPainter *painter, 
-                                         const QStyleOptionGraphicsItem *option, 
+void RefrigerationHeatReclaimView::paint( QPainter *painter,
+                                         const QStyleOptionGraphicsItem *option,
                                          QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -1200,8 +1200,8 @@ QRectF RefrigerationHeatReclaimView::boundingRect() const
   return QRectF(0,0,150,RefrigerationSystemView::componentHeight);
 }
 
-void RefrigerationSHXView::paint( QPainter *painter, 
-                                         const QStyleOptionGraphicsItem *option, 
+void RefrigerationSHXView::paint( QPainter *painter,
+                                         const QStyleOptionGraphicsItem *option,
                                          QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -1309,8 +1309,8 @@ QRectF SecondaryDropZoneView::boundingRect() const
   return QRectF(0,0,RefrigerationCasesView::summaryRect().width(),RefrigerationSystemView::componentHeight);
 }
 
-void SecondaryDropZoneView::paint( QPainter *painter, 
-                                   const QStyleOptionGraphicsItem *option, 
+void SecondaryDropZoneView::paint( QPainter *painter,
+                                   const QStyleOptionGraphicsItem *option,
                                    QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -1332,7 +1332,7 @@ SecondaryDetailView::SecondaryDetailView()
 
   removeButtonItem = new RemoveButtonItem();
   removeButtonItem->setParentItem(this);
-  removeButtonItem->setPos(zoomInButtonItem->x() - removeButtonItem->boundingRect().width() - RefrigerationSystemView::margin,RefrigerationSystemView::margin); 
+  removeButtonItem->setPos(zoomInButtonItem->x() - removeButtonItem->boundingRect().width() - RefrigerationSystemView::margin,RefrigerationSystemView::margin);
   connect(removeButtonItem, &RemoveButtonItem::mouseClicked, this, &SecondaryDetailView::onRemoveButtonClicked);
 }
 
@@ -1349,7 +1349,7 @@ double SecondaryDetailView::height()
 QRectF SecondaryDetailView::nameRect()
 {
   return QRectF(RefrigerationSystemView::margin,RefrigerationSystemView::margin,
-                removeButtonItem->x() - RefrigerationSystemView::margin * 2.0,height() - RefrigerationSystemView::margin * 2.0); 
+                removeButtonItem->x() - RefrigerationSystemView::margin * 2.0,height() - RefrigerationSystemView::margin * 2.0);
 }
 
 void SecondaryDetailView::onRemoveButtonClicked()
@@ -1379,8 +1379,8 @@ QRectF SecondaryDetailView::boundingRect() const
   return QRectF(0,0,width(),height());
 }
 
-void SecondaryDetailView::paint( QPainter *painter, 
-                                   const QStyleOptionGraphicsItem *option, 
+void SecondaryDetailView::paint( QPainter *painter,
+                                   const QStyleOptionGraphicsItem *option,
                                    QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -1439,11 +1439,11 @@ void RefrigerationSecondaryView::adjustLayout()
     y = y + (*it)->boundingRect().height() + RefrigerationSystemView::margin / 2.0;
   }
 
-  m_height = y; 
+  m_height = y;
 }
 
-void RefrigerationSecondaryView::paint( QPainter *painter, 
-                                        const QStyleOptionGraphicsItem *option, 
+void RefrigerationSecondaryView::paint( QPainter *painter,
+                                        const QStyleOptionGraphicsItem *option,
                                         QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -1461,8 +1461,8 @@ QRectF RefrigerationSystemDropZoneView::boundingRect() const
   return QRectF(QPoint(0,0),RefrigerationSystemMiniView::cellSize());
 }
 
-void RefrigerationSystemDropZoneView::paint( QPainter *painter, 
-                                                 const QStyleOptionGraphicsItem *option, 
+void RefrigerationSystemDropZoneView::paint( QPainter *painter,
+                                                 const QStyleOptionGraphicsItem *option,
                                                  QWidget *widget )
 {
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -1498,8 +1498,8 @@ QRectF RefrigerationSystemDetailView::boundingRect() const
   return QRectF(0,0,width,height);
 }
 
-void RefrigerationSystemDetailView::paint( QPainter *painter, 
-            const QStyleOptionGraphicsItem *option, 
+void RefrigerationSystemDetailView::paint( QPainter *painter,
+            const QStyleOptionGraphicsItem *option,
             QWidget *widget )
 {
 }
@@ -1520,8 +1520,8 @@ QRectF CaseViewExpandButton::boundingRect() const
   return QRectF(0,0,size().width(),size().height());
 }
 
-void CaseViewExpandButton::paint(QPainter *painter, 
-                                 const QStyleOptionGraphicsItem *option, 
+void CaseViewExpandButton::paint(QPainter *painter,
+                                 const QStyleOptionGraphicsItem *option,
                                  QWidget * widget)
 {
   QRect rect(0,0,size().width(),size().height());

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -162,11 +162,11 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   bool setCapacityRatingType(std::string capacityRatingType);
 
-  void setRatedUnitLoadFactor(double ratedUnitLoadFactor);
+  bool setRatedUnitLoadFactor(double ratedUnitLoadFactor);
 
   void resetRatedUnitLoadFactor();
 
-  void setRatedCapacity(double ratedCapacity);
+  bool setRatedCapacity(double ratedCapacity);
 
   void resetRatedCapacity();
 
@@ -182,11 +182,11 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   void resetMaximumTemperatureDifferenceBetweenInletAirandEvaporatingTemperature();
 
-  void setCoilMaterialCorrectionFactor(double coilMaterialCorrectionFactor);
+  bool setCoilMaterialCorrectionFactor(double coilMaterialCorrectionFactor);
 
   void resetCoilMaterialCorrectionFactor();
 
-  void setRefrigerantCorrectionFactor(double refrigerantCorrectionFactor);
+  bool setRefrigerantCorrectionFactor(double refrigerantCorrectionFactor);
 
   void resetRefrigerantCorrectionFactor();
 
@@ -202,7 +202,7 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   void resetSHR60CorrectionFactor();
 
-  void setRatedTotalHeatingPower(double ratedTotalHeatingPower);
+  bool setRatedTotalHeatingPower(double ratedTotalHeatingPower);
 
   bool setHeatingPowerSchedule(Schedule& schedule);
 
@@ -216,7 +216,7 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   void resetRatedFanPower();
 
-  void setRatedAirFlow(double ratedAirFlow);
+  bool setRatedAirFlow(double ratedAirFlow);
 
   bool setMinimumFanAirFlowRatio(double minimumFanAirFlowRatio);
 
@@ -248,7 +248,7 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   // void resetVerticalLocation();
 
-  void setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
+  bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
   void resetAverageRefrigerantChargeInventory();
 
@@ -281,5 +281,4 @@ typedef std::vector<RefrigerationAirChiller> RefrigerationAirChillerVector;
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONAIRCHILLER_HPP
-
+#endif // MODEL_REFRIGERATIONAIRCHILLER_HPP

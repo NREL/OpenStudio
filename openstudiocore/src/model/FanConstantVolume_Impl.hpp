@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,14 +39,8 @@ class Schedule;
 namespace detail {
 
   class MODEL_API FanConstantVolume_Impl : public StraightComponent_Impl {
-    
 
-    
-    
-    
-    
-    
-    
+    // TODO: @macumber, isn't this deprecated now?!
     Q_PROPERTY( boost::optional<openstudio::model::ModelObject> availabilitySchedule
                 READ availabilityScheduleAsModelObject
                 WRITE setAvailibiltyScheduleAsModelObject);
@@ -102,31 +96,31 @@ namespace detail {
     double fanEfficiency() const;
 
     // Set fanEfficiency
-    void setFanEfficiency(double val);
+    bool setFanEfficiency(double val);
 
     // Get PressureRise
     double pressureRise() const;
 
     // Set PressureRise
-    void setPressureRise(double val);
+    bool setPressureRise(double val);
 
     // Get MotorEfficiency
     double motorEfficiency() const;
 
     // Set MotorEfficiency
-    void setMotorEfficiency(double val);
+    bool setMotorEfficiency(double val);
 
     // Get MotorInAirstreamFraction
     double motorInAirstreamFraction() const;
 
     // Set MotorInAirstreamFraction
-    void setMotorInAirstreamFraction(double val);
+    bool setMotorInAirstreamFraction(double val);
 
     // Get EndUseSubcategory
     std::string endUseSubcategory() const;
 
     // Set EndUseSubcategory
-    void setEndUseSubcategory(std::string val);
+    bool setEndUseSubcategory(std::string val);
 
     boost::optional<double> maximumFlowRate() const;
 
@@ -141,6 +135,19 @@ namespace detail {
     void resetMaximumFlowRate();
 
     void autosizeMaximumFlowRate();
+
+    AirflowNetworkFan getAirflowNetworkFan();
+    boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
+
+  boost::optional<double> autosizedMaximumFlowRate() const ;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
    private:

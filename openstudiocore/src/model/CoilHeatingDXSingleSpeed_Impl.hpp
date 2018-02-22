@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,33 +42,7 @@ namespace detail {
 
 /** CoilHeatingDXSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingDXSingleSpeed.*/
 class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-  
- public:
+   public:
   /** @name Constructors and Destructors */
   //@{
 
@@ -158,6 +132,16 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
 
   bool isResistiveDefrostHeaterCapacityAutosized() const;
 
+  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
   //@}
   /** @name Setters */
   //@{
@@ -222,7 +206,7 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
   // A6 , \field Total Heating Capacity Function of Flow Fraction Curve Name
   // \object-list QuadraticCubicCurves
   Curve totalHeatingCapacityFunctionofFlowFractionCurve() const;
-  bool setTotalHeatingCapacityFunctionofFlowFractionCurve( const Curve& curve );  
+  bool setTotalHeatingCapacityFunctionofFlowFractionCurve( const Curve& curve );
 
   // A7 ,  \field Energy Input Ratio Function of Temperature Curve Name
   // \object-list BiquadraticQuadraticCubicCurves
@@ -237,17 +221,21 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
   // A9 , \field Part Load Fraction Correlation Curve Name
   // \object-list QuadraticCubicCurves
   Curve partLoadFractionCorrelationCurve() const;
-  bool setPartLoadFractionCorrelationCurve( const Curve& curve );  
+  bool setPartLoadFractionCorrelationCurve( const Curve& curve );
 
   // A10, \field Defrost Energy Input Ratio Function of Temperature Curve Name
   // \object-list BiquadraticCurves
-  // not a required curve so it needs a reset 
+  // not a required curve so it needs a reset
   boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
   bool setDefrostEnergyInputRatioFunctionofTemperatureCurve( const boost::optional<Curve> curve );
 
   bool addToNode(Node & node) override;
 
   //@}
+
+  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
  protected:
  private:
   REGISTER_LOGGER("openstudio.model.CoilHeatingDXSingleSpeed");

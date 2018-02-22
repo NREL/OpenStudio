@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -62,10 +62,10 @@ ConstructionInternalSourceInspectorView::ConstructionInternalSourceInspectorView
     m_standardsInformationWidget(nullptr),
     m_constructionDZ(nullptr),
     m_sourcePresentAfterLayerNumberEdit(nullptr),
+    m_constructionVC(nullptr),
     m_temperatureCalculationRequestedAfterLayerNumberEdit(nullptr),
     m_dimensionsForTheCTFCalculationEdit(nullptr),
-    m_tubeSpacingEdit(nullptr),
-    m_constructionVC(nullptr)
+    m_tubeSpacingEdit(nullptr)
 {
   createLayout();
 }
@@ -256,7 +256,7 @@ void ConstructionInternalSourceInspectorView::attach(openstudio::model::Construc
 
   m_constructionVC->attach(m_constructionWithInternalSource.get());
   m_constructionVC->reportItems();
-  
+
   m_standardsInformationWidget->attach(m_constructionWithInternalSource.get());
 }
 

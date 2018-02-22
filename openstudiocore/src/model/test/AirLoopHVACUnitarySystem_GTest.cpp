@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -316,8 +316,8 @@ TEST_F(ModelFixture,AirLoopHVACUnitarySystem_addToNode)
 
   EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
 
-  EXPECT_TRUE(testObject.airInletPort());
-  EXPECT_TRUE(testObject.airOutletPort());
+  EXPECT_TRUE(testObject.inletPort());
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeTwoSameObjects)
@@ -331,8 +331,8 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeTwoSameObjects)
   supplyOutletNode = airLoop.supplyOutletNode();
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
 
-  EXPECT_TRUE(testObject.airInletPort());
-  EXPECT_TRUE(testObject.airOutletPort());
+  EXPECT_TRUE(testObject.inletPort());
+  EXPECT_TRUE(testObject.outletPort());
 }
 
 TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeAirLoopDemandSide)

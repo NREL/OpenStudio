@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -245,9 +245,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorPhotovoltaic_Impl::setRatedElectricPowerOutput(double ratedElectricPowerOutput) {
+  bool GeneratorPhotovoltaic_Impl::setRatedElectricPowerOutput(double ratedElectricPowerOutput) {
     bool result = setDouble(OS_Generator_PhotovoltaicFields::RatedElectricPowerOutput, ratedElectricPowerOutput);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorPhotovoltaic_Impl::resetRatedElectricPowerOutput() {
@@ -268,6 +269,16 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  std::vector<EMSActuatorNames> GeneratorPhotovoltaic_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "On-Site Generator Control", "Requested Power" } };
+    return actuators;
+  }
+
+  std::vector<std::string> GeneratorPhotovoltaic_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Generator Nominal Maximum Power",
+      "Generator Nominal Thermal To Electric Ratio" };
+    return types;
+  }
 } // detail
 
 GeneratorPhotovoltaic GeneratorPhotovoltaic::simple(const Model& model)
@@ -377,8 +388,8 @@ void GeneratorPhotovoltaic::resetNumberOfModulesInSeries() {
   getImpl<detail::GeneratorPhotovoltaic_Impl>()->resetNumberOfModulesInSeries();
 }
 
-void GeneratorPhotovoltaic::setRatedElectricPowerOutput(double ratedElectricPowerOutput) {
-  getImpl<detail::GeneratorPhotovoltaic_Impl>()->setRatedElectricPowerOutput(ratedElectricPowerOutput);
+bool GeneratorPhotovoltaic::setRatedElectricPowerOutput(double ratedElectricPowerOutput) {
+  return getImpl<detail::GeneratorPhotovoltaic_Impl>()->setRatedElectricPowerOutput(ratedElectricPowerOutput);
 }
 
 void GeneratorPhotovoltaic::resetRatedElectricPowerOutput() {
@@ -401,4 +412,3 @@ GeneratorPhotovoltaic::GeneratorPhotovoltaic(std::shared_ptr<detail::GeneratorPh
 
 } // model
 } // openstudio
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -243,9 +243,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilCoolingLowTempRadiantConstFlow_Impl::setCondensationControlDewpointOffset(double condensationControlDewpointOffset) {
+  bool CoilCoolingLowTempRadiantConstFlow_Impl::setCondensationControlDewpointOffset(double condensationControlDewpointOffset) {
     bool result = setDouble(OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CondensationControlDewpointOffset, condensationControlDewpointOffset);
     OS_ASSERT(result);
+    return result;
   }
 
   void CoilCoolingLowTempRadiantConstFlow_Impl::resetCondensationControlDewpointOffset() {
@@ -482,8 +483,8 @@ void CoilCoolingLowTempRadiantConstFlow::resetCondensationControlType() {
   getImpl<detail::CoilCoolingLowTempRadiantConstFlow_Impl>()->resetCondensationControlType();
 }
 
-void CoilCoolingLowTempRadiantConstFlow::setCondensationControlDewpointOffset(double condensationControlDewpointOffset) {
-  getImpl<detail::CoilCoolingLowTempRadiantConstFlow_Impl>()->setCondensationControlDewpointOffset(condensationControlDewpointOffset);
+bool CoilCoolingLowTempRadiantConstFlow::setCondensationControlDewpointOffset(double condensationControlDewpointOffset) {
+  return getImpl<detail::CoilCoolingLowTempRadiantConstFlow_Impl>()->setCondensationControlDewpointOffset(condensationControlDewpointOffset);
 }
 
 void CoilCoolingLowTempRadiantConstFlow::resetCondensationControlDewpointOffset() {
@@ -498,4 +499,3 @@ CoilCoolingLowTempRadiantConstFlow::CoilCoolingLowTempRadiantConstFlow(std::shar
 
 } // model
 } // openstudio
-

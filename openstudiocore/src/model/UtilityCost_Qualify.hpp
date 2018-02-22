@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,7 +46,7 @@ namespace detail{
  *  This is commonly used for utilities which separate customers into groups such as "low demand", "medium demand", and "high demand".
  */
 class MODEL_API UtilityCost_Qualify : public ParentObject{
- 
+
 public:
 
   /** @name Constructors and Destructors */
@@ -60,8 +60,6 @@ public:
   //@}
   /** @name Getters */
   //@{
-
-  boost::optional<std::string> name() const;
 
   boost::optional<std::string> tariffName() const;
 
@@ -81,21 +79,19 @@ public:
   /** @name Setters */
   //@{
 
-  void setName(const std::string& name);
+  bool setTariffName(const std::string& tariffName);
 
-  void setTariffName(const std::string& tariffName);
-  
-  void setVariableName(const std::string& variableName);
+  bool setVariableName(const std::string& variableName);
 
-  void setQualifyType(const std::string& qualifyType);
+  bool setQualifyType(const std::string& qualifyType);
 
-  void setThresholdValueOrVariableName(const std::string& thresholdValueOrVariableName);
-  
-  void setSeason(const std::string& season);
+  bool setThresholdValueOrVariableName(const std::string& thresholdValueOrVariableName);
 
-  void setThresholdTest(const std::string& thresholdTest);
-  
-  void setNumberOfMonths(int numberOfMonths);
+  bool setSeason(const std::string& season);
+
+  bool setThresholdTest(const std::string& thresholdTest);
+
+  bool setNumberOfMonths(int numberOfMonths);
 
   //@}
 

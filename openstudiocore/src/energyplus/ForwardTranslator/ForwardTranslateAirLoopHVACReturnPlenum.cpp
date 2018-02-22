@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -65,13 +65,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACReturnPlenum( 
 
   //((ZoneName)(Zone Name))
   //((ZoneNodeName)(Zone Node Name))
-  
+
   //  InducedAirOutletNodeorNodeListName
   PortList po = modelObject.getImpl<model::detail::AirLoopHVACReturnPlenum_Impl>()->inducedAirOutletPortList();
   std::vector<ModelObject> inducedNodes = po.modelObjects();
   if( ! inducedNodes.empty() )
   {
-    IdfObject nodeList(openstudio::IddObjectType::NodeList); 
+    IdfObject nodeList(openstudio::IddObjectType::NodeList);
     m_idfObjects.push_back(nodeList);
     nodeList.setName(s + " Induced Air Node List");
     idfObject.setString(AirLoopHVAC_ReturnPlenumFields::InducedAirOutletNodeorNodeListName,nodeList.name().get());
@@ -108,7 +108,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACReturnPlenum( 
 
 
   // InletNodeName
-  
+
   std::vector<ModelObject> inletModelObjects = modelObject.inletModelObjects();
   for( auto & inletModelObject : inletModelObjects )
   {

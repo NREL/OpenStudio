@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -111,16 +111,16 @@ namespace detail {
 
     /// Sets the summer design day schedule.
     bool setSummerDesignDaySchedule(const ScheduleDay& schedule);
-    
+
     /// Resets the summer design day schedule.
     void resetSummerDesignDaySchedule();
 
     /// Sets the winter design day schedule.
     bool setWinterDesignDaySchedule(const ScheduleDay& schedule);
-    
+
     /// Resets the winter design day schedule.
     void resetWinterDesignDaySchedule();
-    
+
     //@}
     /** @name Other */
     //@{
@@ -139,7 +139,7 @@ namespace detail {
 
     /// Returns a vector of day schedules between start date (inclusive) and end date (inclusive).
     std::vector<ScheduleDay> getDaySchedules(const openstudio::Date& startDate, const openstudio::Date& endDate) const;
-    
+
     // Moves this rule to the last position. Called in ScheduleRule remove.
     bool moveToEnd(ScheduleRule& scheduleRule);
 

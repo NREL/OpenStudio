@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,7 +44,7 @@ class OSListItem;
 class OSItemSelectionController;
 
 /** The purpose of OSListController is to provide an ordered list of items and signal when items have been added and removed.
- *  The OSListController class can also manage item selection, however this capability requires that OSListItem objects are 
+ *  The OSListController class can also manage item selection, however this capability requires that OSListItem objects are
  *  constructed with a pointer to the OSListController they are associated with -or- the item's controller has been set after creation.
  */
 class OSListController : public QObject, public Nano::Observer
@@ -61,7 +61,7 @@ class OSListController : public QObject, public Nano::Observer
 
   virtual int count() = 0;
 
-  // The OSListController is initialized with a default OSItemSelectionController class.  
+  // The OSListController is initialized with a default OSItemSelectionController class.
   // If several lists are intended to share selections, for example if only one selection is allowed
   // among several lists, use setSelectionController to share one selection controller among many list controllers.
   QSharedPointer<OSItemSelectionController> selectionController() const;
@@ -71,12 +71,12 @@ class OSListController : public QObject, public Nano::Observer
   signals:
 
   // Emit this signal when an item has been added to the underlying model or data structure.
-  void itemInserted(int index); 
+  void itemInserted(int index);
 
   // Emit this signal when an item has been removed from the underlying model or data structure.
   void itemRemoved(int index);
 
-  // If the model or data structure beneath a single item has changed, 
+  // If the model or data structure beneath a single item has changed,
   // emit this signal to update the view attached to the item at this index.
   void itemChanged(int index);
 
@@ -118,7 +118,7 @@ class OSListItem : public QObject
   virtual ~OSListItem();
 
   void setController(OSListController * controller);
-  
+
   OSListController * controller() const { return m_listController; }
 
   bool isSelected() const;
@@ -196,11 +196,11 @@ class OSItemSelectionController : public QObject, public Nano::Observer
   bool m_allowMultipleSelections;
 };
 
-/** The purpose of OSItemDelegate is to create a visual representation of an OSListItem and to connect the data provided by an 
+/** The purpose of OSItemDelegate is to create a visual representation of an OSListItem and to connect the data provided by an
  * OSListItem to the view.  OSItemDelegate should be subclassed, and the view() method should be reimplemented to provide a
  * QWidget that is not empty.  This class will be commonly subclassed and is a member of the controller logic.  It is particular
- * to the view and the data source.  If the view provided by OSItemDelegate is used often or if the view has a significant amount 
- * of detail, a separate view class should be defined outside of the OSItemDelegate and merely instantiated here.  On the other hand 
+ * to the view and the data source.  If the view provided by OSItemDelegate is used often or if the view has a significant amount
+ * of detail, a separate view class should be defined outside of the OSItemDelegate and merely instantiated here.  On the other hand
  * if the view very specific with little opportunity for reuse, and if the design is simple, it is acceptable for OSItemDelegate::view()
  * to build up a widget conglomeration on the fly from primitive widget types like QLabel, QWidget, etc.
  */

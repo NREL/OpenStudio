@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -114,15 +114,15 @@ namespace detail {
 
     void resetRadiativeFraction();
 
-    void setRatedMaximumContinuousOutputPower(boost::optional<double> ratedMaximumContinuousOutputPower);
+    bool setRatedMaximumContinuousOutputPower(boost::optional<double> ratedMaximumContinuousOutputPower);
 
     void resetRatedMaximumContinuousOutputPower();
 
-    void setNightTareLossPower(boost::optional<double> nightTareLossPower);
+    bool setNightTareLossPower(boost::optional<double> nightTareLossPower);
 
     void resetNightTareLossPower();
 
-    void setNominalVoltageInput(boost::optional<double> nominalVoltageInput);
+    bool setNominalVoltageInput(boost::optional<double> nominalVoltageInput);
 
     void resetNominalVoltageInput();
 
@@ -166,4 +166,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ELECTRICLOADCENTERINVERTERLOOKUPTABLE_IMPL_HPP
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,7 +45,7 @@
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio{
-  
+
 EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
   : QWidget()
 {
@@ -155,14 +155,14 @@ void EditRubyMeasureView::clear()
  }
 }
 
-EditNullView::EditNullView(const QString & text) 
+EditNullView::EditNullView(const QString & text)
   : QWidget()
 {
   auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(5,5,5,5);
   mainVLayout->setSpacing(5);
   setLayout(mainVLayout);
-  
+
   auto label = new QLabel();
   label->setText(text);
   label->setWordWrap(true);

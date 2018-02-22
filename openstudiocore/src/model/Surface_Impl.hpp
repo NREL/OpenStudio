@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -35,6 +35,8 @@
 namespace openstudio {
 namespace model {
 
+class AirflowNetworkSurface;
+class AirflowNetworkComponent;
 class Space;
 class SubSurface;
 class Surface;
@@ -44,38 +46,18 @@ class ConstructionBase;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class SurfacePropertyConfectionCoefficients;
+class FoundationKiva;
 
 namespace detail {
 
   /** Surface_Impl is a PlanarSurface_Impl that is the implementation class for Surface.*/
   class MODEL_API Surface_Impl : public PlanarSurface_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    
-    
-    
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    Surface_Impl(const IdfObject& idfObject, 
+    Surface_Impl(const IdfObject& idfObject,
                  Model_Impl* model,
                  bool keepHandle);
 
@@ -99,10 +81,12 @@ namespace detail {
 
     virtual std::vector<IdfObject> remove() override;
 
+    virtual ModelObject clone(Model model) const override;
+
     virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
-    
+
     virtual IddObjectType iddObjectType() const override;
 
     virtual bool subtractFromGrossArea() const override;
@@ -167,6 +151,10 @@ namespace detail {
     bool isNumberofVerticesDefaulted() const;
 
     bool isNumberofVerticesAutocalculated() const;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */
@@ -258,13 +246,13 @@ namespace detail {
     double skylightToProjectedFloorRatio() const;
 
     boost::optional<SubSurface> setWindowToWallRatio(double wwr);
-    
+
     boost::optional<SubSurface> setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor);
 
-    std::vector<SubSurface> applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
+    std::vector<SubSurface> applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio,
                                                                double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
-                                                               double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
-                                                               const boost::optional<ConstructionBase>& viewGlassConstruction, 
+                                                               double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor,
+                                                               const boost::optional<ConstructionBase>& viewGlassConstruction,
                                                                const boost::optional<ConstructionBase>& daylightingGlassConstruction);
 
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
@@ -272,6 +260,25 @@ namespace detail {
     std::vector<Surface> splitSurfaceForSubSurfaces();
 
     std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
+
+    AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage);
+
+    boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
+
+    bool setAdjacentFoundation(const FoundationKiva& kiva);
+
+    boost::optional<FoundationKiva> adjacentFoundation() const;
+
+    void resetAdjacentFoundation();
+
+    // if surface property exposed foundation perimeter already exists, do nothing and return nil; creates the surface property exposed foundation perimeter if it does not already exist and return it;
+    boost::optional<SurfacePropertyExposedFoundationPerimeter> createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter);
+
+    // returns the surface property exposed foundation perimeter if set
+    boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter() const;
+
+    // resets the surface property exposed foundation perimeter
+    void resetSurfacePropertyExposedFoundationPerimeter();
 
    protected:
    private:

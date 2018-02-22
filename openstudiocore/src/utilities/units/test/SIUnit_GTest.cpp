@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -100,7 +100,7 @@ TEST_F(UnitsFixture,SIUnit_LogicalOperators)
   SIUnit u1;
   SIUnit u2(SIExpnt(1,1,-2));
   SIUnit u3(SIExpnt(1,1,-2,0),3);
-  
+
   EXPECT_TRUE(u2 == u3);
   EXPECT_FALSE(u1 == u3);
 }
@@ -126,7 +126,7 @@ TEST_F(UnitsFixture,SIUnit_ArithmeticOperators)
 
   // division
   u6 /= u4;
-  EXPECT_TRUE(u6 == u2);  
+  EXPECT_TRUE(u6 == u2);
 
   // power
   Unit u7 = pow(u4,6); // (cm)^6
@@ -140,7 +140,7 @@ TEST_F(UnitsFixture,SIUnit_ArithmeticOperators)
 TEST_F(UnitsFixture,SIUnit_createFunctions)
 {
   SIUnit u;
-  
+
   u = createSIMass();
   EXPECT_EQ(1,u.baseUnitExponent("kg"));
   EXPECT_EQ(0,u.scale().exponent);
@@ -202,7 +202,7 @@ TEST_F(UnitsFixture, SIUnit_convert)
   ASSERT_TRUE(cmUnit);
   ASSERT_TRUE(m2Unit);
   ASSERT_TRUE(cm2Unit);
- 
+
   EXPECT_TRUE(mUnit->isBaseUnit("m"));
   EXPECT_EQ(1, mUnit->baseUnitExponent("m"));
   EXPECT_EQ("", mUnit->scale().abbr);
@@ -223,7 +223,7 @@ TEST_F(UnitsFixture, SIUnit_convert)
   EXPECT_EQ("", m2Unit->scale().name);
   EXPECT_EQ(0, m2Unit->scale().exponent);
   EXPECT_EQ(1, m2Unit->scale().value);
- 
+
   EXPECT_TRUE(cm2Unit->isBaseUnit("m"));
   EXPECT_EQ(2, cm2Unit->baseUnitExponent("m"));
   EXPECT_EQ("_dm", cm2Unit->scale().abbr);
@@ -238,7 +238,7 @@ TEST_F(UnitsFixture, SIUnit_convert)
   value = convert(1.0, "cm", "m");
   ASSERT_TRUE(value);
   EXPECT_NEAR(0.01, value.get(), 0.0001);
-  
+
   value = convert(1.0, "1/m", "1/cm");
   ASSERT_TRUE(value);
   EXPECT_NEAR(0.01, value.get(), 0.0001);
@@ -276,7 +276,7 @@ TEST_F(UnitsFixture, SIUnit_convert2)
   ASSERT_TRUE(cmUnit);
   ASSERT_TRUE(m3Unit);
   ASSERT_TRUE(cm3Unit);
- 
+
   EXPECT_TRUE(mUnit->isBaseUnit("m"));
   EXPECT_EQ(1, mUnit->baseUnitExponent("m"));
   EXPECT_EQ("", mUnit->scale().abbr);
@@ -297,7 +297,7 @@ TEST_F(UnitsFixture, SIUnit_convert2)
   EXPECT_EQ("", m3Unit->scale().name);
   EXPECT_EQ(0, m3Unit->scale().exponent);
   EXPECT_EQ(1, m3Unit->scale().value);
- 
+
   EXPECT_TRUE(cm3Unit->isBaseUnit("m"));
   EXPECT_EQ(3, cm3Unit->baseUnitExponent("m"));
   EXPECT_EQ("\\mu", cm3Unit->scale().abbr);

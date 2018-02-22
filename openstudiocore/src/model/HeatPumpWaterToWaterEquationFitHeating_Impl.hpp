@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -63,9 +63,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -117,6 +117,18 @@ namespace detail {
 
     boost::optional<HeatPumpWaterToWaterEquationFitCooling> companionCoolingHeatPump() const;
 
+  boost::optional<double> autosizedReferenceLoadSideFlowRate() const ;
+
+  boost::optional<double> autosizedReferenceSourceSideFlowRate() const ;
+
+  boost::optional<double> autosizedRatedHeatingCapacity() const ;
+
+  boost::optional<double> autosizedRatedHeatingPowerConsumption() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
@@ -141,29 +153,29 @@ namespace detail {
 
     void autosizeRatedHeatingPowerConsumption();
 
-    void setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
+    bool setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1);
 
-    void setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
+    bool setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2);
 
-    void setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
+    bool setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3);
 
-    void setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
+    bool setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4);
 
-    void setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
+    bool setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5);
 
-    void setHeatingCompressorPowerCoefficient1(double heatingCompressorPowerCoefficient1);
+    bool setHeatingCompressorPowerCoefficient1(double heatingCompressorPowerCoefficient1);
 
-    void setHeatingCompressorPowerCoefficient2(double heatingCompressorPowerCoefficient2);
+    bool setHeatingCompressorPowerCoefficient2(double heatingCompressorPowerCoefficient2);
 
-    void setHeatingCompressorPowerCoefficient3(double heatingCompressorPowerCoefficient3);
+    bool setHeatingCompressorPowerCoefficient3(double heatingCompressorPowerCoefficient3);
 
-    void setHeatingCompressorPowerCoefficient4(double heatingCompressorPowerCoefficient4);
+    bool setHeatingCompressorPowerCoefficient4(double heatingCompressorPowerCoefficient4);
 
-    void setHeatingCompressorPowerCoefficient5(double heatingCompressorPowerCoefficient5);
+    bool setHeatingCompressorPowerCoefficient5(double heatingCompressorPowerCoefficient5);
 
-    void setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
+    bool setReferenceCoefficientofPerformance(double referenceCoefficientofPerformance);
 
-    void setSizingFactor(double sizingFactor);
+    bool setSizingFactor(double sizingFactor);
 
     bool setCompanionCoolingHeatPump(const HeatPumpWaterToWaterEquationFitCooling& companionHP);
 
@@ -171,13 +183,13 @@ namespace detail {
     /** @name Other */
     //@{
 
-    virtual unsigned supplyInletPort();
+    virtual unsigned supplyInletPort() override;
 
-    virtual unsigned supplyOutletPort();
+    virtual unsigned supplyOutletPort() override;
 
-    virtual unsigned demandInletPort();
+    virtual unsigned demandInletPort() override;
 
-    virtual unsigned demandOutletPort();
+    virtual unsigned demandOutletPort() override;
 
     //@}
    protected:
@@ -191,4 +203,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_HEATPUMPWATERTOWATEREQUATIONFITHEATING_IMPL_HPP
-

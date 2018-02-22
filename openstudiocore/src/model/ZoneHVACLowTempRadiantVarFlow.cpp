@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -144,6 +144,16 @@ namespace detail {
     static std::vector<std::string> result;
     if (result.empty())
     {
+      result.push_back("Zone Radiant HVAC Heating Rate");
+      result.push_back("Zone Radiant HVAC Heating Energy");
+      result.push_back("Zone Radiant HVAC Cooling Rate");
+      result.push_back("Zone Radiant HVAC Cooling Energy");
+      result.push_back("Zone Radiant HVAC Mass Flow Rate");
+      result.push_back("Zone Radiant HVAC Inlet Temperature");
+      result.push_back("Zone Radiant HVAC Outlet Temperature");
+      result.push_back("Zone Radiant HVAC Moisture Condensation Time");
+      result.push_back("Zone Radiant HVAC Heating Fluid Energy");
+      result.push_back("Zone Radiant HVAC Cooling Fluid Energy");
     }
     return result;
   }
@@ -419,8 +429,8 @@ namespace detail {
     return result;
   }
 
-  void ZoneHVACLowTempRadiantVarFlow_Impl::setCircuitLength(double circuitLength) {
-    setDouble(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CircuitLength, circuitLength);
+  bool ZoneHVACLowTempRadiantVarFlow_Impl::setCircuitLength(double circuitLength) {
+    return setDouble(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CircuitLength, circuitLength);;
   }
 
   boost::optional<Schedule> ZoneHVACLowTempRadiantVarFlow_Impl::optionalAvailabilitySchedule() const
@@ -497,6 +507,34 @@ namespace detail {
     if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
       thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
     }
+  }
+
+  boost::optional<double> ZoneHVACLowTempRadiantVarFlow_Impl::autosizedHydronicTubingLength() const {
+    return getAutosizedValue("Design Size Hydronic Tubing Length", "m");
+  }
+
+  void ZoneHVACLowTempRadiantVarFlow_Impl::autosize() {
+    autosizeHydronicTubingLength();
+  }
+
+  void ZoneHVACLowTempRadiantVarFlow_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedHydronicTubingLength();
+    if (val) {
+      setHydronicTubingLength(val.get());
+    }
+
+  }
+
+  std::vector<EMSActuatorNames> ZoneHVACLowTempRadiantVarFlow_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "Hydronic Low Temp Radiant", "Water Mass Flow Rate" } };
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneHVACLowTempRadiantVarFlow_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Hydronic Low Temp Radiant Design Water Volume Flow Rate for Heating",
+                                    "Hydronic Low Temp Radiant Design Water Volume Flow Rate for Cooling"};
+    return types;
   }
 
 } // detail
@@ -672,8 +710,8 @@ bool ZoneHVACLowTempRadiantVarFlow::setNumberofCircuits(std::string numCircs) {
   return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setNumberofCircuits(numCircs);
 }
 
-void ZoneHVACLowTempRadiantVarFlow::setCircuitLength(double circLength) {
-  getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setCircuitLength(circLength);
+bool ZoneHVACLowTempRadiantVarFlow::setCircuitLength(double circLength) {
+  return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->setCircuitLength(circLength);
 }
 
 boost::optional<ThermalZone> ZoneHVACLowTempRadiantVarFlow::thermalZone() const
@@ -696,6 +734,9 @@ ZoneHVACLowTempRadiantVarFlow::ZoneHVACLowTempRadiantVarFlow(std::shared_ptr<det
 {}
 /// @endcond
 
+  boost::optional<double> ZoneHVACLowTempRadiantVarFlow::autosizedHydronicTubingLength() const {
+    return getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>()->autosizedHydronicTubingLength();
+  }
+
 } // model
 } // openstudio
-

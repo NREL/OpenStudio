@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,6 +39,7 @@ namespace model {
 class Schedule;
 class Curve;
 class CoilHeatingDXMultiSpeedStageData;
+class AirflowNetworkEquivalentDuct;
 
 namespace detail {
 
@@ -107,9 +108,9 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
 
   void resetAvailabilitySchedule();
 
-  void setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-  void setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor);
+  bool setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor);
 
   void resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
 
@@ -133,7 +134,7 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
 
   void autosizeResistiveDefrostHeaterCapacity();
 
-  void setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
+  bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
 
   bool setFuelType(std::string fuelType);
 
@@ -154,6 +155,14 @@ class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
 
   /** Remove all stages **/
   void removeAllStages();
+
+  /** Creates a new equivalent duct object if an object is not already attached. */
+  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+  
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
+  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
 
   //@}
  protected:
@@ -181,4 +190,3 @@ typedef std::vector<CoilHeatingDXMultiSpeed> CoilHeatingDXMultiSpeedVector;
 } // openstudio
 
 #endif // MODEL_COILHEATINGDXMULTISPEED_HPP
-

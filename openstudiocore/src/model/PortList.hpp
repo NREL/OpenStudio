@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -60,28 +60,28 @@ class MODEL_API PortList : public ModelObject {
 
   static IddObjectType iddObjectType();
 
-  /** Returns the port for portIndex.  Ports are consequtively 
-   *  indexed starting from 0. 
+  /** Returns the port for portIndex.  Ports are consequtively
+   *  indexed starting from 0.
    */
   unsigned port(unsigned portIndex);
 
   /** Given a port, return the port index.
-   *  Consider that a "port" is simply an unsigned, so 
+   *  Consider that a "port" is simply an unsigned, so
    *  port and port index share the same type, but they do not share the same value.
    */
   unsigned portIndex(unsigned port);
-  
-  /** Returns the next available port.  This will be the first port 
+
+  /** Returns the next available port.  This will be the first port
    *  with no connected objects */
   unsigned nextPort();
 
-  /** Returns the optional ModelObject connected to the port designated by portIndex. 
+  /** Returns the optional ModelObject connected to the port designated by portIndex.
    *  If there is no connected object then the optional will be false.
    */
   boost::optional<ModelObject> modelObject(unsigned portIndex);
 
   /** Returns the optional ModelObject connected to the last port of the PortList.
-   *  If there are no connections to the list's outlet ports, then the 
+   *  If there are no connections to the list's outlet ports, then the
    *  optional will be false.
    */
   boost::optional<ModelObject> lastModelObject();
@@ -90,7 +90,7 @@ class MODEL_API PortList : public ModelObject {
    *  If no objects are connected to the PortList then an empty vector will be returned.
    */
   std::vector<ModelObject> modelObjects();
-  
+
   /** Returns the port index for the ModelObject specified by modelObject.
    */
   unsigned portIndexForModelObject( ModelObject & modelObject );
@@ -104,6 +104,11 @@ class MODEL_API PortList : public ModelObject {
    *  If there is no AirLoopHVAC object, then the next available port is returned
    */
   unsigned airLoopHVACPort();
+
+  /** Returns the port Index connected to an AirLoopHVAC object.
+   *  If there is no AirLoopHVAC object, then the next available portIndex is returned
+   */
+  unsigned airLoopHVACPortIndex();
 
   /** Returns the object connected to an AirLoopHVAC object. */
   boost::optional<ModelObject> airLoopHVACModelObject();

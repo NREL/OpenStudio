@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -27,7 +27,7 @@
 ########################################################################################################################
 
 ######################################################################
-# == Synopsis 
+# == Synopsis
 #
 #   Generator for analysis::AnalysisObject classes.
 #
@@ -40,86 +40,86 @@ class AnalysisClassGenerator < SubProjectClassGenerator
   def initialize(className, baseClassName, pImpl, qobject)
     super(className, baseClassName, pImpl, qobject)
   end
-  
+
   def hppConstructors()
     result = String.new
-    
+
     result << "  // TODO: Delete if this class is abstract. Otherwise, add other items necessary for construction.\n"
     result << "  // Algorithms have fixed names, and DataPoints have no names by default, so delete the name\n"
     result << "  // argument in those cases.\n"
     result << "  " << @className << "(const std::string& name);\n\n"
-    
+
     buffer = "   " + " " * @className.size
 
-    result << "  // TODO: Delete if this class is abstract. Otherwise, add other items necessary for construction.\n"    
+    result << "  // TODO: Delete if this class is abstract. Otherwise, add other items necessary for construction.\n"
     result << "  /** Constructor provided for deserialization; not for general use. */\n"
     result << "  " << @className << "(const UUID& uuid,\n"
     result << buffer << "const UUID& versionUUID,\n"
     result << buffer << "const std::string& name,\n"
     result << buffer << "const std::string& displayName,\n"
     result << buffer << "const std::string& description);\n\n"
-    
+
     return result
   end
-  
+
   def implHppConstructors()
     result = String.new
-    
+
     result << "    // TODO: Add other items necessary for construction.\n"
     result << "    " << @className << "_Impl(const std::string& name);\n\n"
-    
+
     buffer = "          " + " " * @className.size
-    
+
     result << "    // TODO: Add other items necessary for construction.\n"
     result << "    " << @className << "_Impl(const UUID& uuid,\n"
     result << buffer << "const UUID& versionUUID,\n"
     result << buffer << "const std::string& name,\n"
     result << buffer << "const std::string& displayName,\n"
     result << buffer << "const std::string& description);\n\n"
-    
+
     return result
-  end  
-  
+  end
+
   def cppConstructors()
     result = String.new
-    
+
     result << "  " << @className << "_Impl::" << @className << "_Impl(const std::string& name)\n"
     result << "    : " << @baseClassName << "_Impl(name)\n"
     result << "  {}\n\n"
-    
+
     buffer = "               " + " " * (@className.size * 2)
-    
+
     result << "  " << @className << "_Impl::" << @className << "_Impl(const UUID& uuid,\n"
     result << buffer << "const UUID& versionUUID,\n"
     result << buffer << "const std::string& name,\n"
     result << buffer << "const std::string& displayName,\n"
-    result << buffer << "const std::string& description)\n"    
+    result << buffer << "const std::string& description)\n"
     result << "    : " << @baseClassName << "_Impl(uuid,versionUUID,name,displayName,description)\n"
     result << "  {}\n\n"
-    
+
     return result
   end
-  
+
   def cppPublicClassConstructors()
     result = String.new
-    
+
     result << "// TODO: Delete if this class is abstract.\n"
     result << @className << "::" << @className << "(const std::string& name)\n"
     result << "  : " << @baseClassName << "(std::shared_ptr<detail::" << @className << "_Impl>(\n"
     result << "        " << "new detail::" << @className << "_Impl(name)))\n"
     result << "{}\n\n"
-    
+
     buffer = "   " + " " * (@className.size * 2)
-    
+
     result << "// TODO: Delete if this class is abstract.\n"
     result << @className << "::" << @className << "(const UUID& uuid,\n"
     result << buffer << "const UUID& versionUUID,\n"
     result << buffer << "const std::string& name,\n"
     result << buffer << "const std::string& displayName,\n"
     result << buffer << "const std::string& description)\n"
-    
+
     buffer = "                          " + " " * @className.size
-    
+
     result << "  : " << @baseClassName << "(std::shared_ptr<detail::" << @className << "_Impl>(\n"
     result << "        " << "new detail::" << @className << "_Impl(uuid,\n"
     result << buffer << "versionUUID,\n"
@@ -127,10 +127,10 @@ class AnalysisClassGenerator < SubProjectClassGenerator
     result << buffer << "displayName,\n"
     result << buffer << "description)\n"
     result << "{}\n\n"
-        
+
     return result
-  end  
-  
+  end
+
   def hppPublicMethods()
     result = String.new
     result << "  /** @name Getters and Queries */\n"
@@ -143,30 +143,30 @@ class AnalysisClassGenerator < SubProjectClassGenerator
     result << "  //@}\n"
     return result
   end
-  
+
   def implHppPublicMethods()
     result = String.new
-    
+
     result << "    /** @name Virtual Methods */\n"
     result << "    //@{\n\n"
     result << "    // TODO: Declare virtual methods that need to be overridden.\n\n"
     result << "    //@}\n"
-    result << "    // TODO: Copy, and possibly modify, declarations made in the public class.\n"    
-    
+    result << "    // TODO: Copy, and possibly modify, declarations made in the public class.\n"
+
     return result
-  end  
-  
+  end
+
   def hppProtectedFriends()
     result = String.new
     result << "  friend class AnalysisObject;\n"
     result << "  friend class detail::AnalysisObject_Impl;\n"
     return result
-  end  
-  
+  end
+
   def implHppProtectedMethods()
     result = String.new
-    result << "    // TODO: Add protected data members.\n"    
+    result << "    // TODO: Add protected data members.\n"
     return result
-  end  
-  
+  end
+
 end

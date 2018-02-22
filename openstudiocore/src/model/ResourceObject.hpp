@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,25 +42,25 @@ namespace detail{
 /** ResourceObject is an abstract class derived from ParentObject.
  *
  *  ResourceObject is a pure virtual class for ModelObjects that are shared, globally across a Model.
- *  Examples include Constructions (referenced by many Surfaces), Materials (referenced by many Constructions), 
+ *  Examples include Constructions (referenced by many Surfaces), Materials (referenced by many Constructions),
  *  and Schedules (referenced by almost everything).  Methods such as ModelObject::clone and Model::purgeUnusedResourceObjects
  *  handle special cases related to ResourceObjects.
  */
 class MODEL_API ResourceObject : public ParentObject {
  public:
 
-  /** Returns the number of objects that use this resource directly. All usages count equally. 
-   *  For instance, the use of a Material in a LayeredConstruction counts as one use of the 
+  /** Returns the number of objects that use this resource directly. All usages count equally.
+   *  For instance, the use of a Material in a LayeredConstruction counts as one use of the
    *  Material object, and usages of that LayeredConstruction do not add to the Material's use
    *  count. If excludeChildren is true then children of this object do not contribute to the use count.*/
   unsigned directUseCount(bool excludeChildren = false) const;
 
-  /** Returns the number of non-ResourceObjects that use this resource either directly or 
+  /** Returns the number of non-ResourceObjects that use this resource either directly or
    *  indirectly. Non-ResourceObjects include Building, Zone, Surface, Lights, and AirLoopHVAC,
-   *  for instance. An example of indirect use is the use of a Material object through inclusion 
+   *  for instance. An example of indirect use is the use of a Material object through inclusion
    *  in a Construction. If a particular Material is used in exactly one LayeredConstruction, which
-   *  is in turn used by three PlanarSurface objects, then the nonResourceObjectUseCount of both 
-   *  the Material and the LayeredConstruction is three. 
+   *  is in turn used by three PlanarSurface objects, then the nonResourceObjectUseCount of both
+   *  the Material and the LayeredConstruction is three.
    *  If excludeChildren is true then children of this object do not contribute to the use count.*/
   unsigned nonResourceObjectUseCount(bool excludeChildren = false) const;
 
@@ -73,7 +73,7 @@ class MODEL_API ResourceObject : public ParentObject {
 
   /// Constructs a new PlanarSurface object in the model.
   ResourceObject(IddObjectType type,const Model& model);
-  
+
   //@}
 
   /// @cond
@@ -84,7 +84,7 @@ class MODEL_API ResourceObject : public ParentObject {
   friend class openstudio::IdfObject;
   friend class detail::ResourceObject_Impl;
 
-  explicit ResourceObject(std::shared_ptr<detail::ResourceObject_Impl> impl);  
+  explicit ResourceObject(std::shared_ptr<detail::ResourceObject_Impl> impl);
 
  private:
 
@@ -101,7 +101,7 @@ typedef boost::optional<ResourceObject> OptionalResourceObject;
 typedef std::vector<ResourceObject> ResourceObjectVector;
 
 /** Returns all \link ResourceObject ResourceObjects \endlink accessible by recursively calling
- *  .resources() starting from object. Will not return object even if object is a ResourceObject. 
+ *  .resources() starting from object. Will not return object even if object is a ResourceObject.
  *  \relates ModelObject */
 MODEL_API std::vector<ResourceObject> getRecursiveResources(const ModelObject& object);
 
@@ -117,10 +117,10 @@ std::vector<T> getSubsetOfRecursiveResources(const ModelObject& object) {
   return result;
 }
 
-/** Returns all \link ResourceObject ResourceObjects \endlink and their children accessible 
- *  by alternately calling ModelObject::resources() and getRecursiveChilden. Each element of the 
- *  returned vector is a vector headed by a ResourceObject and followed by that ResourceObject's 
- *  children. ComponentCost_LineItem objects are not technically children but may be included 
+/** Returns all \link ResourceObject ResourceObjects \endlink and their children accessible
+ *  by alternately calling ModelObject::resources() and getRecursiveChilden. Each element of the
+ *  returned vector is a vector headed by a ResourceObject and followed by that ResourceObject's
+ *  children. ComponentCost_LineItem objects are not technically children but may be included
  *  by setting the optional second argument to true.*/
 MODEL_API std::vector< std::vector<ModelObject> > getRecursiveResourceSubTrees(
     const ModelObject& object, bool includeComponentCostLineItems = false);

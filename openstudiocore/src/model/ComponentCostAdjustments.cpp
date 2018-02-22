@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -66,9 +66,9 @@ OptionalDouble ComponentCostAdjustments_Impl::miscellaneousCostPerConditionedAre
   return getDouble(OS_ComponentCost_AdjustmentsFields::MiscellaneousCostperConditionedArea);
 }
 
-void ComponentCostAdjustments_Impl::setMiscellaneousCostPerConditionedArea(double num)
+bool ComponentCostAdjustments_Impl::setMiscellaneousCostPerConditionedArea(double num)
 {
-  setDouble(OS_ComponentCost_AdjustmentsFields::MiscellaneousCostperConditionedArea,num);
+  return setDouble(OS_ComponentCost_AdjustmentsFields::MiscellaneousCostperConditionedArea,num);;
 }
 
 OptionalDouble ComponentCostAdjustments_Impl::designAndEngineeringFees() const
@@ -76,9 +76,9 @@ OptionalDouble ComponentCostAdjustments_Impl::designAndEngineeringFees() const
   return getDouble(OS_ComponentCost_AdjustmentsFields::DesignandEngineeringFees);
 }
 
-void ComponentCostAdjustments_Impl::setDesignAndEngineeringFees(double num)
+bool ComponentCostAdjustments_Impl::setDesignAndEngineeringFees(double num)
 {
-  setDouble(OS_ComponentCost_AdjustmentsFields::DesignandEngineeringFees,num);
+  return setDouble(OS_ComponentCost_AdjustmentsFields::DesignandEngineeringFees,num);;
 }
 
 OptionalDouble ComponentCostAdjustments_Impl::contractorFee() const
@@ -86,9 +86,9 @@ OptionalDouble ComponentCostAdjustments_Impl::contractorFee() const
   return getDouble(OS_ComponentCost_AdjustmentsFields::ContractorFee);
 }
 
-void ComponentCostAdjustments_Impl::setContractorFee(double num)
+bool ComponentCostAdjustments_Impl::setContractorFee(double num)
 {
-  setDouble(OS_ComponentCost_AdjustmentsFields::ContractorFee,num);
+  return setDouble(OS_ComponentCost_AdjustmentsFields::ContractorFee,num);;
 }
 
 OptionalDouble ComponentCostAdjustments_Impl::contingency() const
@@ -96,9 +96,9 @@ OptionalDouble ComponentCostAdjustments_Impl::contingency() const
   return getDouble(OS_ComponentCost_AdjustmentsFields::Contingency);
 }
 
-void ComponentCostAdjustments_Impl::setContingency(double num)
+bool ComponentCostAdjustments_Impl::setContingency(double num)
 {
-  setDouble(OS_ComponentCost_AdjustmentsFields::Contingency,num);
+  return setDouble(OS_ComponentCost_AdjustmentsFields::Contingency,num);;
 }
 
 OptionalDouble ComponentCostAdjustments_Impl::permitsBondingAndInsurance() const
@@ -106,9 +106,9 @@ OptionalDouble ComponentCostAdjustments_Impl::permitsBondingAndInsurance() const
   return getDouble(OS_ComponentCost_AdjustmentsFields::PermitsBondingandInsurance);
 }
 
-void ComponentCostAdjustments_Impl::setPermitsBondingAndInsurance(double num)
+bool ComponentCostAdjustments_Impl::setPermitsBondingAndInsurance(double num)
 {
-  setDouble(OS_ComponentCost_AdjustmentsFields::PermitsBondingandInsurance,num);
+  return setDouble(OS_ComponentCost_AdjustmentsFields::PermitsBondingandInsurance,num);;
 }
 
 OptionalDouble ComponentCostAdjustments_Impl::commissioningFee() const
@@ -116,9 +116,9 @@ OptionalDouble ComponentCostAdjustments_Impl::commissioningFee() const
   return getDouble(OS_ComponentCost_AdjustmentsFields::CommissioningFee);
 }
 
-void ComponentCostAdjustments_Impl::setCommissioningFee(double num)
+bool ComponentCostAdjustments_Impl::setCommissioningFee(double num)
 {
-  setDouble(OS_ComponentCost_AdjustmentsFields::CommissioningFee,num);
+  return setDouble(OS_ComponentCost_AdjustmentsFields::CommissioningFee,num);;
 }
 
 OptionalDouble ComponentCostAdjustments_Impl::regionalAdjustmentFactor() const
@@ -126,9 +126,9 @@ OptionalDouble ComponentCostAdjustments_Impl::regionalAdjustmentFactor() const
   return getDouble(OS_ComponentCost_AdjustmentsFields::RegionalAdjustmentFactor);
 }
 
-void ComponentCostAdjustments_Impl::setRegionalAdjustmentFactor(double num)
+bool ComponentCostAdjustments_Impl::setRegionalAdjustmentFactor(double num)
 {
-  setDouble(OS_ComponentCost_AdjustmentsFields::RegionalAdjustmentFactor,num);
+  return setDouble(OS_ComponentCost_AdjustmentsFields::RegionalAdjustmentFactor,num);;
 }
 
 // return the parent object in the hierarchy
@@ -186,9 +186,9 @@ OptionalDouble ComponentCostAdjustments::miscellaneousCostPerConditionedArea() c
   return getImpl<detail::ComponentCostAdjustments_Impl>()->miscellaneousCostPerConditionedArea();
 }
 
-void ComponentCostAdjustments::setMiscellaneousCostPerConditionedArea(double num)
+bool ComponentCostAdjustments::setMiscellaneousCostPerConditionedArea(double num)
 {
-  getImpl<detail::ComponentCostAdjustments_Impl>()->setMiscellaneousCostPerConditionedArea(num);
+  return getImpl<detail::ComponentCostAdjustments_Impl>()->setMiscellaneousCostPerConditionedArea(num);
 }
 
 OptionalDouble ComponentCostAdjustments::designAndEngineeringFees() const
@@ -196,9 +196,9 @@ OptionalDouble ComponentCostAdjustments::designAndEngineeringFees() const
   return getImpl<detail::ComponentCostAdjustments_Impl>()->designAndEngineeringFees();
 }
 
-void ComponentCostAdjustments::setDesignAndEngineeringFees(double num)
+bool ComponentCostAdjustments::setDesignAndEngineeringFees(double num)
 {
-  getImpl<detail::ComponentCostAdjustments_Impl>()->setDesignAndEngineeringFees(num);
+  return getImpl<detail::ComponentCostAdjustments_Impl>()->setDesignAndEngineeringFees(num);
 }
 
 OptionalDouble ComponentCostAdjustments::contractorFee() const
@@ -206,9 +206,9 @@ OptionalDouble ComponentCostAdjustments::contractorFee() const
   return getImpl<detail::ComponentCostAdjustments_Impl>()->contractorFee();
 }
 
-void ComponentCostAdjustments::setContractorFee(double num)
+bool ComponentCostAdjustments::setContractorFee(double num)
 {
-  getImpl<detail::ComponentCostAdjustments_Impl>()->setContractorFee(num);
+  return getImpl<detail::ComponentCostAdjustments_Impl>()->setContractorFee(num);
 }
 
 OptionalDouble ComponentCostAdjustments::contingency() const
@@ -216,9 +216,9 @@ OptionalDouble ComponentCostAdjustments::contingency() const
   return getImpl<detail::ComponentCostAdjustments_Impl>()->contingency();
 }
 
-void ComponentCostAdjustments::setContingency(double num)
+bool ComponentCostAdjustments::setContingency(double num)
 {
-  getImpl<detail::ComponentCostAdjustments_Impl>()->setContingency(num);
+  return getImpl<detail::ComponentCostAdjustments_Impl>()->setContingency(num);
 }
 
 OptionalDouble ComponentCostAdjustments::permitsBondingAndInsurance() const
@@ -226,9 +226,9 @@ OptionalDouble ComponentCostAdjustments::permitsBondingAndInsurance() const
   return getImpl<detail::ComponentCostAdjustments_Impl>()->permitsBondingAndInsurance();
 }
 
-void ComponentCostAdjustments::setPermitsBondingAndInsurance(double num)
+bool ComponentCostAdjustments::setPermitsBondingAndInsurance(double num)
 {
-  getImpl<detail::ComponentCostAdjustments_Impl>()->setPermitsBondingAndInsurance(num);
+  return getImpl<detail::ComponentCostAdjustments_Impl>()->setPermitsBondingAndInsurance(num);
 }
 
 OptionalDouble ComponentCostAdjustments::commissioningFee() const
@@ -236,9 +236,9 @@ OptionalDouble ComponentCostAdjustments::commissioningFee() const
   return getImpl<detail::ComponentCostAdjustments_Impl>()->commissioningFee();
 }
 
-void ComponentCostAdjustments::setCommissioningFee(double num)
+bool ComponentCostAdjustments::setCommissioningFee(double num)
 {
-  getImpl<detail::ComponentCostAdjustments_Impl>()->setCommissioningFee(num);
+  return getImpl<detail::ComponentCostAdjustments_Impl>()->setCommissioningFee(num);
 }
 
 OptionalDouble ComponentCostAdjustments::regionalAdjustmentFactor() const
@@ -246,9 +246,9 @@ OptionalDouble ComponentCostAdjustments::regionalAdjustmentFactor() const
   return getImpl<detail::ComponentCostAdjustments_Impl>()->regionalAdjustmentFactor();
 }
 
-void ComponentCostAdjustments::setRegionalAdjustmentFactor(double num)
+bool ComponentCostAdjustments::setRegionalAdjustmentFactor(double num)
 {
-  getImpl<detail::ComponentCostAdjustments_Impl>()->setRegionalAdjustmentFactor(num);
+  return getImpl<detail::ComponentCostAdjustments_Impl>()->setRegionalAdjustmentFactor(num);
 }
 
 IddObjectType ComponentCostAdjustments::iddObjectType()
@@ -258,4 +258,4 @@ IddObjectType ComponentCostAdjustments::iddObjectType()
 }
 
 } // model
-} // openstudio
+} // openstudio

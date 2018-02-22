@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -223,7 +223,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::attach(openst
   m_solarDiffusing->bind(
     *m_refractionExtinctionGlazing,
     std::bind(&model::RefractionExtinctionGlazing::solarDiffusing, m_refractionExtinctionGlazing.get_ptr()),
-    boost::optional<BoolSetter>(std::bind(&model::RefractionExtinctionGlazing::setSolarDiffusing, m_refractionExtinctionGlazing.get_ptr(), std::placeholders::_1)),
+    boost::optional<BoolSetter>(std::bind(&model::RefractionExtinctionGlazing::setSolarDiffusingNoFail, m_refractionExtinctionGlazing.get_ptr(), std::placeholders::_1)),
     boost::optional<NoFailAction>(std::bind(&model::RefractionExtinctionGlazing::resetSolarDiffusing, m_refractionExtinctionGlazing.get_ptr())),
     boost::optional<BasicQuery>(std::bind(&model::RefractionExtinctionGlazing::isSolarDiffusingDefaulted, m_refractionExtinctionGlazing.get_ptr()))
   );

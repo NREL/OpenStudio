@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -133,14 +133,14 @@ TEST_F(UnitsFixture,OSQuantityVector_MathematicalOperators) {
   EXPECT_EQ(resultQ,resultVec.getQuantity(1));
   EXPECT_TRUE(resultVec.isAbsolute());
   EXPECT_TRUE(resultQ.isAbsolute());
-  
+
   resultVec = testVec2 + testVec1;
   resultQ = testQ2 + testQ1;
   ASSERT_EQ(2u,resultVec.size());
   EXPECT_EQ(resultQ,resultVec.getQuantity(0));
   EXPECT_EQ(resultQ,resultVec.getQuantity(1));
   EXPECT_TRUE(resultVec.isAbsolute());
-  EXPECT_TRUE(resultQ.isAbsolute());  
+  EXPECT_TRUE(resultQ.isAbsolute());
 
   resultVec = testVec2 + testVec2;
   resultQ = testQ2 + testQ2;

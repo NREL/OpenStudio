@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -32,7 +32,7 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
-namespace openstudio {  
+namespace openstudio {
 
 namespace model {
 
@@ -75,7 +75,7 @@ class MODEL_API BuildingStory : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setNominalZCoordinate(double nominalZCoordinate);
+  bool setNominalZCoordinate(double nominalZCoordinate);
   void resetNominalZCoordinate();
 
   bool setNominalFloortoFloorHeight(double nominalFloortoFloorHeight);
@@ -141,4 +141,3 @@ typedef std::vector<BuildingStory> BuildingStoryVector;
 } // openstudio
 
 #endif // MODEL_BUILDINGSTORY_HPP
-

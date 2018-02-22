@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -126,57 +126,57 @@ class MODEL_API SiteGroundTemperatureShallow : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setJanuarySurfaceGroundTemperature(double januarySurfaceGroundTemperature);
+  bool setJanuarySurfaceGroundTemperature(double januarySurfaceGroundTemperature);
 
   void resetJanuarySurfaceGroundTemperature();
 
-  void setFebruarySurfaceGroundTemperature(double februarySurfaceGroundTemperature);
+  bool setFebruarySurfaceGroundTemperature(double februarySurfaceGroundTemperature);
 
   void resetFebruarySurfaceGroundTemperature();
 
-  void setMarchSurfaceGroundTemperature(double marchSurfaceGroundTemperature);
+  bool setMarchSurfaceGroundTemperature(double marchSurfaceGroundTemperature);
 
   void resetMarchSurfaceGroundTemperature();
 
-  void setAprilSurfaceGroundTemperature(double aprilSurfaceGroundTemperature);
+  bool setAprilSurfaceGroundTemperature(double aprilSurfaceGroundTemperature);
 
   void resetAprilSurfaceGroundTemperature();
 
-  void setMaySurfaceGroundTemperature(double maySurfaceGroundTemperature);
+  bool setMaySurfaceGroundTemperature(double maySurfaceGroundTemperature);
 
   void resetMaySurfaceGroundTemperature();
 
-  void setJuneSurfaceGroundTemperature(double juneSurfaceGroundTemperature);
+  bool setJuneSurfaceGroundTemperature(double juneSurfaceGroundTemperature);
 
   void resetJuneSurfaceGroundTemperature();
 
-  void setJulySurfaceGroundTemperature(double julySurfaceGroundTemperature);
+  bool setJulySurfaceGroundTemperature(double julySurfaceGroundTemperature);
 
   void resetJulySurfaceGroundTemperature();
 
-  void setAugustSurfaceGroundTemperature(double augustSurfaceGroundTemperature);
+  bool setAugustSurfaceGroundTemperature(double augustSurfaceGroundTemperature);
 
   void resetAugustSurfaceGroundTemperature();
 
-  void setSeptemberSurfaceGroundTemperature(double septemberSurfaceGroundTemperature);
+  bool setSeptemberSurfaceGroundTemperature(double septemberSurfaceGroundTemperature);
 
   void resetSeptemberSurfaceGroundTemperature();
 
-  void setOctoberSurfaceGroundTemperature(double octoberSurfaceGroundTemperature);
+  bool setOctoberSurfaceGroundTemperature(double octoberSurfaceGroundTemperature);
 
   void resetOctoberSurfaceGroundTemperature();
 
-  void setNovemberSurfaceGroundTemperature(double novemberSurfaceGroundTemperature);
+  bool setNovemberSurfaceGroundTemperature(double novemberSurfaceGroundTemperature);
 
   void resetNovemberSurfaceGroundTemperature();
 
-  void setDecemberSurfaceGroundTemperature(double decemberSurfaceGroundTemperature);
+  bool setDecemberSurfaceGroundTemperature(double decemberSurfaceGroundTemperature);
 
   void resetDecemberSurfaceGroundTemperature();
 
-  void setTemperatureByMonth(int month, double temperature);
+  bool setTemperatureByMonth(int month, double temperature);
 
-  void setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature);
+  bool setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature);
 
   void resetTemperatureByMonth(int month);
 

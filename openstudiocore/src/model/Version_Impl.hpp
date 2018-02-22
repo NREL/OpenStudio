@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -86,7 +86,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    void setVersionIdentifier(const std::string& s);
+    bool setVersionIdentifier(const std::string& s);
 
     //@}
    private:
@@ -100,4 +100,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_VERSION_IMPL_HPP
-

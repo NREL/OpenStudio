@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -70,8 +70,8 @@ namespace openstudio{
                                          const boost::optional<std::string>& description,
                                          const std::string& type, const boost::optional<std::string>& units,
                                          bool modelDependent)
-                                         : m_name(name), m_displayName(displayName), 
-                                         m_shortName(shortName), m_description(description), 
+                                         : m_name(name), m_displayName(displayName),
+                                         m_shortName(shortName), m_description(description),
                                          m_type(type), m_units(units), m_modelDependent(modelDependent)
   {
   }

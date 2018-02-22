@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -110,7 +110,7 @@ TEST_F(ModelFixture, LifeCycleCostParameters) {
   EXPECT_FALSE(lifeCycleCostParameters.setRealDiscountRate(0.04));
   EXPECT_FALSE(lifeCycleCostParameters.setNominalDiscountRate(0.05));
   EXPECT_FALSE(lifeCycleCostParameters.setInflation(0.01));
-  
+
   EXPECT_FALSE(lifeCycleCostParameters.realDiscountRate());
   ASSERT_TRUE(lifeCycleCostParameters.nominalDiscountRate());
   EXPECT_EQ(0.035, lifeCycleCostParameters.nominalDiscountRate().get());
@@ -128,7 +128,7 @@ TEST_F(ModelFixture, LifeCycleCostParameters) {
   EXPECT_FALSE(lifeCycleCostParameters.setRealDiscountRate(0.04));
   EXPECT_FALSE(lifeCycleCostParameters.setNominalDiscountRate(0.05));
   EXPECT_FALSE(lifeCycleCostParameters.setInflation(0.01));
-  
+
   ASSERT_TRUE(lifeCycleCostParameters.realDiscountRate());
   EXPECT_EQ(0.03, lifeCycleCostParameters.realDiscountRate().get());
   EXPECT_FALSE(lifeCycleCostParameters.nominalDiscountRate());

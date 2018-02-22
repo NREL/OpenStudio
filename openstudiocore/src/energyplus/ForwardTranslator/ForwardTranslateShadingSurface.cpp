@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -92,7 +92,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
 
       boost::optional<Space> space = shadingSurfaceGroup->space();
       if (space){
-        
+
         boost::optional<Surface> baseSurface;
         double minDistance = std::numeric_limits<double>::max();
 
@@ -113,7 +113,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
         }
 
         if (!baseSurface){
-          LOG(Error, "Cannot find appropriate base surface for shading surface '" << modelObject.name().get() << 
+          LOG(Error, "Cannot find appropriate base surface for shading surface '" << modelObject.name().get() <<
                      "', the shading surface will not be translated");
           return boost::none;
         }
@@ -129,7 +129,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
 
       idfObject = IdfObject(openstudio::IddObjectType::Shading_Site_Detailed);
       idfObject->setString(Shading_Site_DetailedFields::Name, modelObject.name().get());
-      
+
       if (transmittanceSchedule){
         idfObject->setString(Shading_Site_DetailedFields::TransmittanceScheduleName, transmittanceSchedule->name().get());
       }
@@ -142,7 +142,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
 
       idfObject = IdfObject(openstudio::IddObjectType::Shading_Building_Detailed);
       idfObject->setString(Shading_Building_DetailedFields::Name, modelObject.name().get());
-      
+
       if (transmittanceSchedule){
         idfObject->setString(Shading_Building_DetailedFields::TransmittanceScheduleName, transmittanceSchedule->name().get());
       }
@@ -151,7 +151,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
   }else{
     idfObject = IdfObject(openstudio::IddObjectType::Shading_Building_Detailed);
     idfObject->setString(Shading_Building_DetailedFields::Name, modelObject.name().get());
-    
+
     if (transmittanceSchedule){
       idfObject->setString(Shading_Building_DetailedFields::TransmittanceScheduleName, transmittanceSchedule->name().get());
     }
@@ -211,7 +211,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
             }
           }
 
-          
+
           if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
             model::MasslessOpaqueMaterial outerMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
 

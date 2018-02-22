@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -102,7 +102,7 @@ class OpenStudioApp : public OSAppBase
 
   openstudio::model::Model hvacComponentLibrary() const;
 
-  openstudio::path resourcesPath() const; 
+  openstudio::path resourcesPath() const;
 
   openstudio::path openstudioCLIPath() const;
 
@@ -117,15 +117,15 @@ class OpenStudioApp : public OSAppBase
  signals:
 
  public slots:
-  
+
   void quit();
 
-  void importIdf(); 
+  void importIdf();
 
-  void importgbXML(); 
+  void importgbXML();
 
-  void importSDD(); 
-  
+  void importSDD();
+
   void importIFC();
 
   void open();
@@ -142,9 +142,16 @@ class OpenStudioApp : public OSAppBase
 
   void revertToSaved();
 
+  void changeDefaultLibraries();
+
  private slots:
 
-  void buildCompLibraries();
+  std::vector<openstudio::path> defaultLibraryPaths() const;
+
+  std::vector<openstudio::path> libraryPaths() const;
+
+  // Build the component libraries and return a vector of paths that failed to load
+  std::vector<std::string> buildCompLibraries();
 
   void newFromEmptyTemplateSlot( );
 
@@ -170,6 +177,8 @@ class OpenStudioApp : public OSAppBase
   // or creates a new empty OSDocument
   void onMeasureManagerAndLibraryReady();
 
+  void onChangeDefaultLibrariesDone();
+
  private:
 
   enum fileType{
@@ -177,11 +186,13 @@ class OpenStudioApp : public OSAppBase
     GBXML
   };
 
+  void showFailedLibraryDialog(const std::vector<std::string> & failedPaths);
+
   void import(fileType type);
 
   bool openFile(const QString& fileName, bool restoreTabs = false);
 
-  void versionUpdateMessageBox(const osversion::VersionTranslator& translator, bool successful, const QString& fileName, 
+  void versionUpdateMessageBox(const osversion::VersionTranslator& translator, bool successful, const QString& fileName,
       const openstudio::path &tempModelDir);
 
   void readSettings();
@@ -194,11 +205,15 @@ class OpenStudioApp : public OSAppBase
 
   void connectOSDocumentSignals();
 
+  void removeLibraryFromsSettings( const openstudio::path & path );
+
   QProcess* m_measureManagerProcess;
 
   openstudio::model::Model m_compLibrary;
 
   openstudio::model::Model m_hvacCompLibrary;
+
+  openstudio::model::Model m_library;
 
   std::shared_ptr<OSDocument> m_osDocument;
 
@@ -206,8 +221,9 @@ class OpenStudioApp : public OSAppBase
 
   std::shared_ptr<StartupMenu> m_startupMenu;
 
-  QFutureWatcher<void> m_buildCompLibWatcher;
+  QFutureWatcher<std::vector<std::string> > m_buildCompLibWatcher;
   QFutureWatcher<void> m_waitForMeasureManagerWatcher;
+  QFutureWatcher<std::vector<std::string> > m_changeLibrariesWatcher;
 };
 
 } // openstudio

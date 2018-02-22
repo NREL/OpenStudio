@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,7 +47,7 @@ namespace openstudio {
   class OSGridView;
 
   class OSItemSelectorButtons;
-  
+
 class GridViewSubTab : public QWidget
 {
   Q_OBJECT
@@ -61,7 +61,7 @@ class GridViewSubTab : public QWidget
     openstudio::IddObjectType m_iddObjectType;
 
   protected:
-    
+
     void setGridView(OSGridView * gridView);
 
     void setGridController(OSGridController * gridController);

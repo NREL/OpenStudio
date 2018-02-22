@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -52,17 +52,6 @@ namespace detail {
 
   /** Site_Impl is a ParentObject_Impl that is the implementation class for Site.*/
   class MODEL_API Site_Impl : public ParentObject_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     //
     //
    public:
@@ -119,6 +108,10 @@ namespace detail {
     std::string terrain() const;
 
     bool isTerrainDefaulted() const;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */

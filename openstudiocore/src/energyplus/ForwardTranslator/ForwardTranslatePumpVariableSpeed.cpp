@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -51,7 +51,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePumpVariableSpeed( 
+boost::optional<IdfObject> ForwardTranslator::translatePumpVariableSpeed(
     PumpVariableSpeed& modelObject)
 {
   boost::optional<std::string> s;
@@ -126,12 +126,12 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpVariableSpeed(
     idfObject.setDouble(Pump_VariableSpeedFields::MotorEfficiency,value.get());
   }
 
-  // FractionofMotorInefficienciestoFluidStream  
+  // FractionofMotorInefficienciestoFluidStream
 
   if( (value = modelObject.fractionofMotorInefficienciestoFluidStream()) )
   {
     idfObject.setDouble(Pump_VariableSpeedFields::FractionofMotorInefficienciestoFluidStream,value.get());
-  } 
+  }
 
   // Coefficient1ofthePartLoadPerformanceCurve
 
@@ -227,6 +227,32 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpVariableSpeed(
 
   if ((schedule = modelObject.maximumRPMSchedule())) {
     idfObject.setString(Pump_VariableSpeedFields::MaximumRPMSchedule,schedule->name().get());
+  }
+
+  if ((value = modelObject.skinLossRadiativeFraction())) {
+    idfObject.setDouble(Pump_VariableSpeedFields::SkinLossRadiativeFraction,value.get());
+  }
+
+  {
+    s = modelObject.designPowerSizingMethod();
+    idfObject.setString(Pump_VariableSpeedFields::DesignPowerSizingMethod,s.get());
+  }
+
+
+  {
+    value = modelObject.designElectricPowerPerUnitFlowRate();
+    idfObject.setDouble(Pump_VariableSpeedFields::DesignElectricPowerperUnitFlowRate,value.get());
+  }
+
+
+  {
+    value = modelObject.designShaftPowerPerUnitFlowRatePerUnitHead();
+    idfObject.setDouble(Pump_VariableSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,value.get());
+  }
+
+  {
+    value = modelObject.designMinimumFlowRateFraction();
+    idfObject.setDouble(Pump_VariableSpeedFields::DesignMinimumFlowRateFraction,value.get());
   }
 
   return idfObject;

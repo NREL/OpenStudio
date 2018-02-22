@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,7 +47,7 @@ class ZoneHVACPackagedTerminalHeatPump_Impl;
 
 /** ZoneHVACPackagedTerminalHeatPump is a ZoneHVACComponent that wraps the
  *  OpenStudio IDD object 'OS:ZoneHVAC:PackagedTerminalHeatPump'. */
-class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent 
+class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
 {
   public:
   /** @name Constructors and Destructors */
@@ -79,7 +79,7 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
   /** @name Getters */
   //@{
 
-  Schedule availabilitySchedule() const;  
+  Schedule availabilitySchedule() const;
 
   std::string outdoorAirMixerObjectType() const;
 
@@ -158,7 +158,7 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
 
   bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
 
-  void setOutdoorAirMixerName(std::string outdoorAirMixerName);
+  bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
 
   bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
 
@@ -188,9 +188,9 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
 
   void autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void setSupplyAirFan( HVACComponent & hvacComponent );
+  bool setSupplyAirFan( HVACComponent & hvacComponent );
 
-  void setHeatingCoil( HVACComponent & hvacComponent );
+  bool setHeatingCoil( HVACComponent & hvacComponent );
 
   bool setHeatingConvergenceTolerance(double heatingConvergenceTolerance);
 
@@ -201,15 +201,15 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
 
   void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
 
-  void setCoolingCoil( HVACComponent & hvacComponent );
+  bool setCoolingCoil( HVACComponent & hvacComponent );
 
   bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
 
   void resetCoolingConvergenceTolerance();
 
-  void setSupplementalHeatingCoil( HVACComponent & hvacComponent );
+  bool setSupplementalHeatingCoil( HVACComponent & hvacComponent );
 
-  void setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
+  bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
 
   void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
@@ -221,8 +221,8 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
 
   void resetFanPlacement();
 
-  /** Sets the supply air fan operating mode schedule. Values of zero indicate that the fan 
-   *  cycles on and off with the active (heating or cooling) coil. Other values operate the 
+  /** Sets the supply air fan operating mode schedule. Values of zero indicate that the fan
+   *  cycles on and off with the active (heating or cooling) coil. Other values operate the
    *  fan continuously. */
   bool setSupplyAirFanOperatingModeSchedule(Schedule & schedule );
 
@@ -231,6 +231,22 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
   //@}
   /** @name Other */
   //@{
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+
+  boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
+
+
 
   //@}
  protected:
@@ -260,4 +276,3 @@ typedef std::vector<ZoneHVACPackagedTerminalHeatPump> ZoneHVACPackagedTerminalHe
 } // openstudio
 
 #endif // MODEL_ZONEHVACPACKAGEDTERMINALHEATPUMP_HPP
-

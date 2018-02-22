@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -75,9 +75,9 @@ namespace detail {
     return getString(OS_VersionFields::VersionIdentifier).get();
   }
 
-  void Version_Impl::setVersionIdentifier(const std::string& s)
+  bool Version_Impl::setVersionIdentifier(const std::string& s)
   {
-    setString(OS_VersionFields::VersionIdentifier,s);
+    return setString(OS_VersionFields::VersionIdentifier,s);;
   }
 
   // return the parent object in the hierarchy
@@ -119,9 +119,9 @@ std::string Version::versionIdentifier() const {
   return getImpl<detail::Version_Impl>()->versionIdentifier();
 }
 
-void Version::setVersionIdentifier(const std::string& s)
+bool Version::setVersionIdentifier(const std::string& s)
 {
-  getImpl<detail::Version_Impl>()->setVersionIdentifier(s);
+  return getImpl<detail::Version_Impl>()->setVersionIdentifier(s);
 }
 
 IddObjectType Version::iddObjectType() {
@@ -130,4 +130,4 @@ IddObjectType Version::iddObjectType() {
 }
 
 } // model
-} // openstudio
+} // openstudio

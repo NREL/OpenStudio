@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,7 +41,7 @@ namespace detail {
 
 } // detail
 
-/** CurveDoubleExponentialDecay is a Curve that wraps the OpenStudio IDD object 
+/** CurveDoubleExponentialDecay is a Curve that wraps the OpenStudio IDD object
  *  'OS:Curve:DoubleExponentialDecay'. The functional form is \f$f(x) = ?\f$ */
 class MODEL_API CurveDoubleExponentialDecay : public Curve {
  public:
@@ -95,25 +95,25 @@ class MODEL_API CurveDoubleExponentialDecay : public Curve {
   /** @name Setters */
   //@{
 
-  void setCoefficient1C1(double coefficient1C1);
+  bool setCoefficient1C1(double coefficient1C1);
 
-  void setCoefficient2C2(double coefficient2C2);
+  bool setCoefficient2C2(double coefficient2C2);
 
-  void setCoefficient3C3(double coefficient3C3);
+  bool setCoefficient3C3(double coefficient3C3);
 
-  void setCoefficient3C4(double coefficient3C4);
+  bool setCoefficient3C4(double coefficient3C4);
 
-  void setCoefficient3C5(double coefficient3C5);
+  bool setCoefficient3C5(double coefficient3C5);
 
-  void setMinimumValueofx(double minimumValueofx);
+  bool setMinimumValueofx(double minimumValueofx);
 
-  void setMaximumValueofx(double maximumValueofx);
+  bool setMaximumValueofx(double maximumValueofx);
 
-  void setMinimumCurveOutput(double minimumCurveOutput);
+  bool setMinimumCurveOutput(double minimumCurveOutput);
 
   void resetMinimumCurveOutput();
 
-  void setMaximumCurveOutput(double maximumCurveOutput);
+  bool setMaximumCurveOutput(double maximumCurveOutput);
 
   void resetMaximumCurveOutput();
 
@@ -156,5 +156,4 @@ typedef std::vector<CurveDoubleExponentialDecay> CurveDoubleExponentialDecayVect
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEDOUBLEEXPONENTIALDECAY_HPP
-
+#endif // MODEL_CURVEDOUBLEEXPONENTIALDECAY_HPP

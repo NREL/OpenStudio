@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,7 +43,7 @@
 namespace openstudio{
 
 namespace measuretab {
-  
+
   class WorkflowSectionItem;
   class WorkflowStepController;
   class MeasureStepItem;
@@ -52,7 +52,7 @@ namespace measuretab {
 } // measuretab
 
 namespace measure {
-  
+
   class OSArgument;
 
 }
@@ -114,7 +114,7 @@ class WorkflowSectionItem : public OSListItem
   QSharedPointer<WorkflowStepController> workflowStepController() const;
 
   private:
-  
+
   QString m_label;
   boost::optional<MeasureType> m_measureType;
 
@@ -209,7 +209,7 @@ class MeasureStepItem : public OSListItem
 
   OptionalBCLMeasure bclMeasure() const;
 
-  // arguments includes the full list of arguments calculated for the given model along with any values specified in the OSW 
+  // arguments includes the full list of arguments calculated for the given model along with any values specified in the OSW
   std::vector<measure::OSArgument> arguments() const;
 
   bool hasIncompleteArguments() const;

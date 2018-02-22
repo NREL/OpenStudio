@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -54,7 +54,7 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
     return boost::none;
   }
 
-  // this function creates a space and a thermal zone, it returns the space.  If you want the 
+  // this function creates a space and a thermal zone, it returns the space.  If you want the
   // thermal zone you can reliably dereference the result of space.thermalZone().
 
   openstudio::model::ThermalZone thermalZone( m_model );
@@ -139,7 +139,7 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
   if( idfZoneName )
   {
     Workspace workspace = workspaceObject.workspace();
-    
+
     std::vector<WorkspaceObject> _zoneControlThermostats;
     _zoneControlThermostats = workspace.getObjectsByType(IddObjectType::ZoneControl_Thermostat);
 
@@ -149,9 +149,9 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
       {
         bool zoneControlThermostatfound = false;
 
-        if( zoneName.get() == idfZoneName ) 
-        { 
-          zoneControlThermostatfound = true; 
+        if( zoneName.get() == idfZoneName )
+        {
+          zoneControlThermostatfound = true;
         }
         else if( boost::optional<WorkspaceObject> _zoneList = workspace.getObjectByTypeAndName(IddObjectType::ZoneList,zoneName.get()) )
         {
@@ -179,7 +179,7 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
             {
               boost::optional<WorkspaceObject> _thermostat
                = workspace.getObjectByTypeAndName(IddObjectType(thermostatType.get()),thermostatName.get());
-              
+
               if( _thermostat )
               {
                 boost::optional<ModelObject> thermostat = translateAndMapWorkspaceObject(_thermostat.get());

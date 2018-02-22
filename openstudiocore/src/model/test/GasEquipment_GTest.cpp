@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -62,7 +62,7 @@ TEST_F(ModelFixture, GasEquipment_Cost)
 
   boost::optional<LifeCycleCost> cost = LifeCycleCost::createLifeCycleCost("Gas Hookup", definition, 10.0, "CostPerEach", "Construction");
   ASSERT_TRUE(cost);
-  
+
   EXPECT_DOUBLE_EQ(0, cost->totalCost());
 
   Space space(model);

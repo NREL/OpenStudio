@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -118,7 +118,9 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.12.4")] = &VersionTranslator::update_1_12_3_to_1_12_4;
   m_updateMethods[VersionString("2.1.1")] = &VersionTranslator::update_2_1_0_to_2_1_1;
   m_updateMethods[VersionString("2.1.2")] = &VersionTranslator::update_2_1_1_to_2_1_2;
-  m_updateMethods[VersionString("2.3.0")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("2.3.1")] = &VersionTranslator::update_2_3_0_to_2_3_1;
+  m_updateMethods[VersionString("2.4.2")] = &VersionTranslator::update_2_4_1_to_2_4_2;
+  //m_updateMethods[VersionString("2.4.2")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -250,6 +252,10 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("2.2.0"));
   m_startVersions.push_back(VersionString("2.2.1"));
   m_startVersions.push_back(VersionString("2.2.2"));
+  m_startVersions.push_back(VersionString("2.3.0"));
+  m_startVersions.push_back(VersionString("2.3.1"));
+  m_startVersions.push_back(VersionString("2.4.0"));
+  m_startVersions.push_back(VersionString("2.4.1"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm,
@@ -3515,6 +3521,418 @@ std::string VersionTranslator::update_2_1_1_to_2_1_2(const IdfFile& idf_2_1_1, c
   return ss.str();
 }
 
+std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, const IddFileAndFactoryWrapper& idd_2_3_1) {
+  std::stringstream ss;
+
+  ss << idf_2_3_0.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_3_1.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  boost::optional<std::string> value;
+
+  for (const IdfObject& object : idf_2_3_0.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:Pump:ConstantSpeed") {
+      auto iddObject = idd_2_3_1.getObject("OS:Pump:ConstantSpeed");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      newObject.setString(16,"PowerPerFlowPerPressure");
+      newObject.setString(17,"348701.1");
+      newObject.setString(18,"1.282051282");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if (iddname == "OS:Pump:VariableSpeed") {
+      auto iddObject = idd_2_3_1.getObject("OS:Pump:VariableSpeed");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      newObject.setString(25,"0.5");
+      newObject.setString(26,"PowerPerFlowPerPressure");
+      newObject.setString(27,"348701.1");
+      newObject.setString(28,"1.282051282");
+      newObject.setString(29,"0.0");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if (iddname == "OS:CoolingTower:SingleSpeed") {
+      auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:SingleSpeed");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      newObject.setString(29,"0.1");
+      newObject.setString(30,"0.1");
+      newObject.setString(31,"1.25");
+      newObject.setString(32,"0.1");
+      newObject.setString(33,"35.0");
+      newObject.setString(34,"25.6");
+      newObject.setString(35,"Autosize");
+      newObject.setString(36,"Autosize");
+      newObject.setString(37,"General");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if (iddname == "OS:CoolingTower:TwoSpeed") {
+      auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:TwoSpeed");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      newObject.setString(41,"35.0");
+      newObject.setString(42,"25.6");
+      newObject.setString(43,"Autosize");
+      newObject.setString(44,"Autosize");
+      newObject.setString(45,"General");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if (iddname == "OS:CoolingTower:VariableSpeed") {
+      auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:VariableSpeed");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      newObject.setString(31,"General");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+    } else if (iddname == "OS:Chiller:Electric:EIR") {
+      auto iddObject = idd_2_3_1.getObject("OS:Chiller:Electric:EIR");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      if( object.getString(17) && (! object.getString(17).get().empty()) ) {
+        newObject.setString(19,"WaterCooled");
+      } else {
+        newObject.setString(19,"AirCooled");
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+    } else if (iddname == "OS:AirLoopHVAC") {
+      auto iddObject = idd_2_3_1.getObject("OS:AirLoopHVAC");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      /* We need handle the change from the old behavior (one AvailabilityManager:xxx) to the new AVMList
+       * First, we must create an AVMList for each loop, then if an AVM was assigned, we put it on the AVM list
+       */
+
+      // Create an AVMList with a handle and a name
+      std::string  avmName = "";
+      if( auto loopName = object.getString(1) ) {
+        avmName = loopName.get();
+      }
+      avmName = avmName + " AvailabilityManagerAssignmentList";
+
+      IdfObject avmList(idd_2_3_1.getObject("OS:AvailabilityManagerAssignmentList").get());
+      std::string avmHandle = toString(createUUID());
+      avmList.setString(0,avmHandle);
+      avmList.setString(1,avmName);
+
+      // Check if there was an AVM assigned to the Loop, it so, put it on the newly created AVMList
+      if (auto existingAVMUUid = object.getString(4)) {
+        avmList.pushExtensibleGroup(StringVector(1u, existingAVMUUid.get()));
+      }
+
+      // Assign AVM list to loop
+      newObject.setString(4,avmHandle);
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_new.push_back(avmList);
+
+      ss << newObject;
+      ss << avmList;
+
+    } else if (iddname == "OS:PlantLoop") {
+      auto iddObject = idd_2_3_1.getObject("OS:PlantLoop");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      // Create an AVMList with a handle and a name
+      std::string  avmName = "";
+      if( auto loopName = object.getString(1) ) {
+        avmName = loopName.get();
+      }
+      avmName = avmName + " AvailabilityManagerAssignmentList";
+
+      IdfObject avmList(idd_2_3_1.getObject("OS:AvailabilityManagerAssignmentList").get());
+      std::string avmHandle = toString(createUUID());
+      avmList.setString(0,avmHandle);
+      avmList.setString(1,avmName);
+
+      // Check if there was an AVM assigned to the Loop, it so, put it on the newly created AVMList
+      if (auto existingAVMUUid = object.getString(22)) {
+        avmList.pushExtensibleGroup(StringVector(1u, existingAVMUUid.get()));
+      }
+
+      // Assign AVM list to loop
+      newObject.setString(22,avmHandle);
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_new.push_back(avmList);
+
+      ss << newObject;
+      ss << avmList;
+
+    } else if (iddname == "OS:AvailabilityManager:NightCycle") {
+      auto iddObject = idd_2_3_1.getObject("OS:AvailabilityManager:NightCycle");
+      IdfObject newObject(iddObject.get());
+
+      // Cycling Run Time Control Type was placed before Cycling Run Time
+      for( size_t i = 0; i < object.numNonextensibleFields() - 1; ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      // No need to set the default Cycling Run Time Control Type, it has a defaulted option
+      // But we need to carry the cycling Run Time (seconds) in the right field
+      if (auto cyclingRunTime = newObject.getDouble(6)) {
+        newObject.setDouble(7, cyclingRunTime.get());
+      }
+
+      // We need to create the four ModelObjectLists for the control zones
+      // 8 = Control Zone or Zone List Name
+      std::string  controlThermalZoneListName = "";
+      if( auto avmName = object.getString(1) ) {
+        controlThermalZoneListName = avmName.get();
+      }
+      controlThermalZoneListName = controlThermalZoneListName + " Control Zone List";
+
+      IdfObject controlThermalZoneList(idd_2_3_1.getObject("OS:ModelObjectList").get());
+      std::string controlThermalZoneListHandle = toString(createUUID());
+      controlThermalZoneList.setString(0, controlThermalZoneListHandle);
+      controlThermalZoneList.setString(1, controlThermalZoneListName);
+      newObject.setString(8, controlThermalZoneListHandle);
+
+      // 9 = Cooling Control Zone or Zone List Name
+      std::string  coolingControlThermalZoneListName = "";
+      if( auto avmName = object.getString(1) ) {
+        coolingControlThermalZoneListName = avmName.get();
+      }
+      coolingControlThermalZoneListName = coolingControlThermalZoneListName + " Cooling Control Zone List";
+
+      IdfObject coolingControlThermalZoneList(idd_2_3_1.getObject("OS:ModelObjectList").get());
+      std::string coolingControlThermalZoneListHandle = toString(createUUID());
+      coolingControlThermalZoneList.setString(0, coolingControlThermalZoneListHandle);
+      coolingControlThermalZoneList.setString(1, coolingControlThermalZoneListName);
+      newObject.setString(9, coolingControlThermalZoneListHandle);
+
+
+      // 10 = Heating Control Zone or Zone List Name
+      std::string  heatingControlThermalZoneListName = "";
+      if( auto avmName = object.getString(1) ) {
+        heatingControlThermalZoneListName = avmName.get();
+      }
+      heatingControlThermalZoneListName = heatingControlThermalZoneListName + " Heating Control Zone List";
+
+      IdfObject heatingControlThermalZoneList(idd_2_3_1.getObject("OS:ModelObjectList").get());
+      std::string heatingControlThermalZoneListHandle = toString(createUUID());
+      heatingControlThermalZoneList.setString(0, heatingControlThermalZoneListHandle);
+      heatingControlThermalZoneList.setString(1, heatingControlThermalZoneListName);
+      newObject.setString(10, heatingControlThermalZoneListHandle);
+
+
+      // 11 = Heating Control Zone or Zone List Name
+      std::string  heatingZoneFansOnlyThermalZoneListName = "";
+      if( auto avmName = object.getString(1) ) {
+        heatingZoneFansOnlyThermalZoneListName = avmName.get();
+      }
+      heatingZoneFansOnlyThermalZoneListName = heatingZoneFansOnlyThermalZoneListName + " Heating Zone Fans Only Zone List";
+
+      IdfObject heatingZoneFansOnlyThermalZoneList(idd_2_3_1.getObject("OS:ModelObjectList").get());
+      std::string heatingZoneFansOnlyThermalZoneListHandle = toString(createUUID());
+      heatingZoneFansOnlyThermalZoneList.setString(0, heatingZoneFansOnlyThermalZoneListHandle);
+      heatingZoneFansOnlyThermalZoneList.setString(1, heatingZoneFansOnlyThermalZoneListName);
+      newObject.setString(11, heatingZoneFansOnlyThermalZoneListHandle);
+
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_new.push_back(controlThermalZoneList);
+      m_new.push_back(coolingControlThermalZoneList);
+      m_new.push_back(heatingControlThermalZoneList);
+      m_new.push_back(heatingZoneFansOnlyThermalZoneList);
+
+
+      ss << newObject;
+      ss << controlThermalZoneList;
+      ss << coolingControlThermalZoneList;
+      ss << heatingControlThermalZoneList;
+      ss << heatingZoneFansOnlyThermalZoneList;
+
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_2_4_1_to_2_4_2(const IdfFile& idf_2_4_1, const IddFileAndFactoryWrapper& idd_2_4_2) {
+  std::stringstream ss;
+
+  ss << idf_2_4_1.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_4_2.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  boost::optional<std::string> value;
+
+  for (const IdfObject& object : idf_2_4_1.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:BuildingUnit") {
+      auto iddObject = idd_2_4_2.getObject("OS:BuildingUnit");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+      iddObject = idd_2_4_2.getObject("OS:AdditionalProperties");
+      IdfObject additionalProperties(iddObject.get());
+      additionalProperties.setString(0, toString(createUUID()));
+      additionalProperties.setString(1, newObject.getString(0).get()); // point additional properties to new object
+
+      size_t newIdx = 2;
+      for( size_t oldIdx = object.numNonextensibleFields(); oldIdx < object.numFields(); ++oldIdx, ++newIdx ) {
+        if( (value = object.getString(oldIdx)) ) {
+          additionalProperties.setString(newIdx, value.get());
+        }
+      }
+
+      m_new.push_back(additionalProperties);
+      ss << additionalProperties;
+
+    } else if (iddname == "OS:Boiler:HotWater") {
+      auto iddObject = idd_2_4_2.getObject("OS:Boiler:HotWater");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+      newObject.setString(18,"General");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+    } else if (iddname == "OS:Boiler:Steam") {
+      auto iddObject = idd_2_4_2.getObject("OS:Boiler:Steam");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+      newObject.setString(16,"General");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+    } else if (iddname == "OS:WaterHeater:Mixed") {
+      auto iddObject = idd_2_4_2.getObject("OS:WaterHeater:Mixed");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      // Source Side Flow Control Mode
+      newObject.setString(40,"IndirectHeatPrimarySetpoint");
+
+      // Indirect Alternate Setpoint Temperature Schedule Name: nothing to do, leave empty
+
+      // End Use Subcategory
+      newObject.setString(42,"General");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+    } else if (iddname == "OS:Chiller:Electric:EIR") {
+      auto iddObject = idd_2_4_2.getObject("OS:Chiller:Electric:EIR");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i,value.get());
+        }
+      }
+
+      // Condenser Heat Recovery Relative Capacity Fraction: this is an optional
+      // but in E+ code (ChillerElectricEIR.cc > GetElectricEIRChillerInput() around line 655)
+      // if omitted (and heat recovery is used), it defaults to 1.0
+      // newObject.setDouble(32, 1.0);
+
+      // Heat Recovery Inlet High Temperature Limit Schedule Name: leave empty
+
+
+      // Heat Recovery Leaving Temperature Setpoint Node Name: leave empty
+
+      // endUseSubcategory
+      newObject.setString(34,"General");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+    // Default case
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
 
 } // osversion
 } // openstudio

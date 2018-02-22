@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -52,7 +52,7 @@ class MODEL_API AirTerminalSingleDuctSeriesPIUReheat : public StraightComponent 
   //@{
 
   explicit AirTerminalSingleDuctSeriesPIUReheat(const Model& model,
-                                                HVACComponent & fan, 
+                                                HVACComponent & fan,
                                                 HVACComponent & reheatCoil);
 
   virtual ~AirTerminalSingleDuctSeriesPIUReheat() {}
@@ -114,7 +114,7 @@ class MODEL_API AirTerminalSingleDuctSeriesPIUReheat : public StraightComponent 
 
   bool setReheatCoil(const HVACComponent& coil);
 
-  void setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate);
+  bool setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate);
 
   void resetMaximumHotWaterorSteamFlowRate();
 
@@ -130,6 +130,16 @@ class MODEL_API AirTerminalSingleDuctSeriesPIUReheat : public StraightComponent 
 
   unsigned secondaryAirInletPort() const;
   boost::optional<Node> secondaryAirInletNode() const;
+
+  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumPrimaryAirFlowRate() const ;
+
+  boost::optional<double> autosizedMinimumPrimaryAirFlowFraction() const ;
+
+  boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const ;
+
+
 
   //@}
  protected:
@@ -157,4 +167,3 @@ typedef std::vector<AirTerminalSingleDuctSeriesPIUReheat> AirTerminalSingleDuctS
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTSERIESPIUREHEAT_HPP
-

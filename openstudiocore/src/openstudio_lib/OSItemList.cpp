@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -53,11 +53,11 @@ OSItemList::OSItemList(OSVectorController* vectorController,
     m_type(OSItemType::ListItem),
     m_dirty(false)
 {
-  // for now we will allow this item list to manage memory of 
+  // for now we will allow this item list to manage memory of
   OS_ASSERT(!m_vectorController->parent());
   m_vectorController->setParent(this);
 
-  this->setObjectName("GrayWidget"); 
+  this->setObjectName("GrayWidget");
 
   QString style;
 
@@ -210,7 +210,7 @@ void OSItemList::setItemIds(const std::vector<OSItemId>& itemIds)
   m_vLayout->addStretch();
 
   m_selectedItem = nullptr;
-  
+
   for (const OSItemId& itemId : itemIds){
     OSItem* item = OSItem::makeItem(itemId, OSItemType::ListItem);
     if (item){

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -107,8 +107,8 @@ class UTILITIES_API ImfFile
   /// print file to std::stream
   std::ostream& print(std::ostream& os) const;
 
-  /** Save IddFile to path. Will construct parent folder, but no further up the chain. Will 
-   *  only overwrite an existing file if overwrite==true. If no extension is provided will use 
+  /** Save IddFile to path. Will construct parent folder, but no further up the chain. Will
+   *  only overwrite an existing file if overwrite==true. If no extension is provided will use
    *  'imf'. */
   bool save(const openstudio::path& p, bool overwrite=false);
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -752,7 +752,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   setMyModelView(myModelList);
 
   // Library
-  model::Model lib = doc->combinedComponentLibrary();
+  model::Model lib = doc->componentLibrary();
 
   auto myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader);
   myLibraryList->setItemsDraggable(true);
@@ -858,7 +858,7 @@ void MainRightColumnController::configureForSpacesSubTab(int subTabID)
   setMyModelView(myModelList);
 
   // Library
-  model::Model lib = doc->combinedComponentLibrary();
+  model::Model lib = doc->componentLibrary();
 
   auto myLibraryList = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
   myLibraryList->setItemsDraggable(true);
@@ -943,7 +943,7 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   setMyModelView(myModelList);
 
   // Library
-  model::Model lib = doc->combinedComponentLibrary();
+  model::Model lib = doc->componentLibrary();
 
   auto libraryWidget = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader);
   libraryWidget->setItemsDraggable(true);
@@ -951,6 +951,7 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   libraryWidget->setItemsType(OSItemType::LibraryItem);
   libraryWidget->setShowFilterLayout(true);
 
+  libraryWidget->addModelObjectType(IddObjectType::OS_AirLoopHVAC_UnitarySystem,"Unitary System");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric,"Baseboard Convective Electric");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water,"Baseboard Convective Water");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_RadiantConvective_Electric,"Baseboard Radiant Convective Electric");
@@ -1017,6 +1018,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_HeatExchanger_FluidToFluid,"Heat Exchanger Fluid To Fluid");
   myModelList->addModelObjectType(IddObjectType::OS_Coil_Heating_Water,"Coil Heating Water");
   myModelList->addModelObjectType(IddObjectType::OS_Coil_Cooling_Water,"Coil Cooling Water");
+  myModelList->addModelObjectType(IddObjectType::OS_CentralHeatPumpSystem,"Central Heat Pump System");
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller - Electric EIR");
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Absorption,"Chiller - Absorption");
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Absorption_Indirect,"Chiller - Indirect Absorption");
@@ -1031,7 +1033,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
 
   // Library
 
-  model::Model lib = doc->hvacComponentLibrary();
+  model::Model lib = doc->componentLibrary();
 
   auto libraryWidget = new ModelObjectTypeListView(lib,true,OSItemType::CollapsibleListHeader,true);
   libraryWidget->setItemsDraggable(true);
@@ -1125,6 +1127,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_CoolingTower_TwoSpeed, "Cooling Tower Two Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_CoolingTower_SingleSpeed, "Cooling Tower Single Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_CoolingTower_VariableSpeed, "Cooling Tower Variable Speed");
+  libraryWidget->addModelObjectType(IddObjectType::OS_CentralHeatPumpSystem,"Central Heat Pump System");
   libraryWidget->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller - Electric EIR");
   libraryWidget->addModelObjectType(IddObjectType::OS_Chiller_Absorption_Indirect,"Chiller - Indirect Absorption");
   libraryWidget->addModelObjectType(IddObjectType::OS_Chiller_Absorption,"Chiller - Absorption");
@@ -1148,11 +1151,30 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat,"AirTerminal Heat and Cool No Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat,"AirTerminal Single Duct VAV NoReheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled,"AirTerminal Single Duct Uncontrolled");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume, "Air Terminal Dual Duct Constant Volume");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_DualDuct_VAV, "Air Terminal Dual Duct VAV");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir, "Air Terminal Dual Duct VAV Outdoor Air");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem,"AirLoopHVAC Outdoor Air System");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirLoopHVAC_UnitarySystem, "AirLoopHVAC Unitary System");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass, "AirLoopHVAC Unitary VAV Changeover Bypass");
 
+
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_Scheduled, "Availability Manager Scheduled");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_ScheduledOn, "Availability Manager Scheduled On");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_ScheduledOff, "Availability Manager Scheduled Off");
+
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOn, "Availability Manager Low Temperature Turn On");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOff, "Availability Manager Low Temperature Turn Off");
+
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOn, "Availability Manager High Temperature Turn On");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOff, "Availability Manager High Temperature Turn Off");
+
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_DifferentialThermostat, "Availability Manager Differential Thermostat");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_OptimumStart, "Availability Manager Optimum Start");
+
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_NightCycle, "Availability Manager Night Cycle");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_NightVentilation, "Availability Manager Night Ventilation");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AvailabilityManager_HybridVentilation, "Availability Manager Hybrid Ventilation");
 
   setLibraryView(libraryWidget);
 

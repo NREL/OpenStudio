@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -61,6 +61,14 @@
 #include "../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "../model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "../model/AvailabilityManager.hpp"
+#include "../model/AvailabilityManager_Impl.hpp"
+#include "../model/AvailabilityManagerAssignmentList.hpp"
+#include "../model/AvailabilityManagerAssignmentList_Impl.hpp"
+
+#include "../model/ChillerElectricEIR.hpp"
+#include "../model/BoilerHotWater.hpp"
+
 #include "../model/ControllerMechanicalVentilation.hpp"
 #include "../model/ControllerMechanicalVentilation_Impl.hpp"
 #include "../model/ControllerOutdoorAir.hpp"
@@ -109,6 +117,9 @@
 #include "../model/Component_Impl.hpp"
 #include "../model/ComponentData.hpp"
 #include "../model/ComponentData_Impl.hpp"
+
+#include "../energyplus/ForwardTranslator/ForwardTranslatePlantEquipmentOperationSchemes.hpp"
+
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
@@ -200,8 +211,6 @@ void HVACSystemsController::update()
 
   if( m_dirty )
   {
-    m_hvacSystemsView->setUpdatesEnabled(false);
-
     model::OptionalModelObject mo;
     OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObject(mo,false);
 
@@ -272,8 +281,6 @@ void HVACSystemsController::update()
       }
     }
 
-    systemComboBox->blockSignals(false);
-
     // Show layout
 
     m_hvacSystemsView->hvacToolbarView->zoomInButton->show();
@@ -286,6 +293,8 @@ void HVACSystemsController::update()
     m_hvacControlsController.reset();
     m_refrigerationController.reset();
     m_vrfController.reset();
+
+    OSAppBase::instance()->processEvents();
 
     if( handle == REFRIGERATION )
     {
@@ -368,14 +377,31 @@ void HVACSystemsController::update()
       {
         m_hvacControlsController = std::shared_ptr<HVACControlsController>(new HVACControlsController(this));
 
-        if( currentLoop() && currentLoop()->optionalCast<model::AirLoopHVAC>() )
-        {
-          m_hvacSystemsView->mainViewSwitcher->setView(m_hvacControlsController->hvacControlsView());
+        if( currentLoop() ) {
+          // If an AirLoopHVAC, set the view to the HVACAirLoopControlsView
+          if ( (currentLoop()->optionalCast<model::AirLoopHVAC>()) )
+          {
+            m_hvacSystemsView->mainViewSwitcher->setView(m_hvacControlsController->hvacAirLoopControlsView());
 
-          m_hvacSystemsView->hvacToolbarView->zoomInButton->setEnabled(false);
-          m_hvacSystemsView->hvacToolbarView->zoomOutButton->setEnabled(false);
+            m_hvacSystemsView->hvacToolbarView->zoomInButton->setEnabled(false);
+            m_hvacSystemsView->hvacToolbarView->zoomOutButton->setEnabled(false);
 
-          OSAppBase::instance()->currentDocument()->mainRightColumnController()->mainRightColumnView()->setCurrentId(MainRightColumnController::MY_MODEL);
+            OSAppBase::instance()->currentDocument()->mainRightColumnController()->mainRightColumnView()->setCurrentId(MainRightColumnController::MY_MODEL);
+          }
+          // If a PlantLoop, HVACPlantLoopControlsView
+          else if ( (currentLoop()->optionalCast<model::PlantLoop>()) )
+          {
+            m_hvacSystemsView->mainViewSwitcher->setView(m_hvacControlsController->hvacPlantLoopControlsView());
+
+            m_hvacSystemsView->hvacToolbarView->zoomInButton->setEnabled(false);
+            m_hvacSystemsView->hvacToolbarView->zoomOutButton->setEnabled(false);
+
+            OSAppBase::instance()->currentDocument()->mainRightColumnController()->mainRightColumnView()->setCurrentId(MainRightColumnController::MY_MODEL);
+          }
+          else
+          {
+            m_hvacSystemsView->mainViewSwitcher->setView(m_hvacControlsController->noControlsView());
+          }
         }
         else
         {
@@ -384,7 +410,7 @@ void HVACSystemsController::update()
       }
     }
 
-    m_hvacSystemsView->setUpdatesEnabled(true);
+    systemComboBox->blockSignals(false);
 
     m_dirty = false;
   }
@@ -503,10 +529,15 @@ void HVACLayoutController::addLibraryObjectToModelNode(OSItemId itemid, model::H
   }
 
   if( object ) {
+
     if( boost::optional<model::HVACComponent> hvacComponent = object->optionalCast<model::HVACComponent>() )
     {
       if( boost::optional<model::Node> node = comp.optionalCast<model::Node>() )
       {
+        // Note: Julien Marrec, 2018-01-04
+        // When you have a WaterToWaterComponent that has a tertiaryPlantLoop, you should override the addToNode method
+        // to call addToTertiaryNode when needed. This will work with addSupplyBranchForComponent (etc) too
+        // Take a look at CentralHeatPumpSystem::addToNode (and CentralHeatPumpSystem::addToTertiaryNode) for an actual example
         added = hvacComponent->addToNode(node.get());
       }
       else if( boost::optional<model::Splitter> splitter = comp.optionalCast<model::Splitter>() )
@@ -588,20 +619,28 @@ void HVACLayoutController::removeModelObject(model::ModelObject & modelObject)
     {
       boost::optional<model::PlantLoop> plant = comp->plantLoop();
       boost::optional<model::PlantLoop> secondaryPlant = comp->secondaryPlantLoop();
+      boost::optional<model::PlantLoop> tertiaryPlant = comp->tertiaryPlantLoop();
 
-      if( plant && secondaryPlant )
-      {
-        if( plant.get() == loop.get() )
-        {
-          comp->removeFromPlantLoop();
-
-          return;
+      // If it's on at least two plantLoops, we disconnect it from the current loop only (instead of deleting) and return
+      if (plant ? (secondaryPlant || tertiaryPlant) : (secondaryPlant && tertiaryPlant)) {
+        if (plant) {
+          if( plant.get() == loop.get() ) {
+            comp->removeFromPlantLoop();
+            return;
+          }
         }
-        if( secondaryPlant.get() == loop.get() )
-        {
-          comp->removeFromSecondaryPlantLoop();
-
-          return;
+        if (secondaryPlant) {
+          if( secondaryPlant.get() == loop.get() )
+          {
+            comp->removeFromSecondaryPlantLoop();
+            return;
+          }
+        }
+        if (tertiaryPlant) {
+          if( tertiaryPlant.get() == loop.get() ) {
+            comp->removeFromTertiaryPlantLoop();
+            return;
+          }
         }
       }
     }
@@ -693,11 +732,15 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
 
     if( boost::optional<model::WaterToWaterComponent> comp = modelObject.optionalCast<model::WaterToWaterComponent>() )
     {
-      if( boost::optional<model::PlantLoop> loop = comp->plantLoop() )
+      boost::optional<model::PlantLoop> primaryPlantLoop = comp->plantLoop();
+      boost::optional<model::PlantLoop> secondaryPlantLoop = comp->secondaryPlantLoop();
+
+      // From primary, go to secondary
+      if( primaryPlantLoop )
       {
-        if( t_currentLoop.get() == loop.get() )
+        if( t_currentLoop.get() == primaryPlantLoop.get() )
         {
-          if( boost::optional<model::PlantLoop> secondaryPlantLoop = comp->secondaryPlantLoop() )
+          if( secondaryPlantLoop )
           {
             m_hvacSystemsController->setCurrentHandle(toQString(secondaryPlantLoop->handle()));
 
@@ -706,18 +749,55 @@ void HVACLayoutController::goToOtherLoop( model::ModelObject & modelObject )
         }
       }
 
-      if( boost::optional<model::PlantLoop> loop = comp->secondaryPlantLoop() )
+      // From secondary, go to primary
+      if( secondaryPlantLoop )
       {
-        if( t_currentLoop.get() == loop.get() )
+        if( t_currentLoop.get() == secondaryPlantLoop.get() )
         {
-          if( boost::optional<model::PlantLoop> plantLoop = comp->plantLoop() )
+          if( primaryPlantLoop )
           {
-            m_hvacSystemsController->setCurrentHandle(toQString(plantLoop->handle()));
+            m_hvacSystemsController->setCurrentHandle(toQString(primaryPlantLoop->handle()));
 
             return;
           }
         }
       }
+
+      // From tertiary, go to either primary or secondary, whichever is on the other side
+      // eg if tertiary = supply => go to secondary (demand)
+      //    if tertiary = demand => go to primary (supply)
+      boost::optional<model::PlantLoop> tertiaryPlantLoop = comp->tertiaryPlantLoop();
+
+      if(tertiaryPlantLoop )
+      {
+
+        if( t_currentLoop.get() == tertiaryPlantLoop.get() )
+        {
+
+          // If the comp is on the supply side of the current=tertiary loop
+          // Jump to the demand side of the other loop, that is secondaryLoop
+          if( tertiaryPlantLoop->supplyComponent(comp->handle()) )
+          {
+            if( secondaryPlantLoop )
+            {
+              m_hvacSystemsController->setCurrentHandle(toQString(secondaryPlantLoop->handle()));
+              return;
+            }
+          }
+
+          // Else it's on the demand side, so jump to primary=supply
+          else
+          {
+            if( primaryPlantLoop )
+            {
+              m_hvacSystemsController->setCurrentHandle(toQString(primaryPlantLoop->handle()));
+              return;
+            }
+          }
+        } // End if currentLoop = loop
+
+      } // End if tertiaryPlantLoop()
+
     }
   }
 }
@@ -885,7 +965,9 @@ HVACControlsController::HVACControlsController(HVACSystemsController * hvacSyste
   : QObject(),
     m_hvacSystemsController(hvacSystemsController)
 {
-  m_hvacControlsView = new HVACControlsView();
+  m_hvacAirLoopControlsView = new HVACAirLoopControlsView();
+
+  m_hvacPlantLoopControlsView = new HVACPlantLoopControlsView();
 
   m_noControlsView = new NoControlsView();
 
@@ -894,28 +976,19 @@ HVACControlsController::HVACControlsController(HVACSystemsController * hvacSyste
 
 HVACControlsController::~HVACControlsController()
 {
-  if( m_hvacControlsView ) { delete m_hvacControlsView; }
-
+  if( m_hvacAirLoopControlsView ) { delete m_hvacAirLoopControlsView; }
+  if( m_hvacPlantLoopControlsView ) { delete m_hvacPlantLoopControlsView; }
   if( m_noControlsView ) { delete m_noControlsView; }
-
   if( m_mechanicalVentilationView ) { delete m_mechanicalVentilationView; }
-
   if( m_singleZoneReheatSPMView ) { delete m_singleZoneReheatSPMView; }
-
   if( m_noSupplyAirTempControlView ) { delete m_noSupplyAirTempControlView; }
-
   if( m_noMechanicalVentilationView) { delete m_noMechanicalVentilationView; }
-
   if( m_systemAvailabilityDropZone ) { delete m_systemAvailabilityDropZone; }
-
   if( m_supplyAirTempScheduleDropZone ) { delete m_supplyAirTempScheduleDropZone; }
-
+  if( m_availabilityManagerDropZone ) { delete m_availabilityManagerDropZone; }
   if( m_followOATempSPMView ) { delete m_followOATempSPMView; }
-
   if( m_oaResetSPMView ) { delete m_oaResetSPMView; }
-
   if( m_airLoopHVACUnitaryHeatPumpAirToAirControlView ) { delete m_airLoopHVACUnitaryHeatPumpAirToAirControlView; }
-
   if( m_scheduledSPMView ) { delete m_scheduledSPMView; }
 }
 
@@ -928,9 +1001,23 @@ boost::optional<model::AirLoopHVAC> HVACControlsController::airLoopHVAC() const
   return boost::none;
 }
 
-HVACControlsView * HVACControlsController::hvacControlsView() const
+boost::optional<model::PlantLoop> HVACControlsController::plantLoop() const
 {
-  return m_hvacControlsView;
+  if( boost::optional<model::Loop> loop = m_hvacSystemsController->currentLoop() )
+  {
+    return loop->optionalCast<model::PlantLoop>();
+  }
+  return boost::none;
+}
+
+HVACAirLoopControlsView * HVACControlsController::hvacAirLoopControlsView() const
+{
+  return m_hvacAirLoopControlsView;
+}
+
+HVACPlantLoopControlsView * HVACControlsController::hvacPlantLoopControlsView() const
+{
+  return m_hvacPlantLoopControlsView;
 }
 
 NoControlsView * HVACControlsController::noControlsView() const
@@ -942,81 +1029,86 @@ void HVACControlsController::update()
 {
   if( m_dirty )
   {
-    m_hvacControlsView->setUpdatesEnabled(false);
 
-    if( m_mechanicalVentilationView ) { delete m_mechanicalVentilationView; }
-    if( m_singleZoneReheatSPMView ) { delete m_singleZoneReheatSPMView; }
-    if( m_noSupplyAirTempControlView ) { delete m_noSupplyAirTempControlView; }
-    if( m_noMechanicalVentilationView) { delete m_noMechanicalVentilationView; }
-    if( m_systemAvailabilityDropZone ) { delete m_systemAvailabilityDropZone; }
-    if( m_supplyAirTempScheduleDropZone ) { delete m_supplyAirTempScheduleDropZone; }
-    if( m_followOATempSPMView ) { delete m_followOATempSPMView; }
-    if( m_oaResetSPMView ) { delete m_oaResetSPMView; }
-    if( m_scheduledSPMView ) { delete m_scheduledSPMView; }
-    if( m_airLoopHVACUnitaryHeatPumpAirToAirControlView ) { delete m_airLoopHVACUnitaryHeatPumpAirToAirControlView; }
-
-    m_hvacControlsView->nightCycleComboBox->setEnabled(false);
-
+    // If we're looking at an AirLoopHVAC
     if( boost::optional<model::AirLoopHVAC> t_airLoopHVAC = airLoopHVAC() )
     {
+
+      m_hvacAirLoopControlsView->setUpdatesEnabled(false);
+
+      if( m_mechanicalVentilationView ) { delete m_mechanicalVentilationView; }
+      if( m_singleZoneReheatSPMView ) { delete m_singleZoneReheatSPMView; }
+      if( m_noSupplyAirTempControlView ) { delete m_noSupplyAirTempControlView; }
+      if( m_noMechanicalVentilationView) { delete m_noMechanicalVentilationView; }
+      if( m_systemAvailabilityDropZone ) { delete m_systemAvailabilityDropZone; }
+      if( m_supplyAirTempScheduleDropZone ) { delete m_supplyAirTempScheduleDropZone; }
+      if( m_availabilityManagerDropZone ) { delete m_availabilityManagerDropZone; }
+      if( m_followOATempSPMView ) { delete m_followOATempSPMView; }
+      if( m_oaResetSPMView ) { delete m_oaResetSPMView; }
+      if( m_scheduledSPMView ) { delete m_scheduledSPMView; }
+      if( m_airLoopHVACUnitaryHeatPumpAirToAirControlView ) { delete m_airLoopHVACUnitaryHeatPumpAirToAirControlView; }
+
+      m_hvacAirLoopControlsView->nightCycleComboBox->setEnabled(false);
+
+
       QString title;
       title.append(QString::fromStdString(t_airLoopHVAC->name().get()));
-      m_hvacControlsView->systemNameLabel->setText(title);
+      m_hvacAirLoopControlsView->systemNameLabel->setText(title);
 
       // Cooling Type
 
-      m_hvacControlsView->coolingTypeLabel->setText("Unclassified Cooling Type");
+      m_hvacAirLoopControlsView->coolingTypeLabel->setText("Unclassified Cooling Type");
 
       std::vector<model::ModelObject> modelObjects = t_airLoopHVAC->supplyComponents(model::CoilCoolingDXSingleSpeed::iddObjectType());
       if( modelObjects.size() > 0 )
       {
-        m_hvacControlsView->coolingTypeLabel->setText("DX Cooling");
+        m_hvacAirLoopControlsView->coolingTypeLabel->setText("DX Cooling");
       }
 
       modelObjects = t_airLoopHVAC->supplyComponents(model::CoilCoolingDXTwoSpeed::iddObjectType());
       if( modelObjects.size() > 0 )
       {
-        m_hvacControlsView->coolingTypeLabel->setText("DX Cooling");
+        m_hvacAirLoopControlsView->coolingTypeLabel->setText("DX Cooling");
       }
 
       modelObjects = t_airLoopHVAC->supplyComponents(model::CoilCoolingWater::iddObjectType());
       if( modelObjects.size() > 0 )
       {
-        m_hvacControlsView->coolingTypeLabel->setText("Chilled Water");
+        m_hvacAirLoopControlsView->coolingTypeLabel->setText("Chilled Water");
       }
 
       modelObjects = t_airLoopHVAC->supplyComponents(model::AirLoopHVACUnitaryHeatPumpAirToAir::iddObjectType());
       if( modelObjects.size() > 0 )
       {
-        m_hvacControlsView->coolingTypeLabel->setText("DX Cooling");
+        m_hvacAirLoopControlsView->coolingTypeLabel->setText("DX Cooling");
       }
 
       // Heating Type
 
-      m_hvacControlsView->heatingTypeLabel->setText("Unclassified Heating Type");
+      m_hvacAirLoopControlsView->heatingTypeLabel->setText("Unclassified Heating Type");
 
       modelObjects = t_airLoopHVAC->supplyComponents(model::CoilHeatingGas::iddObjectType());
       if( modelObjects.size() > 0 )
       {
-        m_hvacControlsView->heatingTypeLabel->setText("Gas Heating");
+        m_hvacAirLoopControlsView->heatingTypeLabel->setText("Gas Heating");
       }
 
       modelObjects = t_airLoopHVAC->supplyComponents(model::CoilHeatingElectric::iddObjectType());
       if( modelObjects.size() > 0 )
       {
-        m_hvacControlsView->heatingTypeLabel->setText("Electric Heating");
+        m_hvacAirLoopControlsView->heatingTypeLabel->setText("Electric Heating");
       }
 
       modelObjects = t_airLoopHVAC->supplyComponents(model::CoilHeatingWater::iddObjectType());
       if( modelObjects.size() > 0 )
       {
-        m_hvacControlsView->heatingTypeLabel->setText("Hot Water");
+        m_hvacAirLoopControlsView->heatingTypeLabel->setText("Hot Water");
       }
 
       modelObjects = t_airLoopHVAC->supplyComponents(model::AirLoopHVACUnitaryHeatPumpAirToAir::iddObjectType());
       if( modelObjects.size() > 0 )
       {
-        m_hvacControlsView->heatingTypeLabel->setText("Air Source Heat Pump");
+        m_hvacAirLoopControlsView->heatingTypeLabel->setText("Air Source Heat Pump");
       }
 
       // HVAC Operation Schedule
@@ -1031,19 +1123,25 @@ void HVACControlsController::update()
       m_systemAvailabilityDropZone->setAcceptDrops(true);
       m_systemAvailabilityDropZone->setItemsAcceptDrops(true);
       m_systemAvailabilityDropZone->setEnabled(true);
-      m_hvacControlsView->hvacOperationViewSwitcher->setView(m_systemAvailabilityDropZone);
+      m_hvacAirLoopControlsView->hvacOperationViewSwitcher->setView(m_systemAvailabilityDropZone);
+
+      // Allow clicking on the Schedule to see it in the right column inspector
+      QObject::connect(m_systemAvailabilityDropZone,
+                       &OSDropZone::itemClicked,
+                       systemAvailabilityVectorController,
+                       &SystemAvailabilityVectorController::onDropZoneItemClicked);
 
       // Night Cycle Control
 
-      m_hvacControlsView->nightCycleComboBox->setEnabled(true);
+      m_hvacAirLoopControlsView->nightCycleComboBox->setEnabled(true);
 
       std::string nightCycleControlType = t_airLoopHVAC->nightCycleControlType();
 
-      int nightCycleSelectorIndex = m_hvacControlsView->nightCycleComboBox->findData(QString::fromStdString(nightCycleControlType));
+      int nightCycleSelectorIndex = m_hvacAirLoopControlsView->nightCycleComboBox->findData(QString::fromStdString(nightCycleControlType));
 
-      m_hvacControlsView->nightCycleComboBox->setCurrentIndex(nightCycleSelectorIndex);
+      m_hvacAirLoopControlsView->nightCycleComboBox->setCurrentIndex(nightCycleSelectorIndex);
 
-      connect(m_hvacControlsView->nightCycleComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+      connect(m_hvacAirLoopControlsView->nightCycleComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
         this, &HVACControlsController::onNightCycleComboBoxIndexChanged);
 
       // Mechanical Ventilation
@@ -1056,7 +1154,7 @@ void HVACControlsController::update()
 
         m_mechanicalVentilationView = new MechanicalVentilationView();
 
-        m_hvacControlsView->ventilationViewSwitcher->setView(m_mechanicalVentilationView);
+        m_hvacAirLoopControlsView->ventilationViewSwitcher->setView(m_mechanicalVentilationView);
 
         // Economizer Control Type
 
@@ -1086,7 +1184,7 @@ void HVACControlsController::update()
         m_mechanicalVentilationView->dcvButton->bind(
           controllerMechanicalVentilation,
           std::bind(&model::ControllerMechanicalVentilation::demandControlledVentilation, controllerMechanicalVentilation),
-          boost::optional<BoolSetter>(std::bind(&model::ControllerMechanicalVentilation::setDemandControlledVentilation, controllerMechanicalVentilation, std::placeholders::_1)),
+          boost::optional<BoolSetter>(std::bind(&model::ControllerMechanicalVentilation::setDemandControlledVentilationNoFail, controllerMechanicalVentilation, std::placeholders::_1)),
           boost::optional<NoFailAction>(std::bind(&model::ControllerMechanicalVentilation::resetDemandControlledVentilation, controllerMechanicalVentilation)),
           boost::optional<BasicQuery>(std::bind(&model::ControllerMechanicalVentilation::isDemandControlledVentilationDefaulted, controllerMechanicalVentilation))
         );
@@ -1095,7 +1193,7 @@ void HVACControlsController::update()
       {
         m_noMechanicalVentilationView = new NoMechanicalVentilationView();
 
-        m_hvacControlsView->ventilationViewSwitcher->setView(m_noMechanicalVentilationView);
+        m_hvacAirLoopControlsView->ventilationViewSwitcher->setView(m_noMechanicalVentilationView);
       }
 
       // Supply Air Temperature
@@ -1121,7 +1219,7 @@ void HVACControlsController::update()
       {
         m_singleZoneReheatSPMView = new SingleZoneReheatSPMView();
 
-        m_hvacControlsView->supplyAirTemperatureViewSwitcher->setView(m_singleZoneReheatSPMView);
+        m_hvacAirLoopControlsView->supplyAirTemperatureViewSwitcher->setView(m_singleZoneReheatSPMView);
 
         std::vector<model::ThermalZone> thermalZones = t_airLoopHVAC->thermalZones();
 
@@ -1167,7 +1265,7 @@ void HVACControlsController::update()
       {
         m_scheduledSPMView = new ScheduledSPMView();
 
-        m_hvacControlsView->supplyAirTemperatureViewSwitcher->setView(m_scheduledSPMView);
+        m_hvacAirLoopControlsView->supplyAirTemperatureViewSwitcher->setView(m_scheduledSPMView);
 
         auto supplyAirTempScheduleVectorController = new SupplyAirTempScheduleVectorController();
         supplyAirTempScheduleVectorController->attach(spmS.get());
@@ -1180,18 +1278,24 @@ void HVACControlsController::update()
         m_supplyAirTempScheduleDropZone->setItemsAcceptDrops(true);
         m_supplyAirTempScheduleDropZone->setEnabled(true);
         m_scheduledSPMView->supplyAirTemperatureViewSwitcher->setView(m_supplyAirTempScheduleDropZone);
+
+        // Allow clicking on the Schedule to see it in the right column inspector
+        QObject::connect(m_supplyAirTempScheduleDropZone,
+                         &OSDropZone::itemClicked,
+                         supplyAirTempScheduleVectorController,
+                         &SupplyAirTempScheduleVectorController::onDropZoneItemClicked);
       }
       else if( _spm && ( spmFOAT = _spm->optionalCast<model::SetpointManagerFollowOutdoorAirTemperature>() ) )
       {
         m_followOATempSPMView = new FollowOATempSPMView();
 
-        m_hvacControlsView->supplyAirTemperatureViewSwitcher->setView(m_followOATempSPMView);
+        m_hvacAirLoopControlsView->supplyAirTemperatureViewSwitcher->setView(m_followOATempSPMView);
       }
       else if( _spm && ( spmOAR = _spm->optionalCast<model::SetpointManagerOutdoorAirReset>() ) )
       {
         m_oaResetSPMView = new OAResetSPMView();
 
-        m_hvacControlsView->supplyAirTemperatureViewSwitcher->setView(m_oaResetSPMView);
+        m_hvacAirLoopControlsView->supplyAirTemperatureViewSwitcher->setView(m_oaResetSPMView);
       }
       else if( t_airLoopHVAC->supplyComponents(model::AirLoopHVACUnitaryHeatPumpAirToAir::iddObjectType()).size() > 0 )
       {
@@ -1201,7 +1305,7 @@ void HVACControlsController::update()
 
         m_airLoopHVACUnitaryHeatPumpAirToAirControlView = new AirLoopHVACUnitaryHeatPumpAirToAirControlView();
 
-        m_hvacControlsView->supplyAirTemperatureViewSwitcher->setView(m_airLoopHVACUnitaryHeatPumpAirToAirControlView);
+        m_hvacAirLoopControlsView->supplyAirTemperatureViewSwitcher->setView(m_airLoopHVACUnitaryHeatPumpAirToAirControlView);
 
         std::vector<model::ThermalZone> thermalZones = t_airLoopHVAC->thermalZones();
 
@@ -1247,11 +1351,139 @@ void HVACControlsController::update()
       {
         m_noSupplyAirTempControlView = new NoSupplyAirTempControlView();
 
-        m_hvacControlsView->supplyAirTemperatureViewSwitcher->setView(m_noSupplyAirTempControlView);
+        m_hvacAirLoopControlsView->supplyAirTemperatureViewSwitcher->setView(m_noSupplyAirTempControlView);
       }
+
+
+      // AVM List
+      auto availabilityManagerObjectVectorController = new AvailabilityManagerObjectVectorController();
+      availabilityManagerObjectVectorController->attach(t_airLoopHVAC.get());
+      m_availabilityManagerDropZone = new OSDropZone(availabilityManagerObjectVectorController,"Drag From Library",QSize(0,0),false);
+      m_availabilityManagerDropZone->setFixedSize(QSize(OSItem::ITEM_WIDTH + 20,10*50));
+      m_availabilityManagerDropZone->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+      m_availabilityManagerDropZone->setMinItems(0);
+      m_availabilityManagerDropZone->setMaxItems(10);
+      m_availabilityManagerDropZone->setItemsRemoveable(true);
+      m_availabilityManagerDropZone->setAcceptDrops(true);
+      m_availabilityManagerDropZone->setItemsAcceptDrops(true);
+      m_availabilityManagerDropZone->setEnabled(true);
+      m_availabilityManagerDropZone->setItemsDraggable(true);
+      m_hvacAirLoopControlsView->availabilityManagerViewSwitcher->setView(m_availabilityManagerDropZone);
+
+      // When clicking on the drop zone item, pull it on the MainRightColumnController
+      QObject::connect(m_availabilityManagerDropZone,
+                       &OSDropZone::itemClicked,
+                       availabilityManagerObjectVectorController,
+                       &AvailabilityManagerObjectVectorController::onDropZoneItemClicked);
+
+      m_hvacAirLoopControlsView->setUpdatesEnabled(true);
+
     }
 
-    m_hvacControlsView->setUpdatesEnabled(true);
+
+    // Else if a plantLoop
+    else if( boost::optional<model::PlantLoop> t_plantLoop = plantLoop() )
+    {
+
+      m_hvacPlantLoopControlsView->setUpdatesEnabled(false);
+
+      if( m_systemAvailabilityDropZone ) { delete m_systemAvailabilityDropZone; }
+
+      QString title;
+      title.append(QString::fromStdString(t_plantLoop->name().get()));
+      m_hvacPlantLoopControlsView->systemNameLabel->setText(title);
+
+      openstudio::energyplus::ComponentType plType = openstudio::energyplus::plantLoopType(t_plantLoop.get());
+
+      if (plType == openstudio::energyplus::ComponentType::BOTH ) {
+        m_hvacPlantLoopControlsView->plantLoopTypeLabel->setText("Both");
+        m_hvacPlantLoopControlsView->plantLoopTypeLabel->setStyleSheet("QLabel { color : orange; }");
+      } else if (plType == openstudio::energyplus::ComponentType::HEATING ) {
+        m_hvacPlantLoopControlsView->plantLoopTypeLabel->setText("Heating");
+        m_hvacPlantLoopControlsView->plantLoopTypeLabel->setStyleSheet("QLabel { color : red; }");
+
+      } else if (plType == openstudio::energyplus::ComponentType::COOLING ) {
+        m_hvacPlantLoopControlsView->plantLoopTypeLabel->setText("Cooling");
+        m_hvacPlantLoopControlsView->plantLoopTypeLabel->setStyleSheet("QLabel { color : blue; }");
+      } else if (plType == openstudio::energyplus::ComponentType::NONE ) {
+        m_hvacPlantLoopControlsView->plantLoopTypeLabel->setText("None");
+        m_hvacPlantLoopControlsView->plantLoopTypeLabel->setStyleSheet("QLabel { color : black; }");
+      }
+
+
+      // Heating Components
+      QString heatingComps("<ul>");
+      // std::vector<model::HVACComponent> heatingComponents = openstudio::energyplus::heatingComponents(t_plantLoop.get());
+      for (const model::HVACComponent& hc: openstudio::energyplus::heatingComponents(t_plantLoop.get())) {
+        heatingComps.append("<li>");
+        heatingComps.append(QString::fromStdString(hc.nameString()));
+        heatingComps.append("</li>");
+      }
+      heatingComps.append("</ul>");
+      m_hvacPlantLoopControlsView->heatingComponentsLabel->setText(heatingComps);
+
+
+      // Cooling Components
+      QString coolingComps("<ul>");
+      // std::vector<model::HVACComponent> coolingComponents = openstudio::energyplus::coolingComponents(t_plantLoop.get());
+      for (const model::HVACComponent& hc: openstudio::energyplus::coolingComponents(t_plantLoop.get())) {
+        coolingComps.append("<li>");
+        coolingComps.append(QString::fromStdString(hc.nameString()));
+        coolingComps.append("</li>");
+      }
+      coolingComps.append("</ul>");
+      m_hvacPlantLoopControlsView->coolingComponentsLabel->setText(coolingComps);
+
+      // Setpoint Components
+      QString setpointComps("<ul>");
+      // std::vector<model::HVACComponent> setpointComponents = openstudio::energyplus::setpointComponents(t_plantLoop.get());
+      for (const model::HVACComponent& hc: openstudio::energyplus::setpointComponents(t_plantLoop.get())) {
+        setpointComps.append("<li>");
+        setpointComps.append(QString::fromStdString(hc.nameString()));
+        setpointComps.append("</li>");
+      }
+      setpointComps.append("</ul>");
+      m_hvacPlantLoopControlsView->setpointComponentsLabel->setText(setpointComps);
+
+      // Uncontrolled Components
+      QString uncontrolledComps("<ul>");
+      // std::vector<model::HVACComponent> uncontrolledComponents = openstudio::energyplus::uncontrolledComponents(t_plantLoop.get());
+      for (const model::HVACComponent& hc: openstudio::energyplus::uncontrolledComponents(t_plantLoop.get())) {
+        uncontrolledComps.append("<li>");
+        uncontrolledComps.append(QString::fromStdString(hc.nameString()));
+        uncontrolledComps.append("</li>");
+      }
+      uncontrolledComps.append("</ul>");
+      m_hvacPlantLoopControlsView->uncontrolledComponentsLabel->setText(uncontrolledComps);
+
+
+      // AvailabilityManagers
+
+      auto availabilityManagerObjectVectorController = new AvailabilityManagerObjectVectorController();
+      availabilityManagerObjectVectorController->attach(t_plantLoop.get());
+      // m_availabilityManagerDropZone = new OSDropZone(availabilityManagerObjectVectorController);
+      m_availabilityManagerDropZone = new OSDropZone(availabilityManagerObjectVectorController,"Drag From Library",QSize(0,0),false);
+
+      m_availabilityManagerDropZone->setFixedSize(QSize(OSItem::ITEM_WIDTH + 20,10*50));
+      m_availabilityManagerDropZone->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+      m_availabilityManagerDropZone->setMinItems(0);
+      m_availabilityManagerDropZone->setMaxItems(10);
+      m_availabilityManagerDropZone->setItemsRemoveable(true);
+      m_availabilityManagerDropZone->setAcceptDrops(true);
+      m_availabilityManagerDropZone->setItemsAcceptDrops(true);
+      m_availabilityManagerDropZone->setEnabled(true);
+      m_availabilityManagerDropZone->setItemsDraggable(true);
+      m_hvacPlantLoopControlsView->availabilityManagerViewSwitcher->setView(m_availabilityManagerDropZone);
+
+      // When clicking on the drop zone item, pull it on the MainRightColumnController
+      QObject::connect(m_availabilityManagerDropZone,
+                       &OSDropZone::itemClicked,
+                       availabilityManagerObjectVectorController,
+                       &AvailabilityManagerObjectVectorController::onDropZoneItemClicked);
+
+      m_hvacPlantLoopControlsView->setUpdatesEnabled(true);
+
+    }
 
     m_dirty = false;
   }
@@ -1303,7 +1535,7 @@ void HVACControlsController::onNightCycleComboBoxIndexChanged(int index)
 
   OS_ASSERT(t_airLoopHVAC);
 
-  QString data = m_hvacControlsView->nightCycleComboBox->itemData(index).toString();
+  QString data = m_hvacAirLoopControlsView->nightCycleComboBox->itemData(index).toString();
 
   t_airLoopHVAC->setNightCycleControlType(data.toStdString());
 }
@@ -1506,7 +1738,7 @@ void HVACLayoutController::updateLater()
   QTimer::singleShot(0,this,SLOT(update()));
 }
 
-SystemAvailabilityVectorController::SystemAvailabilityVectorController() 
+SystemAvailabilityVectorController::SystemAvailabilityVectorController()
   : ModelObjectVectorController()
 {
   m_reportItemsMutex = new QMutex();
@@ -1626,6 +1858,14 @@ SupplyAirTempScheduleVectorController::SupplyAirTempScheduleVectorController()
   m_reportItemsMutex = new QMutex();
 }
 
+void SystemAvailabilityVectorController::onDropZoneItemClicked(OSItem* item) {
+  OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObjectByItem(item, false);
+}
+
+
+
+
+
 void SupplyAirTempScheduleVectorController::attach(const model::ModelObject& modelObject)
 {
   detach();
@@ -1735,6 +1975,318 @@ void SupplyAirTempScheduleVectorController::onDrop(const OSItemId& itemId)
 void SupplyAirTempScheduleVectorController::onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId)
 {
   onDrop(replacementItemId);
+}
+
+void SupplyAirTempScheduleVectorController::onDropZoneItemClicked(OSItem* item) {
+  OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObjectByItem(item, false);
+}
+
+
+
+/***********************************************************************************************************************
+ *        A V A I L A B I L I T Y    M A N A G E R S - AvailabilityManagerObjectVectorController
+ ***********************************************************************************************************************/
+
+
+// CLASSIC ONES
+
+// CTOR
+AvailabilityManagerObjectVectorController::AvailabilityManagerObjectVectorController()
+  : ModelObjectVectorController()
+{
+  m_reportItemsMutex = new QMutex();
+}
+
+
+void AvailabilityManagerObjectVectorController::attach(const model::ModelObject& modelObject)
+{
+  detach();
+
+  m_modelObject = modelObject;
+
+  if( m_modelObject )
+  {
+    m_model = m_modelObject->model();
+
+    m_model->getImpl<model::detail::Model_Impl>().get()->onChange.connect<AvailabilityManagerObjectVectorController, &AvailabilityManagerObjectVectorController::reportItemsLater>(this);
+  }
+
+  reportItemsLater();
+}
+
+void AvailabilityManagerObjectVectorController::detach()
+{
+  if( m_modelObject )
+  {
+    m_modelObject.reset();
+  }
+
+  if( m_model )
+  {
+    m_model->getImpl<model::detail::Model_Impl>().get()->onChange.disconnect<AvailabilityManagerObjectVectorController, &AvailabilityManagerObjectVectorController::reportItemsLater>(this);
+
+    m_model.reset();
+  }
+
+  reportItemsLater();
+}
+
+void AvailabilityManagerObjectVectorController::reportItemsLater()
+{
+  m_reportScheduled = true;
+
+  QTimer::singleShot(0,this,SLOT(reportItems()));
+}
+
+void AvailabilityManagerObjectVectorController::reportItems()
+{
+  if( ! m_reportItemsMutex->tryLock() ) {
+    return;
+  }
+
+  if( m_reportScheduled )
+  {
+    m_reportScheduled = false;
+
+    ModelObjectVectorController::reportItems();
+  }
+
+  m_reportItemsMutex->unlock();
+}
+
+
+// ACTUAL STUFF
+
+boost::optional<model::PlantLoop> AvailabilityManagerObjectVectorController::currentLoop()
+{
+  if( m_modelObject && ! m_modelObject->handle().isNull() )
+  {
+    return m_modelObject->optionalCast<model::PlantLoop>();
+  }
+  else
+  {
+    return boost::none;
+  }
+}
+
+boost::optional<model::AvailabilityManagerAssignmentList> AvailabilityManagerObjectVectorController::avmList()
+{
+  if( m_modelObject && ! m_modelObject->handle().isNull() )
+  {
+    if( auto mo = m_modelObject->optionalCast<model::Loop>() ) {
+      model::Loop loop = m_modelObject->cast<model::Loop>();
+      return loop.getImpl<model::detail::Loop_Impl>()->availabilityManagerAssignmentList();
+    }
+    /*
+     *if (auto mo = m_modelObject->optionalCast<model::PlantLoop>())
+     *{
+     *  model::PlantLoop p =  m_modelObject->cast<model::PlantLoop>();
+     *  return p.getImpl<model::detail::PlantLoop_Impl>()->availabilityManagerAssignmentList();
+     *}
+     *else if (auto mo = m_modelObject->optionalCast<model::AirLoopHVAC>())
+     *{
+     *  model::AirLoopHVAC a =  m_modelObject->cast<model::AirLoopHVAC>();
+     *  return a.getImpl<model::detail::AirLoopHVAC_Impl>()->availabilityManagerAssignmentList();
+     *}
+     */
+  }
+
+  return boost::none;
+
+}
+
+void AvailabilityManagerObjectVectorController::onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle)
+{
+  emit itemIds(makeVector());
+}
+
+void AvailabilityManagerObjectVectorController::onDataChange(const model::ModelObject& modelObject)
+{
+  emit itemIds(makeVector());
+}
+
+
+std::vector<OSItemId> AvailabilityManagerObjectVectorController::makeVector()
+{
+  std::vector<OSItemId> result;
+
+  /*
+   *if( boost::optional<model::PlantLoop> t_currentLoop = currentLoop() )
+   *{
+   *  for( const auto& avm: t_currentLoop->availabilityManagers() ) {
+   *    result.push_back(modelObjectToItemId(avm, false));
+   *  }
+   *}
+   */
+  if( boost::optional<model::AvailabilityManagerAssignmentList> t_avmList = avmList() ) {
+   for( const auto& avm: t_avmList->availabilityManagers() ) {
+    result.push_back(modelObjectToItemId(avm, false));
+   }
+
+  }
+
+  return result;
+}
+
+
+
+void AvailabilityManagerObjectVectorController::onRemoveItem(OSItem * item)
+{
+
+  /**
+  if( boost::optional<model::Loop> t_currentLoop = currentLoop() )
+
+    model::LayeredConstruction construction = m_modelObject->cast<model::LayeredConstruction>();
+    std::vector<model::Material> layers = construction.layers();
+    OSAppBase * app = OSAppBase::instance();
+    unsigned idx = 0;
+    for (model::Material layer : layers){
+      boost::optional<model::ModelObject> modelObject = app->currentDocument()->getModelObject(item->itemId());
+      if(modelObject){
+        if(modelObject->handle() == layer.handle()){
+          construction.eraseLayer(idx);
+          break;
+        }
+        idx++;
+      }
+    }
+  }*/
+
+  /*
+   *if( boost::optional<model::PlantLoop> t_currentLoop = currentLoop() )
+   *{
+   *  // Start by getting the old one
+   *  ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(item);
+   *  OS_ASSERT(modelObjectItem);
+   *  model::ModelObject modelObject = modelObjectItem->modelObject();
+   *  if (!modelObject.handle().isNull()) {
+   *    // There is no reason we shouldn't enter this code block if the onDrop is fine...
+   *    if (modelObject.optionalCast<model::AvailabilityManager>()) {
+   *      model::AvailabilityManager c_avm = modelObject.cast<model::AvailabilityManager>();
+   *      t_currentLoop->removeAvailabilityManager(c_avm);
+   *    }
+   *  }
+   *}
+   */
+
+
+  if( boost::optional<model::AvailabilityManagerAssignmentList> t_avmList = avmList() )
+  {
+    // We get the avm
+    ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(item);
+    OS_ASSERT(modelObjectItem);
+    model::ModelObject modelObject = modelObjectItem->modelObject();
+    if (!modelObject.handle().isNull()) {
+      // There is no reason we shouldn't enter this code block if the onDrop is fine...
+      if (modelObject.optionalCast<model::AvailabilityManager>()) {
+        model::AvailabilityManager c_avm = modelObject.cast<model::AvailabilityManager>();
+        // And we remove it
+        t_avmList->removeAvailabilityManager(c_avm);
+      }
+    }
+  }
+
+}
+
+void AvailabilityManagerObjectVectorController::onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId)
+{
+  // Start by making sure the replacement object is indeed an AvailabilityManager
+  if( boost::optional<model::AvailabilityManagerAssignmentList> t_avmList = avmList() )
+  {
+    boost::optional<model::ModelObject> mo = getModelObject(replacementItemId);
+    if (mo)
+    {
+      if (mo->optionalCast<model::AvailabilityManager>())
+      {
+        // If we drag from the library onto an existing, we want clone, then add at the priority of the one existing
+        // It will shift all other AVMs forward, and the user will be able to delete the one he dragged onto if he wants
+        bool fromLibrary = false;
+        if (this->fromComponentLibrary(replacementItemId))
+        {
+          fromLibrary = true;
+          mo = mo->clone(t_avmList->model());
+        }
+
+        model::AvailabilityManager new_avm = mo->cast<model::AvailabilityManager>();
+
+        // Now that we know it's an AVM, start by getting the one being dragged ONTO
+        ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(currentItem);
+        OS_ASSERT(modelObjectItem);
+        model::ModelObject modelObject = modelObjectItem->modelObject();
+        if (!modelObject.handle().isNull()) {
+          // There is no reason we shouldn't enter this code block if the onDrop is fine...
+          if (modelObject.optionalCast<model::AvailabilityManager>()) {
+
+            model::AvailabilityManager c_avm = modelObject.cast<model::AvailabilityManager>();
+
+            // Get the priority of the current avm
+            unsigned priority = t_avmList->availabilityManagerPriority(c_avm);
+
+            if (fromLibrary) {
+              // Insert the new avm at this priority
+              t_avmList->addAvailabilityManager(new_avm, priority);
+            } else {
+              // We are dragging an existing AVM onto another existing one
+              // We shift them instead, by setting the priority of the one being dragged to the one being dragger onto
+              t_avmList->setAvailabilityManagerPriority(new_avm, priority);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+/* On Drop, if it's an AvailabilityManager, call currentLoop->addAvailabilityManager */
+void AvailabilityManagerObjectVectorController::onDrop(const OSItemId& itemId)
+{
+  if( boost::optional<model::AvailabilityManagerAssignmentList> t_avmList = avmList() )
+  {
+    boost::optional<model::ModelObject> mo = getModelObject(itemId);
+
+    if (mo)
+    {
+      if (mo->optionalCast<model::AvailabilityManager>())
+      {
+        if (this->fromComponentLibrary(itemId))
+        {
+          mo = mo->clone(t_avmList->model());
+        }
+
+        model::AvailabilityManager avm = mo->cast<model::AvailabilityManager>();
+        t_avmList->addAvailabilityManager(avm);
+      }
+    }
+  }
+}
+
+
+void AvailabilityManagerObjectVectorController::onDropZoneItemClicked(OSItem* item) {
+
+  OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObjectByItem(item, false);
+
+/*
+ *  if( boost::optional<model::AvailabilityManagerAssignmentList> t_avmList = avmList() )
+ *  {
+ *    // We get the avm
+ *    ModelObjectItem* modelObjectItem = qobject_cast<ModelObjectItem*>(item);
+ *    OS_ASSERT(modelObjectItem);
+ *    model::ModelObject modelObject = modelObjectItem->modelObject();
+ *    if (!modelObject.handle().isNull()) {
+ *      // There is no reason we shouldn't enter this code block if the onDrop is fine...
+ *      if (modelObject.optionalCast<model::AvailabilityManager>()) {
+ *        model::AvailabilityManager c_avm = modelObject.cast<model::AvailabilityManager>();
+ *
+ *        OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObject(mo,false);
+ *
+ *        // inspectModelObjectByItem(OSItem * item, bool readOnly)
+ *      }
+ *    }
+ *  }
+ */
+
 }
 
 } // openstudio

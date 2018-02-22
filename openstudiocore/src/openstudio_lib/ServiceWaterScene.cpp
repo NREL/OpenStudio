@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -51,7 +51,7 @@ ServiceWaterScene::ServiceWaterScene(const model::Model & model)
 {
   //m_model.getImpl<model::detail::Model_Impl>().get()->addWorkspaceObjectPtr.connect<ServiceWaterScene, &ServiceWaterScene::onAddedWorkspaceObject>(this);
   connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &ServiceWaterScene::onAddedWorkspaceObject, Qt::QueuedConnection);
-  
+
   m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<ServiceWaterScene, &ServiceWaterScene::onRemovedWorkspaceObject>(this);
 
   layout();
@@ -60,8 +60,8 @@ ServiceWaterScene::ServiceWaterScene(const model::Model & model)
 void ServiceWaterScene::layout()
 {
   QList<QGraphicsItem *> itemList = items();
-  for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
-       it < itemList.end(); 
+  for( QList<QGraphicsItem *>::iterator it = itemList.begin();
+       it < itemList.end();
        ++it )
   {
     removeItem(*it);
@@ -124,8 +124,8 @@ model::WaterUseConnections WaterUseConnectionsDetailScene::waterUseConnections()
 void WaterUseConnectionsDetailScene::layout()
 {
   QList<QGraphicsItem *> itemList = items();
-  for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
-       it < itemList.end(); 
+  for( QList<QGraphicsItem *>::iterator it = itemList.begin();
+       it < itemList.end();
        ++it )
   {
     removeItem(*it);

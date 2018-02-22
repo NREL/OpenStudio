@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -64,24 +64,24 @@ OptionalModelObject ReverseTranslator::translateMeterCustomDecrement( const Work
 
   MeterCustomDecrement meterCustomDecrement = optMeterCustomDecrement.get();
 
-  
+
   // Name
   s = workspaceObject.getString(Meter_CustomDecrementFields::Name);
   if (s) {
     meterCustomDecrement.setName(s.get());
   }
-  
+
   // Fuel Type
   s = workspaceObject.getString(Meter_CustomDecrementFields::FuelType);
   if (s) {
     // TODO: JM to DLM: should I also check it's part of the validFuelTypes?
     meterCustomDecrement.setFuelType(s.get());
   }
-  
-  
+
+
   // Get all the (key, var) extensible groups from IDF
   std::vector<IdfExtensibleGroup> keyVarGroups = workspaceObject.extensibleGroups();
-  
+
   // Clean out the (key, var) groups (just in case: the constructor doesn't default any, for now at least!)
   meterCustomDecrement.removeAllKeyVarGroups();
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -70,7 +70,23 @@ namespace detail {
   const std::vector<std::string>& CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // TODO: make sure this is right (cooling, not heating)
+      // Taken directly from the I/O for E+ 8.7
+      result.push_back("Cooling Coil Total Cooling Rate");
+      result.push_back("Cooling Coil Total Cooling Energy");
+      result.push_back("Cooling Coil Sensible Cooling Rate");
+      result.push_back("Cooling Coil Sensible Cooling Energy");
+      result.push_back("Cooling Coil Latent Cooling Rate");
+      result.push_back("Cooling Coil Latent Cooling Energy");
+      result.push_back("Cooling Coil Runtime Fraction");
+      result.push_back("DX Cooling Coil Crankcase Heater Electric Power");
+      result.push_back("Cooling Coil Crankcase Heater Electric Energy");
+      result.push_back("Cooling Coil Total Water Heating Rate");
+      result.push_back("Cooling Coil Total Water Heating Energy");
+      result.push_back("Cooling Coil Water Heating Electric Power");
+      result.push_back("Cooling Coil Water Heating Electric Energy");
     }
     return result;
   }
@@ -235,8 +251,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP) {
-    setBooleanFieldValue(OS_Coil_WaterHeating_AirToWaterHeatPump_WrappedFields::EvaporatorFanPowerIncludedinRatedCOP, evaporatorFanPowerIncludedinRatedCOP);
+  bool CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP) {
+    return setBooleanFieldValue(OS_Coil_WaterHeating_AirToWaterHeatPump_WrappedFields::EvaporatorFanPowerIncludedinRatedCOP, evaporatorFanPowerIncludedinRatedCOP);;
   }
 
   bool CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity) {
@@ -502,8 +518,8 @@ void CoilWaterHeatingAirToWaterHeatPumpWrapped::autocalculateRatedEvaporatorAirF
   getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl>()->autocalculateRatedEvaporatorAirFlowRate();
 }
 
-void CoilWaterHeatingAirToWaterHeatPumpWrapped::setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP) {
-  getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl>()->setEvaporatorFanPowerIncludedinRatedCOP(evaporatorFanPowerIncludedinRatedCOP);
+bool CoilWaterHeatingAirToWaterHeatPumpWrapped::setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP) {
+  return getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl>()->setEvaporatorFanPowerIncludedinRatedCOP(evaporatorFanPowerIncludedinRatedCOP);
 }
 
 bool CoilWaterHeatingAirToWaterHeatPumpWrapped::setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity) {
@@ -546,4 +562,3 @@ CoilWaterHeatingAirToWaterHeatPumpWrapped::CoilWaterHeatingAirToWaterHeatPumpWra
 
 } // model
 } // openstudio
-

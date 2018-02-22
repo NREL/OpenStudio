@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -322,6 +322,16 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  std::vector<EMSActuatorNames> ElectricLoadCenterStorageSimple_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Electrical Storage", "Power Draw Rate"},
+                                            {"Electrical Storage", "Power Charge Rate"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ElectricLoadCenterStorageSimple_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Electrical Storage Simple Maximum Capacity"};
+    return types;
+  }
 } // detail
 
 /* Constructor. Defaults the availabilitySchedule to alwaysOnDiscreteSchedule,

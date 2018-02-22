@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -76,7 +76,7 @@ void WaitDialog::createWidgets()
   //QTimer * timer = new QTimer(this);
   //connect(timer,SIGNAL(timeout()),busyWidget,SLOT(rotate()));
   //timer->start(50);
-  
+
   label = new QLabel("This may take a minute...");
   label->setObjectName("H2");
   upperLayout()->addWidget(label,0,Qt::AlignCenter);
@@ -101,7 +101,7 @@ void WaitDialog::createWidgets()
 //***** SLOTS *****
 
 void WaitDialog::on_cancelButton(bool checked)
-{  
+{
   OSDialog::on_cancelButton(checked);
 }
 

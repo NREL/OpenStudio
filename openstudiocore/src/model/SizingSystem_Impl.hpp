@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,42 +41,8 @@ class AirLoopHVAC;
 namespace detail {
 
 /** SizingSystem_Impl is a ModelObject_Impl that is the implementation class for SizingSystem.*/
-class MODEL_API SizingSystem_Impl : public ModelObject_Impl 
+class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 {
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 
   public:
 
@@ -210,35 +176,35 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   bool setMinimumSystemAirFlowRatio(double minimumSystemAirFlowRatio);
 
-  void setPreheatDesignTemperature(double preheatDesignTemperature);
+  bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
-  void setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
+  bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
 
-  void setPrecoolDesignTemperature(double precoolDesignTemperature);
+  bool setPrecoolDesignTemperature(double precoolDesignTemperature);
 
-  void setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio);
+  bool setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio);
 
-  void setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature);
+  bool setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature);
 
-  void setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature);
+  bool setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature);
 
   bool setSizingOption(std::string sizingOption);
 
   void resetSizingOption();
 
-  void setAllOutdoorAirinCooling(bool allOutdoorAirinCooling);
+  bool setAllOutdoorAirinCooling(bool allOutdoorAirinCooling);
 
   void resetAllOutdoorAirinCooling();
 
-  void setAllOutdoorAirinHeating(bool allOutdoorAirinHeating);
+  bool setAllOutdoorAirinHeating(bool allOutdoorAirinHeating);
 
   void resetAllOutdoorAirinHeating();
 
-  void setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio);
+  bool setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio);
 
   void resetCentralCoolingDesignSupplyAirHumidityRatio();
 
-  void setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio);
+  bool setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio);
 
   void resetCentralHeatingDesignSupplyAirHumidityRatio();
 
@@ -302,7 +268,21 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   AirLoopHVAC airLoopHVAC() const;
 
-  void setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC);
+  bool setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC);
+
+  boost::optional<double> autosizedDesignOutdoorAirFlowRate() const ;
+
+  boost::optional<double> autosizedCoolingDesignCapacity() const ;
+
+  boost::optional<double> autosizedHeatingDesignCapacity() const ;
+
+  void autosize();
+
+  void applySizingValues();
+
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
 
   protected:
 
@@ -318,4 +298,3 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 } // openstudio
 
 #endif // MODEL_SIZINGSYSTEM_IMPL_HPP
-

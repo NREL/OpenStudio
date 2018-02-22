@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -80,7 +80,10 @@ namespace detail {
   const std::vector<std::string>& SiteWaterMainsTemperature_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate
+      //SetupOutputVariable( "Site Mains Water Temperature [C]", WaterMainsTemp, "Zone", "Average", "Environment" );
     }
     return result;
   }
@@ -151,7 +154,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SiteWaterMainsTemperature_Impl::setAnnualAverageOutdoorAirTemperature(boost::optional<double> annualAverageOutdoorAirTemperature) {
+  bool SiteWaterMainsTemperature_Impl::setAnnualAverageOutdoorAirTemperature(boost::optional<double> annualAverageOutdoorAirTemperature) {
     bool result(false);
     if (annualAverageOutdoorAirTemperature) {
       result = setDouble(OS_Site_WaterMainsTemperatureFields::AnnualAverageOutdoorAirTemperature, annualAverageOutdoorAirTemperature.get());
@@ -165,6 +168,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool SiteWaterMainsTemperature_Impl::setAnnualAverageOutdoorAirTemperature(const OSOptionalQuantity& annualAverageOutdoorAirTemperature) {
@@ -331,8 +335,8 @@ void SiteWaterMainsTemperature::resetTemperatureSchedule() {
   getImpl<detail::SiteWaterMainsTemperature_Impl>()->resetTemperatureSchedule();
 }
 
-void SiteWaterMainsTemperature::setAnnualAverageOutdoorAirTemperature(double annualAverageOutdoorAirTemperature) {
-  getImpl<detail::SiteWaterMainsTemperature_Impl>()->setAnnualAverageOutdoorAirTemperature(annualAverageOutdoorAirTemperature);
+bool SiteWaterMainsTemperature::setAnnualAverageOutdoorAirTemperature(double annualAverageOutdoorAirTemperature) {
+  return getImpl<detail::SiteWaterMainsTemperature_Impl>()->setAnnualAverageOutdoorAirTemperature(annualAverageOutdoorAirTemperature);
 }
 
 bool SiteWaterMainsTemperature::setAnnualAverageOutdoorAirTemperature(const Quantity& annualAverageOutdoorAirTemperature) {
@@ -363,4 +367,3 @@ SiteWaterMainsTemperature::SiteWaterMainsTemperature(std::shared_ptr<detail::Sit
 
 } // model
 } // openstudio
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -179,7 +179,7 @@ void LoopLibraryDialog::newItem( const AddToModelEnum & addToModelEnum,
 LoopItemView::LoopItemView( const AddToModelEnum & addToModelEnum,
                             const QString & detailedText,
                             const QPixmap & pixmap,
-                            QWidget * parent ) 
+                            QWidget * parent )
   : QWidget( parent ),
     m_addToModelEnum( addToModelEnum ),
     m_detailedText( detailedText ),

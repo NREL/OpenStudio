@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,7 +47,7 @@ class CoolingTowerSingleSpeed_Impl;
 
 } // detail
 
-/** CoolingTowerSingleSpeed is a StraightComponent that wraps the OpenStudio IDD object 
+/** CoolingTowerSingleSpeed is a StraightComponent that wraps the OpenStudio IDD object
  *  'OS:CoolingTower:SingleSpeed'. */
 class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
  public:
@@ -279,13 +279,13 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   void resetEvaporationLossMode();
 
-  void setEvaporationLossFactor(double evaporationLossFactor);
+  bool setEvaporationLossFactor(double evaporationLossFactor);
 
   bool setEvaporationLossFactor(const Quantity& evaporationLossFactor);
 
   void resetEvaporationLossFactor();
 
-  void setDriftLossPercent(double driftLossPercent);
+  bool setDriftLossPercent(double driftLossPercent);
 
   bool setDriftLossPercent(const Quantity& driftLossPercent);
 
@@ -335,6 +335,60 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   void resetSizingFactor();
 
+  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedUFactorTimesAreaValueatDesignAirFlowRate() const ;
+
+  boost::optional<double> autosizedAirFlowRateinFreeConvectionRegime() const ;
+
+  boost::optional<double> autosizedUFactorTimesAreaValueatFreeConvectionAirFlowRate() const ;
+
+  /* This method mimics what E+ does because this value it isn't reported in the SQL file:
+   * It gets the input from the Sizing:Plant attached to the loop and the entered design inlet air wet-bulb temperature
+   */
+  boost::optional<double> autosizedDesignApproachTemperature() const;
+
+ /* This method mimics what E+ does because this value it isn't reported in the SQL file:
+  * It gets the input from the Sizing:Plant attached to the loop
+  */
+  boost::optional<double> autosizedDesignRangeTemperature() const;
+
+
+  double freeConvectionAirFlowRateSizingFactor() const;
+  bool setFreeConvectionAirFlowRateSizingFactor(double freeConvectionAirFlowRateSizingFactor);
+
+  double freeConvectionUFactorTimesAreaValueSizingFactor() const;
+  bool setFreeConvectionUFactorTimesAreaValueSizingFactor(double freeConvectionUFactorTimesAreaValueSizingFactor);
+
+  double heatRejectionCapacityAndNominalCapacitySizingRatio() const;
+  bool setHeatRejectionCapacityAndNominalCapacitySizingRatio(double heatRejectionCapacityAndNominalCapacitySizingRatio);
+
+  double freeConvectionNominalCapacitySizingFactor() const;
+  bool setFreeConvectionNominalCapacitySizingFactor(double freeConvectionNominalCapacitySizingFactor);
+
+  double designInletAirDryBulbTemperature() const;
+  bool setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature);
+
+  double designInletAirWetBulbTemperature() const;
+  bool setDesignInletAirWetBulbTemperature(double designInletAirWetBulbTemperature);
+
+  boost::optional<double> designApproachTemperature() const;
+  bool isDesignApproachTemperatureAutosized() const;
+  bool setDesignApproachTemperature(double designApproachTemperature);
+  void autosizeDesignApproachTemperature();
+
+  boost::optional<double> designRangeTemperature() const;
+  bool isDesignRangeTemperatureAutosized() const;
+  bool setDesignRangeTemperature(double designRangeTemperature);
+  void autosizeDesignRangeTemperature();
+
+  std::string endUseSubcategory() const;
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
+
   //@}
  protected:
 
@@ -364,4 +418,3 @@ typedef std::vector<CoolingTowerSingleSpeed> CoolingTowerSingleSpeedVector;
 } // openstudio
 
 #endif // MODEL_COOLINGTOWERSINGLESPEED_HPP
-

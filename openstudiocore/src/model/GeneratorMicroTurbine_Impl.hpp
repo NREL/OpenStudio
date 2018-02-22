@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -71,15 +71,15 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
-    
+    virtual IddObjectType iddObjectType() const override;
+
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual std::string generatorObjectType() const;
+    virtual std::string generatorObjectType() const override;
 
-    virtual boost::optional<double> ratedElectricPowerOutput() const;
+    virtual boost::optional<double> ratedElectricPowerOutput() const override;
 
     virtual boost::optional<Schedule> availabilitySchedule() const override;
 
@@ -99,10 +99,10 @@ namespace detail {
     bool isMaximumFullLoadElectricalPowerOutputDefaulted() const;
 
     double referenceElectricalEfficiencyUsingLowerHeatingValue() const;
-    
+
     double referenceCombustionAirInletTemperature() const;
     bool isReferenceCombustionAirInletTemperatureDefaulted() const;
-    
+
     double referenceCombustionAirInletHumidityRatio() const;
     bool isReferenceCombustionAirInletHumidityRatioDefaulted() const;
 
@@ -161,13 +161,17 @@ namespace detail {
     // TODO: Check return type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
     boost::optional<Curve> exhaustAirTemperatureFunctionofPartLoadRatioCurve() const;
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Setters */
     //@{
 
     bool setAvailabilitySchedule(Schedule& schedule);
     void resetAvailabilitySchedule();
-    
+
     bool setReferenceElectricalPowerOutput(double referenceElectricalPowerOutput);
 
     bool setMinimumFullLoadElectricalPowerOutput(double minimumFullLoadElectricalPowerOutput);
@@ -178,7 +182,7 @@ namespace detail {
 
     bool setReferenceElectricalEfficiencyUsingLowerHeatingValue(double referenceElectricalEfficiencyUsingLowerHeatingValue);
 
-    void setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature);
+    bool setReferenceCombustionAirInletTemperature(double referenceCombustionAirInletTemperature);
     void resetReferenceCombustionAirInletTemperature();
 
     bool setReferenceCombustionAirInletHumidityRatio(double referenceCombustionAirInletHumidityRatio);
@@ -238,7 +242,7 @@ namespace detail {
     bool setExhaustAirFlowRateFunctionofPartLoadRatioCurve(const Curve& exhaustAirFlowRateFunctionofPartLoadRatioCurve);
     void resetExhaustAirFlowRateFunctionofPartLoadRatioCurve();
 
-    void setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature);
+    bool setNominalExhaustAirOutletTemperature(double nominalExhaustAirOutletTemperature);
     void resetNominalExhaustAirOutletTemperature();
 
     // TODO: Check argument type. From object lists, some candidates are: QuadraticCubicCurves, UniVariateTables.
@@ -252,7 +256,7 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-      
+
     ModelObject clone(Model model) const override;
 
     std::vector<IddObjectType> allowableChildTypes() const override;
@@ -272,4 +276,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_GENERATORMICROTURBINE_IMPL_HPP
-

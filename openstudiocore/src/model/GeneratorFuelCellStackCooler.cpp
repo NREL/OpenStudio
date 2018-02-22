@@ -84,15 +84,15 @@ namespace detail {
     return GeneratorFuelCellStackCooler::iddObjectType();
   }
 
-  // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
-  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  // This will clone both the GeneratorFuelCellStackCooler and its linked GeneratorFuelCell
+  // and will return a reference to the GeneratorFuelCellStackCooler
   ModelObject GeneratorFuelCellStackCooler_Impl::clone(Model model) const {
 
     // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
     GeneratorFuelCell fs = fuelCell();
     GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
 
-    // We get the clone of the parent generator's MTHR so we can return that
+    // We get the clone of the parent generator's GeneratorFuelCellStackCooler so we can return that
     GeneratorFuelCellStackCooler hxClone = fsClone.stackCooler().get();
 
     return hxClone;
@@ -270,9 +270,10 @@ namespace detail {
     return value.get();
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setNominalStackTemperature(double nominalStackTemperature) {
+  bool GeneratorFuelCellStackCooler_Impl::setNominalStackTemperature(double nominalStackTemperature) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::NominalStackTemperature, nominalStackTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetNominalStackTemperature() {
@@ -280,9 +281,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setActualStackTemperature(double actualStackTemperature) {
+  bool GeneratorFuelCellStackCooler_Impl::setActualStackTemperature(double actualStackTemperature) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::ActualStackTemperature, actualStackTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetActualStackTemperature() {
@@ -290,9 +292,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setCoefficientr0(double coefficientr0) {
+  bool GeneratorFuelCellStackCooler_Impl::setCoefficientr0(double coefficientr0) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr0, coefficientr0);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetCoefficientr0() {
@@ -300,9 +303,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setCoefficientr1(double coefficientr1) {
+  bool GeneratorFuelCellStackCooler_Impl::setCoefficientr1(double coefficientr1) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr1, coefficientr1);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetCoefficientr1() {
@@ -310,9 +314,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setCoefficientr2(double coefficientr2) {
+  bool GeneratorFuelCellStackCooler_Impl::setCoefficientr2(double coefficientr2) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr2, coefficientr2);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetCoefficientr2() {
@@ -320,9 +325,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setCoefficientr3(double coefficientr3) {
+  bool GeneratorFuelCellStackCooler_Impl::setCoefficientr3(double coefficientr3) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::Coefficientr3, coefficientr3);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetCoefficientr3() {
@@ -330,9 +336,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setStackCoolantFlowRate(double stackCoolantFlowRate) {
+  bool GeneratorFuelCellStackCooler_Impl::setStackCoolantFlowRate(double stackCoolantFlowRate) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolantFlowRate, stackCoolantFlowRate);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCoolantFlowRate() {
@@ -340,9 +347,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setStackCoolerUFactorTimesAreaValue(double stackCoolerUFactorTimesAreaValue) {
+  bool GeneratorFuelCellStackCooler_Impl::setStackCoolerUFactorTimesAreaValue(double stackCoolerUFactorTimesAreaValue) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolerUFactorTimesAreaValue, stackCoolerUFactorTimesAreaValue);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCoolerUFactorTimesAreaValue() {
@@ -350,9 +358,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setFscogenAdjustmentFactor(double fscogenAdjustmentFactor) {
+  bool GeneratorFuelCellStackCooler_Impl::setFscogenAdjustmentFactor(double fscogenAdjustmentFactor) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::FscogenAdjustmentFactor, fscogenAdjustmentFactor);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetFscogenAdjustmentFactor() {
@@ -360,9 +369,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setStackCogenerationExchangerArea(double stackCogenerationExchangerArea) {
+  bool GeneratorFuelCellStackCooler_Impl::setStackCogenerationExchangerArea(double stackCogenerationExchangerArea) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerArea, stackCogenerationExchangerArea);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCogenerationExchangerArea() {
@@ -370,9 +380,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setStackCogenerationExchangerNominalFlowRate(double stackCogenerationExchangerNominalFlowRate) {
+  bool GeneratorFuelCellStackCooler_Impl::setStackCogenerationExchangerNominalFlowRate(double stackCogenerationExchangerNominalFlowRate) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalFlowRate, stackCogenerationExchangerNominalFlowRate);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCogenerationExchangerNominalFlowRate() {
@@ -380,9 +391,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setStackCogenerationExchangerNominalHeatTransferCoefficient(double stackCogenerationExchangerNominalHeatTransferCoefficient) {
+  bool GeneratorFuelCellStackCooler_Impl::setStackCogenerationExchangerNominalHeatTransferCoefficient(double stackCogenerationExchangerNominalHeatTransferCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficient, stackCogenerationExchangerNominalHeatTransferCoefficient);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCogenerationExchangerNominalHeatTransferCoefficient() {
@@ -390,9 +402,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setStackCogenerationExchangerNominalHeatTransferCoefficientExponent(double stackCogenerationExchangerNominalHeatTransferCoefficientExponent) {
+  bool GeneratorFuelCellStackCooler_Impl::setStackCogenerationExchangerNominalHeatTransferCoefficientExponent(double stackCogenerationExchangerNominalHeatTransferCoefficientExponent) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCogenerationExchangerNominalHeatTransferCoefficientExponent, stackCogenerationExchangerNominalHeatTransferCoefficientExponent);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCogenerationExchangerNominalHeatTransferCoefficientExponent() {
@@ -400,9 +413,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setStackCoolerPumpPower(double stackCoolerPumpPower) {
+  bool GeneratorFuelCellStackCooler_Impl::setStackCoolerPumpPower(double stackCoolerPumpPower) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackCoolerPumpPower, stackCoolerPumpPower);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackCoolerPumpPower() {
@@ -420,9 +434,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setStackAirCoolerFanCoefficientf0(double stackAirCoolerFanCoefficientf0) {
+  bool GeneratorFuelCellStackCooler_Impl::setStackAirCoolerFanCoefficientf0(double stackAirCoolerFanCoefficientf0) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf0, stackAirCoolerFanCoefficientf0);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackAirCoolerFanCoefficientf0() {
@@ -430,9 +445,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setStackAirCoolerFanCoefficientf1(double stackAirCoolerFanCoefficientf1) {
+  bool GeneratorFuelCellStackCooler_Impl::setStackAirCoolerFanCoefficientf1(double stackAirCoolerFanCoefficientf1) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf1, stackAirCoolerFanCoefficientf1);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackAirCoolerFanCoefficientf1() {
@@ -440,9 +456,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellStackCooler_Impl::setStackAirCoolerFanCoefficientf2(double stackAirCoolerFanCoefficientf2) {
+  bool GeneratorFuelCellStackCooler_Impl::setStackAirCoolerFanCoefficientf2(double stackAirCoolerFanCoefficientf2) {
     bool result = setDouble(OS_Generator_FuelCell_StackCoolerFields::StackAirCoolerFanCoefficientf2, stackAirCoolerFanCoefficientf2);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellStackCooler_Impl::resetStackAirCoolerFanCoefficientf2() {
@@ -569,112 +586,112 @@ double GeneratorFuelCellStackCooler::stackAirCoolerFanCoefficientf2() const {
   return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->stackAirCoolerFanCoefficientf2();
 }
 
-void GeneratorFuelCellStackCooler::setNominalStackTemperature(double nominalStackTemperature) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setNominalStackTemperature(nominalStackTemperature);
+bool GeneratorFuelCellStackCooler::setNominalStackTemperature(double nominalStackTemperature) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setNominalStackTemperature(nominalStackTemperature);
 }
 
 void GeneratorFuelCellStackCooler::resetNominalStackTemperature() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetNominalStackTemperature();
 }
 
-void GeneratorFuelCellStackCooler::setActualStackTemperature(double actualStackTemperature) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setActualStackTemperature(actualStackTemperature);
+bool GeneratorFuelCellStackCooler::setActualStackTemperature(double actualStackTemperature) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setActualStackTemperature(actualStackTemperature);
 }
 
 void GeneratorFuelCellStackCooler::resetActualStackTemperature() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetActualStackTemperature();
 }
 
-void GeneratorFuelCellStackCooler::setCoefficientr0(double coefficientr0) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setCoefficientr0(coefficientr0);
+bool GeneratorFuelCellStackCooler::setCoefficientr0(double coefficientr0) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setCoefficientr0(coefficientr0);
 }
 
 void GeneratorFuelCellStackCooler::resetCoefficientr0() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetCoefficientr0();
 }
 
-void GeneratorFuelCellStackCooler::setCoefficientr1(double coefficientr1) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setCoefficientr1(coefficientr1);
+bool GeneratorFuelCellStackCooler::setCoefficientr1(double coefficientr1) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setCoefficientr1(coefficientr1);
 }
 
 void GeneratorFuelCellStackCooler::resetCoefficientr1() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetCoefficientr1();
 }
 
-void GeneratorFuelCellStackCooler::setCoefficientr2(double coefficientr2) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setCoefficientr2(coefficientr2);
+bool GeneratorFuelCellStackCooler::setCoefficientr2(double coefficientr2) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setCoefficientr2(coefficientr2);
 }
 
 void GeneratorFuelCellStackCooler::resetCoefficientr2() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetCoefficientr2();
 }
 
-void GeneratorFuelCellStackCooler::setCoefficientr3(double coefficientr3) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setCoefficientr3(coefficientr3);
+bool GeneratorFuelCellStackCooler::setCoefficientr3(double coefficientr3) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setCoefficientr3(coefficientr3);
 }
 
 void GeneratorFuelCellStackCooler::resetCoefficientr3() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetCoefficientr3();
 }
 
-void GeneratorFuelCellStackCooler::setStackCoolantFlowRate(double stackCoolantFlowRate) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCoolantFlowRate(stackCoolantFlowRate);
+bool GeneratorFuelCellStackCooler::setStackCoolantFlowRate(double stackCoolantFlowRate) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCoolantFlowRate(stackCoolantFlowRate);
 }
 
 void GeneratorFuelCellStackCooler::resetStackCoolantFlowRate() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetStackCoolantFlowRate();
 }
 
-void GeneratorFuelCellStackCooler::setStackCoolerUFactorTimesAreaValue(double stackCoolerUFactorTimesAreaValue) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCoolerUFactorTimesAreaValue(stackCoolerUFactorTimesAreaValue);
+bool GeneratorFuelCellStackCooler::setStackCoolerUFactorTimesAreaValue(double stackCoolerUFactorTimesAreaValue) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCoolerUFactorTimesAreaValue(stackCoolerUFactorTimesAreaValue);
 }
 
 void GeneratorFuelCellStackCooler::resetStackCoolerUFactorTimesAreaValue() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetStackCoolerUFactorTimesAreaValue();
 }
 
-void GeneratorFuelCellStackCooler::setFscogenAdjustmentFactor(double fscogenAdjustmentFactor) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setFscogenAdjustmentFactor(fscogenAdjustmentFactor);
+bool GeneratorFuelCellStackCooler::setFscogenAdjustmentFactor(double fscogenAdjustmentFactor) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setFscogenAdjustmentFactor(fscogenAdjustmentFactor);
 }
 
 void GeneratorFuelCellStackCooler::resetFscogenAdjustmentFactor() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetFscogenAdjustmentFactor();
 }
 
-void GeneratorFuelCellStackCooler::setStackCogenerationExchangerArea(double stackCogenerationExchangerArea) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCogenerationExchangerArea(stackCogenerationExchangerArea);
+bool GeneratorFuelCellStackCooler::setStackCogenerationExchangerArea(double stackCogenerationExchangerArea) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCogenerationExchangerArea(stackCogenerationExchangerArea);
 }
 
 void GeneratorFuelCellStackCooler::resetStackCogenerationExchangerArea() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetStackCogenerationExchangerArea();
 }
 
-void GeneratorFuelCellStackCooler::setStackCogenerationExchangerNominalFlowRate(double stackCogenerationExchangerNominalFlowRate) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCogenerationExchangerNominalFlowRate(stackCogenerationExchangerNominalFlowRate);
+bool GeneratorFuelCellStackCooler::setStackCogenerationExchangerNominalFlowRate(double stackCogenerationExchangerNominalFlowRate) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCogenerationExchangerNominalFlowRate(stackCogenerationExchangerNominalFlowRate);
 }
 
 void GeneratorFuelCellStackCooler::resetStackCogenerationExchangerNominalFlowRate() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetStackCogenerationExchangerNominalFlowRate();
 }
 
-void GeneratorFuelCellStackCooler::setStackCogenerationExchangerNominalHeatTransferCoefficient(double stackCogenerationExchangerNominalHeatTransferCoefficient) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCogenerationExchangerNominalHeatTransferCoefficient(stackCogenerationExchangerNominalHeatTransferCoefficient);
+bool GeneratorFuelCellStackCooler::setStackCogenerationExchangerNominalHeatTransferCoefficient(double stackCogenerationExchangerNominalHeatTransferCoefficient) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCogenerationExchangerNominalHeatTransferCoefficient(stackCogenerationExchangerNominalHeatTransferCoefficient);
 }
 
 void GeneratorFuelCellStackCooler::resetStackCogenerationExchangerNominalHeatTransferCoefficient() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetStackCogenerationExchangerNominalHeatTransferCoefficient();
 }
 
-void GeneratorFuelCellStackCooler::setStackCogenerationExchangerNominalHeatTransferCoefficientExponent(double stackCogenerationExchangerNominalHeatTransferCoefficientExponent) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCogenerationExchangerNominalHeatTransferCoefficientExponent(stackCogenerationExchangerNominalHeatTransferCoefficientExponent);
+bool GeneratorFuelCellStackCooler::setStackCogenerationExchangerNominalHeatTransferCoefficientExponent(double stackCogenerationExchangerNominalHeatTransferCoefficientExponent) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCogenerationExchangerNominalHeatTransferCoefficientExponent(stackCogenerationExchangerNominalHeatTransferCoefficientExponent);
 }
 
 void GeneratorFuelCellStackCooler::resetStackCogenerationExchangerNominalHeatTransferCoefficientExponent() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetStackCogenerationExchangerNominalHeatTransferCoefficientExponent();
 }
 
-void GeneratorFuelCellStackCooler::setStackCoolerPumpPower(double stackCoolerPumpPower) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCoolerPumpPower(stackCoolerPumpPower);
+bool GeneratorFuelCellStackCooler::setStackCoolerPumpPower(double stackCoolerPumpPower) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackCoolerPumpPower(stackCoolerPumpPower);
 }
 
 void GeneratorFuelCellStackCooler::resetStackCoolerPumpPower() {
@@ -689,24 +706,24 @@ void GeneratorFuelCellStackCooler::resetStackCoolerPumpHeatLossFraction() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetStackCoolerPumpHeatLossFraction();
 }
 
-void GeneratorFuelCellStackCooler::setStackAirCoolerFanCoefficientf0(double stackAirCoolerFanCoefficientf0) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackAirCoolerFanCoefficientf0(stackAirCoolerFanCoefficientf0);
+bool GeneratorFuelCellStackCooler::setStackAirCoolerFanCoefficientf0(double stackAirCoolerFanCoefficientf0) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackAirCoolerFanCoefficientf0(stackAirCoolerFanCoefficientf0);
 }
 
 void GeneratorFuelCellStackCooler::resetStackAirCoolerFanCoefficientf0() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetStackAirCoolerFanCoefficientf0();
 }
 
-void GeneratorFuelCellStackCooler::setStackAirCoolerFanCoefficientf1(double stackAirCoolerFanCoefficientf1) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackAirCoolerFanCoefficientf1(stackAirCoolerFanCoefficientf1);
+bool GeneratorFuelCellStackCooler::setStackAirCoolerFanCoefficientf1(double stackAirCoolerFanCoefficientf1) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackAirCoolerFanCoefficientf1(stackAirCoolerFanCoefficientf1);
 }
 
 void GeneratorFuelCellStackCooler::resetStackAirCoolerFanCoefficientf1() {
   getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->resetStackAirCoolerFanCoefficientf1();
 }
 
-void GeneratorFuelCellStackCooler::setStackAirCoolerFanCoefficientf2(double stackAirCoolerFanCoefficientf2) {
-  getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackAirCoolerFanCoefficientf2(stackAirCoolerFanCoefficientf2);
+bool GeneratorFuelCellStackCooler::setStackAirCoolerFanCoefficientf2(double stackAirCoolerFanCoefficientf2) {
+  return getImpl<detail::GeneratorFuelCellStackCooler_Impl>()->setStackAirCoolerFanCoefficientf2(stackAirCoolerFanCoefficientf2);
 }
 
 void GeneratorFuelCellStackCooler::resetStackAirCoolerFanCoefficientf2() {
@@ -725,4 +742,3 @@ GeneratorFuelCellStackCooler::GeneratorFuelCellStackCooler(std::shared_ptr<detai
 
 } // model
 } // openstudio
-

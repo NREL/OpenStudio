@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -32,6 +32,7 @@
 
 #include "../FloorplanJSForwardTranslator.hpp"
 #include "../ThreeJSReverseTranslator.hpp"
+#include "../ModelMerger.hpp"
 
 #include "../Model.hpp"
 #include "../Space.hpp"
@@ -48,6 +49,8 @@
 #include "../BuildingUnit_Impl.hpp"
 #include "../DefaultConstructionSet.hpp"
 #include "../DefaultConstructionSet_Impl.hpp"
+#include "../RenderingColor.hpp"
+#include "../RenderingColor_Impl.hpp"
 
 #include "../../utilities/geometry/FloorplanJS.hpp"
 #include "../../utilities/geometry/ThreeJS.hpp"
@@ -80,7 +83,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value.isMember("space_types"));
   ASSERT_TRUE(value["space_types"].isArray());
   EXPECT_EQ(0u, value["space_types"].size());
-  
+
   ASSERT_TRUE(value.isMember("thermal_zones"));
   ASSERT_TRUE(value["thermal_zones"].isArray());
   EXPECT_EQ(0u, value["thermal_zones"].size());
@@ -88,7 +91,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value.isMember("building_units"));
   ASSERT_TRUE(value["building_units"].isArray());
   EXPECT_EQ(0u, value["building_units"].size());
-  
+
   ASSERT_TRUE(value.isMember("construction_sets"));
   ASSERT_TRUE(value["construction_sets"].isArray());
   EXPECT_EQ(0u, value["construction_sets"].size());
@@ -184,7 +187,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value["building_units"].isArray());
   ASSERT_EQ(1u, value["building_units"].size());
   EXPECT_EQ("BuildingUnit 1", value["building_units"][0].get("name", "").asString());
-  
+
   ASSERT_TRUE(value.isMember("construction_sets"));
   ASSERT_TRUE(value["construction_sets"].isArray());
   ASSERT_EQ(1u, value["construction_sets"].size());
@@ -250,7 +253,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value["building_units"].isArray());
   ASSERT_EQ(1u, value["building_units"].size());
   EXPECT_EQ("BuildingUnit 1", value["building_units"][0].get("name", "").asString());
-  
+
   ASSERT_TRUE(value.isMember("construction_sets"));
   ASSERT_TRUE(value["construction_sets"].isArray());
   ASSERT_EQ(1u, value["construction_sets"].size());
@@ -305,7 +308,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value.isMember("space_types"));
   ASSERT_TRUE(value["space_types"].isArray());
   EXPECT_EQ(0u, value["space_types"].size());
-  
+
   ASSERT_TRUE(value.isMember("thermal_zones"));
   ASSERT_TRUE(value["thermal_zones"].isArray());
   EXPECT_EQ(0u, value["thermal_zones"].size());
@@ -313,8 +316,95 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   ASSERT_TRUE(value.isMember("building_units"));
   ASSERT_TRUE(value["building_units"].isArray());
   EXPECT_EQ(0u, value["building_units"].size());
-  
+
   ASSERT_TRUE(value.isMember("construction_sets"));
   ASSERT_TRUE(value["construction_sets"].isArray());
   EXPECT_EQ(0u, value["construction_sets"].size());
+}
+
+
+TEST_F(ModelFixture, FloorplanJSForwardTranslator_Colors) {
+
+  Model model;
+
+  RenderingColor red(model);
+  red.setRenderingRedValue(255);
+  red.setRenderingGreenValue(0);
+  red.setRenderingBlueValue(0);
+
+  RenderingColor blue(model);
+  blue.setRenderingRedValue(0);
+  blue.setRenderingGreenValue(0);
+  blue.setRenderingBlueValue(255);
+
+  SpaceType redType(model);
+  redType.setName("Red Type");
+  redType.setRenderingColor(red);
+
+  SpaceType blueType(model);
+  blueType.setName("Blue Type");
+  blueType.setRenderingColor(blue);
+
+  // import current model content as library
+  FloorplanJS floorplan;
+  model::FloorplanJSForwardTranslator ft;
+  floorplan = ft.updateFloorplanJS(floorplan, model, false);
+
+  Json::Reader reader;
+  Json::Value value;
+
+  ASSERT_TRUE(reader.parse(floorplan.toJSON(), value));
+  ASSERT_TRUE(value.isMember("space_types"));
+  ASSERT_TRUE(value["space_types"].isArray());
+  ASSERT_EQ(2u, value["space_types"].size());
+  EXPECT_EQ("1", value["space_types"][0].get("id", "").asString());
+  EXPECT_EQ("Red Type", value["space_types"][0].get("name", "").asString());
+  EXPECT_EQ("#FF0000", value["space_types"][0].get("color", "").asString());
+  EXPECT_EQ(toString(redType.handle()), value["space_types"][0].get("handle", "").asString());
+  EXPECT_EQ("2", value["space_types"][1].get("id", "").asString());
+  EXPECT_EQ("Blue Type", value["space_types"][1].get("name", "").asString());
+  EXPECT_EQ("#0000FF", value["space_types"][1].get("color", "").asString());
+  EXPECT_EQ(toString(blueType.handle()), value["space_types"][1].get("handle", "").asString());
+
+  Json::Value greenSpaceTypeValue(Json::objectValue);
+  greenSpaceTypeValue["id"] = "3";
+  greenSpaceTypeValue["name"] = "Green Type";
+  greenSpaceTypeValue["color"] = "#00FF00";
+  value["space_types"].append(greenSpaceTypeValue);
+
+  Json::FastWriter writer;
+  FloorplanJS floorplan2(writer.write(value));
+
+  ThreeScene scene2 = floorplan2.toThreeScene(true);
+
+  model::ThreeJSReverseTranslator rt;
+  boost::optional<model::Model> model2 = rt.modelFromThreeJS(scene2);
+  std::map<UUID, UUID> handleMapping = rt.handleMapping();
+
+  ASSERT_TRUE(model2);
+  EXPECT_EQ(3u, model2->getConcreteModelObjects<SpaceType>().size());
+  ASSERT_TRUE(model2->getConcreteModelObjectByName<SpaceType>("Red Type"));
+  ASSERT_TRUE(model2->getConcreteModelObjectByName<SpaceType>("Red Type")->renderingColor());
+  EXPECT_EQ("#FF0000", model2->getConcreteModelObjectByName<SpaceType>("Red Type")->renderingColor()->colorString());
+  ASSERT_TRUE(model2->getConcreteModelObjectByName<SpaceType>("Blue Type"));
+  ASSERT_TRUE(model2->getConcreteModelObjectByName<SpaceType>("Blue Type")->renderingColor());
+  EXPECT_EQ("#0000FF", model2->getConcreteModelObjectByName<SpaceType>("Blue Type")->renderingColor()->colorString());
+  ASSERT_TRUE(model2->getConcreteModelObjectByName<SpaceType>("Green Type"));
+  ASSERT_TRUE(model2->getConcreteModelObjectByName<SpaceType>("Green Type")->renderingColor());
+  EXPECT_EQ("#00FF00", model2->getConcreteModelObjectByName<SpaceType>("Green Type")->renderingColor()->colorString());
+
+  model::ModelMerger mm;
+  mm.mergeModels(model, *model2, handleMapping);
+
+  EXPECT_EQ(3u, model.getConcreteModelObjects<SpaceType>().size());
+  ASSERT_TRUE(model.getConcreteModelObjectByName<SpaceType>("Red Type"));
+  ASSERT_TRUE(model.getConcreteModelObjectByName<SpaceType>("Red Type")->renderingColor());
+  EXPECT_EQ("#FF0000", model.getConcreteModelObjectByName<SpaceType>("Red Type")->renderingColor()->colorString());
+  ASSERT_TRUE(model.getConcreteModelObjectByName<SpaceType>("Blue Type"));
+  ASSERT_TRUE(model.getConcreteModelObjectByName<SpaceType>("Blue Type")->renderingColor());
+  EXPECT_EQ("#0000FF", model.getConcreteModelObjectByName<SpaceType>("Blue Type")->renderingColor()->colorString());
+  ASSERT_TRUE(model.getConcreteModelObjectByName<SpaceType>("Green Type"));
+  ASSERT_TRUE(model.getConcreteModelObjectByName<SpaceType>("Green Type")->renderingColor());
+  EXPECT_EQ("#00FF00", model.getConcreteModelObjectByName<SpaceType>("Green Type")->renderingColor()->colorString());
+
 }

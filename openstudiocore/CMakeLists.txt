@@ -9,7 +9,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 
-project(OpenStudio VERSION 2.3.0)
+project(OpenStudio VERSION 2.4.2)
 
 include(ExternalProject)
 include(CPackComponent)
@@ -83,7 +83,7 @@ configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStu
 if(APPLE)
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPENSTUDIO_VERSION}")
   set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION_BUILD}")
-  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2017 National Renewable Energy Laboratory")
+  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2018 National Renewable Energy Laboratory")
 endif()
 
 # compiler id for about boxes
@@ -572,8 +572,11 @@ endif()
 
 # openstudio gems
 
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20170627.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "537c1e958a24ac55f4e2ed5e1d943553")
+# to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
+# next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
+# upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20180221.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "7018b302a6530702cffde96aedd74870")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -589,6 +592,8 @@ if( NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
 
   file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/openstudio-gems")
   execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+
+  file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/src/cli/embedded_files")
 endif()
 
 # OpenSSL / libssh support
@@ -643,11 +648,11 @@ option(BUILD_DVIEW "Build DView" OFF)
 if( BUILD_DVIEW )
   set(DVIEW_INSTALL_DIR "" CACHE PATH "Path to DView Install")
   mark_as_advanced(DVIEW_INSTALL_DIR)
-  
+
   if(NOT EXISTS ${DVIEW_INSTALL_DIR})
     if( WIN32 )
       set(DVIEW_ZIP_FILENAME "DView-windows.zip")
-      set(DVIEW_ZIP_EXPECTED_MD5 "2964786830bbd28cd3e186b4da001946")
+      set(DVIEW_ZIP_EXPECTED_MD5 "da1e0b0a564126118bfc510606470ee3")
     elseif( APPLE )
       set(DVIEW_ZIP_FILENAME "DView-osx.tar.gz")
       set(DVIEW_ZIP_EXPECTED_MD5 "24d225aa500b344816c4f8239641d5aa")
@@ -655,29 +660,32 @@ if( BUILD_DVIEW )
       set(DVIEW_ZIP_FILENAME "DView-linux.tar.gz")
       set(DVIEW_ZIP_EXPECTED_MD5 "8E100CE8E3A220C929A147D1DFA72662")
     endif()
-  endif()
 
-  set(DVIEW_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
-  if(EXISTS "${DVIEW_ZIP_LOCAL_PATH}")
-    file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
-  endif()
+    set(DVIEW_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
+    if(EXISTS "${DVIEW_ZIP_LOCAL_PATH}")
+      file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
+    endif()
 
-  if( NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${DVIEW_ZIP_FILENAME}"
-      ${DVIEW_ZIP_LOCAL_PATH}
-      INACTIVITY_TIMEOUT 120
-      SHOW_PROGRESS
-      EXPECTED_MD5 ${DVIEW_ZIP_EXPECTED_MD5})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${DVIEW_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    if( NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${DVIEW_ZIP_FILENAME}"
+        ${DVIEW_ZIP_LOCAL_PATH}
+        INACTIVITY_TIMEOUT 120
+        SHOW_PROGRESS
+        EXPECTED_MD5 ${DVIEW_ZIP_EXPECTED_MD5})
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${DVIEW_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    endif()
+
+    set(DVIEW_INSTALL_DIR "${CMAKE_BINARY_DIR}/DView-install")
   endif()
 
   if( WIN32 )
-    install(PROGRAMS "${CMAKE_BINARY_DIR}/DView-install/DView.exe" DESTINATION ./bin COMPONENT "DView")
+    install(PROGRAMS "${DVIEW_INSTALL_DIR}/DView.exe" DESTINATION ./bin COMPONENT "DView")
   elseif( APPLE )
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/DView-install/DView.app" DESTINATION . USE_SOURCE_PERMISSIONS COMPONENT "DView")
+    install(DIRECTORY "${DVIEW_INSTALL_DIR}/DView.app" DESTINATION . USE_SOURCE_PERMISSIONS COMPONENT "DView")
   else()
-    install(PROGRAMS "${CMAKE_BINARY_DIR}/DView-install/DView" DESTINATION ./bin COMPONENT "DView")
+    install(PROGRAMS "${DVIEW_INSTALL_DIR}/DView" DESTINATION ./bin COMPONENT "DView")
   endif()
+
 endif()
 
 # SWIG
@@ -764,6 +772,7 @@ endif()
 
 if(BUILD_PYTHON_BINDINGS)
   # need python
+  # TODO: add support for 3.x
   find_package(PythonInterp 2.7 REQUIRED)
   find_package(PythonLibs 2.7 REQUIRED)
   include_directories(SYSTEM ${PYTHON_INCLUDE_DIRS})
@@ -967,7 +976,7 @@ if(BUILD_OS_APP)
   find_file(qweb_resources NAMES qtwebengine_resources.pak PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
   find_file(qweb_resources_100 NAMES qtwebengine_resources_100p.pak PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
   find_file(qweb_resources_200 NAMES qtwebengine_resources_200p.pak PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
-  
+
   list(APPEND QT_WEB_LIBS Qt5::Core)
   list(APPEND QT_WEB_LIBS Qt5::Gui)
   list(APPEND QT_WEB_LIBS Qt5::WebEngine)
@@ -1410,6 +1419,9 @@ if(BUILD_DOCUMENTATION)
   endforeach()
 
   # Set up dependencies after all targets have been created
+  add_dependencies(openstudio_utilities
+    CreateEmbeddedSource
+  )
   add_dependencies(openstudio_utilities_doc
     openstudio_utilities_idd_doc
   )
@@ -1512,7 +1524,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_3_0_20170930.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_4_0_20171229.pdf" DESTINATION .)
 
 ###############################################################################
 
@@ -1576,11 +1588,11 @@ elseif( WIN32 )
   file(GLOB ENERGYPLUS_UCRT_FILES "${ENERGYPLUS_DIR}/ucrt*.dll")
   foreach(ucrt_file IN LISTS ENERGYPLUS_UCRT_FILES)
     install(PROGRAMS "${ucrt_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  endforeach()    
+  endforeach()
   file(GLOB ENERGYPLUS_MSAPI_FILES "${ENERGYPLUS_DIR}/api-ms*.dll")
   foreach(msapi_file IN LISTS ENERGYPLUS_MSAPI_FILES)
     install(PROGRAMS "${msapi_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  endforeach()  
+  endforeach()
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
 else()

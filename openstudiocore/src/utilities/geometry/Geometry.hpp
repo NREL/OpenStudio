@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -62,8 +62,11 @@ namespace openstudio{
   /// reorder points to upper-left-corner convention
   UTILITIES_API std::vector<Point3d> reorderULC(const std::vector<Point3d>& points);
 
-  /// removes collinear points, tolerance is for length of cross product after normalizing each line segment
+  /// removes collinear points
   UTILITIES_API std::vector<Point3d> removeCollinear(const std::vector<Point3d>& points, double tol = 0.001);
+
+  /// removes collinear points, tolerance is for length of cross product after normalizing each line segment
+  UTILITIES_API std::vector<Point3d> removeCollinearLegacy(const std::vector<Point3d>& points, double tol = 0.001);
 
   /// return distance between two points
   UTILITIES_API double getDistance(const Point3d& point1, const Point3d& point2);
@@ -82,10 +85,6 @@ namespace openstudio{
 
   /// return angle (in radians) between two vectors
   UTILITIES_API double getAngle(const Vector3d& vector1, const Vector3d& vector2);
-  
-  /// compute distance in meters between two points on the Earth's surface
-  /// lat and lon are specified in degrees
-  UTILITIES_API double getDistanceLatLon(double lat1, double lon1, double lat2, double lon2);
 
   /// check if two vectors of points are equal (within tolerance) irregardless of initial ordering.
   UTILITIES_API bool circularEqual(const std::vector<Point3d>& points1, const std::vector<Point3d>& points2, double tol = 0.001);
@@ -95,7 +94,7 @@ namespace openstudio{
   UTILITIES_API Point3d getCombinedPoint(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol = 0.001);
 
   /// compute triangulation of vertices, holes are removed in the triangulation
-  /// requires that vertices and holes are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed) 
+  /// requires that vertices and holes are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed)
   UTILITIES_API std::vector<std::vector<Point3d> > computeTriangulation(const std::vector<Point3d>& vertices, const std::vector<std::vector<Point3d> >& holes, double tol = 0.001);
 
   /// move all vertices towards point by distance, pass negative distance to move away from point
@@ -105,6 +104,13 @@ namespace openstudio{
   /// reverse order of vertices
   UTILITIES_API std::vector<Point3d> reverse(const std::vector<Point3d>& vertices);
 
+  /// Sets view and daylighting window, overhang and light shelf vertices by reference.  Returns true if successful, false otherwise.
+  UTILITIES_API bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio,
+                                                        double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
+                                                        double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor,
+                                                        const std::vector<Point3d>& surfaceVertices, std::vector<Point3d>& viewVertices,
+                                                        std::vector<Point3d>& daylightingVertices, std::vector<Point3d>& exteriorShadingVertices,
+                                                        std::vector<Point3d>& interiorShelfVertices);
 
 } // openstudio
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,18 +42,18 @@ namespace detail {
   class ClimateZones_Impl;
 } // detail
 
-/** ClimateZone is a ModelExtensibleGroup that represents a single climate zone definition 
+/** ClimateZone is a ModelExtensibleGroup that represents a single climate zone definition
  *  contained in the unique ClimateZones ModelObject. */
 class MODEL_API ClimateZone : public ModelExtensibleGroup {
  public:
   /** @name Getters */
   //@{
 
-  /** The institution that defines this climate zone designation. Typically this is 
+  /** The institution that defines this climate zone designation. Typically this is
    *  "ASHRAE" or "CEC". */
   std::string institution() const;
 
-  /** The name of the document that defines this climate zone designation. "Standard 169", 
+  /** The name of the document that defines this climate zone designation. "Standard 169",
    *  etc. */
   std::string documentName() const;
 
@@ -62,7 +62,7 @@ class MODEL_API ClimateZone : public ModelExtensibleGroup {
   unsigned year() const;
 
   /** The actual climate zone designation. "4C", "15", etc. */
-  std::string value() const; 
+  std::string value() const;
 
   //@}
   /** @name Setters */
@@ -73,8 +73,8 @@ class MODEL_API ClimateZone : public ModelExtensibleGroup {
   bool setType(const std::string& institution,const std::string& documentName, unsigned year);
 
   bool setTypeAndValue(const std::string& institution,
-                       const std::string& documentName, 
-                       unsigned year, 
+                       const std::string& documentName,
+                       unsigned year,
                        const std::string& value);
   //@}
  protected:
@@ -105,7 +105,7 @@ typedef std::vector<ClimateZone> ClimateZoneVector;
  *  standards, multiple climate zones may be specified for a given model.
  *
  *  \todo Provide methods for setting the ClimateZones for a model based on the data in Site and/or
- *  WeatherFile, and for checking whether the ClimateZones object is consistent with the geospatial 
+ *  WeatherFile, and for checking whether the ClimateZones object is consistent with the geospatial
  *  location(s) called out in Site and/or WeatherFile. */
 class MODEL_API ClimateZones : public ModelObject {
  public:
@@ -153,9 +153,9 @@ class MODEL_API ClimateZones : public ModelObject {
   /** Return the ClimateZone definition at extensible group index. */
   ClimateZone getClimateZone(unsigned index) const;
 
-  // ETH@20110615 Multiple definitions for a particular institution, year combination is not 
-  // handled well. Either return a vector or disallow duplicates at this level. Will have 
-  // implications for some setters. 
+  // ETH@20110615 Multiple definitions for a particular institution, year combination is not
+  // handled well. Either return a vector or disallow duplicates at this level. Will have
+  // implications for some setters.
 
   /** Return the ClimateZone definition for institution and year. The return value will be .empty()
    *  if no such ClimateZone is found. */
@@ -164,15 +164,15 @@ class MODEL_API ClimateZones : public ModelObject {
   /** Return the ClimateZone defintions for institution (e.g. "ASHRAE" or "CEC"). */
   std::vector<ClimateZone> getClimateZones(const std::string& institution) const;
 
-  /** Return the active ClimateZone definition. If no ClimateZone is designated as active, the 
-   *  return value will be .empty(). The active climate zone is the one that will be accessed 
-   *  by the standardsinterface::OpenStudioStandardsInterface, perhaps in the course of applying a 
+  /** Return the active ClimateZone definition. If no ClimateZone is designated as active, the
+   *  return value will be .empty(). The active climate zone is the one that will be accessed
+   *  by the standardsinterface::OpenStudioStandardsInterface, perhaps in the course of applying a
    *  ruleset::StandardsRuleset using a rulesengine::OpenStudioRulesEngine. */
   //ClimateZone activeClimateZone() const;
 
-  /** Return the active ClimateZone value. If no ClimateZone is designated as active, the return 
-   *  value will be .empty(). The active climate zone is the one that will be accessed by the 
-   *  standardsinterface::OpenStudioStandardsInterface, perhaps in the course of applying a 
+  /** Return the active ClimateZone value. If no ClimateZone is designated as active, the return
+   *  value will be .empty(). The active climate zone is the one that will be accessed by the
+   *  standardsinterface::OpenStudioStandardsInterface, perhaps in the course of applying a
    *  ruleset::StandardsRuleset using a rulesengine::OpenStudioRulesEngine. */
   //std::string activeClimateZoneValue() const;
 
@@ -183,18 +183,18 @@ class MODEL_API ClimateZones : public ModelObject {
   /** Clear all ClimateZone definitions. */
   bool clear();
 
-  /** Sets the active ClimateZone to be one defined by institution. If there are no such 
+  /** Sets the active ClimateZone to be one defined by institution. If there are no such
    *  definitions, this method is equivalent to appendClimateZone(institution). If there are
-   *  multiple climate zones associated with institution, the first one is set as active and 
+   *  multiple climate zones associated with institution, the first one is set as active and
    *  a warning is logged. The return value of this method should never be .empty(). */
   //ClimateZone setActiveClimateZone(const std::string& institution);
 
-  /** Sets the active ClimateZone to be one defined by institution and year. If there are no such 
-   *  definitions, this method is equivalent to appendClimateZone(institution,year). The return 
+  /** Sets the active ClimateZone to be one defined by institution and year. If there are no such
+   *  definitions, this method is equivalent to appendClimateZone(institution,year). The return
    *  value of this method should never be .empty(). */
   //ClimateZone setActiveClimateZone(const std::string& institution,unsigned year);
 
-  /** Sets the ClimateZone definition for institution to value and returns the modified (or 
+  /** Sets the ClimateZone definition for institution to value and returns the modified (or
    *  created) ClimateZone. If there are no definitions for institution, this method is equivalent
    *  to appendClimateZone(institution,value). If there are multiple definitions for institution,
    *  the return value is .empty() and a warning is logged. */
@@ -202,14 +202,14 @@ class MODEL_API ClimateZones : public ModelObject {
                              const std::string& value);
 
 
-  /** Sets the ClimateZone definition for institution, year to value and returns the modified (or 
+  /** Sets the ClimateZone definition for institution, year to value and returns the modified (or
    *  created) ClimateZone. If there are no definitions for the given combination of institution
    *  and year, this method is equivalent to appendClimateZone(institution,year,value). */
   ClimateZone setClimateZone(const std::string& institution,
-                             unsigned year, 
+                             unsigned year,
                              const std::string& value);
 
-  /** Creates and returns a new climate zone definition for institution. Attempts to provide a 
+  /** Creates and returns a new climate zone definition for institution. Attempts to provide a
    *  default document name and year, leaves the value blank. */
   ClimateZone appendClimateZone(const std::string& institution);
 
@@ -218,16 +218,16 @@ class MODEL_API ClimateZones : public ModelObject {
   ClimateZone appendClimateZone(const std::string& institution,
                                 const std::string& value);
 
-  /** Creates and returns a new climate zone definition. Attempts to provide a default document 
+  /** Creates and returns a new climate zone definition. Attempts to provide a default document
    *  name. */
   ClimateZone appendClimateZone(const std::string& institution,
-                                unsigned year, 
+                                unsigned year,
                                 const std::string& value);
 
   /** Creates and returns a new climate zone definition. */
-  ClimateZone appendClimateZone(const std::string& institution, 
-                                const std::string documentName, 
-                                unsigned year, 
+  ClimateZone appendClimateZone(const std::string& institution,
+                                const std::string documentName,
+                                unsigned year,
                                 const std::string& value);
 
   //@}
@@ -238,7 +238,7 @@ class MODEL_API ClimateZones : public ModelObject {
   unsigned numClimateZones() const;
 
   //@}
- 
+
  protected:
   /// @cond
   typedef detail::ClimateZones_Impl ImplType;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,7 +41,7 @@ class Curve;
 namespace detail {
 
   /** FanOnOff_Impl is a StraightComponent_Impl that is the implementation class for FanOnOff.*/
-  class MODEL_API FanOnOff_Impl : public StraightComponent_Impl 
+  class MODEL_API FanOnOff_Impl : public StraightComponent_Impl
   {
    public:
     /** @name Constructors and Destructors */
@@ -69,7 +69,7 @@ namespace detail {
     virtual std::vector<openstudio::IdfObject> remove() override;
 
     virtual ModelObject clone(Model model) const override;
-    
+
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
@@ -108,7 +108,7 @@ namespace detail {
 
     double pressureRise() const;
 
-    void setPressureRise(double pressureRise);
+    bool setPressureRise(double pressureRise);
 
     // Field Maximum Flow Rate
 
@@ -146,7 +146,7 @@ namespace detail {
 
     bool isEndUseSubcategoryDefaulted() const;
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
@@ -160,7 +160,21 @@ namespace detail {
     Curve fanEfficiencyRatioFunctionofSpeedRatioCurve() const;
     bool setFanEfficiencyRatioFunctionofSpeedRatioCurve( const Curve& curve );
 
+  boost::optional<double> autosizedMaximumFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
+
+    AirflowNetworkFan getAirflowNetworkFan();
+    boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
+
    //protected:
    private:
     REGISTER_LOGGER("openstudio.model.FanOnOff");
@@ -181,5 +195,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_FANONOFF_IMPL_HPP
-
+#endif // MODEL_FANONOFF_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -66,9 +66,9 @@ OptionalString UtilityCost_Ratchet_Impl::tariffName() const
   return getString(OS_UtilityCost_RatchetFields::TariffName);
 }
 
-void UtilityCost_Ratchet_Impl::setTariffName(const std::string& str)
+bool UtilityCost_Ratchet_Impl::setTariffName(const std::string& str)
 {
-  setString(OS_UtilityCost_RatchetFields::TariffName,str);
+  return setString(OS_UtilityCost_RatchetFields::TariffName,str);;
 }
 
 OptionalString UtilityCost_Ratchet_Impl::baselineSourceVariable() const
@@ -76,9 +76,9 @@ OptionalString UtilityCost_Ratchet_Impl::baselineSourceVariable() const
   return getString(OS_UtilityCost_RatchetFields::BaselineSourceVariable);
 }
 
-void UtilityCost_Ratchet_Impl::setBaselineSourceVariable(const std::string& str)
+bool UtilityCost_Ratchet_Impl::setBaselineSourceVariable(const std::string& str)
 {
-  setString(OS_UtilityCost_RatchetFields::BaselineSourceVariable,str);
+  return setString(OS_UtilityCost_RatchetFields::BaselineSourceVariable,str);;
 }
 
 OptionalString UtilityCost_Ratchet_Impl::adjustmentSourceVariable() const
@@ -86,9 +86,9 @@ OptionalString UtilityCost_Ratchet_Impl::adjustmentSourceVariable() const
   return getString(OS_UtilityCost_RatchetFields::AdjustmentSourceVariable);
 }
 
-void UtilityCost_Ratchet_Impl::setAdjustmentSourceVariable(const std::string& str)
+bool UtilityCost_Ratchet_Impl::setAdjustmentSourceVariable(const std::string& str)
 {
-  setString(OS_UtilityCost_RatchetFields::AdjustmentSourceVariable,str);
+  return setString(OS_UtilityCost_RatchetFields::AdjustmentSourceVariable,str);;
 }
 
 OptionalString UtilityCost_Ratchet_Impl::seasonFrom() const
@@ -96,9 +96,9 @@ OptionalString UtilityCost_Ratchet_Impl::seasonFrom() const
   return getString(OS_UtilityCost_RatchetFields::SeasonFrom);
 }
 
-void UtilityCost_Ratchet_Impl::setSeasonFrom(const std::string& str)
+bool UtilityCost_Ratchet_Impl::setSeasonFrom(const std::string& str)
 {
-  setString(OS_UtilityCost_RatchetFields::SeasonFrom,str);
+  return setString(OS_UtilityCost_RatchetFields::SeasonFrom,str);;
 }
 
 OptionalString UtilityCost_Ratchet_Impl::seasonTo() const
@@ -106,9 +106,9 @@ OptionalString UtilityCost_Ratchet_Impl::seasonTo() const
   return getString(OS_UtilityCost_RatchetFields::SeasonTo);
 }
 
-void UtilityCost_Ratchet_Impl::setSeasonTo(const std::string& str)
+bool UtilityCost_Ratchet_Impl::setSeasonTo(const std::string& str)
 {
-  setString(OS_UtilityCost_RatchetFields::SeasonTo,str);
+  return setString(OS_UtilityCost_RatchetFields::SeasonTo,str);;
 }
 
 OptionalString UtilityCost_Ratchet_Impl::multiplierValueOrVariableName() const
@@ -116,9 +116,9 @@ OptionalString UtilityCost_Ratchet_Impl::multiplierValueOrVariableName() const
   return getString(OS_UtilityCost_RatchetFields::MultiplierValueorVariableName);
 }
 
-void UtilityCost_Ratchet_Impl::setMultiplierValueOrVariableName(const std::string& str)
+bool UtilityCost_Ratchet_Impl::setMultiplierValueOrVariableName(const std::string& str)
 {
-  setString(OS_UtilityCost_RatchetFields::MultiplierValueorVariableName,str);
+  return setString(OS_UtilityCost_RatchetFields::MultiplierValueorVariableName,str);;
 }
 
 OptionalString UtilityCost_Ratchet_Impl::offsetValueOrVariableName() const
@@ -126,9 +126,9 @@ OptionalString UtilityCost_Ratchet_Impl::offsetValueOrVariableName() const
   return getString(OS_UtilityCost_RatchetFields::OffsetValueorVariableName);
 }
 
-void UtilityCost_Ratchet_Impl::setOffsetValueOrVariableName(const std::string& str)
+bool UtilityCost_Ratchet_Impl::setOffsetValueOrVariableName(const std::string& str)
 {
-  setString(OS_UtilityCost_RatchetFields::OffsetValueorVariableName,str);
+  return setString(OS_UtilityCost_RatchetFields::OffsetValueorVariableName,str);;
 }
 
 // return the parent object in the hierarchy
@@ -186,9 +186,9 @@ OptionalString UtilityCost_Ratchet::tariffName() const
   return getImpl<detail::UtilityCost_Ratchet_Impl>()->tariffName();
 }
 
-void UtilityCost_Ratchet::setTariffName(const std::string& str)
+bool UtilityCost_Ratchet::setTariffName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Ratchet_Impl>()->setTariffName(str);
+  return getImpl<detail::UtilityCost_Ratchet_Impl>()->setTariffName(str);
 }
 
 OptionalString UtilityCost_Ratchet::baselineSourceVariable() const
@@ -196,9 +196,9 @@ OptionalString UtilityCost_Ratchet::baselineSourceVariable() const
   return getImpl<detail::UtilityCost_Ratchet_Impl>()->baselineSourceVariable();
 }
 
-void UtilityCost_Ratchet::setBaselineSourceVariable(const std::string& str)
+bool UtilityCost_Ratchet::setBaselineSourceVariable(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Ratchet_Impl>()->setBaselineSourceVariable(str);
+  return getImpl<detail::UtilityCost_Ratchet_Impl>()->setBaselineSourceVariable(str);
 }
 
 OptionalString UtilityCost_Ratchet::adjustmentSourceVariable() const
@@ -206,9 +206,9 @@ OptionalString UtilityCost_Ratchet::adjustmentSourceVariable() const
   return getImpl<detail::UtilityCost_Ratchet_Impl>()->adjustmentSourceVariable();
 }
 
-void UtilityCost_Ratchet::setAdjustmentSourceVariable(const std::string& str)
+bool UtilityCost_Ratchet::setAdjustmentSourceVariable(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Ratchet_Impl>()->setAdjustmentSourceVariable(str);
+  return getImpl<detail::UtilityCost_Ratchet_Impl>()->setAdjustmentSourceVariable(str);
 }
 
 OptionalString UtilityCost_Ratchet::seasonFrom() const
@@ -216,9 +216,9 @@ OptionalString UtilityCost_Ratchet::seasonFrom() const
   return getImpl<detail::UtilityCost_Ratchet_Impl>()->seasonFrom();
 }
 
-void UtilityCost_Ratchet::setSeasonFrom(const std::string& str)
+bool UtilityCost_Ratchet::setSeasonFrom(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Ratchet_Impl>()->setSeasonFrom(str);
+  return getImpl<detail::UtilityCost_Ratchet_Impl>()->setSeasonFrom(str);
 }
 
 OptionalString UtilityCost_Ratchet::seasonTo() const
@@ -226,9 +226,9 @@ OptionalString UtilityCost_Ratchet::seasonTo() const
   return getImpl<detail::UtilityCost_Ratchet_Impl>()->seasonTo();
 }
 
-void UtilityCost_Ratchet::setSeasonTo(const std::string& str)
+bool UtilityCost_Ratchet::setSeasonTo(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Ratchet_Impl>()->setSeasonTo(str);
+  return getImpl<detail::UtilityCost_Ratchet_Impl>()->setSeasonTo(str);
 }
 
 OptionalString UtilityCost_Ratchet::multiplierValueOrVariableName() const
@@ -236,9 +236,9 @@ OptionalString UtilityCost_Ratchet::multiplierValueOrVariableName() const
   return getImpl<detail::UtilityCost_Ratchet_Impl>()->multiplierValueOrVariableName();
 }
 
-void UtilityCost_Ratchet::setMultiplierValueOrVariableName(const std::string& str)
+bool UtilityCost_Ratchet::setMultiplierValueOrVariableName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Ratchet_Impl>()->setMultiplierValueOrVariableName(str);
+  return getImpl<detail::UtilityCost_Ratchet_Impl>()->setMultiplierValueOrVariableName(str);
 }
 
 OptionalString UtilityCost_Ratchet::offsetValueOrVariableName() const
@@ -246,9 +246,9 @@ OptionalString UtilityCost_Ratchet::offsetValueOrVariableName() const
   return getImpl<detail::UtilityCost_Ratchet_Impl>()->offsetValueOrVariableName();
 }
 
-void UtilityCost_Ratchet::setOffsetValueOrVariableName(const std::string& str)
+bool UtilityCost_Ratchet::setOffsetValueOrVariableName(const std::string& str)
 {
-  getImpl<detail::UtilityCost_Ratchet_Impl>()->setOffsetValueOrVariableName(str);
+  return getImpl<detail::UtilityCost_Ratchet_Impl>()->setOffsetValueOrVariableName(str);
 }
 
 IddObjectType UtilityCost_Ratchet::iddObjectType()
@@ -258,4 +258,4 @@ IddObjectType UtilityCost_Ratchet::iddObjectType()
 }
 
 } // model
-} // openstudio
+} // openstudio

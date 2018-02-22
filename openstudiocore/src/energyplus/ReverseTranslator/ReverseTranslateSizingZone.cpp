@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -104,7 +104,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
   for (ThermalZone thermalZone : thermalZones){
 
     // sizing zone is constructed in thermal zone ctor
-    openstudio::model::SizingZone sizingZone = thermalZone.sizingZone(); 
+    openstudio::model::SizingZone sizingZone = thermalZone.sizingZone();
 
     // return first sizing zone
     if (!result){
@@ -177,7 +177,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
     }
 
     // CoolingDesignAirFlowMethod
-    
+
     s = workspaceObject.getString(Sizing_ZoneFields::CoolingDesignAirFlowMethod);
     if( s )
     {
@@ -201,7 +201,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
     }
 
     // CoolingMinimumAirFlow
-    
+
     value = workspaceObject.getDouble(Sizing_ZoneFields::CoolingMinimumAirFlow);
     if( value )
     {
@@ -209,7 +209,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
     }
 
     // CoolingMinimumAirFlowFraction
-    
+
     value = workspaceObject.getDouble(Sizing_ZoneFields::CoolingMinimumAirFlowFraction);
     if( value )
     {
@@ -217,7 +217,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
     }
 
     // HeatingDesignAirFlowMethod
-    
+
     s = workspaceObject.getString(Sizing_ZoneFields::HeatingDesignAirFlowMethod);
     if( s )
     {
@@ -241,7 +241,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
     }
 
     // HeatingMaximumAirFlow
-    
+
     value = workspaceObject.getDouble(Sizing_ZoneFields::HeatingMaximumAirFlow);
     if( value )
     {
@@ -249,7 +249,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
     }
 
     // HeatingMaximumAirFlowFraction
-    
+
     value = workspaceObject.getDouble(Sizing_ZoneFields::HeatingMaximumAirFlowFraction);
     if( value )
     {
@@ -258,7 +258,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
 
     //DesignSpecification_ZoneAirDistribution
 
-    boost::optional<WorkspaceObject> _designSpecification 
+    boost::optional<WorkspaceObject> _designSpecification
         = workspaceObject.getTarget(Sizing_ZoneFields::DesignSpecificationZoneAirDistributionObjectName);
 
     if( _designSpecification )

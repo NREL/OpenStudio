@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -109,27 +109,27 @@ class MODEL_API AirTerminalSingleDuctParallelPIUReheat : public StraightComponen
 
   bool setAvailabilitySchedule(Schedule & schedule);
 
-  void setMaximumPrimaryAirFlowRate(double maximumPrimaryAirFlowRate);
+  bool setMaximumPrimaryAirFlowRate(double maximumPrimaryAirFlowRate);
 
   void autosizeMaximumPrimaryAirFlowRate();
 
-  void setMaximumSecondaryAirFlowRate(double maximumSecondaryAirFlowRate);
+  bool setMaximumSecondaryAirFlowRate(double maximumSecondaryAirFlowRate);
 
   void autosizeMaximumSecondaryAirFlowRate();
 
-  void setMinimumPrimaryAirFlowFraction(double minimumPrimaryAirFlowFraction);
+  bool setMinimumPrimaryAirFlowFraction(double minimumPrimaryAirFlowFraction);
 
   void autosizeMinimumPrimaryAirFlowFraction();
 
-  void setFanOnFlowFraction(double fanOnFlowFraction);
+  bool setFanOnFlowFraction(double fanOnFlowFraction);
 
   void autosizeFanOnFlowFraction();
 
-  void setFan( HVACComponent & hvacComponent );
+  bool setFan( HVACComponent & hvacComponent );
 
-  void setReheatCoil( HVACComponent & hvacComponent );
+  bool setReheatCoil( HVACComponent & hvacComponent );
 
-  void setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate);
+  bool setMaximumHotWaterorSteamFlowRate(double maximumHotWaterorSteamFlowRate);
 
   void resetMaximumHotWaterorSteamFlowRate();
 
@@ -142,6 +142,18 @@ class MODEL_API AirTerminalSingleDuctParallelPIUReheat : public StraightComponen
   bool setConvergenceTolerance(double convergenceTolerance);
 
   void resetConvergenceTolerance();
+
+  boost::optional<double> autosizedMaximumPrimaryAirFlowRate() const ;
+
+  boost::optional<double> autosizedMaximumSecondaryAirFlowRate() const ;
+
+  boost::optional<double> autosizedMinimumPrimaryAirFlowFraction() const ;
+
+  boost::optional<double> autosizedFanOnFlowFraction() const ;
+
+  boost::optional<double> autosizedMaximumHotWaterorSteamFlowRate() const ;
+
+
 
   //@}
  protected:
@@ -170,4 +182,3 @@ typedef std::vector<AirTerminalSingleDuctParallelPIUReheat> AirTerminalSingleDuc
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTPARALLELPIUREHEAT_HPP
-

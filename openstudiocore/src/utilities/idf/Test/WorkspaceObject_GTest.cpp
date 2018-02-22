@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -63,11 +63,11 @@ TEST_F(IdfFixture,WorkspaceObject_Construction) {
   OptionalWorkspaceObject object = ws.getObject(w->handle());
   ASSERT_TRUE(object);
   EXPECT_TRUE(object->iddObject().type() == openstudio::IddObjectType::Building);
-  
+
   // add object with pointer, and do not include pointed to object. should be successful, but
   // pointer should be null. object.canBeSource() should be true.
 
-  // add object with pointer, and do include pointed to object. should be successful, and 
+  // add object with pointer, and do include pointed to object. should be successful, and
   // following pointer should yield target object. source should be source, target should be
   // target.
 
@@ -83,7 +83,7 @@ TEST_F(IdfFixture, WorkspaceObject_GetStringAfterSetStringAddsFields)
   OptionalWorkspaceObject w;
   IdfObject idfObj(IddObjectType::SurfaceProperty_ConvectionCoefficients);
   w = ws.addObject(idfObj);
-  
+
   EXPECT_TRUE(w->numNonextensibleFields()==3);
   EXPECT_TRUE(w->setString(w->iddObject().numFields()-1,""));
   EXPECT_TRUE(w->numNonextensibleFields()==11);
@@ -110,7 +110,7 @@ TEST_F(IdfFixture, WorkspaceObject_Building) {
     FullExterior,            !- Solar Distribution
     25;                      !- Maximum Number of Warmup Days
   */
-  
+
   OptionalString buildingName = building.getString(BuildingFields::Name);
   ASSERT_TRUE(buildingName);
   EXPECT_EQ("Building", *buildingName);
@@ -322,7 +322,7 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   OptionalDouble dValue = object.getDouble(19);
   ASSERT_TRUE(dValue);
   EXPECT_NEAR(0.5,*dValue,tol);
-  
+
   // SHOULD NOT BE VALID
   scratch = Workspace(StrictnessLevel::Draft, IddFileType::EnergyPlus); // Non-null data must be valid
   text.str("");
@@ -394,10 +394,10 @@ TEST_F(IdfFixture,WorkspaceObject_ClearGroups) {
 }
 
 
-TEST_F(IdfFixture, WorkspaceObject_OS_DaylightingDevice_Shelf) 
+TEST_F(IdfFixture, WorkspaceObject_OS_DaylightingDevice_Shelf)
 {
-  // defaults to IddFileType::OpenStudio
-  Workspace ws;
+  // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
+  Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject w1 = ws.addObject(IdfObject(IddObjectType::OS_DaylightingDevice_Shelf));
   OptionalWorkspaceObject w2 = ws.addObject(IdfObject(IddObjectType::OS_InteriorPartitionSurface));
   ASSERT_TRUE(w1);
@@ -405,19 +405,41 @@ TEST_F(IdfFixture, WorkspaceObject_OS_DaylightingDevice_Shelf)
   OptionalWorkspaceObject obj1 = ws.getObject(w1->handle());
   ASSERT_TRUE(obj1);
   EXPECT_TRUE(obj1->setPointer(OS_DaylightingDevice_ShelfFields::InsideShelfName, w2->handle()));
+  ASSERT_TRUE(obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName));
+  EXPECT_EQ(w2->nameString(), obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName).get());
+
+  // check that you can set string with pointer
+  EXPECT_TRUE(obj1->setString(OS_DaylightingDevice_ShelfFields::InsideShelfName, ""));
+  ASSERT_TRUE(obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName));
+  EXPECT_EQ("", obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName).get());
+
+  // check that you can set string with pointer
+  EXPECT_TRUE(obj1->setString(OS_DaylightingDevice_ShelfFields::InsideShelfName, toString(w2->handle())));
+  ASSERT_TRUE(obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName));
+  EXPECT_EQ(w2->nameString(), obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName).get());
+
+  // check that you cannot set string with bad pointer
+  EXPECT_FALSE(obj1->setString(OS_DaylightingDevice_ShelfFields::InsideShelfName, toString(w1->handle())));
+  ASSERT_TRUE(obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName));
+  EXPECT_EQ(w2->nameString(), obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName).get());
+
+  // check that you cannot set string with bad pointer
+  EXPECT_FALSE(obj1->setString(OS_DaylightingDevice_ShelfFields::InsideShelfName, toString(createUUID())));
+  ASSERT_TRUE(obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName));
+  EXPECT_EQ(w2->nameString(), obj1->getString(OS_DaylightingDevice_ShelfFields::InsideShelfName).get());
 }
 
-//TEST_F(IdfFixture, WorkspaceObject_OS_AirLoopHVAC_ZoneSplitter) 
+//TEST_F(IdfFixture, WorkspaceObject_OS_AirLoopHVAC_ZoneSplitter)
 //{
-//  //Workspace ws();
+//  //Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
 //  //OptionalHandle h1 = ws.addObject(IdfObject(IddObjectType::OS_AirLoopHVAC_ZoneSplitter));
 //  //OptionalHandle h2 = ws.addObject(IdfObject(IddObjectType::OS_Connection));
 //}
 
-TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects) 
+TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
 {
-  // defaults to IddFileType::OpenStudio
-  Workspace ws1;
+  // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
+  Workspace ws1(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject w1 = ws1.addObject(IdfObject(IddObjectType::OS_Surface));
   ASSERT_TRUE(w1);
   EXPECT_EQ(1u, ws1.objects().size());
@@ -427,7 +449,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
   EXPECT_FALSE(h1.isNull());
   EXPECT_EQ(h1, w1->handle());
 
-  Workspace ws2;
+  Workspace ws2(StrictnessLevel::Draft, IddFileType::OpenStudio);
   ws2.addObjects(ws1.objects());
   ASSERT_EQ(1u, ws2.objects().size());
   WorkspaceObject w2 = ws2.objects()[0];
@@ -438,10 +460,10 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
   EXPECT_EQ(h2, w2.handle());
 }
 
-TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2) 
+TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
 {
-  // defaults to IddFileType::OpenStudio
-  Workspace ws1;
+  // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
+  Workspace ws1(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject w1 = ws1.addObject(IdfObject(IddObjectType::OS_Surface));
   ASSERT_TRUE(w1);
   EXPECT_EQ(1u, ws1.objects().size());
@@ -460,7 +482,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   EXPECT_FALSE(ih.isNull());
   EXPECT_EQ(ih,i1.handle());
 
-  Workspace ws2;
+  Workspace ws2(StrictnessLevel::Draft, IddFileType::OpenStudio);
   ws2.addObjects(idf1.objects());
   ASSERT_EQ(1u, ws2.objects().size());
   WorkspaceObject w2 = ws2.objects()[0];
@@ -473,7 +495,8 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
 
 TEST_F(IdfFixture, WorkspaceObject_Filter_Sources)
 {
-  Workspace ws;
+  // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
+  Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject node = ws.addObject(IdfObject(IddObjectType::OS_Node));
   OptionalWorkspaceObject node2 = ws.addObject(IdfObject(IddObjectType::OS_Node));
   OptionalWorkspaceObject node3 = ws.addObject(IdfObject(IddObjectType::OS_Node));
@@ -495,7 +518,8 @@ TEST_F(IdfFixture, WorkspaceObject_SetDouble_NaN_and_Inf) {
 
   // try with an WorkspaceObject
   // WorkspaceObject does prevent Infinity and NaN
-  Workspace ws;
+  // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
+  Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
   WorkspaceObject object = ws.addObject(IdfObject(IddObjectType::OS_People_Definition)).get();
 
   // Set Number of People

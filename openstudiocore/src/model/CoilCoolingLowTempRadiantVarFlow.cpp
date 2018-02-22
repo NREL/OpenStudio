@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -265,10 +265,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilCoolingLowTempRadiantVarFlow_Impl::setCondensationControlDewpointOffset(double condensationControlDewpointOffset)
+  bool CoilCoolingLowTempRadiantVarFlow_Impl::setCondensationControlDewpointOffset(double condensationControlDewpointOffset)
   {
     bool result = setDouble(OS_Coil_Cooling_LowTemperatureRadiant_VariableFlowFields::CondensationControlDewpointOffset, condensationControlDewpointOffset);
     OS_ASSERT(result);
+    return result;
   }
 
   void CoilCoolingLowTempRadiantVarFlow_Impl::resetCondensationControlDewpointOffset()
@@ -326,6 +327,54 @@ namespace detail {
     }
 
     return false;
+  }
+
+  boost::optional<ZoneHVACLowTempRadiantVarFlow> CoilCoolingLowTempRadiantVarFlow_Impl::parentZoneHVAC() const {
+
+    boost::optional<ZoneHVACLowTempRadiantVarFlow> result;
+
+    // This coil performance object can only be found in a ZoneHVACLowTempRadiantVarFlow
+    // Check all ZoneHVACLowTempRadiantVarFlow in the model, seeing if this is inside of one of them.
+    boost::optional<ZoneHVACLowTempRadiantVarFlow> parentCoil;
+    auto zoneHVACs = this->model().getConcreteModelObjects<ZoneHVACLowTempRadiantVarFlow>();
+    for (const auto & zoneHVAC : zoneHVACs) {
+      if (zoneHVAC.coolingCoil().handle() == this->handle()) {
+        result = zoneHVAC;
+        break;
+      }
+
+    }
+
+    // Warn if this coil was not found inside a ZoneHVACLowTempRadiantVarFlow
+    if (!result) {
+      LOG(Warn, name().get() + " was not found inside a ZoneHVACLowTempRadiantVarFlow in the model, cannot retrieve the autosized value.");
+      return result;
+    }
+
+    return result;
+  }
+
+  boost::optional<double> CoilCoolingLowTempRadiantVarFlow_Impl::autosizedMaximumColdWaterFlow() const {
+    boost::optional<ZoneHVACLowTempRadiantVarFlow> zoneHVAC = parentZoneHVAC();
+    boost::optional<double> result;
+    if (!zoneHVAC) {
+      return result;
+    }
+
+    return zoneHVAC->getAutosizedValue("Design Size Maximum Cold Water Flow", "m3/s");
+  }
+
+  void CoilCoolingLowTempRadiantVarFlow_Impl::autosize() {
+    autosizeMaximumColdWaterFlow();
+  }
+
+  void CoilCoolingLowTempRadiantVarFlow_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumColdWaterFlow();
+    if (val) {
+      setMaximumColdWaterFlow(val.get());
+    }
+
   }
 
 } // detail
@@ -446,9 +495,9 @@ void CoilCoolingLowTempRadiantVarFlow::resetCondensationControlType()
   getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->resetCondensationControlType();
 }
 
-void CoilCoolingLowTempRadiantVarFlow::setCondensationControlDewpointOffset(double condensationControlDewpointOffset)
+bool CoilCoolingLowTempRadiantVarFlow::setCondensationControlDewpointOffset(double condensationControlDewpointOffset)
 {
-  getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setCondensationControlDewpointOffset(condensationControlDewpointOffset);
+  return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->setCondensationControlDewpointOffset(condensationControlDewpointOffset);
 }
 
 void CoilCoolingLowTempRadiantVarFlow::resetCondensationControlDewpointOffset()
@@ -462,6 +511,13 @@ CoilCoolingLowTempRadiantVarFlow::CoilCoolingLowTempRadiantVarFlow(std::shared_p
 {}
 /// @endcond
 
+  boost::optional<double> CoilCoolingLowTempRadiantVarFlow::autosizedMaximumColdWaterFlow() const {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->autosizedMaximumColdWaterFlow();
+  }
+
+  boost::optional<ZoneHVACLowTempRadiantVarFlow> CoilCoolingLowTempRadiantVarFlow::parentZoneHVAC() const {
+    return getImpl<detail::CoilCoolingLowTempRadiantVarFlow_Impl>()->parentZoneHVAC();
+  }
+
 } // model
 } // openstudio
-

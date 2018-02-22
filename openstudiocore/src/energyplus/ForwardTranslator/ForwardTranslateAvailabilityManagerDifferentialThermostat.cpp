@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -34,7 +34,6 @@
 #include "../../utilities/core/Assert.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/AvailabilityManager_DifferentialThermostat_FieldEnums.hxx>
-#include <utilities/idd/ZoneList_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -44,7 +43,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerDifferentialThermostat( 
+boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerDifferentialThermostat(
     AvailabilityManagerDifferentialThermostat & modelObject)
 {
   IdfObject idfObject(IddObjectType::AvailabilityManager_DifferentialThermostat);

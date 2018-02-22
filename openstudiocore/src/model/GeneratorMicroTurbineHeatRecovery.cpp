@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -136,17 +136,17 @@ namespace model {
     boost::optional<Curve> oCurve;
 
     // Curves should be included
-    if (oCurve = thermalEfficiencyFunctionofTemperatureandElevationCurve()) {
+    if ( (oCurve = thermalEfficiencyFunctionofTemperatureandElevationCurve()) ) {
       result.push_back(oCurve.get());
     }
-    if (oCurve = heatRecoveryRateFunctionofPartLoadRatioCurve()) {
+    if ( (oCurve = heatRecoveryRateFunctionofPartLoadRatioCurve()) ) {
       result.push_back(oCurve.get());
     }
-    if (oCurve = heatRecoveryRateFunctionofInletWaterTemperatureCurve()) {
+    if ( (oCurve = heatRecoveryRateFunctionofInletWaterTemperatureCurve()) ) {
       result.push_back(oCurve.get());
     }
 
-    if (oCurve = heatRecoveryRateFunctionofWaterFlowRateCurve()) {
+    if ( (oCurve = heatRecoveryRateFunctionofWaterFlowRateCurve()) ) {
       result.push_back(oCurve.get());
     }
 
@@ -265,20 +265,20 @@ namespace model {
   // Get the parent generatorMicroTurbine
   GeneratorMicroTurbine GeneratorMicroTurbineHeatRecovery_Impl::generatorMicroTurbine() const {
 
-    boost::optional<GeneratorMicroTurbine> value;
+    boost::optional<GeneratorMicroTurbine> result;
     for ( const GeneratorMicroTurbine& mchp : this->model().getConcreteModelObjects<GeneratorMicroTurbine>() )
     {
       if ( boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = mchp.generatorMicroTurbineHeatRecovery() )
       {
         if (mchpHR->handle() == this->handle())
         {
-          value = mchp;
+          result = mchp;
         }
       }
     }
-    OS_ASSERT(value);
-    return value.get();
-
+    // This doesn't return an optional
+    OS_ASSERT(result);
+    return result.get();
   }
 
 
@@ -467,7 +467,16 @@ namespace model {
     OS_ASSERT(result);
   }
 
+  std::vector<EMSActuatorNames> GeneratorMicroTurbineHeatRecovery_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "On-Site Generator Control", "Requested Power" } };
+    return actuators;
+  }
 
+  std::vector<std::string> GeneratorMicroTurbineHeatRecovery_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Generator Nominal Maximum Power",
+      "Generator Nominal Thermal To Electric Ratio" };
+    return types;
+  }
 } // detail
 
 // The constructor needs model, and a GeneratorMicroTurbine

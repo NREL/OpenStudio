@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -65,6 +65,11 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual unsigned supplyInletPort() override;
+    virtual unsigned supplyOutletPort() override;
+    virtual unsigned demandInletPort() override;
+    virtual unsigned demandOutletPort() override;
+
     //@}
     /** @name Getters */
     //@{
@@ -119,6 +124,20 @@ namespace detail {
 
     double sizingFactor() const;
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  boost::optional<double> autosizedNominalPumpingPower() const ;
+
+  boost::optional<double> autosizedDesignChilledWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignCondenserWaterFlowRate() const ;
+
+  boost::optional<double> autosizedDesignGeneratorFluidFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
@@ -137,7 +156,7 @@ namespace detail {
 
     bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
 
-    void setDesignCondenserInletTemperature(double designCondenserInletTemperature);
+    bool setDesignCondenserInletTemperature(double designCondenserInletTemperature);
 
     bool setDesignChilledWaterFlowRate(boost::optional<double> designChilledWaterFlowRate);
 
@@ -147,19 +166,19 @@ namespace detail {
 
     void autosizeDesignCondenserWaterFlowRate();
 
-    void setCoefficient1oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve);
+    bool setCoefficient1oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve);
 
-    void setCoefficient2oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve);
+    bool setCoefficient2oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve);
 
-    void setCoefficient3oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve);
+    bool setCoefficient3oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve);
 
-    void setCoefficient1ofthePumpElectricUsePartLoadRatioCurve(double coefficient1ofthePumpElectricUsePartLoadRatioCurve);
+    bool setCoefficient1ofthePumpElectricUsePartLoadRatioCurve(double coefficient1ofthePumpElectricUsePartLoadRatioCurve);
 
-    void setCoefficient2ofthePumpElectricUsePartLoadRatioCurve(double coefficient2ofthePumpElectricUsePartLoadRatioCurve);
+    bool setCoefficient2ofthePumpElectricUsePartLoadRatioCurve(double coefficient2ofthePumpElectricUsePartLoadRatioCurve);
 
-    void setCoefficient3ofthePumpElectricUsePartLoadRatioCurve(double coefficient3ofthePumpElectricUsePartLoadRatioCurve);
+    bool setCoefficient3ofthePumpElectricUsePartLoadRatioCurve(double coefficient3ofthePumpElectricUsePartLoadRatioCurve);
 
-    void setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
+    bool setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit);
 
     bool setChillerFlowMode(std::string chillerFlowMode);
 
@@ -169,7 +188,7 @@ namespace detail {
 
     void autosizeDesignGeneratorFluidFlowRate();
 
-    void setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator);
+    bool setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator);
 
     bool setSizingFactor(double sizingFactor);
 
@@ -177,10 +196,6 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned supplyInletPort() override;
-    unsigned supplyOutletPort() override;
-    unsigned demandInletPort() override;
-    unsigned demandOutletPort() override;
 
     //@}
    protected:
@@ -195,4 +210,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_CHILLERABSORPTION_IMPL_HPP
-

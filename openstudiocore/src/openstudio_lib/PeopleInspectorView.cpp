@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -51,7 +51,7 @@
 
 namespace openstudio {
 
-PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP, 
+PeopleDefinitionInspectorView::PeopleDefinitionInspectorView(bool isIP,
                                                              const openstudio::model::Model& model,
                                                              QWidget * parent)
   : ModelObjectInspectorView(model, true, parent)
@@ -189,13 +189,13 @@ void PeopleDefinitionInspectorView::attach(openstudio::model::PeopleDefinition& 
   m_nameEdit->bind(*m_peopleDefinition,
                    OptionalStringGetter(std::bind(&model::PeopleDefinition::name,m_peopleDefinition.get_ptr(),true)),
                    boost::optional<StringSetter>(std::bind(&model::PeopleDefinition::setName,m_peopleDefinition.get_ptr(),std::placeholders::_1)));
-  
+
   // bind to PeopleDefinition methods
   m_numberofPeopleEdit->bind(
       *m_peopleDefinition,
       OptionalDoubleGetter(std::bind(&model::PeopleDefinition::numberofPeople,m_peopleDefinition.get_ptr())),
       boost::optional<DoubleSetter>(std::bind(&model::PeopleDefinition::setNumberofPeople,m_peopleDefinition.get_ptr(),std::placeholders::_1)));
-  
+
   m_peopleperSpaceFloorAreaEdit->bind(
       m_isIP,
       *m_peopleDefinition,

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,6 +38,8 @@
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
@@ -75,8 +77,49 @@ namespace detail {
 
   const std::vector<std::string>& CoilCoolingDXMultiSpeed_Impl::outputVariableNames() const
   {
+    // TODO: static for now
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Cooling Coil Total Cooling Rate");
+      result.push_back("Cooling Coil Total Cooling Energy");
+      result.push_back("Cooling Coil Sensible Cooling Rate");
+      result.push_back("Cooling Coil Sensible Cooling Energy");
+      result.push_back("Cooling Coil Latent Cooling Rate");
+      result.push_back("Cooling Coil Latent Cooling Energy");
+      result.push_back("Cooling Coil Electric Power");
+      result.push_back("Cooling Coil Electric Energy");
+      result.push_back("Cooling Coil Runtime Fraction");
+
+      // condenserType = [AirCooled, EvaporativelyCooled]
+      // if (this->condenserType() == "EvaporativelyCooled") {
+        result.push_back("Cooling Coil Condenser Inlet Temperature");
+        result.push_back("Cooling Coil Evaporative Condenser Water Volume");
+        result.push_back("Cooling Coil Evaporative Condenser Pump Electric Power");
+        result.push_back("Cooling Coil Evaporative Condenser Pump Electric Energy");
+        result.push_back("Cooling Coil Basin Heater Electric Power");
+        result.push_back("Cooling Coil Basin Heater Electric Energy");
+        result.push_back("Cooling Coil Evaporative Condenser Mains Supply Water Volume");
+      // }
+
+      // Storage tank isn't implemented
+      // if has storage tank:
+      // result.push_back("Cooling Coil Condensate Volume Flow Rate");
+      // result.push_back("Cooling Coil Condensate Volume");
+      //
+
+      // If not part of AirLoopHVAC:UnitaryHeatPump:AirToAir
+      // (if part of a heat pump, crankcase heater is reported only for the heating coil):
+      // if ( !this->containingHVACComponent().empty() ) {
+      // result.push_back("Cooling Coil Crankcase Heater Electric Power");
+      // result.push_back("Cooling Coil Crankcase Heater Electric Energy");
+      // }
+      //
+      // Additional variables for Coil:Cooling:DX:Multispeed:
+      // If Fuel Type is not Electricity:
+      // result.push_back("DX Cooling Coil <Fuel Type> Power");
+      // result.push_back("DX Cooling Coil <Fuel Type> Consumption");
+      //
     }
     return result;
   }
@@ -180,19 +223,19 @@ namespace detail {
     return result;
   }
 
-  void CoilCoolingDXMultiSpeed_Impl::setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1) {
+  bool CoilCoolingDXMultiSpeed_Impl::setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1) {
     if (applyPartLoadFractiontoSpeedsGreaterthan1) {
-      setString(OS_Coil_Cooling_DX_MultiSpeedFields::ApplyPartLoadFractiontoSpeedsGreaterthan1, "Yes");
+      return setString(OS_Coil_Cooling_DX_MultiSpeedFields::ApplyPartLoadFractiontoSpeedsGreaterthan1, "Yes");
     } else {
-      setString(OS_Coil_Cooling_DX_MultiSpeedFields::ApplyPartLoadFractiontoSpeedsGreaterthan1, "No");
+      return setString(OS_Coil_Cooling_DX_MultiSpeedFields::ApplyPartLoadFractiontoSpeedsGreaterthan1, "No");;
     }
   }
 
-  void CoilCoolingDXMultiSpeed_Impl::setApplyLatentDegradationtoSpeedsGreaterthan1(bool applyLatentDegradationtoSpeedsGreaterthan1) {
+  bool CoilCoolingDXMultiSpeed_Impl::setApplyLatentDegradationtoSpeedsGreaterthan1(bool applyLatentDegradationtoSpeedsGreaterthan1) {
     if (applyLatentDegradationtoSpeedsGreaterthan1) {
-      setString(OS_Coil_Cooling_DX_MultiSpeedFields::ApplyLatentDegradationtoSpeedsGreaterthan1, "Yes");
+      return setString(OS_Coil_Cooling_DX_MultiSpeedFields::ApplyLatentDegradationtoSpeedsGreaterthan1, "Yes");
     } else {
-      setString(OS_Coil_Cooling_DX_MultiSpeedFields::ApplyLatentDegradationtoSpeedsGreaterthan1, "No");
+      return setString(OS_Coil_Cooling_DX_MultiSpeedFields::ApplyLatentDegradationtoSpeedsGreaterthan1, "No");;
     }
   }
 
@@ -259,7 +302,10 @@ namespace detail {
   }
 
   std::vector<ModelObject> CoilCoolingDXMultiSpeed_Impl::children() const {
-    return subsetCastVector<ModelObject>(stages());
+    std::vector<ModelObject> result = subsetCastVector<ModelObject>(stages());
+    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+    return result;
   }
 
   std::vector<CoilCoolingDXMultiSpeedStageData> CoilCoolingDXMultiSpeed_Impl::stages() const {
@@ -301,6 +347,35 @@ namespace detail {
   bool CoilCoolingDXMultiSpeed_Impl::addToNode(Node & node)
   {
     return false;
+  }
+
+  AirflowNetworkEquivalentDuct CoilCoolingDXMultiSpeed_Impl::getAirflowNetworkEquivalentDuct(double length, double diameter)
+  {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    if (opt) {
+      if (opt->airPathLength() != length){
+        opt->setAirPathLength(length);
+      }
+      if (opt->airPathHydraulicDiameter() != diameter){
+        opt->setAirPathHydraulicDiameter(diameter);
+      }
+      return opt.get();
+    }
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXMultiSpeed_Impl::airflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>
+      (AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return boost::none;
   }
 
 } // detail
@@ -389,12 +464,12 @@ bool CoilCoolingDXMultiSpeed::setCondenserType(std::string condenserType) {
   return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setCondenserType(condenserType);
 }
 
-void CoilCoolingDXMultiSpeed::setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1) {
-  getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setApplyPartLoadFractiontoSpeedsGreaterthan1(applyPartLoadFractiontoSpeedsGreaterthan1);
+bool CoilCoolingDXMultiSpeed::setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1) {
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setApplyPartLoadFractiontoSpeedsGreaterthan1(applyPartLoadFractiontoSpeedsGreaterthan1);
 }
 
-void CoilCoolingDXMultiSpeed::setApplyLatentDegradationtoSpeedsGreaterthan1(bool applyLatentDegradationtoSpeedsGreaterthan1) {
-  getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setApplyLatentDegradationtoSpeedsGreaterthan1(applyLatentDegradationtoSpeedsGreaterthan1);
+bool CoilCoolingDXMultiSpeed::setApplyLatentDegradationtoSpeedsGreaterthan1(bool applyLatentDegradationtoSpeedsGreaterthan1) {
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->setApplyLatentDegradationtoSpeedsGreaterthan1(applyLatentDegradationtoSpeedsGreaterthan1);
 }
 
 void CoilCoolingDXMultiSpeed::resetApplyLatentDegradationtoSpeedsGreaterthan1() {
@@ -437,6 +512,16 @@ void CoilCoolingDXMultiSpeed::addStage(CoilCoolingDXMultiSpeedStageData& stage) 
   return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->addStage(stage);
 }
 
+AirflowNetworkEquivalentDuct CoilCoolingDXMultiSpeed::getAirflowNetworkEquivalentDuct(double length, double diameter)
+{
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->getAirflowNetworkEquivalentDuct(length, diameter);
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXMultiSpeed::airflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::CoilCoolingDXMultiSpeed_Impl>()->airflowNetworkEquivalentDuct();
+}
+
 /// @cond
 CoilCoolingDXMultiSpeed::CoilCoolingDXMultiSpeed(std::shared_ptr<detail::CoilCoolingDXMultiSpeed_Impl> impl)
   : StraightComponent(std::move(impl))
@@ -445,4 +530,3 @@ CoilCoolingDXMultiSpeed::CoilCoolingDXMultiSpeed(std::shared_ptr<detail::CoilCoo
 
 } // model
 } // openstudio
-

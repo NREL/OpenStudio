@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,6 +43,7 @@ class SetpointManagerFollowOutdoorAirTemperature;
 class SetpointManagerOutdoorAirReset;
 class SetpointManagerWarmest;
 class SetpointManager;
+class AirflowNetworkDistributionNode;
 
 namespace detail {
 
@@ -53,8 +54,8 @@ namespace detail {
     Node_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    Node_Impl(const openstudio::detail::WorkspaceObject_Impl& other, 
-              Model_Impl* model, 
+    Node_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+              Model_Impl* model,
               bool keepHandle);
 
     // copy constructor
@@ -125,6 +126,14 @@ namespace detail {
     ModelObject clone(Model model) const override;
 
     bool isConnected(const ModelObject & modelObject);
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+    AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
+
+    boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
    private:
 

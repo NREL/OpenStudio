@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -28,6 +28,10 @@
 
 #include "CoilHeatingGasMultiStageStageData.hpp"
 #include "CoilHeatingGasMultiStageStageData_Impl.hpp"
+#include "../model/CoilHeatingGasMultiStage.hpp"
+#include "../model/CoilHeatingGasMultiStage_Impl.hpp"
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
 #include <utilities/idd/OS_Coil_Heating_Gas_MultiStage_StageData_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -115,9 +119,69 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilHeatingGasMultiStageStageData_Impl::setParasiticElectricLoad(double ParasiticElectricLoad) {
+  bool CoilHeatingGasMultiStageStageData_Impl::setParasiticElectricLoad(double ParasiticElectricLoad) {
     bool result = setDouble(OS_Coil_Heating_Gas_MultiStage_StageDataFields::ParasiticElectricLoad, ParasiticElectricLoad);
     OS_ASSERT(result);
+    return result;
+  }
+
+  boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> CoilHeatingGasMultiStageStageData_Impl::stageIndexAndParentCoil() const {
+
+    boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> result;
+
+    // This coil performance object can only be found in a CoilHeatingGasMultiStage
+    // Check all CoilHeatingGasMultiStages in the model, seeing if this is inside of one of them.
+    boost::optional<int> stageIndex;
+    boost::optional<CoilHeatingGasMultiStage> parentCoil;
+    auto coilHeatingGasMultiStages = this->model().getConcreteModelObjects<CoilHeatingGasMultiStage>();
+    for (const auto & coilInModel : coilHeatingGasMultiStages) {
+      // Check the coil performance objects in this coil to see if one of them is this object
+      std::vector< CoilHeatingGasMultiStageStageData> perfStages = coilInModel.stages();
+      int i = 1;
+      for (auto perfStage : perfStages) {
+        if (perfStage.handle() == this->handle()) {
+          stageIndex = i;
+          parentCoil = coilInModel;
+          break;
+        }
+        i++;
+      }
+    }
+
+    // Warn if this coil performance object was not found inside a coil
+    if (!parentCoil) {
+      LOG(Warn, name().get() + " was not found inside a CoilCoolingDXMultiSpeed in the model, cannot retrieve the autosized value.");
+      return result;
+    }
+
+    return std::make_tuple(stageIndex.get(), parentCoil.get());
+  }
+
+  boost::optional<double> CoilHeatingGasMultiStageStageData_Impl::autosizedNominalCapacity() const {
+    auto indexAndNameOpt = stageIndexAndParentCoil();
+    boost::optional<double> result;
+    if (!indexAndNameOpt) {
+      return result;
+    }
+    auto indexAndName = indexAndNameOpt.get();
+    int index = std::get<0>(indexAndName);
+    CoilHeatingGasMultiStage parentCoil = std::get<1>(indexAndName);
+    std::string sqlField = "Design Size Stage " + std::to_string(index) + " Nominal Capacity";
+
+    return parentCoil.getAutosizedValue(sqlField, "W");
+  }
+
+  void CoilHeatingGasMultiStageStageData_Impl::autosize() {
+    autosizeNominalCapacity();
+  }
+
+  void CoilHeatingGasMultiStageStageData_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
   }
 
 } // detail
@@ -164,8 +228,8 @@ void CoilHeatingGasMultiStageStageData::autosizeNominalCapacity() {
   getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->autosizeNominalCapacity();
 }
 
-void CoilHeatingGasMultiStageStageData::setParasiticElectricLoad(double ParasiticElectricLoad) {
-  getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setParasiticElectricLoad(ParasiticElectricLoad);
+bool CoilHeatingGasMultiStageStageData::setParasiticElectricLoad(double ParasiticElectricLoad) {
+  return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->setParasiticElectricLoad(ParasiticElectricLoad);
 }
 
 /// @cond
@@ -174,6 +238,21 @@ CoilHeatingGasMultiStageStageData::CoilHeatingGasMultiStageStageData(std::shared
 {}
 /// @endcond
 
+  boost::optional<double> CoilHeatingGasMultiStageStageData::autosizedNominalCapacity() const {
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->autosizedNominalCapacity();
+  }
+
+  void CoilHeatingGasMultiStageStageData::autosize() {
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->autosize();
+  }
+
+  void CoilHeatingGasMultiStageStageData::applySizingValues() {
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->applySizingValues();
+  }
+
+  boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> CoilHeatingGasMultiStageStageData::stageIndexAndParentCoil() const {
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->stageIndexAndParentCoil();
+  }
+
 } // model
 } // openstudio
-

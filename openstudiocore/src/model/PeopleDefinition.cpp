@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -64,10 +64,13 @@ namespace detail {
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {}
 
+  // TODO: remove
   const std::vector<std::string>& PeopleDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: output is listed in People instead
     }
     return result;
   }
@@ -261,7 +264,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void PeopleDefinition_Impl::setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings) {
+  bool PeopleDefinition_Impl::setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings) {
     bool result = false;
     if (enableASHRAE55ComfortWarnings) {
       result = setString(OS_People_DefinitionFields::EnableASHRAE55ComfortWarnings, "Yes");
@@ -269,6 +272,7 @@ namespace detail {
       result = setString(OS_People_DefinitionFields::EnableASHRAE55ComfortWarnings, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void PeopleDefinition_Impl::resetEnableASHRAE55ComfortWarnings() {
@@ -413,6 +417,16 @@ namespace detail {
     return PeopleDefinition::thermalComfortModelTypeValues();
   }
 
+  std::vector<EMSActuatorNames> PeopleDefinition_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "People", "Number of People" } };
+    return actuators;
+  }
+
+  std::vector<std::string> PeopleDefinition_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "People Count Design Level" };
+    return types;
+  }
+
 } // detail
 
 PeopleDefinition::PeopleDefinition(const Model& model)
@@ -545,8 +559,8 @@ void PeopleDefinition::resetCarbonDioxideGenerationRate() {
   getImpl<detail::PeopleDefinition_Impl>()->resetCarbonDioxideGenerationRate();
 }
 
-void PeopleDefinition::setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings) {
-  getImpl<detail::PeopleDefinition_Impl>()->setEnableASHRAE55ComfortWarnings(enableASHRAE55ComfortWarnings);
+bool PeopleDefinition::setEnableASHRAE55ComfortWarnings(bool enableASHRAE55ComfortWarnings) {
+  return getImpl<detail::PeopleDefinition_Impl>()->setEnableASHRAE55ComfortWarnings(enableASHRAE55ComfortWarnings);
 }
 
 void PeopleDefinition::resetEnableASHRAE55ComfortWarnings() {
@@ -598,4 +612,3 @@ PeopleDefinition::PeopleDefinition(std::shared_ptr<detail::PeopleDefinition_Impl
 
 } // model
 } // openstudio
-

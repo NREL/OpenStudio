@@ -1,6 +1,6 @@
 
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,6 +30,7 @@
 #include "ThreeJSReverseTranslator.hpp"
 #include "ThreeJSForwardTranslator.hpp"
 
+#include "FileOperations.hpp"
 #include "RenderingColor.hpp"
 #include "ConstructionBase.hpp"
 #include "ConstructionBase_Impl.hpp"
@@ -41,14 +42,20 @@
 #include "BuildingStory_Impl.hpp"
 #include "BuildingUnit.hpp"
 #include "BuildingUnit_Impl.hpp"
+#include "Construction.hpp"
+#include "Construction_Impl.hpp"
 #include "Surface.hpp"
 #include "Surface_Impl.hpp"
 #include "SubSurface.hpp"
 #include "SubSurface_Impl.hpp"
 #include "ShadingSurface.hpp"
 #include "ShadingSurface_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
 #include "InteriorPartitionSurface.hpp"
 #include "InteriorPartitionSurface_Impl.hpp"
+#include "InteriorPartitionSurfaceGroup.hpp"
+#include "InteriorPartitionSurfaceGroup_Impl.hpp"
 #include "PlanarSurfaceGroup.hpp"
 #include "PlanarSurfaceGroup_Impl.hpp"
 #include "Space.hpp"
@@ -57,6 +64,8 @@
 #include "DefaultConstructionSet_Impl.hpp"
 #include "ShadingSurfaceGroup.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
+#include "DaylightingControl.hpp"
+#include "AirWallMaterial.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
@@ -88,7 +97,7 @@ namespace openstudio
       }
 
 
-      if (faces[0] == ThreeJSForwardTranslator::openstudioFaceFormatId()){
+      if (faces[0] == openstudioFaceFormatId()){
         // openstudio, all vertices belong to one face
         Point3dVector face;
 
@@ -116,11 +125,23 @@ namespace openstudio
       return result;
     }
 
+    Construction ThreeJSReverseTranslator::getAirWallConstruction(Model& model)
+    {
+      boost::optional<Construction> result = model.getConcreteModelObjectByName<Construction>("AirWall");
+      if (!result){
+        AirWallMaterial airWall(model);
+        airWall.setName("AirWall");
+        result = Construction(airWall);
+      }
+      OS_ASSERT(result);
+      return result.get();
+    }
+
     ThreeJSReverseTranslator::ThreeJSReverseTranslator()
     {
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
-      m_logSink.setThreadId(QThread::currentThread());    
+      m_logSink.setThreadId(QThread::currentThread());
     }
 
     std::vector<LogMessage> ThreeJSReverseTranslator::warnings() const
@@ -153,7 +174,77 @@ namespace openstudio
     {
       return m_handleMapping;
     }
-    
+
+    unsigned getIddObjectTypeOrder(const std::string& iddObjectType){
+      unsigned typeOrder = 999;
+      if (istringEqual(iddObjectType, "OS:Space")){
+        typeOrder = 0;
+      }else if (istringEqual(iddObjectType, "OS:ThermalZone")){
+        typeOrder = 1;
+      }else if (istringEqual(iddObjectType, "OS:SpaceType")){
+        typeOrder = 2;
+      }else if (istringEqual(iddObjectType, "OS:BuildingStory")){
+        typeOrder = 3;
+      }else if (istringEqual(iddObjectType, "OS:BuildingUnit")){
+        typeOrder = 4;
+      } else if (istringEqual(iddObjectType, "OS:DefaultConstructionSet")){
+        typeOrder = 5;
+      }
+      return typeOrder;
+    }
+
+    bool sortModelObjectMetadata(const ThreeModelObjectMetadata &lhs, const ThreeModelObjectMetadata &rhs) {
+      unsigned leftTypeOrder = getIddObjectTypeOrder(lhs.iddObjectType());
+      unsigned rightTypeOrder = getIddObjectTypeOrder(rhs.iddObjectType());
+
+      if (leftTypeOrder == rightTypeOrder){
+        return lhs.name() < rhs.name();
+      }
+      return leftTypeOrder < rightTypeOrder;
+    }
+
+
+    unsigned getUserDataSurfaceTypeOrder(const std::string& userDataSurfaceType){
+
+    /// surfaceType is overloaded as a more general type:
+    /// Surfaces {"Wall", "Floor", "RoofCeiling"}
+    /// SubSurfaces {"FixedWindow", "OperableWindow", "GlassDoor", "Skylight", "TubularDaylightDome", "TubularDaylightDiffuser", "Door", "OverheadDoor"}
+    /// ShadingSurfaces {"SiteShading", "BuildingShading", "SpaceShading"}
+    /// InteriorPartitionSurfaces {"InteriorPartitionSurface"}
+    /// DaylightingControl {"DaylightingControl"}
+
+      unsigned typeOrder = 999;
+      if (istringEqual(userDataSurfaceType, "Wall") || istringEqual(userDataSurfaceType, "Floor") || istringEqual(userDataSurfaceType, "RoofCeiling")){
+        typeOrder = 0;
+      }else if (istringEqual(userDataSurfaceType, "FixedWindow") || istringEqual(userDataSurfaceType, "OperableWindow") || istringEqual(userDataSurfaceType, "GlassDoor") ||
+                istringEqual(userDataSurfaceType, "Skylight") || istringEqual(userDataSurfaceType, "TubularDaylightDome") || istringEqual(userDataSurfaceType, "TubularDaylightDiffuser") ||
+                istringEqual(userDataSurfaceType, "Door") || istringEqual(userDataSurfaceType, "OverheadDoor")){
+        typeOrder = 1;
+      }else if (istringEqual(userDataSurfaceType, "SiteShading") || istringEqual(userDataSurfaceType, "BuildingShading") || istringEqual(userDataSurfaceType, "SpaceShading")){
+        typeOrder = 2;
+      }else if (istringEqual(userDataSurfaceType, "InteriorPartitionSurface")){
+        typeOrder = 3;
+      }else if (istringEqual(userDataSurfaceType, "DaylightingControl")){
+        typeOrder = 4;
+      }
+      return typeOrder;
+    }
+
+    bool sortSceneChildren(const ThreeSceneChild &lhs, const ThreeSceneChild &rhs) {
+      unsigned leftTypeOrder = getIddObjectTypeOrder(lhs.userData().surfaceType());
+      unsigned rightTypeOrder = getIddObjectTypeOrder(rhs.userData().surfaceType());
+
+      if (leftTypeOrder == rightTypeOrder){
+        return lhs.userData().name() < rhs.userData().name();
+      }
+      return leftTypeOrder < rightTypeOrder;
+    }
+
+    boost::optional<RenderingColor> makeRenderingColor(const std::string& color, Model& model)
+    {
+      return RenderingColor::fromColorString(color, model);
+    }
+
     boost::optional<Model> ThreeJSReverseTranslator::modelFromThreeJS(const ThreeScene& scene)
     {
       m_logSink.setThreadId(QThread::currentThread());
@@ -163,28 +254,109 @@ namespace openstudio
       m_handleMapping.clear();
 
       Model model;
+      initializeModelObjects(model);
+
+      std::map<std::string, Space> originalNameToSpaceMap;
+      std::map<std::string, ThermalZone> originalNameToThermalZoneMap;
+      std::map<std::string, SpaceType> originalNameToSpaceTypeMap;
+      std::map<std::string, BuildingStory> originalNameToBuildingStoryMap;
+      std::map<std::string, BuildingUnit> originalNameToBuildingUnitMap;
+      std::map<std::string, DefaultConstructionSet> originalNameToDefaultConstructionSetMap;
+      std::map<std::string, Surface> originalNameToSurfaceMap;
+      std::map<std::string, SubSurface> originalNameToSubSurfaceMap;
+      std::map<std::string, unsigned> originalNameToSpaceMultiplierMap;
+      std::map<std::string, unsigned> originalNameToThermalZoneMultiplierMap;
 
       // create all the objects we will need
       ThreeSceneMetadata metadata = scene.metadata();
-      for (const auto& m : metadata.modelObjectMetadata()){
+      std::vector<ThreeModelObjectMetadata> modelObjectMetadata = metadata.modelObjectMetadata();
+
+      // sort object types so we make spaces first, etc
+      std::sort(modelObjectMetadata.begin(), modelObjectMetadata.end(), sortModelObjectMetadata);
+
+      for (const auto& m : modelObjectMetadata){
         std::string iddObjectType = m.iddObjectType();
         UUID handle = toUUID(m.handle());
         std::string name = m.name();
-        
+        std::string color = m.color();
+
         boost::optional<ModelObject> modelObject;
 
-        if (istringEqual(iddObjectType, "OS:ThermalZone")){
-          modelObject = ThermalZone(model);
+        if (istringEqual(iddObjectType, "OS:Space")){
+          Space space(model);
+          modelObject = space;
+
+          unsigned multiplier = 1;
+          if (m.multiplier()){
+            multiplier = m.multiplier().get();
+          }
+
+          // DLM: temp code
+          if (multiplier==0){
+            LOG(Warn, "Muliplier for Space '" << name << "' is 0, setting to 1");
+            multiplier = 1;
+          }else if (multiplier > 1){
+            LOG(Warn, "Multiplier translation not yet implemented for Space '" << name << "', setting to 1");
+            multiplier = 1;
+          }
+
+          originalNameToSpaceMultiplierMap.insert(std::make_pair(name, multiplier));
+          originalNameToSpaceMap.insert(std::make_pair(name, space));
+        }else if (istringEqual(iddObjectType, "OS:ThermalZone")){
+          ThermalZone thermalZone(model);
+          boost::optional<RenderingColor> renderingColor = makeRenderingColor(color, model);
+          if (renderingColor){
+            thermalZone.setRenderingColor(*renderingColor);
+          }
+          modelObject = thermalZone;
+          originalNameToThermalZoneMap.insert(std::make_pair(name, thermalZone));
         }else if (istringEqual(iddObjectType, "OS:SpaceType")){
-          modelObject = SpaceType(model);
+          SpaceType spaceType(model);
+          boost::optional<RenderingColor> renderingColor = makeRenderingColor(color, model);
+          if (renderingColor){
+            spaceType.setRenderingColor(*renderingColor);
+          }
+          modelObject = spaceType;
+          originalNameToSpaceTypeMap.insert(std::make_pair(name, spaceType));
         }else if (istringEqual(iddObjectType, "OS:BuildingStory")){
-          modelObject = BuildingStory(model);
-        } else if (istringEqual(iddObjectType, "OS:Space")){
-          modelObject = Space(model);
+          BuildingStory buildingStory(model);
+
+          boost::optional<unsigned> multiplier = m.multiplier(); // DLM: should we apply multipliers only to Spaces in ThreeJS?
+          boost::optional<double> nominalZCoordinate = m.nominalZCoordinate();
+          boost::optional<double> belowFloorPlenumHeight = m.belowFloorPlenumHeight();
+          boost::optional<double> floorToCeilingHeight = m.floorToCeilingHeight();
+          boost::optional<double> aboveCeilingPlenumHeight = m.aboveCeilingPlenumHeight();
+
+          if (nominalZCoordinate){
+            buildingStory.setNominalZCoordinate(*nominalZCoordinate);
+          }
+
+          if (floorToCeilingHeight){
+            buildingStory.setNominalFloortoCeilingHeight(*floorToCeilingHeight);
+            if (belowFloorPlenumHeight && aboveCeilingPlenumHeight){
+              buildingStory.setNominalFloortoFloorHeight(*floorToCeilingHeight + *belowFloorPlenumHeight + *aboveCeilingPlenumHeight);
+            }
+          }
+
+          boost::optional<RenderingColor> renderingColor = makeRenderingColor(color, model);
+          if (renderingColor){
+            buildingStory.setRenderingColor(*renderingColor);
+          }
+
+          modelObject = buildingStory;
+          originalNameToBuildingStoryMap.insert(std::make_pair(name, buildingStory));
         }else if (istringEqual(iddObjectType, "OS:BuildingUnit")){
-          modelObject = BuildingUnit(model);
+          BuildingUnit buildingUnit(model);
+          boost::optional<RenderingColor> renderingColor = makeRenderingColor(color, model);
+          if (renderingColor){
+            buildingUnit.setRenderingColor(*renderingColor);
+          }
+          modelObject = buildingUnit;
+          originalNameToBuildingUnitMap.insert(std::make_pair(name, buildingUnit));
         } else if (istringEqual(iddObjectType, "OS:DefaultConstructionSet")){
-          modelObject = DefaultConstructionSet(model);
+          DefaultConstructionSet defaultConstructionSet(model);
+          modelObject = defaultConstructionSet;
+          originalNameToDefaultConstructionSetMap.insert(std::make_pair(name, defaultConstructionSet));
         }else{
           LOG(Error, "Unknown IddObjectType '" << iddObjectType << "'");
         }
@@ -201,6 +373,11 @@ namespace openstudio
 
       // now translate all the surfaces
       ThreeSceneObject sceneObject = scene.object();
+      std::vector<ThreeSceneChild> children = sceneObject.children();
+
+      // sort the children to create all surfaces before sub surfaces
+      std::sort(children.begin(), children.end(), sortSceneChildren);
+
       for (const auto& child : sceneObject.children()){
         boost::optional<ThreeGeometry> geometry = scene.getGeometry(child.geometry());
         if (!geometry){
@@ -218,8 +395,14 @@ namespace openstudio
         std::string surfaceType = userData.surfaceType();
         std::string constructionName = userData.constructionName();
         UUID constructionHandle = toUUID(userData.constructionHandle());
+        std::string surfaceName = userData.surfaceName();
+        UUID surfaceHandle = toUUID(userData.surfaceHandle());
+        std::string subSurfaceName = userData.subSurfaceName();
+        UUID subSurfaceHandle = toUUID(userData.subSurfaceHandle());
         std::string spaceName = userData.spaceName();
         UUID spaceHandle = toUUID(userData.spaceHandle());
+        std::string shadingName = userData.shadingName();
+        UUID shadingHandle = toUUID(userData.shadingHandle());
         std::string thermalZoneName = userData.thermalZoneName();
         UUID thermalZoneHandle = toUUID(userData.thermalZoneHandle());
         std::string spaceTypeName = userData.spaceTypeName();
@@ -233,33 +416,63 @@ namespace openstudio
         std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
         std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
         std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
+        double illuminanceSetpoint = userData.illuminanceSetpoint();
+        bool airWall = userData.airWall();
         //bool plenum = userData.plenum();
         //bool belowFloorPlenum = userData.belowFloorPlenum();
         //bool aboveFloorPlenum = userData.aboveCeilingPlenum();
 
-        boost::optional<ThermalZone> thermalZone = model.getConcreteModelObjectByName<ThermalZone>(thermalZoneName);
-        if (!thermalZone && !thermalZoneName.empty()){
-          LOG(Error, "Could not find ThermalZone '" << thermalZoneName << "'");
+        // DLM: these objects may have been renamed on import (e.g. if space and space type have the same name)
+        // need to keep a map of original name to object for each type rather than relying on model name
+
+        boost::optional<ThermalZone> thermalZone;
+        if (!thermalZoneName.empty()){
+          const auto it = originalNameToThermalZoneMap.find(thermalZoneName);
+          if (it != originalNameToThermalZoneMap.end()){
+            thermalZone = it->second;
+          }else{
+            LOG(Error, "Could not find ThermalZone '" << thermalZoneName << "'");
+          }
         }
 
-        boost::optional<SpaceType> spaceType = model.getConcreteModelObjectByName<SpaceType>(spaceTypeName);
-        if (!spaceType && !spaceTypeName.empty()){
-          LOG(Error, "Could not find SpaceType '" << spaceTypeName << "'");
+        boost::optional<SpaceType> spaceType;
+        if (!spaceTypeName.empty()){
+          const auto it = originalNameToSpaceTypeMap.find(spaceTypeName);
+          if (it != originalNameToSpaceTypeMap.end()){
+            spaceType = it->second;
+          }else{
+            LOG(Error, "Could not find SpaceType '" << spaceTypeName << "'");
+          }
         }
 
-        boost::optional<BuildingStory> buildingStory = model.getConcreteModelObjectByName<BuildingStory>(buildingStoryName);
-        if (!buildingStory && !buildingStoryName.empty()){
-          LOG(Error, "Could not find BuildingStory '" << buildingStoryName << "'");
+        boost::optional<BuildingStory> buildingStory;
+        if (!buildingStoryName.empty()){
+          const auto it = originalNameToBuildingStoryMap.find(buildingStoryName);
+          if (it != originalNameToBuildingStoryMap.end()){
+            buildingStory = it->second;
+          }else{
+            LOG(Error, "Could not find BuildingStory '" << buildingStoryName << "'");
+          }
         }
 
-        boost::optional<BuildingUnit> buildingUnit = model.getConcreteModelObjectByName<BuildingUnit>(buildingUnitName);
-        if (!buildingUnit && !buildingUnitName.empty()){
-          LOG(Error, "Could not find BuildingUnit '" << buildingUnitName << "'");
+        boost::optional<BuildingUnit> buildingUnit;
+        if (!buildingUnitName.empty()){
+          const auto it = originalNameToBuildingUnitMap.find(buildingUnitName);
+          if (it != originalNameToBuildingUnitMap.end()){
+            buildingUnit = it->second;
+          }else{
+            LOG(Error, "Could not find BuildingUnit '" << buildingUnitName << "'");
+          }
         }
 
-        boost::optional<DefaultConstructionSet> constructionSet = model.getConcreteModelObjectByName<DefaultConstructionSet>(constructionSetName);
-        if (!constructionSet && !constructionSetName.empty()){
-          LOG(Error, "Could not find DefaultConstructionSet '" << constructionSetName << "'");
+        boost::optional<DefaultConstructionSet> constructionSet;
+        if (!constructionSetName.empty()){
+          const auto it = originalNameToDefaultConstructionSetMap.find(constructionSetName);
+          if (it != originalNameToDefaultConstructionSetMap.end()){
+            constructionSet = it->second;
+          }else{
+            LOG(Error, "Could not find DefaultConstructionSet '" << constructionSetName << "'");
+          }
         }
 
         // Check if creating a surface
@@ -269,18 +482,47 @@ namespace openstudio
             spaceName = "Default Space";
           }
 
-          boost::optional<Space> space = model.getConcreteModelObjectByName<Space>(spaceName);
-          if (!space){
-            LOG(Error, "Could not find Space '" << spaceName << "'");
+          boost::optional<Space> space;
+          if (!spaceName.empty()){
+            const auto it = originalNameToSpaceMap.find(spaceName);
+            if (it != originalNameToSpaceMap.end()){
+              space = it->second;
+            }else{
+              LOG(Error, "Could not find Space '" << spaceName << "'");
+              continue;
+            }
+          }else{
+            LOG(Error, "Surface missing required Space Name");
             continue;
           }
-
           OS_ASSERT(space);
+
+          unsigned multiplier = 1;
+          const auto it = originalNameToSpaceMultiplierMap.find(spaceName);
+          if (it != originalNameToSpaceMultiplierMap.end()){
+            multiplier = it->second;
+          }else{
+            LOG(Warn, "Could not find muliplier for Space '" << spaceName << "'");
+          }
 
           if (thermalZone){
             if (!space->thermalZone()){
+
+              const auto it = originalNameToThermalZoneMultiplierMap.find(thermalZoneName);
+              if (it != originalNameToThermalZoneMultiplierMap.end()){
+                if (it->second != multiplier){
+                  LOG(Warn, "Varying mulipliers detected for ThermalZone '" << thermalZoneName << "', setting multiplier to 1");
+                  thermalZone->setMultiplier(1);
+                }
+              } else{
+                originalNameToThermalZoneMultiplierMap[thermalZoneName] = multiplier;
+                thermalZone->setMultiplier(multiplier);
+              }
+
               space->setThermalZone(*thermalZone);
             }
+          } else if (multiplier > 1){
+            LOG(Warn, "Space '" << spaceName << "' has muliplier of " << multiplier << " but no ThermalZone, multiplier ignored");
           }
 
           if (spaceType){
@@ -312,19 +554,211 @@ namespace openstudio
               // ensure we can create a plane before calling Surface ctor that might mess up the model
               Plane plane(face);
 
+              bool test;
+
               Surface surface(face, model);
-              surface.setName(name);
+              test = surface.setName(name);
+              if (!test){
+                LOG(Warn, "Could not set Surface name '" << name << "' for Surface '" << surface.nameString() << "'");
+              }
               surface.setSpace(*space);
+              if (!test){
+                LOG(Warn, "Could not set Space '" << space->nameString() << "' for Surface '" << surface.nameString() << "'");
+              }
+              surface.setSurfaceType(surfaceType);
+              if (!test){
+                LOG(Warn, "Could not set SurfaceType '" << surfaceType << "' for Surface '" << surface.nameString() << "'");
+              }
+
+              if (airWall){
+                surface.setConstruction(getAirWallConstruction(model));
+              }
+
+              originalNameToSurfaceMap.insert(std::make_pair(name, surface));
 
               // DLM: can we use these to set adjacencies?
-        //std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
-        //std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
-        //std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
+              //std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
+              //std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
+              //std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
 
-            } catch (const std::exception& ){
-              LOG_FREE(Warn, "modelFromThreeJS", "Could not create surface for vertices " << face);
+            } catch (const std::exception&){
+              LOG(Warn, "Could not create surface for vertices " << face);
             }
           }
+
+        } else if (istringEqual(surfaceType, "FixedWindow") || istringEqual(surfaceType, "OperableWindow") || istringEqual(surfaceType, "GlassDoor") ||
+          istringEqual(surfaceType, "Skylight") || istringEqual(surfaceType, "TubularDaylightDome") || istringEqual(surfaceType, "TubularDaylightDiffuser") ||
+          istringEqual(surfaceType, "Door") || istringEqual(surfaceType, "OverheadDoor")){
+
+          boost::optional<Surface> surface;
+          if (!surfaceName.empty()){
+            const auto it = originalNameToSurfaceMap.find(surfaceName);
+            if (it != originalNameToSurfaceMap.end()){
+              surface = it->second;
+            }else{
+              LOG(Error, "Could not find Surface '" << surfaceName << "'");
+              continue;
+            }
+          }else{
+            LOG(Error, "SubSurface missing required Surface Name");
+            continue;
+          }
+          OS_ASSERT(surface);
+
+          for (const auto& face : faces){
+            try{
+              // ensure we can create a plane before calling Surface ctor that might mess up the model
+              Plane plane(face);
+
+              bool test;
+
+              SubSurface subSurface(face, model);
+              test = subSurface.setName(name);
+              if (!test){
+                LOG(Warn, "Could not set SubSurface name '" << name << "' for SubSurface '" << subSurface.nameString() << "'");
+              }
+              test = subSurface.setSurface(*surface);
+              if (!test){
+                LOG(Warn, "Could not set SubSurface to '" << surface->nameString() << "' for SubSurface '" << subSurface.nameString() << "'");
+              }
+              test = subSurface.setSubSurfaceType(surfaceType);
+              if (!test){
+                LOG(Warn, "Could not set SubSurfaceType to '" << surfaceType << "' for SubSurface '" << subSurface.nameString() << "'");
+              }
+
+              if (airWall){
+                subSurface.setConstruction(getAirWallConstruction(model));
+              }
+
+              originalNameToSubSurfaceMap.insert(std::make_pair(name, subSurface));
+
+            } catch (const std::exception&){
+              LOG(Warn, "Could not create sub surface for vertices " << face);
+            }
+          }
+
+        } else if (istringEqual(surfaceType, "SiteShading") || istringEqual(surfaceType, "BuildingShading") || istringEqual(surfaceType, "SpaceShading")){
+
+          if (shadingName.empty()){
+            shadingName = "Default " + surfaceType ;
+          }
+
+          boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup;
+          if (istringEqual(surfaceType, "SpaceShading")){
+
+            boost::optional<SubSurface> subSurface;
+            if (!subSurfaceName.empty()){
+              const auto it = originalNameToSubSurfaceMap.find(subSurfaceName);
+              if (it != originalNameToSubSurfaceMap.end()){
+                subSurface = it->second;
+              }else{
+                LOG(Error, "Could not find SubSurface '" << subSurfaceName << "'");
+                continue;
+              }
+            }else{
+              LOG(Error, "SpaceShading missing required SubSurface Name");
+              continue;
+            }
+            OS_ASSERT(subSurface);
+
+            boost::optional<Space> space = subSurface->space();
+            if (!space){
+              LOG(Error, "Cannot find Space for SubSurface '" << subSurfaceName << "'");
+              continue;
+            }
+            OS_ASSERT(space);
+
+            std::vector<ShadingSurfaceGroup> groups = subSurface->shadingSurfaceGroups();
+            if (groups.empty()){
+              std::string shadingGroupName = subSurfaceName + " Shading Group";
+              shadingSurfaceGroup = ShadingSurfaceGroup(model);
+              shadingSurfaceGroup->setName(shadingGroupName);
+              shadingSurfaceGroup->setSpace(*space);
+              shadingSurfaceGroup->setShadedSubSurface(*subSurface);
+            } else{
+              shadingSurfaceGroup = groups[0];
+            }
+          } else{
+            shadingSurfaceGroup = model.getConcreteModelObjectByName<ShadingSurfaceGroup>(shadingName);
+            if (!shadingSurfaceGroup){
+              shadingSurfaceGroup = ShadingSurfaceGroup(model);
+              if (istringEqual(surfaceType, "SiteShading")){
+                shadingSurfaceGroup->setShadingSurfaceType("Site");
+              }else if (istringEqual(surfaceType, "BuildingShading")){
+                shadingSurfaceGroup->setShadingSurfaceType("Building");
+              }
+              shadingSurfaceGroup->setName(shadingName);
+            }
+          }
+
+          OS_ASSERT(shadingSurfaceGroup);
+
+          for (const auto& face : faces){
+            try{
+              // ensure we can create a plane before calling Surface ctor that might mess up the model
+              Plane plane(face);
+
+              bool test;
+
+              ShadingSurface shadingSurface(face, model);
+              test = shadingSurface.setName(name);
+              if (!test){
+                LOG(Warn, "Could not set ShadingSurface name '" << name << "' for ShadingSurface '" << shadingSurface.nameString() << "'");
+              }
+              test = shadingSurface.setShadingSurfaceGroup(*shadingSurfaceGroup);
+              if (!test){
+                LOG(Warn, "Could not set ShadingSurfaceGroup '" << shadingSurfaceGroup->nameString() << "' for ShadingSurface '" << shadingSurface.nameString() << "'");
+              }
+
+            } catch (const std::exception&){
+              LOG(Warn, "Could not create shading surface for vertices " << face);
+            }
+          }
+
+        } else if (istringEqual(surfaceType, "DaylightingControl")){
+
+          if (spaceName.empty()){
+            spaceName = "Default Space";
+          }
+
+          boost::optional<Space> space;
+          if (!spaceName.empty()){
+            const auto it = originalNameToSpaceMap.find(spaceName);
+            if (it != originalNameToSpaceMap.end()){
+              space = it->second;
+            }else{
+              LOG(Error, "Could not find Space '" << spaceName << "'");
+              continue;
+            }
+          }
+          OS_ASSERT(space);
+
+          for (const auto& face : faces){
+            boost::optional<Point3d> centroid = getCentroid(face);
+
+            if (centroid){
+              DaylightingControl dc(model);
+              dc.setName(name);
+              dc.setPositionXCoordinate(centroid->x());
+              dc.setPositionYCoordinate(centroid->y());
+              dc.setPositionZCoordinate(centroid->z());
+              dc.setSpace(*space);
+              dc.setIlluminanceSetpoint(illuminanceSetpoint);
+
+              boost::optional<ThermalZone> zone = space->thermalZone();
+              if (thermalZone){
+                if (!thermalZone->primaryDaylightingControl()){
+                  thermalZone->setPrimaryDaylightingControl(dc);
+                } else if (!thermalZone->secondaryDaylightingControl()){
+                  thermalZone->setSecondaryDaylightingControl(dc);
+                }
+              }
+
+            } else{
+              LOG(Warn, "Could not create daylighting control for vertices " << face);
+            }
+          }
+
         }
       }
 
@@ -365,6 +799,6 @@ namespace openstudio
       return model;
     }
 
-    
+
   }//model
 }//openstudio

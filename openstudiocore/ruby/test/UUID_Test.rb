@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -31,38 +31,38 @@ require 'openstudio'
 require 'minitest/autorun'
 
 class UUID_Test < MiniTest::Unit::TestCase
-  
+
   # def setup
   # end
 
   # def teardown
   # end
-  
+
   def test_uuid_constuctors
 
     # created UUID is not null
     uuid = OpenStudio::UUID::create()
     assert(uuid)
-  
+
     # copy UUID
     uuid2 = uuid
     assert(uuid2)
     assert_equal(uuid, uuid2)
-  
+
     # to string
     s = uuid.to_s
     assert(s)
   end
-  
+
   def test_uuid_big_set
     n = 10000
     nGroup = 10
-    
+
     (0...nGroup).each do |group|
       assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/utilities/test/UUID_BigSet_Aux.rb' '#{n}'"))
     end
-    
-    File.delete("UUIDSet.txt")    
+
+    File.delete("UUIDSet.txt")
   end
 
 end

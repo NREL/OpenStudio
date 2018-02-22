@@ -2,10 +2,10 @@ require 'github_api'
 require 'date'
 require 'yaml'
 
-begin_date = Time.parse('2017-09-06' + 'T06:00:00Z')
+begin_date = Time.parse('2017-12-04' + 'T06:00:00Z')
 
 end_date = Time.now
-end_date = Time.parse('2017-09-13' + 'T006:00:00Z')
+end_date = Time.parse('2017-12-12' + 'T006:00:00Z')
 
 repo_owner = 'NREL'
 repo = 'OpenStudio'
@@ -43,7 +43,7 @@ end
 def print_issue(issue)
   is_feature = false
   issue.labels.each {|label| is_feature = true if label.name == "Feature Request"}
-  
+
   if is_feature
     "- ![Improved:][improved] [#{get_issue_num(issue)}]( #{get_html_url(issue)} ), #{get_title(issue)}"
   else

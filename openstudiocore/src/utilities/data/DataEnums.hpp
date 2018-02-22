@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -36,8 +36,8 @@ namespace openstudio {
 
 /** \class InstallLocationType
  *  \brief EnergyPlus meter install location.
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual 
- *  macro call is: 
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
  *  \code
 OPENSTUDIO_ENUM(InstallLocationType,
   ((Facility))
@@ -57,8 +57,8 @@ OPENSTUDIO_ENUM(InstallLocationType,
 
 /** \class FuelType
  *  \brief EnergyPlus meterable fuel types
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual 
- *  macro call is: 
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
  *  \code
 OPENSTUDIO_ENUM(FuelType,
   ((Electricity))
@@ -96,8 +96,8 @@ typedef std::vector<FuelType> FuelTypeVector;
 
 /** \class EndUseFuelType
  *  \brief Fuel types reported by OpenStudio.
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual 
- *  macro call is: 
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
  *  \code
 OPENSTUDIO_ENUM(EndUseFuelType,
   ((Electricity)(Electricity))
@@ -115,10 +115,10 @@ OPENSTUDIO_ENUM(EndUseFuelType,
   ((DistrictHeating)(District Heating))
   ((Water)(Water)));
 
-/** \class EndUseCategoryType 
+/** \class EndUseCategoryType
  *  \brief End use categories reported by OpenStudio.  These correspond to the "End Uses" table in the ABUPs report.
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual 
- *  macro call is: 
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
+ *  macro call is:
  *  \code
 OPENSTUDIO_ENUM(EndUseCategoryType,
   ((Heating)(Heating))
@@ -154,8 +154,8 @@ OPENSTUDIO_ENUM(EndUseCategoryType,
 
 /** \class EndUseType
  *  \brief End uses that can be metered by EnergyPlus.  Some EndUseTypes correspond to EndUseCategoryTypes, others
- *  do not.  
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is: 
+ *  do not.
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
  *  \code
 OPENSTUDIO_ENUM(EndUseType,
   ((InteriorLights))
@@ -202,9 +202,9 @@ OPENSTUDIO_ENUM(EndUseType,
   ((HeatRecoveryForHeating)));
 
 /** \class BuildingSector
- *  \brief Commercial or residential. 
+ *  \brief Commercial or residential.
  *  \details Used to differentiate between utility tariffs, building energy standards, etc.
- *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is: 
+ *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
  *  \code
 OPENSTUDIO_ENUM(BuildingSector,
   ((Commercial)(NonResidential))

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -127,7 +127,7 @@ TEST_F(MeasureFixture, EmbeddedRubyTest) {
       rsc(new openstudio::measure::EmbeddedRubyMeasureInfoGetter<openstudio::detail::RubyInterpreter>(ri));
 
     // Test calling the actual function we are concerned about
-    
+
     Model someModel;
     Workspace someWorkspace(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
@@ -147,7 +147,7 @@ TEST_F(MeasureFixture, EmbeddedRubyTest) {
     info = rsc->getInfo(measure, someModel, someWorkspace);
     EXPECT_EQ(3u, info.arguments().size());
   }
-  
+
 }
 
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -76,7 +76,7 @@ namespace detail {
     virtual unsigned outletPort() override;
 
     virtual bool addToNode(Node & node) override;
-    
+
     //@}
     /** @name Getters */
     //@{
@@ -137,6 +137,21 @@ namespace detail {
     bool isBlowdownConcentrationRatioDefaulted() const;
 
     boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
+
+    boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+    boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
+
+    boost::optional<double> autosizedUfactorTimesAreaValueatDesignAirFlowRate() const ;
+
+    boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
+    // A11; \field Supply Water Storage Tank Name
 
     //@}
     /** @name Setters */
@@ -202,11 +217,11 @@ namespace detail {
 
     void resetEvaporationLossMode();
 
-    void setEvaporationLossFactor(boost::optional<double> evaporationLossFactor);
+    bool setEvaporationLossFactor(boost::optional<double> evaporationLossFactor);
 
     void resetEvaporationLossFactor();
 
-    void setDriftLossPercent(double driftLossPercent);
+    bool setDriftLossPercent(double driftLossPercent);
 
     void resetDriftLossPercent();
 
@@ -244,5 +259,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_IMPL_HPP
-
+#endif // MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_IMPL_HPP

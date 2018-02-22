@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -45,18 +45,19 @@ namespace detail {
 class AvailabilityManagerScheduled;
 class ControllerOutdoorAir;
 class Node;
+class AirflowNetworkDistributionNode;
 
 /** AirLoopHVACOutdoorAirSystem is an HVACComponent that wraps the IDD object
  *  named "OS:AirLoopHVAC:OutdoorAirSystem"
  *
  *  The purpose of this class is to simplify the construction and manipulation
- *  of the EnergyPlus AirLoopHVAC:OutdoorAirSystem object.  
+ *  of the EnergyPlus AirLoopHVAC:OutdoorAirSystem object.
  */
 class MODEL_API AirLoopHVACOutdoorAirSystem : public HVACComponent {
   public:
 
-  /** Constructs a new AirLoopHVACOutdoorAirSystem object and places it inside the 
-   *  model.     
+  /** Constructs a new AirLoopHVACOutdoorAirSystem object and places it inside the
+   *  model.
    */
   explicit AirLoopHVACOutdoorAirSystem(Model& model, const ControllerOutdoorAir & controller);
 
@@ -105,28 +106,28 @@ class MODEL_API AirLoopHVACOutdoorAirSystem : public HVACComponent {
 
   /** Returns a vector of model objects that are on the path of the outgoing relief air stream. **/
   std::vector<ModelObject> reliefComponents() const;
-  
+
   /** Returns a vector that is the concatenation of oaComponents() and reliefComponents(). **/
   std::vector<ModelObject> components() const;
-  
+
   /** Returns the optional ModelObject with the Handle given.  The optional
    *  will be false if the given handle does not correspond to the a ModelObject
    *  that is not part of the outdoor air system.
    **/
   boost::optional<ModelObject> component(openstudio::Handle handle);
-  
+
   /** Returns the optional ModelObject with the Handle given.  The optional
    *  will be false if the given handle does not correspond to the a ModelObject
    *  that is not part of the supply side of the outdoor air system.
    **/
   boost::optional<ModelObject> oaComponent(openstudio::Handle handle);
-  
+
   /** Returns the optional ModelObject with the Handle given.  The optional
    *  will be false if the given handle does not correspond to the a ModelObject
    *  that is not part of the supply side of the outdoor air system.
    **/
   boost::optional<ModelObject> reliefComponent(openstudio::Handle handle);
-  
+
   virtual bool addToNode(Node & node);
 
   virtual std::vector<openstudio::IdfObject> remove();
@@ -137,10 +138,14 @@ class MODEL_API AirLoopHVACOutdoorAirSystem : public HVACComponent {
   ControllerOutdoorAir getControllerOutdoorAir() const;
 
   /** Sets the ControllerOutdoorAir object associated with the AirLoopHVACOutdoorAirSystem. **/
-  void setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir );
+  bool setControllerOutdoorAir(const ControllerOutdoorAir & controllerOutdoorAir );
 
   /** Reimplemented from HVACComponent. **/
   boost::optional<AirLoopHVAC> airLoop() const;
+
+  AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
+
+  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
   static IddObjectType iddObjectType();
 
@@ -150,8 +155,8 @@ class MODEL_API AirLoopHVACOutdoorAirSystem : public HVACComponent {
 
   friend class openstudio::IdfObject;
 
-  /// @cond 
-  
+  /// @cond
+
   typedef detail::AirLoopHVACOutdoorAirSystem_Impl ImplType;
 
   explicit AirLoopHVACOutdoorAirSystem(

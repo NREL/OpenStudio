@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,10 +39,7 @@ class Schedule;
 namespace detail {
 
   class MODEL_API CoilCoolingWater_Impl : public WaterToAirComponent_Impl {
-    
-
-    
-  public:
+      public:
     /** @name Constructors and Destructors */
     //@{
 
@@ -70,6 +67,8 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual const std::vector<std::string>& outputVariableNames() const override;
+
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     virtual unsigned airInletPort() override;
@@ -84,6 +83,8 @@ namespace detail {
 
     virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
+    virtual std::vector<ModelObject> children() const override;
+
     //@}
 
     Schedule availabilitySchedule() const;
@@ -92,7 +93,7 @@ namespace detail {
 
     boost::optional<double> designWaterFlowRate();
 
-    void setDesignWaterFlowRate( double value );
+    bool setDesignWaterFlowRate( double value );
 
     bool isDesignWaterFlowRateAutosized();
 
@@ -100,7 +101,7 @@ namespace detail {
 
     boost::optional<double> designAirFlowRate();
 
-    void setDesignAirFlowRate( double value );
+    bool setDesignAirFlowRate( double value );
 
     bool isDesignAirFlowRateAutosized();
 
@@ -108,7 +109,7 @@ namespace detail {
 
     boost::optional<double> designInletWaterTemperature();
 
-    void setDesignInletWaterTemperature( double value );
+    bool setDesignInletWaterTemperature( double value );
 
     bool isDesignInletWaterTemperatureAutosized();
 
@@ -116,7 +117,7 @@ namespace detail {
 
     boost::optional<double> designInletAirTemperature();
 
-    void setDesignInletAirTemperature( double value );
+    bool setDesignInletAirTemperature( double value );
 
     bool isDesignInletAirTemperatureAutosized();
 
@@ -124,7 +125,7 @@ namespace detail {
 
     boost::optional<double> designOutletAirTemperature();
 
-    void setDesignOutletAirTemperature( double value );
+    bool setDesignOutletAirTemperature( double value );
 
     bool isDesignOutletAirTemperatureAutosized();
 
@@ -132,7 +133,7 @@ namespace detail {
 
     boost::optional<double> designInletAirHumidityRatio();
 
-    void setDesignInletAirHumidityRatio( double value );
+    bool setDesignInletAirHumidityRatio( double value );
 
     bool isDesignInletAirHumidityRatioAutosized();
 
@@ -140,7 +141,7 @@ namespace detail {
 
     boost::optional<double> designOutletAirHumidityRatio();
 
-    void setDesignOutletAirHumidityRatio( double value );
+    bool setDesignOutletAirHumidityRatio( double value );
 
     bool isDesignOutletAirHumidityRatioAutosized();
 
@@ -148,13 +149,37 @@ namespace detail {
 
     std::string typeOfAnalysis();
 
-    void setTypeOfAnalysis( std::string value );
+    bool setTypeOfAnalysis( std::string value );
 
     std::string heatExchangerConfiguration();
 
-    void setHeatExchangerConfiguration( std::string value );
+    bool setHeatExchangerConfiguration( std::string value );
 
-  private:    
+
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+    
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
+    boost::optional<double> autosizedDesignWaterFlowRate() const ;
+
+    boost::optional<double> autosizedDesignAirFlowRate() const ;
+
+    boost::optional<double> autosizedDesignInletWaterTemperature() const ;
+
+    boost::optional<double> autosizedDesignInletAirTemperature() const ;
+
+    boost::optional<double> autosizedDesignOutletAirTemperature() const ;
+
+    boost::optional<double> autosizedDesignInletAirHumidityRatio() const ;
+
+    boost::optional<double> autosizedDesignOutletAirHumidityRatio() const ;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+  private:
+
     REGISTER_LOGGER("openstudio.model.CoilCoolingWater");
 
     boost::optional<ModelObject> availabilityScheduleAsModelObject() const;

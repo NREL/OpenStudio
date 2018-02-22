@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -54,6 +54,8 @@
 #include "Node_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
@@ -88,7 +90,17 @@ namespace detail {
   const std::vector<std::string>& CoilHeatingDXSingleSpeed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Heating Coil Total Heating Rate");
+      result.push_back("Heating Coil Total Heating Energy");
+      result.push_back("Heating Coil Electric Power");
+      result.push_back("Heating Coil Electric Energy");
+      result.push_back("Heating Coil Defrost Electric Power");
+      result.push_back("Heating Coil Defrost Electric Energy");
+      result.push_back("Heating Coil Crankcase Heater Electric Power");
+      result.push_back("Heating Coil Crankcase Heater Electric Energy");
+      result.push_back("Heating Coil Runtime Fraction");
     }
     return result;
   }
@@ -714,6 +726,9 @@ namespace detail {
     result.push_back( energyInputRatioFunctionofFlowFractionCurve() );
     result.push_back( partLoadFractionCorrelationCurve() );
 
+    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+
     return result;
   }
 
@@ -755,6 +770,70 @@ namespace detail {
   bool CoilHeatingDXSingleSpeed_Impl::setRatedSupplyFanPowerPerVolumeFlowRate(double ratedSupplyFanPowerPerVolumeFlowRate) {
     bool result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate, ratedSupplyFanPowerPerVolumeFlowRate);
     return result;
+  }
+
+  AirflowNetworkEquivalentDuct CoilHeatingDXSingleSpeed_Impl::getAirflowNetworkEquivalentDuct(double length, double diameter)
+  {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    if (opt) {
+      if (opt->airPathLength() != length){
+        opt->setAirPathLength(length);
+      }
+      if (opt->airPathHydraulicDiameter() != diameter){
+        opt->setAirPathHydraulicDiameter(diameter);
+      }
+    }
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDXSingleSpeed_Impl::airflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> CoilHeatingDXSingleSpeed_Impl::autosizedRatedTotalHeatingCapacity() const {
+    return getAutosizedValue("Design Size Gross Rated Heating Capacity", "W");
+  }
+
+  boost::optional<double> CoilHeatingDXSingleSpeed_Impl::autosizedRatedAirFlowRate() const {
+    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> CoilHeatingDXSingleSpeed_Impl::autosizedResistiveDefrostHeaterCapacity() const {
+    return getAutosizedValue("Design Size Resistive Defrost Heater Capacity", "W");
+  }
+
+  void CoilHeatingDXSingleSpeed_Impl::autosize() {
+    autosizeRatedTotalHeatingCapacity();
+    autosizeRatedAirFlowRate();
+    autosizeResistiveDefrostHeaterCapacity();
+  }
+
+  void CoilHeatingDXSingleSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedTotalHeatingCapacity();
+    if (val) {
+      setRatedTotalHeatingCapacity(val.get());
+    }
+
+    val = autosizedRatedAirFlowRate();
+    if (val) {
+      setRatedAirFlowRate(val.get());
+    }
+
+    val = autosizedResistiveDefrostHeaterCapacity();
+    if (val) {
+      setResistiveDefrostHeaterCapacity(val.get());
+    }
+
   }
 
 } // detail
@@ -1152,12 +1231,34 @@ bool CoilHeatingDXSingleSpeed::setRatedSupplyFanPowerPerVolumeFlowRate(double ra
   return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->setRatedSupplyFanPowerPerVolumeFlowRate(ratedSupplyFanPowerPerVolumeFlowRate);
 }
 
+AirflowNetworkEquivalentDuct CoilHeatingDXSingleSpeed::getAirflowNetworkEquivalentDuct(double length, double diameter)
+{
+  return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->getAirflowNetworkEquivalentDuct(length, diameter);
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingDXSingleSpeed::airflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->airflowNetworkEquivalentDuct();
+}
+
 /// @cond
 CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed(std::shared_ptr<detail::CoilHeatingDXSingleSpeed_Impl> impl)
   : StraightComponent(std::move(impl))
 {}
 
 /// @endcond
+
+  boost::optional<double> CoilHeatingDXSingleSpeed::autosizedRatedTotalHeatingCapacity() const {
+    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->autosizedRatedTotalHeatingCapacity();
+  }
+
+  boost::optional<double> CoilHeatingDXSingleSpeed::autosizedRatedAirFlowRate() const {
+    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->autosizedRatedAirFlowRate();
+  }
+
+  boost::optional<double> CoilHeatingDXSingleSpeed::autosizedResistiveDefrostHeaterCapacity() const {
+    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->autosizedResistiveDefrostHeaterCapacity();
+  }
 
 } // model
 

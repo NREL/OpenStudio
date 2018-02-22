@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -81,10 +81,13 @@ namespace detail {
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {}
 
+  // TODO: remove
   const std::vector<std::string>& LightsDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: output is listed in Lights instead
     }
     return result;
   }
@@ -291,7 +294,7 @@ namespace detail {
   //  OS_ASSERT(result);
   //}
 
-  void LightsDefinition_Impl::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
+  bool LightsDefinition_Impl::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
     bool result = false;
     if (returnAirFractionCalculatedfromPlenumTemperature) {
       result = setString(OS_Lights_DefinitionFields::ReturnAirFractionCalculatedfromPlenumTemperature, "Yes");
@@ -299,6 +302,7 @@ namespace detail {
       result = setString(OS_Lights_DefinitionFields::ReturnAirFractionCalculatedfromPlenumTemperature, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void LightsDefinition_Impl::resetReturnAirFractionCalculatedfromPlenumTemperature() {
@@ -408,6 +412,16 @@ namespace detail {
     }
 
     return false;
+  }
+
+  std::vector<EMSActuatorNames> LightsDefinition_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "Lights", "Electric Power Level" } };
+    return actuators;
+  }
+
+  std::vector<std::string> LightsDefinition_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Lighting Power Design Level" };
+    return types;
   }
 
 } // detail
@@ -529,8 +543,8 @@ void LightsDefinition::resetReturnAirFraction() {
   getImpl<detail::LightsDefinition_Impl>()->resetReturnAirFraction();
 }
 
-void LightsDefinition::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
-  getImpl<detail::LightsDefinition_Impl>()->setReturnAirFractionCalculatedfromPlenumTemperature(returnAirFractionCalculatedfromPlenumTemperature);
+bool LightsDefinition::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
+  return getImpl<detail::LightsDefinition_Impl>()->setReturnAirFractionCalculatedfromPlenumTemperature(returnAirFractionCalculatedfromPlenumTemperature);
 }
 
 void LightsDefinition::resetReturnAirFractionCalculatedfromPlenumTemperature() {
@@ -580,4 +594,3 @@ LightsDefinition::LightsDefinition(std::shared_ptr<detail::LightsDefinition_Impl
 
 } // model
 } // openstudio
-

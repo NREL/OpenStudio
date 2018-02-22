@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -35,19 +35,26 @@
 #include "../ChillerHeaterPerformanceElectricEIR.hpp"
 #include "../ChillerHeaterPerformanceElectricEIR_Impl.hpp"
 
+#include "../CentralHeatPumpSystemModule.hpp"
+#include "../CentralHeatPumpSystemModule_Impl.hpp"
+#include "../CentralHeatPumpSystem.hpp"
+#include "../CentralHeatPumpSystem_Impl.hpp"
+
 // Curves
 #include "../Curve.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveBiquadratic_Impl.hpp"
 #include "../CurveCubic.hpp"
 #include "../CurveCubic_Impl.hpp"
+#include "../CurveBicubic.hpp"
+#include "../CurveBicubic_Impl.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_ChillerHeaterPerformanceElectricEIR)
+TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_ChillerHeaterPerformanceElectricEIR)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
@@ -63,7 +70,7 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Chi
 }
 
 // Test the various setters and getters
-TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_SettersGetters)
+TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_SettersGetters)
 {
   Model model;
 
@@ -179,24 +186,23 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Set
   // Return type: bool
   // biquadratic
   CurveBiquadratic coolmode_ccFT(model);
-  ASSERT_TRUE(ch_heater.setCoolingModeCoolingCapacityFunctionofTemperatureCurve(coolmode_ccFT));
-  ASSERT_EQ(coolmode_ccFT, ch_heater.coolingModeCoolingCapacityFunctionofTemperatureCurve());
+  ASSERT_TRUE(ch_heater.setCoolingModeCoolingCapacityFunctionOfTemperatureCurve(coolmode_ccFT));
+  ASSERT_EQ(coolmode_ccFT, ch_heater.coolingModeCoolingCapacityFunctionOfTemperatureCurve());
 
   // Return type: bool
   // biquadratic
   CurveBiquadratic coolmode_eicoFT(model);
-  ASSERT_TRUE(ch_heater.setCoolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(coolmode_eicoFT));
-  ASSERT_EQ(coolmode_eicoFT, ch_heater.coolingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve());
+  ASSERT_TRUE(ch_heater.setCoolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(coolmode_eicoFT));
+  ASSERT_EQ(coolmode_eicoFT, ch_heater.coolingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve());
 
   // Return type: bool
   // Bicubic or quadratic
-  CurveCubic coolmode_eicoFPLR(model);
-  ASSERT_TRUE(ch_heater.setCoolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(coolmode_eicoFPLR));
-  ASSERT_EQ(coolmode_eicoFPLR, ch_heater.coolingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve());
+  CurveBicubic coolmode_eicoFPLR(model);
+  ASSERT_TRUE(ch_heater.setCoolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(coolmode_eicoFPLR));
+  ASSERT_EQ(coolmode_eicoFPLR, ch_heater.coolingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve());
 
   // Return type: bool
   ASSERT_TRUE(ch_heater.setCoolingModeCoolingCapacityOptimumPartLoadRatio(0.87));
-  EXPECT_TRUE(ch_heater.coolingModeCoolingCapacityOptimumPartLoadRatio());
   ASSERT_EQ(0.87, ch_heater.coolingModeCoolingCapacityOptimumPartLoadRatio());
 
   // Return type: bool
@@ -207,20 +213,20 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Set
   // Return type: bool
   // biquadratic
   CurveBiquadratic heatmode_ccFT(model);
-  ASSERT_TRUE(ch_heater.setHeatingModeCoolingCapacityFunctionofTemperatureCurve(heatmode_ccFT));
-  ASSERT_EQ(heatmode_ccFT, ch_heater.heatingModeCoolingCapacityFunctionofTemperatureCurve());
+  ASSERT_TRUE(ch_heater.setHeatingModeCoolingCapacityFunctionOfTemperatureCurve(heatmode_ccFT));
+  ASSERT_EQ(heatmode_ccFT, ch_heater.heatingModeCoolingCapacityFunctionOfTemperatureCurve());
 
   // Return type: bool
   // biquadratic
   CurveBiquadratic heatmode_eicoFT(model);
-  ASSERT_TRUE(ch_heater.setHeatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve(heatmode_eicoFT));
-  ASSERT_EQ(heatmode_eicoFT, ch_heater.heatingModeElectricInputtoCoolingOutputRatioFunctionofTemperatureCurve());
+  ASSERT_TRUE(ch_heater.setHeatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve(heatmode_eicoFT));
+  ASSERT_EQ(heatmode_eicoFT, ch_heater.heatingModeElectricInputToCoolingOutputRatioFunctionOfTemperatureCurve());
 
   // Return type: bool
   // Bicubic or quadratic
-  CurveCubic heatmode_eicoFPLR(model);
-  ASSERT_TRUE(ch_heater.setHeatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve(heatmode_eicoFPLR));
-  ASSERT_EQ(heatmode_eicoFPLR, ch_heater.heatingModeElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurve());
+  CurveBicubic heatmode_eicoFPLR(model);
+  ASSERT_TRUE(ch_heater.setHeatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve(heatmode_eicoFPLR));
+  ASSERT_EQ(heatmode_eicoFPLR, ch_heater.heatingModeElectricInputToCoolingOutputRatioFunctionOfPartLoadRatioCurve());
 
   // Return type: bool
   ASSERT_TRUE(ch_heater.setHeatingModeCoolingCapacityOptimumPartLoadRatio(0.91));
@@ -229,5 +235,154 @@ TEST(ChillerHeaterPerformanceElectricEIR,ChillerHeaterPerformanceElectricEIR_Set
   // Return type: bool
   ASSERT_TRUE(ch_heater.setSizingFactor(1.05));
   ASSERT_EQ(1.05, ch_heater.sizingFactor());
+
+}
+
+TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_CloneWithoutModule)
+{
+  Model model;
+
+  ChillerHeaterPerformanceElectricEIR ch_heater(model);
+  Curve c = ch_heater.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
+  ASSERT_EQ(1u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
+
+  // Clone the ChillerHeater into the same model
+  ChillerHeaterPerformanceElectricEIR  ch_heaterClone = ch_heater.clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
+  Curve c1 = ch_heaterClone.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
+  ASSERT_EQ(2u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
+  // Check that it points to the same curve
+  ASSERT_EQ(c.handle(), c1.handle());
+
+
+  // Clone into another model
+  Model model2;
+  ChillerHeaterPerformanceElectricEIR  ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
+  ASSERT_EQ(1u, model2.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
+  Curve c2 = ch_heaterClone2.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
+  ASSERT_EQ(c.name(), c2.name());
+
+}
+
+TEST_F(ModelFixture,ChillerHeaterPerformanceElectricEIR_CloneWithModule)
+{
+  Model model;
+
+  // Create a CentralHeatPumpSystemModule and get its ChillerHeater (from constructor)
+  CentralHeatPumpSystemModule mod(model);
+  ChillerHeaterPerformanceElectricEIR ch_heater = mod.chillerHeaterModulesPerformanceComponent();
+
+  Curve c = ch_heater.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
+  ASSERT_EQ(1u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
+
+  // Clone the ChillerHeater into the same model
+  ChillerHeaterPerformanceElectricEIR  ch_heaterClone = ch_heater.clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
+  Curve c1 = ch_heaterClone.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
+  ASSERT_EQ(2u, model.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
+  // Check that it points to the same curve
+  ASSERT_EQ(c.handle(), c1.handle());
+
+  // Check that it didn't clone the parent Module...
+  ASSERT_EQ(1u, model.getModelObjects<CentralHeatPumpSystemModule>().size());
+
+  // Clone into another model
+  Model model2;
+  ChillerHeaterPerformanceElectricEIR  ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
+  ASSERT_EQ(1u, model2.getModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
+  Curve c2 = ch_heaterClone2.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
+  ASSERT_EQ(c.name(), c2.name());
+  // Check that it didn't clone the parent Module...Should be zero
+  ASSERT_EQ(0u, model2.getModelObjects<CentralHeatPumpSystemModule>().size());
+
+
+}
+
+
+TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_ReverseLookups)
+{
+  // Nothing set
+  {
+    Model model;
+    ChillerHeaterPerformanceElectricEIR ch_heater(model);
+    ASSERT_EQ(0u, ch_heater.centralHeatPumpSystemModules().size());
+    ASSERT_EQ(0u, ch_heater.centralHeatPumpSystems().size());
+  }
+
+  // A module, no centralHP
+  {
+    Model model;
+
+    // Create a CentralHeatPumpSystemModule and get its ChillerHeater (from constructor)
+    CentralHeatPumpSystemModule mod(model);
+    ChillerHeaterPerformanceElectricEIR ch_heater = mod.chillerHeaterModulesPerformanceComponent();
+
+    ASSERT_EQ(1u, ch_heater.centralHeatPumpSystemModules().size());
+    ASSERT_EQ(mod.handle(), ch_heater.centralHeatPumpSystemModules()[0].handle());
+
+    ASSERT_EQ(0u, ch_heater.centralHeatPumpSystems().size());
+
+  }
+
+
+  // A module and a centralHP
+  {
+    Model model;
+
+    // Create a CentralHeatPumpSystemModule and get its ChillerHeater (from constructor)
+    CentralHeatPumpSystem central_hp(model);
+    CentralHeatPumpSystemModule mod(model);
+    ChillerHeaterPerformanceElectricEIR ch_heater = mod.chillerHeaterModulesPerformanceComponent();
+    ASSERT_TRUE(central_hp.addModule(mod));
+
+    ASSERT_EQ(1u, central_hp.modules().size());
+
+    ASSERT_EQ(1u, ch_heater.centralHeatPumpSystemModules().size());
+    ASSERT_EQ(mod.handle(), ch_heater.centralHeatPumpSystemModules()[0].handle());
+
+    ASSERT_EQ(1u, ch_heater.centralHeatPumpSystems().size());
+    ASSERT_EQ(central_hp.handle(), ch_heater.centralHeatPumpSystems()[0].handle());
+
+  }
+
+  // Two parent modules in two different centralHP
+  {
+    Model model;
+
+    // Create a CentralHeatPumpSystemModule and get its ChillerHeater (from constructor)
+    CentralHeatPumpSystem central_hp(model);
+    CentralHeatPumpSystemModule mod(model);
+    ChillerHeaterPerformanceElectricEIR ch_heater = mod.chillerHeaterModulesPerformanceComponent();
+    ASSERT_TRUE(central_hp.addModule(mod));
+
+    CentralHeatPumpSystem central_hp2(model);
+    CentralHeatPumpSystemModule mod2(model);
+    ASSERT_TRUE(central_hp2.addModule(mod2));
+    mod2.setChillerHeaterModulesPerformanceComponent(ch_heater);
+
+    ASSERT_EQ(2u, ch_heater.centralHeatPumpSystemModules().size());
+
+    ASSERT_EQ(2u, ch_heater.centralHeatPumpSystems().size());
+
+  }
+
+  // Two parent modules in the same centralHP
+  {
+    Model model;
+
+    // Create a CentralHeatPumpSystemModule and get its ChillerHeater (from constructor)
+    CentralHeatPumpSystem central_hp(model);
+    CentralHeatPumpSystemModule mod(model);
+    ChillerHeaterPerformanceElectricEIR ch_heater = mod.chillerHeaterModulesPerformanceComponent();
+    ASSERT_TRUE(central_hp.addModule(mod));
+
+    CentralHeatPumpSystemModule mod2(model);
+    ASSERT_TRUE(central_hp.addModule(mod2));
+    mod2.setChillerHeaterModulesPerformanceComponent(ch_heater);
+
+    ASSERT_EQ(2u, ch_heater.centralHeatPumpSystemModules().size());
+
+    ASSERT_EQ(1u, ch_heater.centralHeatPumpSystems().size());
+
+  }
+
 
 }

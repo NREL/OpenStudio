@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -37,6 +37,7 @@ namespace model {
 
 class Schedule;
 class Node;
+class AirflowNewtorkEquivalentDuct;
 
 namespace detail {
 
@@ -88,18 +89,25 @@ class MODEL_API CoilHeatingElectric : public StraightComponent {
 
   void resetEfficiency();
 
-  void setNominalCapacity(double nominalCapacity);
+  bool setNominalCapacity(double nominalCapacity);
 
   void resetNominalCapacity();
 
   void autosizeNominalCapacity();
 
-  void setTemperatureSetpointNode(Node & temperatureSetpointNode);
+  bool setTemperatureSetpointNode(Node & temperatureSetpointNode);
 
   void resetTemperatureSetpointNode();
 
   //@}
 
+  /** Creates a new equivalent duct object if an object is not already attached. */
+  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+  
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
+  boost::optional<double> autosizedNominalCapacity() const ;
  protected:
   /// @cond
 
@@ -131,4 +139,3 @@ typedef std::vector<CoilHeatingElectric> CoilHeatingElectricVector;
 } // openstudio
 
 #endif // MODEL_COILHEATINGELECTRIC_HPP
-

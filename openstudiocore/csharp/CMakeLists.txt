@@ -49,7 +49,7 @@ if(MSVC)
   set(CSHARP_VERSION_MINOR ${PROJECT_VERSION_MINOR})
   set(CSHARP_VERSION_PATCH ${PROJECT_VERSION_PATCH})
   set(CSHARP_VERSION_BUILD 0)
-  
+
   if (CMAKE_CL_64)
     set(CSHARP_PLATFORM "x64")
   else()
@@ -81,10 +81,10 @@ if(MSVC)
 
   install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Debug/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
   install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Release/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
-  
+
   # DLM: currently there are some multiply defined symbols, force them for now, investigate later
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /FORCE:MULTIPLE")
-  
+
   # ignore deprecated warnings since we will export deprecated methods
   add_definitions(/wd4996 /bigobj)
 
@@ -148,7 +148,7 @@ if(MSVC)
   add_custom_target(csharp_sdk ALL
     DEPENDS ${OPENSTUDIO_CSHARP_DLL} openstudio_csharp openstudio_translators_csharp
   )
-  
+
 endif()
 
 

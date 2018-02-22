@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -31,15 +31,15 @@ require 'openstudio'
 require 'minitest/autorun'
 
 class Site_Test < MiniTest::Unit::TestCase
-  
+
   def test_construct_all_children
-    
+
     model = OpenStudio::Model::Model.new
-    
+
     site = model.getSite
     numSiteChildren = 0
     assert_equal(numSiteChildren,site.children.size)
-    
+
     climateZones = model.getClimateZones
     numSiteChildren = numSiteChildren + 1
     assert_equal(numSiteChildren,site.children.size)
@@ -47,31 +47,31 @@ class Site_Test < MiniTest::Unit::TestCase
     designDay = OpenStudio::Model::DesignDay.new(model)
     numSiteChildren = numSiteChildren + 1
     assert_equal(numSiteChildren,site.children.size)
-    
+
     skyTemperature = OpenStudio::Model::SkyTemperature.new(model)
     numSiteChildren = numSiteChildren + 1
     assert_equal(numSiteChildren,site.children.size)
-    
+
     weatherFile = model.getWeatherFile
     numSiteChildren = numSiteChildren + 1
     assert_equal(numSiteChildren,site.children.size)
-    
+
     weatherFileConditionType = OpenStudio::Model::WeatherFileConditionType.new(model)
     numSiteChildren = numSiteChildren + 1
     assert_equal(numSiteChildren,site.children.size)
-    
+
     weatherFileDays = OpenStudio::Model::WeatherFileDays.new(model)
     numSiteChildren = numSiteChildren + 1
     assert_equal(numSiteChildren,site.children.size)
-    
+
   end
-  
+
   def test_get_optional_site
-    
-    model = OpenStudio::Model::Model.new  
+
+    model = OpenStudio::Model::Model.new
     site = model.getOptionalSite
     assert(site.empty?)
 
   end
- 
+
 end

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -67,7 +67,7 @@ TEST_F(ModelFixture,CoilHeatingLowTempRadiantConstFlow_SetGetFields) {
   EXPECT_TRUE(testHC.setHeatingHighControlTemperatureSchedule(heatingHighControlTempSched));
   boost::optional<Schedule> sch3 = testHC.heatingHighControlTemperatureSchedule();
   EXPECT_EQ(*sch3,heatingHighControlTempSched);
-  
+
   heatingLowControlTempSched.setValue(15.0);
   EXPECT_TRUE(testHC.setHeatingLowControlTemperatureSchedule(heatingLowControlTempSched));
   boost::optional<Schedule> sch4 = testHC.heatingLowControlTemperatureSchedule();

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -46,6 +46,27 @@ class Transformation;
 namespace model{
 
 class AirConditionerVariableRefrigerantFlow;
+class AirflowNetworkSimulationControl;
+class AirflowNetworkZone;
+class AirflowNetworkSurface;
+class AirflowNetworkReferenceCrackConditions;
+class AirflowNetworkCrack;
+class AirflowNetworkEffectiveLeakageArea;
+class AirflowNetworkDetailedOpening;
+class AirflowNetworkSimpleOpening;
+class AirflowNetworkHorizontalOpening;
+class AirflowNetworkZoneExhaustFan;
+class AirflowNetworkExternalNode;
+class AirflowNetworkDistributionNode;
+class AirflowNetworkLeakageRatio;
+class AirflowNetworkDuct;
+class AirflowNetworkFan;
+class AirflowNetworkEquivalentDuct;
+class AirflowNetworkConstantPressureDrop;
+class AirflowNetworkOutdoorAirflow;
+class AirflowNetworkDistributionLinkage;
+class AirflowNetworkDuctViewFactors;
+class AirflowNetworkOccupantVentilationControl;
 class AirGap;
 class AirLoopHVAC;
 class AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass;
@@ -55,7 +76,9 @@ class AirLoopHVACUnitarySystem;
 class AirLoopHVACReturnPlenum;
 class AirLoopHVACSupplyPlenum;
 class AirLoopHVACZoneSplitter;
+class AirTerminalDualDuctConstantVolume;
 class AirTerminalDualDuctVAV;
+class AirTerminalDualDuctVAVOutdoorAir;
 class AirTerminalSingleDuctConstantVolumeCooledBeam;
 class AirTerminalSingleDuctConstantVolumeFourPipeInduction;
 class AirTerminalSingleDuctConstantVolumeReheat;
@@ -70,11 +93,19 @@ class AirTerminalSingleDuctVAVHeatAndCoolReheat;
 class AirLoopHVACZoneMixer;
 class AirLoopHVACOutdoorAirSystem;
 class AirWallMaterial;
+class AvailabilityManagerAssignmentList;
 class AvailabilityManagerHybridVentilation;
 class AvailabilityManagerOptimumStart;
 class AvailabilityManagerDifferentialThermostat;
 class AvailabilityManagerNightVentilation;
 class AvailabilityManagerNightCycle;
+class AvailabilityManagerHighTemperatureTurnOn;
+class AvailabilityManagerHighTemperatureTurnOff;
+class AvailabilityManagerLowTemperatureTurnOn;
+class AvailabilityManagerLowTemperatureTurnOff;
+class AvailabilityManagerScheduled;
+class AvailabilityManagerScheduledOn;
+class AvailabilityManagerScheduledOff;
 class Blind;
 class Building;
 class BoilerHotWater;
@@ -171,6 +202,21 @@ class EvaporativeCoolerIndirectResearchSpecial;
 class EvaporativeFluidCoolerSingleSpeed;
 class EvaporativeFluidCoolerTwoSpeed;
 class ExteriorLights;
+class ExteriorFuelEquipment;
+class ExteriorWaterEquipment;
+class ExternalInterface;
+class ExternalInterfaceActuator;
+class ExternalInterfaceFunctionalMockupUnitExportFromVariable;
+class ExternalInterfaceFunctionalMockupUnitExportToActuator;
+class ExternalInterfaceFunctionalMockupUnitExportToSchedule;
+class ExternalInterfaceFunctionalMockupUnitExportToVariable;
+class ExternalInterfaceFunctionalMockupUnitImport;
+class ExternalInterfaceFunctionalMockupUnitImportFromVariable;
+class ExternalInterfaceFunctionalMockupUnitImportToActuator;
+class ExternalInterfaceFunctionalMockupUnitImportToSchedule;
+class ExternalInterfaceFunctionalMockupUnitImportToVariable;
+class ExternalInterfaceSchedule;
+class ExternalInterfaceVariable;
 class FanConstantVolume;
 class FanOnOff;
 class FanVariableVolume;
@@ -178,6 +224,8 @@ class FanZoneExhaust;
 class FFactorGroundFloorConstruction;
 class FluidCoolerSingleSpeed;
 class FluidCoolerTwoSpeed;
+class FoundationKiva;
+class FoundationKivaSettings;
 class Gas;
 class GasEquipment;
 class GasMixture;
@@ -337,6 +385,7 @@ class SubSurface;
 class Surface;
 class SurfacePropertyConvectionCoefficients;
 class SurfacePropertyConvectionCoefficientsMultipleSurface;
+class SurfacePropertyExposedFoundationPerimeter;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class TableMultiVariableLookup;
@@ -457,6 +506,48 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlow( model::AirConditionerVariableRefrigerantFlow & modelObject );
 
+  boost::optional<IdfObject> translateAirflowNetworkSimulationControl( model::AirflowNetworkSimulationControl & modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkZone( model::AirflowNetworkZone& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkSurface( model::AirflowNetworkSurface& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkReferenceCrackConditions( model::AirflowNetworkReferenceCrackConditions& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkCrack( model::AirflowNetworkCrack& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkEffectiveLeakageArea( model::AirflowNetworkEffectiveLeakageArea& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkDetailedOpening( model::AirflowNetworkDetailedOpening& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkSimpleOpening( model::AirflowNetworkSimpleOpening& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkHorizontalOpening( model::AirflowNetworkHorizontalOpening& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkZoneExhaustFan( model::AirflowNetworkZoneExhaustFan& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkExternalNode( model::AirflowNetworkExternalNode& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkDistributionNode( model::AirflowNetworkDistributionNode& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkLeakageRatio( model::AirflowNetworkLeakageRatio& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkDuct( model::AirflowNetworkDuct& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkFan( model::AirflowNetworkFan& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkEquivalentDuct( model::AirflowNetworkEquivalentDuct& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkConstantPressureDrop( model::AirflowNetworkConstantPressureDrop& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkOutdoorAirflow( model::AirflowNetworkOutdoorAirflow& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkDistributionLinkage( model::AirflowNetworkDistributionLinkage& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkDuctViewFactors( model::AirflowNetworkDuctViewFactors& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkOccupantVentilationControl( model::AirflowNetworkOccupantVentilationControl& modelObject );
+
   boost::optional<IdfObject> translateAirGap( model::AirGap & modelObject );
 
   boost::optional<IdfObject> translateAirLoopHVAC( model::AirLoopHVAC & modelObject );
@@ -479,7 +570,11 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAirLoopHVACZoneSplitter( model::AirLoopHVACZoneSplitter & airLoopHVACZoneSplitter );
 
+  boost::optional<IdfObject> translateAirTerminalDualDuctConstantVolume ( model::AirTerminalDualDuctConstantVolume & modelObject );
+
   boost::optional<IdfObject> translateAirTerminalDualDuctVAV ( model::AirTerminalDualDuctVAV & modelObject );
+
+  boost::optional<IdfObject> translateAirTerminalDualDuctVAVOutdoorAir ( model::AirTerminalDualDuctVAVOutdoorAir & modelObject );
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeCooledBeam ( model::AirTerminalSingleDuctConstantVolumeCooledBeam & modelObject );
 
@@ -505,6 +600,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAirWallMaterial( model::AirWallMaterial & modelObject );
 
+  boost::optional<IdfObject> translateAvailabilityManagerAssignmentList( model::AvailabilityManagerAssignmentList & modelObject );
+
   boost::optional<IdfObject> translateAvailabilityManagerHybridVentilation( model::AvailabilityManagerHybridVentilation & modelObject );
 
   boost::optional<IdfObject> translateAvailabilityManagerOptimumStart( model::AvailabilityManagerOptimumStart & modelObject );
@@ -514,6 +611,20 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateAvailabilityManagerNightVentilation( model::AvailabilityManagerNightVentilation & modelObject );
 
   boost::optional<IdfObject> translateAvailabilityManagerNightCycle( model::AvailabilityManagerNightCycle & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerHighTemperatureTurnOn( model::AvailabilityManagerHighTemperatureTurnOn & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerHighTemperatureTurnOff( model::AvailabilityManagerHighTemperatureTurnOff & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerLowTemperatureTurnOn( model::AvailabilityManagerLowTemperatureTurnOn & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerLowTemperatureTurnOff( model::AvailabilityManagerLowTemperatureTurnOff & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerScheduled( model::AvailabilityManagerScheduled & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerScheduledOn( model::AvailabilityManagerScheduledOn & modelObject );
+
+  boost::optional<IdfObject> translateAvailabilityManagerScheduledOff( model::AvailabilityManagerScheduledOff & modelObject );
 
   boost::optional<IdfObject> translateBlind( model::Blind & modelObject );
 
@@ -715,6 +826,36 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateExteriorLights(model::ExteriorLights& modelObject );
 
+  boost::optional<IdfObject> translateExteriorFuelEquipment(model::ExteriorFuelEquipment& modelObject );
+
+  boost::optional<IdfObject> translateExteriorWaterEquipment(model::ExteriorWaterEquipment& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterface(model::ExternalInterface& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceActuator(model::ExternalInterfaceActuator& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportFromVariable(model::ExternalInterfaceFunctionalMockupUnitExportFromVariable& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportToActuator(model::ExternalInterfaceFunctionalMockupUnitExportToActuator& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportToSchedule(model::ExternalInterfaceFunctionalMockupUnitExportToSchedule& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitExportToVariable(model::ExternalInterfaceFunctionalMockupUnitExportToVariable& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImport(model::ExternalInterfaceFunctionalMockupUnitImport& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportFromVariable(model::ExternalInterfaceFunctionalMockupUnitImportFromVariable& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportToActuator(model::ExternalInterfaceFunctionalMockupUnitImportToActuator& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportToSchedule(model::ExternalInterfaceFunctionalMockupUnitImportToSchedule& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceFunctionalMockupUnitImportToVariable(model::ExternalInterfaceFunctionalMockupUnitImportToVariable& modelObject );
+
+  boost::optional<IdfObject> translateExternalInterfaceSchedule(model::ExternalInterfaceSchedule& modelObject);
+
+  boost::optional<IdfObject> translateExternalInterfaceVariable(model::ExternalInterfaceVariable& modelObject);
+
   boost::optional<IdfObject> translateFanConstantVolume( model::FanConstantVolume & modelObject );
 
   boost::optional<IdfObject> translateFanOnOff( model::FanOnOff & modelObject );
@@ -732,6 +873,10 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateFluidCoolerSingleSpeed(model::FluidCoolerSingleSpeed & modelObject);
 
   boost::optional<IdfObject> translateFluidCoolerTwoSpeed(model::FluidCoolerTwoSpeed & modelObject);
+  
+  boost::optional<IdfObject> translateFoundationKiva(model::FoundationKiva & modelObject);
+
+  boost::optional<IdfObject> translateFoundationKivaSettings(model::FoundationKivaSettings & modelObject);
 
   boost::optional<IdfObject> translateGas( model::Gas & modelObject );
 
@@ -799,7 +944,7 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateLuminaire( model::Luminaire & modelObject );
 
   boost::optional<IdfObject> translateMaterialPropertyGlazingSpectralData( model::MaterialPropertyGlazingSpectralData & modelObject );
-  
+
   boost::optional<IdfObject> translateMaterialPropertyMoisturePenetrationDepthSettings( model::MaterialPropertyMoisturePenetrationDepthSettings & modelObject );
 
   boost::optional<IdfObject> translateMasslessOpaqueMaterial( model::MasslessOpaqueMaterial & modelObject );
@@ -1041,6 +1186,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficients(model::SurfacePropertyConvectionCoefficients & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficientsMultipleSurface(model::SurfacePropertyConvectionCoefficientsMultipleSurface & modelObject);
+  
+  boost::optional<IdfObject> translateSurfacePropertyExposedFoundationPerimeter(model::SurfacePropertyExposedFoundationPerimeter & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyOtherSideCoefficients(model::SurfacePropertyOtherSideCoefficients & modelObject);
 
@@ -1153,6 +1300,9 @@ class ENERGYPLUS_API ForwardTranslator {
 
   // translate all schedules and find always on and always off schedules if they exist
   void translateSchedules(const model::Model & model);
+
+  // translate all airflow network objects if an AFN simulation control exists
+  void translateAirflowNetwork(const model::Model & model);
 
   // returns the always on schedule if found, otherwise creates one and saves for later
   IdfObject alwaysOnSchedule();

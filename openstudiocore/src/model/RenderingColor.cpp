@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -37,6 +37,7 @@
 #include <QColor>
 
 #include <cstdlib>
+#include <iomanip>
 
 namespace openstudio {
 namespace model {
@@ -163,7 +164,14 @@ namespace detail {
 
   std::string RenderingColor_Impl::colorString() const
   {
-    return "";
+    std::stringstream stream;
+    stream << "#"
+            << std::setfill ('0') << std::setw(6) << std::uppercase
+            << std::hex << renderingRedValue()*65536 + renderingGreenValue()*256 + renderingBlueValue();
+
+    std::string result = stream.str();
+    OS_ASSERT(result.size() == 7);
+    return result;
   }
 
 } // detail
@@ -176,7 +184,19 @@ RenderingColor::RenderingColor(const Model& model)
 
 boost::optional<RenderingColor> RenderingColor::fromColorString(const std::string& s, const Model& model)
 {
-  return boost::none;
+  if (s.size() != 7){
+    return boost::none;
+  }
+
+  int r = std::stoi(s.substr(1, 2), 0, 16);
+  int g = std::stoi(s.substr(3, 2), 0, 16);
+  int b = std::stoi(s.substr(5, 2), 0, 16);
+
+  RenderingColor result(model);
+  result.setRenderingRedValue(r);
+  result.setRenderingGreenValue(g);
+  result.setRenderingBlueValue(b);
+  return result;
 }
 
 IddObjectType RenderingColor::iddObjectType() {

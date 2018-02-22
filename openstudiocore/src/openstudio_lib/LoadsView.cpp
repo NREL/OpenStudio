@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -57,10 +57,10 @@ namespace openstudio {
 
 
 LoadsView::LoadsView(bool isIP, const openstudio::model::Model& model, QWidget * parent)
-                     : ModelSubTabView(new ModelObjectTypeListView(LoadsView::modelObjectTypesAndNames(), 
-                                                                   model, 
-                                                                   true, 
-                                                                   OSItemType::CollapsibleListHeader, 
+                     : ModelSubTabView(new ModelObjectTypeListView(LoadsView::modelObjectTypesAndNames(),
+                                                                   model,
+                                                                   true,
+                                                                   OSItemType::CollapsibleListHeader,
                                                                    parent),
                                        new LoadsInspectorView(isIP, model,parent),
                                        false,
@@ -72,7 +72,7 @@ LoadsView::LoadsView(bool isIP, const openstudio::model::Model& model, QWidget *
 std::vector<std::pair<IddObjectType, std::string> > LoadsView::modelObjectTypesAndNames()
 {
   std::vector<std::pair<IddObjectType, std::string> > result;
-  
+
   result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_People_Definition, "People Definitions"));
   result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_Lights_Definition, "Lights Definitions"));
   result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_Luminaire_Definition, "Luminaire Definitions"));
@@ -137,7 +137,7 @@ void LoadsInspectorView::onSelectModelObject(const openstudio::model::ModelObjec
       this->showWaterUseEquipmentDefinitionsInspector(modelObject);
       break;
     default:
-      showDefaultView();      
+      showDefaultView();
   }
 }
 

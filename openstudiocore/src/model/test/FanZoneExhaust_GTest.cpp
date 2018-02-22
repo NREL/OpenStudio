@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -35,6 +35,12 @@
 #include "../Node_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
+#include "../AirflowNetworkZoneExhaustFan.hpp"
+#include "../AirflowNetworkZoneExhaustFan_Impl.hpp"
+#include "../AirflowNetworkCrack.hpp"
+#include "../AirflowNetworkCrack_Impl.hpp"
+#include "../AirflowNetworkReferenceCrackConditions.hpp"
+#include "../AirflowNetworkReferenceCrackConditions_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -43,12 +49,12 @@ TEST_F(ModelFixture, FanZoneExhaust_DefaultConstructor)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT ( 
-  {  
+  ASSERT_EXIT (
+  {
     Model model;
     FanZoneExhaust testObject = FanZoneExhaust(model);
 
-    exit(0); 
+    exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
@@ -58,7 +64,7 @@ TEST_F(ModelFixture, FanZoneExhaust_AddToAndRemoveFromThermalZone)
   Model model;
   FanZoneExhaust testObject = FanZoneExhaust(model);
   ThermalZone thermalZone(model);
-  
+
   // Add to thermal zone
   EXPECT_TRUE(testObject.addToThermalZone(thermalZone));
   boost::optional<ThermalZone> testThermalZone = testObject.thermalZone();
@@ -69,9 +75,29 @@ TEST_F(ModelFixture, FanZoneExhaust_AddToAndRemoveFromThermalZone)
   // Check inlet and outlet nodes
   EXPECT_TRUE(testObject.inletNode());
   EXPECT_TRUE(testObject.outletNode());
-  
+
   // Remove from thermal zone
   testObject.removeFromThermalZone();
   EXPECT_FALSE(testObject.thermalZone());
   EXPECT_EQ(0u, thermalZone.equipment().size());
 }
+
+TEST_F(ModelFixture, FanZoneExhaust_AddAFNZoneExhaustFan)
+{
+  Model model;
+  FanZoneExhaust testObject = FanZoneExhaust(model);
+  ThermalZone thermalZone(model);
+
+  EXPECT_FALSE(testObject.airflowNetworkZoneExhaustFan());
+
+  AirflowNetworkCrack crack(model, 1.0, 0.5);
+  EXPECT_EQ(1, crack.airMassFlowCoefficient());
+  EXPECT_EQ(0.5, crack.airMassFlowExponent());
+  EXPECT_FALSE(crack.referenceCrackConditions());
+
+  auto afnobject = testObject.getAirflowNetworkZoneExhaustFan(crack);
+
+  ASSERT_TRUE(afnobject.crack());
+  EXPECT_EQ(crack, afnobject.crack().get());
+}
+

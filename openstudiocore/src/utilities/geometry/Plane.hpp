@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -34,13 +34,15 @@
 
 #include <boost/optional.hpp>
 
+#include <vector>
+
 namespace openstudio{
 
   // forward declaration
   class Point3d;
   class Vector3d;
 
-  /** Plane defines an infinite plane in 3D space.  The equation of a plane is 
+  /** Plane defines an infinite plane in 3D space.  The equation of a plane is
    *  a*x + b*y + c*z = d, any point that satisfies this equation is on the plane.
    */
   class UTILITIES_API Plane{
@@ -100,7 +102,7 @@ namespace openstudio{
     double d() const;
 
   private:
-  
+
     // construct with coefficients
     Plane(double a, double b, double c, double d);
 

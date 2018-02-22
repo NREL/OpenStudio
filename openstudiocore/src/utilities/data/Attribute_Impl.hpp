@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -136,6 +136,9 @@ namespace detail {
       Attribute_Impl(const QDomElement& element);
       Attribute_Impl(const Attribute_Impl& other);
 
+      // Destructor
+      virtual ~Attribute_Impl() {}
+
       openstudio::UUID uuid() const;
 
       openstudio::UUID versionUUID() const;
@@ -146,7 +149,7 @@ namespace detail {
       // ETH@20140414 - displayName should return a std::string (with returnName=true behavior),
       // and the return type of setDisplayName should be void.
 
-      /// get the display name. if returnName and the display name is empty, will return 
+      /// get the display name. if returnName and the display name is empty, will return
       /// name() instead.
       boost::optional<std::string> displayName(bool returnName=false) const;
 
@@ -231,8 +234,8 @@ namespace detail {
       /// set the units
       bool setUnits(const std::string& units);
 
-      /** If attribute is a simple type (non-vector), prints attribute's value to std::string as 
-      *  simply as possible. Numeric types print in high precision. Attribute vectors are printed 
+      /** If attribute is a simple type (non-vector), prints attribute's value to std::string as
+      *  simply as possible. Numeric types print in high precision. Attribute vectors are printed
       *  as XML. */
       std::string toString() const;
 

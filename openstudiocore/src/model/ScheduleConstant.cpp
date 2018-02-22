@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -91,7 +91,9 @@ namespace detail {
   const std::vector<std::string>& ScheduleConstant_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Schedule Value");
     }
     return result;
   }
@@ -137,9 +139,10 @@ namespace detail {
     return false;
   }
 
-  void ScheduleConstant_Impl::setValue(double value) {
+  bool ScheduleConstant_Impl::setValue(double value) {
     bool ok = setDouble(OS_Schedule_ConstantFields::Value, value);
     OS_ASSERT(ok);
+    return ok;
   }
 
   bool ScheduleConstant_Impl::setValue(const Quantity& value) {
@@ -156,6 +159,15 @@ namespace detail {
     // nothing to do
   }
 
+  std::vector<EMSActuatorNames> ScheduleConstant_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Schedule:Constant", "Schedule Value"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ScheduleConstant_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 // create a new ScheduleConstant object in the model's workspace
@@ -184,8 +196,8 @@ double ScheduleConstant::value() const {
   return getImpl<detail::ScheduleConstant_Impl>()->value();
 }
 
-void ScheduleConstant::setValue(double value) {
-  getImpl<detail::ScheduleConstant_Impl>()->setValue(value);
+bool ScheduleConstant::setValue(double value) {
+  return getImpl<detail::ScheduleConstant_Impl>()->setValue(value);
 }
 
 bool ScheduleConstant::setValue(const Quantity& value) {

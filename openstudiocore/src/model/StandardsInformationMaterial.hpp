@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -121,31 +121,31 @@ class MODEL_API StandardsInformationMaterial : public ModelObject {
   /** @name Setters */
   //@{
 
-  void setMaterialStandard(const std::string& materialStandard);
+  bool setMaterialStandard(const std::string& materialStandard);
   void resetMaterialStandard();
 
-  void setMaterialStandardSource(const std::string& materialStandardSource);
+  bool setMaterialStandardSource(const std::string& materialStandardSource);
   void resetMaterialStandardSource();
 
-  void setStandardsCategory(const std::string& standardsCategory);
+  bool setStandardsCategory(const std::string& standardsCategory);
   void resetStandardsCategory();
 
-  void setStandardsIdentifier(const std::string& standardsIdentifier);
+  bool setStandardsIdentifier(const std::string& standardsIdentifier);
   void resetStandardsIdentifier();
 
-  void setCompositeFramingMaterial(const std::string& compositeFramingMaterial);
+  bool setCompositeFramingMaterial(const std::string& compositeFramingMaterial);
   void resetCompositeFramingMaterial();
 
-  void setCompositeFramingConfiguration(const std::string& compositeFramingConfiguration);
+  bool setCompositeFramingConfiguration(const std::string& compositeFramingConfiguration);
   void resetCompositeFramingConfiguration();
 
-  void setCompositeFramingDepth(const std::string& compositeFramingDepth);
+  bool setCompositeFramingDepth(const std::string& compositeFramingDepth);
   void resetCompositeFramingDepth();
 
-  void setCompositeFramingSize(const std::string& compositeFramingSize);
+  bool setCompositeFramingSize(const std::string& compositeFramingSize);
   void resetCompositeFramingSize();
 
-  void setCompositeCavityInsulation(const std::string& compositeCavityInsulation);
+  bool setCompositeCavityInsulation(const std::string& compositeCavityInsulation);
   void resetCompositeCavityInsulation();
 
   //@}
@@ -182,4 +182,3 @@ typedef std::vector<StandardsInformationMaterial> StandardsInformationMaterialVe
 } // openstudio
 
 #endif // MODEL_STANDARDSINFORMATIONMATERIAL_HPP
-

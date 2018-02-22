@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,6 +41,7 @@
 #include <QBoxLayout>
 #include <QDoubleValidator>
 #include <QFocusEvent>
+#include <QLocale>
 
 #include <iomanip>
 
@@ -48,7 +49,7 @@ using openstudio::model::ModelObject;
 
 namespace openstudio {
 
-OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits, 
+OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits,
                                  const std::string& ipUnits, bool isIP, QWidget * parent)
   : m_lineEdit(new QuantityLineEdit()),
     m_units(new QLabel()),
@@ -77,6 +78,9 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
   hLayout->addWidget(m_units);
 
   m_doubleValidator = new QDoubleValidator();
+  // Set the Locale to C, so that "1234.56" is accepted, but not "1234,56", no matter the user's system locale
+  QLocale lo(QLocale::C);
+  m_doubleValidator->setLocale(lo);
   //m_lineEdit->setValidator(m_doubleValidator);
 
   m_lineEdit->setMinimumWidth(60);
@@ -181,13 +185,13 @@ void OSQuantityEdit2::completeBind(bool isIP,
                                    boost::optional<BasicQuery> isAutocalculated)
 {
   // only let one of autosize/autocalculate
-  if ((isAutosized && isAutocalculated) || 
-      (isAutosized && autocalculate) || 
-      (isAutocalculated && autosize)) 
+  if ((isAutosized && isAutocalculated) ||
+      (isAutosized && autocalculate) ||
+      (isAutocalculated && autosize))
   {
     LOG_AND_THROW("A field can only be autosized or autocalculated, it cannot be both.");
   }
-  
+
   m_isIP = isIP;
   m_modelObject = modelObject;
   m_reset = reset;
@@ -198,7 +202,7 @@ void OSQuantityEdit2::completeBind(bool isIP,
   m_isAutocalculated = isAutocalculated;
 
   setEnabled(true);
-  
+
   connect(m_lineEdit, &QLineEdit::editingFinished, this, &OSQuantityEdit2::onEditingFinished); // Evan note: would behaviors improve with "textChanged"?
 
   m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->onChange.connect<OSQuantityEdit2, &OSQuantityEdit2::onModelObjectChange>(this);
@@ -327,7 +331,7 @@ void OSQuantityEdit2::onModelObjectChange() {
   //    unbind();
   //    return;
   //  }
-  //}  
+  //}
   refreshTextAndLabel();
 }
 
@@ -421,7 +425,7 @@ void OSQuantityEdit2::refreshTextAndLabel() {
     m_units->setTextFormat(Qt::RichText);
     m_units->setText(toQString(formatUnitString(ss.str(),DocumentFormat::XHTML)));
     m_units->blockSignals(false);
-  
+
     if (m_isDefaulted) {
       if ((*m_isDefaulted)()) {
         m_lineEdit->setStyleSheet("color:green");

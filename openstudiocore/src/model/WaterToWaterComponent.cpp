@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -249,6 +249,11 @@ boost::optional<PlantLoop> WaterToWaterComponent_Impl::plantLoop() const
   }
   else
   {
+    // Note: checking for supply side only isn't sufficient for CentralHeatPumpSystem
+    // because it is on the supply side of two plant loops: the heating and the cooling plant loop
+    // We rely on tertiaryPlantLoop() method which checks for actual node connections
+    boost::optional<PlantLoop> tertiaryPlantLoop = this->tertiaryPlantLoop();
+
     std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
 
     for(const auto & elem : plantLoops)
@@ -256,8 +261,16 @@ boost::optional<PlantLoop> WaterToWaterComponent_Impl::plantLoop() const
       OptionalPlantLoop plantLoop = elem.optionalCast<PlantLoop>();
       if(plantLoop)
       {
+        // Check that the component is on the supply side of the PlantLoop
         if( plantLoop->supplyComponent(this->handle()) )
         {
+          // Skip the tertiary one
+          if (tertiaryPlantLoop) {
+            if (plantLoop->handle() == tertiaryPlantLoop->handle()) {
+              continue;
+            }
+          }
+
           m_plantLoop = plantLoop;
 
           return plantLoop;
@@ -277,6 +290,10 @@ boost::optional<PlantLoop> WaterToWaterComponent_Impl::secondaryPlantLoop() cons
   }
   else
   {
+    // JM: Same comment as for plantLoop() above, though as of 2018-01-03 I can't think of an actual object
+    // that could be on the demand side of two plant loops
+    boost::optional<PlantLoop> tertiaryPlantLoop = this->tertiaryPlantLoop();
+
     std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
 
     for(const auto & elem : plantLoops)
@@ -286,6 +303,14 @@ boost::optional<PlantLoop> WaterToWaterComponent_Impl::secondaryPlantLoop() cons
       {
         if( plantLoop->demandComponent(this->handle()) )
         {
+
+          // Skip the tertiary one
+          if (tertiaryPlantLoop) {
+            if (plantLoop->handle() == tertiaryPlantLoop->handle()) {
+              continue;
+            }
+          }
+
           m_secondaryPlantLoop = plantLoop;
 
           return plantLoop;

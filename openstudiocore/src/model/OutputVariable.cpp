@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -101,7 +101,11 @@ namespace detail {
     std::vector<EnergyManagementSystemSensor> objects = m.getConcreteModelObjects<EnergyManagementSystemSensor>();
     for (auto & sensor : objects) {
       if (sensor.outputVariable()) {
-        if (sensor.outputVariable().get().variableName() == this->variableName()) {
+        //if (sensor.outputVariable().get().variableName() == this->variableName()) {
+        //  sensor.remove();
+        //}
+        // check handle instead of name
+        if (sensor.outputVariable().get().handle() == this->handle()) {
           sensor.remove();
         }
       }
@@ -229,6 +233,33 @@ namespace detail {
   {
     return OutputVariable::reportingFrequencyValues();
   }
+
+  bool OutputVariable_Impl::exportToBCVTB() const {
+    boost::optional<std::string> value = getString(OS_Output_VariableFields::ExportToBCVTB, true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "True");
+  }
+
+  bool OutputVariable_Impl::isExportToBCVTBDefaulted() const {
+    return isEmpty(OS_Output_VariableFields::ExportToBCVTB);
+  }
+
+  bool OutputVariable_Impl::setExportToBCVTB(bool exportToBCVTB) {
+    bool result = false;
+    if (exportToBCVTB) {
+      result = setString(OS_Output_VariableFields::ExportToBCVTB, "True");
+    } else {
+      result = setString(OS_Output_VariableFields::ExportToBCVTB, "False");
+    }
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void OutputVariable_Impl::resetExportToBCVTB() {
+    bool result = setString(OS_Output_VariableFields::ExportToBCVTB, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 OutputVariable::OutputVariable(const std::string& variableName, const Model& model)
@@ -335,5 +366,21 @@ std::vector<IdfObject> OutputVariable::remove() {
   return getImpl<detail::OutputVariable_Impl>()->remove();
 }
 
+bool OutputVariable::exportToBCVTB() const {
+  return getImpl<detail::OutputVariable_Impl>()->exportToBCVTB();
+}
+
+bool OutputVariable::isExportToBCVTBDefaulted() const {
+  return getImpl<detail::OutputVariable_Impl>()->isExportToBCVTBDefaulted();
+}
+
+bool OutputVariable::setExportToBCVTB(bool exportToBCVTB) {
+  return getImpl<detail::OutputVariable_Impl>()->setExportToBCVTB(exportToBCVTB);
+}
+
+void OutputVariable::resetExportToBCVTB() {
+  getImpl<detail::OutputVariable_Impl>()->resetExportToBCVTB();
+}
+
 } // model
-} // openstudio
+} // openstudio

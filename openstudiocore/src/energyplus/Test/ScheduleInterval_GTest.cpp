@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -88,6 +88,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_Hourly)
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
   bool nextValueShouldBeLast = false;
+  bool hitNextValueShouldBeLast = false;
   unsigned numUntils = 0;
 
   int currentHour = 0;
@@ -97,6 +98,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_Hourly)
 
     if (nextValueShouldBeLast){
       double value = boost::lexical_cast<double>(*field);
+      hitNextValueShouldBeLast = true;
       EXPECT_EQ(8760.0, value);
       nextValueShouldBeLast = false;
     }
@@ -152,6 +154,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_Hourly)
       }
     }
   }
+  EXPECT_TRUE(hitNextValueShouldBeLast);
   bool lastUntil24Found = until24Found;
 
   // check last date was closed
@@ -200,6 +203,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
   bool nextValueShouldBeLast = false;
+  bool hitNextValueShouldBeLast = false;
   unsigned numUntils = 0;
 
   int currentHour = 0;
@@ -209,6 +213,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
 
     if (nextValueShouldBeLast) {
       double value = boost::lexical_cast<double>(*field);
+      hitNextValueShouldBeLast = true;
       EXPECT_EQ(8760.0, value);
       nextValueShouldBeLast = false;
     }
@@ -264,6 +269,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
       }
     }
   }
+  EXPECT_TRUE(hitNextValueShouldBeLast);
   bool lastUntil24Found = until24Found;
 
   // check last date was closed
@@ -306,14 +312,16 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_20hours)
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
   bool nextValueShouldBeLast = false;
+  bool hitNextValueShouldBeLast = false;
   unsigned numUntils = 0;
-  
+
   for ( unsigned i = 0; i < N; ++i){
     boost::optional<std::string> field = objects[0].getString(i, true, false);
     ASSERT_TRUE(field);
 
     if (nextValueShouldBeLast){
       double value = boost::lexical_cast<double>(*field);
+      hitNextValueShouldBeLast = true;
       EXPECT_EQ(8760.0, value);
       nextValueShouldBeLast = false;
     }
@@ -366,6 +374,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_20hours)
       }
     }
   }
+  EXPECT_TRUE(hitNextValueShouldBeLast);
   bool lastUntil24Found = until24Found;
 
   // check last date was closed
@@ -431,7 +440,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_TwoPoint)
   bool until24Found = false;
   bool nextValueShouldBeLast = false;
   unsigned numUntils = 0;
-  
+
   for ( unsigned i = 0; i < N; ++i){
     boost::optional<std::string> field = objects[0].getString(i, true, false);
     ASSERT_TRUE(field);
@@ -537,6 +546,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly)
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
   bool nextValueShouldBeLast = false;
+  bool hitNextValueShouldBeLast = false;
   unsigned numUntils = 0;
 
   int currentHour = 0;
@@ -546,6 +556,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly)
 
     if (nextValueShouldBeLast){
       double value = boost::lexical_cast<double>(*field);
+      hitNextValueShouldBeLast = true;
       EXPECT_EQ(8760.0, value);
       nextValueShouldBeLast = false;
     }
@@ -601,6 +612,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly)
       }
     }
   }
+  EXPECT_TRUE(hitNextValueShouldBeLast);
   bool lastUntil24Found = until24Found;
 
   // check last date was closed
@@ -647,6 +659,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly_Shift
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
   bool nextValueShouldBeLast = false;
+  bool hitNextValueShouldBeLast = false;
   unsigned numUntils = 0;
 
   int currentHour = 0;
@@ -656,6 +669,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly_Shift
 
     if (nextValueShouldBeLast){
       double value = boost::lexical_cast<double>(*field);
+      hitNextValueShouldBeLast = true;
       EXPECT_EQ(8760.0, value);
       nextValueShouldBeLast = false;
     }
@@ -711,6 +725,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly_Shift
       }
     }
   }
+  EXPECT_TRUE(hitNextValueShouldBeLast);
   bool lastUntil24Found = until24Found;
 
   // check last date was closed
@@ -796,14 +811,16 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_500)
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
   bool nextValueShouldBeLast = false;
+  bool hitNextValueShouldBeLast = false;
   unsigned numUntils = 0;
-  
+
   for (unsigned i = 0; i < N; ++i){
     boost::optional<std::string> field = objects[0].getString(i, true, false);
     ASSERT_TRUE(field);
 
     if (nextValueShouldBeLast){
       double value = boost::lexical_cast<double>(*field);
+      hitNextValueShouldBeLast = true;
       EXPECT_EQ(500.0, value);
       nextValueShouldBeLast = false;
     }
@@ -854,6 +871,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_500)
       }
     }
   }
+  EXPECT_TRUE(hitNextValueShouldBeLast);
   bool lastUntil24Found = until24Found;
 
   // check last date was closed
@@ -939,6 +957,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_500_Shifted
   boost::optional<Date> lastDateThrough;
   bool until24Found = false;
   bool nextValueShouldBeLast = false;
+  bool hitNextValueShouldBeLast = false;
   unsigned numUntils = 0;
 
   for (unsigned i = 0; i < N; ++i) {
@@ -947,6 +966,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_500_Shifted
 
     if (nextValueShouldBeLast) {
       double value = boost::lexical_cast<double>(*field);
+      hitNextValueShouldBeLast = true;
       EXPECT_EQ(500.0, value);
       nextValueShouldBeLast = false;
     }
@@ -997,6 +1017,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_500_Shifted
       }
     }
   }
+  EXPECT_TRUE(hitNextValueShouldBeLast);
   bool lastUntil24Found = until24Found;
 
   // check last date was closed
@@ -1004,4 +1025,179 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_500_Shifted
 
   // check that there were 8760 untils
   EXPECT_EQ(864, numUntils);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_DaysTimeSeries)
+{
+  // The vector of time deltas, randomly generated
+  std::vector<double> timeInDays = { 5.756944444444445, 5.763888888888889, 5.770833333333333, 5.777777777777778, 5.784722222222222,
+    12.993055555555555, 13.0, 13.402777777777779, 13.409722222222221, 17.291666666666668, 17.29861111111111, 26.395833333333332,
+    26.40277777777778, 28.36111111111111, 28.368055555555557, 29.819444444444443, 29.82638888888889, 35.40277777777778,
+    35.40972222222222, 40.736111111111114, 40.74305555555556, 40.75, 40.84722222222222, 40.854166666666664, 40.861111111111114,
+    48.22222222222222, 48.229166666666664, 48.236111111111114, 56.388888888888886, 56.395833333333336, 60.666666666666664,
+    60.673611111111114, 60.68055555555556, 67.84027777777777, 67.84722222222223, 67.85416666666667, 68.24305555555556, 68.25,
+    68.875, 68.88194444444444, 68.88888888888889, 71.25694444444444, 71.26388888888889, 76.02083333333333, 76.02777777777777,
+    77.9375, 77.94444444444444, 77.95138888888889, 82.27083333333333, 82.27777777777777, 82.28472222222223, 83.96527777777777,
+    83.97222222222223, 87.61111111111111, 87.61805555555556, 88.75694444444444, 88.76388888888889, 93.28472222222223, 93.29166666666667,
+    93.29861111111111, 100.25, 100.25694444444444, 100.26388888888889, 101.34027777777777, 101.34722222222223, 103.59027777777777,
+    103.59722222222223, 103.60416666666667, 104.86805555555556, 104.88194444444444, 105.88888888888889, 105.89583333333333,
+    106.21527777777777, 106.22222222222223, 106.22916666666667, 106.80555555555556, 106.8125, 109.77777777777777, 109.78472222222223,
+    109.97916666666667, 109.98611111111111, 110.75694444444444, 110.76388888888889, 112.53472222222223, 112.54166666666667,
+    112.54861111111111, 114.09722222222223, 114.10416666666667, 119.88888888888889, 119.89583333333333, 120.84027777777777,
+    120.84722222222223, 120.85416666666667, 122.29166666666667, 122.29861111111111, 125.81944444444444, 125.82638888888889,
+    125.83333333333333, 130.96527777777777, 130.97222222222223, 132.39583333333334, 132.40277777777777, 132.40972222222223,
+    134.27777777777777, 134.28472222222223, 134.29166666666666, 138.46527777777777, 138.47222222222223, 138.47916666666666,
+    140.64583333333334, 140.65277777777777, 144.27777777777777, 144.29166666666666, 148.9375, 148.94444444444446, 148.95138888888889,
+    151.73611111111111, 151.74305555555554, 154.625, 154.63194444444446, 162.34722222222223, 162.35416666666666, 162.36111111111111,
+    170.59722222222223, 170.60416666666666, 171.875, 171.88194444444446, 174.75694444444446, 174.76388888888889, 174.8125,
+    174.81944444444446, 180.86805555555554, 180.88194444444446, 183.79166666666666, 183.79861111111111, 183.80555555555554,
+    190.88888888888889, 190.89583333333334, 190.90277777777777, 195.99305555555554, 196.0, 196.00694444444446, 210.90277777777777,
+    210.90972222222223, 210.91666666666666, 214.90972222222223, 214.91666666666666, 214.92361111111111, 216.98611111111111,
+    216.99305555555554, 219.8125, 219.82638888888889, 232.6875, 232.69444444444446, 236.81944444444446, 236.83333333333334,
+    247.36805555555554, 247.375, 248.30555555555554, 248.3125, 249.86805555555554, 249.875, 253.20138888888889, 253.20833333333334,
+    253.34027777777777, 253.34722222222223, 253.35416666666666, 257.7986111111111, 257.80555555555554, 257.8125, 258.96527777777777,
+    258.97222222222223, 258.9791666666667, 269.90972222222223, 269.9166666666667, 270.28472222222223, 270.2916666666667,
+    270.2986111111111, 275.77777777777777, 275.78472222222223, 275.7916666666667, 279.8263888888889, 279.8333333333333,
+    281.4166666666667, 281.4236111111111, 281.43055555555554, 287.31944444444446, 287.3263888888889, 287.3333333333333,
+    287.3958333333333, 287.40277777777777, 287.40972222222223, 299.96527777777777, 299.97222222222223, 300.61805555555554,
+    300.625, 300.63194444444446, 303.5625, 303.56944444444446, 306.69444444444446, 306.7013888888889, 307.88194444444446,
+    307.8888888888889, 316.56944444444446, 316.5763888888889, 316.5833333333333, 319.9791666666667, 319.9861111111111,
+    322.84027777777777, 322.84722222222223, 322.8541666666667, 325.0416666666667, 325.0486111111111, 326.84027777777777,
+    326.84722222222223, 326.8541666666667, 327.7013888888889, 327.7083333333333, 327.71527777777777, 333.75, 333.75694444444446,
+    334.5833333333333, 334.59027777777777, 335.8888888888889, 335.8958333333333, 337.3958333333333, 337.40277777777777,
+    343.96527777777777, 343.97222222222223, 347.2916666666667, 347.2986111111111, 349.27777777777777, 349.28472222222223,
+    351.96527777777777, 351.9791666666667, 352.90972222222223, 352.9236111111111, 359.3611111111111, 359.36805555555554,
+    359.8263888888889, 359.8333333333333, 365.0 };
+  std::vector<double> values = { 0.0, 0.2005415, 0.0401083, 0.1557844, 0.23367659999999998, 0.0, 0.2684628, 0.0, 0.2907288, 0.0,
+    0.23589539999999998, 0.0, 0.24801920000000002, 0.0, 0.32789219999999997, 0.0, 0.2, 0.0, 0.2147385, 0.0, 0.1881668, 0.0470417,
+    0.0, 0.1040148, 0.0260037, 0.0, 0.10277339999999999, 0.30832019999999993, 0.0, 0.5604991, 0.0, 0.28898579999999996,
+    0.24082149999999997, 0.0, 0.370206, 0.12340199999999998, 0.0, 0.5014266000000001, 0.0, 0.0979134, 0.2937402, 0.0, 0.0948494,
+    0.0, 0.3474904, 0.0, 0.0438457, 0.2192285, 0.0, 0.0962757, 0.0320919, 0.0, 0.1309298, 0.0, 0.0369915, 0.0, 0.0958796, 0.0,
+    0.33058620000000005, 0.11019540000000001, 0.0, 0.419506, 0.1678024, 0.0, 0.1865292, 0.0, 0.290742, 0.0581484, 0.0, 0.358558,
+    0.0, 0.2745246, 0.0, 0.1878369, 0.37567379999999995, 0.0, 0.5625992, 0.0, 0.5054014, 0.0, 0.403249, 0.0, 0.4173932000000001,
+    0.0, 0.0578315, 0.231326, 0.0, 0.38299, 0.0, 0.5692554000000001, 0.0, 0.0481775, 0.1445325, 0.0, 0.21553079999999997, 0.0,
+    0.075317, 0.451902, 0.0, 0.269678, 0.0, 0.2527735, 0.10110939999999999, 0.0, 0.2254359, 0.0751453, 0.0, 0.0987322,
+    0.14809830000000002, 0.0, 0.271857, 0.0, 0.1546356, 0.0, 0.157686, 0.09461159999999999, 0.0, 0.09569459999999999, 0.0,
+    0.237982, 0.0, 0.2733755, 0.16402529999999999, 0.0, 0.2867936, 0.0, 0.45252269999999994, 0.0, 0.3679872, 0.0, 0.2070785, 0.0,
+    0.0578051, 0.0, 0.0443476, 0.1773904, 0.0, 0.207871, 0.12472259999999999, 0.0, 0.1103276, 0.3309828, 0.0, 0.4419835, 0.1894215,
+    0.0, 0.2180136, 0.1635102, 0.0, 0.3376255, 0.0, 0.2937136, 0.0, 0.368727, 0.0, 0.1937004, 0.0, 0.20402829999999997, 0.0, 0.1961964,
+    0.0, 0.3432648, 0.0, 0.3979795, 0.0, 0.10929739999999999, 0.32789219999999997, 0.0, 0.0758056, 0.2274168, 0.0, 0.11019540000000001,
+    0.33058620000000005, 0.0, 0.38811419999999996, 0.0, 0.2277336, 0.1138668, 0.0, 0.1480718, 0.2961436, 0.0, 0.5244056999999999, 0.0,
+    0.15546759999999998, 0.2332014, 0.0, 0.1625991, 0.21679879999999999, 0.0, 0.08553870000000001, 0.0570258, 0.0, 0.1840992, 0.0,
+    0.35110949999999996, 0.10031699999999999, 0.0, 0.3194665, 0.0, 0.1801902, 0.0, 0.12595079999999997, 0.0, 0.054384600000000005,
+    0.10876920000000001, 0.0, 0.2735868, 0.0, 0.080877, 0.12131549999999999, 0.0, 0.5322107, 0.0, 0.0677364, 0.2032092, 0.0,
+    0.28298999999999996, 0.07074749999999999, 0.0, 0.1815768, 0.0, 0.17072099999999998, 0.0, 0.14098, 0.0, 0.260222, 0.0,
+    0.48543319999999995, 0.0, 0.19251179999999998, 0.0, 0.292525, 0.0, 0.2233492, 0.0, 0.136186, 0.0, 0.44833619999999996, 0.0,
+    0.2968304, 0.0 };
+
+  // The vector of values
+  //Vector values = linspace(1, 500, 500);
+  //std::vector<DateTime> dts;
+  //for (double days : timeInDays) {
+  //  dts.push_back(DateTime(Date(MonthOfYear::Jan, 1), Time(days)));
+  //}
+
+  //std::vector<long> timeInSeconds;
+  //for (double days : timeInDays) {
+  //  timeInSeconds.push_back((long)(days * 24 * 60 * 60));
+  //}
+
+  // Create a time series from the data
+  TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1), Time(timeInDays[0])), timeInDays, values, "");
+  //TimeSeries timeseries(dts, createVector(values), "");
+  //TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1), Time(timeInDays[0])), timeInSeconds, createVector(values), "");
+
+  Model model;
+
+  // Create a schedule and make sure it worked
+  boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(timeseries, model);
+  ASSERT_TRUE(scheduleInterval);
+  ASSERT_TRUE(scheduleInterval->optionalCast<ScheduleVariableInterval>());
+
+  // Forward translate the schedule
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
+  ASSERT_EQ(1u, objects.size());
+
+  boost::regex throughRegex("^Through:\\s*(.*)/\\s*(.*)\\s*");
+  boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
+
+  // Write out the schedule - keep this around for now
+  workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_DaysTimeSeries.idf"), true);
+
+  // Check the contents of the output
+  unsigned N = objects[0].numFields();
+  boost::optional<Date> lastDateThrough;
+  bool until24Found = false;
+  bool nextValueShouldBeLast = false;
+  bool hitNextValueShouldBeLast = false;
+  unsigned numUntils = 0;
+
+  for (unsigned i = 0; i < N; ++i) {
+    boost::optional<std::string> field = objects[0].getString(i, true, false);
+    ASSERT_TRUE(field);
+
+    if (nextValueShouldBeLast) {
+      double value = boost::lexical_cast<double>(*field);
+      hitNextValueShouldBeLast = true;
+      EXPECT_EQ(500.0, value);
+      nextValueShouldBeLast = false;
+    }
+
+    boost::smatch throughMatches;
+    if (boost::regex_search(*field, throughMatches, throughRegex)) {
+
+      std::string monthText(throughMatches[1].first, throughMatches[1].second);
+      std::string dayText(throughMatches[2].first, throughMatches[2].second);
+
+      int month = boost::lexical_cast<int>(monthText);
+      int day = boost::lexical_cast<int>(dayText);
+
+      Date date(MonthOfYear(month), day);
+      if (lastDateThrough) {
+        // check that this date is greater than last date
+        EXPECT_TRUE(date > *lastDateThrough) << date << " <= " << *lastDateThrough;
+
+        // check that last date was closed at 24:00
+        EXPECT_TRUE(until24Found);
+      }
+      lastDateThrough = date;
+      until24Found = false;
+    }
+
+    boost::smatch untilMatches;
+    if (boost::regex_search(*field, untilMatches, untilRegex)) {
+
+      numUntils += 1;
+
+      std::string hrText(untilMatches[1].first, untilMatches[1].second);
+      std::string minText(untilMatches[2].first, untilMatches[2].second);
+
+      int hr = boost::lexical_cast<int>(hrText);
+      int min = boost::lexical_cast<int>(minText);
+      EXPECT_TRUE(hr <= 24);
+      EXPECT_TRUE(min < 60);
+
+      if ((hr == 24) && (min == 0)) {
+        until24Found = true;
+      }
+
+      // should NOT see Until: 00:00,
+      EXPECT_FALSE((hr == 0) && (min == 0));
+
+      if ((lastDateThrough == Date(MonthOfYear(12), 31)) && until24Found) {
+        nextValueShouldBeLast = true;
+      }
+    }
+  }
+  EXPECT_TRUE(hitNextValueShouldBeLast);
+  bool lastUntil24Found = until24Found;
+
+  // check last date was closed
+  EXPECT_TRUE(lastUntil24Found);
+
+  // check that there were XX untils
+  //EXPECT_EQ(864, numUntils);
 }

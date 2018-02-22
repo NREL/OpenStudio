@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -37,36 +37,36 @@ class IddEnums_Test < MiniTest::Unit::TestCase
 
   # def teardown
   # end
-  
+
   def test_IddFileType
-  
+
     epIdd = OpenStudio::IddFileType.new("EnergyPlus")
     osIdd = "OpenStudio".to_IddFileType
     assert( epIdd != osIdd )
-    
+
     assert( osIdd.valueName == "OpenStudio" )
     assert( osIdd.valueDescription == "OpenStudio" )
-    
+
   end
-  
+
   def test_IddObjectType
-  
+
     # The following syntax does not translate from C++
     # iddType = OpenStudio::IddObjectType.new(Openstudio::IddObjectType::Catchall)
     iddType = OpenStudio::IddObjectType.new("Catchall")
     iddType = OpenStudio::IddObjectType.new("UserCustom")
     iddType = "CommentOnly".to_IddObjectType
-    
+
     iddType = "zone".to_IddObjectType
     assert( iddType.valueDescription() == "Zone" )
     iddType = "zoNe".to_IddObjectType
     assert( iddType.valueDescription() == "Zone" )
-    
+
     iddType = "simulation data".to_IddObjectType
     assert( iddType.valueName() == "SimulationData" )
     assert( iddType.valueDescription() == "Simulation Data" )
-  
+
   end
-  
+
 end
-  
+

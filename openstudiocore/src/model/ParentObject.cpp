@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -33,6 +33,8 @@
 #include "Curve_Impl.hpp"
 #include "LifeCycleCost.hpp"
 #include "Component.hpp"
+#include "AdditionalProperties.hpp"
+#include "AdditionalProperties_Impl.hpp"
 
 #include "../utilities/idf/Workspace_Impl.hpp"
 
@@ -148,16 +150,19 @@ std::vector<IddObjectType> ParentObject::allowableChildTypes() const
   return getImpl<detail::ParentObject_Impl>()->allowableChildTypes();
 }
 
-std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCosts) {
+std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCostsAndAdditionalProperties) {
   std::set<Handle> resultSet;
   std::pair<HandleSet::const_iterator,bool> insertResult;
   std::vector<ModelObject> result;
   resultSet.insert(object.handle());
   result.push_back(object);
 
-  if (includeLifeCycleCosts){
+  if (includeLifeCycleCostsAndAdditionalProperties){
     for (const LifeCycleCost& lifeCycleCost : object.lifeCycleCosts()){
       result.push_back(lifeCycleCost);
+    }
+    if (object.hasAdditionalProperties()){
+      result.push_back(object.additionalProperties());
     }
   }
 
@@ -175,9 +180,12 @@ std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool i
       if (insertResult.second) {
         result.push_back(child);
 
-        if (includeLifeCycleCosts){
+        if (includeLifeCycleCostsAndAdditionalProperties){
           for (const LifeCycleCost& lifeCycleCost : child.lifeCycleCosts()){
             result.push_back(lifeCycleCost);
+          }
+          if (child.hasAdditionalProperties()){
+            result.push_back(child.additionalProperties());
           }
         }
 

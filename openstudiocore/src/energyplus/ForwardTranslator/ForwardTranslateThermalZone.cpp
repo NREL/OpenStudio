@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -399,7 +399,6 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             Daylighting_ReferencePointFields::ZCoordinateofReferencePoint,
             secondaryDaylightingControl->positionZCoordinate());
 
-        
         double secondaryFrac = modelObject.fractionofZoneControlledbySecondaryDaylightingControl();
         if (istringEqual("None", secondaryDaylightingControl->lightingControlType())){
           if (secondaryFrac > 0.0){
@@ -410,10 +409,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
           if ((primaryFrac + secondaryFrac) > 1) {
             // Reset secondary to 1 - Primary
             secondaryFrac = std::max(1.0 - primaryFrac, 0.0);
-
             LOG(Warn, "Fraction of Zone Controlled by Primary Daylight Control is " << primaryFrac << " while Secondary Fraction is "
                   << secondaryFrac << ". Reseting Secondary Fraction to " << secondaryFrac);
-            
           }
         }
         std::string fractionofZoneControlledbySecondReferencePoint = toString(secondaryFrac);
@@ -638,9 +635,10 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
           }
         };
 
-        // Only translate ThermostatSetpointDualSetpoint if there are schedules attached
+        // Only translate ThermostatSetpointDualSetpoint if there is at least one schedule attached
+        // The translation to SingleHeating, SingleCooling, or DualSetpoint as appropriate is handled in ForwardTranslateThermostatSetpointDualSetpoint
         if( auto dualSetpoint = thermostat->optionalCast<ThermostatSetpointDualSetpoint>() ) {
-          if( dualSetpoint->heatingSetpointTemperatureSchedule() && dualSetpoint->coolingSetpointTemperatureSchedule() ) {
+          if( dualSetpoint->heatingSetpointTemperatureSchedule() || dualSetpoint->coolingSetpointTemperatureSchedule() ) {
             createZoneControlThermostat();
           }
         } else {

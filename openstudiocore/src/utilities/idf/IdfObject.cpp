@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -450,7 +450,7 @@ namespace detail {
     case openstudio::IddObjectType::OS_EnergyManagementSystem_Subroutine:; // deliberate fall through
     case openstudio::IddObjectType::EnergyManagementSystem_TrendVariable:; // deliberate fall through
     case openstudio::IddObjectType::OS_EnergyManagementSystem_TrendVariable:; // deliberate fall through
-      // replace ‘ ‘ with ‘_’
+      // replace ï¿½ ï¿½ with ï¿½_ï¿½
       std::replace(newName.begin(), newName.end(), ' ', '_');
       break;
     //case openstudio::IddObjectType::EnergyManagementSystem_OutputVariable:; // deliberate fall through

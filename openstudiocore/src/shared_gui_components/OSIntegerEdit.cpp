@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -156,9 +156,9 @@ void OSIntegerEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
 void OSIntegerEdit2::completeBind() {
 
   // only let one of autosize/autocalculate
-  if ((m_isAutosized && m_isAutocalculated) || 
-      (m_isAutosized && m_autocalculate) || 
-      (m_isAutocalculated && m_autosize)) 
+  if ((m_isAutosized && m_isAutocalculated) ||
+      (m_isAutosized && m_autocalculate) ||
+      (m_isAutocalculated && m_autosize))
   {
     LOG_AND_THROW("A field can only be autosized or autocalculated, it cannot be both.");
   }
@@ -219,7 +219,7 @@ void OSIntegerEdit2::onEditingFinished() {
       }
     }
   }
-  
+
   if (m_modelObject) {
     std::string str = text.toStdString();
     ModelObject modelObject = m_modelObject.get();
@@ -265,7 +265,7 @@ void OSIntegerEdit2::onEditingFinished() {
           }
         }
       }
-      catch (...) 
+      catch (...)
       {
         // restore
         refreshTextAndLabel();
@@ -400,7 +400,7 @@ void OSIntegerEdit2::focusOutEvent(QFocusEvent * e)
 
     emit inFocus(false, false);
   }
-  
+
   QLineEdit::focusOutEvent(e);
 }
 
@@ -477,7 +477,7 @@ void OSIntegerEdit2::focusOutEvent(QFocusEvent * e)
 //     ModelObject modelObject = m_modelObject.get();
 
 //     if (str.empty()) {
-//       modelObject.resetAttribute(m_property); 
+//       modelObject.resetAttribute(m_property);
 //     }
 //     else if (boost::regex_search(str,autore)) {
 //       if (m_isAutosizedProperty) {

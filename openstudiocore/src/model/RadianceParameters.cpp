@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -423,9 +423,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void RadianceParameters_Impl::setLimitWeightDMX(double LimitWeightDMX) {
+  bool RadianceParameters_Impl::setLimitWeightDMX(double LimitWeightDMX) {
     bool result = setDouble(OS_RadianceParametersFields::LimitWeightDMX, LimitWeightDMX);
     OS_ASSERT(result);
+    return result;
   }
 
   bool RadianceParameters_Impl::setLimitWeightDMX(const Quantity& LimitWeightDMX) {
@@ -847,8 +848,8 @@ void RadianceParameters::resetLimitWeightVMX() {
   getImpl<detail::RadianceParameters_Impl>()->resetLimitWeightVMX();
 }
 
-void RadianceParameters::setLimitWeightDMX(double LimitWeightDMX) {
-  getImpl<detail::RadianceParameters_Impl>()->setLimitWeightDMX(LimitWeightDMX);
+bool RadianceParameters::setLimitWeightDMX(double LimitWeightDMX) {
+  return getImpl<detail::RadianceParameters_Impl>()->setLimitWeightDMX(LimitWeightDMX);
 }
 
 bool RadianceParameters::setLimitWeightDMX(const Quantity& LimitWeightDMX) {
@@ -905,4 +906,3 @@ RadianceParameters::RadianceParameters(Model& model)
 
 } // model
 } // openstudio
-

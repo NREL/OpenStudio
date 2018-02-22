@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -73,7 +73,25 @@ namespace detail {
   const std::vector<std::string>& HeaderedPumpsConstantSpeed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Pump Electric Power");
+      result.push_back("Pump Electric Energy");
+      result.push_back("Pump Shaft Power");
+      result.push_back("Pump Fluid Heat Gain Rate");
+      result.push_back("Pump Fluid Heat Gain Energy");
+      result.push_back("Pump Outlet Temperature");
+      result.push_back("Pump Mass Flow Rate");
+      result.push_back("Number of Pumps Operating");
+      // The Key is the Pump, not the zone, so it's right to report here
+      // EnergyPlus/Pumps.cc::GetPumpInput()
+      // TODO: Implement this check and make not static above once ModelObject return type has changed
+      //if (! p.zone().empty() ) {
+        result.push_back("Pump Zone Total Heating Rate");
+        result.push_back("Pump Zone Total Heating Energy");
+        result.push_back("Pump Zone Convective Heating Rate");
+        result.push_back("Pump Zone Radiative Heating Rate");
+      // }
     }
     return result;
   }
@@ -183,9 +201,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void HeaderedPumpsConstantSpeed_Impl::setNumberofPumpsinBank(int numberofPumpsinBank) {
+  bool HeaderedPumpsConstantSpeed_Impl::setNumberofPumpsinBank(int numberofPumpsinBank) {
     bool result = setInt(OS_HeaderedPumps_ConstantSpeedFields::NumberofPumpsinBank, numberofPumpsinBank);
     OS_ASSERT(result);
+    return result;
   }
 
   bool HeaderedPumpsConstantSpeed_Impl::setFlowSequencingControlScheme(std::string flowSequencingControlScheme) {
@@ -193,17 +212,19 @@ namespace detail {
     return result;
   }
 
-  void HeaderedPumpsConstantSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
+  bool HeaderedPumpsConstantSpeed_Impl::setRatedPumpHead(double ratedPumpHead) {
     bool result = setDouble(OS_HeaderedPumps_ConstantSpeedFields::RatedPumpHead, ratedPumpHead);
     OS_ASSERT(result);
+    return result;
   }
 
-  void HeaderedPumpsConstantSpeed_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
+  bool HeaderedPumpsConstantSpeed_Impl::setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption) {
     bool result(false);
     if (ratedPowerConsumption) {
       result = setDouble(OS_HeaderedPumps_ConstantSpeedFields::RatedPowerConsumption, ratedPowerConsumption.get());
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void HeaderedPumpsConstantSpeed_Impl::autosizeRatedPowerConsumption() {
@@ -276,6 +297,44 @@ namespace detail {
     }
 
     return false;
+  }
+
+  boost::optional<double> HeaderedPumpsConstantSpeed_Impl::autosizedTotalRatedFlowRate() const {
+    return getAutosizedValue("Design Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> HeaderedPumpsConstantSpeed_Impl::autosizedRatedPowerConsumption() const {
+    return getAutosizedValue("Design Power Consumption", "W");
+  }
+
+  void HeaderedPumpsConstantSpeed_Impl::autosize() {
+    autosizeTotalRatedFlowRate();
+    autosizeRatedPowerConsumption();
+  }
+
+  void HeaderedPumpsConstantSpeed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedTotalRatedFlowRate();
+    if (val) {
+      setTotalRatedFlowRate(val.get());
+    }
+
+    val = autosizedRatedPowerConsumption();
+    if (val) {
+      setRatedPowerConsumption(val.get());
+    }
+
+  }
+
+  std::vector<EMSActuatorNames> HeaderedPumpsConstantSpeed_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Pump", "Pump Mass Flow Rate"},
+                                            {"Pump", "Pump Pressure Rise"}};
+    return actuators;
+  }
+
+  std::vector<std::string> HeaderedPumpsConstantSpeed_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Pump Maximum Mass Flow Rate"};
+    return types;
   }
 
 } // detail
@@ -370,20 +429,20 @@ void HeaderedPumpsConstantSpeed::autosizeTotalRatedFlowRate() {
   getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->autosizeTotalRatedFlowRate();
 }
 
-void HeaderedPumpsConstantSpeed::setNumberofPumpsinBank(int numberofPumpsinBank) {
-  getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setNumberofPumpsinBank(numberofPumpsinBank);
+bool HeaderedPumpsConstantSpeed::setNumberofPumpsinBank(int numberofPumpsinBank) {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setNumberofPumpsinBank(numberofPumpsinBank);
 }
 
 bool HeaderedPumpsConstantSpeed::setFlowSequencingControlScheme(std::string flowSequencingControlScheme) {
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setFlowSequencingControlScheme(flowSequencingControlScheme);
 }
 
-void HeaderedPumpsConstantSpeed::setRatedPumpHead(double ratedPumpHead) {
-  getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setRatedPumpHead(ratedPumpHead);
+bool HeaderedPumpsConstantSpeed::setRatedPumpHead(double ratedPumpHead) {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setRatedPumpHead(ratedPumpHead);
 }
 
-void HeaderedPumpsConstantSpeed::setRatedPowerConsumption(double ratedPowerConsumption) {
-  getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
+bool HeaderedPumpsConstantSpeed::setRatedPowerConsumption(double ratedPowerConsumption) {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
 }
 
 void HeaderedPumpsConstantSpeed::autosizeRatedPowerConsumption() {
@@ -428,6 +487,13 @@ HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(std::shared_ptr<detail::H
 {}
 /// @endcond
 
-} // model
-} // openstudio
+  boost::optional<double> HeaderedPumpsConstantSpeed::autosizedTotalRatedFlowRate() const {
+    return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->autosizedTotalRatedFlowRate();
+  }
 
+  boost::optional<double> HeaderedPumpsConstantSpeed::autosizedRatedPowerConsumption() const {
+    return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->autosizedRatedPowerConsumption();
+  }
+
+} // model
+} // openstudio

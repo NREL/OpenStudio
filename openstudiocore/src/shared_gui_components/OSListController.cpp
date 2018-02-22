@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -168,8 +168,8 @@ void OSListItem::setSelected(bool isSelected)
     if( isSelected )
     {
       if( wasSelected )
-      { 
-        return; 
+      {
+        return;
       }
       else
       {
@@ -289,7 +289,7 @@ void OSItemSelectionController::removeSelectedItem(OSListItem * item)
 {
   OS_ASSERT(item);
 
-  auto it = 
+  auto it =
     std::find(m_selectedItems.begin(),m_selectedItems.end(),item);
 
   if( it != m_selectedItems.end() )
@@ -300,13 +300,13 @@ void OSItemSelectionController::removeSelectedItem(OSListItem * item)
   }
 }
 
-QWidget * OSItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
-{ 
+QWidget * OSItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+{
   return new QWidget();
 }
 
-QGraphicsObject * OSGraphicsItemDelegate::view(QSharedPointer<OSListItem> dataSource) 
-{ 
+QGraphicsObject * OSGraphicsItemDelegate::view(QSharedPointer<OSListItem> dataSource)
+{
   return nullptr;
 }
 

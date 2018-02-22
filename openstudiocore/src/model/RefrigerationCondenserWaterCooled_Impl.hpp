@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -157,19 +157,19 @@ namespace detail {
 
     void resetWaterMinimumWaterInletTemperature();
 
-    void setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
 
-    void setCondenserRefrigerantOperatingChargeInventory(boost::optional<double> condenserRefrigerantOperatingChargeInventory);
+    bool setCondenserRefrigerantOperatingChargeInventory(boost::optional<double> condenserRefrigerantOperatingChargeInventory);
 
     void resetCondenserRefrigerantOperatingChargeInventory();
 
-    void setCondensateReceiverRefrigerantInventory(boost::optional<double> condensateReceiverRefrigerantInventory);
+    bool setCondensateReceiverRefrigerantInventory(boost::optional<double> condensateReceiverRefrigerantInventory);
 
     void resetCondensateReceiverRefrigerantInventory();
 
-    void setCondensatePipingRefrigerantInventory(boost::optional<double> condensatePipingRefrigerantInventory);
+    bool setCondensatePipingRefrigerantInventory(boost::optional<double> condensatePipingRefrigerantInventory);
 
     void resetCondensatePipingRefrigerantInventory();
 
@@ -188,5 +188,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONCONDENSERWATERCOOLED_IMPL_HPP
-
+#endif // MODEL_REFRIGERATIONCONDENSERWATERCOOLED_IMPL_HPP

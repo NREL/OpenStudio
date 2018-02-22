@@ -1,0 +1,244 @@
+{
+	"application": {
+		"currentSelections": {
+			"story": null,
+			"story_id": "1",
+			"subselection_ids": {
+				"1": "4"
+			},
+			"component_id": null,
+			"component_definition_id": null,
+			"component_instance_id": null,
+			"space_property_id": null,
+			"tool": "Rectangle",
+			"mode": "spaces",
+			"snapMode": "grid-strict",
+			"modeTab": "floorplan",
+			"subselectionType": "shading"
+		},
+		"modes": ["spaces", "shading", "building_units", "thermal_zones", "pitched_roofs", "space_types", "images"],
+		"tools": ["Pan", "Drag", "Rectangle", "Polygon", "Eraser", "Select", "Map", "Fill", "Place Component", "Image", "Apply Property"],
+		"scale": {
+			"x": {
+				"pixels": 1608,
+				"rwuRange": [-235.15822784810126, 70.15822784810126]
+			},
+			"y": {
+				"pixels": 869,
+				"rwuRange": [-117.5, 47.5]
+			}
+		}
+	},
+	"project": {
+		"config": {
+			"units": "ft",
+			"unitsEditable": true,
+			"language": "EN-US"
+		},
+		"north_axis": 0,
+		"ground": {
+			"floor_offset": 0,
+			"azimuth_angle": 0,
+			"tilt_slope": 0
+		},
+		"grid": {
+			"visible": true,
+			"spacing": 5
+		},
+		"view": {
+			"min_x": -235.15822784810126,
+			"min_y": -117.5,
+			"max_x": 70.15822784810126,
+			"max_y": 47.5
+		},
+		"map": {
+			"initialized": false,
+			"enabled": false,
+			"visible": true,
+			"latitude": 39.7653,
+			"longitude": -104.9863,
+			"zoom": 4.5,
+			"rotation": 0,
+			"elevation": 0
+		},
+		"previous_story": {
+			"visible": true
+		},
+		"show_import_export": true
+	},
+	"stories": [{
+			"id": "1",
+			"handle": null,
+			"name": "Story 1",
+			"image_visible": true,
+			"below_floor_plenum_height": 0,
+			"floor_to_ceiling_height": 8,
+			"above_ceiling_plenum_height": 0,
+			"multiplier": 1,
+			"color": "#8ce",
+			"geometry": {
+				"id": "2",
+				"vertices": [{
+						"id": "5",
+						"x": -175,
+						"y": 40,
+						"edge_ids": ["9", "12"]
+					}, {
+						"id": "6",
+						"x": -50,
+						"y": 40,
+						"edge_ids": ["9", "10", "16"]
+					}, {
+						"id": "7",
+						"x": -50,
+						"y": -15,
+						"edge_ids": ["10", "11", "18"]
+					}, {
+						"id": "8",
+						"x": -175,
+						"y": -15,
+						"edge_ids": ["11", "12"]
+					}, {
+						"id": "14",
+						"x": 10,
+						"y": 40,
+						"edge_ids": ["16", "17"]
+					}, {
+						"id": "15",
+						"x": 10,
+						"y": -15,
+						"edge_ids": ["17", "18"]
+					}, {
+						"id": "21",
+						"x": -175,
+						"y": -40,
+						"edge_ids": ["25", "28"]
+					}, {
+						"id": "22",
+						"x": -50,
+						"y": -40,
+						"edge_ids": ["25", "26"]
+					}, {
+						"id": "23",
+						"x": -50,
+						"y": -110,
+						"edge_ids": ["26", "27"]
+					}, {
+						"id": "24",
+						"x": -175,
+						"y": -110,
+						"edge_ids": ["27", "28"]
+					}
+				],
+				"edges": [{
+						"id": "9",
+						"vertex_ids": ["5", "6"],
+						"face_ids": ["13"]
+					}, {
+						"id": "10",
+						"vertex_ids": ["6", "7"],
+						"face_ids": ["13", "19"]
+					}, {
+						"id": "11",
+						"vertex_ids": ["7", "8"],
+						"face_ids": ["13"]
+					}, {
+						"id": "12",
+						"vertex_ids": ["8", "5"],
+						"face_ids": ["13"]
+					}, {
+						"id": "16",
+						"vertex_ids": ["6", "14"],
+						"face_ids": ["19"]
+					}, {
+						"id": "17",
+						"vertex_ids": ["14", "15"],
+						"face_ids": ["19"]
+					}, {
+						"id": "18",
+						"vertex_ids": ["15", "7"],
+						"face_ids": ["19"]
+					}, {
+						"id": "25",
+						"vertex_ids": ["21", "22"],
+						"face_ids": ["29"]
+					}, {
+						"id": "26",
+						"vertex_ids": ["22", "23"],
+						"face_ids": ["29"]
+					}, {
+						"id": "27",
+						"vertex_ids": ["23", "24"],
+						"face_ids": ["29"]
+					}, {
+						"id": "28",
+						"vertex_ids": ["24", "21"],
+						"face_ids": ["29"]
+					}
+				],
+				"faces": [{
+						"id": "13",
+						"edge_ids": ["9", "10", "11", "12"],
+						"edge_order": [1, 1, 1, 1]
+					}, {
+						"id": "19",
+						"edge_ids": ["16", "17", "18", "10"],
+						"edge_order": [1, 1, 1, 0]
+					}, {
+						"id": "29",
+						"edge_ids": ["25", "26", "27", "28"],
+						"edge_order": [1, 1, 1, 1]
+					}
+				]
+			},
+			"images": [],
+			"spaces": [{
+					"id": "3",
+					"handle": null,
+					"name": "Space 1 - 1",
+					"face_id": "13",
+					"building_unit_id": null,
+					"thermal_zone_id": null,
+					"space_type_id": null,
+					"construction_set_id": null,
+					"pitched_roof_id": null,
+					"daylighting_controls": [],
+					"below_floor_plenum_height": null,
+					"floor_to_ceiling_height": null,
+					"above_ceiling_plenum_height": null,
+					"floor_offset": null,
+					"open_to_below": null,
+					"color": "#8ce",
+					"type": "space"
+				}
+			],
+			"shading": [{
+					"id": "4",
+					"handle": null,
+					"name": "Shading 1 - 1",
+					"face_id": "19",
+					"color": "#E8E3E5",
+					"type": "shading"
+				}, {
+					"id": "20",
+					"handle": null,
+					"name": "Shading 1 - 2",
+					"face_id": "29",
+					"color": "#E8E3E5",
+					"type": "shading"
+				}
+			],
+			"windows": [],
+			"doors": []
+		}
+	],
+	"building_units": [],
+	"thermal_zones": [],
+	"space_types": [],
+	"construction_sets": [],
+	"window_definitions": [],
+	"daylighting_control_definitions": [],
+	"pitched_roofs": [],
+	"door_definitions": [],
+	"version": "0.7.0"
+}

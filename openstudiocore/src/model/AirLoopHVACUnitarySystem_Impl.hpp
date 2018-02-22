@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -30,7 +30,7 @@
 #define MODEL_AIRLOOPHVACUNITARYSYSTEM_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "WaterToAirComponent_Impl.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -43,8 +43,8 @@ class UnitarySystemPerformanceMultispeed;
 
 namespace detail {
 
-  /** AirLoopHVACUnitarySystem_Impl is a WaterToAirComponent_Impl that is the implementation class for AirLoopHVACUnitarySystem.*/
-  class MODEL_API AirLoopHVACUnitarySystem_Impl : public WaterToAirComponent_Impl {
+  /** AirLoopHVACUnitarySystem_Impl is a ZoneHVACComponent_Impl that is the implementation class for AirLoopHVACUnitarySystem.*/
+  class MODEL_API AirLoopHVACUnitarySystem_Impl : public ZoneHVACComponent_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -79,13 +79,9 @@ namespace detail {
 
     virtual std::vector<IdfObject> remove() override;
 
-    virtual unsigned airInletPort() override;
-   
-    virtual unsigned airOutletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned waterInletPort() override;
-
-    virtual unsigned waterOutletPort() override;
+    virtual unsigned outletPort() const override;
 
     virtual bool addToNode(Node & node) override;
 
@@ -219,6 +215,22 @@ namespace detail {
 
     boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject() const;
 
+    boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+
+    boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+
+    boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const ;
+
+    boost::optional<double> autosizedMaximumSupplyAirTemperature() const ;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Setters */
     //@{
@@ -263,7 +275,7 @@ namespace detail {
 
     void resetCoolingCoil();
 
-    void setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil);
+    bool setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil);
 
     void resetUseDOASDXCoolingCoil();
 
@@ -353,17 +365,17 @@ namespace detail {
 
     void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
 
-    void setMaximumSupplyAirTemperature(boost::optional<double> maximumSupplyAirTemperature);
+    bool setMaximumSupplyAirTemperature(boost::optional<double> maximumSupplyAirTemperature);
 
     void resetMaximumSupplyAirTemperature();
 
     void autosizeMaximumSupplyAirTemperature();
 
-    void setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+    bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
 
     void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
-    void setOutdoorDryBulbTemperatureSensorNodeName(boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName);
+    bool setOutdoorDryBulbTemperatureSensorNodeName(boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName);
 
     void resetOutdoorDryBulbTemperatureSensorNodeName();
 
@@ -419,5 +431,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_IMPL_HPP
-
+#endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_IMPL_HPP

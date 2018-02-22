@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -36,7 +36,7 @@
 #include "../utilities/core/StaticInitializer.hpp"
 
 namespace openstudio {
-  
+
 class EndUseType;
 class FuelType;
 class InstallLocationType;
@@ -119,11 +119,11 @@ namespace detail {
 
     void resetReportingFrequency();
 
-    void setMeterFileOnly(bool meterFileOnly);
+    bool setMeterFileOnly(bool meterFileOnly);
 
     void resetMeterFileOnly();
 
-    void setCumulative(bool cumulative);
+    bool setCumulative(bool cumulative);
 
     void resetCumulative();
 
@@ -182,4 +182,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_OUTPUTMETER_IMPL_HPP
-

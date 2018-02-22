@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -240,7 +240,7 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
           OptionalWorkspaceObject _zone;
           OptionalWorkspaceObject _zoneEquipmentList;
           OptionalWorkspaceObject _zoneEquipment;
-          OptionalWorkspaceObject _airTerminal; 
+          OptionalWorkspaceObject _airTerminal;
 
           if( returnAirNodeName &&
               returnAirNodeName.get() == mixerInletNodeName &&
@@ -253,7 +253,7 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
 
             if( ! _zone )
             {
-              LOG( Error, 
+              LOG( Error,
                   airLoopHVAC.briefDescription()
                   << " is connected to a zone that does not exist." );
 
@@ -262,7 +262,7 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
 
             if( ! _zoneEquipmentList )
             {
-              LOG( Error, 
+              LOG( Error,
                   _zone->briefDescription()
                   << " does not have a zone equipment list, but it is attached to a loop." );
 
@@ -310,7 +310,7 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
                 }
                 else if( istringEqual(optionalString.get(),"ZoneHVAC:AirDistributionUnit") )
                 {
-                  boost::optional<WorkspaceObject> _airDistributionUnit = 
+                  boost::optional<WorkspaceObject> _airDistributionUnit =
                     _workspace.getObjectByTypeAndName(IddObjectType::ZoneHVAC_AirDistributionUnit,zoneEquipmentName.get());
 
                   if( _airDistributionUnit )

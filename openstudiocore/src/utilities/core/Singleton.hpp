@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -32,7 +32,7 @@
 // Warning: If T's constructor throws, instance() will return a null reference.
 
 namespace openstudio{
-  
+
   // Ripped from boost http://www.boost.org/doc/libs/1_42_0/libs/pool/doc/implementation/singleton.html
   // T must be: no-throw default constructible and no-throw destructible
   template <typename T>
@@ -92,7 +92,7 @@ myclass.hpp
 
 #include "singleton.hpp"
 
-class MyClassSingleton 
+class MyClassSingleton
 {
 
 friend class Singleton<MyClass>;

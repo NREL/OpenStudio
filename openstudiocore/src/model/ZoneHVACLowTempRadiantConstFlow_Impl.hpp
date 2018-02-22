@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,7 +44,7 @@ namespace detail {
 
   /** ZoneHVACLowTempRadiantConstFlow_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACLowTempRadiantConstFlow.*/
   class MODEL_API ZoneHVACLowTempRadiantConstFlow_Impl : public ZoneHVACComponent_Impl {
-   
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -67,7 +67,7 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
     virtual ModelObject clone(Model model) const override;
-   
+
     virtual std::vector<IdfObject> remove() override;
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
@@ -155,7 +155,7 @@ namespace detail {
 
     bool setCoolingCoil(HVACComponent& coolingCoil);
 
-    void setRatedFlowRate(boost::optional<double> ratedFlowRate);
+    bool setRatedFlowRate(boost::optional<double> ratedFlowRate);
 
     void resetRatedFlowRate();
 
@@ -163,11 +163,11 @@ namespace detail {
 
     void resetPumpFlowRateSchedule();
 
-    void setRatedPumpHead(double ratedPumpHead);
+    bool setRatedPumpHead(double ratedPumpHead);
 
     void resetRatedPumpHead();
 
-    void setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
+    bool setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
 
     void resetRatedPowerConsumption();
 
@@ -181,7 +181,7 @@ namespace detail {
 
     bool setNumberofCircuits(std::string numberofCircuits);
 
-    void setCircuitLength(double circuitLength);
+    bool setCircuitLength(double circuitLength);
 
     boost::optional<ThermalZone> thermalZone() const;
 
@@ -192,6 +192,10 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
    protected:
@@ -216,5 +220,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_ZONEHVACLOWTEMPRADIANTCONSTFLOW_IMPL_HPP
-
+#endif // MODEL_ZONEHVACLOWTEMPRADIANTCONSTFLOW_IMPL_HPP

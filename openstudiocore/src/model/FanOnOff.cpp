@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -62,6 +62,8 @@
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
+#include "AirflowNetworkFan.hpp"
+#include "AirflowNetworkFan_Impl.hpp"
 #include <utilities/idd/OS_Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -96,11 +98,8 @@ namespace detail {
 
   const std::vector<std::string>& FanOnOff_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-    }
-    return result;
+    static std::vector<std::string> results{"Fan Electric Power", "Fan Rise in Air Temperature", "Fan Heat Gain to Air", "Fan Electric Energy", "Fan Air Mass Flow Rate", "Fan Runtime Fraction"};
+    return results;
   }
 
   IddObjectType FanOnOff_Impl::iddObjectType() const
@@ -251,10 +250,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanOnOff_Impl::setPressureRise(double pressureRise)
+  bool FanOnOff_Impl::setPressureRise(double pressureRise)
   {
     bool result = setDouble(OS_Fan_OnOffFields::PressureRise, pressureRise);
     OS_ASSERT(result);
+    return result;
   }
 
   bool FanOnOff_Impl::setMaximumFlowRate(boost::optional<double> maximumFlowRate)
@@ -317,10 +317,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void FanOnOff_Impl::setEndUseSubcategory(std::string endUseSubcategory)
+  bool FanOnOff_Impl::setEndUseSubcategory(std::string endUseSubcategory)
   {
     bool result = setString(OS_Fan_OnOffFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
+    return result;
   }
 
   void FanOnOff_Impl::resetEndUseSubcategory()
@@ -501,6 +502,60 @@ namespace detail {
     return boost::none;
   }
 
+  AirflowNetworkFan FanOnOff_Impl::getAirflowNetworkFan()
+  {
+    auto opt = airflowNetworkFan();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkFan(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkFan> FanOnOff_Impl::airflowNetworkFan() const
+  {
+    std::vector<AirflowNetworkFan> myAFNitems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkFan>(AirflowNetworkFan::iddObjectType());
+    auto count = myAFNitems.size();
+    if (count == 1) {
+      return myAFNitems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFNitems[0];
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> FanOnOff_Impl::autosizedMaximumFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
+  }
+
+  void FanOnOff_Impl::autosize() {
+    autosizeMaximumFlowRate();
+  }
+
+  void FanOnOff_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumFlowRate();
+    if (val) {
+      setMaximumFlowRate(val.get());
+    }
+
+  }
+
+  std::vector<EMSActuatorNames> FanOnOff_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Fan", "Fan Air Mass Flow Rate"},
+                                            {"Fan", "Fan Pressure Rise"},
+                                            {"Fan", "Fan Total Efficiency"},
+                                            {"Fan", "Fan Autosized Air Flow Rate"}};
+    return actuators;
+  }
+
+  std::vector<std::string> FanOnOff_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Fan Maximum Mass Flow Rate",
+                                   "Fan Nominal Pressure Rise",
+                                   "Fan Nominal Total Efficiency"};
+    return types;
+  }
+
 } // detail
 
 FanOnOff::FanOnOff(const Model& model)
@@ -646,9 +701,9 @@ double FanOnOff::pressureRise() const
   return getImpl<detail::FanOnOff_Impl>()->pressureRise();
 }
 
-void FanOnOff::setPressureRise(double pressureRise)
+bool FanOnOff::setPressureRise(double pressureRise)
 {
-  getImpl<detail::FanOnOff_Impl>()->setPressureRise(pressureRise);
+  return getImpl<detail::FanOnOff_Impl>()->setPressureRise(pressureRise);
 }
 
 // Field Maximum Flow Rate
@@ -753,14 +808,24 @@ bool FanOnOff::isEndUseSubcategoryDefaulted() const
 
 // Field End-Use Subcategory
 
-void FanOnOff::setEndUseSubcategory(std::string endUseSubcategory)
+bool FanOnOff::setEndUseSubcategory(std::string endUseSubcategory)
 {
-  getImpl<detail::FanOnOff_Impl>()->setEndUseSubcategory(endUseSubcategory);
+  return getImpl<detail::FanOnOff_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 void FanOnOff::resetEndUseSubcategory()
 {
   getImpl<detail::FanOnOff_Impl>()->resetEndUseSubcategory();
+}
+
+AirflowNetworkFan FanOnOff::getAirflowNetworkFan()
+{
+  return getImpl<detail::FanOnOff_Impl>()->getAirflowNetworkFan();
+}
+
+boost::optional<AirflowNetworkFan> FanOnOff::airflowNetworkFan() const
+{
+  return getImpl<detail::FanOnOff_Impl>()->airflowNetworkFan();
 }
 
 /// @cond
@@ -769,6 +834,9 @@ FanOnOff::FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl)
 {}
 /// @endcond
 
+  boost::optional<double> FanOnOff::autosizedMaximumFlowRate() const {
+    return getImpl<detail::FanOnOff_Impl>()->autosizedMaximumFlowRate();
+  }
+
 } // model
 } // openstudio
-

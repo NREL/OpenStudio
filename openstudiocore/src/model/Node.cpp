@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,6 +42,8 @@
 #include "SetpointManagerFollowOutdoorAirTemperature_Impl.hpp"
 #include "SetpointManagerWarmest.hpp"
 #include "SetpointManagerWarmest_Impl.hpp"
+#include "AirflowNetworkDistributionNode.hpp"
+#include "AirflowNetworkDistributionNode_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "PortList.hpp"
 #include "PortList_Impl.hpp"
@@ -81,8 +83,54 @@ namespace detail{
   const std::vector<std::string>& Node_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+
+    if (result.empty()) {
+      // Common Variables
+      result.push_back("System Node Temperature");
+      result.push_back("System Node Last Timestep Temperature");
+      result.push_back("System Node Mass Flow Rate");
+      result.push_back("System Node Humidity Ratio");
+      result.push_back("System Node Setpoint Temperature");
+      result.push_back("System Node Setpoint High Temperature");
+      result.push_back("System Node Setpoint Low Temperature");
+      result.push_back("System Node Setpoint Humidity Ratio");
+      result.push_back("System Node Setpoint Minimum Humidity Ratio");
+      result.push_back("System Node Setpoint Maximum Humidity Ratio");
+      result.push_back("System Node Relative Humidity");
+      result.push_back("System Node Pressure");
+      result.push_back("System Node Standard Density Volume Flow Rate");
+      result.push_back("System Node Enthalpy");
+      result.push_back("System Node Last Timestep Enthalpy");
+      result.push_back("System Node Wetbulb Temperature");
+      result.push_back("System Node Dewpoint Temperature");
+      result.push_back("System Node Quality");
+      result.push_back("System Node Height");
+      result.push_back("System Node Specific Heat");
+
+
+      // The following node variable is also available for system nodes that are for “air”:
+      // TODO: implement check? If no, make result non static and remove the result.empty() check
+      result.push_back("System Node Current Density Volume Flow Rate");
+      result.push_back("Average, System Node Current Density");
+
+      // The following node variables are “advanced” and normally used for debugging unusual cases:
+      //result.push_back("System Node Minimum Temperature");
+      //result.push_back("System Node Maximum Temperature");
+      //result.push_back("System Node Minimum Limit Mass Flow Rate");
+      //result.push_back("System Node Maximum Limit Mass Flow Rate");
+      //result.push_back("System Node Minimum Available Mass Flow Rate");
+      //result.push_back("System Node Maximum Available Mass Flow Rate");
+      //result.push_back("System Node Requested Mass Flow Rate");
+      //result.push_back("System Node Setpoint Mass Flow Rate");
+
+      // The following node variable reports node carbon dioxide concentration when carbon dioxide is simulated (ref. ZoneAirContaminantBalance):
+      // result.push_back("System Node CO2 Concentration");
+
+      // The following node variable reports node generic contaminant concentration when generic contaminant is simulated (ref. ZoneAirContaminantBalance):
+      // result.push_back("System Node Generic Air Contaminant Concentration");
+
     }
+
     return result;
   }
 
@@ -298,6 +346,8 @@ namespace detail{
   std::vector<ModelObject> Node_Impl::children() const
   {
     std::vector<ModelObject> result = castVector<ModelObject>(this->setpointManagers());
+    std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
     return result;
   }
 
@@ -367,6 +417,50 @@ namespace detail{
     }
 
     return false;
+  }
+
+  std::vector<EMSActuatorNames> Node_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"System Node Setpoint", "Temperature Setpoint"},
+                                            {"System Node Setpoint", "Temperature Minimum Setpoint"},
+                                            {"System Node Setpoint", "Temperature Maximum Setpoint"},
+                                            {"System Node Setpoint", "Humidity Ratio Setpoint"},
+                                            {"System Node Setpoint", "Humidity Ratio Maximum Setpoint"},
+                                            {"System Node Setpoint", "Humidity Ratio Minimum Setpoint"},
+                                            {"System Node Setpoint", "Mass Flow Rate Setpoint"},
+                                            {"System Node Setpoint", "Mass Flow Rate Maximum Available Setpoint"},
+                                            {"System Node Setpoint", "Mass Flow Rate Minimum Available Setpoint"},
+                                            {"Outdoor Air System Node", "Drybulb Temperature"},
+                                            {"Outdoor Air System Node", "Wetbulb Temperature"},
+                                            {"Outdoor Air System Node", "Wind Speed"},
+                                            {"Outdoor Air System Node", "Wind Direction"}};
+    return actuators;
+  }
+
+  std::vector<std::string> Node_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
+  
+  AirflowNetworkDistributionNode Node_Impl::getAirflowNetworkDistributionNode()
+  {
+    boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkDistributionNode(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkDistributionNode> Node_Impl::airflowNetworkDistributionNode() const
+  {
+    std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
+    auto count = myAFNItems.size();
+    if (count == 1) {
+      return myAFNItems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork DistributionNode attached, returning first.");
+      return myAFNItems[0];
+    }
+    return boost::none;
   }
 
 } // detail
@@ -500,6 +594,16 @@ ModelObject Node::clone(Model model) const
 IddObjectType Node::iddObjectType() {
   IddObjectType result(IddObjectType::OS_Node);
   return result;
+}
+
+AirflowNetworkDistributionNode Node::getAirflowNetworkDistributionNode()
+{
+  return getImpl<detail::Node_Impl>()->getAirflowNetworkDistributionNode();
+}
+
+boost::optional<AirflowNetworkDistributionNode> Node::airflowNetworkDistributionNode() const
+{
+  return getImpl<detail::Node_Impl>()->airflowNetworkDistributionNode();
 }
 
 } // model

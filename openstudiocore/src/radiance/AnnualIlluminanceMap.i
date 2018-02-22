@@ -16,7 +16,7 @@
 
 // create an instantiation of the smart ptr class
 %template(AnnualIlluminanceMapPtr) std::shared_ptr<openstudio::radiance::AnnualIlluminanceMap>;
- 
+
 // create an instantiation of the vector class
 %template(AnnualIlluminanceMapVector) std::vector< std::shared_ptr<openstudio::radiance::AnnualIlluminanceMap> >;
 
@@ -24,4 +24,4 @@
 
 %include <radiance/AnnualIlluminanceMap.hpp>
 
-#endif //RADIANCE_ANNUALILLUMINANCEMAP_I 
+#endif //RADIANCE_ANNUALILLUMINANCEMAP_I

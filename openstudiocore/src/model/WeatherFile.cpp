@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -171,29 +171,34 @@ namespace detail {
     return getString(OS_WeatherFileFields::Checksum,true);
   }
 
-  void WeatherFile_Impl::setCity(std::string city) {
+  bool WeatherFile_Impl::setCity(std::string city) {
     bool result = setString(OS_WeatherFileFields::City, city);
     OS_ASSERT(result);
+    return result;
   }
 
-  void WeatherFile_Impl::setStateProvinceRegion(std::string stateProvinceRegion) {
+  bool WeatherFile_Impl::setStateProvinceRegion(std::string stateProvinceRegion) {
     bool result = setString(OS_WeatherFileFields::StateProvinceRegion, stateProvinceRegion);
     OS_ASSERT(result);
+    return result;
   }
 
-  void WeatherFile_Impl::setCountry(std::string country) {
+  bool WeatherFile_Impl::setCountry(std::string country) {
     bool result = setString(OS_WeatherFileFields::Country, country);
     OS_ASSERT(result);
+    return result;
   }
 
-  void WeatherFile_Impl::setDataSource(std::string dataSource) {
+  bool WeatherFile_Impl::setDataSource(std::string dataSource) {
     bool result = setString(OS_WeatherFileFields::DataSource, dataSource);
     OS_ASSERT(result);
+    return result;
   }
 
-  void WeatherFile_Impl::setWMONumber(std::string wMONumber) {
+  bool WeatherFile_Impl::setWMONumber(std::string wMONumber) {
     bool result = setString(OS_WeatherFileFields::WMONumber, wMONumber);
     OS_ASSERT(result);
+    return result;
   }
 
   bool WeatherFile_Impl::setLatitude(double latitude) {
@@ -221,7 +226,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 /*
-  void WeatherFile_Impl::setUrl(boost::optional<std::string> url) {
+  bool WeatherFile_Impl::setUrl(boost::optional<std::string> url) {
     bool result = false;
     if (url) {
       result = setString(OS_WeatherFileFields::Url, url.get());
@@ -229,11 +234,13 @@ namespace detail {
       result = setString(OS_WeatherFileFields::Url, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
-  void WeatherFile_Impl::setUrl(std::string url) {
+  bool WeatherFile_Impl::setUrl(std::string url) {
     bool result = setString(OS_WeatherFileFields::Url, url);
     OS_ASSERT(result);
+    return result;
   }
 
   void WeatherFile_Impl::resetUrl() {
@@ -241,7 +248,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void WeatherFile_Impl::setChecksum(boost::optional<std::string> checksum) {
+  bool WeatherFile_Impl::setChecksum(boost::optional<std::string> checksum) {
     bool result = false;
     if (checksum) {
       result = setString(OS_WeatherFileFields::Checksum, checksum.get());
@@ -249,11 +256,13 @@ namespace detail {
       result = setString(OS_WeatherFileFields::Checksum, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
-  void WeatherFile_Impl::setChecksum(std::string checksum) {
+  bool WeatherFile_Impl::setChecksum(std::string checksum) {
     bool result = setString(OS_WeatherFileFields::Checksum, checksum);
     OS_ASSERT(result);
+    return result;
   }
 
   void WeatherFile_Impl::resetChecksum() {
@@ -365,6 +374,22 @@ namespace detail {
     return result;
   }
 
+  std::vector<EMSActuatorNames> WeatherFile_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ {"Weather Data", "Outdoor Dry Bulb"},
+                                             {"Weather Data", "Outdoor Dew Point"},
+                                             {"Weather Data", "Outdoor Relative Humidity"},
+                                             {"Weather Data", "Diffuse Solar"},
+                                             {"Weather Data", "Direct Solar"},
+                                             {"Weather Data", "Wind Speed"},
+                                             {"Weather Data", "Wind Direction"}};
+    return actuators;
+  }
+
+  std::vector<std::string> WeatherFile_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
+
 } // detail
 
 IddObjectType WeatherFile::iddObjectType() {
@@ -441,24 +466,24 @@ boost::optional<std::string> WeatherFile::checksum() const {
   return getImpl<detail::WeatherFile_Impl>()->checksum();
 }
 
-void WeatherFile::setCity(std::string city) {
-  getImpl<detail::WeatherFile_Impl>()->setCity(city);
+bool WeatherFile::setCity(std::string city) {
+  return getImpl<detail::WeatherFile_Impl>()->setCity(city);
 }
 
-void WeatherFile::setStateProvinceRegion(std::string stateProvinceRegion) {
-  getImpl<detail::WeatherFile_Impl>()->setStateProvinceRegion(stateProvinceRegion);
+bool WeatherFile::setStateProvinceRegion(std::string stateProvinceRegion) {
+  return getImpl<detail::WeatherFile_Impl>()->setStateProvinceRegion(stateProvinceRegion);
 }
 
-void WeatherFile::setCountry(std::string country) {
-  getImpl<detail::WeatherFile_Impl>()->setCountry(country);
+bool WeatherFile::setCountry(std::string country) {
+  return getImpl<detail::WeatherFile_Impl>()->setCountry(country);
 }
 
-void WeatherFile::setDataSource(std::string dataSource) {
-  getImpl<detail::WeatherFile_Impl>()->setDataSource(dataSource);
+bool WeatherFile::setDataSource(std::string dataSource) {
+  return getImpl<detail::WeatherFile_Impl>()->setDataSource(dataSource);
 }
 
-void WeatherFile::setWMONumber(std::string wMONumber) {
-  getImpl<detail::WeatherFile_Impl>()->setWMONumber(wMONumber);
+bool WeatherFile::setWMONumber(std::string wMONumber) {
+  return getImpl<detail::WeatherFile_Impl>()->setWMONumber(wMONumber);
 }
 
 bool WeatherFile::setLatitude(double latitude) {
@@ -481,24 +506,24 @@ void WeatherFile::resetElevation() {
   getImpl<detail::WeatherFile_Impl>()->resetElevation();
 }
 /*
-void WeatherFile::setUrl(boost::optional<std::string> url) {
-  getImpl<detail::WeatherFile_Impl>()->setUrl(url);
+bool WeatherFile::setUrl(boost::optional<std::string> url) {
+  return getImpl<detail::WeatherFile_Impl>()->setUrl(url);
 }
 
-void WeatherFile::setUrl(std::string url) {
-  getImpl<detail::WeatherFile_Impl>()->setUrl(url);
+bool WeatherFile::setUrl(std::string url) {
+  return getImpl<detail::WeatherFile_Impl>()->setUrl(url);
 }
 
 void WeatherFile::resetUrl() {
   getImpl<detail::WeatherFile_Impl>()->resetUrl();
 }
 
-void WeatherFile::setChecksum(boost::optional<std::string> checksum) {
-  getImpl<detail::WeatherFile_Impl>()->setChecksum(checksum);
+bool WeatherFile::setChecksum(boost::optional<std::string> checksum) {
+  return getImpl<detail::WeatherFile_Impl>()->setChecksum(checksum);
 }
 
-void WeatherFile::setChecksum(std::string checksum) {
-  getImpl<detail::WeatherFile_Impl>()->setChecksum(checksum);
+bool WeatherFile::setChecksum(std::string checksum) {
+  return getImpl<detail::WeatherFile_Impl>()->setChecksum(checksum);
 }
 
 void WeatherFile::resetChecksum() {
@@ -539,4 +564,3 @@ WeatherFile::WeatherFile(Model& model)
 
 } // model
 } // openstudio
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -39,16 +39,7 @@ class Curve;
 namespace detail {
 
   class MODEL_API CoilHeatingGas_Impl : public StraightComponent_Impl {
-    
-
-    
-    
-    
-
-    
-
-    
-  public:
+      public:
     /** @name Constructors and Destructors */
     //2{
 
@@ -102,19 +93,19 @@ namespace detail {
     double gasBurnerEfficiency() const;
 
     // Set GasBurnerEfficiency
-    void setGasBurnerEfficiency(double val);
+    bool setGasBurnerEfficiency(double val);
 
     // Get ParasiticElectricLoad
     double parasiticElectricLoad() const;
 
     // Set parasiticElectricLoad
-    void setParasiticElectricLoad(double val);
+    bool setParasiticElectricLoad(double val);
 
     // Get ParasiticGasLoad
     double parasiticGasLoad() const;
 
     // Set parasiticGasLoad
-    void setParasiticGasLoad(double val);
+    bool setParasiticGasLoad(double val);
 
     boost::optional<double> nominalCapacity() const;
 
@@ -122,7 +113,7 @@ namespace detail {
 
     bool isNominalCapacityAutosized() const;
 
-    void setNominalCapacity(boost::optional<double> nominalCapacity);
+    bool setNominalCapacity(boost::optional<double> nominalCapacity);
 
     bool setNominalCapacity(const OSOptionalQuantity& nominalCapacity);
 
@@ -141,6 +132,15 @@ namespace detail {
     ModelObject clone(Model model) const override;
 
     bool addToNode(Node & node) override;
+
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
 
     //@}
   private:

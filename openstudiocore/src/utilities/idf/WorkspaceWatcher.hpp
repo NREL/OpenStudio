@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -35,13 +35,13 @@
 
 namespace openstudio{
 
-/** WorkspaceWatcher watches a Workspace for signals emitted on changes.  This signals will cause the 
+/** WorkspaceWatcher watches a Workspace for signals emitted on changes.  This signals will cause the
  *  watcher to mark the Workspace  as dirty.  The dirty flag will persist until reset by the user.  A virtual
- *  method onChangeWorkspace is also available to override, it is called everytime the Workspace changes. The 
- *  virtual method onBecomeDirty is called only after dirty transitions from false to true.  Alternatively, the 
+ *  method onChangeWorkspace is also available to override, it is called everytime the Workspace changes. The
+ *  virtual method onBecomeDirty is called only after dirty transitions from false to true.  Alternatively, the
  *  virtual method onBecomeClean is called only after dirty transitions from true to false.
  *
- *  WorkspaceWatcher an atypical QObject because it is designed to be stack allocated.  In many cases it 
+ *  WorkspaceWatcher an atypical QObject because it is designed to be stack allocated.  In many cases it
  *  would be preferred to connect your own heap allocated QObject to the Workspace signals directly rather
  *  than using this convenience class.
  **/
@@ -62,13 +62,13 @@ class UTILITIES_API WorkspaceWatcher {
   // disable watcher, returns true if it was enabled
   bool disable();
 
-  /// true if workspace has changed 
+  /// true if workspace has changed
   bool dirty() const;
 
-  /// true if an object has been added 
+  /// true if an object has been added
   bool objectAdded() const;
 
-  /// true if an object has been removed 
+  /// true if an object has been removed
   bool objectRemoved() const;
 
   /// resets dirty, objectAdded, and objectRemoved

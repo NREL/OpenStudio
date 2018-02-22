@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -108,7 +108,7 @@ TEST_F(ModelFixture, EMSSubroutine_EMSSubroutine)
   EXPECT_EQ(2, lines.get().size());
   EXPECT_EQ(line1_test, lines.get()[0]);
   EXPECT_EQ(line2_test, lines.get()[1]);
-  
+
   EXPECT_EQ(2, fan_program_1.referencedObjects().size());
   EXPECT_EQ(true, (fan_program_1.referencedObjects()[0].nameString() == fanName) || (fan_program_1.referencedObjects()[0].nameString() == "OATdb_Sensor"));
   EXPECT_EQ(true, (fan_program_1.referencedObjects()[1].nameString() == fanName) || (fan_program_1.referencedObjects()[1].nameString() == "OATdb_Sensor"));

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -47,6 +47,7 @@ class SizingSystem;
 class StraightComponent;
 class AvailabilityManagerScheduled;
 class AvailabilityManager;
+class AvailabilityManagerAssignmentList;
 
 namespace detail {
 
@@ -72,7 +73,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   bool isDesignSupplyAirFlowRateAutosized() const;
 
-  void setDesignSupplyAirFlowRate(boost::optional<double> designSupplyAirFlowRate);
+  bool setDesignSupplyAirFlowRate(boost::optional<double> designSupplyAirFlowRate);
 
   bool setDesignSupplyAirFlowRate(const OSOptionalQuantity& designSupplyAirFlowRate);
 
@@ -185,7 +186,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   Schedule availabilitySchedule() const;
 
-  void setAvailabilitySchedule(Schedule & schedule);
+  bool setAvailabilitySchedule(Schedule & schedule);
 
   bool setNightCycleControlType(std::string const & nightCycle);
 
@@ -209,7 +210,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   static boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
 
-  static void setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
+  static bool setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
 
   unsigned supplyOutletPortA() const;
 
@@ -229,11 +230,34 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   bool isDualDuct() const;
 
-  boost::optional<AvailabilityManager> availabilityManager() const;
 
-  bool setAvailabilityManager(const AvailabilityManager & availabilityManager);
+  // AVM
+  // Impl_only
+  virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const override;
 
-  void resetAvailabilityManager();
+
+  std::vector<AvailabilityManager> availabilityManagers() const;
+  bool setAvailabilityManagers(const std::vector<AvailabilityManager> & avms);
+  void resetAvailabilityManagers();
+
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager);
+  bool addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority);
+
+  unsigned availabilityManagerPriority(const AvailabilityManager & availabilityManager) const;
+  bool setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority);
+
+  bool removeAvailabilityManager(const AvailabilityManager& avm);
+  bool removeAvailabilityManager(unsigned priority);
+
+  boost::optional<double> autosizedDesignSupplyAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
 
   private:
 
@@ -255,4 +279,3 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 } // openstudio
 
 #endif
-

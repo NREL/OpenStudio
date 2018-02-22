@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -77,7 +77,14 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACHighTemperatureRadiant_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Zone Radiant HVAC Heating Rate");
+      result.push_back("Zone Radiant HVAC Heating Energy");
+      result.push_back("Zone Radiant HVAC Gas Rate");
+      result.push_back("Zone Radiant HVAC Gas Energy");
+      result.push_back("Zone Radiant HVAC Electric Power");
+      result.push_back("Zone Radiant HVAC Electric Energy");
     }
     return result;
   }
@@ -327,6 +334,23 @@ namespace detail {
     return surfaces;
   }
 
+  boost::optional<double> ZoneHVACHighTemperatureRadiant_Impl::autosizedMaximumPowerInput() const {
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+  }
+
+  void ZoneHVACHighTemperatureRadiant_Impl::autosize() {
+    autosizeMaximumPowerInput();
+  }
+
+  void ZoneHVACHighTemperatureRadiant_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumPowerInput();
+    if (val) {
+      setMaximumPowerInput(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACHighTemperatureRadiant::ZoneHVACHighTemperatureRadiant(const Model& model)
@@ -483,6 +507,10 @@ ZoneHVACHighTemperatureRadiant::ZoneHVACHighTemperatureRadiant(std::shared_ptr<d
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACHighTemperatureRadiant::autosizedMaximumPowerInput() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->autosizedMaximumPowerInput();
+  }
 
 } // model
 } // openstudio

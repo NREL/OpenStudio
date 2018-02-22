@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -60,7 +60,7 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
   }
 
   openstudio::Point3dVector vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, workspaceObject);
- 
+
   boost::optional<SubSurface> subSurface;
   try{
     subSurface = SubSurface(vertices, m_model);
@@ -157,7 +157,7 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
           return subSurface.get();
         }
       }
-    }else{  
+    }else{
       LOG(Error, "OutsideBoundaryConditionObject not yet mapped for object of type " << target->iddObject().name());
     }
   }

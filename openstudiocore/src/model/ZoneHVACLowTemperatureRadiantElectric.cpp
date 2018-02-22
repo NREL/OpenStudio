@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -90,6 +90,10 @@ namespace detail {
     static std::vector<std::string> result;
     if (result.empty())
     {
+      result.push_back("Zone Radiant HVAC Electric Power");
+      result.push_back("Zone Radiant HVAC Electric Energy");
+      result.push_back("Zone Radiant HVAC Heating Energy");
+      result.push_back("Zone Radiant HVAC Heating Rate");
     }
     return result;
   }
@@ -420,6 +424,23 @@ namespace detail {
     }
   }
 
+  boost::optional<double> ZoneHVACLowTemperatureRadiantElectric_Impl::autosizedMaximumElectricalPowertoPanel() const {
+    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+  }
+
+  void ZoneHVACLowTemperatureRadiantElectric_Impl::autosize() {
+    autosizeMaximumElectricalPowertoPanel();
+  }
+
+  void ZoneHVACLowTemperatureRadiantElectric_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedMaximumElectricalPowertoPanel();
+    if (val) {
+      setMaximumElectricalPowertoPanel(val.get());
+    }
+
+  }
+
 } // detail
 
 ZoneHVACLowTemperatureRadiantElectric::ZoneHVACLowTemperatureRadiantElectric(const Model& model, Schedule & availabilitySchedule, Schedule & heatingTemperatureSchedule)
@@ -600,6 +621,10 @@ ZoneHVACLowTemperatureRadiantElectric::ZoneHVACLowTemperatureRadiantElectric(std
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> ZoneHVACLowTemperatureRadiantElectric::autosizedMaximumElectricalPowertoPanel() const {
+    return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->autosizedMaximumElectricalPowertoPanel();
+  }
 
 } // model
 } // openstudio

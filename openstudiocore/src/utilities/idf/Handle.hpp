@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -57,9 +57,9 @@ typedef boost::optional<HandleVector> OptionalHandleVector;
  *  value .isNull(). */
 UTILITIES_API Handle applyHandleMap(const Handle& original, const HandleMap& handleMap);
 
-/** Returns the HandleVector equivalent to original, where original is a vector of handleMap keys, 
- *  and the return vector consists of the corresponding handleMap values. Handles in original that 
- *  are not listed in handleMap are discarded (silently--compare .size() if all values should be 
+/** Returns the HandleVector equivalent to original, where original is a vector of handleMap keys,
+ *  and the return vector consists of the corresponding handleMap values. Handles in original that
+ *  are not listed in handleMap are discarded (silently--compare .size() if all values should be
  *  preserved). */
 UTILITIES_API HandleVector applyHandleMap(const HandleVector& original,const HandleMap& handleMap);
 

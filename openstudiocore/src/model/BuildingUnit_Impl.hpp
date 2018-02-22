@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -121,14 +121,6 @@ class MODEL_API BuildingUnit_Impl : public ModelObject_Impl {
  protected:
  private:
   REGISTER_LOGGER("openstudio.model.BuildingUnit")
-
-  boost::optional<ModelExtensibleGroup> getFeatureGroupByName(const std::string& name) const;
-
-  bool setFeatureGroupDataTypeAndValue(const std::string& name, const std::string& dataType, const std::string& value);
-
-  boost::optional<std::string> getFeatureStringAndCheckForType(const std::string& name, const std::string& expectedDataType) const;
-
-  //bool setRenderingColorAsModelObject(boost::optional<ModelObject> modelObject);
 
 };
 

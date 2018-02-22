@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -133,7 +133,7 @@ class ScheduleDayView : public QWidget
   // gets the current units for the schedule using current is IP
   boost::optional<Unit> units() const;
 
-  // gets the current units for the schedule 
+  // gets the current units for the schedule
   boost::optional<Unit> units(bool displayIP) const;
 
  signals:
@@ -314,7 +314,7 @@ class DayScheduleScene : public QGraphicsScene, public Nano::Observer
   ScheduleDayView * scheduleDayView() const;
 
   model::ScheduleDay scheduleDay() const;
-  
+
   void addSegment(double untilTime,double value);
 
   CalendarSegmentItem * addSegment(double untilTime);
@@ -366,10 +366,10 @@ class DaySchedulePlotArea : public QGraphicsView
 
   virtual ~DaySchedulePlotArea() {}
 
-  QTransform vItemTransform(); 
-  
+  QTransform vItemTransform();
+
   QGraphicsItem * segmentAt(QPoint point) const;
-  
+
   int timeAt(double x) const;
 
   boost::optional<double> valueAt(double x) const;
@@ -462,7 +462,7 @@ class VCalendarSegmentItem : public QGraphicsItem
 
   virtual ~VCalendarSegmentItem() {}
 
-  DayScheduleScene * scene() const; 
+  DayScheduleScene * scene() const;
 
   void setTime(double time);
 
@@ -525,7 +525,7 @@ class CalendarSegmentItem : public QGraphicsItem
 
   virtual ~CalendarSegmentItem() {}
 
-  DayScheduleScene * scene() const; 
+  DayScheduleScene * scene() const;
 
   double startTime() const;
 

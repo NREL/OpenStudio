@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -75,7 +75,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
   // Name
   std::string name = modelObject.name().get();
   idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::Name,name);
- 
+
 
   // Controller List
   IdfObject _controllerList(IddObjectType::AirLoopHVAC_ControllerList);
@@ -107,8 +107,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
     if( controller ) {
       controllers.push_back(controller.get());
     }
-  } 
-  
+  }
+
   for( auto & controller: controllers ) {
     auto _controller = translateAndMapModelObject(controller);
     if( _controller ) {
@@ -205,7 +205,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
        reliefIt != reliefModelObjects.end();
        ++reliefIt )
   {
-    // Make sure this is not an AirToAirComponent, 
+    // Make sure this is not an AirToAirComponent,
     // because those will be added to the equipment list
     // from the oaComponents() side.
     if( ! reliefIt->optionalCast<AirToAirComponent>() ) {

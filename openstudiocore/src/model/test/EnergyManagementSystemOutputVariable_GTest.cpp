@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -95,6 +95,13 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable)
   //setname
   outvar.setName("outputVar");
   EXPECT_EQ("outputVar", outvar.nameString());
+  //check BCVTB
+  EXPECT_FALSE(outvar.exportToBCVTB());
+  EXPECT_TRUE(outvar.isExportToBCVTBDefaulted());
+  outvar.setExportToBCVTB(true);
+  EXPECT_TRUE(outvar.exportToBCVTB());
+  outvar.resetExportToBCVTB();
+  EXPECT_FALSE(outvar.exportToBCVTB());
 
   //variable name
   bool varset = outvar.setEMSVariableName("badVariable");

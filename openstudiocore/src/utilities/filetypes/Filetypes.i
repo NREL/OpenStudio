@@ -28,7 +28,7 @@
   #include <utilities/units/MPHUnit.hpp>
   #include <utilities/units/SIUnit.hpp>
   #include <utilities/units/ThermUnit.hpp>
-  #include <utilities/units/WhUnit.hpp>  
+  #include <utilities/units/WhUnit.hpp>
 %}
 
 //%import <utilities/units/Quantity.i>
@@ -113,4 +113,4 @@
     return os.str();
   }
 };
-#endif //UTILITIES_FILETYPES_I 
+#endif //UTILITIES_FILETYPES_I

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -115,9 +115,9 @@ boost::optional<Quantity> QuantityConverterSingleton::convert(const Quantity &or
 
   // Retain pretty string
   OptionalQuantity result = m_convertToTargetFromSI(working,targetUnits);
-  if (result && 
-      result->prettyUnitsString(false).empty() && 
-      !targetUnits.prettyString(false).empty()) 
+  if (result &&
+      result->prettyUnitsString(false).empty() &&
+      !targetUnits.prettyString(false).empty())
   {
     result->setPrettyUnitsString(targetUnits.prettyString(false));
   }
@@ -335,7 +335,7 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToSI(const Quanti
     while( targetItr != targetEnd ) {
       int exp = targetBase.baseUnitExponent( *targetItr );
       if( exp != 0 ) {
-        result.setBaseUnitExponent(*targetItr,result.baseUnitExponent(*targetItr) + 
+        result.setBaseUnitExponent(*targetItr,result.baseUnitExponent(*targetItr) +
                                               baseExponent*exp);
       }
       ++targetItr;
@@ -349,7 +349,7 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToSI(const Quanti
   }
 
   // Check if there is a pretty string for the result
-  std::string pretty = UnitFactory::instance().lookupPrettyString( 
+  std::string pretty = UnitFactory::instance().lookupPrettyString(
     result.standardUnitsString(false) );
   if( !(pretty.empty()) ) {
     result.setPrettyUnitsString( pretty );
@@ -398,7 +398,7 @@ Quantity QuantityConverterSingleton::m_convertFromSI(const Quantity &original,
     while( targetItr != targetEnd ) {
       int exp = targetBase.baseUnitExponent( *targetItr );
       if( exp != 0) {
-        converted.setBaseUnitExponent(*targetItr,converted.baseUnitExponent(*targetItr) + 
+        converted.setBaseUnitExponent(*targetItr,converted.baseUnitExponent(*targetItr) +
                                                  workingExp*exp);
       }
       ++targetItr;
@@ -524,8 +524,8 @@ boost::optional<double> convert(double original, const std::string& originalUnit
 
     //convert to final units
     boost::optional<Quantity> finalQuant = QuantityConverter::instance().convert(originalQuant, *finalUnit);
-  
-    //if the conversion 
+
+    //if the conversion
     if (finalQuant) {
       return finalQuant->value();
     }

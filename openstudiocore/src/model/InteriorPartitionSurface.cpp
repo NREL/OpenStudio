@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -198,7 +198,7 @@ namespace detail {
     return result;
   }
 
-  void InteriorPartitionSurface_Impl::setConverttoInternalMass(bool converttoInternalMass) {
+  bool InteriorPartitionSurface_Impl::setConverttoInternalMass(bool converttoInternalMass) {
     bool result = false;
     if (converttoInternalMass) {
       result = setString(OS_InteriorPartitionSurfaceFields::ConverttoInternalMass, "Yes");
@@ -206,6 +206,7 @@ namespace detail {
       result = setString(OS_InteriorPartitionSurfaceFields::ConverttoInternalMass, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void InteriorPartitionSurface_Impl::resetConverttoInternalMass() {
@@ -354,8 +355,8 @@ bool InteriorPartitionSurface::isNumberofVerticesAutocalculated() const {
   return getImpl<detail::InteriorPartitionSurface_Impl>()->isNumberofVerticesAutocalculated();
 }
 
-void InteriorPartitionSurface::setConverttoInternalMass(bool converttoInternalMass) {
-  getImpl<detail::InteriorPartitionSurface_Impl>()->setConverttoInternalMass(converttoInternalMass);
+bool InteriorPartitionSurface::setConverttoInternalMass(bool converttoInternalMass) {
+  return getImpl<detail::InteriorPartitionSurface_Impl>()->setConverttoInternalMass(converttoInternalMass);
 }
 
 void InteriorPartitionSurface::resetConverttoInternalMass() {
@@ -418,4 +419,3 @@ InteriorPartitionSurface::InteriorPartitionSurface(std::shared_ptr<detail::Inter
 
 } // model
 } // openstudio
-

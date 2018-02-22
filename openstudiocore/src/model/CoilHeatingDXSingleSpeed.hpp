@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -37,14 +37,8 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
-
 class Curve;
-
-// class CurveBiquadratic;
-
-// class CurveCubic
-
-// class CurveQuadratic;
+class AirflowNetworkEquivalentDuct;
 
 namespace detail {
 
@@ -60,7 +54,7 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
   //@{
 
   explicit CoilHeatingDXSingleSpeed( const Model& model,
-                                       Schedule & availabilitySchedule, 
+                                       Schedule & availabilitySchedule,
                                        Curve& totalHeatingCapacityFunctionofTemperatureCurve,
                                        Curve& totalHeatingCapacityFunctionofFlowFractionCurve,
                                        Curve& energyInputRatioFunctionofTemperatureCurve,
@@ -195,7 +189,7 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
   // A6 , \field Total Heating Capacity Function of Flow Fraction Curve Name
   // \object-list QuadraticCubicCurves
   Curve totalHeatingCapacityFunctionofFlowFractionCurve() const;
-  bool setTotalHeatingCapacityFunctionofFlowFractionCurve( const Curve& curve );  
+  bool setTotalHeatingCapacityFunctionofFlowFractionCurve( const Curve& curve );
 
   // A7 ,  \field Energy Input Ratio Function of Temperature Curve Name
   // \object-list BiquadraticQuadraticCubicCurves
@@ -210,7 +204,7 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
   // A9 , \field Part Load Fraction Correlation Curve Name
   // \object-list QuadraticCubicCurves
   Curve partLoadFractionCorrelationCurve() const;
-  bool setPartLoadFractionCorrelationCurve( const Curve& curve );  
+  bool setPartLoadFractionCorrelationCurve( const Curve& curve );
 
   // A10, \field Defrost Energy Input Ratio Function of Temperature Curve Name
   // \object-list BiquadraticCurves
@@ -219,7 +213,22 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
   bool setDefrostEnergyInputRatioFunctionofTemperatureCurve( const Curve& curve );
   void resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
 
+  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+
+  boost::optional<double> autosizedRatedAirFlowRate() const ;
+
+  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+
+
+
   //@}
+
+  /** Creates a new equivalent duct object if an object is not already attached. */
+  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+  
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
  protected:
   /// @cond
   typedef detail::CoilHeatingDXSingleSpeed_Impl ImplType;

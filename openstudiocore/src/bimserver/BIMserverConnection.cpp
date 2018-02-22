@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -51,7 +51,7 @@ namespace bimserver {
 
   BIMserverConnection::BIMserverConnection(QObject * parent, QString bimserverAddr, QString bimserverPort) :
     QObject(parent),
-    m_networkManager(new QNetworkAccessManager)  
+    m_networkManager(new QNetworkAccessManager)
   {
     QString bimserver = "http://" + bimserverAddr + ":" + bimserverPort + "/json";
     m_bimserverURL = QUrl(bimserver);
@@ -63,7 +63,7 @@ namespace bimserver {
   }
 
   void BIMserverConnection::login(QString username, QString password) {
-    
+
     if (!m_operationDone) {
       emit errorOccured(QString("The last process has not end yet. Please wait and try again."));
       return;
@@ -132,7 +132,7 @@ namespace bimserver {
     }
   }
 
-  void BIMserverConnection::getAllProjects() { 
+  void BIMserverConnection::getAllProjects() {
     if (!m_operationDone) {
       emit errorOccured(QString("The last process has not end yet. Please wait and try again."));
       return;
@@ -199,7 +199,7 @@ namespace bimserver {
     } else {
       emit bimserverError();
     }
-    
+
   }
 
   void BIMserverConnection::download(QString revisionID) {
@@ -301,7 +301,7 @@ namespace bimserver {
       QJsonDocument responseDoc = QJsonDocument::fromJson(responseArray);
       QJsonObject downloadResponse = responseDoc.object();
       QJsonObject response = downloadResponse["response"].toObject();
-      
+
       if (!containsError(response)) {
         m_actionId = QString::number(response["result"].toInt());
         sendGetProgressRequest(m_actionId, QString("download"));
@@ -387,7 +387,7 @@ namespace bimserver {
   }
 
   void BIMserverConnection::sendCreateProjectRequest(QString projectName) {
-    
+
     QJsonObject parameters;
     parameters["projectName"] = projectName;
     QJsonObject request;
@@ -411,7 +411,7 @@ namespace bimserver {
     disconnect(m_networkManager, nullptr, this, nullptr);
     connect(m_networkManager, &QNetworkAccessManager::finished, this, &BIMserverConnection::processCreateProjectRequest);
     m_networkManager->post(qNetworkRequest, createProjectRequestJson);
-    
+
   }
 
   void BIMserverConnection::processCreateProjectRequest(QNetworkReply *rep) {
@@ -433,7 +433,7 @@ namespace bimserver {
     } else {
       emit bimserverError();
     }
-    
+
   }
 
     void BIMserverConnection::deleteProject(QString projectID) {
@@ -452,7 +452,7 @@ namespace bimserver {
   }
 
   void BIMserverConnection::sendDeleteProjectRequest(QString projectID) {
-    
+
     QJsonObject parameters;
     parameters["poid"] = projectID;
     QJsonObject request;
@@ -476,7 +476,7 @@ namespace bimserver {
     disconnect(m_networkManager, nullptr, this, nullptr);
     connect(m_networkManager, &QNetworkAccessManager::finished, this, &BIMserverConnection::processDeleteProjectRequest);
     m_networkManager->post(qNetworkRequest, deleteProjectRequestJson);
-    
+
   }
 
 
@@ -499,9 +499,9 @@ namespace bimserver {
     } else {
       emit bimserverError();
     }
-    
+
   }
-  
+
   void BIMserverConnection::checkInIFCFile(QString projectID, QString IFCFilePath) {
 
     if (!m_operationDone) {
@@ -522,7 +522,7 @@ namespace bimserver {
   void BIMserverConnection::sendGetDeserializerRequest() {
     QJsonObject parameters;
     parameters["extension"] = QJsonValue(QString("ifc"));
-    
+
     QJsonObject request;
     request["interface"] = QJsonValue(QString("Bimsie1ServiceInterface"));
     request["method"] = QJsonValue(QString("getSuggestedDeserializerForExtension"));
@@ -701,7 +701,7 @@ namespace bimserver {
     } else {
       emit bimserverError();
     }
-    
+
   }
 
   void BIMserverConnection::sendGetProgressRequest(QString topicId, QString action) {
@@ -716,7 +716,7 @@ namespace bimserver {
     QJsonObject getProgressRequest;
     getProgressRequest["token"] = QJsonValue(m_token);
     getProgressRequest["request"] = request;
-    
+
     QJsonDocument doc;
     doc.setObject(getProgressRequest);
 
@@ -789,7 +789,7 @@ namespace bimserver {
     if (responseMessage.isEmpty()) {
       emit bimserverError();
     }
-    else { 
+    else {
       QJsonObject exception = responseMessage["exception"].toObject();
       QString errorMessage = exception["message"].toString();
       emit errorOccured(errorMessage);
@@ -845,7 +845,7 @@ namespace bimserver {
     waitForLock(timeout);
     return m_ifcList;
   }
-  
+
   bool BIMserverConnection::waitForLock(int msec) const {
     int msecPerLoop = 20;
     int numTries = msec / msecPerLoop;

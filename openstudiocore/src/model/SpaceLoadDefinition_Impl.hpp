@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -66,13 +66,13 @@ namespace detail {
     /// Returns all instances of this definition.
     std::vector<SpaceLoadInstance> instances() const;
 
-    /** Returns the floor area associated with instances of this space load definition.  
+    /** Returns the floor area associated with instances of this space load definition.
     If two instances are in the same space then that floor area will be double counted.
     If two instances used in the same space type then that floor area will be double counted.
     Space and SpaceLoadInstance multipliers are included in the result. **/
     double floorArea() const;
 
-    /** Returns the number of instances of this space load.  
+    /** Returns the number of instances of this space load.
     Space and SpaceLoadInstance multipliers are included in the result **/
     int quantity() const;
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -69,7 +69,7 @@ namespace openstudio{
     : m_storage(Matrix(4,4))
   {
     OS_ASSERT(vector.size() == 16);
-    
+
     m_storage(0,0) = vector[0];
     m_storage(1,0) = vector[1];
     m_storage(2,0) = vector[2];
@@ -136,7 +136,7 @@ namespace openstudio{
   /// rotation specified by Euler angles
   Transformation Transformation::rotation(const EulerAngles& angles)
   {
-    Transformation result = Transformation::rotation(Vector3d(0,0,1), angles.phi()) * 
+    Transformation result = Transformation::rotation(Vector3d(0,0,1), angles.phi()) *
                             Transformation::rotation(Vector3d(0,1,0), angles.theta()) *
                             Transformation::rotation(Vector3d(1,0,0), angles.psi());
     return result;
@@ -292,7 +292,7 @@ namespace openstudio{
       // theta = pi + asin(m_storage(2,0)); // alternate solution
       psi = atan2(m_storage(2,1)/cos(theta), m_storage(2,2)/cos(theta));
       phi = atan2(m_storage(1,0)/cos(theta), m_storage(0,0)/cos(theta));
-      
+
     }
     EulerAngles result(psi, theta, phi);
     return result;
@@ -359,7 +359,7 @@ namespace openstudio{
     // get a point at outward normal
     Vector3d outwardNormal = plane.outwardNormal();
     Point3d refPoint = point + outwardNormal;
-    
+
     // translate the two points and recompute the normal
     Point3d newPoint = (*this) * point;
     Point3d newRefPoint = (*this) * refPoint;

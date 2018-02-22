@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -222,13 +222,13 @@ TEST_F(ModelFixture, Lights_RemoveDefinition2)
 TEST_F(ModelFixture, Lights_ExampleModel)
 {
   Model model = exampleModel();
-  
+
   std::vector<Lights> lights = model.getModelObjects<Lights>();
   EXPECT_FALSE(lights.empty());
 
   for (Lights light : lights){
     EXPECT_TRUE(light.schedule());
-  } 
+  }
 
 }
 
@@ -424,7 +424,7 @@ TEST_F(ModelFixture, Lights_Costs2)
   SpaceType spaceType(model);
   Lights spaceTypeLight(definition);
   spaceTypeLight.setSpaceType(spaceType);
-  
+
   ASSERT_TRUE(definitionCost.costedArea());
   EXPECT_DOUBLE_EQ(100.0, definitionCost.costedArea().get());
   EXPECT_FALSE(definitionCost.costedQuantity());
@@ -436,7 +436,7 @@ TEST_F(ModelFixture, Lights_Costs2)
   EXPECT_DOUBLE_EQ(200.0, definitionCost.costedArea().get());
   EXPECT_FALSE(definitionCost.costedQuantity());
   EXPECT_FALSE(definitionCost.costedThermalZones());
-} 
+}
 
 
 TEST_F(ModelFixture, Lights_FloorArea) {

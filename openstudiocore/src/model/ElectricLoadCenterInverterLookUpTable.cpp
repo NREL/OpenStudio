@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -73,7 +73,20 @@ namespace detail {
   const std::vector<std::string>& ElectricLoadCenterInverterLookUpTable_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Inverter DC to AC Efficiency");
+      result.push_back("Inverter DC Input Electric Power");
+      result.push_back("Inverter DC Input Electric Energy");
+      result.push_back("Inverter AC Output Electric Power");
+      result.push_back("Inverter AC Output Electric Energy");
+      result.push_back("Inverter Conversion Loss Power");
+      result.push_back("Inverter Conversion Loss Energy");
+      result.push_back("Inverter Conversion Loss Decrement Energy");
+      result.push_back("Inverter Thermal Loss Rate");
+      result.push_back("Inverter Thermal Loss Energy");
+      result.push_back("Inverter Ancillary AC Electric Power");
+      result.push_back("Inverter Ancillary AC Electric Energy");
     }
     return result;
   }
@@ -182,7 +195,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ElectricLoadCenterInverterLookUpTable_Impl::setRatedMaximumContinuousOutputPower(boost::optional<double> ratedMaximumContinuousOutputPower) {
+  bool ElectricLoadCenterInverterLookUpTable_Impl::setRatedMaximumContinuousOutputPower(boost::optional<double> ratedMaximumContinuousOutputPower) {
     bool result(false);
     if (ratedMaximumContinuousOutputPower) {
       result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::RatedMaximumContinuousOutputPower, ratedMaximumContinuousOutputPower.get());
@@ -192,6 +205,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void ElectricLoadCenterInverterLookUpTable_Impl::resetRatedMaximumContinuousOutputPower() {
@@ -199,7 +213,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ElectricLoadCenterInverterLookUpTable_Impl::setNightTareLossPower(boost::optional<double> nightTareLossPower) {
+  bool ElectricLoadCenterInverterLookUpTable_Impl::setNightTareLossPower(boost::optional<double> nightTareLossPower) {
     bool result(false);
     if (nightTareLossPower) {
       result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::NightTareLossPower, nightTareLossPower.get());
@@ -209,6 +223,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void ElectricLoadCenterInverterLookUpTable_Impl::resetNightTareLossPower() {
@@ -216,7 +231,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ElectricLoadCenterInverterLookUpTable_Impl::setNominalVoltageInput(boost::optional<double> nominalVoltageInput) {
+  bool ElectricLoadCenterInverterLookUpTable_Impl::setNominalVoltageInput(boost::optional<double> nominalVoltageInput) {
     bool result(false);
     if (nominalVoltageInput) {
       result = setDouble(OS_ElectricLoadCenter_Inverter_LookUpTableFields::NominalVoltageInput, nominalVoltageInput.get());
@@ -226,6 +241,7 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void ElectricLoadCenterInverterLookUpTable_Impl::resetNominalVoltageInput() {
@@ -412,24 +428,24 @@ void ElectricLoadCenterInverterLookUpTable::resetRadiativeFraction() {
   getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetRadiativeFraction();
 }
 
-void ElectricLoadCenterInverterLookUpTable::setRatedMaximumContinuousOutputPower(double ratedMaximumContinuousOutputPower) {
-  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setRatedMaximumContinuousOutputPower(ratedMaximumContinuousOutputPower);
+bool ElectricLoadCenterInverterLookUpTable::setRatedMaximumContinuousOutputPower(double ratedMaximumContinuousOutputPower) {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setRatedMaximumContinuousOutputPower(ratedMaximumContinuousOutputPower);
 }
 
 void ElectricLoadCenterInverterLookUpTable::resetRatedMaximumContinuousOutputPower() {
   getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetRatedMaximumContinuousOutputPower();
 }
 
-void ElectricLoadCenterInverterLookUpTable::setNightTareLossPower(double nightTareLossPower) {
-  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setNightTareLossPower(nightTareLossPower);
+bool ElectricLoadCenterInverterLookUpTable::setNightTareLossPower(double nightTareLossPower) {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setNightTareLossPower(nightTareLossPower);
 }
 
 void ElectricLoadCenterInverterLookUpTable::resetNightTareLossPower() {
   getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->resetNightTareLossPower();
 }
 
-void ElectricLoadCenterInverterLookUpTable::setNominalVoltageInput(double nominalVoltageInput) {
-  getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setNominalVoltageInput(nominalVoltageInput);
+bool ElectricLoadCenterInverterLookUpTable::setNominalVoltageInput(double nominalVoltageInput) {
+  return getImpl<detail::ElectricLoadCenterInverterLookUpTable_Impl>()->setNominalVoltageInput(nominalVoltageInput);
 }
 
 void ElectricLoadCenterInverterLookUpTable::resetNominalVoltageInput() {
@@ -492,4 +508,3 @@ ElectricLoadCenterInverterLookUpTable::ElectricLoadCenterInverterLookUpTable(std
 
 } // model
 } // openstudio
-

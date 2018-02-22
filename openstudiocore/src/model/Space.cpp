@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -432,9 +432,10 @@ namespace detail {
     return isEmpty(OS_SpaceFields::PartofTotalFloorArea);
   }
 
-  void Space_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
+  bool Space_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
     bool result = setDouble(OS_SpaceFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void Space_Impl::resetDirectionofRelativeNorth() {
@@ -442,9 +443,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void Space_Impl::setXOrigin(double xOrigin, bool driverMethod) {
+  bool Space_Impl::setXOrigin(double xOrigin, bool driverMethod) {
     bool result = setDouble(OS_SpaceFields::XOrigin, xOrigin, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void Space_Impl::resetXOrigin() {
@@ -452,9 +454,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void Space_Impl::setYOrigin(double yOrigin, bool driverMethod) {
+  bool Space_Impl::setYOrigin(double yOrigin, bool driverMethod) {
     bool result = setDouble(OS_SpaceFields::YOrigin, yOrigin, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void Space_Impl::resetYOrigin() {
@@ -462,9 +465,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void Space_Impl::setZOrigin(double zOrigin, bool driverMethod) {
+  bool Space_Impl::setZOrigin(double zOrigin, bool driverMethod) {
     bool result = setDouble(OS_SpaceFields::ZOrigin, zOrigin, driverMethod);
     OS_ASSERT(result);
+    return result;
   }
 
   void Space_Impl::resetZOrigin() {
@@ -472,7 +476,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void Space_Impl::setPartofTotalFloorArea(bool partofTotalFloorArea) {
+  bool Space_Impl::setPartofTotalFloorArea(bool partofTotalFloorArea) {
     bool result = false;
     if (partofTotalFloorArea) {
       result = setString(OS_SpaceFields::PartofTotalFloorArea, "Yes");
@@ -480,6 +484,7 @@ namespace detail {
       result = setString(OS_SpaceFields::PartofTotalFloorArea, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void Space_Impl::resetPartofTotalFloorArea() {
@@ -2233,7 +2238,7 @@ namespace detail {
 
     for (Surface surface : this->surfaces()){
 
-      std::vector<Point3d> vertices = surface.vertices();
+      std::vector<Point3d> vertices = removeCollinear(surface.vertices());
 
       boost::optional<Vector3d> outwardNormal = getOutwardNormal(vertices);
       if (!outwardNormal){
@@ -2242,7 +2247,7 @@ namespace detail {
 
       for (Surface otherSurface : other.surfaces()){
 
-        std::vector<Point3d> otherVertices = transformation*otherSurface.vertices();
+        std::vector<Point3d> otherVertices = removeCollinear(transformation*otherSurface.vertices());
 
         boost::optional<Vector3d> otherOutwardNormal = getOutwardNormal(otherVertices);
         if (!otherOutwardNormal){
@@ -2266,11 +2271,11 @@ namespace detail {
           // once surfaces are matched, check subsurfaces
           for (SubSurface subSurface : surface.subSurfaces()){
 
-            vertices = subSurface.vertices();
+            vertices = removeCollinear(subSurface.vertices());
 
             for (SubSurface otherSubSurface : otherSurface.subSurfaces()){
 
-              otherVertices = transformation*otherSubSurface.vertices();
+              otherVertices = removeCollinear(transformation*otherSubSurface.vertices());
               std::reverse(otherVertices.begin(), otherVertices.end());
 
               if (circularEqual(vertices, otherVertices, tol)){
@@ -2744,13 +2749,13 @@ namespace detail {
       result = floors[0].vertices();
 
       // remove collinear points
-      result = removeCollinear(result);
+      result = removeCollinearLegacy(result);
 
       // reorder the points
       result = reorderULC(result);
 
       // remove additional collinear points that occur after reordering
-      result = removeCollinear(result);
+      result = removeCollinearLegacy(result);
 
     }else{
 
@@ -2792,13 +2797,13 @@ namespace detail {
       result.pop_back();
 
       // remove collinear points
-      result = removeCollinear(result);
+      result = removeCollinearLegacy(result);
 
       // reorder the points
       result = reorderULC(result);
 
       // remove additional collinear points that occur after reordering
-      result = removeCollinear(result);
+      result = removeCollinearLegacy(result);
 
       // if result is now empty just quit
       if (result.size() < 3){
@@ -2819,13 +2824,13 @@ namespace detail {
         }
 
         // remove collinear points
-        innerLoop = removeCollinear(innerLoop);
+        innerLoop = removeCollinearLegacy(innerLoop);
 
         // reorder the points
         innerLoop = reorderULC(innerLoop);
 
         // remove additional collinear points that occur after reordering
-        innerLoop = removeCollinear(innerLoop);
+        innerLoop = removeCollinearLegacy(innerLoop);
 
         // if inner loop is now empty just ignore it
         if (innerLoop.size() < 3){
@@ -2847,13 +2852,13 @@ namespace detail {
     }
 
     // remove collinear points
-    result = removeCollinear(result);
+    result = removeCollinearLegacy(result);
 
     // reorder the points
     result = reorderULC(result);
 
     // remove additional collinear points that occur after reordering
-    result = removeCollinear(result);
+    result = removeCollinearLegacy(result);
 
     // if result is now empty just quit
     if (result.size() < 3){
@@ -2979,8 +2984,8 @@ bool Space::isPartofTotalFloorAreaDefaulted() const {
   return getImpl<detail::Space_Impl>()->isPartofTotalFloorAreaDefaulted();
 }
 
-void Space::setPartofTotalFloorArea(bool partofTotalFloorArea) {
-  getImpl<detail::Space_Impl>()->setPartofTotalFloorArea(partofTotalFloorArea);
+bool Space::setPartofTotalFloorArea(bool partofTotalFloorArea) {
+  return getImpl<detail::Space_Impl>()->setPartofTotalFloorArea(partofTotalFloorArea);
 }
 
 void Space::resetPartofTotalFloorArea() {
@@ -3567,4 +3572,3 @@ std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Spa
 
 } // model
 } // openstudio
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,9 +40,9 @@ namespace openstudio {
 class Quantity;
 
 /** Represents a vector of \link Quantity quantities \endlink all with the same units.
- *  Provides performance improvements over directly operating on std::vector<Quantity>. 
- *  The constructors and assignment operator ensure that this class behaves as "plain 
- *  old data" (POD) by cloning any units information (to avoid multiple objects 
+ *  Provides performance improvements over directly operating on std::vector<Quantity>.
+ *  The constructors and assignment operator ensure that this class behaves as "plain
+ *  old data" (POD) by cloning any units information (to avoid multiple objects
  *  pointing to the exact same unit data). */
 class UTILITIES_API OSQuantityVector {
  public:
@@ -67,13 +67,13 @@ class UTILITIES_API OSQuantityVector {
 
   /** Returns a clone of this object's units. */
   Unit units() const;
-  
+
   UnitSystem system() const;
 
   Scale scale() const;
 
-  /** Creates a vector of separate quantities. Note that it is better to do mathematical 
-   *  operations and convert units using OSOptionalQuantity. Only use this method once the 
+  /** Creates a vector of separate quantities. Note that it is better to do mathematical
+   *  operations and convert units using OSOptionalQuantity. Only use this method once the
    *  values and units of this OSOptionalQuantity are fixed. */
   std::vector<Quantity> quantities() const;
 
@@ -82,7 +82,7 @@ class UTILITIES_API OSQuantityVector {
 
   Quantity getQuantity(unsigned i) const;
 
-  /** Return value is equivalent to values().empty(). */ 
+  /** Return value is equivalent to values().empty(). */
   bool empty() const;
 
   /** Return value is equivalent to values().size(). */
@@ -104,7 +104,7 @@ class UTILITIES_API OSQuantityVector {
   /** Removes the last value in this OSQuantityVector. */
   void pop_back();
 
-  /** Changes the size of this OSQuantityVector to n, using value to fill in any newly 
+  /** Changes the size of this OSQuantityVector to n, using value to fill in any newly
    *  created elements as necessary. \post{size() == n} */
   void resize(unsigned n, double value=0.0);
 
@@ -127,11 +127,11 @@ class UTILITIES_API OSQuantityVector {
   /** Throws if !units().optionalCast<TemperatureUnit>(). */
   bool isRelative() const;
 
-  /** Set temperature as absolute. Throws if !units().optionalCast<TemperatureUnit>(). 
+  /** Set temperature as absolute. Throws if !units().optionalCast<TemperatureUnit>().
    *  \post{isAbsolute()} */
   void setAsAbsolute();
 
-  /** Set temperature as relative. Throws if !units().optionalCast<TemperatureUnit>(). 
+  /** Set temperature as relative. Throws if !units().optionalCast<TemperatureUnit>().
    *  \post{isRelative()} */
   void setAsRelative();
 
@@ -216,23 +216,23 @@ UTILITIES_API OSQuantityVector operator-(const Quantity& lQuantity,
 /** \relates OSQuantityVector */
 UTILITIES_API OSQuantityVector operator*(const OSQuantityVector& lVector,
                                          const Quantity& rQuantity);
-                                         
-/** \relates OSQuantityVector */                                         
+
+/** \relates OSQuantityVector */
 UTILITIES_API OSQuantityVector operator*(const OSQuantityVector& lVector, double d);
 
 /** \relates OSQuantityVector */
 UTILITIES_API OSQuantityVector operator*(const Quantity& lQuantity,
                                          const OSQuantityVector& rVector);
-                                         
-/** \relates OSQuantityVector */                                         
+
+/** \relates OSQuantityVector */
 UTILITIES_API OSQuantityVector operator*(double d,
                                          const OSQuantityVector& rVector);
 
 /** \relates OSQuantityVector */
 UTILITIES_API OSQuantityVector operator/(const OSQuantityVector& lVector,
                                          const Quantity& rQuantity);
-                                         
-/** \relates OSQuantityVector */                                         
+
+/** \relates OSQuantityVector */
 UTILITIES_API OSQuantityVector operator/(const OSQuantityVector& lVector, double d);
 
 /** \relates OSQuantityVector */

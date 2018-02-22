@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -69,7 +69,20 @@ namespace detail {
   const std::vector<std::string>& HumidifierSteamElectric_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Humidifier Water Volume Flow Rate");
+      result.push_back("Humidifier Water Volume");
+      result.push_back("Humidifier Electric Power");
+      result.push_back("Humidifier Electric Energy");
+      result.push_back("Humidifier Mains Water Volume");
+
+      // Water Storage Tank Name isn't implemented
+      // https://github.com/NREL/EnergyPlus/blob/a5b04d73ecfef706cda7d0543ccad31e7c27087a/src/EnergyPlus/Humidifiers.cc#L471
+      //result.push_back("Humidifier Storage Tank Water Volume Flow Rate");
+      //result.push_back("Humidifier Storage Tank Water Volume");
+      //result.push_back("Humidifier Starved Storage Tank Water Volume Flow Rate");
+      //result.push_back("Humidifier Starved Storage Tank Water Volume");
     }
     return result;
   }
@@ -241,6 +254,33 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<double> HumidifierSteamElectric_Impl::autosizedRatedCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity Volume", "m3/s");
+  }
+
+  boost::optional<double> HumidifierSteamElectric_Impl::autosizedRatedPower() const {
+    return getAutosizedValue("Design Size Rated Power", "W");
+  }
+
+  void HumidifierSteamElectric_Impl::autosize() {
+    autosizeRatedCapacity();
+    autosizeRatedPower();
+  }
+
+  void HumidifierSteamElectric_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedRatedCapacity();
+    if (val) {
+      setRatedCapacity(val.get());
+    }
+
+    val = autosizedRatedPower();
+    if (val) {
+      setRatedPower(val.get());
+    }
+
+  }
+
 } // detail
 
 HumidifierSteamElectric::HumidifierSteamElectric(const Model& model)
@@ -345,6 +385,14 @@ HumidifierSteamElectric::HumidifierSteamElectric(std::shared_ptr<detail::Humidif
   : StraightComponent(std::move(impl))
 {}
 /// @endcond
+
+  boost::optional<double> HumidifierSteamElectric::autosizedRatedCapacity() const {
+    return getImpl<detail::HumidifierSteamElectric_Impl>()->autosizedRatedCapacity();
+  }
+
+  boost::optional<double> HumidifierSteamElectric::autosizedRatedPower() const {
+    return getImpl<detail::HumidifierSteamElectric_Impl>()->autosizedRatedPower();
+  }
 
 } // model
 } // openstudio

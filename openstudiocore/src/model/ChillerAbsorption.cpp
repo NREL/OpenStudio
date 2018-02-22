@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -268,9 +268,10 @@ namespace detail {
     return result;
   }
 
-  void ChillerAbsorption_Impl::setDesignCondenserInletTemperature(double designCondenserInletTemperature) {
+  bool ChillerAbsorption_Impl::setDesignCondenserInletTemperature(double designCondenserInletTemperature) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::DesignCondenserInletTemperature, designCondenserInletTemperature);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ChillerAbsorption_Impl::setDesignChilledWaterFlowRate(boost::optional<double> designChilledWaterFlowRate) {
@@ -299,39 +300,46 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ChillerAbsorption_Impl::setCoefficient1oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve) {
+  bool ChillerAbsorption_Impl::setCoefficient1oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::Coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve, coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerAbsorption_Impl::setCoefficient2oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve) {
+  bool ChillerAbsorption_Impl::setCoefficient2oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::Coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve, coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerAbsorption_Impl::setCoefficient3oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve) {
+  bool ChillerAbsorption_Impl::setCoefficient3oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::Coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve, coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerAbsorption_Impl::setCoefficient1ofthePumpElectricUsePartLoadRatioCurve(double coefficient1ofthePumpElectricUsePartLoadRatioCurve) {
+  bool ChillerAbsorption_Impl::setCoefficient1ofthePumpElectricUsePartLoadRatioCurve(double coefficient1ofthePumpElectricUsePartLoadRatioCurve) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::Coefficient1ofthePumpElectricUsePartLoadRatioCurve, coefficient1ofthePumpElectricUsePartLoadRatioCurve);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerAbsorption_Impl::setCoefficient2ofthePumpElectricUsePartLoadRatioCurve(double coefficient2ofthePumpElectricUsePartLoadRatioCurve) {
+  bool ChillerAbsorption_Impl::setCoefficient2ofthePumpElectricUsePartLoadRatioCurve(double coefficient2ofthePumpElectricUsePartLoadRatioCurve) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::Coefficient2ofthePumpElectricUsePartLoadRatioCurve, coefficient2ofthePumpElectricUsePartLoadRatioCurve);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerAbsorption_Impl::setCoefficient3ofthePumpElectricUsePartLoadRatioCurve(double coefficient3ofthePumpElectricUsePartLoadRatioCurve) {
+  bool ChillerAbsorption_Impl::setCoefficient3ofthePumpElectricUsePartLoadRatioCurve(double coefficient3ofthePumpElectricUsePartLoadRatioCurve) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::Coefficient3ofthePumpElectricUsePartLoadRatioCurve, coefficient3ofthePumpElectricUsePartLoadRatioCurve);
     OS_ASSERT(result);
+    return result;
   }
 
-  void ChillerAbsorption_Impl::setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit) {
+  bool ChillerAbsorption_Impl::setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::ChilledWaterOutletTemperatureLowerLimit, chilledWaterOutletTemperatureLowerLimit);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ChillerAbsorption_Impl::setChillerFlowMode(std::string chillerFlowMode) {
@@ -357,9 +365,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ChillerAbsorption_Impl::setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator) {
+  bool ChillerAbsorption_Impl::setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator) {
     bool result = setDouble(OS_Chiller_AbsorptionFields::DegreeofSubcoolinginSteamGenerator, degreeofSubcoolinginSteamGenerator);
     OS_ASSERT(result);
+    return result;
   }
 
   bool ChillerAbsorption_Impl::setSizingFactor(double sizingFactor) {
@@ -381,6 +390,63 @@ namespace detail {
 
   unsigned ChillerAbsorption_Impl::demandOutletPort() {
     return OS_Chiller_AbsorptionFields::CondenserOutletNodeName;
+  }
+
+  boost::optional<double> ChillerAbsorption_Impl::autosizedNominalCapacity() const {
+    return getAutosizedValue("Design Size Nominal Capacity", "W");
+  }
+
+  boost::optional<double> ChillerAbsorption_Impl::autosizedNominalPumpingPower() const {
+    return getAutosizedValue("Design Size Nominal Pumping Power", "W");
+  }
+
+  boost::optional<double> ChillerAbsorption_Impl::autosizedDesignChilledWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Chilled Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ChillerAbsorption_Impl::autosizedDesignCondenserWaterFlowRate() const {
+    return getAutosizedValue("Design Size Design Condenser Water Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> ChillerAbsorption_Impl::autosizedDesignGeneratorFluidFlowRate() const {
+    return getAutosizedValue("Design Size Design Generator Fluid Flow Rate", "m3/s");
+  }
+
+  void ChillerAbsorption_Impl::autosize() {
+    autosizeNominalCapacity();
+    autosizeNominalPumpingPower();
+    autosizeDesignChilledWaterFlowRate();
+    autosizeDesignCondenserWaterFlowRate();
+    autosizeDesignGeneratorFluidFlowRate();
+  }
+
+  void ChillerAbsorption_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedNominalCapacity();
+    if (val) {
+      setNominalCapacity(val.get());
+    }
+
+    val = autosizedNominalPumpingPower();
+    if (val) {
+      setNominalPumpingPower(val.get());
+    }
+
+    val = autosizedDesignChilledWaterFlowRate();
+    if (val) {
+      setDesignChilledWaterFlowRate(val.get());
+    }
+
+    val = autosizedDesignCondenserWaterFlowRate();
+    if (val) {
+      setDesignCondenserWaterFlowRate(val.get());
+    }
+
+    val = autosizedDesignGeneratorFluidFlowRate();
+    if (val) {
+      setDesignGeneratorFluidFlowRate(val.get());
+    }
+
   }
 
 } // detail
@@ -553,8 +619,8 @@ bool ChillerAbsorption::setOptimumPartLoadRatio(double optimumPartLoadRatio) {
   return getImpl<detail::ChillerAbsorption_Impl>()->setOptimumPartLoadRatio(optimumPartLoadRatio);
 }
 
-void ChillerAbsorption::setDesignCondenserInletTemperature(double designCondenserInletTemperature) {
-  getImpl<detail::ChillerAbsorption_Impl>()->setDesignCondenserInletTemperature(designCondenserInletTemperature);
+bool ChillerAbsorption::setDesignCondenserInletTemperature(double designCondenserInletTemperature) {
+  return getImpl<detail::ChillerAbsorption_Impl>()->setDesignCondenserInletTemperature(designCondenserInletTemperature);
 }
 
 bool ChillerAbsorption::setDesignChilledWaterFlowRate(double designChilledWaterFlowRate) {
@@ -573,32 +639,32 @@ void ChillerAbsorption::autosizeDesignCondenserWaterFlowRate() {
   getImpl<detail::ChillerAbsorption_Impl>()->autosizeDesignCondenserWaterFlowRate();
 }
 
-void ChillerAbsorption::setCoefficient1oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve) {
-  getImpl<detail::ChillerAbsorption_Impl>()->setCoefficient1oftheHotWaterorSteamUsePartLoadRatioCurve(coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve);
+bool ChillerAbsorption::setCoefficient1oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve) {
+  return getImpl<detail::ChillerAbsorption_Impl>()->setCoefficient1oftheHotWaterorSteamUsePartLoadRatioCurve(coefficient1oftheHotWaterorSteamUsePartLoadRatioCurve);
 }
 
-void ChillerAbsorption::setCoefficient2oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve) {
-  getImpl<detail::ChillerAbsorption_Impl>()->setCoefficient2oftheHotWaterorSteamUsePartLoadRatioCurve(coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve);
+bool ChillerAbsorption::setCoefficient2oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve) {
+  return getImpl<detail::ChillerAbsorption_Impl>()->setCoefficient2oftheHotWaterorSteamUsePartLoadRatioCurve(coefficient2oftheHotWaterorSteamUsePartLoadRatioCurve);
 }
 
-void ChillerAbsorption::setCoefficient3oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve) {
-  getImpl<detail::ChillerAbsorption_Impl>()->setCoefficient3oftheHotWaterorSteamUsePartLoadRatioCurve(coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve);
+bool ChillerAbsorption::setCoefficient3oftheHotWaterorSteamUsePartLoadRatioCurve(double coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve) {
+  return getImpl<detail::ChillerAbsorption_Impl>()->setCoefficient3oftheHotWaterorSteamUsePartLoadRatioCurve(coefficient3oftheHotWaterorSteamUsePartLoadRatioCurve);
 }
 
-void ChillerAbsorption::setCoefficient1ofthePumpElectricUsePartLoadRatioCurve(double coefficient1ofthePumpElectricUsePartLoadRatioCurve) {
-  getImpl<detail::ChillerAbsorption_Impl>()->setCoefficient1ofthePumpElectricUsePartLoadRatioCurve(coefficient1ofthePumpElectricUsePartLoadRatioCurve);
+bool ChillerAbsorption::setCoefficient1ofthePumpElectricUsePartLoadRatioCurve(double coefficient1ofthePumpElectricUsePartLoadRatioCurve) {
+  return getImpl<detail::ChillerAbsorption_Impl>()->setCoefficient1ofthePumpElectricUsePartLoadRatioCurve(coefficient1ofthePumpElectricUsePartLoadRatioCurve);
 }
 
-void ChillerAbsorption::setCoefficient2ofthePumpElectricUsePartLoadRatioCurve(double coefficient2ofthePumpElectricUsePartLoadRatioCurve) {
-  getImpl<detail::ChillerAbsorption_Impl>()->setCoefficient2ofthePumpElectricUsePartLoadRatioCurve(coefficient2ofthePumpElectricUsePartLoadRatioCurve);
+bool ChillerAbsorption::setCoefficient2ofthePumpElectricUsePartLoadRatioCurve(double coefficient2ofthePumpElectricUsePartLoadRatioCurve) {
+  return getImpl<detail::ChillerAbsorption_Impl>()->setCoefficient2ofthePumpElectricUsePartLoadRatioCurve(coefficient2ofthePumpElectricUsePartLoadRatioCurve);
 }
 
-void ChillerAbsorption::setCoefficient3ofthePumpElectricUsePartLoadRatioCurve(double coefficient3ofthePumpElectricUsePartLoadRatioCurve) {
-  getImpl<detail::ChillerAbsorption_Impl>()->setCoefficient3ofthePumpElectricUsePartLoadRatioCurve(coefficient3ofthePumpElectricUsePartLoadRatioCurve);
+bool ChillerAbsorption::setCoefficient3ofthePumpElectricUsePartLoadRatioCurve(double coefficient3ofthePumpElectricUsePartLoadRatioCurve) {
+  return getImpl<detail::ChillerAbsorption_Impl>()->setCoefficient3ofthePumpElectricUsePartLoadRatioCurve(coefficient3ofthePumpElectricUsePartLoadRatioCurve);
 }
 
-void ChillerAbsorption::setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit) {
-  getImpl<detail::ChillerAbsorption_Impl>()->setChilledWaterOutletTemperatureLowerLimit(chilledWaterOutletTemperatureLowerLimit);
+bool ChillerAbsorption::setChilledWaterOutletTemperatureLowerLimit(double chilledWaterOutletTemperatureLowerLimit) {
+  return getImpl<detail::ChillerAbsorption_Impl>()->setChilledWaterOutletTemperatureLowerLimit(chilledWaterOutletTemperatureLowerLimit);
 }
 
 bool ChillerAbsorption::setChillerFlowMode(std::string chillerFlowMode) {
@@ -617,8 +683,8 @@ void ChillerAbsorption::autosizeDesignGeneratorFluidFlowRate() {
   getImpl<detail::ChillerAbsorption_Impl>()->autosizeDesignGeneratorFluidFlowRate();
 }
 
-void ChillerAbsorption::setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator) {
-  getImpl<detail::ChillerAbsorption_Impl>()->setDegreeofSubcoolinginSteamGenerator(degreeofSubcoolinginSteamGenerator);
+bool ChillerAbsorption::setDegreeofSubcoolinginSteamGenerator(double degreeofSubcoolinginSteamGenerator) {
+  return getImpl<detail::ChillerAbsorption_Impl>()->setDegreeofSubcoolinginSteamGenerator(degreeofSubcoolinginSteamGenerator);
 }
 
 bool ChillerAbsorption::setSizingFactor(double sizingFactor) {
@@ -631,6 +697,25 @@ ChillerAbsorption::ChillerAbsorption(std::shared_ptr<detail::ChillerAbsorption_I
 {}
 /// @endcond
 
+  boost::optional<double> ChillerAbsorption::autosizedNominalCapacity() const {
+    return getImpl<detail::ChillerAbsorption_Impl>()->autosizedNominalCapacity();
+  }
+
+  boost::optional<double> ChillerAbsorption::autosizedNominalPumpingPower() const {
+    return getImpl<detail::ChillerAbsorption_Impl>()->autosizedNominalPumpingPower();
+  }
+
+  boost::optional<double> ChillerAbsorption::autosizedDesignChilledWaterFlowRate() const {
+    return getImpl<detail::ChillerAbsorption_Impl>()->autosizedDesignChilledWaterFlowRate();
+  }
+
+  boost::optional<double> ChillerAbsorption::autosizedDesignCondenserWaterFlowRate() const {
+    return getImpl<detail::ChillerAbsorption_Impl>()->autosizedDesignCondenserWaterFlowRate();
+  }
+
+  boost::optional<double> ChillerAbsorption::autosizedDesignGeneratorFluidFlowRate() const {
+    return getImpl<detail::ChillerAbsorption_Impl>()->autosizedDesignGeneratorFluidFlowRate();
+  }
+
 } // model
 } // openstudio
-

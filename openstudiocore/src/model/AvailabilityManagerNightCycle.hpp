@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -31,6 +31,8 @@
 
 #include "ModelAPI.hpp"
 #include "AvailabilityManager.hpp"
+#include "../utilities/core/Deprecated.hpp"
+
 
 namespace openstudio {
 
@@ -62,45 +64,61 @@ class MODEL_API AvailabilityManagerNightCycle : public AvailabilityManager {
 
 
   std::string controlType() const;
-
   bool setControlType(std::string controlType);
-
   void resetControlType();
-
   bool isControlTypeDefaulted() const;
 
 
   double thermostatTolerance() const;
-
   Quantity getThermostatTolerance(bool returnIP=false) const;
-
   bool setThermostatTolerance(const Quantity& thermostatTolerance);
-
-  void setThermostatTolerance(double thermostatTolerance);
-
+  bool setThermostatTolerance(double thermostatTolerance);
   bool isThermostatToleranceDefaulted() const;
-
   void resetThermostatTolerance();
 
 
   double cyclingRunTime() const;
-
-  void setCyclingRunTime(double cyclingRunTime);
-
+  bool setCyclingRunTime(double cyclingRunTime);
   bool setCyclingRunTime(const Quantity& cyclingRunTime);
-
   void resetCyclingRunTime();
-
   Quantity getCyclingRunTime(bool returnIP=false) const;
-
   bool isCyclingRunTimeDefaulted() const;
 
 
-  boost::optional<ThermalZone> controlThermalZone() const;
+  static std::vector<std::string> cyclingRunTimeControlTypeValues();
+  std::string cyclingRunTimeControlType() const;
+  bool isCyclingRunTimeControlTypeDefaulted() const;
+  bool setCyclingRunTimeControlType(std::string cyclingRunTimeControlType);
+  void resetCyclingRunTimeControlType();
 
-  bool setControlThermalZone(const ThermalZone& thermalZone);
 
-  void resetControlThermalZone();
+  /** \deprecated AvailabilityManagerNightCycle::controlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::controlThermalZones\n
+    * Get the controlThermalZone if it's unique, otherwise returns the first one found and issues a warning. **/
+  OS_DEPRECATED boost::optional<ThermalZone> controlThermalZone() const;
+
+  /** \deprecated AvailabilityManagerNightCycle::setControlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::setControlThermalZones\n
+  * sets the list of controlThermalZones by calling setControlThermalZones([thermalZone]) **/
+  OS_DEPRECATED bool setControlThermalZone(const ThermalZone& thermalZone);
+
+  /** \deprecated AvailabilityManagerNightCycle::resetControlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::resetControlThermalZones\n
+  * Resets the list of controlThermalZones **/
+  OS_DEPRECATED void resetControlThermalZone();
+
+  std::vector<ThermalZone> controlThermalZones() const;
+  bool setControlThermalZones(const std::vector<ThermalZone>& thermalZones);
+  void resetControlThermalZones();
+
+  std::vector<ThermalZone> coolingControlThermalZones() const;
+  bool setCoolingControlThermalZones(const std::vector<ThermalZone>& thermalZones);
+  void resetCoolingControlThermalZones();
+
+  std::vector<ThermalZone> heatingControlThermalZones() const;
+  bool setHeatingControlThermalZones(const std::vector<ThermalZone>& thermalZones);
+  void resetHeatingControlThermalZones();
+
+  std::vector<ThermalZone> heatingZoneFansOnlyThermalZones() const;
+  bool setHeatingZoneFansOnlyThermalZones(const std::vector<ThermalZone>& thermalZones);
+  void resetHeatingZoneFansOnlyThermalZones();
 
  protected:
 
@@ -130,4 +148,3 @@ typedef std::vector<AvailabilityManagerNightCycle> AvailabilityManagerNightCycle
 } // openstudio
 
 #endif // MODEL_AVAILABILITYMANAGERNIGHTCYCLE_HPP
-

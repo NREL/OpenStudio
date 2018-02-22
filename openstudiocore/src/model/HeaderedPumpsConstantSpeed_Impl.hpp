@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -100,6 +100,18 @@ namespace detail {
 
     double skinLossRadiativeFraction() const;
 
+  boost::optional<double> autosizedTotalRatedFlowRate() const ;
+
+  boost::optional<double> autosizedRatedPowerConsumption() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Setters */
     //@{
@@ -108,13 +120,13 @@ namespace detail {
 
     void autosizeTotalRatedFlowRate();
 
-    void setNumberofPumpsinBank(int numberofPumpsinBank);
+    bool setNumberofPumpsinBank(int numberofPumpsinBank);
 
     bool setFlowSequencingControlScheme(std::string flowSequencingControlScheme);
 
-    void setRatedPumpHead(double ratedPumpHead);
+    bool setRatedPumpHead(double ratedPumpHead);
 
-    void setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
+    bool setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
 
     void autosizeRatedPowerConsumption();
 
@@ -156,5 +168,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_HEADEREDPUMPSCONSTANTSPEED_IMPL_HPP
-
+#endif // MODEL_HEADEREDPUMPSCONSTANTSPEED_IMPL_HPP

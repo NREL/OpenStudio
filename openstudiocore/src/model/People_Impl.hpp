@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -43,21 +43,6 @@ namespace detail {
 
   /** People_Impl is a SpaceLoadInstance_Impl that is the implementation class for People.*/
   class MODEL_API People_Impl : public SpaceLoadInstance_Impl {
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -79,7 +64,7 @@ namespace detail {
     //@{
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
-    
+
     virtual IddObjectType iddObjectType() const override;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule &schedule) const override;
@@ -167,7 +152,7 @@ namespace detail {
 
     /** Resets the air velocity Schedule. */
     void resetAirVelocitySchedule();
-  
+
     bool setMultiplier(double multiplier);
 
     void resetMultiplier();
@@ -190,6 +175,10 @@ namespace detail {
 
     /** Returns the m^2/person represented by this instance, assuming floorArea (m^2). */
     double getFloorAreaPerPerson(double floorArea) const;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
    protected:

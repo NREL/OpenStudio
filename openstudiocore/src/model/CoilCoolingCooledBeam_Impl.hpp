@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -61,29 +61,31 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override; 
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override; 
+    virtual IddObjectType iddObjectType() const override;
 
     virtual unsigned inletPort() override;
 
     virtual unsigned outletPort() override;
-    
-    virtual boost::optional<StraightComponent> containingStraightComponent() const override; 
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    virtual boost::optional<StraightComponent> containingStraightComponent() const override;
 
     //@}
     /** @name Getters */
     //@{
 
-    double coilSurfaceAreaperCoilLength() const; 
+    double coilSurfaceAreaperCoilLength() const;
 
-    bool isCoilSurfaceAreaperCoilLengthDefaulted() const; 
+    bool isCoilSurfaceAreaperCoilLengthDefaulted() const;
 
-    double modelParametera() const; 
+    double modelParametera() const;
 
-    bool isModelParameteraDefaulted() const; 
+    bool isModelParameteraDefaulted() const;
 
-    double modelParametern1() const; 
+    double modelParametern1() const;
 
     bool isModelParametern1Defaulted() const;
 
@@ -115,13 +117,13 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setCoilSurfaceAreaperCoilLength(double coilSurfaceAreaperCoilLength); 
+    bool setCoilSurfaceAreaperCoilLength(double coilSurfaceAreaperCoilLength);
 
-    void resetCoilSurfaceAreaperCoilLength(); 
+    void resetCoilSurfaceAreaperCoilLength();
 
-    bool setModelParametera(double modelParametera); 
+    bool setModelParametera(double modelParametera);
 
-    void resetModelParametera(); 
+    void resetModelParametera();
 
     bool setModelParametern1(double modelParametern1);
 
@@ -154,7 +156,7 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-    
+
     bool addToNode(Node & node) override;
 
     //@}

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -81,6 +81,88 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      result.push_back("Water Heater Tank Temperature");
+      result.push_back("Water Heater Final Tank Temperature");
+      result.push_back("Water Heater Heat Loss Rate");
+      result.push_back("Water Heater Heat Loss Energy");
+      result.push_back("Water Heater Use Side Mass Flow Rate");
+      result.push_back("Water Heater Use Side Inlet Temperature");
+      result.push_back("Water Heater Use Side Outlet Temperature");
+      result.push_back("Water Heater Use Side Heat Transfer Rate");
+      result.push_back("Water Heater Use Side Heat Transfer Energy");
+      result.push_back("Water Heater Source Side Mass Flow Rate");
+      result.push_back("Water Heater Source Side Inlet Temperature");
+      result.push_back("Water Heater Source Side Outlet Temperature");
+      result.push_back("Water Heater Source Side Heat Transfer Rate");
+      result.push_back("Water Heater Source Side Heat Transfer Energy");
+      result.push_back("Water Heater Off Cycle Parasitic Tank Heat Transfer Rate");
+      result.push_back("Water Heater Off Cycle Parasitic Tank Heat Transfer Energy");
+      result.push_back("Water Heater On Cycle Parasitic Tank Heat Transfer Rate");
+      result.push_back("Water Heater On Cycle Parasitic Tank Heat Transfer Energy");
+      result.push_back("Water Heater Total Demand Heat Transfer Rate");
+      result.push_back("Water Heater Total Demand Energy");
+      result.push_back("Water Heater Heating Rate");
+      result.push_back("Water Heater Heating Energy");
+      result.push_back("Water Heater Unmet Demand Heat Transfer Rate");
+      result.push_back("Water Heater Unmet Demand Heat Transfer Energy");
+      result.push_back("Water Heater Venting Heat Transfer Rate");
+      result.push_back("Water Heater Venting Heat Transfer Energy");
+      result.push_back("Water Heater Net Heat Transfer Rate");
+      result.push_back("Water Heater Net Heat Transfer Energy");
+      result.push_back("Water Heater Cycle On Count");
+      result.push_back("Water Heater Runtime Fraction");
+      result.push_back("Water Heater Part Load Ratio");
+      result.push_back("Water Heater Electric Power");
+
+      // This should be based on fuel type
+
+      //result.push_back("Water Heater <Fuel Type> Rate");
+      //result.push_back("Water Heater <Fuel Type> Energy");
+          // Fuel type specific
+      // TODO: DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
+          // until then, make this include all possible outputVariableNames for class regardless of fuelType
+          // std::string fuelType = this->fuelType();
+      // if (fuelType == "Electricity") {
+      result.push_back("Water Heater Electric Power");
+      result.push_back("Water Heater Electric Energy");
+      // } else if (fuelType == "NaturalGas") {
+      result.push_back("Water Heater Gas Rate");
+      result.push_back("Water Heater Gas Energy");
+      // } else if (fuelType == "PropaneGas") {
+      result.push_back("Water Heater Propane Rate");
+      result.push_back("Water Heater Propane Energy");
+      // } else if (fuelType == "FuelOil#1") {
+      result.push_back("Water Heater FuelOil#1 Rate");
+      result.push_back("Water Heater FuelOil#1 Energy");
+      // } else if (fuelType == "FuelOil#2") {
+      result.push_back("Water Heater FuelOil#2 Rate");
+      result.push_back("Water Heater FuelOil#2 Energy");
+      // } else if (fuelType == "Coal") {
+      result.push_back("Water Heater Coal Rate");
+      result.push_back("Water Heater Coal Energy");
+      // } else if (fuelType == "Diesel") {
+      result.push_back("Water Heater Diesel Rate");
+      result.push_back("Water Heater Diesel Energy");
+      // } else if (fuelType == "Gasoline") {
+      result.push_back("Water Heater Gasoline Rate");
+      result.push_back("Water Heater Gasoline Energy");
+      // } else if (fuelType == "OtherFuel1") {
+      result.push_back("Water Heater OtherFuel1 Rate");
+      result.push_back("Water Heater OtherFuel1 Energy");
+      // } else if (fuelType == "OtherFuel2") {
+      result.push_back("Water Heater OtherFuel2 Rate");
+      result.push_back("Water Heater OtherFuel2 Energy");
+      // }
+
+      // TODO: implement these too...
+      //result.push_back("Water Heater Off Cycle Parasitic <Fuel Type> Rate");
+      //result.push_back("Water Heater Off Cycle Parasitic <Fuel Type> Energy");
+      //result.push_back("Water Heater On Cycle Parasitic <Fuel Type> Rate");
+      // result.push_back("Water Heater On Cycle Parasitic <Fuel Type> Energy");
+      //
+      result.push_back("Water Heater Water Volume Flow Rate");
+      result.push_back("Water Heater Water Volume");
+
     }
     return result;
   }
@@ -109,6 +191,10 @@ namespace detail {
     if (std::find(b,e,OS_WaterHeater_MixedFields::ColdWaterSupplyTemperatureScheduleName) != e)
     {
       result.push_back(ScheduleTypeKey("WaterHeaterMixed","Cold Water Supply Temperature"));
+    }
+    if (std::find(b,e,OS_WaterHeater_MixedFields::IndirectAlternateSetpointTemperatureScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("WaterHeaterMixed","Indirect Alternate Setpoint Temperature"));
     }
     return result;
   }
@@ -579,7 +665,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void WaterHeaterMixed_Impl::setMaximumTemperatureLimit(boost::optional<double> maximumTemperatureLimit) {
+  bool WaterHeaterMixed_Impl::setMaximumTemperatureLimit(boost::optional<double> maximumTemperatureLimit) {
     bool result = false;
     if (maximumTemperatureLimit) {
       result = setDouble(OS_WaterHeater_MixedFields::MaximumTemperatureLimit, maximumTemperatureLimit.get());
@@ -587,6 +673,7 @@ namespace detail {
       result = setString(OS_WaterHeater_MixedFields::MaximumTemperatureLimit, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   bool WaterHeaterMixed_Impl::setMaximumTemperatureLimit(const OSOptionalQuantity& maximumTemperatureLimit) {
@@ -909,7 +996,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void WaterHeaterMixed_Impl::setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName) {
+  bool WaterHeaterMixed_Impl::setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName) {
     bool result = false;
     if (ambientTemperatureOutdoorAirNodeName) {
       result = setString(OS_WaterHeater_MixedFields::AmbientTemperatureOutdoorAirNodeName, ambientTemperatureOutdoorAirNodeName.get());
@@ -917,6 +1004,7 @@ namespace detail {
       result = setString(OS_WaterHeater_MixedFields::AmbientTemperatureOutdoorAirNodeName, "");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void WaterHeaterMixed_Impl::resetAmbientTemperatureOutdoorAirNodeName() {
@@ -1583,6 +1671,160 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<double> WaterHeaterMixed_Impl::autosizedTankVolume() const {
+    return getAutosizedValue("Design Size Tank Volume", "m3");
+  }
+
+  boost::optional<double> WaterHeaterMixed_Impl::autosizedHeaterMaximumCapacity() const {
+    return getAutosizedValue("Design Size Heater Maximum Capacity", "W");
+  }
+
+  boost::optional<double> WaterHeaterMixed_Impl::autosizedUseSideDesignFlowRate() const {
+    return getAutosizedValue("Design Size Use Side Design Flow Rate", "m3/s");
+  }
+
+  boost::optional<double> WaterHeaterMixed_Impl::autosizedSourceSideDesignFlowRate() const {
+    return getAutosizedValue("Design Size Source Side Design Flow Rate", "m3/s");
+  }
+
+  void WaterHeaterMixed_Impl::autosize() {
+    autosizeTankVolume();
+    autosizeHeaterMaximumCapacity();
+    autosizeUseSideDesignFlowRate();
+    autosizeSourceSideDesignFlowRate();
+  }
+
+  void WaterHeaterMixed_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedTankVolume();
+    if (val) {
+      setTankVolume(val.get());
+    }
+
+    val = autosizedHeaterMaximumCapacity();
+    if (val) {
+      setHeaterMaximumCapacity(val.get());
+    }
+
+    val = autosizedUseSideDesignFlowRate();
+    if (val) {
+      setUseSideDesignFlowRate(val.get());
+    }
+
+    val = autosizedSourceSideDesignFlowRate();
+    if (val) {
+      setSourceSideDesignFlowRate(val.get());
+    }
+
+  }
+
+  std::string WaterHeaterMixed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_WaterHeater_MixedFields::EndUseSubcategory,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool WaterHeaterMixed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_WaterHeater_MixedFields::EndUseSubcategory,endUseSubcategory);
+  }
+
+
+  std::vector<std::string> WaterHeaterMixed_Impl::sourceSideFlowControlModeValues() const {
+    return WaterHeaterMixed::sourceSideFlowControlModeValues();
+  }
+
+  std::string WaterHeaterMixed_Impl::sourceSideFlowControlMode() const {
+    boost::optional<std::string> value = getString(OS_WaterHeater_MixedFields::SourceSideFlowControlMode,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool WaterHeaterMixed_Impl::setSourceSideFlowControlMode(const std::string & sourceSideFlowControlMode) {
+
+    bool result = false;
+
+    // Do not accept IndirectHeatAlternateSetpoint unless there is already a schedule that is set
+    if ( openstudio::istringEqual("IndirectHeatAlternateSetpoint", sourceSideFlowControlMode) )
+    {
+      if (!indirectAlternateSetpointTemperatureSchedule()) {
+        LOG(Warn, "If you want to use a Source Side Flow Control Mode of 'IndirectHeatAlternateSetpoint', "
+                  "use setIndirectAlternateSetpointTemperatureSchedule(schedule) instead for " << briefDescription());
+        return false;
+      }
+    }
+    // If other than IndirectHeatAlternateSetpoint, Reset the indirect alternate setpoint temp schedule
+    else
+    {
+      // Have to do this before resetting the schedule, in case a bad (per IDD) value other than 'IndirectHeatAlternateSetpoint' is provided
+      result = setString(OS_WaterHeater_MixedFields::SourceSideFlowControlMode, sourceSideFlowControlMode);
+
+      if (result && indirectAlternateSetpointTemperatureSchedule()) {
+        LOG(Info, "Resetting the 'Indirect Alternate Setpoint Temperature Schedule Name' for " << briefDescription());
+        setString(OS_WaterHeater_MixedFields::IndirectAlternateSetpointTemperatureScheduleName, "");
+      }
+
+    }
+
+    return result;
+
+  }
+
+
+  boost::optional<Schedule> WaterHeaterMixed_Impl::indirectAlternateSetpointTemperatureSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterHeater_MixedFields::IndirectAlternateSetpointTemperatureScheduleName);
+  }
+
+  bool WaterHeaterMixed_Impl::setIndirectAlternateSetpointTemperatureSchedule(Schedule& indirectAlternateSetpointTemperatureSchedule) {
+    bool result = setSchedule(OS_WaterHeater_MixedFields::IndirectAlternateSetpointTemperatureScheduleName,
+                              "WaterHeaterMixed",
+                              "Indirect Alternate Setpoint Temperature",
+                              indirectAlternateSetpointTemperatureSchedule);
+    // Also set the source Side Flow Control Mode accordingly
+    if (result && !openstudio::istringEqual("IndirectHeatAlternateSetpoint", sourceSideFlowControlMode()) ) {
+      LOG(Info, "Setting the Source Side Flow Control Mode to 'IndirectHeatAlternateSetpoint' for " << briefDescription());
+      result = setString(OS_WaterHeater_MixedFields::SourceSideFlowControlMode, "IndirectHeatAlternateSetpoint");
+    }
+    return result;
+  }
+
+  void WaterHeaterMixed_Impl::resetIndirectAlternateSetpointTemperatureSchedule() {
+    bool result = setString(OS_WaterHeater_MixedFields::IndirectAlternateSetpointTemperatureScheduleName, "");
+    OS_ASSERT(result);
+    // Reset the Source Side Flow Control Mode to the default "IndirectHeatPrimarySetpoint"
+    if ( openstudio::istringEqual("IndirectHeatAlternateSetpoint", sourceSideFlowControlMode()) ) {
+      LOG(Info, "Resetting the Source Side Flow Control Mode to the default 'IndirectHeatPrimarySetpoint' for " << briefDescription());
+      result = setString(OS_WaterHeater_MixedFields::SourceSideFlowControlMode, "IndirectHeatPrimarySetpoint");
+    }
+    OS_ASSERT(result);
+  }
+
+  boost::optional<ModelObject> WaterHeaterMixed_Impl::indirectAlternateSetpointTemperatureScheduleAsModelObject() const {
+    OptionalModelObject result;
+    OptionalSchedule intermediate = indirectAlternateSetpointTemperatureSchedule();
+    if (intermediate) {
+      result = *intermediate;
+    }
+    return result;
+  }
+
+  bool WaterHeaterMixed_Impl::setIndirectAlternateSetpointTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+    if (modelObject) {
+      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+      if (intermediate) {
+        Schedule schedule(*intermediate);
+        return setIndirectAlternateSetpointTemperatureSchedule(schedule);
+      }
+      else {
+        return false;
+      }
+    }
+    else {
+      resetIndirectAlternateSetpointTemperatureSchedule();
+    }
+    return true;
+  }
+
+
 } // detail
 
 WaterHeaterMixed::WaterHeaterMixed(const Model& model)
@@ -1617,6 +1859,9 @@ WaterHeaterMixed::WaterHeaterMixed(const Model& model)
   ScheduleRuleset setpoint_schedule(model);
   setpoint_schedule.defaultDaySchedule().addValue(Time(0,24,0,0),60.0);
   setSetpointTemperatureSchedule(setpoint_schedule);
+
+  setSourceSideFlowControlMode("IndirectHeatPrimarySetpoint");
+  setEndUseSubcategory("General");
 }
 
 IddObjectType WaterHeaterMixed::iddObjectType() {
@@ -1988,8 +2233,8 @@ void WaterHeaterMixed::resetDeadbandTemperatureDifference() {
   getImpl<detail::WaterHeaterMixed_Impl>()->resetDeadbandTemperatureDifference();
 }
 
-void WaterHeaterMixed::setMaximumTemperatureLimit(double maximumTemperatureLimit) {
-  getImpl<detail::WaterHeaterMixed_Impl>()->setMaximumTemperatureLimit(maximumTemperatureLimit);
+bool WaterHeaterMixed::setMaximumTemperatureLimit(double maximumTemperatureLimit) {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->setMaximumTemperatureLimit(maximumTemperatureLimit);
 }
 
 bool WaterHeaterMixed::setMaximumTemperatureLimit(const Quantity& maximumTemperatureLimit) {
@@ -2168,8 +2413,8 @@ void WaterHeaterMixed::resetAmbientTemperatureThermalZone() {
   getImpl<detail::WaterHeaterMixed_Impl>()->resetAmbientTemperatureThermalZone();
 }
 
-void WaterHeaterMixed::setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName) {
-  getImpl<detail::WaterHeaterMixed_Impl>()->setAmbientTemperatureOutdoorAirNodeName(ambientTemperatureOutdoorAirNodeName);
+bool WaterHeaterMixed::setAmbientTemperatureOutdoorAirNodeName(std::string ambientTemperatureOutdoorAirNodeName) {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->setAmbientTemperatureOutdoorAirNodeName(ambientTemperatureOutdoorAirNodeName);
 }
 
 void WaterHeaterMixed::resetAmbientTemperatureOutdoorAirNodeName() {
@@ -2320,12 +2565,61 @@ void WaterHeaterMixed::resetIndirectWaterHeatingRecoveryTime() {
   getImpl<detail::WaterHeaterMixed_Impl>()->resetIndirectWaterHeatingRecoveryTime();
 }
 
+
+std::vector<std::string> WaterHeaterMixed::sourceSideFlowControlModeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_WaterHeater_MixedFields::SourceSideFlowControlMode);
+}
+
+std::string WaterHeaterMixed::sourceSideFlowControlMode() const {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->sourceSideFlowControlMode();
+}
+
+bool WaterHeaterMixed::setSourceSideFlowControlMode(const std::string & sourceSideFlowControlMode) {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->setSourceSideFlowControlMode(sourceSideFlowControlMode);
+}
+
+
+boost::optional<Schedule> WaterHeaterMixed::indirectAlternateSetpointTemperatureSchedule() const {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->indirectAlternateSetpointTemperatureSchedule();
+}
+
+bool WaterHeaterMixed::setIndirectAlternateSetpointTemperatureSchedule(Schedule& indirectAlternateSetpointTemperatureSchedule) {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->setIndirectAlternateSetpointTemperatureSchedule(indirectAlternateSetpointTemperatureSchedule);
+}
+void WaterHeaterMixed::resetIndirectAlternateSetpointTemperatureSchedule() {
+  getImpl<detail::WaterHeaterMixed_Impl>()->resetIndirectAlternateSetpointTemperatureSchedule();
+}
+
+std::string WaterHeaterMixed::endUseSubcategory() const {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->endUseSubcategory();
+}
+
+bool WaterHeaterMixed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::WaterHeaterMixed_Impl>()->setEndUseSubcategory(endUseSubcategory);
+}
+
 /// @cond
 WaterHeaterMixed::WaterHeaterMixed(std::shared_ptr<detail::WaterHeaterMixed_Impl> impl)
   : WaterToWaterComponent(std::move(impl))
 {}
 /// @endcond
 
-} // model
-} // openstudio
+  boost::optional<double> WaterHeaterMixed::autosizedTankVolume() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->autosizedTankVolume();
+  }
 
+  boost::optional<double> WaterHeaterMixed::autosizedHeaterMaximumCapacity() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->autosizedHeaterMaximumCapacity();
+  }
+
+  boost::optional<double> WaterHeaterMixed::autosizedUseSideDesignFlowRate() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->autosizedUseSideDesignFlowRate();
+  }
+
+  boost::optional<double> WaterHeaterMixed::autosizedSourceSideDesignFlowRate() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->autosizedSourceSideDesignFlowRate();
+  }
+
+} // model
+} // openstudio

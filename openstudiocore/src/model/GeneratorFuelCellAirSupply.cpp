@@ -91,15 +91,15 @@ namespace detail {
     return GeneratorFuelCellAirSupply::iddObjectType();
   }
 
-  // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
-  // and will return a reference to the GeneratorMicroTurbineHeatRecovery
+  // This will clone both the GeneratorFuelCellAirSupply and its linked GeneratorFuelCell
+  // and will return a reference to the GeneratorFuelCellAirSupply
   ModelObject GeneratorFuelCellAirSupply_Impl::clone(Model model) const {
 
     // We call the parent generator's Clone method which will clone both the fuelCell and airSupply
     GeneratorFuelCell fs = fuelCell();
     GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
 
-    // We get the clone of the parent generator's MTHR so we can return that
+    // We get the clone of the parent generator's airSupply so we can return that
     GeneratorFuelCellAirSupply hxClone = fsClone.airSupply();
 
 
@@ -119,13 +119,13 @@ namespace detail {
     boost::optional<CurveQuadratic> curveQ;
     boost::optional<CurveCubic> curveC;
 
-    if (curveC = blowerPowerCurve()) {
+    if ( (curveC = blowerPowerCurve()) ) {
       result.push_back(curveC.get());
     }
-    if (curveQ = airRateFunctionofElectricPowerCurve()) {
+    if ( (curveQ = airRateFunctionofElectricPowerCurve()) ) {
       result.push_back(curveQ.get());
     }
-    if (curveQ = airRateFunctionofFuelRateCurve()) {
+    if ( (curveQ = airRateFunctionofFuelRateCurve()) ) {
       result.push_back(curveQ.get());
     }
 
@@ -246,9 +246,10 @@ namespace detail {
     return result;
   }
 
-  void GeneratorFuelCellAirSupply_Impl::setStoichiometricRatio(double stoichiometricRatio) {
+  bool GeneratorFuelCellAirSupply_Impl::setStoichiometricRatio(double stoichiometricRatio) {
     bool result = setDouble(OS_Generator_FuelCell_AirSupplyFields::StoichiometricRatio, stoichiometricRatio);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellAirSupply_Impl::resetStoichiometricRatio() {
@@ -266,9 +267,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void GeneratorFuelCellAirSupply_Impl::setAirRateAirTemperatureCoefficient(double airRateAirTemperatureCoefficient) {
+  bool GeneratorFuelCellAirSupply_Impl::setAirRateAirTemperatureCoefficient(double airRateAirTemperatureCoefficient) {
     bool result = setDouble(OS_Generator_FuelCell_AirSupplyFields::AirRateAirTemperatureCoefficient, airRateAirTemperatureCoefficient);
     OS_ASSERT(result);
+    return result;
   }
 
   void GeneratorFuelCellAirSupply_Impl::resetAirRateAirTemperatureCoefficient() {
@@ -655,8 +657,8 @@ bool GeneratorFuelCellAirSupply::setAirSupplyRateCalculationMode(const std::stri
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->setAirSupplyRateCalculationMode(airSupplyRateCalculationMode);
 }
 
-void GeneratorFuelCellAirSupply::setStoichiometricRatio(double stoichiometricRatio) {
-  getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->setStoichiometricRatio(stoichiometricRatio);
+bool GeneratorFuelCellAirSupply::setStoichiometricRatio(double stoichiometricRatio) {
+  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->setStoichiometricRatio(stoichiometricRatio);
 }
 
 void GeneratorFuelCellAirSupply::resetStoichiometricRatio() {
@@ -671,8 +673,8 @@ void GeneratorFuelCellAirSupply::resetAirRateFunctionofElectricPowerCurve() {
   getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->resetAirRateFunctionofElectricPowerCurve();
 }
 
-void GeneratorFuelCellAirSupply::setAirRateAirTemperatureCoefficient(double airRateAirTemperatureCoefficient) {
-  getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->setAirRateAirTemperatureCoefficient(airRateAirTemperatureCoefficient);
+bool GeneratorFuelCellAirSupply::setAirRateAirTemperatureCoefficient(double airRateAirTemperatureCoefficient) {
+  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->setAirRateAirTemperatureCoefficient(airRateAirTemperatureCoefficient);
 }
 
 void GeneratorFuelCellAirSupply::resetAirRateAirTemperatureCoefficient() {
@@ -715,4 +717,3 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(std::shared_ptr<detail::G
 
 } // model
 } // openstudio
-

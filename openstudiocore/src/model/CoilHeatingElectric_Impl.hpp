@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -44,15 +44,6 @@ namespace detail {
   /** CoilHeatingElectric_Impl is a StraightComponent_Impl that is the
    *  implementation class for CoilHeatingElectric.*/
   class MODEL_API CoilHeatingElectric_Impl : public StraightComponent_Impl {
-    
-
-    
-    
-    
-    
-    
-
-    
   public:
     /** @name Constructors and Destructors */
     //@{
@@ -77,6 +68,8 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual std::vector<ModelObject> children() const override;
+
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     virtual unsigned inletPort() override;
@@ -87,7 +80,7 @@ namespace detail {
 
     virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;    
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
     //@}
     /** @name Getters */
@@ -107,6 +100,12 @@ namespace detail {
 
     boost::optional<Node> temperatureSetpointNode() const;
 
+  boost::optional<double> autosizedNominalCapacity() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
@@ -117,17 +116,24 @@ namespace detail {
 
     void resetEfficiency();
 
-    void setNominalCapacity(boost::optional<double> nominalCapacity);
+    bool setNominalCapacity(boost::optional<double> nominalCapacity);
 
     void resetNominalCapacity();
 
     void autosizeNominalCapacity();
 
-    void setTemperatureSetpointNode(Node & temperatureSetpointNode);
+    bool setTemperatureSetpointNode(Node & temperatureSetpointNode);
 
     void resetTemperatureSetpointNode();
 
     //@}
+
+    /** Creates a new equivalent duct object if an object is not already attached. */
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+    
+    /** Returns the attached equivalent duct object, if any. */
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
   protected:
   private:
     REGISTER_LOGGER("openstudio.model.CoilHeatingElectric");
@@ -143,4 +149,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILHEATINGELECTRIC_IMPL_HPP
-

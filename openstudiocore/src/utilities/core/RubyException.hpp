@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -49,7 +49,7 @@ namespace openstudio
 
       std::string location() const {return m_location;}
 
-      std::string shortLocation() const 
+      std::string shortLocation() const
       {
         std::string result;
 
@@ -58,7 +58,7 @@ namespace openstudio
         if (pos > -1) {
           result = regex.cap(1).toStdString();
         }
-        
+
         return result;
       }
 

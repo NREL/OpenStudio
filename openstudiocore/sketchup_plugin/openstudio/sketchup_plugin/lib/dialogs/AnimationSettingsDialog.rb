@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -54,7 +54,7 @@ module OpenStudio
 
     def on_load
       super
-      
+
       # Manually trigger onChange for start and end months to set the day popup options
       @container.execute_function("setDateOptions()")
 
@@ -67,7 +67,7 @@ module OpenStudio
     def on_match_time_period
 
       run_period = Plugin.model_manager.model_interface.openstudio_model.getRunPeriod
-    
+
       @hash['START_MONTH'] = run_period.getString(1,true).to_s
       set_element_value("START_MONTH", run_period.getString(1,true).to_s)
 
@@ -110,10 +110,10 @@ module OpenStudio
 
       @hash['TIME_STEP'] = time_step
       set_element_value("TIME_STEP", time_step)
-      
+
       report
     end
 
   end
-  
+
 end

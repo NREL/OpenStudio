@@ -17,7 +17,7 @@
 
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelRefrigeration
-  
+
 #endif
 
 MODELOBJECT_TEMPLATES(RefrigerationAirChiller);
@@ -54,4 +54,4 @@ SWIG_MODELOBJECT(RefrigerationTranscriticalSystem, 1);
 SWIG_MODELOBJECT(RefrigerationWalkIn, 1);
 SWIG_MODELOBJECT(RefrigerationWalkInZoneBoundary, 1);
 
-#endif 
+#endif

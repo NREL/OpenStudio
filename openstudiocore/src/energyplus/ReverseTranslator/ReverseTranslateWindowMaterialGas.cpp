@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -38,7 +38,7 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateWindowMaterialGas( 
+boost::optional<ModelObject> ReverseTranslator::translateWindowMaterialGas(
     const WorkspaceObject& workspaceObject)
 {
   OptionalModelObject result;
@@ -57,7 +57,7 @@ boost::optional<ModelObject> ReverseTranslator::translateWindowMaterialGas(
   if (d1) {
     gas.setThickness(*d1);
   }
- 
+
   d1 = workspaceObject.getDouble(WindowMaterial_GasFields::ConductivityCoefficientA);
   OptionalDouble d2 = workspaceObject.getDouble(WindowMaterial_GasFields::ConductivityCoefficientB);
   OptionalDouble d3 = workspaceObject.getDouble(WindowMaterial_GasFields::ConductivityCoefficientC);

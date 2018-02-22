@@ -64,7 +64,7 @@ foreach( _FILE ${IDF_FILES} )
   file(RELATIVE_PATH LOCATION "${CMAKE_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach() 
+endforeach()
 
 foreach( _FILE ${OSM_FILES} )
   file(RELATIVE_PATH LOCATION "${CMAKE_BINARY_DIR}/openstudio-gems" ${_FILE})
@@ -176,10 +176,10 @@ set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
-target_link_libraries(openstudio 
+target_link_libraries(openstudio
  init_openstudio
- ${EXTENSION_LIBS} 
- ${ENC_LIBS} 
+ ${EXTENSION_LIBS}
+ ${ENC_LIBS}
  openstudio_airflow_static
  openstudio_model_static
  openstudio_energyplus_static
@@ -206,6 +206,9 @@ if( APPLE )
 endif()
 
 install(TARGETS openstudio DESTINATION bin COMPONENT "CLI")
+
+install(FILES measure_manager.rb DESTINATION Ruby COMPONENT "RubyAPI")
+install(FILES measure_manager_server.rb DESTINATION Ruby COMPONENT "RubyAPI")
 
 if( BUILD_PAT )
   if( APPLE )

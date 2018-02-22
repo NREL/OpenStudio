@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -74,7 +74,9 @@ namespace detail {
   const std::vector<std::string>& TemperingValve_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      // Not appropriate: no specific output variables
     }
     return result;
   }
@@ -154,11 +156,13 @@ namespace detail {
     return OS_TemperingValveFields::OutletNodeName;
   }
 
-  void TemperingValve_Impl::setControlNodes()
+  bool TemperingValve_Impl::setControlNodes()
   {
     auto plant = plantLoop();
 
-    if( ! plant ) return;
+    if( ! plant ) return false;
+
+    bool ok = true;
 
     if( ! pumpOutletNode() ) {
       std::vector<ModelObject> allpumps;
@@ -174,7 +178,7 @@ namespace detail {
       if( ! allpumps.empty() ) {
         if( auto mo = allpumps.back().cast<StraightComponent>().outletModelObject() ) {
           if( auto node = mo->optionalCast<Node>() ) {
-            setPumpOutletNode(node);
+            ok &= setPumpOutletNode(node);
           }
         }
       }
@@ -182,7 +186,7 @@ namespace detail {
 
     if( ! temperatureSetpointNode() ) {
       auto node = plant->supplyOutletNode();
-      setTemperatureSetpointNode(node);
+      ok &= setTemperatureSetpointNode(node);
     }
 
     auto mixer = plant->supplyMixer();
@@ -193,11 +197,13 @@ namespace detail {
       for( auto & inletObject : inletObjects ) {
         if( auto node = inletObject.optionalCast<Node>() ) {
           if( plant->supplyComponents(thisObject,node.get()).empty() ) {
-            setStream2SourceNode(node.get());
+            ok &= setStream2SourceNode(node.get());
           }
         }
       }
     }
+
+    return ok;
   }
 
   bool TemperingValve_Impl::addToNode(Node & node)

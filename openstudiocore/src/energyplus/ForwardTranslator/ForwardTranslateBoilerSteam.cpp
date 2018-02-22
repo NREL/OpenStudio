@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -100,7 +100,7 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerSteam( BoilerSteam 
 
   if( modelObject.isNominalCapacityAutosized() )
   {
-    idfObject.setString(Boiler_SteamFields::NominalCapacity,"Autosized");
+    idfObject.setString(Boiler_SteamFields::NominalCapacity,"Autosize");
   }
   else if( (value = modelObject.nominalCapacity()) )
   {
@@ -174,6 +174,11 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerSteam( BoilerSteam 
   if( (value = modelObject.sizingFactor()) )
   {
     idfObject.setDouble(Boiler_SteamFields::SizingFactor,value.get());
+  }
+
+  // End Use Subcategory
+  if( (s = modelObject.endUseSubcategory()) ) {
+    idfObject.setString(Boiler_SteamFields::EndUseSubcategory,s.get());
   }
 
   return boost::optional<IdfObject>(idfObject);

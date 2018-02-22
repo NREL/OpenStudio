@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -80,7 +80,13 @@ namespace detail {
   const std::vector<std::string>& LoadProfilePlant_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Plant Load Profile Mass Flow Rate");
+      result.push_back("Plant Load Profile Heat Transfer Rate");
+      result.push_back("Plant Load Profile Heat Transfer Energy");
+      result.push_back("Plant Load Profile Heating Energy");
+      result.push_back("Plant Load Profile Cooling Energy");
     }
     return result;
   }
@@ -146,9 +152,10 @@ namespace detail {
     return result;
   }
 
-  void LoadProfilePlant_Impl::setPeakFlowRate(double peakFlowRate) {
+  bool LoadProfilePlant_Impl::setPeakFlowRate(double peakFlowRate) {
     bool result = setDouble(OS_LoadProfile_PlantFields::PeakFlowRate, peakFlowRate);
     OS_ASSERT(result);
+    return result;
   }
 
   bool LoadProfilePlant_Impl::setFlowRateFractionSchedule(Schedule& schedule) {
@@ -175,6 +182,17 @@ namespace detail {
       }
     }
     return false;
+  }
+
+  std::vector<EMSActuatorNames> LoadProfilePlant_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Plant Load Profile", "Mass Flow Rate"},
+                                            {"Plant Load Profile", "Power"}};
+    return actuators;
+  }
+
+  std::vector<std::string> LoadProfilePlant_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
   }
 
 } // detail
@@ -232,8 +250,8 @@ bool LoadProfilePlant::setLoadSchedule(Schedule& schedule) {
   return getImpl<detail::LoadProfilePlant_Impl>()->setLoadSchedule(schedule);
 }
 
-void LoadProfilePlant::setPeakFlowRate(double peakFlowRate) {
-  getImpl<detail::LoadProfilePlant_Impl>()->setPeakFlowRate(peakFlowRate);
+bool LoadProfilePlant::setPeakFlowRate(double peakFlowRate) {
+  return getImpl<detail::LoadProfilePlant_Impl>()->setPeakFlowRate(peakFlowRate);
 }
 
 bool LoadProfilePlant::setFlowRateFractionSchedule(Schedule& schedule) {
@@ -248,4 +266,3 @@ LoadProfilePlant::LoadProfilePlant(std::shared_ptr<detail::LoadProfilePlant_Impl
 
 } // model
 } // openstudio
-

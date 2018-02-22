@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -41,82 +41,12 @@ namespace model {
 // TODO: Check the following class names against object getters and setters.
 class Schedule;
 class Connection;
-class Connection;
-class Connection;
-class Connection;
 
 namespace detail {
 
   /** HeatExchangerAirToAirSensibleAndLatent_Impl is a AirToAirComponent_Impl that is the implementation class for HeatExchangerAirToAirSensibleAndLatent.*/
   class MODEL_API HeatExchangerAirToAirSensibleAndLatent_Impl : public AirToAirComponent_Impl {
     
-
-    
-    
-    
-    
-
-    
-    
-    
-
-    
-    
-    
-
-    
-    
-    
-
-    
-    
-    
-
-    
-    
-    
-
-    
-    
-    
-
-    
-    
-    
-
-    
-    
-    
-
-    
-    
-    
-
-    
-
-    
-    
-
-    
-    
-
-    
-    
-    
-    
-
-    
-    
-    
-
-    
-    
-    
-
-    
-
-    
-
    public:
 
     /** @name Constructors and Destructors */
@@ -139,6 +69,8 @@ namespace detail {
     //@}
     /** @name Virtual Methods */
     //@{
+
+    virtual std::vector<ModelObject> children() const override;
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
@@ -217,6 +149,12 @@ namespace detail {
 
     bool economizerLockout() const;
 
+  boost::optional<double> autosizedNominalSupplyAirFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
@@ -266,13 +204,13 @@ namespace detail {
 
     bool setNominalElectricPower(const Quantity& nominalElectricPower);
 
-    void setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl);
+    bool setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl);
 
     bool setHeatExchangerType(std::string heatExchangerType);
 
     bool setFrostControlType(std::string frostControlType);
 
-    void setThresholdTemperature(double thresholdTemperature);
+    bool setThresholdTemperature(double thresholdTemperature);
 
     bool setThresholdTemperature(const Quantity& thresholdTemperature);
 
@@ -290,7 +228,7 @@ namespace detail {
 
     void resetRateofDefrostTimeFractionIncrease();
 
-    void setEconomizerLockout(bool economizerLockout);
+    bool setEconomizerLockout(bool economizerLockout);
 
     //@}
     /** @name Other */
@@ -303,6 +241,9 @@ namespace detail {
     unsigned secondaryAirInletPort() override;
 
     unsigned secondaryAirOutletPort() override;
+
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
     //@}
 
@@ -356,4 +297,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_IMPL_HPP
-

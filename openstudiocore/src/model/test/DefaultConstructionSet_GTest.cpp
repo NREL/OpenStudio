@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -507,7 +507,7 @@ TEST_F(ModelFixture, DefaultConstructionSet_Clone)
   DefaultConstructionSet defaultConstructionSet3(model);
   defaultConstructionSet3.setDefaultExteriorSurfaceConstructions(defaultSurfaceConstructions);
   EXPECT_EQ(3u, defaultSurfaceConstructions.getModelObjectSources<model::DefaultConstructionSet>().size());
- 
+
   boost::optional<model::DefaultSurfaceConstructions> defExtSurfCons = defaultConstructionSet1.defaultExteriorSurfaceConstructions();
   ASSERT_TRUE(defExtSurfCons);
   EXPECT_EQ(3u, defExtSurfCons->getModelObjectSources<model::DefaultConstructionSet>().size());

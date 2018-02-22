@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -35,28 +35,28 @@ namespace openstudio {
 
 /** \class StrictnessLevel
  *  \brief Specifies the desired amount of validity.
- *  
+ *
  *  \li None - (Almost) anything goes.
  *  \li Draft - Non-null data is valid.
- *  \li Final - Required and unique data has correct cardinality. 
+ *  \li Final - Required and unique data has correct cardinality.
  *
- *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is: 
+ *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
  *  \code
-OPENSTUDIO_ENUM(StrictnessLevel, 
-                ((None)) 
-                ((Draft)) 
+OPENSTUDIO_ENUM(StrictnessLevel,
+                ((None))
+                ((Draft))
                 ((Final)) );
  *  \endcode */
-OPENSTUDIO_ENUM(StrictnessLevel, 
-                ((None)) 
-                ((Draft)) 
+OPENSTUDIO_ENUM(StrictnessLevel,
+                ((None))
+                ((Draft))
                 ((Final)) );
 
 /** \class Scope
- *  \brief Indicates whether a ValidityReport or DataError pertains to a single field, a 
- *  single object, or the entire collection. 
+ *  \brief Indicates whether a ValidityReport or DataError pertains to a single field, a
+ *  single object, or the entire collection.
  *
- *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is: 
+ *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
  *  \code
 OPENSTUDIO_ENUM(Scope,
                 ((Field))
@@ -85,7 +85,7 @@ OPENSTUDIO_ENUM(Scope,
  *  \li NoIdd (object-level) - The input data definition is missing or empty.
  *  \li DataType - A field or object contains data of an unexpected type.
  *  \li NumericBound - A numeric field violates a field-level min or max bound.
- *  \li NameConflict - Two objects of the same IddObjectType, or with overlapping reference 
+ *  \li NameConflict - Two objects of the same IddObjectType, or with overlapping reference
  *                     lists, have the same name.
  *
  *  Strictness::Final
@@ -95,7 +95,7 @@ OPENSTUDIO_ENUM(Scope,
  *  \li NumberOfFields - A data object has too few or too many fields.
  *  \li Duplicate - There are multiple data objects of a type that is supposed to be unique.
  *
- *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is: 
+ *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
  *  \code
 OPENSTUDIO_ENUM(DataErrorType,
     ((NoIdd)(input data definition is missing or empty))

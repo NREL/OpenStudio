@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -59,7 +59,7 @@ TableModel::TableModel(openstudio::WorkspaceObjectVector& objects, ClassViewWidg
   mClassViewWidget(parent),
   mMaskGUIDs(false)
 {
- 
+
 }
 //! [0]
 
@@ -68,7 +68,7 @@ TableModel::TableModel(ClassViewWidget * parent)
     mClassViewWidget(parent),
     mMaskGUIDs(false)
 {
-  
+
 }
 
 TableModel::~TableModel()
@@ -239,7 +239,7 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
       return iddName;
     }
     else if (index.column() == 1){
-      // object might have a name  
+      // object might have a name
       OptionalString optionalString = object.name();
       QString idfName;
       if(optionalString){
@@ -255,7 +255,7 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
           idfName.remove(firstIdx-offset,secondIdx-firstIdx+1+offset);
         }
       }
-      return idfName; 
+      return idfName;
     }
     else if (index.column() == 2){
       openstudio::Handle handle = object.handle();
@@ -387,7 +387,7 @@ bool TableModel::removeRows(const QModelIndexList& rowList)
 //! [5]
 bool TableModel::removeRows(int position, int rows, const QModelIndex &index)
 {
-  Q_UNUSED(index);    
+  Q_UNUSED(index);
   beginRemoveRows(QModelIndex(), position, position+rows-1);
 
   auto it = mObjects.begin()+position;
@@ -411,7 +411,7 @@ bool TableModel::setData(const QModelIndex &index, const QVariant &value, int ro
       p.second = value.toString();
     else
       return false;
-    
+
     //mObjects.replace(row, p);
     emit(dataChanged(index, index));
 
@@ -438,7 +438,7 @@ void TableModel::setupModelData(openstudio::WorkspaceObjectVector& objects)
     // get the idd object type
     openstudio::IddObject iddObject = object.iddObject();
     QString iddName(iddObject.name().c_str());
-    // object might have a name  
+    // object might have a name
     OptionalString temp = object.name();
     QString idfName;
     if(temp){

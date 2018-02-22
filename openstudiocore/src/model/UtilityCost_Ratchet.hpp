@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,11 +42,11 @@ namespace detail{
 
 /** UtilityCost_Ratchet derives from ParentObject and is an interface to the OpenStudio IDD object named "OS:UtilityCost:Ratchet".
  *
- *  UtilityCost_Ratchet allows the modeling of tariffs that include some type of seasonal ratcheting. 
+ *  UtilityCost_Ratchet allows the modeling of tariffs that include some type of seasonal ratcheting.
  *  Ratchets are most common when used with electric demand charges.
  */
 class MODEL_API UtilityCost_Ratchet : public ParentObject{
- 
+
 public:
 
   /** @name Constructors and Destructors */
@@ -79,20 +79,20 @@ public:
   //@}
   /** @name Setters */
   //@{
-  
-  void setTariffName(const std::string& tariffName);
 
-  void setBaselineSourceVariable(const std::string& baselineSourceVariable);
-  
-  void setAdjustmentSourceVariable(const std::string& adjustmentSourceVariable);
-  
-  void setSeasonFrom(const std::string& seasonFrom);
-  
-  void setSeasonTo(const std::string& seasonTo);
-  
-  void setMultiplierValueOrVariableName(const std::string& multiplierValueOrVariableName);
-  
-  void setOffsetValueOrVariableName(const std::string& offsetValueOrVariableName);
+  bool setTariffName(const std::string& tariffName);
+
+  bool setBaselineSourceVariable(const std::string& baselineSourceVariable);
+
+  bool setAdjustmentSourceVariable(const std::string& adjustmentSourceVariable);
+
+  bool setSeasonFrom(const std::string& seasonFrom);
+
+  bool setSeasonTo(const std::string& seasonTo);
+
+  bool setMultiplierValueOrVariableName(const std::string& multiplierValueOrVariableName);
+
+  bool setOffsetValueOrVariableName(const std::string& offsetValueOrVariableName);
 
   //@}
 
@@ -100,7 +100,7 @@ public:
   static IddObjectType iddObjectType();
 
 protected:
-  
+
   /// @cond
 
   typedef detail::UtilityCost_Ratchet_Impl ImplType;
@@ -128,4 +128,4 @@ typedef std::vector<UtilityCost_Ratchet> UtilityCost_RatchetVector;
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_RATCHET_HPP
+#endif // MODEL_UTILITYCOST_RATCHET_HPP

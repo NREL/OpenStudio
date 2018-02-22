@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -255,7 +255,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   // Connect
 
   m_yearDescription->getImpl<model::detail::YearDescription_Impl>().get()->onChange.connect<YearSettingsWidget, &YearSettingsWidget::scheduleRefresh>(this);
-  
+
   connect(OSAppBase::instance(), &OSAppBase::workspaceObjectAddedPtr, this, &YearSettingsWidget::onWorkspaceObjectAdd, Qt::QueuedConnection);
 
   m_model.getImpl<model::detail::Model_Impl>().get()->removeWorkspaceObjectPtr.connect<YearSettingsWidget, &YearSettingsWidget::onWorkspaceObjectRemove>(this);

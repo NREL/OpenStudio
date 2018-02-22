@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -71,7 +71,10 @@ namespace detail {
   const std::vector<std::string>& AvailabilityManagerOptimumStart_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
+    if (result.empty())
+    {
+      result.push_back("Availability Manager Optimum Start Control Status");
+      result.push_back("Availability Manager Optimum Start Time Before Occupancy");
     }
     return result;
   }
@@ -192,9 +195,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void AvailabilityManagerOptimumStart_Impl::setMaximumValueforOptimumStartTime(double maximumValueforOptimumStartTime) {
+  bool AvailabilityManagerOptimumStart_Impl::setMaximumValueforOptimumStartTime(double maximumValueforOptimumStartTime) {
     bool result = setDouble(OS_AvailabilityManager_OptimumStartFields::MaximumValueforOptimumStartTime, maximumValueforOptimumStartTime);
     OS_ASSERT(result);
+    return result;
   }
 
   bool AvailabilityManagerOptimumStart_Impl::setControlAlgorithm(std::string controlAlgorithm) {
@@ -202,29 +206,34 @@ namespace detail {
     return result;
   }
 
-  void AvailabilityManagerOptimumStart_Impl::setConstantTemperatureGradientduringCooling(double constantTemperatureGradientduringCooling) {
+  bool AvailabilityManagerOptimumStart_Impl::setConstantTemperatureGradientduringCooling(double constantTemperatureGradientduringCooling) {
     bool result = setDouble(OS_AvailabilityManager_OptimumStartFields::ConstantTemperatureGradientduringCooling, constantTemperatureGradientduringCooling);
     OS_ASSERT(result);
+    return result;
   }
 
-  void AvailabilityManagerOptimumStart_Impl::setConstantTemperatureGradientduringHeating(double constantTemperatureGradientduringHeating) {
+  bool AvailabilityManagerOptimumStart_Impl::setConstantTemperatureGradientduringHeating(double constantTemperatureGradientduringHeating) {
     bool result = setDouble(OS_AvailabilityManager_OptimumStartFields::ConstantTemperatureGradientduringHeating, constantTemperatureGradientduringHeating);
     OS_ASSERT(result);
+    return result;
   }
 
-  void AvailabilityManagerOptimumStart_Impl::setInitialTemperatureGradientduringCooling(double initialTemperatureGradientduringCooling) {
+  bool AvailabilityManagerOptimumStart_Impl::setInitialTemperatureGradientduringCooling(double initialTemperatureGradientduringCooling) {
     bool result = setDouble(OS_AvailabilityManager_OptimumStartFields::InitialTemperatureGradientduringCooling, initialTemperatureGradientduringCooling);
     OS_ASSERT(result);
+    return result;
   }
 
-  void AvailabilityManagerOptimumStart_Impl::setInitialTemperatureGradientduringHeating(double initialTemperatureGradientduringHeating) {
+  bool AvailabilityManagerOptimumStart_Impl::setInitialTemperatureGradientduringHeating(double initialTemperatureGradientduringHeating) {
     bool result = setDouble(OS_AvailabilityManager_OptimumStartFields::InitialTemperatureGradientduringHeating, initialTemperatureGradientduringHeating);
     OS_ASSERT(result);
+    return result;
   }
 
-  void AvailabilityManagerOptimumStart_Impl::setConstantStartTime(double constantStartTime) {
+  bool AvailabilityManagerOptimumStart_Impl::setConstantStartTime(double constantStartTime) {
     bool result = setDouble(OS_AvailabilityManager_OptimumStartFields::ConstantStartTime, constantStartTime);
     OS_ASSERT(result);
+    return result;
   }
 
   bool AvailabilityManagerOptimumStart_Impl::setNumberofPreviousDays(int numberofPreviousDays) {
@@ -333,32 +342,32 @@ void AvailabilityManagerOptimumStart::resetControlZone() {
   getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->resetControlZone();
 }
 
-void AvailabilityManagerOptimumStart::setMaximumValueforOptimumStartTime(double maximumValueforOptimumStartTime) {
-  getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setMaximumValueforOptimumStartTime(maximumValueforOptimumStartTime);
+bool AvailabilityManagerOptimumStart::setMaximumValueforOptimumStartTime(double maximumValueforOptimumStartTime) {
+  return getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setMaximumValueforOptimumStartTime(maximumValueforOptimumStartTime);
 }
 
 bool AvailabilityManagerOptimumStart::setControlAlgorithm(std::string controlAlgorithm) {
   return getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setControlAlgorithm(controlAlgorithm);
 }
 
-void AvailabilityManagerOptimumStart::setConstantTemperatureGradientduringCooling(double constantTemperatureGradientduringCooling) {
-  getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setConstantTemperatureGradientduringCooling(constantTemperatureGradientduringCooling);
+bool AvailabilityManagerOptimumStart::setConstantTemperatureGradientduringCooling(double constantTemperatureGradientduringCooling) {
+  return getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setConstantTemperatureGradientduringCooling(constantTemperatureGradientduringCooling);
 }
 
-void AvailabilityManagerOptimumStart::setConstantTemperatureGradientduringHeating(double constantTemperatureGradientduringHeating) {
-  getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setConstantTemperatureGradientduringHeating(constantTemperatureGradientduringHeating);
+bool AvailabilityManagerOptimumStart::setConstantTemperatureGradientduringHeating(double constantTemperatureGradientduringHeating) {
+  return getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setConstantTemperatureGradientduringHeating(constantTemperatureGradientduringHeating);
 }
 
-void AvailabilityManagerOptimumStart::setInitialTemperatureGradientduringCooling(double initialTemperatureGradientduringCooling) {
-  getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setInitialTemperatureGradientduringCooling(initialTemperatureGradientduringCooling);
+bool AvailabilityManagerOptimumStart::setInitialTemperatureGradientduringCooling(double initialTemperatureGradientduringCooling) {
+  return getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setInitialTemperatureGradientduringCooling(initialTemperatureGradientduringCooling);
 }
 
-void AvailabilityManagerOptimumStart::setInitialTemperatureGradientduringHeating(double initialTemperatureGradientduringHeating) {
-  getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setInitialTemperatureGradientduringHeating(initialTemperatureGradientduringHeating);
+bool AvailabilityManagerOptimumStart::setInitialTemperatureGradientduringHeating(double initialTemperatureGradientduringHeating) {
+  return getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setInitialTemperatureGradientduringHeating(initialTemperatureGradientduringHeating);
 }
 
-void AvailabilityManagerOptimumStart::setConstantStartTime(double constantStartTime) {
-  getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setConstantStartTime(constantStartTime);
+bool AvailabilityManagerOptimumStart::setConstantStartTime(double constantStartTime) {
+  return getImpl<detail::AvailabilityManagerOptimumStart_Impl>()->setConstantStartTime(constantStartTime);
 }
 
 bool AvailabilityManagerOptimumStart::setNumberofPreviousDays(int numberofPreviousDays) {
@@ -373,4 +382,3 @@ AvailabilityManagerOptimumStart::AvailabilityManagerOptimumStart(std::shared_ptr
 
 } // model
 } // openstudio
-

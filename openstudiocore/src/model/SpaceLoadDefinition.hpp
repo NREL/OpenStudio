@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,12 +42,12 @@ namespace detail{
 }
 
 /** SpaceLoadDefinition is an abstract class derived from ResourceObject. \link SpaceLoadDefinition
- *  SpaceLoadDefinitions \endlink describe internal loads in a generic way that can be used by 
- *  multiple \link Space Spaces \endlink or \link SpaceType SpaceTypes \endlink. For instance, a 
- *  LightsDefinition might define the appropriate amount of task lighting for a workstation in 
- *  W/person, or an ElectricEquipmentDefinition might define a coffee maker in terms of its maximum 
- *  power draw (W). Multipliers and schedules are defined by the corresponding SpaceLoadInstance 
- *  objects. (Different usage patterns of the same amount of task lighting, or different numbers of 
+ *  SpaceLoadDefinitions \endlink describe internal loads in a generic way that can be used by
+ *  multiple \link Space Spaces \endlink or \link SpaceType SpaceTypes \endlink. For instance, a
+ *  LightsDefinition might define the appropriate amount of task lighting for a workstation in
+ *  W/person, or an ElectricEquipmentDefinition might define a coffee maker in terms of its maximum
+ *  power draw (W). Multipliers and schedules are defined by the corresponding SpaceLoadInstance
+ *  objects. (Different usage patterns of the same amount of task lighting, or different numbers of
  *  coffee makers, can be defined on a space-by-space basis, for instance.)
  */
 class MODEL_API SpaceLoadDefinition : public ResourceObject {
@@ -60,13 +60,13 @@ class MODEL_API SpaceLoadDefinition : public ResourceObject {
   // ETH@20140113 - No units mark-up here. What is the pattern we are trying to move toward?
   // (Programmatically available, but string-based, right?)
 
-  /** Returns the floor area associated with instances of this space load definition.  
+  /** Returns the floor area associated with instances of this space load definition.
   If two instances are in the same space then that floor area will be double counted.
   If two instances used in the same space type then that floor area will be double counted.
   Space and SpaceLoadInstance multipliers are included in the result. **/
   double floorArea() const;
 
-  /** Returns the number of instances of this space load.  
+  /** Returns the number of instances of this space load.
   Space and SpaceLoadInstance multipliers are included in the result **/
   int quantity() const;
 

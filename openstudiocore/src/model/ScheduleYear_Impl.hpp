@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -91,6 +91,10 @@ namespace detail {
     /// Returns a vector of week schedules in the same order and with the same number of elements as dates.
     std::vector<ScheduleWeek> scheduleWeeks() const;
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Setters */
     //@{
@@ -99,7 +103,7 @@ namespace detail {
     /// previous date marker or January 1st if no previous date marker exists.  Replaces existing scheduleWeek
     /// for same date if it exists.
     bool addScheduleWeek(const openstudio::Date& untilDate, const ScheduleWeek& scheduleWeek);
-  
+
     /// Clear all week schedules from this schedule.
     void clearScheduleWeeks();
 

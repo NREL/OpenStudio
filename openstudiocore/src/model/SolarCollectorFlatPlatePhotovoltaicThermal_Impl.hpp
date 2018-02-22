@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -42,7 +42,7 @@ namespace detail {
 
   /** SolarCollectorFlatPlatePhotovoltaicThermal_Impl is a StraightComponent_Impl that is the implementation class for SolarCollectorFlatPlatePhotovoltaicThermal.*/
   class MODEL_API SolarCollectorFlatPlatePhotovoltaicThermal_Impl : public StraightComponent_Impl {
-    
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -95,6 +95,12 @@ namespace detail {
 
     bool isDesignFlowRateAutosized() const;
 
+  boost::optional<double> autosizedDesignFlowRate() const ;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
     //@}
     /** @name Setters */
     //@{
@@ -126,7 +132,7 @@ namespace detail {
    private:
 
     REGISTER_LOGGER("openstudio.model.SolarCollectorFlatPlatePhotovoltaicThermal");
-    
+
     bool setSolarCollectorPerformanceNoClone(const SolarCollectorPerformancePhotovoltaicThermalSimple& parameters);
 
     friend class openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal;

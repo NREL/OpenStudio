@@ -66,11 +66,11 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //extensible fields
 
@@ -137,19 +137,19 @@ namespace detail {
 
     void resetFuelType();
 
-    void setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue);
+    bool setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue);
 
     void resetLiquidGenericFuelLowerHeatingValue();
 
-    void setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue);
+    bool setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue);
 
     void resetLiquidGenericFuelHigherHeatingValue();
 
-    void setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight);
+    bool setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight);
 
     void resetLiquidGenericFuelMolecularWeight();
 
-    void setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor);
+    bool setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor);
 
     void resetLiquidGenericFuelCO2EmissionFactor();
 
@@ -177,4 +177,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_GENERATORFUELSUPPLY_IMPL_HPP
-

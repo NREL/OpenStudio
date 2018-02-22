@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2017, Alliance for Sustainable Energy, LLC. All rights reserved.
+ *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
  *  following conditions are met:
@@ -40,7 +40,7 @@ namespace model {
 namespace detail {
 
   ExteriorLightsDefinition_Impl::ExteriorLightsDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ResourceObject_Impl(idfObject,model,keepHandle)
+    : ExteriorLoadDefinition_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ExteriorLightsDefinition::iddObjectType());
   }
@@ -48,7 +48,7 @@ namespace detail {
   ExteriorLightsDefinition_Impl::ExteriorLightsDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
+    : ExteriorLoadDefinition_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ExteriorLightsDefinition::iddObjectType());
   }
@@ -56,9 +56,10 @@ namespace detail {
   ExteriorLightsDefinition_Impl::ExteriorLightsDefinition_Impl(const ExteriorLightsDefinition_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
+    : ExteriorLoadDefinition_Impl(other,model,keepHandle)
   {}
 
+  // TODO: remove
   const std::vector<std::string>& ExteriorLightsDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -85,7 +86,7 @@ namespace detail {
 } // detail
 
 ExteriorLightsDefinition::ExteriorLightsDefinition(const Model& model)
-  : ResourceObject(ExteriorLightsDefinition::iddObjectType(),model)
+  : ExteriorLoadDefinition(ExteriorLightsDefinition::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExteriorLightsDefinition_Impl>());
 
@@ -108,10 +109,11 @@ bool ExteriorLightsDefinition::setDesignLevel(double designLevel) {
 
 /// @cond
 ExteriorLightsDefinition::ExteriorLightsDefinition(std::shared_ptr<detail::ExteriorLightsDefinition_Impl> impl)
-  : ResourceObject(std::move(impl))
+  : ExteriorLoadDefinition(std::move(impl))
 {}
 /// @endcond
 
 } // model
 } // openstudio
+
 

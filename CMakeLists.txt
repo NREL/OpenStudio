@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.7.0)
 project(OpenStudioMeta)
 
 set(CMAKE_VERSION_MAJOR 2)
-set(CMAKE_VERSION_MINOR 3)
-set(CMAKE_VERSION_PATCH 0)
+set(CMAKE_VERSION_MINOR 4)
+set(CMAKE_VERSION_PATCH 2)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -504,7 +504,7 @@ if( BUILD_DVIEW )
 
     ExternalProject_Add(DView
       DEPENDS lk curl
-      GIT_REPOSITORY https://github.com/kbenne/wex.git
+      GIT_REPOSITORY https://github.com/NREL/wex.git
       GIT_TAG develop
       CMAKE_CACHE_ARGS
         -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
