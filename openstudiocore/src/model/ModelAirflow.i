@@ -114,17 +114,15 @@ SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
     using System.Runtime.InteropServices;
 
     public partial class ThermalZone : HVACComponent {
-      public AirflowNetworkZone getAirflowNetworkZone()
-      {
-        return OpenStudio.OpenStudioModelAirflow.getAirflowNetworkZone(this);
-      }
-      public OptionalAirflowNetworkZone airflowNetworkZone()
-      {
-        return OpenStudio.OpenStudioModelAirflow.getOptionalAirflowNetworkZone(this);
-      }
-      //public void removeAirflowNetworkZone(OpenStudio.ThermalZone thermalZone)
+
+      // DLM: these can be re-enabled after they are hidden in ModelHVAC.i
+      //public AirflowNetworkZone getAirflowNetworkZone()
       //{
-      //  return OpenStudio.OpenStudioModelAirflow.removeAirflowNetworkZone(this);
+      //  return OpenStudio.OpenStudioModelAirflow.getAirflowNetworkZone(this);
+      //}
+      //public OptionalAirflowNetworkZone airflowNetworkZone()
+      //{
+      //  return OpenStudio.OpenStudioModelAirflow.getOptionalAirflowNetworkZone(this);
       //}
     }
   %}

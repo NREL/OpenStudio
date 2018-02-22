@@ -19,6 +19,7 @@
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelSimulation
 
+  // Conflicts with class name in utilities
   //%rename(ModelYearDescription) openstudio::model::YearDescription;
   %ignore openstudio::model::YearDescription;
 
