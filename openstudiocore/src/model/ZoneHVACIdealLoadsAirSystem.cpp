@@ -1102,6 +1102,19 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> ZoneHVACIdealLoadsAirSystem_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Ideal Loads Air System", "Air Mass Flow Rate"},
+                                            {"Ideal Loads Air System", "Outdoor Air Mass Flow Rate"},
+                                            {"Ideal Loads Air System", "Air Temperature"},
+                                            {"Ideal Loads Air System", "Air Humidity Ratio"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneHVACIdealLoadsAirSystem_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
+
 } // detail
 
 ZoneHVACIdealLoadsAirSystem::ZoneHVACIdealLoadsAirSystem(const Model& model)

@@ -39,6 +39,7 @@ namespace model {
 
 class Schedule;
 class ModelObject;
+class AirflowNetworkEquivalentDuct;
 
 namespace detail {
 
@@ -115,6 +116,12 @@ class MODEL_API CoilHeatingDesuperheater : public StraightComponent {
   //@}
   /** @name Other */
   //@{
+
+  /** Creates a new equivalent duct object if an object is not already attached. */
+  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+  
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
   //@}
  protected:

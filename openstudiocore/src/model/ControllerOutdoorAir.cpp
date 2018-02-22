@@ -36,6 +36,10 @@
 #include "ScheduleCompact_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
+#include "AirflowNetworkOutdoorAirflow.hpp"
+#include "AirflowNetworkOutdoorAirflow_Impl.hpp"
+#include "AirflowNetworkCrack.hpp"
+#include "AirflowNetworkCrack_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -126,6 +130,8 @@ namespace detail {
     //result.push_back(this->getMinimumFractionOfOutdoorAirSchedule());
     //result.push_back(this->getMaximumFractionOfOutdoorAirSchedule());
     //result.push_back(this->getTimeOfDayEconomizerControlSchedule());
+    std::vector<AirflowNetworkOutdoorAirflow> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkOutdoorAirflow>(AirflowNetworkOutdoorAirflow::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
     return result;
   }
 
@@ -364,13 +370,6 @@ namespace detail {
     return result;
   }
 
-
-
-
-
-
-
-
   //get needs to return a boost optional double since "" is a valid input
   boost::optional<double> ControllerOutdoorAir_Impl::getEconomizerMaximumLimitEnthalpy() const
   {
@@ -424,9 +423,6 @@ namespace detail {
     }
     return result;
   }
-
-
-
 
   std::string ControllerOutdoorAir_Impl::getLockoutType() const
   {
@@ -674,6 +670,34 @@ namespace detail {
     return result;
   }
 
+  AirflowNetworkOutdoorAirflow ControllerOutdoorAir_Impl::getAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack)
+  {
+    boost::optional<AirflowNetworkOutdoorAirflow> opt = airflowNetworkOutdoorAirflow();
+    if (opt) {
+      boost::optional<AirflowNetworkCrack> oldCrack = opt->crack();
+      if (oldCrack){
+        if (oldCrack->handle() == crack.handle()){
+          return opt.get();
+        }
+      }
+      opt->remove();
+    }
+    return AirflowNetworkOutdoorAirflow(model(), crack, handle());
+  }
+
+  boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir_Impl::airflowNetworkOutdoorAirflow() const
+  {
+    std::vector<AirflowNetworkOutdoorAirflow> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkOutdoorAirflow>(AirflowNetworkOutdoorAirflow::iddObjectType());
+    auto count = myAFNItems.size();
+    if (count == 1) {
+      return myAFNItems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquipmentLinkage attached, returning first.");
+      return myAFNItems[0];
+    }
+    return boost::none;
+  }
+
   boost::optional<double> ControllerOutdoorAir_Impl::autosizedMinimumOutdoorAirFlowRate() const {
     return getAutosizedValue("Minimum Outdoor Air Flow Rate", "m3/s");
   }
@@ -701,6 +725,17 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> ControllerOutdoorAir_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "Outdoor Air Controller", "Air Mass Flow Rate" } };
+    return actuators;
+  }
+
+  std::vector<std::string> ControllerOutdoorAir_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Outdoor Air Controller Maximum Mass Flow Rate",
+                                    "Outdoor Air Controller Minimum Mass Flow Rate"};
+    return types;
+
+  }
 } // detail
 
 // create a new ControllerOutdoorAir object in the model's workspace
@@ -1036,6 +1071,16 @@ bool ControllerOutdoorAir::setTimeofDayEconomizerControlSchedule(Schedule& sched
 void ControllerOutdoorAir::resetTimeofDayEconomizerControlSchedule()
 {
   getImpl<detail::ControllerOutdoorAir_Impl>()->resetTimeofDayEconomizerControlSchedule();
+}
+
+AirflowNetworkOutdoorAirflow ControllerOutdoorAir::getAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack)
+{
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->getAirflowNetworkOutdoorAirflow(crack);
+}
+
+boost::optional<AirflowNetworkOutdoorAirflow> ControllerOutdoorAir::airflowNetworkOutdoorAirflow() const
+{
+  return getImpl<detail::ControllerOutdoorAir_Impl>()->airflowNetworkOutdoorAirflow();
 }
 
   boost::optional<double> ControllerOutdoorAir::autosizedMinimumOutdoorAirFlowRate() const {

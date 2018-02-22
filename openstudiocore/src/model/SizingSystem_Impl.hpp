@@ -280,6 +280,10 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   void applySizingValues();
 
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
+
   protected:
 
   private:

@@ -44,6 +44,7 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioModelAvailabilityManager
  ruby_OpenStudioModelPlantEquipmentOperationScheme
  ruby_OpenStudioModelStraightComponent
+ ruby_OpenStudioModelAirflow
  ruby_OpenStudioUtilities
  ruby_OpenStudioUtilitiesGeometry
  ruby_OpenStudioMeasure

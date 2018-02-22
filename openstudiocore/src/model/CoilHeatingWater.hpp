@@ -37,6 +37,7 @@ namespace model {
 
 class Schedule;
 class ControllerWaterCoil;
+class AirflowNetworkEquivalentDuct;
 
 namespace detail {
   class CoilHeatingWater_Impl;
@@ -171,6 +172,16 @@ class MODEL_API CoilHeatingWater : public WaterToAirComponent {
   boost::optional<double> autosizedRatedCapacity() const ;
 
 
+
+  //@}
+  /** @name Other */
+  //@{
+
+  /** Creates a new equivalent duct object if an object is not already attached. */
+  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+  
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
   //@}
  protected:

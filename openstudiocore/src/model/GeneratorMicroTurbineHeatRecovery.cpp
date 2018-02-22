@@ -467,7 +467,16 @@ namespace model {
     OS_ASSERT(result);
   }
 
+  std::vector<EMSActuatorNames> GeneratorMicroTurbineHeatRecovery_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "On-Site Generator Control", "Requested Power" } };
+    return actuators;
+  }
 
+  std::vector<std::string> GeneratorMicroTurbineHeatRecovery_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Generator Nominal Maximum Power",
+      "Generator Nominal Thermal To Electric Ratio" };
+    return types;
+  }
 } // detail
 
 // The constructor needs model, and a GeneratorMicroTurbine

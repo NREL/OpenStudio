@@ -42,7 +42,8 @@ class QVBoxLayout;
 namespace openstudio {
 
 class HVACGraphicsView;
-class HVACControlsView;
+class HVACAirLoopControlsView;
+class HVACPlantLoopControlsView;
 class HVACToolbarView;
 class VentilationControlsView;
 class SingleZoneResetSPView;
@@ -136,15 +137,17 @@ class HVACGraphicsView : public QGraphicsView
   float m_zoomY;
 };
 
-class HVACControlsView : public QScrollArea
+
+/* Controls tab for an AirLoopHVAC */
+class HVACAirLoopControlsView : public QScrollArea
 {
   Q_OBJECT
 
   public:
 
-  HVACControlsView();
+  HVACAirLoopControlsView();
 
-  virtual ~HVACControlsView() {}
+  virtual ~HVACAirLoopControlsView() {}
 
   QLabel * coolingTypeLabel;
 
@@ -159,6 +162,28 @@ class HVACControlsView : public QScrollArea
   OSViewSwitcher * hvacOperationViewSwitcher;
 
   OSComboBox2 * nightCycleComboBox;
+
+  OSViewSwitcher * availabilityManagerViewSwitcher;
+};
+
+class HVACPlantLoopControlsView : public QScrollArea
+{
+  Q_OBJECT
+
+  public:
+
+  HVACPlantLoopControlsView();
+
+  virtual ~HVACPlantLoopControlsView() {}
+
+  QLabel * systemNameLabel;
+  QLabel * plantLoopTypeLabel;
+  QLabel * heatingComponentsLabel;
+  QLabel * coolingComponentsLabel;
+  QLabel * setpointComponentsLabel;
+  QLabel * uncontrolledComponentsLabel;
+
+  OSViewSwitcher * availabilityManagerViewSwitcher;
 };
 
 class MechanicalVentilationView : public QWidget

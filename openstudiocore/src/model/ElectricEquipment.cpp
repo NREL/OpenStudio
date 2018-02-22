@@ -369,6 +369,16 @@ namespace detail {
     return false;
   }
 
+  std::vector<EMSActuatorNames> ElectricEquipment_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "ElectricEquipment", "Electric Power Level" } };
+    return actuators;
+  }
+
+  std::vector<std::string> ElectricEquipment_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Plug and Process Power Design Level" };
+    return types;
+  }
+
 } // detail
 
 ElectricEquipment::ElectricEquipment(const ElectricEquipmentDefinition& electricEquipmentDefinition)

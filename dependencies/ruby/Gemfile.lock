@@ -1,17 +1,21 @@
-GIT
-  remote: git://github.com/NREL/openstudio-standards.git
-  revision: 1a6a81d242f1783ace78c737059d2ef6121e5675
-  ref: 1a6a81d242f1783ace78c737059d2ef6121e5675
-  specs:
-    openstudio-standards (0.2.0)
-
 GEM
   remote: http://rubygems.org/
   specs:
+    ansi (1.5.0)
+    builder (3.2.3)
     diff-lcs (1.3)
+    hashie (3.5.7)
     minitest (4.7.5)
-    openstudio-workflow (1.3.1)
+    minitest-reporters (0.14.24)
+      ansi
+      builder
+      minitest (>= 2.12, < 5.0)
+      powerbar
+    openstudio-standards (0.2.0.rc1)
+    openstudio-workflow (1.3.2)
     parallel (1.10.0)
+    powerbar (1.0.18)
+      hashie (>= 1.1.0)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -33,8 +37,9 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (= 1.14.4)
-  openstudio-standards!
-  openstudio-workflow (= 1.3.1)
+  minitest-reporters (= 0.14.24)
+  openstudio-standards (= 0.2.0.rc1)
+  openstudio-workflow (= 1.3.2)
   parallel (= 1.10.0)
   rspec (= 3.5.0)
   test-unit-minitest (= 0.9.1)

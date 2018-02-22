@@ -103,7 +103,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_HeatE
 
     Workspace w = forwardTranslator.translateModel(m);
 
-    // Get the Use Loop, and find it's plant operation scheme
+    // Get the Use Loop, and find its plant operation scheme
     _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
     ASSERT_TRUE(_wo.is_initialized());
     WorkspaceObject idf_use_loop = _wo.get();
@@ -164,7 +164,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_HeatE
     Workspace w = forwardTranslator.translateModel(m);
 
 
-    // Get the Use Loop, and find it's plant operation scheme
+    // Get the Use Loop, and find its plant operation scheme
     _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
     ASSERT_TRUE(_wo.is_initialized());
     WorkspaceObject idf_use_loop = _wo.get();
@@ -232,7 +232,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_HeatE
     Workspace w = forwardTranslator.translateModel(m);
 
 
-    // Get the Use Loop, and find it's plant operation scheme
+    // Get the Use Loop, and find its plant operation scheme
     _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
     ASSERT_TRUE(_wo.is_initialized());
     WorkspaceObject idf_use_loop = _wo.get();
@@ -297,7 +297,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Water
     Workspace w = forwardTranslator.translateModel(m);
 
 
-    // Get the Use Loop, and find it's plant operation scheme
+    // Get the Use Loop, and find its plant operation scheme
     _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
     ASSERT_TRUE(_wo.is_initialized());
     WorkspaceObject idf_use_loop = _wo.get();
@@ -371,7 +371,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Water
     Workspace w = forwardTranslator.translateModel(m);
 
 
-    // Get the Use Loop, and find it's plant operation scheme
+    // Get the Use Loop, and find its plant operation scheme
     _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
     ASSERT_TRUE(_wo.is_initialized());
     WorkspaceObject idf_use_loop = _wo.get();

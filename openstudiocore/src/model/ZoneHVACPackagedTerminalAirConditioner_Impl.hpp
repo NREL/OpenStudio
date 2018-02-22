@@ -127,21 +127,21 @@ namespace detail {
 
     boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+    boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
 
     //@}
     /** @name Setters */

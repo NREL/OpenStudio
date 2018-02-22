@@ -166,7 +166,15 @@ namespace detail {
 
   virtual void applySizingValues() override;
 
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
+
+    AirflowNetworkFan getAirflowNetworkFan();
+    boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
+
    //protected:
    private:
     REGISTER_LOGGER("openstudio.model.FanOnOff");

@@ -516,6 +516,17 @@ namespace detail {
 
   }
 
+  std::string BoilerHotWater_Impl::endUseSubcategory() const {
+    auto value = getString(OS_Boiler_HotWaterFields::EndUseSubcategory, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool BoilerHotWater_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_Boiler_HotWaterFields::EndUseSubcategory, endUseSubcategory);
+  }
+
+
 } // detail
 
 BoilerHotWater::BoilerHotWater(const Model& model)
@@ -530,6 +541,9 @@ BoilerHotWater::BoilerHotWater(const Model& model)
   setParasiticElectricLoad(0.0);
 
   setSizingFactor(1.0);
+
+  setEndUseSubcategory("General");
+
 }
 
 IddObjectType BoilerHotWater::iddObjectType() {
@@ -751,6 +765,14 @@ bool BoilerHotWater::setSizingFactor(double sizingFactor) {
 
 void BoilerHotWater::resetSizingFactor() {
   getImpl<detail::BoilerHotWater_Impl>()->resetSizingFactor();
+}
+
+std::string BoilerHotWater::endUseSubcategory() const {
+  return getImpl<detail::BoilerHotWater_Impl>()->endUseSubcategory();
+}
+
+bool BoilerHotWater::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::BoilerHotWater_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 /// @cond

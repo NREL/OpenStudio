@@ -89,11 +89,15 @@ namespace detail {
 
     boost::optional<Schedule> sourceTemperatureSchedule() const;
 
-  boost::optional<double> autosizedDesignVolumeFlowRate() const ;
+    boost::optional<double> autosizedDesignVolumeFlowRate() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */

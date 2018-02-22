@@ -572,8 +572,11 @@ endif()
 
 # openstudio gems
 
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20180214.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "7f7b8075cb9dbde78715e733ee186b74")
+# to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
+# next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
+# upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20180221.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "7018b302a6530702cffde96aedd74870")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -589,7 +592,7 @@ if( NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
 
   file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/openstudio-gems")
   execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  
+
   file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/src/cli/embedded_files")
 endif()
 

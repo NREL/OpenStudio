@@ -283,10 +283,7 @@ bool PlantLoop_Impl::addSupplyBranchForComponent( HVACComponent component )
         if ( (node->outletModelObject().get() == mixer) &&
               (node->inletModelObject().get() == splitter) )
         {
-          if( component.addToNode(node.get()) )
-          {
-            return true;
-          }
+          return component.addToNode(node.get());
         }
       }
     }
@@ -982,6 +979,24 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
 
   bool PlantLoop_Impl::removeAvailabilityManager(unsigned priority) {
     return availabilityManagerAssignmentList().removeAvailabilityManager(priority);
+  }
+
+  std::vector<EMSActuatorNames> PlantLoop_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Plant Loop Overall", "On/Off Supervisory"},
+                                            {"Supply Side Half Loop", "On/Off Supervisory"},
+                                            {"Demand Side Half Loop", "On/Off Supervisory"},
+                                            {"Plant Equipment Operation", "Distributed Load Rate"}}; //gets plantequipOperationScheme
+    //DYNAMIC
+    //{"Supply Side Branch", "On/Off Supervisory"}
+    //{"Demand Side Branch", "On/Off Supervisory"}
+    //{"Plant Component *", "On/Off Supervisory"}
+    return actuators;
+  }
+
+  std::vector<std::string> PlantLoop_Impl::emsInternalVariableNames() const {
+    //"Component Remaining Current Demand Rate" is dynamic for the plantloop components
+    std::vector<std::string> types{"Supply Side Current Demand Rate"};
+    return types;
   }
 
 } // detail

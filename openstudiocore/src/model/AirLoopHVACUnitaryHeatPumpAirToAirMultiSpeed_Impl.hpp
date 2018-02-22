@@ -146,29 +146,33 @@ namespace detail {
 
     bool isSpeed4SupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
-  boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
+    boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
 
-  boost::optional<double> autosizedSpeed1SupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSpeed1SupplyAirFlowRateDuringHeatingOperation() const ;
 
-  boost::optional<double> autosizedSpeed2SupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSpeed2SupplyAirFlowRateDuringHeatingOperation() const ;
 
-  boost::optional<double> autosizedSpeed3SupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSpeed3SupplyAirFlowRateDuringHeatingOperation() const ;
 
-  boost::optional<double> autosizedSpeed4SupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSpeed4SupplyAirFlowRateDuringHeatingOperation() const ;
 
-  boost::optional<double> autosizedSpeed1SupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSpeed1SupplyAirFlowRateDuringCoolingOperation() const ;
 
-  boost::optional<double> autosizedSpeed2SupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSpeed2SupplyAirFlowRateDuringCoolingOperation() const ;
 
-  boost::optional<double> autosizedSpeed3SupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSpeed3SupplyAirFlowRateDuringCoolingOperation() const ;
 
-  boost::optional<double> autosizedSpeed4SupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSpeed4SupplyAirFlowRateDuringCoolingOperation() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */

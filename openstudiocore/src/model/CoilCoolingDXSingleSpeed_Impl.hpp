@@ -267,6 +267,14 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+
+    bool hasAirflowNetworkEquivalentDuct() const;
+
     //@}
    private:
 

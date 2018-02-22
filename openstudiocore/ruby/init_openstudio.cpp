@@ -56,6 +56,7 @@ extern "C" {
   void Init_openstudiomodelavailabilitymanager(void);
   void Init_openstudiomodelplantequipmentoperationscheme(void);
   void Init_openstudiomodelstraightcomponent(void);
+  void Init_openstudiomodelairflow(void);
   void Init_openstudioutilities(void);
   void Init_openstudioutilitiesgeometry(void);
   void Init_openstudiomeasure(void);
@@ -142,6 +143,9 @@ void init_openstudio_internal() {
   Init_openstudiomodelstraightcomponent();
   rb_provide("openstudiomodelstraightcomponent");
   rb_provide("openstudiomodelstraightcomponent.so");
+  Init_openstudiomodelairflow();
+  rb_provide("openstudiomodelairflow");
+  rb_provide("openstudiomodelairflow.so");
   Init_openstudiomodelrefrigeration();
   rb_provide("openstudiomodelrefrigeration");
   rb_provide("openstudiomodelrefrigeration.so");

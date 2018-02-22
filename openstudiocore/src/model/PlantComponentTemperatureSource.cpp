@@ -204,6 +204,16 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> PlantComponentTemperatureSource_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "PlantComponent:TemperatureSource", "Maximum Mass Flow Rate" } };
+    return actuators;
+  }
+
+  std::vector<std::string> PlantComponentTemperatureSource_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
+
 } // detail
 
 PlantComponentTemperatureSource::PlantComponentTemperatureSource(const Model& model)

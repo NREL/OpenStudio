@@ -48,6 +48,8 @@
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include <utilities/idd/OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode_FieldEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -451,7 +453,38 @@ namespace detail {
     if( auto mo = dehumidificationMode1Stage1Plus2CoilPerformance() ) {
       result.push_back(mo.get());
     }
+    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+
     return result;
+  }
+
+  AirflowNetworkEquivalentDuct CoilCoolingDXTwoStageWithHumidityControlMode_Impl::getAirflowNetworkEquivalentDuct(double length, double diameter)
+  {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    if (opt) {
+      if (opt->airPathLength() != length){
+        opt->setAirPathLength(length);
+      }
+      if (opt->airPathHydraulicDiameter() != diameter){
+        opt->setAirPathHydraulicDiameter(diameter);
+      }
+    }
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::airflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>
+      (AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return boost::none;
   }
 
   bool CoilCoolingDXTwoStageWithHumidityControlMode_Impl::addToNode(Node & node)
@@ -840,6 +873,16 @@ bool CoilCoolingDXTwoStageWithHumidityControlMode::setBasinHeaterOperatingSchedu
 
 void CoilCoolingDXTwoStageWithHumidityControlMode::resetBasinHeaterOperatingSchedule() {
   getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->resetBasinHeaterOperatingSchedule();
+}
+
+AirflowNetworkEquivalentDuct CoilCoolingDXTwoStageWithHumidityControlMode::getAirflowNetworkEquivalentDuct(double length, double diameter)
+{
+  return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->getAirflowNetworkEquivalentDuct(length, diameter);
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> CoilCoolingDXTwoStageWithHumidityControlMode::airflowNetworkEquivalentDuct() const
+{
+  return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->airflowNetworkEquivalentDuct();
 }
 
 /// @cond

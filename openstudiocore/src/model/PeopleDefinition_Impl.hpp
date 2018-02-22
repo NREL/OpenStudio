@@ -159,6 +159,10 @@ namespace detail {
      *  under the assumption of floorArea (m^2). */
     bool setNumberOfPeopleCalculationMethod(const std::string& method,double floorArea);
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
    private:
     REGISTER_LOGGER("openstudio.model.PeopleDefinition");

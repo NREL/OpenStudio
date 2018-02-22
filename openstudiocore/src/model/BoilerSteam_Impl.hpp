@@ -44,56 +44,6 @@ namespace detail {
   /** BoilerSteam_Impl is a StraightComponent_Impl that is the implementation class for BoilerSteam.*/
   class MODEL_API BoilerSteam_Impl : public StraightComponent_Impl {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -119,6 +69,16 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    virtual unsigned inletPort() override;
+
+    virtual unsigned outletPort() override;
+
+    virtual bool addToNode(Node & node) override;
 
     //@}
     /** @name Getters */
@@ -174,11 +134,10 @@ namespace detail {
 
     bool isSizingFactorDefaulted() const;
 
-  boost::optional<double> autosizedNominalCapacity() const ;
+    boost::optional<double> autosizedNominalCapacity() const ;
 
-  virtual void autosize() override;
+    std::string endUseSubcategory() const;
 
-  virtual void applySizingValues() override;
 
     //@}
     /** @name Setters */
@@ -254,15 +213,13 @@ namespace detail {
 
     void resetSizingFactor();
 
+    bool setEndUseSubcategory(const std::string & endUseSubcategory);
+
+
     //@}
     /** @name Other */
     //@{
 
-    unsigned inletPort() override;
-
-    unsigned outletPort() override;
-
-    bool addToNode(Node & node) override;
 
     //@}
    protected:

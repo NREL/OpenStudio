@@ -209,6 +209,15 @@ namespace detail {
     return result;
   }
 
+  std::vector<EMSActuatorNames> ScheduleCompact_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Schedule:Compact", "Schedule Value"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ScheduleCompact_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 // create a new ScheduleCompact object in the model's workspace

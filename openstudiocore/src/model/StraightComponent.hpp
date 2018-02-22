@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
 class AirLoopHVAC;
+class AirflowNetworkEquivalentDuct;
 
 namespace detail{
   class StraightComponent_Impl;

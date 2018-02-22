@@ -215,17 +215,21 @@ namespace detail {
 
     boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const ;
 
-  boost::optional<double> autosizedMaximumSupplyAirTemperature() const ;
+    boost::optional<double> autosizedMaximumSupplyAirTemperature() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */

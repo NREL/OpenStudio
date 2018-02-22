@@ -335,6 +335,16 @@ namespace detail {
     return true;
   }
 
+  std::vector<EMSActuatorNames> OtherEquipment_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "OtherEquipment", "Power Level" } };
+    return actuators;
+  }
+
+  std::vector<std::string> OtherEquipment_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Other Equipment Design Level" };
+    return types;
+  }
+
 } // detail
 
 OtherEquipment::OtherEquipment(const OtherEquipmentDefinition& definition)

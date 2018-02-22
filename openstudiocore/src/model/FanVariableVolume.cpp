@@ -46,6 +46,8 @@
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "SetpointManagerMixedAir.hpp"
+#include "AirflowNetworkFan.hpp"
+#include "AirflowNetworkFan_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_Fan_VariableVolume_FieldEnums.hxx>
@@ -79,14 +81,8 @@ namespace detail {
 
   const std::vector<std::string>& FanVariableVolume_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Fan Electric Power");
-      result.push_back("Fan Rise in Air Temperature");
-      result.push_back("Fan Electric Energy");
-    }
-    return result;
+    static std::vector<std::string> results{"Fan Electric Power", "Fan Rise in Air Temperature", "Fan Heat Gain to Air", "Fan Electric Energy", "Fan Air Mass Flow Rate"};
+    return results;
   }
 
   IddObjectType FanVariableVolume_Impl::iddObjectType() const {
@@ -861,6 +857,28 @@ namespace detail {
     return boost::none;
   }
 
+  AirflowNetworkFan FanVariableVolume_Impl::getAirflowNetworkFan()
+  {
+    auto opt = airflowNetworkFan();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkFan(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkFan> FanVariableVolume_Impl::airflowNetworkFan() const
+  {
+    std::vector<AirflowNetworkFan> myAFNitems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkFan>(AirflowNetworkFan::iddObjectType());
+    auto count = myAFNitems.size();
+    if (count == 1) {
+      return myAFNitems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFNitems[0];
+    }
+    return boost::none;
+  }
+
   boost::optional<double> FanVariableVolume_Impl::autosizedMaximumFlowRate() const {
     return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
   }
@@ -876,6 +894,21 @@ namespace detail {
       setMaximumFlowRate(val.get());
     }
 
+  }
+
+  std::vector<EMSActuatorNames> FanVariableVolume_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Fan", "Fan Air Mass Flow Rate"},
+                                            {"Fan", "Fan Pressure Rise"},
+                                            {"Fan", "Fan Total Efficiency"},
+                                            {"Fan", "Fan Autosized Air Flow Rate"}};
+    return actuators;
+  }
+
+  std::vector<std::string> FanVariableVolume_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Fan Maximum Mass Flow Rate",
+                                   "Fan Nominal Pressure Rise",
+                                   "Fan Nominal Total Efficiency"};
+    return types;
   }
 
 } // detail
@@ -1245,6 +1278,16 @@ void FanVariableVolume::resetEndUseSubcategory() {
   getImpl<detail::FanVariableVolume_Impl>()->resetEndUseSubcategory();
 }
 
+AirflowNetworkFan FanVariableVolume::getAirflowNetworkFan()
+{
+  return getImpl<detail::FanVariableVolume_Impl>()->getAirflowNetworkFan();
+}
+
+boost::optional<AirflowNetworkFan> FanVariableVolume::airflowNetworkFan() const
+{
+  return getImpl<detail::FanVariableVolume_Impl>()->airflowNetworkFan();
+}
+
 /// @cond
 FanVariableVolume::FanVariableVolume(std::shared_ptr<detail::FanVariableVolume_Impl> impl)
   : StraightComponent(std::move(impl))
@@ -1256,4 +1299,4 @@ FanVariableVolume::FanVariableVolume(std::shared_ptr<detail::FanVariableVolume_I
   }
 
 } // model
-} // openstudio
+} // openstudio

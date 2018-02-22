@@ -45,6 +45,12 @@ class ConstructionBase;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class SurfacePropertyConvectionCoefficients;
+class AirflowNetworkSurface;
+class AirflowNetworkDetailedOpening;
+class AirflowNetworkSimpleOpening;
+class AirflowNetworkCrack;
+class AirflowNetworkEffectiveLeakageArea;
+class AirflowNetworkHorizontalOpening;
 class FoundationKiva;
 class SurfacePropertyExposedFoundationPerimeter;
 
@@ -282,6 +288,14 @@ class MODEL_API Surface : public PlanarSurface {
    *  Returns all new sub surfaces created, sub surface types are defaulted.  Optional construction is applied.
    *  Returns false is this surface has any current sub surfaces or if there is an adjacent surface.*/
   std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
+
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkDetailedOpening& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkSimpleOpening& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkCrack& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkEffectiveLeakageArea& surfaceAirflowLeakage);
+  AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage);
+
+  boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
   bool setAdjacentFoundation(const FoundationKiva& kiva);
   

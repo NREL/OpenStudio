@@ -39,6 +39,7 @@ class OSOptionalQuantity;
 namespace model {
 
 class Schedule;
+class AirflowNetworkFan;
 
 namespace detail {
 
@@ -225,10 +226,10 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   void resetEndUseSubcategory();
 
+  AirflowNetworkFan getAirflowNetworkFan();
+  boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
+
   boost::optional<double> autosizedMaximumFlowRate() const ;
-
-
-
   //@}
  protected:
   /// @cond
@@ -258,4 +259,4 @@ typedef std::vector<FanVariableVolume> FanVariableVolumeVector;
 
 } // openstudio
 
-#endif // MODEL_FANVARIABLEVOLUME_HPP
+#endif // MODEL_FANVARIABLEVOLUME_HPP

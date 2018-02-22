@@ -52,6 +52,7 @@ class SizingZone;
 class PortList;
 class ZoneMixing;
 class ZoneHVACEquipmentList;
+class AirflowNetworkZone;
 
 namespace detail {
 
@@ -143,6 +144,10 @@ namespace detail {
     Quantity getFractionofZoneControlledbySecondaryDaylightingControl(bool returnIP=false) const;
 
     bool isFractionofZoneControlledbySecondaryDaylightingControlDefaulted() const;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */
@@ -405,6 +410,9 @@ namespace detail {
     std::vector<ZoneMixing> exhaustZoneMixing() const;
 
     boost::optional<HVACComponent> airLoopHVACTerminal() const;
+
+    AirflowNetworkZone getAirflowNetworkZone();
+    boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
 
    protected:
 

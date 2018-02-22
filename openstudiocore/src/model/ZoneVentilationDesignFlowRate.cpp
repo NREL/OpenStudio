@@ -556,6 +556,15 @@ namespace detail {
     }
   }
 
+  std::vector<EMSActuatorNames> ZoneVentilationDesignFlowRate_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Zone Ventilation", "Air Exchange Flow Rate"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneVentilationDesignFlowRate_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 ZoneVentilationDesignFlowRate::ZoneVentilationDesignFlowRate(const Model& model)

@@ -35,6 +35,8 @@
 namespace openstudio {
 namespace model {
 
+class AirflowNetworkSurface;
+class AirflowNetworkComponent;
 class Space;
 class SubSurface;
 class Surface;
@@ -50,6 +52,7 @@ namespace detail {
 
   /** Surface_Impl is a PlanarSurface_Impl that is the implementation class for Surface.*/
   class MODEL_API Surface_Impl : public PlanarSurface_Impl {
+
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -148,6 +151,10 @@ namespace detail {
     bool isNumberofVerticesDefaulted() const;
 
     bool isNumberofVerticesAutocalculated() const;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */
@@ -253,6 +260,10 @@ namespace detail {
     std::vector<Surface> splitSurfaceForSubSurfaces();
 
     std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
+
+    AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage);
+
+    boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
     bool setAdjacentFoundation(const FoundationKiva& kiva);
 

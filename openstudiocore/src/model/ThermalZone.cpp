@@ -100,6 +100,8 @@
 #include "SetpointManagerSingleZoneHeating_Impl.hpp"
 #include "ZoneMixing.hpp"
 #include "ZoneMixing_Impl.hpp"
+#include "AirflowNetworkZone.hpp"
+#include "AirflowNetworkZone_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -163,6 +165,11 @@ namespace detail {
     // remove once we have gridview for these
     for (const auto& mixing : supplyZoneMixing()){
       result.push_back(mixing);
+    }
+
+    boost::optional<AirflowNetworkZone> afnz = airflowNetworkZone();
+    if (afnz) {
+      result.push_back(afnz.get());
     }
 
     return result;
@@ -395,7 +402,7 @@ namespace detail {
         result.push_back("Daylighting Reference Point 1 Glare Index Setpoint Exceeded Time");
         result.push_back("Daylighting Reference Point 1 Daylight Illuminance Setpoint Exceeded Time");
       //}
-      
+
       //if (secondaryDaylightingControl()){
         result.push_back("Daylighting Reference Point 2 Illuminance");
         result.push_back("Daylighting Reference Point 2 Glare Index");
@@ -2366,6 +2373,11 @@ namespace detail {
 
     // DLM: do not clone zone mixing objects
 
+    if (auto t_afnzone = airflowNetworkZone()) {
+      auto afnzoneClone = t_afnzone->clone(model).cast<AirflowNetworkZone>();
+      afnzoneClone.setThermalZone(tz);
+    }
+
     return tz;
   }
 
@@ -2741,6 +2753,50 @@ namespace detail {
     if( auto controller = zoneControlContaminantController() ) {
       controller->remove();
     }
+  }
+
+  std::vector<EMSActuatorNames> ThermalZone_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Zone Temperature Control", "Heating Setpoint"},
+                                            {"Zone Temperature Control", "Cooling Setpoint"},
+                                            {"Zone Humidity Control", "Relative Humidity Humidifying Setpoint"},
+                                            {"Zone Humidity Control", "Relative Humidity Dehumidifying Setpoint"},
+                                            {"Zone Comfort Control", "Heating Setpoint"},
+                                            {"Zone Comfort Control", "Cooling Setpoint"},
+                                            {"Zone", "Outdoor Air Drybulb Temperature"},
+                                            {"Zone", "Outdoor Air Wetbulb Temperature"},
+                                            {"Zone", "Outdoor Air Wind Speed"},
+                                            {"Zone", "Outdoor Air Wind Direction"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ThermalZone_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Zone Floor Area",
+                                   "Zone Air Volume",
+                                   "Zone Multiplier",
+                                   "Zone List Multiplier"};
+    return types;
+  }
+
+  AirflowNetworkZone ThermalZone_Impl::getAirflowNetworkZone()
+  {
+    boost::optional<AirflowNetworkZone> opt = airflowNetworkZone();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkZone(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkZone> ThermalZone_Impl::airflowNetworkZone() const
+  {
+    std::vector<AirflowNetworkZone> myAFNZones = getObject<ModelObject>().getModelObjectSources<AirflowNetworkZone>(AirflowNetworkZone::iddObjectType());
+    auto count = myAFNZones.size();
+    if (count == 1) {
+      return myAFNZones[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork Zone attached, returning first.");
+      return myAFNZones[0];
+    }
+    return boost::none;
   }
 
 } // detail
@@ -3332,6 +3388,16 @@ bool ThermalZone::setZoneControlContaminantController(const ZoneControlContamina
 void ThermalZone::resetZoneControlContaminantController()
 {
   getImpl<detail::ThermalZone_Impl>()->resetZoneControlContaminantController();
+}
+
+AirflowNetworkZone ThermalZone::getAirflowNetworkZone()
+{
+  return getImpl<detail::ThermalZone_Impl>()->getAirflowNetworkZone();
+}
+
+boost::optional<AirflowNetworkZone> ThermalZone::airflowNetworkZone() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->airflowNetworkZone();
 }
 
 /// @cond

@@ -40,6 +40,7 @@
 
 #include "PlantLoop.hpp"
 #include "PlantLoop_Impl.hpp"
+#include "Node.hpp"
 
 // Need for clone override
 #include "Model.hpp"
@@ -114,7 +115,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> CentralHeatPumpSystem_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -190,6 +190,55 @@ namespace detail {
   {
     return OS_CentralHeatPumpSystemFields::HeatingLoopOutletNodeName;
   }
+
+
+  bool CentralHeatPumpSystem_Impl::addToNode(Node & node)
+  {
+    boost::optional<PlantLoop> t_plantLoop = node.plantLoop();
+
+    // If trying to add to a node that is on the supply side of a plant loop
+    if( t_plantLoop ) {
+      if( t_plantLoop->supplyComponent(node.handle()) ) {
+        // If there is already a cooling Plant Loop
+        boost::optional<PlantLoop> coolingPlant = this->coolingPlantLoop();
+        if (coolingPlant) {
+          // And it's not the same as the node's loop
+          if (t_plantLoop.get() != coolingPlant.get()) {
+            // And if there is no heatingPlantLoop (tertiary)
+            boost::optional<PlantLoop> heatingPlant = this->heatingPlantLoop();
+            if (!heatingPlant) {
+              // Then try to add it to the tertiary one
+              LOG(Warn, "Calling addToTertiaryNode to connect it to the tertiary (=heating) loop for " << briefDescription());
+              return this->addToTertiaryNode(node);
+            }
+          }
+        }
+      }
+    }
+
+    // All other cases, call the base class implementation
+    return WaterToWaterComponent_Impl::addToNode(node);
+
+  }
+
+  bool CentralHeatPumpSystem_Impl::addToTertiaryNode(Node & node)
+  {
+    auto _model = node.model();
+    auto t_plantLoop = node.plantLoop();
+
+    // Only accept adding to a node that is on a supply side of a plant loop
+    // Since tertiary here = heating loop
+    if( t_plantLoop ) {
+      if( t_plantLoop->supplyComponent(node.handle()) ) {
+        // Call base class method which accepts both supply and demand
+        return WaterToWaterComponent_Impl::addToTertiaryNode(node);
+      } else {
+         LOG(Info, "Cannot connect the tertiary (=heating) loop to the demand side for " << briefDescription());
+      }
+    }
+    return false;
+  }
+
 
 
   boost::optional<ModelObjectList> CentralHeatPumpSystem_Impl::chillerHeaterModuleList() const {
@@ -331,6 +380,9 @@ CentralHeatPumpSystem::CentralHeatPumpSystem(const Model& model)
   chillerHeaterModuleList.setName(this->name().get() + " Chiller Heater Module List");
   ok = getImpl<detail::CentralHeatPumpSystem_Impl>()->setChillerHeaterModuleList(chillerHeaterModuleList);
   OS_ASSERT(ok);
+
+  // Perhaps we should by default add one CentralHeatPumpSystemModule
+  // But this is at least caught by the ForwardTranslator right now...
 
 }
 

@@ -50,6 +50,7 @@ class ZoneControlHumidistat;
 class SizingZone;
 class PortList;
 class ZoneMixing;
+class AirflowNetworkZone;
 
 namespace detail {
 
@@ -445,6 +446,12 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   /** Returns all ZoneMixing objects which exhaust air from this zone */
   std::vector<ZoneMixing> exhaustZoneMixing() const;
+
+  /** Creates an AirflowNetworkZone object if an object is not already attached. */
+  AirflowNetworkZone getAirflowNetworkZone();
+
+  /** Returns the attached AirflowNetworkZone if there is one */
+  boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
 
   //@}
  protected:

@@ -38,6 +38,8 @@
 #include "Node_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
+#include "AirflowNetworkDistributionNode.hpp"
+#include "AirflowNetworkDistributionNode_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
@@ -47,6 +49,7 @@
 #include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utility>
 
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -90,6 +93,8 @@ namespace detail {
   {
     std::vector<ModelObject> result;
     result.push_back(this->getControllerOutdoorAir());
+    std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
     return result;
   }
 
@@ -636,6 +641,28 @@ namespace detail {
     return false;
   }
 
+  AirflowNetworkDistributionNode AirLoopHVACOutdoorAirSystem_Impl::getAirflowNetworkDistributionNode()
+  {
+    boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkDistributionNode(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem_Impl::airflowNetworkDistributionNode() const
+  {
+    std::vector<AirflowNetworkDistributionNode> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkDistributionNode>(AirflowNetworkDistributionNode::iddObjectType());
+    auto count = myAFNItems.size();
+    if (count == 1) {
+      return myAFNItems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork DistributionNode attached, returning first.");
+      return myAFNItems[0];
+    }
+    return boost::none;
+  }
+
 } // detail
 
 // create a new AirLoopHVACOutdoorAirSystem object in the model's workspace
@@ -777,6 +804,16 @@ bool AirLoopHVACOutdoorAirSystem::addToNode(Node & node)
 IddObjectType AirLoopHVACOutdoorAirSystem::iddObjectType() {
   IddObjectType result(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
   return result;
+}
+
+AirflowNetworkDistributionNode AirLoopHVACOutdoorAirSystem::getAirflowNetworkDistributionNode()
+{
+  return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->getAirflowNetworkDistributionNode();
+}
+
+boost::optional<AirflowNetworkDistributionNode> AirLoopHVACOutdoorAirSystem::airflowNetworkDistributionNode() const
+{
+  return getImpl<detail::AirLoopHVACOutdoorAirSystem_Impl>()->airflowNetworkDistributionNode();
 }
 
 } // model

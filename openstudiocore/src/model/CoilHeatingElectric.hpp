@@ -37,6 +37,7 @@ namespace model {
 
 class Schedule;
 class Node;
+class AirflowNewtorkEquivalentDuct;
 
 namespace detail {
 
@@ -100,10 +101,13 @@ class MODEL_API CoilHeatingElectric : public StraightComponent {
 
   //@}
 
+  /** Creates a new equivalent duct object if an object is not already attached. */
+  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+  
+  /** Returns the attached equivalent duct object, if any. */
+  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
   boost::optional<double> autosizedNominalCapacity() const ;
-
-
-
  protected:
   /// @cond
 
@@ -134,4 +138,4 @@ typedef std::vector<CoilHeatingElectric> CoilHeatingElectricVector;
 
 } // openstudio
 
-#endif // MODEL_COILHEATINGELECTRIC_HPP
+#endif // MODEL_COILHEATINGELECTRIC_HPP

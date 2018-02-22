@@ -65,6 +65,10 @@ namespace detail {
 
     virtual boost::optional<ParentObject> parent() const override;
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Other */
     //@{
