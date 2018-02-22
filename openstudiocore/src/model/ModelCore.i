@@ -23,13 +23,17 @@
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelCore
 
-  // ignore building for now
-  %ignore openstudio::model::Model::building;
+  // ignore simulation objects for now, add back in with partial classes in ModelSimulation.i
+  %ignore openstudio::model::Model::foundationKivaSettings;
+  %ignore openstudio::model::Model::runPeriod;
+  %ignore openstudio::model::Model::weatherFile;
+  %ignore openstudio::model::Model::yearDescription;
 
-  // Ignore plenum space type for now
+  // ignore geometry objects for now, add back in with partial classes in ModelGeometry.i
+  %ignore openstudio::model::Model::building;
   %ignore openstudio::model::Model::plenumSpaceType;
 
-  // Ignore outdoor air node for now
+  // Ignore hvac objects for now, add back in with partial classes in ModelHVAC.i
   %ignore openstudio::model::Model::outdoorAirNode;
 
   // should be able to do something here as C# supports partial classes
