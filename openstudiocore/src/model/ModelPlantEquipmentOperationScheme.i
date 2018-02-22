@@ -1,0 +1,37 @@
+#ifndef MODEL_PLANTEQUIPMENTOPERATIONSCHEME_I
+#define MODEL_PLANTEQUIPMENTOPERATIONSCHEME_I
+
+
+#ifdef SWIGPYTHON
+  %module openstudiomodelplantequipmentoperationscheme
+#endif
+
+#if defined SWIGCSHARP
+  #undef _csharp_module_name
+  #define _csharp_module_name OpenStudioModelPlantEquipmentOperationScheme
+#endif
+
+%include <model/Model_Common_Include.i>
+%import <model/ModelHVAC.i>
+
+MODELOBJECT_TEMPLATES(PlantEquipmentOperationCoolingLoad);
+MODELOBJECT_TEMPLATES(PlantEquipmentOperationHeatingLoad);
+MODELOBJECT_TEMPLATES(PlantEquipmentOperationOutdoorDryBulb);
+MODELOBJECT_TEMPLATES(PlantEquipmentOperationOutdoorWetBulb);
+MODELOBJECT_TEMPLATES(PlantEquipmentOperationOutdoorDewpoint);
+MODELOBJECT_TEMPLATES(PlantEquipmentOperationOutdoorRelativeHumidity);
+MODELOBJECT_TEMPLATES(PlantEquipmentOperationOutdoorDryBulbDifference);
+MODELOBJECT_TEMPLATES(PlantEquipmentOperationOutdoorWetBulbDifference);
+MODELOBJECT_TEMPLATES(PlantEquipmentOperationOutdoorDewpointDifference);
+
+SWIG_MODELOBJECT(PlantEquipmentOperationCoolingLoad,1);
+SWIG_MODELOBJECT(PlantEquipmentOperationHeatingLoad,1);
+SWIG_MODELOBJECT(PlantEquipmentOperationOutdoorDryBulb,1);
+SWIG_MODELOBJECT(PlantEquipmentOperationOutdoorWetBulb,1);
+SWIG_MODELOBJECT(PlantEquipmentOperationOutdoorDewpoint,1);
+SWIG_MODELOBJECT(PlantEquipmentOperationOutdoorRelativeHumidity,1);
+SWIG_MODELOBJECT(PlantEquipmentOperationOutdoorDryBulbDifference,1);
+SWIG_MODELOBJECT(PlantEquipmentOperationOutdoorWetBulbDifference,1);
+SWIG_MODELOBJECT(PlantEquipmentOperationOutdoorDewpointDifference,1);
+
+#endif

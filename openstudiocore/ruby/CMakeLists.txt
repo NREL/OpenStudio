@@ -39,6 +39,11 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioUtilitiesFileTypes
  ruby_OpenStudioUtilitiesUnits
  ruby_OpenStudioModelHVAC
+ ruby_OpenStudioModelZoneHVAC
+ ruby_OpenStudioModelSetpointManager
+ ruby_OpenStudioModelAvailabilityManager
+ ruby_OpenStudioModelPlantEquipmentOperationScheme
+ ruby_OpenStudioModelStraightComponent
  ruby_OpenStudioUtilities
  ruby_OpenStudioUtilitiesGeometry
  ruby_OpenStudioMeasure
