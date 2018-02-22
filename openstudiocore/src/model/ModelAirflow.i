@@ -17,7 +17,7 @@
 
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelAirflow
-  
+
 #endif
 
 // May be able to remove these includes once they are included by concrete classes
@@ -89,11 +89,11 @@ SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
   %inline {
     namespace openstudio {
       namespace model {
-        openstudio::model::AirflowNetworkZone demandAirflowNetworkZone(const openstudio::model::ThermalZone& zone){
-          return zone.airflowNetworkZone();
+        openstudio::model::AirflowNetworkZone getAirflowNetworkZone(openstudio::model::ThermalZone& zone){
+          return zone.getAirflowNetworkZone();
         }
-        boost::optional<openstudio::model::AirflowNetworkZone> optionalAirflowNetworkZone(const openstudio::model::ThermalZone& zone){
-          return zone.optionalAirflowNetworkZone();
+        boost::optional<openstudio::model::AirflowNetworkZone> getOptionalAirflowNetworkZone(const openstudio::model::ThermalZone& zone){
+          return zone.airflowNetworkZone();
         }
         //void removeAirflowNetworkZone(openstudio::model::AirflowNetworkZone zone){
         //  boost::optional<openstudio::model::AirflowNetworkZone> afz = zone.optionalAirflowNetworkZone();
@@ -109,25 +109,25 @@ SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
 #if defined(SWIGCSHARP)
   //%pragma(csharp) imclassimports=%{
   %pragma(csharp) moduleimports=%{
-  
+
     using System;
     using System.Runtime.InteropServices;
-        
+
     public partial class ThermalZone : HVACComponent {
-      public AirflowNetworkZone airflowNetworkZone()
+      public AirflowNetworkZone getAirflowNetworkZone()
       {
-        return OpenStudio.OpenStudioModelAirflow.demandAirflowNetworkZone(this);
+        return OpenStudio.OpenStudioModelAirflow.getAirflowNetworkZone(this);
       }
-      public OptionalAirflowNetworkZone optionalAirflowNetworkZone()
+      public OptionalAirflowNetworkZone airflowNetworkZone()
       {
-        return OpenStudio.OpenStudioModelAirflow.optionalAirflowNetworkZone(this);
+        return OpenStudio.OpenStudioModelAirflow.getOptionalAirflowNetworkZone(this);
       }
       //public void removeAirflowNetworkZone(OpenStudio.ThermalZone thermalZone)
       //{
       //  return OpenStudio.OpenStudioModelAirflow.removeAirflowNetworkZone(this);
       //}
-    }  
+    }
   %}
 #endif
 
-#endif 
+#endif
