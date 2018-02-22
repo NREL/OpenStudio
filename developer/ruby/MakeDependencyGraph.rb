@@ -31,7 +31,7 @@ Dir.glob(File.join(src_dir, "*.i")).each do |file_name|
   end
 end
 
-dot_in = "digraph{\n"
+dot_in = ["digraph{"]
 report_out = ""
 
 n = class_names.size
@@ -71,7 +71,7 @@ class_names.each_index do |i|
         next if module_index > other_module_index
         
         if /\b#{other_class_name}\b/.match(line)
-          dot_in += "  #{display_module_name} -> #{display_other_module_name};\n"
+          dot_in << "  #{display_module_name} -> #{display_other_module_name};"
           report_out += "#{class_name} in module #{module_name} points to #{other_class_name} in module #{other_module_name}:\n"
           report_out += "#{line}\n\n"
         end
@@ -84,14 +84,15 @@ class_names.each_index do |i|
   #end
 end
 
-dot_in += "}\n"
+dot_in << ["}"]
+
+puts report_out
 
 File.open('dot.in', 'w') do |file|
-  file << dot_in
+  file << dot_in.uniq.join("\n")
 end
 
 cmd = "dot -O -x -Kneato -Tpng ./dot.in"
 puts cmd
 system(cmd)
 
-puts report_out
