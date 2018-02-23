@@ -4,7 +4,7 @@ require 'minitest/autorun'
 
 require_relative '../measure.rb'
 
-class EnergyPlusMeasureName_Test < MiniTest::Unit::TestCase
+class EnergyPlusMeasureName_Test < Minitest::Test
 
   # def setup
   # end

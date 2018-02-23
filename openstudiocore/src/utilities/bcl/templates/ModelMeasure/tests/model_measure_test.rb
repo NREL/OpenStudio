@@ -4,7 +4,7 @@ require 'minitest/autorun'
 require_relative '../measure.rb'
 require 'fileutils'
 
-class ModelMeasureName_Test < MiniTest::Unit::TestCase
+class ModelMeasureName_Test < Minitest::Test
 
   # def setup
   # end
@@ -118,7 +118,7 @@ class ModelMeasureName_Test < MiniTest::Unit::TestCase
 
     # save the model to test output directory
     output_file_path = OpenStudio::Path.new(File.dirname(__FILE__) + "/output/test_output.osm")
-    model.save(output_file_path,true)
+    model.save(output_file_path, true)
   end
 
 end

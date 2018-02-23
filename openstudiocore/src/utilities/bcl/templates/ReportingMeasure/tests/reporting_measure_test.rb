@@ -6,7 +6,7 @@ require_relative '../measure.rb'
 
 require 'fileutils'
 
-class ReportingMeasureName_Test < MiniTest::Unit::TestCase
+class ReportingMeasureName_Test < Minitest::Test
 
   def model_in_path_default
     return "#{File.dirname(__FILE__)}/example_model.osm"
