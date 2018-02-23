@@ -83,7 +83,7 @@
 #include "../../model/FanVariableVolume.hpp"
 #include "../../model/FanOnOff.hpp"
 #include "../../model/Node.hpp"
-#include "../../model/AirloopHVACZoneMixer.hpp"
+#include "../../model/AirLoopHVACZoneMixer.hpp"
 #include "../../model/AirLoopHVACZoneSplitter.hpp"
 #include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
 
