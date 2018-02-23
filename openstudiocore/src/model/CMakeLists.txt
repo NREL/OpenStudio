@@ -2044,5 +2044,5 @@ list(APPEND OpenStudioModelSwigs OpenStudioModelRefrigeration)
 MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelGenerators)
 
-MAKE_SWIG_TARGET(OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${swig_target_name} ${OpenStudioModelSwigs})
+MAKE_SWIG_TARGET(OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${swig_target_name} "${OpenStudioModelSwigs}")
 
