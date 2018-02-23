@@ -12,6 +12,9 @@
 #endif
 
 %include <model/Model_Common_Include.i>
+%import <model/ModelCore.i>
+%import <model/ModelResources.i>
+%import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
 
 %ignore std::vector<openstudio::model::GFunction>::vector(size_type);

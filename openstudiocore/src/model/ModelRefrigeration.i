@@ -8,11 +8,10 @@
 
 %include <model/Model_Common_Include.i>
 %import <model/ModelCore.i>
-%import <model/ModelSimulation.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
-%import <model/ModelAirflow.i>
+%import <model/ModelZoneHVAC.i>
 
 #if defined SWIGCSHARP
 
