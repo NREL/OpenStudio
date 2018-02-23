@@ -1,4 +1,4 @@
-  Version,8.8;
+  Version,8.9;
 
   Timestep,4;
 
@@ -4215,6 +4215,7 @@
 
   ZoneHVAC:EquipmentList,
     Bedroom1 Equipment,      !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     Bedroom1 Air,            !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -4266,6 +4267,7 @@
 
   ZoneHVAC:EquipmentList,
     Bedroom2 Equipment,      !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     Bedroom2 Air,            !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -4317,6 +4319,7 @@
 
   ZoneHVAC:EquipmentList,
     Bedroom3 Equipment,      !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     Bedroom3 Air,            !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -4368,6 +4371,7 @@
 
   ZoneHVAC:EquipmentList,
     Bedroom4 Equipment,      !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     Bedroom4 Air,            !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
