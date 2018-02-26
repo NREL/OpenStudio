@@ -83,6 +83,21 @@ namespace detail {
     return AirflowNetworkFan::iddObjectType();
   }
 
+  boost::optional<FanConstantVolume> AirflowNetworkFan_Impl::fanConstantVolume() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<FanConstantVolume>(OS_AirflowNetworkFanFields::FanName);
+  }
+
+  boost::optional<FanVariableVolume> AirflowNetworkFan_Impl::fanVariableVolume() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<FanVariableVolume>(OS_AirflowNetworkFanFields::FanName);
+  }
+
+  boost::optional<FanOnOff> AirflowNetworkFan_Impl::fanOnOff() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<FanOnOff>(OS_AirflowNetworkFanFields::FanName);
+  }
+
   void AirflowNetworkFan_Impl::resetFan()
   {
     bool result = setString(OS_AirflowNetworkFanFields::FanName, "");
@@ -106,17 +121,17 @@ IddObjectType AirflowNetworkFan::iddObjectType()
 
 boost::optional<FanConstantVolume> AirflowNetworkFan::fanConstantVolume() const
 {
-  return getImpl<detail::AirflowNetworkFan_Impl>()->fan<FanConstantVolume>();
+  return getImpl<detail::AirflowNetworkFan_Impl>()->fanConstantVolume();
 }
 
 boost::optional<FanVariableVolume> AirflowNetworkFan::fanVariableVolume() const
 {
-  return getImpl<detail::AirflowNetworkFan_Impl>()->fan<FanVariableVolume>();
+  return getImpl<detail::AirflowNetworkFan_Impl>()->fanVariableVolume();
 }
 
 boost::optional<FanOnOff> AirflowNetworkFan::fanOnOff() const
 {
-  return getImpl<detail::AirflowNetworkFan_Impl>()->fan<FanOnOff>();
+  return getImpl<detail::AirflowNetworkFan_Impl>()->fanOnOff();
 }
 
 void AirflowNetworkFan::resetFan()

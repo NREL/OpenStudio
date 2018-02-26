@@ -12,6 +12,8 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
+%import <model/ModelAirflow.i>
+%import <model/ModelRefrigeration.i>
 
 // All base classes for PV, Generators, inverters and Electrical Storage
 %{

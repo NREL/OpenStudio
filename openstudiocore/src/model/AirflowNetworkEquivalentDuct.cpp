@@ -91,29 +91,29 @@ namespace detail {
     if (optsc) {
       switch (optsc->iddObjectType().value()) {
       case IddObjectType::Coil_Cooling_DX_SingleSpeed:
-        return "Coil:Cooling:DX:SingleSpeed";
+        return std::string("Coil:Cooling:DX:SingleSpeed");
       case IddObjectType::Coil_Cooling_DX_TwoSpeed:
-        return "Coil:Cooling:DX:TwoSpeed";
+        return std::string("Coil:Cooling:DX:TwoSpeed");
       case IddObjectType::Coil_Heating_Fuel:
-        return "Coil:Heating:Fuel";
+        return std::string("Coil:Heating:Fuel");
       case IddObjectType::Coil_Heating_Electric:
-        return "Coil:Heating:Electric";
+        return std::string("Coil:Heating:Electric");
       case IddObjectType::Coil_Heating_DX_SingleSpeed:
-        return "Coil:Heating:DX:SingleSpeed";
+        return std::string("Coil:Heating:DX:SingleSpeed");
       case IddObjectType::Coil_Cooling_Water:
-        return "Coil:Cooling:Water";
+        return std::string("Coil:Cooling:Water");
       case IddObjectType::Coil_Heating_Water:
-        return "Coil:Heating:Water";
+        return std::string("Coil:Heating:Water");
       case IddObjectType::Coil_Cooling_Water_DetailedGeometry:
-        return "Coil:Cooling:Water:DetailedGeometry";
+        return std::string("Coil:Cooling:Water:DetailedGeometry");
       case IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode:
-        return "Coil:Cooling:DX:TwoStageWithHumidityControlMode";
+        return std::string("Coil:Cooling:DX:TwoStageWithHumidityControlMode");
       case IddObjectType::Coil_Cooling_DX_MultiSpeed:
-        return "Coil:Cooling:DX:MultiSpeed";
+        return std::string("Coil:Cooling:DX:MultiSpeed");
       case IddObjectType::Coil_Heating_DX_MultiSpeed:
-        return "Coil:Heating:DX:MultiSpeed";
+        return std::string("Coil:Heating:DX:MultiSpeed");
       case IddObjectType::Coil_Heating_Desuperheater:
-        return "Coil:Heating:Desuperheater";
+        return std::string("Coil:Heating:Desuperheater");
       default:
         return boost::none;
       }
@@ -127,11 +127,11 @@ namespace detail {
     if (optsc) {
       switch (optsc->iddObjectType().value()) {
       case IddObjectType::HeatExchanger_AirToAir_FlatPlate:
-        return "HeatExchanger:AirToAir:FlatPlate";
+        return std::string("HeatExchanger:AirToAir:FlatPlate");
       case IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent:
-        return "HeatExchanger:AirToAir:SensibleAndLatent";
+        return std::string("HeatExchanger:AirToAir:SensibleAndLatent");
       case IddObjectType::HeatExchanger_Desiccant_BalancedFlow:
-        return "HeatExchanger:Desiccant:BalancedFlow";
+        return std::string("HeatExchanger:Desiccant:BalancedFlow");
       default:
         return boost::none;
       }
@@ -145,9 +145,9 @@ namespace detail {
     if (optsc) {
       switch (optsc->iddObjectType().value()) {
       case IddObjectType::AirTerminal_SingleDuct_ConstantVolume_Reheat:
-        return "AirTerminal:SingleDuct:ConstantVolume:Reheat";
+        return std::string("AirTerminal:SingleDuct:ConstantVolume:Reheat");
       case IddObjectType::AirTerminal_SingleDuct_VAV_Reheat:
-        return "AirTerminal:SingleDuct:VAV:Reheat";
+        return std::string("AirTerminal:SingleDuct:VAV:Reheat");
       default:
         return boost::none;
       }
@@ -208,7 +208,7 @@ IddObjectType AirflowNetworkEquivalentDuct::iddObjectType()
 
 boost::optional<StraightComponent> AirflowNetworkEquivalentDuct::straightComponent() const
 {
-  return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->component<StraightComponent>();
+  return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->straightComponent();
 }
 
 boost::optional<std::string> AirflowNetworkEquivalentDuct::coilObjectType() const

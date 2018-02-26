@@ -718,7 +718,7 @@ set(${target_name}_src
   FluidCoolerTwoSpeed.cpp
   FoundationKiva.hpp
   FoundationKiva_Impl.hpp
-  FoundationKiva.cpp  
+  FoundationKiva.cpp
   FoundationKivaSettings.hpp
   FoundationKivaSettings_Impl.hpp
   FoundationKivaSettings.cpp
@@ -1359,10 +1359,10 @@ set(${target_name}_src
   SurfacePropertyConvectionCoefficients_Impl.hpp
   SurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   SurfacePropertyConvectionCoefficientsMultipleSurface.hpp
-  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp  
+  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp
   SurfacePropertyExposedFoundationPerimeter.cpp
   SurfacePropertyExposedFoundationPerimeter.hpp
-  SurfacePropertyExposedFoundationPerimeter_Impl.hpp  
+  SurfacePropertyExposedFoundationPerimeter_Impl.hpp
   SurfacePropertyOtherSideCoefficients.cpp
   SurfacePropertyOtherSideCoefficients.hpp
   SurfacePropertyOtherSideCoefficients_Impl.hpp
@@ -2019,9 +2019,9 @@ MAKE_SWIG_TARGET(OpenStudioModelGeometry model "${CMAKE_CURRENT_SOURCE_DIR}/Mode
 
 MAKE_SWIG_TARGET(OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHVAC.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelGeometry)
 
-MAKE_SWIG_TARGET(OpenStudioModelAirflow model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAirflow.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelGeometry)
+MAKE_SWIG_TARGET(OpenStudioModelAirflow model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAirflow.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 
-MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelAirflow)
 
 MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelRefrigeration)
 
