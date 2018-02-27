@@ -1055,6 +1055,7 @@ class Measure
         options[:start_server] = true
         options[:start_server_port] = port
       end
+      # TODO: run unit tests
     end
 
     # Parse the options

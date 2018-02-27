@@ -1,20 +1,17 @@
 require 'openstudio'
 require 'openstudio/measure/ShowRunnerOutput'
 require 'minitest/autorun'
-
 require_relative '../measure.rb'
-
 require 'fileutils'
 
-class ReportingMeasureName_Test < Minitest::Test
-
+class ReportingMeasureNameTest < Minitest::Test
   def model_in_path_default
     return "#{File.dirname(__FILE__)}/example_model.osm"
   end
 
   def epw_path_default
     # make sure we have a weather data location
-    epw = OpenStudio::Path.new(File.expand_path("#{File.dirname(__FILE__)}/USA_CO_Golden-NREL.724666_TMY3.epw"))
+    epw = File.expand_path("#{File.dirname(__FILE__)}/USA_CO_Golden-NREL.724666_TMY3.epw")
     assert(File.exist?(epw.to_s))
     return epw.to_s
   end
@@ -54,7 +51,6 @@ class ReportingMeasureName_Test < Minitest::Test
 
   # create test files if they do not exist when the test first runs
   def setup_test(test_name, idf_output_requests, model_in_path = model_in_path_default, epw_path = epw_path_default)
-
     if !File.exist?(run_dir(test_name))
       FileUtils.mkdir_p(run_dir(test_name))
     end
@@ -71,20 +67,19 @@ class ReportingMeasureName_Test < Minitest::Test
     end
 
     # convert output requests to OSM for testing, OS App and PAT will add these to the E+ Idf
-    workspace = OpenStudio::Workspace.new("Draft".to_StrictnessLevel, "EnergyPlus".to_IddFileType)
+    workspace = OpenStudio::Workspace.new('Draft'.to_StrictnessLevel, 'EnergyPlus'.to_IddFileType)
     workspace.addObjects(idf_output_requests)
     rt = OpenStudio::EnergyPlus::ReverseTranslator.new
     request_model = rt.translateWorkspace(workspace)
 
     translator = OpenStudio::OSVersion::VersionTranslator.new
     model = translator.loadModel(model_in_path)
-    assert((not model.empty?))
+    assert(!model.empty?)
     model = model.get
     model.addObjects(request_model.objects)
     model.save(model_out_path(test_name), true)
 
     setup_test_2(test_name, epw_path)
-
   end
 
   def test_number_of_arguments_and_argument_names
@@ -97,8 +92,7 @@ class ReportingMeasureName_Test < Minitest::Test
   end
 
   def test_good_argument_values
-
-    test_name = "test_good_argument_values"
+    test_name = 'test_good_argument_values'
 
     # create an instance of the measure
     measure = ReportingMeasureName.new
@@ -124,9 +118,9 @@ class ReportingMeasureName_Test < Minitest::Test
     assert(File.exist?(epw_path))
 
     # set up runner, this will happen automatically when measure is run in PAT or OpenStudio
-    runner.setLastOpenStudioModelPath(OpenStudio::Path.new(model_out_path(test_name)))
+    runner.setLastOpenStudioModelPath(model_out_path(test_name))
     runner.setLastEpwFilePath(epw_path)
-    runner.setLastEnergyPlusSqlFilePath(OpenStudio::Path.new(sql_path(test_name)))
+    runner.setLastEnergyPlusSqlFilePath(sql_path(test_name))
 
     # delete the output if it exists
     if File.exist?(report_path(test_name))
@@ -143,8 +137,8 @@ class ReportingMeasureName_Test < Minitest::Test
       measure.run(runner, argument_map)
       result = runner.result
       show_output(result)
-      assert_equal("Success", result.value.valueName)
-      assert(result.warnings.size == 0)
+      assert_equal('Success', result.value.valueName)
+      assert(result.warnings.empty?)
     ensure
       Dir.chdir(start_dir)
     end
@@ -152,5 +146,5 @@ class ReportingMeasureName_Test < Minitest::Test
     # make sure the report file exists
     assert(File.exist?(report_path(test_name)))
   end
-
 end
+

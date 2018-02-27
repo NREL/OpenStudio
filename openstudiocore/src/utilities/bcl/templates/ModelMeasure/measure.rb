@@ -3,20 +3,20 @@
 
 # start the measure
 class ModelMeasureName < OpenStudio::Measure::ModelMeasure
-
   # human readable name
   def name
-    return "NAME_TEXT"
+    # Measure name should be the title case of the class name.
+    return 'NAME_TEXT'
   end
 
   # human readable description
   def description
-    return "DESCRIPTION_TEXT"
+    return 'DESCRIPTION TEXT'
   end
 
   # human readable description of modeling approach
   def modeler_description
-    return "MODELER_DESCRIPTION_TEXT"
+    return 'MODELER DESCRIPTION TEXT'
   end
 
   # define the arguments that the user will input
@@ -24,9 +24,9 @@ class ModelMeasureName < OpenStudio::Measure::ModelMeasure
     args = OpenStudio::Measure::OSArgumentVector.new
 
     # the name of the space to add to the model
-    space_name = OpenStudio::Measure::OSArgument.makeStringArgument("space_name", true)
-    space_name.setDisplayName("New space name")
-    space_name.setDescription("This name will be used as the name of the new space.")
+    space_name = OpenStudio::Measure::OSArgument.makeStringArgument('space_name', true)
+    space_name.setDisplayName('New space name')
+    space_name.setDescription('This name will be used as the name of the new space.')
     args << space_name
 
     return args
@@ -42,11 +42,11 @@ class ModelMeasureName < OpenStudio::Measure::ModelMeasure
     end
 
     # assign the user inputs to variables
-    space_name = runner.getStringArgumentValue("space_name", user_arguments)
+    space_name = runner.getStringArgumentValue('space_name', user_arguments)
 
     # check the space_name for reasonableness
     if space_name.empty?
-      runner.registerError("Empty space name was entered.")
+      runner.registerError('Empty space name was entered.')
       return false
     end
 
@@ -57,7 +57,6 @@ class ModelMeasureName < OpenStudio::Measure::ModelMeasure
     new_space = OpenStudio::Model::Space.new(model)
     new_space.setName(space_name)
 
-
     # echo the new space's name back to the user
     runner.registerInfo("Space #{new_space.name} was added.")
 
@@ -65,9 +64,7 @@ class ModelMeasureName < OpenStudio::Measure::ModelMeasure
     runner.registerFinalCondition("The building finished with #{model.getSpaces.size} spaces.")
 
     return true
-
   end
-
 end
 
 # register the measure to be used by the application
