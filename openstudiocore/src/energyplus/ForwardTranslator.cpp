@@ -312,7 +312,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   // remove orphan Generator:PVWatts
   for (auto& pv : model.getConcreteModelObjects<GeneratorPVWatts>()){
     if (!pv.electricLoadCenterDistribution()){
-      LOG(Warn, "GeneratorPVWatts " << chp.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      LOG(Warn, "GeneratorPVWatts " << pv.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
       pv.remove();
       continue;
     }

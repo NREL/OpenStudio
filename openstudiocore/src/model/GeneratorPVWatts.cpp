@@ -29,7 +29,6 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
-
 #include "GeneratorPVWatts.hpp"
 #include "GeneratorPVWatts_Impl.hpp"
 #include "PlanarSurface.hpp"
@@ -115,10 +114,6 @@ namespace detail {
   boost::optional<double> GeneratorPVWatts_Impl::ratedThermaltoElectricalPowerRatio() const {
     return boost::none;
   }
-
-
-
-
 
   std::string GeneratorPVWatts_Impl::pvWattsVersion() const {
     boost::optional<std::string> value = getString(OS_Generator_PVWattsFields::PVWattsVersion,true);
