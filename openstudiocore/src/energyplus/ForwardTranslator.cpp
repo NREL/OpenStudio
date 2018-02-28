@@ -309,6 +309,15 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
+  // remove orphan Generator:PVWatts
+  for (auto& pv : model.getConcreteModelObjects<GeneratorPVWatts>()){
+    if (!pv.electricLoadCenterDistribution()){
+      LOG(Warn, "GeneratorPVWatts " << chp.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      pv.remove();
+      continue;
+    }
+  }
+
   // Remove orphan Storage
   for (auto& storage : model.getModelObjects<ElectricalStorage>()) {
     if (!storage.electricLoadCenterDistribution()){
@@ -1790,6 +1799,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   {
     model::GeneratorPhotovoltaic temp = modelObject.cast<GeneratorPhotovoltaic>();
     retVal = translateGeneratorPhotovoltaic(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_Generator_PVWatts:
+  {
+    model::GeneratorPVWatts temp = modelObject.cast<GeneratorPVWatts>();
+    retVal = translateGeneratorPVWatts(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Glare_Sensor:
@@ -3367,6 +3382,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Generator_FuelCell_WaterSupply);
   result.push_back(IddObjectType::OS_Generator_FuelSupply);
   result.push_back(IddObjectType::OS_Generator_Photovoltaic);
+  result.push_back(IddObjectType::OS_Generator_PVWatts);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);

@@ -73,6 +73,7 @@ MODELOBJECT_TEMPLATES(GeneratorPhotovoltaic);
 // Puting the GeneratorMicroTurbineHeatRecovery first so that the GeneratorMicroTurbine knows about it
 MODELOBJECT_TEMPLATES(GeneratorMicroTurbineHeatRecovery);
 MODELOBJECT_TEMPLATES(GeneratorMicroTurbine);
+MODELOBJECT_TEMPLATES(GeneratorPVWatts);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterDistribution);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterInverterLookUpTable);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterInverterSimple);
@@ -99,6 +100,7 @@ SWIG_MODELOBJECT(GeneratorPhotovoltaic, 1);
 // Puting the GeneratorMicroTurbineHeatRecovery first so that the GeneratorMicroTurbine knows about it
 SWIG_MODELOBJECT(GeneratorMicroTurbineHeatRecovery, 1);
 SWIG_MODELOBJECT(GeneratorMicroTurbine, 1);
+SWIG_MODELOBJECT(GeneratorPVWatts, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterDistribution, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterInverterLookUpTable, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterInverterSimple, 1);

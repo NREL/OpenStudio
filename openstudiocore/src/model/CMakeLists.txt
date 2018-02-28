@@ -779,6 +779,9 @@ set(${target_name}_src
   GeneratorPhotovoltaic.hpp
   GeneratorPhotovoltaic_Impl.hpp
   GeneratorPhotovoltaic.cpp
+  GeneratorPVWatts.hpp
+  GeneratorPVWatts_Impl.hpp
+  GeneratorPVWatts.cpp
   GlareSensor.hpp
   GlareSensor_Impl.hpp
   GlareSensor.cpp
@@ -1797,6 +1800,7 @@ set(${target_name}_test_src
   test/GeneratorFuelSupply_GTest.cpp
   test/GeneratorPhotovoltaic_GTest.cpp
   test/GeneratorMicroTurbine_GTest.cpp
+  test/GeneratorPVWatts_GTest.cpp
   test/GlareSensor_GTest.cpp
   test/GroundHeatExchangerHorizontalTrench_GTest.cpp
   test/GroundHeatExchangerVertical_GTest.cpp

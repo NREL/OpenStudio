@@ -241,6 +241,7 @@ class GeneratorFuelCellStackCooler;
 class GeneratorFuelCellWaterSupply;
 class GeneratorFuelSupply;
 class GeneratorPhotovoltaic;
+class GeneratorPVWatts;
 class GroundHeatExchangerHorizontalTrench;
 class GroundHeatExchangerVertical;
 class HeaderedPumpsConstantSpeed;
@@ -898,6 +899,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateGeneratorFuelSupply(model::GeneratorFuelSupply & modelObject);
 
   boost::optional<IdfObject> translateGeneratorPhotovoltaic( model::GeneratorPhotovoltaic & modelObject );
+
+  boost::optional<IdfObject> translateGeneratorPVWatts(model::GeneratorPVWatts & modelObject);
 
   boost::optional<IdfObject> translateGroundHeatExchangerHorizontalTrench( model::GroundHeatExchangerHorizontalTrench & modelObject );
 
