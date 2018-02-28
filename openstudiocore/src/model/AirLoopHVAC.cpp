@@ -142,15 +142,14 @@ namespace detail {
 
   const std::vector<std::string>& AirLoopHVAC_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()) {
-      result.push_back("Air System Simulation Cycle On Off Status");
-      result.push_back("HVAC System Solver Iteration Count");
-      result.push_back("Air System Solver Iteration Count");
-      result.push_back("Air System Simulation Maximum Iteration Count");
-      result.push_back("Air System Simulation Iteration Count");
-      result.push_back("Air System Component Model Simulation Calls");
-    }
+    static std::vector<std::string> result{
+      "Air System Simulation Cycle On Off Status",
+      "HVAC System Solver Iteration Count",
+      "Air System Solver Iteration Count",
+      "Air System Simulation Maximum Iteration Count",
+      "Air System Simulation Iteration Count",
+      "Air System Component Model Simulation Calls"
+    };
     return result;
   }
 

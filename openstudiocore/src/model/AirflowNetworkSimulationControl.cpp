@@ -173,8 +173,6 @@ std::vector<IddObjectType> AirflowNetworkSimulationControl_Impl::allowableChildT
 const std::vector<std::string>& AirflowNetworkSimulationControl_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if (result.empty()){
-  }
   return result;
 }
 
