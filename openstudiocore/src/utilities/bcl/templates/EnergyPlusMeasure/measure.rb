@@ -11,12 +11,12 @@ class EnergyPlusMeasureName < OpenStudio::Measure::EnergyPlusMeasure
 
   # human readable description
   def description
-    return 'DESCRIPTION TEXT'
+    return 'DESCRIPTION_TEXT'
   end
 
   # human readable description of modeling approach
   def modeler_description
-    return 'MODELER DESCRIPTION TEXT'
+    return 'MODELER_DESCRIPTION_TEXT'
   end
 
   # define the arguments that the user will input
