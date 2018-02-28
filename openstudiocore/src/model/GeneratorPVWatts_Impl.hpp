@@ -74,7 +74,7 @@ namespace detail {
 
     virtual boost::optional<Schedule> availabilitySchedule() const override;
 
-    virtual boost::optional<double> ratedElectricPowerOutput() const override;    
+    virtual boost::optional<double> ratedElectricPowerOutput() const override;
 
     virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const override;
 

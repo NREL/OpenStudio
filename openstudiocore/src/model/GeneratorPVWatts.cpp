@@ -108,7 +108,7 @@ namespace detail {
   }
 
   boost::optional<double> GeneratorPVWatts_Impl::ratedElectricPowerOutput() const {
-    return boost::none;
+    return getDouble(OS_Generator_PVWattsFields::DCSystemCapacity);
   }
 
   boost::optional<double> GeneratorPVWatts_Impl::ratedThermaltoElectricalPowerRatio() const {
