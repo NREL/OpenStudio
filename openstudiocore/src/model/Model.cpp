@@ -374,6 +374,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ElectricLoadCenterDistribution);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterLookUpTable);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterSimple);
+    REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterPVWatts);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageSimple);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageConverter);
     REGISTER_CONSTRUCTOR(EnergyManagementSystemActuator);
@@ -869,6 +870,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterDistribution);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterLookUpTable);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterSimple);
+    REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterPVWatts);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageSimple);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageConverter);
     REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemActuator);

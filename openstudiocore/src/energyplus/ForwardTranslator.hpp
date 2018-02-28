@@ -183,6 +183,7 @@ class ElectricEquipment;
 class ElectricLoadCenterDistribution;
 class ElectricLoadCenterInverterLookUpTable;
 class ElectricLoadCenterInverterSimple;
+class ElectricLoadCenterInverterPVWatts;
 class ElectricLoadCenterStorageSimple;
 class ElectricLoadCenterStorageConverter;
 class EnergyManagementSystemActuator;
@@ -792,6 +793,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateElectricLoadCenterInverterLookUpTable( model::ElectricLoadCenterInverterLookUpTable & modelObject );
 
   boost::optional<IdfObject> translateElectricLoadCenterInverterSimple( model::ElectricLoadCenterInverterSimple & modelObject );
+
+  boost::optional<IdfObject> translateElectricLoadCenterInverterPVWatts(model::ElectricLoadCenterInverterPVWatts & modelObject);
 
   boost::optional<IdfObject> translateElectricLoadCenterStorageSimple( model::ElectricLoadCenterStorageSimple & modelObject );
 

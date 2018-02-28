@@ -1436,6 +1436,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateElectricLoadCenterInverterSimple(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts:
+  {
+    model::ElectricLoadCenterInverterPVWatts temp = modelObject.cast<ElectricLoadCenterInverterPVWatts>();
+    retVal = translateElectricLoadCenterInverterPVWatts(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_ElectricLoadCenter_Storage_Simple:
   {
     model::ElectricLoadCenterStorageSimple temp = modelObject.cast<ElectricLoadCenterStorageSimple>();
@@ -3387,6 +3393,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
 
