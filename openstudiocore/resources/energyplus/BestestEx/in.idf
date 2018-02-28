@@ -5,7 +5,7 @@
 !BESTEST-EX Case L200EX-PH BASE-CASE, developed by NREL
 !Use EnergyPlus IDFEditor to view inputs in IP units
 
-  Version,8.8;
+  Version,8.9;
 
   SimulationControl,
     No,                      !- Do Zone Sizing Calculation
@@ -1326,6 +1326,7 @@
 
   ZoneHVAC:EquipmentList,
     ZONE ONE Equipment,      !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZONE ONE Purchased Air,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
