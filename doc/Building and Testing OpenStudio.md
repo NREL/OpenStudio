@@ -369,7 +369,8 @@ In Visual Studio:
 
 - Open OpenStudioCore.sln
 - **Without** IncrediBuild, build ALL\_DOXYGEN
-- **Without** IncrediBuild, build ALL\_RDOC
+
+Ruby documentation (ALL\_RDOC) is no longer being built
 
 In folder `build\OSCore-prefix\src\OSCore-build\doc`
 
