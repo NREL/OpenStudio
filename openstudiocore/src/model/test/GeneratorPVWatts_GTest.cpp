@@ -76,7 +76,7 @@ TEST_F(ModelFixture, GeneratorPVWatts_GeneratorPVWatts) {
   EXPECT_TRUE(generator.isAzimuthAngleDefaulted());
   EXPECT_TRUE(generator.isGroundCoverageRatioDefaulted());
 
-  ASSERT_EQ("5", generator.pvWattsVersion());
+  ASSERT_EQ("", generator.pvWattsVersion());
   ASSERT_EQ(1, generator.dcSystemCapacity());
   ASSERT_EQ("Standard", generator.moduleType());
   ASSERT_EQ("FixedOpenRack", generator.arrayType());

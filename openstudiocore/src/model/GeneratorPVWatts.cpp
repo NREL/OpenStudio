@@ -148,7 +148,7 @@ namespace detail {
   }
 
   double GeneratorPVWatts_Impl::systemLosses() const {
-    boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::SystemLosses);
+    boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::SystemLosses, true);
     OS_ASSERT(value);
     return value.get();
   }
@@ -158,7 +158,7 @@ namespace detail {
   }
 
   double GeneratorPVWatts_Impl::tiltAngle() const {
-    boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::TiltAngle);
+    boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::TiltAngle, true);
     OS_ASSERT(value);
     return value.get();
   }
@@ -168,7 +168,7 @@ namespace detail {
   }
 
   double GeneratorPVWatts_Impl::azimuthAngle() const {
-    boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::AzimuthAngle);
+    boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::AzimuthAngle, true);
     OS_ASSERT(value);
     return value.get();
   }
@@ -182,7 +182,7 @@ namespace detail {
   }
 
   double GeneratorPVWatts_Impl::groundCoverageRatio() const {
-    boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::GroundCoverageRatio);
+    boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::GroundCoverageRatio, true);
     OS_ASSERT(value);
     return value.get();
   }

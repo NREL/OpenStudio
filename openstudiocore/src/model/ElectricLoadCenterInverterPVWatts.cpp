@@ -114,17 +114,17 @@ namespace detail {
   }
 
   double ElectricLoadCenterInverterPVWatts_Impl::dcToACSizeRatio() const {
-    boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Inverter_PVWattsFields::DCToACSizeRatio);
+    boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Inverter_PVWattsFields::DCtoACSizeRatio, true);
     OS_ASSERT(value);
     return value.get();
   }
 
   bool ElectricLoadCenterInverterPVWatts_Impl::isDCToACSizeRatioDefaulted() const {
-    return isEmpty(OS_ElectricLoadCenter_Inverter_PVWattsFields::DCToACSizeRatio);
+    return isEmpty(OS_ElectricLoadCenter_Inverter_PVWattsFields::DCtoACSizeRatio);
   }
 
   double ElectricLoadCenterInverterPVWatts_Impl::inverterEfficiency() const {
-    boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Inverter_PVWattsFields::InverterEfficiency);
+    boost::optional<double> value = getDouble(OS_ElectricLoadCenter_Inverter_PVWattsFields::InverterEfficiency, true);
     OS_ASSERT(value);
     return value.get();
   }
@@ -134,13 +134,13 @@ namespace detail {
   }
 
   bool ElectricLoadCenterInverterPVWatts_Impl::setDCToACSizeRatio(double dcToACSizeRatio) {
-    bool result = setDouble(OS_ElectricLoadCenter_Inverter_PVWattsFields::DCToACSizeRatio, dcToACSizeRatio);
+    bool result = setDouble(OS_ElectricLoadCenter_Inverter_PVWattsFields::DCtoACSizeRatio, dcToACSizeRatio);
     OS_ASSERT(result);
     return result;
   }
 
   void ElectricLoadCenterInverterPVWatts_Impl::resetDCToACSizeRatio() {
-    bool result = setString(OS_ElectricLoadCenter_Inverter_PVWattsFields::DCToACSizeRatio, "");
+    bool result = setString(OS_ElectricLoadCenter_Inverter_PVWattsFields::DCtoACSizeRatio, "");
     OS_ASSERT(result);
   }
 

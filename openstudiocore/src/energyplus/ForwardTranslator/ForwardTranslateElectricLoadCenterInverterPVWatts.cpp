@@ -52,6 +52,10 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterInverte
 {
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricLoadCenter_Inverter_PVWatts, modelObject);
 
+  idfObject.setDouble(ElectricLoadCenter_Inverter_PVWattsFields::DCtoACSizeRatio, modelObject.dcToACSizeRatio());
+
+  idfObject.setDouble(ElectricLoadCenter_Inverter_PVWattsFields::InverterEfficiency, modelObject.inverterEfficiency());
+
   return idfObject;
 }
 

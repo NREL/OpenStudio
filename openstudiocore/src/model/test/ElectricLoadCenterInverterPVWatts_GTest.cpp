@@ -38,6 +38,43 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, ElectricLoadCenterInverterPVWatts_ElectricLoadCenterInverterPVWatts) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT(
+  {
+    // create a model to use
+    Model model;
+
+    // create a foundation kiva object to use
+    ElectricLoadCenterInverterPVWatts inverter(model);
+
+    exit(0);
+  },
+    ::testing::ExitedWithCode(0),
+    ""
+    );
+
+  // create a model to use
+  Model model;
+
+  // create a pvwatts inverter to use
+  ElectricLoadCenterInverterPVWatts inverter(model);
+
+  EXPECT_TRUE(inverter.isDCToACSizeRatioDefaulted());
+  EXPECT_TRUE(inverter.isInverterEfficiencyDefaulted());
+
+  ASSERT_EQ(1.1, inverter.dcToACSizeRatio());
+  ASSERT_EQ(0.96, inverter.inverterEfficiency());
 
 }
 
+// test setting and getting
+TEST_F(ModelFixture, ElectricLoadCenterInverterPVWatts_SetGetFields) {
+
+}
+
+// test cloning it
+
+// test that remove works
+
+// test electric load center distribution
