@@ -94,7 +94,7 @@ namespace detail {
       "Water Heater On Cycle Parasitic Electric Energy",
       "Water Heater Off Cycle Parasitic Electric Power",
       "Water Heater Off Cycle Parasitic Electric Energy"
-    }
+    };
     return result;
   }
 
