@@ -78,10 +78,7 @@ namespace detail {
   const std::vector<std::string>& CoilSystemCoolingWaterHeatExchangerAssisted_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty())
-    {
       // Not appropriate: no specific output, there are at the coil and HX level
-    }
     return result;
   }
 

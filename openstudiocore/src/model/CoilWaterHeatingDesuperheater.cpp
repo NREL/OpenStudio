@@ -82,20 +82,18 @@ namespace detail {
 
   const std::vector<std::string>& CoilWaterHeatingDesuperheater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
+    static std::vector<std::string> result{
       // TODO: scraped from I/O ref, but should double check here... (gut feeling (c) JM)
-      result.push_back("Water Heater Part Load Ratio");
-      result.push_back("Water Heater Heating Rate");
-      result.push_back("Water Heater Heating Energy");
-      result.push_back("Water Heater Pump Electric Power");
-      result.push_back("Water Heater Pump Electric Energy");
-      result.push_back("Water Heater Heat Reclaim Efficiency Modifier Multiplier");
-      result.push_back("Water Heater On Cycle Parasitic Electric Power");
-      result.push_back("Water Heater On Cycle Parasitic Electric Energy");
-      result.push_back("Water Heater Off Cycle Parasitic Electric Power");
-      result.push_back("Water Heater Off Cycle Parasitic Electric Energy");
+      "Water Heater Part Load Ratio",
+      "Water Heater Heating Rate",
+      "Water Heater Heating Energy",
+      "Water Heater Pump Electric Power",
+      "Water Heater Pump Electric Energy",
+      "Water Heater Heat Reclaim Efficiency Modifier Multiplier",
+      "Water Heater On Cycle Parasitic Electric Power",
+      "Water Heater On Cycle Parasitic Electric Energy",
+      "Water Heater Off Cycle Parasitic Electric Power",
+      "Water Heater Off Cycle Parasitic Electric Energy"
     }
     return result;
   }
