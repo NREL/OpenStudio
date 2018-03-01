@@ -71,44 +71,44 @@ namespace detail {
   const std::vector<std::string>& ChillerAbsorptionIndirect_Impl::outputVariableNames() const
   {
     // static until ModelObject return type is changed for outputvariableNames
-    static std::vector<std::string> result;
+    static std::vector<std::string> result{
 
     // Common variables
-    result.push_back("Chiller Electric Power");
-    result.push_back("Chiller Electric Energy");
-    result.push_back("Chiller Evaporator Cooling Rate");
-    result.push_back("Chiller Evaporator Cooling Energy");
-    result.push_back("Chiller Evaporator Inlet Temperature");
-    result.push_back("Chiller Evaporator Outlet Temperature");
-    result.push_back("Chiller Evaporator Mass Flow Rate");
-    result.push_back("Chiller Condenser Heat Transfer Rate");
-    result.push_back("Chiller Condenser Heat Transfer Energy");
-    result.push_back("Chiller Condenser Inlet Temperature");
-    result.push_back("Chiller Condenser Outlet Temperature");
-    result.push_back("Chiller Condenser Mass Flow Rate");
-    result.push_back("Chiller COP");
-    result.push_back("Chiller Part-Load Ratio");
-    result.push_back("Chiller Cycling Ratio");
+    "Chiller Electric Power",
+    "Chiller Electric Energy",
+    "Chiller Evaporator Cooling Rate",
+    "Chiller Evaporator Cooling Energy",
+    "Chiller Evaporator Inlet Temperature",
+    "Chiller Evaporator Outlet Temperature",
+    "Chiller Evaporator Mass Flow Rate",
+    "Chiller Condenser Heat Transfer Rate",
+    "Chiller Condenser Heat Transfer Energy",
+    "Chiller Condenser Inlet Temperature",
+    "Chiller Condenser Outlet Temperature",
+    "Chiller Condenser Mass Flow Rate",
+    "Chiller COP",
+    "Chiller Part-Load Ratio",
+    "Chiller Cycling Ratio",
 
     // TODO: add proper tests once the ModelObject return type is changed.
     // Generator = Hot Water
     //if (this->generatorHeatSourceType() == "HotWater")
     //{
-      result.push_back("Chiller Source Hot Water Rate");
-      result.push_back("Chiller Source Hot Water Energy");
-      result.push_back("Chiller Hot Water Mass Flow Rate");
+      "Chiller Source Hot Water Rate",
+      "Chiller Source Hot Water Energy",
+      "Chiller Hot Water Mass Flow Rate",
     //}
     //
     // Generator = Steam
     // generatorHeatSourceType == 'Steam'
     //if (this->generatorHeatSourceType() == "Steam")
     //{
-      result.push_back("Chiller Source Steam Rate");
-      result.push_back("Chiller Source Steam Energy");
-      result.push_back("Chiller Steam Mass Flow Rate");
-      result.push_back("Chiller Steam Heat Loss Rate");
+      "Chiller Source Steam Rate",
+      "Chiller Source Steam Energy",
+      "Chiller Steam Mass Flow Rate",
+      "Chiller Steam Heat Loss Rate"
 
-    //}
+  };
     return result;
   }
 
