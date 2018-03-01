@@ -63,10 +63,7 @@ namespace detail {
   const std::vector<std::string>& CoolingTowerPerformanceYorkCalc_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty())
-    {
       // Not appropriate: No additional cooling tower output variables are output when this object is used.
-    }
     return result;
   }
 
