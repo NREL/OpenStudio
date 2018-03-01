@@ -72,10 +72,7 @@ namespace detail {
   const std::vector<std::string>& CoilCoolingDXMultiSpeedStageData_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty())
-    {
       // Not Appropriate
-    }
     return result;
   }
 

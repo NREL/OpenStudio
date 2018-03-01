@@ -81,18 +81,16 @@ namespace detail {
 
   const std::vector<std::string>& CoilCoolingWater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Cooling Coil Total Cooling Energy");
-      result.push_back("Cooling Coil Sensible Cooling Energy");
-      result.push_back("Cooling Coil Total Cooling Rate");
-      result.push_back("Cooling Coil Sensible Cooling Rate");
-      result.push_back("Cooling Coil Wetted Area Fraction");
-      result.push_back("Cooling Coil Condensate Volume Flow Rate");
-      result.push_back("Cooling Coil Source Side Heat Transfer Energy");
-      result.push_back("Cooling Coil Condensate Volume");
-    }
+    static std::vector<std::string> result{
+      "Cooling Coil Total Cooling Energy",
+      "Cooling Coil Sensible Cooling Energy",
+      "Cooling Coil Total Cooling Rate",
+      "Cooling Coil Sensible Cooling Rate",
+      "Cooling Coil Wetted Area Fraction",
+      "Cooling Coil Condensate Volume Flow Rate",
+      "Cooling Coil Source Side Heat Transfer Energy",
+      "Cooling Coil Condensate Volume"
+    };
     return result;
   }
 

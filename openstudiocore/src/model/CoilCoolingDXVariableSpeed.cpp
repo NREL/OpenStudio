@@ -93,40 +93,38 @@ namespace detail {
 
   const std::vector<std::string>& CoilCoolingDXVariableSpeed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Cooling Coil Electric Power");
-      result.push_back("Cooling Coil Total Cooling Rate");
-      result.push_back("Cooling Coil Sensible Cooling Rate");
-      result.push_back("Cooling Coil Source Side Heat Transfer Rate");
-      result.push_back("Cooling Coil Part Load Ratio");
-      result.push_back("Cooling Coil Runtime Fraction");
-      result.push_back("Cooling Coil Air Mass Flow Rate");
-      result.push_back("Cooling Coil Air Inlet Temperature");
-      result.push_back("Cooling Coil Air Inlet Humidity Ratio");
-      result.push_back("Cooling Coil Air Outlet Temperature");
-      result.push_back("Cooling Coil Air Outlet Humidity Ratio");
-      result.push_back("Cooling Coil Upper Speed Level");
-      result.push_back("Cooling Coil Neighboring Speed Levels Ratio");
-      result.push_back("VSAirtoAirHP Recoverable Waste Heat");
-      result.push_back("Cooling Coil Electric Energy");
-      result.push_back("Cooling Coil Total Cooling Energy");
-      result.push_back("Cooling Coil Sensible Cooling Energy");
-      result.push_back("Cooling Coil Latent Cooling Energy");
-      result.push_back("Cooling Coil Source Side Heat Transfer Energy");
-      result.push_back("Cooling Coil Crankcase Heater Electric Power");
-      result.push_back("Cooling Coil Crankcase Heater Electric Energy");
-      result.push_back("Cooling Coil Condensate Volume Flow Rate");
-      result.push_back("Cooling Coil Condensate Volume");
-      result.push_back("Cooling Coil Condenser Inlet Temperature");
-      result.push_back("Cooling Coil Evaporative Condenser Water Volume");
-      result.push_back("Cooling Coil Evaporative Condenser Mains Water Volume");
-      result.push_back("Cooling Coil Evaporative Condenser Pump Electric Power");
-      result.push_back("Cooling Coil Evaporative Condenser Pump Electric Energy");
-      result.push_back("Cooling Coil Basin Heater Electric Power");
-      result.push_back("Cooling Coil Basin Heater Electric Energy");
-    }
+    static std::vector<std::string> result{
+      "Cooling Coil Electric Power",
+      "Cooling Coil Total Cooling Rate",
+      "Cooling Coil Sensible Cooling Rate",
+      "Cooling Coil Source Side Heat Transfer Rate",
+      "Cooling Coil Part Load Ratio",
+      "Cooling Coil Runtime Fraction",
+      "Cooling Coil Air Mass Flow Rate",
+      "Cooling Coil Air Inlet Temperature",
+      "Cooling Coil Air Inlet Humidity Ratio",
+      "Cooling Coil Air Outlet Temperature",
+      "Cooling Coil Air Outlet Humidity Ratio",
+      "Cooling Coil Upper Speed Level",
+      "Cooling Coil Neighboring Speed Levels Ratio",
+      "VSAirtoAirHP Recoverable Waste Heat",
+      "Cooling Coil Electric Energy",
+      "Cooling Coil Total Cooling Energy",
+      "Cooling Coil Sensible Cooling Energy",
+      "Cooling Coil Latent Cooling Energy",
+      "Cooling Coil Source Side Heat Transfer Energy",
+      "Cooling Coil Crankcase Heater Electric Power",
+      "Cooling Coil Crankcase Heater Electric Energy",
+      "Cooling Coil Condensate Volume Flow Rate",
+      "Cooling Coil Condensate Volume",
+      "Cooling Coil Condenser Inlet Temperature",
+      "Cooling Coil Evaporative Condenser Water Volume",
+      "Cooling Coil Evaporative Condenser Mains Water Volume",
+      "Cooling Coil Evaporative Condenser Pump Electric Power",
+      "Cooling Coil Evaporative Condenser Pump Electric Energy",
+      "Cooling Coil Basin Heater Electric Power",
+      "Cooling Coil Basin Heater Electric Energy"
+    };
     return result;
   }
 
