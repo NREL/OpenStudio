@@ -70,9 +70,7 @@ namespace detail {
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& Connection_Impl::outputVariableNames() const
   {
-    static StringVector result;
-    if (result.empty()) {
-    }
+    static std::vector<std::string> result;
     return result;
   }
 

@@ -68,8 +68,7 @@ namespace detail {
   {}
 
   const std::vector<std::string>& ComponentData_Impl::outputVariableNames() const {
-    static StringVector result;
-    if (result.empty()) {}
+    static std::vector<std::string> result;
     return result;
   }
 
