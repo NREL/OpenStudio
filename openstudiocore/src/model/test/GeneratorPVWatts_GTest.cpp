@@ -83,13 +83,58 @@ TEST_F(ModelFixture, GeneratorPVWatts_GeneratorPVWatts) {
   ASSERT_EQ(0.14, generator.systemLosses());
   ASSERT_EQ(20, generator.tiltAngle());
   ASSERT_EQ(180, generator.azimuthAngle());
-  ASSERT_EQ(0.4, generator.groundCoverageRatio());
-  
+  ASSERT_EQ(0.4, generator.groundCoverageRatio());  
 }
 
 // test setting and getting
 TEST_F(ModelFixture, GeneratorPVWatts_SetGetFields) {
+  // create a model to use
+  Model model;
 
+  // create a pvwatts generator object to use
+  GeneratorPVWatts generator(model, 1);
+
+  // set the fields
+  generator.setDCSystemCapacity(2);
+  generator.setModuleType("Premium");
+  generator.setArrayType("OneAxis");
+  generator.setSystemLosses(0.15);
+  generator.setTiltAngle(25);
+  generator.setAzimuthAngle(0);
+  generator.setGroundCoverageRatio(0.5);
+
+  // check the fields
+  ASSERT_EQ(2, generator.dcSystemCapacity());
+  ASSERT_FALSE(generator.isModuleTypeDefaulted());
+  ASSERT_EQ("Premium", generator.moduleType());
+  ASSERT_FALSE(generator.isArrayTypeDefaulted());
+  ASSERT_EQ("OneAxis", generator.arrayType());
+  ASSERT_FALSE(generator.isSystemLossesDefaulted());
+  ASSERT_EQ(0.15, generator.systemLosses());
+  ASSERT_FALSE(generator.isTiltAngleDefaulted());
+  ASSERT_EQ(25, generator.tiltAngle());
+  ASSERT_FALSE(generator.isAzimuthAngleDefaulted());
+  ASSERT_EQ(0, generator.azimuthAngle());
+  boost::optional<PlanarSurface> optplanarsurface = generator.surface();
+  ASSERT_FALSE(optplanarsurface);
+  ASSERT_FALSE(generator.isGroundCoverageRatioDefaulted());
+  ASSERT_EQ(0.5, generator.groundCoverageRatio());
+  
+  // reset them one by one
+  generator.resetModuleType();
+  generator.resetArrayType();
+  generator.resetSystemLosses();
+  generator.resetTiltAngle();
+  generator.resetAzimuthAngle();
+  generator.resetSurface();
+  generator.resetGroundCoverageRatio();
+
+  EXPECT_TRUE(generator.isModuleTypeDefaulted());
+  EXPECT_TRUE(generator.isArrayTypeDefaulted());
+  EXPECT_TRUE(generator.isSystemLossesDefaulted());
+  EXPECT_TRUE(generator.isTiltAngleDefaulted());
+  EXPECT_TRUE(generator.isAzimuthAngleDefaulted());
+  EXPECT_TRUE(generator.isGroundCoverageRatioDefaulted());
 }
 
 // test constructing with a surface
@@ -104,6 +149,7 @@ TEST_F(ModelFixture, GeneratorPVWatts_SurfaceConstruct) {
   GeneratorPVWatts generator(model, surface, 1);
   EXPECT_TRUE(generator.surface());
   generator.resetSurface();
+  EXPECT_EQ(1u, model.getConcreteModelObjects<Surface>().size());
   EXPECT_FALSE(generator.surface());
 }
 
@@ -120,14 +166,59 @@ TEST_F(ModelFixture, GeneratorPVWatts_SurfaceAssign) {
   ShadingSurface shadingsurface(points, model);
   generator.setSurface(shadingsurface);
   EXPECT_TRUE(generator.surface());
-  boost::optional<PlanarSurface> optsurface = generator.surface();
-  // ShadingSurface shadingsurface = optsurface.get().cast<ShadingSurface>();
-  // shadingsurface.remove();
-  // EXPECT_FALSE(generator.surface());
+  boost::optional<PlanarSurface> optplanarsurface = generator.surface();
+  ShadingSurface shadingsurface2 = optplanarsurface.get().cast<ShadingSurface>();
+  shadingsurface2.remove();
+  EXPECT_EQ(0, model.getConcreteModelObjects<ShadingSurface>().size());
+  EXPECT_FALSE(generator.surface());
 }
 
 // test cloning it
+TEST_F(ModelFixture, GeneratorPVWatts_Clone) {
+  Model model;
+  GeneratorPVWatts generator(model, 1);
+  generator.setSystemLosses(0.1);
+  
+  // clone it into the same model
+  GeneratorPVWatts generatorClone = generator.clone(model).cast<GeneratorPVWatts>();
+  ASSERT_FALSE(generatorClone.isSystemLossesDefaulted());
+  ASSERT_EQ(0.1, generatorClone.systemLosses());
+  ASSERT_TRUE(generatorClone.isModuleTypeDefaulted());
+
+  // clone it into a different model
+  Model model2;
+  GeneratorPVWatts generatorClone2 = generator.clone(model2).cast<GeneratorPVWatts>();
+  ASSERT_FALSE(generatorClone2.isSystemLossesDefaulted());
+  ASSERT_EQ(0.1, generatorClone2.systemLosses());
+  ASSERT_TRUE(generatorClone2.isModuleTypeDefaulted());
+}
 
 // test that remove works
+TEST_F(ModelFixture, GeneratorPVWatts_Remove) {
+  Model model;
+  auto size = model.modelObjects().size();
+  GeneratorPVWatts generator(model, 1);
+  EXPECT_FALSE(generator.remove().empty());
+  EXPECT_EQ(size, model.modelObjects().size());
+}
 
 // test electric load center distribution
+TEST_F(ModelFixture, GeneratorPVWatts_ElectricLoadCenterDistribution) {
+  Model model;
+  ElectricLoadCenterDistribution elcd(model);
+  EXPECT_EQ(0, elcd.generators().size());
+  GeneratorPVWatts generator(model, 1);
+  elcd.addGenerator(generator);
+  EXPECT_EQ(1u, elcd.generators().size());
+  boost::optional<ElectricLoadCenterDistribution> optelcd = generator.electricLoadCenterDistribution();
+  EXPECT_TRUE(optelcd);
+  ElectricLoadCenterDistribution elcd2 = optelcd.get();
+  EXPECT_EQ(elcd, elcd2);
+  EXPECT_TRUE(elcd.removeGenerator(generator));
+  EXPECT_FALSE(generator.electricLoadCenterDistribution());
+  ASSERT_EQ(0, elcd.generators().size());
+  ASSERT_EQ(0, elcd2.generators().size());
+  elcd.addGenerator(generator);
+  elcd.remove();
+  EXPECT_FALSE(generator.electricLoadCenterDistribution());
+}
