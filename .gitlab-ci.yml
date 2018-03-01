@@ -186,4 +186,6 @@ deployOS:ubuntu:
   script:
   - cd build
   - ls
-  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.deb"  
+  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.deb"
+  
+  
