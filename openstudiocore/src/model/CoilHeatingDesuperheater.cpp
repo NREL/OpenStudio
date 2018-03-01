@@ -80,20 +80,18 @@ namespace detail {
 
   const std::vector<std::string>& CoilHeatingDesuperheater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Heating Coil Rate");
-      result.push_back("Heating Coil Energy");
-      result.push_back("Heating Coil Electric Power");
-      result.push_back("Heating Coil Electric Consumption");
-      result.push_back("Heating Coil Runtime Fraction");
-      result.push_back("Heating Coil Air Heating Rate");
-      result.push_back("Heating Coil Air Heating Energy");
-      result.push_back("Heating Coil Electric Power");
-      result.push_back("Heating Coil Electric Energy");
-      result.push_back("Heating Coil Runtime Fraction");
-    }
+    static std::vector<std::string> result{
+      "Heating Coil Rate",
+      "Heating Coil Energy",
+      "Heating Coil Electric Power",
+      "Heating Coil Electric Consumption",
+      "Heating Coil Runtime Fraction",
+      "Heating Coil Air Heating Rate",
+      "Heating Coil Air Heating Energy",
+      "Heating Coil Electric Power",
+      "Heating Coil Electric Energy",
+      "Heating Coil Runtime Fraction"
+    };
     return result;
   }
 

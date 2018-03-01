@@ -96,18 +96,16 @@ namespace detail{
   const std::vector<std::string>& CoilHeatingGas_Impl::outputVariableNames() const
   {
     // TODO: static until return of ModelObject is changed
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
+    static std::vector<std::string> result{
       // Common variables
-      result.push_back("Heating Coil Air Heating Energy");
-      result.push_back("Heating Coil Air Heating Rate");
+      "Heating Coil Air Heating Energy",
+      "Heating Coil Air Heating Rate",
 
       // This is the parasitic electric load associated with the coil operation, such as an inducer fan
-      result.push_back("Heating Coil Electric Energy");
-      result.push_back("Heating Coil Electric Power");
+      "Heating Coil Electric Energy",
+      "Heating Coil Electric Power",
 
-      result.push_back("Heating Coil Runtime Fraction");
+      "Heating Coil Runtime Fraction",
 
       // As of E+ 8;6, this maps to Coil:Heating:Fuel
       // Fuel type specific
@@ -115,49 +113,49 @@ namespace detail{
       // until then, make this include all possible outputVariableNames for class regardless of fuelType
       // std::string fuelType = this->fuelType();
       // => ["NaturalGas", "Propane", "PropaneGas", "Diesel", "Gasoline", "FuelOil#1", "FuelOil#2", "OtherFuel1", "OtherFuel2"]
-      //         result.push_back("Heating Coil <Fuel Type> Energy");
+      //         "Heating Coil <Fuel Type> Energy",
       // if (fuelType == "NaturalGas") {
-        result.push_back("Heating Coil Gas Energy");
-        result.push_back("Heating Coil Gas Rate");
-        result.push_back("Heating Coil Ancillary Gas Energy");
-        result.push_back("Heating Coil Ancillary Gas Rate");
+        "Heating Coil Gas Energy",
+        "Heating Coil Gas Rate",
+        "Heating Coil Ancillary Gas Energy",
+        "Heating Coil Ancillary Gas Rate",
       // } else if ( (fuelType == "PropaneGas") || (fuelType == "Propane") ) {
-        result.push_back("Heating Coil Propane Energy");
-        result.push_back("Heating Coil Propane Rate");
-        result.push_back("Heating Coil Ancillary Propane Energy");
-        result.push_back("Heating Coil Ancillary Propane Rate");
+        "Heating Coil Propane Energy",
+        "Heating Coil Propane Rate",
+        "Heating Coil Ancillary Propane Energy",
+        "Heating Coil Ancillary Propane Rate",
       // } else if (fuelType == "FuelOil#1") {
-        result.push_back("Heating Coil FuelOil#1 Energy");
-        result.push_back("Heating Coil FuelOil#1 Rate");
-        result.push_back("Heating Coil Ancillary FuelOil#1 Energy");
-        result.push_back("Heating Coil Ancillary FuelOil#1 Rate");
+        "Heating Coil FuelOil#1 Energy",
+        "Heating Coil FuelOil#1 Rate",
+        "Heating Coil Ancillary FuelOil#1 Energy",
+        "Heating Coil Ancillary FuelOil#1 Rate",
       // } else if (fuelType == "FuelOil#2") {
-        result.push_back("Heating Coil FuelOil#2 Energy");
-        result.push_back("Heating Coil FuelOil#2 Rate");
-        result.push_back("Heating Coil Ancillary FuelOil#2 Energy");
-        result.push_back("Heating Coil Ancillary FuelOil#2 Rate");
+        "Heating Coil FuelOil#2 Energy",
+        "Heating Coil FuelOil#2 Rate",
+        "Heating Coil Ancillary FuelOil#2 Energy",
+        "Heating Coil Ancillary FuelOil#2 Rate",
       // } else if (fuelType == "Diesel") {
-        result.push_back("Heating Coil Diesel Energy");
-        result.push_back("Heating Coil Diesel Rate");
-        result.push_back("Heating Coil Ancillary Diesel Energy");
-        result.push_back("Heating Coil Ancillary Diesel Rate");
+        "Heating Coil Diesel Energy",
+        "Heating Coil Diesel Rate",
+        "Heating Coil Ancillary Diesel Energy",
+        "Heating Coil Ancillary Diesel Rate",
       // } else if (fuelType == "Gasoline") {
-        result.push_back("Heating Coil Gasoline Energy");
-        result.push_back("Heating Coil Gasoline Rate");
-        result.push_back("Heating Coil Ancillary Gasoline Energy");
-        result.push_back("Heating Coil Ancillary Gasoline Rate");
+        "Heating Coil Gasoline Energy",
+        "Heating Coil Gasoline Rate",
+        "Heating Coil Ancillary Gasoline Energy",
+        "Heating Coil Ancillary Gasoline Rate",
       // } else if (fuelType == "OtherFuel1") {
-        result.push_back("Heating Coil OtherFuel1 Energy");
-        result.push_back("Heating Coil OtherFuel1 Rate");
-        result.push_back("Heating Coil Ancillary OtherFuel1 Energy");
-        result.push_back("Heating Coil Ancillary OtherFuel1 Rate");
+        "Heating Coil OtherFuel1 Energy",
+        "Heating Coil OtherFuel1 Rate",
+        "Heating Coil Ancillary OtherFuel1 Energy",
+        "Heating Coil Ancillary OtherFuel1 Rate",
       // } else if (fuelType == "OtherFuel2") {
-        result.push_back("Heating Coil OtherFuel2 Energy");
-        result.push_back("Heating Coil OtherFuel2 Rate");
-        result.push_back("Heating Coil Ancillary OtherFuel2 Energy");
-        result.push_back("Heating Coil Ancillary OtherFuel2 Rate");
+        "Heating Coil OtherFuel2 Energy",
+        "Heating Coil OtherFuel2 Rate",
+        "Heating Coil Ancillary OtherFuel2 Energy",
+        "Heating Coil Ancillary OtherFuel2 Rate"
       // }
-    }
+    };
     return result;
   }
 
