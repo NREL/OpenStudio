@@ -80,27 +80,25 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Zone VRF Air Terminal Total Cooling Rate");
-      result.push_back("Zone VRF Air Terminal Total Cooling Energy");
-      result.push_back("Zone VRF Air Terminal Sensible Cooling Rate");
-      result.push_back("Zone VRF Air Terminal Sensible Cooling Energy");
-      result.push_back("Zone VRF Air Terminal Latent Cooling Rate");
-      result.push_back("Zone VRF Air Terminal Latent Cooling Energy");
-      result.push_back("Zone VRF Air Terminal Total Heating Rate");
-      result.push_back("Zone VRF Air Terminal Total Heating Energy");
-      result.push_back("Zone VRF Air Terminal Sensible Heating Rate");
-      result.push_back("Zone VRF Air Terminal Sensible Heating Energy");
-      result.push_back("Zone VRF Air Terminal Latent Heating Rate");
-      result.push_back("Zone VRF Air Terminal Latent Heating Energy");
-      result.push_back("Zone VRF Air Terminal Cooling Electric Power");
-      result.push_back("Zone VRF Air Terminal Cooling Electric Energy");
-      result.push_back("Zone VRF Air Terminal Heating Electric Power");
-      result.push_back("Zone VRF Air Terminal Heating Electric Energy");
-      result.push_back("Zone VRF Air Terminal Fan Availability Status");
-    }
+    static std::vector<std::string> result{
+      "Zone VRF Air Terminal Total Cooling Rate",
+      "Zone VRF Air Terminal Total Cooling Energy",
+      "Zone VRF Air Terminal Sensible Cooling Rate",
+      "Zone VRF Air Terminal Sensible Cooling Energy",
+      "Zone VRF Air Terminal Latent Cooling Rate",
+      "Zone VRF Air Terminal Latent Cooling Energy",
+      "Zone VRF Air Terminal Total Heating Rate",
+      "Zone VRF Air Terminal Total Heating Energy",
+      "Zone VRF Air Terminal Sensible Heating Rate",
+      "Zone VRF Air Terminal Sensible Heating Energy",
+      "Zone VRF Air Terminal Latent Heating Rate",
+      "Zone VRF Air Terminal Latent Heating Energy",
+      "Zone VRF Air Terminal Cooling Electric Power",
+      "Zone VRF Air Terminal Cooling Electric Energy",
+      "Zone VRF Air Terminal Heating Electric Power",
+      "Zone VRF Air Terminal Heating Electric Energy",
+      "Zone VRF Air Terminal Fan Availability Status"
+    };
     return result;
   }
 
