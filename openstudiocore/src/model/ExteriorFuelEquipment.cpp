@@ -78,12 +78,10 @@ namespace detail {
 
   const std::vector<std::string>& ExteriorFuelEquipment_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Exterior FuelEquipment Electric Power");
-      result.push_back("Exterior FuelEquipment Electric Energy");
-    }
+    static std::vector<std::string> result{
+      "Exterior FuelEquipment Electric Power",
+      "Exterior FuelEquipment Electric Energy"
+    };
     return result;
   }
 
