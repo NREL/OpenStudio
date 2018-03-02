@@ -75,8 +75,6 @@ PortList_Impl::PortList_Impl(const PortList_Impl& other,
 const std::vector<std::string>& PortList_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if (result.empty()){
-  }
   return result;
 }
 
