@@ -79,15 +79,13 @@ namespace detail {
 
   const std::vector<std::string>& LoadProfilePlant_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Plant Load Profile Mass Flow Rate");
-      result.push_back("Plant Load Profile Heat Transfer Rate");
-      result.push_back("Plant Load Profile Heat Transfer Energy");
-      result.push_back("Plant Load Profile Heating Energy");
-      result.push_back("Plant Load Profile Cooling Energy");
-    }
+    static std::vector<std::string> result{
+      "Plant Load Profile Mass Flow Rate",
+      "Plant Load Profile Heat Transfer Rate",
+      "Plant Load Profile Heat Transfer Energy",
+      "Plant Load Profile Heating Energy",
+      "Plant Load Profile Cooling Energy"
+    };
     return result;
   }
 
