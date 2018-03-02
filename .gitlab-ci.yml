@@ -3,11 +3,8 @@ stages:
 - deployDView
 - buildOS
 - deployOS
-- testOSResources
 
 buildDView:windows:
-  #variables:
-  #  CI_DEBUG_TRACE: "true"
   stage: buildDView
   only:
   - develop
@@ -24,8 +21,6 @@ buildDView:windows:
       - buildMeta/DView-prefix/src/DView-install
 
 buildDView:mac:
-  #variables:
-  #  CI_DEBUG_TRACE: "true"
   stage: buildDView
   only:
   - develop
@@ -40,10 +35,8 @@ buildDView:mac:
     expire_in: 6 hrs
     paths:
       - buildMeta/DView-prefix/src/DView-install
-      
+
 buildDView:ubuntu:
-  #variables:
-  #  CI_DEBUG_TRACE: "true"
   stage: buildDView
   only:
   - develop
@@ -54,14 +47,13 @@ buildDView:ubuntu:
   - cd buildMeta
   #- cmake -DBUILD_DVIEW=ON -DCMAKE_BUILD_TYPE=Release ..
   #- make -j16 DView
+  #retry: 1
   #artifacts:
   #  expire_in: 6 hrs
   #  paths:
   #    - buildMeta/DView-prefix/src/DView-install
 
 deployDView:windows:
-  #variables:
-  #  CI_DEBUG_TRACE: "true"
   stage: deployDView
   only:
   - develop
@@ -70,13 +62,10 @@ deployDView:windows:
   dependencies:
   - buildDView:windows
   script:
-  - C:/Python27/Scripts/aws --version
-  - cd  buildMeta/DView-prefix/src/DView-install
-  - C:/Python27/Scripts/aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "DView.exe"
+  - cd buildMeta/DView-prefix/src/DView-install/
+  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*DView.exe"
 
 deployDView:mac:
-  #variables:
-  #  CI_DEBUG_TRACE: "true"
   stage: deployDView
   only:
   - develop
@@ -85,13 +74,10 @@ deployDView:mac:
   dependencies:
   - buildDView:mac
   script:
-  - cd  buildMeta/DView-prefix/src/DView-install
-  - aws --version
+  - cd buildMeta/DView-prefix/src/DView-install/DView.app/Contents/MacOS/
   - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "DView"
 
 deployDView:ubuntu:
-  #variables:
-  #  CI_DEBUG_TRACE: "true"
   stage: deployDView
   only:
   - develop
@@ -101,13 +87,9 @@ deployDView:ubuntu:
   - buildDView:ubuntu
   script:
   - ls
-  #- aws --version
-  #- cd  buildMeta/DView-prefix/src/DView-install
-  #- aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "DView.???"
+  #- aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "DView.???"  
 
 buildOS:windows:
-  #variables:
-  #  CI_DEBUG_TRACE: "true"
   stage: buildOS
   only:
   - develop
@@ -129,8 +111,6 @@ buildOS:windows:
       - build/OpenStudio-*.exe
  
 buildOS:mac:
-  #variables:
-  #  CI_DEBUG_TRACE: "true"
   stage: buildOS
   only:
   - develop
@@ -144,7 +124,8 @@ buildOS:mac:
   - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
   - make -j16 package
   - cd _CPack_Packages/Darwin/IFW
-  - zip -r OpenStudio*.zip OpenStudio*
+  - ls
+  - zip -r `ls -1 | grep OpenStudio-*.app | sed -e 's/\.app$//'`.zip OpenStudio-*.app
   retry: 1
   artifacts:
     expire_in: 6 hrs
@@ -152,8 +133,6 @@ buildOS:mac:
       - build/_CPack_Packages/Darwin/IFW/OpenStudio-*.zip
 
 buildOS:ubuntu:
-  #variables:
-  #  CI_DEBUG_TRACE: "true"
   stage: buildOS
   only:
   - develop
@@ -173,8 +152,6 @@ buildOS:ubuntu:
       - build/OpenStudio-*.deb
 
 deployOS:windows:
-  #variables:
-  #  CI_DEBUG_TRACE: "true"
   stage: deployOS
   only:
   - develop
@@ -183,11 +160,10 @@ deployOS:windows:
   dependencies:
   - buildOS:windows
   script:
-  - C:/Python27/Scripts/aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.exe"
+  - cd build
+  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.exe"
 
 deployOS:mac:
-  #variables:
-  #  CI_DEBUG_TRACE: "true"
   stage: deployOS
   only:
   - develop
@@ -196,12 +172,10 @@ deployOS:mac:
   dependencies:
   - buildOS:mac
   script:
-  - cd  build/_CPack_Packages/Darwin/IFW/
+  - cd build/_CPack_Packages/Darwin/IFW
   - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.zip"
 
 deployOS:ubuntu:
-  #variables:
-  #  CI_DEBUG_TRACE: "true"
   stage: deployOS
   only:
   - develop
@@ -210,28 +184,6 @@ deployOS:ubuntu:
   dependencies:
   - buildOS:ubuntu
   script:
-  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.dmg"  
-
-testOSResources:windows:
-  #variables:
-  #  CI_DEBUG_TRACE: "true"
-  stage: testOSResources
-  only:
-  - develop
-  tags:
-  - windows
-  dependencies:
-  - buildOS:windows
-  script:
-  ##- cd build
-  ##- OpenStudio-2.4.1.b75cf90df5-Windows.exe --script ../install.qs
-  #- cd ../temp
-  #- OpenStudio-2.4.1.b75cf90df5-Windows.exe --script ../OpenStudio/install.qs
-  - "cd \"c:\\\""
-  ##- if not exist "OpenStudio-resources" mkdir OpenStudio-resources
-  ##- cd OpenStudio-resources
-  - git clone https://github.com/NREL/OpenStudio-resources.git
-  #- "cd \"c:\\openstudio\\bin\\\""
-  #- "openstudio.exe c:\\OpenStudio-resources\\model_tests.rb"
-
-  
+  - cd build
+  - ls
+  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.deb"  
