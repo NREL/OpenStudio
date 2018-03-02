@@ -409,10 +409,10 @@ void EditorWebView::startEditor()
     }
 
     if (m_isIP){
-      config["units"] = "ft";
+      config["units"] = "ip";
       config["initialGridSize"] = 15;
     }else{
-      config["units"] = "m";
+      config["units"] = "si";
       config["initialGridSize"] = 5;
     }
 
@@ -491,7 +491,7 @@ document.head.appendChild(style);\n";
 
       std::string json = m_floorplan->toJSON(false);
 
-      QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+      QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("), { noReloadGrid: false });");
       m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
       while (m_javascriptRunning){
         OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
