@@ -90,7 +90,7 @@ fill:"#fff"}})])}}},function(module,exports){module.exports={render:function(){w
 window.api = {
   config: null,
   initAlreadyRun: false,
-  openFloorplan: (data, options = { noReloadGrid: false }) => {
+  openFloorplan: (data, options) => {
     try {
       window.application.$store.dispatch('importFloorplan', {
         clientWidth: document.getElementById('svg-grid').clientWidth,
