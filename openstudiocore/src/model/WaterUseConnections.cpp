@@ -77,31 +77,29 @@ namespace detail {
 
   const std::vector<std::string>& WaterUseConnections_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Water Use Connections Hot Water Mass Flow Rate");
-      result.push_back("Water Use Connections Cold Water Mass Flow Rate");
-      result.push_back("Water Use Connections Total Mass Flow Rate");
-      result.push_back("Water Use Connections Drain Water Mass Flow Rate");
-      result.push_back("Water Use Connections Heat Recovery Mass Flow Rate");
-      result.push_back("Water Use Connections Hot Water Volume Flow Rate");
-      result.push_back("Water Use Connections Cold Water Volume Flow Rate");
-      result.push_back("Water Use Connections Total Volume Flow Rate");
-      result.push_back("Water Use Connections Hot Water Volume");
-      result.push_back("Water Use Connections Cold Water Volume");
-      result.push_back("Water Use Connections Total Volume");
-      result.push_back("Water Use Connections Hot Water Temperature");
-      result.push_back("Water Use Connections Cold Water Temperature");
-      result.push_back("Water Use Connections Drain Water Temperature");
-      result.push_back("Water Use Connections Return Water Temperature");
-      result.push_back("Water Use Connections Waste Water Temperature");
-      result.push_back("Water Use Connections Heat Recovery Water Temperature");
-      result.push_back("Water Use Connections Heat Recovery Effectiveness");
-      result.push_back("Water Use Connections Heat Recovery Rate");
-      result.push_back("Water Use Connections Heat Recovery Energy");
-      result.push_back("Water Use Connections Plant Hot Water Energy");
-    }
+    static std::vector<std::string> result{
+      "Water Use Connections Hot Water Mass Flow Rate",
+      "Water Use Connections Cold Water Mass Flow Rate",
+      "Water Use Connections Total Mass Flow Rate",
+      "Water Use Connections Drain Water Mass Flow Rate",
+      "Water Use Connections Heat Recovery Mass Flow Rate",
+      "Water Use Connections Hot Water Volume Flow Rate",
+      "Water Use Connections Cold Water Volume Flow Rate",
+      "Water Use Connections Total Volume Flow Rate",
+      "Water Use Connections Hot Water Volume",
+      "Water Use Connections Cold Water Volume",
+      "Water Use Connections Total Volume",
+      "Water Use Connections Hot Water Temperature",
+      "Water Use Connections Cold Water Temperature",
+      "Water Use Connections Drain Water Temperature",
+      "Water Use Connections Return Water Temperature",
+      "Water Use Connections Waste Water Temperature",
+      "Water Use Connections Heat Recovery Water Temperature",
+      "Water Use Connections Heat Recovery Effectiveness",
+      "Water Use Connections Heat Recovery Rate",
+      "Water Use Connections Heat Recovery Energy",
+      "Water Use Connections Plant Hot Water Energy"
+    };
     return result;
   }
 
