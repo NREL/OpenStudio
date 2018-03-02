@@ -65,22 +65,20 @@ namespace detail {
 
   const std::vector<std::string>& HeatPumpWaterToWaterEquationFitCooling_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Water to Water Heat Pump Electric Energy");
-      result.push_back("Water to Water Heat Pump Load Side Heat Transfer Energy");
-      result.push_back("Water to Water Heat Pump Source Side Heat Transfer Energy");
-      result.push_back("Water to Water Heat Pump Electric Power");
-      result.push_back("Water to Water Heat Pump Load Side Heat Transfer Rate");
-      result.push_back("Water to Water Heat Pump Source Side Heat Transfer Rate");
-      result.push_back("Water to Water Heat Pump Load Side Outlet Temperature");
-      result.push_back("Water to Water Heat Pump Load Side Inlet Temperature");
-      result.push_back("Water to Water Heat Pump Source Side Outlet Temperature");
-      result.push_back("Water to Water Heat Pump Source Side Inlet Temperature");
-      result.push_back("Water to Water Heat Pump Load Side Mass Flow Rate");
-      result.push_back("Water to Water Heat Pump Source Side Mass Flow Rate");
-    }
+    static std::vector<std::string> result{
+      "Water to Water Heat Pump Electric Energy",
+      "Water to Water Heat Pump Load Side Heat Transfer Energy",
+      "Water to Water Heat Pump Source Side Heat Transfer Energy",
+      "Water to Water Heat Pump Electric Power",
+      "Water to Water Heat Pump Load Side Heat Transfer Rate",
+      "Water to Water Heat Pump Source Side Heat Transfer Rate",
+      "Water to Water Heat Pump Load Side Outlet Temperature",
+      "Water to Water Heat Pump Load Side Inlet Temperature",
+      "Water to Water Heat Pump Source Side Outlet Temperature",
+      "Water to Water Heat Pump Source Side Inlet Temperature",
+      "Water to Water Heat Pump Load Side Mass Flow Rate",
+      "Water to Water Heat Pump Source Side Mass Flow Rate"
+    };
     return result;
   }
 
