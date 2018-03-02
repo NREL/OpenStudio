@@ -90,11 +90,9 @@ namespace detail {
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& ScheduleCompact_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Schedule Value");
-    }
+    static std::vector<std::string> result{
+      "Schedule Value"
+    };
     return result;
   }
 
