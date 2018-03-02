@@ -83,39 +83,37 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationWalkIn_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Refrigeration Walk In Evaporator Total Cooling Rate");
-      result.push_back("Refrigeration Walk In Evaporator Total Cooling Energy");
-      result.push_back("Refrigeration Walk In Evaporator Sensible Cooling Rate");
-      result.push_back("Refrigeration Walk In Evaporator Sensible Cooling Energy");
-      result.push_back("Refrigeration Walk In Evaporator Latent Cooling Rate");
-      result.push_back("Refrigeration Walk In Evaporator Latent Cooling Energy");
-      result.push_back("Refrigeration Walk In Ancillary Electric Power");
-      result.push_back("Refrigeration Walk In Ancillary Electric Energy");
-      result.push_back("Refrigeration Walk In Fan Electric Power");
-      result.push_back("Refrigeration Walk In Fan Electric Energy");
-      result.push_back("Refrigeration Walk In Lighting Electric Power");
-      result.push_back("Refrigeration Walk In Lighting Electric Energy");
-      result.push_back("Refrigeration Walk In Heater Electric Power");
-      result.push_back("Refrigeration Walk In Heater Electric Energy");
+    static std::vector<std::string> result{
+      "Refrigeration Walk In Evaporator Total Cooling Rate",
+      "Refrigeration Walk In Evaporator Total Cooling Energy",
+      "Refrigeration Walk In Evaporator Sensible Cooling Rate",
+      "Refrigeration Walk In Evaporator Sensible Cooling Energy",
+      "Refrigeration Walk In Evaporator Latent Cooling Rate",
+      "Refrigeration Walk In Evaporator Latent Cooling Energy",
+      "Refrigeration Walk In Ancillary Electric Power",
+      "Refrigeration Walk In Ancillary Electric Energy",
+      "Refrigeration Walk In Fan Electric Power",
+      "Refrigeration Walk In Fan Electric Energy",
+      "Refrigeration Walk In Lighting Electric Power",
+      "Refrigeration Walk In Lighting Electric Energy",
+      "Refrigeration Walk In Heater Electric Power",
+      "Refrigeration Walk In Heater Electric Energy",
 
       // TODO: Implement checks
       // Report only for WalkIns using electric defrost
-      result.push_back("Refrigeration Walk In Defrost Electric Power");
-      result.push_back("Refrigeration Walk In Defrost Electric Energy");
+      "Refrigeration Walk In Defrost Electric Power",
+      "Refrigeration Walk In Defrost Electric Energy"
 
       // Reported in ThermalZone
       // Report for each Zone exchanging energy with the WalkIn
-      //result.push_back("Refrigeration Walk In Zone Sensible Cooling Rate");
-      //result.push_back("Refrigeration Walk In Zone Sensible Cooling Energy");
-      //result.push_back("Refrigeration Walk In Zone Sensible Heating Rate");
-      //result.push_back("Refrigeration Walk In Zone Sensible Heating Energy");
-      //result.push_back("Refrigeration Walk In Zone Latent Rate");
-      //result.push_back("Refrigeration Walk In Zone Latent Energy");
+      //"Refrigeration Walk In Zone Sensible Cooling Rate",
+      //"Refrigeration Walk In Zone Sensible Cooling Energy",
+      //"Refrigeration Walk In Zone Sensible Heating Rate",
+      //"Refrigeration Walk In Zone Sensible Heating Energy",
+      //"Refrigeration Walk In Zone Latent Rate",
+      //"Refrigeration Walk In Zone Latent Energy"
 
-    }
+    };
     return result;
   }
 

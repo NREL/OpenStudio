@@ -77,49 +77,47 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationAirChiller_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Refrigeration Zone Air Chiller Total Cooling Rate");
-      result.push_back("Refrigeration Zone Air Chiller Total Cooling Energy");
-      result.push_back("Refrigeration Zone Air Chiller Sensible Cooling Rate");
-      result.push_back("Refrigeration Zone Air Chiller Sensible Cooling Energy");
-      result.push_back("Refrigeration Zone Air Chiller Latent Cooling Rate");
-      result.push_back("Refrigeration Zone Air Chiller Latent Cooling Energy");
-      result.push_back("Refrigeration Zone Air Chiller Water Removed Mass Flow Rate");
-      result.push_back("Refrigeration Zone Air Chiller Total Electric Power");
-      result.push_back("Refrigeration Zone Air Chiller Total Electric Energy");
-      result.push_back("Refrigeration Zone Air Chiller Fan Electric Power");
-      result.push_back("Refrigeration Zone Air Chiller Fan Electric Energy");
-      result.push_back("Refrigeration Zone Air Chiller Heater Electric Power");
-      result.push_back("Refrigeration Zone Air Chiller Heater Electric Energy");
-      result.push_back("Refrigeration Zone Air Chiller Sensible Heat Ratio");
-      result.push_back("Refrigeration Zone Air Chiller Frost Accumulation Mass");
-      result.push_back("Refrigeration Zone Air Chiller Zone Total Cooling Rate");
-      result.push_back("Refrigeration Zone Air Chiller Zone Total Cooling Energy");
-      result.push_back("Refrigeration Zone Air Chiller Zone Sensible Cooling Rate");
-      result.push_back("Refrigeration Zone Air Chiller Zone Sensible Cooling Energy");
-      result.push_back("Refrigeration Zone Air Chiller Zone Heating Rate");
-      result.push_back("Refrigeration Zone Air Chiller Zone Heating Energy");
+    static std::vector<std::string> result{
+      "Refrigeration Zone Air Chiller Total Cooling Rate",
+      "Refrigeration Zone Air Chiller Total Cooling Energy",
+      "Refrigeration Zone Air Chiller Sensible Cooling Rate",
+      "Refrigeration Zone Air Chiller Sensible Cooling Energy",
+      "Refrigeration Zone Air Chiller Latent Cooling Rate",
+      "Refrigeration Zone Air Chiller Latent Cooling Energy",
+      "Refrigeration Zone Air Chiller Water Removed Mass Flow Rate",
+      "Refrigeration Zone Air Chiller Total Electric Power",
+      "Refrigeration Zone Air Chiller Total Electric Energy",
+      "Refrigeration Zone Air Chiller Fan Electric Power",
+      "Refrigeration Zone Air Chiller Fan Electric Energy",
+      "Refrigeration Zone Air Chiller Heater Electric Power",
+      "Refrigeration Zone Air Chiller Heater Electric Energy",
+      "Refrigeration Zone Air Chiller Sensible Heat Ratio",
+      "Refrigeration Zone Air Chiller Frost Accumulation Mass",
+      "Refrigeration Zone Air Chiller Zone Total Cooling Rate",
+      "Refrigeration Zone Air Chiller Zone Total Cooling Energy",
+      "Refrigeration Zone Air Chiller Zone Sensible Cooling Rate",
+      "Refrigeration Zone Air Chiller Zone Sensible Cooling Energy",
+      "Refrigeration Zone Air Chiller Zone Heating Rate",
+      "Refrigeration Zone Air Chiller Zone Heating Energy",
 
       // TODO: implement test
       // Report only for Air Chillers using electric defrost
-      result.push_back("Refrigeration Zone Air Chiller Defrost Electric Power");
-      result.push_back("Refrigeration Zone Air Chiller Defrost Electric Energy");
+      "Refrigeration Zone Air Chiller Defrost Electric Power",
+      "Refrigeration Zone Air Chiller Defrost Electric Energy"
 
       // Reported in ThermalZone
       // Report for each Zone exchanging energy with the Air Chiller
-      //result.push_back("Refrigeration Zone Air Chiller Sensible Cooling Rate");
-      //result.push_back("Refrigeration Zone Air Chiller Sensible Cooling Energy");
-      //result.push_back("Refrigeration Zone Air Chiller Heating Rate");
-      //result.push_back("Refrigeration Zone Air Chiller Heating Energy");
-      //result.push_back("Refrigeration Zone Air Chiller Latent Cooling Rate");
-      //result.push_back("Refrigeration Zone Air Chiller Latent Cooling Energy");
-      //result.push_back("Refrigeration Zone Air Chiller Total Cooling Rate");
-      //result.push_back("Refrigeration Zone Air Chiller Total Cooling Energy");
-      //result.push_back("Refrigeration Zone Air Chiller Water Removed Mass Flow Rate");
+      //"Refrigeration Zone Air Chiller Sensible Cooling Rate",
+      //"Refrigeration Zone Air Chiller Sensible Cooling Energy",
+      //"Refrigeration Zone Air Chiller Heating Rate",
+      //"Refrigeration Zone Air Chiller Heating Energy",
+      //"Refrigeration Zone Air Chiller Latent Cooling Rate",
+      //"Refrigeration Zone Air Chiller Latent Cooling Energy",
+      //"Refrigeration Zone Air Chiller Total Cooling Rate",
+      //"Refrigeration Zone Air Chiller Total Cooling Energy",
+      //"Refrigeration Zone Air Chiller Water Removed Mass Flow Rate"
 
-    }
+    };
     return result;
   }
 
