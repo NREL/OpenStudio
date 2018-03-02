@@ -686,7 +686,7 @@ void EditorWebView::mergeExport()
   OS_ASSERT(m_floorplan);
   std::string json = m_floorplan->toJSON(false);
 
-  QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+  QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("), { noReloadGrid: true });");
   //QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
   m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
   while (m_javascriptRunning){
