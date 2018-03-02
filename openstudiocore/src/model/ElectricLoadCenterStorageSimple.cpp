@@ -74,17 +74,16 @@ namespace detail {
 
   const std::vector<std::string>& ElectricLoadCenterStorageSimple_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Electric Storage Simple Charge State");
-      result.push_back("Electric Storage Charge Power");
-      result.push_back("Electric Storage Charge Energy");
-      result.push_back("Electric Storage Production Decrement Energy");
-      result.push_back("Electric Storage Discharge Power");
-      result.push_back("Electric Storage Discharge Energy");
-      result.push_back("Electric Storage Thermal Loss Rate");
-      result.push_back("Electric Storage Thermal Loss Energy");
-    }
+    static std::vector<std::string> result{
+      "Electric Storage Simple Charge State",
+      "Electric Storage Charge Power",
+      "Electric Storage Charge Energy",
+      "Electric Storage Production Decrement Energy",
+      "Electric Storage Discharge Power",
+      "Electric Storage Discharge Energy",
+      "Electric Storage Thermal Loss Rate",
+      "Electric Storage Thermal Loss Energy"
+    };
     return result;
   }
 

@@ -81,21 +81,20 @@ namespace detail {
 
   const std::vector<std::string>& ElectricLoadCenterStorageConverter_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Converter AC to DC Efficiency");
-      result.push_back("Converter AC Input Electric Power");
-      result.push_back("Converter AC Input Electric Energy");
-      result.push_back("Converter DC Output Electric Power");
-      result.push_back("Converter DC Output Electric Energy");
-      result.push_back("Converter Electric Loss Power");
-      result.push_back("Converter Electric Loss Energy");
-      result.push_back("Converter Electric Loss Decrement Energy");
-      result.push_back("Converter Thermal Loss Rate");
-      result.push_back("Converter Thermal Loss Energy");
-      result.push_back("Converter Ancillary AC Electric Power");
-      result.push_back("Converter Ancillary AC Electric Energy");
-    }
+    static std::vector<std::string> result{
+      "Converter AC to DC Efficiency",
+      "Converter AC Input Electric Power",
+      "Converter AC Input Electric Energy",
+      "Converter DC Output Electric Power",
+      "Converter DC Output Electric Energy",
+      "Converter Electric Loss Power",
+      "Converter Electric Loss Energy",
+      "Converter Electric Loss Decrement Energy",
+      "Converter Thermal Loss Rate",
+      "Converter Thermal Loss Energy",
+      "Converter Ancillary AC Electric Power",
+      "Converter Ancillary AC Electric Energy"
+    };
     return result;
   }
 
