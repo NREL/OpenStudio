@@ -135,7 +135,7 @@ buildOS:mac:
 buildOS:ubuntu:
   stage: buildOS
   only:
-  - develop
+  - triggers
   tags:
   - ubuntu
   dependencies:
