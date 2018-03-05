@@ -547,7 +547,10 @@ void EditorWebView::doExport()
     m_javascriptRunning = true;
     m_document->disable();
     QString javascript = QString("JSON.stringify(window.api.exportFloorplan());");
-    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; m_javascriptRunning = false; });
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {
+      m_export = v;
+      m_javascriptRunning = false;
+    });
     while (m_javascriptRunning){
       OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
     }
@@ -562,6 +565,9 @@ void EditorWebView::doExport()
       bool t = false;
     }
 
+  } else{
+      // DLM: This is an error
+      bool t = false;
   }
 }
 
