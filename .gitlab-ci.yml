@@ -7,7 +7,7 @@ stages:
 buildDView:windows:
   stage: buildDView
   only:
-  - develop
+  - triggers
   tags:
   - windows
   script:
@@ -23,7 +23,7 @@ buildDView:windows:
 buildDView:mac:
   stage: buildDView
   only:
-  - develop
+  - triggers
   tags:
   - mac
   script:
@@ -39,7 +39,7 @@ buildDView:mac:
 buildDView:ubuntu:
   stage: buildDView
   only:
-  - develop
+  - triggers
   tags:
   - ubuntu
   script:
@@ -56,7 +56,7 @@ buildDView:ubuntu:
 deployDView:windows:
   stage: deployDView
   only:
-  - develop
+  - triggers
   tags:
   - windows
   dependencies:
@@ -68,7 +68,7 @@ deployDView:windows:
 deployDView:mac:
   stage: deployDView
   only:
-  - develop
+  - triggers
   tags:
   - mac
   dependencies:
@@ -80,7 +80,7 @@ deployDView:mac:
 deployDView:ubuntu:
   stage: deployDView
   only:
-  - develop
+  - triggers
   tags:
   - ubuntu
   dependencies:
@@ -92,7 +92,7 @@ deployDView:ubuntu:
 buildOS:windows:
   stage: buildOS
   only:
-  - develop
+  - triggers
   tags:
   - windows
   dependencies:
@@ -113,7 +113,7 @@ buildOS:windows:
 buildOS:mac:
   stage: buildOS
   only:
-  - develop
+  - triggers
   tags:
   - mac
   dependencies:
@@ -135,7 +135,7 @@ buildOS:mac:
 buildOS:ubuntu:
   stage: buildOS
   only:
-  - develop
+  - triggers
   tags:
   - ubuntu
   dependencies:
@@ -154,7 +154,7 @@ buildOS:ubuntu:
 deployOS:windows:
   stage: deployOS
   only:
-  - develop
+  - triggers
   tags:
   - windows
   dependencies:
@@ -166,7 +166,7 @@ deployOS:windows:
 deployOS:mac:
   stage: deployOS
   only:
-  - develop
+  - triggers
   tags:
   - mac
   dependencies:
@@ -178,7 +178,7 @@ deployOS:mac:
 deployOS:ubuntu:
   stage: deployOS
   only:
-  - develop
+  - triggers
   tags:
   - ubuntu
   dependencies:
