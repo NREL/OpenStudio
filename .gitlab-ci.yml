@@ -1,93 +1,6 @@
 stages:
-- buildDView
-- deployDView
 - buildOS
 - deployOS
-
-buildDView:windows:
-  stage: buildDView
-  only:
-  - triggers
-  tags:
-  - windows
-  script:
-  - mkdir buildMeta
-  - cd buildMeta
-  - cmake -G "Visual Studio 12 2013 Win64" -DBUILD_DVIEW=ON -DCMAKE_BUILD_TYPE=Release ..
-  - cmake --build . --config Release --target DView
-  artifacts:
-    expire_in: 6 hrs
-    paths:
-      - buildMeta/DView-prefix/src/DView-install
-
-buildDView:mac:
-  stage: buildDView
-  only:
-  - triggers
-  tags:
-  - mac
-  script:
-  - mkdir buildMeta
-  - cd buildMeta
-  - cmake -DBUILD_DVIEW=ON -DCMAKE_BUILD_TYPE=Release ..
-  - make -j16 DView
-  artifacts:
-    expire_in: 6 hrs
-    paths:
-      - buildMeta/DView-prefix/src/DView-install
-
-buildDView:ubuntu:
-  stage: buildDView
-  only:
-  - triggers
-  tags:
-  - ubuntu
-  script:
-  - mkdir buildMeta
-  - cd buildMeta
-  #- cmake -DBUILD_DVIEW=ON -DCMAKE_BUILD_TYPE=Release ..
-  #- make -j16 DView
-  #retry: 1
-  #artifacts:
-  #  expire_in: 6 hrs
-  #  paths:
-  #    - buildMeta/DView-prefix/src/DView-install
-
-deployDView:windows:
-  stage: deployDView
-  only:
-  - triggers
-  tags:
-  - windows
-  dependencies:
-  - buildDView:windows
-  script:
-  - cd buildMeta/DView-prefix/src/DView-install/
-  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*DView.exe"
-
-deployDView:mac:
-  stage: deployDView
-  only:
-  - triggers
-  tags:
-  - mac
-  dependencies:
-  - buildDView:mac
-  script:
-  - cd buildMeta/DView-prefix/src/DView-install/DView.app/Contents/MacOS/
-  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "DView"
-
-deployDView:ubuntu:
-  stage: deployDView
-  only:
-  - triggers
-  tags:
-  - ubuntu
-  dependencies:
-  - buildDView:ubuntu
-  script:
-  - ls
-  #- aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "DView.???"  
 
 buildOS:windows:
   stage: buildOS
@@ -95,12 +8,10 @@ buildOS:windows:
   - triggers
   tags:
   - windows
-  dependencies:
-  - deployDView:windows
   script:
   - mkdir build
   - cd build
-  - cmake -G "Visual Studio 12 2013 Win64" -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=OFF -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF -DCPACK_SOURCE_RPM=OFF -DCPACK_SOURCE_TBZ2=OFF -DCPACK_SOURCE_TGZ=0 -DCPACK_SOURCE_TXZ=0 -DCPACK_SOURCE_TZ=0 -DCPACK_SOURCE_ZIP=0 ../openstudiocore
+  - cmake -G "Visual Studio 12 2013 Win64" -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=OFF -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF -DCPACK_SOURCE_RPM=OFF -DCPACK_SOURCE_TBZ2=OFF -DCPACK_SOURCE_TGZ=0 -DCPACK_SOURCE_TXZ=0 -DCPACK_SOURCE_TZ=0 -DCPACK_SOURCE_ZIP=0 ../openstudiocore
   - cmake --build . --config Release --target ALL_BUILD
   - cmake --build . --config Release --target ALL_BUILD
   - cmake --build . --config Release --target PACKAGE
@@ -116,8 +27,6 @@ buildOS:mac:
   - triggers
   tags:
   - mac
-  dependencies:
-  - deployDView:mac
   script:
   - mkdir build
   - cd build
@@ -138,8 +47,6 @@ buildOS:ubuntu:
   - triggers
   tags:
   - ubuntu
-  dependencies:
-  - deployDView:ubuntu
   script:
   - mkdir build
   - cd build
@@ -161,6 +68,7 @@ deployOS:windows:
   - buildOS:windows
   script:
   - cd build
+  - dir
   - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.exe"
 
 deployOS:mac:
@@ -173,6 +81,7 @@ deployOS:mac:
   - buildOS:mac
   script:
   - cd build/_CPack_Packages/Darwin/IFW
+  - ls
   - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.zip"
 
 deployOS:ubuntu:
