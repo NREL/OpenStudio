@@ -65,7 +65,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleDay( ScheduleDay 
   }
 
   if (modelObject.interpolatetoTimestep()){
-    scheduleDay.setString(Schedule_Day_IntervalFields::InterpolatetoTimestep, "Average");
+    scheduleDay.setString(Schedule_Day_IntervalFields::InterpolatetoTimestep, "Linear");
   }else{
     scheduleDay.setString(Schedule_Day_IntervalFields::InterpolatetoTimestep, "No");
   }

@@ -71,9 +71,12 @@ OptionalModelObject ReverseTranslator::translateScheduleDayInterval(const Worksp
     }
   }
 
-  s = workspaceObject.getString(2,true);
+  s = workspaceObject.getString(OS_Schedule_DayFields::InterpolatetoTimestep,true);
   if (s){
-    if (openstudio::istringEqual(*s,"yes")){
+    if (openstudio::istringEqual(*s,"Yes")){
+      scheduleDay.setInterpolatetoTimestep(true);
+    }
+    else if (openstudio::istringEqual(*s,"Linear")){
       scheduleDay.setInterpolatetoTimestep(true);
     }
     else if (openstudio::istringEqual(*s,"Average")){
