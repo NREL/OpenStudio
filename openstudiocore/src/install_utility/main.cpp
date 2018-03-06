@@ -77,6 +77,9 @@ int main(int argc, char *argv[])
           if( ! openstudio::filesystem::exists(dir) ) {
             openstudio::filesystem::create_directories(dir);
           }
+          try {
+            openstudio::filesystem::remove("/usr/local/bin/openstudio");
+          } catch(...) {}
           fs::create_symlink(cliPath.string(),"/usr/local/bin/openstudio");
         }
       } catch(...) {}
