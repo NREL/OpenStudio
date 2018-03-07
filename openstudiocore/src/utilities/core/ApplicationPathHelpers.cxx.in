@@ -146,7 +146,20 @@ namespace openstudio {
     #else
       Dl_info info;
       if (dladdr("GetCurrentModule", &info)) {
-          openstudioDirPath = completeAndNormalize(toPath(info.dli_fname));
+          auto path = toPath(info.dli_fname);
+          if ( path.parent_path().empty() ) {
+            std::istringstream pathstream( getenv("PATH") );
+            std::string pathstring;
+            while ( std::getline(pathstream, pathstring, ':') ) {
+              auto maybepath = toPath(pathstring) / path;
+              if( openstudio::filesystem::exists( maybepath ) ) {
+                openstudioDirPath = maybepath;
+                break;
+              }
+            }
+          } else {
+            openstudioDirPath = completeAndNormalize(path);
+          }
       }
     #endif
     return openstudioDirPath;
