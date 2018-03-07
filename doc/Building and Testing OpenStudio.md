@@ -472,27 +472,7 @@ To do this: (Note: not valid in OS2.x)
 
 AMI BUILD
 =========
-On first use, install the required gems using a command prompt, with Ruby in the PATH.
-
-- In the top level of your OpenStudio-server folder, run
-
-```ruby
-gem install bundler
-bundler install
-```
-
-With Git, make feature branch of OpenStudio-server develop, and name it "OS.x.y.z.sha"
-
-- In `server\lib\openstudio_server\version.rb`, update VERSION_EXT to `-OS.x.y.z.sha` (ex: `-OS.1.12.2.462ae9e746`).
-- In `CHANGELOG.md`, add new server and openstudio versions (ex: `Version 1.19.1-OS.1.12.2.462ae9e746`, `OpenStudio 1.12.2.462ae9e746`).
-- In `vagrant\chef\roles\openstudio.rb`, update version and version_revision (ex: `1.12.2`, `462ae9e746`)
-
-With Git, commit above files to new branch (Commit Message = `Bump OpenStudio version to OS.x.y.z.sha`)
-With Git, submit pull request
-
-In a command window:
-
-- In the top level of your OpenStudio-server folder, run `rake release`
+TBD
 
 Compatibility Matrix
 ====================
@@ -509,7 +489,7 @@ In the top level of your docker-openstudio folder, modify `Dockerfile`
 - Update OPENSTUDIO_VERSION with current version (X.Y.Z)
 - Update OPENSTUDIO_SHA with current SHA
 
-With Git, commit Dockerfile (Commit Message = Bump OpenStudio version to OS.x.y.z.sha), 
+With Git, create feature branch "release-X.Y.Z" and commit Dockerfile (Commit Message = Bump OpenStudio version to OS.x.y.z.sha), 
 
 Travis CI will build, test, and deploy the container. If there is an issue, the committer will receive an email with the error.
 
