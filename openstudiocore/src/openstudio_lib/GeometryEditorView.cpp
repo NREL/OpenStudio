@@ -501,6 +501,8 @@ document.head.appendChild(style);\n";
 
       // import current model content as library
       FloorplanJS floorplan;
+      floorplan.setUnits("si");
+
       model::FloorplanJSForwardTranslator ft;
       floorplan = ft.updateFloorplanJS(floorplan, m_model, false);
 
