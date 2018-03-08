@@ -147,8 +147,15 @@ namespace openstudio{
     /// ThreeJS file produced will always be in metric units, NorthAxis will not be applied during this conversion
     ThreeScene toThreeScene(bool openstudioFormat) const;
 
+    /// unit system, "ip" or "si"
+    std::string units() const;
+    bool setUnits(const std::string& units);
+    void resetUnits();
+
     /// degrees from North measured clockwise
     double northAxis() const;
+    bool setNorthAxis(double northAxis);
+    void resetNorthAxis();
 
     /// update object names in Floorplan with external data
     /// if object with same handle exists, name will be updated
