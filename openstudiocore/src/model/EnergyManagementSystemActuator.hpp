@@ -79,6 +79,14 @@ class MODEL_API EnergyManagementSystemActuator : public ModelObject {
 
   bool setActuatedComponentType(const std::string& actuatedComponentType);
 
+  //extensible fields
+
+  bool addHaystackTag(std::string tag, std::string value);
+  void removeHaystackTag(int groupIndex);
+  void removeAllHaystackTags();
+  std::vector< std::pair<std::string, std::string> > haystackTags();
+  boost::optional<unsigned int> numberofHaystackTags() const;
+
   //@}
   /** @name Other */
   //@{

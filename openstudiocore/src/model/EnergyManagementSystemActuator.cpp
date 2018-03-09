@@ -31,11 +31,15 @@
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "ModelExtensibleGroup.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_Actuator_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 namespace openstudio {
 namespace model {
@@ -115,6 +119,71 @@ namespace detail {
     return result;
   }
 
+  std::vector< std::pair<std::string, std::string> > EnergyManagementSystemActuator_Impl::haystackTags() {
+    std::vector< std::pair<std::string, std::string> > result;
+
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+
+    for (const auto & group : groups) {
+      boost::optional<std::string> tag = group.cast<WorkspaceExtensibleGroup>().getString(OS_EnergyManagementSystem_ActuatorExtensibleFields::HaystackTag);
+      boost::optional<std::string> value = group.cast<WorkspaceExtensibleGroup>().getString(OS_EnergyManagementSystem_ActuatorExtensibleFields::HaystackValue);
+
+      if (tag && value) {
+        result.push_back(std::make_pair(tag.get(), value.get()));
+      }
+    }
+
+    return result;
+  }
+
+  bool EnergyManagementSystemActuator_Impl::addHaystackTag(std::string tag, std::string value) {
+    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    bool temp = false;
+    bool ok = false;
+
+    temp = eg.setString(OS_EnergyManagementSystem_ActuatorExtensibleFields::HaystackTag, tag);
+    ok = eg.setString(OS_EnergyManagementSystem_ActuatorExtensibleFields::HaystackValue, value);
+    /*
+    if (temp && ok) {
+      setNumberofUserDefinedConstituents(num + 1);
+    }
+    else {
+      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+    }
+    */
+    return temp;
+  }
+
+  void EnergyManagementSystemActuator_Impl::removeAllHaystackTags() {
+    getObject<ModelObject>().clearExtensibleGroups();
+    //resetNumberofHaystackTags();
+  }
+
+  void EnergyManagementSystemActuator_Impl::removeHaystackTag(unsigned groupIndex) {
+    unsigned numberofDataPairs = numExtensibleGroups();
+    if (groupIndex < numberofDataPairs) {
+     // unsigned int num;
+      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+      /*
+      if (numberofUserDefinedConstituents()) {
+      num = numberofUserDefinedConstituents().get();
+      setNumberofUserDefinedConstituents(num - 1);
+      }
+      else {
+      setNumberofUserDefinedConstituents(numExtensibleGroups());
+      }
+      */
+    }
+  }
+
+  boost::optional<unsigned int> EnergyManagementSystemActuator_Impl::numberofHaystackTags() const {
+    boost::optional<unsigned int> value;
+    std::vector< std::pair<std::string, std::string> > tags;
+   // tags = haystackTags();
+    value = tags.size();
+    return value;
+  }
+
 } // detail
 
 EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string actuatedComponentType, const std::string actuatedComponentControlType)
@@ -187,6 +256,26 @@ bool EnergyManagementSystemActuator::setActuatedComponentControlType(const std::
 
 bool EnergyManagementSystemActuator::setActuatedComponentType(const std::string& actuatedComponentType) {
   return getImpl<detail::EnergyManagementSystemActuator_Impl>()->setActuatedComponentType(actuatedComponentType);
+}
+
+void EnergyManagementSystemActuator::removeAllHaystackTags() {
+   getImpl<detail::EnergyManagementSystemActuator_Impl>()->removeAllHaystackTags();
+}
+
+void EnergyManagementSystemActuator::removeHaystackTag(const int groupIndex) {
+  getImpl<detail::EnergyManagementSystemActuator_Impl>()->removeHaystackTag(groupIndex);
+}
+
+bool EnergyManagementSystemActuator::addHaystackTag(std::string tag, std::string value) {
+  return getImpl<detail::EnergyManagementSystemActuator_Impl>()->addHaystackTag(tag, value);
+}
+
+std::vector< std::pair<std::string, std::string> > EnergyManagementSystemActuator::haystackTags() {
+  return getImpl<detail::EnergyManagementSystemActuator_Impl>()->haystackTags();
+}
+
+boost::optional<unsigned int> EnergyManagementSystemActuator::numberofHaystackTags() const {
+  return getImpl<detail::EnergyManagementSystemActuator_Impl>()->numberofHaystackTags();
 }
 
 /// @cond

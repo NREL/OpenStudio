@@ -112,3 +112,36 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
 
 }
 
+TEST_F(ModelFixture, EMSActuator_Haystack)
+{
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  ThermalZone zone2(model);
+
+  // add fan
+  Schedule s = model.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan(model, s);
+  FanConstantVolume fan2(model, s);
+
+  // add actuator
+  std::string fanControlType = "Fan Pressure Rise";
+  std::string ComponentType = "Fan";
+  EnergyManagementSystemActuator fanActuator(fan, ComponentType, fanControlType);
+  EXPECT_EQ(fanControlType, fanActuator.actuatedComponentControlType());
+  EXPECT_EQ(ComponentType, fanActuator.actuatedComponentType());
+
+  //haystack
+  EXPECT_EQ(0, fanActuator.haystackTags().size());
+  fanActuator.addHaystackTag("dis","s:Constant Volume Fan");
+  EXPECT_EQ(1, fanActuator.haystackTags().size());
+  //EXPECT_EQ("s:Constant Volume Fan", fanActuator.haystackTags()[0]);
+  fanActuator.addHaystackTag("id","r:Constant Volume Fan");
+  EXPECT_EQ(2, fanActuator.haystackTags().size());
+  //EXPECT_EQ("r:Constant Volume Fan", fanActuator.haystackTags()[1]);
+  fanActuator.removeAllHaystackTags();
+  EXPECT_EQ(0, fanActuator.haystackTags().size());
+}
+

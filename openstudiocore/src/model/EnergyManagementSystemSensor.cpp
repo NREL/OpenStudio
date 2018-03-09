@@ -35,12 +35,15 @@
 #include "OutputMeter_Impl.hpp"
 
 #include "Model.hpp"
+#include "ModelExtensibleGroup.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_Sensor_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/UUID.hpp"
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 namespace openstudio {
 namespace model {
@@ -172,6 +175,71 @@ namespace detail {
     return boost::none;
   }
 
+  std::vector< std::pair<std::string, std::string> > EnergyManagementSystemSensor_Impl::haystackTags() {
+    std::vector< std::pair<std::string, std::string> > result;
+
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+
+    for (const auto & group : groups) {
+      boost::optional<std::string> tag = group.cast<WorkspaceExtensibleGroup>().getString(OS_EnergyManagementSystem_SensorExtensibleFields::HaystackTag);
+      boost::optional<std::string> value = group.cast<WorkspaceExtensibleGroup>().getString(OS_EnergyManagementSystem_SensorExtensibleFields::HaystackValue);
+
+      if (tag && value) {
+        result.push_back(std::make_pair(tag.get(), value.get()));
+      }
+    }
+
+    return result;
+  }
+
+  bool EnergyManagementSystemSensor_Impl::addHaystackTag(std::string tag, std::string value) {
+    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    bool temp = false;
+    bool ok = false;
+
+    temp = eg.setString(OS_EnergyManagementSystem_SensorExtensibleFields::HaystackTag, tag);
+    ok = eg.setString(OS_EnergyManagementSystem_SensorExtensibleFields::HaystackValue, value);
+    /*
+    if (temp && ok) {
+    setNumberofUserDefinedConstituents(num + 1);
+    }
+    else {
+    getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+    }
+    */
+    return temp;
+  }
+
+  void EnergyManagementSystemSensor_Impl::removeAllHaystackTags() {
+    getObject<ModelObject>().clearExtensibleGroups();
+    //resetNumberofHaystackTags();
+  }
+
+  void EnergyManagementSystemSensor_Impl::removeHaystackTag(unsigned groupIndex) {
+    unsigned numberofDataPairs = numExtensibleGroups();
+    if (groupIndex < numberofDataPairs) {
+     // unsigned int num;
+      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+      /*
+      if (numberofUserDefinedConstituents()) {
+        num = numberofUserDefinedConstituents().get();
+        setNumberofUserDefinedConstituents(num - 1);
+      }
+      else {
+        setNumberofUserDefinedConstituents(numExtensibleGroups());
+      }
+      */
+    }
+  }
+
+  boost::optional<unsigned int> EnergyManagementSystemSensor_Impl::numberofHaystackTags() const {
+    boost::optional<unsigned int> value;
+    std::vector< std::pair<std::string, std::string> > tags;
+    //tags = haystackTags();
+    value = tags.size();
+    return value;
+  }
+
 } // detail
 
 EnergyManagementSystemSensor::EnergyManagementSystemSensor(const Model& model, const OutputVariable& outvar)
@@ -252,6 +320,26 @@ bool EnergyManagementSystemSensor::setOutputMeter(const OutputMeter& outputMeter
 
 bool EnergyManagementSystemSensor::setOutputVariableOrMeterName(const std::string& outputVariableOrMeterName) {
   return getImpl<detail::EnergyManagementSystemSensor_Impl>()->setOutputVariableOrMeterName(outputVariableOrMeterName);
+}
+
+void EnergyManagementSystemSensor::removeAllHaystackTags() {
+   getImpl<detail::EnergyManagementSystemSensor_Impl>()->removeAllHaystackTags();
+}
+
+void EnergyManagementSystemSensor::removeHaystackTag(const int groupIndex) {
+  getImpl<detail::EnergyManagementSystemSensor_Impl>()->removeHaystackTag(groupIndex);
+}
+
+bool EnergyManagementSystemSensor::addHaystackTag(std::string tag, std::string value) {
+  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->addHaystackTag(tag, value);
+}
+
+std::vector< std::pair<std::string, std::string> > EnergyManagementSystemSensor::haystackTags() {
+  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->haystackTags();
+}
+
+boost::optional<unsigned int> EnergyManagementSystemSensor::numberofHaystackTags() const {
+  return getImpl<detail::EnergyManagementSystemSensor_Impl>()->numberofHaystackTags();
 }
 
 /// @cond

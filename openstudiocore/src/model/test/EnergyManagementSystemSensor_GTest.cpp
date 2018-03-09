@@ -175,5 +175,34 @@ TEST_F(ModelFixture, EMSSensorOutVar) {
   EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
 
 }
+TEST_F(ModelFixture, EMSSensor_Haystack)
+{
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  ThermalZone zone2(model);
+
+  // add Site Outdoor Air Drybulb Temperature
+  OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
+  EXPECT_EQ("*", siteOutdoorAirDrybulbTemperature.keyValue());
+  EXPECT_EQ("Site Outdoor Air Drybulb Temperature", siteOutdoorAirDrybulbTemperature.variableName());
+
+  // add sensor
+  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
+  OATdbSensor.setName("OATdb Sensor");
+  //haystack
+  EXPECT_EQ(0, OATdbSensor.haystackTags().size());
+  OATdbSensor.addHaystackTag("dis","s:Site Outdoor Air Drybulb Temperature");
+  EXPECT_EQ(1, OATdbSensor.haystackTags().size());
+  //EXPECT_EQ("s:Site Outdoor Air Drybulb Temperature", OATdbSensor.haystackTags()[0]);
+  OATdbSensor.addHaystackTag("id","r:Site Outdoor Air Drybulb Temperature");
+  EXPECT_EQ(2, OATdbSensor.haystackTags().size());
+  //EXPECT_EQ("r:Site Outdoor Air Drybulb Temperature", OATdbSensor.haystackTags()[1]);
+  OATdbSensor.removeAllHaystackTags();
+  EXPECT_EQ(0, OATdbSensor.haystackTags().size());
+
+}
 
 

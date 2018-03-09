@@ -89,6 +89,16 @@ class MODEL_API EnergyManagementSystemSensor : public ModelObject {
   bool setOutputVariable(const OutputVariable& outputVariable);
   bool setOutputMeter(const OutputMeter& outputMeter);
   bool setOutputVariableOrMeterName(const std::string& outputVariableOrMeterName);
+
+  //extensible fields
+
+  bool addHaystackTag(std::string tag, std::string value);
+  void removeHaystackTag(int groupIndex);
+  void removeAllHaystackTags();
+  std::vector< std::pair<std::string, std::string> > haystackTags();
+  boost::optional<unsigned int> numberofHaystackTags() const;
+
+
   //@}
   /** @name Other */
   //@{

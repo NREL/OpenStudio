@@ -28476,6 +28476,7 @@ OS:Output:EnergyManagementSystem,
 \group Energy Management System (EMS)
 
 OS:EnergyManagementSystem:Sensor,
+       \extensible:2
        \memo Declares EMS variable as a sensor
        \memo a list of output variables and meters that can be reported are available after a run on
        \memo the report (.rdd) or meter dictionary file (.mdd) if the Output:VariableDictionary
@@ -28494,11 +28495,17 @@ OS:EnergyManagementSystem:Sensor,
   A3, \field Output Variable or Output Meter Index Key Name
        \type alpha
        \note key name listed here will override key name in Output:Variable or Output:Meter
-  A4; \field Output Variable or Output Meter Name
+  A4, \field Output Variable or Output Meter Name
        \required-field
        \type alpha
+  A5, \field Haystack Tag
+       \begin-extensible
+       \type alpha
+  A6; \field Haystack Value
+       \type alpha         
 
 OS:EnergyManagementSystem:Actuator,
+       \extensible:2
        \memo Hardware portion of EMS used to set up actuators in the model
        \min-fields 4
   A1, \field Handle
@@ -28518,9 +28525,14 @@ OS:EnergyManagementSystem:Actuator,
   A4, \field Actuated Component Type
        \required-field
        \type alpha
-  A5; \field Actuated Component Control Type
+  A5, \field Actuated Component Control Type
        \required-field
        \type alpha
+  A6, \field Haystack Tag
+       \begin-extensible
+       \type alpha
+  A7; \field Haystack Value
+       \type alpha        
 
 OS:EnergyManagementSystem:ProgramCallingManager,
        \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
