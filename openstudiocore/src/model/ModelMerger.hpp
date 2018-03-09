@@ -43,6 +43,7 @@ namespace openstudio
   {
 
     class Space;
+    class ShadingSurfaceGroup;
     class ThermalZone;
     class SpaceType;
     class BuildingStory;
@@ -80,6 +81,7 @@ namespace openstudio
        REGISTER_LOGGER("openstudio.model.ModelMerger");
 
       void mergeSpace(Space& currentSpace, const Space& newSpace);
+      void mergeShadingSurfaceGroup(ShadingSurfaceGroup& currentGroup, const ShadingSurfaceGroup& newGroup);
       void mergeThermalZone(ThermalZone& currentThermalZone, const ThermalZone& newThermalZone);
       void mergeSpaceType(SpaceType& currentSpaceType, const SpaceType& newSpaceType);
       void mergeBuildingStory(BuildingStory& currentBuildingStory, const BuildingStory& newBuildingStory);
