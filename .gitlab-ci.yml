@@ -1,189 +1,139 @@
 stages:
-- buildDView
-- deployDView
-- buildOS
-- deployOS
+- build
+- deploy
+- testCTest
+- testResources
 
-buildDView:windows:
-  stage: buildDView
+build:windows:
+  stage: build
   only:
-  - triggers
+  # all "develop" should be changed to "triggers"
+  - develop
   tags:
   - windows
-  script:
-  - mkdir buildMeta
-  - cd buildMeta
-  - cmake -G "Visual Studio 12 2013 Win64" -DBUILD_DVIEW=ON -DCMAKE_BUILD_TYPE=Release ..
-  - cmake --build . --config Release --target DView
-  artifacts:
-    expire_in: 6 hrs
-    paths:
-      - buildMeta/DView-prefix/src/DView-install
-
-buildDView:mac:
-  stage: buildDView
-  only:
-  - triggers
-  tags:
-  - mac
-  script:
-  - mkdir buildMeta
-  - cd buildMeta
-  - cmake -DBUILD_DVIEW=ON -DCMAKE_BUILD_TYPE=Release ..
-  - make -j16 DView
-  artifacts:
-    expire_in: 6 hrs
-    paths:
-      - buildMeta/DView-prefix/src/DView-install
-
-buildDView:ubuntu:
-  stage: buildDView
-  only:
-  - triggers
-  tags:
-  - ubuntu
-  script:
-  - mkdir buildMeta
-  - cd buildMeta
-  #- cmake -DBUILD_DVIEW=ON -DCMAKE_BUILD_TYPE=Release ..
-  #- make -j16 DView
-  #retry: 1
-  #artifacts:
-  #  expire_in: 6 hrs
-  #  paths:
-  #    - buildMeta/DView-prefix/src/DView-install
-
-deployDView:windows:
-  stage: deployDView
-  only:
-  - triggers
-  tags:
-  - windows
-  dependencies:
-  - buildDView:windows
-  script:
-  - cd buildMeta/DView-prefix/src/DView-install/
-  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*DView.exe"
-
-deployDView:mac:
-  stage: deployDView
-  only:
-  - triggers
-  tags:
-  - mac
-  dependencies:
-  - buildDView:mac
-  script:
-  - cd buildMeta/DView-prefix/src/DView-install/DView.app/Contents/MacOS/
-  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "DView"
-
-deployDView:ubuntu:
-  stage: deployDView
-  only:
-  - triggers
-  tags:
-  - ubuntu
-  dependencies:
-  - buildDView:ubuntu
-  script:
-  - ls
-  #- aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "DView.???"  
-
-buildOS:windows:
-  stage: buildOS
-  only:
-  - triggers
-  tags:
-  - windows
-  dependencies:
-  - deployDView:windows
   script:
   - mkdir build
   - cd build
-  - cmake -G "Visual Studio 12 2013 Win64" -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=OFF -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF -DCPACK_SOURCE_RPM=OFF -DCPACK_SOURCE_TBZ2=OFF -DCPACK_SOURCE_TGZ=0 -DCPACK_SOURCE_TXZ=0 -DCPACK_SOURCE_TZ=0 -DCPACK_SOURCE_ZIP=0 ../openstudiocore
+  - cmake -G "Visual Studio 12 2013 Win64" -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF  ../openstudiocore
   - cmake --build . --config Release --target ALL_BUILD
   - cmake --build . --config Release --target ALL_BUILD
   - cmake --build . --config Release --target PACKAGE
-  retry: 1
   artifacts:
     expire_in: 6 hrs
     paths:
-      - build/OpenStudio-*.exe
- 
-buildOS:mac:
-  stage: buildOS
+    - build/OpenStudio-*.exe
+    - CPackConfig.cmake
+    - CPackSourceConfig.cmake
+    - CTestTestfile.cmake
+    - OpenStudioCoreConfig.cmake
+    - build/CTestTestfile.cmake
+    - build/csharp/
+    - build/embedded/
+    - build/pat/
+    - build/products/
+    - build/resources/
+    - build/ruby/
+    - build/sketchup_plugin/
+    - build/src/
+
+build:mac:
+  stage: build
   only:
-  - triggers
+  - develop
   tags:
   - mac
-  dependencies:
-  - deployDView:mac
   script:
   - mkdir build
   - cd build
   - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
   - make -j16 package
   - cd _CPack_Packages/Darwin/IFW
-  - ls
   - zip -r `ls -1 | grep OpenStudio-*.app | sed -e 's/\.app$//'`.zip OpenStudio-*.app
-  retry: 1
   artifacts:
     expire_in: 6 hrs
     paths:
       - build/_CPack_Packages/Darwin/IFW/OpenStudio-*.zip
 
-buildOS:ubuntu:
-  stage: buildOS
+build:ubuntu:
+  stage: build
   only:
-  - triggers
+  - develop
   tags:
   - ubuntu
-  dependencies:
-  - deployDView:ubuntu
   script:
   - mkdir build
   - cd build
   - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_DVIEW=OFF -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=ON -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
   - make -j16 package
-  retry: 1
   artifacts:
     expire_in: 6 hrs
     paths:
       - build/OpenStudio-*.deb
 
-deployOS:windows:
-  stage: deployOS
+deploy:windows:
+  stage: deploy
   only:
-  - triggers
+  - develop
   tags:
   - windows
   dependencies:
-  - buildOS:windows
+  - build:windows
   script:
   - cd build
   - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.exe"
 
-deployOS:mac:
-  stage: deployOS
+deploy:mac:
+  stage: deploy
   only:
-  - triggers
+  - develop
   tags:
   - mac
   dependencies:
-  - buildOS:mac
+  - build:mac
   script:
   - cd build/_CPack_Packages/Darwin/IFW
   - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.zip"
 
-deployOS:ubuntu:
-  stage: deployOS
+deploy:ubuntu:
+  stage: deploy
   only:
-  - triggers
+  - develop
   tags:
   - ubuntu
   dependencies:
-  - buildOS:ubuntu
+  - build:ubuntu
   script:
   - cd build
-  - ls
   - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.deb"  
+
+testCTest:windows:
+  stage: testCTest
+  only:
+  - develop
+  tags:
+  - windows
+  dependencies:
+  - build:windows
+  script:
+  - cd build
+  - CTest
+  
+testResources:windows:
+  stage: testResources
+  only:
+  - develop
+  tags:
+  - windows
+  dependencies:
+  - build:windows
+  script:
+  - "rmdir c:\\\\openstudio\\ /s /q"
+  - cd build
+  - xcopy *.exe win.exe*
+  - win.exe --script install.qs
+  - cd c://openstudio/
+  - git clone https://github.com/NREL/OpenStudio-resources.git
+  - cd bin/
+  - openstudio.exe ../OpenStudio-resources/model_tests.rb"
+  allow_failure: true # To allow for CTest failures above
+
