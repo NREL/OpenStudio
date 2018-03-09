@@ -2,10 +2,11 @@
 !- Supported By : To-Be-One Technology Co, Ltd.
 !- Created Date : 22/05/2015
 !- Modified By  : Narongsak Mala (narongsak.mala@gmail.com)
-!- Modified Date : 03/03/2017
+!- Modified Date : 09/03/2017
 !- Remark       : This version was provided by AJ.Mok
 !-----------------------------------------------------------------
 !- Revision         Details
+!- 1.0.9-001        edit construction library.
 !- 1.0.9-000        - Revise default construction library.
 !-                  - Revise material names.
 !- 1.0.8-000        Revise Material names.
@@ -27630,8 +27631,9 @@ OS:Construction,
   {dbd32eea-87cd-430e-b5ab-cec0e63d8f09}, !- Handle
   24 Thai Interior Floor,                 !- Name
   ,                                       !- Surface Rendering Name
-  {7083ece6-4a20-4db1-b536-5bd37693fe23}, !- Layer 1
-  {9128b6e7-f71b-4f97-8209-6f95a5104f01}; !- Layer 2
+  {abc74710-066f-4760-b2d3-e76b2e71133e}, !- Layer 1
+  {2a614ed8-fa53-404f-bed4-f1893e6c32d5}, !- Layer 2
+  {9128b6e7-f71b-4f97-8209-6f95a5104f01}; !- Layer 3
 
 OS:Construction,
   {c029d522-6b32-4296-9e2b-ca7dcc7344e3}, !- Handle
@@ -27663,7 +27665,9 @@ OS:Construction,
   {b77c9f93-2ebc-435b-873c-f94c568984b3}, !- Handle
   22 Thai Interior Ceiling,               !- Name
   ,                                       !- Surface Rendering Name
-  {abc74710-066f-4760-b2d3-e76b2e71133e}; !- Layer 1
+  {9128b6e7-f71b-4f97-8209-6f95a5104f01}, !- Layer 1
+  {2a614ed8-fa53-404f-bed4-f1893e6c32d5}, !- Layer 2
+  {abc74710-066f-4760-b2d3-e76b2e71133e}; !- Layer 3
 
 OS:Construction,
   {54350fb9-ca50-4e8b-8123-d7cf89bbc975}, !- Handle
@@ -28169,22 +28173,6 @@ OS:StandardsInformation:Material,
   {bd3df6fd-90fe-4254-8783-419f4a715ec8}, !- Handle
   {0ec0855a-b7e9-462a-9cd2-c624177e112f}; !- Material Name
 
-OS:StandardsInformation:Material,
-  {17eded5e-292f-4870-806d-0060e2052673}, !- Handle
-  {41e6761f-e498-4e5f-82c2-cc99666f98dc}; !- Material Name
-
-OS:StandardsInformation:Construction,
-  {9851bba1-5ad0-486e-8eb4-9b77f0ae2409}, !- Handle
-  {b77c9f93-2ebc-435b-873c-f94c568984b3}; !- Construction Name
-
-OS:StandardsInformation:Construction,
-  {d7840029-f00d-45ca-a514-7b7a64eb8812}, !- Handle
-  {dbd32eea-87cd-430e-b5ab-cec0e63d8f09}; !- Construction Name
-
-OS:StandardsInformation:Construction,
-  {31831e74-1210-4045-af64-8d1c97c2d3b3}, !- Handle
-  {f03e81b9-74cf-4f8c-8e9d-fa87db933455}; !- Construction Name
-
 OS:Construction,
   {00d1c146-ab95-4917-a4b2-e6e838c13d2a}, !- Handle
   04 Thai Glass Curtain Wall with Insulation, !- Name
@@ -28327,14 +28315,30 @@ OS:StandardsInformation:Construction,
   ;                                       !- Fenestration Gas Fill
 
 OS:StandardsInformation:Construction,
-  {9b2d4be0-1624-4fa8-af6a-26aeb1ec0f0b}, !- Handle
+  {6abec1d9-a846-4e4a-a0ee-0ea39fa05b07}, !- Handle
+  {3a5b2241-fd2e-45c2-8b1f-51500cda1b32}; !- Construction Name
+
+OS:StandardsInformation:Material,
+  {81dade1f-44e4-4abd-81f8-ffec80acac1f}, !- Handle
+  {41e6761f-e498-4e5f-82c2-cc99666f98dc}; !- Material Name
+
+OS:StandardsInformation:Construction,
+  {12d2138b-66d7-4d26-9a4b-a060ded10ddf}, !- Handle
   {b77c9f93-2ebc-435b-873c-f94c568984b3}; !- Construction Name
 
 OS:StandardsInformation:Construction,
-  {28fb2232-47fb-4052-b292-aced934ba8fb}, !- Handle
+  {3670026d-90f8-4c75-bcdd-de2b575c9105}, !- Handle
   {dbd32eea-87cd-430e-b5ab-cec0e63d8f09}; !- Construction Name
 
 OS:StandardsInformation:Construction,
-  {bcbde06c-41c9-4693-bd1a-4dfae2ff4c35}, !- Handle
-  {3a5b2241-fd2e-45c2-8b1f-51500cda1b32}; !- Construction Name
+  {f6c96615-1404-4ba3-a42a-32dc90eae976}, !- Handle
+  {f03e81b9-74cf-4f8c-8e9d-fa87db933455}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {8d45423d-504d-474f-a8b0-48e252734dcb}, !- Handle
+  {b77c9f93-2ebc-435b-873c-f94c568984b3}; !- Construction Name
+
+OS:StandardsInformation:Construction,
+  {0291012c-01f9-48cc-ab56-a742e26425c3}, !- Handle
+  {dbd32eea-87cd-430e-b5ab-cec0e63d8f09}; !- Construction Name
 

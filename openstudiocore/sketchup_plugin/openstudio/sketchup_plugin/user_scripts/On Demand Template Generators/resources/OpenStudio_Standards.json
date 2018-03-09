@@ -29016,11 +29016,7 @@
       "construction_standard": "CEC Title24-2013",
       "intended_surface_type": "ExteriorWall",
       "materials": [
-        "124 ปูนซีเมนต์ หนา 5 ซม.",
-        "037 คอนกรีต หนา 10 ซม.",
-        "TH : Roof Air Space Resistance 0 Degree 100mm Lo",
-        "076 ฉนวนใยแก้วที่ได้รับฉลากประสิทธิภาพสูง Stay Cool 3\" Premium",
-        "159 แผ่นยิบซัมตราช้างชนิดธรรมดา หนา 9 มม."
+        "037 คอนกรีต หนา 10 ซม."
       ],
       "standards_construction_type": "Mass"
     },
@@ -29029,6 +29025,8 @@
       "construction_standard": null,
       "intended_surface_type": "InteriorCeiling",
       "materials": [
+        "037 คอนกรีต หนา 10 ซม.",
+        "TH : Roof Air Space Resistance 0 Degree 100mm Hi",
         "163 แผ่นยิปซั่มบอร์ด หนา 9 มม."
       ],
       "standards_construction_type": null
@@ -29038,7 +29036,8 @@
       "construction_standard": null,
       "intended_surface_type": "InteriorFloor",
       "materials": [
-        "198 ไลโนเลียม (พรมน้ำมัน) หนา 3 มม.",
+        "163 แผ่นยิปซั่มบอร์ด หนา 9 มม.",
+        "TH : Roof Air Space Resistance 0 Degree 100mm Hi",
         "037 คอนกรีต หนา 10 ซม."
       ],
       "standards_construction_type": null
@@ -29086,9 +29085,11 @@
       "construction_standard": null,
       "intended_surface_type": "ExteriorRoof",
       "materials": [
-        "M11 100mm lightweight concrete",
-        "F16 Acoustic tile",
-        "F05 Ceiling air space resistance"
+        "124 ปูนซีเมนต์ หนา 5 ซม.",
+        "037 คอนกรีต หนา 10 ซม.",
+        "TH : Roof Air Space Resistance 0 Degree 100mm Lo",
+        "076 ฉนวนใยแก้วที่ได้รับฉลากประสิทธิภาพสูง Stay Cool 3\" Premium",
+        "159 แผ่นยิบซัมตราช้างชนิดธรรมดา หนา 9 มม."
       ],
       "standards_construction_type": null
     },
@@ -29097,7 +29098,7 @@
       "construction_standard": null,
       "intended_surface_type": "ExteriorWindow",
       "materials": [
-        "Th-Clear Float Glass 6 mm"
+        "Th-Ocean Green Float Glass 6 mm"
       ],
       "standards_construction_type": null
     },
@@ -30448,7 +30449,37 @@
       "visible_transmittance": null,
       "visible_transmittance_at_normal_incidence": null
     },
+    "TH : Roof Air Space Resistance 0 Degree 100mm Hi": {
+      "is_Thai_library": true,
+      "back_side_infrared_hemispherical_emissivity": null,
+      "back_side_solar_relectance_at_normal_incidence": null,
+      "back_side_visible_relectance_at_normal_incidence": null,
+      "conductivity": 46.2231453234399,
+      "density": null,
+      "dirt_correction_factor_for_solar_and_visible_transmittance": null,
+      "front_side_infrared_hemispherical_emissivity": null,
+      "front_side_solar_reflectance_at_normal_incidence": null,
+      "front_side_visible_reflectance_at_normal_incidence": null,
+      "gas_type": null,
+      "infrared_transmittance_at_normal_incidence": null,
+      "material_type": "AirGap",
+      "optical_data_type": null,
+      "resistance": 0.174000,
+      "roughness": null,
+      "solar_absorptance": null,
+      "solar_diffusing": null,
+      "solar_heat_gain_coefficient": null,
+      "solar_transmittance_at_normal_incidence": null,
+      "specific_heat": null,
+      "thermal_absorptance": null,
+      "thickness": null,
+      "u_factor": null,
+      "visible_absorptance": null,
+      "visible_transmittance": null,
+      "visible_transmittance_at_normal_incidence": null
+    },
     "TH : Roof Air Space Resistance 0 Degree 100mm Lo": {
+      "is_Thai_library": true,
       "back_side_infrared_hemispherical_emissivity": null,
       "back_side_solar_relectance_at_normal_incidence": null,
       "back_side_visible_relectance_at_normal_incidence": null,
@@ -30477,6 +30508,7 @@
       "visible_transmittance_at_normal_incidence": null
     },
     "TH : Wall Air Space Resistance 100 mm Hi": {
+      "is_Thai_library": true,
       "back_side_infrared_hemispherical_emissivity": null,
       "back_side_solar_relectance_at_normal_incidence": null,
       "back_side_visible_relectance_at_normal_incidence": null,
