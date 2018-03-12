@@ -172,6 +172,9 @@ set(${target_name}_src
   AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp
   AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp
   AirTerminalSingleDuctConstantVolumeFourPipeInduction.cpp
+  AirTerminalSingleDuctConstantVolumeFourPipeBeam.hpp
+  AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeFourPipeBeam.cpp
   AirTerminalSingleDuctConstantVolumeReheat.hpp
   AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp
   AirTerminalSingleDuctConstantVolumeReheat.cpp
@@ -308,18 +311,21 @@ set(${target_name}_src
   CoilCoolingDXVariableRefrigerantFlow.hpp
   CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
   CoilCoolingDXVariableRefrigerantFlow.cpp
-  CoilCoolingLowTempRadiantConstFlow.hpp
-  CoilCoolingLowTempRadiantConstFlow_Impl.hpp
-  CoilCoolingLowTempRadiantConstFlow.cpp
-  CoilCoolingLowTempRadiantVarFlow.hpp
-  CoilCoolingLowTempRadiantVarFlow_Impl.hpp
-  CoilCoolingLowTempRadiantVarFlow.cpp
   CoilCoolingDXVariableSpeed.hpp
   CoilCoolingDXVariableSpeed_Impl.hpp
   CoilCoolingDXVariableSpeed.cpp
   CoilCoolingDXVariableSpeedSpeedData.hpp
   CoilCoolingDXVariableSpeedSpeedData_Impl.hpp
   CoilCoolingDXVariableSpeedSpeedData.cpp
+  CoilCoolingFourPipeBeam.hpp
+  CoilCoolingFourPipeBeam_Impl.hpp
+  CoilCoolingFourPipeBeam.cpp
+  CoilCoolingLowTempRadiantConstFlow.hpp
+  CoilCoolingLowTempRadiantConstFlow_Impl.hpp
+  CoilCoolingLowTempRadiantConstFlow.cpp
+  CoilCoolingLowTempRadiantVarFlow.hpp
+  CoilCoolingLowTempRadiantVarFlow_Impl.hpp
+  CoilCoolingLowTempRadiantVarFlow.cpp
   CoilCoolingWater.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWater.cpp
@@ -350,6 +356,9 @@ set(${target_name}_src
   CoilHeatingElectric.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingElectric.cpp
+  CoilHeatingFourPipeBeam.hpp
+  CoilHeatingFourPipeBeam_Impl.hpp
+  CoilHeatingFourPipeBeam.cpp
   CoilHeatingGas.hpp
   CoilHeatingGas_Impl.hpp
   CoilHeatingGas.cpp
@@ -1640,6 +1649,7 @@ set(${target_name}_test_src
   test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
   test/AirTerminalSingleDuctInletSideMixer_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeFourPipeInduction_GTest.cpp
+  test/AirTerminalSingleDuctConstantVolumeFourPipeBeam_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
@@ -1684,6 +1694,7 @@ set(${target_name}_test_src
   test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   test/CoilCoolingDXVariableSpeed_GTest.cpp
   test/CoilCoolingDXVariableSpeedSpeedData_GTest.cpp
+  test/CoilCoolingFourPipeBeam_GTest.cpp
   test/CoilCoolingLowTempRadiantConstFlow_GTest.cpp
   test/CoilCoolingLowTempRadiantVarFlow_GTest.cpp
   test/CoilCoolingWater_GTest.cpp
@@ -1697,6 +1708,7 @@ set(${target_name}_test_src
   test/CoilHeatingDXVariableSpeed_GTest.cpp
   test/CoilHeatingDXVariableSpeedSpeedData_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
+  test/CoilHeatingFourPipeBeam_GTest.cpp
   test/CoilHeatingGas_GTest.cpp
   test/CoilHeatingGasMultiStage_GTest.cpp
   test/CoilHeatingLowTempRadiantConstFlow_GTest.cpp
