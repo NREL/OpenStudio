@@ -199,8 +199,11 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   // remove orphan surfaces
   for (PlanarSurface planarSurface : model.getModelObjects<PlanarSurface>()){
     if (!planarSurface.planarSurfaceGroup()){
-      LOG(Warn, planarSurface.briefDescription() << " is not associated with a PlanarSurfaceGroup, it will not be translated.");
-      planarSurface.remove();
+      // a sub surface may have already been removed if the parent surface was removed
+      if (!planarSurface.handle().isNull()){
+        LOG(Warn, planarSurface.briefDescription() << " is not associated with a PlanarSurfaceGroup, it will not be translated.");
+        planarSurface.remove();
+      }
     }
   }
 
