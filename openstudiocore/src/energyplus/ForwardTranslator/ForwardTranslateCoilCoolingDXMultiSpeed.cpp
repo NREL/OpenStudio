@@ -173,7 +173,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXMultiSpeed( 
 
     // RatedEvaporatorFanPowerPerVolumeFlowRate
     if( (value = stage.ratedEvaporatorFanPowerPerVolumeFlowRate()) ) {
-      eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::RatedEvaporatorFanPowerPerVolumeFlowRate,value.get());
+      eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedRatedEvaporatorFanPowerPerVolumeFlowRate,value.get());
     }
 
     // SpeedTotalCoolingCapacityFunctionofTemperatureCurveName
