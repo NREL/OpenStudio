@@ -10536,7 +10536,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
        \type object-list
        \object-list ZoneMixers
 
-AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam,
+OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam,
        \memo Central air system terminal unit, single duct, constant volume,
        \memo with heating and/or cooling.
        \memo Operates as two-pipe unit if heating or cooling water is omitted.
@@ -10547,9 +10547,7 @@ AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam,
   A2 , \field Name
        \type alpha
        \required-field
-       \reference AirTerminalUnitNames
-       \reference-class-name validBranchEquipmentTypes
-       \reference validBranchEquipmentNames
+       \reference ConnectionObject
   A3 , \field Primary Air Availability Schedule Name
        \note Primary air is supplied by central air handling unit and must be on for heating or cooling.
        \note Schedule value > 0 means the primary air supply is available.
@@ -10570,26 +10568,32 @@ AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam,
        \object-list ScheduleNames
   A6 , \field Primary Air Inlet Node Name
        \note Name of the air system node for primary supply air entering the air distribution unit.
-       \type node
+       \type object-list
+       \object-list ConnectionNames
        \required-field
   A7 , \field Primary Air Outlet Node Name
        \note Name of the air system node for primary supply air leaving the air distribution unit and entering the zone.
-       \type node
+       \type object-list
+       \object-list ConnectionNames
        \required-field
   A8 , \field Chilled Water Inlet Node Name
        \note Name of the plant system node for chilled water entering the beam.
        \note The two chilled water nodes can (only) be omitted to model a two-pipe heating only beam.
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A9 , \field Chilled Water Outlet Node Name
        \note Name of the plant system node for chilled water leaving the beam.
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A10, \field Hot Water Inlet Node Name
        \note Name of the plant system node for hot water entering the beam.
        \note The two hot water nodes can (only) be omitted to model a two-pipe cooling-only beam.
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A11, \field Hot Water Outlet Node Name
        \note Name of the plant system node for hot water leaving the beam.
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   N1 , \field Design Primary Air Volume Flow Rate
        \type real
        \units m3/s
@@ -12153,7 +12157,8 @@ OS:Chiller:Electric:EIR,
        \note This optional field provides control over the heat recovery
        \note Using this triggers a model more suited to series bundle and chillers with higher temperature heat recovery
        \note If this field is not used, the bundles are modeled as being in parallel
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A17; \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
