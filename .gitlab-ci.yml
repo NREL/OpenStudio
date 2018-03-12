@@ -18,6 +18,7 @@ build:windows:
   - cmake --build . --config Release --target ALL_BUILD
   - cmake --build . --config Release --target ALL_BUILD
   - cmake --build . --config Release --target PACKAGE
+  allow_failure: true
   artifacts:
     expire_in: 6 hrs
     paths:
@@ -45,10 +46,11 @@ build:mac:
   script:
   - mkdir build
   - cd build
-  - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
+  - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
   - make -j16 package
   - cd _CPack_Packages/Darwin/IFW
   - zip -r `ls -1 | grep OpenStudio-*.app | sed -e 's/\.app$//'`.zip OpenStudio-*.app
+  allow_failure: true
   artifacts:
     expire_in: 6 hrs
     paths:
@@ -65,6 +67,7 @@ build:ubuntu:
   - cd build
   - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_DVIEW=OFF -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=ON -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
   - make -j16 package
+  allow_failure: true
   artifacts:
     expire_in: 6 hrs
     paths:
@@ -81,6 +84,7 @@ deploy:windows:
   script:
   - cd build
   - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.exe"
+  allow_failure: true
 
 deploy:mac:
   stage: deploy
@@ -93,6 +97,7 @@ deploy:mac:
   script:
   - cd build/_CPack_Packages/Darwin/IFW
   - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.zip"
+  allow_failure: true
 
 deploy:ubuntu:
   stage: deploy
@@ -105,7 +110,8 @@ deploy:ubuntu:
   script:
   - cd build
   - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.deb"  
-
+  allow_failure: true
+  
 testCTest:windows:
   stage: testCTest
   only:
@@ -117,7 +123,8 @@ testCTest:windows:
   script:
   - cd build
   - CTest
-  
+  allow_failure: true
+ 
 testResources:windows:
   stage: testResources
   only:
