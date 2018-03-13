@@ -70,7 +70,7 @@ namespace detail {
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     virtual ModelObject clone(Model model) const override;
 
