@@ -35,12 +35,9 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Connection;
-class Connection;
-class UniVariateCurves;
-class UniVariateCurves;
-class UniVariateCurves;
+class Node;
+class Curve;
+class AirTerminalSingleDuctConstantVolumeFourPipeBeam;
 
 namespace detail {
 
@@ -72,81 +69,67 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual unsigned inletPort() override;
+
+    virtual unsigned outletPort() override;
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    virtual boost::optional<StraightComponent> containingStraightComponent() const override;
+
+    virtual bool addToNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> hotWaterInletNode() const;
+    boost::optional<Node> hotWaterInletNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> hotWaterOutletNode() const;
+    boost::optional<Node> hotWaterOutletNode() const;
 
     double beamRatedHeatingCapacityperBeamLength() const;
-
     bool isBeamRatedHeatingCapacityperBeamLengthDefaulted() const;
 
     double beamRatedHeatingRoomAirHotWaterTemperatureDifference() const;
-
     bool isBeamRatedHeatingRoomAirHotWaterTemperatureDifferenceDefaulted() const;
 
     double beamRatedHotWaterVolumeFlowRateperBeamLength() const;
-
     bool isBeamRatedHotWaterVolumeFlowRateperBeamLengthDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
-    boost::optional<UniVariateCurves> beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const;
+    boost::optional<Curve> beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
-    boost::optional<UniVariateCurves> beamHeatingCapacityAirFlowModificationFactorCurve() const;
+    boost::optional<Curve> beamHeatingCapacityAirFlowModificationFactorCurve() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
-    boost::optional<UniVariateCurves> beamHeatingCapacityHotWaterFlowModificationFactorCurve() const;
+    boost::optional<Curve> beamHeatingCapacityHotWaterFlowModificationFactorCurve() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setHotWaterInletNode(const Connection& connection);
-
-    void resetHotWaterInletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setHotWaterOutletNode(const Connection& connection);
-
-    void resetHotWaterOutletNode();
-
     bool setBeamRatedHeatingCapacityperBeamLength(double beamRatedHeatingCapacityperBeamLength);
-
     void resetBeamRatedHeatingCapacityperBeamLength();
 
     bool setBeamRatedHeatingRoomAirHotWaterTemperatureDifference(double beamRatedHeatingRoomAirHotWaterTemperatureDifference);
-
     void resetBeamRatedHeatingRoomAirHotWaterTemperatureDifference();
 
     bool setBeamRatedHotWaterVolumeFlowRateperBeamLength(double beamRatedHotWaterVolumeFlowRateperBeamLength);
-
     void resetBeamRatedHotWaterVolumeFlowRateperBeamLength();
 
-    // TODO: Check argument type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
-    bool setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(const UniVariateCurves& uniVariateCurves);
+    bool setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(const Curve& curve);
+    // void resetBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve();
 
-    void resetBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve();
+    bool setBeamHeatingCapacityAirFlowModificationFactorCurve(const Curve& curve);
+    // void resetBeamHeatingCapacityAirFlowModificationFactorCurve();
 
-    // TODO: Check argument type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
-    bool setBeamHeatingCapacityAirFlowModificationFactorCurve(const UniVariateCurves& uniVariateCurves);
-
-    void resetBeamHeatingCapacityAirFlowModificationFactorCurve();
-
-    // TODO: Check argument type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
-    bool setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(const UniVariateCurves& uniVariateCurves);
-
-    void resetBeamHeatingCapacityHotWaterFlowModificationFactorCurve();
+    bool setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(const Curve& curve);
+    // void resetBeamHeatingCapacityHotWaterFlowModificationFactorCurve();
 
     //@}
     /** @name Other */
     //@{
+
+    /* Convenience function to return the parent AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam */
+    boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam> airTerminalSingleDuctConstantVolumeFourPipeBeam() const;
 
     //@}
    protected:

@@ -29,17 +29,14 @@
 #include "CoilHeatingFourPipeBeam.hpp"
 #include "CoilHeatingFourPipeBeam_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "UniVariateCurves.hpp"
-#include "UniVariateCurves_Impl.hpp"
-#include "UniVariateCurves.hpp"
-#include "UniVariateCurves_Impl.hpp"
-#include "UniVariateCurves.hpp"
-#include "UniVariateCurves_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "Model.hpp"
+#include "PlantLoop.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeBeam.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_Heating_FourPipeBeam_FieldEnums.hxx>
@@ -75,10 +72,11 @@ namespace detail {
     : StraightComponent_Impl(other,model,keepHandle)
   {}
 
-  const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableNames() const
+const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      // None: all in parent AirTerminalSingleDuctConstantVolumeFourPipeBeam
     }
     return result;
   }
@@ -87,13 +85,90 @@ namespace detail {
     return CoilHeatingFourPipeBeam::iddObjectType();
   }
 
-  boost::optional<Connection> CoilHeatingFourPipeBeam_Impl::hotWaterInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Coil_Heating_FourPipeBeamFields::HotWaterInletNodeName);
+  unsigned CoilHeatingFourPipeBeam_Impl::inletPort()
+  {
+    return OS_Coil_Heating_FourPipeBeamFields::HotWaterInletNodeName;
   }
 
-  boost::optional<Connection> CoilHeatingFourPipeBeam_Impl::hotWaterOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Coil_Heating_FourPipeBeamFields::HotWaterOutletNodeName);
+  unsigned CoilHeatingFourPipeBeam_Impl::outletPort()
+  {
+    return OS_Coil_Heating_FourPipeBeamFields::HotWaterOutletNodeName;
   }
+
+
+  // contaningHVACComponent is important: used for airLoopHVAC::addBranchForZone to connect the coil to the right loop
+  boost::optional<HVACComponent> CoilHeatingFourPipeBeam_Impl::containingHVACComponent() const
+  {
+    //return this->airTerminalSingleDuctConstantVolumeFourPipeBeam();
+    std::vector<AirTerminalSingleDuctConstantVolumeFourPipeBeam> atuFourPipeBeams;
+
+    atuFourPipeBeams = this->model().getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+
+    for( const auto & elem : atuFourPipeBeams )
+    {
+      if( boost::optional<CoilHeatingFourPipeBeam> coil = elem.heatingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return elem;
+        }
+      }
+    }
+    return boost::none;
+
+  }
+
+  boost::optional<StraightComponent> CoilHeatingFourPipeBeam_Impl::containingStraightComponent() const
+  {
+    //return this->airTerminalSingleDuctConstantVolumeFourPipeBeam();
+    std::vector<AirTerminalSingleDuctConstantVolumeFourPipeBeam> atuFourPipeBeams;
+
+    atuFourPipeBeams = this->model().getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+
+    for( const auto & elem : atuFourPipeBeams )
+    {
+      if( boost::optional<CoilHeatingFourPipeBeam> coil = elem.heatingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return elem;
+        }
+      }
+    }
+    return boost::none;
+
+  }
+
+  /* Only allow connection on the demand side of a plantLoop */
+  bool CoilHeatingFourPipeBeam_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
+    {
+      if( plant->demandComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
+    }
+
+    return false;
+  }
+
+
+
+  /* Nodes */
+
+  boost::optional<Node> CoilHeatingFourPipeBeam_Impl::hotWaterInletNode() const {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Coil_Heating_FourPipeBeamFields::HotWaterInletNodeName);
+  }
+
+  boost::optional<Node> CoilHeatingFourPipeBeam_Impl::hotWaterOutletNode() const {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Coil_Heating_FourPipeBeamFields::HotWaterOutletNodeName);
+  }
+
+
+  /* double with default fields */
+
+  // Beam Rated Heating Capacity per Beam Length
 
   double CoilHeatingFourPipeBeam_Impl::beamRatedHeatingCapacityperBeamLength() const {
     boost::optional<double> value = getDouble(OS_Coil_Heating_FourPipeBeamFields::BeamRatedHeatingCapacityperBeamLength,true);
@@ -103,58 +178,6 @@ namespace detail {
 
   bool CoilHeatingFourPipeBeam_Impl::isBeamRatedHeatingCapacityperBeamLengthDefaulted() const {
     return isEmpty(OS_Coil_Heating_FourPipeBeamFields::BeamRatedHeatingCapacityperBeamLength);
-  }
-
-  double CoilHeatingFourPipeBeam_Impl::beamRatedHeatingRoomAirHotWaterTemperatureDifference() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_FourPipeBeamFields::BeamRatedHeatingRoomAirHotWaterTemperatureDifference,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool CoilHeatingFourPipeBeam_Impl::isBeamRatedHeatingRoomAirHotWaterTemperatureDifferenceDefaulted() const {
-    return isEmpty(OS_Coil_Heating_FourPipeBeamFields::BeamRatedHeatingRoomAirHotWaterTemperatureDifference);
-  }
-
-  double CoilHeatingFourPipeBeam_Impl::beamRatedHotWaterVolumeFlowRateperBeamLength() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_FourPipeBeamFields::BeamRatedHotWaterVolumeFlowRateperBeamLength,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool CoilHeatingFourPipeBeam_Impl::isBeamRatedHotWaterVolumeFlowRateperBeamLengthDefaulted() const {
-    return isEmpty(OS_Coil_Heating_FourPipeBeamFields::BeamRatedHotWaterVolumeFlowRateperBeamLength);
-  }
-
-  boost::optional<UniVariateCurves> CoilHeatingFourPipeBeam_Impl::beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<UniVariateCurves>(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityTemperatureDifferenceModificationFactorCurveName);
-  }
-
-  boost::optional<UniVariateCurves> CoilHeatingFourPipeBeam_Impl::beamHeatingCapacityAirFlowModificationFactorCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<UniVariateCurves>(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityAirFlowModificationFactorCurveName);
-  }
-
-  boost::optional<UniVariateCurves> CoilHeatingFourPipeBeam_Impl::beamHeatingCapacityHotWaterFlowModificationFactorCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<UniVariateCurves>(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityHotWaterFlowModificationFactorCurveName);
-  }
-
-  bool CoilHeatingFourPipeBeam_Impl::setHotWaterInletNode(const Connection& connection) {
-    bool result = setPointer(OS_Coil_Heating_FourPipeBeamFields::HotWaterInletNodeName, connection.handle());
-    return result;
-  }
-
-  void CoilHeatingFourPipeBeam_Impl::resetHotWaterInletNode() {
-    bool result = setString(OS_Coil_Heating_FourPipeBeamFields::HotWaterInletNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool CoilHeatingFourPipeBeam_Impl::setHotWaterOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_Coil_Heating_FourPipeBeamFields::HotWaterOutletNodeName, connection.handle());
-    return result;
-  }
-
-  void CoilHeatingFourPipeBeam_Impl::resetHotWaterOutletNode() {
-    bool result = setString(OS_Coil_Heating_FourPipeBeamFields::HotWaterOutletNodeName, "");
-    OS_ASSERT(result);
   }
 
   bool CoilHeatingFourPipeBeam_Impl::setBeamRatedHeatingCapacityperBeamLength(double beamRatedHeatingCapacityperBeamLength) {
@@ -167,6 +190,19 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+
+  // Beam Rated Heating Room Air Hot Water Temperature Difference
+
+  double CoilHeatingFourPipeBeam_Impl::beamRatedHeatingRoomAirHotWaterTemperatureDifference() const {
+    boost::optional<double> value = getDouble(OS_Coil_Heating_FourPipeBeamFields::BeamRatedHeatingRoomAirHotWaterTemperatureDifference,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilHeatingFourPipeBeam_Impl::isBeamRatedHeatingRoomAirHotWaterTemperatureDifferenceDefaulted() const {
+    return isEmpty(OS_Coil_Heating_FourPipeBeamFields::BeamRatedHeatingRoomAirHotWaterTemperatureDifference);
+  }
+
   bool CoilHeatingFourPipeBeam_Impl::setBeamRatedHeatingRoomAirHotWaterTemperatureDifference(double beamRatedHeatingRoomAirHotWaterTemperatureDifference) {
     bool result = setDouble(OS_Coil_Heating_FourPipeBeamFields::BeamRatedHeatingRoomAirHotWaterTemperatureDifference, beamRatedHeatingRoomAirHotWaterTemperatureDifference);
     return result;
@@ -175,6 +211,19 @@ namespace detail {
   void CoilHeatingFourPipeBeam_Impl::resetBeamRatedHeatingRoomAirHotWaterTemperatureDifference() {
     bool result = setString(OS_Coil_Heating_FourPipeBeamFields::BeamRatedHeatingRoomAirHotWaterTemperatureDifference, "");
     OS_ASSERT(result);
+  }
+
+
+  // Beam Rated Hot Water Volume Flow Rate per Beam Length
+
+  double CoilHeatingFourPipeBeam_Impl::beamRatedHotWaterVolumeFlowRateperBeamLength() const {
+    boost::optional<double> value = getDouble(OS_Coil_Heating_FourPipeBeamFields::BeamRatedHotWaterVolumeFlowRateperBeamLength,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilHeatingFourPipeBeam_Impl::isBeamRatedHotWaterVolumeFlowRateperBeamLengthDefaulted() const {
+    return isEmpty(OS_Coil_Heating_FourPipeBeamFields::BeamRatedHotWaterVolumeFlowRateperBeamLength);
   }
 
   bool CoilHeatingFourPipeBeam_Impl::setBeamRatedHotWaterVolumeFlowRateperBeamLength(double beamRatedHotWaterVolumeFlowRateperBeamLength) {
@@ -187,8 +236,18 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool CoilHeatingFourPipeBeam_Impl::setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(const UniVariateCurves& uniVariateCurves) {
-    bool result = setPointer(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityTemperatureDifferenceModificationFactorCurveName, uniVariateCurves.handle());
+
+
+  /* Curves */
+
+  // Beam Heating Capacity Temperature Difference Modification Factor Curve
+
+  boost::optional<Curve> CoilHeatingFourPipeBeam_Impl::beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityTemperatureDifferenceModificationFactorCurveName);
+  }
+
+  bool CoilHeatingFourPipeBeam_Impl::setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityTemperatureDifferenceModificationFactorCurveName, curve.handle());
     return result;
   }
 
@@ -197,8 +256,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool CoilHeatingFourPipeBeam_Impl::setBeamHeatingCapacityAirFlowModificationFactorCurve(const UniVariateCurves& uniVariateCurves) {
-    bool result = setPointer(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityAirFlowModificationFactorCurveName, uniVariateCurves.handle());
+  // Beam Heating Capacity Air Flow Modification Factor Curve
+
+  boost::optional<Curve> CoilHeatingFourPipeBeam_Impl::beamHeatingCapacityAirFlowModificationFactorCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityAirFlowModificationFactorCurveName);
+  }
+
+  bool CoilHeatingFourPipeBeam_Impl::setBeamHeatingCapacityAirFlowModificationFactorCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityAirFlowModificationFactorCurveName, curve.handle());
     return result;
   }
 
@@ -207,8 +272,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool CoilHeatingFourPipeBeam_Impl::setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(const UniVariateCurves& uniVariateCurves) {
-    bool result = setPointer(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityHotWaterFlowModificationFactorCurveName, uniVariateCurves.handle());
+  // Beam Heating Capacity Hot Water Flow Modification Factor Curve
+
+  boost::optional<Curve> CoilHeatingFourPipeBeam_Impl::beamHeatingCapacityHotWaterFlowModificationFactorCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityHotWaterFlowModificationFactorCurveName);
+  }
+
+  bool CoilHeatingFourPipeBeam_Impl::setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(const Curve& curve) {
+    bool result = setPointer(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityHotWaterFlowModificationFactorCurveName, curve.handle());
     return result;
   }
 
@@ -217,27 +288,61 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+
+
+  /*  Convenience functions */
+
+  boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam> CoilHeatingFourPipeBeam_Impl::airTerminalSingleDuctConstantVolumeFourPipeBeam() const {
+    // this coil can only be found in a AirTerminalSingleDuctConstantVolumeFourPipeBeam
+    // check all AirTerminalSingleDuctConstantVolumeFourPipeBeam in the models, seeing if this coil
+    // is inside of one of them.  Return the one it is inside of.
+
+    std::vector<AirTerminalSingleDuctConstantVolumeFourPipeBeam> atuFourPipeBeams;
+
+    atuFourPipeBeams = this->model().getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+
+    for( const auto & elem : atuFourPipeBeams )
+    {
+      if( boost::optional<CoilHeatingFourPipeBeam> coil = elem.heatingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return elem;
+        }
+      }
+    }
+    return boost::none;
+  }
+
+
 } // detail
 
+/* Ctor: nothing particular to do */
 CoilHeatingFourPipeBeam::CoilHeatingFourPipeBeam(const Model& model)
   : StraightComponent(CoilHeatingFourPipeBeam::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilHeatingFourPipeBeam_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
 }
 
 IddObjectType CoilHeatingFourPipeBeam::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Coil_Heating_FourPipeBeam);
 }
 
-boost::optional<Connection> CoilHeatingFourPipeBeam::hotWaterInletNode() const {
+
+/* Nodes */
+
+boost::optional<Node> CoilHeatingFourPipeBeam::hotWaterInletNode() const {
   return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->hotWaterInletNode();
 }
 
-boost::optional<Connection> CoilHeatingFourPipeBeam::hotWaterOutletNode() const {
+boost::optional<Node> CoilHeatingFourPipeBeam::hotWaterOutletNode() const {
   return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->hotWaterOutletNode();
 }
+
+
+/* double with default fields */
+
+// Beam Rated Heating Capacity per Beam Length
 
 double CoilHeatingFourPipeBeam::beamRatedHeatingCapacityperBeamLength() const {
   return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamRatedHeatingCapacityperBeamLength();
@@ -245,50 +350,6 @@ double CoilHeatingFourPipeBeam::beamRatedHeatingCapacityperBeamLength() const {
 
 bool CoilHeatingFourPipeBeam::isBeamRatedHeatingCapacityperBeamLengthDefaulted() const {
   return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->isBeamRatedHeatingCapacityperBeamLengthDefaulted();
-}
-
-double CoilHeatingFourPipeBeam::beamRatedHeatingRoomAirHotWaterTemperatureDifference() const {
-  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamRatedHeatingRoomAirHotWaterTemperatureDifference();
-}
-
-bool CoilHeatingFourPipeBeam::isBeamRatedHeatingRoomAirHotWaterTemperatureDifferenceDefaulted() const {
-  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->isBeamRatedHeatingRoomAirHotWaterTemperatureDifferenceDefaulted();
-}
-
-double CoilHeatingFourPipeBeam::beamRatedHotWaterVolumeFlowRateperBeamLength() const {
-  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamRatedHotWaterVolumeFlowRateperBeamLength();
-}
-
-bool CoilHeatingFourPipeBeam::isBeamRatedHotWaterVolumeFlowRateperBeamLengthDefaulted() const {
-  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->isBeamRatedHotWaterVolumeFlowRateperBeamLengthDefaulted();
-}
-
-boost::optional<UniVariateCurves> CoilHeatingFourPipeBeam::beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const {
-  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamHeatingCapacityTemperatureDifferenceModificationFactorCurve();
-}
-
-boost::optional<UniVariateCurves> CoilHeatingFourPipeBeam::beamHeatingCapacityAirFlowModificationFactorCurve() const {
-  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamHeatingCapacityAirFlowModificationFactorCurve();
-}
-
-boost::optional<UniVariateCurves> CoilHeatingFourPipeBeam::beamHeatingCapacityHotWaterFlowModificationFactorCurve() const {
-  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamHeatingCapacityHotWaterFlowModificationFactorCurve();
-}
-
-bool CoilHeatingFourPipeBeam::setHotWaterInletNode(const Connection& connection) {
-  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->setHotWaterInletNode(connection);
-}
-
-void CoilHeatingFourPipeBeam::resetHotWaterInletNode() {
-  getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->resetHotWaterInletNode();
-}
-
-bool CoilHeatingFourPipeBeam::setHotWaterOutletNode(const Connection& connection) {
-  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->setHotWaterOutletNode(connection);
-}
-
-void CoilHeatingFourPipeBeam::resetHotWaterOutletNode() {
-  getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->resetHotWaterOutletNode();
 }
 
 bool CoilHeatingFourPipeBeam::setBeamRatedHeatingCapacityperBeamLength(double beamRatedHeatingCapacityperBeamLength) {
@@ -299,12 +360,34 @@ void CoilHeatingFourPipeBeam::resetBeamRatedHeatingCapacityperBeamLength() {
   getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->resetBeamRatedHeatingCapacityperBeamLength();
 }
 
+
+// Beam Rated Heating Room Air Hot Water Temperature Difference
+
+double CoilHeatingFourPipeBeam::beamRatedHeatingRoomAirHotWaterTemperatureDifference() const {
+  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamRatedHeatingRoomAirHotWaterTemperatureDifference();
+}
+
+bool CoilHeatingFourPipeBeam::isBeamRatedHeatingRoomAirHotWaterTemperatureDifferenceDefaulted() const {
+  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->isBeamRatedHeatingRoomAirHotWaterTemperatureDifferenceDefaulted();
+}
+
 bool CoilHeatingFourPipeBeam::setBeamRatedHeatingRoomAirHotWaterTemperatureDifference(double beamRatedHeatingRoomAirHotWaterTemperatureDifference) {
   return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->setBeamRatedHeatingRoomAirHotWaterTemperatureDifference(beamRatedHeatingRoomAirHotWaterTemperatureDifference);
 }
 
 void CoilHeatingFourPipeBeam::resetBeamRatedHeatingRoomAirHotWaterTemperatureDifference() {
   getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->resetBeamRatedHeatingRoomAirHotWaterTemperatureDifference();
+}
+
+
+// Beam Rated Hot Water Volume Flow Rate per Beam Length
+
+double CoilHeatingFourPipeBeam::beamRatedHotWaterVolumeFlowRateperBeamLength() const {
+  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamRatedHotWaterVolumeFlowRateperBeamLength();
+}
+
+bool CoilHeatingFourPipeBeam::isBeamRatedHotWaterVolumeFlowRateperBeamLengthDefaulted() const {
+  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->isBeamRatedHotWaterVolumeFlowRateperBeamLengthDefaulted();
 }
 
 bool CoilHeatingFourPipeBeam::setBeamRatedHotWaterVolumeFlowRateperBeamLength(double beamRatedHotWaterVolumeFlowRateperBeamLength) {
@@ -315,29 +398,63 @@ void CoilHeatingFourPipeBeam::resetBeamRatedHotWaterVolumeFlowRateperBeamLength(
   getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->resetBeamRatedHotWaterVolumeFlowRateperBeamLength();
 }
 
-bool CoilHeatingFourPipeBeam::setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(const UniVariateCurves& uniVariateCurves) {
-  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(uniVariateCurves);
+
+
+/* Curves */
+
+// Beam Heating Capacity Temperature Difference Modification Factor Curve
+
+boost::optional<Curve> CoilHeatingFourPipeBeam::beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const {
+  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamHeatingCapacityTemperatureDifferenceModificationFactorCurve();
+}
+
+bool CoilHeatingFourPipeBeam::setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(curve);
 }
 
 void CoilHeatingFourPipeBeam::resetBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve() {
   getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->resetBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve();
 }
 
-bool CoilHeatingFourPipeBeam::setBeamHeatingCapacityAirFlowModificationFactorCurve(const UniVariateCurves& uniVariateCurves) {
-  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->setBeamHeatingCapacityAirFlowModificationFactorCurve(uniVariateCurves);
+
+// Beam Heating Capacity Air Flow Modification Factor Curve
+
+boost::optional<Curve> CoilHeatingFourPipeBeam::beamHeatingCapacityAirFlowModificationFactorCurve() const {
+  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamHeatingCapacityAirFlowModificationFactorCurve();
+}
+
+bool CoilHeatingFourPipeBeam::setBeamHeatingCapacityAirFlowModificationFactorCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->setBeamHeatingCapacityAirFlowModificationFactorCurve(curve);
 }
 
 void CoilHeatingFourPipeBeam::resetBeamHeatingCapacityAirFlowModificationFactorCurve() {
   getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->resetBeamHeatingCapacityAirFlowModificationFactorCurve();
 }
 
-bool CoilHeatingFourPipeBeam::setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(const UniVariateCurves& uniVariateCurves) {
-  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(uniVariateCurves);
+
+// Beam Heating Capacity Hot Water Flow Modification Factor Curve
+
+boost::optional<Curve> CoilHeatingFourPipeBeam::beamHeatingCapacityHotWaterFlowModificationFactorCurve() const {
+  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamHeatingCapacityHotWaterFlowModificationFactorCurve();
+}
+
+bool CoilHeatingFourPipeBeam::setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(const Curve& curve) {
+  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(curve);
 }
 
 void CoilHeatingFourPipeBeam::resetBeamHeatingCapacityHotWaterFlowModificationFactorCurve() {
   getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->resetBeamHeatingCapacityHotWaterFlowModificationFactorCurve();
 }
+
+
+
+/* Convenience functions */
+
+boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam> CoilHeatingFourPipeBeam::airTerminalSingleDuctConstantVolumeFourPipeBeam() const {
+  return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->airTerminalSingleDuctConstantVolumeFourPipeBeam();
+}
+
+
 
 /// @cond
 CoilHeatingFourPipeBeam::CoilHeatingFourPipeBeam(std::shared_ptr<detail::CoilHeatingFourPipeBeam_Impl> impl)
