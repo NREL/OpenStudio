@@ -26,6 +26,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "EvaporativeCoolerIndirectResearchSpecial.hpp"
 #include "EvaporativeCoolerIndirectResearchSpecial_Impl.hpp"
 #include "Schedule.hpp"
@@ -291,6 +293,10 @@ namespace detail {
           return true;
         }
       }
+    }
+
+    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      return StraightComponent_Impl::addToNode( node );
     }
 
     return false;
@@ -805,4 +811,4 @@ EvaporativeCoolerIndirectResearchSpecial::EvaporativeCoolerIndirectResearchSpeci
   }
 
 } // model
-} // openstudio
+} // openstudio

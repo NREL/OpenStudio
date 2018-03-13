@@ -695,7 +695,9 @@ namespace detail {
     }
 
     {
-      SizingSystem sizingClone(model, airLoopClone);
+      auto sizing = sizingSystem();
+      auto sizingClone = sizing.clone(model).cast<SizingSystem>();
+      sizingClone.setAirLoopHVAC(airLoopClone);
     }
 
     airLoopClone.getImpl<detail::AirLoopHVAC_Impl>()->createTopology();
@@ -708,9 +710,7 @@ namespace detail {
       if( comp.iddObjectType() == Node::iddObjectType() ) {
         supplyNodes.push_back(comp.cast<Node>());
       } else {
-        std::cout << "clonning " << comp.nameString() << std::endl;
         auto compClone = comp.clone(model).cast<HVACComponent>();
-        std::cout << "clonned " << compClone.nameString() << std::endl;
         compClone.addToNode(outletNodeClone);
       }
     }
