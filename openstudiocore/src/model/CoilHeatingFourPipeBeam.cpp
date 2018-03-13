@@ -329,6 +329,8 @@ CoilHeatingFourPipeBeam::CoilHeatingFourPipeBeam(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CoilHeatingFourPipeBeam_Impl>());
 
+  bool ok = true;
+
   //Beam Heating Capacity Temperature Difference Modification Factor Curve Nam
   CurveLinear capModFuncOfTempDiff(model);
   capModFuncOfTempDiff.setName("CapModFuncOfTempDiff");
@@ -339,6 +341,8 @@ CoilHeatingFourPipeBeam::CoilHeatingFourPipeBeam(const Model& model)
   capModFuncOfTempDiff.setMinimumCurveOutput(0.0);
   capModFuncOfTempDiff.setMaximumCurveOutput(1.5);
 
+  ok = setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(capModFuncOfTempDiff);
+  OS_ASSERT(ok);
 
   // Beam Heating Capacity Air Flow Modification Factor Curve Name
   // HeatCapModFuncOfSAFlow: Table:OneIndependentVariable,
@@ -358,6 +362,8 @@ CoilHeatingFourPipeBeam::CoilHeatingFourPipeBeam(const Model& model)
   heatCapModFuncOfSAFlow.addPoint(1.0, 1.0);
   heatCapModFuncOfSAFlow.addPoint(1.2857, 1.0778);
 
+  ok = setBeamHeatingCapacityAirFlowModificationFactorCurve(heatCapModFuncOfSAFlow);
+  OS_ASSERT(ok);
 
   // Beam Heating Capacity Hot Water Flow Modification Factor Curve
   // CapModFuncOfWaterFlow: Table:OneIndependentVariable
@@ -381,6 +387,9 @@ CoilHeatingFourPipeBeam::CoilHeatingFourPipeBeam(const Model& model)
   capModFuncOfWaterFlow.addPoint(0.833333, 0.97);
   capModFuncOfWaterFlow.addPoint(1.0, 1.0);
   capModFuncOfWaterFlow.addPoint(1.333333, 1.04);
+
+  ok = setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(capModFuncOfWaterFlow);
+  OS_ASSERT(ok);
 
 }
 
