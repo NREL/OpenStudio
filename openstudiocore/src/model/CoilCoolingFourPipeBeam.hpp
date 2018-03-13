@@ -36,12 +36,9 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Connection;
-class Connection;
-class UniVariateCurves;
-class UniVariateCurves;
-class UniVariateCurves;
+class Node;
+class Curve;
+class AirTerminalSingleDuctConstantVolumeFourPipeBeam;
 
 namespace detail {
 
@@ -66,77 +63,55 @@ class MODEL_API CoilCoolingFourPipeBeam : public StraightComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> chilledWaterInletNode() const;
+  boost::optional<Node> chilledWaterInletNode() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> chilledWaterOutletNode() const;
+  boost::optional<Node> chilledWaterOutletNode() const;
 
   double beamRatedCoolingCapacityperBeamLength() const;
-
   bool isBeamRatedCoolingCapacityperBeamLengthDefaulted() const;
 
   double beamRatedCoolingRoomAirChilledWaterTemperatureDifference() const;
-
   bool isBeamRatedCoolingRoomAirChilledWaterTemperatureDifferenceDefaulted() const;
 
   double beamRatedChilledWaterVolumeFlowRateperBeamLength() const;
-
   bool isBeamRatedChilledWaterVolumeFlowRateperBeamLengthDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
-  boost::optional<UniVariateCurves> beamCoolingCapacityTemperatureDifferenceModificationFactorCurve() const;
+  Curve beamCoolingCapacityTemperatureDifferenceModificationFactorCurve() const;
 
-  // TODO: Check return type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
-  boost::optional<UniVariateCurves> beamCoolingCapacityAirFlowModificationFactorCurve() const;
+  Curve beamCoolingCapacityAirFlowModificationFactorCurve() const;
 
-  // TODO: Check return type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
-  boost::optional<UniVariateCurves> beamCoolingCapacityChilledWaterFlowModificationFactorCurve() const;
+  Curve beamCoolingCapacityChilledWaterFlowModificationFactorCurve() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setChilledWaterInletNode(const Connection& connection);
-
-  void resetChilledWaterInletNode();
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setChilledWaterOutletNode(const Connection& connection);
-
-  void resetChilledWaterOutletNode();
 
   bool setBeamRatedCoolingCapacityperBeamLength(double beamRatedCoolingCapacityperBeamLength);
-
   void resetBeamRatedCoolingCapacityperBeamLength();
 
   bool setBeamRatedCoolingRoomAirChilledWaterTemperatureDifference(double beamRatedCoolingRoomAirChilledWaterTemperatureDifference);
-
   void resetBeamRatedCoolingRoomAirChilledWaterTemperatureDifference();
 
   bool setBeamRatedChilledWaterVolumeFlowRateperBeamLength(double beamRatedChilledWaterVolumeFlowRateperBeamLength);
-
   void resetBeamRatedChilledWaterVolumeFlowRateperBeamLength();
 
-  // TODO: Check argument type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
-  bool setBeamCoolingCapacityTemperatureDifferenceModificationFactorCurve(const UniVariateCurves& uniVariateCurves);
+  bool setBeamCoolingCapacityTemperatureDifferenceModificationFactorCurve(const Curve& curve);
 
-  void resetBeamCoolingCapacityTemperatureDifferenceModificationFactorCurve();
+  bool setBeamCoolingCapacityAirFlowModificationFactorCurve(const Curve& curve);
 
-  // TODO: Check argument type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
-  bool setBeamCoolingCapacityAirFlowModificationFactorCurve(const UniVariateCurves& uniVariateCurves);
+  bool setBeamCoolingCapacityChilledWaterFlowModificationFactorCurve(const Curve& curve);
 
-  void resetBeamCoolingCapacityAirFlowModificationFactorCurve();
-
-  // TODO: Check argument type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
-  bool setBeamCoolingCapacityChilledWaterFlowModificationFactorCurve(const UniVariateCurves& uniVariateCurves);
-
-  void resetBeamCoolingCapacityChilledWaterFlowModificationFactorCurve();
+  // No reset functions provided for the three curves, because all curves are required if you connect the ATU FourPipeBeam to a hot water plant loop
+  // And given that we added a subclass specifically for the heating portion of the ATU FourPipeBeam, they become required at all times
 
   //@}
   /** @name Other */
   //@{
+
+
+  /* Convenience function to return the parent AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam */
+  boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeBeam> airTerminalSingleDuctConstantVolumeFourPipeBeam() const;
 
   //@}
  protected:
