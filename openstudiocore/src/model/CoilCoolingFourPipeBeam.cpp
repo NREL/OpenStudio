@@ -38,6 +38,9 @@
 #include "AirTerminalSingleDuctConstantVolumeFourPipeBeam.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl.hpp"
 
+// For Ctor default curves
+#include "CurveLinear.hpp"
+#include "TableMultiVariableLookup.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_Cooling_FourPipeBeam_FieldEnums.hxx>
@@ -319,11 +322,65 @@ namespace detail {
 
 } // detail
 
-/* Ctor: nothing particular to do */
+/* Ctor: defaulting Curves like in the FourPipeBeamLargeOffice.idf Example File from E+ */
 CoilCoolingFourPipeBeam::CoilCoolingFourPipeBeam(const Model& model)
   : StraightComponent(CoilCoolingFourPipeBeam::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilCoolingFourPipeBeam_Impl>());
+
+  //Beam Cooling Capacity Temperature Difference Modification Factor Curve Nam
+  CurveLinear capModFuncOfTempDiff(model);
+  capModFuncOfTempDiff.setName("CapModFuncOfTempDiff");
+  capModFuncOfTempDiff.setCoefficient1Constant(0);
+  capModFuncOfTempDiff.setCoefficient2x(1);
+  capModFuncOfTempDiff.setMinimumValueofx(0.0);
+  capModFuncOfTempDiff.setMaximumValueofx(1.5);
+  capModFuncOfTempDiff.setMinimumCurveOutput(0.0);
+  capModFuncOfTempDiff.setMaximumCurveOutput(1.5);
+
+
+  // Beam Cooling Capacity Air Flow Modification Factor Curve Name
+  // CoolCapModFuncOfSAFlow: Table:OneIndependentVariable,
+
+  TableMultiVariableLookup coolCapModFuncOfSAFlow(model, 1);
+  coolCapModFuncOfSAFlow.setName("CoolCapModFuncOfSAFlow");
+  coolCapModFuncOfSAFlow.setCurveType("Quadratic");
+  coolCapModFuncOfSAFlow.setInterpolationMethod("EvaluateCurveToLimits");
+  coolCapModFuncOfSAFlow.setMinimumValueofX1(0.714);
+  coolCapModFuncOfSAFlow.setMaximumValueofX1(1.2857);
+  coolCapModFuncOfSAFlow.setMinimumTableOutput(0.8234);
+  coolCapModFuncOfSAFlow.setMaximumTableOutput(1.1256);
+  coolCapModFuncOfSAFlow.setInputUnitTypeforX1("Dimensionless");
+  coolCapModFuncOfSAFlow.setOutputUnitType("Dimensionless");
+
+  coolCapModFuncOfSAFlow.addPoint(0.714286, 0.823403);
+  coolCapModFuncOfSAFlow.addPoint(1.0, 1.0);
+  coolCapModFuncOfSAFlow.addPoint(1.2857, 1.1256);
+
+
+  // Beam Cooling Capacity Chilled Water Flow Modification Factor Curve
+  // CapModFuncOfWaterFlow: Table:OneIndependentVariable
+
+  TableMultiVariableLookup capModFuncOfWaterFlow(model, 1);
+  capModFuncOfWaterFlow.setName("CapModFuncOfWaterFlow");
+  capModFuncOfWaterFlow.setCurveType("Quadratic");
+  capModFuncOfWaterFlow.setInterpolationMethod("EvaluateCurveToLimits");
+  capModFuncOfWaterFlow.setMinimumValueofX1(0);
+  capModFuncOfWaterFlow.setMaximumValueofX1(1.33);
+  capModFuncOfWaterFlow.setMinimumTableOutput(0.0);
+  capModFuncOfWaterFlow.setMaximumTableOutput(1.04);
+  capModFuncOfWaterFlow.setInputUnitTypeforX1("Dimensionless");
+  capModFuncOfWaterFlow.setOutputUnitType("Dimensionless");
+
+  capModFuncOfWaterFlow.addPoint(0.0, 0.0);
+  capModFuncOfWaterFlow.addPoint(0.05, 0.001);
+  capModFuncOfWaterFlow.addPoint(0.33333, 0.71);
+  capModFuncOfWaterFlow.addPoint(0.5, 0.85);
+  capModFuncOfWaterFlow.addPoint(0.666667, 0.92);
+  capModFuncOfWaterFlow.addPoint(0.833333, 0.97);
+  capModFuncOfWaterFlow.addPoint(1.0, 1.0);
+  capModFuncOfWaterFlow.addPoint(1.333333, 1.04);
+
 }
 
 IddObjectType CoilCoolingFourPipeBeam::iddObjectType() {
