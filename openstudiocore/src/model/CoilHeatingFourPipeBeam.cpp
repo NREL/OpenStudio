@@ -242,8 +242,13 @@ const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableName
 
   // Beam Heating Capacity Temperature Difference Modification Factor Curve
 
-  boost::optional<Curve> CoilHeatingFourPipeBeam_Impl::beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityTemperatureDifferenceModificationFactorCurveName);
+  Curve CoilHeatingFourPipeBeam_Impl::beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const {
+    boost::optional<Curve> c = getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityTemperatureDifferenceModificationFactorCurveName);
+    if (!c) {
+      LOG_AND_THROW(briefDescription() << " doesn't have the required Beam Heating Capacity Temperature Difference Modification Factor Curve");
+    }
+    OS_ASSERT(c);
+    return c.get();
   }
 
   bool CoilHeatingFourPipeBeam_Impl::setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(const Curve& curve) {
@@ -251,15 +256,16 @@ const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableName
     return result;
   }
 
-  void CoilHeatingFourPipeBeam_Impl::resetBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve() {
-    bool result = setString(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityTemperatureDifferenceModificationFactorCurveName, "");
-    OS_ASSERT(result);
-  }
 
   // Beam Heating Capacity Air Flow Modification Factor Curve
 
-  boost::optional<Curve> CoilHeatingFourPipeBeam_Impl::beamHeatingCapacityAirFlowModificationFactorCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityAirFlowModificationFactorCurveName);
+  Curve CoilHeatingFourPipeBeam_Impl::beamHeatingCapacityAirFlowModificationFactorCurve() const {
+    boost::optional<Curve> c = getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityAirFlowModificationFactorCurveName);
+    if (!c) {
+      LOG_AND_THROW(briefDescription() << " doesn't have the required Beam Heating Capacity Air Flow Modification Factor Curve");
+    }
+    OS_ASSERT(c);
+    return c.get();
   }
 
   bool CoilHeatingFourPipeBeam_Impl::setBeamHeatingCapacityAirFlowModificationFactorCurve(const Curve& curve) {
@@ -267,25 +273,21 @@ const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableName
     return result;
   }
 
-  void CoilHeatingFourPipeBeam_Impl::resetBeamHeatingCapacityAirFlowModificationFactorCurve() {
-    bool result = setString(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityAirFlowModificationFactorCurveName, "");
-    OS_ASSERT(result);
-  }
 
   // Beam Heating Capacity Hot Water Flow Modification Factor Curve
 
-  boost::optional<Curve> CoilHeatingFourPipeBeam_Impl::beamHeatingCapacityHotWaterFlowModificationFactorCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityHotWaterFlowModificationFactorCurveName);
+  Curve CoilHeatingFourPipeBeam_Impl::beamHeatingCapacityHotWaterFlowModificationFactorCurve() const {
+    boost::optional<Curve> c = getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityHotWaterFlowModificationFactorCurveName);
+    if (!c) {
+      LOG_AND_THROW(briefDescription() << " doesn't have the required Beam Heating Capacity Hot Water Flow Modification Factor Curve");
+    }
+    OS_ASSERT(c);
+    return c.get();
   }
 
   bool CoilHeatingFourPipeBeam_Impl::setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(const Curve& curve) {
     bool result = setPointer(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityHotWaterFlowModificationFactorCurveName, curve.handle());
     return result;
-  }
-
-  void CoilHeatingFourPipeBeam_Impl::resetBeamHeatingCapacityHotWaterFlowModificationFactorCurve() {
-    bool result = setString(OS_Coil_Heating_FourPipeBeamFields::BeamHeatingCapacityHotWaterFlowModificationFactorCurveName, "");
-    OS_ASSERT(result);
   }
 
 
@@ -404,7 +406,7 @@ void CoilHeatingFourPipeBeam::resetBeamRatedHotWaterVolumeFlowRateperBeamLength(
 
 // Beam Heating Capacity Temperature Difference Modification Factor Curve
 
-boost::optional<Curve> CoilHeatingFourPipeBeam::beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const {
+Curve CoilHeatingFourPipeBeam::beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const {
   return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamHeatingCapacityTemperatureDifferenceModificationFactorCurve();
 }
 
@@ -412,14 +414,10 @@ bool CoilHeatingFourPipeBeam::setBeamHeatingCapacityTemperatureDifferenceModific
   return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->setBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve(curve);
 }
 
-void CoilHeatingFourPipeBeam::resetBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve() {
-  getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->resetBeamHeatingCapacityTemperatureDifferenceModificationFactorCurve();
-}
-
 
 // Beam Heating Capacity Air Flow Modification Factor Curve
 
-boost::optional<Curve> CoilHeatingFourPipeBeam::beamHeatingCapacityAirFlowModificationFactorCurve() const {
+Curve CoilHeatingFourPipeBeam::beamHeatingCapacityAirFlowModificationFactorCurve() const {
   return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamHeatingCapacityAirFlowModificationFactorCurve();
 }
 
@@ -427,23 +425,15 @@ bool CoilHeatingFourPipeBeam::setBeamHeatingCapacityAirFlowModificationFactorCur
   return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->setBeamHeatingCapacityAirFlowModificationFactorCurve(curve);
 }
 
-void CoilHeatingFourPipeBeam::resetBeamHeatingCapacityAirFlowModificationFactorCurve() {
-  getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->resetBeamHeatingCapacityAirFlowModificationFactorCurve();
-}
-
 
 // Beam Heating Capacity Hot Water Flow Modification Factor Curve
 
-boost::optional<Curve> CoilHeatingFourPipeBeam::beamHeatingCapacityHotWaterFlowModificationFactorCurve() const {
+Curve CoilHeatingFourPipeBeam::beamHeatingCapacityHotWaterFlowModificationFactorCurve() const {
   return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->beamHeatingCapacityHotWaterFlowModificationFactorCurve();
 }
 
 bool CoilHeatingFourPipeBeam::setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(const Curve& curve) {
   return getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(curve);
-}
-
-void CoilHeatingFourPipeBeam::resetBeamHeatingCapacityHotWaterFlowModificationFactorCurve() {
-  getImpl<detail::CoilHeatingFourPipeBeam_Impl>()->resetBeamHeatingCapacityHotWaterFlowModificationFactorCurve();
 }
 
 

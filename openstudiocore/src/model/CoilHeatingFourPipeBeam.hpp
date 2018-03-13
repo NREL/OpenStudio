@@ -76,11 +76,11 @@ class MODEL_API CoilHeatingFourPipeBeam : public StraightComponent {
   double beamRatedHotWaterVolumeFlowRateperBeamLength() const;
   bool isBeamRatedHotWaterVolumeFlowRateperBeamLengthDefaulted() const;
 
-  boost::optional<Curve> beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const;
+  Curve beamHeatingCapacityTemperatureDifferenceModificationFactorCurve() const;
 
-  boost::optional<Curve> beamHeatingCapacityAirFlowModificationFactorCurve() const;
+  Curve beamHeatingCapacityAirFlowModificationFactorCurve() const;
 
-  boost::optional<Curve> beamHeatingCapacityHotWaterFlowModificationFactorCurve() const;
+  Curve beamHeatingCapacityHotWaterFlowModificationFactorCurve() const;
 
   //@}
   /** @name Setters */

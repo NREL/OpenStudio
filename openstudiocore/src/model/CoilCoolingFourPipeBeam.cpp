@@ -247,7 +247,7 @@ namespace detail {
       LOG_AND_THROW(briefDescription() << " doesn't have the required Beam Cooling Capacity Temperature Difference Modification Factor Curve");
     }
     OS_ASSERT(c);
-    return c;
+    return c.get();
   }
 
   bool CoilCoolingFourPipeBeam_Impl::setBeamCoolingCapacityTemperatureDifferenceModificationFactorCurve(const Curve& curve) {
@@ -264,7 +264,7 @@ namespace detail {
       LOG_AND_THROW(briefDescription() << " doesn't have the required Beam Cooling Capacity Air Flow Modification Factor Curve");
     }
     OS_ASSERT(c);
-    return c;
+    return c.get();
   }
 
   bool CoilCoolingFourPipeBeam_Impl::setBeamCoolingCapacityAirFlowModificationFactorCurve(const Curve& curve) {
@@ -281,7 +281,7 @@ namespace detail {
       LOG_AND_THROW(briefDescription() << " doesn't have the required Beam Cooling Capacity Chilled Water Flow Modification Factor Curve");
     }
     OS_ASSERT(c);
-    return c;
+    return c.get();
   }
 
   bool CoilCoolingFourPipeBeam_Impl::setBeamCoolingCapacityChilledWaterFlowModificationFactorCurve(const Curve& curve) {
