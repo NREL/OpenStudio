@@ -52,6 +52,8 @@
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirflowNetworkFan.hpp"
+#include "AirflowNetworkFan_Impl.hpp"
 #include "SetpointManagerMixedAir.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
@@ -94,14 +96,8 @@ namespace detail {
 
   const std::vector<std::string>& FanConstantVolume_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Fan Electric Power");
-      result.push_back("Fan Rise in Air Temperature");
-      result.push_back("Fan Electric Energy");
-    }
-    return result;
+    static std::vector<std::string> results{"Fan Electric Power", "Fan Rise in Air Temperature", "Fan Heat Gain to Air", "Fan Electric Energy", "Fan Air Mass Flow Rate"};
+    return results;
   }
 
   IddObjectType FanConstantVolume_Impl::iddObjectType() const {
@@ -459,6 +455,28 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  AirflowNetworkFan FanConstantVolume_Impl::getAirflowNetworkFan()
+  {
+    auto opt = airflowNetworkFan();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkFan(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkFan> FanConstantVolume_Impl::airflowNetworkFan() const
+  {
+    std::vector<AirflowNetworkFan> myAFNitems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkFan>(AirflowNetworkFan::iddObjectType());
+    auto count = myAFNitems.size();
+    if (count == 1) {
+      return myAFNitems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFNitems[0];
+    }
+    return boost::none;
+  }
+
   boost::optional<double> FanConstantVolume_Impl::autosizedMaximumFlowRate() const {
     return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
   }
@@ -474,6 +492,21 @@ namespace detail {
       setMaximumFlowRate(val.get());
     }
 
+  }
+
+  std::vector<EMSActuatorNames> FanConstantVolume_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Fan","Fan Air Mass Flow Rate"},
+                                            {"Fan","Fan Pressure Rise"},
+                                            {"Fan","Fan Total Efficiency"},
+                                            {"Fan","Fan Autosized Air Flow Rate"}};
+    return actuators;
+  }
+
+  std::vector<std::string> FanConstantVolume_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Fan Maximum Mass Flow Rate",
+                                   "Fan Nominal Pressure Rise",
+                                   "Fan Nominal Total Efficiency"};
+    return types;
   }
 
 } // detail
@@ -595,9 +628,18 @@ void FanConstantVolume::autosizeMaximumFlowRate() {
   getImpl<detail::FanConstantVolume_Impl>()->autosizeMaximumFlowRate();
 }
 
-  boost::optional<double> FanConstantVolume::autosizedMaximumFlowRate() const {
-    return getImpl<detail::FanConstantVolume_Impl>()->autosizedMaximumFlowRate();
-  }
+AirflowNetworkFan FanConstantVolume::getAirflowNetworkFan()
+{
+  return getImpl<detail::FanConstantVolume_Impl>()->getAirflowNetworkFan();
+}
 
+boost::optional<AirflowNetworkFan> FanConstantVolume::airflowNetworkFan() const
+{
+  return getImpl<detail::FanConstantVolume_Impl>()->airflowNetworkFan();
+}
+
+boost::optional<double> FanConstantVolume::autosizedMaximumFlowRate() const {
+  return getImpl<detail::FanConstantVolume_Impl>()->autosizedMaximumFlowRate();
+}
 } // model
 } // openstudio

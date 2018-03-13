@@ -164,7 +164,7 @@ namespace detail {
     // shading surface groups
     std::vector<ShadingSurfaceGroup> shadingSurfaceGroups = this->shadingSurfaceGroups();
     result.insert(result.end(),shadingSurfaceGroups.begin(),shadingSurfaceGroups.end());
-    
+
     return result;
   }
 
@@ -189,20 +189,19 @@ namespace detail {
 
   const std::vector<std::string>& Site_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Site Outdoor Air Drybulb Temperature");
-      result.push_back("Site Outdoor Air Wetbulb Temperature");
-      result.push_back("Site Direct Solar Radiation Rate per Area");
-      result.push_back("Site Diffuse Solar Radiation Rate per Area");
-      result.push_back("Site Exterior Beam Normal Illuminance");
-      result.push_back("Site Exterior Horizontal Beam Illuminance");
-      result.push_back("Site Exterior Horizontal Sky Illuminance");
-      result.push_back("Site Beam Solar Radiation Luminous Efficacy");
-      result.push_back("Site Sky Diffuse Solar Radiation Luminous Efficacy");
-      result.push_back("Site Daylighting Model Sky Clearness");
-      result.push_back("Site Daylighting Model Sky Brightness");
-    }
+    static const std::vector<std::string> result = {
+      "Site Outdoor Air Drybulb Temperature",
+      "Site Outdoor Air Wetbulb Temperature",
+      "Site Direct Solar Radiation Rate per Area",
+      "Site Diffuse Solar Radiation Rate per Area",
+      "Site Exterior Beam Normal Illuminance",
+      "Site Exterior Horizontal Beam Illuminance",
+      "Site Exterior Horizontal Sky Illuminance",
+      "Site Beam Solar Radiation Luminous Efficacy",
+      "Site Sky Diffuse Solar Radiation Luminous Efficacy",
+      "Site Daylighting Model Sky Clearness",
+      "Site Daylighting Model Sky Brightness"
+    };
     return result;
   }
 
@@ -390,6 +389,22 @@ namespace detail {
   }
 */
 
+  std::vector<EMSActuatorNames> Site_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Weather Data", "Outdoor Dry Bulb"},
+                                            {"Weather Data", "Outdoor Dew Point"},
+                                            {"Weather Data", "Outdoor Relative Humidity"},
+                                            {"Weather Data", "Diffuse Solar"},
+                                            {"Weather Data", "Direct Solar"},
+                                            {"Weather Data", "Wind Speed"},
+                                            {"Weather Data", "Wind Direction"},
+    };
+    return actuators;
+  }
+
+  std::vector<std::string> Site_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 IddObjectType Site::iddObjectType() {

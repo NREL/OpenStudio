@@ -417,6 +417,16 @@ namespace detail {
     return PeopleDefinition::thermalComfortModelTypeValues();
   }
 
+  std::vector<EMSActuatorNames> PeopleDefinition_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "People", "Number of People" } };
+    return actuators;
+  }
+
+  std::vector<std::string> PeopleDefinition_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "People Count Design Level" };
+    return types;
+  }
+
 } // detail
 
 PeopleDefinition::PeopleDefinition(const Model& model)

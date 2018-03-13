@@ -52,17 +52,6 @@ namespace detail {
 
   /** Site_Impl is a ParentObject_Impl that is the implementation class for Site.*/
   class MODEL_API Site_Impl : public ParentObject_Impl {
-
-
-
-
-
-
-
-
-
-
-
     //
     //
    public:
@@ -119,6 +108,10 @@ namespace detail {
     std::string terrain() const;
 
     bool isTerrainDefaulted() const;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */

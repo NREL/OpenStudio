@@ -1,140 +1,150 @@
 stages:
-- buildDView
-- buildOS
+- build
+- deploy
+- testCTest
+- testResources
 
-buildDView:windows:
-  variables:
-    #CI_DEBUG_TRACE: "true"
-  stage: buildDView
+build:windows:
+  stage: build
   only:
+  # all "develop" should be changed to "triggers"
   - develop
   tags:
   - windows
   script:
-  - if not exist "buildMeta" mkdir buildMeta
-  - cd buildMeta
-  - cmake -G "Visual Studio 12 2013 Win64" ..
-  - cmake -DBUILD_DVIEW=ON -DCMAKE_BUILD_TYPE=Release ..
-  - cmake --build . --config Release --target DView
-  artifacts:
-    expire_in: 12 hrs
-    paths:
-      - buildMeta/DView-prefix/src/DView-install
-
-buildDView:mac:
-  variables:
-    #CI_DEBUG_TRACE: "true"
-  stage: buildDView
-  only:
-  - develop
-  tags:
-  - mac
-  script:
-  - mkdir -p buildMeta
-  - cd buildMeta
-  - cmake ..
-  - cmake -DBUILD_DVIEW=ON -DCMAKE_BUILD_TYPE=Release ..
-  - make -j8 DView
-  artifacts:
-    expire_in: 12 hrs
-    paths:
-      - buildMeta/DView-prefix/src/DView-install
-      
-buildDView:ubuntu:
-  variables:
-    #CI_DEBUG_TRACE: "true"
-  stage: buildDView
-  only:
-  - develop
-  tags:
-  - ubuntu
-  script:
-  - mkdir -p buildMeta
-  - cd buildMeta
-  - cmake ..
-  #- cmake -DBUILD_DVIEW=ON -DCMAKE_BUILD_TYPE=Release ..
-  #- make -j8 DView
-  #artifacts:
-  #  expire_in: 12 hrs
-  #  paths:
-  #    - buildMeta/DView-prefix/src/DView-install
-      
-buildOS:windows:
-  variables:
-    #CI_DEBUG_TRACE: "true"
-  stage: buildOS
-  only:
-  - develop
-  tags:
-  - windows
-  script:
-  - if not exist "build" mkdir build
+  - rd /s /q build
+  - mkdir build
   - cd build
-  - cmake -G "Visual Studio 12 2013 Win64" ../openstudiocore
-  - cmake -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
-  - cmake ../openstudiocore
+  - cmake -G "Visual Studio 12 2013 Win64" -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF  ../openstudiocore
+  - cmake --build . --config Release --target ALL_BUILD
+  - cmake --build . --config Release --target ALL_BUILD
   - cmake --build . --config Release --target PACKAGE
+  allow_failure: true
   artifacts:
     expire_in: 12 hrs
     paths:
-      - build/
- 
-buildOS:mac:
-  variables:
-    #CI_DEBUG_TRACE: "true"
-  stage: buildOS
+    - build/OpenStudio-*.exe
+    - build/CPackConfig.cmake
+    - build/CPackSourceConfig.cmake
+    - build/CTestTestfile.cmake
+    - build/OpenStudioCoreConfig.cmake
+    - build/CTestTestfile.cmake
+    - build/csharp/
+    - build/embedded/
+    - build/pat/
+    - build/Products/
+    - build/resources/
+    - build/ruby/
+    - build/sketchup_plugin/
+    - build/src/
+
+build:mac:
+  stage: build
   only:
   - develop
   tags:
   - mac
   script:
-  - mkdir -p build
+  - mkdir build
   - cd build
-  - cmake ../openstudiocore
-  - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
-  - cmake ../openstudiocore
-  - make -j8 package
+  - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
+  - make -j16 package
+  - cd _CPack_Packages/Darwin/IFW
+  - zip -r `ls -1 | grep OpenStudio-*.app | sed -e 's/\.app$//'`.zip OpenStudio-*.app
+  allow_failure: true
   artifacts:
-    expire_in: 2 hrs
+    expire_in: 12 hrs
     paths:
-      - build/_CPack_Packages/Darwin/IFW
+      - build/_CPack_Packages/Darwin/IFW/OpenStudio-*.zip
 
-buildOS:ubuntu:
-  variables:
-    #CI_DEBUG_TRACE: "true"
-  stage: buildOS
+build:ubuntu:
+  stage: build
   only:
   - develop
   tags:
   - ubuntu
   script:
-  - mkdir -p build
+  - mkdir build
   - cd build
-  - cmake ../openstudiocore
-  #- cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_DVIEW=OFF -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=ON -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
-  #- cmake ../openstudiocore
-  #- make -j8 package
-  #artifacts:
-  #  expire_in: 2 hrs
-  #  paths:
-  #    - build/
+  - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_DVIEW=OFF -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=ON -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
+  - make -j16 package
+  allow_failure: true
+  artifacts:
+    expire_in: 12 hrs
+    paths:
+      - build/OpenStudio-*.deb
 
-testOSResources:windows:
-  variables:
-    CI_DEBUG_TRACE: "true"
-  stage: testOSResources
+deploy:windows:
+  stage: deploy
   only:
   - develop
   tags:
   - windows
+  dependencies:
+  - build:windows
   script:
-  ##- cd build
-  ##- OpenStudio-2.4.1.b75cf90df5-Windows.exe --script ../install.qs
-  #- cd ../temp
-  #- OpenStudio-2.4.1.b75cf90df5-Windows.exe --script ../OpenStudio/install.qs
-  - "cd \"c:\\\""
-  ##- if not exist "OpenStudio-resources" mkdir OpenStudio-resources
-  ##- cd OpenStudio-resources
+  - cd build
+  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.exe"
+  allow_failure: true
+
+deploy:mac:
+  stage: deploy
+  only:
+  - develop
+  tags:
+  - mac
+  dependencies:
+  - build:mac
+  script:
+  - cd build/_CPack_Packages/Darwin/IFW
+  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.zip"
+  allow_failure: true
+
+deploy:ubuntu:
+  stage: deploy
+  only:
+  - develop
+  tags:
+  - ubuntu
+  dependencies:
+  - build:ubuntu
+  script:
+  - cd build
+  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.deb"  
+  allow_failure: true
+  
+testCTest:windows:
+  stage: testCTest
+  only:
+  - develop
+  tags:
+  - windows
+  dependencies:
+  - build:windows
+  script:
+  - cd build
+  - dir
+  - CTest
+  allow_failure: true
+ 
+testResources:windows:
+  stage: testResources
+  only:
+  - develop
+  tags:
+  - windows
+  dependencies:
+  - build:windows
+  script:
+  - "rmdir c:\\\\openstudio\\ /s /q"
+  - cd build
+  - dir
+  - xcopy *.exe win.exe*
+  - dir
+  - win.exe --script ../install.qs
+  - cd c://openstudio/
   - git clone https://github.com/NREL/OpenStudio-resources.git
-  #- "cd \"c:\\openstudio\\bin\\\""
-  #- "openstudio.exe c:\\OpenStudio-resources\\model_tests.rb"
+  - cd bin/
+  - openstudio.exe ../OpenStudio-resources/model_tests.rb"
+  allow_failure: true # To allow for CTest failures above
+

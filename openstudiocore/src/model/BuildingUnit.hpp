@@ -77,18 +77,25 @@ class MODEL_API BuildingUnit : public ModelObject {
 
   std::vector<Space> spaces() const;
 
+  /// \deprecated { This method is deprecated, use additionalProperties instead }
   std::vector<std::string> featureNames() const;
 
+  /// \deprecated { This method is deprecated, use additionalProperties instead }
   boost::optional<std::string> getFeatureDataType(const std::string& name) const;
 
+  /// \deprecated { This method is deprecated, use additionalProperties instead }
   boost::optional<std::string> getFeatureAsString(const std::string& name) const;
 
+  /// \deprecated { This method is deprecated, use additionalProperties instead }
   boost::optional<double> getFeatureAsDouble(const std::string& name) const;
 
+  /// \deprecated { This method is deprecated, use additionalProperties instead }
   boost::optional<int> getFeatureAsInteger(const std::string& name) const;
 
+  /// \deprecated { This method is deprecated, use additionalProperties instead }
   boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
 
+  /// \deprecated { This method is deprecated, use additionalProperties instead }
   std::vector<std::string> suggestedFeatures() const;
 
   double floorArea() const;
@@ -105,16 +112,22 @@ class MODEL_API BuildingUnit : public ModelObject {
 
   void resetBuildingUnitType();
 
+  /// \deprecated { This method is deprecated, use additionalProperties instead }
   bool setFeature(const std::string& name, const std::string& value);
 
+  /// \deprecated { This method is deprecated, use additionalProperties instead }
   bool setFeature(const std::string& name, const char* value);
 
+  /// \deprecated { This method is deprecated, use additionalProperties instead }
   bool setFeature(const std::string& name, double value);
 
+  /// \deprecated { This method is deprecated, use additionalProperties instead }
   bool setFeature(const std::string& name, int value);
 
+  /// \deprecated { This method is deprecated, use additionalProperties instead }
   bool setFeature(const std::string& name, bool value);
 
+  /// \deprecated { This method is deprecated, use additionalProperties instead }
   bool resetFeature(const std::string& name);
 
   //@}

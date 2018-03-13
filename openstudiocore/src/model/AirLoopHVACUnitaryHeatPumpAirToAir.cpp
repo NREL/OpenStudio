@@ -674,6 +674,19 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"AirLoopHVAC:UnitaryHeatPump:AirToAir", "Autosized Supply Air Flow Rate"},
+                                            {"Unitary HVAC", "Sensible Load Request"},
+                                            {"Unitary HVAC", "Moisture Load Request"}};
+    return actuators;
+  }
+
+  std::vector<std::string> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Unitary HVAC Design Heating Capacity",
+                                   "Unitary HVAC Design Cooling Capacity"};
+    return types;
+  }
+
 } // detail
 
 AirLoopHVACUnitaryHeatPumpAirToAir::AirLoopHVACUnitaryHeatPumpAirToAir( const Model & model,

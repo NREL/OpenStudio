@@ -122,14 +122,6 @@ class MODEL_API BuildingUnit_Impl : public ModelObject_Impl {
  private:
   REGISTER_LOGGER("openstudio.model.BuildingUnit")
 
-  boost::optional<ModelExtensibleGroup> getFeatureGroupByName(const std::string& name) const;
-
-  bool setFeatureGroupDataTypeAndValue(const std::string& name, const std::string& dataType, const std::string& value);
-
-  boost::optional<std::string> getFeatureStringAndCheckForType(const std::string& name, const std::string& expectedDataType) const;
-
-  //bool setRenderingColorAsModelObject(boost::optional<ModelObject> modelObject);
-
 };
 
 } // detail

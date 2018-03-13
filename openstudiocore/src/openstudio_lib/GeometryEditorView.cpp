@@ -65,6 +65,7 @@
 
 #include <utilities/idd/IddEnums.hxx>
 
+#include <QFile>
 #include <QDialog>
 #include <QTcpServer>
 #include <QComboBox>
@@ -408,10 +409,10 @@ void EditorWebView::startEditor()
     }
 
     if (m_isIP){
-      config["units"] = "ft";
+      config["units"] = "ip";
       config["initialGridSize"] = 15;
     }else{
-      config["units"] = "m";
+      config["units"] = "si";
       config["initialGridSize"] = 5;
     }
 
@@ -452,6 +453,33 @@ void EditorWebView::startEditor()
     }
   }
 
+  // customize css
+  {
+    OS_ASSERT(!m_javascriptRunning);
+
+    m_javascriptRunning = true;
+
+    QFile cssFile(":/library/geometry_editor.css");
+    bool test = cssFile.open(QFile::ReadOnly | QFile::Text);
+    OS_ASSERT(test);
+    QTextStream cssStream(&cssFile);
+    QString css = cssStream.readAll();
+    cssFile.close();
+
+    QString javascript = "const rules = `\n";
+    javascript += css;
+    javascript += "`;\n\
+const style = document.createElement('style')\n\
+style.type = 'text/css';\n\
+style.innerHTML = rules;\n\
+document.head.appendChild(style);\n";
+
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
+    }
+  }
+
   // create library from current model
   {
     OS_ASSERT(!m_javascriptRunning);
@@ -463,7 +491,7 @@ void EditorWebView::startEditor()
 
       std::string json = m_floorplan->toJSON(false);
 
-      QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+      QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("), { noReloadGrid: false });");
       m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
       while (m_javascriptRunning){
         OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
@@ -473,6 +501,8 @@ void EditorWebView::startEditor()
 
       // import current model content as library
       FloorplanJS floorplan;
+      floorplan.setUnits("si");
+
       model::FloorplanJSForwardTranslator ft;
       floorplan = ft.updateFloorplanJS(floorplan, m_model, false);
 
@@ -519,7 +549,10 @@ void EditorWebView::doExport()
     m_javascriptRunning = true;
     m_document->disable();
     QString javascript = QString("JSON.stringify(window.api.exportFloorplan());");
-    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; m_javascriptRunning = false; });
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {
+      m_export = v;
+      m_javascriptRunning = false;
+    });
     while (m_javascriptRunning){
       OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
     }
@@ -534,6 +567,9 @@ void EditorWebView::doExport()
       bool t = false;
     }
 
+  } else{
+      // DLM: This is an error
+      bool t = false;
   }
 }
 
@@ -658,7 +694,7 @@ void EditorWebView::mergeExport()
   OS_ASSERT(m_floorplan);
   std::string json = m_floorplan->toJSON(false);
 
-  QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+  QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("), { noReloadGrid: true });");
   //QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
   m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
   while (m_javascriptRunning){

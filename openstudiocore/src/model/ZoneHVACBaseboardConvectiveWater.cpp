@@ -277,6 +277,18 @@ std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove()
       thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
     }
   }
+
+  std::vector<EMSActuatorNames> ZoneHVACBaseboardConvectiveWater_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{ { "ZoneBaseboard:OutdoorTemperatureControlled", "Power Level" } };
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneHVACBaseboardConvectiveWater_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{ "Simple Zone Baseboard Capacity At Low Temperature",
+      "Simple Zone Baseboard Capacity At High Temperature" };
+    return types;
+  }
+
 } // detail
 
 ZoneHVACBaseboardConvectiveWater::ZoneHVACBaseboardConvectiveWater(const Model& model, Schedule& availabilitySchedule,StraightComponent& heatingCoilBaseboard)

@@ -60,6 +60,10 @@ class OutputVariable;
 class Meter;
 class Connection;
 
+class EMSActuatorNames;
+
+class AdditionalProperties;
+
 namespace detail {
 
   class Model_Impl;
@@ -211,6 +215,14 @@ namespace detail {
     /// REIMPLEMENT IN ALL CONCRETE MODEL OBJECTS (AND NOT IN ABSTRACT BASE CLASSES).
     virtual IddObjectType iddObjectType() const=0;
 
+    /** Returns this object's additional properties, constructing a new object if necessary. */
+    AdditionalProperties additionalProperties() const;
+
+    bool hasAdditionalProperties() const;
+
+    /** Removes all additional properties that refer to this object. Returns removed objects. */
+    std::vector<IdfObject> removeAdditionalProperties();
+
     //@}
     /** @name Setters */
     //@{
@@ -227,6 +239,10 @@ namespace detail {
      *
      *  REIMPLEMENT IN ALL CONCRETE MODELOBJECTS THAT CAN POINT TO SCHEDULES. */
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const;
 
     //@}
     /** @name HVAC System Connections */
@@ -306,4 +322,3 @@ namespace detail {
 } // openstudio
 
 #endif
-

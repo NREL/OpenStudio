@@ -68,6 +68,10 @@ namespace detail {
 
     virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const = 0;
 
+    //virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    //virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Getters */
     //@{

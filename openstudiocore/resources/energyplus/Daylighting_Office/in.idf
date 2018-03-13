@@ -140,7 +140,7 @@
 ! schedule types, always on schedule, misc
 ! ***GENERAL SIMULATION PARAMETERS***
 
-  Version,8.8;
+  Version,8.9;
 
   SimulationControl,
     YES,                     !- Do Zone Sizing Calculation
@@ -2321,7 +2321,7 @@
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:2_CoolC DXCoil,   !- Name
@@ -2338,7 +2338,7 @@
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:3_CoolC DXCoil,   !- Name
@@ -2355,7 +2355,7 @@
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:4_CoolC DXCoil,   !- Name
@@ -2372,7 +2372,7 @@
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:5_CoolC DXCoil,   !- Name
@@ -2389,10 +2389,11 @@
     CoolCStandard10Ton_EIRFT,!- Energy Input Ratio Function of Temperature Curve Name
     CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   ZoneHVAC:EquipmentList,
     Core_ZN Equipment,       !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Core_ZN Direct Air,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -2400,6 +2401,7 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_ZN_1 Equipment,!- Name
+    SequentialLoad,          !- Load Distribution Scheme
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Perimeter_ZN_1 Direct Air,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -2407,6 +2409,7 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_ZN_2 Equipment,!- Name
+    SequentialLoad,          !- Load Distribution Scheme
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Perimeter_ZN_2 Direct Air,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -2414,6 +2417,7 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_ZN_3 Equipment,!- Name
+    SequentialLoad,          !- Load Distribution Scheme
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Perimeter_ZN_3 Direct Air,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -2421,6 +2425,7 @@
 
   ZoneHVAC:EquipmentList,
     Perimeter_ZN_4 Equipment,!- Name
+    SequentialLoad,          !- Load Distribution Scheme
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Perimeter_ZN_4 Direct Air,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence

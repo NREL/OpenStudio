@@ -209,6 +209,9 @@ path relativePath(const path& p,const path& base) {
 
 path completeAndNormalize(const path& p) {
   path temp = openstudio::filesystem::system_complete(p);
+  if ( openstudio::filesystem::is_symlink(temp) ) {
+    temp = openstudio::filesystem::read_symlink(temp);
+  }
   if (temp.empty() && !p.empty()) {
     temp = p;
   }

@@ -38,6 +38,7 @@ class CurveQuadratic;
 class ScheduleCompact;
 class AirLoopHVACOutdoorAirSystem;
 class ControllerMechanicalVentilation;
+class AirflowNetworkOutdoorAirflow;
 
 namespace detail {
 
@@ -179,6 +180,9 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
 
   std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+  AirflowNetworkOutdoorAirflow getAirflowNetworkOutdoorAirflow(const AirflowNetworkCrack& crack);
+  boost::optional<AirflowNetworkOutdoorAirflow> airflowNetworkOutdoorAirflow() const;
+
   boost::optional<double> autosizedMinimumOutdoorAirFlowRate() const ;
 
   boost::optional<double> autosizedMaximumOutdoorAirFlowRate() const ;
@@ -186,6 +190,10 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
   void autosize();
 
   void applySizingValues();
+
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
 
  private:
 

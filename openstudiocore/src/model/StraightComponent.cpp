@@ -42,6 +42,8 @@
 #include "Splitter_Impl.hpp"
 #include "Mixer.hpp"
 #include "Mixer_Impl.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {

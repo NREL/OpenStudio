@@ -326,6 +326,17 @@ namespace detail {
 
   }
 
+  std::vector<EMSActuatorNames> HeaderedPumpsConstantSpeed_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Pump", "Pump Mass Flow Rate"},
+                                            {"Pump", "Pump Pressure Rise"}};
+    return actuators;
+  }
+
+  std::vector<std::string> HeaderedPumpsConstantSpeed_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Pump Maximum Mass Flow Rate"};
+    return types;
+  }
+
 } // detail
 
 HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(const Model& model)

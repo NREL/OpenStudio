@@ -39,10 +39,7 @@ class Schedule;
 namespace detail {
 
   class MODEL_API CoilCoolingWater_Impl : public WaterToAirComponent_Impl {
-
-
-
-  public:
+      public:
     /** @name Constructors and Destructors */
     //@{
 
@@ -85,6 +82,8 @@ namespace detail {
     virtual bool addToNode(Node & node) override;
 
     virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
+    virtual std::vector<ModelObject> children() const override;
 
     //@}
 
@@ -156,6 +155,11 @@ namespace detail {
 
     bool setHeatExchangerConfiguration( std::string value );
 
+
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+    
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
     boost::optional<double> autosizedDesignWaterFlowRate() const ;
 
     boost::optional<double> autosizedDesignAirFlowRate() const ;
@@ -191,4 +195,4 @@ namespace detail {
 
 } // openstudio
 
-#endif // MODEL_COILCOOLINGWATER_IMPL_HPP
+#endif // MODEL_COILCOOLINGWATER_IMPL_HPP

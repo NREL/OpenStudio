@@ -23,6 +23,26 @@
 
 #endif
 
+namespace openstudio {
+namespace model {
+
+// forward declarations
+%feature("valuewrapper") AirflowNetworkDistributionNode;
+%feature("valuewrapper") AirflowNetworkZone;
+%feature("valuewrapper") AirflowNetworkEquivalentDuct;
+%feature("valuewrapper") AirflowNetworkFan;
+%feature("valuewrapper") AirflowNetworkOutdoorAirflow;
+%feature("valuewrapper") AirflowNetworkZoneExhaustFan;
+class AirflowNetworkDistributionNode;
+class AirflowNetworkZone;
+class AirflowNetworkEquivalentDuct;
+class AirflowNetworkFan;
+class AirflowNetworkOutdoorAirflow;
+class AirflowNetworkZoneExhaustFan;
+
+}
+}
+
 %ignore std::vector<openstudio::model::SupplyAirflowRatioField>::vector(size_type);
 %ignore std::vector<openstudio::model::SupplyAirflowRatioField>::resize(size_type);
 %template(SupplyAirflowRatioFieldVector) std::vector<openstudio::model::SupplyAirflowRatioField>;

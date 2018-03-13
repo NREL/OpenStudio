@@ -67,6 +67,8 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual std::vector<ModelObject> children() const override;
+
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     virtual boost::optional<ThermalZone> thermalZone() override;
@@ -98,6 +100,10 @@ namespace detail {
     boost::optional<Schedule> minimumZoneTemperatureLimitSchedule() const;
 
     boost::optional<Schedule> balancedExhaustFractionSchedule() const;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */
@@ -134,6 +140,9 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    AirflowNetworkZoneExhaustFan getAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack);
+    boost::optional<AirflowNetworkZoneExhaustFan> airflowNetworkZoneExhaustFan() const;
 
     //@}
    protected:

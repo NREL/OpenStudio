@@ -94,6 +94,7 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_Reheat).value()] = new QPixmap(":images/vav-reheat.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Boiler_HotWater).value()] = new QPixmap(":images/boiler.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Boiler_Steam).value()] = new QPixmap(":images/boiler_steam.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_CentralHeatPumpSystem).value()] = new QPixmap(":images/centralheatpumpsystem.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Chiller_Electric_EIR).value()] = new QPixmap(":images/chiller_air.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Chiller_Absorption_Indirect).value()] = new QPixmap(":images/chiller_absorption_indirect.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Chiller_Absorption).value()] = new QPixmap(":images/chiller_absorption_direct.png");
@@ -191,6 +192,21 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump).value()] = new QPixmap(":images/watertoairHP.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater).value()] = new QPixmap(":images/heat_coil-uht.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_UnitVentilator).value()] = new QPixmap(":images/unit_ventilator.png");
+
+
+  // TODO: Update if create new icons... placeholder for now
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_Scheduled).value()] = new QPixmap(":images/hvac-icon.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_ScheduledOn).value()] = new QPixmap(":images/hvac-icon.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_ScheduledOff).value()] = new QPixmap(":images/hvac-icon.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOn).value()] = new QPixmap(":images/hvac-icon.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOff).value()] = new QPixmap(":images/hvac-icon.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOn).value()] = new QPixmap(":images/hvac-icon.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOff).value()] = new QPixmap(":images/hvac-icon.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_DifferentialThermostat).value()] = new QPixmap(":images/hvac-icon.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_OptimumStart).value()] = new QPixmap(":images/hvac-icon.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_NightCycle).value()] = new QPixmap(":images/hvac-icon.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_NightVentilation).value()] = new QPixmap(":images/hvac-icon.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_HybridVentilation).value()] = new QPixmap(":images/hvac-icon.png");
 
   // mini icons
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow).value()] = new QPixmap(":images/mini_icons/mini_vrf_outdoor.png");
@@ -320,6 +336,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_InletSideMixer).value()] = new QPixmap(":images/mini_icons/mini_air_terminal_inlet_mixer.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Boiler_HotWater).value()] = new QPixmap(":images/mini_icons/boiler_steam.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Boiler_Steam).value()] = new QPixmap(":images/mini_icons/boiler.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_CentralHeatPumpSystem).value()] = new QPixmap(":images/mini_icons/centralheatpumpsystem.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Chiller_Electric_EIR).value()] = new QPixmap(":images/mini_icons/chiller_air.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Chiller_Absorption_Indirect).value()] = new QPixmap(":images/mini_icons/mini_chiller_absorption_indirect.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Chiller_Absorption).value()] = new QPixmap(":images/mini_icons/mini_chiller_absorption_direct.png");
@@ -405,6 +422,22 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner).value()] = new QPixmap(":images/mini_icons/system_type_1.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump).value()] = new QPixmap(":images/mini_icons/system_type_2.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater).value()] = new QPixmap(":images/mini_icons/heat_coil-uht.png");
-  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_UnitVentilator).value()] = new QPixmap(":images/mini_icons/mini_unit_ventilator.png");}
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_UnitVentilator).value()] = new QPixmap(":images/mini_icons/mini_unit_ventilator.png");
+
+  // TODO: Update if create new icons... placeholder for now
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_Scheduled).value()] = new QPixmap(":images/mini_icons/setpoint_mixed.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_ScheduledOn).value()] = new QPixmap(":images/mini_icons/setpoint_mixed.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_ScheduledOff).value()] = new QPixmap(":images/mini_icons/setpoint_mixed.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOn).value()] = new QPixmap(":images/mini_icons/setpoint_mixed.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_LowTemperatureTurnOff).value()] = new QPixmap(":images/mini_icons/setpoint_mixed.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOn).value()] = new QPixmap(":images/mini_icons/setpoint_mixed.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_HighTemperatureTurnOff).value()] = new QPixmap(":images/mini_icons/setpoint_mixed.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_DifferentialThermostat).value()] = new QPixmap(":images/mini_icons/setpoint_mixed.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_OptimumStart).value()] = new QPixmap(":images/mini_icons/setpoint_mixed.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_NightCycle).value()] = new QPixmap(":images/mini_icons/setpoint_mixed.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_NightVentilation).value()] = new QPixmap(":images/mini_icons/setpoint_mixed.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_HybridVentilation).value()] = new QPixmap(":images/mini_icons/setpoint_mixed.png");
+
+}
 
 }

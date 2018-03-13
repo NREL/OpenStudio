@@ -322,6 +322,16 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  std::vector<EMSActuatorNames> ElectricLoadCenterStorageSimple_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"Electrical Storage", "Power Draw Rate"},
+                                            {"Electrical Storage", "Power Charge Rate"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ElectricLoadCenterStorageSimple_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"Electrical Storage Simple Maximum Capacity"};
+    return types;
+  }
 } // detail
 
 /* Constructor. Defaults the availabilitySchedule to alwaysOnDiscreteSchedule,

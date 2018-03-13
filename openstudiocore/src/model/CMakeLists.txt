@@ -43,9 +43,84 @@ set(${target_name}_src
   ModelMerger.cpp
 
   ConcreteModelObjects.hpp
+  AdditionalProperties.hpp
+  AdditionalProperties_Impl.hpp
+  AdditionalProperties.cpp
   AirConditionerVariableRefrigerantFlow.hpp
   AirConditionerVariableRefrigerantFlow_Impl.hpp
   AirConditionerVariableRefrigerantFlow.cpp
+  AirflowNetworkComponent.hpp
+  AirflowNetworkComponent_Impl.hpp
+  AirflowNetworkComponent.cpp
+  AirflowNetworkConstantPressureDrop.hpp
+  AirflowNetworkConstantPressureDrop_Impl.hpp
+  AirflowNetworkConstantPressureDrop.cpp
+  AirflowNetworkCrack.hpp
+  AirflowNetworkCrack_Impl.hpp
+  AirflowNetworkCrack.cpp
+  AirflowNetworkDetailedOpening.hpp
+  AirflowNetworkDetailedOpening_Impl.hpp
+  AirflowNetworkDetailedOpening.cpp
+  AirflowNetworkDistributionLinkage.hpp
+  AirflowNetworkDistributionLinkage_Impl.hpp
+  AirflowNetworkDistributionLinkage.cpp
+  AirflowNetworkDistributionNode.hpp
+  AirflowNetworkDistributionNode_Impl.hpp
+  AirflowNetworkDistributionNode.cpp
+  AirflowNetworkDuct.hpp
+  AirflowNetworkDuct_Impl.hpp
+  AirflowNetworkDuct.cpp
+  AirflowNetworkDuctViewFactors.hpp
+  AirflowNetworkDuctViewFactors_Impl.hpp
+  AirflowNetworkDuctViewFactors.cpp
+  AirflowNetworkEffectiveLeakageArea.hpp
+  AirflowNetworkEffectiveLeakageArea_Impl.hpp
+  AirflowNetworkEffectiveLeakageArea.cpp
+  AirflowNetworkEquivalentDuct.hpp
+  AirflowNetworkEquivalentDuct_Impl.hpp
+  AirflowNetworkEquivalentDuct.cpp
+  AirflowNetworkExternalNode.hpp
+  AirflowNetworkExternalNode_Impl.hpp
+  AirflowNetworkExternalNode.cpp
+  AirflowNetworkFan.hpp
+  AirflowNetworkFan_Impl.hpp
+  AirflowNetworkFan.cpp
+  AirflowNetworkHorizontalOpening.hpp
+  AirflowNetworkHorizontalOpening_Impl.hpp
+  AirflowNetworkHorizontalOpening.cpp
+  AirflowNetworkLeakageRatio.hpp
+  AirflowNetworkLeakageRatio_Impl.hpp
+  AirflowNetworkLeakageRatio.cpp
+  AirflowNetworkLinkage.hpp
+  AirflowNetworkLinkage_Impl.hpp
+  AirflowNetworkLinkage.cpp
+  AirflowNetworkNode.hpp
+  AirflowNetworkNode_Impl.hpp
+  AirflowNetworkNode.cpp
+  AirflowNetworkOccupantVentilationControl.hpp
+  AirflowNetworkOccupantVentilationControl_Impl.hpp
+  AirflowNetworkOccupantVentilationControl.cpp
+  AirflowNetworkOutdoorAirflow.hpp
+  AirflowNetworkOutdoorAirflow_Impl.hpp
+  AirflowNetworkOutdoorAirflow.cpp
+  AirflowNetworkReferenceCrackConditions.hpp
+  AirflowNetworkReferenceCrackConditions_Impl.hpp
+  AirflowNetworkReferenceCrackConditions.cpp
+  AirflowNetworkSimpleOpening.hpp
+  AirflowNetworkSimpleOpening_Impl.hpp
+  AirflowNetworkSimpleOpening.cpp
+  AirflowNetworkSimulationControl.hpp
+  AirflowNetworkSimulationControl_Impl.hpp
+  AirflowNetworkSimulationControl.cpp
+  AirflowNetworkSurface.hpp
+  AirflowNetworkSurface_Impl.hpp
+  AirflowNetworkSurface.cpp
+  AirflowNetworkZone.hpp
+  AirflowNetworkZone_Impl.hpp
+  AirflowNetworkZone.cpp
+  AirflowNetworkZoneExhaustFan.hpp
+  AirflowNetworkZoneExhaustFan_Impl.hpp
+  AirflowNetworkZoneExhaustFan.cpp
   AirGap.hpp
   AirGap_Impl.hpp
   AirGap.cpp
@@ -643,7 +718,7 @@ set(${target_name}_src
   FluidCoolerTwoSpeed.cpp
   FoundationKiva.hpp
   FoundationKiva_Impl.hpp
-  FoundationKiva.cpp  
+  FoundationKiva.cpp
   FoundationKivaSettings.hpp
   FoundationKivaSettings_Impl.hpp
   FoundationKivaSettings.cpp
@@ -1281,10 +1356,10 @@ set(${target_name}_src
   SurfacePropertyConvectionCoefficients_Impl.hpp
   SurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   SurfacePropertyConvectionCoefficientsMultipleSurface.hpp
-  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp  
+  SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp
   SurfacePropertyExposedFoundationPerimeter.cpp
   SurfacePropertyExposedFoundationPerimeter.hpp
-  SurfacePropertyExposedFoundationPerimeter_Impl.hpp  
+  SurfacePropertyExposedFoundationPerimeter_Impl.hpp
   SurfacePropertyOtherSideCoefficients.cpp
   SurfacePropertyOtherSideCoefficients.hpp
   SurfacePropertyOtherSideCoefficients_Impl.hpp
@@ -1490,6 +1565,7 @@ set(${target_name}_swig_src
   ModelResources.i
   ModelGeometry.i
   ModelHVAC.i
+  ModelAirflow.i
   ModelRefrigeration.i
   ModelGenerators.i
 )
@@ -1537,7 +1613,21 @@ if(UNIX OR MINGW)
 endif()
 
 set(${target_name}_test_src
+  test/AdditionalProperties_GTest.cpp
   test/AirConditionerVariableRefrigerantFlow_GTest.cpp
+  test/AirflowNetworkCrack_GTest.cpp
+  test/AirflowNetworkDetailedOpening_GTest.cpp
+  test/AirflowNetworkDistributionNode_GTest.cpp
+  test/AirflowNetworkDuctViewFactors_GTest.cpp
+  test/AirflowNetworkEffectiveLeakageArea_GTest.cpp
+  test/AirflowNetworkEquivalentDuct_GTest.cpp
+  test/AirflowNetworkExternalNode_GTest.cpp
+  test/AirflowNetworkHorizontalOpening_GTest.cpp
+  test/AirflowNetworkOccupantVentilationControl_GTest.cpp
+  test/AirflowNetworkSimpleOpening_GTest.cpp
+  test/AirflowNetworkSimulationControl_GTest.cpp
+  test/AirflowNetworkSurface_GTest.cpp
+  test/AirflowNetworkZone_GTest.cpp
   test/AirGap_GTest.cpp
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
@@ -1925,7 +2015,9 @@ MAKE_SWIG_TARGET(OpenStudioModelGeometry model "${CMAKE_CURRENT_SOURCE_DIR}/Mode
 
 MAKE_SWIG_TARGET(OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHVAC.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelGeometry)
 
-MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+MAKE_SWIG_TARGET(OpenStudioModelAirflow model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAirflow.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+
+MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelAirflow)
 
 MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelRefrigeration)
 

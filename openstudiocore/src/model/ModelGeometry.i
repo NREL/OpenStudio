@@ -24,12 +24,19 @@
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelGeometry
 
-  // ignore thermal zone for now
+  // ignore hvac objects for now, add back in with partial classes in ModelHVAC.i
   %ignore openstudio::model::Building::thermalZones;
   %ignore openstudio::model::Space::thermalZone;
   %ignore openstudio::model::Space::setThermalZone;
+  %ignore openstudio::model::Space::waterUseEquipment;
 
-  // ignore GeneratorPhotovoltaic
+  // ignore airflow objects for now, add back in with partial classes in ModelAirflow.i
+   %ignore openstudio::model::Surface::getAirflowNetworkSurface;
+   %ignore openstudio::model::Surface::airflowNetworkSurface;
+   %ignore openstudio::model::SubSurface::getAirflowNetworkSurface;
+   %ignore openstudio::model::SubSurface::airflowNetworkSurface;
+
+  // ignore generator objects for now, add back in with partial classes in ModelGenerators.i
   %ignore openstudio::model::PlanarSurface::generatorPhotovoltaics;
 
   // DLM: this is a proof of concept section to see how attributes work in C#
@@ -89,6 +96,15 @@ class SpaceLoadInstance;
 class SpaceLoadDefinition;
 class GeneratorPhotovoltaic;
 
+%feature("valuewrapper") AirflowNetworkSurface;
+%feature("valuewrapper") AirflowNetworkCrack;
+class AirflowNetworkSurface;
+class AirflowNetworkCrack;
+class AirflowNetworkDetailedOpening;
+class AirflowNetworkEffectiveLeakageArea;
+class AirflowNetworkHorizontalOpening;
+class AirflowNetworkSimpleOpening;
+
 class ExteriorLights;
 class ExteriorFuelEquipment;
 class ExteriorWaterEquipment;
@@ -139,7 +155,7 @@ MODELOBJECT_TEMPLATES(LightingSimulationZone);
 MODELOBJECT_TEMPLATES(FoundationKiva);
 MODELOBJECT_TEMPLATES(SurfacePropertyExposedFoundationPerimeter);
 
-MODELOBJECT_TEMPLATES(ExteriorLoadInstance);   
+MODELOBJECT_TEMPLATES(ExteriorLoadInstance);
 MODELOBJECT_TEMPLATES(ExteriorLights);
 MODELOBJECT_TEMPLATES(ExteriorFuelEquipment);
 MODELOBJECT_TEMPLATES(ExteriorWaterEquipment);
@@ -186,7 +202,7 @@ SWIG_MODELOBJECT(LightingSimulationZone, 1);
 SWIG_MODELOBJECT(FoundationKiva, 1);
 SWIG_MODELOBJECT(SurfacePropertyExposedFoundationPerimeter, 1);
 
-SWIG_MODELOBJECT(ExteriorLoadInstance, 0); 
+SWIG_MODELOBJECT(ExteriorLoadInstance, 0);
 SWIG_MODELOBJECT(ExteriorLights, 1);
 SWIG_MODELOBJECT(ExteriorFuelEquipment, 1);
 SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);

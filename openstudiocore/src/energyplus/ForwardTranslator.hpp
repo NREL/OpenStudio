@@ -46,6 +46,27 @@ class Transformation;
 namespace model{
 
 class AirConditionerVariableRefrigerantFlow;
+class AirflowNetworkSimulationControl;
+class AirflowNetworkZone;
+class AirflowNetworkSurface;
+class AirflowNetworkReferenceCrackConditions;
+class AirflowNetworkCrack;
+class AirflowNetworkEffectiveLeakageArea;
+class AirflowNetworkDetailedOpening;
+class AirflowNetworkSimpleOpening;
+class AirflowNetworkHorizontalOpening;
+class AirflowNetworkZoneExhaustFan;
+class AirflowNetworkExternalNode;
+class AirflowNetworkDistributionNode;
+class AirflowNetworkLeakageRatio;
+class AirflowNetworkDuct;
+class AirflowNetworkFan;
+class AirflowNetworkEquivalentDuct;
+class AirflowNetworkConstantPressureDrop;
+class AirflowNetworkOutdoorAirflow;
+class AirflowNetworkDistributionLinkage;
+class AirflowNetworkDuctViewFactors;
+class AirflowNetworkOccupantVentilationControl;
 class AirGap;
 class AirLoopHVAC;
 class AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass;
@@ -421,7 +442,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "8.8"
+#define ENERGYPLUS_VERSION "8.9"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:
@@ -484,6 +505,48 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateAndMapModelObject( model::ModelObject & modelObject );
 
   boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlow( model::AirConditionerVariableRefrigerantFlow & modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkSimulationControl( model::AirflowNetworkSimulationControl & modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkZone( model::AirflowNetworkZone& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkSurface( model::AirflowNetworkSurface& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkReferenceCrackConditions( model::AirflowNetworkReferenceCrackConditions& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkCrack( model::AirflowNetworkCrack& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkEffectiveLeakageArea( model::AirflowNetworkEffectiveLeakageArea& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkDetailedOpening( model::AirflowNetworkDetailedOpening& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkSimpleOpening( model::AirflowNetworkSimpleOpening& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkHorizontalOpening( model::AirflowNetworkHorizontalOpening& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkZoneExhaustFan( model::AirflowNetworkZoneExhaustFan& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkExternalNode( model::AirflowNetworkExternalNode& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkDistributionNode( model::AirflowNetworkDistributionNode& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkLeakageRatio( model::AirflowNetworkLeakageRatio& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkDuct( model::AirflowNetworkDuct& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkFan( model::AirflowNetworkFan& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkEquivalentDuct( model::AirflowNetworkEquivalentDuct& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkConstantPressureDrop( model::AirflowNetworkConstantPressureDrop& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkOutdoorAirflow( model::AirflowNetworkOutdoorAirflow& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkDistributionLinkage( model::AirflowNetworkDistributionLinkage& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkDuctViewFactors( model::AirflowNetworkDuctViewFactors& modelObject );
+
+  boost::optional<IdfObject> translateAirflowNetworkOccupantVentilationControl( model::AirflowNetworkOccupantVentilationControl& modelObject );
 
   boost::optional<IdfObject> translateAirGap( model::AirGap & modelObject );
 
@@ -1237,6 +1300,9 @@ class ENERGYPLUS_API ForwardTranslator {
 
   // translate all schedules and find always on and always off schedules if they exist
   void translateSchedules(const model::Model & model);
+
+  // translate all airflow network objects if an AFN simulation control exists
+  void translateAirflowNetwork(const model::Model & model);
 
   // returns the always on schedule if found, otherwise creates one and saves for later
   IdfObject alwaysOnSchedule();

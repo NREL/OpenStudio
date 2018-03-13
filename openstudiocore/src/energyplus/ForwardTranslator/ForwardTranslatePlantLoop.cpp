@@ -51,6 +51,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/BoilerHotWater.hpp"
 #include "../../model/BoilerHotWater_Impl.hpp"
+#include "../../model/CentralHeatPumpSystem.hpp"
+#include "../../model/CentralHeatPumpSystem_Impl.hpp"
 #include "../../model/ChillerElectricEIR.hpp"
 #include "../../model/ChillerElectricEIR_Impl.hpp"
 #include "../../model/ChillerAbsorption.hpp"
@@ -307,8 +309,31 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
       }
       else if( auto waterToWaterComponent = modelObject.optionalCast<WaterToWaterComponent>() )
       {
-        if( isSupplyBranch )
-        {
+        // Special case for CentralHeatPump
+        if ( auto central_hp = modelObject.optionalCast<CentralHeatPumpSystem>() ) {
+          auto coolingLoop = central_hp->coolingPlantLoop();
+          auto heatingLoop = central_hp->heatingPlantLoop();
+          auto sourceLoop = central_hp->sourcePlantLoop();
+
+          // supply = cooling Loop
+          if (loop.handle() == coolingLoop->handle()) {
+            inletNode = waterToWaterComponent->supplyInletModelObject()->optionalCast<Node>();
+            outletNode = waterToWaterComponent->supplyOutletModelObject()->optionalCast<Node>();
+
+          // tertiary = heating loop
+          } else if (loop.handle() == heatingLoop->handle()) {
+            inletNode = waterToWaterComponent->tertiaryInletModelObject()->optionalCast<Node>();
+            outletNode = waterToWaterComponent->tertiaryOutletModelObject()->optionalCast<Node>();
+
+          // demand = source loop
+          } else if (loop.handle() == sourceLoop->handle()) {
+            inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
+            outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
+
+          }
+
+        // Regular case
+        } else if( isSupplyBranch ) {
           inletNode = waterToWaterComponent->supplyInletModelObject()->optionalCast<Node>();
           outletNode = waterToWaterComponent->supplyOutletModelObject()->optionalCast<Node>();
         }

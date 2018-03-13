@@ -493,6 +493,10 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   virtual void applySizingValues() override;
 
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
+
  private:
 
   REGISTER_LOGGER("openstudio.model.AirConditionerVariableRefrigerantFlow");

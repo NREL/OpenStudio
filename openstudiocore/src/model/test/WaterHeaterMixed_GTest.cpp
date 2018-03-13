@@ -31,6 +31,9 @@
 #include "../WaterHeaterMixed.hpp"
 #include "../WaterHeaterMixed_Impl.hpp"
 
+#include "../ScheduleConstant.hpp"
+
+
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -48,4 +51,43 @@ TEST(WaterHeaterMixed,WaterHeaterMixed_WaterHeaterMixed)
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
+
+TEST(WaterHeaterMixed,WaterHeaterMixed_NewFields)
+{
+  Model m;
+
+  WaterHeaterMixed wh(m);
+
+  // Test defaults
+  EXPECT_EQ("IndirectHeatPrimarySetpoint", wh.sourceSideFlowControlMode());
+  EXPECT_FALSE(wh.indirectAlternateSetpointTemperatureSchedule());
+  EXPECT_EQ("General", wh.endUseSubcategory());
+
+
+  EXPECT_TRUE(wh.setSourceSideFlowControlMode("StorageTank"));
+  // Shouldn't accept it, it should be set via the schedule method
+  EXPECT_FALSE(wh.setSourceSideFlowControlMode("IndirectHeatAlternateSetpoint"));
+  EXPECT_FALSE(wh.setSourceSideFlowControlMode("BadValue"));
+
+  ScheduleConstant sch(m);
+  EXPECT_TRUE(wh.setIndirectAlternateSetpointTemperatureSchedule(sch));
+  ASSERT_TRUE(wh.indirectAlternateSetpointTemperatureSchedule());
+  EXPECT_EQ(sch, wh.indirectAlternateSetpointTemperatureSchedule().get());
+  EXPECT_EQ("IndirectHeatAlternateSetpoint", wh.sourceSideFlowControlMode());
+
+  // Reset the schedule also resets the flow control mode
+  wh.resetIndirectAlternateSetpointTemperatureSchedule();
+  EXPECT_FALSE(wh.indirectAlternateSetpointTemperatureSchedule());
+  EXPECT_EQ("IndirectHeatPrimarySetpoint", wh.sourceSideFlowControlMode());
+
+  EXPECT_TRUE(wh.setIndirectAlternateSetpointTemperatureSchedule(sch));
+  // Changing the flow control should reset the schedule
+  EXPECT_TRUE(wh.setSourceSideFlowControlMode("StorageTank"));
+  EXPECT_FALSE(wh.indirectAlternateSetpointTemperatureSchedule());
+
+  EXPECT_TRUE(wh.setEndUseSubcategory("SomethingElse"));
+  EXPECT_EQ("SomethingElse", wh.endUseSubcategory());
+
+}
+
 

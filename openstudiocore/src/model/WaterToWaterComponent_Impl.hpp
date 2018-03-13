@@ -87,8 +87,16 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
 
   void disconnect() override;
 
-  boost::optional<PlantLoop> plantLoop() const override;
+  /*
+   * This method checks for presence of the WaterToWaterComponent on the supply side of plantLoops
+   * and checks that it isn't the tertiary plant loop
+   */
+  virtual boost::optional<PlantLoop> plantLoop() const override;
 
+ /*
+  * This method checks for presence of the WaterToWaterComponent on the demand side of plantLoops
+  * and checks that it isn't the tertiary plant loop
+  */
   boost::optional<PlantLoop> secondaryPlantLoop() const;
 
   bool removeFromPlantLoop();
@@ -99,6 +107,10 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
 
   virtual unsigned tertiaryOutletPort() const;
 
+ /*
+  * This method checks for presence of the WaterToWaterComponent on either the supply or demand side of plantLoops
+  * and does an extra check for actual node: the tertiaryOutletModelObject has to be on the plant loop too
+  */
   boost::optional<PlantLoop> tertiaryPlantLoop() const;
 
   bool removeFromTertiaryPlantLoop();

@@ -193,6 +193,10 @@ namespace detail {
     /** @name Other */
     //@{
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
    protected:
    private:

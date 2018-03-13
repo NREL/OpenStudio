@@ -68,10 +68,14 @@ class OutputVariable;
 class OutputMeterMeter;
 class Connection;
 
+class AdditionalProperties;
+
 namespace detail {
   class Model_Impl;
   class ModelObject_Impl;
 } // detail
+
+class EMSActuatorNames;
 
 /** Typedef for ScheduleTypeRegistry key. First is a string representation of the class name.
  *  Second is a display name for the schedule. \relates ModelObject */
@@ -271,6 +275,16 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
    */
   IddObjectType iddObjectType() const;
 
+  /** Returns this object's additional properties, constructing a new object if necessary.
+  *   This method will throw if called on an AddditionalProperties object. */
+  AdditionalProperties additionalProperties() const;
+
+  /** Returns true if this object has additional properties. */
+  bool hasAdditionalProperties() const;
+
+  /** Removes all additional properties that refer to this object. Returns removed objects. */
+  std::vector<IdfObject> removeAdditionalProperties();
+
   //@}
   /** @name Setters */
   //@{
@@ -297,6 +311,14 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
 
   /** Gets the autosized component value from the sql file **/
   boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString) const;
+
+  /** Return the names of the available ems actuators.
+  */
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const;
+
+  /** Return the names of the available ems internal variables.
+  */
+  virtual std::vector<std::string> emsInternalVariableNames() const;
 
   //@}
   /** @name HVAC System Connections */
@@ -333,6 +355,21 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
  private:
 
   REGISTER_LOGGER("openstudio.model.ModelObject");
+};
+
+class MODEL_API EMSActuatorNames
+{
+public:
+
+  EMSActuatorNames(const std::string & componentTypeName, const std::string & controlTypeName);
+
+  std::string controlTypeName() const;
+  std::string componentTypeName() const;
+
+private:
+
+  std::string m_controlTypeName;
+  std::string m_componentTypeName;
 };
 
 /// optional ModelObject

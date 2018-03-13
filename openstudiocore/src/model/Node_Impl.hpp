@@ -43,6 +43,7 @@ class SetpointManagerFollowOutdoorAirTemperature;
 class SetpointManagerOutdoorAirReset;
 class SetpointManagerWarmest;
 class SetpointManager;
+class AirflowNetworkDistributionNode;
 
 namespace detail {
 
@@ -125,6 +126,14 @@ namespace detail {
     ModelObject clone(Model model) const override;
 
     bool isConnected(const ModelObject & modelObject);
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+    AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
+
+    boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
    private:
 

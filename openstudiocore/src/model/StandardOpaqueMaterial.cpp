@@ -474,6 +474,18 @@ namespace detail {
     return getVisibleAbsorptance(true);
   }
 
+  std::vector<EMSActuatorNames> StandardOpaqueMaterial_Impl::emsActuatorNames() const {
+	  std::vector<EMSActuatorNames> actuators{ { "Material", "Surface Property Solar Absorptance" },
+      	                                       { "Material", "Surface Property Thermal Absorptance" },
+											   { "Material", "Surface Property Visible Absorptance" }};
+	  return actuators;
+  }
+
+  std::vector<std::string> StandardOpaqueMaterial_Impl::emsInternalVariableNames() const {
+	  std::vector<std::string> types;
+	  return types;
+  }
+
 } // detail
 
 StandardOpaqueMaterial::StandardOpaqueMaterial(const Model& model,

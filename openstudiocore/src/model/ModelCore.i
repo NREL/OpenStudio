@@ -23,13 +23,17 @@
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelCore
 
-  // ignore building for now
-  %ignore openstudio::model::Model::building;
+  // ignore simulation objects for now, add back in with partial classes in ModelSimulation.i
+  %ignore openstudio::model::Model::foundationKivaSettings;
+  %ignore openstudio::model::Model::runPeriod;
+  %ignore openstudio::model::Model::weatherFile;
+  %ignore openstudio::model::Model::yearDescription;
 
-  // Ignore plenum space type for now
+  // ignore geometry objects for now, add back in with partial classes in ModelGeometry.i
+  %ignore openstudio::model::Model::building;
   %ignore openstudio::model::Model::plenumSpaceType;
 
-  // Ignore outdoor air node for now
+  // Ignore hvac objects for now, add back in with partial classes in ModelHVAC.i
   %ignore openstudio::model::Model::outdoorAirNode;
 
   // should be able to do something here as C# supports partial classes
@@ -197,6 +201,7 @@ MODELOBJECT_TEMPLATES(ScheduleYear);
 MODELOBJECT_TEMPLATES(ScheduleRule);
 MODELOBJECT_TEMPLATES(ScheduleRuleset);
 MODELOBJECT_TEMPLATES(OutputVariable);
+MODELOBJECT_TEMPLATES(AdditionalProperties);
 MODELOBJECT_TEMPLATES(GenericModelObject);
 MODELOBJECT_TEMPLATES(ModelObjectList);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemSensor);
@@ -249,6 +254,7 @@ SWIG_MODELOBJECT(ScheduleYear, 1);
 SWIG_MODELOBJECT(ScheduleRule, 1);
 SWIG_MODELOBJECT(ScheduleRuleset, 1);
 SWIG_MODELOBJECT(OutputVariable, 1);
+SWIG_MODELOBJECT(AdditionalProperties, 1);
 SWIG_MODELOBJECT(GenericModelObject, 0);
 SWIG_MODELOBJECT(ModelObjectList, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemSensor, 1);

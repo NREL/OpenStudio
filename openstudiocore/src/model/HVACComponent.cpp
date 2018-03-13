@@ -522,6 +522,14 @@ namespace detail {
     return;
   }
 
+  std::vector<EMSActuatorNames> HVACComponent_Impl::emsActuatorNames() const {
+    return std::vector<EMSActuatorNames>();
+  }
+
+  std::vector<std::string> HVACComponent_Impl::emsInternalVariableNames() const {
+    return std::vector<std::string>();
+  }
+
 } // detail
 
 HVACComponent::HVACComponent(std::shared_ptr<detail::HVACComponent_Impl> p)

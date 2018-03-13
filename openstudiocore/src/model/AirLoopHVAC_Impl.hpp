@@ -259,6 +259,10 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   void createTopology();
 
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
+
   private:
 
   REGISTER_LOGGER("openstudio.model.AirLoopHVAC");

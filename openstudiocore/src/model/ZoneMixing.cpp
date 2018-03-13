@@ -414,6 +414,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  std::vector<EMSActuatorNames> ZoneMixing_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"ZoneMixing", "Air Exchange Flow Rate"}};
+    return actuators;
+  }
+
+  std::vector<std::string> ZoneMixing_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types;
+    return types;
+  }
 } // detail
 
 ZoneMixing::ZoneMixing(const ThermalZone& zone)

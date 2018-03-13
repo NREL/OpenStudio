@@ -41,82 +41,12 @@ namespace model {
 // TODO: Check the following class names against object getters and setters.
 class Schedule;
 class Connection;
-class Connection;
-class Connection;
-class Connection;
 
 namespace detail {
 
   /** HeatExchangerAirToAirSensibleAndLatent_Impl is a AirToAirComponent_Impl that is the implementation class for HeatExchangerAirToAirSensibleAndLatent.*/
   class MODEL_API HeatExchangerAirToAirSensibleAndLatent_Impl : public AirToAirComponent_Impl {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
    public:
 
     /** @name Constructors and Destructors */
@@ -139,6 +69,8 @@ namespace detail {
     //@}
     /** @name Virtual Methods */
     //@{
+
+    virtual std::vector<ModelObject> children() const override;
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
@@ -310,6 +242,9 @@ namespace detail {
 
     unsigned secondaryAirOutletPort() override;
 
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
     //@}
 
    protected:
@@ -361,4 +296,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_IMPL_HPP
+#endif // MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_IMPL_HPP

@@ -86,6 +86,10 @@ namespace detail {
 
     Schedule flowRateFractionSchedule() const;
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Setters */
     //@{
