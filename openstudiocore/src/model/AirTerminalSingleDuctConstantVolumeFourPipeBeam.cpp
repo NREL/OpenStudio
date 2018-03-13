@@ -542,6 +542,7 @@ namespace detail {
   }
 
   boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::chilledWaterOutletNode()const {
+    boost::optional<Node> node;
     if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil()) {
       node = cc->chilledWaterOutletNode();
     }
