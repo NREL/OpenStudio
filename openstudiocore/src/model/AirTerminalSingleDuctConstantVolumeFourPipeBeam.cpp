@@ -527,37 +527,48 @@ namespace detail {
 
   /* Convenience method to return the chilled water PlantLoop */
   boost::optional<PlantLoop> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::chilledWaterPlantLoop() const {
+    boost::optional<PlantLoop> plantLoop;
     if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil()) {
-      return cc->plantLoop();
+      plantLoop = cc->plantLoop();
     }
+    return plantLoop;
   }
   boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::chilledWaterInletNode() const {
+    boost::optional<Node> node;
     if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil()) {
-      return cc->chilledWaterInletNode();
+      node = cc->chilledWaterInletNode();
     }
+    return node;
   }
 
   boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::chilledWaterOutletNode()const {
     if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil()) {
-      return cc->chilledWaterOutletNode();
+      node = cc->chilledWaterOutletNode();
     }
+    return node;
   }
 
   /* Convenience method to return the hot water PlantLoop */
   boost::optional<PlantLoop> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::hotWaterPlantLoop() const {
+    boost::optional<PlantLoop> plantLoop;
     if (boost::optional<CoilHeatingFourPipeBeam> hc = heatingCoil()) {
-      return hc->plantLoop();
+      plantLoop = hc->plantLoop();
     }
+    return plantLoop;
   }
   boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::hotWaterInletNode() const {
+    boost::optional<Node> node;
     if (boost::optional<CoilHeatingFourPipeBeam> hc = heatingCoil()) {
-      return hc->hotWaterInletNode();
+      node = hc->hotWaterInletNode();
     }
+    return node;
   }
   boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::hotWaterOutletNode() const {
+    boost::optional<Node> node;
     if (boost::optional<CoilHeatingFourPipeBeam> hc = heatingCoil()) {
-      return hc->hotWaterOutletNode();
+      node = hc->hotWaterOutletNode();
     }
+    return node;
   }
 
 
