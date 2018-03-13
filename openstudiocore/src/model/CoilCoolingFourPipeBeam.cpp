@@ -328,7 +328,7 @@ CoilCoolingFourPipeBeam::CoilCoolingFourPipeBeam(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CoilCoolingFourPipeBeam_Impl>());
 
-  book ok = true;
+  bool ok = true;
 
   //Beam Cooling Capacity Temperature Difference Modification Factor Curve Nam
   CurveLinear capModFuncOfTempDiff(model);
@@ -361,7 +361,7 @@ CoilCoolingFourPipeBeam::CoilCoolingFourPipeBeam(const Model& model)
   coolCapModFuncOfSAFlow.addPoint(1.0, 1.0);
   coolCapModFuncOfSAFlow.addPoint(1.2857, 1.1256);
 
-  ok = setBeamCoolingCapacityAirFlowModificationFactorCurve(heatCapModFuncOfSAFlow);
+  ok = setBeamCoolingCapacityAirFlowModificationFactorCurve(coolCapModFuncOfSAFlow);
   OS_ASSERT(ok);
 
   // Beam Cooling Capacity Chilled Water Flow Modification Factor Curve
