@@ -29,21 +29,32 @@
 #include "AirTerminalSingleDuctConstantVolumeFourPipeBeam.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
+
+#include "CoilCoolingFourPipeBeam.hpp"
+#include "CoilCoolingFourPipeBeam_Impl.hpp"
+#include "CoilHeatingFourPipeBeam.hpp"
+#include "CoilHeatingFourPipeBeam_Impl.hpp"
+
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "CoolingCoilFourPipeBeam.hpp"
-#include "CoolingCoilFourPipeBeam_Impl.hpp"
-#include "HeatingCoilFourPipeBeam.hpp"
-#include "HeatingCoilFourPipeBeam_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PortList.hpp"
+#include "PortList_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "AirLoopHVACZoneSplitter.hpp"
+#include "AirLoopHVACZoneSplitter_Impl.hpp"
+#include "AirLoopHVACZoneMixer.hpp"
+#include "AirLoopHVACZoneMixer_Impl.hpp"
+
+
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -85,6 +96,22 @@ namespace detail {
   {
     static std::vector<std::string> result;
     if (result.empty()){
+      // TODO: pretty sure these applies to all AirTerminals
+      result.push_back("Zone Air Terminal Sensible Heating Energy");
+      result.push_back("Zone Air Terminal Sensible Heating Rate");
+      result.push_back("Zone Air Terminal Sensible Cooling Energy");
+      result.push_back("Zone Air Terminal Sensible Cooling Rate");
+
+      // Object specific output variables
+      result.push_back("Zone Air Terminal Beam Sensible Cooling Rate");
+      result.push_back("Zone Air Terminal Beam Sensible Cooling Energy");
+      result.push_back("Zone Air Terminal Beam Sensible Heating Rate");
+      result.push_back("Zone Air Terminal Beam Sensible Heating Energy");
+      result.push_back("Zone Air Terminal Primary Air Sensible Cooling Rate");
+      result.push_back("Zone Air Terminal Primary Air Sensible Cooling Energy");
+      result.push_back("Zone Air Terminal Primary Air Sensible Heating Rate");
+      result.push_back("Zone Air Terminal Primary Air Sensible Heating Energy");
+      result.push_back("Zone Air Terminal Primary Air Flow Rate");
     }
     return result;
   }
@@ -95,7 +122,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -114,56 +140,208 @@ namespace detail {
     return result;
   }
 
-  boost::optional<Schedule> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::primaryAirAvailabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirAvailabilityScheduleName);
-  }
-
-  boost::optional<Schedule> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::coolingAvailabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::CoolingAvailabilityScheduleName);
-  }
-
-  boost::optional<Schedule> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::heatingAvailabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HeatingAvailabilityScheduleName);
-  }
-
-  Connection AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::primaryAirInletNode() const {
-    boost::optional<Connection> value = optionalPrimaryAirInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Primary Air Inlet Node attached.");
+  /* Children are the (optional) subclasses corresponding to the cooling and heating water side */
+  std::vector<ModelObject> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil())
+    {
+      result.push_back(*cc);
     }
+    if (boost::optional<CoilHeatingFourPipeBeam> hc = heatingCoil())
+    {
+      result.push_back(*hc);
+    }
+    return result;
+  }
+
+  unsigned AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::inletPort()
+  {
+    return OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirInletNodeName;
+  }
+
+  unsigned AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::outletPort()
+  {
+    return OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirOutletNodeName;
+  }
+
+  /* Only allow connection on a demand side branch of an AirLoopHVAC */
+  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::addToNode(Node & node)
+  {
+    Model _model = node.model();
+
+    if( boost::optional<ModelObject> outlet = node.outletModelObject() )
+    {
+      boost::optional<ThermalZone> thermalZone;
+
+      if( boost::optional<PortList> portList = outlet->optionalCast<PortList>()  )
+      {
+        thermalZone = portList->thermalZone();
+      }
+
+      if( thermalZone || (outlet->optionalCast<Mixer>() && node.airLoopHVAC()) )
+      {
+        if( boost::optional<ModelObject> inlet = node.inletModelObject() )
+        {
+          if( boost::optional<Splitter> splitter = inlet->optionalCast<Splitter>() )
+          {
+            boost::optional<ModelObject> sourceModelObject = inlet;
+            boost::optional<unsigned> sourcePort = node.connectedObjectPort(node.inletPort());
+
+            if( sourcePort && sourceModelObject )
+            {
+              Node inletNode(_model);
+
+              _model.connect( sourceModelObject.get(),
+                              sourcePort.get(),
+                              inletNode,
+                              inletNode.inletPort() );
+
+              _model.connect( inletNode,
+                              inletNode.outletPort(),
+                              this->getObject<ModelObject>(),
+                              this->inletPort() );
+
+              _model.connect( this->getObject<ModelObject>(),
+                              outletPort(),
+                              node,
+                              node.inletPort() );
+
+              if( thermalZone )
+              {
+                AirTerminalSingleDuctConstantVolumeFourPipeBeam mo = this->getObject<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+
+                thermalZone->addEquipment(mo);
+              }
+
+              return true;
+            }
+          }
+        }
+      }
+    }
+
+    return false;
+  }
+
+
+
+
+
+  /* Primary Air Availability */
+  Schedule AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::primaryAirAvailabilitySchedule() const {
+    boost::optional<Schedule> value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirAvailabilityScheduleName);
+    if(!value){
+      value = this->model().alwaysOnDiscreteSchedule();
+      OS_ASSERT(value);
+      const_cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl*>(this)->setPrimaryAirAvailabilitySchedule(*value);
+    }
+    OS_ASSERT(value);
     return value.get();
   }
 
-  Connection AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::primaryAirOutletNode() const {
-    boost::optional<Connection> value = optionalPrimaryAirOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Primary Air Outlet Node attached.");
+  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setPrimaryAirAvailabilitySchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirAvailabilityScheduleName,
+                              "AirTerminalSingleDuctConstantVolumeFourPipeBeam",
+                              "Primary Air Availability",
+                              schedule);
+    return result;
+  }
+
+  /* Cooling Availability */
+  Schedule AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::coolingAvailabilitySchedule() const {
+    boost::optional<Schedule> value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::CoolingAvailabilityScheduleName);
+    if(!value){
+      value = this->model().alwaysOnDiscreteSchedule();
+      OS_ASSERT(value);
+      const_cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl*>(this)->setCoolingAvailabilitySchedule(*value);
     }
+    OS_ASSERT(value);
     return value.get();
   }
 
-  CoolingCoilFourPipeBeam AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::coolingCoil() const {
-    boost::optional<CoolingCoilFourPipeBeam> value = optionalCoolingCoil();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Cooling Coil attached.");
+  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setCoolingAvailabilitySchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::CoolingAvailabilityScheduleName,
+                              "AirTerminalSingleDuctConstantVolumeFourPipeBeam",
+                              "Cooling Availability",
+                              schedule);
+    return result;
+  }
+
+  /* Heating Availability */
+  Schedule AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::heatingAvailabilitySchedule() const {
+    boost::optional<Schedule> value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HeatingAvailabilityScheduleName);
+    if(!value){
+      value = this->model().alwaysOnDiscreteSchedule();
+      OS_ASSERT(value);
+      const_cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl*>(this)->setHeatingAvailabilitySchedule(*value);
     }
+    OS_ASSERT(value);
     return value.get();
   }
 
-  HeatingCoilFourPipeBeam AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::heatingCoil() const {
-    boost::optional<HeatingCoilFourPipeBeam> value = optionalHeatingCoil();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Heating Coil attached.");
-    }
-    return value.get();
+  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setHeatingAvailabilitySchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HeatingAvailabilityScheduleName,
+                              "AirTerminalSingleDuctConstantVolumeFourPipeBeam",
+                              "Heating Availability",
+                              schedule);
+    return result;
   }
+
+
+
+  /* Air Nodes */
+  boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::primaryAirInletNode() const {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirInletNodeName);
+  }
+
+  boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::primaryAirOutletNode() const {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirOutletNodeName);
+  }
+
+
+
+  /* Coils */
+
+  /* Cooling Coil */
+  boost::optional<CoilCoolingFourPipeBeam> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::coolingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<CoilCoolingFourPipeBeam>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::CoolingCoilName);
+  }
+
+  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setCoolingCoil(const HVACComponent& coilCoolingFourPipeBeam) {
+    bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::CoolingCoilName, coilCoolingFourPipeBeam.handle());
+    if (!result) {
+      if ( !coilCoolingFourPipeBeam.optionalCast<CoilCoolingFourPipeBeam>() ) {
+        LOG(Error, "Cannot set the cooling coil to something else than CoilCoolingFourPipeBeam for " << briefDescription());
+      }
+    }
+    return result;
+  }
+
+  /* Heating Coil */
+  boost::optional<CoilHeatingFourPipeBeam> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::heatingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<CoilHeatingFourPipeBeam>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HeatingCoilName);
+  }
+
+  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setHeatingCoil(const HVACComponent& coilHeatingFourPipeBeam) {
+    bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HeatingCoilName, coilHeatingFourPipeBeam.handle());
+    if (!result) {
+      if ( !coilHeatingFourPipeBeam.optionalCast<CoilHeatingFourPipeBeam>() ) {
+        LOG(Error, "Cannot set the heating coil to something else than CoilHeatingFourPipeBeam for " << briefDescription());
+      }
+    }
+    return result;
+  }
+
+
+
+  /* Autosizable Fields */
+
+
+  // Design Primary Air Volume Flow Rate
 
   boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::designPrimaryAirVolumeFlowRate() const {
     return getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignPrimaryAirVolumeFlowRate,true);
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::isDesignPrimaryAirVolumeFlowRateDefaulted() const {
-    return isEmpty(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignPrimaryAirVolumeFlowRate);
   }
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::isDesignPrimaryAirVolumeFlowRateAutosized() const {
@@ -175,16 +353,27 @@ namespace detail {
     return result;
   }
 
+  // TODO: check SQL
   boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizedDesignPrimaryAirVolumeFlowRate() {
     return getAutosizedValue("TODO_CHECK_SQL Design Primary Air Volume Flow Rate", "m3/s");
   }
 
-  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::designChilledWaterVolumeFlowRate() const {
-    return getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignChilledWaterVolumeFlowRate,true);
+  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setDesignPrimaryAirVolumeFlowRate(double designPrimaryAirVolumeFlowRate) {
+    bool result = setDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignPrimaryAirVolumeFlowRate, designPrimaryAirVolumeFlowRate);
+    return result;
   }
 
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::isDesignChilledWaterVolumeFlowRateDefaulted() const {
-    return isEmpty(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignChilledWaterVolumeFlowRate);
+  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizeDesignPrimaryAirVolumeFlowRate() {
+    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignPrimaryAirVolumeFlowRate, "autosize");
+    OS_ASSERT(result);
+  }
+
+
+
+  // Design Chilled Water Volume Flow Rate
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::designChilledWaterVolumeFlowRate() const {
+    return getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignChilledWaterVolumeFlowRate,true);
   }
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::isDesignChilledWaterVolumeFlowRateAutosized() const {
@@ -196,16 +385,27 @@ namespace detail {
     return result;
   }
 
+  // TODO: Check SQL
   boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizedDesignChilledWaterVolumeFlowRate() {
     return getAutosizedValue("TODO_CHECK_SQL Design Chilled Water Volume Flow Rate", "m3/s");
   }
 
-  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::designHotWaterVolumeFlowRate() const {
-    return getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignHotWaterVolumeFlowRate,true);
+  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setDesignChilledWaterVolumeFlowRate(double designChilledWaterVolumeFlowRate) {
+    bool result = setDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignChilledWaterVolumeFlowRate, designChilledWaterVolumeFlowRate);
+    return result;
   }
 
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::isDesignHotWaterVolumeFlowRateDefaulted() const {
-    return isEmpty(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignHotWaterVolumeFlowRate);
+  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizeDesignChilledWaterVolumeFlowRate() {
+    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignChilledWaterVolumeFlowRate, "autosize");
+    OS_ASSERT(result);
+  }
+
+
+
+  // Design Hot Water Volume Flow Rate
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::designHotWaterVolumeFlowRate() const {
+    return getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignHotWaterVolumeFlowRate,true);
   }
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::isDesignHotWaterVolumeFlowRateAutosized() const {
@@ -217,16 +417,26 @@ namespace detail {
     return result;
   }
 
+  // TODO: Check SQL
   boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizedDesignHotWaterVolumeFlowRate() {
     return getAutosizedValue("TODO_CHECK_SQL Design Hot Water Volume Flow Rate", "m3/s");
   }
 
-  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::zoneTotalBeamLength() const {
-    return getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ZoneTotalBeamLength,true);
+  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setDesignHotWaterVolumeFlowRate(double designHotWaterVolumeFlowRate) {
+    bool result = setDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignHotWaterVolumeFlowRate, designHotWaterVolumeFlowRate);
+    return result;
   }
 
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::isZoneTotalBeamLengthDefaulted() const {
-    return isEmpty(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ZoneTotalBeamLength);
+  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizeDesignHotWaterVolumeFlowRate() {
+    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignHotWaterVolumeFlowRate, "autosize");
+    OS_ASSERT(result);
+  }
+
+
+  // Zone Total Beam Length
+
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::zoneTotalBeamLength() const {
+    return getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ZoneTotalBeamLength,true);
   }
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::isZoneTotalBeamLengthAutosized() const {
@@ -238,10 +448,25 @@ namespace detail {
     return result;
   }
 
+  // TODO: Check SQL
   boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizedZoneTotalBeamLength() {
     return getAutosizedValue("TODO_CHECK_SQL Zone Total Beam Length", "m");
   }
 
+  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setZoneTotalBeamLength(double zoneTotalBeamLength) {
+    bool result = setDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ZoneTotalBeamLength, zoneTotalBeamLength);
+    return result;
+  }
+
+  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizeZoneTotalBeamLength() {
+    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ZoneTotalBeamLength, "autosize");
+    OS_ASSERT(result);
+  }
+
+
+  /* Double with defaults */
+
+  // Rated Primary Air Flow Rate per Beam Length
   double AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::ratedPrimaryAirFlowRateperBeamLength() const {
     boost::optional<double> value = getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::RatedPrimaryAirFlowRateperBeamLength,true);
     OS_ASSERT(value);
@@ -250,125 +475,6 @@ namespace detail {
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::isRatedPrimaryAirFlowRateperBeamLengthDefaulted() const {
     return isEmpty(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::RatedPrimaryAirFlowRateperBeamLength);
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setPrimaryAirAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirAvailabilityScheduleName,
-                              "AirTerminalSingleDuctConstantVolumeFourPipeBeam",
-                              "Primary Air Availability",
-                              schedule);
-    return result;
-  }
-
-  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::resetPrimaryAirAvailabilitySchedule() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirAvailabilityScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setCoolingAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::CoolingAvailabilityScheduleName,
-                              "AirTerminalSingleDuctConstantVolumeFourPipeBeam",
-                              "Cooling Availability",
-                              schedule);
-    return result;
-  }
-
-  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::resetCoolingAvailabilitySchedule() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::CoolingAvailabilityScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setHeatingAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HeatingAvailabilityScheduleName,
-                              "AirTerminalSingleDuctConstantVolumeFourPipeBeam",
-                              "Heating Availability",
-                              schedule);
-    return result;
-  }
-
-  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::resetHeatingAvailabilitySchedule() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HeatingAvailabilityScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setPrimaryAirInletNode(const Connection& connection) {
-    bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirInletNodeName, connection.handle());
-    return result;
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setPrimaryAirOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirOutletNodeName, connection.handle());
-    return result;
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setCoolingCoil(const CoolingCoilFourPipeBeam& coolingCoilFourPipeBeam) {
-    bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::CoolingCoilName, coolingCoilFourPipeBeam.handle());
-    return result;
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setHeatingCoil(const HeatingCoilFourPipeBeam& heatingCoilFourPipeBeam) {
-    bool result = setPointer(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HeatingCoilName, heatingCoilFourPipeBeam.handle());
-    return result;
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setDesignPrimaryAirVolumeFlowRate(double designPrimaryAirVolumeFlowRate) {
-    bool result = setDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignPrimaryAirVolumeFlowRate, designPrimaryAirVolumeFlowRate);
-    return result;
-  }
-
-  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::resetDesignPrimaryAirVolumeFlowRate() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignPrimaryAirVolumeFlowRate, "");
-    OS_ASSERT(result);
-  }
-
-  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizeDesignPrimaryAirVolumeFlowRate() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignPrimaryAirVolumeFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setDesignChilledWaterVolumeFlowRate(double designChilledWaterVolumeFlowRate) {
-    bool result = setDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignChilledWaterVolumeFlowRate, designChilledWaterVolumeFlowRate);
-    return result;
-  }
-
-  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::resetDesignChilledWaterVolumeFlowRate() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignChilledWaterVolumeFlowRate, "");
-    OS_ASSERT(result);
-  }
-
-  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizeDesignChilledWaterVolumeFlowRate() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignChilledWaterVolumeFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setDesignHotWaterVolumeFlowRate(double designHotWaterVolumeFlowRate) {
-    bool result = setDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignHotWaterVolumeFlowRate, designHotWaterVolumeFlowRate);
-    return result;
-  }
-
-  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::resetDesignHotWaterVolumeFlowRate() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignHotWaterVolumeFlowRate, "");
-    OS_ASSERT(result);
-  }
-
-  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizeDesignHotWaterVolumeFlowRate() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::DesignHotWaterVolumeFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setZoneTotalBeamLength(double zoneTotalBeamLength) {
-    bool result = setDouble(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ZoneTotalBeamLength, zoneTotalBeamLength);
-    return result;
-  }
-
-  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::resetZoneTotalBeamLength() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ZoneTotalBeamLength, "");
-    OS_ASSERT(result);
-  }
-
-  void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizeZoneTotalBeamLength() {
-    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ZoneTotalBeamLength, "autosize");
-    OS_ASSERT(result);
   }
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setRatedPrimaryAirFlowRateperBeamLength(double ratedPrimaryAirFlowRateperBeamLength) {
@@ -381,6 +487,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+
+  // Global Autosize
   void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosize() {
     autosizedDesignPrimaryAirVolumeFlowRate();
     autosizedDesignChilledWaterVolumeFlowRate();
@@ -388,6 +496,7 @@ namespace detail {
     autosizedZoneTotalBeamLength();
   }
 
+  // Global Apply Sizing Values
   void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::applySizingValues() {
     boost::optional<double> val;
     val = autosizedDesignPrimaryAirVolumeFlowRate();
@@ -412,21 +521,46 @@ namespace detail {
 
   }
 
-  boost::optional<Connection> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::optionalPrimaryAirInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirInletNodeName);
+
+  /* Convenience functions  */
+
+
+  /* Convenience method to return the chilled water PlantLoop */
+  boost::optional<PlantLoop> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::chilledWaterPlantLoop() const {
+    if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil()) {
+      return cc->plantLoop();
+    }
+  }
+  boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::chilledWaterInletNode() const {
+    if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil()) {
+      return cc->chilledWaterInletNode();
+    }
   }
 
-  boost::optional<Connection> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::optionalPrimaryAirOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirOutletNodeName);
+  boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::chilledWaterOutletNode()const {
+    if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil()) {
+      return cc->chilledWaterOutletNode();
+    }
   }
 
-  boost::optional<CoolingCoilFourPipeBeam> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::optionalCoolingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<CoolingCoilFourPipeBeam>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::CoolingCoilName);
+  /* Convenience method to return the hot water PlantLoop */
+  boost::optional<PlantLoop> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::hotWaterPlantLoop() const {
+    if (boost::optional<CoilHeatingFourPipeBeam> hc = heatingCoil()) {
+      return hc->plantLoop();
+    }
+  }
+  boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::hotWaterInletNode() const {
+    if (boost::optional<CoilHeatingFourPipeBeam> hc = heatingCoil()) {
+      return hc->hotWaterInletNode();
+    }
+  }
+  boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::hotWaterOutletNode() const {
+    if (boost::optional<CoilHeatingFourPipeBeam> hc = heatingCoil()) {
+      return hc->hotWaterOutletNode();
+    }
   }
 
-  boost::optional<HeatingCoilFourPipeBeam> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::optionalHeatingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<HeatingCoilFourPipeBeam>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HeatingCoilName);
-  }
+
 
 } // detail
 
@@ -435,117 +569,210 @@ AirTerminalSingleDuctConstantVolumeFourPipeBeam::AirTerminalSingleDuctConstantVo
 {
   OS_ASSERT(getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirInletNodeName
-  //     OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirOutletNodeName
-  //     OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::CoolingCoilName
-  //     OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HeatingCoilName
   bool ok = true;
-  // ok = setPrimaryAirInletNode();
+
+  Schedule always_on = model.alwaysOnDiscreteSchedule();
+  ok = setPrimaryAirAvailabilitySchedule(always_on);
   OS_ASSERT(ok);
-  // ok = setPrimaryAirOutletNode();
+  ok = setCoolingAvailabilitySchedule(always_on);
   OS_ASSERT(ok);
-  // ok = setCoolingCoil();
+  ok = setHeatingAvailabilitySchedule(always_on);
   OS_ASSERT(ok);
-  // ok = setHeatingCoil();
-  OS_ASSERT(ok);
+
+  autosize();;
 }
 
+// More explicit Ctor
+//
+AirTerminalSingleDuctConstantVolumeFourPipeBeam::AirTerminalSingleDuctConstantVolumeFourPipeBeam(const Model& model,
+                                                                                                 HVACComponent& coilCoolingFourPipeBeam,
+                                                                                                 HVACComponent& coilHeatingFourPipeBeam)
+  : StraightComponent(AirTerminalSingleDuctConstantVolumeFourPipeBeam::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>());
+
+  bool ok = true;
+
+  Schedule always_on = model.alwaysOnDiscreteSchedule();
+  ok = setPrimaryAirAvailabilitySchedule(always_on);
+  OS_ASSERT(ok);
+  ok = setCoolingAvailabilitySchedule(always_on);
+  OS_ASSERT(ok);
+  ok = setHeatingAvailabilitySchedule(always_on);
+  OS_ASSERT(ok);
+
+  autosize();
+
+  ok = setCoolingCoil(coilCoolingFourPipeBeam);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Cannot set the cooling coil, make sure you use a CoilCoolingFourPipeBeam")
+  }
+  OS_ASSERT(ok);
+  ok = setHeatingCoil(coilHeatingFourPipeBeam);
+
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Cannot set the heating coil, make sure you use a CoilHeatingFourPipeBeam")
+  }
+  OS_ASSERT(ok);
+}
 IddObjectType AirTerminalSingleDuctConstantVolumeFourPipeBeam::iddObjectType() {
   return IddObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeam);
 }
 
-boost::optional<Schedule> AirTerminalSingleDuctConstantVolumeFourPipeBeam::primaryAirAvailabilitySchedule() const {
+
+/* Primary Air Availability Schedule */
+Schedule AirTerminalSingleDuctConstantVolumeFourPipeBeam::primaryAirAvailabilitySchedule() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->primaryAirAvailabilitySchedule();
 }
+bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setPrimaryAirAvailabilitySchedule(Schedule& schedule) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setPrimaryAirAvailabilitySchedule(schedule);
+}
 
-boost::optional<Schedule> AirTerminalSingleDuctConstantVolumeFourPipeBeam::coolingAvailabilitySchedule() const {
+/* Cooling Availability Schedule */
+Schedule AirTerminalSingleDuctConstantVolumeFourPipeBeam::coolingAvailabilitySchedule() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->coolingAvailabilitySchedule();
 }
 
-boost::optional<Schedule> AirTerminalSingleDuctConstantVolumeFourPipeBeam::heatingAvailabilitySchedule() const {
+bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setCoolingAvailabilitySchedule(Schedule& schedule) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setCoolingAvailabilitySchedule(schedule);
+}
+
+/* Heating Availability Schedule */
+Schedule AirTerminalSingleDuctConstantVolumeFourPipeBeam::heatingAvailabilitySchedule() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->heatingAvailabilitySchedule();
 }
 
-Connection AirTerminalSingleDuctConstantVolumeFourPipeBeam::primaryAirInletNode() const {
+bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setHeatingAvailabilitySchedule(Schedule& schedule) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setHeatingAvailabilitySchedule(schedule);
+}
+
+/* Nodes */
+
+boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam::primaryAirInletNode() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->primaryAirInletNode();
 }
 
-Connection AirTerminalSingleDuctConstantVolumeFourPipeBeam::primaryAirOutletNode() const {
+boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam::primaryAirOutletNode() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->primaryAirOutletNode();
 }
 
-CoolingCoilFourPipeBeam AirTerminalSingleDuctConstantVolumeFourPipeBeam::coolingCoil() const {
+
+boost::optional<CoilCoolingFourPipeBeam> AirTerminalSingleDuctConstantVolumeFourPipeBeam::coolingCoil() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->coolingCoil();
 }
+bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setCoolingCoil(const HVACComponent& coilCoolingFourPipeBeam) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setCoolingCoil(coilCoolingFourPipeBeam);
+}
 
-HeatingCoilFourPipeBeam AirTerminalSingleDuctConstantVolumeFourPipeBeam::heatingCoil() const {
+
+boost::optional<CoilHeatingFourPipeBeam> AirTerminalSingleDuctConstantVolumeFourPipeBeam::heatingCoil() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->heatingCoil();
 }
+bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setHeatingCoil(const HVACComponent& coilHeatingFourPipeBeam) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setHeatingCoil(coilHeatingFourPipeBeam);
+}
+
+
+/* Autosizable fields */
+
+
+// Design Primary Air Volume Flow Rate
 
 boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeBeam::designPrimaryAirVolumeFlowRate() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->designPrimaryAirVolumeFlowRate();
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::isDesignPrimaryAirVolumeFlowRateDefaulted() const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->isDesignPrimaryAirVolumeFlowRateDefaulted();
 }
 
 bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::isDesignPrimaryAirVolumeFlowRateAutosized() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->isDesignPrimaryAirVolumeFlowRateAutosized();
 }
 
-  boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizedDesignPrimaryAirVolumeFlowRate() {
-    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedDesignPrimaryAirVolumeFlowRate();
-  }
+boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizedDesignPrimaryAirVolumeFlowRate() {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->autosizedDesignPrimaryAirVolumeFlowRate();
+}
+
+bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setDesignPrimaryAirVolumeFlowRate(double designPrimaryAirVolumeFlowRate) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setDesignPrimaryAirVolumeFlowRate(designPrimaryAirVolumeFlowRate);
+}
+
+void AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizeDesignPrimaryAirVolumeFlowRate() {
+  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->autosizeDesignPrimaryAirVolumeFlowRate();
+}
+
+
+// Design Chilled Water Volume Flow Rate
 
 boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeBeam::designChilledWaterVolumeFlowRate() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->designChilledWaterVolumeFlowRate();
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::isDesignChilledWaterVolumeFlowRateDefaulted() const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->isDesignChilledWaterVolumeFlowRateDefaulted();
 }
 
 bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::isDesignChilledWaterVolumeFlowRateAutosized() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->isDesignChilledWaterVolumeFlowRateAutosized();
 }
 
-  boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizedDesignChilledWaterVolumeFlowRate() {
-    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedDesignChilledWaterVolumeFlowRate();
-  }
+boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizedDesignChilledWaterVolumeFlowRate() {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->autosizedDesignChilledWaterVolumeFlowRate();
+}
+
+bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setDesignChilledWaterVolumeFlowRate(double designChilledWaterVolumeFlowRate) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setDesignChilledWaterVolumeFlowRate(designChilledWaterVolumeFlowRate);
+}
+
+void AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizeDesignChilledWaterVolumeFlowRate() {
+  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->autosizeDesignChilledWaterVolumeFlowRate();
+}
+
+
+// Design Hot Water Volume Flow Rate
 
 boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeBeam::designHotWaterVolumeFlowRate() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->designHotWaterVolumeFlowRate();
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::isDesignHotWaterVolumeFlowRateDefaulted() const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->isDesignHotWaterVolumeFlowRateDefaulted();
 }
 
 bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::isDesignHotWaterVolumeFlowRateAutosized() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->isDesignHotWaterVolumeFlowRateAutosized();
 }
 
-  boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizedDesignHotWaterVolumeFlowRate() {
-    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedDesignHotWaterVolumeFlowRate();
-  }
+boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizedDesignHotWaterVolumeFlowRate() {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->autosizedDesignHotWaterVolumeFlowRate();
+}
+
+bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setDesignHotWaterVolumeFlowRate(double designHotWaterVolumeFlowRate) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setDesignHotWaterVolumeFlowRate(designHotWaterVolumeFlowRate);
+}
+
+void AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizeDesignHotWaterVolumeFlowRate() {
+  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->autosizeDesignHotWaterVolumeFlowRate();
+}
+
+
+// Zone Total Beam Length
 
 boost::optional<double> AirTerminalSingleDuctConstantVolumeFourPipeBeam::zoneTotalBeamLength() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->zoneTotalBeamLength();
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::isZoneTotalBeamLengthDefaulted() const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->isZoneTotalBeamLengthDefaulted();
 }
 
 bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::isZoneTotalBeamLengthAutosized() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->isZoneTotalBeamLengthAutosized();
 }
 
-  boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizedZoneTotalBeamLength() {
-    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedZoneTotalBeamLength();
-  }
+boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizedZoneTotalBeamLength() {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->autosizedZoneTotalBeamLength();
+}
+
+bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setZoneTotalBeamLength(double zoneTotalBeamLength) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setZoneTotalBeamLength(zoneTotalBeamLength);
+}
+
+void AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizeZoneTotalBeamLength() {
+  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->autosizeZoneTotalBeamLength();
+}
+
+
+/* Double with defaults */
+
+// Rated Primary Air Flow Rate per Beam Length
 
 double AirTerminalSingleDuctConstantVolumeFourPipeBeam::ratedPrimaryAirFlowRateperBeamLength() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->ratedPrimaryAirFlowRateperBeamLength();
@@ -555,94 +782,6 @@ bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::isRatedPrimaryAirFlowRatep
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->isRatedPrimaryAirFlowRateperBeamLengthDefaulted();
 }
 
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setPrimaryAirAvailabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setPrimaryAirAvailabilitySchedule(schedule);
-}
-
-void AirTerminalSingleDuctConstantVolumeFourPipeBeam::resetPrimaryAirAvailabilitySchedule() {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->resetPrimaryAirAvailabilitySchedule();
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setCoolingAvailabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setCoolingAvailabilitySchedule(schedule);
-}
-
-void AirTerminalSingleDuctConstantVolumeFourPipeBeam::resetCoolingAvailabilitySchedule() {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->resetCoolingAvailabilitySchedule();
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setHeatingAvailabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setHeatingAvailabilitySchedule(schedule);
-}
-
-void AirTerminalSingleDuctConstantVolumeFourPipeBeam::resetHeatingAvailabilitySchedule() {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->resetHeatingAvailabilitySchedule();
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setPrimaryAirInletNode(const Connection& connection) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setPrimaryAirInletNode(connection);
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setPrimaryAirOutletNode(const Connection& connection) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setPrimaryAirOutletNode(connection);
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setCoolingCoil(const CoolingCoilFourPipeBeam& coolingCoilFourPipeBeam) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setCoolingCoil(coolingCoilFourPipeBeam);
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setHeatingCoil(const HeatingCoilFourPipeBeam& heatingCoilFourPipeBeam) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setHeatingCoil(heatingCoilFourPipeBeam);
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setDesignPrimaryAirVolumeFlowRate(double designPrimaryAirVolumeFlowRate) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setDesignPrimaryAirVolumeFlowRate(designPrimaryAirVolumeFlowRate);
-}
-
-void AirTerminalSingleDuctConstantVolumeFourPipeBeam::resetDesignPrimaryAirVolumeFlowRate() {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->resetDesignPrimaryAirVolumeFlowRate();
-}
-
-void AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizeDesignPrimaryAirVolumeFlowRate() {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->autosizeDesignPrimaryAirVolumeFlowRate();
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setDesignChilledWaterVolumeFlowRate(double designChilledWaterVolumeFlowRate) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setDesignChilledWaterVolumeFlowRate(designChilledWaterVolumeFlowRate);
-}
-
-void AirTerminalSingleDuctConstantVolumeFourPipeBeam::resetDesignChilledWaterVolumeFlowRate() {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->resetDesignChilledWaterVolumeFlowRate();
-}
-
-void AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizeDesignChilledWaterVolumeFlowRate() {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->autosizeDesignChilledWaterVolumeFlowRate();
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setDesignHotWaterVolumeFlowRate(double designHotWaterVolumeFlowRate) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setDesignHotWaterVolumeFlowRate(designHotWaterVolumeFlowRate);
-}
-
-void AirTerminalSingleDuctConstantVolumeFourPipeBeam::resetDesignHotWaterVolumeFlowRate() {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->resetDesignHotWaterVolumeFlowRate();
-}
-
-void AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizeDesignHotWaterVolumeFlowRate() {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->autosizeDesignHotWaterVolumeFlowRate();
-}
-
-bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setZoneTotalBeamLength(double zoneTotalBeamLength) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setZoneTotalBeamLength(zoneTotalBeamLength);
-}
-
-void AirTerminalSingleDuctConstantVolumeFourPipeBeam::resetZoneTotalBeamLength() {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->resetZoneTotalBeamLength();
-}
-
-void AirTerminalSingleDuctConstantVolumeFourPipeBeam::autosizeZoneTotalBeamLength() {
-  getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->autosizeZoneTotalBeamLength();
-}
-
 bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setRatedPrimaryAirFlowRateperBeamLength(double ratedPrimaryAirFlowRateperBeamLength) {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->setRatedPrimaryAirFlowRateperBeamLength(ratedPrimaryAirFlowRateperBeamLength);
 }
@@ -650,6 +789,7 @@ bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setRatedPrimaryAirFlowRate
 void AirTerminalSingleDuctConstantVolumeFourPipeBeam::resetRatedPrimaryAirFlowRateperBeamLength() {
   getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->resetRatedPrimaryAirFlowRateperBeamLength();
 }
+
 
 /// @cond
 AirTerminalSingleDuctConstantVolumeFourPipeBeam::AirTerminalSingleDuctConstantVolumeFourPipeBeam(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl> impl)

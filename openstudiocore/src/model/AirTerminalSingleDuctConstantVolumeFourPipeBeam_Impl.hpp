@@ -35,14 +35,12 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
+class HVACComponent;
 class Schedule;
-class Schedule;
-class Schedule;
-class Connection;
-class Connection;
-class CoolingCoilFourPipeBeam;
-class HeatingCoilFourPipeBeam;
+class Node;
+class CoilCoolingFourPipeBeam;
+class CoilHeatingFourPipeBeam;
+class PlantLoop;
 
 namespace detail {
 
@@ -76,150 +74,118 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual std::vector<ModelObject> children() const override;
+
+    virtual bool addToNode(Node & node) override;
+
+    virtual unsigned inletPort() override;
+
+    virtual unsigned outletPort() override;
+
     //@}
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    boost::optional<Schedule> primaryAirAvailabilitySchedule() const;
+    /** Availability Schedules */
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    boost::optional<Schedule> coolingAvailabilitySchedule() const;
+    Schedule primaryAirAvailabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
-    boost::optional<Schedule> heatingAvailabilitySchedule() const;
+    Schedule coolingAvailabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection primaryAirInletNode() const;
+    Schedule heatingAvailabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection primaryAirOutletNode() const;
+    boost::optional<Node> primaryAirInletNode() const;
+    boost::optional<Node> primaryAirOutletNode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CoolingCoilFourPipeBeam.
-    CoolingCoilFourPipeBeam coolingCoil() const;
+    boost::optional<CoilCoolingFourPipeBeam> coolingCoil() const;
 
-    // TODO: Check return type. From object lists, some candidates are: HeatingCoilFourPipeBeam.
-    HeatingCoilFourPipeBeam heatingCoil() const;
+    boost::optional<CoilHeatingFourPipeBeam> heatingCoil() const;
+
+    /** Autosizable fields */
 
     boost::optional<double> designPrimaryAirVolumeFlowRate() const;
-
-    bool isDesignPrimaryAirVolumeFlowRateDefaulted() const;
-
     bool isDesignPrimaryAirVolumeFlowRateAutosized() const;
 
-    boost::optional <double> autosizedDesignPrimaryAirVolumeFlowRate();
 
     boost::optional<double> designChilledWaterVolumeFlowRate() const;
-
-    bool isDesignChilledWaterVolumeFlowRateDefaulted() const;
-
     bool isDesignChilledWaterVolumeFlowRateAutosized() const;
 
-    boost::optional <double> autosizedDesignChilledWaterVolumeFlowRate();
 
     boost::optional<double> designHotWaterVolumeFlowRate() const;
-
-    bool isDesignHotWaterVolumeFlowRateDefaulted() const;
-
     bool isDesignHotWaterVolumeFlowRateAutosized() const;
 
-    boost::optional <double> autosizedDesignHotWaterVolumeFlowRate();
 
     boost::optional<double> zoneTotalBeamLength() const;
-
-    bool isZoneTotalBeamLengthDefaulted() const;
-
     bool isZoneTotalBeamLengthAutosized() const;
 
-    boost::optional <double> autosizedZoneTotalBeamLength();
-
+    /* Double fields with defaults */
     double ratedPrimaryAirFlowRateperBeamLength() const;
-
     bool isRatedPrimaryAirFlowRateperBeamLengthDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
     bool setPrimaryAirAvailabilitySchedule(Schedule& schedule);
 
-    void resetPrimaryAirAvailabilitySchedule();
-
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
     bool setCoolingAvailabilitySchedule(Schedule& schedule);
 
-    void resetCoolingAvailabilitySchedule();
-
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
     bool setHeatingAvailabilitySchedule(Schedule& schedule);
 
-    void resetHeatingAvailabilitySchedule();
+    /* Set Cooling and Heating Coil. */
+    bool setCoolingCoil(const HVACComponent& coilCoolingFourPipeBeam);
+    bool setHeatingCoil(const HVACComponent& coilHeatingFourPipeBeam);
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setPrimaryAirInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setPrimaryAirOutletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: CoolingCoilFourPipeBeam.
-    bool setCoolingCoil(const CoolingCoilFourPipeBeam& coolingCoilFourPipeBeam);
-
-    // TODO: Check argument type. From object lists, some candidates are: HeatingCoilFourPipeBeam.
-    bool setHeatingCoil(const HeatingCoilFourPipeBeam& heatingCoilFourPipeBeam);
-
+    /* Autosizable fields */
     bool setDesignPrimaryAirVolumeFlowRate(double designPrimaryAirVolumeFlowRate);
-
-    void resetDesignPrimaryAirVolumeFlowRate();
-
     void autosizeDesignPrimaryAirVolumeFlowRate();
 
     bool setDesignChilledWaterVolumeFlowRate(double designChilledWaterVolumeFlowRate);
-
-    void resetDesignChilledWaterVolumeFlowRate();
-
     void autosizeDesignChilledWaterVolumeFlowRate();
 
     bool setDesignHotWaterVolumeFlowRate(double designHotWaterVolumeFlowRate);
-
-    void resetDesignHotWaterVolumeFlowRate();
-
     void autosizeDesignHotWaterVolumeFlowRate();
 
     bool setZoneTotalBeamLength(double zoneTotalBeamLength);
-
-    void resetZoneTotalBeamLength();
-
     void autosizeZoneTotalBeamLength();
 
     bool setRatedPrimaryAirFlowRateperBeamLength(double ratedPrimaryAirFlowRateperBeamLength);
-
     void resetRatedPrimaryAirFlowRateperBeamLength();
+
+    //@}
+    /** @name Other */
+    //@{
+
+    /* Convenience method to return the chilled water PlantLoop */
+    boost::optional<PlantLoop> chilledWaterPlantLoop() const;
+    boost::optional<Node> chilledWaterInletNode() const;
+    boost::optional<Node> chilledWaterOutletNode() const;
+
+    /* Convenience method to return the hot water PlantLoop */
+    boost::optional<PlantLoop> hotWaterPlantLoop() const;
+    boost::optional<Node> hotWaterInletNode() const;
+    boost::optional<Node> hotWaterOutletNode() const;
+
+    /* Queries the SQL file after a successful sizing run */
+    boost::optional <double> autosizedDesignPrimaryAirVolumeFlowRate();
+    boost::optional <double> autosizedDesignChilledWaterVolumeFlowRate();
+    boost::optional <double> autosizedDesignHotWaterVolumeFlowRate();
+    boost::optional <double> autosizedZoneTotalBeamLength();
 
     virtual void autosize() override;
 
     virtual void applySizingValues() override;
 
     //@}
-    /** @name Other */
-    //@{
-
-    //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeFourPipeBeam");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
-    boost::optional<Connection> optionalPrimaryAirInletNode() const;
-    boost::optional<Connection> optionalPrimaryAirOutletNode() const;
-    boost::optional<CoolingCoilFourPipeBeam> optionalCoolingCoil() const;
-    boost::optional<HeatingCoilFourPipeBeam> optionalHeatingCoil() const;
+    boost::optional<Node> optionalPrimaryAirInletNode() const;
+    boost::optional<Node> optionalPrimaryAirOutletNode() const;
   };
 
 } // detail
