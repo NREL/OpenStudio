@@ -12,6 +12,7 @@ build:windows:
   tags:
   - windows
   script:
+  - rd /s /q build
   - mkdir build
   - cd build
   - cmake -G "Visual Studio 12 2013 Win64" -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF  ../openstudiocore
@@ -20,18 +21,18 @@ build:windows:
   - cmake --build . --config Release --target PACKAGE
   allow_failure: true
   artifacts:
-    expire_in: 6 hrs
+    expire_in: 12 hrs
     paths:
     - build/OpenStudio-*.exe
-    - CPackConfig.cmake
-    - CPackSourceConfig.cmake
-    - CTestTestfile.cmake
-    - OpenStudioCoreConfig.cmake
+    - build/CPackConfig.cmake
+    - build/CPackSourceConfig.cmake
+    - build/CTestTestfile.cmake
+    - build/OpenStudioCoreConfig.cmake
     - build/CTestTestfile.cmake
     - build/csharp/
     - build/embedded/
     - build/pat/
-    - build/products/
+    - build/Products/
     - build/resources/
     - build/ruby/
     - build/sketchup_plugin/
@@ -52,7 +53,7 @@ build:mac:
   - zip -r `ls -1 | grep OpenStudio-*.app | sed -e 's/\.app$//'`.zip OpenStudio-*.app
   allow_failure: true
   artifacts:
-    expire_in: 6 hrs
+    expire_in: 12 hrs
     paths:
       - build/_CPack_Packages/Darwin/IFW/OpenStudio-*.zip
 
@@ -69,7 +70,7 @@ build:ubuntu:
   - make -j16 package
   allow_failure: true
   artifacts:
-    expire_in: 6 hrs
+    expire_in: 12 hrs
     paths:
       - build/OpenStudio-*.deb
 
@@ -122,6 +123,7 @@ testCTest:windows:
   - build:windows
   script:
   - cd build
+  - dir
   - CTest
   allow_failure: true
  
@@ -136,8 +138,10 @@ testResources:windows:
   script:
   - "rmdir c:\\\\openstudio\\ /s /q"
   - cd build
+  - dir
   - xcopy *.exe win.exe*
-  - win.exe --script install.qs
+  - dir
+  - win.exe --script ../install.qs
   - cd c://openstudio/
   - git clone https://github.com/NREL/OpenStudio-resources.git
   - cd bin/
