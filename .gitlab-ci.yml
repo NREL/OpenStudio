@@ -7,8 +7,7 @@ stages:
 build:windows:
   stage: build
   only:
-  # all "develop" should be changed to "triggers"
-  - develop
+  - triggers
   tags:
   - windows
   script:
@@ -41,7 +40,7 @@ build:windows:
 build:mac:
   stage: build
   only:
-  - develop
+  - triggers
   tags:
   - mac
   script:
@@ -60,7 +59,7 @@ build:mac:
 build:ubuntu:
   stage: build
   only:
-  - develop
+  - triggers
   tags:
   - ubuntu
   script:
@@ -77,46 +76,46 @@ build:ubuntu:
 deploy:windows:
   stage: deploy
   only:
-  - develop
+  - triggers
   tags:
   - windows
   dependencies:
   - build:windows
   script:
   - cd build
-  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.exe"
+  - aws s3 cp ./ s3://openstudio-builds/PR/ --exclude "*" --include "*.exe"
   allow_failure: true
 
 deploy:mac:
   stage: deploy
   only:
-  - develop
+  - triggers
   tags:
   - mac
   dependencies:
   - build:mac
   script:
   - cd build/_CPack_Packages/Darwin/IFW
-  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.zip"
+  - aws s3 cp ./ s3://openstudio-builds/PR/ --exclude "*" --include "*.zip"
   allow_failure: true
 
 deploy:ubuntu:
   stage: deploy
   only:
-  - develop
+  - triggers
   tags:
   - ubuntu
   dependencies:
   - build:ubuntu
   script:
   - cd build
-  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.deb"  
+  - aws s3 cp ./ s3://openstudio-builds/PR/ --exclude "*" --include "*.deb"  
   allow_failure: true
   
 testCTest:windows:
   stage: testCTest
   only:
-  - develop
+  - triggers
   tags:
   - windows
   dependencies:
@@ -130,7 +129,7 @@ testCTest:windows:
 testResources:windows:
   stage: testResources
   only:
-  - develop
+  - triggers
   tags:
   - windows
   dependencies:
