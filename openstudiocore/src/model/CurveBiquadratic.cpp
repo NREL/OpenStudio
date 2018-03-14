@@ -513,4 +513,4 @@ CurveBiquadratic::CurveBiquadratic(std::shared_ptr<detail::CurveBiquadratic_Impl
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

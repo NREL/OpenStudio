@@ -153,12 +153,12 @@ namespace model {
     return result;
   }
 
-  unsigned GeneratorMicroTurbineHeatRecovery_Impl::inletPort()
+  unsigned GeneratorMicroTurbineHeatRecovery_Impl::inletPort() const
   {
     return OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterInletNodeName;
   }
 
-  unsigned GeneratorMicroTurbineHeatRecovery_Impl::outletPort()
+  unsigned GeneratorMicroTurbineHeatRecovery_Impl::outletPort() const
   {
     return OS_Generator_MicroTurbine_HeatRecoveryFields::HeatRecoveryWaterOutletNodeName;
   }

@@ -155,4 +155,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_FANZONEEXHAUST_IMPL_HPP
+#endif // MODEL_FANZONEEXHAUST_IMPL_HPP

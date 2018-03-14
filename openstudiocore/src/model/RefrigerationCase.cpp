@@ -2151,4 +2151,4 @@ RefrigerationCase::RefrigerationCase(std::shared_ptr<detail::RefrigerationCase_I
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

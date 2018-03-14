@@ -128,12 +128,12 @@ namespace detail{
     return result;
   }
 
-  unsigned AirTerminalSingleDuctUncontrolled_Impl::inletPort()
+  unsigned AirTerminalSingleDuctUncontrolled_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_UncontrolledFields::InletAirNodeName;
   }
 
-  unsigned AirTerminalSingleDuctUncontrolled_Impl::outletPort()
+  unsigned AirTerminalSingleDuctUncontrolled_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_UncontrolledFields::ZoneSupplyAirNodeName;
   }

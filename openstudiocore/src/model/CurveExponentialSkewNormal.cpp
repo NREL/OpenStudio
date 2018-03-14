@@ -390,4 +390,4 @@ CurveExponentialSkewNormal::CurveExponentialSkewNormal(std::shared_ptr<detail::C
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

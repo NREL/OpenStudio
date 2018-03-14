@@ -120,12 +120,12 @@ namespace detail {
     return result;
   }
 
-  unsigned CoilWaterHeatingDesuperheater_Impl::inletPort()
+  unsigned CoilWaterHeatingDesuperheater_Impl::inletPort() const
   {
     return OS_Coil_WaterHeating_DesuperheaterFields::WaterInletNodeName;
   }
 
-  unsigned CoilWaterHeatingDesuperheater_Impl::outletPort()
+  unsigned CoilWaterHeatingDesuperheater_Impl::outletPort() const
   {
     return OS_Coil_WaterHeating_DesuperheaterFields::WaterOutletNodeName;
   }

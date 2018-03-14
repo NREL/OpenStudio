@@ -104,4 +104,4 @@ typedef std::vector<ExternalInterfaceVariable> ExternalInterfaceVariableVector;
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEVARIABLE_HPP
+#endif // MODEL_EXTERNALINTERFACEVARIABLE_HPP

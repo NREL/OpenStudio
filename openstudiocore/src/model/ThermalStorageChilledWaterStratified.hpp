@@ -297,4 +297,4 @@ typedef std::vector<ThermalStorageChilledWaterStratified> ThermalStorageChilledW
 } // model
 } // openstudio
 
-#endif // MODEL_THERMALSTORAGECHILLEDWATERSTRATIFIED_HPP
+#endif // MODEL_THERMALSTORAGECHILLEDWATERSTRATIFIED_HPP

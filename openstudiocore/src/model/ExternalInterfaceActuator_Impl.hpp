@@ -114,4 +114,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEACTUATOR_IMPL_HPP
+#endif // MODEL_EXTERNALINTERFACEACTUATOR_IMPL_HPP

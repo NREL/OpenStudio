@@ -1151,4 +1151,4 @@ RefrigerationAirChiller::RefrigerationAirChiller(std::shared_ptr<detail::Refrige
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

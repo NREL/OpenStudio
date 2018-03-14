@@ -156,4 +156,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CURVECUBIC_IMPL_HPP
+#endif // MODEL_CURVECUBIC_IMPL_HPP

@@ -186,4 +186,4 @@ typedef std::vector<SetpointManagerOutdoorAirReset> SetpointManagerOutdoorAirRes
 } // model
 } // openstudio
 
-#endif // MODEL_SETPOINTMANAGEROUTDOORAIRRESET_HPP
+#endif // MODEL_SETPOINTMANAGEROUTDOORAIRRESET_HPP

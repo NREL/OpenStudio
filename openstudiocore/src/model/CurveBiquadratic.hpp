@@ -178,4 +178,4 @@ typedef std::vector<CurveBiquadratic> CurveBiquadraticVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEBIQUADRATIC_HPP
+#endif // MODEL_CURVEBIQUADRATIC_HPP

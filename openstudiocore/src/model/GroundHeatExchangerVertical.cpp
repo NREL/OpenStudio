@@ -398,12 +398,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned GroundHeatExchangerVertical_Impl::inletPort()
+  unsigned GroundHeatExchangerVertical_Impl::inletPort() const
   {
     return OS_GroundHeatExchanger_VerticalFields::InletNodeName;
   }
 
-  unsigned GroundHeatExchangerVertical_Impl::outletPort()
+  unsigned GroundHeatExchangerVertical_Impl::outletPort() const
   {
     return OS_GroundHeatExchanger_VerticalFields::OutletNodeName;
   }

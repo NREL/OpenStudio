@@ -129,4 +129,4 @@ typedef std::vector<ExternalInterfaceFunctionalMockupUnitImportToActuator> Exter
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOACTUATOR_HPP
+#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOACTUATOR_HPP

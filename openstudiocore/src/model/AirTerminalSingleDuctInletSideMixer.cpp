@@ -85,12 +85,12 @@ namespace detail {
     return AirTerminalSingleDuctInletSideMixer::iddObjectType();
   }
 
-  unsigned AirTerminalSingleDuctInletSideMixer_Impl::inletPort()
+  unsigned AirTerminalSingleDuctInletSideMixer_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_InletSideMixerFields::TerminalUnitPrimaryAirInlet;
   }
 
-  unsigned AirTerminalSingleDuctInletSideMixer_Impl::outletPort()
+  unsigned AirTerminalSingleDuctInletSideMixer_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_InletSideMixerFields::TerminalUnitOutlet;
   }

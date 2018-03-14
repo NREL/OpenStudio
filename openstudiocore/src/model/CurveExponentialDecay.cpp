@@ -362,4 +362,4 @@ CurveExponentialDecay::CurveExponentialDecay(std::shared_ptr<detail::CurveExpone
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

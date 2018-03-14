@@ -152,4 +152,4 @@ typedef std::vector<CurveExponentialSkewNormal> CurveExponentialSkewNormalVector
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEEXPONENTIALSKEWNORMAL_HPP
+#endif // MODEL_CURVEEXPONENTIALSKEWNORMAL_HPP

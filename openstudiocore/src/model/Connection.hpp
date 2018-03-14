@@ -91,4 +91,4 @@ typedef std::vector<Connection> ConnectionVector;
   } // model
 } // openstudio
 
-#endif // MODEL_CONNECTION_HPP
+#endif // MODEL_CONNECTION_HPP

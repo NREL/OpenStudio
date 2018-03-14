@@ -537,4 +537,4 @@ RefrigerationCompressor::RefrigerationCompressor(std::shared_ptr<detail::Refrige
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

@@ -264,4 +264,4 @@ typedef std::vector<RefrigerationSecondarySystem> RefrigerationSecondarySystemVe
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONSECONDARYSYSTEM_HPP
+#endif // MODEL_REFRIGERATIONSECONDARYSYSTEM_HPP

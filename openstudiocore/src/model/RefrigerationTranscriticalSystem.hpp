@@ -212,4 +212,4 @@ typedef std::vector<RefrigerationTranscriticalSystem> RefrigerationTranscritical
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONTRANSCRITICALSYSTEM_HPP
+#endif // MODEL_REFRIGERATIONTRANSCRITICALSYSTEM_HPP

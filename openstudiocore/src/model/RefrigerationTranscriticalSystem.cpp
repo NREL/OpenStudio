@@ -850,4 +850,4 @@ RefrigerationTranscriticalSystem::RefrigerationTranscriticalSystem(std::shared_p
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

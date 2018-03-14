@@ -367,4 +367,4 @@ ScheduleFixedInterval::ScheduleFixedInterval(std::shared_ptr<detail::ScheduleFix
 
 
 } // model
-} // openstudio
+} // openstudio

@@ -313,11 +313,11 @@ namespace detail {
     return result;
   }
 
-  unsigned GroundHeatExchangerHorizontalTrench_Impl::inletPort() {
+  unsigned GroundHeatExchangerHorizontalTrench_Impl::inletPort() const {
     return OS_GroundHeatExchanger_HorizontalTrenchFields::InletNodeName;
   }
 
-  unsigned GroundHeatExchangerHorizontalTrench_Impl::outletPort() {
+  unsigned GroundHeatExchangerHorizontalTrench_Impl::outletPort() const {
     return OS_GroundHeatExchanger_HorizontalTrenchFields::OutletNodeName;
   }
 

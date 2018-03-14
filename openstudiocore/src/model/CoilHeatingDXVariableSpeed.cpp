@@ -118,11 +118,11 @@ namespace detail {
     return CoilHeatingDXVariableSpeed::iddObjectType();
   }
 
-  unsigned CoilHeatingDXVariableSpeed_Impl::inletPort() {
+  unsigned CoilHeatingDXVariableSpeed_Impl::inletPort() const {
     return OS_Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName;
   }
 
-  unsigned CoilHeatingDXVariableSpeed_Impl::outletPort() {
+  unsigned CoilHeatingDXVariableSpeed_Impl::outletPort() const {
     return OS_Coil_Heating_DX_VariableSpeedFields::IndoorAirOutletNodeName;
   }
 

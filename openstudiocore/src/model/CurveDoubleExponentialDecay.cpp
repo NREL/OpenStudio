@@ -403,4 +403,4 @@ CurveDoubleExponentialDecay::CurveDoubleExponentialDecay(std::shared_ptr<detail:
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

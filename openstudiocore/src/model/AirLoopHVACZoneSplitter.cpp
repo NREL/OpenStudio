@@ -127,12 +127,12 @@ namespace detail{
     }
   }
 
-  unsigned AirLoopHVACZoneSplitter_Impl::inletPort()
+  unsigned AirLoopHVACZoneSplitter_Impl::inletPort() const
   {
     return OS_AirLoopHVAC_ZoneSplitterFields::InletNodeName;
   }
 
-  unsigned AirLoopHVACZoneSplitter_Impl::outletPort(unsigned branchIndex)
+  unsigned AirLoopHVACZoneSplitter_Impl::outletPort(unsigned branchIndex) const
   {
     unsigned result;
     result = numNonextensibleFields();
@@ -140,7 +140,7 @@ namespace detail{
     return result;
   }
 
-  unsigned AirLoopHVACZoneSplitter_Impl::nextOutletPort()
+  unsigned AirLoopHVACZoneSplitter_Impl::nextOutletPort() const
   {
     return outletPort( this->nextBranchIndex() );
   }
@@ -220,17 +220,17 @@ std::vector<openstudio::IdfObject> AirLoopHVACZoneSplitter::remove()
   return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->remove();
 }
 
-unsigned AirLoopHVACZoneSplitter::inletPort()
+unsigned AirLoopHVACZoneSplitter::inletPort() const
 {
   return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->inletPort();
 }
 
-unsigned AirLoopHVACZoneSplitter::outletPort(unsigned branchIndex)
+unsigned AirLoopHVACZoneSplitter::outletPort(unsigned branchIndex) const
 {
   return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->outletPort(branchIndex);
 }
 
-unsigned AirLoopHVACZoneSplitter::nextOutletPort()
+unsigned AirLoopHVACZoneSplitter::nextOutletPort() const
 {
   return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->nextOutletPort();
 }

@@ -62,16 +62,16 @@ class MODEL_API AirLoopHVACZoneSplitter : public Splitter {
   static IddObjectType iddObjectType();
 
   /** Returns the inlet port to the zone splitter. */
-  unsigned inletPort() override;
+  unsigned inletPort() const override;
 
   /** Returns the outlet port for branchIndex.  Branches are sequentially
    *  indexed starting from 0.
    */
-  unsigned outletPort(unsigned branchIndex) override;
+  unsigned outletPort(unsigned branchIndex) const override;
 
   /** Returns the next available outlet port.  This will be the first port
    *  with no connected objects */
-  unsigned nextOutletPort() override;
+  unsigned nextOutletPort() const override;
 
   /** Returns a vector of all ZoneHVACEquipmentConnections objects connected
    *  to the splitter's outlets.

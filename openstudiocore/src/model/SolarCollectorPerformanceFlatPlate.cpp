@@ -359,4 +359,4 @@ SolarCollectorPerformanceFlatPlate::SolarCollectorPerformanceFlatPlate(std::shar
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

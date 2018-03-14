@@ -156,4 +156,4 @@ typedef std::vector<CurveSigmoid> CurveSigmoidVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVESIGMOID_HPP
+#endif // MODEL_CURVESIGMOID_HPP

@@ -146,4 +146,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CURVELINEAR_IMPL_HPP
+#endif // MODEL_CURVELINEAR_IMPL_HPP

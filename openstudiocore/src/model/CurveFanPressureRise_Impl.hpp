@@ -146,4 +146,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEFANPRESSURERISE_IMPL_HPP
+#endif // MODEL_CURVEFANPRESSURERISE_IMPL_HPP

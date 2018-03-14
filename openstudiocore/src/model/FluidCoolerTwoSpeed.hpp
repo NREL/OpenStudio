@@ -220,4 +220,4 @@ typedef std::vector<FluidCoolerTwoSpeed> FluidCoolerTwoSpeedVector;
 } // model
 } // openstudio
 
-#endif // MODEL_FLUIDCOOLERTWOSPEED_HPP
+#endif // MODEL_FLUIDCOOLERTWOSPEED_HPP

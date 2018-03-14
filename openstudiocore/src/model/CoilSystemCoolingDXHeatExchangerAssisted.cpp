@@ -118,11 +118,11 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::CoolingCoil);
   }
 
-  unsigned CoilSystemCoolingDXHeatExchangerAssisted_Impl::inletPort() {
+  unsigned CoilSystemCoolingDXHeatExchangerAssisted_Impl::inletPort() const {
     return OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::AirInletNodeName;
   }
 
-  unsigned CoilSystemCoolingDXHeatExchangerAssisted_Impl::outletPort() {
+  unsigned CoilSystemCoolingDXHeatExchangerAssisted_Impl::outletPort() const {
     return OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::AirOutletNodeName;
   }
 

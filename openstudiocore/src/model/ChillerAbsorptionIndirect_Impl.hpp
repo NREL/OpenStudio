@@ -239,4 +239,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CHILLERABSORPTIONINDIRECT_IMPL_HPP
+#endif // MODEL_CHILLERABSORPTIONINDIRECT_IMPL_HPP

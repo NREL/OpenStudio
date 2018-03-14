@@ -305,4 +305,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_TABLEMULTIVARIABLELOOKUP_IMPL_HPP
+#endif // MODEL_TABLEMULTIVARIABLELOOKUP_IMPL_HPP

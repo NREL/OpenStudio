@@ -91,12 +91,12 @@ namespace detail {
     return CoilCoolingLowTempRadiantConstFlow::iddObjectType();
   }
 
-  unsigned CoilCoolingLowTempRadiantConstFlow_Impl::inletPort()
+  unsigned CoilCoolingLowTempRadiantConstFlow_Impl::inletPort() const
   {
     return OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CoolingWaterInletNodeName;
   }
 
-  unsigned CoilCoolingLowTempRadiantConstFlow_Impl::outletPort()
+  unsigned CoilCoolingLowTempRadiantConstFlow_Impl::outletPort() const
   {
     return OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlowFields::CoolingWaterOutletNodeName;
   }

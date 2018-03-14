@@ -304,12 +304,12 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::ReheatCoilName);
   }
 
-  unsigned AirTerminalSingleDuctSeriesPIUReheat_Impl::inletPort()
+  unsigned AirTerminalSingleDuctSeriesPIUReheat_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::SupplyAirInletNode;
   }
 
-  unsigned AirTerminalSingleDuctSeriesPIUReheat_Impl::outletPort()
+  unsigned AirTerminalSingleDuctSeriesPIUReheat_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::OutletNode;
   }

@@ -203,4 +203,4 @@ typedef std::vector<ZoneHVACLowTempRadiantConstFlow> ZoneHVACLowTempRadiantConst
 } // model
 } // openstudio
 
-#endif // MODEL_ZONEHVACLOWTEMPRADIANTCONSTFLOW_HPP
+#endif // MODEL_ZONEHVACLOWTEMPRADIANTCONSTFLOW_HPP

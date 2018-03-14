@@ -155,4 +155,4 @@ typedef std::vector<ZoneHVACEnergyRecoveryVentilatorController> ZoneHVACEnergyRe
 } // model
 } // openstudio
 
-#endif // MODEL_ZONEHVACENERGYRECOVERYVENTILATORCONTROLLER_HPP
+#endif // MODEL_ZONEHVACENERGYRECOVERYVENTILATORCONTROLLER_HPP

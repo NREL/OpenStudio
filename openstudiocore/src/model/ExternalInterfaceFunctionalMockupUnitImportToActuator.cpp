@@ -269,4 +269,4 @@ ExternalInterfaceFunctionalMockupUnitImportToActuator::ExternalInterfaceFunction
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

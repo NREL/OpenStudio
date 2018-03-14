@@ -115,4 +115,4 @@ typedef std::vector<ExternalInterfaceFunctionalMockupUnitImportToSchedule> Exter
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOSCHEDULE_HPP
+#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOSCHEDULE_HPP

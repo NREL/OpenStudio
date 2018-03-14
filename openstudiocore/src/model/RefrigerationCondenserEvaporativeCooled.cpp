@@ -996,4 +996,4 @@ RefrigerationCondenserEvaporativeCooled::RefrigerationCondenserEvaporativeCooled
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

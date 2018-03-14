@@ -389,4 +389,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_SIZINGZONE_IMPL_HPP
+#endif // MODEL_SIZINGZONE_IMPL_HPP

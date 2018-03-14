@@ -407,4 +407,4 @@ CurveQuartic::CurveQuartic(std::shared_ptr<detail::CurveQuartic_Impl> impl)
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

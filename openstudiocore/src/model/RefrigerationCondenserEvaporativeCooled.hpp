@@ -268,4 +268,4 @@ typedef std::vector<RefrigerationCondenserEvaporativeCooled> RefrigerationConden
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONCONDENSEREVAPORATIVECOOLED_HPP
+#endif // MODEL_REFRIGERATIONCONDENSEREVAPORATIVECOOLED_HPP

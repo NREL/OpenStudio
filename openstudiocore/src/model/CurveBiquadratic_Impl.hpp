@@ -186,4 +186,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEBIQUADRATIC_IMPL_HPP
+#endif // MODEL_CURVEBIQUADRATIC_IMPL_HPP

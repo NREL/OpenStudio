@@ -135,12 +135,12 @@ namespace detail{
     return result;
   }
 
-  unsigned AirTerminalSingleDuctVAVReheat_Impl::inletPort()
+  unsigned AirTerminalSingleDuctVAVReheat_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_VAV_ReheatFields::AirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctVAVReheat_Impl::outletPort()
+  unsigned AirTerminalSingleDuctVAVReheat_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_VAV_ReheatFields::AirOutletNodeName;
   }

@@ -137,4 +137,4 @@ typedef std::vector<RunPeriod> RunPeriodVector;
 } // model
 } // openstudio
 
-#endif // MODEL_RUNPERIOD_HPP
+#endif // MODEL_RUNPERIOD_HPP

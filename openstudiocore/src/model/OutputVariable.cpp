@@ -383,4 +383,4 @@ void OutputVariable::resetExportToBCVTB() {
 }
 
 } // model
-} // openstudio
+} // openstudio

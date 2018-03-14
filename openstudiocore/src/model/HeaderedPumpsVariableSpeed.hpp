@@ -184,4 +184,4 @@ typedef std::vector<HeaderedPumpsVariableSpeed> HeaderedPumpsVariableSpeedVector
 } // model
 } // openstudio
 
-#endif // MODEL_HEADEREDPUMPSVARIABLESPEED_HPP
+#endif // MODEL_HEADEREDPUMPSVARIABLESPEED_HPP

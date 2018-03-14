@@ -101,4 +101,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_COMPONENTCOSTADJUSTMENTS_IMPL_HPP
+#endif // MODEL_COMPONENTCOSTADJUSTMENTS_IMPL_HPP

@@ -229,12 +229,12 @@ AirflowNetworkComponent::AirflowNetworkComponent(std::shared_ptr<detail::Airflow
 {}
 
 /*
-unsigned AirflowNetworkComponent::inletPort()
+unsigned AirflowNetworkComponent::inletPort() const
 {
   return getImpl<detail::AirflowNetworkComponent_Impl>()->inletPort();
 }
 
-unsigned AirflowNetworkComponent::outletPort()
+unsigned AirflowNetworkComponent::outletPort() const
 {
   return getImpl<detail::AirflowNetworkComponent_Impl>()->outletPort();
 }

@@ -123,11 +123,11 @@ namespace detail {
     return result;
   }
 
-  unsigned CoilHeatingDXMultiSpeed_Impl::inletPort() {
+  unsigned CoilHeatingDXMultiSpeed_Impl::inletPort() const {
     return OS_Coil_Heating_DX_MultiSpeedFields::AirInletNodeName;
   }
 
-  unsigned CoilHeatingDXMultiSpeed_Impl::outletPort() {
+  unsigned CoilHeatingDXMultiSpeed_Impl::outletPort() const {
     return OS_Coil_Heating_DX_MultiSpeedFields::AirOutletNodeName;
   }
 

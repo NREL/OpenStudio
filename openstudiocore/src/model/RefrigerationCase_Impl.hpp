@@ -495,4 +495,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONCASE_IMPL_HPP
+#endif // MODEL_REFRIGERATIONCASE_IMPL_HPP

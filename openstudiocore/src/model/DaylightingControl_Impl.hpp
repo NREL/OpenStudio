@@ -228,4 +228,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_DAYLIGHTINGCONTROL_IMPL_HPP
+#endif // MODEL_DAYLIGHTINGCONTROL_IMPL_HPP

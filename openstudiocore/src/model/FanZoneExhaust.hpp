@@ -147,4 +147,4 @@ typedef std::vector<FanZoneExhaust> FanZoneExhaustVector;
 } // model
 } // openstudio
 
-#endif // MODEL_FANZONEEXHAUST_HPP
+#endif // MODEL_FANZONEEXHAUST_HPP

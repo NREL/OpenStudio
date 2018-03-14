@@ -537,4 +537,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_WATERHEATERMIXED_IMPL_HPP
+#endif // MODEL_WATERHEATERMIXED_IMPL_HPP

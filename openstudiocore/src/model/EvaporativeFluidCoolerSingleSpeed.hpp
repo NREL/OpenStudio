@@ -248,4 +248,4 @@ typedef std::vector<EvaporativeFluidCoolerSingleSpeed> EvaporativeFluidCoolerSin
 } // model
 } // openstudio
 
-#endif // MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_HPP
+#endif // MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_HPP

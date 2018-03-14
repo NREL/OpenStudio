@@ -228,12 +228,12 @@ StraightComponent::StraightComponent(std::shared_ptr<detail::StraightComponent_I
   : HVACComponent(std::move(p))
 {}
 
-unsigned StraightComponent::inletPort()
+unsigned StraightComponent::inletPort() const
 {
   return getImpl<detail::StraightComponent_Impl>()->inletPort();
 }
 
-unsigned StraightComponent::outletPort()
+unsigned StraightComponent::outletPort() const
 {
   return getImpl<detail::StraightComponent_Impl>()->outletPort();
 }

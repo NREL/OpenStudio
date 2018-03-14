@@ -281,4 +281,4 @@ typedef std::vector<RefrigerationAirChiller> RefrigerationAirChillerVector;
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONAIRCHILLER_HPP
+#endif // MODEL_REFRIGERATIONAIRCHILLER_HPP

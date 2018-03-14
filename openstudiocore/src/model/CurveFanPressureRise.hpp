@@ -140,4 +140,4 @@ typedef std::vector<CurveFanPressureRise> CurveFanPressureRiseVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEFANPRESSURERISE_HPP
+#endif // MODEL_CURVEFANPRESSURERISE_HPP

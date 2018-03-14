@@ -161,4 +161,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEDOUBLEEXPONENTIALDECAY_IMPL_HPP
+#endif // MODEL_CURVEDOUBLEEXPONENTIALDECAY_IMPL_HPP

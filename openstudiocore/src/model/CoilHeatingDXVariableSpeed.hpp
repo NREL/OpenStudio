@@ -189,4 +189,4 @@ typedef std::vector<CoilHeatingDXVariableSpeed> CoilHeatingDXVariableSpeedVector
 } // model
 } // openstudio
 
-#endif // MODEL_COILHEATINGDXVARIABLESPEED_HPP
+#endif // MODEL_COILHEATINGDXVARIABLESPEED_HPP

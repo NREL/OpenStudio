@@ -103,4 +103,4 @@ typedef std::vector<CurrencyType> CurrencyTypeVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURRENCYTYPE_HPP
+#endif // MODEL_CURRENCYTYPE_HPP

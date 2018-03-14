@@ -112,12 +112,12 @@ namespace detail {
     return result;
   }
 
-  unsigned CoilHeatingLowTempRadiantVarFlow_Impl::inletPort()
+  unsigned CoilHeatingLowTempRadiantVarFlow_Impl::inletPort() const
   {
     return OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingWaterInletNodeName;
   }
 
-  unsigned CoilHeatingLowTempRadiantVarFlow_Impl::outletPort()
+  unsigned CoilHeatingLowTempRadiantVarFlow_Impl::outletPort() const
   {
     return OS_Coil_Heating_LowTemperatureRadiant_VariableFlowFields::HeatingWaterOutletNodeName;
   }

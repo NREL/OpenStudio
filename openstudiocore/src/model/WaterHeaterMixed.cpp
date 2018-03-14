@@ -2622,4 +2622,4 @@ WaterHeaterMixed::WaterHeaterMixed(std::shared_ptr<detail::WaterHeaterMixed_Impl
   }
 
 } // model
-} // openstudio
+} // openstudio

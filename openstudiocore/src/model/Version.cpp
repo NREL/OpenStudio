@@ -130,4 +130,4 @@ IddObjectType Version::iddObjectType() {
 }
 
 } // model
-} // openstudio
+} // openstudio

@@ -100,4 +100,4 @@ typedef std::vector<ExternalInterfaceFunctionalMockupUnitExportToVariable> Exter
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOVARIABLE_HPP
+#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITEXPORTTOVARIABLE_HPP

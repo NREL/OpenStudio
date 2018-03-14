@@ -258,4 +258,4 @@ IddObjectType ComponentCostAdjustments::iddObjectType()
 }
 
 } // model
-} // openstudio
+} // openstudio

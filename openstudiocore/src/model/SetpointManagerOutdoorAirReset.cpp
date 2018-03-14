@@ -781,4 +781,4 @@ SetpointManagerOutdoorAirReset::SetpointManagerOutdoorAirReset(std::shared_ptr<d
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

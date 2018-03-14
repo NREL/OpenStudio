@@ -124,12 +124,12 @@ namespace detail {
     return result;
   }
 
-  unsigned SolarCollectorFlatPlateWater_Impl::inletPort()
+  unsigned SolarCollectorFlatPlateWater_Impl::inletPort() const
   {
     return OS_SolarCollector_FlatPlate_WaterFields::InletNodeName;
   }
 
-  unsigned SolarCollectorFlatPlateWater_Impl::outletPort()
+  unsigned SolarCollectorFlatPlateWater_Impl::outletPort() const
   {
     return OS_SolarCollector_FlatPlate_WaterFields::OutletNodeName;
   }

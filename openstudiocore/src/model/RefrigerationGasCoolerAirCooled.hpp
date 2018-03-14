@@ -197,4 +197,4 @@ typedef std::vector<RefrigerationGasCoolerAirCooled> RefrigerationGasCoolerAirCo
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONGASCOOLERAIRCOOLED_HPP
+#endif // MODEL_REFRIGERATIONGASCOOLERAIRCOOLED_HPP

@@ -133,4 +133,4 @@ typedef std::vector<CurveFunctionalPressureDrop> CurveFunctionalPressureDropVect
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEFUNCTIONALPRESSUREDROP_HPP
+#endif // MODEL_CURVEFUNCTIONALPRESSUREDROP_HPP

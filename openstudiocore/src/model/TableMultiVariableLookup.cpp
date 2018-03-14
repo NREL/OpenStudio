@@ -1279,4 +1279,4 @@ TableMultiVariableLookup::TableMultiVariableLookup(std::shared_ptr<detail::Table
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

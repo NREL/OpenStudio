@@ -349,4 +349,4 @@ typedef std::vector<ChillerElectricEIR> ChillerElectricEIRVector;
 
 } // openstudio
 
-#endif // MODEL_CHILLERELECTRICEIR_HPP
+#endif // MODEL_CHILLERELECTRICEIR_HPP

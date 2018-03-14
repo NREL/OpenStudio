@@ -156,4 +156,4 @@ typedef std::vector<CurveDoubleExponentialDecay> CurveDoubleExponentialDecayVect
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEDOUBLEEXPONENTIALDECAY_HPP
+#endif // MODEL_CURVEDOUBLEEXPONENTIALDECAY_HPP

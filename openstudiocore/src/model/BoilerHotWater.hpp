@@ -217,4 +217,4 @@ typedef std::vector<BoilerHotWater> BoilerHotWaterVector;
 } // model
 } // openstudio
 
-#endif // MODEL_BOILERHOTWATER_HPP
+#endif // MODEL_BOILERHOTWATER_HPP

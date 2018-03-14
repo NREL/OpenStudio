@@ -101,4 +101,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_QUALIFY_IMPL_HPP
+#endif // MODEL_UTILITYCOST_QUALIFY_IMPL_HPP

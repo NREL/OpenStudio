@@ -194,4 +194,4 @@ typedef std::vector<CurveBicubic> CurveBicubicVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEBICUBIC_HPP
+#endif // MODEL_CURVEBICUBIC_HPP

@@ -91,12 +91,12 @@ namespace detail {
     return CoilCoolingCooledBeam::iddObjectType();
   }
 
-  unsigned CoilCoolingCooledBeam_Impl::inletPort()
+  unsigned CoilCoolingCooledBeam_Impl::inletPort() const
   {
     return OS_Coil_Cooling_CooledBeamFields::ChilledWaterInletNodeName;
   }
 
-  unsigned CoilCoolingCooledBeam_Impl::outletPort()
+  unsigned CoilCoolingCooledBeam_Impl::outletPort() const
   {
     return OS_Coil_Cooling_CooledBeamFields::ChilledWaterOutletNodeName;
   }

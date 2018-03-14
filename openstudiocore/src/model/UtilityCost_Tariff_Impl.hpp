@@ -122,4 +122,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_TARIFF_IMPL_HPP
+#endif // MODEL_UTILITYCOST_TARIFF_IMPL_HPP

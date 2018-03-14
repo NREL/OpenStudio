@@ -577,4 +577,4 @@ typedef std::vector<AirConditionerVariableRefrigerantFlow> AirConditionerVariabl
 } // model
 } // openstudio
 
-#endif // MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOW_HPP
+#endif // MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOW_HPP

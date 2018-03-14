@@ -79,9 +79,9 @@ class MODEL_API WaterUseConnections : public StraightComponent {
   // Detaches waterUseEquipment from this object but does not remove it from the model
   bool removeWaterUseEquipment(WaterUseEquipment & waterUseEquipment);
 
-  unsigned inletPort();
+  unsigned inletPort() const;
 
-  unsigned outletPort();
+  unsigned outletPort() const;
 
   protected:
 

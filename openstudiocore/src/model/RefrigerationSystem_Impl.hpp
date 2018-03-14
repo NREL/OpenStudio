@@ -275,4 +275,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONSYSTEM_IMPL_HPP
+#endif // MODEL_REFRIGERATIONSYSTEM_IMPL_HPP

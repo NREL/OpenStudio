@@ -1232,4 +1232,4 @@ ThermalStorageChilledWaterStratified::ThermalStorageChilledWaterStratified(std::
   }
 
 } // model
-} // openstudio
+} // openstudio

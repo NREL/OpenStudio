@@ -303,4 +303,4 @@ IddObjectType UtilityCost_Charge_Block::iddObjectType()
 }
 
 } // model
-} // openstudio
+} // openstudio

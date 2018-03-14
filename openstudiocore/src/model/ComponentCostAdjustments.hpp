@@ -129,4 +129,4 @@ typedef std::vector<ComponentCostAdjustments> ComponentCostAdjustmentsVector;
 } // model
 } // openstudio
 
-#endif // MODEL_COMPONENTCOSTADJUSTMENTS_HPP
+#endif // MODEL_COMPONENTCOSTADJUSTMENTS_HPP

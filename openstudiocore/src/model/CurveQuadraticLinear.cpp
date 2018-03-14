@@ -515,4 +515,4 @@ CurveQuadraticLinear::CurveQuadraticLinear(std::shared_ptr<detail::CurveQuadrati
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

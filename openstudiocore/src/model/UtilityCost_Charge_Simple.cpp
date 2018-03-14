@@ -218,4 +218,4 @@ IddObjectType UtilityCost_Charge_Simple::iddObjectType()
 }
 
 } // model
-} // openstudio
+} // openstudio
