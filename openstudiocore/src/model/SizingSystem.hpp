@@ -41,6 +41,7 @@ class AirLoopHVAC;
 namespace detail {
 
 class SizingSystem_Impl;
+class AirLoopHVAC_Impl;
 
 } // detail
 
@@ -301,6 +302,7 @@ class MODEL_API SizingSystem : public ModelObject
   friend class Model;
   friend class IdfObject;
   friend class AirLoopHVAC;
+  friend class detail::AirLoopHVAC_Impl;
   friend class openstudio::detail::IdfObject_Impl;
 
   /// @endcond

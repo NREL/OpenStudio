@@ -38,6 +38,8 @@
 #include "ModelObjectList_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "ZoneHVACPackagedTerminalAirConditioner.hpp"
@@ -486,6 +488,10 @@ namespace detail {
       }
     }
 
+    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      return StraightComponent_Impl::addToNode( node );
+    }
+
     return false;
   }
 
@@ -825,4 +831,4 @@ CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(std::shared_ptr<detail::C
   }
 
 } // model
-} // openstudio
+} // openstudio
