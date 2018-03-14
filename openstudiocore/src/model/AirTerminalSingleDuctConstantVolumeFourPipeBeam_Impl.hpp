@@ -82,6 +82,12 @@ namespace detail {
 
     virtual unsigned outletPort() override;
 
+    virtual ModelObject clone(Model model) const override;
+
+    // TODO: virtual std::vector<IdfObject> remove() override;
+
+    virtual bool isRemovable() const override;
+
     //@}
     /** @name Getters */
     //@{

@@ -140,6 +140,98 @@ namespace detail {
     return result;
   }
 
+  // TODO
+/*
+  std::vector<IdfObject> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::remove()
+  {
+    Model _model = this->model();
+    ModelObject thisObject = this->getObject<ModelObject>();
+
+    HVACComponent _coolingCoil = coilCoolingCooledBeam();
+
+    boost::optional<ModelObject> sourceModelObject = this->inletModelObject();
+    boost::optional<unsigned> sourcePort = this->connectedObjectPort(this->inletPort());
+
+    boost::optional<ModelObject> targetModelObject = this->outletModelObject();
+    boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
+
+    std::vector<ThermalZone> thermalZones = _model.getConcreteModelObjects<ThermalZone>();
+    for( auto & thermalZone : thermalZones )
+    {
+      std::vector<ModelObject> equipment = thermalZone.equipment();
+
+      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
+      {
+        thermalZone.removeEquipment(thisObject);
+
+        break;
+      }
+    }
+
+    if( sourcePort && sourceModelObject
+        && targetPort && targetModelObject )
+    {
+      if( boost::optional<Node> inletNode = sourceModelObject->optionalCast<Node>() )
+      {
+        if( boost::optional<ModelObject> source2ModelObject = inletNode->inletModelObject() )
+        {
+          if( boost::optional<unsigned> source2Port = inletNode->connectedObjectPort(inletNode->inletPort()) )
+          {
+            _model.connect( source2ModelObject.get(),
+                            source2Port.get(),
+                            targetModelObject.get(),
+                            targetPort.get() );
+
+            inletNode->disconnect();
+            inletNode->remove();
+
+            if( boost::optional<PlantLoop> loop = _coolingCoil.plantLoop() )
+            {
+              loop->removeDemandBranchWithComponent(_coolingCoil);
+            }
+
+            return StraightComponent_Impl::remove();
+          }
+        }
+      }
+    }
+
+    model().disconnect(getObject<ModelObject>(),inletPort());
+    model().disconnect(getObject<ModelObject>(),outletPort());
+
+    if( boost::optional<PlantLoop> loop = _coolingCoil.plantLoop() )
+    {
+      loop->removeDemandBranchWithComponent(_coolingCoil);
+    }
+
+    return StraightComponent_Impl::remove();
+  }
+
+  bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::isRemovable() const
+  {
+    return true;
+  } */
+
+  /* Clone this + any cooling and heating coils */
+  ModelObject AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::clone(Model model) const
+  {
+    AirTerminalSingleDuctConstantVolumeFourPipeBeam airTerminalCVFourPipeBeamClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+
+    if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil()) {
+      HVACComponent coilCoolingClone = cc->clone(model).cast<HVACComponent>();
+      airTerminalCVFourPipeBeamClone.setCoolingCoil(coilCoolingClone);
+    }
+
+    if (boost::optional<CoilHeatingFourPipeBeam> hc = heatingCoil()) {
+      HVACComponent coilHeatingClone = hc->clone(model).cast<HVACComponent>();
+      airTerminalCVFourPipeBeamClone.setHeatingCoil(coilHeatingClone);
+    }
+
+    return airTerminalCVFourPipeBeamClone;
+  }
+
+
+
   /* Children are the (optional) subclasses corresponding to the cooling and heating water side */
   std::vector<ModelObject> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::children() const
   {
