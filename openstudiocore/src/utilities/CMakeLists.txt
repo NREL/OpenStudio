@@ -599,7 +599,7 @@ endif()
 
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
-set(swig_target_name ${target_name}_static)
+set(swig_target_name ${target_name})
 
 MAKE_SWIG_TARGET(OpenStudioUtilitiesCore utilitiescore "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesCore.i" "${${target_name}_swig_src}" ${swig_target_name} "")
 

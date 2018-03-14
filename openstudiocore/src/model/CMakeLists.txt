@@ -2003,7 +2003,7 @@ if(BUILD_TESTING)
   endif()
 endif()
 
-set(swig_target_name ${target_name}_static)
+set(swig_target_name ${target_name})
 
 MAKE_SWIG_TARGET(OpenStudioModelCore model "${CMAKE_CURRENT_SOURCE_DIR}/ModelCore.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilities)
 
