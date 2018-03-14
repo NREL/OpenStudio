@@ -1410,12 +1410,12 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirConditioner_VariableRefrigerantFlowFields::AvailabilitySchedule);
   }
 
-  unsigned AirConditionerVariableRefrigerantFlow_Impl::inletPort()
+  unsigned AirConditionerVariableRefrigerantFlow_Impl::inletPort() const
   {
     return OS_AirConditioner_VariableRefrigerantFlowFields::CondenserInletNode;
   }
 
-  unsigned AirConditionerVariableRefrigerantFlow_Impl::outletPort()
+  unsigned AirConditionerVariableRefrigerantFlow_Impl::outletPort() const
   {
     return OS_AirConditioner_VariableRefrigerantFlowFields::CondenserOutletNode;
   }
@@ -3195,4 +3195,4 @@ AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(std
   }
 
 } // model
-} // openstudio
+} // openstudio

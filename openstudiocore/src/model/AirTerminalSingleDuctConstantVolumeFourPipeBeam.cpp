@@ -205,12 +205,12 @@ namespace detail {
     }
 
     return StraightComponent_Impl::remove();
-  }
+  } */
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::isRemovable() const
   {
     return true;
-  } */
+  }
 
   /* Clone this + any cooling and heating coils */
   ModelObject AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::clone(Model model) const
@@ -582,10 +582,10 @@ namespace detail {
 
   // Global Autosize
   void AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosize() {
-    autosizedDesignPrimaryAirVolumeFlowRate();
-    autosizedDesignChilledWaterVolumeFlowRate();
-    autosizedDesignHotWaterVolumeFlowRate();
-    autosizedZoneTotalBeamLength();
+    autosizeDesignPrimaryAirVolumeFlowRate();
+    autosizeDesignChilledWaterVolumeFlowRate();
+    autosizeDesignHotWaterVolumeFlowRate();
+    autosizeZoneTotalBeamLength();
   }
 
   // Global Apply Sizing Values
@@ -892,6 +892,36 @@ bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setRatedPrimaryAirFlowRate
 
 void AirTerminalSingleDuctConstantVolumeFourPipeBeam::resetRatedPrimaryAirFlowRateperBeamLength() {
   getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->resetRatedPrimaryAirFlowRateperBeamLength();
+}
+
+
+
+/* Convenience functions  */
+
+/* Convenience method to return the chilled water PlantLoop */
+boost::optional<PlantLoop> AirTerminalSingleDuctConstantVolumeFourPipeBeam::chilledWaterPlantLoop() const {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->chilledWaterPlantLoop();
+}
+
+boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam::chilledWaterInletNode() const {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->chilledWaterInletNode();
+}
+
+boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam::chilledWaterOutletNode() const {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->chilledWaterOutletNode();
+}
+
+/* Convenience method to return the hot water PlantLoop */
+boost::optional<PlantLoop> AirTerminalSingleDuctConstantVolumeFourPipeBeam::hotWaterPlantLoop() const {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->hotWaterPlantLoop();
+}
+
+boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam::hotWaterInletNode() const {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->hotWaterInletNode();
+}
+
+boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam::hotWaterOutletNode() const {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->hotWaterOutletNode();
 }
 
 

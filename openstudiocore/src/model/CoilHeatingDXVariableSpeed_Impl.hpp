@@ -69,9 +69,9 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     virtual ModelObject clone(Model model) const override;
 
@@ -209,4 +209,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_COILHEATINGDXVARIABLESPEED_IMPL_HPP
+#endif // MODEL_COILHEATINGDXVARIABLESPEED_IMPL_HPP

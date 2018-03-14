@@ -69,9 +69,9 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     // TODO: I think this should be virtual bool since it's defined in both HVACcomponent and StraightComponent. @Kyle?
     virtual bool addToNode(Node & node) override;

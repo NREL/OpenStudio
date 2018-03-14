@@ -89,12 +89,12 @@ const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableName
     return CoilHeatingFourPipeBeam::iddObjectType();
   }
 
-  unsigned CoilHeatingFourPipeBeam_Impl::inletPort()
+  unsigned CoilHeatingFourPipeBeam_Impl::inletPort() const
   {
     return OS_Coil_Heating_FourPipeBeamFields::HotWaterInletNodeName;
   }
 
-  unsigned CoilHeatingFourPipeBeam_Impl::outletPort()
+  unsigned CoilHeatingFourPipeBeam_Impl::outletPort() const
   {
     return OS_Coil_Heating_FourPipeBeamFields::HotWaterOutletNodeName;
   }
@@ -162,11 +162,35 @@ const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableName
   /* Nodes */
 
   boost::optional<Node> CoilHeatingFourPipeBeam_Impl::hotWaterInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Coil_Heating_FourPipeBeamFields::HotWaterInletNodeName);
+    unsigned port = inletPort();
+    boost::optional<ModelObject> mo = connectedObject(port);
+    boost::optional<Node> result;
+
+    if( mo )
+    {
+      if( boost::optional<Node> node = mo->optionalCast<Node>() )
+      {
+        result = node;
+      }
+    }
+
+    return result;
   }
 
   boost::optional<Node> CoilHeatingFourPipeBeam_Impl::hotWaterOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Coil_Heating_FourPipeBeamFields::HotWaterOutletNodeName);
+    unsigned port = outletPort();
+    boost::optional<ModelObject> mo = connectedObject(port);
+    boost::optional<Node> result;
+
+    if( mo )
+    {
+      if( boost::optional<Node> node = mo->optionalCast<Node>() )
+      {
+        result = node;
+      }
+    }
+
+    return result;
   }
 
 

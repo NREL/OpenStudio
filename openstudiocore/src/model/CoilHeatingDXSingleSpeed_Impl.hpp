@@ -72,9 +72,9 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
 
   virtual std::vector<ModelObject> children() const override;
 
-  virtual unsigned inletPort() override;
+  virtual unsigned inletPort() const override;
 
-  virtual unsigned outletPort() override;
+  virtual unsigned outletPort() const override;
 
   virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 

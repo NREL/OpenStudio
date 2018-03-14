@@ -124,8 +124,8 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort() override;
-    unsigned outletPort() override;
+    virtual unsigned inletPort() const override;
+    virtual unsigned outletPort() const override;
 
     bool addToNode(Node & node) override;
     std::vector<ModelObject> children() const override;

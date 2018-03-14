@@ -76,9 +76,9 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     virtual std::vector<ModelObject> children() const override;
 
@@ -195,4 +195,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_FANONOFF_IMPL_HPP
+#endif // MODEL_FANONOFF_IMPL_HPP

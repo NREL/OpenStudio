@@ -72,9 +72,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    virtual unsigned inletPort() = 0;
+    virtual unsigned inletPort() const = 0;
 
-    virtual unsigned outletPort() = 0;
+    virtual unsigned outletPort() const = 0;
 
     virtual boost::optional<ModelObject> inletModelObject();
 

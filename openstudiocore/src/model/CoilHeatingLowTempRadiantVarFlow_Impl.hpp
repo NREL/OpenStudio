@@ -72,9 +72,9 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 

@@ -89,12 +89,12 @@ namespace detail {
     return CoilCoolingFourPipeBeam::iddObjectType();
   }
 
-  unsigned CoilCoolingFourPipeBeam_Impl::inletPort()
+  unsigned CoilCoolingFourPipeBeam_Impl::inletPort() const
   {
     return OS_Coil_Cooling_FourPipeBeamFields::ChilledWaterInletNodeName;
   }
 
-  unsigned CoilCoolingFourPipeBeam_Impl::outletPort()
+  unsigned CoilCoolingFourPipeBeam_Impl::outletPort() const
   {
     return OS_Coil_Cooling_FourPipeBeamFields::ChilledWaterOutletNodeName;
   }
@@ -160,11 +160,35 @@ namespace detail {
   /* Nodes */
 
   boost::optional<Node> CoilCoolingFourPipeBeam_Impl::chilledWaterInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Coil_Cooling_FourPipeBeamFields::ChilledWaterInletNodeName);
+    unsigned port = inletPort();
+    boost::optional<ModelObject> mo = connectedObject(port);
+    boost::optional<Node> result;
+
+    if( mo )
+    {
+      if( boost::optional<Node> node = mo->optionalCast<Node>() )
+      {
+        result = node;
+      }
+    }
+
+    return result;
   }
 
   boost::optional<Node> CoilCoolingFourPipeBeam_Impl::chilledWaterOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Coil_Cooling_FourPipeBeamFields::ChilledWaterOutletNodeName);
+    unsigned port = outletPort();
+    boost::optional<ModelObject> mo = connectedObject(port);
+    boost::optional<Node> result;
+
+    if( mo )
+    {
+      if( boost::optional<Node> node = mo->optionalCast<Node>() )
+      {
+        result = node;
+      }
+    }
+
+    return result;
   }
 
 

@@ -75,9 +75,9 @@ namespace detail {
 
     virtual std::vector<ModelObject> children() const override;
 
-    virtual unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     virtual bool addToNode(Node & node) override;
 
@@ -372,4 +372,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_PUMPVARIABLESPEED_IMPL_HPP
+#endif // MODEL_PUMPVARIABLESPEED_IMPL_HPP

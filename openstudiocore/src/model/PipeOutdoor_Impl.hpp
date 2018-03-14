@@ -72,9 +72,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    virtual unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     boost::optional<Construction> construction() const;
 

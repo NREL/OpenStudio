@@ -199,9 +199,9 @@ namespace detail {
     /** @name Other */
     //@{
 
-    virtual unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     ModelObject clone(Model model) const override;
 

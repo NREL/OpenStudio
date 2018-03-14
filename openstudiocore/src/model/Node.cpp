@@ -138,12 +138,12 @@ namespace detail{
     return Node::iddObjectType();
   }
 
-  unsigned Node_Impl::inletPort()
+  unsigned Node_Impl::inletPort() const
   {
     return OS_NodeFields::InletPort;
   }
 
-  unsigned Node_Impl::outletPort()
+  unsigned Node_Impl::outletPort() const
   {
     return OS_NodeFields::OutletPort;
   }
@@ -440,7 +440,7 @@ namespace detail{
     std::vector<std::string> types;
     return types;
   }
-  
+
   AirflowNetworkDistributionNode Node_Impl::getAirflowNetworkDistributionNode()
   {
     boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();

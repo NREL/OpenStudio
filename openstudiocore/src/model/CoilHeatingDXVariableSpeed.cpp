@@ -825,4 +825,4 @@ CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(std::shared_ptr<detail::C
   }
 
 } // model
-} // openstudio
+} // openstudio

@@ -61,9 +61,9 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
-    unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     bool addToNode(Node & node) override;
 
