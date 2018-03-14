@@ -59,7 +59,7 @@ if(BUILD_TESTING)
   add_dependencies(${target_name}_tests openstudio_gbxml_resources)
 endif()
 
-MAKE_SWIG_TARGET(OpenStudioGBXML gbXML "${CMAKE_CURRENT_SOURCE_DIR}/gbXML.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioEnergyPlus)
+MAKE_SWIG_TARGET(OpenStudioGBXML gbXML "${CMAKE_CURRENT_SOURCE_DIR}/gbXML.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
 
 #add_executable(gbXMLToIdf gbXMLToIdf.cpp)
 #AddPCH(gbXMLToIdf)

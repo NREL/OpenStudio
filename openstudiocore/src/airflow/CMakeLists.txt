@@ -103,4 +103,4 @@ add_library(${target_name}_static
 )
 target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
-MAKE_SWIG_TARGET(OpenStudioAirflow Airflow "${CMAKE_CURRENT_SOURCE_DIR}/Airflow.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioEnergyPlus)
+MAKE_SWIG_TARGET(OpenStudioAirflow Airflow "${CMAKE_CURRENT_SOURCE_DIR}/Airflow.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)

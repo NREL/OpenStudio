@@ -65,4 +65,4 @@ if(BUILD_TESTING)
   add_dependencies(${target_name}_tests openstudio_sdd_resources)
 endif()
 
-MAKE_SWIG_TARGET(OpenStudioSDD SDD "${CMAKE_CURRENT_SOURCE_DIR}/SDD.i" "${${target_name}_swig_src}" ${target_name}_static "OpenStudioEnergyPlus;OpenStudioOSVersion")
+MAKE_SWIG_TARGET(OpenStudioSDD SDD "${CMAKE_CURRENT_SOURCE_DIR}/SDD.i" "${${target_name}_swig_src}" ${target_name} "OpenStudioEnergyPlus;OpenStudioOSVersion")
