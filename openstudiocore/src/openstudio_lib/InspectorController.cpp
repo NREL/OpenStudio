@@ -43,16 +43,6 @@
 #include "../model/AirLoopHVACZoneSplitter.hpp"
 #include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../model/AirLoopHVAC_Impl.hpp"
-
-/* TODO: build and make sure these aren't needed, then remove them
- *#include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
- *#include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
- *#include "../model/AirTerminalSingleDuctUncontrolled.hpp"
- *#include "../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
- *#include "../model/AirTerminalSingleDuctVAVReheat.hpp"
- *#include "../model/AirTerminalSingleDuctVAVReheat_Impl.hpp"
- */
-
 #include "../model/HVACComponent.hpp"
 #include "../model/HVACComponent_Impl.hpp"
 #include "../model/PlantLoop.hpp"
