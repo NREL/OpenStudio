@@ -600,6 +600,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirTerminalSingleDuctConstantVolumeCooledBeam(airTerminal);
       break;
     }
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeam :
+    {
+      model::AirTerminalSingleDuctConstantVolumeFourPipeBeam airTerminal = modelObject.cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+      retVal = translateAirTerminalSingleDuctConstantVolumeFourPipeBeam(airTerminal);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ParallelPIU_Reheat :
     {
       model::AirTerminalSingleDuctParallelPIUReheat airTerminal = modelObject.cast<AirTerminalSingleDuctParallelPIUReheat>();
@@ -851,7 +857,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_CooledBeam:
     {
-      // DLM: is this a no-op?
+      // This is handled directly in ATU:SingleDuct:ConstantVolume::CooledBeam
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_FourPipeBeam:
+    {
+      // This is handled directly in ATU:SingleDuct:ConstantVolume::FourPipeBeam
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_FourPipeBeam:
+    {
+      // This is handled directly in ATU:SingleDuct:ConstantVolume::FourPipeBeam
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed :
