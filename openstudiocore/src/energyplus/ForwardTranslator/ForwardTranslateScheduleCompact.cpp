@@ -68,7 +68,14 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleCompact( Schedule
     }
   }
 
-  for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
+  for ( IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
+    for ( unsigned i = 0; i < eg.numFields(); ++i ) {
+      if( auto value = eg.getString(i) ) {
+        if( istringEqual(value.get(), "Interpolate:Yes") ) {
+          eg.setString(i, "Interpolate:Average");
+        }
+      }
+    }
     scheduleCompact.pushExtensibleGroup(eg.fields());
   }
 

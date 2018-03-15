@@ -33,7 +33,7 @@
 ! WeatherFileName=USA_CO_Boulder_TMY2.epw
 ! End SimMetaData
 
-  Version,8.8;
+  Version,8.9;
 
   Timestep,6;
 
@@ -1251,6 +1251,7 @@
 
   ZoneHVAC:EquipmentList,
     Classroom Equipment,     !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Classroom Direct Air,    !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -1471,7 +1472,7 @@
     PSZ-AC:1_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC:1_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     PSZ-AC:1_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Curve:Biquadratic,
     PSZ-AC:1_CoolCStandard10Ton_CapFT,  !- Name

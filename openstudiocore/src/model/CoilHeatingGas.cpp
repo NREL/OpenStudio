@@ -37,6 +37,8 @@
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "ZoneHVACWaterToAirHeatPump.hpp"
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
@@ -518,6 +520,10 @@ namespace detail{
       {
         return StraightComponent_Impl::addToNode( node );
       }
+    }
+
+    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      return StraightComponent_Impl::addToNode( node );
     }
 
     return false;

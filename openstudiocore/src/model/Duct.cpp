@@ -28,13 +28,12 @@
 
 #include "Duct.hpp"
 #include "Duct_Impl.hpp"
-
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Duct_FieldEnums.hxx>
-
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -89,6 +88,10 @@ namespace detail {
   {
     if(node.airLoopHVAC()) {
       return StraightComponent_Impl::addToNode(node);
+    }
+
+    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      return StraightComponent_Impl::addToNode( node );
     }
 
     return false;
