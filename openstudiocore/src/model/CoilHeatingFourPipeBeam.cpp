@@ -79,9 +79,7 @@ namespace detail {
 const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
-      // None: all in parent AirTerminalSingleDuctConstantVolumeFourPipeBeam
-    }
+    // None: all in parent AirTerminalSingleDuctConstantVolumeFourPipeBeam
     return result;
   }
 

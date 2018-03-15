@@ -94,25 +94,24 @@ namespace detail {
 
   const std::vector<std::string>& AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
+    static std::vector<std::string> result{
       // TODO: pretty sure these applies to all AirTerminals
-      result.push_back("Zone Air Terminal Sensible Heating Energy");
-      result.push_back("Zone Air Terminal Sensible Heating Rate");
-      result.push_back("Zone Air Terminal Sensible Cooling Energy");
-      result.push_back("Zone Air Terminal Sensible Cooling Rate");
+      "Zone Air Terminal Sensible Heating Energy",
+      "Zone Air Terminal Sensible Heating Rate",
+      "Zone Air Terminal Sensible Cooling Energy",
+      "Zone Air Terminal Sensible Cooling Rate",
 
       // Object specific output variables
-      result.push_back("Zone Air Terminal Beam Sensible Cooling Rate");
-      result.push_back("Zone Air Terminal Beam Sensible Cooling Energy");
-      result.push_back("Zone Air Terminal Beam Sensible Heating Rate");
-      result.push_back("Zone Air Terminal Beam Sensible Heating Energy");
-      result.push_back("Zone Air Terminal Primary Air Sensible Cooling Rate");
-      result.push_back("Zone Air Terminal Primary Air Sensible Cooling Energy");
-      result.push_back("Zone Air Terminal Primary Air Sensible Heating Rate");
-      result.push_back("Zone Air Terminal Primary Air Sensible Heating Energy");
-      result.push_back("Zone Air Terminal Primary Air Flow Rate");
-    }
+      "Zone Air Terminal Beam Sensible Cooling Rate",
+      "Zone Air Terminal Beam Sensible Cooling Energy",
+      "Zone Air Terminal Beam Sensible Heating Rate",
+      "Zone Air Terminal Beam Sensible Heating Energy",
+      "Zone Air Terminal Primary Air Sensible Cooling Rate",
+      "Zone Air Terminal Primary Air Sensible Cooling Energy",
+      "Zone Air Terminal Primary Air Sensible Heating Rate",
+      "Zone Air Terminal Primary Air Sensible Heating Energy",
+      "Zone Air Terminal Primary Air Flow Rate",
+    };
     return result;
   }
 
