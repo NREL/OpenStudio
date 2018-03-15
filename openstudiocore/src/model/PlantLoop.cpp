@@ -98,34 +98,32 @@ PlantLoop_Impl::PlantLoop_Impl(const PlantLoop_Impl& other,
 
   const std::vector<std::string>& PlantLoop_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Plant Supply Side Cooling Demand Rate");
-      result.push_back("Plant Supply Side Heating Demand Rate");
-      result.push_back("Plant Supply Side Inlet Mass Flow Rate");
-      result.push_back("Plant Supply Side Inlet Temperature");
-      result.push_back("Plant Supply Side Outlet Temperature");
-      result.push_back("Plant Supply Side Not Distributed Demand Rate");
-      result.push_back("Plant Supply Side Unmet Demand Rate");
-      result.push_back("Plant Solver Sub Iteration Count");
-      result.push_back("Plant Solver Half Loop Calls Count");
-      result.push_back("Debug Plant Loop Bypass Fraction");
-      result.push_back("Debug Plant Last Simulated Loop Side");
-      result.push_back("Plant Common Pipe Mass Flow Rate");
-      result.push_back("Plant Common Pipe Temperature");
-      result.push_back("Plant Common Pipe Flow Direction Status");
-      result.push_back("Plant Common Pipe Primary Mass Flow Rate");
-      result.push_back("Plant Common Pipe Secondary Mass Flow Rate");
-      result.push_back("Primary Side Common Pipe Flow Direction");
-      result.push_back("Secondary Side Common Pipe Flow Direction");
-      result.push_back("Plant Common Pipe Primary to Secondary Mass Flow Rate");
-      result.push_back("Plant Common Pipe Secondary to Primary Mass Flow Rate");
-      result.push_back("Plant System Cycle On Off Status");
-      result.push_back("Plant Demand Side Loop Pressure Difference");
-      result.push_back("Plant Supply Side Loop Pressure Difference");
-      result.push_back("Plant Loop Pressure Difference");
-    }
+    static std::vector<std::string> result{
+      "Plant Supply Side Cooling Demand Rate",
+      "Plant Supply Side Heating Demand Rate",
+      "Plant Supply Side Inlet Mass Flow Rate",
+      "Plant Supply Side Inlet Temperature",
+      "Plant Supply Side Outlet Temperature",
+      "Plant Supply Side Not Distributed Demand Rate",
+      "Plant Supply Side Unmet Demand Rate",
+      "Plant Solver Sub Iteration Count",
+      "Plant Solver Half Loop Calls Count",
+      "Debug Plant Loop Bypass Fraction",
+      "Debug Plant Last Simulated Loop Side",
+      "Plant Common Pipe Mass Flow Rate",
+      "Plant Common Pipe Temperature",
+      "Plant Common Pipe Flow Direction Status",
+      "Plant Common Pipe Primary Mass Flow Rate",
+      "Plant Common Pipe Secondary Mass Flow Rate",
+      "Primary Side Common Pipe Flow Direction",
+      "Secondary Side Common Pipe Flow Direction",
+      "Plant Common Pipe Primary to Secondary Mass Flow Rate",
+      "Plant Common Pipe Secondary to Primary Mass Flow Rate",
+      "Plant System Cycle On Off Status",
+      "Plant Demand Side Loop Pressure Difference",
+      "Plant Supply Side Loop Pressure Difference",
+      "Plant Loop Pressure Difference"
+    };
     return result;
   }
 

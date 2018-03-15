@@ -74,20 +74,18 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACUnitVentilator_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Zone Unit Ventilator Heating Rate");
-      result.push_back("Zone Unit Ventilator Heating Energy");
-      result.push_back("Zone Unit Ventilator Total Cooling Rate");
-      result.push_back("Zone Unit Ventilator Total Cooling Energy");
-      result.push_back("Zone Unit Ventilator Sensible Cooling Rate");
-      result.push_back("Zone Unit Ventilator Sensible Cooling Energy");
-      result.push_back("Zone Unit Ventilator Fan Electric Power");
-      result.push_back("Zone Unit Ventilator Fan Electric Energy");
-      result.push_back("Zone Unit Ventilator Fan Availability Status");
-      result.push_back("Zone Unit Ventilator Fan Part Load Ratio");
-    }
+    static std::vector<std::string> result{
+      "Zone Unit Ventilator Heating Rate",
+      "Zone Unit Ventilator Heating Energy",
+      "Zone Unit Ventilator Total Cooling Rate",
+      "Zone Unit Ventilator Total Cooling Energy",
+      "Zone Unit Ventilator Sensible Cooling Rate",
+      "Zone Unit Ventilator Sensible Cooling Energy",
+      "Zone Unit Ventilator Fan Electric Power",
+      "Zone Unit Ventilator Fan Electric Energy",
+      "Zone Unit Ventilator Fan Availability Status",
+      "Zone Unit Ventilator Fan Part Load Ratio"
+    };
     return result;
   }
 

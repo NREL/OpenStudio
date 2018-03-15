@@ -68,10 +68,7 @@ namespace detail {
   const std::vector<std::string>& PeopleDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty())
-    {
       // Not appropriate: output is listed in People instead
-    }
     return result;
   }
 

@@ -71,22 +71,20 @@ namespace detail{
 
   const std::vector<std::string>& EvaporativeCoolerDirectResearchSpecial_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Evaporative Cooler Electric Power");
-      result.push_back("Evaporative Cooler Stage Effectiveness");
-      result.push_back("Evaporative Cooler Electric Energy");
-      result.push_back("Evaporative Cooler Water Volume");
-      result.push_back("Evaporative Cooler Mains Water Volume");
+    static std::vector<std::string> result{
+      "Evaporative Cooler Electric Power",
+      "Evaporative Cooler Stage Effectiveness",
+      "Evaporative Cooler Electric Energy",
+      "Evaporative Cooler Water Volume",
+      "Evaporative Cooler Mains Water Volume"
 
       // Doc doesn't specify, but 95% sure this is only
       // If Supply Water Storage Tank Name is specified:
       // TODO: if storage tank gets implemented
-      //result.push_back("Evaporative Cooler Storage Tank Water Volume");
-      //result.push_back("Evaporative Cooler Starved Water Volume");
-      //result.push_back("Evaporative Cooler Starved Mains Water Volume");
-    }
+      //"Evaporative Cooler Storage Tank Water Volume",
+      //"Evaporative Cooler Starved Water Volume",
+      //"Evaporative Cooler Starved Mains Water Volume"
+    };
     return result;
   }
 

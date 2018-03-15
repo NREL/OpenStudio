@@ -82,15 +82,14 @@ namespace detail {
 
   const std::vector<std::string>& GeneratorPhotovoltaic_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Generator Produced DC Electric Power");
-      result.push_back("Generator Produced DC Electric Energy");
-      result.push_back("Generator PV Cell Temperature");
-      result.push_back("Generator PV Short Circuit Current");
-      result.push_back("Generator PV Open Circuit Voltage");
-      result.push_back("Generator PV Array Efficiency");
-    }
+    static std::vector<std::string> result{
+      "Generator Produced DC Electric Power",
+      "Generator Produced DC Electric Energy",
+      "Generator PV Cell Temperature",
+      "Generator PV Short Circuit Current",
+      "Generator PV Open Circuit Voltage",
+      "Generator PV Array Efficiency"
+    };
     return result;
   }
 

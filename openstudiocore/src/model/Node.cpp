@@ -82,54 +82,52 @@ namespace detail{
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& Node_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-
-    if (result.empty()) {
+    static std::vector<std::string> result{
       // Common Variables
-      result.push_back("System Node Temperature");
-      result.push_back("System Node Last Timestep Temperature");
-      result.push_back("System Node Mass Flow Rate");
-      result.push_back("System Node Humidity Ratio");
-      result.push_back("System Node Setpoint Temperature");
-      result.push_back("System Node Setpoint High Temperature");
-      result.push_back("System Node Setpoint Low Temperature");
-      result.push_back("System Node Setpoint Humidity Ratio");
-      result.push_back("System Node Setpoint Minimum Humidity Ratio");
-      result.push_back("System Node Setpoint Maximum Humidity Ratio");
-      result.push_back("System Node Relative Humidity");
-      result.push_back("System Node Pressure");
-      result.push_back("System Node Standard Density Volume Flow Rate");
-      result.push_back("System Node Enthalpy");
-      result.push_back("System Node Last Timestep Enthalpy");
-      result.push_back("System Node Wetbulb Temperature");
-      result.push_back("System Node Dewpoint Temperature");
-      result.push_back("System Node Quality");
-      result.push_back("System Node Height");
-      result.push_back("System Node Specific Heat");
+      "System Node Temperature",
+      "System Node Last Timestep Temperature",
+      "System Node Mass Flow Rate",
+      "System Node Humidity Ratio",
+      "System Node Setpoint Temperature",
+      "System Node Setpoint High Temperature",
+      "System Node Setpoint Low Temperature",
+      "System Node Setpoint Humidity Ratio",
+      "System Node Setpoint Minimum Humidity Ratio",
+      "System Node Setpoint Maximum Humidity Ratio",
+      "System Node Relative Humidity",
+      "System Node Pressure",
+      "System Node Standard Density Volume Flow Rate",
+      "System Node Enthalpy",
+      "System Node Last Timestep Enthalpy",
+      "System Node Wetbulb Temperature",
+      "System Node Dewpoint Temperature",
+      "System Node Quality",
+      "System Node Height",
+      "System Node Specific Heat",
 
 
       // The following node variable is also available for system nodes that are for “air”:
       // TODO: implement check? If no, make result non static and remove the result.empty() check
-      result.push_back("System Node Current Density Volume Flow Rate");
-      result.push_back("Average, System Node Current Density");
+      "System Node Current Density Volume Flow Rate",
+      "Average, System Node Current Density"
 
       // The following node variables are “advanced” and normally used for debugging unusual cases:
-      //result.push_back("System Node Minimum Temperature");
-      //result.push_back("System Node Maximum Temperature");
-      //result.push_back("System Node Minimum Limit Mass Flow Rate");
-      //result.push_back("System Node Maximum Limit Mass Flow Rate");
-      //result.push_back("System Node Minimum Available Mass Flow Rate");
-      //result.push_back("System Node Maximum Available Mass Flow Rate");
-      //result.push_back("System Node Requested Mass Flow Rate");
-      //result.push_back("System Node Setpoint Mass Flow Rate");
+      //"System Node Minimum Temperature",
+      //"System Node Maximum Temperature",
+      //"System Node Minimum Limit Mass Flow Rate",
+      //"System Node Maximum Limit Mass Flow Rate",
+      //"System Node Minimum Available Mass Flow Rate",
+      //"System Node Maximum Available Mass Flow Rate",
+      //"System Node Requested Mass Flow Rate",
+      //"System Node Setpoint Mass Flow Rate",
 
       // The following node variable reports node carbon dioxide concentration when carbon dioxide is simulated (ref. ZoneAirContaminantBalance):
-      // result.push_back("System Node CO2 Concentration");
+      // "System Node CO2 Concentration",
 
       // The following node variable reports node generic contaminant concentration when generic contaminant is simulated (ref. ZoneAirContaminantBalance):
-      // result.push_back("System Node Generic Air Contaminant Concentration");
+      // "System Node Generic Air Contaminant Concentration"
 
-    }
+    };
 
     return result;
   }
@@ -440,7 +438,7 @@ namespace detail{
     std::vector<std::string> types;
     return types;
   }
-  
+
   AirflowNetworkDistributionNode Node_Impl::getAirflowNetworkDistributionNode()
   {
     boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();

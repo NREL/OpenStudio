@@ -90,80 +90,78 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationSystem_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
+    static std::vector<std::string> result{
       // TODO: Implement checks
       // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE CASES AND/OR WALKINS:
-      result.push_back("Refrigeration System Total Compressor Electric Power");
-      result.push_back("Refrigeration System Total Compressor Electric Energy");
-      result.push_back("Refrigeration System Average Compressor COP");
-      result.push_back("Refrigeration System Total Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration System Total Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration System Total Cases and Walk Ins Heat Transfer Rate");
-      result.push_back("Refrigeration System Total Cases and Walk Ins Heat Transfer Energy");
-      result.push_back("Refrigeration System Total Transferred Load Heat Transfer Rate");
-      result.push_back("Refrigeration System Total Transferred Load Heat Transfer Energy");
-      result.push_back("Refrigeration System Total Suction Pipe Heat Gain Rate");
-      result.push_back("Refrigeration System Total Suction Pipe Heat Gain Energy");
-      result.push_back("Refrigeration System Net Rejected Heat Transfer Rate");
-      result.push_back("Refrigeration System Net Rejected Heat Transfer Energy");
-      result.push_back("Refrigeration System Estimated Refrigerant Inventory Mass");
-      result.push_back("Refrigeration System Liquid Suction Subcooler Heat Transfer Rate");
-      result.push_back("Refrigeration System Liquid Suction Subcooler Heat Transfer Energy");
-      result.push_back("Refrigeration System Estimated Refrigerant Inventory");
-      result.push_back("Refrigeration System Estimated Refrigerant Mass Flow Rate");
-      result.push_back("Refrigeration System Condensing Temperature");
-      result.push_back("Refrigeration System Evaporating Temperature");
-      result.push_back("Refrigeration System Suction Pipe Suction Temperature");
-      result.push_back("Refrigeration System Thermostatic Expansion Valve Liquid Temperature");
-      result.push_back("Refrigeration System Estimated High Stage Refrigerant Mass Flow Rate");
-      result.push_back("Refrigeration System Total High Stage Compressor Electric Energy");
-      result.push_back("Refrigeration System Total High Stage Compressor Electric Power");
-      result.push_back("Refrigeration System Total High Stage Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration System Total High Stage Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration System Total Low and High Stage Compressor Electric Energy");
-      result.push_back("Refrigeration System Total Low Stage Compressor Electric Energy");
-      result.push_back("Refrigeration System Total Low Stage Compressor Electric Power");
-      result.push_back("Refrigeration System Total Low Stage Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration System Total Low Stage Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration System Estimated Low Stage Refrigerant Mass Flow Rate");
+      "Refrigeration System Total Compressor Electric Power",
+      "Refrigeration System Total Compressor Electric Energy",
+      "Refrigeration System Average Compressor COP",
+      "Refrigeration System Total Compressor Heat Transfer Rate",
+      "Refrigeration System Total Compressor Heat Transfer Energy",
+      "Refrigeration System Total Cases and Walk Ins Heat Transfer Rate",
+      "Refrigeration System Total Cases and Walk Ins Heat Transfer Energy",
+      "Refrigeration System Total Transferred Load Heat Transfer Rate",
+      "Refrigeration System Total Transferred Load Heat Transfer Energy",
+      "Refrigeration System Total Suction Pipe Heat Gain Rate",
+      "Refrigeration System Total Suction Pipe Heat Gain Energy",
+      "Refrigeration System Net Rejected Heat Transfer Rate",
+      "Refrigeration System Net Rejected Heat Transfer Energy",
+      "Refrigeration System Estimated Refrigerant Inventory Mass",
+      "Refrigeration System Liquid Suction Subcooler Heat Transfer Rate",
+      "Refrigeration System Liquid Suction Subcooler Heat Transfer Energy",
+      "Refrigeration System Estimated Refrigerant Inventory",
+      "Refrigeration System Estimated Refrigerant Mass Flow Rate",
+      "Refrigeration System Condensing Temperature",
+      "Refrigeration System Evaporating Temperature",
+      "Refrigeration System Suction Pipe Suction Temperature",
+      "Refrigeration System Thermostatic Expansion Valve Liquid Temperature",
+      "Refrigeration System Estimated High Stage Refrigerant Mass Flow Rate",
+      "Refrigeration System Total High Stage Compressor Electric Energy",
+      "Refrigeration System Total High Stage Compressor Electric Power",
+      "Refrigeration System Total High Stage Compressor Heat Transfer Energy",
+      "Refrigeration System Total High Stage Compressor Heat Transfer Rate",
+      "Refrigeration System Total Low and High Stage Compressor Electric Energy",
+      "Refrigeration System Total Low Stage Compressor Electric Energy",
+      "Refrigeration System Total Low Stage Compressor Electric Power",
+      "Refrigeration System Total Low Stage Compressor Heat Transfer Energy",
+      "Refrigeration System Total Low Stage Compressor Heat Transfer Rate",
+      "Refrigeration System Estimated Low Stage Refrigerant Mass Flow Rate",
       // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE AIR CHILLERS:
-      result.push_back("Refrigeration Air Chiller System Total Compressor Electric Power");
-      result.push_back("Refrigeration Air Chiller System Total Compressor Electric Energy");
-      result.push_back("Refrigeration Air Chiller System Average Compressor COP");
-      result.push_back("Refrigeration Air Chiller System Total Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Total Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Total Air Chiller Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Total Case and Walk In Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Total Transferred Load Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Total Transferred Load Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Total Suction Pipe Heat Gain Rate");
-      result.push_back("Refrigeration Air Chiller System Total Suction Pipe Heat Gain Energy");
-      result.push_back("Refrigeration Air Chiller System Net Rejected Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Net Rejected Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Estimated Refrigerant Inventory Mass");
-      result.push_back("Refrigeration Air Chiller System Estimated Refrigerant Mass Flow Rate");
-      result.push_back("Refrigeration Air Chiller System Intercooler Temperature");
-      result.push_back("Refrigeration Air Chiller System Intercooler Pressure");
-      result.push_back("Refrigeration Air Chiller System Condensing Temperature");
-      result.push_back("Refrigeration Air Chiller System Evaporating Temperature");
-      result.push_back("Refrigeration Air Chiller System Suction Temperature");
-      result.push_back("Refrigeration Air Chiller System TXV Liquid Temperature");
-      result.push_back("Refrigeration Air Chiller System Estimated High Stage Refrigerant Mass Flow Rate");
-      result.push_back("Refrigeration Air Chiller System Total High Stage Compressor Electric Energy");
-      result.push_back("Refrigeration Air Chiller System Total High Stage Compressor Electric Power");
-      result.push_back("Refrigeration Air Chiller System Total High Stage Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Total High Stage Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Total Low and High Stage Compressor Electric Energy");
-      result.push_back("Refrigeration Air Chiller System Total Low Stage Compressor Electric Energy");
-      result.push_back("Refrigeration Air Chiller System Total Low Stage Compressor Electric Power");
-      result.push_back("Refrigeration Air Chiller System Total Low Stage Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Total Low Stage Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Estimated Low Stage Refrigerant Mass Flow Rate");
-    }
+      "Refrigeration Air Chiller System Total Compressor Electric Power",
+      "Refrigeration Air Chiller System Total Compressor Electric Energy",
+      "Refrigeration Air Chiller System Average Compressor COP",
+      "Refrigeration Air Chiller System Total Compressor Heat Transfer Rate",
+      "Refrigeration Air Chiller System Total Compressor Heat Transfer Energy",
+      "Refrigeration Air Chiller System Total Air Chiller Heat Transfer Rate",
+      "Refrigeration Air Chiller System Total Case and Walk In Heat Transfer Energy",
+      "Refrigeration Air Chiller System Total Transferred Load Heat Transfer Rate",
+      "Refrigeration Air Chiller System Total Transferred Load Heat Transfer Energy",
+      "Refrigeration Air Chiller System Total Suction Pipe Heat Gain Rate",
+      "Refrigeration Air Chiller System Total Suction Pipe Heat Gain Energy",
+      "Refrigeration Air Chiller System Net Rejected Heat Transfer Rate",
+      "Refrigeration Air Chiller System Net Rejected Heat Transfer Energy",
+      "Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Rate",
+      "Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Energy",
+      "Refrigeration Air Chiller System Estimated Refrigerant Inventory Mass",
+      "Refrigeration Air Chiller System Estimated Refrigerant Mass Flow Rate",
+      "Refrigeration Air Chiller System Intercooler Temperature",
+      "Refrigeration Air Chiller System Intercooler Pressure",
+      "Refrigeration Air Chiller System Condensing Temperature",
+      "Refrigeration Air Chiller System Evaporating Temperature",
+      "Refrigeration Air Chiller System Suction Temperature",
+      "Refrigeration Air Chiller System TXV Liquid Temperature",
+      "Refrigeration Air Chiller System Estimated High Stage Refrigerant Mass Flow Rate",
+      "Refrigeration Air Chiller System Total High Stage Compressor Electric Energy",
+      "Refrigeration Air Chiller System Total High Stage Compressor Electric Power",
+      "Refrigeration Air Chiller System Total High Stage Compressor Heat Transfer Energy",
+      "Refrigeration Air Chiller System Total High Stage Compressor Heat Transfer Rate",
+      "Refrigeration Air Chiller System Total Low and High Stage Compressor Electric Energy",
+      "Refrigeration Air Chiller System Total Low Stage Compressor Electric Energy",
+      "Refrigeration Air Chiller System Total Low Stage Compressor Electric Power",
+      "Refrigeration Air Chiller System Total Low Stage Compressor Heat Transfer Energy",
+      "Refrigeration Air Chiller System Total Low Stage Compressor Heat Transfer Rate",
+      "Refrigeration Air Chiller System Estimated Low Stage Refrigerant Mass Flow Rate"
+    };
     return result;
   }
 

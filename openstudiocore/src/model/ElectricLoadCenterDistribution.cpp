@@ -84,14 +84,13 @@ namespace detail {
 
   const std::vector<std::string>& ElectricLoadCenterDistribution_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Electric Load Center Requested Electric Power");
-      result.push_back("Electric Load Center Produced Electric Power");
-      result.push_back("Electric Load Center Produced Electric Energy");
-      result.push_back("Electric Load Center Produced Thermal Rate");
-      result.push_back("Electric Load Center Produced Thermal Energy");
-    }
+    static std::vector<std::string> result{
+      "Electric Load Center Requested Electric Power",
+      "Electric Load Center Produced Electric Power",
+      "Electric Load Center Produced Electric Energy",
+      "Electric Load Center Produced Thermal Rate",
+      "Electric Load Center Produced Thermal Energy"
+    };
     return result;
   }
 

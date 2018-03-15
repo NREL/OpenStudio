@@ -72,9 +72,7 @@ namespace detail {
   const std::vector<std::string>& AirLoopHVACZoneMixer_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
-      // Not Appropriate: No variables available
-    }
+    // Not Appropriate: No variables available
     return result;
   }
 

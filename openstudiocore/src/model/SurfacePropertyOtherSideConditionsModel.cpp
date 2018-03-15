@@ -64,13 +64,12 @@ namespace detail {
 
   const std::vector<std::string>& SurfacePropertyOtherSideConditionsModel_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Average, Surface Other Side Conditions Modeled Convection Air Temperature");
-      result.push_back("Average, Surface Other Side Conditions Modeled Convection Heat Transfer Coefficient");
-      result.push_back("Average, Surface Other Side Conditions Modeled Radiation Temperature");
-      result.push_back("Average, Surface Other Side Conditions Modeled Radiation Heat Transfer Coefficient");
-    }
+    static std::vector<std::string> result{
+      "Average, Surface Other Side Conditions Modeled Convection Air Temperature",
+      "Average, Surface Other Side Conditions Modeled Convection Heat Transfer Coefficient",
+      "Average, Surface Other Side Conditions Modeled Radiation Temperature",
+      "Average, Surface Other Side Conditions Modeled Radiation Heat Transfer Coefficient"
+    };
     return result;
   }
 

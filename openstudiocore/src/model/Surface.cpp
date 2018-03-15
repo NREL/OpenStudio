@@ -185,11 +185,10 @@ namespace detail {
 
   const std::vector<std::string>& Surface_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Surface Inside Face Temperature");
-      result.push_back("Surface Outside Face Temperature");
-    }
+    static std::vector<std::string> result{
+      "Surface Inside Face Temperature",
+      "Surface Outside Face Temperature"
+    };
     return result;
   }
 
@@ -1979,7 +1978,7 @@ namespace detail {
     std::vector<std::string> types;
     return types;
   }
-  
+
 } // detail
 
 Surface::Surface(const std::vector<Point3d>& vertices, const Model& model)

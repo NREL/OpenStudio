@@ -96,37 +96,36 @@ namespace detail {
   // (see GeneratorMicroTurbineHeatRecovery::outputVariableNames for these)
   const std::vector<std::string>& GeneratorMicroTurbine_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Generator Produced Electric Power");
-      result.push_back("Generator Produced Electric Energy");
-      result.push_back("Generator LHV Basis Electric Efficiency");
+    static std::vector<std::string> result{
+      "Generator Produced Electric Power",
+      "Generator Produced Electric Energy",
+      "Generator LHV Basis Electric Efficiency",
       // <FuelType>
-      result.push_back("Generator Gas HHV Basis Rate");
-      result.push_back("Generator Gas HHV Basis Energy");
-      result.push_back("Generator Gas Mass Flow Rate");
+      "Generator Gas HHV Basis Rate",
+      "Generator Gas HHV Basis Energy",
+      "Generator Gas Mass Flow Rate",
 
-      result.push_back("Generator Propane HHV Basis Rate");
-      result.push_back("Generator Propane HHV Basis Energy");
-      result.push_back("Generator Propane Mass Flow Rate");
+      "Generator Propane HHV Basis Rate",
+      "Generator Propane HHV Basis Energy",
+      "Generator Propane Mass Flow Rate",
       // </FuelType>
-      result.push_back("Generator Fuel HHV Basis Rate");
-      result.push_back("Generator Fuel HHV Basis Energy");
+      "Generator Fuel HHV Basis Rate",
+      "Generator Fuel HHV Basis Energy",
 
       // These are part of Generator:MicroTurbine:HeatRecovery
-      // result.push_back("Generator Produced Thermal Rate");
-      // result.push_back("Generator Produced Thermal Energy");
-      // result.push_back("Generator Thermal Efficiency LHV Basis");
-      // result.push_back("Generator Heat Recovery Inlet Temperature");
-      // result.push_back("Generator Heat Recovery Outlet Temperature");
-      // result.push_back("Generator Heat Recovery Water Mass Flow Rate");
-      result.push_back("Generator Standby Electric Power");
-      result.push_back("Generator Standby Electric Energy");
-      result.push_back("Generator Ancillary Electric Power");
-      result.push_back("Generator Ancillary Electric Energy");
-      result.push_back("Generator Exhaust Air Mass Flow Rate");
-      result.push_back("Generator Exhaust Air Temperature");
-    }
+      // "Generator Produced Thermal Rate",
+      // "Generator Produced Thermal Energy",
+      // "Generator Thermal Efficiency LHV Basis",
+      // "Generator Heat Recovery Inlet Temperature",
+      // "Generator Heat Recovery Outlet Temperature",
+      // "Generator Heat Recovery Water Mass Flow Rate",
+      "Generator Standby Electric Power",
+      "Generator Standby Electric Energy",
+      "Generator Ancillary Electric Power",
+      "Generator Ancillary Electric Energy",
+      "Generator Exhaust Air Mass Flow Rate",
+      "Generator Exhaust Air Temperature"
+    };
     return result;
   }
 

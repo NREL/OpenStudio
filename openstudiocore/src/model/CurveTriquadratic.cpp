@@ -67,14 +67,12 @@ namespace detail {
 
   const std::vector<std::string>& CurveTriquadratic_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Performance Curve Output Value");
-      result.push_back("Performance Curve Input Variable 1 Value");
-      result.push_back("Performance Curve Input Variable 2 Value");
-      result.push_back("Performance Curve Input Variable 3 Value");
-    }
+    static std::vector<std::string> result{
+      "Performance Curve Output Value",
+      "Performance Curve Input Variable 1 Value",
+      "Performance Curve Input Variable 2 Value",
+      "Performance Curve Input Variable 3 Value"
+    };
     return result;
   }
 

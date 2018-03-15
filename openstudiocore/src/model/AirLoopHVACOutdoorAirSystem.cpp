@@ -104,11 +104,8 @@ namespace detail {
   const std::vector<std::string>& AirLoopHVACOutdoorAirSystem_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty())
-    {
-      // Not Appropriate: No variables available
-      // The impact of using outside air/mechanical ventilation is described in the section: Outdoor Air Ventilation Outputs.
-    }
+    // Not Appropriate: No variables available
+    // The impact of using outside air/mechanical ventilation is described in the section: Outdoor Air Ventilation Outputs.
     return result;
   }
 

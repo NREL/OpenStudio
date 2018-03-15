@@ -74,31 +74,29 @@ namespace detail {
 
   const std::vector<std::string>& EvaporativeFluidCoolerTwoSpeed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Cooling Tower Fan Electric Power");
-      result.push_back("Cooling Tower Fan Electric Energy");
-      result.push_back("Cooling Tower Heat Transfer Rate");
-      result.push_back("Cooling Tower Inlet Temperature");
-      result.push_back("Cooling Tower Outlet Temperature");
-      result.push_back("Cooling Tower Mass Flow Rate");
-      result.push_back("Cooling Tower Make Up Water Volume Flow Rate");
-      result.push_back("Cooling Tower Make Up Water Volume");
-      result.push_back("Cooling Tower Water Evaporation Volume Flow Rate");
-      result.push_back("Cooling Tower Water Evaporation Volume");
-      result.push_back("Cooling Tower Water Drift Volume Flow Rate");
-      result.push_back("Cooling Tower Water Drift Volume");
-      result.push_back("Cooling Tower Water Blowdown Volume Flow Rate");
-      result.push_back("Cooling Tower Water Blowdown Volume");
-      result.push_back("Cooling Tower Make Up Mains Water Volume");
+    static std::vector<std::string> result{
+      "Cooling Tower Fan Electric Power",
+      "Cooling Tower Fan Electric Energy",
+      "Cooling Tower Heat Transfer Rate",
+      "Cooling Tower Inlet Temperature",
+      "Cooling Tower Outlet Temperature",
+      "Cooling Tower Mass Flow Rate",
+      "Cooling Tower Make Up Water Volume Flow Rate",
+      "Cooling Tower Make Up Water Volume",
+      "Cooling Tower Water Evaporation Volume Flow Rate",
+      "Cooling Tower Water Evaporation Volume",
+      "Cooling Tower Water Drift Volume Flow Rate",
+      "Cooling Tower Water Drift Volume",
+      "Cooling Tower Water Blowdown Volume Flow Rate",
+      "Cooling Tower Water Blowdown Volume",
+      "Cooling Tower Make Up Mains Water Volume"
       // If Supply Water Storage Tank Name is specified:
       // TODO: storage tank not implemented for now
-      //result.push_back("Cooling Tower Storage Tank Water Volume Flow Rate");
-      //result.push_back("Cooling Tower Storage Tank Water Volume");
-      //result.push_back("Cooling Tower Starved Storage Tank Water Volume Flow Rate");
-      //result.push_back("Cooling Tower Starved Storage Tank Water Volume");
-    }
+      //"Cooling Tower Storage Tank Water Volume Flow Rate",
+      //"Cooling Tower Storage Tank Water Volume",
+      //"Cooling Tower Starved Storage Tank Water Volume Flow Rate",
+      //"Cooling Tower Starved Storage Tank Water Volume"
+    };
     return result;
   }
 

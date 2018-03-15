@@ -74,10 +74,7 @@ namespace detail {
   const std::vector<std::string>& TemperingValve_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty())
-    {
       // Not appropriate: no specific output variables
-    }
     return result;
   }
 

@@ -74,18 +74,16 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationGasCoolerAirCooled_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Refrigeration Transcritical System Gas Cooler Heat Transfer Rate");
-      result.push_back("Refrigeration Transcritical System Gas Cooler Heat Transfer Energy");
-      result.push_back("Refrigeration Transcritical System Gas Cooler Fan Electric Power");
-      result.push_back("Refrigeration Transcritical System Gas Cooler Fan Electric Energy");
-      result.push_back("Refrigeration Transcritical System Gas Cooler Outlet Temperature");
-      result.push_back("Refrigeration Transcritical System Gas Cooler Outlet Pressure");
-      result.push_back("Refrigeration Transcritical System Gas Cooler Defrost Recovered Heat Transfer Rate");
-      result.push_back("Refrigeration Transcritical System Gas Cooler Defrost Recovered Heat Transfer Energy");
-    }
+    static std::vector<std::string> result{
+      "Refrigeration Transcritical System Gas Cooler Heat Transfer Rate",
+      "Refrigeration Transcritical System Gas Cooler Heat Transfer Energy",
+      "Refrigeration Transcritical System Gas Cooler Fan Electric Power",
+      "Refrigeration Transcritical System Gas Cooler Fan Electric Energy",
+      "Refrigeration Transcritical System Gas Cooler Outlet Temperature",
+      "Refrigeration Transcritical System Gas Cooler Outlet Pressure",
+      "Refrigeration Transcritical System Gas Cooler Defrost Recovered Heat Transfer Rate",
+      "Refrigeration Transcritical System Gas Cooler Defrost Recovered Heat Transfer Energy"
+    };
     return result;
   }
 

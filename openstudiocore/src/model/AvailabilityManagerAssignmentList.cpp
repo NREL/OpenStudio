@@ -84,10 +84,7 @@ namespace detail {
   const std::vector<std::string>& AvailabilityManagerAssignmentList_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty())
-    {
-      // Not appropriate: no specific output
-    }
+    // Not appropriate: no specific output
     return result;
   }
 

@@ -74,11 +74,9 @@ namespace detail {
 
   const std::vector<std::string>& AvailabilityManagerNightVentilation_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Availability Manager Night Ventilation Control Status");
-    }
+    static std::vector<std::string> result{
+      "Availability Manager Night Ventilation Control Status"
+    };
     return result;
   }
 

@@ -78,14 +78,12 @@ namespace detail{
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& AirTerminalSingleDuctUncontrolled_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Zone Air Terminal Sensible Heating Energy");
-      result.push_back("Zone Air Terminal Sensible Cooling Energy");
-      result.push_back("Zone Air Terminal Sensible Heating Rate");
-      result.push_back("Zone Air Terminal Sensible Cooling Rate");
-    }
+    static std::vector<std::string> result{
+      "Zone Air Terminal Sensible Heating Energy",
+      "Zone Air Terminal Sensible Cooling Energy",
+      "Zone Air Terminal Sensible Heating Rate",
+      "Zone Air Terminal Sensible Cooling Rate"
+    };
     return result;
   }
 
