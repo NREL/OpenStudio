@@ -91,6 +91,10 @@
 #include "../../model/CoilHeatingWaterBaseboardRadiant_Impl.hpp"
 #include "../../model/CoilCoolingCooledBeam.hpp"
 #include "../../model/CoilCoolingCooledBeam_Impl.hpp"
+#include "../../model/CoilCoolingFourPipeBeam.hpp"
+#include "../../model/CoilCoolingFourPipeBeam_Impl.hpp"
+#include "../../model/CoilHeatingFourPipeBeam.hpp"
+#include "../../model/CoilHeatingFourPipeBeam_Impl.hpp"
 #include "../../model/StraightComponent.hpp"
 #include "../../model/StraightComponent_Impl.hpp"
 #include "../../model/CoilHeatingLowTempRadiantConstFlow.hpp"
@@ -125,6 +129,7 @@
 #include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Plant_FieldEnums.hxx>
 #include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
+#include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_FourPipeBeam_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
 #include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
 #include <utilities/idd/AvailabilityManagerAssignmentList_FieldEnums.hxx>
@@ -210,6 +215,37 @@ IdfObject ForwardTranslator::populateBranch( IdfObject & branchIdfObject,
         if (boost::optional<CoilCoolingCooledBeam> coilCB = modelObject.optionalCast<CoilCoolingCooledBeam>() )
         {
           if (boost::optional<StraightComponent> airTerm = coilCB->containingStraightComponent())
+          {
+            boost::optional<IdfObject> idfAirDistUnit = this->translateAndMapModelObject(*airTerm);
+            //translate and map containingStraightComponent
+            if (idfAirDistUnit)
+            {
+              //Get the name and idd type of the air terminal inside the air distribution unit
+              objectName = idfAirDistUnit->getString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName).get();
+              iddType = idfAirDistUnit->getString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType).get();
+            }
+          }
+        }
+
+        //special case for AirTerminalSingleDuctConstantVolumeFourPipeBeam: Cooling Side
+        if (boost::optional<CoilCoolingFourPipeBeam> coilFPB = modelObject.optionalCast<CoilCoolingFourPipeBeam>() )
+        {
+          if (boost::optional<StraightComponent> airTerm = coilFPB->containingStraightComponent())
+          {
+            boost::optional<IdfObject> idfAirDistUnit = this->translateAndMapModelObject(*airTerm);
+            //translate and map containingStraightComponent
+            if (idfAirDistUnit)
+            {
+              //Get the name and idd type of the air terminal inside the air distribution unit
+              objectName = idfAirDistUnit->getString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName).get();
+              iddType = idfAirDistUnit->getString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType).get();
+            }
+          }
+        }
+        //special case for AirTerminalSingleDuctConstantVolumeFourPipeBeam: Cooling Side
+        if (boost::optional<CoilHeatingFourPipeBeam> coilFPB = modelObject.optionalCast<CoilHeatingFourPipeBeam>() )
+        {
+          if (boost::optional<StraightComponent> airTerm = coilFPB->containingStraightComponent())
           {
             boost::optional<IdfObject> idfAirDistUnit = this->translateAndMapModelObject(*airTerm);
             //translate and map containingStraightComponent
