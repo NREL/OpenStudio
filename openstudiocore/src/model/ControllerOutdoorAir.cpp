@@ -91,23 +91,21 @@ namespace detail {
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& ControllerOutdoorAir_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
+    static std::vector<std::string> result{
       // TODO: Note that the key value for these outputs is the AirLoopHVAC name,
       // not the name of the Controller:OutdoorAir.
-      result.push_back("Air System Outdoor Air Economizer Status");
-      result.push_back("Air System Outdoor Air Heat Recovery Bypass Status");
-      result.push_back("Air System Outdoor Air Heat Recovery Bypass Heating Coil Activity Status");
-      result.push_back("Air System Outdoor Air Heat Recovery Bypass Minimum Outdoor Air Mixed Air Temperature");
-      result.push_back("Air System Outdoor Air High Humidity Control Status");
-      result.push_back("Air System Outdoor Air Flow Fraction");
-      result.push_back("Air System Outdoor Air Minimum Flow Fraction");
-      result.push_back("Air System Outdoor Air Mass Flow Rate");
-      result.push_back("Air System Mixed Air Mass Flow Rate");
-      result.push_back("Air System Outdoor Air Maximum Flow Fraction");
-      result.push_back("Air System Outdoor Air Mechanical Ventilation Requested Mass Flow Rate");
-    }
+      "Air System Outdoor Air Economizer Status",
+      "Air System Outdoor Air Heat Recovery Bypass Status",
+      "Air System Outdoor Air Heat Recovery Bypass Heating Coil Activity Status",
+      "Air System Outdoor Air Heat Recovery Bypass Minimum Outdoor Air Mixed Air Temperature",
+      "Air System Outdoor Air High Humidity Control Status",
+      "Air System Outdoor Air Flow Fraction",
+      "Air System Outdoor Air Minimum Flow Fraction",
+      "Air System Outdoor Air Mass Flow Rate",
+      "Air System Mixed Air Mass Flow Rate",
+      "Air System Outdoor Air Maximum Flow Fraction",
+      "Air System Outdoor Air Mechanical Ventilation Requested Mass Flow Rate"
+    };
     return result;
   }
 

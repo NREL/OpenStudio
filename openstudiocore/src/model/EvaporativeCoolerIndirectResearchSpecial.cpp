@@ -26,6 +26,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "EvaporativeCoolerIndirectResearchSpecial.hpp"
 #include "EvaporativeCoolerIndirectResearchSpecial_Impl.hpp"
 #include "Schedule.hpp"
@@ -70,23 +72,21 @@ namespace detail {
 
   const std::vector<std::string>& EvaporativeCoolerIndirectResearchSpecial_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Evaporative Cooler Total Stage Effectiveness");
-      result.push_back("Evaporative Cooler Part Load Ratio");
-      result.push_back("Evaporative Cooler Dewpoint Bound Status");
-      result.push_back("Evaporative Cooler Operating Mode Satus");
-      result.push_back("Evaporative Cooler Electric Energy");
-      result.push_back("Evaporative Cooler Electric Power");
+    static std::vector<std::string> result{
+      "Evaporative Cooler Total Stage Effectiveness",
+      "Evaporative Cooler Part Load Ratio",
+      "Evaporative Cooler Dewpoint Bound Status",
+      "Evaporative Cooler Operating Mode Satus",
+      "Evaporative Cooler Electric Energy",
+      "Evaporative Cooler Electric Power"
 
       // Doc doesn't specify, but 95% sure this is only
       // If Supply Water Storage Tank Name is specified:
       // TODO: if storage tank gets implemented
-      //result.push_back("Evaporative Cooler Storage Tank Water Volume");
-      //result.push_back("Evaporative Cooler Starved Water Volume");
-      //result.push_back("Evaporative Cooler Starved Mains Water Volume");
-    }
+      //"Evaporative Cooler Storage Tank Water Volume",
+      //"Evaporative Cooler Starved Water Volume",
+      //"Evaporative Cooler Starved Mains Water Volume"
+    };
     return result;
   }
 
@@ -291,6 +291,10 @@ namespace detail {
           return true;
         }
       }
+    }
+
+    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      return StraightComponent_Impl::addToNode( node );
     }
 
     return false;

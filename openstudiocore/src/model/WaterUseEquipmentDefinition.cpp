@@ -68,10 +68,7 @@ namespace detail {
   const std::vector<std::string>& WaterUseEquipmentDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty())
-    {
       // Not appropriate: output is listed in WaterUseEquipment instead
-    }
     return result;
   }
 

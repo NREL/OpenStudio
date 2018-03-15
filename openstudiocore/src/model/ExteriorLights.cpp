@@ -78,12 +78,10 @@ namespace detail {
 
   const std::vector<std::string>& ExteriorLights_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Exterior Lights Electric Power");
-      result.push_back("Exterior Lights Electric Energy");
-    }
+    static std::vector<std::string> result{
+      "Exterior Lights Electric Power",
+      "Exterior Lights Electric Energy"
+    };
     return result;
   }
 

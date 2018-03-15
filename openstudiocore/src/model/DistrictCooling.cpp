@@ -68,16 +68,14 @@ namespace detail {
 
   const std::vector<std::string>& DistrictCooling_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("District Cooling Chilled Water Rate");
-      result.push_back("District Cooling Chilled Water Energy");
-      result.push_back("District Cooling Rate");
-      result.push_back("District Cooling Inlet Temperature");
-      result.push_back("District Cooling Outlet Temperature");
-      result.push_back("District Cooling Mass Flow Rate");
-    }
+    static std::vector<std::string> result{
+      "District Cooling Chilled Water Rate",
+      "District Cooling Chilled Water Energy",
+      "District Cooling Rate",
+      "District Cooling Inlet Temperature",
+      "District Cooling Outlet Temperature",
+      "District Cooling Mass Flow Rate"
+    };
     return result;
   }
 

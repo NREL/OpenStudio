@@ -105,15 +105,14 @@ namespace detail {
 
   const std::vector<std::string>& SolarCollectorFlatPlatePhotovoltaicThermal_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Generator Produced Thermal Rate");
-      result.push_back("Generator Produced Thermal Energy");
-      result.push_back("Generator PVT Fluid Bypass Status");
-      result.push_back("Generator PVT Fluid Inlet Temperature");
-      result.push_back("Generator PVT Fluid Outlet Temperature");
-      result.push_back("Generator PVT Fluid Mass Flow Rate");
-    }
+    static std::vector<std::string> result{
+      "Generator Produced Thermal Rate",
+      "Generator Produced Thermal Energy",
+      "Generator PVT Fluid Bypass Status",
+      "Generator PVT Fluid Inlet Temperature",
+      "Generator PVT Fluid Outlet Temperature",
+      "Generator PVT Fluid Mass Flow Rate"
+    };
     return result;
   }
 

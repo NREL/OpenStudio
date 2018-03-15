@@ -78,12 +78,10 @@ namespace detail {
 
   const std::vector<std::string>& ExteriorWaterEquipment_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Exterior WaterEquipment Electric Power");
-      result.push_back("Exterior WaterEquipment Electric Energy");
-    }
+    static std::vector<std::string> result{
+      "Exterior WaterEquipment Electric Power",
+      "Exterior WaterEquipment Electric Energy"
+    };
     return result;
   }
 

@@ -69,25 +69,23 @@ namespace detail {
 
   const std::vector<std::string>& CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
+    static std::vector<std::string> result{
       // TODO: make sure this is right (cooling, not heating)
       // Taken directly from the I/O for E+ 8.7
-      result.push_back("Cooling Coil Total Cooling Rate");
-      result.push_back("Cooling Coil Total Cooling Energy");
-      result.push_back("Cooling Coil Sensible Cooling Rate");
-      result.push_back("Cooling Coil Sensible Cooling Energy");
-      result.push_back("Cooling Coil Latent Cooling Rate");
-      result.push_back("Cooling Coil Latent Cooling Energy");
-      result.push_back("Cooling Coil Runtime Fraction");
-      result.push_back("DX Cooling Coil Crankcase Heater Electric Power");
-      result.push_back("Cooling Coil Crankcase Heater Electric Energy");
-      result.push_back("Cooling Coil Total Water Heating Rate");
-      result.push_back("Cooling Coil Total Water Heating Energy");
-      result.push_back("Cooling Coil Water Heating Electric Power");
-      result.push_back("Cooling Coil Water Heating Electric Energy");
-    }
+      "Cooling Coil Total Cooling Rate",
+      "Cooling Coil Total Cooling Energy",
+      "Cooling Coil Sensible Cooling Rate",
+      "Cooling Coil Sensible Cooling Energy",
+      "Cooling Coil Latent Cooling Rate",
+      "Cooling Coil Latent Cooling Energy",
+      "Cooling Coil Runtime Fraction",
+      "DX Cooling Coil Crankcase Heater Electric Power",
+      "Cooling Coil Crankcase Heater Electric Energy",
+      "Cooling Coil Total Water Heating Rate",
+      "Cooling Coil Total Water Heating Energy",
+      "Cooling Coil Water Heating Electric Power",
+      "Cooling Coil Water Heating Electric Energy"
+    };
     return result;
   }
 

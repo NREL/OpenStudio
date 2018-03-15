@@ -89,10 +89,7 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctConstantVolumeReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty())
-    {
-      // There are no outputs for the constant volume reheat air terminal.
-    }
+    // There are no outputs for the constant volume reheat air terminal.
     return result;
   }
 

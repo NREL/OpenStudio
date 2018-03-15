@@ -68,22 +68,20 @@ namespace detail {
 
   const std::vector<std::string>& HumidifierSteamElectric_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Humidifier Water Volume Flow Rate");
-      result.push_back("Humidifier Water Volume");
-      result.push_back("Humidifier Electric Power");
-      result.push_back("Humidifier Electric Energy");
-      result.push_back("Humidifier Mains Water Volume");
+    static std::vector<std::string> result{
+      "Humidifier Water Volume Flow Rate",
+      "Humidifier Water Volume",
+      "Humidifier Electric Power",
+      "Humidifier Electric Energy",
+      "Humidifier Mains Water Volume"
 
       // Water Storage Tank Name isn't implemented
       // https://github.com/NREL/EnergyPlus/blob/a5b04d73ecfef706cda7d0543ccad31e7c27087a/src/EnergyPlus/Humidifiers.cc#L471
-      //result.push_back("Humidifier Storage Tank Water Volume Flow Rate");
-      //result.push_back("Humidifier Storage Tank Water Volume");
-      //result.push_back("Humidifier Starved Storage Tank Water Volume Flow Rate");
-      //result.push_back("Humidifier Starved Storage Tank Water Volume");
-    }
+      //"Humidifier Storage Tank Water Volume Flow Rate",
+      //"Humidifier Storage Tank Water Volume",
+      //"Humidifier Starved Storage Tank Water Volume Flow Rate",
+      //"Humidifier Starved Storage Tank Water Volume"
+    };
     return result;
   }
 

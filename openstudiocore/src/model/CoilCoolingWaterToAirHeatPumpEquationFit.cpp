@@ -82,28 +82,26 @@ namespace detail {
 
   const std::vector<std::string>& CoilCoolingWaterToAirHeatPumpEquationFit_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Cooling Coil Electric Power");
-      result.push_back("Cooling Coil Total Cooling Rate");
-      result.push_back("Cooling Coil Sensible Cooling Rate");
-      result.push_back("Cooling Coil Source Side Heat Transfer Rate");
-      result.push_back("Cooling Coil Part Load Ratio");
-      result.push_back("Cooling Coil Air Mass Flow Rate");
-      result.push_back("Cooling Coil Air Inlet Temperature");
-      result.push_back("Cooling Coil Air Inlet Humidity Ratio");
-      result.push_back("Cooling Coil Air Outlet Temperature");
-      result.push_back("Cooling Coil Air Outlet Humidity Ratio");
-      result.push_back("Cooling Coil Source Side Mass Flow Rate");
-      result.push_back("Cooling Coil Source Side Inlet Temperature");
-      result.push_back("Cooling Coil Source Side Outlet Temperature");
-      result.push_back("Cooling Coil Electric Energy");
-      result.push_back("Cooling Coil Total Cooling Energy");
-      result.push_back("Cooling Coil Sensible Cooling Energy");
-      result.push_back("Cooling Coil Latent Cooling Energy");
-      result.push_back("Cooling Coil Source Side Heat Transfer Energy");
-    }
+    static std::vector<std::string> result{
+      "Cooling Coil Electric Power",
+      "Cooling Coil Total Cooling Rate",
+      "Cooling Coil Sensible Cooling Rate",
+      "Cooling Coil Source Side Heat Transfer Rate",
+      "Cooling Coil Part Load Ratio",
+      "Cooling Coil Air Mass Flow Rate",
+      "Cooling Coil Air Inlet Temperature",
+      "Cooling Coil Air Inlet Humidity Ratio",
+      "Cooling Coil Air Outlet Temperature",
+      "Cooling Coil Air Outlet Humidity Ratio",
+      "Cooling Coil Source Side Mass Flow Rate",
+      "Cooling Coil Source Side Inlet Temperature",
+      "Cooling Coil Source Side Outlet Temperature",
+      "Cooling Coil Electric Energy",
+      "Cooling Coil Total Cooling Energy",
+      "Cooling Coil Sensible Cooling Energy",
+      "Cooling Coil Latent Cooling Energy",
+      "Cooling Coil Source Side Heat Transfer Energy"
+    };
     return result;
   }
 

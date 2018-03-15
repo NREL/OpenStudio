@@ -77,11 +77,10 @@ namespace detail {
 
   const std::vector<std::string>& AirTerminalDualDuctConstantVolume_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Zone Air Terminal Cold Supply Duct Damper Position");
-      result.push_back("Zone Air Terminal Hot Supply Duct Damper Position");
-    }
+    static std::vector<std::string> result{
+      "Zone Air Terminal Cold Supply Duct Damper Position",
+      "Zone Air Terminal Hot Supply Duct Damper Position"
+    };
     return result;
   }
 

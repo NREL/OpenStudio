@@ -76,26 +76,24 @@ namespace detail {
 
   const std::vector<std::string>& ThermalStorageIceDetailed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Ice Thermal Storage Cooling Rate");
-      result.push_back("Ice Thermal Storage Change Fraction");
-      result.push_back("Ice Thermal Storage End Fraction");
-      result.push_back("Ice Thermal Storage Mass Flow Rate");
-      result.push_back("Ice Thermal Storage Bypass Mass Flow Rate");
-      result.push_back("Ice Thermal Storage Tank Mass Flow Rate");
-      result.push_back("Ice Thermal Storage Fluid Inlet Temperature");
-      result.push_back("Ice Thermal Storage Blended Outlet Temperature");
-      result.push_back("Ice Thermal Storage Tank Outlet Temperature");
-      result.push_back("Ice Thermal Storage Cooling Discharge Rate");
-      result.push_back("Ice Thermal Storage Cooling Discharge Energy");
-      result.push_back("Ice Thermal Storage Cooling Charge Rate");
-      result.push_back("Ice Thermal Storage Cooling Charge Energy");
-      result.push_back("Ice Thermal Storage Ancillary Electric Power");
-      result.push_back("Ice Thermal Storage Ancillary Electric Energy");
-      result.push_back("Ice Thermal Storage On Coil Fraction");
-    }
+    static std::vector<std::string> result{
+      "Ice Thermal Storage Cooling Rate",
+      "Ice Thermal Storage Change Fraction",
+      "Ice Thermal Storage End Fraction",
+      "Ice Thermal Storage Mass Flow Rate",
+      "Ice Thermal Storage Bypass Mass Flow Rate",
+      "Ice Thermal Storage Tank Mass Flow Rate",
+      "Ice Thermal Storage Fluid Inlet Temperature",
+      "Ice Thermal Storage Blended Outlet Temperature",
+      "Ice Thermal Storage Tank Outlet Temperature",
+      "Ice Thermal Storage Cooling Discharge Rate",
+      "Ice Thermal Storage Cooling Discharge Energy",
+      "Ice Thermal Storage Cooling Charge Rate",
+      "Ice Thermal Storage Cooling Charge Energy",
+      "Ice Thermal Storage Ancillary Electric Power",
+      "Ice Thermal Storage Ancillary Electric Energy",
+      "Ice Thermal Storage On Coil Fraction"
+    };
     return result;
   }
 

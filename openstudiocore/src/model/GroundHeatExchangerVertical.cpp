@@ -68,16 +68,14 @@ namespace detail {
 
   const std::vector<std::string>& GroundHeatExchangerVertical_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Ground Heat Exchanger Average Borehole Temperature");
-      result.push_back("Ground Heat Exchanger Heat Transfer Rate");
-      result.push_back("Ground Heat Exchanger Inlet Temperature");
-      result.push_back("Ground Heat Exchanger Outlet Temperature");
-      result.push_back("Ground Heat Exchanger Mass Flow Rate");
-      result.push_back("Ground Heat Exchanger Average Fluid Temperature");
-    }
+    static std::vector<std::string> result{
+      "Ground Heat Exchanger Average Borehole Temperature",
+      "Ground Heat Exchanger Heat Transfer Rate",
+      "Ground Heat Exchanger Inlet Temperature",
+      "Ground Heat Exchanger Outlet Temperature",
+      "Ground Heat Exchanger Mass Flow Rate",
+      "Ground Heat Exchanger Average Fluid Temperature"
+    };
     return result;
   }
 

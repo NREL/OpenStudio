@@ -83,29 +83,27 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationCondenserWaterCooled_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
+    static std::vector<std::string> result{
       // TODO: Implement checks
       // FOR CONDENSERS COOLING SYSTEMS SERVING CASES AND/OR WALKINS:
-      result.push_back("Refrigeration System Condenser Heat Transfer Rate");
-      result.push_back("Refrigeration System Condenser Heat Transfer Energy");
-      result.push_back("Refrigeration System Condenser Total Recovered Heat Transfer Rate");
-      result.push_back("Refrigeration System Condenser Non Refrigeration Recovered Heat Transfer Rate");
-      result.push_back("Refrigeration System Condenser Heat Recovered for Non-Refrigeration Purposes Energy");
-      result.push_back("Refrigeration System Condenser Defrost Recovered Heat Transfer Rate");
-      result.push_back("Refrigeration System Condenser Defrost Recovered Heat Transfer Energy");
-      result.push_back("Refrigeration System Condenser Water Mass Flow Rate");
+      "Refrigeration System Condenser Heat Transfer Rate",
+      "Refrigeration System Condenser Heat Transfer Energy",
+      "Refrigeration System Condenser Total Recovered Heat Transfer Rate",
+      "Refrigeration System Condenser Non Refrigeration Recovered Heat Transfer Rate",
+      "Refrigeration System Condenser Heat Recovered for Non-Refrigeration Purposes Energy",
+      "Refrigeration System Condenser Defrost Recovered Heat Transfer Rate",
+      "Refrigeration System Condenser Defrost Recovered Heat Transfer Energy",
+      "Refrigeration System Condenser Water Mass Flow Rate",
       // FOR CONDENSERS COOLING SYSTEMS SERVING AIR CHILLERS:
-      result.push_back("Refrigeration Air Chiller System Condenser Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Condenser Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Condenser Total Recovered Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Condenser Fluid Mass Flow Rate");
-    }
+      "Refrigeration Air Chiller System Condenser Heat Transfer Rate",
+      "Refrigeration Air Chiller System Condenser Heat Transfer Energy",
+      "Refrigeration Air Chiller System Condenser Total Recovered Heat Transfer Rate",
+      "Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Rate",
+      "Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Energy",
+      "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Rate",
+      "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Energy",
+      "Refrigeration Air Chiller System Condenser Fluid Mass Flow Rate"
+    };
     return result;
   }
 

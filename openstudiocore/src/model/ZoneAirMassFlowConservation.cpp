@@ -63,11 +63,10 @@ namespace detail {
 
   const std::vector<std::string>& ZoneAirMassFlowConservation_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Zone Infiltration Air Mass Flow Balance Status");
-      result.push_back("Zone Mass Balance Infiltration Air Mass Flow Rate");
-    }
+    static std::vector<std::string> result{
+      "Zone Infiltration Air Mass Flow Balance Status",
+      "Zone Mass Balance Infiltration Air Mass Flow Rate"
+    };
     return result;
   }
 

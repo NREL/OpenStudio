@@ -95,20 +95,19 @@ namespace detail {
 
   const std::vector<std::string>& SolarCollectorIntegralCollectorStorage_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Solar Collector Storage Water Temperature");
-      result.push_back("Solar Collector Absorber Plate Temperature");
-      result.push_back("Solar Collector Overall Top Heat Loss Coefficient");
-      result.push_back("Solar Collector Thermal Efficiency");
-      result.push_back("Solar Collector Storage Heat Transfer Rate");
-      result.push_back("Solar Collector Storage Heat Transfer Energy");
-      result.push_back("Solar Collector Heat Transfer Rate");
-      result.push_back("Solar Collector Heat Transfer Energy");
-      result.push_back("Solar Collector Skin Heat Transfer Rate");
-      result.push_back("Solar Collector Skin Heat Transfer Energy");
-      result.push_back("Solar Collector Transmittance Absorptance Product");
-    }
+    static std::vector<std::string> result{
+      "Solar Collector Storage Water Temperature",
+      "Solar Collector Absorber Plate Temperature",
+      "Solar Collector Overall Top Heat Loss Coefficient",
+      "Solar Collector Thermal Efficiency",
+      "Solar Collector Storage Heat Transfer Rate",
+      "Solar Collector Storage Heat Transfer Energy",
+      "Solar Collector Heat Transfer Rate",
+      "Solar Collector Heat Transfer Energy",
+      "Solar Collector Skin Heat Transfer Rate",
+      "Solar Collector Skin Heat Transfer Energy",
+      "Solar Collector Transmittance Absorptance Product"
+    };
     return result;
   }
 

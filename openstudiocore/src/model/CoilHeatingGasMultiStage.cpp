@@ -75,19 +75,17 @@ namespace detail {
 
   const std::vector<std::string>& CoilHeatingGasMultiStage_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Heating Coil Energy");
-      result.push_back("Heating Coil Rate");
-      result.push_back("Heating Coil Gas Consumption");
-      result.push_back("Heating Coil Gas Consumption Rate");
-      result.push_back("Heating Coil Electric Consumption");
-      result.push_back("Heating Coil Electric Power");
-      result.push_back("Heating Coil Runtime Fraction");
-      result.push_back("Heating Coil Parasitic Gas Consumption");
-      result.push_back("Heating Coil Parasitic Gas Consumption Rate");
-    }
+    static std::vector<std::string> result{
+      "Heating Coil Energy",
+      "Heating Coil Rate",
+      "Heating Coil Gas Consumption",
+      "Heating Coil Gas Consumption Rate",
+      "Heating Coil Electric Consumption",
+      "Heating Coil Electric Power",
+      "Heating Coil Runtime Fraction",
+      "Heating Coil Parasitic Gas Consumption",
+      "Heating Coil Parasitic Gas Consumption Rate"
+    };
     return result;
   }
 

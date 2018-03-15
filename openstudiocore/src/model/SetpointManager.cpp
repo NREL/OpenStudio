@@ -72,8 +72,6 @@ namespace detail{
   const std::vector<std::string>& SetpointManager_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
-    }
     return result;
   }
 
@@ -118,11 +116,13 @@ namespace detail{
       {
         return this->setSetpointNode(node);
       }
-      if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem())
-      {
-        return this->setSetpointNode(node);
-      }
     }
+
+    if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = node.airLoopHVACOutdoorAirSystem())
+    {
+      return this->setSetpointNode(node);
+    }
+
     return false;
   }
 

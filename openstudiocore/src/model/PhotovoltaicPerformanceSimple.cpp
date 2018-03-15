@@ -73,10 +73,7 @@ namespace detail {
   const std::vector<std::string>& PhotovoltaicPerformanceSimple_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty())
-    {
       // Not appropriate: no specific variables
-    }
     return result;
   }
 

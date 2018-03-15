@@ -67,12 +67,10 @@ namespace detail {
 
   const std::vector<std::string>& CurveExponent_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Performance Curve Output Value");
-      result.push_back("Performance Curve Input Variable 1 Value");
-    }
+    static std::vector<std::string> result{
+      "Performance Curve Output Value",
+      "Performance Curve Input Variable 1 Value"
+    };
     return result;
   }
 

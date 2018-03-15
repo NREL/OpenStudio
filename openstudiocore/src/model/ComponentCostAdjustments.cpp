@@ -162,8 +162,6 @@ std::vector<IddObjectType> ComponentCostAdjustments_Impl::allowableChildTypes() 
 const std::vector<std::string>& ComponentCostAdjustments_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if (result.empty()){
-  }
   return result;
 }
 

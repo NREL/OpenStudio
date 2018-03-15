@@ -81,45 +81,43 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationCase_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Refrigeration Case Evaporator Total Cooling Rate");
-      result.push_back("Refrigeration Case Evaporator Total Cooling Energy");
-      result.push_back("Refrigeration Case Evaporator Sensible Cooling Rate");
-      result.push_back("Refrigeration Case Evaporator Sensible Cooling Energy");
-      result.push_back("Refrigeration Case Evaporator Latent Cooling Rate");
-      result.push_back("Refrigeration Case Evaporator Latent Cooling Energy");
-      result.push_back("Refrigeration Case Zone Sensible Cooling Rate");
-      result.push_back("Refrigeration Case Zone Sensible Cooling Energy");
-      result.push_back("Refrigeration Case Zone Sensible Heating Rate");
-      result.push_back("Refrigeration Case Zone Sensible Heating Energy");
-      result.push_back("Refrigeration Case Zone Latent Rate");
-      result.push_back("Refrigeration Case Zone Latent Energy");
-      result.push_back("Refrigeration Case Return Air Sensible Cooling Rate");
-      result.push_back("Refrigeration Case Return Air Sensible Cooling Energy");
-      result.push_back("Refrigeration Case Return Air Sensible Heating Rate");
-      result.push_back("Refrigeration Case Return Air Sensible Heating Energy");
-      result.push_back("Refrigeration Case Return Air Latent Rate");
-      result.push_back("Refrigeration Case Return Air Latent Energy");
-      result.push_back("Refrigeration Case Evaporator Fan Electric Power");
-      result.push_back("Refrigeration Case Evaporator Fan Electric Energy");
-      result.push_back("Refrigeration Case Lighting Electric Power");
-      result.push_back("Refrigeration Case Lighting Electric Energy");
-      result.push_back("Refrigeration Case Latent Credit Curve Value");
+    static std::vector<std::string> result{
+      "Refrigeration Case Evaporator Total Cooling Rate",
+      "Refrigeration Case Evaporator Total Cooling Energy",
+      "Refrigeration Case Evaporator Sensible Cooling Rate",
+      "Refrigeration Case Evaporator Sensible Cooling Energy",
+      "Refrigeration Case Evaporator Latent Cooling Rate",
+      "Refrigeration Case Evaporator Latent Cooling Energy",
+      "Refrigeration Case Zone Sensible Cooling Rate",
+      "Refrigeration Case Zone Sensible Cooling Energy",
+      "Refrigeration Case Zone Sensible Heating Rate",
+      "Refrigeration Case Zone Sensible Heating Energy",
+      "Refrigeration Case Zone Latent Rate",
+      "Refrigeration Case Zone Latent Energy",
+      "Refrigeration Case Return Air Sensible Cooling Rate",
+      "Refrigeration Case Return Air Sensible Cooling Energy",
+      "Refrigeration Case Return Air Sensible Heating Rate",
+      "Refrigeration Case Return Air Sensible Heating Energy",
+      "Refrigeration Case Return Air Latent Rate",
+      "Refrigeration Case Return Air Latent Energy",
+      "Refrigeration Case Evaporator Fan Electric Power",
+      "Refrigeration Case Evaporator Fan Electric Energy",
+      "Refrigeration Case Lighting Electric Power",
+      "Refrigeration Case Lighting Electric Energy",
+      "Refrigeration Case Latent Credit Curve Value",
 
       // TODO: implement tests
 
       // If case defrost type is Electric, Hot-Gas, or Hot-Brine with Temperature Termination
-      result.push_back("Refrigeration Case Defrost Energy Correction Curve Value");
+      "Refrigeration Case Defrost Energy Correction Curve Value",
       // If anti-sweat heater control type is not equal to None:
-      result.push_back("Refrigeration Case Anti Sweat Electric Power");
-      result.push_back("Refrigeration Case Anti Sweat Electric Energy");
+      "Refrigeration Case Anti Sweat Electric Power",
+      "Refrigeration Case Anti Sweat Electric Energy",
       // If case defrost type is Electric or Electric with Temperature Termination:
-      result.push_back("Refrigeration Case Defrost Electric Power");
-      result.push_back("Refrigeration Case Defrost Electric Energy");
+      "Refrigeration Case Defrost Electric Power",
+      "Refrigeration Case Defrost Electric Energy"
 
-    }
+    };
     return result;
   }
 

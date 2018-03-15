@@ -66,14 +66,12 @@ namespace detail {
 
   const std::vector<std::string>& GroundHeatExchangerHorizontalTrench_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Ground Heat Exchanger Mass Flow Rate");
-      result.push_back("Ground Heat Exchanger Inlet Temperature");
-      result.push_back("Ground Heat Exchanger Outlet Temperature");
-      result.push_back("Ground Heat Exchanger Fluid Heat Transfer Rate");
-    }
+    static std::vector<std::string> result{
+      "Ground Heat Exchanger Mass Flow Rate",
+      "Ground Heat Exchanger Inlet Temperature",
+      "Ground Heat Exchanger Outlet Temperature",
+      "Ground Heat Exchanger Fluid Heat Transfer Rate"
+    };
     return result;
   }
 

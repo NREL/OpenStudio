@@ -89,14 +89,12 @@ namespace detail {
 
   const std::vector<std::string>& AirTerminalSingleDuctSeriesPIUReheat_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Zone Air Terminal Heating Rate");
-      result.push_back("Zone Air Terminal Heating Energy");
-      result.push_back("Zone Air Terminal Sensible Cooling Rate");
-      result.push_back("Zone Air Terminal Sensible Cooling Energy");
-    }
+    static std::vector<std::string> result{
+      "Zone Air Terminal Heating Rate",
+      "Zone Air Terminal Heating Energy",
+      "Zone Air Terminal Sensible Cooling Rate",
+      "Zone Air Terminal Sensible Cooling Energy"
+    };
     return result;
   }
 

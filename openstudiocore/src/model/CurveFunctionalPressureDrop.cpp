@@ -65,21 +65,19 @@ namespace detail {
 
   const std::vector<std::string>& CurveFunctionalPressureDrop_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
+    static std::vector<std::string> result{
       // Curve Input 1: MassFlow
-      result.push_back("Performance Curve Input Variable 1 Value");
+      "Performance Curve Input Variable 1 Value",
 
       // Curve Input 2: Density
-      result.push_back("Performance Curve Input Variable 2 Value");
+      "Performance Curve Input Variable 2 Value",
 
       // Curve Input 3: Velocity
-      result.push_back("Performance Curve Input Variable 3 Value");
+      "Performance Curve Input Variable 3 Value",
 
       // Curve Output: the resultant value
-      result.push_back("Performance Curve Output Value");
-    }
+      "Performance Curve Output Value"
+    };
     return result;
   }
 

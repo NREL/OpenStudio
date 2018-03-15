@@ -118,27 +118,25 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACPackagedTerminalHeatPump_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Zone Packaged Terminal Heat Pump Total Heating Rate");
-      result.push_back("Zone Packaged Terminal Heat Pump Total Heating Energy");
-      result.push_back("Zone Packaged Terminal Heat Pump Total Cooling Rate");
-      result.push_back("Zone Packaged Terminal Heat Pump Total Cooling Energy");
-      result.push_back("Zone Packaged Terminal Heat Pump Sensible Heating Rate");
-      result.push_back("Zone Packaged Terminal Heat Pump Sensible Heating Energy");
-      result.push_back("Zone Packaged Terminal Heat Pump Sensible Cooling Rate");
-      result.push_back("Zone Packaged Terminal Heat Pump Sensible Cooling Energy");
-      result.push_back("Zone Packaged Terminal Heat Pump Latent Heating Rate");
-      result.push_back("Zone Packaged Terminal Heat Pump Latent Heating Energy");
-      result.push_back("Zone Packaged Terminal Heat Pump Latent Cooling Rate");
-      result.push_back("Zone Packaged Terminal Heat Pump Latent Cooling Energy");
-      result.push_back("Zone Packaged Terminal Heat Pump Electric Power");
-      result.push_back("Zone Packaged Terminal Heat Pump Electric Energy");
-      result.push_back("Zone Packaged Terminal Heat Pump Fan Part Load Ratio");
-      result.push_back("Zone Packaged Terminal Heat Pump Compressor Part Load Ratio");
-      result.push_back("Zone Packaged Terminal Heat Pump Fan Availability Status");
-    }
+    static std::vector<std::string> result{
+      "Zone Packaged Terminal Heat Pump Total Heating Rate",
+      "Zone Packaged Terminal Heat Pump Total Heating Energy",
+      "Zone Packaged Terminal Heat Pump Total Cooling Rate",
+      "Zone Packaged Terminal Heat Pump Total Cooling Energy",
+      "Zone Packaged Terminal Heat Pump Sensible Heating Rate",
+      "Zone Packaged Terminal Heat Pump Sensible Heating Energy",
+      "Zone Packaged Terminal Heat Pump Sensible Cooling Rate",
+      "Zone Packaged Terminal Heat Pump Sensible Cooling Energy",
+      "Zone Packaged Terminal Heat Pump Latent Heating Rate",
+      "Zone Packaged Terminal Heat Pump Latent Heating Energy",
+      "Zone Packaged Terminal Heat Pump Latent Cooling Rate",
+      "Zone Packaged Terminal Heat Pump Latent Cooling Energy",
+      "Zone Packaged Terminal Heat Pump Electric Power",
+      "Zone Packaged Terminal Heat Pump Electric Energy",
+      "Zone Packaged Terminal Heat Pump Fan Part Load Ratio",
+      "Zone Packaged Terminal Heat Pump Compressor Part Load Ratio",
+      "Zone Packaged Terminal Heat Pump Fan Availability Status"
+    };
     return result;
   }
 

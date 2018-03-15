@@ -232,8 +232,6 @@ std::vector<IddObjectType> UtilityCost_Tariff_Impl::allowableChildTypes() const 
 const std::vector<std::string>& UtilityCost_Tariff_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if (result.empty()){
-  }
   return result;
 }
 

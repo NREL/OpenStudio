@@ -35,6 +35,8 @@
 #include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
 #include "AirTerminalSingleDuctVAVReheat.hpp"
 #include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
@@ -84,14 +86,12 @@ namespace detail {
 
   const std::vector<std::string>& CoilHeatingElectric_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Heating Coil Air Heating Energy");
-      result.push_back("Heating Coil Air Heating Rate");
-      result.push_back("Heating Coil Electric Energy");
-      result.push_back("Heating Coil Electric Power");
-    }
+    static std::vector<std::string> result{
+      "Heating Coil Air Heating Energy",
+      "Heating Coil Air Heating Rate",
+      "Heating Coil Electric Energy",
+      "Heating Coil Electric Power"
+    };
     return result;
   }
 
@@ -237,6 +237,15 @@ namespace detail {
           }
           return true;
         }
+      }
+    }
+
+    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      if ( StraightComponent_Impl::addToNode( node ) ) {
+        if ( auto _node = outletModelObject()->optionalCast<Node>() ) {
+          setTemperatureSetpointNode(_node.get());
+        }
+        return true;
       }
     }
 

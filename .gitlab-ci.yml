@@ -7,11 +7,11 @@ stages:
 build:windows:
   stage: build
   only:
-  # all "develop" should be changed to "triggers"
-  - develop
+  - triggers
   tags:
   - windows
   script:
+  - rd /s /q build
   - mkdir build
   - cd build
   - cmake -G "Visual Studio 12 2013 Win64" -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF  ../openstudiocore
@@ -20,18 +20,18 @@ build:windows:
   - cmake --build . --config Release --target PACKAGE
   allow_failure: true
   artifacts:
-    expire_in: 6 hrs
+    expire_in: 12 hrs
     paths:
     - build/OpenStudio-*.exe
-    - CPackConfig.cmake
-    - CPackSourceConfig.cmake
-    - CTestTestfile.cmake
-    - OpenStudioCoreConfig.cmake
+    - build/CPackConfig.cmake
+    - build/CPackSourceConfig.cmake
+    - build/CTestTestfile.cmake
+    - build/OpenStudioCoreConfig.cmake
     - build/CTestTestfile.cmake
     - build/csharp/
     - build/embedded/
     - build/pat/
-    - build/products/
+    - build/Products/
     - build/resources/
     - build/ruby/
     - build/sketchup_plugin/
@@ -40,7 +40,7 @@ build:windows:
 build:mac:
   stage: build
   only:
-  - develop
+  - triggers
   tags:
   - mac
   script:
@@ -52,14 +52,14 @@ build:mac:
   - zip -r `ls -1 | grep OpenStudio-*.app | sed -e 's/\.app$//'`.zip OpenStudio-*.app
   allow_failure: true
   artifacts:
-    expire_in: 6 hrs
+    expire_in: 12 hrs
     paths:
       - build/_CPack_Packages/Darwin/IFW/OpenStudio-*.zip
 
 build:ubuntu:
   stage: build
   only:
-  - develop
+  - triggers
   tags:
   - ubuntu
   script:
@@ -69,66 +69,67 @@ build:ubuntu:
   - make -j16 package
   allow_failure: true
   artifacts:
-    expire_in: 6 hrs
+    expire_in: 12 hrs
     paths:
       - build/OpenStudio-*.deb
 
 deploy:windows:
   stage: deploy
   only:
-  - develop
+  - triggers
   tags:
   - windows
   dependencies:
   - build:windows
   script:
   - cd build
-  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.exe"
+  - aws s3 cp ./ s3://openstudio-builds/PR/ --exclude "*" --include "*.exe"
   allow_failure: true
 
 deploy:mac:
   stage: deploy
   only:
-  - develop
+  - triggers
   tags:
   - mac
   dependencies:
   - build:mac
   script:
   - cd build/_CPack_Packages/Darwin/IFW
-  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.zip"
+  - aws s3 cp ./ s3://openstudio-builds/PR/ --exclude "*" --include "*.zip"
   allow_failure: true
 
 deploy:ubuntu:
   stage: deploy
   only:
-  - develop
+  - triggers
   tags:
   - ubuntu
   dependencies:
   - build:ubuntu
   script:
   - cd build
-  - aws s3 cp ./ s3://openstudio-builds/CI/ --recursive --exclude "*" --include "*.deb"  
+  - aws s3 cp ./ s3://openstudio-builds/PR/ --exclude "*" --include "*.deb"
   allow_failure: true
-  
+
 testCTest:windows:
   stage: testCTest
   only:
-  - develop
+  - triggers
   tags:
   - windows
   dependencies:
   - build:windows
   script:
   - cd build
+  - dir
   - CTest
   allow_failure: true
- 
+
 testResources:windows:
   stage: testResources
   only:
-  - develop
+  - triggers
   tags:
   - windows
   dependencies:
@@ -136,8 +137,10 @@ testResources:windows:
   script:
   - "rmdir c:\\\\openstudio\\ /s /q"
   - cd build
+  - dir
   - xcopy *.exe win.exe*
-  - win.exe --script install.qs
+  - dir
+  - win.exe --script ../install.qs
   - cd c://openstudio/
   - git clone https://github.com/NREL/OpenStudio-resources.git
   - cd bin/

@@ -75,8 +75,6 @@ namespace detail {
   const std::vector<std::string>& MeterCustomDecrement_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
-    }
     //LOG(Info, "Meter:Custom does not produce any output variables.");
     return result;
   }

@@ -195,8 +195,6 @@ std::vector<IddObjectType> UtilityCost_Charge_Block_Impl::allowableChildTypes() 
 const std::vector<std::string>& UtilityCost_Charge_Block_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if (result.empty()){
-  }
   return result;
 }
 

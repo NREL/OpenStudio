@@ -77,44 +77,42 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationCondenserEvaporativeCooled_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Refrigeration System Condenser Fan Electric Power");
-      result.push_back("Refrigeration System Condenser Fan Electric Consumption");
+    static std::vector<std::string> result{
+      "Refrigeration System Condenser Fan Electric Power",
+      "Refrigeration System Condenser Fan Electric Consumption",
 
       // TODO: Implement checks
       // FOR CONDENSERS COOLING SYSTEMS SERVING CASES AND/OR WALKINS:
-      result.push_back("Refrigeration System Condenser Heat Transfer Rate");
-      result.push_back("Refrigeration System Condenser Heat Transfer Energy");
-      result.push_back("Refrigeration System Condenser Total Recovered Heat Transfer Rate");
-      result.push_back("Refrigeration System Condenser Total Recovered Heat Transfer Energy");
-      result.push_back("Refrigeration System Condenser Non Refrigeration Recovered Heat Transfer Rate");
-      result.push_back("Refrigeration System Condenser Non Refrigeration Recovered Heat Transfer Energy");
-      result.push_back("Refrigeration System Condenser Defrost Recovered Heat Transfer Rate");
-      result.push_back("Refrigeration System Condenser Defrost Recovered Heat Transfer Energy");
-      result.push_back("Refrigeration System Condenser Pump Electric Power");
-      result.push_back("Refrigeration System Condenser Pump Electric Energy");
-      result.push_back("Refrigeration System Condenser Basin Heater Electric Power");
-      result.push_back("Refrigeration System Condenser Basin Heater Electric Energy");
-      result.push_back("Refrigeration System Condenser Evaporated Water Volume Flow Rate");
-      result.push_back("Refrigeration System Condenser Evaporated Water Volume");
+      "Refrigeration System Condenser Heat Transfer Rate",
+      "Refrigeration System Condenser Heat Transfer Energy",
+      "Refrigeration System Condenser Total Recovered Heat Transfer Rate",
+      "Refrigeration System Condenser Total Recovered Heat Transfer Energy",
+      "Refrigeration System Condenser Non Refrigeration Recovered Heat Transfer Rate",
+      "Refrigeration System Condenser Non Refrigeration Recovered Heat Transfer Energy",
+      "Refrigeration System Condenser Defrost Recovered Heat Transfer Rate",
+      "Refrigeration System Condenser Defrost Recovered Heat Transfer Energy",
+      "Refrigeration System Condenser Pump Electric Power",
+      "Refrigeration System Condenser Pump Electric Energy",
+      "Refrigeration System Condenser Basin Heater Electric Power",
+      "Refrigeration System Condenser Basin Heater Electric Energy",
+      "Refrigeration System Condenser Evaporated Water Volume Flow Rate",
+      "Refrigeration System Condenser Evaporated Water Volume",
       // FOR CONDENSERS COOLING SYSTEMS SERVING AIR CHILLERS:
-      result.push_back("Refrigeration Air Chiller System Condenser Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Condenser Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Condenser Total Recovered Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Condenser Total Recovered Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Condenser Pump Electric Power");
-      result.push_back("Refrigeration Air Chiller System Condenser Pump Electric Energy");
-      result.push_back("Refrigeration Air Chiller System Condenser Basin Heater Electric Power");
-      result.push_back("Refrigeration Air Chiller System Condenser Basin Heater Electric Energy");
-      result.push_back("Refrigeration Air Chiller System Condenser Evaporated Water Volume Flow Rate");
-      result.push_back("Refrigeration Air Chiller System Condenser Evaporated Water Volume");
-    }
+      "Refrigeration Air Chiller System Condenser Heat Transfer Rate",
+      "Refrigeration Air Chiller System Condenser Heat Transfer Energy",
+      "Refrigeration Air Chiller System Condenser Total Recovered Heat Transfer Rate",
+      "Refrigeration Air Chiller System Condenser Total Recovered Heat Transfer Energy",
+      "Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Rate",
+      "Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Energy",
+      "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Rate",
+      "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Energy",
+      "Refrigeration Air Chiller System Condenser Pump Electric Power",
+      "Refrigeration Air Chiller System Condenser Pump Electric Energy",
+      "Refrigeration Air Chiller System Condenser Basin Heater Electric Power",
+      "Refrigeration Air Chiller System Condenser Basin Heater Electric Energy",
+      "Refrigeration Air Chiller System Condenser Evaporated Water Volume Flow Rate",
+      "Refrigeration Air Chiller System Condenser Evaporated Water Volume"
+    };
     return result;
   }
 
