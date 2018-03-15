@@ -109,9 +109,9 @@ deploy:ubuntu:
   - build:ubuntu
   script:
   - cd build
-  - aws s3 cp ./ s3://openstudio-builds/PR/ --exclude "*" --include "*.deb"  
+  - aws s3 cp ./ s3://openstudio-builds/PR/ --exclude "*" --include "*.deb"
   allow_failure: true
-  
+
 testCTest:windows:
   stage: testCTest
   only:
@@ -125,7 +125,7 @@ testCTest:windows:
   - dir
   - CTest
   allow_failure: true
- 
+
 testResources:windows:
   stage: testResources
   only:
