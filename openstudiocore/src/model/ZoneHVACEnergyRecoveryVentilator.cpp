@@ -76,25 +76,23 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACEnergyRecoveryVentilator_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Zone Ventilator Electric Power");
-      result.push_back("Zone Ventilator Electric Energy");
-      result.push_back("Zone Ventilator Total Cooling Rate");
-      result.push_back("Zone Ventilator Total Cooling Energy");
-      result.push_back("Zone Ventilator Total Heating Rate");
-      result.push_back("Zone Ventilator Total Heating Energy");
-      result.push_back("Zone Ventilator Sensible Cooling Rate");
-      result.push_back("Zone Ventilator Sensible Cooling Energy");
-      result.push_back("Zone Ventilator Sensible Heating Rate");
-      result.push_back("Zone Ventilator Sensible Heating Energy");
-      result.push_back("Zone Ventilator Latent Cooling Rate");
-      result.push_back("Zone Ventilator Latent Cooling Energy");
-      result.push_back("Zone Ventilator Latent Heating Rate");
-      result.push_back("Zone Ventilator Latent Heating Energy");
-      result.push_back("Zone Ventilator Supply Fan Availability Status");
-    }
+    static std::vector<std::string> result{
+      "Zone Ventilator Electric Power",
+      "Zone Ventilator Electric Energy",
+      "Zone Ventilator Total Cooling Rate",
+      "Zone Ventilator Total Cooling Energy",
+      "Zone Ventilator Total Heating Rate",
+      "Zone Ventilator Total Heating Energy",
+      "Zone Ventilator Sensible Cooling Rate",
+      "Zone Ventilator Sensible Cooling Energy",
+      "Zone Ventilator Sensible Heating Rate",
+      "Zone Ventilator Sensible Heating Energy",
+      "Zone Ventilator Latent Cooling Rate",
+      "Zone Ventilator Latent Cooling Energy",
+      "Zone Ventilator Latent Heating Rate",
+      "Zone Ventilator Latent Heating Energy",
+      "Zone Ventilator Supply Fan Availability Status"
+    };
     return result;
   }
 

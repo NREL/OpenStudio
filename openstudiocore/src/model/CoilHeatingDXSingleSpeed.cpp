@@ -42,6 +42,8 @@
 #include "CurveQuadratic_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
@@ -89,19 +91,17 @@ namespace detail {
 
   const std::vector<std::string>& CoilHeatingDXSingleSpeed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Heating Coil Total Heating Rate");
-      result.push_back("Heating Coil Total Heating Energy");
-      result.push_back("Heating Coil Electric Power");
-      result.push_back("Heating Coil Electric Energy");
-      result.push_back("Heating Coil Defrost Electric Power");
-      result.push_back("Heating Coil Defrost Electric Energy");
-      result.push_back("Heating Coil Crankcase Heater Electric Power");
-      result.push_back("Heating Coil Crankcase Heater Electric Energy");
-      result.push_back("Heating Coil Runtime Fraction");
-    }
+    static std::vector<std::string> result{
+      "Heating Coil Total Heating Rate",
+      "Heating Coil Total Heating Energy",
+      "Heating Coil Electric Power",
+      "Heating Coil Electric Energy",
+      "Heating Coil Defrost Electric Power",
+      "Heating Coil Defrost Electric Energy",
+      "Heating Coil Crankcase Heater Electric Power",
+      "Heating Coil Crankcase Heater Electric Energy",
+      "Heating Coil Runtime Fraction"
+    };
     return result;
   }
 
@@ -756,6 +756,10 @@ namespace detail {
       {
         return StraightComponent_Impl::addToNode( node );
       }
+    }
+
+    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      return StraightComponent_Impl::addToNode( node );
     }
 
     return false;

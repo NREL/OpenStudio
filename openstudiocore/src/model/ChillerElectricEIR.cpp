@@ -72,24 +72,22 @@ namespace detail {
 
   const std::vector<std::string> & ChillerElectricEIR_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Chiller Electric Power");
-      result.push_back("Chiller Electric Energy");
-      result.push_back("Chiller Evaporator Cooling Rate");
-      result.push_back("Chiller Evaporator Cooling Energy");
-      result.push_back("Chiller Evaporator Inlet Temperature");
-      result.push_back("Chiller Evaporator Outlet Temperature");
-      result.push_back("Chiller Evaporator Mass Flow Rate");
-      result.push_back("Chiller COP");
-      result.push_back("Chiller Condenser Heat Transfer Rate");
-      result.push_back("Chiller Condenser Heat Transfer Energy");
-      result.push_back("Chiller Part Load Ratio");
-      result.push_back("Chiller Cycling Ratio");
-      result.push_back("Chiller False Load Heat Transfer Rate");
-      result.push_back("Chiller False Load Heat Transfer Energy");
-    }
+    static std::vector<std::string> result{
+      "Chiller Electric Power",
+      "Chiller Electric Energy",
+      "Chiller Evaporator Cooling Rate",
+      "Chiller Evaporator Cooling Energy",
+      "Chiller Evaporator Inlet Temperature",
+      "Chiller Evaporator Outlet Temperature",
+      "Chiller Evaporator Mass Flow Rate",
+      "Chiller COP",
+      "Chiller Condenser Heat Transfer Rate",
+      "Chiller Condenser Heat Transfer Energy",
+      "Chiller Part Load Ratio",
+      "Chiller Cycling Ratio",
+      "Chiller False Load Heat Transfer Rate",
+      "Chiller False Load Heat Transfer Energy"
+    };
     return result;
   }
 

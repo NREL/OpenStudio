@@ -232,8 +232,6 @@ std::vector<IddObjectType> UtilityCost_Variable_Impl::allowableChildTypes() cons
 const std::vector<std::string>& UtilityCost_Variable_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if (result.empty()){
-  }
   return result;
 }
 

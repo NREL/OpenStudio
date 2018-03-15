@@ -255,6 +255,10 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   virtual void applySizingValues() override;
 
+  std::vector<HVACComponent> terminals() const;
+
+  void createTopology();
+
   virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
   virtual std::vector<std::string> emsInternalVariableNames() const override;

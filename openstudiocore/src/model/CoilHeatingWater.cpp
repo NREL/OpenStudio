@@ -102,14 +102,12 @@ namespace detail{
 
   const std::vector<std::string>& CoilHeatingWater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Heating Coil Heating Energy");
-      result.push_back("Heating Coil Source Side Heat Transfer Energy");
-      result.push_back("Heating Coil Heating Rate");
-      result.push_back("Heating Coil U Factor Times Area Value");
-    }
+    static std::vector<std::string> result{
+      "Heating Coil Heating Energy",
+      "Heating Coil Source Side Heat Transfer Energy",
+      "Heating Coil Heating Rate",
+      "Heating Coil U Factor Times Area Value"
+    };
     return result;
   }
 

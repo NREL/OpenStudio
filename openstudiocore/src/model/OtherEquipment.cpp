@@ -75,34 +75,32 @@ namespace detail {
 
   const std::vector<std::string>& OtherEquipment_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Other Equipment Fuel Rate");
-      result.push_back("Other Equipment Fuel Energy");
-      result.push_back("Other Equipment Radiant Heating Energy");
-      result.push_back("Other Equipment Radiant Heating Rate");
-      result.push_back("Other Equipment Convective Heating Energy");
-      result.push_back("Other Equipment Convective Heating Rate");
-      result.push_back("Other Equipment Latent Gain Energy");
-      result.push_back("Other Equipment Latent Gain Rate");
-      result.push_back("Other Equipment Lost Heat Energy");
-      result.push_back("Other Equipment Lost Heat Rate");
-      result.push_back("Other Equipment Total Heating Energy");
-      result.push_back("Other Equipment Total Heating Rate");
+    static std::vector<std::string> result{
+      "Other Equipment Fuel Rate",
+      "Other Equipment Fuel Energy",
+      "Other Equipment Radiant Heating Energy",
+      "Other Equipment Radiant Heating Rate",
+      "Other Equipment Convective Heating Energy",
+      "Other Equipment Convective Heating Rate",
+      "Other Equipment Latent Gain Energy",
+      "Other Equipment Latent Gain Rate",
+      "Other Equipment Lost Heat Energy",
+      "Other Equipment Lost Heat Rate",
+      "Other Equipment Total Heating Energy",
+      "Other Equipment Total Heating Rate"
 
       // Reported in ThermalZone
-      //result.push_back("Zone Other Equipment Radiant Heating Energy");
-      //result.push_back("Zone Other Equipment Radiant Heating Rate");
-      //result.push_back("Zone Other Equipment Convective Heating Energy");
-      //result.push_back("Zone Other Equipment Convective Heating Rate");
-      //result.push_back("Zone Other Equipment Latent Gain Energy");
-      //result.push_back("Zone Other Equipment Latent Gain Rate");
-      //result.push_back("Zone Other Equipment Lost Heat Energy");
-      //result.push_back("Zone Other Equipment Lost Heat Rate");
-      //result.push_back("Zone Other Equipment Total Heating Energy");
-      //result.push_back("Zone Other Equipment Total Heating Rate");
-    }
+      //"Zone Other Equipment Radiant Heating Energy",
+      //"Zone Other Equipment Radiant Heating Rate",
+      //"Zone Other Equipment Convective Heating Energy",
+      //"Zone Other Equipment Convective Heating Rate",
+      //"Zone Other Equipment Latent Gain Energy",
+      //"Zone Other Equipment Latent Gain Rate",
+      //"Zone Other Equipment Lost Heat Energy",
+      //"Zone Other Equipment Lost Heat Rate",
+      //"Zone Other Equipment Total Heating Energy",
+      //"Zone Other Equipment Total Heating Rate"
+    };
     return result;
   }
 

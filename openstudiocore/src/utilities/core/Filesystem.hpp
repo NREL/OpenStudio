@@ -79,6 +79,7 @@ namespace filesystem {
   using boost::filesystem::file_size;
   using boost::filesystem::system_complete;
   using boost::filesystem::temp_directory_path;
+  using boost::filesystem::read_symlink;
 
 
 }

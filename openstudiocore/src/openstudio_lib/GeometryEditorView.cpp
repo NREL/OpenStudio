@@ -409,10 +409,10 @@ void EditorWebView::startEditor()
     }
 
     if (m_isIP){
-      config["units"] = "ft";
+      config["units"] = "ip";
       config["initialGridSize"] = 15;
     }else{
-      config["units"] = "m";
+      config["units"] = "si";
       config["initialGridSize"] = 5;
     }
 
@@ -491,7 +491,7 @@ document.head.appendChild(style);\n";
 
       std::string json = m_floorplan->toJSON(false);
 
-      QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+      QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("), { noReloadGrid: false });");
       m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
       while (m_javascriptRunning){
         OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
@@ -501,6 +501,8 @@ document.head.appendChild(style);\n";
 
       // import current model content as library
       FloorplanJS floorplan;
+      floorplan.setUnits("si");
+
       model::FloorplanJSForwardTranslator ft;
       floorplan = ft.updateFloorplanJS(floorplan, m_model, false);
 
@@ -547,7 +549,10 @@ void EditorWebView::doExport()
     m_javascriptRunning = true;
     m_document->disable();
     QString javascript = QString("JSON.stringify(window.api.exportFloorplan());");
-    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_export = v; m_javascriptRunning = false; });
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {
+      m_export = v;
+      m_javascriptRunning = false;
+    });
     while (m_javascriptRunning){
       OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
     }
@@ -562,6 +567,9 @@ void EditorWebView::doExport()
       bool t = false;
     }
 
+  } else{
+      // DLM: This is an error
+      bool t = false;
   }
 }
 
@@ -686,7 +694,7 @@ void EditorWebView::mergeExport()
   OS_ASSERT(m_floorplan);
   std::string json = m_floorplan->toJSON(false);
 
-  QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+  QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("), { noReloadGrid: true });");
   //QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
   m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
   while (m_javascriptRunning){

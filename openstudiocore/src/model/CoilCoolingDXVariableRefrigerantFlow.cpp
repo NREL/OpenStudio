@@ -78,20 +78,18 @@ namespace detail {
   const std::vector<std::string>& CoilCoolingDXVariableRefrigerantFlow_Impl::outputVariableNames() const
   {
     // static for now, need to change if storage tank is implemented
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Cooling Coil Total Cooling Rate");
-      result.push_back("Cooling Coil Total Cooling Energy");
-      result.push_back("Cooling Coil Sensible Cooling Rate");
-      result.push_back("Cooling Coil Sensible Cooling Energy");
-      result.push_back("Cooling Coil Latent Cooling Rate");
-      result.push_back("Cooling Coil Latent Cooling Energy");
-      result.push_back("Cooling Coil Runtime Fraction");
+    static std::vector<std::string> result{
+      "Cooling Coil Total Cooling Rate",
+      "Cooling Coil Total Cooling Energy",
+      "Cooling Coil Sensible Cooling Rate",
+      "Cooling Coil Sensible Cooling Energy",
+      "Cooling Coil Latent Cooling Rate",
+      "Cooling Coil Latent Cooling Energy",
+      "Cooling Coil Runtime Fraction"
       // Storage tank isn't implemented
-      // result.push_back("Cooling Coil Condensate Volume Flow Rate");
-      // result.push_back("Cooling Coil Condensate Volume");
-    }
+      // "Cooling Coil Condensate Volume Flow Rate",
+      // "Cooling Coil Condensate Volume"
+    };
     return result;
   }
 

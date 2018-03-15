@@ -72,23 +72,21 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationCompressor_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
+    static std::vector<std::string> result{
       // TODO: Implement checks
       // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE CASES AND/OR WALKINS:
-      result.push_back("Refrigeration Compressor Electric Power");
-      result.push_back("Refrigeration Compressor Electric Energy");
-      result.push_back("Refrigeration Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration Compressor Run Time Fraction");
+      "Refrigeration Compressor Electric Power",
+      "Refrigeration Compressor Electric Energy",
+      "Refrigeration Compressor Heat Transfer Rate",
+      "Refrigeration Compressor Heat Transfer Energy",
+      "Refrigeration Compressor Run Time Fraction",
       // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE AIR CHILLERS:
-      result.push_back("Refrigeration Air Chiller System Compressor Electric Power");
-      result.push_back("Refrigeration Air Chiller System Compressor Electric Energy");
-      result.push_back("Refrigeration Air Chiller System Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration Chiller Compressor Run TimeFraction");
-    }
+      "Refrigeration Air Chiller System Compressor Electric Power",
+      "Refrigeration Air Chiller System Compressor Electric Energy",
+      "Refrigeration Air Chiller System Compressor Heat Transfer Rate",
+      "Refrigeration Air Chiller System Compressor Heat Transfer Energy",
+      "Refrigeration Chiller Compressor Run TimeFraction"
+    };
     return result;
   }
 

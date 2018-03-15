@@ -109,19 +109,17 @@ std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove()
 
   const std::vector<std::string>& ZoneHVACBaseboardConvectiveWater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Baseboard Total Heating Rate");
-      result.push_back("Baseboard Total Heating Energy");
-      result.push_back("Baseboard Hot Water Energy");
-      result.push_back("Baseboard Hot Water Mass Flow Rate");
-      result.push_back("Baseboard Air Mass Flow Rate");
-      result.push_back("Baseboard Air Inlet Temperature");
-      result.push_back("Baseboard Air Outlet Temperature");
-      result.push_back("Baseboard Water Inlet Temperature");
-      result.push_back("Baseboard Water Outlet Temperature");
-    }
+    static std::vector<std::string> result{
+      "Baseboard Total Heating Rate",
+      "Baseboard Total Heating Energy",
+      "Baseboard Hot Water Energy",
+      "Baseboard Hot Water Mass Flow Rate",
+      "Baseboard Air Mass Flow Rate",
+      "Baseboard Air Inlet Temperature",
+      "Baseboard Air Outlet Temperature",
+      "Baseboard Water Inlet Temperature",
+      "Baseboard Water Outlet Temperature"
+    };
     return result;
   }
 

@@ -162,8 +162,6 @@ std::vector<IddObjectType> UtilityCost_Qualify_Impl::allowableChildTypes() const
 const std::vector<std::string>& UtilityCost_Qualify_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if (result.empty()){
-  }
   return result;
 }
 

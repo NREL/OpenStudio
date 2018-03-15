@@ -104,6 +104,12 @@ HVACToolbarView::HVACToolbarView()
   addButton->setFlat(true);
   controlLayout->addWidget(addButton);
 
+  copyButton = new QPushButton();
+  copyButton->setObjectName("CopyButton");
+  copyButton->setFixedSize(24,24);
+  copyButton->setFlat(true);
+  controlLayout->addWidget(copyButton);
+
   deleteButton = new QPushButton(this);
   deleteButton->setObjectName("DeleteButton");
   deleteButton->setFixedSize(24,24);

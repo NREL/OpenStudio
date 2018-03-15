@@ -65,10 +65,9 @@ namespace detail {
 
   const std::vector<std::string>& AvailabilityManagerLowTemperatureTurnOn_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Availability Manager Low Temperature Turn On Control Status");
-    }
+    static std::vector<std::string> result{
+      "Availability Manager Low Temperature Turn On Control Status"
+    };
     return result;
   }
 

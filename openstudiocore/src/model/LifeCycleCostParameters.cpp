@@ -87,10 +87,7 @@ namespace detail {
   const std::vector<std::string>& LifeCycleCostParameters_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty())
-    {
       // Not appropriate: no specific variables available
-    }
     return result;
   }
 

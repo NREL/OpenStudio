@@ -65,17 +65,15 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationSubcoolerLiquidSuction_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
+    static std::vector<std::string> result{
       // TODO: implement checks
       // FOR SUBCOOLERS ON SYSTEMS SERVING CASES AND/OR WALKINS:
-      result.push_back("Refrigeration System Liquid Suction Subcooler Heat Transfer Rate");
-      result.push_back("Refrigeration System Liquid Suction Subcooler Heat Transfer Energy");
+      "Refrigeration System Liquid Suction Subcooler Heat Transfer Rate",
+      "Refrigeration System Liquid Suction Subcooler Heat Transfer Energy",
       // FOR SUBCOOLERS ON SYSTEMS SERVING AIR CHILLERS:
-      result.push_back("Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Energy");
-    }
+      "Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Rate",
+      "Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Energy"
+    };
     return result;
   }
 

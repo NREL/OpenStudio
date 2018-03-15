@@ -115,16 +115,14 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACUnitHeater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Zone Unit Heater Heating Rate");
-      result.push_back("Zone Unit Heater Heating Energy");
-      result.push_back("Zone Unit Heater Fan Electric Power");
-      result.push_back("Zone Unit Heater Fan Electric Energy");
-      result.push_back("Zone Unit Heater Fan Availability Status");
-      result.push_back("Zone Unit Heater Fan Part Load Ratio");
-    }
+    static std::vector<std::string> result{
+      "Zone Unit Heater Heating Rate",
+      "Zone Unit Heater Heating Energy",
+      "Zone Unit Heater Fan Electric Power",
+      "Zone Unit Heater Fan Electric Energy",
+      "Zone Unit Heater Fan Availability Status",
+      "Zone Unit Heater Fan Part Load Ratio"
+    };
     return result;
   }
 

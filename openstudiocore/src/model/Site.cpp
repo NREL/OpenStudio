@@ -189,7 +189,7 @@ namespace detail {
 
   const std::vector<std::string>& Site_Impl::outputVariableNames() const
   {
-    static const std::vector<std::string> result = {
+    static const std::vector<std::string> result {
       "Site Outdoor Air Drybulb Temperature",
       "Site Outdoor Air Wetbulb Temperature",
       "Site Direct Solar Radiation Rate per Area",

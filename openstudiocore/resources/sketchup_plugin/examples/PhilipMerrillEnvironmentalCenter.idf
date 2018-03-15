@@ -12,7 +12,7 @@
 !
 !
 
-  VERSION,8.8;
+  VERSION,8.9;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 !10,  ! estimated
@@ -64142,6 +64142,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN1-WestConf Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN1-WestConf Air,        !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64193,6 +64194,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN2-EastConf Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN2-EastConf Air,        !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64244,6 +64246,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN3-SWMain Equipment,    !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN3-SWMain Air,          !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64295,6 +64298,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN4-NWMain Equipment,    !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN4-NWMain Air,          !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64346,6 +64350,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN5-Server Equipment,    !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN5-Server Air,          !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64397,6 +64402,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN6-ExhibtLobby Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN6-ExhibtLobby Air,     !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64448,6 +64454,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN7-SEMain Equipment,    !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN7-SEMain Air,          !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64499,6 +64506,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN8-NEMain Equipment,    !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN8-NEMain Air,          !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64550,6 +64558,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN9-SouthConf Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN9-SouthConf Air,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64601,6 +64610,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN10-KitchDine Equipment,!- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN10-KitchDine Air,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64652,6 +64662,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN11-EastConf Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN11-EastConf Air,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64703,6 +64714,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN12-Link Equipment,     !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN12-Link Air,           !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64754,6 +64766,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN13-WestWindows Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN13-WestWindows Air,    !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64805,6 +64818,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN14-SW_Main Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN14-SW_Main Air,        !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64856,6 +64870,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN15-NW_Main Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN15-NW_Main Air,        !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64907,6 +64922,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN16-EastWindows Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN16-EastWindows Air,    !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -64958,6 +64974,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN17-EastMain Equipment, !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN17-EastMain Air,       !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -65009,6 +65026,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN18-NEMain Equipment,   !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN18-NEMain Air,         !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -65060,6 +65078,7 @@
 
   ZoneHVAC:EquipmentList,
     ZN19-AtticConf Equipment,!- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     ZN19-AtticConf Air,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence

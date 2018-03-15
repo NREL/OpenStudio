@@ -69,7 +69,7 @@
 ! ExtWallConstruction=Wood-Framed and Other
 ! End SimMetaData
 
-  Version,8.8;
+  Version,8.9;
 
   Timestep,6;
 
@@ -2089,6 +2089,7 @@
 
   ZoneHVAC:EquipmentList,
     Dining Equipment,        !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     Fan:ZoneExhaust,         !- Zone Equipment 1 Object Type
     Dining Exhaust Fan,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -2485,6 +2486,7 @@
 
   ZoneHVAC:EquipmentList,
     Kitchen Equipment,       !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     Fan:ZoneExhaust,         !- Zone Equipment 1 Object Type
     Kitchen Exhaust Fan,     !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -2636,7 +2638,7 @@
     On/Off,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 11:00,0,          !- Field 4
     Until: 11:20,1,          !- Field 6
     Until: 23:00,0,          !- Field 8
@@ -2648,7 +2650,7 @@
     On/Off,                  !- Schedule Type Limits Name
     Through: 12/31,          !- Field 1
     For:AllDays,             !- Field 2
-    Interpolate:Yes,         !- Field 3
+    Interpolate:Average,     !- Field 3
     Until: 11:00,0,          !- Field 4
     Until: 11:30,1,          !- Field 6
     Until: 23:00,0,          !- Field 8
@@ -3180,7 +3182,7 @@
     PSZ-AC_1:1_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC_1:1_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     PSZ-AC_1:1_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Curve:Biquadratic,
     PSZ-AC_1:1_CoolCStandard10Ton_CapFT,  !- Name
@@ -3492,7 +3494,7 @@
     PSZ-AC_2:2_CoolCStandard10Ton_EIRFT,  !- Energy Input Ratio Function of Temperature Curve Name
     PSZ-AC_2:2_CoolCStandard10Ton_EIRFFF,  !- Energy Input Ratio Function of Flow Fraction Curve Name
     PSZ-AC_2:2_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
-    ;                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0;                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
 
   Curve:Biquadratic,
     PSZ-AC_2:2_CoolCStandard10Ton_CapFT,  !- Name

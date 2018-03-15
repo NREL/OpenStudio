@@ -75,36 +75,34 @@ namespace detail {
 
   const std::vector<std::string>& GasEquipment_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Gas Equipment Gas Rate");
-      result.push_back("Gas Equipment Gas Energy");
-      result.push_back("Gas Equipment Radiant Heating Energy");
-      result.push_back("Gas Equipment Convective Heating Energy");
-      result.push_back("Gas Equipment Latent Gain Energy");
-      result.push_back("Gas Equipment Lost Heat Energy");
-      result.push_back("Gas Equipment Total Heating Energy");
-      result.push_back("Gas Equipment Radiant Heating Rate");
-      result.push_back("Gas Equipment Convective Heating Rate");
-      result.push_back("Gas Equipment Latent Gain Rate");
-      result.push_back("Gas Equipment Lost Heat Rate");
-      result.push_back("Gas Equipment Total Heating Rate");
+    static std::vector<std::string> result{
+      "Gas Equipment Gas Rate",
+      "Gas Equipment Gas Energy",
+      "Gas Equipment Radiant Heating Energy",
+      "Gas Equipment Convective Heating Energy",
+      "Gas Equipment Latent Gain Energy",
+      "Gas Equipment Lost Heat Energy",
+      "Gas Equipment Total Heating Energy",
+      "Gas Equipment Radiant Heating Rate",
+      "Gas Equipment Convective Heating Rate",
+      "Gas Equipment Latent Gain Rate",
+      "Gas Equipment Lost Heat Rate",
+      "Gas Equipment Total Heating Rate"
 
       // Reported in ThermalZone
-      //result.push_back("Zone Gas Equipment Gas Rate");
-      //result.push_back("Zone Gas Equipment Gas Energy");
-      //result.push_back("Zone Gas Equipment Radiant Heating Energy");
-      //result.push_back("Zone Gas Equipment Radiant Heating Rate");
-      //result.push_back("Zone Gas Equipment Convective Heating Energy");
-      //result.push_back("Zone Gas Equipment Convective Heating Rate");
-      //result.push_back("Zone Gas Equipment Latent Gain Energy");
-      //result.push_back("Zone Gas Equipment Latent Gain Rate");
-      //result.push_back("Zone Gas Equipment Lost Heat Energy");
-      //result.push_back("Zone Gas Equipment Lost Heat Rate");
-      //result.push_back("Zone Gas Equipment Total Heating Energy");
-      //result.push_back("Zone Gas Equipment Total Heating Rate");
-    }
+      //"Zone Gas Equipment Gas Rate",
+      //"Zone Gas Equipment Gas Energy",
+      //"Zone Gas Equipment Radiant Heating Energy",
+      //"Zone Gas Equipment Radiant Heating Rate",
+      //"Zone Gas Equipment Convective Heating Energy",
+      //"Zone Gas Equipment Convective Heating Rate",
+      //"Zone Gas Equipment Latent Gain Energy",
+      //"Zone Gas Equipment Latent Gain Rate",
+      //"Zone Gas Equipment Lost Heat Energy",
+      //"Zone Gas Equipment Lost Heat Rate",
+      //"Zone Gas Equipment Total Heating Energy",
+      //"Zone Gas Equipment Total Heating Rate"
+    };
     return result;
   }
 

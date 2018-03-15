@@ -72,22 +72,20 @@ namespace detail {
 
   const std::vector<std::string>& ElectricLoadCenterInverterSimple_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Inverter DC to AC Efficiency");
-      result.push_back("Inverter DC Input Electric Power");
-      result.push_back("Inverter DC Input Electric Energy");
-      result.push_back("Inverter AC Output Electric Power");
-      result.push_back("Inverter AC Output Electric Energy");
-      result.push_back("Inverter Conversion Loss Power");
-      result.push_back("Inverter Conversion Loss Energy");
-      result.push_back("Inverter Conversion Loss Decrement Energy");
-      result.push_back("Inverter Thermal Loss Rate");
-      result.push_back("Inverter Thermal Loss Energy");
-      result.push_back("Inverter Ancillary AC Electric Power");
-      result.push_back("Inverter Ancillary AC Electric Energy");
-    }
+    static std::vector<std::string> result{
+      "Inverter DC to AC Efficiency",
+      "Inverter DC Input Electric Power",
+      "Inverter DC Input Electric Energy",
+      "Inverter AC Output Electric Power",
+      "Inverter AC Output Electric Energy",
+      "Inverter Conversion Loss Power",
+      "Inverter Conversion Loss Energy",
+      "Inverter Conversion Loss Decrement Energy",
+      "Inverter Thermal Loss Rate",
+      "Inverter Thermal Loss Energy",
+      "Inverter Ancillary AC Electric Power",
+      "Inverter Ancillary AC Electric Energy"
+    };
     return result;
   }
 

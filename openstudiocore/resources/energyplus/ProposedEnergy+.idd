@@ -1,4 +1,4 @@
-!IDD_Version 8.8.0
+!IDD_Version 8.9.0
 !IDD_BUILD TBD
 ! **************************************************************************
 ! This file is the Input Data Dictionary (IDD) for EnergyPlus.
@@ -302,6 +302,8 @@
 !      s/m                    =>   s/ft                0.3048
 !      V/K                    =>   V/F                 0.555555555555556
 !      W                      =>   Btu/h               3.4121412858518
+!      W/((m3/s)-Pa)          =>   W/((gal/min)-ftH20) 0.188582274697355
+!      W/((m3/s)-Pa)          =>   W/((ft3/min)-inH2O) 0.117556910599482
 !      W/(m3/s)               =>   W/(ft3/min)         0.0004719475
 !      W/K                    =>   Btu/h-F             1.89563404769544
 !      W/m                    =>   Btu/h-ft            1.04072
@@ -382,7 +384,7 @@ Version,
       \format singleLine
       \min-fields 1
   A1 ; \field Version Identifier
-      \default 8.6
+      \default 8.9
 
 SimulationControl,
       \unique-object
@@ -507,6 +509,7 @@ ShadowCalculation,
        \unique-object
        \min-fields 2
        \memo This object is used to control details of the solar, shading, and daylighting models
+       \extensible:1
   A1 , \field Calculation Method
        \note choose calculation method. note that TimestepFrequency is only needed for certain cases
        \note and can increase execution time significantly.
@@ -548,14 +551,43 @@ ShadowCalculation,
        \type choice
        \key ScheduledShading
        \key InternalCalculation
+       \key ImportedShading
        \default InternalCalculation
-       \note If ScheduledShading is chosen, the External Shading Fraction Schedule Name is required.
-  A5 ; \field Output External Shading Calculation Results
+       \note If ScheduledShading is chosen, the External Shading Fraction Schedule Name is required
+       \note in SurfaceProperty:LocalEnvironment.
+       \note If ImportedShading is chosen, the Schedule:File:Shading object is required.
+  A5 , \field Output External Shading Calculation Results
        \type choice
        \key Yes
        \key No
        \default No
        \note If Yes is chosen, the calculated external shading fraction results will be saved to an external CSV file with surface names as the column headers.
+  A6 , \field Disable Self-Shading Within Shading Zone Groups
+       \note If Yes, self-shading will be disabled from all exterior surfaces in a given Shading Zone Group to surfaces within
+       \note the same Shading Zone Group.
+       \note If both Disable Self-Shading Within Shading Zone Groups and Disable Self-Shading From Shading Zone Groups to Other Zones = Yes,
+       \note then all self-shading from exterior surfaces will be disabled.
+       \note If only one of these fields = Yes, then at least one Shading Zone Group must be specified, or this field will be ignored.
+       \note Shading from Shading:* surfaces, overhangs, fins, and reveals will not be disabled.
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A7 , \field Disable Self-Shading From Shading Zone Groups to Other Zones
+       \note If Yes, self-shading will be disabled from all exterior surfaces in a given Shading Zone Group to all other zones in the model.
+       \note If both Disable Self-Shading Within Shading Zone Groups and Disable Self-Shading From Shading Zone Groups to Other Zones = Yes,
+       \note then all self-shading from exterior surfaces will be disabled.
+       \note If only one of these fields = Yes, then at least one Shading Zone Group must be specified, or this field will be ignored.
+       \note Shading from Shading:* surfaces, overhangs, fins, and reveals will not be disabled.
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A8 ; \field Shading Zone Group 1 ZoneList Name
+       \note Specifies a group of zones which are controlled by the Disable Self-Shading fields.
+       \type object-list
+       \object-list ZoneListNames
+       \begin-extensible
 
 SurfaceConvectionAlgorithm:Inside,
        \memo Default indoor surface heat transfer convection algorithm to be used for all zones
@@ -2497,11 +2529,12 @@ Schedule:Day:Interval,
        \type object-list
        \object-list ScheduleTypeLimitsNames
   A3 , \field Interpolate to Timestep
-       \note when the interval does not match the user specified timestep a Yes choice will average between the intervals request (to
-       \note timestep resolution.  a No choice will use the interval value at the simulation timestep without regard to if it matches
-       \note the boundary or not.
+       \note when the interval does not match the user specified timestep a Average choice will average between the intervals request (to
+       \note timestep resolution. A No choice will use the interval value at the simulation timestep without regard to if it matches
+       \note the boundary or not. A Linear choice will interpolate linearly between successive values.
        \type choice
-       \key Yes
+       \key Average
+       \key Linear
        \key No
        \default No
  A4  , \field Time 1
@@ -2522,11 +2555,12 @@ Schedule:Day:List,
        \type object-list
        \object-list ScheduleTypeLimitsNames
   A3 , \field Interpolate to Timestep
-       \note when the interval does not match the user specified timestep a "Yes" choice will average between the intervals request (to
-       \note timestep resolution.  a "No" choice will use the interval value at the simulation timestep without regard to if it matches
-       \note the boundary or not.
+       \note when the interval does not match the user specified timestep a "Average" choice will average between the intervals request (to
+       \note timestep resolution.  A "No" choice will use the interval value at the simulation timestep without regard to if it matches
+       \note the boundary or not. A "Linear" choice will interpolate linearly between successive values.
        \type choice
-       \key Yes
+       \key Average
+       \key Linear
        \key No
        \default No
   N1 , \field Minutes per Item
@@ -2702,6 +2736,16 @@ Schedule:Constant,
   N1 ; \field Hourly Value
        \type real
        \default 0
+
+Schedule:File:Shading,
+       \min-fields 1
+       \memo A Schedule:File:Shading points to a CSV file that has 8760-8784
+       \memo hours of sunlit fraction data for all or some of the exterior surfaces.
+       \unique-object
+  A1 ; \field File Name
+       \memo The name of the file that writes all shading data.
+       \required-field
+       \retaincase
 
 Schedule:File,
  \min-fields 5
@@ -7732,6 +7776,29 @@ SurfaceProperty:HeatTransferAlgorithm:Construction,
        \type object-list
        \object-list ConstructionNames
 
+SurfaceProperty:HeatBalanceSourceTerm,
+       \memo Allows an additional heat source term to be added to the inside or outside surface boundary.
+       \memo A heat source can be added to either or both the inside and outside of the same surface.
+       \min-fields 3
+  A1 , \field Surface Name
+       \required-field
+       \type object-list
+       \object-list SurfaceNames
+  A2 , \field Inside Face Heat Source Term Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note The value of this schedule is the source term value for the inside face of this surface
+       \note If this field is left blank, no inside surface source term will be applied.
+       \note The schedule values are heat rate per surface area (W/m2), when positive
+       \note schedule values indicate heat gain and negative values indicates loss.
+  A3 ; \field Outside Face Heat Source Term Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note The value of this schedule is the source term value for the outside face of this surface
+       \note If this field is left blank, no outside surface source term will be applied.
+       \note The schedule values are heat rate per surface area (W/m2), when positive
+       \note schedule values indicate heat gain and negative values indicates loss.
+
 SurfaceControl:MovableInsulation,
       \memo Exterior or Interior Insulation on opaque surfaces
   A1, \field Insulation Type
@@ -8071,7 +8138,7 @@ SurfaceProperty:ExposedFoundationPerimeter,
   N1 , \field Total Exposed Perimeter
        \type real
        \units m
-       \minimum> 0.0
+       \minimum 0.0
   N2 , \field Exposed Perimeter Fraction
        \type real
        \units dimensionless
@@ -10946,6 +11013,9 @@ People,
        \minimum 0.0
        \maximum 1.0
        \default 0.3
+       \note This is radiant fraction of the sensible heat released by people in a zone. This value will be
+       \note multiplied by the total sensible heat released by people yields the amount of long wavelength
+       \note radiation gain from people in a zone. Default value is 0.30.
   N5,  \field Sensible Heat Fraction
        \note if input, overrides program calculated sensible/latent split
        \autocalculatable
@@ -11495,7 +11565,7 @@ OtherEquipment,
 ElectricEquipment:ITE:AirCooled,
    \memo This object describes air-cooled electric information technology equipment (ITE) which has
    \memo variable power consumption as a function of loading and temperature.
-       \min-fields 27
+       \min-fields 28
   A1 , \field Name
        \required-field
        \type alpha
@@ -11503,7 +11573,21 @@ ElectricEquipment:ITE:AirCooled,
        \required-field
        \type object-list
        \object-list ZoneNames
-  A3 , \field Design Power Input Calculation Method
+  A3 , \field Air Flow Calculation Method
+       \note The specified method is used to calculate the IT inlet temperature and zone return
+       \note air temperature. If FlowFromSystem is chosen, the zone is assumed to be well-mixed.
+       \note If FlowControlWithApproachTemperatures is chosen, Supply and Return approach temperature
+       \note should be defined to indicate the temperature difference due to the air distribution. When
+       \note FlowControlWithApproachTemperatures is chosen, the inputs of Air Inlet Connection Type, Design Recirculation Fraction
+       \note and Recirculation Function of Loading and Supply Temperature Curve Name are ignored. For multiple
+       \note ITE objects defined for one zone, the same calculation method should apply.
+       \note The FlowControlWithApproachTemperatures only applies to ITE zones with single duct VAV terminal unit.
+       \note Other return air heat gains from window or lights are not allowed when FlowControlWithApproachTemperatures is chosen.
+       \type choice
+       \key FlowFromSystem
+       \key FlowControlWithApproachTemperatures
+       \default FlowFromSystem
+  A4 , \field Design Power Input Calculation Method
        \note The entered calculation method is used to specify the design power input
        \note Watts/Unit => Watts per Unit -- Design Power = Watts per Unit * Number of Units
        \note Watts/Area => Watts per Zone Floor Area -- Design Power = Watts per Zone Floor Area * Floor Area
@@ -11525,18 +11609,18 @@ ElectricEquipment:ITE:AirCooled,
        \minimum 0
        \units W/m2
        \ip-units W/ft2
-  A4 , \field Design Power Input Schedule Name
+  A5 , \field Design Power Input Schedule Name
        \note Operating schedule for this equipment, fraction applied to the design power input,
        \note generally (0.0 - 1.0)
        \note If this field is blank, the schedule is assumed to always be 1.0.
        \type object-list
        \object-list ScheduleNames
-  A5 , \field CPU Loading  Schedule Name
+  A6 , \field CPU Loading  Schedule Name
        \note CPU loading schedule for this equipment as a fraction from 0.0 (idle) to 1.0 (full load).
        \note If this field is blank, the schedule is assumed to always be 1.0.
        \type object-list
        \object-list ScheduleNames
-  A6 , \field CPU Power Input Function of Loading and Air Temperature Curve Name
+  A7 , \field CPU Power Input Function of Loading and Air Temperature Curve Name
        \required-field
        \type object-list
        \object-list BiVariateCurves
@@ -11557,7 +11641,7 @@ ElectricEquipment:ITE:AirCooled,
        \type real
        \units m3/s-W
        \minimum 0.0
-  A7 , \field Air Flow Function of Loading and Air Temperature Curve Name
+  A8 , \field Air Flow Function of Loading and Air Temperature Curve Name
        \required-field
        \type object-list
        \object-list BiVariateCurves
@@ -11566,7 +11650,7 @@ ElectricEquipment:ITE:AirCooled,
        \note air flow rate as a function of CPU loading (x) and air inlet node temperature (y).
        \note This curve (table) should equal 1.0 at design conditions (CPU loading = 1.0 and
        \note Design Entering Air Temperature).
-  A8 , \field Fan Power Input Function of Flow Curve Name
+  A9 , \field Fan Power Input Function of Flow Curve Name
        \required-field
        \type object-list
        \object-list UniVariateCurves
@@ -11579,7 +11663,7 @@ ElectricEquipment:ITE:AirCooled,
        \type real
        \units C
        \default 15.0
-  A9,  \field Environmental Class
+  A10, \field Environmental Class
        \note Specifies the allowable operating conditions for the air inlet conditions.
        \note Used for reporting time outside allowable conditions.
        \type choice
@@ -11591,7 +11675,7 @@ ElectricEquipment:ITE:AirCooled,
        \key B
        \key C
        \default None
-  A10, \field Air Inlet Connection Type
+  A11, \field Air Inlet Connection Type
        \note Specifies the type of connection between the zone and the ITE air inlet node.
        \note AdjustedSupply = ITE inlet temperature will be the current Supply Air Node temperature
        \note adjusted by the current recirculation fraction.
@@ -11599,32 +11683,35 @@ ElectricEquipment:ITE:AirCooled,
        \note ZoneAirNode = ITE air inlet condition is  the average zone condition.
        \note All heat output is added to the zone air heat balance as a convective gain.
        \note RoomAirModel = ITE air inlet and outlet are connected to room air model nodes.
+       \note This field is only used when Air Flow Calculation Method is FlowFromSystem.
        \type choice
        \key AdjustedSupply
        \key ZoneAirNode
        \key RoomAirModel
        \default AdjustedSupply
-  A11, \field Air Inlet Room Air Model Node Name
+  A12, \field Air Inlet Room Air Model Node Name
        \note Name of a RoomAir:Node object which is connected to the ITE air inlet.
        \type object-list
        \object-list RoomAirNodes
-  A12, \field Air Outlet Room Air Model Node Name
+  A13, \field Air Outlet Room Air Model Node Name
        \note Name of a RoomAir:Node object which is connected to the ITE air outlet.
        \type object-list
        \object-list RoomAirNodes
-  A13, \field Supply Air Node Name
+  A14, \field Supply Air Node Name
        \note Name of the supply air inlet node serving this ITE. Required if the
-       \note Air Node Connection Type = AdjustedSupply. Also required if reporting of
+       \note Air Node Connection Type = AdjustedSupply. Also required if
+       \note Calculation Method = FlowControlWithApproachTemperatures. Also required if reporting of
        \note Supply Heat Index is desired.
        \type node
   N7,  \field Design Recirculation Fraction
        \note The recirculation fraction for this equipment at design conditions. This field is used only
        \note if the Air Node Connection Type = AdjustedSupply. The default is 0.0 (no recirculation).
+       \note This field is only used when Air Flow Calculation Method is FlowFromSystem.
        \type real
        \minimum 0.0
        \maximum 0.5
        \default 0.0
-  A14, \field Recirculation Function of Loading and Supply Temperature Curve Name
+  A15, \field Recirculation Function of Loading and Supply Temperature Curve Name
        \type object-list
        \object-list BiVariateCurves
        \object-list BiVariateTables
@@ -11634,13 +11721,14 @@ ElectricEquipment:ITE:AirCooled,
        \note Design Entering Air Temperature).This field is used only if the
        \note Air Node Connection Type = AdjustedSupply. If this curve is left blank, then the curve
        \note is assumed to always equal 1.0.
+       \note This field is only used when Air Flow Calculation Method is FlowFromSystem.
   N8 , \field Design Electric Power Supply Efficiency
        \note The efficiency of the power supply system serving this ITE
        \type real
        \minimum> 0.0
        \maximum 1.0
        \default 1.0
-  A15, \field Electric Power Supply Efficiency Function of Part Load Ratio Curve Name
+  A16, \field Electric Power Supply Efficiency Function of Part Load Ratio Curve Name
        \type object-list
        \object-list UniVariateCurves
        \object-list UniVariateTables
@@ -11655,21 +11743,45 @@ ElectricEquipment:ITE:AirCooled,
        \minimum 0.0
        \maximum 1.0
        \default 1.0
-  A16, \field CPU End-Use Subcategory
+  A17, \field CPU End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default ITE-CPU
-  A17, \field Fan End-Use Subcategory
+  A18, \field Fan End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default ITE-Fans
-  A18; \field Electric Power Supply End-Use Subcategory
+  A19, \field Electric Power Supply End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default ITE-UPS
+  N10, \field Supply Temperature Difference
+       \note The difference of the IT inlet temperature from the AHU supply air temperature.
+       \note Either Supply Temperature Difference or Supply Temperature Difference Schedule is required if Air Flow Calculation Method is set to FlowControlWithApproachTemperatures.
+       \note This field is ignored when Air Flow Calculation Method is FlowFromSystem.
+       \type real
+       \units deltaC
+  A20, \field Supply Temperature Difference Schedule
+       \note The difference schedule of the IT inlet temperature from the AHU supply air temperature.
+       \note Either Supply Temperature Difference or Supply Temperature Difference Schedule is required if Air Flow Calculation Method is set to FlowControlWithApproachTemperatures.
+       \note This field is ignored when Air Flow Calculation Method is FlowFromSystem.
+       \type object-list
+       \object-list ScheduleNames
+  N11, \field Return Temperature Difference
+       \note The difference of the return outlet temperature from the well mixed zone temperature.
+       \note Either Return Temperature Difference or Return Temperature Difference Schedule is required if Air Flow Calculation Method is set to FlowControlWithApproachTemperatures.
+       \note This field is ignored when Air Flow Calculation Method is FlowFromSystem.
+       \type real
+       \units deltaC
+  A21; \field Return Temperature Difference Schedule
+       \note The difference schedule of the return outlet temperature from the well mixed zone temperature.
+       \note Either Return Temperature Difference or Return Temperature Difference Schedule is required if Air Flow Calculation Method is set to FlowControlWithApproachTemperatures.
+       \note This field is ignored when Air Flow Calculation Method is FlowFromSystem.
+       \type object-list
+       \object-list ScheduleNames
 
 ZoneBaseboard:OutdoorTemperatureControlled,
        \memo Specifies outside temperature-controlled electric baseboard heating.
@@ -12029,7 +12141,9 @@ Daylighting:Controls,
        \maximum 0.6
        \default 0.2
   N3,  \field Number of Stepped Control Steps
-       \note for Stepped Lighting Control Type, this field cannot be zero.
+       \note The number of steps, excluding off, in a stepped lighting control system.
+       \note If Lighting Control Type is Stepped, this field must be greater than zero.
+       \note The steps are assumed to be equally spaced.
        \type integer
        \minimum 1
        \default 1
@@ -13503,6 +13617,7 @@ AirflowNetwork:MultiZone:Surface,
   A3, \field External Node Name
       \type object-list
       \object-list ExternalNodeNames
+      \object-list OutdoorAirNodeNames
       \note Used if Wind Pressure Coefficient Type = Input in the AirflowNetwork:SimulationControl object,
       \note otherwise this field may be left blank.
   N1, \field Window/Door Opening Factor, or Crack Factor
@@ -13592,8 +13707,8 @@ AirflowNetwork:MultiZone:Surface,
   A8, \field Equivalent Rectangle Method
       \type choice
       \key PolygonHeight
-      \Key BaseSurfaceAspectRatio
-      \Key UserDefinedAspectRatio
+      \key BaseSurfaceAspectRatio
+      \key UserDefinedAspectRatio
       \default PolygonHeight
       \note This field is applied to a non-rectangular window or door. The equivalent shape has
       \note the same area as a polygonal window or door.
@@ -21968,7 +22083,8 @@ Sizing:System,
       \type real
       \minimum 0.0
       \maximum 1.0
-      \default 0.5
+      \default autosize
+      \autosizable
   N3, \field Preheat Design Temperature
       \required-field
       \type real
@@ -22734,7 +22850,7 @@ ZoneHVAC:IdealLoadsAirSystem,
        \memo that mixes zone air with the specified amount of outdoor air and then adds or removes
        \memo heat and moisture at 100% efficiency in order to meet the specified controls. Energy
        \memo use is reported as DistrictHeating and DistrictCooling.
-       \min-fields 26
+       \min-fields 27
   A1 , \field Name
        \required-field
        \reference ZoneEquipmentNames
@@ -22761,6 +22877,7 @@ ZoneHVAC:IdealLoadsAirSystem,
        \note The Zone Supply Air Node Name must match a zone inlet air node name for the zone where this
        \note Ideal Loads Air System is connected. The Zone Exhaust Air Node Name must match an inlet air
        \note node name of an AirloopHVAC:ReturnAirPlenum object.
+       \type node
   N1 , \field Maximum Heating Supply Air Temperature
        \units C
        \minimum> 0
@@ -23321,10 +23438,27 @@ ZoneHVAC:PackagedTerminalAirConditioner,
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
-   A16; \field Design Specification ZoneHVAC Sizing Object Name
+   A16, \field Design Specification ZoneHVAC Sizing Object Name
         \note Enter the name of a DesignSpecificationZoneHVACSizing object.
         \type object-list
         \object-list DesignSpecificationZoneHVACSizingName
+   A17, \field Capacity Control Method
+        \type choice
+        \key None
+        \key SingleZoneVAV
+        \default None
+   N7 , \field Minimum Supply Air Temperature in Cooling Mode
+        \note For Capacity Control Method = SingleZoneVAV, enter the minimum air temperature limit for reduced fan speed.
+        \type real
+        \minimum 0.0
+        \autosizable
+        \default autosize
+   N8 ; \field Maximum Supply Air Temperature in Heating Mode
+        \note For Capacity Control Method = SingleZoneVAV, enter the maximum air temperature limit for reduced fan speed.
+        \type real
+        \minimum 0.0
+        \autosizable
+        \default autosize
 
 ZoneHVAC:PackagedTerminalHeatPump,
         \memo Packaged terminal heat pump (PTHP). Forced-convection heating-cooling unit with
@@ -23513,10 +23647,27 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
-   A18; \field Design Specification ZoneHVAC Sizing Object Name
+   A18, \field Design Specification ZoneHVAC Sizing Object Name
         \note Enter the name of a DesignSpecificationZoneHVACSizing object.
         \type object-list
         \object-list DesignSpecificationZoneHVACSizingName
+   A19, \field Capacity Control Method
+        \type choice
+        \key None
+        \key SingleZoneVAV
+        \default None
+   N11, \field Minimum Supply Air Temperature in Cooling Mode
+        \note For Capacity Control Method = SingleZoneVAV, enter the minimum air temperature limit for reduced fan speed.
+        \type real
+        \minimum 0.0
+        \autosizable
+        \default autosize
+   N12; \field Maximum Supply Air Temperature in Heating Mode
+        \note For Capacity Control Method = SingleZoneVAV, enter the maximum air temperature limit for reduced fan speed.
+        \type real
+        \minimum 0.0
+        \autosizable
+        \default autosize
 
 ZoneHVAC:WaterToAirHeatPump,
         \memo Water-to-air heat pump. Forced-convection heating-cooling unit with supply fan,
@@ -24292,6 +24443,401 @@ ZoneHVAC:EvaporativeCoolerUnit,
         \note Enter the name of a DesignSpecificationZoneHVACSizing object.
         \type object-list
         \object-list DesignSpecificationZoneHVACSizingName
+
+ZoneHVAC:HybridUnitaryHVAC,
+        \memo Hybrid Unitary HVAC. A black box model for multi-mode packaged forced air equipment. Independent variables include outdoor air conditions and indoor air conditions. Controlled inputs include operating mode, supply air flow rate, and outdoor air faction. Emperical lookup tables are required to map supply air temperature supply air humidity, electricity use, fuel uses, water use, fan electricity use, and external static pressure as a function of each indpednent varaible and each controlled input. In each timestep the model will choose one or more combinations of settings for mode, supply air flow rate, outdoor air faction, and part runtime fraction so as to satisfy zone requests for sensible cooling, heating, ventilation, and/or dehumidification with the least resource consumption. Equipment in this class may consume electricity, water, and up to two additional fuel types.
+        \extensible:25 repeat last twentyfive fields remembering to move the semi-colon to the last value
+    A1, \field Name
+        \required-field
+        \type alpha
+        \retaincase
+        \reference ZoneEquipmentNames
+    A2, \field Availability Schedule Name
+        \note Enter the availability schedule name for this system. Schedule value > 0 means the system is available. If this field is blank, the system is always available.
+        \type object-list
+        \object-list ScheduleNames
+    A3, \field Availability Manager List Name
+        \note Enter the name of an AvailabilityManagerAssignmentList object.
+        \type object-list
+        \object-list SystemAvailabilityManagerLists
+    A4, \field Minimum Supply Air Temperature Schedule Name
+        \note Values in this schedule are used as a constraint in choosing the feasible settings for supply air flow rate and ouside air fraction in each operating mode. If this field is blank, no minimum is imposed.
+        \type object-list
+        \object-list ScheduleNames
+    A5, \field Maximum Supply Air Temperature Schedule Name
+        \note Values in this schedule are used as a constraint in choosing the feasible settings for supply air flow rate and outdoor air fraction in each operating mode. If this field is blank, no maximum is imposed.
+        \type object-list
+        \object-list ScheduleNames
+    A6, \field Minimum Supply Air Humidity Ratio Schedule Name
+        \note Values in this schedule are used as a constraint in choosing the feasible settings for supply air flow rate and outdoor air fraction in each operating mode. If this field is blank, no minimum is imposed.
+        \type object-list
+        \object-list ScheduleNames
+    A7, \field Maximum Supply Air Humidity Ratio Schedule Name
+        \note Values in this schedule are used as a constraint in choosing the feasible settings for supply air flow rate and outdoor air fraction in each operating mode. If this field is blank, no maximum is imposed.
+        \type object-list
+        \object-list ScheduleNames
+    A8, \field Method to Choose Controlled Inputs and Part Runtime Fraction
+        \note Select the method that will be used to choose operating mode(s), supply air flow rate(s), outdoor air fraction(s) and part runtime fraction(s) in each time step. "Automatic" = chooses controlled inputs and part runtime fraction(s) to minimize resource use within each time step while best satisfying requested sensible cooling, dehumidification and ventilation, and subject to constraints. "User Defined" = EMS will be used to choose controlled inputs and part runtime fraction(s) in each time step. If this field is blank, default to "Automatic".
+        \type choice
+        \key Automatic
+        \key User Defined
+        \default Automatic
+    A9, \field Return Air Node Name
+		\required-field
+        \type node
+        \note Return air node for the hybrid unit must be a zone exhaust node.
+   A10, \field Outdoor Air Node Name
+		\required-field
+        \type node
+        \note Outdoor air node for the hybrid unit must be an outdoor air node.
+   A11, \field Supply Air Node Name
+		\required-field
+        \type node
+        \note Supply air node for the hybrid unit must be a zone air inlet node.
+   A12, \field Relief Node Name
+        \type node
+        \note Relief node for the hybrid unit must be a zone exhaust node, unless flow is being balanced elsewhere.
+    N1, \field System Maximum Supply Air Flow Rate
+        \type real
+        \minimum> 0
+        \note The value in this field represents the maximum supply air volume flow rate among all operating modes. Values of extensive variables in lookup tables are normalized by the system maximum supply air mass flow rate that was used to build performance curves. The value in this field is used to rescale the output from exenstive variables to a desired system size.
+        \units m3/s
+    N2, \field External Static Pressure at System Maximum Supply Air Flow Rate
+        \type real
+        \minimum> 0
+        \note Input the external static pressure when the system operates at maximum supply air flow rate. Fan affinity laws are used to scale supply fan power from the values tabulated in lookup tables, to values that match the external static pressure input to this field. If this field is blank, the supply fan power is not scaled from the values tabulated in lookup tables.
+        \units Pa
+    N3, \field Scaling Factor
+        \type real
+        \minimum> 0
+        \note The value in this field scales all extensive performance variables including: supply air mass flow rate, fuel uses, and water use. If this field is blank, the default scaling factor is 1.
+        \default 1
+    N4, \field Number of Operating Modes
+        \type integer
+        \minimum 1
+        \maximum 26
+        \note The value in this field defines the number of discrete operating modes for the unitary hybrid equipment. Supply air mass flow rate ratio and outdoor air fraction are treated as continuous controlled inputs within each discrete operating mode.
+        \note Mode 0 always describes standby.
+        \note Mode 1 - Mode 25 describe active operating modes that provide ventilation, heating, cooling, humidification or dehumidification.
+        \note 26 modes are allowed (including Mode 0).
+        \note If the value input to this field is 1, only Mode 0 will be considered.
+        \note If this field is blank, the default number of operating modes is 1.
+        \default 1
+    N5, \field Minimum Time Between Mode Change
+        \type real
+        \minimum 1
+        \note Any mode selected will not operate for less time than the value input in this field. If the value in this field is larger than each timestep, the mode selected in one time step will persist in later time steps until the minimum time between mode change is satisfied. Supply air mass flow rate and outdoor air fraction within a mode are not subject to minimum runtime and may change in every time step. Mode 0 does not have a minimum time. If this field is blank, the default minimum time between mode change is 10 minutes.
+        \units minutes
+        \default 10
+   A13, \field First Fuel Type
+        \type choice
+        \key None
+        \key Electricity
+        \key NaturalGas
+        \key PropaneGas
+        \key FuelOil#1
+        \key FuelOil#2
+        \key Diesel
+        \key Gasoline
+        \key Coal
+        \key OtherFuel1
+        \key OtherFuel2
+        \key Steam
+        \key DistrictHeating
+        \key DistrictCooling
+        \note Select the fuel type associated with field: "System Electric Power Lookup Table" in each mode.
+        \note If this field is blank, default first fuel type = Electricity.
+        \default Electricity
+   A14, \field Second Fuel Type
+        \type choice
+        \key None
+        \key Electricity
+        \key NaturalGas
+        \key PropaneGas
+        \key FuelOil#1
+        \key FuelOil#2
+        \key Diesel
+        \key Gasoline
+        \key Coal
+        \key OtherFuel1
+        \key OtherFuel2
+        \key Steam
+        \key DistrictHeating
+        \key DistrictCooling
+        \note Select the fuel type associated with field: "System Second Fuel Consumption Lookup Table" in each mode.
+        \note If this field is blank, default second fuel type = None.
+        \default None
+   A15, \field Third Fuel Type
+        \type choice
+        \key None
+        \key Electricity
+        \key NaturalGas
+        \key PropaneGas
+        \key FuelOil#1
+        \key FuelOil#2
+        \key Diesel
+        \key Gasoline
+        \key Coal
+        \key OtherFuel1
+        \key OtherFuel2
+        \key Steam
+        \key DistrictHeating
+        \key DistrictCooling
+        \note Select the fuel type associated with field: "System Third Fuel Consumption Lookup Table" in each mode.
+        \note If this field is blank, default third fuel type = None.
+        \default None
+   A16, \field Objective Function to Minimize
+        \type choice
+        \key Electricity Use
+        \key Second Fuel Use
+        \key Third Fuel Use
+        \key Water Use
+        \note In each time step, controlled variables will be chosen to minimize the selection in this field, subject to constraints.
+        \note If this field is blank, the objective function will minimize electricity use.
+        \default Electricity Use
+   A17, \field Design Specification Outdoor Air Object Name
+        \type object-list
+        \object-list DesignSpecificationOutdoorAirNames
+        \note Enter the name of a DesignSpecification:OutdoorAir object. Information in that object will be used to compute the minimum outdoor air flow rate in each time step.
+        \note If this field is blank, the system may still supply outdoor air, if it is capable as described by lookup tables, when doing so is the most efficient way to satisfy other constraints.
+   A18, \field Mode 0 Name
+        \type alpha
+        \retaincase
+        \note Enter a name for Mode 0.
+        \note Mode 0 describes equipment performance in standby.  Mode 0 is usually characterized by electricity use for controls and crankcase heaters, or other standby resouce consumption. Mode 0 will be chosen for any timestep, or portion of timestep, when no ventilation, cooling, humidification, or dehumidification is required.  Mode 0 is available at any environmental condition.
+   A19, \field Mode 0 Supply Air Temperature Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the Supply Air Temperature Lookup Table for Mode 0.
+        \note If this field is blank, Mode 0 will not be considered for any period that requires ventilation, heating, cooling, humidification, or dehumidification. If this field is blank, when Mode 0 is chosen (during standby periods) the supply air temperature will equal the return air temperature.
+   A20, \field Mode 0 Supply Air Humidity Ratio Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the Supply Air Humidity Ratio Lookup Table for Mode 0.
+        \note If this field is blank, Mode 0 will not be considered for any period that requires ventilation, heating, cooling, humidification, or dehumidification. If this field is blank, when Mode 0 is chosen (during standby periods) the supply air humidty ratio will equal the return air humidity ratio.
+   A21, \field Mode 0 System Electric Power Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the Electric Power Lookup Table for Mode 0.
+        \note If this field is blank, Mode 0 does not consume electricity.
+   A22, \field Mode 0 Supply Fan Electric Power Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the Supply Fan Electric Power Lookup Table for Mode 0.
+        \note If this field is blank, Mode 0 does not consume electricity for supply fan.
+   A23, \field Mode 0 External Static Pressure Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the External Static Pressure Lookup Table for Mode 0.
+        \note If this field is blank, external static pressure will not be reported.
+   A24, \field Mode 0 System Second Fuel Consumption Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the System Second Fuel Consumption Lookup Table for Mode 0.
+        \note If this field is blank, Mode 0 does not consume a second fuel.
+   A25, \field Mode 0 System Third Fuel Consumption Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the System Third Fuel Consumption Lookup Table for Mode 0.
+        \note If this field is blank, Mode 0 does not consume a third fuel.
+   A26, \field Mode 0 System Water Use Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the System Water Use Lookup Table for Mode 0.
+        \note If this field is blank, Mode 0 does not consume water.
+    N6, \field Mode 0 Outdoor Air Fraction
+        \type real
+        \minimum 0.00
+        \maximum 1.00
+        \note Enter the outdoor air fraction for Mode 0.
+        \note If this field is blank, the outdoor air fraction for Mode 0 will be 0.00.
+        \default 0.00
+    N7, \field Mode 0 Supply Air Mass Flow Rate Ratio
+        \type real
+        \minimum 0.00
+        \maximum 1.00
+        \note Enter the supply air mass flow rate ratio for Mode 0. The value in this field will be used to determine the supply air mass flow rate in Mode 0.
+        \note Supply air mass flow rate ratio describes supply air mass flow rate as a fraction of mass flow rate associated with the value in field: "System Maximum Supply Air Flow Rate".
+        \note If this field is blank, the supply air mass flow rate ratio for Mode 0 will be 0.
+        \default 0.00
+   A27, \field Mode 1 Name
+        \begin-extensible
+        \type alpha
+        \retaincase
+        \note Enter a name for Mode 1.
+   A28, \field Mode 1 Supply Air Temperature Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the Supply Air Temperature Lookup Table for Mode 1.
+        \note If this field is blank, Mode 1 will not be considered for any time step that requires ventilation, heating, cooling, humidification, or dehumidification.
+   A29, \field Mode 1 Supply Air Humidity Ratio Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the Supply Air Humidity Ratio Lookup Table for Mode 1.
+        \note If this field is blank, Mode 1 will not be considered for any time step that requires ventilation, heating, cooling, humidification, or dehumidification.
+   A30, \field Mode 1 System Electric Power Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the Electric Power Lookup Table for Mode 1.
+        \note If this field is blank, Mode 1 does not use electricity
+   A31, \field Mode 1 Supply Fan Electric Power Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the Supply Fan Electric Power Lookup Table for Mode 1.
+        \note If this field is blank, Mode 1 does not use electricity for supply fan.
+   A32, \field Mode 1 External Static Pressure Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the External Static Pressure Lookup Table for Mode 1.
+        \note If this field is blank, external static pressure will not be reported for Mode 1.
+   A33, \field Mode 1 System Second Fuel Consumption Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the System Second Fuel Consumption Lookup Table for Mode 1.
+        \note If this field is blank, Mode 1 does not consume a second fuel.
+   A34, \field Mode 1 System Third Fuel Consumption Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the System Third Fuel Consumption Lookup Table for Mode 1.
+        \note If this field is blank, Mode 1 does not consume a third fuel.
+   A35, \field Mode 1 System Water Use Lookup Table Name
+        \type object-list
+        \object-list MultiVariateTables
+        \note Enter the name of the System Water Use Lookup Table for Mode 1.
+        \note If this field is blank, Mode 1 does not consume water.
+    N8, \field Mode 1 Minimum Outdoor Air Temperature
+        \type real
+        \units C
+        \note Enter the minimum outdoor air temperature allowed for Mode 1.
+        \note Mode 1 will not be considered when outdoor air temperature is below the value in this field.
+        \note If this field is blank, there will be no lower constraint on outdoor air temperature.
+    N9, \field Mode 1 Maximum Outdoor Air Temperature
+        \type real
+        \units C
+        \note Enter the maximum outdoor air temperature allowed for Mode 1.
+        \note Mode 1 will not be considered wen outdoor air temperature is above the value in this field.
+        \note If this field is blank, there will be no upper constraint on outdoor air temperature.
+   N10, \field Mode 1 Minimum Outdoor Air Humidity Ratio
+        \type real
+        \minimum 0.00
+        \maximum 0.10
+        \units kgWater/kgDryAir
+        \note Enter the minimum outdoor humidity ratio allowed for Mode 1.
+        \note Mode 1 will not be considerd when outdoor air absolute humidity is below the value in this field.
+        \note If this field is blank, the lower constraint on outdoor air humidity ratio will be 0.00 kgWater/kgDryAir.
+        \default 0.00
+   N11, \field Mode 1 Maximum Outdoor Air Humidity Ratio
+        \type real
+        \minimum 0.00
+        \maximum 0.10
+        \units kgWater/kgDryAir
+        \note Enter the maximum outdoor air humidity ratio allowed for Mode 1.
+        \note Mode 1 will not be considered when outdoor air humidity ratio is above the value in this field.
+        \note If this field is blank, the upper constraint on outdoor air humidity ratio will be 0.10 kgWater/kgDryAir.
+        \default 0.10
+   N12, \field Mode 1 Minimum Outdoor Air Relative Humidity
+        \type real
+        \minimum 0.00
+        \maximum 100.00
+        \units percent
+        \note Enter the minimum outdoor relative humidity allowed for Mode 1.
+        \note Mode 1 will not be considered when the outdoor air relative humidity is below the value in this field.
+        \note If this field is blank, the lower constraint on outdoor air relative humidity will be 0.00%.
+        \default 0.00
+   N13, \field Mode 1 Maximum Outdoor Air Relative Humidity
+        \type real
+        \minimum 0.00
+        \maximum 100.00
+        \units percent
+        \note Enter the maximum outdoor air relative humidity allowed for Mode 1.
+        \note Relative humidity as percent from 0.00 to 100.00.
+        \note Mode 1 will not be considered when the outdoor air relative humidity is above the value in this field.
+        \note If this field is blank, the upper constraint on outdoor air relative humidity will be 100.00%.
+        \default 100.00
+   N14, \field Mode 1 Minimum Return Air Temperature
+        \type real
+        \units C
+        \note Enter the minimum return air temperature allowed for Mode 1.
+        \note Mode 1 will not be considered when the return air temperature is below the value in this field.
+        \note If this field is blank, there will be no lower constraint on return air temperature.
+   N15, \field Mode 1 Maximum Return Air Temperature
+        \type real
+        \units C
+        \note Enter the maximum return air temperature allowed for Mode 1.
+        \note Mode 1 will not be considred when the return air temperature is above the value in this field.
+        \note If this field is blank, there will be no upper constraint on return air temperature.
+   N16, \field Mode 1 Minimum Return Air Humidity Ratio
+        \type real
+        \minimum 0.00
+        \maximum 0.10
+        \units kgWater/kgDryAir
+        \note Enter the minimum return air humidity ratio allowed for Mode 1.
+        \note Mode 1 will not be considered when the return air humidity ratio is below the value in this field.
+        \note If this field is blank, the lower constraint on return air humidity ratio will be 0.00 kgWater/kgDryAir.
+        \default 0.00
+   N17, \field Mode 1 Maximum Return Air Humidity Ratio
+        \type real
+        \minimum 0.00
+        \maximum 0.10
+        \units kgWater/kgDryAir
+        \note Enter the maximum return air humidity ratio allowed for Mode 1.
+        \note Mode 1 will not be considered when the return air humidity ratio is above the value in this field.
+        \note If this field is blank, the upper constraint on return air humidity ratio will be 0.10 kgWater/kgDryAir.
+        \default 0.10
+   N18, \field Mode 1 Minimum Return Air Relative Humidity
+        \type real
+        \minimum 0.00
+        \maximum 100.00
+        \units percent
+        \note Enter the minimum return air relative humidity allowed for Mode 1.
+        \note Relative humidity as percent from 0.00 to 100.00.
+        \note Mode 1 will not be considered when the return air relative humidity is below the value in this field.
+        \note If this field is blank, the lower constraint on return air relative humidity will be 0.00%.
+        \default 0.00
+   N19, \field Mode 1 Maximum Return Air Relative Humidity
+        \type real
+        \minimum 0.00
+        \maximum 100.00
+        \units percent
+        \note Enter the maximum return air relative humdity allowed for Mode 1.
+        \note Relative humidity as percent from 0.00 to 100.00.
+        \note Mode 1 will not be considered when the return air relative humidity is above the value in this field.
+        \note If this field is blank, the upper constraint on return air relative humidity will be 100%.
+        \default 100.00
+   N20, \field Mode 1 Minimum Outdoor Air Fraction
+        \type real
+        \minimum 0.00
+        \maximum 1.00
+        \note Enter the minimum outdoor air fraction allowed for Mode 1.
+        \note Outdoor air fractions below this value will not be considered for operation in Mode 1.
+        \note If this field is blank, the lower constraint on outdoor air fraction will be 0.00.
+        \default 0.10
+   N21, \field Mode 1 Maximum Outdoor Air Fraction
+        \type real
+        \minimum 0.00
+        \maximum 1.00
+        \note Enter the maximum outdoor air fraction allowed for Mode 1.
+        \note Outdoor air fractions above this value will not be considered for operation in Mode 1.
+        \note If this field is blank, the upper constraint on outdoor air fraction will be 1.00.
+        \default 1.00
+   N22, \field Mode 1 Minimum Supply Air Mass Flow Rate Ratio
+        \type real
+        \minimum 0.00
+        \maximum 1.00
+        \note Enter the minimum supply air mass flow rate ratio allowed for Mode 1.
+        \note Supply air mass flow rate ratios below this value will not be considered for operation in Mode 1.
+        \note Supply air mass flow rate ratio describes supply air mass flow rate as a fraction of mass flow rate associated with the value in field: "System Maximum Supply Air Flow Rate".
+        \note If this field is blank, the lower constraint on supply air mass flow rate ratio will be 0.10.
+        \default 0.10
+   N23; \field Mode 1 Maximum Supply Air Mass Flow Rate Ratio
+        \type real
+        \minimum 0.00
+        \maximum 1.00
+        \note Enter the maximum supply air mass flow rate ratio allowed for Mode 1.
+        \note Supply air mass flow rate ratios above this value will not be considered for operation in Mode 1.
+        \note Supply air mass flow rate ratio describes supply air flow rate as a fraction of the value in field: "System Maximum Supply Air Flow Rate".
+        \note If this field is blank, there upper constraint on supply air mass flow rate ratio will be 1.00.
+        \default 1.00
 
 ZoneHVAC:OutdoorAirUnit,
        \memo The zone outdoor air unit models a single-zone dedicated outdoor air system (DOAS).
@@ -25848,6 +26394,53 @@ AirTerminal:SingleDuct:Uncontrolled,
        \type object-list
        \object-list DesignSpecificationAirTerminalSizingName
 
+AirTerminal:SingleDuct:ConstantVolume:NoReheat,
+       \memo Central air system terminal unit, single duct, constant volume, without reheat coil
+       \min-fields 5
+  A1 , \field Name
+       \required-field
+       \reference AirTerminalUnitNames
+       \reference AFNTerminalUnitNames
+  A2 , \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A3,  \field Air Inlet Node Name
+       \required-field
+       \type node
+       \note The air-inlet node name that connects the air splitter to the individual zone air distribution
+       \note unit. This node should also be one of the outlet air node of an AirLoopHVAC:ZoneSplitter or
+       \note AirLoopHVAC:SupplyPlenum component.
+  A4,  \field Air Outlet Node Name
+       \required-field
+       \type node
+       \note This is an air outlet node from the air distribution unit. This node name should be one of the
+       \note supply air inlet node names of a zone served by this component.
+  N1,  \field Maximum Air Flow Rate
+       \required-field
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+   A5, \field Design Specification Outdoor Air Object Name
+       \type object-list
+       \object-list DesignSpecificationOutdoorAirNames
+       \note This field is used to modulate the terminal unit flow rate based on the specified outdoor air
+       \note requirement. When the name of a DesignSpecification:OutdoorAir object is entered, the terminal unit will
+       \note adjust flow to meet this outdoor air requirement and no more. Load is still "Uncontrolled."
+       \note If Outdoor Air Flow per Person is non-zero, then the outdoor air requirement will be computed based
+       \note on either the current or design occupancy as specified in the Per Person Ventilation Rate Mode field.
+       \note At no time will the supply air flow rate exceed the value for Maximum Air Flow Rate. The requested fl
+       \note rate may not be fully met if the system is operating with cycling fan. If this field is blank, then
+       \note the terminal unit will not be controlled for outdoor air flow. This field is optional.
+   A6; \field Per Person Ventilation Rate Mode
+       \type choice
+       \key CurrentOccupancy
+       \key DesignOccupancy
+       \default CurrentOccupancy
+       \note CurrentOccupancy uses current number of people in the zone which may vary
+       \note DesignOccupancy uses the total number of people in the zone and is constant
+
 AirTerminal:SingleDuct:ConstantVolume:Reheat,
        \memo Central air system terminal unit, single duct, constant volume, with reheat coil (hot
        \memo water, electric, gas, or steam).
@@ -27033,6 +27626,7 @@ ZoneHVAC:AirDistributionUnit,
        \key AirTerminal:DualDuct:ConstantVolume
        \key AirTerminal:DualDuct:VAV
        \key AirTerminal:SingleDuct:ConstantVolume:Reheat
+       \key AirTerminal:SingleDuct:ConstantVolume:NoReheat
        \key AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam
        \key AirTerminal:SingleDuct:VAV:Reheat
        \key AirTerminal:SingleDuct:VAV:NoReheat
@@ -27088,10 +27682,18 @@ ZoneHVAC:EquipmentList,
        \memo should be assigned Heating Sequence = 1 and Cooling Sequence = 1.  Any other equipment should
        \memo be assigned sequence 2 or higher so that it will see the net load after the DOAS air is added
        \memo to the zone.
+       \min-fields 6
   A1 , \field Name
        \required-field
        \reference ZoneEquipmentLists
-  A2 , \field Zone Equipment 1 Object Type
+  A2 , \field Load Distribution Scheme
+       \type choice
+       \key SequentialLoad
+       \key UniformLoad
+       \key UniformPLR
+       \key SequentialUniformPLR
+       \default SequentialLoad
+  A3 , \field Zone Equipment 1 Object Type
        \begin-extensible
        \type choice
        \key ZoneHVAC:TerminalUnit:VariableRefrigerantFlow
@@ -27099,6 +27701,7 @@ ZoneHVAC:EquipmentList,
        \key AirTerminal:SingleDuct:Uncontrolled
        \key ZoneHVAC:EnergyRecoveryVentilator
        \key ZoneHVAC:EvaporativeCoolerUnit
+       \key ZoneHVAC:HybridUnitaryHVAC
        \key ZoneHVAC:ForcedAir:UserDefined
        \key ZoneHVAC:FourPipeFanCoil
        \key ZoneHVAC:OutdoorAirUnit
@@ -27128,7 +27731,7 @@ ZoneHVAC:EquipmentList,
        \key HeatExchanger:AirToAir:FlatPlate
        \key AirLoopHVAC:UnitarySystem
        \required-field
-  A3 , \field Zone Equipment 1 Name
+  A4 , \field Zone Equipment 1 Name
        \required-field
        \type object-list
        \object-list ZoneEquipmentNames
@@ -28711,7 +29314,7 @@ Coil:Cooling:DX:MultiSpeed,
        \note Flow rate corresponding to rated total cooling capacity, rated SHR and rated
        \note COP should be between 0.00004027 m3/s and .00006041 m3/s per watt of rated total
        \note cooling capacity
-  N11, \field Rated Evaporator Fan Power Per Volume Flow Rate
+  N11, \field Speed 1 Rated Evaporator Fan Power Per Volume Flow Rate
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions.
        \note The test conditions vary external static pressure based on total cooling capacity.
        \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER), and the
@@ -37871,19 +38474,19 @@ AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl,
        \type object-list
        \object-list QuadraticCurves
        \object-list UniVariateTables
-  N17, \field Diameter of Main Pipe Connecting Outdoor Unit to Indoor Units
+  N17, \field Diameter of Main Pipe Connecting Outdoor Unit to the First Branch Joint
        \note used to calculate the piping loss
        \type real
        \units m
        \minimum 0.0
        \default 0.0762
-  N18, \field Length of Main Pipe Connecting Outdoor Unit to Indoor Units
+  N18, \field Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint
        \note used to calculate the heat loss of the main pipe
        \type real
        \units m
        \minimum 0.0
        \default 30.0
-  N19, \field Equivalent Length of Main Pipe Connecting Outdoor Unit to Indoor Units
+  N19, \field Equivalent Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint
        \note used to calculate the refrigerant pressure drop of the main pipe
        \type real
        \units m
@@ -38197,13 +38800,13 @@ AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR,
        \units m
        \minimum 0.0
        \default 0.0762
-  N25, \field Length of Main Pipe Connecting Outdoor Unit to Indoor Units
+  N25, \field Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint
        \note used to calculate the heat loss of the main pipe
        \type real
        \units m
        \minimum 0.0
        \default 30.0
-  N26, \field Equivalent Length of Main Pipe Connecting Outdoor Unit to Indoor Units
+  N26, \field Equivalent Length of Main Pipe Connecting Outdoor Unit to the First Branch Joint
        \note used to calculate the refrigerant pressure drop of the main pipe
        \type real
        \units m
@@ -39119,7 +39722,7 @@ OutdoorAir:Node,
        \type object-list
        \object-list ScheduleNames
        \note Schedule values are real numbers, -100.0 to 100.0, units C
-  A3 , \field Wetbulb Schedule Name
+  A3 , \field Wetbulb Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note Schedule values are real numbers, -100.0 to 100.0, units C
@@ -40330,12 +40933,12 @@ SolarCollector:FlatPlate:PhotovoltaicThermal,
   A1 , \field Name
        \reference-class-name validOASysEquipmentTypes
        \reference validOASysEquipmentNames
+       \reference-class-name validBranchEquipmentTypes
+       \reference validBranchEquipmentNames
   A2 , \field Surface Name
        \required-field
        \type object-list
        \object-list AllShadingAndHTSurfNames
-       \reference-class-name validBranchEquipmentTypes
-       \reference validBranchEquipmentNames
   A3 , \field Photovoltaic-Thermal Model Performance Name
        \type object-list
        \object-list FlatPlatePVTParameters
@@ -45415,16 +46018,15 @@ FluidCooler:TwoSpeed,
   A5 ; \field Outdoor Air Inlet Node Name
        \type node
 
-GroundHeatExchanger:Vertical,
- \extensible:2
- \min-fields 20
- \memo Variable short time step vertical ground heat exchanger model based on
- \memo Yavuztruk, C., J.D.Spitler. 1999. A Short Time Step response Factor Model for
- \memo Vertical Ground Loop Heat Exchangers
- \memo The Fluid Type in the associated condenser loop must be same for which the
- \memo g-functions below are calculated.
+GroundHeatExchanger:System,
+        \memo Models vertical ground heat exchangers systems using the response factor approach
+        \memo developed by Eskilson. Response factors are calculated using a finite line source
+        \memo model assuming uniform heat flux at the borehole wall.
+        \extensible:1
+        \min-fields 9
   A1,   \field Name
         \required-field
+        \type alpha
         \reference-class-name validPlantEquipmentTypes
         \reference validPlantEquipmentNames
         \reference-class-name validCondenserEquipmentTypes
@@ -45443,84 +46045,166 @@ GroundHeatExchanger:Vertical,
         \minimum> 0.0
         \units m3/s
         \ip-units gal/min
-  N2,   \field Number of Bore Holes
+  A4,  \field Undisturbed Ground Temperature Model Type
         \required-field
-        \type integer
-        \minimum> 0.0
-  N3,   \field Bore Hole Length
+        \type choice
+        \key Site:GroundTemperature:Undisturbed:FiniteDifference
+        \key Site:GroundTemperature:Undisturbed:KusudaAchenbach
+        \key Site:GroundTemperature:Undisturbed:Xing
+  A5,  \field Undisturbed Ground Temperature Model Name
         \required-field
-        \type real
-        \minimum> 0.0
-        \units m
-  N4,   \field Bore Hole Radius
-        \required-field
-        \type real
-        \minimum> 0.0
-        \units m
-  N5,   \field Ground Thermal Conductivity
+        \type object-list
+        \object-list UndisturbedGroundTempModels
+  N2,   \field Ground Thermal Conductivity
         \required-field
         \type real
         \minimum> 0.0
         \units W/m-K
-  N6,   \field Ground Thermal Heat Capacity
+  N3,   \field Ground Thermal Heat Capacity
         \required-field
         \type real
         \minimum> 0.0
         \units J/m3-K
-  N7,   \field Ground Temperature
+  A6,   \field GHE:Vertical:ResponseFactors Object Name
+        \type object-list
+        \object-list GroundHeatExchangerVerticalResponseFactorNames
+  A7,   \field GHE:Vertical:Array Object Name
+        \type object-list
+        \object-list GroundHeatExchangerVerticalArrayNames
+  A8;   \field GHE:Vertical:Single Object Name 1
+        \begin-extensible
+        \type object-list
+        \object-list GroundHeatExchangerVerticalSingleNames
+
+GroundHeatExchanger:Vertical:Properties,
+        \memo Properties for vertical ground heat exchanger systems
+        \min-fields 11
+  A1,   \field Name
+        \required-field
+        \type alpha
+        \reference GroundHeatExchangerVerticalPropertiesNames
+  N1,   \field Depth of Top of Borehole
+        \required-field
+        \type real
+        \units m
+        \minimum 0.0
+  N2,   \field Borehole Length
         \required-field
         \type real
         \minimum> 0.0
-        \units C
-  N8,   \field Grout Thermal Conductivity
-        \required-field
-        \type real
-        \minimum> 0.0
-        \units W/m-K
-  N9,   \field Pipe Thermal Conductivity
-        \required-field
-        \type real
-        \minimum> 0.0
-        \units W/m-K
-  N10,  \field Pipe Out Diameter
+        \units m
+  N3,   \field Borehole Diameter
         \required-field
         \type real
         \minimum> 0.0
         \units m
         \ip-units in
-  N11,  \field U-Tube Distance
+  N4,   \field Grout Thermal Conductivity
         \required-field
         \type real
         \minimum> 0.0
-        \units m
-  N12,  \field Pipe Thickness
+        \units W/m-K
+  N5,   \field Grout Thermal Heat Capacity
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units J/m3-K
+  N6,   \field Pipe Thermal Conductivity
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units W/m-K
+  N7,   \field Pipe Thermal Heat Capacity
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units J/m3-K
+  N8,   \field Pipe Outer Diameter
         \required-field
         \type real
         \minimum> 0.0
         \units m
         \ip-units in
-  N13,  \field Maximum Length of Simulation
+  N9,   \field Pipe Thickness
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units m
+        \ip-units in
+  N10;  \field U-Tube Distance
+        \required-field
+        \type real
+        \minimum> 0.0
+        \units m
+
+GroundHeatExchanger:Vertical:Array,
+  A1,   \field Name
+        \required-field
+        \type alpha
+        \reference GroundHeatExchangerVerticalArrayNames
+  A2,   \field GHE:Vertical:Properties Object Name
+        \required-field
+        \type object-list
+        \object-list GroundHeatExchangerVerticalPropertiesNames
+  N1,   \field Number of Boreholes in X-Direction
         \required-field
         \type integer
+        \minimum 1
+  N2,   \field Number of Boreholes in Y-Direction
+        \required-field
+        \type integer
+        \minimum 1
+  N3;   \field Borehole Spacing
+        \required-field
+        \type real
         \minimum> 0.0
-        \units years
-  N14,  \field G-Function Reference Ratio
+        \units m
+
+GroundHeatExchanger:Vertical:Single,
+  A1,   \field Name
+        \required-field
+        \type alpha
+        \reference GroundHeatExchangerVerticalSingleNames
+  A2,   \field GHE:Vertical:Properties Object Name
+        \required-field
+        \type object-list
+        \object-list GroundHeatExchangerVerticalPropertiesNames
+  N1,   \field X-Location
+        \required-field
+        \type real
+        \units m
+  N2;   \field Y-Location
+        \required-field
+        \type real
+        \units m
+
+GroundHeatExchanger:ResponseFactors,
+        \memo Response factor definitions from third-party tool, commonly referred to a "g-functions"
+        \extensible:2
+        \min-fields 5
+  A1,   \field Name
+        \required-field
+        \type alpha
+        \reference GroundHeatExchangerVerticalResponseFactorNames
+  A2,   \field GHE:Vertical:Properties Object Name
+        \required-field
+        \type object-list
+        \object-list GroundHeatExchangerVerticalPropertiesNames
+  N1,   \field Number of Boreholes
+        \type integer
+        \required-field
+  N2,   \field G-Function Reference Ratio
         \type real
         \minimum> 0.0
         \units dimensionless
         \default 0.0005
-  N15,  \field Number of Data Pairs of the G Function
+  N3,   \field g-Function Ln(T/Ts) Value 1
+        \begin-extensible
         \required-field
-        \type integer
-        \minimum 1
-        \maximum 100
-  N16, \field G-Function Ln(T/Ts) Value 1
-       \required-field
-       \type real
-       \begin-extensible
-  N17; \field G-Function G Value 1
-       \required-field
-       \type real
+        \type real
+  N4;   \field g-Function g Value 1
+        \required-field
+        \type real
 
 GroundHeatExchanger:Pond,
         \memo A model of a shallow pond with immersed pipe loops.
@@ -53843,6 +54527,99 @@ PhotovoltaicPerformance:Sandia,
    N39 ; \field Sandia Database Parameter c7
          \type real
 
+Generator:PVWatts,
+      \min-fields 9
+      \memo Describes a simple set of inputs for an array of photovoltaic (PV) modules as described
+      \memo in the PVWatts software. A series of different PVWatts arrays can be connected to a
+      \memo single electric load center (preferably through an
+      \memo ElectricLoadCenter:Inverter:PVWatts). Array tilt and azimuth can be either specified
+      \memo on this object or taken from a referenced building surface or shading surface. If
+      \memo a surface is specified, the array participates normally in all shading calculations.
+  A1, \field Name
+      \type alpha
+      \required-field
+      \reference GeneratorNames
+  A2, \field PVWatts Version
+      \type choice
+      \key 5
+  N1, \field DC System Capacity
+      \note Nameplate rated DC system capacity in watts
+      \type real
+      \required-field
+      \units W
+      \minimum> 0
+  A3, \field Module Type
+      \type choice
+      \required-field
+      \key Standard
+      \key Premium
+      \key ThinFilm
+  A4, \field Array Type
+      \type choice
+      \required-field
+      \key FixedOpenRack
+      \key FixedRoofMounted
+      \key OneAxis
+      \key OneAxisBacktracking
+      \key TwoAxis
+  N2, \field System Losses
+      \type real
+      \default 0.14
+      \minimum 0
+      \maximum 1
+  A5, \field Array Geometry Type
+      \note TiltAzimuth - The tilt and azimuth angles are specified in the next two fields.
+      \note An unshaded array is assumed.
+      \note Surface - The array geometry (tilt and azimuth) as well as shading is determined from
+      \note surface referenced.
+      \type choice
+      \default TiltAzimuth
+      \key TiltAzimuth
+      \key Surface
+  N3, \field Tilt Angle
+      \note The tilt angle is the angle from horizontal of the photovoltaic modules in the array.
+      \type real
+      \units deg
+      \default 20
+      \minimum 0
+      \maximum 90
+  N4, \field Azimuth Angle
+      \note For a fixed array, the azimuth angle is the angle clockwise from true north describing
+      \note the direction that the array faces. For an array with one-axis tracking, the azimuth
+      \note angle is the angle clockwise from true north of the axis of rotation.
+      \type real
+      \units deg
+      \default 180
+      \minimum 0
+      \maximum< 360
+  A6, \field Surface Name
+      \type object-list
+      \object-list AllShadingAndHTSurfNames
+  N5; \field Ground Coverage Ratio
+      \note Applies only to arrays with one-axis tracking and is the ratio of module surface area
+      \note to area of the ground or roof occupied by the array.
+      \type real
+      \default 0.4
+      \minimum 0
+      \maximum 1
+
+ElectricLoadCenter:Inverter:PVWatts,
+      \min-fields 1
+      \memo Electric power inverter to convert from direct current (DC) to alternating current
+      \memo (AC) in an electric load center that contains Generator:PVWatts objects.
+      \memo It implements the PVWatts inverter performance curves.
+  A1, \field Name
+      \reference InverterList
+  N1, \field DC to AC Size Ratio
+      \type real
+      \minimum> 0
+      \default 1.10
+  N2; \field Inverter Efficiency
+      \type real
+      \minimum> 0
+      \maximum 1
+      \default 0.96
+
 Generator:FuelCell,
        \memo This generator model is the FC model from IEA Annex 42
   A1, \field Name
@@ -54571,6 +55348,7 @@ ElectricLoadCenter:Generators,
        \key Generator:InternalCombustionEngine
        \key Generator:CombustionTurbine
        \key Generator:Photovoltaic
+       \key Generator:PVWatts
        \key Generator:FuelCell
        \key Generator:MicroCHP
        \key Generator:MicroTurbine
@@ -57611,7 +58389,7 @@ Table:TwoIndependentVariables,
        \type real
 
 Table:MultiVariableLookup,
-       \memo The multi-variable lookup table can represent from 1 to 5 independent variables and
+       \memo The multi-variable lookup table can represent from 1 to 6 independent variables and
        \memo can interpolate these independent variables up to a 4th order polynomial. The
        \memo polynomial order is assumed to be the number of interpolation points (n) minus 1.
        \memo When any independent variable value is outside the table limits, linear extrapolation
@@ -57704,11 +58482,17 @@ Table:MultiVariableLookup,
   N12, \field Maximum Value of X5
        \type real
        \unitsBasedOnField A12
-  N13, \field Minimum Table Output
+  N13, \field Minimum Value of X6
+       \type real
+       \unitsBasedOnField A13
+  N14, \field Maximum Value of X6
+       \type real
+       \unitsBasedOnField A13
+  N15, \field Minimum Table Output
        \type real
        \note Specify the minimum value calculated by this curve object
        \unitsBasedOnField A13
-  N14, \field Maximum Table Output
+  N16, \field Maximum Table Output
        \type real
        \note Specify the maximum value calculated by this curve object
        \unitsBasedOnField A13
@@ -57757,7 +58541,16 @@ Table:MultiVariableLookup,
        \key Power
        \key Distance
        \default Dimensionless
-  A13, \field Output Unit Type
+  A13, \field Input Unit Type for X6
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \default Dimensionless
+  A14, \field Output Unit Type
        \type choice
        \key Dimensionless
        \key Capacity
@@ -57766,7 +58559,7 @@ Table:MultiVariableLookup,
   N15, \field Number of Independent Variables
        \type integer
        \minimum 1
-       \maximum 5
+       \maximum 6
        \required-field
   N16; \field Data
        \type real
@@ -58187,8 +58980,12 @@ UtilityCost:Tariff,
         \key kBtu
         \key MCF
         \key CCF
+        \key m3
+        \key gal
+        \key kgal
         \note A choice that allows several different predefined conversion factors to be used; otherwise user
-        \note defined conversion factors are used as defined in the next two fields.
+        \note defined conversion factors are used as defined in the next two fields. If left blank m3 is used for water meters
+        \note and kWh are used for all other meters.
    N1,  \field Energy Conversion Factor
         \type real
         \note Is a multiplier used to convert energy into the units specified by the utility in their tariff. If
@@ -59147,6 +59944,7 @@ Output:Table:SummaryReports,
        \key HVACSizingSummary
        \key SystemSummary
        \key ComponentSizingSummary
+       \key CoilSizingDetails
        \key OutdoorAirSummary
        \key ObjectCountSummary
        \key ComponentCostEconomicsSummary
@@ -59530,7 +60328,7 @@ Output:Variable,
        \note Detailed lists every instance (i.e. HVAC variable timesteps)
        \key Timestep
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
-       \note RunPeriod, Environment, and Annual are the same
+       \note RunPeriod and Environment are the same
        \key Hourly
        \key Daily
        \key Monthly
@@ -59560,7 +60358,7 @@ Output:Meter,
        \key Detailed
        \key Timestep
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
-       \note RunPeriod, Environment, and Annual are the same
+       \note RunPeriod and Environment are the same
        \key Hourly
        \key Daily
        \key Detailed
@@ -59588,7 +60386,7 @@ Output:Meter:MeterFileOnly,
        \key Detailed
        \key Timestep
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
-       \note RunPeriod, Environment, and Annual are the same
+       \note RunPeriod and Environment are the same
        \key Hourly
        \key Daily
        \key Monthly
@@ -59616,7 +60414,7 @@ Output:Meter:Cumulative,
        \key Detailed
        \key Timestep
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
-       \note RunPeriod, Environment, and Annual are the same
+       \note RunPeriod and Environment are the same
        \key Hourly
        \key Daily
        \key Monthly
@@ -59641,9 +60439,10 @@ Output:Meter:Cumulative:MeterFileOnly,
        \note Output:Meter:Cumulative:MeterFileOnly puts results on the eplusout.mtr file only
   A2 ; \field Reporting Frequency
        \type choice
+       \key Detailed
        \key Timestep
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
-       \note RunPeriod, Environment, and Annual are the same
+       \note RunPeriod and Environment are the same
        \key Hourly
        \key Daily
        \key Monthly
@@ -59651,7 +60450,6 @@ Output:Meter:Cumulative:MeterFileOnly,
        \key Environment
        \key Annual
        \default Hourly
-       \note RunPeriod, Environment, and Annual are synonymous
 
 Meter:Custom,
    \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
@@ -59720,12 +60518,11 @@ Output:EnvironmentalImpactFactors,
   A1 ; \field Reporting Frequency
        \type choice
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
-       \note RunPeriod, Environment, and Annual are the same. Detailed is not a valid choice.
+       \note RunPeriod and Environment are the same. Detailed is not a valid choice.
        \key Timestep
        \key Hourly
        \key Daily
        \key Monthly
-       \key Annual
        \key RunPeriod
        \key Environment
        \key Annual
