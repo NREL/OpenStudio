@@ -5,6 +5,7 @@ We'd love for you to contribute to OpenStudio to make it better than it is today
  - [Question or Problem?](#question)
  - [Issues and Bugs](#issue)
  - [Feature Requests](#feature)
+ - [Follow Along](#follow)
  - [Code Submission](#submit)
 
 ## <a name="question"></a> Got a Question or Problem?
