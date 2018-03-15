@@ -15,7 +15,7 @@ Please direct questions about how to use OpenStudio to [unmethours](https://unme
 ## <a name="issue"></a> Found a Bug?
 If you find a bug, you can help us by submitting an issue to our [issues page](https://github.com/NREL/OpenStudio/issues). Before submitting your issue please search existing issues to see if your bug has already been reported.  If reporting a new issue, please be as detailed as you can be in your report to help developers reproduce your issue so they can fix the problem.  For example, report the platform that you are on, the version of OpenStudio you are using, etc. Before reporting an issue please read our [wiki entry](https://github.com/NREL/OpenStudio/wiki/Issue-Prioritization) for instructions on properly labelling issues.
 
-## <a name="feature"></a> Want a better Feature?
+## <a name="feature"></a> Want a Better Feature?
 You can request a feature enhancement by submitting an issue to our [issues page](https://github.com/NREL/OpenStudio/issues).  Before submitting your issue please search existing issues to see if your request has already been reported.  If requesting a new enhancement, please be as detailed as you can be in your report to help developers understand what you are looking for. Before reporting a feature enhancement please read our [wiki entry](https://github.com/NREL/OpenStudio/wiki/Issue-Prioritization) for instructions on properly labelling issues. Note that an enhancement is NOT a bug!
 
 ## <a name="follow"></a> Want to Follow Along?
