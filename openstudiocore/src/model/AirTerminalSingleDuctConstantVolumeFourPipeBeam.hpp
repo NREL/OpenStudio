@@ -82,10 +82,12 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeBeam : public Straigh
   boost::optional<Node> primaryAirInletNode() const;
   boost::optional<Node> primaryAirOutletNode() const;
 
-  /* This returns an optional because you can omit the cooling coil if you are modeling a heating-only beam */
+  /* This returns an optional because you can omit the cooling coil if you are modeling a heating-only beam
+   * The only child class it will return is a CoilCoolingFourPipeBeam */
   boost::optional<HVACComponent> coolingCoil() const;
 
-  /* This returns an optional because you can omit the heating coil if you are modeling a cooling-only beam */
+  /* This returns an optional because you can omit the heating coil if you are modeling a cooling-only beam
+   * The only child class it will return is a CoilHeatingFourPipeBeam */
   boost::optional<HVACComponent> heatingCoil() const;
 
   /** Autosizable fields */
@@ -120,7 +122,11 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeBeam : public Straigh
   bool setHeatingAvailabilitySchedule(Schedule& schedule);
 
   /* Set Cooling and Heating Coil. */
+
+  /* The only object this method will accept is the companion class CoilCoolingFourPipeBeam */
   bool setCoolingCoil(const HVACComponent& coilCoolingFourPipeBeam);
+
+  /* The only object this method will accept is the companion class CoilHeatingFourPipeBeam */
   bool setHeatingCoil(const HVACComponent& coilHeatingFourPipeBeam);
 
   /* Autosizable fields */
