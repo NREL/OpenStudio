@@ -410,15 +410,21 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDistributio
 
   if (modelObject.node()) {
     idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.node().get().name().get());
+    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentObjectTypeorNodeType, "Other");
   } else if (modelObject.airLoopHVACZoneMixer()) {
-    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.airLoopHVACZoneMixer().get().name().get());
+    // JWD: This and the comments below will probably be uncommented and used once multiple airloops hit.
+    //idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.airLoopHVACZoneMixer().get().name().get());
+    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentObjectTypeorNodeType, "AirLoopHVAC:ZoneMixer");
   } else if (modelObject.airLoopHVACZoneSplitter()) {
-    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.airLoopHVACZoneSplitter().get().name().get());
+    //idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.airLoopHVACZoneSplitter().get().name().get());
+    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentObjectTypeorNodeType, "AirLoopHVAC:ZoneSplitter");
   } else if (modelObject.airLoopHVACOutdoorAirSystem()) {
-    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.airLoopHVACOutdoorAirSystem().get().name().get());
+    //idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.airLoopHVACOutdoorAirSystem().get().name().get());
+    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentObjectTypeorNodeType, "AirLoopHVAC:OutdoorAirSystem");
+  } else {
+    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentObjectTypeorNodeType, "Other");
   }
 
-  idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentObjectTypeorNodeType, "Other");
   idfObject.setDouble(AirflowNetwork_Distribution_NodeFields::NodeHeight, modelObject.nodeHeight());
   return idfObject;
 }
