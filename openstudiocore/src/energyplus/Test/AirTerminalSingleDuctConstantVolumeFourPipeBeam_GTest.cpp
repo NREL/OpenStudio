@@ -98,6 +98,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctConstantVolumeF
   CoilHeatingFourPipeBeam hc(m);
   atu.setHeatingCoil(hc);
 
+  // They must be connected to a PlantLoop too
+  PlantLoop chw_p(m);
+  chw_p.addDemandBranchForComponent(cc);
+
+  PlantLoop hw_p(m);
+  hw_p.addDemandBranchForComponent(hc);
+
   // Hardsize an autosize field
   atu.setDesignHotWaterVolumeFlowRate(0.005);
 
@@ -117,7 +124,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctConstantVolumeF
     EXPECT_EQ(sch.name().get(), idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirAvailabilityScheduleName).get());
 
     // Check the Node connections
-
     // Primary Air
     EXPECT_EQ(atu.primaryAirInletNode().get().name().get(), idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirInletNodeName).get());
     EXPECT_EQ(atu.primaryAirOutletNode().get().name().get(), idf_atu.getString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirOutletNodeName).get());
@@ -150,6 +156,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctConstantVolumeF
 
     EXPECT_EQ("AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam", idf_adu.getString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType).get());
     EXPECT_EQ(idf_atu.name().get(), idf_adu.getString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName).get());
+
   }
 
 }
