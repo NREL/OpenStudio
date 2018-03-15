@@ -26,6 +26,8 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "EvaporativeCoolerDirectResearchSpecial.hpp"
 #include "EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
 #include "Schedule.hpp"
@@ -126,6 +128,15 @@ namespace detail{
           }
           return true;
         }
+      }
+    }
+
+    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      if ( StraightComponent_Impl::addToNode( node ) ) {
+        if ( auto _node = outletModelObject()->optionalCast<Node>() ) {
+          setSensorNode(_node.get());
+        }
+        return true;
       }
     }
 

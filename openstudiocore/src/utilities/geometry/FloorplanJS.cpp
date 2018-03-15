@@ -1080,18 +1080,13 @@ namespace openstudio{
     double currentStoryZ = 0;
 
     // read project config
-    std::string units = "ft";
     Json::Value project = m_value.get("project", Json::objectValue);
     if (!project.isNull()){
-      Json::Value config = project.get("config", Json::objectValue);
-      if (!config.isNull()){
-        units = config.get("units", units).asString();
-      }
-
+      // DLM: TODO move this to a function
       Json::Value ground = project.get("ground", Json::objectValue);
       if (!ground.isNull()){
         if (checkKeyAndType(ground, "floor_offset", Json::realValue)){
-          currentStoryZ = ground.get("floor_offset", units).asDouble();
+          currentStoryZ = ground.get("floor_offset", 0.0).asDouble();
         }
       }
     }
@@ -1100,7 +1095,7 @@ namespace openstudio{
     // north angle is applied directly to osm, does not impact this translation
 
     double lengthToMeters = 1;
-    if (istringEqual(units, "ft")){
+    if (istringEqual(units(), "ip")){
       lengthToMeters = 0.3048; // don't use openstudio convert to keep dependencies low
     }
 
@@ -1434,6 +1429,49 @@ namespace openstudio{
     return result;
   }
 
+  std::string FloorplanJS::units() const
+  {
+    std::string units = "ip";
+    Json::Value project = m_value.get("project", Json::objectValue);
+    if (!project.isNull()){
+      Json::Value config = project.get("config", Json::objectValue);
+      if (!config.isNull()){
+        units = config.get("units", units).asString();
+      }
+    }
+    if (istringEqual(units, "ft")){
+      units = "ip";
+    }
+    return units;
+  }
+
+  bool FloorplanJS::setUnits(const std::string& units)
+  {
+    std::string _units = units;
+    if (!(istringEqual(units, "ip") || istringEqual(units, "si"))){
+      return false;
+    }
+
+    if (!checkKeyAndType(m_value, "project", Json::objectValue)){
+      m_value["project"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& project = m_value["project"];
+
+    if (!checkKeyAndType(project, "config", Json::objectValue)){
+      project["config"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& config = project["config"];
+
+    config["units"] = units;
+
+    return true;
+  }
+
+  void FloorplanJS::resetUnits()
+  {
+    setUnits("ip");
+  }
+
   double FloorplanJS::northAxis() const
   {
     double result = 0;
@@ -1451,6 +1489,23 @@ namespace openstudio{
       }
     }
     return result;
+  }
+
+  bool FloorplanJS::setNorthAxis(double northAxis)
+  {
+    if (!checkKeyAndType(m_value, "project", Json::objectValue)){
+      m_value["project"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& project = m_value["project"];
+
+    project["north_axis"] = northAxis;
+
+    return true;
+  }
+
+  void FloorplanJS::resetNorthAxis()
+  {
+    setNorthAxis(0);
   }
 
   void FloorplanJS::updateStories(const std::vector<FloorplanObject>& objects, bool removeMissingObjects)

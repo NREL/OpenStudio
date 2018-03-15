@@ -787,10 +787,14 @@ namespace openstudio {
   {
     m_mainWindow->setWindowModified(true);
 
-    QString fileName = this->mainWindow()->windowFilePath();
+    if (m_savePath.isEmpty()){
+      return;
+    }
 
-    QFile testFile(fileName);
-    if (!testFile.exists()) return;
+    // this is very expensive to do every time any object changes
+    //QString fileName = this->mainWindow()->windowFilePath();
+    //QFile testFile(fileName);
+    //if (!testFile.exists()) return;
 
     m_mainWindow->enableRevertToSavedAction(true);
   }

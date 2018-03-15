@@ -350,6 +350,10 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeAirLoopDemandSide)
 
 TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodePlantLoop)
 {
+  // As of right now you cannot add the unitary to a plant.
+  // Some heat recovery configurations may enable it, but more likely
+  // the inner components will be added to the plant.
+
   Model m;
   AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
   PlantLoop plantLoop(m);
@@ -367,7 +371,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodePlantLoop)
   EXPECT_FALSE(testObject.addToNode(supplyInletNode));
   EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
   EXPECT_FALSE(plantLoop.addSupplyBranchForComponent(testObject));
-  EXPECT_EQ((unsigned)6, plantLoop.supplyComponents().size());
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
   ASSERT_FALSE(testObject.plantLoop());
   // EXPECT_EQ(plantLoop, testObject.plantLoop().get());
 }

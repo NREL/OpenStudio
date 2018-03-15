@@ -257,6 +257,7 @@ namespace openstudio
       initializeModelObjects(model);
 
       std::map<std::string, Space> originalNameToSpaceMap;
+      std::map<std::string, ShadingSurfaceGroup> originalNameToShadingSurfaceGroupMap;
       std::map<std::string, ThermalZone> originalNameToThermalZoneMap;
       std::map<std::string, SpaceType> originalNameToSpaceTypeMap;
       std::map<std::string, BuildingStory> originalNameToBuildingStoryMap;
@@ -292,16 +293,20 @@ namespace openstudio
           }
 
           // DLM: temp code
-          if (multiplier==0){
+          if (multiplier == 0){
             LOG(Warn, "Muliplier for Space '" << name << "' is 0, setting to 1");
             multiplier = 1;
-          }else if (multiplier > 1){
+          } else if (multiplier > 1){
             LOG(Warn, "Multiplier translation not yet implemented for Space '" << name << "', setting to 1");
             multiplier = 1;
           }
 
           originalNameToSpaceMultiplierMap.insert(std::make_pair(name, multiplier));
           originalNameToSpaceMap.insert(std::make_pair(name, space));
+        }else if (istringEqual(iddObjectType, "OS:ShadingSurfaceGroup")){
+          ShadingSurfaceGroup shadingSurfaceGroup(model);
+          modelObject = shadingSurfaceGroup;
+          originalNameToShadingSurfaceGroupMap.insert(std::make_pair(name, shadingSurfaceGroup));
         }else if (istringEqual(iddObjectType, "OS:ThermalZone")){
           ThermalZone thermalZone(model);
           boost::optional<RenderingColor> renderingColor = makeRenderingColor(color, model);
@@ -679,7 +684,11 @@ namespace openstudio
               shadingSurfaceGroup = groups[0];
             }
           } else{
-            shadingSurfaceGroup = model.getConcreteModelObjectByName<ShadingSurfaceGroup>(shadingName);
+            const auto it = originalNameToShadingSurfaceGroupMap.find(shadingName);
+            if (it != originalNameToShadingSurfaceGroupMap.end()){
+              shadingSurfaceGroup = it->second;
+            }
+
             if (!shadingSurfaceGroup){
               shadingSurfaceGroup = ShadingSurfaceGroup(model);
               if (istringEqual(surfaceType, "SiteShading")){

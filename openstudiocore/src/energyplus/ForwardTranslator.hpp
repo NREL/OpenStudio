@@ -442,7 +442,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "8.8"
+#define ENERGYPLUS_VERSION "8.9"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:

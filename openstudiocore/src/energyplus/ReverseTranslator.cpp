@@ -600,7 +600,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateGasEquipment(workspaceObject );
       break;
     }
-  case openstudio::IddObjectType::GroundHeatExchanger_Vertical :
+  case openstudio::IddObjectType::GroundHeatExchanger_System :
     {
       //modelObject = translateGroundHeatExchangerVertical(workspaceObject );
       break;

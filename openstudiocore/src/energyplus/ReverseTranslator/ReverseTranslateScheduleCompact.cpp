@@ -66,7 +66,14 @@ OptionalModelObject ReverseTranslator::translateScheduleCompact( const Workspace
     scheduleCompact.setName(*os);
   }
 
-  for (const IdfExtensibleGroup& eg : workspaceObject.extensibleGroups()) {
+  for ( IdfExtensibleGroup& eg : workspaceObject.extensibleGroups()) {
+    for ( unsigned i = 0; i < eg.numFields(); ++i ) {
+      if( auto value = eg.getString(i) ) {
+        if( istringEqual(value.get(), "Interpolate:Average") ) {
+          eg.setString(i, "Interpolate:Yes");
+        }
+      }
+    }
     scheduleCompact.pushExtensibleGroup(eg.fields());
   }
 

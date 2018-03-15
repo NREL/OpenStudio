@@ -36,6 +36,8 @@
 #include "Model_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include <utilities/idd/OS_CoilSystem_Cooling_DX_HeatExchangerAssisted_FieldEnums.hxx>
@@ -129,6 +131,10 @@ namespace detail {
       if( ! airLoop->demandComponent(node.handle()) ) {
         return StraightComponent_Impl::addToNode( node );
       }
+    }
+
+    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      return StraightComponent_Impl::addToNode( node );
     }
 
     return false;

@@ -84,6 +84,15 @@ namespace openstudio
 
     ModelMerger::ModelMerger()
     {
+      // DLM: TODO expose this to user to give more control over merging?
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Space);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ShadingSurfaceGroup);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ThermalZone);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_SpaceType);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingStory);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingUnit);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_DefaultConstructionSet);
+
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
       m_logSink.setThreadId(QThread::currentThread());
@@ -319,6 +328,36 @@ namespace openstudio
 
         }
 
+      }
+    }
+
+    void ModelMerger::mergeShadingSurfaceGroup(ShadingSurfaceGroup& currentGroup, const ShadingSurfaceGroup& newGroup)
+    {
+      if (m_newMergedHandles.find(newGroup.handle()) != m_newMergedHandles.end()){
+        // already merged
+        return;
+      }
+      m_newMergedHandles.insert(newGroup.handle());
+
+      currentGroup.setName(newGroup.nameString());
+
+      // remove current shading surfaces
+      for (auto& currentSurface : currentGroup.shadingSurfaces()){
+        currentSurface.remove();
+      }
+
+      // change shading surface group type
+      currentGroup.setShadingSurfaceType(newGroup.shadingSurfaceType());
+
+      // add new shading surfaces
+      for (const auto& newSurface : newGroup.shadingSurfaces()){
+        // DLM: this should probably be moved to a mergeSurface method
+        ShadingSurface clone = newSurface.clone(m_currentModel).cast<ShadingSurface>();
+        clone.setShadingSurfaceGroup(currentGroup);
+
+        m_newMergedHandles.insert(newSurface.handle());
+        m_currentToNewHandleMapping[clone.handle()] = newSurface.handle();
+        m_newToCurrentHandleMapping[newSurface.handle()] = clone.handle();
       }
     }
 
@@ -611,6 +650,9 @@ namespace openstudio
         case IddObjectType::OS_Space:
           currentObject = model::Space(m_currentModel);
           break;
+        case IddObjectType::OS_ShadingSurfaceGroup:
+          currentObject = model::ShadingSurfaceGroup(m_currentModel);
+          break;
         case IddObjectType::OS_ThermalZone:
           currentObject = model::ThermalZone(m_currentModel);
           break;
@@ -642,6 +684,17 @@ namespace openstudio
         Space currentSpace = currentObject->cast<Space>();
         Space newSpace = newObject.cast<Space>();
         mergeSpace(currentSpace, newSpace);
+      }
+        break;
+      case IddObjectType::OS_ShadingSurfaceGroup:
+      {
+        ShadingSurfaceGroup currentGroup = currentObject->cast<ShadingSurfaceGroup>();
+        ShadingSurfaceGroup newGroup = newObject.cast<ShadingSurfaceGroup>();
+
+        // if the new group has a space it will be added under that space
+        if (!newGroup.space()){
+          mergeShadingSurfaceGroup(currentGroup, newGroup);
+        }
       }
         break;
       case IddObjectType::OS_ThermalZone:
@@ -706,16 +759,8 @@ namespace openstudio
         m_newToCurrentHandleMapping[it.second] = it.first;
       }
 
-      // DLM: TODO expose this to user to give more control over merging?
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Space);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ThermalZone);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_SpaceType);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingStory);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingUnit);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_DefaultConstructionSet);
-
       //** Remove objects from current model that are not in new model **//
-      for (const auto& iddObjectType : m_iddObjectTypesToMerge){
+      for (const auto& iddObjectType : iddObjectTypesToMerge()){
         for (auto& currenObject : currentModel.getObjectsByType(iddObjectType)){
           if (m_currentToNewHandleMapping.find(currenObject.handle()) == m_currentToNewHandleMapping.end()){
             currenObject.remove();
@@ -724,7 +769,7 @@ namespace openstudio
       }
 
       //** Merge objects from new model into curret model **//
-      for (const auto& iddObjectType : m_iddObjectTypesToMerge){
+      for (const auto& iddObjectType : iddObjectTypesToMerge()){
         for (auto& newObject : newModel.getObjectsByType(iddObjectType)){
           getCurrentModelObject(newObject);
         }
