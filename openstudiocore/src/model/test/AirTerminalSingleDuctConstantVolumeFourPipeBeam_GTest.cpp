@@ -99,6 +99,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeBeam_Coils)
   ASSERT_TRUE(atu.heatingCoil());
   EXPECT_EQ(hc.handle(), atu.heatingCoil()->handle());
 
+  // Test setting the coils
   CoilCoolingFourPipeBeam cc2(m);
   EXPECT_TRUE(atu.setCoolingCoil(cc2));
   EXPECT_EQ(cc2.handle(), atu.coolingCoil()->handle());
@@ -137,11 +138,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeBeam_Coils)
   ASSERT_TRUE(hc2.hotWaterOutletNode());
   EXPECT_EQ(hc2.hotWaterOutletNode()->handle(), atu.hotWaterOutletNode()->handle());
 
-
 }
 
-
-TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeBeam_Clone)
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeBeam_CloneAndRemove)
 {
 
   Model m;
@@ -152,6 +151,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeBeam_Clone)
   AirTerminalSingleDuctConstantVolumeFourPipeBeam atuClone = atu.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
 
   // I expect the cooling/heating coils to have been cloned too
+  EXPECT_EQ(2u, m.getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeFourPipeBeam>().size());
   EXPECT_EQ(2u, m.getConcreteModelObjects<CoilCoolingFourPipeBeam>().size());
   EXPECT_EQ(2u, m.getConcreteModelObjects<CoilHeatingFourPipeBeam>().size());
 
@@ -159,4 +159,12 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeBeam_Clone)
   ASSERT_TRUE(atuClone.coolingCoil());
   ASSERT_TRUE(atuClone.heatingCoil());
 
+  // test remove method
+  atuClone.remove();
+  EXPECT_EQ(1u, m.getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeFourPipeBeam>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CoilCoolingFourPipeBeam>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CoilHeatingFourPipeBeam>().size());
+
+
 }
+
