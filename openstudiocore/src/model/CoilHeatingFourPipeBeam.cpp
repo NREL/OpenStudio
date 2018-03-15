@@ -110,7 +110,7 @@ const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableName
 
     for( const auto & elem : atuFourPipeBeams )
     {
-      if( boost::optional<CoilHeatingFourPipeBeam> coil = elem.heatingCoil() )
+      if( boost::optional<HVACComponent> coil = elem.heatingCoil() )
       {
         if( coil->handle() == this->handle() )
         {
@@ -131,7 +131,7 @@ const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableName
 
     for( const auto & elem : atuFourPipeBeams )
     {
-      if( boost::optional<CoilHeatingFourPipeBeam> coil = elem.heatingCoil() )
+      if( boost::optional<HVACComponent> coil = elem.heatingCoil() )
       {
         if( coil->handle() == this->handle() )
         {
@@ -333,7 +333,7 @@ const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableName
 
     for( const auto & elem : atuFourPipeBeams )
     {
-      if( boost::optional<CoilHeatingFourPipeBeam> coil = elem.heatingCoil() )
+      if( boost::optional<HVACComponent> coil = elem.heatingCoil() )
       {
         if( coil->handle() == this->handle() )
         {

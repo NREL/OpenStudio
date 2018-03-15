@@ -214,9 +214,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
 
   // Cooling Side: everything is carried on the subclass CoilCoolingFourPipeBeam
 
-  if (boost::optional<CoilCoolingFourPipeBeam> _cc = modelObject.coolingCoil()) {
+  if ( boost::optional<HVACComponent> _comp = modelObject.coolingCoil() ) {
 
-    CoilCoolingFourPipeBeam cc = _cc.get();
+    boost::optional<CoilCoolingFourPipeBeam>  _cc = _comp->optionalCast<CoilCoolingFourPipeBeam>();
+
+    if ( !_cc.is_initialized() ) {
+      LOG(Error, "Cooling coil is not a CoilCoolingFourPipeBeam for " << modelObject.briefDescription() << ". Coil will not be translated");
+    } else {
+      CoilCoolingFourPipeBeam cc = _cc.get();
 
     // It it isn't connected to a plantLoop, it's useless...
     // If it is connected to a plantloop, all three curves are required fields
@@ -262,44 +267,45 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
         {
           idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::ChilledWaterOutletNodeName, s.get());
         }
-      }
+        }
 
-      /* Double with defaults (not optionals) */
+        /* Double with defaults (not optionals) */
 
-      // N6 , \field Beam Rated Cooling Capacity per Beam Length
-      {
-        double value = cc.beamRatedCoolingCapacityperBeamLength();
-        idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamRatedCoolingCapacityperBeamLength, value);
-      }
+        // N6 , \field Beam Rated Cooling Capacity per Beam Length
+        {
+          double value = cc.beamRatedCoolingCapacityperBeamLength();
+          idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamRatedCoolingCapacityperBeamLength, value);
+        }
 
-      // N7 , \field Beam Rated Cooling Room Air Chilled Water Temperature Difference
-      {
-        double value = cc.beamRatedCoolingRoomAirChilledWaterTemperatureDifference();
-        idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamRatedCoolingRoomAirChilledWaterTemperatureDifference, value);
-      }
+        // N7 , \field Beam Rated Cooling Room Air Chilled Water Temperature Difference
+        {
+          double value = cc.beamRatedCoolingRoomAirChilledWaterTemperatureDifference();
+          idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamRatedCoolingRoomAirChilledWaterTemperatureDifference, value);
+        }
 
-      // N8 , \field Beam Rated Chilled Water Volume Flow Rate per Beam Length
-      {
-        double value = cc.beamRatedChilledWaterVolumeFlowRateperBeamLength();
-        idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamRatedChilledWaterVolumeFlowRateperBeamLength, value);
-      }
+        // N8 , \field Beam Rated Chilled Water Volume Flow Rate per Beam Length
+        {
+          double value = cc.beamRatedChilledWaterVolumeFlowRateperBeamLength();
+          idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamRatedChilledWaterVolumeFlowRateperBeamLength, value);
+        }
 
-      /* Curves: At this point, I have alreaady checked above that all three curves are defined */
+        /* Curves: At this point, I have alreaady checked above that all three curves are defined */
 
-      // A11, \field Beam Cooling Capacity Temperature Difference Modification Factor Curve Name
-      if( auto _curve = translateAndMapModelObject(capModFuncOfTempDiff.get()) ) {
-        idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamCoolingCapacityTemperatureDifferenceModificationFactorCurveName, _curve->name().get());
-      }
+        // A11, \field Beam Cooling Capacity Temperature Difference Modification Factor Curve Name
+        if( auto _curve = translateAndMapModelObject(capModFuncOfTempDiff.get()) ) {
+          idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamCoolingCapacityTemperatureDifferenceModificationFactorCurveName, _curve->name().get());
+        }
 
 
-      // A12, \field Beam Cooling Capacity Air Flow Modification Factor Curve Name
-      if( auto _curve = translateAndMapModelObject(capModFuncOfSAFlow.get()) ) {
-        idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamCoolingCapacityAirFlowModificationFactorCurveName, _curve->name().get());
-      }
+        // A12, \field Beam Cooling Capacity Air Flow Modification Factor Curve Name
+        if( auto _curve = translateAndMapModelObject(capModFuncOfSAFlow.get()) ) {
+          idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamCoolingCapacityAirFlowModificationFactorCurveName, _curve->name().get());
+        }
 
-      // A13, \field Beam Cooling Capacity Chilled Water Flow Modification Factor Curve Name
-      if( auto _curve = translateAndMapModelObject(capModFuncOfWaterFlow.get()) ) {
-        idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamCoolingCapacityChilledWaterFlowModificationFactorCurveName, _curve->name().get());
+        // A13, \field Beam Cooling Capacity Chilled Water Flow Modification Factor Curve Name
+        if( auto _curve = translateAndMapModelObject(capModFuncOfWaterFlow.get()) ) {
+          idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamCoolingCapacityChilledWaterFlowModificationFactorCurveName, _curve->name().get());
+        }
       }
     }
   }
@@ -308,91 +314,97 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
    * HEATING SIDE: everything is carried on the subclass CoilHeatingFourPipeBeam
    */
 
+  if (boost::optional<HVACComponent> _comp = modelObject.heatingCoil()) {
 
-  if (boost::optional<CoilHeatingFourPipeBeam> _hc = modelObject.heatingCoil()) {
+    boost::optional<CoilHeatingFourPipeBeam>  _hc = _comp->optionalCast<CoilHeatingFourPipeBeam>();
 
-    CoilHeatingFourPipeBeam hc = _hc.get();
+    if ( !_hc.is_initialized() ) {
+      LOG(Error, "Heating coil is not a CoilHeatingFourPipeBeam for " << modelObject.briefDescription() << ". Coil will not be translated");
+    } else {
 
-    // It it isn't connected to a plantLoop, it's useless...
-    // If it is connected to a plantloop, all three curves are required fields
+      CoilHeatingFourPipeBeam hc = _hc.get();
 
-    /* Curves: all three are required if the FourPipeBeam is connected to a hot water plant loop, which is the case if we have reached this
-     * point, so I will log and not translate is they aren't defined */
+      // It it isn't connected to a plantLoop, it's useless...
+      // If it is connected to a plantloop, all three curves are required fields
 
-    // A11, \field Beam Heating Capacity Temperature Difference Modification Factor Curve Name
-    boost::optional<Curve> capModFuncOfTempDiff = hc.beamHeatingCapacityTemperatureDifferenceModificationFactorCurve();
+      /* Curves: all three are required if the FourPipeBeam is connected to a hot water plant loop, which is the case if we have reached this
+       * point, so I will log and not translate is they aren't defined */
 
-    // A12, \field Beam Heating Capacity Air Flow Modification Factor Curve Name
-    boost::optional<Curve> capModFuncOfSAFlow = hc.beamHeatingCapacityAirFlowModificationFactorCurve();
+      // A11, \field Beam Heating Capacity Temperature Difference Modification Factor Curve Name
+      boost::optional<Curve> capModFuncOfTempDiff = hc.beamHeatingCapacityTemperatureDifferenceModificationFactorCurve();
 
-    // A13, \field Beam Heating Capacity Hot Water Flow Modification Factor Curve Name
-    boost::optional<Curve> capModFuncOfWaterFlow = hc.beamHeatingCapacityHotWaterFlowModificationFactorCurve();
-    // Check that it is connected to a plantLoop
-    if (! _hc->plantLoop().is_initialized() ) {
-      LOG(Warn, "The Heating side of " << modelObject.briefDescription() << " isn't connected to a plantLoop, it will not be translated");
+      // A12, \field Beam Heating Capacity Air Flow Modification Factor Curve Name
+      boost::optional<Curve> capModFuncOfSAFlow = hc.beamHeatingCapacityAirFlowModificationFactorCurve();
 
-    // It MUST have the three curves defined in this case
-    } else if (!capModFuncOfTempDiff.is_initialized() || !capModFuncOfSAFlow.is_initialized() || !capModFuncOfWaterFlow.is_initialized() ) {
-      LOG(Warn, "If you connect the heating side of " << modelObject.briefDescription()
-          << " to a plantLoop, you MUST supply all three curves in the subobject " << hc.briefDescription());
+      // A13, \field Beam Heating Capacity Hot Water Flow Modification Factor Curve Name
+      boost::optional<Curve> capModFuncOfWaterFlow = hc.beamHeatingCapacityHotWaterFlowModificationFactorCurve();
+      // Check that it is connected to a plantLoop
+      if (! _hc->plantLoop().is_initialized() ) {
+        LOG(Warn, "The Heating side of " << modelObject.briefDescription() << " isn't connected to a plantLoop, it will not be translated");
 
-    } else
-    {
-      // A9 , \field Hot Water Inlet Node Name
-      temp = hc.inletModelObject();
-      if(temp)
+      // It MUST have the three curves defined in this case
+      } else if (!capModFuncOfTempDiff.is_initialized() || !capModFuncOfSAFlow.is_initialized() || !capModFuncOfWaterFlow.is_initialized() ) {
+        LOG(Warn, "If you connect the heating side of " << modelObject.briefDescription()
+            << " to a plantLoop, you MUST supply all three curves in the subobject " << hc.briefDescription());
+
+      } else
       {
-        if((s = temp->name()))
+        // A9 , \field Hot Water Inlet Node Name
+        temp = hc.inletModelObject();
+        if(temp)
         {
-          idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HotWaterInletNodeName, s.get());
+          if((s = temp->name()))
+          {
+            idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HotWaterInletNodeName, s.get());
+          }
         }
-      }
-      // A10 , \field Hot Water Outlet Node Name
-      temp = hc.outletModelObject();
-      if(temp)
-      {
-        if((s = temp->name()))
+        // A10 , \field Hot Water Outlet Node Name
+        temp = hc.outletModelObject();
+        if(temp)
         {
-          idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HotWaterOutletNodeName, s.get());
+          if((s = temp->name()))
+          {
+            idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HotWaterOutletNodeName, s.get());
+          }
         }
-      }
 
-      /* Double with defaults (not optionals) */
+        /* Double with defaults (not optionals) */
 
-      // N9 , \field Beam Rated Heating Capacity per Beam Length
-      {
-        double value = hc.beamRatedHeatingCapacityperBeamLength();
-        idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamRatedHeatingCapacityperBeamLength, value);
-      }
+        // N9 , \field Beam Rated Heating Capacity per Beam Length
+        {
+          double value = hc.beamRatedHeatingCapacityperBeamLength();
+          idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamRatedHeatingCapacityperBeamLength, value);
+        }
 
-      // N10, \field Beam Rated Heating Room Air Hot Water Temperature Difference
-      {
-        double value = hc.beamRatedHeatingRoomAirHotWaterTemperatureDifference();
-        idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamRatedHeatingRoomAirHotWaterTemperatureDifference, value);
-      }
+        // N10, \field Beam Rated Heating Room Air Hot Water Temperature Difference
+        {
+          double value = hc.beamRatedHeatingRoomAirHotWaterTemperatureDifference();
+          idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamRatedHeatingRoomAirHotWaterTemperatureDifference, value);
+        }
 
-      // N11, \field Beam Rated Hot Water Volume Flow Rate per Beam Length
-      {
-        double value = hc.beamRatedHotWaterVolumeFlowRateperBeamLength();
-        idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamRatedHotWaterVolumeFlowRateperBeamLength, value);
-      }
+        // N11, \field Beam Rated Hot Water Volume Flow Rate per Beam Length
+        {
+          double value = hc.beamRatedHotWaterVolumeFlowRateperBeamLength();
+          idfObject.setDouble(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamRatedHotWaterVolumeFlowRateperBeamLength, value);
+        }
 
-      /* Curves: At this point, I have already checked above that all three curves are defined */
+        /* Curves: At this point, I have already checked above that all three curves are defined */
 
-      // A14, \field Beam Heating Capacity Temperature Difference Modification Factor Curve Name
-      if( auto _curve = translateAndMapModelObject(capModFuncOfTempDiff.get()) ) {
-        idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamHeatingCapacityTemperatureDifferenceModificationFactorCurveName, _curve->name().get());
-      }
+        // A14, \field Beam Heating Capacity Temperature Difference Modification Factor Curve Name
+        if( auto _curve = translateAndMapModelObject(capModFuncOfTempDiff.get()) ) {
+          idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamHeatingCapacityTemperatureDifferenceModificationFactorCurveName, _curve->name().get());
+        }
 
 
-      // A15, \field Beam Heating Capacity Air Flow Modification Factor Curve Name
-      if( auto _curve = translateAndMapModelObject(capModFuncOfSAFlow.get()) ) {
-        idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamHeatingCapacityAirFlowModificationFactorCurveName, _curve->name().get());
-      }
+        // A15, \field Beam Heating Capacity Air Flow Modification Factor Curve Name
+        if( auto _curve = translateAndMapModelObject(capModFuncOfSAFlow.get()) ) {
+          idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamHeatingCapacityAirFlowModificationFactorCurveName, _curve->name().get());
+        }
 
-      // A16, \field Beam Heating Capacity Hot Water Flow Modification Factor Curve Name
-      if( auto _curve = translateAndMapModelObject(capModFuncOfWaterFlow.get()) ) {
-        idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamHeatingCapacityHotWaterFlowModificationFactorCurveName, _curve->name().get());
+        // A16, \field Beam Heating Capacity Hot Water Flow Modification Factor Curve Name
+        if( auto _curve = translateAndMapModelObject(capModFuncOfWaterFlow.get()) ) {
+          idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::BeamHeatingCapacityHotWaterFlowModificationFactorCurveName, _curve->name().get());
+        }
       }
     }
   }

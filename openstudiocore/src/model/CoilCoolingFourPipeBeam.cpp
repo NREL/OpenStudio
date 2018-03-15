@@ -110,7 +110,7 @@ namespace detail {
 
     for( const auto & elem : atuFourPipeBeams )
     {
-      if( boost::optional<CoilCoolingFourPipeBeam> coil = elem.coolingCoil() )
+      if( boost::optional<HVACComponent> coil = elem.coolingCoil() )
       {
         if( coil->handle() == this->handle() )
         {
@@ -130,7 +130,7 @@ namespace detail {
 
     for( const auto & elem : atuFourPipeBeams )
     {
-      if( boost::optional<CoilCoolingFourPipeBeam> coil = elem.coolingCoil() )
+      if( boost::optional<HVACComponent> coil = elem.coolingCoil() )
       {
         if( coil->handle() == this->handle() )
         {
@@ -331,7 +331,7 @@ namespace detail {
 
     for( const auto & elem : atuFourPipeBeams )
     {
-      if( boost::optional<CoilCoolingFourPipeBeam> coil = elem.coolingCoil() )
+      if( boost::optional<HVACComponent> coil = elem.coolingCoil() )
       {
         if( coil->handle() == this->handle() )
         {

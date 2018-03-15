@@ -217,12 +217,12 @@ namespace detail {
   {
     AirTerminalSingleDuctConstantVolumeFourPipeBeam airTerminalCVFourPipeBeamClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
 
-    if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil()) {
+    if (boost::optional<HVACComponent> cc = coolingCoil()) {
       HVACComponent coilCoolingClone = cc->clone(model).cast<HVACComponent>();
       airTerminalCVFourPipeBeamClone.setCoolingCoil(coilCoolingClone);
     }
 
-    if (boost::optional<CoilHeatingFourPipeBeam> hc = heatingCoil()) {
+    if (boost::optional<HVACComponent> hc = heatingCoil()) {
       HVACComponent coilHeatingClone = hc->clone(model).cast<HVACComponent>();
       airTerminalCVFourPipeBeamClone.setHeatingCoil(coilHeatingClone);
     }
@@ -236,11 +236,11 @@ namespace detail {
   std::vector<ModelObject> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::children() const
   {
     std::vector<ModelObject> result;
-    if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil())
+    if (boost::optional<HVACComponent> cc = coolingCoil())
     {
       result.push_back(*cc);
     }
-    if (boost::optional<CoilHeatingFourPipeBeam> hc = heatingCoil())
+    if (boost::optional<HVACComponent> hc = heatingCoil())
     {
       result.push_back(*hc);
     }
@@ -384,11 +384,33 @@ namespace detail {
 
   /* Air Nodes */
   boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::primaryAirInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirInletNodeName);
+    unsigned port = inletPort();
+    boost::optional<ModelObject> mo = connectedObject(port);
+    boost::optional<Node> result;
+    if( mo )
+    {
+      if( boost::optional<Node> node = mo->optionalCast<Node>() )
+      {
+        result = node;
+      }
+    }
+    return result;
   }
 
   boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::primaryAirOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirOutletNodeName);
+    unsigned port = outletPort();
+    boost::optional<ModelObject> mo = connectedObject(port);
+    boost::optional<Node> result;
+
+    if( mo )
+    {
+      if( boost::optional<Node> node = mo->optionalCast<Node>() )
+      {
+        result = node;
+      }
+    }
+
+    return result;
   }
 
 
@@ -396,8 +418,8 @@ namespace detail {
   /* Coils */
 
   /* Cooling Coil */
-  boost::optional<CoilCoolingFourPipeBeam> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::coolingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<CoilCoolingFourPipeBeam>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::CoolingCoilName);
+  boost::optional<HVACComponent> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::coolingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::CoolingCoilName);
   }
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setCoolingCoil(const HVACComponent& coilCoolingFourPipeBeam) {
@@ -411,8 +433,8 @@ namespace detail {
   }
 
   /* Heating Coil */
-  boost::optional<CoilHeatingFourPipeBeam> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::heatingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<CoilHeatingFourPipeBeam>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HeatingCoilName);
+  boost::optional<HVACComponent> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::heatingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::HeatingCoilName);
   }
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setHeatingCoil(const HVACComponent& coilHeatingFourPipeBeam) {
@@ -620,23 +642,28 @@ namespace detail {
   /* Convenience method to return the chilled water PlantLoop */
   boost::optional<PlantLoop> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::chilledWaterPlantLoop() const {
     boost::optional<PlantLoop> plantLoop;
-    if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil()) {
-      plantLoop = cc->plantLoop();
+    if ( boost::optional<HVACComponent> _comp = coolingCoil() ) {
+      if ( boost::optional<CoilCoolingFourPipeBeam> _hc = _comp->optionalCast<CoilCoolingFourPipeBeam>() ) {
+        plantLoop = _hc->plantLoop();
+      }
     }
     return plantLoop;
   }
   boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::chilledWaterInletNode() const {
     boost::optional<Node> node;
-    if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil()) {
-      node = cc->chilledWaterInletNode();
+    if ( boost::optional<HVACComponent> _comp = coolingCoil() ) {
+      if ( boost::optional<CoilCoolingFourPipeBeam> _hc = _comp->optionalCast<CoilCoolingFourPipeBeam>() ) {
+        node = _hc->chilledWaterInletNode();
+      }
     }
     return node;
   }
-
-  boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::chilledWaterOutletNode()const {
+  boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::chilledWaterOutletNode() const {
     boost::optional<Node> node;
-    if (boost::optional<CoilCoolingFourPipeBeam> cc = coolingCoil()) {
-      node = cc->chilledWaterOutletNode();
+    if ( boost::optional<HVACComponent> _comp = coolingCoil() ) {
+      if ( boost::optional<CoilCoolingFourPipeBeam> _hc = _comp->optionalCast<CoilCoolingFourPipeBeam>() ) {
+        node = _hc->chilledWaterOutletNode();
+      }
     }
     return node;
   }
@@ -644,22 +671,28 @@ namespace detail {
   /* Convenience method to return the hot water PlantLoop */
   boost::optional<PlantLoop> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::hotWaterPlantLoop() const {
     boost::optional<PlantLoop> plantLoop;
-    if (boost::optional<CoilHeatingFourPipeBeam> hc = heatingCoil()) {
-      plantLoop = hc->plantLoop();
+    if ( boost::optional<HVACComponent> _comp = heatingCoil() ) {
+      if ( boost::optional<CoilHeatingFourPipeBeam> _hc = _comp->optionalCast<CoilHeatingFourPipeBeam>() ) {
+        plantLoop = _hc->plantLoop();
+      }
     }
     return plantLoop;
   }
   boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::hotWaterInletNode() const {
     boost::optional<Node> node;
-    if (boost::optional<CoilHeatingFourPipeBeam> hc = heatingCoil()) {
-      node = hc->hotWaterInletNode();
+    if ( boost::optional<HVACComponent> _comp = heatingCoil() ) {
+      if ( boost::optional<CoilHeatingFourPipeBeam> _hc = _comp->optionalCast<CoilHeatingFourPipeBeam>() ) {
+        node = _hc->hotWaterInletNode();
+      }
     }
     return node;
   }
   boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::hotWaterOutletNode() const {
     boost::optional<Node> node;
-    if (boost::optional<CoilHeatingFourPipeBeam> hc = heatingCoil()) {
-      node = hc->hotWaterOutletNode();
+    if ( boost::optional<HVACComponent> _comp = heatingCoil() ) {
+      if ( boost::optional<CoilHeatingFourPipeBeam> _hc = _comp->optionalCast<CoilHeatingFourPipeBeam>() ) {
+        node = _hc->hotWaterOutletNode();
+      }
     }
     return node;
   }
@@ -763,7 +796,9 @@ boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam::primaryAi
 }
 
 
-boost::optional<CoilCoolingFourPipeBeam> AirTerminalSingleDuctConstantVolumeFourPipeBeam::coolingCoil() const {
+/* Coils */
+
+boost::optional<HVACComponent> AirTerminalSingleDuctConstantVolumeFourPipeBeam::coolingCoil() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->coolingCoil();
 }
 bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setCoolingCoil(const HVACComponent& coilCoolingFourPipeBeam) {
@@ -771,7 +806,7 @@ bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setCoolingCoil(const HVACC
 }
 
 
-boost::optional<CoilHeatingFourPipeBeam> AirTerminalSingleDuctConstantVolumeFourPipeBeam::heatingCoil() const {
+boost::optional<HVACComponent> AirTerminalSingleDuctConstantVolumeFourPipeBeam::heatingCoil() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl>()->heatingCoil();
 }
 bool AirTerminalSingleDuctConstantVolumeFourPipeBeam::setHeatingCoil(const HVACComponent& coilHeatingFourPipeBeam) {

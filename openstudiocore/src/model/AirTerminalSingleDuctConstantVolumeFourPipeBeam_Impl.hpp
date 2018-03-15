@@ -38,8 +38,7 @@ namespace model {
 class HVACComponent;
 class Schedule;
 class Node;
-class CoilCoolingFourPipeBeam;
-class CoilHeatingFourPipeBeam;
+class HVACComponent;
 class PlantLoop;
 
 namespace detail {
@@ -103,9 +102,9 @@ namespace detail {
     boost::optional<Node> primaryAirInletNode() const;
     boost::optional<Node> primaryAirOutletNode() const;
 
-    boost::optional<CoilCoolingFourPipeBeam> coolingCoil() const;
+    boost::optional<HVACComponent> coolingCoil() const;
 
-    boost::optional<CoilHeatingFourPipeBeam> heatingCoil() const;
+    boost::optional<HVACComponent> heatingCoil() const;
 
     /** Autosizable fields */
 

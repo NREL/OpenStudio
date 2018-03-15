@@ -39,8 +39,7 @@ namespace model {
 class HVACComponent;
 class Schedule;
 class Node;
-class CoilCoolingFourPipeBeam;
-class CoilHeatingFourPipeBeam;
+class HVACComponent;
 class PlantLoop;
 
 namespace detail {
@@ -59,6 +58,8 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeBeam : public Straigh
                                                   HVACComponent& coilCoolingFourPipeBeam,
                                                   HVACComponent& coilHeatingFourPipeBeam);
 
+  /* This constructor does not instantiate any CoilCoolingFourPipeBeam nor CoilHeatingFourPipeBeam. At least one of these two is required
+   * for this object to be ForwardTranslated, so you will have to do it manually and use setCoolingCoil and/or setHeatingCoil */
   AirTerminalSingleDuctConstantVolumeFourPipeBeam(const Model& model);
 
   virtual ~AirTerminalSingleDuctConstantVolumeFourPipeBeam() {}
@@ -82,10 +83,10 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeFourPipeBeam : public Straigh
   boost::optional<Node> primaryAirOutletNode() const;
 
   /* This returns an optional because you can omit the cooling coil if you are modeling a heating-only beam */
-  boost::optional<CoilCoolingFourPipeBeam> coolingCoil() const;
+  boost::optional<HVACComponent> coolingCoil() const;
 
   /* This returns an optional because you can omit the heating coil if you are modeling a cooling-only beam */
-  boost::optional<CoilHeatingFourPipeBeam> heatingCoil() const;
+  boost::optional<HVACComponent> heatingCoil() const;
 
   /** Autosizable fields */
 
