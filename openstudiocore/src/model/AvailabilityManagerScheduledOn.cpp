@@ -69,10 +69,9 @@ namespace detail {
 
   const std::vector<std::string>& AvailabilityManagerScheduledOn_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Availability Manager Scheduled On Control Status");
-    }
+    static std::vector<std::string> result{
+      "Availability Manager Scheduled On Control Status"
+    };
     return result;
   }
 

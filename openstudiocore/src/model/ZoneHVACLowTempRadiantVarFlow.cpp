@@ -141,20 +141,18 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACLowTempRadiantVarFlow_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Zone Radiant HVAC Heating Rate");
-      result.push_back("Zone Radiant HVAC Heating Energy");
-      result.push_back("Zone Radiant HVAC Cooling Rate");
-      result.push_back("Zone Radiant HVAC Cooling Energy");
-      result.push_back("Zone Radiant HVAC Mass Flow Rate");
-      result.push_back("Zone Radiant HVAC Inlet Temperature");
-      result.push_back("Zone Radiant HVAC Outlet Temperature");
-      result.push_back("Zone Radiant HVAC Moisture Condensation Time");
-      result.push_back("Zone Radiant HVAC Heating Fluid Energy");
-      result.push_back("Zone Radiant HVAC Cooling Fluid Energy");
-    }
+    static std::vector<std::string> result{
+      "Zone Radiant HVAC Heating Rate",
+      "Zone Radiant HVAC Heating Energy",
+      "Zone Radiant HVAC Cooling Rate",
+      "Zone Radiant HVAC Cooling Energy",
+      "Zone Radiant HVAC Mass Flow Rate",
+      "Zone Radiant HVAC Inlet Temperature",
+      "Zone Radiant HVAC Outlet Temperature",
+      "Zone Radiant HVAC Moisture Condensation Time",
+      "Zone Radiant HVAC Heating Fluid Energy",
+      "Zone Radiant HVAC Cooling Fluid Energy"
+    };
     return result;
   }
 

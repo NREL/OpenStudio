@@ -84,16 +84,14 @@ namespace detail {
 
   const std::vector<std::string>& WaterHeaterHeatPump_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
+    static std::vector<std::string> result{
       // WaterHeater:HeatPump:PumpedCondenser
-      result.push_back("Water Heater Compressor Part Load Ratio");
-      result.push_back("Water Heater On Cycle Ancillary Electric Power");
-      result.push_back("Water Heater On Cycle Ancillary Electric Energy");
-      result.push_back("Water Heater Off Cycle Ancillary Electric Power");
-      result.push_back("Water Heater Off Cycle Ancillary Electric Energy");
-    }
+      "Water Heater Compressor Part Load Ratio",
+      "Water Heater On Cycle Ancillary Electric Power",
+      "Water Heater On Cycle Ancillary Electric Energy",
+      "Water Heater Off Cycle Ancillary Electric Power",
+      "Water Heater Off Cycle Ancillary Electric Energy"
+    };
     return result;
   }
 

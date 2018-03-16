@@ -77,26 +77,24 @@ namespace detail {
 
   const std::vector<std::string>& PumpConstantSpeed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Pump Electric Power");
-      result.push_back("Pump Electric Energy");
-      result.push_back("Pump Shaft Power");
-      result.push_back("Pump Fluid Heat Gain Rate");
-      result.push_back("Pump Fluid Heat Gain Energy");
-      result.push_back("Pump Outlet Temperature");
-      result.push_back("Pump Mass Flow Rate");
+    static std::vector<std::string> result{
+      "Pump Electric Power",
+      "Pump Electric Energy",
+      "Pump Shaft Power",
+      "Pump Fluid Heat Gain Rate",
+      "Pump Fluid Heat Gain Energy",
+      "Pump Outlet Temperature",
+      "Pump Mass Flow Rate",
       // The Key is the Pump, not the zone, so it's right to report here
       // EnergyPlus/Pumps.cc::GetPumpInput()
       // TODO: Implement this check and make not static above once ModelObject return type has changed
       // if (! p.zone().empty() ) {
-        result.push_back("Pump Zone Total Heating Rate");
-        result.push_back("Pump Zone Total Heating Energy");
-        result.push_back("Pump Zone Convective Heating Rate");
-        result.push_back("Pump Zone Radiative Heating Rate");
+        "Pump Zone Total Heating Rate",
+        "Pump Zone Total Heating Energy",
+        "Pump Zone Convective Heating Rate",
+        "Pump Zone Radiative Heating Rate"
       // }
-    }
+    };
     return result;
   }
 

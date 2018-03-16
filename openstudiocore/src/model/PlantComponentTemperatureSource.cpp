@@ -71,16 +71,14 @@ namespace detail {
 
   const std::vector<std::string>& PlantComponentTemperatureSource_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Plant Temperature Source Component Mass Flow Rate");
-      result.push_back("Plant Temperature Source Component Inlet Temperature");
-      result.push_back("Plant Temperature Source Component Outlet Temperature");
-      result.push_back("Plant Temperature Source Component Source Temperature");
-      result.push_back("Plant Temperature Source Component Heat Transfer Rate");
-      result.push_back("Plant Temperature Source Component Heat Transfer Energy");
-    }
+    static std::vector<std::string> result{
+      "Plant Temperature Source Component Mass Flow Rate",
+      "Plant Temperature Source Component Inlet Temperature",
+      "Plant Temperature Source Component Outlet Temperature",
+      "Plant Temperature Source Component Source Temperature",
+      "Plant Temperature Source Component Heat Transfer Rate",
+      "Plant Temperature Source Component Heat Transfer Energy"
+    };
     return result;
   }
 

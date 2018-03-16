@@ -74,36 +74,34 @@ namespace detail {
 
   const std::vector<std::string>& Lights_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Lights Electric Power");
-      result.push_back("Lights Radiant Heat Gain");
-      result.push_back("Lights Radiant Heating Rate");
-      result.push_back("Lights Visible Radiation Heating Energy");
-      result.push_back("Lights Visible Radiation Heating Rate");
-      result.push_back("Lights Convective Heating Energy");
-      result.push_back("Lights Convective Heating Rate");
-      result.push_back("Lights Return Air Heating Energy");
-      result.push_back("Lights Return Air Heating Rate");
-      result.push_back("Lights Total Heating Energy");
-      result.push_back("Lights Total Heating Rate");
-      result.push_back("Lights Electric Energy");
+    static std::vector<std::string> result{
+      "Lights Electric Power",
+      "Lights Radiant Heat Gain",
+      "Lights Radiant Heating Rate",
+      "Lights Visible Radiation Heating Energy",
+      "Lights Visible Radiation Heating Rate",
+      "Lights Convective Heating Energy",
+      "Lights Convective Heating Rate",
+      "Lights Return Air Heating Energy",
+      "Lights Return Air Heating Rate",
+      "Lights Total Heating Energy",
+      "Lights Total Heating Rate",
+      "Lights Electric Energy"
 
       // Reported in ThermalZone
-      //result.push_back("Zone Lights Electric Power");
-      //result.push_back("Zone Lights Radiant Heating Energy");
-      //result.push_back("Zone Lights Radiant Heating Rate");
-      //result.push_back("Zone Lights Visible Radiation Heating Energy");
-      //result.push_back("Zone Lights Visible Radiation Heating Rate");
-      //result.push_back("Zone Lights Convective Heating Energy");
-      //result.push_back("Zone Lights Convective Heating Rate");
-      //result.push_back("Zone Lights Return Air Heating Energy");
-      //result.push_back("Zone Lights Return Air Heating Rate");
-      //result.push_back("Zone Lights Total Heating Energy");
-      //result.push_back("Zone Lights Total Heating Rate");
-      //result.push_back("Zone Lights Electric Energy");
-    }
+      //"Zone Lights Electric Power",
+      //"Zone Lights Radiant Heating Energy",
+      //"Zone Lights Radiant Heating Rate",
+      //"Zone Lights Visible Radiation Heating Energy",
+      //"Zone Lights Visible Radiation Heating Rate",
+      //"Zone Lights Convective Heating Energy",
+      //"Zone Lights Convective Heating Rate",
+      //"Zone Lights Return Air Heating Energy",
+      //"Zone Lights Return Air Heating Rate",
+      //"Zone Lights Total Heating Energy",
+      //"Zone Lights Total Heating Rate",
+      //"Zone Lights Electric Energy"
+    };
     return result;
   }
 

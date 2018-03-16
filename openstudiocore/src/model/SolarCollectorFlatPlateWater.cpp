@@ -98,15 +98,14 @@ namespace detail {
 
   const std::vector<std::string>& SolarCollectorFlatPlateWater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Solar Collector Incident Angle Modifier");
-      result.push_back("Solar Collector Efficiency");
-      result.push_back("Solar Collector Heat Transfer Rate");
-      result.push_back("Solar Collector Heat Gain Rate");
-      result.push_back("Solar Collector Heat Loss Rate");
-      result.push_back("Solar Collector Heat Transfer Energy");
-    }
+    static std::vector<std::string> result{
+      "Solar Collector Incident Angle Modifier",
+      "Solar Collector Efficiency",
+      "Solar Collector Heat Transfer Rate",
+      "Solar Collector Heat Gain Rate",
+      "Solar Collector Heat Loss Rate",
+      "Solar Collector Heat Transfer Energy"
+    };
     return result;
   }
 

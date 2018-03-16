@@ -143,8 +143,6 @@ AirflowNetworkDetailedOpening_Impl::AirflowNetworkDetailedOpening_Impl(const Air
 const std::vector<std::string>& AirflowNetworkDetailedOpening_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if(result.empty()){
-  }
   return result;
 }
 

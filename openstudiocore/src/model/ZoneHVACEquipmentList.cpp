@@ -68,8 +68,6 @@ ZoneHVACEquipmentList_Impl::ZoneHVACEquipmentList_Impl(const ZoneHVACEquipmentLi
 const std::vector<std::string>& ZoneHVACEquipmentList_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if (result.empty()){
-  }
   return result;
 }
 

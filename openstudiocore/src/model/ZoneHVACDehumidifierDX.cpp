@@ -75,26 +75,24 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACDehumidifierDX_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Zone Dehumidifier Sensible Heating Rate");
-      result.push_back("Zone Dehumidifier Sensible Heating Energy");
-      result.push_back("Zone Dehumidifier Removed Water Mass Flow Rate");
-      result.push_back("Zone Dehumidifier Removed Water Mass");
-      result.push_back("Zone Dehumidifier Electric Power");
-      result.push_back("Zone Dehumidifier Electric Energy");
-      result.push_back("Zone Dehumidifier Off Cycle Parasitic Electric Power");
-      result.push_back("Zone Dehumidifier Off Cycle Parasitic Electric Energy");
-      result.push_back("Zone Dehumidifier Part Load Ratio");
-      result.push_back("Zone Dehumidifier Runtime Fraction");
-      result.push_back("Zone Dehumidifier Outlet Air Temperature");
+    static std::vector<std::string> result{
+      "Zone Dehumidifier Sensible Heating Rate",
+      "Zone Dehumidifier Sensible Heating Energy",
+      "Zone Dehumidifier Removed Water Mass Flow Rate",
+      "Zone Dehumidifier Removed Water Mass",
+      "Zone Dehumidifier Electric Power",
+      "Zone Dehumidifier Electric Energy",
+      "Zone Dehumidifier Off Cycle Parasitic Electric Power",
+      "Zone Dehumidifier Off Cycle Parasitic Electric Energy",
+      "Zone Dehumidifier Part Load Ratio",
+      "Zone Dehumidifier Runtime Fraction",
+      "Zone Dehumidifier Outlet Air Temperature"
       // If Condensate Collection Water Storage Tank Name is specified:
       // Not implemented for now
       // TODO: change if it becomes implemented, and change the "static" above
-      // result.push_back("Zone Dehumidifier Condensate Volume Flow Rate");
-      // result.push_back("Zone Dehumidifier Condensate Volume");
-    }
+      // "Zone Dehumidifier Condensate Volume Flow Rate",
+      // "Zone Dehumidifier Condensate Volume"
+    };
     return result;
   }
 

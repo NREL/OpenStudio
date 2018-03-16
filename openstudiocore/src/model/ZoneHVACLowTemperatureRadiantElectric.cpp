@@ -87,14 +87,12 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACLowTemperatureRadiantElectric_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Zone Radiant HVAC Electric Power");
-      result.push_back("Zone Radiant HVAC Electric Energy");
-      result.push_back("Zone Radiant HVAC Heating Energy");
-      result.push_back("Zone Radiant HVAC Heating Rate");
-    }
+    static std::vector<std::string> result{
+      "Zone Radiant HVAC Electric Power",
+      "Zone Radiant HVAC Electric Energy",
+      "Zone Radiant HVAC Heating Energy",
+      "Zone Radiant HVAC Heating Rate"
+    };
     return result;
   }
 

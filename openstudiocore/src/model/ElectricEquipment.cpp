@@ -74,36 +74,34 @@ namespace detail {
 
   const std::vector<std::string>& ElectricEquipment_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Electric Equipment Electric Power");
-      result.push_back("Electric Equipment Electric Energy");
-      result.push_back("Electric Equipment Radiant Heating Energy");
-      result.push_back("Electric Equipment Radiant Heating Rate");
-      result.push_back("Electric Equipment Convective Heating Energy");
-      result.push_back("Electric Equipment Convective Heating Rate");
-      result.push_back("Electric Equipment Latent Gain Energy");
-      result.push_back("Electric Equipment Latent Gain Rate");
-      result.push_back("Electric Equipment Lost Heat Energy");
-      result.push_back("Electric Equipment Lost Heat Rate");
-      result.push_back("Electric Equipment Total Heating Energy");
-      result.push_back("Electric Equipment Total Heating Rate");
+    static std::vector<std::string> result{
+      "Electric Equipment Electric Power",
+      "Electric Equipment Electric Energy",
+      "Electric Equipment Radiant Heating Energy",
+      "Electric Equipment Radiant Heating Rate",
+      "Electric Equipment Convective Heating Energy",
+      "Electric Equipment Convective Heating Rate",
+      "Electric Equipment Latent Gain Energy",
+      "Electric Equipment Latent Gain Rate",
+      "Electric Equipment Lost Heat Energy",
+      "Electric Equipment Lost Heat Rate",
+      "Electric Equipment Total Heating Energy",
+      "Electric Equipment Total Heating Rate"
 
       // Reported in ThermalZone
-      //result.push_back("Zone Electric Equipment Electric Power");
-      //result.push_back("Zone Electric Equipment Electric Energy");
-      //result.push_back("Zone Electric Equipment Radiant Heating Energy");
-      //result.push_back("Zone Electric Equipment Radiant Heating Rate");
-      //result.push_back("Zone Electric Equipment Convective Heating Energy");
-      //result.push_back("Zone Electric Equipment Convective Heating Rate");
-      //result.push_back("Zone Electric Equipment Latent Gain Energy");
-      //result.push_back("Zone Electric Equipment Latent Gain Rate");
-      //result.push_back("Zone Electric Equipment Lost Heat Energy");
-      //result.push_back("Zone Electric Equipment Lost Heat Rate");
-      //result.push_back("Zone Electric Equipment Total Heating Energy");
-      //result.push_back("Zone Electric Equipment Total Heating Rate");
-    }
+      //"Zone Electric Equipment Electric Power",
+      //"Zone Electric Equipment Electric Energy",
+      //"Zone Electric Equipment Radiant Heating Energy",
+      //"Zone Electric Equipment Radiant Heating Rate",
+      //"Zone Electric Equipment Convective Heating Energy",
+      //"Zone Electric Equipment Convective Heating Rate",
+      //"Zone Electric Equipment Latent Gain Energy",
+      //"Zone Electric Equipment Latent Gain Rate",
+      //"Zone Electric Equipment Lost Heat Energy",
+      //"Zone Electric Equipment Lost Heat Rate",
+      //"Zone Electric Equipment Total Heating Energy",
+      //"Zone Electric Equipment Total Heating Rate"
+    };
     return result;
   }
 

@@ -78,49 +78,47 @@ namespace detail {
   const std::vector<std::string>& CoilCoolingDXMultiSpeed_Impl::outputVariableNames() const
   {
     // TODO: static for now
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Cooling Coil Total Cooling Rate");
-      result.push_back("Cooling Coil Total Cooling Energy");
-      result.push_back("Cooling Coil Sensible Cooling Rate");
-      result.push_back("Cooling Coil Sensible Cooling Energy");
-      result.push_back("Cooling Coil Latent Cooling Rate");
-      result.push_back("Cooling Coil Latent Cooling Energy");
-      result.push_back("Cooling Coil Electric Power");
-      result.push_back("Cooling Coil Electric Energy");
-      result.push_back("Cooling Coil Runtime Fraction");
+    static std::vector<std::string> result{
+      "Cooling Coil Total Cooling Rate",
+      "Cooling Coil Total Cooling Energy",
+      "Cooling Coil Sensible Cooling Rate",
+      "Cooling Coil Sensible Cooling Energy",
+      "Cooling Coil Latent Cooling Rate",
+      "Cooling Coil Latent Cooling Energy",
+      "Cooling Coil Electric Power",
+      "Cooling Coil Electric Energy",
+      "Cooling Coil Runtime Fraction",
 
       // condenserType = [AirCooled, EvaporativelyCooled]
       // if (this->condenserType() == "EvaporativelyCooled") {
-        result.push_back("Cooling Coil Condenser Inlet Temperature");
-        result.push_back("Cooling Coil Evaporative Condenser Water Volume");
-        result.push_back("Cooling Coil Evaporative Condenser Pump Electric Power");
-        result.push_back("Cooling Coil Evaporative Condenser Pump Electric Energy");
-        result.push_back("Cooling Coil Basin Heater Electric Power");
-        result.push_back("Cooling Coil Basin Heater Electric Energy");
-        result.push_back("Cooling Coil Evaporative Condenser Mains Supply Water Volume");
+        "Cooling Coil Condenser Inlet Temperature",
+        "Cooling Coil Evaporative Condenser Water Volume",
+        "Cooling Coil Evaporative Condenser Pump Electric Power",
+        "Cooling Coil Evaporative Condenser Pump Electric Energy",
+        "Cooling Coil Basin Heater Electric Power",
+        "Cooling Coil Basin Heater Electric Energy",
+        "Cooling Coil Evaporative Condenser Mains Supply Water Volume"
       // }
 
       // Storage tank isn't implemented
       // if has storage tank:
-      // result.push_back("Cooling Coil Condensate Volume Flow Rate");
-      // result.push_back("Cooling Coil Condensate Volume");
+      // "Cooling Coil Condensate Volume Flow Rate",
+      // "Cooling Coil Condensate Volume",
       //
 
       // If not part of AirLoopHVAC:UnitaryHeatPump:AirToAir
       // (if part of a heat pump, crankcase heater is reported only for the heating coil):
       // if ( !this->containingHVACComponent().empty() ) {
-      // result.push_back("Cooling Coil Crankcase Heater Electric Power");
-      // result.push_back("Cooling Coil Crankcase Heater Electric Energy");
+      // "Cooling Coil Crankcase Heater Electric Power",
+      // "Cooling Coil Crankcase Heater Electric Energy",
       // }
       //
       // Additional variables for Coil:Cooling:DX:Multispeed:
       // If Fuel Type is not Electricity:
-      // result.push_back("DX Cooling Coil <Fuel Type> Power");
-      // result.push_back("DX Cooling Coil <Fuel Type> Consumption");
+      // "DX Cooling Coil <Fuel Type> Power",
+      // "DX Cooling Coil <Fuel Type> Consumption"
       //
-    }
+    };
     return result;
   }
 

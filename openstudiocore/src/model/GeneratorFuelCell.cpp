@@ -91,28 +91,26 @@ namespace detail {
 
   const std::vector<std::string>& GeneratorFuelCell_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Generator Produced Electric Power");
-      result.push_back("Generator Produced Electric Energy");
-      result.push_back("Generator Produced Thermal Rate");
-      result.push_back("Generator Produced Thermal Energy");
-      result.push_back("Generator Fuel HHV Basis Energy");
-      result.push_back("Generator Fuel HHV Basis Rate");
-      result.push_back("Generator Fuel LHV Basis Energy");
-      result.push_back("Generator Fuel Consumption Rate LHV Basis");
-      result.push_back("FuelCell Heat Loss Rate to Zone");
-      result.push_back("FuelCell Heat Loss Energy to Zone");
-      result.push_back("FuelCell Convection Heat Loss Rate to Zone");
-      result.push_back("FuelCell Radiation Heat Loss Rate to Zone");
+    static std::vector<std::string> result{
+      "Generator Produced Electric Power",
+      "Generator Produced Electric Energy",
+      "Generator Produced Thermal Rate",
+      "Generator Produced Thermal Energy",
+      "Generator Fuel HHV Basis Energy",
+      "Generator Fuel HHV Basis Rate",
+      "Generator Fuel LHV Basis Energy",
+      "Generator Fuel Consumption Rate LHV Basis",
+      "FuelCell Heat Loss Rate to Zone",
+      "FuelCell Heat Loss Energy to Zone",
+      "FuelCell Convection Heat Loss Rate to Zone",
+      "FuelCell Radiation Heat Loss Rate to Zone",
 
       // From FuelSupply object
-      result.push_back("Generator Fuel Compressor Electric Power");
-      result.push_back("Generator Fuel Compressor Electric Energy");
-      result.push_back("Generator Fuel Compressor Skin Heat Loss Rate");
+      "Generator Fuel Compressor Electric Power",
+      "Generator Fuel Compressor Electric Energy",
+      "Generator Fuel Compressor Skin Heat Loss Rate"
 
-    }
+    };
     return result;
   }
 

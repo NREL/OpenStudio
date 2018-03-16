@@ -75,8 +75,6 @@ namespace detail {
   const std::vector<std::string>& ZoneVentilationDesignFlowRate_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty())
-    {
       // Not appropriate: all variables reported at the zone level
       //result.push_back("Zone Ventilation Sensible Heat Loss Energy");
       //result.push_back("Zone Ventilation Sensible Heat Gain Energy");
@@ -93,7 +91,6 @@ namespace detail {
       //result.push_back("Zone Ventilation Air Change Rate");
       //result.push_back("Zone Ventilation Fan Electric Energy");
       //result.push_back("Zone Ventilation Air Inlet Temperature");
-    }
     return result;
   }
 

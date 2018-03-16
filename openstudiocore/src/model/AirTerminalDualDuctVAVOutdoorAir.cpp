@@ -79,12 +79,11 @@ namespace detail {
 
   const std::vector<std::string>& AirTerminalDualDuctVAVOutdoorAir_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Zone Air Terminal Outdoor Air Duct Damper Position");
-      result.push_back("Zone Air Terminal Recirculated Air Duct Damper Position");
-      result.push_back("Zone Air Terminal Outdoor Air Fraction");
-    }
+    static std::vector<std::string> result{
+      "Zone Air Terminal Outdoor Air Duct Damper Position",
+      "Zone Air Terminal Recirculated Air Duct Damper Position",
+      "Zone Air Terminal Outdoor Air Fraction"
+    };
     return result;
   }
 

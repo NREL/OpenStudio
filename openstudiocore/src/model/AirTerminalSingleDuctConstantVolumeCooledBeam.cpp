@@ -86,17 +86,15 @@ namespace detail {
 
 AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-    result.push_back("Zone Air Terminal Beam Sensible Cooling Energy [J]");
-    result.push_back("Zone Air Terminal Beam Sensible Cooling Rate [W]");
-    result.push_back("Zone Air Terminal Supply Air Sensible Cooling Energy [J]");
-    result.push_back("Zone Air Terminal Supply Air Sensible Cooling Rate [W]");
-    result.push_back("Zone Air Terminal Supply Air Sensible Heating Energy [J]");
-    result.push_back("Zone Air Terminal Supply Air Sensible Heating Rate [W]");
-    result.push_back("Zone Air Terminal Beam Chilled Water Energy [J]");
-    }
+    static std::vector<std::string> result{
+    "Zone Air Terminal Beam Sensible Cooling Energy [J]",
+    "Zone Air Terminal Beam Sensible Cooling Rate [W]",
+    "Zone Air Terminal Supply Air Sensible Cooling Energy [J]",
+    "Zone Air Terminal Supply Air Sensible Cooling Rate [W]",
+    "Zone Air Terminal Supply Air Sensible Heating Energy [J]",
+    "Zone Air Terminal Supply Air Sensible Heating Rate [W]",
+    "Zone Air Terminal Beam Chilled Water Energy [J]"
+    };
     return result;
   }
 

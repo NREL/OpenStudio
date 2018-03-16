@@ -479,10 +479,7 @@ boost::optional<int>  LifeCycleCost_Impl::costedThermalZones() const
 const std::vector<std::string>& LifeCycleCost_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if (result.empty())
-  {
     // Not appropriate: no specific variables
-  }
   return result;
 }
 

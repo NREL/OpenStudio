@@ -87,8 +87,6 @@ namespace detail {
   const std::vector<std::string>& AirflowNetworkSurface_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
-    if (result.empty()){
-    }
     return result;
   }
 
@@ -250,7 +248,7 @@ bool AirflowNetworkSurface_Impl::setLeakageComponent(const AirflowNetworkCompone
   return setPointer(OS_AirflowNetworkSurfaceFields::LeakageComponentName, surfaceAirflowLeakage.handle());
 }
 
-bool AirflowNetworkSurface_Impl::setExternalNode(const AirflowNetworkExternalNode& externalNode) 
+bool AirflowNetworkSurface_Impl::setExternalNode(const AirflowNetworkExternalNode& externalNode)
 {
   return setPointer(OS_AirflowNetworkSurfaceFields::ExternalNodeName, externalNode.handle());
 }

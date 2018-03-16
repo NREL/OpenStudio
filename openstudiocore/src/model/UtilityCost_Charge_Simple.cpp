@@ -142,8 +142,6 @@ std::vector<IddObjectType> UtilityCost_Charge_Simple_Impl::allowableChildTypes()
 const std::vector<std::string>& UtilityCost_Charge_Simple_Impl::outputVariableNames() const
 {
   static std::vector<std::string> result;
-  if (result.empty()){
-  }
   return result;
 }
 

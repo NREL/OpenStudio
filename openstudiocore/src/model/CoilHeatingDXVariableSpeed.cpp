@@ -88,31 +88,29 @@ namespace detail {
 
   const std::vector<std::string>& CoilHeatingDXVariableSpeed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Heating Coil Electric Power");
-      result.push_back("Heating Coil Heating Rate");
-      result.push_back("Heating Coil Sensible Heating Rate");
-      result.push_back("Heating Coil Source Side Heat Transfer Rate");
-      result.push_back("Heating Coil Part Load Ratio");
-      result.push_back("Heating Coil Runtime Fraction");
-      result.push_back("Heating Coil Air Mass Flow Rate");
-      result.push_back("Heating Coil Air Inlet Temperature");
-      result.push_back("Heating Coil Air Inlet Humidity Ratio");
-      result.push_back("Heating Coil Air Outlet Temperature");
-      result.push_back("Heating Coil Air Outlet Humidity Ratio");
-      result.push_back("Heating Coil Upper Speed Level");
-      result.push_back("Heating Coil Neighboring Speed Levels Ratio");
-      result.push_back("VSAirtoAirHP Recoverable Waste Heat");
-      result.push_back("Heating Coil Electric Energy");
-      result.push_back("Heating Coil Heating Energy");
-      result.push_back("Heating Coil Source Side Heat Transfer Energy");
-      result.push_back("Heating Coil Defrost Electric Power");
-      result.push_back("Heating Coil Defrost Electric Energy");
-      result.push_back("Heating Coil Crankcase Heater Electric Power");
-      result.push_back("Heating Coil Crankcase Heater Electric Energy");
-    }
+    static std::vector<std::string> result{
+      "Heating Coil Electric Power",
+      "Heating Coil Heating Rate",
+      "Heating Coil Sensible Heating Rate",
+      "Heating Coil Source Side Heat Transfer Rate",
+      "Heating Coil Part Load Ratio",
+      "Heating Coil Runtime Fraction",
+      "Heating Coil Air Mass Flow Rate",
+      "Heating Coil Air Inlet Temperature",
+      "Heating Coil Air Inlet Humidity Ratio",
+      "Heating Coil Air Outlet Temperature",
+      "Heating Coil Air Outlet Humidity Ratio",
+      "Heating Coil Upper Speed Level",
+      "Heating Coil Neighboring Speed Levels Ratio",
+      "VSAirtoAirHP Recoverable Waste Heat",
+      "Heating Coil Electric Energy",
+      "Heating Coil Heating Energy",
+      "Heating Coil Source Side Heat Transfer Energy",
+      "Heating Coil Defrost Electric Power",
+      "Heating Coil Defrost Electric Energy",
+      "Heating Coil Crankcase Heater Electric Power",
+      "Heating Coil Crankcase Heater Electric Energy"
+    };
     return result;
   }
 

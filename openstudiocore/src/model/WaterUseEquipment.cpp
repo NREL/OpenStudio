@@ -72,38 +72,36 @@ namespace detail {
 
   const std::vector<std::string>& WaterUseEquipment_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Water Use Equipment Hot Water Mass Flow Rate");
-      result.push_back("Water Use Equipment Cold Water Mass Flow Rate");
-      result.push_back("Water Use Equipment Total Mass Flow Rate");
-      result.push_back("Water Use Equipment Hot Water Volume Flow Rate");
-      result.push_back("Water Use Equipment Cold Water Volume Flow Rate");
-      result.push_back("Water Use Equipment Total Volume Flow Rate");
-      result.push_back("Water Use Equipment Hot Water Volume");
-      result.push_back("Water Use Equipment Cold Water Volume");
-      result.push_back("Water Use Equipment Total Volume");
-      result.push_back("Water Use Equipment Mains Water Volume");
-      result.push_back("Water Use Equipment Hot Water Temperature");
-      result.push_back("Water Use Equipment Cold Water Temperature");
-      result.push_back("Water Use Equipment Target Water Temperature");
-      result.push_back("Water Use Equipment Mixed Water Temperature");
-      result.push_back("Water Use Equipment Drain Water Temperature");
-      result.push_back("Water Use Equipment Heating Rate");
-      result.push_back("Water Use Equipment Heating Energy");
+    static std::vector<std::string> result{
+      "Water Use Equipment Hot Water Mass Flow Rate",
+      "Water Use Equipment Cold Water Mass Flow Rate",
+      "Water Use Equipment Total Mass Flow Rate",
+      "Water Use Equipment Hot Water Volume Flow Rate",
+      "Water Use Equipment Cold Water Volume Flow Rate",
+      "Water Use Equipment Total Volume Flow Rate",
+      "Water Use Equipment Hot Water Volume",
+      "Water Use Equipment Cold Water Volume",
+      "Water Use Equipment Total Volume",
+      "Water Use Equipment Mains Water Volume",
+      "Water Use Equipment Hot Water Temperature",
+      "Water Use Equipment Cold Water Temperature",
+      "Water Use Equipment Target Water Temperature",
+      "Water Use Equipment Mixed Water Temperature",
+      "Water Use Equipment Drain Water Temperature",
+      "Water Use Equipment Heating Rate",
+      "Water Use Equipment Heating Energy",
 
       // The Key is the name of the Water Use Equipment, not the zone,
       // so it's appropriate to report it here rather than the ThermalZone
       // cf EnergyPlus/WaterUse.cc
-      result.push_back("Water Use Equipment Zone Sensible Heat Gain Rate");
-      result.push_back("Water Use Equipment Zone Sensible Heat Gain Energy");
-      result.push_back("Water Use Equipment Zone Latent Gain Rate");
-      result.push_back("Water Use Equipment Zone Latent Gain Energy");
-      result.push_back("Water Use Equipment Zone Moisture Gain Mass Flow Rate");
-      result.push_back("Water Use Equipment Zone Moisture Gain Mass");
+      "Water Use Equipment Zone Sensible Heat Gain Rate",
+      "Water Use Equipment Zone Sensible Heat Gain Energy",
+      "Water Use Equipment Zone Latent Gain Rate",
+      "Water Use Equipment Zone Latent Gain Energy",
+      "Water Use Equipment Zone Moisture Gain Mass Flow Rate",
+      "Water Use Equipment Zone Moisture Gain Mass"
 
-    }
+    };
     return result;
   }
 
