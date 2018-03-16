@@ -19,7 +19,7 @@ basepath = ARGV[0].gsub("\\", "/")
 
 copyright = "/**********************************************************************\n"
 ruby_copyright = "######################################################################\n"
-File.open(basepath + "/copyright.txt") do |file|
+File.open(basepath + "/../LICENSE.md") do |file|
   while (line = file.gets)
     copyright += "*  " + line
     ruby_copyright += "#  " + line
