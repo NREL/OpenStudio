@@ -29,7 +29,6 @@
 #include "AirTerminalSingleDuctConstantVolumeFourPipeBeam.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl.hpp"
 
-
 #include "CoilCoolingFourPipeBeam.hpp"
 #include "CoilCoolingFourPipeBeam_Impl.hpp"
 #include "CoilHeatingFourPipeBeam.hpp"
@@ -95,7 +94,7 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result{
-      // TODO: pretty sure these applies to all AirTerminals
+      // These applies to all AirTerminals
       "Zone Air Terminal Sensible Heating Energy",
       "Zone Air Terminal Sensible Heating Rate",
       "Zone Air Terminal Sensible Cooling Energy",
@@ -466,9 +465,8 @@ namespace detail {
     return result;
   }
 
-  // TODO: check SQL
   boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizedDesignPrimaryAirVolumeFlowRate() {
-    return getAutosizedValue("TODO_CHECK_SQL Design Primary Air Volume Flow Rate", "m3/s");
+    return getAutosizedValue("Supply Air Flow Rate", "m3/s");
   }
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setDesignPrimaryAirVolumeFlowRate(double designPrimaryAirVolumeFlowRate) {
@@ -498,9 +496,8 @@ namespace detail {
     return result;
   }
 
-  // TODO: Check SQL
   boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizedDesignChilledWaterVolumeFlowRate() {
-    return getAutosizedValue("TODO_CHECK_SQL Design Chilled Water Volume Flow Rate", "m3/s");
+    return getAutosizedValue("Maximum Total Chilled Water Flow Rate", "m3/s");
   }
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setDesignChilledWaterVolumeFlowRate(double designChilledWaterVolumeFlowRate) {
@@ -530,9 +527,8 @@ namespace detail {
     return result;
   }
 
-  // TODO: Check SQL
   boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizedDesignHotWaterVolumeFlowRate() {
-    return getAutosizedValue("TODO_CHECK_SQL Design Hot Water Volume Flow Rate", "m3/s");
+    return getAutosizedValue("Maximum Total Hot Water Flow Rate", "m3/s");
   }
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setDesignHotWaterVolumeFlowRate(double designHotWaterVolumeFlowRate) {
@@ -561,9 +557,8 @@ namespace detail {
     return result;
   }
 
-  // TODO: Check SQL
   boost::optional <double> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::autosizedZoneTotalBeamLength() {
-    return getAutosizedValue("TODO_CHECK_SQL Zone Total Beam Length", "m");
+    return getAutosizedValue("Zone Total Beam Length", "m");
   }
 
   bool AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::setZoneTotalBeamLength(double zoneTotalBeamLength) {
