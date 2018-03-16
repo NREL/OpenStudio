@@ -11847,19 +11847,9 @@ OS:Coil:Heating:FourPipeBeam,
   ,                                       !- Beam Rated Heating Capacity per Beam Length {W/m}
   ,                                       !- Beam Rated Heating Room Air Hot Water Temperature Difference {deltaC}
   ,                                       !- Beam Rated Hot Water Volume Flow Rate per Beam Length {m3/s-m}
-  {5b2168a2-64bc-4213-ba97-f8163b759520}, !- Beam Heating Capacity Temperature Difference Modification Factor Curve Name
+  {208ac920-37b5-4390-ade9-53ee37303287}, !- Beam Heating Capacity Temperature Difference Modification Factor Curve Name
   {bfecbc8c-a298-4ca4-b78a-26051bc5001e}, !- Beam Heating Capacity Air Flow Modification Factor Curve Name
-  {1f9b29ab-ccea-4d4e-9fd2-478aca8471f3}; !- Beam Heating Capacity Hot Water Flow Modification Factor Curve Name
-
-OS:Curve:Linear,
-  {5b2168a2-64bc-4213-ba97-f8163b759520}, !- Handle
-  CapModFuncOfTempDiff 1,                 !- Name
-  0,                                      !- Coefficient1 Constant
-  1,                                      !- Coefficient2 x
-  0,                                      !- Minimum Value of x
-  1.5,                                    !- Maximum Value of x
-  0,                                      !- Minimum Curve Output
-  1.5;                                    !- Maximum Curve Output
+  {d0557227-3232-4798-b2e6-0f8760d0dbdc}; !- Beam Heating Capacity Hot Water Flow Modification Factor Curve Name
 
 OS:Table:MultiVariableLookup,
   {bfecbc8c-a298-4ca4-b78a-26051bc5001e}, !- Handle
@@ -11898,49 +11888,4 @@ OS:Table:MultiVariableLookup,
   1.2857,                                 !- Data 5
   1.0778;                                 !- Data 6
 
-OS:Table:MultiVariableLookup,
-  {1f9b29ab-ccea-4d4e-9fd2-478aca8471f3}, !- Handle
-  CapModFuncOfWaterFlow 1,                !- Name
-  EvaluateCurveToLimits,                  !- Interpolation Method
-  ,                                       !- Number of Interpolation Points
-  Quadratic,                              !- Curve Type
-  ,                                       !- Table Data Format
-  ,                                       !- External File Name
-  ,                                       !- X1 Sort Order
-  ,                                       !- X2 Sort Order
-  ,                                       !- Normalization Reference
-  0,                                      !- Minimum Value of X1
-  1.33,                                   !- Maximum Value of X1
-  ,                                       !- Minimum Value of X2
-  ,                                       !- Maximum Value of X2
-  ,                                       !- Minimum Value of X3
-  ,                                       !- Maximum Value of X3
-  ,                                       !- Minimum Value of X4
-  ,                                       !- Maximum Value of X4
-  ,                                       !- Minimum Value of X5
-  ,                                       !- Maximum Value of X5
-  0,                                      !- Minimum Table Output
-  1.04,                                   !- Maximum Table Output
-  Dimensionless,                          !- Input Unit Type for X1
-  ,                                       !- Input Unit Type for X2
-  ,                                       !- Input Unit Type for X3
-  ,                                       !- Input Unit Type for X4
-  ,                                       !- Input Unit Type for X5
-  Dimensionless,                          !- Output Unit Type
-  1,                                      !- Number of Independent Variables
-  0,                                      !- Data 1
-  0,                                      !- Data 2
-  0.05,                                   !- Data 3
-  0.001,                                  !- Data 4
-  0.33333,                                !- Data 5
-  0.71,                                   !- Data 6
-  0.5,                                    !- Data 7
-  0.85,                                   !- Data 8
-  0.666667,                               !- Data 9
-  0.92,                                   !- Data 10
-  0.833333,                               !- Data 11
-  0.97,                                   !- Data 12
-  1,                                      !- Data 13
-  1,                                      !- Data 14
-  1.333333,                               !- Data 15
-  1.04;                                   !- Data 16
+
