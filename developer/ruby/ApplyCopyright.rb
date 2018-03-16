@@ -67,7 +67,7 @@ files.each do |p|
   File.open(p, "r") do |file|
     # read until end of current copyright
     while (line = file.gets)
-      if not /^[\/\*]/.match(line)
+      if not /^\s?[\/\*]/.match(line)
         if not line.chomp.empty?
           text += line
         end
