@@ -21,8 +21,14 @@ copyright = "/******************************************************************
 ruby_copyright = "######################################################################\n"
 File.open(basepath + "/../LICENSE.md") do |file|
   while (line = file.gets)
-    copyright += ("*  " + line).strip
-    ruby_copyright += ("#  " + line).strip
+    if line.strip.empty?
+      copyright +=  "*" + line
+      ruby_copyright += "#" + line
+    
+    else
+      copyright += "*  " + line
+      ruby_copyright += "#  " + line
+    end
   end
 end
 copyright += "**********************************************************************/\n\n"
