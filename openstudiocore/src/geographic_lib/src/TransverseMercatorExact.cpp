@@ -1,43 +1,31 @@
-/**
- * \file TransverseMercatorExact.cpp
- * \brief Implementation for GeographicLib::TransverseMercatorExact class
- *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
- * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
- *
- * The relevant section of Lee's paper is part V, pp 67--101,
- * <a href="https://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
- * Projections Based On Jacobian Elliptic Functions</a>.
- *
- * The method entails using the Thompson Transverse Mercator as an
- * intermediate projection.  The projections from the intermediate
- * coordinates to [\e phi, \e lam] and [\e x, \e y] are given by elliptic
- * functions.  The inverse of these projections are found by Newton's method
- * with a suitable starting guess.
- *
- * This implementation and notation closely follows Lee, with the following
- * exceptions:
- * <center><table>
- * <tr><th>Lee    <th>here    <th>Description
- * <tr><td>x/a    <td>xi      <td>Northing (unit Earth)
- * <tr><td>y/a    <td>eta     <td>Easting (unit Earth)
- * <tr><td>s/a    <td>sigma   <td>xi + i * eta
- * <tr><td>y      <td>x       <td>Easting
- * <tr><td>x      <td>y       <td>Northing
- * <tr><td>k      <td>e       <td>eccentricity
- * <tr><td>k^2    <td>mu      <td>elliptic function parameter
- * <tr><td>k'^2   <td>mv      <td>elliptic function complementary parameter
- * <tr><td>m      <td>k       <td>scale
- * <tr><td>zeta   <td>zeta    <td>complex longitude = Mercator = chi in paper
- * <tr><td>s      <td>sigma   <td>complex GK = zeta in paper
- * </table></center>
- *
- * Minor alterations have been made in some of Lee's expressions in an
- * attempt to control round-off.  For example atanh(sin(phi)) is replaced by
- * asinh(tan(phi)) which maintains accuracy near phi = pi/2.  Such changes
- * are noted in the code.
- **********************************************************************/
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include <GeographicLib/TransverseMercatorExact.hpp>
 

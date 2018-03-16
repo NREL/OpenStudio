@@ -1,43 +1,31 @@
-/**
- * \file TransverseMercator.cpp
- * \brief Implementation for GeographicLib::TransverseMercator class
- *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
- * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
- *
- * This implementation follows closely
- * <a href="http://www.jhs-suositukset.fi/suomi/jhs154"> JHS 154, ETRS89 -
- * j&auml;rjestelm&auml;&auml;n liittyv&auml;t karttaprojektiot,
- * tasokoordinaatistot ja karttalehtijako</a> (Map projections, plane
- * coordinates, and map sheet index for ETRS89), published by JUHTA, Finnish
- * Geodetic Institute, and the National Land Survey of Finland (2006).
- *
- * The relevant section is available as the 2008 PDF file
- * http://docs.jhs-suositukset.fi/jhs-suositukset/JHS154/JHS154_liite1.pdf
- *
- * This is a straight transcription of the formulas in this paper with the
- * following exceptions:
- *  - use of 6th order series instead of 4th order series.  This reduces the
- *    error to about 5nm for the UTM range of coordinates (instead of 200nm),
- *    with a speed penalty of only 1%;
- *  - use Newton's method instead of plain iteration to solve for latitude in
- *    terms of isometric latitude in the Reverse method;
- *  - use of Horner's representation for evaluating polynomials and Clenshaw's
- *    method for summing trigonometric series;
- *  - several modifications of the formulas to improve the numerical accuracy;
- *  - evaluating the convergence and scale using the expression for the
- *    projection or its inverse.
- *
- * If the preprocessor variable GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER is set
- * to an integer between 4 and 8, then this specifies the order of the series
- * used for the forward and reverse transformations.  The default value is 6.
- * (The series accurate to 12th order is given in \ref tmseries.)
- *
- * Other equivalent implementations are given in
- *  - http://www.ign.fr/DISPLAY/000/526/702/5267021/NTG_76.pdf
- *  - http://www.lantmateriet.se/upload/filer/kartor/geodesi_gps_och_detaljmatning/geodesi/Formelsamling/Gauss_Conformal_Projection.pdf
- **********************************************************************/
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include <GeographicLib/TransverseMercator.hpp>
 
