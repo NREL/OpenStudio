@@ -37,14 +37,18 @@ ruby_copyright += "#############################################################
 # first do c++
 
 # exceptions are files that are not part of OpenStudio
-exceptions = [basepath + "/src/boost-log/",
-              basepath + "/src/qwt/",
-              basepath + "/src/gtest/",
-              basepath + "/src/orm/",
+exceptions = [basepath + "/src/geographic_lib/",
+              basepath + "/src/google_test/",
+              basepath + "/src/install_utility/",
+              basepath + "/src/jsoncpp/",
+              basepath + "/src/nano/",
+              basepath + "/src/polypartition/",
+              basepath + "/src/qtwinmigrate/",
+              basepath + "/src/qwt/",    
+              basepath + "/src/sqlite/",       
+              basepath + "/src/zlib/",              
               basepath + "/src/utilities/sql/Sqlite3.c",
               basepath + "/src/utilities/sql/Sqlite3.h",
-              basepath + "/src/editor/treemodel.h",
-              basepath + "/src/editor/treemodel.cpp",
               "mainpage.hpp"]
 
 # glob for hpp and cpp
