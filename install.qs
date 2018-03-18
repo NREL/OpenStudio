@@ -27,6 +27,9 @@ Controller.prototype.ComponentSelectionPageCallback = function () {
 }
 
 Controller.prototype.TargetDirectoryPageCallback = function () {
+  // set install directory if needed
+  //var widget = gui.currentPageWidget();
+  //widget.TargetDirectoryLineEdit.setText("c:\\openstudio")
   gui.clickButton(buttons.NextButton);
 }
 
