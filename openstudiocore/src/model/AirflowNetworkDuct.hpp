@@ -30,7 +30,7 @@
 #define MODEL_AIRFLOWNETWORKDUCT_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+#include "AirflowNetworkComponent.hpp"
 
 namespace openstudio {
 
@@ -43,7 +43,7 @@ namespace detail {
 } // detail
 
 /** AirflowNetworkDuct is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetwork:Duct'. */
-class MODEL_API AirflowNetworkDuct : public ModelObject {
+class MODEL_API AirflowNetworkDuct : public AirflowNetworkComponent {
  public:
   /** @name Constructors and Destructors */
   //@{

@@ -44,7 +44,7 @@ namespace detail {
   AirflowNetworkDuct_Impl::AirflowNetworkDuct_Impl(const IdfObject& idfObject,
                                                                                              Model_Impl* model,
                                                                                              bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : AirflowNetworkComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkDuct::iddObjectType());
   }
@@ -52,7 +52,7 @@ namespace detail {
   AirflowNetworkDuct_Impl::AirflowNetworkDuct_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                              Model_Impl* model,
                                                                                              bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AirflowNetworkDuct::iddObjectType());
   }
@@ -60,7 +60,7 @@ namespace detail {
   AirflowNetworkDuct_Impl::AirflowNetworkDuct_Impl(const AirflowNetworkDuct_Impl& other,
                                                                                              Model_Impl* model,
                                                                                              bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AirflowNetworkDuct_Impl::outputVariableNames() const
@@ -260,7 +260,7 @@ namespace detail {
 } // detail
 
 AirflowNetworkDuct::AirflowNetworkDuct(const Model& model)
-  : ModelObject(AirflowNetworkDuct::iddObjectType(),model)
+  : AirflowNetworkComponent(AirflowNetworkDuct::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkDuct_Impl>());
 
@@ -426,7 +426,7 @@ void AirflowNetworkDuct::resetOverallMoistureTransmittanceCoefficientfromAirtoAi
 
 /// @cond
 AirflowNetworkDuct::AirflowNetworkDuct(std::shared_ptr<detail::AirflowNetworkDuct_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkComponent(impl)
 {}
 /// @endcond
 

@@ -52,7 +52,7 @@ namespace detail {
   AirflowNetworkFan_Impl::AirflowNetworkFan_Impl(const IdfObject& idfObject,
                                                  Model_Impl* model,
                                                  bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : AirflowNetworkComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkFan::iddObjectType());
   }
@@ -60,7 +60,7 @@ namespace detail {
   AirflowNetworkFan_Impl::AirflowNetworkFan_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                  Model_Impl* model,
                                                  bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AirflowNetworkFan::iddObjectType());
   }
@@ -68,7 +68,7 @@ namespace detail {
   AirflowNetworkFan_Impl::AirflowNetworkFan_Impl(const AirflowNetworkFan_Impl& other,
                                                  Model_Impl* model,
                                                  bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AirflowNetworkFan_Impl::outputVariableNames() const
@@ -105,7 +105,7 @@ namespace detail {
 } // detail
 
 AirflowNetworkFan::AirflowNetworkFan(const Model& model, const Handle &handle)
-  : ModelObject(AirflowNetworkFan::iddObjectType(), model)
+  : AirflowNetworkComponent(AirflowNetworkFan::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkFan_Impl>());
   bool ok = getImpl<detail::AirflowNetworkFan_Impl>()->setPointer(OS_AirflowNetworkFanFields::FanName, handle);
@@ -139,7 +139,7 @@ void AirflowNetworkFan::resetFan()
 
 /// @cond
 AirflowNetworkFan::AirflowNetworkFan(std::shared_ptr<detail::AirflowNetworkFan_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkComponent(impl)
 {}
 /// @endcond
 

@@ -48,7 +48,7 @@ namespace detail {
   AirflowNetworkEquivalentDuct_Impl::AirflowNetworkEquivalentDuct_Impl(const IdfObject& idfObject,
                                                                        Model_Impl* model,
                                                                        bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : AirflowNetworkComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkEquivalentDuct::iddObjectType());
   }
@@ -56,7 +56,7 @@ namespace detail {
   AirflowNetworkEquivalentDuct_Impl::AirflowNetworkEquivalentDuct_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                        Model_Impl* model,
                                                                        bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AirflowNetworkEquivalentDuct::iddObjectType());
   }
@@ -64,7 +64,7 @@ namespace detail {
   AirflowNetworkEquivalentDuct_Impl::AirflowNetworkEquivalentDuct_Impl(const AirflowNetworkEquivalentDuct_Impl& other,
                                                                        Model_Impl* model,
                                                                        bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AirflowNetworkEquivalentDuct_Impl::outputVariableNames() const
@@ -188,7 +188,7 @@ namespace detail {
 } // detail
 
 AirflowNetworkEquivalentDuct::AirflowNetworkEquivalentDuct(const Model& model, double length, double diameter, const Handle &handle)
-  : ModelObject(AirflowNetworkEquivalentDuct::iddObjectType(),model)
+  : AirflowNetworkComponent(AirflowNetworkEquivalentDuct::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkEquivalentDuct_Impl>());
   bool ok = getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->setPointer(OS_AirflowNetworkEquivalentDuctFields::ComponentName, handle);
@@ -251,7 +251,7 @@ void AirflowNetworkEquivalentDuct::resetComponent()
 
 /// @cond
 AirflowNetworkEquivalentDuct::AirflowNetworkEquivalentDuct(std::shared_ptr<detail::AirflowNetworkEquivalentDuct_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkComponent(impl)
 {}
 /// @endcond
 

@@ -30,7 +30,7 @@
 #define MODEL_AIRFLOWNETWORKEQUIVALENTDUCT_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject_Impl.hpp"
+#include "AirflowNetworkComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -39,8 +39,8 @@ class StraightComponent;
 
 namespace detail {
 
-  /** AirflowNetworkEquivalentDuct_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkEquivalentDuct.*/
-  class MODEL_API AirflowNetworkEquivalentDuct_Impl : public ModelObject_Impl {
+  /** AirflowNetworkEquivalentDuct_Impl is a AirflowNetworkComponent_Impl that is the implementation class for AirflowNetworkEquivalentDuct.*/
+  class MODEL_API AirflowNetworkEquivalentDuct_Impl : public AirflowNetworkComponent_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
