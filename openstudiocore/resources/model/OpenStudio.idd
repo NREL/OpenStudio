@@ -29727,7 +29727,11 @@ OS:AirflowNetworkFan,
   A1, \field Handle
       \type handle
       \required-field
-  A2; \field Fan Name
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference AirflowNetworkComponentNames
+  A3; \field Fan Name
       \required-field
       \type object-list
       \object-list FansCVandOnOffandVAV
@@ -29739,7 +29743,11 @@ OS:AirflowNetworkEquivalentDuct,
   A1, \field Handle
       \type handle
       \required-field
-  A2, \field Component Name
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference AirflowNetworkComponentNames
+  A3, \field Component Name
       \required-field
       \type object-list
       \object-list AFNCoilNames
