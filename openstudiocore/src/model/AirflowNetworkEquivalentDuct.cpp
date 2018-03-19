@@ -153,6 +153,11 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<ModelObject> AirflowNetworkEquivalentDuct_Impl::hvacComponent() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_AirflowNetworkEquivalentDuctFields::ComponentName);
+  }
+
   double AirflowNetworkEquivalentDuct_Impl::airPathLength() const
   {
     boost::optional<double> value = getDouble(OS_AirflowNetworkEquivalentDuctFields::AirPathLength,true);
@@ -222,6 +227,11 @@ boost::optional<std::string> AirflowNetworkEquivalentDuct::heatExchangerObjectTy
 boost::optional<std::string> AirflowNetworkEquivalentDuct::terminalUnitObjectType() const
 {
   return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->terminalUnitObjectType();
+}
+
+boost::optional<ModelObject> AirflowNetworkEquivalentDuct::hvacComponent() const
+{
+  return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->hvacComponent();
 }
 
 double AirflowNetworkEquivalentDuct::airPathLength() const

@@ -83,6 +83,7 @@ namespace detail {
     boost::optional<std::string> coilObjectType() const;
     boost::optional<std::string> heatExchangerObjectType() const;
     boost::optional<std::string> terminalUnitObjectType() const;
+    boost::optional<ModelObject> hvacComponent() const;
 
     double airPathLength() const;
 

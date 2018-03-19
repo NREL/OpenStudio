@@ -61,8 +61,8 @@ class MODEL_API AirflowNetworkComponent : public ModelObject
   //** Returns the outlet port. **/
   //unsigned outletPort();
 
-  //** Returns the optional ModelObject connected to the inlet port. **/
-  //boost::optional<ModelObject> inletModelObject();
+  //** Returns the optional ModelObject that this component represents. **/
+  virtual boost::optional<ModelObject> hvacComponent() const;
 
   //** Returns the optional ModelObject connected to the outlet port. **/
   //boost::optional<ModelObject> outletModelObject();

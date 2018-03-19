@@ -69,6 +69,7 @@ class MODEL_API AirflowNetworkFan : public AirflowNetworkComponent
   boost::optional<FanConstantVolume> fanConstantVolume() const;
   boost::optional<FanVariableVolume> fanVariableVolume() const;
   boost::optional<FanOnOff> fanOnOff() const;
+  boost::optional<ModelObject> hvacComponent() const;
 
   //@}
   /** @name Setters */

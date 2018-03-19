@@ -96,6 +96,11 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<FanOnOff>(OS_AirflowNetworkFanFields::FanName);
   }
 
+  boost::optional<ModelObject> AirflowNetworkFan_Impl::hvacComponent() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_AirflowNetworkFanFields::FanName);
+  }
+
   void AirflowNetworkFan_Impl::resetFan()
   {
     bool result = setString(OS_AirflowNetworkFanFields::FanName, "");
@@ -130,6 +135,11 @@ boost::optional<FanVariableVolume> AirflowNetworkFan::fanVariableVolume() const
 boost::optional<FanOnOff> AirflowNetworkFan::fanOnOff() const
 {
   return getImpl<detail::AirflowNetworkFan_Impl>()->fanOnOff();
+}
+
+boost::optional<ModelObject> AirflowNetworkFan::hvacComponent() const
+{
+  return getImpl<detail::AirflowNetworkFan_Impl>()->hvacComponent();
 }
 
 void AirflowNetworkFan::resetFan()

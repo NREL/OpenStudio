@@ -85,6 +85,7 @@ namespace detail {
     boost::optional<FanConstantVolume> fanConstantVolume() const;
     boost::optional<FanVariableVolume> fanVariableVolume() const;
     boost::optional<FanOnOff> fanOnOff() const;
+    boost::optional<ModelObject> hvacComponent() const;
 
     //@}
     /** @name Setters */

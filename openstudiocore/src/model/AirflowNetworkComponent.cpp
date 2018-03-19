@@ -228,22 +228,12 @@ AirflowNetworkComponent::AirflowNetworkComponent(std::shared_ptr<detail::Airflow
   : ModelObject(p)
 {}
 
+OptionalModelObject AirflowNetworkComponent::hvacComponent() const
+{
+  return boost::none;
+}
+
 /*
-unsigned AirflowNetworkComponent::inletPort()
-{
-  return getImpl<detail::AirflowNetworkComponent_Impl>()->inletPort();
-}
-
-unsigned AirflowNetworkComponent::outletPort()
-{
-  return getImpl<detail::AirflowNetworkComponent_Impl>()->outletPort();
-}
-
-OptionalModelObject AirflowNetworkComponent::inletModelObject()
-{
-  return getImpl<detail::AirflowNetworkComponent_Impl>()->inletModelObject();
-}
-
 OptionalModelObject AirflowNetworkComponent::outletModelObject()
 {
   return getImpl<detail::AirflowNetworkComponent_Impl>()->outletModelObject();
