@@ -572,10 +572,15 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDistributio
   idfObject.setString(AirflowNetwork_Distribution_LinkageFields::Node2Name, modelObject.node2().name().get());
 
   AirflowNetworkComponent component = modelObject.component();
-  if (true) {
-    idfObject.setString(AirflowNetwork_Distribution_LinkageFields::ComponentName, modelObject.component().name().get());
-  } else {
-    idfObject.setString(AirflowNetwork_Distribution_LinkageFields::ComponentName, modelObject.component().hvacComponent().get().name().get());
+  switch (component.iddObject().type().value()) {
+  case openstudio::IddObjectType::OS_AirflowNetworkFan:
+  case openstudio::IddObjectType::OS_AirflowNetworkEquivalentDuct:
+    { ModelObject obj = component.hvacComponent().get(); }
+    idfObject.setString(AirflowNetwork_Distribution_LinkageFields::ComponentName, component.hvacComponent().get().name().get());
+    break;
+  default:
+    idfObject.setString(AirflowNetwork_Distribution_LinkageFields::ComponentName, component.name().get());
+    break;
   }
 
   if (modelObject.thermalZone()) {

@@ -68,6 +68,7 @@ TEST_F(ModelFixture, AirflowNetwork_EquivalentDuct)
   // Test component here?
 
   EXPECT_TRUE(link.setComponent(coolingComponent));
+  EXPECT_TRUE(link.component().hvacComponent());
 }
 
 
