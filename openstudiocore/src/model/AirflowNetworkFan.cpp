@@ -137,11 +137,6 @@ boost::optional<FanOnOff> AirflowNetworkFan::fanOnOff() const
   return getImpl<detail::AirflowNetworkFan_Impl>()->fanOnOff();
 }
 
-boost::optional<ModelObject> AirflowNetworkFan::hvacComponent() const
-{
-  return getImpl<detail::AirflowNetworkFan_Impl>()->hvacComponent();
-}
-
 void AirflowNetworkFan::resetFan()
 {
   getImpl<detail::AirflowNetworkFan_Impl>()->resetFan();

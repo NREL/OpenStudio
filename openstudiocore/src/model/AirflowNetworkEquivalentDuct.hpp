@@ -77,8 +77,6 @@ class MODEL_API AirflowNetworkEquivalentDuct : public AirflowNetworkComponent {
   boost::optional<std::string> heatExchangerObjectType() const;
   boost::optional<std::string> terminalUnitObjectType() const;
 
-  boost::optional<ModelObject> hvacComponent() const;
-
   double airPathLength() const;
 
   double airPathHydraulicDiameter() const;

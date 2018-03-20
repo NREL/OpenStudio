@@ -62,7 +62,7 @@ class MODEL_API AirflowNetworkComponent : public ModelObject
   //unsigned outletPort();
 
   //** Returns the optional ModelObject that this component represents. **/
-  virtual boost::optional<ModelObject> hvacComponent() const;
+  boost::optional<ModelObject> hvacComponent() const;
 
   //** Returns the optional ModelObject connected to the outlet port. **/
   //boost::optional<ModelObject> outletModelObject();
@@ -85,7 +85,7 @@ class MODEL_API AirflowNetworkComponent : public ModelObject
 
   friend class openstudio::IdfObject;
 
-  /// @cond 
+  /// @cond
 
   typedef detail::AirflowNetworkComponent_Impl ImplType;
 
@@ -95,7 +95,7 @@ class MODEL_API AirflowNetworkComponent : public ModelObject
 
   REGISTER_LOGGER("openstudio.model.AirflowNetworkComponent");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

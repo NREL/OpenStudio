@@ -71,6 +71,8 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
+    virtual boost::optional<ModelObject> hvacComponent() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -85,7 +87,6 @@ namespace detail {
     boost::optional<FanConstantVolume> fanConstantVolume() const;
     boost::optional<FanVariableVolume> fanVariableVolume() const;
     boost::optional<FanOnOff> fanOnOff() const;
-    boost::optional<ModelObject> hvacComponent() const;
 
     //@}
     /** @name Setters */

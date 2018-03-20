@@ -229,11 +229,6 @@ boost::optional<std::string> AirflowNetworkEquivalentDuct::terminalUnitObjectTyp
   return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->terminalUnitObjectType();
 }
 
-boost::optional<ModelObject> AirflowNetworkEquivalentDuct::hvacComponent() const
-{
-  return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->hvacComponent();
-}
-
 double AirflowNetworkEquivalentDuct::airPathLength() const
 {
   return getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->airPathLength();

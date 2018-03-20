@@ -57,22 +57,28 @@ AirflowNetworkComponent_Impl::AirflowNetworkComponent_Impl(IddObjectType type, M
 
 AirflowNetworkComponent_Impl::AirflowNetworkComponent_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : ModelObject_Impl(idfObject, model, keepHandle)
-{ 
+{
 }
 
 AirflowNetworkComponent_Impl::AirflowNetworkComponent_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other, 
-    Model_Impl* model, 
+    const openstudio::detail::WorkspaceObject_Impl& other,
+    Model_Impl* model,
     bool keepHandle)
   : ModelObject_Impl(other,model,keepHandle)
 {
 }
 
 AirflowNetworkComponent_Impl::AirflowNetworkComponent_Impl(const AirflowNetworkComponent_Impl& other,
-                                               Model_Impl* model, 
+                                               Model_Impl* model,
                                                bool keepHandles)
   : ModelObject_Impl(other,model,keepHandles)
 {
+}
+
+
+boost::optional<ModelObject> AirflowNetworkComponent_Impl::hvacComponent() const
+{
+  return boost::none;
 }
 
 /*
@@ -159,7 +165,7 @@ std::vector<HVACComponent> AirflowNetworkComponent_Impl::edges(const boost::opti
 
 bool AirflowNetworkComponent_Impl::addToNode(Node & node)
 {
-  Model _model = node.model(); 
+  Model _model = node.model();
   ModelObject thisModelObject = getObject<ModelObject>();
   auto t_loop = node.loop();
   auto t_oaSystem = node.airLoopHVACOutdoorAirSystem();
@@ -209,8 +215,8 @@ ModelObject AirflowNetworkComponent_Impl::clone(Model model) const
 {
   AirflowNetworkComponent mo =  HVACComponent_Impl::clone( model ).cast<AirflowNetworkComponent>();
 
-  mo.setString(mo.inletPort(),""); 
-  mo.setString(mo.outletPort(),""); 
+  mo.setString(mo.inletPort(),"");
+  mo.setString(mo.outletPort(),"");
 
   return mo;
 }
@@ -222,7 +228,7 @@ AirflowNetworkComponent::AirflowNetworkComponent(IddObjectType type,const Model&
   : ModelObject(type,model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkComponent_Impl>());
-}     
+}
 
 AirflowNetworkComponent::AirflowNetworkComponent(std::shared_ptr<detail::AirflowNetworkComponent_Impl> p)
   : ModelObject(p)
@@ -230,7 +236,7 @@ AirflowNetworkComponent::AirflowNetworkComponent(std::shared_ptr<detail::Airflow
 
 OptionalModelObject AirflowNetworkComponent::hvacComponent() const
 {
-  return boost::none;
+  return getImpl<detail::AirflowNetworkComponent_Impl>()->hvacComponent();
 }
 
 /*
