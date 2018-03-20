@@ -30324,6 +30324,7 @@ OS:PlantComponent:UserDefined,
       \required-field
       \type alpha
       \reference ConnectionObject
+      \reference AllObjects
   A3, \field Main Model Program Calling Manager Name
       \type object-list
       \object-list ErlProgramCallingManagerNames
