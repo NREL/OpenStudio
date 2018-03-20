@@ -66,10 +66,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirflowNetworkFanLinkage)
 
   AirflowNetworkSimulationControl control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
 
-  //Node node0(model);
+  Node node0(model);
   //Node node1(model);
 
-  AirflowNetworkDistributionNode afnnode0(model); // = node0.getAirflowNetworkDistributionNode();
+  AirflowNetworkDistributionNode afnnode0 = node0.getAirflowNetworkDistributionNode();
   AirflowNetworkDistributionNode afnnode1(model); // = node1.getAirflowNetworkDistributionNode();
 
   CoilCoolingDXSingleSpeed coilCooling(model);
