@@ -497,7 +497,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkEquivalentD
     // Coil
     IdfObject idfObject(IddObjectType::AirflowNetwork_Distribution_Component_Coil);
     m_idfObjects.push_back(idfObject);
-    idfObject.setString(AirflowNetwork_Distribution_Component_CoilFields::CoilName, modelObject.nameString());
+    idfObject.setString(AirflowNetwork_Distribution_Component_CoilFields::CoilName, modelObject.straightComponent().get().nameString());
     idfObject.setString(AirflowNetwork_Distribution_Component_CoilFields::CoilObjectType, opttype.get());
     idfObject.setDouble(AirflowNetwork_Distribution_Component_CoilFields::AirPathLength, modelObject.airPathLength());
     idfObject.setDouble(AirflowNetwork_Distribution_Component_CoilFields::AirPathHydraulicDiameter, modelObject.airPathHydraulicDiameter());

@@ -49,6 +49,20 @@
 #include "../../model/AirflowNetworkFan_Impl.hpp"
 #include "../../model/FanConstantVolume.hpp"
 #include "../../model/FanConstantVolume_Impl.hpp"
+#include "../../model/CoilHeatingGas.hpp"
+#include "../../model/CoilHeatingGas_Impl.hpp"
+#include "../../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../../model/SetpointManagerSingleZoneReheat.hpp"
+#include "../../model/SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/AirloopHVAC.hpp"
+#include "../../model/AirloopHVAC_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -59,6 +73,49 @@
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
+
+Model createModelWithSimpleAirLoop(){
+
+  // Generate the example Model
+  Model m = openstudio::model::exampleModel();
+
+  // Remove the existing loop
+  AirLoopHVAC example_loop = m.getModelObjects<AirLoopHVAC>()[0];
+  example_loop.remove();
+
+  AirLoopHVAC a(m);
+
+  FanConstantVolume fan(m);
+  Node outletNode = a.supplyOutletNode();
+  fan.addToNode(outletNode);
+  fan.setName("AirLoopHVAC Supply Fan");
+
+  CoilCoolingDXSingleSpeed coilCooling(m);
+  coilCooling.addToNode(outletNode);
+
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
+  CoilHeatingGas coilHeatingGas(m, alwaysOn);
+  coilHeatingGas.addToNode(outletNode);
+
+  SetpointManagerSingleZoneReheat setpointMSZR(m);
+
+  auto node1 = coilHeatingGas.outletModelObject().get();// .to_Node.get
+  //setpointMSZR.addToNode(node1);
+
+  AirTerminalSingleDuctUncontrolled terminal(m, alwaysOn);
+
+  a.addBranchForHVACComponent(terminal);
+
+  // Get the single thermal Zone in the model
+  ThermalZone z = m.getModelObjects<ThermalZone>()[0];
+
+  a.addBranchForZone(z);
+  auto outlet_node = a.supplyOutletNode();
+  setpointMSZR.setControlZone(z);
+
+  return m;
+
+}
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_AirflowNetworkFanLinkage)
 {
@@ -91,6 +148,63 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirflowNetworkFanLinkage)
   ASSERT_EQ(1u, links.size());
 
   EXPECT_EQ(std::string("Airflow Network Distribution Linkage 1"), links[0].getString(0));
+
+}
+
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkEquivalentDuct)
+{
+  Model model = createModelWithSimpleAirLoop();
+
+  std::vector<CoilHeatingGas> heatingCoils = model.getConcreteModelObjects<CoilHeatingGas>();
+  ASSERT_EQ(1, heatingCoils.size());
+
+  std::vector<CoilCoolingDXSingleSpeed> coolingCoils = model.getConcreteModelObjects<CoilCoolingDXSingleSpeed>();
+  ASSERT_EQ(1, coolingCoils.size());
+
+  AirflowNetworkSimulationControl control = model.getUniqueModelObject<AirflowNetworkSimulationControl>();
+
+  AirflowNetworkEquivalentDuct cool = coolingCoils[0].getAirflowNetworkEquivalentDuct(0.1, 0.1);
+  ASSERT_TRUE(cool.straightComponent());
+  EXPECT_TRUE(cool.straightComponent().get().optionalCast<CoilCoolingDXSingleSpeed>());
+  EXPECT_EQ(coolingCoils[0], cool.straightComponent().get().optionalCast<CoilCoolingDXSingleSpeed>().get());
+  ASSERT_TRUE(cool.coilObjectType());
+  EXPECT_EQ(std::string("Coil:Cooling:DX:SingleSpeed"), cool.coilObjectType().get());
+
+  AirflowNetworkEquivalentDuct eqd = heatingCoils[0].getAirflowNetworkEquivalentDuct(0.1, 0.1);
+
+  auto comp = eqd.straightComponent();
+  ASSERT_TRUE(comp);
+  auto opt = comp.get().optionalCast<CoilHeatingGas>();
+  auto val = comp.get().iddObjectType().value();
+  ASSERT_TRUE(opt);
+  EXPECT_EQ(IddObjectType::OS_Coil_Heating_Gas, val);
+  ASSERT_TRUE(eqd.coilObjectType());
+  EXPECT_EQ(std::string("Coil:Heating:Fuel"), eqd.coilObjectType());
+
+  AirflowNetworkDistributionNode node0 = coolingCoils[0].inletModelObject().get().cast<Node>().getAirflowNetworkDistributionNode();
+  AirflowNetworkDistributionNode node1 = coolingCoils[0].outletModelObject().get().cast<Node>().getAirflowNetworkDistributionNode();
+
+  AirflowNetworkDistributionLinkage link(model, node0, node1, cool);
+
+  EXPECT_EQ(cool, link.component());
+  ASSERT_TRUE(link.component().hvacComponent());
+  EXPECT_EQ(coolingCoils[0], link.component().hvacComponent().get());
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> coilws = workspace.getObjectsByType(IddObjectType::AirflowNetwork_Distribution_Component_Coil);
+
+  ASSERT_EQ(2u, coilws.size());
+
+  std::vector<WorkspaceObject> links = workspace.getObjectsByType(IddObjectType::AirflowNetwork_Distribution_Linkage);
+
+  ASSERT_EQ(1u, links.size());
+
+  EXPECT_EQ(std::string("Airflow Network Distribution Linkage 1"), links[0].getString(0));
+
+  workspace.save(toPath("./AirflowNetworkLinkage.idf"), true);
 
 }
 
