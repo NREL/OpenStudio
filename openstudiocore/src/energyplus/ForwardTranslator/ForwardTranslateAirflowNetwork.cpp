@@ -575,7 +575,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDistributio
   switch (component.iddObject().type().value()) {
   case openstudio::IddObjectType::OS_AirflowNetworkFan:
   case openstudio::IddObjectType::OS_AirflowNetworkEquivalentDuct:
-    { ModelObject obj = component.hvacComponent().get(); }
     idfObject.setString(AirflowNetwork_Distribution_LinkageFields::ComponentName, component.hvacComponent().get().name().get());
     break;
   default:
