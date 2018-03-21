@@ -273,7 +273,7 @@ namespace detail {
 
     AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 
-    bool hasAirflowNetworkEquivalentDuct() const;
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
     //@}
    private:

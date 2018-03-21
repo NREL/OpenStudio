@@ -44,7 +44,7 @@ namespace detail {
   AirflowNetworkLeakageRatio_Impl::AirflowNetworkLeakageRatio_Impl(const IdfObject& idfObject,
                                                                                                              Model_Impl* model,
                                                                                                              bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : AirflowNetworkComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkLeakageRatio::iddObjectType());
   }
@@ -52,7 +52,7 @@ namespace detail {
   AirflowNetworkLeakageRatio_Impl::AirflowNetworkLeakageRatio_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                                              Model_Impl* model,
                                                                                                              bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AirflowNetworkLeakageRatio::iddObjectType());
   }
@@ -60,7 +60,7 @@ namespace detail {
   AirflowNetworkLeakageRatio_Impl::AirflowNetworkLeakageRatio_Impl(const AirflowNetworkLeakageRatio_Impl& other,
                                                                                                              Model_Impl* model,
                                                                                                              bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AirflowNetworkLeakageRatio_Impl::outputVariableNames() const
@@ -132,7 +132,7 @@ namespace detail {
 } // detail
 
 AirflowNetworkLeakageRatio::AirflowNetworkLeakageRatio(const Model& model)
-  : ModelObject(AirflowNetworkLeakageRatio::iddObjectType(),model)
+  : AirflowNetworkComponent(AirflowNetworkLeakageRatio::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkLeakageRatio_Impl>());
 
@@ -194,7 +194,7 @@ void AirflowNetworkLeakageRatio::resetAirMassFlowExponent() {
 
 /// @cond
 AirflowNetworkLeakageRatio::AirflowNetworkLeakageRatio(std::shared_ptr<detail::AirflowNetworkLeakageRatio_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkComponent(impl)
 {}
 /// @endcond
 

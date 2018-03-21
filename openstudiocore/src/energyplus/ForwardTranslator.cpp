@@ -3643,6 +3643,14 @@ void ForwardTranslator::translateAirflowNetwork(const model::Model & model)
       translateAirflowNetworkZoneExhaustFan(modelObject);
     }
 
+    // Fan
+    std::vector<model::AirflowNetworkFan> fans = model.getConcreteModelObjects<model::AirflowNetworkFan>();
+    std::sort(fans.begin(), fans.end(), WorkspaceObjectNameLess());
+    for (auto modelObject : fans) {
+      LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+      translateAirflowNetworkFan(modelObject);
+    }
+
     // Duct
     std::vector<model::AirflowNetworkDuct> ducts = model.getConcreteModelObjects<model::AirflowNetworkDuct>();
     std::sort(ducts.begin(), ducts.end(), WorkspaceObjectNameLess());
@@ -3750,6 +3758,10 @@ void ForwardTranslator::translateAirflowNetwork(const model::Model & model)
     // Zone Exhaust Fan
     std::vector<model::AirflowNetworkZoneExhaustFan> zefs = model.getConcreteModelObjects<model::AirflowNetworkZoneExhaustFan>();
     count += zefs.size();
+
+    // Fan
+    std::vector<model::AirflowNetworkFan> fans = model.getConcreteModelObjects<model::AirflowNetworkFan>();
+    count += fans.size();
 
     // Duct
     std::vector<model::AirflowNetworkDuct> ducts = model.getConcreteModelObjects<model::AirflowNetworkDuct>();

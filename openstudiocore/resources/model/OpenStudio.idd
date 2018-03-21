@@ -28944,12 +28944,16 @@ OS:AirflowNetworkZone,
   A1, \field Handle
       \type handle
       \required-field
-  A2, \field Thermal Zone Name
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference AirflowNetworkNodeAndZoneNames
+  A3, \field Thermal Zone Name
       \required-field
       \type object-list
       \object-list ThermalZoneNames
       \note Enter the zone name where ventilation control is required.
-  A3, \field Ventilation Control Mode
+  A4, \field Ventilation Control Mode
       \type choice
       \key Temperature
       \key Enthalpy
@@ -28964,7 +28968,7 @@ OS:AirflowNetworkZone,
       \note indoor-outdoor temperature or enthalpy difference.
       \note Constant: controlled by field Venting Schedule Name.
       \note NoVent: control will not open window or door during simulation (Ventilation Open Factor = 0).
-  A4, \field Ventilation Control Zone Temperature Setpoint Schedule Name
+  A5, \field Ventilation Control Zone Temperature Setpoint Schedule Name
       \type object-list
       \object-list ScheduleNames
       \note Used only if Ventilation Control Mode = Temperature or Enthalpy.
@@ -29005,7 +29009,7 @@ OS:AirflowNetworkZone,
       \default 300000.0
       \note Applicable only if Ventilation Control Mode = Enthalpy.
       \note This value must be greater than the corresponding lower value (previous field).
-  A5, \field Venting Availability Schedule Name
+  A6, \field Venting Availability Schedule Name
       \type object-list
       \object-list ScheduleNames
       \note Non-zero Schedule value means venting is allowed if other venting control conditions are
@@ -29014,7 +29018,7 @@ OS:AirflowNetworkZone,
       \note circumstances. If this Schedule is not specified then venting is allowed if
       \note other venting control conditions are satisfied.
       \note Not used if Ventilation Control Mode = NoVent.
-  A6, \field Single Sided Wind Pressure Coefficient Algorithm
+  A7, \field Single Sided Wind Pressure Coefficient Algorithm
       \type choice
       \key Advanced
       \key Standard
@@ -29028,7 +29032,7 @@ OS:AirflowNetworkZone,
       \minimum 0.0
       \default 10.0
       \note This is the whole building width along the direction of the facade of this zone.
-  A7; \field Occupant Ventilation Control Name
+  A8; \field Occupant Ventilation Control Name
       \type object-list
       \object-list AirflowNetworkOccupantVentilationControlNames
       \note Enter the name where Occupancy Ventilation Control is required.
@@ -29727,7 +29731,11 @@ OS:AirflowNetworkFan,
   A1, \field Handle
       \type handle
       \required-field
-  A2; \field Fan Name
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference AirflowNetworkComponentNames
+  A3; \field Fan Name
       \required-field
       \type object-list
       \object-list FansCVandOnOffandVAV
@@ -29739,7 +29747,11 @@ OS:AirflowNetworkEquivalentDuct,
   A1, \field Handle
       \type handle
       \required-field
-  A2, \field Component Name
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference AirflowNetworkComponentNames
+  A3, \field Component Name
       \required-field
       \type object-list
       \object-list AFNCoilNames

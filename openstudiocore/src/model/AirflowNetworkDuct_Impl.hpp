@@ -30,7 +30,7 @@
 #define MODEL_AIRFLOWNETWORKDUCT_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject_Impl.hpp"
+#include "AirflowNetworkComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -38,7 +38,7 @@ namespace model {
 namespace detail {
 
   /** AirflowNetworkDuct_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkDuct.*/
-  class MODEL_API AirflowNetworkDuct_Impl : public ModelObject_Impl
+  class MODEL_API AirflowNetworkDuct_Impl : public AirflowNetworkComponent_Impl
   {
    public:
     /** @name Constructors and Destructors */

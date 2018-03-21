@@ -120,7 +120,7 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkSimulationControl( 
+boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkSimulationControl(
     AirflowNetworkSimulationControl& modelObject)
 {
   IdfObject idfObject(IddObjectType::AirflowNetwork_SimulationControl);
@@ -128,8 +128,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkSimulationC
   m_idfObjects.push_back(idfObject);
 
   if (modelObject.name()) {
-    if (modelObject.name().get().empty()) {
-      idfObject.setString(AirflowNetwork_SimulationControlFields::Name, modelObject.name().get());
+    if (modelObject.nameString().empty()) {
+      idfObject.setString(AirflowNetwork_SimulationControlFields::Name, modelObject.nameString());
     } else {
       idfObject.setString(AirflowNetwork_SimulationControlFields::Name, "AFNSimControl 1");
     }
@@ -185,10 +185,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkZone(Airflo
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_MultiZone_ZoneFields::ZoneName, modelObject.thermalZone().name().get());
+  idfObject.setString(AirflowNetwork_MultiZone_ZoneFields::ZoneName, modelObject.thermalZone().nameString());
   idfObject.setString(AirflowNetwork_MultiZone_ZoneFields::VentilationControlMode, modelObject.ventilationControlMode());
   if (modelObject.ventilationControlZoneTemperatureSetpointSchedule()) {
-    idfObject.setString(AirflowNetwork_MultiZone_ZoneFields::VentilationControlZoneTemperatureSetpointScheduleName, modelObject.ventilationControlZoneTemperatureSetpointSchedule()->name().get());
+    idfObject.setString(AirflowNetwork_MultiZone_ZoneFields::VentilationControlZoneTemperatureSetpointScheduleName, modelObject.ventilationControlZoneTemperatureSetpointSchedule()->nameString());
   }
   idfObject.setDouble(AirflowNetwork_MultiZone_ZoneFields::MinimumVentingOpenFactor, modelObject.minimumVentingOpenFactor());
   idfObject.setDouble(AirflowNetwork_MultiZone_ZoneFields::IndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor, modelObject.indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor());
@@ -196,12 +196,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkZone(Airflo
   idfObject.setDouble(AirflowNetwork_MultiZone_ZoneFields::IndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor, modelObject.indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor());
   idfObject.setDouble(AirflowNetwork_MultiZone_ZoneFields::IndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor, modelObject.indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor());
   if (modelObject.ventingAvailabilitySchedule()) {
-    idfObject.setString(AirflowNetwork_MultiZone_ZoneFields::VentingAvailabilityScheduleName, modelObject.ventingAvailabilitySchedule()->name().get());
+    idfObject.setString(AirflowNetwork_MultiZone_ZoneFields::VentingAvailabilityScheduleName, modelObject.ventingAvailabilitySchedule()->nameString());
   }
   idfObject.setString(AirflowNetwork_MultiZone_ZoneFields::SingleSidedWindPressureCoefficientAlgorithm, modelObject.singleSidedWindPressureCoefficientAlgorithm());
   idfObject.setDouble(AirflowNetwork_MultiZone_ZoneFields::FacadeWidth, modelObject.facadeWidth());
   if (modelObject.occupantVentilationControl()) {
-    idfObject.setString(AirflowNetwork_MultiZone_ZoneFields::OccupantVentilationControlName, modelObject.occupantVentilationControl()->name().get());
+    idfObject.setString(AirflowNetwork_MultiZone_ZoneFields::OccupantVentilationControlName, modelObject.occupantVentilationControl()->nameString());
   }
 
   return idfObject;
@@ -213,15 +213,15 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkSurface( Ai
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::SurfaceName, modelObject.surface().name().get());
-  idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::LeakageComponentName, modelObject.leakageComponent()->name().get());
+  idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::SurfaceName, modelObject.surface().nameString());
+  idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::LeakageComponentName, modelObject.leakageComponent()->nameString());
   if (modelObject.externalNode()) {
-    idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::ExternalNodeName, modelObject.externalNode()->name().get());
+    idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::ExternalNodeName, modelObject.externalNode()->nameString());
   }
   idfObject.setDouble(AirflowNetwork_MultiZone_SurfaceFields::Window_DoorOpeningFactororCrackFactor, modelObject.windowDoorOpeningFactorOrCrackFactor());
   idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::VentilationControlMode, modelObject.ventilationControlMode());
   if (modelObject.ventilationControlZoneTemperatureSetpointSchedule()) {
-    idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::VentilationControlZoneTemperatureSetpointScheduleName, modelObject.ventilationControlZoneTemperatureSetpointSchedule()->name().get());
+    idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::VentilationControlZoneTemperatureSetpointScheduleName, modelObject.ventilationControlZoneTemperatureSetpointSchedule()->nameString());
   }
   idfObject.setDouble(AirflowNetwork_MultiZone_SurfaceFields::MinimumVentingOpenFactor, modelObject.minimumVentingOpenFactor());
   idfObject.setDouble(AirflowNetwork_MultiZone_SurfaceFields::IndoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor, modelObject.indoorandOutdoorTemperatureDifferenceLowerLimitForMaximumVentingOpenFactor());
@@ -229,10 +229,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkSurface( Ai
   idfObject.setDouble(AirflowNetwork_MultiZone_SurfaceFields::IndoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor, modelObject.indoorandOutdoorEnthalpyDifferenceLowerLimitForMaximumVentingOpenFactor());
   idfObject.setDouble(AirflowNetwork_MultiZone_SurfaceFields::IndoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor, modelObject.indoorandOutdoorEnthalpyDifferenceUpperLimitforMinimumVentingOpenFactor());
   if (modelObject.ventingAvailabilitySchedule()) {
-    idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::VentingAvailabilityScheduleName, modelObject.ventingAvailabilitySchedule()->name().get());
+    idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::VentingAvailabilityScheduleName, modelObject.ventingAvailabilitySchedule()->nameString());
   }
   if (modelObject.occupantVentilationControl()) {
-    idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::OccupantVentilationControlName, modelObject.occupantVentilationControl()->name().get());
+    idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::OccupantVentilationControlName, modelObject.occupantVentilationControl()->nameString());
   }
   //if (modelObject.equivalentRectangleMethod()) {
   //  idfObject.setString(AirflowNetwork_MultiZone_SurfaceFields::EquivalentRectangleMethod, modelObject.equivalentRectangleMethod().get());
@@ -251,7 +251,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkReferenceCr
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_MultiZone_ReferenceCrackConditionsFields::Name, modelObject.name().get());
+  idfObject.setString(AirflowNetwork_MultiZone_ReferenceCrackConditionsFields::Name, modelObject.nameString());
   idfObject.setDouble(AirflowNetwork_MultiZone_ReferenceCrackConditionsFields::ReferenceTemperature, modelObject.temperature());
   idfObject.setDouble(AirflowNetwork_MultiZone_ReferenceCrackConditionsFields::ReferenceBarometricPressure, modelObject.barometricPressure());
   idfObject.setDouble(AirflowNetwork_MultiZone_ReferenceCrackConditionsFields::ReferenceHumidityRatio, modelObject.humidityRatio());
@@ -265,11 +265,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkCrack(Airfl
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_MultiZone_Surface_CrackFields::Name, modelObject.name().get());
+  idfObject.setString(AirflowNetwork_MultiZone_Surface_CrackFields::Name, modelObject.nameString());
   idfObject.setDouble(AirflowNetwork_MultiZone_Surface_CrackFields::AirMassFlowCoefficientatReferenceConditions, modelObject.airMassFlowCoefficient());
   idfObject.setDouble(AirflowNetwork_MultiZone_Surface_CrackFields::AirMassFlowExponent, modelObject.airMassFlowExponent());
   if (modelObject.referenceCrackConditions()) {
-    idfObject.setString(AirflowNetwork_MultiZone_Surface_CrackFields::ReferenceCrackConditions, modelObject.referenceCrackConditions()->name().get());
+    idfObject.setString(AirflowNetwork_MultiZone_Surface_CrackFields::ReferenceCrackConditions, modelObject.referenceCrackConditions()->nameString());
   }
 
   return idfObject;
@@ -281,7 +281,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkEffectiveLe
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_MultiZone_Surface_EffectiveLeakageAreaFields::Name, modelObject.name().get());
+  idfObject.setString(AirflowNetwork_MultiZone_Surface_EffectiveLeakageAreaFields::Name, modelObject.nameString());
   idfObject.setDouble(AirflowNetwork_MultiZone_Surface_EffectiveLeakageAreaFields::EffectiveLeakageArea, modelObject.effectiveLeakageArea());
   idfObject.setDouble(AirflowNetwork_MultiZone_Surface_EffectiveLeakageAreaFields::DischargeCoefficient, modelObject.dischargeCoefficient());
   idfObject.setDouble(AirflowNetwork_MultiZone_Surface_EffectiveLeakageAreaFields::ReferencePressureDifference, modelObject.referencePressureDifference());
@@ -296,7 +296,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDetailedOpe
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::Name, modelObject.name().get());
+  idfObject.setString(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::Name, modelObject.nameString());
   idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::AirMassFlowCoefficientWhenOpeningisClosed, modelObject.airMassFlowCoefficientWhenOpeningisClosed());
   idfObject.setDouble(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::AirMassFlowExponentWhenOpeningisClosed, modelObject.airMassFlowExponentWhenOpeningisClosed());
   idfObject.setString(AirflowNetwork_MultiZone_Component_DetailedOpeningFields::TypeofRectangularLargeVerticalOpening_LVO_, modelObject.typeofRectangularLargeVerticalOpening());
@@ -342,7 +342,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkSimpleOpeni
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::Name, modelObject.name().get());
+  idfObject.setString(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::Name, modelObject.nameString());
   idfObject.setDouble(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::AirMassFlowCoefficientWhenOpeningisClosed, modelObject.airMassFlowCoefficientWhenOpeningisClosed());
   idfObject.setDouble(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::AirMassFlowExponentWhenOpeningisClosed, modelObject.airMassFlowExponentWhenOpeningisClosed());
   idfObject.setDouble(AirflowNetwork_MultiZone_Component_SimpleOpeningFields::MinimumDensityDifferenceforTwoWayFlow, modelObject.minimumDensityDifferenceforTwoWayFlow());
@@ -357,7 +357,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkHorizontalO
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::Name, modelObject.name().get());
+  idfObject.setString(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::Name, modelObject.nameString());
   idfObject.setDouble(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::AirMassFlowCoefficientWhenOpeningisClosed, modelObject.airMassFlowCoefficientWhenOpeningisClosed());
   idfObject.setDouble(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::AirMassFlowExponentWhenOpeningisClosed, modelObject.airMassFlowExponentWhenOpeningisClosed());
   idfObject.setDouble(AirflowNetwork_MultiZone_Component_HorizontalOpeningFields::SlopingPlaneAngle, modelObject.slopingPlaneAngle());
@@ -373,11 +373,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkZoneExhaust
   if (modelObject.crack()) {
     m_idfObjects.push_back(idfObject);
 
-    idfObject.setString(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::Name, modelObject.name().get());
+    idfObject.setString(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::Name, modelObject.nameString());
     idfObject.setDouble(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::AirMassFlowCoefficientWhentheZoneExhaustFanisOffatReferenceConditions, modelObject.crack()->airMassFlowCoefficient());
     idfObject.setDouble(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::AirMassFlowExponentWhentheZoneExhaustFanisOff, modelObject.crack()->airMassFlowExponent());
     if (modelObject.crack()->referenceCrackConditions()) {
-      idfObject.setString(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::ReferenceCrackConditions, modelObject.crack()->referenceCrackConditions()->name().get());
+      idfObject.setString(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::ReferenceCrackConditions, modelObject.crack()->referenceCrackConditions()->nameString());
     }
   } // else warning?
   return idfObject;
@@ -389,9 +389,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkExternalNod
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_MultiZone_ExternalNodeFields::Name, modelObject.name().get());
+  idfObject.setString(AirflowNetwork_MultiZone_ExternalNodeFields::Name, modelObject.nameString());
   idfObject.setDouble(AirflowNetwork_MultiZone_ExternalNodeFields::ExternalNodeHeight, modelObject.externalNodeHeight());
-  idfObject.setString(AirflowNetwork_MultiZone_ExternalNodeFields::WindPressureCoefficientCurveName, modelObject.windPressureCoefficientCurve().name().get());
+  idfObject.setString(AirflowNetwork_MultiZone_ExternalNodeFields::WindPressureCoefficientCurveName, modelObject.windPressureCoefficientCurve().nameString());
   if (modelObject.symmetricWindPressureCoefficientCurve()) {
     idfObject.setString(AirflowNetwork_MultiZone_ExternalNodeFields::SymmetricWindPressureCoefficientCurve, "Yes");
   }
@@ -406,19 +406,25 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDistributio
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_Distribution_NodeFields::Name, modelObject.name().get());
+  idfObject.setString(AirflowNetwork_Distribution_NodeFields::Name, modelObject.nameString());
 
   if (modelObject.node()) {
-    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.node().get().name().get());
+    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.node().get().nameString());
+    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentObjectTypeorNodeType, "Other");
   } else if (modelObject.airLoopHVACZoneMixer()) {
-    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.airLoopHVACZoneMixer().get().name().get());
+    // JWD: This and the comments below will probably be uncommented and used once multiple airloops hit.
+    //idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.airLoopHVACZoneMixer().get().nameString());
+    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentObjectTypeorNodeType, "AirLoopHVAC:ZoneMixer");
   } else if (modelObject.airLoopHVACZoneSplitter()) {
-    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.airLoopHVACZoneSplitter().get().name().get());
+    //idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.airLoopHVACZoneSplitter().get().nameString());
+    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentObjectTypeorNodeType, "AirLoopHVAC:ZoneSplitter");
   } else if (modelObject.airLoopHVACOutdoorAirSystem()) {
-    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.airLoopHVACOutdoorAirSystem().get().name().get());
+    //idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentNameorNodeName, modelObject.airLoopHVACOutdoorAirSystem().get().nameString());
+    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentObjectTypeorNodeType, "AirLoopHVAC:OutdoorAirSystem");
+  } else {
+    idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentObjectTypeorNodeType, "Other");
   }
 
-  idfObject.setString(AirflowNetwork_Distribution_NodeFields::ComponentObjectTypeorNodeType, "Other");
   idfObject.setDouble(AirflowNetwork_Distribution_NodeFields::NodeHeight, modelObject.nodeHeight());
   return idfObject;
 }
@@ -429,7 +435,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkLeakageRati
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_Distribution_Component_LeakageRatioFields::Name, modelObject.name().get());
+  idfObject.setString(AirflowNetwork_Distribution_Component_LeakageRatioFields::Name, modelObject.nameString());
   if (modelObject.effectiveLeakageRatio()) {
     idfObject.setDouble(AirflowNetwork_Distribution_Component_LeakageRatioFields::EffectiveLeakageRatio, modelObject.effectiveLeakageRatio().get());
   }
@@ -446,7 +452,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDuct( Airfl
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_Distribution_Component_DuctFields::Name, modelObject.name().get());
+  idfObject.setString(AirflowNetwork_Distribution_Component_DuctFields::Name, modelObject.nameString());
   idfObject.setDouble(AirflowNetwork_Distribution_Component_DuctFields::DuctLength, modelObject.ductLength());
   idfObject.setDouble(AirflowNetwork_Distribution_Component_DuctFields::HydraulicDiameter, modelObject.hydraulicDiameter());
   idfObject.setDouble(AirflowNetwork_Distribution_Component_DuctFields::CrossSectionArea, modelObject.crossSectionArea());
@@ -464,17 +470,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkFan( Airflo
 {
   IdfObject idfObject(IddObjectType::AirflowNetwork_Distribution_Component_Fan);
 
-  
+
   if (modelObject.fanConstantVolume()) {
-    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, modelObject.fanConstantVolume().get().name().get());
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, modelObject.fanConstantVolume().get().nameString());
     idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::SupplyFanObjectType, "Fan:ConstantVolume");
     m_idfObjects.push_back(idfObject);
   } else if (modelObject.fanVariableVolume()) {
-    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, modelObject.fanVariableVolume().get().name().get());
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, modelObject.fanVariableVolume().get().nameString());
     idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::SupplyFanObjectType, "Fan:VariableVolume");
     m_idfObjects.push_back(idfObject);
   } else if (modelObject.fanOnOff()) {
-    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, modelObject.fanOnOff().get().name().get());
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, modelObject.fanOnOff().get().nameString());
     idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::SupplyFanObjectType, "Fan:OnOff");
     m_idfObjects.push_back(idfObject);
   } else {
@@ -491,7 +497,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkEquivalentD
     // Coil
     IdfObject idfObject(IddObjectType::AirflowNetwork_Distribution_Component_Coil);
     m_idfObjects.push_back(idfObject);
-    idfObject.setString(AirflowNetwork_Distribution_Component_CoilFields::CoilName, modelObject.name().get());
+    idfObject.setString(AirflowNetwork_Distribution_Component_CoilFields::CoilName, modelObject.straightComponent().get().nameString());
     idfObject.setString(AirflowNetwork_Distribution_Component_CoilFields::CoilObjectType, opttype.get());
     idfObject.setDouble(AirflowNetwork_Distribution_Component_CoilFields::AirPathLength, modelObject.airPathLength());
     idfObject.setDouble(AirflowNetwork_Distribution_Component_CoilFields::AirPathHydraulicDiameter, modelObject.airPathHydraulicDiameter());
@@ -503,7 +509,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkEquivalentD
     // Heat exchanger
     IdfObject idfObject(IddObjectType::AirflowNetwork_Distribution_Component_HeatExchanger);
     m_idfObjects.push_back(idfObject);
-    idfObject.setString(AirflowNetwork_Distribution_Component_HeatExchangerFields::HeatExchangerName, modelObject.name().get());
+    idfObject.setString(AirflowNetwork_Distribution_Component_HeatExchangerFields::HeatExchangerName, modelObject.nameString());
     idfObject.setString(AirflowNetwork_Distribution_Component_HeatExchangerFields::HeatExchangerObjectType, opttype.get());
     idfObject.setDouble(AirflowNetwork_Distribution_Component_HeatExchangerFields::AirPathLength, modelObject.airPathLength());
     idfObject.setDouble(AirflowNetwork_Distribution_Component_HeatExchangerFields::AirPathHydraulicDiameter, modelObject.airPathHydraulicDiameter());
@@ -515,7 +521,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkEquivalentD
     // Terminal Unit
     IdfObject idfObject(IddObjectType::AirflowNetwork_Distribution_Component_TerminalUnit);
     m_idfObjects.push_back(idfObject);
-    idfObject.setString(AirflowNetwork_Distribution_Component_TerminalUnitFields::TerminalUnitName, modelObject.name().get());
+    idfObject.setString(AirflowNetwork_Distribution_Component_TerminalUnitFields::TerminalUnitName, modelObject.nameString());
     idfObject.setString(AirflowNetwork_Distribution_Component_TerminalUnitFields::TerminalUnitObjectType, opttype.get());
     idfObject.setDouble(AirflowNetwork_Distribution_Component_TerminalUnitFields::AirPathLength, modelObject.airPathLength());
     idfObject.setDouble(AirflowNetwork_Distribution_Component_TerminalUnitFields::AirPathHydraulicDiameter, modelObject.airPathHydraulicDiameter());
@@ -531,7 +537,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkConstantPre
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_Distribution_Component_ConstantPressureDropFields::Name, modelObject.name().get());
+  idfObject.setString(AirflowNetwork_Distribution_Component_ConstantPressureDropFields::Name, modelObject.nameString());
   idfObject.setDouble(AirflowNetwork_Distribution_Component_ConstantPressureDropFields::PressureDifferenceAcrosstheComponent, modelObject.pressureDrop());
 
   return idfObject;
@@ -544,11 +550,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkOutdoorAirf
   if (modelObject.crack()) {
     m_idfObjects.push_back(idfObject);
 
-    idfObject.setString(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::Name, modelObject.name().get());
+    idfObject.setString(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::Name, modelObject.nameString());
     idfObject.setDouble(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::AirMassFlowCoefficientWhentheZoneExhaustFanisOffatReferenceConditions, modelObject.crack()->airMassFlowCoefficient());
     idfObject.setDouble(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::AirMassFlowExponentWhentheZoneExhaustFanisOff, modelObject.crack()->airMassFlowExponent());
     if (modelObject.crack()->referenceCrackConditions()) {
-      idfObject.setString(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::ReferenceCrackConditions, modelObject.crack()->referenceCrackConditions()->name().get());
+      idfObject.setString(AirflowNetwork_MultiZone_Component_ZoneExhaustFanFields::ReferenceCrackConditions, modelObject.crack()->referenceCrackConditions()->nameString());
     }
   } // else warning?
 
@@ -561,12 +567,47 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDistributio
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_Distribution_LinkageFields::Name, modelObject.name().get());
-  idfObject.setString(AirflowNetwork_Distribution_LinkageFields::Node1Name, modelObject.node1().name().get());
-  idfObject.setString(AirflowNetwork_Distribution_LinkageFields::Node2Name, modelObject.node2().name().get());
-  idfObject.setString(AirflowNetwork_Distribution_LinkageFields::ComponentName, modelObject.component().name().get());
+  idfObject.setString(AirflowNetwork_Distribution_LinkageFields::Name, modelObject.nameString());
+
+  boost::optional<IdfObject> obj;
+
+  AirflowNetworkNode node1 = modelObject.node1();
+  if (node1.optionalCast<AirflowNetworkZone>()) {
+    // DLM: Jason, the thermal zone and other objects may be renamed on translation, need to get the translated object's name
+    obj = translateAndMapModelObject(node1.cast<AirflowNetworkZone>().thermalZone());
+    OS_ASSERT(obj);
+    idfObject.setString(AirflowNetwork_Distribution_LinkageFields::Node1Name, obj->nameString());
+  } else {
+    idfObject.setString(AirflowNetwork_Distribution_LinkageFields::Node1Name, node1.nameString());
+  }
+
+  AirflowNetworkNode node2 = modelObject.node2();
+  if (node2.optionalCast<AirflowNetworkZone>()) {
+    obj = translateAndMapModelObject(node2.cast<AirflowNetworkZone>().thermalZone());
+    OS_ASSERT(obj);
+    idfObject.setString(AirflowNetwork_Distribution_LinkageFields::Node2Name, obj->nameString());
+  } else {
+    idfObject.setString(AirflowNetwork_Distribution_LinkageFields::Node2Name, node2.nameString());
+  }
+
+  AirflowNetworkComponent component = modelObject.component();
+  switch (component.iddObject().type().value()) {
+  case openstudio::IddObjectType::OS_AirflowNetworkFan:
+  case openstudio::IddObjectType::OS_AirflowNetworkEquivalentDuct:
+    OS_ASSERT(component.componentModelObject());
+    obj = translateAndMapModelObject(component.componentModelObject().get());
+    OS_ASSERT(obj);
+    idfObject.setString(AirflowNetwork_Distribution_LinkageFields::ComponentName, obj->nameString());
+    break;
+  default:
+    idfObject.setString(AirflowNetwork_Distribution_LinkageFields::ComponentName, component.nameString());
+    break;
+  }
+
   if (modelObject.thermalZone()) {
-    idfObject.setString(AirflowNetwork_Distribution_LinkageFields::ThermalZoneName, modelObject.thermalZone().get().name().get());
+    obj = translateAndMapModelObject(modelObject.thermalZone().get());
+    OS_ASSERT(obj);
+    idfObject.setString(AirflowNetwork_Distribution_LinkageFields::ThermalZoneName, obj->nameString());
   }
 
   return idfObject;
@@ -581,7 +622,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDuctViewFac
   if (vfs.size() > 0) {
     m_idfObjects.push_back(idfObject);
 
-    idfObject.setString(AirflowNetwork_Distribution_DuctViewFactorsFields::LinkageName, modelObject.linkage().name().get());
+    idfObject.setString(AirflowNetwork_Distribution_DuctViewFactorsFields::LinkageName, modelObject.linkage().nameString());
     idfObject.setDouble(AirflowNetwork_Distribution_DuctViewFactorsFields::DuctSurfaceExposureFraction, modelObject.ductSurfaceExposureFraction());
     idfObject.setDouble(AirflowNetwork_Distribution_DuctViewFactorsFields::DuctSurfaceEmittance, modelObject.ductSurfaceEmittance());
 
@@ -589,7 +630,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDuctViewFac
     for (const auto& vf : vfs) {
       IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
       OS_ASSERT(group.numFields() == 2);
-      group.setString(0, vf.first.name().get());
+      group.setString(0, vf.first.nameString());
       group.setDouble(1, vf.second);
     }
 
@@ -607,24 +648,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkOccupantVen
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(AirflowNetwork_OccupantVentilationControlFields::Name, modelObject.name().get());
+  idfObject.setString(AirflowNetwork_OccupantVentilationControlFields::Name, modelObject.nameString());
   idfObject.setDouble(AirflowNetwork_OccupantVentilationControlFields::MinimumOpeningTime, modelObject.minimumOpeningTime());
   idfObject.setDouble(AirflowNetwork_OccupantVentilationControlFields::MinimumClosingTime, modelObject.minimumClosingTime());
   idfObject.setString(AirflowNetwork_OccupantVentilationControlFields::ThermalComfortLowTemperatureCurveName,
-    modelObject.thermalComfortLowTemperatureCurve().name().get());
+    modelObject.thermalComfortLowTemperatureCurve().nameString());
   idfObject.setDouble(AirflowNetwork_OccupantVentilationControlFields::ThermalComfortTemperatureBoundaryPoint, modelObject.thermalComfortTemperatureBoundaryPoint());
   if (modelObject.thermalComfortHighTemperatureCurve()) {
-    idfObject.setString(AirflowNetwork_OccupantVentilationControlFields::ThermalComfortHighTemperatureCurveName, modelObject.thermalComfortHighTemperatureCurve()->name().get());
+    idfObject.setString(AirflowNetwork_OccupantVentilationControlFields::ThermalComfortHighTemperatureCurveName, modelObject.thermalComfortHighTemperatureCurve()->nameString());
   }
   idfObject.setDouble(AirflowNetwork_OccupantVentilationControlFields::MaximumThresholdforPersonsDissatisfiedPPD, modelObject.maximumPredictedPercentageofDissatisfiedThreshold());
   if (modelObject.occupancyCheck()) {
     idfObject.setString(AirflowNetwork_OccupantVentilationControlFields::OccupancyCheck, "Yes");
   }
   if (modelObject.openingProbabilitySchedule()) {
-    idfObject.setString(AirflowNetwork_OccupantVentilationControlFields::OpeningProbabilityScheduleName, modelObject.openingProbabilitySchedule()->name().get());
+    idfObject.setString(AirflowNetwork_OccupantVentilationControlFields::OpeningProbabilityScheduleName, modelObject.openingProbabilitySchedule()->nameString());
   }
   if (modelObject.closingProbabilitySchedule()) {
-    idfObject.setString(AirflowNetwork_OccupantVentilationControlFields::ClosingProbabilityScheduleName, modelObject.closingProbabilitySchedule()->name().get());
+    idfObject.setString(AirflowNetwork_OccupantVentilationControlFields::ClosingProbabilityScheduleName, modelObject.closingProbabilitySchedule()->nameString());
   }
 
   return idfObject;

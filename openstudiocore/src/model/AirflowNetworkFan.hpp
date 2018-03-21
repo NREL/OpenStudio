@@ -30,7 +30,7 @@
 #define MODEL_AIRFLOWNETWORKFAN_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+#include "AirflowNetworkComponent.hpp"
 
 namespace openstudio {
 namespace model {
@@ -51,7 +51,7 @@ namespace detail {
 } // detail
 
 /** AirflowNetworkFan is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetwork:Fan'. */
-class MODEL_API AirflowNetworkFan : public ModelObject
+class MODEL_API AirflowNetworkFan : public AirflowNetworkComponent
 {
  public:
   /** @name Constructors and Destructors */

@@ -30,7 +30,7 @@
 #define MODEL_AIRFLOWNETWORKLEAKAGERATIO_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ModelObject.hpp"
+#include "AirflowNetworkComponent.hpp"
 
 namespace openstudio {
 
@@ -42,8 +42,8 @@ namespace detail {
 
 } // detail
 
-/** AirflowNetworkLeakageRatio is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetwork:LeakageRatio'. */
-class MODEL_API AirflowNetworkLeakageRatio : public ModelObject {
+/** AirflowNetworkLeakageRatio is a AirflowNetworkComponent that wraps the OpenStudio IDD object 'OS:AirflowNetwork:LeakageRatio'. */
+class MODEL_API AirflowNetworkLeakageRatio : public AirflowNetworkComponent {
  public:
   /** @name Constructors and Destructors */
   //@{

@@ -48,7 +48,7 @@ namespace detail {
   AirflowNetworkEquivalentDuct_Impl::AirflowNetworkEquivalentDuct_Impl(const IdfObject& idfObject,
                                                                        Model_Impl* model,
                                                                        bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : AirflowNetworkComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkEquivalentDuct::iddObjectType());
   }
@@ -56,7 +56,7 @@ namespace detail {
   AirflowNetworkEquivalentDuct_Impl::AirflowNetworkEquivalentDuct_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                        Model_Impl* model,
                                                                        bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AirflowNetworkEquivalentDuct::iddObjectType());
   }
@@ -64,7 +64,7 @@ namespace detail {
   AirflowNetworkEquivalentDuct_Impl::AirflowNetworkEquivalentDuct_Impl(const AirflowNetworkEquivalentDuct_Impl& other,
                                                                        Model_Impl* model,
                                                                        bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : AirflowNetworkComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AirflowNetworkEquivalentDuct_Impl::outputVariableNames() const
@@ -88,29 +88,29 @@ namespace detail {
     auto optsc = straightComponent();
     if (optsc) {
       switch (optsc->iddObjectType().value()) {
-      case IddObjectType::Coil_Cooling_DX_SingleSpeed:
+      case IddObjectType::OS_Coil_Cooling_DX_SingleSpeed:
         return std::string("Coil:Cooling:DX:SingleSpeed");
-      case IddObjectType::Coil_Cooling_DX_TwoSpeed:
+      case IddObjectType::OS_Coil_Cooling_DX_TwoSpeed:
         return std::string("Coil:Cooling:DX:TwoSpeed");
-      case IddObjectType::Coil_Heating_Fuel:
+      case IddObjectType::OS_Coil_Heating_Gas:
         return std::string("Coil:Heating:Fuel");
-      case IddObjectType::Coil_Heating_Electric:
+      case IddObjectType::OS_Coil_Heating_Electric:
         return std::string("Coil:Heating:Electric");
-      case IddObjectType::Coil_Heating_DX_SingleSpeed:
+      case IddObjectType::OS_Coil_Heating_DX_SingleSpeed:
         return std::string("Coil:Heating:DX:SingleSpeed");
-      case IddObjectType::Coil_Cooling_Water:
+      case IddObjectType::OS_Coil_Cooling_Water:
         return std::string("Coil:Cooling:Water");
-      case IddObjectType::Coil_Heating_Water:
+      case IddObjectType::OS_Coil_Heating_Water:
         return std::string("Coil:Heating:Water");
-      case IddObjectType::Coil_Cooling_Water_DetailedGeometry:
-        return std::string("Coil:Cooling:Water:DetailedGeometry");
-      case IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode:
+      //case IddObjectType::Coil_Cooling_Water_DetailedGeometry:
+      //  return std::string("Coil:Cooling:Water:DetailedGeometry");
+      case IddObjectType::OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode:
         return std::string("Coil:Cooling:DX:TwoStageWithHumidityControlMode");
-      case IddObjectType::Coil_Cooling_DX_MultiSpeed:
+      case IddObjectType::OS_Coil_Cooling_DX_MultiSpeed:
         return std::string("Coil:Cooling:DX:MultiSpeed");
-      case IddObjectType::Coil_Heating_DX_MultiSpeed:
+      case IddObjectType::OS_Coil_Heating_DX_MultiSpeed:
         return std::string("Coil:Heating:DX:MultiSpeed");
-      case IddObjectType::Coil_Heating_Desuperheater:
+      case IddObjectType::OS_Coil_Heating_Desuperheater:
         return std::string("Coil:Heating:Desuperheater");
       default:
         return boost::none;
@@ -124,12 +124,12 @@ namespace detail {
     auto optsc = straightComponent();
     if (optsc) {
       switch (optsc->iddObjectType().value()) {
-      case IddObjectType::HeatExchanger_AirToAir_FlatPlate:
-        return std::string("HeatExchanger:AirToAir:FlatPlate");
-      case IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent:
+      //case IddObjectType::HeatExchanger_AirToAir_FlatPlate:
+      //  return std::string("HeatExchanger:AirToAir:FlatPlate");
+      case IddObjectType::OS_HeatExchanger_AirToAir_SensibleAndLatent:
         return std::string("HeatExchanger:AirToAir:SensibleAndLatent");
-      case IddObjectType::HeatExchanger_Desiccant_BalancedFlow:
-        return std::string("HeatExchanger:Desiccant:BalancedFlow");
+      //case IddObjectType::HeatExchanger_Desiccant_BalancedFlow:
+      //  return std::string("HeatExchanger:Desiccant:BalancedFlow");
       default:
         return boost::none;
       }
@@ -142,15 +142,20 @@ namespace detail {
     auto optsc = straightComponent();
     if (optsc) {
       switch (optsc->iddObjectType().value()) {
-      case IddObjectType::AirTerminal_SingleDuct_ConstantVolume_Reheat:
+      case IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_Reheat:
         return std::string("AirTerminal:SingleDuct:ConstantVolume:Reheat");
-      case IddObjectType::AirTerminal_SingleDuct_VAV_Reheat:
+      case IddObjectType::OS_AirTerminal_SingleDuct_VAV_Reheat:
         return std::string("AirTerminal:SingleDuct:VAV:Reheat");
       default:
         return boost::none;
       }
     }
     return boost::none;
+  }
+
+  boost::optional<ModelObject> AirflowNetworkEquivalentDuct_Impl::componentModelObject() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_AirflowNetworkEquivalentDuctFields::ComponentName);
   }
 
   double AirflowNetworkEquivalentDuct_Impl::airPathLength() const
@@ -188,7 +193,7 @@ namespace detail {
 } // detail
 
 AirflowNetworkEquivalentDuct::AirflowNetworkEquivalentDuct(const Model& model, double length, double diameter, const Handle &handle)
-  : ModelObject(AirflowNetworkEquivalentDuct::iddObjectType(),model)
+  : AirflowNetworkComponent(AirflowNetworkEquivalentDuct::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirflowNetworkEquivalentDuct_Impl>());
   bool ok = getImpl<detail::AirflowNetworkEquivalentDuct_Impl>()->setPointer(OS_AirflowNetworkEquivalentDuctFields::ComponentName, handle);
@@ -251,7 +256,7 @@ void AirflowNetworkEquivalentDuct::resetComponent()
 
 /// @cond
 AirflowNetworkEquivalentDuct::AirflowNetworkEquivalentDuct(std::shared_ptr<detail::AirflowNetworkEquivalentDuct_Impl> impl)
-  : ModelObject(impl)
+  : AirflowNetworkComponent(impl)
 {}
 /// @endcond
 

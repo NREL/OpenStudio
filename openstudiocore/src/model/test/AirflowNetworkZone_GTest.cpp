@@ -36,8 +36,16 @@
 #include "../ThermalZone_Impl.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
 #include "../CurveLinear.hpp"
 #include "../CurveLinear_Impl.hpp"
+#include "../AirflowNetworkDuct.hpp"
+#include "../AirflowNetworkDuct_Impl.hpp"
+#include "../AirflowNetworkDistributionLinkage.hpp"
+#include "../AirflowNetworkDistributionLinkage_Impl.hpp"
+#include "../AirflowNetworkDistributionNode.hpp"
+#include "../AirflowNetworkDistributionNode_Impl.hpp"
 #include "../AirflowNetworkOccupantVentilationControl.hpp"
 #include "../AirflowNetworkOccupantVentilationControl_Impl.hpp"
 
@@ -92,6 +100,28 @@ TEST_F(ModelFixture, AirflowNetwork_Zone_Basic)
   EXPECT_EQ(50.0, optzone.get().facadeWidth());
   ASSERT_TRUE(optzone.get().occupantVentilationControl());
   EXPECT_EQ(ovc, optzone.get().occupantVentilationControl().get());
+
+}
+
+TEST_F(ModelFixture, AirflowNetwork_Zone_Linking)
+{
+  Model model;
+  ThermalZone thermalZone(model);
+
+  EXPECT_FALSE(thermalZone.airflowNetworkZone());
+
+  auto zone = thermalZone.getAirflowNetworkZone();
+  auto optzone = thermalZone.airflowNetworkZone();
+  ASSERT_TRUE(optzone);
+  EXPECT_EQ(zone, optzone.get());
+
+  AirflowNetworkDistributionNode node_afn(model);
+  AirflowNetworkDuct duct(model);
+
+  AirflowNetworkDistributionLinkage link(model, node_afn, zone, duct);
+
+  EXPECT_EQ(node_afn, link.node1());
+  EXPECT_EQ(zone, link.node2());
 
 }
 

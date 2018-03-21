@@ -373,8 +373,8 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
 
   /** Returns an equivalent duct object, creating a new one if an object is not already attached. */
   AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-  /** Returns true is there is an attached equivalent duct object. */
-  bool hasAirflowNetworkEquivalentDuct() const;
+  /** Returns the attached equivalent duct object if there is one. */
+  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
   // Autosizing methods
 

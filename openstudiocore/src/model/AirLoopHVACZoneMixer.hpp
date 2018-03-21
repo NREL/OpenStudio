@@ -71,6 +71,10 @@ class MODEL_API AirLoopHVACZoneMixer : public Mixer {
 
   void disconnect();
 
+  AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
+
+  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
+
   static IddObjectType iddObjectType();
 
   protected:
@@ -78,11 +82,6 @@ class MODEL_API AirLoopHVACZoneMixer : public Mixer {
   friend class Model;
 
   friend class openstudio::IdfObject;
-
-
-  AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
-
-  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
   /// @cond
 
