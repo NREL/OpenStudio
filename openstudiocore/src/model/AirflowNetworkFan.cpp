@@ -96,7 +96,7 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<FanOnOff>(OS_AirflowNetworkFanFields::FanName);
   }
 
-  boost::optional<ModelObject> AirflowNetworkFan_Impl::hvacComponent() const
+  boost::optional<ModelObject> AirflowNetworkFan_Impl::componentModelObject() const
   {
     return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_AirflowNetworkFanFields::FanName);
   }

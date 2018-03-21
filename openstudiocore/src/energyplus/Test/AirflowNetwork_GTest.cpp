@@ -138,7 +138,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_AirflowNetworkFanLinkage)
   AirflowNetworkDistributionLinkage link(model, afnnode0, afnnode1, afnfan);
 
   EXPECT_TRUE(link.setComponent(afnfan));
-  ASSERT_TRUE(link.component().hvacComponent());
+  ASSERT_TRUE(link.component().componentModelObject());
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);

@@ -153,7 +153,7 @@ namespace detail {
     return boost::none;
   }
 
-  boost::optional<ModelObject> AirflowNetworkEquivalentDuct_Impl::hvacComponent() const
+  boost::optional<ModelObject> AirflowNetworkEquivalentDuct_Impl::componentModelObject() const
   {
     return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_AirflowNetworkEquivalentDuctFields::ComponentName);
   }

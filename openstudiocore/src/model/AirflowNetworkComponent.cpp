@@ -76,8 +76,9 @@ AirflowNetworkComponent_Impl::AirflowNetworkComponent_Impl(const AirflowNetworkC
 }
 
 
-boost::optional<ModelObject> AirflowNetworkComponent_Impl::hvacComponent() const
+boost::optional<ModelObject> AirflowNetworkComponent_Impl::componentModelObject() const
 {
+  // base class implementation
   return boost::none;
 }
 
@@ -234,9 +235,9 @@ AirflowNetworkComponent::AirflowNetworkComponent(std::shared_ptr<detail::Airflow
   : ModelObject(p)
 {}
 
-OptionalModelObject AirflowNetworkComponent::hvacComponent() const
+OptionalModelObject AirflowNetworkComponent::componentModelObject() const
 {
-  return getImpl<detail::AirflowNetworkComponent_Impl>()->hvacComponent();
+  return getImpl<detail::AirflowNetworkComponent_Impl>()->componentModelObject();
 }
 
 /*

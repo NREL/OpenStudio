@@ -66,7 +66,7 @@ namespace detail {
     //virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 
     //** Returns the optional ModelObject that this component represents. **/
-    virtual boost::optional<ModelObject> hvacComponent() const;
+    virtual boost::optional<ModelObject> componentModelObject() const;
 
     //@}
     /** @name Getters */
