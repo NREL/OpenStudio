@@ -188,8 +188,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkEquivalentDuct)
   AirflowNetworkDistributionLinkage link(model, node0, node1, cool);
 
   EXPECT_EQ(cool, link.component());
-  ASSERT_TRUE(link.component().hvacComponent());
-  EXPECT_EQ(coolingCoils[0], link.component().hvacComponent().get());
+  ASSERT_TRUE(link.component().componentModelObject());
+  EXPECT_EQ(coolingCoils[0], link.component().componentModelObject().get());
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
