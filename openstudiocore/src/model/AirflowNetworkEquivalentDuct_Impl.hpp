@@ -67,7 +67,7 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
-    virtual boost::optional<ModelObject> hvacComponent() const override;
+    virtual boost::optional<ModelObject> componentModelObject() const override;
 
     //@}
     /** @name Getters */
