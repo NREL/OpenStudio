@@ -71,7 +71,7 @@ set(ENERGYPLUS_VERSION_MINOR 9)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "c912a2d032")
+set(ENERGYPLUS_BUILD_SHA "92e85043a9")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -93,6 +93,15 @@ elseif(APPLE)
   set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID} ${CMAKE_OSX_ARCHITECTURES} - OSX ${CMAKE_OSX_DEPLOYMENT_TARGET}")
 else()
   set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID}")
+endif()
+
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
+    "MinSizeRel" "RelWithDebInfo")
 endif()
 
 ###############################################################################
@@ -344,7 +353,7 @@ if("Ninja" STREQUAL ${CMAKE_GENERATOR})
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # For some reason it doesn't say its supported, but it works...
     # AddCXXFlagIfSupported(-fdiagnostics-color COMPILER_SUPPORTS_fdiagnostics-color)
-    message("Forcing -fdiagnostics-color=always")
+    message(STATUS "Forcing -fdiagnostics-color=always")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
   endif()
 endif()
@@ -366,16 +375,16 @@ endif()
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v8.9.0-TestA")
+set(ENERGYPLUS_RELEASE_NAME "v8.9.0-TestB")
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 130bcf51ba8c683ea9265c17ae46c7d3)
+    set(ENERGYPLUS_EXPECTED_HASH f6b687bcece6dede4b440b2ae3e8d138)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     set(ENERGYPLUS_EXPECTED_HASH xyz)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 1782ab187be0588b950093b306f56739)
+    set(ENERGYPLUS_EXPECTED_HASH 0fddc1ec0ca6cec43842728fd13806f7)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -397,7 +406,7 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 6301f977dda17e04699cf3ff390bc532)
+    set(ENERGYPLUS_EXPECTED_HASH c3ec14245027bb568dc7d87a61519742)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
