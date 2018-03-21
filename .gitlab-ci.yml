@@ -8,6 +8,8 @@ build:windows:
   stage: build
   only:
   - triggers
+  - master
+  - develop
   tags:
   - windows
   script:
@@ -41,6 +43,8 @@ build:mac:
   stage: build
   only:
   - triggers
+  - master
+  - develop
   tags:
   - mac
   script:
@@ -60,6 +64,8 @@ build:ubuntu:
   stage: build
   only:
   - triggers
+  - master
+  - develop
   tags:
   - ubuntu
   script:
@@ -77,6 +83,8 @@ deploy:windows:
   stage: deploy
   only:
   - triggers
+  - master
+  - develop
   tags:
   - windows
   dependencies:
@@ -90,6 +98,8 @@ deploy:mac:
   stage: deploy
   only:
   - triggers
+  - master
+  - develop
   tags:
   - mac
   dependencies:
@@ -103,6 +113,8 @@ deploy:ubuntu:
   stage: deploy
   only:
   - triggers
+  - master
+  - develop
   tags:
   - ubuntu
   dependencies:
@@ -116,6 +128,8 @@ testCTest:windows:
   stage: testCTest
   only:
   - triggers
+  - master
+  - develop
   tags:
   - windows
   dependencies:
@@ -130,6 +144,8 @@ testResources:windows:
   stage: testResources
   only:
   - triggers
+  - master
+  - develop
   tags:
   - windows
   dependencies:
