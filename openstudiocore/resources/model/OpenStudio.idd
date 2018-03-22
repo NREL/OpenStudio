@@ -28490,7 +28490,6 @@ OS:EnergyManagementSystem:Sensor,
        \note This name becomes a variable for use in Erl programs
        \note No spaces allowed in names for ErlVariableNames
        \reference ErlVariableNames
-       \reference AllObjects
   A3, \field Output Variable or Output Meter Index Key Name
        \type alpha
        \note key name listed here will override key name in Output:Variable or Output:Meter
@@ -28511,7 +28510,6 @@ OS:EnergyManagementSystem:Actuator,
        \note No spaces allowed in names for ErlVariableNames
        \reference ErlVariableNames
        \reference ErlActuatorNames
-       \reference AllObjects
   A3, \field Actuated Component Name
        \required-field
        \type object-list
@@ -30030,7 +30028,6 @@ OS:ExternalInterface:Actuator,
        \required-field
        \type alpha
        \reference ErlVariableNames
-       \reference AllObjects
        \note This name becomes a variable for use in Erl programs
        \note no spaces allowed in name
   A3 , \field Actuated Component Unique Name
@@ -30153,7 +30150,6 @@ OS:ExternalInterface:FunctionalMockupUnitImport:To:Actuator,
        \note This name becomes a read-only variable for use in Erl programs
        \note no spaces allowed in name
        \reference ErlVariableNames
-       \reference AllObjects
   A3 , \field Actuated Component Unique Name
        \required-field
        \type object-list
@@ -30324,7 +30320,6 @@ OS:PlantComponent:UserDefined,
       \required-field
       \type alpha
       \reference ConnectionObject
-      \reference AllObjects
   A3, \field Main Model Program Calling Manager Name
       \type object-list
       \object-list ErlProgramCallingManagerNames
