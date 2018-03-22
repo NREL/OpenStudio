@@ -107,6 +107,10 @@ TEST_F(ModelFixture, PlantComponentUserDefined_addToNode) {
   EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
   EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
+  m.save(toPath("./PlantComponentUserDefinedTestBefore.osm"), true);
+  EnergyManagementSystemActuator actuator = testObject.designVolumeFlowRateActuator().get();
+
+
   PlantComponentUserDefined testObjectClone = testObject.clone(m).cast<PlantComponentUserDefined>();
   EXPECT_TRUE(testObject.designVolumeFlowRateActuator());
   EXPECT_TRUE(testObjectClone.designVolumeFlowRateActuator());

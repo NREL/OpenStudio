@@ -135,16 +135,20 @@ namespace detail {
     //}
     if (boost::optional<EnergyManagementSystemActuator> object = designVolumeFlowRateActuator()) {
       EnergyManagementSystemActuator objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+      //DO THIS HERE OR IN THE PlantComponentUserDefined_Impl::setDesignVolumeFlowRateActuator() method??
+      //objectClone.setActuatedComponent(newPlantComponentUserDefined);
       newPlantComponentUserDefined.setDesignVolumeFlowRateActuator(objectClone);
     }
     //minimumMassFlowRateActuator
     if (boost::optional<EnergyManagementSystemActuator> object = minimumMassFlowRateActuator()) {
       EnergyManagementSystemActuator objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+      //objectClone.setActuatedComponent(newPlantComponentUserDefined);
       newPlantComponentUserDefined.setMinimumMassFlowRateActuator(objectClone);
     }
     //maximumMassFlowRateActuator
     if (boost::optional<EnergyManagementSystemActuator> object = maximumMassFlowRateActuator()) {
       EnergyManagementSystemActuator objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
+      //objectClone.setActuatedComponent(newPlantComponentUserDefined);
       newPlantComponentUserDefined.setMaximumMassFlowRateActuator(objectClone);
     }
     //minimumLoadingCapacityActuator
