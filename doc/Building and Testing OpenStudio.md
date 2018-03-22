@@ -46,6 +46,7 @@ If a new version of EnergyPlus is to be incorporated into OpenStudio
     - ENERGYPLUS_VERSION_MINOR
     - ENERGYPLUS_VERSION_PATCH
     - ENERGYPLUS_BUILD_SHA
+    - ENERGYPLUS_RELEASE_NAME
     - ENERGYPLUS_EXPECTED_HASH (In 3 places: Win 32, Win 64, Darwin, and Linux)
 
 Note: use HashTab, or similar, to determine the MD5 hash value for each file referenced above.
