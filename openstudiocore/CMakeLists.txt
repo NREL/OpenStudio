@@ -71,7 +71,7 @@ set(ENERGYPLUS_VERSION_MINOR 9)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "92e85043a9")
+set(ENERGYPLUS_BUILD_SHA "f75dd060e8")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -375,16 +375,16 @@ endif()
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v8.9.0-TestB")
+set(ENERGYPLUS_RELEASE_NAME "v8.9.0-RC1")
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH f6b687bcece6dede4b440b2ae3e8d138)
+    set(ENERGYPLUS_EXPECTED_HASH 234cbf8b923a27177b3803279d649881)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     set(ENERGYPLUS_EXPECTED_HASH xyz)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 0fddc1ec0ca6cec43842728fd13806f7)
+    set(ENERGYPLUS_EXPECTED_HASH 18fcf29c187c96710380b1d90b0cee4c)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -406,7 +406,7 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH c3ec14245027bb568dc7d87a61519742)
+    set(ENERGYPLUS_EXPECTED_HASH 95d54a04f9a13eb01f99a21a77c7efe8)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
@@ -661,13 +661,13 @@ if( BUILD_DVIEW )
   if(NOT EXISTS ${DVIEW_INSTALL_DIR})
     if( WIN32 )
       set(DVIEW_ZIP_FILENAME "DView-windows.zip")
-      set(DVIEW_ZIP_EXPECTED_MD5 "da1e0b0a564126118bfc510606470ee3")
+      set(DVIEW_ZIP_EXPECTED_MD5 "620181775C94B0B55C8CD2C38F011972")
     elseif( APPLE )
       set(DVIEW_ZIP_FILENAME "DView-osx.tar.gz")
-      set(DVIEW_ZIP_EXPECTED_MD5 "24d225aa500b344816c4f8239641d5aa")
+      set(DVIEW_ZIP_EXPECTED_MD5 "EE26F6CBDD19B6A2C3B5B0CAFE14E2E6")
     else()
       set(DVIEW_ZIP_FILENAME "DView-linux.tar.gz")
-      set(DVIEW_ZIP_EXPECTED_MD5 "8E100CE8E3A220C929A147D1DFA72662")
+      set(DVIEW_ZIP_EXPECTED_MD5 "E6EC87B46E7C1DCB8910EAEF6A3D1A48")
     endif()
 
     set(DVIEW_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
@@ -1533,7 +1533,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_4_0_20171229.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_5_0_20170330.pdf" DESTINATION .)
 
 ###############################################################################
 
