@@ -391,8 +391,6 @@ namespace openstudio
       // multiplier
       if (newThermalZone.isMultiplierDefaulted()){
         currentThermalZone.resetMultiplier();
-      } else{
-        currentThermalZone.setMultiplier(newThermalZone.multiplier());
       }
 
       // ceilingHeight
@@ -434,11 +432,7 @@ namespace openstudio
         if (currentObject){
           DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
           currentSpaceType.setDefaultConstructionSet(currentDefaultConstructionSet);
-        } else{
-          currentSpaceType.resetDefaultConstructionSet();
         }
-      } else{
-        currentSpaceType.resetDefaultConstructionSet();
       }
 
       // default schedule set
@@ -447,11 +441,7 @@ namespace openstudio
         if (currentObject){
           DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
           currentSpaceType.setDefaultScheduleSet(currentDefaultScheduleSet);
-        } else{
-          currentSpaceType.resetDefaultScheduleSet();
         }
-      } else{
-        currentSpaceType.resetDefaultScheduleSet();
       }
 
       // rendering color
@@ -474,16 +464,12 @@ namespace openstudio
       boost::optional<std::string> newStandardsBuildingType = newSpaceType.standardsBuildingType();
       if (newStandardsBuildingType){
         currentSpaceType.setStandardsBuildingType(*newStandardsBuildingType);
-      } else {
-        currentSpaceType.resetStandardsBuildingType();
       }
 
       // standardsSpaceType
       boost::optional<std::string> newStandardsSpaceType = newSpaceType.standardsSpaceType();
       if (newStandardsSpaceType){
         currentSpaceType.setStandardsSpaceType(*newStandardsSpaceType);
-      } else {
-        currentSpaceType.resetStandardsSpaceType();
       }
 
       // bring over child loads
@@ -549,11 +535,7 @@ namespace openstudio
         if (currentObject){
           DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
           currentBuildingStory.setDefaultConstructionSet(currentDefaultConstructionSet);
-        } else{
-          currentBuildingStory.resetDefaultConstructionSet();
         }
-      } else{
-        currentBuildingStory.resetDefaultConstructionSet();
       }
 
       // default schedule set
@@ -562,11 +544,7 @@ namespace openstudio
         if (currentObject){
           DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
           currentBuildingStory.setDefaultScheduleSet(currentDefaultScheduleSet);
-        } else{
-          currentBuildingStory.resetDefaultScheduleSet();
         }
-      } else{
-        currentBuildingStory.resetDefaultScheduleSet();
       }
 
     }
@@ -709,6 +687,8 @@ namespace openstudio
       {
         SpaceType currentSpaceType = currentObject->cast<SpaceType>();
         SpaceType newSpaceType = newObject.cast<SpaceType>();
+        LOG(Debug, "Current Space Type:" << currentSpaceType.name());
+        LOG(Debug, "New Space Type:" << currentSpaceType.name());
         mergeSpaceType(currentSpaceType, newSpaceType);
       }
         break;
