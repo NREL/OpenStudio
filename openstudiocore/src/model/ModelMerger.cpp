@@ -223,6 +223,8 @@ namespace openstudio
         }
       }
 
+      // DLM: TODO remove current and bring over new hard assigned loads, optional
+
       // DLM: TODO interiorPartitionSurfaceGroups
 
       // thermal zone
@@ -382,7 +384,7 @@ namespace openstudio
           currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
           currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
         } else{
-          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentThermalZone.model());
+          currentColor = RenderingColor::fromColorString(newColor->colorString(), currentThermalZone.model());
           OS_ASSERT(currentColor);
           currentThermalZone.setRenderingColor(*currentColor);
         }
@@ -390,21 +392,24 @@ namespace openstudio
 
       // multiplier
       if (newThermalZone.isMultiplierDefaulted()){
-        currentThermalZone.resetMultiplier();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentThermalZone.resetMultiplier();
       } else{
         currentThermalZone.setMultiplier(newThermalZone.multiplier());
       }
 
       // ceilingHeight
       if (newThermalZone.isCeilingHeightDefaulted() || newThermalZone.isCeilingHeightAutocalculated()){
-        currentThermalZone.resetCeilingHeight();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentThermalZone.resetCeilingHeight();
       } else{
         currentThermalZone.setCeilingHeight(newThermalZone.ceilingHeight());
       }
 
       // volume
       if (newThermalZone.isVolumeDefaulted() || newThermalZone.isVolumeAutocalculated()){
-        currentThermalZone.resetVolume();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentThermalZone.resetVolume();
       } else{
         currentThermalZone.setVolume(newThermalZone.volume());
       }
@@ -435,10 +440,12 @@ namespace openstudio
           DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
           currentSpaceType.setDefaultConstructionSet(currentDefaultConstructionSet);
         } else{
-          currentSpaceType.resetDefaultConstructionSet();
+          // DLM: this is an error
+          //currentSpaceType.resetDefaultConstructionSet();
         }
       } else{
-        currentSpaceType.resetDefaultConstructionSet();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentSpaceType.resetDefaultConstructionSet();
       }
 
       // default schedule set
@@ -448,10 +455,12 @@ namespace openstudio
           DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
           currentSpaceType.setDefaultScheduleSet(currentDefaultScheduleSet);
         } else{
-          currentSpaceType.resetDefaultScheduleSet();
+          // DLM: this is an error
+          //currentSpaceType.resetDefaultScheduleSet();
         }
       } else{
-        currentSpaceType.resetDefaultScheduleSet();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentSpaceType.resetDefaultScheduleSet();
       }
 
       // rendering color
@@ -464,7 +473,7 @@ namespace openstudio
           currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
           currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
         } else{
-          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentSpaceType.model());
+          currentColor = RenderingColor::fromColorString(newColor->colorString(), currentSpaceType.model());
           OS_ASSERT(currentColor);
           currentSpaceType.setRenderingColor(*currentColor);
         }
@@ -475,7 +484,8 @@ namespace openstudio
       if (newStandardsBuildingType){
         currentSpaceType.setStandardsBuildingType(*newStandardsBuildingType);
       } else {
-        currentSpaceType.resetStandardsBuildingType();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentSpaceType.resetStandardsBuildingType();
       }
 
       // standardsSpaceType
@@ -483,14 +493,16 @@ namespace openstudio
       if (newStandardsSpaceType){
         currentSpaceType.setStandardsSpaceType(*newStandardsSpaceType);
       } else {
-        currentSpaceType.resetStandardsSpaceType();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentSpaceType.resetStandardsSpaceType();
       }
 
       // bring over child loads
-      for (const auto& newChild : newSpaceType.children()){
-        ModelObject currentChild = newChild.clone(m_currentModel).cast<ModelObject>();
-        currentChild.setParent(currentSpaceType);
-      }
+      // DLM: should only do this if new model can have loads, if doing this should also remove current loads
+      //for (const auto& newChild : newSpaceType.children()){
+      //  ModelObject currentChild = newChild.clone(m_currentModel).cast<ModelObject>();
+      //  currentChild.setParent(currentSpaceType);
+      //}
     }
 
     void ModelMerger::mergeBuildingStory(BuildingStory& currentBuildingStory, const BuildingStory& newBuildingStory)
@@ -513,7 +525,7 @@ namespace openstudio
           currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
           currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
         } else{
-          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingStory.model());
+          currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingStory.model());
           OS_ASSERT(currentColor);
           currentBuildingStory.setRenderingColor(*currentColor);
         }
@@ -550,10 +562,12 @@ namespace openstudio
           DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
           currentBuildingStory.setDefaultConstructionSet(currentDefaultConstructionSet);
         } else{
-          currentBuildingStory.resetDefaultConstructionSet();
+          // DLM: this is an error
+          //currentBuildingStory.resetDefaultConstructionSet();
         }
       } else{
-        currentBuildingStory.resetDefaultConstructionSet();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentBuildingStory.resetDefaultConstructionSet();
       }
 
       // default schedule set
@@ -563,10 +577,12 @@ namespace openstudio
           DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
           currentBuildingStory.setDefaultScheduleSet(currentDefaultScheduleSet);
         } else{
-          currentBuildingStory.resetDefaultScheduleSet();
+          // DLM: this is an error
+          //currentBuildingStory.resetDefaultScheduleSet();
         }
       } else{
-        currentBuildingStory.resetDefaultScheduleSet();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentBuildingStory.resetDefaultScheduleSet();
       }
 
     }
@@ -591,14 +607,15 @@ namespace openstudio
           currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
           currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
         } else{
-          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingUnit.model());
+          currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingUnit.model());
           OS_ASSERT(currentColor);
           currentBuildingUnit.setRenderingColor(*currentColor);
         }
       }
 
       // buildingUnitType
-      currentBuildingUnit.setBuildingUnitType(newBuildingUnit.buildingUnitType());
+      // DLM: TODO need to check if other buildingUnitType is defaulted and optionally set
+      //currentBuildingUnit.setBuildingUnitType(newBuildingUnit.buildingUnitType());
 
       // DLM: TODO featureNames() const;
     }
