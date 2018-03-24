@@ -390,7 +390,10 @@ namespace openstudio
 
       // multiplier
       if (newThermalZone.isMultiplierDefaulted()){
-        currentThermalZone.resetMultiplier();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentThermalZone.resetMultiplier();
+      } else{
+        currentThermalZone.setMultiplier(newThermalZone.multiplier());
       }
 
       // ceilingHeight
@@ -432,7 +435,13 @@ namespace openstudio
         if (currentObject){
           DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
           currentSpaceType.setDefaultConstructionSet(currentDefaultConstructionSet);
+        } else{
+          // DLM: this is an error
+          //currentSpaceType.resetDefaultConstructionSet();
         }
+      } else{
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentSpaceType.resetDefaultConstructionSet();
       }
 
       // default schedule set
@@ -441,7 +450,13 @@ namespace openstudio
         if (currentObject){
           DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
           currentSpaceType.setDefaultScheduleSet(currentDefaultScheduleSet);
+        } else{
+          // DLM: this is an error
+          //currentSpaceType.resetDefaultScheduleSet();
         }
+      } else{
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentSpaceType.resetDefaultScheduleSet();
       }
 
       // rendering color
@@ -464,12 +479,18 @@ namespace openstudio
       boost::optional<std::string> newStandardsBuildingType = newSpaceType.standardsBuildingType();
       if (newStandardsBuildingType){
         currentSpaceType.setStandardsBuildingType(*newStandardsBuildingType);
+      } else {
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentSpaceType.resetStandardsBuildingType();
       }
 
       // standardsSpaceType
       boost::optional<std::string> newStandardsSpaceType = newSpaceType.standardsSpaceType();
       if (newStandardsSpaceType){
         currentSpaceType.setStandardsSpaceType(*newStandardsSpaceType);
+      } else {
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentSpaceType.resetStandardsSpaceType();
       }
 
       // bring over child loads
@@ -535,7 +556,13 @@ namespace openstudio
         if (currentObject){
           DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
           currentBuildingStory.setDefaultConstructionSet(currentDefaultConstructionSet);
+        } else{
+          // DLM: this is an error
+          //currentBuildingStory.resetDefaultConstructionSet();
         }
+      } else{
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentBuildingStory.resetDefaultConstructionSet();
       }
 
       // default schedule set
@@ -544,7 +571,13 @@ namespace openstudio
         if (currentObject){
           DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
           currentBuildingStory.setDefaultScheduleSet(currentDefaultScheduleSet);
+        } else{
+          // DLM: this is an error
+          //currentBuildingStory.resetDefaultScheduleSet();
         }
+      } else{
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentBuildingStory.resetDefaultScheduleSet();
       }
 
     }
@@ -687,8 +720,6 @@ namespace openstudio
       {
         SpaceType currentSpaceType = currentObject->cast<SpaceType>();
         SpaceType newSpaceType = newObject.cast<SpaceType>();
-        LOG(Debug, "Current Space Type:" << currentSpaceType.name());
-        LOG(Debug, "New Space Type:" << currentSpaceType.name());
         mergeSpaceType(currentSpaceType, newSpaceType);
       }
         break;
