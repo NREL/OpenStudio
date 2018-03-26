@@ -983,7 +983,7 @@ namespace detail{
       LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
       return myAFN[0];
     }
-    return false;
+    return boost::none;
   }
 
   // Autosizing methods

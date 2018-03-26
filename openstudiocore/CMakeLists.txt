@@ -71,7 +71,7 @@ set(ENERGYPLUS_VERSION_MINOR 9)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "f75dd060e8")
+set(ENERGYPLUS_BUILD_SHA "40101eaafd")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -375,16 +375,16 @@ endif()
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v8.9.0-RC1")
+set(ENERGYPLUS_RELEASE_NAME "v8.9.0")
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 234cbf8b923a27177b3803279d649881)
+    set(ENERGYPLUS_EXPECTED_HASH a2621059d23923fe16ff8335b0446a90)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     set(ENERGYPLUS_EXPECTED_HASH xyz)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 18fcf29c187c96710380b1d90b0cee4c)
+    set(ENERGYPLUS_EXPECTED_HASH dd7b0c6c76dba3ee2b6ea33751d5ff0b)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -406,7 +406,7 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 95d54a04f9a13eb01f99a21a77c7efe8)
+    set(ENERGYPLUS_EXPECTED_HASH 17964c3bf36146496820735093800576)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
@@ -584,8 +584,8 @@ endif()
 # to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
 # next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20180317.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "216c9a19d36489a2314e9ebb02afe17a")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20180325.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "ac9e76129679612a4761fb47b3a9a127")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -661,13 +661,13 @@ if( BUILD_DVIEW )
   if(NOT EXISTS ${DVIEW_INSTALL_DIR})
     if( WIN32 )
       set(DVIEW_ZIP_FILENAME "DView-windows.zip")
-      set(DVIEW_ZIP_EXPECTED_MD5 "620181775C94B0B55C8CD2C38F011972")
+      set(DVIEW_ZIP_EXPECTED_MD5 "7658310fda707e620ec4412eef26a456")
     elseif( APPLE )
       set(DVIEW_ZIP_FILENAME "DView-osx.tar.gz")
-      set(DVIEW_ZIP_EXPECTED_MD5 "EE26F6CBDD19B6A2C3B5B0CAFE14E2E6")
+      set(DVIEW_ZIP_EXPECTED_MD5 "27eaf313eee9461d77e249538c1f627f")
     else()
       set(DVIEW_ZIP_FILENAME "DView-linux.tar.gz")
-      set(DVIEW_ZIP_EXPECTED_MD5 "E6EC87B46E7C1DCB8910EAEF6A3D1A48")
+      set(DVIEW_ZIP_EXPECTED_MD5 "f42818573cc07aec5ed8b676312c0af3")
     endif()
 
     set(DVIEW_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
@@ -1533,7 +1533,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_5_0_20170330.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_5_0_20180330.pdf" DESTINATION .)
 
 ###############################################################################
 

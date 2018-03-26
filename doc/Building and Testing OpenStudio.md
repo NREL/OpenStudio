@@ -197,8 +197,7 @@ In CMake type the following:
 
 In a command window:
 
-    make –j16 (16 indicates the number of cores used, the max number allowed by VMware 12)
-    make package
+    make –j16 package
 
 Copy .deb package from VM to Windows
 
@@ -270,7 +269,7 @@ In CMake type the following:
 In a command window:
 
 ```bash
-make package –j16
+make -j16 package
 # When done:
 ⌘ + q (to quit a Mac app)
 ```

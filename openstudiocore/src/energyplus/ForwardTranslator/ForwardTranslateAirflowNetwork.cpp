@@ -574,9 +574,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDistributio
 
   AirflowNetworkNode node1 = modelObject.node1();
   if (node1.optionalCast<AirflowNetworkZone>()) {
-    // DLM: Jason, the thermal zone and other objects may be renamed on translation, need to get the translated object's name
-    ThermalZone zone = node1.cast<AirflowNetworkZone>().thermalZone();
-    obj = translateAndMapModelObject(zone);
+    // DLM: Jason, the thermal zone and other objects may be renamed on translation, need to get the translated object's name   
+    auto z = node1.cast<AirflowNetworkZone>().thermalZone();
+    obj = translateAndMapModelObject(z);
     OS_ASSERT(obj);
     idfObject.setString(AirflowNetwork_Distribution_LinkageFields::Node1Name, obj->nameString());
   } else {
@@ -585,8 +585,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDistributio
 
   AirflowNetworkNode node2 = modelObject.node2();
   if (node2.optionalCast<AirflowNetworkZone>()) {
-    ThermalZone zone = node2.cast<AirflowNetworkZone>().thermalZone();
-    obj = translateAndMapModelObject(zone);
+    auto z = node1.cast<AirflowNetworkZone>().thermalZone();
+    obj = translateAndMapModelObject(z);
     OS_ASSERT(obj);
     idfObject.setString(AirflowNetwork_Distribution_LinkageFields::Node2Name, obj->nameString());
   } else {

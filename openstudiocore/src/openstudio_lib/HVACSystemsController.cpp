@@ -1142,7 +1142,7 @@ void HVACControlsController::update()
       m_hvacAirLoopControlsView->hvacOperationViewSwitcher->setView(m_systemAvailabilityDropZone);
 
       // Allow clicking on the Schedule to see it in the right column inspector
-      connect(m_systemAvailabilityDropZone,
+      connect(m_systemAvailabilityDropZone.data(),
         &OSDropZone::itemClicked,
         systemAvailabilityVectorController,
         &SystemAvailabilityVectorController::onDropZoneItemClicked);
