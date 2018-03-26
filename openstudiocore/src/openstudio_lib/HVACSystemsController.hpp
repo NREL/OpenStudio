@@ -239,9 +239,9 @@ class HVACControlsController : public QObject, public Nano::Observer
 
   QPointer<NoMechanicalVentilationView> m_noMechanicalVentilationView;
 
-  OSDropZone * m_systemAvailabilityDropZone;
+  QPointer<OSDropZone> m_systemAvailabilityDropZone;
 
-  OSDropZone * m_supplyAirTempScheduleDropZone;
+  QPointer<OSDropZone> m_supplyAirTempScheduleDropZone;
 
   QPointer<FollowOATempSPMView> m_followOATempSPMView;
 
@@ -251,7 +251,7 @@ class HVACControlsController : public QObject, public Nano::Observer
 
   QPointer<HVACSystemsController> m_hvacSystemsController;
 
-  OSDropZone * m_availabilityManagerDropZone;
+  QPointer<OSDropZone> m_availabilityManagerDropZone;
 
   bool m_dirty;
 };
