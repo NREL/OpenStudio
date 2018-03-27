@@ -168,6 +168,18 @@ class MODEL_API PlantComponentUserDefined_Impl : public StraightComponent_Impl {
 
     bool setMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
+    EnergyManagementSystemProgram createInitProgram(const EnergyManagementSystemActuator& dvfrActuator,
+                                                    const EnergyManagementSystemActuator& mmfrActuator,
+                                                    const EnergyManagementSystemActuator& mxfrActuator,
+                                                    const EnergyManagementSystemActuator& mlcActuator,
+                                                    const EnergyManagementSystemActuator& mxlcActuator,
+                                                    const EnergyManagementSystemActuator& olcActuator,
+                                                    const Model& model);
+
+    EnergyManagementSystemProgram createSimProgram( const EnergyManagementSystemActuator& otActuator,
+                                                    const EnergyManagementSystemActuator& mfrActuator,
+                                                    const Model& model);
+
     //@}
     /** @name Other */
     //@{

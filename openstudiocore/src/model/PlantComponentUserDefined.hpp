@@ -109,7 +109,7 @@ class MODEL_API PlantComponentUserDefined : public StraightComponent {
   boost::optional<EnergyManagementSystemActuator> outletTemperatureActuator() const;
 
   boost::optional<EnergyManagementSystemActuator> massFlowRateActuator() const;
-  
+
 
   //@}
   /** @name Setters */
@@ -162,6 +162,18 @@ class MODEL_API PlantComponentUserDefined : public StraightComponent {
   bool setOutletTemperatureActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
 
   bool setMassFlowRateActuator(const EnergyManagementSystemActuator& energyManagementSystemActuator);
+
+  EnergyManagementSystemProgram createInitProgram(const EnergyManagementSystemActuator& dvfrActuator,
+    const EnergyManagementSystemActuator& mmfrActuator,
+    const EnergyManagementSystemActuator& mxfrActuator,
+    const EnergyManagementSystemActuator& mlcActuator,
+    const EnergyManagementSystemActuator& mxlcActuator,
+    const EnergyManagementSystemActuator& olcActuator,
+    const Model& model);
+
+  EnergyManagementSystemProgram createSimProgram(const EnergyManagementSystemActuator& otActuator,
+    const EnergyManagementSystemActuator& mfrActuator,
+    const Model& model);
 
   //@}
   /** @name Other */
