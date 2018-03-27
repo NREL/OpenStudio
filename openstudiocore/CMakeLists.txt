@@ -8,8 +8,7 @@ if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-
-project(OpenStudio VERSION 2.4.4)
+project(OpenStudio VERSION 2.5.0)
 
 include(ExternalProject)
 include(CPackComponent)

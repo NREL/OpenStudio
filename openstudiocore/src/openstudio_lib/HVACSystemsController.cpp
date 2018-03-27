@@ -1296,7 +1296,7 @@ void HVACControlsController::update()
         m_scheduledSPMView->supplyAirTemperatureViewSwitcher->setView(m_supplyAirTempScheduleDropZone);
 
         // Allow clicking on the Schedule to see it in the right column inspector
-        connect(m_supplyAirTempScheduleDropZone,
+        connect(m_supplyAirTempScheduleDropZone.data(),
           &OSDropZone::itemClicked,
           supplyAirTempScheduleVectorController,
           &SupplyAirTempScheduleVectorController::onDropZoneItemClicked);
@@ -1387,7 +1387,7 @@ void HVACControlsController::update()
       m_hvacAirLoopControlsView->availabilityManagerViewSwitcher->setView(m_availabilityManagerDropZone);
 
       // When clicking on the drop zone item, pull it on the MainRightColumnController
-      connect(m_availabilityManagerDropZone,
+      connect(m_availabilityManagerDropZone.data(),
         &OSDropZone::itemClicked,
         availabilityManagerObjectVectorController,
         &AvailabilityManagerObjectVectorController::onDropZoneItemClicked);
@@ -1492,7 +1492,7 @@ void HVACControlsController::update()
       m_hvacPlantLoopControlsView->availabilityManagerViewSwitcher->setView(m_availabilityManagerDropZone);
 
       // When clicking on the drop zone item, pull it on the MainRightColumnController
-      connect(m_availabilityManagerDropZone,
+      connect(m_availabilityManagerDropZone.data(),
         &OSDropZone::itemClicked,
         availabilityManagerObjectVectorController,
         &AvailabilityManagerObjectVectorController::onDropZoneItemClicked);
