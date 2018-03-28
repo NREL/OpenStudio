@@ -1533,6 +1533,9 @@ endif()
 
 # Install additional Documents, such as release notes
 install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_5_0_20180330.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../LICENSE.md" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../CHANGELOG.md" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../copyright.txt" DESTINATION .)
 
 ###############################################################################
 
