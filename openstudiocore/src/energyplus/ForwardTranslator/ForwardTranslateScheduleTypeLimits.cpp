@@ -69,10 +69,13 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleTypeLimits( Sched
     std::string unitType = *s;
     boost::to_lower(unitType);
     if ((unitType == "clothinginsulation") ||
-        (unitType == "rotationsperminute") ||
+        (unitType == "controlmode") ||
+        (unitType == "linearpowerdensity") ||
         (unitType == "massflowrate") ||
         (unitType == "pressure") ||
-        (unitType == "solarenergy"))
+        (unitType == "rotationsperminute") ||
+        (unitType == "solarenergy") ||
+        (unitType == "volumetricflowrate"))
     {
       // unit type key is unsupported in EnergyPlus--fall back on 'Any Number'
       m_idfObjects.pop_back();
