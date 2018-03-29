@@ -76,6 +76,8 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCostParameters( 
   // create, register, and name object
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::LifeCycleCost_Parameters,
                                                        modelObject);
+  // This is a unique model object
+  idfObject.setName("Life Cycle Cost Parameters");
 
   idfObject.setString(LifeCycleCost_ParametersFields::DiscountingConvention, modelObject.discountingConvention());
 

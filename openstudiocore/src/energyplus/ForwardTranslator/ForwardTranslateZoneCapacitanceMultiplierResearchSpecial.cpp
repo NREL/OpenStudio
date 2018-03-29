@@ -47,6 +47,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneCapacitanceMultiplier
 
   m_idfObjects.push_back(idfObject);
 
+  // This is a unique model object *in OpenStudio*
+  idfObject.setName("Zone Capacitance Multiplier Research Special");
+
   if (!modelObject.isTemperatureCapacityMultiplierDefaulted()) {
     idfObject.setDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier,
                         modelObject.temperatureCapacityMultiplier());
