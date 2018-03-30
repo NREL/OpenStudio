@@ -331,7 +331,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
       IdfObject daylightingControlObject(openstudio::IddObjectType::Daylighting_Controls);
       // Name it like the Zone name + " DaylightingControls"
-      daylightingControlObject.setName(modelObject.name().get() + "DaylightingControls");
+      daylightingControlObject.setName(modelObject.name().get() + " DaylightingControls");
       m_idfObjects.push_back(daylightingControlObject);
 
       daylightingControlObject.setString(
@@ -518,6 +518,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         referencePoint.setDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint, illuminanceMap->originZCoordinate());
 
         IdfObject daylightingControlObject(openstudio::IddObjectType::Daylighting_Controls);
+        // Name it like the Zone name + " DaylightingControls"
+        daylightingControlObject.setName(modelObject.name().get() + " DaylightingControls");
         m_idfObjects.push_back(daylightingControlObject);
 
         daylightingControlObject.setString(Daylighting_ControlsFields::ZoneName, modelObject.nameString());
