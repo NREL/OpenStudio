@@ -330,6 +330,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       }
 
       IdfObject daylightingControlObject(openstudio::IddObjectType::Daylighting_Controls);
+      // Name it like the Zone name + " DaylightingControls"
+      daylightingControlObject.setName(modelObject.name().get() + "DaylightingControls");
       m_idfObjects.push_back(daylightingControlObject);
 
       daylightingControlObject.setString(
@@ -338,6 +340,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
       // Primary Control
       IdfObject primaryReferencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
+      // Name it like the OS:Daylighting:Control corresponding to the Primary Reference Point
       primaryReferencePoint.setName(primaryDaylightingControl->nameString());
       m_idfObjects.push_back(primaryReferencePoint);
 
@@ -378,6 +381,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       // Secondary Control
       if (secondaryDaylightingControl){
         IdfObject secondaryReferencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
+      // Name it like the OS:Daylighting:Control corresponding to the Secondary Reference Point
         secondaryReferencePoint.setName(secondaryDaylightingControl->nameString());
         m_idfObjects.push_back(secondaryReferencePoint);
 
