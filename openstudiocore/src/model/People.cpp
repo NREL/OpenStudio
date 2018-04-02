@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "People.hpp"
 #include "People_Impl.hpp"
@@ -76,55 +77,54 @@ namespace detail {
 
   const std::vector<std::string>& People_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
+    static std::vector<std::string> result{
 
-      result.push_back("People Occupant Count");
-      result.push_back("People Radiant Heating Energy");
-      result.push_back("People Radiant Heating Rate");
-      result.push_back("People Convective Heating Energy");
-      result.push_back("People Convective Heating Rate");
-      result.push_back("People Sensible Heating Energy");
-      result.push_back("People Sensible Heating Rate");
-      result.push_back("People Latent Gain Energy");
-      result.push_back("People Latent Gain Rate");
-      result.push_back("People Total Heating Energy");
-      result.push_back("People Total Heating Rate");
-      result.push_back("People Air Temperature");
-      result.push_back("People Air Relative Humidity");
+      "People Occupant Count",
+      "People Radiant Heating Energy",
+      "People Radiant Heating Rate",
+      "People Convective Heating Energy",
+      "People Convective Heating Rate",
+      "People Sensible Heating Energy",
+      "People Sensible Heating Rate",
+      "People Latent Gain Energy",
+      "People Latent Gain Rate",
+      "People Total Heating Energy",
+      "People Total Heating Rate",
+      "People Air Temperature",
+      "People Air Relative Humidity"
 
       // Reported in ThermalZone
-      //result.push_back("Zone People Occupant Count");
-      //result.push_back("Zone People Radiant Heating Energy");
-      //result.push_back("Zone People Radiant Heating Rate");
-      //result.push_back("Zone People Convective Heating Energy");
-      //result.push_back("Zone People Convective Heating Rate");
-      //result.push_back("Zone People Sensible Heating Energy");
-      //result.push_back("Zone People Sensible Heating Rate");
-      //result.push_back("Zone People Latent Gain Energy");
-      //result.push_back("Zone People Latent Gain Rate");
-      //result.push_back("Zone People Total Heating Energy");
-      //result.push_back("Zone People Total Heating Rate");
-      //result.push_back("Zone Thermal Comfort Mean Radiant Temperature");
-      //result.push_back("Zone Thermal Comfort Operative Temperature");
-      //result.push_back("Zone Thermal Comfort Fanger Model PMV");
-      //result.push_back("Zone Thermal Comfort Fanger Model PPD");
-      //result.push_back("Zone Thermal Comfort Clothing Surface Temperature");
-      //result.push_back("Zone Thermal Comfort Pierce Model Effective Temperature PMV");
-      //result.push_back("Zone Thermal Comfort Pierce Model Standard Effective Temperature PMV");
-      //result.push_back("Zone Thermal Comfort Pierce Model Discomfort Index");
-      //result.push_back("Zone Thermal Comfort Pierce Model Thermal Sensation Index");
-      //result.push_back("Zone Thermal Comfort KSU Model Thermal Sensation Index");
-      //result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model 80%% Acceptability Status");
-      //result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model 90%% Acceptability Status");
-      //result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model Running Average Outdoor Air Temperature");
-      //result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model Temperature");
-      //result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Category I Status");
-      //result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Category II Status");
-      //result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Category III Status");
-      //result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Running Average Outdoor Air Temperature");
-      //result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Temperature");
-    }
+      //"Zone People Occupant Count",
+      //"Zone People Radiant Heating Energy",
+      //"Zone People Radiant Heating Rate",
+      //"Zone People Convective Heating Energy",
+      //"Zone People Convective Heating Rate",
+      //"Zone People Sensible Heating Energy",
+      //"Zone People Sensible Heating Rate",
+      //"Zone People Latent Gain Energy",
+      //"Zone People Latent Gain Rate",
+      //"Zone People Total Heating Energy",
+      //"Zone People Total Heating Rate",
+      //"Zone Thermal Comfort Mean Radiant Temperature",
+      //"Zone Thermal Comfort Operative Temperature",
+      //"Zone Thermal Comfort Fanger Model PMV",
+      //"Zone Thermal Comfort Fanger Model PPD",
+      //"Zone Thermal Comfort Clothing Surface Temperature",
+      //"Zone Thermal Comfort Pierce Model Effective Temperature PMV",
+      //"Zone Thermal Comfort Pierce Model Standard Effective Temperature PMV",
+      //"Zone Thermal Comfort Pierce Model Discomfort Index",
+      //"Zone Thermal Comfort Pierce Model Thermal Sensation Index",
+      //"Zone Thermal Comfort KSU Model Thermal Sensation Index",
+      //"Zone Thermal Comfort ASHRAE 55 Adaptive Model 80%% Acceptability Status",
+      //"Zone Thermal Comfort ASHRAE 55 Adaptive Model 90%% Acceptability Status",
+      //"Zone Thermal Comfort ASHRAE 55 Adaptive Model Running Average Outdoor Air Temperature",
+      //"Zone Thermal Comfort ASHRAE 55 Adaptive Model Temperature",
+      //"Zone Thermal Comfort CEN 15251 Adaptive Model Category I Status",
+      //"Zone Thermal Comfort CEN 15251 Adaptive Model Category II Status",
+      //"Zone Thermal Comfort CEN 15251 Adaptive Model Category III Status",
+      //"Zone Thermal Comfort CEN 15251 Adaptive Model Running Average Outdoor Air Temperature",
+      //"Zone Thermal Comfort CEN 15251 Adaptive Model Temperature"
+    };
     return result;
   }
 

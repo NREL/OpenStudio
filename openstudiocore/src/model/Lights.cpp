@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "Lights.hpp"
 #include "Lights_Impl.hpp"
@@ -74,36 +75,34 @@ namespace detail {
 
   const std::vector<std::string>& Lights_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Lights Electric Power");
-      result.push_back("Lights Radiant Heat Gain");
-      result.push_back("Lights Radiant Heating Rate");
-      result.push_back("Lights Visible Radiation Heating Energy");
-      result.push_back("Lights Visible Radiation Heating Rate");
-      result.push_back("Lights Convective Heating Energy");
-      result.push_back("Lights Convective Heating Rate");
-      result.push_back("Lights Return Air Heating Energy");
-      result.push_back("Lights Return Air Heating Rate");
-      result.push_back("Lights Total Heating Energy");
-      result.push_back("Lights Total Heating Rate");
-      result.push_back("Lights Electric Energy");
+    static std::vector<std::string> result{
+      "Lights Electric Power",
+      "Lights Radiant Heat Gain",
+      "Lights Radiant Heating Rate",
+      "Lights Visible Radiation Heating Energy",
+      "Lights Visible Radiation Heating Rate",
+      "Lights Convective Heating Energy",
+      "Lights Convective Heating Rate",
+      "Lights Return Air Heating Energy",
+      "Lights Return Air Heating Rate",
+      "Lights Total Heating Energy",
+      "Lights Total Heating Rate",
+      "Lights Electric Energy"
 
       // Reported in ThermalZone
-      //result.push_back("Zone Lights Electric Power");
-      //result.push_back("Zone Lights Radiant Heating Energy");
-      //result.push_back("Zone Lights Radiant Heating Rate");
-      //result.push_back("Zone Lights Visible Radiation Heating Energy");
-      //result.push_back("Zone Lights Visible Radiation Heating Rate");
-      //result.push_back("Zone Lights Convective Heating Energy");
-      //result.push_back("Zone Lights Convective Heating Rate");
-      //result.push_back("Zone Lights Return Air Heating Energy");
-      //result.push_back("Zone Lights Return Air Heating Rate");
-      //result.push_back("Zone Lights Total Heating Energy");
-      //result.push_back("Zone Lights Total Heating Rate");
-      //result.push_back("Zone Lights Electric Energy");
-    }
+      //"Zone Lights Electric Power",
+      //"Zone Lights Radiant Heating Energy",
+      //"Zone Lights Radiant Heating Rate",
+      //"Zone Lights Visible Radiation Heating Energy",
+      //"Zone Lights Visible Radiation Heating Rate",
+      //"Zone Lights Convective Heating Energy",
+      //"Zone Lights Convective Heating Rate",
+      //"Zone Lights Return Air Heating Energy",
+      //"Zone Lights Return Air Heating Rate",
+      //"Zone Lights Total Heating Energy",
+      //"Zone Lights Total Heating Rate",
+      //"Zone Lights Electric Energy"
+    };
     return result;
   }
 

@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
@@ -142,15 +143,14 @@ namespace detail {
 
   const std::vector<std::string>& AirLoopHVAC_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()) {
-      result.push_back("Air System Simulation Cycle On Off Status");
-      result.push_back("HVAC System Solver Iteration Count");
-      result.push_back("Air System Solver Iteration Count");
-      result.push_back("Air System Simulation Maximum Iteration Count");
-      result.push_back("Air System Simulation Iteration Count");
-      result.push_back("Air System Component Model Simulation Calls");
-    }
+    static std::vector<std::string> result{
+      "Air System Simulation Cycle On Off Status",
+      "HVAC System Solver Iteration Count",
+      "Air System Solver Iteration Count",
+      "Air System Simulation Maximum Iteration Count",
+      "Air System Simulation Iteration Count",
+      "Air System Component Model Simulation Calls"
+    };
     return result;
   }
 
@@ -673,9 +673,15 @@ namespace detail {
   }
 
 
-  ModelObject AirLoopHVAC_Impl::clone(Model model) const
-  {
+  ModelObject AirLoopHVAC_Impl::clone(Model model) const {
     AirLoopHVAC airLoopClone = Loop_Impl::clone(model).cast<AirLoopHVAC>();
+
+    airLoopClone.setString(supplyInletPort(),"");
+    airLoopClone.setString(supplyOutletPortA(),"");
+    airLoopClone.setString(supplyOutletPortB(),"");
+    airLoopClone.setString(demandInletPortA(),"");
+    airLoopClone.setString(demandInletPortB(),"");
+    airLoopClone.setString(demandOutletPort(),"");
 
     {
       auto clone = availabilitySchedule().clone(model).cast<Schedule>();
@@ -683,13 +689,100 @@ namespace detail {
     }
 
     {
-      // Perhaps call a clone(Loop loop) instead...
       AvailabilityManagerAssignmentList avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
       avmListClone.setName(airLoopClone.name().get() + " AvailabilityManagerAssigmentList");
       airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilityManagerListName, avmListClone.handle());
     }
 
+    {
+      auto sizing = sizingSystem();
+      auto sizingClone = sizing.clone(model).cast<SizingSystem>();
+      sizingClone.setAirLoopHVAC(airLoopClone);
+    }
+
+    airLoopClone.getImpl<detail::AirLoopHVAC_Impl>()->createTopology();
+
+    auto supplyComps = supplyComponents();
+    auto outletNodeClone = airLoopClone.supplyOutletNode();
+    std::vector<Node> supplyNodes;
+
+    for( const auto & comp : supplyComps ) {
+      if( comp.iddObjectType() == Node::iddObjectType() ) {
+        supplyNodes.push_back(comp.cast<Node>());
+      } else {
+        auto compClone = comp.clone(model).cast<HVACComponent>();
+        compClone.addToNode(outletNodeClone);
+      }
+    }
+
+    auto supplyNodeClones = subsetCastVector<Node>(airLoopClone.supplyComponents());
+
+    OS_ASSERT( supplyNodes.size() == supplyNodeClones.size() );
+    for ( size_t i = 0; i < supplyNodes.size(); ++i ) {
+      const auto node = supplyNodes[i];
+      auto cloneNode = supplyNodeClones[i];
+
+      auto spms = node.setpointManagers();
+      for ( const auto & spm : spms ) {
+        auto spmclone = spm.clone(model).cast<SetpointManager>();
+        spmclone.addToNode(cloneNode);
+      }
+    }
+
+    auto terms = terminals();
+    std::vector<IddObjectType> termtypes;
+
+    std::for_each(terms.begin(), terms.end(), [&termtypes](const HVACComponent & comp) {
+      termtypes.push_back(comp.iddObjectType());
+    });
+
+    auto uniquetypes = std::vector<IddObjectType>(termtypes.begin(), std::unique(termtypes.begin(), termtypes.end()));
+    std::vector<HVACComponent> uniqueterms;
+
+    for ( const auto & type : uniquetypes ) {
+      auto it = std::find_if(terms.begin(), terms.end(), [&type](const HVACComponent & comp) {
+        return (type ==  comp.iddObjectType());
+      });
+      if ( it != terms.end() ) {
+        uniqueterms.push_back(*it); 
+      }
+    }
+
+    for( const auto & term : uniqueterms ) {
+      auto termclone = term.clone(model).cast<HVACComponent>();
+      airLoopClone.addBranchForHVACComponent(termclone);
+    }
+
     return airLoopClone;
+  }
+
+  std::vector<HVACComponent> AirLoopHVAC_Impl::terminals() const {
+    auto demandComps = subsetCastVector<HVACComponent>(demandComponents());
+
+    auto notterminal = [](const HVACComponent & comp) {
+      bool result = false;
+      const auto type = comp.iddObjectType();
+
+      if( type == Node::iddObjectType() ) {
+        result = true;
+      } else if( type == ThermalZone::iddObjectType() ) {
+        result = true;
+      } else if( type == AirLoopHVACZoneSplitter::iddObjectType() ) {
+        result = true;
+      } else if( type == AirLoopHVACZoneMixer::iddObjectType() ) {
+        result = true;
+      } else if( type == AirLoopHVACSupplyPlenum::iddObjectType() ) {
+        result = true;
+      } else if( type == AirLoopHVACReturnPlenum::iddObjectType() ) {
+        result = true;
+      }
+
+      return result;
+    };
+
+    auto end = std::remove_if(demandComps.begin(), demandComps.end(), notterminal);
+
+    return std::vector<HVACComponent>(demandComps.begin(), end);
   }
 
   std::vector<ModelObject> AirLoopHVAC_Impl::oaComponents(openstudio::IddObjectType type)
@@ -1766,55 +1859,69 @@ namespace detail {
     return types;
   }
 
+  void AirLoopHVAC_Impl::createTopology() {
+    auto m = model();
+    auto obj = getObject<model::AirLoopHVAC>();
+
+    // supply side
+    openstudio::model::Node supplyInletNode(m);
+    openstudio::model::Node supplyOutletNode(m);
+
+    m.connect( obj,openstudio::OS_AirLoopHVACFields::SupplySideInletNodeName,
+               supplyInletNode,openstudio::OS_NodeFields::InletPort );
+    m.connect( supplyInletNode,openstudio::OS_NodeFields::OutletPort,
+               supplyOutletNode,openstudio::OS_NodeFields::InletPort );
+    m.connect( supplyOutletNode,openstudio::OS_NodeFields::OutletPort,obj,
+                   openstudio::OS_AirLoopHVACFields::SupplySideOutletNodeA );
+
+    // demand side
+    Node demandInletNode(m);
+    Node demandOutletNode(m);
+    Node branchNode(m);
+
+    m.connect( obj,openstudio::OS_AirLoopHVACFields::DemandSideInletNodeA,
+               demandInletNode,demandInletNode.inletPort() );
+    m.connect( demandOutletNode,demandOutletNode.outletPort(),
+                   obj,openstudio::OS_AirLoopHVACFields::DemandSideOutletNodeName );
+
+
+    openstudio::model::AirLoopHVACZoneSplitter airLoopHVACZoneSplitter(m);
+    setZoneSplitter(airLoopHVACZoneSplitter, 0);
+    openstudio::model::AirLoopHVACZoneMixer airLoopHVACZoneMixer(m);
+    setZoneMixer(airLoopHVACZoneMixer);
+
+    m.connect( demandInletNode,demandInletNode.outletPort(),
+               airLoopHVACZoneSplitter, airLoopHVACZoneSplitter.inletPort() );
+
+    m.connect( airLoopHVACZoneSplitter, airLoopHVACZoneSplitter.nextOutletPort(),
+               branchNode, branchNode.inletPort() );
+
+    m.connect( branchNode, branchNode.outletPort(),
+               airLoopHVACZoneMixer, airLoopHVACZoneMixer.nextInletPort() );
+
+    m.connect( airLoopHVACZoneMixer,airLoopHVACZoneMixer.outletPort(),
+                   demandOutletNode,demandOutletNode.inletPort() );
+  }
+
 } // detail
 
 AirLoopHVAC::AirLoopHVAC(Model& model, bool dualDuct)
   : Loop(iddObjectType(),model)
 {
-  OS_ASSERT(getImpl<detail::AirLoopHVAC_Impl>());
+  auto impl = getImpl<detail::AirLoopHVAC_Impl>();
+  OS_ASSERT(impl);
+
+  impl->createTopology();
+
+
+  if( dualDuct ) {
+    auto n = supplyOutletNode();
+    ConnectorSplitter splitter(model);
+    splitter.addToNode(n);
+    impl->setSupplySplitter(splitter);
+  }
 
   setString(openstudio::OS_AirLoopHVACFields::DesignSupplyAirFlowRate,"AutoSize");
-
-  // supply side
-
-  openstudio::model::Node supplyInletNode(model);
-  openstudio::model::Node supplyOutletNode(model);
-
-  model.connect( *this,openstudio::OS_AirLoopHVACFields::SupplySideInletNodeName,
-                 supplyInletNode,openstudio::OS_NodeFields::InletPort );
-  model.connect( supplyInletNode,openstudio::OS_NodeFields::OutletPort,
-                 supplyOutletNode,openstudio::OS_NodeFields::InletPort );
-  model.connect( supplyOutletNode,openstudio::OS_NodeFields::OutletPort,*this,
-                 openstudio::OS_AirLoopHVACFields::SupplySideOutletNodeA );
-
-  // demand side
-
-  Node demandInletNode(model);
-  Node demandOutletNode(model);
-  Node branchNode(model);
-
-  model.connect( *this,openstudio::OS_AirLoopHVACFields::DemandSideInletNodeA,
-                 demandInletNode,demandInletNode.inletPort() );
-  model.connect( demandOutletNode,demandOutletNode.outletPort(),
-                 *this,openstudio::OS_AirLoopHVACFields::DemandSideOutletNodeName );
-
-
-  openstudio::model::AirLoopHVACZoneSplitter airLoopHVACZoneSplitter(model);
-  getImpl<detail::AirLoopHVAC_Impl>()->setZoneSplitter(airLoopHVACZoneSplitter, 0);
-  openstudio::model::AirLoopHVACZoneMixer airLoopHVACZoneMixer(model);
-  getImpl<detail::AirLoopHVAC_Impl>()->setZoneMixer(airLoopHVACZoneMixer);
-
-  model.connect( demandInletNode,demandInletNode.outletPort(),
-                 airLoopHVACZoneSplitter, airLoopHVACZoneSplitter.inletPort() );
-
-  model.connect( airLoopHVACZoneSplitter, airLoopHVACZoneSplitter.nextOutletPort(),
-                 branchNode, branchNode.inletPort() );
-
-  model.connect( branchNode, branchNode.outletPort(),
-                 airLoopHVACZoneMixer, airLoopHVACZoneMixer.nextInletPort() );
-
-  model.connect( airLoopHVACZoneMixer,airLoopHVACZoneMixer.outletPort(),
-                 demandOutletNode,demandOutletNode.inletPort() );
 
   // Sizing:System
   SizingSystem sizingSystem(model,*this);
@@ -1828,12 +1935,6 @@ AirLoopHVAC::AirLoopHVAC(Model& model, bool dualDuct)
   // AvailabilityManagerAssignmentList
   AvailabilityManagerAssignmentList avmList(*this);
   setPointer(OS_AirLoopHVACFields::AvailabilityManagerListName, avmList.handle());
-
-  if( dualDuct ) {
-    ConnectorSplitter splitter(model);
-    splitter.addToNode(supplyOutletNode);
-    getImpl<detail::AirLoopHVAC_Impl>()->setSupplySplitter(splitter);
-  }
 }
 
 AirLoopHVAC::AirLoopHVAC(std::shared_ptr<detail::AirLoopHVAC_Impl> impl)

@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "WaterHeaterMixed.hpp"
 #include "WaterHeaterMixed_Impl.hpp"
@@ -79,91 +80,90 @@ namespace detail {
 
   const std::vector<std::string>& WaterHeaterMixed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-      result.push_back("Water Heater Tank Temperature");
-      result.push_back("Water Heater Final Tank Temperature");
-      result.push_back("Water Heater Heat Loss Rate");
-      result.push_back("Water Heater Heat Loss Energy");
-      result.push_back("Water Heater Use Side Mass Flow Rate");
-      result.push_back("Water Heater Use Side Inlet Temperature");
-      result.push_back("Water Heater Use Side Outlet Temperature");
-      result.push_back("Water Heater Use Side Heat Transfer Rate");
-      result.push_back("Water Heater Use Side Heat Transfer Energy");
-      result.push_back("Water Heater Source Side Mass Flow Rate");
-      result.push_back("Water Heater Source Side Inlet Temperature");
-      result.push_back("Water Heater Source Side Outlet Temperature");
-      result.push_back("Water Heater Source Side Heat Transfer Rate");
-      result.push_back("Water Heater Source Side Heat Transfer Energy");
-      result.push_back("Water Heater Off Cycle Parasitic Tank Heat Transfer Rate");
-      result.push_back("Water Heater Off Cycle Parasitic Tank Heat Transfer Energy");
-      result.push_back("Water Heater On Cycle Parasitic Tank Heat Transfer Rate");
-      result.push_back("Water Heater On Cycle Parasitic Tank Heat Transfer Energy");
-      result.push_back("Water Heater Total Demand Heat Transfer Rate");
-      result.push_back("Water Heater Total Demand Energy");
-      result.push_back("Water Heater Heating Rate");
-      result.push_back("Water Heater Heating Energy");
-      result.push_back("Water Heater Unmet Demand Heat Transfer Rate");
-      result.push_back("Water Heater Unmet Demand Heat Transfer Energy");
-      result.push_back("Water Heater Venting Heat Transfer Rate");
-      result.push_back("Water Heater Venting Heat Transfer Energy");
-      result.push_back("Water Heater Net Heat Transfer Rate");
-      result.push_back("Water Heater Net Heat Transfer Energy");
-      result.push_back("Water Heater Cycle On Count");
-      result.push_back("Water Heater Runtime Fraction");
-      result.push_back("Water Heater Part Load Ratio");
-      result.push_back("Water Heater Electric Power");
+    static std::vector<std::string> result{
+      "Water Heater Tank Temperature",
+      "Water Heater Final Tank Temperature",
+      "Water Heater Heat Loss Rate",
+      "Water Heater Heat Loss Energy",
+      "Water Heater Use Side Mass Flow Rate",
+      "Water Heater Use Side Inlet Temperature",
+      "Water Heater Use Side Outlet Temperature",
+      "Water Heater Use Side Heat Transfer Rate",
+      "Water Heater Use Side Heat Transfer Energy",
+      "Water Heater Source Side Mass Flow Rate",
+      "Water Heater Source Side Inlet Temperature",
+      "Water Heater Source Side Outlet Temperature",
+      "Water Heater Source Side Heat Transfer Rate",
+      "Water Heater Source Side Heat Transfer Energy",
+      "Water Heater Off Cycle Parasitic Tank Heat Transfer Rate",
+      "Water Heater Off Cycle Parasitic Tank Heat Transfer Energy",
+      "Water Heater On Cycle Parasitic Tank Heat Transfer Rate",
+      "Water Heater On Cycle Parasitic Tank Heat Transfer Energy",
+      "Water Heater Total Demand Heat Transfer Rate",
+      "Water Heater Total Demand Energy",
+      "Water Heater Heating Rate",
+      "Water Heater Heating Energy",
+      "Water Heater Unmet Demand Heat Transfer Rate",
+      "Water Heater Unmet Demand Heat Transfer Energy",
+      "Water Heater Venting Heat Transfer Rate",
+      "Water Heater Venting Heat Transfer Energy",
+      "Water Heater Net Heat Transfer Rate",
+      "Water Heater Net Heat Transfer Energy",
+      "Water Heater Cycle On Count",
+      "Water Heater Runtime Fraction",
+      "Water Heater Part Load Ratio",
+      "Water Heater Electric Power",
 
       // This should be based on fuel type
 
-      //result.push_back("Water Heater <Fuel Type> Rate");
-      //result.push_back("Water Heater <Fuel Type> Energy");
+      //"Water Heater <Fuel Type> Rate",
+      //"Water Heater <Fuel Type> Energy",
           // Fuel type specific
       // TODO: DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
           // until then, make this include all possible outputVariableNames for class regardless of fuelType
           // std::string fuelType = this->fuelType();
       // if (fuelType == "Electricity") {
-      result.push_back("Water Heater Electric Power");
-      result.push_back("Water Heater Electric Energy");
+      "Water Heater Electric Power",
+      "Water Heater Electric Energy",
       // } else if (fuelType == "NaturalGas") {
-      result.push_back("Water Heater Gas Rate");
-      result.push_back("Water Heater Gas Energy");
+      "Water Heater Gas Rate",
+      "Water Heater Gas Energy",
       // } else if (fuelType == "PropaneGas") {
-      result.push_back("Water Heater Propane Rate");
-      result.push_back("Water Heater Propane Energy");
+      "Water Heater Propane Rate",
+      "Water Heater Propane Energy",
       // } else if (fuelType == "FuelOil#1") {
-      result.push_back("Water Heater FuelOil#1 Rate");
-      result.push_back("Water Heater FuelOil#1 Energy");
+      "Water Heater FuelOil#1 Rate",
+      "Water Heater FuelOil#1 Energy",
       // } else if (fuelType == "FuelOil#2") {
-      result.push_back("Water Heater FuelOil#2 Rate");
-      result.push_back("Water Heater FuelOil#2 Energy");
+      "Water Heater FuelOil#2 Rate",
+      "Water Heater FuelOil#2 Energy",
       // } else if (fuelType == "Coal") {
-      result.push_back("Water Heater Coal Rate");
-      result.push_back("Water Heater Coal Energy");
+      "Water Heater Coal Rate",
+      "Water Heater Coal Energy",
       // } else if (fuelType == "Diesel") {
-      result.push_back("Water Heater Diesel Rate");
-      result.push_back("Water Heater Diesel Energy");
+      "Water Heater Diesel Rate",
+      "Water Heater Diesel Energy",
       // } else if (fuelType == "Gasoline") {
-      result.push_back("Water Heater Gasoline Rate");
-      result.push_back("Water Heater Gasoline Energy");
+      "Water Heater Gasoline Rate",
+      "Water Heater Gasoline Energy",
       // } else if (fuelType == "OtherFuel1") {
-      result.push_back("Water Heater OtherFuel1 Rate");
-      result.push_back("Water Heater OtherFuel1 Energy");
+      "Water Heater OtherFuel1 Rate",
+      "Water Heater OtherFuel1 Energy",
       // } else if (fuelType == "OtherFuel2") {
-      result.push_back("Water Heater OtherFuel2 Rate");
-      result.push_back("Water Heater OtherFuel2 Energy");
+      "Water Heater OtherFuel2 Rate",
+      "Water Heater OtherFuel2 Energy",
       // }
 
       // TODO: implement these too...
-      //result.push_back("Water Heater Off Cycle Parasitic <Fuel Type> Rate");
-      //result.push_back("Water Heater Off Cycle Parasitic <Fuel Type> Energy");
-      //result.push_back("Water Heater On Cycle Parasitic <Fuel Type> Rate");
-      // result.push_back("Water Heater On Cycle Parasitic <Fuel Type> Energy");
+      //"Water Heater Off Cycle Parasitic <Fuel Type> Rate",
+      //"Water Heater Off Cycle Parasitic <Fuel Type> Energy",
+      //"Water Heater On Cycle Parasitic <Fuel Type> Rate",
+      // "Water Heater On Cycle Parasitic <Fuel Type> Energy",
       //
-      result.push_back("Water Heater Water Volume Flow Rate");
-      result.push_back("Water Heater Water Volume");
+      "Water Heater Water Volume Flow Rate",
+      "Water Heater Water Volume"
 
-    }
+    };
     return result;
   }
 

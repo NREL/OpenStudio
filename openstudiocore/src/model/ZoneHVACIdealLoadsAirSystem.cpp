@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "ZoneHVACIdealLoadsAirSystem.hpp"
 #include "ZoneHVACIdealLoadsAirSystem_Impl.hpp"
@@ -72,65 +73,63 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACIdealLoadsAirSystem_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Zone Ideal Loads Supply Air Sensible Heating Energy");
-      result.push_back("Zone Ideal Loads Supply Air Total Heating Energy");
-      result.push_back("Zone Ideal Loads Supply Air Sensible Cooling Energy");
-      result.push_back("Zone Ideal Loads Supply Air Latent Cooling Energy");
-      result.push_back("Zone Ideal Loads Supply Air Total Cooling Energy");
-      result.push_back("Zone Ideal Loads Supply Air Latent Heating Energy");
-      result.push_back("Zone Ideal Loads Zone Sensible Heating Energy");
-      result.push_back("Zone Ideal Loads Zone Latent Heating Energy");
-      result.push_back("Zone Ideal Loads Zone Total Heating Energy");
-      result.push_back("Zone Ideal Loads Zone Sensible Cooling Energy");
-      result.push_back("Zone Ideal Loads Zone Latent Cooling Energy");
-      result.push_back("Zone Ideal Loads Zone Total Cooling Energy");
-      result.push_back("Zone Ideal Loads Outdoor Air Sensible Heating Energy");
-      result.push_back("Zone Ideal Loads Outdoor Air Latent Heating Energy");
-      result.push_back("Zone Ideal Loads Outdoor Air Total Heating Energy");
-      result.push_back("Zone Ideal Loads Outdoor Air Sensible Cooling Energy");
-      result.push_back("Zone Ideal Loads Outdoor Air Latent Cooling Energy");
-      result.push_back("Zone Ideal Loads Outdoor Air Total Cooling Energy");
-      result.push_back("Zone Ideal Loads Heat Recovery Sensible Heating Energy");
-      result.push_back("Zone Ideal Loads Heat Recovery Latent Heating Energy");
-      result.push_back("Zone Ideal Loads Heat Recovery Total Heating Energy");
-      result.push_back("Zone Ideal Loads Heat Recovery Sensible Cooling Energy");
-      result.push_back("Zone Ideal Loads Heat Recovery Latent Cooling Energy");
-      result.push_back("Zone Ideal Loads Heat Recovery Total Cooling Energy");
-      result.push_back("Zone Ideal Loads Supply Air Sensible Heating Rate");
-      result.push_back("Zone Ideal Loads Supply Air Latent Heating Rate");
-      result.push_back("Zone Ideal Loads Supply Air Total Heating Rate");
-      result.push_back("Zone Ideal Loads Supply Air Sensible Cooling Rate");
-      result.push_back("Zone Ideal Loads Supply Air Latent Cooling Rate");
-      result.push_back("Zone Ideal Loads Supply Air Total Cooling Rate");
-      result.push_back("Zone Ideal Loads Zone Sensible Heating Rate");
-      result.push_back("Zone Ideal Loads Zone Latent Heating Rate");
-      result.push_back("Zone Ideal Loads Zone Total Heating Rate");
-      result.push_back("Zone Ideal Loads Zone Sensible Cooling Rate");
-      result.push_back("Zone Ideal Loads Zone Latent Cooling Rate");
-      result.push_back("Zone Ideal Loads Zone Total Cooling Rate");
-      result.push_back("Zone Ideal Loads Outdoor Air Sensible Heating Rate");
-      result.push_back("Zone Ideal Loads Outdoor Air Latent Heating Rate");
-      result.push_back("Zone Ideal Loads Outdoor Air Total Heating Rate");
-      result.push_back("Zone Ideal Loads Outdoor Air Sensible Cooling Rate");
-      result.push_back("Zone Ideal Loads Outdoor Air Latent Cooling Rate");
-      result.push_back("Zone Ideal Loads Outdoor Air Total Cooling Rate");
-      result.push_back("Zone Ideal Loads Heat Recovery Sensible Heating Rate");
-      result.push_back("Zone Ideal Loads Heat Recovery Latent Heating Rate");
-      result.push_back("Zone Ideal Loads Heat Recovery Total Heating Rate");
-      result.push_back("Zone Ideal Loads Heat Recovery Sensible Cooling Rate");
-      result.push_back("Zone Ideal Loads Heat Recovery Latent Cooling Rate");
-      result.push_back("Zone Ideal Loads Heat Recovery Total Cooling Rate");
-      result.push_back("Zone Ideal Loads Economizer Active Time");
-      result.push_back("Zone Ideal Loads Heat Recovery Active Time");
-      result.push_back("Zone Ideal Loads Hybrid Ventilation Available Status");
-      result.push_back("Zone Ideal Loads Outdoor Air Mass Flow Rate");
-      result.push_back("Zone Ideal Loads Outdoor Air Standard Density Volume Flow Rate");
-      result.push_back("Zone Ideal Loads Supply Air Mass Flow Rate");
-      result.push_back("Zone Ideal Loads Supply Air Standard Density Volume Flow Rate");
-    }
+    static std::vector<std::string> result{
+      "Zone Ideal Loads Supply Air Sensible Heating Energy",
+      "Zone Ideal Loads Supply Air Total Heating Energy",
+      "Zone Ideal Loads Supply Air Sensible Cooling Energy",
+      "Zone Ideal Loads Supply Air Latent Cooling Energy",
+      "Zone Ideal Loads Supply Air Total Cooling Energy",
+      "Zone Ideal Loads Supply Air Latent Heating Energy",
+      "Zone Ideal Loads Zone Sensible Heating Energy",
+      "Zone Ideal Loads Zone Latent Heating Energy",
+      "Zone Ideal Loads Zone Total Heating Energy",
+      "Zone Ideal Loads Zone Sensible Cooling Energy",
+      "Zone Ideal Loads Zone Latent Cooling Energy",
+      "Zone Ideal Loads Zone Total Cooling Energy",
+      "Zone Ideal Loads Outdoor Air Sensible Heating Energy",
+      "Zone Ideal Loads Outdoor Air Latent Heating Energy",
+      "Zone Ideal Loads Outdoor Air Total Heating Energy",
+      "Zone Ideal Loads Outdoor Air Sensible Cooling Energy",
+      "Zone Ideal Loads Outdoor Air Latent Cooling Energy",
+      "Zone Ideal Loads Outdoor Air Total Cooling Energy",
+      "Zone Ideal Loads Heat Recovery Sensible Heating Energy",
+      "Zone Ideal Loads Heat Recovery Latent Heating Energy",
+      "Zone Ideal Loads Heat Recovery Total Heating Energy",
+      "Zone Ideal Loads Heat Recovery Sensible Cooling Energy",
+      "Zone Ideal Loads Heat Recovery Latent Cooling Energy",
+      "Zone Ideal Loads Heat Recovery Total Cooling Energy",
+      "Zone Ideal Loads Supply Air Sensible Heating Rate",
+      "Zone Ideal Loads Supply Air Latent Heating Rate",
+      "Zone Ideal Loads Supply Air Total Heating Rate",
+      "Zone Ideal Loads Supply Air Sensible Cooling Rate",
+      "Zone Ideal Loads Supply Air Latent Cooling Rate",
+      "Zone Ideal Loads Supply Air Total Cooling Rate",
+      "Zone Ideal Loads Zone Sensible Heating Rate",
+      "Zone Ideal Loads Zone Latent Heating Rate",
+      "Zone Ideal Loads Zone Total Heating Rate",
+      "Zone Ideal Loads Zone Sensible Cooling Rate",
+      "Zone Ideal Loads Zone Latent Cooling Rate",
+      "Zone Ideal Loads Zone Total Cooling Rate",
+      "Zone Ideal Loads Outdoor Air Sensible Heating Rate",
+      "Zone Ideal Loads Outdoor Air Latent Heating Rate",
+      "Zone Ideal Loads Outdoor Air Total Heating Rate",
+      "Zone Ideal Loads Outdoor Air Sensible Cooling Rate",
+      "Zone Ideal Loads Outdoor Air Latent Cooling Rate",
+      "Zone Ideal Loads Outdoor Air Total Cooling Rate",
+      "Zone Ideal Loads Heat Recovery Sensible Heating Rate",
+      "Zone Ideal Loads Heat Recovery Latent Heating Rate",
+      "Zone Ideal Loads Heat Recovery Total Heating Rate",
+      "Zone Ideal Loads Heat Recovery Sensible Cooling Rate",
+      "Zone Ideal Loads Heat Recovery Latent Cooling Rate",
+      "Zone Ideal Loads Heat Recovery Total Cooling Rate",
+      "Zone Ideal Loads Economizer Active Time",
+      "Zone Ideal Loads Heat Recovery Active Time",
+      "Zone Ideal Loads Hybrid Ventilation Available Status",
+      "Zone Ideal Loads Outdoor Air Mass Flow Rate",
+      "Zone Ideal Loads Outdoor Air Standard Density Volume Flow Rate",
+      "Zone Ideal Loads Supply Air Mass Flow Rate",
+      "Zone Ideal Loads Supply Air Standard Density Volume Flow Rate"
+    };
     return result;
   }
 
