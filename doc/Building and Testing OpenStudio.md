@@ -46,6 +46,7 @@ If a new version of EnergyPlus is to be incorporated into OpenStudio
     - ENERGYPLUS_VERSION_MINOR
     - ENERGYPLUS_VERSION_PATCH
     - ENERGYPLUS_BUILD_SHA
+    - ENERGYPLUS_RELEASE_NAME
     - ENERGYPLUS_EXPECTED_HASH (In 3 places: Win 32, Win 64, Darwin, and Linux)
 
 Note: use HashTab, or similar, to determine the MD5 hash value for each file referenced above.
@@ -196,8 +197,7 @@ In CMake type the following:
 
 In a command window:
 
-    make –j16 (16 indicates the number of cores used, the max number allowed by VMware 12)
-    make package
+    make –j16 package
 
 Copy .deb package from VM to Windows
 
@@ -269,7 +269,7 @@ In CMake type the following:
 In a command window:
 
 ```bash
-make package –j16
+make -j16 package
 # When done:
 ⌘ + q (to quit a Mac app)
 ```
@@ -382,14 +382,7 @@ In S3:
 
 For major releases, delete the content of `openstudio-sdk-documentation/cpp/latest` and drag in the contents of `build\OSCore-prefix\src\OSCore-build\doc\OpenStudio-X.Y.Z-doc`
 
-In folder `build\OSCore-prefix\src\OSCore-build\ruby\rdocify`
-
-- Extract zip OpenStudio-X.Y.Z-rdoc.zip to a similarly named folder
-
-In S3:
-
-- Drag extracted directory into S3 directory `openstudio-sdk-documentation/ruby`
-- From `openstudio-sdk-documentation` bucket, download index.html and edit to new release numbers (23 changes)
+- From `openstudio-sdk-documentation` bucket, download index.html and edit to new release numbers
 - Test at https://openstudio-sdk-documentation.s3.amazonaws.com/index.html
 
 

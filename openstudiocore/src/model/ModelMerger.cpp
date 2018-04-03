@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "ModelMerger.hpp"
 
@@ -84,6 +85,15 @@ namespace openstudio
 
     ModelMerger::ModelMerger()
     {
+      // DLM: TODO expose this to user to give more control over merging?
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Space);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ShadingSurfaceGroup);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ThermalZone);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_SpaceType);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingStory);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingUnit);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_DefaultConstructionSet);
+
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
       m_logSink.setThreadId(QThread::currentThread());
@@ -213,6 +223,8 @@ namespace openstudio
         }
       }
 
+      // DLM: TODO remove current and bring over new hard assigned loads, optional
+
       // DLM: TODO interiorPartitionSurfaceGroups
 
       // thermal zone
@@ -322,6 +334,36 @@ namespace openstudio
       }
     }
 
+    void ModelMerger::mergeShadingSurfaceGroup(ShadingSurfaceGroup& currentGroup, const ShadingSurfaceGroup& newGroup)
+    {
+      if (m_newMergedHandles.find(newGroup.handle()) != m_newMergedHandles.end()){
+        // already merged
+        return;
+      }
+      m_newMergedHandles.insert(newGroup.handle());
+
+      currentGroup.setName(newGroup.nameString());
+
+      // remove current shading surfaces
+      for (auto& currentSurface : currentGroup.shadingSurfaces()){
+        currentSurface.remove();
+      }
+
+      // change shading surface group type
+      currentGroup.setShadingSurfaceType(newGroup.shadingSurfaceType());
+
+      // add new shading surfaces
+      for (const auto& newSurface : newGroup.shadingSurfaces()){
+        // DLM: this should probably be moved to a mergeSurface method
+        ShadingSurface clone = newSurface.clone(m_currentModel).cast<ShadingSurface>();
+        clone.setShadingSurfaceGroup(currentGroup);
+
+        m_newMergedHandles.insert(newSurface.handle());
+        m_currentToNewHandleMapping[clone.handle()] = newSurface.handle();
+        m_newToCurrentHandleMapping[newSurface.handle()] = clone.handle();
+      }
+    }
+
     void ModelMerger::mergeThermalZone(ThermalZone& currentThermalZone, const ThermalZone& newThermalZone)
     {
       if (m_newMergedHandles.find(newThermalZone.handle()) != m_newMergedHandles.end()){
@@ -342,7 +384,7 @@ namespace openstudio
           currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
           currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
         } else{
-          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentThermalZone.model());
+          currentColor = RenderingColor::fromColorString(newColor->colorString(), currentThermalZone.model());
           OS_ASSERT(currentColor);
           currentThermalZone.setRenderingColor(*currentColor);
         }
@@ -350,21 +392,24 @@ namespace openstudio
 
       // multiplier
       if (newThermalZone.isMultiplierDefaulted()){
-        currentThermalZone.resetMultiplier();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentThermalZone.resetMultiplier();
       } else{
         currentThermalZone.setMultiplier(newThermalZone.multiplier());
       }
 
       // ceilingHeight
       if (newThermalZone.isCeilingHeightDefaulted() || newThermalZone.isCeilingHeightAutocalculated()){
-        currentThermalZone.resetCeilingHeight();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentThermalZone.resetCeilingHeight();
       } else{
         currentThermalZone.setCeilingHeight(newThermalZone.ceilingHeight());
       }
 
       // volume
       if (newThermalZone.isVolumeDefaulted() || newThermalZone.isVolumeAutocalculated()){
-        currentThermalZone.resetVolume();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentThermalZone.resetVolume();
       } else{
         currentThermalZone.setVolume(newThermalZone.volume());
       }
@@ -395,10 +440,12 @@ namespace openstudio
           DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
           currentSpaceType.setDefaultConstructionSet(currentDefaultConstructionSet);
         } else{
-          currentSpaceType.resetDefaultConstructionSet();
+          // DLM: this is an error
+          //currentSpaceType.resetDefaultConstructionSet();
         }
       } else{
-        currentSpaceType.resetDefaultConstructionSet();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentSpaceType.resetDefaultConstructionSet();
       }
 
       // default schedule set
@@ -408,10 +455,12 @@ namespace openstudio
           DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
           currentSpaceType.setDefaultScheduleSet(currentDefaultScheduleSet);
         } else{
-          currentSpaceType.resetDefaultScheduleSet();
+          // DLM: this is an error
+          //currentSpaceType.resetDefaultScheduleSet();
         }
       } else{
-        currentSpaceType.resetDefaultScheduleSet();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentSpaceType.resetDefaultScheduleSet();
       }
 
       // rendering color
@@ -424,7 +473,7 @@ namespace openstudio
           currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
           currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
         } else{
-          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentSpaceType.model());
+          currentColor = RenderingColor::fromColorString(newColor->colorString(), currentSpaceType.model());
           OS_ASSERT(currentColor);
           currentSpaceType.setRenderingColor(*currentColor);
         }
@@ -435,7 +484,8 @@ namespace openstudio
       if (newStandardsBuildingType){
         currentSpaceType.setStandardsBuildingType(*newStandardsBuildingType);
       } else {
-        currentSpaceType.resetStandardsBuildingType();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentSpaceType.resetStandardsBuildingType();
       }
 
       // standardsSpaceType
@@ -443,14 +493,16 @@ namespace openstudio
       if (newStandardsSpaceType){
         currentSpaceType.setStandardsSpaceType(*newStandardsSpaceType);
       } else {
-        currentSpaceType.resetStandardsSpaceType();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentSpaceType.resetStandardsSpaceType();
       }
 
       // bring over child loads
-      for (const auto& newChild : newSpaceType.children()){
-        ModelObject currentChild = newChild.clone(m_currentModel).cast<ModelObject>();
-        currentChild.setParent(currentSpaceType);
-      }
+      // DLM: should only do this if new model can have loads, if doing this should also remove current loads
+      //for (const auto& newChild : newSpaceType.children()){
+      //  ModelObject currentChild = newChild.clone(m_currentModel).cast<ModelObject>();
+      //  currentChild.setParent(currentSpaceType);
+      //}
     }
 
     void ModelMerger::mergeBuildingStory(BuildingStory& currentBuildingStory, const BuildingStory& newBuildingStory)
@@ -473,7 +525,7 @@ namespace openstudio
           currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
           currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
         } else{
-          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingStory.model());
+          currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingStory.model());
           OS_ASSERT(currentColor);
           currentBuildingStory.setRenderingColor(*currentColor);
         }
@@ -510,10 +562,12 @@ namespace openstudio
           DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
           currentBuildingStory.setDefaultConstructionSet(currentDefaultConstructionSet);
         } else{
-          currentBuildingStory.resetDefaultConstructionSet();
+          // DLM: this is an error
+          //currentBuildingStory.resetDefaultConstructionSet();
         }
       } else{
-        currentBuildingStory.resetDefaultConstructionSet();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentBuildingStory.resetDefaultConstructionSet();
       }
 
       // default schedule set
@@ -523,10 +577,12 @@ namespace openstudio
           DefaultScheduleSet currentDefaultScheduleSet = currentObject->cast<DefaultScheduleSet>();
           currentBuildingStory.setDefaultScheduleSet(currentDefaultScheduleSet);
         } else{
-          currentBuildingStory.resetDefaultScheduleSet();
+          // DLM: this is an error
+          //currentBuildingStory.resetDefaultScheduleSet();
         }
       } else{
-        currentBuildingStory.resetDefaultScheduleSet();
+        // DLM: TODO: add option as this might have been intentionally reset on other model
+        //currentBuildingStory.resetDefaultScheduleSet();
       }
 
     }
@@ -551,14 +607,15 @@ namespace openstudio
           currentColor->setRenderingBlueValue(newColor->renderingBlueValue());
           currentColor->setRenderingAlphaValue(newColor->renderingAlphaValue());
         } else{
-          boost::optional<RenderingColor> currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingUnit.model());
+          currentColor = RenderingColor::fromColorString(newColor->colorString(), currentBuildingUnit.model());
           OS_ASSERT(currentColor);
           currentBuildingUnit.setRenderingColor(*currentColor);
         }
       }
 
       // buildingUnitType
-      currentBuildingUnit.setBuildingUnitType(newBuildingUnit.buildingUnitType());
+      // DLM: TODO need to check if other buildingUnitType is defaulted and optionally set
+      //currentBuildingUnit.setBuildingUnitType(newBuildingUnit.buildingUnitType());
 
       // DLM: TODO featureNames() const;
     }
@@ -611,6 +668,9 @@ namespace openstudio
         case IddObjectType::OS_Space:
           currentObject = model::Space(m_currentModel);
           break;
+        case IddObjectType::OS_ShadingSurfaceGroup:
+          currentObject = model::ShadingSurfaceGroup(m_currentModel);
+          break;
         case IddObjectType::OS_ThermalZone:
           currentObject = model::ThermalZone(m_currentModel);
           break;
@@ -642,6 +702,17 @@ namespace openstudio
         Space currentSpace = currentObject->cast<Space>();
         Space newSpace = newObject.cast<Space>();
         mergeSpace(currentSpace, newSpace);
+      }
+        break;
+      case IddObjectType::OS_ShadingSurfaceGroup:
+      {
+        ShadingSurfaceGroup currentGroup = currentObject->cast<ShadingSurfaceGroup>();
+        ShadingSurfaceGroup newGroup = newObject.cast<ShadingSurfaceGroup>();
+
+        // if the new group has a space it will be added under that space
+        if (!newGroup.space()){
+          mergeShadingSurfaceGroup(currentGroup, newGroup);
+        }
       }
         break;
       case IddObjectType::OS_ThermalZone:
@@ -706,16 +777,8 @@ namespace openstudio
         m_newToCurrentHandleMapping[it.second] = it.first;
       }
 
-      // DLM: TODO expose this to user to give more control over merging?
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Space);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ThermalZone);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_SpaceType);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingStory);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_BuildingUnit);
-      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_DefaultConstructionSet);
-
       //** Remove objects from current model that are not in new model **//
-      for (const auto& iddObjectType : m_iddObjectTypesToMerge){
+      for (const auto& iddObjectType : iddObjectTypesToMerge()){
         for (auto& currenObject : currentModel.getObjectsByType(iddObjectType)){
           if (m_currentToNewHandleMapping.find(currenObject.handle()) == m_currentToNewHandleMapping.end()){
             currenObject.remove();
@@ -724,7 +787,7 @@ namespace openstudio
       }
 
       //** Merge objects from new model into curret model **//
-      for (const auto& iddObjectType : m_iddObjectTypesToMerge){
+      for (const auto& iddObjectType : iddObjectTypesToMerge()){
         for (auto& newObject : newModel.getObjectsByType(iddObjectType)){
           getCurrentModelObject(newObject);
         }

@@ -1,3 +1,19 @@
+## OpenStudio v2.5.0
+###### 2018-03-30 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.4.3...v2.5.0 )
+
+- ![Fixed:][fixed] [#2420]( https://github.com/NREL/OpenStudio/issues/2420 ), OpenStudio 2 on Windows Installation Issues
+- ![Fixed:][fixed] [#2561]( https://github.com/NREL/OpenStudio/issues/2561 ), Symlinked CLI cannot find EnergyPlus on Mac
+- ![Fixed:][fixed] [#2616]( https://github.com/NREL/OpenStudio/issues/2616 ), OpenStudio CLI fails to run properly if not run using absolute path. 
+- ![Fixed:][fixed] [#2709]( https://github.com/NREL/OpenStudio/issues/2709 ), number of surfaces created by geometry editor translator is not deterministic
+- ![Fixed:][fixed] [#2715]( https://github.com/NREL/OpenStudio/issues/2715 ), roofceiling adjacent to outdoors instead of surface after geometry editor translation
+- ![Fixed:][fixed] [#2810]( https://github.com/NREL/OpenStudio/issues/2810 ), Bad Surface Names from Geometry Editor
+- ![Fixed:][fixed] [#2836]( https://github.com/NREL/OpenStudio/issues/2836 ), Geometry Editor Units Display
+- ![Fixed:][fixed] [#2911]( https://github.com/NREL/OpenStudio/issues/2911 ), cli run does not find e+ when running a simulation
+- ![Fixed:][fixed] [#3038]( https://github.com/NREL/OpenStudio/issues/3038 ), Expose end-use subcategory
+- ![Fixed:][fixed] [#3071]( https://github.com/NREL/OpenStudio/issues/3071 ), SpaceType properties lost in merge from Floorspace
+- ![Fixed:][fixed] [#3074]( https://github.com/NREL/OpenStudio/issues/3074 ), Broken API for LifeCycleCost (identified via E+ 8.9.0 release)
+- ![Fixed:][fixed] [#3075]( https://github.com/NREL/OpenStudio/issues/3075 ), ScheduleTypeLimits: "controlmode" failed to match any enum values E+ 8.9.0
+
 ## OpenStudio v2.4.3
 ###### 2018-03-07 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.4.1...v2.4.3 )
 

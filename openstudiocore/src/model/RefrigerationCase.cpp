@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "RefrigerationCase.hpp"
 #include "RefrigerationCase_Impl.hpp"
@@ -81,45 +82,43 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationCase_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Refrigeration Case Evaporator Total Cooling Rate");
-      result.push_back("Refrigeration Case Evaporator Total Cooling Energy");
-      result.push_back("Refrigeration Case Evaporator Sensible Cooling Rate");
-      result.push_back("Refrigeration Case Evaporator Sensible Cooling Energy");
-      result.push_back("Refrigeration Case Evaporator Latent Cooling Rate");
-      result.push_back("Refrigeration Case Evaporator Latent Cooling Energy");
-      result.push_back("Refrigeration Case Zone Sensible Cooling Rate");
-      result.push_back("Refrigeration Case Zone Sensible Cooling Energy");
-      result.push_back("Refrigeration Case Zone Sensible Heating Rate");
-      result.push_back("Refrigeration Case Zone Sensible Heating Energy");
-      result.push_back("Refrigeration Case Zone Latent Rate");
-      result.push_back("Refrigeration Case Zone Latent Energy");
-      result.push_back("Refrigeration Case Return Air Sensible Cooling Rate");
-      result.push_back("Refrigeration Case Return Air Sensible Cooling Energy");
-      result.push_back("Refrigeration Case Return Air Sensible Heating Rate");
-      result.push_back("Refrigeration Case Return Air Sensible Heating Energy");
-      result.push_back("Refrigeration Case Return Air Latent Rate");
-      result.push_back("Refrigeration Case Return Air Latent Energy");
-      result.push_back("Refrigeration Case Evaporator Fan Electric Power");
-      result.push_back("Refrigeration Case Evaporator Fan Electric Energy");
-      result.push_back("Refrigeration Case Lighting Electric Power");
-      result.push_back("Refrigeration Case Lighting Electric Energy");
-      result.push_back("Refrigeration Case Latent Credit Curve Value");
+    static std::vector<std::string> result{
+      "Refrigeration Case Evaporator Total Cooling Rate",
+      "Refrigeration Case Evaporator Total Cooling Energy",
+      "Refrigeration Case Evaporator Sensible Cooling Rate",
+      "Refrigeration Case Evaporator Sensible Cooling Energy",
+      "Refrigeration Case Evaporator Latent Cooling Rate",
+      "Refrigeration Case Evaporator Latent Cooling Energy",
+      "Refrigeration Case Zone Sensible Cooling Rate",
+      "Refrigeration Case Zone Sensible Cooling Energy",
+      "Refrigeration Case Zone Sensible Heating Rate",
+      "Refrigeration Case Zone Sensible Heating Energy",
+      "Refrigeration Case Zone Latent Rate",
+      "Refrigeration Case Zone Latent Energy",
+      "Refrigeration Case Return Air Sensible Cooling Rate",
+      "Refrigeration Case Return Air Sensible Cooling Energy",
+      "Refrigeration Case Return Air Sensible Heating Rate",
+      "Refrigeration Case Return Air Sensible Heating Energy",
+      "Refrigeration Case Return Air Latent Rate",
+      "Refrigeration Case Return Air Latent Energy",
+      "Refrigeration Case Evaporator Fan Electric Power",
+      "Refrigeration Case Evaporator Fan Electric Energy",
+      "Refrigeration Case Lighting Electric Power",
+      "Refrigeration Case Lighting Electric Energy",
+      "Refrigeration Case Latent Credit Curve Value",
 
       // TODO: implement tests
 
       // If case defrost type is Electric, Hot-Gas, or Hot-Brine with Temperature Termination
-      result.push_back("Refrigeration Case Defrost Energy Correction Curve Value");
+      "Refrigeration Case Defrost Energy Correction Curve Value",
       // If anti-sweat heater control type is not equal to None:
-      result.push_back("Refrigeration Case Anti Sweat Electric Power");
-      result.push_back("Refrigeration Case Anti Sweat Electric Energy");
+      "Refrigeration Case Anti Sweat Electric Power",
+      "Refrigeration Case Anti Sweat Electric Energy",
       // If case defrost type is Electric or Electric with Temperature Termination:
-      result.push_back("Refrigeration Case Defrost Electric Power");
-      result.push_back("Refrigeration Case Defrost Electric Energy");
+      "Refrigeration Case Defrost Electric Power",
+      "Refrigeration Case Defrost Electric Energy"
 
-    }
+    };
     return result;
   }
 

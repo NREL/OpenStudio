@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
@@ -195,54 +196,53 @@ namespace detail {
 
   const std::vector<std::string>& ThermalZone_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
+    static std::vector<std::string> result{
 
       /*
        * Zone Thermal Output
        */
 
       // Outdoor
-      result.push_back("Zone Outdoor Air Drybulb Temperature");
-      result.push_back("Zone Outdoor Air Wetbulb Temperature");
-      result.push_back("Zone Outdoor Air Wind Speed");
+      "Zone Outdoor Air Drybulb Temperature",
+      "Zone Outdoor Air Wetbulb Temperature",
+      "Zone Outdoor Air Wind Speed",
 
       // Internal
-      result.push_back("Zone Total Internal Radiant Heating Energy");
-      result.push_back("Zone Total Internal Radiant Heating Rate");
-      result.push_back("Zone Total Internal Visible Radiation Heating Energy");
-      result.push_back("Zone Total Internal Visible Radiation Heating Rate");
-      result.push_back("Zone Total Internal Convective Heating Energy");
-      result.push_back("Zone Total Internal Convective Heating Rate");
-      result.push_back("Zone Total Internal Latent Gain Energy");
-      result.push_back("Zone Total Internal Latent Gain Rate");
-      result.push_back("Zone Total Internal Total Heating Energy");
-      result.push_back("Zone Total Internal Total Heating Rate");
+      "Zone Total Internal Radiant Heating Energy",
+      "Zone Total Internal Radiant Heating Rate",
+      "Zone Total Internal Visible Radiation Heating Energy",
+      "Zone Total Internal Visible Radiation Heating Rate",
+      "Zone Total Internal Convective Heating Energy",
+      "Zone Total Internal Convective Heating Rate",
+      "Zone Total Internal Latent Gain Energy",
+      "Zone Total Internal Latent Gain Rate",
+      "Zone Total Internal Total Heating Energy",
+      "Zone Total Internal Total Heating Rate",
 
       // Temperatures and RH
-      result.push_back("Zone Mean Air Temperature"); // Zone level
-      result.push_back("Zone Air Temperature"); // HVAC level
-      result.push_back("Zone Mean Air Dewpoint Temperature");
-      result.push_back("Zone Mean Radiant Temperature");
-      result.push_back("Zone Operative Temperature");
-      result.push_back("Zone Air Humidity Ratio");
-      result.push_back("Zone Air Relative Humidity");
+      "Zone Mean Air Temperature", // Zone level
+      "Zone Air Temperature", // HVAC level
+      "Zone Mean Air Dewpoint Temperature",
+      "Zone Mean Radiant Temperature",
+      "Zone Operative Temperature",
+      "Zone Air Humidity Ratio",
+      "Zone Air Relative Humidity",
 
       // Heat Balance
-      result.push_back("Zone Air Heat Balance Internal Convective Heat Gain Rate");
-      result.push_back("Zone Air Heat Balance Surface Convection Rate");
-      result.push_back("Zone Air Heat Balance Interzone Air Transfer Rate");
-      result.push_back("Zone Air Heat Balance Outdoor Air Transfer Rate");
-      result.push_back("Zone Air Heat Balance System Air Transfer Rate");
-      result.push_back("Zone Air Heat Balance System Convective Heat Gain Rate");
-      result.push_back("Zone Air Heat Balance Air Energy Storage Rate");
-      result.push_back("Zone Air Heat Balance Deviation Rate");
+      "Zone Air Heat Balance Internal Convective Heat Gain Rate",
+      "Zone Air Heat Balance Surface Convection Rate",
+      "Zone Air Heat Balance Interzone Air Transfer Rate",
+      "Zone Air Heat Balance Outdoor Air Transfer Rate",
+      "Zone Air Heat Balance System Air Transfer Rate",
+      "Zone Air Heat Balance System Convective Heat Gain Rate",
+      "Zone Air Heat Balance Air Energy Storage Rate",
+      "Zone Air Heat Balance Deviation Rate",
 
       // Air System
-      result.push_back("Zone Air System Sensible Heating Energy");
-      result.push_back("Zone Air System Sensible Cooling Energy");
-      result.push_back("Zone Air System Sensible Heating Rate");
-      result.push_back("Zone Air System Sensible Cooling Rate");
+      "Zone Air System Sensible Heating Energy",
+      "Zone Air System Sensible Cooling Energy",
+      "Zone Air System Sensible Heating Rate",
+      "Zone Air System Sensible Cooling Rate",
 
       /*
        * Zone Outputs from LOADS: Equipment, People, Lights
@@ -251,86 +251,86 @@ namespace detail {
       // TODO:: All of this section should be dynamic (if no ElectricEquipment, don't propose the output...)
 
       // Electric Equipment
-      result.push_back("Zone Electric Equipment Electric Power");
-      result.push_back("Zone Electric Equipment Electric Energy");
-      result.push_back("Zone Electric Equipment Radiant Heating Energy");
-      result.push_back("Zone Electric Equipment Radiant Heating Rate");
-      result.push_back("Zone Electric Equipment Convective Heating Energy");
-      result.push_back("Zone Electric Equipment Convective Heating Rate");
-      result.push_back("Zone Electric Equipment Latent Gain Energy");
-      result.push_back("Zone Electric Equipment Latent Gain Rate");
-      result.push_back("Zone Electric Equipment Lost Heat Energy");
-      result.push_back("Zone Electric Equipment Lost Heat Rate");
-      result.push_back("Zone Electric Equipment Total Heating Energy");
-      result.push_back("Zone Electric Equipment Total Heating Rate");
+      "Zone Electric Equipment Electric Power",
+      "Zone Electric Equipment Electric Energy",
+      "Zone Electric Equipment Radiant Heating Energy",
+      "Zone Electric Equipment Radiant Heating Rate",
+      "Zone Electric Equipment Convective Heating Energy",
+      "Zone Electric Equipment Convective Heating Rate",
+      "Zone Electric Equipment Latent Gain Energy",
+      "Zone Electric Equipment Latent Gain Rate",
+      "Zone Electric Equipment Lost Heat Energy",
+      "Zone Electric Equipment Lost Heat Rate",
+      "Zone Electric Equipment Total Heating Energy",
+      "Zone Electric Equipment Total Heating Rate",
 
       // Gas Equipment
-      result.push_back("Zone Gas Equipment Gas Rate");
-      result.push_back("Zone Gas Equipment Gas Energy");
-      result.push_back("Zone Gas Equipment Radiant Heating Energy");
-      result.push_back("Zone Gas Equipment Radiant Heating Rate");
-      result.push_back("Zone Gas Equipment Convective Heating Energy");
-      result.push_back("Zone Gas Equipment Convective Heating Rate");
-      result.push_back("Zone Gas Equipment Latent Gain Energy");
-      result.push_back("Zone Gas Equipment Latent Gain Rate");
-      result.push_back("Zone Gas Equipment Lost Heat Energy");
-      result.push_back("Zone Gas Equipment Lost Heat Rate");
-      result.push_back("Zone Gas Equipment Total Heating Energy");
-      result.push_back("Zone Gas Equipment Total Heating Rate");
+      "Zone Gas Equipment Gas Rate",
+      "Zone Gas Equipment Gas Energy",
+      "Zone Gas Equipment Radiant Heating Energy",
+      "Zone Gas Equipment Radiant Heating Rate",
+      "Zone Gas Equipment Convective Heating Energy",
+      "Zone Gas Equipment Convective Heating Rate",
+      "Zone Gas Equipment Latent Gain Energy",
+      "Zone Gas Equipment Latent Gain Rate",
+      "Zone Gas Equipment Lost Heat Energy",
+      "Zone Gas Equipment Lost Heat Rate",
+      "Zone Gas Equipment Total Heating Energy",
+      "Zone Gas Equipment Total Heating Rate",
 
       // HotWater Equipment
-      result.push_back("Zone Hot Water Equipment District Heating Rate");
-      result.push_back("Zone Hot Water Equipment District Heating Energy");
-      result.push_back("Zone Hot Water Equipment Radiant Heating Energy");
-      result.push_back("Zone Hot Water Equipment Radiant Heating Rate");
-      result.push_back("Zone Hot Water Equipment Convective Heating Energy");
-      result.push_back("Zone Hot Water Equipment Convective Heating Rate");
-      result.push_back("Zone Hot Water Equipment Latent Gain Energy");
-      result.push_back("Zone Hot Water Equipment Latent Gain Rate");
-      result.push_back("Zone Hot Water Equipment Lost Heat Energy");
-      result.push_back("Zone Hot Water Equipment Lost Heat Rate");
-      result.push_back("Zone Hot Water Equipment Total Heating Energy");
-      result.push_back("Zone Hot Water Equipment Total Heating Rate");
+      "Zone Hot Water Equipment District Heating Rate",
+      "Zone Hot Water Equipment District Heating Energy",
+      "Zone Hot Water Equipment Radiant Heating Energy",
+      "Zone Hot Water Equipment Radiant Heating Rate",
+      "Zone Hot Water Equipment Convective Heating Energy",
+      "Zone Hot Water Equipment Convective Heating Rate",
+      "Zone Hot Water Equipment Latent Gain Energy",
+      "Zone Hot Water Equipment Latent Gain Rate",
+      "Zone Hot Water Equipment Lost Heat Energy",
+      "Zone Hot Water Equipment Lost Heat Rate",
+      "Zone Hot Water Equipment Total Heating Energy",
+      "Zone Hot Water Equipment Total Heating Rate",
 
       // Lights
       // TODO: if zone.spaces.select{|s| s.lights.size > 0}.size > 0
-      result.push_back("Zone Lights Electric Power");
-      result.push_back("Zone Lights Radiant Heating Energy");
-      result.push_back("Zone Lights Radiant Heating Rate");
-      result.push_back("Zone Lights Visible Radiation Heating Energy");
-      result.push_back("Zone Lights Visible Radiation Heating Rate");
-      result.push_back("Zone Lights Convective Heating Energy");
-      result.push_back("Zone Lights Convective Heating Rate");
-      result.push_back("Zone Lights Return Air Heating Energy");
-      result.push_back("Zone Lights Return Air Heating Rate");
-      result.push_back("Zone Lights Total Heating Energy");
-      result.push_back("Zone Lights Total Heating Rate");
-      result.push_back("Zone Lights Electric Energy");
+      "Zone Lights Electric Power",
+      "Zone Lights Radiant Heating Energy",
+      "Zone Lights Radiant Heating Rate",
+      "Zone Lights Visible Radiation Heating Energy",
+      "Zone Lights Visible Radiation Heating Rate",
+      "Zone Lights Convective Heating Energy",
+      "Zone Lights Convective Heating Rate",
+      "Zone Lights Return Air Heating Energy",
+      "Zone Lights Return Air Heating Rate",
+      "Zone Lights Total Heating Energy",
+      "Zone Lights Total Heating Rate",
+      "Zone Lights Electric Energy",
 
       // OtherEquipment
-      result.push_back("Zone Other Equipment Radiant Heating Energy");
-      result.push_back("Zone Other Equipment Radiant Heating Rate");
-      result.push_back("Zone Other Equipment Convective Heating Energy");
-      result.push_back("Zone Other Equipment Convective Heating Rate");
-      result.push_back("Zone Other Equipment Latent Gain Energy");
-      result.push_back("Zone Other Equipment Latent Gain Rate");
-      result.push_back("Zone Other Equipment Lost Heat Energy");
-      result.push_back("Zone Other Equipment Lost Heat Rate");
-      result.push_back("Zone Other Equipment Total Heating Energy");
-      result.push_back("Zone Other Equipment Total Heating Rate");
+      "Zone Other Equipment Radiant Heating Energy",
+      "Zone Other Equipment Radiant Heating Rate",
+      "Zone Other Equipment Convective Heating Energy",
+      "Zone Other Equipment Convective Heating Rate",
+      "Zone Other Equipment Latent Gain Energy",
+      "Zone Other Equipment Latent Gain Rate",
+      "Zone Other Equipment Lost Heat Energy",
+      "Zone Other Equipment Lost Heat Rate",
+      "Zone Other Equipment Total Heating Energy",
+      "Zone Other Equipment Total Heating Rate",
 
       // People
-      result.push_back("Zone People Occupant Count");
-      result.push_back("Zone People Radiant Heating Energy");
-      result.push_back("Zone People Radiant Heating Rate");
-      result.push_back("Zone People Convective Heating Energy");
-      result.push_back("Zone People Convective Heating Rate");
-      result.push_back("Zone People Sensible Heating Energy");
-      result.push_back("Zone People Sensible Heating Rate");
-      result.push_back("Zone People Latent Gain Energy");
-      result.push_back("Zone People Latent Gain Rate");
-      result.push_back("Zone People Total Heating Energy");
-      result.push_back("Zone People Total Heating Rate");
+      "Zone People Occupant Count",
+      "Zone People Radiant Heating Energy",
+      "Zone People Radiant Heating Rate",
+      "Zone People Convective Heating Energy",
+      "Zone People Convective Heating Rate",
+      "Zone People Sensible Heating Energy",
+      "Zone People Sensible Heating Rate",
+      "Zone People Latent Gain Energy",
+      "Zone People Latent Gain Rate",
+      "Zone People Total Heating Energy",
+      "Zone People Total Heating Rate",
 
       // TODO: check if has thermal comfort enabled
       // Ruby pseudo code...
@@ -348,66 +348,66 @@ namespace detail {
         //end
       //end
       // JM: Not sure which model outputs these, maybe all
-      result.push_back("Zone Thermal Comfort Mean Radiant Temperature");
-      result.push_back("Zone Thermal Comfort Operative Temperature");
-      result.push_back("Zone Thermal Comfort Clothing Surface Temperature");
+      "Zone Thermal Comfort Mean Radiant Temperature",
+      "Zone Thermal Comfort Operative Temperature",
+      "Zone Thermal Comfort Clothing Surface Temperature",
       // if Fanger
-      result.push_back("Zone Thermal Comfort Fanger Model PMV");
-      result.push_back("Zone Thermal Comfort Fanger Model PPD");
+      "Zone Thermal Comfort Fanger Model PMV",
+      "Zone Thermal Comfort Fanger Model PPD",
       // if Pierce
-      result.push_back("Zone Thermal Comfort Pierce Model Effective Temperature PMV");
-      result.push_back("Zone Thermal Comfort Pierce Model Standard Effective Temperature PMV");
-      result.push_back("Zone Thermal Comfort Pierce Model Discomfort Index");
-      result.push_back("Zone Thermal Comfort Pierce Model Thermal Sensation Index");
+      "Zone Thermal Comfort Pierce Model Effective Temperature PMV",
+      "Zone Thermal Comfort Pierce Model Standard Effective Temperature PMV",
+      "Zone Thermal Comfort Pierce Model Discomfort Index",
+      "Zone Thermal Comfort Pierce Model Thermal Sensation Index",
       // if KSU
-      result.push_back("Zone Thermal Comfort KSU Model Thermal Sensation Index");
+      "Zone Thermal Comfort KSU Model Thermal Sensation Index",
       // if AdaptiveASH55
-      result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model 80%% Acceptability Status");
-      result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model 90%% Acceptability Status");
-      result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model Running Average Outdoor Air Temperature");
-      result.push_back("Zone Thermal Comfort ASHRAE 55 Adaptive Model Temperature");
+      "Zone Thermal Comfort ASHRAE 55 Adaptive Model 80%% Acceptability Status",
+      "Zone Thermal Comfort ASHRAE 55 Adaptive Model 90%% Acceptability Status",
+      "Zone Thermal Comfort ASHRAE 55 Adaptive Model Running Average Outdoor Air Temperature",
+      "Zone Thermal Comfort ASHRAE 55 Adaptive Model Temperature",
       // if AdaptiveCEN15251
-      result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Category I Status");
-      result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Category II Status");
-      result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Category III Status");
-      result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Running Average Outdoor Air Temperature");
-      result.push_back("Zone Thermal Comfort CEN 15251 Adaptive Model Temperature");
+      "Zone Thermal Comfort CEN 15251 Adaptive Model Category I Status",
+      "Zone Thermal Comfort CEN 15251 Adaptive Model Category II Status",
+      "Zone Thermal Comfort CEN 15251 Adaptive Model Category III Status",
+      "Zone Thermal Comfort CEN 15251 Adaptive Model Running Average Outdoor Air Temperature",
+      "Zone Thermal Comfort CEN 15251 Adaptive Model Temperature",
 
 
 
       // Steam Equipment
-      result.push_back("Zone Steam Equipment District Heating Rate");
-      result.push_back("Zone Steam Equipment District Heating Energy");
-      result.push_back("Zone Steam Equipment Radiant Heating Energy");
-      result.push_back("Zone Steam Equipment Radiant Heating Rate");
-      result.push_back("Zone Steam Equipment Convective Heating Energy");
-      result.push_back("Zone Steam Equipment Convective Heating Rate");
-      result.push_back("Zone Steam Equipment Latent Gain Energy");
-      result.push_back("Zone Steam Equipment Latent Gain Rate");
-      result.push_back("Zone Steam Equipment Lost Heat Energy");
-      result.push_back("Zone Steam Equipment Lost Heat Rate");
-      result.push_back("Zone Steam Equipment Total Heating Energy");
-      result.push_back("Zone Steam Equipment Total Heating Rate");
+      "Zone Steam Equipment District Heating Rate",
+      "Zone Steam Equipment District Heating Energy",
+      "Zone Steam Equipment Radiant Heating Energy",
+      "Zone Steam Equipment Radiant Heating Rate",
+      "Zone Steam Equipment Convective Heating Energy",
+      "Zone Steam Equipment Convective Heating Rate",
+      "Zone Steam Equipment Latent Gain Energy",
+      "Zone Steam Equipment Latent Gain Rate",
+      "Zone Steam Equipment Lost Heat Energy",
+      "Zone Steam Equipment Lost Heat Rate",
+      "Zone Steam Equipment Total Heating Energy",
+      "Zone Steam Equipment Total Heating Rate",
 
       /*
        * Zone Outputs from Daylighting Controls
        */
 
-      result.push_back("Daylighting Lighting Power Multiplier");
+      "Daylighting Lighting Power Multiplier",
 
       // DLM: this is a static list so no dynamic
       //if (primaryDaylightingControl()){
-        result.push_back("Daylighting Reference Point 1 Illuminance");
-        result.push_back("Daylighting Reference Point 1 Glare Index");
-        result.push_back("Daylighting Reference Point 1 Glare Index Setpoint Exceeded Time");
-        result.push_back("Daylighting Reference Point 1 Daylight Illuminance Setpoint Exceeded Time");
+        "Daylighting Reference Point 1 Illuminance",
+        "Daylighting Reference Point 1 Glare Index",
+        "Daylighting Reference Point 1 Glare Index Setpoint Exceeded Time",
+        "Daylighting Reference Point 1 Daylight Illuminance Setpoint Exceeded Time",
       //}
 
       //if (secondaryDaylightingControl()){
-        result.push_back("Daylighting Reference Point 2 Illuminance");
-        result.push_back("Daylighting Reference Point 2 Glare Index");
-        result.push_back("Daylighting Reference Point 2 Glare Index Setpoint Exceeded Time");
-        result.push_back("Daylighting Reference Point 2 Daylight Illuminance Setpoint Exceeded Time");
+        "Daylighting Reference Point 2 Illuminance",
+        "Daylighting Reference Point 2 Glare Index",
+        "Daylighting Reference Point 2 Glare Index Setpoint Exceeded Time",
+        "Daylighting Reference Point 2 Daylight Illuminance Setpoint Exceeded Time",
       //}
 
 
@@ -419,33 +419,33 @@ namespace detail {
       // Opaque
       // Output variables applicable to opaque heat transfer surfaces (FLOOR, WALL, ROOF, DOOR).
       // if Output:Diagnostics is used
-      //result.push_back("Zone Opaque Surface Inside Face Conduction");
-      //result.push_back("Zone Opaque Surface Inside Faces Total Conduction Heat Gain Rate");
-      //result.push_back("Zone Opaque Surface Inside Faces Total Conduction Heat Loss Rate");
-      //result.push_back("Zone Opaque Surface Inside Faces Total Conduction Heat Gain Energy");
-      //result.push_back("Zone Opaque Surface Inside Faces Total Conduction Heat Loss Energy");
-      //result.push_back("Zone Opaque Surface Outside Face Conduction");
-      //result.push_back("Zone Opaque Surface Outside Face Conduction Gain");
-      //result.push_back("Zone Opaque Surface Outside Face Conduction Loss");
+      //"Zone Opaque Surface Inside Face Conduction",
+      //"Zone Opaque Surface Inside Faces Total Conduction Heat Gain Rate",
+      //"Zone Opaque Surface Inside Faces Total Conduction Heat Loss Rate",
+      //"Zone Opaque Surface Inside Faces Total Conduction Heat Gain Energy",
+      //"Zone Opaque Surface Inside Faces Total Conduction Heat Loss Energy",
+      //"Zone Opaque Surface Outside Face Conduction",
+      //"Zone Opaque Surface Outside Face Conduction Gain",
+      //"Zone Opaque Surface Outside Face Conduction Loss",
 
       // Window
-      result.push_back("Zone Windows Total Transmitted Solar Radiation Rate");
-      result.push_back("Zone Windows Total Transmitted Solar Radiation Energy");
+      "Zone Windows Total Transmitted Solar Radiation Rate",
+      "Zone Windows Total Transmitted Solar Radiation Energy",
 
-      result.push_back("Zone Windows Total Heat Gain Rate");
-      result.push_back("Zone Windows Total Heat Gain Energy");
-      result.push_back("Zone Windows Total Heat Loss Rate");
-      result.push_back("Zone Windows Total Heat Loss Energy");
+      "Zone Windows Total Heat Gain Rate",
+      "Zone Windows Total Heat Gain Energy",
+      "Zone Windows Total Heat Loss Rate",
+      "Zone Windows Total Heat Loss Energy",
 
-      result.push_back("Zone Exterior Windows Total Transmitted Beam Solar Radiation Rate");
-      result.push_back("Zone Exterior Windows Total Transmitted Beam Solar Radiation Energy");
-      result.push_back("Zone Exterior Windows Total Transmitted Diffuse Solar Radiation Rate");
-      result.push_back("Zone Exterior Windows Total Transmitted Diffuse Solar Radiation Energy");
+      "Zone Exterior Windows Total Transmitted Beam Solar Radiation Rate",
+      "Zone Exterior Windows Total Transmitted Beam Solar Radiation Energy",
+      "Zone Exterior Windows Total Transmitted Diffuse Solar Radiation Rate",
+      "Zone Exterior Windows Total Transmitted Diffuse Solar Radiation Energy",
 
-      result.push_back("Zone Interior Windows Total Transmitted Beam Solar Radiation Rate");
-      result.push_back("Zone Interior Windows Total Transmitted Beam Solar Radiation Energy");
-      result.push_back("Zone Interior Windows Total Transmitted Diffuse Solar Radiation Rate");
-      result.push_back("Zone Interior Windows Total Transmitted Diffuse Solar Radiation Energy");
+      "Zone Interior Windows Total Transmitted Beam Solar Radiation Rate",
+      "Zone Interior Windows Total Transmitted Beam Solar Radiation Energy",
+      "Zone Interior Windows Total Transmitted Diffuse Solar Radiation Rate",
+      "Zone Interior Windows Total Transmitted Diffuse Solar Radiation Energy",
 
       /*
        * Zone Outputs from other
@@ -453,105 +453,105 @@ namespace detail {
 
       // Infiltration
       // If infiltration is used
-      result.push_back("Zone Infiltration Sensible Heat Loss Energy");
-      result.push_back("Zone Infiltration Sensible Heat Gain Energy");
-      result.push_back("Zone Infiltration Latent Heat Loss Energy");
-      result.push_back("Zone Infiltration Latent Heat Gain Energy");
-      result.push_back("Zone Infiltration Total Heat Loss Energy");
-      result.push_back("Zone Infiltration Total Heat Gain Energy");
-      result.push_back("Zone Infiltration Current Density Volume Flow Rate");
-      result.push_back("Zone Infiltration Standard Density Volume Flow Rate");
-      result.push_back("Zone Infiltration Current Density Volume");
-      result.push_back("Zone Infiltration Standard Density Volume");
-      result.push_back("Zone Infiltration Mass");
-      result.push_back("Zone Infiltration Mass Flow Rate");
-      result.push_back("Zone Infiltration Air Change Rate");
+      "Zone Infiltration Sensible Heat Loss Energy",
+      "Zone Infiltration Sensible Heat Gain Energy",
+      "Zone Infiltration Latent Heat Loss Energy",
+      "Zone Infiltration Latent Heat Gain Energy",
+      "Zone Infiltration Total Heat Loss Energy",
+      "Zone Infiltration Total Heat Gain Energy",
+      "Zone Infiltration Current Density Volume Flow Rate",
+      "Zone Infiltration Standard Density Volume Flow Rate",
+      "Zone Infiltration Current Density Volume",
+      "Zone Infiltration Standard Density Volume",
+      "Zone Infiltration Mass",
+      "Zone Infiltration Mass Flow Rate",
+      "Zone Infiltration Air Change Rate",
 
 
       // ZoneVentilation:DesignFlowRate
-      result.push_back("Zone Ventilation Sensible Heat Loss Energy");
-      result.push_back("Zone Ventilation Sensible Heat Gain Energy");
-      result.push_back("Zone Ventilation Latent Heat Loss Energy");
-      result.push_back("Zone Ventilation Latent Heat Gain Energy");
-      result.push_back("Zone Ventilation Total Heat Loss Energy");
-      result.push_back("Zone Ventilation Total Heat Gain Energy");
-      result.push_back("Zone Ventilation Current Density Volume Flow Rate");
-      result.push_back("Zone Ventilation Standard Density Volume Flow Rate");
-      result.push_back("Zone Ventilation Current Density Volume");
-      result.push_back("Zone Ventilation Standard Density Volume");
-      result.push_back("Zone Ventilation Mass");
-      result.push_back("Zone Ventilation Mass Flow Rate");
-      result.push_back("Zone Ventilation Air Change Rate");
-      result.push_back("Zone Ventilation Fan Electric Energy");
-      result.push_back("Zone Ventilation Air Inlet Temperature");
+      "Zone Ventilation Sensible Heat Loss Energy",
+      "Zone Ventilation Sensible Heat Gain Energy",
+      "Zone Ventilation Latent Heat Loss Energy",
+      "Zone Ventilation Latent Heat Gain Energy",
+      "Zone Ventilation Total Heat Loss Energy",
+      "Zone Ventilation Total Heat Gain Energy",
+      "Zone Ventilation Current Density Volume Flow Rate",
+      "Zone Ventilation Standard Density Volume Flow Rate",
+      "Zone Ventilation Current Density Volume",
+      "Zone Ventilation Standard Density Volume",
+      "Zone Ventilation Mass",
+      "Zone Ventilation Mass Flow Rate",
+      "Zone Ventilation Air Change Rate",
+      "Zone Ventilation Fan Electric Energy",
+      "Zone Ventilation Air Inlet Temperature",
 
 
 
-      result.push_back("Zone Predicted Sensible Load to Setpoint Heat Transfer Rate");
-      result.push_back("Zone Predicted Sensible Load to Heating Setpoint Heat Transfer Rate");
-      result.push_back("Zone Predicted Sensible Load to Cooling Setpoint Heat Transfer Rate");
-      result.push_back("Zone Predicted Moisture Load Moisture Transfer Rate");
-      result.push_back("Zone Predicted Moisture Load to Humidifying Setpoint Moisture Transfer Rate");
-      result.push_back("Zone Predicted Moisture Load to Dehumidifying Setpoint Moisture Transfer Rate");
+      "Zone Predicted Sensible Load to Setpoint Heat Transfer Rate",
+      "Zone Predicted Sensible Load to Heating Setpoint Heat Transfer Rate",
+      "Zone Predicted Sensible Load to Cooling Setpoint Heat Transfer Rate",
+      "Zone Predicted Moisture Load Moisture Transfer Rate",
+      "Zone Predicted Moisture Load to Humidifying Setpoint Moisture Transfer Rate",
+      "Zone Predicted Moisture Load to Dehumidifying Setpoint Moisture Transfer Rate",
 
-      result.push_back("Zone Thermostat Control Type");
-      result.push_back("Zone Thermostat Heating Setpoint Temperature");
-      result.push_back("Zone Thermostat Cooling Setpoint Temperature");
+      "Zone Thermostat Control Type",
+      "Zone Thermostat Heating Setpoint Temperature",
+      "Zone Thermostat Cooling Setpoint Temperature",
 
-      result.push_back("Zone Mechanical Ventilation No Load Heat Removal Energy");
-      result.push_back("Zone Mechanical Ventilation Cooling Load Increase Energy");
-      result.push_back("Zone Mechanical Ventilation Cooling Load Increase Energy Due to Overheating Energy");
-      result.push_back("Zone Mechanical Ventilation Cooling Load Decrease Energy");
-      result.push_back("Zone Mechanical Ventilation No Load Heat Addition Energy");
-      result.push_back("Zone Mechanical Ventilation No Load Heat Removal Energy");
-      result.push_back("Zone Mechanical Ventilation Cooling Load Increase Energy");
-      result.push_back("Zone Mechanical Ventilation Cooling Load Increase Energy Due to Overheating Energy");
-      result.push_back("Zone Mechanical Ventilation Cooling Load Decrease Energy");
-      result.push_back("Zone Mechanical Ventilation No Load Heat Addition Energy");
-      result.push_back("Zone Mechanical Ventilation Heating Load Increase Energy");
-      result.push_back("Zone Mechanical Ventilation Heating Load Increase Energy Due to Overcooling Energy");
-      result.push_back("Zone Mechanical Ventilation Heating Load Decrease Energy");
-      result.push_back("Zone Mechanical Ventilation Mass Flow Rate");
-      result.push_back("Zone Mechanical Ventilation Mass");
-      result.push_back("Zone Mechanical Ventilation Standard Density Volume Flow Rate");
-      result.push_back("Zone Mechanical Ventilation Standard Density Volume");
-      result.push_back("Zone Mechanical Ventilation Current Density Volume Flow Rate");
-      result.push_back("Zone Mechanical Ventilation Current Density Volume");
-      result.push_back("Zone Mechanical Ventilation Air Changes per Hour");
+      "Zone Mechanical Ventilation No Load Heat Removal Energy",
+      "Zone Mechanical Ventilation Cooling Load Increase Energy",
+      "Zone Mechanical Ventilation Cooling Load Increase Energy Due to Overheating Energy",
+      "Zone Mechanical Ventilation Cooling Load Decrease Energy",
+      "Zone Mechanical Ventilation No Load Heat Addition Energy",
+      "Zone Mechanical Ventilation No Load Heat Removal Energy",
+      "Zone Mechanical Ventilation Cooling Load Increase Energy",
+      "Zone Mechanical Ventilation Cooling Load Increase Energy Due to Overheating Energy",
+      "Zone Mechanical Ventilation Cooling Load Decrease Energy",
+      "Zone Mechanical Ventilation No Load Heat Addition Energy",
+      "Zone Mechanical Ventilation Heating Load Increase Energy",
+      "Zone Mechanical Ventilation Heating Load Increase Energy Due to Overcooling Energy",
+      "Zone Mechanical Ventilation Heating Load Decrease Energy",
+      "Zone Mechanical Ventilation Mass Flow Rate",
+      "Zone Mechanical Ventilation Mass",
+      "Zone Mechanical Ventilation Standard Density Volume Flow Rate",
+      "Zone Mechanical Ventilation Standard Density Volume",
+      "Zone Mechanical Ventilation Current Density Volume Flow Rate",
+      "Zone Mechanical Ventilation Current Density Volume",
+      "Zone Mechanical Ventilation Air Changes per Hour",
 
 
       // ZoneContaminantAirBalance
       // The following output variables are available when Carbon Dioxide Concentration = Yes.
-      result.push_back("Zone Air CO2 Internal Gain Volume Flow Rate");
-      result.push_back("Zone Air CO2 Concentration");
+      "Zone Air CO2 Internal Gain Volume Flow Rate",
+      "Zone Air CO2 Concentration",
       // The following output variable is available when Generic Contaminant Concentration = Yes.
-      result.push_back("Zone Generic Air Contaminant Generation Volume Flow Rate");
-      result.push_back("Zone Air Generic Air Contaminant Concentration");
+      "Zone Generic Air Contaminant Generation Volume Flow Rate",
+      "Zone Air Generic Air Contaminant Concentration",
 
       // Refrigeration:AirChiller
       // TODO: implement test to see if AirChiller.
-      result.push_back("Refrigeration Zone Air Chiller Sensible Cooling Rate");
-      result.push_back("Refrigeration Zone Air Chiller Sensible Cooling Energy");
-      result.push_back("Refrigeration Zone Air Chiller Heating Rate");
-      result.push_back("Refrigeration Zone Air Chiller Heating Energy");
-      result.push_back("Refrigeration Zone Air Chiller Latent Cooling Rate");
-      result.push_back("Refrigeration Zone Air Chiller Latent Cooling Energy");
-      result.push_back("Refrigeration Zone Air Chiller Total Cooling Rate");
-      result.push_back("Refrigeration Zone Air Chiller Total Cooling Energy");
-      result.push_back("Refrigeration Zone Air Chiller Water Removed Mass Flow Rate");
+      "Refrigeration Zone Air Chiller Sensible Cooling Rate",
+      "Refrigeration Zone Air Chiller Sensible Cooling Energy",
+      "Refrigeration Zone Air Chiller Heating Rate",
+      "Refrigeration Zone Air Chiller Heating Energy",
+      "Refrigeration Zone Air Chiller Latent Cooling Rate",
+      "Refrigeration Zone Air Chiller Latent Cooling Energy",
+      "Refrigeration Zone Air Chiller Total Cooling Rate",
+      "Refrigeration Zone Air Chiller Total Cooling Energy",
+      "Refrigeration Zone Air Chiller Water Removed Mass Flow Rate",
 
       // RefrigerationWalkin
       // TODO: test
-      result.push_back("Refrigeration Walk In Zone Sensible Cooling Rate");
-      result.push_back("Refrigeration Walk In Zone Sensible Cooling Energy");
-      result.push_back("Refrigeration Walk In Zone Sensible Heating Rate");
-      result.push_back("Refrigeration Walk In Zone Sensible Heating Energy");
-      result.push_back("Refrigeration Walk In Zone Latent Rate");
-      result.push_back("Refrigeration Walk In Zone Latent Energy");
+      "Refrigeration Walk In Zone Sensible Cooling Rate",
+      "Refrigeration Walk In Zone Sensible Cooling Energy",
+      "Refrigeration Walk In Zone Sensible Heating Rate",
+      "Refrigeration Walk In Zone Sensible Heating Energy",
+      "Refrigeration Walk In Zone Latent Rate",
+      "Refrigeration Walk In Zone Latent Energy"
 
 
 
-    }
+    };
     return result;
   }
 
