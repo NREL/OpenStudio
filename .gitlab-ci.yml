@@ -1,11 +1,10 @@
 stages:
-- build
-- deploy
+- build_deploy
 - testCTest
 - testResources
 
-build:windows:
-  stage: build
+build_deploy:windows:
+  stage: build_deploy
   only:
   - triggers
   - master
@@ -18,15 +17,20 @@ build:windows:
   - mkdir build
   - cd build
   - cmake -G "Visual Studio 12 2013 Win64" ../openstudiocore
-  - cmake -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF  ../openstudiocore
+  # PAT does not build in the OpenStudio CI, at the moment
+  - cmake -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF  ../openstudiocore
   - cmake - ../openstudiocore
   - cmake --build . --config Release --target ALL_BUILD
   - cmake --build . --config Release --target ALL_BUILD
   - cmake --build . --config Release --target PACKAGE
-  - cmake --build . --config Release --target ALL_DOXYGEN
+ #- cmake --build . --config Release --target ALL_DOXYGEN # docs do not build without errors
+  - cd build
+  - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "*.exe"
+ #- cd /doc
+ #- aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/doc --recursive --exclude "*" --include "*.zip"
   retry: 1
   artifacts:
-    expire_in: 12 hrs
+    expire_in: 24 hrs
     paths:
     - build/OpenStudio-*.exe
     - build/CPackConfig.cmake
@@ -44,8 +48,8 @@ build:windows:
     - build/src/
     - build/doc/OpenStudio-*.zip
 
-build:mac:
-  stage: build
+build_deploy:mac:
+  stage: build_deploy
   only:
   - triggers
   - master
@@ -60,14 +64,12 @@ build:mac:
   - make -j16 package
   - cd _CPack_Packages/Darwin/IFW
   - zip -r `ls -1 | grep OpenStudio-*.app | sed -e 's/\.app$//'`.zip OpenStudio-*.app
+  - cd build/_CPack_Packages/Darwin/IFW
+  - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "*.zip"
   retry: 1
-  artifacts:
-    expire_in: 12 hrs
-    paths:
-      - build/_CPack_Packages/Darwin/IFW/OpenStudio-*.zip
 
-build:ubuntu:
-  stage: build
+build_deploy:ubuntu:
+  stage: build_deploy
   only:
   - triggers
   - master
@@ -80,58 +82,9 @@ build:ubuntu:
   - cd build
   - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=ON -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
   - make -j16 package
-  retry: 1
-  artifacts:
-    expire_in: 12 hrs
-    paths:
-      - build/OpenStudio-*.deb
-
-deploy:windows:
-  stage: deploy
-  only:
-  - triggers
-  - master
-  - iteration
-  - develop
-  tags:
-  - windows
-  dependencies:
-  - build:windows
-  script:
-  - cd build
-  - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "*.exe"
-  - cd /doc
-  - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/doc --recursive --exclude "*" --include "*.zip"
-
-deploy:mac:
-  stage: deploy
-  only:
-  - triggers
-  - master
-  - iteration
-  - develop
-  tags:
-  - mac
-  dependencies:
-  - build:mac
-  script:
-  - cd build/_CPack_Packages/Darwin/IFW
-  - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "*.zip"
-
-deploy:ubuntu:
-  stage: deploy
-  only:
-  - triggers
-  - master
-  - iteration
-  - develop
-  tags:
-  - ubuntu
-  dependencies:
-  - build:ubuntu
-  script:
   - cd build
   - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "*.deb"
+  retry: 1
 
 testCTest:windows:
   stage: testCTest
@@ -143,7 +96,7 @@ testCTest:windows:
   tags:
   - windows
   dependencies:
-  - build:windows
+  - build_deploy:windows
   script:
   - cd build
   - dir
@@ -159,7 +112,7 @@ testResources:windows:
   tags:
   - windows
   dependencies:
-  - build:windows
+  - build_deploy:windows
   script:
   - "rmdir c:\\\\openstudio\\ /s /q"
   - cd build
