@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "AirConditionerVariableRefrigerantFlow.hpp"
 #include "AirConditionerVariableRefrigerantFlow_Impl.hpp"
@@ -86,60 +87,57 @@ namespace detail {
 
   const std::vector<std::string>& AirConditionerVariableRefrigerantFlow_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("VRF Heat Pump Total Cooling Rate");
-      result.push_back("VRF Heat Pump Total Heating Rate");
-      result.push_back("VRF Heat Pump Cooling COP");
-      result.push_back("VRF Heat Pump Heating COP");
-      result.push_back("VRF Heat Pump COP");
-      result.push_back("VRF Heat Pump Part Load Ratio");
-      result.push_back("VRF Heat Pump Runtime Fraction");
-      result.push_back("VRF Heat Pump Cycling Ratio");
-      result.push_back("VRF Heat Pump Operating Mode");
-      result.push_back("VRF Heat Pump Condenser Inlet Temperature");
-      result.push_back("VRF Heat Pump Maximum Capacity Cooling Rate");
-      result.push_back("VRF Heat Pump Maximum Capacity Heating Rate");
-      result.push_back("VRF Heat Pump Crankcase Heater Electric Power");
-      result.push_back("VRF Heat Pump Crankcase Heater Electric Energy");
-      result.push_back("VRF Heat Pump Terminal Unit Heating Load Rate");
-      result.push_back("VRF Heat Pump Terminal Unit Cooling Load Rate");
+    static std::vector<std::string> result{ "VRF Heat Pump Total Cooling Rate",
+      "VRF Heat Pump Total Heating Rate",
+      "VRF Heat Pump Cooling COP",
+      "VRF Heat Pump Heating COP",
+      "VRF Heat Pump COP",
+      "VRF Heat Pump Part Load Ratio",
+      "VRF Heat Pump Runtime Fraction",
+      "VRF Heat Pump Cycling Ratio",
+      "VRF Heat Pump Operating Mode",
+      "VRF Heat Pump Condenser Inlet Temperature",
+      "VRF Heat Pump Maximum Capacity Cooling Rate",
+      "VRF Heat Pump Maximum Capacity Heating Rate",
+      "VRF Heat Pump Crankcase Heater Electric Power",
+      "VRF Heat Pump Crankcase Heater Electric Energy",
+      "VRF Heat Pump Terminal Unit Heating Load Rate",
+      "VRF Heat Pump Terminal Unit Cooling Load Rate",
 
       // TODO: add proper tests once the ModelObject return type is changed.
       // For now include all
       // Heat Recovery:
-      result.push_back("VRF Heat Pump Heat Recovery Status Change Multiplier");
-      result.push_back("VRF Heat Pump Simultaneous Cooling and Heating Efficiency");
+      "VRF Heat Pump Heat Recovery Status Change Multiplier",
+      "VRF Heat Pump Simultaneous Cooling and Heating Efficiency",
       // Evap-cooled:
-      result.push_back("VRF Heat Pump Evaporative Condenser Water Use Volume");
-      result.push_back("VRF Heat Pump Evaporative Condenser Pump Electric Power");
-      result.push_back("VRF Heat Pump Evaporative Condenser Pump Electric Energy");
-      result.push_back("VRF Heat Pump Basin Heater Electric Power");
-      result.push_back("VRF Heat Pump Basin Heater Electric Energy");
-      result.push_back("VRF Heat Pump Heat Recovery Status Change Multiplier");
+      "VRF Heat Pump Evaporative Condenser Water Use Volume",
+      "VRF Heat Pump Evaporative Condenser Pump Electric Power",
+      "VRF Heat Pump Evaporative Condenser Pump Electric Energy",
+      "VRF Heat Pump Basin Heater Electric Power",
+      "VRF Heat Pump Basin Heater Electric Energy",
+      "VRF Heat Pump Heat Recovery Status Change Multiplier",
       // Water-cooled:
-      result.push_back("VRF Heat Pump Condenser Outlet Temperature");
-      result.push_back("VRF Heat Pump Condenser Mass Flow Rate");
-      result.push_back("VRF Heat Pump Condenser Heat Transfer Energy");
-      result.push_back("VRF Heat Pump Condenser Heat Transfer Rate");
+      "VRF Heat Pump Condenser Outlet Temperature",
+      "VRF Heat Pump Condenser Mass Flow Rate",
+      "VRF Heat Pump Condenser Heat Transfer Energy",
+      "VRF Heat Pump Condenser Heat Transfer Rate",
       // Electric Fuel type (default):
-      result.push_back("VRF Heat Pump Cooling Electric Power");
-      result.push_back("VRF Heat Pump Cooling Electric Energy");
-      result.push_back("VRF Heat Pump Heating Electric Power");
-      result.push_back("VRF Heat Pump Heating Electric Energy");
+      "VRF Heat Pump Cooling Electric Power",
+      "VRF Heat Pump Cooling Electric Energy",
+      "VRF Heat Pump Heating Electric Power",
+      "VRF Heat Pump Heating Electric Energy",
       // Electric defrost always used for Defrost Strategy = Resistive regardless of fuel type
-      result.push_back("VRF Heat Pump Defrost Electric Power");
-      result.push_back("VRF Heat Pump Defrost Electric Energy");
+      "VRF Heat Pump Defrost Electric Power",
+      "VRF Heat Pump Defrost Electric Energy"
       // Alternate Fuel types (e.g., FuelType = NaturalGas):
-      //result.push_back("VRF Heat Pump Cooling <FuelType> Rate");
-      //result.push_back("VRF Heat Pump Cooling <FuelType> Energy");
-      //result.push_back("VRF Heat Pump Heating <FuelType> Rate");
-      //result.push_back("VRF Heat Pump Heating <FuelType> Energy");
-      //result.push_back("VRF Heat Pump Defrost <FuelType> Rate");
-      //result.push_back("VRF Heat Pump Defrost <FuelType> Energy");
+      //"VRF Heat Pump Cooling <FuelType> Rate",
+      //"VRF Heat Pump Cooling <FuelType> Energy",
+      //"VRF Heat Pump Heating <FuelType> Rate",
+      //"VRF Heat Pump Heating <FuelType> Energy",
+      //"VRF Heat Pump Defrost <FuelType> Rate",
+      //"VRF Heat Pump Defrost <FuelType> Energy",
 
-    }
+    };
     return result;
   }
 

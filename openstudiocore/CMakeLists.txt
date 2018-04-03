@@ -8,8 +8,7 @@ if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-
-project(OpenStudio VERSION 2.4.2)
+project(OpenStudio VERSION 2.5.1)
 
 include(ExternalProject)
 include(CPackComponent)
@@ -67,11 +66,11 @@ set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.$
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 8)
-set(ENERGYPLUS_VERSION_MINOR 8)
+set(ENERGYPLUS_VERSION_MINOR 9)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "7c3bbe4830")
+set(ENERGYPLUS_BUILD_SHA "eba93e8e1b")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -93,6 +92,15 @@ elseif(APPLE)
   set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID} ${CMAKE_OSX_ARCHITECTURES} - OSX ${CMAKE_OSX_DEPLOYMENT_TARGET}")
 else()
   set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID}")
+endif()
+
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
+    "MinSizeRel" "RelWithDebInfo")
 endif()
 
 ###############################################################################
@@ -344,7 +352,7 @@ if("Ninja" STREQUAL ${CMAKE_GENERATOR})
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # For some reason it doesn't say its supported, but it works...
     # AddCXXFlagIfSupported(-fdiagnostics-color COMPILER_SUPPORTS_fdiagnostics-color)
-    message("Forcing -fdiagnostics-color=always")
+    message(STATUS "Forcing -fdiagnostics-color=always")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
   endif()
 endif()
@@ -366,16 +374,16 @@ endif()
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v8.8.0")
+set(ENERGYPLUS_RELEASE_NAME "v8.9.0-WithIDDFixes")
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH c600995348d4a7cbe905d3c1ee043dc5)
+    set(ENERGYPLUS_EXPECTED_HASH df69477dc6598a3b873bb006b9039a3d)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     set(ENERGYPLUS_EXPECTED_HASH xyz)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 90b8955a527d424fd0dc489c76c7eace)
+    set(ENERGYPLUS_EXPECTED_HASH 92cdf52bb3a2eff5f6b3c485bdce98b1)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -397,11 +405,11 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 7eeac12354aae8fb343a20df0d36f6a1)
+    set(ENERGYPLUS_EXPECTED_HASH a78e35abe81c7a25b8ac4f7e95307e0f)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH cebcbf36c51ff250ae45c444fa1296ef)
+    set(ENERGYPLUS_EXPECTED_HASH xyz)
   endif()
   if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
@@ -575,8 +583,8 @@ endif()
 # to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
 # next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20180221.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "7018b302a6530702cffde96aedd74870")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20180325.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "ac9e76129679612a4761fb47b3a9a127")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -652,13 +660,13 @@ if( BUILD_DVIEW )
   if(NOT EXISTS ${DVIEW_INSTALL_DIR})
     if( WIN32 )
       set(DVIEW_ZIP_FILENAME "DView-windows.zip")
-      set(DVIEW_ZIP_EXPECTED_MD5 "da1e0b0a564126118bfc510606470ee3")
+      set(DVIEW_ZIP_EXPECTED_MD5 "7658310fda707e620ec4412eef26a456")
     elseif( APPLE )
       set(DVIEW_ZIP_FILENAME "DView-osx.tar.gz")
-      set(DVIEW_ZIP_EXPECTED_MD5 "24d225aa500b344816c4f8239641d5aa")
+      set(DVIEW_ZIP_EXPECTED_MD5 "27eaf313eee9461d77e249538c1f627f")
     else()
       set(DVIEW_ZIP_FILENAME "DView-linux.tar.gz")
-      set(DVIEW_ZIP_EXPECTED_MD5 "8E100CE8E3A220C929A147D1DFA72662")
+      set(DVIEW_ZIP_EXPECTED_MD5 "f42818573cc07aec5ed8b676312c0af3")
     endif()
 
     set(DVIEW_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
@@ -1524,7 +1532,10 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_4_0_20171229.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_5_0_20180330.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../LICENSE.md" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../CHANGELOG.md" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../copyright.txt" DESTINATION .)
 
 ###############################################################################
 
@@ -1540,6 +1551,7 @@ if(NOT UNIX)
   endif()
 endif()
 
+set(CPACK_PACKAGE_VENDOR "National Renewable Energy Laboratory")
 set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})

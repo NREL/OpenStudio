@@ -17,28 +17,38 @@ end
 
 basepath = ARGV[0].gsub("\\", "/")
 
-copyright = "/**********************************************************************\n"
-ruby_copyright = "######################################################################\n"
-File.open(basepath + "/copyright.txt") do |file|
+copyright = "/***********************************************************************************************************************\n"
+ruby_copyright = "########################################################################################################################\n"
+File.open(basepath + "/../LICENSE.md") do |file|
   while (line = file.gets)
-    copyright += "*  " + line
-    ruby_copyright += "#  " + line
+    if line.strip.empty?
+      copyright +=  "*" + line
+      ruby_copyright += "#" + line
+    
+    else
+      copyright += "*  " + line
+      ruby_copyright += "#  " + line
+    end
   end
 end
-copyright += "**********************************************************************/\n\n"
-ruby_copyright += "######################################################################\n\n"
+copyright += "***********************************************************************************************************************/\n\n"
+ruby_copyright += "########################################################################################################################\n\n"
 
 # first do c++
 
 # exceptions are files that are not part of OpenStudio
-exceptions = [basepath + "/src/boost-log/",
-              basepath + "/src/qwt/",
-              basepath + "/src/gtest/",
-              basepath + "/src/orm/",
+exceptions = [basepath + "/src/geographic_lib/",
+              basepath + "/src/google_test/",
+              basepath + "/src/install_utility/",
+              basepath + "/src/jsoncpp/",
+              basepath + "/src/nano/",
+              basepath + "/src/polypartition/",
+              basepath + "/src/qtwinmigrate/",
+              basepath + "/src/qwt/",    
+              basepath + "/src/sqlite/",       
+              basepath + "/src/zlib/",              
               basepath + "/src/utilities/sql/Sqlite3.c",
               basepath + "/src/utilities/sql/Sqlite3.h",
-              basepath + "/src/editor/treemodel.h",
-              basepath + "/src/editor/treemodel.cpp",
               "mainpage.hpp"]
 
 # glob for hpp and cpp
@@ -67,7 +77,7 @@ files.each do |p|
   File.open(p, "r") do |file|
     # read until end of current copyright
     while (line = file.gets)
-      if not /^[\/\*]/.match(line)
+      if not /^\s?[\/\*]/.match(line)
         if not line.chomp.empty?
           text += line
         end

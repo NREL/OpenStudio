@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "ElectricEquipment.hpp"
 #include "ElectricEquipment_Impl.hpp"
@@ -74,36 +75,34 @@ namespace detail {
 
   const std::vector<std::string>& ElectricEquipment_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Electric Equipment Electric Power");
-      result.push_back("Electric Equipment Electric Energy");
-      result.push_back("Electric Equipment Radiant Heating Energy");
-      result.push_back("Electric Equipment Radiant Heating Rate");
-      result.push_back("Electric Equipment Convective Heating Energy");
-      result.push_back("Electric Equipment Convective Heating Rate");
-      result.push_back("Electric Equipment Latent Gain Energy");
-      result.push_back("Electric Equipment Latent Gain Rate");
-      result.push_back("Electric Equipment Lost Heat Energy");
-      result.push_back("Electric Equipment Lost Heat Rate");
-      result.push_back("Electric Equipment Total Heating Energy");
-      result.push_back("Electric Equipment Total Heating Rate");
+    static std::vector<std::string> result{
+      "Electric Equipment Electric Power",
+      "Electric Equipment Electric Energy",
+      "Electric Equipment Radiant Heating Energy",
+      "Electric Equipment Radiant Heating Rate",
+      "Electric Equipment Convective Heating Energy",
+      "Electric Equipment Convective Heating Rate",
+      "Electric Equipment Latent Gain Energy",
+      "Electric Equipment Latent Gain Rate",
+      "Electric Equipment Lost Heat Energy",
+      "Electric Equipment Lost Heat Rate",
+      "Electric Equipment Total Heating Energy",
+      "Electric Equipment Total Heating Rate"
 
       // Reported in ThermalZone
-      //result.push_back("Zone Electric Equipment Electric Power");
-      //result.push_back("Zone Electric Equipment Electric Energy");
-      //result.push_back("Zone Electric Equipment Radiant Heating Energy");
-      //result.push_back("Zone Electric Equipment Radiant Heating Rate");
-      //result.push_back("Zone Electric Equipment Convective Heating Energy");
-      //result.push_back("Zone Electric Equipment Convective Heating Rate");
-      //result.push_back("Zone Electric Equipment Latent Gain Energy");
-      //result.push_back("Zone Electric Equipment Latent Gain Rate");
-      //result.push_back("Zone Electric Equipment Lost Heat Energy");
-      //result.push_back("Zone Electric Equipment Lost Heat Rate");
-      //result.push_back("Zone Electric Equipment Total Heating Energy");
-      //result.push_back("Zone Electric Equipment Total Heating Rate");
-    }
+      //"Zone Electric Equipment Electric Power",
+      //"Zone Electric Equipment Electric Energy",
+      //"Zone Electric Equipment Radiant Heating Energy",
+      //"Zone Electric Equipment Radiant Heating Rate",
+      //"Zone Electric Equipment Convective Heating Energy",
+      //"Zone Electric Equipment Convective Heating Rate",
+      //"Zone Electric Equipment Latent Gain Energy",
+      //"Zone Electric Equipment Latent Gain Rate",
+      //"Zone Electric Equipment Lost Heat Energy",
+      //"Zone Electric Equipment Lost Heat Rate",
+      //"Zone Electric Equipment Total Heating Energy",
+      //"Zone Electric Equipment Total Heating Rate"
+    };
     return result;
   }
 
