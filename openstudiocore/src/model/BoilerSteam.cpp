@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "BoilerSteam.hpp"
 #include "BoilerSteam_Impl.hpp"
@@ -66,52 +67,50 @@ namespace detail {
 
   const std::vector<std::string>& BoilerSteam_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Boiler Heating Rate");
-      result.push_back("Boiler Heating Energy");
-      result.push_back("Boiler Steam Inlet Temperature");
-      result.push_back("Boiler Steam Outlet Temperature");
-      result.push_back("Boiler Mass Flow Rate");
+    static std::vector<std::string> result{
+      "Boiler Heating Rate",
+      "Boiler Heating Energy",
+      "Boiler Steam Inlet Temperature",
+      "Boiler Steam Outlet Temperature",
+      "Boiler Mass Flow Rate",
 
       // One of the following blocks will be applicable based on fuel type:
       // TODO: DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
       // until then, make this include all possible outputVariableNames for class regardless of fuelType
-      // std::string fuelType = this->fuelType();
+      // std::string fuelType = this->fuelType(,
       // if (fuelType == "Electricity") {
-        result.push_back("Boiler Electric Power");
-        result.push_back("Boiler Electric Energy");
+        "Boiler Electric Power",
+        "Boiler Electric Energy",
       // } else if (fuelType == "NaturalGas") {
-        result.push_back("Boiler Gas Rate");
-        result.push_back("Boiler Gas Energy");
+        "Boiler Gas Rate",
+        "Boiler Gas Energy",
       // } else if (fuelType == "PropaneGas") {
-        result.push_back("Boiler Propane Rate");
-        result.push_back("Boiler Propane Energy");
+        "Boiler Propane Rate",
+        "Boiler Propane Energy",
       // } else if (fuelType == "FuelOil#1") {
-        result.push_back("Boiler FuelOil#1 Rate");
-        result.push_back("Boiler FuelOil#1 Energy");
+        "Boiler FuelOil#1 Rate",
+        "Boiler FuelOil#1 Energy",
       // } else if (fuelType == "FuelOil#2") {
-        result.push_back("Boiler FuelOil#2 Rate");
-        result.push_back("Boiler FuelOil#2 Energy");
+        "Boiler FuelOil#2 Rate",
+        "Boiler FuelOil#2 Energy",
       // } else if (fuelType == "Coal") {
-        result.push_back("Boiler Coal Rate");
-        result.push_back("Boiler Coal Energy");
+        "Boiler Coal Rate",
+        "Boiler Coal Energy",
       // } else if (fuelType == "Diesel") {
-        result.push_back("Boiler Diesel Rate");
-        result.push_back("Boiler Diesel Energy");
+        "Boiler Diesel Rate",
+        "Boiler Diesel Energy",
       // } else if (fuelType == "Gasoline") {
-        result.push_back("Boiler Gasoline Rate");
-        result.push_back("Boiler Gasoline Energy");
+        "Boiler Gasoline Rate",
+        "Boiler Gasoline Energy",
       // } else if (fuelType == "OtherFuel1") {
-        result.push_back("Boiler OtherFuel1 Rate");
-        result.push_back("Boiler OtherFuel1 Energy");
+        "Boiler OtherFuel1 Rate",
+        "Boiler OtherFuel1 Energy",
       // } else if (fuelType == "OtherFuel2") {
-        result.push_back("Boiler OtherFuel2 Rate");
-        result.push_back("Boiler OtherFuel2 Energy");
+        "Boiler OtherFuel2 Rate",
+        "Boiler OtherFuel2 Energy"
       // }
 
-    }
+    };
     return result;
   }
 

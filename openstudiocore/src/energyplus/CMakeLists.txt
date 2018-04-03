@@ -446,7 +446,6 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
   ReverseTranslator/ReverseTranslateGasEquipment.cpp
   ReverseTranslator/ReverseTranslateGeneratorMicroTurbine.cpp
-  ReverseTranslator/ReverseTranslateGroundHeatExchangerVertical.cpp
   ReverseTranslator/ReverseTranslateHeatBalanceAlgorithm.cpp
   ReverseTranslator/ReverseTranslateHotWaterEquipment.cpp
   ReverseTranslator/ReverseTranslateInternalMass.cpp
@@ -525,6 +524,8 @@ set(${target_name}_test_src
   Test/GeometryTranslator_GTest.cpp
   Test/ForwardTranslator_GTest.cpp
   Test/ReverseTranslator_GTest.cpp
+
+  Test/AirflowNetwork_GTest.cpp
 
   Test/AirLoopHVACUnitarySystem_GTest.cpp
   Test/AirTerminalDualDuctConstantVolume_GTest.cpp

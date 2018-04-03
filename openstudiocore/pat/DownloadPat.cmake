@@ -6,8 +6,10 @@ if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}.zip)
     file(REMOVE_RECURSE "${OLD_PAT}")
   endforeach()
 
+  message(STATUS "Downloading PAT ${PAT_SHA}")
   # Make github public and use a direct github url please
-  file(DOWNLOAD "https://github.com/NREL/OpenStudio-PAT/archive/${PAT_SHA}.zip"
+  #file(DOWNLOAD "https://github.com/NREL/OpenStudio-PAT/archive/${PAT_SHA}.zip"
+  file(DOWNLOAD "https://codeload.github.com/NREL/OpenStudio-PAT/zip/${PAT_SHA}"
     "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}.zip"
     TIMEOUT 980 INACTIVITY_TIMEOUT 980 
     SHOW_PROGRESS

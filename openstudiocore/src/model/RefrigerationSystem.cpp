@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "RefrigerationSystem.hpp"
 #include "RefrigerationSystem_Impl.hpp"
@@ -90,80 +91,78 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationSystem_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
+    static std::vector<std::string> result{
       // TODO: Implement checks
       // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE CASES AND/OR WALKINS:
-      result.push_back("Refrigeration System Total Compressor Electric Power");
-      result.push_back("Refrigeration System Total Compressor Electric Energy");
-      result.push_back("Refrigeration System Average Compressor COP");
-      result.push_back("Refrigeration System Total Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration System Total Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration System Total Cases and Walk Ins Heat Transfer Rate");
-      result.push_back("Refrigeration System Total Cases and Walk Ins Heat Transfer Energy");
-      result.push_back("Refrigeration System Total Transferred Load Heat Transfer Rate");
-      result.push_back("Refrigeration System Total Transferred Load Heat Transfer Energy");
-      result.push_back("Refrigeration System Total Suction Pipe Heat Gain Rate");
-      result.push_back("Refrigeration System Total Suction Pipe Heat Gain Energy");
-      result.push_back("Refrigeration System Net Rejected Heat Transfer Rate");
-      result.push_back("Refrigeration System Net Rejected Heat Transfer Energy");
-      result.push_back("Refrigeration System Estimated Refrigerant Inventory Mass");
-      result.push_back("Refrigeration System Liquid Suction Subcooler Heat Transfer Rate");
-      result.push_back("Refrigeration System Liquid Suction Subcooler Heat Transfer Energy");
-      result.push_back("Refrigeration System Estimated Refrigerant Inventory");
-      result.push_back("Refrigeration System Estimated Refrigerant Mass Flow Rate");
-      result.push_back("Refrigeration System Condensing Temperature");
-      result.push_back("Refrigeration System Evaporating Temperature");
-      result.push_back("Refrigeration System Suction Pipe Suction Temperature");
-      result.push_back("Refrigeration System Thermostatic Expansion Valve Liquid Temperature");
-      result.push_back("Refrigeration System Estimated High Stage Refrigerant Mass Flow Rate");
-      result.push_back("Refrigeration System Total High Stage Compressor Electric Energy");
-      result.push_back("Refrigeration System Total High Stage Compressor Electric Power");
-      result.push_back("Refrigeration System Total High Stage Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration System Total High Stage Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration System Total Low and High Stage Compressor Electric Energy");
-      result.push_back("Refrigeration System Total Low Stage Compressor Electric Energy");
-      result.push_back("Refrigeration System Total Low Stage Compressor Electric Power");
-      result.push_back("Refrigeration System Total Low Stage Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration System Total Low Stage Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration System Estimated Low Stage Refrigerant Mass Flow Rate");
+      "Refrigeration System Total Compressor Electric Power",
+      "Refrigeration System Total Compressor Electric Energy",
+      "Refrigeration System Average Compressor COP",
+      "Refrigeration System Total Compressor Heat Transfer Rate",
+      "Refrigeration System Total Compressor Heat Transfer Energy",
+      "Refrigeration System Total Cases and Walk Ins Heat Transfer Rate",
+      "Refrigeration System Total Cases and Walk Ins Heat Transfer Energy",
+      "Refrigeration System Total Transferred Load Heat Transfer Rate",
+      "Refrigeration System Total Transferred Load Heat Transfer Energy",
+      "Refrigeration System Total Suction Pipe Heat Gain Rate",
+      "Refrigeration System Total Suction Pipe Heat Gain Energy",
+      "Refrigeration System Net Rejected Heat Transfer Rate",
+      "Refrigeration System Net Rejected Heat Transfer Energy",
+      "Refrigeration System Estimated Refrigerant Inventory Mass",
+      "Refrigeration System Liquid Suction Subcooler Heat Transfer Rate",
+      "Refrigeration System Liquid Suction Subcooler Heat Transfer Energy",
+      "Refrigeration System Estimated Refrigerant Inventory",
+      "Refrigeration System Estimated Refrigerant Mass Flow Rate",
+      "Refrigeration System Condensing Temperature",
+      "Refrigeration System Evaporating Temperature",
+      "Refrigeration System Suction Pipe Suction Temperature",
+      "Refrigeration System Thermostatic Expansion Valve Liquid Temperature",
+      "Refrigeration System Estimated High Stage Refrigerant Mass Flow Rate",
+      "Refrigeration System Total High Stage Compressor Electric Energy",
+      "Refrigeration System Total High Stage Compressor Electric Power",
+      "Refrigeration System Total High Stage Compressor Heat Transfer Energy",
+      "Refrigeration System Total High Stage Compressor Heat Transfer Rate",
+      "Refrigeration System Total Low and High Stage Compressor Electric Energy",
+      "Refrigeration System Total Low Stage Compressor Electric Energy",
+      "Refrigeration System Total Low Stage Compressor Electric Power",
+      "Refrigeration System Total Low Stage Compressor Heat Transfer Energy",
+      "Refrigeration System Total Low Stage Compressor Heat Transfer Rate",
+      "Refrigeration System Estimated Low Stage Refrigerant Mass Flow Rate",
       // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE AIR CHILLERS:
-      result.push_back("Refrigeration Air Chiller System Total Compressor Electric Power");
-      result.push_back("Refrigeration Air Chiller System Total Compressor Electric Energy");
-      result.push_back("Refrigeration Air Chiller System Average Compressor COP");
-      result.push_back("Refrigeration Air Chiller System Total Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Total Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Total Air Chiller Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Total Case and Walk In Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Total Transferred Load Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Total Transferred Load Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Total Suction Pipe Heat Gain Rate");
-      result.push_back("Refrigeration Air Chiller System Total Suction Pipe Heat Gain Energy");
-      result.push_back("Refrigeration Air Chiller System Net Rejected Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Net Rejected Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Estimated Refrigerant Inventory Mass");
-      result.push_back("Refrigeration Air Chiller System Estimated Refrigerant Mass Flow Rate");
-      result.push_back("Refrigeration Air Chiller System Intercooler Temperature");
-      result.push_back("Refrigeration Air Chiller System Intercooler Pressure");
-      result.push_back("Refrigeration Air Chiller System Condensing Temperature");
-      result.push_back("Refrigeration Air Chiller System Evaporating Temperature");
-      result.push_back("Refrigeration Air Chiller System Suction Temperature");
-      result.push_back("Refrigeration Air Chiller System TXV Liquid Temperature");
-      result.push_back("Refrigeration Air Chiller System Estimated High Stage Refrigerant Mass Flow Rate");
-      result.push_back("Refrigeration Air Chiller System Total High Stage Compressor Electric Energy");
-      result.push_back("Refrigeration Air Chiller System Total High Stage Compressor Electric Power");
-      result.push_back("Refrigeration Air Chiller System Total High Stage Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Total High Stage Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Total Low and High Stage Compressor Electric Energy");
-      result.push_back("Refrigeration Air Chiller System Total Low Stage Compressor Electric Energy");
-      result.push_back("Refrigeration Air Chiller System Total Low Stage Compressor Electric Power");
-      result.push_back("Refrigeration Air Chiller System Total Low Stage Compressor Heat Transfer Energy");
-      result.push_back("Refrigeration Air Chiller System Total Low Stage Compressor Heat Transfer Rate");
-      result.push_back("Refrigeration Air Chiller System Estimated Low Stage Refrigerant Mass Flow Rate");
-    }
+      "Refrigeration Air Chiller System Total Compressor Electric Power",
+      "Refrigeration Air Chiller System Total Compressor Electric Energy",
+      "Refrigeration Air Chiller System Average Compressor COP",
+      "Refrigeration Air Chiller System Total Compressor Heat Transfer Rate",
+      "Refrigeration Air Chiller System Total Compressor Heat Transfer Energy",
+      "Refrigeration Air Chiller System Total Air Chiller Heat Transfer Rate",
+      "Refrigeration Air Chiller System Total Case and Walk In Heat Transfer Energy",
+      "Refrigeration Air Chiller System Total Transferred Load Heat Transfer Rate",
+      "Refrigeration Air Chiller System Total Transferred Load Heat Transfer Energy",
+      "Refrigeration Air Chiller System Total Suction Pipe Heat Gain Rate",
+      "Refrigeration Air Chiller System Total Suction Pipe Heat Gain Energy",
+      "Refrigeration Air Chiller System Net Rejected Heat Transfer Rate",
+      "Refrigeration Air Chiller System Net Rejected Heat Transfer Energy",
+      "Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Rate",
+      "Refrigeration Air Chiller System Liquid Suction Subcooler Heat Transfer Energy",
+      "Refrigeration Air Chiller System Estimated Refrigerant Inventory Mass",
+      "Refrigeration Air Chiller System Estimated Refrigerant Mass Flow Rate",
+      "Refrigeration Air Chiller System Intercooler Temperature",
+      "Refrigeration Air Chiller System Intercooler Pressure",
+      "Refrigeration Air Chiller System Condensing Temperature",
+      "Refrigeration Air Chiller System Evaporating Temperature",
+      "Refrigeration Air Chiller System Suction Temperature",
+      "Refrigeration Air Chiller System TXV Liquid Temperature",
+      "Refrigeration Air Chiller System Estimated High Stage Refrigerant Mass Flow Rate",
+      "Refrigeration Air Chiller System Total High Stage Compressor Electric Energy",
+      "Refrigeration Air Chiller System Total High Stage Compressor Electric Power",
+      "Refrigeration Air Chiller System Total High Stage Compressor Heat Transfer Energy",
+      "Refrigeration Air Chiller System Total High Stage Compressor Heat Transfer Rate",
+      "Refrigeration Air Chiller System Total Low and High Stage Compressor Electric Energy",
+      "Refrigeration Air Chiller System Total Low Stage Compressor Electric Energy",
+      "Refrigeration Air Chiller System Total Low Stage Compressor Electric Power",
+      "Refrigeration Air Chiller System Total Low Stage Compressor Heat Transfer Energy",
+      "Refrigeration Air Chiller System Total Low Stage Compressor Heat Transfer Rate",
+      "Refrigeration Air Chiller System Estimated Low Stage Refrigerant Mass Flow Rate"
+    };
     return result;
   }
 

@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "CoilHeatingDXVariableSpeed.hpp"
 #include "CoilHeatingDXVariableSpeed_Impl.hpp"
@@ -38,6 +39,8 @@
 #include "ModelObjectList_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "ZoneHVACPackagedTerminalAirConditioner.hpp"
@@ -86,31 +89,29 @@ namespace detail {
 
   const std::vector<std::string>& CoilHeatingDXVariableSpeed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty())
-    {
-      result.push_back("Heating Coil Electric Power");
-      result.push_back("Heating Coil Heating Rate");
-      result.push_back("Heating Coil Sensible Heating Rate");
-      result.push_back("Heating Coil Source Side Heat Transfer Rate");
-      result.push_back("Heating Coil Part Load Ratio");
-      result.push_back("Heating Coil Runtime Fraction");
-      result.push_back("Heating Coil Air Mass Flow Rate");
-      result.push_back("Heating Coil Air Inlet Temperature");
-      result.push_back("Heating Coil Air Inlet Humidity Ratio");
-      result.push_back("Heating Coil Air Outlet Temperature");
-      result.push_back("Heating Coil Air Outlet Humidity Ratio");
-      result.push_back("Heating Coil Upper Speed Level");
-      result.push_back("Heating Coil Neighboring Speed Levels Ratio");
-      result.push_back("VSAirtoAirHP Recoverable Waste Heat");
-      result.push_back("Heating Coil Electric Energy");
-      result.push_back("Heating Coil Heating Energy");
-      result.push_back("Heating Coil Source Side Heat Transfer Energy");
-      result.push_back("Heating Coil Defrost Electric Power");
-      result.push_back("Heating Coil Defrost Electric Energy");
-      result.push_back("Heating Coil Crankcase Heater Electric Power");
-      result.push_back("Heating Coil Crankcase Heater Electric Energy");
-    }
+    static std::vector<std::string> result{
+      "Heating Coil Electric Power",
+      "Heating Coil Heating Rate",
+      "Heating Coil Sensible Heating Rate",
+      "Heating Coil Source Side Heat Transfer Rate",
+      "Heating Coil Part Load Ratio",
+      "Heating Coil Runtime Fraction",
+      "Heating Coil Air Mass Flow Rate",
+      "Heating Coil Air Inlet Temperature",
+      "Heating Coil Air Inlet Humidity Ratio",
+      "Heating Coil Air Outlet Temperature",
+      "Heating Coil Air Outlet Humidity Ratio",
+      "Heating Coil Upper Speed Level",
+      "Heating Coil Neighboring Speed Levels Ratio",
+      "VSAirtoAirHP Recoverable Waste Heat",
+      "Heating Coil Electric Energy",
+      "Heating Coil Heating Energy",
+      "Heating Coil Source Side Heat Transfer Energy",
+      "Heating Coil Defrost Electric Power",
+      "Heating Coil Defrost Electric Energy",
+      "Heating Coil Crankcase Heater Electric Power",
+      "Heating Coil Crankcase Heater Electric Energy"
+    };
     return result;
   }
 
@@ -486,6 +487,10 @@ namespace detail {
       }
     }
 
+    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      return StraightComponent_Impl::addToNode( node );
+    }
+
     return false;
   }
 
@@ -825,4 +830,4 @@ CoilHeatingDXVariableSpeed::CoilHeatingDXVariableSpeed(std::shared_ptr<detail::C
   }
 
 } // model
-} // openstudio
+} // openstudio

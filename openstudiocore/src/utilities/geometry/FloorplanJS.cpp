@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "FloorplanJS.hpp"
 #include "ThreeJS.hpp"
@@ -1080,18 +1081,13 @@ namespace openstudio{
     double currentStoryZ = 0;
 
     // read project config
-    std::string units = "ft";
     Json::Value project = m_value.get("project", Json::objectValue);
     if (!project.isNull()){
-      Json::Value config = project.get("config", Json::objectValue);
-      if (!config.isNull()){
-        units = config.get("units", units).asString();
-      }
-
+      // DLM: TODO move this to a function
       Json::Value ground = project.get("ground", Json::objectValue);
       if (!ground.isNull()){
         if (checkKeyAndType(ground, "floor_offset", Json::realValue)){
-          currentStoryZ = ground.get("floor_offset", units).asDouble();
+          currentStoryZ = ground.get("floor_offset", 0.0).asDouble();
         }
       }
     }
@@ -1100,7 +1096,7 @@ namespace openstudio{
     // north angle is applied directly to osm, does not impact this translation
 
     double lengthToMeters = 1;
-    if (istringEqual(units, "ft")){
+    if (istringEqual(units(), "ip")){
       lengthToMeters = 0.3048; // don't use openstudio convert to keep dependencies low
     }
 
@@ -1434,6 +1430,49 @@ namespace openstudio{
     return result;
   }
 
+  std::string FloorplanJS::units() const
+  {
+    std::string units = "ip";
+    Json::Value project = m_value.get("project", Json::objectValue);
+    if (!project.isNull()){
+      Json::Value config = project.get("config", Json::objectValue);
+      if (!config.isNull()){
+        units = config.get("units", units).asString();
+      }
+    }
+    if (istringEqual(units, "ft")){
+      units = "ip";
+    }
+    return units;
+  }
+
+  bool FloorplanJS::setUnits(const std::string& units)
+  {
+    std::string _units = units;
+    if (!(istringEqual(units, "ip") || istringEqual(units, "si"))){
+      return false;
+    }
+
+    if (!checkKeyAndType(m_value, "project", Json::objectValue)){
+      m_value["project"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& project = m_value["project"];
+
+    if (!checkKeyAndType(project, "config", Json::objectValue)){
+      project["config"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& config = project["config"];
+
+    config["units"] = units;
+
+    return true;
+  }
+
+  void FloorplanJS::resetUnits()
+  {
+    setUnits("ip");
+  }
+
   double FloorplanJS::northAxis() const
   {
     double result = 0;
@@ -1451,6 +1490,23 @@ namespace openstudio{
       }
     }
     return result;
+  }
+
+  bool FloorplanJS::setNorthAxis(double northAxis)
+  {
+    if (!checkKeyAndType(m_value, "project", Json::objectValue)){
+      m_value["project"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& project = m_value["project"];
+
+    project["north_axis"] = northAxis;
+
+    return true;
+  }
+
+  void FloorplanJS::resetNorthAxis()
+  {
+    setNorthAxis(0);
   }
 
   void FloorplanJS::updateStories(const std::vector<FloorplanObject>& objects, bool removeMissingObjects)

@@ -1,4 +1,4 @@
-  Version,8.8;
+  Version,8.9;
 
   Building,
     Building 1,              !- Name
@@ -439,7 +439,7 @@
     OS:Curve:Biquadratic 14, !- Energy Input Ratio Function of Temperature Curve Name
     OS:Curve:Quadratic 18,   !- Energy Input Ratio Function of Flow Fraction Curve Name
     OS:Curve:Quadratic 19,   !- Part Load Fraction Correlation Curve Name
-    ,                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     0.0,                     !- Nominal Time for Condensate Removal to Begin {s}
     0.0,                     !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
     0.0,                     !- Maximum Cycling Rate {cycles/hr}
@@ -458,6 +458,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 1 Core Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:PackagedTerminalAirConditioner,  !- Zone Equipment 1 Object Type
     PTAC DX Clg HW Htg,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -857,7 +858,7 @@
     OS:Curve:Biquadratic 10, !- Energy Input Ratio Function of Temperature Curve Name
     OS:Curve:Quadratic 12,   !- Energy Input Ratio Function of Flow Fraction Curve Name
     OS:Curve:Quadratic 13,   !- Part Load Fraction Correlation Curve Name
-    ,                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     0.0,                     !- Nominal Time for Condensate Removal to Begin {s}
     0.0,                     !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
     0.0,                     !- Maximum Cycling Rate {cycles/hr}
@@ -884,6 +885,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 1 East Perimeter Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:PackagedTerminalHeatPump,  !- Zone Equipment 1 Object Type
     PTHP,                    !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -1090,6 +1092,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 1 North Perimeter Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Uncontrolled 1,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -1308,6 +1311,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 1 South Perimeter Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Uncontrolled 2,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -1527,6 +1531,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 1 West Perimeter Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Uncontrolled 3,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -1755,6 +1760,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 2 Core Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ADU Air Terminal Single Duct VAV Reheat 1,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -2012,6 +2018,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 2 East Perimeter Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ADU Air Terminal Single Duct VAV Reheat 2,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -2218,6 +2225,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 2 North Perimeter Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Uncontrolled 4,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -2482,6 +2490,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 2 South Perimeter Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Parallel PIU Reheat 1 Air Distribution Unit,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -2749,6 +2758,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 2 West Perimeter Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Parallel PIU Reheat 2 Air Distribution Unit,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -2977,6 +2987,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 3 Core Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ADU Air Terminal Single Duct VAV Reheat 3,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -3237,6 +3248,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 3 East Perimeter Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ADU Air Terminal Single Duct VAV Reheat 4,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -3489,6 +3501,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 3 North Perimeter Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ADU Air Terminal Single Duct VAV Reheat 5,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -3743,6 +3756,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 3 South Perimeter Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Parallel PIU Reheat 3 Air Distribution Unit,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -4010,6 +4024,7 @@
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 3 West Perimeter Space Equipment List,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Parallel PIU Reheat 4 Air Distribution Unit,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
@@ -6307,7 +6322,7 @@
     Curve Biquadratic 2,     !- Energy Input Ratio Function of Temperature Curve Name
     Curve Quadratic 2,       !- Energy Input Ratio Function of Flow Fraction Curve Name
     Curve Quadratic 3,       !- Part Load Fraction Correlation Curve Name
-    ,                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     0.0,                     !- Nominal Time for Condensate Removal to Begin {s}
     0.0,                     !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
     0.0,                     !- Maximum Cycling Rate {cycles/hr}
@@ -6577,7 +6592,7 @@
     Curve Biquadratic 10,    !- Low Speed Energy Input Ratio Function of Temperature Curve Name
     ,                        !- Condenser Air Inlet Node Name
     AirCooled,               !- Condenser Type
-    ,                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     0,                       !- High Speed Evaporative Condenser Effectiveness {dimensionless}
     ,                        !- High Speed Evaporative Condenser Air Flow Rate {m3/s}
     ,                        !- High Speed Evaporative Condenser Pump Rated Power Consumption {W}
@@ -6942,7 +6957,7 @@
     Curve Biquadratic 6,     !- Low Speed Energy Input Ratio Function of Temperature Curve Name
     ,                        !- Condenser Air Inlet Node Name
     AirCooled,               !- Condenser Type
-    ,                        !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+    -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     0,                       !- High Speed Evaporative Condenser Effectiveness {dimensionless}
     ,                        !- High Speed Evaporative Condenser Air Flow Rate {m3/s}
     ,                        !- High Speed Evaporative Condenser Pump Rated Power Consumption {W}
