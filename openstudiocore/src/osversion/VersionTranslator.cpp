@@ -258,6 +258,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("2.4.0"));
   m_startVersions.push_back(VersionString("2.4.1"));
   m_startVersions.push_back(VersionString("2.4.2"));
+  m_startVersions.push_back(VersionString("2.4.3"));
   m_startVersions.push_back(VersionString("2.5.0"));
 }
 
