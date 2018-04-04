@@ -76,6 +76,7 @@ namespace detail {
 } // detail
 
 class EMSActuatorNames;
+class HaystackTags;
 
 /** Typedef for ScheduleTypeRegistry key. First is a string representation of the class name.
  *  Second is a display name for the schedule. \relates ModelObject */
@@ -320,6 +321,10 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   */
   virtual std::vector<std::string> emsInternalVariableNames() const;
 
+  /** Return the names of the available haystack tags.
+  */
+  virtual std::vector<HaystackTags> haystackTags() const;
+
   //@}
   /** @name HVAC System Connections */
   //@{
@@ -370,6 +375,21 @@ private:
 
   std::string m_controlTypeName;
   std::string m_componentTypeName;
+};
+
+class MODEL_API HaystackTags
+{
+public:
+
+  HaystackTags(const std::string & tag, const std::string & value);
+
+  std::string tag() const;
+  std::string value() const;
+
+private:
+
+  std::string m_tag;
+  std::string m_value;
 };
 
 /// optional ModelObject

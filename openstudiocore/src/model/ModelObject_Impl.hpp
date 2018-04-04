@@ -61,6 +61,7 @@ class Meter;
 class Connection;
 
 class EMSActuatorNames;
+class HaystackTags;
 
 class AdditionalProperties;
 
@@ -243,6 +244,8 @@ namespace detail {
     virtual std::vector<EMSActuatorNames> emsActuatorNames() const;
 
     virtual std::vector<std::string> emsInternalVariableNames() const;
+
+    virtual std::vector<HaystackTags> haystackTags() const;
 
     //@}
     /** @name HVAC System Connections */

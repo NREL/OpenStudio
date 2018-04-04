@@ -1145,7 +1145,11 @@ namespace detail {
   std::vector<std::string> ModelObject_Impl::emsInternalVariableNames() const {
     return std::vector<std::string>();
   }
-  
+
+  std::vector<HaystackTags> ModelObject_Impl::haystackTags() const {
+    return std::vector<HaystackTags>();
+  }
+
   AdditionalProperties ModelObject_Impl::additionalProperties() const {
     AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
     if (candidates.size() > 1) {
@@ -1409,6 +1413,10 @@ std::vector<std::string> ModelObject::emsInternalVariableNames() const {
   return getImpl<detail::ModelObject_Impl>()->emsInternalVariableNames();
 }
 
+std::vector<HaystackTags> ModelObject::haystackTags() const {
+  return getImpl<detail::ModelObject_Impl>()->haystackTags();
+}
+
 EMSActuatorNames::EMSActuatorNames(const std::string & componentTypeName, const std::string & controlTypeName)
   : m_componentTypeName(componentTypeName),
   m_controlTypeName(controlTypeName) {}
@@ -1419,6 +1427,18 @@ std::string EMSActuatorNames::controlTypeName() const {
 
 std::string EMSActuatorNames::componentTypeName() const {
   return m_componentTypeName;
+}
+
+HaystackTags::HaystackTags(const std::string & tag, const std::string & value)
+  : m_tag(tag),
+    m_value(value) {}
+
+std::string HaystackTags::tag() const {
+  return m_tag;
+}
+
+std::string HaystackTags::value() const {
+  return m_value;
 }
 
 } // model
