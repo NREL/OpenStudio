@@ -194,7 +194,7 @@ OPENSTUDIO_ENUM(EpwDesignField,
   ((CoolingDehumidificationHumidityRatio2)(Cooling Dehumidification Humidity Ratio 2%))
   ((CoolingDehumidificationMeanCoincidentDryBulb2)(Cooling Dehumidification Mean Coincident Dry Bulb 2%))
   ((CoolingEnthalpy0pt4)(Cooling Enthalpy 0.4%))
-  ((CoolingEnthalpyMeanCoincidentDryBulb0pt4)(Cooling Enthalpy Mean Coincident Dry Bulb 1%))
+  ((CoolingEnthalpyMeanCoincidentDryBulb0pt4)(Cooling Enthalpy Mean Coincident Dry Bulb 0.4%))
   ((CoolingEnthalpy1)(Cooling Enthalpy 1%))
   ((CoolingEnthalpyMeanCoincidentDryBulb1)(Cooling Enthalpy Mean Coincident Dry Bulb 1%))
   ((CoolingEnthalpy2)(Cooling Enthalpy 2%))
