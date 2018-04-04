@@ -80,6 +80,12 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result{
+      // These applies to all AirTerminals
+      "Zone Air Terminal Sensible Heating Energy",
+      "Zone Air Terminal Sensible Heating Rate",
+      "Zone Air Terminal Sensible Cooling Energy",
+      "Zone Air Terminal Sensible Cooling Rate",
+
       "Zone Air Terminal VAV Damper Position"
     };
     return result;
@@ -237,12 +243,12 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::ReheatCoil);
   }
 
-  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::inletPort()
+  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AirInlet;
   }
 
-  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::outletPort()
+  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AirOutlet;
   }

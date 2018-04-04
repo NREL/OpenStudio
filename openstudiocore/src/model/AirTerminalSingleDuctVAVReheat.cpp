@@ -83,6 +83,12 @@ namespace detail{
   const std::vector<std::string>& AirTerminalSingleDuctVAVReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result{
+      // These applies to all AirTerminals
+      "Zone Air Terminal Sensible Heating Energy",
+      "Zone Air Terminal Sensible Heating Rate",
+      "Zone Air Terminal Sensible Cooling Energy",
+      "Zone Air Terminal Sensible Cooling Rate",
+
       "Zone Air Terminal VAV Damper Position",
       "Zone Air Terminal Minimum Air Flow Fraction",
       "Zone Air Terminal Outdoor Air Volume Flow Rate"
@@ -134,12 +140,12 @@ namespace detail{
     return result;
   }
 
-  unsigned AirTerminalSingleDuctVAVReheat_Impl::inletPort()
+  unsigned AirTerminalSingleDuctVAVReheat_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_VAV_ReheatFields::AirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctVAVReheat_Impl::outletPort()
+  unsigned AirTerminalSingleDuctVAVReheat_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_VAV_ReheatFields::AirOutletNodeName;
   }

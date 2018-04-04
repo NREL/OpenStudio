@@ -106,12 +106,12 @@ namespace detail {
     return result;
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::inletPort()
+  unsigned AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::SupplyAirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::outletPort()
+  unsigned AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInductionFields::AirOutletNodeName;
   }

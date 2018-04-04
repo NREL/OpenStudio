@@ -149,4 +149,4 @@ typedef std::vector<CurveQuadratic> CurveQuadraticVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEQUADRATIC_HPP
+#endif // MODEL_CURVEQUADRATIC_HPP

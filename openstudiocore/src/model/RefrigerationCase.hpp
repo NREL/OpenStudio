@@ -497,4 +497,4 @@ typedef std::vector<RefrigerationCase> RefrigerationCaseVector;
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONCASE_HPP
+#endif // MODEL_REFRIGERATIONCASE_HPP

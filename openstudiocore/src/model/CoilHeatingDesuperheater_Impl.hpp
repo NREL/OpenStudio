@@ -65,9 +65,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
 

@@ -100,12 +100,12 @@ namespace detail {
     return result;
   }
 
-  unsigned PlantComponentTemperatureSource_Impl::inletPort()
+  unsigned PlantComponentTemperatureSource_Impl::inletPort() const
   {
     return OS_PlantComponent_TemperatureSourceFields::InletNode;
   }
 
-  unsigned PlantComponentTemperatureSource_Impl::outletPort()
+  unsigned PlantComponentTemperatureSource_Impl::outletPort() const
   {
     return OS_PlantComponent_TemperatureSourceFields::OutletNode;
   }

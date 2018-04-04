@@ -72,9 +72,9 @@ namespace detail {
 
     virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 
-    unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     std::vector<SetpointManager> setpointManagers() const;
 

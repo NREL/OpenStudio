@@ -113,4 +113,4 @@ typedef std::vector<ExternalInterfaceFunctionalMockupUnitImport> ExternalInterfa
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORT_HPP
+#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORT_HPP

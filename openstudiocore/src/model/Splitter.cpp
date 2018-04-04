@@ -128,7 +128,7 @@ unsigned Splitter_Impl::branchIndexForOutletModelObject( ModelObject modelObject
   return 0;
 }
 
-unsigned Splitter_Impl::nextBranchIndex()
+unsigned Splitter_Impl::nextBranchIndex() const
 {
   unsigned i = 0;
   OptionalModelObject modelObject;
@@ -212,17 +212,17 @@ Splitter::Splitter(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::Splitter_Impl>());
 }
 
-unsigned Splitter::inletPort()
+unsigned Splitter::inletPort() const
 {
   return getImpl<detail::Splitter_Impl>()->inletPort();
 }
 
-unsigned Splitter::outletPort(unsigned branchIndex)
+unsigned Splitter::outletPort(unsigned branchIndex) const
 {
   return getImpl<detail::Splitter_Impl>()->outletPort(branchIndex);
 }
 
-unsigned Splitter::nextOutletPort()
+unsigned Splitter::nextOutletPort() const
 {
   return getImpl<detail::Splitter_Impl>()->nextOutletPort();
 }
