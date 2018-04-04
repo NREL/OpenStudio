@@ -1734,7 +1734,7 @@ OS:Chiller:Electric:EIR,
   ,                                       ! Chilled Water Outlet Node Name
   ,                                       ! Condenser Inlet Node Name
   ,                                       ! Condenser Outlet Node Name
-  ,                                       ! Condenser Type
+  AirCooled,                              ! Condenser Type
   ,                                       ! Condenser Fan Power Ratio {W/W}
   ,                                       ! Compressor Motor Efficiency
   ,                                       ! Leaving Chilled Water Lower Temperature Limit {C}
@@ -1843,7 +1843,7 @@ OS:Chiller:Electric:EIR,
   ,                                       !- Chilled Water Outlet Node Name
   ,                                       !- Condenser Inlet Node Name
   ,                                       !- Condenser Outlet Node Name
-  ,                                       !- Condenser Type
+  WaterCooled,                            !- Condenser Type
   ,                                       !- Condenser Fan Power Ratio {W/W}
   ,                                       !- Compressor Motor Efficiency
   ,                                       !- Leaving Chilled Water Lower Temperature Limit {C}
