@@ -193,7 +193,6 @@ namespace detail {
 
   bool GeneratorPVWatts_Impl::setDCSystemCapacity(double dcSystemCapacity) {
     bool result = setDouble(OS_Generator_PVWattsFields::DCSystemCapacity, dcSystemCapacity);
-    OS_ASSERT(result);
     return result;
   }
 
@@ -231,7 +230,9 @@ namespace detail {
   }
 
   bool GeneratorPVWatts_Impl::setTiltAngle(double tiltAngle) {
-    bool result = setDouble(OS_Generator_PVWattsFields::TiltAngle, tiltAngle);
+    bool result = true;
+    result = result && setString(OS_Generator_PVWattsFields::SurfaceName, "");
+    result = result && setDouble(OS_Generator_PVWattsFields::TiltAngle, tiltAngle);
     OS_ASSERT(result);
     return result;
   }
@@ -242,7 +243,9 @@ namespace detail {
   }
 
   bool GeneratorPVWatts_Impl::setAzimuthAngle(double azimuthAngle) {
-    bool result = setDouble(OS_Generator_PVWattsFields::AzimuthAngle, azimuthAngle);
+    bool result = true;
+    result = result && setString(OS_Generator_PVWattsFields::SurfaceName, "");
+    result = result && setDouble(OS_Generator_PVWattsFields::AzimuthAngle, azimuthAngle);
     OS_ASSERT(result);
     return result;
   }
@@ -253,14 +256,15 @@ namespace detail {
   }
 
   bool GeneratorPVWatts_Impl::setSurface(const PlanarSurface& surface) {
-    bool result = false;
+    bool result = true;
+    result = result && setString(OS_Generator_PVWattsFields::TiltAngle, "");
+    result = result && setString(OS_Generator_PVWattsFields::AzimuthAngle, "");
     if (surface.optionalCast<Surface>()){
-      result = setPointer(OS_Generator_PVWattsFields::SurfaceName, surface.handle());
+      result = result && setPointer(OS_Generator_PVWattsFields::SurfaceName, surface.handle());
     }
     else if (surface.optionalCast<ShadingSurface>()){
-      result = setPointer(OS_Generator_PVWattsFields::SurfaceName, surface.handle());
+      result = result && setPointer(OS_Generator_PVWattsFields::SurfaceName, surface.handle());
     }
-    OS_ASSERT(result);
     return result;
   }
 
@@ -288,10 +292,12 @@ GeneratorPVWatts::GeneratorPVWatts(const Model& model, double dcSystemCapacity)
   OS_ASSERT(getImpl<detail::GeneratorPVWatts_Impl>());
 
   bool ok = true;
-  OS_ASSERT(ok);
 
-  ok = setDCSystemCapacity(dcSystemCapacity);
-  OS_ASSERT(ok);
+  ok = this->setDCSystemCapacity(dcSystemCapacity);
+  if (!ok){
+    this->remove();
+    LOG_AND_THROW("Cannot create a pvwatts generator with dc system capacity " << dcSystemCapacity);
+  }
 }
 
 GeneratorPVWatts::GeneratorPVWatts(const Model& model, const PlanarSurface& surface, double dcSystemCapacity)
@@ -300,13 +306,18 @@ GeneratorPVWatts::GeneratorPVWatts(const Model& model, const PlanarSurface& surf
   OS_ASSERT(getImpl<detail::GeneratorPVWatts_Impl>());
 
   bool ok = true;
-  OS_ASSERT(ok);
 
-  ok = setSurface(surface);
-  OS_ASSERT(ok);
+  ok = this->setSurface(surface);
+  if (!ok){
+    this->remove();
+    LOG_AND_THROW("Cannot create a pvwatts generator without surface");
+  }
 
-  ok = setDCSystemCapacity(dcSystemCapacity);
-  OS_ASSERT(ok);
+  ok = this->setDCSystemCapacity(dcSystemCapacity);
+  if (!ok){
+    this->remove();
+    LOG_AND_THROW("Cannot create a pvwatts generator with dc system capacity " << dcSystemCapacity);
+  }
 }
 
 IddObjectType GeneratorPVWatts::iddObjectType() {

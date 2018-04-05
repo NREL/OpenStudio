@@ -27398,6 +27398,7 @@ OS:ElectricLoadCenter:Inverter:PVWatts,
        \type handle
        \required-field 
   A2, \field Name
+      \required-field
       \reference InverterList
   N1, \field DC to AC Size Ratio
       \type real

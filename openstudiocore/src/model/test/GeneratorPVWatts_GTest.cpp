@@ -153,6 +153,18 @@ TEST_F(ModelFixture, GeneratorPVWatts_SurfaceConstruct) {
   EXPECT_FALSE(generator.surface());
 }
 
+// test constructing with a surface and bad dc system capacity
+TEST_F(ModelFixture, GeneratorPVWatts_SurfaceConstructBadDCSystemCapacity) {
+  Model model;
+  Point3dVector points;
+  points.clear();
+  points.push_back(Point3d(0, 2, 0));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(1, 0, 0));
+  Surface surface(points, model);
+  EXPECT_THROW(GeneratorPVWatts(model, surface, -1), openstudio::Exception);
+}
+
 // test assigning a surface
 TEST_F(ModelFixture, GeneratorPVWatts_SurfaceAssign) {
   Model model;

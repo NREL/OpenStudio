@@ -68,11 +68,9 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorPVWatts(model::G
     }
   } else {
     idfObject.setString(Generator_PVWattsFields::ArrayGeometryType, "TiltAzimuth");
+    idfObject.setDouble(Generator_PVWattsFields::TiltAngle, modelObject.tiltAngle());
+    idfObject.setDouble(Generator_PVWattsFields::AzimuthAngle, modelObject.azimuthAngle());
   }
-
-  idfObject.setDouble(Generator_PVWattsFields::TiltAngle, modelObject.tiltAngle());
-
-  idfObject.setDouble(Generator_PVWattsFields::AzimuthAngle, modelObject.azimuthAngle());
 
   idfObject.setDouble(Generator_PVWattsFields::GroundCoverageRatio, modelObject.groundCoverageRatio());
 
