@@ -14650,6 +14650,10 @@ AirflowNetwork:Distribution:Linkage,
       \required-field
       \type object-list
       \object-list AirflowNetworkComponentNames
+      \object-list FansCVandOnOffandVAV
+      \object-list AFNCoilNames
+      \object-list AFNHeatExchangerNames
+      \object-list AFNTerminalUnitNames
       \note Enter the name of an AirflowNetwork component. A component is one of the
       \note following AirflowNetwork:Distribution:Component objects: Leak, LeakageRatio,
       \note Duct, ConstantVolumeFan, Coil, TerminalUnit, ConstantPressureDrop, or HeatExchanger.
