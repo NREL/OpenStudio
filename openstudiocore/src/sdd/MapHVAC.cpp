@@ -95,6 +95,8 @@
 #include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
 #include "../model/CoolingTowerSingleSpeed.hpp"
 #include "../model/CoolingTowerSingleSpeed_Impl.hpp"
+#include "../model/CoolingTowerTwoSpeed.hpp"
+#include "../model/CoolingTowerTwoSpeed_Impl.hpp"
 #include "../model/CoolingTowerVariableSpeed.hpp"
 #include "../model/CoolingTowerVariableSpeed_Impl.hpp"
 #include "../model/SetpointManagerFollowOutdoorAirTemperature.hpp"
@@ -4225,78 +4227,98 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   }
 
   // Exhaust Fan(s)
+  struct ExhaustFanInfo {
+    QDomElement exhFanNameElement;
+    QDomElement exhFlowRtSimElement;
+    QDomElement exhFanEndUseCatElement;
+    QDomElement exhAvailSchRefElement;
+    QDomElement exhTotEffElement;
+    QDomElement exhTotStaticPressElement;
+    QDomElement exhFlowSchRefElement;
+    QDomElement exhOperModeElement;
+    QDomElement exhMinTempSchRefElement;
+    QDomElement exhBalancedSchRefElement;
+  };
 
-  QDomElement exhFlowRtSimElement = thermalZoneElement.firstChildElement("ExhFlowSim");
-  QDomElement exhFanNameElement = thermalZoneElement.firstChildElement("ExhFanName");
-  QDomElement exhFanEndUseCatElement = thermalZoneElement.firstChildElement("ExhFanEndUseCat");
+  std::map<int, ExhaustFanInfo> exhaustFanInfo;
 
-  value = exhFlowRtSimElement.text().toDouble(&ok);
-  if( ok && (! exhFanNameElement.isNull()) )
-  {
-    model::FanZoneExhaust exhaustFan(model);
-    exhaustFan.setName(exhFanNameElement.text().toStdString());
-
-    if( ! exhFanEndUseCatElement.text().isEmpty() ) {
-      exhaustFan.setEndUseSubcategory(exhFanEndUseCatElement.text().toStdString());
+  auto getFanElement = [&](const QString & elementName, QDomElement ExhaustFanInfo::*member ) {
+    auto elements = thermalZoneElement.elementsByTagName(elementName);
+    for ( int i = 0; i < elements.count(); ++i ) {
+      auto element = elements.at(i).toElement();
+      auto index = element.attribute("index").toInt(&ok);
+      auto it = exhaustFanInfo.find(index);
+      if ( it != exhaustFanInfo.end() ) {
+        it->second.*member = element;
+      }
     }
+  };
 
+  auto elements = thermalZoneElement.elementsByTagName("ExhFanName");
+  for ( int i = 0; i < elements.count(); ++i ) {
+    ExhaustFanInfo info;
+    info.exhFanNameElement = elements.at(i).toElement();
+    auto index = info.exhFanNameElement.attribute("index").toInt(&ok);
+    exhaustFanInfo[index] = info;
+  }
+
+  getFanElement("ExhFlowSim", &ExhaustFanInfo::exhFlowRtSimElement);
+  getFanElement("ExhFanEndUseCat", &ExhaustFanInfo::exhFanEndUseCatElement);
+  getFanElement("ExhAvailSchRef", &ExhaustFanInfo::exhAvailSchRefElement);
+  getFanElement("ExhTotEff", &ExhaustFanInfo::exhTotEffElement);
+  getFanElement("ExhTotStaticPress", &ExhaustFanInfo::exhTotStaticPressElement);
+  getFanElement("ExhFlowSchRef", &ExhaustFanInfo::exhFlowSchRefElement);
+  getFanElement("ExhOperMode", &ExhaustFanInfo::exhOperModeElement);
+  getFanElement("ExhMinTempSchRef", &ExhaustFanInfo::exhMinTempSchRefElement);
+  getFanElement("ExhBalancedSchRef", &ExhaustFanInfo::exhBalancedSchRefElement);
+
+  for ( const auto & fanInfo: exhaustFanInfo ) {
+    model::FanZoneExhaust exhaustFan(model);
+    exhaustFan.setName(fanInfo.second.exhFanNameElement.text().toStdString());
+    exhaustFan.setEndUseSubcategory(fanInfo.second.exhFanEndUseCatElement.text().toStdString());
+
+    value = fanInfo.second.exhFlowRtSimElement.text().toDouble(&ok);
     value = unitToUnit(value,"cfm","m^3/s").get();
     exhaustFan.setMaximumFlowRate(value);
 
-    QDomElement exhAvailSchRefElement = thermalZoneElement.firstChildElement("ExhAvailSchRef");
-    std::string exhAvailSchRef = escapeName(exhAvailSchRefElement.text());
+    std::string exhAvailSchRef = escapeName(fanInfo.second.exhAvailSchRefElement.text());
     boost::optional<model::Schedule> exhAvailSch = model.getModelObjectByName<model::Schedule>(exhAvailSchRef);
-    if( exhAvailSch )
-    {
+    if ( exhAvailSch ) {
       exhaustFan.setAvailabilitySchedule(exhAvailSch.get());
     }
 
-    QDomElement exhTotEffElement = thermalZoneElement.firstChildElement("ExhTotEff");
-    value = exhTotEffElement.text().toDouble(&ok);
-    if( ok )
-    {
+    value = fanInfo.second.exhTotEffElement.text().toDouble(&ok);
+    if ( ok ) {
       exhaustFan.setFanEfficiency(value);
     }
 
-    QDomElement exhTotStaticPressElement = thermalZoneElement.firstChildElement("ExhTotStaticPress");
-    value = exhTotStaticPressElement.text().toDouble(&ok);
-    if( ok )
-    {
+    value = fanInfo.second.exhTotStaticPressElement.text().toDouble(&ok);
+    if ( ok ) {
       // Convert in WC to Pa
       exhaustFan.setPressureRise(value * 249.0889 );
     }
 
-    QDomElement exhFlowSchRefElement = thermalZoneElement.firstChildElement("ExhFlowSchRef");
-    std::string exhFlowSchRef = escapeName(exhFlowSchRefElement.text());
+    std::string exhFlowSchRef = escapeName(fanInfo.second.exhFlowSchRefElement.text());
     boost::optional<model::Schedule> exhFlowSch = model.getModelObjectByName<model::Schedule>(exhFlowSchRef);
-    if( exhFlowSch )
-    {
+    if ( exhFlowSch ) {
       exhaustFan.setFlowFractionSchedule(exhFlowSch.get());
     }
 
-    QDomElement exhOperModeElement = thermalZoneElement.firstChildElement("ExhOperMode");
-    if( exhOperModeElement.text().compare("DecoupledFromSystem",Qt::CaseInsensitive) == 0 )
-    {
+    if ( fanInfo.second.exhOperModeElement.text().compare("DecoupledFromSystem",Qt::CaseInsensitive) == 0 ) {
       exhaustFan.setSystemAvailabilityManagerCouplingMode("Decoupled");
-    }
-    else if( exhOperModeElement.text().compare("CoupledToSystem",Qt::CaseInsensitive) == 0 )
-    {
+    } else if ( fanInfo.second.exhOperModeElement.text().compare("CoupledToSystem",Qt::CaseInsensitive) == 0 ) {
       exhaustFan.setSystemAvailabilityManagerCouplingMode("Coupled");
     }
 
-    QDomElement exhMinTempSchRefElement = thermalZoneElement.firstChildElement("ExhMinTempSchRef");
-    std::string exhMinTempSchRef = escapeName(exhMinTempSchRefElement.text());
+    std::string exhMinTempSchRef = escapeName(fanInfo.second.exhMinTempSchRefElement.text());
     boost::optional<model::Schedule> exhMinTempSch = model.getModelObjectByName<model::Schedule>(exhMinTempSchRef);
-    if( exhMinTempSch )
-    {
+    if ( exhMinTempSch ) {
       exhaustFan.setMinimumZoneTemperatureLimitSchedule(exhMinTempSch.get());
     }
 
-    QDomElement exhBalancedSchRefElement = thermalZoneElement.firstChildElement("ExhBalancedSchRef");
-    std::string exhBalancedSchRef = escapeName(exhBalancedSchRefElement.text());
+    std::string exhBalancedSchRef = escapeName(fanInfo.second.exhBalancedSchRefElement.text());
     boost::optional<model::Schedule> exhBalancedSch = model.getModelObjectByName<model::Schedule>(exhBalancedSchRef);
-    if( exhBalancedSch )
-    {
+    if ( exhBalancedSch ) {
       exhaustFan.setBalancedExhaustFractionSchedule(exhBalancedSch.get());
     }
 
@@ -6291,6 +6313,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       spm2.addToNode(node.get());
     }
 
+    std::vector<model::CoolingTowerTwoSpeed> twoSpeedTowers =
+    subsetCastVector<model::CoolingTowerTwoSpeed>(plantLoop.supplyComponents(model::CoolingTowerTwoSpeed::iddObjectType()));
+    for(auto it = twoSpeedTowers.begin();
+        it != twoSpeedTowers.end();
+        ++it)
+    {
+      boost::optional<model::ModelObject> mo = it->outletModelObject();
+      OS_ASSERT(mo);
+      boost::optional<model::Node> node = mo->optionalCast<model::Node>();
+      OS_ASSERT(node);
+
+      model::SetpointManagerScheduled spm2(model,schedule);
+      spm2.setName(it->name().get() + " SPM");
+      spm2.addToNode(node.get());
+    }
+
     std::vector<model::CoolingTowerSingleSpeed> constantTowers =
     subsetCastVector<model::CoolingTowerSingleSpeed>(plantLoop.supplyComponents(model::CoolingTowerSingleSpeed::iddObjectType()));
     for(auto it = constantTowers.begin();
@@ -6620,19 +6658,35 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
 
   bool ok;
   double value;
+  std::string svalue;
 
   if( ! istringEqual(htRejElement.tagName().toStdString(),"HtRej") )
   {
     return result;
   }
 
+  // HtRej:ModCtrl
+  // HtRej:CapRtd
+  // HtRej:FanType
+  // HtRej:TotFanHP
+  // HtRej:AirFlowCap
+  // HtRej:WtrFlowCap
+  // HtRej:LowSpdAirFlowRat
+  // HtRej:LowSpdPwrRat
+  // HtRej:CellCnt
+
   // ModCtrl
 
   QDomElement modCtrlElement = htRejElement.firstChildElement("ModCtrl");
-
   if( modCtrlElement.text().compare("VariableSpeedDrive",Qt::CaseInsensitive) == 0 )
   {
     model::CoolingTowerVariableSpeed tower(model);
+
+    QDomElement nameElement = htRejElement.firstChildElement("Name");
+    tower.setName(nameElement.text().toStdString());
+
+    tower.setModelType("CoolToolsCrossFlow");
+    //tower.setModelCoefficient();
 
     QDomElement wetBulbApproachElement = htRejElement.parentNode().firstChildElement("WetBulbApproach");
     QDomElement dsgnSupWtrTempElement = htRejElement.parentNode().firstChildElement("DsgnSupWtrTemp");
@@ -6641,6 +6695,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
     boost::optional<double> wetBulbApproach;
     boost::optional<double> dsgnSupWtrTemp;
     boost::optional<double> dsgnSupWtrDelT;
+    boost::optional<double> dsgnWBT;
 
     value = wetBulbApproachElement.text().toDouble(&ok);
     if( ok )
@@ -6660,10 +6715,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
       dsgnSupWtrDelT = value * 5.0 / 9.0; 
     }
 
+    value = doc.documentElement().firstChildElement("Proj").firstChildElement("DsgnWBT").text().toDouble(&ok);
+    if ( ok ) {
+      dsgnWBT = unitToUnit(value,"F","C");
+    }
+
     if( dsgnSupWtrDelT )
     {
       tower.setDesignRangeTemperature(dsgnSupWtrDelT.get());
     }
+
+    if ( dsgnWBT ) {
+      tower.setDesignInletAirWetBulbTemperature(dsgnWBT.get());
+    }
+
+    tower.setDesignApproachTemperature( 5.6 );
 
     tower.setDesignInletAirWetBulbTemperature(20.01);
 
@@ -6687,8 +6753,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
 
     if( ! autosize() )
     {
-      QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCapSim");
+      if ( dsgnWBT && dsgnSupWtrTemp ) {
+        tower.setDesignApproachTemperature( dsgnWBT.get() - dsgnSupWtrTemp.get() );
+      }
 
+      QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCapSim");
       value = airFlowCapElement.text().toDouble(&ok);
       if( ok )
       {
@@ -6737,12 +6806,59 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
     }
 
     result = tower;
-  }
-  else
-  {
-    model::CoolingTowerSingleSpeed tower(model);
-
+  } else if ( modCtrlElement.text().compare("TwoSpeed",Qt::CaseInsensitive) == 0 ) {
+    model::CoolingTowerTwoSpeed tower(model);
     result = tower;
+
+    svalue = htRejElement.firstChildElement("Name").text().toStdString();
+    tower.setName(svalue);
+
+    value = htRejElement.firstChildElement("WtrFlowCapSim").text().toDouble(&ok);
+    if ( ok ) {
+      value = unitToUnit(value, "gal/min", "m^3/s").get();
+      tower.setDesignWaterFlowRate(value);
+    }
+
+    value = htRejElement.firstChildElement("AirFlowCapSim").text().toDouble(&ok);
+    if ( ok ) {
+      value = unitToUnit(value,"cfm","m^3/s").get();
+      tower.setHighFanSpeedAirFlowRate(value);
+    }
+
+    value = htRejElement.firstChildElement("TotFanHPSim").text().toDouble(&ok);
+    if ( ok ) {
+      tower.setHighFanSpeedFanPower(value * 745.7);
+    }
+
+    //tower.autosizeUFactorTimesAreaValue();
+
+    value = htRejElement.firstChildElement("LowSpdAirFlowRat").text().toDouble(&ok);
+    if ( ok ) {
+      value = unitToUnit(value,"cfm","m^3/s").get();
+      tower.setLowFanSpeedAirFlowRate(value);
+    }
+
+    value = htRejElement.firstChildElement("LowSpdPwrRat").text().toDouble(&ok);
+    if ( ok ) {
+      tower.setLowFanSpeedFanPower(value * 745.7);
+    }
+
+    tower.autosizeLowFanSpeedUFactorTimesAreaValue();
+
+    tower.setPerformanceInputMethod("NominalCapacity");
+
+    value = htRejElement.firstChildElement("CapRtdSim").text().toDouble(&ok);
+    if ( ok ) {
+      value = unitToUnit(value,"Btu/h","W").get();
+      tower.setHighSpeedNominalCapacity(value);
+    }
+
+  } else {
+    model::CoolingTowerSingleSpeed tower(model);
+    result = tower;
+
+    QDomElement nameElement = htRejElement.firstChildElement("Name");
+    tower.setName(nameElement.text().toStdString());
 
     if( modCtrlElement.text().compare("Cycling",Qt::CaseInsensitive) == 0 )
     {
@@ -6759,22 +6875,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
     {
       tower.setNumberofCells(cellCnt);
     }
+
+    tower.autosizeUFactorTimesAreaValueatDesignAirFlowRate();
     
     if( ! autosize() )
     {
       // PerformanceInputMethod
       tower.setPerformanceInputMethod("NominalCapacity");
 
-      tower.resetDesignWaterFlowRate();
-
-      tower.resetUFactorTimesAreaValueatDesignAirFlowRate();
-
-      tower.resetUFactorTimesAreaValueatFreeConvectionAirFlowRate();
-
       // CapRtd
       QDomElement capRtdElement = htRejElement.firstChildElement("CapRtdSim");
       value = capRtdElement.text().toDouble(&ok);
-
       if( ok )
       {
         // NominalCapacity
@@ -7339,6 +7450,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     heatPump.setFanPlacement("DrawThrough");
     heatPump.setOnCycleParasiticElectricLoad(0.0);
     heatPump.setOffCycleParasiticElectricLoad(0.0);
+
+    value = element.firstChildElement("DeadBandTempDiff").text().toDouble(&ok);
+    if ( ok ) {
+      heatPump.setDeadBandTemperatureDifference( value * 5.0 / 9.0 );
+    }
+
+    value = element.firstChildElement("MinInletAirTempCprsrOper").text().toDouble(&ok);
+    if ( ok ) {
+      value = unitToUnit(value, "F", "C").get();
+      heatPump.setMinimumInletAirTemperatureforCompressorOperation( value );
+    }
 
     {
       auto schedule = model.alwaysOnDiscreteSchedule();

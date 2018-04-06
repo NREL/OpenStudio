@@ -1342,6 +1342,9 @@ namespace sdd {
         var = model::OutputVariable("Baseboard Total Heating Rate",*result);
         var.setReportingFrequency(interval);
 
+        var = model::OutputVariable("Zone Combined Outdoor Air Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+
         auto createOutputForNode = [&](const std::string & nodename) {
           auto var = model::OutputVariable("System Node Temperature",*result);
           var.setReportingFrequency(interval);
@@ -1478,6 +1481,12 @@ namespace sdd {
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Air System Outdoor Air Economizer Status",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Fan Unbalanced Air Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Air System Outdoor Air Mass Flow Rate",*result);
         var.setReportingFrequency(interval);
 
         auto hxs = result->getModelObjects<model::HeatExchangerAirToAirSensibleAndLatent>();
