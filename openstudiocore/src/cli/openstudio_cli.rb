@@ -31,9 +31,6 @@
 require 'openstudio'
 
 OpenStudio::Application::instance().application(false)
-if (!OpenStudio::RemoteBCL::initializeSSL())
-  puts "Unable to initialize OpenSSL: Verify that openstudio.exe can access the OpenSSL libraries"
-end
 
 #File.open('E:\test\test.log', 'w') do |f|
 #  ENV.each_key {|k| f.puts "#{k} = #{ENV[k]}" }
@@ -275,6 +272,7 @@ def parse_main_args(main_args)
   # Operate on the include option to add to $LOAD_PATH
   remove_indices = []
   new_path = []
+  init_ssl = true
   main_args.each_index do |i|
 
     if main_args[i] == '-I' || main_args[i] == '--include'
@@ -292,8 +290,20 @@ def parse_main_args(main_args)
         #$logger.warn "'#{dir}' passed to #{main_args[i]} is not a directory"
       end
       new_path << dir
+    elsif main_args[i] == '--no-ssl'
+      # remove from further processing
+      remove_indices << i
+      
+      init_ssl = false
     end
   end
+  
+  if init_ssl
+    if (!OpenStudio::RemoteBCL::initializeSSL())
+      puts "Unable to initialize OpenSSL: Verify that openstudio.exe can access the OpenSSL libraries"
+    end
+  end
+
   remove_indices.reverse_each {|i| main_args.delete_at(i)}
 
   if !new_path.empty?
@@ -639,6 +649,7 @@ class CLI
     if quiet
       commands = ['-h','--help',
                   '--verbose',
+                  '--no-ssl',
                   '-i', '--include',
                   '-e', '--execute',
                   '--gem_path', '--gem_home']
@@ -656,6 +667,7 @@ class CLI
         o.separator ''
         o.on('-h', '--help', 'Print this help.')
         o.on('--verbose', 'Print the full log to STDOUT')
+        o.on('--no-ssl', 'Skip initializing SSL')
         o.on('-I', '--include DIR', 'Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)')
         o.on('-e', '--execute CMD', 'Execute one line of script (may be used more than once). Returns after executing commands.')
         o.on('--gem_path DIR', 'Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)')
@@ -717,6 +729,12 @@ class Run
     # options are local to this method, run_methods are what get passed to workflow gem
     run_options = {}
 
+    # Hidden option shhhhh
+    run_options[:fast] = false
+    if sub_argv.delete '--fast'
+      run_options[:fast] = true
+    end
+    
     options = {}
     options[:debug] = false
     options[:no_simulation] = false
