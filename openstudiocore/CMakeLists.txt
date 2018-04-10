@@ -1562,7 +1562,11 @@ set(CPACK_PACKAGE_CONTACT "openstudio@nrel.gov")
 if( APPLE )
   set( CPACK_IFW_TARGET_DIRECTORY /Applications/OpenStudio-${OpenStudio_VERSION}/ )
 elseif( UNIX )
+  # Default method doesn't use IFW but Deb, so this one is probably useless (but harmless)
   set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
+  # These two will set the .deb install path correctly
+  set( CPACK_SET_DESTDIR true )
+  set( CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/ )
 endif()
 
 if(WIN32)
