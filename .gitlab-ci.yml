@@ -24,7 +24,11 @@ build_deploy:windows:
   - cmake --build . --config Release --target ALL_BUILD
   - cmake --build . --config Release --target PACKAGE
  #- cmake --build . --config Release --target ALL_DOXYGEN # docs do not build without errors
+  - mkdir package
+  - copy OpenStudio-2.*-Windows.exe package
+  - cd package
   - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Windows.exe"
+  - cd ../
  #- cd /doc
  #- aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/doc --recursive --exclude "*" --include "*.zip"
   retry: 1
