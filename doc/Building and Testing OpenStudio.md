@@ -382,14 +382,7 @@ In S3:
 
 For major releases, delete the content of `openstudio-sdk-documentation/cpp/latest` and drag in the contents of `build\OSCore-prefix\src\OSCore-build\doc\OpenStudio-X.Y.Z-doc`
 
-In folder `build\OSCore-prefix\src\OSCore-build\ruby\rdocify`
-
-- Extract zip OpenStudio-X.Y.Z-rdoc.zip to a similarly named folder
-
-In S3:
-
-- Drag extracted directory into S3 directory `openstudio-sdk-documentation/ruby`
-- From `openstudio-sdk-documentation` bucket, download index.html and edit to new release numbers (23 changes)
+- From `openstudio-sdk-documentation` bucket, download index.html and edit to new release numbers
 - Test at https://openstudio-sdk-documentation.s3.amazonaws.com/index.html
 
 
