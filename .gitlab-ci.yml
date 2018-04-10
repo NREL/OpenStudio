@@ -81,7 +81,7 @@ build_deploy:ubuntu:
   - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=ON -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
   - make -j16 package
   - cd _CPack_Packages/Linux/DEB
-  - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
+  - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --exclude "*" --include "OpenStudio-2.*-Linux.deb"
   retry: 1
 
 testCTest:windows:
