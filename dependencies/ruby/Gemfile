@@ -12,8 +12,8 @@ gem 'openstudio-standards', '= 0.2.0'
 
 gem 'openstudio_measure_tester', '= 0.1' # This includes the dependencies for running unit tests, coverage, and rubocop
 
-gem 'rspec', '= 3.5.0' # TODO: is this still needed? Measures use minitest.
-gem 'test-unit-minitest', '= 0.9.1' # TODO: is this still needed?
+#gem 'rspec', '= 3.5.0' # TODO: is this still needed? Measures use minitest.
+#gem 'test-unit-minitest', '= 0.9.1' # TODO: is this still needed?
 
 gem 'parallel', '= 1.12.1'
-gem 'bundler', '= 1.16.1'
+gem 'bundler', '= 1.14.4'
