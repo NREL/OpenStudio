@@ -24,7 +24,11 @@ build_deploy:windows:
   - cmake --build . --config Release --target ALL_BUILD
   - cmake --build . --config Release --target PACKAGE
  #- cmake --build . --config Release --target ALL_DOXYGEN # docs do not build without errors
-  - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "*.exe"
+  - mkdir package
+  - copy OpenStudio-2.*-Windows.exe package
+  - cd package
+  - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Windows.exe"
+  - cd ../
  #- cd /doc
  #- aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/doc --recursive --exclude "*" --include "*.zip"
   retry: 1
@@ -63,7 +67,7 @@ build_deploy:mac:
   - make -j16 package
   - cd _CPack_Packages/Darwin/IFW
   - zip -r `ls -1 | grep OpenStudio-*.app | sed -e 's/\.app$//'`.zip OpenStudio-*.app
-  - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "*.zip"
+  - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Darwin.zip"
   retry: 1
 
 build_deploy:ubuntu:
@@ -80,7 +84,9 @@ build_deploy:ubuntu:
   - cd build
   - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=ON -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
   - make -j16 package
-  - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "*.deb"
+  - cd _CPack_Packages/Linux/DEB
+  - rm -rf `ls -d */ | grep OpenStudio-2.*-Linux`
+  - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
   retry: 1
 
 testCTest:windows:
