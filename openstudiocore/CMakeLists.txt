@@ -1592,17 +1592,32 @@ elseif( UNIX )
   # Install the XML mime info
   install(FILES "${CMAKE_SOURCE_DIR}/x-openstudio.xml" DESTINATION /usr/share/mime/application)
 
-  # Copy the OSApplication icon
-  install(FILES icons/os_128.png DESTINATION /usr/share/icons/)
+  # Copy the icons
+  # Cf. http://standards.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
+  foreach(_size 16 32 48 64 128 256)
+    # Copy OS App icons
+    install(
+      FILES "${CMAKE_SOURCE_DIR}/icons/os_${_size}.png"
+      DESTINATION "share/icons/hicolor/${_size}x${_size}/apps"
+      RENAME openstudioapp.png
+    )
+    # Install OSM mimetypes icons
+    install(
+      FILES "${CMAKE_SOURCE_DIR}/icons/osm_${_size}.png"
+      DESTINATION "share/icons/hicolor/${_size}x${_size}/mimetypes"
+      RENAME application-x-openstudio.png
+    )
+  endforeach()
 
-  # Copy the OSM file icons
-  install(FILES "${CMAKE_SOURCE_DIR}/icons/osm_16.png" DESTINATION /usr/share/icons/hicolor/16x16/mimetypes/application-x-openstudio.png)
-  install(FILES "${CMAKE_SOURCE_DIR}/icons/osm_32.png" DESTINATION /usr/share/icons/hicolor/32x32/mimetypes/application-x-openstudio.png)
-  install(FILES "${CMAKE_SOURCE_DIR}/icons/osm_48.png" DESTINATION /usr/share/icons/hicolor/48x48/mimetypes/application-x-openstudio.png)
-  install(FILES "${CMAKE_SOURCE_DIR}/icons/osm_64.png" DESTINATION /usr/share/icons/hicolor/128x128/mimetypes/application-x-openstudio.png)
-  install(FILES "${CMAKE_SOURCE_DIR}/icons/osm_128.png" DESTINATION /usr/share/icons/hicolor/128x128/mimetypes/application-x-openstudio.png)
-  install(FILES "${CMAKE_SOURCE_DIR}/icons/osm_256.png" DESTINATION /usr/share/icons/hicolor/256x256/mimetypes/application-x-openstudio.png)
-
+  # OS App has a 512 and 1024 too
+  foreach(_size 512 1024)
+    # Copy OS App icons
+    install(
+      FILES "${CMAKE_SOURCE_DIR}/icons/os_${_size}.png"
+      DESTINATION "share/icons/hicolor/${_size}x${_size}/apps"
+      RENAME openstudioapp.png
+    )
+  endforeach()
 
   # try to set up the menu system
   find_program(XDG-MIME_EXECUTABLE xdg-mime)
@@ -1618,6 +1633,7 @@ elseif( UNIX )
   # Register the mime description: this places it in /usr/share/mime/packages/
   # sudo xdg-mime install --novendor --mode system x-openstudio.xml
   INSTALL(CODE "execute_process(COMMAND ${MIME_EXECUTABLE} install --novendor --mode system /usr/share/mime/application/x-openstudio.xml)")
+  INSTALL(CODE "execute_process(COMMAND echo COUCOU)")
 
   # Register the application launcher with the registered mimetype
   # sudo xdg-mime default openstudio.desktop application/x-openstudio

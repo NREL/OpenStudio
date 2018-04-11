@@ -1,11 +1,11 @@
 [Desktop Entry]
+Type=Application
 Name=OpenStudioApp
 Comment=OpenStudio Application for Energy Modeling
+Comment[fr]=Application OpenStudio pour la modélisation énergétique
 Exec=/usr/local/bin/OpenStudioApp %u
+Icon=openstudioapp
 Terminal=false
-Type=Application
-Icon=/usr/share/icons/os_128.png
 Categories=Utility;X-OpenStudio;X-EnergyModeling;
-StartupNotify=true
 MimeType=application/x-openstudio;
 
