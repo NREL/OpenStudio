@@ -4487,6 +4487,10 @@ namespace openstudio{
       LOG(Error, "Missing DESIGN CONDITIONS specifier in EPW file '" << m_path << "'");
       return false;
     }
+    else if (split[1] == "0") {
+      LOG(Warn, "Appears there are no design condition fields in the EPW file '" << m_path << "'");
+      return true;
+    }
 
     int nDesignConditions = std::stoi(split[1]);
 
