@@ -1598,13 +1598,13 @@ elseif( UNIX )
     # Copy OS App icons
     install(
       FILES "${CMAKE_SOURCE_DIR}/icons/os_${_size}.png"
-      DESTINATION "share/icons/hicolor/${_size}x${_size}/apps"
+      DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/apps"
       RENAME openstudioapp.png
     )
     # Install OSM mimetypes icons
     install(
       FILES "${CMAKE_SOURCE_DIR}/icons/osm_${_size}.png"
-      DESTINATION "share/icons/hicolor/${_size}x${_size}/mimetypes"
+      DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/mimetypes"
       RENAME application-x-openstudio.png
     )
   endforeach()
@@ -1614,7 +1614,7 @@ elseif( UNIX )
     # Copy OS App icons
     install(
       FILES "${CMAKE_SOURCE_DIR}/icons/os_${_size}.png"
-      DESTINATION "share/icons/hicolor/${_size}x${_size}/apps"
+      DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/apps"
       RENAME openstudioapp.png
     )
   endforeach()
