@@ -1579,6 +1579,59 @@ elseif( UNIX )
   execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio openstudio)
   # Have this link be installed with the .deb package in /usr/local/bin
   install(FILES ${CMAKE_BINARY_DIR}/openstudio DESTINATION /usr/local/bin COMPONENT CLI)
+  # Same for OpenStudioApp
+  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/OpenStudioApp OpenStudioApp)
+  # Have this link be installed with the .deb package in /usr/local/bin
+  install(FILES ${CMAKE_BINARY_DIR}/OpenStudioApp DESTINATION /usr/local/bin COMPONENT CLI)
+
+
+  # Create a proper App with file associations
+
+  # Install the .desktop manifest (allows the App to be seen in the Dash and adding to the dock, and to map it a mimetype)
+  install(FILES "${CMAKE_SOURCE_DIR}/openstudioapp.desktop" DESTINATION /usr/share/applications)
+  # Install the XML mime info
+  install(FILES "${CMAKE_SOURCE_DIR}/x-openstudioapp.xml" DESTINATION /usr/share/mime/application)
+
+  # Copy the OSApplication icon
+  install(FILES icons/os_128.png DESTINATION /usr/share/icons/)
+
+  # Copy the OSM file icons
+  install(FILES "${CMAKE_SOURCE_DIR}/icons/osm_16.png" DESTINATION "/usr/share/icons/hicolor/16x16/mimetypes/application-x-openstudio.png")
+  install(FILES "${CMAKE_SOURCE_DIR}/icons/osm_32.png" DESTINATION "/usr/share/icons/hicolor/32x32/mimetypes/application-x-openstudio.png")
+  install(FILES "${CMAKE_SOURCE_DIR}/icons/osm_48.png" DESTINATION "/usr/share/icons/hicolor/48x48/mimetypes/application-x-openstudio.png")
+  install(FILES "${CMAKE_SOURCE_DIR}/icons/osm_64.png" DESTINATION "/usr/share/icons/hicolor/128x128/mimetypes/application-x-openstudio.png")
+  install(FILES "${CMAKE_SOURCE_DIR}/icons/osm_128.png" DESTINATION "/usr/share/icons/hicolor/128x128/mimetypes/application-x-openstudio.png")
+  install(FILES "${CMAKE_SOURCE_DIR}/icons/osm_256.png" DESTINATION "/usr/share/icons/hicolor/256x256/mimetypes/application-x-openstudio.png")
+
+
+  # try to set up the menu system
+  find_program(XDG-MIME_EXECUTABLE xdg-mime)
+  find_program(XDG-DESKTOP-MENU_EXECUTABLE xdg-desktop-menu)
+  find_program(UPDATE-MIME-DATABASE-EXECUTABLE update-mime-database)
+  find_program(GTK-UPDATE-ICON-CACHE-EXECUTABLE gtk-update-icon-cache)
+
+
+  # Install the Desktop Menu
+  # xdg-desktop-menu install --novendor /usr/share/applications/openstudioapp.desktop
+  INSTALL(CODE "execute_process(COMMAND ${XDG-DESKTOP-MENU_EXECUTABLE} install --novendor /usr/share/applications/openstudioapp.desktop)")
+
+  # Register the mime description: this places it in /usr/share/mime/packages/
+  # sudo xdg-mime install --novendor --mode system x-openstudio.xml
+  INSTALL(CODE "execute_process(COMMAND ${MIME_EXECUTABLE} install --novendor --mode system /usr/share/mime/application/x-openstudio.xml)")
+
+  # Register the application launcher with the registered mimetype
+  # sudo xdg-mime default openstudio.desktop application/x-openstudio
+  INSTALL(CODE "execute_process(COMMAND ${MIME_EXECUTABLE} default /usr/share/applications/openstudio.desktop application/x-openstudio")
+
+
+  # Update the mime cache and icon cache
+  # sudo update-mime-database /usr/share/mime
+  INSTALL(CODE "execute_process(COMMAND ${UPDATE-MIME-DATABASE-EXECUTABLE} /usr/share/mime")
+  # sudo gtk-update-icon-cache /usr/share/icons/hicolor/ -f
+  INSTALL(CODE "execute_process(COMMAND ${GTK-UPDATE-ICON-CACHE-EXECUTABLE} /usr/share/icons/hicolor/ -f")
+
+
+
 endif()
 
 if(WIN32)
