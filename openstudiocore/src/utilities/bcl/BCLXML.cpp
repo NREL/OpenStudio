@@ -212,6 +212,8 @@ namespace openstudio{
         openstudio::path path; ;
         if (usageType == "script"){
           path = m_path.parent_path() / toPath(fileName);
+        }else if (usageType == "docs"){
+          path = m_path.parent_path() / toPath("docs") / toPath(fileName);
         }else if (usageType == "test"){
           path = m_path.parent_path() / toPath("tests") / toPath(fileName);
         }else if (usageType == "resource"){
