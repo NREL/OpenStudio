@@ -4283,7 +4283,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   for ( const auto & fanInfo: exhaustFanInfo ) {
     model::FanZoneExhaust exhaustFan(model);
     exhaustFan.setName(fanInfo.second.exhFanNameElement.text().toStdString());
-    exhaustFan.setEndUseSubcategory(fanInfo.second.exhFanEndUseCatElement.text().toStdString());
+    if ( fanInfo.second.exhFanNameElement.text().isEmpty() ) {
+      exhaustFan.setEndUseSubcategory("General");
+    } else {
+      exhaustFan.setEndUseSubcategory(fanInfo.second.exhFanEndUseCatElement.text().toStdString());
+    }
 
     value = fanInfo.second.exhFlowRtSimElement.text().toDouble(&ok);
     value = unitToUnit(value,"cfm","m^3/s").get();
