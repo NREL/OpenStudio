@@ -1345,49 +1345,9 @@ namespace sdd {
         var = model::OutputVariable("Zone Combined Outdoor Air Mass Flow Rate",*result);
         var.setReportingFrequency(interval);
 
-        auto createOutputForNode = [&](const std::string & nodename) {
-          auto var = model::OutputVariable("System Node Temperature",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(nodename);
-          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(nodename);
-        };
-
-        auto createOutputForZoneHVAC = [&](const model::ZoneHVACComponent & comp) {
-          auto name = comp.name().get();
-          if( auto mo = comp.inletNode() ) {
-            createOutputForNode(mo->name().get());
-          }
-          if( auto mo = comp.outletNode() ) {
-            createOutputForNode(mo->name().get());
-          }
-          auto mixedAirNodeName = name + " Mixed Air Node";
-          createOutputForNode(mixedAirNodeName);
-          auto reliefAirNodeName = name + " Relief Air Node";
-          createOutputForNode(reliefAirNodeName);
-          auto oaNodeName = name + " OA Node";
-          createOutputForNode(oaNodeName);
-        };
-
-        // Really need some abstraction so this sillyness isn't required
-        {
-          auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalAirConditioner>();
-          for( const auto & comp : zonehvac ) {
-            createOutputForZoneHVAC(comp);
-          }
-        }
-        {
-          auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalHeatPump>();
-          for( const auto & comp : zonehvac ) {
-            createOutputForZoneHVAC(comp);
-          }
-        }
         {
           auto zonehvac = result->getModelObjects<model::ZoneHVACWaterToAirHeatPump>();
           for( const auto & comp : zonehvac ) {
-            createOutputForZoneHVAC(comp);
-
         		var = model::OutputVariable("Zone Water to Air Heat Pump Total Heating Rate",*result);
         		var.setReportingFrequency(interval);
           	var.setKeyValue(comp.nameString());
@@ -1411,12 +1371,6 @@ namespace sdd {
         		var = model::OutputVariable("Zone Water to Air Heat Pump Compressor Part Load Ratio",*result);
         		var.setReportingFrequency(interval);
           	var.setKeyValue(comp.nameString());
-          }
-        }
-        {
-          auto zonehvac = result->getModelObjects<model::ZoneHVACFourPipeFanCoil>();
-          for( const auto & comp : zonehvac ) {
-            createOutputForZoneHVAC(comp);
           }
         }
         {
@@ -1488,10 +1442,144 @@ namespace sdd {
 
         var = model::OutputVariable("Air System Outdoor Air Mass Flow Rate",*result);
         var.setReportingFrequency(interval);
+      }
 
+      auto simVarsHVACSecTempFlowElement = projectElement.firstChildElement("SimVarsHVACSecTempFlow");
+      if( simVarsHVACSecTempFlowElement.text().toInt() == 1 ) {
+        std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
+        for( auto & airloop : airloops)
+        {
+          auto var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(airloop.supplyInletNode().name().get());
+
+          var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(airloop.supplyOutletNode().name().get());
+
+          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(airloop.supplyOutletNode().name().get());
+
+          var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(airloop.demandInletNode().name().get());
+
+          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(airloop.demandInletNode().name().get());
+
+          if( boost::optional<model::Node> node = airloop.mixedAirNode() )
+          {
+            var = model::OutputVariable("System Node Temperature",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+
+            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+          }
+
+          if( boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airloop.airLoopHVACOutdoorAirSystem() )
+          {
+            if( boost::optional<model::ModelObject> node = oaSystem->reliefAirModelObject() )
+            {
+              var = model::OutputVariable("System Node Temperature",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
+
+              var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
+            }
+
+            if( boost::optional<model::Node> node = oaSystem->outboardOANode() )
+            {
+              var = model::OutputVariable("System Node Temperature",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
+
+              var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node->name().get());
+            }
+          }
+        }
+
+        auto var = model::OutputVariable("Fan Unbalanced Air Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Air System Outdoor Air Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+      }
+
+      // SimVarsHVACZnTempFlow
+      auto simVarsHVACZnTempFlowElement = projectElement.firstChildElement("SimVarsHVACZnTempFlow");
+      if( simVarsHVACZnTempFlowElement.text().toInt() == 1)  {
+
+        auto createOutputForNode = [&](const std::string & nodename) {
+          auto var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(nodename);
+          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(nodename);
+        };
+
+        auto createOutputForZoneHVAC = [&](const model::ZoneHVACComponent & comp) {
+          auto name = comp.name().get();
+          if( auto mo = comp.inletNode() ) {
+            createOutputForNode(mo->name().get());
+          }
+          if( auto mo = comp.outletNode() ) {
+            createOutputForNode(mo->name().get());
+          }
+          auto mixedAirNodeName = name + " Mixed Air Node";
+          createOutputForNode(mixedAirNodeName);
+          auto reliefAirNodeName = name + " Relief Air Node";
+          createOutputForNode(reliefAirNodeName);
+          auto oaNodeName = name + " OA Node";
+          createOutputForNode(oaNodeName);
+        };
+
+        // Really need some abstraction so this sillyness isn't required
+        {
+          auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalAirConditioner>();
+          for( const auto & comp : zonehvac ) {
+            createOutputForZoneHVAC(comp);
+          }
+        }
+        {
+          auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalHeatPump>();
+          for( const auto & comp : zonehvac ) {
+            createOutputForZoneHVAC(comp);
+          }
+        }
+
+        {
+          auto zonehvac = result->getModelObjects<model::ZoneHVACWaterToAirHeatPump>();
+          for( const auto & comp : zonehvac ) {
+            createOutputForZoneHVAC(comp);
+          }
+        }
+
+        {
+          auto zonehvac = result->getModelObjects<model::ZoneHVACFourPipeFanCoil>();
+          for( const auto & comp : zonehvac ) {
+            createOutputForZoneHVAC(comp);
+          }
+        }
+
+        auto var = model::OutputVariable("Zone Combined Outdoor Air Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+      }
+
+      // SimVarsHtRcvry
+      auto simVarsHtRcvryElement = projectElement.firstChildElement("SimVarsHtRcvry");
+      if( simVarsHtRcvryElement.text().toInt() == 1)  {
         auto hxs = result->getModelObjects<model::HeatExchangerAirToAirSensibleAndLatent>();
         for( auto & hx : hxs ) {
-          var = model::OutputVariable("Heat Exchanger Sensible Heating Rate",*result);
+          auto var = model::OutputVariable("Heat Exchanger Sensible Heating Rate",*result);
           var.setReportingFrequency(interval);
           var.setKeyValue(hx.nameString());
           var = model::OutputVariable("Heat Exchanger Latent Gain Rate",*result);
@@ -1546,66 +1634,6 @@ namespace sdd {
             var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
             var.setReportingFrequency(interval);
             var.setKeyValue(node->name().get());
-          }
-        }
-
-        std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
-        for( auto & airloop : airloops)
-        {
-          var = model::OutputVariable("System Node Temperature",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(airloop.supplyInletNode().name().get());
-
-          var = model::OutputVariable("System Node Temperature",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(airloop.supplyOutletNode().name().get());
-
-          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(airloop.supplyOutletNode().name().get());
-
-          var = model::OutputVariable("System Node Temperature",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(airloop.demandInletNode().name().get());
-
-          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(airloop.demandInletNode().name().get());
-
-          if( boost::optional<model::Node> node = airloop.mixedAirNode() )
-          {
-            var = model::OutputVariable("System Node Temperature",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(node->name().get());
-
-            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(node->name().get());
-          }
-
-          if( boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airloop.airLoopHVACOutdoorAirSystem() )
-          {
-            if( boost::optional<model::ModelObject> node = oaSystem->reliefAirModelObject() )
-            {
-              var = model::OutputVariable("System Node Temperature",*result);
-              var.setReportingFrequency(interval);
-              var.setKeyValue(node->name().get());
-
-              var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-              var.setReportingFrequency(interval);
-              var.setKeyValue(node->name().get());
-            }
-
-            if( boost::optional<model::Node> node = oaSystem->outboardOANode() )
-            {
-              var = model::OutputVariable("System Node Temperature",*result);
-              var.setReportingFrequency(interval);
-              var.setKeyValue(node->name().get());
-
-              var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-              var.setReportingFrequency(interval);
-              var.setKeyValue(node->name().get());
-            }
           }
         }
       }
