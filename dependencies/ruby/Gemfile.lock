@@ -1,9 +1,9 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (5.1.6)
+    activesupport (5.1.5)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (>= 0.7, < 2)
+      i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     ansi (1.5.0)
@@ -17,34 +17,34 @@ GEM
     concurrent-ruby (1.0.5)
     docile (1.3.0)
     git (1.3.0)
-    i18n (1.0.0)
+    i18n (0.9.5)
       concurrent-ruby (~> 1.0)
-    json (2.1.0)
+    json (1.8.1)
     minitest (5.4.3)
-    minitest-reporters (1.2.0)
+    minitest-reporters (1.1.19)
       ansi
       builder
       minitest (>= 5.0)
       ruby-progressbar
     openstudio-standards (0.2.0)
     openstudio-workflow (1.3.2)
-    openstudio_measure_tester (0.1.0)
-      activesupport (~> 5.1.4)
-      ci_reporter_minitest (~> 1.0.0)
-      git (~> 1.3.0)
-      minitest (~> 5.4.0)
-      minitest-reporters (~> 1.1)
-      rake (~> 12.3)
-      rubocop (~> 0.52)
-      rubocop-checkstyle_formatter (~> 0.4)
-      simplecov (~> 0.15)
+    openstudio_measure_tester (0.1.3)
+      activesupport (= 5.1.5)
+      ci_reporter_minitest (= 1.0.0)
+      git (= 1.3.0)
+      minitest (= 5.4.3)
+      minitest-reporters (= 1.1.19)
+      rake (= 12.3)
+      rubocop (= 0.53.0)
+      rubocop-checkstyle_formatter (= 0.4)
+      simplecov (= 0.16)
     parallel (1.12.1)
-    parser (2.5.0.5)
+    parser (2.5.1.0)
       ast (~> 2.4.0)
     powerpack (0.1.1)
     rainbow (3.0.0)
-    rake (12.3.1)
-    rubocop (0.54.0)
+    rake (12.3.0)
+    rubocop (0.53.0)
       parallel (~> 1.10)
       parser (>= 2.5)
       powerpack (~> 0.1)
@@ -54,7 +54,7 @@ GEM
     rubocop-checkstyle_formatter (0.4.0)
       rubocop (>= 0.35.1)
     ruby-progressbar (1.9.0)
-    simplecov (0.16.1)
+    simplecov (0.16.0)
       docile (~> 1.1)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
@@ -65,13 +65,14 @@ GEM
     unicode-display_width (1.3.0)
 
 PLATFORMS
-  x64-mingw32
+  ruby
 
 DEPENDENCIES
   bundler (= 1.14.4)
+  json (= 1.8.1)
   openstudio-standards (= 0.2.0)
   openstudio-workflow (= 1.3.2)
-  openstudio_measure_tester (= 0.1)
+  openstudio_measure_tester (= 0.1.3)
   parallel (= 1.12.1)
 
 BUNDLED WITH
