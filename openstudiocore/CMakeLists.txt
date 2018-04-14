@@ -396,6 +396,13 @@ if(UNIX)
     unset(ENERGYPLUS_EXE CACHE)
     unset(ENERGYPLUS_IDD CACHE)
     unset(ENERGYPLUS_WEATHER_DIR CACHE)
+    
+    # remove existing tar.gz files so we don't get confused later if switching branches
+    file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/EnergyPlus*.tar.gz")
+    foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+      file(REMOVE ${EXISTING_ZIP})
+    endforeach()
+    
     file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
@@ -420,6 +427,13 @@ elseif(WIN32)
     unset(ENERGYPLUS_EXE CACHE)
     unset(ENERGYPLUS_IDD CACHE)
     unset(ENERGYPLUS_WEATHER_DIR CACHE)
+    
+    # remove existing zip files so we don't get confused later if switching branches
+    file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/EnergyPlus*.zip")
+    foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+      file(REMOVE ${EXISTING_ZIP})
+    endforeach()    
+    
     file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
@@ -447,6 +461,13 @@ if(UNIX)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
     message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
+    
+    # remove existing tar.gz files so we don't get confused later if switching branches
+    file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/radiance*.tar.gz")
+    foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+      file(REMOVE ${EXISTING_ZIP})
+    endforeach()    
+    
     file(DOWNLOAD "http://github.com/NREL/Radiance/releases/download/${RADIANCE_VERSION}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
@@ -471,6 +492,13 @@ elseif(WIN32)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
     message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_ARCH}-bit)")
+    
+    # remove existing zip files so we don't get confused later if switching branches
+    file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/radiance*.zip")
+    foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+      file(REMOVE ${EXISTING_ZIP})
+    endforeach()    
+    
     file(DOWNLOAD "http://github.com/NREL/Radiance/releases/download/${RADIANCE_VERSION}/Radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}.zip" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
@@ -517,6 +545,13 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
   endif()
 
   if( NOT RUBY_ZIP_MD5 STREQUAL RUBY_ZIP_EXPECTED_MD5)
+  
+    # remove existing tar.gz files so we don't get confused later if switching branches
+    file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/ruby_*.tar.gz")
+    foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+      file(REMOVE ${EXISTING_ZIP})
+    endforeach()  
+  
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_ZIP_FILENAME}"
       ${RUBY_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -566,6 +601,13 @@ if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
   endif()
 
   if( NOT RUBY_MINGW_LIB_ZIP_MD5 STREQUAL RUBY_MINGW_LIB_ZIP_EXPECTED_MD5)
+  
+    # remove existing tar.gz files so we don't get confused later if switching branches
+    file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/Ruby-mingw*.tar.gz")
+    foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+      file(REMOVE ${EXISTING_ZIP})
+    endforeach()  
+  
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_MINGW_LIB_ZIP_FILENAME}"
       ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -592,6 +634,13 @@ if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
 endif()
 
 if( NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
+  
+  # remove existing tar.gz files so we don't get confused later if switching branches
+  file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/openstudio-gems*.tar.gz")
+  foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+    file(REMOVE ${EXISTING_ZIP})
+  endforeach()
+
   file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
     ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
     INACTIVITY_TIMEOUT 120
@@ -634,6 +683,13 @@ if(BUILD_WITH_OPENSSL)
     endif()
     if(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}" OR NOT "${OPENSSL_HASH}" MATCHES "${OPENSSL_EXPECTED_HASH}")
       message(STATUS "Downloading OpenSSL ${OPENSSL_VERSION} (${OPENSSL_ARCH}-bit)")
+      
+      # remove existing zip files so we don't get confused later if switching branches
+      file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/OpenSSL-Win*.zip")
+      foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+        file(REMOVE ${EXISTING_ZIP})
+      endforeach()      
+      
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
       execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
@@ -675,6 +731,17 @@ if( BUILD_DVIEW )
     endif()
 
     if( NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)
+    
+      # remove existing zip tar.gz files so we don't get confused later if switching branches
+      file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/DView*.zip")
+      foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+        file(REMOVE ${EXISTING_ZIP})
+      endforeach()      
+      file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/DView*.tar.gz")
+      foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+        file(REMOVE ${EXISTING_ZIP})
+      endforeach()
+  
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${DVIEW_ZIP_FILENAME}"
         ${DVIEW_ZIP_LOCAL_PATH}
         INACTIVITY_TIMEOUT 120
@@ -727,6 +794,13 @@ else()
     file(MD5 "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" SWIG_HASH)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${SWIG_DIR}" OR NOT "${SWIG_HASH}" MATCHES "${SWIG_EXPECTED_HASH}")
+  
+    # remove existing zip files so we don't get confused later if switching branches
+    file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/swigwin*.zip")
+    foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+      file(REMOVE ${EXISTING_ZIP})
+    endforeach()
+      
     message(STATUS "Downloading SWIG)")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${SWIG_ZIP}" "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${SWIG_EXPECTED_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${SWIG_DIR}")
@@ -877,6 +951,17 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
   endif()
 
   if( NOT BOOST_ZIP_MD5 STREQUAL BOOST_ZIP_EXPECTED_MD5)
+
+    # remove existing zip and tar.gz files so we don't get confused later if switching branches
+    file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/boost*.tar.gz")
+    foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+      file(REMOVE ${EXISTING_ZIP})
+    endforeach()
+    file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/boost*.zip")
+    foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+      file(REMOVE ${EXISTING_ZIP})
+    endforeach()
+    
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${BOOST_ZIP_FILENAME}"
       ${BOOST_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -944,6 +1029,21 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
   endif()
 
   if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
+    
+    # remove existing zip and tar.gz files so we don't get confused later if switching branches
+    file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/qt*shared.tar.gz")
+    foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+      file(REMOVE ${EXISTING_ZIP})
+    endforeach()
+    file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/qt*shared.zip")
+    foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+      file(REMOVE ${EXISTING_ZIP})
+    endforeach()
+    file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/qt*shared_temp.zip")
+    foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+      file(REMOVE ${EXISTING_ZIP})
+    endforeach()
+    
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
       ${QT_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -1077,6 +1177,16 @@ if(EXISTS "${QT_STATIC_ZIP_LOCAL_PATH}")
 endif()
 
 if( NOT QT_STATIC_ZIP_MD5 STREQUAL QT_STATIC_ZIP_EXPECTED_MD5)
+  # remove existing zip and tar.gz files so we don't get confused later if switching branches
+  file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/qt*static.tar.gz")
+  foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+    file(REMOVE ${EXISTING_ZIP})
+  endforeach()
+  file(GLOB EXISTING_ZIPS "${CMAKE_BINARY_DIR}/qt*static.zip")
+  foreach(EXISTING_ZIP ${EXISTING_ZIPS})
+    file(REMOVE ${EXISTING_ZIP})
+  endforeach()
+    
   file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_STATIC_ZIP_FILENAME}"
     ${QT_STATIC_ZIP_LOCAL_PATH}
     INACTIVITY_TIMEOUT 120
