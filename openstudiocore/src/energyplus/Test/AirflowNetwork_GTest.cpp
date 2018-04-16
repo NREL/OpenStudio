@@ -63,7 +63,7 @@
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
-#include "../../model/AirloopHVAC_Impl.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
