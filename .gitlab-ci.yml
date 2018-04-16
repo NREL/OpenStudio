@@ -3,7 +3,7 @@ stages:
 - testCTest
 - testResources
 
-build_deploy:windows:
+build_deploy_develop:windows:
   stage: build_deploy
   only:
     - develop
@@ -30,7 +30,7 @@ build_deploy:windows:
     #- aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/doc --recursive --exclude "*" --include "*.zip"
   retry: 1
   cache:
-    key: windows
+    key: openstudio_windows
     untracked: true
     #policy: push # NOTE: use default pull-push policy
     paths:
@@ -54,7 +54,7 @@ build_deploy:windows:
       - build/src/
       #- build/doc/OpenStudio-*.zip
 
-build_deploy:mac:
+build_deploy_develop:mac:
   stage: build_deploy
   only:
     - develop
@@ -70,7 +70,7 @@ build_deploy:mac:
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Darwin.zip"
   retry: 1
   cache:
-    key: mac
+    key: openstudio_mac
     untracked: true
     #policy: push # NOTE: use default pull-push policy
     paths:
@@ -94,7 +94,7 @@ build_deploy:mac:
       - build/sketchup_plugin/
       - build/src/
 
-build_deploy:ubuntu:
+build_deploy_develop:ubuntu:
   stage: build_deploy
   only:
     - develop
@@ -110,7 +110,7 @@ build_deploy:ubuntu:
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
   retry: 1
   cache:
-    key: ubuntu
+    key: openstudio_ubuntu
     untracked: true
     #policy: push # NOTE: use default pull-push policy
     paths:
@@ -133,7 +133,7 @@ build_deploy:ubuntu:
       - build/sketchup_plugin/
       - build/src/
 
-build_deploy:windows:
+build_deploy_all_others:windows:
   stage: build_deploy
   only:
      - triggers
@@ -162,7 +162,7 @@ build_deploy:windows:
     #- aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/doc --recursive --exclude "*" --include "*.zip"
   retry: 1
   cache:
-    key: windows
+    key: openstudio_windows
     untracked: true
     policy: pull
     paths:
@@ -186,7 +186,7 @@ build_deploy:windows:
       - build/src/
       #- build/doc/OpenStudio-*.zip
 
-build_deploy:mac:
+build_deploy_all_others:mac:
   stage: build_deploy
   only:
     - triggers
@@ -204,7 +204,7 @@ build_deploy:mac:
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Darwin.zip"
   retry: 1
   cache:
-    key: mac
+    key: openstudio_mac
     untracked: true
     policy: pull
     paths:
@@ -228,7 +228,7 @@ build_deploy:mac:
       - build/sketchup_plugin/
       - build/src/
 
-build_deploy:ubuntu:
+build_deploy_all_others:ubuntu:
   stage: build_deploy
   only:
     - triggers
@@ -246,7 +246,7 @@ build_deploy:ubuntu:
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
   retry: 1
   cache:
-    key: ubuntu
+    key: openstudio_ubuntu
     untracked: true
     policy: pull
     paths:
@@ -268,7 +268,7 @@ build_deploy:ubuntu:
       - build/ruby/
       - build/sketchup_plugin/
       - build/src/
-      
+
 testCTest:windows:
   stage: testCTest
   only:
@@ -279,7 +279,7 @@ testCTest:windows:
   tags:
     - windows
   dependencies:
-    - build_deploy:windows
+    - build_deploy_all_others:windows
   script:
     - cd build
     - dir
@@ -296,7 +296,7 @@ testCTest:mac:
   tags:
     - mac
   dependencies:
-    - build_deploy:mac
+    - build_deploy_all_others:mac
   script:
     - cd build
     - ls
@@ -313,7 +313,7 @@ testCTest:ubuntu:
   tags:
     - ubuntu
   dependencies:
-    - build_deploy:ubuntu
+    - build_deploy_all_others:ubuntu
   script:
     - cd build
     - ls
@@ -330,7 +330,7 @@ testResources:windows:
   tags:
     - windows
   dependencies:
-    - build_deploy:windows
+    - build_deploy_all_others:windows
   script:
     - "rmdir c:\\\\openstudio\\ /s /q"
     - cd build
@@ -354,7 +354,7 @@ testResources:mac:
   tags:
     - mac
   dependencies:
-    - build_deploy:mac
+    - build_deploy_all_others:mac
   script:
     - rm -rf /OpenStudio
     - cd build
@@ -380,7 +380,7 @@ testResources:ubuntu:
   tags:
     - ubuntu
   dependencies:
-    - build_deploy:ubuntu
+    - build_deploy_all_others:ubuntu
   script:
     - rm -rf /OpenStudio
     - cd build
