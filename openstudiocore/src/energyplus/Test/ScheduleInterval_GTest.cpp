@@ -165,6 +165,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_Hourly)
   EXPECT_EQ(8760, numUntils);
 }
 
+/*
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted)
 {
   // Create the values vector
@@ -279,6 +280,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
   // check that there were 8760 untils
   EXPECT_EQ(8760, numUntils);
 }
+*/
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_20hours)
 {
@@ -623,6 +625,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly)
   EXPECT_EQ(8760, numUntils);
 }
 
+/*
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly_Shifted)
 {
   // Create the values vector and a vector of seconds from the start
@@ -735,6 +738,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly_Shift
   // check that there were 8760 untils
   EXPECT_EQ(8760, numUntils);
 }
+*/
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_500)
 {
@@ -882,6 +886,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_500)
   EXPECT_EQ(864, numUntils);
 }
 
+/*
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_500_Shifted)
 {
   // The vector of time deltas, randomly generated
@@ -1027,7 +1032,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_500_Shifted
   // check that there were 8760 untils
   EXPECT_EQ(864, numUntils);
 }
+*/
 
+/*
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_DaysTimeSeries)
 {
   // The vector of time deltas, randomly generated
@@ -1202,3 +1209,4 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleVariableInterval_DaysTimeSer
   // check that there were XX untils
   //EXPECT_EQ(864, numUntils);
 }
+*/
