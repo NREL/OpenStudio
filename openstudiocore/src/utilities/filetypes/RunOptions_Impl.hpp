@@ -61,6 +61,10 @@ namespace detail {
     bool setPreserveRunDir(bool preserve);
     void resetPreserveRunDir();
 
+    bool skipExpandObjects() const;
+    bool setSkipExpandObjects(bool skip);
+    void resetSkipExpandObjects();
+
     bool cleanup() const;
     bool setCleanup(bool cleanup);
     void resetCleanup();
@@ -83,6 +87,7 @@ namespace detail {
 
     bool m_debug;
     bool m_preserveRunDir;
+    bool m_skipExpandObjects;
     bool m_cleanup;
     boost::optional<CustomOutputAdapter> m_customOutputAdapter;
   };

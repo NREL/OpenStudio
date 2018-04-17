@@ -79,6 +79,10 @@ public:
   bool setPreserveRunDir(bool preserve);
   void resetPreserveRunDir();
 
+  bool skipExpandObjects() const;
+  bool setSkipExpandObjects(bool skip);
+  void resetSkipExpandObjects();
+
   bool cleanup() const;
   bool setCleanup(bool cleanup);
   void resetCleanup();

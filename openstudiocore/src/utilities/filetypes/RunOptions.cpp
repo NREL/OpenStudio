@@ -38,7 +38,7 @@ namespace openstudio{
 namespace detail{
 
   RunOptions_Impl::RunOptions_Impl()
-    : m_debug(false), m_preserveRunDir(false), m_cleanup(true)
+    : m_debug(false), m_preserveRunDir(false), m_skipExpandObjects(false), m_cleanup(true)
   {}
 
   RunOptions_Impl::~RunOptions_Impl()
@@ -59,6 +59,10 @@ namespace detail{
 
     if (m_preserveRunDir){
       result["preserve_run_dir"] = m_preserveRunDir;
+    }
+
+    if (m_skipExpandObjects){
+      result["skip_expand_objects"] = m_skipExpandObjects;
     }
 
     if (m_customOutputAdapter){
@@ -114,6 +118,24 @@ namespace detail{
   void RunOptions_Impl::resetPreserveRunDir()
   {
     m_preserveRunDir = false;
+    onUpdate();
+  }
+
+  bool RunOptions_Impl::skipExpandObjects() const
+  {
+    return m_skipExpandObjects;
+  }
+
+  bool RunOptions_Impl::setSkipExpandObjects(bool skip)
+  {
+    m_skipExpandObjects = skip;
+    onUpdate();
+    return true;
+  }
+
+  void RunOptions_Impl::resetSkipExpandObjects()
+  {
+    m_skipExpandObjects = false;
     onUpdate();
   }
 
@@ -204,6 +226,10 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s)
     result->setPreserveRunDir(value["preserve_run_dir"].asBool());
   }
 
+  if (value.isMember("skip_expand_objects") && value["skip_expand_objects"].isBool()){
+    result->setSkipExpandObjects(value["skip_expand_objects"].asBool());
+  }
+
   if (value.isMember("output_adapter")){
     Json::Value outputAdapter = value["output_adapter"];
     if (outputAdapter.isMember("custom_file_name") && outputAdapter.isMember("class_name")){
@@ -254,6 +280,21 @@ bool RunOptions::setPreserveRunDir(bool preserve)
 void RunOptions::resetPreserveRunDir()
 {
   getImpl<detail::RunOptions_Impl>()->resetPreserveRunDir();
+}
+
+bool RunOptions::skipExpandObjects() const
+{
+  return getImpl<detail::RunOptions_Impl>()->skipExpandObjects();
+}
+
+bool RunOptions::setSkipExpandObjects(bool preserve)
+{
+  return getImpl<detail::RunOptions_Impl>()->setSkipExpandObjects(preserve);
+}
+
+void RunOptions::resetSkipExpandObjects()
+{
+  getImpl<detail::RunOptions_Impl>()->resetSkipExpandObjects();
 }
 
 bool RunOptions::cleanup() const
