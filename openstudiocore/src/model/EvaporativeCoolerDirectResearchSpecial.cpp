@@ -356,13 +356,6 @@ namespace detail{
     return result;
   }
 
-  void EvaporativeCoolerDirectResearchSpecial_Impl::resetEvaporativeOperationMaximumLimitDrybulbTemperature() {
-    bool result = setString(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDrybulbTemperature, "");
-    OS_ASSERT(result);
-  }
-
-
-
 
   boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::autosizedRecirculatingWaterPumpPowerConsumption() const {
     return getAutosizedValue("Recirculating Pump Power", "W");

@@ -147,16 +147,16 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectRe
     idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::WaterPumpPowerModifierCurveName,_curve->name().get());
   }
 
-  // Evaporative Operation Minimum Drybulb Temperature (Optional Double)
+  // Evaporative Operation Minimum Drybulb Temperature (Double)
   idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature,
                       modelObject.evaporativeOperationMinimumDrybulbTemperature());
 
 
-  // Evaporative Operation Maximum Limit Wetbulb Temperature (Optional Double)
+  // Evaporative Operation Maximum Limit Wetbulb Temperature (Double)
   idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature,
                       modelObject.evaporativeOperationMaximumLimitWetbulbTemperature());
 
-  // Evaporative Operation Maximum Limit Drybulb Temperature (Optional Double)
+  // Evaporative Operation Maximum Limit Drybulb Temperature (Double)
   idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDrybulbTemperature,
                       modelObject.evaporativeOperationMaximumLimitDrybulbTemperature());
 
