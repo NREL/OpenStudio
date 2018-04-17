@@ -1,7 +1,16 @@
 stages:
 - build_deploy
+- deploy_latest_master
 - testCTest
 - testResources
+
+build_deploy_develop:
+  stage: build_deploy
+  only:
+    - develop
+  script:
+    # Empty s3://openstudio-builds/develop/latest/
+    - aws s3 rm s3://openstudio-builds/develop/latest/ --recursive
 
 build_deploy_develop:windows:
   stage: build_deploy
@@ -11,20 +20,25 @@ build_deploy_develop:windows:
     - windows
   script:
     #- rd /s /q build
+    - if exist OpenStudio-2.*-Windows.exe del OpenStudio-2.*-Windows.exe
     - if not exist "build" mkdir build
     - cd build
     - cmake -G "Visual Studio 12 2013 Win64" ../openstudiocore
     # PAT does not build in the OpenStudio CI, at the moment
     - cmake -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF  ../openstudiocore
     - cmake - ../openstudiocore
-    - cmake --build . --config Release --target ALL_BUILD
-    - cmake --build . --config Release --target ALL_BUILD
-    - cmake --build . --config Release --target PACKAGE
+    #- cmake --build . --config Release --target ALL_BUILD
+    #- cmake --build . --config Release --target PACKAGE
+    # Use IncrediBuild
+    - BuildConsole.exe OpenStudio.sln /cfg="Release|x64" /prj="ALL_BUILD"
+    - BuildConsole.exe OpenStudio.sln /cfg="Release|x64" /prj="PACKAGE"
     #- cmake --build . --config Release --target ALL_DOXYGEN # docs do not build without errors
+    - if exist "package" rd /S /Q package
     - mkdir package
     - copy OpenStudio-2.*-Windows.exe package
     - cd package
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Windows.exe"
+    - aws s3 cp ./ s3://openstudio-builds/develop/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Windows.exe"
     - cd ../
     #- cd /doc
     #- aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/doc --recursive --exclude "*" --include "*.zip"
@@ -46,7 +60,7 @@ build_deploy_develop:windows:
       - build/CTestTestfile.cmake
       - build/csharp/
       - build/embedded/
-      - build/pat/
+      #- build/pat/
       - build/Products/
       - build/resources/
       - build/ruby/
@@ -61,6 +75,7 @@ build_deploy_develop:mac:
   tags:
     - mac
   script:
+    - rm -f OpenStudio-2.*-Darwin.zip
     - mkdir -p build
     - cd build
     - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
@@ -68,6 +83,7 @@ build_deploy_develop:mac:
     - cd _CPack_Packages/Darwin/IFW
     - zip -r `ls -1 | grep OpenStudio-*.app | sed -e 's/\.app$//'`.zip OpenStudio-*.app
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Darwin.zip"
+    - aws s3 cp ./ s3://openstudio-builds/develop/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Darwin.zip"
   retry: 1
   cache:
     key: openstudio_mac
@@ -85,7 +101,6 @@ build_deploy_develop:mac:
       - build/CTestTestfile.cmake
       - build/OpenStudioCoreConfig.cmake
       - build/CTestTestfile.cmake
-      - build/csharp/
       - build/embedded/
       - build/pat/
       - build/Products/
@@ -101,6 +116,7 @@ build_deploy_develop:ubuntu:
   tags:
     - ubuntu
   script:
+    - rm -f OpenStudio-2.*-Linux.deb
     - mkdir -p build
     - cd build
     - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=ON -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
@@ -108,6 +124,7 @@ build_deploy_develop:ubuntu:
     - cd _CPack_Packages/Linux/DEB
     - rm -rf `ls -d */ | grep OpenStudio-2.*-Linux`
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
+    - aws s3 cp ./ s3://openstudio-builds/develop/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
   retry: 1
   cache:
     key: openstudio_ubuntu
@@ -124,9 +141,7 @@ build_deploy_develop:ubuntu:
       - build/CTestTestfile.cmake
       - build/OpenStudioCoreConfig.cmake
       - build/CTestTestfile.cmake
-      - build/csharp/
       - build/embedded/
-      - build/pat/
       - build/Products/
       - build/resources/
       - build/ruby/
@@ -143,16 +158,20 @@ build_deploy_all_others:windows:
     - windows
   script:
     #- rd /s /q build
+    - if exist OpenStudio-2.*-Windows.exe del OpenStudio-2.*-Windows.exe
     - if not exist "build" mkdir build
     - cd build
     - cmake -G "Visual Studio 12 2013 Win64" ../openstudiocore
     # PAT does not build in the OpenStudio CI, at the moment
     - cmake -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF  ../openstudiocore
     - cmake - ../openstudiocore
-    - cmake --build . --config Release --target ALL_BUILD
-    - cmake --build . --config Release --target ALL_BUILD
-    - cmake --build . --config Release --target PACKAGE
+    #- cmake --build . --config Release --target ALL_BUILD
+    #- cmake --build . --config Release --target PACKAGE
+    # Use IncrediBuild
+    - BuildConsole.exe OpenStudio.sln /cfg="Release|x64" /prj="ALL_BUILD"
+    - BuildConsole.exe OpenStudio.sln /cfg="Release|x64" /prj="PACKAGE"
     #- cmake --build . --config Release --target ALL_DOXYGEN # docs do not build without errors
+    - if exist "package" rd /S /Q package
     - mkdir package
     - copy OpenStudio-2.*-Windows.exe package
     - cd package
@@ -178,7 +197,7 @@ build_deploy_all_others:windows:
       - build/CTestTestfile.cmake
       - build/csharp/
       - build/embedded/
-      - build/pat/
+      #- build/pat/
       - build/Products/
       - build/resources/
       - build/ruby/
@@ -195,6 +214,7 @@ build_deploy_all_others:mac:
   tags:
     - mac
   script:
+    - rm -f OpenStudio-2.*-Darwin.zip
     - mkdir -p build
     - cd build
     - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
@@ -219,7 +239,6 @@ build_deploy_all_others:mac:
       - build/CTestTestfile.cmake
       - build/OpenStudioCoreConfig.cmake
       - build/CTestTestfile.cmake
-      - build/csharp/
       - build/embedded/
       - build/pat/
       - build/Products/
@@ -237,6 +256,7 @@ build_deploy_all_others:ubuntu:
   tags:
     - ubuntu
   script:
+    - rm -f OpenStudio-2.*-Linux.deb
     - mkdir -p build
     - cd build
     - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=ON -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
@@ -260,14 +280,57 @@ build_deploy_all_others:ubuntu:
       - build/CTestTestfile.cmake
       - build/OpenStudioCoreConfig.cmake
       - build/CTestTestfile.cmake
-      - build/csharp/
       - build/embedded/
-      - build/pat/
       - build/Products/
       - build/resources/
       - build/ruby/
       - build/sketchup_plugin/
       - build/src/
+
+deploy_latest_master:
+  stage: deploy_latest_master
+  only:
+    - master
+  dependencies:
+    - build_deploy_all_others:windows
+    - build_deploy_all_others:mac
+    - build_deploy_all_others:ubuntu
+  script:
+    # Empty s3://openstudio-builds/master/latest/
+    - aws s3 rm s3://openstudio-builds/master/latest/ --recursive
+
+deploy_latest_master:windows:
+  stage: deploy_latest_master
+  only:
+    - master
+  tags:
+    - windows
+  dependencies:
+    - build_deploy_all_others:windows
+  script:
+    - aws s3 cp ./ s3://openstudio-builds/master/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Windows.exe"
+
+deploy_latest_master:mac:
+  stage: deploy_latest_master
+  only:
+    - master
+  tags:
+    - mac
+  dependencies:
+    - build_deploy_all_others:mac
+  script:
+    - aws s3 cp ./ s3://openstudio-builds/master/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Darwin.zip"
+
+deploy_latest_master:ubuntu:
+  stage: deploy_latest_master
+  only:
+    - master
+  tags:
+    - ubuntu
+  dependencies:
+    - build_deploy_all_others:ubuntu
+  script:
+    - aws s3 cp ./ s3://openstudio-builds/master/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
 
 testCTest:windows:
   stage: testCTest
