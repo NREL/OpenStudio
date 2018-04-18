@@ -581,6 +581,9 @@ set(${target_name}_src
   ElectricLoadCenterInverterSimple.hpp
   ElectricLoadCenterInverterSimple_Impl.hpp
   ElectricLoadCenterInverterSimple.cpp
+  ElectricLoadCenterInverterPVWatts.hpp
+  ElectricLoadCenterInverterPVWatts_Impl.hpp
+  ElectricLoadCenterInverterPVWatts.cpp
   ElectricLoadCenterStorageSimple.hpp
   ElectricLoadCenterStorageSimple_Impl.hpp
   ElectricLoadCenterStorageSimple.cpp
@@ -788,6 +791,9 @@ set(${target_name}_src
   GeneratorPhotovoltaic.hpp
   GeneratorPhotovoltaic_Impl.hpp
   GeneratorPhotovoltaic.cpp
+  GeneratorPVWatts.hpp
+  GeneratorPVWatts_Impl.hpp
+  GeneratorPVWatts.cpp
   GlareSensor.hpp
   GlareSensor_Impl.hpp
   GlareSensor.cpp
@@ -1748,6 +1754,7 @@ set(${target_name}_test_src
   test/ElectricEquipment_GTest.cpp
   test/ElectricLoadCenterDistribution_GTest.cpp
   test/ElectricLoadCenterInverterSimple_GTest.cpp
+  test/ElectricLoadCenterInverterPVWatts_GTest.cpp
   test/ElectricLoadCenterInverterLookUpTable_GTest.cpp
   test/ElectricLoadCenterStorageSimple_GTest.cpp
   test/ElectricLoadCenterStorageConverter_GTest.cpp
@@ -1809,6 +1816,7 @@ set(${target_name}_test_src
   test/GeneratorFuelSupply_GTest.cpp
   test/GeneratorPhotovoltaic_GTest.cpp
   test/GeneratorMicroTurbine_GTest.cpp
+  test/GeneratorPVWatts_GTest.cpp
   test/GlareSensor_GTest.cpp
   test/GroundHeatExchangerHorizontalTrench_GTest.cpp
   test/GroundHeatExchangerVertical_GTest.cpp
