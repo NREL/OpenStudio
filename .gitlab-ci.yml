@@ -43,12 +43,6 @@ build_deploy_develop:windows:
     #- cd /doc
     #- aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/doc --recursive --exclude "*" --include "*.zip"
   retry: 1
-  cache:
-    key: openstudio_windows
-    untracked: true
-    #policy: push # NOTE: use default pull-push policy
-    paths:
-      - build
   artifacts:
     expire_in: 24 hrs
     paths:
@@ -57,7 +51,6 @@ build_deploy_develop:windows:
       - build/CPackSourceConfig.cmake
       - build/CTestTestfile.cmake
       - build/OpenStudioCoreConfig.cmake
-      - build/CTestTestfile.cmake
       - build/csharp/
       - build/embedded/
       #- build/pat/
@@ -67,6 +60,12 @@ build_deploy_develop:windows:
       - build/sketchup_plugin/
       - build/src/
       #- build/doc/OpenStudio-*.zip
+  cache:
+    key: openstudio_windows
+    untracked: true
+    #policy: push # NOTE: use default pull-push policy
+    paths:
+      - build
 
 build_deploy_develop:mac:
   stage: build_deploy
@@ -85,12 +84,6 @@ build_deploy_develop:mac:
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Darwin.zip"
     - aws s3 cp ./ s3://openstudio-builds/develop/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Darwin.zip"
   retry: 1
-  cache:
-    key: openstudio_mac
-    untracked: true
-    #policy: push # NOTE: use default pull-push policy
-    paths:
-      - build
   artifacts:
     expire_in: 24 hrs
     paths:
@@ -100,7 +93,6 @@ build_deploy_develop:mac:
       - build/CPackSourceConfig.cmake
       - build/CTestTestfile.cmake
       - build/OpenStudioCoreConfig.cmake
-      - build/CTestTestfile.cmake
       - build/embedded/
       - build/pat/
       - build/Products/
@@ -108,6 +100,12 @@ build_deploy_develop:mac:
       - build/ruby/
       - build/sketchup_plugin/
       - build/src/
+  cache:
+    key: openstudio_mac
+    untracked: true
+    #policy: push # NOTE: use default pull-push policy
+    paths:
+      - build
 
 build_deploy_develop:ubuntu:
   stage: build_deploy
@@ -126,12 +124,6 @@ build_deploy_develop:ubuntu:
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
     - aws s3 cp ./ s3://openstudio-builds/develop/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
   retry: 1
-  cache:
-    key: openstudio_ubuntu
-    untracked: true
-    #policy: push # NOTE: use default pull-push policy
-    paths:
-      - build
   artifacts:
     expire_in: 24 hrs
     paths:
@@ -140,13 +132,18 @@ build_deploy_develop:ubuntu:
       - build/CPackSourceConfig.cmake
       - build/CTestTestfile.cmake
       - build/OpenStudioCoreConfig.cmake
-      - build/CTestTestfile.cmake
       - build/embedded/
       - build/Products/
       - build/resources/
       - build/ruby/
       - build/sketchup_plugin/
       - build/src/
+  cache:
+    key: openstudio_ubuntu
+    untracked: true
+    #policy: push # NOTE: use default pull-push policy
+    paths:
+      - build
 
 build_deploy_all_others:windows:
   stage: build_deploy
@@ -180,12 +177,6 @@ build_deploy_all_others:windows:
     #- cd /doc
     #- aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/doc --recursive --exclude "*" --include "*.zip"
   retry: 1
-  cache:
-    key: openstudio_windows
-    untracked: true
-    policy: pull
-    paths:
-      - build
   artifacts:
     expire_in: 24 hrs
     paths:
@@ -194,7 +185,6 @@ build_deploy_all_others:windows:
       - build/CPackSourceConfig.cmake
       - build/CTestTestfile.cmake
       - build/OpenStudioCoreConfig.cmake
-      - build/CTestTestfile.cmake
       - build/csharp/
       - build/embedded/
       #- build/pat/
@@ -204,6 +194,12 @@ build_deploy_all_others:windows:
       - build/sketchup_plugin/
       - build/src/
       #- build/doc/OpenStudio-*.zip
+  cache:
+    key: openstudio_windows
+    untracked: true
+    policy: pull
+    paths:
+      - build
 
 build_deploy_all_others:mac:
   stage: build_deploy
@@ -223,12 +219,6 @@ build_deploy_all_others:mac:
     - zip -r `ls -1 | grep OpenStudio-*.app | sed -e 's/\.app$//'`.zip OpenStudio-*.app
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Darwin.zip"
   retry: 1
-  cache:
-    key: openstudio_mac
-    untracked: true
-    policy: pull
-    paths:
-      - build
   artifacts:
     expire_in: 24 hrs
     paths:
@@ -238,7 +228,6 @@ build_deploy_all_others:mac:
       - build/CPackSourceConfig.cmake
       - build/CTestTestfile.cmake
       - build/OpenStudioCoreConfig.cmake
-      - build/CTestTestfile.cmake
       - build/embedded/
       - build/pat/
       - build/Products/
@@ -246,7 +235,13 @@ build_deploy_all_others:mac:
       - build/ruby/
       - build/sketchup_plugin/
       - build/src/
-
+  cache:
+    key: openstudio_mac
+    untracked: true
+    policy: pull
+    paths:
+      - build
+      
 build_deploy_all_others:ubuntu:
   stage: build_deploy
   only:
@@ -265,12 +260,6 @@ build_deploy_all_others:ubuntu:
     - rm -rf `ls -d */ | grep OpenStudio-2.*-Linux`
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
   retry: 1
-  cache:
-    key: openstudio_ubuntu
-    untracked: true
-    policy: pull
-    paths:
-      - build
   artifacts:
     expire_in: 24 hrs
     paths:
@@ -279,14 +268,19 @@ build_deploy_all_others:ubuntu:
       - build/CPackSourceConfig.cmake
       - build/CTestTestfile.cmake
       - build/OpenStudioCoreConfig.cmake
-      - build/CTestTestfile.cmake
       - build/embedded/
       - build/Products/
       - build/resources/
       - build/ruby/
       - build/sketchup_plugin/
       - build/src/
-
+  cache:
+    key: openstudio_ubuntu
+    untracked: true
+    policy: pull
+    paths:
+      - build
+      
 deploy_latest_master:
   stage: deploy_latest_master
   only:
@@ -407,54 +401,54 @@ testResources:windows:
     - openstudio.exe ../OpenStudio-resources/model_tests.rb"
   allow_failure: true
 
-testResources:mac:
-  stage: testResources
-  only:
-    - triggers
-    - master
-    - iteration
-    - develop
-  tags:
-    - mac
-  dependencies:
-    - build_deploy_all_others:mac
-  script:
-    - rm -rf /OpenStudio
-    - cd build
-    - ls
-    - unzip `ls | grep OpenStudio*.zip`
-    - ls
-    - mv `ls | grep OpenStudio*.app` openstudio
-    - ls
-    - ./openstudio --script install.qs
-    - cd OpenStudio/
-    - git clone https://github.com/NREL/OpenStudio-resources.git
-    - cd bin/
-    - ./openstudio ../OpenStudio-resources/model_tests.rb
-  allow_failure: true
+#testResources:mac:
+#  stage: testResources
+#  only:
+#    - triggers
+#    - master
+#    - iteration
+#    - develop
+#  tags:
+#    - mac
+#  dependencies:
+#    - build_deploy_all_others:mac
+#  script:
+#    - rm -rf /OpenStudio
+#    - cd build
+#    - ls
+#    - unzip `ls | grep OpenStudio*.zip`
+#    - ls
+#    - mv `ls | grep OpenStudio*.app` openstudio
+#    - ls
+#    - ./openstudio --script install.qs
+#    - cd OpenStudio/
+#    - git clone https://github.com/NREL/OpenStudio-resources.git
+#    - cd bin/
+#    - ./openstudio ../OpenStudio-resources/model_tests.rb
+#  allow_failure: true
 
-testResources:ubuntu:
-  stage: testResources
-  only:
-    - triggers
-    - master
-    - iteration
-    - develop
-  tags:
-    - ubuntu
-  dependencies:
-    - build_deploy_all_others:ubuntu
-  script:
-    - rm -rf /OpenStudio
-    - cd build
-    - ls
-    - mv `ls | grep OpenStudio*.deb` openstudio
-    - ls
-    - ./openstudio
-    - cd OpenStudio/
-    - git clone https://github.com/NREL/OpenStudio-resources.git
-    - cd bin/
-    - ./openstudio ../OpenStudio-resources/model_tests.rb
-  allow_failure: true
+#testResources:ubuntu:
+#  stage: testResources
+#  only:
+#    - triggers
+#    - master
+#    - iteration
+#    - develop
+#  tags:
+#    - ubuntu
+#  dependencies:
+#    - build_deploy_all_others:ubuntu
+#  script:
+#    - rm -rf /OpenStudio
+#    - cd build
+#    - ls
+#    - mv `ls | grep OpenStudio*.deb` openstudio
+#    - ls
+#    - ./openstudio
+#    - cd OpenStudio/
+#    - git clone https://github.com/NREL/OpenStudio-resources.git
+#    - cd bin/
+#    - ./openstudio ../OpenStudio-resources/model_tests.rb
+#  allow_failure: true
   
   
