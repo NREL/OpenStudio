@@ -2,16 +2,31 @@ REM Install http://gnuwin32.sourceforge.net/packages/bison.htm and http://gnuwin
 
 call C:\Devkit\devkitvars.bat
 
+REM If running from command line, also call
+REM "c:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x64
+
 REM The build process litters the source tree with the extension binaries
 REM so we make a copy of the clean source tree. One for release and one for debug
 XCOPY /e /i /Y . ..\Ruby-release
 XCOPY /e /i /Y . ..\Ruby-debug
 
+MKDIR ..\Ruby-depends
+MKDIR ..\Ruby-depends\OpenSSL
+MKDIR ..\Ruby-depends\OpenSSL\include
+MKDIR ..\Ruby-depends\OpenSSL\lib
+MKDIR ..\Ruby-depends\OpenSSL\lib\debug
+MKDIR ..\Ruby-depends\OpenSSL\lib\release
+XCOPY /e /i /Y "${CMAKE_BINARY_DIR}/OpenSSL-Win64/include/."  ..\Ruby-depends\OpenSSL\include\
+COPY /Y "${CMAKE_BINARY_DIR}/OpenSSL-Win64/lib/VC/static\libeay32MDd.lib"  ..\Ruby-depends\OpenSSL\lib\debug\libeay32.lib
+COPY /Y "${CMAKE_BINARY_DIR}/OpenSSL-Win64/lib/VC/static\ssleay32MDd.lib"  ..\Ruby-depends\OpenSSL\lib\debug\ssleay32.lib
+COPY /Y "${CMAKE_BINARY_DIR}/OpenSSL-Win64/lib/VC/static\libeay32MD.lib"  ..\Ruby-depends\OpenSSL\lib\release\libeay32.lib
+COPY /Y "${CMAKE_BINARY_DIR}/OpenSSL-Win64/lib/VC/static\ssleay32MD.lib"  ..\Ruby-depends\OpenSSL\lib\release\ssleay32.lib
+
 REM targets are i386-mswin32 or x64-mswin64
 
 cd ..\Ruby-release
-set CFLAGS = MD -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600 
-call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-openssl-include="${CMAKE_BINARY_DIR}/OpenSSL-Win64/include/" --with-openssl-lib="${CMAKE_BINARY_DIR}/OpenSSL-Win64/lib/VC/static/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release" --target=x64-mswin64
+set CFLAGS = MD -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600 -MP 
+call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-openssl-include="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-depends/OpenSSL/include/" --with-openssl-lib="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-depends/OpenSSL/lib/release/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release" --target=x64-mswin64
 set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstatic.lib"
 nmake libenc
 nmake libtrans
@@ -28,8 +43,8 @@ for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/" %%f in (*.lib) do
 )
 
 cd ..\Ruby-debug
-set CFLAGS = MDd -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600
-call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-openssl-include="${CMAKE_BINARY_DIR}/OpenSSL-Win64/include/" --with-openssl-lib="${CMAKE_BINARY_DIR}/OpenSSL-Win64/lib/VC/static/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug" --target=x64-mswin64
+set CFLAGS = MDd -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600 -MP 
+call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-openssl-include="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-depends/OpenSSL/include/" --with-openssl-lib="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-depends/OpenSSL/lib/debug/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug" --target=x64-mswin64
 set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstaticd.lib"
 nmake libenc
 nmake libtrans
