@@ -472,9 +472,6 @@ testCTest_all_others:ubuntu:
 testResources_develop:windows:
   stage: testResources
   only:
-    - triggers
-    - master
-    - iteration
     - develop
   tags:
     - windows
@@ -497,7 +494,6 @@ testResources_all_others:windows:
     - triggers
     - master
     - iteration
-    - develop
   tags:
     - windows
   dependencies:
