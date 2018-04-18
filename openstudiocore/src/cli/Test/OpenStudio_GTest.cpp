@@ -31,23 +31,37 @@
 #include "OpenStudioFixture.hpp"
 
 #include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/String.hpp"
 #include <resources.hxx>
 
-#include <sstream>
-#include <cstdlib>
+#include <QProcess>
 
-std::string makeCommand(const std::string& args)
+QString program()
 {
-  std::stringstream ss;
-  ss << openstudio::getOpenStudioCLI() << " " << args;
-  std::string result = ss.str();
-  return result;
+  return openstudio::toQString(openstudio::getOpenStudioCLI());
 }
+
 
 TEST_F(OpenStudioFixture, Commands)
 {
-  EXPECT_EQ(0, std::system(makeCommand("-v").c_str()));
-  EXPECT_EQ(0, std::system(makeCommand("--help").c_str()));
-  EXPECT_EQ(0, std::system(makeCommand("-e \"puts OpenStudio::Model::exampleModel\"").c_str()));
-  //EXPECT_EQ(0, std::system(makeCommand("-e \"require 'openssl'\" -e \"puts OpenSSL::PKey::RSA.new\"").c_str())); // tests issue #2704
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "--help" }));
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "energyplus_version", "--help" }));
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "execute_ruby_script", "--help" }));
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "gem_list", "--help" }));
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "list_commands", "--help" }));
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "measure", "--help" }));
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "openstudio_version", "--help" }));
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "ruby_version", "--help" }));
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "run", "--help" }));
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "update", "--help" }));
+
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "energyplus_version" }));
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "gem_list" }));
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "list_commands" }));
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "openstudio_version" }));
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "ruby_version" }));
+
+  EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "-e", "puts OpenStudio::Model::exampleModel()" }));
+
+  //EXPECT_EQ(0, QProcess::execute(program(), QStringList{ "-e", "require 'openssl'", "-e", "puts OpenSSL::PKey::RSA.new" })); // issue 2704
 }

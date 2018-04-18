@@ -220,4 +220,22 @@ if( BUILD_PAT )
   endif()
 endif()
 
+set(openstudio_test_src
+  Test/OpenStudioFixture.hpp
+  Test/OpenStudioFixture.cpp
+  Test/OpenStudio_GTest.cpp
+)
 
+set(openstudio_test_depends
+  ${Boost_LIBRARIES}
+  ${CMAKE_THREAD_LIBS}
+  openstudio_utilities
+  #zkexpat
+)
+
+CREATE_TEST_TARGETS(openstudio "${openstudio_test_src}" "${openstudio_test_depends}")
+if(BUILD_TESTING)
+  target_include_directories(openstudio_tests PUBLIC ${QT_INCLUDES})
+  add_dependencies(openstudio_tests openstudio)
+  #add_dependencies(openstudio_tests openstudio_resources)
+endif()
