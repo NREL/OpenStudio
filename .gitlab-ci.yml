@@ -23,6 +23,9 @@ build_deploy_develop:windows:
     - if exist OpenStudio-2.*-Windows.exe del OpenStudio-2.*-Windows.exe
     - if not exist "build" mkdir build
     - cd build
+    - dir
+    - rm OpenStudio-2.*-Windows.exe
+    - dir
     - cmake -G "Visual Studio 12 2013 Win64" ../openstudiocore
     # PAT does not build in the OpenStudio CI, at the moment
     - cmake -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF  ../openstudiocore
@@ -36,6 +39,7 @@ build_deploy_develop:windows:
     - if exist "package" rd /S /Q package
     - mkdir package
     - copy OpenStudio-2.*-Windows.exe package
+    - move /y OpenStudio-2.*-Windows.exe OpenStudio.exe
     - cd package
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Windows.exe"
     - aws s3 cp ./ s3://openstudio-builds/develop/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Windows.exe"
@@ -46,20 +50,21 @@ build_deploy_develop:windows:
   artifacts:
     expire_in: 24 hrs
     paths:
-      - build/OpenStudio-2.*-Windows.exe
-      - build/CPackConfig.cmake
-      - build/CPackSourceConfig.cmake
-      - build/CTestTestfile.cmake
-      - build/OpenStudioCoreConfig.cmake
-      - build/csharp/
-      - build/embedded/
-      #- build/pat/
-      - build/Products/
-      - build/resources/
-      - build/ruby/
-      - build/sketchup_plugin/
-      - build/src/
-      #- build/doc/OpenStudio-*.zip
+      - build/
+      #- build/OpenStudio.exe
+      #- build/CPackConfig.cmake
+      #- build/CPackSourceConfig.cmake
+      #- build/CTestTestfile.cmake
+      #- build/OpenStudioCoreConfig.cmake
+      #- build/csharp/
+      #- build/embedded/
+      ##- build/pat/
+      #- build/Products/
+      #- build/resources/
+      #- build/ruby/
+      #- build/sketchup_plugin/
+      #- build/src/
+      ##- build/doc/OpenStudio-*.zip
   cache:
     key: openstudio_windows
     untracked: true
@@ -74,32 +79,41 @@ build_deploy_develop:mac:
   tags:
     - mac
   script:
+    - date +%R
+    - ls
+    - mkdir -p build/_CPack_Packages/Darwin/IFW
+    - cd build/_CPack_Packages/Darwin/IFW
+    - ls
     - rm -f OpenStudio-2.*-Darwin.zip
-    - mkdir -p build
-    - cd build
+    - ls
+    - date +%R
+    - cd ../../../
+    - pwd
+    - ls
     - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
     - make -j16 package
+    - date +%R
     - cd _CPack_Packages/Darwin/IFW
     - zip -r `ls -1 | grep OpenStudio-*.app | sed -e 's/\.app$//'`.zip OpenStudio-*.app
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Darwin.zip"
     - aws s3 cp ./ s3://openstudio-builds/develop/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Darwin.zip"
+    - date +%R
   retry: 1
   artifacts:
     expire_in: 24 hrs
     paths:
-      - build/OpenStudio-2.*-Darwin.zip
-      - build/OpenStudio-2.*-Darwin.app
-      - build/CPackConfig.cmake
-      - build/CPackSourceConfig.cmake
-      - build/CTestTestfile.cmake
-      - build/OpenStudioCoreConfig.cmake
-      - build/embedded/
-      - build/pat/
-      - build/Products/
-      - build/resources/
-      - build/ruby/
-      - build/sketchup_plugin/
-      - build/src/
+      - build/
+      #- build/CPackConfig.cmake
+      #- build/CPackSourceConfig.cmake
+      #- build/CTestTestfile.cmake
+      #- build/OpenStudioCoreConfig.cmake
+      #- build/embedded/
+      #- build/pat/
+      #- build/Products/
+      #- build/resources/
+      #- build/ruby/
+      #- build/sketchup_plugin/
+      #- build/src/
   cache:
     key: openstudio_mac
     untracked: true
@@ -114,30 +128,42 @@ build_deploy_develop:ubuntu:
   tags:
     - ubuntu
   script:
-    - rm -f OpenStudio-2.*-Linux.deb
+    - date +%R
+    - ls
     - mkdir -p build
     - cd build
+    - ls
+    - rm -f OpenStudio-2.*-Linux.deb
+    - ls
+    - date +%R
     - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=ON -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
     - make -j16 package
+    - mv OpenStudio-2.*-Linux.deb OpenStudio.deb
     - cd _CPack_Packages/Linux/DEB
+    - ls
     - rm -rf `ls -d */ | grep OpenStudio-2.*-Linux`
+    - ls
+    - date +%R
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
     - aws s3 cp ./ s3://openstudio-builds/develop/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
+    - date +%R
   retry: 1
   artifacts:
     expire_in: 24 hrs
     paths:
-      - build/OpenStudio-2.*-Linux.deb
-      - build/CPackConfig.cmake
-      - build/CPackSourceConfig.cmake
-      - build/CTestTestfile.cmake
-      - build/OpenStudioCoreConfig.cmake
-      - build/embedded/
-      - build/Products/
-      - build/resources/
-      - build/ruby/
-      - build/sketchup_plugin/
-      - build/src/
+      - build/
+      #- build/OpenStudio.deb
+      #- build/CPackConfig.cmake
+      #- build/CPackSourceConfig.cmake
+      #- build/CTestTestfile.cmake
+      #- build/OpenStudioCoreConfig.cmake
+      #- build/CTestTestfile.cmake
+      #- build/embedded/
+      #- build/Products/
+      #- build/resources/
+      #- build/ruby/
+      #- build/sketchup_plugin/
+      #- build/src/
   cache:
     key: openstudio_ubuntu
     untracked: true
@@ -158,6 +184,9 @@ build_deploy_all_others:windows:
     - if exist OpenStudio-2.*-Windows.exe del OpenStudio-2.*-Windows.exe
     - if not exist "build" mkdir build
     - cd build
+    - dir
+    - rm OpenStudio-2.*-Windows.exe
+    - dir
     - cmake -G "Visual Studio 12 2013 Win64" ../openstudiocore
     # PAT does not build in the OpenStudio CI, at the moment
     - cmake -DBUILD_CSHARP_BINDINGS=ON -DBUILD_DOCUMENTATION=ON -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF  ../openstudiocore
@@ -171,6 +200,7 @@ build_deploy_all_others:windows:
     - if exist "package" rd /S /Q package
     - mkdir package
     - copy OpenStudio-2.*-Windows.exe package
+    - move /y OpenStudio-2.*-Windows.exe OpenStudio.exe
     - cd package
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Windows.exe"
     - cd ../
@@ -180,20 +210,21 @@ build_deploy_all_others:windows:
   artifacts:
     expire_in: 24 hrs
     paths:
-      - build/OpenStudio-2.*-Windows.exe
-      - build/CPackConfig.cmake
-      - build/CPackSourceConfig.cmake
-      - build/CTestTestfile.cmake
-      - build/OpenStudioCoreConfig.cmake
-      - build/csharp/
-      - build/embedded/
-      #- build/pat/
-      - build/Products/
-      - build/resources/
-      - build/ruby/
-      - build/sketchup_plugin/
-      - build/src/
-      #- build/doc/OpenStudio-*.zip
+      - build/
+      #- build/OpenStudio.exe
+      #- build/CPackConfig.cmake
+      #- build/CPackSourceConfig.cmake
+      #- build/CTestTestfile.cmake
+      #- build/OpenStudioCoreConfig.cmake
+      #- build/csharp/
+      #- build/embedded/
+      ##- build/pat/
+      #- build/Products/
+      #- build/resources/
+      #- build/ruby/
+      #- build/sketchup_plugin/
+      #- build/src/
+      ##- build/doc/OpenStudio-*.zip
   cache:
     key: openstudio_windows
     untracked: true
@@ -210,38 +241,47 @@ build_deploy_all_others:mac:
   tags:
     - mac
   script:
+    - date +%R
+    - ls
+    - mkdir -p build/_CPack_Packages/Darwin/IFW
+    - cd build/_CPack_Packages/Darwin/IFW
+    - ls
     - rm -f OpenStudio-2.*-Darwin.zip
-    - mkdir -p build
-    - cd build
+    - ls
+    - date +%R
+    - cd ../../../
+    - pwd
+    - ls
     - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=OFF -DCPACK_BINARY_IFW=ON -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
     - make -j16 package
+    - date +%R
     - cd _CPack_Packages/Darwin/IFW
     - zip -r `ls -1 | grep OpenStudio-*.app | sed -e 's/\.app$//'`.zip OpenStudio-*.app
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Darwin.zip"
+    - date +%R
   retry: 1
   artifacts:
     expire_in: 24 hrs
     paths:
-      - build/OpenStudio-2.*-Darwin.zip
-      - build/OpenStudio-2.*-Darwin.app
-      - build/CPackConfig.cmake
-      - build/CPackSourceConfig.cmake
-      - build/CTestTestfile.cmake
-      - build/OpenStudioCoreConfig.cmake
-      - build/embedded/
-      - build/pat/
-      - build/Products/
-      - build/resources/
-      - build/ruby/
-      - build/sketchup_plugin/
-      - build/src/
+      - build/
+      #- build/CPackConfig.cmake
+      #- build/CPackSourceConfig.cmake
+      #- build/CTestTestfile.cmake
+      #- build/OpenStudioCoreConfig.cmake
+      #- build/embedded/
+      #- build/pat/
+      #- build/Products/
+      #- build/resources/
+      #- build/ruby/
+      #- build/sketchup_plugin/
+      #- build/src/
   cache:
     key: openstudio_mac
     untracked: true
     policy: pull
     paths:
       - build
-      
+
 build_deploy_all_others:ubuntu:
   stage: build_deploy
   only:
@@ -251,36 +291,49 @@ build_deploy_all_others:ubuntu:
   tags:
     - ubuntu
   script:
-    - rm -f OpenStudio-2.*-Linux.deb
+    - date +%R
+    - ls
     - mkdir -p build
     - cd build
+    - ls
+    - rm -f OpenStudio-2.*-Linux.deb
+    - ls
+    - date +%R
     - cmake -DOPENSSL_INCLUDE_DIR=/usr/bin/openssl -DBUILD_TESTING=ON -DBUILD_DVIEW=ON -DBUILD_OS_APP=ON -DBUILD_PACKAGE=ON -DBUILD_PAT=OFF -DCMAKE_BUILD_TYPE=Release -DCPACK_BINARY_DEB=ON -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TGZ=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../openstudiocore
     - make -j16 package
+    - mv OpenStudio-2.*-Linux.deb OpenStudio.deb
     - cd _CPack_Packages/Linux/DEB
+    - ls
     - rm -rf `ls -d */ | grep OpenStudio-2.*-Linux`
+    - ls
+    - date +%R
     - aws s3 cp ./ s3://openstudio-builds/_CI/OpenStudio/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
+    - aws s3 cp ./ s3://openstudio-builds/develop/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
+    - date +%R
   retry: 1
   artifacts:
     expire_in: 24 hrs
     paths:
-      - build/OpenStudio-2.*-Linux.deb
-      - build/CPackConfig.cmake
-      - build/CPackSourceConfig.cmake
-      - build/CTestTestfile.cmake
-      - build/OpenStudioCoreConfig.cmake
-      - build/embedded/
-      - build/Products/
-      - build/resources/
-      - build/ruby/
-      - build/sketchup_plugin/
-      - build/src/
+      - build/
+      #- build/OpenStudio.deb
+      #- build/CPackConfig.cmake
+      #- build/CPackSourceConfig.cmake
+      #- build/CTestTestfile.cmake
+      #- build/OpenStudioCoreConfig.cmake
+      #- build/CTestTestfile.cmake
+      #- build/embedded/
+      #- build/Products/
+      #- build/resources/
+      #- build/ruby/
+      #- build/sketchup_plugin/
+      #- build/src/
   cache:
     key: openstudio_ubuntu
     untracked: true
     policy: pull
     paths:
       - build
-      
+
 deploy_latest_master:
   stage: deploy_latest_master
   only:
@@ -326,13 +379,54 @@ deploy_latest_master:ubuntu:
   script:
     - aws s3 cp ./ s3://openstudio-builds/master/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
 
-testCTest:windows:
+testCTest_develop:windows:
+  stage: testCTest
+  only:
+    - develop
+  tags:
+    - windows
+  dependencies:
+    - build_deploy_develop:windows
+  script:
+    - cd build
+    - dir
+    - ctest
+  allow_failure: true
+
+testCTest_develop:mac:
+  stage: testCTest
+  only:
+    - develop
+  tags:
+    - mac
+  dependencies:
+    - build_deploy_develop:mac
+  script:
+    - cd build
+    - ls
+    - ctest
+  allow_failure: true
+
+testCTest_develop:ubuntu:
+  stage: testCTest
+  only:
+    - develop
+  tags:
+    - ubuntu
+  dependencies:
+    - build_deploy_develop:ubuntu
+  script:
+    - cd build
+    - ls
+    - ctest
+  allow_failure: true
+
+testCTest_all_others:windows:
   stage: testCTest
   only:
     - triggers
     - master
     - iteration
-    - develop
   tags:
     - windows
   dependencies:
@@ -343,13 +437,12 @@ testCTest:windows:
     - ctest
   allow_failure: true
 
-testCTest:mac:
+testCTest_all_others:mac:
   stage: testCTest
   only:
     - triggers
     - master
     - iteration
-    - develop
   tags:
     - mac
   dependencies:
@@ -360,13 +453,12 @@ testCTest:mac:
     - ctest
   allow_failure: true
 
-testCTest:ubuntu:
+testCTest_all_others:ubuntu:
   stage: testCTest
   only:
     - triggers
     - master
     - iteration
-    - develop
   tags:
     - ubuntu
   dependencies:
@@ -377,7 +469,29 @@ testCTest:ubuntu:
     - ctest
   allow_failure: true
 
-testResources:windows:
+testResources_develop:windows:
+  stage: testResources
+  only:
+    - triggers
+    - master
+    - iteration
+    - develop
+  tags:
+    - windows
+  dependencies:
+    - build_deploy_develop
+  script:
+    - "rmdir c:\\\\openstudio\\ /s /q"
+    - cd build
+    - dir
+    - OpenStudio.exe --script ../install.qs
+    - cd c://openstudio/
+    - git clone https://github.com/NREL/OpenStudio-resources.git
+    - cd bin/
+    - openstudio.exe ../OpenStudio-resources/model_tests.rb"
+  allow_failure: true
+
+testResources_all_others:windows:
   stage: testResources
   only:
     - triggers
@@ -392,9 +506,7 @@ testResources:windows:
     - "rmdir c:\\\\openstudio\\ /s /q"
     - cd build
     - dir
-    - xcopy *.exe win.exe*
-    - dir
-    - win.exe --script ../install.qs
+    - OpenStudio.exe --script ../install.qs
     - cd c://openstudio/
     - git clone https://github.com/NREL/OpenStudio-resources.git
     - cd bin/
