@@ -1,14 +1,17 @@
 REM Install http://gnuwin32.sourceforge.net/packages/bison.htm and http://gnuwin32.sourceforge.net/packages/sed.htm to a location with no spaces in the path and add to path
 
 call C:\Devkit\devkitvars.bat
+
 REM The build process litters the source tree with the extension binaries
 REM so we make a copy of the clean source tree. One for release and one for debug
 XCOPY /e /i /Y . ..\Ruby-release
 XCOPY /e /i /Y . ..\Ruby-debug
 
+REM targets are i386-mswin32 or x64-mswin64
+
 cd ..\Ruby-release
 set CFLAGS = MD -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600 
-call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release" --target=i386-mswin32
+call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-openssl-include="${CMAKE_BINARY_DIR}/OpenSSL-Win64/include/" --with-openssl-lib="${CMAKE_BINARY_DIR}/OpenSSL-Win64/lib/VC/static/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release" --target=x64-mswin64
 set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstatic.lib"
 nmake libenc
 nmake libtrans
@@ -26,7 +29,7 @@ for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/" %%f in (*.lib) do
 
 cd ..\Ruby-debug
 set CFLAGS = MDd -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600
-call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug" --target=i386-mswin32
+call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-openssl-include="${CMAKE_BINARY_DIR}/OpenSSL-Win64/include/" --with-openssl-lib="${CMAKE_BINARY_DIR}/OpenSSL-Win64/lib/VC/static/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug" --target=x64-mswin64
 set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstaticd.lib"
 nmake libenc
 nmake libtrans
