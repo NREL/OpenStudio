@@ -1,22 +1,6 @@
 GIT
-  remote: git://github.com/NREL/OpenStudio-measure-tester-gem.git
-  revision: 5ec382e97d079b674c22ad50c00bd77d11bd12d0
-  ref: 5ec382e97d079b674c22ad50c00bd77d11bd12d0
-  specs:
-    openstudio_measure_tester (0.1.3)
-      activesupport (= 5.1.6)
-      ci_reporter_minitest (= 1.0.0)
-      git (= 1.3.0)
-      minitest (= 5.4.3)
-      minitest-reporters (= 1.2.0)
-      rake (= 12.3.1)
-      rubocop (= 0.54.0)
-      rubocop-checkstyle_formatter (= 0.4)
-
-GIT
   remote: git://github.com/NREL/simplecov.git
   revision: 88beea5ba393bf431af024ef90cfb661a63e238c
-  ref: 88beea5ba393bf431af024ef90cfb661a63e238c
   specs:
     simplecov (0.16.1)
       docile (~> 1.1)
@@ -41,7 +25,7 @@ GEM
     concurrent-ruby (1.0.5)
     docile (1.3.0)
     git (1.3.0)
-    i18n (1.0.0)
+    i18n (1.0.1)
       concurrent-ruby (~> 1.0)
     minitest (5.4.3)
     minitest-reporters (1.2.0)
@@ -51,6 +35,16 @@ GEM
       ruby-progressbar
     openstudio-standards (0.2.0)
     openstudio-workflow (1.3.2)
+    openstudio_measure_tester (0.1.4)
+      activesupport (= 5.1.6)
+      ci_reporter_minitest (= 1.0.0)
+      git (= 1.3.0)
+      minitest (= 5.4.3)
+      minitest-reporters (= 1.2.0)
+      rake (= 12.3.1)
+      rubocop (= 0.54.0)
+      rubocop-checkstyle_formatter (= 0.4)
+      simplecov (= 0.16.1)
     parallel (1.12.1)
     parser (2.5.1.0)
       ast (~> 2.4.0)
@@ -80,7 +74,7 @@ DEPENDENCIES
   bundler (= 1.14.4)
   openstudio-standards (= 0.2.0)
   openstudio-workflow (= 1.3.2)
-  openstudio_measure_tester!
+  openstudio_measure_tester (= 0.1.4)
   parallel (= 1.12.1)
   simplecov!
 
