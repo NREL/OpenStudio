@@ -91,7 +91,7 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctSeriesPIUReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result{
-      // These applies to all AirTerminals
+      // These apply to all AirTerminals
       "Zone Air Terminal Sensible Heating Energy",
       "Zone Air Terminal Sensible Heating Rate",
       "Zone Air Terminal Sensible Cooling Energy",
