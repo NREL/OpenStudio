@@ -277,7 +277,7 @@ namespace openstudio{
       file.close();
 
       BCLFileReference measureReadmeFileReference(measureReadmePath, true);
-      measureReadmeFileReference.setUsageType("readme");
+      measureReadmeFileReference.setUsageType("readmeerb");
       m_bclXML.addFile(measureReadmeFileReference);
     }
 
