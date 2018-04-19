@@ -195,3 +195,16 @@ index 668f9e1..73e5429 100644
  !endif
  MINIRUBY = $(MINIRUBY) $(MINIRUBYOPT)
  RUNRUBY = $(RUNRUBY) "$(srcdir)/tool/runruby.rb" --extout="$(EXTOUT)" $(RUNRUBYOPT) -- $(RUN_OPTS)
+diff --git a/lib/rubygems/security.rb b/e/lib/rubygems/security.rb
+index 8c5fb7d9f..e7e18ba5e 100644
+--- a/lib/rubygems/security.rb
++++ b/e/lib/rubygems/security.rb
+@@ -340,7 +340,7 @@ module Gem::Security
+
+   DIGEST_ALGORITHM =
+     if defined?(OpenSSL::Digest) then
+-      OpenSSL::Digest::SHA1
++      #OpenSSL::Digest::SHA1
+     end
+
+   ##

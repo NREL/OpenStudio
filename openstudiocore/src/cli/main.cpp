@@ -405,11 +405,17 @@ int main(int argc, char *argv[])
   Init_openssl();
   rb_provide("openssl");
   rb_provide("openssl.so");
-#else
+#elif  Q_OS_MAC
   // DLM: temporarily fake out, no init
+  //Init_openssl();
   rb_provide("openssl");
   rb_provide("openssl.so");
-#endif // Q_OS_LINUX
+#else
+  // Windows
+  Init_openssl();
+  rb_provide("openssl");
+  rb_provide("openssl.so");
+#endif
 
   Init_objspace();
   rb_provide("objspace");
