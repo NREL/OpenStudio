@@ -1147,7 +1147,12 @@ namespace openstudio{
 
         std::string filename = toString(file.filename());
         if (filename.empty() || boost::starts_with(filename, ".")){
-          continue;
+          if (filename == ".gitkeep") {
+            // allow this file
+          } else {
+            continue;
+          }
+
         }
 
         if (!m_bclXML.hasFile(srcItemPath)){

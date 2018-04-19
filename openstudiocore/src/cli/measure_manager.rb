@@ -307,19 +307,13 @@ class MeasureManager
         info = get_measure_info(measure_dir, result, "", OpenStudio::Model::OptionalModel.new, OpenStudio::OptionalWorkspace.new)
         info.update(result)
         
-        puts "Updating"
-        
         # update README.md.erb
         if File.exists?(readme_in_path)
-        
-          puts "#{readme_in_path} exists"
           
           begin
             # delete README.md if it exists
             File.delete(readme_out_path) if File.exists?(readme_out_path)
-            
-            puts "Deleted #{readme_out_path}"
-            
+
             readme_in = nil
             File.open(readme_in_path, 'r') do |file|
               readme_in = file.read
@@ -330,8 +324,6 @@ class MeasureManager
             renderer = ERB.new(readme_in)
             result_binding = MeasureInfoBinding.new(info, result_hash)
             readme_out = renderer.result(result_binding.get_binding)
-            
-            puts "Writing #{readme_out_path}"
 
             # write README.me file
             File.open(readme_out_path, 'w') do |file|
@@ -347,13 +339,10 @@ class MeasureManager
             # update the files
             result.checkForUpdatesFiles
             
-            puts "Done"
-            
           rescue => e
             # update error in info
             info = OpenStudio::Ruleset::RubyUserScriptInfo.new(e.message)
             info.update(result)
-            puts "Error #{e.message}"
           end
           
           # check for file updates
