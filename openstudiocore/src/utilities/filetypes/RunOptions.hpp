@@ -83,6 +83,10 @@ public:
   bool setSkipExpandObjects(bool skip);
   void resetSkipExpandObjects();
 
+  bool skipEnergyPlusPreprocess() const;
+  bool setSkipEnergyPlusPreprocess(bool skip);
+  void resetSkipEnergyPlusPreprocess();
+
   bool cleanup() const;
   bool setCleanup(bool cleanup);
   void resetCleanup();

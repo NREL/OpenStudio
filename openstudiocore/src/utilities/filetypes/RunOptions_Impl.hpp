@@ -65,6 +65,10 @@ namespace detail {
     bool setSkipExpandObjects(bool skip);
     void resetSkipExpandObjects();
 
+    bool skipEnergyPlusPreprocess() const;
+    bool setSkipEnergyPlusPreprocess(bool skip);
+    void resetSkipEnergyPlusPreprocess();
+
     bool cleanup() const;
     bool setCleanup(bool cleanup);
     void resetCleanup();
@@ -88,6 +92,7 @@ namespace detail {
     bool m_debug;
     bool m_preserveRunDir;
     bool m_skipExpandObjects;
+    bool m_skipEnergyPlusPreprocess;
     bool m_cleanup;
     boost::optional<CustomOutputAdapter> m_customOutputAdapter;
   };

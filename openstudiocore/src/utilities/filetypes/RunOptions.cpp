@@ -38,7 +38,7 @@ namespace openstudio{
 namespace detail{
 
   RunOptions_Impl::RunOptions_Impl()
-    : m_debug(false), m_preserveRunDir(false), m_skipExpandObjects(false), m_cleanup(true)
+    : m_debug(false), m_preserveRunDir(false), m_skipExpandObjects(false), m_skipEnergyPlusPreprocess(false), m_cleanup(true)
   {}
 
   RunOptions_Impl::~RunOptions_Impl()
@@ -63,6 +63,10 @@ namespace detail{
 
     if (m_skipExpandObjects){
       result["skip_expand_objects"] = m_skipExpandObjects;
+    }
+
+    if (m_skipEnergyPlusPreprocess){
+      result["skip_energyplus_preprocess"] = m_skipEnergyPlusPreprocess;
     }
 
     if (m_customOutputAdapter){
@@ -136,6 +140,24 @@ namespace detail{
   void RunOptions_Impl::resetSkipExpandObjects()
   {
     m_skipExpandObjects = false;
+    onUpdate();
+  }
+
+  bool RunOptions_Impl::skipEnergyPlusPreprocess() const
+  {
+    return m_skipEnergyPlusPreprocess;
+  }
+
+  bool RunOptions_Impl::setSkipEnergyPlusPreprocess(bool skip)
+  {
+    m_skipEnergyPlusPreprocess = skip;
+    onUpdate();
+    return true;
+  }
+
+  void RunOptions_Impl::resetSkipEnergyPlusPreprocess()
+  {
+    m_skipEnergyPlusPreprocess = false;
     onUpdate();
   }
 
@@ -230,6 +252,10 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s)
     result->setSkipExpandObjects(value["skip_expand_objects"].asBool());
   }
 
+  if (value.isMember("skip_energyplus_preprocess") && value["skip_energyplus_preprocess"].isBool()){
+    result->setSkipEnergyPlusPreprocess(value["skip_energyplus_preprocess"].asBool());
+  }
+
   if (value.isMember("output_adapter")){
     Json::Value outputAdapter = value["output_adapter"];
     if (outputAdapter.isMember("custom_file_name") && outputAdapter.isMember("class_name")){
@@ -295,6 +321,21 @@ bool RunOptions::setSkipExpandObjects(bool preserve)
 void RunOptions::resetSkipExpandObjects()
 {
   getImpl<detail::RunOptions_Impl>()->resetSkipExpandObjects();
+}
+
+bool RunOptions::skipEnergyPlusPreprocess() const
+{
+  return getImpl<detail::RunOptions_Impl>()->skipEnergyPlusPreprocess();
+}
+
+bool RunOptions::setSkipEnergyPlusPreprocess(bool preserve)
+{
+  return getImpl<detail::RunOptions_Impl>()->setSkipEnergyPlusPreprocess(preserve);
+}
+
+void RunOptions::resetSkipEnergyPlusPreprocess()
+{
+  getImpl<detail::RunOptions_Impl>()->resetSkipEnergyPlusPreprocess();
 }
 
 bool RunOptions::cleanup() const
