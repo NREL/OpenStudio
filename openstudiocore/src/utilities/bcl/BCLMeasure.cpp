@@ -108,8 +108,8 @@ namespace openstudio{
     // read in template files
     std::string measureTemplate;
     std::string licenseTemplate = ":/templates/common/LICENSE.md";
-    std::string readmeTemplate = ":/templates/common/README.md";
-    std::string docTemplate = ":/templates/common/docs/index.md";;
+    std::string readmeTemplate = ":/templates/common/README.md.erb";
+    std::string docTemplate = ":/templates/common/docs/.gitkeep";;
     std::string testTemplate;
 
     QString templateClassName;
@@ -234,8 +234,8 @@ namespace openstudio{
     openstudio::path measureXMLPath = dir / toPath("measure.xml");
     openstudio::path measureScriptPath = dir / toPath("measure.rb");
     openstudio::path measureLicensePath = dir / toPath("LICENSE.md");
-    openstudio::path measureReadmePath = dir / toPath("README.md");
-    openstudio::path measureDocPath = measureDocDir / toPath("index.md");
+    openstudio::path measureReadmePath = dir / toPath("README.md.erb");
+    openstudio::path measureDocPath = measureDocDir / toPath(".gitkeep");
     openstudio::path measureTestPath = measureTestDir / toPath(lowerClassName + "_test.rb");
 
     // write measure.rb
@@ -267,11 +267,11 @@ namespace openstudio{
       m_bclXML.addFile(measureLicenseFileReference);
     }
 
-    // write README.md
+    // write README.md.erb
     {
       openstudio::filesystem::ofstream file(measureReadmePath, std::ios_base::binary);
       if (!file.is_open()){
-        LOG_AND_THROW("Cannot write README.md to '" << toString(measureReadmePath) << "'");
+        LOG_AND_THROW("Cannot write README.md.erb to '" << toString(measureReadmePath) << "'");
       }
       openstudio::filesystem::write(file, readmeString);
       file.close();
@@ -1189,6 +1189,17 @@ namespace openstudio{
       if (exists(srcItemPath)){
         BCLFileReference file(srcItemPath, true);
         file.setUsageType("readme");
+        result = true;
+        filesToAdd.push_back(file);
+      }
+    }
+
+    // check for README.me.erb
+    srcItemPath = m_directory / toPath("README.md.erb");
+    if (!m_bclXML.hasFile(srcItemPath)){
+      if (exists(srcItemPath)){
+        BCLFileReference file(srcItemPath, true);
+        file.setUsageType("readmeerb");
         result = true;
         filesToAdd.push_back(file);
       }
