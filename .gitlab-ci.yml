@@ -19,12 +19,10 @@ build_deploy_develop:windows:
   tags:
     - windows
   script:
-    #- rd /s /q build
-    - if exist OpenStudio-2.*-Windows.exe del OpenStudio-2.*-Windows.exe
     - if not exist "build" mkdir build
     - cd build
     - dir
-    - rm OpenStudio-2.*-Windows.exe
+    - if exist OpenStudio-2.*-Windows.exe del OpenStudio-2.*-Windows.exe
     - dir
     - cmake -G "Visual Studio 12 2013 Win64" ../openstudiocore
     # PAT does not build in the OpenStudio CI, at the moment
@@ -51,20 +49,6 @@ build_deploy_develop:windows:
     expire_in: 24 hrs
     paths:
       - build/
-      #- build/OpenStudio.exe
-      #- build/CPackConfig.cmake
-      #- build/CPackSourceConfig.cmake
-      #- build/CTestTestfile.cmake
-      #- build/OpenStudioCoreConfig.cmake
-      #- build/csharp/
-      #- build/embedded/
-      ##- build/pat/
-      #- build/Products/
-      #- build/resources/
-      #- build/ruby/
-      #- build/sketchup_plugin/
-      #- build/src/
-      ##- build/doc/OpenStudio-*.zip
   cache:
     key: openstudio_windows
     untracked: true
@@ -103,17 +87,6 @@ build_deploy_develop:mac:
     expire_in: 24 hrs
     paths:
       - build/
-      #- build/CPackConfig.cmake
-      #- build/CPackSourceConfig.cmake
-      #- build/CTestTestfile.cmake
-      #- build/OpenStudioCoreConfig.cmake
-      #- build/embedded/
-      #- build/pat/
-      #- build/Products/
-      #- build/resources/
-      #- build/ruby/
-      #- build/sketchup_plugin/
-      #- build/src/
   cache:
     key: openstudio_mac
     untracked: true
@@ -152,18 +125,6 @@ build_deploy_develop:ubuntu:
     expire_in: 24 hrs
     paths:
       - build/
-      #- build/OpenStudio.deb
-      #- build/CPackConfig.cmake
-      #- build/CPackSourceConfig.cmake
-      #- build/CTestTestfile.cmake
-      #- build/OpenStudioCoreConfig.cmake
-      #- build/CTestTestfile.cmake
-      #- build/embedded/
-      #- build/Products/
-      #- build/resources/
-      #- build/ruby/
-      #- build/sketchup_plugin/
-      #- build/src/
   cache:
     key: openstudio_ubuntu
     untracked: true
@@ -180,12 +141,10 @@ build_deploy_all_others:windows:
   tags:
     - windows
   script:
-    #- rd /s /q build
-    - if exist OpenStudio-2.*-Windows.exe del OpenStudio-2.*-Windows.exe
     - if not exist "build" mkdir build
     - cd build
     - dir
-    - rm OpenStudio-2.*-Windows.exe
+    - if exist OpenStudio-2.*-Windows.exe del OpenStudio-2.*-Windows.exe
     - dir
     - cmake -G "Visual Studio 12 2013 Win64" ../openstudiocore
     # PAT does not build in the OpenStudio CI, at the moment
@@ -211,24 +170,10 @@ build_deploy_all_others:windows:
     expire_in: 24 hrs
     paths:
       - build/
-      #- build/OpenStudio.exe
-      #- build/CPackConfig.cmake
-      #- build/CPackSourceConfig.cmake
-      #- build/CTestTestfile.cmake
-      #- build/OpenStudioCoreConfig.cmake
-      #- build/csharp/
-      #- build/embedded/
-      ##- build/pat/
-      #- build/Products/
-      #- build/resources/
-      #- build/ruby/
-      #- build/sketchup_plugin/
-      #- build/src/
-      ##- build/doc/OpenStudio-*.zip
   cache:
     key: openstudio_windows
     untracked: true
-    policy: pull
+    #policy: push # NOTE: use default pull-push policy
     paths:
       - build
 
@@ -264,21 +209,10 @@ build_deploy_all_others:mac:
     expire_in: 24 hrs
     paths:
       - build/
-      #- build/CPackConfig.cmake
-      #- build/CPackSourceConfig.cmake
-      #- build/CTestTestfile.cmake
-      #- build/OpenStudioCoreConfig.cmake
-      #- build/embedded/
-      #- build/pat/
-      #- build/Products/
-      #- build/resources/
-      #- build/ruby/
-      #- build/sketchup_plugin/
-      #- build/src/
   cache:
     key: openstudio_mac
     untracked: true
-    policy: pull
+    #policy: push # NOTE: use default pull-push policy
     paths:
       - build
 
@@ -315,22 +249,10 @@ build_deploy_all_others:ubuntu:
     expire_in: 24 hrs
     paths:
       - build/
-      #- build/OpenStudio.deb
-      #- build/CPackConfig.cmake
-      #- build/CPackSourceConfig.cmake
-      #- build/CTestTestfile.cmake
-      #- build/OpenStudioCoreConfig.cmake
-      #- build/CTestTestfile.cmake
-      #- build/embedded/
-      #- build/Products/
-      #- build/resources/
-      #- build/ruby/
-      #- build/sketchup_plugin/
-      #- build/src/
   cache:
     key: openstudio_ubuntu
     untracked: true
-    policy: pull
+    #policy: push # NOTE: use default pull-push policy
     paths:
       - build
 
@@ -479,6 +401,7 @@ testResources_develop:windows:
     - build_deploy_develop
   script:
     - "rmdir c:\\\\openstudio\\ /s /q"
+    - dir
     - cd build
     - dir
     - OpenStudio.exe --script ../install.qs
@@ -500,6 +423,7 @@ testResources_all_others:windows:
     - build_deploy_all_others:windows
   script:
     - "rmdir c:\\\\openstudio\\ /s /q"
+    - dir
     - cd build
     - dir
     - OpenStudio.exe --script ../install.qs
@@ -558,5 +482,4 @@ testResources_all_others:windows:
 #    - cd bin/
 #    - ./openstudio ../OpenStudio-resources/model_tests.rb
 #  allow_failure: true
-  
-  
+
