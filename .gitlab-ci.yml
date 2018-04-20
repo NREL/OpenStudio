@@ -173,7 +173,7 @@ build_deploy_all_others:windows:
   cache:
     key: openstudio_windows
     untracked: true
-    policy: pull
+    #policy: push # NOTE: use default pull-push policy
     paths:
       - build
 
@@ -212,7 +212,7 @@ build_deploy_all_others:mac:
   cache:
     key: openstudio_mac
     untracked: true
-    policy: pull
+    #policy: push # NOTE: use default pull-push policy
     paths:
       - build
 
@@ -252,7 +252,7 @@ build_deploy_all_others:ubuntu:
   cache:
     key: openstudio_ubuntu
     untracked: true
-    policy: pull
+    #policy: push # NOTE: use default pull-push policy
     paths:
       - build
 
