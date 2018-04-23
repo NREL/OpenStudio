@@ -1,11 +1,34 @@
 # <%= name %>
 
-Description on what the measure does. 
-
+##Description
 <%= description %>
+
+##Modeler Description
+<%= modelerDescription %>
+
+##Measure Type
+<%= measureType %>
+
+##Taxonomy
+<%= taxonomy %>
+
+##Minimum Compatible OpenStudio Version
+(this feature will be added soon)
+
+<%= taxonomy %>
+## Outputs
+
+<% outputs.each do |output| %>
+ * <%= output[:display_name] %>
+<% end %>
 
 ## Arguments
 
-Arguments of the measure
-
-<%= arguments %>
+<% arguments.each do |argument| %>
+### <%= argument[:display_name] %>
+  <%= argument[:description] %>
+ * Type: <%= argument[:type] %>
+ * Units: <%= argument[:units] %>
+ * Required: <%= argument[:required] %>
+ * Model Dependent: <%= argument[:model_dependent] %>
+<% end %>
