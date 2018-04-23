@@ -31,7 +31,16 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
 
     return args
   end
+  
+  # define the outputs that the measure will create
+  def outputs
+    outs = OpenStudio::Measure::OSOutputVector.new
 
+    # this measure does not produce machine readable outputs with registerValue, return an empty list
+
+    return outs
+  end
+  
   # return a vector of IdfObject's to request EnergyPlus objects needed by the run method
   # Warning: Do not change the name of this method to be snake_case. The method must be lowerCamelCase.
   def energyPlusOutputRequests(runner, user_arguments)

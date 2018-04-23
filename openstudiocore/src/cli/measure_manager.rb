@@ -45,7 +45,7 @@ class MeasureInfoBinding
     @measure_info.error.to_s
   end
   def measureType
-    @measure_info.measureType.to_s
+    @measure_info.measureType.valueName.to_s
   end
   def className
     @measure_info.className.to_s

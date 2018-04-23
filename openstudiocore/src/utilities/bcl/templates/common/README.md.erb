@@ -12,23 +12,26 @@
 ##Taxonomy
 <%= taxonomy %>
 
-##Minimum Compatible OpenStudio Version
-(this feature will be added soon)
-
-<%= taxonomy %>
-## Outputs
-
-<% outputs.each do |output| %>
- * <%= output[:display_name] %>
-<% end %>
-
 ## Arguments
 
 <% arguments.each do |argument| %>
 ### <%= argument[:display_name] %>
   <%= argument[:description] %>
+ * Name: <%= argument[:name] %>
  * Type: <%= argument[:type] %>
  * Units: <%= argument[:units] %>
  * Required: <%= argument[:required] %>
  * Model Dependent: <%= argument[:model_dependent] %>
+<% end %>
+
+## Outputs
+
+<% outputs.each do |output| %>
+### <%= output[:display_name] %>
+  <%= output[:description] %>
+ * Name: <%= output[:name] %>
+ * Short Name: <%= output[:short_name] %> 
+ * Type: <%= output[:type] %>
+ * Units: <%= output[:units] %>
+ * Model Dependent: <%= output[:model_dependent] %>
 <% end %>
