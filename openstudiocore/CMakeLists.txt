@@ -508,6 +508,7 @@ endif()
 
 # Perl
 if(NOT UNIX)
+  execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced")
   execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     RESULT_VARIABLE rv)
@@ -557,6 +558,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
       INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${RUBY_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/Ruby-install")
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
 
@@ -613,6 +615,7 @@ if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
       INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${RUBY_MINGW_LIB_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/Ruby-mingw-install")
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
 
@@ -647,10 +650,14 @@ if( NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
     SHOW_PROGRESS
     EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
 
-  file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/openstudio-gems")
+  #DLM: file REMOVE_RECURSE did not seem to fully remove the directory consistently
+  #file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/openstudio-gems")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/openstudio-gems")
   execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
 
-  file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/src/cli/embedded_files")
+  #DLM: file REMOVE_RECURSE did not seem to fully remove the directory consistently
+  #file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/src/cli/embedded_files")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/src/cli/embedded_files")
 endif()
 
 # OpenSSL / libssh support
@@ -747,6 +754,7 @@ if( BUILD_DVIEW )
         INACTIVITY_TIMEOUT 120
         SHOW_PROGRESS
         EXPECTED_MD5 ${DVIEW_ZIP_EXPECTED_MD5})
+        execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/DView-install")
         execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${DVIEW_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
     endif()
 
@@ -967,6 +975,7 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
       INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${BOOST_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/Boost-install")
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${BOOST_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
   set(BOOST_INSTALL_DIR "${CMAKE_BINARY_DIR}/Boost-install/")
@@ -1049,6 +1058,7 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/Qt-install")
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
 
@@ -1192,6 +1202,7 @@ if( NOT QT_STATIC_ZIP_MD5 STREQUAL QT_STATIC_ZIP_EXPECTED_MD5)
     INACTIVITY_TIMEOUT 120
     SHOW_PROGRESS
     EXPECTED_MD5 ${QT_STATIC_ZIP_EXPECTED_MD5})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/Qt-static-install")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_STATIC_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
 endif()
 
