@@ -108,21 +108,15 @@ TEST_F(ModelFixture, PlantComponentUserDefined_addToNode) {
   EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
   m.save(toPath("./PlantComponentUserDefinedTestBefore.osm"), true);
+  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
   EnergyManagementSystemActuator actuator = testObject.designVolumeFlowRateActuator().get();
-
 
   PlantComponentUserDefined testObjectClone = testObject.clone(m).cast<PlantComponentUserDefined>();
   EXPECT_TRUE(testObject.designVolumeFlowRateActuator());
   EXPECT_TRUE(testObjectClone.designVolumeFlowRateActuator());
   EXPECT_TRUE(testObjectClone.designVolumeFlowRateActuator().get().actuatedComponent());
-  //EXPECT_EQ(testObjectClone.designVolumeFlowRateActuator().get().actuatedComponent().get().handle(), testObjectClone.handle());
-  EXPECT_EQ(testObjectClone.designVolumeFlowRateActuator().get().actuatedComponent().get().handle(), testObject.handle());
-  m.save(toPath("./PlantComponentUserDefinedTest.osm"), true);
-  supplyOutletNode = plantLoop.supplyOutletNode();
-  m.save(toPath("./PlantComponentUserDefinedTestAfter.osm"), true);
-  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
-  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
+  EXPECT_EQ(testObjectClone.designVolumeFlowRateActuator().get().actuatedComponent().get().handle(), testObjectClone.handle());
+  m.save(toPath("./PlantComponentUserDefinedTestClone.osm"), true);
 }
 
 TEST_F(ModelFixture, PlantComponentUserDefined_remove) {
