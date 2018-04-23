@@ -41,8 +41,8 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, AirflowNetwork_DuctViewFactors_Basic)
 {
-  openstudio::Logger::instance().standardOutLogger().enable();
-  openstudio::Logger::instance().standardOutLogger().setLogLevel(Info);
+  // openstudio::Logger::instance().standardOutLogger().enable();
+  // openstudio::Logger::instance().standardOutLogger().setLogLevel(Info);
   Model model;
   Point3dVector points;
 
