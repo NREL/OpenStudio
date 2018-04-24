@@ -819,7 +819,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
           if (outdoorAirFlowperPerson > 0){
 
-            // todo: improve this?
+            // TODO: improve this?
             // find first people schedule
             std::vector<People> allPeople;
             for (People people : spaces[0].people()){
