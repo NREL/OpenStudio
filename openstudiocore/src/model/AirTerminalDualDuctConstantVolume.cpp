@@ -79,6 +79,12 @@ namespace detail {
   const std::vector<std::string>& AirTerminalDualDuctConstantVolume_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result{
+      // These applies to all AirTerminals
+      "Zone Air Terminal Sensible Heating Energy",
+      "Zone Air Terminal Sensible Heating Rate",
+      "Zone Air Terminal Sensible Cooling Energy",
+      "Zone Air Terminal Sensible Cooling Rate",
+
       "Zone Air Terminal Cold Supply Duct Damper Position",
       "Zone Air Terminal Hot Supply Duct Damper Position"
     };

@@ -165,4 +165,4 @@ typedef std::vector<HeaderedPumpsConstantSpeed> HeaderedPumpsConstantSpeedVector
 } // model
 } // openstudio
 
-#endif // MODEL_HEADEREDPUMPSCONSTANTSPEED_HPP
+#endif // MODEL_HEADEREDPUMPSCONSTANTSPEED_HPP

@@ -713,12 +713,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned CoolingTowerVariableSpeed_Impl::inletPort()
+  unsigned CoolingTowerVariableSpeed_Impl::inletPort() const
   {
     return OS_CoolingTower_VariableSpeedFields::WaterInletNode;
   }
 
-  unsigned CoolingTowerVariableSpeed_Impl::outletPort()
+  unsigned CoolingTowerVariableSpeed_Impl::outletPort() const
   {
     return OS_CoolingTower_VariableSpeedFields::WaterOutletNode;
   }
@@ -1188,4 +1188,4 @@ CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(std::shared_ptr<detail::Coo
   }
 
 } // model
-} // openstudio
+} // openstudio

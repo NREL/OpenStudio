@@ -55,16 +55,16 @@ class MODEL_API Splitter_Impl : public HVACComponent_Impl
   virtual ~Splitter_Impl() {}
 
   /** Returns the inlet port to the splitter. */
-  virtual unsigned inletPort() = 0;
+  virtual unsigned inletPort() const = 0;
 
   /** Returns the outlet port for branchIndex.  Branches consequtively
    *  indexed starting from 0.
    */
-  virtual unsigned outletPort(unsigned branchIndex) = 0;
+  virtual unsigned outletPort(unsigned branchIndex) const = 0;
 
   /** Returns the next available outlet port.  This will be the first port
    *  with no connected objects */
-  virtual unsigned nextOutletPort() = 0;
+  virtual unsigned nextOutletPort() const = 0;
 
   virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 
@@ -98,7 +98,7 @@ class MODEL_API Splitter_Impl : public HVACComponent_Impl
   unsigned branchIndexForOutletModelObject( ModelObject modelObject );
 
   /** Returns the index of the next available branch */
-  unsigned nextBranchIndex();
+  unsigned nextBranchIndex() const;
 
   /** Effectively disconnects anything connected to the outlet port
    *  at the specified branch index.  All branches after the specified

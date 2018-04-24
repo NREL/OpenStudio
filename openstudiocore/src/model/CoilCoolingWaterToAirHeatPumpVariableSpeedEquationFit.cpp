@@ -638,4 +638,4 @@ CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::CoilCoolingWaterToAirHeat
   }
 
 } // model
-} // openstudio
+} // openstudio

@@ -47,16 +47,16 @@ class MODEL_API Splitter : public HVACComponent
   virtual ~Splitter() {}
 
   /** Returns the inlet port to the splitter. */
-  virtual unsigned inletPort();
+  virtual unsigned inletPort() const;
 
   /** Returns the outlet port for branchIndex.  Branches consequtively
    *  indexed starting from 0.
    */
-  virtual unsigned outletPort(unsigned branchIndex);
+  virtual unsigned outletPort(unsigned branchIndex) const;
 
   /** Returns the next available outlet port.  This will be the first port
    *  with no connected objects */
-  virtual unsigned nextOutletPort();
+  virtual unsigned nextOutletPort() const;
 
   /** Returns the optional ModelObject connected to the inlet port.
    *  If there is no connected object then the optional will be false.

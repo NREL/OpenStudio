@@ -91,10 +91,13 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctSeriesPIUReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result{
-      "Zone Air Terminal Heating Rate",
-      "Zone Air Terminal Heating Energy",
-      "Zone Air Terminal Sensible Cooling Rate",
-      "Zone Air Terminal Sensible Cooling Energy"
+      // These applies to all AirTerminals
+      "Zone Air Terminal Sensible Heating Energy",
+      "Zone Air Terminal Sensible Heating Rate",
+      "Zone Air Terminal Sensible Cooling Energy",
+      "Zone Air Terminal Sensible Cooling Rate"
+
+      // No specific output for this one
     };
     return result;
   }
@@ -105,7 +108,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> AirTerminalSingleDuctSeriesPIUReheat_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -303,12 +305,12 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::ReheatCoilName);
   }
 
-  unsigned AirTerminalSingleDuctSeriesPIUReheat_Impl::inletPort()
+  unsigned AirTerminalSingleDuctSeriesPIUReheat_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::SupplyAirInletNode;
   }
 
-  unsigned AirTerminalSingleDuctSeriesPIUReheat_Impl::outletPort()
+  unsigned AirTerminalSingleDuctSeriesPIUReheat_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::OutletNode;
   }

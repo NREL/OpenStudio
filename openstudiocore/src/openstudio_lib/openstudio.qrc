@@ -12,6 +12,7 @@
     <file>images/airterminal_dualduct_vav.png</file>
     <file>images/airterminal_dualduct_vav_outdoorair.png</file>
     <file>images/airterminal_dualduct_constantvolume.png</file>
+    <file>images/airterminal_fourpipebeam.png</file>
     <file>images/arrow.png</file>
     <file>images/baseboard_electric.png</file>
     <file>images/baseboard_water.png</file>
@@ -28,6 +29,8 @@
     <file>images/coil_ht_dx_singlespeed.png</file>
     <file>images/coil_system_coolingwater_heat_exchanger.png</file>
     <file>images/coilcoolingchilledbeam.png</file>
+    <file>images/coilcoolingfourpipebeam.png</file>
+    <file>images/coilheatingfourpipebeam.png</file>
     <file>images/coilcoolinglowtemprad_constflow.png</file>
     <file>images/coilcoolinglowtemprad_varflow.png</file>
     <file>images/coilheatinglowtemprad_constflow.png</file>
@@ -345,9 +348,12 @@
     <file>images/mini_icons/cav_reheat.png</file>
     <file>images/mini_icons/centralheatpumpsystem.png</file>
     <file>images/mini_icons/chilled_beam.png</file>
+    <file>images/mini_icons/airterminal_fourpipebeam.png</file>
     <file>images/mini_icons/chiller_air.png</file>
     <file>images/mini_icons/coil_ht_dx_singlespeed_mini.png</file>
     <file>images/mini_icons/coilcoolingchilledbeam_mini.png</file>
+    <file>images/mini_icons/coilcoolingfourpipebeam.png</file>
+    <file>images/mini_icons/coilheatingfourpipebeam.png</file>
     <file>images/mini_icons/coilcoolinglowtemprad_constflow.png</file>
     <file>images/mini_icons/coilcoolinglowtemprad_varflow.png</file>
     <file>images/mini_icons/coilheatinglowtemprad_constflow.png</file>

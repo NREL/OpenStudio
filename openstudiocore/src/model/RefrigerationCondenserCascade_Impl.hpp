@@ -131,4 +131,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONCONDENSERCASCADE_IMPL_HPP
+#endif // MODEL_REFRIGERATIONCONDENSERCASCADE_IMPL_HPP
