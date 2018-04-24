@@ -234,7 +234,7 @@ class Dir
       return result
     end    
     
-    return self.original_glob(name, *args)
+    return self.original_glob(pattern, *args)
   end
 end
 
