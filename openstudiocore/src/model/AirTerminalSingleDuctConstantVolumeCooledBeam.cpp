@@ -88,13 +88,19 @@ namespace detail {
 AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result{
-    "Zone Air Terminal Beam Sensible Cooling Energy [J]",
-    "Zone Air Terminal Beam Sensible Cooling Rate [W]",
-    "Zone Air Terminal Supply Air Sensible Cooling Energy [J]",
-    "Zone Air Terminal Supply Air Sensible Cooling Rate [W]",
-    "Zone Air Terminal Supply Air Sensible Heating Energy [J]",
-    "Zone Air Terminal Supply Air Sensible Heating Rate [W]",
-    "Zone Air Terminal Beam Chilled Water Energy [J]"
+      // These apply to all AirTerminals
+      "Zone Air Terminal Sensible Heating Energy",
+      "Zone Air Terminal Sensible Heating Rate",
+      "Zone Air Terminal Sensible Cooling Energy",
+      "Zone Air Terminal Sensible Cooling Rate",
+
+      "Zone Air Terminal Beam Sensible Cooling Energy",
+      "Zone Air Terminal Beam Sensible Cooling Rate",
+      "Zone Air Terminal Supply Air Sensible Cooling Energy",
+      "Zone Air Terminal Supply Air Sensible Cooling Rate",
+      "Zone Air Terminal Supply Air Sensible Heating Energy",
+      "Zone Air Terminal Supply Air Sensible Heating Rate",
+      "Zone Air Terminal Beam Chilled Water Energy"
     };
     return result;
   }
@@ -136,12 +142,12 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
                               schedule);
     return result;
   }
-  unsigned AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::inletPort()
+  unsigned AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outletPort()
+  unsigned AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirOutletNodeName;
   }

@@ -113,12 +113,12 @@ namespace detail {
   }
 
 
-  unsigned CoilHeatingLowTempRadiantConstFlow_Impl::inletPort()
+  unsigned CoilHeatingLowTempRadiantConstFlow_Impl::inletPort() const
 {
   return OS_Coil_Heating_LowTemperatureRadiant_ConstantFlowFields::HeatingWaterInletNodeName;
 }
 
-  unsigned CoilHeatingLowTempRadiantConstFlow_Impl::outletPort()
+  unsigned CoilHeatingLowTempRadiantConstFlow_Impl::outletPort() const
 {
   return OS_Coil_Heating_LowTemperatureRadiant_ConstantFlowFields::HeatingWaterOutletNodeName;
 }

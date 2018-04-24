@@ -107,4 +107,4 @@ typedef std::vector<ExternalInterfaceSchedule> ExternalInterfaceScheduleVector;
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACESCHEDULE_HPP
+#endif // MODEL_EXTERNALINTERFACESCHEDULE_HPP

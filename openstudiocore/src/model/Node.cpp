@@ -137,12 +137,12 @@ namespace detail{
     return Node::iddObjectType();
   }
 
-  unsigned Node_Impl::inletPort()
+  unsigned Node_Impl::inletPort() const
   {
     return OS_NodeFields::InletPort;
   }
 
-  unsigned Node_Impl::outletPort()
+  unsigned Node_Impl::outletPort() const
   {
     return OS_NodeFields::OutletPort;
   }

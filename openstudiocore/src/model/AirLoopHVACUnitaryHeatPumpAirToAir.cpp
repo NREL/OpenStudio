@@ -146,12 +146,12 @@ namespace detail {
     return result;
   }
 
-  unsigned AirLoopHVACUnitaryHeatPumpAirToAir_Impl::inletPort()
+  unsigned AirLoopHVACUnitaryHeatPumpAirToAir_Impl::inletPort() const
   {
     return OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::AirInletNodeName;
   }
 
-  unsigned AirLoopHVACUnitaryHeatPumpAirToAir_Impl::outletPort()
+  unsigned AirLoopHVACUnitaryHeatPumpAirToAir_Impl::outletPort() const
   {
     return OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::AirOutletNodeName;
   }

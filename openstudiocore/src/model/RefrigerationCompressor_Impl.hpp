@@ -163,4 +163,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONCOMPRESSOR_IMPL_HPP
+#endif // MODEL_REFRIGERATIONCOMPRESSOR_IMPL_HPP

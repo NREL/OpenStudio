@@ -105,12 +105,12 @@ namespace detail{
     return result;
   }
 
-  unsigned EvaporativeCoolerDirectResearchSpecial_Impl::inletPort()
+  unsigned EvaporativeCoolerDirectResearchSpecial_Impl::inletPort() const
   {
     return OS_EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName;
   }
 
-  unsigned EvaporativeCoolerDirectResearchSpecial_Impl::outletPort()
+  unsigned EvaporativeCoolerDirectResearchSpecial_Impl::outletPort() const
   {
     return OS_EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName;
   }

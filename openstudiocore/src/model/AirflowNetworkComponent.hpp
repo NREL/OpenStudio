@@ -57,10 +57,10 @@ class MODEL_API AirflowNetworkComponent : public ModelObject
   //bool removeFromLoop();
 
   //** Returns the inlet port. **/
-  //unsigned inletPort();
+  //unsigned inletPort() const;
 
   //** Returns the outlet port. **/
-  //unsigned outletPort();
+  //unsigned outletPort() const;
 
   //** Returns the optional ModelObject that this component represents. **/
   boost::optional<ModelObject> componentModelObject() const;
