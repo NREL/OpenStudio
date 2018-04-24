@@ -9,6 +9,23 @@ module OpenStudio
   def self.openstudio_path
     RbConfig.ruby
   end
+  
+  def self.get_absolute_path(p)
+    absolute_path = ""
+    if p.chars.first == ':' then
+      p[0] = ''
+      absolute_path = File.expand_path p
+
+      # strip Windows drive letters
+      if /[A-Z]\:/.match(absolute_path)
+        absolute_path = absolute_path[2..-1]
+      end
+      absolute_path = ':' + absolute_path
+    else
+      absolute_path = File.expand_path p
+    end
+    return absolute_path
+  end
 
   def self.preprocess_ruby_script(s)
 
@@ -90,14 +107,7 @@ module Kernel
   def require_relative path
     absolute_path = File.dirname(caller_locations(1,1)[0].path) + '/' + path
     if absolute_path.chars.first == ':'
-      absolute_path[0] = ''
-      absolute_path = File.expand_path absolute_path
-
-      # strip Windows drive letters
-      if /[A-Z]\:/.match(absolute_path)
-        absolute_path = absolute_path[2..-1]
-      end
-      absolute_path = ':' + absolute_path
+      absolute_path = OpenStudio.get_absolute_path(absolute_path)
     end
     return require absolute_path
   end
@@ -107,14 +117,7 @@ module Kernel
 
     absolute_path = File.dirname(caller_locations(1,1)[0].path) + '/' + path
     if absolute_path.chars.first == ':'
-      absolute_path[0] = ''
-      absolute_path = File.expand_path absolute_path
-
-      # strip Windows drive letters
-      if /[A-Z]\:/.match(absolute_path)
-        absolute_path = absolute_path[2..-1]
-      end
-      absolute_path = ':' + absolute_path
+      absolute_path = OpenStudio.get_absolute_path(absolute_path)
     end
 
     if EmbeddedScripting::hasFile(absolute_path)
@@ -178,5 +181,94 @@ class Module
     end
 
     original_const_missing(m)
+  end
+end
+
+class IO
+  class << self
+    alias :original_read :read
+  end
+  
+  def self.read(name, *args)
+    if name.chars.first == ':' then
+      absolute_path = OpenStudio.get_absolute_path(name)
+      
+      if EmbeddedScripting::hasFile(absolute_path) then
+        return EmbeddedScripting::getFileAsString(absolute_path)
+      else
+        puts "IO.read cannot find embedded file '#{absolute_path}' for '#{name}'"
+        return ""
+      end
+    end    
+    
+    return self.original_read(name, *args)
+  end
+end
+
+class Dir
+  class << self
+    alias :original_glob :glob
+  end
+  
+  def self.[](pattern, *args)
+    return self.glob(pattern, *args)
+  end
+  
+  def self.glob(pattern, *args)
+  
+    if pattern.chars.first == ':' then
+      #puts "searching embedded files for #{pattern}"
+      absolute_pattern = OpenStudio.get_absolute_path(pattern)
+      #puts "absolute_pattern #{absolute_pattern}"
+      result = []
+      
+      # DLM: this does not appear to be swig'd correctly
+      #EmbeddedScripting::fileNames.each do |name|
+      EmbeddedScripting::allFileNamesAsString.split(';').each do |name|
+        absolute_path = OpenStudio.get_absolute_path(name)
+        if File.fnmatch( absolute_pattern, absolute_path, *args ) 
+          #puts "#{absolute_path} is a match!"
+          result << absolute_path
+        end
+      end
+      return result
+    end    
+    
+    return self.original_glob(name, *args)
+  end
+end
+
+require 'fileutils'
+module FileUtils
+  class << self
+    alias :original_cp_r :cp_r
+  end
+  
+  def self.cp_r(src, dest, options = {})
+    #puts "cp_r #{src} to #{dest}"
+    if src.chars.first == ':' then
+      absolute_path = OpenStudio.get_absolute_path(src)
+      
+      # TODO: if src is a directory
+      
+      if EmbeddedScripting::hasFile(absolute_path) then
+        s = EmbeddedScripting::getFileAsString(absolute_path)
+        
+        if File.directory?(dest)
+          dest = File.join(dest, File.basename(src))
+        end
+        FileUtils.mkdir_p(File.dirname(dest))
+        
+        File.open(dest, 'w') do |f|
+          f.puts s
+        end
+        return true
+      else
+        puts "FileUtils.cp_r cannot find embedded file '#{absolute_path}' for '#{src}'"
+        return false
+      end
+    end 
+    
+    self.original_cp_r(src, dest, options)
   end
 end
