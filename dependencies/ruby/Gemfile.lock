@@ -11,10 +11,10 @@ GEM
       builder
       minitest (>= 2.12, < 5.0)
       powerbar
-    openstudio-standards (0.2.0)
+    openstudio-standards (0.2.1)
     openstudio-workflow (1.3.2)
     parallel (1.10.0)
-    powerbar (1.0.18)
+    powerbar (2.0.1)
       hashie (>= 1.1.0)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
@@ -38,7 +38,7 @@ PLATFORMS
 DEPENDENCIES
   bundler (= 1.14.4)
   minitest-reporters (= 0.14.24)
-  openstudio-standards (= 0.2.0)
+  openstudio-standards (= 0.2.1)
   openstudio-workflow (= 1.3.2)
   parallel (= 1.10.0)
   rspec (= 3.5.0)

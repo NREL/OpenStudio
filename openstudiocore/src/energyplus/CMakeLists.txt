@@ -133,6 +133,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateElectricLoadCenterDistribution.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterLookUpTable.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp
+  ForwardTranslator/ForwardTranslateElectricLoadCenterInverterPVWatts.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageConverter.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageSimple.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemActuator.cpp
@@ -180,6 +181,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateGasEquipment.cpp
   ForwardTranslator/ForwardTranslateGasMixture.cpp
   ForwardTranslator/ForwardTranslateGeneratorPhotovoltaic.cpp
+  ForwardTranslator/ForwardTranslateGeneratorPVWatts.cpp
   ForwardTranslator/ForwardTranslateGeneratorMicroTurbine.cpp
   ForwardTranslator/ForwardTranslateGeneratorFuelCell.cpp
   ForwardTranslator/ForwardTranslateGeneratorFuelCellAirSupply.cpp
