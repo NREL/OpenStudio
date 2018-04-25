@@ -64,8 +64,8 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyConvectionCoefficients_InternalMass) {
-  openstudio::Logger::instance().standardOutLogger().enable();
-  openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
+  // openstudio::Logger::instance().standardOutLogger().enable();
+  // openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
   Model model;
   ThermalZone zone(model);
   Space space(model);
@@ -133,8 +133,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyConvectionCoefficient
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyConvectionCoefficients_Surface) {
-  openstudio::Logger::instance().standardOutLogger().enable();
-  openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
+  // openstudio::Logger::instance().standardOutLogger().enable();
+  // openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
   Model model;
   ThermalZone zone(model);
   Space space(model);
