@@ -1,7 +1,7 @@
 
 OS:Version,
   {9793bc78-0ad3-4e2c-ad9c-026d1d7c594a}, !- Handle
-  2.4.1;                                  !- Version Identifier
+  2.5.1;                                  !- Version Identifier
 
 ! Always OnOff Discrete Schedule Type Limits
 OS:ScheduleTypeLimits,
@@ -11373,6 +11373,125 @@ OS:AirTerminal:DualDuct:ConstantVolume,
   ,                                       !- Hot Air Inlet Node
   ,                                       !- Cold Air Inlet Node
   autosize;                               !- Maximum Air Flow Rate {m3/s}
+
+OS:StandardsInformation:Material,
+  {4376f05d-bbf3-40f7-be03-4171974aefd8}, !- Handle
+  {0e7d4a49-4eee-48f1-8cba-d3afc0f7239c}; !- Material Name
+
+OS:StandardsInformation:Construction,
+  {b1f5fa7e-743e-4bc9-b561-3bdf2980fafd}, !- Handle
+  {de11bfc1-7dc3-4a5b-a98d-46d3a33c1b82}; !- Construction Name
+
+OS:PlantComponent:UserDefined,
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Handle
+  Plant Component User Defined 1,         !- Name
+  ,                                       !- Main Model Program Calling Manager Name
+  ,                                       !- Main Model Program Name
+  ,                                       !- Plant Inlet Node Name
+  ,                                       !- Plant Outlet Node Name
+  MeetsLoadWithNominalCapacityHiOutLimit, !- Plant Loading Mode
+  NeedsFlowIfLoopOn,                      !- Plant Loop Flow Request Mode
+  {599addbb-a3dc-49a5-a228-654376bb48ce}, !- Plant Initialization Program Calling Manager Name
+  {72044f72-33e7-4b86-aed0-39c8acf2f9dc}, !- Plant Initialization Program Name
+  {a6ba477e-43a4-4aab-860a-e96f56861682}, !- Plant Simulation Program Calling Manager Name
+  {b52a712e-59aa-40f9-8649-cda114806841}, !- Plant Simulation Program Name
+  {d3c5b4d2-fc5f-42a2-859a-64f8dab1d6a7}, !- Design Volume Flow Rate Actuator
+  {341a9fc6-b9d8-406d-bc0e-8e18319cb389}, !- Minimum Mass Flow Rate Actuator
+  {ab63622a-7356-40fe-bf24-f3705530f60b}, !- Maximum Mass Flow Rate Actuator
+  {8350f270-85e3-4827-8883-3683997f0ae3}, !- Minimum Loading Capacity Actuator
+  {596054f3-5c00-4614-ac61-26966f361a0d}, !- Maximum Loading Capacity Actuator
+  {8b144b63-95ec-4674-9ed4-ce125185f107}, !- Optimal Loading Capacity Actuator
+  {ea36e08d-524c-4f79-842c-e3a2603d1936}, !- Outlet Temperature Actuator
+  {69531b92-22ad-41e4-9446-d128320ecfcb}; !- Mass Flow Rate Actuator
+
+OS:EnergyManagementSystem:Actuator,
+  {d3c5b4d2-fc5f-42a2-859a-64f8dab1d6a7}, !- Handle
+  PCUD_Vdot_Design,                       !- Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
+  Plant Connection 1,                     !- Actuated Component Type
+  Design Volume Flow Rate;                !- Actuated Component Control Type
+
+OS:EnergyManagementSystem:Actuator,
+  {341a9fc6-b9d8-406d-bc0e-8e18319cb389}, !- Handle
+  PCUD_Mdot_Min,                          !- Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
+  Plant Connection 1,                     !- Actuated Component Type
+  Minimum Mass Flow Rate;                 !- Actuated Component Control Type
+
+OS:EnergyManagementSystem:Actuator,
+  {ab63622a-7356-40fe-bf24-f3705530f60b}, !- Handle
+  PCUD_Mdot_Max,                          !- Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
+  Plant Connection 1,                     !- Actuated Component Type
+  Maximum Mass Flow Rate;                 !- Actuated Component Control Type
+
+OS:EnergyManagementSystem:Actuator,
+  {8350f270-85e3-4827-8883-3683997f0ae3}, !- Handle
+  PCUD_Cap_Min,                           !- Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
+  Plant Connection 1,                     !- Actuated Component Type
+  Minimum Loading Capacity;               !- Actuated Component Control Type
+
+OS:EnergyManagementSystem:Actuator,
+  {596054f3-5c00-4614-ac61-26966f361a0d}, !- Handle
+  PCUD_Cap_Max,                           !- Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
+  Plant Connection 1,                     !- Actuated Component Type
+  Maximum Loading Capacity;               !- Actuated Component Control Type
+
+OS:EnergyManagementSystem:Actuator,
+  {8b144b63-95ec-4674-9ed4-ce125185f107}, !- Handle
+  PCUD_Cap_Opt,                           !- Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
+  Plant Connection 1,                     !- Actuated Component Type
+  Optimal Loading Capacity;               !- Actuated Component Control Type
+
+OS:EnergyManagementSystem:Actuator,
+  {ea36e08d-524c-4f79-842c-e3a2603d1936}, !- Handle
+  PCUD_Tout,                              !- Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
+  Plant Connection 1,                     !- Actuated Component Type
+  Outlet Temperature;                     !- Actuated Component Control Type
+
+OS:EnergyManagementSystem:Actuator,
+  {69531b92-22ad-41e4-9446-d128320ecfcb}, !- Handle
+  PCUD_Mdot_Request,                      !- Name
+  {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Actuated Component Name
+  Plant Connection 1,                     !- Actuated Component Type
+  Mass Flow Rate;                         !- Actuated Component Control Type
+
+OS:EnergyManagementSystem:Program,
+  {72044f72-33e7-4b86-aed0-39c8acf2f9dc}, !- Handle
+  PCUD_InitProgram,                       !- Name
+  SET LoopExitTemp = 82.22,               ! - <none>
+  SET LoopDeltaTemp = 4.0,                ! - <none>
+  SET CP = @CPCW LoopExitTemp,            ! - <none>
+  SET rho = @RhoH2O LoopExitTemp,         ! - <none>
+  SET {d3c5b4d2-fc5f-42a2-859a-64f8dab1d6a7} = 0.5, ! - <none>
+  SET {341a9fc6-b9d8-406d-bc0e-8e18319cb389} = 0.0, ! - <none>
+  SET {ab63622a-7356-40fe-bf24-f3705530f60b} = {d3c5b4d2-fc5f-42a2-859a-64f8dab1d6a7} * rho, ! - <none>
+  SET PCUD_Cap = CP * rho * LoopDeltaTemp * 0.5, ! - <none>
+  SET {8350f270-85e3-4827-8883-3683997f0ae3} = 0.0, ! - <none>
+  SET {596054f3-5c00-4614-ac61-26966f361a0d} = PCUD_Cap, ! - <none>
+  SET {8b144b63-95ec-4674-9ed4-ce125185f107} = 0.9 * PCUD_Cap; ! - <none>
+
+OS:EnergyManagementSystem:ProgramCallingManager,
+  {599addbb-a3dc-49a5-a228-654376bb48ce}, !- Handle
+  PCUD_InitProgramCallingManager,         !- Name
+  UserDefinedComponentModel,              !- EnergyPlus Model Calling Point
+  {72044f72-33e7-4b86-aed0-39c8acf2f9dc}; !- Program Name 1
+
+OS:EnergyManagementSystem:Program,
+  {b52a712e-59aa-40f9-8649-cda114806841}, !- Handle
+  PCUD_SimProgram,                        !- Name
+  SET {ea36e08d-524c-4f79-842c-e3a2603d1936} = 82.22, ! - <none>
+  SET {69531b92-22ad-41e4-9446-d128320ecfcb} = 0.5; ! - <none>
+
+OS:EnergyManagementSystem:ProgramCallingManager,
+  {a6ba477e-43a4-4aab-860a-e96f56861682}, !- Handle
+  PCUD_SimProgramCallingManager,          !- Name
+  UserDefinedComponentModel,              !- EnergyPlus Model Calling Point
+  {b52a712e-59aa-40f9-8649-cda114806841}; !- Program Name 1
 
 OS:AvailabilityManager:DifferentialThermostat,
   {a1d77522-772f-4092-98f9-4bf87ecb3cd5}, !- Handle

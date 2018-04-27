@@ -98,6 +98,8 @@
 #include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal_Impl.hpp"
 #include "../../model/PlantComponentTemperatureSource.hpp"
 #include "../../model/PlantComponentTemperatureSource_Impl.hpp"
+#include "../../model/PlantComponentUserDefined.hpp"
+#include "../../model/PlantComponentUserDefined_Impl.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitHeating.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitHeating_Impl.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitCooling.hpp"
@@ -321,6 +323,13 @@ boost::optional<double> flowrate(const HVACComponent & component)
     {
       auto mo = component.cast<PlantComponentTemperatureSource>();
       result = mo.designVolumeFlowRate();
+      break;
+    }
+    case openstudio::IddObjectType::OS_PlantComponent_UserDefined:
+    {
+      auto mo = component.cast<PlantComponentUserDefined>();
+      //TODO use Design Volume Flow Rate Actuator for PlantLoop 1
+      //result = mo.designVolumeFlowRateActuator().get();
       break;
     }
     case openstudio::IddObjectType::OS_HeatPump_WaterToWater_EquationFit_Cooling :
@@ -587,6 +596,11 @@ ComponentType componentType(const HVACComponent & component)
       return ComponentType::HEATING;
     }
     case openstudio::IddObjectType::OS_PlantComponent_TemperatureSource :
+    {
+      //TODO can this be inferred from PlantLoadingMode?
+      return ComponentType::BOTH;
+    }
+    case openstudio::IddObjectType::OS_PlantComponent_UserDefined:
     {
       return ComponentType::BOTH;
     }
