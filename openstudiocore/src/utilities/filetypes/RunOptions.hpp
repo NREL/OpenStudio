@@ -75,6 +75,10 @@ public:
   bool setDebug(bool debug);
   void resetDebug();
 
+  bool fast() const;
+  bool setFast(bool fast);
+  void resetFast();
+
   bool preserveRunDir() const;
   bool setPreserveRunDir(bool preserve);
   void resetPreserveRunDir();

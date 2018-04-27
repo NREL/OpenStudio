@@ -57,6 +57,10 @@ namespace detail {
     bool setDebug(bool debug);
     void resetDebug();
 
+    bool fast() const;
+    bool setFast(bool fast);
+    void resetFast();
+
     bool preserveRunDir() const;
     bool setPreserveRunDir(bool preserve);
     void resetPreserveRunDir();
@@ -90,6 +94,7 @@ namespace detail {
     REGISTER_LOGGER("openstudio.RunOptions");
 
     bool m_debug;
+    bool m_fast;
     bool m_preserveRunDir;
     bool m_skipExpandObjects;
     bool m_skipEnergyPlusPreprocess;

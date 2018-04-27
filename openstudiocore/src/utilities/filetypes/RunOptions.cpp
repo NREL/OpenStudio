@@ -38,7 +38,7 @@ namespace openstudio{
 namespace detail{
 
   RunOptions_Impl::RunOptions_Impl()
-    : m_debug(false), m_preserveRunDir(false), m_skipExpandObjects(false), m_skipEnergyPlusPreprocess(false), m_cleanup(true)
+    : m_debug(false), m_fast(false), m_preserveRunDir(false), m_skipExpandObjects(false), m_skipEnergyPlusPreprocess(false), m_cleanup(true)
   {}
 
   RunOptions_Impl::~RunOptions_Impl()
@@ -55,6 +55,10 @@ namespace detail{
 
     if (m_debug){
       result["debug"] = m_debug;
+    }
+
+    if (m_fast){
+      result["fast"] = m_fast;
     }
 
     if (m_preserveRunDir){
@@ -104,6 +108,24 @@ namespace detail{
   void RunOptions_Impl::resetDebug()
   {
     m_debug = false;
+    onUpdate();
+  }
+
+  bool RunOptions_Impl::fast() const
+  {
+    return m_fast;
+  }
+
+  bool RunOptions_Impl::setFast(bool fast)
+  {
+    m_fast = fast;
+    onUpdate();
+    return true;
+  }
+
+  void RunOptions_Impl::resetFast()
+  {
+    m_fast = false;
     onUpdate();
   }
 
@@ -244,6 +266,10 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s)
     result->setDebug(value["debug"].asBool());
   }
 
+  if (value.isMember("fast") && value["fast"].isBool()){
+    result->setFast(value["fast"].asBool());
+  }
+
   if (value.isMember("preserve_run_dir") && value["preserve_run_dir"].isBool()){
     result->setPreserveRunDir(value["preserve_run_dir"].asBool());
   }
@@ -288,9 +314,24 @@ bool RunOptions::setDebug(bool debug)
 {
   return getImpl<detail::RunOptions_Impl>()->setDebug(debug);
 }
+
 void RunOptions::resetDebug()
 {
   getImpl<detail::RunOptions_Impl>()->resetDebug();
+}
+
+bool RunOptions::fast() const
+{
+  return getImpl<detail::RunOptions_Impl>()->fast();
+}
+
+bool RunOptions::setFast(bool fast)
+{
+  return getImpl<detail::RunOptions_Impl>()->setFast(fast);
+}
+void RunOptions::resetFast()
+{
+  getImpl<detail::RunOptions_Impl>()->resetFast();
 }
 
 bool RunOptions::preserveRunDir() const
