@@ -132,6 +132,11 @@
 #include "../../model/OtherEquipment_Impl.hpp"
 #include "../../model/OtherEquipmentDefinition.hpp"
 #include "../../model/OtherEquipmentDefinition_Impl.hpp"
+#include "../../model/PlantLoop.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/AvailabilityManagerHighTemperatureTurnOff.hpp"
+#include "../../model/AvailabilityManagerHighTemperatureTurnOff_Impl.hpp"
 
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
@@ -1593,5 +1598,51 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTrendVariable2_EMS) {
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
   model.save(toPath("./EMS_TrendVariable2T.osm"), true);
+
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorSensorDelete_EMS) {
+
+  Model model;
+  PlantLoop plantLoop(model);
+  AvailabilityManagerHighTemperatureTurnOff avm(model);
+  avm.setSensorNode(model.outdoorAirNode());
+  plantLoop.addAvailabilityManager(avm);
+  std::vector<std::string> avm_names = avm.outputVariableNames();
+
+  // add sensor 1
+  EnergyManagementSystemSensor sensor(model, avm_names[0]);
+  sensor.setKeyName(toString(avm.handle()));
+
+  // Sensor attached to AVM
+  std::string key = toString(avm.handle());
+  EXPECT_EQ(key, sensor.keyName());
+  // 1 sensor in the model
+  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
+  // 1 avm in the model
+  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  //there should be 1 sensor
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor).size());
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor)[0];
+
+  //model.save(toPath("./EMS_SensorBeforeDelete.osm"), true);
+  //workspace.save(toPath("./EMS_SensorBeforeDelete.idf"), true);
+
+  avm.remove();
+  // 0 avm in the model
+  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
+  //sensor still has keyName as avm UUID string (will not FT though eventually)
+  EXPECT_EQ(key, sensor.keyName());
+
+  Workspace workspaceDelete = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(0u, workspaceDelete.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor).size());
+
+  //model.save(toPath("./EMS_SensorDelete.osm"), true);
+  //workspaceDelete.save(toPath("./EMS_SensorDelete.idf"), true);
 
 }
