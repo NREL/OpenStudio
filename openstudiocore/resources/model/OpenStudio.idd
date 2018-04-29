@@ -18679,7 +18679,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \required-field
        \units W/(m3/s)
        \note this field is used when the previous field is set to autosize. The pump power is scaled with Primary Air Design Air Flow Rate
-  A8;  \field Water Pump Power Modifier Curve Name
+  A8,  \field Water Pump Power Modifier Curve Name
        \note this curve modifies the pump power in the previous field by multiplying the design power by the result of this curve.
        \note x = ff = flow fraction on the primary air.  The flow fraction is the secondary air flow rate during current operation divided
        \note by Primary Air Design Flow Rate
@@ -18690,6 +18690,29 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
        \note Curve:RectangularHyperbola2, Curve:ExponentialDecay, Curve:DoubleExponentialDecay,
        \note Table:OneIndependentVariable
+  N7,  \field Evaporative Operation Minimum Drybulb Temperature
+       \type real
+       \minimum -99.0
+       \note This numeric field defines the evaporative cooler air inlet node drybulb temperature minimum
+       \note limit in degrees Celsius. The evaporative cooler will be turned off when the evaporator cooler
+       \note air inlet node dry-bulb temperature falls below this limit. The typical minimum value is 16degC. Users
+       \note are allowed to specify their own limits. If this field is left blank, then there is no drybulb lower
+       \note temperature limit for evaporative cooler operation.
+  N8,  \field Evaporative Operation Maximum Limit Wetbulb Temperature
+       \type real
+       \note when outdoor wetbulb temperature rises above this limit the cooler shuts down.
+       \note This numeric field defines the evaporative cooler air inlet node wet-bulb temperature maximum
+       \note limit in degrees Celsius. The evaporative cooler will be turned off when the evaporative cooler
+       \note air inlet node wet-bulb temperature exceeds this limit. The typical maximum value is 24degC. Users
+       \note are allowed to specify their own limits. If this field is left blank, then there is no upper
+       \note wetbulb temperature limit for evaporative cooler operation.
+  N9;  \field Evaporative Operation Maximum Limit Drybulb Temperature
+       \type real
+       \note This numeric field defines the evaporative cooler air inlet node dry-bulb temperature maximum
+       \note limit in degrees Celsius. The evaporative cooler will be turned off when its air inlet node
+       \note drybulb temperature exceeds this limit. The typical maximum value is 26degC. Users
+       \note are allowed to specify their own limits. If this field is left blank, then there is no upper
+       \note temperature limit for evaporative cooler operation.
 
 OS:EvaporativeFluidCooler:SingleSpeed,
        \min-fields 10
@@ -27396,7 +27419,7 @@ OS:ElectricLoadCenter:Inverter:PVWatts,
       \memo It implements the PVWatts inverter performance curves.
   A1, \field Handle
        \type handle
-       \required-field 
+       \required-field
   A2, \field Name
       \required-field
       \reference InverterList

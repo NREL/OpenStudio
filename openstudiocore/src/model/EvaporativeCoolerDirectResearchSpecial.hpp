@@ -140,11 +140,27 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
 
   void resetWaterPumpPowerModifierCurve();
 
+  /** Sets the minimum and maximum operation temperatures **/
+
+  /** Returns the value of the EvaporativeOperationMinimumDrybulbTemperature field. **/
+  double evaporativeOperationMinimumDrybulbTemperature() const;
+  /** Sets the value of the EvaporativeOperationMinimumDrybulbTemperature field. **/
+  bool setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature);
+
+  /** Returns the value of the EvaporativeOperationMaximumLimitWetbulbTemperature field. **/
+  double evaporativeOperationMaximumLimitWetbulbTemperature() const;
+  /** Sets the value of the EvaporativeOperationMaximumLimitWetbulbTemperature field. **/
+  bool setEvaporativeOperationMaximumLimitWetbulbTemperature(double evaporativeOperationMaximumLimitWetbulbTemperature);
+
+  /** Returns the value of the EvaporativeOperationMaximumLimitDrybulbTemperature field. **/
+  double evaporativeOperationMaximumLimitDrybulbTemperature() const;
+  /** Sets the value of the EvaporativeOperationMaximumLimitDrybulbTemperature field. **/
+  bool setEvaporativeOperationMaximumLimitDrybulbTemperature(double evaporativeOperationMaximumLimitDrybulbTemperature);
+
+
   boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
 
   boost::optional<double> autosizedPrimaryAirDesignFlowRate() const ;
-
-
 
   //@}
  protected:
