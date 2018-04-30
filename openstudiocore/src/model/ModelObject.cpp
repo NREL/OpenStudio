@@ -652,6 +652,10 @@ namespace detail {
     boost::replace_all(sqlObjectType, "OS:", "");
 
     // Special logic to deal with EnergyPlus inconsistencies
+    if (sqlObjectType == "Coil:Heating:Gas") {
+      sqlObjectType = "Coil:Heating:Fuel";
+    }
+
     if (sqlObjectType == "CoilPerformance:DX:Cooling") {
       // Get the parent object
       boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> parentCoil;
