@@ -203,7 +203,7 @@ void LightsDefinitionInspectorView::attach(openstudio::model::LightsDefinition &
   );
 
   // m_returnAirFractionEdit->bind(lightsDefinition,"returnAirFraction",m_isIP);
-  m_fractionVisibleEdit->bind(
+  m_returnAirFractionEdit->bind(
     m_isIP,
     *m_lightsDefinition,
     OptionalDoubleGetter(std::bind(&model::LightsDefinition::returnAirFraction, m_lightsDefinition.get_ptr())),

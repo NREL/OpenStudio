@@ -298,6 +298,7 @@
     <file>images/toggle_true_over.png</file>
     <file>images/unitary_system.png</file>
     <file>images/unit_ventilator.png</file>
+    <file>images/user_defined.png</file>
     <file>images/utility_calibration_warning.png</file>
     <file>images/v_divider_dots.png</file>
     <file>images/vav-reheat.png</file>
@@ -530,6 +531,7 @@
     <file>images/mini_icons/system_type_1.png</file>
     <file>images/mini_icons/system_type_2.png</file>
     <file>images/mini_icons/thermal_zone.png</file>
+    <file>images/mini_icons/user_defined.png</file>
     <file>images/mini_icons/variable_fan.png</file>
     <file>images/mini_icons/vav-reheat.png</file>
     <file>images/mini_icons/vav_noreheat.png</file>

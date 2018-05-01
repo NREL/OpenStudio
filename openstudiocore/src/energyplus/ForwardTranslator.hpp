@@ -184,6 +184,7 @@ class ElectricEquipment;
 class ElectricLoadCenterDistribution;
 class ElectricLoadCenterInverterLookUpTable;
 class ElectricLoadCenterInverterSimple;
+class ElectricLoadCenterInverterPVWatts;
 class ElectricLoadCenterStorageSimple;
 class ElectricLoadCenterStorageConverter;
 class EnergyManagementSystemActuator;
@@ -242,6 +243,7 @@ class GeneratorFuelCellStackCooler;
 class GeneratorFuelCellWaterSupply;
 class GeneratorFuelSupply;
 class GeneratorPhotovoltaic;
+class GeneratorPVWatts;
 class GroundHeatExchangerHorizontalTrench;
 class GroundHeatExchangerVertical;
 class HeaderedPumpsConstantSpeed;
@@ -284,6 +286,7 @@ class PipeIndoor;
 class PipeOutdoor;
 class PlantLoop;
 class PlantComponentTemperatureSource;
+class PlantComponentUserDefined;
 class PlantEquipmentOperationCoolingLoad;
 class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationOutdoorDryBulb;
@@ -793,6 +796,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateElectricLoadCenterInverterSimple( model::ElectricLoadCenterInverterSimple & modelObject );
 
+  boost::optional<IdfObject> translateElectricLoadCenterInverterPVWatts(model::ElectricLoadCenterInverterPVWatts & modelObject);
+
   boost::optional<IdfObject> translateElectricLoadCenterStorageSimple( model::ElectricLoadCenterStorageSimple & modelObject );
 
   boost::optional<IdfObject> translateElectricLoadCenterStorageConverter( model::ElectricLoadCenterStorageConverter & modelObject );
@@ -900,6 +905,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateGeneratorPhotovoltaic( model::GeneratorPhotovoltaic & modelObject );
 
+  boost::optional<IdfObject> translateGeneratorPVWatts(model::GeneratorPVWatts & modelObject);
+
   boost::optional<IdfObject> translateGroundHeatExchangerHorizontalTrench( model::GroundHeatExchangerHorizontalTrench & modelObject );
 
   boost::optional<IdfObject> translateGroundHeatExchangerVertical( model::GroundHeatExchangerVertical & modelObject );
@@ -983,6 +990,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translatePlantLoop( model::PlantLoop & modelObject );
 
   boost::optional<IdfObject> translatePlantComponentTemperatureSource( model::PlantComponentTemperatureSource & modelObject  );
+
+  boost::optional<IdfObject> translatePlantComponentUserDefined(model::PlantComponentUserDefined & modelObject);
 
   boost::optional<IdfObject> translatePlantEquipmentOperationSchemes( model::PlantLoop & plantLoop );
 
