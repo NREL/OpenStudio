@@ -1646,4 +1646,22 @@
     <rule IddField="Heat Recovery Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Heat Recovery Water Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_PlantComponent_UserDefined">
+    <rule IddField="Plant Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Plant Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Design Volume Flow Rate Actuator" Access="HIDDEN"/>
+    <rule IddField="Minimum Mass Flow Rate Actuator" Access="HIDDEN"/>
+    <rule IddField="Maximum Mass Flow Rate Actuator" Access="HIDDEN"/>
+    <rule IddField="Minimum Loading Capacity Actuator" Access="HIDDEN"/>
+    <rule IddField="Maximum Loading Capacity Actuator" Access="HIDDEN"/>
+    <rule IddField="Optimal Loading Capacity Actuator" Access="HIDDEN"/>
+    <rule IddField="Outlet Temperature Actuator" Access="HIDDEN"/>
+    <rule IddField="Mass Flow Rate Actuator" Access="HIDDEN"/>
+    <rule IddField="Plant Initialization Program Calling Manager Name" Access="HIDDEN"/>
+    <rule IddField="Plant Initialization Program Name" Access="HIDDEN"/>
+    <rule IddField="Plant Simulation Program Calling Manager Name" Access="HIDDEN"/>
+    <rule IddField="Plant Simulation Program Name" Access="HIDDEN"/>
+    <rule IddField="Main Model Program Calling Manager Name" Access="HIDDEN"/>
+    <rule IddField="Main Model Program Name" Access="HIDDEN"/>
+  </POLICY>
 </ROOT>
