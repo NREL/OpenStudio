@@ -48,6 +48,8 @@
 #include <QGraphicsView>
 #include <QApplication>
 #include <QMenu>
+#include <QMessageBox>
+
 #include "../model/HVACComponent.hpp"
 #include "../model/HVACComponent_Impl.hpp"
 #include "../model/ZoneHVACComponent.hpp"
@@ -1185,13 +1187,40 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
         auto comp1 = it1->optionalCast<model::HVACComponent>();
         OS_ASSERT(comp1);
         auto branchComponents = loop->components(comp1.get(),mixer);
-        branchComponents.pop_back();
 
-        if( isSupplySide ) {
-          allBranchComponents.push_back(branchComponents);
+        // Can't pop_back if it's empty to begin with...
+        if (branchComponents.empty()) {
+          std::stringstream ss;
+          ss << "Found orphaned component while drawing loop for " << comp1.get().briefDescription() << ".";
+
+          if (comp1->isRemovable()) {
+            ss << " Removing it.";
+            comp1->remove();
+          } else {
+            ss << " But this component is not removable. Trying to forcibly remove it";
+            // TODO: Trying to call the base ModelObject_Impl but it ends up calling Node_Impl::remove anyways
+            std::vector<IdfObject> delComps = comp1->getImpl<model::detail::ModelObject_Impl>().get()->remove();
+            if (delComps.empty()) {
+              ss << ", but it didn't work.";
+            }
+          }
+          QMessageBox box(QMessageBox::Warning,
+                          QString("Orphaned component Found"),
+                          toQString(ss.str()),
+                          QMessageBox::Ok);
+          // box.setDetailedText(toQString(ss.string()));
+          box.exec();
+
         } else {
-          auto rBranchComponents = reverseVector(branchComponents);
-          allBranchComponents.push_back(rBranchComponents);
+          // Pop the last component (the mixer)
+          branchComponents.pop_back();
+
+          if( isSupplySide ) {
+            allBranchComponents.push_back(branchComponents);
+          } else {
+            auto rBranchComponents = reverseVector(branchComponents);
+            allBranchComponents.push_back(rBranchComponents);
+          }
         }
       }
 
