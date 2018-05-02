@@ -219,4 +219,4 @@ IddObjectType LifeCycleCostUsePriceEscalation::iddObjectType()
 }
 
 } // model
-} // openstudio
+} // openstudio

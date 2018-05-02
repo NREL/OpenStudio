@@ -118,4 +118,4 @@ typedef std::vector<UtilityCost_Charge_Simple> UtilityCost_Charge_SimpleVector;
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_CHARGE_SIMPLE_HPP
+#endif // MODEL_UTILITYCOST_CHARGE_SIMPLE_HPP

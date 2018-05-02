@@ -94,12 +94,12 @@ namespace detail {
     return PipeIndoor::iddObjectType();
   }
 
-  unsigned PipeIndoor_Impl::inletPort() const
+  unsigned PipeIndoor_Impl::inletPort()
   {
     return OS_Pipe_IndoorFields::FluidInletNode;
   }
 
-  unsigned PipeIndoor_Impl::outletPort() const
+  unsigned PipeIndoor_Impl::outletPort()
   {
     return OS_Pipe_IndoorFields::FluidOutletNode;
   }

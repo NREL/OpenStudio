@@ -311,4 +311,4 @@ typedef std::vector<ZoneHVACFourPipeFanCoil> ZoneHVACFourPipeFanCoilVector;
 } // model
 } // openstudio
 
-#endif // MODEL_ZONEHVACFOURPIPEFANCOIL_HPP
+#endif // MODEL_ZONEHVACFOURPIPEFANCOIL_HPP

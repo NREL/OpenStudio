@@ -496,11 +496,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::inletPort() const {
+  unsigned GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::inletPort() {
     return OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterInletNodeName;
   }
 
-  unsigned GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::outletPort() const {
+  unsigned GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::outletPort() {
     return OS_Generator_FuelCell_ExhaustGasToWaterHeatExchangerFields::HeatRecoveryWaterOutletNodeName;
   }
 

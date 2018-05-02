@@ -110,12 +110,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned DistrictCooling_Impl::inletPort() const
+  unsigned DistrictCooling_Impl::inletPort()
   {
     return OS_DistrictCoolingFields::ChilledWaterInletNodeName;
   }
 
-  unsigned DistrictCooling_Impl::outletPort() const
+  unsigned DistrictCooling_Impl::outletPort()
   {
     return OS_DistrictCoolingFields::ChilledWaterOutletNodeName;
   }

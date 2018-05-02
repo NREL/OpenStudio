@@ -270,12 +270,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned EvaporativeCoolerIndirectResearchSpecial_Impl::inletPort() const
+  unsigned EvaporativeCoolerIndirectResearchSpecial_Impl::inletPort()
   {
     return OS_EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirInletNode;
   }
 
-  unsigned EvaporativeCoolerIndirectResearchSpecial_Impl::outletPort() const
+  unsigned EvaporativeCoolerIndirectResearchSpecial_Impl::outletPort()
   {
     return OS_EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirOutletNode;
   }

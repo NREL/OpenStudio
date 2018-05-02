@@ -166,11 +166,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned CoilHeatingGasMultiStage_Impl::inletPort() const {
+  unsigned CoilHeatingGasMultiStage_Impl::inletPort() {
     return OS_Coil_Heating_Gas_MultiStageFields::AirInletNode;
   }
 
-  unsigned CoilHeatingGasMultiStage_Impl::outletPort() const {
+  unsigned CoilHeatingGasMultiStage_Impl::outletPort() {
     return OS_Coil_Heating_Gas_MultiStageFields::AirOutletNode;
   }
 

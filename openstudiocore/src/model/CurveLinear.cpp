@@ -340,4 +340,4 @@ CurveLinear::CurveLinear(std::shared_ptr<detail::CurveLinear_Impl> impl)
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

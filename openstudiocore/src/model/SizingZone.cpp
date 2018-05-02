@@ -1668,4 +1668,4 @@ SizingZone::SizingZone(std::shared_ptr<detail::SizingZone_Impl> impl)
   }
 
 } // model
-} // openstudio
+} // openstudio

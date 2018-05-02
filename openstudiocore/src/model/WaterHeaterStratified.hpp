@@ -420,4 +420,4 @@ typedef std::vector<WaterHeaterStratified> WaterHeaterStratifiedVector;
 } // model
 } // openstudio
 
-#endif // MODEL_WATERHEATERSTRATIFIED_HPP
+#endif // MODEL_WATERHEATERSTRATIFIED_HPP

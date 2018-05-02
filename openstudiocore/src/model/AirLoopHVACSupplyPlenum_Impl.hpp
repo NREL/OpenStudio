@@ -69,11 +69,11 @@ class MODEL_API AirLoopHVACSupplyPlenum_Impl : public Splitter_Impl {
 
   void resetThermalZone();
 
-  virtual unsigned inletPort() const override;
+  unsigned inletPort() override;
 
-  unsigned outletPort(unsigned branchIndex) const override;
+  unsigned outletPort(unsigned branchIndex) override;
 
-  unsigned nextOutletPort() const override;
+  unsigned nextOutletPort() override;
 
   bool addToNode(Node & node) override;
 

@@ -80,12 +80,12 @@ namespace detail {
   IddObjectType CoilHeatingWaterBaseboard_Impl::iddObjectType() const {
     return CoilHeatingWaterBaseboard::iddObjectType();
   }
-  unsigned CoilHeatingWaterBaseboard_Impl::inletPort() const
+  unsigned CoilHeatingWaterBaseboard_Impl::inletPort()
 {
   return OS_Coil_Heating_Water_BaseboardFields::WaterInletNodeName;
 }
 
-  unsigned CoilHeatingWaterBaseboard_Impl::outletPort() const
+  unsigned CoilHeatingWaterBaseboard_Impl::outletPort()
 {
   return OS_Coil_Heating_Water_BaseboardFields::WaterOutletNodeName;
 }
@@ -356,12 +356,12 @@ CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(const Model& model)
   setHeatingDesignCapacityPerFloorArea(0.0);
   setFractionofAutosizedHeatingDesignCapacity(0.8);
 }
-unsigned CoilHeatingWaterBaseboard::inletPort() const
+unsigned CoilHeatingWaterBaseboard::inletPort()
 {
   return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->inletPort();
 }
 
-unsigned CoilHeatingWaterBaseboard::outletPort() const
+unsigned CoilHeatingWaterBaseboard::outletPort()
 {
   return getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->outletPort();
 }

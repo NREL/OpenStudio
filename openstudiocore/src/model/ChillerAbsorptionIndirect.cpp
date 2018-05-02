@@ -981,4 +981,4 @@ ChillerAbsorptionIndirect::ChillerAbsorptionIndirect(std::shared_ptr<detail::Chi
   }
 
 } // model
-} // openstudio
+} // openstudio

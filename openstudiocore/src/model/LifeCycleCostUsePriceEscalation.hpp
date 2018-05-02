@@ -119,4 +119,4 @@ typedef std::vector<LifeCycleCostUsePriceEscalation> LifeCycleCostUsePriceEscala
 } // model
 } // openstudio
 
-#endif // MODEL_LIFECYCLECOSTUSEPRICEESCALATION_HPP
+#endif // MODEL_LIFECYCLECOSTUSEPRICEESCALATION_HPP

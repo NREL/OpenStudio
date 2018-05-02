@@ -334,11 +334,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned CoilCoolingDXTwoStageWithHumidityControlMode_Impl::inletPort() const {
+  unsigned CoilCoolingDXTwoStageWithHumidityControlMode_Impl::inletPort() {
     return OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirInletNodeName;
   }
 
-  unsigned CoilCoolingDXTwoStageWithHumidityControlMode_Impl::outletPort() const {
+  unsigned CoilCoolingDXTwoStageWithHumidityControlMode_Impl::outletPort() {
     return OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirOutletNodeName;
   }
 

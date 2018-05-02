@@ -208,12 +208,12 @@ namespace detail {
     return true;
   }
 
-  unsigned WaterUseConnections_Impl::inletPort() const
+  unsigned WaterUseConnections_Impl::inletPort()
   {
     return OS_WaterUse_ConnectionsFields::InletNodeName;
   }
 
-  unsigned WaterUseConnections_Impl::outletPort() const
+  unsigned WaterUseConnections_Impl::outletPort()
   {
     return OS_WaterUse_ConnectionsFields::OutletNodeName;
   }
@@ -328,12 +328,12 @@ void WaterUseConnections::resetColdWaterSupplyTemperatureSchedule() {
   getImpl<detail::WaterUseConnections_Impl>()->resetColdWaterSupplyTemperatureSchedule();
 }
 
-unsigned WaterUseConnections::inletPort() const
+unsigned WaterUseConnections::inletPort()
 {
   return getImpl<detail::WaterUseConnections_Impl>()->inletPort();
 }
 
-unsigned WaterUseConnections::outletPort() const
+unsigned WaterUseConnections::outletPort()
 {
   return getImpl<detail::WaterUseConnections_Impl>()->outletPort();
 }

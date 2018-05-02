@@ -138,12 +138,12 @@ namespace detail {
     return result;
   }
 
-  unsigned CoolingTowerSingleSpeed_Impl::inletPort() const
+  unsigned CoolingTowerSingleSpeed_Impl::inletPort()
   {
     return OS_CoolingTower_SingleSpeedFields::WaterInletNodeName;
   }
 
-  unsigned CoolingTowerSingleSpeed_Impl::outletPort() const
+  unsigned CoolingTowerSingleSpeed_Impl::outletPort()
   {
     return OS_CoolingTower_SingleSpeedFields::WaterOutletNodeName;
   }

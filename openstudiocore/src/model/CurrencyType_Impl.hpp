@@ -84,4 +84,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_CURRENCYTYPE_IMPL_HPP
+#endif // MODEL_CURRENCYTYPE_IMPL_HPP

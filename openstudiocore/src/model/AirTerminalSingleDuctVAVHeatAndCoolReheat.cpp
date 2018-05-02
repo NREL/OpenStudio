@@ -243,12 +243,12 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::ReheatCoil);
   }
 
-  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::inletPort() const
+  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::inletPort()
   {
     return OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AirInlet;
   }
 
-  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::outletPort() const
+  unsigned AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::outletPort()
   {
     return OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AirOutlet;
   }

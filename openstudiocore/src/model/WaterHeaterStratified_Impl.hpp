@@ -421,4 +421,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_WATERHEATERSTRATIFIED_IMPL_HPP
+#endif // MODEL_WATERHEATERSTRATIFIED_IMPL_HPP

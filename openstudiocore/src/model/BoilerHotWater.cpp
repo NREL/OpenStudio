@@ -134,12 +134,12 @@ namespace detail {
     return result;
   }
 
-  unsigned BoilerHotWater_Impl::inletPort() const
+  unsigned BoilerHotWater_Impl::inletPort()
   {
     return OS_Boiler_HotWaterFields::BoilerWaterInletNodeName;
   }
 
-  unsigned BoilerHotWater_Impl::outletPort() const
+  unsigned BoilerHotWater_Impl::outletPort()
   {
     return OS_Boiler_HotWaterFields::BoilerWaterOutletNodeName;
   }

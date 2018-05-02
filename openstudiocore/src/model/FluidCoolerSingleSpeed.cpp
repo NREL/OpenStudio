@@ -84,12 +84,12 @@ namespace detail {
     return FluidCoolerSingleSpeed::iddObjectType();
   }
 
-  unsigned FluidCoolerSingleSpeed_Impl::inletPort() const
+  unsigned FluidCoolerSingleSpeed_Impl::inletPort()
   {
     return  OS_FluidCooler_SingleSpeedFields::WaterInletNode;
   }
 
-  unsigned FluidCoolerSingleSpeed_Impl::outletPort() const
+  unsigned FluidCoolerSingleSpeed_Impl::outletPort()
   {
     return  OS_FluidCooler_SingleSpeedFields::WaterOutletNode;
   }

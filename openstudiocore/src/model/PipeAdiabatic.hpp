@@ -58,9 +58,9 @@ class MODEL_API PipeAdiabatic : public StraightComponent {
 
   virtual ~PipeAdiabatic() {}
 
-  unsigned inletPort() const;
+  unsigned inletPort();
 
-  unsigned outletPort() const;
+  unsigned outletPort();
 
   static IddObjectType iddObjectType();
 

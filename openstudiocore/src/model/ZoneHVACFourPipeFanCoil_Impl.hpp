@@ -341,4 +341,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_ZONEHVACFOURPIPEFANCOIL_IMPL_HPP
+#endif // MODEL_ZONEHVACFOURPIPEFANCOIL_IMPL_HPP

@@ -85,12 +85,12 @@ namespace detail {
     return PipeOutdoor::iddObjectType();
   }
 
-  unsigned PipeOutdoor_Impl::inletPort() const
+  unsigned PipeOutdoor_Impl::inletPort()
   {
     return OS_Pipe_OutdoorFields::FluidInletNode;
   }
 
-  unsigned PipeOutdoor_Impl::outletPort() const
+  unsigned PipeOutdoor_Impl::outletPort()
   {
     return OS_Pipe_OutdoorFields::FluidOutletNode;
   }

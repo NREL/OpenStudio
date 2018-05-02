@@ -231,4 +231,4 @@ typedef std::vector<PumpConstantSpeed> PumpConstantSpeedVector;
 } // model
 } // openstudio
 
-#endif // MODEL_PUMPCONSTANTSPEED_HPP
+#endif // MODEL_PUMPCONSTANTSPEED_HPP

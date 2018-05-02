@@ -115,4 +115,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACESCHEDULE_IMPL_HPP
+#endif // MODEL_EXTERNALINTERFACESCHEDULE_IMPL_HPP

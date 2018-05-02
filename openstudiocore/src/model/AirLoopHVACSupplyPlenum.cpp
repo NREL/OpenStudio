@@ -114,12 +114,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned AirLoopHVACSupplyPlenum_Impl::inletPort() const
+  unsigned AirLoopHVACSupplyPlenum_Impl::inletPort()
   {
     return OS_AirLoopHVAC_SupplyPlenumFields::InletNode;
   }
 
-  unsigned AirLoopHVACSupplyPlenum_Impl::outletPort(unsigned branchIndex) const
+  unsigned AirLoopHVACSupplyPlenum_Impl::outletPort(unsigned branchIndex)
   {
     unsigned result;
     result = numNonextensibleFields();
@@ -127,7 +127,7 @@ namespace detail {
     return result;
   }
 
-  unsigned AirLoopHVACSupplyPlenum_Impl::nextOutletPort() const
+  unsigned AirLoopHVACSupplyPlenum_Impl::nextOutletPort()
   {
     return outletPort( this->nextBranchIndex() );
   }
@@ -350,17 +350,17 @@ void AirLoopHVACSupplyPlenum::resetThermalZone() {
   getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->resetThermalZone();
 }
 
-unsigned AirLoopHVACSupplyPlenum::inletPort() const
+unsigned AirLoopHVACSupplyPlenum::inletPort()
 {
   return getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->inletPort();
 }
 
-unsigned AirLoopHVACSupplyPlenum::outletPort(unsigned branchIndex) const
+unsigned AirLoopHVACSupplyPlenum::outletPort(unsigned branchIndex)
 {
   return getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->outletPort(branchIndex);
 }
 
-unsigned AirLoopHVACSupplyPlenum::nextOutletPort() const
+unsigned AirLoopHVACSupplyPlenum::nextOutletPort()
 {
   return getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->nextOutletPort();
 }

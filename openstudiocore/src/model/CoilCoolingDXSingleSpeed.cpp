@@ -195,12 +195,12 @@ namespace detail{
     return result;
   }
 
-  unsigned CoilCoolingDXSingleSpeed_Impl::inletPort() const
+  unsigned CoilCoolingDXSingleSpeed_Impl::inletPort()
   {
     return OS_Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName;
   }
 
-  unsigned CoilCoolingDXSingleSpeed_Impl::outletPort() const
+  unsigned CoilCoolingDXSingleSpeed_Impl::outletPort()
   {
     return OS_Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName;
   }

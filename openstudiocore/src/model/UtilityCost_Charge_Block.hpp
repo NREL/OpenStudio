@@ -141,4 +141,4 @@ typedef std::vector<UtilityCost_Charge_Block> UtilityCost_Charge_BlockVector;
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_CHARGE_BLOCK_HPP
+#endif // MODEL_UTILITYCOST_CHARGE_BLOCK_HPP

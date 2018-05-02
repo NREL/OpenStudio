@@ -151,4 +151,4 @@ IddObjectType CurrencyType::iddObjectType()
 }
 
 } // model
-} // openstudio
+} // openstudio

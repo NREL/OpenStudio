@@ -157,4 +157,4 @@ typedef std::vector<CurveQuartic> CurveQuarticVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEQUARTIC_HPP
+#endif // MODEL_CURVEQUARTIC_HPP

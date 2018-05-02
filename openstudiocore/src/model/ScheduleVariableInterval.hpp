@@ -113,4 +113,4 @@ typedef std::vector<ScheduleVariableInterval> ScheduleVariableIntervalVector;
 } // model
 } // openstudio
 
-#endif // MODEL_SCHEDULEVARIABLEINTERVAL_HPP
+#endif // MODEL_SCHEDULEVARIABLEINTERVAL_HPP

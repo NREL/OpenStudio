@@ -363,4 +363,4 @@ CurveRectangularHyperbola1::CurveRectangularHyperbola1(std::shared_ptr<detail::C
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

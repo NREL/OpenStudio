@@ -162,4 +162,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CURVESIGMOID_IMPL_HPP
+#endif // MODEL_CURVESIGMOID_IMPL_HPP

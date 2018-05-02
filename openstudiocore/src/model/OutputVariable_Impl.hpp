@@ -145,4 +145,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_OUTPUTVARIABLE_IMPL_HPP
+#endif // MODEL_OUTPUTVARIABLE_IMPL_HPP

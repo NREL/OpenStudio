@@ -60,9 +60,9 @@ class MODEL_API CoilCoolingCooledBeam : public StraightComponent {
   /** @name Getters */
   //@{
 
-  //unsigned inletPort() const;
+  //unsigned inletPort();
 
-  //unsigned outletPort() const;
+  //unsigned outletPort();
 
   double coilSurfaceAreaperCoilLength() const;
 

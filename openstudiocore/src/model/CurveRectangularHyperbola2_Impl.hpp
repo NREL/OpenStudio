@@ -152,4 +152,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CURVERECTANGULARHYPERBOLA2_IMPL_HPP
+#endif // MODEL_CURVERECTANGULARHYPERBOLA2_IMPL_HPP

@@ -162,4 +162,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEQUARTIC_IMPL_HPP
+#endif // MODEL_CURVEQUARTIC_IMPL_HPP

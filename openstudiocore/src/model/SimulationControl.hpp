@@ -272,4 +272,4 @@ typedef boost::optional<SimulationControl> OptionalSimulationControl;
 }
 }
 
-#endif
+#endif

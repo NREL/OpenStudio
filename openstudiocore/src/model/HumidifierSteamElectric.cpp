@@ -102,12 +102,12 @@ namespace detail {
     return result;
   }
 
-  unsigned HumidifierSteamElectric_Impl::inletPort() const
+  unsigned HumidifierSteamElectric_Impl::inletPort()
   {
     return OS_Humidifier_Steam_ElectricFields::AirInletNodeName;
   }
 
-  unsigned HumidifierSteamElectric_Impl::outletPort() const
+  unsigned HumidifierSteamElectric_Impl::outletPort()
   {
     return OS_Humidifier_Steam_ElectricFields::AirOutletNodeName;
   }

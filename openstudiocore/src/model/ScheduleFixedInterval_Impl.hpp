@@ -131,4 +131,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_SCHEDULEFIXEDINTERVAL_IMPL_HPP
+#endif // MODEL_SCHEDULEFIXEDINTERVAL_IMPL_HPP

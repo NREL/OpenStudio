@@ -218,4 +218,4 @@ typedef std::vector<DaylightingControl> DaylightingControlVector;
 } // model
 } // openstudio
 
-#endif // MODEL_DAYLIGHTINGCONTROL_HPP
+#endif // MODEL_DAYLIGHTINGCONTROL_HPP

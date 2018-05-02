@@ -84,12 +84,12 @@ namespace detail {
     return FluidCoolerTwoSpeed::iddObjectType();
   }
 
-  unsigned FluidCoolerTwoSpeed_Impl::inletPort() const
+  unsigned FluidCoolerTwoSpeed_Impl::inletPort()
   {
     return  OS_FluidCooler_TwoSpeedFields::WaterInletNode;
   }
 
-  unsigned FluidCoolerTwoSpeed_Impl::outletPort() const
+  unsigned FluidCoolerTwoSpeed_Impl::outletPort()
   {
     return  OS_FluidCooler_TwoSpeedFields::WaterOutletNode;
   }

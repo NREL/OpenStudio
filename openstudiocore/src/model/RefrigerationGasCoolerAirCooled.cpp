@@ -625,4 +625,4 @@ RefrigerationGasCoolerAirCooled::RefrigerationGasCoolerAirCooled(std::shared_ptr
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

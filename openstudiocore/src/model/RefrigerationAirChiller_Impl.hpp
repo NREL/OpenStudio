@@ -289,4 +289,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONAIRCHILLER_IMPL_HPP
+#endif // MODEL_REFRIGERATIONAIRCHILLER_IMPL_HPP

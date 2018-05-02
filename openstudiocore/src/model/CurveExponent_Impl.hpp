@@ -152,4 +152,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEEXPONENT_IMPL_HPP
+#endif // MODEL_CURVEEXPONENT_IMPL_HPP

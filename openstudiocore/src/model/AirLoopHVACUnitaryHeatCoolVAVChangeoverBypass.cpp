@@ -412,12 +412,12 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::HeatingCoil);
   }
 
-  unsigned AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::inletPort() const
+  unsigned AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::inletPort()
   {
     return OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::AirInletNode;
   }
 
-  unsigned AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::outletPort() const
+  unsigned AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::outletPort()
   {
     return OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::AirOutletNode;
   }

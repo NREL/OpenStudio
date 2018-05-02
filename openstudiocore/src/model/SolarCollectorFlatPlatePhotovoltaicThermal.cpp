@@ -131,12 +131,12 @@ namespace detail {
     return result;
   }
 
-  unsigned SolarCollectorFlatPlatePhotovoltaicThermal_Impl::inletPort() const
+  unsigned SolarCollectorFlatPlatePhotovoltaicThermal_Impl::inletPort()
   {
     return OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::InletNodeName;
   }
 
-  unsigned SolarCollectorFlatPlatePhotovoltaicThermal_Impl::outletPort() const
+  unsigned SolarCollectorFlatPlatePhotovoltaicThermal_Impl::outletPort()
   {
     return OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::OutletNodeName;
   }

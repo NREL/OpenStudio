@@ -529,4 +529,4 @@ RefrigerationCondenserAirCooled::RefrigerationCondenserAirCooled(std::shared_ptr
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

@@ -245,12 +245,12 @@ namespace detail {
     return result;
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::inletPort() const
+  unsigned AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::inletPort()
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::outletPort() const
+  unsigned AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::outletPort()
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirOutletNodeName;
   }

@@ -142,4 +142,4 @@ ExternalInterfaceFunctionalMockupUnitExportToVariable::ExternalInterfaceFunction
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

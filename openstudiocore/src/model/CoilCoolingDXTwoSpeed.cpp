@@ -726,13 +726,13 @@ namespace detail{
   }
 
   // A3 , \field Air Inlet Node Name
-  unsigned CoilCoolingDXTwoSpeed_Impl::inletPort() const
+  unsigned CoilCoolingDXTwoSpeed_Impl::inletPort()
   {
     return OS_Coil_Cooling_DX_TwoSpeedFields::AirInletNodeName;
   }
 
   // A4 , \field Air Outlet Node Name
-  unsigned CoilCoolingDXTwoSpeed_Impl::outletPort() const
+  unsigned CoilCoolingDXTwoSpeed_Impl::outletPort()
   {
     return OS_Coil_Cooling_DX_TwoSpeedFields::AirOutletNodeName;
   }

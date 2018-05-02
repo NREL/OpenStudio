@@ -82,12 +82,12 @@ namespace detail {
     return CoilHeatingWaterBaseboardRadiant::iddObjectType();
   }
 
-  unsigned CoilHeatingWaterBaseboardRadiant_Impl::inletPort() const
+  unsigned CoilHeatingWaterBaseboardRadiant_Impl::inletPort()
   {
     return OS_Coil_Heating_Water_Baseboard_RadiantFields::InletNodeName;
   }
 
-  unsigned CoilHeatingWaterBaseboardRadiant_Impl::outletPort() const
+  unsigned CoilHeatingWaterBaseboardRadiant_Impl::outletPort()
   {
     return OS_Coil_Heating_Water_Baseboard_RadiantFields::OutletNodeName;
   }

@@ -118,4 +118,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_RUNPERIOD_IMPL_HPP
+#endif // MODEL_RUNPERIOD_IMPL_HPP

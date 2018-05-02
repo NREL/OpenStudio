@@ -698,12 +698,12 @@ namespace detail {
     return true;
   }
 
-  unsigned PumpConstantSpeed_Impl::inletPort() const
+  unsigned PumpConstantSpeed_Impl::inletPort()
   {
     return OS_Pump_ConstantSpeedFields::InletNodeName;
   }
 
-  unsigned PumpConstantSpeed_Impl::outletPort() const
+  unsigned PumpConstantSpeed_Impl::outletPort()
   {
     return OS_Pump_ConstantSpeedFields::OutletNodeName;
   }

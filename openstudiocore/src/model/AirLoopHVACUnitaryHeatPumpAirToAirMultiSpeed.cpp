@@ -575,11 +575,11 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::CoolingCoil);
   }
 
-  unsigned AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::inletPort() const {
+  unsigned AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::inletPort() {
     return OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::AirInletNode;
   }
 
-  unsigned AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::outletPort() const {
+  unsigned AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::outletPort() {
     return OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::AirOutletNode;
   }
 

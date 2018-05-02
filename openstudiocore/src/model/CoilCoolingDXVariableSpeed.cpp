@@ -147,11 +147,11 @@ namespace detail {
     return result;
   }
 
-  unsigned CoilCoolingDXVariableSpeed_Impl::inletPort() const {
+  unsigned CoilCoolingDXVariableSpeed_Impl::inletPort() {
     return OS_Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName;
   }
 
-  unsigned CoilCoolingDXVariableSpeed_Impl::outletPort() const {
+  unsigned CoilCoolingDXVariableSpeed_Impl::outletPort() {
     return OS_Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName;
   }
 

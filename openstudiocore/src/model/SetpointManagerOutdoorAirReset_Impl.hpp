@@ -256,4 +256,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_SETPOINTMANAGEROUTDOORAIRRESET_IMPL_HPP
+#endif // MODEL_SETPOINTMANAGEROUTDOORAIRRESET_IMPL_HPP

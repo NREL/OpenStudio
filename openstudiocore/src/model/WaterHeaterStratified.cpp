@@ -1971,4 +1971,4 @@ WaterHeaterStratified::WaterHeaterStratified(std::shared_ptr<detail::WaterHeater
   }
 
 } // model
-} // openstudio
+} // openstudio

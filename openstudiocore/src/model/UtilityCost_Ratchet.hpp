@@ -129,4 +129,4 @@ typedef std::vector<UtilityCost_Ratchet> UtilityCost_RatchetVector;
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_RATCHET_HPP
+#endif // MODEL_UTILITYCOST_RATCHET_HPP

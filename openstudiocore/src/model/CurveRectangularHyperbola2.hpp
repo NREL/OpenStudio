@@ -150,4 +150,4 @@ typedef std::vector<CurveRectangularHyperbola2> CurveRectangularHyperbola2Vector
 } // model
 } // openstudio
 
-#endif // MODEL_CURVERECTANGULARHYPERBOLA2_HPP
+#endif // MODEL_CURVERECTANGULARHYPERBOLA2_HPP

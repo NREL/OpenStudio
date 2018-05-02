@@ -123,4 +123,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_VARIABLE_IMPL_HPP
+#endif // MODEL_UTILITYCOST_VARIABLE_IMPL_HPP

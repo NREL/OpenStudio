@@ -190,4 +190,4 @@ ExternalInterfaceFunctionalMockupUnitExportToSchedule::ExternalInterfaceFunction
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

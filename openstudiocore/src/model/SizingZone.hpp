@@ -346,4 +346,4 @@ typedef std::vector<SizingZone> SizingZoneVector;
 } // model
 } // openstudio
 
-#endif // MODEL_SIZINGZONE_HPP
+#endif // MODEL_SIZINGZONE_HPP

@@ -153,4 +153,4 @@ typedef std::vector<CurveCubic> CurveCubicVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVECUBIC_HPP
+#endif // MODEL_CURVECUBIC_HPP

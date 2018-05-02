@@ -121,4 +121,4 @@ typedef std::vector<ExternalInterfaceActuator> ExternalInterfaceActuatorVector;
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEACTUATOR_HPP
+#endif // MODEL_EXTERNALINTERFACEACTUATOR_HPP

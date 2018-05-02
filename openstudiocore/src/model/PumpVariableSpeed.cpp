@@ -148,12 +148,12 @@ namespace detail {
     return result;
   }
 
-  unsigned PumpVariableSpeed_Impl::inletPort() const
+  unsigned PumpVariableSpeed_Impl::inletPort()
   {
     return OS_Pump_VariableSpeedFields::InletNodeName;
   }
 
-  unsigned PumpVariableSpeed_Impl::outletPort() const
+  unsigned PumpVariableSpeed_Impl::outletPort()
   {
     return OS_Pump_VariableSpeedFields::OutletNodeName;
   }

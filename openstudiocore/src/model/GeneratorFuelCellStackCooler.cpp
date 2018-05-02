@@ -467,11 +467,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned GeneratorFuelCellStackCooler_Impl::inletPort() const {
+  unsigned GeneratorFuelCellStackCooler_Impl::inletPort() {
     return OS_Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterInletNodeName;
   }
 
-  unsigned GeneratorFuelCellStackCooler_Impl::outletPort() const {
+  unsigned GeneratorFuelCellStackCooler_Impl::outletPort() {
     return OS_Generator_FuelCell_StackCoolerFields::HeatRecoveryWaterOutletNodeName;
   }
 

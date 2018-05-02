@@ -281,11 +281,11 @@ namespace detail {
     return result;
   }
 
-  unsigned HeaderedPumpsConstantSpeed_Impl::inletPort() const {
+  unsigned HeaderedPumpsConstantSpeed_Impl::inletPort() {
     return OS_HeaderedPumps_ConstantSpeedFields::InletNodeName;
   }
 
-  unsigned HeaderedPumpsConstantSpeed_Impl::outletPort() const {
+  unsigned HeaderedPumpsConstantSpeed_Impl::outletPort() {
     return OS_HeaderedPumps_ConstantSpeedFields::OutletNodeName;
   }
 

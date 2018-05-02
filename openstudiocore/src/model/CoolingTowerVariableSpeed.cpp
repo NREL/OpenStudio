@@ -713,12 +713,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned CoolingTowerVariableSpeed_Impl::inletPort() const
+  unsigned CoolingTowerVariableSpeed_Impl::inletPort()
   {
     return OS_CoolingTower_VariableSpeedFields::WaterInletNode;
   }
 
-  unsigned CoolingTowerVariableSpeed_Impl::outletPort() const
+  unsigned CoolingTowerVariableSpeed_Impl::outletPort()
   {
     return OS_CoolingTower_VariableSpeedFields::WaterOutletNode;
   }

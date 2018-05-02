@@ -160,12 +160,12 @@ namespace detail {
       return isEmpty(OS_Coil_Heating_DesuperheaterFields::HeatReclaimRecoveryEfficiency);
   }
 
-  unsigned CoilHeatingDesuperheater_Impl::inletPort() const
+  unsigned CoilHeatingDesuperheater_Impl::inletPort()
   {
       return OS_Coil_Heating_DesuperheaterFields::AirInletNodeName;
   }
 
-  unsigned CoilHeatingDesuperheater_Impl::outletPort() const
+  unsigned CoilHeatingDesuperheater_Impl::outletPort()
   {
       return OS_Coil_Heating_DesuperheaterFields::AirOutletNodeName;
   }

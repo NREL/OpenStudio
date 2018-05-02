@@ -68,11 +68,11 @@ class MODEL_API AirLoopHVACZoneSplitter_Impl : public Splitter_Impl {
 
   std::vector<openstudio::IdfObject> remove() override;
 
-  virtual unsigned inletPort() const override;
+  unsigned inletPort() override;
 
-  unsigned outletPort(unsigned branchIndex) const override;
+  unsigned outletPort(unsigned branchIndex) override;
 
-  unsigned nextOutletPort() const override;
+  unsigned nextOutletPort() override;
 
   std::vector<ThermalZone> thermalZones();
 

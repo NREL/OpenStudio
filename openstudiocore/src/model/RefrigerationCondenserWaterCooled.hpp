@@ -187,4 +187,4 @@ typedef std::vector<RefrigerationCondenserWaterCooled> RefrigerationCondenserWat
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONCONDENSERWATERCOOLED_HPP
+#endif // MODEL_REFRIGERATIONCONDENSERWATERCOOLED_HPP

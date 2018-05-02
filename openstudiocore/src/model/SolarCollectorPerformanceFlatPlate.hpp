@@ -149,4 +149,4 @@ typedef std::vector<SolarCollectorPerformanceFlatPlate> SolarCollectorPerformanc
 } // model
 } // openstudio
 
-#endif // MODEL_SOLARCOLLECTORPERFORMANCEFLATPLATE_HPP
+#endif // MODEL_SOLARCOLLECTORPERFORMANCEFLATPLATE_HPP
