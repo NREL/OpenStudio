@@ -87,12 +87,12 @@ namespace detail {
     return CoilCoolingFourPipeBeam::iddObjectType();
   }
 
-  unsigned CoilCoolingFourPipeBeam_Impl::inletPort() const
+  unsigned CoilCoolingFourPipeBeam_Impl::inletPort()
   {
     return OS_Coil_Cooling_FourPipeBeamFields::ChilledWaterInletNodeName;
   }
 
-  unsigned CoilCoolingFourPipeBeam_Impl::outletPort() const
+  unsigned CoilCoolingFourPipeBeam_Impl::outletPort()
   {
     return OS_Coil_Cooling_FourPipeBeamFields::ChilledWaterOutletNodeName;
   }
@@ -158,7 +158,9 @@ namespace detail {
   /* Nodes */
 
   boost::optional<Node> CoilCoolingFourPipeBeam_Impl::chilledWaterInletNode() const {
-    unsigned port = inletPort();
+    // TODO: use this once port methods are set to const
+    // unsigned port = inletPort();
+    unsigned port = OS_Coil_Cooling_FourPipeBeamFields::ChilledWaterInletNodeName;
     boost::optional<ModelObject> mo = connectedObject(port);
     boost::optional<Node> result;
 
@@ -174,7 +176,9 @@ namespace detail {
   }
 
   boost::optional<Node> CoilCoolingFourPipeBeam_Impl::chilledWaterOutletNode() const {
-    unsigned port = outletPort();
+    // TODO: use this once port methods are set to const
+    // unsigned port = outletPort();
+    unsigned port = OS_Coil_Cooling_FourPipeBeamFields::ChilledWaterOutletNodeName;
     boost::optional<ModelObject> mo = connectedObject(port);
     boost::optional<Node> result;
 
