@@ -1197,12 +1197,20 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
             ss << " Removing it.";
             comp1->remove();
           } else {
-            ss << " But this component is not removable. Trying to forcibly remove it";
-            // TODO: Trying to call the base ModelObject_Impl but it ends up calling Node_Impl::remove anyways
-            std::vector<IdfObject> delComps = comp1->getImpl<model::detail::ModelObject_Impl>().get()->remove();
-            if (delComps.empty()) {
-              ss << ", but it didn't work.";
-            }
+
+            ss << " But this component is not removable. You should use the Ruby bindings to disconnect then remove it";
+
+            //ss << " But this component is not removable. Trying to forcibly disconnect then remove it";
+            //// Start by disconnecting
+            //comp1->disconnect();
+            //// Then remove
+            //// TODO: Problem: this will produce a crash when drawing later...
+            //std::vector<IdfObject> delComps = comp1->remove();
+            //// Check whether it did delete something or not
+            //if (delComps.empty()) {
+              //ss << ", but it didn't work.";
+            //}
+
           }
           QMessageBox box(QMessageBox::Warning,
                           QString("Orphaned component Found"),
