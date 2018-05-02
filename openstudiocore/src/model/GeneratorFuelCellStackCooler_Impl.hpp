@@ -191,9 +191,9 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-    virtual unsigned inletPort() const override;
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort() const override;
+    virtual unsigned outletPort() override;
 
     bool addToNode(Node & node) override;
 

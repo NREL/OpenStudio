@@ -80,9 +80,9 @@ namespace detail {
 
     virtual bool isRemovable() const override;
 
-    virtual unsigned inletPort() const override;
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort() const override;
+    virtual unsigned outletPort() override;
 
     boost::optional<Node> inducedAirInletNode() const;
 

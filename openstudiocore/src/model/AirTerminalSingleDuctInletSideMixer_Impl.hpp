@@ -80,8 +80,8 @@ namespace detail {
     /** @name Other */
     //@{
 
-    virtual unsigned inletPort() const override;
-    virtual unsigned outletPort() const override;
+    unsigned inletPort() override;
+    unsigned outletPort() override;
     bool addToNode(Node& node) override;
     std::vector<openstudio::IdfObject> remove() override;
     bool isRemovable() const override;

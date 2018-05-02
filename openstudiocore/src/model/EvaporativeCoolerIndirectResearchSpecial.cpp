@@ -810,4 +810,4 @@ EvaporativeCoolerIndirectResearchSpecial::EvaporativeCoolerIndirectResearchSpeci
   }
 
 } // model
-} // openstudio
+} // openstudio

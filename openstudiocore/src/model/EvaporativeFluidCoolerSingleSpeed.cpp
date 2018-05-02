@@ -1003,4 +1003,4 @@ EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(std::shared
   }
 
 } // model
-} // openstudio
+} // openstudio

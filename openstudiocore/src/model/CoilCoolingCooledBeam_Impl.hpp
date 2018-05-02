@@ -66,9 +66,9 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned inletPort() const override;
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort() const override;
+    virtual unsigned outletPort() override;
 
     virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 

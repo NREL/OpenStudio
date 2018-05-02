@@ -146,11 +146,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned TemperingValve_Impl::inletPort() const {
+  unsigned TemperingValve_Impl::inletPort() {
     return OS_TemperingValveFields::InletNodeName;
   }
 
-  unsigned TemperingValve_Impl::outletPort() const {
+  unsigned TemperingValve_Impl::outletPort() {
     return OS_TemperingValveFields::OutletNodeName;
   }
 

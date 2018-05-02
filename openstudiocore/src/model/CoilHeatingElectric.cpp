@@ -191,12 +191,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned CoilHeatingElectric_Impl::inletPort() const
+  unsigned CoilHeatingElectric_Impl::inletPort()
   {
     return OS_Coil_Heating_ElectricFields::AirInletNodeName;
   }
 
-  unsigned CoilHeatingElectric_Impl::outletPort() const
+  unsigned CoilHeatingElectric_Impl::outletPort()
   {
     return OS_Coil_Heating_ElectricFields::AirOutletNodeName;
   }

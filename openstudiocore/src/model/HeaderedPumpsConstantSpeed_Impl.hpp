@@ -151,9 +151,9 @@ namespace detail {
     /** @name Other */
     //@{
 
-    virtual unsigned inletPort() const override;
+    unsigned inletPort() override;
 
-    virtual unsigned outletPort() const override;
+    unsigned outletPort() override;
 
     bool addToNode(Node & node) override;
 
@@ -169,4 +169,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_HEADEREDPUMPSCONSTANTSPEED_IMPL_HPP
+#endif // MODEL_HEADEREDPUMPSCONSTANTSPEED_IMPL_HPP

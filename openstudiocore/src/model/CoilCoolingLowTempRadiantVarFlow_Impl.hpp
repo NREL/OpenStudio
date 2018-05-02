@@ -71,9 +71,9 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() const override;
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort() const override;
+    virtual unsigned outletPort() override;
 
     virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 

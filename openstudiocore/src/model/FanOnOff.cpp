@@ -127,12 +127,12 @@ namespace detail {
 
   // Inlet and Outlet nodes
 
-  unsigned FanOnOff_Impl::inletPort() const
+  unsigned FanOnOff_Impl::inletPort()
   {
     return OS_Fan_OnOffFields::AirInletNodeName;
   }
 
-  unsigned FanOnOff_Impl::outletPort() const
+  unsigned FanOnOff_Impl::outletPort()
   {
     return OS_Fan_OnOffFields::AirOutletNodeName;
   }

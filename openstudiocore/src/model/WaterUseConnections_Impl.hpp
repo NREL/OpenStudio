@@ -85,9 +85,9 @@ class MODEL_API WaterUseConnections_Impl : public StraightComponent_Impl {
 
   void resetColdWaterSupplyTemperatureSchedule();
 
-  virtual unsigned inletPort() const override;
+  unsigned inletPort() override;
 
-  virtual unsigned outletPort() const override;
+  unsigned outletPort() override;
 
   std::vector<WaterUseEquipment> waterUseEquipment() const;
 

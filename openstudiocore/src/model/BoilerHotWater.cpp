@@ -791,4 +791,4 @@ BoilerHotWater::BoilerHotWater(std::shared_ptr<detail::BoilerHotWater_Impl> impl
   }
 
 } // model
-} // openstudio
+} // openstudio

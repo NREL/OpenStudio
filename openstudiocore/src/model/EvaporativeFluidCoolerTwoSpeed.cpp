@@ -1327,4 +1327,4 @@ EvaporativeFluidCoolerTwoSpeed::EvaporativeFluidCoolerTwoSpeed(std::shared_ptr<d
   }
 
 } // model
-} // openstudio
+} // openstudio

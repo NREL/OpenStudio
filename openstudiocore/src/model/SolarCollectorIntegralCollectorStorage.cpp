@@ -126,12 +126,12 @@ namespace detail {
     return result;
   }
 
-  unsigned SolarCollectorIntegralCollectorStorage_Impl::inletPort() const
+  unsigned SolarCollectorIntegralCollectorStorage_Impl::inletPort()
   {
     return OS_SolarCollector_IntegralCollectorStorageFields::InletNodeName;
   }
 
-  unsigned SolarCollectorIntegralCollectorStorage_Impl::outletPort() const
+  unsigned SolarCollectorIntegralCollectorStorage_Impl::outletPort()
   {
     return OS_SolarCollector_IntegralCollectorStorageFields::OutletNodeName;
   }

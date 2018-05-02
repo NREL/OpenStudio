@@ -70,9 +70,9 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    virtual unsigned inletPort() const override;
+    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort() const override;
+    virtual unsigned outletPort() override;
 
     //@}
     /** @name Setters */

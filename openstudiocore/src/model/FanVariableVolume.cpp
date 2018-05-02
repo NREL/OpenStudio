@@ -648,12 +648,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned FanVariableVolume_Impl::inletPort() const
+  unsigned FanVariableVolume_Impl::inletPort()
   {
     return OS_Fan_VariableVolumeFields::AirInletNodeName;
   }
 
-  unsigned FanVariableVolume_Impl::outletPort() const
+  unsigned FanVariableVolume_Impl::outletPort()
   {
     return OS_Fan_VariableVolumeFields::AirOutletNodeName;
   }

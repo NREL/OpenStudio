@@ -259,8 +259,8 @@ namespace detail {
     /** @name Other */
     //@{
 
-    virtual unsigned inletPort() const override;
-    virtual unsigned outletPort() const override;
+    unsigned inletPort() override;
+    unsigned outletPort() override;
     std::vector<ModelObject> children() const override;
     ModelObject clone(Model model) const override;
 

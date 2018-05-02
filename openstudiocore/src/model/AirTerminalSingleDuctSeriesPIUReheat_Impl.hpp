@@ -151,8 +151,8 @@ namespace detail {
     /** @name Other */
     //@{
 
-    virtual unsigned inletPort() const override;
-    virtual unsigned outletPort() const override;
+    unsigned inletPort() override;
+    unsigned outletPort() override;
     unsigned secondaryAirInletPort() const;
     boost::optional<Node> secondaryAirInletNode() const;
     bool addToNode(Node & node) override;
