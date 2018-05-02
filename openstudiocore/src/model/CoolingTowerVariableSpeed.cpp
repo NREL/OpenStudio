@@ -1188,4 +1188,4 @@ CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(std::shared_ptr<detail::Coo
   }
 
 } // model
-} // openstudio
+} // openstudio

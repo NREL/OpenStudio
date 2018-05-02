@@ -118,12 +118,12 @@ namespace detail {
     return result;
   }
 
-  unsigned FanConstantVolume_Impl::inletPort()
+  unsigned FanConstantVolume_Impl::inletPort() const
   {
     return OS_Fan_ConstantVolumeFields::AirInletNodeName;
   }
 
-  unsigned FanConstantVolume_Impl::outletPort()
+  unsigned FanConstantVolume_Impl::outletPort() const
   {
     return OS_Fan_ConstantVolumeFields::AirOutletNodeName;
   }

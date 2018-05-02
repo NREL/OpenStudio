@@ -1670,4 +1670,4 @@ PumpVariableSpeed::PumpVariableSpeed(std::shared_ptr<detail::PumpVariableSpeed_I
   }
 
 } // model
-} // openstudio
+} // openstudio

@@ -637,4 +637,4 @@ RefrigerationCondenserWaterCooled::RefrigerationCondenserWaterCooled(std::shared
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio
