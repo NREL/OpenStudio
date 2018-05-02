@@ -341,11 +341,11 @@ namespace detail {
     return result;
   }
 
-  unsigned HeaderedPumpsVariableSpeed_Impl::inletPort() {
+  unsigned HeaderedPumpsVariableSpeed_Impl::inletPort() const {
     return OS_HeaderedPumps_VariableSpeedFields::InletNodeName;
   }
 
-  unsigned HeaderedPumpsVariableSpeed_Impl::outletPort() {
+  unsigned HeaderedPumpsVariableSpeed_Impl::outletPort() const {
     return OS_HeaderedPumps_VariableSpeedFields::OutletNodeName;
   }
 

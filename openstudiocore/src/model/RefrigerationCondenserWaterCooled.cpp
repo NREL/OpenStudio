@@ -72,12 +72,12 @@ namespace detail {
     : StraightComponent_Impl(other,model,keepHandle)
   {}
 
-  unsigned RefrigerationCondenserWaterCooled_Impl::inletPort()
+  unsigned RefrigerationCondenserWaterCooled_Impl::inletPort() const
   {
     return OS_Refrigeration_Condenser_WaterCooledFields::WaterInletNodeName;
   }
 
-  unsigned RefrigerationCondenserWaterCooled_Impl::outletPort()
+  unsigned RefrigerationCondenserWaterCooled_Impl::outletPort() const
   {
     return OS_Refrigeration_Condenser_WaterCooledFields::WaterOutletNodeName;
   }

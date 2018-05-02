@@ -235,4 +235,4 @@ typedef std::vector<HeatExchangerAirToAirSensibleAndLatent> HeatExchangerAirToAi
 } // model
 } // openstudio
 
-#endif // MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_HPP
+#endif // MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_HPP

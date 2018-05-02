@@ -57,10 +57,10 @@ class MODEL_API AirflowNetworkNode : public ModelObject
   //bool removeFromLoop();
 
   //** Returns the inlet port. **/
-  //unsigned inletPort();
+  //unsigned inletPort() const;
 
   //** Returns the outlet port. **/
-  //unsigned outletPort();
+  //unsigned outletPort() const;
 
   //** Returns the optional ModelObject connected to the inlet port. **/
   //boost::optional<ModelObject> inletModelObject();

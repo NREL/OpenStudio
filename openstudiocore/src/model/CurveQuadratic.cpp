@@ -362,4 +362,4 @@ CurveQuadratic::CurveQuadratic(std::shared_ptr<detail::CurveQuadratic_Impl> impl
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

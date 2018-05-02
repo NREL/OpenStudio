@@ -126,4 +126,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEFUNCTIONALPRESSUREDROP_IMPL_HPP
+#endif // MODEL_CURVEFUNCTIONALPRESSUREDROP_IMPL_HPP

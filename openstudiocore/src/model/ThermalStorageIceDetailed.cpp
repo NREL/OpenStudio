@@ -248,11 +248,11 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_ThermalStorage_Ice_DetailedFields::ChargingCurve);
   }
 
-  unsigned ThermalStorageIceDetailed_Impl::inletPort() {
+  unsigned ThermalStorageIceDetailed_Impl::inletPort() const {
     return OS_ThermalStorage_Ice_DetailedFields::InletNodeName;
   }
 
-  unsigned ThermalStorageIceDetailed_Impl::outletPort() {
+  unsigned ThermalStorageIceDetailed_Impl::outletPort() const {
     return OS_ThermalStorage_Ice_DetailedFields::OutletNodeName;
   }
 

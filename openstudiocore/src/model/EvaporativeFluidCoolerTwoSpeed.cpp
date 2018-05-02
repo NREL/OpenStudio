@@ -128,12 +128,12 @@ namespace detail {
     return false;
   }
 
-  unsigned EvaporativeFluidCoolerTwoSpeed_Impl::inletPort()
+  unsigned EvaporativeFluidCoolerTwoSpeed_Impl::inletPort() const
   {
     return OS_EvaporativeFluidCooler_TwoSpeedFields::WaterInletNodeName;
   }
 
-  unsigned EvaporativeFluidCoolerTwoSpeed_Impl::outletPort()
+  unsigned EvaporativeFluidCoolerTwoSpeed_Impl::outletPort() const
   {
     return OS_EvaporativeFluidCooler_TwoSpeedFields::WaterOutletNodeName;
   }

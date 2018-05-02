@@ -136,12 +136,12 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
                               schedule);
     return result;
   }
-  unsigned AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::inletPort()
+  unsigned AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outletPort()
+  unsigned AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeamFields::SupplyAirOutletNodeName;
   }

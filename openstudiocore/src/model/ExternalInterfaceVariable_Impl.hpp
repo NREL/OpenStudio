@@ -101,4 +101,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEVARIABLE_IMPL_HPP
+#endif // MODEL_EXTERNALINTERFACEVARIABLE_IMPL_HPP
