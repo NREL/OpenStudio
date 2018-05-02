@@ -1208,7 +1208,6 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
                           QString("Orphaned component Found"),
                           toQString(ss.str()),
                           QMessageBox::Ok);
-          // box.setDetailedText(toQString(ss.string()));
           box.exec();
 
         } else {
