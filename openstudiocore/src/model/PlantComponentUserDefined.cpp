@@ -407,11 +407,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    unsigned PlantComponentUserDefined_Impl::inletPort() {
+    unsigned PlantComponentUserDefined_Impl::inletPort() const {
       return OS_PlantComponent_UserDefinedFields::PlantInletNodeName;
     }
 
-    unsigned PlantComponentUserDefined_Impl::outletPort() {
+    unsigned PlantComponentUserDefined_Impl::outletPort() const {
       return OS_PlantComponent_UserDefinedFields::PlantOutletNodeName;
     }
 
