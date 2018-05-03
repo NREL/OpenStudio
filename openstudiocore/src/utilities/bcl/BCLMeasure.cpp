@@ -291,7 +291,7 @@ namespace openstudio{
       file.close();
 
       BCLFileReference measureDocFileReference(measureDocPath, true);
-      measureDocFileReference.setUsageType("docs");
+      measureDocFileReference.setUsageType("doc");
       m_bclXML.addFile(measureDocFileReference);
     }
 
@@ -1157,7 +1157,7 @@ namespace openstudio{
 
         if (!m_bclXML.hasFile(srcItemPath)){
           BCLFileReference file(srcItemPath, true);
-          file.setUsageType("docs");
+          file.setUsageType("doc");
           result = true;
           filesToAdd.push_back(file);
         }
