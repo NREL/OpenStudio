@@ -61,7 +61,6 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemSen
   boost::optional<std::string> s;
 
   IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_Sensor);
-  m_idfObjects.push_back(idfObject);
   //Name
   s = modelObject.name();
   if (s) {
@@ -91,24 +90,33 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemSen
           newline.replace(pos, 38, mObject.get().nameString());
         }
       }
+      else {
+        //did not find an object with the UID so do not FT
+        LOG(Error, "Key Name for Sensor '" << modelObject.nameString() << "' is UID but does not exist, it will not be translated.");
+        return boost::none;
+      }
     }
     idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, newline);
   }
   d = modelObject.outputVariable();
   if (d.is_initialized()) {
     idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, d.get().variableName());
+    m_idfObjects.push_back(idfObject);
     return idfObject;
   }
   m = modelObject.outputMeter();
   if (m.is_initialized()){
     idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, m.get().name());
+    m_idfObjects.push_back(idfObject);
     return idfObject;
   }
   s = modelObject.outputVariableOrMeterName();
   if (s.is_initialized()) {
     idfObject.setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, s.get());
+    m_idfObjects.push_back(idfObject);
     return idfObject;
   }
+  m_idfObjects.push_back(idfObject);
   return idfObject;
 }
 

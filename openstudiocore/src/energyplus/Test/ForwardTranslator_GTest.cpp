@@ -614,7 +614,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
     }
   };
 
-  Logger::instance().standardOutLogger().enable();
+  // Logger::instance().standardOutLogger().enable();
 
   Model model;
   Space space(model); // not in thermal zone will generate a warning
