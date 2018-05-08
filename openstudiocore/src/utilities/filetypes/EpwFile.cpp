@@ -992,7 +992,7 @@ namespace openstudio{
       // Could do a warning message here
       return boost::none;
     }
-    return boost::optional<std::string>(getUnits(id));
+    return getUnits(id);
   }
 
   std::string EpwDesignCondition::getUnits(EpwDesignField field)
@@ -4494,11 +4494,14 @@ namespace openstudio{
 
     int nDesignConditions = std::stoi(split[1]);
 
-    if (split.size() < 70) {
-      LOG(Error, "Expected at least 70 design condition fields rather than the " << split.size() << " fields in the EPW file '" << m_path << "'");
+    double expected_split_size = 70;
+    expected_split_size += (nDesignConditions - 1) * 68;
+
+    if (split.size() < expected_split_size) {
+      LOG(Error, "Expected at least " << expected_split_size << " design condition fields rather than the " << split.size() << " fields in the EPW file '" << m_path << "'");
       return false;
     }
-    else if (split.size() > 70) {
+    else if (nDesignConditions > 1) {
       LOG(Warn, "Found " << nDesignConditions << " in the EPW file '" << m_path << "'");
     }
 
