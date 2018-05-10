@@ -5604,7 +5604,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
   // Keep a map of chiller to a flag indicating if it should be used
   // in thermal energy storage discharge
-  std::map<model::ModelObject,bool> enableOnThrmlEngyStorDischargeMap;
+  std::vector< std::pair<model::ModelObject,bool> > enableOnThrmlEngyStorDischargeMap;
   auto chillerElements = fluidSysElement.elementsByTagName("Chlr");
   for (int i = 0; i < chillerElements.count(); i++) {
     auto chillerElement = chillerElements.at(i).toElement();
@@ -5621,9 +5621,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
       if( thermalStorage ) {
         if( chillerElement.firstChildElement("EnableOnThrmlEngyStorDischrg").text().toInt() == 1 ) {
-          enableOnThrmlEngyStorDischargeMap.insert(std::make_pair(chiller,true));
+          enableOnThrmlEngyStorDischargeMap.push_back(std::make_pair(chiller,true));
         } else {
-          enableOnThrmlEngyStorDischargeMap.insert(std::make_pair(chiller,false));
+          enableOnThrmlEngyStorDischargeMap.push_back(std::make_pair(chiller,false));
         }
       }
     }
