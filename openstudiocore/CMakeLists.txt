@@ -8,7 +8,7 @@ if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-project(OpenStudio VERSION 2.5.1)
+project(OpenStudio VERSION 2.5.2)
 
 include(ExternalProject)
 include(CPackComponent)
@@ -1677,13 +1677,104 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-0")
+# Default the debian package name to include version to allow several versions to be installed concurrently instead of overwritting any existing one
+set(CPACK_DEBIAN_PACKAGE_NAME "openstudio-${OpenStudio_VERSION}")
+# CPACK_DEBIAN_PACKAGE_DESCRIPTION defaults to this one too. dpkg-deb -I xxx.deb will show this description
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenStudio is a cross-platform collection of software tools to support whole building energy modeling using EnergyPlus and advanced daylight analysis using Radiance")
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://www.openstudio.net")
+
+# The actual .deb file name on disk
 set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${CMAKE_SYSTEM_NAME}")
 set(CPACK_PACKAGE_CONTACT "openstudio@nrel.gov")
 
 if( APPLE )
   set( CPACK_IFW_TARGET_DIRECTORY /Applications/OpenStudio-${OpenStudio_VERSION}/ )
 elseif( UNIX )
+  # Default method doesn't use IFW but Deb, so this one is probably useless (but harmless)
   set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
+  # These two will set the .deb install path correctly
+  set( CPACK_SET_DESTDIR ON )
+  set( CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/ )
+  # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio
+  # Add an abritary link (broken) at build/openstudio (if build/ is your build folder) that already points to the **future** /usr/local/openstudio-x.y.z/bin/openstudio
+  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio openstudio)
+  # Plus a versioned one
+  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio openstudio-${OpenStudio_VERSION})
+  # Have this link be installed with the .deb package in /usr/local/bin
+  install(FILES ${CMAKE_BINARY_DIR}/openstudio DESTINATION /usr/local/bin COMPONENT CLI)
+  install(FILES ${CMAKE_BINARY_DIR}/openstudio-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
+
+  # Same for OpenStudioApp
+  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/OpenStudioApp OpenStudioApp)
+  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/OpenStudioApp OpenStudioApp-${OpenStudio_VERSION})
+
+  # Have this link be installed with the .deb package in /usr/local/bin
+  install(FILES ${CMAKE_BINARY_DIR}/OpenStudioApp DESTINATION /usr/local/bin COMPONENT CLI)
+  install(FILES ${CMAKE_BINARY_DIR}/OpenStudioApp-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
+
+
+  # Create a proper App with file associations
+
+  # Install the .desktop manifest (allows the App to be seen in the Dash and adding to the dock, and to map it a mimetype)
+  install(FILES "${CMAKE_SOURCE_DIR}/openstudioapp.desktop" DESTINATION /usr/share/applications)
+  # Install the XML mime info
+  install(FILES "${CMAKE_SOURCE_DIR}/x-openstudio.xml" DESTINATION /usr/share/mime/application)
+
+  # Copy the icons
+  # Cf. http://standards.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
+  foreach(_size 16 32 48 64 128 256)
+    # Copy OS App icons
+    install(
+      FILES "${CMAKE_SOURCE_DIR}/icons/os_${_size}.png"
+      DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/apps"
+      RENAME openstudioapp.png
+    )
+    # Install OSM mimetypes icons
+    install(
+      FILES "${CMAKE_SOURCE_DIR}/icons/osm_${_size}.png"
+      DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/mimetypes"
+      RENAME application-x-openstudio.png
+    )
+  endforeach()
+
+  # OS App has a 512 and 1024 too
+  foreach(_size 512 1024)
+    # Copy OS App icons
+    install(
+      FILES "${CMAKE_SOURCE_DIR}/icons/os_${_size}.png"
+      DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/apps"
+      RENAME openstudioapp.png
+    )
+  endforeach()
+
+  ## try to set up the menu system
+  #find_program(XDG-MIME_EXECUTABLE xdg-mime)
+  #find_program(XDG-DESKTOP-MENU_EXECUTABLE xdg-desktop-menu)
+  #find_program(UPDATE-MIME-DATABASE-EXECUTABLE update-mime-database)
+  #find_program(GTK-UPDATE-ICON-CACHE-EXECUTABLE gtk-update-icon-cache)
+
+
+  ## Install the Desktop Menu
+  ## xdg-desktop-menu install --novendor /usr/share/applications/openstudioapp.desktop
+  #INSTALL(CODE "execute_process(COMMAND ${XDG-DESKTOP-MENU_EXECUTABLE} install --novendor --mode system /usr/share/applications/openstudioapp.desktop)")
+
+  ## Register the mime description: this places it in /usr/share/mime/packages/
+  ## sudo xdg-mime install --novendor --mode system x-openstudio.xml
+  #INSTALL(CODE "execute_process(COMMAND ${MIME_EXECUTABLE} install --novendor --mode system /usr/share/mime/application/x-openstudio.xml)")
+  #INSTALL(CODE "execute_process(COMMAND echo COUCOU)")
+
+  ## Register the application launcher with the registered mimetype
+  ## sudo xdg-mime default openstudio.desktop application/x-openstudio
+  #INSTALL(CODE "execute_process(COMMAND ${MIME_EXECUTABLE} default /usr/share/applications/openstudio.desktop application/x-openstudio)")
+
+
+  ## Update the mime cache and icon cache
+  ## sudo update-mime-database /usr/share/mime
+  #INSTALL(CODE "execute_process(COMMAND ${UPDATE-MIME-DATABASE-EXECUTABLE} /usr/share/mime)")
+  ## sudo gtk-update-icon-cache /usr/share/icons/hicolor/ -f
+  #INSTALL(CODE "execute_process(COMMAND ${GTK-UPDATE-ICON-CACHE-EXECUTABLE} /usr/share/icons/hicolor/ -f)")
+
+
 endif()
 
 if(WIN32)

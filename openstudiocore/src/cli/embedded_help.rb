@@ -137,6 +137,45 @@ module Kernel
     return result
   end
 
+  # Finds files relative to a given location whose names
+  # (not including file extension) match the regex
+  # and whose extension matches the specified extension.
+  # Recursively includes files in subdirectories below the given location.
+  #
+  # @param path [String] the directory to search relative to the current file.
+  #   Use ./ for the current directory
+  # @param file_name_regexp [Regexp] the Ruby regular expression to match the file name
+  #   (including the file extension).
+  # @return [Array<String>] an array of absolute file paths matching the specified string
+  def embedded_files_relative(path, file_name_regexp)
+
+    # Resolve the absolute path to the caller location
+    absolute_path = File.dirname(caller_locations(1,1)[0].path) + '/' + path
+    if absolute_path.chars.first == ':'
+      absolute_path[0] = ''
+      absolute_path = File.expand_path absolute_path
+
+      # strip Windows drive letters
+      if /[A-Z]\:/.match(absolute_path)
+        absolute_path = absolute_path[2..-1]
+      end
+      absolute_path = ':' + absolute_path
+    end
+
+    # Loop through all the files in the embedded system
+    matches = []
+    EmbeddedScripting.allFileNamesAsString.split(';').each do |file|
+      # Skip files outside of the specified directory
+      next unless file.include?(absolute_path)
+      # Skip files that don't match the file_name_pattern criterion
+      next unless File.basename(file).match(file_name_regexp)
+      # If here, found a match
+      matches << file
+    end
+
+    return matches
+  end
+
 end
 
 $autoload_hash = {}

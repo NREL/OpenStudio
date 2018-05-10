@@ -235,6 +235,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslatePipeOutdoor.cpp
   ForwardTranslator/ForwardTranslatePlantLoop.cpp
   ForwardTranslator/ForwardTranslatePlantComponentTemperatureSource.cpp
+  ForwardTranslator/ForwardTranslatePlantComponentUserDefined.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationSchemes.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationCoolingLoad.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationHeatingLoad.cpp
@@ -576,7 +577,7 @@ set(${target_name}_test_src
   Test/Meter_GTest.cpp
   Test/People_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
-
+  Test/PlantComponentUserDefined_GTest.cpp
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
   Test/ScheduleInterval_GTest.cpp
   Test/ScheduleRuleset_GTest.cpp
