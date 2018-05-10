@@ -6964,7 +6964,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
       }
 
       result = fluidCooler;
-    } else if ( ( modCtrlElement.text().compare("TwoSpeed",Qt::CaseInsensitive) == 0 ) ) {
+    } else if ( ( modCtrlElement.text().compare("VariableSpeedDrive",Qt::CaseInsensitive) == 0 ) || ( modCtrlElement.text().compare("TwoSpeed",Qt::CaseInsensitive) == 0 ) ) {
       model::FluidCoolerTwoSpeed fluidCooler(model);
 
       QDomElement nameElement = htRejElement.firstChildElement("Name");
@@ -7064,7 +7064,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
       fluidCooler.setBlowdownCalculationMode("ConcentrationRatio");
 
       result = fluidCooler;
-    } else if ( ( modCtrlElement.text().compare("Bypass",Qt::CaseInsensitive) == 0 ) || ( modCtrlElement.text().compare("Cycling",Qt::CaseInsensitive) == 0 ) ) {
+    } else if ( ( modCtrlElement.text().compare("VariableSpeedDrive",Qt::CaseInsensitive) == 0 ) || ( modCtrlElement.text().compare("TwoSpeed",Qt::CaseInsensitive) == 0 ) ) {
       model::EvaporativeFluidCoolerTwoSpeed fluidCooler(model);
 
       QDomElement nameElement = htRejElement.firstChildElement("Name");
