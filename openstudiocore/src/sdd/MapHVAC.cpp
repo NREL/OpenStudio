@@ -4283,7 +4283,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   for ( const auto & fanInfo: exhaustFanInfo ) {
     model::FanZoneExhaust exhaustFan(model);
     exhaustFan.setName(fanInfo.second.exhFanNameElement.text().toStdString());
-    if ( fanInfo.second.exhFanNameElement.text().isEmpty() ) {
+    if ( fanInfo.second.exhFanEndUseCatElement.text().isEmpty() ) {
       exhaustFan.setEndUseSubcategory("General");
     } else {
       exhaustFan.setEndUseSubcategory(fanInfo.second.exhFanEndUseCatElement.text().toStdString());
