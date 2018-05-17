@@ -609,6 +609,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
           zoneControlThermostat.setString(ZoneControl_ThermostatFields::ZoneorZoneListName,modelObject.name().get());
           m_idfObjects.push_back(zoneControlThermostat);
 
+          // Need to handle the control type base don thermostat type (1: Single heating, 2: single cooling, 4: Dual setpoint)
           IdfObject scheduleCompact(openstudio::IddObjectType::Schedule_Compact);
           scheduleCompact.setName(modelObject.name().get() + " Thermostat Schedule");
           m_idfObjects.push_back(scheduleCompact);
@@ -633,6 +634,13 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             values[ZoneControl_ThermostatExtensibleFields::ControlObjectType] = idfThermostat->iddObject().name();
             values[ZoneControl_ThermostatExtensibleFields::ControlName] = idfThermostat->name().get();
             IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
+            if (idfThermostat->iddObject().name() == "ThermostatSetpoint:SingleHeating" ) {
+              scheduleCompact.setString(5, "1");
+            } else if (idfThermostat->iddObject().name() == "ThermostatSetpoint:SingleCooling" ) {
+              scheduleCompact.setString(5, "2");
+            } else {
+              scheduleCompact.setString(5, "4");
+            }
           }
         };
 
