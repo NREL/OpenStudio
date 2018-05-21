@@ -6,7 +6,6 @@
   %module openstudiomodelcore
 #endif
 
-
 %include <model/Model_Common_Include.i>
 
 #if defined SWIGRUBY

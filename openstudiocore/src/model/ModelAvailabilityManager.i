@@ -6,16 +6,16 @@
   %module openstudiomodelavailabilitymanager
 #endif
 
-#if defined SWIGCSHARP
-  #undef _csharp_module_name
-  #define _csharp_module_name OpenStudioModelAvailabilityManager
-#endif
-
 %include <model/Model_Common_Include.i>
 %import <model/ModelCore.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
+
+#if defined SWIGCSHARP
+  #undef _csharp_module_name
+  #define _csharp_module_name OpenStudioModelAvailabilityManager
+#endif
 
 MODELOBJECT_TEMPLATES(AvailabilityManagerNightCycle);
 MODELOBJECT_TEMPLATES(AvailabilityManagerHybridVentilation);
