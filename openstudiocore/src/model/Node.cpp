@@ -439,7 +439,7 @@ namespace detail{
     std::vector<std::string> types;
     return types;
   }
-
+  
   AirflowNetworkDistributionNode Node_Impl::getAirflowNetworkDistributionNode()
   {
     boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();
