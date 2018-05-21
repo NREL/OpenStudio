@@ -35,6 +35,7 @@
 %import <utilities/data/Variant.i>
 
 %template(EpwDataPointVector) std::vector<openstudio::EpwDataPoint>;
+%template(EpwDesignConditionVector) std::vector<openstudio::EpwDesignCondition>;
 %template(OptionalEpwDataPoint) boost::optional<openstudio::EpwDataPoint>;
 %template(OptionalAirState) boost::optional<openstudio::AirState>;
 
