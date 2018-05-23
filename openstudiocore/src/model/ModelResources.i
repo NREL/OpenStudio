@@ -8,7 +8,6 @@
 
 %include <model/Model_Common_Include.i>
 %import <model/ModelCore.i>
-%import <model/ModelSimulation.i>
 
 %{
   #include <model/ScheduleTypeRegistry.hpp>
@@ -23,12 +22,9 @@
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelResources
 
-  // ignore space for now
+  // ignore geometry objects for now, add back in with partial classes in ModelGeometry.i
   %ignore openstudio::model::SpaceType::spaces;
-
-  // ignore space load instance for now
   %ignore openstudio::model::SpaceLoadDefinition::instances;
-
   %ignore openstudio::model::ExteriorLoadDefinition::instances;
 
   // ignore schedule type

@@ -88,6 +88,7 @@ if(MSVC)
   # ignore deprecated warnings since we will export deprecated methods
   add_definitions(/wd4996 /bigobj)
 
+  # keep the following lists aligned with translator_names in \openstudiocore\ProjectMacros.cmake
   set(translator_wrappers
     csharp_OpenStudioAirflow_wrap.cxx
     csharp_OpenStudioEnergyPlus_wrap.cxx
@@ -101,13 +102,18 @@ if(MSVC)
     csharp_OpenStudioMeasure_wrap.cxx
     csharp_OpenStudioModel_wrap.cxx
     csharp_OpenStudioModelAirflow_wrap.cxx
+    csharp_OpenStudioModelAvailabilityManager_wrap.cxx
     csharp_OpenStudioModelCore_wrap.cxx
     csharp_OpenStudioModelGenerators_wrap.cxx
     csharp_OpenStudioModelGeometry_wrap.cxx
     csharp_OpenStudioModelHVAC_wrap.cxx
+    csharp_OpenStudioModelPlantEquipmentOperationScheme_wrap.cxx
     csharp_OpenStudioModelRefrigeration_wrap.cxx
     csharp_OpenStudioModelResources_wrap.cxx
+    csharp_OpenStudioModelSetpointManager
     csharp_OpenStudioModelSimulation_wrap.cxx
+    csharp_OpenStudioModelStraightComponent_wrap.cxx
+    csharp_OpenStudioModelZoneHVAC_wrap.cxx
     csharp_OpenStudioOSVersion_wrap.cxx
     csharp_OpenStudioModelEditor_wrap.cxx
   )

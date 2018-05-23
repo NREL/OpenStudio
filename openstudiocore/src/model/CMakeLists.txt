@@ -2018,20 +2018,43 @@ endif()
 set(swig_target_name ${target_name}_static)
 
 MAKE_SWIG_TARGET(OpenStudioModelCore model "${CMAKE_CURRENT_SOURCE_DIR}/ModelCore.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilities)
+list(APPEND OpenStudioModelSwigs OpenStudioModelCore)
 
 MAKE_SWIG_TARGET(OpenStudioModelSimulation model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSimulation.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelCore)
+list(APPEND OpenStudioModelSwigs OpenStudioModelSimulation)
 
-MAKE_SWIG_TARGET(OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelSimulation)
+MAKE_SWIG_TARGET(OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelCore)
+list(APPEND OpenStudioModelSwigs OpenStudioModelResources)
 
 MAKE_SWIG_TARGET(OpenStudioModelGeometry model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGeometry.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelResources)
+list(APPEND OpenStudioModelSwigs OpenStudioModelGeometry)
 
 MAKE_SWIG_TARGET(OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHVAC.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelGeometry)
+list(APPEND OpenStudioModelSwigs OpenStudioModelHVAC)
+
+MAKE_SWIG_TARGET(OpenStudioModelZoneHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelZoneHVAC.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelZoneHVAC)
+
+MAKE_SWIG_TARGET(OpenStudioModelSetpointManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSetpointManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelSetpointManager)
+
+MAKE_SWIG_TARGET(OpenStudioModelAvailabilityManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAvailabilityManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelAvailabilityManager)
+
+MAKE_SWIG_TARGET(OpenStudioModelPlantEquipmentOperationScheme model "${CMAKE_CURRENT_SOURCE_DIR}/ModelPlantEquipmentOperationScheme.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelPlantEquipmentOperationScheme)
+
+MAKE_SWIG_TARGET(OpenStudioModelStraightComponent model "${CMAKE_CURRENT_SOURCE_DIR}/ModelStraightComponent.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelStraightComponent)
 
 MAKE_SWIG_TARGET(OpenStudioModelAirflow model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAirflow.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelAirflow)
 
-MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelAirflow)
+MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelZoneHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelRefrigeration)
 
-MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelRefrigeration)
+MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelGenerators)
 
-MAKE_SWIG_TARGET(OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelGenerators)
+MAKE_SWIG_TARGET(OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${swig_target_name} "${OpenStudioModelSwigs}")
 
