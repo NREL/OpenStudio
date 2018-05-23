@@ -345,6 +345,13 @@ OS:SetpointManager:SingleZone:Humidity:Maximum,
   ,                                       !- Control Zone Name
   ;                                       !- Setpoint Node or NodeList Name
 
+OS:SetpointManager:SingleZone:Humidity:Minimum,
+  {3beb4328-e84f-4368-9105-1071d292ebe3}, !- Handle
+  Setpoint Manager Single Zone Humidity Minimum, !- Name
+  MinimumHumidityRatio,                   !- Control Variable
+  ,                                       !- Setpoint Node or NodeList Name
+  ;                                       !- Control Zone Name
+
 OS:SetpointManager:SingleZone:OneStageCooling,
   {698b3c0c-62eb-431c-a93b-571f5614da9a}, !- Handle
   Setpoint Manager Single Zone One Stage Cooling, !- Name

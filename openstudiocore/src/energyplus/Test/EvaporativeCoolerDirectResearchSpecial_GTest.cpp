@@ -27,48 +27,58 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
+
 #include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include "../../model/ZoneCapacitanceMultiplierResearchSpecial.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Schedule.hpp"
 
-#include <utilities/idd/ZoneCapacitanceMultiplier_ResearchSpecial_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
+#include "../../model/EvaporativeCoolerDirectResearchSpecial.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/EvaporativeCooler_Direct_ResearchSpecial_FieldEnums.hxx>
 
+#include <resources.hxx>
+
+#include <sstream>
+
+using namespace openstudio::energyplus;
 using namespace openstudio::model;
+using namespace openstudio;
 
-namespace openstudio {
-
-namespace energyplus {
-
-boost::optional<IdfObject> ForwardTranslator::translateZoneCapacitanceMultiplierResearchSpecial( ZoneCapacitanceMultiplierResearchSpecial & modelObject )
+TEST_F(EnergyPlusFixture,ForwardTranslator_EvaporativeCoolerDirectResearchSpecial_LimitFields)
 {
-  IdfObject idfObject( openstudio::IddObjectType::ZoneCapacitanceMultiplier_ResearchSpecial);
+  Model m;
 
-  m_idfObjects.push_back(idfObject);
+  Schedule sch =  m.alwaysOnDiscreteSchedule();
+  EvaporativeCoolerDirectResearchSpecial e(m, sch);
 
-  // This is a unique model object *in OpenStudio*
-  idfObject.setName("Zone Capacitance Multiplier Research Special");
+  ASSERT_TRUE(e.setEvaporativeOperationMinimumDrybulbTemperature(16));
+  ASSERT_TRUE(e.setEvaporativeOperationMaximumLimitWetbulbTemperature(24));
+  ASSERT_TRUE(e.setEvaporativeOperationMaximumLimitDrybulbTemperature(28));
 
-  if (!modelObject.isTemperatureCapacityMultiplierDefaulted()) {
-    idfObject.setDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier,
-                        modelObject.temperatureCapacityMultiplier());
-  }
+  ASSERT_EQ(16, e.evaporativeOperationMinimumDrybulbTemperature());
+  ASSERT_EQ(24, e.evaporativeOperationMaximumLimitWetbulbTemperature());
+  ASSERT_EQ(28, e.evaporativeOperationMaximumLimitDrybulbTemperature());
 
-  if (!modelObject.isHumidityCapacityMultiplierDefaulted()) {
-    idfObject.setDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::HumidityCapacityMultiplier,
-                        modelObject.humidityCapacityMultiplier());
-  }
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
 
-  if (!modelObject.isCarbonDioxideCapacityMultiplierDefaulted()) {
-    idfObject.setDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier,
-                        modelObject.carbonDioxideCapacityMultiplier());
-  }
+  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::EvaporativeCooler_Direct_ResearchSpecial);
+  ASSERT_EQ(1u, idfObjs.size());
 
-  return boost::optional<IdfObject>(idfObject);
+  WorkspaceObject idfObj(idfObjs[0]);
+
+  ASSERT_EQ(e.evaporativeOperationMinimumDrybulbTemperature(),
+            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature).get());
+  ASSERT_EQ(e.evaporativeOperationMaximumLimitWetbulbTemperature(),
+            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature).get());
+  ASSERT_EQ(e.evaporativeOperationMaximumLimitDrybulbTemperature(),
+            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDrybulbTemperature).get());
+
 }
 
-} // energyplus
-
-} // openstudio
 
