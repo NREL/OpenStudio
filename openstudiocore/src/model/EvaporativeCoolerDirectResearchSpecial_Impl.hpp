@@ -132,6 +132,15 @@ namespace detail {
 
     bool isPrimaryAirDesignFlowRateAutosized() const;
 
+    double evaporativeOperationMinimumDrybulbTemperature() const;
+    bool setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature);
+
+    double evaporativeOperationMaximumLimitWetbulbTemperature() const;
+    bool setEvaporativeOperationMaximumLimitWetbulbTemperature(double evaporativeOperationMaximumLimitWetbulbTemperature);
+
+    double evaporativeOperationMaximumLimitDrybulbTemperature() const;
+    bool setEvaporativeOperationMaximumLimitDrybulbTemperature(double evaporativeOperationMaximumLimitDrybulbTemperature);
+
     boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
 
     boost::optional<double> autosizedPrimaryAirDesignFlowRate() const ;

@@ -330,6 +330,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       }
 
       IdfObject daylightingControlObject(openstudio::IddObjectType::Daylighting_Controls);
+      // Name it like the Zone name + " DaylightingControls"
+      daylightingControlObject.setName(modelObject.name().get() + " DaylightingControls");
       m_idfObjects.push_back(daylightingControlObject);
 
       daylightingControlObject.setString(
@@ -338,6 +340,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
       // Primary Control
       IdfObject primaryReferencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
+      // Name it like the OS:Daylighting:Control corresponding to the Primary Reference Point
       primaryReferencePoint.setName(primaryDaylightingControl->nameString());
       m_idfObjects.push_back(primaryReferencePoint);
 
@@ -378,6 +381,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       // Secondary Control
       if (secondaryDaylightingControl){
         IdfObject secondaryReferencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
+      // Name it like the OS:Daylighting:Control corresponding to the Secondary Reference Point
         secondaryReferencePoint.setName(secondaryDaylightingControl->nameString());
         m_idfObjects.push_back(secondaryReferencePoint);
 
@@ -514,6 +518,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         referencePoint.setDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint, illuminanceMap->originZCoordinate());
 
         IdfObject daylightingControlObject(openstudio::IddObjectType::Daylighting_Controls);
+        // Name it like the Zone name + " DaylightingControls"
+        daylightingControlObject.setName(modelObject.name().get() + " DaylightingControls");
         m_idfObjects.push_back(daylightingControlObject);
 
         daylightingControlObject.setString(Daylighting_ControlsFields::ZoneName, modelObject.nameString());
@@ -609,6 +615,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
           zoneControlThermostat.setString(ZoneControl_ThermostatFields::ZoneorZoneListName,modelObject.name().get());
           m_idfObjects.push_back(zoneControlThermostat);
 
+          // Need to handle the control type base don thermostat type (1: Single heating, 2: single cooling, 4: Dual setpoint)
           IdfObject scheduleCompact(openstudio::IddObjectType::Schedule_Compact);
           scheduleCompact.setName(modelObject.name().get() + " Thermostat Schedule");
           m_idfObjects.push_back(scheduleCompact);
@@ -633,6 +640,13 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             values[ZoneControl_ThermostatExtensibleFields::ControlObjectType] = idfThermostat->iddObject().name();
             values[ZoneControl_ThermostatExtensibleFields::ControlName] = idfThermostat->name().get();
             IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
+            if (idfThermostat->iddObject().name() == "ThermostatSetpoint:SingleHeating" ) {
+              scheduleCompact.setString(5, "1");
+            } else if (idfThermostat->iddObject().name() == "ThermostatSetpoint:SingleCooling" ) {
+              scheduleCompact.setString(5, "2");
+            } else {
+              scheduleCompact.setString(5, "4");
+            }
           }
         };
 
