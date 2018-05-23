@@ -80,6 +80,12 @@ namespace detail {
   const std::vector<std::string>& AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result{
+      // These apply to all AirTerminals
+      "Zone Air Terminal Sensible Heating Energy",
+      "Zone Air Terminal Sensible Heating Rate",
+      "Zone Air Terminal Sensible Cooling Energy",
+      "Zone Air Terminal Sensible Cooling Rate",
+
       "Zone Air Terminal VAV Damper Position"
     };
     return result;

@@ -1,7 +1,7 @@
 
 OS:Version,
   {9793bc78-0ad3-4e2c-ad9c-026d1d7c594a}, !- Handle
-  2.5.1;                                  !- Version Identifier
+  2.5.2;                                  !- Version Identifier
 
 ! Always OnOff Discrete Schedule Type Limits
 OS:ScheduleTypeLimits,
@@ -1399,7 +1399,11 @@ OS:Chiller:Electric:EIR,
   1,                                      !- Sizing Factor
   0,                                      !- Basin Heater Capacity {W/K}
   10,                                     !- Basin Heater Setpoint Temperature {C}
-  ;                                       !- Basin Heater Operating Schedule Name
+  ,                                       !- Basin Heater Operating Schedule Name
+  ,                                       !- Condenser Heat Recovery Relative Capacity Fraction
+  ,                                       !- Heat Recovery Inlet High Temperature Limit Schedule Name
+  ,                                       !- Heat Recovery Leaving Temperature Setpoint Node Name
+  General;                                !- End-Use Subcategory
 
 OS:Curve:Biquadratic,
   {238cb0b4-afac-4115-8524-7778555d6cfb}, ! Handle
@@ -1506,27 +1510,32 @@ OS:Chiller:Electric:EIR,
   1,                                      !- Sizing Factor
   0,                                      !- Basin Heater Capacity {W/K}
   10,                                     !- Basin Heater Setpoint Temperature {C}
-  ;                                       !- Basin Heater Operating Schedule Name
+  ,                                       !- Basin Heater Operating Schedule Name
+  ,                                       !- Condenser Heat Recovery Relative Capacity Fraction
+  ,                                       !- Heat Recovery Inlet High Temperature Limit Schedule Name
+  ,                                       !- Heat Recovery Leaving Temperature Setpoint Node Name
+  General;                                !- End-Use Subcategory
 
 OS:Boiler:HotWater,
-  {7741e24f-1bf9-4cb7-b035-737b8734095c}, ! Handle
-  HW Boiler,                              ! Name
-  ,                                       ! Fuel Type
-  ,                                       ! Nominal Capacity {W}
-  ,                                       ! Nominal Thermal Efficiency
-  LeavingBoiler,                          ! Efficiency Curve Temperature Evaluation Variable
-  {7a46b48b-f003-42e6-9865-b04b98d124aa}, ! Normalized Boiler Efficiency Curve Name
-  ,                                       ! Design Water Outlet Temperature {C}
-  ,                                       ! Design Water Flow Rate {m3/s}
-  ,                                       ! Minimum Part Load Ratio
-  ,                                       ! Maximum Part Load Ratio
-  ,                                       ! Optimum Part Load Ratio
-  ,                                       ! Boiler Water Inlet Node Name
-  ,                                       ! Boiler Water Outlet Node Name
-  99,                                     ! Water Outlet Upper Temperature Limit {C}
-  NotModulated,                           ! Boiler Flow Mode
-  0,                                      ! Parasitic Electric Load {W}
-  1;                                      ! Sizing Factor
+  {7741e24f-1bf9-4cb7-b035-737b8734095c}, !- Handle
+  HW Boiler,                              !- Name
+  ,                                       !- Fuel Type
+  ,                                       !- Nominal Capacity {W}
+  ,                                       !- Nominal Thermal Efficiency
+  LeavingBoiler,                          !- Efficiency Curve Temperature Evaluation Variable
+  {7a46b48b-f003-42e6-9865-b04b98d124aa}, !- Normalized Boiler Efficiency Curve Name
+  ,                                       !- Design Water Outlet Temperature {C}
+  ,                                       !- Design Water Flow Rate {m3/s}
+  ,                                       !- Minimum Part Load Ratio
+  ,                                       !- Maximum Part Load Ratio
+  ,                                       !- Optimum Part Load Ratio
+  ,                                       !- Boiler Water Inlet Node Name
+  ,                                       !- Boiler Water Outlet Node Name
+  99,                                     !- Water Outlet Upper Temperature Limit {C}
+  NotModulated,                           !- Boiler Flow Mode
+  0,                                      !- Parasitic Electric Load {W}
+  1,                                      !- Sizing Factor
+  General;                                !- End-Use Subcategory
 
 OS:Curve:Biquadratic,
   {7a46b48b-f003-42e6-9865-b04b98d124aa}, !- Handle
@@ -2214,46 +2223,49 @@ OS:Curve:Biquadratic,
   46;                                     ! Maximum Value of y {BasedOnField A3}
 
 OS:WaterHeater:Mixed,
-  {a5780efe-a3d2-4211-a0a1-66f758539f62}, ! Handle
-  Water Heater,                           ! Name
-  0.3785,                                 ! Tank Volume {m3}
-  {c13bffd8-644e-4f69-871f-7dcafa493644}, ! Setpoint Temperature Schedule Name
-  2,                                      ! Deadband Temperature Difference {deltaC}
-  82.22,                                  ! Maximum Temperature Limit {C}
-  Cycle,                                  ! Heater Control Type
-  845000,                                 ! Heater Maximum Capacity {W}
-  ,                                       ! Heater Minimum Capacity {W}
-  ,                                       ! Heater Ignition Minimum Flow Rate {m3/s}
-  ,                                       ! Heater Ignition Delay {s}
-  NaturalGas,                             ! Heater Fuel Type
-  0.8,                                    ! Heater Thermal Efficiency
-  ,                                       ! Part Load Factor Curve Name
-  20,                                     ! Off Cycle Parasitic Fuel Consumption Rate {W}
-  NaturalGas,                             ! Off Cycle Parasitic Fuel Type
-  0.8,                                    ! Off Cycle Parasitic Heat Fraction to Tank
-  ,                                       ! On Cycle Parasitic Fuel Consumption Rate {W}
-  NaturalGas,                             ! On Cycle Parasitic Fuel Type
-  ,                                       ! On Cycle Parasitic Heat Fraction to Tank
-  Schedule,                               ! Ambient Temperature Indicator
-  {cc53a423-3dc6-47ad-90d5-0154db8eccc8}, ! Ambient Temperature Schedule Name
-  ,                                       ! Ambient Temperature Thermal Zone Name
-  ,                                       ! Ambient Temperature Outdoor Air Node Name
-  6,                                      ! Off Cycle Loss Coefficient to Ambient Temperature {W/K}
-  ,                                       ! Off Cycle Loss Fraction to Thermal Zone
-  6,                                      ! On Cycle Loss Coefficient to Ambient Temperature {W/K}
-  ,                                       ! On Cycle Loss Fraction to Thermal Zone
-  ,                                       ! Peak Use Flow Rate {m3/s}
-  ,                                       ! Use Flow Rate Fraction Schedule Name
-  ,                                       ! Cold Water Supply Temperature Schedule Name
-  ,                                       ! Use Side Inlet Node Name
-  ,                                       ! Use Side Outlet Node Name
-  1,                                      ! Use Side Effectiveness
-  ,                                       ! Source Side Inlet Node Name
-  ,                                       ! Source Side Outlet Node Name
-  1,                                      ! Source Side Effectiveness
-  autosize,                               ! Use Side Design Flow Rate {m3/s}
-  autosize,                               ! Source Side Design Flow Rate {m3/s}
-  1.5;                                    ! Indirect Water Heating Recovery Time {hr}
+  {a5780efe-a3d2-4211-a0a1-66f758539f62}, !- Handle
+  Water Heater,                           !- Name
+  0.3785,                                 !- Tank Volume {m3}
+  {c13bffd8-644e-4f69-871f-7dcafa493644}, !- Setpoint Temperature Schedule Name
+  2,                                      !- Deadband Temperature Difference {deltaC}
+  82.22,                                  !- Maximum Temperature Limit {C}
+  Cycle,                                  !- Heater Control Type
+  845000,                                 !- Heater Maximum Capacity {W}
+  ,                                       !- Heater Minimum Capacity {W}
+  ,                                       !- Heater Ignition Minimum Flow Rate {m3/s}
+  ,                                       !- Heater Ignition Delay {s}
+  NaturalGas,                             !- Heater Fuel Type
+  0.8,                                    !- Heater Thermal Efficiency
+  ,                                       !- Part Load Factor Curve Name
+  20,                                     !- Off Cycle Parasitic Fuel Consumption Rate {W}
+  NaturalGas,                             !- Off Cycle Parasitic Fuel Type
+  0.8,                                    !- Off Cycle Parasitic Heat Fraction to Tank
+  ,                                       !- On Cycle Parasitic Fuel Consumption Rate {W}
+  NaturalGas,                             !- On Cycle Parasitic Fuel Type
+  ,                                       !- On Cycle Parasitic Heat Fraction to Tank
+  Schedule,                               !- Ambient Temperature Indicator
+  {cc53a423-3dc6-47ad-90d5-0154db8eccc8}, !- Ambient Temperature Schedule Name
+  ,                                       !- Ambient Temperature Thermal Zone Name
+  ,                                       !- Ambient Temperature Outdoor Air Node Name
+  6,                                      !- Off Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       !- Off Cycle Loss Fraction to Thermal Zone
+  6,                                      !- On Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       !- On Cycle Loss Fraction to Thermal Zone
+  ,                                       !- Peak Use Flow Rate {m3/s}
+  ,                                       !- Use Flow Rate Fraction Schedule Name
+  ,                                       !- Cold Water Supply Temperature Schedule Name
+  ,                                       !- Use Side Inlet Node Name
+  ,                                       !- Use Side Outlet Node Name
+  1,                                      !- Use Side Effectiveness
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  1,                                      !- Source Side Effectiveness
+  autosize,                               !- Use Side Design Flow Rate {m3/s}
+  autosize,                               !- Source Side Design Flow Rate {m3/s}
+  1.5,                                    !- Indirect Water Heating Recovery Time {hr}
+  IndirectHeatPrimarySetpoint,            !- Source Side Flow Control Mode
+  ,                                       !- Indirect Alternate Setpoint Temperature Schedule Name
+  General;                                !- End-Use Subcategory
 
 OS:WaterHeater:HeatPump,
   {8227efbf-0cf6-443c-bdd2-3f8217c5f85e}, !- Handle
@@ -2521,7 +2533,10 @@ OS:WaterHeater:Mixed,
   1,                                      !- Source Side Effectiveness
   autosize,                               !- Use Side Design Flow Rate {m3/s}
   autosize,                               !- Source Side Design Flow Rate {m3/s}
-  1.5;                                    !- Indirect Water Heating Recovery Time {hr}
+  1.5,                                    !- Indirect Water Heating Recovery Time {hr}
+  IndirectHeatPrimarySetpoint,            !- Source Side Flow Control Mode
+  ,                                       !- Indirect Alternate Setpoint Temperature Schedule Name
+  General;                                !- End-Use Subcategory
 
 OS:WaterHeater:HeatPump:WrappedCondenser,
   {0cf7ccd6-da8e-427d-8d2f-0acd55b7e681}, !- Handle
@@ -11820,4 +11835,175 @@ OS:Curve:Bicubic,
   1,                                      !- Maximum Value of x
   0,                                      !- Minimum Value of y
   1;                                      !- Maximum Value of y
+
+OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam,
+  {820639a4-6cae-4f32-90f7-717ecdb8546f}, !- Handle
+  ATU FourPipeBeam Heat&Cool,             !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Primary Air Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Cooling Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Heating Availability Schedule Name
+  ,                                       !- Primary Air Inlet Node Name
+  ,                                       !- Primary Air Outlet Node Name
+  {092cab56-9f91-4fef-8082-fcd67398663c}, !- Cooling Coil Name
+  {dc7cc590-6edc-4bc8-9068-1ff4fe2619c5}, !- Heating Coil Name
+  autosize,                               !- Design Primary Air Volume Flow Rate {m3/s}
+  autosize,                               !- Design Chilled Water Volume Flow Rate {m3/s}
+  autosize,                               !- Design Hot Water Volume Flow Rate {m3/s}
+  autosize,                               !- Zone Total Beam Length {m}
+  ;                                       !- Rated Primary Air Flow Rate per Beam Length {m3/s-m}
+
+OS:Coil:Cooling:FourPipeBeam,
+  {092cab56-9f91-4fef-8082-fcd67398663c}, !- Handle
+  ATU FourPipeBeam Coil Cooling,          !- Name
+  ,                                       !- Chilled Water Inlet Node Name
+  ,                                       !- Chilled Water Outlet Node Name
+  ,                                       !- Beam Rated Cooling Capacity per Beam Length {W/m}
+  ,                                       !- Beam Rated Cooling Room Air Chilled Water Temperature Difference {deltaC}
+  ,                                       !- Beam Rated Chilled Water Volume Flow Rate per Beam Length {m3/s-m}
+  {208ac920-37b5-4390-ade9-53ee37303287}, !- Beam Cooling Capacity Temperature Difference Modification Factor Curve Name
+  {a9095ab3-ec82-4ac2-a36a-893af1e63a66}, !- Beam Cooling Capacity Air Flow Modification Factor Curve Name
+  {d0557227-3232-4798-b2e6-0f8760d0dbdc}; !- Beam Cooling Capacity Chilled Water Flow Modification Factor Curve Name
+
+OS:Curve:Linear,
+  {208ac920-37b5-4390-ade9-53ee37303287}, !- Handle
+  CapModFuncOfTempDiff,                   !- Name
+  0,                                      !- Coefficient1 Constant
+  1,                                      !- Coefficient2 x
+  0,                                      !- Minimum Value of x
+  1.5,                                    !- Maximum Value of x
+  0,                                      !- Minimum Curve Output
+  1.5;                                    !- Maximum Curve Output
+
+OS:Table:MultiVariableLookup,
+  {a9095ab3-ec82-4ac2-a36a-893af1e63a66}, !- Handle
+  CoolCapModFuncOfSAFlow,                 !- Name
+  EvaluateCurveToLimits,                  !- Interpolation Method
+  ,                                       !- Number of Interpolation Points
+  Quadratic,                              !- Curve Type
+  ,                                       !- Table Data Format
+  ,                                       !- External File Name
+  ,                                       !- X1 Sort Order
+  ,                                       !- X2 Sort Order
+  ,                                       !- Normalization Reference
+  0.714,                                  !- Minimum Value of X1
+  1.2857,                                 !- Maximum Value of X1
+  ,                                       !- Minimum Value of X2
+  ,                                       !- Maximum Value of X2
+  ,                                       !- Minimum Value of X3
+  ,                                       !- Maximum Value of X3
+  ,                                       !- Minimum Value of X4
+  ,                                       !- Maximum Value of X4
+  ,                                       !- Minimum Value of X5
+  ,                                       !- Maximum Value of X5
+  0.8234,                                 !- Minimum Table Output
+  1.1256,                                 !- Maximum Table Output
+  Dimensionless,                          !- Input Unit Type for X1
+  ,                                       !- Input Unit Type for X2
+  ,                                       !- Input Unit Type for X3
+  ,                                       !- Input Unit Type for X4
+  ,                                       !- Input Unit Type for X5
+  Dimensionless,                          !- Output Unit Type
+  1,                                      !- Number of Independent Variables
+  0.714286,                               !- Data 1
+  0.823403,                               !- Data 2
+  1,                                      !- Data 3
+  1,                                      !- Data 4
+  1.2857,                                 !- Data 5
+  1.1256;                                 !- Data 6
+
+OS:Table:MultiVariableLookup,
+  {d0557227-3232-4798-b2e6-0f8760d0dbdc}, !- Handle
+  CapModFuncOfWaterFlow,                  !- Name
+  EvaluateCurveToLimits,                  !- Interpolation Method
+  ,                                       !- Number of Interpolation Points
+  Quadratic,                              !- Curve Type
+  ,                                       !- Table Data Format
+  ,                                       !- External File Name
+  ,                                       !- X1 Sort Order
+  ,                                       !- X2 Sort Order
+  ,                                       !- Normalization Reference
+  0,                                      !- Minimum Value of X1
+  1.33,                                   !- Maximum Value of X1
+  ,                                       !- Minimum Value of X2
+  ,                                       !- Maximum Value of X2
+  ,                                       !- Minimum Value of X3
+  ,                                       !- Maximum Value of X3
+  ,                                       !- Minimum Value of X4
+  ,                                       !- Maximum Value of X4
+  ,                                       !- Minimum Value of X5
+  ,                                       !- Maximum Value of X5
+  0,                                      !- Minimum Table Output
+  1.04,                                   !- Maximum Table Output
+  Dimensionless,                          !- Input Unit Type for X1
+  ,                                       !- Input Unit Type for X2
+  ,                                       !- Input Unit Type for X3
+  ,                                       !- Input Unit Type for X4
+  ,                                       !- Input Unit Type for X5
+  Dimensionless,                          !- Output Unit Type
+  1,                                      !- Number of Independent Variables
+  0,                                      !- Data 1
+  0,                                      !- Data 2
+  0.05,                                   !- Data 3
+  0.001,                                  !- Data 4
+  0.33333,                                !- Data 5
+  0.71,                                   !- Data 6
+  0.5,                                    !- Data 7
+  0.85,                                   !- Data 8
+  0.666667,                               !- Data 9
+  0.92,                                   !- Data 10
+  0.833333,                               !- Data 11
+  0.97,                                   !- Data 12
+  1,                                      !- Data 13
+  1,                                      !- Data 14
+  1.333333,                               !- Data 15
+  1.04;                                   !- Data 16
+
+OS:Coil:Heating:FourPipeBeam,
+  {dc7cc590-6edc-4bc8-9068-1ff4fe2619c5}, !- Handle
+  ATU FourPipeBeam Coil Heating,          !- Name
+  ,                                       !- Hot Water Inlet Node Name
+  ,                                       !- Hot Water Outlet Node Name
+  ,                                       !- Beam Rated Heating Capacity per Beam Length {W/m}
+  ,                                       !- Beam Rated Heating Room Air Hot Water Temperature Difference {deltaC}
+  ,                                       !- Beam Rated Hot Water Volume Flow Rate per Beam Length {m3/s-m}
+  {208ac920-37b5-4390-ade9-53ee37303287}, !- Beam Heating Capacity Temperature Difference Modification Factor Curve Name
+  {bfecbc8c-a298-4ca4-b78a-26051bc5001e}, !- Beam Heating Capacity Air Flow Modification Factor Curve Name
+  {d0557227-3232-4798-b2e6-0f8760d0dbdc}; !- Beam Heating Capacity Hot Water Flow Modification Factor Curve Name
+
+OS:Table:MultiVariableLookup,
+  {bfecbc8c-a298-4ca4-b78a-26051bc5001e}, !- Handle
+  HeatCapModFuncOfSAFlow,                 !- Name
+  EvaluateCurveToLimits,                  !- Interpolation Method
+  ,                                       !- Number of Interpolation Points
+  Quadratic,                              !- Curve Type
+  ,                                       !- Table Data Format
+  ,                                       !- External File Name
+  ,                                       !- X1 Sort Order
+  ,                                       !- X2 Sort Order
+  ,                                       !- Normalization Reference
+  0.714,                                  !- Minimum Value of X1
+  1.2857,                                 !- Maximum Value of X1
+  ,                                       !- Minimum Value of X2
+  ,                                       !- Maximum Value of X2
+  ,                                       !- Minimum Value of X3
+  ,                                       !- Maximum Value of X3
+  ,                                       !- Minimum Value of X4
+  ,                                       !- Maximum Value of X4
+  ,                                       !- Minimum Value of X5
+  ,                                       !- Maximum Value of X5
+  0.8234,                                 !- Minimum Table Output
+  1.0778,                                 !- Maximum Table Output
+  Dimensionless,                          !- Input Unit Type for X1
+  ,                                       !- Input Unit Type for X2
+  ,                                       !- Input Unit Type for X3
+  ,                                       !- Input Unit Type for X4
+  ,                                       !- Input Unit Type for X5
+  Dimensionless,                          !- Output Unit Type
+  1,                                      !- Number of Independent Variables
+  0.714286,                               !- Data 1
+  0.8554,                                 !- Data 2
+  1,                                      !- Data 3
+  1,                                      !- Data 4
+  1.2857,                                 !- Data 5
+  1.0778;                                 !- Data 6
 
