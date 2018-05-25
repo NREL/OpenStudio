@@ -602,13 +602,34 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   if(BUILD_CSHARP_BINDINGS)
     set(swig_target "csharp_${NAME}")
 
+    # keep the following lists aligned with translator_wrappers in \openstudiocore\csharp\CMakeLists.txt
     set( translator_names
-      OpenStudioEnergyPlus
-      OpenStudioRadiance
-      OpenStudioGBXML
       OpenStudioAirflow
+      OpenStudioEnergyPlus
+      OpenStudioGBXML
       OpenStudioISOModel
+      OpenStudioRadiance
       OpenStudioSDD
+    )
+    
+    set( model_names
+      OpenStudioMeasure
+      OpenStudioModel
+      OpenStudioModelAirflow
+      OpenStudioModelAvailabilityManager
+      OpenStudioModelCore
+      OpenStudioModelGenerators
+      OpenStudioModelGeometry
+      OpenStudioModelHVAC
+      OpenStudioModelPlantEquipmentOperationScheme
+      OpenStudioModelRefrigeration
+      OpenStudioModelResources
+      OpenStudioModelSetpointManager
+      OpenStudioModelSimulation
+      OpenStudioModelStraightComponent
+      OpenStudioModelZoneHVAC
+      OpenStudioOSVersion
+      OpenStudioModelEditor
     )
 
     if(IS_UTILTIES)
@@ -627,7 +648,12 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     if( name_found GREATER -1 )
       set(CSHARP_OUTPUT_NAME "openstudio_translators_csharp.dll")
     else()
-      set(CSHARP_OUTPUT_NAME "openstudio_csharp.dll")
+      list(FIND model_names ${NAME} name_found)
+      if( name_found GREATER -1 )
+        set(CSHARP_OUTPUT_NAME "openstudio_model_csharp.dll")
+      else()
+        set(CSHARP_OUTPUT_NAME "openstudio_csharp.dll")
+      endif()
     endif()
 
     set(CSHARP_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/csharp_wrapper/generated_sources/${NAME}")

@@ -1288,18 +1288,50 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
   bool varset = outvar.setEMSVariableName("glob_var");
   EXPECT_EQ(true, varset);
 
-  // add output variable
-  EnergyManagementSystemOutputVariable outvar2(model, "glob_var_2");
+  // add output variable using modelObject
+  EnergyManagementSystemOutputVariable outvar2(model, var2);
   //setname
   outvar2.setName("outputVar2");
   EXPECT_EQ("outputVar2", outvar2.nameString());
+  EXPECT_EQ(outvar2.emsVariableName(), toString(var2.handle()));
 
-  varset = outvar2.setEMSVariableName("glob_var_2");
-  EXPECT_EQ(true, varset);
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
   ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_OutputVariable).size());
+
+  //WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_OutputVariable)[0];
+  //ASSERT_TRUE(object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false));
+  //EXPECT_EQ(var.nameString(), object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false).get());
+
+  //model.save(toPath("./EMS_OutputVariable.osm"), true);
+  //workspace.save(toPath("./EMS_OutputVariable.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable2_EMS) {
+  Model model;
+
+  // add global variable
+  EnergyManagementSystemGlobalVariable var(model, "glob_var");
+  EXPECT_EQ("glob_var", var.nameString());
+
+  // add global variable
+  EnergyManagementSystemGlobalVariable var2(model, "glob_var_2");
+  EXPECT_EQ("glob_var_2", var2.nameString());
+
+  // add output variable using modelObject
+  EnergyManagementSystemOutputVariable outvar(model, var);
+  EXPECT_EQ(outvar.emsVariableName(), toString(var.handle()));
+  // add output variable using modelObject
+  EnergyManagementSystemOutputVariable outvar2(model, var2);
+  EXPECT_EQ(outvar2.emsVariableName(), toString(var2.handle()));
+  //remove attached modelObject and test if the EMSOutVar does not get translated.
+  var2.remove();
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  //should only be 1 since the other attached modelObject was deleted
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_OutputVariable).size());
 
   //WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_OutputVariable)[0];
   //ASSERT_TRUE(object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false));
