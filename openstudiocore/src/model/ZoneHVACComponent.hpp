@@ -86,6 +86,16 @@ class MODEL_API ZoneHVACComponent : public HVACComponent
    **/
   void removeFromThermalZone();
 
+  /** Establish plenumZone as the return plenum for this ZoneHVACComponent.
+   *  ZoneHVACComponent must already be attached to a ThermalZone
+  *   The method canBePlenum called on plenumZone must return true.
+  */
+  bool setReturnPlenum(const ThermalZone & plenumZone);
+
+  /** Remove any return plenum attached to this ZoneHVACComponent
+  */
+  void removeReturnPlenum();
+
   /** Adds this ZoneHVACComponent to a node on an AirLoopHVAC object.
    *  The node must be located between a ThermalZone and a AirTerminalSingleDuctInletSideMixer object.
    *  This is used to feed an AirLoopHVAC structure (such as a DOAS, or any built up system) into a ZoneHVACComponent.

@@ -205,8 +205,16 @@ namespace detail {
       }
     }
 
-    if( result )
-    {
+    if ( ! result ) {
+      auto mo = node.outletModelObject();  
+      if ( mo ) {
+        if ( mo->optionalCast<ZoneHVACComponent>() ) {
+          result = true;
+        }
+      }
+    }
+
+    if ( result ) {
       unsigned inletObjectPort;
       unsigned outletObjectPort;
       boost::optional<ModelObject> inletModelObject;

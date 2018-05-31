@@ -97,6 +97,10 @@ class MODEL_API ZoneHVACComponent_Impl : public HVACComponent_Impl {
 
   boost::optional<ModelObject> airOutletModelObject() const;
 
+  bool setReturnPlenum(const ThermalZone & plenumZone);
+
+  void removeReturnPlenum();
+
  protected:
 
   friend class Model_Impl;

@@ -120,6 +120,53 @@ namespace detail {
     return boost::none;
   }
 
+  void ZoneHVACComponent_Impl::removeReturnPlenum() {
+    boost::optional<AirLoopHVACReturnPlenum> plenum;
+    Model m = this->model();
+
+    auto node = inletNode();
+
+    if ( node ) {
+      auto mo = node->inletModelObject();
+    }
+
+
+  }
+
+  bool ZoneHVACComponent_Impl::setReturnPlenum(const ThermalZone & plenumZone) {
+
+    bool result = true;
+
+    if ( ! plenumZone.canBePlenum() ) {
+      result = false;
+    }
+
+    auto node = inletNode();
+    if ( ! inletNode ) {
+      result = false;
+    }
+
+    boost::optional<AirLoopHVACReturnPlenum> plenum;
+
+    if ( result ) {
+      plenum = plenumZone.getImpl<ThermalZone_Impl>()->airLoopHVACReturnPlenum();
+
+      if ( ! plenum ) {
+        plenum = AirLoopHVACReturnPlenum(m);
+        plenum->setThermalZone(plenumZone);
+      }
+
+      OS_ASSERT( plenum );
+      OS_ASSERT( node );
+
+      removeReturnPlenum();
+
+      plenum->addToNode( node.get() );
+    }
+
+    return result;
+  }
+
   bool ZoneHVACComponent_Impl::addToThermalZone(ThermalZone & thermalZone)
   {
     Model m = this->model();
@@ -441,6 +488,11 @@ bool ZoneHVACComponent::addToNode(Node & node)
 boost::optional<AirLoopHVAC> ZoneHVACComponent::airLoopHVAC() const
 {
   return getImpl<detail::ZoneHVACComponent_Impl>()->airLoopHVAC();
+}
+
+boost::optional<ModelObject> ZoneHVACComponent_Impl::removeReturnPlenum() const
+{
+  return getImpl<detail::ZoneHVACComponent_Impl>()->removeReturnPlenum();
 }
 
 bool ZoneHVACComponent::removeFromAirLoopHVAC()
