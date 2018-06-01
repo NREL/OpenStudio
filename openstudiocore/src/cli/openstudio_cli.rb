@@ -43,6 +43,7 @@ end
 
 require 'logger'
 require 'optparse'
+require 'stringio'
 
 #include OpenStudio::Workflow::Util::IO
 
@@ -1173,22 +1174,16 @@ class Measure
       end
       $logger.debug("Minitest arguments are '#{saved_subargv}'")
       
-      # load coverage library
-      begin
-        require 'openstudio_measure_tester/test_helper.rb'
-      rescue LoadError
-        # Do not print anything as this is the CLI.
-      end
+      # load openstudio_measure_tester gem
+      #begin
+        require 'openstudio_measure_tester'
+      #rescue LoadError
+        #puts "Cannot load 'openstudio_measure_tester'"
+        #return 1
+      #end
       
-      # loop over all measure directories
-      Dir.glob("#{directory}/**/").each do |measure_dir|
-        if File.directory?(measure_dir) && File.exists?(File.join(measure_dir, "measure.xml"))
-          Dir.glob(File.join(measure_dir, "**/*.rb"), File::FNM_CASEFOLD).each do |file|
-            $logger.debug("require '#{file}'")
-            require file
-          end
-        end
-      end
+      runner = OpenStudioMeasureTester::Runner.new(directory)
+      runner.run_all(Dir.pwd) 
     
     elsif options[:start_server]
 
