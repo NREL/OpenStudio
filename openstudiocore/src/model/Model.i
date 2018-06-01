@@ -25,6 +25,11 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
+%import <model/ModelZoneHVAC.i>
+%import <model/ModelSetpointManager.i>
+%import <model/ModelAvailabilityManager.i>
+%import <model/ModelPlantEquipmentOperationScheme.i>
+%import <model/ModelStraightComponent.i>
 %import <model/ModelAirflow.i>
 %import <model/ModelRefrigeration.i>
 %import <model/ModelGenerators.i>

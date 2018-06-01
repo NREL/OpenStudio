@@ -170,6 +170,104 @@ TEST(Filetypes, EpwFile_Data)
   }
 }
 
+TEST(Filetypes, EpwFile_Design)
+{
+  try{
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
+    EpwFile epwFile(p);
+    EXPECT_EQ(p, epwFile.path());
+    EXPECT_EQ("BDF687C1", epwFile.checksum());
+    EXPECT_EQ(openstudio::checksum(epwFile.path()), epwFile.checksum());
+    EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
+    EXPECT_EQ("CO", epwFile.stateProvinceRegion());
+    EXPECT_EQ("USA", epwFile.country());
+    EXPECT_EQ("TMY3", epwFile.dataSource());
+    EXPECT_EQ("724666", epwFile.wmoNumber());
+    EXPECT_EQ(39.74, epwFile.latitude());
+    EXPECT_EQ(-105.18, epwFile.longitude());
+    EXPECT_EQ(-7, epwFile.timeZone());
+    EXPECT_EQ(1829, epwFile.elevation());
+    EXPECT_EQ(Time(0, 1, 0, 0), epwFile.timeStep());
+    EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), epwFile.startDayOfWeek());
+    EXPECT_EQ(Date(MonthOfYear::Jan, 1), epwFile.startDate());
+    EXPECT_EQ(Date(MonthOfYear::Dec, 31), epwFile.endDate());
+    // Up to here, everything should be the same as the first test. Now ask for the design conditions
+    std::vector<EpwDesignCondition> designs = epwFile.designConditions();
+    EXPECT_EQ(1, designs.size());
+    EXPECT_EQ("Climate Design Data 2009 ASHRAE Handbook", designs[0].titleOfDesignCondition());
+    EXPECT_EQ(12, designs[0].heatingColdestMonth());
+    EXPECT_EQ(-18.8, designs[0].heatingDryBulb99pt6());
+    EXPECT_EQ(-18.8, designs[0].getFieldByName("Heating Dry Bulb Temperature 99.6%").get());
+    EXPECT_EQ(-18.8, designs[0].getField(EpwDesignField("Heating Dry Bulb Temperature 99.6%")).get());
+    EXPECT_EQ("C", designs[0].getUnitsByName("Heating Dry Bulb Temperature 99.6%").get());
+    EXPECT_EQ("C", designs[0].getUnits(EpwDesignField("Heating Dry Bulb Temperature 99.6%")));
+    EXPECT_EQ(-15.5, designs[0].heatingDryBulb99());
+    EXPECT_EQ(-21.6, designs[0].heatingHumidificationDewPoint99pt6());
+    EXPECT_EQ(0.7, designs[0].heatingHumidificationHumidityRatio99pt6());
+    EXPECT_EQ(-10.9, designs[0].heatingHumidificationMeanCoincidentDryBulb99pt6());
+    EXPECT_EQ(-18.8, designs[0].heatingHumidificationDewPoint99());
+    EXPECT_EQ(0.9, designs[0].heatingHumidificationHumidityRatio99());
+    EXPECT_EQ(-7.5, designs[0].heatingHumidificationMeanCoincidentDryBulb99());
+    EXPECT_EQ(12.2, designs[0].heatingColdestMonthWindSpeed0pt4());
+    EXPECT_EQ(3.9, designs[0].heatingColdestMonthMeanCoincidentDryBulb0pt4());
+    EXPECT_EQ(10.9, designs[0].heatingColdestMonthWindSpeed1());
+    EXPECT_EQ(3.8, designs[0].heatingColdestMonthMeanCoincidentDryBulb1());
+    EXPECT_EQ(3.0, designs[0].heatingMeanCoincidentWindSpeed99pt6());
+    EXPECT_EQ(340, designs[0].heatingPrevailingCoincidentWindDirection99pt6());
+    EXPECT_EQ(7, designs[0].coolingHottestMonth());
+    EXPECT_EQ(15.2, designs[0].coolingDryBulbRange());
+    EXPECT_EQ(33.0, designs[0].coolingDryBulb0pt4());
+    EXPECT_EQ(15.7, designs[0].coolingMeanCoincidentWetBulb0pt4());
+    EXPECT_EQ(32.0, designs[0].coolingDryBulb1());
+    EXPECT_EQ(15.5, designs[0].coolingMeanCoincidentWetBulb1());
+    EXPECT_EQ(30.2, designs[0].coolingDryBulb2());
+    EXPECT_EQ(15.3, designs[0].coolingMeanCoincidentWetBulb2());
+    EXPECT_EQ(18.4, designs[0].coolingEvaporationWetBulb0pt4());
+    EXPECT_EQ(27.3, designs[0].coolingEvaporationMeanCoincidentDryBulb0pt4());
+    EXPECT_EQ(17.5, designs[0].coolingEvaporationWetBulb1());
+    EXPECT_EQ(26.4, designs[0].coolingEvaporationMeanCoincidentDryBulb1());
+    EXPECT_EQ(16.8, designs[0].coolingEvaporationWetBulb2());
+    EXPECT_EQ(25.6, designs[0].coolingEvaporationMeanCoincidentDryBulb2());
+    EXPECT_EQ(4.9, designs[0].coolingMeanCoincidentWindSpeed0pt4());
+    EXPECT_EQ(0, designs[0].coolingPrevailingCoincidentWindDirection0pt4());
+    EXPECT_EQ(16.1, designs[0].coolingDehumidificationDewPoint0pt4());
+    EXPECT_EQ(14.3, designs[0].coolingDehumidificationHumidityRatio0pt4());
+    EXPECT_EQ(20.2, designs[0].coolingDehumidificationMeanCoincidentDryBulb0pt4());
+    EXPECT_EQ(14.9, designs[0].coolingDehumidificationDewPoint1());
+    EXPECT_EQ(13.2, designs[0].coolingDehumidificationHumidityRatio1());
+    EXPECT_EQ(19.9, designs[0].coolingDehumidificationMeanCoincidentDryBulb1());
+    EXPECT_EQ(13.9, designs[0].coolingDehumidificationDewPoint2());
+    EXPECT_EQ(12.3, designs[0].coolingDehumidificationHumidityRatio2());
+    EXPECT_EQ(19.6, designs[0].coolingDehumidificationMeanCoincidentDryBulb2());
+    EXPECT_EQ(59.7, designs[0].coolingEnthalpy0pt4());
+    EXPECT_EQ(27.3, designs[0].coolingEnthalpyMeanCoincidentDryBulb0pt4());
+    EXPECT_EQ(56.6, designs[0].coolingEnthalpy1());
+    EXPECT_EQ(26.6, designs[0].coolingEnthalpyMeanCoincidentDryBulb1());
+    EXPECT_EQ(54.0, designs[0].coolingEnthalpy2());
+    EXPECT_EQ(25.7, designs[0].coolingEnthalpyMeanCoincidentDryBulb2());
+    EXPECT_EQ(760, designs[0].coolingHours8To4AndDryBulb12pt8To20pt6());
+    EXPECT_EQ(11.1, designs[0].extremeWindSpeed1());
+    EXPECT_EQ(9.5, designs[0].extremeWindSpeed2pt5());
+    EXPECT_EQ(8.4, designs[0].extremeWindSpeed5());
+    EXPECT_EQ(22.9, designs[0].extremeMaxWetBulb());
+    EXPECT_EQ(-22.9, designs[0].extremeMeanMinDryBulb());
+    EXPECT_EQ(36.1, designs[0].extremeMeanMaxDryBulb());
+    EXPECT_EQ(3.8, designs[0].extremeStdDevMinDryBulb());
+    EXPECT_EQ(1.2, designs[0].extremeStdDevMaxDryBulb());
+    EXPECT_EQ(-25.7, designs[0].extremeN5YearsMinDryBulb());
+    EXPECT_EQ(37.0, designs[0].extremeN5YearsMaxDryBulb());
+    EXPECT_EQ(-27.9, designs[0].extremeN10YearsMinDryBulb());
+    EXPECT_EQ(37.7, designs[0].extremeN10YearsMaxDryBulb());
+    EXPECT_EQ(-30.1, designs[0].extremeN20YearsMinDryBulb());
+    EXPECT_EQ(38.3, designs[0].extremeN20YearsMaxDryBulb());
+    EXPECT_EQ(-32.8, designs[0].extremeN50YearsMinDryBulb());
+    EXPECT_EQ(39.2, designs[0].extremeN50YearsMaxDryBulb());
+  }
+  catch (...) {
+    ASSERT_TRUE(false);
+  }
+}
+
 TEST(Filetypes, EpwFile_International_Data)
 {
   try{
