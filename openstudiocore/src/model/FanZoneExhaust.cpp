@@ -125,7 +125,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<ThermalZone> FanZoneExhaust_Impl::thermalZone()
+  boost::optional<ThermalZone> FanZoneExhaust_Impl::thermalZone() const
   {
     boost::optional<ThermalZone> result;
 

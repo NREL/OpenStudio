@@ -40,6 +40,7 @@ namespace model {
 class ThermalZone;
 class Node;
 class AirLoopHVAC;
+class AirLoopHVACReturnPlenum;
 
 namespace detail {
 
@@ -70,7 +71,7 @@ class MODEL_API ZoneHVACComponent : public HVACComponent
 
   /** Returns the optional ThermalZone that this ZoneHVACComponent is attached to
    **/
-  boost::optional<ThermalZone> thermalZone();
+  virtual boost::optional<ThermalZone> thermalZone() const;
 
   /** Adds this ZoneHVACComponent to the thermal zone while managing all
    *  node connections automatically.  Returns true if the operation was
@@ -95,6 +96,8 @@ class MODEL_API ZoneHVACComponent : public HVACComponent
   /** Remove any return plenum attached to this ZoneHVACComponent
   */
   void removeReturnPlenum();
+
+  boost::optional<AirLoopHVACReturnPlenum> returnPlenum() const;
 
   /** Adds this ZoneHVACComponent to a node on an AirLoopHVAC object.
    *  The node must be located between a ThermalZone and a AirTerminalSingleDuctInletSideMixer object.

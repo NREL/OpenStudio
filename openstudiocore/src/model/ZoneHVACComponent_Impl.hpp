@@ -75,7 +75,7 @@ class MODEL_API ZoneHVACComponent_Impl : public HVACComponent_Impl {
 
   boost::optional<Node> outletNode() const;
 
-  virtual boost::optional<ThermalZone> thermalZone();
+  virtual boost::optional<ThermalZone> thermalZone() const;
 
   virtual bool addToThermalZone(ThermalZone & thermalZone);
 
@@ -101,11 +101,15 @@ class MODEL_API ZoneHVACComponent_Impl : public HVACComponent_Impl {
 
   void removeReturnPlenum();
 
+  boost::optional<AirLoopHVACReturnPlenum> returnPlenum() const;
+
  protected:
 
   friend class Model_Impl;
 
  private:
+
+  boost::optional<Connection> returnPlenumOutletNodeConnection() const;
 
   REGISTER_LOGGER("openstudio.model.ZoneHVACComponent");
 };

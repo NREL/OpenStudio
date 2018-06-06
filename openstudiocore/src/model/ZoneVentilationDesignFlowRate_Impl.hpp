@@ -198,7 +198,7 @@ namespace detail {
 
     unsigned outletPort() const override;
 
-    boost::optional<ThermalZone> thermalZone() override;
+    boost::optional<ThermalZone> thermalZone() const override;
 
     bool addToThermalZone(ThermalZone & thermalZone) override;
 

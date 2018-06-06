@@ -35,6 +35,8 @@
 #include "AirLoopHVACSupplyPlenum_Impl.hpp"
 #include "AirLoopHVACZoneSplitter.hpp"
 #include "AirLoopHVACZoneSplitter_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "Model.hpp"
@@ -45,6 +47,8 @@
 #include "Node_Impl.hpp"
 #include "PortList.hpp"
 #include "PortList_Impl.hpp"
+#include "Connection.hpp"
+#include "Connection_Impl.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_ReturnPlenum_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -149,97 +153,131 @@ namespace detail {
     bool result = true;
 
     Model _model = model();
-
     // Is the node in this model
-    if( node.model() != _model )
-    {
-      result = false;
+    if ( node.model() != _model ) {
+      return false;
     }
 
-    // Is the node part of an air loop
-    boost::optional<AirLoopHVAC> nodeAirLoop = node.airLoopHVAC();
+    auto thisObject = getObject<AirLoopHVACReturnPlenum>();
 
-    if( ! nodeAirLoop )
-    {
-      result = false;
+    auto outletObj = node.outletModelObject();
+    auto inletObj = node.inletModelObject();
+
+    boost::optional<ZoneHVACComponent> zoneHVAC;
+    if ( outletObj ) {
+      zoneHVAC = outletObj->optionalCast<ZoneHVACComponent>();
     }
 
-    // Is this plenum already connected to a different air loop
-    boost::optional<AirLoopHVAC> currentAirLoopHVAC = airLoopHVAC();
-    if( currentAirLoopHVAC && (currentAirLoopHVAC.get() != nodeAirLoop) )
-    {
-      result = false;
-    }
-
-    boost::optional<ModelObject> outletObj = node.outletModelObject();
-    boost::optional<ModelObject> inletObj = node.inletModelObject();
-    boost::optional<AirLoopHVACZoneMixer> mixer;
-
-    // Is the immediate downstream object to the node a mixer
-    if( result )
-    {
-      mixer = nodeAirLoop->zoneMixer();
-
-      if( ! (outletObj && mixer && (outletObj.get() == mixer.get()) ) )
-      {
+    // Plenum can be attached to ZoneHVAC OR AirLoopHVAC
+    if ( zoneHVAC ) {
+      // don't let a plenum connect to ZoneHVAC and AirLoopHVAC at the same time
+      if ( airLoopHVAC() ) {
         result = false;
       }
-    }
 
-    // Make sure there is not already a return plenum
-    if( result )
-    {
-      if(  inletObj && inletObj->optionalCast<AirLoopHVACReturnPlenum>() )
-      {
-        result = false;
-      }
-    }
+      boost::optional<ThermalZone> zone;
 
-    // Is there a zone on this branch
-    if( result )
-    {
-      Splitter splitter = nodeAirLoop->zoneSplitter();
-      if( nodeAirLoop->demandComponents(splitter,node,ThermalZone::iddObjectType()).empty() )
-      {
-        result = false;
-      }
-    }
-
-    if ( ! result ) {
-      auto mo = node.outletModelObject();  
-      if ( mo ) {
-        if ( mo->optionalCast<ZoneHVACComponent>() ) {
-          result = true;
+      if ( inletObj ) {
+        auto pl = inletObj->optionalCast<PortList>();
+        if ( pl ) {
+          zone = pl->thermalZone();
         }
       }
-    }
 
-    if ( result ) {
-      unsigned inletObjectPort;
-      unsigned outletObjectPort;
-      boost::optional<ModelObject> inletModelObject;
-      boost::optional<ModelObject> outletModelObject;
-
-      inletModelObject = node;
-      inletObjectPort = node.outletPort();
-      outletModelObject = outletObj;
-      outletObjectPort = node.connectedObjectPort(node.outletPort()).get();
-
-      AirLoopHVACReturnPlenum thisObject = getObject<AirLoopHVACReturnPlenum>();
-
-      if( currentAirLoopHVAC )
-      {
-        mixer->removePortForBranch(mixer->branchIndexForInletModelObject(inletModelObject.get()));
-        _model.connect(inletModelObject.get(),inletObjectPort,thisObject,thisObject.nextInletPort());
+      if ( ! zone ) {
+        result = false;
       }
-      else
-      {
-        Node plenumOutletNode(_model);
-        plenumOutletNode.createName();
 
-        _model.connect(inletModelObject.get(),inletObjectPort,thisObject,thisObject.nextInletPort());
-        _model.connect(thisObject,thisObject.outletPort(),plenumOutletNode,plenumOutletNode.inletPort());
-        _model.connect(plenumOutletNode,plenumOutletNode.outletPort(),outletModelObject.get(),outletObjectPort);
+      if ( result ) {
+        _model.connect(node, node.outletPort(), thisObject, thisObject.nextInletPort());
+        boost::optional<Node> plenumOutletNode;
+        if ( auto mo = outletModelObject() ) {
+          plenumOutletNode = mo->optionalCast<Node>();
+        }
+
+        if ( ! plenumOutletNode ) {
+          plenumOutletNode = Node( _model );
+          _model.connect(thisObject, thisObject.outletPort(), plenumOutletNode.get(), plenumOutletNode->inletPort() );
+        }
+
+        // Remove the ZoneHVAC inlet node because we will use the new plenum outlet node
+        auto inletNode = zoneHVAC->inletNode();
+        if ( inletNode ) {
+          inletNode->disconnect();
+          inletNode->remove();
+        }
+
+        // Normally one HVACComponent port is connected to at most one other HVACComponent
+        // Here we are breaking the rules. Yuck.
+        Connection c(_model);
+        c.setSourceObject(plenumOutletNode.get());
+        c.setSourceObjectPort(plenumOutletNode->outletPort());
+        c.setTargetObject(zoneHVAC.get());
+        c.setTargetObjectPort(zoneHVAC->inletPort());
+      }
+    } else {
+      // Is the node part of an air loop
+      auto nodeAirLoop = node.airLoopHVAC();
+
+      if ( ! nodeAirLoop ) {
+        result = false;
+      }
+
+      // Is this plenum already connected to a different air loop
+      auto currentAirLoopHVAC = airLoopHVAC();
+      if ( currentAirLoopHVAC && (currentAirLoopHVAC.get() != nodeAirLoop) ) {
+        result = false;
+      }
+
+      boost::optional<AirLoopHVACZoneMixer> mixer;
+      // Is the immediate downstream object to the node a mixer
+      if ( result ) {
+        mixer = nodeAirLoop->zoneMixer();
+
+        if( ! (outletObj && mixer && (outletObj.get() == mixer.get()) ) )
+        {
+          result = false;
+        }
+      }
+
+      // Make sure there is not already a return plenum
+      if ( result ) {
+        if (  inletObj && inletObj->optionalCast<AirLoopHVACReturnPlenum>() ) {
+          result = false;
+        }
+      }
+
+      // Is there a zone on this branch
+      if ( result ) {
+        Splitter splitter = nodeAirLoop->zoneSplitter();
+        if ( nodeAirLoop->demandComponents(splitter,node,ThermalZone::iddObjectType()).empty() ) {
+          result = false;
+        }
+      }
+
+      if ( result ) {
+        unsigned inletObjectPort;
+        unsigned outletObjectPort;
+        boost::optional<ModelObject> inletModelObject;
+        boost::optional<ModelObject> outletModelObject;
+
+        inletModelObject = node;
+        inletObjectPort = node.outletPort();
+        outletModelObject = outletObj;
+        outletObjectPort = node.connectedObjectPort(node.outletPort()).get();
+
+
+        if ( currentAirLoopHVAC ) {
+          mixer->removePortForBranch(mixer->branchIndexForInletModelObject(inletModelObject.get()));
+          _model.connect(inletModelObject.get(),inletObjectPort,thisObject,thisObject.nextInletPort());
+        } else {
+          Node plenumOutletNode(_model);
+          plenumOutletNode.createName();
+
+          _model.connect(inletModelObject.get(),inletObjectPort,thisObject,thisObject.nextInletPort());
+          _model.connect(thisObject,thisObject.outletPort(),plenumOutletNode,plenumOutletNode.inletPort());
+          _model.connect(plenumOutletNode,plenumOutletNode.outletPort(),outletModelObject.get(),outletObjectPort);
+        }
       }
     }
 
@@ -318,6 +356,21 @@ namespace detail {
       OS_ASSERT(node);
       zoneMixer.removePortForBranch(zoneMixer.branchIndexForInletModelObject(node.get()));
       node->remove();
+    } else {
+      auto outlet = outletModelObject();
+      auto h = handle();
+
+      auto zoneHVAC = t_model.getModelObjects<ZoneHVACComponent>();
+      for ( auto & hvac : zoneHVAC ) {
+        auto plenum = hvac.returnPlenum();
+        if ( plenum && ( plenum->handle() == h ) ) {
+          hvac.removeReturnPlenum();
+        }
+      }
+
+      if ( outlet ) {
+        outlet->remove();
+      }
     }
 
     return Mixer_Impl::remove();

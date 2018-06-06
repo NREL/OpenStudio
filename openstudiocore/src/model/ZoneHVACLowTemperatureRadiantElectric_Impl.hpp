@@ -130,7 +130,7 @@ namespace detail {
 
     void resetHeatingThrottlingRange();
 
-    boost::optional<ThermalZone> thermalZone() const;
+    boost::optional<ThermalZone> thermalZone() const override;
 
     bool addToThermalZone(ThermalZone & thermalZone) override;
 
