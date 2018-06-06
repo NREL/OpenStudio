@@ -190,30 +190,11 @@ namespace detail {
 
       if ( result ) {
         _model.connect(node, node.outletPort(), thisObject, thisObject.nextInletPort());
-        boost::optional<Node> plenumOutletNode;
-        if ( auto mo = outletModelObject() ) {
-          plenumOutletNode = mo->optionalCast<Node>();
-        }
 
-        if ( ! plenumOutletNode ) {
-          plenumOutletNode = Node( _model );
-          _model.connect(thisObject, thisObject.outletPort(), plenumOutletNode.get(), plenumOutletNode->inletPort() );
-        }
-
-        // Remove the ZoneHVAC inlet node because we will use the new plenum outlet node
-        auto inletNode = zoneHVAC->inletNode();
-        if ( inletNode ) {
-          inletNode->disconnect();
-          inletNode->remove();
-        }
-
-        // Normally one HVACComponent port is connected to at most one other HVACComponent
-        // Here we are breaking the rules. Yuck.
-        Connection c(_model);
-        c.setSourceObject(plenumOutletNode.get());
-        c.setSourceObjectPort(plenumOutletNode->outletPort());
-        c.setTargetObject(zoneHVAC.get());
-        c.setTargetObjectPort(zoneHVAC->inletPort());
+        Node zoneHVACInletNode(_model);
+        _model.connect(zoneHVACInletNode, zoneHVACInletNode.outletPort(), zoneHVAC.get(), zoneHVAC->inletPort());
+        auto pl = inducedAirOutletPortList();
+        _model.connect(pl, pl.nextPort(), zoneHVACInletNode, zoneHVACInletNode.inletPort());
       }
     } else {
       // Is the node part of an air loop

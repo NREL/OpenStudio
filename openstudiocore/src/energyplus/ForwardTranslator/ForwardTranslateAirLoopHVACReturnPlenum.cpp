@@ -90,6 +90,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACReturnPlenum( 
   if( boost::optional<model::ModelObject> node = modelObject.outletModelObject() )
   {
     idfObject.setString(AirLoopHVAC_ReturnPlenumFields::OutletNodeName,node->name().get());
+  } else {
+    idfObject.setString(AirLoopHVAC_ReturnPlenumFields::OutletNodeName,modelObject.nameString() + " Outlet Node");
   }
 
   //// ZoneName

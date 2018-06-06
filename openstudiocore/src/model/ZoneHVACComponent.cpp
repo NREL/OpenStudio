@@ -124,44 +124,42 @@ namespace detail {
     return boost::none;
   }
 
-  boost::optional<Connection> ZoneHVACComponent_Impl::returnPlenumOutletNodeConnection() const {
-    auto m = model();
-    auto h = handle();
+  //boost::optional<Connection> ZoneHVACComponent_Impl::returnPlenumOutletNodeConnection() const {
+  //  auto m = model();
+  //  auto h = handle();
 
-    auto connections = subsetCastVector<Connection>(m.getModelObjects<Connection>());
-    auto plenums = subsetCastVector<AirLoopHVACReturnPlenum>(m.getModelObjects<AirLoopHVACReturnPlenum>());
-    for ( auto & c : connections ) {
-      auto target = c.targetObject();
-      if ( target && ( target->handle() == h ) ) {
-        auto source = c.sourceObject();
-        if ( source ) {
-          auto sourceHandle = source->handle();
-          for ( auto & p : plenums ) {
-            auto outlet = p.outletModelObject();
-            if ( outlet && ( outlet->handle() == sourceHandle ) ) {
-              return c;
-            }
-          }
-        }
-      }
-    }
+  //  auto connections = subsetCastVector<Connection>(m.getModelObjects<Connection>());
+  //  auto plenums = subsetCastVector<AirLoopHVACReturnPlenum>(m.getModelObjects<AirLoopHVACReturnPlenum>());
+  //  for ( auto & c : connections ) {
+  //    auto target = c.targetObject();
+  //    if ( target && ( target->handle() == h ) ) {
+  //      auto source = c.sourceObject();
+  //      if ( source ) {
+  //        auto sourceHandle = source->handle();
+  //        for ( auto & p : plenums ) {
+  //          auto outlet = p.outletModelObject();
+  //          if ( outlet && ( outlet->handle() == sourceHandle ) ) {
+  //            return c;
+  //          }
+  //        }
+  //      }
+  //    }
+  //  }
 
-    return boost::none;
-  }
+  //  return boost::none;
+  //}
 
   boost::optional<AirLoopHVACReturnPlenum> ZoneHVACComponent_Impl::returnPlenum() const {
     boost::optional<AirLoopHVACReturnPlenum> plenum;
 
-    auto c = returnPlenumOutletNodeConnection();
-    if ( c ) {
-      auto source = c->sourceObject();
-      if ( source ) {
-        auto node = source->optionalCast<Node>();
-        if ( node ) {
-          auto inlet = node->inletModelObject();
-          if ( inlet ) {
-            plenum = inlet->optionalCast<AirLoopHVACReturnPlenum>();
-          }
+    auto node = inletNode();
+    if ( node ) {
+      auto mo = node->inletModelObject();
+      if ( mo ) {
+        auto pl = mo->optionalCast<PortList>();
+        if ( pl ) {
+          auto mo2 = pl->getImpl<detail::PortList_Impl>()->hvacComponent();
+          plenum = mo2.optionalCast<AirLoopHVACReturnPlenum>();
         }
       }
     }
@@ -170,31 +168,39 @@ namespace detail {
   }
 
   void ZoneHVACComponent_Impl::removeReturnPlenum() {
-    Model m = this->model();
+    Model m = model();
     auto plenum = returnPlenum();
+    auto thisObject = getObject<ZoneHVACComponent>();
 
     if ( plenum ) {
       auto zone = thermalZone();
       OS_ASSERT( zone );
+      auto h = zone->handle();
 
-      auto inletNodes = subsetCastVector<Node>(plenum->inletModelObjects());
-      for ( auto & node : inletNodes ) {
-        auto nodeInlet = node.inletModelObject();
-        if ( nodeInlet && ( nodeInlet->handle() == zone->handle() ) ) {
-          auto c = returnPlenumOutletNodeConnection();
+      auto inlet = inletNode();
+      boost::optional<Node> plenumInletNode;
 
-          auto branch = plenum->branchIndexForInletModelObject(nodeInlet.get());
-          plenum->removePortForBranch( branch );
-          auto zoneHVAC = getObject<ZoneHVACComponent>();
-          m.connect(node, node.outletPort(), zoneHVAC, zoneHVAC.inletPort());
-
-          // The connection between the return plenum outlet node
-          // and the ZoneHVACComponent is created manually, and break the typical
-          // rules about one port connecting to exactly one other object port
-          // Because of this we have to manage the Connection object manually.
-          if ( c ) {
-            c->remove();
+      auto plenumInlets = plenum->inletModelObjects();
+      for ( auto & plenumInlet : plenumInlets ) {
+        auto node = plenumInlet.optionalCast<Node>();
+        if ( node ) {
+          auto mo = node->inletModelObject();
+          if ( mo ) {
+            if ( mo->handle() == h ) {
+              plenumInletNode = node;
+            }
           }
+        }
+      }
+
+      if ( inlet && plenumInletNode ) {
+        inlet->remove();
+        auto branch = plenum->branchIndexForInletModelObject(plenumInletNode.get());
+        plenum->removePortForBranch(branch);
+        m.connect(plenumInletNode.get(), plenumInletNode->outletPort(), thisObject, thisObject.inletPort()); 
+        plenumInlets = plenum->inletModelObjects();
+        if ( plenumInlets.empty() ) {
+          plenum->remove();
         }
       }
     }

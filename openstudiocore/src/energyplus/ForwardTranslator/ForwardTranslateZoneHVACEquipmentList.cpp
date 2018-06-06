@@ -31,12 +31,16 @@
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../model/ZoneHVACEquipmentList.hpp"
 #include "../../model/ZoneHVACEquipmentList_Impl.hpp"
+#include "../../model/ZoneHVACComponent.hpp"
+#include "../../model/ZoneHVACComponent_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/RefrigerationAirChiller.hpp"
 #include "../../model/RefrigerationAirChiller_Impl.hpp"
 #include "../../model/ZoneVentilationDesignFlowRate.hpp"
 #include "../../model/ZoneVentilationDesignFlowRate_Impl.hpp"
+#include "../../model/AirLoopHVACReturnPlenum.hpp"
+#include "../../model/AirLoopHVACReturnPlenum_Impl.hpp"
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EquipmentList_FieldEnums.hxx>
@@ -151,6 +155,14 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
       eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentName,_equipment->name().get());
       eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,coolingPriority);
       eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,heatingPriority);
+    }
+
+    auto zoneHVAC = elem.optionalCast<ZoneHVACComponent>();
+    if ( zoneHVAC ) {
+      auto plenum = zoneHVAC->returnPlenum();
+      if ( plenum ) {
+        auto _plenum = translateAndMapModelObject(plenum.get());
+      }
     }
   }
 
