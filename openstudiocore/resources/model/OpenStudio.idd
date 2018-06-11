@@ -28843,9 +28843,12 @@ OS:EnergyManagementSystem:Actuator,
   A4, \field Actuated Component Type
        \required-field
        \type alpha
-  A5; \field Actuated Component Control Type
+  A5, \field Actuated Component Control Type
        \required-field
        \type alpha
+  A6; \field Thermal Zone
+       \type object-list
+       \object-list AllObjects
 
 OS:EnergyManagementSystem:ProgramCallingManager,
        \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
