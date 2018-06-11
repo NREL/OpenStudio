@@ -184,10 +184,12 @@ namespace detail {
       for ( auto & plenumInlet : plenumInlets ) {
         auto node = plenumInlet.optionalCast<Node>();
         if ( node ) {
-          auto mo = node->inletModelObject();
-          if ( mo ) {
-            if ( mo->handle() == h ) {
+          auto pl = node->inletModelObject();
+          if ( pl && pl->optionalCast<PortList>() ) {
+            auto mo = pl->cast<PortList>().getImpl<model::detail::PortList_Impl>()->hvacComponent();
+            if ( mo.handle() == h ) {
               plenumInletNode = node;
+              break;
             }
           }
         }

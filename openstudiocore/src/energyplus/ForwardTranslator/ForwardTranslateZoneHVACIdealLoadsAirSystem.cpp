@@ -40,8 +40,12 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Space_Impl.hpp"
+#include "../../model/PortList.hpp"
+#include "../../model/PortList_Impl.hpp"
 #include "../../model/DesignSpecificationOutdoorAir.hpp"
 #include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
+#include "../../model/AirLoopHVACReturnPlenum.hpp"
+#include "../../model/AirLoopHVACReturnPlenum_Impl.hpp"
 
 #include <utilities/idd/ZoneHVAC_IdealLoadsAirSystem_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -81,10 +85,41 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACIdealLoadsAirSyst
 
   // zone exhaust air node name
   boost::optional<std::string> zoneExhaustAirNodeName;
+
+  auto plenum = modelObject.returnPlenum();
+  if ( plenum ) {
+    auto zone = modelObject.thermalZone();
+    OS_ASSERT( zone );
+    auto h = zone->handle();
+
+    boost::optional<Node> plenumInletNode;
+
+    auto plenumInlets = plenum->inletModelObjects();
+    for ( auto & plenumInlet : plenumInlets ) {
+      auto node = plenumInlet.optionalCast<Node>();
+      if ( node ) {
+        auto pl = node->inletModelObject();
+        if ( pl && pl->optionalCast<PortList>() ) {
+          auto mo = pl->cast<PortList>().getImpl<model::detail::PortList_Impl>()->hvacComponent();
+          if ( mo.handle() == h ) {
+            zoneExhaustAirNodeName = node->nameString();
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  if ( zoneExhaustAirNodeName ) {
+    zoneHVACIdealLoadsAirSystem.setString(ZoneHVAC_IdealLoadsAirSystemFields::ZoneExhaustAirNodeName,zoneExhaustAirNodeName.get());
+  }
+
+  // System Inlet Air Node Name
+  boost::optional<std::string> systemInletAirNodeName;
   if(boost::optional<Node> node = modelObject.inletNode()){
     if(boost::optional<std::string> s = node->name()){
-      zoneExhaustAirNodeName = s;
-      zoneHVACIdealLoadsAirSystem.setString(ZoneHVAC_IdealLoadsAirSystemFields::ZoneExhaustAirNodeName,s.get());
+      systemInletAirNodeName = s;
+      zoneHVACIdealLoadsAirSystem.setString(ZoneHVAC_IdealLoadsAirSystemFields::SystemInletAirNodeName,s.get());
     }
   }
 
