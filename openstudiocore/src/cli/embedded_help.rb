@@ -6,6 +6,10 @@ module RbConfig
 end
 
 module OpenStudio
+
+  # check if this is CLI
+  CLI = true
+
   def self.openstudio_path
     RbConfig.ruby
   end
@@ -286,13 +290,14 @@ class File
   
   def self.expand_path(file_name, *args)
     if file_name.to_s.chars.first == ':' then
-      puts "self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #STDOUT.flush
       return OpenStudio.get_absolute_path(file_name)
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
-      puts "2 self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
-      puts "x = #{File.join(args[0], file_name)}"
-      puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}"
-      STDOUT.flush
+      #puts "2 self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "x = #{File.join(args[0], file_name)}"
+      #puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}"
+      #STDOUT.flush
       #return original_expand_path(file_name, *args)
       return OpenStudio.get_absolute_path(File.join(args[0], file_name))
     end
@@ -301,13 +306,14 @@ class File
 
   def self.absolute_path(file_name, *args)
     if file_name.to_s.chars.first == ':' then
-      puts "self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #STDOUT.flush
       return OpenStudio.get_absolute_path(file_name)
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
-      puts "2 self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}"
-      puts "x = #{File.join(args[0], file_name)}"
-      puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}" 
-      STDOUT.flush      
+      #puts "2 self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "x = #{File.join(args[0], file_name)}"
+      #puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}" 
+      #STDOUT.flush      
       #return original_absolute_path(file_name, *args)
       return OpenStudio.get_absolute_path(File.join(args[0], file_name))
     end
@@ -316,13 +322,14 @@ class File
   
   def self.realpath(file_name, *args)
     if file_name.to_s.chars.first == ':' then
-      puts "self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #STDOUT.flush
       return OpenStudio.get_absolute_path(file_name)
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
-      puts "2 self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}"
-      puts "x = #{File.join(args[0], file_name)}"
-      puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}" 
-      STDOUT.flush      
+      #puts "2 self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}"
+      #puts "x = #{File.join(args[0], file_name)}"
+      #puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}" 
+      #STDOUT.flush      
       #return original_realpath(file_name, *args)
       return OpenStudio.get_absolute_path(File.join(args[0], file_name))
     end
@@ -473,8 +480,8 @@ module Find
 
       # this is overriden
       if d.to_s.chars.first == ':'
-        puts "d = #{d}"
-        STDOUT.flush
+        #puts "Find.find skipping '#{d}'"
+        #STDOUT.flush
         next
       end
       
