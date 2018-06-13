@@ -41,6 +41,9 @@ namespace energyplus {
 
 namespace model {
 
+class ThermalZone;
+class Space;
+
 namespace detail {
 
   class EnergyManagementSystemActuator_Impl;
@@ -54,6 +57,16 @@ class MODEL_API EnergyManagementSystemActuator : public ModelObject {
   //@{
 
   explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string actuatedComponentType, const std::string actuatedComponentControlType);
+  //These constructors below are for SpaceloadInstances that are defined in SpaceTypes that are used in Spaces.
+  //Upon translation, the SpaceLoadInstances use ZoneLists which are not avail in OS
+  //The ZoneListName is the SpaceType name
+  //The Zone's are the Space->ThermalZone names
+  //So to attach to a future zone, use the TZ or the Space that the SpaceLoadInstance will operate on
+  explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string actuatedComponentType, const std::string actuatedComponentControlType, const ModelObject& zoneNameModelObject);
+
+  explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string actuatedComponentType, const std::string actuatedComponentControlType, const ThermalZone& thermalZone);
+
+  explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string actuatedComponentType, const std::string actuatedComponentControlType, const Space& space);
 
   virtual ~EnergyManagementSystemActuator() {}
 
@@ -70,6 +83,8 @@ class MODEL_API EnergyManagementSystemActuator : public ModelObject {
 
   std::string actuatedComponentType() const;
 
+  boost::optional<ModelObject> zoneName() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -79,6 +94,14 @@ class MODEL_API EnergyManagementSystemActuator : public ModelObject {
   bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
   bool setActuatedComponentType(const std::string& actuatedComponentType);
+  //set the zoneName field to a generic ModelObjects name
+  bool setZoneName(const ModelObject& modelObject);
+  //set the ZoneName field to the ThermalZone's names
+  bool setThermalZone(const ThermalZone& thermalZone);
+  //set the ZoneName field to the Space's ThermalZone's name
+  bool setSpace(const Space& space);
+
+  void resetZoneName();
 
   //@}
   /** @name Other */

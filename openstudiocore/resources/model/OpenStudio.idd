@@ -28846,7 +28846,7 @@ OS:EnergyManagementSystem:Actuator,
   A5, \field Actuated Component Control Type
        \required-field
        \type alpha
-  A6; \field Thermal Zone
+  A6; \field Zone Name
        \type object-list
        \object-list AllObjects
 
