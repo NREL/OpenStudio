@@ -75,9 +75,21 @@ public:
   bool setDebug(bool debug);
   void resetDebug();
 
+  bool fast() const;
+  bool setFast(bool fast);
+  void resetFast();
+
   bool preserveRunDir() const;
   bool setPreserveRunDir(bool preserve);
   void resetPreserveRunDir();
+
+  bool skipExpandObjects() const;
+  bool setSkipExpandObjects(bool skip);
+  void resetSkipExpandObjects();
+
+  bool skipEnergyPlusPreprocess() const;
+  bool setSkipEnergyPlusPreprocess(bool skip);
+  void resetSkipEnergyPlusPreprocess();
 
   bool cleanup() const;
   bool setCleanup(bool cleanup);
