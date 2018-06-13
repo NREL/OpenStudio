@@ -6959,10 +6959,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
           value = unitToUnit(value,"F","C").get();
           fluidCooler.setDesignEnteringAirWetbulbTemperature(value);
         }
-      } else if ( calcMthd.compare("UAFactor", Qt::CaseInsensitive) == 0 ) {
+      } else if ( calcMthd.compare("UAFactorSim", Qt::CaseInsensitive) == 0 ) {
         fluidCooler.setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
 
-        value = htRejElement.firstChildElement("UAFactor").text().toDouble(&ok);
+        value = htRejElement.firstChildElement("UAFactorSim").text().toDouble(&ok);
         if ( ok ) {
           // Convert Btu/h-F to W/K
           fluidCooler.setDesignAirFlowRateUfactorTimesAreaValue(value * 0.5275);
@@ -7016,16 +7016,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
       auto calcMthd = htRejElement.firstChildElement("CalcMthd").text();
       if ( calcMthd.compare("UserSpecified", Qt::CaseInsensitive) == 0 ) {
         fluidCooler.setPerformanceInputMethod("NominalCapacity");
-      } else if ( calcMthd.compare("UAFactor", Qt::CaseInsensitive) == 0 ) {
+      } else if ( calcMthd.compare("UAFactorSim", Qt::CaseInsensitive) == 0 ) {
         fluidCooler.setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
 
-        value = htRejElement.firstChildElement("UAFactor").text().toDouble(&ok);
+        value = htRejElement.firstChildElement("UAFactorSim").text().toDouble(&ok);
         if ( ok ) {
           // Convert Btu/h-F to W/K
           fluidCooler.setHighFanSpeedUfactorTimesAreaValue(value * 0.5275);
         }
 
-        value = htRejElement.firstChildElement("LowSpdUAFactor").text().toDouble(&ok);
+        value = htRejElement.firstChildElement("LowSpdUAFactorSim").text().toDouble(&ok);
         if ( ok ) {
           // Convert Btu/h-F to W/K
           fluidCooler.setLowFanSpeedUfactorTimesAreaValue(value * 0.5275);
@@ -7078,6 +7078,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
       if ( ok ) {
         fluidCooler.setLowFanSpeedFanPowerSizingFactor(value);
       }
+
+      fluidCooler.autosizeLowFanSpeedAirFlowRate();
       
       result = fluidCooler;
     }
@@ -7137,9 +7139,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
           value = unitToUnit(value,"F","C").get();
           fluidCooler.setDesignEnteringAirWetbulbTemperature(value);
         }
-      } else if ( calcMthd.compare("UAFactor", Qt::CaseInsensitive) == 0 ) {
+      } else if ( calcMthd.compare("UAFactorSim", Qt::CaseInsensitive) == 0 ) {
         fluidCooler.setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
-        value = htRejElement.firstChildElement("UAFactor").text().toDouble(&ok);
+        value = htRejElement.firstChildElement("UAFactorSim").text().toDouble(&ok);
         if ( ok ) {
           // Convert Btu/h-F to W/K
           fluidCooler.setUfactorTimesAreaValueatDesignAirFlowRate(value * 0.5275);
@@ -7185,7 +7187,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
 
       value = htRejElement.firstChildElement("LowSpdAirFlowRatSim").text().toDouble(&ok);
       if ( ok ) {
-        value = unitToUnit(value,"cfm","m^3/s").get();
         fluidCooler.setLowFanSpeedAirFlowRateSizingFactor(value);
       }
 
@@ -7231,34 +7232,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
           value = unitToUnit(value,"Btu/h","W").get();
           fluidCooler.setLowSpeedUserSpecifiedDesignCapacity(value);
         }
-
-        value = htRejElement.firstChildElement("EntTempDsgn").text().toDouble(&ok);
-        if ( ok ) {
-          value = unitToUnit(value,"F","C").get();
-          fluidCooler.setDesignEnteringWaterTemperature(value);
-        }
-
-        value = htRejElement.firstChildElement("DsgnDBT").text().toDouble(&ok);
-        if ( ok ) {
-          value = unitToUnit(value,"F","C").get();
-          fluidCooler.setDesignEnteringAirTemperature(value);
-        }
-
-        value = htRejElement.firstChildElement("DsgnWBT").text().toDouble(&ok);
-        if ( ok ) {
-          value = unitToUnit(value,"F","C").get();
-          fluidCooler.setDesignEnteringAirWetbulbTemperature(value);
-        }
-      } else if ( calcMthd.compare("UAFactor", Qt::CaseInsensitive) == 0 ) {
+      } else if ( calcMthd.compare("UAFactorSim", Qt::CaseInsensitive) == 0 ) {
         fluidCooler.setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
 
-        value = htRejElement.firstChildElement("UAFactor").text().toDouble(&ok);
+        value = htRejElement.firstChildElement("UAFactorSim").text().toDouble(&ok);
         if ( ok ) {
           // Convert Btu/h-F to W/K
           fluidCooler.setHighFanSpeedUfactorTimesAreaValue(value * 0.5275);
         }
 
-        value = htRejElement.firstChildElement("LowSpdUAFactor").text().toDouble(&ok);
+        value = htRejElement.firstChildElement("LowSpdUAFactorSim").text().toDouble(&ok);
         if ( ok ) {
           // Convert Btu/h-F to W/K
           fluidCooler.setLowFanSpeedUfactorTimesAreaValue(value * 0.5275);
@@ -7269,6 +7252,24 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
       if ( ok ) {
         value = unitToUnit(value,"gal/min","m^3/s").get();
         fluidCooler.setDesignWaterFlowRate(value);
+      }
+
+      value = htRejElement.firstChildElement("EntTempDsgn").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"F","C").get();
+        fluidCooler.setDesignEnteringWaterTemperature(value);
+      }
+
+      value = htRejElement.firstChildElement("DsgnDBT").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"F","C").get();
+        fluidCooler.setDesignEnteringAirTemperature(value);
+      }
+
+      value = htRejElement.firstChildElement("DsgnWBT").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"F","C").get();
+        fluidCooler.setDesignEnteringAirWetbulbTemperature(value);
       }
 
       fluidCooler.setEvaporationLossMode("LossFactor");
