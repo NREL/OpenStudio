@@ -281,12 +281,13 @@ class File
   class << self
     alias :original_expand_path :expand_path
     alias :original_realpath :realpath
+    alias :original_absolute_path :absolute_path
   end
   
   def self.expand_path(file_name, *args)
     if file_name.to_s.chars.first == ':' then
       puts "self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
-      return file_name
+      return OpenStudio.get_absolute_path(file_name)
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
       puts "2 self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
       puts "x = #{File.join(args[0], file_name)}"
@@ -297,11 +298,26 @@ class File
     end
     return original_expand_path(file_name, *args)
   end
+
+  def self.absolute_path(file_name, *args)
+    if file_name.to_s.chars.first == ':' then
+      puts "self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      return OpenStudio.get_absolute_path(file_name)
+    elsif args.size == 1 && args[0].to_s.chars.first == ':' then
+      puts "2 self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}"
+      puts "x = #{File.join(args[0], file_name)}"
+      puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}" 
+      STDOUT.flush      
+      #return original_absolute_path(file_name, *args)
+      return OpenStudio.get_absolute_path(File.join(args[0], file_name))
+    end
+    return original_absolute_path(file_name, *args)
+  end
   
   def self.realpath(file_name, *args)
     if file_name.to_s.chars.first == ':' then
       puts "self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}"
-      return file_name
+      return OpenStudio.get_absolute_path(file_name)
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
       puts "2 self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}"
       puts "x = #{File.join(args[0], file_name)}"
@@ -440,4 +456,61 @@ module FileUtils
   def self.copy(src, dest, options = {})
     return self.cp(src, dest, options)
   end  
+end
+
+require 'find'
+module Find
+  class << self
+    alias :original_find :find
+  end
+  
+  def self.find(*paths, ignore_error: true)    
+    block_given? or return enum_for(__method__, *paths, ignore_error: ignore_error)
+
+    fs_encoding = Encoding.find("filesystem")
+
+    all_paths = paths.collect! do |d| 
+
+      # this is overriden
+      if d.to_s.chars.first == ':'
+        puts "d = #{d}"
+        STDOUT.flush
+        next
+      end
+      
+      raise Errno::ENOENT unless File.exist?(d)
+      d.dup
+    end
+    
+    all_paths.each do |path|
+      path = path.to_path if path.respond_to? :to_path
+      enc = path.encoding == Encoding::US_ASCII ? fs_encoding : path.encoding
+      ps = [path]
+      while file = ps.shift
+        catch(:prune) do
+          yield file.dup.taint
+          begin
+            s = File.lstat(file)
+          rescue Errno::ENOENT, Errno::EACCES, Errno::ENOTDIR, Errno::ELOOP, Errno::ENAMETOOLONG
+            raise unless ignore_error
+            next
+          end
+          if s.directory? then
+            begin
+              fs = Dir.entries(file, encoding: enc)
+            rescue Errno::ENOENT, Errno::EACCES, Errno::ENOTDIR, Errno::ELOOP, Errno::ENAMETOOLONG
+              raise unless ignore_error
+              next
+            end
+            fs.sort!
+            fs.reverse_each {|f|
+              next if f == "." or f == ".."
+              f = File.join(file, f)
+              ps.unshift f.untaint
+            }
+          end
+        end
+      end
+    end
+  end
 end
