@@ -236,8 +236,11 @@ class IO
   
   def self.read(name, *args)
     if name.to_s.chars.first == ':' then
+      #puts "self.read(name, *args), name = #{name}, args = #{args}"
+      #STDOUT.flush
       absolute_path = OpenStudio.get_absolute_path(name)
-      
+      #puts "absolute_path = #{absolute_path}"
+      #STDOUT.flush
       if EmbeddedScripting::hasFile(absolute_path) then
         return EmbeddedScripting::getFileAsString(absolute_path)
       else
@@ -246,7 +249,9 @@ class IO
       end
     end    
     
-    return self.original_read(name, *args)
+    #puts "self.original_read, name = #{name}, args = #{args}, block_given? = #{block_given?}"
+    #STDOUT.flush
+    return original_read(name, *args)
   end
   
   def self.open(name, *args)
@@ -259,14 +264,22 @@ class IO
         string = EmbeddedScripting::getFileAsString(absolute_path)
         #puts "string = #{string}"
         if block_given?
-          return yield(StringIO.open(string))
+          # if a block is given, then a new IO is created and closed
+          io = StringIO.open(string)
+          result = yield(io)
+          io.close
+          return result
         else
           return StringIO.open(string)
         end
       else
         puts "IO.open cannot find embedded file '#{absolute_path}' for '#{name}'"
         if block_given?
-          return yield(StringIO.open(""))
+          # if a block is given, then a new IO is created and closed
+          io = StringIO.open("")
+          result = yield(io)
+          io.close
+          return result
         else
           return ""
         end
@@ -274,7 +287,11 @@ class IO
     end    
     
     if block_given?
-      return yield(self.original_open(name, *args))
+      # if a block is given, then a new IO is created and closed
+      io = self.original_open(name, *args)
+      result = yield(io)
+      io.close
+      return result
     else
       return self.original_open(name, *args)
     end
