@@ -122,6 +122,7 @@ endif()
 
 install(TARGETS openstudio_rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(FILES openstudio.rb DESTINATION Ruby COMPONENT "RubyAPI")
+install(DIRECTORY openstudio DESTINATION Ruby COMPONENT "RubyAPI")
 
 if( BUILD_PAT )
   if( APPLE )

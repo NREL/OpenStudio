@@ -27,9 +27,15 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
+begin
+  require 'openstudio_measure_tester/test_helper.rb'
+rescue LoadError
+  puts 'OpenStudio Measure Tester Gem not installed -- will not be able to aggregate and dashboard the results of tests'
+end
+
 def show_output(result)
 
-  puts "**MEASURE APPLICABILITY**"
+  puts '**MEASURE APPLICABILITY**'
   applicability = result.value.value
   if applicability ==  -1
     puts "#{applicability} = Not Applicable"
@@ -39,48 +45,48 @@ def show_output(result)
     puts "#{applicability} = Fail"
   end
 
-  puts "**INITIAL CONDITION**"
+  puts '**INITIAL CONDITION**'
   if result.stepInitialCondition.empty?
     #do nothing
   else
     puts result.stepInitialCondition.get
   end
 
-  puts "**FINAL CONDITION**"
+  puts '**FINAL CONDITION**'
   if result.stepFinalCondition.empty?
     #do nothing
   else
     puts result.stepFinalCondition.get
   end
 
-  puts "**INFO MESSAGES**"
+  puts '**INFO MESSAGES**'
   result.stepInfo.each do |info_msg|
     puts "#{info_msg}"
   end
 
-  puts "**WARNING MESSAGES**"
+  puts '**WARNING MESSAGES**'
   result.stepWarnings.each do |info_msg|
     puts "#{info_msg}"
   end
 
-  puts "**ERROR MESSAGES**"
+  puts '**ERROR MESSAGES**'
   result.stepErrors.each do |info_msg|
     puts "#{info_msg}"
   end
 
-  puts "***Machine-Readable Attributes**"
+  puts '***Machine-Readable Attributes**'
   values = []
   result.stepValues.each do |value|
     values << value.string
   end
   puts "[\n#{values.join(',').strip}\n]"
 
-  puts "***Files Generated**"
+  puts '***Files Generated**'
   result.stepFiles.each do |file|
     puts "#{file}"
   end
 
-  puts "" #space between measures for readability in output
-  puts ""
+  puts '' #space between measures for readability in output
+  puts ''
 
 end

@@ -40,6 +40,7 @@ OpenStudio::Application::instance().application(false)
 
 require 'logger'
 require 'optparse'
+require 'stringio'
 
 #include OpenStudio::Workflow::Util::IO
 
@@ -392,9 +393,9 @@ def parse_main_args(main_args)
           end
 
         rescue LoadError => e
-          puts e.message
+          safe_puts e.message
         rescue => e
-          puts e.message
+          safe_puts e.message
         end
       end
     end
@@ -933,11 +934,11 @@ class GemList
       end
 
       embedded.each do |spec|
-        puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
+        safe_puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
       end
 
       user.each do |spec|
-        puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
+        safe_puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
       end
 
     rescue => e
@@ -1045,6 +1046,14 @@ class Measure
     options[:update] = false
     options[:compute_arguments] = nil
 
+    # save some arguments to pass to minitest
+    saved_subargv = []
+    if sub_argv[0] == '-r' || sub_argv[0] == '--run_tests'
+      saved_subargv = sub_argv[2..-1]
+      sub_argv = sub_argv[0...2]
+    end
+    
+    # find the directory
     directory = nil
     if sub_argv.size > 1
       unless (sub_argv[0] == '-s' || sub_argv[0] == '--start_server')
@@ -1070,16 +1079,20 @@ class Measure
         options[:compute_arguments] = true
         options[:compute_arguments_model] = model_file
       end
+      o.on('-r', '--run_tests', 'Run all tests recursively found in a directory, additional arguments are passed to minitest') do
+        options[:run_tests] = true
+      end
       o.on('-s', '--start_server [PORT]', 'Start a measure manager server') do |port|
         options[:start_server] = true
         options[:start_server_port] = port
       end
+      # TODO: run unit tests
     end
-
+    
     # Parse the options
     argv = parse_options(opts, sub_argv)
     return 0 if argv == nil
-
+    
     $logger.debug("Measure command: #{argv.inspect} #{options.inspect}")
 
     if !options[:start_server]
@@ -1108,7 +1121,7 @@ class Measure
         end
       end
 
-      puts JSON.generate(result)
+      safe_puts JSON.generate(result)
 
     elsif options[:update]
       measure_manager = MeasureManager.new($logger)
@@ -1119,7 +1132,7 @@ class Measure
       end
 
       hash = measure_manager.measure_hash(directory, measure)
-      puts JSON.generate(hash)
+      safe_puts JSON.generate(hash)
 
     elsif options[:compute_arguments]
       measure_manager = MeasureManager.new($logger)
@@ -1168,8 +1181,28 @@ class Measure
       measure_info = measure_manager.get_measure_info(directory, measure, model_path, model, workspace)
 
       hash = measure_manager.measure_hash(directory, measure, measure_info)
-      puts JSON.generate(hash)
+      safe_puts JSON.generate(hash)
 
+    elsif options[:run_tests]
+      
+      # restore saved arguments for minitest
+      ARGV.clear
+      saved_subargv.each do |arg|
+        ARGV << arg
+      end
+      $logger.debug("Minitest arguments are '#{saved_subargv}'")
+      
+      # load openstudio_measure_tester gem
+      #begin
+        require 'openstudio_measure_tester'
+      #rescue LoadError
+        #puts "Cannot load 'openstudio_measure_tester'"
+        #return 1
+      #end
+      
+      runner = OpenStudioMeasureTester::Runner.new(directory)
+      runner.run_all(Dir.pwd) 
+    
     elsif options[:start_server]
 
       require_relative 'measure_manager_server'
