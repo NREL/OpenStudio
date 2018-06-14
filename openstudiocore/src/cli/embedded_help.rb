@@ -171,7 +171,7 @@ module Kernel
     matches = []
     EmbeddedScripting.allFileNamesAsString.split(';').each do |file|
       # Skip files outside of the specified directory
-      next unless file.include?(absolute_path)
+      next unless file.start_with?(absolute_path)
       # Skip files that don't match the file_name_pattern criterion
       next unless File.basename(file).match(file_name_regexp)
       # If here, found a match
@@ -426,18 +426,34 @@ module FileUtils
     if src.to_s.chars.first == ':' then
       absolute_path = OpenStudio.get_absolute_path(src)
       
-      # TODO: if src is a directory
+      #puts "cp_r absolute_path = #{absolute_path}"
       
-      if EmbeddedScripting::hasFile(absolute_path) then
-        s = EmbeddedScripting::getFileAsString(absolute_path)
-        
-        if File.directory?(dest)
-          dest = File.join(dest, File.basename(src))
-        end
-        FileUtils.mkdir_p(File.dirname(dest))
-        
-        File.open(dest, 'w') do |f|
-          f.puts s
+      # Loop through all he files in the embedded system
+      matches = []
+      EmbeddedScripting.allFileNamesAsString.split(';').each do |file|
+        # Skip files outside of the specified directory
+        next unless file.start_with?(absolute_path)
+
+        # If here, found a match
+        matches << file
+      end
+      
+      if matches.count > 0 then
+        matches.each do |absolute_path|
+          #puts "do copy absolute_path = #{absolute_path}"
+          s = EmbeddedScripting::getFileAsString(absolute_path)
+          
+          new_dest = dest
+          if matches.count > 1
+            #puts "dest is dir = #{absolute_path}"
+            new_dest = File.join(dest, File.basename(absolute_path))
+          end
+          #puts "new_dest = #{new_dest}"
+          FileUtils.mkdir_p(File.dirname(new_dest))
+          
+          File.open(new_dest, 'w') do |f|
+            f.puts s
+          end
         end
         return true
       else
@@ -495,10 +511,11 @@ module Find
 
     all_paths = paths.collect! do |d| 
 
-      # this is overriden
+      # this is overriden to ignore files on embedded file system
       if d.to_s.chars.first == ':'
         #puts "Find.find skipping '#{d}'"
         #STDOUT.flush
+        nil
         next
       end
       
@@ -506,7 +523,12 @@ module Find
       d.dup
     end
     
+    # this is overriden to ignore files on embedded file system
+    all_paths.reject! {|x| x.nil?} 
+    
     all_paths.each do |path|
+      #puts "all_paths path = '#{path}'"
+      #STDOUT.flush  
       path = path.to_path if path.respond_to? :to_path
       enc = path.encoding == Encoding::US_ASCII ? fs_encoding : path.encoding
       ps = [path]
