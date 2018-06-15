@@ -1,8 +1,3 @@
-begin
-  require 'openstudio_measure_tester/test_helper.rb'
-rescue LoadError
-  # Do not print anything as this is the CLI.
-end
 
 def show_output(result)
 
