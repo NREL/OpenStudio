@@ -7061,17 +7061,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         fluidCooler.setHighFanSpeedAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
       }
 
+      value = htRejElement.firstChildElement("LowSpdAirFlowCapSim").text().toDouble(&ok);
+      if ( ok ) {
+        fluidCooler.setLowFanSpeedAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+      }
+
       auto totFanHPElement = htRejElement.firstChildElement("TotFanHPSim");
       value = totFanHPElement.text().toDouble(&ok);
       if ( ok ) {
         fluidCooler.setHighFanSpeedFanPower(value * 745.7);
       }
 
-      auto lowSpdAirFlowRatSimElement = htRejElement.firstChildElement("LowSpdAirFlowRatSim");
-      value = lowSpdAirFlowRatSimElement.text().toDouble(&ok);
-      if ( ok ) {
-        fluidCooler.setLowFanSpeedAirFlowRateSizingFactor(value);
-      }
+      //auto lowSpdAirFlowRatSimElement = htRejElement.firstChildElement("LowSpdAirFlowRatSim");
+      //value = lowSpdAirFlowRatSimElement.text().toDouble(&ok);
+      //if ( ok ) {
+      //  fluidCooler.setLowFanSpeedAirFlowRateSizingFactor(value);
+      //}
 
       auto lowSpdPwrRatSimElement = htRejElement.firstChildElement("LowSpdPwrRatSim");
       value = lowSpdPwrRatSimElement.text().toDouble(&ok);
@@ -7079,7 +7084,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         fluidCooler.setLowFanSpeedFanPowerSizingFactor(value);
       }
 
-      fluidCooler.autosizeLowFanSpeedAirFlowRate();
+      //fluidCooler.autosizeLowFanSpeedAirFlowRate();
       
       result = fluidCooler;
     }
@@ -7139,7 +7144,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
           value = unitToUnit(value,"F","C").get();
           fluidCooler.setDesignEnteringAirWetbulbTemperature(value);
         }
-      } else if ( calcMthd.compare("UAFactorSim", Qt::CaseInsensitive) == 0 ) {
+      } else if ( calcMthd.compare("UAFactor", Qt::CaseInsensitive) == 0 ) {
         fluidCooler.setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
         value = htRejElement.firstChildElement("UAFactorSim").text().toDouble(&ok);
         if ( ok ) {
@@ -7173,6 +7178,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
       QDomElement nameElement = htRejElement.firstChildElement("Name");
       fluidCooler.setName(nameElement.text().toStdString());
 
+      fluidCooler.resetLowFanSpeedUfactorTimesAreaValue();
+
       auto airFlowCapElement = htRejElement.firstChildElement("AirFlowCapSim");
       value = airFlowCapElement.text().toDouble(&ok);
       if( ok ) {
@@ -7192,7 +7199,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
 
       value = htRejElement.firstChildElement("LowSpdPwrRatSim").text().toDouble(&ok);
       if ( ok ) {
-        fluidCooler.setLowFanSpeedFanPowerSizingFactor(value * 745.7);
+        fluidCooler.setLowFanSpeedFanPowerSizingFactor(value);
       }
 
       auto sprayWtrFlowCapSimElement = htRejElement.firstChildElement("SprayWtrFlowCapSim");
@@ -7232,7 +7239,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
           value = unitToUnit(value,"Btu/h","W").get();
           fluidCooler.setLowSpeedUserSpecifiedDesignCapacity(value);
         }
-      } else if ( calcMthd.compare("UAFactorSim", Qt::CaseInsensitive) == 0 ) {
+      } else if ( calcMthd.compare("UAFactor", Qt::CaseInsensitive) == 0 ) {
         fluidCooler.setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
 
         value = htRejElement.firstChildElement("UAFactorSim").text().toDouble(&ok);
