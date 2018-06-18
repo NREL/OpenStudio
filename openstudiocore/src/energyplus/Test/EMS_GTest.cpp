@@ -1824,4 +1824,230 @@ EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1
   //model.save(toPath("./EMS_actuator_exampleModel2_electric.osm"), true);
   //workspace.save(toPath("./EMS_actuator_exampleModel2_electric.idf"), true);
 }
+TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API2_EMS) {
+  //SAME AS PREVIOUS TEST BUT USE TZ instead of Spaces IN API
+  //use spacetype with multiple spaces
+  //this is the issue with spaceloads if there are multiple spaces using a spaceload defined in a spaceType
+  //the zonelist is created from the spaceType name, and the zones in the list are the space.thermalzone names
+
+  //Model model;
+  Model model = exampleModel();
+  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  oems.setActuatorAvailabilityDictionaryReporting("Verbose");
+
+  std::vector<Lights> lights = model.getModelObjects<Lights>();
+  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
+  std::vector<Space> spaces = model.getModelObjects<Space>();
+  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
+  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
+
+  auto thermalZone2 = thermalZone[0].clone(model).cast<ThermalZone>();
+  auto thermalZone3 = thermalZone[0].clone(model).cast<ThermalZone>();
+  auto thermalZone4 = thermalZone[0].clone(model).cast<ThermalZone>();
+  //this will create 4 zones in a zonelist
+  spaces[0].setThermalZone(thermalZone[0]);
+  spaces[1].setThermalZone(thermalZone2);
+  spaces[2].setThermalZone(thermalZone3);
+  spaces[3].setThermalZone(thermalZone4);
+  //This is the EDD file for the spaceload actuators for this model so far
+  /*
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 PEOPLE 1, People, Number of People, [each]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 PEOPLE 1, People, Number of People, [each]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 PEOPLE 1, People, Number of People, [each]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 PEOPLE 1, People, Number of People, [each]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+  */
+
+  //actuator settings
+  std::string lightsComponentType = "Lights";
+  std::string lightsControlType = "Electric Power Level";
+  //create actuator zone2
+  EnergyManagementSystemActuator lightsActuator2(lights[0], lightsComponentType, lightsControlType, thermalZone2);
+  //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
+  //EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
+  //EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
+  EXPECT_EQ(spaces[1].thermalZone().get().handle(), lightsActuator2.zoneName().get().handle());
+
+  //create actuator zone3
+  EnergyManagementSystemActuator lightsActuator3(lights[0], lightsComponentType, lightsControlType, thermalZone3);
+  //EXPECT_EQ(lightsControlType, lightsActuator3.actuatedComponentControlType());
+  //EXPECT_EQ(lightsComponentType, lightsActuator3.actuatedComponentType());
+  //EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
+  EXPECT_EQ(spaces[2].thermalZone().get().handle(), lightsActuator3.zoneName().get().handle());
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  //expect no warning since we are using the zoneNAme API
+  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  //expect 2 actuators
+  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+  OptionalString name0 = objects[0].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
+  OptionalString name1 = objects[1].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
+  std::string test1 = "Thermal Zone 1 Lights 1";
+  std::string test2 = "Thermal Zone 2 Lights 1";
+  std::string test3 = "Thermal Zone 3 Lights 1";
+  std::string test4 = "Thermal Zone 4 Lights 1";
+  //EXPECT_EQ(name0.get(),test2);
+  //EXPECT_EQ(name1.get(), test1);
+  EXPECT_TRUE((name0.get() == test1) || (name0.get() == test2) || (name0.get() == test3) || (name0.get() == test4));
+  EXPECT_TRUE((name1.get() == test1) || (name1.get() == test2) || (name1.get() == test3) || (name1.get() == test4));
+  //model.save(toPath("./EMS_actuator_exampleModel2_electric.osm"), true);
+  //workspace.save(toPath("./EMS_actuator_exampleModel2_electric.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
+  //SAME AS PREVIOUS TEST BUT DELETE THE SPACE BEFORE FT
+  //use spacetype with multiple spaces
+  //this is the issue with spaceloads if there are multiple spaces using a spaceload defined in a spaceType
+  //the zonelist is created from the spaceType name, and the zones in the list are the space.thermalzone names
+
+  //Model model;
+  Model model = exampleModel();
+  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  oems.setActuatorAvailabilityDictionaryReporting("Verbose");
+
+  std::vector<Lights> lights = model.getModelObjects<Lights>();
+  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
+  std::vector<Space> spaces = model.getModelObjects<Space>();
+  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
+  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
+
+  auto thermalZone2 = thermalZone[0].clone(model).cast<ThermalZone>();
+  auto thermalZone3 = thermalZone[0].clone(model).cast<ThermalZone>();
+  auto thermalZone4 = thermalZone[0].clone(model).cast<ThermalZone>();
+  //this will create 4 zones in a zonelist
+  spaces[0].setThermalZone(thermalZone[0]);
+  spaces[1].setThermalZone(thermalZone2);
+  spaces[2].setThermalZone(thermalZone3);
+  spaces[3].setThermalZone(thermalZone4);
+  //This is the EDD file for the spaceload actuators for this model so far
+  /*
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 PEOPLE 1, People, Number of People, [each]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 PEOPLE 1, People, Number of People, [each]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 PEOPLE 1, People, Number of People, [each]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 PEOPLE 1, People, Number of People, [each]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+  */
+
+  //actuator settings
+  std::string lightsComponentType = "Lights";
+  std::string lightsControlType = "Electric Power Level";
+  //create actuator zone2
+  EnergyManagementSystemActuator lightsActuator2(lights[0], lightsComponentType, lightsControlType, thermalZone2);
+  //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
+  //EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
+  //EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
+  EXPECT_EQ(spaces[1].thermalZone().get().handle(), lightsActuator2.zoneName().get().handle());
+
+  //create actuator zone3
+  EnergyManagementSystemActuator lightsActuator3(lights[0], lightsComponentType, lightsControlType, thermalZone3);
+  //EXPECT_EQ(lightsControlType, lightsActuator3.actuatedComponentControlType());
+  //EXPECT_EQ(lightsComponentType, lightsActuator3.actuatedComponentType());
+  //EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
+  EXPECT_EQ(spaces[2].thermalZone().get().handle(), lightsActuator3.zoneName().get().handle());
+
+  //this will create 4 zones in a zonelist
+  spaces[0].setThermalZone(thermalZone[0]);
+  spaces[1].setThermalZone(thermalZone[0]);
+  spaces[2].setThermalZone(thermalZone[0]);
+  spaces[3].setThermalZone(thermalZone[0]);
+
+  thermalZone2.remove();
+  thermalZone3.remove();
+  thermalZone4.remove();
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  //expect no warning since we are using the zoneNAme API
+  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  //expect 2 actuators
+  //ACTUATORS WILL STILL GET TRANSLATED WITH BLANK ZONENAME FIELD
+  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+  OptionalString name0 = objects[0].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
+  OptionalString name1 = objects[1].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
+  std::string test1 = "Thermal Zone 1 Lights 1";
+  std::string test2 = "Thermal Zone 2 Lights 1";
+  std::string test3 = "Thermal Zone 3 Lights 1";
+  std::string test4 = "Thermal Zone 4 Lights 1";
+  //ONLY 1 TZ in model now so should default back to that
+  EXPECT_EQ(name0.get(),test1);
+  EXPECT_EQ(name1.get(), test1);
+  //EXPECT_TRUE((name0.get() == test1) || (name0.get() == test2) || (name0.get() == test3) || (name0.get() == test4));
+  //EXPECT_TRUE((name1.get() == test1) || (name1.get() == test2) || (name1.get() == test3) || (name1.get() == test4));
+  //model.save(toPath("./EMS_actuator_exampleModel2_electric.osm"), true);
+  //workspace.save(toPath("./EMS_actuator_exampleModel2_electric.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API4_EMS) {
+    //use modeloject in zone field
+  //this is the issue with spaceloads if there are multiple spaces using a spaceload defined in a spaceType
+  //the zonelist is created from the spaceType name, and the zones in the list are the space.thermalzone names
+
+  //Model model;
+  Model model = exampleModel();
+  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
+  oems.setActuatorAvailabilityDictionaryReporting("Verbose");
+
+  std::vector<Lights> lights = model.getModelObjects<Lights>();
+  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
+  std::vector<Space> spaces = model.getModelObjects<Space>();
+  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
+  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
+
+  // add fan
+  Schedule s = model.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan(model, s);
+  fan.setName("Fan");
+
+  //actuator settings
+  std::string lightsComponentType = "Lights";
+  std::string lightsControlType = "Electric Power Level";
+  //create actuator zone2
+  EnergyManagementSystemActuator lightsActuator2(lights[0], lightsComponentType, lightsControlType, fan);
+  //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
+  //EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
+  //EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
+  EXPECT_EQ(fan.handle(), lightsActuator2.zoneName().get().handle());
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  //expect no warning since we are using the zoneNAme API
+  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  //expect 1 actuators
+  //ACTUATORS WILL STILL GET TRANSLATED WITH fan in the ZONENAME FIELD
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+  OptionalString name0 = objects[0].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
+  std::string test1 = "Fan Lights 1";
+
+  EXPECT_EQ(name0.get(), test1);
+
+  //model.save(toPath("./EMS_actuator_exampleModel2_electric.osm"), true);
+  //workspace.save(toPath("./EMS_actuator_exampleModel2_electric.idf"), true);
+}
+
 
