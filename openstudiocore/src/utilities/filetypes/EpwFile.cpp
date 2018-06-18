@@ -517,18 +517,18 @@ namespace openstudio{
     double heatingHumidificationDewPoint99, double heatingHumidificationHumidityRatio99, double heatingHumidificationMeanCoincidentDryBulb99,
     double heatingColdestMonthWindSpeed0pt4, double heatingColdestMonthMeanCoincidentDryBulb0pt4, double heatingColdestMonthWindSpeed1,
     double heatingColdestMonthMeanCoincidentDryBulb1, double heatingMeanCoincidentWindSpeed99pt6, int heatingPrevailingCoincidentWindDirection99pt6,
-    int coolingHottestMonth, double coolingDryBulbRange, double coolingDryBulb0pt4, double coolingMeanCoincidentWetBulb0pt4, double coolingDryBulb1, 
-    double coolingMeanCoincidentWetBulb1, double coolingDryBulb2, double coolingMeanCoincidentWetBulb2, double coolingEvaporationWetBulb0pt4, 
-    double coolingEvaporationMeanCoincidentDryBulb0pt4, double coolingEvaporationWetBulb1, double coolingEvaporationMeanCoincidentDryBulb1, 
-    double coolingEvaporationWetBulb2, double coolingEvaporationMeanCoincidentDryBulb2, double coolingMeanCoincidentWindSpeed0pt4, 
-    int coolingPrevailingCoincidentWindDirection0pt4, double coolingDehumidificationDewPoint0pt4, double coolingDehumidificationHumidityRatio0pt4, 
-    double coolingDehumidificationMeanCoincidentDryBulb0pt4, double coolingDehumidificationDewPoint1, double coolingDehumidificationHumidityRatio1, 
-    double coolingDehumidificationMeanCoincidentDryBulb1, double coolingDehumidificationDewPoint2, double coolingDehumidificationHumidityRatio2, 
-    double coolingDehumidificationMeanCoincidentDryBulb2, double coolingEnthalpy0pt4, double coolingEnthalpyMeanCoincidentDryBulb0pt4, 
-    double coolingEnthalpy1, double coolingEnthalpyMeanCoincidentDryBulb1, double coolingEnthalpy2, double coolingEnthalpyMeanCoincidentDryBulb2, 
-    int coolingHours8To4AndDryBulb12pt8To20pt6, double extremeWindSpeed1, double extremeWindSpeed2pt5, double extremeWindSpeed5, double extremeMaxWetBulb, 
-    double extremeMeanMinDryBulb, double extremeMeanMaxDryBulb, double extremeStdDevMinDryBulb, double extremeStdDevMaxDryBulb, 
-    double extremeN5YearsMinDryBulb, double extremeN5YearsMaxDryBulb, double extremeN10YearsMinDryBulb, double extremeN10YearsMaxDryBulb, 
+    int coolingHottestMonth, double coolingDryBulbRange, double coolingDryBulb0pt4, double coolingMeanCoincidentWetBulb0pt4, double coolingDryBulb1,
+    double coolingMeanCoincidentWetBulb1, double coolingDryBulb2, double coolingMeanCoincidentWetBulb2, double coolingEvaporationWetBulb0pt4,
+    double coolingEvaporationMeanCoincidentDryBulb0pt4, double coolingEvaporationWetBulb1, double coolingEvaporationMeanCoincidentDryBulb1,
+    double coolingEvaporationWetBulb2, double coolingEvaporationMeanCoincidentDryBulb2, double coolingMeanCoincidentWindSpeed0pt4,
+    int coolingPrevailingCoincidentWindDirection0pt4, double coolingDehumidificationDewPoint0pt4, double coolingDehumidificationHumidityRatio0pt4,
+    double coolingDehumidificationMeanCoincidentDryBulb0pt4, double coolingDehumidificationDewPoint1, double coolingDehumidificationHumidityRatio1,
+    double coolingDehumidificationMeanCoincidentDryBulb1, double coolingDehumidificationDewPoint2, double coolingDehumidificationHumidityRatio2,
+    double coolingDehumidificationMeanCoincidentDryBulb2, double coolingEnthalpy0pt4, double coolingEnthalpyMeanCoincidentDryBulb0pt4,
+    double coolingEnthalpy1, double coolingEnthalpyMeanCoincidentDryBulb1, double coolingEnthalpy2, double coolingEnthalpyMeanCoincidentDryBulb2,
+    int coolingHours8To4AndDryBulb12pt8To20pt6, double extremeWindSpeed1, double extremeWindSpeed2pt5, double extremeWindSpeed5, double extremeMaxWetBulb,
+    double extremeMeanMinDryBulb, double extremeMeanMaxDryBulb, double extremeStdDevMinDryBulb, double extremeStdDevMaxDryBulb,
+    double extremeN5YearsMinDryBulb, double extremeN5YearsMaxDryBulb, double extremeN10YearsMinDryBulb, double extremeN10YearsMaxDryBulb,
     double extremeN20YearsMinDryBulb, double extremeN20YearsMaxDryBulb, double extremeN50YearsMinDryBulb, double extremeN50YearsMaxDryBulb)
   {
     setTitleOfDesignCondition(titleOfDesignCondition);
@@ -746,7 +746,7 @@ namespace openstudio{
     // Use the appropriate setter on each field
     dc.setTitleOfDesignCondition(list[EpwDesignField::TitleOfDesignCondition]);
     dc.setHeatingColdestMonth(list[EpwDesignField::HeatingColdestMonth]);
-    dc.setHeatingDryBulb99pt6(list[EpwDesignField::HeatingDryBulb99pt6]);    
+    dc.setHeatingDryBulb99pt6(list[EpwDesignField::HeatingDryBulb99pt6]);
     dc.setHeatingDryBulb99(list[EpwDesignField::HeatingDryBulb99]);
     dc.setHeatingHumidificationDewPoint99pt6(list[EpwDesignField::HeatingHumidificationDewPoint99pt6]);
     dc.setHeatingHumidificationHumidityRatio99pt6(list[EpwDesignField::HeatingHumidificationHumidityRatio99pt6]);
@@ -3784,7 +3784,7 @@ namespace openstudio{
     return ok;
   }
 
-  void EpwDesignCondition::setCoolingEnthalpyMeanCoincidentDryBulb2(double coolingEnthalpyMeanCoincidentDryBulb2)  
+  void EpwDesignCondition::setCoolingEnthalpyMeanCoincidentDryBulb2(double coolingEnthalpyMeanCoincidentDryBulb2)
   {
     m_coolingEnthalpyMeanCoincidentDryBulb2 = coolingEnthalpyMeanCoincidentDryBulb2;
   }
@@ -4497,11 +4497,10 @@ namespace openstudio{
     double expected_split_size = 70;
     expected_split_size += (nDesignConditions - 1) * 68;
 
-    if (split.size() < expected_split_size) {
-      LOG(Error, "Expected at least " << expected_split_size << " design condition fields rather than the " << split.size() << " fields in the EPW file '" << m_path << "'");
-      return false;
-    }
-    else if (nDesignConditions > 1) {
+    if (split.size() != expected_split_size) {
+      LOG(Warn, "Expected " << expected_split_size << " design condition fields rather than the " << split.size() << " fields in the EPW file '" << m_path << "'. Design conditions will not be parsed.");
+      nDesignConditions = 0;
+    } else if (nDesignConditions > 1) {
       LOG(Warn, "Found " << nDesignConditions << " in the EPW file '" << m_path << "'");
     }
 
