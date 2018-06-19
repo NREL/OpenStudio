@@ -49,9 +49,10 @@
 #include "PortList_Impl.hpp"
 #include "Connection.hpp"
 #include "Connection_Impl.hpp"
+#include "ZoneHVACIdealLoadsAirSystem.hpp"
+#include "ZoneHVACIdealLoadsAirSystem_Impl.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_ReturnPlenum_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
 
 namespace openstudio {
 namespace model {
@@ -355,6 +356,50 @@ namespace detail {
     }
 
     return Mixer_Impl::remove();
+  }
+
+  // If every zone on the plenum has exactly one piece of equipment
+  // and that equipment is a ZoneHVACIdealLoadsAirSystem
+  // then return a list of all them,
+  // This is used privatly in the translator to work around an EnergyPlus bug
+  std::vector<model::ZoneHVACIdealLoadsAirSystem> AirLoopHVACReturnPlenum_Impl::zoneHVACIdealLoadsAirSystems() const
+  {
+    std::vector<model::ZoneHVACIdealLoadsAirSystem> result;
+    bool doworkaround = true;
+    auto inlets = inletModelObjects();
+    for ( const auto & inlet : inlets ) {
+      auto node = inlet.optionalCast<Node>();
+      if ( node ) {
+        auto nodeinlet = node->inletModelObject();
+        if ( nodeinlet ) {
+          auto pl = nodeinlet->optionalCast<PortList>();
+          if ( pl ) {
+            auto zone = pl->thermalZone();
+            auto equipment = zone.equipment();
+            if ( equipment.size() < 2 ) {
+              if ( equipment.size() == 1 ) {
+                auto ideal = equipment.front().optionalCast<ZoneHVACIdealLoadsAirSystem>();
+                if ( ideal ) {
+                  result.push_back( ideal.get() );
+                } else {
+                  doworkaround = false;
+                  break;
+                }
+              }
+            } else {
+              doworkaround = false;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    if ( ! doworkaround ) {
+      result.clear(); 
+    }
+
+    return result;
   }
 
 } // detail

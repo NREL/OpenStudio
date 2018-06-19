@@ -62,8 +62,13 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateZoneHVACIdealLoadsAirSystem(ZoneHVACIdealLoadsAirSystem & modelObject)
 {
-
   IdfObject zoneHVACIdealLoadsAirSystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_IdealLoadsAirSystem,modelObject);
+
+  std::vector<model::ZoneHVACIdealLoadsAirSystem> allIdealSystems;
+  auto returnPlenum = modelObject.returnPlenum();
+  if ( returnPlenum ) {
+    allIdealSystems = returnPlenum->getImpl<model::detail::AirLoopHVACReturnPlenum_Impl>()->zoneHVACIdealLoadsAirSystems();
+  }
 
   // availability schedule name
   boost::optional<Schedule> schedule = modelObject.availabilitySchedule();
@@ -84,42 +89,53 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACIdealLoadsAirSyst
   }
 
   // zone exhaust air node name
-  boost::optional<std::string> zoneExhaustAirNodeName;
+  if ( allIdealSystems.empty() ) {
+    boost::optional<std::string> zoneExhaustAirNodeName;
 
-  auto plenum = modelObject.returnPlenum();
-  if ( plenum ) {
-    auto zone = modelObject.thermalZone();
-    OS_ASSERT( zone );
-    auto h = zone->handle();
+    auto plenum = modelObject.returnPlenum();
+    if ( plenum ) {
+      auto zone = modelObject.thermalZone();
+      OS_ASSERT( zone );
+      auto h = zone->handle();
 
-    boost::optional<Node> plenumInletNode;
+      boost::optional<Node> plenumInletNode;
 
-    auto plenumInlets = plenum->inletModelObjects();
-    for ( auto & plenumInlet : plenumInlets ) {
-      auto node = plenumInlet.optionalCast<Node>();
-      if ( node ) {
-        auto pl = node->inletModelObject();
-        if ( pl && pl->optionalCast<PortList>() ) {
-          auto mo = pl->cast<PortList>().getImpl<model::detail::PortList_Impl>()->hvacComponent();
-          if ( mo.handle() == h ) {
-            zoneExhaustAirNodeName = node->nameString();
-            break;
+      auto plenumInlets = plenum->inletModelObjects();
+      for ( auto & plenumInlet : plenumInlets ) {
+        auto node = plenumInlet.optionalCast<Node>();
+        if ( node ) {
+          auto pl = node->inletModelObject();
+          if ( pl && pl->optionalCast<PortList>() ) {
+            auto mo = pl->cast<PortList>().getImpl<model::detail::PortList_Impl>()->hvacComponent();
+            if ( mo.handle() == h ) {
+              zoneExhaustAirNodeName = node->nameString();
+              break;
+            }
           }
         }
       }
     }
+
+    if ( zoneExhaustAirNodeName ) {
+      zoneHVACIdealLoadsAirSystem.setString(ZoneHVAC_IdealLoadsAirSystemFields::ZoneExhaustAirNodeName,zoneExhaustAirNodeName.get());
+    }
   }
 
-  if ( zoneExhaustAirNodeName ) {
-    zoneHVACIdealLoadsAirSystem.setString(ZoneHVAC_IdealLoadsAirSystemFields::ZoneExhaustAirNodeName,zoneExhaustAirNodeName.get());
-  }
-
-  // System Inlet Air Node Name
-  boost::optional<std::string> systemInletAirNodeName;
-  if(boost::optional<Node> node = modelObject.inletNode()){
-    if(boost::optional<std::string> s = node->name()){
-      systemInletAirNodeName = s;
-      zoneHVACIdealLoadsAirSystem.setString(ZoneHVAC_IdealLoadsAirSystemFields::SystemInletAirNodeName,s.get());
+  if ( allIdealSystems.empty() ) {
+    // System Inlet Air Node Name
+    boost::optional<std::string> systemInletAirNodeName;
+    if(boost::optional<Node> node = modelObject.inletNode()){
+      if(boost::optional<std::string> s = node->name()){
+        systemInletAirNodeName = s;
+        zoneHVACIdealLoadsAirSystem.setString(ZoneHVAC_IdealLoadsAirSystemFields::SystemInletAirNodeName,s.get());
+      }
+    }
+  } else {
+    auto front = allIdealSystems.front();
+    if ( front.handle() == modelObject.handle() ) {
+      auto node = front.inletNode();
+      OS_ASSERT( node );
+      zoneHVACIdealLoadsAirSystem.setString(ZoneHVAC_IdealLoadsAirSystemFields::SystemInletAirNodeName,node->nameString());
     }
   }
 
