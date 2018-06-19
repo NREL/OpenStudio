@@ -1194,6 +1194,14 @@ class Measure
       
       # load openstudio_measure_tester gem
       #begin
+        require 'minitest'
+        require 'minitest/reporters'
+        
+        # Minitest Reports use a plugin that is normally found by Minitest::load_plugins using Gem.find
+        # until Gem.find is overloaded to find embedded gems, we will manually load the plugin here
+        require 'minitest/minitest_reporter_plugin'
+        Minitest.extensions << 'minitest_reporter'
+        
         require 'openstudio_measure_tester'
       #rescue LoadError
         #puts "Cannot load 'openstudio_measure_tester'"
