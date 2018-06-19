@@ -27,12 +27,6 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
-begin
-  require 'openstudio_measure_tester/test_helper.rb'
-rescue LoadError
-  puts 'OpenStudio Measure Tester Gem not installed -- will not be able to aggregate and dashboard the results of tests'
-end
-
 def show_output(result)
 
   puts '**MEASURE APPLICABILITY**'

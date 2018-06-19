@@ -85,6 +85,14 @@ add_custom_command(TARGET openstudio_rb
   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb $<TARGET_FILE_DIR:openstudio_rb>/openstudio.rb
 )
 
+file(GLOB_RECURSE OPENSTUDIO_FILES FOLLOW_SYMLINKS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/" "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/**/*.*")
+foreach(OPENSTUDIO_FILE ${OPENSTUDIO_FILES})
+  add_custom_command(TARGET openstudio_rb
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/${OPENSTUDIO_FILE}" "$<TARGET_FILE_DIR:openstudio_rb>/openstudio/${OPENSTUDIO_FILE}"
+  )
+endforeach()
+  
 target_link_libraries(openstudio_rb
   init_openstudio
   ruby_OpenStudioModelEditor
@@ -123,6 +131,8 @@ endif()
 install(TARGETS openstudio_rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(FILES openstudio.rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(DIRECTORY openstudio DESTINATION Ruby COMPONENT "RubyAPI")
+
+
 
 if( BUILD_PAT )
   if( APPLE )
