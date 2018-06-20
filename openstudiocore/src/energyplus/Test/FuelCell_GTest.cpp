@@ -68,7 +68,8 @@
 #include "../../model/GeneratorFuelCellStackCooler_Impl.hpp"
 #include "../../model/GeneratorFuelCellWaterSupply_Impl.hpp"
 #include "../../model/GeneratorFuelSupply_Impl.hpp"
-
+#include "../../model/ElectricLoadCenterDistribution.hpp"
+#include "../../model/ElectricLoadCenterDistribution_Impl.hpp"
 
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
@@ -103,6 +104,9 @@
 #include <utilities/idd/Generator_FuelCell_WaterSupply_FieldEnums.hxx>
 #include <utilities/idd/OS_Generator_FuelSupply_FieldEnums.hxx>
 #include <utilities/idd/Generator_FuelSupply_FieldEnums.hxx>
+#include <utilities/idd/OS_ElectricLoadCenter_Distribution_FieldEnums.hxx>
+#include <utilities/idd/ElectricLoadCenter_Distribution_FieldEnums.hxx>
+#include <utilities/idd/ElectricLoadCenter_Generators_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -217,6 +221,58 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell2) {
   Workspace workspace = forwardTranslator.translateModel(model);
 
   EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Generators).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_AirSupply).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_AuxiliaryHeater).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_ElectricalStorage).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_ExhaustGasToWaterHeatExchanger).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_Inverter).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_PowerModule).size());
+  //expect stack cooler
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_StackCooler).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_WaterSupply).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelSupply).size());
+  //no water mains expected
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Site_WaterMainsTemperature).size());
+
+
+  model.save(toPath("./fuelcell2.osm"), true);
+  workspace.save(toPath("./fuelcell2.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell3) {
+
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  GeneratorFuelCellAirSupply airSupply(model);
+  GeneratorFuelCellAuxiliaryHeater auxHeater(model);
+  GeneratorFuelCellElectricalStorage elecStorage(model);
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger exhaustHX(model);
+  GeneratorFuelCellInverter inverter(model);
+  GeneratorFuelCellPowerModule powerModule(model);
+  GeneratorFuelCellStackCooler stackCooler(model);
+  GeneratorFuelCellWaterSupply waterSupply(model);
+  GeneratorFuelSupply fuelSupply(model);
+  // create default fuelcell
+  GeneratorFuelCell fuelcell(model, powerModule, airSupply, waterSupply, auxHeater, exhaustHX, elecStorage, inverter, fuelSupply);
+
+  // Create an ELCD
+  ElectricLoadCenterDistribution elcd = ElectricLoadCenterDistribution(model);
+  elcd.setName("fuelcell ELCD");
+  elcd.setElectricalBussType("AlternatingCurrent");
+  elcd.addGenerator(fuelcell);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Generators).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_AirSupply).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_AuxiliaryHeater).size());
