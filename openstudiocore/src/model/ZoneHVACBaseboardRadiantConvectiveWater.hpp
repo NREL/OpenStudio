@@ -89,7 +89,7 @@ class MODEL_API ZoneHVACBaseboardRadiantConvectiveWater : public ZoneHVACCompone
 
   /** Returns the optional ThermalZone that this ZoneHVACBaseboardRadiantConvectiveWater is attached to
    **/
-  boost::optional<ThermalZone> thermalZone();
+  boost::optional<ThermalZone> thermalZone() const override;
 
   /** Adds this ZoneHVACBaseboardRadiantConvectiveWater to the thermal zone.  Returns true if the operation was
    *  successful.

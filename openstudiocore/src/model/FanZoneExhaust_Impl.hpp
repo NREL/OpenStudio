@@ -72,7 +72,7 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual boost::optional<ThermalZone> thermalZone() override;
+    virtual boost::optional<ThermalZone> thermalZone() const override;
 
     virtual bool addToThermalZone(ThermalZone & thermalZone) override;
 
@@ -156,4 +156,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_FANZONEEXHAUST_IMPL_HPP
+#endif // MODEL_FANZONEEXHAUST_IMPL_HPP

@@ -419,7 +419,7 @@ bool ZoneHVACBaseboardRadiantConvectiveElectric::setFractionofRadiantEnergyIncid
   return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->setFractionofRadiantEnergyIncidentonPeople(fractionofRadiantEnergyIncidentonPeople);
 }
 
-boost::optional<ThermalZone> ZoneHVACBaseboardRadiantConvectiveElectric::thermalZone() {
+boost::optional<ThermalZone> ZoneHVACBaseboardRadiantConvectiveElectric::thermalZone() const {
   return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl>()->thermalZone();
 }
 
