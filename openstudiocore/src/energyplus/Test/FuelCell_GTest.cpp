@@ -288,6 +288,58 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell3) {
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Site_WaterMainsTemperature).size());
 
 
-  model.save(toPath("./fuelcell2.osm"), true);
-  workspace.save(toPath("./fuelcell2.idf"), true);
+  model.save(toPath("./fuelcell3.osm"), true);
+  workspace.save(toPath("./fuelcell3.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell4) {
+  //TEST orphaned FC
+
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  GeneratorFuelCellAirSupply airSupply(model);
+  GeneratorFuelCellAuxiliaryHeater auxHeater(model);
+  GeneratorFuelCellElectricalStorage elecStorage(model);
+  GeneratorFuelCellExhaustGasToWaterHeatExchanger exhaustHX(model);
+  GeneratorFuelCellInverter inverter(model);
+  GeneratorFuelCellPowerModule powerModule(model);
+  GeneratorFuelCellStackCooler stackCooler(model);
+  GeneratorFuelCellWaterSupply waterSupply(model);
+  GeneratorFuelSupply fuelSupply(model);
+  // create default fuelcell
+  GeneratorFuelCell fuelcell(model, powerModule, airSupply, waterSupply, auxHeater, exhaustHX, elecStorage, inverter, fuelSupply);
+
+  // Create an ELCD
+  boost::optional<ElectricLoadCenterDistribution> elcd = fuelcell.electricLoadCenterDistribution();
+  elcd.get().remove();
+  EXPECT_FALSE(fuelcell.electricLoadCenterDistribution());
+
+  ForwardTranslator forwardTranslator;
+  //TODO, the below crashes
+  //Workspace workspace = forwardTranslator.translateModel(model);
+  //EXPECT_EQ(1u, forwardTranslator.errors().size());
+  /*
+  //NO FC components should FT now since it is orphaned
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Generators).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_AirSupply).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_AuxiliaryHeater).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_ElectricalStorage).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_ExhaustGasToWaterHeatExchanger).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_Inverter).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_PowerModule).size());
+  //expect stack cooler
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_StackCooler).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_WaterSupply).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelSupply).size());
+  //no water mains expected
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Site_WaterMainsTemperature).size());
+
+
+  model.save(toPath("./fuelcell4.osm"), true);
+  workspace.save(toPath("./fuelcell4.idf"), true);
+  */
 }
