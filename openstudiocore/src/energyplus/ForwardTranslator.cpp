@@ -325,9 +325,10 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   // remove orphan Generator:FuelCell
   for (auto& fc : model.getConcreteModelObjects<GeneratorFuelCell>()){
     if (!fc.electricLoadCenterDistribution()){
-      //making this an error since the FT will crash later
-      LOG_AND_THROW("GeneratorFuelCell " << fc.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
-      fc.remove();
+      //get the HX from the FC since that is the parent and remove it, thus removing the FC
+      LOG(Warn, "GeneratorFuelCell " << fc.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      fc.heatExchanger().remove();
+      //fc.remove();
       continue;
     }
   }

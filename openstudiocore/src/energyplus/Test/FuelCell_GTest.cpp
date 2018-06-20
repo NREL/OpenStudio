@@ -305,22 +305,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell4) {
   GeneratorFuelCellExhaustGasToWaterHeatExchanger exhaustHX(model);
   GeneratorFuelCellInverter inverter(model);
   GeneratorFuelCellPowerModule powerModule(model);
-  GeneratorFuelCellStackCooler stackCooler(model);
+  //GeneratorFuelCellStackCooler stackCooler(model);
   GeneratorFuelCellWaterSupply waterSupply(model);
   GeneratorFuelSupply fuelSupply(model);
   // create default fuelcell
   GeneratorFuelCell fuelcell(model, powerModule, airSupply, waterSupply, auxHeater, exhaustHX, elecStorage, inverter, fuelSupply);
 
-  // Create an ELCD
+  // remove the ELCD
   boost::optional<ElectricLoadCenterDistribution> elcd = fuelcell.electricLoadCenterDistribution();
   elcd.get().remove();
   EXPECT_FALSE(fuelcell.electricLoadCenterDistribution());
 
   ForwardTranslator forwardTranslator;
-  //TODO, the below crashes
-  //Workspace workspace = forwardTranslator.translateModel(model);
-  //EXPECT_EQ(1u, forwardTranslator.errors().size());
-  /*
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, forwardTranslator.warnings().size());
+
   //NO FC components should FT now since it is orphaned
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Generators).size());
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution).size());
@@ -341,5 +341,4 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell4) {
 
   model.save(toPath("./fuelcell4.osm"), true);
   workspace.save(toPath("./fuelcell4.idf"), true);
-  */
 }
