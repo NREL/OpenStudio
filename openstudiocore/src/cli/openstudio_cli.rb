@@ -369,6 +369,7 @@ def parse_main_args(main_args)
   Gem.paths.path << ':/ruby/2.2.0/bundler/gems/'
 
   # find all the embedded gems
+  original_embedded_gems = {}
   begin
     EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
       if md = /specifications\/.*\.gemspec$/.match(f) || 
@@ -377,6 +378,7 @@ def parse_main_args(main_args)
           spec = EmbeddedScripting::getFileAsString(f)
           s = eval(spec)
           s.loaded_from = f
+          original_embedded_gems[s.name] = s
 
           init_count = 0
           Gem::Specification.each {|x| init_count += 1}
@@ -389,7 +391,6 @@ def parse_main_args(main_args)
 
           if post_count == init_count
             $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
-            $logger.debug "Ignoring embdedded gem #{s.file_name}"
           end
 
         rescue LoadError => e
@@ -404,15 +405,17 @@ def parse_main_args(main_args)
   end
 
   # activate bundler
-  Gem::Specification.each do |spec|
-    if spec.gem_dir.chars.first == ':'
-      if spec.name == 'bundler'
-        # DLM: for now remove this
-        #spec.activate
-        Gem::Specification.remove_spec(spec)
-      end
-    end
-  end
+  #Gem::Specification.each do |spec|
+  #  if spec.gem_dir.chars.first == ':'
+  #    if spec.name == 'bundler'
+  #      # DLM would like to have bundler support in the cli
+  #      #spec.activate
+  #      
+  #      # DLM: for now remove this gem
+  #      Gem::Specification.remove_spec(spec)
+  #    end
+  #  end
+  #end
 
   # require bundler
   # have to do some forward declaration and pre-require to get around autoload cycles
@@ -447,70 +450,74 @@ def parse_main_args(main_args)
   #  exit e.status_code
   #end
 
-  embedded_gems = []
-  user_gems = []
-  Gem::Specification.each do |spec|
-    if spec.gem_dir.chars.first == ':'
-      embedded_gems << spec
-    else
-      user_gems << spec
-    end
-  end
+  # DLM: test code, useful for testing from command line using system ruby
+  #Gem::Specification.each do |spec|
+  #  if /openstudio/.match(spec.name) 
+  #    original_embedded_gems[spec.name] = spec
+  #  end
+  #end
 
-  # remove any embedded gems that are also found on disk with equal or higher version but compatible major version
-  user_gems_to_remove = []
-  embedded_gems.each do |spec|
-    remove = false
-    user_gems.each do |s|
-      if s.name == spec.name
-        if s.version > spec.version
-          # only allow higher versions with compatible major version
-          if s.version.to_s.split('.').first == spec.version.to_s.split('.').first
-            $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
-            remove = true
-          else
-            $logger.debug "Ignoring system gem #{s.name} #{s.version}, incompatible with embedded gem"
-            user_gems_to_remove << s
-          end
-        elsif s.version == spec.version
-          $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
-          remove = true
-        else
-          $logger.debug "Found system gem #{s.name} #{s.version}, does not override embedded gem"
-        end
+  # find final set of embedded gems that are also found on disk with equal or higher version but compatible major version
+  final_embedded_gems = original_embedded_gems.clone
+  Gem::Specification.each do |spec|
+    current_embedded_gem = final_embedded_gems[spec.name]
+    
+    # not an embedded gem
+    next if current_embedded_gem.nil?
+    
+    if spec.version > current_embedded_gem.version
+      # only allow higher versions with compatible major version
+      if spec.version.to_s.split('.').first == current_embedded_gem.version.to_s.split('.').first
+        $logger.debug "Found system gem #{spec.name} #{spec.version}, overrides embedded gem"
+        final_embedded_gems[spec.name] = spec
       end
     end
-
-    if remove
-      $logger.debug "Ignoring embdedded gem #{spec.file_name}"
-      Gem::Specification.remove_spec(spec)
-    end
   end
+  
+  # get a list of all the embedded gems and their dependencies 
+  dependencies = []
+  final_embedded_gems.each_value do |spec|
+    #$logger.debug "Accumulating dependencies for #{spec.name} #{spec.version}"
+    dependencies << Gem::Dependency.new(spec.name)
+    dependencies.concat(spec.runtime_dependencies)
+  end
+  #dependencies.each {|d| $logger.debug "Found dependency #{d}"}
 
-  user_gems_to_remove.uniq.each {|s| Gem::Specification.remove_spec(s)}
+  # resolve dependencies
+  activation_errors = false
+  original_load_path = $:.clone
+  resolver = Gem::Resolver.for_current_gems(dependencies)
+  resolver.resolve.each do |request|
+    do_activate = true
+    spec = request.spec
 
-  # activate remaining embedded gems
-  Gem::Specification.each do |spec|
-    if spec.gem_dir.chars.first == ':'
+    # check if this is one of our embedded gems
+    if final_embedded_gems[spec.name]
 
       # check if gem can be loaded from RUBYLIB, this supports developer use case
-      do_activate = true
-      $:.each do |lp|
+      original_load_path.each do |lp|
         if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
-          $logger.debug "Found #{spec.name} in '#{lp}', overrides embdedded gem"
+          $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
+          Gem::Specification.remove_spec(spec)
           do_activate = false
           break
         end
       end
-
-      if do_activate
-        $logger.debug "Activating embdedded gem #{spec.file_name}"
+    end
+    
+    if do_activate
+      $logger.debug "Activating gem #{spec.spec_file}"
+      begin
         spec.activate
-      else
-        $logger.debug "Ignoring embdedded gem #{spec.file_name}"
-        Gem::Specification.remove_spec(spec)
+      rescue Gem::LoadError
+        $logger.error "Error activating gem #{spec.spec_file}"
       end
     end
+      
+  end
+  
+  if activation_errors
+    return false
   end
 
   # Handle -e commands
