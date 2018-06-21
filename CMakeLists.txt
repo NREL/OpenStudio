@@ -496,7 +496,7 @@ if( BUILD_DVIEW )
 
     ExternalProject_Add(lk
       GIT_REPOSITORY git://github.com/NREL/lk
-      GIT_TAG develop
+      GIT_TAG 1e4291ab85b2679fbb06391c3eaf23c8053e8481
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
       INSTALL_COMMAND ""
@@ -504,8 +504,8 @@ if( BUILD_DVIEW )
 
     ExternalProject_Add(DView
       DEPENDS lk curl
-      GIT_REPOSITORY https://github.com/NREL/wex.git
-      GIT_TAG develop
+      GIT_REPOSITORY https://github.com/macumber/wex.git
+      GIT_TAG bd3c757c7f206de1804cc515b2e44d6312e66172
       CMAKE_CACHE_ARGS
         -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
         -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
@@ -513,6 +513,7 @@ if( BUILD_DVIEW )
         -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
         -DLK_DIR:DIR=${CMAKE_BINARY_DIR}/lk-prefix/src/lk/
         -DCURL_DIR:DIR=${CMAKE_BINARY_DIR}/curl-prefix/src/curl/
+		-DINCLUDE_DIRECTORIES:STRING=${CMAKE_BINARY_DIR}/curl-prefix/src/curl/include
         -DCMAKE_INSTALL_PREFIX:DIR=${CMAKE_BINARY_DIR}/DView-prefix/src/DView-install
         -DwxWidgets_EXCLUDE_COMMON_LIBRARIES:BOOL=false
         -DwxWidgets_USE_STATIC:BOOL=true
