@@ -421,6 +421,11 @@ unsigned PortList::airLoopHVACPort() const
   return getImpl<detail::PortList_Impl>()->airLoopHVACPort();
 }
 
+std::vector<unsigned> PortList::airLoopHVACPorts() const
+{
+  return getImpl<detail::PortList_Impl>()->airLoopHVACPorts();
+}
+
 unsigned PortList::airLoopHVACPortIndex() const
 {
   return getImpl<detail::PortList_Impl>()->airLoopHVACPortIndex();

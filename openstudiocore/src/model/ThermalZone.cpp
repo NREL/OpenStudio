@@ -562,21 +562,19 @@ namespace detail {
   std::vector<HVACComponent> ThermalZone_Impl::edges(const boost::optional<HVACComponent> & prev)
   {
     std::vector<HVACComponent> edges;
-    auto returncomps = subsetCastVector<HVACComponent>(returnPortList().airLoopHVACModelObjects());
+    auto returncomps = subsetCastVector<HVACComponent>(returnPortList().modelObjects());
     for ( auto & comp : returncomps ) {
-      if ( prev ) {
-        auto prevloop = prev->airLoopHVAC();
-        auto comploop = comp.airLoopHVAC();
-        if ( prevloop && comploop ) {
-          if ( prevloop->handle() == comploop->handle() ) {
-            edges.push_back(comp);
-          }
-        }
-      } else {
-        if ( comp.airLoopHVAC() ) {
-          edges.push_back(comp);
-        }
-      }
+      //if ( prev ) {
+      //  auto prevloop = prev->airLoopHVAC();
+      //  auto comploop = comp.airLoopHVAC();
+      //  if ( prevloop && comploop ) {
+      //    if ( prevloop->handle() == comploop->handle() ) {
+      //      edges.push_back(comp);
+      //    }
+      //  }
+      //} else {
+        edges.push_back(comp);
+      //}
     }
     return edges;
   }
@@ -2809,6 +2807,9 @@ ThermalZone::ThermalZone(const Model& model)
 
   PortList exhaustPortList(*this);
   setPointer(OS_ThermalZoneFields::ZoneAirExhaustPortList,exhaustPortList.handle());
+
+  PortList returnPortList(*this);
+  setPointer(OS_ThermalZoneFields::ZoneReturnAirPortList,returnPortList.handle());
 
   SizingZone sizingZone(model,*this);
 

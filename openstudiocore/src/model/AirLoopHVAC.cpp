@@ -307,50 +307,46 @@ namespace detail {
 
   boost::optional<ThermalZone> AirLoopHVAC_Impl::zoneForLastBranch(Mixer & mixer)
   {
-    if( OptionalNode node = mixer.lastInletModelObject()->optionalCast<Node>() )
-    {
-      return node->inletModelObject()->optionalCast<ThermalZone>();
+    if( auto node = mixer.lastInletModelObject()->optionalCast<Node>() ) {
+      auto nodeinlet = node->inletModelObject();
+      OS_ASSERT(nodeinlet);
+      auto pl = nodeinlet->optionalCast<PortList>();
+      if ( pl ) {
+        return pl->thermalZone();
+      }
     }
-    else
-    {
-      return boost::none;
-    }
+    return boost::none;
   }
 
   boost::optional<HVACComponent> AirLoopHVAC_Impl::terminalForLastBranch(Mixer & mixer)
   {
-    if( OptionalNode node = mixer.lastInletModelObject()->optionalCast<Node>() )
-    {
-      if( boost::optional<ThermalZone> zone = node->inletModelObject()->optionalCast<ThermalZone>() )
-      {
-        boost::optional<Node> zoneInletNode = zone->inletPortList().airLoopHVACModelObject()->optionalCast<Node>();
-
-        OS_ASSERT( zoneInletNode );
-
-        boost::optional<ModelObject> mo = zoneInletNode->inletModelObject();
-
-        OS_ASSERT( mo );
-
-        if( ! mo->optionalCast<Splitter>() )
-        {
-          if( boost::optional<HVACComponent> hvacComponent = mo->optionalCast<HVACComponent>() )
-          {
-            return hvacComponent;
+    auto mixerInletNode = mixer.lastInletModelObject()->optionalCast<Node>();
+    if ( mixerInletNode ) {
+      auto upstreamComp = mixerInletNode->inletModelObject();
+      OS_ASSERT(upstreamComp);
+      auto pl = upstreamComp->optionalCast<PortList>();
+      if ( pl ) {
+        auto zone = pl->thermalZone();
+        auto zoneInletNodes = subsetCastVector<Node>(zone.inletPortList().airLoopHVACModelObjects());
+        auto h = handle();
+        for ( auto & zoneNode : zoneInletNodes ) {
+          auto airloop = zoneNode.airLoopHVAC();
+          OS_ASSERT(airloop);
+          if ( h == airloop->handle() ) {
+            auto mo = zoneNode.inletModelObject();
+            OS_ASSERT(mo);
+            if ( ! mo->optionalCast<Splitter>() ) {
+              auto hvacComponent = mo->optionalCast<HVACComponent>();
+              if ( hvacComponent ) {
+                return hvacComponent;
+              }
+            }
+               
           }
         }
-      }
-      else
-      {
-        boost::optional<ModelObject> mo = node->inletModelObject();
-
-        OS_ASSERT( mo );
-
-        if( ! mo->optionalCast<Splitter>() && ! mo->optionalCast<Mixer>() && ! mo->optionalCast<Node>() )
-        {
-          if( boost::optional<HVACComponent> hvacComponent = mo->optionalCast<HVACComponent>() )
-          {
-            return hvacComponent;
-          }
+      } else if ( ! upstreamComp->optionalCast<Splitter>() && ! upstreamComp->optionalCast<Mixer>() && ! upstreamComp->optionalCast<Node>() ) {
+        if ( auto hvacComponent = upstreamComp->optionalCast<HVACComponent>() ) {
+          return hvacComponent;
         }
       }
     }

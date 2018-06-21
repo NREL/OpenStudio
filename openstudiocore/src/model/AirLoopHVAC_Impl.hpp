@@ -205,9 +205,9 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
                                    Mixer & mixer,
                                    boost::optional<HVACComponent> & optAirTerminal);
 
-  static boost::optional<ThermalZone> zoneForLastBranch(Mixer & mixer);
+  boost::optional<ThermalZone> zoneForLastBranch(Mixer & mixer);
 
-  static boost::optional<HVACComponent> terminalForLastBranch(Mixer & mixer);
+  boost::optional<HVACComponent> terminalForLastBranch(Mixer & mixer);
 
   static boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
 
