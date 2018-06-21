@@ -158,7 +158,7 @@ namespace openstudio {
           while ( std::getline(pathstream, pathstring, ':') ) {
             LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, searching for '" << path << "' in '" << pathstring << "'");
             auto maybepath = toPath(pathstring) / path;
-            if( openstudio::filesystem::exists( maybepath ) ) {
+            if( openstudio::filesystem::exists( maybepath ) && !openstudio::filesystem::is_directory( maybepath ) ) {
               openstudioDirPath = maybepath;
               break;
             }
