@@ -27771,6 +27771,128 @@ OS:ElectricLoadCenter:Storage:Simple,
   N7;  \field Initial State of Charge
        \units J
 
+OS:ElectricLoadCenter:Transformer,
+       \memo a list of meters that can be reported are available after a run on
+       \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
+       \extensible:1
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference TransformerNames
+  A3,  \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4,  \field Transformer Usage
+       \type choice
+       \key PowerInFromGrid
+       \key PowerOutToGrid
+       \key LoadCenterPowerConditioning
+       \default PowerInFromGrid
+       \note A transformer can be used to transfer electric energy from utility grid to
+       \note building (PowerInFromGrid)or from building on-site generation to
+       \note the grid (PowerOutToGrid) or within a load center to match generation
+       \note to the facility service main panel (LoadCenterPowerConditioning)
+  A5,  \field Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+       \note Enter name of zone to receive transformer losses as heat
+       \note if blank then transformer losses are dissipated to outdoors
+  N1,  \field Radiative Fraction
+       \type real
+       \minimum 0
+       \maximum 1.0
+       \default 0
+  N2,  \field Rated Capacity
+       \type real
+       \minimum 0
+       \units VA
+       \note the unit is VA, instead of kVA as usually shown on transformer nameplates.
+  N3,  \field Phase
+       \type choice
+       \key 1
+       \key 3
+       \default 3
+       \note Must be single or three phase transformer.
+       \note NOT used in the current model.
+  A6,  \field Conductor Material
+       \type choice
+       \key Copper
+       \key Aluminum
+       \default Aluminum
+       \note Winding material used by the transformer.
+  N4,  \field Full Load Temperature Rise
+       \type real
+       \units C
+       \minimum 50
+       \maximum 180
+       \default 150
+  N5,  \field Fraction of Eddy Current Losses
+       \type real
+       \minimum 0
+       \maximum 1.0
+       \default 0.1
+  A7,  \field Performance Input Method
+       \type choice
+       \key RatedLosses
+       \key NominalEfficiency
+       \default RatedLosses
+       \note User can define transformer performance by specifying
+       \note load and no load losses at rated conditions or
+       \note nameplate efficiency and maximum efficiency
+  N6,  \field Rated No Load Loss
+       \type real
+       \units W
+       \minimum> 0
+       \note Only required when RatedLosses is the performance input method
+  N7,  \field Rated Load Loss
+       \type real
+       \units W
+       \minimum 0
+       \note Only required when RatedLosses is the performance input method
+  N8,  \field Nameplate Efficiency
+       \type real
+       \minimum> 0
+       \maximum 1.0
+       \default 0.98
+       \note Only required when NominalEfficiency is the performance input method
+  N9,  \field Per Unit Load for Nameplate Efficiency
+       \type real
+       \minimum> 0
+       \maximum 1.0
+       \default 0.35
+       \note Percentage of the rated capacity at which the nameplate efficiency is defined
+       \note Only required when NominalEfficiency is the performance input method
+  N10, \field Reference Temperature for Nameplate Efficiency
+       \type real
+       \units C
+       \minimum 20
+       \maximum 150
+       \default 75
+       \note Conductor operating temperature at which the nameplate efficiency is defined
+       \note Only required when NominalEfficiency is the performance input method
+  N11, \field Per Unit Load for Maximum Efficiency
+       \type real
+       \minimum> 0
+       \maximum 1.0
+       \note Percentage of the rate capacity at which the maximum efficiency is obtained
+       \note Only required when NominalEfficiency is the performance input method
+  A8,  \field Consider Transformer Loss for Utility Cost
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+       \note Only required when the transformer is used for power in from the utility grid
+  A9;  \field Meter 1 Name
+       \begin-extensible
+       \type external-list
+       \external-list autoRDDmeter
+       \note Must be an electric meter (with electricity as the resource type)
+       \note Only required when transformer is used for power in from the utility grid
+
 OS:ElectricLoadCenter:Distribution,
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
@@ -27805,8 +27927,8 @@ OS:ElectricLoadCenter:Distribution,
   A6 , \field Track Meter Scheme Meter Name
        \type alpha
        \note required when Generator Operation Scheme Type=TrackMeter
-       \memo type external list
-       \memo external list autoRDDmeter
+       \memo type external-list
+       \memo external-list autoRDDmeter
   A7 , \field Electrical Buss Type
        \type choice
        \key AlternatingCurrent

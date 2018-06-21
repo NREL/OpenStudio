@@ -590,6 +590,9 @@ set(${target_name}_src
   ElectricLoadCenterStorageConverter.hpp
   ElectricLoadCenterStorageConverter_Impl.hpp
   ElectricLoadCenterStorageConverter.cpp
+  ElectricLoadCenterTransformer.hpp
+  ElectricLoadCenterTransformer_Impl.hpp
+  ElectricLoadCenterTransformer.cpp
   EnergyManagementSystemActuator.cpp
   EnergyManagementSystemActuator.hpp
   EnergyManagementSystemActuator_Impl.hpp
@@ -1761,6 +1764,7 @@ set(${target_name}_test_src
   test/ElectricLoadCenterInverterLookUpTable_GTest.cpp
   test/ElectricLoadCenterStorageSimple_GTest.cpp
   test/ElectricLoadCenterStorageConverter_GTest.cpp
+  test/ElectricLoadCenterTransformer_GTest.cpp
   test/EnergyManagementSystemActuator_GTest.cpp
   test/EnergyManagementSystemConstructionIndexVariable_GTest.cpp
   test/EnergyManagementSystemCurveOrTableIndexVariable_GTest.cpp

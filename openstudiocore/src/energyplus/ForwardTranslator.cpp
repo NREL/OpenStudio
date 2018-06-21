@@ -1474,6 +1474,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateElectricLoadCenterStorageConverter(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Transformer:
+  {
+    model::ElectricLoadCenterTransformer temp = modelObject.cast<ElectricLoadCenterTransformer>();
+    retVal = translateElectricLoadCenterTransformer(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_Actuator:
   {
     model::EnergyManagementSystemActuator actuator = modelObject.cast<EnergyManagementSystemActuator>();
@@ -3422,6 +3428,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Transformer);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);
