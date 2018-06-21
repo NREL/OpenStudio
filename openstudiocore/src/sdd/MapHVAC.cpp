@@ -7186,6 +7186,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         fluidCooler.setHighFanSpeedAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
       }
 
+      value = htRejElement.firstChildElement("LowSpdAirFlowCapSim").text().toDouble(&ok);
+      if ( ok ) {
+        fluidCooler.setLowFanSpeedAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+      }
+
       auto totFanHPElement = htRejElement.firstChildElement("TotFanHPSim");
       value = totFanHPElement.text().toDouble(&ok);
       if ( ok ) {
