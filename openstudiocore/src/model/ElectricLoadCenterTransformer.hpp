@@ -36,9 +36,9 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 class ThermalZone;
+class OutputMeter;
 
 namespace detail {
 
@@ -71,14 +71,12 @@ class MODEL_API ElectricLoadCenterTransformer : public ModelObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> availabilitySchedule() const;
 
   std::string transformerUsage() const;
 
   bool isTransformerUsageDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
   boost::optional<ThermalZone> zone() const;
 
   double radiativeFraction() const;
@@ -129,14 +127,14 @@ class MODEL_API ElectricLoadCenterTransformer : public ModelObject {
 
   bool isConsiderTransformerLossforUtilityCostDefaulted() const;
 
-  // TODO: Handle this object's extensible fields.
+  std::vector<OutputMeter> meters() const;
+
+  boost::optional<OutputMeter> getMeter(unsigned index) const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
@@ -145,7 +143,6 @@ class MODEL_API ElectricLoadCenterTransformer : public ModelObject {
 
   void resetTransformerUsage();
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setZone(const ThermalZone& thermalZone);
 
   void resetZone();
@@ -206,7 +203,13 @@ class MODEL_API ElectricLoadCenterTransformer : public ModelObject {
 
   void resetConsiderTransformerLossforUtilityCost();
 
-  // TODO: Handle this object's extensible fields.
+  void eraseMeters();
+
+  bool eraseMeter(unsigned index);
+
+  bool addMeter(const OutputMeter& meter);
+
+  bool setMeter(const OutputMeter& meter, unsigned index);
 
   //@}
   /** @name Other */
