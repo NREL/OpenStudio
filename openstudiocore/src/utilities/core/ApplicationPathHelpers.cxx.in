@@ -208,7 +208,7 @@ namespace openstudio {
       }
     #endif
 
-    if( openstudio::filesystem::exists(cliPath) ){
+    if( openstudio::filesystem::exists(cliPath) && !openstudio::filesystem::is_directory(cliPath) ){
       return cliPath;
     }
 
@@ -218,7 +218,7 @@ namespace openstudio {
       cliPath = getOpenStudioModuleDirectory() / toPath("../bin/openstudio");
     #endif
 
-    if( openstudio::filesystem::exists(cliPath) ){
+    if( openstudio::filesystem::exists(cliPath) && !openstudio::filesystem::is_directory(cliPath) ){
       return cliPath;
     }
 
