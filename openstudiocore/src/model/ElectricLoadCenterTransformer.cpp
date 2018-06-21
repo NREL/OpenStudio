@@ -29,11 +29,14 @@
 #include "ElectricLoadCenterTransformer.hpp"
 #include "ElectricLoadCenterTransformer_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "ScheduleCompact.hpp"
+#include "ScheduleCompact_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
+#include "OutputMeter.hpp"
+#include "OutputMeter_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -44,6 +47,8 @@
 #include "../utilities/units/Unit.hpp"
 
 #include "../utilities/core/Assert.hpp"
+
+#include "ModelExtensibleGroup.hpp"
 
 namespace openstudio {
 namespace model {
@@ -74,9 +79,22 @@ namespace detail {
 
   const std::vector<std::string>& ElectricLoadCenterTransformer_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-    }
+    static std::vector<std::string> result{
+      "Transformer Efficiency",
+      "Transformer Input Electric Power",
+      "Transformer Input Electric Energy",
+      "Transformer Output Electric Power",
+      "Transformer Output Electric Energy",
+      "Transformer No Load Loss Rate",
+      "Transformer No Load Loss Energy",
+      "Transformer Load Loss Rate",
+      "Transformer Load Loss Energy",
+      "Transformer Thermal Loss Rate",
+      "Transformer Thermal Loss Energy",
+      "Transformer Distribution Electric Loss Energy",
+      "Transformer Cogeneration Electric Loss Energy",
+      "Transformer Conversion Electric Loss Energy"
+    };
     return result;
   }
 
@@ -86,7 +104,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> ElectricLoadCenterTransformer_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -409,6 +426,79 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<OutputMeter> ElectricLoadCenterTransformer_Impl::getMeter(unsigned index) const {
+    //return meter at index
+    boost::optional<OutputMeter> result;
+    auto groups = extensibleGroups();
+    unsigned sizeOfGroup = numExtensibleGroups();
+
+    if ((index < sizeOfGroup) && (!groups[index].empty())) {
+      WorkspaceExtensibleGroup group = groups[index].cast<WorkspaceExtensibleGroup>();
+      boost::optional<WorkspaceObject> wo = group.getTarget(OS_ElectricLoadCenter_TransformerExtensibleFields::MeterName);
+      if (wo) {
+        OutputMeter meter = wo->cast<OutputMeter>();
+        result = meter;
+      }
+    }
+    return result;
+  }
+
+  std::vector<OutputMeter> ElectricLoadCenterTransformer_Impl::meters() const {
+    // loop through extensible groups and return vector of meters
+    std::vector<OutputMeter> result;
+    auto groups = extensibleGroups();
+
+    for (const auto & elem : groups) {
+      WorkspaceExtensibleGroup group = elem.cast<WorkspaceExtensibleGroup>();
+      boost::optional<WorkspaceObject> wo = group.getTarget(OS_ElectricLoadCenter_TransformerExtensibleFields::MeterName);
+      if (wo){
+        OutputMeter meter = wo->cast<OutputMeter>();
+        result.push_back(meter);
+      }
+    }
+    return result;
+  }
+
+  bool ElectricLoadCenterTransformer_Impl::eraseMeter(unsigned index) {
+    //erase program at index
+    bool result = false;
+    auto groups = extensibleGroups();
+    unsigned sizeOfGroup = numExtensibleGroups();
+
+    if (index < sizeOfGroup) {
+      eraseExtensibleGroup(index);
+      result = true;
+    }
+    return result;
+  }
+
+  void ElectricLoadCenterTransformer_Impl::eraseMeters() {
+    //erase all meters in this transformer
+    clearExtensibleGroups();
+  }
+
+  bool ElectricLoadCenterTransformer_Impl::addMeter(const OutputMeter& meter) {
+    //add meter to end of vector of meters
+    bool result = false;
+    WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    result = group.setPointer(OS_ElectricLoadCenter_TransformerExtensibleFields::MeterName, meter.handle());
+    return result;
+  }
+
+  bool ElectricLoadCenterTransformer_Impl::setMeter(const OutputMeter& meter, unsigned index) {
+    //add meter to {index} of vector of meters
+    bool result = false;
+    auto groups = extensibleGroups();
+    unsigned sizeOfGroup = numExtensibleGroups();
+    if (index <= sizeOfGroup) {
+      IdfExtensibleGroup idfGroup = insertExtensibleGroup(index, StringVector());
+      OS_ASSERT(!idfGroup.empty());
+      ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
+      result = group.setPointer(0, meter.handle());
+    }
+    return result;
+  }
+
 } // detail
 
 ElectricLoadCenterTransformer::ElectricLoadCenterTransformer(const Model& model)
@@ -416,7 +506,33 @@ ElectricLoadCenterTransformer::ElectricLoadCenterTransformer(const Model& model)
 {
   OS_ASSERT(getImpl<detail::ElectricLoadCenterTransformer_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
+  ScheduleCompact alwaysOn(model, 1.0);
+  alwaysOn.setName("Always On");
+
+  setAvailabilitySchedule(alwaysOn);
+
+  setTransformerUsage("PowerOutToGrid");
+
+  setRatedCapacity(15000);
+
+  setPhase("3");
+
+  setConductorMaterial("Aluminum");
+
+  setFullLoadTemperatureRise(150);
+
+  setFractionofEddyCurrentLosses(0.1);
+
+  setPerformanceInputMethod("NominalEfficiency");
+
+  setNameplateEfficiency(0.985);
+
+  setPerUnitLoadforNameplateEfficiency(0.35);
+
+  setReferenceTemperatureforNameplateEfficiency(75);
+
+  setConsiderTransformerLossforUtilityCost(true);
+
 }
 
 IddObjectType ElectricLoadCenterTransformer::iddObjectType() {
@@ -689,6 +805,30 @@ void ElectricLoadCenterTransformer::setConsiderTransformerLossforUtilityCost(boo
 
 void ElectricLoadCenterTransformer::resetConsiderTransformerLossforUtilityCost() {
   getImpl<detail::ElectricLoadCenterTransformer_Impl>()->resetConsiderTransformerLossforUtilityCost();
+}
+
+boost::optional<OutputMeter> ElectricLoadCenterTransformer::getMeter(unsigned index) const {
+  return getImpl<detail::ElectricLoadCenterTransformer_Impl>()->getMeter(index);
+}
+
+std::vector<OutputMeter> ElectricLoadCenterTransformer::meters() const {
+  return getImpl<detail::ElectricLoadCenterTransformer_Impl>()->meters();
+}
+
+bool ElectricLoadCenterTransformer::eraseMeter(unsigned index) {
+  return getImpl<detail::ElectricLoadCenterTransformer_Impl>()->eraseMeter(index);
+}
+
+void ElectricLoadCenterTransformer::eraseMeters() {
+  getImpl<detail::ElectricLoadCenterTransformer_Impl>()->eraseMeters();
+}
+
+bool ElectricLoadCenterTransformer::addMeter(const OutputMeter& meter) {
+  return getImpl<detail::ElectricLoadCenterTransformer_Impl>()->addMeter(meter);
+}
+
+bool ElectricLoadCenterTransformer::setMeter(const OutputMeter& meter, unsigned index) {
+  return getImpl<detail::ElectricLoadCenterTransformer_Impl>()->setMeter(meter, index);
 }
 
 /// @cond
