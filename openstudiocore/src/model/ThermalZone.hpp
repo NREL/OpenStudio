@@ -206,6 +206,8 @@ class MODEL_API ThermalZone : public HVACComponent {
   /** @name Other */
   //@{
 
+  // As of OS Version 2.6.1 this method returns the first port on the returnPortList
+  // because multiple return air ports (and AirLoopHVAC instances) are allowed
   unsigned returnAirPort();
 
   unsigned zoneAirPort();
@@ -358,6 +360,8 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   bool addToNode(Node & node);
 
+  PortList returnPortList() const;
+
   PortList inletPortList() const;
 
   PortList exhaustPortList() const;
@@ -453,6 +457,8 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   /** Returns the attached AirflowNetworkZone if there is one */
   boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
+
+  std::vector<AirLoopHVAC> airLoopHVACs() const;
 
   //@}
  protected:

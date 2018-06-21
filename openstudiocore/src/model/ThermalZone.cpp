@@ -562,9 +562,20 @@ namespace detail {
   std::vector<HVACComponent> ThermalZone_Impl::edges(const boost::optional<HVACComponent> & prev)
   {
     std::vector<HVACComponent> edges;
-    if( auto edgeModelObject = this->returnAirModelObject() ) {
-      if( auto edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
-        edges.push_back(*edgeObject);
+    auto returncomps = subsetCastVector<HVACComponent>(returnPortList().airLoopHVACModelObjects());
+    for ( auto & comp : returncomps ) {
+      if ( prev ) {
+        auto prevloop = prev->airLoopHVAC();
+        auto comploop = comp.airLoopHVAC();
+        if ( prevloop && comploop ) {
+          if ( prevloop->handle() == comploop->handle() ) {
+            edges.push_back(comp);
+          }
+        }
+      } else {
+        if ( comp.airLoopHVAC() ) {
+          edges.push_back(comp);
+        }
       }
     }
     return edges;
@@ -859,9 +870,16 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  PortList ThermalZone_Impl::returnPortList() const
+  {
+    boost::optional<PortList> pl = getObject<ModelObject>().getModelObjectTarget<PortList>(OS_ThermalZoneFields::ZoneReturnAirPortList);
+    OS_ASSERT(pl);
+    return pl.get();
+  }
+
   unsigned ThermalZone_Impl::returnAirPort()
   {
-    return OS_ThermalZoneFields::ZoneReturnAirNodeName;
+    return returnPortList().port(0);
   }
 
   unsigned ThermalZone_Impl::zoneAirPort()
@@ -1256,15 +1274,6 @@ namespace detail {
 
   bool ThermalZone_Impl::isRemovable() const
   {
-    //if( airLoopHVAC() )
-    //{
-    //  return false;
-    //}
-    //else
-    //{
-    //  return true;
-    //}
-
     return true;
   }
 
@@ -1794,23 +1803,16 @@ namespace detail {
 
   std::vector<IdfObject> ThermalZone_Impl::remove()
   {
-    // this->blockSignals(true);
-
     Model m = model();
-
-    // m.getImpl<QObject>()->blockSignals(true);
 
     ThermalZone thermalZone = this->getObject<ThermalZone>();
 
-    if( boost::optional<AirLoopHVAC> airLoopHVAC = this->airLoopHVAC() )
-    {
-      airLoopHVAC->removeBranchForZone(thermalZone);
+    for( auto & airloop : airLoopHVACs() ) {
+      airloop.removeBranchForZone(thermalZone);
     }
 
     std::vector<ModelObject> comps = this->equipment();
-
-    for( auto & comp : comps )
-    {
+    for( auto & comp : comps ) {
       comp.remove();
     }
 
@@ -1821,9 +1823,8 @@ namespace detail {
     airNode.remove();
 
     // remove port lists
-
+    returnPortList().remove();
     inletPortList().remove();
-
     exhaustPortList().remove();
 
     // remove ZoneHVACEquipmentList
@@ -1835,35 +1836,27 @@ namespace detail {
     // DLM: these removed objects are not being returned in the result
     for (auto mixing : this->zoneMixing()){
       mixing.remove();
-      //std::vector<IdfObject> temp = mixing.remove();
-      //result.insert(result.end(), temp.begin(), temp.end());
     }
-
-    //turn the object back on and proceed
-    // this->blockSignals(false);
-
-    // m.getImpl<QObject>()->blockSignals(false);
 
     return HVACComponent_Impl::remove();
   }
 
   void ThermalZone_Impl::disconnect()
   {
-    PortList pl = inletPortList();
-    // This returns a 0-indexed for the extensible fields
-    // unsigned plPortIndex = pl.airLoopHVACPortIndex();
-    // This is the actual field index, used in disconnect
-    // unsigned plPort = pl.port(plPortIndex);
-
-    unsigned plPort = pl.airLoopHVACPort();
-
     ModelObject mo = this->getObject<ModelObject>();
     Model _model = this->model();
 
-    if (plPort != pl.nextPort()) {
-      _model.disconnect(pl, plPort);
+    auto pl = inletPortList();
+    auto plPorts = pl.airLoopHVACPorts();
+    for ( const auto & port : plPorts ) {
+      _model.disconnect(pl, port);
     }
-    _model.disconnect(mo, returnAirPort());
+
+    pl = returnPortList();
+    plPorts = pl.airLoopHVACPorts();
+    for ( const auto & port : plPorts ) {
+      _model.disconnect(pl, port);
+    }
   }
 
   bool ThermalZone_Impl::useIdealAirLoads() const
@@ -2130,49 +2123,43 @@ namespace detail {
 
     ThermalZone thisObject = getObject<ThermalZone>();
 
-    if( node.model() != _model )
-    {
+    if( node.model() != _model ) {
       return false;
     }
 
-    if( isPlenum() )
-    {
+    if( isPlenum() ) {
       return false;
     }
 
-    boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC();
+    auto airLoop = node.airLoopHVAC();
 
-    if( airLoop )
-    {
+    if( airLoop ) {
+      //if( boost::optional<AirLoopHVAC> currentAirLoopHVAC = airLoopHVAC() ) {
+      //  if( currentAirLoopHVAC->handle() == airLoop->handle() ) {
+      //    return false;
+      //  }
 
-      if( boost::optional<AirLoopHVAC> currentAirLoopHVAC = airLoopHVAC() )
-      {
-        if( currentAirLoopHVAC->handle() == airLoop->handle() )
-        {
-          return false;
-        }
+      //  currentAirLoopHVAC->removeBranchForZone(thisObject);
+      //}
 
-        currentAirLoopHVAC->removeBranchForZone(thisObject);
-      }
+      // TODO: make sure airLoop is not already one of the connected airloops
 
-      boost::optional<ModelObject> inletObj = node.inletModelObject();
-      boost::optional<ModelObject> outletObj = node.outletModelObject();
+      auto inletObj = node.inletModelObject();
+      auto outletObj = node.outletModelObject();
 
-      if( inletObj && outletObj )
-      {
-        if( (! inletObj->optionalCast<ThermalZone>()) && outletObj->optionalCast<Mixer>() )
-        {
+      if( inletObj && outletObj ) {
+        if( (! inletObj->optionalCast<ThermalZone>()) && outletObj->optionalCast<Mixer>() ) {
           Node newNode(_model);
-          ThermalZone thisobj = getObject<ThermalZone>();
-          PortList inletPortList = this->inletPortList();
-
+          auto thisobj = getObject<ThermalZone>();
+          auto _inletPortList = inletPortList();
+          auto _returnPortList = returnPortList();
 
           unsigned oldMixerPort  = node.connectedObjectPort( node.outletPort() ).get();
 
           _model.connect( node, node.outletPort(),
-                          inletPortList, inletPortList.nextPort() );
+                          _inletPortList, _inletPortList.nextPort() );
 
-          _model.connect( thisobj, returnAirPort(),
+          _model.connect( _returnPortList, _returnPortList.nextPort(),
                           newNode, newNode.inletPort() );
 
           _model.connect( newNode, newNode.outletPort(),
@@ -2351,6 +2338,9 @@ namespace detail {
     PortList exhaustPortList(tz);
     tz.setPointer(OS_ThermalZoneFields::ZoneAirExhaustPortList,exhaustPortList.handle());
 
+    PortList outletPortList(tz);
+    tz.setPointer(OS_ThermalZoneFields::ZoneReturnAirPortList,outletPortList.handle());
+
     auto sizingZoneClone = sizingZone().clone(model).cast<SizingZone>();
     sizingZoneClone.getImpl<detail::SizingZone_Impl>()->setThermalZone(tz);
 
@@ -2435,8 +2425,7 @@ namespace detail {
   {
     bool result = true;
 
-    if( airLoopHVAC() || (! equipment().empty()) )
-    {
+    if( airLoopHVAC() || (! equipment().empty()) ) {
       result = false;
     }
 
@@ -2692,6 +2681,12 @@ namespace detail {
 
     result.erase(new_end, result.end());
     return result;
+  }
+
+  std::vector<AirLoopHVAC> ThermalZone_Impl::airLoopHVACs() const
+  {
+    auto pl = inletPortList();
+    return subsetCastVector<AirLoopHVAC>(pl.airLoopHVACModelObjects());
   }
 
   boost::optional<HVACComponent> ThermalZone_Impl::airLoopHVACTerminal() const
@@ -3268,6 +3263,11 @@ SizingZone ThermalZone::sizingZone() const
 bool ThermalZone::addToNode(Node & node)
 {
   return getImpl<detail::ThermalZone_Impl>()->addToNode(node);
+}
+
+PortList ThermalZone::returnPortList() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->returnPortList();
 }
 
 PortList ThermalZone::inletPortList() const

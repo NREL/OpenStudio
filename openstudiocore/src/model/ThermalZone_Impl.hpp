@@ -377,6 +377,8 @@ namespace detail {
 
     PortList exhaustPortList() const;
 
+    PortList returnPortList() const;
+
     bool addEquipment(const ModelObject & equipment);
 
     bool removeEquipment(const ModelObject & equipment);
@@ -414,6 +416,8 @@ namespace detail {
 
     AirflowNetworkZone getAirflowNetworkZone();
     boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
+
+    std::vector<AirLoopHVAC> airLoopHVACs() const;
 
    protected:
 
