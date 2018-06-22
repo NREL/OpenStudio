@@ -411,14 +411,13 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ElectricLoadCenterTransformer_Impl::setConsiderTransformerLossforUtilityCost(bool considerTransformerLossforUtilityCost) {
-    bool result = false;
-    if (considerTransformerLossforUtilityCost) {
-      result = setBooleanFieldValue(OS_ElectricLoadCenter_TransformerFields::ConsiderTransformerLossforUtilityCost, "Yes");
-    } else {
-      result = setBooleanFieldValue(OS_ElectricLoadCenter_TransformerFields::ConsiderTransformerLossforUtilityCost, "No");
-    }
-    OS_ASSERT(result);
+  bool ElectricLoadCenterTransformer_Impl::setConsiderTransformerLossforUtilityCost(bool considerTransformerLossforUtilityCost) {
+    return setBooleanFieldValue(OS_ElectricLoadCenter_TransformerFields::ConsiderTransformerLossforUtilityCost, considerTransformerLossforUtilityCost);
+    //if (considerTransformerLossforUtilityCost) {
+    //  result = setBooleanFieldValue(OS_ElectricLoadCenter_TransformerFields::ConsiderTransformerLossforUtilityCost, "Yes");
+    //} else {
+    //  result = setBooleanFieldValue(OS_ElectricLoadCenter_TransformerFields::ConsiderTransformerLossforUtilityCost, "No");
+    //}
   }
 
   void ElectricLoadCenterTransformer_Impl::resetConsiderTransformerLossforUtilityCost() {
@@ -426,33 +425,32 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  boost::optional<OutputMeter> ElectricLoadCenterTransformer_Impl::getMeter(unsigned index) const {
+  boost::optional<std::string> ElectricLoadCenterTransformer_Impl::getMeter(unsigned index) const {
     //return meter at index
-    boost::optional<OutputMeter> result;
+    boost::optional<std::string> result;
     auto groups = extensibleGroups();
     unsigned sizeOfGroup = numExtensibleGroups();
 
     if ((index < sizeOfGroup) && (!groups[index].empty())) {
       WorkspaceExtensibleGroup group = groups[index].cast<WorkspaceExtensibleGroup>();
-      boost::optional<WorkspaceObject> wo = group.getTarget(OS_ElectricLoadCenter_TransformerExtensibleFields::MeterName);
+      boost::optional<std::string> wo = group.getString(OS_ElectricLoadCenter_TransformerExtensibleFields::MeterName);
       if (wo) {
-        OutputMeter meter = wo->cast<OutputMeter>();
-        result = meter;
+        result = wo.get();
       }
     }
     return result;
   }
 
-  std::vector<OutputMeter> ElectricLoadCenterTransformer_Impl::meters() const {
+  std::vector<std::string> ElectricLoadCenterTransformer_Impl::meters() const {
     // loop through extensible groups and return vector of meters
-    std::vector<OutputMeter> result;
+    std::vector<std::string> result;
     auto groups = extensibleGroups();
 
     for (const auto & elem : groups) {
       WorkspaceExtensibleGroup group = elem.cast<WorkspaceExtensibleGroup>();
-      boost::optional<WorkspaceObject> wo = group.getTarget(OS_ElectricLoadCenter_TransformerExtensibleFields::MeterName);
+      boost::optional<std::string> wo = group.getString(OS_ElectricLoadCenter_TransformerExtensibleFields::MeterName);
       if (wo){
-        OutputMeter meter = wo->cast<OutputMeter>();
+        std::string meter = wo.get();
         result.push_back(meter);
       }
     }
@@ -477,15 +475,15 @@ namespace detail {
     clearExtensibleGroups();
   }
 
-  bool ElectricLoadCenterTransformer_Impl::addMeter(const OutputMeter& meter) {
+  bool ElectricLoadCenterTransformer_Impl::addMeter(const std::string& meterName) {
     //add meter to end of vector of meters
     bool result = false;
     WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    result = group.setPointer(OS_ElectricLoadCenter_TransformerExtensibleFields::MeterName, meter.handle());
+    result = group.setString(OS_ElectricLoadCenter_TransformerExtensibleFields::MeterName, meterName);
     return result;
   }
 
-  bool ElectricLoadCenterTransformer_Impl::setMeter(const OutputMeter& meter, unsigned index) {
+  bool ElectricLoadCenterTransformer_Impl::setMeter(const std::string& meterName, unsigned index) {
     //add meter to {index} of vector of meters
     bool result = false;
     auto groups = extensibleGroups();
@@ -494,7 +492,7 @@ namespace detail {
       IdfExtensibleGroup idfGroup = insertExtensibleGroup(index, StringVector());
       OS_ASSERT(!idfGroup.empty());
       ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
-      result = group.setPointer(0, meter.handle());
+      result = group.setString(0, meterName);
     }
     return result;
   }
@@ -508,30 +506,18 @@ ElectricLoadCenterTransformer::ElectricLoadCenterTransformer(const Model& model)
 
   ScheduleCompact alwaysOn(model, 1.0);
   alwaysOn.setName("Always On");
-
   setAvailabilitySchedule(alwaysOn);
-
   setTransformerUsage("PowerOutToGrid");
-
   setRatedCapacity(15000);
-
-  setPhase("3");
-
-  setConductorMaterial("Aluminum");
-
-  setFullLoadTemperatureRise(150);
-
-  setFractionofEddyCurrentLosses(0.1);
-
+  //setPhase("3");
+  //setConductorMaterial("Aluminum");
+  //setFullLoadTemperatureRise(150);
+  //setFractionofEddyCurrentLosses(0.1);
   setPerformanceInputMethod("NominalEfficiency");
-
-  setNameplateEfficiency(0.985);
-
-  setPerUnitLoadforNameplateEfficiency(0.35);
-
-  setReferenceTemperatureforNameplateEfficiency(75);
-
-  setConsiderTransformerLossforUtilityCost(true);
+  //setNameplateEfficiency(0.985);
+  //setPerUnitLoadforNameplateEfficiency(0.35);
+  //setReferenceTemperatureforNameplateEfficiency(75);
+  //setConsiderTransformerLossforUtilityCost(true);
 
 }
 
@@ -799,19 +785,19 @@ void ElectricLoadCenterTransformer::resetPerUnitLoadforMaximumEfficiency() {
   getImpl<detail::ElectricLoadCenterTransformer_Impl>()->resetPerUnitLoadforMaximumEfficiency();
 }
 
-void ElectricLoadCenterTransformer::setConsiderTransformerLossforUtilityCost(bool considerTransformerLossforUtilityCost) {
-  getImpl<detail::ElectricLoadCenterTransformer_Impl>()->setConsiderTransformerLossforUtilityCost(considerTransformerLossforUtilityCost);
+bool ElectricLoadCenterTransformer::setConsiderTransformerLossforUtilityCost(bool considerTransformerLossforUtilityCost) {
+  return getImpl<detail::ElectricLoadCenterTransformer_Impl>()->setConsiderTransformerLossforUtilityCost(considerTransformerLossforUtilityCost);
 }
 
 void ElectricLoadCenterTransformer::resetConsiderTransformerLossforUtilityCost() {
   getImpl<detail::ElectricLoadCenterTransformer_Impl>()->resetConsiderTransformerLossforUtilityCost();
 }
 
-boost::optional<OutputMeter> ElectricLoadCenterTransformer::getMeter(unsigned index) const {
+boost::optional<std::string> ElectricLoadCenterTransformer::getMeter(unsigned index) const {
   return getImpl<detail::ElectricLoadCenterTransformer_Impl>()->getMeter(index);
 }
 
-std::vector<OutputMeter> ElectricLoadCenterTransformer::meters() const {
+std::vector<std::string> ElectricLoadCenterTransformer::meters() const {
   return getImpl<detail::ElectricLoadCenterTransformer_Impl>()->meters();
 }
 
@@ -823,12 +809,12 @@ void ElectricLoadCenterTransformer::eraseMeters() {
   getImpl<detail::ElectricLoadCenterTransformer_Impl>()->eraseMeters();
 }
 
-bool ElectricLoadCenterTransformer::addMeter(const OutputMeter& meter) {
-  return getImpl<detail::ElectricLoadCenterTransformer_Impl>()->addMeter(meter);
+bool ElectricLoadCenterTransformer::addMeter(const std::string& meterName) {
+  return getImpl<detail::ElectricLoadCenterTransformer_Impl>()->addMeter(meterName);
 }
 
-bool ElectricLoadCenterTransformer::setMeter(const OutputMeter& meter, unsigned index) {
-  return getImpl<detail::ElectricLoadCenterTransformer_Impl>()->setMeter(meter, index);
+bool ElectricLoadCenterTransformer::setMeter(const std::string& meterName, unsigned index) {
+  return getImpl<detail::ElectricLoadCenterTransformer_Impl>()->setMeter(meterName, index);
 }
 
 /// @cond
