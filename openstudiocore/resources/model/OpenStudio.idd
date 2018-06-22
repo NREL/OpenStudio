@@ -27888,8 +27888,9 @@ OS:ElectricLoadCenter:Transformer,
        \note Only required when the transformer is used for power in from the utility grid
   A9;  \field Meter 1 Name
        \begin-extensible
-       \type external-list
-       \external-list autoRDDmeter
+       \type alpha
+       \memo type external-list
+       \memo external-list autoRDDmeter
        \note Must be an electric meter (with electricity as the resource type)
        \note Only required when transformer is used for power in from the utility grid
 

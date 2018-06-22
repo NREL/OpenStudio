@@ -131,9 +131,9 @@ namespace detail {
 
     bool isConsiderTransformerLossforUtilityCostDefaulted() const;
 
-    std::vector<OutputMeter> meters() const;
+    std::vector<std::string> meters() const;
 
-    boost::optional<OutputMeter> getMeter(unsigned index) const;
+    boost::optional<std::string> getMeter(unsigned index) const;
 
     //@}
     /** @name Setters */
@@ -203,7 +203,7 @@ namespace detail {
 
     void resetPerUnitLoadforMaximumEfficiency();
 
-    void setConsiderTransformerLossforUtilityCost(bool considerTransformerLossforUtilityCost);
+    bool setConsiderTransformerLossforUtilityCost(bool considerTransformerLossforUtilityCost);
 
     void resetConsiderTransformerLossforUtilityCost();
 
@@ -211,9 +211,9 @@ namespace detail {
 
     bool eraseMeter(unsigned index);
 
-    bool addMeter(const OutputMeter& meter);
+    bool addMeter(const std::string& meterName);
 
-    bool setMeter(const OutputMeter& meter, unsigned index);
+    bool setMeter(const std::string& meterName, unsigned index);
 
     //@}
     /** @name Other */
