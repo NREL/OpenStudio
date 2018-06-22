@@ -152,7 +152,33 @@ TEST_F(ModelFixture, ElectricLoadCenterTransformer_Extensible)
   EXPECT_TRUE(elct.addMeter(meter.nameString()));
   EXPECT_EQ(1u, elct.meters().size());
   EXPECT_TRUE(elct.getMeter(0));
+  EXPECT_FALSE(elct.getMeter(1));
   EXPECT_EQ(meter.nameString(), elct.getMeter(0).get());
+  //2nd
+  EXPECT_TRUE(elct.addMeter(meter2.nameString()));
+  EXPECT_EQ(2u, elct.meters().size());
+  EXPECT_TRUE(elct.getMeter(0));
+  EXPECT_TRUE(elct.getMeter(1));
+  EXPECT_FALSE(elct.getMeter(2));
+  EXPECT_EQ(meter2.nameString(), elct.getMeter(1).get());
+  //3rd
+  EXPECT_TRUE(elct.addMeter(meter3.nameString()));
+  EXPECT_EQ(3u, elct.meters().size());
+  EXPECT_TRUE(elct.getMeter(0));
+  EXPECT_TRUE(elct.getMeter(1));
+  EXPECT_TRUE(elct.getMeter(2));
+  EXPECT_EQ(meter3.nameString(), elct.getMeter(2).get());
+  //remove 2nd
+  EXPECT_TRUE(elct.eraseMeter(2));
+  EXPECT_EQ(2u, elct.meters().size());
+  EXPECT_TRUE(elct.getMeter(0));
+  EXPECT_TRUE(elct.getMeter(1));
+  EXPECT_FALSE(elct.getMeter(2));
+  //meter3 is now in the second slot
+  EXPECT_EQ(meter3.nameString(), elct.getMeter(1).get());
+  //remove all
+  elct.eraseMeters();
+  EXPECT_EQ(0u, elct.meters().size());
 
   model.save(toPath("./ELCT_extensible.osm"), true);
 }
