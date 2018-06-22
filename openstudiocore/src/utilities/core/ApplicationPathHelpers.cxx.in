@@ -28,6 +28,7 @@
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/PathHelpers.hpp>
+#include <utilities/core/Logger.hpp>
 
 #include <OpenStudio.hxx>
 
@@ -80,12 +81,14 @@ namespace openstudio {
     #if defined _WIN32
       TCHAR szPath[MAX_PATH];
       if( GetModuleFileName( nullptr, szPath, MAX_PATH ) ) {
+        LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, szPath = '" << szPath << "'");
         return completeAndNormalize(toPath(szPath));
       }
     #else
       Dl_info info;
       if (dladdr("main", &info)) {
-         return completeAndNormalize(toPath(info.dli_fname));
+        LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, info.dli_fname = '" << info.dli_fname << "'");
+        return completeAndNormalize(toPath(info.dli_fname));
       }
     #endif
 
@@ -121,12 +124,12 @@ namespace openstudio {
   #if defined _WIN32
   HMODULE GetCurrentModule()
   {
-	  HMODULE hModule = NULL;
-	  // hModule is NULL if GetModuleHandleEx fails.
-	  GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS
-						  | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-						  (LPCTSTR)GetCurrentModule, &hModule);
-	  return hModule;
+      HMODULE hModule = NULL;
+      // hModule is NULL if GetModuleHandleEx fails.
+      GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS
+                          | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                          (LPCTSTR)GetCurrentModule, &hModule);
+      return hModule;
   }
   #else
   bool GetCurrentModule()
@@ -141,27 +144,31 @@ namespace openstudio {
     #if defined _WIN32
       TCHAR szPath[MAX_PATH];
       if( GetModuleFileName( GetCurrentModule(), szPath, MAX_PATH ) ) {
+        LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, szPath = '" << szPath << "'");
         openstudioDirPath = completeAndNormalize(toPath(szPath));
       }
     #else
       Dl_info info;
       if (dladdr("GetCurrentModule", &info)) {
-          auto path = toPath(info.dli_fname);
-          if ( path.parent_path().empty() ) {
-            std::istringstream pathstream( getenv("PATH") );
-            std::string pathstring;
-            while ( std::getline(pathstream, pathstring, ':') ) {
-              auto maybepath = toPath(pathstring) / path;
-              if( openstudio::filesystem::exists( maybepath ) ) {
-                openstudioDirPath = maybepath;
-                break;
-              }
+        LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, info.dli_fname = '" << info.dli_fname << "'");
+        auto path = toPath(info.dli_fname);
+        if ( path.parent_path().empty() ) {
+          std::istringstream pathstream( getenv("PATH") );
+          std::string pathstring;
+          while ( std::getline(pathstream, pathstring, ':') ) {
+            LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, searching for '" << path << "' in '" << pathstring << "'");
+            auto maybepath = toPath(pathstring) / path;
+            if( openstudio::filesystem::exists( maybepath ) && !openstudio::filesystem::is_directory( maybepath ) ) {
+              openstudioDirPath = maybepath;
+              break;
             }
-          } else {
-            openstudioDirPath = completeAndNormalize(path);
           }
+        } else {
+            openstudioDirPath = completeAndNormalize(path);
+        }
       }
     #endif
+    LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, found '" << openstudioDirPath << "'");
     return openstudioDirPath;
   }
 
@@ -201,7 +208,7 @@ namespace openstudio {
       }
     #endif
 
-    if( openstudio::filesystem::exists(cliPath) ){
+    if( openstudio::filesystem::exists(cliPath) && !openstudio::filesystem::is_directory(cliPath) ){
       return cliPath;
     }
 
@@ -211,7 +218,7 @@ namespace openstudio {
       cliPath = getOpenStudioModuleDirectory() / toPath("../bin/openstudio");
     #endif
 
-    if( openstudio::filesystem::exists(cliPath) ){
+    if( openstudio::filesystem::exists(cliPath) && !openstudio::filesystem::is_directory(cliPath) ){
       return cliPath;
     }
 
