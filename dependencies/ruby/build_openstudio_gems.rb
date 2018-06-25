@@ -106,7 +106,10 @@ FileUtils.cp('Gemfile.lock', "#{install_dir}/.")
 
 Dir.chdir("#{install_dir}/..")
 
-system_call("\"#{tar_exe}\" -zcvf \"openstudio-gems-#{DateTime.now.strftime("%Y%m%d")}.tar.gz\" \"openstudio-gems\"")
+new_file_name = "openstudio-gems-#{DateTime.now.strftime("%Y%m%d")}.tar.gz"
+system_call("\"#{tar_exe}\" -zcvf \"#{new_file_name}\" \"openstudio-gems\"")
 
-# md5sum openstudio-gems-YYYYMMDD.tar.gz
-# upload openstudio-gems-YYYYMMDD.tar.gz to s3, update openstudiocore/CMakeLists.txt
+puts
+puts "You need to manually upload #{new_file_name} to S3:openstudio-resources/dependencies/"
+puts "Also, you will need to update openstudiocore/CMakeLists.txt with the new file name and the md5 hash (call `md5 #{new_file_name}` or `md5sum #{new_file_name}` to get hash)"
+puts

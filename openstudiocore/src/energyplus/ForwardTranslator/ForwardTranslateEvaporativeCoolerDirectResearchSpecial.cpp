@@ -50,7 +50,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectResearchSpecial( EvaporativeCoolerDirectResearchSpecial & modelObject )
 {
   OptionalString s;
-  OptionalDouble d;
+  OptionalDouble OptD;
   OptionalModelObject temp;
   double value;
 
@@ -77,8 +77,8 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectRe
   // RecirculatingWaterPumpPowerConsumption
   if ( modelObject.isRecirculatingWaterPumpPowerConsumptionAutosized() ) {
     idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,"autosize");
-  } else if( (d = modelObject.recirculatingWaterPumpPowerConsumption()) ) {
-    idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,d.get());
+  } else if( (OptD = modelObject.recirculatingWaterPumpPowerConsumption()) ) {
+    idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,OptD.get());
   }
 
   // AirInletNodeName
@@ -146,6 +146,19 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectRe
     OS_ASSERT(_curve);
     idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::WaterPumpPowerModifierCurveName,_curve->name().get());
   }
+
+  // Evaporative Operation Minimum Drybulb Temperature (Double)
+  idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature,
+                      modelObject.evaporativeOperationMinimumDrybulbTemperature());
+
+
+  // Evaporative Operation Maximum Limit Wetbulb Temperature (Double)
+  idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature,
+                      modelObject.evaporativeOperationMaximumLimitWetbulbTemperature());
+
+  // Evaporative Operation Maximum Limit Drybulb Temperature (Double)
+  idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDrybulbTemperature,
+                      modelObject.evaporativeOperationMaximumLimitDrybulbTemperature());
 
   return boost::optional<IdfObject>(idfObject);
 }
