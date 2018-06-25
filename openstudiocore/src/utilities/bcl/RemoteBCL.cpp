@@ -1028,8 +1028,13 @@ namespace openstudio{
           }
           QDir().mkpath(toQString(tempDest));
 
-          openstudio::UnzipFile uf(src);
-          std::vector<openstudio::path> createdFiles = uf.extractAllFiles(tempDest);
+          std::vector<openstudio::path> createdFiles;
+          try {
+            openstudio::UnzipFile uf(src);
+            createdFiles = uf.extractAllFiles(tempDest);
+          } catch (const std::exception &e) {
+            LOG(Error, "Cannot unzip file: " << e.what());
+          }
           QFile::remove(toQString(src));
 
           // search for component.xml or measure.xml file

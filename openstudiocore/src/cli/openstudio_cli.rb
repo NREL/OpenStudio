@@ -31,9 +31,6 @@
 require 'openstudio'
 
 OpenStudio::Application::instance().application(false)
-if (!OpenStudio::RemoteBCL::initializeSSL())
-  puts "Unable to initialize OpenSSL: Verify that openstudio.exe can access the OpenSSL libraries"
-end
 
 #File.open('E:\test\test.log', 'w') do |f|
 #  ENV.each_key {|k| f.puts "#{k} = #{ENV[k]}" }
@@ -43,6 +40,7 @@ end
 
 require 'logger'
 require 'optparse'
+require 'stringio'
 
 #include OpenStudio::Workflow::Util::IO
 
@@ -275,6 +273,7 @@ def parse_main_args(main_args)
   # Operate on the include option to add to $LOAD_PATH
   remove_indices = []
   new_path = []
+  init_ssl = true
   main_args.each_index do |i|
 
     if main_args[i] == '-I' || main_args[i] == '--include'
@@ -292,8 +291,20 @@ def parse_main_args(main_args)
         #$logger.warn "'#{dir}' passed to #{main_args[i]} is not a directory"
       end
       new_path << dir
+    elsif main_args[i] == '--no-ssl'
+      # remove from further processing
+      remove_indices << i
+      
+      init_ssl = false
     end
   end
+  
+  if init_ssl
+    if (!OpenStudio::RemoteBCL::initializeSSL())
+      puts "Unable to initialize OpenSSL: Verify that openstudio.exe can access the OpenSSL libraries"
+    end
+  end
+
   remove_indices.reverse_each {|i| main_args.delete_at(i)}
 
   if !new_path.empty?
@@ -358,6 +369,7 @@ def parse_main_args(main_args)
   Gem.paths.path << ':/ruby/2.2.0/bundler/gems/'
 
   # find all the embedded gems
+  original_embedded_gems = {}
   begin
     EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
       if md = /specifications\/.*\.gemspec$/.match(f) || 
@@ -366,6 +378,7 @@ def parse_main_args(main_args)
           spec = EmbeddedScripting::getFileAsString(f)
           s = eval(spec)
           s.loaded_from = f
+          original_embedded_gems[s.name] = s
 
           init_count = 0
           Gem::Specification.each {|x| init_count += 1}
@@ -378,13 +391,12 @@ def parse_main_args(main_args)
 
           if post_count == init_count
             $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
-            $logger.debug "Ignoring embdedded gem #{s.file_name}"
           end
 
         rescue LoadError => e
-          puts e.message
+          safe_puts e.message
         rescue => e
-          puts e.message
+          safe_puts e.message
         end
       end
     end
@@ -393,15 +405,17 @@ def parse_main_args(main_args)
   end
 
   # activate bundler
-  Gem::Specification.each do |spec|
-    if spec.gem_dir.chars.first == ':'
-      if spec.name == 'bundler'
-        # DLM: for now remove this
-        #spec.activate
-        Gem::Specification.remove_spec(spec)
-      end
-    end
-  end
+  #Gem::Specification.each do |spec|
+  #  if spec.gem_dir.chars.first == ':'
+  #    if spec.name == 'bundler'
+  #      # DLM would like to have bundler support in the cli
+  #      #spec.activate
+  #      
+  #      # DLM: for now remove this gem
+  #      Gem::Specification.remove_spec(spec)
+  #    end
+  #  end
+  #end
 
   # require bundler
   # have to do some forward declaration and pre-require to get around autoload cycles
@@ -436,70 +450,74 @@ def parse_main_args(main_args)
   #  exit e.status_code
   #end
 
-  embedded_gems = []
-  user_gems = []
-  Gem::Specification.each do |spec|
-    if spec.gem_dir.chars.first == ':'
-      embedded_gems << spec
-    else
-      user_gems << spec
-    end
-  end
+  # DLM: test code, useful for testing from command line using system ruby
+  #Gem::Specification.each do |spec|
+  #  if /openstudio/.match(spec.name) 
+  #    original_embedded_gems[spec.name] = spec
+  #  end
+  #end
 
-  # remove any embedded gems that are also found on disk with equal or higher version but compatible major version
-  user_gems_to_remove = []
-  embedded_gems.each do |spec|
-    remove = false
-    user_gems.each do |s|
-      if s.name == spec.name
-        if s.version > spec.version
-          # only allow higher versions with compatible major version
-          if s.version.to_s.split('.').first == spec.version.to_s.split('.').first
-            $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
-            remove = true
-          else
-            $logger.debug "Ignoring system gem #{s.name} #{s.version}, incompatible with embedded gem"
-            user_gems_to_remove << s
-          end
-        elsif s.version == spec.version
-          $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
-          remove = true
-        else
-          $logger.debug "Found system gem #{s.name} #{s.version}, does not override embedded gem"
-        end
+  # find final set of embedded gems that are also found on disk with equal or higher version but compatible major version
+  final_embedded_gems = original_embedded_gems.clone
+  Gem::Specification.each do |spec|
+    current_embedded_gem = final_embedded_gems[spec.name]
+    
+    # not an embedded gem
+    next if current_embedded_gem.nil?
+    
+    if spec.version > current_embedded_gem.version
+      # only allow higher versions with compatible major version
+      if spec.version.to_s.split('.').first == current_embedded_gem.version.to_s.split('.').first
+        $logger.debug "Found system gem #{spec.name} #{spec.version}, overrides embedded gem"
+        final_embedded_gems[spec.name] = spec
       end
     end
-
-    if remove
-      $logger.debug "Ignoring embdedded gem #{spec.file_name}"
-      Gem::Specification.remove_spec(spec)
-    end
   end
+  
+  # get a list of all the embedded gems and their dependencies 
+  dependencies = []
+  final_embedded_gems.each_value do |spec|
+    #$logger.debug "Accumulating dependencies for #{spec.name} #{spec.version}"
+    dependencies << Gem::Dependency.new(spec.name)
+    dependencies.concat(spec.runtime_dependencies)
+  end
+  #dependencies.each {|d| $logger.debug "Found dependency #{d}"}
 
-  user_gems_to_remove.uniq.each {|s| Gem::Specification.remove_spec(s)}
+  # resolve dependencies
+  activation_errors = false
+  original_load_path = $:.clone
+  resolver = Gem::Resolver.for_current_gems(dependencies)
+  resolver.resolve.each do |request|
+    do_activate = true
+    spec = request.spec
 
-  # activate remaining embedded gems
-  Gem::Specification.each do |spec|
-    if spec.gem_dir.chars.first == ':'
+    # check if this is one of our embedded gems
+    if final_embedded_gems[spec.name]
 
       # check if gem can be loaded from RUBYLIB, this supports developer use case
-      do_activate = true
-      $:.each do |lp|
+      original_load_path.each do |lp|
         if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
-          $logger.debug "Found #{spec.name} in '#{lp}', overrides embdedded gem"
+          $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
+          Gem::Specification.remove_spec(spec)
           do_activate = false
           break
         end
       end
-
-      if do_activate
-        $logger.debug "Activating embdedded gem #{spec.file_name}"
+    end
+    
+    if do_activate
+      $logger.debug "Activating gem #{spec.spec_file}"
+      begin
         spec.activate
-      else
-        $logger.debug "Ignoring embdedded gem #{spec.file_name}"
-        Gem::Specification.remove_spec(spec)
+      rescue Gem::LoadError
+        $logger.error "Error activating gem #{spec.spec_file}"
       end
     end
+      
+  end
+  
+  if activation_errors
+    return false
   end
 
   # Handle -e commands
@@ -640,6 +658,7 @@ class CLI
     if quiet
       commands = ['-h','--help',
                   '--verbose',
+                  '--no-ssl',
                   '-i', '--include',
                   '-e', '--execute',
                   '--gem_path', '--gem_home']
@@ -657,6 +676,7 @@ class CLI
         o.separator ''
         o.on('-h', '--help', 'Print this help.')
         o.on('--verbose', 'Print the full log to STDOUT')
+        o.on('--no-ssl', 'Skip initializing SSL')
         o.on('-I', '--include DIR', 'Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)')
         o.on('-e', '--execute CMD', 'Execute one line of script (may be used more than once). Returns after executing commands.')
         o.on('--gem_path DIR', 'Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)')
@@ -718,6 +738,12 @@ class Run
     # options are local to this method, run_methods are what get passed to workflow gem
     run_options = {}
 
+    # Hidden option shhhhh
+    run_options[:fast] = false
+    if sub_argv.delete '--fast'
+      run_options[:fast] = true
+    end
+    
     options = {}
     options[:debug] = false
     options[:no_simulation] = false
@@ -915,11 +941,11 @@ class GemList
       end
 
       embedded.each do |spec|
-        puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
+        safe_puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
       end
 
       user.each do |spec|
-        puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
+        safe_puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
       end
 
     rescue => e
@@ -1027,6 +1053,14 @@ class Measure
     options[:update] = false
     options[:compute_arguments] = nil
 
+    # save some arguments to pass to minitest
+    saved_subargv = []
+    if sub_argv[0] == '-r' || sub_argv[0] == '--run_tests'
+      saved_subargv = sub_argv[2..-1]
+      sub_argv = sub_argv[0...2]
+    end
+    
+    # find the directory
     directory = nil
     if sub_argv.size > 1
       unless (sub_argv[0] == '-s' || sub_argv[0] == '--start_server')
@@ -1052,16 +1086,20 @@ class Measure
         options[:compute_arguments] = true
         options[:compute_arguments_model] = model_file
       end
+      o.on('-r', '--run_tests', 'Run all tests recursively found in a directory, additional arguments are passed to minitest') do
+        options[:run_tests] = true
+      end
       o.on('-s', '--start_server [PORT]', 'Start a measure manager server') do |port|
         options[:start_server] = true
         options[:start_server_port] = port
       end
+      # TODO: run unit tests
     end
-
+    
     # Parse the options
     argv = parse_options(opts, sub_argv)
     return 0 if argv == nil
-
+    
     $logger.debug("Measure command: #{argv.inspect} #{options.inspect}")
 
     if !options[:start_server]
@@ -1090,7 +1128,7 @@ class Measure
         end
       end
 
-      puts JSON.generate(result)
+      safe_puts JSON.generate(result)
 
     elsif options[:update]
       measure_manager = MeasureManager.new($logger)
@@ -1101,7 +1139,7 @@ class Measure
       end
 
       hash = measure_manager.measure_hash(directory, measure)
-      puts JSON.generate(hash)
+      safe_puts JSON.generate(hash)
 
     elsif options[:compute_arguments]
       measure_manager = MeasureManager.new($logger)
@@ -1150,8 +1188,36 @@ class Measure
       measure_info = measure_manager.get_measure_info(directory, measure, model_path, model, workspace)
 
       hash = measure_manager.measure_hash(directory, measure, measure_info)
-      puts JSON.generate(hash)
+      safe_puts JSON.generate(hash)
 
+    elsif options[:run_tests]
+      
+      # restore saved arguments for minitest
+      ARGV.clear
+      saved_subargv.each do |arg|
+        ARGV << arg
+      end
+      $logger.debug("Minitest arguments are '#{saved_subargv}'")
+      
+      # load openstudio_measure_tester gem
+      #begin
+        require 'minitest'
+        require 'minitest/reporters'
+        
+        # Minitest Reports use a plugin that is normally found by Minitest::load_plugins using Gem.find
+        # until Gem.find is overloaded to find embedded gems, we will manually load the plugin here
+        require 'minitest/minitest_reporter_plugin'
+        Minitest.extensions << 'minitest_reporter'
+        
+        require 'openstudio_measure_tester'
+      #rescue LoadError
+        #puts "Cannot load 'openstudio_measure_tester'"
+        #return 1
+      #end
+      
+      runner = OpenStudioMeasureTester::Runner.new(directory)
+      runner.run_all(Dir.pwd) 
+    
     elsif options[:start_server]
 
       require_relative 'measure_manager_server'
