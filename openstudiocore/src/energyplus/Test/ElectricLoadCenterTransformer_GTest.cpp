@@ -46,6 +46,8 @@
 
 #include "../../model/ElectricLoadCenterTransformer.hpp"
 #include "../../model/ElectricLoadCenterTransformer_Impl.hpp"
+#include "../../model/ElectricLoadCenterDistribution.hpp"
+#include "../../model/ElectricLoadCenterDistribution_Impl.hpp"
 
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
@@ -61,6 +63,7 @@
 
 #include <utilities/idd/OS_ElectricLoadCenter_Transformer_FieldEnums.hxx>
 #include <utilities/idd/ElectricLoadCenter_Transformer_FieldEnums.hxx>
+#include <utilities/idd/ElectricLoadCenter_Distribution_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -182,4 +185,32 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorElectricLoadCenterTransformer3) {
 
   model.save(toPath("./ElectricLoadCenterTransformer2.osm"), true);
   workspace.save(toPath("./ElectricLoadCenterTransformer2.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorElectricLoadCenterTransformer_Distribution) {
+
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+
+  ElectricLoadCenterTransformer elct(model);
+  ElectricLoadCenterDistribution elcd(model);
+
+  elcd.setTransformer(elct);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  model.save(toPath("./ElectricLoadCenterDistribution.osm"), true);
+  workspace.save(toPath("./ElectricLoadCenterDistribution.idf"), true);
+
+  WorkspaceObject transformer = workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Transformer)[0];
+  WorkspaceObject distribution = workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution)[0];
+
+  EXPECT_EQ(transformer.nameString(), distribution.getString(ElectricLoadCenter_DistributionFields::TransformerObjectName, false).get());
+
+  model.save(toPath("./ElectricLoadCenterDistribution.osm"), true);
+  workspace.save(toPath("./ElectricLoadCenterDistribution.idf"), true);
 }

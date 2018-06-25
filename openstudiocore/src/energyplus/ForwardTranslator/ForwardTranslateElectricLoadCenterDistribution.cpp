@@ -37,6 +37,8 @@
 #include "../../model/ElectricLoadCenterStorageConverter.hpp"
 #include "../../model/Generator.hpp"
 #include "../../model/Schedule.hpp"
+#include "../../model/ElectricLoadCenterTransformer.hpp"
+#include "../../model/ElectricLoadCenterTransformer_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -82,13 +84,13 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricLoadCenterDistrib
     idfObject.setString(ElectricLoadCenter_DistributionFields::GeneratorTrackMeterSchemeMeterName, (*optS) );
   }
 
-  //boost::optional<Transformer> transformer = modelObject.transformer();
-  //if (transformer){
-  //  boost::optional<IdfObject> transformerIdf = translateAndMapModelObject(transformer);
-  //  if (transformerIdf){
-  //   idfObject.setString(ElectricLoadCenter_DistributionFields::TransformerObjectName, transformerIdf->name().get());
-  //  }
-  //}
+  boost::optional<ElectricLoadCenterTransformer> transformer = modelObject.transformer();
+  if (transformer){
+    boost::optional<IdfObject> transformerIdf = translateAndMapModelObject(transformer.get());
+    if (transformerIdf){
+     idfObject.setString(ElectricLoadCenter_DistributionFields::TransformerObjectName, transformerIdf->name().get());
+    }
+  }
 
   for (auto& generator : modelObject.generators()) {
     boost::optional<IdfObject> generatorIdf = translateAndMapModelObject(generator);
