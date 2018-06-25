@@ -40,7 +40,7 @@ class Schedule;
 class Generator;
 class Inverter;
 class ElectricalStorage;
-//class Transformer;
+class ElectricLoadCenterTransformer;
 class ElectricLoadCenterStorageConverter;
 class ModelObjectList;
 
@@ -114,7 +114,7 @@ namespace detail {
 
     boost::optional<ElectricalStorage> electricalStorage() const;
 
-    //boost::optional<Transformer> transformer() const;
+    boost::optional<ElectricLoadCenterTransformer> transformer() const;
 
     // New
 
@@ -197,9 +197,9 @@ namespace detail {
 
     void resetElectricalStorage();
 
-    //bool setTransformer(const Transformer& transformer);
+    bool setTransformer(const ElectricLoadCenterTransformer& transformer);
 
-    //void resetTransformerObject();
+    void resetTransformer();
 
     // Storage Operation Scheme
     bool setStorageOperationScheme(const std::string& operationScheme);
