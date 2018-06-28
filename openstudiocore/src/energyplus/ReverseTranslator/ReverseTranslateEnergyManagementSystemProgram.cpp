@@ -87,6 +87,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
       //split line on whitespaces to get look for modelobject names
       std::vector<std::string> results = splitString(line.get(), ' ');
       for (size_t j = 0; j < results.size(); j++) {
+
         for (size_t k = 0; k < modelObjects.size(); k++) {
           if (modelObjects.at(k).name()) {
             //check if program item is the name of a model object
@@ -96,12 +97,16 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
               uid = toString(modelObjects.at(k).handle());
               //replace modelobject name with handle
               newline.replace(pos, len, uid);
+              // Now that we have done the replacement, we need to break out of the nested loop and go to the next "j"
+              // Otherwise pos will become giberish since it won't be able to find the already-replaced string
+              break;
             }
           }
-        }
-      }
+        } // end loop on all modelObjects
+
+      } // end loop on all results in line
       emsProgram.addLine(newline);
-    }
+    } // end if(line)
   }
   return emsProgram;
 }
