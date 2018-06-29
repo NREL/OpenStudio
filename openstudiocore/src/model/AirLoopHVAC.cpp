@@ -427,11 +427,8 @@ namespace detail {
 
     thermalZone.addToNode(node.get());
 
-    if( optAirTerminal )
-    {
-      Node airInletNode = thermalZone.inletPortList().airLoopHVACModelObject()->cast<Node>();
-
-      optAirTerminal->addToNode(airInletNode);
+    if ( optAirTerminal ) {
+      optAirTerminal->addToNode(node.get());
     }
 
     return true;
@@ -486,75 +483,67 @@ namespace detail {
   bool AirLoopHVAC_Impl::removeBranchForZone(ThermalZone & thermalZone)
   {
     Model _model = model();
-    boost::optional<AirLoopHVAC> t_airLoopHVAC = thermalZone.airLoopHVAC();
 
-    if( ! t_airLoopHVAC )
-    {
-      return false;
-    }
+    auto splitter = zoneSplitter();
+    auto mixer = zoneMixer();
 
-    if( t_airLoopHVAC->handle() != handle() )
-    {
-      return false;
-    }
-
-    auto demandInletNodes = t_airLoopHVAC->demandInletNodes();
-    for( unsigned i = 0; i < demandInletNodes.size(); ++i ) {
-      thermalZone.removeSupplyPlenum(i);
-    }
-    thermalZone.removeReturnPlenum();
-
-    std::vector<ModelObject> modelObjects;
-    AirLoopHVACZoneSplitter zoneSplitter = t_airLoopHVAC->zoneSplitter();
-    AirLoopHVACZoneMixer zoneMixer = t_airLoopHVAC->zoneMixer();
-    boost::optional<ModelObject> splitterOutletObject;
-    boost::optional<ModelObject> mixerInletObject;
-    std::vector<ModelObject>::iterator findit;
+    // TODO: reintroduce this and make sure it works
+    //auto demandInletNodes = t_airLoopHVAC->demandInletNodes();
+    //for( unsigned i = 0; i < demandInletNodes.size(); ++i ) {
+    //  thermalZone.removeSupplyPlenum(i);
+    //}
+    //thermalZone.removeReturnPlenum();
 
     // Before we go wrecking the loop, cleanly remove anything that is not a node or zone
     // (ie terminals).  This is important because dual duct terminals especially have to worry about
     // the second duct on their removal.
-    modelObjects = t_airLoopHVAC->demandComponents(zoneSplitter,thermalZone);
+    auto modelObjects = subsetCastVector<HVACComponent>(demandComponents(splitter,thermalZone));
+    if ( modelObjects.empty() ) {
+      return false;
+    }
+
     for( auto & modelObject : modelObjects ) {
       if( (! modelObject.optionalCast<Node>()) && (! modelObject.optionalCast<ThermalZone>()) ) {
         modelObject.remove();
       }
     }
 
-    modelObjects = t_airLoopHVAC->demandComponents(thermalZone,zoneMixer);
-    findit = std::find(modelObjects.begin(),modelObjects.end(),zoneMixer);
-    mixerInletObject = *(findit - 1);
+    modelObjects = subsetCastVector<HVACComponent>(demandComponents(thermalZone,mixer));
+    auto mixerInletObject = modelObjects[modelObjects.size() - 2].cast<HVACComponent>();
+    auto zoneOutletObject = modelObjects[1].cast<HVACComponent>();
 
-    modelObjects = t_airLoopHVAC->demandComponents(zoneSplitter,thermalZone);
-    findit = std::find(modelObjects.begin(),modelObjects.end(),zoneSplitter);
-    splitterOutletObject = *(findit + 1);
+    modelObjects = subsetCastVector<HVACComponent>(demandComponents(splitter,thermalZone));
+    auto splitterOutletObject = modelObjects[1].cast<HVACComponent>();
+    auto zoneInletObject = modelObjects[modelObjects.size() - 2].cast<HVACComponent>();
 
-    OS_ASSERT(splitterOutletObject);
-    OS_ASSERT(mixerInletObject);
+    modelObjects = subsetCastVector<HVACComponent>(demandComponents(splitterOutletObject,mixerInletObject));
 
-    modelObjects = t_airLoopHVAC->demandComponents(splitterOutletObject->cast<HVACComponent>(),mixerInletObject->cast<HVACComponent>());
+    auto inletPortList = thermalZone.inletPortList();
+    auto returnPortList = thermalZone.returnPortList();
 
-    // Do this first because, the zone needs to be connected to airloop
-    // in order for disconnect to figure out which port is the airloop port
-    thermalZone.disconnect();
+    auto inletportindex = inletPortList.portIndexForModelObject(zoneInletObject);
+    inletPortList.getImpl<model::detail::PortList_Impl>()->removePort(inletPortList.port(inletportindex));
 
-    zoneSplitter.removePortForBranch(zoneSplitter.branchIndexForOutletModelObject(splitterOutletObject.get()));
-    zoneMixer.removePortForBranch(zoneMixer.branchIndexForInletModelObject(mixerInletObject.get()));
+    auto returnportindex = returnPortList.portIndexForModelObject(zoneOutletObject);
+    returnPortList.getImpl<model::detail::PortList_Impl>()->removePort(inletPortList.port(returnportindex));
 
-    for( const auto & modelObject : modelObjects ) {
-      if( ! modelObject.optionalCast<ThermalZone>() ) {
-        modelObject.cast<HVACComponent>().disconnect();
+    splitter.removePortForBranch(splitter.branchIndexForOutletModelObject(splitterOutletObject));
+    mixer.removePortForBranch(mixer.branchIndexForInletModelObject(mixerInletObject));
+
+    for ( auto & modelObject : modelObjects ) {
+      if ( ! modelObject.optionalCast<ThermalZone>() ) {
+        modelObject.disconnect();
       }
     }
 
-    for( auto & modelObject : modelObjects ) {
-      if( ! modelObject.optionalCast<ThermalZone>() ) {
+    for ( auto & modelObject : modelObjects ) {
+      if ( ! modelObject.optionalCast<ThermalZone>() ) {
         modelObject.remove();
       }
     }
 
     {
-      std::vector<SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(t_airLoopHVAC->supplyOutletNode().setpointManagers());
+      std::vector<SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(supplyOutletNode().setpointManagers());
       if( ! setpointManagers.empty() ) {
         SetpointManagerSingleZoneReheat spm = setpointManagers.front();
         if( spm.controlZone() == thermalZone )
@@ -565,7 +554,7 @@ namespace detail {
     }
 
     {
-      std::vector<SetpointManagerSingleZoneCooling> setpointManagers = subsetCastVector<SetpointManagerSingleZoneCooling>(t_airLoopHVAC->supplyOutletNode().setpointManagers());
+      std::vector<SetpointManagerSingleZoneCooling> setpointManagers = subsetCastVector<SetpointManagerSingleZoneCooling>(supplyOutletNode().setpointManagers());
       if( ! setpointManagers.empty() ) {
         SetpointManagerSingleZoneCooling spm = setpointManagers.front();
         if( spm.controlZone() == thermalZone )
@@ -576,7 +565,7 @@ namespace detail {
     }
 
     {
-      std::vector<SetpointManagerSingleZoneHeating> setpointManagers = subsetCastVector<SetpointManagerSingleZoneHeating>(t_airLoopHVAC->supplyOutletNode().setpointManagers());
+      std::vector<SetpointManagerSingleZoneHeating> setpointManagers = subsetCastVector<SetpointManagerSingleZoneHeating>(supplyOutletNode().setpointManagers());
       if( ! setpointManagers.empty() ) {
         SetpointManagerSingleZoneHeating spm = setpointManagers.front();
         if( spm.controlZone() == thermalZone )
@@ -586,13 +575,10 @@ namespace detail {
       }
     }
 
-    if( (! zoneSplitter.lastOutletModelObject()) || (! zoneMixer.lastInletModelObject()) )
-    {
+    if ( (! splitter.lastOutletModelObject()) || (! mixer.lastInletModelObject()) ) {
       Node newNode(_model);
-
-      _model.connect(zoneSplitter,zoneSplitter.nextOutletPort(),newNode,newNode.inletPort());
-
-      _model.connect(newNode,newNode.outletPort(),zoneMixer,zoneMixer.nextInletPort());
+      _model.connect(splitter,splitter.nextOutletPort(),newNode,newNode.inletPort());
+      _model.connect(newNode,newNode.outletPort(),mixer,mixer.nextInletPort());
     }
 
     return true;

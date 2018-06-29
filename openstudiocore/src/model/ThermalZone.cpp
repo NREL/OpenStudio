@@ -564,17 +564,7 @@ namespace detail {
     std::vector<HVACComponent> edges;
     auto returncomps = subsetCastVector<HVACComponent>(returnPortList().modelObjects());
     for ( auto & comp : returncomps ) {
-      //if ( prev ) {
-      //  auto prevloop = prev->airLoopHVAC();
-      //  auto comploop = comp.airLoopHVAC();
-      //  if ( prevloop && comploop ) {
-      //    if ( prevloop->handle() == comploop->handle() ) {
-      //      edges.push_back(comp);
-      //    }
-      //  }
-      //} else {
-        edges.push_back(comp);
-      //}
+      edges.push_back(comp);
     }
     return edges;
   }
