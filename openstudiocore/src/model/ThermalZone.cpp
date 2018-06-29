@@ -1791,23 +1791,21 @@ namespace detail {
 
   std::vector<IdfObject> ThermalZone_Impl::remove()
   {
-    Model m = model();
+    auto m = model();
 
-    ThermalZone thermalZone = this->getObject<ThermalZone>();
-
-    for( auto & airloop : airLoopHVACs() ) {
+    auto thermalZone = getObject<ThermalZone>();
+    for ( auto & airloop : airLoopHVACs() ) {
       airloop.removeBranchForZone(thermalZone);
     }
 
-    std::vector<ModelObject> comps = this->equipment();
-    for( auto & comp : comps ) {
+    auto comps = this->equipment();
+    for ( auto & comp : comps ) {
       comp.remove();
     }
 
     //detach it from the zone air node
-    Node airNode = this->zoneAirNode();
+    auto airNode = zoneAirNode().disconnect();
     airNode.disconnect();
-
     airNode.remove();
 
     // remove port lists
@@ -1816,13 +1814,10 @@ namespace detail {
     exhaustPortList().remove();
 
     // remove ZoneHVACEquipmentList
-
     zoneHVACEquipmentList().remove();
 
     // remove ZoneMixing objects
-
-    // DLM: these removed objects are not being returned in the result
-    for (auto mixing : this->zoneMixing()){
+    for (auto mixing : this->zoneMixing()) {
       mixing.remove();
     }
 

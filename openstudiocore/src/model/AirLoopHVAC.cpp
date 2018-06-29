@@ -537,7 +537,10 @@ namespace detail {
     }
 
     for ( auto & modelObject : modelObjects ) {
-      if ( ! modelObject.optionalCast<ThermalZone>() ) {
+      if ( modelObject.optionalCast<ThermalZone>() ) {
+        // This is to reset the cache
+        modelObject.getImpl<model::detail::HVACComponent_Impl>()->m_airLoopHVAC = boost::none;
+      } else {
         modelObject.remove();
       }
     }
