@@ -486,13 +486,7 @@ namespace detail {
 
     auto splitter = zoneSplitter();
     auto mixer = zoneMixer();
-
-    // TODO: reintroduce this and make sure it works
-    //auto demandInletNodes = t_airLoopHVAC->demandInletNodes();
-    //for( unsigned i = 0; i < demandInletNodes.size(); ++i ) {
-    //  thermalZone.removeSupplyPlenum(i);
-    //}
-    //thermalZone.removeReturnPlenum();
+    auto airloop = getObject<AirLoopHVAC>();
 
     // Before we go wrecking the loop, cleanly remove anything that is not a node or zone
     // (ie terminals).  This is important because dual duct terminals especially have to worry about
@@ -501,6 +495,11 @@ namespace detail {
     if ( modelObjects.empty() ) {
       return false;
     }
+
+    for( unsigned i = 0; i < demandInletNodes().size(); ++i ) {
+      thermalZone.removeSupplyPlenum(airloop, i);
+    }
+    thermalZone.removeReturnPlenum();
 
     for( auto & modelObject : modelObjects ) {
       if( (! modelObject.optionalCast<Node>()) && (! modelObject.optionalCast<ThermalZone>()) ) {

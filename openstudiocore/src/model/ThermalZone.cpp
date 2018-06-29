@@ -3394,6 +3394,11 @@ boost::optional<AirflowNetworkZone> ThermalZone::airflowNetworkZone() const
   return getImpl<detail::ThermalZone_Impl>()->airflowNetworkZone();
 }
 
+std::vector<AirLoopHVAC> ThermalZone::airLoopHVACs() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->airLoopHVACs();
+}
+
 /// @cond
 ThermalZone::ThermalZone(std::shared_ptr<detail::ThermalZone_Impl> impl)
   : HVACComponent(std::move(impl))
