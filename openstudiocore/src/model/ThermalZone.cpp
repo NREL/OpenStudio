@@ -1804,7 +1804,7 @@ namespace detail {
     }
 
     //detach it from the zone air node
-    auto airNode = zoneAirNode().disconnect();
+    auto airNode = zoneAirNode();
     airNode.disconnect();
     airNode.remove();
 
@@ -2492,52 +2492,50 @@ namespace detail {
     return setSupplyPlenum(plenumZone,0u);
   }
 
-  void ThermalZone_Impl::removeSupplyPlenum(unsigned branchIndex)
+  void ThermalZone_Impl::removeSupplyPlenum(const AirLoopHVAC & airloop, unsigned branchIndex)
   {
-    Model t_model = model();
-    boost::optional<AirLoopHVAC> t_airLoopHVAC = airLoopHVAC();
+    Model m = model();
 
-    if( t_airLoopHVAC )
-    {
-      boost::optional<AirLoopHVACZoneSplitter> zoneSplitter;
-      auto zoneSplitters = t_airLoopHVAC->zoneSplitters();
-      if( branchIndex < zoneSplitters.size() ) {
-        zoneSplitter = zoneSplitters[branchIndex];
-      }
+    auto zoneSplitters = airloop.zoneSplitters();
+    if( branchIndex < zoneSplitters.size() ) {
+      auto zoneSplitter = zoneSplitters[branchIndex];
 
-      if( zoneSplitter ) {
-        std::vector<ModelObject> modelObjects = t_airLoopHVAC->demandComponents(zoneSplitter.get(),getObject<ThermalZone>());
-        std::vector<AirLoopHVACSupplyPlenum> plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(modelObjects);
-        boost::optional<AirLoopHVACSupplyPlenum> plenum;
+      auto modelObjects = airloop.demandComponents(zoneSplitter,getObject<ThermalZone>());
+      auto plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(modelObjects);
+      boost::optional<AirLoopHVACSupplyPlenum> plenum;
 
-        if( ! plenums.empty() )
-        {
-          plenum = plenums.front();
-        }
+      if( ! plenums.empty() ) {
+        auto plenum = plenums.front();
 
-        if( plenum )
-        {
-          if( plenum->outletModelObjects().size() == 1u )
-          {
-            plenum->remove();
-          }
-          else
-          {
-            auto it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
-            ModelObject plenumOutletModelObject = *(it + 1);
-            unsigned branchIndex = plenum->branchIndexForOutletModelObject(plenumOutletModelObject);
-            unsigned port = plenum->connectedObjectPort(plenum->outletPort(branchIndex)).get();
-            plenum->removePortForBranch(branchIndex);
-            t_model.connect(zoneSplitter.get(),zoneSplitter->nextOutletPort(),plenumOutletModelObject,port);
-          }
+        if ( plenum.outletModelObjects().size() == 1u ) {
+          plenum.remove();
+        } else {
+          auto it = std::find(modelObjects.begin(),modelObjects.end(),plenum);
+          ModelObject plenumOutletModelObject = *(it + 1);
+          unsigned branchIndex = plenum.branchIndexForOutletModelObject(plenumOutletModelObject);
+          unsigned port = plenum.connectedObjectPort(plenum.outletPort(branchIndex)).get();
+          plenum.removePortForBranch(branchIndex);
+          m.connect(zoneSplitter,zoneSplitter.nextOutletPort(),plenumOutletModelObject,port);
         }
       }
     }
   }
 
+  void ThermalZone_Impl::removeSupplyPlenum(unsigned branchIndex)
+  {
+    auto airloop = airLoopHVAC();
+    if ( airloop ) {
+      removeSupplyPlenum(airloop.get(), branchIndex);
+    }
+  }
+
   void ThermalZone_Impl::removeSupplyPlenum()
   {
-    return removeSupplyPlenum(0u);
+    removeSupplyPlenum(0u);
+  }
+
+  void ThermalZone_Impl::removeSupplyPlenum(const AirLoopHVAC & airloop) {
+    removeSupplyPlenum(airloop, 0u);
   }
 
   bool ThermalZone_Impl::setReturnPlenum(const ThermalZone & plenumZone)
@@ -3324,6 +3322,16 @@ bool ThermalZone::setSupplyPlenum(const ThermalZone & plenumZone, unsigned branc
 void ThermalZone::removeSupplyPlenum()
 {
   getImpl<detail::ThermalZone_Impl>()->removeSupplyPlenum();
+}
+
+void ThermalZone::removeSupplyPlenum(const AirLoopHVAC & airloop)
+{
+  getImpl<detail::ThermalZone_Impl>()->removeSupplyPlenum(airloop);
+}
+
+void ThermalZone::removeSupplyPlenum(const AirLoopHVAC & airloop, unsigned branchIndex)
+{
+  getImpl<detail::ThermalZone_Impl>()->removeSupplyPlenum(airloop, branchIndex);
 }
 
 void ThermalZone::removeSupplyPlenum(unsigned branchIndex)

@@ -404,6 +404,8 @@ namespace detail {
     bool setSupplyPlenum(const ThermalZone & plenumZone);
     bool setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex);
     void removeSupplyPlenum();
+    void removeSupplyPlenum(const AirLoopHVAC & airloop);
+    void removeSupplyPlenum(const AirLoopHVAC & airloop, unsigned branchIndex);
     bool setReturnPlenum(const ThermalZone & plenumZone);
     void removeReturnPlenum();
     void removeSupplyPlenum(unsigned branchIndex);
