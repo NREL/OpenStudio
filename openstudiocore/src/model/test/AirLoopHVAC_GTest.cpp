@@ -201,14 +201,14 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
-                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal = AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
-
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
 
+  EXPECT_TRUE(thermalZone.airLoopHVAC());
+  EXPECT_EQ(1, thermalZone.airLoopHVACs().size());
 }
 
 TEST_F(ModelFixture,AirLoopHVAC_demandComponents)

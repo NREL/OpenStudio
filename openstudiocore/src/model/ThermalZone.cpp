@@ -2683,8 +2683,18 @@ namespace detail {
 
   std::vector<AirLoopHVAC> ThermalZone_Impl::airLoopHVACs() const
   {
+    std::vector<AirLoopHVAC> result;
+
     auto pl = inletPortList();
-    return subsetCastVector<AirLoopHVAC>(pl.airLoopHVACModelObjects());
+    auto nodes = subsetCastVector<model::HVACComponent>(pl.airLoopHVACModelObjects());
+    for ( auto & node : nodes ) {
+      auto loop = node.airLoopHVAC();
+      if ( loop ) {
+        result.push_back(loop.get());
+      }
+    }
+
+    return result;
   }
 
   boost::optional<HVACComponent> ThermalZone_Impl::airLoopHVACTerminal() const
