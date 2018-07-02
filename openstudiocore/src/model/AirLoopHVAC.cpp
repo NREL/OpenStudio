@@ -391,11 +391,6 @@ namespace detail {
 
     thermalZone.setUseIdealAirLoads(false);
 
-    if( OptionalAirLoopHVAC airLoopHVAC = thermalZone.airLoopHVAC() )
-    {
-      airLoopHVAC->removeBranchForZone(thermalZone);
-    }
-
     boost::optional<Node> node;
 
     std::vector<ModelObject> objects = airLoopHVAC.demandComponents(splitter,mixer);
@@ -851,10 +846,43 @@ namespace detail {
   {
     boost::optional<HVACComponent> comp;
 
-    return addBranchForZoneImpl(thermalZone,comp);
+    // If the add is successful we will remove existing loops
+    auto loops = thermalZone.airLoopHVACs();
+    auto result = addBranchForZoneImpl(thermalZone,comp);
+    
+    if ( result ) {
+      for ( auto & loop : loops ) {
+        loop.removeBranchForZone(thermalZone);
+      }
+    }
+
+    return result;
   }
 
   bool AirLoopHVAC_Impl::addBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal)
+  {
+    boost::optional<HVACComponent> comp = airTerminal;
+
+    // If the add is successful we will remove existing loops
+    auto loops = thermalZone.airLoopHVACs();
+    auto result = addBranchForZoneImpl(thermalZone, comp);
+
+    if ( result ) {
+      for ( auto & loop : loops ) {
+        loop.removeBranchForZone(thermalZone);
+      }
+    }
+
+    return result;
+  }
+
+  bool AirLoopHVAC_Impl::multiAddBranchForZone(ThermalZone & thermalZone)
+  {
+    boost::optional<HVACComponent> comp;
+    return addBranchForZoneImpl(thermalZone,comp);
+  }
+
+  bool AirLoopHVAC_Impl::multiAddBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal)
   {
     boost::optional<HVACComponent> comp = airTerminal;
 
@@ -869,20 +897,36 @@ namespace detail {
       comp = airTerminal->cast<HVACComponent>();
     }
 
-    return addBranchForZoneImpl(thermalZone, comp);
+    // If the add is successful we will remove existing loops
+    // This is the only "Impl" version ofr addBranchForZone that does remove
+    // because the only place this method is called is from AirLoopHVAC::addBranchForZone(...)
+    auto loops = thermalZone.airLoopHVACs();
+    auto result = addBranchForZoneImpl(thermalZone, comp);
+
+    if ( result ) {
+      for ( auto & loop : loops ) {
+        loop.removeBranchForZone(thermalZone);
+      }
+    }
+
+    return result;
   }
 
   bool AirLoopHVAC_Impl::addBranchForZoneImpl(ThermalZone & thermalZone, OptionalHVACComponent & airTerminal)
   {
+    auto currentloops = thermalZone.airLoopHVACs();
+    auto h = handle();
+    for ( const auto & loop : currentloops ) {
+      if( h == loop.handle() ) {
+        return false;
+      }
+    }
+
     bool result = true;
     bool complete = false;
 
     Splitter splitter = zoneSplitter();
     Mixer mixer = zoneMixer();
-
-    if( auto currentSystem = thermalZone.airLoopHVAC() ) {
-      if( currentSystem->handle() == handle() ) return false;
-    }
 
     if( ! airTerminal )
     {
@@ -1974,6 +2018,16 @@ bool AirLoopHVAC::addBranchForZone(openstudio::model::ThermalZone & thermalZone,
                                    boost::optional<StraightComponent> optAirTerminal)
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZoneImpl( thermalZone, optAirTerminal );
+}
+
+bool AirLoopHVAC::multiAddBranchForZone(ThermalZone & thermalZone)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZone(thermalZone);
+}
+
+bool AirLoopHVAC::multiAddBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal)
+{
+  return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZone(thermalZone, airTerminal);
 }
 
 ModelObject AirLoopHVAC::clone(Model model) const

@@ -360,6 +360,12 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   bool addToNode(Node & node);
 
+  /** This method is the same as addToNode, except
+   *  existing air loop connections will not be removed.
+   *  This is because EnergyPlus gained the ability to attach multiple air loops.
+   **/
+  bool multiAddToNode(Node & node);
+
   PortList returnPortList() const;
 
   PortList inletPortList() const;

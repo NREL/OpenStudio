@@ -152,6 +152,10 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   boost::optional<HVACComponent> reliefFan() const;
 
+  bool multiAddBranchForZone(ThermalZone & thermalZone);
+
+  bool multiAddBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal);
+
   bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
 
   bool addBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal);

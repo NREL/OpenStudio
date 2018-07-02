@@ -2100,7 +2100,7 @@ namespace detail {
     }
   }
 
-  bool ThermalZone_Impl::addToNode(Node & node)
+  bool ThermalZone_Impl::addToNodeImpl(Node & node)
   {
     Model _model = model();
 
@@ -2117,15 +2117,12 @@ namespace detail {
     auto airLoop = node.airLoopHVAC();
 
     if( airLoop ) {
-      //if( boost::optional<AirLoopHVAC> currentAirLoopHVAC = airLoopHVAC() ) {
-      //  if( currentAirLoopHVAC->handle() == airLoop->handle() ) {
-      //    return false;
-      //  }
-
-      //  currentAirLoopHVAC->removeBranchForZone(thisObject);
-      //}
-
-      // TODO: make sure airLoop is not already one of the connected airloops
+      auto loops = airLoopHVACs();
+      for ( const auto & loop : loops ) {
+        if( loop.handle() == airLoop->handle() ) {
+          return false;
+        }
+      }
 
       auto inletObj = node.inletModelObject();
       auto outletObj = node.outletModelObject();
@@ -2220,6 +2217,26 @@ namespace detail {
     }
 
     return false;
+  }
+
+  bool ThermalZone_Impl::addToNode(Node & node)
+  {
+    auto loops = airLoopHVACs();
+    auto result = addToNodeImpl(node);
+    auto zone = getObject<model::ThermalZone>();
+
+    if ( result ) {
+      for ( auto & loop : loops ) {
+        loop.removeBranchForZone(zone);
+      }
+    }
+
+    return result;
+  }
+
+  bool ThermalZone_Impl::multiAddToNode(Node & node)
+  {
+    return addToNodeImpl(node);
   }
 
   PortList ThermalZone_Impl::inletPortList() const
@@ -3247,6 +3264,11 @@ SizingZone ThermalZone::sizingZone() const
 bool ThermalZone::addToNode(Node & node)
 {
   return getImpl<detail::ThermalZone_Impl>()->addToNode(node);
+}
+
+bool ThermalZone::multiAddToNode(Node & node)
+{
+  return getImpl<detail::ThermalZone_Impl>()->multiAddToNode(node);
 }
 
 PortList ThermalZone::returnPortList() const

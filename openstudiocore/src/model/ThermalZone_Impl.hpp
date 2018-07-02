@@ -373,6 +373,10 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
+    bool addToNodeImpl(Node & node);
+
+    bool multiAddToNode(Node & node);
+
     PortList inletPortList() const;
 
     PortList exhaustPortList() const;
