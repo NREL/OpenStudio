@@ -1827,7 +1827,7 @@ namespace openstudio{
   bool EpwDataPoint::setDryBulbTemperature(double value)
   {
     if(-70 >= value || 70 <= value) {
-      LOG_FREE(Warning, "openstudio.EpwFile", "DryBulbTemperature value '" << value << "' not within the expected limits");
+      LOG_FREE(Warn, "openstudio.EpwFile", "DryBulbTemperature value '" << value << "' not within the expected limits");
     }
     m_dryBulbTemperature = std::to_string(value);
     return true;
@@ -1841,7 +1841,7 @@ namespace openstudio{
       m_dryBulbTemperature = "99.9";
       return false;
     } else if(-70 >= value || 70 <= value) {
-      LOG_FREE(Warning, "openstudio.EpwFile", "DryBulbTemperature value '" << value << "' not within the expected limits");
+      LOG_FREE(Warn, "openstudio.EpwFile", "DryBulbTemperature value '" << value << "' not within the expected limits");
     }
     m_dryBulbTemperature = dryBulbTemperature;
     return true;
@@ -1858,7 +1858,7 @@ namespace openstudio{
   bool EpwDataPoint::setDewPointTemperature(double value)
   {
     if(-70 >= value || 70 <= value) {
-      LOG_FREE(Warning, "openstudio.EpwFile", "DewPointTemperature value '" << value << "' not within the expected limits");
+      LOG_FREE(Warn, "openstudio.EpwFile", "DewPointTemperature value '" << value << "' not within the expected limits");
     }
     m_dewPointTemperature = std::to_string(value);
     return true;
@@ -1872,7 +1872,7 @@ namespace openstudio{
       m_dewPointTemperature = "99.9";
       return false;
     } else if(-70 >= value || 70 <= value) {
-      LOG_FREE(Warning, "openstudio.EpwFile", "DewPointTemperature value '" << value << "' not within the expected limits");
+      LOG_FREE(Warn, "openstudio.EpwFile", "DewPointTemperature value '" << value << "' not within the expected limits");
     }
     m_dewPointTemperature = dewPointTemperature;
     return true;
@@ -1892,7 +1892,7 @@ namespace openstudio{
       m_relativeHumidity = "999";
       return false;
     } else if(110 < value) {
-      LOG_FREE(Warning, "openstudio.EpwFile", "RelativeHumidity value '" << value << "' not within the expected limits");
+      LOG_FREE(Warn, "openstudio.EpwFile", "RelativeHumidity value '" << value << "' not within the expected limits");
     }
     m_relativeHumidity = std::to_string(value);
     return true;
@@ -1906,7 +1906,7 @@ namespace openstudio{
       m_relativeHumidity = "999";
       return false;
     } else if(110 < value) {
-      LOG_FREE(Warning, "openstudio.EpwFile", "RelativeHumidity value '" << value << "' not within the expected limits");
+      LOG_FREE(Warn, "openstudio.EpwFile", "RelativeHumidity value '" << value << "' not within the expected limits");
     }
     m_relativeHumidity = relativeHumidity;
     return true;
@@ -1923,7 +1923,7 @@ namespace openstudio{
   bool EpwDataPoint::setAtmosphericStationPressure(double value)
   {
     if(31000 >= value || 120000 <= value) {
-      LOG_FREE(Warning, "openstudio.EpwFile", "AtmosphericStationPressure value '" << value << "' not within the expected limits");
+      LOG_FREE(Warn, "openstudio.EpwFile", "AtmosphericStationPressure value '" << value << "' not within the expected limits");
     }
     m_atmosphericStationPressure = std::to_string(value);
     return true;
@@ -1937,7 +1937,7 @@ namespace openstudio{
       m_atmosphericStationPressure = "999999";
       return false;
     } else if(31000 >= value || 120000 <= value) {
-      LOG_FREE(Warning, "openstudio.EpwFile", "AtmosphericStationPressure value '" << value << "' not within the expected limits");
+      LOG_FREE(Warn, "openstudio.EpwFile", "AtmosphericStationPressure value '" << value << "' not within the expected limits");
     }
     m_atmosphericStationPressure = atmosphericStationPressure;
     return true;
@@ -2286,7 +2286,7 @@ namespace openstudio{
       m_windSpeed = "999";
       return false;
     } else if(40 < value) {
-      LOG_FREE(Warning, "openstudio.EpwFile", "WindSpeed value '" << value << "' not within the expected limits");
+      LOG_FREE(Warn, "openstudio.EpwFile", "WindSpeed value '" << value << "' not within the expected limits");
     }
     m_windSpeed = std::to_string(value);
     return true;
@@ -2300,7 +2300,7 @@ namespace openstudio{
       m_windSpeed = "999";
       return false;
     } else if(40 < value) {
-      LOG_FREE(Warning, "openstudio.EpwFile", "WindSpeed value '" << value << "' not within the expected limits");
+      LOG_FREE(Warn, "openstudio.EpwFile", "WindSpeed value '" << value << "' not within the expected limits");
     }
     return setWindSpeed(value);
   }
