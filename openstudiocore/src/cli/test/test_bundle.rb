@@ -2,7 +2,8 @@ require 'minitest/autorun'
 require 'openstudio'
 
 # test bundle capability in CLI
-# currently CLI cannot do bundle install, rely on system bundle for that
+# currently CLI cannot do bundle install, rely on system bundle for that for now
+# in future, bundle install should be done like: openstudio --bundle_install --bundle_path ./test_gems
 class Bundle_Test < Minitest::Test
 
   def rm_if_exist(p)
@@ -47,13 +48,19 @@ class Bundle_Test < Minitest::Test
     original_dir = Dir.pwd
     Dir.chdir(File.join(File.dirname(__FILE__), 'bundle_native'))
     
+    if /mingw/.match(RUBY_PLATFORM) || /mswin/.match(RUBY_PLATFORM)
+      skip("Native gems not supported on Windows") 
+    end
+    
     rm_if_exist('Gemfile.lock')
     rm_if_exist('./test_gems')
     rm_if_exist('./bundle')
     
     assert(system('bundle install --path ./test_gems'))
     assert(system('bundle lock --add_platform ruby'))
-    assert(system('bundle lock --add_platform mswin'))
+    if /mingw/.match(RUBY_PLATFORM) || /mswin/.match(RUBY_PLATFORM)
+      assert(system('bundle lock --add_platform mswin64'))
+    end    
     assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --verbose test.rb"))
     
   ensure
