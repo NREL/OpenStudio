@@ -473,19 +473,17 @@ def parse_main_args(main_args)
       # 2) find_file("Gemfile", "gems.rb")
       #require 'bundler/setup'
 
-      
-      
       Bundler.setup
       #Bundler.require
     rescue Bundler::BundlerError => e
       puts "#{e.message}"
       #puts e.backtrace.join("\n")
       if e.is_a?(Bundler::GemNotFound)
-        puts "Run `bundle install` to install missing gems."
-        #exit e.status_code
+        puts "GemNotFound, Run `bundle install` to install missing gems."
+        exit e.status_code
       elsif e.is_a?(Bundler::ProductionError)
-        puts "Run `bundle install` to install missing gems."
-        #exit e.status_code
+        puts "ProductionError, Run `bundle install` to install missing gems."
+        exit e.status_code
       else
         # no Gemfile,
       end    
