@@ -91,8 +91,6 @@ namespace detail {
 
     bool setActuatedComponentType(const std::string& actuatedComponentType);
 
-    bool setZoneName(const ModelObject& modelObject);
-
     bool setThermalZone(const ThermalZone& thermalZone);
 
     bool setSpace(const Space& space);
