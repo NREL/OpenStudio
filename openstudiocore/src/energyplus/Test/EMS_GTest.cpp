@@ -2000,54 +2000,5 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
   //workspace.save(toPath("./EMS_actuator_exampleModel2_electric.idf"), true);
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API4_EMS) {
-    //use modeloject in zone field
-  //this is the issue with spaceloads if there are multiple spaces using a spaceload defined in a spaceType
-  //the zonelist is created from the spaceType name, and the zones in the list are the space.thermalzone names
-
-  //Model model;
-  Model model = exampleModel();
-  OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
-  oems.setActuatorAvailabilityDictionaryReporting("Verbose");
-
-  std::vector<Lights> lights = model.getModelObjects<Lights>();
-  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
-  std::vector<Space> spaces = model.getModelObjects<Space>();
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
-  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
-
-  // add fan
-  Schedule s = model.alwaysOnDiscreteSchedule();
-  FanConstantVolume fan(model, s);
-  fan.setName("Fan");
-
-  //actuator settings
-  std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electric Power Level";
-  //create actuator zone2
-  EnergyManagementSystemActuator lightsActuator2(lights[0], lightsComponentType, lightsControlType, fan);
-  //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
-  //EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
-  //EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
-  EXPECT_EQ(fan.handle(), lightsActuator2.zoneName().get().handle());
-
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  //expect no warning since we are using the zoneNAme API
-  EXPECT_EQ(0u, forwardTranslator.warnings().size());
-  //expect 1 actuators
-  //ACTUATORS WILL STILL GET TRANSLATED WITH fan in the ZONENAME FIELD
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
-
-  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
-  OptionalString name0 = objects[0].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
-  std::string test1 = "Fan Lights 1";
-
-  EXPECT_EQ(name0.get(), test1);
-
-  //model.save(toPath("./EMS_actuator_exampleModel2_electric.osm"), true);
-  //workspace.save(toPath("./EMS_actuator_exampleModel2_electric.idf"), true);
-}
 
 
