@@ -186,42 +186,50 @@ FloorspaceEditor::FloorspaceEditor(const openstudio::path& floorplanPath, bool i
 {
   m_document->disable();
 
-  OS_ASSERT(exists(m_floorplanPath));
-  openstudio::filesystem::ifstream ifs(m_floorplanPath);
-  OS_ASSERT(ifs.is_open());
-  std::string contents((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
-  ifs.close();
-  m_floorplan = FloorplanJS::load(contents);
+  if (exists(m_floorplanPath)){
 
-  if (m_floorplan)
-  {
-    // floorplan loaded correctly
+    openstudio::filesystem::ifstream ifs(m_floorplanPath);
+    OS_ASSERT(ifs.is_open());
+    std::string contents((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+    ifs.close();
+    m_floorplan = FloorplanJS::load(contents);
 
-    // update with current model content
-    // at this point you may have removed objects in the app, so tell updateFloorplanJS to remove missing objects
-    model::FloorplanJSForwardTranslator ft;
-    m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, true);
+    if (m_floorplan)
+    {
+      // floorplan loaded correctly
 
-    QString errorsAndWarnings;
-    for (const auto& error : ft.errors()){
-      errorsAndWarnings += QString::fromStdString(error.logMessage() + "\n");
+      // update with current model content
+      // at this point you may have removed objects in the app, so tell updateFloorplanJS to remove missing objects
+      model::FloorplanJSForwardTranslator ft;
+      m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, true);
+
+      QString errorsAndWarnings;
+      for (const auto& error : ft.errors()){
+        errorsAndWarnings += QString::fromStdString(error.logMessage() + "\n");
+      }
+      for (const auto& warning : ft.warnings()){
+        errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
+      }
+      if (!errorsAndWarnings.isEmpty()){
+        QMessageBox::warning(qobject_cast<QWidget*>(parent()), "Updating Floorplan", errorsAndWarnings);
+      }
+
+      //std::string contents2 = m_floorplan->toJSON();
+
+      // start the editor
+      m_editorStarted = true;
+      m_editorLoaded = false;
+      m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
+    } else {
+      m_view->setHtml(QString("Failed to open existing floorplan."));
     }
-    for (const auto& warning : ft.warnings()){
-      errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
-    }
-    if (!errorsAndWarnings.isEmpty()){
-      QMessageBox::warning(qobject_cast<QWidget*>(parent()), "Updating Floorplan", errorsAndWarnings);
-    }
 
-    std::string contents2 = m_floorplan->toJSON();
+  } else {
 
-    // start the editor
-
+    // new floorplan
     m_editorStarted = true;
     m_editorLoaded = false;
     m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
-  } else {
-    m_view->setHtml(QString("Failed to open existing floorplan."));
   }
 
   m_document->enable();
@@ -483,35 +491,38 @@ void FloorspaceEditor::translateExport()
 
 void FloorspaceEditor::updateModel(const openstudio::model::Model& model)
 {
-  m_model = model;
+  if (m_floorplan){
 
-  // make sure handles get updated in floorplan and the exported string
-  model::FloorplanJSForwardTranslator ft;
-  m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, false);
+    m_model = model;
 
-  QString errorsAndWarnings;
-  for (const auto& error : ft.errors()){
-    errorsAndWarnings += QString::fromStdString(error.logMessage() + "\n");
-  }
-  for (const auto& warning : ft.warnings()){
-    errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
-  }
-  if (!errorsAndWarnings.isEmpty()){
-    QMessageBox::warning(qobject_cast<QWidget*>(parent()), "Updating Floorplan", errorsAndWarnings);
-  }
+    // make sure handles get updated in floorplan and the exported string
+    model::FloorplanJSForwardTranslator ft;
+    m_floorplan = ft.updateFloorplanJS(*m_floorplan, m_model, false);
 
-  OS_ASSERT(!m_javascriptRunning);
-  m_javascriptRunning = true;
+    QString errorsAndWarnings;
+    for (const auto& error : ft.errors()){
+      errorsAndWarnings += QString::fromStdString(error.logMessage() + "\n");
+    }
+    for (const auto& warning : ft.warnings()){
+      errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
+    }
+    if (!errorsAndWarnings.isEmpty()){
+      QMessageBox::warning(qobject_cast<QWidget*>(parent()), "Updating Floorplan", errorsAndWarnings);
+    }
 
-  // import updated floorplan back into editor
-  OS_ASSERT(m_floorplan);
-  std::string json = m_floorplan->toJSON(false);
+    OS_ASSERT(!m_javascriptRunning);
+    m_javascriptRunning = true;
 
-  QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("), { noReloadGrid: true });");
-  //QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
-  m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
-  while (m_javascriptRunning){
-    OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
+    // import updated floorplan back into editor
+    OS_ASSERT(m_floorplan);
+    std::string json = m_floorplan->toJSON(false);
+
+    QString javascript = QString("window.api.openFloorplan(JSON.stringify(") + QString::fromStdString(json) + QString("), { noReloadGrid: true });");
+    //QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
+    }
   }
 }
 
@@ -652,6 +663,8 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
   if (exists(p)){
     m_newImportGeometry->setEnabled(false);
     m_baseEditor = new FloorspaceEditor(p, m_isIP, m_model, m_view, this);
+
+    // editor will be started when page load finishes
     return;
   }
 
@@ -682,10 +695,11 @@ void EditorWebView::newImportClicked()
   if (m_geometrySourceComboBox->currentText() == "Floorplan"){
     m_newImportGeometry->setEnabled(false);
 
-    // DLM: need to handle new without existing model
     m_baseEditor = new FloorspaceEditor(floorplanPath(), m_isIP, m_model, m_view, this);
 
     onChanged();
+
+    // editor will be started when page load finishes
   }
 }
 
