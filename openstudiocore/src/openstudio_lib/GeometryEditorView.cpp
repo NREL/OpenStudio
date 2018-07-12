@@ -587,6 +587,16 @@ GbXmlEditor::~GbXmlEditor()
 
 void GbXmlEditor::loadEditor()
 {
+  {
+    OS_ASSERT(!m_javascriptRunning);
+    // call init and animate
+    QString javascript = QString("init();\n animate();");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
+    }
+  }
+
   if (!m_gbXML.isEmpty()){
     OS_ASSERT(!m_javascriptRunning);
 

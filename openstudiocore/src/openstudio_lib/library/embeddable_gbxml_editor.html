@@ -31,7 +31,7 @@ this.activeCubeFace=0}function jb(a,b,c,d,e,f,g,h,l,m,w,n){X.call(this,null,f,g,
 a?a:new p(1,0,0);this.constant=void 0!==b?b:0}function od(a,b,c,d,e,f){this.planes=[void 0!==a?a:new Ha,void 0!==b?b:new Ha,void 0!==c?c:new Ha,void 0!==d?d:new Ha,void 0!==e?e:new Ha,void 0!==f?f:new Ha]}function L(a,b,c){return void 0===b&&void 0===c?this.set(a):this.setRGB(a,b,c)}function yf(a){function b(b,c){var d=b.array,e=b.dynamic?a.DYNAMIC_DRAW:a.STATIC_DRAW,h=a.createBuffer();a.bindBuffer(c,h);a.bufferData(c,d,e);b.onUploadCallback();c=a.FLOAT;d instanceof Float32Array?c=a.FLOAT:d instanceof
 Float64Array?console.warn("THREE.WebGLAttributes: Unsupported data buffer format: Float64Array."):d instanceof Uint16Array?c=a.UNSIGNED_SHORT:d instanceof Int16Array?c=a.SHORT:d instanceof Uint32Array?c=a.UNSIGNED_INT:d instanceof Int32Array?c=a.INT:d instanceof Int8Array?c=a.BYTE:d instanceof Uint8Array&&(c=a.UNSIGNED_BYTE);return{buffer:h,type:c,bytesPerElement:d.BYTES_PER_ELEMENT,version:b.version}}var c=new WeakMap;return{get:function(a){a.isInterleavedBufferAttribute&&(a=a.data);return c.get(a)},
 remove:function(b){b.isInterleavedBufferAttribute&&(b=b.data);var d=c.get(b);d&&(a.deleteBuffer(d.buffer),c.delete(b))},update:function(d,e){d.isInterleavedBufferAttribute&&(d=d.data);var f=c.get(d);if(void 0===f)c.set(d,b(d,e));else if(f.version<d.version){var g=d,h=g.array,l=g.updateRange;a.bindBuffer(e,f.buffer);!1===g.dynamic?a.bufferData(e,h,a.STATIC_DRAW):-1===l.count?a.bufferSubData(e,0,h):0===l.count?console.error("THREE.WebGLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually."):
-(a.bufferSubData(e,l.offset*h.BYTES_PER_ELEMENT,h.subarray(l.offset,l.offset+l.count)),l.count=-1);f.version=d.version}}}}function kb(a,b,c,d){this._x=a||0;this._y=b||0;this._z=c||0;this._order=d||kb.DefaultOrder}function Sd(){this.mask=1}function B(){Object.defineProperty(this,"id",{value:zf++});this.uuid=R.generateUUID();this.name="";this.type="Object3D";this.parent=null;console.log("this.children=[]");this.children=[];this.up=B.DefaultUp.clone();var a=new p,b=new kb,c=new ia,d=new p(1,1,1);b.onChange(function(){c.setFromEuler(b,
+(a.bufferSubData(e,l.offset*h.BYTES_PER_ELEMENT,h.subarray(l.offset,l.offset+l.count)),l.count=-1);f.version=d.version}}}}function kb(a,b,c,d){this._x=a||0;this._y=b||0;this._z=c||0;this._order=d||kb.DefaultOrder}function Sd(){this.mask=1}function B(){Object.defineProperty(this,"id",{value:zf++});this.uuid=R.generateUUID();this.name="";this.type="Object3D";this.parent=null;this.children=[];this.up=B.DefaultUp.clone();var a=new p,b=new kb,c=new ia,d=new p(1,1,1);b.onChange(function(){c.setFromEuler(b,
 !1)});c.onChange(function(){b.setFromQuaternion(c,void 0,!1)});Object.defineProperties(this,{position:{enumerable:!0,value:a},rotation:{enumerable:!0,value:b},quaternion:{enumerable:!0,value:c},scale:{enumerable:!0,value:d},modelViewMatrix:{value:new K},normalMatrix:{value:new oa}});this.matrix=new K;this.matrixWorld=new K;this.matrixAutoUpdate=B.DefaultMatrixAutoUpdate;this.matrixWorldNeedsUpdate=!1;this.layers=new Sd;this.visible=!0;this.receiveShadow=this.castShadow=!1;this.frustumCulled=!0;this.renderOrder=
 0;this.userData={}}function Qa(){B.call(this);this.type="Camera";this.matrixWorldInverse=new K;this.projectionMatrix=new K}function Jb(a,b,c,d,e,f){Qa.call(this);this.type="OrthographicCamera";this.zoom=1;this.view=null;this.left=a;this.right=b;this.top=c;this.bottom=d;this.near=void 0!==e?e:.1;this.far=void 0!==f?f:2E3;this.updateProjectionMatrix()}function Wa(a,b,c,d,e,f){this.a=a;this.b=b;this.c=c;this.normal=d&&d.isVector3?d:new p;this.vertexNormals=Array.isArray(d)?d:[];this.color=e&&e.isColor?
 e:new L;this.vertexColors=Array.isArray(e)?e:[];this.materialIndex=void 0!==f?f:0}function M(){Object.defineProperty(this,"id",{value:Af+=2});this.uuid=R.generateUUID();this.name="";this.type="Geometry";this.vertices=[];this.colors=[];this.faces=[];this.faceVertexUvs=[[]];this.morphTargets=[];this.morphNormals=[];this.skinWeights=[];this.skinIndices=[];this.lineDistances=[];this.boundingSphere=this.boundingBox=null;this.groupsNeedUpdate=this.lineDistancesNeedUpdate=this.colorsNeedUpdate=this.normalsNeedUpdate=
@@ -2389,8 +2389,8 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
 	var lightAmbient, lightDirectional, lightPoint, axesHelper;
 	var geometry, material, mesh;
 
-	init();
-	animate();
+	//init();
+	//animate();
 
 	function init() {
 
@@ -2495,8 +2495,6 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
   }
   
   function setGbXml ( gbxml ) {
-    
-    console.log('Hi there');
     
     timeStart = Date.now();
 
