@@ -37,6 +37,7 @@
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelMerger.hpp"
 #include "../model/ThreeJSReverseTranslator.hpp"
+#include "../model/ThreeJSForwardTranslator.hpp"
 #include "../model/FloorplanJSForwardTranslator.hpp"
 #include "../model/FloorplanJSForwardTranslator.hpp"
 #include "../model/Building.hpp"
@@ -60,6 +61,7 @@
 
 #include "../gbxml/ReverseTranslator.hpp"
 #include "../energyplus/ReverseTranslator.hpp"
+#include "../osversion/VersionTranslator.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Checksum.hpp"
@@ -744,8 +746,8 @@ IdfEditor::IdfEditor(const openstudio::path& idfPath, bool isIP, const openstudi
   }
 
   // start loading the editor, will trigger EditorWebView::onLoadFinished when done
-  //m_view->load(QUrl("qrc:///library/embeddable_idf_editor.html"));
-  m_view->load(QUrl("file:///E:/openstudio2/openstudiocore/src/openstudio_lib/library/embeddable_idf_editor.html"));
+  m_view->load(QUrl("qrc:///library/embeddable_idf_editor.html"));
+  //m_view->load(QUrl("file:///E:/openstudio2/openstudiocore/src/openstudio_lib/library/embeddable_idf_editor.html"));
 
   m_document->enable();
 }
@@ -827,6 +829,96 @@ void IdfEditor::checkForUpdate()
   // no-op since we aren't editing anything
 }
 
+OsmEditor::OsmEditor(const openstudio::path& osmPath, bool isIP, const openstudio::model::Model& model, QWebEngineView * view, QWidget *t_parent)
+  : BaseEditor(isIP, model, view, t_parent),
+    m_osmPath(osmPath)
+{
+  m_document->disable();
+
+  if (exists(osmPath)){
+    osversion::VersionTranslator vt;
+    boost::optional<model::Model> optModel = vt.loadModel(osmPath);
+
+    QString errorsAndWarnings;
+    for (const auto& error : vt.errors()){
+      errorsAndWarnings += QString::fromStdString(error.logMessage() + "\n");
+    }
+    for (const auto& warning : vt.warnings()){
+      errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
+    }
+
+    if (optModel){
+      m_exportModel = *optModel;
+    } else{
+      errorsAndWarnings += QString("Model could not be loaded\n");
+    }
+
+    if (!errorsAndWarnings.isEmpty()){
+      QMessageBox::warning(qobject_cast<QWidget*>(parent()), "Creating Model From IDF", errorsAndWarnings);
+    }
+  }
+
+  // start loading the editor, will trigger EditorWebView::onLoadFinished when done
+  m_view->load(QUrl("qrc:///library/geometry_preview.html"));
+
+  m_document->enable();
+}
+
+OsmEditor::~OsmEditor()
+{}
+
+void OsmEditor::loadEditor()
+{
+
+  {
+    OS_ASSERT(!m_javascriptRunning);
+
+    model::ThreeJSForwardTranslator ft;
+    ThreeScene scene = ft.modelToThreeJS(m_exportModel, true); // triangulated
+    std::string json = scene.toJSON(false); // no pretty print
+
+    // call init and animate
+    QString javascript = QString("init(") + toQString(json) + QString(");\n animate();\n initDatGui();");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
+    }
+  }
+
+  m_editorLoaded = true;
+
+  // start checking for updates
+  //m_versionNumber = 0;
+  //m_checkForUpdateTimer->start(CHECKFORUPDATEMSEC);
+
+}
+
+void OsmEditor::doExport()
+{
+  // no-op since we aren't editing anything
+}
+
+void OsmEditor::saveExport()
+{
+  // no-op since we aren't editing anything
+}
+
+void OsmEditor::translateExport()
+{
+  // DLM: todo
+  //m_exportModelHandleMapping = rt.handleMapping();
+}
+
+void OsmEditor::updateModel(const openstudio::model::Model& model)
+{
+  // no-op for now
+}
+
+void OsmEditor::checkForUpdate()
+{
+  // no-op since we aren't editing anything
+}
+
 
 EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
@@ -866,6 +958,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
   m_geometrySourceComboBox->addItem("Floorplan");
   m_geometrySourceComboBox->addItem("gbXML");
   m_geometrySourceComboBox->addItem("IDF");
+  m_geometrySourceComboBox->addItem("OSM");
   m_geometrySourceComboBox->setCurrentIndex(0);
   hLayout->addWidget(m_geometrySourceComboBox);
 
@@ -959,6 +1052,19 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
     return;
   }
 
+  // check if osm exists
+  p = osmPath();
+  if (exists(p)){
+    m_geometrySourceComboBox->setCurrentText("OSM");
+    m_geometrySourceComboBox->setEnabled(false);
+    m_newImportGeometry->setEnabled(true);
+
+    m_baseEditor = new OsmEditor(p, m_isIP, m_model, m_view, this);
+
+    // editor will be started when page load finishes
+    return;
+  }
+
   // no files found
   if ((model.getConcreteModelObjects<model::Surface>().size() > 0) || (model.getConcreteModelObjects<model::SubSurface>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurface>().size() > 0)){
     m_newImportGeometry->setEnabled(false);
@@ -981,6 +1087,8 @@ void EditorWebView::geometrySourceChanged(const QString& text)
   }else if (text == "gbXML"){
     m_newImportGeometry->setText("Import");
   }else if (text == "IDF"){
+    m_newImportGeometry->setText("Import");
+  }else if (text == "OSM"){
     m_newImportGeometry->setText("Import");
   }
 }
@@ -1052,6 +1160,34 @@ void EditorWebView::newImportClicked()
     m_newImportGeometry->setEnabled(true);
 
     m_baseEditor = new IdfEditor(op, m_isIP, m_model, m_view, this);
+
+    onChanged();
+
+    // editor will be started when page load finishes
+    return;
+  }
+
+  if (m_geometrySourceComboBox->currentText() == "OSM"){
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                m_document->savePath(),
+                                                tr("OSM (*.osm)"));
+    if (fileName.isEmpty()) {
+      // canceled
+      return;
+    }
+
+    openstudio::path op = osmPath();
+    QString p = toQString(op);
+    if (QFile::exists(p)) {
+      QFile::remove(p);
+    }
+    QFile::copy(fileName, p);
+
+    m_geometrySourceComboBox->setEnabled(false);
+    m_newImportGeometry->setEnabled(true);
+
+    m_baseEditor = new OsmEditor(op, m_isIP, m_model, m_view, this);
 
     onChanged();
 
@@ -1269,9 +1405,14 @@ openstudio::path EditorWebView::gbXmlPath() const
   return toPath(m_document->modelTempDir()) / toPath("resources/gbXML.xml");
 }
 
-  openstudio::path EditorWebView::idfPath() const
+openstudio::path EditorWebView::idfPath() const
 {
   return toPath(m_document->modelTempDir()) / toPath("resources/geometry.idf");
+}
+
+openstudio::path EditorWebView::osmPath() const
+{
+  return toPath(m_document->modelTempDir()) / toPath("resources/geometry.osm");
 }
 
 } // openstudio

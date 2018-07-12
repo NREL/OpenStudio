@@ -188,6 +188,27 @@ class IdfEditor : public BaseEditor
    QString m_jdf;
 };
 
+class OsmEditor : public BaseEditor
+{
+  Q_OBJECT;
+
+  public:
+    OsmEditor(const openstudio::path& osmPath, bool isIP, const openstudio::model::Model& model, QWebEngineView * m_view, QWidget *t_parent = nullptr);
+    virtual ~OsmEditor();
+
+  public slots:
+    virtual void loadEditor();
+    virtual void doExport();
+    virtual void saveExport();
+    virtual void translateExport();
+    virtual void updateModel(const openstudio::model::Model& model);
+    virtual void checkForUpdate();
+
+  private:
+
+   openstudio::path m_osmPath;
+};
+
 // EditorWebView is the main UI widget, it decides which BaseEditor to instantiate
 class EditorWebView : public QWidget
 {
@@ -223,6 +244,7 @@ class EditorWebView : public QWidget
     openstudio::path floorplanPath() const;
     openstudio::path gbXmlPath() const;
     openstudio::path idfPath() const;
+    openstudio::path osmPath() const;
 
     BaseEditor * m_baseEditor;
 
