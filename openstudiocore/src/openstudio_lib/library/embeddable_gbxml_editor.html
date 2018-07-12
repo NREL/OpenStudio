@@ -31,7 +31,7 @@ this.activeCubeFace=0}function jb(a,b,c,d,e,f,g,h,l,m,w,n){X.call(this,null,f,g,
 a?a:new p(1,0,0);this.constant=void 0!==b?b:0}function od(a,b,c,d,e,f){this.planes=[void 0!==a?a:new Ha,void 0!==b?b:new Ha,void 0!==c?c:new Ha,void 0!==d?d:new Ha,void 0!==e?e:new Ha,void 0!==f?f:new Ha]}function L(a,b,c){return void 0===b&&void 0===c?this.set(a):this.setRGB(a,b,c)}function yf(a){function b(b,c){var d=b.array,e=b.dynamic?a.DYNAMIC_DRAW:a.STATIC_DRAW,h=a.createBuffer();a.bindBuffer(c,h);a.bufferData(c,d,e);b.onUploadCallback();c=a.FLOAT;d instanceof Float32Array?c=a.FLOAT:d instanceof
 Float64Array?console.warn("THREE.WebGLAttributes: Unsupported data buffer format: Float64Array."):d instanceof Uint16Array?c=a.UNSIGNED_SHORT:d instanceof Int16Array?c=a.SHORT:d instanceof Uint32Array?c=a.UNSIGNED_INT:d instanceof Int32Array?c=a.INT:d instanceof Int8Array?c=a.BYTE:d instanceof Uint8Array&&(c=a.UNSIGNED_BYTE);return{buffer:h,type:c,bytesPerElement:d.BYTES_PER_ELEMENT,version:b.version}}var c=new WeakMap;return{get:function(a){a.isInterleavedBufferAttribute&&(a=a.data);return c.get(a)},
 remove:function(b){b.isInterleavedBufferAttribute&&(b=b.data);var d=c.get(b);d&&(a.deleteBuffer(d.buffer),c.delete(b))},update:function(d,e){d.isInterleavedBufferAttribute&&(d=d.data);var f=c.get(d);if(void 0===f)c.set(d,b(d,e));else if(f.version<d.version){var g=d,h=g.array,l=g.updateRange;a.bindBuffer(e,f.buffer);!1===g.dynamic?a.bufferData(e,h,a.STATIC_DRAW):-1===l.count?a.bufferSubData(e,0,h):0===l.count?console.error("THREE.WebGLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually."):
-(a.bufferSubData(e,l.offset*h.BYTES_PER_ELEMENT,h.subarray(l.offset,l.offset+l.count)),l.count=-1);f.version=d.version}}}}function kb(a,b,c,d){this._x=a||0;this._y=b||0;this._z=c||0;this._order=d||kb.DefaultOrder}function Sd(){this.mask=1}function B(){Object.defineProperty(this,"id",{value:zf++});this.uuid=R.generateUUID();this.name="";this.type="Object3D";this.parent=null;this.children=[];this.up=B.DefaultUp.clone();var a=new p,b=new kb,c=new ia,d=new p(1,1,1);b.onChange(function(){c.setFromEuler(b,
+(a.bufferSubData(e,l.offset*h.BYTES_PER_ELEMENT,h.subarray(l.offset,l.offset+l.count)),l.count=-1);f.version=d.version}}}}function kb(a,b,c,d){this._x=a||0;this._y=b||0;this._z=c||0;this._order=d||kb.DefaultOrder}function Sd(){this.mask=1}function B(){Object.defineProperty(this,"id",{value:zf++});this.uuid=R.generateUUID();this.name="";this.type="Object3D";this.parent=null;console.log("this.children=[]");this.children=[];this.up=B.DefaultUp.clone();var a=new p,b=new kb,c=new ia,d=new p(1,1,1);b.onChange(function(){c.setFromEuler(b,
 !1)});c.onChange(function(){b.setFromQuaternion(c,void 0,!1)});Object.defineProperties(this,{position:{enumerable:!0,value:a},rotation:{enumerable:!0,value:b},quaternion:{enumerable:!0,value:c},scale:{enumerable:!0,value:d},modelViewMatrix:{value:new K},normalMatrix:{value:new oa}});this.matrix=new K;this.matrixWorld=new K;this.matrixAutoUpdate=B.DefaultMatrixAutoUpdate;this.matrixWorldNeedsUpdate=!1;this.layers=new Sd;this.visible=!0;this.receiveShadow=this.castShadow=!1;this.frustumCulled=!0;this.renderOrder=
 0;this.userData={}}function Qa(){B.call(this);this.type="Camera";this.matrixWorldInverse=new K;this.projectionMatrix=new K}function Jb(a,b,c,d,e,f){Qa.call(this);this.type="OrthographicCamera";this.zoom=1;this.view=null;this.left=a;this.right=b;this.top=c;this.bottom=d;this.near=void 0!==e?e:.1;this.far=void 0!==f?f:2E3;this.updateProjectionMatrix()}function Wa(a,b,c,d,e,f){this.a=a;this.b=b;this.c=c;this.normal=d&&d.isVector3?d:new p;this.vertexNormals=Array.isArray(d)?d:[];this.color=e&&e.isColor?
 e:new L;this.vertexColors=Array.isArray(e)?e:[];this.materialIndex=void 0!==f?f:0}function M(){Object.defineProperty(this,"id",{value:Af+=2});this.uuid=R.generateUUID();this.name="";this.type="Geometry";this.vertices=[];this.colors=[];this.faces=[];this.faceVertexUvs=[[]];this.morphTargets=[];this.morphNormals=[];this.skinWeights=[];this.skinIndices=[];this.lineDistances=[];this.boundingSphere=this.boundingBox=null;this.groupsNeedUpdate=this.lineDistancesNeedUpdate=this.colorsNeedUpdate=this.normalsNeedUpdate=
@@ -514,7 +514,7 @@ a.set(this._x,this._y,this._z):new p(this._x,this._y,this._z)},onChange:function
 setRotationFromQuaternion:function(a){this.quaternion.copy(a)},rotateOnAxis:function(){var a=new ia;return function(b,c){a.setFromAxisAngle(b,c);this.quaternion.multiply(a);return this}}(),rotateOnWorldAxis:function(){var a=new ia;return function(b,c){a.setFromAxisAngle(b,c);this.quaternion.premultiply(a);return this}}(),rotateX:function(){var a=new p(1,0,0);return function(b){return this.rotateOnAxis(a,b)}}(),rotateY:function(){var a=new p(0,1,0);return function(b){return this.rotateOnAxis(a,b)}}(),
 rotateZ:function(){var a=new p(0,0,1);return function(b){return this.rotateOnAxis(a,b)}}(),translateOnAxis:function(){var a=new p;return function(b,c){a.copy(b).applyQuaternion(this.quaternion);this.position.add(a.multiplyScalar(c));return this}}(),translateX:function(){var a=new p(1,0,0);return function(b){return this.translateOnAxis(a,b)}}(),translateY:function(){var a=new p(0,1,0);return function(b){return this.translateOnAxis(a,b)}}(),translateZ:function(){var a=new p(0,0,1);return function(b){return this.translateOnAxis(a,
 b)}}(),localToWorld:function(a){return a.applyMatrix4(this.matrixWorld)},worldToLocal:function(){var a=new K;return function(b){return b.applyMatrix4(a.getInverse(this.matrixWorld))}}(),lookAt:function(){var a=new K,b=new p;return function(c,d,e){c.isVector3?b.copy(c):b.set(c,d,e);this.isCamera?a.lookAt(this.position,b,this.up):a.lookAt(b,this.position,this.up);this.quaternion.setFromRotationMatrix(a)}}(),add:function(a){if(1<arguments.length){for(var b=0;b<arguments.length;b++)this.add(arguments[b]);
-return this}if(a===this)return console.error("THREE.Object3D.add: object can't be added as a child of itself.",a),this;a&&a.isObject3D?(null!==a.parent&&a.parent.remove(a),a.parent=this,a.dispatchEvent({type:"added"}),this.children.push(a)):console.error("THREE.Object3D.add: object not an instance of THREE.Object3D.",a);return this},remove:function(a){if(1<arguments.length){for(var b=0;b<arguments.length;b++)this.remove(arguments[b]);return this}b=this.children.indexOf(a);-1!==b&&(a.parent=null,a.dispatchEvent({type:"removed"}),
+return this}if(a===this)return console.error("THREE.Object3D.add: object can't be added as a child of itself.",a),this;a&&a.isObject3D?(null!==a.parent&&a.parent.remove(a),a.parent=this,a.dispatchEvent({type:"added"}),console.log("my children"),console.log(this.children),this.children.push(a),console.log(this.children)):console.error("THREE.Object3D.add: object not an instance of THREE.Object3D.",a);return this},remove:function(a){if(1<arguments.length){for(var b=0;b<arguments.length;b++)this.remove(arguments[b]);return this}b=this.children.indexOf(a);-1!==b&&(a.parent=null,a.dispatchEvent({type:"removed"}),
 this.children.splice(b,1));return this},getObjectById:function(a){return this.getObjectByProperty("id",a)},getObjectByName:function(a){return this.getObjectByProperty("name",a)},getObjectByProperty:function(a,b){if(this[a]===b)return this;for(var c=0,d=this.children.length;c<d;c++){var e=this.children[c].getObjectByProperty(a,b);if(void 0!==e)return e}},getWorldPosition:function(a){void 0===a&&(console.warn("THREE.Object3D: .getWorldPosition() target is now required"),a=new p);this.updateMatrixWorld(!0);
 return a.setFromMatrixPosition(this.matrixWorld)},getWorldQuaternion:function(){var a=new p,b=new p;return function(c){void 0===c&&(console.warn("THREE.Object3D: .getWorldQuaternion() target is now required"),c=new ia);this.updateMatrixWorld(!0);this.matrixWorld.decompose(a,c,b);return c}}(),getWorldScale:function(){var a=new p,b=new ia;return function(c){void 0===c&&(console.warn("THREE.Object3D: .getWorldScale() target is now required"),c=new p);this.updateMatrixWorld(!0);this.matrixWorld.decompose(a,
 b,c);return c}}(),getWorldDirection:function(){var a=new ia;return function(b){void 0===b&&(console.warn("THREE.Object3D: .getWorldDirection() target is now required"),b=new p);this.getWorldQuaternion(a);return b.set(0,0,1).applyQuaternion(a)}}(),raycast:function(){},traverse:function(a){a(this);for(var b=this.children,c=0,d=b.length;c<d;c++)b[c].traverse(a)},traverseVisible:function(a){if(!1!==this.visible){a(this);for(var b=this.children,c=0,d=b.length;c<d;c++)b[c].traverseVisible(a)}},traverseAncestors:function(a){var b=
@@ -2034,6 +2034,8 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
 
 	GBX.surfaceTypes  = Object.keys( GBX.colors );
 
+  // try a weird name to avoid collisions, put outside of scope
+  var trampolines = null;
 
 	// loads any xml file - from AJAX, file reader or location hash or wherever
 
@@ -2046,27 +2048,39 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
 
 		GBX.surfacesJson = GBX.gbjson.Campus.Surface;
 
-		GBX.surfaceMeshes = new THREE.Group();
-		GBX.surfaceMeshes.name = 'GBX.surfaceMeshes';
+		trampolines = new THREE.Group();
+		trampolines.name = 'GBX.surfaceMeshes';
 		//GBX.surfaceMeshes.add( ...GBX.getSurfaceMeshes() );
-    GBX.getSurfaceMeshes().forEach(function(element) {
-      GBX.surfaceMeshes.add(element);
-    });
+    //GBX.surfaceMeshes.add( GBX.getSurfaceMeshes() );
+    var tmp = GBX.getSurfaceMeshes();
+    for (var i=0; i<tmp.length; i++) {
+      element = tmp[i];
+      console.log("start");
+      console.log(element);
+      console.log(trampolines);
+      trampolines.add(element);
+      console.log(trampolines);
+    };
+    GBX.surfaceMeshes = trampolines;
 
 		GBX.surfaceEdges = new THREE.Group();
 		GBX.surfaceEdges.name = 'GBX.surfaceEdges';
 		//GBX.surfaceEdges.add( ...GBX.getSurfaceEdges() );
-    GBX.surfaceEdges().forEach(function(element) {
+    //GBX.surfaceEdges.add( GBX.getSurfaceEdges() );
+    GBX.getSurfaceEdges().forEach(function(element) {
       GBX.surfaceEdges.add(element);
     });
     
 		GBX.surfaceOpenings = new THREE.Group();
 		GBX.surfaceOpenings.name = 'GBX.surfaceOpenings';
 		//GBX.surfaceOpenings.add( ...GBX.getOpenings() );
-    GBX.surfaceOpenings().forEach(function(element) {
+    //GBX.surfaceOpenings.add( GBX.getOpenings() );
+    GBX.getOpenings().forEach(function(element) {
+      element.parent = null;
       GBX.surfaceOpenings.add(element);
     });
     
+    console.log([ GBX.surfaceMeshes, GBX.surfaceEdges, GBX.surfaceOpenings ]);
 		return [ GBX.surfaceMeshes, GBX.surfaceEdges, GBX.surfaceOpenings ];
 
 	};
@@ -2156,13 +2170,13 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
 
 			}
 
-			const polyloop = surface.PlanarGeometry.PolyLoop;
-			const vertices = GBX.getVertices( polyloop );
+			const polyloop2 = surface.PlanarGeometry.PolyLoop;
+			const vertices2 = GBX.getVertices( polyloop2 );
 
 			const material = new THREE.MeshPhongMaterial( {
 				color: GBX.colors[ surface.surfaceType ], side: 2, opacity: 0.85, transparent: true } );
 
-			const shape = GBX.get3dShape( vertices, material, holes );
+			const shape = GBX.get3dShape( vertices2, material, holes );
 			shape.userData.data = surface;
 			shape.castShadow = shape.receiveShadow = true;
 			surfaceMeshes.push( shape );
@@ -2488,7 +2502,7 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
 
 		setSceneDispose( [ GBX.surfaceMeshes, GBX.surfaceEdges, GBX.surfaceOpenings, axesHelper ] );
   
-    divLog.innerHTML = "Dan was here";
+    divLog.innerHTML = "";
     
     console.log(gbxml);
     
@@ -2499,6 +2513,7 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
     meshes = GBX.parseFileXML( gbxml.documentElement );
 
     //scene.add( ...meshes );
+    console.log(meshes);
     meshes.forEach(function(element) {
       scene.add(element);
     });
@@ -2570,6 +2585,7 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
 
 
 		//scene.remove( ...objArray );
+    console.log(objArray);
     objArray.forEach(function(element) {
       scene.remove(element);
     });
