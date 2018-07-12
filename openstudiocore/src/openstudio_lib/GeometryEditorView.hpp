@@ -140,10 +140,30 @@ class FloorspaceEditor : public BaseEditor
 
   private:
 
-
    openstudio::path m_floorplanPath;
    boost::optional<FloorplanJS> m_floorplan;
+};
 
+class GbXmlEditor : public BaseEditor
+{
+  Q_OBJECT;
+
+  public:
+    GbXmlEditor(const openstudio::path& gbXmlPath, bool isIP, const openstudio::model::Model& model, QWebEngineView * m_view, QWidget *t_parent = nullptr);
+    virtual ~GbXmlEditor();
+
+  public slots:
+    virtual void loadEditor();
+    virtual void doExport();
+    virtual void saveExport();
+    virtual void translateExport();
+    virtual void updateModel(const openstudio::model::Model& model);
+    virtual void checkForUpdate();
+
+  private:
+
+   openstudio::path m_gbXmlPath;
+   QString m_gbXML;
 };
 
 
@@ -180,13 +200,13 @@ class EditorWebView : public QWidget
     REGISTER_LOGGER("openstudio::EditorWebView");
 
     openstudio::path floorplanPath() const;
+    openstudio::path gbXmlPath() const;
 
     BaseEditor * m_baseEditor;
 
     bool m_isIP;
 
     model::Model m_model;
-
 
     QString m_debugPort;
 

@@ -557,11 +557,12 @@
 
     <file>library/tid_api.xml</file>
     <file>library/embeddable_geometry_editor.html</file>
+    <file>library/embeddable_gbxml_editor.html</file>
     <file>library/geometry_editor.css</file>
     <file>library/geometry_editor_start.html</file>
     <file>library/geometry_preview.html</file>
-    
-    
+
+
     <file alias="shared_gui_components/images/add_script_icon.png">../shared_gui_components/images/add_script_icon.png</file>
     <file alias="shared_gui_components/images/add_script_icon_over.png">../shared_gui_components/images/add_script_icon_over.png</file>
     <file alias="shared_gui_components/images/add_script_icon_press.png">../shared_gui_components/images/add_script_icon_press.png</file>
