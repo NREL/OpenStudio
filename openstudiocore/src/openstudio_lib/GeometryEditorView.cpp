@@ -59,12 +59,14 @@
 #include "../model/ShadingSurface_Impl.hpp"
 
 #include "../gbxml/ReverseTranslator.hpp"
+#include "../energyplus/ReverseTranslator.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Checksum.hpp"
 #include "../utilities/bcl/RemoteBCL.hpp"
 #include "../utilities/geometry/FloorplanJS.hpp"
 #include "../utilities/geometry/ThreeJS.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -81,6 +83,9 @@
 #include <QPushButton>
 #include <QWebEnginePage>
 #include <QWebEngineSettings>
+#include <QTemporaryDir>
+#include <QProcess>
+#include <QProcessEnvironment>
 
 int CHECKFORUPDATEMSEC = 5000;
 
@@ -576,8 +581,8 @@ GbXmlEditor::GbXmlEditor(const openstudio::path& gbXmlPath, bool isIP, const ope
   }
 
   // start loading the editor, will trigger EditorWebView::onLoadFinished when done
-  //m_view->load(QUrl("qrc:///library/embeddable_gbxml_editor.html"));
-  m_view->load(QUrl("file:///E:/openstudio2/openstudiocore/src/openstudio_lib/library/embeddable_gbxml_editor.html"));
+  m_view->load(QUrl("qrc:///library/embeddable_gbxml_editor.html"));
+  //m_view->load(QUrl("file:///E:/openstudio2/openstudiocore/src/openstudio_lib/library/embeddable_gbxml_editor.html"));
 
   m_document->enable();
 }
@@ -667,6 +672,161 @@ void GbXmlEditor::checkForUpdate()
   // no-op since we aren't editing anything
 }
 
+IdfEditor::IdfEditor(const openstudio::path& idfPath, bool isIP, const openstudio::model::Model& model, QWebEngineView * view, QWidget *t_parent)
+  : BaseEditor(isIP, model, view, t_parent),
+  m_idfPath(idfPath)
+{
+  m_document->disable();
+
+  QFileInfo fi(toQString(m_idfPath));
+  QString jdfName = fi.fileName();
+  jdfName.replace(".idf", ".epJSON");
+  openstudio::path jdfPath = toPath(fi.absolutePath()) / toPath(jdfName);
+
+  QString qJdfPath = toQString(jdfPath);
+  if (QFile::exists(qJdfPath)) {
+    QFileInfo fi2(qJdfPath);
+
+    if (fi2.lastModified() < fi.lastModified()){
+      QFile::remove(qJdfPath);
+    }
+  }
+
+  if (exists(m_idfPath)){
+
+    if (!exists(jdfPath)){
+
+      QTemporaryDir tempDir( QString ( QDir::tempPath() + "/XXXXXX" ) );
+      tempDir.setAutoRemove(true);
+      if (tempDir.isValid()) {
+
+        openstudio::path jdfTempPath = toPath(tempDir.path()) / toPath(jdfName);
+
+        QProcess runner;
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+
+        QString energyPlusExePath = toQString(getEnergyPlusExecutable());
+
+        runner.setProcessEnvironment(env);
+        runner.setWorkingDirectory(tempDir.path());
+
+        QStringList arguments;
+        arguments << QString("-c") << fi.absoluteFilePath();
+
+        //m_document->disableTabsDuringRun();
+
+        runner.start(energyPlusExePath, arguments);
+        runner.waitForFinished();
+        if (runner.state()){
+          // if still running just kill it
+          runner.kill();
+        }
+        int result = runner.exitCode();
+        QString error(runner.readAllStandardError());
+        QString output(runner.readAllStandardOutput());
+
+        //m_document->enableTabsAfterRun();
+
+        if (exists(jdfTempPath)) {
+          QString qJdfTempPath = toQString(jdfTempPath);
+          QFile::copy(qJdfTempPath, qJdfPath);
+        }
+      }
+    }
+
+    if (exists(jdfPath)){
+      openstudio::filesystem::ifstream ifs(jdfPath);
+      OS_ASSERT(ifs.is_open());
+      std::string contents((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+      m_jdf = toQString(contents).simplified(); // .replace(QString("\""), QString("\\\""));
+      ifs.close();
+    }
+  }
+
+  // start loading the editor, will trigger EditorWebView::onLoadFinished when done
+  //m_view->load(QUrl("qrc:///library/embeddable_idf_editor.html"));
+  m_view->load(QUrl("file:///E:/openstudio2/openstudiocore/src/openstudio_lib/library/embeddable_idf_editor.html"));
+
+  m_document->enable();
+}
+
+IdfEditor::~IdfEditor()
+{}
+
+void IdfEditor::loadEditor()
+{
+
+  if (!m_jdf.isEmpty()){
+    OS_ASSERT(!m_javascriptRunning);
+
+    m_javascriptRunning = true;
+
+    QString javascript = QString("setJdf(JSON.stringify(") + m_jdf + QString("));");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
+    }
+  }
+
+  m_editorLoaded = true;
+
+  // start checking for updates
+  //m_versionNumber = 0;
+  //m_checkForUpdateTimer->start(CHECKFORUPDATEMSEC);
+
+}
+
+void IdfEditor::doExport()
+{
+  // no-op since we aren't editing anything
+}
+
+void IdfEditor::saveExport()
+{
+  // no-op since we aren't editing anything
+}
+
+void IdfEditor::translateExport()
+{
+
+  energyplus::ReverseTranslator rt;
+  boost::optional<model::Model> model;
+
+  model = rt.loadModel(m_idfPath);
+
+  QString errorsAndWarnings;
+  for (const auto& error : rt.errors()){
+    errorsAndWarnings += QString::fromStdString(error.logMessage() + "\n");
+  }
+  for (const auto& warning : rt.warnings()){
+    errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
+  }
+  if (!errorsAndWarnings.isEmpty()){
+    QMessageBox::warning(qobject_cast<QWidget*>(parent()), "Creating Model From IDF", errorsAndWarnings);
+  }
+
+  if (model){
+    m_exportModel = *model;
+    // DLM: todo
+    //m_exportModelHandleMapping = rt.handleMapping();
+  } else{
+    // DLM: this is an error, either floorplan was empty or could not be translated
+    m_exportModel = model::Model();
+    m_exportModelHandleMapping.clear();
+  }
+
+}
+
+void IdfEditor::updateModel(const openstudio::model::Model& model)
+{
+  // no-op for now
+}
+
+void IdfEditor::checkForUpdate()
+{
+  // no-op since we aren't editing anything
+}
+
 
 EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
@@ -705,6 +865,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
 
   m_geometrySourceComboBox->addItem("Floorplan");
   m_geometrySourceComboBox->addItem("gbXML");
+  m_geometrySourceComboBox->addItem("IDF");
   m_geometrySourceComboBox->setCurrentIndex(0);
   hLayout->addWidget(m_geometrySourceComboBox);
 
@@ -785,6 +946,19 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
     return;
   }
 
+  // check if idf exists
+   p = idfPath();
+  if (exists(p)){
+    m_geometrySourceComboBox->setCurrentText("IDF");
+    m_geometrySourceComboBox->setEnabled(false);
+    m_newImportGeometry->setEnabled(true);
+
+    m_baseEditor = new IdfEditor(p, m_isIP, m_model, m_view, this);
+
+    // editor will be started when page load finishes
+    return;
+  }
+
   // no files found
   if ((model.getConcreteModelObjects<model::Surface>().size() > 0) || (model.getConcreteModelObjects<model::SubSurface>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurface>().size() > 0)){
     m_newImportGeometry->setEnabled(false);
@@ -805,6 +979,8 @@ void EditorWebView::geometrySourceChanged(const QString& text)
   if (text == "Floorplan"){
     m_newImportGeometry->setText("New");
   }else if (text == "gbXML"){
+    m_newImportGeometry->setText("Import");
+  }else if (text == "IDF"){
     m_newImportGeometry->setText("Import");
   }
 }
@@ -848,6 +1024,34 @@ void EditorWebView::newImportClicked()
     m_newImportGeometry->setEnabled(true);
 
     m_baseEditor = new GbXmlEditor(op, m_isIP, m_model, m_view, this);
+
+    onChanged();
+
+    // editor will be started when page load finishes
+    return;
+  }
+
+  if (m_geometrySourceComboBox->currentText() == "IDF"){
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                m_document->savePath(),
+                                                tr("IDF (*.idf)"));
+    if (fileName.isEmpty()) {
+      // canceled
+      return;
+    }
+
+    openstudio::path op = idfPath();
+    QString p = toQString(op);
+    if (QFile::exists(p)) {
+      QFile::remove(p);
+    }
+    QFile::copy(fileName, p);
+
+    m_geometrySourceComboBox->setEnabled(false);
+    m_newImportGeometry->setEnabled(true);
+
+    m_baseEditor = new IdfEditor(op, m_isIP, m_model, m_view, this);
 
     onChanged();
 
@@ -1065,5 +1269,9 @@ openstudio::path EditorWebView::gbXmlPath() const
   return toPath(m_document->modelTempDir()) / toPath("resources/gbXML.xml");
 }
 
+  openstudio::path EditorWebView::idfPath() const
+{
+  return toPath(m_document->modelTempDir()) / toPath("resources/geometry.idf");
+}
 
 } // openstudio

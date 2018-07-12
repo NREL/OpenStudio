@@ -166,6 +166,27 @@ class GbXmlEditor : public BaseEditor
    QString m_gbXML;
 };
 
+class IdfEditor : public BaseEditor
+{
+  Q_OBJECT;
+
+  public:
+    IdfEditor(const openstudio::path& idfPath, bool isIP, const openstudio::model::Model& model, QWebEngineView * m_view, QWidget *t_parent = nullptr);
+    virtual ~IdfEditor();
+
+  public slots:
+    virtual void loadEditor();
+    virtual void doExport();
+    virtual void saveExport();
+    virtual void translateExport();
+    virtual void updateModel(const openstudio::model::Model& model);
+    virtual void checkForUpdate();
+
+  private:
+
+   openstudio::path m_idfPath;
+   QString m_jdf;
+};
 
 // EditorWebView is the main UI widget, it decides which BaseEditor to instantiate
 class EditorWebView : public QWidget
@@ -201,6 +222,7 @@ class EditorWebView : public QWidget
 
     openstudio::path floorplanPath() const;
     openstudio::path gbXmlPath() const;
+    openstudio::path idfPath() const;
 
     BaseEditor * m_baseEditor;
 

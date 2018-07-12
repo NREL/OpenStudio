@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8>
+  <title>Embedded IDF Editor</title>
+</head>
+<body>
+<div id="test"></div>
+<script type="text/javascript">
+"use strict";var _typeof="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(b){return typeof b}:function(b){return b&&"function"==typeof Symbol&&b.constructor===Symbol&&b!==Symbol.prototype?"symbol":typeof b},_module,window,define,renderjson=function(){function b(o,p,q,r,t){var u=q?"":p,w=function(x,y,z,B,C){var D,E=l(B),F=function(){D||d(E.parentNode,D=f(C(),m(t.hide,"disclosure",function(){D.style.display="none",E.style.display="inline"}))),D.style.display="inline",E.style.display="none"};d(E,m(t.show,"disclosure",F),c(B+" syntax",x),m(y,null,F),c(B+" syntax",z));var G=d(l(),h(u.slice(0,-1)),E);return 0<r&&"string"!=B&&F(),G};return null===o?c(null,u,"keyword","null"):void 0===o?c(null,u,"keyword","undefined"):"string"==typeof o&&o.length>t.max_string_length?w("\"",o.substr(0,t.max_string_length)+" ...","\"","string",function(){return d(l("string"),c(null,u,"string",JSON.stringify(o)))}):"object"!=("undefined"==typeof o?"undefined":_typeof(o))||0<=[Number,String,Boolean,Date].indexOf(o.constructor)?c(null,u,"undefined"==typeof o?"undefined":_typeof(o),JSON.stringify(o)):o.constructor==Array?0==o.length?c(null,u,"array syntax","[]"):w("[",t.collapse_msg(o.length),"]","array",function(){for(var x=d(l("array"),c("array syntax","[",null,"\n")),y=0;y<o.length;y++)d(x,b(t.replacer.call(o,y,o[y]),p+"    ",!1,r-1,t),y==o.length-1?[]:c("syntax",","),h("\n"));return d(x,c(null,p,"array syntax","]")),x}):g(o,t.property_list)?c(null,u,"object syntax","{}"):w("{",t.collapse_msg(Object.keys(o).length),"}","object",function(){var x=d(l("object"),c("object syntax","{",null,"\n"));for(var y in o)var z=y;var B=t.property_list||Object.keys(o);for(var C in t.sort_objects&&(B=B.sort()),B){var y=B[C];y in o&&d(x,c(null,p+"    ","key","\""+y+"\"","object syntax",": "),b(t.replacer.call(o,y,o[y]),p+"    ",!0,r-1,t),y==z?[]:c("syntax",","),h("\n"))}return d(x,c(null,p,"object syntax","}")),x})}var c=function(){for(var o=[];arguments.length;)o.push(d(l(Array.prototype.shift.call(arguments)),h(Array.prototype.shift.call(arguments))));return o},d=function(){for(var o=Array.prototype.shift.call(arguments),p=0;p<arguments.length;p++)arguments[p].constructor==Array?d.apply(this,[o].concat(arguments[p])):o.appendChild(arguments[p]);return o},f=function(o,p){return o.insertBefore(p,o.firstChild),o},g=function(o,p){var q=p||Object.keys(o);for(var r in q)if(Object.hasOwnProperty.call(o,q[r]))return!1;return!0},h=function(o){return document.createTextNode(o)},l=function(o){var p=document.createElement("span");return o&&(p.className=o),p},m=function(p,q,r){var t=document.createElement("a");return q&&(t.className=q),t.appendChild(h(p)),t.href="#",t.onclick=function(u){return r(),u&&u.stopPropagation(),!1},t},n=function o(p){var q=Object(o.options);q.replacer="function"==typeof q.replacer?q.replacer:function(t,u){return u};var r=d(document.createElement("pre"),b(p,"",!1,q.show_to_level,q));return r.className="renderjson",r};return n.set_icons=function(o,p){return n.options.show=o,n.options.hide=p,n},n.set_show_to_level=function(o){return n.options.show_to_level="string"==typeof o&&"all"===o.toLowerCase()?Number.MAX_VALUE:o,n},n.set_max_string_length=function(o){return n.options.max_string_length="string"==typeof o&&"none"===o.toLowerCase()?Number.MAX_VALUE:o,n},n.set_sort_objects=function(o){return n.options.sort_objects=o,n},n.set_replacer=function(o){return n.options.replacer=o,n},n.set_collapse_msg=function(o){return n.options.collapse_msg=o,n},n.set_property_list=function(o){return n.options.property_list=o,n},n.set_show_by_default=function(o){return n.options.show_to_level=o?Number.MAX_VALUE:0,n},n.options={},n.set_icons("\u2295","\u2296"),n.set_show_by_default(!1),n.set_sort_objects(!1),n.set_max_string_length("none"),n.set_replacer(void 0),n.set_property_list(void 0),n.set_collapse_msg(function(o){return o+" item"+(1==o?"":"s")}),n}();define?define({renderjson:renderjson}):(_module||{}).exports=(window||{}).renderjson=renderjson;
+</script>
+<script>
+  function setJdf(jdf) {
+    console.log(jdf);
+    jdf = JSON.parse(jdf);
+    console.log(jdf);
+    document.getElementById("test").appendChild(
+        renderjson(jdf)
+    );
+  }
+</script>
+</body>
+</html>
