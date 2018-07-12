@@ -88,7 +88,6 @@ class BaseEditor : public QObject
     BaseEditor(bool isIP, const openstudio::model::Model& model, QWebEngineView * m_view, QWidget *t_parent = nullptr);
     virtual ~BaseEditor();
 
-    bool editorStarted() const;
     bool editorLoaded() const;
     bool javascriptRunning() const;
     bool blockUpdateTimerSignals(bool block);
@@ -97,7 +96,7 @@ class BaseEditor : public QObject
     std::map<UUID, UUID> exportModelHandleMapping() const;
 
   public slots:
-    virtual void startEditor() = 0;
+    virtual void loadEditor() = 0;
     virtual void doExport() = 0;
     virtual void saveExport() = 0;
     virtual void translateExport() = 0;
@@ -107,7 +106,6 @@ class BaseEditor : public QObject
     virtual void onChanged();
 
   protected:
-    bool m_editorStarted;
     bool m_editorLoaded;
     bool m_javascriptRunning;
     unsigned m_versionNumber;
@@ -133,7 +131,7 @@ class FloorspaceEditor : public BaseEditor
     virtual ~FloorspaceEditor();
 
   public slots:
-    virtual void startEditor();
+    virtual void loadEditor();
     virtual void doExport();
     virtual void saveExport();
     virtual void translateExport();

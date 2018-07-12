@@ -126,7 +126,6 @@ DebugWebView::~DebugWebView()
 
 BaseEditor::BaseEditor(bool isIP, const openstudio::model::Model& model, QWebEngineView * view, QWidget *t_parent)
   : QObject(t_parent),
-    m_editorStarted(false),
     m_editorLoaded(false),
     m_javascriptRunning(false),
     m_versionNumber(0),
@@ -145,11 +144,6 @@ BaseEditor::BaseEditor(bool isIP, const openstudio::model::Model& model, QWebEng
 
 BaseEditor::~BaseEditor()
 {}
-
-bool BaseEditor::editorStarted() const
-{
-  return m_editorStarted;
-}
 
 bool BaseEditor::editorLoaded() const
 {
@@ -216,9 +210,7 @@ FloorspaceEditor::FloorspaceEditor(const openstudio::path& floorplanPath, bool i
 
       //std::string contents2 = m_floorplan->toJSON();
 
-      // start the editor
-      m_editorStarted = true;
-      m_editorLoaded = false;
+      // start loading the editor, will trigger EditorWebView::onLoadFinished when done
       m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
     } else {
       m_view->setHtml(QString("Failed to open existing floorplan."));
@@ -226,9 +218,7 @@ FloorspaceEditor::FloorspaceEditor(const openstudio::path& floorplanPath, bool i
 
   } else {
 
-    // new floorplan
-    m_editorStarted = true;
-    m_editorLoaded = false;
+    // new floorplan, will trigger EditorWebView::onLoadFinished when done
     m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
   }
 
@@ -238,7 +228,7 @@ FloorspaceEditor::FloorspaceEditor(const openstudio::path& floorplanPath, bool i
 FloorspaceEditor::~FloorspaceEditor()
 {}
 
-void FloorspaceEditor::startEditor()
+void FloorspaceEditor::loadEditor()
 {
   // set config
   {
@@ -391,7 +381,7 @@ document.head.appendChild(style);\n";
     }
   }
 
-  m_editorStarted = true;
+  m_editorLoaded = true;
 
   // start checking for updates
   m_versionNumber = 0;
@@ -711,7 +701,7 @@ void EditorWebView::refreshClicked()
 
 void EditorWebView::saveClickedBlocking(const openstudio::path&)
 {
-  if (m_baseEditor){
+  if (m_baseEditor && m_baseEditor->editorLoaded()){
     m_baseEditor->doExport();
     m_baseEditor->saveExport();
   }
@@ -719,7 +709,7 @@ void EditorWebView::saveClickedBlocking(const openstudio::path&)
 
 void EditorWebView::previewClicked()
 {
-  if (m_baseEditor){
+  if (m_baseEditor && m_baseEditor->editorLoaded()){
     m_baseEditor->doExport();
     previewExport();
   }
@@ -728,7 +718,7 @@ void EditorWebView::previewClicked()
 
 void EditorWebView::mergeClicked()
 {
-  if (m_baseEditor){
+  if (m_baseEditor && m_baseEditor->editorLoaded()){
     m_baseEditor->doExport();
     mergeExport();
   }
@@ -742,7 +732,7 @@ void EditorWebView::debugClicked()
 
 void EditorWebView::previewExport()
 {
-  if (m_baseEditor){
+  if (m_baseEditor && m_baseEditor->editorLoaded()){
 
     // do the export
     m_baseEditor->doExport();
@@ -797,7 +787,7 @@ void EditorWebView::previewExport()
 
 void EditorWebView::mergeExport()
 {
-  if (m_baseEditor){
+  if (m_baseEditor && m_baseEditor->editorLoaded()){
 
     // do the export
     m_baseEditor->doExport();
@@ -859,7 +849,7 @@ void EditorWebView::onLoadFinished(bool ok)
     if (m_baseEditor){
 
       // can't call javascript now, page is still loading
-      QTimer::singleShot(0, m_baseEditor, &BaseEditor::startEditor);
+      QTimer::singleShot(0, m_baseEditor, &BaseEditor::loadEditor);
 
       m_refreshBtn->setEnabled(true);
       m_previewBtn->setEnabled(true);
