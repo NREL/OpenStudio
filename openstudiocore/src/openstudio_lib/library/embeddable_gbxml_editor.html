@@ -514,7 +514,7 @@ a.set(this._x,this._y,this._z):new p(this._x,this._y,this._z)},onChange:function
 setRotationFromQuaternion:function(a){this.quaternion.copy(a)},rotateOnAxis:function(){var a=new ia;return function(b,c){a.setFromAxisAngle(b,c);this.quaternion.multiply(a);return this}}(),rotateOnWorldAxis:function(){var a=new ia;return function(b,c){a.setFromAxisAngle(b,c);this.quaternion.premultiply(a);return this}}(),rotateX:function(){var a=new p(1,0,0);return function(b){return this.rotateOnAxis(a,b)}}(),rotateY:function(){var a=new p(0,1,0);return function(b){return this.rotateOnAxis(a,b)}}(),
 rotateZ:function(){var a=new p(0,0,1);return function(b){return this.rotateOnAxis(a,b)}}(),translateOnAxis:function(){var a=new p;return function(b,c){a.copy(b).applyQuaternion(this.quaternion);this.position.add(a.multiplyScalar(c));return this}}(),translateX:function(){var a=new p(1,0,0);return function(b){return this.translateOnAxis(a,b)}}(),translateY:function(){var a=new p(0,1,0);return function(b){return this.translateOnAxis(a,b)}}(),translateZ:function(){var a=new p(0,0,1);return function(b){return this.translateOnAxis(a,
 b)}}(),localToWorld:function(a){return a.applyMatrix4(this.matrixWorld)},worldToLocal:function(){var a=new K;return function(b){return b.applyMatrix4(a.getInverse(this.matrixWorld))}}(),lookAt:function(){var a=new K,b=new p;return function(c,d,e){c.isVector3?b.copy(c):b.set(c,d,e);this.isCamera?a.lookAt(this.position,b,this.up):a.lookAt(b,this.position,this.up);this.quaternion.setFromRotationMatrix(a)}}(),add:function(a){if(1<arguments.length){for(var b=0;b<arguments.length;b++)this.add(arguments[b]);
-return this}if(a===this)return console.error("THREE.Object3D.add: object can't be added as a child of itself.",a),this;a&&a.isObject3D?(null!==a.parent&&a.parent.remove(a),a.parent=this,a.dispatchEvent({type:"added"}),console.log("my children"),console.log(this.children),this.children.push(a),console.log(this.children)):console.error("THREE.Object3D.add: object not an instance of THREE.Object3D.",a);return this},remove:function(a){if(1<arguments.length){for(var b=0;b<arguments.length;b++)this.remove(arguments[b]);return this}b=this.children.indexOf(a);-1!==b&&(a.parent=null,a.dispatchEvent({type:"removed"}),
+return this}if(a===this)return console.error("THREE.Object3D.add: object can't be added as a child of itself.",a),this;a&&a.isObject3D?(null!==a.parent&&a.parent.remove(a),a.parent=this,a.dispatchEvent({type:"added"}),this.children.push(a)):console.error("THREE.Object3D.add: object not an instance of THREE.Object3D.",a);return this},remove:function(a){if(1<arguments.length){for(var b=0;b<arguments.length;b++)this.remove(arguments[b]);return this}b=this.children.indexOf(a);-1!==b&&(a.parent=null,a.dispatchEvent({type:"removed"}),
 this.children.splice(b,1));return this},getObjectById:function(a){return this.getObjectByProperty("id",a)},getObjectByName:function(a){return this.getObjectByProperty("name",a)},getObjectByProperty:function(a,b){if(this[a]===b)return this;for(var c=0,d=this.children.length;c<d;c++){var e=this.children[c].getObjectByProperty(a,b);if(void 0!==e)return e}},getWorldPosition:function(a){void 0===a&&(console.warn("THREE.Object3D: .getWorldPosition() target is now required"),a=new p);this.updateMatrixWorld(!0);
 return a.setFromMatrixPosition(this.matrixWorld)},getWorldQuaternion:function(){var a=new p,b=new p;return function(c){void 0===c&&(console.warn("THREE.Object3D: .getWorldQuaternion() target is now required"),c=new ia);this.updateMatrixWorld(!0);this.matrixWorld.decompose(a,c,b);return c}}(),getWorldScale:function(){var a=new p,b=new ia;return function(c){void 0===c&&(console.warn("THREE.Object3D: .getWorldScale() target is now required"),c=new p);this.updateMatrixWorld(!0);this.matrixWorld.decompose(a,
 b,c);return c}}(),getWorldDirection:function(){var a=new ia;return function(b){void 0===b&&(console.warn("THREE.Object3D: .getWorldDirection() target is now required"),b=new p);this.getWorldQuaternion(a);return b.set(0,0,1).applyQuaternion(a)}}(),raycast:function(){},traverse:function(a){a(this);for(var b=this.children,c=0,d=b.length;c<d;c++)b[c].traverse(a)},traverseVisible:function(a){if(!1!==this.visible){a(this);for(var b=this.children,c=0,d=b.length;c<d;c++)b[c].traverseVisible(a)}},traverseAncestors:function(a){var b=
@@ -1999,7 +1999,8 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
 // Copyright 2018 Ladybug Tools authors. MIT License
 /* globals THREE */
 /* jshint esversion: 6 */
-
+  "use strict";
+  
 	var GBX = {};
 
 	GBX.gbxml = null;
@@ -2034,56 +2035,42 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
 
 	GBX.surfaceTypes  = Object.keys( GBX.colors );
 
-  // try a weird name to avoid collisions, put outside of scope
-  var trampolines = null;
 
 	// loads any xml file - from AJAX, file reader or location hash or wherever
 
-	GBX.parseFileXML = function( xml ) {
+  GBX.parseFileXML = function(xml) {
+    var _GBX$surfaceMeshes, _GBX$surfaceEdges, _GBX$surfaceOpenings;
 
-		GBX.gbxml = xml;
+    GBX.gbxml = xml;
 
-		GBX.gbjson = GBX.getXML2jsobj( GBX.gbxml );
-		//console.log( 'GBX.gbjson', GBX.gbjson );
+    GBX.gbjson = GBX.getXML2jsobj(GBX.gbxml);
+    //console.log( 'GBX.gbjson', GBX.gbjson );
 
-		GBX.surfacesJson = GBX.gbjson.Campus.Surface;
+    GBX.surfacesJson = GBX.gbjson.Campus.Surface;
 
-		trampolines = new THREE.Group();
-		trampolines.name = 'GBX.surfaceMeshes';
-		//GBX.surfaceMeshes.add( ...GBX.getSurfaceMeshes() );
-    //GBX.surfaceMeshes.add( GBX.getSurfaceMeshes() );
-    var tmp = GBX.getSurfaceMeshes();
-    for (var i=0; i<tmp.length; i++) {
-      element = tmp[i];
-      console.log("start");
-      console.log(element);
-      console.log(trampolines);
-      trampolines.add(element);
-      console.log(trampolines);
-    };
-    GBX.surfaceMeshes = trampolines;
+    GBX.surfaceMeshes = new THREE.Group();
+    GBX.surfaceMeshes.name = "GBX.surfaceMeshes";
+    (_GBX$surfaceMeshes = GBX.surfaceMeshes).add.apply(
+      _GBX$surfaceMeshes,
+      GBX.getSurfaceMeshes()
+    );
 
-		GBX.surfaceEdges = new THREE.Group();
-		GBX.surfaceEdges.name = 'GBX.surfaceEdges';
-		//GBX.surfaceEdges.add( ...GBX.getSurfaceEdges() );
-    //GBX.surfaceEdges.add( GBX.getSurfaceEdges() );
-    GBX.getSurfaceEdges().forEach(function(element) {
-      GBX.surfaceEdges.add(element);
-    });
-    
-		GBX.surfaceOpenings = new THREE.Group();
-		GBX.surfaceOpenings.name = 'GBX.surfaceOpenings';
-		//GBX.surfaceOpenings.add( ...GBX.getOpenings() );
-    //GBX.surfaceOpenings.add( GBX.getOpenings() );
-    GBX.getOpenings().forEach(function(element) {
-      element.parent = null;
-      GBX.surfaceOpenings.add(element);
-    });
-    
-    console.log([ GBX.surfaceMeshes, GBX.surfaceEdges, GBX.surfaceOpenings ]);
-		return [ GBX.surfaceMeshes, GBX.surfaceEdges, GBX.surfaceOpenings ];
+    GBX.surfaceEdges = new THREE.Group();
+    GBX.surfaceEdges.name = "GBX.surfaceEdges";
+    (_GBX$surfaceEdges = GBX.surfaceEdges).add.apply(
+      _GBX$surfaceEdges,
+      GBX.getSurfaceEdges()
+    );
 
-	};
+    GBX.surfaceOpenings = new THREE.Group();
+    GBX.surfaceOpenings.name = "GBX.surfaceOpenings";
+    (_GBX$surfaceOpenings = GBX.surfaceOpenings).add.apply(
+      _GBX$surfaceOpenings,
+      GBX.getOpenings()
+    );
+
+    return [GBX.surfaceMeshes, GBX.surfaceEdges, GBX.surfaceOpenings];
+  };
 
 
 	// https://www.sitepoint.com/how-to-convert-xml-to-a-javascript-object/
@@ -2149,7 +2136,7 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
 	GBX.getSurfaceMeshes = function() {
 
 		const surfaces = GBX.surfacesJson; // gbjson.Campus.Surface;
-		surfaceMeshes = [];
+		var surfaceMeshes = [];
 
 		for ( var surface of surfaces ) {
 
@@ -2444,6 +2431,7 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
 	}
 
 
+
 	function requestGbxmlFile ( url ) {
 
 		timeStart = Date.now();
@@ -2470,55 +2458,54 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
 
 		}
 
-		function callbackGbXML ( xhr ) {
+	    function callbackGbXML(xhr) {
+	      var _scene;
 
-			const gbxmlResponseXML =  xhr.target.responseXML;
-			const gbxml = xhr.target.responseXML.documentElement;
+	      var gbxmlResponseXML = xhr.target.responseXML;
+	      var gbxml = xhr.target.responseXML.documentElement;
 
-			meshes = GBX.parseFileXML( gbxml );
+	      meshes = GBX.parseFileXML(gbxml);
 
-			//scene.add( ...meshes );
-      meshes.forEach(function(element) {
-        scene.add(element);
-      });
-    
-			zoomObjectBoundingSphere( GBX.surfaceEdges );
+	      (_scene = scene).add.apply(_scene, meshes);
 
-			divLog.innerHTML += 'time: ' + ( Date.now () - timeStart ) + ' ms<br>';
+	      zoomObjectBoundingSphere(GBX.surfaceEdges);
 
-		}
-
-	}
+	      divLog.innerHTML += "time: " + (Date.now() - timeStart) + " ms<br>";
+	    }
+		
+  } // requestGbxmlFile
   
   function parseXml(xmlStr) {
      return new window.DOMParser().parseFromString(xmlStr, "text/xml");
   }
-  
-  function setGbXml ( gbxml ) {
     
+  function setGbXml(gbxml) {
+    var _scene;
+
     timeStart = Date.now();
 
-		setSceneDispose( [ GBX.surfaceMeshes, GBX.surfaceEdges, GBX.surfaceOpenings, axesHelper ] );
-  
+    setSceneDispose([
+      GBX.surfaceMeshes,
+      GBX.surfaceEdges,
+      GBX.surfaceOpenings,
+      axesHelper
+    ]);
+
     divLog.innerHTML = "";
-    
+
     console.log(gbxml);
-    
+
     var gbxml = parseXml(gbxml);
 
     console.log(gbxml.documentElement);
-    
-    meshes = GBX.parseFileXML( gbxml.documentElement );
 
-    //scene.add( ...meshes );
-    console.log(meshes);
-    meshes.forEach(function(element) {
-      scene.add(element);
-    });
-  
-    zoomObjectBoundingSphere( GBX.surfaceEdges );
+    meshes = GBX.parseFileXML(gbxml.documentElement);
 
-    divLog.innerHTML += 'time: ' + ( Date.now () - timeStart ) + ' ms<br>';
+    (_scene = scene).add.apply(_scene, meshes);
+
+    zoomObjectBoundingSphere(GBX.surfaceEdges);
+
+    divLog.innerHTML += "time: " + (Date.now() - timeStart) + " ms<br>";
   }
 
 
@@ -2563,38 +2550,26 @@ Object.defineProperties( THREE.OrbitControls.prototype, {
 
 	};
 
+  function setSceneDispose(objArray) {
+    var _scene;
 
+    //console.log( 'renderer.info.memory.geometries 1', renderer.info.memory.geometries );
 
-	function setSceneDispose( objArray ) {
+    scene.traverse(function(child) {
+      if (child instanceof THREE.Mesh || child instanceof THREE.LineSegments) {
+        child.geometry.dispose();
+        child.material.dispose();
 
-		//console.log( 'renderer.info.memory.geometries 1', renderer.info.memory.geometries );
-
-		scene.traverse( function ( child ) {
-
-			if ( child instanceof THREE.Mesh || child instanceof THREE.LineSegments ) {
-
-				child.geometry.dispose();
-				child.material.dispose();
-
-				scene.remove( child );
-			}
-
-		} );
-
-
-		//scene.remove( ...objArray );
-    console.log(objArray);
-    objArray.forEach(function(element) {
-      scene.remove(element);
+        scene.remove(child);
+      }
     });
-    
-		axesHelper = undefined;
 
-		//getRenderInfo();
+    (_scene = scene).remove.apply(_scene, objArray);
 
-	}
+    axesHelper = undefined;
 
-
+    //getRenderInfo();
+  }
 
 	function getRenderInfo() {
 
