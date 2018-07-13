@@ -712,6 +712,18 @@
     <rule IddField="Heating Coil Name" Access="HIDDEN"/>
     <rule IddField="Zone Mixer Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeam">
+    <rule IddField="Primary Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Primary Air Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Cooling_FourPipeBeam">
+    <rule IddField="Chilled Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Chilled Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Heating_FourPipeBeam">
+    <rule IddField="Hot Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Hot Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Supply Air Inlet Node Name" Access="HIDDEN"/>
@@ -1645,5 +1657,23 @@
   <POLICY IddObjectType="OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger">
     <rule IddField="Heat Recovery Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Heat Recovery Water Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_PlantComponent_UserDefined">
+    <rule IddField="Plant Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Plant Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Design Volume Flow Rate Actuator" Access="HIDDEN"/>
+    <rule IddField="Minimum Mass Flow Rate Actuator" Access="HIDDEN"/>
+    <rule IddField="Maximum Mass Flow Rate Actuator" Access="HIDDEN"/>
+    <rule IddField="Minimum Loading Capacity Actuator" Access="HIDDEN"/>
+    <rule IddField="Maximum Loading Capacity Actuator" Access="HIDDEN"/>
+    <rule IddField="Optimal Loading Capacity Actuator" Access="HIDDEN"/>
+    <rule IddField="Outlet Temperature Actuator" Access="HIDDEN"/>
+    <rule IddField="Mass Flow Rate Actuator" Access="HIDDEN"/>
+    <rule IddField="Plant Initialization Program Calling Manager Name" Access="HIDDEN"/>
+    <rule IddField="Plant Initialization Program Name" Access="HIDDEN"/>
+    <rule IddField="Plant Simulation Program Calling Manager Name" Access="HIDDEN"/>
+    <rule IddField="Plant Simulation Program Name" Access="HIDDEN"/>
+    <rule IddField="Main Model Program Calling Manager Name" Access="HIDDEN"/>
+    <rule IddField="Main Model Program Name" Access="HIDDEN"/>
   </POLICY>
 </ROOT>

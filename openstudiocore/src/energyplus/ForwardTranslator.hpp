@@ -82,6 +82,7 @@ class AirTerminalDualDuctVAV;
 class AirTerminalDualDuctVAVOutdoorAir;
 class AirTerminalSingleDuctConstantVolumeCooledBeam;
 class AirTerminalSingleDuctConstantVolumeFourPipeInduction;
+class AirTerminalSingleDuctConstantVolumeFourPipeBeam;
 class AirTerminalSingleDuctConstantVolumeReheat;
 class AirTerminalSingleDuctParallelPIUReheat;
 class AirTerminalSingleDuctSeriesPIUReheat;
@@ -184,6 +185,7 @@ class ElectricEquipment;
 class ElectricLoadCenterDistribution;
 class ElectricLoadCenterInverterLookUpTable;
 class ElectricLoadCenterInverterSimple;
+class ElectricLoadCenterInverterPVWatts;
 class ElectricLoadCenterStorageSimple;
 class ElectricLoadCenterStorageConverter;
 class EnergyManagementSystemActuator;
@@ -242,6 +244,7 @@ class GeneratorFuelCellStackCooler;
 class GeneratorFuelCellWaterSupply;
 class GeneratorFuelSupply;
 class GeneratorPhotovoltaic;
+class GeneratorPVWatts;
 class GroundHeatExchangerHorizontalTrench;
 class GroundHeatExchangerVertical;
 class HeaderedPumpsConstantSpeed;
@@ -284,6 +287,7 @@ class PipeIndoor;
 class PipeOutdoor;
 class PlantLoop;
 class PlantComponentTemperatureSource;
+class PlantComponentUserDefined;
 class PlantEquipmentOperationCoolingLoad;
 class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationOutdoorDryBulb;
@@ -581,6 +585,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeFourPipeInduction( model::AirTerminalSingleDuctConstantVolumeFourPipeInduction & modelObject );
 
+  boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeFourPipeBeam( model::AirTerminalSingleDuctConstantVolumeFourPipeBeam & modelObject );
+
   boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeReheat( model::AirTerminalSingleDuctConstantVolumeReheat & modelObject );
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctParallelPIUReheat( model::AirTerminalSingleDuctParallelPIUReheat & modelObject );
@@ -793,6 +799,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateElectricLoadCenterInverterSimple( model::ElectricLoadCenterInverterSimple & modelObject );
 
+  boost::optional<IdfObject> translateElectricLoadCenterInverterPVWatts(model::ElectricLoadCenterInverterPVWatts & modelObject);
+
   boost::optional<IdfObject> translateElectricLoadCenterStorageSimple( model::ElectricLoadCenterStorageSimple & modelObject );
 
   boost::optional<IdfObject> translateElectricLoadCenterStorageConverter( model::ElectricLoadCenterStorageConverter & modelObject );
@@ -874,7 +882,7 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateFluidCoolerSingleSpeed(model::FluidCoolerSingleSpeed & modelObject);
 
   boost::optional<IdfObject> translateFluidCoolerTwoSpeed(model::FluidCoolerTwoSpeed & modelObject);
-  
+
   boost::optional<IdfObject> translateFoundationKiva(model::FoundationKiva & modelObject);
 
   boost::optional<IdfObject> translateFoundationKivaSettings(model::FoundationKivaSettings & modelObject);
@@ -899,6 +907,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateGeneratorFuelSupply(model::GeneratorFuelSupply & modelObject);
 
   boost::optional<IdfObject> translateGeneratorPhotovoltaic( model::GeneratorPhotovoltaic & modelObject );
+
+  boost::optional<IdfObject> translateGeneratorPVWatts(model::GeneratorPVWatts & modelObject);
 
   boost::optional<IdfObject> translateGroundHeatExchangerHorizontalTrench( model::GroundHeatExchangerHorizontalTrench & modelObject );
 
@@ -983,6 +993,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translatePlantLoop( model::PlantLoop & modelObject );
 
   boost::optional<IdfObject> translatePlantComponentTemperatureSource( model::PlantComponentTemperatureSource & modelObject  );
+
+  boost::optional<IdfObject> translatePlantComponentUserDefined(model::PlantComponentUserDefined & modelObject);
 
   boost::optional<IdfObject> translatePlantEquipmentOperationSchemes( model::PlantLoop & plantLoop );
 
@@ -1187,7 +1199,7 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficients(model::SurfacePropertyConvectionCoefficients & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficientsMultipleSurface(model::SurfacePropertyConvectionCoefficientsMultipleSurface & modelObject);
-  
+
   boost::optional<IdfObject> translateSurfacePropertyExposedFoundationPerimeter(model::SurfacePropertyExposedFoundationPerimeter & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyOtherSideCoefficients(model::SurfacePropertyOtherSideCoefficients & modelObject);

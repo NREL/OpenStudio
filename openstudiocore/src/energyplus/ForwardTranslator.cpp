@@ -313,6 +313,15 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
+  // remove orphan Generator:PVWatts
+  for (auto& pv : model.getConcreteModelObjects<GeneratorPVWatts>()){
+    if (!pv.electricLoadCenterDistribution()){
+      LOG(Warn, "GeneratorPVWatts " << pv.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      pv.remove();
+      continue;
+    }
+  }
+
   // Remove orphan Storage
   for (auto& storage : model.getModelObjects<ElectricalStorage>()) {
     if (!storage.electricLoadCenterDistribution()){
@@ -604,6 +613,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirTerminalSingleDuctConstantVolumeCooledBeam(airTerminal);
       break;
     }
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeam :
+    {
+      model::AirTerminalSingleDuctConstantVolumeFourPipeBeam airTerminal = modelObject.cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+      retVal = translateAirTerminalSingleDuctConstantVolumeFourPipeBeam(airTerminal);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ParallelPIU_Reheat :
     {
       model::AirTerminalSingleDuctParallelPIUReheat airTerminal = modelObject.cast<AirTerminalSingleDuctParallelPIUReheat>();
@@ -855,7 +870,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_CooledBeam:
     {
-      // DLM: is this a no-op?
+      // This is handled directly in ATU:SingleDuct:ConstantVolume::CooledBeam
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_FourPipeBeam:
+    {
+      // This is handled directly in ATU:SingleDuct:ConstantVolume::FourPipeBeam
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_FourPipeBeam:
+    {
+      // This is handled directly in ATU:SingleDuct:ConstantVolume::FourPipeBeam
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed :
@@ -1431,6 +1456,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateElectricLoadCenterInverterSimple(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts:
+  {
+    model::ElectricLoadCenterInverterPVWatts temp = modelObject.cast<ElectricLoadCenterInverterPVWatts>();
+    retVal = translateElectricLoadCenterInverterPVWatts(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_ElectricLoadCenter_Storage_Simple:
   {
     model::ElectricLoadCenterStorageSimple temp = modelObject.cast<ElectricLoadCenterStorageSimple>();
@@ -1796,6 +1827,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateGeneratorPhotovoltaic(temp);
     break;
   }
+  case openstudio::IddObjectType::OS_Generator_PVWatts:
+  {
+    model::GeneratorPVWatts temp = modelObject.cast<GeneratorPVWatts>();
+    retVal = translateGeneratorPVWatts(temp);
+    break;
+  }
   case openstudio::IddObjectType::OS_Glare_Sensor:
     {
       // no-op
@@ -2126,6 +2163,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePlantComponentTemperatureSource(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_PlantComponent_UserDefined:
+  {
+    model::PlantComponentUserDefined mo = modelObject.cast<PlantComponentUserDefined>();
+    retVal = translatePlantComponentUserDefined(mo);
+    break;
+  }
   case openstudio::IddObjectType::OS_PlantEquipmentOperation_CoolingLoad :
     {
       auto mo = modelObject.cast<PlantEquipmentOperationCoolingLoad>();
@@ -3371,10 +3414,12 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Generator_FuelCell_WaterSupply);
   result.push_back(IddObjectType::OS_Generator_FuelSupply);
   result.push_back(IddObjectType::OS_Generator_Photovoltaic);
+  result.push_back(IddObjectType::OS_Generator_PVWatts);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_Simple);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_LookUpTable);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_Simple);
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
 

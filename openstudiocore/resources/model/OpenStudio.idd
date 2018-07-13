@@ -1,4 +1,4 @@
-!IDD_Version 2.5.0
+!IDD_Version 2.6.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -10536,6 +10536,92 @@ OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
        \type object-list
        \object-list ZoneMixers
 
+OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeBeam,
+       \memo Central air system terminal unit, single duct, constant volume,
+       \memo with heating and/or cooling.
+       \memo Operates as two-pipe unit if heating or cooling water is omitted.
+       \memo Heating and/or cooling can be scheduled off for dedicated ventilation.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3 , \field Primary Air Availability Schedule Name
+       \note Primary air is supplied by central air handling unit and must be on for heating or cooling.
+       \note Schedule value > 0 means the primary air supply is available.
+       \note If this field is blank, the primary air supply is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Cooling Availability Schedule Name
+       \note Cooling operation can be controlled separately using this availability schedule.
+       \note Schedule value > 0 means beam cooling is available.
+       \note If this field is blank, the beam cooling is always available (as long as primary air is also available).
+       \type object-list
+       \object-list ScheduleNames
+  A5 , \field Heating Availability Schedule Name
+       \note Heating operation can be controlled separately using this availability schedule.
+       \note Schedule value > 0 means beam heating is available.
+       \note If this field is blank, the beam heating is always available (as long as primary air is also available).
+       \type object-list
+       \object-list ScheduleNames
+  A6 , \field Primary Air Inlet Node Name
+       \note Name of the air system node for primary supply air entering the air distribution unit.
+       \type object-list
+       \object-list ConnectionNames
+       \required-field
+  A7 , \field Primary Air Outlet Node Name
+       \note Name of the air system node for primary supply air leaving the air distribution unit and entering the zone.
+       \type object-list
+       \object-list ConnectionNames
+       \required-field
+  A8 , \field Cooling Coil Name
+       \note  Needs to match the four pipe beam cooling coil object CoolingCoilFourPipeBeam
+       \note This can (only) be omitted to model a two-pipe heating only beam.
+       \type object-list
+       \required-field
+       \object-list CoolingCoilFourPipeBeam
+  A9 , \field Heating Coil Name
+       \note  Needs to match the cooled beam cooling coil object HeatingCoilFourPipeBeam
+       \note This can (only) be omitted to model a two-pipe cooling only beam.
+       \type object-list
+       \required-field
+       \object-list HeatingCoilFourPipeBeam
+  N1 , \field Design Primary Air Volume Flow Rate
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \default autosize
+  N2 , \field Design Chilled Water Volume Flow Rate
+       \type real
+       \units m3/s
+       \ip-units gal/min
+       \minimum 0.0
+       \autosizable
+       \default autosize
+  N3 , \field Design Hot Water Volume Flow Rate
+       \type real
+       \units m3/s
+       \ip-units gal/min
+       \minimum 0.0
+       \autosizable
+       \default autosize
+  N4 , \field Zone Total Beam Length
+       \note Sum of the length of all the beam units in the zone represented by this terminal unit.
+       \type real
+       \units m
+       \minimum> 0.0
+       \autosizable
+       \default autosize
+  N5 ; \field Rated Primary Air Flow Rate per Beam Length
+       \note Primary air supply flow rate normalized by beam length.
+       \type real
+       \units m3/s-m
+       \minimum> 0.0
+       \default 0.035
+
 OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
        \memo Central air system terminal unit, single duct, constant volume, with cooled beam
        \memo (active or passive).
@@ -11979,7 +12065,8 @@ OS:Chiller:Electric:EIR,
        \note This optional field provides control over the heat recovery
        \note Using this triggers a model more suited to series bundle and chillers with higher temperature heat recovery
        \note If this field is not used, the bundles are modeled as being in parallel
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A17; \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
@@ -13880,6 +13967,132 @@ OS:Coil:Cooling:CooledBeam,
        \units m
        \minimum> 0.0
        \default 0.0145
+
+OS:Coil:Cooling:FourPipeBeam,
+  \min-fields 10
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference CoolingCoilFourPipeBeam
+       \reference ConnectionObject
+  A3 , \field Chilled Water Inlet Node Name
+       \note Name of the plant system node for chilled water entering the beam.
+       \note The two chilled water nodes can (only) be omitted to model a two-pipe heating only beam.
+       \type object-list
+       \object-list ConnectionNames
+  A4 , \field Chilled Water Outlet Node Name
+       \note Name of the plant system node for chilled water leaving the beam.
+       \type object-list
+       \object-list ConnectionNames
+  N1 , \field Beam Rated Cooling Capacity per Beam Length
+       \note Sensible cooling capacity per meter of beam length at the rating point.
+       \type real
+       \units W/m
+       \minimum> 0.0
+       \default 600.0
+  N2 , \field Beam Rated Cooling Room Air Chilled Water Temperature Difference
+       \note Difference in temperature between the zone air and the entering chilled water at the rating point.
+       \type real
+       \units deltaC
+       \minimum> 0.0
+       \default 10.0
+  N3 , \field Beam Rated Chilled Water Volume Flow Rate per Beam Length
+       \note The volume flow rate of chilled water per meter of beam length at the rating point.
+       \type real
+       \units m3/s-m
+       \ip-units gal/min-ft
+       \minimum> 0.0
+       \default 0.00005
+  A5 , \field Beam Cooling Capacity Temperature Difference Modification Factor Curve Name
+       \note Adjusts beam cooling capacity when the temperature difference between entering water and zone air
+       \note is different than at the rating point.  Single independent variable is the ratio of the current
+       \note temperature difference divided by the rating point temperature difference.
+       \note This field is required when beam is connected to a chilled water plant.
+       \type object-list
+       \object-list UniVariateCurves
+       \object-list UniVariateTables
+  A6 , \field Beam Cooling Capacity Air Flow Modification Factor Curve Name
+       \note Adjusts beam cooling capacity when the primary air supply flow rate is different
+       \note than at the rating point. The single independent variable is the current normalized
+       \note air flow rate divided by the normalized air flow rate at the rating point.
+       \note This field is required when beam is connected to a chilled water plant.
+       \type object-list
+       \object-list UniVariateCurves
+       \object-list UniVariateTables
+  A7 ; \field Beam Cooling Capacity Chilled Water Flow Modification Factor Curve Name
+       \note Adjusts beam cooling capacity when the normalized chilled water flow rate is different
+       \note than at the rating point. The single independent variable is the current normalized
+       \note chilled water flow rate divided by the normalized chilled water flow rate at the rating point.
+       \note This field is required when beam is connected to a chilled water plant.
+       \type object-list
+       \object-list UniVariateCurves
+       \object-list UniVariateTables
+
+OS:Coil:Heating:FourPipeBeam,
+  \min-fields 10
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference HeatingCoilFourPipeBeam
+       \reference ConnectionObject
+  A3 , \field Hot Water Inlet Node Name
+       \note Name of the plant system node for hot water entering the beam.
+       \note The two hot water nodes can (only) be omitted to model a two-pipe cooling-only beam.
+       \type object-list
+       \object-list ConnectionNames
+  A4, \field Hot Water Outlet Node Name
+       \note Name of the plant system node for hot water leaving the beam.
+       \type object-list
+       \object-list ConnectionNames
+  N1 , \field Beam Rated Heating Capacity per Beam Length
+       \note Sensible heating capacity per meter of beam length at the rating point.
+       \type real
+       \units W/m
+       \minimum> 0.0
+       \default 1500.0
+  N2 , \field Beam Rated Heating Room Air Hot Water Temperature Difference
+       \note Difference in temperature between the zone air and the entering hot water at the rating point.
+       \type real
+       \units deltaC
+       \minimum> 0.0
+       \default 27.8
+  N3 , \field Beam Rated Hot Water Volume Flow Rate per Beam Length
+       \note The volume flow rate of hoy water per meter of beam length at the rating point.
+       \type real
+       \units m3/s-m
+       \ip-units gal/min-ft
+       \minimum> 0.0
+       \default 0.00005
+  A5 , \field Beam Heating Capacity Temperature Difference Modification Factor Curve Name
+       \note Adjusts beam heating capacity when the temperature difference between entering water and zone air
+       \note is different than at the rating point.  Single independent variable is the ratio of the current
+       \note temperature difference divided by the rating point temperature difference.
+       \note This field is required when beam is connected to a hot water plant.
+       \type object-list
+       \object-list UniVariateCurves
+       \object-list UniVariateTables
+  A6 , \field Beam Heating Capacity Air Flow Modification Factor Curve Name
+       \note Adjusts beam heating capacity when the primary air supply flow rate is different
+       \note than at the rating point. The single independent variable is the current normalized
+       \note air flow rate divided by the normalized air flow rate at the rating point.
+       \note This field is required when beam is connected to a hot water plant.
+       \type object-list
+       \object-list UniVariateCurves
+       \object-list UniVariateTables
+  A7 ; \field Beam Heating Capacity Hot Water Flow Modification Factor Curve Name
+       \note Adjusts beam heating capacity when the normalized hot water flow rate is different
+       \note than at the rating point. The single independent variable is the current normalized
+       \note hot water flow rate divided by the normalized hot water flow rate at the rating point.
+       \note This field is required when beam is connected to a hot water plant.
+       \type object-list
+       \object-list UniVariateCurves
+       \object-list UniVariateTables
 
 OS:Coil:Cooling:DX:SingleSpeed,
        \min-fields 15
@@ -18679,7 +18892,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \required-field
        \units W/(m3/s)
        \note this field is used when the previous field is set to autosize. The pump power is scaled with Primary Air Design Air Flow Rate
-  A8;  \field Water Pump Power Modifier Curve Name
+  A8,  \field Water Pump Power Modifier Curve Name
        \note this curve modifies the pump power in the previous field by multiplying the design power by the result of this curve.
        \note x = ff = flow fraction on the primary air.  The flow fraction is the secondary air flow rate during current operation divided
        \note by Primary Air Design Flow Rate
@@ -18690,6 +18903,29 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
        \note Curve:RectangularHyperbola2, Curve:ExponentialDecay, Curve:DoubleExponentialDecay,
        \note Table:OneIndependentVariable
+  N7,  \field Evaporative Operation Minimum Drybulb Temperature
+       \type real
+       \minimum -99.0
+       \note This numeric field defines the evaporative cooler air inlet node drybulb temperature minimum
+       \note limit in degrees Celsius. The evaporative cooler will be turned off when the evaporator cooler
+       \note air inlet node dry-bulb temperature falls below this limit. The typical minimum value is 16degC. Users
+       \note are allowed to specify their own limits. If this field is left blank, then there is no drybulb lower
+       \note temperature limit for evaporative cooler operation.
+  N8,  \field Evaporative Operation Maximum Limit Wetbulb Temperature
+       \type real
+       \note when outdoor wetbulb temperature rises above this limit the cooler shuts down.
+       \note This numeric field defines the evaporative cooler air inlet node wet-bulb temperature maximum
+       \note limit in degrees Celsius. The evaporative cooler will be turned off when the evaporative cooler
+       \note air inlet node wet-bulb temperature exceeds this limit. The typical maximum value is 24degC. Users
+       \note are allowed to specify their own limits. If this field is left blank, then there is no upper
+       \note wetbulb temperature limit for evaporative cooler operation.
+  N9;  \field Evaporative Operation Maximum Limit Drybulb Temperature
+       \type real
+       \note This numeric field defines the evaporative cooler air inlet node dry-bulb temperature maximum
+       \note limit in degrees Celsius. The evaporative cooler will be turned off when its air inlet node
+       \note drybulb temperature exceeds this limit. The typical maximum value is 26degC. Users
+       \note are allowed to specify their own limits. If this field is left blank, then there is no upper
+       \note temperature limit for evaporative cooler operation.
 
 OS:EvaporativeFluidCooler:SingleSpeed,
        \min-fields 10
@@ -27320,6 +27556,96 @@ OS:Generator:FuelSupply,
       \minimum 0.0
       \maximum 1.0
 
+OS:Generator:PVWatts,
+      \min-fields 4
+      \memo Describes a simple set of inputs for an array of photovoltaic (PV) modules as described
+      \memo in the PVWatts software. A series of different PVWatts arrays can be connected to a
+      \memo single electric load center (preferably through an
+      \memo ElectricLoadCenter:Inverter:PVWatts). Array tilt and azimuth can be either specified
+      \memo on this object or taken from a referenced building surface or shading surface. If
+      \memo a surface is specified, the array participates normally in all shading calculations.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+      \required-field
+      \reference GeneratorNames
+  A3, \field PVWatts Version
+      \type choice
+      \key 5
+  N1, \field DC System Capacity
+      \note Nameplate rated DC system capacity in watts
+      \type real
+      \required-field
+      \units W
+      \minimum> 0
+  A4, \field Module Type
+      \type choice
+      \key Standard
+      \key Premium
+      \key ThinFilm
+      \default Standard
+  A5, \field Array Type
+      \type choice
+      \key FixedOpenRack
+      \key FixedRoofMounted
+      \key OneAxis
+      \key OneAxisBacktracking
+      \key TwoAxis
+      \default FixedOpenRack
+  N2, \field System Losses
+      \type real
+      \default 0.14
+      \minimum 0
+      \maximum 1
+  N3, \field Tilt Angle
+      \note The tilt angle is the angle from horizontal of the photovoltaic modules in the array.
+      \type real
+      \units deg
+      \default 20
+      \minimum 0
+      \maximum 90
+  N4, \field Azimuth Angle
+      \note For a fixed array, the azimuth angle is the angle clockwise from true north describing
+      \note the direction that the array faces. For an array with one-axis tracking, the azimuth
+      \note angle is the angle clockwise from true north of the axis of rotation.
+      \type real
+      \units deg
+      \default 180
+      \minimum 0
+      \maximum< 360
+  A6, \field Surface Name
+      \type object-list
+      \object-list AllShadingAndHTSurfNames
+  N5; \field Ground Coverage Ratio
+      \note Applies only to arrays with one-axis tracking and is the ratio of module surface area
+      \note to area of the ground or roof occupied by the array.
+      \type real
+      \default 0.4
+      \minimum 0
+      \maximum 1
+
+OS:ElectricLoadCenter:Inverter:PVWatts,
+      \min-fields 2
+      \memo Electric power inverter to convert from direct current (DC) to alternating current
+      \memo (AC) in an electric load center that contains Generator:PVWatts objects.
+      \memo It implements the PVWatts inverter performance curves.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+      \required-field
+      \reference InverterList
+  N1, \field DC to AC Size Ratio
+      \type real
+      \minimum> 0
+      \default 1.10
+  N2; \field Inverter Efficiency
+      \type real
+      \minimum> 0
+      \maximum 1
+      \default 0.96
+
 OS:ElectricLoadCenter:Inverter:Simple,
         \memo Electric power inverter to convert from direct current (DC) to alternating current
         \memo (AC) in an electric load center that contains photovoltaic modules. This input
@@ -28490,7 +28816,6 @@ OS:EnergyManagementSystem:Sensor,
        \note This name becomes a variable for use in Erl programs
        \note No spaces allowed in names for ErlVariableNames
        \reference ErlVariableNames
-       \reference AllObjects
   A3, \field Output Variable or Output Meter Index Key Name
        \type alpha
        \note key name listed here will override key name in Output:Variable or Output:Meter
@@ -28510,7 +28835,7 @@ OS:EnergyManagementSystem:Actuator,
        \note This name becomes a variable for use in Erl programs
        \note No spaces allowed in names for ErlVariableNames
        \reference ErlVariableNames
-       \reference AllObjects
+       \reference ErlActuatorNames
   A3, \field Actuated Component Name
        \required-field
        \type object-list
@@ -30041,7 +30366,6 @@ OS:ExternalInterface:Actuator,
        \required-field
        \type alpha
        \reference ErlVariableNames
-       \reference AllObjects
        \note This name becomes a variable for use in Erl programs
        \note no spaces allowed in name
   A3 , \field Actuated Component Unique Name
@@ -30164,7 +30488,6 @@ OS:ExternalInterface:FunctionalMockupUnitImport:To:Actuator,
        \note This name becomes a read-only variable for use in Erl programs
        \note no spaces allowed in name
        \reference ErlVariableNames
-       \reference AllObjects
   A3 , \field Actuated Component Unique Name
        \required-field
        \type object-list
@@ -30322,4 +30645,85 @@ OS:ExternalInterface:FunctionalMockupUnitExport:To:Variable,
        \required-field
        \note Used during the first call of EnergyPlus.
 
+\group User Defined HVAC and Plant Component Models
 
+OS:PlantComponent:UserDefined,
+      \memo Defines a generic plant component for custom modeling
+      \memo using Energy Management System or External Interface
+      \min-fields 6
+  A1, \field Handle
+      \type handle
+      \required-field    
+  A2, \field Name
+      \required-field
+      \type alpha
+      \reference ConnectionObject
+  A3, \field Main Model Program Calling Manager Name
+      \type object-list
+      \object-list ErlProgramCallingManagerNames
+  A4, \field Main Model Program Name
+      \type object-list
+      \object-list ErlProgramNames    
+  A5, \field Plant Inlet Node Name
+      \type object-list
+      \object-list ConnectionNames
+      \required-field
+  A6, \field Plant Outlet Node Name
+      \type object-list
+      \object-list ConnectionNames
+      \required-field
+  A7, \field Plant Loading Mode
+      \type choice
+      \key DemandsLoad
+      \key MeetsLoadWithPassiveCapacity
+      \key MeetsLoadWithNominalCapacity
+      \key MeetsLoadWithNominalCapacityLowOutLimit
+      \key MeetsLoadWithNominalCapacityHiOutLimit
+      \required-field
+  A8, \field Plant Loop Flow Request Mode
+      \type choice
+      \key NeedsFlowIfLoopOn
+      \key NeedsFlowAndTurnsLoopOn
+      \key ReceivesWhateverFlowAvailable
+      \required-field
+  A9, \field Plant Initialization Program Calling Manager Name
+      \type object-list
+      \object-list ErlProgramCallingManagerNames
+  A10, \field Plant Initialization Program Name
+      \type object-list
+      \object-list ErlProgramNames      
+  A11, \field Plant Simulation Program Calling Manager Name
+      \type object-list
+      \object-list ErlProgramCallingManagerNames
+  A12, \field Plant Simulation Program Name
+      \type object-list
+      \object-list ErlProgramNames      
+  A13, \field Design Volume Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A14, \field Minimum Mass Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A15, \field Maximum Mass Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A16, \field Minimum Loading Capacity Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A17, \field Maximum Loading Capacity Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A18, \field Optimal Loading Capacity Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A19, \field Outlet Temperature Actuator
+       \type object-list
+       \object-list ErlActuatorNames
+  A20, \field Mass Flow Rate Actuator
+       \type object-list
+       \object-list ErlActuatorNames       
+  A21; \field Ambient Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+       \note Used for modeling device losses to surrounding zone
+      

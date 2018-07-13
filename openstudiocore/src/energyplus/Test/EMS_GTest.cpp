@@ -132,6 +132,11 @@
 #include "../../model/OtherEquipment_Impl.hpp"
 #include "../../model/OtherEquipmentDefinition.hpp"
 #include "../../model/OtherEquipmentDefinition_Impl.hpp"
+#include "../../model/PlantLoop.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/AvailabilityManagerHighTemperatureTurnOff.hpp"
+#include "../../model/AvailabilityManagerHighTemperatureTurnOff_Impl.hpp"
 
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
@@ -1283,18 +1288,50 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
   bool varset = outvar.setEMSVariableName("glob_var");
   EXPECT_EQ(true, varset);
 
-  // add output variable
-  EnergyManagementSystemOutputVariable outvar2(model, "glob_var_2");
+  // add output variable using modelObject
+  EnergyManagementSystemOutputVariable outvar2(model, var2);
   //setname
   outvar2.setName("outputVar2");
   EXPECT_EQ("outputVar2", outvar2.nameString());
+  EXPECT_EQ(outvar2.emsVariableName(), toString(var2.handle()));
 
-  varset = outvar2.setEMSVariableName("glob_var_2");
-  EXPECT_EQ(true, varset);
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
   ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_OutputVariable).size());
+
+  //WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_OutputVariable)[0];
+  //ASSERT_TRUE(object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false));
+  //EXPECT_EQ(var.nameString(), object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false).get());
+
+  //model.save(toPath("./EMS_OutputVariable.osm"), true);
+  //workspace.save(toPath("./EMS_OutputVariable.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable2_EMS) {
+  Model model;
+
+  // add global variable
+  EnergyManagementSystemGlobalVariable var(model, "glob_var");
+  EXPECT_EQ("glob_var", var.nameString());
+
+  // add global variable
+  EnergyManagementSystemGlobalVariable var2(model, "glob_var_2");
+  EXPECT_EQ("glob_var_2", var2.nameString());
+
+  // add output variable using modelObject
+  EnergyManagementSystemOutputVariable outvar(model, var);
+  EXPECT_EQ(outvar.emsVariableName(), toString(var.handle()));
+  // add output variable using modelObject
+  EnergyManagementSystemOutputVariable outvar2(model, var2);
+  EXPECT_EQ(outvar2.emsVariableName(), toString(var2.handle()));
+  //remove attached modelObject and test if the EMSOutVar does not get translated.
+  var2.remove();
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  //should only be 1 since the other attached modelObject was deleted
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_OutputVariable).size());
 
   //WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_OutputVariable)[0];
   //ASSERT_TRUE(object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false));
@@ -1593,5 +1630,51 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTrendVariable2_EMS) {
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
   model.save(toPath("./EMS_TrendVariable2T.osm"), true);
+
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorSensorDelete_EMS) {
+
+  Model model;
+  PlantLoop plantLoop(model);
+  AvailabilityManagerHighTemperatureTurnOff avm(model);
+  avm.setSensorNode(model.outdoorAirNode());
+  plantLoop.addAvailabilityManager(avm);
+  std::vector<std::string> avm_names = avm.outputVariableNames();
+
+  // add sensor 1
+  EnergyManagementSystemSensor sensor(model, avm_names[0]);
+  sensor.setKeyName(toString(avm.handle()));
+
+  // Sensor attached to AVM
+  std::string key = toString(avm.handle());
+  EXPECT_EQ(key, sensor.keyName());
+  // 1 sensor in the model
+  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
+  // 1 avm in the model
+  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  //there should be 1 sensor
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor).size());
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor)[0];
+
+  //model.save(toPath("./EMS_SensorBeforeDelete.osm"), true);
+  //workspace.save(toPath("./EMS_SensorBeforeDelete.idf"), true);
+
+  avm.remove();
+  // 0 avm in the model
+  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
+  //sensor still has keyName as avm UUID string (will not FT though eventually)
+  EXPECT_EQ(key, sensor.keyName());
+
+  Workspace workspaceDelete = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(0u, workspaceDelete.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor).size());
+
+  //model.save(toPath("./EMS_SensorDelete.osm"), true);
+  //workspaceDelete.save(toPath("./EMS_SensorDelete.idf"), true);
 
 }

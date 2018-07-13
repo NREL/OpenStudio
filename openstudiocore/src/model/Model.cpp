@@ -247,6 +247,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctInletSideMixer);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeCooledBeam);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
+    REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeFourPipeBeam);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctParallelPIUReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctSeriesPIUReheat);
@@ -294,6 +295,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilCoolingLowTempRadiantVarFlow);
     REGISTER_CONSTRUCTOR(CoilCoolingDXVariableSpeed);
     REGISTER_CONSTRUCTOR(CoilCoolingDXVariableSpeedSpeedData);
+    REGISTER_CONSTRUCTOR(CoilCoolingFourPipeBeam);
     REGISTER_CONSTRUCTOR(CoilCoolingWater);
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpEquationFit);
     REGISTER_CONSTRUCTOR(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit);
@@ -304,6 +306,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(CoilHeatingDXSingleSpeed);
     REGISTER_CONSTRUCTOR(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(CoilHeatingElectric);
+    REGISTER_CONSTRUCTOR(CoilHeatingFourPipeBeam);
     REGISTER_CONSTRUCTOR(CoilHeatingGas);
     REGISTER_CONSTRUCTOR(CoilHeatingGasMultiStage);
     REGISTER_CONSTRUCTOR(CoilHeatingGasMultiStageStageData);
@@ -375,6 +378,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ElectricLoadCenterDistribution);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterLookUpTable);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterSimple);
+    REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterPVWatts);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageSimple);
     REGISTER_CONSTRUCTOR(ElectricLoadCenterStorageConverter);
     REGISTER_CONSTRUCTOR(EnergyManagementSystemActuator);
@@ -439,6 +443,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(GeneratorMicroTurbine);
     REGISTER_CONSTRUCTOR(GeneratorMicroTurbineHeatRecovery);
     REGISTER_CONSTRUCTOR(GeneratorPhotovoltaic);
+    REGISTER_CONSTRUCTOR(GeneratorPVWatts);
     REGISTER_CONSTRUCTOR(GlareSensor);
     REGISTER_CONSTRUCTOR(GroundHeatExchangerHorizontalTrench);
     REGISTER_CONSTRUCTOR(GroundHeatExchangerVertical);
@@ -492,6 +497,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(PipeIndoor);
     REGISTER_CONSTRUCTOR(PipeOutdoor);
     REGISTER_CONSTRUCTOR(PlantComponentTemperatureSource);
+    REGISTER_CONSTRUCTOR(PlantComponentUserDefined);
     REGISTER_CONSTRUCTOR(PlantLoop);
     REGISTER_CONSTRUCTOR(PlantEquipmentOperationCoolingLoad);
     REGISTER_CONSTRUCTOR(PlantEquipmentOperationHeatingLoad);
@@ -741,6 +747,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctInletSideMixer);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeCooledBeam);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
+    REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeFourPipeBeam);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctParallelPIUReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctSeriesPIUReheat);
@@ -788,6 +795,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilCoolingLowTempRadiantVarFlow);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXVariableSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXVariableSpeedSpeedData);
+    REGISTER_COPYCONSTRUCTORS(CoilCoolingFourPipeBeam);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWater);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpEquationFit);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit);
@@ -798,6 +806,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectric);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingFourPipeBeam);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingGas);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingGasMultiStage);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingGasMultiStageStageData);
@@ -869,6 +878,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterDistribution);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterLookUpTable);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterSimple);
+    REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterPVWatts);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageSimple);
     REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterStorageConverter);
     REGISTER_COPYCONSTRUCTORS(EnergyManagementSystemActuator);
@@ -933,6 +943,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(GeneratorMicroTurbine);
     REGISTER_COPYCONSTRUCTORS(GeneratorMicroTurbineHeatRecovery);
     REGISTER_COPYCONSTRUCTORS(GeneratorPhotovoltaic);
+    REGISTER_COPYCONSTRUCTORS(GeneratorPVWatts);
     REGISTER_COPYCONSTRUCTORS(GlareSensor);
     REGISTER_COPYCONSTRUCTORS(GroundHeatExchangerHorizontalTrench);
     REGISTER_COPYCONSTRUCTORS(GroundHeatExchangerVertical);
@@ -986,6 +997,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(PipeIndoor);
     REGISTER_COPYCONSTRUCTORS(PipeOutdoor);
     REGISTER_COPYCONSTRUCTORS(PlantComponentTemperatureSource);
+    REGISTER_COPYCONSTRUCTORS(PlantComponentUserDefined);
     REGISTER_COPYCONSTRUCTORS(PlantLoop);
     REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationCoolingLoad);
     REGISTER_COPYCONSTRUCTORS(PlantEquipmentOperationHeatingLoad);
@@ -1210,7 +1222,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     return m_cachedBuilding;
   }
-  
+
   boost::optional<FoundationKivaSettings> Model_Impl::foundationKivaSettings() const
   {
     if (m_cachedFoundationKivaSettings){
@@ -1224,7 +1236,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     }
 
     return m_cachedFoundationKivaSettings;
-  }  
+  }
 
   boost::optional<LifeCycleCostParameters> Model_Impl::lifeCycleCostParameters() const
   {
@@ -1936,11 +1948,11 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     m_cachedBuilding.reset();
   }
-  
+
   void Model_Impl::clearCachedFoundationKivaSettings(const Handle &)
   {
     m_cachedFoundationKivaSettings.reset();
-  }  
+  }
 
   void Model_Impl::clearCachedLifeCycleCostParameters(const Handle &handle)
   {

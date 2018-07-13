@@ -88,7 +88,37 @@ if(MSVC)
   # ignore deprecated warnings since we will export deprecated methods
   add_definitions(/wd4996 /bigobj)
 
+  # keep the following lists aligned with translator_names in \openstudiocore\ProjectMacros.cmake
   set(translator_wrappers
+    csharp_OpenStudioAirflow_wrap.cxx
+    csharp_OpenStudioEnergyPlus_wrap.cxx
+    csharp_OpenStudioGBXML_wrap.cxx
+    csharp_OpenStudioISOModel_wrap.cxx
+    csharp_OpenStudioRadiance_wrap.cxx
+    csharp_OpenStudioSDD_wrap.cxx
+  )
+
+  set(model_wrappers
+    csharp_OpenStudioMeasure_wrap.cxx
+    csharp_OpenStudioModel_wrap.cxx
+    csharp_OpenStudioModelAirflow_wrap.cxx
+    csharp_OpenStudioModelAvailabilityManager_wrap.cxx
+    csharp_OpenStudioModelCore_wrap.cxx
+    csharp_OpenStudioModelGenerators_wrap.cxx
+    csharp_OpenStudioModelGeometry_wrap.cxx
+    csharp_OpenStudioModelHVAC_wrap.cxx
+    csharp_OpenStudioModelPlantEquipmentOperationScheme_wrap.cxx
+    csharp_OpenStudioModelRefrigeration_wrap.cxx
+    csharp_OpenStudioModelResources_wrap.cxx
+    csharp_OpenStudioModelSetpointManager
+    csharp_OpenStudioModelSimulation_wrap.cxx
+    csharp_OpenStudioModelStraightComponent_wrap.cxx
+    csharp_OpenStudioModelZoneHVAC_wrap.cxx
+    csharp_OpenStudioOSVersion_wrap.cxx
+    csharp_OpenStudioModelEditor_wrap.cxx
+  )
+
+  set(utilities_wrappers
     csharp_OpenStudioEnergyPlus_wrap.cxx
     csharp_OpenStudioRadiance_wrap.cxx
     csharp_OpenStudioGBXML_wrap.cxx
@@ -101,6 +131,14 @@ if(MSVC)
     get_filename_component(wrapper_name ${wrapper_file} NAME)
 
     set(notfound TRUE)
+
+    foreach(model_wrapper IN LISTS model_wrappers)
+      if( wrapper_name STREQUAL model_wrapper )
+        list(APPEND model_wrapper_files ${wrapper_file})
+        set(notfound FALSE)
+        break()
+      endif()
+    endforeach()
 
     foreach(translator_wrapper IN LISTS translator_wrappers)
       if( wrapper_name STREQUAL translator_wrapper )
@@ -115,9 +153,14 @@ if(MSVC)
     endif()
   endforeach()
 
+  #message("model_wrapper_files = ${model_wrapper_files}")
+  #message("translator_wrapper_files = ${translator_wrapper_files}")
+  #message("core_wrapper_files = ${core_wrapper_files}")
+
   set_source_files_properties(${ALL_CSHARP_WRAPPER_FILES} PROPERTIES GENERATED TRUE)
 
-  # build a dll to link all the static C# bindings into
+  # build dlls to link all the static C# bindings with
+
   add_library(
     openstudio_csharp
     MODULE
@@ -130,6 +173,19 @@ if(MSVC)
   )
   install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
   install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
+
+  add_library(
+    openstudio_model_csharp
+    MODULE
+    ${model_wrapper_files}
+  )
+  add_dependencies(openstudio_model_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
+  target_link_libraries(openstudio_model_csharp
+   ${ALL_CSHARP_BINDING_DEPENDS}
+   ${Boost_LIBRARIES}
+  )
+  install(TARGETS openstudio_model_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
+  install(TARGETS openstudio_model_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
 
   add_library(
     openstudio_translators_csharp
@@ -146,7 +202,7 @@ if(MSVC)
 
   # convenience target to build the SDK
   add_custom_target(csharp_sdk ALL
-    DEPENDS ${OPENSTUDIO_CSHARP_DLL} openstudio_csharp openstudio_translators_csharp
+    DEPENDS ${OPENSTUDIO_CSHARP_DLL} openstudio_csharp openstudio_model_csharp openstudio_translators_csharp
   )
 
 endif()

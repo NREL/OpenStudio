@@ -121,7 +121,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.1.2")] = &VersionTranslator::update_2_1_1_to_2_1_2;
   m_updateMethods[VersionString("2.3.1")] = &VersionTranslator::update_2_3_0_to_2_3_1;
   m_updateMethods[VersionString("2.4.2")] = &VersionTranslator::update_2_4_1_to_2_4_2;
-  m_updateMethods[VersionString("2.5.0")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("2.5.0")] = &VersionTranslator::update_2_4_3_to_2_5_0;
+  m_updateMethods[VersionString("2.6.0")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -259,6 +260,9 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("2.4.1"));
   m_startVersions.push_back(VersionString("2.4.2"));
   m_startVersions.push_back(VersionString("2.4.3"));
+  m_startVersions.push_back(VersionString("2.5.0"));
+  m_startVersions.push_back(VersionString("2.5.1"));
+  m_startVersions.push_back(VersionString("2.5.2"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm,
@@ -3924,6 +3928,64 @@ std::string VersionTranslator::update_2_4_1_to_2_4_2(const IdfFile& idf_2_4_1, c
 
       // endUseSubcategory
       newObject.setString(34,"General");
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+    // Default case
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+
+std::string VersionTranslator::update_2_4_3_to_2_5_0(const IdfFile& idf_2_4_3, const IddFileAndFactoryWrapper& idd_2_5_0){
+  std::stringstream ss;
+
+  ss << idf_2_4_3.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_5_0.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  boost::optional<std::string> value;
+
+  for (const IdfObject& object : idf_2_4_3.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:AirflowNetworkZone") {
+      // In 2.5.0, a field "Name" was inserted right after the handle
+      auto iddObject = idd_2_5_0.getObject("OS:AirflowNetworkZone");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          if (i == 0) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else if (i == 1) {
+            // Thermal Zone Name field
+
+            // We place the Thermal Zone's handle into the right field
+            newObject.setString(i+1, value.get());
+
+            // We want to rename the AFN Zone object with its thermal Zone name
+            // So we need to locate the right thermal zone from its handle so we can get the name
+            boost::optional<IdfObject> _zone = idf_2_4_3.getObject(toUUID(value.get()));
+            if (_zone) {
+              newObject.setString(i, "Airflow Network Zone " + _zone->nameString());
+            } else {
+              // Safety fall back, name it with the thermal zone handle instead...
+              newObject.setString(i, "Airflow Network Zone " + value.get());
+            }
+
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i+1, value.get());
+          }
+        }
+      }
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;

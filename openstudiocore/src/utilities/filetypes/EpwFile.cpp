@@ -445,6 +445,158 @@ namespace openstudio{
     setLiquidPrecipitationQuantity(liquidPrecipitationQuantity);
   }
 
+  EpwDesignCondition::EpwDesignCondition() :
+    m_titleOfDesignCondition(),
+    m_heatingColdestMonth(),
+    m_heatingDryBulb99pt6(),
+    m_heatingDryBulb99(),
+    m_heatingHumidificationDewPoint99pt6(),
+    m_heatingHumidificationHumidityRatio99pt6(),
+    m_heatingHumidificationMeanCoincidentDryBulb99pt6(),
+    m_heatingHumidificationDewPoint99(),
+    m_heatingHumidificationHumidityRatio99(),
+    m_heatingHumidificationMeanCoincidentDryBulb99(),
+    m_heatingColdestMonthWindSpeed0pt4(),
+    m_heatingColdestMonthMeanCoincidentDryBulb0pt4(),
+    m_heatingColdestMonthWindSpeed1(),
+    m_heatingColdestMonthMeanCoincidentDryBulb1(),
+    m_heatingMeanCoincidentWindSpeed99pt6(),
+    m_heatingPrevailingCoincidentWindDirection99pt6(),
+    m_coolingHottestMonth(),
+    m_coolingDryBulbRange(),
+    m_coolingDryBulb0pt4(),
+    m_coolingMeanCoincidentWetBulb0pt4(),
+    m_coolingDryBulb1(),
+    m_coolingMeanCoincidentWetBulb1(),
+    m_coolingDryBulb2(),
+    m_coolingMeanCoincidentWetBulb2(),
+    m_coolingEvaporationWetBulb0pt4(),
+    m_coolingEvaporationMeanCoincidentDryBulb0pt4(),
+    m_coolingEvaporationWetBulb1(),
+    m_coolingEvaporationMeanCoincidentDryBulb1(),
+    m_coolingEvaporationWetBulb2(),
+    m_coolingEvaporationMeanCoincidentDryBulb2(),
+    m_coolingMeanCoincidentWindSpeed0pt4(),
+    m_coolingPrevailingCoincidentWindDirection0pt4(),
+    m_coolingDehumidificationDewPoint0pt4(),
+    m_coolingDehumidificationHumidityRatio0pt4(),
+    m_coolingDehumidificationMeanCoincidentDryBulb0pt4(),
+    m_coolingDehumidificationDewPoint1(),
+    m_coolingDehumidificationHumidityRatio1(),
+    m_coolingDehumidificationMeanCoincidentDryBulb1(),
+    m_coolingDehumidificationDewPoint2(),
+    m_coolingDehumidificationHumidityRatio2(),
+    m_coolingDehumidificationMeanCoincidentDryBulb2(),
+    m_coolingEnthalpy0pt4(),
+    m_coolingEnthalpyMeanCoincidentDryBulb0pt4(),
+    m_coolingEnthalpy1(),
+    m_coolingEnthalpyMeanCoincidentDryBulb1(),
+    m_coolingEnthalpy2(),
+    m_coolingEnthalpyMeanCoincidentDryBulb2(),
+    m_coolingHours8To4AndDryBulb12pt8To20pt6(),
+    m_extremeWindSpeed1(),
+    m_extremeWindSpeed2pt5(),
+    m_extremeWindSpeed5(),
+    m_extremeMaxWetBulb(),
+    m_extremeMeanMinDryBulb(),
+    m_extremeMeanMaxDryBulb(),
+    m_extremeStdDevMinDryBulb(),
+    m_extremeStdDevMaxDryBulb(),
+    m_extremeN5YearsMinDryBulb(),
+    m_extremeN5YearsMaxDryBulb(),
+    m_extremeN10YearsMinDryBulb(),
+    m_extremeN10YearsMaxDryBulb(),
+    m_extremeN20YearsMinDryBulb(),
+    m_extremeN20YearsMaxDryBulb(),
+    m_extremeN50YearsMinDryBulb(),
+    m_extremeN50YearsMaxDryBulb()
+  {}
+
+  EpwDesignCondition::EpwDesignCondition(std::string titleOfDesignCondition, int heatingColdestMonth, double heatingDryBulb99pt6, double heatingDryBulb99,
+    double heatingHumidificationDewPoint99pt6, double heatingHumidificationHumidityRatio99pt6, double heatingHumidificationMeanCoincidentDryBulb99pt6,
+    double heatingHumidificationDewPoint99, double heatingHumidificationHumidityRatio99, double heatingHumidificationMeanCoincidentDryBulb99,
+    double heatingColdestMonthWindSpeed0pt4, double heatingColdestMonthMeanCoincidentDryBulb0pt4, double heatingColdestMonthWindSpeed1,
+    double heatingColdestMonthMeanCoincidentDryBulb1, double heatingMeanCoincidentWindSpeed99pt6, int heatingPrevailingCoincidentWindDirection99pt6,
+    int coolingHottestMonth, double coolingDryBulbRange, double coolingDryBulb0pt4, double coolingMeanCoincidentWetBulb0pt4, double coolingDryBulb1,
+    double coolingMeanCoincidentWetBulb1, double coolingDryBulb2, double coolingMeanCoincidentWetBulb2, double coolingEvaporationWetBulb0pt4,
+    double coolingEvaporationMeanCoincidentDryBulb0pt4, double coolingEvaporationWetBulb1, double coolingEvaporationMeanCoincidentDryBulb1,
+    double coolingEvaporationWetBulb2, double coolingEvaporationMeanCoincidentDryBulb2, double coolingMeanCoincidentWindSpeed0pt4,
+    int coolingPrevailingCoincidentWindDirection0pt4, double coolingDehumidificationDewPoint0pt4, double coolingDehumidificationHumidityRatio0pt4,
+    double coolingDehumidificationMeanCoincidentDryBulb0pt4, double coolingDehumidificationDewPoint1, double coolingDehumidificationHumidityRatio1,
+    double coolingDehumidificationMeanCoincidentDryBulb1, double coolingDehumidificationDewPoint2, double coolingDehumidificationHumidityRatio2,
+    double coolingDehumidificationMeanCoincidentDryBulb2, double coolingEnthalpy0pt4, double coolingEnthalpyMeanCoincidentDryBulb0pt4,
+    double coolingEnthalpy1, double coolingEnthalpyMeanCoincidentDryBulb1, double coolingEnthalpy2, double coolingEnthalpyMeanCoincidentDryBulb2,
+    int coolingHours8To4AndDryBulb12pt8To20pt6, double extremeWindSpeed1, double extremeWindSpeed2pt5, double extremeWindSpeed5, double extremeMaxWetBulb,
+    double extremeMeanMinDryBulb, double extremeMeanMaxDryBulb, double extremeStdDevMinDryBulb, double extremeStdDevMaxDryBulb,
+    double extremeN5YearsMinDryBulb, double extremeN5YearsMaxDryBulb, double extremeN10YearsMinDryBulb, double extremeN10YearsMaxDryBulb,
+    double extremeN20YearsMinDryBulb, double extremeN20YearsMaxDryBulb, double extremeN50YearsMinDryBulb, double extremeN50YearsMaxDryBulb)
+  {
+    setTitleOfDesignCondition(titleOfDesignCondition);
+    setHeatingColdestMonth(heatingColdestMonth);
+    setHeatingDryBulb99pt6(heatingDryBulb99pt6);
+    setHeatingDryBulb99(heatingDryBulb99);
+    setHeatingHumidificationDewPoint99pt6(heatingHumidificationDewPoint99pt6);
+    setHeatingHumidificationHumidityRatio99pt6(heatingHumidificationHumidityRatio99pt6);
+    setHeatingHumidificationMeanCoincidentDryBulb99pt6(heatingHumidificationMeanCoincidentDryBulb99pt6);
+    setHeatingHumidificationDewPoint99(heatingHumidificationDewPoint99);
+    setHeatingHumidificationHumidityRatio99(heatingHumidificationHumidityRatio99);
+    setHeatingHumidificationMeanCoincidentDryBulb99(heatingHumidificationMeanCoincidentDryBulb99);
+    setHeatingColdestMonthWindSpeed0pt4(heatingColdestMonthWindSpeed0pt4);
+    setHeatingColdestMonthMeanCoincidentDryBulb0pt4(heatingColdestMonthMeanCoincidentDryBulb0pt4);
+    setHeatingColdestMonthWindSpeed1(heatingColdestMonthWindSpeed1);
+    setHeatingColdestMonthMeanCoincidentDryBulb1(heatingColdestMonthMeanCoincidentDryBulb1);
+    setHeatingMeanCoincidentWindSpeed99pt6(heatingMeanCoincidentWindSpeed99pt6);
+    setHeatingPrevailingCoincidentWindDirection99pt6(heatingPrevailingCoincidentWindDirection99pt6);
+    setCoolingHottestMonth(coolingHottestMonth);
+    setCoolingDryBulbRange(coolingDryBulbRange);
+    setCoolingDryBulb0pt4(coolingDryBulb0pt4);
+    setCoolingMeanCoincidentWetBulb0pt4(coolingMeanCoincidentWetBulb0pt4);
+    setCoolingDryBulb1(coolingDryBulb1);
+    setCoolingMeanCoincidentWetBulb1(coolingMeanCoincidentWetBulb1);
+    setCoolingDryBulb2(coolingDryBulb2);
+    setCoolingMeanCoincidentWetBulb2(coolingMeanCoincidentWetBulb2);
+    setCoolingEvaporationWetBulb0pt4(coolingEvaporationWetBulb0pt4);
+    setCoolingEvaporationMeanCoincidentDryBulb0pt4(coolingEvaporationMeanCoincidentDryBulb0pt4);
+    setCoolingEvaporationWetBulb1(coolingEvaporationWetBulb1);
+    setCoolingEvaporationMeanCoincidentDryBulb1(coolingEvaporationMeanCoincidentDryBulb1);
+    setCoolingEvaporationWetBulb2(coolingEvaporationWetBulb2);
+    setCoolingEvaporationMeanCoincidentDryBulb2(coolingEvaporationMeanCoincidentDryBulb2);
+    setCoolingMeanCoincidentWindSpeed0pt4(coolingMeanCoincidentWindSpeed0pt4);
+    setCoolingPrevailingCoincidentWindDirection0pt4(coolingPrevailingCoincidentWindDirection0pt4);
+    setCoolingDehumidificationDewPoint0pt4(coolingDehumidificationDewPoint0pt4);
+    setCoolingDehumidificationHumidityRatio0pt4(coolingDehumidificationHumidityRatio0pt4);
+    setCoolingDehumidificationMeanCoincidentDryBulb0pt4(coolingDehumidificationMeanCoincidentDryBulb0pt4);
+    setCoolingDehumidificationDewPoint1(coolingDehumidificationDewPoint1);
+    setCoolingDehumidificationHumidityRatio1(coolingDehumidificationHumidityRatio1);
+    setCoolingDehumidificationMeanCoincidentDryBulb1(coolingDehumidificationMeanCoincidentDryBulb1);
+    setCoolingDehumidificationDewPoint2(coolingDehumidificationDewPoint2);
+    setCoolingDehumidificationHumidityRatio2(coolingDehumidificationHumidityRatio2);
+    setCoolingDehumidificationMeanCoincidentDryBulb2(coolingDehumidificationMeanCoincidentDryBulb2);
+    setCoolingEnthalpy0pt4(coolingEnthalpy0pt4);
+    setCoolingEnthalpyMeanCoincidentDryBulb0pt4(coolingEnthalpyMeanCoincidentDryBulb0pt4);
+    setCoolingEnthalpy1(coolingEnthalpy1);
+    setCoolingEnthalpyMeanCoincidentDryBulb1(coolingEnthalpyMeanCoincidentDryBulb1);
+    setCoolingEnthalpy2(coolingEnthalpy2);
+    setCoolingEnthalpyMeanCoincidentDryBulb2(coolingEnthalpyMeanCoincidentDryBulb2);
+    setCoolingHours8To4AndDryBulb12pt8To20pt6(coolingHours8To4AndDryBulb12pt8To20pt6);
+    setExtremeWindSpeed1(extremeWindSpeed1);
+    setExtremeWindSpeed2pt5(extremeWindSpeed2pt5);
+    setExtremeWindSpeed5(extremeWindSpeed5);
+    setExtremeMaxWetBulb(extremeMaxWetBulb);
+    setExtremeMeanMinDryBulb(extremeMeanMinDryBulb);
+    setExtremeMeanMaxDryBulb(extremeMeanMaxDryBulb);
+    setExtremeStdDevMinDryBulb(extremeStdDevMinDryBulb);
+    setExtremeStdDevMaxDryBulb(extremeStdDevMaxDryBulb);
+    setExtremeN5YearsMinDryBulb(extremeN5YearsMinDryBulb);
+    setExtremeN5YearsMaxDryBulb(extremeN5YearsMaxDryBulb);
+    setExtremeN10YearsMinDryBulb(extremeN10YearsMinDryBulb);
+    setExtremeN10YearsMaxDryBulb(extremeN10YearsMaxDryBulb);
+    setExtremeN20YearsMinDryBulb(extremeN20YearsMinDryBulb);
+    setExtremeN20YearsMaxDryBulb(extremeN20YearsMaxDryBulb);
+    setExtremeN50YearsMinDryBulb(extremeN50YearsMinDryBulb);
+    setExtremeN50YearsMaxDryBulb(extremeN50YearsMaxDryBulb);
+  }
+
   boost::optional<EpwDataPoint> EpwDataPoint::fromEpwString(const std::string &line)
   {
     std::vector<std::string> list = splitString(line, ',');
@@ -457,14 +609,14 @@ namespace openstudio{
     // Expect 35 items in the list
     if (list.size() < 35) {
       if (pedantic) {
-        LOG_FREE(Error, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " recieved");
+        LOG_FREE(Error, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " received");
         return boost::none;
       } else {
-        LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " recieved. The remaining fields will not be available");
+        LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " received. The remaining fields will not be available");
       }
     }
     else if (list.size() > 35) {
-      LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " recieved. The additional data will be ignored");
+      LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " received. The additional data will be ignored");
     }
     // Use the appropriate setter on each field
     if (!pt.setYear(list[EpwDataField::Year])) {
@@ -522,13 +674,13 @@ namespace openstudio{
     // Expect 30 items in the list
     if (list.size() < 35) {
       if (pedantic) {
-        LOG_FREE(Error, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " recieved");
+        LOG_FREE(Error, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " received");
         return boost::none;
       } else {
-        LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " recieved. The remaining fields will not be available");
+        LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " received. The remaining fields will not be available");
       }
     } else if (list.size() > 35) {
-      LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " recieved. The additional data will be ignored");
+      LOG_FREE(Warn, "openstudio.EpwFile", "Expected 35 fields in EPW data instead of the " << list.size() << " received. The additional data will be ignored");
     }
     // Use the appropriate setter on each field
     pt.setYear(year);
@@ -575,6 +727,88 @@ namespace openstudio{
     pt.setLiquidPrecipitationDepth(list[EpwDataField::LiquidPrecipitationDepth]);
     pt.setLiquidPrecipitationQuantity(list[EpwDataField::LiquidPrecipitationQuantity]);
     return boost::optional<EpwDataPoint>(pt);
+  }
+
+  boost::optional<EpwDesignCondition> EpwDesignCondition::fromDesignConditionsString(const std::string &line)
+  {
+    std::vector<std::string> list = splitString(line, ',');
+    return fromDesignConditionsStrings(list);
+  }
+
+  boost::optional<EpwDesignCondition> EpwDesignCondition::fromDesignConditionsStrings(const std::vector<std::string> &list)
+  {
+    EpwDesignCondition dc;
+    // Expect 68 items in the list
+    if (list.size() < 68) {
+      LOG_FREE(Error, "openstudio.EpwFile", "Expected 68 fields in EPW design condition instead of the " << list.size() << " received");
+      return boost::none;
+    }
+    // Use the appropriate setter on each field
+    dc.setTitleOfDesignCondition(list[EpwDesignField::TitleOfDesignCondition]);
+    dc.setHeatingColdestMonth(list[EpwDesignField::HeatingColdestMonth]);
+    dc.setHeatingDryBulb99pt6(list[EpwDesignField::HeatingDryBulb99pt6]);
+    dc.setHeatingDryBulb99(list[EpwDesignField::HeatingDryBulb99]);
+    dc.setHeatingHumidificationDewPoint99pt6(list[EpwDesignField::HeatingHumidificationDewPoint99pt6]);
+    dc.setHeatingHumidificationHumidityRatio99pt6(list[EpwDesignField::HeatingHumidificationHumidityRatio99pt6]);
+    dc.setHeatingHumidificationMeanCoincidentDryBulb99pt6(list[EpwDesignField::HeatingHumidificationMeanCoincidentDryBulb99pt6]);
+    dc.setHeatingHumidificationDewPoint99(list[EpwDesignField::HeatingHumidificationDewPoint99]);
+    dc.setHeatingHumidificationHumidityRatio99(list[EpwDesignField::HeatingHumidificationHumidityRatio99]);
+    dc.setHeatingHumidificationMeanCoincidentDryBulb99(list[EpwDesignField::HeatingHumidificationMeanCoincidentDryBulb99]);
+    dc.setHeatingColdestMonthWindSpeed0pt4(list[EpwDesignField::HeatingColdestMonthWindSpeed0pt4]);
+    dc.setHeatingColdestMonthMeanCoincidentDryBulb0pt4(list[EpwDesignField::HeatingColdestMonthMeanCoincidentDryBulb0pt4]);
+    dc.setHeatingColdestMonthWindSpeed1(list[EpwDesignField::HeatingColdestMonthWindSpeed1]);
+    dc.setHeatingColdestMonthMeanCoincidentDryBulb1(list[EpwDesignField::HeatingColdestMonthMeanCoincidentDryBulb1]);
+    dc.setHeatingMeanCoincidentWindSpeed99pt6(list[EpwDesignField::HeatingMeanCoincidentWindSpeed99pt6]);
+    dc.setHeatingPrevailingCoincidentWindDirection99pt6(list[EpwDesignField::HeatingPrevailingCoincidentWindDirection99pt6]);
+    dc.setCoolingHottestMonth(list[EpwDesignField::CoolingHottestMonth]);
+    dc.setCoolingDryBulbRange(list[EpwDesignField::CoolingDryBulbRange]);
+    dc.setCoolingDryBulb0pt4(list[EpwDesignField::CoolingDryBulb0pt4]);
+    dc.setCoolingMeanCoincidentWetBulb0pt4(list[EpwDesignField::CoolingMeanCoincidentWetBulb0pt4]);
+    dc.setCoolingDryBulb1(list[EpwDesignField::CoolingDryBulb1]);
+    dc.setCoolingMeanCoincidentWetBulb1(list[EpwDesignField::CoolingMeanCoincidentWetBulb1]);
+    dc.setCoolingDryBulb2(list[EpwDesignField::CoolingDryBulb2]);
+    dc.setCoolingMeanCoincidentWetBulb2(list[EpwDesignField::CoolingMeanCoincidentWetBulb2]);
+    dc.setCoolingEvaporationWetBulb0pt4(list[EpwDesignField::CoolingEvaporationWetBulb0pt4]);
+    dc.setCoolingEvaporationMeanCoincidentDryBulb0pt4(list[EpwDesignField::CoolingEvaporationMeanCoincidentDryBulb0pt4]);
+    dc.setCoolingEvaporationWetBulb1(list[EpwDesignField::CoolingEvaporationWetBulb1]);
+    dc.setCoolingEvaporationMeanCoincidentDryBulb1(list[EpwDesignField::CoolingEvaporationMeanCoincidentDryBulb1]);
+    dc.setCoolingEvaporationWetBulb2(list[EpwDesignField::CoolingEvaporationWetBulb2]);
+    dc.setCoolingEvaporationMeanCoincidentDryBulb2(list[EpwDesignField::CoolingEvaporationMeanCoincidentDryBulb2]);
+    dc.setCoolingMeanCoincidentWindSpeed0pt4(list[EpwDesignField::CoolingMeanCoincidentWindSpeed0pt4]);
+    dc.setCoolingPrevailingCoincidentWindDirection0pt4(list[EpwDesignField::CoolingPrevailingCoincidentWindDirection0pt4]);
+    dc.setCoolingDehumidificationDewPoint0pt4(list[EpwDesignField::CoolingDehumidificationDewPoint0pt4]);
+    dc.setCoolingDehumidificationHumidityRatio0pt4(list[EpwDesignField::CoolingDehumidificationHumidityRatio0pt4]);
+    dc.setCoolingDehumidificationMeanCoincidentDryBulb0pt4(list[EpwDesignField::CoolingDehumidificationMeanCoincidentDryBulb0pt4]);
+    dc.setCoolingDehumidificationDewPoint1(list[EpwDesignField::CoolingDehumidificationDewPoint1]);
+    dc.setCoolingDehumidificationHumidityRatio1(list[EpwDesignField::CoolingDehumidificationHumidityRatio1]);
+    dc.setCoolingDehumidificationMeanCoincidentDryBulb1(list[EpwDesignField::CoolingDehumidificationMeanCoincidentDryBulb1]);
+    dc.setCoolingDehumidificationDewPoint2(list[EpwDesignField::CoolingDehumidificationDewPoint2]);
+    dc.setCoolingDehumidificationHumidityRatio2(list[EpwDesignField::CoolingDehumidificationHumidityRatio2]);
+    dc.setCoolingDehumidificationMeanCoincidentDryBulb2(list[EpwDesignField::CoolingDehumidificationMeanCoincidentDryBulb2]);
+    dc.setCoolingEnthalpy0pt4(list[EpwDesignField::CoolingEnthalpy0pt4]);
+    dc.setCoolingEnthalpyMeanCoincidentDryBulb0pt4(list[EpwDesignField::CoolingEnthalpyMeanCoincidentDryBulb0pt4]);
+    dc.setCoolingEnthalpy1(list[EpwDesignField::CoolingEnthalpy1]);
+    dc.setCoolingEnthalpyMeanCoincidentDryBulb1(list[EpwDesignField::CoolingEnthalpyMeanCoincidentDryBulb1]);
+    dc.setCoolingEnthalpy2(list[EpwDesignField::CoolingEnthalpy2]);
+    dc.setCoolingEnthalpyMeanCoincidentDryBulb2(list[EpwDesignField::CoolingEnthalpyMeanCoincidentDryBulb2]);
+    dc.setCoolingHours8To4AndDryBulb12pt8To20pt6(list[EpwDesignField::CoolingHours8To4AndDryBulb12pt8To20pt6]);
+    dc.setExtremeWindSpeed1(list[EpwDesignField::ExtremeWindSpeed1]);
+    dc.setExtremeWindSpeed2pt5(list[EpwDesignField::ExtremeWindSpeed2pt5]);
+    dc.setExtremeWindSpeed5(list[EpwDesignField::ExtremeWindSpeed5]);
+    dc.setExtremeMaxWetBulb(list[EpwDesignField::ExtremeMaxWetBulb]);
+    dc.setExtremeMeanMinDryBulb(list[EpwDesignField::ExtremeMeanMinDryBulb]);
+    dc.setExtremeMeanMaxDryBulb(list[EpwDesignField::ExtremeMeanMaxDryBulb]);
+    dc.setExtremeStdDevMinDryBulb(list[EpwDesignField::ExtremeStdDevMinDryBulb]);
+    dc.setExtremeStdDevMaxDryBulb(list[EpwDesignField::ExtremeStdDevMaxDryBulb]);
+    dc.setExtremeN5YearsMinDryBulb(list[EpwDesignField::ExtremeN5YearsMinDryBulb]);
+    dc.setExtremeN5YearsMaxDryBulb(list[EpwDesignField::ExtremeN5YearsMaxDryBulb]);
+    dc.setExtremeN10YearsMinDryBulb(list[EpwDesignField::ExtremeN10YearsMinDryBulb]);
+    dc.setExtremeN10YearsMaxDryBulb(list[EpwDesignField::ExtremeN10YearsMaxDryBulb]);
+    dc.setExtremeN20YearsMinDryBulb(list[EpwDesignField::ExtremeN20YearsMinDryBulb]);
+    dc.setExtremeN20YearsMaxDryBulb(list[EpwDesignField::ExtremeN20YearsMaxDryBulb]);
+    dc.setExtremeN50YearsMinDryBulb(list[EpwDesignField::ExtremeN50YearsMinDryBulb]);
+    dc.setExtremeN50YearsMaxDryBulb(list[EpwDesignField::ExtremeN50YearsMaxDryBulb]);
+    return boost::optional<EpwDesignCondition>(dc);
   }
 
   std::vector<std::string> EpwDataPoint::toEpwStrings() const
@@ -748,6 +982,223 @@ namespace openstudio{
     return string;
   }
 
+  boost::optional<std::string> EpwDesignCondition::getUnitsByName(const std::string &name)
+  {
+    EpwDesignField id;
+    try {
+      id = EpwDesignField(name);
+    }
+    catch (...) {
+      // Could do a warning message here
+      return boost::none;
+    }
+    return getUnits(id);
+  }
+
+  std::string EpwDesignCondition::getUnits(EpwDesignField field)
+  {
+    std::string string;
+    switch (field.value())
+    {
+    case EpwDesignField::TitleOfDesignCondition:
+      //string = "None";
+      break;
+    case EpwDesignField::HeatingColdestMonth:
+      //string = "None";
+      break;
+    case EpwDesignField::HeatingDryBulb99pt6:
+      string = "C";
+      break;
+    case EpwDesignField::HeatingDryBulb99:
+      string = "C";
+      break;
+    case EpwDesignField::HeatingHumidificationDewPoint99pt6:
+      string = "C";
+      break;
+    case EpwDesignField::HeatingHumidificationHumidityRatio99pt6:
+      string = "g/kg";
+      break;
+    case EpwDesignField::HeatingHumidificationMeanCoincidentDryBulb99pt6:
+      string = "C";
+      break;
+    case EpwDesignField::HeatingHumidificationDewPoint99:
+      string = "C";
+      break;
+    case EpwDesignField::HeatingHumidificationHumidityRatio99:
+      string = "g/kg";
+      break;
+    case EpwDesignField::HeatingHumidificationMeanCoincidentDryBulb99:
+      string = "C";
+      break;
+    case EpwDesignField::HeatingColdestMonthWindSpeed0pt4:
+      string = "m/s";
+      break;
+    case EpwDesignField::HeatingColdestMonthMeanCoincidentDryBulb0pt4:
+      string = "C";
+      break;
+    case EpwDesignField::HeatingColdestMonthWindSpeed1:
+      string = "m/s";
+      break;
+    case EpwDesignField::HeatingColdestMonthMeanCoincidentDryBulb1:
+      string = "C";
+      break;
+    case EpwDesignField::HeatingMeanCoincidentWindSpeed99pt6:
+      string = "m/s";
+      break;
+    case EpwDesignField::HeatingPrevailingCoincidentWindDirection99pt6:
+      string = "degrees";
+      break;
+    case EpwDesignField::CoolingHottestMonth:
+      //string = "None";
+      break;
+    case EpwDesignField::CoolingDryBulbRange:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingDryBulb0pt4:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingMeanCoincidentWetBulb0pt4:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingDryBulb1:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingMeanCoincidentWetBulb1:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingDryBulb2:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingMeanCoincidentWetBulb2:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingEvaporationWetBulb0pt4:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingEvaporationMeanCoincidentDryBulb0pt4:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingEvaporationWetBulb1:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingEvaporationMeanCoincidentDryBulb1:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingEvaporationWetBulb2:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingEvaporationMeanCoincidentDryBulb2:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingMeanCoincidentWindSpeed0pt4:
+      string = "m/s";
+      break;
+    case EpwDesignField::CoolingPrevailingCoincidentWindDirection0pt4:
+      string = "degrees";
+      break;
+    case EpwDesignField::CoolingDehumidificationDewPoint0pt4:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingDehumidificationHumidityRatio0pt4:
+      string = "g/kg";
+      break;
+    case EpwDesignField::CoolingDehumidificationMeanCoincidentDryBulb0pt4:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingDehumidificationDewPoint1:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingDehumidificationHumidityRatio1:
+      string = "g/kg";
+      break;
+    case EpwDesignField::CoolingDehumidificationMeanCoincidentDryBulb1:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingDehumidificationDewPoint2:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingDehumidificationHumidityRatio2:
+      string = "g/kg";
+      break;
+    case EpwDesignField::CoolingDehumidificationMeanCoincidentDryBulb2:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingEnthalpy0pt4:
+      string = "kJ/kg";
+      break;
+    case EpwDesignField::CoolingEnthalpyMeanCoincidentDryBulb0pt4:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingEnthalpy1:
+      string = "kJ/kg";
+      break;
+    case EpwDesignField::CoolingEnthalpyMeanCoincidentDryBulb1:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingEnthalpy2:
+      string = "kJ/kg";
+      break;
+    case EpwDesignField::CoolingEnthalpyMeanCoincidentDryBulb2:
+      string = "C";
+      break;
+    case EpwDesignField::CoolingHours8To4AndDryBulb12pt8To20pt6:
+      string = "hr";
+      break;
+    case EpwDesignField::ExtremeWindSpeed1:
+      string = "m/s";
+      break;
+    case EpwDesignField::ExtremeWindSpeed2pt5:
+      string = "m/s";
+      break;
+    case EpwDesignField::ExtremeWindSpeed5:
+      string = "m/s";
+      break;
+    case EpwDesignField::ExtremeMaxWetBulb:
+      string = "C";
+      break;
+    case EpwDesignField::ExtremeMeanMinDryBulb:
+      string = "C";
+      break;
+    case EpwDesignField::ExtremeMeanMaxDryBulb:
+      string = "C";
+      break;
+    case EpwDesignField::ExtremeStdDevMinDryBulb:
+      string = "C";
+      break;
+    case EpwDesignField::ExtremeStdDevMaxDryBulb:
+      string = "C";
+      break;
+    case EpwDesignField::ExtremeN5YearsMinDryBulb:
+      string = "C";
+      break;
+    case EpwDesignField::ExtremeN5YearsMaxDryBulb:
+      string = "C";
+      break;
+    case EpwDesignField::ExtremeN10YearsMinDryBulb:
+      string = "C";
+      break;
+    case EpwDesignField::ExtremeN10YearsMaxDryBulb:
+      string = "C";
+      break;
+    case EpwDesignField::ExtremeN20YearsMinDryBulb:
+      string = "C";
+      break;
+    case EpwDesignField::ExtremeN20YearsMaxDryBulb:
+      string = "C";
+      break;
+    case EpwDesignField::ExtremeN50YearsMinDryBulb:
+      string = "C";
+      break;
+    case EpwDesignField::ExtremeN50YearsMaxDryBulb:
+      string = "C";
+      break;
+    default:
+      //string = "None";
+      break;
+    }
+    return string;
+  }
+
   std::string EpwDataPoint::getUnits(EpwComputedField field)
   {
     std::string string;
@@ -889,6 +1340,219 @@ namespace openstudio{
         // Could do a warning message here
         return boost::none;
         break;
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> EpwDesignCondition::getFieldByName(const std::string &name)
+  {
+    EpwDesignField id;
+    try {
+      id = EpwDesignField(name);
+    }
+    catch (...) {
+      // Could do a warning message here
+      return boost::none;
+    }
+    return getField(id);
+  }
+
+  boost::optional<double> EpwDesignCondition::getField(EpwDesignField id)
+  {
+    switch (id.value()) {
+    case EpwDesignField::HeatingColdestMonth:
+      return heatingColdestMonth();
+      break;
+    case EpwDesignField::HeatingDryBulb99pt6:
+      return heatingDryBulb99pt6();
+      break;
+    case EpwDesignField::HeatingDryBulb99:
+      return heatingDryBulb99();
+      break;
+    case EpwDesignField::HeatingHumidificationDewPoint99pt6:
+      return heatingHumidificationDewPoint99pt6();
+      break;
+    case EpwDesignField::HeatingHumidificationHumidityRatio99pt6:
+      return heatingHumidificationHumidityRatio99pt6();
+      break;
+    case EpwDesignField::HeatingHumidificationMeanCoincidentDryBulb99pt6:
+      return heatingHumidificationMeanCoincidentDryBulb99pt6();
+      break;
+    case EpwDesignField::HeatingHumidificationDewPoint99:
+      return heatingHumidificationDewPoint99();
+      break;
+    case EpwDesignField::HeatingHumidificationHumidityRatio99:
+      return heatingHumidificationHumidityRatio99();
+      break;
+    case EpwDesignField::HeatingHumidificationMeanCoincidentDryBulb99:
+      return heatingHumidificationMeanCoincidentDryBulb99();
+      break;
+    case EpwDesignField::HeatingColdestMonthWindSpeed0pt4:
+      return heatingColdestMonthWindSpeed0pt4();
+      break;
+    case EpwDesignField::HeatingColdestMonthMeanCoincidentDryBulb0pt4:
+      return heatingColdestMonthMeanCoincidentDryBulb0pt4();
+      break;
+    case EpwDesignField::HeatingColdestMonthWindSpeed1:
+      return heatingColdestMonthWindSpeed1();
+      break;
+    case EpwDesignField::HeatingColdestMonthMeanCoincidentDryBulb1:
+      return heatingColdestMonthMeanCoincidentDryBulb1();
+      break;
+    case EpwDesignField::HeatingMeanCoincidentWindSpeed99pt6:
+      return heatingMeanCoincidentWindSpeed99pt6();
+      break;
+    case EpwDesignField::HeatingPrevailingCoincidentWindDirection99pt6:
+      return heatingPrevailingCoincidentWindDirection99pt6();
+      break;
+    case EpwDesignField::CoolingHottestMonth:
+      return coolingHottestMonth();
+      break;
+    case EpwDesignField::CoolingDryBulbRange:
+      return coolingDryBulbRange();
+      break;
+    case EpwDesignField::CoolingDryBulb0pt4:
+      return coolingDryBulb0pt4();
+      break;
+    case EpwDesignField::CoolingMeanCoincidentWetBulb0pt4:
+      return coolingMeanCoincidentWetBulb0pt4();
+      break;
+    case EpwDesignField::CoolingDryBulb1:
+      return coolingDryBulb1();
+      break;
+    case EpwDesignField::CoolingMeanCoincidentWetBulb1:
+      return coolingMeanCoincidentWetBulb1();
+      break;
+    case EpwDesignField::CoolingDryBulb2:
+      return coolingDryBulb2();
+      break;
+    case EpwDesignField::CoolingMeanCoincidentWetBulb2:
+      return coolingMeanCoincidentWetBulb2();
+      break;
+    case EpwDesignField::CoolingEvaporationWetBulb0pt4:
+      return coolingEvaporationWetBulb0pt4();
+      break;
+    case EpwDesignField::CoolingEvaporationMeanCoincidentDryBulb0pt4:
+      return coolingEvaporationMeanCoincidentDryBulb0pt4();
+      break;
+    case EpwDesignField::CoolingEvaporationWetBulb1:
+      return coolingEvaporationWetBulb1();
+      break;
+    case EpwDesignField::CoolingEvaporationMeanCoincidentDryBulb1:
+      return coolingEvaporationMeanCoincidentDryBulb1();
+      break;
+    case EpwDesignField::CoolingEvaporationWetBulb2:
+      return coolingEvaporationWetBulb2();
+      break;
+    case EpwDesignField::CoolingEvaporationMeanCoincidentDryBulb2:
+      return coolingEvaporationMeanCoincidentDryBulb2();
+      break;
+    case EpwDesignField::CoolingMeanCoincidentWindSpeed0pt4:
+      return coolingMeanCoincidentWindSpeed0pt4();
+      break;
+    case EpwDesignField::CoolingPrevailingCoincidentWindDirection0pt4:
+      return coolingPrevailingCoincidentWindDirection0pt4();
+      break;
+    case EpwDesignField::CoolingDehumidificationDewPoint0pt4:
+      return coolingDehumidificationDewPoint0pt4();
+      break;
+    case EpwDesignField::CoolingDehumidificationHumidityRatio0pt4:
+      return coolingDehumidificationHumidityRatio0pt4();
+      break;
+    case EpwDesignField::CoolingDehumidificationMeanCoincidentDryBulb0pt4:
+      return coolingDehumidificationMeanCoincidentDryBulb0pt4();
+      break;
+    case EpwDesignField::CoolingDehumidificationDewPoint1:
+      return coolingDehumidificationDewPoint1();
+      break;
+    case EpwDesignField::CoolingDehumidificationHumidityRatio1:
+      return coolingDehumidificationHumidityRatio1();
+      break;
+    case EpwDesignField::CoolingDehumidificationMeanCoincidentDryBulb1:
+      return coolingDehumidificationMeanCoincidentDryBulb1();
+      break;
+    case EpwDesignField::CoolingDehumidificationDewPoint2:
+      return coolingDehumidificationDewPoint2();
+      break;
+    case EpwDesignField::CoolingDehumidificationHumidityRatio2:
+      return coolingDehumidificationHumidityRatio2();
+      break;
+    case EpwDesignField::CoolingDehumidificationMeanCoincidentDryBulb2:
+      return coolingDehumidificationMeanCoincidentDryBulb2();
+      break;
+    case EpwDesignField::CoolingEnthalpy0pt4:
+      return coolingEnthalpy0pt4();
+      break;
+    case EpwDesignField::CoolingEnthalpyMeanCoincidentDryBulb0pt4:
+      return coolingEnthalpyMeanCoincidentDryBulb0pt4();
+      break;
+    case EpwDesignField::CoolingEnthalpy1:
+      return coolingEnthalpy1();
+      break;
+    case EpwDesignField::CoolingEnthalpyMeanCoincidentDryBulb1:
+      return coolingEnthalpyMeanCoincidentDryBulb1();
+      break;
+    case EpwDesignField::CoolingEnthalpy2:
+      return coolingEnthalpy2();
+      break;
+    case EpwDesignField::CoolingEnthalpyMeanCoincidentDryBulb2:
+      return coolingEnthalpyMeanCoincidentDryBulb2();
+      break;
+    case EpwDesignField::CoolingHours8To4AndDryBulb12pt8To20pt6:
+      return coolingHours8To4AndDryBulb12pt8To20pt6();
+      break;
+    case EpwDesignField::ExtremeWindSpeed1:
+      return extremeWindSpeed1();
+      break;
+    case EpwDesignField::ExtremeWindSpeed2pt5:
+      return extremeWindSpeed2pt5();
+      break;
+    case EpwDesignField::ExtremeWindSpeed5:
+      return extremeWindSpeed5();
+      break;
+    case EpwDesignField::ExtremeMaxWetBulb:
+      return extremeMaxWetBulb();
+      break;
+    case EpwDesignField::ExtremeMeanMinDryBulb:
+      return extremeMeanMinDryBulb();
+      break;
+    case EpwDesignField::ExtremeMeanMaxDryBulb:
+      return extremeMeanMaxDryBulb();
+      break;
+    case EpwDesignField::ExtremeStdDevMinDryBulb:
+      return extremeStdDevMinDryBulb();
+      break;
+    case EpwDesignField::ExtremeStdDevMaxDryBulb:
+      return extremeStdDevMaxDryBulb();
+      break;
+    case EpwDesignField::ExtremeN5YearsMinDryBulb:
+      return extremeN5YearsMinDryBulb();
+      break;
+    case EpwDesignField::ExtremeN5YearsMaxDryBulb:
+      return extremeN5YearsMaxDryBulb();
+      break;
+    case EpwDesignField::ExtremeN10YearsMinDryBulb:
+      return extremeN10YearsMinDryBulb();
+      break;
+    case EpwDesignField::ExtremeN10YearsMaxDryBulb:
+      return extremeN10YearsMaxDryBulb();
+      break;
+    case EpwDesignField::ExtremeN20YearsMinDryBulb:
+      return extremeN20YearsMinDryBulb();
+      break;
+    case EpwDesignField::ExtremeN20YearsMaxDryBulb:
+      return extremeN20YearsMaxDryBulb();
+      break;
+    case EpwDesignField::ExtremeN50YearsMinDryBulb:
+      return extremeN50YearsMinDryBulb();
+      break;
+    case EpwDesignField::ExtremeN50YearsMaxDryBulb:
+      return extremeN50YearsMaxDryBulb();
+      break;
+    default:
+      // Could do a warning message here
+      return boost::none;
+      break;
     }
     return boost::none;
   }
@@ -2202,6 +2866,1173 @@ namespace openstudio{
     return m_data;
   }
 
+  std::string EpwDesignCondition::titleOfDesignCondition() const
+  {
+    return m_titleOfDesignCondition;
+  }
+
+  int EpwDesignCondition::heatingColdestMonth() const
+  {
+    return m_heatingColdestMonth;
+  }
+
+  double EpwDesignCondition::heatingDryBulb99pt6() const
+  {
+    return m_heatingDryBulb99pt6;
+  }
+
+  double EpwDesignCondition::heatingDryBulb99() const
+  {
+    return m_heatingDryBulb99;
+  }
+
+  double EpwDesignCondition::heatingHumidificationDewPoint99pt6() const
+  {
+    return m_heatingHumidificationDewPoint99pt6;
+  }
+
+  double EpwDesignCondition::heatingHumidificationHumidityRatio99pt6() const
+  {
+    return m_heatingHumidificationHumidityRatio99pt6;
+  }
+
+  double EpwDesignCondition::heatingHumidificationMeanCoincidentDryBulb99pt6() const
+  {
+    return m_heatingHumidificationMeanCoincidentDryBulb99pt6;
+  }
+
+  double EpwDesignCondition::heatingHumidificationDewPoint99() const
+  {
+    return m_heatingHumidificationDewPoint99;
+  }
+
+  double EpwDesignCondition::heatingHumidificationHumidityRatio99() const
+  {
+    return m_heatingHumidificationHumidityRatio99;
+  }
+
+  double EpwDesignCondition::heatingHumidificationMeanCoincidentDryBulb99() const
+  {
+    return m_heatingHumidificationMeanCoincidentDryBulb99;
+  }
+
+  double EpwDesignCondition::heatingColdestMonthWindSpeed0pt4() const
+  {
+    return m_heatingColdestMonthWindSpeed0pt4;
+  }
+
+  double EpwDesignCondition::heatingColdestMonthMeanCoincidentDryBulb0pt4() const
+  {
+    return m_heatingColdestMonthMeanCoincidentDryBulb0pt4;
+  }
+
+  double EpwDesignCondition::heatingColdestMonthWindSpeed1() const
+  {
+    return m_heatingColdestMonthWindSpeed1;
+  }
+
+  double EpwDesignCondition::heatingColdestMonthMeanCoincidentDryBulb1() const
+  {
+    return m_heatingColdestMonthMeanCoincidentDryBulb1;
+  }
+
+  double EpwDesignCondition::heatingMeanCoincidentWindSpeed99pt6() const
+  {
+    return m_heatingMeanCoincidentWindSpeed99pt6;
+  }
+
+  int EpwDesignCondition::heatingPrevailingCoincidentWindDirection99pt6() const
+  {
+    return m_heatingPrevailingCoincidentWindDirection99pt6;
+  }
+
+  int EpwDesignCondition::coolingHottestMonth() const
+  {
+    return m_coolingHottestMonth;
+  }
+
+  double EpwDesignCondition::coolingDryBulbRange() const
+  {
+    return m_coolingDryBulbRange;
+  }
+
+  double EpwDesignCondition::coolingDryBulb0pt4() const
+  {
+    return m_coolingDryBulb0pt4;
+  }
+
+  double EpwDesignCondition::coolingMeanCoincidentWetBulb0pt4() const
+  {
+    return m_coolingMeanCoincidentWetBulb0pt4;
+  }
+
+  double EpwDesignCondition::coolingDryBulb1() const
+  {
+    return m_coolingDryBulb1;
+  }
+
+  double EpwDesignCondition::coolingMeanCoincidentWetBulb1() const
+  {
+    return m_coolingMeanCoincidentWetBulb1;
+  }
+
+  double EpwDesignCondition::coolingDryBulb2() const
+  {
+    return m_coolingDryBulb2;
+  }
+
+  double EpwDesignCondition::coolingMeanCoincidentWetBulb2() const
+  {
+    return m_coolingMeanCoincidentWetBulb2;
+  }
+
+  double EpwDesignCondition::coolingEvaporationWetBulb0pt4() const
+  {
+    return m_coolingEvaporationWetBulb0pt4;
+  }
+
+  double EpwDesignCondition::coolingEvaporationMeanCoincidentDryBulb0pt4() const
+  {
+    return m_coolingEvaporationMeanCoincidentDryBulb0pt4;
+  }
+
+  double EpwDesignCondition::coolingEvaporationWetBulb1() const
+  {
+    return m_coolingEvaporationWetBulb1;
+  }
+
+  double EpwDesignCondition::coolingEvaporationMeanCoincidentDryBulb1() const
+  {
+    return m_coolingEvaporationMeanCoincidentDryBulb1;
+  }
+
+  double EpwDesignCondition::coolingEvaporationWetBulb2() const
+  {
+    return m_coolingEvaporationWetBulb2;
+  }
+
+  double EpwDesignCondition::coolingEvaporationMeanCoincidentDryBulb2() const
+  {
+    return m_coolingEvaporationMeanCoincidentDryBulb2;
+  }
+
+  double EpwDesignCondition::coolingMeanCoincidentWindSpeed0pt4() const
+  {
+    return m_coolingMeanCoincidentWindSpeed0pt4;
+  }
+
+  int EpwDesignCondition::coolingPrevailingCoincidentWindDirection0pt4() const
+  {
+    return m_coolingPrevailingCoincidentWindDirection0pt4;
+  }
+
+  double EpwDesignCondition::coolingDehumidificationDewPoint0pt4() const
+  {
+    return m_coolingDehumidificationDewPoint0pt4;
+  }
+
+  double EpwDesignCondition::coolingDehumidificationHumidityRatio0pt4() const
+  {
+    return m_coolingDehumidificationHumidityRatio0pt4;
+  }
+
+  double EpwDesignCondition::coolingDehumidificationMeanCoincidentDryBulb0pt4() const
+  {
+    return m_coolingDehumidificationMeanCoincidentDryBulb0pt4;
+  }
+
+  double EpwDesignCondition::coolingDehumidificationDewPoint1() const
+  {
+    return m_coolingDehumidificationDewPoint1;
+  }
+
+  double EpwDesignCondition::coolingDehumidificationHumidityRatio1() const
+  {
+    return m_coolingDehumidificationHumidityRatio1;
+  }
+
+  double EpwDesignCondition::coolingDehumidificationMeanCoincidentDryBulb1() const
+  {
+    return m_coolingDehumidificationMeanCoincidentDryBulb1;
+  }
+
+  double EpwDesignCondition::coolingDehumidificationDewPoint2() const
+  {
+    return m_coolingDehumidificationDewPoint2;
+  }
+
+  double EpwDesignCondition::coolingDehumidificationHumidityRatio2() const
+  {
+    return m_coolingDehumidificationHumidityRatio2;
+  }
+
+  double EpwDesignCondition::coolingDehumidificationMeanCoincidentDryBulb2() const
+  {
+    return m_coolingDehumidificationMeanCoincidentDryBulb2;
+  }
+
+  double EpwDesignCondition::coolingEnthalpy0pt4() const
+  {
+    return m_coolingEnthalpy0pt4;
+  }
+
+  double EpwDesignCondition::coolingEnthalpyMeanCoincidentDryBulb0pt4() const
+  {
+    return m_coolingEnthalpyMeanCoincidentDryBulb0pt4;
+  }
+
+  double EpwDesignCondition::coolingEnthalpy1() const
+  {
+    return m_coolingEnthalpy1;
+  }
+
+  double EpwDesignCondition::coolingEnthalpyMeanCoincidentDryBulb1() const
+  {
+    return m_coolingEnthalpyMeanCoincidentDryBulb1;
+  }
+
+  double EpwDesignCondition::coolingEnthalpy2() const
+  {
+    return m_coolingEnthalpy2;
+  }
+
+  double EpwDesignCondition::coolingEnthalpyMeanCoincidentDryBulb2() const
+  {
+    return m_coolingEnthalpyMeanCoincidentDryBulb2;
+  }
+
+  int EpwDesignCondition::coolingHours8To4AndDryBulb12pt8To20pt6() const
+  {
+    return m_coolingHours8To4AndDryBulb12pt8To20pt6;
+  }
+
+  double EpwDesignCondition::extremeWindSpeed1() const
+  {
+    return m_extremeWindSpeed1;
+  }
+
+  double EpwDesignCondition::extremeWindSpeed2pt5() const
+  {
+    return m_extremeWindSpeed2pt5;
+  }
+
+  double EpwDesignCondition::extremeWindSpeed5() const
+  {
+    return m_extremeWindSpeed5;
+  }
+
+  double EpwDesignCondition::extremeMaxWetBulb() const
+  {
+    return m_extremeMaxWetBulb;
+  }
+
+  double EpwDesignCondition::extremeMeanMinDryBulb() const
+  {
+    return m_extremeMeanMinDryBulb;
+  }
+
+  double EpwDesignCondition::extremeMeanMaxDryBulb() const
+  {
+    return m_extremeMeanMaxDryBulb;
+  }
+
+  double EpwDesignCondition::extremeStdDevMinDryBulb() const
+  {
+    return m_extremeStdDevMinDryBulb;
+  }
+
+  double EpwDesignCondition::extremeStdDevMaxDryBulb() const
+  {
+    return m_extremeStdDevMaxDryBulb;
+  }
+
+  double EpwDesignCondition::extremeN5YearsMinDryBulb() const
+  {
+    return m_extremeN5YearsMinDryBulb;
+  }
+
+  double EpwDesignCondition::extremeN5YearsMaxDryBulb() const
+  {
+    return m_extremeN5YearsMaxDryBulb;
+  }
+
+  double EpwDesignCondition::extremeN10YearsMinDryBulb() const
+  {
+    return m_extremeN10YearsMinDryBulb;
+  }
+
+  double EpwDesignCondition::extremeN10YearsMaxDryBulb() const
+  {
+    return m_extremeN10YearsMaxDryBulb;
+  }
+
+  double EpwDesignCondition::extremeN20YearsMinDryBulb() const
+  {
+    return m_extremeN20YearsMinDryBulb;
+  }
+
+  double EpwDesignCondition::extremeN20YearsMaxDryBulb() const
+  {
+    return m_extremeN20YearsMaxDryBulb;
+  }
+
+  double EpwDesignCondition::extremeN50YearsMinDryBulb() const
+  {
+    return m_extremeN50YearsMinDryBulb;
+  }
+
+  double EpwDesignCondition::extremeN50YearsMaxDryBulb() const
+  {
+    return m_extremeN50YearsMaxDryBulb;
+  }
+
+  void EpwDesignCondition::setTitleOfDesignCondition(std::string titleOfDesignCondition)
+  {
+    m_titleOfDesignCondition = titleOfDesignCondition;
+  }
+
+  bool EpwDesignCondition::setHeatingColdestMonth(const std::string &heatingColdestMonth)
+  {
+    bool ok;
+    int value = stringToInteger(heatingColdestMonth, &ok);
+    setHeatingColdestMonth(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingColdestMonth(int heatingColdestMonth)
+  {
+    m_heatingColdestMonth = heatingColdestMonth;
+  }
+
+  bool EpwDesignCondition::setHeatingDryBulb99pt6(const std::string &heatingDryBulb99pt6)
+  {
+    bool ok;
+    double value = stringToDouble(heatingDryBulb99pt6, &ok);
+    setHeatingDryBulb99pt6(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingDryBulb99pt6(double heatingDryBulb99pt6)
+  {
+    m_heatingDryBulb99pt6 = heatingDryBulb99pt6;
+  }
+
+  bool EpwDesignCondition::setHeatingDryBulb99(const std::string &heatingDryBulb99)
+  {
+    bool ok;
+    double value = stringToDouble(heatingDryBulb99, &ok);
+    setHeatingDryBulb99(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingDryBulb99(double heatingDryBulb99)
+  {
+    m_heatingDryBulb99 = heatingDryBulb99;
+  }
+
+  bool EpwDesignCondition::setHeatingHumidificationDewPoint99pt6(const std::string &heatingHumidificationDewPoint99pt6)
+  {
+    bool ok;
+    double value = stringToDouble(heatingHumidificationDewPoint99pt6, &ok);
+    setHeatingHumidificationDewPoint99pt6(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingHumidificationDewPoint99pt6(double heatingHumidificationDewPoint99pt6)
+  {
+    m_heatingHumidificationDewPoint99pt6 = heatingHumidificationDewPoint99pt6;
+  }
+
+  bool EpwDesignCondition::setHeatingHumidificationHumidityRatio99pt6(const std::string &heatingHumidificationHumidityRatio99pt6)
+  {
+    bool ok;
+    double value = stringToDouble(heatingHumidificationHumidityRatio99pt6, &ok);
+    setHeatingHumidificationHumidityRatio99pt6(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingHumidificationHumidityRatio99pt6(double heatingHumidificationHumidityRatio99pt6)
+  {
+    m_heatingHumidificationHumidityRatio99pt6 = heatingHumidificationHumidityRatio99pt6;
+  }
+
+  bool EpwDesignCondition::setHeatingHumidificationMeanCoincidentDryBulb99pt6(const std::string &heatingHumidificationMeanCoincidentDryBulb99pt6)
+  {
+    bool ok;
+    double value = stringToDouble(heatingHumidificationMeanCoincidentDryBulb99pt6, &ok);
+    setHeatingHumidificationMeanCoincidentDryBulb99pt6(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingHumidificationMeanCoincidentDryBulb99pt6(double heatingHumidificationMeanCoincidentDryBulb99pt6)
+  {
+    m_heatingHumidificationMeanCoincidentDryBulb99pt6 = heatingHumidificationMeanCoincidentDryBulb99pt6;
+  }
+
+  bool EpwDesignCondition::setHeatingHumidificationDewPoint99(const std::string &heatingHumidificationDewPoint99)
+  {
+    bool ok;
+    double value = stringToDouble(heatingHumidificationDewPoint99, &ok);
+    setHeatingHumidificationDewPoint99(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingHumidificationDewPoint99(double heatingHumidificationDewPoint99)
+  {
+    m_heatingHumidificationDewPoint99 = heatingHumidificationDewPoint99;
+  }
+
+  bool EpwDesignCondition::setHeatingHumidificationHumidityRatio99(const std::string &heatingHumidificationHumidityRatio99)
+  {
+    bool ok;
+    double value = stringToDouble(heatingHumidificationHumidityRatio99, &ok);
+    setHeatingHumidificationHumidityRatio99(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingHumidificationHumidityRatio99(double heatingHumidificationHumidityRatio99)
+  {
+    m_heatingHumidificationHumidityRatio99 = heatingHumidificationHumidityRatio99;
+  }
+
+  bool EpwDesignCondition::setHeatingHumidificationMeanCoincidentDryBulb99(const std::string &heatingHumidificationMeanCoincidentDryBulb99)
+  {
+    bool ok;
+    double value = stringToDouble(heatingHumidificationMeanCoincidentDryBulb99, &ok);
+    setHeatingHumidificationMeanCoincidentDryBulb99(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingHumidificationMeanCoincidentDryBulb99(double heatingHumidificationMeanCoincidentDryBulb99)
+  {
+    m_heatingHumidificationMeanCoincidentDryBulb99 = heatingHumidificationMeanCoincidentDryBulb99;
+  }
+
+  bool EpwDesignCondition::setHeatingColdestMonthWindSpeed0pt4(const std::string &heatingColdestMonthWindSpeed0pt4)
+  {
+    bool ok;
+    double value = stringToDouble(heatingColdestMonthWindSpeed0pt4, &ok);
+    setHeatingColdestMonthWindSpeed0pt4(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingColdestMonthWindSpeed0pt4(double heatingColdestMonthWindSpeed0pt4)
+  {
+    m_heatingColdestMonthWindSpeed0pt4 = heatingColdestMonthWindSpeed0pt4;
+  }
+
+  bool EpwDesignCondition::setHeatingColdestMonthMeanCoincidentDryBulb0pt4(const std::string &heatingColdestMonthMeanCoincidentDryBulb0pt4)
+  {
+    bool ok;
+    double value = stringToDouble(heatingColdestMonthMeanCoincidentDryBulb0pt4, &ok);
+    setHeatingColdestMonthMeanCoincidentDryBulb0pt4(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingColdestMonthMeanCoincidentDryBulb0pt4(double heatingColdestMonthMeanCoincidentDryBulb0pt4)
+  {
+    m_heatingColdestMonthMeanCoincidentDryBulb0pt4 = heatingColdestMonthMeanCoincidentDryBulb0pt4;
+  }
+
+  bool EpwDesignCondition::setHeatingColdestMonthWindSpeed1(const std::string &heatingColdestMonthWindSpeed1)
+  {
+    bool ok;
+    double value = stringToDouble(heatingColdestMonthWindSpeed1, &ok);
+    setHeatingColdestMonthWindSpeed1(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingColdestMonthWindSpeed1(double heatingColdestMonthWindSpeed1)
+  {
+    m_heatingColdestMonthWindSpeed1 = heatingColdestMonthWindSpeed1;
+  }
+
+  bool EpwDesignCondition::setHeatingColdestMonthMeanCoincidentDryBulb1(const std::string &heatingColdestMonthMeanCoincidentDryBulb1)
+  {
+    bool ok;
+    double value = stringToDouble(heatingColdestMonthMeanCoincidentDryBulb1, &ok);
+    setHeatingColdestMonthMeanCoincidentDryBulb1(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingColdestMonthMeanCoincidentDryBulb1(double heatingColdestMonthMeanCoincidentDryBulb1)
+  {
+    m_heatingColdestMonthMeanCoincidentDryBulb1 = heatingColdestMonthMeanCoincidentDryBulb1;
+  }
+
+  bool EpwDesignCondition::setHeatingMeanCoincidentWindSpeed99pt6(const std::string &heatingMeanCoincidentWindSpeed99pt6)
+  {
+    bool ok;
+    double value = stringToDouble(heatingMeanCoincidentWindSpeed99pt6, &ok);
+    setHeatingMeanCoincidentWindSpeed99pt6(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingMeanCoincidentWindSpeed99pt6(double heatingMeanCoincidentWindSpeed99pt6)
+  {
+    m_heatingMeanCoincidentWindSpeed99pt6 = heatingMeanCoincidentWindSpeed99pt6;
+  }
+
+  bool EpwDesignCondition::setHeatingPrevailingCoincidentWindDirection99pt6(const std::string &heatingPrevailingCoincidentWindDirection99pt6)
+  {
+    bool ok;
+    int value = stringToInteger(heatingPrevailingCoincidentWindDirection99pt6, &ok);
+    setHeatingPrevailingCoincidentWindDirection99pt6(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setHeatingPrevailingCoincidentWindDirection99pt6(int heatingPrevailingCoincidentWindDirection99pt6)
+  {
+    m_heatingPrevailingCoincidentWindDirection99pt6 = heatingPrevailingCoincidentWindDirection99pt6;
+  }
+
+  bool EpwDesignCondition::setCoolingHottestMonth(const std::string &coolingHottestMonth)
+  {
+    bool ok;
+    int value = stringToInteger(coolingHottestMonth, &ok);
+    setCoolingHottestMonth(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingHottestMonth(int coolingHottestMonth)
+  {
+    m_coolingHottestMonth = coolingHottestMonth;
+  }
+
+  bool EpwDesignCondition::setCoolingDryBulbRange(const std::string &coolingDryBulbRange)
+  {
+    bool ok;
+    double value = stringToDouble(coolingDryBulbRange, &ok);
+    setCoolingDryBulbRange(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingDryBulbRange(double coolingDryBulbRange)
+  {
+    m_coolingDryBulbRange = coolingDryBulbRange;
+  }
+
+  bool EpwDesignCondition::setCoolingDryBulb0pt4(const std::string &coolingDryBulb0pt4)
+  {
+    bool ok;
+    double value = stringToDouble(coolingDryBulb0pt4, &ok);
+    setCoolingDryBulb0pt4(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingDryBulb0pt4(double coolingDryBulb0pt4)
+  {
+    m_coolingDryBulb0pt4 = coolingDryBulb0pt4;
+  }
+
+  bool EpwDesignCondition::setCoolingMeanCoincidentWetBulb0pt4(const std::string &coolingMeanCoincidentWetBulb0pt4)
+  {
+    bool ok;
+    double value = stringToDouble(coolingMeanCoincidentWetBulb0pt4, &ok);
+    setCoolingMeanCoincidentWetBulb0pt4(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingMeanCoincidentWetBulb0pt4(double coolingMeanCoincidentWetBulb0pt4)
+  {
+    m_coolingMeanCoincidentWetBulb0pt4 = coolingMeanCoincidentWetBulb0pt4;
+  }
+
+  bool EpwDesignCondition::setCoolingDryBulb1(const std::string &coolingDryBulb1)
+  {
+    bool ok;
+    double value = stringToDouble(coolingDryBulb1, &ok);
+    setCoolingDryBulb1(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingDryBulb1(double coolingDryBulb1)
+  {
+    m_coolingDryBulb1 = coolingDryBulb1;
+  }
+
+  bool EpwDesignCondition::setCoolingMeanCoincidentWetBulb1(const std::string &coolingMeanCoincidentWetBulb1)
+  {
+    bool ok;
+    double value = stringToDouble(coolingMeanCoincidentWetBulb1, &ok);
+    setCoolingMeanCoincidentWetBulb1(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingMeanCoincidentWetBulb1(double coolingMeanCoincidentWetBulb1)
+  {
+    m_coolingMeanCoincidentWetBulb1 = coolingMeanCoincidentWetBulb1;
+  }
+
+  bool EpwDesignCondition::setCoolingDryBulb2(const std::string &coolingDryBulb2)
+  {
+    bool ok;
+    double value = stringToDouble(coolingDryBulb2, &ok);
+    setCoolingDryBulb2(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingDryBulb2(double coolingDryBulb2)
+  {
+    m_coolingDryBulb2 = coolingDryBulb2;
+  }
+
+  bool EpwDesignCondition::setCoolingMeanCoincidentWetBulb2(const std::string &coolingMeanCoincidentWetBulb2)
+  {
+    bool ok;
+    double value = stringToDouble(coolingMeanCoincidentWetBulb2, &ok);
+    setCoolingMeanCoincidentWetBulb2(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingMeanCoincidentWetBulb2(double coolingMeanCoincidentWetBulb2)
+  {
+    m_coolingMeanCoincidentWetBulb2 = coolingMeanCoincidentWetBulb2;
+  }
+
+  bool EpwDesignCondition::setCoolingEvaporationWetBulb0pt4(const std::string &coolingEvaporationWetBulb0pt4)
+  {
+    bool ok;
+    double value = stringToDouble(coolingEvaporationWetBulb0pt4, &ok);
+    setCoolingEvaporationWetBulb0pt4(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingEvaporationWetBulb0pt4(double coolingEvaporationWetBulb0pt4)
+  {
+    m_coolingEvaporationWetBulb0pt4 = coolingEvaporationWetBulb0pt4;
+  }
+
+  bool EpwDesignCondition::setCoolingEvaporationMeanCoincidentDryBulb0pt4(const std::string &coolingEvaporationMeanCoincidentDryBulb0pt4)
+  {
+    bool ok;
+    double value = stringToDouble(coolingEvaporationMeanCoincidentDryBulb0pt4, &ok);
+    setCoolingEvaporationMeanCoincidentDryBulb0pt4(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingEvaporationMeanCoincidentDryBulb0pt4(double coolingEvaporationMeanCoincidentDryBulb0pt4)
+  {
+    m_coolingEvaporationMeanCoincidentDryBulb0pt4 = coolingEvaporationMeanCoincidentDryBulb0pt4;
+  }
+
+  bool EpwDesignCondition::setCoolingEvaporationWetBulb1(const std::string &coolingEvaporationWetBulb1)
+  {
+    bool ok;
+    double value = stringToDouble(coolingEvaporationWetBulb1, &ok);
+    setCoolingEvaporationWetBulb1(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingEvaporationWetBulb1(double coolingEvaporationWetBulb1)
+  {
+    m_coolingEvaporationWetBulb1 = coolingEvaporationWetBulb1;
+  }
+
+  bool EpwDesignCondition::setCoolingEvaporationMeanCoincidentDryBulb1(const std::string &coolingEvaporationMeanCoincidentDryBulb1)
+  {
+    bool ok;
+    double value = stringToDouble(coolingEvaporationMeanCoincidentDryBulb1, &ok);
+    setCoolingEvaporationMeanCoincidentDryBulb1(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingEvaporationMeanCoincidentDryBulb1(double coolingEvaporationMeanCoincidentDryBulb1)
+  {
+    m_coolingEvaporationMeanCoincidentDryBulb1 = coolingEvaporationMeanCoincidentDryBulb1;
+  }
+
+  bool EpwDesignCondition::setCoolingEvaporationWetBulb2(const std::string &coolingEvaporationWetBulb2)
+  {
+    bool ok;
+    double value = stringToDouble(coolingEvaporationWetBulb2, &ok);
+    setCoolingEvaporationWetBulb2(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingEvaporationWetBulb2(double coolingEvaporationWetBulb2)
+  {
+    m_coolingEvaporationWetBulb2 = coolingEvaporationWetBulb2;
+  }
+
+  bool EpwDesignCondition::setCoolingEvaporationMeanCoincidentDryBulb2(const std::string &coolingEvaporationMeanCoincidentDryBulb2)
+  {
+    bool ok;
+    double value = stringToDouble(coolingEvaporationMeanCoincidentDryBulb2, &ok);
+    setCoolingEvaporationMeanCoincidentDryBulb2(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingEvaporationMeanCoincidentDryBulb2(double coolingEvaporationMeanCoincidentDryBulb2)
+  {
+    m_coolingEvaporationMeanCoincidentDryBulb2 = coolingEvaporationMeanCoincidentDryBulb2;
+  }
+
+  bool EpwDesignCondition::setCoolingMeanCoincidentWindSpeed0pt4(const std::string &coolingMeanCoincidentWindSpeed0pt4)
+  {
+    bool ok;
+    double value = stringToDouble(coolingMeanCoincidentWindSpeed0pt4, &ok);
+    setCoolingMeanCoincidentWindSpeed0pt4(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingMeanCoincidentWindSpeed0pt4(double coolingMeanCoincidentWindSpeed0pt4)
+  {
+    m_coolingMeanCoincidentWindSpeed0pt4 = coolingMeanCoincidentWindSpeed0pt4;
+  }
+
+  bool EpwDesignCondition::setCoolingPrevailingCoincidentWindDirection0pt4(const std::string &coolingPrevailingCoincidentWindDirection0pt4)
+  {
+    bool ok;
+    int value = stringToInteger(coolingPrevailingCoincidentWindDirection0pt4, &ok);
+    setCoolingPrevailingCoincidentWindDirection0pt4(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingPrevailingCoincidentWindDirection0pt4(int coolingPrevailingCoincidentWindDirection0pt4)
+  {
+    m_coolingPrevailingCoincidentWindDirection0pt4 = coolingPrevailingCoincidentWindDirection0pt4;
+  }
+
+  bool EpwDesignCondition::setCoolingDehumidificationDewPoint0pt4(const std::string &coolingDehumidificationDewPoint0pt4)
+  {
+    bool ok;
+    double value = stringToDouble(coolingDehumidificationDewPoint0pt4, &ok);
+    setCoolingDehumidificationDewPoint0pt4(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingDehumidificationDewPoint0pt4(double coolingDehumidificationDewPoint0pt4)
+  {
+    m_coolingDehumidificationDewPoint0pt4 = coolingDehumidificationDewPoint0pt4;
+  }
+
+  bool EpwDesignCondition::setCoolingDehumidificationHumidityRatio0pt4(const std::string &coolingDehumidificationHumidityRatio0pt4)
+  {
+    bool ok;
+    double value = stringToDouble(coolingDehumidificationHumidityRatio0pt4, &ok);
+    setCoolingDehumidificationHumidityRatio0pt4(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingDehumidificationHumidityRatio0pt4(double coolingDehumidificationHumidityRatio0pt4)
+  {
+    m_coolingDehumidificationHumidityRatio0pt4 = coolingDehumidificationHumidityRatio0pt4;
+  }
+
+  bool EpwDesignCondition::setCoolingDehumidificationMeanCoincidentDryBulb0pt4(const std::string &coolingDehumidificationMeanCoincidentDryBulb0pt4)
+  {
+    bool ok;
+    double value = stringToDouble(coolingDehumidificationMeanCoincidentDryBulb0pt4, &ok);
+    setCoolingDehumidificationMeanCoincidentDryBulb0pt4(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingDehumidificationMeanCoincidentDryBulb0pt4(double coolingDehumidificationMeanCoincidentDryBulb0pt4)
+  {
+    m_coolingDehumidificationMeanCoincidentDryBulb0pt4 = coolingDehumidificationMeanCoincidentDryBulb0pt4;
+  }
+
+  bool EpwDesignCondition::setCoolingDehumidificationDewPoint1(const std::string &coolingDehumidificationDewPoint1)
+  {
+    bool ok;
+    double value = stringToDouble(coolingDehumidificationDewPoint1, &ok);
+    setCoolingDehumidificationDewPoint1(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingDehumidificationDewPoint1(double coolingDehumidificationDewPoint1)
+  {
+    m_coolingDehumidificationDewPoint1 = coolingDehumidificationDewPoint1;
+  }
+
+  bool EpwDesignCondition::setCoolingDehumidificationHumidityRatio1(const std::string &coolingDehumidificationHumidityRatio1)
+  {
+    bool ok;
+    double value = stringToDouble(coolingDehumidificationHumidityRatio1, &ok);
+    setCoolingDehumidificationHumidityRatio1(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingDehumidificationHumidityRatio1(double coolingDehumidificationHumidityRatio1)
+  {
+    m_coolingDehumidificationHumidityRatio1 = coolingDehumidificationHumidityRatio1;
+  }
+
+  bool EpwDesignCondition::setCoolingDehumidificationMeanCoincidentDryBulb1(const std::string &coolingDehumidificationMeanCoincidentDryBulb1)
+  {
+    bool ok;
+    double value = stringToDouble(coolingDehumidificationMeanCoincidentDryBulb1, &ok);
+    setCoolingDehumidificationMeanCoincidentDryBulb1(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingDehumidificationMeanCoincidentDryBulb1(double coolingDehumidificationMeanCoincidentDryBulb1)
+  {
+    m_coolingDehumidificationMeanCoincidentDryBulb1 = coolingDehumidificationMeanCoincidentDryBulb1;
+  }
+
+  bool EpwDesignCondition::setCoolingDehumidificationDewPoint2(const std::string &coolingDehumidificationDewPoint2)
+  {
+    bool ok;
+    double value = stringToDouble(coolingDehumidificationDewPoint2, &ok);
+    setCoolingDehumidificationDewPoint2(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingDehumidificationDewPoint2(double coolingDehumidificationDewPoint2)
+  {
+    m_coolingDehumidificationDewPoint2 = coolingDehumidificationDewPoint2;
+  }
+
+  bool EpwDesignCondition::setCoolingDehumidificationHumidityRatio2(const std::string &coolingDehumidificationHumidityRatio2)
+  {
+    bool ok;
+    double value = stringToDouble(coolingDehumidificationHumidityRatio2, &ok);
+    setCoolingDehumidificationHumidityRatio2(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingDehumidificationHumidityRatio2(double coolingDehumidificationHumidityRatio2)
+  {
+    m_coolingDehumidificationHumidityRatio2 = coolingDehumidificationHumidityRatio2;
+  }
+
+  bool EpwDesignCondition::setCoolingDehumidificationMeanCoincidentDryBulb2(const std::string &coolingDehumidificationMeanCoincidentDryBulb2)
+  {
+    bool ok;
+    double value = stringToDouble(coolingDehumidificationMeanCoincidentDryBulb2, &ok);
+    setCoolingDehumidificationMeanCoincidentDryBulb2(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingDehumidificationMeanCoincidentDryBulb2(double coolingDehumidificationMeanCoincidentDryBulb2)
+  {
+    m_coolingDehumidificationMeanCoincidentDryBulb2 = coolingDehumidificationMeanCoincidentDryBulb2;
+  }
+
+  bool EpwDesignCondition::setCoolingEnthalpy0pt4(const std::string &coolingEnthalpy0pt4)
+  {
+    bool ok;
+    double value = stringToDouble(coolingEnthalpy0pt4, &ok);
+    setCoolingEnthalpy0pt4(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingEnthalpy0pt4(double coolingEnthalpy0pt4)
+  {
+    m_coolingEnthalpy0pt4 = coolingEnthalpy0pt4;
+  }
+
+  bool EpwDesignCondition::setCoolingEnthalpyMeanCoincidentDryBulb0pt4(const std::string &coolingEnthalpyMeanCoincidentDryBulb0pt4)
+  {
+    bool ok;
+    double value = stringToDouble(coolingEnthalpyMeanCoincidentDryBulb0pt4, &ok);
+    setCoolingEnthalpyMeanCoincidentDryBulb0pt4(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingEnthalpyMeanCoincidentDryBulb0pt4(double coolingEnthalpyMeanCoincidentDryBulb0pt4)
+  {
+    m_coolingEnthalpyMeanCoincidentDryBulb0pt4 = coolingEnthalpyMeanCoincidentDryBulb0pt4;
+  }
+
+  bool EpwDesignCondition::setCoolingEnthalpy1(const std::string &coolingEnthalpy1)
+  {
+    bool ok;
+    double value = stringToDouble(coolingEnthalpy1, &ok);
+    setCoolingEnthalpy1(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingEnthalpy1(double coolingEnthalpy1)
+  {
+    m_coolingEnthalpy1 = coolingEnthalpy1;
+  }
+
+  bool EpwDesignCondition::setCoolingEnthalpyMeanCoincidentDryBulb1(const std::string &coolingEnthalpyMeanCoincidentDryBulb1)
+  {
+    bool ok;
+    double value = stringToDouble(coolingEnthalpyMeanCoincidentDryBulb1, &ok);
+    setCoolingEnthalpyMeanCoincidentDryBulb1(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingEnthalpyMeanCoincidentDryBulb1(double coolingEnthalpyMeanCoincidentDryBulb1)
+  {
+    m_coolingEnthalpyMeanCoincidentDryBulb1 = coolingEnthalpyMeanCoincidentDryBulb1;
+  }
+
+  bool EpwDesignCondition::setCoolingEnthalpy2(const std::string &coolingEnthalpy2)
+  {
+    bool ok;
+    double value = stringToDouble(coolingEnthalpy2, &ok);
+    setCoolingEnthalpy2(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingEnthalpy2(double coolingEnthalpy2)
+  {
+    m_coolingEnthalpy2 = coolingEnthalpy2;
+  }
+
+  bool EpwDesignCondition::setCoolingEnthalpyMeanCoincidentDryBulb2(const std::string &coolingEnthalpyMeanCoincidentDryBulb2)
+  {
+    bool ok;
+    double value = stringToDouble(coolingEnthalpyMeanCoincidentDryBulb2, &ok);
+    setCoolingEnthalpyMeanCoincidentDryBulb2(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingEnthalpyMeanCoincidentDryBulb2(double coolingEnthalpyMeanCoincidentDryBulb2)
+  {
+    m_coolingEnthalpyMeanCoincidentDryBulb2 = coolingEnthalpyMeanCoincidentDryBulb2;
+  }
+
+  bool EpwDesignCondition::setCoolingHours8To4AndDryBulb12pt8To20pt6(const std::string &coolingHours8To4AndDryBulb12pt8To20pt6)
+  {
+    bool ok;
+    int value = stringToInteger(coolingHours8To4AndDryBulb12pt8To20pt6, &ok);
+    setCoolingHours8To4AndDryBulb12pt8To20pt6(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setCoolingHours8To4AndDryBulb12pt8To20pt6(int coolingHours8To4AndDryBulb12pt8To20pt6)
+  {
+    m_coolingHours8To4AndDryBulb12pt8To20pt6 = coolingHours8To4AndDryBulb12pt8To20pt6;
+  }
+
+  bool EpwDesignCondition::setExtremeWindSpeed1(const std::string &extremeWindSpeed1)
+  {
+    bool ok;
+    double value = stringToDouble(extremeWindSpeed1, &ok);
+    setExtremeWindSpeed1(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeWindSpeed1(double extremeWindSpeed1)
+  {
+    m_extremeWindSpeed1 = extremeWindSpeed1;
+  }
+
+  bool EpwDesignCondition::setExtremeWindSpeed2pt5(const std::string &extremeWindSpeed2pt5)
+  {
+    bool ok;
+    double value = stringToDouble(extremeWindSpeed2pt5, &ok);
+    setExtremeWindSpeed2pt5(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeWindSpeed2pt5(double extremeWindSpeed2pt5)
+  {
+    m_extremeWindSpeed2pt5 = extremeWindSpeed2pt5;
+  }
+
+  bool EpwDesignCondition::setExtremeWindSpeed5(const std::string &extremeWindSpeed5)
+  {
+    bool ok;
+    double value = stringToDouble(extremeWindSpeed5, &ok);
+    setExtremeWindSpeed5(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeWindSpeed5(double extremeWindSpeed5)
+  {
+    m_extremeWindSpeed5 = extremeWindSpeed5;
+  }
+
+  bool EpwDesignCondition::setExtremeMaxWetBulb(const std::string &extremeMaxWetBulb)
+  {
+    bool ok;
+    double value = stringToDouble(extremeMaxWetBulb, &ok);
+    setExtremeMaxWetBulb(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeMaxWetBulb(double extremeMaxWetBulb)
+  {
+    m_extremeMaxWetBulb = extremeMaxWetBulb;
+  }
+
+  bool EpwDesignCondition::setExtremeMeanMinDryBulb(const std::string &extremeMeanMinDryBulb)
+  {
+    bool ok;
+    double value = stringToDouble(extremeMeanMinDryBulb, &ok);
+    setExtremeMeanMinDryBulb(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeMeanMinDryBulb(double extremeMeanMinDryBulb)
+  {
+    m_extremeMeanMinDryBulb = extremeMeanMinDryBulb;
+  }
+
+  bool EpwDesignCondition::setExtremeMeanMaxDryBulb(const std::string &extremeMeanMaxDryBulb)
+  {
+    bool ok;
+    double value = stringToDouble(extremeMeanMaxDryBulb, &ok);
+    setExtremeMeanMaxDryBulb(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeMeanMaxDryBulb(double extremeMeanMaxDryBulb)
+  {
+    m_extremeMeanMaxDryBulb = extremeMeanMaxDryBulb;
+  }
+
+  bool EpwDesignCondition::setExtremeStdDevMinDryBulb(const std::string &extremeStdDevMinDryBulb)
+  {
+    bool ok;
+    double value = stringToDouble(extremeStdDevMinDryBulb, &ok);
+    setExtremeStdDevMinDryBulb(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeStdDevMinDryBulb(double extremeStdDevMinDryBulb)
+  {
+    m_extremeStdDevMinDryBulb = extremeStdDevMinDryBulb;
+  }
+
+  bool EpwDesignCondition::setExtremeStdDevMaxDryBulb(const std::string &extremeStdDevMaxDryBulb)
+  {
+    bool ok;
+    double value = stringToDouble(extremeStdDevMaxDryBulb, &ok);
+    setExtremeStdDevMaxDryBulb(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeStdDevMaxDryBulb(double extremeStdDevMaxDryBulb)
+  {
+    m_extremeStdDevMaxDryBulb = extremeStdDevMaxDryBulb;
+  }
+
+  bool EpwDesignCondition::setExtremeN5YearsMinDryBulb(const std::string &extremeN5YearsMinDryBulb)
+  {
+    bool ok;
+    double value = stringToDouble(extremeN5YearsMinDryBulb, &ok);
+    setExtremeN5YearsMinDryBulb(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeN5YearsMinDryBulb(double extremeN5YearsMinDryBulb)
+  {
+    m_extremeN5YearsMinDryBulb = extremeN5YearsMinDryBulb;
+  }
+
+  bool EpwDesignCondition::setExtremeN5YearsMaxDryBulb(const std::string &extremeN5YearsMaxDryBulb)
+  {
+    bool ok;
+    double value = stringToDouble(extremeN5YearsMaxDryBulb, &ok);
+    setExtremeN5YearsMaxDryBulb(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeN5YearsMaxDryBulb(double extremeN5YearsMaxDryBulb)
+  {
+    m_extremeN5YearsMaxDryBulb = extremeN5YearsMaxDryBulb;
+  }
+
+  bool EpwDesignCondition::setExtremeN10YearsMinDryBulb(const std::string &extremeN10YearsMinDryBulb)
+  {
+    bool ok;
+    double value = stringToDouble(extremeN10YearsMinDryBulb, &ok);
+    setExtremeN10YearsMinDryBulb(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeN10YearsMinDryBulb(double extremeN10YearsMinDryBulb)
+  {
+    m_extremeN10YearsMinDryBulb = extremeN10YearsMinDryBulb;
+  }
+
+  bool EpwDesignCondition::setExtremeN10YearsMaxDryBulb(const std::string &extremeN10YearsMaxDryBulb)
+  {
+    bool ok;
+    double value = stringToDouble(extremeN10YearsMaxDryBulb, &ok);
+    setExtremeN10YearsMaxDryBulb(value);
+    return ok;
+  }
+  void EpwDesignCondition::setExtremeN10YearsMaxDryBulb(double extremeN10YearsMaxDryBulb)
+  {
+    m_extremeN10YearsMaxDryBulb = extremeN10YearsMaxDryBulb;
+  }
+
+  bool EpwDesignCondition::setExtremeN20YearsMinDryBulb(const std::string &extremeN20YearsMinDryBulb)
+  {
+    bool ok;
+    double value = stringToDouble(extremeN20YearsMinDryBulb, &ok);
+    setExtremeN20YearsMinDryBulb(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeN20YearsMinDryBulb(double extremeN20YearsMinDryBulb)
+  {
+    m_extremeN20YearsMinDryBulb = extremeN20YearsMinDryBulb;
+  }
+
+  bool EpwDesignCondition::setExtremeN20YearsMaxDryBulb(const std::string &extremeN20YearsMaxDryBulb)
+  {
+    bool ok;
+    double value = stringToDouble(extremeN20YearsMaxDryBulb, &ok);
+    setExtremeN20YearsMaxDryBulb(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeN20YearsMaxDryBulb(double extremeN20YearsMaxDryBulb)
+  {
+    m_extremeN20YearsMaxDryBulb = extremeN20YearsMaxDryBulb;
+  }
+
+  bool EpwDesignCondition::setExtremeN50YearsMinDryBulb(const std::string &extremeN50YearsMinDryBulb)
+  {
+    bool ok;
+    double value = stringToDouble(extremeN50YearsMinDryBulb, &ok);
+    setExtremeN50YearsMinDryBulb(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeN50YearsMinDryBulb(double extremeN50YearsMinDryBulb)
+  {
+    m_extremeN50YearsMinDryBulb = extremeN50YearsMinDryBulb;
+  }
+
+  bool EpwDesignCondition::setExtremeN50YearsMaxDryBulb(const std::string &extremeN50YearsMaxDryBulb)
+  {
+    bool ok;
+    double value = stringToDouble(extremeN50YearsMaxDryBulb, &ok);
+    setExtremeN50YearsMaxDryBulb(value);
+    return ok;
+  }
+
+  void EpwDesignCondition::setExtremeN50YearsMaxDryBulb(double extremeN50YearsMaxDryBulb)
+  {
+    m_extremeN50YearsMaxDryBulb = extremeN50YearsMaxDryBulb;
+  }
+
+  std::vector<EpwDesignCondition> EpwFile::designConditions()
+  {
+    if (m_designs.size() == 0){
+      if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)){
+        LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
+      }
+
+      // set checksum
+      m_checksum = openstudio::checksum(m_path);
+
+      // open file
+      std::ifstream ifs(openstudio::toString(m_path));
+
+      if (!parse(ifs, true)){
+        ifs.close();
+        LOG(Error, "EpwFile '" << toString(m_path) << "' cannot be processed");
+      }
+      else{
+        ifs.close();
+      }
+    }
+    return m_designs;
+  }
+
   boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string &name)
   {
     if(m_data.size()==0) {
@@ -2437,6 +4268,7 @@ namespace openstudio{
           result = result && parseLocation(line);
           break;
         case 1:
+          result = result && parseDesignConditions(line);
           break;
         case 2:
           break;
@@ -2642,6 +4474,50 @@ namespace openstudio{
       return false;
     }
 
+    return true;
+  }
+
+  bool EpwFile::parseDesignConditions(const std::string& line)
+  {
+    // DESIGN CONDITIONS,1,Climate Design Data 2009 ASHRAE Handbook,,Heating,12,-17.4,-14,-21.5,0.7,-11.7,-18.9,0.9,-6.9,14.1,1.8,12,2.4,3.3,160,Cooling,7,15.2,34.6,15.7,33.2,15.6,31.8,15.4,18.3,27.3,17.6,27,17,26.5,4.2,80,16,14,19.9,15.2,13.2,19.7,14.1,12.3,19.6,58.3,27,55.9,26.9,53.8,26.3,722,Extremes,11.9,10.4,8.8,20.7,-22.7,37.1,2.8,1.3,-24.7,38,-26.3,38.8,-27.9,39.5,-29.9,40.5
+    // DESIGN CONDITIONS,Number of Design Conditions,Title of Design Condition,Design Stat,HDB 99.6%,HDB 99%,X WS 1%,X WS 2.5%,X WS 5%,CM WS .4%,CM MDB .4%,CM WS 1%,CM MDB 1%,MWS 99.6%,PWD 99.6%,MWS .4%,PWD .4%,X MnDB Max,X MnDB Min,X StdDB Max,X StdDB Min,Design Stat,CDB .4%,C MWB .4%,CDB 1%,C MWB 1%,CDB 2%,C MWB 2%,E WB .4%,E MDB .4%,E WB 1%,E MDB 1%,E WB 2%,E MDB 2%,DP .4%,HR .4%,MDB .4%,DP 1%,HR 1%,MDB 1%,DP 2%,HR 2%,MDB 2%,DB Range
+    std::vector<std::string> split = splitString(line, ',');
+
+    if (split[0] != "DESIGN CONDITIONS") {
+      LOG(Error, "Missing DESIGN CONDITIONS specifier in EPW file '" << m_path << "'");
+      return false;
+    }
+    else if (split[1] == "0") {
+      LOG(Warn, "Appears there are no design condition fields in the EPW file '" << m_path << "'");
+      return true;
+    }
+
+    int nDesignConditions = std::stoi(split[1]);
+
+    double expected_split_size = 70;
+    expected_split_size += (nDesignConditions - 1) * 68;
+
+    if (split.size() != expected_split_size) {
+      LOG(Warn, "Expected " << expected_split_size << " design condition fields rather than the " << split.size() << " fields in the EPW file '" << m_path << "'. Design conditions will not be parsed.");
+      nDesignConditions = 0;
+    } else if (nDesignConditions > 1) {
+      LOG(Warn, "Found " << nDesignConditions << " in the EPW file '" << m_path << "'");
+    }
+
+    for (int j = 0; j < nDesignConditions; j++) {
+      std::vector<std::string> design_condition(68);
+      for (int k = 0; k < 68; k++) {
+        design_condition[k] = split[k + 2 + (68 * j)];
+      }
+      boost::optional<EpwDesignCondition> dc = EpwDesignCondition::fromDesignConditionsStrings(design_condition);
+      if (dc) {
+        m_designs.push_back(dc.get());
+      }
+      else {
+        LOG(Error, "Failed to parse design condition " << j+1 << " of EPW file '" << m_path << "'");
+        return false;
+      }
+    }
     return true;
   }
 
