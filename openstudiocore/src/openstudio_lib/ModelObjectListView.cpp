@@ -128,7 +128,8 @@ std::vector<OSItemId> ModelObjectListController::makeVector()
         if( (! hvacComponent->containingHVACComponent()) && (! hvacComponent->containingZoneHVACComponent()) ) {
           result.push_back(modelObjectToItemId(hvacComponent.get(), false));
         }
-        // Special case when there is a containingZoneHVACComponent
+        // Special case when there is a containingZoneHVACComponent, it might be a tank for a HPWH that we DO want to be able
+        // to drag and drop...
         else if ( boost::optional<openstudio::model::ZoneHVACComponent> zComp = hvacComponent->containingZoneHVACComponent() ) {
 
           openstudio::IddObjectType zCompType = zComp->iddObjectType();
