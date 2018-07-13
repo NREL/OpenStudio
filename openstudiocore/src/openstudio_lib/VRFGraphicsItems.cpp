@@ -342,7 +342,8 @@ void VRFThermalZoneDropZoneView::paint( QPainter *painter,
     painter->drawRect(boundingRect());
 
     QFont font = painter->font();
-    font.setPointSize(25);
+    // This changes the size of the font for the name of the Thermal Zone once you've dragged it next to a VRF Terminal
+    font.setPointSize(16);
     painter->setFont(font);
     painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));
     QRectF t_rec = boundingRect();
@@ -505,6 +506,7 @@ void VRFSystemDropZoneView::paint( QPainter *painter,
   painter->drawRect(boundingRect());
 
   QFont font = painter->font();
+  // This is first "Drop VRF System" one, make it big!
   font.setPointSize(30);
   painter->setFont(font);
   painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));
