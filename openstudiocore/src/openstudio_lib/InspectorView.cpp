@@ -2208,7 +2208,7 @@ ZoneHVACPackagedTerminalAirConditionerInspectorView::ZoneHVACPackagedTerminalAir
                               ":images/link_icon_on.png",
                               ":images/link_icon_off.png" );
 
-  m_libraryTabWidget->setCurrentIndex(1);
+  m_libraryTabWidget->setCurrentIndex(0);
 
   connect(m_loopChooserView, &LoopChooserView::addToLoopClicked,
           this, &ZoneHVACPackagedTerminalAirConditionerInspectorView::addToLoopClicked);
