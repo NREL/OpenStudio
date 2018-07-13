@@ -40,7 +40,7 @@
 #include "../model/YearDescription.hpp"
 #include "../model/YearDescription_Impl.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 #include <boost/smart_ptr.hpp>
 
 #include <map>

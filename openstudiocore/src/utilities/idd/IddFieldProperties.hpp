@@ -32,7 +32,7 @@
 
 #include "../UtilitiesAPI.hpp"
 #include "../core/Enum.hpp"
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <string>
 #include <vector>

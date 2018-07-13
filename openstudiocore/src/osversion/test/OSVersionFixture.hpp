@@ -35,7 +35,7 @@
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/FileLogSink.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 namespace openstudio {
   class VersionString;

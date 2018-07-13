@@ -31,7 +31,7 @@
 #define MODEL_ATTRIBUTES_HPP
 
 #include <boost/preprocessor/control/if.hpp>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 #include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/OSOptionalQuantity.hpp"
 

@@ -69,7 +69,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 #include <boost/algorithm/string.hpp>
 
 namespace openstudio {

@@ -66,7 +66,7 @@ namespace detail {
 
     virtual const std::vector<std::string>& outputVariableNames() const;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     virtual boost::optional<ModelObject> componentModelObject() const override;
 

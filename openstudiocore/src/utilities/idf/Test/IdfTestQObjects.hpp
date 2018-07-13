@@ -36,7 +36,7 @@
 
 #include "../../core/Assert.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 using namespace openstudio;
 

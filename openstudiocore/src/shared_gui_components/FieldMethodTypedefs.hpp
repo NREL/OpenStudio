@@ -35,7 +35,7 @@
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <vector>
 

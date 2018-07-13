@@ -33,7 +33,7 @@
 #include "../UtilitiesAPI.hpp"
 #include "Compare.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <vector>
 #include <set>

@@ -35,7 +35,7 @@
 #include "../core/Logger.hpp"
 
 #include <vector>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 namespace openstudio{
 

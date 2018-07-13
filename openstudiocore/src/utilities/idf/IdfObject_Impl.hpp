@@ -39,7 +39,7 @@
 #include <utilities/core/Containers.hpp>
 #include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <QUrl>
 

@@ -39,7 +39,7 @@
 #include <ostream>
 #include <vector>
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/date_defs.hpp>
 #include <boost/date_time/gregorian/greg_calendar.hpp>

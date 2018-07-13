@@ -39,7 +39,7 @@
 
 #include "../utilities/core/Logger.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <vector>

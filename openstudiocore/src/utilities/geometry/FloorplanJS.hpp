@@ -43,7 +43,7 @@
 
 #include <vector>
 #include <set>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 namespace openstudio{
 

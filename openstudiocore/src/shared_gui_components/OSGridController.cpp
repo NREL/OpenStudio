@@ -367,11 +367,11 @@ namespace openstudio {
     m_grid->requestRefreshGrid();
   }
 
-  boost::optional<const model::ModelObject &> ObjectSelector::getObject(const int t_row, const int t_column, const boost::optional<int> &t_subrow)
+  boost::optional<model::ModelObject> ObjectSelector::getObject(const int t_row, const int t_column, const boost::optional<int> &t_subrow)
   {
-    boost::optional<const model::ModelObject &> object;
+    boost::optional<model::ModelObject> object;
 
-    for (auto &widgetLoc : m_widgetMap)
+    for (const auto &widgetLoc : m_widgetMap)
     {
       if (widgetLoc.second->row == t_row && widgetLoc.second->column == t_column && (!t_subrow || t_subrow == widgetLoc.second->subrow))
       {
@@ -1835,7 +1835,7 @@ namespace openstudio {
         // Sub rows present, either in a widget, or in a row
         const DataSource &source = dataSource->source();
         QSharedPointer<BaseConcept> dropZoneConcept = source.dropZoneConcept();
-        boost::optional<const model::ModelObject &> object = this->m_objectSelector->getObject(selectedRow, selectedColumn, selectedSubrow);
+        boost::optional<model::ModelObject> object = this->m_objectSelector->getObject(selectedRow, selectedColumn, selectedSubrow);
         if (object) {
           for (auto modelObject : selectedObjects) {
             // Don't set the chosen object when iterating through the selected objects

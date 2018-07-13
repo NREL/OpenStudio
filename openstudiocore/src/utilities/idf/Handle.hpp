@@ -32,7 +32,7 @@
 
 #include "../core/UUID.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <map>
 #include <vector>

@@ -35,7 +35,7 @@
 #include <QAbstractButton>
 #include <QLabel>
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 class QLineEdit;
 class QTextEdit;

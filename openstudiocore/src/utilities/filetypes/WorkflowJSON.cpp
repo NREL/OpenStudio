@@ -41,7 +41,7 @@
 #include "../core/Checksum.hpp"
 #include "../time/DateTime.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <string>
 #include <fstream>

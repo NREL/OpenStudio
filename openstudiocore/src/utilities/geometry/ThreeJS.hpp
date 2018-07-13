@@ -67,7 +67,7 @@
 
 #include <vector>
 #include <map>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 namespace Json{
   class Value;

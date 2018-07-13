@@ -32,7 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "SetpointManager.hpp"
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 namespace openstudio {
 

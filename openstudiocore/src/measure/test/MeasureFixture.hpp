@@ -36,7 +36,7 @@
 #include "../../utilities/core/FileLogSink.hpp"
 #include "../../utilities/core/Path.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <resources.hxx>
 

@@ -37,7 +37,7 @@
 
 #include "../utilities/data/DataEnums.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 namespace openstudio {
 

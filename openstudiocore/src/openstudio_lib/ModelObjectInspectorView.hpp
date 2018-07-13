@@ -36,7 +36,7 @@
 #include "../model/ModelObject.hpp"
 
 #include <boost/smart_ptr.hpp>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 #include <QWidget>
 #include "OSInspectorView.hpp"
 

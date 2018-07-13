@@ -34,7 +34,7 @@
 #include "../model/Model.hpp"
 #include "../model/OutputVariable.hpp"
 #include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 class QComboBox;
 class QPushButton;

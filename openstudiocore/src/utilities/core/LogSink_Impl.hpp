@@ -35,7 +35,7 @@
 #include "LogMessage.hpp"
 #include "LogSink.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 class QReadWriteLock;
 class QWriteLocker;

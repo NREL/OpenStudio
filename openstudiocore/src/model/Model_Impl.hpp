@@ -46,7 +46,7 @@
 #include "../utilities/idf/WorkspaceObject_Impl.hpp"
 #include "../utilities/filetypes/WorkflowJSON.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <vector>
 

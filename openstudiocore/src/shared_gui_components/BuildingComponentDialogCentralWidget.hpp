@@ -35,7 +35,7 @@
 #include <set>
 #include <vector>
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 class QProgressBar;
 

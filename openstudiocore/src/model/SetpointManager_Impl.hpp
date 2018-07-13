@@ -31,7 +31,7 @@
 #define MODEL_SETPOINTMANAGER_IMPL_HPP
 
 #include "HVACComponent_Impl.hpp"
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 namespace openstudio {
 namespace model {

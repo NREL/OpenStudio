@@ -35,7 +35,7 @@
 #include "../model/ScheduleTypeLimits.hpp"
 #include "../model/YearDescription.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 #include <boost/smart_ptr.hpp>
 
 #include <QGraphicsItem>

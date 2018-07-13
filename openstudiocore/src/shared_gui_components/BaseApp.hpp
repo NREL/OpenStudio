@@ -33,7 +33,7 @@
 #include "../utilities/core/Path.hpp"
 
 #include <QWidget>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 //#include "EditController.hpp"
 
 namespace openstudio {

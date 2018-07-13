@@ -31,7 +31,7 @@
 #include <gtest/gtest.h>
 
 #include <string>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include "ModelFixture.hpp"
 

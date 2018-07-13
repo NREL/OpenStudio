@@ -57,7 +57,8 @@ namespace energyplus {
 
 #define MAP_SCHEDULE(_idfObject, _fieldIndex, _scheduleDay) \
 if (_scheduleDay){ \
-  boost::optional<IdfObject> idfScheduleDay = translateAndMapModelObject(*(_scheduleDay)); \
+  auto scheduleDay = *(_scheduleDay);\
+  boost::optional<IdfObject> idfScheduleDay = translateAndMapModelObject(scheduleDay); \
   if (idfScheduleDay){ \
     test = _idfObject.setString(_fieldIndex, idfScheduleDay->name().get()) && test; \
   } else { \

@@ -35,7 +35,7 @@
 #include "../core/Logger.hpp"
 
 #include <vector>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 // do not include anything from GeographicLib in header or expose in the API
 namespace GeographicLib{

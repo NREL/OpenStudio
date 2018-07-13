@@ -37,7 +37,7 @@
 #include "../time/Time.hpp"
 #include "../time/DateTime.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 #include <boost/function.hpp>
 
 #include <vector>

@@ -34,7 +34,7 @@
 
 #include "../core/Logger.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <string>
 #include <vector>

@@ -42,7 +42,7 @@
 
 #include "../utilities/core/Assert.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <QFocusEvent>
 #include <QMouseEvent>

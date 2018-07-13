@@ -37,7 +37,7 @@
  */
 
 #include <vector>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 /** Typedefs for shared pointers and vector of shared pointers, const and
  *  non-const variants. */

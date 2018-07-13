@@ -58,7 +58,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << std::endl
     << "#include <utilities/core/Enum.hpp>" << std::endl
     << std::endl
-    << "#include <boost/optional.hpp>" << std::endl
+    << "#include <boost/optional/optional_io.hpp>" << std::endl
     << std::endl
     << "#include <vector>" << std::endl
     << "#include <set>" << std::endl

@@ -32,7 +32,7 @@
 
 #include <QObject>
 #include <QSharedPointer>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 #include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 #include "../shared_gui_components/OSListController.hpp"
 

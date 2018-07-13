@@ -34,7 +34,7 @@
 #include <boost/regex.hpp>
 
 #include <QMetaType>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <vector>
 #include <ostream>

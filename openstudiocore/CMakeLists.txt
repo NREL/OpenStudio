@@ -196,6 +196,8 @@ if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
 endif()
 
+add_definitions("-DBOOST_NO_CXX11_EXPLICIT_CONVERSION_OPERATORS")
+
 IF (APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 ENDIF (APPLE)
@@ -888,7 +890,7 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
 endif()
 set(BOOST_ROOT "${BOOST_INSTALL_DIR}")
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
+find_package(Boost 1.67.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
 include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 mark_as_advanced(
   Boost_DIR

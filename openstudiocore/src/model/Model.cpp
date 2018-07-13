@@ -2066,8 +2066,8 @@ Model::Model(const openstudio::Workspace& workspace)
     newObjectImplPtrs.push_back(getImpl<detail::Model_Impl>()->createObject(
         vo->getImpl<openstudio::detail::WorkspaceObject_Impl>(),true));
   }
-  for (const WorkspaceObject& object :
-                workspace.getImpl<openstudio::detail::Workspace_Impl>()->objects())
+  auto objects = workspace.getImpl<openstudio::detail::Workspace_Impl>()->objects();
+  for (auto object : objects)
   {
     newObjectImplPtrs.push_back(getImpl<detail::Model_Impl>()->createObject(
         object.getImpl<openstudio::detail::WorkspaceObject_Impl>(),true));

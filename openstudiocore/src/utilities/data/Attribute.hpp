@@ -38,7 +38,7 @@
 #include "../core/UUID.hpp"
 #include "../core/Optional.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <QVariant>
 #include <QMetaType>

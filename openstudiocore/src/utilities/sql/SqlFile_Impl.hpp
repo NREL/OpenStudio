@@ -41,7 +41,7 @@
 #include "../core/Optional.hpp"
 #include "../data/Matrix.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <string>
 #include <vector>

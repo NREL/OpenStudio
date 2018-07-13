@@ -361,10 +361,9 @@ if(BUILD_BOOST)
   if(APPLE)
     set(apple-flags "-std=c11 -std=c++11 -stdlib=libc++")
     ExternalProject_Add(Boost
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_55_0.tar.gz
-      URL_MD5 93780777cfbf999a600f62883bd54b17
+      URL /Users/kbenne/Downloads/boost_1_67_0.tar.gz
+      URL_MD5 4850fceb3f2222ee011d4f3ea304d2cb
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/fchmodat.patch
       BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-flags} linkflags=${apple-flags} variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
       INSTALL_COMMAND ""
     )

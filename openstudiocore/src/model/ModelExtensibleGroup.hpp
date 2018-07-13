@@ -37,7 +37,7 @@
 
 #include "../utilities/core/Logger.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 namespace openstudio {
 namespace model {

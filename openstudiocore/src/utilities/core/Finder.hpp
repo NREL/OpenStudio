@@ -34,7 +34,7 @@
 #include "String.hpp"
 
 #include <boost/algorithm/string.hpp>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 #include <vector>
 

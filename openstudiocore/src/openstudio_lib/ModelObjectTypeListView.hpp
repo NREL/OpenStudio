@@ -35,7 +35,7 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 class QVBoxLayout;
 

@@ -35,7 +35,7 @@
 #include <vector>
 #include "StaticInitializer.hpp"
 #include <boost/preprocessor.hpp>
-#include <boost/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <stdexcept>
