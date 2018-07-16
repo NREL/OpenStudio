@@ -2592,7 +2592,7 @@ std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::Mo
 detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
 #define REGISTER_CONSTRUCTOR(_className) \
   m_newMap[_className::iddObjectType()] = [](openstudio::model::detail::Model_Impl * m, const IdfObject& object, bool keepHandle) { \
-    return std::shared_ptr<_className##_Impl>(new _className##_Impl(object, m, keepHandle)); \
+    return std::make_shared<_className##_Impl>(object, m, keepHandle); \
   };
 
   REGISTER_CONSTRUCTOR(AdditionalProperties);
@@ -3064,13 +3064,11 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
 #define REGISTER_COPYCONSTRUCTORS(_className) \
   m_copyMap[_className::iddObjectType()] = [](openstudio::model::detail::Model_Impl * m, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& ptr, bool keepHandle) { \
     if (dynamic_pointer_cast<_className##_Impl>(ptr)) { \
-      return std::shared_ptr<_className##_Impl>(new _className##_Impl( \
-          *dynamic_pointer_cast<_className##_Impl>(ptr),m,keepHandle)); \
+      return std::make_shared<_className##_Impl>(*dynamic_pointer_cast<_className##_Impl>(ptr),m,keepHandle); \
     } \
     else { \
       OS_ASSERT(!dynamic_pointer_cast<openstudio::model::detail::ModelObject_Impl>(ptr)); \
-      return std::shared_ptr<_className##_Impl>(new _className##_Impl( \
-          *ptr,m,keepHandle)); \
+      return std::make_shared<_className##_Impl>(*ptr,m,keepHandle); \
     } \
   };
   REGISTER_COPYCONSTRUCTORS(AdditionalProperties);
