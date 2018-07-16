@@ -488,3 +488,20 @@ TEST(Filetypes, EpwFile_Wrap_AMY)
     ASSERT_TRUE(false);
   }
 }
+
+TEST(Filetypes, EpwFile_DataPoint)
+{
+  try{
+    // Check that we can read all timeseries wind speed values, even if they are extreme
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CT_New.Haven-Tweed.AP.725045_TMY3.epw");
+    EpwFile epwFile(p);
+    EXPECT_EQ(p, epwFile.path());
+    std::vector<EpwDataPoint> data = epwFile.data();
+    for (EpwDataPoint dataPoint : data) {
+      EXPECT_NE(dataPoint.windSpeed(), boost::none);
+      //EXPECT_NO_THROW(dataPoint.windSpeed().get());
+    }
+  } catch (...) {
+    ASSERT_TRUE(false);
+  }
+}

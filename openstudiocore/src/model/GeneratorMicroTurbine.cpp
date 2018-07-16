@@ -31,6 +31,8 @@
 #include "GeneratorMicroTurbine_Impl.hpp"
 #include "GeneratorMicroTurbineHeatRecovery.hpp"
 #include "GeneratorMicroTurbineHeatRecovery_Impl.hpp"
+#include "ElectricLoadCenterDistribution.hpp"
+#include "ElectricLoadCenterDistribution_Impl.hpp"
 
 // Need model to check if curve is part of model when setting
 #include "Model.hpp"
@@ -813,6 +815,10 @@ GeneratorMicroTurbine::GeneratorMicroTurbine(const Model& model)
   elecEffFPLR.setMinimumValueofx(0.03);
   elecEffFPLR.setMaximumValueofx(1.0);
   setElectricalEfficiencyFunctionofPartLoadRatioCurve(elecEffFPLR);
+
+  //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
+  ElectricLoadCenterDistribution elcd(model);
+  elcd.addGenerator(*this);
 }
 
 IddObjectType GeneratorMicroTurbine::iddObjectType() {

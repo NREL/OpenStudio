@@ -1,4 +1,4 @@
-!IDD_Version 2.6.1
+!IDD_Version 2.6.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -22162,10 +22162,10 @@ OS:ThermalZone,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A9, \field Zone Return Air Port List
+  A9, \field Zone Return Air Node Name
        \type object-list
        \required-field
-       \object-list PortLists
+       \object-list ConnectionNames
   A10, \field Primary Daylighting Control Name
        \note For export to EnergyPlus
        \type object-list
