@@ -1520,6 +1520,66 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable_EMS) {
   model.save(toPath("./EMS_meteredoutvar.osm"), true);
   workspace.save(toPath("./EMS_meteredoutvar.idf"), true);
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable2_EMS) {
+  Model model;
+  // add Site Outdoor Air Drybulb Temperature
+  OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
+  EXPECT_EQ("*", siteOutdoorAirDrybulbTemperature.keyValue());
+  EXPECT_EQ("Site Outdoor Air Drybulb Temperature", siteOutdoorAirDrybulbTemperature.variableName());
+
+  // add sensor
+  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
+  OATdbSensor.setName("OATdb Sensor");
+  //OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+
+  //add program
+  EnergyManagementSystemProgram program_1(model);
+  program_1.setName("program one");
+
+  //add program
+  EnergyManagementSystemSubroutine subroutine_1(model);
+  subroutine_1.setName("subroutine one");
+
+  // add metered output variable using UID
+  EnergyManagementSystemMeteredOutputVariable meteredoutvar(model, toString(OATdbSensor.handle()));
+
+  //meteredoutvar.setEMSVariableName(OATdbSensor.name().get());
+  meteredoutvar.setUpdateFrequency("ZoneTimestep");
+  meteredoutvar.setEMSProgramOrSubroutineName(program_1);
+  meteredoutvar.setEMSProgramOrSubroutineName(subroutine_1);
+  meteredoutvar.setResourceType("NaturalGas");
+  meteredoutvar.setGroupType("HVAC");
+  meteredoutvar.setEndUseCategory("Heating");
+  meteredoutvar.setEndUseSubcategory("Madeup");
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_MeteredOutputVariable).size());
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_MeteredOutputVariable)[0];
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, false));
+  //expect name string to be substituted from UID and match
+  EXPECT_EQ(OATdbSensor.name().get(), object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EMSVariableName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::UpdateFrequency, false));
+  EXPECT_EQ("ZoneTimestep", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::UpdateFrequency, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, false));
+  EXPECT_EQ(subroutine_1.name().get(), object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EMSProgramorSubroutineName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::ResourceType, false));
+  EXPECT_EQ("NaturalGas", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::ResourceType, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::GroupType, false));
+  EXPECT_EQ("HVAC", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::GroupType, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EndUseCategory, false));
+  EXPECT_EQ("Heating", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EndUseCategory, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EndUseSubcategory, false));
+  EXPECT_EQ("Madeup", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::EndUseSubcategory, false).get());
+  //ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::Units, false));
+  //EXPECT_EQ("", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::Units, false).get());
+
+  model.save(toPath("./EMS_meteredoutvar2.osm"), true);
+  workspace.save(toPath("./EMS_meteredoutvar2.idf"), true);
+}
+
 TEST_F(EnergyPlusFixture, ReverseTranslatorMeteredOutputVariable_EMS) {
 
   openstudio::path idfPath = toPath("./EMS_meteredoutvar.idf");
