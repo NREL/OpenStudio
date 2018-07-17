@@ -879,13 +879,12 @@ namespace detail {
   bool AirLoopHVAC_Impl::multiAddBranchForZone(ThermalZone & thermalZone)
   {
     boost::optional<HVACComponent> comp;
-    return addBranchForZoneImpl(thermalZone,comp);
+    return addBranchForZoneImpl(thermalZone, comp);
   }
 
   bool AirLoopHVAC_Impl::multiAddBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal)
   {
     boost::optional<HVACComponent> comp = airTerminal;
-
     return addBranchForZoneImpl(thermalZone, comp);
   }
 
@@ -2022,12 +2021,12 @@ bool AirLoopHVAC::addBranchForZone(openstudio::model::ThermalZone & thermalZone,
 
 bool AirLoopHVAC::multiAddBranchForZone(ThermalZone & thermalZone)
 {
-  return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZone(thermalZone);
+  return getImpl<detail::AirLoopHVAC_Impl>()->multiAddBranchForZone(thermalZone);
 }
 
 bool AirLoopHVAC::multiAddBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal)
 {
-  return getImpl<detail::AirLoopHVAC_Impl>()->addBranchForZone(thermalZone, airTerminal);
+  return getImpl<detail::AirLoopHVAC_Impl>()->multiAddBranchForZone(thermalZone, airTerminal);
 }
 
 ModelObject AirLoopHVAC::clone(Model model) const
