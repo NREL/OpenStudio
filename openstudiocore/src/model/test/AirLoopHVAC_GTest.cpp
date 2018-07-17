@@ -211,6 +211,26 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone)
   EXPECT_EQ(1, thermalZone.airLoopHVACs().size());
 }
 
+TEST_F(ModelFixture,AirLoopHVAC_multiAddBranchForZone)
+{
+  Model model = Model();
+  OptionalModelObject modelObject;
+
+  AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+  AirLoopHVAC airLoopHVAC2 = AirLoopHVAC(model);
+  ThermalZone thermalZone = ThermalZone(model);
+  ScheduleCompact scheduleCompact = ScheduleCompact(model);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal = AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal2 = AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
+
+  ASSERT_TRUE(airLoopHVAC.multiAddBranchForZone(thermalZone,singleDuctTerminal));
+  EXPECT_EQ(1, thermalZone.airLoopHVACs().size());
+
+  ASSERT_TRUE(airLoopHVAC2.multiAddBranchForZone(thermalZone,singleDuctTerminal2));
+  EXPECT_EQ(2, thermalZone.airLoopHVACs().size());
+}
+
 TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
 {
   Model model = Model();
