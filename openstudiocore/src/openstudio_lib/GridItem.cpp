@@ -112,6 +112,8 @@
 #include "../model/ThermalZone_Impl.hpp"
 #include <algorithm>
 
+#include <utilities/idd/IddEnums.hxx>
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -1361,8 +1363,13 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
   auto supplyInletNode = m_loop.supplyInletNode();
   auto supplyOutletNodes = m_loop.supplyOutletNodes();
 
-  std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(loop.demandComponents());
-  std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(loop.demandComponents());
+  // std::vector<openstudio::model::ModelObject> dComps = m_loop.demandComponents();
+  // std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(dComps);
+  // std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(dComps);
+
+  std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(m_loop.demandComponents(openstudio::IddObjectType::OS_AirLoopHVAC_SupplyPlenum));
+
+  std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(m_loop.demandComponents(openstudio::IddObjectType::OS_AirLoopHVAC_ReturnPlenum));
 
   int i = 0;
 
@@ -3760,6 +3767,9 @@ SupplySideItem::SupplySideItem( QGraphicsItem * parent,
     }
   } else {
     auto inletComponents = loop.supplyComponents(m_supplyInletNode,_supplyOutletNode);
+    // If there isn't at least two components (the inlet and the outlet node we passed as argument),
+    // then something went CLEARLY wrong!
+    OS_ASSERT(inletComponents.size() >= 2u);
     inletComponents.erase( inletComponents.begin() );
     inletComponents.pop_back();
     m_inletBranchItem = new HorizontalBranchItem(inletComponents,this);
