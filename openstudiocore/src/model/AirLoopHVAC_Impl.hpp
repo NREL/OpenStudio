@@ -169,11 +169,11 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
                         Splitter & splitter,
                         Mixer & mixer);
 
-  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone,
-                            boost::optional<StraightComponent> & optAirTerminal);
+  //bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone,
+  //                          boost::optional<StraightComponent> & optAirTerminal);
 
-  bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone,
-                            boost::optional<HVACComponent> & optAirTerminal);
+  //bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone,
+  //                          boost::optional<HVACComponent> & optAirTerminal);
 
   bool moveBranchForZone(ThermalZone & thermalZone,
                          Splitter & newSplitter);
@@ -207,11 +207,12 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
                                    AirLoopHVAC & airLoopHVAC,
                                    Splitter & splitter,
                                    Mixer & mixer,
+                                   bool removeCurrentZones,
                                    boost::optional<HVACComponent> & optAirTerminal);
 
-  boost::optional<ThermalZone> zoneForLastBranch(Mixer & mixer);
+  static boost::optional<ThermalZone> zoneForLastBranch(Mixer & mixer);
 
-  boost::optional<HVACComponent> terminalForLastBranch(Mixer & mixer);
+  static boost::optional<HVACComponent> terminalForLastBranch(Mixer & mixer);
 
   static boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
 

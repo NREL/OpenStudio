@@ -2225,11 +2225,11 @@ namespace detail {
     auto result = addToNodeImpl(node);
     auto zone = getObject<model::ThermalZone>();
 
-    if ( result ) {
-      for ( auto & loop : loops ) {
-        loop.removeBranchForZone(zone);
-      }
-    }
+    //if ( result ) {
+    //  for ( auto & loop : loops ) {
+    //    loop.removeBranchForZone(zone);
+    //  }
+    //}
 
     return result;
   }
