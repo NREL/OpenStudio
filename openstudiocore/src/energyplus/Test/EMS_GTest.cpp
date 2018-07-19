@@ -1376,6 +1376,31 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorInternalVariable_EMS) {
   workspace.save(toPath("./EMS_InternalVariable.idf"), true);
 }
 
+TEST_F(EnergyPlusFixture, ForwardTranslatorInternalVariable2_EMS) {
+  Model model;
+  //add zone
+  ThermalZone zone(model);
+  zone.setName("Test Zone");
+  // add internal variable
+  EnergyManagementSystemInternalVariable var(model, "Zone Air Volume");
+  //test using UID in this field
+  var.setInternalDataIndexKeyName(toString(zone.handle()));
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_InternalVariable).size());
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_InternalVariable)[0];
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_InternalVariableFields::InternalDataIndexKeyName, false));
+  //name string should match instead of UID of zone
+  EXPECT_EQ("Test Zone", object.getString(EnergyManagementSystem_InternalVariableFields::InternalDataIndexKeyName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_InternalVariableFields::InternalDataType, false));
+  EXPECT_EQ("Zone Air Volume", object.getString(EnergyManagementSystem_InternalVariableFields::InternalDataType, false).get());
+
+  model.save(toPath("./EMS_InternalVariable2.osm"), true);
+  workspace.save(toPath("./EMS_InternalVariable2.idf"), true);
+}
+
 TEST_F(EnergyPlusFixture, ReverseTranslatorInternalVariable_EMS) {
 
   openstudio::path idfPath = toPath("./EMS_InternalVariable.idf");
