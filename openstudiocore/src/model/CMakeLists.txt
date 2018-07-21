@@ -1132,6 +1132,9 @@ set(${target_name}_src
   ScheduleDay.hpp
   ScheduleDay_Impl.hpp
   ScheduleDay.cpp
+  ScheduleFile.hpp
+  ScheduleFile_Impl.hpp
+  ScheduleFile.cpp
   ScheduleFixedInterval.hpp
   ScheduleFixedInterval_Impl.hpp
   ScheduleFixedInterval.cpp

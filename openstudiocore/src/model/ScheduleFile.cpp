@@ -38,7 +38,7 @@
 #include <utilities/idd/OS_Schedule_File_FieldEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
-
+#include "../utilities/data/TimeSeries.hpp"
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -49,7 +49,7 @@ namespace detail {
   ScheduleFile_Impl::ScheduleFile_Impl(const IdfObject& idfObject,
                                        Model_Impl* model,
                                        bool keepHandle)
-    : ScheduleBase_Impl(idfObject,model,keepHandle)
+    : ScheduleInterval_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ScheduleFile::iddObjectType());
   }
@@ -57,7 +57,7 @@ namespace detail {
   ScheduleFile_Impl::ScheduleFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                        Model_Impl* model,
                                        bool keepHandle)
-    : ScheduleBase_Impl(other,model,keepHandle)
+    : ScheduleInterval_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ScheduleFile::iddObjectType());
   }
@@ -65,7 +65,7 @@ namespace detail {
   ScheduleFile_Impl::ScheduleFile_Impl(const ScheduleFile_Impl& other,
                                        Model_Impl* model,
                                        bool keepHandle)
-    : ScheduleBase_Impl(other,model,keepHandle)
+    : ScheduleInterval_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& ScheduleFile_Impl::outputVariableNames() const
@@ -141,9 +141,10 @@ namespace detail {
     return result;
   }
 
-  void ScheduleFile_Impl::resetScheduleTypeLimits() {
+  bool ScheduleFile_Impl::resetScheduleTypeLimits() {
     bool result = setString(OS_Schedule_FileFields::ScheduleTypeLimitsName, "");
     OS_ASSERT(result);
+    return result;
   }
 
   void ScheduleFile_Impl::setFileName(const std::string& fileName) {
@@ -181,14 +182,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void ScheduleFile_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep) {
+  bool ScheduleFile_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep) {
     bool result = false;
     if (interpolatetoTimestep) {
-      result = setBooleanFieldValue(OS_Schedule_FileFields::InterpolatetoTimestep, "Yes");
+      result = setString(OS_Schedule_FileFields::InterpolatetoTimestep, "Yes");
     } else {
-      result = setBooleanFieldValue(OS_Schedule_FileFields::InterpolatetoTimestep, "No");
+      result = setString(OS_Schedule_FileFields::InterpolatetoTimestep, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
   void ScheduleFile_Impl::resetInterpolatetoTimestep() {
@@ -206,10 +208,130 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  openstudio::TimeSeries ScheduleFile_Impl::timeSeries() const
+  {
+    openstudio::TimeSeries result;
+    /* FIXME!
+    Date startDate(openstudio::MonthOfYear(this->startMonth()), this->startDay());
+    Time intervalLength(0, 0, this->intervalLength());
+
+    Vector values(this->numExtensibleGroups());
+    unsigned i = 0;
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
+      OptionalDouble x = group.getDouble(0);
+      OS_ASSERT(x);
+      values[i] = *x;
+      ++i;
+    }
+
+    TimeSeries result(startDate, intervalLength, values, "");
+    result.setOutOfRangeValue(this->outOfRangeValue());
+    */
+    return result;
+  }
+
+  bool ScheduleFile_Impl::setTimeSeries(const openstudio::TimeSeries& timeSeries)
+  {
+    /* FIXME!
+    // check the interval
+    boost::optional<openstudio::Time> intervalTime = timeSeries.intervalLength();
+    if (!intervalTime) {
+      return false;
+    }
+
+    // check the interval
+    double intervalLength = intervalTime->totalMinutes();
+    if (intervalLength - floor(intervalLength) > 0) {
+      return false;
+    }
+
+    // check the interval
+    if (intervalTime->totalDays() > 1) {
+      return false;
+    }
+
+    // check that first report is whole number of intervals from start date
+    DateTime firstReportDateTime = timeSeries.firstReportDateTime();
+    Date startDate = firstReportDateTime.date();
+    Time firstReportTime = firstReportDateTime.time();
+
+    double numIntervalsToFirstReport = std::max(1.0, firstReportTime.totalMinutes() / intervalLength);
+    if (numIntervalsToFirstReport - floor(numIntervalsToFirstReport) > 0) {
+      return false;
+    }
+
+    // check the values
+    openstudio::Vector values = timeSeries.values();
+    for (const auto& value : values) {
+      // Get the position
+      int pos = &value - &values[0];
+      // Check validity, cannot be NaN, Inf, etc
+      if (std::isinf(value)) {
+        LOG(Warn, "There is Infinity on position " << pos << " in the timeSeries provided for " << this->briefDescription());
+        return false;
+      } else if (std::isnan(value)) {
+        LOG(Warn, "There is a NaN on position " << pos << " in the timeSeries provided for " << this->briefDescription());
+        return false;
+      }
+    }
+
+    // at this point we are going to change the object
+    clearExtensibleGroups(false);
+
+    // set the interval
+    this->setIntervalLength(intervalLength, false);
+
+    // set the start date
+    this->setStartMonth(startDate.monthOfYear().value(), false);
+    this->setStartDay(startDate.dayOfMonth(), false);
+
+    // set the out of range value
+    double outOfRangeValue = timeSeries.outOfRangeValue();
+
+    // add in numIntervalsToFirstReport-1 outOfRangeValues to pad the timeseries
+    for (unsigned i = 0; i < numIntervalsToFirstReport - 1; ++i) {
+      std::vector<std::string> temp;
+      temp.push_back(toString(outOfRangeValue));
+
+      ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
+      OS_ASSERT(!group.empty());
+    }
+
+    // set the values
+    for (unsigned i = 0; i < values.size(); ++i) {
+      std::vector<std::string> temp;
+      temp.push_back(toString(values[i]));
+
+      ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
+      OS_ASSERT(!group.empty());
+    }
+
+    this->emitChangeSignals();
+
+    return true;
+    */
+    return false;
+  }
+
+  void ScheduleFile_Impl::ensureNoLeapDays()
+  {
+    /* FIXME!
+    boost::optional<int> month;
+    boost::optional<int> day;
+
+    month = getInt(OS_Schedule_FixedIntervalFields::StartMonth);
+    if (month && (month.get() == 2)) {
+      day = this->getInt(OS_Schedule_FixedIntervalFields::StartDay);
+      if (day && (day.get() == 29)) {
+        this->setInt(OS_Schedule_FixedIntervalFields::StartDay, 28);
+      }
+    }*/
+  }
+
 } // detail
 
 ScheduleFile::ScheduleFile(const Model& model)
-  : ScheduleBase(ScheduleFile::iddObjectType(),model)
+  : ScheduleInterval(ScheduleFile::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ScheduleFile_Impl>());
 
@@ -284,8 +406,8 @@ bool ScheduleFile::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeL
   return getImpl<detail::ScheduleFile_Impl>()->setScheduleTypeLimits(scheduleTypeLimits);
 }
 
-void ScheduleFile::resetScheduleTypeLimits() {
-  getImpl<detail::ScheduleFile_Impl>()->resetScheduleTypeLimits();
+bool ScheduleFile::resetScheduleTypeLimits() {
+  return getImpl<detail::ScheduleFile_Impl>()->resetScheduleTypeLimits();
 }
 
 void ScheduleFile::setFileName(const std::string& fileName) {
@@ -316,8 +438,8 @@ void ScheduleFile::resetColumnSeparator() {
   getImpl<detail::ScheduleFile_Impl>()->resetColumnSeparator();
 }
 
-void ScheduleFile::setInterpolatetoTimestep(bool interpolatetoTimestep) {
-  getImpl<detail::ScheduleFile_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
+bool ScheduleFile::setInterpolatetoTimestep(bool interpolatetoTimestep) {
+  return getImpl<detail::ScheduleFile_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
 }
 
 void ScheduleFile::resetInterpolatetoTimestep() {
@@ -334,7 +456,7 @@ void ScheduleFile::resetMinutesperItem() {
 
 /// @cond
 ScheduleFile::ScheduleFile(std::shared_ptr<detail::ScheduleFile_Impl> impl)
-  : ScheduleBase(impl)
+  : ScheduleInterval(impl)
 {}
 /// @endcond
 

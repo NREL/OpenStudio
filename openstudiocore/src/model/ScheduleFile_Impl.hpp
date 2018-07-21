@@ -30,7 +30,7 @@
 #define MODEL_SCHEDULEFILE_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ScheduleBase_Impl.hpp"
+#include "ScheduleInterval_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -41,7 +41,7 @@ class ScheduleTypeLimits;
 namespace detail {
 
   /** ScheduleFile_Impl is a ScheduleBase_Impl that is the implementation class for ScheduleFile.*/
-  class MODEL_API ScheduleFile_Impl : public ScheduleBase_Impl {
+  class MODEL_API ScheduleFile_Impl : public ScheduleInterval_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -95,6 +95,8 @@ namespace detail {
 
     boost::optional<std::string> minutesperItem() const;
 
+    virtual openstudio::TimeSeries timeSeries() const override;
+
     //@}
     /** @name Setters */
     //@{
@@ -102,7 +104,7 @@ namespace detail {
     // TODO: Check argument type. From object lists, some candidates are: ScheduleTypeLimits.
     bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
 
-    void resetScheduleTypeLimits();
+    bool resetScheduleTypeLimits();
 
     void setFileName(const std::string& fileName);
 
@@ -118,7 +120,7 @@ namespace detail {
 
     void resetColumnSeparator();
 
-    void setInterpolatetoTimestep(bool interpolatetoTimestep);
+    bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
     void resetInterpolatetoTimestep();
 
@@ -126,12 +128,18 @@ namespace detail {
 
     void resetMinutesperItem();
 
+    virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries) override;
+
+    // ensure that this object does not contain the date 2/29
+    virtual void ensureNoLeapDays() override;
+
     //@}
     /** @name Other */
     //@{
 
     //@}
    protected:
+
    private:
     REGISTER_LOGGER("openstudio.model.ScheduleFile");
   };

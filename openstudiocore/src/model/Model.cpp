@@ -538,6 +538,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ScheduleCompact);
     REGISTER_CONSTRUCTOR(ScheduleConstant);
     REGISTER_CONSTRUCTOR(ScheduleDay);
+    REGISTER_CONSTRUCTOR(ScheduleFile);
     REGISTER_CONSTRUCTOR(ScheduleFixedInterval);
     REGISTER_CONSTRUCTOR(ScheduleTypeLimits);
     REGISTER_CONSTRUCTOR(ScheduleVariableInterval);
@@ -1038,6 +1039,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ScheduleCompact);
     REGISTER_COPYCONSTRUCTORS(ScheduleConstant);
     REGISTER_COPYCONSTRUCTORS(ScheduleDay);
+    REGISTER_COPYCONSTRUCTORS(ScheduleFile);
     REGISTER_COPYCONSTRUCTORS(ScheduleFixedInterval);
     REGISTER_COPYCONSTRUCTORS(ScheduleTypeLimits);
     REGISTER_COPYCONSTRUCTORS(ScheduleVariableInterval);

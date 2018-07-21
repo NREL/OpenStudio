@@ -30,7 +30,7 @@
 #define MODEL_SCHEDULEFILE_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ScheduleBase.hpp"
+#include "ScheduleInterval.hpp"
 
 namespace openstudio {
 
@@ -45,8 +45,8 @@ namespace detail {
 
 } // detail
 
-/** ScheduleFile is a ScheduleBase that wraps the OpenStudio IDD object 'OS:Schedule:File'. */
-class MODEL_API ScheduleFile : public ScheduleBase {
+/** ScheduleFile is a ScheduleInterval that wraps the OpenStudio IDD object 'OS:Schedule:File'. */
+class MODEL_API ScheduleFile : public ScheduleInterval {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -96,7 +96,7 @@ class MODEL_API ScheduleFile : public ScheduleBase {
   // TODO: Check argument type. From object lists, some candidates are: ScheduleTypeLimits.
   bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
 
-  void resetScheduleTypeLimits();
+  bool resetScheduleTypeLimits();
 
   void setFileName(const std::string& fileName);
 
@@ -112,7 +112,7 @@ class MODEL_API ScheduleFile : public ScheduleBase {
 
   void resetColumnSeparator();
 
-  void setInterpolatetoTimestep(bool interpolatetoTimestep);
+  bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
   void resetInterpolatetoTimestep();
 
@@ -126,6 +126,7 @@ class MODEL_API ScheduleFile : public ScheduleBase {
 
   //@}
  protected:
+
   /// @cond
   typedef detail::ScheduleFile_Impl ImplType;
 
