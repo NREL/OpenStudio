@@ -81,11 +81,11 @@ namespace detail {
 
     int rowstoSkipatTop() const;
 
-    double numberofHoursofData() const;
-
-    bool isNumberofHoursofDataDefaulted() const;
+    int numberofRowsofData() const;
 
     std::string columnSeparator() const;
+
+    char columnSeparatorChar() const;
 
     bool isColumnSeparatorDefaulted() const;
 
@@ -112,10 +112,6 @@ namespace detail {
 
     bool setRowstoSkipatTop(int rowstoSkipatTop);
 
-    bool setNumberofHoursofData(double numberofHoursofData);
-
-    void resetNumberofHoursofData();
-
     bool setColumnSeparator(const std::string& columnSeparator);
 
     void resetColumnSeparator();
@@ -136,12 +132,13 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+    bool isValid();
 
     //@}
    protected:
 
    private:
-    REGISTER_LOGGER("openstudio.model.ScheduleFile");
+     REGISTER_LOGGER("openstudio.model.ScheduleFile");
   };
 
 } // detail

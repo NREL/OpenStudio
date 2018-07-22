@@ -75,9 +75,7 @@ class MODEL_API ScheduleFile : public ScheduleInterval {
 
   int rowstoSkipatTop() const;
 
-  double numberofHoursofData() const;
-
-  bool isNumberofHoursofDataDefaulted() const;
+  int numberofRowsofData() const;
 
   std::string columnSeparator() const;
 
@@ -104,10 +102,6 @@ class MODEL_API ScheduleFile : public ScheduleInterval {
 
   bool setRowstoSkipatTop(int rowstoSkipatTop);
 
-  bool setNumberofHoursofData(double numberofHoursofData);
-
-  void resetNumberofHoursofData();
-
   bool setColumnSeparator(const std::string& columnSeparator);
 
   void resetColumnSeparator();
@@ -123,6 +117,7 @@ class MODEL_API ScheduleFile : public ScheduleInterval {
   //@}
   /** @name Other */
   //@{
+  bool isValid();
 
   //@}
  protected:
