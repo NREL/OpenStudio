@@ -43,8 +43,8 @@
 namespace openstudio {
 
 const int VRFSystemView::margin = 20;
-const int VRFSystemView::terminalDropZoneWidth = 200;
-const int VRFSystemView::zoneDropZoneWidth = 300;
+const int VRFSystemView::terminalDropZoneWidth = 300;
+const int VRFSystemView::zoneDropZoneWidth = 500;
 const int VRFSystemView::dropZoneHeight = 150;
 const int VRFSystemView::terminalViewHeight = 100;
 
@@ -319,7 +319,7 @@ void VRFTerminalView::paint( QPainter *painter,
 VRFThermalZoneDropZoneView::VRFThermalZoneDropZoneView()
   : m_hasZone(false)
 {
-  setSize(300,50);
+  setSize(600,50);
   setText("Drop Thermal Zone");
 }
 
