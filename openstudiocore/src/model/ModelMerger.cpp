@@ -224,6 +224,30 @@ namespace openstudio
 
       currentSpace.setName(newSpace.nameString());
 
+      if (newSpace.isDirectionofRelativeNorthDefaulted()) {
+        currentSpace.resetDirectionofRelativeNorth();
+      } else {
+        currentSpace.setDirectionofRelativeNorth(newSpace.directionofRelativeNorth());
+      }
+
+      if (newSpace.isXOriginDefaulted()) {
+        currentSpace.resetXOrigin();
+      } else {
+        currentSpace.setXOrigin(newSpace.xOrigin());
+      }
+
+      if (newSpace.isYOriginDefaulted()) {
+        currentSpace.resetYOrigin();
+      } else {
+        currentSpace.setYOrigin(newSpace.yOrigin());
+      }
+
+      if (newSpace.isZOriginDefaulted()) {
+        currentSpace.resetZOrigin();
+      } else {
+        currentSpace.setZOrigin(newSpace.zOrigin());
+      }
+
       // remove current surfaces
       for (auto& currentSurface : currentSpace.surfaces()){
         currentSurface.remove();
@@ -414,6 +438,30 @@ namespace openstudio
       m_newMergedHandles.insert(newGroup.handle());
 
       currentGroup.setName(newGroup.nameString());
+
+      if (newGroup.isDirectionofRelativeNorthDefaulted()) {
+        currentGroup.resetDirectionofRelativeNorth();
+      } else {
+        currentGroup.setDirectionofRelativeNorth(newGroup.directionofRelativeNorth());
+      }
+
+      if (newGroup.isXOriginDefaulted()) {
+        currentGroup.resetXOrigin();
+      } else {
+        currentGroup.setXOrigin(newGroup.xOrigin());
+      }
+
+      if (newGroup.isYOriginDefaulted()) {
+        currentGroup.resetYOrigin();
+      } else {
+        currentGroup.setYOrigin(newGroup.yOrigin());
+      }
+
+      if (newGroup.isZOriginDefaulted()) {
+        currentGroup.resetZOrigin();
+      } else {
+        currentGroup.setZOrigin(newGroup.zOrigin());
+      }
 
       // remove current shading surfaces
       for (auto& currentSurface : currentGroup.shadingSurfaces()){

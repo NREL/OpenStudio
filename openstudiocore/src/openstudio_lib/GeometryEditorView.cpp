@@ -649,18 +649,20 @@ void GbXmlEditor::translateExport()
   for (const auto& warning : rt.warnings()){
     errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
   }
-  if (!errorsAndWarnings.isEmpty()){
-    QMessageBox::warning(qobject_cast<QWidget*>(parent()), "Creating Model From gbXML", errorsAndWarnings);
-  }
 
   if (model){
     m_exportModel = *model;
-    // DLM: todo
-    //m_exportModelHandleMapping = rt.handleMapping();
+    model::ModelMerger mm;
+    m_exportModelHandleMapping = mm.suggestHandleMapping(m_model, m_exportModel);
   } else{
-    // DLM: this is an error, either floorplan was empty or could not be translated
+    // DLM: this is an error, either gbxml was empty or could not be translated
+    errorsAndWarnings += QString("Model could not be loaded\n");
     m_exportModel = model::Model();
     m_exportModelHandleMapping.clear();
+  }
+
+  if (!errorsAndWarnings.isEmpty()){
+    QMessageBox::warning(qobject_cast<QWidget*>(parent()), "Creating Model From gbXML", errorsAndWarnings);
   }
 }
 
@@ -803,20 +805,21 @@ void IdfEditor::translateExport()
   for (const auto& warning : rt.warnings()){
     errorsAndWarnings += QString::fromStdString(warning.logMessage() + "\n");
   }
-  if (!errorsAndWarnings.isEmpty()){
-    QMessageBox::warning(qobject_cast<QWidget*>(parent()), "Creating Model From IDF", errorsAndWarnings);
-  }
 
   if (model){
     m_exportModel = *model;
-    // DLM: todo
-    //m_exportModelHandleMapping = rt.handleMapping();
+    model::ModelMerger mm;
+    m_exportModelHandleMapping = mm.suggestHandleMapping(m_model, m_exportModel);
   } else{
-    // DLM: this is an error, either floorplan was empty or could not be translated
+    // DLM: this is an error, either idf was empty or could not be translated
+    errorsAndWarnings += QString("Model could not be loaded\n");
     m_exportModel = model::Model();
     m_exportModelHandleMapping.clear();
   }
 
+  if (!errorsAndWarnings.isEmpty()){
+    QMessageBox::warning(qobject_cast<QWidget*>(parent()), "Creating Model From IDF", errorsAndWarnings);
+  }
 }
 
 void IdfEditor::updateModel(const openstudio::model::Model& model)
@@ -849,12 +852,16 @@ OsmEditor::OsmEditor(const openstudio::path& osmPath, bool isIP, const openstudi
 
     if (optModel){
       m_exportModel = *optModel;
+      model::ModelMerger mm;
+      m_exportModelHandleMapping = mm.suggestHandleMapping(m_model, m_exportModel);
     } else{
       errorsAndWarnings += QString("Model could not be loaded\n");
+      m_exportModel = model::Model();
+      m_exportModelHandleMapping.clear();
     }
 
     if (!errorsAndWarnings.isEmpty()){
-      QMessageBox::warning(qobject_cast<QWidget*>(parent()), "Creating Model From IDF", errorsAndWarnings);
+      QMessageBox::warning(qobject_cast<QWidget*>(parent()), "Creating Model From OSM", errorsAndWarnings);
     }
   }
 
@@ -905,8 +912,7 @@ void OsmEditor::saveExport()
 
 void OsmEditor::translateExport()
 {
-  // DLM: todo
-  //m_exportModelHandleMapping = rt.handleMapping();
+  // happens in ctor
 }
 
 void OsmEditor::updateModel(const openstudio::model::Model& model)

@@ -43,6 +43,7 @@
 #include "../utilities/plot/ProgressBar.hpp"
 
 #include <QThread>
+#include <boost/serialization/version.hpp>
 
 using namespace openstudio::model;
 
@@ -77,9 +78,11 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
 
   m_logSink.setChannelRegex(boost::regex("openstudio\\.IdfFile"));
 
-  //load idf and convert to a workspace
+  // load idf
   boost::optional<openstudio::IdfFile> idfFile = IdfFile::load(path, IddFileType::EnergyPlus, progressBar);
 
+  // change channel after loading file
+  // DLM: is this right?  we miss messages from loading idf
   m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ReverseTranslator"));
 
   // energyplus idfs may not be draft level strictness, eventually need a fixer
@@ -88,6 +91,23 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
     LOG(Error, "Could not read idf file at path ='" << toString(path) << "'");
 
   }else{
+
+    VersionString expectedVersion(IddFileAndFactoryWrapper(IddFileType::EnergyPlus).version());
+    boost::optional<IdfObject> versionObject = idfFile->versionObject();
+    if (!versionObject) {
+      LOG(Warn, "Idf file missing Version object, use IDFVersionUpdater to ensure that Idf file is at expected version = '" << expectedVersion.str() << "'");
+    } else {
+      boost::optional<std::string> vs = versionObject->getString(versionObject->numFields() - 1);
+      if (!vs){
+        LOG(Warn, "Idf file contains empty Version object, use IDFVersionUpdater to ensure that Idf file is at expected version = '" << expectedVersion.str() << "'");
+      } else{
+        VersionString fileVersion(*vs);
+        if ((expectedVersion.major() != fileVersion.major()) || (expectedVersion.minor() != fileVersion.minor())){
+          LOG(Warn, "Idf file Version = '" << fileVersion.str() << "' does not match expected version = '" << expectedVersion.str() << "'");
+        }
+      }
+    }
+
 
     if (!idfFile->isValid(StrictnessLevel::Draft)){
 
