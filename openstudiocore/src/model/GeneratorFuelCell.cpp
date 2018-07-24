@@ -50,6 +50,8 @@
 #include "GeneratorFuelCellStackCooler_Impl.hpp"
 #include "GeneratorFuelSupply.hpp"
 #include "GeneratorFuelSupply_Impl.hpp"
+#include "ElectricLoadCenterDistribution.hpp"
+#include "ElectricLoadCenterDistribution_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
 #include "CurveCubic.hpp"
@@ -507,6 +509,10 @@ GeneratorFuelCell::GeneratorFuelCell(const Model& model,
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellInverter to "
       << fCInverter.briefDescription() << ".");
   }
+  //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
+  ElectricLoadCenterDistribution elcd(model);
+  elcd.addGenerator(*this);
+  elcd.setElectricalBussType("AlternatingCurrent");
 }
 
 GeneratorFuelCell::GeneratorFuelCell(const Model& model)
@@ -570,6 +576,10 @@ GeneratorFuelCell::GeneratorFuelCell(const Model& model)
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s GeneratorFuelCellInverter");
   }
+  //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
+  ElectricLoadCenterDistribution elcd(model);
+  elcd.addGenerator(*this);
+  elcd.setElectricalBussType("AlternatingCurrent");
 }
 
 IddObjectType GeneratorFuelCell::iddObjectType() {

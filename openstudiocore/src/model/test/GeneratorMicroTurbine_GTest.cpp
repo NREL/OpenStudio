@@ -40,6 +40,7 @@
 #include "../GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../ElectricLoadCenterDistribution.hpp"
+#include "../ElectricLoadCenterDistribution_Impl.hpp"
 
 // Curves
 #include "../Curve.hpp"
@@ -562,5 +563,29 @@ TEST_F(ModelFixture,GeneratorMicroTurbine_HeatRecovery_addToNode) {
   EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
   EXPECT_TRUE(mchpHRClone.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+}
+
+TEST_F(ModelFixture, GeneratorMicroTurbine_ElectricLoadCenterDistribution) {
+  Model model;
+
+  GeneratorMicroTurbine mchp = GeneratorMicroTurbine(model);
+
+  GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model, mchp);
+
+  //should be 1 default ELCD attached to mchp
+  std::vector<ElectricLoadCenterDistribution> elcd = model.getModelObjects<ElectricLoadCenterDistribution>();
+  EXPECT_EQ(1u, elcd.size());
+  EXPECT_EQ(1u, elcd[0].generators().size());
+  std::vector<Generator> generators = elcd[0].generators();
+  EXPECT_EQ(generators[0].handle(), mchp.handle());
+  EXPECT_TRUE(mchp.electricLoadCenterDistribution());
+  EXPECT_EQ(elcd[0].handle(), mchp.electricLoadCenterDistribution().get().handle());
+  //Add another ELCD
+  ElectricLoadCenterDistribution elcd2(model);
+  EXPECT_EQ(2, model.getModelObjects<ElectricLoadCenterDistribution>().size());
+  //Add the mchp to it which should remove the existing one attached to mchp
+  EXPECT_TRUE(elcd2.addGenerator(mchp));
+  EXPECT_EQ(0, elcd[0].generators().size());
+  EXPECT_EQ(elcd2.handle(), mchp.electricLoadCenterDistribution().get().handle());
 }
 

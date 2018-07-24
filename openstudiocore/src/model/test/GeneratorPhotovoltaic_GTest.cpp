@@ -37,6 +37,7 @@
 #include "../PhotovoltaicPerformanceEquivalentOneDiode.hpp"
 #include "../PhotovoltaicPerformanceEquivalentOneDiode_Impl.hpp"
 #include "../ElectricLoadCenterDistribution.hpp"
+#include "../ElectricLoadCenterDistribution_Impl.hpp"
 
 #include "../../utilities/geometry/Point3d.hpp"
 
@@ -60,7 +61,8 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_Simple) {
   EXPECT_FALSE(panel.ratedElectricPowerOutput());
   EXPECT_FALSE(panel.availabilitySchedule());
   EXPECT_FALSE(panel.ratedThermaltoElectricalPowerRatio());
-  EXPECT_FALSE(panel.electricLoadCenterDistribution());
+  //should be true now that ELDC is in ctor
+  EXPECT_TRUE(panel.electricLoadCenterDistribution());
 
   Point3dVector points;
   points.push_back(Point3d(0, 1, 0));
@@ -116,7 +118,8 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_OneDiode) {
   EXPECT_FALSE(panel.ratedElectricPowerOutput());
   EXPECT_FALSE(panel.availabilitySchedule());
   EXPECT_FALSE(panel.ratedThermaltoElectricalPowerRatio());
-  EXPECT_FALSE(panel.electricLoadCenterDistribution());
+  //should be true now that ELDC is in ctor
+  EXPECT_TRUE(panel.electricLoadCenterDistribution());
 
   Point3dVector points;
   points.push_back(Point3d(0, 1, 0));
@@ -185,4 +188,25 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_Delete) {
     EXPECT_EQ(PhotovoltaicPerformanceEquivalentOneDiode::iddObjectType(), removed[1].iddObject().type());
   }
 
+}
+TEST_F(ModelFixture, GeneratorPhotovoltaic_ElectricLoadCenterDistribution) {
+  Model model;
+
+  GeneratorPhotovoltaic panel = GeneratorPhotovoltaic::simple(model);
+
+  //should be 1 default ELCD attached to panel
+  std::vector<ElectricLoadCenterDistribution> elcd = model.getModelObjects<ElectricLoadCenterDistribution>();
+  EXPECT_EQ(1u, elcd.size());
+  EXPECT_EQ(1u, elcd[0].generators().size());
+  std::vector<Generator> generators = elcd[0].generators();
+  EXPECT_EQ(generators[0].handle(), panel.handle());
+  EXPECT_TRUE(panel.electricLoadCenterDistribution());
+  EXPECT_EQ(elcd[0].handle(), panel.electricLoadCenterDistribution().get().handle());
+  //Add another ELCD
+  ElectricLoadCenterDistribution elcd2(model);
+  EXPECT_EQ(2, model.getModelObjects<ElectricLoadCenterDistribution>().size());
+  //Add the panel to it which should remove the existing one attached to panel
+  EXPECT_TRUE(elcd2.addGenerator(panel));
+  EXPECT_EQ(0, elcd[0].generators().size());
+  EXPECT_EQ(elcd2.handle(), panel.electricLoadCenterDistribution().get().handle());
 }
