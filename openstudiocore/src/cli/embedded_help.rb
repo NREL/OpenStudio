@@ -49,7 +49,9 @@ Encoding.default_external = Encoding::ASCII
 module Kernel
   # ":" is our root path to the embedded file system
   # make sure it is in the ruby load path
-  $:.unshift(ENV['RUBYLIB']) if ENV['RUBYLIB']
+  if ENV['RUBYLIB']
+    ENV['RUBYLIB'].split(File::PATH_SEPARATOR).each {|lib| $LOAD_PATH.unshift(lib)}
+  end
   $LOAD_PATH << ':'
   $LOAD_PATH << ':/ruby/2.2.0'
   $LOAD_PATH << ':/ruby/2.2.0/x86_64-darwin15'

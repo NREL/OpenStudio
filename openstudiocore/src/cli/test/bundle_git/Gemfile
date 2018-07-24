@@ -1,0 +1,5 @@
+source 'http://rubygems.org'
+
+gem 'xml-simple'
+gem 'openstudio-standards', github: 'nrel/openstudio-standards', branch: 'ambient-loop'
+gem 'tilt', github: 'rtomayko/tilt', ref: 'abe77eaf1b5f8da0a7e46135f'
