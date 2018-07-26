@@ -593,16 +593,10 @@ namespace detail {
     inletPortList.getImpl<model::detail::PortList_Impl>()->removePort(inletPortList.port(inletportindex));
 
     auto returnportindex = returnPortList.portIndexForModelObject(zoneOutletObject);
-    returnPortList.getImpl<model::detail::PortList_Impl>()->removePort(inletPortList.port(returnportindex));
+    returnPortList.getImpl<model::detail::PortList_Impl>()->removePort(returnPortList.port(returnportindex));
 
     splitter.removePortForBranch(splitter.branchIndexForOutletModelObject(splitterOutletObject));
     mixer.removePortForBranch(mixer.branchIndexForInletModelObject(mixerInletObject));
-
-    for ( auto & modelObject : modelObjects ) {
-      if ( ! modelObject.optionalCast<ThermalZone>() ) {
-        modelObject.disconnect();
-      }
-    }
 
     for ( auto & modelObject : modelObjects ) {
       if ( modelObject.optionalCast<ThermalZone>() ) {

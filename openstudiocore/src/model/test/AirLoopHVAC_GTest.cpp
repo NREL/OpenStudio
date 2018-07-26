@@ -1410,3 +1410,28 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
 
 }
 
+TEST_F(ModelFixture,AirLoopHVAC_multiloops) {
+  Model m;
+  AirLoopHVAC a1(m);
+  AirLoopHVAC a2(m);
+  AirLoopHVAC a3(m);
+
+  ThermalZone z1(m);
+  ThermalZone z2(m);
+
+  EXPECT_TRUE(a1.multiAddBranchForZone(z1));
+  EXPECT_TRUE(a2.multiAddBranchForZone(z1));
+
+  EXPECT_EQ(z1.airLoopHVACs().size(), 2);
+
+  EXPECT_TRUE(a1.removeBranchForZone(z1));
+  EXPECT_EQ(z1.airLoopHVACs().size(), 1);
+
+  EXPECT_TRUE(a3.addBranchForZone(z1));
+  EXPECT_EQ(z1.airLoopHVACs().size(), 1);
+
+  EXPECT_TRUE(a1.multiAddBranchForZone(z1));
+  EXPECT_TRUE(a2.multiAddBranchForZone(z1));
+  EXPECT_EQ(z1.airLoopHVACs().size(), 3);
+}
+

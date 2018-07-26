@@ -877,7 +877,7 @@ namespace detail {
 
   OptionalModelObject ThermalZone_Impl::returnAirModelObject()
   {
-    return this->connectedObject(this->returnAirPort());
+    return returnPortList().connectedObject(this->returnAirPort());
   }
 
   Node ThermalZone_Impl::zoneAirNode()
@@ -2225,11 +2225,11 @@ namespace detail {
     auto result = addToNodeImpl(node);
     auto zone = getObject<model::ThermalZone>();
 
-    //if ( result ) {
-    //  for ( auto & loop : loops ) {
-    //    loop.removeBranchForZone(zone);
-    //  }
-    //}
+    if ( result ) {
+      for ( auto & loop : loops ) {
+        loop.removeBranchForZone(zone);
+      }
+    }
 
     return result;
   }
