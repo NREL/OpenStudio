@@ -84,9 +84,11 @@ namespace detail {
   }
 
   bool SetpointManagerOutdoorAirReset_Impl::addToNode(Node & node) {
+    // Call the base class method, which will check for AirLoopHVAC
     bool added = SetpointManager_Impl::addToNode( node );
     if( added ) {
       return added;
+    // If that failed, then accept it only on the supply side of a plantLoop
     } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
       if( plantLoop->supplyComponent(node.handle()) ) {
         return this->setSetpointNode(node);
@@ -97,7 +99,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> SetpointManagerOutdoorAirReset_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -780,4 +781,4 @@ SetpointManagerOutdoorAirReset::SetpointManagerOutdoorAirReset(std::shared_ptr<d
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio
