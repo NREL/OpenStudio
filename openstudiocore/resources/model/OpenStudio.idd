@@ -23005,6 +23005,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \object-list ScheduleNames
    N4 , \field Rated Pump Head
         \units Pa
+        \ip-units ftH2O
         \default 179352
         \note default head is 60 feet
    N5 , \field Rated Power Consumption
