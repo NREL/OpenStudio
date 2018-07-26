@@ -122,6 +122,9 @@ bool hasSPM(model::Node & node)
   for( auto & spm: spms ) {
     if ( spm.controlVariable().find( "Temperature" ) != std::string::npos ) {
       return true;
+    } else {
+      // This captures the Humidity SPMs essentially.
+      return true;
     }
   }
   return false;
@@ -2544,31 +2547,32 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
           }
           break;
         } else {
-          // if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMaximum::iddObjectType() )
-          // {
-          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_humidity_max.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
-          // {
-          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_humidity_min.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerMultiZoneMaximumHumidityAverage::iddObjectType() )
-          // {
-          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_maxhumidity_avg.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
-          // {
-          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_minhumidity_avg.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMaximum::iddObjectType() )
-          // {
-          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone_humidity_max.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
-          // {
-          //   painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone_humidity_min.png"));
-          // }
-          //break;
+           // These are the Humidty SPMs
+           if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMaximum::iddObjectType() )
+           {
+             painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_humidity_max.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
+           {
+             painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_humidity_min.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerMultiZoneMaximumHumidityAverage::iddObjectType() )
+           {
+             painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_maxhumidity_avg.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
+           {
+             painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_multizone_minhumidity_avg.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMaximum::iddObjectType() )
+           {
+             painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone_humidity_max.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
+           {
+             painter->drawPixmap(37,13,25,25,QPixmap(":images/setpoint_singlezone_humidity_min.png"));
+           }
+          break;
         }
       }
     }
@@ -2786,31 +2790,32 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
           }
           break;
         } else {
-          // if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMaximum::iddObjectType() )
-          // {
-          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_max_right.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
-          // {
-          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_min_right.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerMultiZoneMaximumHumidityAverage::iddObjectType() )
-          // {
-          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_maxhumidity_avg_right.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
-          // {
-          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_minhumidity_avg_right.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMaximum::iddObjectType() )
-          // {
-          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_max_right.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
-          // {
-          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_min_right.png"));
-          // }
-          //break;
+           // These are the humidity ones
+           if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMaximum::iddObjectType() )
+           {
+             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_max_right.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
+           {
+             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_min_right.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerMultiZoneMaximumHumidityAverage::iddObjectType() )
+           {
+             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_maxhumidity_avg_right.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
+           {
+             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_minhumidity_avg_right.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMaximum::iddObjectType() )
+           {
+             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_max_right.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
+           {
+             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_min_right.png"));
+           }
+          break;
         }
       }
     }
@@ -2956,31 +2961,32 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
           }
           break;
         } else {
-          // if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMaximum::iddObjectType() )
-          // {
-          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_max.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
-          // {
-          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_min.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerMultiZoneMaximumHumidityAverage::iddObjectType() )
-          // {
-          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_maxhumidity_avg.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
-          // {
-          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_minhumidity_avg.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMaximum::iddObjectType() )
-          // {
-          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_max.png"));
-          // }
-          // else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
-          // {
-          //   painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_min.png"));
-          // }
-          //break;
+           // These are the humidity ones
+           if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMaximum::iddObjectType() )
+           {
+             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_max.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerMultiZoneHumidityMinimum::iddObjectType() )
+           {
+             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_humidity_min.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerMultiZoneMaximumHumidityAverage::iddObjectType() )
+           {
+             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_maxhumidity_avg.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerMultiZoneMinimumHumidityAverage::iddObjectType() )
+           {
+             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_multizone_minhumidity_avg.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMaximum::iddObjectType() )
+           {
+             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_max.png"));
+           }
+           else if( it->iddObjectType() == SetpointManagerSingleZoneHumidityMinimum::iddObjectType() )
+           {
+             painter->drawPixmap(62,37,25,25,QPixmap(":images/setpoint_singlezone_humidity_min.png"));
+           }
+          break;
         }
       }
     }
@@ -4026,6 +4032,9 @@ void NodeContextButtonItem::onRemoveSPMActionTriggered()
       {
         if( istringEqual("Temperature", it->controlVariable()) )
         {
+          emit removeModelObjectClicked( *it );
+          break;
+        } else {
           emit removeModelObjectClicked( *it );
           break;
         }
