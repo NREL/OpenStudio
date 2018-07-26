@@ -118,16 +118,16 @@ namespace openstudio {
 
 bool hasSPM(model::Node & node)
 {
+  /* // Previously was only allowing temperature
+   *auto spms = node.setpointManagers();
+   *for( auto & spm: spms ) {
+   *  if ( spm.controlVariable().find( "Temperature" ) != std::string::npos ) {
+   *    return true;
+   *  }
+   *}
+   */
   auto spms = node.setpointManagers();
-  for( auto & spm: spms ) {
-    if ( spm.controlVariable().find( "Temperature" ) != std::string::npos ) {
-      return true;
-    } else {
-      // This captures the Humidity SPMs essentially.
-      return true;
-    }
-  }
-  return false;
+  return !(spms.empty());
 }
 
 // Begin move these
