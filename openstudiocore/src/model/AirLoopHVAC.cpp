@@ -840,6 +840,18 @@ namespace detail {
     }
   }
 
+  boost::optional<Node> AirLoopHVAC_Impl::outdoorAirNode() const
+  {
+    if( airLoopHVACOutdoorAirSystem() )
+    {
+      return airLoopHVACOutdoorAirSystem()->outboardOANode();
+    }
+    else
+    {
+      return boost::optional<Node>();
+    }
+  }
+
   boost::optional<Node> AirLoopHVAC_Impl::reliefAirNode() const
   {
     if( airLoopHVACOutdoorAirSystem() )
@@ -1375,6 +1387,21 @@ namespace detail {
     if( boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVACOutdoorAirSystem() )
     {
       if( boost::optional<ModelObject> mo = oaSystem->mixedAirModelObject() )
+      {
+        result = mo->optionalCast<Node>();
+      }
+    }
+
+    return result;
+  }
+
+  boost::optional<Node> AirLoopHVAC_Impl::returnAirNode() const
+  {
+    boost::optional<Node> result;
+
+    if( boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVACOutdoorAirSystem() )
+    {
+      if( boost::optional<ModelObject> mo = oaSystem->returnAirModelObject() )
       {
         result = mo->optionalCast<Node>();
       }
@@ -2131,8 +2158,7 @@ std::vector<ModelObject> AirLoopHVAC::oaComponents(openstudio::IddObjectType typ
 
 boost::optional<Node> AirLoopHVAC::outdoorAirNode()
 {
-  // ETH@20111101 Adding to get Ruby bindings building.
-  LOG_AND_THROW("Not implemented.");
+  return getImpl<detail::AirLoopHVAC_Impl>()->outdoorAirNode();
 }
 
 boost::optional<Node> AirLoopHVAC::reliefAirNode()
@@ -2147,8 +2173,7 @@ boost::optional<Node> AirLoopHVAC::mixedAirNode()
 
 boost::optional<Node> AirLoopHVAC::returnAirNode()
 {
-  // ETH@20111101 Adding to get Ruby bindings building.
-  LOG_AND_THROW("Not implemented.");
+  return getImpl<detail::AirLoopHVAC_Impl>()->returnAirNode();
 }
 
 boost::optional<Splitter> AirLoopHVAC::supplySplitter() const {

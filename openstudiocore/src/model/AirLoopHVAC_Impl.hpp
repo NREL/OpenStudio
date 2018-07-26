@@ -94,9 +94,13 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   Node demandOutletNode() const override;
 
+  boost::optional<Node> outdoorAirNode() const;
+
   boost::optional<Node> reliefAirNode() const;
 
   boost::optional<Node> mixedAirNode() const;
+
+  boost::optional<Node> returnAirNode() const;
 
   std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
