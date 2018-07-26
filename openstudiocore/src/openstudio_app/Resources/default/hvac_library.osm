@@ -3068,9 +3068,9 @@ OS:WaterUse:Equipment:Definition,
   Water Fixture Definition,               ! Name
   ,                                       ! End-Use Subcategory
   0.0000631,                              ! Peak Flow Rate {m3/s}
-  ,                                       !- Target Temperature Schedule Name
-  ,                                       !- Sensible Fraction Schedule Name
-  ;                                       !- Latent Fraction Schedule Name
+  {a5dae33a-6748-4f6c-a201-4cdee88f592a}, !- Target Temperature Schedule Name
+  {ed2f92c0-3279-41b2-9896-bd003cf06614}, !- Sensible Fraction Schedule Name
+  {91a014e9-93cd-4bdf-bf54-77887a0a33f3}; !- Latent Fraction Schedule Name
 
 OS:WaterUse:Equipment,
   {bb539061-f901-499d-b11b-a96891973f45}, ! Handle
@@ -12013,4 +12013,49 @@ OS:Table:MultiVariableLookup,
   1,                                      !- Data 4
   1.2857,                                 !- Data 5
   1.0778;                                 !- Data 6
+
+OS:Schedule:Ruleset,
+  {a5dae33a-6748-4f6c-a201-4cdee88f592a}, !- Handle
+  WaterUse Schedule 120F,                 !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  {0ce20635-a0aa-4dd9-8c4a-6bc27c66b0bf}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {0ce20635-a0aa-4dd9-8c4a-6bc27c66b0bf}, !- Handle
+  WaterUse Schedule 120F Day,             !- Name
+  {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  48.8888888888889;                       !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {ed2f92c0-3279-41b2-9896-bd003cf06614}, !- Handle
+  WaterUse Sensible Fraction Schedule 20p, !- Name
+  {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Schedule Type Limits Name
+  {85fd95fb-dd17-4fec-bc59-bb05477b926e}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {85fd95fb-dd17-4fec-bc59-bb05477b926e}, !- Handle
+  WaterUse Sensible Fraction Schedule 20p Day, !- Name
+  {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0.2;                                    !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {91a014e9-93cd-4bdf-bf54-77887a0a33f3}, !- Handle
+  WaterUse Latent Fraction Schedule 5p,   !- Name
+  {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Schedule Type Limits Name
+  {bde93882-2840-4a44-a751-661639853442}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {bde93882-2840-4a44-a751-661639853442}, !- Handle
+  WaterUse Latent Fraction Schedule 5p Day, !- Name
+  {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0.05;                                   !- Value Until Time 1
 
