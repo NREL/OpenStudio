@@ -53,6 +53,12 @@ namespace detail {
 
     virtual ~SetpointManager_Impl();
 
+    /** This method will delete any existing SPM with the same controlVariable
+     * as well as disallow placing the SPM anywhere else than the supply side of an AirLoopHVAC
+     * and EXCEPTING on the outdoorAirNode or reliefAirNode of an AirLoopHVAC
+     * All child classes will normally call this method first (all SPMs are potentially allowed on an AirLoopHVAC, only a subset for PlantLoops),
+     * and if failed AND the SPM is appropriate for a plantLoop, then it'll check if it can connect it to the PlantLoop.
+     */
     virtual bool addToNode(Node & node) override;
 
     virtual std::vector<openstudio::IdfObject> remove() override;
