@@ -829,33 +829,44 @@
   </POLICY>
   <POLICY IddObjectType="OS_People">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Number of People Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Activity Level Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Lights">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Luminaire">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_ElectricEquipment">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_GasEquipment">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_HotWaterEquipment">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_SteamEquipment">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_OtherEquipment">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_SpaceInfiltration_DesignFlowRate">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_SpaceInfiltration_EffectiveLeakageArea">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_DesignSpecification_OutdoorAir">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
