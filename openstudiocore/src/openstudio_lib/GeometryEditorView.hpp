@@ -171,7 +171,7 @@ class IdfEditor : public BaseEditor
   Q_OBJECT;
 
   public:
-    IdfEditor(const openstudio::path& idfPath, bool isIP, const openstudio::model::Model& model, QWebEngineView * m_view, QWidget *t_parent = nullptr);
+    IdfEditor(const openstudio::path& idfPath, bool forceConvert, bool isIP, const openstudio::model::Model& model, QWebEngineView * m_view, QWidget *t_parent = nullptr);
     virtual ~IdfEditor();
 
   public slots:

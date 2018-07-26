@@ -12,11 +12,20 @@
 <script>
   function setJdf(jdf) {
     console.log(jdf);
-    jdf = JSON.parse(jdf);
-    console.log(jdf);
-    document.getElementById("test").appendChild(
+    try{
+      jdf = JSON.parse(jdf);
+      console.log(jdf);
+      document.getElementById("test").innerHTML = "";
+      document.getElementById("test").appendChild(
         renderjson(jdf)
-    );
+      );
+    } catch(err) {
+      document.getElementById("test").innerHTML = "Error: " + err.message + "<br><br>";
+    }
+  }
+  function setMessage(txt) {
+    console.log(txt);
+    document.getElementById("test").innerHTML = txt;
   }
 </script>
 </body>

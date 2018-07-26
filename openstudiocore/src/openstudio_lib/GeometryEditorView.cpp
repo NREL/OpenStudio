@@ -676,7 +676,7 @@ void GbXmlEditor::checkForUpdate()
   // no-op since we aren't editing anything
 }
 
-IdfEditor::IdfEditor(const openstudio::path& idfPath, bool isIP, const openstudio::model::Model& model, QWebEngineView * view, QWidget *t_parent)
+IdfEditor::IdfEditor(const openstudio::path& idfPath, bool forceConvert, bool isIP, const openstudio::model::Model& model, QWebEngineView * view, QWidget *t_parent)
   : BaseEditor(isIP, model, view, t_parent),
   m_idfPath(idfPath)
 {
@@ -691,7 +691,7 @@ IdfEditor::IdfEditor(const openstudio::path& idfPath, bool isIP, const openstudi
   if (QFile::exists(qJdfPath)) {
     QFileInfo fi2(qJdfPath);
 
-    if (fi2.lastModified() < fi.lastModified()){
+    if ((forceConvert) || (fi2.lastModified() < fi.lastModified())){
       QFile::remove(qJdfPath);
     }
   }
@@ -760,7 +760,19 @@ IdfEditor::~IdfEditor()
 void IdfEditor::loadEditor()
 {
 
-  if (!m_jdf.isEmpty()){
+  if (m_jdf.isEmpty() || m_jdf.isNull() || m_jdf == "null"){
+
+    OS_ASSERT(!m_javascriptRunning);
+
+    m_javascriptRunning = true;
+
+    QString javascript = QString("setMessage(\"Failed to convert IDF to JSON format\");");
+    m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
+    while (m_javascriptRunning){
+      OSAppBase::instance()->processEvents(QEventLoop::ExcludeUserInputEvents, 200);
+    }
+
+  } else {
     OS_ASSERT(!m_javascriptRunning);
 
     m_javascriptRunning = true;
@@ -1052,7 +1064,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
     m_geometrySourceComboBox->setEnabled(false);
     m_newImportGeometry->setEnabled(true);
 
-    m_baseEditor = new IdfEditor(p, m_isIP, m_model, m_view, this);
+    m_baseEditor = new IdfEditor(p, false, m_isIP, m_model, m_view, this);
 
     // editor will be started when page load finishes
     return;
@@ -1165,7 +1177,7 @@ void EditorWebView::newImportClicked()
     m_geometrySourceComboBox->setEnabled(false);
     m_newImportGeometry->setEnabled(true);
 
-    m_baseEditor = new IdfEditor(op, m_isIP, m_model, m_view, this);
+    m_baseEditor = new IdfEditor(op, true, m_isIP, m_model, m_view, this);
 
     onChanged();
 

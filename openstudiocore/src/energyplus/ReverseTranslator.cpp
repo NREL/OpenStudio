@@ -92,6 +92,14 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
 
   }else{
 
+    if (!idfFile->isValid(StrictnessLevel::Draft)){
+
+      LOG(Error, "Idf file at path ='" << toString(path) << "' is not valid to draft strictness.");
+      LOG(Error, "Check that IDF is of correct version and that all fields are valid against Energy+.idd.");
+      LOG(Error, idfFile->validityReport(StrictnessLevel::Draft));
+      return boost::none;
+    }
+
     VersionString expectedVersion(IddFileAndFactoryWrapper(IddFileType::EnergyPlus).version());
     boost::optional<IdfObject> versionObject = idfFile->versionObject();
     if (!versionObject) {
@@ -106,16 +114,6 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
           LOG(Warn, "Idf file Version = '" << fileVersion.str() << "' does not match expected version = '" << expectedVersion.str() << "'");
         }
       }
-    }
-
-
-    if (!idfFile->isValid(StrictnessLevel::Draft)){
-
-      LOG(Error, "Idf file at path ='" << toString(path) << "' is not valid to draft strictness.");
-      LOG(Error, "Check that IDF is of correct version and that all fields are valid against Energy+.idd.");
-      LOG(Error, idfFile->validityReport(StrictnessLevel::Draft));
-      return boost::none;
-
     }
 
     if (progressBar){
@@ -135,15 +133,21 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
       workspace.disconnectProgressBar(*progressBar);
     }
 
-    return this->translateWorkspace(workspace, progressBar);
+    return this->translateWorkspace(workspace, progressBar, false);
 
   }
 
   return boost::none;
 }
 
-Model ReverseTranslator::translateWorkspace(const Workspace & workspace, ProgressBar* progressBar )
+Model ReverseTranslator::translateWorkspace(const Workspace & workspace, ProgressBar* progressBar, bool clearLogSink )
 {
+  if (clearLogSink){
+    m_logSink.resetStringStream();
+  }
+
+  m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ReverseTranslator"));
+
   // check input
   if (workspace.iddFileType() != IddFileType::EnergyPlus){
     LOG(Error, "Cannot translate Workspace with IddFileType = '" << workspace.iddFileType().valueName() << "'");
@@ -159,11 +163,10 @@ Model ReverseTranslator::translateWorkspace(const Workspace & workspace, Progres
 
   m_untranslatedIdfObjects.clear();
 
-  m_logSink.resetStringStream();
-
   // if multiple runperiod objects in idf, remove them all
   vector<WorkspaceObject> runPeriods = m_workspace.getObjectsByType(IddObjectType::RunPeriod);
   if (runPeriods.size() > 1){
+    LOG(Warn, "Multiple RunPeriod objects detected, removing all RunPeriod objects.");
     for(auto & runPeriod : runPeriods)
     {
       runPeriod.remove();
