@@ -687,15 +687,25 @@ struct ModelObjectNameSorter{
 
       }
       else if (field == AIRLOOPNAME){
+        std::function<std::vector<model::ModelObject>(const model::ThermalZone &)> airloops(
+          [](model::ThermalZone t) {
+          // we need to pass in a const &, but the function expects non-const, so let's copy the wrapper
+          // object in the param list
+          return subsetCastVector<model::ModelObject>(t.airLoopHVACs());
+        }
+        );
+
         // Notes: this only requires a static_cast because `name` comes from IdfObject
         // we are passing in an empty std::function for the separate parameter because there's no way to set it
         addNameLineEditColumn(Heading(QString(AIRLOOPNAME), true, false),
           false,
           false,
-          ProxyAdapter(static_cast<boost::optional<std::string>(model::AirLoopHVAC::*)(bool) const>(&model::AirLoopHVAC::name),
-          &model::ThermalZone::airLoopHVAC, boost::optional<std::string>("None")),
-          std::function<boost::optional<std::string>(model::HVACComponent*, const std::string &)>(),
-          boost::optional<std::function<void(model::HVACComponent *)>>());
+          CastNullAdapter<model::ModelObject>(&model::ModelObject::name),
+          std::function<boost::optional<std::string>(model::ModelObject*, const std::string &)>(),
+          boost::optional<std::function<void(model::ModelObject *)>>(),
+          // insert DataSourceAdapter
+          DataSource(airloops,true)
+          );
 
       }
       else if (field == MULTIPLIER){
