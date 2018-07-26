@@ -8198,6 +8198,7 @@ OS:Refrigeration:SecondarySystem,
         \type real
         \minimum 0.0
         \units Pa
+        \ip-units ftH2O
         \note Either the Total Pump Power or the Total Pump Head is required.
   N11,  \field PhaseChange Circulating Rate
         \type real
@@ -30657,7 +30658,7 @@ OS:PlantComponent:UserDefined,
       \min-fields 6
   A1, \field Handle
       \type handle
-      \required-field    
+      \required-field
   A2, \field Name
       \required-field
       \type alpha
@@ -30667,7 +30668,7 @@ OS:PlantComponent:UserDefined,
       \object-list ErlProgramCallingManagerNames
   A4, \field Main Model Program Name
       \type object-list
-      \object-list ErlProgramNames    
+      \object-list ErlProgramNames
   A5, \field Plant Inlet Node Name
       \type object-list
       \object-list ConnectionNames
@@ -30695,13 +30696,13 @@ OS:PlantComponent:UserDefined,
       \object-list ErlProgramCallingManagerNames
   A10, \field Plant Initialization Program Name
       \type object-list
-      \object-list ErlProgramNames      
+      \object-list ErlProgramNames
   A11, \field Plant Simulation Program Calling Manager Name
       \type object-list
       \object-list ErlProgramCallingManagerNames
   A12, \field Plant Simulation Program Name
       \type object-list
-      \object-list ErlProgramNames      
+      \object-list ErlProgramNames
   A13, \field Design Volume Flow Rate Actuator
        \type object-list
        \object-list ErlActuatorNames
@@ -30725,9 +30726,9 @@ OS:PlantComponent:UserDefined,
        \object-list ErlActuatorNames
   A20, \field Mass Flow Rate Actuator
        \type object-list
-       \object-list ErlActuatorNames       
+       \object-list ErlActuatorNames
   A21; \field Ambient Zone Name
        \type object-list
        \object-list ThermalZoneNames
        \note Used for modeling device losses to surrounding zone
-      
+
