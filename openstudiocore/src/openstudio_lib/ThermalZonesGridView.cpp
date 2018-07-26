@@ -628,7 +628,6 @@ struct ModelObjectNameSorter{
         std::function<boost::optional<model::ModelObject>(model::ThermalZone *)>  getter;
         std::function<bool(model::ThermalZone *, const model::ModelObject &)> setter(
           [](model::ThermalZone *t_z, const model::ModelObject &t_mo) {
-          std::cout << "Setting" << std::endl;
           try {
             if (t_mo.cast<model::ZoneHVACComponent>().thermalZone()) {
               boost::optional<model::ModelObject> clone_mo = t_mo.cast<model::ZoneHVACComponent>().clone(t_mo.model());
@@ -639,7 +638,6 @@ struct ModelObjectNameSorter{
               OS_ASSERT(clone_mo->cast<model::ZoneHVACComponent>().thermalZone());
               return true;
             }
-            std::cout << "Setting 2" << std::endl;
             return t_mo.cast<model::ZoneHVACComponent>().addToThermalZone(*t_z);
           }
           catch (const std::exception &) {
