@@ -419,6 +419,7 @@ namespace detail {
     std::vector<ZoneMixing> exhaustZoneMixing() const;
 
     boost::optional<HVACComponent> airLoopHVACTerminal() const;
+    std::vector<HVACComponent> airLoopHVACTerminals() const;
 
     AirflowNetworkZone getAirflowNetworkZone();
     boost::optional<AirflowNetworkZone> airflowNetworkZone() const;

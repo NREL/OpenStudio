@@ -1419,10 +1419,15 @@ TEST_F(ModelFixture,AirLoopHVAC_multiloops) {
   ThermalZone z1(m);
   ThermalZone z2(m);
 
-  EXPECT_TRUE(a1.multiAddBranchForZone(z1));
-  EXPECT_TRUE(a2.multiAddBranchForZone(z1));
+  Schedule sch = m.alwaysOnDiscreteSchedule();
+  AirTerminalSingleDuctUncontrolled atu1(m, sch);
+  AirTerminalSingleDuctUncontrolled atu2(m, sch);
+
+  EXPECT_TRUE(a1.multiAddBranchForZone(z1, atu1));
+  EXPECT_TRUE(a2.multiAddBranchForZone(z1, atu2));
 
   EXPECT_EQ(z1.airLoopHVACs().size(), 2);
+  EXPECT_EQ(z1.airLoopHVACTerminals().size(), 2);
 
   EXPECT_TRUE(a1.removeBranchForZone(z1));
   EXPECT_EQ(z1.airLoopHVACs().size(), 1);
@@ -1433,5 +1438,8 @@ TEST_F(ModelFixture,AirLoopHVAC_multiloops) {
   EXPECT_TRUE(a1.multiAddBranchForZone(z1));
   EXPECT_TRUE(a2.multiAddBranchForZone(z1));
   EXPECT_EQ(z1.airLoopHVACs().size(), 3);
+
+  EXPECT_EQ(z1.airLoopHVACTerminals().size(), 0);
+  EXPECT_FALSE(z1.airLoopHVACTerminal());
 }
 
