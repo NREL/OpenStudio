@@ -2156,22 +2156,22 @@ std::vector<ModelObject> AirLoopHVAC::oaComponents(openstudio::IddObjectType typ
   return getImpl<detail::AirLoopHVAC_Impl>()->oaComponents( type );
 }
 
-boost::optional<Node> AirLoopHVAC::outdoorAirNode()
+boost::optional<Node> AirLoopHVAC::outdoorAirNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->outdoorAirNode();
 }
 
-boost::optional<Node> AirLoopHVAC::reliefAirNode()
+boost::optional<Node> AirLoopHVAC::reliefAirNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->reliefAirNode();
 }
 
-boost::optional<Node> AirLoopHVAC::mixedAirNode()
+boost::optional<Node> AirLoopHVAC::mixedAirNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->mixedAirNode();
 }
 
-boost::optional<Node> AirLoopHVAC::returnAirNode()
+boost::optional<Node> AirLoopHVAC::returnAirNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->returnAirNode();
 }
