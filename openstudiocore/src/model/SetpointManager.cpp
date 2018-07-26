@@ -97,6 +97,8 @@ namespace detail{
       return false;
     }
 
+    // Erase any existing setpoint manager that has the same control variable
+    // eg you can't have two temperature ones. But Humidity ones can be MaximumHumidityRatio or MinimumHumidityRatio so you can have a Min and Max
     std::vector<SetpointManager> _setpointManagers = node.setpointManagers();
     if( !_setpointManagers.empty() )
     {
@@ -113,6 +115,7 @@ namespace detail{
 
     if( OptionalAirLoopHVAC airLoop = node.airLoopHVAC() )
     {
+      // If this is one of the regular nodes of the supply path (eg not in the AirLoopHVACOASys)
       if( airLoop->supplyComponent(node.handle()) )
       {
         return this->setSetpointNode(node);
@@ -121,7 +124,10 @@ namespace detail{
 
     if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = node.airLoopHVACOutdoorAirSystem())
     {
-      return this->setSetpointNode(node);
+      // We only accept it if it's neither the relief or the OA node (doesn't make sense to place one there)
+      if ( (node != oaSystem->reliefAirNode()) && (node != oaSystem->outdoorAirNode()) ) {
+        return this->setSetpointNode(node);
+      }
     }
 
     return false;
