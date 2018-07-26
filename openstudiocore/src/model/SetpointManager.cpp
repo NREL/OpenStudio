@@ -125,7 +125,7 @@ namespace detail{
     if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = node.airLoopHVACOutdoorAirSystem())
     {
       // We only accept it if it's neither the relief or the OA node (doesn't make sense to place one there)
-      if ( (node != oaSystem->reliefAirNode()) && (node != oaSystem->outdoorAirNode()) ) {
+      if ( (node != oaSystem->outboardReliefNode()) && (node != oaSystem->outboardOANode()) ) {
         return this->setSetpointNode(node);
       }
     }
