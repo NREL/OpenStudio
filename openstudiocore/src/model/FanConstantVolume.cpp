@@ -152,14 +152,14 @@ namespace detail {
   }
 
 
-  double FanConstantVolume_Impl::fanEfficiency() const
+  double FanConstantVolume_Impl::fanTotalEfficiency() const
   {
-    return this->getDouble(OS_Fan_ConstantVolumeFields::FanEfficiency,true).get();
+    return this->getDouble(OS_Fan_ConstantVolumeFields::FanTotalEfficiency,true).get();
   }
 
-  bool FanConstantVolume_Impl::setFanEfficiency(double val)
+  bool FanConstantVolume_Impl::setFanTotalEfficiency(double val)
   {
-    return this->setDouble(OS_Fan_ConstantVolumeFields::FanEfficiency,val);
+    return this->setDouble(OS_Fan_ConstantVolumeFields::FanTotalEfficiency,val);
   }
 
   double FanConstantVolume_Impl::pressureRise() const
@@ -546,14 +546,24 @@ bool FanConstantVolume::setAvailabilitySchedule(Schedule& s)
   return getImpl<detail::FanConstantVolume_Impl>()->setAvailabilitySchedule(s);
 }
 
+double FanConstantVolume::fanTotalEfficiency() const
+{
+  return getImpl<detail::FanConstantVolume_Impl>()->fanTotalEfficiency();
+}
+
+bool FanConstantVolume::setFanTotalEfficiency(double val)
+{
+  return getImpl<detail::FanConstantVolume_Impl>()->setFanTotalEfficiency(val);
+}
+
 double FanConstantVolume::fanEfficiency() const
 {
-  return getImpl<detail::FanConstantVolume_Impl>()->fanEfficiency();
+  return getImpl<detail::FanConstantVolume_Impl>()->fanTotalEfficiency();
 }
 
 bool FanConstantVolume::setFanEfficiency(double val)
 {
-  return getImpl<detail::FanConstantVolume_Impl>()->setFanEfficiency(val);
+  return getImpl<detail::FanConstantVolume_Impl>()->setFanTotalEfficiency(val);
 }
 
 double FanConstantVolume::pressureRise() const
