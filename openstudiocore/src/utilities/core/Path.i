@@ -134,7 +134,7 @@ namespace openstudio {
 
   // path to QString.
   // DLM: deprecate
-  QString toQString(const path& p);
+  //QString toQString(const path& p);
 
   // UTF-8 encoded char* to path
   // DLM: deprecate
@@ -146,7 +146,7 @@ namespace openstudio {
 
   // QString to path
   // DLM: deprecate
-  path toPath(const QString& q);
+  //path toPath(const QString& q);
 
   // does the path exist
   bool exists(const path& p);
