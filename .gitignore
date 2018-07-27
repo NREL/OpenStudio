@@ -12,7 +12,7 @@ test_fails.txt
 /build_64/
 /build-64/
 /build-relwithdebinfo/
-/build_relwithdebinfo//
+/build_relwithdebinfo/
 /build_profile/
 /build-profile/
 /core-build/

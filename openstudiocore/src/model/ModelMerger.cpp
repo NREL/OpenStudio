@@ -62,7 +62,7 @@
 #include "InteriorPartitionSurfaceGroup.hpp"
 #include "DaylightingControl.hpp"
 #include "DaylightingControl_Impl.hpp"
-
+#include "AdditionalProperties.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
@@ -77,6 +77,7 @@
 #include <QThread>
 
 #include <cmath>
+#include <tuple>
 
 namespace openstudio
 {
@@ -97,6 +98,76 @@ namespace openstudio
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
       m_logSink.setThreadId(QThread::currentThread());
+    }
+
+    std::map<UUID, UUID> ModelMerger::suggestHandleMapping(const Model& currentModel, const Model& newModel) const
+    {
+      std::map<UUID, UUID> result;
+
+      typedef std::set<UUID> HandleSet;
+      typedef std::map<std::string, UUID> StringHandleMap;
+      typedef std::tuple<HandleSet, StringHandleMap, StringHandleMap> ObjectLookup; // 0 - handle, 1 - CADObjectId, 2 - Name
+      typedef std::map<IddObjectType, ObjectLookup> IddToObjectLookupMap;
+
+      IddToObjectLookupMap currentIddToObjectLookupMap;
+      for (const auto& iddObjectType : m_iddObjectTypesToMerge) {
+        ObjectLookup currentLookup;
+        for (const auto& object : currentModel.getObjectsByType(iddObjectType)) {
+          Handle handle = object.handle();
+          std::get<0>(currentLookup).insert(handle);
+
+          ModelObject modelObject = object.cast<ModelObject>();
+          if (modelObject.hasAdditionalProperties()) {
+            model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
+            if (additionalProperties.hasFeature("CADObjectId")) {
+              boost::optional<std::string> cadObjectId = additionalProperties.getFeatureAsString("CADObjectId");
+              if (cadObjectId) {
+                std::get<1>(currentLookup).insert(std::make_pair(*cadObjectId, handle));
+              }
+            }
+          }
+
+          std::get<2>(currentLookup).insert(std::make_pair(object.nameString(), handle));
+        }
+        currentIddToObjectLookupMap.insert(std::make_pair(iddObjectType, currentLookup));
+      }
+
+      for (const auto& iddObjectType : m_iddObjectTypesToMerge) {
+        ObjectLookup currentLookup = currentIddToObjectLookupMap[iddObjectType];
+        for (const auto& object : newModel.getObjectsByType(iddObjectType)) {
+          Handle handle = object.handle();
+          if (std::get<0>(currentLookup).count(handle) > 0) {
+            // handle is in both models
+            result[handle] = handle;
+            continue;
+          }
+
+          ModelObject modelObject = object.cast<ModelObject>();
+          if (modelObject.hasAdditionalProperties()) {
+            model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
+            if (additionalProperties.hasFeature("CADObjectId")) {
+              boost::optional<std::string> cadObjectId = additionalProperties.getFeatureAsString("CADObjectId");
+              if (cadObjectId) {
+                if (std::get<1>(currentLookup).count(*cadObjectId) > 0) {
+                  // cadObjectId is in both models
+                  Handle currentHandle = std::get<1>(currentLookup)[*cadObjectId];
+                  result[currentHandle] = handle;
+                  continue;
+                }
+              }
+            }
+          }
+
+          if (std::get<2>(currentLookup).count(object.nameString()) > 0) {
+            // name is in both models
+            Handle currentHandle = std::get<2>(currentLookup)[object.nameString()];
+            result[currentHandle] = handle;
+            continue;
+          }
+        }
+      }
+
+      return result;
     }
 
     std::vector<LogMessage> ModelMerger::warnings() const
@@ -152,6 +223,30 @@ namespace openstudio
       m_newMergedHandles.insert(newSpace.handle());
 
       currentSpace.setName(newSpace.nameString());
+
+      if (newSpace.isDirectionofRelativeNorthDefaulted()) {
+        currentSpace.resetDirectionofRelativeNorth();
+      } else {
+        currentSpace.setDirectionofRelativeNorth(newSpace.directionofRelativeNorth());
+      }
+
+      if (newSpace.isXOriginDefaulted()) {
+        currentSpace.resetXOrigin();
+      } else {
+        currentSpace.setXOrigin(newSpace.xOrigin());
+      }
+
+      if (newSpace.isYOriginDefaulted()) {
+        currentSpace.resetYOrigin();
+      } else {
+        currentSpace.setYOrigin(newSpace.yOrigin());
+      }
+
+      if (newSpace.isZOriginDefaulted()) {
+        currentSpace.resetZOrigin();
+      } else {
+        currentSpace.setZOrigin(newSpace.zOrigin());
+      }
 
       // remove current surfaces
       for (auto& currentSurface : currentSpace.surfaces()){
@@ -343,6 +438,30 @@ namespace openstudio
       m_newMergedHandles.insert(newGroup.handle());
 
       currentGroup.setName(newGroup.nameString());
+
+      if (newGroup.isDirectionofRelativeNorthDefaulted()) {
+        currentGroup.resetDirectionofRelativeNorth();
+      } else {
+        currentGroup.setDirectionofRelativeNorth(newGroup.directionofRelativeNorth());
+      }
+
+      if (newGroup.isXOriginDefaulted()) {
+        currentGroup.resetXOrigin();
+      } else {
+        currentGroup.setXOrigin(newGroup.xOrigin());
+      }
+
+      if (newGroup.isYOriginDefaulted()) {
+        currentGroup.resetYOrigin();
+      } else {
+        currentGroup.setYOrigin(newGroup.yOrigin());
+      }
+
+      if (newGroup.isZOriginDefaulted()) {
+        currentGroup.resetZOrigin();
+      } else {
+        currentGroup.setZOrigin(newGroup.zOrigin());
+      }
 
       // remove current shading surfaces
       for (auto& currentSurface : currentGroup.shadingSurfaces()){

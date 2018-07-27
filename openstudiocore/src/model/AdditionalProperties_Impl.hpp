@@ -84,6 +84,8 @@ class MODEL_API AdditionalProperties_Impl : public ModelObject_Impl {
 
   std::vector<std::string> featureNames() const;
 
+  bool hasFeature(const std::string& name) const;
+
   boost::optional<std::string> getFeatureDataType(const std::string& name) const;
 
   boost::optional<std::string> getFeatureAsString(const std::string& name) const;

@@ -135,6 +135,11 @@ namespace detail {
     return boost::none;
   }
 
+  bool AdditionalProperties_Impl::hasFeature(const std::string &name) const
+  {
+    return getFeatureGroupByName(name);
+  }
+
   boost::optional<std::string> AdditionalProperties_Impl::getFeatureDataType(const std::string &name) const
   {
     boost::optional<std::string> dataType;
@@ -369,6 +374,11 @@ IddObjectType AdditionalProperties::iddObjectType() {
 std::vector<std::string> AdditionalProperties::featureNames() const
 {
   return getImpl<detail::AdditionalProperties_Impl>()->featureNames();
+}
+
+bool AdditionalProperties::hasFeature(const std::string& name) const
+{
+  return getImpl<detail::AdditionalProperties_Impl>()->hasFeature(name);
 }
 
 boost::optional<std::string> AdditionalProperties::getFeatureDataType(const std::string& name) const
