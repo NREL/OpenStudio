@@ -123,11 +123,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACIdealLoadsAirSyst
 
   if ( allIdealSystems.empty() ) {
     // System Inlet Air Node Name
-    boost::optional<std::string> systemInletAirNodeName;
     if(boost::optional<Node> node = modelObject.inletNode()){
       if(boost::optional<std::string> s = node->name()){
-        systemInletAirNodeName = s;
-        zoneHVACIdealLoadsAirSystem.setString(ZoneHVAC_IdealLoadsAirSystemFields::SystemInletAirNodeName,s.get());
+        zoneHVACIdealLoadsAirSystem.setString(ZoneHVAC_IdealLoadsAirSystemFields::ZoneExhaustAirNodeName,s.get());
       }
     }
   } else {
