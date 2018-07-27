@@ -227,11 +227,13 @@ void OpenStudioApp::onMeasureManagerAndLibraryReady() {
       osversion::VersionTranslator versionTranslator;
       versionTranslator.setAllowNewerVersions(false);
 
-      boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(toPath(fileName));
+      // Handle special chars by creating the path from a wstring
+      openstudio::path filePath(fileName.toStdWString());
+      boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(filePath);
       if( model ){
 
-        m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
-                                                                   resourcesPath(), 
+        m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(),
+                                                                   resourcesPath(),
                                                                    model,
                                                                    fileName) );
 
@@ -1166,12 +1168,12 @@ void OpenStudioApp::startMeasureManagerProcess(){
 void OpenStudioApp::loadLibrary() {
   if ( this->currentDocument() ) {
     QWidget * parent = this->currentDocument()->mainWindow();
-  
+
     QString fileName = QFileDialog::getOpenFileName( parent,
                                                     tr("Select Library"),
                                                     toQString(resourcesPath()),
                                                     tr("(*.osm)") );
-  
+
     if( ! (fileName == "") ) {
       QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
@@ -1202,7 +1204,7 @@ void OpenStudioApp::changeDefaultLibraries() {
   auto defaultPaths = defaultLibraryPaths();
   auto paths = libraryPaths();
 
-  auto resources = resourcesPath(); 
+  auto resources = resourcesPath();
   LibraryDialog dialog(paths, defaultPaths, resources);
   auto code = dialog.exec();
   auto newPaths = dialog.paths();
