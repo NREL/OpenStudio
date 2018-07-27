@@ -70,8 +70,9 @@ std::ostream& operator<<(std::ostream& os, const path& p)
 /** QString to path*/
 path toPath(const QString& q)
 {
-  std::string s = toString(q);
-  return path(s);
+  // std::string s = toString(q);
+  // Construct from a wstring to avoid messes with special characters
+  return path(q.toStdWString());
 }
 
 /** path to a temporary directory. */

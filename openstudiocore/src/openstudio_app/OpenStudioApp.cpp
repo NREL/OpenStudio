@@ -227,9 +227,7 @@ void OpenStudioApp::onMeasureManagerAndLibraryReady() {
       osversion::VersionTranslator versionTranslator;
       versionTranslator.setAllowNewerVersions(false);
 
-      // Handle special chars by creating the path from a wstring
-      openstudio::path filePath(fileName.toStdWString());
-      boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(filePath);
+      boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(toPath(fileName));
       if( model ){
 
         m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(),
