@@ -105,6 +105,8 @@ namespace gbxml {
 
     m_logSink.resetStringStream();
 
+    m_idToObjectMap.clear();
+
     boost::optional<openstudio::model::Model> result;
 
     if (openstudio::filesystem::exists(path)){
