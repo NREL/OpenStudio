@@ -223,25 +223,31 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir, con
   std::vector<openstudio::path> radout;
   std::vector<openstudio::path> reports;
 
-  for ( openstudio::filesystem::recursive_directory_iterator end, dir(t_runDir);
-        dir != end;
-        ++dir )
-  {
-    openstudio::path p = *dir;
-    if        (openstudio::toString(p.filename()) == "eplusout.sql") {
-      eplusout.push_back(p);
-    } else if (openstudio::toString(p.filename()) == "radout.sql") {
-      radout.push_back(p);
-    } else if (openstudio::toString(p.filename()) == "report.html") {
-      //reports.push_back(p);
-    } else if (openstudio::toString(p.filename()) == "eplustbl.htm") {
-      //reports.push_back(p);
+  // Check that the directory does exists first
+  if (openstudio::filesystem::is_directory(t_runDir) 
+    && openstudio::filesystem::exists(t_runDir)) {
+    for ( openstudio::filesystem::recursive_directory_iterator end, dir(t_runDir);
+          dir != end;
+          ++dir )
+    {
+      openstudio::path p = *dir;
+      if        (openstudio::toString(p.filename()) == "eplusout.sql") {
+        eplusout.push_back(p);
+      } else if (openstudio::toString(p.filename()) == "radout.sql") {
+        radout.push_back(p);
+      } else if (openstudio::toString(p.filename()) == "report.html") {
+        //reports.push_back(p);
+      } else if (openstudio::toString(p.filename()) == "eplustbl.htm") {
+        //reports.push_back(p);
+      }
     }
   }
 
   LOG(Debug, "Looking for existing results in: " << openstudio::toString(t_reportsDir));
 
-  if( openstudio::filesystem::exists(t_reportsDir) ) {
+  // Check that the directory does exists first
+  if (openstudio::filesystem::is_directory(t_reportsDir)
+    && openstudio::filesystem::exists(t_reportsDir)) {
     for ( openstudio::filesystem::directory_iterator end, dir(t_reportsDir);
           dir != end;
           ++dir )
