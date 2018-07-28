@@ -32,6 +32,11 @@
 
 #include <QDir>
 
+#include <iostream>
+#include <string>
+#include <locale>
+#include <codecvt>
+
 namespace openstudio {
 
 //#ifdef Q_OS_WIN
@@ -59,6 +64,15 @@ namespace openstudio {
 //
 //#endif
 
+/*
+  | Class       | Internal      | Platform  |
+  | std::string | UTF-8, char   | All       |
+  | path        | UTF-8, char   | Unix, Mac |
+  | path        | UTF-16, wchar | Windows   |
+  | QString     | UTF-16, wchar | All       |
+
+*/
+
 
 // allow path to be written to cout on Windows
 std::ostream& operator<<(std::ostream& os, const path& p)
@@ -70,9 +84,11 @@ std::ostream& operator<<(std::ostream& os, const path& p)
 /** QString to path*/
 path toPath(const QString& q)
 {
-  // std::string s = toString(q);
-  // Construct from a wstring to avoid messes with special characters
-  return path(q.toStdWString());
+  #ifdef Q_OS_WIN
+    return path(q.toStdWString());
+  #endif
+
+  return path(q.toStdString());
 }
 
 /** path to a temporary directory. */
@@ -84,13 +100,22 @@ path tempDir()
 /** path to UTF-8 encoding. */
 std::string toString(const path& p)
 {
+  #ifdef Q_OS_WIN
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>,wchar_t> converter;
+    std::string s = converter.to_bytes(p.generic_wstring());
+    return s;
+  #endif
+
   return p.generic_string();
 }
 
 /** path to QString. */
 QString toQString(const path& p)
 {
-  return QString::fromStdWString(p.wstring());
+  #ifdef Q_OS_WIN
+    return QString::fromStdWString(p.wstring());
+  #endif
+  return QString::fromUtf8(p.string().c_str());
 }
 
 /** UTF-8 encoded char* to path*/
@@ -102,7 +127,14 @@ path toPath(const char* s)
 /** UTF-8 encoded std::string to path*/
 path toPath(const std::string& s)
 {
-  return toPath(toQString(s));
+  #ifdef Q_OS_WIN
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>,wchar_t> converter;
+    std::wstring wstr = converter.from_bytes(s);
+    return path(wstr);
+  #endif
+
+  // else
+  return path(s);
 }
 
 } // openstudio
