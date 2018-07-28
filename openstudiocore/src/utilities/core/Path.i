@@ -77,17 +77,17 @@ namespace openstudio {
     path();
     //path(const PathStringType& p);
     //path(const PathCharType* p);
-    path(const std::string& p);
-    path(const char* p);
+    //path(const std::string& p);
+    //path(const char* p);
     path(const path& p);
     virtual ~path();
 
     //path& operator=(const PathStringType& s);
-    path& operator=(const std::string& s);
+    //path& operator=(const std::string& s);
     path& operator=(const path& p);
 
     //path& operator/=(const PathStringType& s);
-    path& operator/=(const std::string& s);
+    //path& operator/=(const std::string& s);
     path& operator/=(const path& p);
 
     void clear();
@@ -182,30 +182,24 @@ namespace openstudio {
       return toString(*self);
     }
 
-    //#ifdef SWIGRUBY
-    //  #ifdef _WINDOWS
-    //    // constructor from std::string
-    //    path(const std::string& s){
-    //      path *p;
-    //      p = new path(toPath(s));
-    //      return p;
-    //    }
-    //  #endif
-    //#endif
+    // from std::string
+    // ensure that we use conversion from string to path
+    path(const std::string& s) {
+       path* p = new path(toPath(s));
+       return p;
+    }
+
+    // from char*
+    // ensure that we use conversion from string to path
+    path(const char* c) {
+       path* p = new path(toPath(c));
+       return p;
+    }
 
     #ifdef SWIGJAVASCRIPT
         path append(const path &other) const {
           return (*self) / other;
         }
-
-      #ifdef _WINDOWS
-          // constructor from std::string
-          path(const std::string& s){
-            path *p;
-            p = new path(toPath(s));
-            return p;
-          }
-      #endif
     #endif
   };
 
