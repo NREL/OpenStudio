@@ -113,9 +113,9 @@ std::string toString(const path& p)
 QString toQString(const path& p)
 {
   #ifdef Q_OS_WIN
-    return QString::fromStdWString(p.wstring());
+    return QString::fromStdWString(p.generic_wstring());
   #endif
-  return QString::fromUtf8(p.string().c_str());
+  return QString::fromUtf8(p.generic_string().c_str());
 }
 
 /** UTF-8 encoded char* to path*/
