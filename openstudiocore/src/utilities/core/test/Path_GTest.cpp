@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+﻿/***********************************************************************************************************************
 *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -36,10 +36,16 @@
 #include "../Path.hpp"
 #include "../PathHelpers.hpp"
 #include "../URLHelpers.hpp"
+#include <filesystem>
+#include "utilities/sql/SqlFileDataDictionary.hpp"
+
+#include <QTextCodec>
+#include <clocale>
 
 using openstudio::path;
 using openstudio::toPath;
 using openstudio::toString;
+using openstudio::toQString;
 using openstudio::completePathToFile;
 using openstudio::setFileExtension;
 using openstudio::makeParentFolder;
@@ -382,4 +388,88 @@ TEST_F(CoreFixture, IsNetworkPath)
   EXPECT_FALSE(isNetworkPath(path));
   EXPECT_FALSE(isNetworkPathAvailable(path));
   */
+}
+
+TEST_F(CoreFixture, Path_Conversions)
+{
+  std::string s;
+  std::wstring w;
+  path p;
+
+  s = std::string("basic_path");
+  w = std::wstring(L"basic_path");
+  p = path(s);
+  EXPECT_EQ(s, p.string());
+  EXPECT_EQ(s, toQString(p).toStdString());
+  EXPECT_EQ(s, toString(p));
+  EXPECT_EQ(s, toQString(toString(p)).toStdString());
+  EXPECT_EQ(s, std::string(toQString(toString(p)).toUtf8()));
+  EXPECT_EQ(s, toPath(toQString(toString(p))).string());
+  EXPECT_EQ(w, p.wstring());
+  EXPECT_EQ(w, toQString(p).toStdWString());
+  //EXPECT_EQ(w, toString(p));
+  EXPECT_EQ(w, toQString(toString(p)).toStdWString());
+  //EXPECT_EQ(w, std::wstring(toQString(toString(p)).toUtf16()));
+  EXPECT_EQ(w, toPath(toQString(toString(p))).wstring());
+
+  p = path(w);
+  EXPECT_EQ(s, p.string());
+  EXPECT_EQ(s, toQString(p).toStdString());
+  EXPECT_EQ(s, toString(p));
+  EXPECT_EQ(s, toQString(toString(p)).toStdString());
+  EXPECT_EQ(s, std::string(toQString(toString(p)).toUtf8()));
+  EXPECT_EQ(s, toPath(toQString(toString(p))).string());
+
+  p = path(w);
+  EXPECT_EQ(s, p.string());
+  EXPECT_EQ(s, toQString(p).toStdString());
+  EXPECT_EQ(s, toString(p));
+  EXPECT_EQ(s, toQString(toString(p)).toStdString());
+  EXPECT_EQ(s, std::string(toQString(toString(p)).toUtf8()));
+  EXPECT_EQ(s, toPath(toQString(toString(p))).string());
+
+  // http://utf8everywhere.org/
+
+
+  // from http://www.nubaria.com/en/blog/?p=289
+
+  // Chinese characters for "zhongwen" ("Chinese language").
+  const char kChineseSampleText[] = {-28, -72, -83, -26, -106, -121, 0};
+
+  // Arabic "al-arabiyya" ("Arabic").
+  const char kArabicSampleText[] = {-40, -89, -39, -124, -40, -71, -40, -79, -40, -88, -39, -118, -40, -87, 0};
+
+  // Spanish word "canon" with an "n" with "~" on top and an "o" with an acute accent.
+  const char kSpanishSampleText[] = {99, 97, -61, -79, -61, -77, 110, 0};
+
+  std::string t;
+  QString q;
+
+  t = std::string(kChineseSampleText);
+  q = QString::fromUtf8(t.c_str());
+  p = toPath(t);
+  EXPECT_EQ(t, std::string(toQString(p).toUtf8()));
+  EXPECT_EQ(t, toString(p));
+  EXPECT_EQ(t, toString(toQString(toString(p))));
+  EXPECT_EQ(t, std::string(toQString(toString(p)).toUtf8()));
+  EXPECT_EQ(t, toString(toPath(toQString(toString(p)))));
+
+  t = std::string(kArabicSampleText);
+  q = QString::fromUtf8(t.c_str());
+  p = toPath(t);
+  EXPECT_EQ(t, std::string(toQString(p).toUtf8()));
+  EXPECT_EQ(t, toString(p));
+  EXPECT_EQ(t, toString(toQString(toString(p))));
+  EXPECT_EQ(t, std::string(toQString(toString(p)).toUtf8()));
+  EXPECT_EQ(t, toString(toPath(toQString(toString(p)))));
+
+  t = std::string(kSpanishSampleText);
+  q = QString::fromUtf8(t.c_str());
+  p = toPath(t);
+  EXPECT_EQ(t, std::string(toQString(p).toUtf8()));
+  EXPECT_EQ(t, toString(p));
+  EXPECT_EQ(t, toString(toQString(toString(p))));
+  EXPECT_EQ(t, std::string(toQString(toString(p)).toUtf8()));
+  EXPECT_EQ(t, toString(toPath(toQString(toString(p)))));
+
 }
