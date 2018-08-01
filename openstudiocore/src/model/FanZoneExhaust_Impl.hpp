@@ -86,7 +86,7 @@ namespace detail {
 
     boost::optional<Schedule> availabilitySchedule() const;
 
-    double fanEfficiency() const;
+    double fanTotalEfficiency() const;
 
     double pressureRise() const;
 
@@ -114,7 +114,7 @@ namespace detail {
 
     void resetAvailabilitySchedule();
 
-    bool setFanEfficiency(double fanEfficiency);
+    bool setFanTotalEfficiency(double fanTotalEfficiency);
 
     bool setPressureRise(double pressureRise);
 
