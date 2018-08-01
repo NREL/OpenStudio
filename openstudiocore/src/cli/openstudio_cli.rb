@@ -380,6 +380,12 @@ def parse_main_args(main_args)
     $logger.info "Setting BUNDLE_GEMFILE to #{gemfile}"
     ENV['BUNDLE_GEMFILE'] = gemfile
     use_bundler = true
+    
+  elsif ENV['BUNDLE_GEMFILE']
+    # no argument but env var is set
+    $logger.info "ENV['BUNDLE_GEMFILE'] set to '#{BUNDLE_GEMFILE}', activating bundler"
+    use_bundler = true
+  
   end  
   
   if main_args.include? '--bundle_path'
@@ -391,6 +397,18 @@ def parse_main_args(main_args)
 
     $logger.info "Setting BUNDLE_PATH to #{bundle_path}"
     ENV['BUNDLE_PATH'] = bundle_path
+  
+  elsif ENV['BUNDLE_PATH']
+    # no argument but env var is set
+    $logger.info "ENV['BUNDLE_PATH'] set to '#{BUNDLE_PATH}'"
+  
+  elsif use_bundler
+    # bundle was requested but bundle_path was not provided
+    $logger.warn "Bundle activated but ENV['BUNDLE_PATH'] is not set"
+    
+    $logger.info "Setting BUNDLE_PATH to ':/ruby/2.2.0/'"
+    ENV['BUNDLE_PATH'] = ':/ruby/2.2.0/'
+  
   end  
   
   Gem.paths.path << ':/ruby/2.2.0/gems/'
@@ -476,16 +494,21 @@ def parse_main_args(main_args)
       Bundler.setup
       #Bundler.require
     rescue Bundler::BundlerError => e
-      puts "#{e.message}"
+      
       #puts e.backtrace.join("\n")
       if e.is_a?(Bundler::GemNotFound)
-        puts "GemNotFound, Run `bundle install` to install missing gems."
+        puts "Bundler GemNotFound, Run `bundle install` to install missing gems."
         exit e.status_code
       elsif e.is_a?(Bundler::ProductionError)
-        puts "ProductionError, Run `bundle install` to install missing gems."
+        puts "Bundler ProductionError, Run `bundle install` to install missing gems."
+        exit e.status_code
+      elsif e.is_a?(Bundler::GitError)
+        puts "Bundler GitError, Run `bundle install` to install missing gems."
         exit e.status_code
       else
-        # no Gemfile,
+        # other error
+        puts "Bundler #{e.class}"
+        exit e.status_code
       end    
     end
 

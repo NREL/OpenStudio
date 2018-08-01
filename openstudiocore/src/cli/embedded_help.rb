@@ -17,7 +17,7 @@ module OpenStudio
   def self.get_absolute_path(p)
     absolute_path = ""
     if p.to_s.chars.first == ':' then
-      p2 = String.new(p)
+      p2 = String.new(p.to_s)
       p2[0] = ''
       absolute_path = File.expand_path p2
 
@@ -63,6 +63,7 @@ module Kernel
 
   alias :original_require_relative :require_relative
   alias :original_require :require
+  alias :original_open :open
 
   def require path
     rb_path = path
@@ -181,6 +182,50 @@ module Kernel
     end
 
     return matches
+  end
+
+  def open(name, *args)
+    #puts "I'm in Kernel.open!"
+    #STDOUT.flush
+    if name.to_s.chars.first == ':' then
+      #puts "self.open(name, *args), name = #{name}, args = #{args}"
+      absolute_path = OpenStudio.get_absolute_path(name)
+      #puts "absolute_path = #{absolute_path}"
+      if EmbeddedScripting::hasFile(absolute_path) then
+        string = EmbeddedScripting::getFileAsString(absolute_path)
+        #puts "string = #{string}"
+        if block_given?
+          # if a block is given, then a new IO is created and closed
+          io = StringIO.open(string)
+          result = yield(io)
+          io.close
+          return result
+        else
+          return StringIO.open(string)
+        end
+      else
+        #puts "IO.open cannot find embedded file '#{absolute_path}' for '#{name}'"
+        if block_given?
+          # if a block is given, then a new IO is created and closed
+          io = StringIO.open("")
+          result = yield(io)
+          io.close
+          return result
+        else
+          return ""
+        end
+      end
+    end    
+    
+    if block_given?
+      # if a block is given, then a new IO is created and closed
+      io = original_open(name, *args)
+      result = yield(io)
+      io.close
+      return result
+    else
+      return original_open(name, *args)
+    end
   end
 
 end
@@ -305,12 +350,14 @@ class File
     alias :original_expand_path :expand_path
     alias :original_realpath :realpath
     alias :original_absolute_path :absolute_path
+    alias :original_directory? :directory?
+    alias :original_file? :file?
   end
   
   def self.expand_path(file_name, *args)
     if file_name.to_s.chars.first == ':' then
       #puts "self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
-      #STDOUT.flush
+      STDOUT.flush
       return OpenStudio.get_absolute_path(file_name)
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
       #puts "2 self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
@@ -355,11 +402,45 @@ class File
     return original_realpath(file_name, *args)
   end
   
+  def self.directory?(file_name)
+    if file_name.to_s.chars.first == ':' then
+      absolute_path = OpenStudio.get_absolute_path(file_name)
+      EmbeddedScripting.allFileNamesAsString.split(';').each do |file|
+        # true if a file starts with this absolute path
+        next unless file.start_with?(absolute_path)
+        
+        # if this is an exact match because then this is a file not a directory
+        return false if (file == absolute_path)
+
+        # If here, found a match
+        return true
+      end
+      return false
+    end
+    return original_directory?(file_name)
+  end
+
+  def self.file?(file_name)
+    if file_name.to_s.chars.first == ':' then
+      absolute_path = OpenStudio.get_absolute_path(file_name)
+      EmbeddedScripting.allFileNamesAsString.split(';').each do |file|
+        # Skip files unless exact match
+        next unless (file == absolute_path)
+       
+        # If here, found a match
+        return true
+      end
+      return false
+    end
+    return original_file?(file_name)
+  end
+  
 end
 
 class Dir
   class << self
     alias :original_glob :glob
+    alias :original_chdir :chdir
   end
   
   def self.[](*args)
@@ -379,13 +460,11 @@ class Dir
       pattern_array = pattern
     end
     
-    any_embedded = false
-    pattern_array.each {|p| any_embedded = true if p.to_s.chars.first == ':'}
-  
-    if any_embedded
-
-      result = []
-      pattern_array.each do |pattern|
+    result = []
+    pattern_array.each do |pattern|
+      
+      if pattern.to_s.chars.first == ':'
+    
         #puts "searching embedded files for #{pattern}"
         absolute_pattern = OpenStudio.get_absolute_path(pattern)
         #puts "absolute_pattern #{absolute_pattern}"
@@ -394,25 +473,49 @@ class Dir
         #EmbeddedScripting::fileNames.each do |name|
         EmbeddedScripting::allFileNamesAsString.split(';').each do |name|
           absolute_path = OpenStudio.get_absolute_path(name)
+          
+          # DLM: this is how I read the documentation
           if File.fnmatch( absolute_pattern, absolute_path, *args ) 
+            #puts "#{absolute_path} is a match!"
+            result << absolute_path
+            
+          # DLM: but it appears that this is actually the real behavior?
+          elsif File.fnmatch( absolute_pattern, absolute_path, File::FNM_EXTGLOB ) 
             #puts "#{absolute_path} is a match!"
             result << absolute_path
           end
         end
-      end
-      
-      if block_given?
-        return yield(result)
+        
       else
-        return result
+        result.concat(self.original_glob(pattern, *args))
       end
-    end    
+    end
     
     if block_given?
-      return yield(self.original_glob(pattern, *args))
+      return yield(result)
     else
-      return self.original_glob(pattern, *args)
+      return result
     end
+    
+  end
+  
+  def self.chdir(dir)
+    if dir.to_s.chars.first == ':'
+      # DLM: yeah sorry, don't know what to do here
+      absolute_path = OpenStudio.get_absolute_path(dir)
+      if block_given?
+        return yield(absolute_path)
+      else
+        return absolute_path
+      end
+    end
+    
+    if block_given?
+      return yield(self.original_chdir(dir))
+    else
+      return self.original_chdir(dir)
+    end
+    
   end
 end
 
