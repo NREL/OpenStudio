@@ -60,6 +60,13 @@ end
 
 system_call("#{bundle_exe} _#{bundle_version}_ install --without=test --path='#{install_dir}'")
 
+system_call("#{bundle_exe} _#{bundle_version}_ lock --add_platform ruby")
+
+platforms_to_remove = ['mri', 'mingw', 'x64_mingw', 'x64-mingw32', 'rbx', 'jruby', 'mswin', 'mswin64']
+platforms_to_remove.each do |platform|
+  system_call("#{bundle_exe} _#{bundle_version}_ lock --remove_platform #{platform}")
+end
+
 FileUtils.rm_rf("#{install_dir}/ruby/#{ruby_gem_dir}/cache")
 
 standards_gem_dir = nil
