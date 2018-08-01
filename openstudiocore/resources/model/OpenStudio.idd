@@ -17385,10 +17385,12 @@ OS:Controller:WaterCoil,
        \type real
        \autosizable
        \units m3/s
+       \ip-units gal/min
        \default Autosize
   N3; \field Minimum Actuated Flow
        \type real
        \units m3/s
+       \ip-units gal/min
        \default 0.0000001
 
 OS:Curve:Linear,
