@@ -94,7 +94,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemOut
       }
       else {
         //did not find an object with the UID so do not FT
-        LOG(Error, "Key Name for Sensor '" << modelObject.nameString() << "' is UID but does not exist, it will not be translated.");
+        LOG(Error, "Key Name for EMS:OutputVariable '" << modelObject.nameString() << "' is UID but does not exist, it will not be translated.");
         return boost::none;
       }
     }

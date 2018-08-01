@@ -75,10 +75,13 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   Schedule availabilitySchedule() const;
 
+  double fanTotalEfficiency() const;
   double fanEfficiency() const;
 
+  Quantity getFanTotalEfficiency(bool returnIP=false) const;
   Quantity getFanEfficiency(bool returnIP=false) const;
 
+  bool isFanTotalEfficiencyDefaulted() const;
   bool isFanEfficiencyDefaulted() const;
 
   double pressureRise() const;
@@ -147,10 +150,12 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setFanEfficiency(double fanEfficiency);
+  bool setFanTotalEfficiency(double fanTotalEfficiency);
+  bool setFanTotalEfficiency(const Quantity& fanTotalEfficiency);
+  void resetFanTotalEfficiency();
 
-  bool setFanEfficiency(const Quantity& fanEfficiency);
-
+  bool setFanEfficiency(double fanTotalEfficiency);
+  bool setFanEfficiency(const Quantity& fanTotalEfficiency);
   void resetFanEfficiency();
 
   bool setPressureRise(double pressureRise);

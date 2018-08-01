@@ -1355,7 +1355,7 @@ WaterToAirInspectorView::WaterToAirInspectorView( QWidget * parent )
                               ":images/controller_icon_on.png",
                               ":images/controller_icon_off.png" );
 
-  m_libraryTabWidget->setCurrentIndex(1);
+  m_libraryTabWidget->setCurrentIndex(0);
 
   connect(m_loopChooserView, &LoopChooserView::addToLoopClicked, this, &WaterToAirInspectorView::addToLoopClicked);
 
@@ -1581,7 +1581,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView::AirTerminalSingleDuc
                               ":images/link_icon_on.png",
                               ":images/link_icon_off.png" );
 
-  m_libraryTabWidget->setCurrentIndex(1);
+  m_libraryTabWidget->setCurrentIndex(0);
 
   connect(m_coolingLoopChooserView, &LoopChooserView::addToLoopClicked, this, &AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView::addToLoopClicked);
 
@@ -2208,7 +2208,7 @@ ZoneHVACPackagedTerminalAirConditionerInspectorView::ZoneHVACPackagedTerminalAir
                               ":images/link_icon_on.png",
                               ":images/link_icon_off.png" );
 
-  m_libraryTabWidget->setCurrentIndex(1);
+  m_libraryTabWidget->setCurrentIndex(0);
 
   connect(m_loopChooserView, &LoopChooserView::addToLoopClicked,
           this, &ZoneHVACPackagedTerminalAirConditionerInspectorView::addToLoopClicked);
