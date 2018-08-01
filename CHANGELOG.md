@@ -1,3 +1,57 @@
+## OpenStudio v2.6.0
+###### 2018-06-30 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.5.0...v2.6.0 )
+
+- ![Fixed:][fixed] [#231]( https://github.com/NREL/OpenStudio/issues/231 ), gbXML export cannot be read into several programs (Bugzilla #989)
+- ![Fixed:][fixed] [#2198]( https://github.com/NREL/OpenStudio/issues/2198 ), SWIG takes 22 minutes to complete on OpenStudioModelHVAC
+- ![Fixed:][fixed] [#2874]( https://github.com/NREL/OpenStudio/issues/2874 ), Wrong OSApp shared components (resources) install path on Linux
+- ![Fixed:][fixed] [#2963]( https://github.com/NREL/OpenStudio/issues/2963 ), CoilHeatingGas.autosizedNominalCapacity() does not work
+- ![Fixed:][fixed] [#2974]( https://github.com/NREL/OpenStudio/issues/2974 ), version of gtk dependency on linux is not available on ubuntu 16.04
+- ![Fixed:][fixed] [#3082]( https://github.com/NREL/OpenStudio/issues/3082 ), adding AirTerminal to supply side of PlantLoop creates branches
+- ![Fixed:][fixed] [#3084]( https://github.com/NREL/OpenStudio/issues/3084 ), Broken version translator for 2.4.3 models in current develop
+- ![Fixed:][fixed] [#3096]( https://github.com/NREL/OpenStudio/issues/3096 ), LightsDefinition bug in fraction fields
+- ![Fixed:][fixed] [#3102]( https://github.com/NREL/OpenStudio/issues/3102 ), Removing AvailabilityManager with sensor from loop leaves invalid EnergyManagementSystem:Sensor
+- ![Fixed:][fixed] [#3103]( https://github.com/NREL/OpenStudio/issues/3103 ), AirLoopHVAC::autosizedDesignSupplyAirFlowRate doesn't always work
+- ![Fixed:][fixed] [#3106]( https://github.com/NREL/OpenStudio/issues/3106 ), Linux install UX
+- ![Fixed:][fixed] [#3126]( https://github.com/NREL/OpenStudio/issues/3126 ), EMS OutputVariable FT issue
+- ![Fixed:][fixed] [#3130]( https://github.com/NREL/OpenStudio/issues/3130 ), Add SetpointManager:SingleZone:Humidity:Minimum to hvac_library
+- ![Fixed:][fixed] [#3157]( https://github.com/NREL/OpenStudio/issues/3157 ), OpenStudio::EpwFile.new(weather_file) returns 'my.epw' cannot be processed
+- ![Fixed:][fixed] [#3163]( https://github.com/NREL/OpenStudio/issues/3163 ), 2.5.2 CLI returns wrong path
+- ![Fixed:][fixed] [#2205]( https://github.com/NREL/OpenStudio/pull/2205 ), Implement missing fields for EvaporativeCoolerDirectResarchSpecial
+- ![Fixed:][fixed] [#3011]( https://github.com/NREL/OpenStudio/pull/3011 ), 2198 breakup hvac swig
+- ![Fixed:][fixed] [#3014]( https://github.com/NREL/OpenStudio/pull/3014 ), Update Measure Templates and Dependencies
+- ![Fixed:][fixed] [#3016]( https://github.com/NREL/OpenStudio/pull/3016 ), PVWatts Generator and Inverter
+- ![Fixed:][fixed] [#3031]( https://github.com/NREL/OpenStudio/pull/3031 ), Four pipe beam
+- ![Fixed:][fixed] [#3081]( https://github.com/NREL/OpenStudio/pull/3081 ), Fix #3080 - no UUID in IDFs
+- ![Fixed:][fixed] [#3085]( https://github.com/NREL/OpenStudio/pull/3085 ), Fix #3084 and NREL/OpenStudio-resources#43
+- ![Fixed:][fixed] [#3086]( https://github.com/NREL/OpenStudio/pull/3086 ), Design conditions in OS:EpwFile
+- ![Fixed:][fixed] [#3087]( https://github.com/NREL/OpenStudio/pull/3087 ), Four pipe beam merge
+- ![Fixed:][fixed] [#3088]( https://github.com/NREL/OpenStudio/pull/3088 ), Fix 3080 merge
+- ![Fixed:][fixed] [#3089]( https://github.com/NREL/OpenStudio/pull/3089 ), Fix missing condenser type
+- ![Fixed:][fixed] [#3090]( https://github.com/NREL/OpenStudio/pull/3090 ), CI Test PR
+- ![Fixed:][fixed] [#3092]( https://github.com/NREL/OpenStudio/pull/3092 ), new CLI arguments
+- ![Fixed:][fixed] [#3094]( https://github.com/NREL/OpenStudio/pull/3094 ), Fix #2874 - .deb package install to /usr/local/openstudio-x.y.z instead of /usr/
+- ![Fixed:][fixed] [#3095]( https://github.com/NREL/OpenStudio/pull/3095 ), Plant component user defined
+- ![Fixed:][fixed] [#3097]( https://github.com/NREL/OpenStudio/pull/3097 ), Fix #3096
+- ![Fixed:][fixed] [#3104]( https://github.com/NREL/OpenStudio/pull/3104 ), Turn Off standardOutLogger in Individual tests
+- ![Fixed:][fixed] [#3105]( https://github.com/NREL/OpenStudio/pull/3105 ), Just a CI test. Please ignore me.
+- ![Fixed:][fixed] [#3108]( https://github.com/NREL/OpenStudio/pull/3108 ), Update gitlab ci yml file
+- ![Fixed:][fixed] [#3109]( https://github.com/NREL/OpenStudio/pull/3109 ), Cli embedded files change
+- ![Fixed:][fixed] [#3112]( https://github.com/NREL/OpenStudio/pull/3112 ), resolve EMS Sensor issue 3102
+- ![Fixed:][fixed] [#3113]( https://github.com/NREL/OpenStudio/pull/3113 ), Fix 2874 install path unix
+- ![Fixed:][fixed] [#3117]( https://github.com/NREL/OpenStudio/pull/3117 ), Fix 3116 catch orphaned components
+- ![Fixed:][fixed] [#3118]( https://github.com/NREL/OpenStudio/pull/3118 ), Implement missing fields for EvaporativeCoolerDirectResarchSpecial
+- ![Fixed:][fixed] [#3125]( https://github.com/NREL/OpenStudio/pull/3125 ), Allow shading controls for skylights.
+- ![Fixed:][fixed] [#3129]( https://github.com/NREL/OpenStudio/pull/3129 ), Geometry editor
+- ![Fixed:][fixed] [#3131]( https://github.com/NREL/OpenStudio/pull/3131 ), Fix #3130 - Add SPM Single Zone Humidity Minimum to hvac_library
+- ![Fixed:][fixed] [#3132]( https://github.com/NREL/OpenStudio/pull/3132 ), add check to EMSOutVar emsVariableName() to look for UUIDs and swap fâ¦
+- ![Fixed:][fixed] [#3133]( https://github.com/NREL/OpenStudio/pull/3133 ), Fix #2974 - libwxgtk dependencies on Linux
+- ![Fixed:][fixed] [#3134]( https://github.com/NREL/OpenStudio/pull/3134 ), Fix thermostat schedule control value
+- ![Fixed:][fixed] [#3135]( https://github.com/NREL/OpenStudio/pull/3135 ), Julien mega merge
+- ![Fixed:][fixed] [#3136]( https://github.com/NREL/OpenStudio/pull/3136 ), Four pipe beam only
+- ![Fixed:][fixed] [#3137]( https://github.com/NREL/OpenStudio/pull/3137 ), Four pipe beam only
+- ![Fixed:][fixed] [#3152]( https://github.com/NREL/OpenStudio/pull/3152 ), Updates openstudio-standards to 0.2.2
+- ![Fixed:][fixed] [#3160]( https://github.com/NREL/OpenStudio/pull/3160 ), Fixes #3157
+
 ## OpenStudio v2.5.0
 ###### 2018-03-30 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.4.3...v2.5.0 )
 

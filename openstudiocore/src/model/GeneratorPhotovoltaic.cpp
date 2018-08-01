@@ -45,6 +45,8 @@
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "ElectricLoadCenterDistribution.hpp"
+#include "ElectricLoadCenterDistribution_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -300,6 +302,9 @@ GeneratorPhotovoltaic::GeneratorPhotovoltaic(const Model& model, const Photovolt
 
   bool ok = setPointer(OS_Generator_PhotovoltaicFields::ModulePerformanceName, performance.handle());
   OS_ASSERT(ok);
+  //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
+  ElectricLoadCenterDistribution elcd(model);
+  elcd.addGenerator(*this);
 
 }
 

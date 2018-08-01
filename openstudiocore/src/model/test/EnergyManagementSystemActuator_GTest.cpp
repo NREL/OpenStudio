@@ -33,12 +33,21 @@
 #include "../Building.hpp"
 #include "../Building_Impl.hpp"
 #include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
+#include "../SpaceType.hpp"
+#include "../SpaceType_Impl.hpp"
 #include "../FanConstantVolume.hpp"
 #include "../FanConstantVolume_Impl.hpp"
 #include "../ElectricEquipment.hpp"
 #include "../ElectricEquipment_Impl.hpp"
 #include "../ElectricEquipmentDefinition.hpp"
 #include "../ElectricEquipmentDefinition_Impl.hpp"
+#include "../Lights.hpp"
+#include "../Lights_Impl.hpp"
+#include "../LightsDefinition.hpp"
+#include "../LightsDefinition_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../EnergyManagementSystemActuator.hpp"
 #include "../OutputVariable.hpp"
@@ -110,6 +119,156 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
 
   equipActuator.setActuatedComponentType(ComponentType);
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
-
 }
 
+TEST_F(ModelFixture, EMSActuator_newEMSActuator)
+{
+  Model model;
+  //no use spacetype
+  Space space1(model);
+  ThermalZone zone1(model);
+  space1.setThermalZone(zone1);
+
+  //use spacetype with multiple spaces
+  //this is the issue with spaceloads if there are multiple spaces using a spaceload defined in a spaceType
+  //the zonelist is created from the spaceType name, and the zones in the list are the space.thermalzone names
+  SpaceType spaceType(model);
+  Space space2(model);
+  ThermalZone zone2(model);
+  Space space3(model);
+  ThermalZone zone3(model);
+  space2.setSpaceType(spaceType);
+  space2.setThermalZone(zone2);
+  space3.setSpaceType(spaceType);
+  space3.setThermalZone(zone3);
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  //add electric equipment and attach to space
+  ElectricEquipmentDefinition definition(model);
+  ElectricEquipment electricEquipment(definition);
+  //add to space1
+  electricEquipment.setSpace(space1);
+  EXPECT_TRUE(electricEquipment.space());
+  EXPECT_EQ(space1.handle(), electricEquipment.space()->handle());
+  EXPECT_FALSE(electricEquipment.spaceType());
+
+  //actuator settings
+  std::string elecComponentType = "ElectricEquipment";
+  std::string elecControlType = "Electric Power Level";
+  //create actuator
+  EnergyManagementSystemActuator elecActuator(electricEquipment, elecComponentType, elecControlType, zone1);
+  EXPECT_EQ(elecControlType, elecActuator.actuatedComponentControlType());
+  EXPECT_EQ(elecComponentType, elecActuator.actuatedComponentType());
+  EXPECT_EQ(electricEquipment, elecActuator.actuatedComponent().get());
+
+  //add lights and attach to spaceType
+  LightsDefinition lightsDefinition(model);
+  lightsDefinition.setWattsperSpaceFloorArea(1.0);
+  Lights lights(lightsDefinition);
+  //add lights to spaceType which space2 and space3 use
+  lights.setSpaceType(spaceType);
+
+  //actuator settings
+  std::string lightsComponentType = "Lights";
+  std::string lightsControlType = "Electric Power Level";
+  //create actuator zone2
+  EnergyManagementSystemActuator lightsActuator2(lights, lightsComponentType, lightsControlType, zone2);
+  EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
+  EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
+  EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
+
+  //create actuator zone3
+  EnergyManagementSystemActuator lightsActuator3(lights, lightsComponentType, lightsControlType, zone3);
+  EXPECT_EQ(lightsControlType, lightsActuator3.actuatedComponentControlType());
+  EXPECT_EQ(lightsComponentType, lightsActuator3.actuatedComponentType());
+  EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
+}
+
+TEST_F(ModelFixture, EMSActuator_newEMSActuator2)
+{
+  //USE ONLY 1 TZ in constructor
+  Model model;
+
+  //use spacetype with multiple spaces
+  //this is the issue with spaceloads if there are multiple spaces using a spaceload defined in a spaceType
+  //the zonelist is created from the spaceType name, and the zones in the list are the space.thermalzone names
+  SpaceType spaceType(model);
+  Space space2(model);
+  ThermalZone zone2(model);
+  Space space3(model);
+  space2.setSpaceType(spaceType);
+  space2.setThermalZone(zone2);
+  space3.setSpaceType(spaceType);
+  space3.setThermalZone(zone2);
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  //add lights and attach to spaceType
+  LightsDefinition lightsDefinition(model);
+  lightsDefinition.setWattsperSpaceFloorArea(1.0);
+  Lights lights(lightsDefinition);
+  //add lights to spaceType which space2 and space3 use
+  lights.setSpaceType(spaceType);
+
+  //actuator settings
+  std::string lightsComponentType = "Lights";
+  std::string lightsControlType = "Electric Power Level";
+  //create actuator zone2
+  EnergyManagementSystemActuator lightsActuator2(lights, lightsComponentType, lightsControlType, zone2);
+  EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
+  EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
+  EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
+  EXPECT_EQ(zone2.handle(), lightsActuator2.zoneName().get().handle());
+
+  //create actuator zone3
+  EnergyManagementSystemActuator lightsActuator3(lights, lightsComponentType, lightsControlType, zone2);
+  EXPECT_EQ(lightsControlType, lightsActuator3.actuatedComponentControlType());
+  EXPECT_EQ(lightsComponentType, lightsActuator3.actuatedComponentType());
+  EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
+  EXPECT_EQ(zone2.handle(), lightsActuator3.zoneName().get().handle());
+}
+
+TEST_F(ModelFixture, EMSActuator_newEMSActuator3)
+{
+  //USE spaces in constructor
+  Model model;
+
+  //use spacetype with multiple spaces
+  //this is the issue with spaceloads if there are multiple spaces using a spaceload defined in a spaceType
+  //the zonelist is created from the spaceType name, and the zones in the list are the space.thermalzone names
+  SpaceType spaceType(model);
+  Space space2(model);
+  ThermalZone zone2(model);
+  Space space3(model);
+  space2.setSpaceType(spaceType);
+  space2.setThermalZone(zone2);
+  space3.setSpaceType(spaceType);
+  space3.setThermalZone(zone2);
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  //add lights and attach to spaceType
+  LightsDefinition lightsDefinition(model);
+  lightsDefinition.setWattsperSpaceFloorArea(1.0);
+  Lights lights(lightsDefinition);
+  //add lights to spaceType which space2 and space3 use
+  lights.setSpaceType(spaceType);
+
+  //actuator settings
+  std::string lightsComponentType = "Lights";
+  std::string lightsControlType = "Electric Power Level";
+  //create actuator zone2
+  EnergyManagementSystemActuator lightsActuator2(lights, lightsComponentType, lightsControlType, space2);
+  EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
+  EXPECT_EQ(lightsComponentType, lightsActuator2.actuatedComponentType());
+  EXPECT_EQ(lights, lightsActuator2.actuatedComponent().get());
+  EXPECT_EQ(space2.thermalZone().get().handle(), lightsActuator2.zoneName().get().handle());
+
+  //create actuator zone3
+  EnergyManagementSystemActuator lightsActuator3(lights, lightsComponentType, lightsControlType, space3);
+  EXPECT_EQ(lightsControlType, lightsActuator3.actuatedComponentControlType());
+  EXPECT_EQ(lightsComponentType, lightsActuator3.actuatedComponentType());
+  EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
+  EXPECT_EQ(space3.thermalZone().get().handle(), lightsActuator3.zoneName().get().handle());
+}

@@ -28,6 +28,7 @@
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/PathHelpers.hpp>
+#include <utilities/core/Logger.hpp>
 
 #include <OpenStudio.hxx>
 
@@ -80,12 +81,14 @@ namespace openstudio {
     #if defined _WIN32
       TCHAR szPath[MAX_PATH];
       if( GetModuleFileName( nullptr, szPath, MAX_PATH ) ) {
+        LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, szPath = '" << szPath << "'");
         return completeAndNormalize(toPath(szPath));
       }
     #else
       Dl_info info;
       if (dladdr("main", &info)) {
-         return completeAndNormalize(toPath(info.dli_fname));
+        LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, info.dli_fname = '" << info.dli_fname << "'");
+        return completeAndNormalize(toPath(info.dli_fname));
       }
     #endif
 
@@ -121,12 +124,12 @@ namespace openstudio {
   #if defined _WIN32
   HMODULE GetCurrentModule()
   {
-	  HMODULE hModule = NULL;
-	  // hModule is NULL if GetModuleHandleEx fails.
-	  GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS
-						  | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-						  (LPCTSTR)GetCurrentModule, &hModule);
-	  return hModule;
+      HMODULE hModule = NULL;
+      // hModule is NULL if GetModuleHandleEx fails.
+      GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS
+                          | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                          (LPCTSTR)GetCurrentModule, &hModule);
+      return hModule;
   }
   #else
   bool GetCurrentModule()
@@ -141,27 +144,31 @@ namespace openstudio {
     #if defined _WIN32
       TCHAR szPath[MAX_PATH];
       if( GetModuleFileName( GetCurrentModule(), szPath, MAX_PATH ) ) {
+        LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, szPath = '" << szPath << "'");
         openstudioDirPath = completeAndNormalize(toPath(szPath));
       }
     #else
       Dl_info info;
       if (dladdr("GetCurrentModule", &info)) {
-          auto path = toPath(info.dli_fname);
-          if ( path.parent_path().empty() ) {
-            std::istringstream pathstream( getenv("PATH") );
-            std::string pathstring;
-            while ( std::getline(pathstream, pathstring, ':') ) {
-              auto maybepath = toPath(pathstring) / path;
-              if( openstudio::filesystem::exists( maybepath ) ) {
-                openstudioDirPath = maybepath;
-                break;
-              }
+        LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, info.dli_fname = '" << info.dli_fname << "'");
+        auto path = toPath(info.dli_fname);
+        if ( path.parent_path().empty() ) {
+          std::istringstream pathstream( getenv("PATH") );
+          std::string pathstring;
+          while ( std::getline(pathstream, pathstring, ':') ) {
+            LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, searching for '" << path << "' in '" << pathstring << "'");
+            auto maybepath = toPath(pathstring) / path;
+            if( openstudio::filesystem::exists( maybepath ) && !openstudio::filesystem::is_directory( maybepath ) ) {
+              openstudioDirPath = completeAndNormalize(maybepath);
+              break;
             }
-          } else {
-            openstudioDirPath = completeAndNormalize(path);
           }
+        } else {
+            openstudioDirPath = completeAndNormalize(path);
+        }
       }
     #endif
+    LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, found '" << openstudioDirPath << "'");
     return openstudioDirPath;
   }
 
@@ -201,8 +208,10 @@ namespace openstudio {
       }
     #endif
 
-    if( openstudio::filesystem::exists(cliPath) ){
-      return cliPath;
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for CLI in '" << cliPath << "'");
+    if( openstudio::filesystem::exists(cliPath) && !openstudio::filesystem::is_directory(cliPath) ){
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Found CLI at '" << completeAndNormalize(cliPath) << "'");
+      return completeAndNormalize(cliPath);
     }
 
     #if defined _WIN32
@@ -211,8 +220,10 @@ namespace openstudio {
       cliPath = getOpenStudioModuleDirectory() / toPath("../bin/openstudio");
     #endif
 
-    if( openstudio::filesystem::exists(cliPath) ){
-      return cliPath;
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for CLI in '" << cliPath << "'");
+    if( openstudio::filesystem::exists(cliPath) && !openstudio::filesystem::is_directory(cliPath) ){
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Found CLI at '" << completeAndNormalize(cliPath) << "'");
+      return completeAndNormalize(cliPath);
     }
 
     return openstudio::path();
@@ -225,8 +236,10 @@ namespace openstudio {
 
     // handle developer case first
     if (moduleIsRunningFromBuildDirectory()){
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << cmakeEnergyPlusPath << "'");
       if( openstudio::filesystem::exists(cmakeEnergyPlusPath) ){
-        return cmakeEnergyPlusPath;
+        LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(cmakeEnergyPlusPath) << "'");
+        return completeAndNormalize(cmakeEnergyPlusPath);
       }
     }
 
@@ -234,8 +247,11 @@ namespace openstudio {
     auto envPathString = std::getenv("ENERGYPLUS_EXE_PATH");
     if( envPathString ) {
       openstudio::path envPath = openstudio::toPath(envPathString);
+
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << envPath << "'");
       if( openstudio::filesystem::exists(envPath) ) {
-        return envPath;
+        LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(envPath) << "'");
+        return completeAndNormalize(envPath);
       }
     }
 
@@ -245,8 +261,11 @@ namespace openstudio {
 #else
     openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../EnergyPlus/energyplus");
 #endif
-    if( openstudio::filesystem::exists(installPath) ) {
-      return installPath;
+
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << installPath << "'");
+    if( openstudio::filesystem::exists(installPath) && !openstudio::filesystem::is_directory(installPath) ) {
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(installPath) << "'");
+      return completeAndNormalize(installPath);
     }
 
     // next check default location
@@ -261,8 +280,10 @@ namespace openstudio {
       auto systemPath = openstudio::toPath("C:/") / energyPlusDirectoryName / energyPlusExeName;
     #endif
 
-    if( openstudio::filesystem::exists(systemPath) ) {
-      return systemPath;
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << systemPath << "'");
+    if( openstudio::filesystem::exists(systemPath) && !openstudio::filesystem::is_directory(systemPath) ) {
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(systemPath) << "'");
+      return completeAndNormalize(systemPath);
     }
 
     std::string energyPlusDirectoryNameStr = toString(energyPlusDirectoryName);
@@ -276,8 +297,10 @@ namespace openstudio {
         systemPath = openstudio::toPath("C:/") / toPath(energyPlusDirectoryNameStr2) / energyPlusExeName;
       #endif
 
-      if( openstudio::filesystem::exists(systemPath) ) {
-        return systemPath;
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << systemPath << "'");
+      if( openstudio::filesystem::exists(systemPath) && !openstudio::filesystem::is_directory(systemPath) ) {
+        LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(systemPath) << "'");
+        return completeAndNormalize(systemPath);
       }
     }
 
@@ -298,6 +321,7 @@ namespace openstudio {
     if (moduleIsRunningFromBuildDirectory()){
       openstudio::path cmakeRadianceDirectory = openstudio::toPath("${RADIANCE_LOCATION}");
       if( openstudio::filesystem::exists(cmakeRadianceDirectory) ){
+        LOG_FREE(Debug, "ApplicationPathHelpers", "Found Radiance at '" << completeAndNormalize(cmakeRadianceDirectory) << "'");
         return cmakeRadianceDirectory;
       }
     }
@@ -307,14 +331,18 @@ namespace openstudio {
     if( envPathString ) {
       openstudio::path envPath = openstudio::toPath(envPathString);
       if( openstudio::filesystem::exists(envPath) ) {
-        return envPath;
+        LOG_FREE(Debug, "ApplicationPathHelpers", "Found Radiance at '" << completeAndNormalize(envPath) << "'");
+        return completeAndNormalize(envPath);
       }
     }
 
-    // next check for installed energyplus
+    // next check for installed radiance
     openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../Radiance");
+
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Radiance in '" << installPath << "'");
     if( openstudio::filesystem::exists(installPath) ) {
-      return installPath;
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Found Radiance at '" << completeAndNormalize(installPath) << "'");
+      return completeAndNormalize(installPath);
     }
 
     // next check default location
@@ -326,8 +354,10 @@ namespace openstudio {
       auto systemPath = openstudio::toPath("C:/Program Files/radiance");
     #endif
 
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Radiance in '" << systemPath << "'");
     if( openstudio::filesystem::exists(systemPath) ) {
-      return systemPath;
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Found Radiance at '" << completeAndNormalize(systemPath) << "'");
+      return completeAndNormalize(systemPath);
     }
 
     return openstudio::path();
@@ -339,22 +369,31 @@ namespace openstudio {
       auto envPathString = std::getenv("PERL_EXE_PATH");
       if( envPathString ) {
         openstudio::path envPath = openstudio::toPath(envPathString);
+
+        LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << envPath << "'");
         if( openstudio::filesystem::exists(envPath) ) {
+          LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(envPath) << "'");
           return envPath;
         }
       }
 
       // next check for system perl
       openstudio::path systemPath = toPath("/usr/bin/perl");
+
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << systemPath << "'");
       if( openstudio::filesystem::exists(systemPath) ) {
-        return systemPath;
+        LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(systemPath) << "'");
+        return completeAndNormalize(systemPath);
       }
     #else
       // handle developer case first
       if (moduleIsRunningFromBuildDirectory()){
         openstudio::path cmakePerlPath = openstudio::toPath("${PERL_EXE}");
+
+        LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << cmakePerlPath << "'");
         if( openstudio::filesystem::exists(cmakePerlPath) ){
-          return cmakePerlPath;
+          LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(cmakePerlPath) << "'");
+          return completeAndNormalize(cmakePerlPath);
         }
       }
 
@@ -362,21 +401,30 @@ namespace openstudio {
       auto envPathString = std::getenv("PERL_EXE_PATH");
       if( envPathString ) {
         openstudio::path envPath = openstudio::toPath(envPathString);
+
+        LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << envPath << "'");
         if( openstudio::filesystem::exists(envPath) ) {
-          return envPath;
+          LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(envPath) << "'");
+          return completeAndNormalize(envPath);
         }
       }
 
       // next check for installed perl
       openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../Perl/bin/perl.exe");
+
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << installPath << "'");
       if( openstudio::filesystem::exists(installPath) ) {
-        return installPath;
+        LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(installPath) << "'");
+        return completeAndNormalize(installPath);
       }
 
       // alternate install location (to be removed)
       installPath = getOpenStudioModuleDirectory() / toPath("/../Perl/perl/bin/perl.exe");
+
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << installPath << "'");
       if( openstudio::filesystem::exists(installPath) ) {
-        return installPath;
+        LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(installPath) << "'");
+        return completeAndNormalize(installPath);
       }
     #endif
 

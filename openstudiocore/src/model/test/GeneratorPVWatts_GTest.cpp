@@ -83,7 +83,7 @@ TEST_F(ModelFixture, GeneratorPVWatts_GeneratorPVWatts) {
   ASSERT_EQ(0.14, generator.systemLosses());
   ASSERT_EQ(20, generator.tiltAngle());
   ASSERT_EQ(180, generator.azimuthAngle());
-  ASSERT_EQ(0.4, generator.groundCoverageRatio());  
+  ASSERT_EQ(0.4, generator.groundCoverageRatio());
 }
 
 // test setting and getting
@@ -119,7 +119,7 @@ TEST_F(ModelFixture, GeneratorPVWatts_SetGetFields) {
   ASSERT_FALSE(optplanarsurface);
   ASSERT_FALSE(generator.isGroundCoverageRatioDefaulted());
   ASSERT_EQ(0.5, generator.groundCoverageRatio());
-  
+
   // reset them one by one
   generator.resetModuleType();
   generator.resetArrayType();
@@ -190,7 +190,7 @@ TEST_F(ModelFixture, GeneratorPVWatts_Clone) {
   Model model;
   GeneratorPVWatts generator(model, 1);
   generator.setSystemLosses(0.1);
-  
+
   // clone it into the same model
   GeneratorPVWatts generatorClone = generator.clone(model).cast<GeneratorPVWatts>();
   ASSERT_FALSE(generatorClone.isSystemLossesDefaulted());
@@ -208,10 +208,17 @@ TEST_F(ModelFixture, GeneratorPVWatts_Clone) {
 // test that remove works
 TEST_F(ModelFixture, GeneratorPVWatts_Remove) {
   Model model;
-  auto size = model.modelObjects().size();
+  //start with 0
+  std::vector<GeneratorPVWatts> gens = model.getModelObjects<GeneratorPVWatts>();
+  EXPECT_EQ(0u, gens.size());
+  //add 1
   GeneratorPVWatts generator(model, 1);
+  gens = model.getModelObjects<GeneratorPVWatts>();
+  EXPECT_EQ(1u, gens.size());
+  //remove
   EXPECT_FALSE(generator.remove().empty());
-  EXPECT_EQ(size, model.modelObjects().size());
+  gens = model.getModelObjects<GeneratorPVWatts>();
+  EXPECT_EQ(0u, gens.size());
 }
 
 // test electric load center distribution
@@ -233,4 +240,25 @@ TEST_F(ModelFixture, GeneratorPVWatts_ElectricLoadCenterDistribution) {
   elcd.addGenerator(generator);
   elcd.remove();
   EXPECT_FALSE(generator.electricLoadCenterDistribution());
+}
+TEST_F(ModelFixture, GeneratorPVWatts_ElectricLoadCenterDistribution2) {
+  Model model;
+
+  GeneratorPVWatts generator(model, 1);
+
+  //should be 1 default ELCD attached to pvwatts
+  std::vector<ElectricLoadCenterDistribution> elcd = model.getModelObjects<ElectricLoadCenterDistribution>();
+  EXPECT_EQ(1u, elcd.size());
+  EXPECT_EQ(1u, elcd[0].generators().size());
+  std::vector<Generator> generators = elcd[0].generators();
+  EXPECT_EQ(generators[0].handle(), generator.handle());
+  EXPECT_TRUE(generator.electricLoadCenterDistribution());
+  EXPECT_EQ(elcd[0].handle(), generator.electricLoadCenterDistribution().get().handle());
+  //Add another ELCD
+  ElectricLoadCenterDistribution elcd2(model);
+  EXPECT_EQ(2, model.getModelObjects<ElectricLoadCenterDistribution>().size());
+  //Add the pvwatts to it which should remove the existing one attached to pvwatts
+  EXPECT_TRUE(elcd2.addGenerator(generator));
+  EXPECT_EQ(0, elcd[0].generators().size());
+  EXPECT_EQ(elcd2.handle(), generator.electricLoadCenterDistribution().get().handle());
 }

@@ -80,7 +80,13 @@ class ReportingMeasureNameTest < Minitest::Test
     model = model.get
     model.addObjects(request_model.objects)
     model.save(model_out_path(test_name), true)
-
+    
+    if ENV['OPENSTUDIO_TEST_NO_CACHE_SQLFILE']
+      if File.exist?(sql_path(test_name))
+        FileUtils.rm_f(sql_path(test_name))
+      end
+    end
+    
     setup_test_2(test_name, epw_path)
   end
 

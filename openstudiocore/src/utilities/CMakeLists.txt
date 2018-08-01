@@ -71,8 +71,6 @@ set(core_src
   core/StringStreamLogSink.hpp
   core/StringStreamLogSink_Impl.hpp
   core/StringStreamLogSink.cpp
-  core/TemporaryDirectory.hpp
-  core/TemporaryDirectory.cpp
   core/System.hpp
   core/System.cpp
   core/UpdateManager.hpp
