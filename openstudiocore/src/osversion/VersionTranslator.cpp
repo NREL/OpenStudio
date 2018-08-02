@@ -122,7 +122,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.3.1")] = &VersionTranslator::update_2_3_0_to_2_3_1;
   m_updateMethods[VersionString("2.4.2")] = &VersionTranslator::update_2_4_1_to_2_4_2;
   m_updateMethods[VersionString("2.5.0")] = &VersionTranslator::update_2_4_3_to_2_5_0;
-  m_updateMethods[VersionString("2.6.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("2.6.1")] = &VersionTranslator::update_2_6_0_to_2_6_1;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -3992,6 +3992,94 @@ std::string VersionTranslator::update_2_4_3_to_2_5_0(const IdfFile& idf_2_4_3, c
       ss << newObject;
 
     // Default case
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, const IddFileAndFactoryWrapper& idd_2_6_1) {
+  std::stringstream ss;
+
+  ss << idf_2_6_0.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_6_1.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  struct ConnectionInfo {
+    std::string zoneHandle;
+    std::string connectionHandle;
+    std::string newPortListHandle;
+  };
+  // map of a connection object handle to a ConnectionInfo instance
+  std::map<std::string, ConnectionInfo> connectionsToFix;
+
+  // Find the connection object associated with the return air port
+  auto zones = idf_2_6_0.getObjectsByType(idf_2_6_0.iddFile().getObject("OS:ThermalZone").get());
+  for ( auto & zone : zones ) {
+    // index 12 is the handle of a connection that will need fixing
+    auto value = zone.getString(12);
+    if ( value ) {
+      ConnectionInfo info;
+      info.zoneHandle = zone.getString(0).get();
+      info.connectionHandle = value.get();
+      connectionsToFix[value.get()] = info;
+    }
+  }
+
+  for (const IdfObject& object : idf_2_6_0.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:ThermalZone") {
+      auto iddObject = idd_2_6_1.getObject("OS:ThermalZone");
+      IdfObject newObject(iddObject.get());
+
+      IdfObject newReturnPortList(idd_2_6_1.getObject("OS:PortList").get());
+
+      auto h = toString(createUUID());
+      newReturnPortList.setString(0,h);
+      newReturnPortList.setString(2,object.getString(0).get());
+
+      for ( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        auto value = object.getString(i);
+        if ( value ) {
+          if ( i == 12 ) {
+            auto eg = newReturnPortList.pushExtensibleGroup();
+            eg.setString(0,value.get());
+            connectionsToFix[value.get()].newPortListHandle = h;
+            newObject.setString(i, h);
+          } else {
+            newObject.setString(i, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_new.push_back(newReturnPortList);
+      ss << newObject;
+      ss << newReturnPortList;
+    } else if ( iddname == "OS:Connection" ) {
+      auto value = object.getString(0);
+      OS_ASSERT(value);
+      auto c = connectionsToFix.find(value.get());
+      if ( c != connectionsToFix.end() ) {
+        IdfObject newConnection(idd_2_6_1.getObject("OS:Connection").get());
+        for ( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+          auto value = object.getString(i);
+          if ( value ) {
+            newConnection.setString(i, value.get()); 
+          }
+        }
+        // index 3 is the source object port,
+        // it needs to specify a port on the PortList instead of the ThermalZone now
+        newConnection.setString(2, c->second.newPortListHandle);
+        newConnection.setUnsigned(3, 3);
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newConnection) );
+        ss << newConnection;
+      } else {
+        ss << object;
+      }
     } else {
       ss << object;
     }

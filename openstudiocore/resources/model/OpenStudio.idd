@@ -22165,10 +22165,10 @@ OS:ThermalZone,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A9, \field Zone Return Air Node Name
+  A9, \field Zone Return Air Port List
        \type object-list
        \required-field
-       \object-list ConnectionNames
+       \object-list PortLists
   A10, \field Primary Daylighting Control Name
        \note For export to EnergyPlus
        \type object-list

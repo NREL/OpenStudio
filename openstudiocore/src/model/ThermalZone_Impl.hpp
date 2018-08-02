@@ -373,9 +373,15 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
+    bool addToNodeImpl(Node & node);
+
+    bool multiAddToNode(Node & node);
+
     PortList inletPortList() const;
 
     PortList exhaustPortList() const;
+
+    PortList returnPortList() const;
 
     bool addEquipment(const ModelObject & equipment);
 
@@ -402,6 +408,8 @@ namespace detail {
     bool setSupplyPlenum(const ThermalZone & plenumZone);
     bool setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex);
     void removeSupplyPlenum();
+    void removeSupplyPlenum(const AirLoopHVAC & airloop);
+    void removeSupplyPlenum(const AirLoopHVAC & airloop, unsigned branchIndex);
     bool setReturnPlenum(const ThermalZone & plenumZone);
     void removeReturnPlenum();
     void removeSupplyPlenum(unsigned branchIndex);
@@ -411,9 +419,12 @@ namespace detail {
     std::vector<ZoneMixing> exhaustZoneMixing() const;
 
     boost::optional<HVACComponent> airLoopHVACTerminal() const;
+    std::vector<HVACComponent> airLoopHVACTerminals() const;
 
     AirflowNetworkZone getAirflowNetworkZone();
     boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
+
+    std::vector<AirLoopHVAC> airLoopHVACs() const;
 
    protected:
 

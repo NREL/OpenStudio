@@ -101,7 +101,7 @@ namespace detail {
 
     bool setHeatingCoil(const StraightComponent& baseboardHeatingCoil);
 
-    boost::optional<ThermalZone> thermalZone() override;
+    boost::optional<ThermalZone> thermalZone() const override;
 
     bool addToThermalZone(ThermalZone & thermalZone) override;
 

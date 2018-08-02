@@ -72,7 +72,7 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual boost::optional<ThermalZone> thermalZone() override;
+    virtual boost::optional<ThermalZone> thermalZone() const override;
 
     virtual bool addToThermalZone(ThermalZone & thermalZone) override;
 

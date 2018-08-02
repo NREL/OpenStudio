@@ -27,6 +27,7 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+// uncomment for Visual Leak Detector
 //#include <vld.h>
 
 #define COMPILING_FROM_OSAPP
@@ -42,6 +43,7 @@
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/String.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
+#include "../model/AccessPolicyStore.hpp"
 
 #include <QAbstractButton>
 #include <QApplication>
@@ -192,7 +194,12 @@ int main(int argc, char *argv[])
 #if !(_DEBUG || (__GNUC__ && !NDEBUG))
     try {
 #endif
-      return app.exec();
+      int result = app.exec();
+
+      // shut down global state
+      openstudio::model::AccessPolicyStore::Instance().clear();
+
+      return result;
 #if !(_DEBUG || (__GNUC__ && !NDEBUG))
     } catch (const std::exception &e) {
       LOG_FREE(Fatal, "OpenStudio", "An unhandled exception has occurred: " << e.what());

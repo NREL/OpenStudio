@@ -182,19 +182,24 @@ namespace openstudio {
       return toString(*self);
     }
 
-    // from std::string
-    // ensure that we use conversion from string to path
-    path(const std::string& s) {
-       path* p = new path(toPath(s));
-       return p;
-    }
+    #ifndef SWIGCSHARP
+      // DLM: this generates code that does not compile due to compiler error C2733
+      // I think this may be a SWIG bug, for now users of C# will have to call toPath(string) instead
 
-    // from char*
-    // ensure that we use conversion from string to path
-    path(const char* c) {
-       path* p = new path(toPath(c));
-       return p;
-    }
+      // from char*
+      // ensure that we use conversion from string to path
+      path(const char* c) {
+          path* p = new path(toPath(c));
+          return p;
+      }
+
+      // from std::string
+      // ensure that we use conversion from string to path
+      path(const std::string& s) {
+         path* p = new path(toPath(s));
+         return p;
+      }
+    #endif
 
     #ifdef SWIGJAVASCRIPT
         path append(const path &other) const {
