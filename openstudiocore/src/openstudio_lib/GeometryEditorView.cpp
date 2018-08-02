@@ -93,6 +93,19 @@ int CHECKFORUPDATEMSEC = 5000;
 
 namespace openstudio {
 
+QUrl getEmbeddedFileUrl(const QString& filename)
+{
+  QUrl result(QString("qrc:///library/") + filename);
+
+  QString appDir = QCoreApplication::applicationDirPath();
+  QFileInfo fileInfo(appDir + QString("/") + filename);
+  if (fileInfo.exists() && fileInfo.isFile()) {
+    result = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
+  }
+
+  return result;
+}
+
 GeometryEditorView::GeometryEditorView(bool isIP,
                                      const openstudio::model::Model& model,
                                      QWidget * parent)
@@ -221,7 +234,7 @@ FloorspaceEditor::FloorspaceEditor(const openstudio::path& floorplanPath, bool i
       //std::string contents2 = m_floorplan->toJSON();
 
       // start loading the editor, will trigger EditorWebView::onLoadFinished when done
-      m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
+      m_view->load(getEmbeddedFileUrl("embeddable_geometry_editor.html"));
     } else {
       m_view->setHtml(QString("Failed to open existing floorplan."));
     }
@@ -229,7 +242,7 @@ FloorspaceEditor::FloorspaceEditor(const openstudio::path& floorplanPath, bool i
   } else {
 
     // new floorplan, will trigger EditorWebView::onLoadFinished when done
-    m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
+    m_view->load(getEmbeddedFileUrl("embeddable_geometry_editor.html"));
   }
 
   m_document->enable();
@@ -583,7 +596,7 @@ GbXmlEditor::GbXmlEditor(const openstudio::path& gbXmlPath, bool isIP, const ope
   }
 
   // start loading the editor, will trigger EditorWebView::onLoadFinished when done
-  m_view->load(QUrl("qrc:///library/embeddable_gbxml_editor.html"));
+  m_view->load(getEmbeddedFileUrl("embeddable_gbxml_editor.html"));
   //m_view->load(QUrl("file:///E:/openstudio2/openstudiocore/src/openstudio_lib/library/embeddable_gbxml_editor.html"));
 
   m_document->enable();
@@ -748,7 +761,7 @@ IdfEditor::IdfEditor(const openstudio::path& idfPath, bool forceConvert, bool is
   }
 
   // start loading the editor, will trigger EditorWebView::onLoadFinished when done
-  m_view->load(QUrl("qrc:///library/embeddable_idf_editor.html"));
+  m_view->load(getEmbeddedFileUrl("embeddable_idf_editor.html"));
   //m_view->load(QUrl("file:///E:/openstudio2/openstudiocore/src/openstudio_lib/library/embeddable_idf_editor.html"));
 
   m_document->enable();
@@ -878,7 +891,7 @@ OsmEditor::OsmEditor(const openstudio::path& osmPath, bool isIP, const openstudi
   }
 
   // start loading the editor, will trigger EditorWebView::onLoadFinished when done
-  m_view->load(QUrl("qrc:///library/geometry_preview.html"));
+  m_view->load(getEmbeddedFileUrl("geometry_preview.html"));
 
   m_document->enable();
 }
@@ -1086,9 +1099,9 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
   // no files found
   if ((model.getConcreteModelObjects<model::Surface>().size() > 0) || (model.getConcreteModelObjects<model::SubSurface>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurface>().size() > 0)){
     m_newImportGeometry->setEnabled(false);
-    m_view->load(QUrl("qrc:///library/geometry_editor_start.html"));
+    m_view->load(getEmbeddedFileUrl("geometry_editor_start.html"));
   } else{
-    m_view->load(QUrl("qrc:///library/geometry_editor_start.html"));
+    m_view->load(getEmbeddedFileUrl("geometry_editor_start.html"));
   }
 }
 
