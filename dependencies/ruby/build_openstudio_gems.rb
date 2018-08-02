@@ -69,6 +69,8 @@ end
 
 FileUtils.rm_rf("#{install_dir}/ruby/#{ruby_gem_dir}/cache")
 
+FileUtils.rm_rf("./.bundle")
+
 standards_gem_dir = nil
 workflow_gem_dir = nil
 Dir.glob("#{install_dir}/ruby/#{ruby_gem_dir}/bundler/gems/*").each do |f|
