@@ -197,8 +197,11 @@ module Kernel
         if block_given?
           # if a block is given, then a new IO is created and closed
           io = StringIO.open(string)
-          result = yield(io)
-          io.close
+          begin
+            result = yield(io)
+          ensure
+            io.close
+          end
           return result
         else
           return StringIO.open(string)
@@ -208,8 +211,11 @@ module Kernel
         if block_given?
           # if a block is given, then a new IO is created and closed
           io = StringIO.open("")
-          result = yield(io)
-          io.close
+          begin
+            result = yield(io)
+          ensure
+            io.close
+          end
           return result
         else
           return ""
@@ -220,8 +226,11 @@ module Kernel
     if block_given?
       # if a block is given, then a new IO is created and closed
       io = original_open(name, *args)
-      result = yield(io)
-      io.close
+      begin
+        result = yield(io)
+      ensure
+        io.close
+      end
       return result
     else
       return original_open(name, *args)
@@ -313,8 +322,11 @@ class IO
         if block_given?
           # if a block is given, then a new IO is created and closed
           io = StringIO.open(string)
-          result = yield(io)
-          io.close
+          begin
+            result = yield(io)
+          ensure
+            io.close
+          end
           return result
         else
           return StringIO.open(string)
@@ -324,8 +336,11 @@ class IO
         if block_given?
           # if a block is given, then a new IO is created and closed
           io = StringIO.open("")
-          result = yield(io)
-          io.close
+          begin
+            result = yield(io)
+          ensure
+            io.close
+          end
           return result
         else
           return ""
@@ -336,8 +351,11 @@ class IO
     if block_given?
       # if a block is given, then a new IO is created and closed
       io = self.original_open(name, *args)
-      result = yield(io)
-      io.close
+      begin
+        result = yield(io)
+      ensure
+        io.close
+      end
       return result
     else
       return self.original_open(name, *args)
@@ -357,7 +375,7 @@ class File
   def self.expand_path(file_name, *args)
     if file_name.to_s.chars.first == ':' then
       #puts "self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
-      STDOUT.flush
+      #STDOUT.flush
       return OpenStudio.get_absolute_path(file_name)
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
       #puts "2 self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
@@ -458,12 +476,20 @@ class Dir
       pattern_array = [pattern]
     elsif pattern.is_a? Array
       pattern_array = pattern
+    else
+      pattern_array = pattern
     end
+    
+    #puts "Dir.glob pattern = #{pattern}, pattern_array = #{pattern_array}, args = #{args}"
+    override_args_extglob = false
     
     result = []
     pattern_array.each do |pattern|
       
       if pattern.to_s.chars.first == ':'
+      
+        # DLM: seems like this is needed for embedded paths, possibly due to leading ':' character? 
+        override_args_extglob = true
     
         #puts "searching embedded files for #{pattern}"
         absolute_pattern = OpenStudio.get_absolute_path(pattern)
@@ -474,20 +500,26 @@ class Dir
         EmbeddedScripting::allFileNamesAsString.split(';').each do |name|
           absolute_path = OpenStudio.get_absolute_path(name)
           
-          # DLM: this is how I read the documentation
-          if File.fnmatch( absolute_pattern, absolute_path, *args ) 
-            #puts "#{absolute_path} is a match!"
-            result << absolute_path
-            
-          # DLM: but it appears that this is actually the real behavior?
-          elsif File.fnmatch( absolute_pattern, absolute_path, File::FNM_EXTGLOB ) 
-            #puts "#{absolute_path} is a match!"
-            result << absolute_path
+          if override_args_extglob 
+            if File.fnmatch( absolute_pattern, absolute_path, File::FNM_EXTGLOB ) 
+              #puts "#{absolute_path} is a match!"
+              result << absolute_path
+            end
+          else
+            if File.fnmatch( absolute_pattern, absolute_path, *args ) 
+              #puts "#{absolute_path} is a match!"
+              result << absolute_path
+            end
           end
+
         end
         
       else
-        result.concat(self.original_glob(pattern, *args))
+        if override_args_extglob
+          result.concat(self.original_glob(pattern, File::FNM_EXTGLOB))
+        else
+          result.concat(self.original_glob(pattern, *args))
+        end
       end
     end
     

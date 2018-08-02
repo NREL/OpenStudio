@@ -95,12 +95,20 @@ class Bundle_Test < Minitest::Test
   end   
   
   def test_bundle_default
+    
     original_dir = Dir.pwd
+    
+    if !defined?(OpenStudio::CLI) || !OpenStudio::CLI
+      skip("Embedded gems not available unless CLI") 
+    end
+    
     gemdir = File.realpath(File.join(File.dirname(__FILE__), '../../../../dependencies/ruby'))
     gemfile = File.join(gemdir, 'Gemfile')
     gemlock = File.join(gemdir, 'Gemfile.lock')
+    gemcnfg = File.join(gemdir, './bundle')
     assert(File.exists?(gemfile))
     assert(File.exists?(gemlock))
+    assert(!File.exists?(gemcnfg))
     Dir.chdir(File.join(File.dirname(__FILE__), 'bundle_default'))
 
     # don't pass bundle_path since we want to use embedded gems

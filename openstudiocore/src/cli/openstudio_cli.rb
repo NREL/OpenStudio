@@ -383,7 +383,7 @@ def parse_main_args(main_args)
     
   elsif ENV['BUNDLE_GEMFILE']
     # no argument but env var is set
-    $logger.info "ENV['BUNDLE_GEMFILE'] set to '#{BUNDLE_GEMFILE}', activating bundler"
+    $logger.info "ENV['BUNDLE_GEMFILE'] set to '#{ENV['BUNDLE_GEMFILE']}'"
     use_bundler = true
   
   end  
@@ -400,7 +400,7 @@ def parse_main_args(main_args)
   
   elsif ENV['BUNDLE_PATH']
     # no argument but env var is set
-    $logger.info "ENV['BUNDLE_PATH'] set to '#{BUNDLE_PATH}'"
+    $logger.info "ENV['BUNDLE_PATH'] set to '#{ENV['BUNDLE_PATH']}'"
   
   elsif use_bundler
     # bundle was requested but bundle_path was not provided
@@ -408,6 +408,10 @@ def parse_main_args(main_args)
     
     $logger.info "Setting BUNDLE_PATH to ':/ruby/2.2.0/'"
     ENV['BUNDLE_PATH'] = ':/ruby/2.2.0/'
+    
+    # match configuration in build_openstudio_gems
+    $logger.info "Setting BUNDLE_WITHOUT to 'test'"
+    ENV['BUNDLE_WITHOUT'] = 'test'
   
   end  
   
@@ -466,6 +470,8 @@ def parse_main_args(main_args)
   
   if use_bundler
   
+    current_dir = Dir.pwd
+  
     # require bundler
     # have to do some forward declaration and pre-require to get around autoload cycles
     require 'bundler/errors'
@@ -493,23 +499,15 @@ def parse_main_args(main_args)
 
       Bundler.setup
       #Bundler.require
-    rescue Bundler::BundlerError => e
-      
-      #puts e.backtrace.join("\n")
-      if e.is_a?(Bundler::GemNotFound)
-        puts "Bundler GemNotFound, Run `bundle install` to install missing gems."
-        exit e.status_code
-      elsif e.is_a?(Bundler::ProductionError)
-        puts "Bundler ProductionError, Run `bundle install` to install missing gems."
-        exit e.status_code
-      elsif e.is_a?(Bundler::GitError)
-        puts "Bundler GitError, Run `bundle install` to install missing gems."
-        exit e.status_code
-      else
-        # other error
-        puts "Bundler #{e.class}"
-        exit e.status_code
-      end    
+    #rescue Bundler::BundlerError => e
+    
+      #$logger.info e.backtrace.join("\n")
+      #$logger.error "Bundler #{e.class}: Use `bundle install` to install missing gems"
+      #exit e.status_code
+
+    ensure
+    
+      Dir.chdir(current_dir)
     end
 
   else 
