@@ -34,8 +34,11 @@
 
 #include <iostream>
 #include <string>
+
+#ifdef Q_OS_WIN
 #include <locale>
 #include <codecvt>
+#endif
 
 namespace openstudio {
 
