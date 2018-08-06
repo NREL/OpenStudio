@@ -17,6 +17,7 @@
     <file src="Products/csharp/$CONFIGURATION$/OpenStudio.dll" target="lib" />
     <file src="Products/$CONFIGURATION$/openstudio_csharp.dll" target="build" />
     <file src="Products/$CONFIGURATION$/openstudio_translators_csharp.dll" target="build" />
+    <file src="Products/$CONFIGURATION$/openstudio_model_csharp.dll" target="build" />
     <file src="@CMAKE_SOURCE_DIR@/OpenStudio.targets" target="build" />
   </files>
 </package>
