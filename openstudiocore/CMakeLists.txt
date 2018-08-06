@@ -316,7 +316,8 @@ if(MSVC)
   endif()
 
   # treat warnings as errors
-  add_definitions(/WX)
+  # YXC: remove warning as errors
+  #add_definitions(/WX)
 
   # ignore warnings about the stl being insecure
   add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
