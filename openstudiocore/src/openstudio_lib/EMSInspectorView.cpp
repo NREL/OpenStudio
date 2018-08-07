@@ -41,6 +41,7 @@
 #include <QCheckBox>
 #include <QFrame>
 #include <QLabel>
+#include <QScrollArea>
 #include <functional>
 
 namespace openstudio {
@@ -203,12 +204,18 @@ EMSInspectorView::EMSInspectorView(QWidget* parent, EMSInspectorView::Type type)
   QWidget(parent),
   m_type(type)
 {
+  auto mainWidget = new QWidget();
+
   setContentsMargins(0,0,0,0);
   m_layout = new QVBoxLayout();
   m_layout->setSpacing(10);
   m_layout->setMargin(0);
   m_layout->setAlignment(Qt::AlignTop);
-  setLayout(m_layout);
+  mainWidget->setLayout(m_layout);
+
+  // make a scroll widget
+  auto scrollArea = new QScrollArea(this);
+  scrollArea->setWidget(mainWidget);
 }
 
 void EMSInspectorView::layoutModelObject( const model::ModelObject & modelObject ) {
