@@ -4032,14 +4032,31 @@ namespace openstudio{
 
       // open file
       std::ifstream ifs(openstudio::toString(m_path));
-
-      if (!parse(ifs, true)){
+      
+      // Calling parse here would parse the whole file. Since we only want to read the second line of the header, let's not do that
+      
+      std::string line;
+      
+      // Discard the first line
+      if(!std::getline(ifs, line)) {
+        LOG(Error, "Could not read line 1 of EPW file '" << m_path << "', unable to obtain design conditions");
         ifs.close();
-        LOG(Error, "EpwFile '" << toString(m_path) << "' cannot be processed");
+        return m_designs;
       }
-      else{
+      
+      // The second line is the line we want
+      if(!std::getline(ifs, line)) {
+        LOG(Error, "Could not read line 2 of EPW file '" << m_path << "', unable to obtain design conditions");
         ifs.close();
+        return m_designs;
       }
+      
+      // Parse the second line
+      if(!parseDesignConditions(line)) {
+        LOG(Error, "Failed to parse EPW file header '" << m_path << "', unable to obtain all design conditions");
+      }
+      
+      ifs.close();
     }
     return m_designs;
   }
