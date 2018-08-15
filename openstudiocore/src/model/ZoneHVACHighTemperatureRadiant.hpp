@@ -128,7 +128,7 @@ class MODEL_API ZoneHVACHighTemperatureRadiant : public ZoneHVACComponent {
   /** @name Other */
   //@{
 
-  boost::optional<ThermalZone> thermalZone() const;
+  boost::optional<ThermalZone> thermalZone() const override;
 
   bool addToThermalZone(ThermalZone & thermalZone);
 

@@ -123,6 +123,7 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
  protected:
 
   friend class Model_Impl;
+  friend class AirLoopHVAC_Impl;
 
   mutable boost::optional<AirLoopHVAC> m_airLoopHVAC;
   mutable boost::optional<PlantLoop> m_plantLoop;

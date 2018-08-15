@@ -2007,6 +2007,7 @@ set(${target_name}_test_src
   test/ZoneHVACUnitHeater_GTest.cpp
   test/ZoneHVACUnitVentilator_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp
+  test/ZoneHVACIdealLoadsAirSystem_GTest.cpp
   test/ZoneMixing_GTest.cpp
   test/ZoneVentilationDesignFlowRate_GTest.cpp
 )
