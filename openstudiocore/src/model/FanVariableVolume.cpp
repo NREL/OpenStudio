@@ -660,25 +660,15 @@ namespace detail {
 
   bool FanVariableVolume_Impl::addToNode(Node & node)
   {
-    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
-    {
-      boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoop->airLoopHVACOutdoorAirSystem();
-      if( airLoop->supplyComponent(node.handle()) || (oaSystem && oaSystem->component(node.handle())) )
-      {
-        unsigned fanCount = airLoop->supplyComponents(IddObjectType::OS_Fan_ConstantVolume).size();
-        fanCount += airLoop->supplyComponents(IddObjectType::OS_Fan_VariableVolume).size();
+    auto oaSystem = node.airLoopHVACOutdoorAirSystem();
+    auto airLoop = node.airLoopHVAC();
 
-        if( oaSystem )
-        {
-          fanCount += subsetCastVector<FanConstantVolume>(oaSystem->components()).size();
-          fanCount += subsetCastVector<FanVariableVolume>(oaSystem->components()).size();
-        }
-
-        if( StraightComponent_Impl::addToNode(node) )
-        {
+    if( (airLoop && airLoop->supplyComponent(node.handle())) || (oaSystem && oaSystem->component(node.handle())) ) {
+      if( StraightComponent_Impl::addToNode(node) ) {
+        if ( airLoop ) {
           SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
-          return true;
         }
+        return true;
       }
     }
 
