@@ -251,6 +251,11 @@ namespace detail {
       }
     }
 
+    auto zones = thermalZones();
+    for ( auto & zone : zones ) {
+      removeBranchForZone( zone );
+    }
+
     modelObjects = components();
 
     std::vector<openstudio::IdfObject> idfObjects =  ModelObject_Impl::remove();
@@ -261,13 +266,9 @@ namespace detail {
     {
       if( OptionalHVACComponent comp = it->optionalCast<HVACComponent>() )
       {
-        if( ! it->handle().isNull() )
-        {
+        if( ! it->handle().isNull() ) {
           comp->disconnect();
-          if( ! comp->optionalCast<ThermalZone>() )
-          {
-            comp->remove();
-          }
+          comp->remove();
         }
       }
     }
