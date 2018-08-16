@@ -1441,5 +1441,8 @@ TEST_F(ModelFixture,AirLoopHVAC_multiloops) {
 
   EXPECT_EQ(z1.airLoopHVACTerminals().size(), 0);
   EXPECT_FALSE(z1.airLoopHVACTerminal());
+
+  a1.remove();
+  EXPECT_EQ(2, z1.airLoopHVACs().size());
 }
 
