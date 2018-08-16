@@ -59,13 +59,28 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
     return boost::none;
   }
 
-  //make sure all other objects are translated first
+
+  // Make sure all necessary objects are translated first
+  // TODO: JM 2018-08-16: Is this really necessary? Really we should just call the translation of the objects that
+  // can be referenced by the EMS program, and these objects should be handling the call to reverseTranslation of the objects
+  // they themselves can reference
   for (const WorkspaceObject& workspaceObject : m_workspace.objects()) {
-    if ((workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_Program)
-      && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_Subroutine)
-      && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_ProgramCallingManager)
-      && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_MeteredOutputVariable)
-      && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_OutputVariable)) {
+
+     // &&(workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_Program)
+     // && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_ProgramCallingManager)
+     // && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_MeteredOutputVariable)
+     // && (workspaceObject.iddObject().type() != IddObjectType::EnergyManagementSystem_OutputVariable)
+
+      // These I'm sure we do need.
+    if (   (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_Subroutine)
+        || (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_Actuator)
+        || (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_Sensor)
+        || (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_ConstructionIndexVariable)
+        || (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_CurveOrTableIndexVariable)
+        || (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_GlobalVariable)
+        || (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_InternalVariable)
+        || (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_TrendVariable)
+       ) {
       translateAndMapWorkspaceObject(workspaceObject);
     }
   }
@@ -73,41 +88,74 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
   openstudio::model::EnergyManagementSystemProgram emsProgram(m_model);
   emsProgram.setName(*s);
 
-  //get all model objects so we can do name / uid substitution
-  const std::vector<model::ModelObject> modelObjects = m_model.getModelObjects<model::ModelObject>();
+
+  // Get all model objects that can be referenced int he EMS Program so we can do name / uid substitution
+  const std::vector<IddObjectType> validIddObjectTypes{
+    IddObjectType::OS_EnergyManagementSystem_Subroutine,
+    IddObjectType::OS_EnergyManagementSystem_Actuator,
+    IddObjectType::OS_EnergyManagementSystem_Sensor,
+    IddObjectType::OS_EnergyManagementSystem_ConstructionIndexVariable,
+    IddObjectType::OS_EnergyManagementSystem_CurveOrTableIndexVariable,
+    IddObjectType::OS_EnergyManagementSystem_GlobalVariable,
+    IddObjectType::OS_EnergyManagementSystem_InternalVariable,
+    IddObjectType::OS_EnergyManagementSystem_TrendVariable
+  };
+
+  std::vector<model::ModelObject> modelObjects;
+  for (const model::ModelObject& mo: m_model.modelObjects()) {
+    if( std::find(validIddObjectTypes.begin(), validIddObjectTypes.end(), mo.iddObjectType()) != validIddObjectTypes.end() ) {
+      modelObjects.push_back(mo);
+    }
+  }
+
+
+  // Now, we should do the actual name/uid substitution on all lines of the program
+
   size_t pos, len;
-  std::string newline, uid;
+  std::string newline,  uid;
 
   unsigned n = workspaceObject.numExtensibleGroups();
   OptionalString line;
+
+  // Loop on each line of the program
   for (unsigned i = 0; i < n; ++i) {
     line = workspaceObject.getExtensibleGroup(i).cast<WorkspaceExtensibleGroup>().getString(EnergyManagementSystem_ProgramExtensibleFields::ProgramLine);
     if (line) {
       newline = line.get();
-      //split line on whitespaces to get look for modelobject names
-      std::vector<std::string> results = splitString(line.get(), ' ');
-      for (size_t j = 0; j < results.size(); j++) {
 
-        for (size_t k = 0; k < modelObjects.size(); k++) {
-          if (modelObjects.at(k).name()) {
-            //check if program item is the name of a model object
-            if (modelObjects.at(k).name().get() == results.at(j)) {
-              pos = newline.find(results.at(j));
-              len = results.at(j).length();
-              uid = toString(modelObjects.at(k).handle());
-              //replace modelobject name with handle
-              newline.replace(pos, len, uid);
-              // Now that we have done the replacement, we need to break out of the nested loop and go to the next "j"
-              // Otherwise pos will become giberish since it won't be able to find the already-replaced string
-              break;
-            }
+      // Split line on whitespaces to get look for modelobject names
+      // TODO: really this parser should match the E+ one, so probably split on operators, handle parenthesis, etc
+      // TODO: Split on ' +-*/^=<>' then trim paranthesis, that should about do it
+      // So I just replace every operator with a space, then split on space...
+      // TODO: check escape sequences... I'm pretty sure all are correct except '<>' where I'm guessing
+      std::vector<std::string> tokens = splitString(boost::regex_replace(newline, boost::regex("[\\+\\-\\*\\^/=<>]"), " "), ' ');
+
+      for (std::string& token: tokens) {
+        // TODO: trim parenthesis
+        boost::replace_all(token, "(", "");
+        boost::replace_all(token, ")", "");
+        for (const model::ModelObject& mo: modelObjects) {
+          // Check if program item is the name of a model object
+          boost::optional<std::string> _name = mo.name();
+          if ( _name && (_name.get() == token) ) {
+            // replace model object's name with its handle
+            pos = newline.find(token);
+            len = token.length();
+            uid = toString(mo.handle());
+            newline.replace(pos, len, uid);
+            // Now that we have done the replacement, no need to keep looping.
+            // Plus, we should break out of the nested loop and go to the next "j"
+            // Otherwise pos could become giberish if there's another object named the same
+            // since it won't be able to find the already-replaced string
+            break;
           }
         } // end loop on all modelObjects
 
       } // end loop on all results in line
       emsProgram.addLine(newline);
     } // end if(line)
-  }
+  } // End loop on each line of the program
+
   return emsProgram;
 }
 
