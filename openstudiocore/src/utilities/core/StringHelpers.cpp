@@ -320,4 +320,83 @@ std::vector <std::string> splitString(const std::string &string, char delimiter)
   return results;
 }
 
+std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string delimiters) {
+
+  // Split line to get 'tokens' and look for ModelObject names
+  // Note: JM 2018-08-16: Really this parser should match the E+ one, so probably split on operators, handle parenthesis, etc
+  // The idea is to split on ' +-*/^=<>&|' which are the operators
+  // We also need to ignore the reserved keywords and functions
+
+  std::vector<std::string> reservedKeyWords = {
+    // Constant built-in variables
+    "NULL",
+    "FALSE",
+    "TRUE",
+    "OFF",
+    "ON",
+    "PI",
+
+    // Dynamic built-in variables
+    "YEAR",
+    "MONTH",
+    "DAYOFMONTH",
+    "DAYOFWEEK",
+    "DAYOFYEAR",
+    "HOUR",
+    "MINUTE",
+    "HOLIDAY",
+    "DAYLIGHTSAVINGS",
+    "CURRENTTIME",
+    "SUNISUP",
+    "ISRAINING",
+    "SYSTEMTIMESTEP",
+    "ZONETIMESTEP",
+    "CURRENTENVIRONMENT",
+    "ACTUALDATEANDTIME",
+    "ACTUALTIME",
+    "WARMUPFLAG",
+
+    // Statement Keywords
+    "RUN",
+    "RETURN",
+    "SET",
+    "IF",
+    "ELSEIF",
+    "ELSE",
+    "ENDIF",
+    "WHILE",
+    "ENDWHILE",
+  };
+
+  std::vector<std::string> result;
+
+  std::vector<std::string> tokens;
+  boost::split(tokens, line, boost::is_any_of(delimiters));
+
+  for (std::string& token: tokens) {
+    // We trim eventual parenthesis
+    boost::replace_all(token, "(", "");
+    boost::replace_all(token, ")", "");
+    // We trim leading and trailing whitespaces (shouldn't be necesssary with boost::split)
+    boost::trim(token);
+
+    // We only keep the token:
+
+          // If there's something left in the token,
+    if (  (!token.empty())
+          // and it doesn't start by "@" (function)
+          && (!boost::starts_with(token, "@"))
+          // and this is not one of the reserved keyword above
+          && (std::find(reservedKeyWords.begin(), reservedKeyWords.end(), boost::to_upper_copy<std::string>(token)) == reservedKeyWords.end())
+        )
+    {
+      result.push_back(token);
+    }
+  }
+
+  return result;
+
+}
+
+
 } // openstudio
