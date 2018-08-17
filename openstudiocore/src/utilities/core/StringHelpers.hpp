@@ -130,6 +130,7 @@ namespace openstudio {
    *  version
    */
   UTILITIES_API std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string delimiters=" +-*/^=<>&|");
+
 }
 
 #endif // UTILITIES_CORE_STRINGHELPERS_HPP
