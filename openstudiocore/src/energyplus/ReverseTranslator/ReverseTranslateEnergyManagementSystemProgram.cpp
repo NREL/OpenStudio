@@ -62,7 +62,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
 
   // Make sure all necessary objects are translated first
   // TODO: JM 2018-08-16: Is this really necessary? Really we should just call the translation of the objects that
-  // can be referenced by the EMS program, and these objects should be handling the call to reverseTranslation of the objects
+  // **can** be referenced by the EMS program, and these objects should be handling the call to reverseTranslation of the objects
   // they themselves can reference
   for (const WorkspaceObject& workspaceObject : m_workspace.objects()) {
 
@@ -113,6 +113,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
 
   size_t pos, len;
   std::string newline,  uid;
+  std::string delimiters(" +-*/^=<>&|");
 
   unsigned n = workspaceObject.numExtensibleGroups();
   OptionalString line;
@@ -125,16 +126,15 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
 
       // Split line to get 'tokens' and look for ModelObject names
       // Note: JM 2018-08-16: Really this parser should match the E+ one, so probably split on operators, handle parenthesis, etc
-      // The idea is to split on ' +-*/^=<>' then trim paranthesis
-      // So I just replace every operator with a space, then split on space.
-      // TODO: check escape sequences... I'm pretty sure all are correct except '<>' where I'm guessing
-      std::vector<std::string> tokens = splitString(boost::regex_replace(newline, boost::regex("[\\+\\-\\*\\^/=<>]"), " "), ' ');
+      // The idea is to split on ' +-*/^=<>&|'
+      std::vector<std::string> tokens;
+      boost::split(tokens, newline, boost::is_any_of(delimiters));
 
       for (std::string& token: tokens) {
         // We trim eventual parenthesis
         boost::replace_all(token, "(", "");
         boost::replace_all(token, ")", "");
-        // We trim leading and trailing whitespaces
+        // We trim leading and trailing whitespaces (shouldn't be necesssary with boost::split)
         boost::algorithm::trim(token);
         // If there's something left in the token, then we try to match it to a modelObject's name
         if (!token.empty()) {
@@ -150,7 +150,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
               // Now that we have done the replacement, no need to keep looping.
               // Plus, we should break out of the nested loop and go to the next "j"
               // Otherwise pos could become giberish if there's another object named the same
-              // since it won't be able to find the already-replaced string
+              // since it won't be able to find the already-replaced string (this shouldn't happen though)
               break;
             }
           } // end loop on all modelObjects
