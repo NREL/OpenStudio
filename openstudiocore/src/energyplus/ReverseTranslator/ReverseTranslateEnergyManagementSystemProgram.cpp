@@ -112,7 +112,7 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
   // Now, we should do the actual name/uid substitution on all lines of the program
 
   size_t pos, len;
-  std::string newline,  uid;
+  std::string newline, uid;
 
   unsigned n = workspaceObject.numExtensibleGroups();
   OptionalString line;
@@ -156,4 +156,3 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
 } // energyplus
 
 } // openstudio
-
