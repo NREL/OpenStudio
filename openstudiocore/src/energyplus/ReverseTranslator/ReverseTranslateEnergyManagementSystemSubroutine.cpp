@@ -62,9 +62,15 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemSubroutine
   // Make sure we translate the objects that can be referenced here
   for (const WorkspaceObject& workspaceObject : m_workspace.objects()) {
 
-    // These I'm sure we do need.
-    if (   (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_Subroutine)
-        || (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_Actuator)
+    // Note: JM 2018-08-17
+    // I think an EMS:Subroutine can reference another EMS:Subroutine, we might get problems from that:
+    // The one that is being referenced would need be translated before the one that references before the name/uuid substitution happen.
+    // But it's harder to control that order*, and this is really an edge case though, so not handling it.
+    // * Can't add this condition without getting into a loop:
+    // (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_Subroutine)
+    if (
+        // These I'm sure we do need.
+        (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_Actuator)
         || (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_Sensor)
         || (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_ConstructionIndexVariable)
         || (workspaceObject.iddObject().type() == IddObjectType::EnergyManagementSystem_CurveOrTableIndexVariable)
