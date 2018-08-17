@@ -395,24 +395,18 @@ TEST(String, StringSplit)
 TEST(String, SplitEMSLineToTokens)
 {
   // Very simple case
-  std::vector<std::string> tokens = splitEMSLineToTokens("SET PUE = 10");
+  std::vector<std::string> tokens = splitEMSLineToTokens("SET Var1 = 10");
   ASSERT_EQ(2, tokens.size());
-  EXPECT_EQ("PUE", tokens[0]);
+  EXPECT_EQ("Var1", tokens[0]);
   EXPECT_EQ("10", tokens[1]);
 
   // More complicated: Set is a statement keyword, Hour is an ERL dynamic variable
   // and @TrendValue is a function.
-  tokens = splitEMSLineToTokens("Set  PUE =Hour  *(@TrendValue PUE   2) /Var2");
+  tokens = splitEMSLineToTokens("Set  Var1 =(Hour  *(@TrendValue Var1   2)) /(Var2)");
   ASSERT_EQ(4, tokens.size());
-  EXPECT_EQ("PUE", tokens[0]);
-  EXPECT_EQ("PUE", tokens[1]);
+  EXPECT_EQ("Var1", tokens[0]);
+  EXPECT_EQ("Var1", tokens[1]);
   EXPECT_EQ("2", tokens[2]);
   EXPECT_EQ("Var2", tokens[3]);
-
-  int i = 1;
-  for (const std::string& token: tokens) {
-    std::cout << "i=" << i << ": " << token << "\n";
-    ++i;
-  }
 }
 

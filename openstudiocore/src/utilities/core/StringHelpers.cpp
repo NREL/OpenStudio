@@ -368,33 +368,32 @@ std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std
     "ENDWHILE",
   };
 
-  std::vector<std::string> result;
 
   std::vector<std::string> tokens;
   boost::split(tokens, line, boost::is_any_of(delimiters));
 
-  for (std::string& token: tokens) {
+  for (std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end(); ) {
     // We trim eventual parenthesis
-    boost::replace_all(token, "(", "");
-    boost::replace_all(token, ")", "");
+    boost::replace_all(*it, "(", "");
+    boost::replace_all(*it, ")", "");
     // We trim leading and trailing whitespaces (shouldn't be necesssary with boost::split)
-    boost::trim(token);
+    boost::trim(*it);
 
-    // We only keep the token:
+    // We Delete the token:
 
-          // If there's something left in the token,
-    if (  (!token.empty())
-          // and it doesn't start by "@" (function)
-          && (!boost::starts_with(token, "@"))
-          // and this is not one of the reserved keyword above
-          && (std::find(reservedKeyWords.begin(), reservedKeyWords.end(), boost::to_upper_copy<std::string>(token)) == reservedKeyWords.end())
+          // If there's nothing left in the token,
+    if (  (it->empty())
+          // or it starts with "@" (function)
+          || (boost::starts_with(*it, "@"))
+          // or its one of the reserved keyword above
+          || (std::find(reservedKeyWords.begin(), reservedKeyWords.end(), boost::to_upper_copy<std::string>(*it)) != reservedKeyWords.end())
         )
     {
-      result.push_back(token);
+      it = tokens.erase(it);
+    } else {
+      ++it;
     }
-  }
-
-  return result;
+  } return tokens;
 
 }
 
