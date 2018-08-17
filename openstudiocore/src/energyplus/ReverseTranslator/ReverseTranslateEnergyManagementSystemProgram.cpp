@@ -123,33 +123,38 @@ OptionalModelObject ReverseTranslator::translateEnergyManagementSystemProgram(co
     if (line) {
       newline = line.get();
 
-      // Split line on whitespaces to get look for modelobject names
-      // TODO: really this parser should match the E+ one, so probably split on operators, handle parenthesis, etc
-      // TODO: Split on ' +-*/^=<>' then trim paranthesis, that should about do it
-      // So I just replace every operator with a space, then split on space...
+      // Split line to get 'tokens' and look for ModelObject names
+      // Note: JM 2018-08-16: Really this parser should match the E+ one, so probably split on operators, handle parenthesis, etc
+      // The idea is to split on ' +-*/^=<>' then trim paranthesis
+      // So I just replace every operator with a space, then split on space.
       // TODO: check escape sequences... I'm pretty sure all are correct except '<>' where I'm guessing
       std::vector<std::string> tokens = splitString(boost::regex_replace(newline, boost::regex("[\\+\\-\\*\\^/=<>]"), " "), ' ');
 
       for (std::string& token: tokens) {
-        // TODO: trim parenthesis
+        // We trim eventual parenthesis
         boost::replace_all(token, "(", "");
         boost::replace_all(token, ")", "");
-        for (const model::ModelObject& mo: modelObjects) {
-          // Check if program item is the name of a model object
-          boost::optional<std::string> _name = mo.name();
-          if ( _name && (_name.get() == token) ) {
-            // replace model object's name with its handle
-            pos = newline.find(token);
-            len = token.length();
-            uid = toString(mo.handle());
-            newline.replace(pos, len, uid);
-            // Now that we have done the replacement, no need to keep looping.
-            // Plus, we should break out of the nested loop and go to the next "j"
-            // Otherwise pos could become giberish if there's another object named the same
-            // since it won't be able to find the already-replaced string
-            break;
-          }
-        } // end loop on all modelObjects
+        // We trim leading and trailing whitespaces
+        boost::algorithm::trim(token);
+        // If there's something left in the token, then we try to match it to a modelObject's name
+        if (!token.empty()) {
+          for (const model::ModelObject& mo: modelObjects) {
+            // Check if program item is the name of a model object
+            boost::optional<std::string> _name = mo.name();
+            if ( _name && (_name.get() == token) ) {
+              // replace model object's name with its handle
+              pos = newline.find(token);
+              len = token.length();
+              uid = toString(mo.handle());
+              newline.replace(pos, len, uid);
+              // Now that we have done the replacement, no need to keep looping.
+              // Plus, we should break out of the nested loop and go to the next "j"
+              // Otherwise pos could become giberish if there's another object named the same
+              // since it won't be able to find the already-replaced string
+              break;
+            }
+          } // end loop on all modelObjects
+        }
 
       } // end loop on all results in line
       emsProgram.addLine(newline);
