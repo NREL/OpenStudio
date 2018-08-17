@@ -2102,6 +2102,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
 "  EnergyManagementSystem:GlobalVariable,\n"
 "    Var2;                     !- Erl Variable 1 Name\n"
 "\n"
+"  EnergyManagementSystem:Subroutine,\n"
+"    DummySubRoutine,\n"
+"    Set Var2 = 10,\n"
+"    SET Var2 =Var2*10^4;\n"
+"\n"
 "  EnergyManagementSystem:Program,\n"
 "    DummyProg,                 !- Name\n"
 "    IF (Hour >= 6) &&(Hour <22),\n"
@@ -2109,7 +2114,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
 "    ELSE,\n"
 "        SET Var1 = 2-0.1*Hour,\n"
 "    ENDIF,\n"
-"    SET Var2 = 10,\n"
+"    RUN DummySubRoutine,\n"
 "    IF (Var1) >=2,\n"
 "        SeT Var2 = Var2,\n"
 "        Set Var2 =Var2* 2,\n"
@@ -2127,15 +2132,19 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
 
   EXPECT_EQ(2u, model.getModelObjects<EnergyManagementSystemGlobalVariable>().size());
   EXPECT_EQ(1u, model.getModelObjects<EnergyManagementSystemProgramCallingManager>().size());
+
+    /**
+   * Test the EMS Program
+   * */
   std::vector<EnergyManagementSystemProgram> emsProgs = model.getModelObjects<EnergyManagementSystemProgram>();
   ASSERT_EQ(1u, emsProgs.size());
   EnergyManagementSystemProgram emsProg = emsProgs[0];
   EXPECT_EQ(12u, emsProg.lines().size());
   std::vector<ModelObject> refObjs = emsProg.referencedObjects();
-  // There should be 10 references in total, 4 for Var1 and 6 for Var2, so only two unique refs (Var1 and Var2)
+  // There should be 10 references in total, 4 for Var1 and 5 for Var2, 1 for DummySubRoutine, so only two unique refs (Var1 and Var2)
   EXPECT_EQ(10u, refObjs.size());
 
-  int n1(0), n2(0), n0(0);
+  int n1(0), n2(0), n3(0), n0(0);
 
   for (const ModelObject& refObj: refObjs) {
     std::string oname = refObj.name().get();
@@ -2143,6 +2152,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
       ++n1;
     } else if (oname == "Var2") {
       ++n2;
+    } else if (oname == "DummySubRoutine") {
+      ++n3;
     } else {
       ++n0;
     }
@@ -2150,7 +2161,37 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
   // 4 Var1
   EXPECT_EQ(4, n1);
   // 6 Var2
-  EXPECT_EQ(6, n2);
+  EXPECT_EQ(5, n2);
+  // 1 DummySubRoutine
+  EXPECT_EQ(1, n3);
+  // Nothing Else
+  EXPECT_EQ(0, n0);
+
+
+  /**
+   * Test the subroutine
+   * */
+  std::vector<EnergyManagementSystemSubroutine> emsSubs = model.getModelObjects<EnergyManagementSystemSubroutine>();
+  ASSERT_EQ(1u, emsSubs.size());
+  EnergyManagementSystemSubroutine emsSub = emsSubs[0];
+  EXPECT_EQ(2u, emsSub.lines().size());
+  refObjs = emsSub.referencedObjects();
+  // There should be 3 references in total, 3 Var2
+  EXPECT_EQ(3u, refObjs.size());
+
+  n2 = 0;
+  n0 = 0;
+
+  for (const ModelObject& refObj: refObjs) {
+    std::string oname = refObj.name().get();
+    if (oname == "Var2") {
+      ++n2;
+    } else {
+      ++n0;
+    }
+  }
+  // 3 Var2
+  EXPECT_EQ(3, n2);
   // Nothing Else
   EXPECT_EQ(0, n0);
 
