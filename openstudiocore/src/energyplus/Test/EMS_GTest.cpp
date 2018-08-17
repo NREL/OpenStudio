@@ -2086,4 +2086,76 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
 }
 
 
+TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
 
+  // This is a dummy IDF snippet
+  // Its goal is to test the various weird formatting pattern that would still work with E+
+  std::string emsSnippet(
+"  EnergyManagementSystem:ProgramCallingManager,\n"
+"    ProgCaller,              !- Name\n"
+"    EndOfZoneTimestepBeforeZoneReporting,  !- EnergyPlus Model Calling Point\n"
+"    DummyProg;               !- Program Name 1\n"
+"\n"
+"  EnergyManagementSystem:GlobalVariable,\n"
+"    Var1;                     !- Erl Variable 1 Name\n"
+"\n"
+"  EnergyManagementSystem:GlobalVariable,\n"
+"    Var2;                     !- Erl Variable 1 Name\n"
+"\n"
+"  EnergyManagementSystem:Program,\n"
+"    DummyProg,                 !- Name\n"
+"    IF (Hour >= 6) &&(Hour <22),\n"
+"      SET  Var1= 1 *0.1* Hour,\n"
+"    ELSE,\n"
+"        SET Var1 = 2-0.1*Hour,\n"
+"    ENDIF,\n"
+"    SET Var2 = 10,\n"
+"    IF (Var1) >=2,\n"
+"        SeT Var2 = Var2,\n"
+"        Set Var2 =Var2* 2,\n"
+"    ELSE,\n"
+"        set Var2 = Var1,\n"
+"    ENDIF;\n"
+  );
+
+  std::istringstream is(emsSnippet);
+  OptionalIdfFile idfFile = IdfFile::load(is, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+
+  EXPECT_EQ(2u, model.getModelObjects<EnergyManagementSystemGlobalVariable>().size());
+  EXPECT_EQ(1u, model.getModelObjects<EnergyManagementSystemProgramCallingManager>().size());
+  std::vector<EnergyManagementSystemProgram> emsProgs = model.getModelObjects<EnergyManagementSystemProgram>();
+  ASSERT_EQ(1u, emsProgs.size());
+  EnergyManagementSystemProgram emsProg = emsProgs[0];
+  EXPECT_EQ(12u, emsProg.lines().size());
+  std::vector<ModelObject> refObjs = emsProg.referencedObjects();
+  // There should be 10 references in total, 4 for Var1 and 6 for Var2, so only two unique refs (Var1 and Var2)
+  EXPECT_EQ(10u, refObjs.size());
+
+  int n1(0), n2(0), n0(0);
+
+  for (const ModelObject& refObj: refObjs) {
+    std::string oname = refObj.name().get();
+    if (oname == "Var1") {
+      ++n1;
+    } else if (oname == "Var2") {
+      ++n2;
+    } else {
+      ++n0;
+    }
+  }
+  // 4 Var1
+  EXPECT_EQ(4, n1);
+  // 6 Var2
+  EXPECT_EQ(6, n2);
+  // Nothing Else
+  EXPECT_EQ(0, n0);
+
+  // Save for Debug
+  // inWorkspace.save(toPath("./EMS_WeirdFormat.idf"), true);
+  // model.save(toPath("./EMS_WeirdFormat.osm"), true);
+
+}
