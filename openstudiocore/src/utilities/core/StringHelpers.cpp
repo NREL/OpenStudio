@@ -313,7 +313,7 @@ std::vector <std::string> splitString(const std::string &string, char delimiter)
     while(std::getline(stream, substring, delimiter)) { // Loop and fill the results vector
       results.push_back(substring);
     }
-    if(*(string.end() - 1) == ',') { // Add an empty string if the last char is the delimiter
+    if(*(string.end() - 1) == delimiter) { // Add an empty string if the last char is the delimiter
       results.push_back(std::string());
     }
   }
