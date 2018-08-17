@@ -10544,7 +10544,7 @@ OS:ZoneHVAC:UnitVentilator,
 OS:Fan:VariableVolume,
   {3a5c4d7d-b0cc-4ab2-a4d7-3760f8f8c23d}, !- Handle
   Fan Variable Volume 4,                  !- Name
-  ,                                       !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6045,                                 !- Fan Efficiency
   1017.592,                               !- Pressure Rise {Pa}
   Autosize,                               !- Maximum Flow Rate {m3/s}
@@ -10604,7 +10604,7 @@ OS:ZoneHVAC:UnitVentilator,
 OS:Fan:VariableVolume,
   {bad53ddc-aa16-4015-892c-f5ff046eee38}, !- Handle
   Fan Variable Volume 2,                  !- Name
-  ,                                       !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6045,                                 !- Fan Efficiency
   1017.592,                               !- Pressure Rise {Pa}
   Autosize,                               !- Maximum Flow Rate {m3/s}
@@ -10664,7 +10664,7 @@ OS:ZoneHVAC:UnitVentilator,
 OS:Fan:VariableVolume,
   {a225515b-f5e9-4836-8df4-889357ca2700}, !- Handle
   Fan Variable Volume 3,                  !- Name
-  ,                                       !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   0.6045,                                 !- Fan Efficiency
   1017.592,                               !- Pressure Rise {Pa}
   Autosize,                               !- Maximum Flow Rate {m3/s}

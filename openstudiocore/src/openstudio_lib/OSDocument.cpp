@@ -1490,7 +1490,9 @@ namespace openstudio {
   {
     bool fileSaved = false;
 
-    QString defaultDir = savePath().isEmpty() ? mainWindow()->lastPath() : QFileInfo(savePath()).path();
+    // Defaults to the current savePath is there is one (will populate the filename too)
+    // Or the lastPath (directory) if not.
+    QString defaultDir = savePath().isEmpty() ? mainWindow()->lastPath() : savePath();
 
     QString filePath = QFileDialog::getSaveFileName(this->mainWindow(),
       tr("Save"),

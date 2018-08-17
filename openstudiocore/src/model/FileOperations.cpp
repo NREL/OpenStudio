@@ -262,6 +262,32 @@ namespace model {
     return result;
   }
 
+#ifdef Q_OS_WIN
+
+#include <windows.h>
+
+QString longPathName(const QString& path)
+{
+  if (path.isEmpty()){
+    return QString();
+  }
+  QString maybeShort = QDir::toNativeSeparators(path);
+  QByteArray shortName = maybeShort.toLocal8Bit();
+  char longPath[MAX_PATH];
+  int err = GetLongPathName(shortName.constData(), longPath, MAX_PATH);
+  (void)err;
+  return QDir::fromNativeSeparators(QString::fromLocal8Bit(longPath));
+}
+
+#else
+
+QString longPathName(const QString& path)
+{
+  return path;
+}
+
+#endif
+
   openstudio::path createModelTempDir()
   {
     openstudio::path result;

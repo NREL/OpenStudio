@@ -351,9 +351,10 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
 
   // Remove empty electric load center distribution objects (e.g. with no generators)
   // requested by jmarrec, https://github.com/NREL/OpenStudio/pull/1927
+  // add check for transformers
   for (auto& elcd : model.getConcreteModelObjects<ElectricLoadCenterDistribution>()){
-    if (elcd.generators().empty()){
-      LOG(Warn, "ElectricLoadCenterDistribution " << elcd.name().get() << " is not referenced by any generators, it will not be translated.");
+    if ((elcd.generators().empty())&&(!elcd.transformer())){
+      LOG(Warn, "ElectricLoadCenterDistribution " << elcd.name().get() << " is not referenced by any generators or transformers, it will not be translated.");
       if (auto inverter = elcd.inverter()){
         inverter->remove();
       }
@@ -1483,6 +1484,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   {
     model::ElectricLoadCenterStorageConverter temp = modelObject.cast<ElectricLoadCenterStorageConverter>();
     retVal = translateElectricLoadCenterStorageConverter(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Transformer:
+  {
+    model::ElectricLoadCenterTransformer temp = modelObject.cast<ElectricLoadCenterTransformer>();
+    retVal = translateElectricLoadCenterTransformer(temp);
     break;
   }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_Actuator:
@@ -3433,6 +3440,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Transformer);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);

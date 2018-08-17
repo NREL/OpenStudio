@@ -125,7 +125,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<ThermalZone> FanZoneExhaust_Impl::thermalZone()
+  boost::optional<ThermalZone> FanZoneExhaust_Impl::thermalZone() const
   {
     boost::optional<ThermalZone> result;
 
@@ -191,8 +191,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Fan_ZoneExhaustFields::AvailabilityScheduleName);
   }
 
-  double FanZoneExhaust_Impl::fanEfficiency() const {
-    boost::optional<double> value = getDouble(OS_Fan_ZoneExhaustFields::FanEfficiency,true);
+  double FanZoneExhaust_Impl::fanTotalEfficiency() const {
+    boost::optional<double> value = getDouble(OS_Fan_ZoneExhaustFields::FanTotalEfficiency,true);
     OS_ASSERT(value);
     return value.get();
   }
@@ -254,8 +254,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool FanZoneExhaust_Impl::setFanEfficiency(double fanEfficiency) {
-    bool result = setDouble(OS_Fan_ZoneExhaustFields::FanEfficiency, fanEfficiency);
+  bool FanZoneExhaust_Impl::setFanTotalEfficiency(double fanTotalEfficiency) {
+    bool result = setDouble(OS_Fan_ZoneExhaustFields::FanTotalEfficiency, fanTotalEfficiency);
     return result;
   }
 
@@ -346,7 +346,7 @@ namespace detail {
                                    "Fan Nominal Total Efficiency"};
     return types;
   }
-  
+
   AirflowNetworkZoneExhaustFan FanZoneExhaust_Impl::getAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack)
   {
     boost::optional<AirflowNetworkZoneExhaustFan> opt = airflowNetworkZoneExhaustFan();
@@ -382,7 +382,7 @@ FanZoneExhaust::FanZoneExhaust(const Model& model)
 {
   OS_ASSERT(getImpl<detail::FanZoneExhaust_Impl>());
 
-  setFanEfficiency(0.60);
+  setFanTotalEfficiency(0.60);
   setPressureRise(0);
   setEndUseSubcategory("General");
   setSystemAvailabilityManagerCouplingMode("Decoupled");
@@ -401,8 +401,13 @@ boost::optional<Schedule> FanZoneExhaust::availabilitySchedule() const {
   return getImpl<detail::FanZoneExhaust_Impl>()->availabilitySchedule();
 }
 
+
+double FanZoneExhaust::fanTotalEfficiency() const {
+  return getImpl<detail::FanZoneExhaust_Impl>()->fanTotalEfficiency();
+}
+
 double FanZoneExhaust::fanEfficiency() const {
-  return getImpl<detail::FanZoneExhaust_Impl>()->fanEfficiency();
+  return getImpl<detail::FanZoneExhaust_Impl>()->fanTotalEfficiency();
 }
 
 double FanZoneExhaust::pressureRise() const {
@@ -441,8 +446,12 @@ void FanZoneExhaust::resetAvailabilitySchedule() {
   getImpl<detail::FanZoneExhaust_Impl>()->resetAvailabilitySchedule();
 }
 
-bool FanZoneExhaust::setFanEfficiency(double fanEfficiency) {
-  return getImpl<detail::FanZoneExhaust_Impl>()->setFanEfficiency(fanEfficiency);
+bool FanZoneExhaust::setFanTotalEfficiency(double fanTotalEfficiency) {
+  return getImpl<detail::FanZoneExhaust_Impl>()->setFanTotalEfficiency(fanTotalEfficiency);
+}
+
+bool FanZoneExhaust::setFanEfficiency(double fanTotalEfficiency) {
+  return getImpl<detail::FanZoneExhaust_Impl>()->setFanTotalEfficiency(fanTotalEfficiency);
 }
 
 bool FanZoneExhaust::setPressureRise(double pressureRise) {

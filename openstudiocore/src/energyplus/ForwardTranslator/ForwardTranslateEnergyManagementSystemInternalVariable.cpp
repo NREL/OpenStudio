@@ -64,9 +64,44 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemInt
   if (s) {
     idfObject.setName(*s);
   }
+  // look for UID and if found replace with object name; otherwise just use string value
   s = modelObject.internalDataIndexKeyName();
   if (s) {
-    idfObject.setString(EnergyManagementSystem_InternalVariableFields::InternalDataIndexKeyName, s.get());
+    //find uids
+    const int subs[] = { 1 };
+    std::string newline = s.get();
+    std::string possible_uid;
+    size_t pos;
+    bool is_uuid = false;
+    const Model m = modelObject.model();
+    boost::optional<ModelObject> mObject;
+
+    boost::sregex_token_iterator j(s.get().begin(), s.get().end(), uuidInString(), subs);
+
+    while (j != boost::sregex_token_iterator()) {
+      possible_uid = *j++;
+      //look to see if uid is in the model and return the object
+      UUID uid = toUUID(possible_uid);
+      mObject = m.getModelObject<model::ModelObject>(uid);
+      if (mObject) {
+        is_uuid = true;
+        //replace uid with namestring
+        pos = newline.find(possible_uid);
+        if (pos + 38 <= newline.length()) {
+          newline.replace(pos, 38, mObject.get().nameString());
+          idfObject.setString(EnergyManagementSystem_InternalVariableFields::InternalDataIndexKeyName, newline);
+        }
+      }
+      else {
+        //did not find an object with the UID so do not FT
+        LOG(Error, "InternalIndexDataKeyName for EMS:InternalVariable '" << modelObject.nameString() << "' is UID but does not exist, it will not be translated.");
+        return boost::none;
+      }
+    }
+    //string is not a uuid so just translate its value for the EMSVariableName
+    if (!is_uuid) {
+      idfObject.setString(EnergyManagementSystem_InternalVariableFields::InternalDataIndexKeyName, s.get());
+    }
   }
   s = modelObject.internalDataType();
   if (s) {

@@ -102,6 +102,7 @@ namespace gbxml {
     boost::optional<QDomElement> translateLayer(const openstudio::model::Material& material, QDomDocument& doc);
     boost::optional<QDomElement> translateMaterial(const openstudio::model::Material& material, QDomDocument& doc);
     boost::optional<QDomElement> translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, QDomDocument& doc);
+    boost::optional<QDomElement> translateCADObjectId(const openstudio::model::ModelObject& modelObject, QDomElement& parentElement, QDomDocument& doc);
 
     std::map<openstudio::Handle, QDomElement> m_translatedObjects;
 
