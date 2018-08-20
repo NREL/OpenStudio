@@ -478,6 +478,7 @@ void SchedulesView::showScheduleRule(model::ScheduleRule scheduleRule)
 void SchedulesView::onScheduleRuleRemoved(const Handle& handle)
 {
   // DLM: todo, show something else?
+  // Note JM 2018-08-20: Handled in SchedulesTabController::removeScheduleRule() instead
   showEmptyPage();
 }
 
@@ -1831,6 +1832,7 @@ void ScheduleRuleView::onRemoveClicked()
   std::cout << "ScheduleRuleView::onRemoveClicked: " << m_scheduleRule << std::endl;
 
   //m_scheduleRule.remove();
+  // TODO: why is this calling the impl without doing anything?
   m_scheduleRule.getImpl<openstudio::model::detail::ScheduleRule_Impl>();
 
   emit removeScheduleRuleClicked(m_scheduleRule);

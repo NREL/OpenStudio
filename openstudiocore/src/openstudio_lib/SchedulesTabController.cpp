@@ -270,6 +270,7 @@ void SchedulesTabController::onEndDateTimeChanged(model::ScheduleRule & schedule
 
 void SchedulesTabController::removeScheduleRule(model::ScheduleRule & scheduleRule)
 {
+  // TODO: why is this calling Impl and not doing anything with it?
   scheduleRule.getImpl<openstudio::model::detail::ScheduleRule_Impl>();
 
   // Store current ruleIndex
