@@ -66,7 +66,7 @@ class MODEL_API SetpointManager : public HVACComponent {
 
   /** Returns whether this SPM is allowed to be placed on a PlantLoop
    * (*all* SPMs are allowed on an AirLoopHVAC, *some* are allowed on a PlantLoop) **/
-  // bool isAllowedOnPlantLoop() const;
+  bool isAllowedOnPlantLoop() const;
 
   //@}
   /** @name Setters */

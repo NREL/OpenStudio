@@ -241,11 +241,10 @@ bool SetpointManager::setControlVariable(const std::string & value)
   return getImpl<detail::SetpointManager_Impl>()->setControlVariable(value);
 }
 
-
-//bool SetpointManager::isAllowedOnPlantLoop() const
-//{
-  //return getImpl<detail::SetpointManager_Impl>()->isAllowedOnPlantLoop();
-//}
+bool SetpointManager::isAllowedOnPlantLoop() const
+{
+  return getImpl<detail::SetpointManager_Impl>()->isAllowedOnPlantLoop();
+}
 
 
 
