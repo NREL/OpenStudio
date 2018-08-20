@@ -75,18 +75,9 @@ namespace detail {
     return SetpointManagerFollowGroundTemperature::iddObjectType();
   }
 
-  bool SetpointManagerFollowGroundTemperature_Impl::addToNode(Node & node) {
-    // Call the base class method, which will check for AirLoopHVAC
-    bool added = SetpointManager_Impl::addToNode( node );
-    if( added ) {
-      return added;
-    // If that failed, then accept it only on the supply side of a plantLoop
-    } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
-      if( plantLoop->supplyComponent(node.handle()) ) {
-        return this->setSetpointNode(node);
-      }
-    }
-    return added;
+  /** This SPM is allowed on a PlantLoop */
+  bool SetpointManagerFollowGroundTemperature_Impl::isAllowedOnPlantLoop() const {
+    return true;
   }
 
   std::string SetpointManagerFollowGroundTemperature_Impl::controlVariable() const {

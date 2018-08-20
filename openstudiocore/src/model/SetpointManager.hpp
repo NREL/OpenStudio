@@ -64,6 +64,10 @@ class MODEL_API SetpointManager : public HVACComponent {
   /** Returns the Control Variable **/
   std::string controlVariable() const;
 
+  /** Returns whether this SPM is allowed to be placed on a PlantLoop
+   * (*all* SPMs are allowed on an AirLoopHVAC, *some* are allowed on a PlantLoop) **/
+  // bool isAllowedOnPlantLoop() const;
+
   //@}
   /** @name Setters */
   //@{
