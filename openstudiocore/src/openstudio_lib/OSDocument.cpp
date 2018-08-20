@@ -1598,6 +1598,7 @@ namespace openstudio {
         return m_compLibrary.getModelObject<model::ModelObject>(handle);
       }
     }
+    // TODO: should we handle BCL objects here?
 
     return boost::none;
   }
