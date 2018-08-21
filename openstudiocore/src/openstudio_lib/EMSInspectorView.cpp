@@ -70,7 +70,7 @@ class EMSInspectorActuator : public QWidget {
 
   public:
 
-  EMSInspectorActuator(const model::EMSActuatorNames & names, const model::ModelObject & modelObject) : 
+  EMSInspectorActuator(const model::EMSActuatorNames & names, const model::ModelObject & modelObject) :
     QWidget(),
     m_names(names),
     m_modelObject(modelObject)
@@ -139,7 +139,7 @@ class EMSInspectorSensor : public QWidget {
 
   public:
 
-  EMSInspectorSensor(const std::string & name, const model::ModelObject & modelObject) : 
+  EMSInspectorSensor(const std::string & name, const model::ModelObject & modelObject) :
     QWidget(),
     m_name(name),
     m_modelObject(modelObject)
@@ -200,22 +200,34 @@ class EMSInspectorSensor : public QWidget {
   model::ModelObject m_modelObject;
 };
 
-EMSInspectorView::EMSInspectorView(QWidget* parent, EMSInspectorView::Type type) : 
+EMSInspectorView::EMSInspectorView(QWidget* parent, EMSInspectorView::Type type) :
   QWidget(parent),
   m_type(type)
 {
-  auto mainWidget = new QWidget();
-
-  setContentsMargins(0,0,0,0);
+  setContentsMargins(0, 0, 0, 0);
   m_layout = new QVBoxLayout();
   m_layout->setSpacing(10);
   m_layout->setMargin(0);
   m_layout->setAlignment(Qt::AlignTop);
-  mainWidget->setLayout(m_layout);
+  //setLayout(m_layout);
 
-  // make a scroll widget
-  auto scrollArea = new QScrollArea(this);
-  scrollArea->setWidget(mainWidget);
+  auto scrollWidget = new QWidget();
+  scrollWidget->setObjectName("ScrollWidget");
+  scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
+  scrollWidget->setLayout(m_layout);
+
+  m_scrollArea = new QScrollArea();
+  m_scrollArea->setFrameStyle(QFrame::NoFrame);
+  m_scrollArea->setWidget(scrollWidget);
+  m_scrollArea->setWidgetResizable(true);
+  m_scrollArea->setBackgroundRole(QPalette::NoRole);
+
+  //m_layout->addWidget(m_scrollArea);
+  auto scrollLayout = new QVBoxLayout();
+  scrollLayout->setContentsMargins(0,0,0,0);
+  scrollLayout->addWidget(m_scrollArea);
+
+  setLayout(scrollLayout);
 }
 
 void EMSInspectorView::layoutModelObject( const model::ModelObject & modelObject ) {

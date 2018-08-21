@@ -33,6 +33,7 @@
 #include <QWidget>
 
 class QVBoxLayout;
+class QScrollArea;
 
 namespace openstudio {
 
@@ -59,6 +60,7 @@ class EMSInspectorView : public QWidget
 
   QVBoxLayout * m_layout;
   Type m_type;
+  QScrollArea * m_scrollArea;
 };
 
 } // openstudio
