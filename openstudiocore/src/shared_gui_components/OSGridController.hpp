@@ -221,7 +221,7 @@ class ObjectSelector : public QObject, public Nano::Observer
     bool containsObject(const openstudio::model::ModelObject &t_obj) const;
     void selectAll();
     void clearSelection();
-    void updateWidgets();
+    void updateWidgets(bool isRowLevel=false);
 
     std::set<model::ModelObject> m_selectedObjects;
     std::set<model::ModelObject> m_selectorObjects;
@@ -232,6 +232,9 @@ class ObjectSelector : public QObject, public Nano::Observer
 
   private slots:
     void widgetDestroyed(QObject *t_obj);
+
+  protected:
+    REGISTER_LOGGER("openstudio.ObjectSelector");
 
   private:
     void updateWidgets(const model::ModelObject &t_obj);

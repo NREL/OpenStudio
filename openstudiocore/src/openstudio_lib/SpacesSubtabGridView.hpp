@@ -158,6 +158,8 @@ namespace openstudio{
 
     void filterChanged();
 
+    // All these sets will store the objects that DO NEED to be hidden
+    // So if the set is empty -> show all
     std::set<openstudio::model::ModelObject> m_objectsFilteredByStory;
 
     std::set<openstudio::model::ModelObject> m_objectsFilteredByThermalZone;
