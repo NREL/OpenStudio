@@ -78,12 +78,12 @@ StraightComponent_Impl::StraightComponent_Impl(const StraightComponent_Impl& oth
 {
 }
 
-OptionalModelObject StraightComponent_Impl::inletModelObject()
+OptionalModelObject StraightComponent_Impl::inletModelObject() const
 {
   return connectedObject(inletPort());
 }
 
-OptionalModelObject StraightComponent_Impl::outletModelObject()
+OptionalModelObject StraightComponent_Impl::outletModelObject() const
 {
   return connectedObject(outletPort());
 }
@@ -239,12 +239,12 @@ unsigned StraightComponent::outletPort() const
   return getImpl<detail::StraightComponent_Impl>()->outletPort();
 }
 
-OptionalModelObject StraightComponent::inletModelObject()
+OptionalModelObject StraightComponent::inletModelObject() const
 {
   return getImpl<detail::StraightComponent_Impl>()->inletModelObject();
 }
 
-OptionalModelObject StraightComponent::outletModelObject()
+OptionalModelObject StraightComponent::outletModelObject() const
 {
   return getImpl<detail::StraightComponent_Impl>()->outletModelObject();
 }

@@ -341,22 +341,22 @@ namespace detail{
     return setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedRatioforAirandWaterConvection, value );;
   }
 
-  unsigned CoilHeatingWater_Impl::airInletPort()
+  unsigned CoilHeatingWater_Impl::airInletPort() const
   {
     return OS_Coil_Heating_WaterFields::AirInletNodeName;
   }
 
-  unsigned CoilHeatingWater_Impl::airOutletPort()
+  unsigned CoilHeatingWater_Impl::airOutletPort() const
   {
     return OS_Coil_Heating_WaterFields::AirOutletNodeName;
   }
 
-  unsigned CoilHeatingWater_Impl::waterInletPort()
+  unsigned CoilHeatingWater_Impl::waterInletPort() const
   {
     return OS_Coil_Heating_WaterFields::WaterInletNodeName;
   }
 
-  unsigned CoilHeatingWater_Impl::waterOutletPort()
+  unsigned CoilHeatingWater_Impl::waterOutletPort() const
   {
     return OS_Coil_Heating_WaterFields::WaterOutletNodeName;
   }

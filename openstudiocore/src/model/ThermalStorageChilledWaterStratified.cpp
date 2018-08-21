@@ -129,22 +129,22 @@ namespace detail {
     return result;
   }
 
-  unsigned ThermalStorageChilledWaterStratified_Impl::supplyInletPort()
+  unsigned ThermalStorageChilledWaterStratified_Impl::supplyInletPort() const
   {
     return OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideInletNodeName;
   }
 
-  unsigned ThermalStorageChilledWaterStratified_Impl::supplyOutletPort()
+  unsigned ThermalStorageChilledWaterStratified_Impl::supplyOutletPort() const
   {
     return OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideOutletNodeName;
   }
 
-  unsigned ThermalStorageChilledWaterStratified_Impl::demandInletPort()
+  unsigned ThermalStorageChilledWaterStratified_Impl::demandInletPort() const
   {
     return OS_ThermalStorage_ChilledWater_StratifiedFields::SourceSideInletNodeName;
   }
 
-  unsigned ThermalStorageChilledWaterStratified_Impl::demandOutletPort()
+  unsigned ThermalStorageChilledWaterStratified_Impl::demandOutletPort() const
   {
     return OS_ThermalStorage_ChilledWater_StratifiedFields::SourceSideOutletNodeName;
   }

@@ -865,22 +865,22 @@ namespace detail {
     return pl.get();
   }
 
-  unsigned ThermalZone_Impl::returnAirPort()
+  unsigned ThermalZone_Impl::returnAirPort() const
   {
     return returnPortList().port(0);
   }
 
-  unsigned ThermalZone_Impl::zoneAirPort()
+  unsigned ThermalZone_Impl::zoneAirPort() const
   {
     return OS_ThermalZoneFields::ZoneAirNodeName;
   }
 
-  OptionalModelObject ThermalZone_Impl::returnAirModelObject()
+  OptionalModelObject ThermalZone_Impl::returnAirModelObject() const
   {
     return returnPortList().connectedObject(this->returnAirPort());
   }
 
-  Node ThermalZone_Impl::zoneAirNode()
+  Node ThermalZone_Impl::zoneAirNode() const
   {
     return this->connectedObject(this->zoneAirPort())->cast<Node>();
   }
@@ -2307,12 +2307,12 @@ namespace detail {
     return zoneHVACEquipmentList().equipment();
   }
 
-  std::vector<ModelObject> ThermalZone_Impl::equipmentInHeatingOrder()
+  std::vector<ModelObject> ThermalZone_Impl::equipmentInHeatingOrder() const
   {
     return zoneHVACEquipmentList().equipmentInHeatingOrder();
   }
 
-  std::vector<ModelObject> ThermalZone_Impl::equipmentInCoolingOrder()
+  std::vector<ModelObject> ThermalZone_Impl::equipmentInCoolingOrder() const
   {
     return zoneHVACEquipmentList().equipmentInCoolingOrder();
   }
@@ -3040,22 +3040,22 @@ void ThermalZone::resetFractionofZoneControlledbySecondaryDaylightingControl() {
   getImpl<detail::ThermalZone_Impl>()->resetFractionofZoneControlledbySecondaryDaylightingControl();
 }
 
-unsigned ThermalZone::returnAirPort()
+unsigned ThermalZone::returnAirPort() const
 {
   return getImpl<detail::ThermalZone_Impl>()->returnAirPort();
 }
 
-unsigned ThermalZone::zoneAirPort()
+unsigned ThermalZone::zoneAirPort() const
 {
   return getImpl<detail::ThermalZone_Impl>()->zoneAirPort();
 }
 
-OptionalModelObject ThermalZone::returnAirModelObject()
+OptionalModelObject ThermalZone::returnAirModelObject() const
 {
   return getImpl<detail::ThermalZone_Impl>()->returnAirModelObject();
 }
 
-Node ThermalZone::zoneAirNode()
+Node ThermalZone::zoneAirNode() const
 {
   return getImpl<detail::ThermalZone_Impl>()->zoneAirNode();
 }
@@ -3337,12 +3337,12 @@ std::vector<ModelObject> ThermalZone::equipment() const
   return getImpl<detail::ThermalZone_Impl>()->equipment();
 }
 
-std::vector<ModelObject> ThermalZone::equipmentInHeatingOrder()
+std::vector<ModelObject> ThermalZone::equipmentInHeatingOrder() const
 {
   return getImpl<detail::ThermalZone_Impl>()->equipmentInHeatingOrder();
 }
 
-std::vector<ModelObject> ThermalZone::equipmentInCoolingOrder()
+std::vector<ModelObject> ThermalZone::equipmentInCoolingOrder() const
 {
   return getImpl<detail::ThermalZone_Impl>()->equipmentInCoolingOrder();
 }

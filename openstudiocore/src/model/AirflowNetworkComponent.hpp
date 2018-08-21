@@ -66,7 +66,7 @@ class MODEL_API AirflowNetworkComponent : public ModelObject
   boost::optional<ModelObject> componentModelObject() const;
 
   //** Returns the optional ModelObject connected to the outlet port. **/
-  //boost::optional<ModelObject> outletModelObject();
+  //boost::optional<ModelObject> outletModelObject() const;
 
   //** Returns the optional AirLoopHVAC object that this AirToAirComponent is attached to.
   // *

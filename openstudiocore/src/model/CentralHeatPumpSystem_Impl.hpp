@@ -73,11 +73,11 @@ namespace detail {
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     // CoolingLoop
-    virtual unsigned supplyInletPort() override;
-    virtual unsigned supplyOutletPort() override;
+    virtual unsigned supplyInletPort() const override;
+    virtual unsigned supplyOutletPort() const override;
     // SourceLoop
-    virtual unsigned demandInletPort() override;
-    virtual unsigned demandOutletPort() override;
+    virtual unsigned demandInletPort() const override;
+    virtual unsigned demandOutletPort() const override;
     // HeatingLoop
     virtual unsigned tertiaryInletPort() const override;
     virtual unsigned tertiaryOutletPort() const override;

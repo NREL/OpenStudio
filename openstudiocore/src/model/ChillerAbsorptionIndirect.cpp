@@ -503,19 +503,19 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Chiller_Absorption_IndirectFields::GeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve);
   }
 
-  unsigned ChillerAbsorptionIndirect_Impl::supplyInletPort() {
+  unsigned ChillerAbsorptionIndirect_Impl::supplyInletPort() const {
     return OS_Chiller_Absorption_IndirectFields::ChilledWaterInletNodeName;
   }
 
-  unsigned ChillerAbsorptionIndirect_Impl::supplyOutletPort() {
+  unsigned ChillerAbsorptionIndirect_Impl::supplyOutletPort() const {
     return OS_Chiller_Absorption_IndirectFields::ChilledWaterOutletNodeName;
   }
 
-  unsigned ChillerAbsorptionIndirect_Impl::demandInletPort() {
+  unsigned ChillerAbsorptionIndirect_Impl::demandInletPort() const {
     return OS_Chiller_Absorption_IndirectFields::CondenserInletNodeName;
   }
 
-  unsigned ChillerAbsorptionIndirect_Impl::demandOutletPort() {
+  unsigned ChillerAbsorptionIndirect_Impl::demandOutletPort() const {
     return OS_Chiller_Absorption_IndirectFields::CondenserOutletNodeName;
   }
 

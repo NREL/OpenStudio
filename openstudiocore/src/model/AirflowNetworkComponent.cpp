@@ -84,12 +84,12 @@ boost::optional<ModelObject> AirflowNetworkComponent_Impl::componentModelObject(
 }
 
 /*
-OptionalModelObject AirflowNetworkComponent_Impl::inletModelObject()
+OptionalModelObject AirflowNetworkComponent_Impl::inletModelObject() const
 {
   return connectedObject(inletPort());
 }
 
-OptionalModelObject AirflowNetworkComponent_Impl::outletModelObject()
+OptionalModelObject AirflowNetworkComponent_Impl::outletModelObject() const
 {
   return connectedObject(outletPort());
 }

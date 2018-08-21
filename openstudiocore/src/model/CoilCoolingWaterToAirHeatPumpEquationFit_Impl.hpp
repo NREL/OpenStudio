@@ -72,13 +72,13 @@ namespace detail {
 
     //virtual bool addToNode(Node & node);
 
-    virtual unsigned airInletPort() override;
+    virtual unsigned airInletPort() const override;
 
-    virtual unsigned airOutletPort() override;
+    virtual unsigned airOutletPort() const override;
 
-    virtual unsigned waterInletPort() override;
+    virtual unsigned waterInletPort() const override;
 
-    virtual unsigned waterOutletPort() override;
+    virtual unsigned waterOutletPort() const override;
 
     virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 

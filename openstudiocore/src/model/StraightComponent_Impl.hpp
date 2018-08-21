@@ -77,9 +77,9 @@ namespace detail {
 
     virtual unsigned outletPort() const = 0;
 
-    virtual boost::optional<ModelObject> inletModelObject();
+    virtual boost::optional<ModelObject> inletModelObject() const;
 
-    virtual boost::optional<ModelObject> outletModelObject();
+    virtual boost::optional<ModelObject> outletModelObject() const;
 
     virtual boost::optional<AirLoopHVAC> airLoopHVAC() const override;
 

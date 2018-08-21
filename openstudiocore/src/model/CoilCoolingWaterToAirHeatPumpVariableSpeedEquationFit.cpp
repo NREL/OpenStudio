@@ -116,19 +116,19 @@ namespace detail {
     return CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::iddObjectType();
   }
 
-  unsigned CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::airInletPort() {
+  unsigned CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::airInletPort() const {
     return OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::IndoorAirInletNodeName;
   }
 
-  unsigned CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::airOutletPort() {
+  unsigned CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::airOutletPort() const {
     return OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::IndoorAirOutletNodeName;
   }
 
-  unsigned CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::waterInletPort() {
+  unsigned CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::waterInletPort() const {
     return OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::WatertoRefrigerantHXWaterInletNodeName;
   }
 
-  unsigned CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::waterOutletPort() {
+  unsigned CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::waterOutletPort() const {
     return OS_Coil_Cooling_WaterToAirHeatPump_VariableSpeedEquationFitFields::WatertoRefrigerantHXWaterOutletNodeName;
   }
 

@@ -412,22 +412,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned HeatExchangerFluidToFluid_Impl::supplyInletPort()
+  unsigned HeatExchangerFluidToFluid_Impl::supplyInletPort() const
   {
     return OS_HeatExchanger_FluidToFluidFields::LoopSupplySideInletNode;
   }
 
-  unsigned HeatExchangerFluidToFluid_Impl::supplyOutletPort()
+  unsigned HeatExchangerFluidToFluid_Impl::supplyOutletPort() const
   {
     return OS_HeatExchanger_FluidToFluidFields::LoopSupplySideOutletNode;
   }
 
-  unsigned HeatExchangerFluidToFluid_Impl::demandInletPort()
+  unsigned HeatExchangerFluidToFluid_Impl::demandInletPort() const
   {
     return OS_HeatExchanger_FluidToFluidFields::LoopDemandSideInletNode;
   }
 
-  unsigned HeatExchangerFluidToFluid_Impl::demandOutletPort()
+  unsigned HeatExchangerFluidToFluid_Impl::demandOutletPort() const
   {
     return OS_HeatExchanger_FluidToFluidFields::LoopDemandSideOutletNode;
   }

@@ -66,9 +66,9 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
 
   std::vector<ModelObject> equipment() const;
 
-  std::vector<ModelObject> equipmentInHeatingOrder();
+  std::vector<ModelObject> equipmentInHeatingOrder() const;
 
-  std::vector<ModelObject> equipmentInCoolingOrder();
+  std::vector<ModelObject> equipmentInCoolingOrder() const;
 
   WorkspaceExtensibleGroup getGroupForModelObject(const ModelObject & modelObject);
 
@@ -80,9 +80,9 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
 
   ThermalZone thermalZone() const;
 
-  unsigned heatingPriority(const ModelObject & equipment);
+  unsigned heatingPriority(const ModelObject & equipment) const;
 
-  unsigned coolingPriority(const ModelObject & equipment);
+  unsigned coolingPriority(const ModelObject & equipment) const;
 
   protected:
 

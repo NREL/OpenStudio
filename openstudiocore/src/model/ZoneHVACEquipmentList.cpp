@@ -198,7 +198,7 @@ std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipment() const
   return result;
 }
 
-std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipmentInHeatingOrder()
+std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipmentInHeatingOrder() const
 {
   std::map<unsigned,ModelObject> equipmentMap;
 
@@ -229,7 +229,7 @@ std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipmentInHeatingOrder()
   return equipmentVector;
 }
 
-std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipmentInCoolingOrder()
+std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipmentInCoolingOrder() const
 {
   std::map<unsigned,ModelObject> equipmentMap;
 
@@ -322,7 +322,7 @@ bool ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
 
 }
 
-unsigned ZoneHVACEquipmentList_Impl::heatingPriority(const ModelObject & equipment)
+unsigned ZoneHVACEquipmentList_Impl::heatingPriority(const ModelObject & equipment) const
 {
   boost::optional<unsigned> result;
 
@@ -347,7 +347,7 @@ unsigned ZoneHVACEquipmentList_Impl::heatingPriority(const ModelObject & equipme
   return result.get();
 }
 
-unsigned ZoneHVACEquipmentList_Impl::coolingPriority(const ModelObject & equipment)
+unsigned ZoneHVACEquipmentList_Impl::coolingPriority(const ModelObject & equipment) const
 {
   boost::optional<unsigned> result;
 
@@ -406,12 +406,12 @@ std::vector<ModelObject> ZoneHVACEquipmentList::equipment() const
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->equipment();
 }
 
-std::vector<ModelObject> ZoneHVACEquipmentList::equipmentInHeatingOrder()
+std::vector<ModelObject> ZoneHVACEquipmentList::equipmentInHeatingOrder() const
 {
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->equipmentInHeatingOrder();
 }
 
-std::vector<ModelObject> ZoneHVACEquipmentList::equipmentInCoolingOrder()
+std::vector<ModelObject> ZoneHVACEquipmentList::equipmentInCoolingOrder() const
 {
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->equipmentInCoolingOrder();
 }
@@ -426,12 +426,12 @@ bool ZoneHVACEquipmentList::removeEquipment(const ModelObject & equipment)
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->removeEquipment(equipment);
 }
 
-unsigned ZoneHVACEquipmentList::heatingPriority(const ModelObject & equipment)
+unsigned ZoneHVACEquipmentList::heatingPriority(const ModelObject & equipment) const
 {
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->heatingPriority(equipment);
 }
 
-unsigned ZoneHVACEquipmentList::coolingPriority(const ModelObject & equipment)
+unsigned ZoneHVACEquipmentList::coolingPriority(const ModelObject & equipment) const
 {
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->coolingPriority(equipment);
 }

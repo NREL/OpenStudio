@@ -75,13 +75,13 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned supplyInletPort() override;
+    virtual unsigned supplyInletPort() const override;
 
-    virtual unsigned supplyOutletPort() override;
+    virtual unsigned supplyOutletPort() const override;
 
-    virtual unsigned demandInletPort() override;
+    virtual unsigned demandInletPort() const override;
 
-    virtual unsigned demandOutletPort() override;
+    virtual unsigned demandOutletPort() const override;
 
     virtual void autosize() override;
 

@@ -54,21 +54,21 @@ namespace detail {
 
     virtual ~AirToAirComponent_Impl() {}
 
-    virtual unsigned primaryAirInletPort() = 0;
+    virtual unsigned primaryAirInletPort() const = 0;
 
-    virtual unsigned primaryAirOutletPort() = 0;
+    virtual unsigned primaryAirOutletPort() const = 0;
 
-    virtual unsigned secondaryAirInletPort() = 0;
+    virtual unsigned secondaryAirInletPort() const = 0;
 
-    virtual unsigned secondaryAirOutletPort() = 0;
+    virtual unsigned secondaryAirOutletPort() const = 0;
 
-    boost::optional<ModelObject> primaryAirInletModelObject();
+    boost::optional<ModelObject> primaryAirInletModelObject() const;
 
-    boost::optional<ModelObject> primaryAirOutletModelObject();
+    boost::optional<ModelObject> primaryAirOutletModelObject() const;
 
-    boost::optional<ModelObject> secondaryAirInletModelObject();
+    boost::optional<ModelObject> secondaryAirInletModelObject() const;
 
-    boost::optional<ModelObject> secondaryAirOutletModelObject();
+    boost::optional<ModelObject> secondaryAirOutletModelObject() const;
 
     bool addToNode(Node & node) override;
 

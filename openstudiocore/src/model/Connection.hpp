@@ -49,13 +49,13 @@ class MODEL_API Connection : public ModelObject {
 
   virtual ~Connection() {}
 
-  boost::optional<ModelObject> sourceObject();
+  boost::optional<ModelObject> sourceObject() const;
 
-  boost::optional<unsigned> sourceObjectPort();
+  boost::optional<unsigned> sourceObjectPort() const;
 
-  boost::optional<ModelObject> targetObject();
+  boost::optional<ModelObject> targetObject() const;
 
-  boost::optional<unsigned> targetObjectPort();
+  boost::optional<unsigned> targetObjectPort() const;
 
   bool setSourceObject(ModelObject object);
 
