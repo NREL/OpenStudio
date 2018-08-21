@@ -428,11 +428,29 @@ namespace openstudio {
     }
   }
 
-  void ObjectSelector::updateWidgets()
+  void ObjectSelector::updateWidgets(bool isRowLevel)
   {
-    for (const auto &obj : m_selectorObjects)
-    {
-      updateWidgets(obj);
+    if( isRowLevel ) {
+      // We loop on all object in the leftmost colum (eg: 'Space' for all SpaceSubtabs)
+      for( int t_row=0; t_row < this->m_grid->rowCount(); ++t_row ) {
+        bool objectVisible = true;
+
+        // If that object is present in m_filteredObjects
+        boost::optional<const model::ModelObject &> _rowLevelObj = getObject(t_row, 0, boost::optional<int>());
+        if( _rowLevelObj && (m_filteredObjects.count(_rowLevelObj.get()) != 0 ) ) {
+          LOG(Debug, "Hidding t_row=" << t_row << " matched as rowLevelObj (=" << _rowLevelObj.get().briefDescription() << ")");
+          objectVisible = false;
+        }
+
+        // We'll hide the entire row
+        updateWidgets(t_row, boost::optional<int>(), false, objectVisible);
+      }
+    } else {
+      // This contains the (unique) individual DataObjects (eg: Loads subtab = SpaceLoadInstances (People, Lights, etc))
+      for (const auto &obj : m_selectorObjects)
+      {
+        updateWidgets(obj);
+      }
     }
   }
 
