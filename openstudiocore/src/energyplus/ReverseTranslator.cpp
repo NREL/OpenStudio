@@ -43,6 +43,7 @@
 #include "../utilities/plot/ProgressBar.hpp"
 
 #include <QThread>
+#include <boost/serialization/version.hpp>
 
 using namespace openstudio::model;
 
@@ -77,9 +78,11 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
 
   m_logSink.setChannelRegex(boost::regex("openstudio\\.IdfFile"));
 
-  //load idf and convert to a workspace
+  // load idf
   boost::optional<openstudio::IdfFile> idfFile = IdfFile::load(path, IddFileType::EnergyPlus, progressBar);
 
+  // change channel after loading file
+  // DLM: is this right?  we miss messages from loading idf
   m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ReverseTranslator"));
 
   // energyplus idfs may not be draft level strictness, eventually need a fixer
@@ -95,7 +98,22 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
       LOG(Error, "Check that IDF is of correct version and that all fields are valid against Energy+.idd.");
       LOG(Error, idfFile->validityReport(StrictnessLevel::Draft));
       return boost::none;
+    }
 
+    VersionString expectedVersion(IddFileAndFactoryWrapper(IddFileType::EnergyPlus).version());
+    boost::optional<IdfObject> versionObject = idfFile->versionObject();
+    if (!versionObject) {
+      LOG(Warn, "Idf file missing Version object, use IDFVersionUpdater to ensure that Idf file is at expected version = '" << expectedVersion.str() << "'");
+    } else {
+      boost::optional<std::string> vs = versionObject->getString(versionObject->numFields() - 1);
+      if (!vs){
+        LOG(Warn, "Idf file contains empty Version object, use IDFVersionUpdater to ensure that Idf file is at expected version = '" << expectedVersion.str() << "'");
+      } else{
+        VersionString fileVersion(*vs);
+        if ((expectedVersion.major() != fileVersion.major()) || (expectedVersion.minor() != fileVersion.minor())){
+          LOG(Warn, "Idf file Version = '" << fileVersion.str() << "' does not match expected version = '" << expectedVersion.str() << "'");
+        }
+      }
     }
 
     if (progressBar){
@@ -115,15 +133,21 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
       workspace.disconnectProgressBar(*progressBar);
     }
 
-    return this->translateWorkspace(workspace, progressBar);
+    return this->translateWorkspace(workspace, progressBar, false);
 
   }
 
   return boost::none;
 }
 
-Model ReverseTranslator::translateWorkspace(const Workspace & workspace, ProgressBar* progressBar )
+Model ReverseTranslator::translateWorkspace(const Workspace & workspace, ProgressBar* progressBar, bool clearLogSink )
 {
+  if (clearLogSink){
+    m_logSink.resetStringStream();
+  }
+
+  m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ReverseTranslator"));
+
   // check input
   if (workspace.iddFileType() != IddFileType::EnergyPlus){
     LOG(Error, "Cannot translate Workspace with IddFileType = '" << workspace.iddFileType().valueName() << "'");
@@ -139,11 +163,10 @@ Model ReverseTranslator::translateWorkspace(const Workspace & workspace, Progres
 
   m_untranslatedIdfObjects.clear();
 
-  m_logSink.resetStringStream();
-
   // if multiple runperiod objects in idf, remove them all
   vector<WorkspaceObject> runPeriods = m_workspace.getObjectsByType(IddObjectType::RunPeriod);
   if (runPeriods.size() > 1){
+    LOG(Warn, "Multiple RunPeriod objects detected, removing all RunPeriod objects.");
     for(auto & runPeriod : runPeriods)
     {
       runPeriod.remove();

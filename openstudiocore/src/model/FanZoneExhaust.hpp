@@ -68,6 +68,10 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
 
   boost::optional<Schedule> availabilitySchedule() const;
 
+
+  double fanTotalEfficiency() const;
+
+  /** Deprecated, forwards to fanTotalEfficiency */
   double fanEfficiency() const;
 
   double pressureRise() const;
@@ -92,7 +96,10 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
 
   void resetAvailabilitySchedule();
 
-  bool setFanEfficiency(double fanEfficiency);
+  bool setFanTotalEfficiency(double fanTotalEfficiency);
+
+  /** Deprecated, forwards to setFanTotalEfficiency */
+  bool setFanEfficiency(double fanTotalEfficiency);
 
   bool setPressureRise(double pressureRise);
 

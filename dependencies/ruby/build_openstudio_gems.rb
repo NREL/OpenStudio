@@ -60,7 +60,16 @@ end
 
 system_call("#{bundle_exe} _#{bundle_version}_ install --without=test --path='#{install_dir}'")
 
+system_call("#{bundle_exe} _#{bundle_version}_ lock --add_platform ruby")
+
+platforms_to_remove = ['mri', 'mingw', 'x64_mingw', 'x64-mingw32', 'rbx', 'jruby', 'mswin', 'mswin64']
+platforms_to_remove.each do |platform|
+  system_call("#{bundle_exe} _#{bundle_version}_ lock --remove_platform #{platform}")
+end
+
 FileUtils.rm_rf("#{install_dir}/ruby/#{ruby_gem_dir}/cache")
+
+FileUtils.rm_rf("./.bundle")
 
 standards_gem_dir = nil
 workflow_gem_dir = nil
@@ -106,7 +115,10 @@ FileUtils.cp('Gemfile.lock', "#{install_dir}/.")
 
 Dir.chdir("#{install_dir}/..")
 
-system_call("\"#{tar_exe}\" -zcvf \"openstudio-gems-#{DateTime.now.strftime("%Y%m%d")}.tar.gz\" \"openstudio-gems\"")
+new_file_name = "openstudio-gems-#{DateTime.now.strftime("%Y%m%d")}.tar.gz"
+system_call("\"#{tar_exe}\" -zcvf \"#{new_file_name}\" \"openstudio-gems\"")
 
-# md5sum openstudio-gems-YYYYMMDD.tar.gz
-# upload openstudio-gems-YYYYMMDD.tar.gz to s3, update openstudiocore/CMakeLists.txt
+puts
+puts "You need to manually upload #{new_file_name} to S3:openstudio-resources/dependencies/"
+puts "Also, you will need to update openstudiocore/CMakeLists.txt with the new file name and the md5 hash (call `md5 #{new_file_name}` or `md5sum #{new_file_name}` to get hash)"
+puts

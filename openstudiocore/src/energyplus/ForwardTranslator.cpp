@@ -322,6 +322,17 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
+  // remove orphan Generator:FuelCell
+  for (auto& fc : model.getConcreteModelObjects<GeneratorFuelCell>()){
+    if (!fc.electricLoadCenterDistribution()){
+      //get the HX from the FC since that is the parent and remove it, thus removing the FC
+      LOG(Warn, "GeneratorFuelCell " << fc.name().get() << " is not referenced by any ElectricLoadCenterDistribution, it will not be translated.");
+      fc.heatExchanger().remove();
+      //fc.remove();
+      continue;
+    }
+  }
+
   // Remove orphan Storage
   for (auto& storage : model.getModelObjects<ElectricalStorage>()) {
     if (!storage.electricLoadCenterDistribution()){
@@ -340,9 +351,10 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
 
   // Remove empty electric load center distribution objects (e.g. with no generators)
   // requested by jmarrec, https://github.com/NREL/OpenStudio/pull/1927
+  // add check for transformers
   for (auto& elcd : model.getConcreteModelObjects<ElectricLoadCenterDistribution>()){
-    if (elcd.generators().empty()){
-      LOG(Warn, "ElectricLoadCenterDistribution " << elcd.name().get() << " is not referenced by any generators, it will not be translated.");
+    if ((elcd.generators().empty())&&(!elcd.transformer())){
+      LOG(Warn, "ElectricLoadCenterDistribution " << elcd.name().get() << " is not referenced by any generators or transformers, it will not be translated.");
       if (auto inverter = elcd.inverter()){
         inverter->remove();
       }
@@ -613,6 +625,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirTerminalSingleDuctConstantVolumeCooledBeam(airTerminal);
       break;
     }
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeam :
+    {
+      model::AirTerminalSingleDuctConstantVolumeFourPipeBeam airTerminal = modelObject.cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+      retVal = translateAirTerminalSingleDuctConstantVolumeFourPipeBeam(airTerminal);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ParallelPIU_Reheat :
     {
       model::AirTerminalSingleDuctParallelPIUReheat airTerminal = modelObject.cast<AirTerminalSingleDuctParallelPIUReheat>();
@@ -864,7 +882,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_CooledBeam:
     {
-      // DLM: is this a no-op?
+      // This is handled directly in ATU:SingleDuct:ConstantVolume::CooledBeam
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_FourPipeBeam:
+    {
+      // This is handled directly in ATU:SingleDuct:ConstantVolume::FourPipeBeam
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Heating_FourPipeBeam:
+    {
+      // This is handled directly in ATU:SingleDuct:ConstantVolume::FourPipeBeam
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed :
@@ -1456,6 +1484,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   {
     model::ElectricLoadCenterStorageConverter temp = modelObject.cast<ElectricLoadCenterStorageConverter>();
     retVal = translateElectricLoadCenterStorageConverter(temp);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ElectricLoadCenter_Transformer:
+  {
+    model::ElectricLoadCenterTransformer temp = modelObject.cast<ElectricLoadCenterTransformer>();
+    retVal = translateElectricLoadCenterTransformer(temp);
     break;
   }
   case openstudio::IddObjectType::OS_EnergyManagementSystem_Actuator:
@@ -3406,6 +3440,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Inverter_PVWatts);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Simple);
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Storage_Converter);
+  result.push_back(IddObjectType::OS_ElectricLoadCenter_Transformer);
 
   // put these down here so they have a chance to be translated with their "parent"
   result.push_back(IddObjectType::OS_LifeCycleCost);

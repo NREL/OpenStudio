@@ -109,8 +109,13 @@ namespace openstudio
 
       /*!Each IddObjectType has a uniqueAcessPolicy. This function will retrieve it*/
       const AccessPolicy* getPolicy( const openstudio::IddObjectType& )const;
+
+      /* clear the map*/
+      void clear();
+
     private:
       AccessPolicyStore();
+      ~AccessPolicyStore();
       AccessPolicyStore(const AccessPolicyStore&);
       AccessPolicyStore& operator=(const AccessPolicyStore&);
 

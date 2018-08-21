@@ -180,7 +180,7 @@ namespace detail {
     return 0; // this object has no inlet or outlet node
   }
 
-  boost::optional<ThermalZone> RefrigerationAirChiller_Impl::thermalZone()
+  boost::optional<ThermalZone> RefrigerationAirChiller_Impl::thermalZone() const
   {
     Model m = this->model();
     ModelObject thisObject = this->getObject<ModelObject>();

@@ -127,6 +127,9 @@ TEST_F(ModelFixture,ThermalZone_Remove)
   ASSERT_EQ(1u,thermalZones.size());
   EXPECT_EQ(zone1.handle(), thermalZones[0].handle());
 
+  auto mo = zone1.returnAirModelObject();
+  EXPECT_TRUE(mo);
+
   ASSERT_NO_THROW(zone1.remove());
 
   modelObjects = airLoopHVAC.demandComponents();

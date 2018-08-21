@@ -58,6 +58,9 @@ require_relative 'openstudio.so'
 # restore original path
 ENV['PATH'] = original_path
 
+# add this directory to Ruby load path
+$:.unshift(File.expand_path(File.dirname(__FILE__)))
+
 # initialize ssl
 have_open_ssl  = false
 if platform_specific_path

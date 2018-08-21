@@ -102,6 +102,7 @@ namespace gbxml {
     boost::optional<openstudio::model::ModelObject> translateSpace(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateSubSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::Surface& surface);
+    boost::optional<openstudio::model::ModelObject> translateCADObjectId(const QDomElement& element, const QDomDocument& doc, openstudio::model::ModelObject& modelObject);
 
     StringStreamLogSink m_logSink;
 

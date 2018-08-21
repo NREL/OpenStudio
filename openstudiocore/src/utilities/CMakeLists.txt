@@ -71,8 +71,6 @@ set(core_src
   core/StringStreamLogSink.hpp
   core/StringStreamLogSink_Impl.hpp
   core/StringStreamLogSink.cpp
-  core/TemporaryDirectory.hpp
-  core/TemporaryDirectory.cpp
   core/System.hpp
   core/System.cpp
   core/UpdateManager.hpp
@@ -301,7 +299,7 @@ qt5_wrap_cpp_minimally(data_moc_src ${data_moc}) # RM
 qt5_wrap_cpp_minimally(plot_moc_src ${plot_moc}) # [sudo] RM [-rf]
 
 
-# embedded files
+# embedded files, bump again to update common files
 file(GLOB_RECURSE BCL_TEMPLATES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/bcl/templates/**/*.*")
 foreach( _FILE ${BCL_TEMPLATES} )
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/bcl/" ${_FILE})

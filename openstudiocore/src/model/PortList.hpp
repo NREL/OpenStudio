@@ -64,7 +64,7 @@ class MODEL_API PortList : public ModelObject {
   /** Returns the port for portIndex.  Ports are consequtively
    *  indexed starting from 0.
    */
-  unsigned port(unsigned portIndex);
+  unsigned port(unsigned portIndex) const;
 
   /** Given a port, return the port index.
    *  Consider that a "port" is simply an unsigned, so
@@ -79,7 +79,7 @@ class MODEL_API PortList : public ModelObject {
   /** Returns the optional ModelObject connected to the port designated by portIndex.
    *  If there is no connected object then the optional will be false.
    */
-  boost::optional<ModelObject> modelObject(unsigned portIndex);
+  boost::optional<ModelObject> modelObject(unsigned portIndex) const;
 
   /** Returns the optional ModelObject connected to the last port of the PortList.
    *  If there are no connections to the list's outlet ports, then the
@@ -90,29 +90,35 @@ class MODEL_API PortList : public ModelObject {
   /** Returns a vector of all objects connected to the PortList's ports.
    *  If no objects are connected to the PortList then an empty vector will be returned.
    */
-  std::vector<ModelObject> modelObjects();
+  std::vector<ModelObject> modelObjects() const;
 
   /** Returns the port index for the ModelObject specified by modelObject.
    */
-  unsigned portIndexForModelObject( ModelObject & modelObject );
+  unsigned portIndexForModelObject( ModelObject & modelObject ) const;
 
   /** Returns the index of the next available port */
-  unsigned nextPortIndex();
+  unsigned nextPortIndex() const;
 
   ThermalZone thermalZone() const;
 
   /** Returns the port connected to an AirLoopHVAC object.
    *  If there is no AirLoopHVAC object, then the next available port is returned
    */
-  unsigned airLoopHVACPort();
+  unsigned airLoopHVACPort() const;
+
+  std::vector<unsigned> airLoopHVACPorts() const;
 
   /** Returns the port Index connected to an AirLoopHVAC object.
    *  If there is no AirLoopHVAC object, then the next available portIndex is returned
    */
-  unsigned airLoopHVACPortIndex();
+  unsigned airLoopHVACPortIndex() const;
+
+  std::vector<unsigned> airLoopHVACPortIndexes() const;
 
   /** Returns the object connected to an AirLoopHVAC object. */
-  boost::optional<ModelObject> airLoopHVACModelObject();
+  boost::optional<ModelObject> airLoopHVACModelObject() const;
+
+  std::vector<ModelObject> airLoopHVACModelObjects() const;
 
   protected:
 

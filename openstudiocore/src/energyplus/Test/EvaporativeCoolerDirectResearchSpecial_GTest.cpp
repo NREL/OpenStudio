@@ -27,29 +27,58 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_CORE_TEMPORARYDIRECTORY_HPP
-#define UTILITIES_CORE_TEMPORARYDIRECTORY_HPP
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
 
-#include "../UtilitiesAPI.hpp"
-#include "Path.hpp"
-#include "Logger.hpp"
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-namespace openstudio
+#include "../../model/Model.hpp"
+#include "../../model/Schedule.hpp"
+
+#include "../../model/EvaporativeCoolerDirectResearchSpecial.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/EvaporativeCooler_Direct_ResearchSpecial_FieldEnums.hxx>
+
+#include <resources.hxx>
+
+#include <sstream>
+
+using namespace openstudio::energyplus;
+using namespace openstudio::model;
+using namespace openstudio;
+
+TEST_F(EnergyPlusFixture,ForwardTranslator_EvaporativeCoolerDirectResearchSpecial_LimitFields)
 {
-  class UTILITIES_API TemporaryDirectory
-  {
-    public:
-      TemporaryDirectory();
-      ~TemporaryDirectory();
+  Model m;
 
+  Schedule sch =  m.alwaysOnDiscreteSchedule();
+  EvaporativeCoolerDirectResearchSpecial e(m, sch);
 
-      openstudio::path path();
+  ASSERT_TRUE(e.setEvaporativeOperationMinimumDrybulbTemperature(16));
+  ASSERT_TRUE(e.setEvaporativeOperationMaximumLimitWetbulbTemperature(24));
+  ASSERT_TRUE(e.setEvaporativeOperationMaximumLimitDrybulbTemperature(28));
 
-    private:
-      openstudio::path m_path;
+  ASSERT_EQ(16, e.evaporativeOperationMinimumDrybulbTemperature());
+  ASSERT_EQ(24, e.evaporativeOperationMaximumLimitWetbulbTemperature());
+  ASSERT_EQ(28, e.evaporativeOperationMaximumLimitDrybulbTemperature());
 
-      REGISTER_LOGGER("openstudio.utilities.TemporaryDirectory");
-  };
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::EvaporativeCooler_Direct_ResearchSpecial);
+  ASSERT_EQ(1u, idfObjs.size());
+
+  WorkspaceObject idfObj(idfObjs[0]);
+
+  ASSERT_EQ(e.evaporativeOperationMinimumDrybulbTemperature(),
+            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature).get());
+  ASSERT_EQ(e.evaporativeOperationMaximumLimitWetbulbTemperature(),
+            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature).get());
+  ASSERT_EQ(e.evaporativeOperationMaximumLimitDrybulbTemperature(),
+            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDrybulbTemperature).get());
+
 }
 
-#endif // UTILITIES_CORE_TEMPORARYDIRECTORY_HPP
+

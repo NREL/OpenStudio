@@ -541,7 +541,12 @@ void HVACLayoutController::addLibraryObjectToModelNode(OSItemId itemid, model::H
         // When you have a WaterToWaterComponent that has a tertiaryPlantLoop, you should override the addToNode method
         // to call addToTertiaryNode when needed. This will work with addSupplyBranchForComponent (etc) too
         // Take a look at CentralHeatPumpSystem::addToNode (and CentralHeatPumpSystem::addToTertiaryNode) for an actual example
-        added = hvacComponent->addToNode(node.get());
+        auto zone = hvacComponent->optionalCast<model::ThermalZone>();
+        if ( zone ) {
+          added = zone->multiAddToNode(node.get());
+        } else {
+          added = hvacComponent->addToNode(node.get());
+        }
       }
       else if( boost::optional<model::Splitter> splitter = comp.optionalCast<model::Splitter>() )
       {
@@ -560,7 +565,7 @@ void HVACLayoutController::addLibraryObjectToModelNode(OSItemId itemid, model::H
         {
           if( boost::optional<model::ThermalZone> zone = object->optionalCast<model::ThermalZone>() )
           {
-            added = airLoop->addBranchForZone(zone.get());
+            added = airLoop->multiAddBranchForZone(zone.get());
           }
         }
       }

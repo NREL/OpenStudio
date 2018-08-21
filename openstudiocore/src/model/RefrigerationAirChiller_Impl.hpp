@@ -85,7 +85,7 @@ namespace detail {
 
     virtual void removeFromThermalZone() override;
 
-    virtual boost::optional<ThermalZone> thermalZone() override;
+    virtual boost::optional<ThermalZone> thermalZone() const override;
 
     //@}
     /** @name Getters */

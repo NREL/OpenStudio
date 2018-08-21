@@ -58,6 +58,7 @@
 #include "../model/Construction_Impl.hpp"
 #include "../model/AirWallMaterial.hpp"
 #include "../model/AirWallMaterial_Impl.hpp"
+#include "../model/AdditionalProperties.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
@@ -103,6 +104,8 @@ namespace gbxml {
     m_logSink.setThreadId(QThread::currentThread());
 
     m_logSink.resetStringStream();
+
+    m_idToObjectMap.clear();
 
     boost::optional<openstudio::model::Model> result;
 
@@ -448,6 +451,13 @@ namespace gbxml {
 
     // DLM: todo, translate setpoints
 
+    // import CADObjectId
+    QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    if (cadObjectIdElements.size() >= 1){
+      // TODO: import multiple CADObjectIds
+      translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, zone);
+    }
+
     return zone;
   }
   boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
@@ -505,6 +515,13 @@ namespace gbxml {
       if (spaceType){
         space.setSpaceType(*spaceType);
       }
+    }
+
+    // import CADObjectId
+    QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    if (cadObjectIdElements.size() >= 1){
+      // TODO: import multiple CADObjectIds
+      translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, space);
     }
 
     return space;
@@ -732,6 +749,22 @@ namespace gbxml {
       }
     }
 
+    OS_ASSERT(result);
+
+    // import CADObjectId
+    QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    if (cadObjectIdElements.size() >= 1){
+      // TODO: import multiple CADObjectIds
+      translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *result);
+
+      if (result->optionalCast<model::Surface>()){
+        boost::optional<openstudio::model::Surface> otherSurface = result->cast<model::Surface>().adjacentSurface();
+        if (otherSurface) {
+          translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *otherSurface);
+        }
+      }
+    }
+
     return result;
   }
 
@@ -791,10 +824,10 @@ namespace gbxml {
       subSurface.setSubSurfaceType("Skylight");
     }else if (openingType.contains("OperableSkylight")){
       subSurface.setSubSurfaceType("Skylight");
+    }else if (openingType.contains("NonSlidingDoor")){ // do before testing contains door
+      subSurface.setSubSurfaceType("Door");
     }else if (openingType.contains("SlidingDoor")){
       subSurface.setSubSurfaceType("GlassDoor");
-    }else if (openingType.contains("NonSlidingDoor")){
-      subSurface.setSubSurfaceType("Door");
     } else if (openingType.contains("Air")){
       // use default sub surface type?
     }
@@ -838,6 +871,34 @@ namespace gbxml {
 
     // todo: translate "interiorShadeType", "exteriorShadeType", and other properties of the opening
 
+    // import CADObjectId
+    QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    if (cadObjectIdElements.size() >= 1){
+      // TODO: import multiple CADObjectIds
+      translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, subSurface);
+
+      boost::optional<openstudio::model::SubSurface> otherSubSurface = subSurface.adjacentSubSurface();
+      if (otherSubSurface) {
+        translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *otherSubSurface);
+      }
+    }
+
+    return result;
+  }
+
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCADObjectId(const QDomElement& element, const QDomDocument& doc, openstudio::model::ModelObject& modelObject)
+  {
+    model::AdditionalProperties result = modelObject.additionalProperties();
+
+    QString cadObjectId = element.text();
+    if (!cadObjectId.isEmpty()) {
+      result.setFeature("CADObjectId", toString(cadObjectId));
+
+      QString programIdRef = element.attribute("programIdRef");
+      if (!programIdRef.isEmpty()) {
+        result.setFeature("programIdRef", toString(programIdRef));
+      }
+    }
 
     return result;
   }

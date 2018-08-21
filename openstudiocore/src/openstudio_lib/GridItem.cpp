@@ -48,6 +48,8 @@
 #include <QGraphicsView>
 #include <QApplication>
 #include <QMenu>
+#include <QMessageBox>
+
 #include "../model/HVACComponent.hpp"
 #include "../model/HVACComponent_Impl.hpp"
 #include "../model/ZoneHVACComponent.hpp"
@@ -1144,8 +1146,12 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
       for( const auto & centerComp : centerComps ) {
         boost::optional<model::HVACComponent> keyComp = centerComp;
         if( auto zone = centerComp.optionalCast<model::ThermalZone>() ) {
-          if( auto terminal = zone->airLoopHVACTerminal() ) {
-            keyComp = terminal;
+          auto terminals = zone->airLoopHVACTerminals();
+          for( const auto & term : terminals ) {
+            auto a = term.airLoopHVAC();
+            if ( a && ( a->handle() == airLoop->handle() ) ) {
+              keyComp = term;
+            }
           }
         }
         OS_ASSERT(keyComp);
@@ -1185,13 +1191,47 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
         auto comp1 = it1->optionalCast<model::HVACComponent>();
         OS_ASSERT(comp1);
         auto branchComponents = loop->components(comp1.get(),mixer);
-        branchComponents.pop_back();
 
-        if( isSupplySide ) {
-          allBranchComponents.push_back(branchComponents);
+        // Can't pop_back if it's empty to begin with...
+        if (branchComponents.empty()) {
+          std::stringstream ss;
+          ss << "Found orphaned component while drawing loop for " << comp1.get().briefDescription() << ".";
+
+          if (comp1->isRemovable()) {
+            ss << " Removing it.";
+            comp1->remove();
+          } else {
+
+            ss << " But this component is not removable. You should use the Ruby bindings to disconnect then remove it";
+
+            //ss << " But this component is not removable. Trying to forcibly disconnect then remove it";
+            //// Start by disconnecting
+            //comp1->disconnect();
+            //// Then remove
+            //// TODO: Problem: this will produce a crash when drawing later...
+            //std::vector<IdfObject> delComps = comp1->remove();
+            //// Check whether it did delete something or not
+            //if (delComps.empty()) {
+              //ss << ", but it didn't work.";
+            //}
+
+          }
+          QMessageBox box(QMessageBox::Warning,
+                          QString("Orphaned component Found"),
+                          toQString(ss.str()),
+                          QMessageBox::Ok);
+          box.exec();
+
         } else {
-          auto rBranchComponents = reverseVector(branchComponents);
-          allBranchComponents.push_back(rBranchComponents);
+          // Pop the last component (the mixer)
+          branchComponents.pop_back();
+
+          if( isSupplySide ) {
+            allBranchComponents.push_back(branchComponents);
+          } else {
+            auto rBranchComponents = reverseVector(branchComponents);
+            allBranchComponents.push_back(rBranchComponents);
+          }
         }
       }
 
@@ -2084,13 +2124,17 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
 {
   setAcceptHoverEvents(false);
 
+  // reliefIt = components from return to outside
   auto reliefIt = reliefModelObjects.begin();
+  // supplyIt = components from mixed air node to outside (= oaSystem.oaComponents.reverse)
   auto supplyIt = supplyModelObjects.begin();
 
   while(supplyIt < supplyModelObjects.end())
   {
+    // If this is an AirToAirComponent (an ERV basically...)
     if(boost::optional<model::AirToAirComponent> comp = supplyIt->optionalCast<model::AirToAirComponent>())
     {
+      // We fake draw the relief side until we get to the ERV so ERV is ligned up in both cases
       while( (reliefIt < reliefModelObjects.end()) && (! reliefIt->optionalCast<model::AirToAirComponent>()) )
       {
         GridItem * gridItem = new OASupplyStraightItem(this);
@@ -2117,7 +2161,7 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
     }
     else if(boost::optional<model::StraightComponent> comp = supplyIt->optionalCast<model::StraightComponent>())
     {
-      GridItem * gridItem = new OAReliefStraightItem(this);
+      GridItem * gridItem = new OASupplyStraightItem(this);
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
       if( comp->isRemovable() )
       {

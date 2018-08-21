@@ -89,8 +89,15 @@ namespace detail {
 
   const std::vector<std::string>& AirTerminalSingleDuctConstantVolumeReheat_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    // There are no outputs for the constant volume reheat air terminal.
+    static std::vector<std::string> result{
+      // These apply to all AirTerminals
+      "Zone Air Terminal Sensible Heating Energy",
+      "Zone Air Terminal Sensible Heating Rate",
+      "Zone Air Terminal Sensible Cooling Energy",
+      "Zone Air Terminal Sensible Cooling Rate"
+
+      // No specific output for this terminal
+    };
     return result;
   }
 

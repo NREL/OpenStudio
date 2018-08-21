@@ -152,14 +152,14 @@ namespace detail {
   }
 
 
-  double FanConstantVolume_Impl::fanEfficiency() const
+  double FanConstantVolume_Impl::fanTotalEfficiency() const
   {
-    return this->getDouble(OS_Fan_ConstantVolumeFields::FanEfficiency,true).get();
+    return this->getDouble(OS_Fan_ConstantVolumeFields::FanTotalEfficiency,true).get();
   }
 
-  bool FanConstantVolume_Impl::setFanEfficiency(double val)
+  bool FanConstantVolume_Impl::setFanTotalEfficiency(double val)
   {
-    return this->setDouble(OS_Fan_ConstantVolumeFields::FanEfficiency,val);
+    return this->setDouble(OS_Fan_ConstantVolumeFields::FanTotalEfficiency,val);
   }
 
   double FanConstantVolume_Impl::pressureRise() const
@@ -204,25 +204,15 @@ namespace detail {
 
   bool FanConstantVolume_Impl::addToNode(Node & node)
   {
-    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
-    {
-      boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoop->airLoopHVACOutdoorAirSystem();
-      if( airLoop->supplyComponent(node.handle()) || (oaSystem && oaSystem->component(node.handle())) )
-      {
-        unsigned fanCount = airLoop->supplyComponents(IddObjectType::OS_Fan_ConstantVolume).size();
-        fanCount += airLoop->supplyComponents(IddObjectType::OS_Fan_VariableVolume).size();
+    auto oaSystem = node.airLoopHVACOutdoorAirSystem();
+    auto airLoop = node.airLoopHVAC();
 
-        if( oaSystem )
-        {
-          fanCount += subsetCastVector<FanConstantVolume>(oaSystem->components()).size();
-          fanCount += subsetCastVector<FanVariableVolume>(oaSystem->components()).size();
-        }
-
-        if( StraightComponent_Impl::addToNode(node) )
-        {
+    if( (airLoop && airLoop->supplyComponent(node.handle())) || (oaSystem && oaSystem->component(node.handle())) ) {
+      if( StraightComponent_Impl::addToNode(node) ) {
+        if ( airLoop ) {
           SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
-          return true;
         }
+        return true;
       }
     }
 
@@ -546,14 +536,24 @@ bool FanConstantVolume::setAvailabilitySchedule(Schedule& s)
   return getImpl<detail::FanConstantVolume_Impl>()->setAvailabilitySchedule(s);
 }
 
+double FanConstantVolume::fanTotalEfficiency() const
+{
+  return getImpl<detail::FanConstantVolume_Impl>()->fanTotalEfficiency();
+}
+
+bool FanConstantVolume::setFanTotalEfficiency(double val)
+{
+  return getImpl<detail::FanConstantVolume_Impl>()->setFanTotalEfficiency(val);
+}
+
 double FanConstantVolume::fanEfficiency() const
 {
-  return getImpl<detail::FanConstantVolume_Impl>()->fanEfficiency();
+  return getImpl<detail::FanConstantVolume_Impl>()->fanTotalEfficiency();
 }
 
 bool FanConstantVolume::setFanEfficiency(double val)
 {
-  return getImpl<detail::FanConstantVolume_Impl>()->setFanEfficiency(val);
+  return getImpl<detail::FanConstantVolume_Impl>()->setFanTotalEfficiency(val);
 }
 
 double FanConstantVolume::pressureRise() const

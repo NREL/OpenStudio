@@ -8,12 +8,9 @@
 
 %include <model/Model_Common_Include.i>
 %import <model/ModelCore.i>
-%import <model/ModelSimulation.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
-%import <model/ModelAirflow.i>
-%import <model/ModelRefrigeration.i>
 
 // All base classes for PV, Generators, inverters and Electrical Storage
 %{
@@ -74,6 +71,7 @@ MODELOBJECT_TEMPLATES(GeneratorPhotovoltaic);
 MODELOBJECT_TEMPLATES(GeneratorMicroTurbineHeatRecovery);
 MODELOBJECT_TEMPLATES(GeneratorMicroTurbine);
 MODELOBJECT_TEMPLATES(GeneratorPVWatts);
+MODELOBJECT_TEMPLATES(ElectricLoadCenterTransformer);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterDistribution);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterInverterLookUpTable);
 MODELOBJECT_TEMPLATES(ElectricLoadCenterInverterSimple);
@@ -102,6 +100,7 @@ SWIG_MODELOBJECT(GeneratorPhotovoltaic, 1);
 SWIG_MODELOBJECT(GeneratorMicroTurbineHeatRecovery, 1);
 SWIG_MODELOBJECT(GeneratorMicroTurbine, 1);
 SWIG_MODELOBJECT(GeneratorPVWatts, 1);
+SWIG_MODELOBJECT(ElectricLoadCenterTransformer, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterDistribution, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterInverterLookUpTable, 1);
 SWIG_MODELOBJECT(ElectricLoadCenterInverterSimple, 1);

@@ -27,7 +27,8 @@ function Component()
 
     if( kernel == "winnt" ) {
       component.addElevatedOperation("CreateShortcut", "@TargetDir@/bin/OpenStudioApp.exe", "@StartMenuDir@/OpenStudio.lnk");
-      component.addElevatedOperation("RegisterFileType", "osm", "@TargetDir@/bin/OpenStudioApp.exe %1", "OpenStudio Model File", "text/plain", "@TargetDir@/bin/OpenStudioApp.exe,1");
+      // Note JM: you have to quote the %1 which represents the file path, otherwise any space in the path will think there are multiple args
+      component.addElevatedOperation("RegisterFileType", "osm", "@TargetDir@/bin/OpenStudioApp.exe \"%1\"", "OpenStudio Model File", "text/plain", "@TargetDir@/bin/OpenStudioApp.exe,1");
     }
   }
 }

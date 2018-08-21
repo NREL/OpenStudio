@@ -292,7 +292,7 @@ namespace detail {
     OS_ASSERT(splitter);
     OS_ASSERT(mixer);
 
-    return AirLoopHVAC_Impl::addBranchForZoneImpl(thermalZone,t_airLoopHVAC.get(),splitter.get(),mixer.get(),terminal);
+    return AirLoopHVAC_Impl::addBranchForZoneImpl(thermalZone,t_airLoopHVAC.get(),splitter.get(),mixer.get(),true,terminal);
   }
 
   std::vector<IdfObject> AirLoopHVACSupplyPlenum_Impl::remove()

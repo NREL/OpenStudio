@@ -172,6 +172,9 @@ set(${target_name}_src
   AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp
   AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp
   AirTerminalSingleDuctConstantVolumeFourPipeInduction.cpp
+  AirTerminalSingleDuctConstantVolumeFourPipeBeam.hpp
+  AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeFourPipeBeam.cpp
   AirTerminalSingleDuctConstantVolumeReheat.hpp
   AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp
   AirTerminalSingleDuctConstantVolumeReheat.cpp
@@ -308,18 +311,21 @@ set(${target_name}_src
   CoilCoolingDXVariableRefrigerantFlow.hpp
   CoilCoolingDXVariableRefrigerantFlow_Impl.hpp
   CoilCoolingDXVariableRefrigerantFlow.cpp
-  CoilCoolingLowTempRadiantConstFlow.hpp
-  CoilCoolingLowTempRadiantConstFlow_Impl.hpp
-  CoilCoolingLowTempRadiantConstFlow.cpp
-  CoilCoolingLowTempRadiantVarFlow.hpp
-  CoilCoolingLowTempRadiantVarFlow_Impl.hpp
-  CoilCoolingLowTempRadiantVarFlow.cpp
   CoilCoolingDXVariableSpeed.hpp
   CoilCoolingDXVariableSpeed_Impl.hpp
   CoilCoolingDXVariableSpeed.cpp
   CoilCoolingDXVariableSpeedSpeedData.hpp
   CoilCoolingDXVariableSpeedSpeedData_Impl.hpp
   CoilCoolingDXVariableSpeedSpeedData.cpp
+  CoilCoolingFourPipeBeam.hpp
+  CoilCoolingFourPipeBeam_Impl.hpp
+  CoilCoolingFourPipeBeam.cpp
+  CoilCoolingLowTempRadiantConstFlow.hpp
+  CoilCoolingLowTempRadiantConstFlow_Impl.hpp
+  CoilCoolingLowTempRadiantConstFlow.cpp
+  CoilCoolingLowTempRadiantVarFlow.hpp
+  CoilCoolingLowTempRadiantVarFlow_Impl.hpp
+  CoilCoolingLowTempRadiantVarFlow.cpp
   CoilCoolingWater.hpp
   CoilCoolingWater_Impl.hpp
   CoilCoolingWater.cpp
@@ -350,6 +356,9 @@ set(${target_name}_src
   CoilHeatingElectric.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingElectric.cpp
+  CoilHeatingFourPipeBeam.hpp
+  CoilHeatingFourPipeBeam_Impl.hpp
+  CoilHeatingFourPipeBeam.cpp
   CoilHeatingGas.hpp
   CoilHeatingGas_Impl.hpp
   CoilHeatingGas.cpp
@@ -581,6 +590,9 @@ set(${target_name}_src
   ElectricLoadCenterStorageConverter.hpp
   ElectricLoadCenterStorageConverter_Impl.hpp
   ElectricLoadCenterStorageConverter.cpp
+  ElectricLoadCenterTransformer.hpp
+  ElectricLoadCenterTransformer_Impl.hpp
+  ElectricLoadCenterTransformer.cpp
   EnergyManagementSystemActuator.cpp
   EnergyManagementSystemActuator.hpp
   EnergyManagementSystemActuator_Impl.hpp
@@ -1649,6 +1661,7 @@ set(${target_name}_test_src
   test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
   test/AirTerminalSingleDuctInletSideMixer_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeFourPipeInduction_GTest.cpp
+  test/AirTerminalSingleDuctConstantVolumeFourPipeBeam_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
@@ -1693,6 +1706,7 @@ set(${target_name}_test_src
   test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   test/CoilCoolingDXVariableSpeed_GTest.cpp
   test/CoilCoolingDXVariableSpeedSpeedData_GTest.cpp
+  test/CoilCoolingFourPipeBeam_GTest.cpp
   test/CoilCoolingLowTempRadiantConstFlow_GTest.cpp
   test/CoilCoolingLowTempRadiantVarFlow_GTest.cpp
   test/CoilCoolingWater_GTest.cpp
@@ -1706,6 +1720,7 @@ set(${target_name}_test_src
   test/CoilHeatingDXVariableSpeed_GTest.cpp
   test/CoilHeatingDXVariableSpeedSpeedData_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
+  test/CoilHeatingFourPipeBeam_GTest.cpp
   test/CoilHeatingGas_GTest.cpp
   test/CoilHeatingGasMultiStage_GTest.cpp
   test/CoilHeatingLowTempRadiantConstFlow_GTest.cpp
@@ -1749,6 +1764,7 @@ set(${target_name}_test_src
   test/ElectricLoadCenterInverterLookUpTable_GTest.cpp
   test/ElectricLoadCenterStorageSimple_GTest.cpp
   test/ElectricLoadCenterStorageConverter_GTest.cpp
+  test/ElectricLoadCenterTransformer_GTest.cpp
   test/EnergyManagementSystemActuator_GTest.cpp
   test/EnergyManagementSystemConstructionIndexVariable_GTest.cpp
   test/EnergyManagementSystemCurveOrTableIndexVariable_GTest.cpp
@@ -1991,6 +2007,7 @@ set(${target_name}_test_src
   test/ZoneHVACUnitHeater_GTest.cpp
   test/ZoneHVACUnitVentilator_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp
+  test/ZoneHVACIdealLoadsAirSystem_GTest.cpp
   test/ZoneMixing_GTest.cpp
   test/ZoneVentilationDesignFlowRate_GTest.cpp
 )
@@ -2018,20 +2035,43 @@ endif()
 set(swig_target_name ${target_name}_static)
 
 MAKE_SWIG_TARGET(OpenStudioModelCore model "${CMAKE_CURRENT_SOURCE_DIR}/ModelCore.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilities)
+list(APPEND OpenStudioModelSwigs OpenStudioModelCore)
 
 MAKE_SWIG_TARGET(OpenStudioModelSimulation model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSimulation.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelCore)
+list(APPEND OpenStudioModelSwigs OpenStudioModelSimulation)
 
-MAKE_SWIG_TARGET(OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelSimulation)
+MAKE_SWIG_TARGET(OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelCore)
+list(APPEND OpenStudioModelSwigs OpenStudioModelResources)
 
 MAKE_SWIG_TARGET(OpenStudioModelGeometry model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGeometry.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelResources)
+list(APPEND OpenStudioModelSwigs OpenStudioModelGeometry)
 
 MAKE_SWIG_TARGET(OpenStudioModelHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelHVAC.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelGeometry)
+list(APPEND OpenStudioModelSwigs OpenStudioModelHVAC)
+
+MAKE_SWIG_TARGET(OpenStudioModelZoneHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelZoneHVAC.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelZoneHVAC)
+
+MAKE_SWIG_TARGET(OpenStudioModelSetpointManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSetpointManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelSetpointManager)
+
+MAKE_SWIG_TARGET(OpenStudioModelAvailabilityManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAvailabilityManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelAvailabilityManager)
+
+MAKE_SWIG_TARGET(OpenStudioModelPlantEquipmentOperationScheme model "${CMAKE_CURRENT_SOURCE_DIR}/ModelPlantEquipmentOperationScheme.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelPlantEquipmentOperationScheme)
+
+MAKE_SWIG_TARGET(OpenStudioModelStraightComponent model "${CMAKE_CURRENT_SOURCE_DIR}/ModelStraightComponent.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelStraightComponent)
 
 MAKE_SWIG_TARGET(OpenStudioModelAirflow model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAirflow.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelAirflow)
 
-MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelAirflow)
+MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelZoneHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelRefrigeration)
 
-MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelRefrigeration)
+MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+list(APPEND OpenStudioModelSwigs OpenStudioModelGenerators)
 
-MAKE_SWIG_TARGET(OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelGenerators)
+MAKE_SWIG_TARGET(OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${swig_target_name} "${OpenStudioModelSwigs}")
 

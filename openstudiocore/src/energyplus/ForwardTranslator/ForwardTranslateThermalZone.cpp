@@ -39,6 +39,8 @@
 #include "../../model/PortList_Impl.hpp"
 #include "../../model/ZoneHVACEquipmentList.hpp"
 #include "../../model/ZoneHVACEquipmentList_Impl.hpp"
+#include "../../model/ZoneHVACIdealLoadsAirSystem.hpp"
+#include "../../model/ZoneHVACIdealLoadsAirSystem_Impl.hpp"
 #include "../../model/ZoneVentilationDesignFlowRate.hpp"
 #include "../../model/ZoneVentilationDesignFlowRate_Impl.hpp"
 #include "../../model/SizingZone.hpp"
@@ -51,6 +53,8 @@
 #include "../../model/SetpointManagerSingleZoneReheat.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/AirLoopHVACReturnPlenum.hpp"
+#include "../../model/AirLoopHVACReturnPlenum_Impl.hpp"
 #include "../../model/Thermostat.hpp"
 #include "../../model/Thermostat_Impl.hpp"
 #include "../../model/ThermostatSetpointDualSetpoint.hpp"
@@ -330,6 +334,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       }
 
       IdfObject daylightingControlObject(openstudio::IddObjectType::Daylighting_Controls);
+      // Name it like the Zone name + " DaylightingControls"
+      daylightingControlObject.setName(modelObject.name().get() + " DaylightingControls");
       m_idfObjects.push_back(daylightingControlObject);
 
       daylightingControlObject.setString(
@@ -338,6 +344,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
       // Primary Control
       IdfObject primaryReferencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
+      // Name it like the OS:Daylighting:Control corresponding to the Primary Reference Point
       primaryReferencePoint.setName(primaryDaylightingControl->nameString());
       m_idfObjects.push_back(primaryReferencePoint);
 
@@ -378,6 +385,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       // Secondary Control
       if (secondaryDaylightingControl){
         IdfObject secondaryReferencePoint(openstudio::IddObjectType::Daylighting_ReferencePoint);
+      // Name it like the OS:Daylighting:Control corresponding to the Secondary Reference Point
         secondaryReferencePoint.setName(secondaryDaylightingControl->nameString());
         m_idfObjects.push_back(secondaryReferencePoint);
 
@@ -514,6 +522,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         referencePoint.setDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint, illuminanceMap->originZCoordinate());
 
         IdfObject daylightingControlObject(openstudio::IddObjectType::Daylighting_Controls);
+        // Name it like the Zone name + " DaylightingControls"
+        daylightingControlObject.setName(modelObject.name().get() + " DaylightingControls");
         m_idfObjects.push_back(daylightingControlObject);
 
         daylightingControlObject.setString(Daylighting_ControlsFields::ZoneName, modelObject.nameString());
@@ -609,6 +619,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
           zoneControlThermostat.setString(ZoneControl_ThermostatFields::ZoneorZoneListName,modelObject.name().get());
           m_idfObjects.push_back(zoneControlThermostat);
 
+          // Need to handle the control type base don thermostat type (1: Single heating, 2: single cooling, 4: Dual setpoint)
           IdfObject scheduleCompact(openstudio::IddObjectType::Schedule_Compact);
           scheduleCompact.setName(modelObject.name().get() + " Thermostat Schedule");
           m_idfObjects.push_back(scheduleCompact);
@@ -633,6 +644,13 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             values[ZoneControl_ThermostatExtensibleFields::ControlObjectType] = idfThermostat->iddObject().name();
             values[ZoneControl_ThermostatExtensibleFields::ControlName] = idfThermostat->name().get();
             IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
+            if (idfThermostat->iddObject().name() == "ThermostatSetpoint:SingleHeating" ) {
+              scheduleCompact.setString(5, "1");
+            } else if (idfThermostat->iddObject().name() == "ThermostatSetpoint:SingleCooling" ) {
+              scheduleCompact.setString(5, "2");
+            } else {
+              scheduleCompact.setString(5, "4");
+            }
           }
         };
 
@@ -677,7 +695,64 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     translateAndMapModelObject(zone_vent);
   }
 
-  if( zoneEquipment.size() > 0 ) {
+  bool zoneHVACIdealWorkaround = false;
+  boost::optional<ZoneHVACIdealLoadsAirSystem> ideal;
+  if ( zoneEquipment.size() == 1 ) {
+    ideal = zoneEquipment.front().optionalCast<model::ZoneHVACIdealLoadsAirSystem>();
+    if ( ideal ) {
+      auto returnPlenum = ideal->returnPlenum();
+      if ( returnPlenum ) {
+        auto allIdealHVAC = returnPlenum->getImpl<model::detail::AirLoopHVACReturnPlenum_Impl>()->zoneHVACIdealLoadsAirSystems();
+        if ( ! allIdealHVAC.empty() ) {
+          zoneHVACIdealWorkaround = true; 
+        }
+      }
+    }
+  }
+
+  if ( zoneHVACIdealWorkaround ) {
+    // ZoneHVAC_EquipmentConnections
+    IdfObject connectionsObject(openstudio::IddObjectType::ZoneHVAC_EquipmentConnections);
+    m_idfObjects.push_back(connectionsObject);
+
+    s = modelObject.name().get();
+    std::string name = s;
+    connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneName,s);
+
+    //set the inlet port list
+    PortList inletPortList = modelObject.inletPortList();
+    if (inletPortList.modelObjects().size() > 0 )
+    {
+      boost::optional<IdfObject> _inletNodeList = translateAndMapModelObject(inletPortList);
+      if(_inletNodeList)
+      {
+        _inletNodeList->setName(name + " Inlet Node List");
+        s = _inletNodeList->name().get();
+        connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneAirInletNodeorNodeListName,s);
+      }
+    }
+
+    //set the zone air node
+    Node node = modelObject.zoneAirNode();
+    connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneAirNodeName,node.name().get());
+
+    // Use the exhaust node as the zone return node in this workaround
+    //set the zone return air node
+    auto exhaustPortList = modelObject.exhaustPortList();
+    auto exhaustNodes = subsetCastVector<model::Node>(exhaustPortList.modelObjects());
+    OS_ASSERT( exhaustNodes.size() == 1 );
+    s = exhaustNodes.front().nameString();
+    connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeorNodeListName,s);
+
+    // ZoneHVAC_EquipmentList
+    ZoneHVACEquipmentList equipmentList = modelObject.getImpl<model::detail::ThermalZone_Impl>()->zoneHVACEquipmentList();
+    boost::optional<IdfObject> _equipmentList = translateAndMapModelObject(equipmentList);
+
+    if ( _equipmentList ) {
+      s = _equipmentList->name().get();
+      connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneConditioningEquipmentListName,s);
+    }
+  } else if ( zoneEquipment.size() > 0 ) {
     // ZoneHVAC_EquipmentConnections
     IdfObject connectionsObject(openstudio::IddObjectType::ZoneHVAC_EquipmentConnections);
     m_idfObjects.push_back(connectionsObject);
@@ -717,17 +792,14 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneAirNodeName,node.name().get());
 
     //set the zone return air node
-    boost::optional<ModelObject> optObj = modelObject.returnAirModelObject();
-    if(optObj)
-    {
-      s = optObj->name().get();
-      connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeorNodeListName,s);
-    }
-    else
-    {
-      s = modelObject.name().get() + " Return Air Node";
-
-      connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeorNodeListName,s);
+    auto returnPortList = modelObject.returnPortList();
+    if ( returnPortList.modelObjects().size() > 0 ) {
+      auto _returnNodeList = translateAndMapModelObject(returnPortList);
+      if(_returnNodeList) {
+        _returnNodeList->setName(name + " Return Node List");
+        s = _returnNodeList->name().get();
+        connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeorNodeListName,s);
+      }
     }
 
     // ZoneHVAC_EquipmentList

@@ -97,13 +97,13 @@ namespace detail {
 
     // Field Fan Efficiency
 
-    double fanEfficiency() const;
+    double fanTotalEfficiency() const;
 
-    bool isFanEfficiencyDefaulted() const;
+    bool isFanTotalEfficiencyDefaulted() const;
 
-    bool setFanEfficiency(double fanEfficiency);
+    bool setFanTotalEfficiency(double fanTotalEfficiency);
 
-    void resetFanEfficiency();
+    void resetFanTotalEfficiency();
 
     // Field Pressure Rise
 
