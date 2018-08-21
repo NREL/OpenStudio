@@ -463,6 +463,7 @@ namespace openstudio {
     // Find the row that contains this object
     auto row = std::make_tuple(range.first->second->row, range.first->second->subrow);
 
+    // TODO: should we delete that too?
 #if _DEBUG || (__GNUC__ && !NDEBUG)
     // Sanity check to make sure we don't have the same object in two different rows
     ++range.first;
@@ -480,68 +481,123 @@ namespace openstudio {
 
   void ObjectSelector::updateWidgets(const model::ModelObject &t_obj)
   {
+
+    // Find all entries in m_widgetMap that matches t_obj
     auto range = m_widgetMap.equal_range(boost::optional<model::ModelObject>(t_obj));
 
+    // Check that it did return something
     assert(range.first != range.second);
 
-    // Find the row that contains this object
-    auto row = std::make_tuple(range.first->second->row, range.first->second->subrow);
 
-#if _DEBUG || (__GNUC__ && !NDEBUG)
-    // Sanity check to make sure we don't have the same object in two different rows
-    ++range.first;
-    while (range.first != range.second)
-    {
-      //assert(row == std::make_tuple(range.first->second->row, range.first->second->subrow));
-      ++range.first;
-    }
-#endif
+  /*
+   *  auto row = std::make_tuple(t_row, t_subrow);
+   *#if _DEBUG || (__GNUC__ && !NDEBUG)
+   *    // Sanity check to make sure we don't have the same object in two different rows
+   *    // TODO: JM 2018-08-21: In case of the Loads subtab for eg, given than obj is a load object (People, Light, etc)
+   *    // We kinda expect to have the same object in several rows, don't we?
+   *    ++range.first;
+   *    while (range.first != range.second)
+   *    {
+   *      assert(row == std::make_tuple(range.first->second->row, range.first->second->subrow));
+   *      ++range.first;
+   *    }
+   *#endif
+   */
 
-    const auto objectSelected = m_selectedObjects.count(t_obj) != 0;
-    auto objectVisible = m_objectFilter(t_obj);
+    // For all rows that contain this object
+    for (auto it = range.first; it != range.second; ++it) {
+      // it->second returns the WidgetLocation of that entry
+      // it->second->row (subrow) returns the WidgetLocation's row (and subrow)
+      int t_row = it->second->row;
+      boost::optional<int> t_subrow = it->second->subrow;
 
-    if (objectVisible) {
-      if (std::get<1>(row)) {
-        // We have a matched sub row
-        auto parent = t_obj.parent();
-        if (parent) {
-          // Check if we are filtering on the sub row's parent object
-          if (m_filteredObjects.count(*parent) != 0) {
-            objectVisible = false;
-          }
 
-          if (objectVisible) {
-            // We still haven't matched the sub row, let's look up 1 more level
-            auto parentsParent = parent->parent();
-            // Evan's note:
-            //   in the case of SpacesSubsurfacesGridView,
-            //   t_obj.parent() returns Surface,
-            //   but our common currency is Space.
-            //   t_obj.parent()->parent() returns Space
 
-            if (parentsParent) {
-              // Check if we are filtering on the sub row's parent's parent object
-              if (m_filteredObjects.count(*parentsParent) != 0) {
-                objectVisible = false;
+      const auto objectSelected = m_selectedObjects.count(t_obj) != 0;
+      auto objectVisible = m_objectFilter(t_obj);
+
+      // If the object is not already hidden
+      if (objectVisible) {
+        // We try find it it's a subrow
+        if (t_subrow) {
+          // We have a matched sub row
+          auto parent = t_obj.parent();
+          if (parent) {
+            // Check if we are filtering on the sub row's parent object
+            if (m_filteredObjects.count(*parent) != 0) {
+              objectVisible = false;
+            }
+
+            if (objectVisible) {
+              // We still haven't matched the sub row, let's look up 1 more level
+              auto parentsParent = parent->parent();
+              // Evan's note:
+              //   in the case of SpacesSubsurfacesGridView,
+              //   t_obj.parent() returns Surface,
+              //   but our common currency is Space.
+              //   t_obj.parent()->parent() returns Space
+              //
+              // JM: 2018-08-21
+              //  in the case of the Loads subtab
+              //  t_obj.parent() will return either Space or SpaceType depending on how owns it
+              //  So if it's SpaceType, it won't match...
+              //  Also, even for Space, it will filter out only that load and not the entire corresponding Space master
+              //  which is fine if filtering by "Load Type", but not fine if filtering by Story for eg...
+
+              if (parentsParent) {
+                // Check if we are filtering on the sub row's parent's parent object
+                if (m_filteredObjects.count(*parentsParent) != 0) {
+                  objectVisible = false;
+                }
               }
             }
           }
-        }
-        // Hmmm, still no match, let's check if we
-        // are filtering on the sub row's object
-        if (objectVisible && m_filteredObjects.count(t_obj) != 0) {
-          objectVisible = false;
-        }
-      }
-      else{
-        // We only matched the row
-        if (m_filteredObjects.count(t_obj) != 0) {
-          objectVisible = false;
-        }
-      }
-    }
+          // Hmmm, still no match, let's check if we
+          // are filtering on the sub row's object
+          if (objectVisible && m_filteredObjects.count(t_obj) != 0) {
+            objectVisible = false;
+          }
 
-    updateWidgets(std::get<0>(row), std::get<1>(row), objectSelected, objectVisible);
+          // Still no match? That's problematic... perhaps it's the Loads subtab?
+/*
+ *          if (objectVisible) {
+ *            boost::optional<const model::ModelObject &> _rowLevelObj = getObject(t_row, 0, boost::optional<int>());
+ *            if (_rowLevelObj && m_filteredObjects.count(_rowLevelObj.get()) != 0) {
+ *              LOG(Debug, t_obj.briefDescription() << " matched as rowLevelObj (=" << _rowLevelObj.get().briefDescription() << ")"
+ *                  << " || t_row=" << t_row << ", t_subrow=" << t_subrow);
+ *              objectVisible = false;
+ *              t_subrow = boost::optional<int>();
+ *            }
+ *
+ *            //range = m_widgetMap.equal_range(boost::optional<model::ModelObject>(t_obj));
+ *            //std::cout << "\n\nt_obj=" << t_obj.briefDescription() << "\n";
+ *            //for (auto it = range.first; it != range.second; ++it) {
+ *              //boost::optional<model::ModelObject> mo = it->first;
+ *              //WidgetLocation * wL = it->second;
+ *              //if (mo) {
+ *                //std::cout << "mo=" << mo->name().get()
+ *                  //<< ", row=" << wL->row << ", subrow=";
+ *                //if (boost::optional<int> sr = wL->subrow) {
+ *                  //std::cout << sr;
+ *                //} else {
+ *                  //std::cout << "None";
+ *                //}
+ *                //std::cout << "\n";
+ *              //}
+ *            //}
+ *          }
+ */
+        }
+        else{
+          // We only matched the row: (works for the Properties subtab probably)
+          if (m_filteredObjects.count(t_obj) != 0) {
+            LOG(Debug, t_obj.briefDescription() << " matched as row");
+            objectVisible = false;
+          }
+        }
+      }
+      updateWidgets(t_row, t_subrow, objectSelected, objectVisible);
+    }
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
