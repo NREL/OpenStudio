@@ -241,7 +241,7 @@
     <rule IddField="Zone Air Inlet Port List" Access="HIDDEN"/>
     <rule IddField="Zone Air Exhaust Port List" Access="HIDDEN"/>
     <rule IddField="Zone Air Node Name" Access="HIDDEN"/>
-    <rule IddField="Zone Return Air Node Name" Access="HIDDEN"/>
+    <rule IddField="Zone Return Air Port List" Access="HIDDEN"/>
     <rule IddField="Primary Daylighting Control Name" Access="HIDDEN"/>
     <rule IddField="Fraction of Zone Controlled by Primary Daylighting Control" Access="HIDDEN"/>
     <rule IddField="Secondary Daylighting Control Name" Access="HIDDEN"/>
