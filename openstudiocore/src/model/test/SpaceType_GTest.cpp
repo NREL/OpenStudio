@@ -145,17 +145,19 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   ASSERT_GT(numBuildingTypes, 0u);
   EXPECT_FALSE(spaceType.standardsSpaceType());
   std::vector<std::string> suggestedStandardsSpaceTypes = spaceType.suggestedStandardsSpaceTypes();
-  ASSERT_EQ(2u, suggestedStandardsSpaceTypes.size());
+  EXPECT_EQ(2u, suggestedStandardsSpaceTypes.size());
   EXPECT_EQ("Attic", suggestedStandardsSpaceTypes[0]);
   EXPECT_EQ("Plenum", suggestedStandardsSpaceTypes[1]);
 
+  // Verify that 'SecondarySchool' exists in the list of all possible building types (from JSON)
   std::vector<std::string>::const_iterator it = std::find(suggestedStandardsBuildingTypes.begin(), suggestedStandardsBuildingTypes.end(), "SecondarySchool");
   EXPECT_NE(suggestedStandardsBuildingTypes.end(), it);
 
   EXPECT_TRUE(spaceType.setStandardsBuildingType("SecondarySchool"));
   ASSERT_TRUE(spaceType.standardsBuildingType());
   EXPECT_EQ("SecondarySchool", spaceType.standardsBuildingType().get());
-  ASSERT_EQ(numBuildingTypes, spaceType.suggestedStandardsBuildingTypes().size());
+  // We didn't add any new building type, so should be still the same number
+  EXPECT_EQ(numBuildingTypes, spaceType.suggestedStandardsBuildingTypes().size());
   EXPECT_EQ("SecondarySchool", spaceType.suggestedStandardsBuildingTypes()[0]);
   EXPECT_FALSE(spaceType.standardsSpaceType());
 
@@ -166,12 +168,13 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   EXPECT_TRUE(spaceType.setStandardsSpaceType(secondarySchoolStandardsSpaceTypes[0]));
   ASSERT_TRUE(spaceType.standardsSpaceType());
   EXPECT_EQ(secondarySchoolStandardsSpaceTypes[0], spaceType.standardsSpaceType().get());
-  ASSERT_EQ(numSpaceTypes, spaceType.suggestedStandardsSpaceTypes().size());
+  EXPECT_EQ(numSpaceTypes, spaceType.suggestedStandardsSpaceTypes().size());
 
   EXPECT_TRUE(spaceType.setStandardsSpaceType("Anything Goes"));
   ASSERT_TRUE(spaceType.standardsSpaceType());
   EXPECT_EQ("Anything Goes", spaceType.standardsSpaceType().get());
-  ASSERT_EQ(numSpaceTypes + 1, spaceType.suggestedStandardsSpaceTypes().size());
+  // This time it's a new entry (doesn't exist in JSON), so should be +1
+  EXPECT_EQ(numSpaceTypes + 1, spaceType.suggestedStandardsSpaceTypes().size());
   EXPECT_EQ("Anything Goes", spaceType.suggestedStandardsSpaceTypes()[0]);
 
   EXPECT_TRUE(spaceType.setStandardsSpaceType(""));
@@ -181,7 +184,7 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   EXPECT_TRUE(spaceType.setStandardsBuildingType("Outpatient"));
   ASSERT_TRUE(spaceType.standardsBuildingType());
   EXPECT_EQ("Outpatient", spaceType.standardsBuildingType().get());
-  ASSERT_EQ(numBuildingTypes, spaceType.suggestedStandardsBuildingTypes().size());
+  EXPECT_EQ(numBuildingTypes, spaceType.suggestedStandardsBuildingTypes().size());
   EXPECT_EQ("Outpatient", spaceType.suggestedStandardsBuildingTypes()[0]);
   EXPECT_FALSE(spaceType.standardsSpaceType());
   EXPECT_FALSE(spaceType.suggestedStandardsSpaceTypes().empty());
@@ -203,11 +206,11 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   EXPECT_TRUE(spaceType.setStandardsBuildingType("Anything Goes"));
   ASSERT_TRUE(spaceType.standardsBuildingType());
   EXPECT_EQ("Anything Goes", spaceType.standardsBuildingType().get());
-  ASSERT_EQ(numBuildingTypes + 1, spaceType.suggestedStandardsBuildingTypes().size());
+  EXPECT_EQ(numBuildingTypes + 1, spaceType.suggestedStandardsBuildingTypes().size());
   EXPECT_EQ("Anything Goes", spaceType.suggestedStandardsBuildingTypes()[0]);
   EXPECT_FALSE(spaceType.standardsSpaceType());
   suggestedStandardsSpaceTypes = spaceType.suggestedStandardsSpaceTypes();
-  ASSERT_EQ(2u, suggestedStandardsSpaceTypes.size());
+  EXPECT_EQ(2u, suggestedStandardsSpaceTypes.size());
   EXPECT_EQ("Attic", suggestedStandardsSpaceTypes[0]);
   EXPECT_EQ("Plenum", suggestedStandardsSpaceTypes[1]);
 }
