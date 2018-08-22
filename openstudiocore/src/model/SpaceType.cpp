@@ -91,6 +91,7 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QJsonParseError>
 
 namespace openstudio {
@@ -292,18 +293,11 @@ namespace detail {
     // include values from json
     parseStandardsMap();
 
-    QMap<QString, QVariant> templates = m_standardsMap["space_types"].toMap();
-    for (QString template_name : templates.uniqueKeys()) {
-      QMap<QString, QVariant> climate_sets = templates[template_name].toMap();
-      for (QString climate_set_name : climate_sets.uniqueKeys()) {
-
-        QMap<QString, QVariant> building_types = climate_sets[climate_set_name].toMap();
-        for (QString building_type_name : building_types.uniqueKeys()) {
-
-          result.push_back(toString(building_type_name));
-
-        }
-      }
+    // Find the possible building_type names
+    // jsonArr is an array of hashes (no nested levels)
+    QJsonArray jsonArr = m_standardsMap["space_types"].toJsonArray();
+    for( auto v: jsonArr) {
+      result.push_back(toString(v.toObject()["building_type"].toString()));
     }
 
     // include values from model
@@ -385,17 +379,12 @@ namespace detail {
     if (standardsBuildingType){
       parseStandardsMap();
 
-      QMap<QString, QVariant> templates = m_standardsMap["space_types"].toMap();
-      for (QString template_name : templates.uniqueKeys()) {
-        QMap<QString, QVariant> climate_sets = templates[template_name].toMap();
-        for (QString climate_set_name : climate_sets.uniqueKeys()) {
-
-          QMap<QString, QVariant> building_types = climate_sets[climate_set_name].toMap();
-          QMap<QString, QVariant> specific_types = building_types[toQString(*standardsBuildingType)].toMap();
-          for (QString specific_type_name : specific_types.uniqueKeys()) {
-            result.push_back(toString(specific_type_name));
-
-          }
+      // Find the possible space_type names that have the building_type name
+      // jsonArr is an array of hashes (no nested levels)
+      QJsonArray jsonArr = m_standardsMap["space_types"].toJsonArray();
+      for( auto v: jsonArr) {
+        if( v.toObject()["building_type"].toString() == toQString(*standardsBuildingType) ) {
+          result.push_back(v.toObject()["space_type"].toString().toStdString());
         }
       }
     }
@@ -1373,14 +1362,19 @@ namespace detail {
   void SpaceType_Impl::parseStandardsMap() const
   {
     if (m_standardsMap.empty()){
-      QFile file(":/resources/standards/OpenStudio_Standards.json");
+      QFile file(":/resources/standards/OpenStudio_Standards_space_types.json");
       if (file.open(QFile::ReadOnly)) {
         QJsonParseError parseError;
         QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll(), &parseError);
         file.close();
         if( QJsonParseError::NoError == parseError.error) {
           m_standardsMap = jsonDoc.object().toVariantMap();
-        }
+        } else {
+        LOG_AND_THROW("Problem occured in parsing JSON file at 'resources/standards/OpenStudio_Standards_space_types.json'");
+      }
+
+      } else {
+        LOG_AND_THROW("Cannot open file at 'resources/standards/OpenStudio_Standards_space_types.json' for parsing");
       }
     }
   }
