@@ -498,7 +498,6 @@ namespace detail {
       }
     }
 
-
     // include values from model
     for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
       if (other.handle() == this->handle()){
@@ -875,9 +874,14 @@ namespace detail {
         }
       }
 
-      QString tmp = material["cavity_insulation"].toString();
-      if (!tmp.isEmpty()){
+      // JM 2018-08-22: material["cavity_insulation"].toVariant().toString() would work too, but I'd rather be explicit
+      // cavity_insulation is stored in the JSON as a number (a double), and not a string
+      if( material["cavity_insulation"].isDouble() ) {
+        QString tmp = QString::number(material["cavity_insulation"].toDouble());
+        // No need to check if empty here
+        // if (!tmp.isEmpty()){
         result.push_back(toString(tmp));
+        //}
       }
     }
 
