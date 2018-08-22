@@ -43,13 +43,16 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
+#include <QJsonArray>
+#include <QJsonValue>
+#include <QString>
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
-  QMap<QString, QVariant> StandardsInformationMaterial_Impl::m_standardsMap;
+  QJsonArray StandardsInformationMaterial_Impl::m_standardsArr;
 
   StandardsInformationMaterial_Impl::StandardsInformationMaterial_Impl(const IdfObject& idfObject,
     Model_Impl* model,
@@ -73,17 +76,26 @@ namespace detail {
     : ModelObject_Impl(other, model, keepHandle)
   {}
 
-  void StandardsInformationMaterial_Impl::parseStandardsMap() const
+  void StandardsInformationMaterial_Impl::parseStandardsJSON() const
   {
-    if (m_standardsMap.empty()){
-      QFile file(":/resources/standards/OpenStudio_Standards.json");
+    if (m_standardsArr.empty()){
+      QFile file(":/resources/standards/OpenStudio_Standards_materials.json");
       if (file.open(QFile::ReadOnly)) {
         QJsonParseError parseError;
         QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll(), &parseError);
         file.close();
-        if (QJsonParseError::NoError == parseError.error) {
-          m_standardsMap = jsonDoc.object().toVariantMap();
+        if( QJsonParseError::NoError == parseError.error) {
+          QJsonObject jsonObj = jsonDoc.object();
+          if( (jsonObj.size() == 1) && jsonObj.contains("materials") && jsonObj["materials"].isArray()) {
+            m_standardsArr = jsonObj["materials"].toArray();
+          } else {
+            LOG_AND_THROW("Wrong format encountered in JSON file at 'resources/standards/OpenStudio_Standards_materials.json'");
+          }
+        } else {
+          LOG_AND_THROW("Problem occured in parsing JSON file at 'resources/standards/OpenStudio_Standards_materials.json'");
         }
+      } else {
+        LOG_AND_THROW("Cannot open file at 'resources/standards/OpenStudio_Standards_materials.json' for parsing");
       }
     }
   }
@@ -125,16 +137,16 @@ namespace detail {
     boost::optional<std::string> materialStandard = this->materialStandard();
 
     // include values from json
-    parseStandardsMap();
+    parseStandardsJSON();
 
-    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
-    for (QString material_name : materials.uniqueKeys()) {
-      QMap<QString, QVariant> material = materials[material_name].toMap();
+    for( const QJsonValue& v: m_standardsArr) {
+      QJsonObject material = v.toObject();
       QString tmp = material["material_standard"].toString();
       if (!tmp.isEmpty()){
         result.push_back(toString(tmp));
       }
     }
+
 
     // include values from model
     for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
@@ -191,22 +203,23 @@ namespace detail {
     }
 
     // include values from json
-    parseStandardsMap();
+    parseStandardsJSON();
 
-    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
-    for (QString material_name : materials.uniqueKeys()) {
-      QMap<QString, QVariant> material = materials[material_name].toMap();
-
-      QString tmp = material["material_standard"].toString();
-      if (toString(tmp) != *materialStandard){
-        continue;
+    for( const QJsonValue& v: m_standardsArr) {
+      QJsonObject material = v.toObject();
+      if (materialStandard){
+        QString tmp = material["material_standard"].toString();
+        if (toString(tmp) != *materialStandard){
+          continue;
+        }
       }
 
-      tmp = material["material_standard_source"].toString();
+      QString tmp = material["material_standard_source"].toString();
       if (!tmp.isEmpty()){
         result.push_back(toString(tmp));
       }
     }
+
 
     // include values from model
     for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
@@ -265,12 +278,10 @@ namespace detail {
     boost::optional<std::string> standardsCategory = this->standardsCategory();
 
     // include values from json
-    parseStandardsMap();
+    parseStandardsJSON();
 
-    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
-    for (QString material_name : materials.uniqueKeys()) {
-      QMap<QString, QVariant> material = materials[material_name].toMap();
-
+    for( const QJsonValue& v: m_standardsArr) {
+      QJsonObject material = v.toObject();
       if (materialStandard){
         QString tmp = material["material_standard"].toString();
         if (toString(tmp) != *materialStandard){
@@ -283,6 +294,7 @@ namespace detail {
         result.push_back(toString(tmp));
       }
     }
+
 
     // include values from model
     for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
@@ -368,12 +380,11 @@ namespace detail {
     }
 
     // include values from json
-    parseStandardsMap();
+    parseStandardsJSON();
 
-    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
-    for (QString material_name : materials.uniqueKeys()) {
-      QMap<QString, QVariant> material = materials[material_name].toMap();
 
+    for( const QJsonValue& v: m_standardsArr) {
+      QJsonObject material = v.toObject();
       if (materialStandard){
         QString tmp = material["material_standard"].toString();
         if (toString(tmp) != *materialStandard){
@@ -381,12 +392,14 @@ namespace detail {
         }
       }
 
-      QString tmp = material["code_category"].toString();
-      if (toString(tmp) != *standardsCategory){
-        continue;
+      if (standardsCategory){
+        QString tmp = material["code_category"].toString();
+        if (toString(tmp) != *standardsCategory){
+          continue;
+        }
       }
 
-      tmp = material["code_identifier"].toString();
+      QString tmp = material["code_identifier"].toString();
       if (!tmp.isEmpty()){
         result.push_back(toString(tmp));
       }
@@ -461,12 +474,10 @@ namespace detail {
     boost::optional<std::string> compositeFramingMaterial = this->compositeFramingMaterial();
 
     // include values from json
-    parseStandardsMap();
+    parseStandardsJSON();
 
-    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
-    for (QString material_name : materials.uniqueKeys()) {
-      QMap<QString, QVariant> material = materials[material_name].toMap();
-
+    for( const QJsonValue& v: m_standardsArr) {
+      QJsonObject material = v.toObject();
       if (materialStandard){
         QString tmp = material["material_standard"].toString();
         if (toString(tmp) != *materialStandard){
@@ -486,6 +497,7 @@ namespace detail {
         result.push_back(toString(tmp));
       }
     }
+
 
     // include values from model
     for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
@@ -558,12 +570,11 @@ namespace detail {
     boost::optional<std::string> compositeFramingConfiguration = this->compositeFramingConfiguration();
 
     // include values from json
-    parseStandardsMap();
+    parseStandardsJSON();
 
-    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
-    for (QString material_name : materials.uniqueKeys()) {
-      QMap<QString, QVariant> material = materials[material_name].toMap();
 
+    for( const QJsonValue& v: m_standardsArr) {
+      QJsonObject material = v.toObject();
       if (materialStandard){
         QString tmp = material["material_standard"].toString();
         if (toString(tmp) != *materialStandard){
@@ -655,12 +666,10 @@ namespace detail {
     boost::optional<std::string> compositeFramingDepth = this->compositeFramingDepth();
 
     // include values from json
-    parseStandardsMap();
+    parseStandardsJSON();
 
-    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
-    for (QString material_name : materials.uniqueKeys()) {
-      QMap<QString, QVariant> material = materials[material_name].toMap();
-
+    for( const QJsonValue& v: m_standardsArr) {
+      QJsonObject material = v.toObject();
       if (materialStandard){
         QString tmp = material["material_standard"].toString();
         if (toString(tmp) != *materialStandard){
@@ -752,12 +761,10 @@ namespace detail {
     boost::optional<std::string> compositeFramingSize = this->compositeFramingSize();
 
     // include values from json
-    parseStandardsMap();
+    parseStandardsJSON();
 
-    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
-    for (QString material_name : materials.uniqueKeys()) {
-      QMap<QString, QVariant> material = materials[material_name].toMap();
-
+    for( const QJsonValue& v: m_standardsArr) {
+      QJsonObject material = v.toObject();
       if (materialStandard){
         QString tmp = material["material_standard"].toString();
         if (toString(tmp) != *materialStandard){
@@ -777,6 +784,7 @@ namespace detail {
         result.push_back(toString(tmp));
       }
     }
+
 
     // include values from model
     for (const StandardsInformationMaterial& other : this->model().getConcreteModelObjects<StandardsInformationMaterial>()){
@@ -849,12 +857,10 @@ namespace detail {
     boost::optional<std::string> compositeCavityInsulation = this->compositeCavityInsulation();
 
     // include values from json
-    parseStandardsMap();
+    parseStandardsJSON();
 
-    QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
-    for (QString material_name : materials.uniqueKeys()) {
-      QMap<QString, QVariant> material = materials[material_name].toMap();
-
+    for( const QJsonValue& v: m_standardsArr) {
+      QJsonObject material = v.toObject();
       if (materialStandard){
         QString tmp = material["material_standard"].toString();
         if (toString(tmp) != *materialStandard){
