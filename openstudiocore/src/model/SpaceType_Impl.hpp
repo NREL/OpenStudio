@@ -390,8 +390,8 @@ namespace detail {
     template <typename T>
     void removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep);
 
-    static QMap<QString, QVariant> m_standardsMap;
-    void parseStandardsMap() const;
+    static QJsonArray m_standardsArr;
+    void parseStandardsJSON() const;
   };
 
 } // detail
