@@ -91,15 +91,19 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonArray>
 #include <QJsonParseError>
+#include <QJsonArray>
+#include <QJsonValue>
+#include <QString>
+
+#include <QDebug>
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
-  QMap<QString, QVariant> SpaceType_Impl::m_standardsMap;
+  QJsonArray SpaceType_Impl::m_standardsArr;
 
   SpaceType_Impl::SpaceType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
@@ -291,13 +295,13 @@ namespace detail {
     boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
 
     // include values from json
-    parseStandardsMap();
+    parseStandardsJSON();
 
     // Find the possible building_type names
-    // jsonArr is an array of hashes (no nested levels)
-    QJsonArray jsonArr = m_standardsMap["space_types"].toJsonArray();
-    for( auto v: jsonArr) {
-      result.push_back(toString(v.toObject()["building_type"].toString()));
+    // m_standardsArr is an array of hashes (no nested levels)
+    for( const QJsonValue& v: m_standardsArr) {
+      QJsonObject space_type = v.toObject();
+      result.push_back(toString(space_type["building_type"].toString()));
     }
 
     // include values from model
@@ -377,14 +381,16 @@ namespace detail {
 
     // include values from json
     if (standardsBuildingType){
-      parseStandardsMap();
+      parseStandardsJSON();
 
       // Find the possible space_type names that have the building_type name
-      // jsonArr is an array of hashes (no nested levels)
-      QJsonArray jsonArr = m_standardsMap["space_types"].toJsonArray();
-      for( auto v: jsonArr) {
-        if( v.toObject()["building_type"].toString() == toQString(*standardsBuildingType) ) {
-          result.push_back(v.toObject()["space_type"].toString().toStdString());
+      // m_standardsArr is an array of hashes (no nested levels)
+      for( const QJsonValue& v: m_standardsArr) {
+        QJsonObject space_type = v.toObject();
+        // TODO: use case insensitive compare?
+        // if( QString::compare(space_type["building_type"].toString(), toQString(*standardsBuildingType), Qt::CaseInsensitive) )
+        if( space_type["building_type"].toString() == toQString(*standardsBuildingType) ) {
+          result.push_back(toString(space_type["space_type"].toString()));
         }
       }
     }
@@ -1359,25 +1365,31 @@ namespace detail {
     OS_ASSERT(count == 1);
   }
 
-  void SpaceType_Impl::parseStandardsMap() const
+  void SpaceType_Impl::parseStandardsJSON() const
   {
-    if (m_standardsMap.empty()){
+    if (m_standardsArr.empty()){
       QFile file(":/resources/standards/OpenStudio_Standards_space_types.json");
       if (file.open(QFile::ReadOnly)) {
         QJsonParseError parseError;
         QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll(), &parseError);
         file.close();
         if( QJsonParseError::NoError == parseError.error) {
-          m_standardsMap = jsonDoc.object().toVariantMap();
+          QJsonObject jsonObj = jsonDoc.object();
+          if( (jsonObj.size() == 1) && jsonObj.contains("space_types") && jsonObj["space_types"].isArray()) {
+            m_standardsArr = jsonObj["space_types"].toArray();
+          } else {
+            LOG_AND_THROW("Wrong format encountered in JSON file at 'resources/standards/OpenStudio_Standards_space_types.json'");
+          }
         } else {
-        LOG_AND_THROW("Problem occured in parsing JSON file at 'resources/standards/OpenStudio_Standards_space_types.json'");
-      }
-
+          LOG_AND_THROW("Problem occured in parsing JSON file at 'resources/standards/OpenStudio_Standards_space_types.json'");
+        }
       } else {
         LOG_AND_THROW("Cannot open file at 'resources/standards/OpenStudio_Standards_space_types.json' for parsing");
       }
     }
   }
+
+
 
 } // detail
 
