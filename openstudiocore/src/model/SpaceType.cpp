@@ -1368,7 +1368,7 @@ namespace detail {
   void SpaceType_Impl::parseStandardsJSON() const
   {
     if (m_standardsArr.empty()){
-      QFile file(":/resources/standards/OpenStudio_Standards_space_types.json");
+      QFile file(":/resources/standards/OpenStudio_Standards_space_types_merged.json");
       if (file.open(QFile::ReadOnly)) {
         QJsonParseError parseError;
         QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll(), &parseError);
