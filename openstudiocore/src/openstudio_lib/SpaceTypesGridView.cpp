@@ -1664,10 +1664,11 @@ namespace openstudio {
       }
     }
 
+    gridView()->requestRefreshGrid();
 
     // TODO: find a way to connect the STANDARDSBUILDINGTYPE onCurrentIndexChanged to trigger a refresh of
     // STANDARDSSPACETYPE?
-    if (category == QString("Measure\nTags")) {
+    //if (category == QString("Measure\nTags")) {
       int column = this->columnCount();
 
       for( int i = 1; i < this->rowCount(); i++ ) {
@@ -1685,25 +1686,25 @@ namespace openstudio {
 
         if( comboBoxBuildingType &&  comboBoxStandardsSpaceType ){
           bool isConnected = connect(comboBoxBuildingType, SIGNAL(currentIndexChanged(int)),
-                                     comboBoxStandardsSpaceType, SLOT(onComboBoxIndexChanged()));
+                                     comboBoxStandardsSpaceType, SLOT(comboBoxStandardsSpaceType()));
           OS_ASSERT(isConnected);
         } else {
           std::cout << "Couldn't find comboboxes at i=" << i << ", column=" << column << "\n";
         }
       }
-    }
+    // }
 
     qDebug() << "gridview layout count= " << this->gridView()->layout()->count() << "\n";
 
     qDebug() << "rowCount=" << this->rowCount() << ", columnCount=" << this->columnCount() << "\n";
     for( int i = 1; i < this->rowCount(); ++i ) {
       for( int j = 1; j < this->columnCount(); ++j ) {
-        qDebug() << "row=" << i << ", column=" << j << "\n";
+        qDebug() << "\n\nrow=" << i << ", column=" << j << "\n";
         QWidget * t_widgetStandardsBuildingType = this->cell(i, j);
         qDebug() << "children.size = " << t_widgetStandardsBuildingType->children().size() << "\n";
         int p = 0;
         for( auto k: t_widgetStandardsBuildingType->children()) {
-          qDebug() << "\n\nat p=" << p << k << "\n";
+          qDebug() << "\nat p=" << p << k << "\n";
           OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>(k);
           if (comboBoxBuildingType) {
             qDebug() << "FOUND at children=" << k << "\n";
@@ -1711,6 +1712,19 @@ namespace openstudio {
           ++p;
 
         }
+        // 0 appears to be GridLayout, 1 is a Holder
+        QObject * o = t_widgetStandardsBuildingType->children()[1];
+        Holder * holder = qobject_cast<Holder *>(o);
+        if(holder) {
+          qDebug() << "Holder.widget" << holder->widget << "\n";
+          OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>( holder->widget);
+          if (comboBoxBuildingType) {
+            qDebug() << "FOUND at Holder.widget=" << "\n";
+          }
+
+        }
+
+
         // qDebug() << t_widgetStandardsBuildingType->metaObject()->className();
         OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>(t_widgetStandardsBuildingType);
         if (comboBoxBuildingType != NULL) {
@@ -1780,6 +1794,7 @@ namespace openstudio {
 
   void SpaceTypesGridController::onComboBoxIndexChanged(int index)
   {
+    std::cout << "index=" << index;
   }
 
 } // openstudio
