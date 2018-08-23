@@ -1595,9 +1595,31 @@ namespace openstudio {
         };
 
         std::function<bool(model::SpaceType *, std::string)> setter =
-          [](model::SpaceType *t_spaceType, std::string t_value) {
+          [=](model::SpaceType *t_spaceType, std::string t_value) {
           t_spaceType->resetStandardsSpaceType();
-          return t_spaceType->setStandardsBuildingType(t_value);
+          bool success = t_spaceType->setStandardsBuildingType(t_value);
+
+          // find a way to connect the STANDARDSBUILDINGTYPE onCurrentIndexChanged to trigger a refresh of
+          // STANDARDSSPACETYPE
+          // Get the corresponding Standards Space Type Dropdown, and trigger repopulating
+          int columnCount = this->columnCount();
+          for( int i = 1; i < this->rowCount(); ++i ) {
+            if( this->modelObject(i).handle() == t_spaceType->handle() ) {
+              QWidget * t_widgetStandardsSpaceType = this->cell(i, columnCount - 1);
+              // 0 appears to be GridLayout, 1 is a Holder
+              QObject * o = t_widgetStandardsSpaceType->children()[1];
+              Holder * holder = qobject_cast<Holder *>(o);
+              if(holder) {
+                OSComboBox2 * comboBoxSpaceType = qobject_cast<OSComboBox2 *>( holder->widget);
+                if (comboBoxSpaceType) {
+                  comboBoxSpaceType->onChoicesRefreshTrigger();
+                }
+              }
+              break;
+            }
+          }
+
+          return success;
         };
 
         boost::optional<std::function<void(model::SpaceType *)>> resetter(
@@ -1669,70 +1691,72 @@ namespace openstudio {
     // TODO: find a way to connect the STANDARDSBUILDINGTYPE onCurrentIndexChanged to trigger a refresh of
     // STANDARDSSPACETYPE?
     //if (category == QString("Measure\nTags")) {
-      int column = this->columnCount();
+      //int column = this->columnCount();
 
-      for( int i = 1; i < this->rowCount(); i++ ) {
+      //for( int i = 1; i < this->rowCount(); i++ ) {
         /*
          *QSharedPointer<BaseConcept> t_baseConcept = m_baseConcepts[column];
          *if(QSharedPointer<ComboBoxConcept> comboBoxConcept = t_baseConcept.dynamicCast<ComboBoxConcept>()) {
          *}
          */
-        QWidget * t_widgetStandardsBuildingType = this->cell(i, column-2);
-        qDebug() << t_widgetStandardsBuildingType->metaObject()->className();
-        OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>(t_widgetStandardsBuildingType);
+        //QWidget * t_widgetStandardsBuildingType = this->cell(i, column-2);
+        //qDebug() << t_widgetStandardsBuildingType->metaObject()->className();
+        //OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>(t_widgetStandardsBuildingType);
 
-        QWidget * t_widgetStandardsSpaceType = this->cell(i, column-1);
-        OSComboBox2 * comboBoxStandardsSpaceType = qobject_cast<OSComboBox2 *>(t_widgetStandardsSpaceType);
+        //QWidget * t_widgetStandardsSpaceType = this->cell(i, column-1);
+        //OSComboBox2 * comboBoxStandardsSpaceType = qobject_cast<OSComboBox2 *>(t_widgetStandardsSpaceType);
 
-        if( comboBoxBuildingType &&  comboBoxStandardsSpaceType ){
-          bool isConnected = connect(comboBoxBuildingType, SIGNAL(currentIndexChanged(int)),
-                                     comboBoxStandardsSpaceType, SLOT(comboBoxStandardsSpaceType()));
-          OS_ASSERT(isConnected);
-        } else {
-          std::cout << "Couldn't find comboboxes at i=" << i << ", column=" << column << "\n";
-        }
-      }
-    // }
+        //if( comboBoxBuildingType &&  comboBoxStandardsSpaceType ){
+          //bool isConnected = connect(comboBoxBuildingType, SIGNAL(currentIndexChanged(int)),
+                                     //comboBoxStandardsSpaceType, SLOT(comboBoxStandardsSpaceType()));
+          //OS_ASSERT(isConnected);
+        //} else {
+          //std::cout << "Couldn't find comboboxes at i=" << i << ", column=" << column << "\n";
+        //}
+      //}
+    //// }
 
-    qDebug() << "gridview layout count= " << this->gridView()->layout()->count() << "\n";
-
-    qDebug() << "rowCount=" << this->rowCount() << ", columnCount=" << this->columnCount() << "\n";
-    for( int i = 1; i < this->rowCount(); ++i ) {
-      for( int j = 1; j < this->columnCount(); ++j ) {
-        qDebug() << "\n\nrow=" << i << ", column=" << j << "\n";
-        QWidget * t_widgetStandardsBuildingType = this->cell(i, j);
-        qDebug() << "children.size = " << t_widgetStandardsBuildingType->children().size() << "\n";
-        int p = 0;
-        for( auto k: t_widgetStandardsBuildingType->children()) {
-          qDebug() << "\nat p=" << p << k << "\n";
-          OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>(k);
-          if (comboBoxBuildingType) {
-            qDebug() << "FOUND at children=" << k << "\n";
-          }
-          ++p;
-
-        }
-        // 0 appears to be GridLayout, 1 is a Holder
-        QObject * o = t_widgetStandardsBuildingType->children()[1];
-        Holder * holder = qobject_cast<Holder *>(o);
-        if(holder) {
-          qDebug() << "Holder.widget" << holder->widget << "\n";
-          OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>( holder->widget);
-          if (comboBoxBuildingType) {
-            qDebug() << "FOUND at Holder.widget=" << "\n";
-          }
-
-        }
+    //qDebug() << "gridview layout count= " << this->gridView()->layout()->count() << "\n";
 
 
-        // qDebug() << t_widgetStandardsBuildingType->metaObject()->className();
-        OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>(t_widgetStandardsBuildingType);
-        if (comboBoxBuildingType != NULL) {
-          qDebug() << "Found a comboBox at row=" << i << ", column=" << j << "\n";
-        }
+    //// MOVE THIS TO THE SETTER
+    //qDebug() << "rowCount=" << this->rowCount() << ", columnCount=" << this->columnCount() << "\n";
+    //for( int i = 1; i < this->rowCount(); ++i ) {
+      //for( int j = 1; j < this->columnCount(); ++j ) {
+        //qDebug() << "\n\nrow=" << i << ", column=" << j << "\n";
+        //QWidget * t_widgetStandardsBuildingType = this->cell(i, j);
+        //qDebug() << "children.size = " << t_widgetStandardsBuildingType->children().size() << "\n";
+        //int p = 0;
+        //for( auto k: t_widgetStandardsBuildingType->children()) {
+          //qDebug() << "\nat p=" << p << k << "\n";
+          //OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>(k);
+          //if (comboBoxBuildingType) {
+            //qDebug() << "FOUND at children=" << k << "\n";
+          //}
+          //++p;
 
-      }
-    }
+        //}
+        //// 0 appears to be GridLayout, 1 is a Holder
+        //QObject * o = t_widgetStandardsBuildingType->children()[1];
+        //Holder * holder = qobject_cast<Holder *>(o);
+        //if(holder) {
+          //qDebug() << "Holder.widget" << holder->widget << "\n";
+          //OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>( holder->widget);
+          //if (comboBoxBuildingType) {
+            //qDebug() << "FOUND at Holder.widget=" << "\n";
+          //}
+
+        //}
+
+
+        //// qDebug() << t_widgetStandardsBuildingType->metaObject()->className();
+        //OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>(t_widgetStandardsBuildingType);
+        //if (comboBoxBuildingType != NULL) {
+          //qDebug() << "Found a comboBox at row=" << i << ", column=" << j << "\n";
+        //}
+
+      //}
+    //}
 
   }
 
