@@ -1603,13 +1603,15 @@ namespace openstudio {
           t_spaceType->resetStandardsBuildingType();
         });
 
+        // Note: It will end up creating a ComboBoxOptionalChoiceImpl
         addComboBoxColumn(Heading(QString(STANDARDSBUILDINGTYPE)),
           toString,
           choices,
           getter,
           setter,
           resetter,
-          boost::none,
+          boost::none, // No DataSource
+          // Make editable
           true);
       }
       else if (field == STANDARDSSPACETYPE) {
@@ -1650,6 +1652,7 @@ namespace openstudio {
           setter,
           resetter,
           boost::none,
+          // Make editable
           true);
       }
       else {
