@@ -37,6 +37,7 @@
 #include "OSDropZone.hpp"
 
 #include "../shared_gui_components/OSGridView.hpp"
+#include "../shared_gui_components/OSComboBox.hpp"
 
 #include "../model/DefaultConstructionSet.hpp"
 #include "../model/DefaultConstructionSet_Impl.hpp"
@@ -108,6 +109,8 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QLabel>
+
+#include <QDebug>
 
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
@@ -350,26 +353,26 @@ namespace openstudio {
       m_categoriesAndFields.push_back(categoryAndFields);
     }
 
-  {
-    std::vector<QString> fields;
-    fields.push_back(LOADNAME);
-    fields.push_back(MULTIPLIER);
-    fields.push_back(DEFINITION);
-    fields.push_back(SCHEDULE);
-    fields.push_back(ACTIVITYSCHEDULE);
-    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Loads"), fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
+    {
+      std::vector<QString> fields;
+      fields.push_back(LOADNAME);
+      fields.push_back(MULTIPLIER);
+      fields.push_back(DEFINITION);
+      fields.push_back(SCHEDULE);
+      fields.push_back(ACTIVITYSCHEDULE);
+      std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Loads"), fields);
+      m_categoriesAndFields.push_back(categoryAndFields);
+    }
 
-  {
-    std::vector<QString> fields;
-    fields.push_back(STANDARDSBUILDINGTYPE);
-    fields.push_back(STANDARDSSPACETYPE);
-    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Measure\nTags"), fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
+    {
+      std::vector<QString> fields;
+      fields.push_back(STANDARDSBUILDINGTYPE);
+      fields.push_back(STANDARDSSPACETYPE);
+      std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Measure\nTags"), fields);
+      m_categoriesAndFields.push_back(categoryAndFields);
+    }
 
-  OSGridController::setCategoriesAndFields();
+    OSGridController::setCategoriesAndFields();
 
   }
 
@@ -1660,6 +1663,63 @@ namespace openstudio {
         OS_ASSERT(false);
       }
     }
+
+
+    // TODO: find a way to connect the STANDARDSBUILDINGTYPE onCurrentIndexChanged to trigger a refresh of
+    // STANDARDSSPACETYPE?
+    if (category == QString("Measure\nTags")) {
+      int column = this->columnCount();
+
+      for( int i = 1; i < this->rowCount(); i++ ) {
+        /*
+         *QSharedPointer<BaseConcept> t_baseConcept = m_baseConcepts[column];
+         *if(QSharedPointer<ComboBoxConcept> comboBoxConcept = t_baseConcept.dynamicCast<ComboBoxConcept>()) {
+         *}
+         */
+        QWidget * t_widgetStandardsBuildingType = this->cell(i, column-2);
+        qDebug() << t_widgetStandardsBuildingType->metaObject()->className();
+        OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>(t_widgetStandardsBuildingType);
+
+        QWidget * t_widgetStandardsSpaceType = this->cell(i, column-1);
+        OSComboBox2 * comboBoxStandardsSpaceType = qobject_cast<OSComboBox2 *>(t_widgetStandardsSpaceType);
+
+        if( comboBoxBuildingType &&  comboBoxStandardsSpaceType ){
+          bool isConnected = connect(comboBoxBuildingType, SIGNAL(currentIndexChanged(int)),
+                                     comboBoxStandardsSpaceType, SLOT(onComboBoxIndexChanged()));
+          OS_ASSERT(isConnected);
+        } else {
+          std::cout << "Couldn't find comboboxes at i=" << i << ", column=" << column << "\n";
+        }
+      }
+    }
+
+    qDebug() << "gridview layout count= " << this->gridView()->layout()->count() << "\n";
+
+    qDebug() << "rowCount=" << this->rowCount() << ", columnCount=" << this->columnCount() << "\n";
+    for( int i = 1; i < this->rowCount(); ++i ) {
+      for( int j = 1; j < this->columnCount(); ++j ) {
+        qDebug() << "row=" << i << ", column=" << j << "\n";
+        QWidget * t_widgetStandardsBuildingType = this->cell(i, j);
+        qDebug() << "children.size = " << t_widgetStandardsBuildingType->children().size() << "\n";
+        int p = 0;
+        for( auto k: t_widgetStandardsBuildingType->children()) {
+          qDebug() << "\n\nat p=" << p << k << "\n";
+          OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>(k);
+          if (comboBoxBuildingType) {
+            qDebug() << "FOUND at children=" << k << "\n";
+          }
+          ++p;
+
+        }
+        // qDebug() << t_widgetStandardsBuildingType->metaObject()->className();
+        OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>(t_widgetStandardsBuildingType);
+        if (comboBoxBuildingType != NULL) {
+          qDebug() << "Found a comboBox at row=" << i << ", column=" << j << "\n";
+        }
+
+      }
+    }
+
   }
 
   QString SpaceTypesGridController::getColor(const model::ModelObject & modelObject)
