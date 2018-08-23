@@ -110,8 +110,6 @@
 #include <QComboBox>
 #include <QLabel>
 
-#include <QDebug>
-
 // These defines provide a common area for field display names
 // used on column headers, and other grid widgets
 
@@ -1685,8 +1683,6 @@ namespace openstudio {
         OS_ASSERT(false);
       }
     }
-
-    gridView()->requestRefreshGrid();
 
   }
 
