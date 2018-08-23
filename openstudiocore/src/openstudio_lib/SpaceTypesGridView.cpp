@@ -1597,8 +1597,10 @@ namespace openstudio {
           t_spaceType->resetStandardsSpaceType();
           bool success = t_spaceType->setStandardsBuildingType(t_value);
 
-          // find a way to connect the STANDARDSBUILDINGTYPE onCurrentIndexChanged to trigger a refresh of
-          // STANDARDSSPACETYPE
+          // Note: JM 2018-08-23
+          // Because we want **dependent** dropdown lists, we need to find a way to connect
+          // a change in STANDARDSBUILDINGTYPE to trigger a refresh of STANDARDSSPACETYPE
+          // This is a hack (at best), but it works
           // Get the corresponding Standards Space Type Dropdown, and trigger repopulating
           int columnCount = this->columnCount();
           for( int i = 1; i < this->rowCount(); ++i ) {
