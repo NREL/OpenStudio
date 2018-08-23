@@ -79,7 +79,7 @@ namespace detail {
   void StandardsInformationMaterial_Impl::parseStandardsJSON() const
   {
     if (m_standardsArr.empty()){
-      QFile file(":/resources/standards/OpenStudio_Standards_materials.json");
+      QFile file(":/resources/standards/OpenStudio_Standards_materials_merged.json");
       if (file.open(QFile::ReadOnly)) {
         QJsonParseError parseError;
         QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll(), &parseError);
