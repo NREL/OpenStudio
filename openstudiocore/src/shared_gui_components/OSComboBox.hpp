@@ -183,6 +183,10 @@ class OSComboBox2 : public QComboBox, public Nano::Observer {
 
   void inFocus(bool inFocus, bool hasData);
 
+ public slots:
+  // Need to make that public for dependent dropdowns...
+  void onChoicesRefreshTrigger();
+
  private slots:
 
   void onModelObjectChanged();
@@ -192,8 +196,6 @@ class OSComboBox2 : public QComboBox, public Nano::Observer {
   void onCurrentIndexChanged(const QString & text);
 
   void onEditTextChanged(const QString & text);
-
-  void onChoicesRefreshTrigger();
 
   void onDataSourceChange(int);
 
