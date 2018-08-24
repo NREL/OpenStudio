@@ -51,7 +51,7 @@ namespace model {
 namespace detail {
 
   BuildingUnit_Impl::BuildingUnit_Impl(const IdfObject &idfObject, Model_Impl *model, bool keepHandle)
-    : ModelObject_Impl(idfObject, model, keepHandle)
+    : ParentObject_Impl(idfObject, model, keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == BuildingUnit::iddObjectType());
   }
@@ -59,7 +59,7 @@ namespace detail {
   BuildingUnit_Impl::BuildingUnit_Impl(const openstudio::detail::WorkspaceObject_Impl &other,
                                        Model_Impl *model,
                                        bool keepHandle)
-    : ModelObject_Impl(other, model, keepHandle)
+    : ParentObject_Impl(other, model, keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == BuildingUnit::iddObjectType());
   }
@@ -67,7 +67,7 @@ namespace detail {
   BuildingUnit_Impl::BuildingUnit_Impl(const BuildingUnit_Impl &other,
                                        Model_Impl *model,
                                        bool keepHandle)
-    : ModelObject_Impl(other, model, keepHandle)
+    : ParentObject_Impl(other, model, keepHandle)
   {}
 
   const std::vector<std::string>& BuildingUnit_Impl::outputVariableNames() const
@@ -78,6 +78,20 @@ namespace detail {
 
   IddObjectType BuildingUnit_Impl::iddObjectType() const {
     return BuildingUnit::iddObjectType();
+  }
+
+  std::vector<ModelObject> BuildingUnit_Impl::children() const {
+    std::vector<ModelObject> result;
+    if( boost::optional<RenderingColor> r = this->renderingColor() ) {
+      result.push_back(*r);
+    }
+    return result;
+  }
+
+  std::vector<IddObjectType> BuildingUnit_Impl::allowableChildTypes() const {
+    IddObjectTypeVector result;
+    result.push_back(RenderingColor::iddObjectType());
+    return result;
   }
 
   boost::optional<RenderingColor> BuildingUnit_Impl::renderingColor() const
@@ -197,7 +211,7 @@ namespace detail {
 } //detail
 
 BuildingUnit::BuildingUnit(const Model &model)
-  : ModelObject(BuildingUnit::iddObjectType(), model)
+  : ParentObject(BuildingUnit::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::BuildingUnit_Impl>());
 }
@@ -326,7 +340,7 @@ bool BuildingUnit::resetFeature(const std::string& name)
 
 /// @cond
 BuildingUnit::BuildingUnit(std::shared_ptr<detail::BuildingUnit_Impl> impl)
-  : ModelObject(std::move(impl))
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

@@ -178,6 +178,10 @@ namespace detail {
     SpaceInfiltrationEffectiveLeakageAreaVector spaceInfiltrationEffectiveLeakageAreas = this->spaceInfiltrationEffectiveLeakageAreas();
     result.insert(result.end(), spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end());
 
+    if( boost::optional<RenderingColor> r = this->renderingColor() ) {
+      result.push_back(*r);
+    }
+
     return result;
   }
 

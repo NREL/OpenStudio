@@ -31,7 +31,7 @@
 #define MODEL_BUILDINGUNIT_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 
@@ -46,7 +46,8 @@ namespace detail {
 
 } // detail
 
-class MODEL_API BuildingUnit : public ModelObject {
+/** BuildingUnit is a ParentObject that wraps the OpenStudio IDD object 'OS_BuildingUnit'. */
+class MODEL_API BuildingUnit : public ParentObject {
  public:
   /** @name Constructors and Destructors */
   //@{

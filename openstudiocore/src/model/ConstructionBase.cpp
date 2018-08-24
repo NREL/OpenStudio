@@ -164,13 +164,16 @@ namespace detail {
   std::vector<ModelObject> ConstructionBase_Impl::children() const {
 
     vector<ModelObject> results(castVector<ModelObject>(getObject<ConstructionBase>().getModelObjectSources<StandardsInformationConstruction>()));
-
+    if( boost::optional<RenderingColor> r = this->renderingColor() ) {
+      results.push_back(*r);
+    }
     return results;
   }
 
   std::vector<IddObjectType> ConstructionBase_Impl::allowableChildTypes() const {
     IddObjectTypeVector result;
     result.push_back(StandardsInformationConstruction::iddObjectType());
+    result.push_back(RenderingColor::iddObjectType());
     return result;
   }
 

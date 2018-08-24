@@ -44,8 +44,9 @@ namespace detail {
 
 } // detail
 
-/** RenderingColor is a ResourceObject that wraps the OpenStudio IDD object 'OS_Rendering_Color'. */
-class MODEL_API RenderingColor : public ResourceObject {
+/** RenderingColor is a ModelObject that wraps the OpenStudio IDD object 'OS_Rendering_Color'. */
+class MODEL_API RenderingColor : public ModelObject {
+
  public:
   /** @name Constructors and Destructors */
   //@{

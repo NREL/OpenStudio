@@ -173,6 +173,10 @@ namespace detail {
       result.push_back(afnz.get());
     }
 
+    if( boost::optional<RenderingColor> r = this->renderingColor() ) {
+      result.push_back(*r);
+    }
+
     return result;
   }
 
@@ -191,6 +195,7 @@ namespace detail {
     // DLM: this does not seem to agree with implementation of children()
     result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
     result.push_back(IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint);
+    result.push_back(IddObjectType::OS_Rendering_Color);
     return result;
   }
 
@@ -2359,6 +2364,11 @@ namespace detail {
     if( auto t_controller = zoneControlContaminantController() ) {
       auto controllerClone = t_controller->clone(model).cast<ZoneControlContaminantController>();
       tz.setZoneControlContaminantController(controllerClone);
+    }
+
+    if( auto t_color = renderingColor() ) {
+      auto colorClone = t_color->clone(model).cast<RenderingColor>();
+      tz.setRenderingColor(colorClone);
     }
 
     // DLM: do not clone zone mixing objects

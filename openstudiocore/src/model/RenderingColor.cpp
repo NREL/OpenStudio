@@ -46,7 +46,7 @@ namespace model {
 namespace detail {
 
   RenderingColor_Impl::RenderingColor_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ResourceObject_Impl(idfObject,model,keepHandle)
+    : ModelObject_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == RenderingColor::iddObjectType());
 
@@ -71,7 +71,7 @@ namespace detail {
   RenderingColor_Impl::RenderingColor_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
+    : ModelObject_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == RenderingColor::iddObjectType());
   }
@@ -79,7 +79,7 @@ namespace detail {
   RenderingColor_Impl::RenderingColor_Impl(const RenderingColor_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle)
-    : ResourceObject_Impl(other,model,keepHandle)
+    : ModelObject_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& RenderingColor_Impl::outputVariableNames() const
@@ -176,7 +176,7 @@ namespace detail {
 } // detail
 
 RenderingColor::RenderingColor(const Model& model)
-  : ResourceObject(RenderingColor::iddObjectType(),model)
+  : ModelObject(RenderingColor::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::RenderingColor_Impl>());
 }
@@ -250,7 +250,7 @@ std::string RenderingColor::colorString() const
 
 /// @cond
 RenderingColor::RenderingColor(std::shared_ptr<detail::RenderingColor_Impl> impl)
-  : ResourceObject(std::move(impl))
+  : ModelObject(std::move(impl))
 {}
 
 QColor RenderingColor::randomColor()

@@ -30,7 +30,7 @@
 #ifndef MODEL_BUILDINGSTORY_IMPL_HPP
 #define MODEL_BUILDINGSTORY_IMPL_HPP
 
-#include "ModelObject_Impl.hpp"
+#include "ParentObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -44,12 +44,8 @@ class BuildingStory;
 
 namespace detail {
 
-  /** BuildingStory_Impl is a ModelObject_Impl that is the implementation class for BuildingStory.*/
-  class MODEL_API BuildingStory_Impl : public ModelObject_Impl {
-
-
-
-
+  /** BuildingStory_Impl is a ParentObject_Impl that is the implementation class for BuildingStory.*/
+  class MODEL_API BuildingStory_Impl : public ParentObject_Impl {
 
    public:
     /** @name Constructors and Destructors */
@@ -72,6 +68,12 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
+
+    // return any children objects in the hierarchy
+    virtual std::vector<ModelObject> children() const override;
+
+    // get a vector of allowable children types
+    virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
     /** @name Getters */
     //@{

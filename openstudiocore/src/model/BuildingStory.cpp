@@ -54,7 +54,7 @@ namespace model {
 namespace detail {
 
   BuildingStory_Impl::BuildingStory_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : ParentObject_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == BuildingStory::iddObjectType());
   }
@@ -62,7 +62,7 @@ namespace detail {
   BuildingStory_Impl::BuildingStory_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                          Model_Impl* model,
                                          bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == BuildingStory::iddObjectType());
   }
@@ -70,7 +70,7 @@ namespace detail {
   BuildingStory_Impl::BuildingStory_Impl(const BuildingStory_Impl& other,
                                          Model_Impl* model,
                                          bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : ParentObject_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& BuildingStory_Impl::outputVariableNames() const
@@ -81,6 +81,20 @@ namespace detail {
 
   IddObjectType BuildingStory_Impl::iddObjectType() const {
     return BuildingStory::iddObjectType();
+  }
+
+  std::vector<ModelObject> BuildingStory_Impl::children() const {
+    std::vector<ModelObject> result;
+    if( boost::optional<RenderingColor> r = this->renderingColor() ) {
+      result.push_back(*r);
+    }
+    return result;
+  }
+
+  std::vector<IddObjectType> BuildingStory_Impl::allowableChildTypes() const {
+    IddObjectTypeVector result;
+    result.push_back(RenderingColor::iddObjectType());
+    return result;
   }
 
   boost::optional<double> BuildingStory_Impl::nominalZCoordinate() const {
@@ -256,7 +270,7 @@ namespace detail {
 } // detail
 
 BuildingStory::BuildingStory(const Model& model)
-  : ModelObject(BuildingStory::iddObjectType(), model)
+  : ParentObject(BuildingStory::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::BuildingStory_Impl>());
 }
@@ -354,7 +368,7 @@ std::vector<Space> BuildingStory::spaces() const
 
 /// @cond
 BuildingStory::BuildingStory(std::shared_ptr<detail::BuildingStory_Impl> impl)
-  : ModelObject(std::move(impl))
+  : ParentObject(std::move(impl))
 {}
 /// @endcond
 

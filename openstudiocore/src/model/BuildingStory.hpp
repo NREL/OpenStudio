@@ -31,7 +31,7 @@
 #define MODEL_BUILDINGSTORY_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 
@@ -49,8 +49,8 @@ namespace detail {
 
 } // detail
 
-/** BuildingStory is a ModelObject that wraps the OpenStudio IDD object 'OS_BuildingStory'. */
-class MODEL_API BuildingStory : public ModelObject {
+/** BuildingStory is a ParentObject that wraps the OpenStudio IDD object 'OS_BuildingStory'. */
+class MODEL_API BuildingStory : public ParentObject {
  public:
   /** @name Constructors and Destructors */
   //@{

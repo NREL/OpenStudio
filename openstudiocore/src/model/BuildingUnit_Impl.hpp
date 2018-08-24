@@ -30,7 +30,7 @@
 #ifndef MODEL_BUILDINGUNIT_IMPL_HPP
 #define MODEL_BUILDINGUNIT_IMPL_HPP
 
-#include "ModelObject_Impl.hpp"
+#include "ParentObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -41,7 +41,9 @@ class BuildingUnit;
 
 namespace detail {
 
-class MODEL_API BuildingUnit_Impl : public ModelObject_Impl {
+/** BuildingUnit_Impl is a ParentObject_Impl that wraps the OpenStudio IDD object 'OS_BuildingUnit'. */
+class MODEL_API BuildingUnit_Impl : public ParentObject_Impl {
+
  public:
 
   /** @name Constructors and Destructors */
@@ -68,6 +70,12 @@ class MODEL_API BuildingUnit_Impl : public ModelObject_Impl {
   virtual const std::vector<std::string>& outputVariableNames() const override;
 
   virtual IddObjectType iddObjectType() const override;
+
+  // return any children objects in the hierarchy
+  virtual std::vector<ModelObject> children() const override;
+
+  // get a vector of allowable children types
+  virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
   /** @name Getters */
   //@{
