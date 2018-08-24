@@ -69,7 +69,8 @@
 #include "../ZoneControlContaminantController.hpp"
 #include "../ZoneControlContaminantController_Impl.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
-
+#include "../RenderingColor.hpp"
+#include "../RenderingColor_Impl.hpp"
 
 #include "../ScheduleConstant.hpp"
 #include "../ZoneHVACUnitHeater.hpp"
@@ -807,5 +808,34 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
     EXPECT_NE(zone.zoneControlHumidistat()->handle(), zone2.zoneControlHumidistat()->handle());
     EXPECT_EQ(2u,m.getModelObjects<model::ZoneControlHumidistat>().size());
   }
+}
+
+TEST_F(ModelFixture, ThermalZone_RenderingColor) {
+  Model m;
+
+  ThermalZone thermalZone(m);
+  RenderingColor renderingColor(m);
+  EXPECT_TRUE(thermalZone.setRenderingColor(renderingColor));
+
+  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+
+  // Delete ThermalZone, since the color is referenced, it should be deleted too
+  EXPECT_EQ(3u, thermalZone.remove().size()); // Zone + ZoneHVACEquipmentList + Color
+  EXPECT_EQ(0u, m.getModelObjects<ThermalZone>().size());
+  EXPECT_EQ(0u, m.getModelObjects<RenderingColor>().size());
+
+
+  // Clone
+  ThermalZone thermalZone2(m);
+  RenderingColor renderingColor2(m);
+  EXPECT_TRUE(thermalZone2.setRenderingColor(renderingColor2));
+
+  thermalZone2.clone(m);
+  EXPECT_EQ(2u, m.getModelObjects<ThermalZone>().size());
+  EXPECT_EQ(2u, m.getModelObjects<RenderingColor>().size());
+
+  EXPECT_EQ(3u, thermalZone2.remove().size()); // Zone + ZoneHVACEquipmentList + Color
+  EXPECT_EQ(1u, m.getModelObjects<ThermalZone>().size());
+  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
 }
 

@@ -51,7 +51,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, BuildingUnit_RenderingColor)
+TEST_F(ModelFixture, BuildingUnit_RenderingColor_SettersGetters)
 {
 
   Model model;
@@ -250,4 +250,33 @@ TEST_F(ModelFixture, BuildingUnit_Features)
   ASSERT_NE(std::find(suggestedFeatures.begin(), suggestedFeatures.end(), "NumberOfBathrooms"), suggestedFeatures.end());
   ASSERT_NE(std::find(suggestedFeatures.begin(), suggestedFeatures.end(), "MyUniqueFeature"), suggestedFeatures.end());
 
+}
+
+TEST_F(ModelFixture, BuildingUnit_RenderingColor_Clone) {
+  Model m;
+
+  BuildingUnit buildingUnit(m);
+  RenderingColor renderingColor(m);
+  EXPECT_TRUE(buildingUnit.setRenderingColor(renderingColor));
+
+  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+
+  // Delete BuildingUnit, since the color is referenced, it should be deleted too
+  EXPECT_EQ(2u, buildingUnit.remove().size());
+  EXPECT_EQ(0u, m.getModelObjects<BuildingUnit>().size());
+  EXPECT_EQ(0u, m.getModelObjects<RenderingColor>().size());
+
+
+  // Clone
+  BuildingUnit buildingUnit2(m);
+  RenderingColor renderingColor2(m);
+  EXPECT_TRUE(buildingUnit2.setRenderingColor(renderingColor2));
+
+  buildingUnit2.clone(m);
+  EXPECT_EQ(2u, m.getModelObjects<BuildingUnit>().size());
+  EXPECT_EQ(2u, m.getModelObjects<RenderingColor>().size());
+
+  EXPECT_EQ(2u, buildingUnit2.remove().size());
+  EXPECT_EQ(1u, m.getModelObjects<BuildingUnit>().size());
+  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
 }

@@ -54,6 +54,8 @@
 #include "../WindowDataFile_Impl.hpp"
 #include "../StandardsInformationConstruction.hpp"
 #include "../StandardsInformationConstruction_Impl.hpp"
+#include "../RenderingColor.hpp"
+#include "../RenderingColor_Impl.hpp"
 
 #include "../Material.hpp"
 #include "../Material_Impl.hpp"
@@ -1009,4 +1011,34 @@ TEST_F(ModelFixture, Construction_NumLayers)
       }
     }
   }
+}
+
+
+TEST_F(ModelFixture, Construction_RenderingColor) {
+  Model m;
+
+  Construction construction(m);
+  RenderingColor renderingColor(m);
+  EXPECT_TRUE(construction.setRenderingColor(renderingColor));
+
+  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+
+  // Delete Construction, since the color is referenced, it should be deleted too
+  EXPECT_EQ(2u, construction.remove().size());
+  EXPECT_EQ(0u, m.getModelObjects<Construction>().size());
+  EXPECT_EQ(0u, m.getModelObjects<RenderingColor>().size());
+
+
+  // Clone
+  Construction construction2(m);
+  RenderingColor renderingColor2(m);
+  EXPECT_TRUE(construction2.setRenderingColor(renderingColor2));
+
+  construction2.clone(m);
+  EXPECT_EQ(2u, m.getModelObjects<Construction>().size());
+  EXPECT_EQ(2u, m.getModelObjects<RenderingColor>().size());
+
+  EXPECT_EQ(2u, construction2.remove().size());
+  EXPECT_EQ(1u, m.getModelObjects<Construction>().size());
+  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
 }

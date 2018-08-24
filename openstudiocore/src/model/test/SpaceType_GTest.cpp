@@ -43,6 +43,8 @@
 #include "../ThermalZone.hpp"
 #include "../ScheduleRuleset.hpp"
 #include "../ScheduleRuleset_Impl.hpp"
+#include "../RenderingColor.hpp"
+#include "../RenderingColor_Impl.hpp"
 
 #include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
@@ -306,3 +308,31 @@ TEST_F(ModelFixture, SpaceType_Clone_Plenum) {
   ASSERT_NE(m3.plenumSpaceType().handle(), m3_stClone.handle());
 }
 
+TEST_F(ModelFixture, SpaceType_RenderingColor) {
+  Model m;
+
+  SpaceType spaceType(m);
+  RenderingColor renderingColor(m);
+  EXPECT_TRUE(spaceType.setRenderingColor(renderingColor));
+
+  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+
+  // Delete SpaceType, since the color is referenced, it should be deleted too
+  EXPECT_EQ(2u, spaceType.remove().size());
+  EXPECT_EQ(0u, m.getModelObjects<SpaceType>().size());
+  EXPECT_EQ(0u, m.getModelObjects<RenderingColor>().size());
+
+
+  // Clone
+  SpaceType spaceType2(m);
+  RenderingColor renderingColor2(m);
+  EXPECT_TRUE(spaceType2.setRenderingColor(renderingColor2));
+
+  spaceType2.clone(m);
+  EXPECT_EQ(2u, m.getModelObjects<SpaceType>().size());
+  EXPECT_EQ(2u, m.getModelObjects<RenderingColor>().size());
+
+  EXPECT_EQ(2u, spaceType2.remove().size());
+  EXPECT_EQ(1u, m.getModelObjects<SpaceType>().size());
+  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+}

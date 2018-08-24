@@ -33,6 +33,8 @@
 
 #include "../BuildingStory.hpp"
 #include "../BuildingStory_Impl.hpp"
+#include "../RenderingColor.hpp"
+#include "../RenderingColor_Impl.hpp"
 
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
@@ -65,4 +67,35 @@ TEST_F(ModelFixture,BuildingStory_NominalFloortoFloorHeight) {
   ASSERT_TRUE(result);
   EXPECT_NEAR(value, *result, 1.0E-8);
 }
+
+
+TEST_F(ModelFixture, BuildingStory_RenderingColor) {
+  Model m;
+
+  BuildingStory buildingStory(m);
+  RenderingColor renderingColor(m);
+  EXPECT_TRUE(buildingStory.setRenderingColor(renderingColor));
+
+  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+
+  // Delete BuildingStory, since the color is referenced, it should be deleted too
+  EXPECT_EQ(2u, buildingStory.remove().size());
+  EXPECT_EQ(0u, m.getModelObjects<BuildingStory>().size());
+  EXPECT_EQ(0u, m.getModelObjects<RenderingColor>().size());
+
+
+  // Clone
+  BuildingStory buildingStory2(m);
+  RenderingColor renderingColor2(m);
+  EXPECT_TRUE(buildingStory2.setRenderingColor(renderingColor2));
+
+  buildingStory2.clone(m);
+  EXPECT_EQ(2u, m.getModelObjects<BuildingStory>().size());
+  EXPECT_EQ(2u, m.getModelObjects<RenderingColor>().size());
+
+  EXPECT_EQ(2u, buildingStory2.remove().size());
+  EXPECT_EQ(1u, m.getModelObjects<BuildingStory>().size());
+  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+}
+
 
