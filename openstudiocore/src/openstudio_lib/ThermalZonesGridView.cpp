@@ -44,6 +44,8 @@
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/Model_Impl.hpp"
+#include "../model/RenderingColor.hpp"
+#include "../model/RenderingColor_Impl.hpp"
 #include "../model/Schedule.hpp"
 #include "../model/Schedule_Impl.hpp"
 #include "../model/SizingZone.hpp"
@@ -75,6 +77,7 @@
 #define SELECTED "All"
 
 //HVAC SYSTEMS
+#define RENDERINGCOLOR "Rendering Color"
 #define IDEALAIRLOADS "Turn On\nIdeal\nAir Loads"
 #define AIRLOOPNAME "Air Loop Name"
 #define ZONEEQUIPMENT "Zone Equipment"
@@ -176,6 +179,7 @@ struct ModelObjectNameSorter{
 
     {
       std::vector<QString> fields;
+      fields.push_back(RENDERINGCOLOR);
       fields.push_back(IDEALAIRLOADS);
       fields.push_back(AIRLOOPNAME);
       fields.push_back(ZONEEQUIPMENT);
@@ -188,37 +192,37 @@ struct ModelObjectNameSorter{
       m_categoriesAndFields.push_back(categoryAndFields);
     }
 
-  {
-    std::vector<QString> fields;
-    fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE);
-    fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO);
-    fields.push_back(ZONECOOLINGSIZINGFACTOR);
-    fields.push_back(COOLINGMINIMUMAIRFLOWPERZONEFLOORAREA);
-    fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE);
-    fields.push_back(COOLINGMINIMUMAIRFLOWFRACTION);
-    fields.push_back(COOLINGDESIGNAIRFLOWMETHOD);
-    fields.push_back(COOLINGDESIGNAIRFLOWRATE);
-    fields.push_back(COOLINGMINIMUMAIRFLOW);
-    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Cooling\nSizing\nParameters"), fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
+    {
+      std::vector<QString> fields;
+      fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE);
+      fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO);
+      fields.push_back(ZONECOOLINGSIZINGFACTOR);
+      fields.push_back(COOLINGMINIMUMAIRFLOWPERZONEFLOORAREA);
+      fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE);
+      fields.push_back(COOLINGMINIMUMAIRFLOWFRACTION);
+      fields.push_back(COOLINGDESIGNAIRFLOWMETHOD);
+      fields.push_back(COOLINGDESIGNAIRFLOWRATE);
+      fields.push_back(COOLINGMINIMUMAIRFLOW);
+      std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Cooling\nSizing\nParameters"), fields);
+      m_categoriesAndFields.push_back(categoryAndFields);
+    }
 
-  {
-    std::vector<QString> fields;
-    fields.push_back(ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE);
-    fields.push_back(ZONEHEATINGDESIGNSUPPLYAIRHUMIDITYRATIO);
-    fields.push_back(ZONEHEATINGSIZINGFACTOR);
-    fields.push_back(HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA);
-    fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE);
-    fields.push_back(HEATINGMAXIMUMAIRFLOWFRACTION);
-    fields.push_back(HEATINGDESIGNAIRFLOWMETHOD);
-    fields.push_back(HEATINGDESIGNAIRFLOWRATE);
-    fields.push_back(HEATINGMAXIMUMAIRFLOW);
-    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Heating\nSizing\nParameters"), fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
+    {
+      std::vector<QString> fields;
+      fields.push_back(ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE);
+      fields.push_back(ZONEHEATINGDESIGNSUPPLYAIRHUMIDITYRATIO);
+      fields.push_back(ZONEHEATINGSIZINGFACTOR);
+      fields.push_back(HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA);
+      fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE);
+      fields.push_back(HEATINGMAXIMUMAIRFLOWFRACTION);
+      fields.push_back(HEATINGDESIGNAIRFLOWMETHOD);
+      fields.push_back(HEATINGDESIGNAIRFLOWRATE);
+      fields.push_back(HEATINGMAXIMUMAIRFLOW);
+      std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Heating\nSizing\nParameters"), fields);
+      m_categoriesAndFields.push_back(categoryAndFields);
+    }
 
-  OSGridController::setCategoriesAndFields();
+    OSGridController::setCategoriesAndFields();
 
   }
 
@@ -243,6 +247,12 @@ struct ModelObjectNameSorter{
         connect(checkbox.data(), &QCheckBox::stateChanged, this->gridView(), &OSGridView::gridRowSelectionChanged);
 
         addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
+      }
+      else if (field == RENDERINGCOLOR){
+        addRenderingColorColumn(Heading(QString(RENDERINGCOLOR), true, false),
+          CastNullAdapter<model::ThermalZone>(&model::ThermalZone::renderingColor),
+          CastNullAdapter<model::ThermalZone>(&model::ThermalZone::setRenderingColor));
+
       }
       else if (field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
         addQuantityEditColumn(Heading(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE)),
