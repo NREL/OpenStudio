@@ -1593,7 +1593,7 @@ namespace openstudio {
         };
 
         std::function<bool(model::SpaceType *, std::string)> setter =
-          [=](model::SpaceType *t_spaceType, std::string t_value) {
+          [this](model::SpaceType *t_spaceType, std::string t_value) {
           t_spaceType->resetStandardsSpaceType();
           bool success = t_spaceType->setStandardsBuildingType(t_value);
 
