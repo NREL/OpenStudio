@@ -1591,14 +1591,14 @@ namespace openstudio {
 
         std::function<boost::optional<std::string>(model::SpaceType *)> getter =
           [](model::SpaceType *t_spaceType) {
-          return t_spaceType->standardsBuildingType();
+          return t_spaceType->standardsTemplate();
         };
 
         std::function<bool(model::SpaceType *, std::string)> setter =
           [this](model::SpaceType *t_spaceType, std::string t_value) {
           // We start by resetting the Standards Building Type and SpaceType
-          t_spaceType->resetStandardsBuildingType();
           t_spaceType->resetStandardsSpaceType();
+          t_spaceType->resetStandardsBuildingType();
           bool success = t_spaceType->setStandardsTemplate(t_value);
 
           // Note: JM 2018-08-23
@@ -1641,13 +1641,14 @@ namespace openstudio {
 
         boost::optional<std::function<void(model::SpaceType *)>> resetter(
           [](model::SpaceType *t_spaceType) {
-          t_spaceType->resetStandardsTemplate();
+          // Reset all three standards info (dependent)
           t_spaceType->resetStandardsSpaceType();
           t_spaceType->resetStandardsBuildingType();
+          t_spaceType->resetStandardsTemplate();
         });
 
         // Note: It will end up creating a ComboBoxOptionalChoiceImpl
-        addComboBoxColumn(Heading(QString(STANDARDSBUILDINGTYPE)),
+        addComboBoxColumn(Heading(QString(STANDARDSTEMPLATE)),
           toString,
           choices,
           getter,
@@ -1710,6 +1711,7 @@ namespace openstudio {
 
         boost::optional<std::function<void(model::SpaceType *)>> resetter(
           [](model::SpaceType *t_spaceType) {
+          // Reset Building Type and SpaceType
           t_spaceType->resetStandardsSpaceType();
           t_spaceType->resetStandardsBuildingType();
         });
