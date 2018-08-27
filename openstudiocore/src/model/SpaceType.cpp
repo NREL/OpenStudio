@@ -1550,6 +1550,26 @@ void SpaceType::resetRenderingColor()
   getImpl<detail::SpaceType_Impl>()->resetRenderingColor();
 }
 
+boost::optional<std::string> SpaceType::standardsTemplate() const
+{
+  return getImpl<detail::SpaceType_Impl>()->standardsTemplate();
+}
+
+std::vector<std::string> SpaceType::suggestedStandardsTemplates() const
+{
+  return getImpl<detail::SpaceType_Impl>()->suggestedStandardsTemplates();
+}
+
+bool SpaceType::setStandardsTemplate(const std::string& standardsTemplate)
+{
+  return getImpl<detail::SpaceType_Impl>()->setStandardsTemplate(standardsTemplate);
+}
+
+void SpaceType::resetStandardsTemplate()
+{
+  getImpl<detail::SpaceType_Impl>()->resetStandardsTemplate();
+}
+
 boost::optional<std::string> SpaceType::standardsBuildingType() const
 {
   return getImpl<detail::SpaceType_Impl>()->standardsBuildingType();
