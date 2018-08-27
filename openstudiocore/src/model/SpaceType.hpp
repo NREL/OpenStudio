@@ -91,6 +91,7 @@ class MODEL_API SpaceType : public ResourceObject {
   /// Returns the standards Template. This is a freeform field used to identify the energy standard template for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
   /// More information can be found at https://github.com/NREL/openstudio-standards.
+  /// If Not set, tries to inherit from the Building
   boost::optional<std::string> standardsTemplate() const;
 
   /**
@@ -103,6 +104,7 @@ class MODEL_API SpaceType : public ResourceObject {
   /// Returns the standards building type. This is a freeform field used to identify the building type for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
   /// More information can be found at https://github.com/NREL/openstudio-standards.
+  /// If Not set, tries to inherit from the Building
   boost::optional<std::string> standardsBuildingType() const;
 
   /**
