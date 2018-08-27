@@ -402,8 +402,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_ThreePoint)
   ASSERT_FALSE(scheduleInterval);
 }
 
-/*
-TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_TwoPoint)
+TEST_F(EnergyPlusFixture, DISABLED_ForwardTranslator_ScheduleFixedInterval_TwoPoint)
 {
   std::vector<double> vals(2,0.0);
   vals[1] = 1.0;
@@ -506,7 +505,6 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_TwoPoint)
   // check that there were 366 untils
   EXPECT_EQ(366, numUntils);
 }
-*/
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly)
 {
