@@ -281,37 +281,34 @@ namespace detail {
     return value;
   }
 
-  boost::optional<std::string> Building_Impl::standardsBuildingType() const
+
+  boost::optional<std::string> Building_Impl::standardsTemplate() const
   {
-    return getString(OS_BuildingFields::StandardsBuildingType, false, true);
+    return getString(OS_BuildingFields::StandardsTemplate, false, true);
   }
 
-  std::vector<std::string> Building_Impl::suggestedStandardsBuildingTypes() const
+  std::vector<std::string> Building_Impl::suggestedStandardsTemplates() const
   {
-    std::vector<std::string> result;
 
-    boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
+    boost::optional<std::string> standardsTemplate = this->standardsTemplate();
 
-    // DLM: temp code, eventually get from StandardsLibrary
+    // Make a dummy model and a dummy space Type,
+    // and call suggestedStandardsTemplates from it, so we don't have to repeat code here
     Model tempModel;
     SpaceType tempSpaceType(tempModel);
-    std::vector<std::string> tempSuggestions = tempSpaceType.suggestedStandardsBuildingTypes();
-    for (const std::string& suggestion : tempSuggestions){
-      result.push_back(suggestion);
-    }
+    std::vector<std::string> result = tempSpaceType.suggestedStandardsTemplates();
 
     // include values from model
-    for (const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>()){
-      boost::optional<std::string> otherBuildingType = other.standardsBuildingType();
-      if (otherBuildingType){
-        result.push_back(*otherBuildingType);
+    for( const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>() ){
+      if( boost::optional<std::string> otherTemplate = other.standardsTemplate() ) {
+        result.push_back(*otherTemplate);
       }
     }
 
-    // remove standardsBuildingType
+    // remove standardsTemplate
     IstringFind finder;
-    if (standardsBuildingType){
-      finder.addTarget(*standardsBuildingType);
+    if( standardsTemplate ){
+      finder.addTarget(*standardsTemplate);
     }
     auto it = std::remove_if(result.begin(), result.end(), finder);
     result.resize( std::distance(result.begin(),it) );
@@ -325,11 +322,89 @@ namespace detail {
     result.resize( std::distance(result.begin(),it) );
 
     // add current to front
-    if (standardsBuildingType){
-      result.insert(result.begin(), *standardsBuildingType);
+    if( standardsTemplate ){
+      result.insert(result.begin(), *standardsTemplate);
     }
 
     return result;
+  }
+
+  bool Building_Impl::setStandardsTemplate(const std::string& standardsTemplate)
+  {
+    bool result = setString(OS_BuildingFields::StandardsTemplate, standardsTemplate);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void Building_Impl::resetStandardsTemplate()
+  {
+    bool test = setString(OS_BuildingFields::StandardsTemplate, "");
+    OS_ASSERT(test);
+  }
+
+  boost::optional<std::string> Building_Impl::standardsBuildingType() const
+  {
+    return getString(OS_BuildingFields::StandardsBuildingType, false, true);
+  }
+
+  std::vector<std::string> Building_Impl::suggestedStandardsBuildingTypes() const
+  {
+    // If standardsTemplate isn't set, return empty
+    boost::optional<std::string> standardsTemplate = this->standardsTemplate();
+    if( !standardsTemplate ) {
+      return std::vector<std::string>();
+    } else {
+
+      boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
+
+      // Make a dummy Model and a dummy space Type,
+      // and call suggestedStandardsTemplates from it, so we don't have to repeat code here
+      Model tempModel;
+      SpaceType tempSpaceType(tempModel);
+      // We set the standards template to the value
+      tempSpaceType.setStandardsTemplate( standardsTemplate.get() );
+      std::vector<std::string> result = tempSpaceType.suggestedStandardsBuildingTypes();
+
+      // include values from model
+      for( const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>() ){
+        if( boost::optional<std::string> otherBuildingType = other.standardsBuildingType() ){
+          result.push_back(*otherBuildingType);
+        }
+      }
+
+      // remove standardsBuildingType
+      IstringFind finder;
+      if( standardsBuildingType ){
+        finder.addTarget(*standardsBuildingType);
+      }
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize( std::distance(result.begin(),it) );
+
+      // sort, unique only works on consecutive elements
+      std::sort(result.begin(), result.end(), IstringCompare());
+      // make unique
+      it = std::unique(result.begin(), result.end(), IstringEqual());
+      result.resize( std::distance(result.begin(),it) );
+
+      // add current to front
+      if( standardsBuildingType ){
+        result.insert(result.begin(), *standardsBuildingType);
+      }
+      return result;
+    }
+  }
+
+  bool Building_Impl::setStandardsBuildingType(const std::string& standardsBuildingType)
+  {
+    bool result = setString(OS_BuildingFields::StandardsBuildingType, standardsBuildingType);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void Building_Impl::resetStandardsBuildingType()
+  {
+    bool test = setString(OS_BuildingFields::StandardsBuildingType, "");
+    OS_ASSERT(test);
   }
 
   bool Building_Impl::relocatable() const
@@ -408,19 +483,6 @@ namespace detail {
   void Building_Impl::resetNominalFloortoCeilingHeight() {
     bool result = setString(OS_BuildingFields::NominalFloortoCeilingHeight, "");
     OS_ASSERT(result);
-  }
-
-  bool Building_Impl::setStandardsBuildingType(const std::string& standardsBuildingType)
-  {
-    bool result = setString(OS_BuildingFields::StandardsBuildingType, standardsBuildingType);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void Building_Impl::resetStandardsBuildingType()
-  {
-    bool test = setString(OS_BuildingFields::StandardsBuildingType, "");
-    OS_ASSERT(test);
   }
 
   bool Building_Impl::setRelocatable(bool relocatable)
