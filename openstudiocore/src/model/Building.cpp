@@ -1099,12 +1099,36 @@ boost::optional<double> Building::nominalFloortoCeilingHeight() const {
   return getImpl<detail::Building_Impl>()->nominalFloortoCeilingHeight();
 }
 
+boost::optional<std::string> Building::standardsTemplate() const{
+  return getImpl<detail::Building_Impl>()->standardsTemplate();
+}
+
+std::vector<std::string> Building::suggestedStandardsTemplates() const{
+  return getImpl<detail::Building_Impl>()->suggestedStandardsTemplates();
+}
+
+bool Building::setStandardsTemplate(const std::string& standardsTemplate){
+  return getImpl<detail::Building_Impl>()->setStandardsTemplate(standardsTemplate);
+}
+
+void Building::resetStandardsTemplate(){
+  getImpl<detail::Building_Impl>()->resetStandardsTemplate();
+}
+
 boost::optional<std::string> Building::standardsBuildingType() const{
   return getImpl<detail::Building_Impl>()->standardsBuildingType();
 }
 
 std::vector<std::string> Building::suggestedStandardsBuildingTypes() const{
   return getImpl<detail::Building_Impl>()->suggestedStandardsBuildingTypes();
+}
+
+bool Building::setStandardsBuildingType(const std::string& standardsBuildingType){
+  return getImpl<detail::Building_Impl>()->setStandardsBuildingType(standardsBuildingType);
+}
+
+void Building::resetStandardsBuildingType(){
+  getImpl<detail::Building_Impl>()->resetStandardsBuildingType();
 }
 
 bool Building::relocatable() const{
@@ -1161,14 +1185,6 @@ bool Building::setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight
 
 void Building::resetNominalFloortoCeilingHeight() {
   getImpl<detail::Building_Impl>()->resetNominalFloortoCeilingHeight();
-}
-
-bool Building::setStandardsBuildingType(const std::string& standardsBuildingType){
-  return getImpl<detail::Building_Impl>()->setStandardsBuildingType(standardsBuildingType);
-}
-
-void Building::resetStandardsBuildingType(){
-  getImpl<detail::Building_Impl>()->resetStandardsBuildingType();
 }
 
 bool Building::setRelocatable(bool isRelocatable){
