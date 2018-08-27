@@ -135,8 +135,10 @@ class BuildingInspectorView : public ModelObjectInspectorView
 
   protected slots:
 
-    void editStandardsBuildingType(const QString & text);
+    void editStandardsTemplate(const QString & text);
+    void standardsTemplateChanged(const QString & text);
 
+    void editStandardsBuildingType(const QString & text);
     void standardsBuildingTypeChanged(const QString & text);
 
   private:
@@ -145,6 +147,7 @@ class BuildingInspectorView : public ModelObjectInspectorView
 
     void detach();
 
+    void populateStandardsTemplates();
     void populateStandardsBuildingTypes();
 
     boost::optional<openstudio::model::Building> m_building;
@@ -162,6 +165,7 @@ class BuildingInspectorView : public ModelObjectInspectorView
     OSQuantityEdit2 * m_floorToCeilingHeight = nullptr;
     OSQuantityEdit2 * m_floorToFloorHeight = nullptr;
     OSSwitch2* m_relocatable = nullptr;
+    QComboBox* m_standardsTemplateComboBox = nullptr;
     QComboBox* m_standardsBuildingTypeComboBox = nullptr;
     bool m_isIP;
 
