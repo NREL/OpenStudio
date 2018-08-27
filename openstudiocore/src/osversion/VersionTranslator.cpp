@@ -4084,6 +4084,55 @@ std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, c
       } else {
         ss << object;
       }
+    } else if( iddname == "OS:Building" ) {
+      // TODO:
+      // Inserted a field "Standards Template" at position 10
+      auto iddObject = idd_2_6_1.getObject("OS:Building");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < 10; ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(i, s.get());
+        }
+      }
+
+      for( size_t i = 10; i < object.numNonextensibleFields(); ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(i + 1, s.get());
+        }
+      }
+
+      // Field is optional string, so leave it empty
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+    } else if( iddname == "OS:SpaceType") {
+      // TODO:
+      // Added a field "Standards Template" at position 6
+      auto iddObject = idd_2_6_1.getObject("OS:SpaceType");
+      OS_ASSERT(iddObject);
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < 6; ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(i, s.get());
+        }
+      }
+
+      for( size_t i = 6; i < object.numNonextensibleFields(); ++i ) {
+        if( auto s = object.getString(i) ) {
+          newObject.setString(i + 1, s.get());
+        }
+      }
+
+      // Field is optional string, so leave it empty
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+
     } else {
       ss << object;
     }
