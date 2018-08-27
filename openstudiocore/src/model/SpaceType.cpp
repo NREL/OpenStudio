@@ -284,8 +284,17 @@ namespace detail {
 
   boost::optional<std::string> SpaceType_Impl::standardsTemplate() const
   {
-    // TODO: should this get inherited from the Building?
-    return getString(OS_SpaceTypeFields::StandardsTemplate, false, true);
+    boost::optional<std::string> result;
+    if( boost::optional<std::string> standardsTemplate = getString(OS_SpaceTypeFields::StandardsTemplate, false, true) ) {
+      result = standardsTemplate.get();
+    } else {
+      // If not set, try to inherit from building
+      boost::optional<Building> building = this->model().getOptionalUniqueModelObject<Building>();
+      if (building){
+        result = building->standardsTemplate();
+      }
+    }
+    return result;
   }
 
   std::vector<std::string> SpaceType_Impl::suggestedStandardsTemplates() const
@@ -370,7 +379,18 @@ namespace detail {
   /** STANDARDS BUILDING TYPE */
   boost::optional<std::string> SpaceType_Impl::standardsBuildingType() const
   {
-    return getString(OS_SpaceTypeFields::StandardsBuildingType, false, true);
+    boost::optional<std::string> result;
+    if( boost::optional<std::string> standardsBuildingType = getString(OS_SpaceTypeFields::StandardsBuildingType, false, true) ) {
+      result = standardsBuildingType.get();
+    } else {
+      // If not set, try to inherit from building
+      boost::optional<Building> building = this->model().getOptionalUniqueModelObject<Building>();
+      if (building){
+        result = building->standardsBuildingType();
+      }
+    }
+
+    return result;
   }
 
   std::vector<std::string> SpaceType_Impl::suggestedStandardsBuildingTypes() const
