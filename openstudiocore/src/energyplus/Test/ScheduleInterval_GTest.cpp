@@ -402,6 +402,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_ThreePoint)
   ASSERT_FALSE(scheduleInterval);
 }
 
+// TODO: This test was disabled since it is failing, need to fix it
 TEST_F(EnergyPlusFixture, DISABLED_ForwardTranslator_ScheduleFixedInterval_TwoPoint)
 {
   std::vector<double> vals(2,0.0);
