@@ -173,7 +173,7 @@ void OSGridView::setGridController(OSGridController * gridController)
 
 void OSGridView::requestAddRow(int row)
 {
-  std::cout << "REQUEST ADDROW CALLED " << std::endl;
+  // std::cout << "REQUEST ADDROW CALLED " << std::endl;
   setEnabled(false);
 
   m_timer.start();
@@ -185,7 +185,7 @@ void OSGridView::requestAddRow(int row)
 
 void OSGridView::requestRemoveRow(int row)
 {
-  std::cout << "REQUEST REMOVEROW CALLED " << std::endl;
+  // std::cout << "REQUEST REMOVEROW CALLED " << std::endl;
   setEnabled(false);
 
   m_timer.start();
@@ -289,7 +289,7 @@ void OSGridView::deleteAll()
 
 void OSGridView::requestRefreshAll()
 {
-  std::cout << "REQUEST REFRESHALL CALLED " << std::endl;
+  // std::cout << "REQUEST REFRESHALL CALLED " << std::endl;
   setEnabled(false);
 
   m_timer.start();
@@ -299,7 +299,7 @@ void OSGridView::requestRefreshAll()
 
 void OSGridView::requestRefreshGrid()
 {
-  std::cout << "REQUEST REFRESHGRID CALLED " << std::endl;
+  // std::cout << "REQUEST REFRESHGRID CALLED " << std::endl;
   setEnabled(false);
 
   m_timer.start();
@@ -318,7 +318,7 @@ void OSGridView::requestRefreshGrid()
 
 void OSGridView::doRefresh()
 {
-  std::cout << " DO REFRESH CALLED " << m_queueRequests.size() << std::endl;
+  // std::cout << " DO REFRESH CALLED " << m_queueRequests.size() << std::endl;
 
   if (m_queueRequests.empty())
   {
@@ -364,7 +364,7 @@ void OSGridView::doRefresh()
 
 void OSGridView::refreshAll()
 {
-  std::cout << " REFRESHALL CALLED " << std::endl;
+  // std::cout << " REFRESHALL CALLED " << std::endl;
   m_queueRequests.clear();
   deleteAll();
 
