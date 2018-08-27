@@ -170,7 +170,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
   // Create the values vector
   Vector values = linspace(1, 8760, 8760);
 
-  // Create a time series that starts at 12/31 23:00
+  // Create a time series that starts at 01/01 00:00 (first timestamp = 01/01 01:00)
   TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1)), Time(0, 1, 0), values, "");
 
   Model model;
@@ -182,9 +182,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
 
   // Verify that the schedule gives us back the time series
   TimeSeries ts = scheduleInterval->timeSeries();
-  // Oops, it doesn't. Maybe it shouldn't give back the exact time series, but it can't do this.
-  // Without this check, the schedule manages to pass everything else and the test succeeds.
-  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,0)), ts.firstReportDateTime());
+  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 1, 0)), ts.firstReportDateTime());
 
   // Forward translate the schedule
   ForwardTranslator ft;
