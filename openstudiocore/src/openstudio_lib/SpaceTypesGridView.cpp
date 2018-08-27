@@ -132,6 +132,7 @@
 #define ACTIVITYSCHEDULE "Activity Schedule\n(People Only)"
 
 // MEASURE TAGS
+#define STANDARDSTEMPLATE "Standards Template (Optional)"
 #define STANDARDSBUILDINGTYPE "Standards Building Type\n(Optional)"
 #define STANDARDSSPACETYPE "Standards Space Type\n(Optional)"
 
@@ -364,6 +365,7 @@ namespace openstudio {
 
     {
       std::vector<QString> fields;
+      fields.push_back(STANDARDSTEMPLATE);
       fields.push_back(STANDARDSBUILDINGTYPE);
       fields.push_back(STANDARDSSPACETYPE);
       std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Measure\nTags"), fields);
@@ -1572,6 +1574,89 @@ namespace openstudio {
           );
 
       }
+      else if (field == STANDARDSTEMPLATE) {
+
+        // nothing to do, it is a string already
+        std::function<std::string(const std::string &)> toString = [](std::string t_s) { return t_s; };
+
+        std::function<std::vector<std::string>(model::SpaceType *)> choices =
+          [](model::SpaceType *t_spaceType){
+          std::vector<std::string> retval;
+
+          const auto &types = t_spaceType->suggestedStandardsTemplates();
+
+          retval.insert(retval.end(), types.begin(), types.end());
+          return retval;
+        };
+
+        std::function<boost::optional<std::string>(model::SpaceType *)> getter =
+          [](model::SpaceType *t_spaceType) {
+          return t_spaceType->standardsBuildingType();
+        };
+
+        std::function<bool(model::SpaceType *, std::string)> setter =
+          [this](model::SpaceType *t_spaceType, std::string t_value) {
+          // We start by resetting the Standards Building Type and SpaceType
+          t_spaceType->resetStandardsBuildingType();
+          t_spaceType->resetStandardsSpaceType();
+          bool success = t_spaceType->setStandardsTemplate(t_value);
+
+          // Note: JM 2018-08-23
+          // Because we want **dependent** dropdown lists, we need to find a way to connect
+          // a change in STANDARDSTEMPLATE to trigger a refresh of STANDARDSBUILDINGTYPE AND STANDARDSSPACETYPE
+          // This is a hack (at best), but it works
+          // Get the corresponding Standards Building Type Dropdown, and trigger repopulating
+          int columnCount = this->columnCount();
+          for( int i = 1; i < this->rowCount(); ++i ) {
+            if( this->modelObject(i).handle() == t_spaceType->handle() ) {
+              // Standards Building Type is penultimate
+              QWidget * t_widgetStandardsBuildingType = this->cell(i, columnCount - 2);
+              // 0 appears to be GridLayout, 1 is a Holder
+              QObject * oBT = t_widgetStandardsBuildingType->children()[1];
+              Holder * holderBT = qobject_cast<Holder *>(oBT);
+              if( holderBT ) {
+                OSComboBox2 * comboBoxBuildingType = qobject_cast<OSComboBox2 *>( holderBT->widget );
+                if( comboBoxBuildingType ) {
+                  comboBoxBuildingType->onChoicesRefreshTrigger();
+                }
+              }
+
+              // Standards Space Type is last
+              QWidget * t_widgetStandardsSpaceType = this->cell(i, columnCount - 1);
+              // 0 appears to be GridLayout, 1 is a Holder
+              QObject * oST = t_widgetStandardsSpaceType->children()[1];
+              Holder * holderST = qobject_cast<Holder *>(oST);
+              if( holderST ) {
+                OSComboBox2 * comboBoxSpaceType = qobject_cast<OSComboBox2 *>( holderST->widget );
+                if( comboBoxSpaceType ) {
+                  comboBoxSpaceType->onChoicesRefreshTrigger();
+                }
+              }
+              break;
+            }
+          }
+
+          return success;
+        };
+
+        boost::optional<std::function<void(model::SpaceType *)>> resetter(
+          [](model::SpaceType *t_spaceType) {
+          t_spaceType->resetStandardsTemplate();
+          t_spaceType->resetStandardsSpaceType();
+          t_spaceType->resetStandardsBuildingType();
+        });
+
+        // Note: It will end up creating a ComboBoxOptionalChoiceImpl
+        addComboBoxColumn(Heading(QString(STANDARDSBUILDINGTYPE)),
+          toString,
+          choices,
+          getter,
+          setter,
+          resetter,
+          boost::none, // No DataSource
+          // Make editable
+          true);
+      }
       else if (field == STANDARDSBUILDINGTYPE) {
 
         // nothing to do, it is a string already
@@ -1594,6 +1679,7 @@ namespace openstudio {
 
         std::function<bool(model::SpaceType *, std::string)> setter =
           [this](model::SpaceType *t_spaceType, std::string t_value) {
+          // We start by resetting the Standards SpaceType
           t_spaceType->resetStandardsSpaceType();
           bool success = t_spaceType->setStandardsBuildingType(t_value);
 
@@ -1607,11 +1693,11 @@ namespace openstudio {
             if( this->modelObject(i).handle() == t_spaceType->handle() ) {
               QWidget * t_widgetStandardsSpaceType = this->cell(i, columnCount - 1);
               // 0 appears to be GridLayout, 1 is a Holder
-              QObject * o = t_widgetStandardsSpaceType->children()[1];
-              Holder * holder = qobject_cast<Holder *>(o);
-              if(holder) {
-                OSComboBox2 * comboBoxSpaceType = qobject_cast<OSComboBox2 *>( holder->widget);
-                if (comboBoxSpaceType) {
+              QObject * oST = t_widgetStandardsSpaceType->children()[1];
+              Holder * holderST = qobject_cast<Holder *>(oST);
+              if( holderST ) {
+                OSComboBox2 * comboBoxSpaceType = qobject_cast<OSComboBox2 *>( holderST->widget );
+                if( comboBoxSpaceType ) {
                   comboBoxSpaceType->onChoicesRefreshTrigger();
                 }
               }
