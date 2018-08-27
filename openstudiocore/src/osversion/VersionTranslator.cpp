@@ -4087,11 +4087,10 @@ std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, c
       // It should have produced a crash anyways before, but if we find 'Latent', we replace by 'Total'
       value = object.getString(2);
       if( value && istringEqual(value.get(), "Latent") ) {
-        auto iddObject = idd_2_6_1.getObject("OS:Sizing:System");
-        IdfObject newObject(iddObject.get());
+        IdfObject newObject = object.clone(true);
         newObject.setString(2, "Total");
-        LOG(Warn, "OS:Sizing:System does not support 'Latent' as 'Type of Load To Size On', it was replaced by 'Total' instead for '"
-                << newObject.name().get() << "'. Please review carefully.");
+        LOG(Warn, "OS:Sizing:System does not support 'Latent' as 'Type of Load To Size On', it was replaced by 'Total' instead for object with handle '"
+                << newObject.getString(0).get() << "'. Please review carefully.");
 
         m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newObject) );
         ss << newObject;
