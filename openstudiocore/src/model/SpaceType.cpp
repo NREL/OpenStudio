@@ -281,6 +281,93 @@ namespace detail {
     setString(OS_SpaceTypeFields::GroupRenderingName, "");
   }
 
+
+  boost::optional<std::string> SpaceType_Impl::standardsTemplate() const
+  {
+    // TODO: should this get inherited from the Building?
+    return getString(OS_SpaceTypeFields::StandardsTemplate, false, true);
+  }
+
+  std::vector<std::string> SpaceType_Impl::suggestedStandardsTemplates() const
+  {
+    std::vector<std::string> result;
+
+    boost::optional<std::string> standardsTemplate = this->standardsTemplate();
+
+    // include values from json
+    parseStandardsJSON();
+
+    // Find the possible template names
+    // m_standardsArr is an array of hashes (no nested levels)
+    for( const QJsonValue& v: m_standardsArr) {
+      QJsonObject space_type = v.toObject();
+      result.push_back(toString(space_type["template"].toString()));
+    }
+
+    // include values from model
+
+    boost::optional<Building> building = this->model().getOptionalUniqueModelObject<Building>();
+    boost::optional<std::string> buildingStandardsTemplate;
+    if (building){
+      buildingStandardsTemplate = building->standardsTemplate();
+    }
+
+    for (const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+      boost::optional<std::string> otherTemplate = other.standardsTemplate();
+      if (otherTemplate){
+        result.push_back(*otherTemplate);
+      }
+    }
+
+    // remove buildingStandardsTemplate and standardsTemplate
+    IstringFind finder;
+    if (buildingStandardsTemplate){
+      finder.addTarget(*buildingStandardsTemplate);
+    }
+    if (standardsTemplate){
+      finder.addTarget(*standardsTemplate);
+    }
+    auto it = std::remove_if(result.begin(), result.end(), finder);
+    result.resize( std::distance(result.begin(),it) );
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize( std::distance(result.begin(),it) );
+
+    // add building value to front
+    if (buildingStandardsTemplate){
+      result.insert(result.begin(), *buildingStandardsTemplate);
+    }
+
+    // add current to front
+    if (standardsTemplate){
+      result.insert(result.begin(), *standardsTemplate);
+    }
+
+    return result;
+  }
+
+  bool SpaceType_Impl::setStandardsTemplate(const std::string& standardsTemplate)
+  {
+    bool test = setString(OS_SpaceTypeFields::StandardsTemplate, standardsTemplate);
+    OS_ASSERT(test);
+    return test;
+  }
+
+  void SpaceType_Impl::resetStandardsTemplate()
+  {
+    bool test = setString(OS_SpaceTypeFields::StandardsTemplate, "");
+    OS_ASSERT(test);
+  }
+
+  /** STANDARDS BUILDING TYPE */
   boost::optional<std::string> SpaceType_Impl::standardsBuildingType() const
   {
     return getString(OS_SpaceTypeFields::StandardsBuildingType, false, true);
@@ -290,16 +377,24 @@ namespace detail {
   {
     std::vector<std::string> result;
 
+
+    boost::optional<std::string> standardsTemplate = this->standardsTemplate();
     boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
 
-    // include values from json
-    parseStandardsJSON();
+    // include values from json if template is already set
+    if( standardsTemplate ){
+      parseStandardsJSON();
 
-    // Find the possible building_type names
-    // m_standardsArr is an array of hashes (no nested levels)
-    for( const QJsonValue& v: m_standardsArr) {
-      QJsonObject space_type = v.toObject();
-      result.push_back(toString(space_type["building_type"].toString()));
+      // Find the possible building_type names that have the template name
+      // m_standardsArr is an array of hashes (no nested levels)
+      for( const QJsonValue& v: m_standardsArr) {
+        QJsonObject space_type = v.toObject();
+        // TODO: use case insensitive compare?
+        // if( QString::compare(space_type["building_type"].toString(), toQString(*standardsBuildingType), Qt::CaseInsensitive) )
+        if( space_type["template"].toString() == toQString(*standardsTemplate) ) {
+          result.push_back(toString(space_type["building_type"].toString()));
+        }
+      }
     }
 
     // include values from model
@@ -365,6 +460,7 @@ namespace detail {
     OS_ASSERT(test);
   }
 
+  /** STANDARDS SPACE TYPE */
   boost::optional<std::string> SpaceType_Impl::standardsSpaceType() const
   {
     return getString(OS_SpaceTypeFields::StandardsSpaceType, false, true);
@@ -374,20 +470,22 @@ namespace detail {
   {
     std::vector<std::string> result;
 
+    boost::optional<std::string> standardsTemplate = this->standardsTemplate();
     boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
     boost::optional<std::string> standardsSpaceType = this->standardsSpaceType();
 
-    // include values from json
-    if (standardsBuildingType){
+    // include values from json if template and building_type are set
+    if (standardsTemplate && standardsBuildingType){
       parseStandardsJSON();
 
-      // Find the possible space_type names that have the building_type name
+      // Find the possible space_type names that have the right template and building_type name
       // m_standardsArr is an array of hashes (no nested levels)
       for( const QJsonValue& v: m_standardsArr) {
         QJsonObject space_type = v.toObject();
         // TODO: use case insensitive compare?
         // if( QString::compare(space_type["building_type"].toString(), toQString(*standardsBuildingType), Qt::CaseInsensitive) )
-        if( space_type["building_type"].toString() == toQString(*standardsBuildingType) ) {
+        if( (space_type["template"].toString() == toQString(*standardsTemplate)) &&
+            (space_type["building_type"].toString() == toQString(*standardsBuildingType)) ) {
           result.push_back(toString(space_type["space_type"].toString()));
         }
       }
