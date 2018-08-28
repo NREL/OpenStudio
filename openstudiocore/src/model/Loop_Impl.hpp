@@ -62,6 +62,8 @@ namespace detail {
 
     virtual ~Loop_Impl() {}
 
+    /** This pure virtual method is intended to be overriden by child classes (namely PlantLoop and AirLoopHVAC) to create the basic topology of the
+     * loop, that is to create the supply/demand inlet/outlet nodes, splitters and mixers as appropriate */
     virtual void createTopology() = 0;
 
     virtual Node supplyInletNode() const = 0;

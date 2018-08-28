@@ -73,6 +73,15 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual IddObjectType iddObjectType() const override;
 
+  /**
+   * This method creates the basic, barebone, PlantLoop topology:
+   * - Supply inlet & oulet nodes,
+   * - Supply splitter & mixer,
+   * - A Suply branch with a node (Connector Node)
+   * - Demand inlet & outlet nodes,
+   * - Demand splitter & mixer,
+   * - A Demand branch with a node (Branch Node)
+   */
   virtual void createTopology() override;
 
   std::string loadDistributionScheme();

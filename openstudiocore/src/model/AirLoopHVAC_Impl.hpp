@@ -263,6 +263,14 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::vector<HVACComponent> terminals() const;
 
+  /**
+   * This method creates the basic, barebone, AirLoopHVAC topology:
+   * - Supply inlet & oulet nodes,
+   * - Demand inlet & outlet nodes,
+   * - Demand splitter & mixer,
+   * - A demand branch with a node
+   * - A Demand branch with a node (Branch Node)
+   */
   virtual void createTopology() override;
 
   virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
