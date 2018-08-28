@@ -80,6 +80,15 @@ IddObjectType SizingSystem_Impl::iddObjectType() const {
   return SizingSystem::iddObjectType();
 }
 
+bool SizingSystem_Impl::setParent(ParentObject& newParent)
+{
+  bool result = false;
+  if( boost::optional<AirLoopHVAC> airLoopHVAC = newParent.optionalCast<AirLoopHVAC>()){
+    result = this->setAirLoopHVAC(airLoopHVAC.get());
+  }
+  return result;
+}
+
 std::string SizingSystem_Impl::typeofLoadtoSizeOn() const {
   boost::optional<std::string> value = getString(OS_Sizing_SystemFields::TypeofLoadtoSizeOn,true);
   OS_ASSERT(value);
