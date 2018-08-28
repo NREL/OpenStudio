@@ -788,6 +788,8 @@ namespace detail {
       termtypes.push_back(comp.iddObjectType());
     });
 
+    // std::unique only works on sorted vectors, need to sort
+    std::sort(termtypes.begin(), termtypes.end());
     auto uniquetypes = std::vector<IddObjectType>(termtypes.begin(), std::unique(termtypes.begin(), termtypes.end()));
     std::vector<HVACComponent> uniqueterms;
 
