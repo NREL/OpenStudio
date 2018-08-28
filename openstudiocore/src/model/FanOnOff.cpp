@@ -61,6 +61,8 @@
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "AirflowNetworkFan.hpp"
@@ -388,7 +390,9 @@ namespace detail {
   // It can only be contained within another HVAC Component, such as Unitary, ZoneHVAC, etc.
   bool FanOnOff_Impl::addToNode(Node & node)
   {
-    if( boost::optional<Loop> loop = node.loop() ) {
+    if( node.loop() ) {
+      return false;
+    } else if ( node.airLoopHVACOutdoorAirSystem() ) {
       return false;
     }
     else {
