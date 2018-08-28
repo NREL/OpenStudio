@@ -998,76 +998,86 @@ void PlantLoop_Impl::resetCommonPipeSimulation()
     return types;
   }
 
+  void PlantLoop_Impl::createTopology() {
+
+    auto m = model();
+    auto obj = getObject<model::PlantLoop>();
+
+    // supply side
+    Node supplyInletNode(m);
+    Node supplyOutletNode(m);
+    Node connectorNode(m);
+
+    ConnectorMixer supplyMixer(m);
+    setSupplyMixer(supplyMixer);
+    ConnectorSplitter supplySplitter(m);
+    setSupplySplitter(supplySplitter);
+
+    m.connect( obj, supplyInletPort(),
+                   supplyInletNode, supplyInletNode.inletPort() );
+
+    m.connect( supplyInletNode, supplyInletNode.outletPort(),
+                   supplySplitter, supplySplitter.inletPort() );
+
+    m.connect( supplySplitter, supplySplitter.nextOutletPort(),
+                   connectorNode, connectorNode.inletPort() );
+
+    m.connect( connectorNode, connectorNode.outletPort(),
+                   supplyMixer, supplyMixer.nextInletPort() );
+
+    m.connect( supplyMixer, supplyMixer.outletPort(),
+                   supplyOutletNode, supplyOutletNode.inletPort() );
+
+    m.connect( supplyOutletNode, supplyOutletNode.outletPort(),
+                   obj, supplyOutletPort() );
+
+    // demand side
+    Node demandInletNode(m);
+    Node demandOutletNode(m);
+    Node branchNode(m);
+    ConnectorMixer mixer(m);
+    setDemandMixer(mixer);
+    ConnectorSplitter splitter(m);
+    setDemandSplitter(splitter);
+
+    m.connect( obj, demandInletPort(),
+                   demandInletNode, demandInletNode.inletPort() );
+
+    m.connect( demandInletNode, demandInletNode.outletPort(),
+                   splitter, splitter.inletPort() );
+
+    m.connect( splitter, splitter.nextOutletPort(),
+                   branchNode, branchNode.inletPort() );
+
+    m.connect( branchNode, branchNode.outletPort(),
+                   mixer, mixer.nextInletPort() );
+
+    m.connect( mixer, mixer.outletPort(),
+                   demandOutletNode, demandOutletNode.inletPort() );
+
+    m.connect( demandOutletNode, demandOutletNode.outletPort(),
+                   obj, demandOutletPort() );
+
+    setLoopTemperatureSetpointNode(supplyOutletNode);
+
+  }
+
+
 } // detail
 
 PlantLoop::PlantLoop(Model& model)
   : Loop(PlantLoop::iddObjectType(),model)
 {
-  OS_ASSERT(getImpl<detail::PlantLoop_Impl>());
+  auto impl = getImpl<detail::PlantLoop_Impl>();
+  OS_ASSERT(impl);
+
+  // Create topology
+  impl->createTopology();
 
   SizingPlant sizingPlant(model,*this);
 
   autocalculatePlantLoopVolume();
   setLoadDistributionScheme("Optimal");
-
-  // supply side
-
-  Node supplyInletNode(model);
-  Node supplyOutletNode(model);
-  Node connectorNode(model);
-
-  ConnectorMixer supplyMixer(model);
-  getImpl<detail::PlantLoop_Impl>()->setSupplyMixer(supplyMixer);
-  ConnectorSplitter supplySplitter(model);
-  getImpl<detail::PlantLoop_Impl>()->setSupplySplitter(supplySplitter);
-
-  model.connect( *this, this->supplyInletPort(),
-                 supplyInletNode, supplyInletNode.inletPort() );
-
-  model.connect( supplyInletNode,supplyInletNode.outletPort(),
-                 supplySplitter,supplySplitter.inletPort() );
-
-  model.connect( supplySplitter,supplySplitter.nextOutletPort(),
-                 connectorNode,connectorNode.inletPort() );
-
-  model.connect( connectorNode,connectorNode.outletPort(),
-                 supplyMixer,supplyMixer.nextInletPort() );
-
-  model.connect( supplyMixer,supplyMixer.outletPort(),
-                 supplyOutletNode,supplyOutletNode.inletPort() );
-
-  model.connect( supplyOutletNode, supplyOutletNode.outletPort(),
-                 *this, this->supplyOutletPort() );
-
-  // demand side
-
-  Node demandInletNode(model);
-  Node demandOutletNode(model);
-  Node branchNode(model);
-  ConnectorMixer mixer(model);
-  getImpl<detail::PlantLoop_Impl>()->setDemandMixer(mixer);
-  ConnectorSplitter splitter(model);
-  getImpl<detail::PlantLoop_Impl>()->setDemandSplitter(splitter);
-
-  model.connect( *this, demandInletPort(),
-                 demandInletNode, demandInletNode.inletPort() );
-
-  model.connect( demandInletNode, demandInletNode.outletPort(),
-                 splitter, splitter.inletPort() );
-
-  model.connect( splitter, splitter.nextOutletPort(),
-                 branchNode, branchNode.inletPort() );
-
-  model.connect( branchNode, branchNode.outletPort(),
-                 mixer, mixer.nextInletPort() );
-
-  model.connect( mixer, mixer.outletPort(),
-                 demandOutletNode, demandOutletNode.inletPort() );
-
-  model.connect( demandOutletNode, demandOutletNode.outletPort(),
-                 *this, demandOutletPort() );
-
-  setLoopTemperatureSetpointNode(supplyOutletNode);
 
   setGlycolConcentration(0);
   setString(OS_PlantLoopFields::DemandSideConnectorListName,"");
