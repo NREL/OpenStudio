@@ -1086,6 +1086,16 @@ ThermalZoneInspectorView::ThermalZoneInspectorView(QWidget * parent)
   connect(m_plenumChooser->newSupplyPlenumButton, &QToolButton::clicked, this, &ThermalZoneInspectorView::onNewSupplyPlenumClicked);
 
   connect(m_plenumChooser->newReturnPlenumButton, &QToolButton::clicked, this, &ThermalZoneInspectorView::onNewReturnPlenumClicked);
+
+  m_emsActuatorView = new EMSInspectorView(nullptr, EMSInspectorView::Type::ACTUATOR);
+  m_libraryTabWidget->addTab(m_emsActuatorView,
+    ":images/controller_icon_on.png",
+    ":images/controller_icon_off.png");
+
+  m_emsSensorView = new EMSInspectorView(nullptr, EMSInspectorView::Type::SENSOR);
+  m_libraryTabWidget->addTab(m_emsSensorView,
+    ":images/controller_icon_on.png",
+    ":images/controller_icon_off.png");
 }
 
 void ThermalZoneInspectorView::onSupplyPlenumChooserChanged(int newIndex)
@@ -1327,6 +1337,8 @@ void ThermalZoneInspectorView::layoutModelObject( model::ModelObject & modelObje
     m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
   }
   m_inspectorGadget->layoutModelObj(modelObject, force, recursive, readOnly, hideChildren);
+  m_emsActuatorView->layoutModelObject(modelObject);
+  m_emsSensorView->layoutModelObject(modelObject);
 
   update();
 }

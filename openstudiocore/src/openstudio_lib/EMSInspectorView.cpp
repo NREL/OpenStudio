@@ -241,8 +241,14 @@ void EMSInspectorView::layoutModelObject( const model::ModelObject & modelObject
 
   for( const auto & objecti : modelObjects ) {
     if( m_type == Type::ACTUATOR ) {
-      auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Acuators");
-      m_layout->addWidget(label);
+      if (objecti.nameString().empty()) {
+        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.iddObjectType().valueName()) + " Acuators");
+        m_layout->addWidget(label);
+      }
+      else {
+        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Acuators");
+        m_layout->addWidget(label);
+      }
 
       const auto actuatorNames = objecti.emsActuatorNames();
 
@@ -251,8 +257,14 @@ void EMSInspectorView::layoutModelObject( const model::ModelObject & modelObject
         m_layout->addWidget(actuatorWidget);
       }
     } else if( m_type == Type::SENSOR ) {
-      auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Sensors");
-      m_layout->addWidget(label);
+      if (objecti.nameString().empty()) {
+        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.iddObjectType().valueName()) + " Sensors");
+        m_layout->addWidget(label);
+      }
+      else {
+        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Sensors");
+        m_layout->addWidget(label);
+      }
 
       const auto sensorNames = objecti.outputVariableNames();
 
