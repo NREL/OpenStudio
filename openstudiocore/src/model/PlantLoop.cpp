@@ -220,6 +220,11 @@ ModelObject PlantLoop_Impl::clone(Model model) const
 
   plantLoopClone.getImpl<detail::PlantLoop_Impl>()->createTopology();
 
+  // Declare vectors we'll use
+  std::vector<Node> nodes;
+  std::vector<Node> nodeClones;
+  std::vector<Node> allNodeClones;
+
   /*
    *==========================================
    *       S U P P L Y    S I D E
@@ -230,14 +235,12 @@ ModelObject PlantLoop_Impl::clone(Model model) const
   Node outletNode = supplyOutletNode();
   Splitter splitter = supplySplitter();
   Mixer mixer = supplyMixer();
-  std::vector<Node> nodes;
 
   Node inletNodeClone = plantLoopClone.supplyInletNode();
   Node outletNodeClone = plantLoopClone.supplyOutletNode();
   Splitter splitterClone = plantLoopClone.supplySplitter();
   Mixer mixerClone = plantLoopClone.supplyMixer();
-  std::vector<Node> nodeClones;
-  std::vector<Node> allNodeClones;
+
 
   /**
    * Betwen the supply inlet node and the supply Splitter
@@ -419,6 +422,126 @@ ModelObject PlantLoop_Impl::clone(Model model) const
     }
   }
 
+
+  /*
+   *==========================================
+   *       D E M A N D    S I D E
+   *==========================================
+   */
+  std::cout << "\n\nDEMAND SIDE\n\n";
+  // Rationale: here we'll handle everything BUT the stuff that's on the demand branches
+  // Reassign nodes/connectors to the demand side
+  inletNode = demandInletNode();
+  outletNode = demandOutletNode();
+  splitter = demandSplitter();
+  mixer = demandMixer();
+
+  inletNodeClone = plantLoopClone.demandInletNode();
+  outletNodeClone = plantLoopClone.demandOutletNode();
+  splitterClone = plantLoopClone.demandSplitter();
+  mixerClone = plantLoopClone.demandMixer();
+
+
+    /**
+   * Betwen the demand inlet node and the supply Splitter
+   */
+
+  // Get components between the supply inlet node and the supply splitter
+  components = demandComponents(inletNode, splitter);
+  auto demandnodes = subsetCastVector<Node>(components);
+  nodes.insert(nodes.end(), demandnodes.begin(), demandnodes.end());
+  // Erase the supply inlet node from it
+  // components.erase( components.begin() );
+  // And the supply Splitter
+  components.pop_back();
+  // We are going to add them to the supplyInletNode in reverse order so that they end up correctly ordered
+  // Note: yes, incrementing a reverse iterator moves the right way...
+  for( std::vector<ModelObject>::reverse_iterator rit = components.rbegin(); rit != components.rend(); ++rit ) {
+    ModelObject comp = *rit;
+    if( comp.iddObjectType() == Node::iddObjectType() ) {
+      // nodes.push_back(comp.cast<Node>());
+    } else {
+      auto compClone = comp.clone(model).cast<HVACComponent>();
+      compClone.addToNode(inletNodeClone);
+      if( boost::optional<WaterToWaterComponent> hvacComp = comp.optionalCast<WaterToWaterComponent>() ) {
+        if( boost::optional<PlantLoop> pl = hvacComp->plantLoop() ) {
+          // Connect the clone to the plantLoop too
+          pl->addSupplyBranchForComponent(compClone);
+        }
+      }
+   }
+  }
+
+  nodeClones = subsetCastVector<Node>(plantLoopClone.demandComponents(inletNodeClone, splitterClone));
+  // Add the new cloned nodes
+  allNodeClones.insert(allNodeClones.end(), nodeClones.begin(), nodeClones.end());
+  std::cout << "nodes.size()=" << nodes.size() << ", allNodeClones.size()=" << allNodeClones.size() << "\n";
+  // OS_ASSERT( nodes.size() == allNodeClones.size() );
+  if( nodes.size() != allNodeClones.size() ) {
+    std::cout << "\n\nnodes:\n";
+    for( auto& n: nodes ) {
+      std::cout << n.name().get() << "\n";
+    }
+
+    std::cout << "\n\nallNodeClones:\n";
+    for( auto& n: allNodeClones ) {
+      std::cout << n.name().get() << "\n";
+    }
+  }
+
+
+  /**
+   * Betwen the demand Mixer node and the demand Outlet Node
+   */
+  components = demandComponents(mixer, outletNode);
+  for(auto& comp: components ) {
+    std::cout << comp.name().get() << "\n";
+  }
+  // Erase the supply mixer from it
+  components.erase( components.begin() );
+  // And the supply outlet node
+  // components.pop_back();
+
+
+  // We are going to add them to the supplyOutletNode in current order so that they end up correctly ordered
+  for( std::vector<ModelObject>::iterator it = components.begin(); it != components.end(); ++it ) {
+    ModelObject comp = *it;
+    if( comp.iddObjectType() == Node::iddObjectType() ) {
+      nodes.push_back(comp.cast<Node>());
+    } else {
+      auto compClone = comp.clone(model).cast<HVACComponent>();
+      compClone.addToNode(outletNodeClone);
+      if( boost::optional<WaterToWaterComponent> hvacComp = comp.optionalCast<WaterToWaterComponent>() ) {
+        if( boost::optional<PlantLoop> pl = hvacComp->plantLoop() ) {
+          // Connect the clone to the plantLoop too
+          pl->addSupplyBranchForComponent(compClone);
+        }
+      }
+    }
+  }
+
+  nodeClones = subsetCastVector<Node>(plantLoopClone.demandComponents(mixerClone, outletNodeClone));
+  // Add the new cloned nodes
+  allNodeClones.insert(allNodeClones.end(), nodeClones.begin(), nodeClones.end());
+  std::cout << "nodes.size()=" << nodes.size() << ", allNodeClones.size()=" << allNodeClones.size() << "\n";
+  // OS_ASSERT( nodes.size() == allNodeClones.size() );
+  if( nodes.size() != allNodeClones.size() ) {
+    std::cout << "\n\nnodes:\n";
+    for( auto& n: nodes ) {
+      std::cout << n.name().get() << "\n";
+    }
+
+    std::cout << "\n\allNodeClones:\n";
+    for( auto& n: allNodeClones ) {
+      std::cout << n.name().get() << "\n";
+    }
+  }
+
+  /*
+   *==========================================
+   *     S E T P O I N T   M A N A G E R S
+   *==========================================
+   */
   // Do another global check
   OS_ASSERT( subsetCastVector<Node>(supplyComponents()).size() == subsetCastVector<Node>(plantLoopClone.supplyComponents()).size() );
 
