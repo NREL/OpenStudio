@@ -344,7 +344,7 @@ namespace detail {
                 return hvacComponent;
               }
             }
-               
+
           }
         }
       } else if ( ! upstreamComp->optionalCast<Splitter>() && ! upstreamComp->optionalCast<Mixer>() && ! upstreamComp->optionalCast<Node>() ) {
@@ -368,7 +368,7 @@ namespace detail {
 
     if( (optAirTerminal && _model != optAirTerminal->model()) ||
          _model != splitter.model() ||
-         _model != mixer.model() ) 
+         _model != mixer.model() )
     {
       return false;
     }
@@ -731,6 +731,9 @@ namespace detail {
     airLoopClone.setString(demandInletPortB(),"");
     airLoopClone.setString(demandOutletPort(),"");
 
+    // Sizing:System was already cloned because it is declared as a child
+    // And because it has the setParent method overriden, no need to do anything
+
     {
       auto clone = availabilitySchedule().clone(model).cast<Schedule>();
       airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilitySchedule,clone.handle());
@@ -740,12 +743,6 @@ namespace detail {
       AvailabilityManagerAssignmentList avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
       avmListClone.setName(airLoopClone.name().get() + " AvailabilityManagerAssigmentList");
       airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilityManagerListName, avmListClone.handle());
-    }
-
-    {
-      auto sizing = sizingSystem();
-      auto sizingClone = sizing.clone(model).cast<SizingSystem>();
-      sizingClone.setAirLoopHVAC(airLoopClone);
     }
 
     airLoopClone.getImpl<detail::AirLoopHVAC_Impl>()->createTopology();
@@ -792,7 +789,7 @@ namespace detail {
         return (type ==  comp.iddObjectType());
       });
       if ( it != terms.end() ) {
-        uniqueterms.push_back(*it); 
+        uniqueterms.push_back(*it);
       }
     }
 
@@ -922,7 +919,7 @@ namespace detail {
     auto splitter = thisloop.zoneSplitter();
     auto mixer = thisloop.zoneMixer();
     auto result = addBranchForZoneImpl(thermalZone, thisloop, splitter, mixer, true, comp);
-    
+
     //if ( result ) {
     //  for ( auto & loop : loops ) {
     //    loop.removeBranchForZone(thermalZone);
