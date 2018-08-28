@@ -88,6 +88,10 @@ OSGridView::OSGridView(OSGridController * gridController,
     m_CollapsibleView(nullptr),
     m_gridController(gridController)
 {
+
+  // We use the headerText as the object name, will help in indentifying objects for any warnings
+  setObjectName(headerText);
+
   /** Set up buttons for Categories: eg: SpaceTypes tab: that's the dropzone "Drop Space Type", "General", "Loads", "Measure Tags", "Custom"
    * QHBoxLayout manages the visual representation: they are placed side by side
    * QButtonGroup manages the state of the buttons in the group. By default a QButtonGroup is exclusive (only one button can be checked at one time)
