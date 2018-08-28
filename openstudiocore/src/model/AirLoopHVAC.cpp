@@ -907,12 +907,12 @@ namespace detail {
     return result;
   }
 
-  Splitter AirLoopHVAC_Impl::demandSplitter()
+  Splitter AirLoopHVAC_Impl::demandSplitter() const
   {
     return this->zoneSplitter();
   }
 
-  Mixer AirLoopHVAC_Impl::demandMixer()
+  Mixer AirLoopHVAC_Impl::demandMixer() const
   {
     return this->zoneMixer();
   }

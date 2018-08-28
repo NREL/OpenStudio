@@ -208,11 +208,11 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   bool setSupplySplitter(Splitter const & splitter);
 
-  Mixer demandMixer() override;
+  virtual Mixer demandMixer() const override;
 
   bool setDemandMixer(Mixer const & mixer);
 
-  Splitter demandSplitter() override;
+  virtual Splitter demandSplitter() const override;
 
   bool setDemandSplitter(Splitter const & splitter);
 

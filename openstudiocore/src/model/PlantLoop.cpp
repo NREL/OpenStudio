@@ -755,7 +755,7 @@ bool PlantLoop_Impl::setSupplySplitter(Splitter const & splitter)
   return result;
 }
 
-Mixer PlantLoop_Impl::demandMixer()
+Mixer PlantLoop_Impl::demandMixer() const
 {
   auto result = getObject<ModelObject>().getModelObjectTarget<Mixer>(OS_PlantLoopFields::DemandMixerName);
   if (result) return result.get();
@@ -769,7 +769,7 @@ bool PlantLoop_Impl::setDemandMixer(Mixer const & mixer)
   return result;
 }
 
-Splitter PlantLoop_Impl::demandSplitter()
+Splitter PlantLoop_Impl::demandSplitter() const
 {
   auto result = getObject<ModelObject>().getModelObjectTarget<Splitter>(OS_PlantLoopFields::DemandSplitterName);
   if (result) return result.get();

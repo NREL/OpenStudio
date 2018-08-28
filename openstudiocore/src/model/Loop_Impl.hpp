@@ -120,9 +120,9 @@ namespace detail {
 
     virtual ModelObject clone(Model model) const override;
 
-    virtual Splitter demandSplitter() = 0;
+    virtual Splitter demandSplitter() const = 0;
 
-    virtual Mixer demandMixer() = 0;
+    virtual Mixer demandMixer() const = 0;
 
     virtual void autosize();
 

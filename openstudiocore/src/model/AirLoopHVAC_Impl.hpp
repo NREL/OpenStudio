@@ -142,9 +142,9 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  Splitter demandSplitter() override;
+  virtual Splitter demandSplitter() const override;
 
-  Mixer demandMixer() override;
+  virtual Mixer demandMixer() const override;
 
   boost::optional<HVACComponent> supplyFan() const;
 
