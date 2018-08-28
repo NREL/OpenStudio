@@ -757,6 +757,13 @@ namespace detail {
       } else {
         auto compClone = comp.clone(model).cast<HVACComponent>();
         compClone.addToNode(outletNodeClone);
+        // If the original component was also on a PlantLoop
+        if( boost::optional<HVACComponent> hvacComp = comp.optionalCast<HVACComponent>() ) {
+          if( boost::optional<PlantLoop> pl = hvacComp->plantLoop() ) {
+            // Connect the clone to the plantLoop too
+            pl->addDemandBranchForComponent(compClone);
+          }
+        }
       }
     }
 
