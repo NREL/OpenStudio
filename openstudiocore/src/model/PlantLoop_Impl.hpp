@@ -73,7 +73,7 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual IddObjectType iddObjectType() const override;
 
-
+  virtual void createTopology() override;
 
   std::string loadDistributionScheme();
 

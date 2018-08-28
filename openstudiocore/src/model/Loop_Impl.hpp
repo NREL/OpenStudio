@@ -62,6 +62,8 @@ namespace detail {
 
     virtual ~Loop_Impl() {}
 
+    virtual void createTopology() = 0;
+
     virtual Node supplyInletNode() const = 0;
 
     virtual Node supplyOutletNode() const = 0;
