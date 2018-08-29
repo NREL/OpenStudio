@@ -129,7 +129,8 @@ namespace detail {
 
   ModelObject CoolingTowerVariableSpeed_Impl::clone(Model model) const
   {
-    CoolingTowerVariableSpeed newTower = ModelObject_Impl::clone(model).cast<CoolingTowerVariableSpeed>();
+    // StraightComponent_Impl will clone the CT and reset the inlet/outlet ports for us
+    CoolingTowerVariableSpeed newTower = StraightComponent_Impl::clone(model).cast<CoolingTowerVariableSpeed>();
 
     if( boost::optional<ModelObject> mo = modelCoefficient() )
     {
@@ -1188,4 +1189,4 @@ CoolingTowerVariableSpeed::CoolingTowerVariableSpeed(std::shared_ptr<detail::Coo
   }
 
 } // model
-} // openstudio
+} // openstudio
