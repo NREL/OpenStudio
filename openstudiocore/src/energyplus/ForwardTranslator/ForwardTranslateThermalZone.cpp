@@ -227,12 +227,28 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       idfObject.setDouble(openstudio::ZoneFields::ZOrigin, spaces[0].zOrigin());
     }
 
-    if (!spaces[0].isPartofTotalFloorAreaDefaulted()){
-      if (spaces[0].partofTotalFloorArea()){
-        idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"Yes");
-      }else{
-        idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"No");
+    bool has_yes_flag = false;
+    bool has_no_flag = false;
+    for( const Space& s: spaces ) {
+      if( ! s.isPartofTotalFloorAreaDefaulted() ) {
+        if( s.partofTotalFloorArea() ) {
+          has_yes_flag = true;
+        } else {
+          has_no_flag = true;
+        }
       }
+    }
+    if( has_yes_flag && has_no_flag ) {
+      LOG(Warn, "ThermalZone " << modelObject.name().get() << " has spaces with mis-matched 'Part of Total Floor Area' flags, will default to 'Yes'");
+      idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"Yes");
+    } else if( has_yes_flag ) {
+      // Only yes
+      idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"Yes");
+    } else if( has_no_flag ) {
+      // Only no
+      idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"No");
+    } else {
+      // There aren't any that aren't defaulted, we do nothing (leave field empty)
     }
 
     // translate the space now
@@ -704,7 +720,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       if ( returnPlenum ) {
         auto allIdealHVAC = returnPlenum->getImpl<model::detail::AirLoopHVACReturnPlenum_Impl>()->zoneHVACIdealLoadsAirSystems();
         if ( ! allIdealHVAC.empty() ) {
-          zoneHVACIdealWorkaround = true; 
+          zoneHVACIdealWorkaround = true;
         }
       }
     }
