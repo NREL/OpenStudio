@@ -62,7 +62,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerScheduledOn) {
   WorkspaceObject idf_avm(idfObjs[0]);
 
   // HVAC Air Loop Name
-  EXPECT_EQ(a.name().get(), idf_avm.getString(AvailabilityManager_HybridVentilation_Fields::HVACAirLoopName).get());
+  EXPECT_EQ(a.name().get(), idf_avm.getString(AvailabilityManager_HybridVentilationFields::HVACAirLoopName).get());
 
 }
 
