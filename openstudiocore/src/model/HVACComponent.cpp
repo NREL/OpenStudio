@@ -484,6 +484,7 @@ namespace detail {
 
   ModelObject HVACComponent_Impl::clone(Model model) const
   {
+    // TODO: JM 2018-08-29: For @kbenne -> Why isn't this calling ParentObject_Impl::clone instead? We loose the benefit of Parenting...
     return ModelObject_Impl::clone(model);
   }
 
