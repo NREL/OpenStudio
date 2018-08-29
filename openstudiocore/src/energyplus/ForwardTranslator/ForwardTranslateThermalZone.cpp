@@ -228,6 +228,14 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       idfObject.setDouble(openstudio::ZoneFields::ZOrigin, spaces[0].zOrigin());
     }
 
+    if (!spaces[0].isPartofTotalFloorAreaDefaulted()){
+      if (spaces[0].partofTotalFloorArea()){
+        idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"Yes");
+      }else{
+        idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"No");
+      }
+    }
+
     // translate the space now
     translateAndMapModelObject(spaces[0]);
 
