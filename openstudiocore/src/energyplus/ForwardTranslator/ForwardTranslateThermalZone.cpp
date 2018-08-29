@@ -204,7 +204,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
   }
 
   // Spaces
-
+  // Note, when you reach this point of the forward translator thermalZone.combineSpaces() has already been called,
+  // This happens in ForwardTranslator::translateModelPrivate. As a result, each zone has 0 or 1 space only
   std::vector<Space> spaces = modelObject.spaces();
   if (spaces.empty()){
     LOG(Warn, "ThermalZone " << modelObject.name().get() << " does not have any geometry or loads associated with it.");
@@ -225,30 +226,6 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
     if (!spaces[0].isZOriginDefaulted()){
       idfObject.setDouble(openstudio::ZoneFields::ZOrigin, spaces[0].zOrigin());
-    }
-
-    bool has_yes_flag = false;
-    bool has_no_flag = false;
-    for( const Space& s: spaces ) {
-      if( ! s.isPartofTotalFloorAreaDefaulted() ) {
-        if( s.partofTotalFloorArea() ) {
-          has_yes_flag = true;
-        } else {
-          has_no_flag = true;
-        }
-      }
-    }
-    if( has_yes_flag && has_no_flag ) {
-      LOG(Warn, "ThermalZone " << modelObject.name().get() << " has spaces with mis-matched 'Part of Total Floor Area' flags, will default to 'Yes'");
-      idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"Yes");
-    } else if( has_yes_flag ) {
-      // Only yes
-      idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"Yes");
-    } else if( has_no_flag ) {
-      // Only no
-      idfObject.setString(openstudio::ZoneFields::PartofTotalFloorArea,"No");
-    } else {
-      // There aren't any that aren't defaulted, we do nothing (leave field empty)
     }
 
     // translate the space now
