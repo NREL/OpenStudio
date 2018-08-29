@@ -3361,10 +3361,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam);
   result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled);
 
-  // TODO: @kbenne is this needed here?
-  // Does this mean these objects get translated even if not connected to anything?
   result.push_back(IddObjectType::OS_AvailabilityManagerAssignmentList);
-  result.push_back(IddObjectType::OS_AvailabilityManager_Scheduled);
+  result.push_back(IddObjectType::OS_AvailabilityManager_HybridVentilation);
 
   result.push_back(IddObjectType::OS_Chiller_Electric_EIR);
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_SingleSpeed);
