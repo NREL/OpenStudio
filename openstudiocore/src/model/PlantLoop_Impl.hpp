@@ -178,6 +178,14 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual std::vector<openstudio::IdfObject> remove() override;
 
+  /**
+   * This method will clone a Plant Loop with the following rationale:
+   * - Handle all non-branch components from both the supply and the demand side
+   * - Handle branch components on the supply side (between supply splitter and mixer)
+   * - Clone any SetpointManagers and add them to the correct location
+   * - If the component that is cloned is connected to another PlantLoop, we try to connect the clone
+   *   to the same other PlantLoop (if comp is on the supply side, we add a demand branch to the other plantloop)
+   */
   virtual ModelObject clone(Model model) const override;
 
   unsigned supplyInletPort() const;
