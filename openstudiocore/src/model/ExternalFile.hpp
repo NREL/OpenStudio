@@ -26,112 +26,88 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#ifndef MODEL_SCHEDULEFILE_HPP
-#define MODEL_SCHEDULEFILE_HPP
+#ifndef MODEL_EXTERNALFILE_HPP
+#define MODEL_EXTERNALFILE_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ScheduleInterval.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class ScheduleTypeLimits;
-class ExternalFile;
-
 namespace detail {
 
-  class ScheduleFile_Impl;
+  class ExternalFile_Impl;
 
 } // detail
 
-/** ScheduleFile is a ScheduleInterval that wraps the OpenStudio IDD object 'OS:Schedule:File'. */
-class MODEL_API ScheduleFile : public ScheduleInterval {
+/** ExternalFile is a ResourceObject that wraps the OpenStudio IDD object 'OS:External:File'. */
+class MODEL_API ExternalFile : public ResourceObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  ScheduleFile(const ExternalFile& externalfile, int column=1, int rowsToSkip=0);
+  explicit ExternalFile(const Model& model, const std::string &filename);
 
-  virtual ~ScheduleFile() {}
+  virtual ~ExternalFile() {}
 
   //@}
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> minutesperItemValues();
+  static std::vector<std::string> columnSeparatorValues();
 
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: ScheduleTypeLimits.
-  boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
+  std::string fileName() const;
 
-  ExternalFile externalFile() const;
+  std::string columnSeparator() const;
 
-  int columnNumber() const;
-
-  int rowstoSkipatTop() const;
-
-  int numberofHoursofData() const;
-
-  bool interpolatetoTimestep() const;
-
-  bool isInterpolatetoTimestepDefaulted() const;
-
-  boost::optional<std::string> minutesperItem() const;
+  bool isColumnSeparatorDefaulted() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: ScheduleTypeLimits.
-  bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
+  bool setColumnSeparator(const std::string& columnSeparator);
 
-  bool resetScheduleTypeLimits();
-
-  bool setColumnNumber(int columnNumber);
-
-  bool setRowstoSkipatTop(int rowstoSkipatTop);
-
-  bool setInterpolatetoTimestep(bool interpolatetoTimestep);
-
-  void resetInterpolatetoTimestep();
-
-  bool setMinutesperItem(const std::string& minutesperItem);
-
-  void resetMinutesperItem();
+  void resetColumnSeparator();
 
   //@}
   /** @name Other */
   //@{
+  
+  //bool isValid();
 
   //@}
  protected:
 
   /// @cond
-  typedef detail::ScheduleFile_Impl ImplType;
+  typedef detail::ExternalFile_Impl ImplType;
 
-  explicit ScheduleFile(std::shared_ptr<detail::ScheduleFile_Impl> impl);
+  explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
 
-  friend class detail::ScheduleFile_Impl;
+  friend class detail::ExternalFile_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
  private:
-  REGISTER_LOGGER("openstudio.model.ScheduleFile");
+  REGISTER_LOGGER("openstudio.model.ExternalFile");
+
+  bool setFileName(const std::string& fileName);
 };
 
-/** \relates ScheduleFile*/
-typedef boost::optional<ScheduleFile> OptionalScheduleFile;
+/** \relates ExternalFile*/
+typedef boost::optional<ExternalFile> OptionalExternalFile;
 
-/** \relates ScheduleFile*/
-typedef std::vector<ScheduleFile> ScheduleFileVector;
+/** \relates ExternalFile*/
+typedef std::vector<ExternalFile> ExternalFileVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_SCHEDULEFILE_HPP
+#endif // MODEL_EXTERNALFILE_HPP
 

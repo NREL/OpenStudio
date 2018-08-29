@@ -29,9 +29,12 @@
 #include "ScheduleFile.hpp"
 #include "ScheduleFile_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeLimits_Impl.hpp"
+#include "ExternalFile.hpp"
+#include "ExternalFile_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -86,8 +89,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_Schedule_FileFields::ScheduleTypeLimitsName);
   }
 
-  std::string ScheduleFile_Impl::fileName() const {
-    boost::optional<std::string> value = getString(OS_Schedule_FileFields::FileName,true);
+  ExternalFile ScheduleFile_Impl::externalFile() const {
+    auto value = getObject<ModelObject>().getModelObjectTarget<ExternalFile>(OS_Schedule_FileFields::FileName);
     OS_ASSERT(value);
     return value.get();
   }
@@ -104,34 +107,12 @@ namespace detail {
     return value.get();
   }
 
-  int ScheduleFile_Impl::numberofRowsofData() const {
+  int ScheduleFile_Impl::numberofHoursofData() const {
     boost::optional<int> value = getInt(OS_Schedule_FileFields::NumberofHoursofData, true);
     OS_ASSERT(value);
     return value.get();
   }
 
-
-  std::string ScheduleFile_Impl::columnSeparator() const {
-    boost::optional<std::string> value = getString(OS_Schedule_FileFields::ColumnSeparator,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  char ScheduleFile_Impl::columnSeparatorChar() const {
-    static std::unordered_map<std::string, char> lookup({ { "Comma", ',' }, { "Tab", '\t' }, { "Fixed", ' ' }, { "Semicolon", ';' } });
-    boost::optional<std::string> value = getString(OS_Schedule_FileFields::ColumnSeparator, true);
-    OS_ASSERT(value);
-    auto it = lookup.find(value.get());
-    if (it == std::end(lookup)) {
-      // Invalid separator
-      return '\0';
-    }
-    return it->second;
-  }
-
-  bool ScheduleFile_Impl::isColumnSeparatorDefaulted() const {
-    return isEmpty(OS_Schedule_FileFields::ColumnSeparator);
-  }
 
   bool ScheduleFile_Impl::interpolatetoTimestep() const {
     boost::optional<std::string> value = getString(OS_Schedule_FileFields::InterpolatetoTimestep,true);
@@ -158,11 +139,6 @@ namespace detail {
     return result;
   }
 
-  void ScheduleFile_Impl::setFileName(const std::string& fileName) {
-    bool result = setString(OS_Schedule_FileFields::FileName, fileName);
-    OS_ASSERT(result);
-  }
-
   bool ScheduleFile_Impl::setColumnNumber(int columnNumber) {
     bool result = setInt(OS_Schedule_FileFields::ColumnNumber, columnNumber);
     return result;
@@ -171,16 +147,6 @@ namespace detail {
   bool ScheduleFile_Impl::setRowstoSkipatTop(int rowstoSkipatTop) {
     bool result = setInt(OS_Schedule_FileFields::RowstoSkipatTop, rowstoSkipatTop);
     return result;
-  }
-
-  bool ScheduleFile_Impl::setColumnSeparator(const std::string& columnSeparator) {
-    bool result = setString(OS_Schedule_FileFields::ColumnSeparator, columnSeparator);
-    return result;
-  }
-
-  void ScheduleFile_Impl::resetColumnSeparator() {
-    bool result = setString(OS_Schedule_FileFields::ColumnSeparator, "");
-    OS_ASSERT(result);
   }
 
   bool ScheduleFile_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep) {
@@ -329,72 +295,21 @@ namespace detail {
     }*/
   }
 
-  bool ScheduleFile_Impl::isValid()
-  {
-
-    //auto filepath = toPath(fileName());
-    std::ifstream ifs;
-    ifs.open(fileName(), std::ifstream::in);
-    if (!ifs.is_open()) {
-      // Failed to open file
-      LOG(Warn, "Failed to open file \"" << fileName() << "\" for " << this->briefDescription());
-      return false;
-    }
-
-    std::string line;
-    // Skip lines
-    int count;
-    for (count = 0; count < rowstoSkipatTop(); ++count) {
-      std::getline(ifs, line);
-      if (ifs.eof()) {
-        ifs.close();
-        LOG(Warn, "Failed to skip " << rowstoSkipatTop() << " in file \"" << fileName() << "\" for " << this->briefDescription());
-        return false;
-      }
-    }
-
-    // Separator check
-    char separator = columnSeparatorChar();
-    if (separator == '\0') {
-      // Invalid separator
-      return false;
-    }
-
-    count = -1;
-    do {
-      count += 1;
-      std::getline(ifs, line);
-      // Line-by-line validation goes here
-    } while (!ifs.eof());
-
-    if (count == 8760 || count == 8784) {
-      bool result = setInt(OS_Schedule_FileFields::NumberofHoursofData, count);
-      OS_ASSERT(result);
-      return result;
-    }
-    return false;
-  }
-
 } // detail
 
-ScheduleFile::ScheduleFile(const Model& model)
-  : ScheduleInterval(ScheduleFile::iddObjectType(),model)
+ScheduleFile::ScheduleFile(const ExternalFile& externalfile, int column, int rowsToSkip)
+  : ScheduleInterval(ScheduleFile::iddObjectType(),externalfile.model())
 {
   OS_ASSERT(getImpl<detail::ScheduleFile_Impl>());
   bool ok;
-  ok = setColumnNumber(1);
+  ok = setColumnNumber(column);
   OS_ASSERT(ok);
-  ok = setRowstoSkipatTop(0);
+  ok = setRowstoSkipatTop(rowsToSkip);
   OS_ASSERT(ok);
 }
 
 IddObjectType ScheduleFile::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Schedule_File);
-}
-
-std::vector<std::string> ScheduleFile::columnSeparatorValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Schedule_FileFields::ColumnSeparator);
 }
 
 std::vector<std::string> ScheduleFile::minutesperItemValues() {
@@ -406,8 +321,8 @@ boost::optional<ScheduleTypeLimits> ScheduleFile::scheduleTypeLimits() const {
   return getImpl<detail::ScheduleFile_Impl>()->scheduleTypeLimits();
 }
 
-std::string ScheduleFile::fileName() const {
-  return getImpl<detail::ScheduleFile_Impl>()->fileName();
+ExternalFile ScheduleFile::externalFile() const {
+  return getImpl<detail::ScheduleFile_Impl>()->externalFile();
 }
 
 int ScheduleFile::columnNumber() const {
@@ -418,18 +333,9 @@ int ScheduleFile::rowstoSkipatTop() const {
   return getImpl<detail::ScheduleFile_Impl>()->rowstoSkipatTop();
 }
 
-std::string ScheduleFile::columnSeparator() const {
-  return getImpl<detail::ScheduleFile_Impl>()->columnSeparator();
+int ScheduleFile::numberofHoursofData() const {
+  return getImpl<detail::ScheduleFile_Impl>()->numberofHoursofData();
 }
-
-bool ScheduleFile::isColumnSeparatorDefaulted() const {
-  return getImpl<detail::ScheduleFile_Impl>()->isColumnSeparatorDefaulted();
-}
-
-int ScheduleFile::numberofRowsofData() const {
-  return getImpl<detail::ScheduleFile_Impl>()->numberofRowsofData();
-}
-
 
 bool ScheduleFile::interpolatetoTimestep() const {
   return getImpl<detail::ScheduleFile_Impl>()->interpolatetoTimestep();
@@ -451,24 +357,12 @@ bool ScheduleFile::resetScheduleTypeLimits() {
   return getImpl<detail::ScheduleFile_Impl>()->resetScheduleTypeLimits();
 }
 
-void ScheduleFile::setFileName(const std::string& fileName) {
-  getImpl<detail::ScheduleFile_Impl>()->setFileName(fileName);
-}
-
 bool ScheduleFile::setColumnNumber(int columnNumber) {
   return getImpl<detail::ScheduleFile_Impl>()->setColumnNumber(columnNumber);
 }
 
 bool ScheduleFile::setRowstoSkipatTop(int rowstoSkipatTop) {
   return getImpl<detail::ScheduleFile_Impl>()->setRowstoSkipatTop(rowstoSkipatTop);
-}
-
-bool ScheduleFile::setColumnSeparator(const std::string& columnSeparator) {
-  return getImpl<detail::ScheduleFile_Impl>()->setColumnSeparator(columnSeparator);
-}
-
-void ScheduleFile::resetColumnSeparator() {
-  getImpl<detail::ScheduleFile_Impl>()->resetColumnSeparator();
 }
 
 bool ScheduleFile::setInterpolatetoTimestep(bool interpolatetoTimestep) {
@@ -485,10 +379,6 @@ bool ScheduleFile::setMinutesperItem(const std::string& minutesperItem) {
 
 void ScheduleFile::resetMinutesperItem() {
   getImpl<detail::ScheduleFile_Impl>()->resetMinutesperItem();
-}
-
-bool ScheduleFile::isValid() {
-  return getImpl<detail::ScheduleFile_Impl>()->isValid();
 }
 
 /// @cond

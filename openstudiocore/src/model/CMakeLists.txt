@@ -701,6 +701,9 @@ set(${target_name}_src
   ExternalInterfaceVariable.hpp
   ExternalInterfaceVariable_Impl.hpp
   ExternalInterfaceVariable.cpp
+  ExternalFile.hpp
+  ExternalFile_Impl.hpp
+  ExternalFile.cpp
   Facility.hpp
   Facility_Impl.hpp
   Facility.cpp

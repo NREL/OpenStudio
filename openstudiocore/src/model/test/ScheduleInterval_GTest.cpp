@@ -32,6 +32,8 @@
 #include "ModelFixture.hpp"
 #include "../ScheduleFixedInterval.hpp"
 #include "../ScheduleFixedInterval_Impl.hpp"
+#include "../ExternalFile.hpp"
+#include "../ExternalFile_Impl.hpp"
 #include "../ScheduleFile.hpp"
 #include "../ScheduleFile_Impl.hpp"
 #include "../ScheduleVariableInterval.hpp"
@@ -251,54 +253,21 @@ TEST_F(ModelFixture, Schedule_File)
 
   path p = resourcesPath() / toPath("model/schedulefile.csv");
 
-  ScheduleFile schedule(model);
+  ExternalFile externalfile(model, openstudio::toString(p));
+  EXPECT_EQ(openstudio::toString(p), externalfile.fileName());
+  EXPECT_EQ("Comma", externalfile.columnSeparator());
+  ScheduleFile schedule(externalfile);
 
-  EXPECT_EQ(8760, schedule.numberofRowsofData());
+  EXPECT_EQ(8760, schedule.numberofHoursofData());
   EXPECT_EQ(1, schedule.columnNumber());
-  EXPECT_EQ("", schedule.fileName());
-  EXPECT_EQ("Comma", schedule.columnSeparator());
   EXPECT_EQ(0, schedule.rowstoSkipatTop());
 
-  schedule.setFileName(openstudio::toString(p));
   schedule.setRowstoSkipatTop(1);
-  EXPECT_TRUE(schedule.isValid());
-  /*
-  ScheduleFixedInterval schedule(model);
-  EXPECT_EQ(0, schedule.intervalLength());
+  EXPECT_EQ(1, schedule.rowstoSkipatTop());
+  
+  EXPECT_TRUE(externalfile.setColumnSeparator("Tab"));
+  EXPECT_EQ("Tab", externalfile.columnSeparator());
+  externalfile.resetColumnSeparator();
+  EXPECT_EQ("Comma", externalfile.columnSeparator());
 
-  TimeSeries timeSeries1 = schedule.timeSeries();
-  EXPECT_EQ(Date(MonthOfYear::Jan, 1), timeSeries1.firstReportDateTime().date());
-  EXPECT_EQ(0u, timeSeries1.values().size());
-
-  Date startDate(MonthOfYear::Jan, 1);
-  Time intervalLength(0, 0, 60);
-  Vector values(8760);
-  for (unsigned i = 0; i < values.size(); ++i) {
-    values[i] = i % 24;
-  }
-
-  TimeSeries timeSeries2(startDate, intervalLength, values, "");
-  EXPECT_TRUE(schedule.setTimeSeries(timeSeries2));
-
-  TimeSeries timeSeries3 = schedule.timeSeries();
-  EXPECT_EQ(Date(MonthOfYear::Jan, 1), timeSeries3.firstReportDateTime().date());
-  EXPECT_EQ(Time(0, 0, 60), timeSeries3.firstReportDateTime().time());
-
-  EXPECT_EQ(timeSeries2.firstReportDateTime(), timeSeries3.firstReportDateTime());
-  ASSERT_TRUE(timeSeries2.intervalLength());
-  ASSERT_TRUE(timeSeries3.intervalLength());
-  EXPECT_EQ(timeSeries2.intervalLength(), timeSeries3.intervalLength());
-  EXPECT_EQ(timeSeries2.values().size(), timeSeries3.values().size());
-
-  boost::optional<ScheduleInterval> newSchedule = ScheduleInterval::fromTimeSeries(timeSeries3, model);
-  ASSERT_TRUE(newSchedule);
-  EXPECT_NE(schedule.handle(), newSchedule->handle());
-
-  TimeSeries timeSeries4 = newSchedule->timeSeries();
-  EXPECT_EQ(timeSeries2.firstReportDateTime(), timeSeries4.firstReportDateTime());
-  ASSERT_TRUE(timeSeries2.intervalLength());
-  ASSERT_TRUE(timeSeries4.intervalLength());
-  EXPECT_EQ(timeSeries2.intervalLength(), timeSeries4.intervalLength());
-  EXPECT_EQ(timeSeries2.values().size(), timeSeries4.values().size());
-  */
 }

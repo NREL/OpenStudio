@@ -416,6 +416,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitImportToVariable);
     REGISTER_CONSTRUCTOR(ExternalInterfaceSchedule);
     REGISTER_CONSTRUCTOR(ExternalInterfaceVariable);
+    REGISTER_CONSTRUCTOR(ExternalFile);
     REGISTER_CONSTRUCTOR(Facility);
     REGISTER_CONSTRUCTOR(FanConstantVolume);
     REGISTER_CONSTRUCTOR(FanOnOff);
@@ -917,6 +918,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitImportToVariable);
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceSchedule);
     REGISTER_COPYCONSTRUCTORS(ExternalInterfaceVariable);
+    REGISTER_COPYCONSTRUCTORS(ExternalFile);
     REGISTER_COPYCONSTRUCTORS(Facility);
     REGISTER_COPYCONSTRUCTORS(FanConstantVolume);
     REGISTER_COPYCONSTRUCTORS(FanOnOff);

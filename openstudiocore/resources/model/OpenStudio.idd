@@ -4726,19 +4726,43 @@ OS:ScheduleTypeLimits,
        \key ControlMode
        \key LinearPowerDensity
 
-OS:Schedule:File,
-       \min-fields 5
-       \memo A Schedule:File points to a text computer file that has 8760-8784 hours of data.
-  A1,  \field Name
+OS:External:File,
+       \min-fields 3
+       \memo An External:File points to a text computer file for use in Schedule:File objects.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
        \required-field
        \type alpha
-       \reference ScheduleNames
-  A2,  \field Schedule Type Limits Name
-       \type object-list
-       \object-list ScheduleTypeLimitsNames
+       \reference ExternalFileNames
   A3,  \field File Name
        \required-field
        \retaincase
+  A4;  \field Column Separator
+       \type choice
+       \key Comma
+       \key Tab
+       \key Space
+       \key Semicolon
+       \default Comma
+
+OS:Schedule:File,
+       \min-fields 6
+       \memo A Schedule:File points to a text computer file that has 8760-8784 hours of data.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ScheduleNames
+  A3,  \field Schedule Type Limits Name
+       \type object-list
+       \object-list ScheduleTypeLimitsNames
+  A4,  \field File Name
+       \required-field
+       \object-list ExternalFileNames
   N1,  \field Column Number
        \required-field
        \type integer
@@ -4753,14 +4777,14 @@ OS:Schedule:File,
        \default 8760
        \minimum 8760
        \maximum 8784
-  A4,  \field Column Separator
+  A5,  \field Column Separator
        \type choice
        \key Comma
        \key Tab
        \key Fixed
        \key Semicolon
        \default Comma
-  A5,  \field Interpolate to Timestep
+  A6,  \field Interpolate to Timestep
        \note when the interval does not match the user specified timestep a "Yes" choice will average between the intervals request (to
        \note timestep resolution.  a "No" choice will use the interval value at the simulation timestep without regard to if it matches
        \note the boundary or not.
