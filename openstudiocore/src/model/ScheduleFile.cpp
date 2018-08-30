@@ -154,6 +154,11 @@ namespace detail {
     return result;
   }
 
+  bool ScheduleFile_Impl::setNumberofHoursofData(int numberofHours) {
+    bool result = setInt(OS_Schedule_FileFields::NumberofHoursofData, numberofHours);
+    return result;
+  }
+
   bool ScheduleFile_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep) {
     bool result = false;
     if (interpolatetoTimestep) {
@@ -376,6 +381,10 @@ bool ScheduleFile::setColumnNumber(int columnNumber) {
 
 bool ScheduleFile::setRowstoSkipatTop(int rowstoSkipatTop) {
   return getImpl<detail::ScheduleFile_Impl>()->setRowstoSkipatTop(rowstoSkipatTop);
+}
+
+bool ScheduleFile::setNumberofHoursofData(int numberofHours) {
+  return getImpl<detail::ScheduleFile_Impl>()->setNumberofHoursofData(numberofHours);
 }
 
 bool ScheduleFile::setInterpolatetoTimestep(bool interpolatetoTimestep) {

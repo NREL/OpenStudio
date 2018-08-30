@@ -251,6 +251,8 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateScheduleDayInterval(const WorkspaceObject & workspaceObject);
 
+  boost::optional<model::ModelObject> translateScheduleFile(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateScheduleTypeLimits(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateScheduleWeekDaily(const WorkspaceObject & workspaceObject);

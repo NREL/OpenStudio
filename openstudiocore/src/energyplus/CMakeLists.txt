@@ -478,6 +478,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateScheduleConstant.cpp
   ReverseTranslator/ReverseTranslateScheduleDayHourly.cpp
   ReverseTranslator/ReverseTranslateScheduleDayInterval.cpp
+  ReverseTranslator/ReverseTranslateScheduleFile.cpp
   ReverseTranslator/ReverseTranslateScheduleTypeLimits.cpp
   ReverseTranslator/ReverseTranslateScheduleWeekDaily.cpp
   ReverseTranslator/ReverseTranslateScheduleYear.cpp

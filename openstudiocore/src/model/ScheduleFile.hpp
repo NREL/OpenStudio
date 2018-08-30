@@ -99,6 +99,8 @@ class MODEL_API ScheduleFile : public ScheduleInterval {
 
   bool setRowstoSkipatTop(int rowstoSkipatTop);
 
+  bool setNumberofHoursofData(int numberofHours);
+
   bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
   void resetInterpolatetoTimestep();
