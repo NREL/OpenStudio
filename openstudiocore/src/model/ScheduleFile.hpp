@@ -74,13 +74,17 @@ class MODEL_API ScheduleFile : public ScheduleInterval {
 
   int rowstoSkipatTop() const;
 
-  int numberofHoursofData() const;
+  boost::optional<int> numberofHoursofData() const;
+
+  bool isNumberofHoursofDataDefaulted() const;
 
   bool interpolatetoTimestep() const;
 
   bool isInterpolatetoTimestepDefaulted() const;
 
   boost::optional<std::string> minutesperItem() const;
+
+  bool isMinutesperItemDefaulted() const;
 
   //@}
   /** @name Setters */

@@ -107,12 +107,13 @@ namespace detail {
     return value.get();
   }
 
-  int ScheduleFile_Impl::numberofHoursofData() const {
-    boost::optional<int> value = getInt(OS_Schedule_FileFields::NumberofHoursofData, true);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<int> ScheduleFile_Impl::numberofHoursofData() const {
+    return getInt(OS_Schedule_FileFields::NumberofHoursofData, true);
   }
 
+  bool ScheduleFile_Impl::isNumberofHoursofDataDefaulted() const {
+    return isEmpty(OS_Schedule_FileFields::NumberofHoursofData);
+  }
 
   bool ScheduleFile_Impl::interpolatetoTimestep() const {
     boost::optional<std::string> value = getString(OS_Schedule_FileFields::InterpolatetoTimestep,true);
@@ -126,6 +127,10 @@ namespace detail {
 
   boost::optional<std::string> ScheduleFile_Impl::minutesperItem() const {
     return getString(OS_Schedule_FileFields::MinutesperItem,true);
+  }
+
+  bool ScheduleFile_Impl::isMinutesperItemDefaulted() const {
+    return isEmpty(OS_Schedule_FileFields::MinutesperItem);
   }
 
   bool ScheduleFile_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
@@ -333,8 +338,12 @@ int ScheduleFile::rowstoSkipatTop() const {
   return getImpl<detail::ScheduleFile_Impl>()->rowstoSkipatTop();
 }
 
-int ScheduleFile::numberofHoursofData() const {
+boost::optional<int> ScheduleFile::numberofHoursofData() const {
   return getImpl<detail::ScheduleFile_Impl>()->numberofHoursofData();
+}
+
+bool ScheduleFile::isNumberofHoursofDataDefaulted() const {
+  return getImpl<detail::ScheduleFile_Impl>()->isNumberofHoursofDataDefaulted();
 }
 
 bool ScheduleFile::interpolatetoTimestep() const {
@@ -347,6 +356,10 @@ bool ScheduleFile::isInterpolatetoTimestepDefaulted() const {
 
 boost::optional<std::string> ScheduleFile::minutesperItem() const {
   return getImpl<detail::ScheduleFile_Impl>()->minutesperItem();
+}
+
+bool ScheduleFile::isMinutesperItemDefaulted() const {
+  return getImpl<detail::ScheduleFile_Impl>()->isMinutesperItemDefaulted();
 }
 
 bool ScheduleFile::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {

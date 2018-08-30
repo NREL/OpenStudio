@@ -273,6 +273,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateScheduleCompact.cpp
   ForwardTranslator/ForwardTranslateScheduleConstant.cpp
   ForwardTranslator/ForwardTranslateScheduleDay.cpp
+  ForwardTranslator/ForwardTranslateScheduleFile.cpp
   ForwardTranslator/ForwardTranslateScheduleFixedInterval.cpp
   ForwardTranslator/ForwardTranslateScheduleRuleset.cpp
   ForwardTranslator/ForwardTranslateScheduleTypeLimits.cpp

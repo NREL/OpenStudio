@@ -255,10 +255,10 @@ TEST_F(ModelFixture, Schedule_File)
 
   ExternalFile externalfile(model, openstudio::toString(p));
   EXPECT_EQ(openstudio::toString(p), externalfile.fileName());
-  EXPECT_EQ("Comma", externalfile.columnSeparator());
+  EXPECT_TRUE(externalfile.isColumnSeparatorDefaulted());
   ScheduleFile schedule(externalfile);
 
-  EXPECT_EQ(8760, schedule.numberofHoursofData());
+  EXPECT_TRUE(schedule.isNumberofHoursofDataDefaulted());
   EXPECT_EQ(1, schedule.columnNumber());
   EXPECT_EQ(0, schedule.rowstoSkipatTop());
 
@@ -266,8 +266,8 @@ TEST_F(ModelFixture, Schedule_File)
   EXPECT_EQ(1, schedule.rowstoSkipatTop());
   
   EXPECT_TRUE(externalfile.setColumnSeparator("Tab"));
-  EXPECT_EQ("Tab", externalfile.columnSeparator());
+  EXPECT_EQ("Tab", externalfile.columnSeparator().get());
   externalfile.resetColumnSeparator();
-  EXPECT_EQ("Comma", externalfile.columnSeparator());
+  EXPECT_EQ("Comma", externalfile.columnSeparator().get());
 
 }

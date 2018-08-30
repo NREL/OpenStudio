@@ -73,7 +73,7 @@ namespace detail {
 
     std::string fileName() const;
 
-    std::string columnSeparator() const;
+    boost::optional<std::string> columnSeparator() const;
 
     char columnSeparatorChar() const;
 

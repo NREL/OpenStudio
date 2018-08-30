@@ -63,7 +63,7 @@ class MODEL_API ExternalFile : public ResourceObject {
 
   std::string fileName() const;
 
-  std::string columnSeparator() const;
+  boost::optional<std::string> columnSeparator() const;
 
   bool isColumnSeparatorDefaulted() const;
 

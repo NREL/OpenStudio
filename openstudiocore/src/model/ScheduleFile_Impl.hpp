@@ -82,13 +82,17 @@ namespace detail {
 
     int rowstoSkipatTop() const;
 
-    int numberofHoursofData() const;
+    boost::optional<int> numberofHoursofData() const;
+
+    bool isNumberofHoursofDataDefaulted() const;
 
     bool interpolatetoTimestep() const;
 
     bool isInterpolatetoTimestepDefaulted() const;
 
     boost::optional<std::string> minutesperItem() const;
+
+    bool isMinutesperItemDefaulted() const;
 
     virtual openstudio::TimeSeries timeSeries() const override;
 

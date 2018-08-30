@@ -2445,6 +2445,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateScheduleFixedInterval(schedule);
       break;
     }
+  case  openstudio::IddObjectType::OS_Schedule_File:
+   {
+    model::ScheduleFile schedule = modelObject.cast<ScheduleFile>();
+    retVal = translateScheduleFile(schedule);
+    break;
+   }
   case  openstudio::IddObjectType::OS_Schedule_Rule :
     {
       // no-op

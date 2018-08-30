@@ -82,10 +82,8 @@ namespace detail {
     return value.get();
   }
 
-  std::string ExternalFile_Impl::columnSeparator() const {
-    boost::optional<std::string> value = getString(OS_External_FileFields::ColumnSeparator,true);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<std::string> ExternalFile_Impl::columnSeparator() const {
+    return getString(OS_External_FileFields::ColumnSeparator,true);
   }
 
   char ExternalFile_Impl::columnSeparatorChar() const {
@@ -119,52 +117,6 @@ namespace detail {
     bool result = setString(OS_External_FileFields::ColumnSeparator, "");
     OS_ASSERT(result);
   }
-
-  //bool ExternalFile_Impl::isValid()
-  //{
-
-  //  //auto filepath = toPath(fileName());
-  //  std::ifstream ifs;
-  //  ifs.open(fileName(), std::ifstream::in);
-  //  if (!ifs.is_open()) {
-  //    // Failed to open file
-  //    LOG(Warn, "Failed to open file \"" << fileName() << "\" for " << this->briefDescription());
-  //    return false;
-  //  }
-
-  //  std::string line;
-  //  // Skip lines
-  //  int count;
-  //  for (count = 0; count < rowstoSkipatTop(); ++count) {
-  //    std::getline(ifs, line);
-  //    if (ifs.eof()) {
-  //      ifs.close();
-  //      LOG(Warn, "Failed to skip " << rowstoSkipatTop() << " in file \"" << fileName() << "\" for " << this->briefDescription());
-  //      return false;
-  //    }
-  //  }
-
-  //  // Separator check
-  //  char separator = columnSeparatorChar();
-  //  if (separator == '\0') {
-  //    // Invalid separator
-  //    return false;
-  //  }
-
-  //  count = -1;
-  //  do {
-  //    count += 1;
-  //    std::getline(ifs, line);
-  //    // Line-by-line validation goes here
-  //  } while (!ifs.eof());
-
-  //  if (count == 8760 || count == 8784) {
-  //    bool result = setInt(OS_Schedule_FileFields::NumberofHoursofData, count);
-  //    OS_ASSERT(result);
-  //    return result;
-  //  }
-  //  return false;
-  //}
 
 } // detail
 
@@ -201,7 +153,7 @@ std::string ExternalFile::fileName() const {
   return getImpl<detail::ExternalFile_Impl>()->fileName();
 }
 
-std::string ExternalFile::columnSeparator() const {
+boost::optional<std::string> ExternalFile::columnSeparator() const {
   return getImpl<detail::ExternalFile_Impl>()->columnSeparator();
 }
 

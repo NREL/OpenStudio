@@ -363,6 +363,7 @@ class SimpleGlazing;
 class ScheduleCompact;
 class ScheduleConstant;
 class ScheduleDay;
+class ScheduleFile;
 class ScheduleFixedInterval;
 class ScheduleRuleset;
 class ScheduleTypeLimits;
@@ -1067,6 +1068,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateScheduleDay( model::ScheduleDay & modelObject );
 
   boost::optional<IdfObject> translateScheduleFixedInterval( model::ScheduleFixedInterval & modelObject );
+
+  boost::optional<IdfObject> translateScheduleFile( model::ScheduleFile & modelObject );
 
   boost::optional<IdfObject> translateScheduleRuleset( model::ScheduleRuleset & modelObject );
 
