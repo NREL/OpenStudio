@@ -36,6 +36,8 @@
 #include "../../energyplus/ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/ModelMerger.hpp"
 #include "../../model/Facility.hpp"
 #include "../../model/Facility_Impl.hpp"
 #include "../../model/Building.hpp"
@@ -89,6 +91,76 @@ TEST_F(gbXMLFixture, ReverseTranslator_ZNETH)
   openstudio::gbxml::ForwardTranslator forwardTranslator;
   bool test = forwardTranslator.modelToGbXML(*model, outputPath);
   EXPECT_TRUE(test);
+}
+
+TEST_F(gbXMLFixture, ReverseTranslator_HandleMapping)
+{
+  //openstudio::Logger::instance().standardOutLogger().enable();
+  //openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
+
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/ZNETH.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> model1 = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model1);
+
+  unsigned numSpaces = model1->getConcreteModelObjects<model::Space>().size();
+  unsigned numSurfaces = model1->getConcreteModelObjects<model::Surface>().size();
+  unsigned numPlanarSurfaces = model1->getModelObjects<model::PlanarSurface>().size();
+  EXPECT_NE(0, numSpaces);
+  EXPECT_NE(0, numSurfaces);
+  EXPECT_NE(0, numPlanarSurfaces);
+
+  boost::optional<openstudio::model::Model> model2 = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model2);
+  EXPECT_EQ(numSpaces, model2->getConcreteModelObjects<model::Space>().size());
+  EXPECT_EQ(numSurfaces, model2->getConcreteModelObjects<model::Surface>().size());
+  EXPECT_EQ(numPlanarSurfaces, model2->getModelObjects<model::PlanarSurface>().size());
+
+  for (const auto& object : model2->objects()) {
+    EXPECT_FALSE(model1->getObject(object.handle()));
+  }
+
+  model::Model model1Clone1 = model1->clone(false).cast<model::Model>();
+  model::Model model1Clone2 = model1->clone(false).cast<model::Model>();
+
+  for (const auto& object : model1Clone1.objects()) {
+    EXPECT_FALSE(model1->getObject(object.handle()));
+    EXPECT_FALSE(model2->getObject(object.handle()));
+    EXPECT_FALSE(model1Clone2.getObject(object.handle()));
+  }
+
+  model::ModelMerger mm;
+
+  // no mapping merge, objects not in mapping are removed
+  mm.mergeModels(model1Clone1, *model2, std::map<UUID, UUID>());
+  EXPECT_EQ(numSpaces, model2->getConcreteModelObjects<model::Space>().size());
+  EXPECT_EQ(numSurfaces, model2->getConcreteModelObjects<model::Surface>().size());
+  EXPECT_EQ(numPlanarSurfaces, model2->getModelObjects<model::PlanarSurface>().size());
+  EXPECT_EQ(numSpaces, model1Clone1.getConcreteModelObjects<model::Space>().size());
+  EXPECT_EQ(numSurfaces, model1Clone1.getConcreteModelObjects<model::Surface>().size());
+  EXPECT_EQ(numPlanarSurfaces, model1Clone1.getModelObjects<model::PlanarSurface>().size());
+
+  // merge with mapping
+  const auto mapping = mm.suggestHandleMapping(model1Clone2, *model2);
+  for (const auto& space : model1Clone2.getConcreteModelObjects<model::Space>()) {
+    const auto it = mapping.find(space.handle());
+    // spaces are mapped
+    ASSERT_TRUE(it != mapping.end());
+    EXPECT_TRUE(model2->getObject(it->second));
+  }
+  for (const auto& planarSurface : model1Clone2.getModelObjects<model::PlanarSurface>()) {
+    const auto it = mapping.find(planarSurface.handle());
+    // surfaces are not mapped
+    EXPECT_TRUE(it == mapping.end());
+  }
+  mm.mergeModels(model1Clone2, *model2, mapping);
+  EXPECT_EQ(numSpaces, model2->getConcreteModelObjects<model::Space>().size());
+  EXPECT_EQ(numSurfaces, model2->getConcreteModelObjects<model::Surface>().size());
+  EXPECT_EQ(numPlanarSurfaces, model2->getModelObjects<model::PlanarSurface>().size());
+  EXPECT_EQ(numSpaces, model1Clone2.getConcreteModelObjects<model::Space>().size());
+  EXPECT_EQ(numSurfaces, model1Clone2.getConcreteModelObjects<model::Surface>().size());
+  EXPECT_EQ(numPlanarSurfaces, model1Clone2.getModelObjects<model::PlanarSurface>().size());
 }
 
 TEST_F(gbXMLFixture, ReverseTranslator_SimpleBox_Vasari)

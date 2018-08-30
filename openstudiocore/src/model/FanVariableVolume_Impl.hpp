@@ -86,11 +86,11 @@ namespace detail {
 
     Schedule availabilitySchedule() const;
 
-    double fanEfficiency() const;
+    double fanTotalEfficiency() const;
 
-    Quantity getFanEfficiency(bool returnIP=false) const;
+    Quantity getFanTotalEfficiency(bool returnIP=false) const;
 
-    bool isFanEfficiencyDefaulted() const;
+    bool isFanTotalEfficiencyDefaulted() const;
 
     double pressureRise() const;
 
@@ -168,11 +168,11 @@ namespace detail {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setFanEfficiency(double fanEfficiency);
+    bool setFanTotalEfficiency(double fanTotalEfficiency);
 
-    bool setFanEfficiency(const Quantity& fanEfficiency);
+    bool setFanTotalEfficiency(const Quantity& fanTotalEfficiency);
 
-    void resetFanEfficiency();
+    void resetFanTotalEfficiency();
 
     bool setPressureRise(double pressureRise);
 
@@ -256,8 +256,8 @@ namespace detail {
   private:
     REGISTER_LOGGER("openstudio.model.FanVariableVolume");
 
-    openstudio::Quantity fanEfficiency_SI() const;
-    openstudio::Quantity fanEfficiency_IP() const;
+    openstudio::Quantity fanTotalEfficiency_SI() const;
+    openstudio::Quantity fanTotalEfficiency_IP() const;
     openstudio::Quantity pressureRise_SI() const;
     openstudio::Quantity pressureRise_IP() const;
     openstudio::OSOptionalQuantity maximumFlowRate_SI() const;

@@ -37,6 +37,7 @@
 #include "../ElectricLoadCenterInverterSimple.hpp"
 #include "../ElectricLoadCenterInverterLookUpTable.hpp"
 #include "../ElectricLoadCenterStorageSimple.hpp"
+#include "../ElectricLoadCenterTransformer.hpp"
 
 using namespace openstudio::model;
 
@@ -307,8 +308,14 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   elcd.resetElectricalStorage();
   ASSERT_FALSE(elcd.electricalStorage());
 
-  // Test Transformer: not yet
-
+  // Test Transformer:
+  ElectricLoadCenterTransformer elct(model);
+  EXPECT_FALSE(elcd.transformer());
+  EXPECT_TRUE(elcd.setTransformer(elct));
+  EXPECT_TRUE(elcd.transformer());
+  EXPECT_EQ(elct.handle(), elcd.transformer()->handle());
+  elcd.resetTransformer();
+  EXPECT_FALSE(elcd.transformer());
 
   // Storage Operation Scheme, defaults
   EXPECT_TRUE(elcd.isStorageOperationSchemeDefaulted());
@@ -402,4 +409,16 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   ASSERT_TRUE( elcd.isStorageControlUtilityDemandTargetFractionScheduleDefaulted() );
 
 
+}
+TEST_F(ModelFixture, ElectricLoadCenterDistribution_TransformerDelete) {
+  Model model;
+
+  ElectricLoadCenterDistribution elcd(model);
+  ElectricLoadCenterTransformer elct(model);
+  EXPECT_TRUE(elcd.setTransformer(elct));
+  EXPECT_EQ(1u, model.getObjectsByType(ElectricLoadCenterDistribution::iddObjectType()).size());
+  EXPECT_EQ(1u, model.getObjectsByType(ElectricLoadCenterTransformer::iddObjectType()).size());
+  elcd.remove();
+  EXPECT_EQ(0u, model.getObjectsByType(ElectricLoadCenterDistribution::iddObjectType()).size());
+  EXPECT_EQ(0u, model.getObjectsByType(ElectricLoadCenterTransformer::iddObjectType()).size());
 }

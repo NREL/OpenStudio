@@ -169,7 +169,7 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   bool setCircuitLength(double circuitLength);
 
-  boost::optional<ThermalZone> thermalZone() const;
+  boost::optional<ThermalZone> thermalZone() const override;
 
   bool addToThermalZone(ThermalZone & thermalZone);
 
@@ -204,4 +204,4 @@ typedef std::vector<ZoneHVACLowTempRadiantConstFlow> ZoneHVACLowTempRadiantConst
 } // model
 } // openstudio
 
-#endif // MODEL_ZONEHVACLOWTEMPRADIANTCONSTFLOW_HPP
+#endif // MODEL_ZONEHVACLOWTEMPRADIANTCONSTFLOW_HPP

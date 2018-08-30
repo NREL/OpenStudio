@@ -93,11 +93,11 @@ namespace detail {
     Schedule availabilitySchedule() const;
     bool setAvailabilitySchedule(Schedule& s);
 
-    // Get FanEfficiency
-    double fanEfficiency() const;
+    // Get FanTotalEfficiency
+    double fanTotalEfficiency() const;
 
-    // Set fanEfficiency
-    bool setFanEfficiency(double val);
+    // Set fanTotalEfficiency
+    bool setFanTotalEfficiency(double val);
 
     // Get PressureRise
     double pressureRise() const;

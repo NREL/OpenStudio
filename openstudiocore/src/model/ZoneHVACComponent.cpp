@@ -33,6 +33,8 @@
 #include "HVACComponent_Impl.hpp"
 #include "AirTerminalSingleDuctInletSideMixer.hpp"
 #include "AirTerminalSingleDuctInletSideMixer_Impl.hpp"
+#include "AirLoopHVACReturnPlenum.hpp"
+#include "AirLoopHVACReturnPlenum_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "Node.hpp"
@@ -43,6 +45,8 @@
 #include "AirLoopHVAC_Impl.hpp"
 #include "PortList.hpp"
 #include "PortList_Impl.hpp"
+#include "Connection.hpp"
+#include "Connection_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -107,7 +111,7 @@ namespace detail {
     return clone;
   }
 
-  boost::optional<ThermalZone> ZoneHVACComponent_Impl::thermalZone()
+  boost::optional<ThermalZone> ZoneHVACComponent_Impl::thermalZone() const
   {
     auto thisObject = this->getObject<ModelObject>();
     for( const auto & thermalZone : model().getConcreteModelObjects<ThermalZone>() ) {
@@ -118,6 +122,132 @@ namespace detail {
       }
     }
     return boost::none;
+  }
+
+  //boost::optional<Connection> ZoneHVACComponent_Impl::returnPlenumOutletNodeConnection() const {
+  //  auto m = model();
+  //  auto h = handle();
+
+  //  auto connections = subsetCastVector<Connection>(m.getModelObjects<Connection>());
+  //  auto plenums = subsetCastVector<AirLoopHVACReturnPlenum>(m.getModelObjects<AirLoopHVACReturnPlenum>());
+  //  for ( auto & c : connections ) {
+  //    auto target = c.targetObject();
+  //    if ( target && ( target->handle() == h ) ) {
+  //      auto source = c.sourceObject();
+  //      if ( source ) {
+  //        auto sourceHandle = source->handle();
+  //        for ( auto & p : plenums ) {
+  //          auto outlet = p.outletModelObject();
+  //          if ( outlet && ( outlet->handle() == sourceHandle ) ) {
+  //            return c;
+  //          }
+  //        }
+  //      }
+  //    }
+  //  }
+
+  //  return boost::none;
+  //}
+
+  boost::optional<AirLoopHVACReturnPlenum> ZoneHVACComponent_Impl::returnPlenum() const {
+    boost::optional<AirLoopHVACReturnPlenum> plenum;
+
+    auto node = inletNode();
+    if ( node ) {
+      auto mo = node->inletModelObject();
+      if ( mo ) {
+        auto pl = mo->optionalCast<PortList>();
+        if ( pl ) {
+          auto mo2 = pl->getImpl<detail::PortList_Impl>()->hvacComponent();
+          plenum = mo2.optionalCast<AirLoopHVACReturnPlenum>();
+        }
+      }
+    }
+
+    return plenum;
+  }
+
+  void ZoneHVACComponent_Impl::removeReturnPlenum() {
+    Model m = model();
+    auto plenum = returnPlenum();
+    auto thisObject = getObject<ZoneHVACComponent>();
+
+    if ( plenum ) {
+      auto zone = thermalZone();
+      OS_ASSERT( zone );
+      auto h = zone->handle();
+
+      auto inlet = inletNode();
+      boost::optional<Node> plenumInletNode;
+
+      auto plenumInlets = plenum->inletModelObjects();
+      for ( auto & plenumInlet : plenumInlets ) {
+        auto node = plenumInlet.optionalCast<Node>();
+        if ( node ) {
+          auto pl = node->inletModelObject();
+          if ( pl && pl->optionalCast<PortList>() ) {
+            auto mo = pl->cast<PortList>().getImpl<model::detail::PortList_Impl>()->hvacComponent();
+            if ( mo.handle() == h ) {
+              plenumInletNode = node;
+              break;
+            }
+          }
+        }
+      }
+
+      if ( inlet && plenumInletNode ) {
+        inlet->remove();
+        auto branch = plenum->branchIndexForInletModelObject(plenumInletNode.get());
+        plenum->removePortForBranch(branch);
+        m.connect(plenumInletNode.get(), plenumInletNode->outletPort(), thisObject, thisObject.inletPort()); 
+        plenumInlets = plenum->inletModelObjects();
+        if ( plenumInlets.empty() ) {
+          plenum->remove();
+        }
+      }
+    }
+  }
+
+  bool ZoneHVACComponent_Impl::setReturnPlenum(const ThermalZone & plenumZone) {
+
+    bool result = true;
+
+    if ( ! plenumZone.canBePlenum() ) {
+      result = false;
+    }
+
+    auto node = inletNode();
+    if ( ! node ) {
+      result = false;
+    }
+
+    auto m = model();
+
+    boost::optional<AirLoopHVACReturnPlenum> plenum;
+
+    if ( result ) {
+      plenum = plenumZone.getImpl<ThermalZone_Impl>()->airLoopHVACReturnPlenum();
+
+      if ( ! plenum ) {
+        plenum = AirLoopHVACReturnPlenum(m);
+        plenum->setThermalZone(plenumZone);
+      }
+
+      OS_ASSERT( plenum );
+      OS_ASSERT( node );
+    }
+
+    // don't let a plenum connect to ZoneHVAC and AirLoopHVAC at the same time
+    if ( plenum->airLoopHVAC() ) {
+      result = false;
+    }
+
+    if ( result ) {
+      removeReturnPlenum();
+      result = plenum->addToNode( node.get() );
+    }
+
+    return result;
   }
 
   bool ZoneHVACComponent_Impl::addToThermalZone(ThermalZone & thermalZone)
@@ -408,7 +538,7 @@ unsigned ZoneHVACComponent::outletPort() const
   return getImpl<detail::ZoneHVACComponent_Impl>()->outletPort();
 }
 
-boost::optional<ThermalZone> ZoneHVACComponent::thermalZone()
+boost::optional<ThermalZone> ZoneHVACComponent::thermalZone() const
 {
   return getImpl<detail::ZoneHVACComponent_Impl>()->thermalZone();
 }
@@ -443,6 +573,11 @@ boost::optional<AirLoopHVAC> ZoneHVACComponent::airLoopHVAC() const
   return getImpl<detail::ZoneHVACComponent_Impl>()->airLoopHVAC();
 }
 
+void ZoneHVACComponent::removeReturnPlenum()
+{
+  return getImpl<detail::ZoneHVACComponent_Impl>()->removeReturnPlenum();
+}
+
 bool ZoneHVACComponent::removeFromAirLoopHVAC()
 {
   return getImpl<detail::ZoneHVACComponent_Impl>()->removeFromAirLoopHVAC();
@@ -456,6 +591,16 @@ boost::optional<ModelObject> ZoneHVACComponent::airInletModelObject() const
 boost::optional<ModelObject> ZoneHVACComponent::airOutletModelObject() const
 {
   return getImpl<detail::ZoneHVACComponent_Impl>()->airOutletModelObject();
+}
+
+boost::optional<AirLoopHVACReturnPlenum> ZoneHVACComponent::returnPlenum() const
+{
+  return getImpl<detail::ZoneHVACComponent_Impl>()->returnPlenum();
+}
+
+bool ZoneHVACComponent::setReturnPlenum(const ThermalZone & plenumZone)
+{
+  return getImpl<detail::ZoneHVACComponent_Impl>()->setReturnPlenum(plenumZone);
 }
 
 } // model

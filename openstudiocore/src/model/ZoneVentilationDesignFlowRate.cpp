@@ -510,7 +510,7 @@ namespace detail {
     return 0; // this object has no inlet or outlet node
   }
 
-  boost::optional<ThermalZone> ZoneVentilationDesignFlowRate_Impl::thermalZone()
+  boost::optional<ThermalZone> ZoneVentilationDesignFlowRate_Impl::thermalZone() const
   {
     ModelObject thisObject = this->getObject<ModelObject>();
     std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();

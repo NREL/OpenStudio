@@ -1,4 +1,4 @@
-!IDD_Version 2.6.0
+!IDD_Version 2.6.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -8279,6 +8279,7 @@ OS:Refrigeration:SecondarySystem,
         \type real
         \minimum 0.0
         \units Pa
+        \ip-units ftH2O
         \note Either the Total Pump Power or the Total Pump Head is required.
   N11,  \field PhaseChange Circulating Rate
         \type real
@@ -17465,10 +17466,12 @@ OS:Controller:WaterCoil,
        \type real
        \autosizable
        \units m3/s
+       \ip-units gal/min
        \default Autosize
   N3; \field Minimum Actuated Flow
        \type real
        \units m3/s
+       \ip-units gal/min
        \default 0.0000001
 
 OS:Curve:Linear,
@@ -19380,7 +19383,7 @@ OS:Fan:ConstantVolume,
        \type object-list
        \required-field
        \object-list ScheduleNames
-  N1, \field Fan Efficiency
+  N1, \field Fan Total Efficiency
        \type real
        \minimum> 0
        \maximum 1
@@ -19437,7 +19440,7 @@ OS:Fan:VariableVolume,
        \type object-list
        \required-field
        \object-list ScheduleNames
-  N1, \field Fan Efficiency
+  N1, \field Fan Total Efficiency
        \type real
        \minimum> 0
        \maximum 1
@@ -19522,7 +19525,7 @@ OS:Fan:OnOff,
        \type object-list
        \required-field
        \object-list ScheduleNames
-  N1, \field Fan Efficiency
+  N1, \field Fan Total Efficiency
        \type real
        \minimum> 0
        \maximum 1
@@ -19584,7 +19587,7 @@ OS:Fan:ZoneExhaust,
        \note If this field is blank, the system is always available.
        \type object-list
        \object-list ScheduleNames
-  N1, \field Fan Efficiency
+  N1, \field Fan Total Efficiency
        \type real
        \minimum> 0.0
        \maximum 1.0
@@ -22243,10 +22246,10 @@ OS:ThermalZone,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A9, \field Zone Return Air Node Name
+  A9, \field Zone Return Air Port List
        \type object-list
        \required-field
-       \object-list ConnectionNames
+       \object-list PortLists
   A10, \field Primary Daylighting Control Name
        \note For export to EnergyPlus
        \type object-list
@@ -23086,6 +23089,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \object-list ScheduleNames
    N4 , \field Rated Pump Head
         \units Pa
+        \ip-units ftH2O
         \default 179352
         \note default head is 60 feet
    N5 , \field Rated Power Consumption
@@ -27852,6 +27856,129 @@ OS:ElectricLoadCenter:Storage:Simple,
   N7;  \field Initial State of Charge
        \units J
 
+OS:ElectricLoadCenter:Transformer,
+       \memo a list of meters that can be reported are available after a run on
+       \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
+       \extensible:1
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference TransformerNames
+  A3,  \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4,  \field Transformer Usage
+       \type choice
+       \key PowerInFromGrid
+       \key PowerOutToGrid
+       \key LoadCenterPowerConditioning
+       \default PowerInFromGrid
+       \note A transformer can be used to transfer electric energy from utility grid to
+       \note building (PowerInFromGrid)or from building on-site generation to
+       \note the grid (PowerOutToGrid) or within a load center to match generation
+       \note to the facility service main panel (LoadCenterPowerConditioning)
+  A5,  \field Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+       \note Enter name of zone to receive transformer losses as heat
+       \note if blank then transformer losses are dissipated to outdoors
+  N1,  \field Radiative Fraction
+       \type real
+       \minimum 0
+       \maximum 1.0
+       \default 0
+  N2,  \field Rated Capacity
+       \type real
+       \minimum 0
+       \units VA
+       \note the unit is VA, instead of kVA as usually shown on transformer nameplates.
+  N3,  \field Phase
+       \type choice
+       \key 1
+       \key 3
+       \default 3
+       \note Must be single or three phase transformer.
+       \note NOT used in the current model.
+  A6,  \field Conductor Material
+       \type choice
+       \key Copper
+       \key Aluminum
+       \default Aluminum
+       \note Winding material used by the transformer.
+  N4,  \field Full Load Temperature Rise
+       \type real
+       \units C
+       \minimum 50
+       \maximum 180
+       \default 150
+  N5,  \field Fraction of Eddy Current Losses
+       \type real
+       \minimum 0
+       \maximum 1.0
+       \default 0.1
+  A7,  \field Performance Input Method
+       \type choice
+       \key RatedLosses
+       \key NominalEfficiency
+       \default RatedLosses
+       \note User can define transformer performance by specifying
+       \note load and no load losses at rated conditions or
+       \note nameplate efficiency and maximum efficiency
+  N6,  \field Rated No Load Loss
+       \type real
+       \units W
+       \minimum> 0
+       \note Only required when RatedLosses is the performance input method
+  N7,  \field Rated Load Loss
+       \type real
+       \units W
+       \minimum 0
+       \note Only required when RatedLosses is the performance input method
+  N8,  \field Nameplate Efficiency
+       \type real
+       \minimum> 0
+       \maximum 1.0
+       \default 0.98
+       \note Only required when NominalEfficiency is the performance input method
+  N9,  \field Per Unit Load for Nameplate Efficiency
+       \type real
+       \minimum> 0
+       \maximum 1.0
+       \default 0.35
+       \note Percentage of the rated capacity at which the nameplate efficiency is defined
+       \note Only required when NominalEfficiency is the performance input method
+  N10, \field Reference Temperature for Nameplate Efficiency
+       \type real
+       \units C
+       \minimum 20
+       \maximum 150
+       \default 75
+       \note Conductor operating temperature at which the nameplate efficiency is defined
+       \note Only required when NominalEfficiency is the performance input method
+  N11, \field Per Unit Load for Maximum Efficiency
+       \type real
+       \minimum> 0
+       \maximum 1.0
+       \note Percentage of the rate capacity at which the maximum efficiency is obtained
+       \note Only required when NominalEfficiency is the performance input method
+  A8,  \field Consider Transformer Loss for Utility Cost
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+       \note Only required when the transformer is used for power in from the utility grid
+  A9;  \field Meter 1 Name
+       \begin-extensible
+       \type alpha
+       \memo type external-list
+       \memo external-list autoRDDmeter
+       \note Must be an electric meter (with electricity as the resource type)
+       \note Only required when transformer is used for power in from the utility grid
+
 OS:ElectricLoadCenter:Distribution,
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
@@ -27886,8 +28013,8 @@ OS:ElectricLoadCenter:Distribution,
   A6 , \field Track Meter Scheme Meter Name
        \type alpha
        \note required when Generator Operation Scheme Type=TrackMeter
-       \memo type external list
-       \memo external list autoRDDmeter
+       \memo type external-list
+       \memo external-list autoRDDmeter
   A7 , \field Electrical Buss Type
        \type choice
        \key AlternatingCurrent
@@ -28924,9 +29051,12 @@ OS:EnergyManagementSystem:Actuator,
   A4, \field Actuated Component Type
        \required-field
        \type alpha
-  A5; \field Actuated Component Control Type
+  A5, \field Actuated Component Control Type
        \required-field
        \type alpha
+  A6; \field Zone Name
+       \type object-list
+       \object-list AllObjects
 
 OS:EnergyManagementSystem:ProgramCallingManager,
        \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
@@ -30734,7 +30864,7 @@ OS:PlantComponent:UserDefined,
       \min-fields 6
   A1, \field Handle
       \type handle
-      \required-field    
+      \required-field
   A2, \field Name
       \required-field
       \type alpha
@@ -30744,7 +30874,7 @@ OS:PlantComponent:UserDefined,
       \object-list ErlProgramCallingManagerNames
   A4, \field Main Model Program Name
       \type object-list
-      \object-list ErlProgramNames    
+      \object-list ErlProgramNames
   A5, \field Plant Inlet Node Name
       \type object-list
       \object-list ConnectionNames
@@ -30772,13 +30902,13 @@ OS:PlantComponent:UserDefined,
       \object-list ErlProgramCallingManagerNames
   A10, \field Plant Initialization Program Name
       \type object-list
-      \object-list ErlProgramNames      
+      \object-list ErlProgramNames
   A11, \field Plant Simulation Program Calling Manager Name
       \type object-list
       \object-list ErlProgramCallingManagerNames
   A12, \field Plant Simulation Program Name
       \type object-list
-      \object-list ErlProgramNames      
+      \object-list ErlProgramNames
   A13, \field Design Volume Flow Rate Actuator
        \type object-list
        \object-list ErlActuatorNames
@@ -30802,9 +30932,9 @@ OS:PlantComponent:UserDefined,
        \object-list ErlActuatorNames
   A20, \field Mass Flow Rate Actuator
        \type object-list
-       \object-list ErlActuatorNames       
+       \object-list ErlActuatorNames
   A21; \field Ambient Zone Name
        \type object-list
        \object-list ThermalZoneNames
        \note Used for modeling device losses to surrounding zone
-      
+

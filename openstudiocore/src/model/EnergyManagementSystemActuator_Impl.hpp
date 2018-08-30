@@ -36,6 +36,9 @@
 namespace openstudio {
 namespace model {
 
+class ThermalZone;
+class Space;
+
 namespace detail {
 
   /** EnergyManagementSystemActuator_Impl is a ModelObject_Impl that is the implementation class for EnergyManagementSystemActuator.*/
@@ -76,6 +79,8 @@ namespace detail {
 
     std::string actuatedComponentType() const;
 
+    boost::optional<ModelObject> zoneName() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -85,6 +90,12 @@ namespace detail {
     bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
     bool setActuatedComponentType(const std::string& actuatedComponentType);
+
+    bool setThermalZone(const ThermalZone& thermalZone);
+
+    bool setSpace(const Space& space);
+
+    void resetZoneName();
 
     //@}
     /** @name Other */

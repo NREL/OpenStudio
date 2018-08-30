@@ -188,6 +188,7 @@ class ElectricLoadCenterInverterSimple;
 class ElectricLoadCenterInverterPVWatts;
 class ElectricLoadCenterStorageSimple;
 class ElectricLoadCenterStorageConverter;
+class ElectricLoadCenterTransformer;
 class EnergyManagementSystemActuator;
 class EnergyManagementSystemConstructionIndexVariable;
 class EnergyManagementSystemCurveOrTableIndexVariable;
@@ -805,6 +806,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateElectricLoadCenterStorageSimple( model::ElectricLoadCenterStorageSimple & modelObject );
 
   boost::optional<IdfObject> translateElectricLoadCenterStorageConverter( model::ElectricLoadCenterStorageConverter & modelObject );
+
+  boost::optional<IdfObject> translateElectricLoadCenterTransformer( model::ElectricLoadCenterTransformer & modelObject );
 
   boost::optional<IdfObject> translateEnergyManagementSystemActuator(model::EnergyManagementSystemActuator & modelObject);
 

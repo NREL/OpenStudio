@@ -1146,8 +1146,12 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
       for( const auto & centerComp : centerComps ) {
         boost::optional<model::HVACComponent> keyComp = centerComp;
         if( auto zone = centerComp.optionalCast<model::ThermalZone>() ) {
-          if( auto terminal = zone->airLoopHVACTerminal() ) {
-            keyComp = terminal;
+          auto terminals = zone->airLoopHVACTerminals();
+          for( const auto & term : terminals ) {
+            auto a = term.airLoopHVAC();
+            if ( a && ( a->handle() == airLoop->handle() ) ) {
+              keyComp = term;
+            }
           }
         }
         OS_ASSERT(keyComp);
@@ -2120,13 +2124,17 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
 {
   setAcceptHoverEvents(false);
 
+  // reliefIt = components from return to outside
   auto reliefIt = reliefModelObjects.begin();
+  // supplyIt = components from mixed air node to outside (= oaSystem.oaComponents.reverse)
   auto supplyIt = supplyModelObjects.begin();
 
   while(supplyIt < supplyModelObjects.end())
   {
+    // If this is an AirToAirComponent (an ERV basically...)
     if(boost::optional<model::AirToAirComponent> comp = supplyIt->optionalCast<model::AirToAirComponent>())
     {
+      // We fake draw the relief side until we get to the ERV so ERV is ligned up in both cases
       while( (reliefIt < reliefModelObjects.end()) && (! reliefIt->optionalCast<model::AirToAirComponent>()) )
       {
         GridItem * gridItem = new OASupplyStraightItem(this);
@@ -2153,7 +2161,7 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
     }
     else if(boost::optional<model::StraightComponent> comp = supplyIt->optionalCast<model::StraightComponent>())
     {
-      GridItem * gridItem = new OAReliefStraightItem(this);
+      GridItem * gridItem = new OASupplyStraightItem(this);
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
       if( comp->isRemovable() )
       {

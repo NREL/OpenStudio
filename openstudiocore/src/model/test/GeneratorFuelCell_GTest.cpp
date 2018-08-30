@@ -37,6 +37,8 @@
 #include "../GeneratorFuelCell_Impl.hpp"
 #include "../GeneratorFuelCellPowerModule.hpp"
 #include "../GeneratorFuelCellPowerModule_Impl.hpp"
+#include "../ElectricLoadCenterDistribution.hpp"
+#include "../ElectricLoadCenterDistribution_Impl.hpp"
 #include "../Curve.hpp"
 #include "../Curve_Impl.hpp"
 #include "../CurveQuadratic.hpp"
@@ -136,6 +138,21 @@ TEST_F(ModelFixture, FuelCell2) {
   EXPECT_EQ(elecStorage, fuelcell.electricalStorage());
   EXPECT_EQ(inverter, fuelcell.inverter());
   EXPECT_EQ(fuelSupply, fuelcell.fuelSupply());
+  //should be 1 default ELCD attached to FC
+  std::vector<ElectricLoadCenterDistribution> elcd = model.getModelObjects<ElectricLoadCenterDistribution>();
+  EXPECT_EQ(1u, elcd.size());
+  EXPECT_EQ(1u, elcd[0].generators().size());
+  std::vector<Generator> generators = elcd[0].generators();
+  EXPECT_EQ(generators[0].handle(), fuelcell.handle());
+  EXPECT_TRUE(fuelcell.electricLoadCenterDistribution());
+  EXPECT_EQ(elcd[0].handle(), fuelcell.electricLoadCenterDistribution().get().handle());
+  //Add another ELCD
+  ElectricLoadCenterDistribution elcd2(model);
+  EXPECT_EQ(2, model.getModelObjects<ElectricLoadCenterDistribution>().size());
+  //Add the FC to it which should remove the existing one attached to FC
+  EXPECT_TRUE(elcd2.addGenerator(fuelcell));
+  EXPECT_EQ(0, elcd[0].generators().size());
+  EXPECT_EQ(elcd2.handle(), fuelcell.electricLoadCenterDistribution().get().handle());
 }
 
 TEST_F(ModelFixture, FuelCell3) {

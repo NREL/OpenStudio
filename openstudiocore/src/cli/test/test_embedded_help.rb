@@ -36,6 +36,25 @@ class EmbeddedHelp_Test < Minitest::Test
     assert_includes(no_block_glob, 'embedded_help.rb')
     assert_includes(no_block_glob, 'test/test_embedded_help.rb')
     
+    no_block_glob = Dir["*{.txt,.rb}"]
+    assert_instance_of(Array, no_block_glob)
+    assert_includes(no_block_glob, 'CMakeLists.txt')
+    assert_includes(no_block_glob, 'embedded_help.rb')
+    assert_nil(no_block_glob.index('test_embedded_help.rb'))
+    assert_nil(no_block_glob.index('test/test_embedded_help.rb'))
+    
+    no_block_glob = Dir["{,*,*/*}.{txt,rb}"]
+    assert_instance_of(Array, no_block_glob)
+    assert_includes(no_block_glob, 'CMakeLists.txt')
+    assert_includes(no_block_glob, 'embedded_help.rb')
+    assert_includes(no_block_glob, 'test/test_embedded_help.rb')
+    
+    no_block_glob = Dir.glob("{,*,*/*}.{txt,rb}")
+    assert_instance_of(Array, no_block_glob)
+    assert_includes(no_block_glob, 'CMakeLists.txt')
+    assert_includes(no_block_glob, 'embedded_help.rb')
+    assert_includes(no_block_glob, 'test/test_embedded_help.rb')    
+    
     no_block_glob = Dir["./**/*.txt", "./**/*.rb"]
     assert_instance_of(Array, no_block_glob)
     assert_includes(no_block_glob, './CMakeLists.txt')
@@ -50,23 +69,45 @@ class EmbeddedHelp_Test < Minitest::Test
     assert_includes(block_glob, 'embedded_help.rb')
     assert_nil(block_glob.index('test_embedded_help.rb'))
 
+    assert(File.fnmatch( "C:/test/help.rb", "C:/test/help.rb", 0))
+    assert(File.fnmatch( "C:/test/help.rb", "C:/test/help.rb", File::FNM_EXTGLOB))
+    assert(File.fnmatch( "C:/**/help.rb", "C:/test/help.rb", 0))
+    assert(File.fnmatch( "C:/**/help.rb", "C:/test/help.rb", File::FNM_EXTGLOB))
+    assert(!File.fnmatch( "C:/**/help{.rb,.txt}", "C:/test/help.rb", 0))
+    assert(File.fnmatch( "C:/**/help{.rb,.txt}", "C:/test/help.rb", File::FNM_EXTGLOB))
+
+    assert(File.fnmatch( ":/test/help.rb", ":/test/help.rb", 0))
+    assert(File.fnmatch( ":/test/help.rb", ":/test/help.rb", File::FNM_EXTGLOB))
+    assert(File.fnmatch( ":/**/help.rb", ":/test/help.rb", 0))
+    assert(File.fnmatch( ":/**/help.rb", ":/test/help.rb", File::FNM_EXTGLOB))
+    assert(!File.fnmatch( ":/**/help{.rb,.txt}", ":/test/help.rb", 0))
+    assert(File.fnmatch( ":/**/help{.rb,.txt}", ":/test/help.rb", File::FNM_EXTGLOB))
+    
     # test things that should only work in the CLI
     if defined?(OpenStudio::CLI) && OpenStudio::CLI
 
       no_block_glob = Dir[":/*.txt", ":/*.rb"]
       assert_instance_of(Array, no_block_glob)
+      assert(no_block_glob.size > 0)
       
       no_block_glob = Dir.glob(":/*.txt")
       assert_instance_of(Array, no_block_glob)
+      assert(no_block_glob.size == 0)
       
       no_block_glob = Dir[":/**/*.txt", ":/**/*.rb"]
       assert_instance_of(Array, no_block_glob)
+      assert(no_block_glob.size > 0)
+      
+      no_block_glob = Dir[":/{,*,*/*}.rb"]
+      assert_instance_of(Array, no_block_glob)
+      assert(no_block_glob.size > 0)
       
       block_glob = []
       Dir[":/*.txt", ":/*.rb"].each do |p|
         block_glob << p
       end   
-      assert_instance_of(Array, block_glob)      
+      assert_instance_of(Array, block_glob)
+      assert(block_glob.size > 0)      
     end
     
   ensure
