@@ -95,17 +95,20 @@ namespace detail {
 
   std::vector<IdfObject> ExternalFile_Impl::remove()
   {
-    path p = filePath();
-    if (exists(p)){
-      try {
-        boost::filesystem::remove(p);
-      } catch (std::exception&) {
-        LOG(Warn, "Could not remove file \"" << p << "\"");
+    if (!fileName().empty()){
+      path p = filePath();
+      if (exists(p)){
+        try {
+          boost::filesystem::remove(p);
+        } catch (std::exception&) {
+          LOG(Warn, "Could not remove file \"" << p << "\"");
+        }
       }
     }
 
     std::vector<openstudio::IdfObject> tmp;
-    for (auto& scheduleFile : scheduleFiles()) {
+    std::vector<ScheduleFile> sfs = scheduleFiles();
+    for (auto& scheduleFile : sfs) {
       std::vector<openstudio::IdfObject> tmp2 = scheduleFile.remove();
       tmp.insert( tmp.end(), tmp2.begin(), tmp2.end() );
     }
@@ -165,7 +168,8 @@ namespace detail {
 
   std::vector<ScheduleFile> ExternalFile_Impl::scheduleFiles() const
   {
-    return getObject<ExternalFile>().getModelObjectSources<ScheduleFile>();
+    std::vector<ScheduleFile> result = getObject<ExternalFile>().getModelObjectSources<ScheduleFile>();
+    return result;
   }
 
 } // detail

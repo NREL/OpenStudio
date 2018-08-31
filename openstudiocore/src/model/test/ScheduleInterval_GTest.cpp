@@ -259,6 +259,7 @@ TEST_F(ModelFixture, ScheduleFile)
   boost::optional<ExternalFile> externalfile = ExternalFile::getExternalFile(model, openstudio::toString(p));
   ASSERT_TRUE(externalfile);
   EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0u, externalfile->scheduleFiles().size());
   EXPECT_EQ(openstudio::toString(p.filename()), externalfile->fileName());
   //EXPECT_TRUE(externalfile.isColumnSeparatorDefaulted());
   EXPECT_TRUE(exists(externalfile->filePath()));
@@ -266,6 +267,7 @@ TEST_F(ModelFixture, ScheduleFile)
 
   ScheduleFile schedule(*externalfile);
   EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
+  EXPECT_EQ(1u, externalfile->scheduleFiles().size());
   EXPECT_TRUE(schedule.isNumberofHoursofDataDefaulted());
   EXPECT_EQ(1, schedule.columnNumber());
   schedule.setColumnNumber(1);
@@ -276,6 +278,7 @@ TEST_F(ModelFixture, ScheduleFile)
 
   ScheduleFile schedule2(*externalfile);
   EXPECT_EQ(2u, model.getConcreteModelObjects<ScheduleFile>().size());
+  EXPECT_EQ(2u, externalfile->scheduleFiles().size());
   EXPECT_TRUE(schedule2.isNumberofHoursofDataDefaulted());
   EXPECT_EQ(1, schedule2.columnNumber());
   schedule2.setColumnNumber(2);
@@ -286,6 +289,7 @@ TEST_F(ModelFixture, ScheduleFile)
 
   ScheduleFile schedule3(*externalfile);
   EXPECT_EQ(3u, model.getConcreteModelObjects<ScheduleFile>().size());
+  EXPECT_EQ(3u, externalfile->scheduleFiles().size());
   EXPECT_TRUE(schedule3.isNumberofHoursofDataDefaulted());
   EXPECT_EQ(1, schedule3.columnNumber());
   schedule3.setColumnNumber(3);
@@ -319,6 +323,7 @@ TEST_F(ModelFixture, ScheduleFile)
   schedule3.remove();
   EXPECT_EQ(2u, model.getConcreteModelObjects<ExternalFile>().size());
   EXPECT_EQ(2u, model.getConcreteModelObjects<ScheduleFile>().size());
+  EXPECT_EQ(2u, externalfile->scheduleFiles().size());
 
   path filePath = externalfile->filePath();
   EXPECT_TRUE(exists(p));
@@ -328,6 +333,7 @@ TEST_F(ModelFixture, ScheduleFile)
   externalfile4->remove();
   EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
   EXPECT_EQ(0u, model.getConcreteModelObjects<ScheduleFile>().size());
+  EXPECT_EQ(0u, externalfile->scheduleFiles().size());
 
   EXPECT_TRUE(exists(p));
   EXPECT_FALSE(exists(filePath));

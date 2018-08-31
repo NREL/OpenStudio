@@ -4740,6 +4740,7 @@ OS:External:File,
        \required-field
        \retaincase
   A4;  \field Column Separator
+       \note Currently unused
        \type choice
        \key Comma
        \key Tab
@@ -4760,8 +4761,8 @@ OS:Schedule:File,
   A3,  \field Schedule Type Limits Name
        \type object-list
        \object-list ScheduleTypeLimitsNames
-  A4,  \field File Name
-       \required-field
+  A4,  \field External File Name
+       \type object-list
        \object-list ExternalFileNames
   N1,  \field Column Number
        \required-field
