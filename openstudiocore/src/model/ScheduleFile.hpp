@@ -78,6 +78,10 @@ class MODEL_API ScheduleFile : public ScheduleInterval {
 
   bool isNumberofHoursofDataDefaulted() const;
 
+  std::string columnSeparator() const;
+
+  bool isColumnSeparatorDefaulted() const;
+
   bool interpolatetoTimestep() const;
 
   bool isInterpolatetoTimestepDefaulted() const;
@@ -100,6 +104,10 @@ class MODEL_API ScheduleFile : public ScheduleInterval {
   bool setRowstoSkipatTop(int rowstoSkipatTop);
 
   bool setNumberofHoursofData(int numberofHours);
+
+  bool setColumnSeparator(const std::string& columnSeparator);
+
+  void resetColumnSeparator();
 
   bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 

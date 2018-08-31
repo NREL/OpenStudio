@@ -277,6 +277,11 @@ TEST_F(ModelFixture, ScheduleFile)
   schedule.setRowstoSkipatTop(1);
   EXPECT_EQ(1, schedule.rowstoSkipatTop());
 
+  EXPECT_EQ("Comma", schedule.columnSeparator());
+  EXPECT_TRUE(schedule.isColumnSeparatorDefaulted());
+  EXPECT_TRUE(schedule.setColumnSeparator("Tab"));
+  EXPECT_EQ("Tab", schedule.columnSeparator());
+
   ScheduleFile schedule2(*externalfile);
   EXPECT_EQ(2u, model.getConcreteModelObjects<ScheduleFile>().size());
   EXPECT_EQ(2u, externalfile->scheduleFiles().size());

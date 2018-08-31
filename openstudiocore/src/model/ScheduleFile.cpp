@@ -122,6 +122,28 @@ namespace detail {
     return isEmpty(OS_Schedule_FileFields::NumberofHoursofData);
   }
 
+  std::string ScheduleFile_Impl::columnSeparator() const {
+    boost::optional<std::string> value = getString(OS_Schedule_FileFields::ColumnSeparator,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  char ScheduleFile_Impl::columnSeparatorChar() const {
+    static std::unordered_map<std::string, char> lookup({ { "Comma", ',' }, { "Tab", '\t' }, { "Fixed", ' ' }, { "Semicolon", ';' } });
+    boost::optional<std::string> value = getString(OS_Schedule_FileFields::ColumnSeparator, true);
+    OS_ASSERT(value);
+    auto it = lookup.find(value.get());
+    if (it == std::end(lookup)) {
+      // Invalid separator
+      return '\0';
+    }
+    return it->second;
+  }
+
+  bool ScheduleFile_Impl::isColumnSeparatorDefaulted() const {
+    return isEmpty(OS_Schedule_FileFields::ColumnSeparator);
+  }
+
   bool ScheduleFile_Impl::interpolatetoTimestep() const {
     boost::optional<std::string> value = getString(OS_Schedule_FileFields::InterpolatetoTimestep,true);
     OS_ASSERT(value);
@@ -164,6 +186,16 @@ namespace detail {
   bool ScheduleFile_Impl::setNumberofHoursofData(int numberofHours) {
     bool result = setInt(OS_Schedule_FileFields::NumberofHoursofData, numberofHours);
     return result;
+  }
+
+  bool ScheduleFile_Impl::setColumnSeparator(const std::string& columnSeparator) {
+    bool result = setString(OS_Schedule_FileFields::ColumnSeparator, columnSeparator);
+    return result;
+  }
+
+  void ScheduleFile_Impl::resetColumnSeparator() {
+    bool result = setString(OS_Schedule_FileFields::ColumnSeparator, "");
+    OS_ASSERT(result);
   }
 
   bool ScheduleFile_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep) {
@@ -360,6 +392,14 @@ bool ScheduleFile::isNumberofHoursofDataDefaulted() const {
   return getImpl<detail::ScheduleFile_Impl>()->isNumberofHoursofDataDefaulted();
 }
 
+std::string ScheduleFile::columnSeparator() const {
+  return getImpl<detail::ScheduleFile_Impl>()->columnSeparator();
+}
+
+bool ScheduleFile::isColumnSeparatorDefaulted() const {
+  return getImpl<detail::ScheduleFile_Impl>()->isColumnSeparatorDefaulted();
+}
+
 bool ScheduleFile::interpolatetoTimestep() const {
   return getImpl<detail::ScheduleFile_Impl>()->interpolatetoTimestep();
 }
@@ -394,6 +434,14 @@ bool ScheduleFile::setRowstoSkipatTop(int rowstoSkipatTop) {
 
 bool ScheduleFile::setNumberofHoursofData(int numberofHours) {
   return getImpl<detail::ScheduleFile_Impl>()->setNumberofHoursofData(numberofHours);
+}
+
+bool ScheduleFile::setColumnSeparator(const std::string& columnSeparator) {
+  return getImpl<detail::ScheduleFile_Impl>()->setColumnSeparator(columnSeparator);
+}
+
+void ScheduleFile::resetColumnSeparator() {
+  getImpl<detail::ScheduleFile_Impl>()->resetColumnSeparator();
 }
 
 bool ScheduleFile::setInterpolatetoTimestep(bool interpolatetoTimestep) {

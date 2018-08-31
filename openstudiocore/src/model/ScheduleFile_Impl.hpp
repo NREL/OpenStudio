@@ -88,6 +88,12 @@ namespace detail {
 
     bool isNumberofHoursofDataDefaulted() const;
 
+    std::string columnSeparator() const;
+
+    char columnSeparatorChar() const;
+
+    bool isColumnSeparatorDefaulted() const;
+
     bool interpolatetoTimestep() const;
 
     bool isInterpolatetoTimestepDefaulted() const;
@@ -112,6 +118,10 @@ namespace detail {
     bool setRowstoSkipatTop(int rowstoSkipatTop);
 
     bool setNumberofHoursofData(int numberofHours);
+
+    bool setColumnSeparator(const std::string& columnSeparator);
+
+    void resetColumnSeparator();
 
     bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 

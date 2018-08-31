@@ -84,9 +84,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFile( ScheduleFil
     idfObject.setInt( openstudio::Schedule_FileFields::NumberofHoursofData, modelObject.numberofHoursofData().get() );
   }
 
-  if ( !modelObject.externalFile().isColumnSeparatorDefaulted() ) {
-    idfObject.setString( openstudio::Schedule_FileFields::ColumnSeparator, modelObject.externalFile().columnSeparator().get() );
-  }
+  idfObject.setString( openstudio::Schedule_FileFields::ColumnSeparator, modelObject.columnSeparator() );
 
   if ( modelObject.interpolatetoTimestep() ) {
     idfObject.setString( openstudio::Schedule_FileFields::InterpolatetoTimestep, "Yes" );
