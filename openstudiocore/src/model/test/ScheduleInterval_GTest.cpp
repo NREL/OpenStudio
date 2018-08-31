@@ -268,6 +268,7 @@ TEST_F(ModelFixture, ScheduleFile)
   ScheduleFile schedule(*externalfile);
   EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleFile>().size());
   EXPECT_EQ(1u, externalfile->scheduleFiles().size());
+  EXPECT_EQ(externalfile->handle(), schedule.externalFile().handle());
   EXPECT_TRUE(schedule.isNumberofHoursofDataDefaulted());
   EXPECT_EQ(1, schedule.columnNumber());
   schedule.setColumnNumber(1);
@@ -279,6 +280,7 @@ TEST_F(ModelFixture, ScheduleFile)
   ScheduleFile schedule2(*externalfile);
   EXPECT_EQ(2u, model.getConcreteModelObjects<ScheduleFile>().size());
   EXPECT_EQ(2u, externalfile->scheduleFiles().size());
+  EXPECT_EQ(externalfile->handle(), schedule2.externalFile().handle());
   EXPECT_TRUE(schedule2.isNumberofHoursofDataDefaulted());
   EXPECT_EQ(1, schedule2.columnNumber());
   schedule2.setColumnNumber(2);
@@ -290,6 +292,7 @@ TEST_F(ModelFixture, ScheduleFile)
   ScheduleFile schedule3(*externalfile);
   EXPECT_EQ(3u, model.getConcreteModelObjects<ScheduleFile>().size());
   EXPECT_EQ(3u, externalfile->scheduleFiles().size());
+  EXPECT_EQ(externalfile->handle(), schedule3.externalFile().handle());
   EXPECT_TRUE(schedule3.isNumberofHoursofDataDefaulted());
   EXPECT_EQ(1, schedule3.columnNumber());
   schedule3.setColumnNumber(3);

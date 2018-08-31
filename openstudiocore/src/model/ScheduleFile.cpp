@@ -97,7 +97,7 @@ namespace detail {
   }
 
   ExternalFile ScheduleFile_Impl::externalFile() const {
-    auto value = getObject<ModelObject>().getModelObjectTarget<ExternalFile>(OS_Schedule_FileFields::FileName);
+    auto value = getObject<ModelObject>().getModelObjectTarget<ExternalFile>(OS_Schedule_FileFields::ExternalFileName);
     OS_ASSERT(value);
     return value.get();
   }
@@ -319,6 +319,8 @@ ScheduleFile::ScheduleFile(const ExternalFile& externalfile, int column, int row
 {
   OS_ASSERT(getImpl<detail::ScheduleFile_Impl>());
   bool ok;
+  ok = setPointer(OS_Schedule_FileFields::ExternalFileName, externalfile.handle());
+  OS_ASSERT(ok);
   ok = setColumnNumber(column);
   OS_ASSERT(ok);
   ok = setRowstoSkipatTop(rowsToSkip);
