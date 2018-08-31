@@ -4068,7 +4068,7 @@ std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, c
         for ( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
           auto value = object.getString(i);
           if ( value ) {
-            newConnection.setString(i, value.get()); 
+            newConnection.setString(i, value.get());
           }
         }
         // index 3 is the source object port,
@@ -4080,6 +4080,36 @@ std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, c
       } else {
         ss << object;
       }
+    } else if( iddname == "OS:EvaporativeCooler:Direct:ResearchSpecial" ) {
+
+      auto iddObject = idd_2_6_1.getObject("OS:EvaporativeCooler:Direct:ResearchSpecial");
+      IdfObject newObject(iddObject.get());
+
+      for ( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        auto value = object.getString(i);
+        if ( value ) {
+          newObject.setString(i, value.get());
+        }
+      }
+      // The last three fields were added in #3118 as NON optional doubles, so default to extreme values
+      // to make it behave like when blank = no control
+
+      // Evaporative Operation Minimum Drybulb Temperature
+      if( !newObject.getDouble(14) ) {
+        newObject.setDouble(14, -99);
+      }
+      // Evaporative Operation Maximum Limit Wetbulb Temperature
+      if( !newObject.getDouble(15) ) {
+        newObject.setDouble(15, 99);
+      }
+      // Evaporative Operation Maximum Limit Drybulb Temperature
+      if( !newObject.getDouble(16) ) {
+        newObject.setDouble(16, 99);
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
     } else {
       ss << object;
     }
