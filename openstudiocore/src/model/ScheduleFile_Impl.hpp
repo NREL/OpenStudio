@@ -69,6 +69,8 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual std::vector<ResourceObject> resources() const override;
+
     //@}
     /** @name Getters */
     //@{

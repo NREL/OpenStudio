@@ -47,35 +47,6 @@ namespace openstudio {
 
   namespace energyplus {
 
-static ExternalFile externalFileFromFileName(Model &model, const std::string &filename, const boost::optional<std::string> &separator)
-{
-  if ( separator ) {
-    for ( auto & extfile : model.getConcreteModelObjects<model::ExternalFile>() ) {
-      if ( extfile.fileName() == filename ) {
-        if ( extfile.columnSeparator() == separator.get() ) {
-          return extfile;
-        }
-        // If the separator doesn't match, maybe should thow here
-      }
-    }
-    ExternalFile extfile( model, filename );
-    extfile.setColumnSeparator( separator.get() );
-    return extfile;
-  }
-
-  for ( auto & extfile : model.getConcreteModelObjects<model::ExternalFile>() ) {
-    if ( extfile.fileName() == filename ) {
-      if ( extfile.isColumnSeparatorDefaulted() ) {
-        return extfile;
-      }
-      // If the separator doesn't match, maybe should thow here
-    }
-  }
-  ExternalFile extfile(model, filename);
-  return extfile;
-
-}
-
 OptionalModelObject ReverseTranslator::translateScheduleFile( const WorkspaceObject & workspaceObject )
 {
   if( workspaceObject.iddObject().type() != IddObjectType::Schedule_File )
@@ -84,11 +55,15 @@ OptionalModelObject ReverseTranslator::translateScheduleFile( const WorkspaceObj
     return boost::none;
   }
 
-  ExternalFile extfile = externalFileFromFileName( m_model, workspaceObject.getString( Schedule_FileFields::FileName ).get(),
-    workspaceObject.getString( Schedule_FileFields::ColumnSeparator ) );
+  std::string fileName = workspaceObject.getString(Schedule_FileFields::FileName).get();
+  boost::optional<ExternalFile> extfile = ExternalFile::getExternalFile( m_model, fileName);
 
+  if (!extfile) {
+    LOG( Error, "Could not translate Schedule:File, cannot find file \"" << fileName << "\"" );
+    return boost::none;
+  }
 
-  ScheduleFile scheduleFile( extfile, workspaceObject.getInt( Schedule_FileFields::ColumnNumber ).get(),
+  ScheduleFile scheduleFile( extfile.get(), workspaceObject.getInt( Schedule_FileFields::ColumnNumber ).get(),
     workspaceObject.getInt( Schedule_FileFields::RowstoSkipatTop ).get() );
 
   OptionalWorkspaceObject target = workspaceObject.getTarget(Schedule_FileFields::ScheduleTypeLimitsName);

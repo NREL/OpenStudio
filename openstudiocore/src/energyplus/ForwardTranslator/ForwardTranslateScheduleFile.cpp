@@ -56,8 +56,6 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFile( ScheduleFil
 {
   IdfObject idfObject( openstudio::IddObjectType::Schedule_File );
 
-  m_idfObjects.push_back(idfObject);
-
   idfObject.setName(modelObject.name().get());
 
   boost::optional<ScheduleTypeLimits> scheduleTypeLimits = modelObject.scheduleTypeLimits();
@@ -68,7 +66,16 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFile( ScheduleFil
     }
   }
 
-  idfObject.setString( openstudio::Schedule_FileFields::FileName, modelObject.externalFile().name().get() );
+  path filePath = modelObject.externalFile().filePath();
+  if (!exists(filePath)) {
+    LOG(Warn, "Cannot find file \"" << filePath << "\"");
+  } else {
+    // make the path correct for this system
+    filePath = system_complete(filePath);
+  }
+
+  // DLM: this path is going to be in the temp dir, might want to fix it up when saving model temp dir
+  idfObject.setString( openstudio::Schedule_FileFields::FileName, toString(filePath));
 
   idfObject.setInt( openstudio::Schedule_FileFields::ColumnNumber, modelObject.columnNumber() );
   idfObject.setInt( openstudio::Schedule_FileFields::RowstoSkipatTop, modelObject.rowstoSkipatTop() );
@@ -86,11 +93,12 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFile( ScheduleFil
   } else {
     idfObject.setString(openstudio::Schedule_FileFields::InterpolatetoTimestep, "No");
   }
-  
+
   if ( !modelObject.isMinutesperItemDefaulted() ) {
     idfObject.setString( openstudio::Schedule_FileFields::MinutesperItem, modelObject.minutesperItem().get() );
   }
 
+  m_idfObjects.push_back(idfObject);
   return idfObject;
 }
 

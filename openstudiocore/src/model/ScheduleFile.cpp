@@ -85,6 +85,13 @@ namespace detail {
     return ScheduleFile::iddObjectType();
   }
 
+  std::vector<ResourceObject> ScheduleFile_Impl::resources() const
+  {
+    std::vector<ResourceObject> result;
+    result.push_back(externalFile());
+    return result;
+  }
+
   boost::optional<ScheduleTypeLimits> ScheduleFile_Impl::scheduleTypeLimits() const {
     return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_Schedule_FileFields::ScheduleTypeLimitsName);
   }

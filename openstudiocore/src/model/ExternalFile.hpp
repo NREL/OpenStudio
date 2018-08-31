@@ -36,6 +36,8 @@ namespace openstudio {
 
 namespace model {
 
+  class ScheduleFile;
+
 namespace detail {
 
   class ExternalFile_Impl;
@@ -48,8 +50,6 @@ class MODEL_API ExternalFile : public ResourceObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ExternalFile(const Model& model, const std::string &filename);
-
   virtual ~ExternalFile() {}
 
   //@}
@@ -58,28 +58,34 @@ class MODEL_API ExternalFile : public ResourceObject {
 
   static std::vector<std::string> columnSeparatorValues();
 
+  static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string &filename);
+
   /** @name Getters */
   //@{
 
   std::string fileName() const;
 
-  boost::optional<std::string> columnSeparator() const;
+  path filePath() const;
 
-  bool isColumnSeparatorDefaulted() const;
+  //boost::optional<std::string> columnSeparator() const;
+
+  //bool isColumnSeparatorDefaulted() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setColumnSeparator(const std::string& columnSeparator);
+  //bool setColumnSeparator(const std::string& columnSeparator);
 
-  void resetColumnSeparator();
+  //void resetColumnSeparator();
 
   //@}
   /** @name Other */
   //@{
-  
+
   //bool isValid();
+
+  std::vector<ScheduleFile> scheduleFiles() const;
 
   //@}
  protected:
@@ -96,6 +102,8 @@ class MODEL_API ExternalFile : public ResourceObject {
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.ExternalFile");
+
+  ExternalFile(const Model& model, const std::string &filename);
 
   bool setFileName(const std::string& fileName);
 };

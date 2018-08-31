@@ -29,13 +29,19 @@
 #include "ExternalFile.hpp"
 #include "ExternalFile_Impl.hpp"
 
+#include "Model.hpp"
+#include "ScheduleFile.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_External_File_FieldEnums.hxx>
 
+#include "../utilities/filetypes/WorkflowJSON.hpp"
+#include "../utilities/core/Checksum.hpp"
 #include "../utilities/core/Assert.hpp"
 
 #include <unordered_map>
+#include "ScheduleFile_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -72,8 +78,42 @@ namespace detail {
     return result;
   }
 
+  ExternalFile_Impl::~ExternalFile_Impl() {}
+
   IddObjectType ExternalFile_Impl::iddObjectType() const {
     return ExternalFile::iddObjectType();
+  }
+
+  ModelObject ExternalFile_Impl::clone(Model model) const
+  {
+    boost::optional<ExternalFile> externalFile = ExternalFile::getExternalFile(model, toString(this->filePath()));
+    if (!externalFile) {
+      LOG_AND_THROW("Could not clone " << this->briefDescription());
+    }
+    return *externalFile;
+  }
+
+  std::vector<IdfObject> ExternalFile_Impl::remove()
+  {
+    path p = filePath();
+    if (exists(p)){
+      try {
+        boost::filesystem::remove(p);
+      } catch (std::exception&) {
+        LOG(Warn, "Could not remove file \"" << p << "\"");
+      }
+    }
+
+    std::vector<openstudio::IdfObject> tmp;
+    for (auto& scheduleFile : scheduleFiles()) {
+      std::vector<openstudio::IdfObject> tmp2 = scheduleFile.remove();
+      tmp.insert( tmp.end(), tmp2.begin(), tmp2.end() );
+    }
+
+    std::vector<openstudio::IdfObject> idfObjects =  ModelObject_Impl::remove();
+    idfObjects.insert( idfObjects.end(), tmp.begin(), tmp.end() );
+
+    return idfObjects;
   }
 
   std::string ExternalFile_Impl::fileName() const {
@@ -82,25 +122,30 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<std::string> ExternalFile_Impl::columnSeparator() const {
-    return getString(OS_External_FileFields::ColumnSeparator,true);
+  path ExternalFile_Impl::filePath() const {
+    path result = this->model().workflowJSON().absoluteRootDir() / toPath(fileName());
+    return result;
   }
 
-  char ExternalFile_Impl::columnSeparatorChar() const {
-    static std::unordered_map<std::string, char> lookup({ { "Comma", ',' }, { "Tab", '\t' }, { "Fixed", ' ' }, { "Semicolon", ';' } });
-    boost::optional<std::string> value = getString(OS_External_FileFields::ColumnSeparator, true);
-    OS_ASSERT(value);
-    auto it = lookup.find(value.get());
-    if (it == std::end(lookup)) {
-      // Invalid separator
-      return '\0';
-    }
-    return it->second;
-  }
+  //boost::optional<std::string> ExternalFile_Impl::columnSeparator() const {
+  //  return getString(OS_External_FileFields::ColumnSeparator,true);
+  //}
 
-  bool ExternalFile_Impl::isColumnSeparatorDefaulted() const {
-    return isEmpty(OS_External_FileFields::ColumnSeparator);
-  }
+  //char ExternalFile_Impl::columnSeparatorChar() const {
+  //  static std::unordered_map<std::string, char> lookup({ { "Comma", ',' }, { "Tab", '\t' }, { "Fixed", ' ' }, { "Semicolon", ';' } });
+  //  boost::optional<std::string> value = getString(OS_External_FileFields::ColumnSeparator, true);
+  //  OS_ASSERT(value);
+  //  auto it = lookup.find(value.get());
+  //  if (it == std::end(lookup)) {
+  //    // Invalid separator
+  //    return '\0';
+  //  }
+  //  return it->second;
+  //}
+
+  //bool ExternalFile_Impl::isColumnSeparatorDefaulted() const {
+  //  return isEmpty(OS_External_FileFields::ColumnSeparator);
+  //}
 
   bool ExternalFile_Impl::setFileName(const std::string& fileName) {
     bool result = setString(OS_External_FileFields::FileName, fileName);
@@ -108,37 +153,91 @@ namespace detail {
     return result;
   }
 
-  bool ExternalFile_Impl::setColumnSeparator(const std::string& columnSeparator) {
-    bool result = setString(OS_External_FileFields::ColumnSeparator, columnSeparator);
-    return result;
-  }
+  //bool ExternalFile_Impl::setColumnSeparator(const std::string& columnSeparator) {
+  //  bool result = setString(OS_External_FileFields::ColumnSeparator, columnSeparator);
+  //  return result;
+  //}
 
-  void ExternalFile_Impl::resetColumnSeparator() {
-    bool result = setString(OS_External_FileFields::ColumnSeparator, "");
-    OS_ASSERT(result);
+  //void ExternalFile_Impl::resetColumnSeparator() {
+  //  bool result = setString(OS_External_FileFields::ColumnSeparator, "");
+  //  OS_ASSERT(result);
+  //}
+
+  std::vector<ScheduleFile> ExternalFile_Impl::scheduleFiles() const
+  {
+    return getObject<ExternalFile>().getModelObjectSources<ScheduleFile>();
   }
 
 } // detail
+
+boost::optional<ExternalFile> ExternalFile::getExternalFile(const Model& model, const std::string &filename)
+{
+  path p = toPath(filename);
+  if (!p.has_filename()) {
+    return boost::none;
+  }
+  std::string s = toString(p.filename());
+
+  // this factory method will give us better control if we start doing things like copying files
+  for (const auto& externalFile : model.getConcreteModelObjects<ExternalFile>()) {
+
+    // handle Windows filename case insensitivity?
+    if (externalFile.fileName() == s) {
+      return externalFile;
+    }
+  }
+
+  try {
+    return ExternalFile(model, filename);
+  } catch (std::exception&) {
+
+  }
+  return boost::none;
+}
 
 ExternalFile::ExternalFile(const Model& model, const std::string &filename)
   : ResourceObject(ExternalFile::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalFile_Impl>());
 
-  std::ifstream ifs;
-  ifs.open(filename, std::ifstream::in);
-  if (!ifs.is_open()) {
-    // Failed to open file
-    LOG_AND_THROW("Failed to open file \"" << filename << "\" for " << this->briefDescription());
+  WorkflowJSON workflow = model.workflowJSON();
+
+  // we expect all strings to be UTF-8 encoded
+  path p = toPath(filename);
+  if (!exists(p)) {
+    boost::optional<path> op = workflow.findFile(filename);
+    if (!op) {
+      this->remove();
+      LOG_AND_THROW("Cannot find file \"" << filename << "\" for " << this->briefDescription());
+    }
+    p = op.get();
   }
-  ifs.close();
+  OS_ASSERT(exists(p));
+
+  path rootDir = workflow.absoluteRootDir();
+  path dest = rootDir / p.filename();
+
+  if (exists(dest)) {
+    if (checksum(p) != checksum(dest)){
+      this->remove();
+      LOG_AND_THROW("File \"" << p.filename() << "\" already exists in \"" << rootDir << "\"");
+    }
+  } else{
+
+    try {
+      boost::filesystem::copy(p, dest);
+    } catch (std::exception&) {
+      this->remove();
+      LOG_AND_THROW("Failed to copy file from \"" << p << "\" to \"" << dest << "\"");
+    }
+  }
+  OS_ASSERT(exists(dest));
 
   bool ok;
-  ok = setFileName(filename);
+  ok = setFileName(toString(dest.filename()));
   OS_ASSERT(ok);
-
-  // Moving the file etc. should go here
 }
+
 
 IddObjectType ExternalFile::iddObjectType() {
   return IddObjectType(IddObjectType::OS_External_File);
@@ -153,29 +252,38 @@ std::string ExternalFile::fileName() const {
   return getImpl<detail::ExternalFile_Impl>()->fileName();
 }
 
-boost::optional<std::string> ExternalFile::columnSeparator() const {
-  return getImpl<detail::ExternalFile_Impl>()->columnSeparator();
+path ExternalFile::filePath() const {
+  return getImpl<detail::ExternalFile_Impl>()->filePath();
 }
 
-bool ExternalFile::isColumnSeparatorDefaulted() const {
-  return getImpl<detail::ExternalFile_Impl>()->isColumnSeparatorDefaulted();
-}
+//boost::optional<std::string> ExternalFile::columnSeparator() const {
+//  return getImpl<detail::ExternalFile_Impl>()->columnSeparator();
+//}
+
+//bool ExternalFile::isColumnSeparatorDefaulted() const {
+//  return getImpl<detail::ExternalFile_Impl>()->isColumnSeparatorDefaulted();
+//}
 
 bool ExternalFile::setFileName(const std::string& fileName) {
   return getImpl<detail::ExternalFile_Impl>()->setFileName(fileName);
 }
 
-bool ExternalFile::setColumnSeparator(const std::string& columnSeparator) {
-  return getImpl<detail::ExternalFile_Impl>()->setColumnSeparator(columnSeparator);
-}
+//bool ExternalFile::setColumnSeparator(const std::string& columnSeparator) {
+//  return getImpl<detail::ExternalFile_Impl>()->setColumnSeparator(columnSeparator);
+//}
 
-void ExternalFile::resetColumnSeparator() {
-  getImpl<detail::ExternalFile_Impl>()->resetColumnSeparator();
-}
+//void ExternalFile::resetColumnSeparator() {
+//  getImpl<detail::ExternalFile_Impl>()->resetColumnSeparator();
+//}
 
 //bool ExternalFile::isValid() {
 //  return getImpl<detail::ExternalFile_Impl>()->isValid();
 //}
+
+std::vector<ScheduleFile> ExternalFile::scheduleFiles() const
+{
+  return getImpl<detail::ExternalFile_Impl>()->scheduleFiles();
+}
 
 /// @cond
 ExternalFile::ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl)

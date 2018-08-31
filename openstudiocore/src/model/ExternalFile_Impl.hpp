@@ -36,6 +36,7 @@ namespace openstudio {
 namespace model {
 
 class ExternalFile;
+class ScheduleFile;
 
 namespace detail {
 
@@ -57,7 +58,7 @@ namespace detail {
                       Model_Impl* model,
                       bool keepHandle);
 
-    virtual ~ExternalFile_Impl() {}
+    virtual ~ExternalFile_Impl();
 
     //@}
     /** @name Virtual Methods */
@@ -67,30 +68,38 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<IdfObject> remove() override;
+
     //@}
     /** @name Getters */
     //@{
 
     std::string fileName() const;
 
-    boost::optional<std::string> columnSeparator() const;
+    path filePath() const;
 
-    char columnSeparatorChar() const;
+    //boost::optional<std::string> columnSeparator() const;
 
-    bool isColumnSeparatorDefaulted() const;
+    //char columnSeparatorChar() const;
+
+    //bool isColumnSeparatorDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setColumnSeparator(const std::string& columnSeparator);
+    //bool setColumnSeparator(const std::string& columnSeparator);
 
-    void resetColumnSeparator();
+    //void resetColumnSeparator();
 
     //@}
     /** @name Other */
     //@{
     //bool isValid();
+
+    std::vector<ScheduleFile> scheduleFiles() const;
 
     //@}
    protected:
