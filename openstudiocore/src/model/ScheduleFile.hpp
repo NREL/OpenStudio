@@ -129,7 +129,6 @@ class MODEL_API ScheduleFile : public ScheduleInterval {
 
   explicit ScheduleFile(std::shared_ptr<detail::ScheduleFile_Impl> impl);
 
-  friend class detail::ScheduleFile_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;

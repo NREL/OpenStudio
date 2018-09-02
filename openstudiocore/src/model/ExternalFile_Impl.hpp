@@ -104,7 +104,7 @@ namespace detail {
     //@}
    protected:
      bool setFileName(const std::string& fileName);
-     friend class ExternalFile;
+     friend class openstudio::model::ExternalFile;
 
    private:
      REGISTER_LOGGER("openstudio.model.ExternalFile");

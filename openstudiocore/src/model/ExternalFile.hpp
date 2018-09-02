@@ -95,7 +95,6 @@ class MODEL_API ExternalFile : public ResourceObject {
 
   explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
 
-  friend class detail::ExternalFile_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
