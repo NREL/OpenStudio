@@ -49,6 +49,8 @@
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
@@ -296,6 +298,23 @@ namespace detail {
         if( fan->handle() == this->handle() )
         {
           return airTerminalSingleDuctParallelPIUReheatObject;
+        }
+      }
+    }
+
+    // AirTerminalSingleDuctSeriesPIUReheat
+
+    std::vector<AirTerminalSingleDuctSeriesPIUReheat> airTerminalSingleDuctSeriesPIUReheatObjects;
+
+    airTerminalSingleDuctSeriesPIUReheatObjects = this->model().getConcreteModelObjects<AirTerminalSingleDuctSeriesPIUReheat>();
+
+    for( const auto & airTerminalSingleDuctSeriesPIUReheatObject : airTerminalSingleDuctSeriesPIUReheatObjects )
+    {
+      if( boost::optional<HVACComponent> fan = airTerminalSingleDuctSeriesPIUReheatObject.fan() )
+      {
+        if( fan->handle() == this->handle() )
+        {
+          return airTerminalSingleDuctSeriesPIUReheatObject;
         }
       }
     }
