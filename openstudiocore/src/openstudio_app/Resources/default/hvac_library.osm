@@ -3688,7 +3688,7 @@ OS:Curve:Quadratic,
 
 OS:HeatExchanger:AirToAir:SensibleAndLatent,
   {648d1052-42c2-4c83-82e9-af6299097461}, !- Handle
-  Air-to-Air HX,                          !- Name
+  Air-to-Air Plate HX,                    !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
   autosize,                               !- Nominal Supply Air Flow Rate {m3/s}
   0.76,                                   !- Sensible Effectiveness at 100% Heating Air Flow {dimensionless}
@@ -4516,7 +4516,7 @@ OS:Refrigeration:WalkIn:ZoneBoundary,
 
 OS:CoolingTower:VariableSpeed,
   {2e6faa4b-6a62-40f1-b39f-d0100fe47857}, !- Handle
-  Var Spd Cooling Tower,                  !- Name
+  Var Spd Cooling Tower CoolToolsCrossFlow,  !- Name
   ,                                       !- Water Inlet Node
   ,                                       !- Water Outlet Node
   CoolToolsCrossFlow,                     !- Model Type
@@ -4550,7 +4550,7 @@ OS:CoolingTower:VariableSpeed,
 
 OS:Curve:Cubic,
   {07e95396-18cf-4b45-8c39-d1c6d9b569a4}, !- Handle
-  Var Spd Cooling Tower 1 Fan Power Ratio Curve, !- Name
+  Var Spd Cooling Tower CoolToolsCrossFlow Fan Power Ratio Curve, !- Name
   -0.0093,                                !- Coefficient1 Constant
   0.0512,                                 !- Coefficient2 x
   -0.0838,                                !- Coefficient3 x**2
@@ -4560,7 +4560,7 @@ OS:Curve:Cubic,
 
 OS:CoolingTower:VariableSpeed,
   {c297d8fd-cf34-420a-bd55-ea44c46983f3}, !- Handle
-  Cooling Tower Cool Tools,               !- Name
+  Cooling Tower Cool Tools User Defined,  !- Name
   ,                                       !- Water Inlet Node
   ,                                       !- Water Outlet Node
   CoolToolsUserDefined,                   !- Model Type
@@ -4594,7 +4594,7 @@ OS:CoolingTower:VariableSpeed,
 
 OS:Curve:Cubic,
   {ef3db801-9ea9-468f-8d25-da4759413263}, !- Handle
-  Var Spd Cooling Tower 2 Fan Power Ratio Curve, !- Name
+  Cooling Tower Cool Tools User Defined Fan Power Ratio Curve, !- Name
   -0.0093,                                !- Coefficient1 Constant
   0.0512,                                 !- Coefficient2 x
   -0.0838,                                !- Coefficient3 x**2
@@ -4604,7 +4604,7 @@ OS:Curve:Cubic,
 
 OS:CoolingTowerPerformance:CoolTools,
   {39b3c3c6-1e9c-4e29-a23e-4746c7e742e9}, !- Handle
-  Cooling Tower Performance Cool Tools 1, !- Name
+  Cooling Tower Performance Cool Tools,   !- Name
   -1,                                     !- Minimum Inlet Air Wet-Bulb Temperature {C}
   26.6667,                                !- Maximum Inlet Air Wet-Bulb Temperature {C}
   1.1111,                                 !- Minimum Range Temperature {deltaC}
@@ -4651,7 +4651,7 @@ OS:CoolingTowerPerformance:CoolTools,
 
 OS:CoolingTower:VariableSpeed,
   {3bef5e15-fbeb-44fb-9c20-dd99b0c36dab}, !- Handle
-  Cooling Tower York Calc,                !- Name
+  Cooling Tower York Calc User Defined,   !- Name
   ,                                       !- Water Inlet Node
   ,                                       !- Water Outlet Node
   YorkCalcUserDefined,                    !- Model Type
@@ -4685,7 +4685,7 @@ OS:CoolingTower:VariableSpeed,
 
 OS:Curve:Cubic,
   {e9ae406d-ab3e-4461-8418-7af997698c00}, !- Handle
-  Var Spd Cooling Tower 3 Fan Power Ratio Curve, !- Name
+  Cooling Tower York Calc User Defined Fan Power Ratio Curve, !- Name
   -0.0093,                                !- Coefficient1 Constant
   0.0512,                                 !- Coefficient2 x
   -0.0838,                                !- Coefficient3 x**2
@@ -4695,7 +4695,7 @@ OS:Curve:Cubic,
 
 OS:CoolingTowerPerformance:YorkCalc,
   {d5189f31-0fbf-4acb-b874-cd2f88a1b6af}, !- Handle
-  Cooling Tower Performance York Calc 1,  !- Name
+  Cooling Tower Performance York Calc,    !- Name
   -34.4,                                  !- Minimum Inlet Air Wet-Bulb Temperature {C}
   26.6667,                                !- Maximum Inlet Air Wet-Bulb Temperature {C}
   1.1111,                                 !- Minimum Range Temperature {deltaC}
@@ -5495,7 +5495,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {fff3b049-43aa-408a-9c3a-d5f10c812c03}, !- Handle
-  1 Spd DX Clg Coil 4,                    !- Name
+  Unitary - DX Heat Pump - Cycling - 1 Spd DX Clg Coil,            !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
@@ -6481,7 +6481,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {983b9c20-5a9e-49eb-9770-5c1545cc6b65}, !- Handle
-  1 Spd DX Clg Coil 5,                    !- Name
+  Unitary - Single Speed DX cooling Coil, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
@@ -6672,7 +6672,7 @@ OS:Curve:Cubic,
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {7017ca11-fbaa-49eb-ac8c-6bda560c9d59}, !- Handle
-  1 Spd DX Clg Coil 6,                    !- Name
+  Unitary - Single Speed DX cooling 2,    !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
@@ -7794,7 +7794,7 @@ OS:Humidifier:Steam:Electric,
 
 OS:CoolingTower:TwoSpeed,
   {86888698-0c15-40ab-9678-97550a440089}, !- Handle
-  Cooling Tower Two Speed,                !- Name
+  2 Spd Cooling Tower,                    !- Name
   ,                                       !- Water Inlet Node Name
   ,                                       !- Water Outlet Node Name
   autosize,                               !- Design Water Flow Rate {m3/s}
@@ -10987,97 +10987,9 @@ OS:Curve:Cubic,
   0.03,                                   !- Minimum Value of x
   1;                                      !- Maximum Value of x
 
-OS:Site,
-  {54a213fc-e638-47e4-b9c7-684370e74122}, !- Handle
-  Site 1,                                 !- Name
-  ,                                       !- Latitude {deg}
-  ,                                       !- Longitude {deg}
-  ,                                       !- Time Zone {hr}
-  ,                                       !- Elevation {m}
-  ;                                       !- Terrain
-
-OS:YearDescription,
-  {5199437f-8c3e-4006-a295-abcc76194452}; !- Handle
-
-OS:ClimateZones,
-  {3a0639cd-6622-4ae1-a478-e123c2c89477}, !- Handle
-  ,                                       !- Active Institution
-  ,                                       !- Active Year
-  ASHRAE,                                 !- Climate Zone Institution Name 1
-  ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
-  2006,                                   !- Climate Zone Document Year 1
-  ,                                       !- Climate Zone Value 1
-  CEC,                                    !- Climate Zone Institution Name 2
-  California Climate Zone Descriptions,   !- Climate Zone Document Name 2
-  1995,                                   !- Climate Zone Document Year 2
-  ;                                       !- Climate Zone Value 2
-
-OS:Building,
-  {96010d35-3a48-443c-b980-90d35f88d618}, !- Handle
-  Building 1,                             !- Name
-  ,                                       !- Building Sector Type
-  ,                                       !- North Axis {deg}
-  ,                                       !- Nominal Floor to Floor Height {m}
-  ,                                       !- Space Type Name
-  ,                                       !- Default Construction Set Name
-  ;                                       !- Default Schedule Set Name
-
-OS:Facility,
-  {684c605f-552c-4511-9d60-9f06a9cc1013}; !- Handle
-
-OS:SimulationControl,
-  {3000fb01-12a5-4a2c-9c70-373aa7801ba5}; !- Handle
-
-OS:Sizing:Parameters,
-  {8a5f5dab-babf-4c1f-9080-63789067fe96}, !- Handle
-  1.25,                                   !- Heating Sizing Factor
-  1.15;                                   !- Cooling Sizing Factor
-
-OS:Timestep,
-  {b402730b-59c6-4ec1-aa84-8edcca516d89}, !- Handle
-  6;                                      !- Number of Timesteps per Hour
-
-OS:ShadowCalculation,
-  {c5d35f99-a723-49bf-a820-2b36f6320bef}, !- Handle
-  20,                                     !- Calculation Frequency
-  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
-
-OS:HeatBalanceAlgorithm,
-  {367f9238-f07b-4231-a8cb-c976e4b20a9a}, !- Handle
-  ConductionTransferFunction,             !- Algorithm
-  200;                                    !- Surface Temperature Upper Limit {C}
-
-OS:RunPeriod,
-  {ee142eed-73a7-4814-9962-92b0a452399d}, !- Handle
-  Run Period 1,                           !- Name
-  1,                                      !- Begin Month
-  1,                                      !- Begin Day of Month
-  12,                                     !- End Month
-  31,                                     !- End Day of Month
-  ,                                       !- Use Weather File Holidays and Special Days
-  ,                                       !- Use Weather File Daylight Saving Period
-  ,                                       !- Apply Weekend Holiday Rule
-  ,                                       !- Use Weather File Rain Indicators
-  ,                                       !- Use Weather File Snow Indicators
-  ;                                       !- Number of Times Runperiod to be Repeated
-
-OS:LifeCycleCost:Parameters,
-  {e5203ecd-87ec-4286-96da-2f01f09ac409}, !- Handle
-  ,                                       !- Analysis Type
-  ,                                       !- Discounting Convention
-  ,                                       !- Inflation Approach
-  ,                                       !- Real Discount Rate
-  ,                                       !- Nominal Discount Rate
-  ,                                       !- Inflation
-  ,                                       !- Base Date Month
-  ,                                       !- Base Date Year
-  ,                                       !- Service Date Month
-  ,                                       !- Service Date Year
-  ;                                       !- Length of Study Period in Years
-
 OS:Generator:FuelCell,
   {427ee723-5adc-4b64-a43e-72ecf07b7976}, !- Handle
-  Generator Fuel Cell 1,                  !- Name
+  Generator Fuel Cell,                    !- Name
   {749f6f6f-440d-4884-bfca-92957ee723e8}, !- Power Module Name
   {44f4a297-e351-4cb1-9cc2-422456e93020}, !- Air Supply Name
   {a9cb7b8d-a10a-4cab-909b-3ec4ce27017b}, !- Fuel Supply Name
@@ -11089,7 +11001,7 @@ OS:Generator:FuelCell,
 
 OS:Generator:FuelCell:PowerModule,
   {749f6f6f-440d-4884-bfca-92957ee723e8}, !- Handle
-  Generator Fuel Cell Power Module 1,     !- Name
+  Generator Fuel Cell Power Module,       !- Name
   Annex42,                                !- Efficiency Curve Mode
   {faa57d50-d008-430e-bed1-8e67e4e55562}, !- Efficiency Curve Name
   1,                                      !- Nominal Efficiency
@@ -11125,7 +11037,7 @@ OS:Generator:FuelCell:PowerModule,
 
 OS:Curve:Quadratic,
   {faa57d50-d008-430e-bed1-8e67e4e55562}, !- Handle
-  Power Module Efficiency Curve,          !- Name
+  FC Power Module Efficiency Curve,       !- Name
   0.642388,                               !- Coefficient1 Constant
   -0.0001619,                             !- Coefficient2 x
   2.26e-008,                              !- Coefficient3 x**2
@@ -11134,7 +11046,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Quadratic,
   {4aaf746d-812c-420e-ba92-089aa73d72bc}, !- Handle
-  Skin Loss Curve,                        !- Name
+  FC Power Module Skin Loss Curve,        !- Name
   0,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -11143,7 +11055,7 @@ OS:Curve:Quadratic,
 
 OS:Generator:FuelCell:AirSupply,
   {44f4a297-e351-4cb1-9cc2-422456e93020}, !- Handle
-  Generator Fuel Cell Air Supply 1,       !- Name
+  Generator Fuel Cell Air Supply,         !- Name
   ,                                       !- Air Inlet Node Name
   {ffcc11c3-2cd0-4d35-b07a-bcb55ed3efcc}, !- Blower Power Curve Name
   1,                                      !- Blower Heat Loss Factor
@@ -11158,7 +11070,7 @@ OS:Generator:FuelCell:AirSupply,
 
 OS:Curve:Cubic,
   {ffcc11c3-2cd0-4d35-b07a-bcb55ed3efcc}, !- Handle
-  Blower Power Curve,                     !- Name
+  FC Air Supply Blower Power Curve,       !- Name
   0,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -11168,7 +11080,7 @@ OS:Curve:Cubic,
 
 OS:Curve:Quadratic,
   {2236bcc7-bb73-4ad6-93b3-425eb06ac90a}, !- Handle
-  Air Rate Function of Electric Power Curve, !- Name
+  FC Air Rate Function of Electric Power Curve, !- Name
   0.00150976,                             !- Coefficient1 Constant
   -7.76656e-007,                          !- Coefficient2 x
   1.30317e-010,                           !- Coefficient3 x**2
@@ -11177,7 +11089,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Quadratic,
   {04b5fd70-709b-4538-8eb5-94a992fb4410}, !- Handle
-  Air Rate Function of Fuel Rate Curve,   !- Name
+  FC Air Rate Function of Fuel Rate Curve, !- Name
   0,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -11186,7 +11098,7 @@ OS:Curve:Quadratic,
 
 OS:Generator:FuelSupply,
   {a9cb7b8d-a10a-4cab-909b-3ec4ce27017b}, !- Handle
-  Generator Fuel Supply 1,                !- Name
+  Generator Fuel Supply,                  !- Name
   Scheduled,                              !- Fuel Temperature Modeling Mode
   ,                                       !- Fuel Temperature Reference Node Name
   {0fb785ba-88c0-438a-9d31-1a88979dab95}, !- Fuel Temperature Schedule Name
@@ -11201,13 +11113,13 @@ OS:Generator:FuelSupply,
 
 OS:Schedule:Constant,
   {0fb785ba-88c0-438a-9d31-1a88979dab95}, !- Handle
-  Fuel Temperature,                       !- Name
+  FC Fuel Supply Fuel Temperature,        !- Name
   {0aa7bb86-b420-45ab-9bde-8e8a1cb6966c}, !- Schedule Type Limits Name
   20;                                     !- Value
 
 OS:Curve:Cubic,
   {197d60a6-b60d-4e87-a76b-392da18ab1bb}, !- Handle
-  Compressor Power Multiplier Function of FuelRate Curve, !- Name
+  FC Compressor Power Multiplier Function of FuelRate Curve, !- Name
   0,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -11217,7 +11129,7 @@ OS:Curve:Cubic,
 
 OS:Generator:FuelCell:WaterSupply,
   {4847a478-2328-4d16-8833-4ae67fb00f3f}, !- Handle
-  Generator Fuel Cell Water Supply 1,     !- Name
+  Generator Fuel Cell Water Supply,       !- Name
   {34b8e269-1f4d-4990-9443-ebc57696ad0a}, !- Reformer Water Flow Rate Function of Fuel Rate Curve Name
   {8e4e3b2d-1c02-4843-90cf-3143ee332bd4}, !- Reformer Water Pump Power Function of Fuel Rate Curve Name
   0,                                      !- Pump Heat Loss Factor
@@ -11227,7 +11139,7 @@ OS:Generator:FuelCell:WaterSupply,
 
 OS:Curve:Quadratic,
   {34b8e269-1f4d-4990-9443-ebc57696ad0a}, !- Handle
-  Reformer Water FlowRate Function of FuelRate Curve, !- Name
+  FC Reformer Water FlowRate Function of FuelRate Curve, !- Name
   0,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -11236,7 +11148,7 @@ OS:Curve:Quadratic,
 
 OS:Curve:Cubic,
   {8e4e3b2d-1c02-4843-90cf-3143ee332bd4}, !- Handle
-  Reformer Water Pump Power Function of FuelRate Curve, !- Name
+  FC Reformer Water Pump Power Function of FuelRate Curve, !- Name
   0,                                      !- Coefficient1 Constant
   0,                                      !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
@@ -11252,7 +11164,7 @@ OS:Schedule:Constant,
 
 OS:Generator:FuelCell:AuxiliaryHeater,
   {e23fc238-c1a5-404f-b1db-70e1e801860d}, !- Handle
-  Generator Fuel Cell Auxiliary Heater 1, !- Name
+  Generator Fuel Cell Auxiliary Heater,   !- Name
   0,                                      !- Excess Air Ratio
   0,                                      !- Ancillary Power Constant Term
   0,                                      !- Ancillary Power Linear Term
@@ -11265,7 +11177,7 @@ OS:Generator:FuelCell:AuxiliaryHeater,
 
 OS:Generator:FuelCell:ExhaustGasToWaterHeatExchanger,
   {e852bb3b-50c2-496f-85ba-0df2e99d2156}, !- Handle
-  Generator Fuel Cell Exhaust Gas To Water Heat Exchanger 1, !- Name
+  Generator Fuel Cell Exhaust Gas To Water Heat Exchanger, !- Name
   ,                                       !- Heat Recovery Water Inlet Node Name
   ,                                       !- Heat Recovery Water Outlet Node Name
   0.0004,                                 !- Heat Recovery Water Maximum Flow Rate {m3/s}
@@ -11292,7 +11204,7 @@ OS:Generator:FuelCell:ExhaustGasToWaterHeatExchanger,
 
 OS:Generator:FuelCell:ElectricalStorage,
   {b405a85d-67e8-4d3e-bacb-9d888ea47ba7}, !- Handle
-  Generator Fuel Cell Electrical Storage 1, !- Name
+  Generator Fuel Cell Electrical Storage, !- Name
   SimpleEfficiencyWithConstraints,        !- Choice of Model
   1,                                      !- Nominal Charging Energetic Efficiency
   1,                                      !- Nominal Discharging Energetic Efficiency
@@ -11303,7 +11215,7 @@ OS:Generator:FuelCell:ElectricalStorage,
 
 OS:Generator:FuelCell:Inverter,
   {95c3175c-ed0d-4458-a1ba-fb5a114f52ae}, !- Handle
-  Generator Fuel Cell Inverter 1,         !- Name
+  Generator Fuel Cell Inverter,           !- Name
   Constant,                               !- Inverter Efficiency Calculation Mode
   1,                                      !- Inverter Efficiency
   {30de34da-9cc0-47fc-8eec-90653a96a7f7}; !- Efficiency Function of DC Power Curve Name
@@ -11347,7 +11259,7 @@ OS:StandardsInformation:Construction,
 
 OS:PlantComponent:UserDefined,
   {42d34fc1-d875-44dc-8f25-448310b5ba71}, !- Handle
-  Plant Component User Defined 1,         !- Name
+  Plant Component User Defined - PCUD,    !- Name
   ,                                       !- Main Model Program Calling Manager Name
   ,                                       !- Main Model Program Name
   ,                                       !- Plant Inlet Node Name
@@ -11999,4 +11911,98 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0.05;                                   !- Value Until Time 1
+
+
+
+
+
+! TO DELETE ?
+
+OS:Site,
+  {54a213fc-e638-47e4-b9c7-684370e74122}, !- Handle
+  Site 1,                                 !- Name
+  ,                                       !- Latitude {deg}
+  ,                                       !- Longitude {deg}
+  ,                                       !- Time Zone {hr}
+  ,                                       !- Elevation {m}
+  ;                                       !- Terrain
+
+OS:YearDescription,
+  {5199437f-8c3e-4006-a295-abcc76194452}; !- Handle
+
+OS:ClimateZones,
+  {3a0639cd-6622-4ae1-a478-e123c2c89477}, !- Handle
+  ,                                       !- Active Institution
+  ,                                       !- Active Year
+  ASHRAE,                                 !- Climate Zone Institution Name 1
+  ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
+  2006,                                   !- Climate Zone Document Year 1
+  ,                                       !- Climate Zone Value 1
+  CEC,                                    !- Climate Zone Institution Name 2
+  California Climate Zone Descriptions,   !- Climate Zone Document Name 2
+  1995,                                   !- Climate Zone Document Year 2
+  ;                                       !- Climate Zone Value 2
+
+OS:Building,
+  {96010d35-3a48-443c-b980-90d35f88d618}, !- Handle
+  Building,                               !- Name
+  ,                                       !- Building Sector Type
+  ,                                       !- North Axis {deg}
+  ,                                       !- Nominal Floor to Floor Height {m}
+  ,                                       !- Space Type Name
+  ,                                       !- Default Construction Set Name
+  ;                                       !- Default Schedule Set Name
+
+OS:Facility,
+  {684c605f-552c-4511-9d60-9f06a9cc1013}; !- Handle
+
+OS:SimulationControl,
+  {3000fb01-12a5-4a2c-9c70-373aa7801ba5}; !- Handle
+
+OS:Sizing:Parameters,
+  {8a5f5dab-babf-4c1f-9080-63789067fe96}, !- Handle
+  1.25,                                   !- Heating Sizing Factor
+  1.15;                                   !- Cooling Sizing Factor
+
+OS:Timestep,
+  {b402730b-59c6-4ec1-aa84-8edcca516d89}, !- Handle
+  4;                                      !- Number of Timesteps per Hour
+
+OS:ShadowCalculation,
+  {c5d35f99-a723-49bf-a820-2b36f6320bef}, !- Handle
+  20,                                     !- Calculation Frequency
+  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
+
+OS:HeatBalanceAlgorithm,
+  {367f9238-f07b-4231-a8cb-c976e4b20a9a}, !- Handle
+  ConductionTransferFunction,             !- Algorithm
+  200;                                    !- Surface Temperature Upper Limit {C}
+
+OS:RunPeriod,
+  {ee142eed-73a7-4814-9962-92b0a452399d}, !- Handle
+  Run Period 1,                           !- Name
+  1,                                      !- Begin Month
+  1,                                      !- Begin Day of Month
+  12,                                     !- End Month
+  31,                                     !- End Day of Month
+  ,                                       !- Use Weather File Holidays and Special Days
+  ,                                       !- Use Weather File Daylight Saving Period
+  ,                                       !- Apply Weekend Holiday Rule
+  ,                                       !- Use Weather File Rain Indicators
+  ,                                       !- Use Weather File Snow Indicators
+  ;                                       !- Number of Times Runperiod to be Repeated
+
+OS:LifeCycleCost:Parameters,
+  {e5203ecd-87ec-4286-96da-2f01f09ac409}, !- Handle
+  ,                                       !- Analysis Type
+  ,                                       !- Discounting Convention
+  ,                                       !- Inflation Approach
+  ,                                       !- Real Discount Rate
+  ,                                       !- Nominal Discount Rate
+  ,                                       !- Inflation
+  ,                                       !- Base Date Month
+  ,                                       !- Base Date Year
+  ,                                       !- Service Date Month
+  ,                                       !- Service Date Year
+  ;                                       !- Length of Study Period in Years
 
