@@ -1095,7 +1095,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_Pump_VariableSpeed,"Pump Variable Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_HeaderedPumps_VariableSpeed,"Pump Variable Speed Headered");
   libraryWidget->addModelObjectType(IddObjectType::OS_PlantComponent_TemperatureSource, "Plant Component - Temp Source");
-  libraryWidget->addModelObjectType(IddObjectType::OS_PlantComponent_UserDefined, "Plant Component - User Defined");  
+  libraryWidget->addModelObjectType(IddObjectType::OS_PlantComponent_UserDefined, "Plant Component - User Defined");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pipe_Outdoor, "Pipe - Outdoor");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pipe_Indoor, "Pipe - Indoor");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pipe_Adiabatic, "Pipe - Adiabatic");
@@ -1109,8 +1109,8 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_Generator_MicroTurbine_HeatRecovery,"Generator MicroTurbine - Heat Recovery");
   libraryWidget->addModelObjectType(IddObjectType::OS_GroundHeatExchanger_Vertical, "Ground Heat Exchanger - Vertical ");
   libraryWidget->addModelObjectType(IddObjectType::OS_GroundHeatExchanger_HorizontalTrench,"Ground Heat Exchanger - Horizontal");
-  libraryWidget->addModelObjectType(IddObjectType::OS_FluidCooler_SingleSpeed,"Fluid Cooler Single Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_FluidCooler_TwoSpeed,"Fluid Cooler Two Speed");
+  libraryWidget->addModelObjectType(IddObjectType::OS_FluidCooler_SingleSpeed,"Fluid Cooler Single Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump,"PTHP");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump,"Water To Air HP");
