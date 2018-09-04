@@ -117,4 +117,4 @@ typedef std::vector<ScheduleFixedInterval> ScheduleFixedIntervalVector;
 } // model
 } // openstudio
 
-#endif // MODEL_SCHEDULEFIXEDINTERVAL_HPP
+#endif // MODEL_SCHEDULEFIXEDINTERVAL_HPP

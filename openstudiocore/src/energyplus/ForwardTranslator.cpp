@@ -2463,6 +2463,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateScheduleFixedInterval(schedule);
       break;
     }
+  case  openstudio::IddObjectType::OS_Schedule_File:
+   {
+    model::ScheduleFile schedule = modelObject.cast<ScheduleFile>();
+    retVal = translateScheduleFile(schedule);
+    break;
+   }
   case  openstudio::IddObjectType::OS_Schedule_Rule :
     {
       // no-op
@@ -3566,6 +3572,7 @@ void ForwardTranslator::translateSchedules(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_Schedule_Ruleset);
   iddObjectTypes.push_back(IddObjectType::OS_Schedule_FixedInterval);
   iddObjectTypes.push_back(IddObjectType::OS_Schedule_VariableInterval);
+  iddObjectTypes.push_back(IddObjectType::OS_Schedule_File);
 
   for (const IddObjectType& iddObjectType : iddObjectTypes){
 
