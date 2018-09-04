@@ -1580,15 +1580,19 @@ set(${target_name}_src
 
 set(${target_name}_swig_src
   Model_Common_Include.i
-  Model.i
-  ModelCore.i
+  ModelZoneHVAC.i
+  ModelStraightComponent.i
   ModelSimulation.i
   ModelResources.i
-  ModelGeometry.i
-  ModelHVAC.i
-  ModelAirflow.i
   ModelRefrigeration.i
+  ModelPlantEquipmentOperationScheme.i
+  ModelHVAC.i
+  ModelGeometry.i
   ModelGenerators.i
+  ModelCore.i
+  ModelAvailabilityManager.i
+  ModelAirflow.i
+  Model.i
 )
 
 qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
@@ -2051,9 +2055,6 @@ list(APPEND OpenStudioModelSwigs OpenStudioModelHVAC)
 
 MAKE_SWIG_TARGET(OpenStudioModelZoneHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelZoneHVAC.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelZoneHVAC)
-
-MAKE_SWIG_TARGET(OpenStudioModelSetpointManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSetpointManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
-list(APPEND OpenStudioModelSwigs OpenStudioModelSetpointManager)
 
 MAKE_SWIG_TARGET(OpenStudioModelAvailabilityManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAvailabilityManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelAvailabilityManager)
