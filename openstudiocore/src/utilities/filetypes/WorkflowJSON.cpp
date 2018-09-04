@@ -752,26 +752,27 @@ namespace detail{
     std::vector<openstudio::path> paths = absoluteMeasurePaths();
     OS_ASSERT(!paths.empty());
 
-    openstudio::path stem = bclMeasure.directory().stem();
-    if (!toUUID(toString(stem)).isNull()){
+    // We already have a directory, so we take filename() to return the name of the last level directory
+    openstudio::path lastLevelDirectoryName = bclMeasure.directory().filename();
+    if (!toUUID(toString(lastLevelDirectoryName)).isNull()){
       // directory name is convertible to uuid, use the class name
-      stem = toPath(bclMeasure.className());
+      lastLevelDirectoryName = toPath(bclMeasure.className());
     }
 
     int i = 1;
-    while (boost::filesystem::exists(paths[0] / stem)){
+    while (boost::filesystem::exists(paths[0] / lastLevelDirectoryName)){
       std::stringstream ss;
-      ss << toString(stem) << " " << i;
-      stem = toPath(ss.str());
+      ss << toString(lastLevelDirectoryName) << " " << i;
+      lastLevelDirectoryName = toPath(ss.str());
     }
-    openstudio::path newMeasureDirName = paths[0] / stem;
+    openstudio::path newMeasureDirName = paths[0] / lastLevelDirectoryName;
 
-    if (existingMeasureDirName && (existingMeasureDirName->stem() != newMeasureDirName.stem())){
+    if (existingMeasureDirName && (existingMeasureDirName->filename() != newMeasureDirName.filename())){
       // update steps
       for (auto& step : m_steps){
         if (auto measureStep = step.optionalCast<MeasureStep>()){
-          if (measureStep->measureDirName() == toString(existingMeasureDirName->stem())){
-            measureStep->setMeasureDirName(toString(newMeasureDirName.stem()));
+          if (measureStep->measureDirName() == toString(existingMeasureDirName->filename())){
+            measureStep->setMeasureDirName(toString(newMeasureDirName.filename()));
           }
         }
       }

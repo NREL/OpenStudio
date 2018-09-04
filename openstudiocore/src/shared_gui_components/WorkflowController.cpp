@@ -281,7 +281,9 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
     return;
   }
 
-  MeasureStep measureStep(toString(projectMeasure->directory().stem()));
+  // Note: JM 2018-09-04: Here we know we already have a directory, so taking filename() will return the name of the last level directory
+  // stem() would do weird things if the folder name had a "." in it
+  MeasureStep measureStep(toString(projectMeasure->directory().filename()));
   try{
     std::vector<measure::OSArgument> arguments = m_app->measureManager().getArguments(*projectMeasure);
   } catch ( const RubyException&e ) {

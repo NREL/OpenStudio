@@ -314,7 +314,8 @@ void ApplyMeasureNowDialog::displayMeasure()
     m_tempWorkflowJSON.resetMeasurePaths();
     m_tempWorkflowJSON.addMeasurePath(m_bclMeasure->directory().parent_path());
 
-    MeasureStep step(toString(m_bclMeasure->directory().stem()));
+    // We already have a directory, so we take filename() to return the name of the last level directory
+    MeasureStep step(toString(m_bclMeasure->directory().filename()));
     std::vector<WorkflowStep> steps;
     steps.push_back(step);
     m_tempWorkflowJSON.setWorkflowSteps(steps);

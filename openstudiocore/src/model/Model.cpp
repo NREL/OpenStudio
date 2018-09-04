@@ -1134,6 +1134,7 @@ boost::optional<Model> Model::load(const path& p) {
   }
 
   if (result){
+    // Load the workflow.osw in the model's companion folder
     path workflowJSONPath = p.parent_path() / p.stem() / toPath("workflow.osw");
     if (exists(workflowJSONPath)){
       boost::optional<WorkflowJSON> workflowJSON = WorkflowJSON::load(workflowJSONPath);
@@ -2563,7 +2564,7 @@ void Model::applySizingValues() {
 
 std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::ModelObjectCreator::getNew(
   Model_Impl * model,
-  const IdfObject& obj, 
+  const IdfObject& obj,
   bool keepHandle) const
 {
   auto typeToCreate = obj.iddObject().type();
@@ -2576,7 +2577,7 @@ std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::Mo
 }
 
 std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::ModelObjectCreator::getCopy(
-  Model_Impl * model, 
+  Model_Impl * model,
   const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& obj,
   bool keepHandle) const
 {

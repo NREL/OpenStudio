@@ -338,6 +338,7 @@ QString longPathName(const QString& path)
       }
 
       // Copy all files from existing resources dir into temp dir when opening
+      // osmPath.stem() removes the file extension
       openstudio::path sourceDir = osmPath.parent_path() / osmPath.stem();
       openstudio::path destDir = modelTempDir / toPath("resources");
       if (openstudio::filesystem::exists(sourceDir)){
@@ -504,6 +505,7 @@ QString longPathName(const QString& path)
 
       // copy resources
       openstudio::path srcDir = modelTempDir / toPath("resources");
+      // Creates the companion directory
       openstudio::path dstDir = osmPath.parent_path() / osmPath.stem();
 
       LOG_FREE(Debug, "saveModelTempDir", "Copying " << toString(srcDir) << " to " << toString(dstDir));
