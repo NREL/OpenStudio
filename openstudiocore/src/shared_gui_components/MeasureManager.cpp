@@ -340,8 +340,9 @@ std::pair<bool,std::string> MeasureManager::updateMeasure(const BCLMeasure &t_me
     boost::optional<BCLMeasure> measure = workflowJSON.addMeasure(t_measure);
 
     if (measure){
-      // We already have a directory, so we take filename() to return the name of the last level directory
-      result = std::pair<bool, std::string>(true, toString(measure->directory().filename()));
+      // Since we set the measure_paths, we only neeed to reference the name of the directory (=last level directory name)
+      // eg: /path/to/measure_folder => measure_folder
+      result = std::pair<bool, std::string>(true, toString( getLastLevelDirectoryName( measure->directory() ) ));
     } else{
       std::stringstream ss;
       ss << "An error occurred while adding measure '" << t_measure.displayName() << "' to the project.";

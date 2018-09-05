@@ -44,6 +44,7 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/core/RubyException.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/filetypes/WorkflowStep_Impl.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
@@ -281,9 +282,9 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
     return;
   }
 
-  // Note: JM 2018-09-04: Here we know we already have a directory, so taking filename() will return the name of the last level directory
-  // stem() would do weird things if the folder name had a "." in it
-  MeasureStep measureStep(toString(projectMeasure->directory().filename()));
+  // Since we set the measure_paths, we only neeed to reference the name of the directory (=last level directory name)
+  // eg: /path/to/measure_folder => measure_folder
+  MeasureStep measureStep(toString( getLastLevelDirectoryName( projectMeasure->directory() ) ));
   try{
     std::vector<measure::OSArgument> arguments = m_app->measureManager().getArguments(*projectMeasure);
   } catch ( const RubyException&e ) {

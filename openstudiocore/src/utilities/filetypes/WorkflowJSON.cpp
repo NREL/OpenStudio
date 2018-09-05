@@ -752,8 +752,8 @@ namespace detail{
     std::vector<openstudio::path> paths = absoluteMeasurePaths();
     OS_ASSERT(!paths.empty());
 
-    // We already have a directory, so we take filename() to return the name of the last level directory
-    openstudio::path lastLevelDirectoryName = bclMeasure.directory().filename();
+    // Get the name of the directory (=last level directory name), eg: /path/to/measure_folder => measure_folder
+    openstudio::path lastLevelDirectoryName = getLastLevelDirectoryName( bclMeasure.directory() );
     if (!toUUID(toString(lastLevelDirectoryName)).isNull()){
       // directory name is convertible to uuid, use the class name
       lastLevelDirectoryName = toPath(bclMeasure.className());
@@ -767,12 +767,17 @@ namespace detail{
     }
     openstudio::path newMeasureDirName = paths[0] / lastLevelDirectoryName;
 
-    if (existingMeasureDirName && (existingMeasureDirName->filename() != newMeasureDirName.filename())){
-      // update steps
-      for (auto& step : m_steps){
-        if (auto measureStep = step.optionalCast<MeasureStep>()){
-          if (measureStep->measureDirName() == toString(existingMeasureDirName->filename())){
-            measureStep->setMeasureDirName(toString(newMeasureDirName.filename()));
+    // If we have an existing measure
+    if( existingMeasureDirName) {
+      openstudio::path lastLevelExistingDirectoryName = getLastLevelDirectoryName(*existingMeasureDirName);
+      // And the previous directory name isn't the same as the new one
+      if( lastLevelExistingDirectoryName != lastLevelDirectoryName ) {
+        // update steps
+        for (auto& step : m_steps){
+          if (auto measureStep = step.optionalCast<MeasureStep>()){
+            if (measureStep->measureDirName() == toString(lastLevelExistingDirectoryName) ) {
+              measureStep->setMeasureDirName(toString(lastLevelDirectoryName));
+            }
           }
         }
       }

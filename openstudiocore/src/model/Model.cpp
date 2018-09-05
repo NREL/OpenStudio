@@ -1123,9 +1123,9 @@ Model::Model(const openstudio::Workspace& workspace)
   getImpl<detail::Model_Impl>()->createComponentWatchers();
 }
 
-boost::optional<Model> Model::load(const path& p) {
+boost::optional<Model> Model::load(const path& osmPath) {
   OptionalModel result;
-  OptionalIdfFile oIdfFile = IdfFile::load(p,IddFileType::OpenStudio);
+  OptionalIdfFile oIdfFile = IdfFile::load(osmPath,IddFileType::OpenStudio);
   if (oIdfFile) {
     try {
       result = Model(*oIdfFile);
@@ -1135,7 +1135,7 @@ boost::optional<Model> Model::load(const path& p) {
 
   if (result){
     // Load the workflow.osw in the model's companion folder
-    path workflowJSONPath = p.parent_path() / p.stem() / toPath("workflow.osw");
+    path workflowJSONPath = getCompanionFolder(osmPath) / toPath("workflow.osw");
     if (exists(workflowJSONPath)){
       boost::optional<WorkflowJSON> workflowJSON = WorkflowJSON::load(workflowJSONPath);
       if (workflowJSON){
