@@ -473,3 +473,11 @@ TEST_F(CoreFixture, Path_Conversions)
   EXPECT_EQ(t, toString(toPath(toQString(toString(p)))));
 
 }
+
+TEST_F(CoreFixture, LastLevelDirectoryWithDot) {
+  // We want to make sure that we don't end up with "A measure with 90" (test for #3249)
+  openstudio::path measure_directory = openstudio::toPath("C:/users/user name/OpenStudio/Measures/A measure with 90.1 dots/");
+  openstudio::path lastLevelDir = openstudio::getLastLevelDirectoryName(measure_directory);
+  EXPECT_EQ("A measure with 90.1 dots", toString(lastLevelDir));
+  EXPECT_EQ(measure_directory, measure_directory.parent_path() / lastLevelDir);
+}
