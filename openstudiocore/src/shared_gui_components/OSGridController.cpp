@@ -1381,34 +1381,25 @@ namespace openstudio {
       }
       else if (OSDropZone2 * dropZone = qobject_cast<OSDropZone2 *>(t_widget)) {
         connect(dropZone, &OSDropZone2::inFocus, holder, &Holder::inFocus);
-      }
-      else if (HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(t_widget)) {
-        connect(horizontalHeaderWidget, &HorizontalHeaderWidget::inFocus, holder, &Holder::inFocus);
-      }
-
-      // Is this widget's subrow a surface with a defaulted construction?
-      if (t_obj) {
-        if (auto planarSurface = t_obj->optionalCast<model::PlanarSurface>()) {
-          if ( planarSurface->isConstructionDefaulted()) {
-            // Is this column a construction?
-            if (column == m_constructionColumn) {
-              if (OSDropZone2 * dropZone = qobject_cast<OSDropZone2 *>(t_widget)) {
+        // Is this widget's subrow a surface with a defaulted construction?
+        if (t_obj) {
+          if (auto planarSurface = t_obj->optionalCast<model::PlanarSurface>()) {
+            if ( planarSurface->isConstructionDefaulted()) {
+              // Is this column a construction?
+              if (column == m_constructionColumn) {
                 dropZone->setIsDefaulted(true);
               }
             }
           }
         }
-        // Is this the "Turn On Ideal Air Loads?"
-        // if( t_obj->iddObjectType() == openstudio::IddObjectType::OS_ThermalZone )
-        if (auto t_z = t_obj->optionalCast<model::ThermalZone>()) {
-          // Is this column a construction?
-          if (column == m_idealAirLoadsColumn) {
-            if (OSCheckBox3 * checkBox = qobject_cast<OSCheckBox3 *>(t_widget)) {
-              // Then we connect the inFocus
-              std::cout << "Connecting for " << t_obj->nameString() <<"\n";
-              connect(checkBox, &OSCheckBox3::inFocus, holder, &Holder::inFocus);
-            }
-          }
+      }
+      else if (HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(t_widget)) {
+        connect(horizontalHeaderWidget, &HorizontalHeaderWidget::inFocus, holder, &Holder::inFocus);
+      }
+      else if (OSCheckBox3 * checkBox = qobject_cast<OSCheckBox3 *>(t_widget)) {
+        // If it's not the "Select All" column, we connect the inFocus method
+        if( column > 1 ) {
+          connect(checkBox, &OSCheckBox3::inFocus, holder, &Holder::inFocus);
         }
       }
 

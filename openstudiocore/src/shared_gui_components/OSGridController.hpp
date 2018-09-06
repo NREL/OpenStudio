@@ -606,9 +606,6 @@ public:
   // should set this value, if appropriate.
   int m_constructionColumn = -1;
 
-  // Selectively add an "Apply" button to the "Turn on Ideal Air Loads on thermal zone subtab
-  int m_idealAirLoadsColumn = -1;
-
 protected:
 
   // This function determines the category for
