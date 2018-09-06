@@ -58,6 +58,12 @@
 #include "../model/SpaceType.hpp"
 #include "../model/SpaceType_Impl.hpp"
 
+// Which is faster?
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+// or
+// #include <utilities/idd/IddEnums.hxx>
+
 #include "../utilities/core/Assert.hpp"
 
 #include <QApplication>
@@ -672,6 +678,7 @@ namespace openstudio {
 
     if (QSharedPointer<CheckBoxConcept> checkBoxConcept = t_baseConcept.dynamicCast<CheckBoxConcept>()){
 
+      // This is basically for the "Select All" column
       auto checkBox = new OSCheckBox3(this->gridView()); // OSCheckBox3 is derived from QCheckBox, whereas OSCheckBox2 is derived from QPushButton
       if (checkBoxConcept->tooltip().size()) {
         checkBox->setToolTip(checkBoxConcept->tooltip().c_str());
@@ -690,7 +697,7 @@ namespace openstudio {
       widget = checkBox;
 
   } else if (auto checkBoxConceptBoolReturn = t_baseConcept.dynamicCast<CheckBoxConceptBoolReturn>()){
-
+      // This is for a proper setter **that returns a bool**, such as Ideal Air Loads column
       auto checkBoxBoolReturn = new OSCheckBox3(this->gridView());
       if (checkBoxConceptBoolReturn->tooltip().size()) {
         checkBoxBoolReturn->setToolTip(checkBoxConceptBoolReturn->tooltip().c_str());
@@ -700,11 +707,12 @@ namespace openstudio {
         BoolGetter(std::bind(&CheckBoxConceptBoolReturn::get, checkBoxConceptBoolReturn.data(), t_mo)),
         boost::optional<BoolSetterBoolReturn>(std::bind(&CheckBoxConceptBoolReturn::set, checkBoxConceptBoolReturn.data(), t_mo, std::placeholders::_1)));
 
-      isConnected = connect(checkBoxBoolReturn, SIGNAL(stateChanged(int)), gridView(), SLOT(requestRefreshGrid()));
-      OS_ASSERT(isConnected);
+      // We don't need to refresh the whole grid, since we do not have to color the rows blue like the "Select All" checkboc
+      // isConnected = connect(checkBoxBoolReturn, SIGNAL(stateChanged(int)), gridView(), SLOT(requestRefreshGrid()));
+      // OS_ASSERT(isConnected);
 
-      isConnected = connect(checkBoxBoolReturn, SIGNAL(stateChanged(int)), gridView(), SIGNAL(gridRowSelectionChanged(int)));
-      OS_ASSERT(isConnected);
+      // isConnected = connect(checkBoxBoolReturn, SIGNAL(stateChanged(int)), gridView(), SIGNAL(gridRowSelectionChanged(int)));
+      // OS_ASSERT(isConnected);
 
       widget = checkBoxBoolReturn;
 
@@ -1073,6 +1081,12 @@ namespace openstudio {
       auto temp = getter();
       setter(temp);
     }
+    else if (QSharedPointer<CheckBoxConceptBoolReturn> concept = t_baseConcept.dynamicCast<CheckBoxConceptBoolReturn>()) {
+      auto setter = std::bind(&CheckBoxConceptBoolReturn::set, concept.data(), t_setterMO, std::placeholders::_1);
+      auto getter = std::bind(&CheckBoxConceptBoolReturn::get, concept.data(), t_getterMO);
+      auto temp = getter();
+      setter(temp);
+    }
     else if (QSharedPointer<ComboBoxConcept> concept = t_baseConcept.dynamicCast<ComboBoxConcept>()) {
       auto getterChoiceConcept = concept->choiceConcept(t_getterMO);
       auto setterChoiceConcept = concept->choiceConcept(t_setterMO);
@@ -1375,7 +1389,7 @@ namespace openstudio {
       // Is this widget's subrow a surface with a defaulted construction?
       if (t_obj) {
         if (auto planarSurface = t_obj->optionalCast<model::PlanarSurface>()) {
-          if (planarSurface && planarSurface->isConstructionDefaulted()) {
+          if ( planarSurface->isConstructionDefaulted()) {
             // Is this column a construction?
             if (column == m_constructionColumn) {
               if (OSDropZone2 * dropZone = qobject_cast<OSDropZone2 *>(t_widget)) {
@@ -1384,12 +1398,24 @@ namespace openstudio {
             }
           }
         }
+        // Is this the "Turn On Ideal Air Loads?"
+        // if( t_obj->iddObjectType() == openstudio::IddObjectType::OS_ThermalZone )
+        if (auto t_z = t_obj->optionalCast<model::ThermalZone>()) {
+          // Is this column a construction?
+          if (column == m_idealAirLoadsColumn) {
+            if (OSCheckBox3 * checkBox = qobject_cast<OSCheckBox3 *>(t_widget)) {
+              // Then we connect the inFocus
+              std::cout << "Connecting for " << t_obj->nameString() <<"\n";
+              connect(checkBox, &OSCheckBox3::inFocus, holder, &Holder::inFocus);
+            }
+          }
+        }
       }
 
       m_objectSelector->addWidget(t_obj, holder, row, column, hasSubRows ? numWidgets : boost::optional<int>(), t_selector);
 
       ++numWidgets;
-    };
+    }; // End of lambda
 
     if (m_hasHorizontalHeader && row == 0){
       if (column == 0){

@@ -304,16 +304,18 @@ public:
                          std::function<void (DataSourceType *, bool)> t_setter,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
+    std::cout << "CheckBoxConcept\n";
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(heading,tooltip,t_getter,t_setter)), t_source));
   }
 
   template<typename DataSourceType>
   void addCheckBoxColumn(const Heading &heading,
-    const std::string & tooltip,
-    std::function<bool(DataSourceType *)>  t_getter,
-    std::function<bool(DataSourceType *, bool)> t_setter,
-    const boost::optional<DataSource> &t_source = boost::none)
+                         const std::string & tooltip,
+                         std::function<bool(DataSourceType *)>  t_getter,
+                         std::function<bool(DataSourceType *, bool)> t_setter,
+                         const boost::optional<DataSource> &t_source = boost::none)
   {
+    std::cout << "CheckBoxConceptBoolReturn\n";
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConceptBoolReturn>(new CheckBoxConceptBoolReturnImpl<DataSourceType>(heading, tooltip, t_getter, t_setter)), t_source));
   }
 
@@ -603,6 +605,9 @@ public:
   // (as determined by calling PlanarSurface::isConstructionDefaulted). An instantiated gridview
   // should set this value, if appropriate.
   int m_constructionColumn = -1;
+
+  // Selectively add an "Apply" button to the "Turn on Ideal Air Loads on thermal zone subtab
+  int m_idealAirLoadsColumn = -1;
 
 protected:
 
