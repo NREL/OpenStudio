@@ -2239,9 +2239,8 @@ void ZoneHVACPackagedTerminalAirConditionerInspectorView::layoutModelObject( mod
 
   if( ! waterCoil )
   {
-    boost::optional<model::ModelObject> mo;
-
-    m_loopChooserView->layoutModelObject(mo);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_loopChooserView, true);
   }
 }
 
@@ -2309,9 +2308,8 @@ void ZoneHVACPackagedTerminalHeatPumpInspectorView::layoutModelObject( model::Mo
 
   if( ! waterCoil )
   {
-    boost::optional<model::ModelObject> mo;
-
-    m_loopChooserView->layoutModelObject(mo);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_loopChooserView, true);
   }
 }
 
@@ -2374,9 +2372,8 @@ void WaterHeaterHeatPumpInspectorView::layoutModelObject( model::ModelObject & m
 
   if( ! waterCoil )
   {
-    boost::optional<model::ModelObject> mo;
-
-    m_loopChooserView->layoutModelObject(mo);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_loopChooserView, true);
   }
 }
 
