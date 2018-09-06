@@ -22422,7 +22422,14 @@ OS:ZoneHVAC:EquipmentList,
   A3 , \field Thermal Zone
        \type object-list
        \object-list AllObjects
-  A4 , \field Zone Equipment 1
+  A4, \field Load Distribution Scheme
+       \type choice
+       \key SequentialLoad
+       \key UniformLoad
+       \key UniformPLR
+       \key SequentialUniformPLR
+       \default SequentialLoad
+  A5 , \field Zone Equipment 1
        \required-field
        \type object-list
        \object-list AllObjects

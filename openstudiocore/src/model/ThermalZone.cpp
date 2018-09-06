@@ -2307,6 +2307,16 @@ namespace detail {
     return zoneHVACEquipmentList().equipment();
   }
 
+  std::string ThermalZone_Impl::loadDistributionScheme()
+  {
+    return zoneHVACEquipmentList().loadDistributionScheme();
+  }
+
+  bool ThermalZone_Impl::setLoadDistributionScheme(std::string scheme)
+  {
+    return zoneHVACEquipmentList().setLoadDistributionScheme(scheme);
+  }
+
   std::vector<ModelObject> ThermalZone_Impl::equipmentInHeatingOrder()
   {
     return zoneHVACEquipmentList().equipmentInHeatingOrder();
@@ -3335,6 +3345,21 @@ bool ThermalZone::setHeatingPriority(const ModelObject & equipment, unsigned pri
 std::vector<ModelObject> ThermalZone::equipment() const
 {
   return getImpl<detail::ThermalZone_Impl>()->equipment();
+}
+
+std::string ThermalZone::loadDistributionScheme()
+{
+  return getImpl<detail::ThermalZone_Impl>()->loadDistributionScheme();
+}
+
+bool ThermalZone::setLoadDistributionScheme(std::string scheme)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setLoadDistributionScheme(scheme);
+}
+
+std::vector<std::string> ThermalZone::loadDistributionSchemeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme);
 }
 
 std::vector<ModelObject> ThermalZone::equipmentInHeatingOrder()

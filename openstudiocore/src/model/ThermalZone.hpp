@@ -77,6 +77,8 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   static std::vector<std::string> validZoneOutsideConvectionAlgorithmValues();
 
+  static std::vector<std::string> loadDistributionSchemeValues();
+
   /** @name Getters */
   //@{
 
@@ -387,6 +389,10 @@ class MODEL_API ThermalZone : public HVACComponent {
     * disconnect any node connections.  Use only if you know what you are doing.
     */
   bool removeEquipment(const ModelObject & equipment);
+
+  std::string loadDistributionScheme();
+
+  bool setLoadDistributionScheme(std::string scheme);
 
   /** Set cooling priority of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList

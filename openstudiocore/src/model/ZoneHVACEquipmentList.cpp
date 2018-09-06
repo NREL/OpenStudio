@@ -76,6 +76,23 @@ IddObjectType ZoneHVACEquipmentList_Impl::iddObjectType() const {
   return ZoneHVACEquipmentList::iddObjectType();
 }
 
+std::string ZoneHVACEquipmentList_Impl::loadDistributionScheme()
+{
+  auto value = getString(OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme,true);
+  OS_ASSERT(value);
+  return value.get();
+}
+
+bool ZoneHVACEquipmentList_Impl::setLoadDistributionScheme(std::string scheme)
+{
+  if( istringEqual(scheme,"Sequential") ) {
+    scheme = "SequentialLoad";
+  } else if( istringEqual(scheme,"Uniform") ) {
+    scheme = "UniformLoad";
+  }
+  return setString(OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme,scheme);
+}
+
 bool ZoneHVACEquipmentList_Impl::addEquipment(const ModelObject & equipment)
 {
   unsigned count = this->equipment().size();
@@ -384,6 +401,21 @@ ZoneHVACEquipmentList::ZoneHVACEquipmentList(const ThermalZone & thermalZone)
 
 IddObjectType ZoneHVACEquipmentList::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ZoneHVAC_EquipmentList);
+}
+
+std::string ZoneHVACEquipmentList::loadDistributionScheme()
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->loadDistributionScheme();
+}
+
+bool ZoneHVACEquipmentList::setLoadDistributionScheme(std::string scheme)
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->setLoadDistributionScheme(scheme);
+}
+
+std::vector<std::string> ZoneHVACEquipmentList::loadDistributionSchemeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme);
 }
 
 bool ZoneHVACEquipmentList::addEquipment(const ModelObject & equipment)
