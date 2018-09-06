@@ -422,9 +422,10 @@ class CheckBoxConceptBoolReturn : public BaseConcept
 {
 public:
 
+  /* This concept will allow click focus */
   CheckBoxConceptBoolReturn(const Heading &t_heading,
-    const std::string & t_tooltip)
-    : BaseConcept(t_heading),
+    const std::string & t_tooltip, bool t_hasClickFocus = true)
+    : BaseConcept(t_heading, t_hasClickFocus),
     m_tooltip(t_tooltip)
   {
   }

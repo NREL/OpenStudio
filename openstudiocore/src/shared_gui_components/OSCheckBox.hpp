@@ -38,6 +38,10 @@
 #include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <QPushButton>
 
+// Forward declaration
+class QFocusEvent;
+
+
 namespace openstudio {
 
   class OSCheckBox3 : public QCheckBox, public Nano::Observer {
@@ -48,6 +52,10 @@ namespace openstudio {
     OSCheckBox3(QWidget * parent = nullptr);
 
     virtual ~OSCheckBox3();
+
+    // This method will be called to enable the Checkbox to accept focus
+    // (typically by the OSGridController depending on whether the underlying BaseConcept allows it)
+    void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
 
     void bind(model::ModelObject & modelObject,
       BoolGetter get,

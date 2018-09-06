@@ -703,6 +703,10 @@ namespace openstudio {
         checkBoxBoolReturn->setToolTip(checkBoxConceptBoolReturn->tooltip().c_str());
       }
 
+      if (checkBoxConceptBoolReturn->hasClickFocus()) {
+        checkBoxBoolReturn->enableClickFocus();
+      }
+
       checkBoxBoolReturn->bind(t_mo,
         BoolGetter(std::bind(&CheckBoxConceptBoolReturn::get, checkBoxConceptBoolReturn.data(), t_mo)),
         boost::optional<BoolSetterBoolReturn>(std::bind(&CheckBoxConceptBoolReturn::set, checkBoxConceptBoolReturn.data(), t_mo, std::placeholders::_1)));
