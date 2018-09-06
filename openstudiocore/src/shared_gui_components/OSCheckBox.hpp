@@ -75,6 +75,11 @@ namespace openstudio {
 
     void inFocus(bool inFocus, bool hasData);
 
+  protected:
+    // We override these methods to emit inFocus as appropriate to enable/disable the header button
+    virtual void focusInEvent(QFocusEvent * e) override;
+    virtual void focusOutEvent(QFocusEvent * e) override;
+
   private slots:
 
     void onToggled(bool checked);

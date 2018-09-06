@@ -28,9 +28,12 @@
 ***********************************************************************************************************************/
 
 #include "OSCheckBox.hpp"
+
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
+
 #include <QString>
+#include <QFocusEvent>
 
 namespace openstudio {
 
@@ -138,6 +141,26 @@ namespace openstudio {
   {
     unbind();
   }
+
+  void OSCheckBox3::focusInEvent(QFocusEvent * e)
+  {
+    if (e->reason() == Qt::MouseFocusReason)
+    {
+      emit inFocus(true, true);
+    }
+    QWidget::focusInEvent(e);
+  }
+
+  void OSCheckBox3::focusOutEvent(QFocusEvent * e)
+  {
+    if (e->reason() == Qt::MouseFocusReason)
+    {
+      emit inFocus(false, false);
+    }
+    // Pass it on for further processing
+    QWidget::focusOutEvent(e);
+  }
+
 
 OSCheckBox2::OSCheckBox2( QWidget * parent )
   : QPushButton(parent)
