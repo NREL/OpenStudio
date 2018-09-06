@@ -1503,9 +1503,8 @@ void AirTerminalInspectorView::layoutModelObject( model::ModelObject & modelObje
 
   if( ! waterCoil )
   {
-    boost::optional<model::ModelObject> mo;
-
-    m_loopChooserView->layoutModelObject(mo);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_loopChooserView, true);
   }
 }
 
@@ -1613,19 +1612,15 @@ void AirTerminalSingleDuctConstantVolumeCooledBeamInspectorView::layoutModelObje
     if( boost::optional<model::HVACComponent> coil = terminal->coilCoolingCooledBeam() )
     {
         boost::optional<model::ModelObject> mo = coil.get();
-
         m_coolingLoopChooserView->layoutModelObject(mo);
-
         coolCoil = true;
-
     }
   }
 
   if( !coolCoil )
   {
-    boost::optional<model::ModelObject> mo;
-
-    m_coolingLoopChooserView->layoutModelObject(mo);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_coolingLoopChooserView, true);
   }
 }
 
@@ -1678,7 +1673,7 @@ void ZoneHVACBaseboardConvectiveWaterInspectorView::layoutModelObject( model::Mo
         modelObject.optionalCast<model::ZoneHVACBaseboardConvectiveWater>();
 
   if(baseboardConvtest){
-    //if it is, check if it has a heating coil
+    // if it is, check if has a heating coil (but we need to pass as an optional)
     boost::optional<model::ModelObject> coilheatingbb = baseboardConvtest->heatingCoil();
     m_heatingLoopChooserView->layoutModelObject(coilheatingbb);
     waterHeatingCoil = true;
@@ -1686,9 +1681,8 @@ void ZoneHVACBaseboardConvectiveWaterInspectorView::layoutModelObject( model::Mo
 
   if( ! waterHeatingCoil )
   {
-    boost::optional<model::ModelObject> moHeat;
-
-    m_heatingLoopChooserView->layoutModelObject(moHeat);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_heatingLoopChooserView, true);
   }
 }
 
@@ -1741,7 +1735,7 @@ void ZoneHVACBaseboardRadiantConvectiveWaterInspectorView::layoutModelObject( mo
         modelObject.optionalCast<model::ZoneHVACBaseboardRadiantConvectiveWater>();
 
   if(baseboardConvtest){
-    //if it is, check if it has a heating coil
+    // if it is, check if has a heating coil (but optional needed)
     boost::optional<model::ModelObject> coilheatingbb = baseboardConvtest->heatingCoil();
     m_heatingLoopChooserView->layoutModelObject(coilheatingbb);
     waterHeatingCoil = true;
@@ -1749,9 +1743,8 @@ void ZoneHVACBaseboardRadiantConvectiveWaterInspectorView::layoutModelObject( mo
 
   if( ! waterHeatingCoil )
   {
-    boost::optional<model::ModelObject> moHeat;
-
-    m_heatingLoopChooserView->layoutModelObject(moHeat);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_heatingLoopChooserView, true);
   }
 }
 
@@ -1843,15 +1836,13 @@ void ZoneHVACFourPipeFanCoilInspectorView::layoutModelObject( model::ModelObject
 
   if( ! waterHeatingCoil )
   {
-    boost::optional<model::ModelObject> moHeat;
-
-    m_heatingLoopChooserView->layoutModelObject(moHeat);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_heatingLoopChooserView, true);
   }
   if( ! waterCoolingCoil )
   {
-    boost::optional<model::ModelObject> moCool;
-
-    m_coolingLoopChooserView->layoutModelObject(moCool);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_coolingLoopChooserView, true);
   }
 }
 
@@ -1945,15 +1936,13 @@ void ZoneHVACLowTempRadiantConstFlowInspectorView::layoutModelObject( model::Mod
 
   if( ! waterHeatingCoil )
   {
-    boost::optional<model::ModelObject> moHeat;
-
-    m_heatingLoopChooserView->layoutModelObject(moHeat);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_heatingLoopChooserView, true);
   }
   if( ! waterCoolingCoil )
   {
-    boost::optional<model::ModelObject> moCool;
-
-    m_coolingLoopChooserView->layoutModelObject(moCool);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_coolingLoopChooserView, true);
   }
 
 }
@@ -2047,15 +2036,13 @@ void ZoneHVACLowTempRadiantVarFlowInspectorView::layoutModelObject( model::Model
 
   if( ! waterHeatingCoil )
   {
-    boost::optional<model::ModelObject> moHeat;
-
-    m_heatingLoopChooserView->layoutModelObject(moHeat);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_heatingLoopChooserView, true);
   }
   if( ! waterCoolingCoil )
   {
-    boost::optional<model::ModelObject> moCool;
-
-    m_coolingLoopChooserView->layoutModelObject(moCool);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_coolingLoopChooserView, true);
   }
 
 }
@@ -2172,22 +2159,19 @@ void ZoneHVACWaterToAirHeatPumpInspectorView::layoutModelObject( model::ModelObj
 
   if( ! waterHeatingCoil )
   {
-    boost::optional<model::ModelObject> moHeat;
-
-    m_heatingLoopChooserView->layoutModelObject(moHeat);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_heatingLoopChooserView, true);
   }
   if( ! waterCoolingCoil )
   {
-    boost::optional<model::ModelObject> moCool;
-
-    m_coolingLoopChooserView->layoutModelObject(moCool);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_coolingLoopChooserView, true);
   }
 
   if( ! supplementalHC )
   {
-    boost::optional<model::ModelObject> moSupplementalHeat;
-
-    m_supHeatingLoopChooserView->layoutModelObject(moSupplementalHeat);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_supHeatingLoopChooserView, true);
   }
 }
 
@@ -2462,9 +2446,8 @@ void ZoneHVACUnitHeaterInspectorView::layoutModelObject( model::ModelObject & mo
 
   if( ! waterHeatingCoil )
   {
-    boost::optional<model::ModelObject> moHeat;
-
-    m_heatingLoopChooserView->layoutModelObject(moHeat);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_heatingLoopChooserView, true);
   }
 }
 
@@ -2548,12 +2531,12 @@ void ZoneHVACUnitVentilatorInspectorView::layoutModelObject( model::ModelObject 
   }
 
   if( ! waterHeatingCoil ) {
-    boost::optional<model::ModelObject> omo;
-    m_heatingLoopChooserView->layoutModelObject(omo);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_heatingLoopChooserView, true);
   }
   if( ! waterCoolingCoil ) {
-    boost::optional<model::ModelObject> omo;
-    m_coolingLoopChooserView->layoutModelObject(omo);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_coolingLoopChooserView, true);
   }
 }
 
@@ -2662,20 +2645,20 @@ void AirLoopHVACUnitarySystemInspectorView::layoutModelObject( model::ModelObjec
 
   if( ! waterHeatingCoil )
   {
-    boost::optional<model::ModelObject> mo;
-    m_heatingLoopChooserView->layoutModelObject(mo);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_heatingLoopChooserView, true);
   }
 
   if( ! waterCoolingCoil )
   {
-    boost::optional<model::ModelObject> mo;
-    m_coolingLoopChooserView->layoutModelObject(mo);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_coolingLoopChooserView, true);
   }
 
   if( ! waterSecondaryCoil )
   {
-    boost::optional<model::ModelObject> mo;
-    m_secondaryLoopChooserView->layoutModelObject(mo);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_secondaryLoopChooserView, true);
   }
 }
 
@@ -2763,14 +2746,14 @@ void AirTerminalSingleDuctConstantVolumeFourPipeInductionInspectorView::layoutMo
 
   if( ! waterHeatingCoil )
   {
-    boost::optional<model::ModelObject> mo;
-    m_heatingLoopChooserView->layoutModelObject(mo);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_heatingLoopChooserView, true);
   }
 
   if( ! waterCoolingCoil )
   {
-    boost::optional<model::ModelObject> mo;
-    m_coolingLoopChooserView->layoutModelObject(mo);
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_coolingLoopChooserView, true);
   }
 }
 
@@ -2856,15 +2839,13 @@ void AirTerminalSingleDuctConstantVolumeFourPipeBeamInspectorView::layoutModelOb
 
   if( ! heatingCoil )
   {
-    boost::optional<model::ModelObject> mo;
-    m_heatingLoopChooserView->layoutModelObject(mo);
-  }
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_heatingLoopChooserView, true);  }
 
   if( ! coolingCoil )
   {
-    boost::optional<model::ModelObject> mo;
-    m_coolingLoopChooserView->layoutModelObject(mo);
-  }
+    // Hide the tab (by hiding the button)
+    m_libraryTabWidget->hideTab( m_coolingLoopChooserView, true);  }
 }
 
 
