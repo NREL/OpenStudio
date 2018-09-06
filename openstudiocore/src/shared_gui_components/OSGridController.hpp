@@ -304,7 +304,6 @@ public:
                          std::function<void (DataSourceType *, bool)> t_setter,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
-    std::cout << "CheckBoxConcept\n";
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConcept>(new CheckBoxConceptImpl<DataSourceType>(heading,tooltip,t_getter,t_setter)), t_source));
   }
 
@@ -315,7 +314,6 @@ public:
                          std::function<bool(DataSourceType *, bool)> t_setter,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
-    std::cout << "CheckBoxConceptBoolReturn\n";
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConceptBoolReturn>(new CheckBoxConceptBoolReturnImpl<DataSourceType>(heading, tooltip, t_getter, t_setter)), t_source));
   }
 
