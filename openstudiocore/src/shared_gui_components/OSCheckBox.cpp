@@ -144,8 +144,7 @@ namespace openstudio {
 
   void OSCheckBox3::focusInEvent(QFocusEvent * e)
   {
-    if (e->reason() == Qt::MouseFocusReason)
-    {
+    if( (e->reason() == Qt::MouseFocusReason) && (this->focusPolicy() == Qt::ClickFocus) ) {
       // Switch to yellow background
       QPalette p = this->palette();
       QColor yellow("#ffc627");
@@ -159,8 +158,7 @@ namespace openstudio {
 
   void OSCheckBox3::focusOutEvent(QFocusEvent * e)
   {
-    if (e->reason() == Qt::MouseFocusReason)
-    {
+    if( (e->reason() == Qt::MouseFocusReason) && (this->focusPolicy() == Qt::ClickFocus) ) {
       // Reset the style sheet
       setStyleSheet("");
       emit inFocus(false, false);
