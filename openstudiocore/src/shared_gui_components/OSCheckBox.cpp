@@ -146,6 +146,12 @@ namespace openstudio {
   {
     if (e->reason() == Qt::MouseFocusReason)
     {
+      // Switch to yellow background
+      QPalette p = this->palette();
+      QColor yellow("#ffc627");
+      p.setColor(QPalette::Base, yellow);
+      this->setPalette(p);
+
       emit inFocus(true, true);
     }
     QWidget::focusInEvent(e);
@@ -155,6 +161,8 @@ namespace openstudio {
   {
     if (e->reason() == Qt::MouseFocusReason)
     {
+      // Reset the style sheet
+      setStyleSheet("");
       emit inFocus(false, false);
     }
     // Pass it on for further processing
