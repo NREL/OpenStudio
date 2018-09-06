@@ -422,10 +422,10 @@ class CheckBoxConceptBoolReturn : public BaseConcept
 {
 public:
 
-  /* This concept will allow click focus */
+  /* This concept will allow click focus IIF Heading is passed with t_showColumnButton=true */
   CheckBoxConceptBoolReturn(const Heading &t_heading,
-    const std::string & t_tooltip, bool t_hasClickFocus = true)
-    : BaseConcept(t_heading, t_hasClickFocus),
+                            const std::string & t_tooltip)
+    : BaseConcept(t_heading, t_heading.showButton() ),
     m_tooltip(t_tooltip)
   {
   }
