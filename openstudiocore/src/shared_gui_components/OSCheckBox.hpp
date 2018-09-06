@@ -63,7 +63,11 @@ namespace openstudio {
 
     void unbind();
 
-    private slots:
+  signals:
+
+    void inFocus(bool inFocus, bool hasData);
+
+  private slots:
 
     void onToggled(bool checked);
 

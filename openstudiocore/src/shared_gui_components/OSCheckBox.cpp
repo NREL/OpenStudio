@@ -110,6 +110,7 @@ namespace openstudio {
 
   void OSCheckBox3::onToggled(bool checked)
   {
+    emit inFocus(true, true); // fake that is has data
     if (m_modelObject && m_set) {
       if ((*m_get)() != checked) {
         (*m_set)(checked);
