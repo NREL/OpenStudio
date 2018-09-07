@@ -21763,11 +21763,13 @@ OS:Sizing:System,
        \units m3/s
        \minimum 0
        \default autosize
-  N2, \field Minimum System Air Flow Ratio
+  N2, \field Central Heating Maximum System Air Flow Ratio
        \type real
+       \autosizable
        \required-field
        \minimum 0
        \maximum 1
+       \default autosize
   N3, \field Preheat Design Temperature
        \type real
        \required-field
