@@ -108,9 +108,7 @@ bool SizingSystem_Impl::isDesignOutdoorAirFlowRateAutosized() const {
 }
 
 boost::optional<double> SizingSystem_Impl::centralHeatingMaximumSystemAirFlowRatio() const {
-  boost::optional<double> value = getDouble(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio,true);
-  OS_ASSERT(value);
-  return value.get();
+  return getDouble(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio,true);
 }
 
 bool SizingSystem_Impl::setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio) {
@@ -1468,6 +1466,7 @@ SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
 
   // DEPRECATED
   boost::optional<double> SizingSystem::minimumSystemAirFlowRatio() const {
+    LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, now it returns an Optional double");
     return getImpl<detail::SizingSystem_Impl>()->centralHeatingMaximumSystemAirFlowRatio();
   }
 
@@ -1475,9 +1474,6 @@ SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
   bool SizingSystem::setMinimumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio) {
     return getImpl<detail::SizingSystem_Impl>()->setCentralHeatingMaximumSystemAirFlowRatio(centralHeatingMaximumSystemAirFlowRatio);
   }
-
-
-
 
 } // model
 
