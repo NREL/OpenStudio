@@ -125,6 +125,10 @@ class HVACSystemsController : public QObject, public Nano::Observer
 
   void update();
 
+  // Trigger repopulation of the SystemComboBox only
+  // Will be connected to Plant/AirLoop name IdfObject name change and also called by (full) update
+  void repopulateSystemComboBox();
+
   void addToModel(AddToModelEnum addToModelEnum);
 
   void onAddSystemClicked();
