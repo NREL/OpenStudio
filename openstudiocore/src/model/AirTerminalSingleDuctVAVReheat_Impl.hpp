@@ -101,13 +101,15 @@ namespace detail {
 
     bool setZoneMinimumAirFlowMethod( std::string value );
 
-    double constantMinimumAirFlowFraction();
-
+    boost::optional<double> constantMinimumAirFlowFraction() const;
+    bool isConstantMinimumAirFlowFractionAutosized() const;
     bool setConstantMinimumAirFlowFraction( double value );
+    void autosizeConstantMinimumAirFlowFraction();
 
-    double fixedMinimumAirFlowRate();
-
+    boost::optional<double> fixedMinimumAirFlowRate() const;
+    bool isFixedMinimumAirFlowRateAutosized() const;
     bool setFixedMinimumAirFlowRate( double value );
+    void autosizeFixedMinimumAirFlowRate();
 
     boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
 
@@ -176,7 +178,7 @@ namespace detail {
   virtual void applySizingValues() override;
 
     AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-    
+
     boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
    private:

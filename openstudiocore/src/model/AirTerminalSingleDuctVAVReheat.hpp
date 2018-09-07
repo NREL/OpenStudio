@@ -92,16 +92,29 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   bool setZoneMinimumAirFlowMethod( std::string value );
 
   /** Returns the value of the ConstantMinimumAirFlowFraction field. */
-  double constantMinimumAirFlowFraction();
+  boost::optional<double> constantMinimumAirFlowFraction() const;
 
   /** Sets the value of the ConstantMinimumAirFlowFraction field. */
   bool setConstantMinimumAirFlowFraction( double value );
 
+  /** Sets the value of the ConstantMinimumAirFlowFraction field to Autosize */
+  void autosizeConstantMinimumAirFlowFraction();
+
+  /** Returns true of the ConstantMinimumAirFlowFraction field is set to Autosize */
+  bool isConstantMinimumAirFlowFractionAutosized() const;
+
   /** Returns the value of the FixedMinimumAirFlowRate field. */
-  double fixedMinimumAirFlowRate();
+  boost::optional<double> fixedMinimumAirFlowRate() const;
 
   /** Sets the value of the FixedMinimumAirFlowRate field. */
   bool setFixedMinimumAirFlowRate( double value );
+
+  /** Sets the value of the FixedMinimumAirFlowRate field to Autosize */
+  void autosizeFixedMinimumAirFlowRate();
+
+  /** Returns true of the FixedMinimumAirFlowRate field is set to Autosize */
+  bool isFixedMinimumAirFlowRateAutosized() const;
+
 
   /** Returns the Schedule referred to by the MinimumAirFlowFractionScheduleName field. */
   boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
@@ -198,7 +211,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
 
   /** Creates a new equivalent duct object if an object is not already attached. */
   AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-  
+
   /** Returns the attached equivalent duct object, if any. */
   boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
