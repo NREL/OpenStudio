@@ -53,6 +53,10 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 
+// TODO: only needed for API warning
+#include <OpenStudio.hxx>
+
+
 namespace openstudio {
 
 namespace model {
@@ -851,8 +855,14 @@ bool AirTerminalSingleDuctVAVReheat::setZoneMinimumAirFlowMethod( std::string va
 
 boost::optional<double> AirTerminalSingleDuctVAVReheat::constantMinimumAirFlowFraction() const
 {
-  // TODO: remove in 2 versions
-  LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, it now returns an Optional double");
+  if( VersionString( openStudioVersion() ) < VersionString("2.8.0") ) {
+    // TODO: remove in 2 versions
+    LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, it now returns an Optional double");
+  } else {
+    // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
+    LOG(Debug, "Please go tell a developper to remove the warning in AirTerminalSingleDuctVAVReheat::constantMinimumAirFlowFraction");
+    OS_ASSERT(false);
+  }
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->constantMinimumAirFlowFraction();
 }
 
@@ -870,9 +880,16 @@ void AirTerminalSingleDuctVAVReheat::autosizeConstantMinimumAirFlowFraction() {
 }
 
 
- boost::optional<double> AirTerminalSingleDuctVAVReheat::fixedMinimumAirFlowRate() const
+boost::optional<double> AirTerminalSingleDuctVAVReheat::fixedMinimumAirFlowRate() const
 {
-  LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, it now returns an Optional double");
+  if( VersionString( openStudioVersion() ) < VersionString("2.8.0") ) {
+    // TODO: remove in 2 versions
+    LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, it now returns an Optional double");
+  } else {
+    // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
+    LOG(Debug, "Please go tell a developper to remove the warning AirTerminalSingleDuctVAVReheat::fixedMinimumAirFlowRate");
+    OS_ASSERT(false);
+  }
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->fixedMinimumAirFlowRate();
 }
 
@@ -1044,21 +1061,21 @@ boost::optional<AirflowNetworkEquivalentDuct> AirTerminalSingleDuctVAVReheat::ai
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->airflowNetworkEquivalentDuct();
 }
 
-  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumAirFlowRate() const {
-    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumAirFlowRate();
-  }
+boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumAirFlowRate() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumAirFlowRate();
+}
 
-  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumHotWaterOrSteamFlowRate() const {
-    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumHotWaterOrSteamFlowRate();
-  }
+boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumHotWaterOrSteamFlowRate() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumHotWaterOrSteamFlowRate();
+}
 
-  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const {
-    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumFlowPerZoneFloorAreaDuringReheat();
-  }
+boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumFlowPerZoneFloorAreaDuringReheat();
+}
 
-  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumFlowFractionDuringReheat() const {
-    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumFlowFractionDuringReheat();
-  }
+boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumFlowFractionDuringReheat() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumFlowFractionDuringReheat();
+}
 
 } // model
 
