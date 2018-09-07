@@ -132,6 +132,9 @@
 #include <QLayout>
 #include <QMutex>
 
+// Switch log Level in one go
+#define LOGLEVEL Trace
+
 namespace openstudio {
 
 const QString SHW = "SHW";
@@ -175,14 +178,14 @@ HVACSystemsController::HVACSystemsController(bool isIP, const model::Model & mod
   std::sort(airloops.begin(),airloops.end(),WorkspaceObjectNameLess());
   for( auto it = airloops.begin(); it != airloops.end(); ++it ) {
     // Trigger a full refresh if the airLoop name changes
-    // std::cout << "Attaching name change for AirLoopHVAC " << it->nameString() << "\n";
+    LOG(LOGLEVEL, "HVACSystemsController Ctor: Attaching name change for AirLoopHVAC " << it->nameString());
     it->getImpl<detail::IdfObject_Impl>().get()->detail::IdfObject_Impl::onNameChange.connect<HVACSystemsController, &HVACSystemsController::repopulateSystemComboBox>(this);
   }
 
   auto plantloops = m_model.getModelObjects<model::PlantLoop>();
   std::sort(plantloops.begin(),plantloops.end(),WorkspaceObjectNameLess());
   for( auto it = plantloops.begin(); it != plantloops.end(); ++it ) {
-    // std::cout << "Attaching name change for PlantLoop " << it->nameString() << "\n";
+    LOG(LOGLEVEL, "HVACSystemsController Ctor: Attaching name change for PlantLoop " << it->nameString());
     it->getImpl<detail::IdfObject_Impl>().get()->detail::IdfObject_Impl::onNameChange.connect<HVACSystemsController, &HVACSystemsController::repopulateSystemComboBox>(this);
   }
 
@@ -227,7 +230,7 @@ model::Model HVACSystemsController::model() const
 
 void HVACSystemsController::repopulateSystemComboBox() {
 
-  // std::cout << "repopulateSystemComboBox\n";
+  LOG(LOGLEVEL, "repopulateSystemComboBox() called");
 
   QComboBox * systemComboBox = m_hvacSystemsView->hvacToolbarView->systemComboBox;
   bool signalsAlreadyBlocked = systemComboBox->signalsBlocked();
@@ -325,7 +328,7 @@ void HVACSystemsController::update()
 
     QComboBox * systemComboBox = m_hvacSystemsView->hvacToolbarView->systemComboBox;
 
-    // std::cout << "update\n";
+    LOG(LOGLEVEL, "update() called");
     systemComboBox->blockSignals(true);
 
     // Repopulate
@@ -515,7 +518,7 @@ void HVACSystemsController::onObjectAdded(const WorkspaceObject& workspaceObject
   // If it's a Loop, we trigger a repopulation of the System Combobox upon name change
   if( (newObjectIddType == model::PlantLoop::iddObjectType() )
       || (newObjectIddType == model::AirLoopHVAC::iddObjectType() ) ) {
-    // std::cout << "Attaching name change for " << workspaceObject.briefDescription() << "\n";
+    LOG(LOGLEVEL, "onObjectAdded: Attaching name change for " << workspaceObject.briefDescription());
     workspaceObject.getImpl<detail::IdfObject_Impl>().get()->detail::IdfObject_Impl::onNameChange.connect<HVACSystemsController, &HVACSystemsController::repopulateSystemComboBox>(this);
   }
 }

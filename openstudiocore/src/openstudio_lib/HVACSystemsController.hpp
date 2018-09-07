@@ -155,6 +155,8 @@ class HVACSystemsController : public QObject, public Nano::Observer
 
   private:
 
+  REGISTER_LOGGER("openstudio.openstudio_lib.HVACSystemsController");
+
   std::vector<IddObjectType> systemComboBoxTypes() const;
 
   QPointer<HVACSystemsView> m_hvacSystemsView;
