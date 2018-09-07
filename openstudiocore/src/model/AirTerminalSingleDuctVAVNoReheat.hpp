@@ -75,11 +75,11 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
 
   boost::optional<double> constantMinimumAirFlowFraction() const;
 
-  bool isConstantMinimumAirFlowFractionDefaulted() const;
+  bool isConstantMinimumAirFlowFractionAutosized() const;
 
   boost::optional<double> fixedMinimumAirFlowRate() const;
 
-  bool isFixedMinimumAirFlowRateDefaulted() const;
+  bool isFixedMinimumAirFlowRateAutosized() const;
 
   boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
 
@@ -101,11 +101,11 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
 
   bool setConstantMinimumAirFlowFraction(double constantMinimumAirFlowFraction);
 
-  void resetConstantMinimumAirFlowFraction();
+  void autosizeConstantMinimumAirFlowFraction();
 
   bool setFixedMinimumAirFlowRate(double fixedMinimumAirFlowRate);
 
-  void resetFixedMinimumAirFlowRate();
+  void autosizeFixedMinimumAirFlowRate();
 
   bool setMinimumAirFlowFractionSchedule(Schedule& schedule);
 
