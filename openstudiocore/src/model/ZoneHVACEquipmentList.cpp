@@ -413,11 +413,6 @@ bool ZoneHVACEquipmentList::setLoadDistributionScheme(std::string scheme)
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->setLoadDistributionScheme(scheme);
 }
 
-std::vector<std::string> ZoneHVACEquipmentList::loadDistributionSchemeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme);
-}
-
 bool ZoneHVACEquipmentList::addEquipment(const ModelObject & equipment)
 {
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->addEquipment(equipment);

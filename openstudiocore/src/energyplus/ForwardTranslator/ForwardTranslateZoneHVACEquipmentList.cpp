@@ -168,8 +168,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
 
   // LoadDistributionScheme
   {
-    auto scheme = plantLoop.loadDistributionScheme();
-    idfObject.setString(PlantLoopFields::LoadDistributionScheme,scheme);
+    auto scheme = modelObject.loadDistributionScheme();
+    idfObject.setString(ZoneHVAC_EquipmentListFields::LoadDistributionScheme,scheme);
   }
 
 

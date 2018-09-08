@@ -77,8 +77,6 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   static std::vector<std::string> validZoneOutsideConvectionAlgorithmValues();
 
-  static std::vector<std::string> loadDistributionSchemeValues();
-
   /** @name Getters */
   //@{
 

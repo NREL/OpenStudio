@@ -3357,11 +3357,6 @@ bool ThermalZone::setLoadDistributionScheme(std::string scheme)
   return getImpl<detail::ThermalZone_Impl>()->setLoadDistributionScheme(scheme);
 }
 
-std::vector<std::string> ThermalZone::loadDistributionSchemeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme);
-}
-
 std::vector<ModelObject> ThermalZone::equipmentInHeatingOrder()
 {
   return getImpl<detail::ThermalZone_Impl>()->equipmentInHeatingOrder();
