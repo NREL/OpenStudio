@@ -717,6 +717,14 @@ namespace detail{
     return getAutosizedValue("Design Size Maximum Air Flow Rate", "m3/s");
   }
 
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedConstantMinimumAirFlowFraction() const {
+    return getAutosizedValue("Design Size Constant Minimum Air Flow Fraction", "");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedFixedMinimumAirFlowRate() const {
+    return getAutosizedValue("Design Size Minimum Air Flow Rate", "m3/s");
+  }
+
   boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumHotWaterOrSteamFlowRate() const {
     return getAutosizedValue("Design Size Maximum Reheat Water Flow Rate", "m3/s");
   }
@@ -743,6 +751,16 @@ namespace detail{
       setMaximumAirFlowRate(val.get());
     }
 
+    val = autosizedConstantMinimumAirFlowFraction();
+    if (val) {
+      setConstantMinimumAirFlowFraction(val.get());
+    }
+
+    val = autosizedFixedMinimumAirFlowRate();
+    if (val) {
+      setFixedMinimumAirFlowRate(val.get());
+    }
+
     val = autosizedMaximumHotWaterOrSteamFlowRate();
     if (val) {
       setMaximumHotWaterOrSteamFlowRate(val.get());
@@ -757,6 +775,8 @@ namespace detail{
     if (val) {
       setMaximumFlowFractionDuringReheat(val.get());
     }
+
+
 
   }
 
@@ -1063,6 +1083,14 @@ boost::optional<AirflowNetworkEquivalentDuct> AirTerminalSingleDuctVAVReheat::ai
 
 boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumAirFlowRate() const {
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumAirFlowRate();
+}
+
+boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedConstantMinimumAirFlowFraction() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedConstantMinimumAirFlowFraction();
+}
+
+boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedFixedMinimumAirFlowRate() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedFixedMinimumAirFlowRate();
 }
 
 boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumHotWaterOrSteamFlowRate() const {

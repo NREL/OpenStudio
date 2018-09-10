@@ -199,13 +199,17 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
 
   bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+  boost::optional<double> autosizedMaximumAirFlowRate() const;
 
-  boost::optional<double> autosizedMaximumHotWaterOrSteamFlowRate() const ;
+  boost::optional<double> autosizedConstantMinimumAirFlowFraction() const;
 
-  boost::optional<double> autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const ;
+  boost::optional<double> autosizedFixedMinimumAirFlowRate() const;
 
-  boost::optional<double> autosizedMaximumFlowFractionDuringReheat() const ;
+  boost::optional<double> autosizedMaximumHotWaterOrSteamFlowRate() const;
+
+  boost::optional<double> autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const;
+
+  boost::optional<double> autosizedMaximumFlowFractionDuringReheat() const;
 
 
 
