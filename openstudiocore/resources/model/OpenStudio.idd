@@ -21769,10 +21769,9 @@ OS:Sizing:System,
        \default autosize
   N2, \field Central Heating Maximum System Air Flow Ratio
        \type real
-       \autosizable
-       \required-field
        \minimum 0
        \maximum 1
+       \autosizable
        \default autosize
   N3, \field Preheat Design Temperature
        \type real
