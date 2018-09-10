@@ -393,7 +393,7 @@ namespace detail {
 
     bool setCoolingPriority(const ModelObject & equipment, unsigned priority);
 
-    bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+    bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
 
     std::vector<ModelObject> equipmentInHeatingOrder();
 

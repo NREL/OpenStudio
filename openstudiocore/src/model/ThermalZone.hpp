@@ -400,7 +400,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   /** Set heating priority of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
-  bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+  bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
 
   /** Return all equipment.  Order is determined by heating priority */
   std::vector<ModelObject> equipmentInHeatingOrder();
