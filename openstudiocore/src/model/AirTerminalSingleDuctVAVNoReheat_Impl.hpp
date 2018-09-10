@@ -96,13 +96,17 @@ namespace detail {
 
     boost::optional<double> constantMinimumAirFlowFraction() const;
     bool isConstantMinimumAirFlowFractionAutosized() const;
+    bool isConstantMinimumAirFlowFractionDefaulted() const;
 
     boost::optional<double> fixedMinimumAirFlowRate() const;
     bool isFixedMinimumAirFlowRateAutosized() const;
+    bool isFixedMinimumAirFlowRateDefaulted() const;
 
     boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
 
-    boost::optional<double> autosizedMaximumAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumAirFlowRate() const;
+    boost::optional<double> autosizedConstantMinimumAirFlowFraction() const;
+    boost::optional<double> autosizedFixedMinimumAirFlowRate() const;
 
     virtual void autosize() override;
 
@@ -126,9 +130,11 @@ namespace detail {
 
     bool setConstantMinimumAirFlowFraction(double constantMinimumAirFlowFraction);
     void autosizeConstantMinimumAirFlowFraction();
+    void resetConstantMinimumAirFlowFraction();
 
     bool setFixedMinimumAirFlowRate(double fixedMinimumAirFlowRate);
     void autosizeFixedMinimumAirFlowRate();
+    void resetFixedMinimumAirFlowRate();
 
     bool setMinimumAirFlowFractionSchedule(Schedule& schedule);
 

@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -74,12 +75,12 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
   boost::optional<std::string> zoneMinimumAirFlowInputMethod() const;
 
   boost::optional<double> constantMinimumAirFlowFraction() const;
-
   bool isConstantMinimumAirFlowFractionAutosized() const;
+  bool isConstantMinimumAirFlowFractionDefaulted() const;
 
   boost::optional<double> fixedMinimumAirFlowRate() const;
-
   bool isFixedMinimumAirFlowRateAutosized() const;
+  bool isFixedMinimumAirFlowRateDefaulted() const;
 
   boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
 
@@ -105,12 +106,13 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
   void resetZoneMinimumAirFlowInputMethod();
 
   bool setConstantMinimumAirFlowFraction(double constantMinimumAirFlowFraction);
-
   void autosizeConstantMinimumAirFlowFraction();
+  void resetConstantMinimumAirFlowFraction();
 
   bool setFixedMinimumAirFlowRate(double fixedMinimumAirFlowRate);
-
   void autosizeFixedMinimumAirFlowRate();
+  void resetFixedMinimumAirFlowRate();
+
 
   bool setMinimumAirFlowFractionSchedule(Schedule& schedule);
 
@@ -122,9 +124,9 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
   /** @name Other */
   //@{
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const ;
-
-
+  boost::optional<double> autosizedMaximumAirFlowRate() const;
+  boost::optional<double> autosizedConstantMinimumAirFlowFraction() const;
+  boost::optional<double> autosizedFixedMinimumAirFlowRate() const;
 
   //@}
  protected:
