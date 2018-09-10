@@ -1509,6 +1509,10 @@ SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
     getImpl<detail::SizingSystem_Impl>()->autosizeCentralHeatingMaximumSystemAirFlowRatio();
   }
 
+  boost::optional<double> SizingSystem::autosizedCentralHeatingMaximumSystemAirFlowRatio() const {
+    return getImpl<detail::SizingSystem_Impl>()->autosizedCentralHeatingMaximumSystemAirFlowRatio();
+  }
+
   // DEPRECATED: TODO REMOVED in 2.6.2, REMOVE FROM API In the FUTURE
   boost::optional<double> SizingSystem::minimumSystemAirFlowRatio() const {
     LOG(Warn, "SizingSystem::minimumSystemAirFlowRatio has been deprecated and will be removed in a future release, please use SizingSystem::centralHeatingMaximumSystemAirFlowRatio");
