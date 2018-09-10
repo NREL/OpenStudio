@@ -917,6 +917,7 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
     autosizeDesignOutdoorAirFlowRate();
     autosizeCoolingDesignCapacity();
     autosizeHeatingDesignCapacity();
+    autosizeCentralHeatingMaximumSystemAirFlowRatio();
   }
 
   void SizingSystem_Impl::applySizingValues() {
@@ -936,6 +937,10 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
       setHeatingDesignCapacity(val.get());
     }
 
+    val = autosizedCentralHeatingMaximumSystemAirFlowRatio();
+    if (val) {
+      setCentralHeatingMaximumSystemAirFlowRatio(val.get());
+    }
   }
 
   std::vector<EMSActuatorNames> SizingSystem_Impl::emsActuatorNames() const {
