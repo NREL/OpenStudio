@@ -23683,10 +23683,24 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \note cycling fan operation (fan cycles with cooling or heating coil). Schedule values greater
         \note than 0 denote constant fan operation (fan runs continually regardless of coil operation).
         \note The fan operating mode defaults to cycling fan operation if this field is left blank.
-   A14; \field Availability Manager List Name
+   A14, \field Availability Manager List Name
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
+   A15, \field Heat Pump Coil Water Flow Mode
+        \type choice
+        \key Constant
+        \key Cycling
+        \key ConstantOnDemand
+        \default Cycling
+        \note used only when the heat pump coils are of the type WaterToAirHeatPump:EquationFit
+        \note Constant results in 100% water flow regardless of compressor PLR
+        \note Cycling results in water flow that matches compressor PLR
+        \note ConstantOnDemand results in 100% water flow whenever the coil is on, but is 0% whenever the coil has no load
+   A26; \field Design Specification ZoneHVAC Sizing Object Name
+        \note Enter the name of a DesignSpecificationZoneHVACSizing object.
+        \type object-list
+        \object-list DesignSpecificationZoneHVACSizingName
 
 OS:ZoneHVAC:UnitHeater,
        \min-fields 10
