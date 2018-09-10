@@ -290,9 +290,10 @@ class MODEL_API SizingSystem : public ModelObject
   OS_DEPRECATED bool setMinimumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
 
 
-  boost::optional<double> autosizedDesignOutdoorAirFlowRate() const ;
-  boost::optional<double> autosizedCoolingDesignCapacity() const ;
-  boost::optional<double> autosizedHeatingDesignCapacity() const ;
+  boost::optional<double> autosizedDesignOutdoorAirFlowRate() const;
+  boost::optional<double> autosizedCentralHeatingMaximumSystemAirFlowRatio() const;
+  boost::optional<double> autosizedCoolingDesignCapacity() const;
+  boost::optional<double> autosizedHeatingDesignCapacity() const;
 
   void autosize();
 

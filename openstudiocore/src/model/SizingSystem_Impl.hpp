@@ -275,6 +275,8 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   boost::optional<double> autosizedDesignOutdoorAirFlowRate() const ;
 
+  boost::optional<double> autosizedCentralHeatingMaximumSystemAirFlowRatio() const;
+
   boost::optional<double> autosizedCoolingDesignCapacity() const ;
 
   boost::optional<double> autosizedHeatingDesignCapacity() const ;

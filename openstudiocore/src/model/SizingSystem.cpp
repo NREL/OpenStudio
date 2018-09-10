@@ -871,6 +871,48 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
     return result;
   }
 
+  boost::optional<double> SizingSystem_Impl::autosizedCentralHeatingMaximumSystemAirFlowRatio() const {
+    boost::optional < double > result;
+
+    // Get the parent AirLoopHVAC
+    AirLoopHVAC parAirLoop = airLoopHVAC();
+
+    // Get the name of the air loop
+    if (!parAirLoop.name()) {
+      LOG(Debug, "This object's parent AirLoopHVAC does not have a name, cannot retrieve the autosized "
+          << "'Central Heating Maximum System Air Flow Ratio'.");
+      return result;
+    }
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string sqlName = parAirLoop.name().get();
+    boost::to_upper(sqlName);
+
+    // Check that the model has a sql file
+    if (!model().sqlFile()) {
+      LOG(Warn, "This model has no sql file, cannot retrieve the autosized 'Central Heating Maximum System Air Flow Ratio'.");
+      return result;
+    }
+
+    // Note JM 2018-09-10: It's not in the TabularDataWithStrings, so I look in the ComponentSizes
+    std::stringstream valQuery;
+    valQuery << "SELECT Value ";
+    valQuery << "FROM ComponentSizes ";
+    valQuery << "WHERE CompType='AirLoopHVAC' ";
+    valQuery << "AND Description='User Heating Air Flow Ratio' ";
+    valQuery << "AND Units='' ";
+    valQuery << "AND CompName='" << parAirLoop.nameString() << "' ";
+    boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+    // Check if the query succeeded
+    if (val) {
+      result = val.get();
+    }
+
+    return result;
+  }
+
+
   void SizingSystem_Impl::autosize() {
     autosizeDesignOutdoorAirFlowRate();
     autosizeCoolingDesignCapacity();
