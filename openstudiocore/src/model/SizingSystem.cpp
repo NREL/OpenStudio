@@ -902,7 +902,7 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
     valQuery << "WHERE CompType='AirLoopHVAC' ";
     valQuery << "AND Description='User Heating Air Flow Ratio' ";
     valQuery << "AND Units='' ";
-    valQuery << "AND CompName='" << parAirLoop.nameString() << "' ";
+    valQuery << "AND CompName='" << sqlName << "' ";
     boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
     // Check if the query succeeded
     if (val) {
