@@ -366,7 +366,8 @@ namespace detail {
   {
     removeFromThermalZone();
 
-    removeFromAirLoopHVAC();
+    bool result = removeFromAirLoopHVAC();
+    OS_ASSERT(result || !airLoopHVAC());
 
     return HVACComponent_Impl::remove();
   }
