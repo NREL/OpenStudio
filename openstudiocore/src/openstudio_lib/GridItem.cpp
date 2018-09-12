@@ -1363,10 +1363,6 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
   auto supplyInletNode = m_loop.supplyInletNode();
   auto supplyOutletNodes = m_loop.supplyOutletNodes();
 
-  // std::vector<openstudio::model::ModelObject> dComps = m_loop.demandComponents();
-  // std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(dComps);
-  // std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(dComps);
-
   std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(m_loop.demandComponents(openstudio::IddObjectType::OS_AirLoopHVAC_SupplyPlenum));
 
   std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(m_loop.demandComponents(openstudio::IddObjectType::OS_AirLoopHVAC_ReturnPlenum));
