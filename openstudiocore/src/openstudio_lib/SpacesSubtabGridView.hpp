@@ -208,7 +208,13 @@ namespace openstudio{
 
     virtual void interiorPartitionGroupFilterChanged(const QString & text);
 
+  private:
+    // All of the subtabs except the main SpacesSpace subtab will return true
+    // We use this in filterChanged
+    virtual bool hasSubRows() { return true; };
   };
+
+
 
 } // openstudio
 

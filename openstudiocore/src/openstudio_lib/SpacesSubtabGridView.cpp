@@ -891,11 +891,6 @@ namespace openstudio {
       }
     }
 
-    bool isRowLevel=true;
-    this->m_gridController->getObjectSelector()->m_filteredObjects = spaceFilteredObjects;
-    this->m_gridController->getObjectSelector()->updateWidgets(isRowLevel);
-
-
     /***********************************************************************************
      * Filters that should apply at the SUBROW level because they are DataObject-related
      ***********************************************************************************/
@@ -937,10 +932,22 @@ namespace openstudio {
       }
     }
 
-    isRowLevel=false;
-    // allFilteredObjects.insert(spaceFilteredObjects.begin(), spaceFilteredObjects.end());
-    this->m_gridController->getObjectSelector()->m_filteredObjects = allFilteredObjects;
-    this->m_gridController->getObjectSelector()->updateWidgets(isRowLevel);
+    if( this->hasSubRows() ) {
+      // We do it in two steps, the row level stuff (=space related)
+      bool isRowLevel=true;
+      this->m_gridController->getObjectSelector()->m_filteredObjects = spaceFilteredObjects;
+      this->m_gridController->getObjectSelector()->updateWidgets(isRowLevel);
+      // The subrow level stuff, that could link to Space and/or Space Type
+      isRowLevel=false;
+      this->m_gridController->getObjectSelector()->m_filteredObjects = allFilteredObjects;
+      this->m_gridController->getObjectSelector()->updateWidgets(isRowLevel);
+    } else {
+      // One step
+      bool isRowLevel=false;
+      allFilteredObjects.insert(spaceFilteredObjects.begin(), spaceFilteredObjects.end());
+      this->m_gridController->getObjectSelector()->m_filteredObjects = allFilteredObjects;
+      this->m_gridController->getObjectSelector()->updateWidgets(isRowLevel);
+    }
   }
 
   void SpacesSubtabGridView::addObject(const IddObjectType& iddObjectType)

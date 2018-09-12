@@ -131,7 +131,7 @@ namespace openstudio {
 
   void ObjectSelector::objectRemoved(const openstudio::model::ModelObject &t_obj)
   {
-    std::cout << " Object removed\n";
+    // std::cout << " Object removed\n";
 
     m_selectedObjects.erase(t_obj);
     m_selectorObjects.erase(t_obj);
@@ -403,17 +403,14 @@ namespace openstudio {
     bool isSubRow = t_subrow;
 
     // determine if we want to update the parent widget or the child widget
-    for (auto &widgetLoc : m_widgetMap)
-    {
-      if (widgetLoc.second->row == t_row
-        && (!t_subrow
-        || (t_subrow == widgetLoc.second->subrow)))
-      {
-        if (!isSubRow)
-        {
+    for( auto &widgetLoc : m_widgetMap ) {
+      // If the row corresponds
+      if( widgetLoc.second->row == t_row ) {
+        // And there isn't any subrow, we get the parent
+        if( !isSubRow ) {
           widgetsToUpdate.insert(std::make_pair(widgetLoc.second->widget->parentWidget(), widgetLoc.second->column));
-        }
-        else {
+        // Otherwise, the subrow needs to corresponds, and we hide that widget
+        } else if( t_subrow == widgetLoc.second->subrow ) {
           widgetsToUpdate.insert(std::make_pair(widgetLoc.second->widget, widgetLoc.second->column));
           widgetLoc.second->widget->setStyleSheet("");
         }
@@ -434,16 +431,18 @@ namespace openstudio {
       // We loop on all object in the leftmost colum (eg: 'Space' for all SpaceSubtabs)
       for( int t_row=0; t_row < this->m_grid->rowCount(); ++t_row ) {
         bool objectVisible = true;
+        bool objectSelected = false;
 
         // If that object is present in m_filteredObjects
         boost::optional<const model::ModelObject &> _rowLevelObj = getObject(t_row, 0, boost::optional<int>());
         if( _rowLevelObj && (m_filteredObjects.count(_rowLevelObj.get()) != 0 ) ) {
-          LOG(Debug, "Hidding t_row=" << t_row << " matched as rowLevelObj (=" << _rowLevelObj.get().briefDescription() << ")");
+          // LOG(Debug, "Hidding t_row=" << t_row << " matched as rowLevelObj (=" << _rowLevelObj.get().briefDescription() << ")");
           objectVisible = false;
+          objectSelected = m_selectedObjects.count(_rowLevelObj.get()) != 0;
         }
 
         // We'll hide the entire row
-        updateWidgets(t_row, boost::optional<int>(), false, objectVisible);
+        updateWidgets(t_row, boost::optional<int>(), objectSelected, objectVisible);
       }
     } else {
       // This contains the (unique) individual DataObjects (eg: Loads subtab = SpaceLoadInstances (People, Lights, etc))
@@ -454,6 +453,7 @@ namespace openstudio {
     }
   }
 
+  // TODO: this overloaded function isn't called anywhere...
   void ObjectSelector::updateWidgets(const model::ModelObject &t_obj, const bool t_objectVisible)
   {
     auto range = m_widgetMap.equal_range(boost::optional<model::ModelObject>(t_obj));
@@ -463,7 +463,7 @@ namespace openstudio {
     // Find the row that contains this object
     auto row = std::make_tuple(range.first->second->row, range.first->second->subrow);
 
-    // TODO: should we delete that too?
+    // TODO: should we delete that too? see comment below in updateWidgets(const model::ModelObject &t_obj)
 #if _DEBUG || (__GNUC__ && !NDEBUG)
     // Sanity check to make sure we don't have the same object in two different rows
     ++range.first;
@@ -488,12 +488,28 @@ namespace openstudio {
     // Check that it did return something
     assert(range.first != range.second);
 
+    // Note JM: leaving it here in case you need to look at the contents of m_widgetMap...
+    /*
+     *std::cout << "\n\nContent of m_widgetMap\n";
+     *for (auto it = m_widgetMap.begin(); it != m_widgetMap.end(); ++it) {
+     *  const boost::optional<model::ModelObject> mo = it->first;
+     *  int t_row = it->second->row;
+     *  boost::optional<int> t_subrow = it->second->subrow;
+     *  if( mo ) {
+     *    std::cout << "row=" << t_row << ", subrow=" << t_subrow <<", mo=" << mo->briefDescription() << "\n";
+     *  } else {
+     *    std::cout << "row=" << t_row << ", subrow=" << t_subrow <<", mo=None\n";
+     *  }
+     *}
+     */
+
 
   /*
    *  auto row = std::make_tuple(t_row, t_subrow);
    *#if _DEBUG || (__GNUC__ && !NDEBUG)
    *    // Sanity check to make sure we don't have the same object in two different rows
-   *    // TODO: JM 2018-08-21: In case of the Loads subtab for eg, given than obj is a load object (People, Light, etc)
+   *    // TODO: JM 2018-08-21: In case of the Loads subtab for eg, given than obj is a **Space** (always!)
+   *    // but given that we have lots of load objects (People, Light, etc) for each Space,
    *    // We kinda expect to have the same object in several rows, don't we?
    *    ++range.first;
    *    while (range.first != range.second)
