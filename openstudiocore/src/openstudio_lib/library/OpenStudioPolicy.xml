@@ -876,6 +876,12 @@
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Heating Coil Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_ZoneHVAC_EquipmentList">
+    <rule IddField="Thermal Zone" Access="HIDDEN"/>
+    <rule IddField="Zone Equipment" Access="HIDDEN"/>
+    <rule IddField="Zone Equipment Cooling Sequence" Access="HIDDEN"/>
+    <rule IddField="Zone Equipment Heating or No-Load Sequence" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_FourPipeFanCoil">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
