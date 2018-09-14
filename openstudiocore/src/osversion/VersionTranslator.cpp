@@ -4137,7 +4137,8 @@ std::string VersionTranslator::update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, c
       IdfObject newObject(iddObject.get());
 
       for( size_t i = 0; i < object.numFields(); ++i ) {
-        if( (value = object.getString(i)) ) {
+		    auto value = object.getString(i);
+			  if (value) {
           if (i < 3) {
             // Handle
             newObject.setString(i, value.get());
