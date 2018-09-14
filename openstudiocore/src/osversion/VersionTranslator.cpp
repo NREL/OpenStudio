@@ -124,6 +124,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.5.0")] = &VersionTranslator::update_2_4_3_to_2_5_0;
   m_updateMethods[VersionString("2.6.1")] = &VersionTranslator::update_2_6_0_to_2_6_1;
   m_updateMethods[VersionString("2.6.2")] = &VersionTranslator::update_2_6_1_to_2_6_2;
+  // m_updateMethods[VersionString("2.7.0")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -4070,7 +4071,7 @@ std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, c
         for ( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
           auto value = object.getString(i);
           if ( value ) {
-            newConnection.setString(i, value.get()); 
+            newConnection.setString(i, value.get());
           }
         }
         // index 3 is the source object port,
@@ -4097,12 +4098,40 @@ std::string VersionTranslator::update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, c
   IdfFile targetIdf(idd_2_6_2.iddFile());
   ss << targetIdf.versionObject().get();
 
-  boost::optional<std::string> value;
-
   for (const IdfObject& object : idf_2_6_1.objects()) {
     auto iddname = object.iddObject().name();
 
-    if (iddname == "OS:ZoneHVAC:EquipmentList") {
+    if ( iddname == "OS:EvaporativeCooler:Direct:ResearchSpecial" ) {
+
+      auto iddObject = idd_2_6_2.getObject("OS:EvaporativeCooler:Direct:ResearchSpecial");
+      IdfObject newObject(iddObject.get());
+
+      for ( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        auto value = object.getString(i);
+        if ( value ) {
+          newObject.setString(i, value.get());
+        }
+      }
+      // The last three fields were added in #3118 as NON optional doubles, so default to extreme values
+      // to make it behave like when blank = no control
+
+      // Evaporative Operation Minimum Drybulb Temperature
+      if( !newObject.getDouble(14) ) {
+        newObject.setDouble(14, -99);
+      }
+      // Evaporative Operation Maximum Limit Wetbulb Temperature
+      if( !newObject.getDouble(15) ) {
+        newObject.setDouble(15, 99);
+      }
+      // Evaporative Operation Maximum Limit Drybulb Temperature
+      if( !newObject.getDouble(16) ) {
+        newObject.setDouble(16, 99);
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+    } else if (iddname == "OS:ZoneHVAC:EquipmentList") {
       // In 2.6.2, a field "Load Distribution Scheme" was inserted right after the thermal zone
       auto iddObject = idd_2_6_2.getObject("OS:ZoneHVAC:EquipmentList");
       IdfObject newObject(iddObject.get());
@@ -4122,7 +4151,6 @@ std::string VersionTranslator::update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
 
-    // Default case
     } else {
       ss << object;
     }
@@ -4130,7 +4158,6 @@ std::string VersionTranslator::update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, c
 
   return ss.str();
 }
-
 } // osversion
 } // openstudio
 
