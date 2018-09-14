@@ -214,6 +214,8 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   OptionalModelObject returnAirModelObject();
 
+  std::vector<ModelObject> returnAirModelObjects() const;
+
   Node zoneAirNode();
 
   boost::optional<DaylightingControl> primaryDaylightingControl() const;
@@ -468,9 +470,18 @@ class MODEL_API ThermalZone : public HVACComponent {
   */
   bool setReturnPlenum(const ThermalZone & plenumZone);
 
+  /** setReturnPlenum for the specified air loop.
+    * This method is used when there are multiple air loops attached to the zone
+    */
+  bool setReturnPlenum(const ThermalZone & plenumZone, AirLoopHVAC & airLoop);
+
   /** Remove any return plenum serving this zone
   */
   void removeReturnPlenum();
+
+  /** Remove any return plenum serving this zone
+  */
+  void removeReturnPlenum(AirLoopHVAC & airLoop);
 
   /** Returns all ZoneMixing objects associated with this zone, includes supply and exhaust mixing objects */
   std::vector<ZoneMixing> zoneMixing() const;

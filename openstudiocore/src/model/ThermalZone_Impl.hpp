@@ -228,6 +228,8 @@ namespace detail {
 
     OptionalModelObject returnAirModelObject();
 
+    std::vector<ModelObject> returnAirModelObjects() const;
+
     Node zoneAirNode();
 
     boost::optional<DaylightingControl> primaryDaylightingControl() const;
@@ -412,11 +414,13 @@ namespace detail {
     bool setSupplyPlenum(const ThermalZone & plenumZone);
     bool setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex);
     void removeSupplyPlenum();
+    void removeSupplyPlenum(unsigned branchIndex);
     void removeSupplyPlenum(const AirLoopHVAC & airloop);
     void removeSupplyPlenum(const AirLoopHVAC & airloop, unsigned branchIndex);
     bool setReturnPlenum(const ThermalZone & plenumZone);
+    bool setReturnPlenum(const ThermalZone & plenumZone, AirLoopHVAC & airLoop);
     void removeReturnPlenum();
-    void removeSupplyPlenum(unsigned branchIndex);
+    void removeReturnPlenum(AirLoopHVAC & airLoop);
 
     std::vector<ZoneMixing> zoneMixing() const;
     std::vector<ZoneMixing> supplyZoneMixing() const;
