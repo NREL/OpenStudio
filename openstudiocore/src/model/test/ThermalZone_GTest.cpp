@@ -405,6 +405,20 @@ TEST_F(ModelFixture,ThermalZone_equipment) {
   EXPECT_EQ(2u,thermalZone.equipment().size());
 }
 
+TEST_F(ModelFixture,ThermalZone_LoadDistributionScheme) {
+  Model model;
+
+  ThermalZone thermalZone(model);
+
+  EXPECT_EQ("SequentialLoad",thermalZone.loadDistributionScheme());
+
+  thermalZone.setLoadDistributionScheme("UniformLoad");
+  EXPECT_EQ("UniformLoad",thermalZone.loadDistributionScheme());
+
+  thermalZone.setLoadDistributionScheme("InvalidChoice");
+  EXPECT_EQ("UniformLoad",thermalZone.loadDistributionScheme());
+}
+
 TEST_F(ModelFixture,ThermalZone_Cost) {
   Model model;
   ThermalZone thermalZone(model);

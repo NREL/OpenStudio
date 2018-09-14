@@ -123,7 +123,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.4.2")] = &VersionTranslator::update_2_4_1_to_2_4_2;
   m_updateMethods[VersionString("2.5.0")] = &VersionTranslator::update_2_4_3_to_2_5_0;
   m_updateMethods[VersionString("2.6.1")] = &VersionTranslator::update_2_6_0_to_2_6_1;
-  m_updateMethods[VersionString("2.6.2")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("2.6.2")] = &VersionTranslator::update_2_6_1_to_2_6_2;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -4082,6 +4082,47 @@ std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, c
       } else {
         ss << object;
       }
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, const IddFileAndFactoryWrapper& idd_2_6_2) {
+  std::stringstream ss;
+
+  ss << idf_2_6_1.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_6_2.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  boost::optional<std::string> value;
+
+  for (const IdfObject& object : idf_2_6_1.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:ZoneHVAC:EquipmentList") {
+      // In 2.6.2, a field "Load Distribution Scheme" was inserted right after the thermal zone
+      auto iddObject = idd_2_6_2.getObject("OS:ZoneHVAC:EquipmentList");
+      IdfObject newObject(iddObject.get());
+
+      for( size_t i = 0; i < object.numFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          if (i < 3) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i+1, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      ss << newObject;
+
+    // Default case
     } else {
       ss << object;
     }
