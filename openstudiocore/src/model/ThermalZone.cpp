@@ -173,6 +173,10 @@ namespace detail {
       result.push_back(afnz.get());
     }
 
+    if ( boost::optional<ZoneHVACEquipmentList> z_eq = this->zoneHVACEquipmentList() ) {
+      result.push_back(z_eq.get());
+    }
+
     return result;
   }
 
