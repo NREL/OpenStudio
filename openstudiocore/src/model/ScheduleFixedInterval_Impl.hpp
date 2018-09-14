@@ -41,13 +41,6 @@ namespace detail {
   /** ScheduleFixedInterval_Impl is a ScheduleInterval_Impl that is the implementation class for ScheduleFixedInterval.*/
   class MODEL_API ScheduleFixedInterval_Impl : public ScheduleInterval_Impl {
 
-
-
-
-
-
-
-
    public:
 
     /** @name Constructors and Destructors */
@@ -131,4 +124,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_SCHEDULEFIXEDINTERVAL_IMPL_HPP
+#endif // MODEL_SCHEDULEFIXEDINTERVAL_IMPL_HPP
