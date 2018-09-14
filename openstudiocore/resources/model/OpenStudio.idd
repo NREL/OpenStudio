@@ -10844,7 +10844,8 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \note is optional; if a value is entered, then it is used for sizing normal-action reheat coils.
        \note If both this field and the following field are entered, the larger result is used.
        \type real
-       \default 0.3
+       \autosizable
+       \default autosize
   N3 , \field Fixed Minimum Air Flow Rate
        \note This field is used if the field Zone Minimum Air Flow Input Method is FixedFlowRate.
        \note If the field Zone Minimum Air Flow Input Method is Scheduled, then this field
@@ -10852,7 +10853,8 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \note If both this field and the previous field are entered, the larger result is used.
        \type real
        \units m3/s
-       \default 0.0
+       \autosizable
+       \default autosize
   A7 , \field Minimum Air Flow Fraction Schedule Name
        \note This field is used if the field Zone Minimum Air Flow Input Method is Scheduled
        \note Schedule values are fractions, 0.0 to 1.0.
@@ -10904,7 +10906,8 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \note is optional; if a value is entered, then it is used for sizing normal-action reheat coils.
        \note If both this field and the following field are entered, the larger result is used.
        \type real
-       \default 0.3
+       \autosizable
+       \default autosize
   N3, \field Fixed Minimum Air Flow Rate
        \note This field is used if the field Zone Minimum Air Flow Input Method is FixedFlowRate.
        \note If the field Zone Minimum Air Flow Input Method is Scheduled, then this field
@@ -10912,7 +10915,8 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \note If both this field and the previous field are entered, the larger result is used.
        \type real
        \units m3/s
-       \default 0.0
+       \autosizable
+       \default autosize
   A7, \field Minimum Air Flow Fraction Schedule Name
        \note This field is used if the field Zone Minimum Air Flow Input Method is Scheduled
        \note Schedule values are fractions, 0.0 to 1.0.
@@ -21763,11 +21767,12 @@ OS:Sizing:System,
        \units m3/s
        \minimum 0
        \default autosize
-  N2, \field Minimum System Air Flow Ratio
+  N2, \field Central Heating Maximum System Air Flow Ratio
        \type real
-       \required-field
        \minimum 0
        \maximum 1
+       \autosizable
+       \default autosize
   N3, \field Preheat Design Temperature
        \type real
        \required-field
@@ -23685,10 +23690,24 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \note cycling fan operation (fan cycles with cooling or heating coil). Schedule values greater
         \note than 0 denote constant fan operation (fan runs continually regardless of coil operation).
         \note The fan operating mode defaults to cycling fan operation if this field is left blank.
-   A14; \field Availability Manager List Name
+   A14, \field Availability Manager List Name
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
+   A15, \field Heat Pump Coil Water Flow Mode
+        \type choice
+        \key Constant
+        \key Cycling
+        \key ConstantOnDemand
+        \default Cycling
+        \note used only when the heat pump coils are of the type WaterToAirHeatPump:EquationFit
+        \note Constant results in 100% water flow regardless of compressor PLR
+        \note Cycling results in water flow that matches compressor PLR
+        \note ConstantOnDemand results in 100% water flow whenever the coil is on, but is 0% whenever the coil has no load
+   A26; \field Design Specification ZoneHVAC Sizing Object Name
+        \note Enter the name of a DesignSpecificationZoneHVACSizing object.
+        \type object-list
+        \object-list DesignSpecificationZoneHVACSizingName
 
 OS:ZoneHVAC:UnitHeater,
        \min-fields 10
