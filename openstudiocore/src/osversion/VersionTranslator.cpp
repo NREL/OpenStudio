@@ -123,7 +123,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.4.2")] = &VersionTranslator::update_2_4_1_to_2_4_2;
   m_updateMethods[VersionString("2.5.0")] = &VersionTranslator::update_2_4_3_to_2_5_0;
   m_updateMethods[VersionString("2.6.1")] = &VersionTranslator::update_2_6_0_to_2_6_1;
-  m_updateMethods[VersionString("2.6.2")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("2.6.2")] = &VersionTranslator::update_2_6_1_to_2_6_2;
+  // m_updateMethods[VersionString("2.7.1")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -4082,9 +4083,27 @@ std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, c
       } else {
         ss << object;
       }
-    } else if( iddname == "OS:EvaporativeCooler:Direct:ResearchSpecial" ) {
+    } else {
+      ss << object;
+    }
+  }
 
-      auto iddObject = idd_2_6_1.getObject("OS:EvaporativeCooler:Direct:ResearchSpecial");
+  return ss.str();
+}
+
+std::string VersionTranslator::update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, const IddFileAndFactoryWrapper& idd_2_6_2) {
+  std::stringstream ss;
+
+  ss << idf_2_6_1.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_6_2.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_2_6_1.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if ( iddname == "OS:EvaporativeCooler:Direct:ResearchSpecial" ) {
+
+      auto iddObject = idd_2_6_2.getObject("OS:EvaporativeCooler:Direct:ResearchSpecial");
       IdfObject newObject(iddObject.get());
 
       for ( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
