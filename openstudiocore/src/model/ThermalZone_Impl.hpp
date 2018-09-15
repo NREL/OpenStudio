@@ -389,9 +389,13 @@ namespace detail {
 
     bool removeEquipment(const ModelObject & equipment);
 
+    std::string loadDistributionScheme();
+
+    bool setLoadDistributionScheme(std::string scheme);
+
     bool setCoolingPriority(const ModelObject & equipment, unsigned priority);
 
-    bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+    bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
 
     std::vector<ModelObject> equipmentInHeatingOrder();
 
