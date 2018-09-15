@@ -166,6 +166,13 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
     }
   }
 
+  // LoadDistributionScheme
+  {
+    auto scheme = modelObject.loadDistributionScheme();
+    idfObject.setString(ZoneHVAC_EquipmentListFields::LoadDistributionScheme,scheme);
+  }
+
+
   if (!airChillers.empty()) {
     // ZoneHVAC:RefrigerationChillerSet
     // Name

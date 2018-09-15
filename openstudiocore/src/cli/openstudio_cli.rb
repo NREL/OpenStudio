@@ -412,6 +412,11 @@ def parse_main_args(main_args)
     # match configuration in build_openstudio_gems
     $logger.info "Setting BUNDLE_WITHOUT to 'test'"
     ENV['BUNDLE_WITHOUT'] = 'test'
+    
+    # ignore any local config on disk
+    #DLM: this would be correct if the bundle was created here
+    #it would not be correct if the bundle was transfered from another computer
+    #ENV['BUNDLE_IGNORE_CONFIG'] = 'true'
   
   end  
   
