@@ -539,7 +539,7 @@ void MainRightColumnController::configureForGeometrySubTab(int subTabID)
 
   switch( subTabID )
   {
-    case GeometryTabController::PREVIEW:
+    case GeometryTabController::VIEW:
     {
       doc->closeSidebar();
       break;
