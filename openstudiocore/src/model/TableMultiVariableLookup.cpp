@@ -672,8 +672,8 @@ namespace detail {
 
   double TableMultiVariableLookup_Impl::evaluate(const std::vector<double>& x) const
   {
-    LOG(Info, "Curve evaluation isn't implemented for TableMultiVariableLookup");
-    return -990.0;
+    LOG(Warn, "Curve evaluation isn't implemented for TableMultiVariableLookup");
+    return -9999.0;
   }
 
   bool TableMultiVariableLookup_Impl::addPoint(const std::vector<double> & t_xValues, double t_yValue)
