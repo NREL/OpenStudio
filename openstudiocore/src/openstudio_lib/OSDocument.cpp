@@ -170,9 +170,12 @@ namespace openstudio {
 
     openstudio::path modelTempDir;
     if (!m_savePath.isEmpty()){
-      modelTempDir = model::initializeModel(*model, toPath(m_savePath));
+      auto p = toPath(m_savePath);
+      modelTempDir = model::initializeModel(*model, p);
+      m_mainWindow->setWindowTitle(toQString(p.filename()) + "[*]");
     } else{
       modelTempDir = model::initializeModel(*model);
+      m_mainWindow->setWindowTitle("Untitled[*]");
     }
     m_modelTempDir = toQString(modelTempDir);
 
@@ -1738,11 +1741,17 @@ namespace openstudio {
 
   void OSDocument::updateWindowFilePath()
   {
-    if (m_savePath.isEmpty()){
-      m_mainWindow->setWindowFilePath("Untitled");
+    if( m_savePath.isEmpty() ) {
+      // Because we use the setWindowModified, we need to set the WindowTitle with a "[*]" placeholder where the '*' should appear
+      // m_mainWindow->setWindowFilePath("Untitled");
+      m_mainWindow->setWindowTitle("Untitled[*]");
     }
     else{
+      // m_mainWindow->setWindowTitle();
       m_mainWindow->setWindowFilePath(m_savePath);
+      QFileInfo fi(m_savePath);
+      QString fileName = fi.fileName();
+      m_mainWindow->setWindowTitle(fileName +"[*]");
     }
   }
 
