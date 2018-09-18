@@ -992,22 +992,7 @@ namespace openstudio {
       // relative weather file path
       epwPathAbsolute = false;
 
-      if (!m_savePath.isEmpty()){
-        openstudio::path osmPath = toPath(m_savePath);
-        openstudio::path searchResourcesDir = osmPath.parent_path() / osmPath.stem();
-        openstudio::path searchFilesDir = osmPath.parent_path() / toPath("files") / osmPath.stem();
-
-        epwInUserPath = searchResourcesDir / *weatherFilePath;
-        if (boost::filesystem::exists(epwInUserPath)){
-          epwInUserPathChecksum = checksum(epwInUserPath);
-        } else{
-          epwInUserPath = searchFilesDir / *weatherFilePath;
-          if (boost::filesystem::exists(epwInUserPath)){
-            epwInUserPathChecksum = checksum(epwInUserPath);
-          }
-        }
-      }
-
+      // Look in temp model "resources" and "resources/files"
       epwInTempPath = tempResourcesDir / *weatherFilePath;
       if (boost::filesystem::exists(epwInTempPath)){
         epwInTempPathChecksum = checksum(epwInTempPath);
@@ -1015,6 +1000,28 @@ namespace openstudio {
         epwInTempPath = tempFilesDir / *weatherFilePath;
         if (boost::filesystem::exists(epwInTempPath)){
           epwInTempPathChecksum = checksum(epwInTempPath);
+        }
+      }
+
+      if (!m_savePath.isEmpty()){
+        // We look where the actual model is saved on disk (non temp folder)
+        // eg: /path/to/model.osm
+        openstudio::path osmPath = toPath(m_savePath);
+        // eg: /path/to/model/
+        openstudio::path searchCompanionDir = getCompanionFolder(osmPath);
+        // eg: /path/to/model/files/
+        openstudio::path searchFilesDir = searchCompanionDir / toPath("files");
+
+        // Expected location is companion_folder/files
+        epwInUserPath = searchFilesDir / *weatherFilePath;
+        if (boost::filesystem::exists(epwInUserPath)){
+          epwInUserPathChecksum = checksum(epwInUserPath);
+        } else{
+          // Just in case, we look in the companion_folder
+          epwInUserPath = searchCompanionDir / *weatherFilePath;
+          if (boost::filesystem::exists(epwInUserPath)){
+            epwInUserPathChecksum = checksum(epwInUserPath);
+          }
         }
       }
 

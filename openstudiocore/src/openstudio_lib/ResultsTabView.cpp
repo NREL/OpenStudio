@@ -45,6 +45,7 @@
 #include <QWebEnginePage>
 #include <QWebEngineSettings>
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 
@@ -59,8 +60,9 @@ ResultsTabView::ResultsTabView(const QString & tabLabel,
 
   auto savePath = OSAppBase::instance()->currentDocument()->savePath();
   if( ! savePath.isEmpty() ) {
-    openstudio::path runPath = toPath(savePath).parent_path() / toPath(savePath).stem() / openstudio::toPath("run");
-    openstudio::path reportsPath = toPath(savePath).parent_path() / toPath(savePath).stem() / openstudio::toPath("reports");
+    openstudio::path companionFolder = getCompanionFolder( toPath(savePath) );
+    openstudio::path runPath = companionFolder / toPath("run");
+    openstudio::path reportsPath = companionFolder / toPath("reports");
     m_resultsView->searchForExistingResults(runPath, reportsPath);
   }
 }
