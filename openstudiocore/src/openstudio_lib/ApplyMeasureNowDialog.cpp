@@ -715,7 +715,7 @@ void DataPointJobItemView::update(const BCLMeasure & bclMeasure, const boost::op
     }
 
     std::vector<std::string> infos = result->stepInfo();
-    m_dataPointJobHeaderView->setNumWarnings(infos.size());
+    // m_dataPointJobHeaderView->setNumInfos(infos.size());
     for (const std::string& info : infos){
       m_dataPointJobContentView->addInfoMessage(info);
     }
