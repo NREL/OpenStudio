@@ -231,7 +231,8 @@ struct ModelObjectNameSorter{
 
     Q_FOREACH(QString field, fields){
       if (field == IDEALAIRLOADS){
-        addCheckBoxColumn(Heading(QString(IDEALAIRLOADS), true, false),
+        // We add the "Apply Selected" button to this column by passing 3rd arg, t_showColumnButton=true
+        addCheckBoxColumn(Heading(QString(IDEALAIRLOADS), true, true),
           std::string("Check to enable ideal air loads."),
           NullAdapter(&model::ThermalZone::useIdealAirLoads),
           NullAdapter(&model::ThermalZone::setUseIdealAirLoads));
