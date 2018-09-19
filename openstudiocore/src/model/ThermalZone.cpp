@@ -2386,7 +2386,12 @@ namespace detail {
       tz.setZoneControlContaminantController(controllerClone);
     }
 
-    // Note: rendering color is already handled via the fact that it's a children
+    // Note: Even though rendering color is a children, ParentObject::clone isn't called by HVACComponent::clone
+    // So we need to explicitly clone the rendering color
+    if( auto t_color = renderingColor() ) {
+      auto colorClone = t_color->clone(model).cast<RenderingColor>();
+      tz.setRenderingColor(colorClone);
+    }
 
     // DLM: do not clone zone mixing objects
 
