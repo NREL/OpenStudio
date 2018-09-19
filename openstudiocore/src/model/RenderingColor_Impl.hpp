@@ -31,12 +31,13 @@
 #define MODEL_RENDERINGCOLOR_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ResourceObject_Impl.hpp"
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
 class RenderingColor;
+class ParentObject;
 
 namespace detail {
 

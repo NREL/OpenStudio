@@ -29,6 +29,8 @@
 
 #include "RenderingColor.hpp"
 #include "RenderingColor_Impl.hpp"
+#include "ParentObject.hpp"
+#include "ParentObject_Impl.hpp"
 
 #include <utilities/idd/OS_Rendering_Color_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
