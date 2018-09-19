@@ -274,6 +274,11 @@ namespace detail {
 
   bool SpaceType_Impl::setRenderingColor(const RenderingColor& renderingColor)
   {
+    if (renderingColor.parent() ) {
+      LOG(Warn, "Cannot set RenderingColor '" << renderingColor.nameString()
+             << "' to SpaceType '" << this->nameString() << "' since RenderingColor already has a parent");
+      return false;
+    }
     return setPointer(OS_SpaceTypeFields::GroupRenderingName, renderingColor.handle());
   }
 

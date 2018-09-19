@@ -101,6 +101,11 @@ namespace detail {
 
   bool BuildingUnit_Impl::setRenderingColor(const RenderingColor& renderingColor)
   {
+    if (renderingColor.parent() ) {
+      LOG(Warn, "Cannot set RenderingColor '" << renderingColor.nameString()
+             << "' to BuildingUnit '" << this->nameString() << "' since RenderingColor already has a parent");
+      return false;
+    }
     return setPointer(OS_BuildingUnitFields::RenderingColor, renderingColor.handle());
   }
 

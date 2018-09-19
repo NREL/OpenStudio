@@ -987,6 +987,11 @@ namespace detail {
 
   bool ThermalZone_Impl::setRenderingColor(const RenderingColor& renderingColor)
   {
+    if (renderingColor.parent() ) {
+      LOG(Warn, "Cannot set RenderingColor '" << renderingColor.nameString()
+             << "' to ThermalZone '" << this->nameString() << "' since RenderingColor already has a parent");
+      return false;
+    }
     return setPointer(OS_ThermalZoneFields::GroupRenderingName, renderingColor.handle());
   }
 
@@ -2381,10 +2386,7 @@ namespace detail {
       tz.setZoneControlContaminantController(controllerClone);
     }
 
-    if( auto t_color = renderingColor() ) {
-      auto colorClone = t_color->clone(model).cast<RenderingColor>();
-      tz.setRenderingColor(colorClone);
-    }
+    // Note: rendering color is already handled via the fact that it's a children
 
     // DLM: do not clone zone mixing objects
 

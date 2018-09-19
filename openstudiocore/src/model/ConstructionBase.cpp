@@ -219,7 +219,12 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<RenderingColor>(this->renderingColorIndex());
   }
 
-  bool ConstructionBase_Impl::setRenderingColor(const RenderingColor& renderingColor){
+  bool ConstructionBase_Impl::setRenderingColor(const RenderingColor& renderingColor) {
+    if (renderingColor.parent() ) {
+      LOG(Warn, "Cannot set RenderingColor '" << renderingColor.nameString()
+             << "' to Construction '" << this->nameString() << "' since RenderingColor already has a parent");
+      return false;
+    }
     return setPointer(this->renderingColorIndex(), renderingColor.handle());
   }
 

@@ -179,6 +179,11 @@ namespace detail {
 
   bool BuildingStory_Impl::setRenderingColor(const RenderingColor& renderingColor)
   {
+    if (renderingColor.parent() ) {
+      LOG(Warn, "Cannot set RenderingColor '" << renderingColor.nameString()
+             << "' to BuildingStory '" << this->nameString() << "' since RenderingColor already has a parent");
+      return false;
+    }
     return setPointer(OS_BuildingStoryFields::GroupRenderingName, renderingColor.handle());
   }
 
