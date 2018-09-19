@@ -50,6 +50,13 @@ class ShadingControl;
 }
 }
 
+// templates
+// std::vector<std::pair<std::vector<double>,double> >
+%template(TableMultiVariableLookupPointCoordinates) std::vector<double>;
+%template(TableMultiVariableLookupPoint) std::pair<std::vector<double>,double>;
+%template(TableMultiVariableLookupPointVector) std::vector<std::pair<std::vector<double>,double> >;
+
+
 MODELOBJECT_TEMPLATES(ScheduleInterval);
 MODELOBJECT_TEMPLATES(ScheduleFixedInterval);
 MODELOBJECT_TEMPLATES(ExternalFile);
