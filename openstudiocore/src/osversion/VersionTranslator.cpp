@@ -4136,6 +4136,9 @@ std::string VersionTranslator::update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, c
           ss << newObject;
           ss << newColor;
 
+        } else {
+          // No problem, keep object as is
+          ss << object;
         }
      }
   };
