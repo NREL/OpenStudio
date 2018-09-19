@@ -4099,6 +4099,48 @@ std::string VersionTranslator::update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, c
   IdfFile targetIdf(idd_2_6_2.iddFile());
   ss << targetIdf.versionObject().get();
 
+  // We want to enforce that each rendering color has only 0 or 1 parent
+  // Use a set to check if we have already encountered this rendering color
+  std::set<std::string> renderingColorHandlesSet;
+
+  // Lambda to create a new rendering color and assign it to the object
+  auto enforceRenderingColor = [this, &renderingColorHandlesSet, &idd_2_6_2, &ss]
+    (std::string& iddname, const IdfObject& object, int renderingColorIndex) {
+      std::pair<std::set<std::string>::iterator, bool> ret;
+      auto value = object.getString(renderingColorIndex);
+      if (value) {
+        ret = renderingColorHandlesSet.insert(*value);
+        if (!ret.second) {
+          // Insertion failed: means it was already present, we need to create a new renderingcolor
+          IdfObject newColor(idd_2_6_2.getObject("OS:Rendering:Color").get());
+          IdfObject newObject(idd_2_6_2.getObject(iddname).get());
+
+          for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+            if( auto value = object.getString(i) ) {
+                newObject.setString(i,value.get());
+            }
+          }
+
+          for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
+            IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();
+            for ( size_t i = 0; i < eg.numFields(); ++i ) {
+              if ( auto value = eg.getString(i) ) {
+                new_eg.setString(i, value.get());
+              }
+            }
+          }
+
+          newObject.setString(renderingColorIndex, toString(newColor.handle()));
+          m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newObject) );
+          m_new.push_back(newColor);
+          ss << newObject;
+          ss << newColor;
+
+        }
+     }
+  };
+
+
   for (const IdfObject& object : idf_2_6_1.objects()) {
     auto iddname = object.iddObject().name();
 
@@ -4138,8 +4180,8 @@ std::string VersionTranslator::update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, c
       IdfObject newObject(iddObject.get());
 
       for( size_t i = 0; i < object.numFields(); ++i ) {
-		    auto value = object.getString(i);
-			  if (value) {
+        auto value = object.getString(i);
+        if (value) {
           if (i < 3) {
             // Handle
             newObject.setString(i, value.get());
@@ -4152,6 +4194,37 @@ std::string VersionTranslator::update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, c
 
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
+
+    } else if (iddname == "OS:BuildingStory" ) {
+       int renderingColorIndex = 6;
+       enforceRenderingColor(iddname, object, renderingColorIndex);
+    } else if (iddname == "OS:BuildingUnit") {
+      int renderingColorIndex = 2;
+      enforceRenderingColor(iddname, object, renderingColorIndex);
+
+    } else if (iddname == "OS:Construction") {
+      int renderingColorIndex = 2;
+      enforceRenderingColor(iddname, object, renderingColorIndex);
+    } else if (iddname == "OS:Construction:CfactorUndergroundWall") {
+      int renderingColorIndex = 4;
+      enforceRenderingColor(iddname, object, renderingColorIndex);
+
+    } else if (iddname == "OS:Construction:FfactorGroundFloor") {
+      int renderingColorIndex = 5;
+      enforceRenderingColor(iddname, object, renderingColorIndex);
+    } else if (iddname == "OS:Construction:InternalSource") {
+      int renderingColorIndex = 6;
+      enforceRenderingColor(iddname, object, renderingColorIndex);
+    } else if (iddname == "OS:Construction:WindowDataFile") {
+      int renderingColorIndex = 3;
+      enforceRenderingColor(iddname, object, renderingColorIndex);
+
+    } else if (iddname == "OS:SpaceType") {
+      int renderingColorIndex = 4;
+      enforceRenderingColor(iddname, object, renderingColorIndex);
+    } else if (iddname == "OS:ThermalZone") {
+      int renderingColorIndex = 18;
+      enforceRenderingColor(iddname, object, renderingColorIndex);
 
     } else {
       ss << object;
