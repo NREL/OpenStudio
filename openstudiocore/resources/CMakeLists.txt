@@ -94,6 +94,7 @@ set(ENERGYPLUS_OUTPUTS "")
 
 set(model_resources_src
   model/OpenStudio.idd
+  model/schedulefile.csv
 )
 
 

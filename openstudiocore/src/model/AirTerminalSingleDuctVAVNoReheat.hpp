@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -74,14 +75,19 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
   boost::optional<std::string> zoneMinimumAirFlowInputMethod() const;
 
   boost::optional<double> constantMinimumAirFlowFraction() const;
-
+  bool isConstantMinimumAirFlowFractionAutosized() const;
   bool isConstantMinimumAirFlowFractionDefaulted() const;
 
   boost::optional<double> fixedMinimumAirFlowRate() const;
-
+  bool isFixedMinimumAirFlowRateAutosized() const;
   bool isFixedMinimumAirFlowRateDefaulted() const;
 
   boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
+
+  /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
+    * with the terminal's zone on export to EnergyPlus idf format.
+    * This field replaces the functionality of the EnergyPlus field: Design Specification Outdoor Air Object Name.*/
+  bool controlForOutdoorAir() const;
 
   //@}
   /** @name Setters */
@@ -100,21 +106,17 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
   void resetZoneMinimumAirFlowInputMethod();
 
   bool setConstantMinimumAirFlowFraction(double constantMinimumAirFlowFraction);
-
+  void autosizeConstantMinimumAirFlowFraction();
   void resetConstantMinimumAirFlowFraction();
 
   bool setFixedMinimumAirFlowRate(double fixedMinimumAirFlowRate);
-
+  void autosizeFixedMinimumAirFlowRate();
   void resetFixedMinimumAirFlowRate();
+
 
   bool setMinimumAirFlowFractionSchedule(Schedule& schedule);
 
   void resetMinimumAirFlowFractionSchedule();
-
-  /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
-    * with the terminal's zone on export to EnergyPlus idf format.
-    * This field replaces the functionality of the EnergyPlus field: Design Specification Outdoor Air Object Name.*/
-  bool controlForOutdoorAir() const;
 
   bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
@@ -122,9 +124,9 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
   /** @name Other */
   //@{
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const ;
-
-
+  boost::optional<double> autosizedMaximumAirFlowRate() const;
+  boost::optional<double> autosizedConstantMinimumAirFlowFraction() const;
+  boost::optional<double> autosizedFixedMinimumAirFlowRate() const;
 
   //@}
  protected:

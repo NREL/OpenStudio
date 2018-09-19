@@ -2792,6 +2792,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(ExteriorFuelEquipmentDefinition);
   REGISTER_CONSTRUCTOR(ExteriorWaterEquipment);
   REGISTER_CONSTRUCTOR(ExteriorWaterEquipmentDefinition);
+  REGISTER_CONSTRUCTOR(ExternalFile);
   REGISTER_CONSTRUCTOR(ExternalInterface);
   REGISTER_CONSTRUCTOR(ExternalInterfaceActuator);
   REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitExportFromVariable);
@@ -2927,6 +2928,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(ScheduleCompact);
   REGISTER_CONSTRUCTOR(ScheduleConstant);
   REGISTER_CONSTRUCTOR(ScheduleDay);
+  REGISTER_CONSTRUCTOR(ScheduleFile);
   REGISTER_CONSTRUCTOR(ScheduleFixedInterval);
   REGISTER_CONSTRUCTOR(ScheduleTypeLimits);
   REGISTER_CONSTRUCTOR(ScheduleVariableInterval);
@@ -3269,6 +3271,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(ExteriorFuelEquipmentDefinition);
   REGISTER_COPYCONSTRUCTORS(ExteriorWaterEquipment);
   REGISTER_COPYCONSTRUCTORS(ExteriorWaterEquipmentDefinition);
+  REGISTER_COPYCONSTRUCTORS(ExternalFile);
   REGISTER_COPYCONSTRUCTORS(ExternalInterface);
   REGISTER_COPYCONSTRUCTORS(ExternalInterfaceActuator);
   REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitExportFromVariable);
@@ -3405,6 +3408,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(ScheduleConstant);
   REGISTER_COPYCONSTRUCTORS(ScheduleDay);
   REGISTER_COPYCONSTRUCTORS(ScheduleFixedInterval);
+  REGISTER_COPYCONSTRUCTORS(ScheduleFile);
   REGISTER_COPYCONSTRUCTORS(ScheduleTypeLimits);
   REGISTER_COPYCONSTRUCTORS(ScheduleVariableInterval);
   REGISTER_COPYCONSTRUCTORS(ScheduleRule);
