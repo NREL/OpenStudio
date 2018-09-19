@@ -836,29 +836,46 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
 TEST_F(ModelFixture, ThermalZone_RenderingColor) {
   Model m;
 
-  ThermalZone thermalZone(m);
-  RenderingColor renderingColor(m);
-  EXPECT_TRUE(thermalZone.setRenderingColor(renderingColor));
+  {
+    ThermalZone thermalZone(m);
+    RenderingColor renderingColor(m);
+    EXPECT_TRUE(thermalZone.setRenderingColor(renderingColor));
 
-  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+    EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
 
-  // Delete ThermalZone, since the color is referenced, it should be deleted too
-  EXPECT_EQ(3u, thermalZone.remove().size()); // Zone + ZoneHVACEquipmentList + Color
-  EXPECT_EQ(0u, m.getModelObjects<ThermalZone>().size());
-  EXPECT_EQ(0u, m.getModelObjects<RenderingColor>().size());
+    // Delete ThermalZone, since the color is referenced, it should be deleted too
+    EXPECT_EQ(3u, thermalZone.remove().size()); // Zone + ZoneHVACEquipmentList + Color
+    EXPECT_EQ(0u, m.getModelObjects<ThermalZone>().size());
+    EXPECT_EQ(0u, m.getModelObjects<RenderingColor>().size());
+  }
 
+  {
+    ThermalZone thermalZone(m);
+    RenderingColor renderingColor(m);
+    EXPECT_TRUE(thermalZone.setRenderingColor(renderingColor));
 
-  // Clone
-  ThermalZone thermalZone2(m);
-  RenderingColor renderingColor2(m);
-  EXPECT_TRUE(thermalZone2.setRenderingColor(renderingColor2));
+    // Test clone
+    ModelObject mo = thermalZone.clone(m);
+    EXPECT_EQ(2u, m.getModelObjects<ThermalZone>().size());
+    EXPECT_EQ(2u, m.getModelObjects<RenderingColor>().size());
 
-  thermalZone2.clone(m);
-  EXPECT_EQ(2u, m.getModelObjects<ThermalZone>().size());
-  EXPECT_EQ(2u, m.getModelObjects<RenderingColor>().size());
+    ThermalZone thermalZoneClone = mo.cast<ThermalZone>();
+    EXPECT_NE(thermalZone.handle(), thermalZoneClone.handle());
+    boost::optional<RenderingColor> _r = thermalZoneClone.renderingColor();
+    ASSERT_TRUE(_r);
+    RenderingColor renderingColor2 = _r.get();
+    EXPECT_NE(renderingColor.handle(), renderingColor2.handle());
 
-  EXPECT_EQ(3u, thermalZone2.remove().size()); // Zone + ZoneHVACEquipmentList + Color
-  EXPECT_EQ(1u, m.getModelObjects<ThermalZone>().size());
-  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+    // Enforce 0 or 1 parent only
+    // This should return false, and nothing done
+    EXPECT_FALSE(thermalZone.setRenderingColor(renderingColor2));
+    // That means thermalZone still has its original rendering color
+    ASSERT_TRUE(thermalZone.renderingColor());
+    EXPECT_EQ(renderingColor.handle(), thermalZone.renderingColor()->handle());
+
+    // Test remove, clone should get remove with its rendering color
+    EXPECT_EQ(3u, thermalZoneClone.remove().size());
+    EXPECT_EQ(1u, m.getModelObjects<ThermalZone>().size());
+    EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+  }
 }
-

@@ -68,34 +68,49 @@ TEST_F(ModelFixture,BuildingStory_NominalFloortoFloorHeight) {
   EXPECT_NEAR(value, *result, 1.0E-8);
 }
 
-
 TEST_F(ModelFixture, BuildingStory_RenderingColor) {
   Model m;
 
-  BuildingStory buildingStory(m);
-  RenderingColor renderingColor(m);
-  EXPECT_TRUE(buildingStory.setRenderingColor(renderingColor));
+  {
+    BuildingStory buildingStory(m);
+    RenderingColor renderingColor(m);
+    EXPECT_TRUE(buildingStory.setRenderingColor(renderingColor));
 
-  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+    EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
 
-  // Delete BuildingStory, since the color is referenced, it should be deleted too
-  EXPECT_EQ(2u, buildingStory.remove().size());
-  EXPECT_EQ(0u, m.getModelObjects<BuildingStory>().size());
-  EXPECT_EQ(0u, m.getModelObjects<RenderingColor>().size());
+    // Delete BuildingStory, since the color is referenced, it should be deleted too
+    EXPECT_EQ(2u, buildingStory.remove().size());
+    EXPECT_EQ(0u, m.getModelObjects<BuildingStory>().size());
+    EXPECT_EQ(0u, m.getModelObjects<RenderingColor>().size());
+  }
 
+  {
+    BuildingStory buildingStory(m);
+    RenderingColor renderingColor(m);
+    EXPECT_TRUE(buildingStory.setRenderingColor(renderingColor));
 
-  // Clone
-  BuildingStory buildingStory2(m);
-  RenderingColor renderingColor2(m);
-  EXPECT_TRUE(buildingStory2.setRenderingColor(renderingColor2));
+    // Test clone
+    ModelObject mo = buildingStory.clone(m);
+    EXPECT_EQ(2u, m.getModelObjects<BuildingStory>().size());
+    EXPECT_EQ(2u, m.getModelObjects<RenderingColor>().size());
 
-  buildingStory2.clone(m);
-  EXPECT_EQ(2u, m.getModelObjects<BuildingStory>().size());
-  EXPECT_EQ(2u, m.getModelObjects<RenderingColor>().size());
+    BuildingStory buildingStoryClone = mo.cast<BuildingStory>();
+    EXPECT_NE(buildingStory.handle(), buildingStoryClone.handle());
+    boost::optional<RenderingColor> _r = buildingStoryClone.renderingColor();
+    ASSERT_TRUE(_r);
+    RenderingColor renderingColor2 = _r.get();
+    EXPECT_NE(renderingColor.handle(), renderingColor2.handle());
 
-  EXPECT_EQ(2u, buildingStory2.remove().size());
-  EXPECT_EQ(1u, m.getModelObjects<BuildingStory>().size());
-  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+    // Enforce 0 or 1 parent only
+    // This should return false, and nothing done
+    EXPECT_FALSE(buildingStory.setRenderingColor(renderingColor2));
+    // That means buildingStory still has its original rendering color
+    ASSERT_TRUE(buildingStory.renderingColor());
+    EXPECT_EQ(renderingColor.handle(), buildingStory.renderingColor()->handle());
+
+    // Test remove, clone should get remove with its rendering color
+    EXPECT_EQ(2u, buildingStoryClone.remove().size());
+    EXPECT_EQ(1u, m.getModelObjects<BuildingStory>().size());
+    EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+  }
 }
-
-

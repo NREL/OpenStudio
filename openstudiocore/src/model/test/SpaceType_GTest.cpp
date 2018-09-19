@@ -311,28 +311,46 @@ TEST_F(ModelFixture, SpaceType_Clone_Plenum) {
 TEST_F(ModelFixture, SpaceType_RenderingColor) {
   Model m;
 
-  SpaceType spaceType(m);
-  RenderingColor renderingColor(m);
-  EXPECT_TRUE(spaceType.setRenderingColor(renderingColor));
+  {
+    SpaceType spaceType(m);
+    RenderingColor renderingColor(m);
+    EXPECT_TRUE(spaceType.setRenderingColor(renderingColor));
 
-  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+    EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
 
-  // Delete SpaceType, since the color is referenced, it should be deleted too
-  EXPECT_EQ(2u, spaceType.remove().size());
-  EXPECT_EQ(0u, m.getModelObjects<SpaceType>().size());
-  EXPECT_EQ(0u, m.getModelObjects<RenderingColor>().size());
+    // Delete SpaceType, since the color is referenced, it should be deleted too
+    EXPECT_EQ(2u, spaceType.remove().size());
+    EXPECT_EQ(0u, m.getModelObjects<SpaceType>().size());
+    EXPECT_EQ(0u, m.getModelObjects<RenderingColor>().size());
+  }
 
+  {
+    SpaceType spaceType(m);
+    RenderingColor renderingColor(m);
+    EXPECT_TRUE(spaceType.setRenderingColor(renderingColor));
 
-  // Clone
-  SpaceType spaceType2(m);
-  RenderingColor renderingColor2(m);
-  EXPECT_TRUE(spaceType2.setRenderingColor(renderingColor2));
+    // Test clone
+    ModelObject mo = spaceType.clone(m);
+    EXPECT_EQ(2u, m.getModelObjects<SpaceType>().size());
+    EXPECT_EQ(2u, m.getModelObjects<RenderingColor>().size());
 
-  spaceType2.clone(m);
-  EXPECT_EQ(2u, m.getModelObjects<SpaceType>().size());
-  EXPECT_EQ(2u, m.getModelObjects<RenderingColor>().size());
+    SpaceType spaceTypeClone = mo.cast<SpaceType>();
+    EXPECT_NE(spaceType.handle(), spaceTypeClone.handle());
+    boost::optional<RenderingColor> _r = spaceTypeClone.renderingColor();
+    ASSERT_TRUE(_r);
+    RenderingColor renderingColor2 = _r.get();
+    EXPECT_NE(renderingColor.handle(), renderingColor2.handle());
 
-  EXPECT_EQ(2u, spaceType2.remove().size());
-  EXPECT_EQ(1u, m.getModelObjects<SpaceType>().size());
-  EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+    // Enforce 0 or 1 parent only
+    // This should return false, and nothing done
+    EXPECT_FALSE(spaceType.setRenderingColor(renderingColor2));
+    // That means spaceType still has its original rendering color
+    ASSERT_TRUE(spaceType.renderingColor());
+    EXPECT_EQ(renderingColor.handle(), spaceType.renderingColor()->handle());
+
+    // Test remove, clone should get remove with its rendering color
+    EXPECT_EQ(2u, spaceTypeClone.remove().size());
+    EXPECT_EQ(1u, m.getModelObjects<SpaceType>().size());
+    EXPECT_EQ(1u, m.getModelObjects<RenderingColor>().size());
+  }
 }
