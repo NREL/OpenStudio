@@ -31,6 +31,17 @@
 #include "RenderingColor_Impl.hpp"
 #include "ParentObject.hpp"
 #include "ParentObject_Impl.hpp"
+#include "Model.hpp"
+#include "BuildingStory.hpp"
+#include "BuildingStory_Impl.hpp"
+#include "BuildingUnit.hpp"
+#include "BuildingUnit_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 
 #include <utilities/idd/OS_Rendering_Color_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -102,6 +113,25 @@ namespace detail {
       result = parents[0];
     } else if (!parents.empty()) {
       result = parents[0];
+    }
+    return result;
+  }
+
+  bool RenderingColor_Impl::setParent(ParentObject& newParent) {
+    bool result = false;
+    RenderingColor mo_color = this->getObject<RenderingColor>();
+    if (newParent.model() == model()) {
+      if (auto mo = newParent.optionalCast<BuildingStory>()) {
+        result = mo->setRenderingColor(mo_color);
+      } else if (auto mo = newParent.optionalCast<BuildingUnit>()) {
+        result = mo->setRenderingColor(mo_color);
+      } else if (auto mo = newParent.optionalCast<ConstructionBase>()) {
+        result = mo->setRenderingColor(mo_color);
+      } else if (auto mo = newParent.optionalCast<SpaceType>()) {
+        result = mo->setRenderingColor(mo_color);
+      } else if (auto mo = newParent.optionalCast<ThermalZone>()) {
+        result = mo->setRenderingColor(mo_color);
+      }
     }
     return result;
   }

@@ -69,7 +69,9 @@ namespace detail {
     virtual boost::optional<ParentObject> parent() const override;
 
     // set the parent, child may have to call methods on the parent
-    // virtual bool setParent(ParentObject& newParent) override;
+    // Will be used during the cloning of any ParentObject that has a RenderingColor to automatically set things up
+    // It will basically automatically call objectClone.setRenderingColor(renderingColorClone)
+    virtual bool setParent(ParentObject& newParent) override;
 
     /** @name Getters */
     //@{
