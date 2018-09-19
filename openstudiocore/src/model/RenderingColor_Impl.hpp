@@ -64,6 +64,12 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    // return the parent object in the hierarchy
+    virtual boost::optional<ParentObject> parent() const override;
+
+    // set the parent, child may have to call methods on the parent
+    // virtual bool setParent(ParentObject& newParent) override;
+
     /** @name Getters */
     //@{
 

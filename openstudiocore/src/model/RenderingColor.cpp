@@ -92,6 +92,18 @@ namespace detail {
     return RenderingColor::iddObjectType();
   }
 
+  boost::optional<ParentObject> RenderingColor_Impl::parent() const {
+    boost::optional<ParentObject> result;
+    ParentObjectVector parents = getObject<RenderingColor>().getModelObjectSources<ParentObject>();
+    if (parents.size() > 1u) {
+      LOG(Error,"This RenderingColor, " << nameString() << " has multiple parents. Returning the first.");
+      result = parents[0];
+    } else if (!parents.empty()) {
+      result = parents[0];
+    }
+    return result;
+  }
+
   int RenderingColor_Impl::renderingRedValue() const {
     boost::optional<int> value = getInt(OS_Rendering_ColorFields::RenderingRedValue,true);
     OS_ASSERT(value);
