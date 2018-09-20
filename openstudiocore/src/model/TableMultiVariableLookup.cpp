@@ -728,7 +728,6 @@ namespace detail {
       OS_ASSERT(d);
       double yValue = d.get();
 
-      // TODO: this should be SWIG'ed properly
       std::pair<std::vector<double>,double> p = std::pair<std::vector<double>,double>(xValues,yValue);
       result.push_back(p);
     }
