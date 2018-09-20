@@ -69,7 +69,7 @@ class EMSInspectorActuator : public QWidget {
 
   public:
 
-  EMSInspectorActuator(const model::EMSActuatorNames & names, const model::ModelObject & modelObject) : 
+  EMSInspectorActuator(const model::EMSActuatorNames & names, const model::ModelObject & modelObject) :
     QWidget(),
     m_names(names),
     m_modelObject(modelObject)
@@ -115,12 +115,12 @@ class EMSInspectorActuator : public QWidget {
       }
     } else {
       for( auto & actuator : actuators ) {
-        std::cout << "m_names.controlTypeName: " << m_names.controlTypeName() << std::endl;
-        std::cout << "m_names.componentTypeName: " << m_names.componentTypeName() << std::endl;
-        std::cout << "actuator.actuatedComponentControlType: " << actuator.actuatedComponentControlType() << std::endl;
-        std::cout << "actuator.actuatedComponentType: " << actuator.actuatedComponentType() << std::endl;
+        // std::cout << "m_names.controlTypeName: " << m_names.controlTypeName() << std::endl;
+        // std::cout << "m_names.componentTypeName: " << m_names.componentTypeName() << std::endl;
+        // std::cout << "actuator.actuatedComponentControlType: " << actuator.actuatedComponentControlType() << std::endl;
+        // std::cout << "actuator.actuatedComponentType: " << actuator.actuatedComponentType() << std::endl;
         if( m_isMatchingActuator(actuator) ) {
-          std::cout << "removing" << std::endl;
+          // std::cout << "removing" << std::endl;
           actuator.remove();
         }
       }
@@ -138,7 +138,7 @@ class EMSInspectorSensor : public QWidget {
 
   public:
 
-  EMSInspectorSensor(const std::string & name, const model::ModelObject & modelObject) : 
+  EMSInspectorSensor(const std::string & name, const model::ModelObject & modelObject) :
     QWidget(),
     m_name(name),
     m_modelObject(modelObject)
@@ -199,7 +199,7 @@ class EMSInspectorSensor : public QWidget {
   model::ModelObject m_modelObject;
 };
 
-EMSInspectorView::EMSInspectorView(QWidget* parent, EMSInspectorView::Type type) : 
+EMSInspectorView::EMSInspectorView(QWidget* parent, EMSInspectorView::Type type) :
   QWidget(parent),
   m_type(type)
 {
