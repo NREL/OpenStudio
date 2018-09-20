@@ -144,6 +144,27 @@ int main(int argc, char *argv[])
     openstudio::Logger::instance().standardOutLogger().setLogLevel(Warn);
   }
 
+  // JM; set this environment variable to log to that path, eg: '/home/julien/OpenStudioApp.log'
+  // Note to *Nix users: don't do it in bash_profile
+  // macOS: see https://stackoverflow.com/questions/25385934/setting-environment-variables-via-launchd-conf-no-longer-works-in-os-x-yosemite
+  // ubuntu: /etc/environment
+  if( qEnvironmentVariableIsSet("OPENSTUDIO_APPLICATION_LOGFILE_PATH") ) {
+    QString logFileQString(qgetenv("OPENSTUDIO_APPLICATION_LOGFILE_PATH"));
+    openstudio::FileLogSink logFile = openstudio::FileLogSink(openstudio::toPath(logFileQString));
+    if( debugging ) {
+      logFile.setLogLevel(Debug);
+    } else {
+      logFile.setLogLevel(Warn);
+    }
+  }
+
+  // Output content of argc/argv
+  LOG_FREE(Debug, "OpenStudioApp.main", "main received argc=" << argc << "arguments")
+  for (int i=0; i < argc; ++i) {
+    LOG_FREE(Debug, "OpenStudioApp.main", "Argument " << i << "=" << argv[i]);
+  }
+
+
   bool cont = true;
   while(cont) {
     cont = false;

@@ -73,8 +73,6 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   bool isDesignOutdoorAirFlowRateAutosized() const;
 
-  double minimumSystemAirFlowRatio() const;
-
   double preheatDesignTemperature() const;
 
   double preheatDesignHumidityRatio() const;
@@ -175,8 +173,6 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   void autosizeDesignOutdoorAirFlowRate();
 
-  bool setMinimumSystemAirFlowRatio(double minimumSystemAirFlowRatio);
-
   bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
   bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
@@ -271,7 +267,15 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   bool setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC);
 
+
+  boost::optional<double> centralHeatingMaximumSystemAirFlowRatio() const;
+  bool isCentralHeatingMaximumSystemAirFlowRatioAutosized() const;
+  bool setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
+  void autosizeCentralHeatingMaximumSystemAirFlowRatio();
+
   boost::optional<double> autosizedDesignOutdoorAirFlowRate() const ;
+
+  boost::optional<double> autosizedCentralHeatingMaximumSystemAirFlowRatio() const;
 
   boost::optional<double> autosizedCoolingDesignCapacity() const ;
 
