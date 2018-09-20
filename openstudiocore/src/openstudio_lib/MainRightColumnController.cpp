@@ -1002,12 +1002,12 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
   myModelList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump,"PTHP");
   myModelList->addModelObjectType(IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump,"Water To Air HP");
+  myModelList->addModelObjectType(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow,"VRF Terminal");
   myModelList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner,"PTAC");
   myModelList->addModelObjectType(IddObjectType::OS_ZoneHVAC_UnitHeater,"Unit Heater");
   myModelList->addModelObjectType(IddObjectType::OS_ZoneHVAC_UnitVentilator,"Unit Ventilator");
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition,"Water Use Equipment Definition");
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Connections,"Water Use Connections");
-  // For some reason, this doesn't suffice to pick up the WaterHeater:Mixed linked to a HeatPump:WaterHeater
   myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_Mixed, "Water Heater Mixed");
   myModelList->addModelObjectType(IddObjectType::OS_WaterHeater_Stratified, "Water Heater Stratified");
   myModelList->addModelObjectType(IddObjectType::OS_ThermalZone,"Thermal Zone");
@@ -1095,7 +1095,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_Pump_VariableSpeed,"Pump Variable Speed");
   libraryWidget->addModelObjectType(IddObjectType::OS_HeaderedPumps_VariableSpeed,"Pump Variable Speed Headered");
   libraryWidget->addModelObjectType(IddObjectType::OS_PlantComponent_TemperatureSource, "Plant Component - Temp Source");
-  libraryWidget->addModelObjectType(IddObjectType::OS_PlantComponent_UserDefined, "Plant Component - User Defined");  
+  libraryWidget->addModelObjectType(IddObjectType::OS_PlantComponent_UserDefined, "Plant Component - User Defined");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pipe_Outdoor, "Pipe - Outdoor");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pipe_Indoor, "Pipe - Indoor");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pipe_Adiabatic, "Pipe - Adiabatic");
