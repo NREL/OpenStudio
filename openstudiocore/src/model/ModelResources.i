@@ -11,7 +11,7 @@
 
 %{
   #include <model/ScheduleTypeRegistry.hpp>
-
+  #include <model/TableMultiVariableLookup.hpp>
   #include <QColor>
   #include <utilities/data/TimeSeries.hpp>
   #include <utilities/sql/SqlFile.hpp>
@@ -49,13 +49,6 @@ class ShadingControl;
 
 }
 }
-
-// templates
-// std::vector<std::pair<std::vector<double>,double> >
-%template(TableMultiVariableLookupPointCoordinates) std::vector<double>;
-%template(TableMultiVariableLookupPoint) std::pair<std::vector<double>,double>;
-%template(TableMultiVariableLookupPointVector) std::vector<std::pair<std::vector<double>,double> >;
-
 
 MODELOBJECT_TEMPLATES(ScheduleInterval);
 MODELOBJECT_TEMPLATES(ScheduleFixedInterval);
@@ -223,6 +216,7 @@ SWIG_MODELOBJECT(RenderingColor, 1);
 SWIG_MODELOBJECT(DesignSpecificationOutdoorAir, 1);
 
 %include <model/ScheduleTypeRegistry.hpp>
+#include <model/TableMultiVariableLookup.hpp>
 
 #endif
 

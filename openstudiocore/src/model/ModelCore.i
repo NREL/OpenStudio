@@ -124,6 +124,11 @@ class Node;
 %template(ScheduleTypeKey) std::pair<std::string,std::string>;
 %template(ScheduleTypeKeyVector) std::vector< std::pair<std::string,std::string> >;
 
+// std::vector<std::pair<std::vector<double>,double> > TableMultiVariableLookup::points
+// %template(DoubleVector) std::vector<double>; // already in utilities/core/CommonImport.i
+%template(TableMultiVariableLookupPoint) std::pair<std::vector<double>,double>;
+%template(TableMultiVariableLookupPointVector) std::vector<std::pair<std::vector<double>,double> >;
+
 // include initial objects
 %include <model/AccessPolicyStore.hpp>
 %include <model/ModelObject.hpp>
