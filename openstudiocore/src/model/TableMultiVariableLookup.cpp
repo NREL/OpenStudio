@@ -672,8 +672,7 @@ namespace detail {
 
   double TableMultiVariableLookup_Impl::evaluate(const std::vector<double>& x) const
   {
-    LOG(Info, "Curve evaluation isn't implemented for TableMultiVariableLookup");
-    return -990.0;
+    return 1.0;
   }
 
   bool TableMultiVariableLookup_Impl::addPoint(const std::vector<double> & t_xValues, double t_yValue)
@@ -728,7 +727,6 @@ namespace detail {
       OS_ASSERT(d);
       double yValue = d.get();
 
-      // TODO: this should be SWIG'ed properly
       std::pair<std::vector<double>,double> p = std::pair<std::vector<double>,double>(xValues,yValue);
       result.push_back(p);
     }
