@@ -668,7 +668,11 @@ class OptionalChoiceConceptImpl : public ChoiceConcept {
           // Oops, we forgot to update the choices
           this->choices();
         }
-        OS_ASSERT(m_choicesMap.find(result) != m_choicesMap.end());
+        // If editable, the user can add their own entry, so we don't necesarilly except to find it
+        // If not editable, it should be found in the list of choices
+        if( !this->editable() ) {
+          OS_ASSERT(m_choicesMap.find(result) != m_choicesMap.end());
+        }
       }
     }
     return result;
