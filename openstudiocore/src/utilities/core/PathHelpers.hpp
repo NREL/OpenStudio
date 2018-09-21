@@ -87,6 +87,14 @@ UTILITIES_API path relocatePath(const path& originalPath,
                                 const path& originalBase,
                                 const path& newBase);
 
+/* Given the path to an OSM file, get the companion folder in which files, measures, etc, are stored
+ * eg if /path/to/model.osm, returns the folder /path/to/model/ */
+UTILITIES_API path getCompanionFolder(const path& osmPath);
+
+/* Given the path to a **directory**, return the name of the last level directory
+ * eg if /path/to/folder, returns 'folder' */
+UTILITIES_API path getLastLevelDirectoryName(const path& directory);
+
 /** Print information about path p available through openstudio::filesystem. */
 UTILITIES_API std::ostream& printPathInformation(std::ostream& os,const path& p);
 

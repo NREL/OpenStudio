@@ -672,7 +672,8 @@ namespace detail {
 
   double TableMultiVariableLookup_Impl::evaluate(const std::vector<double>& x) const
   {
-    return 1.0;
+    LOG(Warn, "Curve evaluation isn't implemented for TableMultiVariableLookup");
+    return -9999.0;
   }
 
   bool TableMultiVariableLookup_Impl::addPoint(const std::vector<double> & t_xValues, double t_yValue)
@@ -1278,4 +1279,4 @@ TableMultiVariableLookup::TableMultiVariableLookup(std::shared_ptr<detail::Table
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

@@ -1155,11 +1155,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   value = dsgnAirFlowMinRatElement.text().toDouble(&ok);
   if( ok )
   {
-    sizingSystem.setMinimumSystemAirFlowRatio(value);
+    sizingSystem.setCentralHeatingMaximumSystemAirFlowRatio(value);
   }
   else
   {
-    sizingSystem.setMinimumSystemAirFlowRatio(0.3);
+    sizingSystem.setCentralHeatingMaximumSystemAirFlowRatio(0.3);
   }
 
   // DsgnPrehtTemp
@@ -7374,7 +7374,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       value = unitToUnit(value,"cfm","m^3/s").get();
       heatPump.setEvaporatorAirFlowRate(value);
     } else {
-			heatPump.autosizeEvaporatorAirFlowRate();	
+			heatPump.autosizeEvaporatorAirFlowRate();
 		}
 
     heatPump.setMinimumInletAirTemperatureforCompressorOperation(5.0);
