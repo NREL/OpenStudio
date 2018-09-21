@@ -258,7 +258,8 @@ namespace openstudio {
             );
         }
         else if (field == CONVERTTOINTERNALMASS) {
-          addCheckBoxColumn(Heading(QString(CONVERTTOINTERNALMASS), true, false),
+          // We add the "Apply Selected" button to this column by passing 3rd arg, t_showColumnButton=true
+          addCheckBoxColumn(Heading(QString(CONVERTTOINTERNALMASS), true, true),
             std::string("Check to enable convert to InternalMass."),
             NullAdapter(&model::InteriorPartitionSurface::converttoInternalMass),
             NullAdapter(&model::InteriorPartitionSurface::setConverttoInternalMass),

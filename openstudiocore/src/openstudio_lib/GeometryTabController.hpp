@@ -49,7 +49,7 @@ class GeometryTabController : public MainTabController
 
     enum TabID
     {
-      PREVIEW,
+      VIEW,
       EDITOR
     };
 
