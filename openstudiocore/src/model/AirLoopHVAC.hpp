@@ -253,6 +253,14 @@ class MODEL_API AirLoopHVAC : public Loop
   /** Overloaded version of addBranchForZone() **/
   bool addBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal);
 
+  /** This method has the same function as addBranchForZone, except it will not
+   * disconnect any air loops that are already attached to the zone.
+   **/
+  bool multiAddBranchForZone(ThermalZone & thermalZone);
+
+  /** Overloaded version of addBranchForZone() **/
+  bool multiAddBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal);
+
   /** Adds a new branch on the demand side of the air loop with the specified airTerminal.
    *  Returns true if the airTerminal was accepted, otherwise false.  The argument, hvacComponent,
    *  can be an air terminal, AirLoopHVACSupplyPlenum, or airLoopHVACReturnPlenum.

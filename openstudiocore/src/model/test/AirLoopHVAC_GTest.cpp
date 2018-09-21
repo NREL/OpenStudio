@@ -201,14 +201,34 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
-                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal = AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
-
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
 
+  EXPECT_TRUE(thermalZone.airLoopHVAC());
+  EXPECT_EQ(1, thermalZone.airLoopHVACs().size());
+}
+
+TEST_F(ModelFixture,AirLoopHVAC_multiAddBranchForZone)
+{
+  Model model = Model();
+  OptionalModelObject modelObject;
+
+  AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+  AirLoopHVAC airLoopHVAC2 = AirLoopHVAC(model);
+  ThermalZone thermalZone = ThermalZone(model);
+  ScheduleCompact scheduleCompact = ScheduleCompact(model);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal = AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal2 = AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
+
+  ASSERT_TRUE(airLoopHVAC.multiAddBranchForZone(thermalZone,singleDuctTerminal));
+  EXPECT_EQ(1, thermalZone.airLoopHVACs().size());
+
+  ASSERT_TRUE(airLoopHVAC2.multiAddBranchForZone(thermalZone,singleDuctTerminal2));
+  EXPECT_EQ(2, thermalZone.airLoopHVACs().size());
 }
 
 TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
@@ -1388,5 +1408,41 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone_AirTerminalMagic_AirTerminalSin
   ASSERT_TRUE(_cc->plantLoop());
   ASSERT_EQ(p_cooling.handle(), _cc->plantLoop()->handle());
 
+}
+
+TEST_F(ModelFixture,AirLoopHVAC_multiloops) {
+  Model m;
+  AirLoopHVAC a1(m);
+  AirLoopHVAC a2(m);
+  AirLoopHVAC a3(m);
+
+  ThermalZone z1(m);
+  ThermalZone z2(m);
+
+  Schedule sch = m.alwaysOnDiscreteSchedule();
+  AirTerminalSingleDuctUncontrolled atu1(m, sch);
+  AirTerminalSingleDuctUncontrolled atu2(m, sch);
+
+  EXPECT_TRUE(a1.multiAddBranchForZone(z1, atu1));
+  EXPECT_TRUE(a2.multiAddBranchForZone(z1, atu2));
+
+  EXPECT_EQ(z1.airLoopHVACs().size(), 2);
+  EXPECT_EQ(z1.airLoopHVACTerminals().size(), 2);
+
+  EXPECT_TRUE(a1.removeBranchForZone(z1));
+  EXPECT_EQ(z1.airLoopHVACs().size(), 1);
+
+  EXPECT_TRUE(a3.addBranchForZone(z1));
+  EXPECT_EQ(z1.airLoopHVACs().size(), 1);
+
+  EXPECT_TRUE(a1.multiAddBranchForZone(z1));
+  EXPECT_TRUE(a2.multiAddBranchForZone(z1));
+  EXPECT_EQ(z1.airLoopHVACs().size(), 3);
+
+  EXPECT_EQ(z1.airLoopHVACTerminals().size(), 0);
+  EXPECT_FALSE(z1.airLoopHVACTerminal());
+
+  a1.remove();
+  EXPECT_EQ(2, z1.airLoopHVACs().size());
 }
 

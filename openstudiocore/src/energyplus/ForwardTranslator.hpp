@@ -188,6 +188,7 @@ class ElectricLoadCenterInverterSimple;
 class ElectricLoadCenterInverterPVWatts;
 class ElectricLoadCenterStorageSimple;
 class ElectricLoadCenterStorageConverter;
+class ElectricLoadCenterTransformer;
 class EnergyManagementSystemActuator;
 class EnergyManagementSystemConstructionIndexVariable;
 class EnergyManagementSystemCurveOrTableIndexVariable;
@@ -363,6 +364,7 @@ class SimpleGlazing;
 class ScheduleCompact;
 class ScheduleConstant;
 class ScheduleDay;
+class ScheduleFile;
 class ScheduleFixedInterval;
 class ScheduleRuleset;
 class ScheduleTypeLimits;
@@ -805,6 +807,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateElectricLoadCenterStorageConverter( model::ElectricLoadCenterStorageConverter & modelObject );
 
+  boost::optional<IdfObject> translateElectricLoadCenterTransformer( model::ElectricLoadCenterTransformer & modelObject );
+
   boost::optional<IdfObject> translateEnergyManagementSystemActuator(model::EnergyManagementSystemActuator & modelObject);
 
   boost::optional<IdfObject> translateEnergyManagementSystemConstructionIndexVariable(model::EnergyManagementSystemConstructionIndexVariable & modelObject);
@@ -1067,6 +1071,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateScheduleDay( model::ScheduleDay & modelObject );
 
   boost::optional<IdfObject> translateScheduleFixedInterval( model::ScheduleFixedInterval & modelObject );
+
+  boost::optional<IdfObject> translateScheduleFile( model::ScheduleFile & modelObject );
 
   boost::optional<IdfObject> translateScheduleRuleset( model::ScheduleRuleset & modelObject );
 

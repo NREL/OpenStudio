@@ -8,7 +8,7 @@ if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-project(OpenStudio VERSION 2.6.1)
+project(OpenStudio VERSION 2.7.0)
 
 include(ExternalProject)
 include(CPackComponent)
@@ -206,12 +206,16 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if( WIN32 )
-  # DLM: do we really want to specify /OPT:REF /OPT:NOICF (the defaults seem correct for debug and release), also check link flags for modules and static libraries
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF /MAXILKSIZE:0x7FFFFFFF")
-  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MAXILKSIZE:0x7FFFFFFF")
-  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /MAXILKSIZE:0x7FFFFFFF")
-  set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /MAXILKSIZE:0x7FFFFFFF")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
+  if(CMAKE_CL_64)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF /MAXILKSIZE:0x7FFFFFFF")
+    set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MAXILKSIZE:0x7FFFFFFF")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /MAXILKSIZE:0x7FFFFFFF")
+    set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /MAXILKSIZE:0x7FFFFFFF")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
+  else()
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
+  endif()
 endif()
 
 if(BUILD_V8_BINDINGS)
@@ -315,13 +319,11 @@ if(MSVC)
   # be linked against the same runtime
   add_definitions(/wd4251)
 
+  add_definitions(/bigobj)
+
   if(CMAKE_CL_64)
-
-    add_definitions(/bigobj)
-
     # ignore conversion from size_t to int for now
     add_definitions(/wd4267)
-
   endif()
 
   # treat warnings as errors
@@ -409,7 +411,7 @@ elseif(WIN32)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH xyz)
+    set(ENERGYPLUS_EXPECTED_HASH a2cbd995acd1928a7baa18407bb8e949)
   endif()
   if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
@@ -583,8 +585,8 @@ endif()
 # to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
 # next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20180613.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "1a681676962d81f20d0e027dde4fc1dc")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20180904.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "65e787705580be7d76393cfc61b225c9")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")

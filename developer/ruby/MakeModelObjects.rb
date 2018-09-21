@@ -112,7 +112,9 @@ objects = []
 #objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:To:Actuator", "ExternalInterfaceFunctionalMockupUnitExportToActuator", "ModelObject"]
 #objects << ["OS:ExternalInterface:FunctionalMockupUnitExport:To:Variable", "ExternalInterfaceFunctionalMockupUnitExportToVariable", "ModelObject"]
 
-objects << ["OS:PlantComponent:UserDefined", "PlantComponentUserDefined", "ModelObject"]
+#objects << ["OS:PlantComponent:UserDefined", "PlantComponentUserDefined", "ModelObject"]
+#objects << ["OS:ElectricLoadCenter:Transformer", "ElectricLoadCenterTransformer", "ParentObject"]
+objects << ["OS:ElectricLoadCenter:Transformer", "ElectricLoadCenterTransformer", "ModelObject"]
 
 includePath = nil
 if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)

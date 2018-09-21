@@ -39,6 +39,7 @@ set(utilities_resources_src
   utilities/Filetypes/USA_CO_Golden-NREL.wrap.epw
   utilities/Filetypes/USA_CO_Golden-NREL.amy
   utilities/Filetypes/USA_CO_Golden-NREL.wrap.amy
+  utilities/Filetypes/USA_CT_New.Haven-Tweed.AP.725045_TMY3.epw
   utilities/Filetypes/TDV_2008_kBtu_CZ13.csv
   utilities/Filetypes/TUN_Tunis.607150_IWEC.epw
   utilities/Filetypes/min.osw
@@ -93,6 +94,7 @@ set(ENERGYPLUS_OUTPUTS "")
 
 set(model_resources_src
   model/OpenStudio.idd
+  model/schedulefile.csv
 )
 
 

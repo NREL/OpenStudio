@@ -127,9 +127,21 @@ TEST_F(ModelFixture,ThermalZone_Remove)
   ASSERT_EQ(1u,thermalZones.size());
   EXPECT_EQ(zone1.handle(), thermalZones[0].handle());
 
+  auto mo = zone1.returnAirModelObject();
+  EXPECT_TRUE(mo);
+
+  AirLoopHVAC airLoopHVAC2(model);
+  airLoopHVAC2.multiAddBranchForZone(zone1);
+
+  auto mos = zone1.returnAirModelObjects();
+  EXPECT_EQ(2u, mos.size());
+
   ASSERT_NO_THROW(zone1.remove());
 
   modelObjects = airLoopHVAC.demandComponents();
+  EXPECT_EQ(5u,modelObjects.size());
+
+  modelObjects = airLoopHVAC2.demandComponents();
   EXPECT_EQ(5u,modelObjects.size());
 }
 
@@ -391,6 +403,20 @@ TEST_F(ModelFixture,ThermalZone_equipment) {
   EXPECT_TRUE(ptac.addToThermalZone(thermalZone));
 
   EXPECT_EQ(2u,thermalZone.equipment().size());
+}
+
+TEST_F(ModelFixture,ThermalZone_LoadDistributionScheme) {
+  Model model;
+
+  ThermalZone thermalZone(model);
+
+  EXPECT_EQ("SequentialLoad",thermalZone.loadDistributionScheme());
+
+  thermalZone.setLoadDistributionScheme("UniformLoad");
+  EXPECT_EQ("UniformLoad",thermalZone.loadDistributionScheme());
+
+  thermalZone.setLoadDistributionScheme("InvalidChoice");
+  EXPECT_EQ("UniformLoad",thermalZone.loadDistributionScheme());
 }
 
 TEST_F(ModelFixture,ThermalZone_Cost) {

@@ -590,6 +590,9 @@ set(${target_name}_src
   ElectricLoadCenterStorageConverter.hpp
   ElectricLoadCenterStorageConverter_Impl.hpp
   ElectricLoadCenterStorageConverter.cpp
+  ElectricLoadCenterTransformer.hpp
+  ElectricLoadCenterTransformer_Impl.hpp
+  ElectricLoadCenterTransformer.cpp
   EnergyManagementSystemActuator.cpp
   EnergyManagementSystemActuator.hpp
   EnergyManagementSystemActuator_Impl.hpp
@@ -701,6 +704,9 @@ set(${target_name}_src
   ExternalInterfaceVariable.hpp
   ExternalInterfaceVariable_Impl.hpp
   ExternalInterfaceVariable.cpp
+  ExternalFile.hpp
+  ExternalFile_Impl.hpp
+  ExternalFile.cpp
   Facility.hpp
   Facility_Impl.hpp
   Facility.cpp
@@ -1132,6 +1138,9 @@ set(${target_name}_src
   ScheduleDay.hpp
   ScheduleDay_Impl.hpp
   ScheduleDay.cpp
+  ScheduleFile.hpp
+  ScheduleFile_Impl.hpp
+  ScheduleFile.cpp
   ScheduleFixedInterval.hpp
   ScheduleFixedInterval_Impl.hpp
   ScheduleFixedInterval.cpp
@@ -1577,15 +1586,19 @@ set(${target_name}_src
 
 set(${target_name}_swig_src
   Model_Common_Include.i
-  Model.i
-  ModelCore.i
+  ModelZoneHVAC.i
+  ModelStraightComponent.i
   ModelSimulation.i
   ModelResources.i
-  ModelGeometry.i
-  ModelHVAC.i
-  ModelAirflow.i
   ModelRefrigeration.i
+  ModelPlantEquipmentOperationScheme.i
+  ModelHVAC.i
+  ModelGeometry.i
   ModelGenerators.i
+  ModelCore.i
+  ModelAvailabilityManager.i
+  ModelAirflow.i
+  Model.i
 )
 
 qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
@@ -1761,6 +1774,7 @@ set(${target_name}_test_src
   test/ElectricLoadCenterInverterLookUpTable_GTest.cpp
   test/ElectricLoadCenterStorageSimple_GTest.cpp
   test/ElectricLoadCenterStorageConverter_GTest.cpp
+  test/ElectricLoadCenterTransformer_GTest.cpp
   test/EnergyManagementSystemActuator_GTest.cpp
   test/EnergyManagementSystemConstructionIndexVariable_GTest.cpp
   test/EnergyManagementSystemCurveOrTableIndexVariable_GTest.cpp
@@ -2003,6 +2017,7 @@ set(${target_name}_test_src
   test/ZoneHVACUnitHeater_GTest.cpp
   test/ZoneHVACUnitVentilator_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp
+  test/ZoneHVACIdealLoadsAirSystem_GTest.cpp
   test/ZoneMixing_GTest.cpp
   test/ZoneVentilationDesignFlowRate_GTest.cpp
 )
@@ -2046,9 +2061,6 @@ list(APPEND OpenStudioModelSwigs OpenStudioModelHVAC)
 
 MAKE_SWIG_TARGET(OpenStudioModelZoneHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelZoneHVAC.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelZoneHVAC)
-
-MAKE_SWIG_TARGET(OpenStudioModelSetpointManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSetpointManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
-list(APPEND OpenStudioModelSwigs OpenStudioModelSetpointManager)
 
 MAKE_SWIG_TARGET(OpenStudioModelAvailabilityManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAvailabilityManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelAvailabilityManager)

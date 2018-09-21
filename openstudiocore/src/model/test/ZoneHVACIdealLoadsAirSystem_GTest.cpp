@@ -33,6 +33,10 @@
 
 #include "../ZoneHVACIdealLoadsAirSystem.hpp"
 #include "../ZoneHVACIdealLoadsAirSystem_Impl.hpp"
+#include "../AirLoopHVACReturnPlenum.hpp"
+#include "../AirLoopHVACReturnPlenum_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
@@ -47,7 +51,7 @@ TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MaximumHeatingSupplyAirTemperatu
 
   Unit units = zoneHVACIdealLoadsAirSystem.getMaximumHeatingSupplyAirTemperature(true).units(); // Get IP units.
   // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
+  double value(75.0);
   Quantity testQ(value,units);
   EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setMaximumHeatingSupplyAirTemperature(testQ));
   Quantity q = zoneHVACIdealLoadsAirSystem.getMaximumHeatingSupplyAirTemperature(true);
@@ -207,5 +211,26 @@ TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_LatentHeatRecoveryEffectiveness_
   Quantity q = zoneHVACIdealLoadsAirSystem.getLatentHeatRecoveryEffectiveness(true);
   EXPECT_NEAR(value,q.value(),1.0E-8);
   EXPECT_EQ(units.standardString(),q.units().standardString());
+}
+
+TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_ReturnPlenum) {
+  Model model;
+  ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(model);
+
+  ThermalZone zone(model);
+  ThermalZone plenumzone(model);
+
+  EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.addToThermalZone(zone));
+  auto z = zoneHVACIdealLoadsAirSystem.thermalZone();
+  ASSERT_TRUE(z);
+  EXPECT_EQ(z.get(), zone);
+
+  EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setReturnPlenum(plenumzone));
+  auto p = zoneHVACIdealLoadsAirSystem.returnPlenum();
+  ASSERT_TRUE(p);
+
+  auto pz = p->thermalZone();
+  ASSERT_TRUE(pz);
+  EXPECT_EQ(pz.get(), plenumzone);
 }
 

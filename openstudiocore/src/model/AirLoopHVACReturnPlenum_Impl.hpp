@@ -38,6 +38,7 @@ namespace model {
 
 class ThermalZone;
 class PortList;
+class ZoneHVACIdealLoadsAirSystem;
 
 namespace detail {
 
@@ -87,6 +88,8 @@ namespace detail {
     bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, boost::optional<HVACComponent> & terminal);
 
     std::vector<IdfObject> remove() override;
+
+    std::vector<model::ZoneHVACIdealLoadsAirSystem> zoneHVACIdealLoadsAirSystems() const;
 
    private:
 

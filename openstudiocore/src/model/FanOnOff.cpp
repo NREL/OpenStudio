@@ -61,6 +61,8 @@
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "AirflowNetworkFan.hpp"
@@ -175,16 +177,16 @@ namespace detail {
     return result;
   }
 
-  double FanOnOff_Impl::fanEfficiency() const
+  double FanOnOff_Impl::fanTotalEfficiency() const
   {
-    boost::optional<double> value = getDouble(OS_Fan_OnOffFields::FanEfficiency,true);
+    boost::optional<double> value = getDouble(OS_Fan_OnOffFields::FanTotalEfficiency,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool FanOnOff_Impl::isFanEfficiencyDefaulted() const
+  bool FanOnOff_Impl::isFanTotalEfficiencyDefaulted() const
   {
-    return isEmpty(OS_Fan_OnOffFields::FanEfficiency);
+    return isEmpty(OS_Fan_OnOffFields::FanTotalEfficiency);
   }
 
   double FanOnOff_Impl::pressureRise() const
@@ -239,15 +241,15 @@ namespace detail {
     return isEmpty(OS_Fan_OnOffFields::EndUseSubcategory);
   }
 
-  bool FanOnOff_Impl::setFanEfficiency(double fanEfficiency)
+  bool FanOnOff_Impl::setFanTotalEfficiency(double fanTotalEfficiency)
   {
-    bool result = setDouble(OS_Fan_OnOffFields::FanEfficiency, fanEfficiency);
+    bool result = setDouble(OS_Fan_OnOffFields::FanTotalEfficiency, fanTotalEfficiency);
     return result;
   }
 
-  void FanOnOff_Impl::resetFanEfficiency()
+  void FanOnOff_Impl::resetFanTotalEfficiency()
   {
-    bool result = setString(OS_Fan_OnOffFields::FanEfficiency, "");
+    bool result = setString(OS_Fan_OnOffFields::FanTotalEfficiency, "");
     OS_ASSERT(result);
   }
 
@@ -388,7 +390,9 @@ namespace detail {
   // It can only be contained within another HVAC Component, such as Unitary, ZoneHVAC, etc.
   bool FanOnOff_Impl::addToNode(Node & node)
   {
-    if( boost::optional<Loop> loop = node.loop() ) {
+    if( node.loop() ) {
+      return false;
+    } else if ( node.airLoopHVACOutdoorAirSystem() ) {
       return false;
     }
     else {
@@ -567,7 +571,7 @@ FanOnOff::FanOnOff(const Model& model)
     auto availabilitySchedule = model.alwaysOnDiscreteSchedule();
     setAvailabilitySchedule(availabilitySchedule);
 
-    bool ok = setFanEfficiency(0.6);
+    bool ok = setFanTotalEfficiency(0.6);
     OS_ASSERT(ok);
     setPressureRise(300);
     autosizeMaximumFlowRate();
@@ -601,7 +605,7 @@ FanOnOff::FanOnOff(const Model& model, Schedule& availabilitySchedule)
 
     setAvailabilitySchedule(availabilitySchedule);
 
-    bool ok = setFanEfficiency(0.6);
+    bool ok = setFanTotalEfficiency(0.6);
     OS_ASSERT(ok);
     setPressureRise(300);
     autosizeMaximumFlowRate();
@@ -640,7 +644,7 @@ FanOnOff::FanOnOff(const Model& model,
 
     setAvailabilitySchedule(availabilitySchedule);
 
-    bool ok = setFanEfficiency(0.6);
+    bool ok = setFanTotalEfficiency(0.6);
     OS_ASSERT(ok);
     setPressureRise(300);
     autosizeMaximumFlowRate();
@@ -675,24 +679,44 @@ bool FanOnOff::setAvailabilitySchedule(Schedule& schedule)
 
 // Field Fan Efficiency
 
+double FanOnOff::fanTotalEfficiency() const
+{
+  return getImpl<detail::FanOnOff_Impl>()->fanTotalEfficiency();
+}
+
+bool FanOnOff::isFanTotalEfficiencyDefaulted() const
+{
+  return getImpl<detail::FanOnOff_Impl>()->isFanTotalEfficiencyDefaulted();
+}
+
+bool FanOnOff::setFanTotalEfficiency(double fanTotalEfficiency)
+{
+  return getImpl<detail::FanOnOff_Impl>()->setFanTotalEfficiency(fanTotalEfficiency);
+}
+
+void FanOnOff::resetFanTotalEfficiency()
+{
+  getImpl<detail::FanOnOff_Impl>()->resetFanTotalEfficiency();
+}
+
 double FanOnOff::fanEfficiency() const
 {
-  return getImpl<detail::FanOnOff_Impl>()->fanEfficiency();
+  return getImpl<detail::FanOnOff_Impl>()->fanTotalEfficiency();
 }
 
 bool FanOnOff::isFanEfficiencyDefaulted() const
 {
-  return getImpl<detail::FanOnOff_Impl>()->isFanEfficiencyDefaulted();
+  return getImpl<detail::FanOnOff_Impl>()->isFanTotalEfficiencyDefaulted();
 }
 
-bool FanOnOff::setFanEfficiency(double fanEfficiency)
+bool FanOnOff::setFanEfficiency(double fanTotalEfficiency)
 {
-  return getImpl<detail::FanOnOff_Impl>()->setFanEfficiency(fanEfficiency);
+  return getImpl<detail::FanOnOff_Impl>()->setFanTotalEfficiency(fanTotalEfficiency);
 }
 
 void FanOnOff::resetFanEfficiency()
 {
-  getImpl<detail::FanOnOff_Impl>()->resetFanEfficiency();
+  getImpl<detail::FanOnOff_Impl>()->resetFanTotalEfficiency();
 }
 
 // Field Pressure Rise

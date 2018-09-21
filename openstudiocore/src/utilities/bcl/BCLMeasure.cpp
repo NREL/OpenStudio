@@ -1074,8 +1074,12 @@ namespace openstudio{
         // what if this is the measure.rb file?
         filesToRemove.push_back(file);
       }else if (filename.empty() || boost::starts_with(filename, ".")){
-        result = true;
-        filesToRemove.push_back(file);
+        if (filename == ".gitkeep") {
+          // allow this file
+        } else {
+          result = true;
+          filesToRemove.push_back(file);
+        }
       }else if (file.checkForUpdate()){
         result = true;
         filesToAdd.push_back(file);

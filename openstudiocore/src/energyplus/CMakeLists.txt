@@ -137,6 +137,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterPVWatts.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageConverter.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageSimple.cpp
+  ForwardTranslator/ForwardTranslateElectricLoadCenterTransformer.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemActuator.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemConstructionIndexVariable.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemCurveOrTableIndexVariable.cpp
@@ -273,6 +274,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateScheduleCompact.cpp
   ForwardTranslator/ForwardTranslateScheduleConstant.cpp
   ForwardTranslator/ForwardTranslateScheduleDay.cpp
+  ForwardTranslator/ForwardTranslateScheduleFile.cpp
   ForwardTranslator/ForwardTranslateScheduleFixedInterval.cpp
   ForwardTranslator/ForwardTranslateScheduleRuleset.cpp
   ForwardTranslator/ForwardTranslateScheduleTypeLimits.cpp
@@ -477,6 +479,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateScheduleConstant.cpp
   ReverseTranslator/ReverseTranslateScheduleDayHourly.cpp
   ReverseTranslator/ReverseTranslateScheduleDayInterval.cpp
+  ReverseTranslator/ReverseTranslateScheduleFile.cpp
   ReverseTranslator/ReverseTranslateScheduleTypeLimits.cpp
   ReverseTranslator/ReverseTranslateScheduleWeekDaily.cpp
   ReverseTranslator/ReverseTranslateScheduleYear.cpp
@@ -560,13 +563,14 @@ set(${target_name}_test_src
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
+  Test/ElectricLoadCenterTransformer_GTest.cpp
   Test/EMS_GTest.cpp
-  Test/FuelCell_GTest.cpp
   Test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   Test/ExteriorLights_GTest.cpp
   Test/ExteriorFuelEquipment_GTest.cpp
   Test/ExteriorWaterEquipment_GTest.cpp
   Test/ExternalInterfaceFT_GTest.cpp
+  Test/FuelCell_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
