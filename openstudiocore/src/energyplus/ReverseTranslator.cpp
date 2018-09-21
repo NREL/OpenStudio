@@ -791,6 +791,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateScheduleDayHourly(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::Schedule_File:
+    {
+    modelObject = translateScheduleFile(workspaceObject);
+    break;
+    }
   case openstudio::IddObjectType::Schedule_Day_Interval :
     {
       modelObject = translateScheduleDayInterval(workspaceObject);

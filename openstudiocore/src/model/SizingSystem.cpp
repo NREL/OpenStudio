@@ -44,6 +44,9 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 
+// TODO: only needed for API warning
+#include <OpenStudio.hxx>
+
 namespace openstudio {
 
 namespace model {
@@ -116,10 +119,27 @@ bool SizingSystem_Impl::isDesignOutdoorAirFlowRateAutosized() const {
   return result;
 }
 
-double SizingSystem_Impl::minimumSystemAirFlowRatio() const {
-  boost::optional<double> value = getDouble(OS_Sizing_SystemFields::MinimumSystemAirFlowRatio,true);
-  OS_ASSERT(value);
-  return value.get();
+boost::optional<double> SizingSystem_Impl::centralHeatingMaximumSystemAirFlowRatio() const {
+  return getDouble(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio,true);
+}
+
+bool SizingSystem_Impl::setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio) {
+  bool result = setDouble(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, centralHeatingMaximumSystemAirFlowRatio);
+  return result;
+}
+
+bool SizingSystem_Impl::isCentralHeatingMaximumSystemAirFlowRatioAutosized() const {
+  bool result = false;
+  boost::optional<std::string> value = getString(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, true);
+  if (value) {
+    result = openstudio::istringEqual(value.get(), "Autosize");
+  }
+  return result;
+}
+
+void SizingSystem_Impl::autosizeCentralHeatingMaximumSystemAirFlowRatio() {
+  bool result = setString(OS_Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, "Autosize");
+  OS_ASSERT(result);
 }
 
 double SizingSystem_Impl::preheatDesignTemperature() const {
@@ -402,11 +422,6 @@ void SizingSystem_Impl::resetDesignOutdoorAirFlowRate() {
 void SizingSystem_Impl::autosizeDesignOutdoorAirFlowRate() {
   bool result = setString(OS_Sizing_SystemFields::DesignOutdoorAirFlowRate, "Autosize");
   OS_ASSERT(result);
-}
-
-bool SizingSystem_Impl::setMinimumSystemAirFlowRatio(double minimumSystemAirFlowRatio) {
-  bool result = setDouble(OS_Sizing_SystemFields::MinimumSystemAirFlowRatio, minimumSystemAirFlowRatio);
-  return result;
 }
 
 bool SizingSystem_Impl::setPreheatDesignTemperature(double preheatDesignTemperature) {
@@ -865,10 +880,53 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
     return result;
   }
 
+  boost::optional<double> SizingSystem_Impl::autosizedCentralHeatingMaximumSystemAirFlowRatio() const {
+    boost::optional < double > result;
+
+    // Get the parent AirLoopHVAC
+    AirLoopHVAC parAirLoop = airLoopHVAC();
+
+    // Get the name of the air loop
+    if (!parAirLoop.name()) {
+      LOG(Debug, "This object's parent AirLoopHVAC does not have a name, cannot retrieve the autosized "
+          << "'Central Heating Maximum System Air Flow Ratio'.");
+      return result;
+    }
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string sqlName = parAirLoop.name().get();
+    boost::to_upper(sqlName);
+
+    // Check that the model has a sql file
+    if (!model().sqlFile()) {
+      LOG(Warn, "This model has no sql file, cannot retrieve the autosized 'Central Heating Maximum System Air Flow Ratio'.");
+      return result;
+    }
+
+    // Note JM 2018-09-10: It's not in the TabularDataWithStrings, so I look in the ComponentSizes
+    std::stringstream valQuery;
+    valQuery << "SELECT Value ";
+    valQuery << "FROM ComponentSizes ";
+    valQuery << "WHERE CompType='AirLoopHVAC' ";
+    valQuery << "AND Description='User Heating Air Flow Ratio' ";
+    valQuery << "AND Units='' ";
+    valQuery << "AND CompName='" << sqlName << "' ";
+    boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+    // Check if the query succeeded
+    if (val) {
+      result = val.get();
+    }
+
+    return result;
+  }
+
+
   void SizingSystem_Impl::autosize() {
     autosizeDesignOutdoorAirFlowRate();
     autosizeCoolingDesignCapacity();
     autosizeHeatingDesignCapacity();
+    autosizeCentralHeatingMaximumSystemAirFlowRatio();
   }
 
   void SizingSystem_Impl::applySizingValues() {
@@ -888,6 +946,10 @@ bool SizingSystem_Impl::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
       setHeatingDesignCapacity(val.get());
     }
 
+    val = autosizedCentralHeatingMaximumSystemAirFlowRatio();
+    if (val) {
+      setCentralHeatingMaximumSystemAirFlowRatio(val.get());
+    }
   }
 
   std::vector<EMSActuatorNames> SizingSystem_Impl::emsActuatorNames() const {
@@ -939,7 +1001,11 @@ SizingSystem::SizingSystem(const Model& model, const AirLoopHVAC & airLoopHVAC)
 
   setTypeofLoadtoSizeOn("Sensible");
   autosizeDesignOutdoorAirFlowRate();
-  setMinimumSystemAirFlowRatio(0.3);
+
+  setCentralHeatingMaximumSystemAirFlowRatio(0.3);
+  // TODO: should we autosize (E+ default) instead?
+  // autosizeCentralHeatingMaximumSystemAirFlowRatio();
+
   setPreheatDesignTemperature(7.0);
   setPreheatDesignHumidityRatio(0.008);
   setPrecoolDesignTemperature(12.8);
@@ -1023,10 +1089,6 @@ bool SizingSystem::isDesignOutdoorAirFlowRateDefaulted() const {
 
 bool SizingSystem::isDesignOutdoorAirFlowRateAutosized() const {
   return getImpl<detail::SizingSystem_Impl>()->isDesignOutdoorAirFlowRateAutosized();
-}
-
-double SizingSystem::minimumSystemAirFlowRatio() const {
-  return getImpl<detail::SizingSystem_Impl>()->minimumSystemAirFlowRatio();
 }
 
 double SizingSystem::preheatDesignTemperature() const {
@@ -1227,10 +1289,6 @@ void SizingSystem::resetDesignOutdoorAirFlowRate() {
 
 void SizingSystem::autosizeDesignOutdoorAirFlowRate() {
   getImpl<detail::SizingSystem_Impl>()->autosizeDesignOutdoorAirFlowRate();
-}
-
-bool SizingSystem::setMinimumSystemAirFlowRatio(double minimumSystemAirFlowRatio) {
-  return getImpl<detail::SizingSystem_Impl>()->setMinimumSystemAirFlowRatio(minimumSystemAirFlowRatio);
 }
 
 bool SizingSystem::setPreheatDesignTemperature(double preheatDesignTemperature) {
@@ -1447,6 +1505,50 @@ SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
 
   void SizingSystem::applySizingValues() {
     return getImpl<detail::SizingSystem_Impl>()->applySizingValues();
+  }
+
+
+  boost::optional<double> SizingSystem::centralHeatingMaximumSystemAirFlowRatio() const {
+    return getImpl<detail::SizingSystem_Impl>()->centralHeatingMaximumSystemAirFlowRatio();
+  }
+
+  bool SizingSystem::setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio) {
+    return getImpl<detail::SizingSystem_Impl>()->setCentralHeatingMaximumSystemAirFlowRatio(centralHeatingMaximumSystemAirFlowRatio);  }
+
+  bool SizingSystem::isCentralHeatingMaximumSystemAirFlowRatioAutosized() const {
+    return getImpl<detail::SizingSystem_Impl>()->isCentralHeatingMaximumSystemAirFlowRatioAutosized();
+  }
+
+  void SizingSystem::autosizeCentralHeatingMaximumSystemAirFlowRatio() {
+    getImpl<detail::SizingSystem_Impl>()->autosizeCentralHeatingMaximumSystemAirFlowRatio();
+  }
+
+  boost::optional<double> SizingSystem::autosizedCentralHeatingMaximumSystemAirFlowRatio() const {
+    return getImpl<detail::SizingSystem_Impl>()->autosizedCentralHeatingMaximumSystemAirFlowRatio();
+  }
+
+  // DEPRECATED: TODO REMOVED in 2.6.2, REMOVE FROM API In the FUTURE
+  boost::optional<double> SizingSystem::minimumSystemAirFlowRatio() const {
+    LOG(Warn, "SizingSystem::minimumSystemAirFlowRatio has been deprecated and will be removed in a future release, please use SizingSystem::centralHeatingMaximumSystemAirFlowRatio");
+    LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, now it returns an Optional double");
+    if( VersionString( openStudioVersion() ) >= VersionString("2.8.0") ) {
+      // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
+      LOG(Debug, "Please go tell a developper to remove SizingSystem::minimumSystemAirFlowRatio");
+      OS_ASSERT(false);
+    }
+
+    return getImpl<detail::SizingSystem_Impl>()->centralHeatingMaximumSystemAirFlowRatio();
+  }
+
+  // DEPRECATED: TODO REMOVED in 2.6.2, REMOVE FROM API In the FUTURE
+  bool SizingSystem::setMinimumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio) {
+    LOG(Warn, "SizingSystem::setMinimumSystemAirFlowRatio has been deprecated and will be removed in a future release, please use SizingSystem::setCentralHeatingMaximumSystemAirFlowRatio");
+    if( VersionString( openStudioVersion() ) >= VersionString("2.8.0") ) {
+      // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
+      LOG(Debug, "Please go tell a developper to remove SizingSystem::minimumSystemAirFlowRatio");
+      OS_ASSERT(false);
+    }
+    return getImpl<detail::SizingSystem_Impl>()->setCentralHeatingMaximumSystemAirFlowRatio(centralHeatingMaximumSystemAirFlowRatio);
   }
 
 } // model

@@ -44,6 +44,7 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/core/RubyException.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/filetypes/WorkflowStep_Impl.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
@@ -281,7 +282,9 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
     return;
   }
 
-  MeasureStep measureStep(toString(projectMeasure->directory().stem()));
+  // Since we set the measure_paths, we only neeed to reference the name of the directory (=last level directory name)
+  // eg: /path/to/measure_folder => measure_folder
+  MeasureStep measureStep(toString( getLastLevelDirectoryName( projectMeasure->directory() ) ));
   try{
     std::vector<measure::OSArgument> arguments = m_app->measureManager().getArguments(*projectMeasure);
   } catch ( const RubyException&e ) {

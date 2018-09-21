@@ -52,6 +52,8 @@ class ShadingControl;
 
 MODELOBJECT_TEMPLATES(ScheduleInterval);
 MODELOBJECT_TEMPLATES(ScheduleFixedInterval);
+MODELOBJECT_TEMPLATES(ExternalFile);
+MODELOBJECT_TEMPLATES(ScheduleFile);
 MODELOBJECT_TEMPLATES(ScheduleVariableInterval);
 MODELOBJECT_TEMPLATES(ScheduleCompact);
 MODELOBJECT_TEMPLATES(ScheduleConstant);
@@ -132,6 +134,8 @@ MODELOBJECT_TEMPLATES(RenderingColor);
 MODELOBJECT_TEMPLATES(DesignSpecificationOutdoorAir);
 
 SWIG_MODELOBJECT(ScheduleInterval, 0);
+SWIG_MODELOBJECT(ScheduleFile, 1);
+SWIG_MODELOBJECT(ExternalFile, 1);
 SWIG_MODELOBJECT(ScheduleFixedInterval, 1);
 SWIG_MODELOBJECT(ScheduleVariableInterval, 1);
 SWIG_MODELOBJECT(ScheduleCompact, 1);

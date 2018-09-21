@@ -569,7 +569,7 @@ namespace detail {
     for( unsigned i = 0; i < demandInletNodes().size(); ++i ) {
       thermalZone.removeSupplyPlenum(airloop, i);
     }
-    thermalZone.removeReturnPlenum();
+    thermalZone.removeReturnPlenum(airloop);
 
     for( auto & modelObject : modelObjects ) {
       if( (! modelObject.optionalCast<Node>()) && (! modelObject.optionalCast<ThermalZone>()) ) {

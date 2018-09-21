@@ -314,7 +314,9 @@ void ApplyMeasureNowDialog::displayMeasure()
     m_tempWorkflowJSON.resetMeasurePaths();
     m_tempWorkflowJSON.addMeasurePath(m_bclMeasure->directory().parent_path());
 
-    MeasureStep step(toString(m_bclMeasure->directory().stem()));
+    // Since we set the measure_paths, we only neeed to reference the name of the directory (=last level directory name)
+    // eg: /path/to/measure_folder => measure_folder
+    MeasureStep step(toString( getLastLevelDirectoryName( m_bclMeasure->directory() ) ));
     std::vector<WorkflowStep> steps;
     steps.push_back(step);
     m_tempWorkflowJSON.setWorkflowSteps(steps);
@@ -715,7 +717,7 @@ void DataPointJobItemView::update(const BCLMeasure & bclMeasure, const boost::op
     }
 
     std::vector<std::string> infos = result->stepInfo();
-    m_dataPointJobHeaderView->setNumWarnings(infos.size());
+    // m_dataPointJobHeaderView->setNumInfos(infos.size());
     for (const std::string& info : infos){
       m_dataPointJobContentView->addInfoMessage(info);
     }
