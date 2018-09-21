@@ -124,7 +124,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.5.0")] = &VersionTranslator::update_2_4_3_to_2_5_0;
   m_updateMethods[VersionString("2.6.1")] = &VersionTranslator::update_2_6_0_to_2_6_1;
   m_updateMethods[VersionString("2.6.2")] = &VersionTranslator::update_2_6_1_to_2_6_2;
-  m_updateMethods[VersionString("2.6.7")] = &VersionTranslator::update_2_6_2_to_2_7_0;
+  m_updateMethods[VersionString("2.7.0")] = &VersionTranslator::update_2_6_2_to_2_7_0;
   // m_updateMethods[VersionString("2.7.1")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
