@@ -429,6 +429,16 @@ namespace detail {
     return isEmpty(OS_ZoneHVAC_WaterToAirHeatPumpFields::FanPlacement);
   }
 
+  std::string ZoneHVACWaterToAirHeatPump_Impl::heatPumpCoilWaterFlowMode() const {
+    boost::optional<std::string> value = getString(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpCoilWaterFlowMode, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ZoneHVACWaterToAirHeatPump_Impl::isHeatPumpCoilWaterFlowModeDefaulted() const {
+    return isEmpty(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpCoilWaterFlowMode);
+  }
+
   boost::optional<Schedule> ZoneHVACWaterToAirHeatPump_Impl::supplyAirFanOperatingModeSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanOperatingModeScheduleName);
   }
@@ -705,6 +715,16 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool ZoneHVACWaterToAirHeatPump_Impl::setHeatPumpCoilWaterFlowMode(std::string heatPumpCoilWaterFlowMode) {
+    bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpCoilWaterFlowMode, heatPumpCoilWaterFlowMode);
+    return result;
+  }
+
+  void ZoneHVACWaterToAirHeatPump_Impl::resetHeatPumpCoilWaterFlowMode() {
+    bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpCoilWaterFlowMode, "");
+    OS_ASSERT(result);
+  }
+
   bool ZoneHVACWaterToAirHeatPump_Impl::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
     bool result = setSchedule(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanOperatingModeScheduleName,
                               "ZoneHVACWaterToAirHeatPump",
@@ -742,9 +762,9 @@ namespace detail {
     return ZoneHVACWaterToAirHeatPump::fanPlacementValues();
   }
 
-  //std::vector<std::string> ZoneHVACWaterToAirHeatPump_Impl::fanPlacementValues() const {
-  //  return ZoneHVACWaterToAirHeatPump::fanPlacementValues();
-  //}
+  std::vector<std::string> ZoneHVACWaterToAirHeatPump_Impl::heatPumpCoilWaterFlowModeValues() const {
+    return ZoneHVACWaterToAirHeatPump::heatPumpCoilWaterFlowModeValues();
+  }
 
   boost::optional<ModelObject> ZoneHVACWaterToAirHeatPump_Impl::availabilityScheduleAsModelObject() const {
     OptionalModelObject result = availabilitySchedule();
@@ -970,6 +990,11 @@ std::vector<std::string> ZoneHVACWaterToAirHeatPump::fanPlacementValues() {
                         OS_ZoneHVAC_WaterToAirHeatPumpFields::FanPlacement);
 }
 
+std::vector<std::string> ZoneHVACWaterToAirHeatPump::heatPumpCoilWaterFlowModeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpCoilWaterFlowMode);
+}
+
 Schedule ZoneHVACWaterToAirHeatPump::availabilitySchedule() const {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->availabilitySchedule();
 }
@@ -1092,6 +1117,14 @@ std::string ZoneHVACWaterToAirHeatPump::fanPlacement() const {
 
 bool ZoneHVACWaterToAirHeatPump::isFanPlacementDefaulted() const {
   return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->isFanPlacementDefaulted();
+}
+
+std::string ZoneHVACWaterToAirHeatPump::heatPumpCoilWaterFlowMode() const {;
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->heatPumpCoilWaterFlowMode();
+}
+
+bool ZoneHVACWaterToAirHeatPump::isHeatPumpCoilWaterFlowModeDefaulted() const {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->isHeatPumpCoilWaterFlowModeDefaulted();
 }
 
 boost::optional<Schedule> ZoneHVACWaterToAirHeatPump::supplyAirFanOperatingModeSchedule() const {
@@ -1295,6 +1328,14 @@ bool ZoneHVACWaterToAirHeatPump::setFanPlacement(std::string fanPlacement) {
 
 void ZoneHVACWaterToAirHeatPump::resetFanPlacement() {
   getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetFanPlacement();
+}
+
+bool ZoneHVACWaterToAirHeatPump::setHeatPumpCoilWaterFlowMode(std::string heatPumpCoilWaterFlowMode) {
+  return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setHeatPumpCoilWaterFlowMode(heatPumpCoilWaterFlowMode);
+}
+
+void ZoneHVACWaterToAirHeatPump::resetHeatPumpCoilWaterFlowMode() {
+  getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetHeatPumpCoilWaterFlowMode();
 }
 
 bool ZoneHVACWaterToAirHeatPump::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {

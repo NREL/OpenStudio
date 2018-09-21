@@ -214,6 +214,8 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   OptionalModelObject returnAirModelObject();
 
+  std::vector<ModelObject> returnAirModelObjects() const;
+
   Node zoneAirNode();
 
   boost::optional<DaylightingControl> primaryDaylightingControl() const;
@@ -388,6 +390,10 @@ class MODEL_API ThermalZone : public HVACComponent {
     */
   bool removeEquipment(const ModelObject & equipment);
 
+  std::string loadDistributionScheme();
+
+  bool setLoadDistributionScheme(std::string scheme);
+
   /** Set cooling priority of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
@@ -396,7 +402,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   /** Set heating priority of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
-  bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+  bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
 
   /** Return all equipment.  Order is determined by heating priority */
   std::vector<ModelObject> equipmentInHeatingOrder();
@@ -464,9 +470,18 @@ class MODEL_API ThermalZone : public HVACComponent {
   */
   bool setReturnPlenum(const ThermalZone & plenumZone);
 
+  /** setReturnPlenum for the specified air loop.
+    * This method is used when there are multiple air loops attached to the zone
+    */
+  bool setReturnPlenum(const ThermalZone & plenumZone, AirLoopHVAC & airLoop);
+
   /** Remove any return plenum serving this zone
   */
   void removeReturnPlenum();
+
+  /** Remove any return plenum serving this zone
+  */
+  void removeReturnPlenum(AirLoopHVAC & airLoop);
 
   /** Returns all ZoneMixing objects associated with this zone, includes supply and exhaust mixing objects */
   std::vector<ZoneMixing> zoneMixing() const;

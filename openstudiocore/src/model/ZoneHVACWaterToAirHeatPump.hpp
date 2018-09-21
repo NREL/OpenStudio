@@ -50,6 +50,7 @@ namespace detail {
 
 /** ZoneHVACWaterToAirHeatPump is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:WaterToAirHeatPump'. */
 class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
+
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -68,6 +69,9 @@ class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
   static IddObjectType iddObjectType();
 
   static std::vector<std::string> fanPlacementValues();
+
+  static std::vector<std::string> heatPumpCoilWaterFlowModeValues();
+
   /** @name Getters */
   //@{
 
@@ -138,8 +142,16 @@ class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
   std::string fanPlacement() const;
 
   bool isFanPlacementDefaulted() const;
+
+  std::string heatPumpCoilWaterFlowMode() const;
+
+  bool isHeatPumpCoilWaterFlowModeDefaulted() const;
+
   boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
 
+  // TODO: field 'Availability Manager List Name' isn't implemented
+
+  // TODO: field 'Design Specification ZoneHVAC Sizing' isn't implemented since the object isn't wrapped in SDK
 
   //@}
   /** @name Setters */
@@ -247,6 +259,11 @@ class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
   bool setFanPlacement(std::string fanPlacement);
 
   void resetFanPlacement();
+
+  bool setHeatPumpCoilWaterFlowMode(std::string heatPumpCoilWaterFlowMode);
+
+  void resetHeatPumpCoilWaterFlowMode();
+
   bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
   void resetSupplyAirFanOperatingModeSchedule();
