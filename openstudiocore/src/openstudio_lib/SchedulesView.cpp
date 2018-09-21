@@ -1828,7 +1828,7 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
 void ScheduleRuleView::onRemoveClicked()
 {
-  std::cout << "ScheduleRuleView::onRemoveClicked: " << m_scheduleRule << std::endl;
+  // std::cout << "ScheduleRuleView::onRemoveClicked: " << m_scheduleRule << std::endl;
 
   //m_scheduleRule.remove();
   m_scheduleRule.getImpl<openstudio::model::detail::ScheduleRule_Impl>();
