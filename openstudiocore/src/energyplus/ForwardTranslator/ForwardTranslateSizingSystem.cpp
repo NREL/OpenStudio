@@ -82,12 +82,12 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingSystem( SizingSyste
     idfObject.setDouble(Sizing_SystemFields::DesignOutdoorAirFlowRate,value.get());
   }
 
-  // MinimumSystemAirFlowRatio
+  // CentralHeatingMaximumSystemAirFlowRatio
+  if( modelObject.isCentralHeatingMaximumSystemAirFlowRatioAutosized() ) {
+    idfObject.setString(Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, "Autosize");
+  } else if( (value = modelObject.centralHeatingMaximumSystemAirFlowRatio()) ) {
+    idfObject.setDouble(Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio, value.get());
 
-  value = modelObject.minimumSystemAirFlowRatio();
-  if( value )
-  {
-    idfObject.setDouble(Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio,value.get());
   }
 
   // PreheatDesignTemperature
