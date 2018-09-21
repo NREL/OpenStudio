@@ -167,7 +167,7 @@ void VRFController::onVRFSystemViewDrop(const OSItemId & itemid)
       if( auto terminal = component->primaryObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>() ) {
         // Ugly hack to avoid the component being treated as a resource.
         component->componentData().setString(OS_ComponentDataFields::UUID, toString(createUUID()));
-        std::cout << component->componentData().getString(OS_ComponentDataFields::UUID) << std::endl;;
+        // std::cout << component->componentData().getString(OS_ComponentDataFields::UUID) << std::endl;;
         if( auto componentData = m_currentSystem->model().insertComponent(component.get()) ) {
           terminal = componentData->primaryComponentObject().optionalCast<model::ZoneHVACTerminalUnitVariableRefrigerantFlow>();
           OS_ASSERT(terminal);

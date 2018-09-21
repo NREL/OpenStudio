@@ -91,12 +91,12 @@ OptionalModelObject ReverseTranslator::translateSizingSystem( const WorkspaceObj
     sizingSystem.autosizeDesignOutdoorAirFlowRate();
   }
 
-  // MinimumSystemAirFlowRatio
+  // CentralHeatingMaximumSystemAirFlowRatio
 
   value = workspaceObject.getDouble(Sizing_SystemFields::CentralHeatingMaximumSystemAirFlowRatio);
   if( value )
   {
-    sizingSystem.setMinimumSystemAirFlowRatio(value.get());
+    sizingSystem.setCentralHeatingMaximumSystemAirFlowRatio(value.get());
   }
 
   // PreheatDesignTemperature
