@@ -151,25 +151,29 @@ namespace detail {
     std::string fanPlacement() const;
 
     bool isFanPlacementDefaulted() const;
+
+    std::string heatPumpCoilWaterFlowMode() const;
+    bool isHeatPumpCoilWaterFlowModeDefaulted() const;
+
     boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+    boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
 
-  boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
+    boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
 
     //@}
     /** @name Setters */
@@ -278,6 +282,10 @@ namespace detail {
 
     void resetFanPlacement();
 
+    bool setHeatPumpCoilWaterFlowMode(std::string heatPumpCoilWaterFlowMode);
+
+    void resetHeatPumpCoilWaterFlowMode();
+
     bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
     void resetSupplyAirFanOperatingModeSchedule();
@@ -301,6 +309,7 @@ namespace detail {
     boost::optional<HVACComponent> optionalSupplementalHeatingCoil() const;
 
     std::vector<std::string> fanPlacementValues() const;
+    std::vector<std::string> heatPumpCoilWaterFlowModeValues() const;
 
     boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
     boost::optional<ModelObject> supplyAirFanAsModelObject() const;

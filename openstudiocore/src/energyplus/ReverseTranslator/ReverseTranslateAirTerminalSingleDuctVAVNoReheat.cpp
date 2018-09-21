@@ -113,6 +113,11 @@ OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctVAVNoReheat
     if( value )
     {
       airTerminal->setConstantMinimumAirFlowFraction(value.get());
+    } else {
+      s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction);
+      if( s && (istringEqual(s.get(),"Autosize") || istringEqual(s.get(),"Autocalculate") ) ) {
+        airTerminal->autosizeMaximumAirFlowRate();
+      }
     }
 
     // FixedMinimumAirFlowRate
@@ -120,6 +125,11 @@ OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctVAVNoReheat
     if( value )
     {
       airTerminal->setFixedMinimumAirFlowRate(value.get());
+    } else {
+      s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate);
+      if( s && (istringEqual(s.get(),"Autosize") || istringEqual(s.get(),"Autocalculate") ) ) {
+        airTerminal->autosizeFixedMinimumAirFlowRate();
+      }
     }
 
     boost::optional<WorkspaceObject> _schedule;
