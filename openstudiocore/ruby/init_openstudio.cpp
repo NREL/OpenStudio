@@ -52,7 +52,6 @@ extern "C" {
   void Init_openstudioutilitiesunits(void);
   void Init_openstudiomodelhvac(void);
   void Init_openstudiomodelzonehvac(void);
-  void Init_openstudiomodelsetpointmanager(void);
   void Init_openstudiomodelavailabilitymanager(void);
   void Init_openstudiomodelplantequipmentoperationscheme(void);
   void Init_openstudiomodelstraightcomponent(void);
@@ -131,9 +130,6 @@ void init_openstudio_internal() {
   Init_openstudiomodelzonehvac();
   rb_provide("openstudiomodelzonehvac");
   rb_provide("openstudiomodelzonehvac.so");
-  Init_openstudiomodelsetpointmanager();
-  rb_provide("openstudiomodelsetpointmanager");
-  rb_provide("openstudiomodelsetpointmanager.so");
   Init_openstudiomodelavailabilitymanager();
   rb_provide("openstudiomodelavailabilitymanager");
   rb_provide("openstudiomodelavailabilitymanager.so");

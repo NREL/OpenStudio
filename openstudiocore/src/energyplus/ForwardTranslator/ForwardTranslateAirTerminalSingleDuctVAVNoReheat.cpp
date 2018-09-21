@@ -166,13 +166,19 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVN
     idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::ZoneMinimumAirFlowInputMethod,s.get());
   }
 
-  // ConstantMinimumAirFlowFraction
-  value = modelObject.constantMinimumAirFlowFraction();
-  idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction,value.get());
+  // ConstantMinimumAirFlowFraction: autosizable
+  if( modelObject.isConstantMinimumAirFlowFractionAutosized() ) {
+    idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, "Autosize");
+  } else if( (value = modelObject.constantMinimumAirFlowFraction()) ) {
+    idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, value.get());
+  }
 
-  // FixedMinimumAirFlowRate
-  value = modelObject.fixedMinimumAirFlowRate();
-  idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate,value.get());
+  // FixedMinimumAirFlowRate: autosizable
+  if( modelObject.isFixedMinimumAirFlowRateAutosized() ) {
+    idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate, "Autosize");
+  } else if( (value = modelObject.fixedMinimumAirFlowRate()) ) {
+    idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate, value.get());
+  }
 
   // MinimumAirFlowFractionScheduleName
   boost::optional<Schedule> minAirFlowFractionSchedule = modelObject.minimumAirFlowFractionSchedule();
