@@ -51,7 +51,7 @@ TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MaximumHeatingSupplyAirTemperatu
 
   Unit units = zoneHVACIdealLoadsAirSystem.getMaximumHeatingSupplyAirTemperature(true).units(); // Get IP units.
   // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
+  double value(75.0);
   Quantity testQ(value,units);
   EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setMaximumHeatingSupplyAirTemperature(testQ));
   Quantity q = zoneHVACIdealLoadsAirSystem.getMaximumHeatingSupplyAirTemperature(true);

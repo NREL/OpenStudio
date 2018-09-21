@@ -274,6 +274,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateScheduleCompact.cpp
   ForwardTranslator/ForwardTranslateScheduleConstant.cpp
   ForwardTranslator/ForwardTranslateScheduleDay.cpp
+  ForwardTranslator/ForwardTranslateScheduleFile.cpp
   ForwardTranslator/ForwardTranslateScheduleFixedInterval.cpp
   ForwardTranslator/ForwardTranslateScheduleRuleset.cpp
   ForwardTranslator/ForwardTranslateScheduleTypeLimits.cpp
@@ -478,6 +479,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateScheduleConstant.cpp
   ReverseTranslator/ReverseTranslateScheduleDayHourly.cpp
   ReverseTranslator/ReverseTranslateScheduleDayInterval.cpp
+  ReverseTranslator/ReverseTranslateScheduleFile.cpp
   ReverseTranslator/ReverseTranslateScheduleTypeLimits.cpp
   ReverseTranslator/ReverseTranslateScheduleWeekDaily.cpp
   ReverseTranslator/ReverseTranslateScheduleYear.cpp
