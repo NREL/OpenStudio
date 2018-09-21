@@ -42,6 +42,9 @@
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/Model_Impl.hpp"
 
+#include "../model/Component.hpp"
+#include "../model/ComponentData.hpp"
+
 #include "../utilities/core/Assert.hpp"
 
 #include <QApplication>
@@ -679,10 +682,31 @@ void OSDropZone2::dropEvent(QDropEvent *event)
 {
   event->accept();
 
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
   if((event->proposedAction() == Qt::CopyAction) && m_modelObject && m_set){
 
     OSItemId itemId(event->mimeData());
-    boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(itemId);
+
+    boost::optional<model::ModelObject> modelObject;
+
+    // If what you dragged is from the BCL, then VT it and insert it in model
+    // TODO: should we modify OSDocument::getModelObject instead?
+    if(itemId.sourceId() == OSItemId::BCL_SOURCE_ID)
+    {
+      boost::optional<model::Component> component = doc->getComponent(itemId);
+      if( component ) {
+        if( component->primaryObject().optionalCast<model::ModelObject>() ){
+          boost::optional<model::ComponentData> _compData = doc->model().insertComponent(*component);
+          if( _compData ) {
+            modelObject = _compData->primaryComponentObject();
+          }
+        }
+      }
+    } else {
+      modelObject = doc->getModelObject(itemId);
+    }
+
     m_item = OSItem::makeItem(itemId, OSItemType::ListItem);
     m_item->setParent(this);
 
