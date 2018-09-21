@@ -1588,7 +1588,12 @@ namespace detail {
 
       // don't override if user provided zone floor area
       if (isEmpty(OS_ThermalZoneFields::FloorArea)){
+        LOG(Info, "ThermalZone '" << this->name().get() << "' has spaces with mis-matched 'Part of Total Floor Area' flags. "
+               << "Setting set the flag to 'Yes', but hard-coding the total floor area to only take into account the spaces "
+               << "that are part of total Floor Area");
         this->setDouble(OS_ThermalZoneFields::FloorArea, totalFloorArea);
+      } else {
+        LOG(Info, "ThermalZone " << this->name().get() << " has a user-specified Floor Area, using this number");
       }
     }
 
@@ -2315,6 +2320,16 @@ namespace detail {
   std::vector<ModelObject> ThermalZone_Impl::equipment() const
   {
     return zoneHVACEquipmentList().equipment();
+  }
+
+  std::string ThermalZone_Impl::loadDistributionScheme()
+  {
+    return zoneHVACEquipmentList().loadDistributionScheme();
+  }
+
+  bool ThermalZone_Impl::setLoadDistributionScheme(std::string scheme)
+  {
+    return zoneHVACEquipmentList().setLoadDistributionScheme(scheme);
   }
 
   std::vector<ModelObject> ThermalZone_Impl::equipmentInHeatingOrder()
@@ -3346,6 +3361,16 @@ bool ThermalZone::setHeatingPriority(const ModelObject & equipment, unsigned pri
 std::vector<ModelObject> ThermalZone::equipment() const
 {
   return getImpl<detail::ThermalZone_Impl>()->equipment();
+}
+
+std::string ThermalZone::loadDistributionScheme()
+{
+  return getImpl<detail::ThermalZone_Impl>()->loadDistributionScheme();
+}
+
+bool ThermalZone::setLoadDistributionScheme(std::string scheme)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setLoadDistributionScheme(scheme);
 }
 
 std::vector<ModelObject> ThermalZone::equipmentInHeatingOrder()

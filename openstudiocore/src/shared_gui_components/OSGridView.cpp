@@ -88,6 +88,14 @@ OSGridView::OSGridView(OSGridController * gridController,
     m_CollapsibleView(nullptr),
     m_gridController(gridController)
 {
+
+  // We use the headerText as the object name, will help in indentifying objects for any warnings
+  setObjectName(headerText);
+
+  /** Set up buttons for Categories: eg: SpaceTypes tab: that's the dropzone "Drop Space Type", "General", "Loads", "Measure Tags", "Custom"
+   * QHBoxLayout manages the visual representation: they are placed side by side
+   * QButtonGroup manages the state of the buttons in the group. By default a QButtonGroup is exclusive (only one button can be checked at one time)
+   */
   auto buttonGroup = new QButtonGroup();
   connect(buttonGroup, static_cast<void (QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), this, &OSGridView::selectCategory);
 
@@ -113,14 +121,22 @@ OSGridView::OSGridView(OSGridController * gridController,
     buttonGroup->addButton(button,buttonGroup->buttons().size());
   }
 
+  /** QVBoxLayout is the main gridview layout, it's where we'll place vertically the different elements:
+   * * buttonLayout at the top
+   * * Filter
+   * * Then the model-dependent data, such as Space Type Name, All, Rendering Color, Default Construction set, etc
+   */
   auto layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
 
+  // Add the header first
   auto widget = new QWidget;
 
   if (useHeader) {
+    // If we use the header, we place a blue to dark blue header with for eg: 'Space Types' as text
+    // Its content is widget
     auto header = new DarkGradientHeader();
     header->label->setText(headerText);
     auto collabsibleView = new OSCollapsibleView(true);
@@ -129,19 +145,25 @@ OSGridView::OSGridView(OSGridController * gridController,
     collabsibleView->setExpanded(true);
     layout->addWidget(collabsibleView);
   } else {
+    // Otherwise we only place widget
     layout->addWidget(widget);
   }
-
-  m_contentLayout = new QVBoxLayout();
+  // Create a QLayout object with a parent of widget: This will set widget's layout to this QVBoxLayout already.
+  // widget has a layout that is a QVBoxLayout
+  m_contentLayout = new QVBoxLayout(widget);
   m_contentLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   m_contentLayout->setSpacing(0);
   m_contentLayout->setContentsMargins(0,0,0,0);
-  widget->setLayout(m_contentLayout);
+  // widget->setLayout(m_contentLayout);
+  //
+  // We place the button Layout at the top
   m_contentLayout->addLayout(buttonLayout);
   widget->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
 
+  // This should have been done in the Ctor
   setGridController(m_gridController);
 
+  // Make the first button checked by default
   std::vector<QAbstractButton *> buttons = buttonGroup->buttons().toVector().toStdVector();
   if(buttons.size() > 0){
     QPushButton * button = qobject_cast<QPushButton *>(buttons.at(0));
@@ -173,7 +195,7 @@ void OSGridView::setGridController(OSGridController * gridController)
 
 void OSGridView::requestAddRow(int row)
 {
-  std::cout << "REQUEST ADDROW CALLED " << std::endl;
+  // std::cout << "REQUEST ADDROW CALLED " << std::endl;
   setEnabled(false);
 
   m_timer.start();
@@ -185,7 +207,7 @@ void OSGridView::requestAddRow(int row)
 
 void OSGridView::requestRemoveRow(int row)
 {
-  std::cout << "REQUEST REMOVEROW CALLED " << std::endl;
+  // std::cout << "REQUEST REMOVEROW CALLED " << std::endl;
   setEnabled(false);
 
   m_timer.start();
@@ -289,7 +311,7 @@ void OSGridView::deleteAll()
 
 void OSGridView::requestRefreshAll()
 {
-  std::cout << "REQUEST REFRESHALL CALLED " << std::endl;
+  // std::cout << "REQUEST REFRESHALL CALLED " << std::endl;
   setEnabled(false);
 
   m_timer.start();
@@ -299,7 +321,7 @@ void OSGridView::requestRefreshAll()
 
 void OSGridView::requestRefreshGrid()
 {
-  std::cout << "REQUEST REFRESHGRID CALLED " << std::endl;
+  // std::cout << "REQUEST REFRESHGRID CALLED " << std::endl;
   setEnabled(false);
 
   m_timer.start();
@@ -318,7 +340,7 @@ void OSGridView::requestRefreshGrid()
 
 void OSGridView::doRefresh()
 {
-  std::cout << " DO REFRESH CALLED " << m_queueRequests.size() << std::endl;
+  // std::cout << " DO REFRESH CALLED " << m_queueRequests.size() << std::endl;
 
   if (m_queueRequests.empty())
   {
@@ -364,7 +386,7 @@ void OSGridView::doRefresh()
 
 void OSGridView::refreshAll()
 {
-  std::cout << " REFRESHALL CALLED " << std::endl;
+  // std::cout << " REFRESHALL CALLED " << std::endl;
   m_queueRequests.clear();
   deleteAll();
 

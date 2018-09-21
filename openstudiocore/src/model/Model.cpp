@@ -1123,9 +1123,9 @@ Model::Model(const openstudio::Workspace& workspace)
   getImpl<detail::Model_Impl>()->createComponentWatchers();
 }
 
-boost::optional<Model> Model::load(const path& p) {
+boost::optional<Model> Model::load(const path& osmPath) {
   OptionalModel result;
-  OptionalIdfFile oIdfFile = IdfFile::load(p,IddFileType::OpenStudio);
+  OptionalIdfFile oIdfFile = IdfFile::load(osmPath,IddFileType::OpenStudio);
   if (oIdfFile) {
     try {
       result = Model(*oIdfFile);
@@ -1134,7 +1134,8 @@ boost::optional<Model> Model::load(const path& p) {
   }
 
   if (result){
-    path workflowJSONPath = p.parent_path() / p.stem() / toPath("workflow.osw");
+    // Load the workflow.osw in the model's companion folder
+    path workflowJSONPath = getCompanionFolder(osmPath) / toPath("workflow.osw");
     if (exists(workflowJSONPath)){
       boost::optional<WorkflowJSON> workflowJSON = WorkflowJSON::load(workflowJSONPath);
       if (workflowJSON){
@@ -2563,7 +2564,7 @@ void Model::applySizingValues() {
 
 std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::ModelObjectCreator::getNew(
   Model_Impl * model,
-  const IdfObject& obj, 
+  const IdfObject& obj,
   bool keepHandle) const
 {
   auto typeToCreate = obj.iddObject().type();
@@ -2576,7 +2577,7 @@ std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::Mo
 }
 
 std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::ModelObjectCreator::getCopy(
-  Model_Impl * model, 
+  Model_Impl * model,
   const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& obj,
   bool keepHandle) const
 {

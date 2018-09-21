@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -76,9 +77,6 @@ class MODEL_API SizingSystem : public ModelObject
   bool isDesignOutdoorAirFlowRateDefaulted() const;
 
   bool isDesignOutdoorAirFlowRateAutosized() const;
-
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Central Heating Maximum System Air Flow Ratio" **/
-  double minimumSystemAirFlowRatio() const;
 
   double preheatDesignTemperature() const;
 
@@ -185,8 +183,6 @@ class MODEL_API SizingSystem : public ModelObject
 
   void autosizeDesignOutdoorAirFlowRate();
 
-  bool setMinimumSystemAirFlowRatio(double minimumSystemAirFlowRatio);
-
   bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
   bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
@@ -279,11 +275,25 @@ class MODEL_API SizingSystem : public ModelObject
 
   AirLoopHVAC airLoopHVAC() const;
 
-  boost::optional<double> autosizedDesignOutdoorAirFlowRate() const ;
 
-  boost::optional<double> autosizedCoolingDesignCapacity() const ;
+  boost::optional<double> centralHeatingMaximumSystemAirFlowRatio() const;
+  bool isCentralHeatingMaximumSystemAirFlowRatioAutosized() const;
+  bool setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
+  void autosizeCentralHeatingMaximumSystemAirFlowRatio();
 
-  boost::optional<double> autosizedHeatingDesignCapacity() const ;
+
+  /** Deprecated, forwards to centralHeatingMaximumSystemAirFlowRatio
+   * In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Central Heating Maximum System Air Flow Ratio"
+   * Prior to 2.6.2, this was returning a double (no autosize possible) */
+  OS_DEPRECATED boost::optional<double> minimumSystemAirFlowRatio() const;
+  /* Deprecated, forwards to setCentralHeatingMaximumSystemAirFlowRatio */
+  OS_DEPRECATED bool setMinimumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
+
+
+  boost::optional<double> autosizedDesignOutdoorAirFlowRate() const;
+  boost::optional<double> autosizedCentralHeatingMaximumSystemAirFlowRatio() const;
+  boost::optional<double> autosizedCoolingDesignCapacity() const;
+  boost::optional<double> autosizedHeatingDesignCapacity() const;
 
   void autosize();
 
