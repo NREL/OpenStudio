@@ -28,7 +28,9 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
+
 #include "ModelFixture.hpp"
+
 #include "../WaterHeaterMixed.hpp"
 #include "../WaterHeaterMixed_Impl.hpp"
 
@@ -38,7 +40,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST(WaterHeaterMixed,WaterHeaterMixed_WaterHeaterMixed)
+TEST_F(ModelFixture, WaterHeaterMixed_WaterHeaterMixed)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
@@ -53,7 +55,7 @@ TEST(WaterHeaterMixed,WaterHeaterMixed_WaterHeaterMixed)
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST(WaterHeaterMixed,WaterHeaterMixed_NewFields)
+TEST_F(ModelFixture, WaterHeaterMixed_NewFields)
 {
   Model m;
 
