@@ -28,6 +28,9 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
+
+#include "ModelFixture.hpp"
+
 #include "../AirLoopHVAC.hpp"
 #include "../Model.hpp"
 #include "../Node.hpp"
@@ -38,7 +41,7 @@
 
 using namespace openstudio;
 
-TEST(CoilCoolingWater,CoilCoolingWater_CoilCoolingWater)
+TEST_F(ModelFixture, CoilCoolingWater_CoilCoolingWater)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
@@ -51,11 +54,11 @@ TEST(CoilCoolingWater,CoilCoolingWater_CoilCoolingWater)
      model::CoilCoolingWater coil(m,s);
 
      exit(0);
-  } ,
+} ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST(CoilCoolingWater,CoilCoolingWater_addToNode)
+TEST_F(ModelFixture, CoilCoolingWater_addToNode)
 {
   model::Model m;
 
