@@ -690,16 +690,21 @@ void OSDropZone2::dropEvent(QDropEvent *event)
 
     boost::optional<model::ModelObject> modelObject;
 
+    // component data is only available from BCL components
+    boost::optional<model::Component> component;
+    boost::optional<model::ComponentData> componentData;
+
     // If what you dragged is from the BCL, then VT it and insert it in model
     // TODO: should we modify OSDocument::getModelObject instead?
-    if(itemId.sourceId() == OSItemId::BCL_SOURCE_ID)
+    // DLM: initially thought so but we also want to keep track of the component data as well
+    if (doc->fromBCL(itemId))
     {
-      boost::optional<model::Component> component = doc->getComponent(itemId);
+      component = doc->getComponent(itemId);
       if( component ) {
         if( component->primaryObject().optionalCast<model::ModelObject>() ){
-          boost::optional<model::ComponentData> _compData = doc->model().insertComponent(*component);
-          if( _compData ) {
-            modelObject = _compData->primaryComponentObject();
+          componentData = doc->model().insertComponent(*component);
+          if (componentData) {
+            modelObject = componentData->primaryComponentObject();
           }
         }
       }
@@ -717,7 +722,26 @@ void OSDropZone2::dropEvent(QDropEvent *event)
     m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSDropZone2, &OSDropZone2::refresh>(this);
 
     if(modelObject){
-      if(OSAppBase::instance()->currentDocument()->fromComponentLibrary(itemId)){
+      if (doc->fromBCL(itemId)) {
+        // model object already cloned above
+        OS_ASSERT(componentData);
+        if (m_set) {
+          bool success = (*m_set)(modelObject.get());
+          if (!success) {
+            std::vector<Handle> handlesToRemove;
+            for (const auto& object: componentData->componentObjects()) {
+              handlesToRemove.push_back(object.handle());
+            }
+            doc->model().removeObjects(handlesToRemove);
+            // removing objects in component will remove component data object via component watcher
+            //componentData->remove();
+            OS_ASSERT(componentData->handle().isNull());
+          }
+        }
+        refresh();
+      }
+      else if (doc->fromComponentLibrary(itemId)) 
+      {
         modelObject = modelObject->clone(m_modelObject->model());
         if (m_set)
         {
