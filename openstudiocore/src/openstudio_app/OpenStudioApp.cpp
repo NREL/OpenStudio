@@ -691,12 +691,11 @@ bool OpenStudioApp::closeDocument()
 
     auto messageBox = new QMessageBox(parent);
 
+    messageBox->setWindowTitle("New OpenStudio Document");
     messageBox->setText("The document has been modified.");
-
     messageBox->setInformativeText("Do you want to save your changes?");
 
     messageBox->setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-
     messageBox->setDefaultButton(QMessageBox::Save);
 
     messageBox->button(QMessageBox::Save)->setShortcut(QKeySequence(Qt::Key_S));
@@ -1067,16 +1066,29 @@ void OpenStudioApp::revertToSaved()
   QString fileName = this->currentDocument()->mainWindow()->windowFilePath();
 
   QFile testFile(fileName);
-  if(!testFile.exists()) return;
+  if( !testFile.exists() ) {
+    // Tell the user the file has never been saved, and ask them if they want to create a new file
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(mainWidget(), QString("Revert to Saved"), QString("This model has never been saved.\nDo you want to create a New Model?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+    {
+      // JM: copied DLM's hack below so we do not trigger prompt to save in call to closeDocument during newModel()
+      // this->currentDocument()->markAsUnmodified();
 
-  QMessageBox::StandardButton reply;
-  reply = QMessageBox::question(mainWidget(), QString("Revert to Saved"), QString("Are you sure you want to revert to the last saved version?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
-  if (reply == QMessageBox::Yes)
-  {
-    // DLM: quick hack so we do not trigger prompt to save in call to closeDocument during openFile
-    this->currentDocument()->markAsUnmodified();
+      newModel();
+    }
 
-    openFile(fileName, true);
+  } else {
+    // Ask for confirmation
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(mainWidget(), QString("Revert to Saved"), QString("Are you sure you want to revert to the last saved version?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+    {
+      // DLM: quick hack so we do not trigger prompt to save in call to closeDocument during openFile
+      this->currentDocument()->markAsUnmodified();
+
+      openFile(fileName, true);
+    }
   }
 
 }
