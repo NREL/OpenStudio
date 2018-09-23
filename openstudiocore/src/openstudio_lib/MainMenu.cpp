@@ -254,8 +254,8 @@ void MainMenu::enableRevertToSavedAction(bool enable)
   // Instead, we display an asterisk to indicate whether we think the model is dirty or not
   // Note: (The MainWindow also displays an asterisk, so perhaps it's not needed)
   if( enable ) {
-    m_revertToSavedAction->setText(tr("&Revert to Saved *"));
-
+    //m_revertToSavedAction->setText(tr("&Revert to Saved *"));
+    m_revertToSavedAction->setText(tr("&Revert to Saved"));
   } else {
     m_revertToSavedAction->setText(tr("&Revert to Saved"));
   }
