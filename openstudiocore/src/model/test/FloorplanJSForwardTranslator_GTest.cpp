@@ -362,15 +362,26 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Colors) {
 
   // model.getSpaceTypes[0].name => "Blue Type"
 
-  EXPECT_EQ("2", value["space_types"][1].get("id", "").asString());
-  EXPECT_EQ("Red Type", value["space_types"][1].get("name", "").asString());
-  EXPECT_EQ("#FF0000", value["space_types"][1].get("color", "").asString());
-  EXPECT_EQ(toString(redType.handle()), value["space_types"][1].get("handle", "").asString());
-
   EXPECT_EQ("1", value["space_types"][0].get("id", "").asString());
-  EXPECT_EQ("Blue Type", value["space_types"][0].get("name", "").asString());
-  EXPECT_EQ("#0000FF", value["space_types"][0].get("color", "").asString());
-  EXPECT_EQ(toString(blueType.handle()), value["space_types"][0].get("handle", "").asString());
+  EXPECT_EQ("2", value["space_types"][1].get("id", "").asString());
+
+  unsigned redIndex = std::numeric_limits<unsigned>::max();
+  unsigned blueIndex = std::numeric_limits<unsigned>::max();
+  if ("Red Type" == value["space_types"][0].get("name", "").asString()) {
+    redIndex = 0;
+    blueIndex = 1;
+  } else {
+    redIndex = 1;
+    blueIndex = 0;
+  }
+
+  EXPECT_EQ("Red Type", value["space_types"][redIndex].get("name", "").asString());
+  EXPECT_EQ("#FF0000", value["space_types"][redIndex].get("color", "").asString());
+  EXPECT_EQ(toString(redType.handle()), value["space_types"][redIndex].get("handle", "").asString());
+
+  EXPECT_EQ("Blue Type", value["space_types"][blueIndex].get("name", "").asString());
+  EXPECT_EQ("#0000FF", value["space_types"][blueIndex].get("color", "").asString());
+  EXPECT_EQ(toString(blueType.handle()), value["space_types"][blueIndex].get("handle", "").asString());
 
   Json::Value greenSpaceTypeValue(Json::objectValue);
   greenSpaceTypeValue["id"] = "3";
