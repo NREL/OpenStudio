@@ -51,6 +51,19 @@ namespace model {
 TableMultiVariableLookupPoint::TableMultiVariableLookupPoint(std::vector<double> x, double y)
   : m_x(x), m_y(y) { };
 
+TableMultiVariableLookupPoint::TableMultiVariableLookupPoint(double x1, double yValue)
+  : m_x(std::vector<double> {x1}), m_y(yValue) { };
+
+TableMultiVariableLookupPoint::TableMultiVariableLookupPoint(double x1, double x2, double yValue)
+  : m_x(std::vector<double> {x1, x2}), m_y(yValue) { };
+TableMultiVariableLookupPoint::TableMultiVariableLookupPoint(double x1, double x2, double x3, double yValue)
+  : m_x(std::vector<double> {x1, x2, x3}), m_y(yValue) { };
+TableMultiVariableLookupPoint::TableMultiVariableLookupPoint(double x1, double x2, double x3, double x4, double yValue)
+  : m_x(std::vector<double> {x1, x2, x3, x4}), m_y(yValue) { };
+TableMultiVariableLookupPoint::TableMultiVariableLookupPoint(double x1, double x2, double x3, double x4, double x5, double yValue)
+  : m_x(std::vector<double> {x1, x2, x3, x4, x5}), m_y(yValue) { };
+
+
 std::vector<double> TableMultiVariableLookupPoint::x() const {
   return m_x;
 }
