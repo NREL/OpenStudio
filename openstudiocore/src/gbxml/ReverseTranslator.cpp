@@ -623,6 +623,9 @@ namespace gbxml {
         surface.setSurfaceType("Wall");
       }else if (surfaceType.contains("UndergroundWall")){
         surface.setSurfaceType("Wall");
+        surface.setOutsideBoundaryCondition("Ground");
+        surface.setSunExposure("NoSun");
+        surface.setWindExposure("NoWind");
       // roof types
       }else if (surfaceType.contains("Roof")){
         surface.setSurfaceType("RoofCeiling");
