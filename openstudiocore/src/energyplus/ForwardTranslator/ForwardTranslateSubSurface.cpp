@@ -129,11 +129,6 @@ boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSur
     idfObject.setDouble(FenestrationSurface_DetailedFields::ViewFactortoGround, *viewFactortoGround);
   }
 
-  boost::optional<ShadingControl> shadingControl = modelObject.shadingControl();
-  if (shadingControl){
-    idfObject.setString(FenestrationSurface_DetailedFields::ShadingControlName, shadingControl->name().get());
-  }
-
   boost::optional<WindowPropertyFrameAndDivider> frameAndDivider = modelObject.windowPropertyFrameAndDivider();
   openstudio::Vector3d offset(0, 0, 0);
   if (frameAndDivider){

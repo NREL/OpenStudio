@@ -6618,13 +6618,7 @@ FenestrationSurface:Detailed,
        \minimum 0.0
        \maximum 1.0
        \default autocalculate
-  A6, \field Shading Control Name
-       \note enter the name of a WindowProperty:ShadingControl object
-       \type object-list
-       \object-list WindowShadeControlNames
-       \note used for windows and glass doors only
-       \note If not specified, window or glass door has no shading (blind, roller shade, etc.)
-  A7, \field Frame and Divider Name
+  A6, \field Frame and Divider Name
        \note Enter the name of a WindowProperty:FrameAndDivider object
        \type object-list
        \object-list WindowFrameAndDividerNames
