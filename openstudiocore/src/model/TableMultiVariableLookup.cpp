@@ -1294,7 +1294,7 @@ bool TableMultiVariableLookup::addPoint(double x1, double x2, double x3, double 
   return getImpl<detail::TableMultiVariableLookup_Impl>()->addPoint(x1,x2,x3,x4,x5,yValue);
 }
 
-bool TableMultiVariableLookup::setPoints(const std::vector<TableMultiVariableLookup>& points) {
+bool TableMultiVariableLookup::setPoints(const std::vector<TableMultiVariableLookupPoint>& points) {
   return getImpl<detail::TableMultiVariableLookup_Impl>()->setPoints(points);
 }
 
