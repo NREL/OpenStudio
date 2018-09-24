@@ -339,6 +339,9 @@ typedef boost::optional<TableMultiVariableLookup> OptionalTableMultiVariableLook
 /** \relates TableMultiVariableLookup*/
 typedef std::vector<TableMultiVariableLookup> TableMultiVariableLookupVector;
 
+/** \relates TableMultiVariableLookupPoint*/
+typedef std::vector<TableMultiVariableLookupPoint> TableMultiVariableLookupPointVector;
+
 } // model
 } // openstudio
 
