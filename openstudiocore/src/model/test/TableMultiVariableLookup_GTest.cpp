@@ -120,3 +120,27 @@ TEST_F(ModelFixture,TableMultiVariableLookup)
   }
 }
 
+TEST_F(ModelFixture,TableMultiVariableLookupPoint) {
+
+  Model m;
+  TableMultiVariableLookup table(m,2);
+
+  EXPECT_TRUE(table.addPoint(70,32,0.1));
+
+  TableMultiVariableLookupPoint pt1(std::vector<double> {71,32}, 0.15);
+  TableMultiVariableLookupPoint pt2(72, 32, 0.3);
+  TableMultiVariableLookupPoint pt3(std::vector<double> {74,32}, 0.5);
+
+  std::vector<TableMultiVariableLookupPoint> points;
+  points.push_back(pt1);
+  points.push_back(pt2);
+  points.push_back(pt3);
+
+  EXPECT_TRUE(table.setPoints(points));
+
+  TableMultiVariableLookupPoint bad_point(70, 0.7);
+  points.push_back(bad_point);
+  EXPECT_FALSE(table.setPoints(points));
+
+}
+

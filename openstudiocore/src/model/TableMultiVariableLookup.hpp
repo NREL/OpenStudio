@@ -49,6 +49,12 @@ namespace detail {
 class TableMultiVariableLookupPoint {
  public:
   TableMultiVariableLookupPoint(std::vector<double> x, double y);
+  TableMultiVariableLookupPoint(double x1, double yValue);
+  TableMultiVariableLookupPoint(double x1, double x2, double yValue);
+  TableMultiVariableLookupPoint(double x1, double x2, double x3, double yValue);
+  TableMultiVariableLookupPoint(double x1, double x2, double x3, double x4, double yValue);
+  TableMultiVariableLookupPoint(double x1, double x2, double x3, double x4, double x5, double yValue);
+
   std::vector<double> x() const;
   double y() const;
  private:
