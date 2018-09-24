@@ -11,7 +11,6 @@
 
 %{
   #include <model/ScheduleTypeRegistry.hpp>
-  #include <model/TableMultiVariableLookup.hpp>
   #include <QColor>
   #include <utilities/data/TimeSeries.hpp>
   #include <utilities/sql/SqlFile.hpp>
@@ -216,7 +215,6 @@ SWIG_MODELOBJECT(RenderingColor, 1);
 SWIG_MODELOBJECT(DesignSpecificationOutdoorAir, 1);
 
 %include <model/ScheduleTypeRegistry.hpp>
-#include <model/TableMultiVariableLookup.hpp>
 
 #endif
 
