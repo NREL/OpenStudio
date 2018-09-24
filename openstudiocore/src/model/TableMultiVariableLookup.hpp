@@ -45,6 +45,18 @@ namespace detail {
 
 } // detail
 
+
+class TableMultiVariableLookupPoint {
+ public:
+  TableMultiVariableLookupPoint(std::vector<double> x, double y);
+  std::vector<double> x() const;
+  double y() const;
+ private:
+  std::vector<double> m_x;
+  double m_y;
+};
+
+
 /** TableMultiVariableLookup is a Curve that wraps the OpenStudio IDD object 'OS:Table:MultiVariableLookup'. */
 class MODEL_API TableMultiVariableLookup : public Curve {
  public:
@@ -257,6 +269,10 @@ class MODEL_API TableMultiVariableLookup : public Curve {
   /** @name Other */
   //@{
 
+
+  // Primary way to add a point
+  bool addPoint(const TableMultiVariableLookupPoint& point);
+
   /**
    * Add a y value corresponding to xValues. The size of the XValues vector must be
    * equal to the number of independent variables specified when the table was created.
@@ -264,19 +280,17 @@ class MODEL_API TableMultiVariableLookup : public Curve {
    * will be replaced.
    */
   bool addPoint(const std::vector<double> & xValues, double yValue);
-
   bool addPoint(double x1, double yValue);
-
   bool addPoint(double x1, double x2, double yValue);
-
   bool addPoint(double x1, double x2, double x3, double yValue);
-
   bool addPoint(double x1, double x2, double x3, double x4, double yValue);
-
   bool addPoint(double x1, double x2, double x3, double x4, double x5, double yValue);
 
-  // Return a vector of xValues and corresponding yValues, this is the entire set of data points
-  std::vector<std::pair<std::vector<double>,double> > points() const;
+  // Return a vector of points, this is the entire set of data points
+  std::vector<TableMultiVariableLookupPoint> points() const;
+
+  // Directly set the points from a vector, will delete any existing points
+  bool setPoints(const std::vector<TableMultiVariableLookupPoint>& points);;
 
   boost::optional<double> yValue(const std::vector<double> & xValues) const;
 

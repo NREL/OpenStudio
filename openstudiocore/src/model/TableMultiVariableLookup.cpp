@@ -47,6 +47,18 @@
 namespace openstudio {
 namespace model {
 
+
+TableMultiVariableLookupPoint::TableMultiVariableLookupPoint(std::vector<double> x, double y)
+  : m_x(x), m_y(y) { };
+
+std::vector<double> TableMultiVariableLookupPoint::x() const {
+  return m_x;
+}
+
+double TableMultiVariableLookupPoint::y() const {
+  return m_y;
+}
+
 namespace detail {
 
   bool TableMultiVariableLookup_Impl::xValuesEqual(const std::vector<double> & a, const std::vector<double> & b)
@@ -703,9 +715,9 @@ namespace detail {
     return true;
   }
 
-  std::vector<std::pair<std::vector<double>,double> > TableMultiVariableLookup_Impl::points() const
+  std::vector<TableMultiVariableLookupPoint> TableMultiVariableLookup_Impl::points() const
   {
-    std::vector<std::pair<std::vector<double>,double> > result;
+    std::vector<TableMultiVariableLookupPoint> result;
 
     int t_numberofIndependentVariables = numberofIndependentVariables();
 
@@ -728,8 +740,8 @@ namespace detail {
       OS_ASSERT(d);
       double yValue = d.get();
 
-      std::pair<std::vector<double>,double> p = std::pair<std::vector<double>,double>(xValues,yValue);
-      result.push_back(p);
+      TableMultiVariableLookupPoint point(xValues, yValue);
+      result.push_back(point);
     }
 
     return result;
@@ -744,12 +756,9 @@ namespace detail {
       return result;
     }
 
-    std::vector<std::pair<std::vector<double>,double> > t_points = points();
-    for(std::vector<std::pair<std::vector<double>,double> >::const_iterator it = t_points.begin();
-        it != t_points.end();
-        ++it)
-    {
-      std::vector<double> xValues = it->first;
+    std::vector<TableMultiVariableLookupPoint> t_points = points();
+    for(const TableMultiVariableLookupPoint& pt: t_points) {
+      std::vector<double> xValues = pt.x();
       result.push_back(xValues[xIndex]);
     }
 
@@ -763,20 +772,44 @@ namespace detail {
   {
     boost::optional<double> result;
 
-    std::vector<std::pair<std::vector<double>,double> > t_points = points();
-    for(std::vector<std::pair<std::vector<double>,double> >::const_iterator it = t_points.begin();
-        it != t_points.end();
-        ++it)
-    {
-      std::vector<double> t_c = it->first;
+    std::vector<TableMultiVariableLookupPoint> t_points = points();
+    for(const TableMultiVariableLookupPoint& pt: t_points) {
+      std::vector<double> t_c = pt.x();
       if( xValuesEqual( t_c, xValues ) )
       {
-        result = it->second;
+        result = pt.y();
         break;
       }
     }
 
     return result;
+  }
+
+
+  bool TableMultiVariableLookup_Impl::setPoints(const std::vector<TableMultiVariableLookupPoint>& points) {
+    // We first check that ALL points have the right number of independent variables, before we do anything destructive such as clearing the points
+    int n_independent = numberofIndependentVariables();
+    for (const TableMultiVariableLookupPoint& pt: points) {
+      if (pt.x().size() != n_independent) {
+        LOG(Warn, "Cannot set points because all points must have exactly " << n_independent << " independent variable(s), for " << briefDescription());
+        return false;
+      }
+    }
+
+    // Ok, now we clear
+    this->clearExtensibleGroups();
+
+    // And we add all points
+    bool result = true;
+    for (const TableMultiVariableLookupPoint& pt: points) {
+      result &= addPoint(pt);
+    }
+
+    return result;
+  }
+
+  bool TableMultiVariableLookup_Impl::addPoint(const TableMultiVariableLookupPoint& point) {
+     return addPoint(point.x(), point.y());
   }
 
   bool TableMultiVariableLookup_Impl::addPoint(double x1, double yValue)
@@ -1226,6 +1259,11 @@ double TableMultiVariableLookup::evaluate(const std::vector<double>& x) const
   return getImpl<detail::TableMultiVariableLookup_Impl>()->evaluate(x);
 }
 
+bool TableMultiVariableLookup::addPoint(const TableMultiVariableLookupPoint& point)
+{
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->addPoint(point);
+}
+
 bool TableMultiVariableLookup::addPoint(const std::vector<double> & xValues, double yValue)
 {
   return getImpl<detail::TableMultiVariableLookup_Impl>()->addPoint(xValues,yValue);
@@ -1256,7 +1294,11 @@ bool TableMultiVariableLookup::addPoint(double x1, double x2, double x3, double 
   return getImpl<detail::TableMultiVariableLookup_Impl>()->addPoint(x1,x2,x3,x4,x5,yValue);
 }
 
-std::vector<std::pair<std::vector<double>,double> > TableMultiVariableLookup::points() const
+bool TableMultiVariableLookup::setPoints(const std::vector<TableMultiVariableLookup>& points) {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->setPoints(points);
+}
+
+std::vector<TableMultiVariableLookupPoint> TableMultiVariableLookup::points() const
 {
   return getImpl<detail::TableMultiVariableLookup_Impl>()->points();
 }
