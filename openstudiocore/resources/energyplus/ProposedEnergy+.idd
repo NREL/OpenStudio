@@ -48261,6 +48261,7 @@ PlantEquipmentOperationSchemes,
        \reference PlantOperationSchemes
   A2 , \field Control Scheme 1 Object Type
         \required-field
+        \begin-extensible
        \type choice
        \key PlantEquipmentOperation:CoolingLoad
        \key PlantEquipmentOperation:HeatingLoad
