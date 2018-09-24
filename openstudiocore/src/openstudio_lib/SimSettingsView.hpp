@@ -296,7 +296,7 @@ private:
 
   // ZoneAirContaminantBalance
   OSSwitch2 * m_carbonDioxideConcentration;
-  OSLineEdit2 * m_outdoorCarbonDioxideScheduleName;
+  OSComboBox2 * m_outdoorCarbonDioxideScheduleName;
 
   // ZoneCapacitanceMultiplierResearchSpecial
   OSQuantityEdit2 * m_temperatureCapacityMultiplier;
