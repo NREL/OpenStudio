@@ -831,6 +831,8 @@ namespace gbxml {
           result.setAttribute("surfaceType", "InteriorWall");
         } else if (surface.isGroundSurface()){
           result.setAttribute("surfaceType", "UndergroundWall");
+        } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
+          result.setAttribute("surfaceType", "InteriorWall");
         }
       } else if (istringEqual("RoofCeiling", surfaceType)){
         if (istringEqual("Outdoors", outsideBoundaryCondition)){
@@ -839,6 +841,8 @@ namespace gbxml {
           result.setAttribute("surfaceType", "Ceiling");
         } else if (surface.isGroundSurface()){
           result.setAttribute("surfaceType", "UndergroundCeiling");
+        } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
+          result.setAttribute("surfaceType", "InteriorWall");
         }
       } else if (istringEqual("Floor", surfaceType)){
         if (istringEqual("Outdoors", outsideBoundaryCondition)){
@@ -848,6 +852,8 @@ namespace gbxml {
           result.setAttribute("surfaceType", "UndergroundSlab"); // might be SlabOnGrade, check vertices later
         } else if (istringEqual("Surface", outsideBoundaryCondition)){
           result.setAttribute("surfaceType", "InteriorFloor");
+        } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
+          result.setAttribute("surfaceType", "InteriorWall");
         }
       }
     }
@@ -1234,7 +1240,7 @@ namespace gbxml {
       QDomElement adjacentSpaceIdElement = doc.createElement("AdjacentSpaceId");
       result.appendChild(adjacentSpaceIdElement);
       adjacentSpaceIdElement.setAttribute("spaceIdRef", escapeName(spaceName));
-    } else{
+    } else {
       boost::optional<model::ShadingSurfaceGroup> shadingSurfaceGroup = shadingSurface.shadingSurfaceGroup();
       if (shadingSurfaceGroup){
         std::string spaceName = shadingSurfaceGroup->name().get();
