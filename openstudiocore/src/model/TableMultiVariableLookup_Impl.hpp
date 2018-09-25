@@ -151,7 +151,7 @@ namespace detail {
     int numberofIndependentVariables() const;
 
     /** Print a fixed-width table of the points, precision is the number of decimals */
-    std::string printTable(int precision) const;
+    std::string printTable(unsigned int precision) const;
 
     //@}
     /** @name Setters */

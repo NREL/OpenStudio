@@ -793,14 +793,14 @@ namespace detail {
   }
 
   // Helper function for printTable
-  std::string centered(double val, int targetSize, int precision) {
+  std::string centered(double val, int targetSize, unsigned int precision) {
     std::stringstream ss;
     ss << std::fixed << std::setprecision(precision) << val;
     return centered(ss.str(), targetSize);
   }
 
   // Print a table (for console output in particular)
-  std::string TableMultiVariableLookup_Impl::printTable(int precision) const {
+  std::string TableMultiVariableLookup_Impl::printTable(unsigned int precision) const {
     std::vector<TableMultiVariableLookupPoint> points = this->points();
     std::stringstream ss;
     int size = points[0].x().size();
@@ -1388,7 +1388,7 @@ std::vector<TableMultiVariableLookupPoint> TableMultiVariableLookup::points() co
   return getImpl<detail::TableMultiVariableLookup_Impl>()->points();
 }
 
-std::string TableMultiVariableLookup::printTable(int precision) const {
+std::string TableMultiVariableLookup::printTable(unsigned int precision) const {
   return getImpl<detail::TableMultiVariableLookup_Impl>()->printTable(precision);
 }
 
