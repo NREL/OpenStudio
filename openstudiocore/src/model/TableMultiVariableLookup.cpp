@@ -707,7 +707,11 @@ namespace detail {
   }
 
   bool TableMultiVariableLookup_Impl::setNumberofIndependentVariables(int numberofIndependentVariables) {
+    // This object only accept between 1 and 5 independent variables
+    // This is enforced by the IDD \minimum and \maximum, so no need to explicitly check here:
+    // setInt will return false if outside that range
     bool result = setInt(OS_Table_MultiVariableLookupFields::NumberofIndependentVariables, numberofIndependentVariables);
+
     return result;
   }
 
@@ -949,14 +953,12 @@ TableMultiVariableLookup::TableMultiVariableLookup(const Model& model, const int
 {
   OS_ASSERT(getImpl<detail::TableMultiVariableLookup_Impl>());
 
-  getImpl<detail::TableMultiVariableLookup_Impl>()->setNumberofIndependentVariables(numberofIndependentVariables);
-
-  // TODO: Appropriately handle the following required object-list fields.
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setNumberofIndependentVariables();
-  OS_ASSERT(ok);
+  // Check if numberofIndependentVariables between 1 and 5 included, otherwise THROW
+  bool ok = getImpl<detail::TableMultiVariableLookup_Impl>()->setNumberofIndependentVariables(numberofIndependentVariables);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("TableMultiVariableLookup only accepts between 1 and 5 independent variables (included).");
+  }
 }
 
 IddObjectType TableMultiVariableLookup::iddObjectType() {
