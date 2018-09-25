@@ -120,6 +120,16 @@ TEST_F(ModelFixture,TableMultiVariableLookup)
   }
 }
 
+TEST_F(ModelFixture, TableMultiVariableLookup_BadNumberOfVariables)
+{
+  Model model;
+
+  // Only between 1 and 5 (included) independent variables are allowed
+  EXPECT_THROW(TableMultiVariableLookup(model, 0), openstudio::Exception);
+  EXPECT_THROW(TableMultiVariableLookup(model, 6), openstudio::Exception);
+  EXPECT_NO_THROW(TableMultiVariableLookup(model, 5));
+}
+
 TEST_F(ModelFixture,TableMultiVariableLookupPoint) {
 
   Model m;
