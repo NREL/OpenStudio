@@ -145,7 +145,10 @@ boost::optional<IdfObject> ForwardTranslator::translateRunPeriod( RunPeriod& mod
     runPeriod.setString(openstudio::RunPeriodFields::UseWeatherFileSnowIndicators,"No");
   }
 
-  runPeriod.setInt(openstudio::RunPeriodFields::NumberofTimesRunperiodtobeRepeated,modelObject.getNumTimePeriodRepeats());
+  //runPeriod.setInt(openstudio::RunPeriodFields::NumberofTimesRunperiodtobeRepeated,modelObject.getNumTimePeriodRepeats());
+
+  runPeriod.setInt(openstudio::RunPeriodFields::BeginYear, jan1.year());
+  runPeriod.setInt(openstudio::RunPeriodFields::EndYear, jan1.year() + modelObject.getNumTimePeriodRepeats());
 
   return boost::optional<IdfObject>(runPeriod);
 }

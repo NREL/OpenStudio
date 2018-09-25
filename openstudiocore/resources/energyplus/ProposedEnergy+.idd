@@ -1237,13 +1237,13 @@ SizingPeriod:WeatherFileConditionType,
        \default Yes
 
 RunPeriod,
-       \memo Specified a range of dates and other parameters for a weather file simulation.
+       \memo Specify a range of dates and other parameters for a simulation.
        \memo Multiple run periods may be input, but they may not overlap.
-       \min-fields 11
+       \min-fields 7
   A1 , \field Name
        \reference RunPeriodsAndDesignDays
        \note descriptive name (used in reporting mainly)
-       \note if blank, weather file title is used.  if not blank, must be unique
+       \note If blank, weather file title is used.  If not blank, must be unique
   N1 , \field Begin Month
        \required-field
        \minimum 1
@@ -1254,19 +1254,25 @@ RunPeriod,
        \minimum 1
        \maximum 31
        \type integer
-  N3 , \field End Month
+  N3,  \field Begin Year
+       \note Start year of the simulation, if this field is specified it must agree with the Day of Week for Start Day
+       \note If this field is blank, the year will be selected to match the weekday, which is Sunday if not specified
+  N4 , \field End Month
        \required-field
        \minimum 1
        \maximum 12
        \type integer
-  N4 , \field End Day of Month
+  N5 , \field End Day of Month
        \required-field
        \minimum 1
        \maximum 31
        \type integer
+  N6,  \field End Year
+       \note end year of simulation, if specified
   A2 , \field Day of Week for Start Day
-       \note  =<blank - use WeatherFile>|Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday];
-       \default UseWeatherFile
+       \note =[Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday];
+       \note If no year is input, this field will default to Sunday
+       \note If a year is input and this field is blank, the correct weekday is determined
        \type choice
        \key Sunday
        \key Monday
@@ -1275,7 +1281,6 @@ RunPeriod,
        \key Thursday
        \key Friday
        \key Saturday
-       \key UseWeatherFile
   A3,  \field Use Weather File Holidays and Special Days
        \note If yes or blank, use holidays as specified on Weatherfile.
        \note If no, do not use the holidays specified on the Weatherfile.
@@ -1307,19 +1312,11 @@ RunPeriod,
        \key Yes
        \key No
        \default Yes
-  N5,  \field Number of Times Runperiod to be Repeated
-       \type integer
-       \minimum 1
-       \default 1
-  A8,  \field Increment Day of Week on repeat
+  A8;  \field Treat Weather as Actual
        \type choice
        \key Yes
        \key No
-       \default Yes
-  N6;  \field Start Year
-       \note this is the start year for the start date.  If the leap year is "Yes" in the weather file header
-       \note (that is HOLIDAYS/SPECIAL DAYS header first field), then any year which is a leap year will assume
-       \note there will be a Feb 29. A repeat of this runperiod will automatically increment the year.
+       \default No
 
 RunPeriod:CustomRange,
        \memo run simulation for a custom created weather file
