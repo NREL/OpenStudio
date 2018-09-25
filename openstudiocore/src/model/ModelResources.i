@@ -113,6 +113,7 @@ MODELOBJECT_TEMPLATES(CurveRectangularHyperbola1);
 MODELOBJECT_TEMPLATES(CurveRectangularHyperbola2);
 MODELOBJECT_TEMPLATES(CurveSigmoid);
 MODELOBJECT_TEMPLATES(CurveTriquadratic);
+MODELOBJECT_TEMPLATES(TableMultiVariableLookupPoint);
 MODELOBJECT_TEMPLATES(TableMultiVariableLookup);
 MODELOBJECT_TEMPLATES(SpaceLoadDefinition);
 MODELOBJECT_TEMPLATES(PeopleDefinition);
