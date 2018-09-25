@@ -133,6 +133,7 @@ TEST_F(ModelFixture, TableMultiVariableLookup_BadNumberOfVariables)
 TEST_F(ModelFixture,TableMultiVariableLookupPoint) {
 
   Model m;
+  // Table with 2 independent variables
   TableMultiVariableLookup table(m,2);
 
   EXPECT_TRUE(table.addPoint(70,32,0.1));
@@ -160,7 +161,7 @@ TEST_F(ModelFixture,TableMultiVariableLookupPoint) {
 
   TableMultiVariableLookupPoint bad_point(70, 0.7);
   points.push_back(bad_point);
-  // It should catch that at least one point doesn't have the appropriate number of independent variables
+  // It should catch that our bad_point doesn't have the appropriate number of independent variables
   // and as a result both return false and don't affect the points
   EXPECT_FALSE(table.setPoints(points));
   EXPECT_EQ(3, table.points().size());
