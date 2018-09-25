@@ -128,6 +128,7 @@ TEST_F(ModelFixture,TableMultiVariableLookupPoint) {
   EXPECT_TRUE(table.addPoint(70,32,0.1));
 
   TableMultiVariableLookupPoint pt1(std::vector<double> {71,32}, 0.15);
+  // Add with the overloaded Ctor that takes (x0, x1, y)
   TableMultiVariableLookupPoint pt2(72, 32, 0.3);
   TableMultiVariableLookupPoint pt3(std::vector<double> {74,32}, 0.5);
 
@@ -136,11 +137,30 @@ TEST_F(ModelFixture,TableMultiVariableLookupPoint) {
   points.push_back(pt2);
   points.push_back(pt3);
 
+  // setPoints just replaces points
   EXPECT_TRUE(table.setPoints(points));
+  EXPECT_EQ(3, table.points().size());
+  {
+    TableMultiVariableLookupPoint pt = table.points()[0];
+    EXPECT_EQ(2, pt.x().size());
+    EXPECT_DOUBLE_EQ(71, pt.x()[0]);
+    EXPECT_DOUBLE_EQ(32, pt.x()[1]);
+    EXPECT_DOUBLE_EQ(0.15, pt.y());
+  }
 
   TableMultiVariableLookupPoint bad_point(70, 0.7);
   points.push_back(bad_point);
+  // It should catch that at least one point doesn't have the appropriate number of independent variables
+  // and as a result both return false and don't affect the points
   EXPECT_FALSE(table.setPoints(points));
+  EXPECT_EQ(3, table.points().size());
+  {
+    TableMultiVariableLookupPoint pt = table.points()[0];
+    EXPECT_EQ(2, pt.x().size());
+    EXPECT_DOUBLE_EQ(71, pt.x()[0]);
+    EXPECT_DOUBLE_EQ(32, pt.x()[1]);
+    EXPECT_DOUBLE_EQ(0.15, pt.y());
+  }
 
 }
 
