@@ -177,7 +177,8 @@ class MODEL_API TableMultiVariableLookup : public Curve {
 
   int numberofIndependentVariables() const;
 
-  // TODO: Handle this object's extensible fields.
+  /** Print a fixed-width table of the points, precision is the number of decimals */
+  std::string printTable(int precision=3) const;
 
   //@}
   /** @name Setters */

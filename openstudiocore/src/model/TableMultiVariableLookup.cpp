@@ -43,6 +43,7 @@
 #include "../utilities/core/Assert.hpp"
 
 #include <algorithm>
+#include <iomanip>
 
 namespace openstudio {
 namespace model {
@@ -780,6 +781,57 @@ namespace detail {
     return result;
   }
 
+  // Helper function for printTable
+  std::string centered( std::string const& original, int targetSize ) {
+    // assert( targetSize >= 0 );
+    int padding = targetSize - (int)( original.size() );
+    return padding > 0
+        ? std::string( padding / 2, ' ' )
+            + original
+            + std::string( padding - (padding / 2), ' ' )
+        : original;
+  }
+
+  // Helper function for printTable
+  std::string centered(double val, int targetSize, int precision) {
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(precision) << val;
+    return centered(ss.str(), targetSize);
+  }
+
+  // Print a table (for console output in particular)
+  std::string TableMultiVariableLookup_Impl::printTable(int precision) const {
+    std::vector<TableMultiVariableLookupPoint> points = this->points();
+    std::stringstream ss;
+    int size = points[0].x().size();
+
+    ss << "|" << centered("n", 5) << "|";
+    for (int i=1; i <= size; ++i) {
+      std::stringstream tempss;
+      tempss << "x" << i;
+      ss << centered(tempss.str(), 15) << "|";
+    }
+    ss << centered("y", 15) << "|";
+    ss << "\n" << "|-----+";
+    for (int i=1; i <= size; ++i) {
+      ss << std::string(15, '-') << "+";
+    }
+    ss << std::string(15, '-') << "|\n";
+
+    int i = 1;
+    for (const TableMultiVariableLookupPoint& pt: points) {
+      ss << "|" << centered(std::to_string(i), 5);
+      for (const double& x: pt.x()) {
+        ss << "|" << centered(x, 15, precision);
+      }
+      ss << "|" << centered(pt.y(), 15, precision) << "|\n";
+      ++i;
+    }
+
+    return ss.str();
+
+  }
+
   std::vector<double> TableMultiVariableLookup_Impl::xValues(int xIndex) const
   {
     std::vector<double> result;
@@ -1334,6 +1386,10 @@ bool TableMultiVariableLookup::setPoints(const std::vector<TableMultiVariableLoo
 std::vector<TableMultiVariableLookupPoint> TableMultiVariableLookup::points() const
 {
   return getImpl<detail::TableMultiVariableLookup_Impl>()->points();
+}
+
+std::string TableMultiVariableLookup::printTable(int precision) const {
+  return getImpl<detail::TableMultiVariableLookup_Impl>()->printTable(precision);
 }
 
 boost::optional<double> TableMultiVariableLookup::yValue(const std::vector<double> & xValues) const
