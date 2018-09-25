@@ -49,6 +49,17 @@ class ShadingControl;
 }
 }
 
+// extend classes
+%extend openstudio::model::TableMultiVariableLookupPoint {
+  // Use the overloaded operator<< for string representation
+  // puts point will return something like "(x1, x2) = (10.5, 0.75)"
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 MODELOBJECT_TEMPLATES(ScheduleInterval);
 MODELOBJECT_TEMPLATES(ScheduleFixedInterval);
 MODELOBJECT_TEMPLATES(ExternalFile);

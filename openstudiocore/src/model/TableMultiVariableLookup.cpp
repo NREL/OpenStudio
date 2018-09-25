@@ -72,6 +72,26 @@ double TableMultiVariableLookupPoint::y() const {
   return m_y;
 }
 
+std::ostream& operator<< (std::ostream& out, const openstudio::model::TableMultiVariableLookupPoint& point) {
+  std::vector<double> xValues = point.x();
+  std::stringstream ss_left, ss_right;
+  int i = 1;
+  ss_left << "(";
+  ss_right << "(";
+
+  for (const double& x: xValues) {
+    ss_left << "x" << i << ", ";
+    ss_right << x << ", ";
+    ++i;
+  }
+
+  ss_left << "y)";
+  ss_right << point.y() << ")";
+
+  out << ss_left.str() << " = " << ss_right.str();
+  return out;
+}
+
 namespace detail {
 
   bool TableMultiVariableLookup_Impl::xValuesEqual(const std::vector<double> & a, const std::vector<double> & b)
@@ -703,7 +723,7 @@ namespace detail {
 
   bool TableMultiVariableLookup_Impl::addPoint(const std::vector<double> & t_xValues, double t_yValue)
   {
-    if( t_xValues.size() != numberofIndependentVariables() )
+    if( t_xValues.size() != (unsigned)numberofIndependentVariables() )
     {
       return false;
     }
@@ -803,7 +823,7 @@ namespace detail {
     // We first check that ALL points have the right number of independent variables, before we do anything destructive such as clearing the points
     int n_independent = numberofIndependentVariables();
     for (const TableMultiVariableLookupPoint& pt: points) {
-      if (pt.x().size() != n_independent) {
+      if (pt.x().size() != (unsigned)n_independent) {
         LOG(Warn, "Cannot set points because all points must have exactly " << n_independent << " independent variable(s), for " << briefDescription());
         return false;
       }
