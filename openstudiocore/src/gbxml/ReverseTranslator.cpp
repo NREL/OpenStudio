@@ -86,7 +86,7 @@ namespace gbxml {
   }
 
   ReverseTranslator::ReverseTranslator()
-    : m_lengthMultiplier(1.0)
+    : m_nonBaseMultiplier(1.0), m_lengthMultiplier(1.0)
   {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.gbxml\\.ReverseTranslator"));
@@ -192,17 +192,21 @@ namespace gbxml {
     // TODO: still need some help with some units
     QString lengthUnit = element.attribute("lengthUnit");
     if (lengthUnit.contains("Kilometers", Qt::CaseInsensitive)){
-      //m_lengthUnit = UnitFactory::instance().createUnit("F").get();
+      m_nonBaseMultiplier = 1000.0;
+      m_lengthUnit = UnitFactory::instance().createUnit("m").get();
     }else if (lengthUnit.contains("Centimeters", Qt::CaseInsensitive)){
-      //m_lengthUnit = UnitFactory::instance().createUnit("C").get();
+      m_nonBaseMultiplier = 1.0e-2;
+      m_lengthUnit = UnitFactory::instance().createUnit("m").get();
     }else if (lengthUnit.contains("Millimeters", Qt::CaseInsensitive)){
-      //m_lengthUnit = UnitFactory::instance().createUnit("K").get();
+      m_nonBaseMultiplier = 1.0e-3;
+      m_lengthUnit = UnitFactory::instance().createUnit("K").get();
     }else if (lengthUnit.contains("Meters", Qt::CaseInsensitive)){
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
     }else if (lengthUnit.contains("Miles", Qt::CaseInsensitive)){
       m_lengthUnit = UnitFactory::instance().createUnit("mi").get();
     }else if (lengthUnit.contains("Yards", Qt::CaseInsensitive)){
-      //m_lengthUnit = UnitFactory::instance().createUnit("m").get();
+      m_nonBaseMultiplier = 3.0;
+      m_lengthUnit = UnitFactory::instance().createUnit("ft").get();
     }else if (lengthUnit.contains("Feet", Qt::CaseInsensitive)){
       m_lengthUnit = UnitFactory::instance().createUnit("ft").get();
     }else if (lengthUnit.contains("Inches", Qt::CaseInsensitive)){
@@ -212,7 +216,7 @@ namespace gbxml {
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
     }
 
-    Quantity unitLength(1.0, m_lengthUnit);
+    Quantity unitLength(m_nonBaseMultiplier, m_lengthUnit);
     Unit targetUnit = UnitFactory::instance().createUnit("m").get();
     m_lengthMultiplier = QuantityConverter::instance().convert(unitLength, targetUnit)->value();
 
