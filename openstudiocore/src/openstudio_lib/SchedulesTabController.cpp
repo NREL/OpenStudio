@@ -270,9 +270,32 @@ void SchedulesTabController::onEndDateTimeChanged(model::ScheduleRule & schedule
 
 void SchedulesTabController::removeScheduleRule(model::ScheduleRule & scheduleRule)
 {
+  // TODO: why is this calling Impl and not doing anything with it?
   scheduleRule.getImpl<openstudio::model::detail::ScheduleRule_Impl>();
 
+  // Store current ruleIndex
+  int ruleIndex = scheduleRule.ruleIndex();
+  model::ScheduleRuleset scheduleRuleset = scheduleRule.scheduleRuleset();
+
   scheduleRule.remove();
+
+  std::vector<model::ScheduleRule> rules = scheduleRuleset.scheduleRules();
+  int n_rules = static_cast<int>(rules.size());
+
+  if( n_rules == 0 ) {
+    // Set the new displayed to the defaultDaySchedule
+    qobject_cast<SchedulesView *>(m_currentView)->showDefaultScheduleDay(scheduleRuleset);
+  }
+  else if( ruleIndex <= (n_rules - 1) ) {
+    // Set the new displayed ScheduleRule to the same index (will display the priority right below the one we just deleted)
+    if (qobject_cast<SchedulesView *>(m_currentView)) {
+      qobject_cast<SchedulesView *>(m_currentView)->showScheduleRule(rules[ruleIndex]);
+    }
+  } else {
+    // Set the new displayed ScheduleRule to the last one
+    qobject_cast<SchedulesView *>(m_currentView)->showScheduleRule(rules[n_rules - 1]);
+  }
+
 }
 
 void SchedulesTabController::onItemDropped(const OSItemId& itemId)
