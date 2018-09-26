@@ -142,7 +142,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_UndergroundWalls)
       count += 1;
     }
   }
-  EXPECT_EQ(12, count);
+  EXPECT_EQ(12, count); // 4 slabs + 8 walls
 }
 
 TEST_F(gbXMLFixture, ReverseTranslator_HandleMapping)
