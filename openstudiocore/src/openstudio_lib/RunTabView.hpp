@@ -83,9 +83,6 @@ namespace openstudio {
 
     void onRunDataReady();
 
-    // Given an osm file, return the companion directory
-    path resourcePath(const path & osmPath) const;
-
     QToolButton * m_playButton;
     QProgressBar * m_progressBar;
     QLabel * m_statusLabel;

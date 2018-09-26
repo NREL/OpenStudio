@@ -204,7 +204,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
   }
 
   // Spaces
-
+  // Note, when you reach this point of the forward translator thermalZone.combineSpaces() has already been called,
+  // This happens in ForwardTranslator::translateModelPrivate. As a result, each zone has 0 or 1 space only
   std::vector<Space> spaces = modelObject.spaces();
   if (spaces.empty()){
     LOG(Warn, "ThermalZone " << modelObject.name().get() << " does not have any geometry or loads associated with it.");
@@ -704,7 +705,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       if ( returnPlenum ) {
         auto allIdealHVAC = returnPlenum->getImpl<model::detail::AirLoopHVACReturnPlenum_Impl>()->zoneHVACIdealLoadsAirSystems();
         if ( ! allIdealHVAC.empty() ) {
-          zoneHVACIdealWorkaround = true; 
+          zoneHVACIdealWorkaround = true;
         }
       }
     }
