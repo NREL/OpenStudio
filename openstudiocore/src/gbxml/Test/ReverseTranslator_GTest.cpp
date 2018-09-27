@@ -48,6 +48,8 @@
 #include "../../model/Space_Impl.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/Surface_Impl.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial_Impl.hpp"
 
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/Optional.hpp"
@@ -143,6 +145,170 @@ TEST_F(gbXMLFixture, ReverseTranslator_UndergroundWalls)
     }
   }
   EXPECT_EQ(12, count); // 4 slabs + 8 walls
+}
+
+TEST_F(gbXMLFixture, ReverseTranslator_FloorSurfaces)
+{
+
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/TestCube.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model);
+
+  // Check all the surfaces that are supposed to be floors and ceilings
+  OptionalSurface osurf = model->getModelObjectByName<Surface>("T-1-5-I-F-6");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("Floor", osurf->surfaceType());
+  auto space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("5 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-1-5-I-F-6 Reversed");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("RoofCeiling", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("1 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-2-6-I-F-11");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("Floor", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("6 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-2-6-I-F-11 Reversed");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("RoofCeiling", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("2 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-3-7-I-F-16");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("Floor", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("7 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-3-7-I-F-16 Reversed");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("RoofCeiling", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("3 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-4-8-I-F-20");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("Floor", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("8 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-4-8-I-F-20 Reversed");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("RoofCeiling", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("4 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-5-9-I-F-25");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("Floor", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("9 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-5-9-I-F-25 Reversed");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("RoofCeiling", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("5 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-6-10-I-F-29");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("Floor", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("10 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-6-10-I-F-29 Reversed");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("RoofCeiling", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("6 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-7-11-I-F-33");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("Floor", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("11 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-7-11-I-F-33 Reversed");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("RoofCeiling", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("7 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-8-12-I-F-36");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("Floor", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("12 Space", space->name().get());
+
+  osurf = model->getModelObjectByName<Surface>("T-8-12-I-F-36 Reversed");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("RoofCeiling", osurf->surfaceType());
+  space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("8 Space", space->name().get());
+
+}
+
+TEST_F(gbXMLFixture, ReverseTranslator_AlternateUnits)
+{
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/TestCubeAlternateUnits.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model);
+
+  auto surfs = model->getModelObjects<Surface>();
+
+  OptionalSurface osurf = model->getModelObjectByName<Surface>("T-1-5-I-F-6");
+  ASSERT_TRUE(osurf);
+  auto points = osurf->vertices();
+  ASSERT_EQ(4, points.size());
+  EXPECT_EQ(0.9144, points[1].y());
+
+  auto omat = model->getModelObjectByName<StandardOpaqueMaterial>("Concrete: 100 [mm]");
+  ASSERT_TRUE(omat);
+  EXPECT_DOUBLE_EQ(0.07407407, omat->thermalResistance());
+  EXPECT_DOUBLE_EQ(1570.0, omat->density());
+  EXPECT_DOUBLE_EQ(1.35, omat->conductivity());
+  EXPECT_DOUBLE_EQ(0.1, omat->thickness());
+  EXPECT_DOUBLE_EQ(840.0, omat->specificHeat());
+  omat = model->getModelObjectByName<StandardOpaqueMaterial>("RockWool: 50 [mm]");
+  ASSERT_TRUE(omat);
+  EXPECT_DOUBLE_EQ(1.470588, omat->thermalResistance());
+  EXPECT_DOUBLE_EQ(200.0, omat->density());
+  EXPECT_DOUBLE_EQ(0.034, omat->conductivity());
+  EXPECT_DOUBLE_EQ(0.05, omat->thickness());
+  EXPECT_DOUBLE_EQ(710.0, omat->specificHeat());
+  omat = model->getModelObjectByName<StandardOpaqueMaterial>("Concrete: 150 [mm]");
+  ASSERT_TRUE(omat);
+  EXPECT_DOUBLE_EQ(0.1111111, omat->thermalResistance());
+  EXPECT_DOUBLE_EQ(1570.0, omat->density());
+  EXPECT_DOUBLE_EQ(1.35, omat->conductivity());
+  EXPECT_DOUBLE_EQ(0.15, omat->thickness());
+  EXPECT_DOUBLE_EQ(840.0, omat->specificHeat());
+
 }
 
 TEST_F(gbXMLFixture, ReverseTranslator_HandleMapping)

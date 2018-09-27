@@ -6208,26 +6208,26 @@
   </Layer>
   <Material id="aim0639">
     <Name>Concrete: 100 [mm]</Name>
-    <R-value unit="SquareMeterKPerW">0.07407407</R-value>
-    <Thickness unit="Meters">0.1</Thickness>
-    <Conductivity unit="WPerMeterK">1.35</Conductivity>
-    <Density unit="KgPerCubicM">1570</Density>
-    <SpecificHeat unit="JPerKgK">840</SpecificHeat>
+    <R-value unit="HrSquareFtFPerBTU">1.379961020395480</R-value>
+    <Thickness unit="Kilometers">0.0001</Thickness>
+    <Conductivity unit="WPerCmC">0.0135</Conductivity>
+    <Density unit="GramsPerCubicCm">1.57</Density>
+    <SpecificHeat unit="BTUPerLbF">0.2005345661702477</SpecificHeat>
   </Material>
   <Material id="aim0646">
     <Name>RockWool: 50 [mm]</Name>
     <R-value unit="SquareMeterKPerW">1.470588</R-value>
-    <Thickness unit="Meters">0.05</Thickness>
+    <Thickness unit="Yards">0.0546806649168855</Thickness>
     <Conductivity unit="WPerMeterK">0.034</Conductivity>
-    <Density unit="KgPerCubicM">200</Density>
+    <Density unit="LbsPerCubicIn">0.0072254642939029</Density>
     <SpecificHeat unit="JPerKgK">710</SpecificHeat>
   </Material>
   <Material id="aim0667">
     <Name>Concrete: 150 [mm]</Name>
     <R-value unit="SquareMeterKPerW">0.1111111</R-value>
     <Thickness unit="Meters">0.15</Thickness>
-    <Conductivity unit="WPerMeterK">1.35</Conductivity>
-    <Density unit="KgPerCubicM">1570</Density>
+    <Conductivity unit="BtuPerHourFtF">0.7800154979457203</Conductivity>
+    <Density unit="LbsPerCubicFt">98.01197805393393</Density>
     <SpecificHeat unit="JPerKgK">840</SpecificHeat>
   </Material>
   <Schedule type="Fraction" id="aim0056">
