@@ -48,6 +48,8 @@
 #include "../../model/Space_Impl.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/Surface_Impl.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial_Impl.hpp"
 
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/Optional.hpp"
@@ -266,6 +268,46 @@ TEST_F(gbXMLFixture, ReverseTranslator_FloorSurfaces)
   space = osurf->space();
   ASSERT_TRUE(space);
   EXPECT_EQ("8 Space", space->name().get());
+
+}
+
+TEST_F(gbXMLFixture, ReverseTranslator_AlternateUnits)
+{
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/TestCubeAlternateUnits.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model);
+
+  auto surfs = model->getModelObjects<Surface>();
+
+  OptionalSurface osurf = model->getModelObjectByName<Surface>("T-1-5-I-F-6");
+  ASSERT_TRUE(osurf);
+  auto points = osurf->vertices();
+  ASSERT_EQ(4, points.size());
+  EXPECT_EQ(0.9144, points[1].y());
+
+  auto omat = model->getModelObjectByName<StandardOpaqueMaterial>("Concrete: 100 [mm]");
+  ASSERT_TRUE(omat);
+  EXPECT_DOUBLE_EQ(0.07407407, omat->thermalResistance());
+  EXPECT_DOUBLE_EQ(1570.0, omat->density());
+  EXPECT_DOUBLE_EQ(1.35, omat->conductivity());
+  EXPECT_DOUBLE_EQ(0.1, omat->thickness());
+  EXPECT_DOUBLE_EQ(840.0, omat->specificHeat());
+  omat = model->getModelObjectByName<StandardOpaqueMaterial>("RockWool: 50 [mm]");
+  ASSERT_TRUE(omat);
+  EXPECT_DOUBLE_EQ(1.470588, omat->thermalResistance());
+  EXPECT_DOUBLE_EQ(200.0, omat->density());
+  EXPECT_DOUBLE_EQ(0.034, omat->conductivity());
+  EXPECT_DOUBLE_EQ(0.05, omat->thickness());
+  EXPECT_DOUBLE_EQ(710.0, omat->specificHeat());
+  omat = model->getModelObjectByName<StandardOpaqueMaterial>("Concrete: 150 [mm]");
+  ASSERT_TRUE(omat);
+  EXPECT_DOUBLE_EQ(0.1111111, omat->thermalResistance());
+  EXPECT_DOUBLE_EQ(1570.0, omat->density());
+  EXPECT_DOUBLE_EQ(1.35, omat->conductivity());
+  EXPECT_DOUBLE_EQ(0.15, omat->thickness());
+  EXPECT_DOUBLE_EQ(840.0, omat->specificHeat());
 
 }
 
