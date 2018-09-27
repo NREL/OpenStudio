@@ -29,8 +29,8 @@
 
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
-#include "../AirTerminalSingleDuctUncontrolled.hpp"
-#include "../AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
@@ -40,7 +40,7 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,AirTerminalSingleDuctUncontrolled_AirTerminalSingleDuctUncontrolled)
+TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeNoReheat_AirTerminalSingleDuctConstantVolumeNoReheat)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
@@ -48,17 +48,17 @@ TEST_F(ModelFixture,AirTerminalSingleDuctUncontrolled_AirTerminalSingleDuctUncon
   {
     Model m;
     Schedule s = m.alwaysOnDiscreteSchedule();
-    AirTerminalSingleDuctUncontrolled testObject(m,s);
+    AirTerminalSingleDuctConstantVolumeNoReheat testObject(m,s);
 
     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,AirTerminalSingleDuctUncontrolled_addToNode) {
+TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeNoReheat_addToNode) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  AirTerminalSingleDuctUncontrolled testObject(m,s);
+  AirTerminalSingleDuctConstantVolumeNoReheat testObject(m,s);
 
   AirLoopHVAC airLoop(m);
 
@@ -81,8 +81,20 @@ TEST_F(ModelFixture,AirTerminalSingleDuctUncontrolled_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 
-  AirTerminalSingleDuctUncontrolled testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctUncontrolled>();
+  AirTerminalSingleDuctConstantVolumeNoReheat testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
 
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
   EXPECT_EQ( (unsigned)8, airLoop.demandComponents().size() );
+}
+
+
+// In E+ 9.0.0, ATU SingleDuctUncontrolled was renamed to SingleDuctConstantVolumeNoReheat
+// To be more consistent with the naming convention of others ATU
+// So we test that we can instantiate with the old name too
+TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeNoReheat_AliasUncontrolled) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  AirTerminalSingleDuctUncontrolled testObject(m,s);
+
+  EXPECT_EQ(testObject.iddObjectType(), AirTerminalSingleDuctConstantVolumeNoReheat::iddObjectType());
 }
