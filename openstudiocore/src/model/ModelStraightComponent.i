@@ -28,11 +28,15 @@ MODELOBJECT_TEMPLATES(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeCooledBeam);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeFourPipeBeam);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
+
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeReheat);
+// For backward compat, we also provide the old name
+MODELOBJECT_TEMPLATES(AirTerminalSingleDuctUncontrolled);
+
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctInletSideMixer);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctParallelPIUReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctSeriesPIUReheat);
-MODELOBJECT_TEMPLATES(AirTerminalSingleDuctUncontrolled);
+MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeNoReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVHeatAndCoolReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVNoReheat);
@@ -108,7 +112,7 @@ SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctInletSideMixer,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctParallelPIUReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctSeriesPIUReheat,1);
-SWIG_MODELOBJECT(AirTerminalSingleDuctUncontrolled,1);
+SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeNoReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctVAVHeatAndCoolNoReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctVAVHeatAndCoolReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctVAVNoReheat,1);
