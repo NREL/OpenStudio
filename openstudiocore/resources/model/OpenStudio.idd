@@ -10779,7 +10779,10 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
        \default Autocalculate
 
 OS:AirTerminal:SingleDuct:Uncontrolled,
-       \min-fields 6
+      \memo Central air system terminal unit, single duct, constant volume, no controls other than
+      \memo on/off schedule.
+      \obsolete New=>OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat
+      \min-fields 6
   A1, \field Handle
        \type handle
        \required-field
@@ -10803,6 +10806,34 @@ OS:AirTerminal:SingleDuct:Uncontrolled,
        \autosizable
        \units m3/s
        \minimum 0
+
+OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat,
+      \memo Central air system terminal unit, single duct, constant volume, without reheat coil
+      \min-fields 6
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \type alpha
+      \required-field
+      \reference ConnectionObject
+  A3, \field Availability Schedule Name
+      \type object-list
+      \required-field
+      \object-list ScheduleNames
+  A4, \field Inlet Air Node Name
+      \type object-list
+      \object-list ConnectionNames
+  A5, \field Zone Supply Air Node Name
+      \type object-list
+      \object-list ConnectionNames
+  N1; \field Maximum Air Flow Rate
+      \type real
+      \required-field
+      \autosizable
+      \units m3/s
+      \minimum 0
+
 
 OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \min-fields 1
