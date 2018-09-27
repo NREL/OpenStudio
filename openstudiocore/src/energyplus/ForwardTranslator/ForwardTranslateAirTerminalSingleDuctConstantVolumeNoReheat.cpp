@@ -33,6 +33,8 @@
 #include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_NoReheat_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -67,12 +69,29 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
     return boost::none;
   }
 
-  temp = modelObject.outletModelObject();
-  if(temp)
+
+  boost::optional<std::string> inletNodeName;
+  boost::optional<std::string> outletNodeName;
+
+  if( boost::optional<ModelObject> inletModelObject = modelObject.inletModelObject() )
   {
-    optS = temp->name();
-    if(optS)
-      idfObject.setString(openstudio::AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::ZoneSupplyAirNodeName,*optS);
+    if( boost::optional<Node> inletNode = inletModelObject->optionalCast<Node>() )
+    {
+      inletNodeName = inletNode->name().get();
+    }
+  }
+
+  if( boost::optional<ModelObject> outletModelObject = modelObject.outletModelObject() )
+  {
+    if( boost::optional<Node> outletNode = outletModelObject->optionalCast<Node>() )
+    {
+      outletNodeName = outletNode->name().get();
+    }
+  }
+
+  if (inletNodeName && outletNodeName) {
+    idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AirOutletNodeName,outletNodeName.get());
+    idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AirInletNodeName,inletNodeName.get());
   }
 
   if( modelObject.isMaximumAirFlowRateAutosized() )
