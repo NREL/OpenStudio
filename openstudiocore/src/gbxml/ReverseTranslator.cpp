@@ -732,26 +732,95 @@ namespace gbxml {
       }
 
       if (space && adjacentSpaceElements.size() == 2){
-
         QString adjacentSpaceId = adjacentSpaceElements.at(1).toElement().attribute("spaceIdRef");
         auto adjacentSpaceIt = m_idToObjectMap.find(adjacentSpaceId);
-        if (adjacentSpaceIt != m_idToObjectMap.end()){
+        if (adjacentSpaceIt != m_idToObjectMap.end()) {
           boost::optional<model::Space> adjacentSpace = adjacentSpaceIt->second.optionalCast<openstudio::model::Space>();
-          if (adjacentSpace){
-            // DLM: we have issues if interior ceilings/floors are mislabeled, override surface type for adjacent surfaces
-            // http://code.google.com/p/cbecc/issues/detail?id=471
+          if (adjacentSpace) {
+
             std::string currentSurfaceType = surface.surfaceType();
-            surface.assignDefaultSurfaceType();
-            if (currentSurfaceType != surface.surfaceType()){
-              LOG(Warn, "Changing surface type from '" << currentSurfaceType << "' to '" << surface.surfaceType() << "' for surface '" << surface.name().get() << "'");
+            if (currentSurfaceType == "RoofCeiling" || currentSurfaceType == "Floor") {
+              // DLM: we have issues if interior ceilings/floors are mislabeled, override surface type for adjacent surfaces
+              // http://code.google.com/p/cbecc/issues/detail?id=471
+              // Try to figure it out based on the surfaceType
+              bool figuredOut = false;
+              QString spaceSurfaceType = adjacentSpaceElements.at(0).toElement().attribute("surfaceType");
+              QString adjacentSpaceSurfaceType = adjacentSpaceElements.at(1).toElement().attribute("surfaceType");
+              if (!spaceSurfaceType.isEmpty()) {
+                if (currentSurfaceType == "Floor") {
+                  if (spaceSurfaceType == "InteriorFloor") {
+                    // No changes
+                    figuredOut = true;
+                  } else if (spaceSurfaceType == "Ceiling") {
+                    // Swap roles of space and adjacentSpace
+                    surface.setSpace(*adjacentSpace);
+                    auto temp = space;
+                    space = adjacentSpace;
+                    adjacentSpace = temp;
+                    figuredOut = true;
+                  }
+                } else if (currentSurfaceType == "RoofCeiling") {
+                  if (spaceSurfaceType == "Ceiling") {
+                    // No changes
+                    figuredOut = true;
+                  } else if (spaceSurfaceType == "InteriorFloor") {
+                    // Swap roles of space and adjacentSpace
+                    surface.setSpace(*adjacentSpace);
+                    auto temp = space;
+                    space = adjacentSpace;
+                    adjacentSpace = temp;
+                    figuredOut = true;
+                  }
+                }
+              } else if (!adjacentSpaceSurfaceType.isEmpty()) {
+                if (currentSurfaceType == "Floor") {
+                  if (adjacentSpaceSurfaceType == "InteriorFloor") {
+                    // No changes
+                    figuredOut = true;
+                  } else if (adjacentSpaceSurfaceType == "Ceiling") {
+                    // Swap roles of space and adjacentSpace
+                    surface.setSpace(*adjacentSpace);
+                    auto temp = space;
+                    space = adjacentSpace;
+                    adjacentSpace = temp;
+                    figuredOut = true;
+                  }
+                } else if (currentSurfaceType == "RoofCeiling") {
+                  if (adjacentSpaceSurfaceType == "Ceiling") {
+                    // No changes
+                    figuredOut = true;
+                  } else if (adjacentSpaceSurfaceType == "InteriorFloor") {
+                    // Swap roles of space and adjacentSpace
+                    surface.setSpace(*adjacentSpace);
+                    auto temp = space;
+                    space = adjacentSpace;
+                    adjacentSpace = temp;
+                    figuredOut = true;
+                  }
+                }
+              }
+              if (!figuredOut) {
+                surface.assignDefaultSurfaceType();
+                if (currentSurfaceType != surface.surfaceType()) {
+                  LOG(Warn, "Changing surface type from '" << currentSurfaceType << "' to '" << surface.surfaceType() << "' for surface '" << surface.name().get() << "'");
+                }
+              }
+
+            } else {
+              surface.assignDefaultSurfaceType();
+              if (currentSurfaceType != surface.surfaceType()) {
+                LOG(Warn, "Changing surface type from '" << currentSurfaceType << "' to '" << surface.surfaceType() << "' for surface '" << surface.name().get() << "'");
+              }
             }
 
             // clone the surface and sub surfaces and reverse vertices
             boost::optional<openstudio::model::Surface> otherSurface = surface.createAdjacentSurface(*adjacentSpace);
-            if (!otherSurface){
+            if (!otherSurface) {
               LOG(Error, "Could not create adjacent surface in adjacent space '" << adjacentSpace->name().get() << "' for surface '" << surface.name().get() << "' in space '" << space->name().get() << "'");
             }
           }
+        } else {
+          LOG(Error, "Could not find adjacent space '" << adjacentSpaceId.toStdString() << "' for surface '" << surface.name().get() << "'");
         }
       }
     }

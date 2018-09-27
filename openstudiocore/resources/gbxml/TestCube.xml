@@ -4240,8 +4240,8 @@
       <Name>W-1-4-I-W-5</Name>
     </Surface>
     <Surface surfaceType="InteriorFloor" constructionIdRef="aim0634" id="aim0757">
-      <AdjacentSpaceId spaceIdRef="aim0046" />
-      <AdjacentSpaceId spaceIdRef="aim0250" />
+      <AdjacentSpaceId spaceIdRef="aim0046" surfaceType="Ceiling"/>
+      <AdjacentSpaceId spaceIdRef="aim0250" surfaceType="InteriorFloor"/>
       <RectangularGeometry id="aim0758">
         <Azimuth>180</Azimuth>
         <CartesianPoint>
@@ -4442,8 +4442,8 @@
       <Name>W-2-3-I-W-10</Name>
     </Surface>
     <Surface surfaceType="InteriorFloor" constructionIdRef="aim0634" id="aim0814">
-      <AdjacentSpaceId spaceIdRef="aim0106" />
-      <AdjacentSpaceId spaceIdRef="aim0298" />
+      <AdjacentSpaceId spaceIdRef="aim0106" surfaceType="Ceiling"/>
+      <AdjacentSpaceId spaceIdRef="aim0298" surfaceType="InteriorFloor"/>
       <RectangularGeometry id="aim0815">
         <Azimuth>180</Azimuth>
         <CartesianPoint>
@@ -4644,8 +4644,8 @@
       <Name>N-3-4-I-W-15</Name>
     </Surface>
     <Surface surfaceType="InteriorFloor" constructionIdRef="aim0634" id="aim0871">
-      <AdjacentSpaceId spaceIdRef="aim0154" />
-      <AdjacentSpaceId spaceIdRef="aim0346" />
+      <AdjacentSpaceId spaceIdRef="aim0154" surfaceType="Ceiling"/>
+      <AdjacentSpaceId spaceIdRef="aim0346" surfaceType="InteriorFloor"/>
       <RectangularGeometry id="aim0872">
         <Azimuth>180</Azimuth>
         <CartesianPoint>
@@ -4805,8 +4805,8 @@
       <Name>B-4-U-F-19</Name>
     </Surface>
     <Surface surfaceType="InteriorFloor" constructionIdRef="aim0634" id="aim0916">
-      <AdjacentSpaceId spaceIdRef="aim0202" />
-      <AdjacentSpaceId spaceIdRef="aim0394" />
+      <AdjacentSpaceId spaceIdRef="aim0202" surfaceType="Ceiling"/>
+      <AdjacentSpaceId spaceIdRef="aim0394" surfaceType="InteriorFloor"/>
       <RectangularGeometry id="aim0917">
         <Azimuth>180</Azimuth>
         <CartesianPoint>
@@ -5008,8 +5008,8 @@
       <Name>W-5-8-I-W-24</Name>
     </Surface>
     <Surface surfaceType="InteriorFloor" constructionIdRef="aim0634" id="aim0974">
-      <AdjacentSpaceId spaceIdRef="aim0250" />
-      <AdjacentSpaceId spaceIdRef="aim0442" />
+      <AdjacentSpaceId spaceIdRef="aim0250" surfaceType="Ceiling"/>
+      <AdjacentSpaceId spaceIdRef="aim0442" surfaceType="InteriorFloor"/>
       <RectangularGeometry id="aim0975">
         <Azimuth>180</Azimuth>
         <CartesianPoint>
@@ -5170,8 +5170,8 @@
       <Name>W-6-7-I-W-28</Name>
     </Surface>
     <Surface surfaceType="InteriorFloor" constructionIdRef="aim0634" id="aim1020">
-      <AdjacentSpaceId spaceIdRef="aim0298" />
-      <AdjacentSpaceId spaceIdRef="aim0490" />
+      <AdjacentSpaceId spaceIdRef="aim0298" surfaceType="Ceiling"/>
+      <AdjacentSpaceId spaceIdRef="aim0490" surfaceType="InteriorFloor"/>
       <RectangularGeometry id="aim1021">
         <Azimuth>180</Azimuth>
         <CartesianPoint>
@@ -5332,8 +5332,8 @@
       <Name>N-7-8-I-W-32</Name>
     </Surface>
     <Surface surfaceType="InteriorFloor" constructionIdRef="aim0634" id="aim1066">
-      <AdjacentSpaceId spaceIdRef="aim0346" />
-      <AdjacentSpaceId spaceIdRef="aim0538" />
+      <AdjacentSpaceId spaceIdRef="aim0346" surfaceType="Ceiling"/>
+      <AdjacentSpaceId spaceIdRef="aim0538" surfaceType="InteriorFloor"/>
       <RectangularGeometry id="aim1067">
         <Azimuth>180</Azimuth>
         <CartesianPoint>
@@ -5453,8 +5453,8 @@
       <Name>N-8-E-W-35</Name>
     </Surface>
     <Surface surfaceType="InteriorFloor" constructionIdRef="aim0634" id="aim1100">
-      <AdjacentSpaceId spaceIdRef="aim0394" />
-      <AdjacentSpaceId spaceIdRef="aim0586" />
+      <AdjacentSpaceId spaceIdRef="aim0394" surfaceType="Ceiling"/>
+      <AdjacentSpaceId spaceIdRef="aim0586" surfaceType="InteriorFloor"/>
       <RectangularGeometry id="aim1101">
         <Azimuth>180</Azimuth>
         <CartesianPoint>
@@ -6152,7 +6152,7 @@
     <Absorptance unit="Fraction" type="ExtIR">0.1</Absorptance>
     <Roughness value="VeryRough" />
     <LayerId layerIdRef="aim0658" />
-    <Name>Floor: Floor 1</Name>
+    <Name>Floor: Floor 1 Duplicate</Name>
   </Construction>
   <Construction id="aim0662">
     <U-value unit="WPerSquareMeterK">0.6322314</U-value>
@@ -6173,7 +6173,7 @@
     <Absorptance unit="Fraction" type="ExtIR">0.1</Absorptance>
     <Roughness value="VeryRough" />
     <LayerId layerIdRef="aim0688" />
-    <Name>Basic Wall: Interior</Name>
+    <Name>Basic Wall: Interior Duplicate</Name>
   </Construction>
   <Construction id="aim0692">
     <U-value unit="WPerSquareMeterK">0.6322314</U-value>
