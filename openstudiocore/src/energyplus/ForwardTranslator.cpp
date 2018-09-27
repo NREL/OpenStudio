@@ -643,10 +643,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirTerminalSingleDuctSeriesPIUReheat(airTerminal);
       break;
     }
-  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled :
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat :
     {
-      model::AirTerminalSingleDuctUncontrolled airTerminal = modelObject.cast<AirTerminalSingleDuctUncontrolled>();
-      retVal = translateAirTerminalSingleDuctUncontrolled(airTerminal);
+      model::AirTerminalSingleDuctConstantVolumeNoReheat airTerminal = modelObject.cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
+      retVal = translateAirTerminalSingleDuctConstantVolumeNoReheat(airTerminal);
       break;
     }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat :
@@ -3365,7 +3365,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume);
   result.push_back(IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir);
   result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam);
-  result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled);
+  result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat);
 
   // TODO: @kbenne is this needed here?
   // Does this mean these objects get translated even if not connected to anything?

@@ -27,14 +27,16 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ReverseTranslator.hpp"
-#include "../../model/AirTerminalSingleDuctUncontrolled.hpp"
-#include "../../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
-#include <utilities/idd/AirTerminal_SingleDuct_Uncontrolled_FieldEnums.hxx>
+#include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_NoReheat_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 using namespace openstudio::model;
 
@@ -42,64 +44,48 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctUncontrolled( const WorkspaceObject & workspaceObject )
+boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctConstantVolumeNoReheat( AirTerminalSingleDuctConstantVolumeNoReheat & modelObject )
 {
-  if( workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_Uncontrolled )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: AirTerminal_SingleDuct_Uncontrolled");
-     return boost::none;
-  }
-
-  boost::optional<WorkspaceObject> wo = workspaceObject.getTarget(AirTerminal_SingleDuct_UncontrolledFields::AvailabilityScheduleName);
-  boost::optional<Schedule> schedule;
-  boost::optional<AirTerminalSingleDuctUncontrolled> airTerminal;
+  OptionalModelObject temp;
+  OptionalString optS;
   boost::optional<double> value;
+  std::string s;
 
-  if( wo )
-  {
-    boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(wo.get());
-    if( mo )
-    {
-      if( ! (schedule = mo->optionalCast<Schedule>()) )
-      {
-        LOG(Error, workspaceObject.briefDescription() << " does not have an associated availability schedule");
+  IdfObject idfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat);
 
-        return boost::none;
-      }
-    }
+  s = modelObject.name().get();
+  idfObject.setName(s);
+
+  // hook up required objects
+  try {
+    idfObject.setString( openstudio::AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AvailabilityScheduleName,
+                         modelObject.availabilitySchedule().name().get() );
   }
-
-  if( schedule )
-  {
-    airTerminal = AirTerminalSingleDuctUncontrolled(m_model,schedule.get());
-  }
-
-  if( airTerminal )
-  {
-    boost::optional<std::string> s = workspaceObject.getString(AirTerminal_SingleDuct_UncontrolledFields::Name);
-    if( s )
-    {
-      airTerminal->setName(s.get());
-    }
-
-    s = workspaceObject.getString(AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate);
-    if( s && istringEqual(s.get(),"AutoSize") )
-    {
-      airTerminal->autosizeMaximumAirFlowRate();
-    }
-    else if( (value = workspaceObject.getDouble(AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate)) )
-    {
-      airTerminal->setMaximumAirFlowRate(value.get());
-    }
-
-    return airTerminal.get();
-  }
-  else
-  {
-    LOG(Error, "Unknown error translating " << workspaceObject.briefDescription());
-
+  catch (std::exception& e) {
+    LOG(Error,"Could not translate " << modelObject.briefDescription() << ", because "
+        << e.what() << ".");
     return boost::none;
   }
+
+  temp = modelObject.outletModelObject();
+  if(temp)
+  {
+    optS = temp->name();
+    if(optS)
+      idfObject.setString(openstudio::AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::ZoneSupplyAirNodeName,*optS);
+  }
+
+  if( modelObject.isMaximumAirFlowRateAutosized() )
+  {
+    idfObject.setString(openstudio::AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate,"AutoSize");
+  }
+  else if( (value = modelObject.maximumAirFlowRate()) )
+  {
+    idfObject.setDouble(openstudio::AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate,value.get());
+  }
+
+  m_idfObjects.push_back(idfObject);
+  return boost::optional<IdfObject>(idfObject);
 }
 
 } // energyplus

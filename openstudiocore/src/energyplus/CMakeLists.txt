@@ -37,7 +37,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctParallelPIUReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctSeriesPIUReheat.cpp
-  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctUncontrolled.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctInletSideMixer.cpp
@@ -397,7 +397,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateAirLoopHVAC.cpp
   ReverseTranslator/ReverseTranslateAirLoopHVACOutdoorAirSystem.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
-  ReverseTranslator/ReverseTranslateAirTerminalSingleDuctUncontrolled.cpp
+  ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeNoReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctVAVNoReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctVAVReheat.cpp
   ReverseTranslator/ReverseTranslateBuilding.cpp

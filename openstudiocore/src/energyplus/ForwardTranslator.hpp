@@ -86,7 +86,7 @@ class AirTerminalSingleDuctConstantVolumeFourPipeBeam;
 class AirTerminalSingleDuctConstantVolumeReheat;
 class AirTerminalSingleDuctParallelPIUReheat;
 class AirTerminalSingleDuctSeriesPIUReheat;
-class AirTerminalSingleDuctUncontrolled;
+class AirTerminalSingleDuctConstantVolumeNoReheat;
 class AirTerminalSingleDuctVAVNoReheat;
 class AirTerminalSingleDuctVAVReheat;
 class AirTerminalSingleDuctInletSideMixer;
@@ -595,7 +595,7 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctSeriesPIUReheat( model::AirTerminalSingleDuctSeriesPIUReheat & modelObject );
 
-  boost::optional<IdfObject> translateAirTerminalSingleDuctUncontrolled( model::AirTerminalSingleDuctUncontrolled & modelObject );
+  boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeNoReheat( model::AirTerminalSingleDuctConstantVolumeNoReheat & modelObject );
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctVAVNoReheat( model::AirTerminalSingleDuctVAVNoReheat & modelObject );
 
