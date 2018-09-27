@@ -35,6 +35,7 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
+#include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
 #include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_NoReheat_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -53,10 +54,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
   boost::optional<double> value;
   std::string s;
 
-  IdfObject idfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat);
+  std::string baseName = modelObject.name().get();
 
-  s = modelObject.name().get();
-  idfObject.setName(s);
+  IdfObject _airDistributionUnit(openstudio::IddObjectType::ZoneHVAC_AirDistributionUnit);
+  _airDistributionUnit.setName("ADU " + baseName ); //ADU: Air Distribution Unit
+
+  IdfObject idfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat);
+  idfObject.setName(baseName);
 
   // hook up required objects
   try {
@@ -69,42 +73,47 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctCons
     return boost::none;
   }
 
+  // Register the ATU and the ADU
+  m_idfObjects.push_back(idfObject);
+  m_idfObjects.push_back(_airDistributionUnit);
+
 
   boost::optional<std::string> inletNodeName;
   boost::optional<std::string> outletNodeName;
 
-  if( boost::optional<ModelObject> inletModelObject = modelObject.inletModelObject() )
-  {
-    if( boost::optional<Node> inletNode = inletModelObject->optionalCast<Node>() )
-    {
+  if ( boost::optional<ModelObject> inletModelObject = modelObject.inletModelObject() ) {
+    if ( boost::optional<Node> inletNode = inletModelObject->optionalCast<Node>() ) {
       inletNodeName = inletNode->name().get();
     }
   }
 
-  if( boost::optional<ModelObject> outletModelObject = modelObject.outletModelObject() )
-  {
-    if( boost::optional<Node> outletNode = outletModelObject->optionalCast<Node>() )
-    {
+  if ( boost::optional<ModelObject> outletModelObject = modelObject.outletModelObject() ) {
+    if ( boost::optional<Node> outletNode = outletModelObject->optionalCast<Node>() ) {
       outletNodeName = outletNode->name().get();
     }
   }
 
   if (inletNodeName && outletNodeName) {
-    idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AirOutletNodeName,outletNodeName.get());
     idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AirInletNodeName,inletNodeName.get());
+    idfObject.setString(AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AirOutletNodeName,outletNodeName.get());
   }
 
-  if( modelObject.isMaximumAirFlowRateAutosized() )
-  {
+  if ( modelObject.isMaximumAirFlowRateAutosized() ) {
     idfObject.setString(openstudio::AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate,"AutoSize");
-  }
-  else if( (value = modelObject.maximumAirFlowRate()) )
-  {
+  } else if( (value = modelObject.maximumAirFlowRate()) ) {
     idfObject.setDouble(openstudio::AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate,value.get());
   }
 
-  m_idfObjects.push_back(idfObject);
-  return boost::optional<IdfObject>(idfObject);
+  // Populate fields for AirDistributionUnit
+  if (outletNodeName) {
+    _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirDistributionUnitOutletNodeName, outletNodeName.get());
+  }
+  _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType,idfObject.iddObject().name());
+  _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName,idfObject.name().get());
+
+  // We return the ADU
+  return _airDistributionUnit;
+
 }
 
 } // energyplus
