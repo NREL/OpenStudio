@@ -184,9 +184,9 @@ set(${target_name}_src
   AirTerminalSingleDuctSeriesPIUReheat.hpp
   AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp
   AirTerminalSingleDuctSeriesPIUReheat.cpp
-  AirTerminalSingleDuctUncontrolled.hpp
-  AirTerminalSingleDuctUncontrolled_Impl.hpp
-  AirTerminalSingleDuctUncontrolled.cpp
+  AirTerminalSingleDuctConstantVolumeNoReheat.hpp
+  AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeNoReheat.cpp
   AirTerminalSingleDuctVAVNoReheat.hpp
   AirTerminalSingleDuctVAVNoReheat_Impl.hpp
   AirTerminalSingleDuctVAVNoReheat.cpp
@@ -1676,7 +1676,7 @@ set(${target_name}_test_src
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
   test/AirTerminalSingleDuctSeriesPIUReheat_GTest.cpp
-  test/AirTerminalSingleDuctUncontrolled_GTest.cpp
+  test/AirTerminalSingleDuctConstantVolumeNoReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVNoReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVHeatAndCoolReheat_GTest.cpp
