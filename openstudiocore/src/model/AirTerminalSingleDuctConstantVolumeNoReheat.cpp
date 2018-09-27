@@ -129,12 +129,12 @@ namespace detail{
 
   unsigned AirTerminalSingleDuctConstantVolumeNoReheat_Impl::inletPort()
   {
-    return OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::InletAirNodeName;
+    return OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AirInletNodeName;
   }
 
   unsigned AirTerminalSingleDuctConstantVolumeNoReheat_Impl::outletPort()
   {
-    return OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::ZoneSupplyAirNodeName;
+    return OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AirOutletNodeName;
   }
 
   bool AirTerminalSingleDuctConstantVolumeNoReheat_Impl::addToNode(Node & node)
@@ -156,15 +156,22 @@ namespace detail{
         {
           if( boost::optional<Splitter> splitter = inlet->optionalCast<Splitter>() )
           {
-            boost::optional<ModelObject> sourceModelObject = node.inletModelObject();
+            boost::optional<ModelObject> sourceModelObject = inlet;
             boost::optional<unsigned> sourcePort = node.connectedObjectPort(node.inletPort());
 
             if( sourcePort && sourceModelObject )
             {
+              Node inletNode(_model);
+
               _model.connect( sourceModelObject.get(),
                               sourcePort.get(),
+                              inletNode,
+                              inletNode.inletPort() );
+
+              _model.connect( inletNode,
+                              inletNode.outletPort(),
                               this->getObject<ModelObject>(),
-                              inletPort() );
+                              this->inletPort() );
 
               _model.connect( this->getObject<ModelObject>(),
                               outletPort(),

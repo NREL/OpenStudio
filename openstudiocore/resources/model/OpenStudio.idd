@@ -10808,25 +10808,30 @@ OS:AirTerminal:SingleDuct:Uncontrolled,
        \minimum 0
 
 OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat,
-      \memo Central air system terminal unit, single duct, constant volume, without reheat coil
-      \min-fields 6
-  A1, \field Handle
-      \type handle
-      \required-field
-  A2, \field Name
-      \type alpha
-      \required-field
-      \reference ConnectionObject
-  A3, \field Availability Schedule Name
-      \type object-list
-      \required-field
-      \object-list ScheduleNames
-  A4, \field Inlet Air Node Name
-      \type object-list
-      \object-list ConnectionNames
-  A5, \field Zone Supply Air Node Name
-      \type object-list
-      \object-list ConnectionNames
+       \memo Central air system terminal unit, single duct, constant volume, without reheat coil
+       \min-fields 6
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3,  \field Availability Schedule Name
+       \type object-list
+       \required-field
+       \object-list ScheduleNames
+  A4,  \field Air Inlet Node Name
+       \required-field
+       \type ConnectionNames
+       \note The air-inlet node name that connects the air splitter to the individual zone air distribution
+       \note unit. This node should also be one of the outlet air node of an AirLoopHVAC:ZoneSplitter or
+       \note AirLoopHVAC:SupplyPlenum component.
+  A5,  \field Air Outlet Node Name
+       \required-field
+       \type ConnectionNames
+       \note This is an air outlet node from the air distribution unit. This node name should be one of the
+       \note supply air inlet node names of a zone served by this component.
   N1; \field Maximum Air Flow Rate
       \type real
       \required-field
