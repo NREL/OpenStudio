@@ -4179,11 +4179,11 @@ std::string VersionTranslator::update_2_6_2_to_2_7_0(const IdfFile& idf_2_6_2, c
   // map of a connection object handle to a ConnectionInfo instance
   std::map<std::string, ConnectionInfo> connectionsToFix;
 
-  // Find the connection object associated with the ATU Uncontrolled
+  // Find the connections object associated with the ATU Uncontrolled
   auto atus = idf_2_6_2.getObjectsByType(idf_2_6_2.iddFile().getObject("OS:AirTerminal:SingleDuct:Uncontrolled").get());
   for ( auto & atu : atus ) {
-    // index 3 = Inlet Air Node Name
-    // It's the handle of a connection that will need fixing; Inlet Air Node Name
+    // index 3 = Air Inlet Node Name
+    // It's the handle of a connection that will need fixing
     // Because ATU Uncontrolled was directly connected to ZoneSplitter; now we want a node in between
     auto value = atu.getString(3);
     if ( value ) {
@@ -4199,14 +4199,14 @@ std::string VersionTranslator::update_2_6_2_to_2_7_0(const IdfFile& idf_2_6_2, c
 
     // ATU:SingleDuct:Uncontrolled got made obsolete by ATU:SingleDuct:ConstantVolume:NoReheat in E+ 9.0.0
     // in order to be more consistent with the naming of other ATUs, but it also isn't exactly laid out the same
-    if( iddname == "OS:AirTerminal:SingleDuct:Uncontrolled" ) {
+    if ( iddname == "OS:AirTerminal:SingleDuct:Uncontrolled" ) {
       // We just create a new object, and copy every field but one.
       auto iddObject = idd_2_7_0.getObject("OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat");
       OS_ASSERT(iddObject);
       IdfObject newObject(iddObject.get());
 
-      for( size_t i = 0; i < 10; ++i ) {
-        if( auto s = object.getString(i) ) {
+      for ( size_t i = 0; i < object.numFields(); ++i ) {
+        if ( auto s = object.getString(i) ) {
           if ( i == 3 ) {
             // ATU Uncontrolled references the AirLoopHVAC:ZoneSplitter directly, here we want a node in between, so we need a new node and a new
             // connection
@@ -4218,7 +4218,8 @@ std::string VersionTranslator::update_2_6_2_to_2_7_0(const IdfFile& idf_2_6_2, c
             newNode.setString(0, nodeHandle);
 
             auto connectionIdd = idd_2_7_0.getObject("OS:Connection");
-            IdfObject newConnection(connectionIdd.get());
+            // We pass fastname = true, to mimic the normal behavior (a connection gets a handle for name)
+            IdfObject newConnection(connectionIdd.get(), true);
             auto newConnectionHandle = toString(createUUID());
             newConnection.setString(0, newConnectionHandle);
             // Name
@@ -4238,8 +4239,6 @@ std::string VersionTranslator::update_2_6_2_to_2_7_0(const IdfFile& idf_2_6_2, c
 
             // The existing connection is going to have to point to the newNode
             connectionsToFix[s.get()].newNodeHandle = nodeHandle;
-
-
 
             newNode.setName(object.nameString() + " Inlet Node");
             // Node Inlet Port = old connection
@@ -4265,6 +4264,14 @@ std::string VersionTranslator::update_2_6_2_to_2_7_0(const IdfFile& idf_2_6_2, c
       m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
       ss << newObject;
 
+    } else if ( iddname == "OS:Connection" ) {
+      // No-Op for now
+      auto value = object.getString(0);
+      OS_ASSERT(value);
+      if ( connectionsToFix.find(value.get()) == connectionsToFix.end() ) {
+        // No need to fix it, we just push it
+        ss << object;
+      }
     } else {
       ss << object;
     }
