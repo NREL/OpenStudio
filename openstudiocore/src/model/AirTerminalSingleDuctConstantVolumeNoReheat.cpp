@@ -222,20 +222,32 @@ namespace detail{
     if( sourcePort && sourceModelObject
         && targetPort && targetModelObject )
     {
-      _model.connect( sourceModelObject.get(),
-                      sourcePort.get(),
-                      targetModelObject.get(),
-                      targetPort.get() );
+      if( boost::optional<Node> inletNode = sourceModelObject->optionalCast<Node>() )
+      {
+        if( boost::optional<ModelObject> source2ModelObject = inletNode->inletModelObject() )
+        {
+          if( boost::optional<unsigned> source2Port = inletNode->connectedObjectPort(inletNode->inletPort()) )
+          {
+            _model.connect( source2ModelObject.get(),
+                            source2Port.get(),
+                            targetModelObject.get(),
+                            targetPort.get() );
 
-      return ModelObject_Impl::remove();
-    }
-    else
-    {
-      model().disconnect(getObject<ModelObject>(),inletPort());
-      model().disconnect(getObject<ModelObject>(),outletPort());
+            // Need to delete the inlet node too
+            inletNode->disconnect();
+            inletNode->remove();
 
-      return ModelObject_Impl::remove();
+            return StraightComponent_Impl::remove();
+          }
+        }
+      }
     }
+
+
+    model().disconnect(getObject<ModelObject>(),inletPort());
+    model().disconnect(getObject<ModelObject>(),outletPort());
+
+    return StraightComponent_Impl::remove();
   }
 
   bool AirTerminalSingleDuctConstantVolumeNoReheat_Impl::isRemovable() const
