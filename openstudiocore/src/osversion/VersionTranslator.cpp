@@ -4229,7 +4229,7 @@ std::string VersionTranslator::update_2_6_2_to_2_7_0(const IdfFile& idf_2_6_2, c
             newConnection.setInt(3, 3);
 
             // Target Object: ATU
-            newConnection.setString(4, toString(newObject.handle()));
+            newConnection.setString(4, newObject.getString(0).get());
             // Inlet Port: i=3
             newConnection.setInt(5, 3);
 
