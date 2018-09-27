@@ -340,12 +340,12 @@ namespace detail{
   }
 
   std::vector<EMSActuatorNames> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{{"AirTerminal:SingleDuct:ConstantVolumeNoReheat", "Mass Flow Rate"}};
+    std::vector<EMSActuatorNames> actuators{{"AirTerminal:SingleDuct:ConstantVolume:NoReheat", "Mass Flow Rate"}};
     return actuators;
   }
 
   std::vector<std::string> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::emsInternalVariableNames() const {
-    std::vector<std::string> types{"AirTerminal:SingleDuct:ConstantVolumeNoReheat Maximum Mass Flow Rate"};
+    std::vector<std::string> types{"AirTerminal:SingleDuct:ConstantVolume:NoReheat Maximum Mass Flow Rate"};
     return types;
   }
 
@@ -371,10 +371,6 @@ bool AirTerminalSingleDuctConstantVolumeNoReheat::setAvailabilitySchedule(Schedu
 {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->setAvailabilitySchedule(schedule);
 }
-
-AirTerminalSingleDuctConstantVolumeNoReheat::AirTerminalSingleDuctConstantVolumeNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl> p)
-  : StraightComponent(std::move(p))
-{}
 
 IddObjectType AirTerminalSingleDuctConstantVolumeNoReheat::iddObjectType() {
   IddObjectType result(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat);
@@ -408,6 +404,12 @@ void AirTerminalSingleDuctConstantVolumeNoReheat::autosizeMaximumAirFlowRate() {
 boost::optional<double> AirTerminalSingleDuctConstantVolumeNoReheat::autosizedMaximumAirFlowRate() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->autosizedMaximumAirFlowRate();
 }
+
+/// @cond
+AirTerminalSingleDuctConstantVolumeNoReheat::AirTerminalSingleDuctConstantVolumeNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl> p)
+  : StraightComponent(std::move(p))
+{}
+// @endcond
 
 } // model
 } // openstudio
