@@ -27,8 +27,8 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_AIRTERMINALSINGLEDUCTUNCONTROLLED_IMPL_HPP
-#define MODEL_AIRTERMINALSINGLEDUCTUNCONTROLLED_IMPL_HPP
+#ifndef MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMENOREHEAT_IMPL_HPP
+#define MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMENOREHEAT_IMPL_HPP
 
 #include "StraightComponent_Impl.hpp"
 
@@ -37,29 +37,27 @@ namespace model {
 
 namespace detail {
 
-  class MODEL_API AirTerminalSingleDuctUncontrolled_Impl : public StraightComponent_Impl {
-
-
+  class MODEL_API AirTerminalSingleDuctConstantVolumeNoReheat_Impl : public StraightComponent_Impl {
 
    public:
     /** @name Constructors and Destructors */
     //@{
 
     // constructor
-    AirTerminalSingleDuctUncontrolled_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+    AirTerminalSingleDuctConstantVolumeNoReheat_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
     // construct from workspace
-    AirTerminalSingleDuctUncontrolled_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+    AirTerminalSingleDuctConstantVolumeNoReheat_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle);
 
     // copy constructor
-    AirTerminalSingleDuctUncontrolled_Impl(const AirTerminalSingleDuctUncontrolled_Impl& other,
+    AirTerminalSingleDuctConstantVolumeNoReheat_Impl(const AirTerminalSingleDuctConstantVolumeNoReheat_Impl& other,
                                            Model_Impl* model,
                                            bool keepHandle);
 
     // virtual destructor
-    virtual ~AirTerminalSingleDuctUncontrolled_Impl(){}
+    virtual ~AirTerminalSingleDuctConstantVolumeNoReheat_Impl(){}
 
     //@}
     /** @name Virtual Methods */
@@ -114,7 +112,7 @@ namespace detail {
 
    private:
 
-    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctUncontrolled");
+    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeNoReheat");
 
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
@@ -131,4 +129,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_AIRTERMINALSINGLEDUCTUNCONTROLLED_IMPL_HPP
+#endif // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMENOREHEAT_IMPL_HPP

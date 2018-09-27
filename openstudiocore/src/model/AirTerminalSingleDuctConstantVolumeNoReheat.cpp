@@ -27,8 +27,8 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "AirTerminalSingleDuctUncontrolled.hpp"
-#include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
 #include "Node.hpp"
@@ -44,7 +44,7 @@
 #include "Model.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include <utilities/idd/OS_AirTerminal_SingleDuct_Uncontrolled_FieldEnums.hxx>
+#include <utilities/idd/OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
 
@@ -53,31 +53,31 @@ namespace model {
 
 namespace detail{
 
-  AirTerminalSingleDuctUncontrolled_Impl::AirTerminalSingleDuctUncontrolled_Impl(
+  AirTerminalSingleDuctConstantVolumeNoReheat_Impl::AirTerminalSingleDuctConstantVolumeNoReheat_Impl(
       const IdfObject& idfObject,
       Model_Impl* model,
       bool keepHandle)
         : StraightComponent_Impl(idfObject, model,keepHandle)
   {
-    OS_ASSERT(idfObject.iddObject().type() == AirTerminalSingleDuctUncontrolled::iddObjectType());
+    OS_ASSERT(idfObject.iddObject().type() == AirTerminalSingleDuctConstantVolumeNoReheat::iddObjectType());
   }
 
-  AirTerminalSingleDuctUncontrolled_Impl::AirTerminalSingleDuctUncontrolled_Impl(
+  AirTerminalSingleDuctConstantVolumeNoReheat_Impl::AirTerminalSingleDuctConstantVolumeNoReheat_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
         : StraightComponent_Impl(other,model,keepHandle)
   {
-    OS_ASSERT(other.iddObject().type() == AirTerminalSingleDuctUncontrolled::iddObjectType());
+    OS_ASSERT(other.iddObject().type() == AirTerminalSingleDuctConstantVolumeNoReheat::iddObjectType());
   }
 
-  AirTerminalSingleDuctUncontrolled_Impl::AirTerminalSingleDuctUncontrolled_Impl(
-      const AirTerminalSingleDuctUncontrolled_Impl& other,
+  AirTerminalSingleDuctConstantVolumeNoReheat_Impl::AirTerminalSingleDuctConstantVolumeNoReheat_Impl(
+      const AirTerminalSingleDuctConstantVolumeNoReheat_Impl& other,
       Model_Impl* model,
       bool keepHandle)
         : StraightComponent_Impl(other,model,keepHandle)
   {}
 
   // Get all output variable names that could be associated with this object.
-  const std::vector<std::string>& AirTerminalSingleDuctUncontrolled_Impl::outputVariableNames() const
+  const std::vector<std::string>& AirTerminalSingleDuctConstantVolumeNoReheat_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result{
       "Zone Air Terminal Sensible Heating Energy",
@@ -88,23 +88,23 @@ namespace detail{
     return result;
   }
 
-  IddObjectType AirTerminalSingleDuctUncontrolled_Impl::iddObjectType() const {
-    return AirTerminalSingleDuctUncontrolled::iddObjectType();
+  IddObjectType AirTerminalSingleDuctConstantVolumeNoReheat_Impl::iddObjectType() const {
+    return AirTerminalSingleDuctConstantVolumeNoReheat::iddObjectType();
   }
 
-  std::vector<ScheduleTypeKey> AirTerminalSingleDuctUncontrolled_Impl::getScheduleTypeKeys(const Schedule& schedule) const
+  std::vector<ScheduleTypeKey> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_AirTerminal_SingleDuct_UncontrolledFields::AvailabilityScheduleName) != e)
+    if (std::find(b,e,OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AvailabilityScheduleName) != e)
     {
-      result.push_back(ScheduleTypeKey("AirTerminalSingleDuctUncontrolled","Availability"));
+      result.push_back(ScheduleTypeKey("AirTerminalSingleDuctConstantVolumeNoReheat","Availability"));
     }
     return result;
   }
 
-  Schedule AirTerminalSingleDuctUncontrolled_Impl::availabilitySchedule() const {
+  Schedule AirTerminalSingleDuctConstantVolumeNoReheat_Impl::availabilitySchedule() const {
     boost::optional<Schedule> value = optionalAvailabilitySchedule();
     if (!value){
       // it is an error if we get here, however we don't want to crash
@@ -112,32 +112,32 @@ namespace detail{
       LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
       value = this->model().alwaysOnDiscreteSchedule();
       OS_ASSERT(value);
-      const_cast<AirTerminalSingleDuctUncontrolled_Impl*>(this)->setAvailabilitySchedule(*value);
+      const_cast<AirTerminalSingleDuctConstantVolumeNoReheat_Impl*>(this)->setAvailabilitySchedule(*value);
       value = optionalAvailabilitySchedule();
     }
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool AirTerminalSingleDuctUncontrolled_Impl::setAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_AirTerminal_SingleDuct_UncontrolledFields::AvailabilityScheduleName,
-                              "AirTerminalSingleDuctUncontrolled",
+  bool AirTerminalSingleDuctConstantVolumeNoReheat_Impl::setAvailabilitySchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AvailabilityScheduleName,
+                              "AirTerminalSingleDuctConstantVolumeNoReheat",
                               "Availability",
                               schedule);
     return result;
   }
 
-  unsigned AirTerminalSingleDuctUncontrolled_Impl::inletPort()
+  unsigned AirTerminalSingleDuctConstantVolumeNoReheat_Impl::inletPort()
   {
-    return OS_AirTerminal_SingleDuct_UncontrolledFields::InletAirNodeName;
+    return OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::InletAirNodeName;
   }
 
-  unsigned AirTerminalSingleDuctUncontrolled_Impl::outletPort()
+  unsigned AirTerminalSingleDuctConstantVolumeNoReheat_Impl::outletPort()
   {
-    return OS_AirTerminal_SingleDuct_UncontrolledFields::ZoneSupplyAirNodeName;
+    return OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::ZoneSupplyAirNodeName;
   }
 
-  bool AirTerminalSingleDuctUncontrolled_Impl::addToNode(Node & node)
+  bool AirTerminalSingleDuctConstantVolumeNoReheat_Impl::addToNode(Node & node)
   {
     Model _model = node.model();
 
@@ -173,7 +173,7 @@ namespace detail{
 
               if( thermalZone )
               {
-                AirTerminalSingleDuctUncontrolled mo = this->getObject<AirTerminalSingleDuctUncontrolled>();
+                AirTerminalSingleDuctConstantVolumeNoReheat mo = this->getObject<AirTerminalSingleDuctConstantVolumeNoReheat>();
 
                 thermalZone->addEquipment(mo);
               }
@@ -188,7 +188,7 @@ namespace detail{
     return false;
   }
 
-  std::vector<IdfObject> AirTerminalSingleDuctUncontrolled_Impl::remove()
+  std::vector<IdfObject> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::remove()
   {
     Model _model = this->model();
     ModelObject thisObject = this->getObject<ModelObject>();
@@ -231,21 +231,21 @@ namespace detail{
     }
   }
 
-  bool AirTerminalSingleDuctUncontrolled_Impl::isRemovable() const
+  bool AirTerminalSingleDuctConstantVolumeNoReheat_Impl::isRemovable() const
   {
     return true;
   }
 
-  boost::optional<Schedule> AirTerminalSingleDuctUncontrolled_Impl::optionalAvailabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_UncontrolledFields::AvailabilityScheduleName);
+  boost::optional<Schedule> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::optionalAvailabilitySchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AvailabilityScheduleName);
   }
 
-  boost::optional<ModelObject> AirTerminalSingleDuctUncontrolled_Impl::availabilityScheduleAsModelObject() const {
+  boost::optional<ModelObject> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::availabilityScheduleAsModelObject() const {
     OptionalModelObject result = availabilitySchedule();
     return result;
   }
 
-  bool AirTerminalSingleDuctUncontrolled_Impl::setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+  bool AirTerminalSingleDuctConstantVolumeNoReheat_Impl::setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
     if (modelObject) {
       OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
       if (intermediate) {
@@ -256,18 +256,18 @@ namespace detail{
     return false;
   }
 
-  boost::optional<double> AirTerminalSingleDuctUncontrolled_Impl::maximumAirFlowRate() const {
-    return getDouble(OS_AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate,true);
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::maximumAirFlowRate() const {
+    return getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate,true);
   }
 
-  OSOptionalQuantity AirTerminalSingleDuctUncontrolled_Impl::getMaximumAirFlowRate(bool returnIP) const {
+  OSOptionalQuantity AirTerminalSingleDuctConstantVolumeNoReheat_Impl::getMaximumAirFlowRate(bool returnIP) const {
     OptionalDouble value = maximumAirFlowRate();
-    return getQuantityFromDouble(OS_AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate, value, returnIP);
+    return getQuantityFromDouble(OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate, value, returnIP);
   }
 
-  bool AirTerminalSingleDuctUncontrolled_Impl::isMaximumAirFlowRateAutosized() const {
+  bool AirTerminalSingleDuctConstantVolumeNoReheat_Impl::isMaximumAirFlowRateAutosized() const {
     bool result = false;
-    boost::optional<std::string> value = getString(OS_AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate, true);
+    boost::optional<std::string> value = getString(OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate, true);
     if (value) {
       result = openstudio::istringEqual(value.get(), "autosize");
     }
@@ -275,19 +275,19 @@ namespace detail{
   }
 
 
-  bool AirTerminalSingleDuctUncontrolled_Impl::setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate) {
+  bool AirTerminalSingleDuctConstantVolumeNoReheat_Impl::setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate) {
     bool result(false);
     if (maximumAirFlowRate) {
-      result = setDouble(OS_AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate, maximumAirFlowRate.get());
+      result = setDouble(OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate, maximumAirFlowRate.get());
     }
     return result;
   }
 
-  bool AirTerminalSingleDuctUncontrolled_Impl::setMaximumAirFlowRate(const OSOptionalQuantity& maximumAirFlowRate) {
+  bool AirTerminalSingleDuctConstantVolumeNoReheat_Impl::setMaximumAirFlowRate(const OSOptionalQuantity& maximumAirFlowRate) {
     bool result(false);
     OptionalDouble value;
     if (maximumAirFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate,maximumAirFlowRate.get());
+      value = getDoubleFromQuantity(OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate,maximumAirFlowRate.get());
       if (value) {
         result = setMaximumAirFlowRate(value);
       }
@@ -298,20 +298,20 @@ namespace detail{
     return result;
   }
 
-  void AirTerminalSingleDuctUncontrolled_Impl::autosizeMaximumAirFlowRate() {
-    bool result = setString(OS_AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate, "autosize");
+  void AirTerminalSingleDuctConstantVolumeNoReheat_Impl::autosizeMaximumAirFlowRate() {
+    bool result = setString(OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate, "autosize");
     OS_ASSERT(result);
   }
 
-  boost::optional<double> AirTerminalSingleDuctUncontrolled_Impl::autosizedMaximumAirFlowRate() const {
+  boost::optional<double> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::autosizedMaximumAirFlowRate() const {
     return getAutosizedValue("Design Size Maximum Air Flow Rate", "m3/s");
   }
 
-  void AirTerminalSingleDuctUncontrolled_Impl::autosize() {
+  void AirTerminalSingleDuctConstantVolumeNoReheat_Impl::autosize() {
     autosizeMaximumAirFlowRate();
   }
 
-  void AirTerminalSingleDuctUncontrolled_Impl::applySizingValues() {
+  void AirTerminalSingleDuctConstantVolumeNoReheat_Impl::applySizingValues() {
     boost::optional<double> val;
     val = autosizedMaximumAirFlowRate();
     if (val) {
@@ -320,75 +320,75 @@ namespace detail{
 
   }
 
-  std::vector<EMSActuatorNames> AirTerminalSingleDuctUncontrolled_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{{"AirTerminal:SingleDuct:Uncontrolled", "Mass Flow Rate"}};
+  std::vector<EMSActuatorNames> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::emsActuatorNames() const {
+    std::vector<EMSActuatorNames> actuators{{"AirTerminal:SingleDuct:ConstantVolumeNoReheat", "Mass Flow Rate"}};
     return actuators;
   }
 
-  std::vector<std::string> AirTerminalSingleDuctUncontrolled_Impl::emsInternalVariableNames() const {
-    std::vector<std::string> types{"AirTerminal:SingleDuct:Uncontrolled Maximum Mass Flow Rate"};
+  std::vector<std::string> AirTerminalSingleDuctConstantVolumeNoReheat_Impl::emsInternalVariableNames() const {
+    std::vector<std::string> types{"AirTerminal:SingleDuct:ConstantVolumeNoReheat Maximum Mass Flow Rate"};
     return types;
   }
 
 } // detail
 
-AirTerminalSingleDuctUncontrolled::AirTerminalSingleDuctUncontrolled(const Model& model,
+AirTerminalSingleDuctConstantVolumeNoReheat::AirTerminalSingleDuctConstantVolumeNoReheat(const Model& model,
                                                                      Schedule & availabilitySchedule)
-  : StraightComponent(AirTerminalSingleDuctUncontrolled::iddObjectType(),model)
+  : StraightComponent(AirTerminalSingleDuctConstantVolumeNoReheat::iddObjectType(),model)
 {
-  OS_ASSERT(getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>());
+  OS_ASSERT(getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>());
 
-  setString(openstudio::OS_AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate,"AutoSize" );
+  setString(openstudio::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate,"AutoSize" );
 
   setAvailabilitySchedule(availabilitySchedule);
 }
 
-Schedule AirTerminalSingleDuctUncontrolled::availabilitySchedule() const
+Schedule AirTerminalSingleDuctConstantVolumeNoReheat::availabilitySchedule() const
 {
-  return getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->availabilitySchedule();
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->availabilitySchedule();
 }
 
-bool AirTerminalSingleDuctUncontrolled::setAvailabilitySchedule(Schedule & schedule)
+bool AirTerminalSingleDuctConstantVolumeNoReheat::setAvailabilitySchedule(Schedule & schedule)
 {
-  return getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->setAvailabilitySchedule(schedule);
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-AirTerminalSingleDuctUncontrolled::AirTerminalSingleDuctUncontrolled(std::shared_ptr<detail::AirTerminalSingleDuctUncontrolled_Impl> p)
+AirTerminalSingleDuctConstantVolumeNoReheat::AirTerminalSingleDuctConstantVolumeNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl> p)
   : StraightComponent(std::move(p))
 {}
 
-IddObjectType AirTerminalSingleDuctUncontrolled::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled);
+IddObjectType AirTerminalSingleDuctConstantVolumeNoReheat::iddObjectType() {
+  IddObjectType result(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat);
   return result;
 }
 
-boost::optional<double> AirTerminalSingleDuctUncontrolled::maximumAirFlowRate() const {
-  return getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->maximumAirFlowRate();
+boost::optional<double> AirTerminalSingleDuctConstantVolumeNoReheat::maximumAirFlowRate() const {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->maximumAirFlowRate();
 }
 
-OSOptionalQuantity AirTerminalSingleDuctUncontrolled::getMaximumAirFlowRate(bool returnIP) const {
-  return getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->getMaximumAirFlowRate(returnIP);
+OSOptionalQuantity AirTerminalSingleDuctConstantVolumeNoReheat::getMaximumAirFlowRate(bool returnIP) const {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->getMaximumAirFlowRate(returnIP);
 }
 
-bool AirTerminalSingleDuctUncontrolled::isMaximumAirFlowRateAutosized() const {
-  return getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->isMaximumAirFlowRateAutosized();
+bool AirTerminalSingleDuctConstantVolumeNoReheat::isMaximumAirFlowRateAutosized() const {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->isMaximumAirFlowRateAutosized();
 }
 
-bool AirTerminalSingleDuctUncontrolled::setMaximumAirFlowRate(double maximumAirFlowRate) {
-  return getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->setMaximumAirFlowRate(maximumAirFlowRate);
+bool AirTerminalSingleDuctConstantVolumeNoReheat::setMaximumAirFlowRate(double maximumAirFlowRate) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->setMaximumAirFlowRate(maximumAirFlowRate);
 }
 
-bool AirTerminalSingleDuctUncontrolled::setMaximumAirFlowRate(const Quantity& maximumAirFlowRate) {
-  return getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->setMaximumAirFlowRate(maximumAirFlowRate);
+bool AirTerminalSingleDuctConstantVolumeNoReheat::setMaximumAirFlowRate(const Quantity& maximumAirFlowRate) {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->setMaximumAirFlowRate(maximumAirFlowRate);
 }
 
-void AirTerminalSingleDuctUncontrolled::autosizeMaximumAirFlowRate() {
-  getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->autosizeMaximumAirFlowRate();
+void AirTerminalSingleDuctConstantVolumeNoReheat::autosizeMaximumAirFlowRate() {
+  getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->autosizeMaximumAirFlowRate();
 }
 
-  boost::optional<double> AirTerminalSingleDuctUncontrolled::autosizedMaximumAirFlowRate() const {
-    return getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->autosizedMaximumAirFlowRate();
-  }
+boost::optional<double> AirTerminalSingleDuctConstantVolumeNoReheat::autosizedMaximumAirFlowRate() const {
+  return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->autosizedMaximumAirFlowRate();
+}
 
 } // model
 } // openstudio
