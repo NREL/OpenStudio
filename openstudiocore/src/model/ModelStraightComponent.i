@@ -31,7 +31,7 @@ MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
 
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeReheat);
 // For backward compat, we also provide the old name
-MODELOBJECT_TEMPLATES(AirTerminalSingleDuctUncontrolled);
+//MODELOBJECT_TEMPLATES(AirTerminalSingleDuctUncontrolled);
 
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctInletSideMixer);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctParallelPIUReheat);
