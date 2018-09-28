@@ -166,27 +166,9 @@ namespace gbxml {
     return construction;
   }
 
-  static double convertByMap(double value, const QString &key, const QMap<QString, double> &map)
-  {
-    auto iter = map.find(key);
-    if (iter != map.end()) {
-      return value*iter.value();
-    }
-    // Could warn here about not finding the unit
-    return value;
-  }
-
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateMaterial(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
   {
     boost::optional<openstudio::model::ModelObject> result;
-
-    static QMap<QString, double> densityUnitConversion{ { "GramsPerCubicCm", 1000.0 }, { "LbsPerCubicIn", 0.4536/(0.0254*0.0254*0.0254) },
-    { "LbsPerCubicFt", 0.4536/(0.3048*0.3048*0.3048) }, { "KgPerCubicM", 1.0 } };
-
-    static QMap<QString, double> conductivityUnitConversion{ { "WPerCmC", 100.0 }, { "WPerMeterK", 1.0 }, { "BtuPerHourFtF", 1.0 } };
-
-    static QMap<QString, double> lengthUnitConversion{ { "Kilometers", 1000.0 }, { "Centimeters", 1.0e-2 }, { "Millimeters", 1.0e-3 },
-    { "Meters", 1.0 }, { "Miles", 5280.0*0.3048 }, { "Yards", 3.0*0.3048 }, { "Feet", 0.3048 }, { "Inches", 0.0254 } };
 
     QDomNodeList rvalueElements = element.elementsByTagName("R-value");
     QDomNodeList densityElements = element.elementsByTagName("Density");
@@ -198,22 +180,8 @@ namespace gbxml {
     if (!(densityElements.isEmpty() || conductivityElements.isEmpty() || thicknessElements.isEmpty() || specificHeatElements.isEmpty())){
 
       double density = densityElements.at(0).toElement().text().toDouble();
-      QString densityUnit = thicknessElements.at(0).toElement().attribute("unit");
-      if (!densityUnit.isEmpty()) {
-        density = convertByMap(density, densityUnit, densityUnitConversion);
-      }
-
       double conductivity = conductivityElements.at(0).toElement().text().toDouble();
-      QString conductivityUnit = conductivityElements.at(0).toElement().attribute("unit");
-      if (!conductivityUnit.isEmpty()) {
-        conductivity = convertByMap(conductivity, conductivityUnit, conductivityUnitConversion);
-      }
-
       double thickness = thicknessElements.at(0).toElement().text().toDouble();
-      QString thicknessUnit = thicknessElements.at(0).toElement().attribute("unit");
-      if (!thicknessUnit.isEmpty()) {
-        thickness = convertByMap(thickness, thicknessUnit, lengthUnitConversion);
-      }
       double specificHeat = specificHeatElements.at(0).toElement().text().toDouble();
 
       std::string roughness = "MediumRough";

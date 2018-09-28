@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<gbXML useSIUnitsForResults="true" temperatureUnit="C" lengthUnit="Meters" areaUnit="SquareMeters" volumeUnit="CubicMeters" version="0.37" xmlns="http://www.gbxml.org/schema">
+<gbXML useSIUnitsForResults="true" temperatureUnit="C" lengthUnit="Yards" areaUnit="SquareMeters" volumeUnit="CubicMeters" version="0.37" xmlns="http://www.gbxml.org/schema">
   <Campus id="aim0002">
     <Location>
       <StationId IDType="WMO">160813_2006</StationId>
