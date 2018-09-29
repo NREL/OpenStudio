@@ -70,7 +70,7 @@ namespace detail {
   const std::vector<std::string>& SurfacePropertyOtherSideCoefficients_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result{
-      "Average, Surface Other Side Coefficients Exterior Air Drybulb Temperature"
+      "Surface Other Side Coefficients Exterior Air Drybulb Temperature"
     };
     return result;
   }

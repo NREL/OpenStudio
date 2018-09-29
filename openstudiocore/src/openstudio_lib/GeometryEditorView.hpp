@@ -48,6 +48,16 @@ class QTimer;
 
 namespace openstudio {
 
+class OSWebEnginePage : public QWebEnginePage
+{
+  Q_OBJECT
+
+public:
+  OSWebEnginePage(QObject* parent = 0) : QWebEnginePage(parent) {}
+
+  bool acceptNavigationRequest(const QUrl & url, QWebEnginePage::NavigationType type, bool isMainFrame);
+};
+
 class GeometryEditorView : public QWidget
 {
   Q_OBJECT
@@ -104,6 +114,10 @@ class BaseEditor : public QObject
     virtual void checkForUpdate() = 0;
 
     virtual void onChanged();
+  
+  signals:
+    
+    bool changed();
 
   protected:
     bool m_editorLoaded;
@@ -249,6 +263,7 @@ class EditorWebView : public QWidget
     BaseEditor * m_baseEditor;
 
     bool m_isIP;
+    bool m_mergeWarn;
 
     model::Model m_model;
 
@@ -263,6 +278,7 @@ class EditorWebView : public QWidget
     QPushButton * m_debugBtn;
 
     QWebEngineView * m_view;
+    OSWebEnginePage * m_page;
     std::shared_ptr<OSDocument> m_document;
 };
 

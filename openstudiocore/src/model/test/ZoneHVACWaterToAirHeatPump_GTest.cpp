@@ -310,4 +310,17 @@ TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_SetGetFields) {
   EXPECT_TRUE(coolingCoil1.containingZoneHVACComponent());
   EXPECT_TRUE(heatingCoil1.containingZoneHVACComponent());
   EXPECT_TRUE(supplementalHC1.containingZoneHVACComponent());
+
+  //test fan placement
+  EXPECT_TRUE(testHP.setHeatPumpCoilWaterFlowMode("Constant"));
+  std::string str3 = testHP.heatPumpCoilWaterFlowMode();
+  EXPECT_EQ(str3, "Constant");
+  EXPECT_FALSE(testHP.isHeatPumpCoilWaterFlowModeDefaulted());
+
+  testHP.resetHeatPumpCoilWaterFlowMode();
+  EXPECT_TRUE(testHP.isHeatPumpCoilWaterFlowModeDefaulted());
+  str3 = testHP.heatPumpCoilWaterFlowMode();
+  EXPECT_EQ(str3,"Cycling");
+
+
 }
