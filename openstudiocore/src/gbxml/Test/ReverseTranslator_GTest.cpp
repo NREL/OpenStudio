@@ -95,6 +95,27 @@ TEST_F(gbXMLFixture, ReverseTranslator_ZNETH)
   EXPECT_TRUE(test);
 }
 
+TEST_F(gbXMLFixture, ReverseTranslator_Constructions)
+{
+
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/TestCube.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model);
+
+  model->save(resourcesPath() / openstudio::toPath("gbxml/TestCube.osm"), true);
+
+  auto osurf = model->getModelObjectByName<Surface>("T-1-5-I-F-6 Reversed");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("Surface", osurf->outsideBoundaryCondition());
+
+  auto oconstruct = osurf->construction();
+  ASSERT_TRUE(oconstruct);
+  EXPECT_EQ("Floor: Floor 1", oconstruct->name().get());
+
+}
+
 TEST_F(gbXMLFixture, ReverseTranslator_UndergroundWalls)
 {
 
