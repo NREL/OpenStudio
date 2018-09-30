@@ -508,6 +508,25 @@ TEST(Filetypes, EpwFile_Data_DoubleRead)
   }
 }
 
+TEST(Filetypes, EpwFile_NoDesign)
+{
+  try {
+    path p = resourcesPath() / toPath("utilities/Filetypes/leapday-test.epw");
+    EpwFile epwFile(p);
+    EXPECT_EQ(p, epwFile.path());
+    // Ask for data
+    std::vector<EpwDataPoint> data = epwFile.data();
+    EXPECT_EQ(8784, data.size());
+    // Ask for the design conditions, but there aren't any
+    std::vector<EpwDesignCondition> designs = epwFile.designConditions();
+    EXPECT_EQ(0, designs.size());
+    data = epwFile.data();
+    EXPECT_EQ(8784, data.size());
+  } catch (...) {
+    ASSERT_TRUE(false);
+  }
+}
+
 TEST(Filetypes, EpwFile_International_Data)
 {
   try{
