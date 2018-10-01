@@ -5239,7 +5239,8 @@ OS:SubSurface,
        \memo Used for windows, doors, glass doors, tubular daylighting devices
        \extensible:3
        \format vertices
-       \min-fields 20
+       \min-fields 19
+       \max-fields 22
   A1, \field Handle
        \type handle
        \required-field
@@ -5247,6 +5248,7 @@ OS:SubSurface,
        \type alpha
        \required-field
        \reference SubSurfNames
+       \reference GlazedExtSubSurfNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames
@@ -5289,13 +5291,7 @@ OS:SubSurface,
        \minimum 0
        \maximum 1
        \default autocalculate
-  A7, \field Shading Control Name
-       \note enter the name of a WindowProperty:ShadingControl object
-       \note used for windows and glass doors only
-       \note If not specified, window or glass door has no shading (blind, roller shade, etc.)
-       \type object-list
-       \object-list WindowShadeControlNames
-  A8, \field Frame and Divider Name
+  A7,  \field Frame and Divider Name
        \note Enter the name of a WindowProperty:FrameAndDivider object
        \note Used only for exterior windows (rectangular) and glass doors.
        \note Unused for triangular windows.
@@ -5346,7 +5342,19 @@ OS:ShadingControl,
        \reference WindowShadeControlNames
        \note Referenced by surfaces that are exterior windows
        \note Not used by interzone windows
-  A3 , \field Shading Type
+  A3 , \field Zone Name
+       \required-field
+       \type object-list
+       \object-list ZoneNames
+  N1 , \field Shading Control Sequence Number
+       \type integer
+       \minimum 1
+       \default 1
+       \note If multiple WindowShadingControl objects are used than the order that they deploy the window shades
+       \note can be set with this field. The first WindowShadingControl should be 1 and subsequent
+       \note WindowShadingControl should 2 or 3 or higher. This is usually used when the Multiple Surface Control Type
+       \note field is set to Group and groups of windows are being controlled in a certain order.
+  A4 , \field Shading Type
        \required-field
        \type choice
        \key InteriorShade
@@ -5359,7 +5367,7 @@ OS:ShadingControl,
        \key SwitchableGlazing
        \note InteriorDaylightRedirectionDevice doesn't exist in E+, will map to InteriorBlind.
        \key InteriorDaylightRedirectionDevice
-  A4 , \field Construction with Shading Name
+  A5 , \field Construction with Shading Name
        \type object-list
        \object-list ConstructionNames
        \note Required if Shading Type = SwitchableGlazing
@@ -5367,7 +5375,7 @@ OS:ShadingControl,
        \note "Shading Device Material Name" is not specified.
        \note If both "Construction with Shading Name" and "Shading Device Material Name" are entered,
        \note the former takes precedence.
-  A5,  \field Shading Device Material Name
+  A6,  \field Shading Device Material Name
        \type object-list
        \object-list WindowShadesScreensAndBlinds
        \note Enter then name of a WindowMaterial:Shade, WindowMaterial:Screen or WindowMaterial:Blind object.
@@ -5375,7 +5383,7 @@ OS:ShadingControl,
        \note Not used if Shading Control Type = SwitchableGlazing, BetweenGlassShade, or BetweenGlassBlind.
        \note If both "Construction with Shading Name" and "Shading Device Material Name" are entered,
        \note the former takes precedence.
-  A6 , \field Shading Control Type
+  A7 , \field Shading Control Type
        \type choice
        \key AlwaysOn
        \key AlwaysOff
@@ -5419,7 +5427,7 @@ OS:ShadingControl,
        \key OnIfHighZoneAirTempAndHighSolarOnWindow
        \key OnIfHighZoneAirTempAndHighHorizontalSolar
        \default OnIfHighSolarOnWindow
-  A7 , \field Schedule Name
+  A8 , \field Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note Required if Shading Control Is Scheduled = Yes.
@@ -5433,14 +5441,14 @@ OS:ShadingControl,
        \note Unused for Shading Control Type = AlwaysOn, AlwaysOff, OnIfScheduleAllows,
        \note OnIfHighGlare, Glare, and DaylightIlluminance
        \type real
-  A8 , \field Shading Control Is Scheduled
+  A9 , \field Shading Control Is Scheduled
        \type choice
        \key No
        \key Yes
        \default No
        \note If Yes, Schedule Name is required; if No, Schedule Name is not used.
        \note Shading Control Is Scheduled = Yes is required if Shading Control Type = OnIfScheduleAllows.
-  A9 , \field Glare Control Is Active
+  A10, \field Glare Control Is Active
        \type choice
        \key No
        \key Yes
@@ -5449,7 +5457,7 @@ OS:ShadingControl,
        \note the maximum discomfort glare index specified in the Daylighting object referenced by the zone.
        \note The glare test is OR'ed with the test specified by Shading Control Type.
        \note Glare Control Is Active = Yes is required if Shading Control Type = OnIfHighGlare.
-  A10, \field Type of Slat Angle Control for Blinds
+  A11, \field Type of Slat Angle Control for Blinds
        \type choice
        \key FixedSlatAngle
        \key ScheduledSlatAngle
@@ -5457,7 +5465,7 @@ OS:ShadingControl,
        \default FixedSlatAngle
        \note Used only if Shading Type = InteriorBlind, ExteriorBlind or BetweenGlassBlind.
        \note If choice is ScheduledSlatAngle then Slat Angle Schedule Name is required.
-  A11, \field Slat Angle Schedule Name
+  A12, \field Slat Angle Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note Used only if Shading Type = InteriorBlind, ExteriorBlind or BetweenGlassBlind.
@@ -5470,6 +5478,25 @@ OS:ShadingControl,
        \note OnIfHighZoneAirTempAndHighSolarOnWindow, and OnIfHighZoneAirTempAndHighHorizontalSolar
        \type real
        \ip-units unknown
+  A13, \field Daylighting Control Object Name
+       \type object-list
+       \object-list DaylightingControlNames
+       \note Reference to the Daylighting:Controls object that provides the glare and illuminance control to the zone.
+  A14, \field Multiple Surface Control Type
+       \type choice
+       \key Sequential
+       \key Group
+       \default Sequential
+       \note When Sequential is used the list of fenestration surfaces are controlled individually in the order specified
+       \note When Group is used the entire list is controlled simultaneously and if glare control is needed the entire
+       \note group of window shades are deployed together a the same time
+  A15; \field Fenestration Surface List Name
+       \required-field
+       \type object-list
+       \object-list ModelObjectLists
+       \note A Model object list to store the Fenestration Surface Names to which this control applies to
+       \note When Multiple Surface Control Type is set to Sequential the shades will be deployed for the referenced surface objects in order.
+       \note When that field is set to Group the entire list is controlled simultaneously.
 
 OS:WindowProperty:FrameAndDivider,
          \memo Specifies the dimensions of a window frame, dividers, and reveal surfaces.
