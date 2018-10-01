@@ -70,7 +70,6 @@ set(ENERGYPLUS_VERSION_MINOR 0)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "569b6cc171")
 set(ENERGYPLUS_BUILD_SHA "2ef880da82")
 
 # Radiance
@@ -377,13 +376,13 @@ endif()
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.0.0-RC3")
+set(ENERGYPLUS_RELEASE_NAME "v9.0.0")
 if(UNIX)
   if(APPLE)
     set(ENERGYPLUS_EXPECTED_HASH 7108d57043633844cbd5e866558f160e)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
-    # TODO: There aren't any redhat releases anymore
+    # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH xyz)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
