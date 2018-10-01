@@ -6941,7 +6941,7 @@ WindowShadingControl,
        \type integer
        \minimum 1
        \default 1
-       \note If multiple WindowShadingControl objects are used than the order that they deploy the window shades
+       \note If multiple WindowShadingControl objects are used then the order that they deploy the window shades
        \note can be set with this field. The first WindowShadingControl should be 1 and subsequent
        \note WindowShadingControl should 2 or 3 or higher. This is usually used when the Multiple Surface Control Type
        \note field is set to Group and groups of windows are being controlled in a certain order.
