@@ -2551,15 +2551,16 @@ OS:WindowMaterial:Blind,
        \maximum 0.1
        \default 0.001
   N4, \field Slat Angle
-       \note If WindowShadingControl referencing the window that incorporates this blind
+       \note If WindowProperty:ShadingControl for the window that incorporates this blind
        \note has Type of Slat Angle Control for Blinds = FixedSlatAngle,
        \note then this is the fixed value of the slat angle;
-       \note If WindowShadingControl referencing the window that incorporates this blind
+       \note If WindowProperty:ShadingControl for the window that incorporates this blind
        \note has Type of Slat Angle Control for Blinds = BlockBeamSolar,
        \note then this is the slat angle when slat angle control
        \note is not in effect (e.g., when there is no beam solar on the blind);
-       \note Not used if WindowShadingControl referencing the window that incorporates this blind
-       \note has Type of Slat Angle Control for Blinds = ScheduledSlatAngle.      \type real
+       \note Not used if WindowProperty:ShadingControl for the window that incorporates this blind
+       \note has Type of Slat Angle Control for Blinds = ScheduledSlatAngle.
+       \type real
        \units deg
        \minimum 0
        \maximum 180
@@ -2686,17 +2687,18 @@ OS:WindowMaterial:Blind,
        \maximum 1
        \default 0.5
   N26, \field Minimum Slat Angle
-       \note Used only if WindowShadingControl referencing the window that incorporates
-       \note this blind varies the slat angle (i.e., WindowShadingControl with
+       \note Used only if WindowProperty:ShadingControl for the window that incorporates
+       \note this blind varies the slat angle (i.e., WindowProperty:ShadingControl with
        \note Type of Slat Angle Control for Blinds = ScheduledSlatAngle
-       \note or BlockBeamSolar)      \type real
+       \note or BlockBeamSolar)
+       \type real
        \units deg
        \minimum 0
        \maximum 180
        \default 0
   N27; \field Maximum Slat Angle
-       \note Used only if WindowShadingControl referencing the window that incorporates
-       \note this blind varies the slat angle (i.e., WindowShadingControl with
+       \note Used only if WindowProperty:ShadingControl for the window that incorporates
+       \note this blind varies the slat angle (i.e., WindowProperty:ShadingControl with
        \note Type of Slat Angle Control for Blinds = ScheduledSlatAngle
        \note or BlockBeamSolar)
        \type real
@@ -5239,8 +5241,7 @@ OS:SubSurface,
        \memo Used for windows, doors, glass doors, tubular daylighting devices
        \extensible:3
        \format vertices
-       \min-fields 19
-       \max-fields 22
+       \min-fields 20
   A1, \field Handle
        \type handle
        \required-field
@@ -5291,7 +5292,13 @@ OS:SubSurface,
        \minimum 0
        \maximum 1
        \default autocalculate
-  A7,  \field Frame and Divider Name
+  A7, \field Shading Control Name
+       \note enter the name of a WindowProperty:ShadingControl object
+       \note used for windows and glass doors only
+       \note If not specified, window or glass door has no shading (blind, roller shade, etc.)
+       \type object-list
+       \object-list WindowShadeControlNames
+  A8, \field Frame and Divider Name
        \note Enter the name of a WindowProperty:FrameAndDivider object
        \note Used only for exterior windows (rectangular) and glass doors.
        \note Unused for triangular windows.
@@ -5329,9 +5336,6 @@ OS:SubSurface,
        \units m
 
 OS:ShadingControl,
-       \memo Specifies the type, location, and controls for window shades, window blinds, and
-       \memo switchable glazing. Referencing the surface objects for exterior windows and glass
-       \memo doors (ref: FenestrationSurface:Detailed, Window, and GlazedDoor).
        \min-fields 4
   A1 , \field Handle
        \type handle
@@ -5342,19 +5346,7 @@ OS:ShadingControl,
        \reference WindowShadeControlNames
        \note Referenced by surfaces that are exterior windows
        \note Not used by interzone windows
-  A3 , \field Zone Name
-       \required-field
-       \type object-list
-       \object-list ZoneNames
-  N1 , \field Shading Control Sequence Number
-       \type integer
-       \minimum 1
-       \default 1
-       \note If multiple WindowShadingControl objects are used than the order that they deploy the window shades
-       \note can be set with this field. The first WindowShadingControl should be 1 and subsequent
-       \note WindowShadingControl should 2 or 3 or higher. This is usually used when the Multiple Surface Control Type
-       \note field is set to Group and groups of windows are being controlled in a certain order.
-  A4 , \field Shading Type
+  A3 , \field Shading Type
        \required-field
        \type choice
        \key InteriorShade
@@ -5365,9 +5357,8 @@ OS:ShadingControl,
        \key BetweenGlassShade
        \key BetweenGlassBlind
        \key SwitchableGlazing
-       \note InteriorDaylightRedirectionDevice doesn't exist in E+, will map to InteriorBlind.
        \key InteriorDaylightRedirectionDevice
-  A5 , \field Construction with Shading Name
+  A4 , \field Construction with Shading Name
        \type object-list
        \object-list ConstructionNames
        \note Required if Shading Type = SwitchableGlazing
@@ -5375,7 +5366,7 @@ OS:ShadingControl,
        \note "Shading Device Material Name" is not specified.
        \note If both "Construction with Shading Name" and "Shading Device Material Name" are entered,
        \note the former takes precedence.
-  A6,  \field Shading Device Material Name
+  A5,  \field Shading Device Material Name
        \type object-list
        \object-list WindowShadesScreensAndBlinds
        \note Enter then name of a WindowMaterial:Shade, WindowMaterial:Screen or WindowMaterial:Blind object.
@@ -5383,51 +5374,14 @@ OS:ShadingControl,
        \note Not used if Shading Control Type = SwitchableGlazing, BetweenGlassShade, or BetweenGlassBlind.
        \note If both "Construction with Shading Name" and "Shading Device Material Name" are entered,
        \note the former takes precedence.
-  A7 , \field Shading Control Type
+  A6 , \field Shading Control Type
        \type choice
        \key AlwaysOn
        \key AlwaysOff
        \key OnIfScheduleAllows
-       \note OnIfScheduleAllows requires that Schedule Name be specified and
-       \note Shading Control Is Scheduled = Yes.
-       \note AlwaysOn, AlwaysOff and OnIfScheduleAllows are the only valid control types for ExteriorScreen.
-       \note The following six control types are used primarily to reduce
-       \note zone cooling load due to window solar gain
        \key OnIfHighSolarOnWindow
-       \key OnIfHighHorizontalSolar
-       \key OnIfHighOutdoorAirTemperature
-       \key OnIfHighZoneAirTemperature
-       \key OnIfHighZoneCooling
-       \key OnIfHighGlare
-       \note Following entry should be used only if Shading Type = SwitchableGlazing
-       \note and window is in a daylit zone
-       \key MeetDaylightIlluminanceSetpoint
-       \note The following three control types are used to reduce zone Heating load. They can be
-       \note used with any Shading Type but are most appropriate for opaque interior or exterior
-       \note shades with high insulating value ("opaque movable insulation")
-       \key OnNightIfLowOutdoorTempAndOffDay
-       \key OnNightIfLowInsideTempAndOffDay
-       \key OnNightIfHeatingAndOffDay
-       \note The following two control types are used to reduce zone heating and cooling load.
-       \note They can be used with any Shading Type but are most appropriate for translucent interior
-       \note or exterior shades with high insulating value ("translucent movable insulation")
-       \key OnNightIfLowOutdoorTempAndOnDayIfCooling
-       \key OnNightIfHeatingAndOnDayIfCooling
-       \note The following two control types are used to reduce zone Cooling load.
-       \note They can be used with any Shading Type but are most appropriate for interior
-       \note or exterior blinds,interior or exterior shades with low insulating value, or
-       \note switchable glazing
-       \key OffNightAndOnDayIfCoolingAndHighSolarOnWindow
-       \key OnNightAndOnDayIfCoolingAndHighSolarOnWindow
-       \note The following four control types require that both Setpoint and Setpoint2 be specified
-       \note Setpoint will correspond to outdoor air temp or zone air temp (deg C)
-       \note Setpoint2 will correspond to solar on window or horizontal solar (W/m2)
-       \key OnIfHighOutdoorAirTempAndHighSolarOnWindow
-       \key OnIfHighOutdoorAirTempAndHighHorizontalSolar
-       \key OnIfHighZoneAirTempAndHighSolarOnWindow
-       \key OnIfHighZoneAirTempAndHighHorizontalSolar
        \default OnIfHighSolarOnWindow
-  A8 , \field Schedule Name
+  A7 , \field Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note Required if Shading Control Is Scheduled = Yes.
@@ -5441,14 +5395,14 @@ OS:ShadingControl,
        \note Unused for Shading Control Type = AlwaysOn, AlwaysOff, OnIfScheduleAllows,
        \note OnIfHighGlare, Glare, and DaylightIlluminance
        \type real
-  A9 , \field Shading Control Is Scheduled
+  A8 , \field Shading Control Is Scheduled
        \type choice
        \key No
        \key Yes
        \default No
        \note If Yes, Schedule Name is required; if No, Schedule Name is not used.
        \note Shading Control Is Scheduled = Yes is required if Shading Control Type = OnIfScheduleAllows.
-  A10, \field Glare Control Is Active
+  A9 , \field Glare Control Is Active
        \type choice
        \key No
        \key Yes
@@ -5457,7 +5411,7 @@ OS:ShadingControl,
        \note the maximum discomfort glare index specified in the Daylighting object referenced by the zone.
        \note The glare test is OR'ed with the test specified by Shading Control Type.
        \note Glare Control Is Active = Yes is required if Shading Control Type = OnIfHighGlare.
-  A11, \field Type of Slat Angle Control for Blinds
+  A10, \field Type of Slat Angle Control for Blinds
        \type choice
        \key FixedSlatAngle
        \key ScheduledSlatAngle
@@ -5465,7 +5419,7 @@ OS:ShadingControl,
        \default FixedSlatAngle
        \note Used only if Shading Type = InteriorBlind, ExteriorBlind or BetweenGlassBlind.
        \note If choice is ScheduledSlatAngle then Slat Angle Schedule Name is required.
-  A12, \field Slat Angle Schedule Name
+  A11, \field Slat Angle Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note Used only if Shading Type = InteriorBlind, ExteriorBlind or BetweenGlassBlind.
@@ -5478,25 +5432,6 @@ OS:ShadingControl,
        \note OnIfHighZoneAirTempAndHighSolarOnWindow, and OnIfHighZoneAirTempAndHighHorizontalSolar
        \type real
        \ip-units unknown
-  A13, \field Daylighting Control Object Name
-       \type object-list
-       \object-list DaylightingControlNames
-       \note Reference to the Daylighting:Controls object that provides the glare and illuminance control to the zone.
-  A14, \field Multiple Surface Control Type
-       \type choice
-       \key Sequential
-       \key Group
-       \default Sequential
-       \note When Sequential is used the list of fenestration surfaces are controlled individually in the order specified
-       \note When Group is used the entire list is controlled simultaneously and if glare control is needed the entire
-       \note group of window shades are deployed together a the same time
-  A15; \field Fenestration Surface List Name
-       \required-field
-       \type object-list
-       \object-list ModelObjectLists
-       \note A Model object list to store the Fenestration Surface Names to which this control applies to
-       \note When Multiple Surface Control Type is set to Sequential the shades will be deployed for the referenced surface objects in order.
-       \note When that field is set to Group the entire list is controlled simultaneously.
 
 OS:WindowProperty:FrameAndDivider,
          \memo Specifies the dimensions of a window frame, dividers, and reveal surfaces.
