@@ -1,3 +1,4 @@
+
 /***********************************************************************************************************************
 *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
 *
@@ -39,6 +40,7 @@ namespace model {
 class Construction;
 class ShadingMaterial;
 class Schedule;
+class SubSurface;
 
 namespace detail {
 
@@ -113,6 +115,8 @@ namespace detail {
     /** @name Other */
     //@{
 
+    std::vector<SubSurface> subSurfaces() const;
+    
     //@}
    protected:
 

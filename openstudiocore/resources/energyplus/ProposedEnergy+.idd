@@ -3795,6 +3795,7 @@ WindowMaterial:Blind,
        \default 180
        \minimum 0
        \maximum 180
+
 WindowMaterial:Screen,
        \memo Window screen physical properties. Can only be located on the exterior side of a window construction.
        \min-fields 9
