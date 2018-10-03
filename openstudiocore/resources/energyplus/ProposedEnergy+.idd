@@ -2222,7 +2222,6 @@ Site:WaterMainsTemperature,
        \memo Water mains temperatures are a function of outdoor climate conditions
        \memo and vary with time of year.
   A1 , \field Calculation Method
-       \required-field
        \type choice
        \key Schedule
        \key Correlation
@@ -5303,7 +5302,7 @@ WindowThermalModel:Params,
        \default 101325
 
 WindowsCalculationEngine,
-       \memo Describes which window model will be used in calculations. Built in windows model will use algorithms that are part of EnergyPlus, 
+       \memo Describes which window model will be used in calculations. Built in windows model will use algorithms that are part of EnergyPlus,
        \memo while ExternalWindowsModel will use Windows-CalcEngine library to perform optical and thermal performances of windows and doors.
   A1;  \field Windows engine
        \type choice
@@ -5762,7 +5761,7 @@ Wall:Detailed,
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
        \reference RadiantSurfaceNames
-       \reference AllShadingAndHTSurfNames       
+       \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
        \note To be matched with a construction in this input file
@@ -6753,7 +6752,7 @@ Window:Interzone,
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference AllShadingAndHTSurfNames       
+       \reference AllShadingAndHTSurfNames
        \reference RadGroupAndSurfNames
   A2 , \field Construction Name
        \required-field
@@ -6849,7 +6848,7 @@ GlazedDoor:Interzone,
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
-       \reference AllShadingAndHTSurfNames       
+       \reference AllShadingAndHTSurfNames
        \reference RadGroupAndSurfNames
   A2 , \field Construction Name
        \required-field
@@ -6906,8 +6905,8 @@ WindowShadingControl,
        \minimum 1
        \default 1
        \note If multiple WindowShadingControl objects are used than the order that they deploy the window shades
-       \note can be set with this field. The first WindowShadingControl should be 1 and subsequent 
-       \note WindowShadingControl should 2 or 3 or higher. This is usually used when the Multiple Surface Control Type 
+       \note can be set with this field. The first WindowShadingControl should be 1 and subsequent
+       \note WindowShadingControl should 2 or 3 or higher. This is usually used when the Multiple Surface Control Type
        \note field is set to Group and groups of windows are being controlled in a certain order.
   A3 , \field Shading Type
        \required-field
@@ -6920,7 +6919,7 @@ WindowShadingControl,
        \key BetweenGlassShade
        \key BetweenGlassBlind
        \key SwitchableGlazing
-  A4 , \field Construction with Shading Name 
+  A4 , \field Construction with Shading Name
        \type object-list
        \object-list ConstructionNames
        \note Required if Shading Type = SwitchableGlazing
@@ -7043,14 +7042,14 @@ WindowShadingControl,
        \key Group
        \default Sequential
        \note When Sequential is used the list of fenestration surfaces are controlled individually in the order specified
-       \note When Group is used the entire list is controlled simultaneously and if glare control is needed the entire 
+       \note When Group is used the entire list is controlled simultaneously and if glare control is needed the entire
        \note group of window shades are deployed together a the same time
   A14; \field Fenestration Surface Name
        \required-field
        \begin-extensible
        \type object-list
        \object-list GlazedExtSubSurfNames
-       \note When Multiple Surface Control Type is set to Sequential the shades will be deployed for the referenced surface objects in order. 
+       \note When Multiple Surface Control Type is set to Sequential the shades will be deployed for the referenced surface objects in order.
        \note When that field is set to Group the entire list is controlled simultaneously.
 
 WindowProperty:FrameAndDivider,
