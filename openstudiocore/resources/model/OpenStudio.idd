@@ -5249,6 +5249,7 @@ OS:SubSurface,
        \type alpha
        \required-field
        \reference SubSurfNames
+       \reference GlazedExtSubSurfNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames

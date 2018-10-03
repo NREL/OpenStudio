@@ -62,36 +62,39 @@ boost::optional<IdfObject> ForwardTranslator::translateRunPeriod( RunPeriod& mod
   runPeriod.setInt(openstudio::RunPeriodFields::EndDayofMonth,modelObject.getEndDayOfMonth());
 
   model::YearDescription yd = modelObject.model().getUniqueModelObject<model::YearDescription>();
-  Date jan1 = yd.makeDate(1,1);
+  Date firstDay = yd.makeDate(modelObject.getBeginMonth(), modelObject.getBeginDayOfMonth());
+
+  runPeriod.setInt(openstudio::RunPeriodFields::BeginYear, firstDay.year());
+  runPeriod.setInt(openstudio::RunPeriodFields::EndYear, firstDay.year() + modelObject.getNumTimePeriodRepeats());
 
   // ETH@20121219 - This always hard codes a day of the week to start on, even if the user
   // specified "UseWeatherFile". It is important to keep it this way for now, since we are
   // not parsing the start day out of the weather file, and we are hard-setting the day schedules
   // based on the settings/assumptions of YearDescription (assumes 2009 if 'UseWeatherFile').
-  switch(jan1.dayOfWeek().value()){
-    case DayOfWeek::Sunday:
-      runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay,"Sunday");
-      break;
-    case DayOfWeek::Monday:
-      runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay,"Monday");
-      break;
-    case DayOfWeek::Tuesday:
-      runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay,"Tuesday");
-      break;
-    case DayOfWeek::Wednesday:
-      runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay,"Wednesday");
-      break;
-    case DayOfWeek::Thursday:
-      runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay,"Thursday");
-      break;
-    case DayOfWeek::Friday:
-      runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay,"Friday");
-      break;
-    case DayOfWeek::Saturday:
-      runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay,"Saturday");
-      break;
-    default:
-      ;
+  switch (firstDay.dayOfWeek().value()) {
+  case DayOfWeek::Sunday:
+    runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay, "Sunday");
+    break;
+  case DayOfWeek::Monday:
+    runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay, "Monday");
+    break;
+  case DayOfWeek::Tuesday:
+    runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay, "Tuesday");
+    break;
+  case DayOfWeek::Wednesday:
+    runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay, "Wednesday");
+    break;
+  case DayOfWeek::Thursday:
+    runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay, "Thursday");
+    break;
+  case DayOfWeek::Friday:
+    runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay, "Friday");
+    break;
+  case DayOfWeek::Saturday:
+    runPeriod.setString(openstudio::RunPeriodFields::DayofWeekforStartDay, "Saturday");
+    break;
+  default:
+    ;
   }
 
   // ETH@20121219 - We don't currently support holidays. This makes sure that default day schedules
@@ -146,9 +149,6 @@ boost::optional<IdfObject> ForwardTranslator::translateRunPeriod( RunPeriod& mod
   }
 
   //runPeriod.setInt(openstudio::RunPeriodFields::NumberofTimesRunperiodtobeRepeated,modelObject.getNumTimePeriodRepeats());
-
-  runPeriod.setInt(openstudio::RunPeriodFields::BeginYear, jan1.year());
-  runPeriod.setInt(openstudio::RunPeriodFields::EndYear, jan1.year() + modelObject.getNumTimePeriodRepeats());
 
   return boost::optional<IdfObject>(runPeriod);
 }
