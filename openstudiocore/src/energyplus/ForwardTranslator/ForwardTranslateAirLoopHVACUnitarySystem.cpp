@@ -470,20 +470,20 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // }
 
   // Design Specification Multispeed Object Name
-   if( boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject = modelObject.designSpecificationMultispeedObject() )
-   {
-     boost::optional<IdfObject> _unitarySystemPerformance = translateAndMapModelObject(designSpecificationMultispeedObject.get());
+  if( boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject = modelObject.designSpecificationMultispeedObject() )
+  {
+    boost::optional<IdfObject> _unitarySystemPerformance = translateAndMapModelObject(designSpecificationMultispeedObject.get());
 
-     if( _unitarySystemPerformance && _unitarySystemPerformance->name() )
-     {
-       unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType,_unitarySystemPerformance->iddObject().name());
-       unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName,_unitarySystemPerformance->name().get());
-     }
-   } else if( (coolingCoil && (coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType())) ||
+    if( _unitarySystemPerformance && _unitarySystemPerformance->name() )
+    {
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType,_unitarySystemPerformance->iddObject().name());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName,_unitarySystemPerformance->name().get());
+    }
+  } else if( (coolingCoil && (coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType())) ||
       (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingDXMultiSpeed::iddObjectType())) ||
       (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingDXVariableSpeed::iddObjectType())) ||
       (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingGasMultiStage::iddObjectType())) )
-   {
+  {
 
     // If not user specified, then generate the UnitarySystemPerformance:Multispeed used for multi speed coils
 
