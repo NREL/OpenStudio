@@ -25492,7 +25492,7 @@ ZoneHVAC:CoolingPanel:RadiantConvective:Water,
        \note Radiant energy may be distributed to specific surfaces
        \type object-list
        \object-list AllHeatTranSurfNames
-  N12, \field Fraction of Radiant Energy to Surface 1
+  N12; \field Fraction of Radiant Energy to Surface 1
        \type real
        \minimum 0
        \maximum 1
