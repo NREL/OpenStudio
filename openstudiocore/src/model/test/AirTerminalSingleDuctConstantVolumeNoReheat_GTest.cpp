@@ -69,8 +69,12 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeNoReheat_addToNode) {
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
+  // Inlet Node, splitter, placeholder node, mixer, outlet node
+  EXPECT_EQ( (unsigned)5, airLoop.demandComponents().size() );
+
   EXPECT_TRUE(testObject.addToNode(inletNode));
-  EXPECT_EQ((unsigned)6, airLoop.demandComponents().size());
+  // Inlet Node, splitter, ATU inlet Node, ATU, ATU outlet Node, mixer, outlet node
+  EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
 
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
@@ -84,7 +88,8 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeNoReheat_addToNode) {
   AirTerminalSingleDuctConstantVolumeNoReheat testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
 
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
-  EXPECT_EQ( (unsigned)8, airLoop.demandComponents().size() );
+  // 7 initially, plus a branch with ATU inlet Node, ATU, ATU outlet node
+  EXPECT_EQ( (unsigned)10, airLoop.demandComponents().size() );
 }
 
 
