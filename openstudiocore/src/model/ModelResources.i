@@ -11,7 +11,6 @@
 
 %{
   #include <model/ScheduleTypeRegistry.hpp>
-
   #include <QColor>
   #include <utilities/data/TimeSeries.hpp>
   #include <utilities/sql/SqlFile.hpp>
@@ -49,6 +48,17 @@ class ShadingControl;
 
 }
 }
+
+// extend classes
+%extend openstudio::model::TableMultiVariableLookupPoint {
+  // Use the overloaded operator<< for string representation
+  // puts point will return something like "(x1, x2) = (10.5, 0.75)"
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
 
 MODELOBJECT_TEMPLATES(ScheduleInterval);
 MODELOBJECT_TEMPLATES(ScheduleFixedInterval);
@@ -114,6 +124,7 @@ MODELOBJECT_TEMPLATES(CurveRectangularHyperbola1);
 MODELOBJECT_TEMPLATES(CurveRectangularHyperbola2);
 MODELOBJECT_TEMPLATES(CurveSigmoid);
 MODELOBJECT_TEMPLATES(CurveTriquadratic);
+MODELOBJECT_TEMPLATES(TableMultiVariableLookupPoint);
 MODELOBJECT_TEMPLATES(TableMultiVariableLookup);
 MODELOBJECT_TEMPLATES(SpaceLoadDefinition);
 MODELOBJECT_TEMPLATES(PeopleDefinition);
