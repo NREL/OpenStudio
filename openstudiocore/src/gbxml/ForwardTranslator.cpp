@@ -1234,7 +1234,12 @@ namespace gbxml {
     Transformation transformation;
     boost::optional<model::Space> space = shadingSurface.space();
     if (space){
-      transformation = space->siteTransformation();
+      boost::optional<model::ShadingSurfaceGroup> shadingSurfaceGroup = shadingSurface.shadingSurfaceGroup();
+      if (shadingSurfaceGroup) {
+        transformation = shadingSurfaceGroup->siteTransformation();
+      } else {
+        transformation = space->siteTransformation();
+      }
 
       std::string spaceName = space->name().get();
       QDomElement adjacentSpaceIdElement = doc.createElement("AdjacentSpaceId");
@@ -1243,6 +1248,8 @@ namespace gbxml {
     } else {
       boost::optional<model::ShadingSurfaceGroup> shadingSurfaceGroup = shadingSurface.shadingSurfaceGroup();
       if (shadingSurfaceGroup){
+        transformation = shadingSurfaceGroup->siteTransformation();
+
         std::string spaceName = shadingSurfaceGroup->name().get();
         QDomElement adjacentSpaceIdElement = doc.createElement("AdjacentSpaceId");
         result.appendChild(adjacentSpaceIdElement);
