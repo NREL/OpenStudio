@@ -66,7 +66,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRunPeriod( RunPeriod& mod
 
   runPeriod.setInt(openstudio::RunPeriodFields::BeginYear, firstDay.year());
   runPeriod.setInt(openstudio::RunPeriodFields::EndYear, firstDay.year() + modelObject.getNumTimePeriodRepeats());
-  
+
   // ETH@20121219 - This always hard codes a day of the week to start on, even if the user
   // specified "UseWeatherFile". It is important to keep it this way for now, since we are
   // not parsing the start day out of the weather file, and we are hard-setting the day schedules

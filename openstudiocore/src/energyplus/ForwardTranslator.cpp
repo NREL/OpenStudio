@@ -377,7 +377,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   std::vector<ShadingControl> shadingControls = model.getConcreteModelObjects<ShadingControl>();
   std::sort(shadingControls.begin(), shadingControls.end(), WorkspaceObjectNameLess());
   std::map<Handle, ShadingControlVector> zoneHandleToShadingControlVectorMap;
-  for (auto& shadingControl : model.getConcreteModelObjects<ShadingControl>()) {
+  for (auto& shadingControl : shadingControls) {
     std::set<Handle> thisZoneHandleSet;
     for (const auto& subSurface : shadingControl.subSurfaces()) {
       boost::optional<Space> space = subSurface.space();
@@ -397,7 +397,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
             it->second.push_back(shadingControl);
             shadingControl.additionalProperties().setFeature("Shading Control Sequence Number", (int)it->second.size());
           } else if (thisZoneHandleSet.find(zoneHandle) != thisZoneHandleSet.end()) {
-            // already in here, good to go          
+            // already in here, good to go
 
           } else {
             // additional thermal zone, must clone
