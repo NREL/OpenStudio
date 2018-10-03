@@ -301,6 +301,8 @@ set(ENERGYPLUS_OUTPUTS "")
 
 SET(gbxml_resources_src
   gbxml/simpleBox_vasari.xml
+  gbxml/TestCube.xml
+  gbxml/TestCubeAlternateUnits.xml
   gbxml/TwoStoryOffice_Trane.xml
   gbxml/ZNETH.xml
 )
