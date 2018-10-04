@@ -424,7 +424,9 @@ void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
       myModelList->setItemsType(OSItemType::LibraryItem);
       myModelList->setShowFilterLayout(true);
 
-      myModelList->addModelObjectType(IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic, "Glazing Group Thermochromic Window Materials");
+      // TODO: commented out until ThermochromicGlazing is properly wrapped
+      // myModelList->addModelObjectType(IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic, "Glazing Group Thermochromic Window Materials");
+
       myModelList->addModelObjectType(IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod, "Refraction Extinction Method Glazing Window Materials");
       myModelList->addModelObjectType(IddObjectType::OS_WindowMaterial_Shade, "Shade Window Materials");
       myModelList->addModelObjectType(IddObjectType::OS_WindowMaterial_Screen, "Screen Window Materials");
@@ -451,7 +453,8 @@ void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
       myLibraryList->setItemsType(OSItemType::LibraryItem);
       myLibraryList->setShowFilterLayout(true);
 
-      myLibraryList->addModelObjectType(IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic, "Glazing Group Thermochromic Window Materials");
+      // TODO: commented out until ThermochromicGlazing is properly wrapped
+      // myLibraryList->addModelObjectType(IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic, "Glazing Group Thermochromic Window Materials");
       myLibraryList->addModelObjectType(IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod, "Refraction Extinction Method Glazing Window Materials");
       myLibraryList->addModelObjectType(IddObjectType::OS_WindowMaterial_Shade, "Shade Window Materials");
       myLibraryList->addModelObjectType(IddObjectType::OS_WindowMaterial_Screen, "Screen Window Materials");
@@ -500,7 +503,9 @@ void MainRightColumnController::configureForConstructionsSubTab(int subTabID)
       myLibraryList->setItemsType(OSItemType::LibraryItem);
       myLibraryList->setShowFilterLayout(true);
 
-      myLibraryList->addModelObjectType(IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic, "Glazing Group Thermochromic Window Materials");
+      // TODO: commented out until ThermochromicGlazing is properly wrapped
+      // myLibraryList->addModelObjectType(IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic, "Glazing Group Thermochromic Window Materials");
+
       myLibraryList->addModelObjectType(IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod, "Refraction Extinction Method Glazing Window Materials");
       myLibraryList->addModelObjectType(IddObjectType::OS_WindowMaterial_Shade, "Shade Window Materials");
       myLibraryList->addModelObjectType(IddObjectType::OS_WindowMaterial_Screen, "Screen Window Materials");

@@ -237,7 +237,8 @@ namespace openstudio {
           );
       }
       else if (field == PARTOFTOTALFLOORAREA) {
-        addCheckBoxColumn(Heading(QString(PARTOFTOTALFLOORAREA), true, false),
+        // We add the "Apply Selected" button to this column by passing 3rd arg, t_showColumnButton=true
+        addCheckBoxColumn(Heading(QString(PARTOFTOTALFLOORAREA), true, true),
           std::string("Check to enable part of total floor area."),
           NullAdapter(&model::Space::partofTotalFloorArea),
           NullAdapter(&model::Space::setPartofTotalFloorArea)

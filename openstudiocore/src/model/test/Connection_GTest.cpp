@@ -29,6 +29,8 @@
 
 #include <gtest/gtest.h>
 
+#include "ModelFixture.hpp"
+
 #include "../Model.hpp"
 #include "../Connection.hpp"
 #include "../AirLoopHVAC.hpp"
@@ -50,7 +52,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST(Connection, Name)
+TEST_F(ModelFixture, Connection_Name)
 {
   openstudio::IdfObject airLoopIdfObject(openstudio::IddObjectType::OS_AirLoopHVAC);
   ASSERT_TRUE(airLoopIdfObject.name());
