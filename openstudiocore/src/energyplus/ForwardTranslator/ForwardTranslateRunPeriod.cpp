@@ -63,9 +63,20 @@ boost::optional<IdfObject> ForwardTranslator::translateRunPeriod( RunPeriod& mod
 
   model::YearDescription yd = modelObject.model().getUniqueModelObject<model::YearDescription>();
   Date firstDay = yd.makeDate(modelObject.getBeginMonth(), modelObject.getBeginDayOfMonth());
+  Date endDay = yd.makeDate(modelObject.getEndMonth(), modelObject.getEndMonth());
 
-  runPeriod.setInt(openstudio::RunPeriodFields::BeginYear, firstDay.year());
-  runPeriod.setInt(openstudio::RunPeriodFields::EndYear, firstDay.year() + modelObject.getNumTimePeriodRepeats());
+  int beginYear = firstDay.year();
+  int endYear = 0;
+  if (endDay < firstDay) {
+    // e.g. 4/1 - 3/31
+    endYear = beginYear + modelObject.getNumTimePeriodRepeats();
+  } else {
+    // e.g. 1/1 - 12/31
+    endYear = beginYear + modelObject.getNumTimePeriodRepeats() - 1;
+  }
+
+  runPeriod.setInt(openstudio::RunPeriodFields::BeginYear, beginYear);
+  runPeriod.setInt(openstudio::RunPeriodFields::EndYear, endYear);
 
   // ETH@20121219 - This always hard codes a day of the week to start on, even if the user
   // specified "UseWeatherFile". It is important to keep it this way for now, since we are
