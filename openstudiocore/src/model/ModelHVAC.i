@@ -8,14 +8,9 @@
 
 %include <model/Model_Common_Include.i>
 %import <model/ModelCore.i>
+%import <model/ModelSimulation.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
-%import <model/ModelZoneHVAC.i>
-%import <model/ModelAvailabilityManager.i>
-%import <model/ModelPlantEquipmentOperationScheme.i>
-%import <model/ModelStraightComponent.i>
-%import <model/ModelAirflow.i>
-%import <model/ModelRefrigeration.i>
 
 %{
   #include <model/HVACTemplates.hpp>

@@ -1586,19 +1586,19 @@ set(${target_name}_src
 
 set(${target_name}_swig_src
   Model_Common_Include.i
-  ModelZoneHVAC.i
-  ModelStraightComponent.i
-  ModelSimulation.i
-  ModelResources.i
-  ModelRefrigeration.i
-  ModelPlantEquipmentOperationScheme.i
-  ModelHVAC.i
-  ModelGeometry.i
-  ModelGenerators.i
-  ModelCore.i
-  ModelAvailabilityManager.i
-  ModelAirflow.i
   Model.i
+  ModelAirflow.i
+  ModelAvailabilityManager.i
+  ModelCore.i
+  ModelGenerators.i
+  ModelGeometry.i
+  ModelHVAC.i
+  ModelPlantEquipmentOperationScheme.i
+  ModelRefrigeration.i
+  ModelResources.i
+  ModelSimulation.i
+  ModelStraightComponent.i
+  ModelZoneHVAC.i
 )
 
 qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
