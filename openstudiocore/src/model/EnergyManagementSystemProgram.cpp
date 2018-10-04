@@ -140,37 +140,40 @@ namespace detail {
     for (size_t i = 0; i < body_minus_nl.size(); i++) {
       //split string on comment character !
       comments = splitString(body_minus_nl.at(i), '!');
-      //get extensibleGroup object
-      WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+
       //make sure program line exists and insert
       if (comments.size() > 0) {
-        //remove whitespace at end of comments[0]
-        boost::trim_right(comments[0]);
-        //remove whitespace at beginning of comments[0]
-        boost::trim_left(comments[0]);
+        //remove leading and trailing whitespaces in program line (comments[0])
+        boost::trim(comments[0]);
         //remove ,
         pos = 0;
         while ((pos = comments[0].find(",", pos)) != std::string::npos) {
           comments[0].erase(pos, 1);
         }
-        //insert program line
-        result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, comments[0]);
-        if (!result) {
-          return result;
-        }
-        //check if comments exist
-        if (comments.size() > 1) {
-          //clear out the old comment
-          comment.clear();
-          //add comment to comment vector
-          comment.append(comments.at(1));
-          //combine any remaining comments for this line into one comment
-          if (comments.size() > 2) {
-            for (size_t j = 2; j < comments.size(); j++) {
-              comment.append("!" + comments.at(j));
-            }
+        // insert program line only if not empty
+        if( !comments[0].empty() ) {
+
+          // Push an extensibleGroup object (we only want to that if there is something to put in)
+          WorkspaceExtensibleGroup group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+
+          result = group.setString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, comments[0]);
+          if (!result) {
+            return result;
           }
-          comment_result = group.setFieldComment(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, comment);
+          //check if comments exist
+          if (comments.size() > 1) {
+            //clear out the old comment
+            comment.clear();
+            //add comment to comment vector
+            comment.append(comments.at(1));
+            //combine any remaining comments for this line into one comment
+            if (comments.size() > 2) {
+              for (size_t j = 2; j < comments.size(); j++) {
+                comment.append("!" + comments.at(j));
+              }
+            }
+            comment_result = group.setFieldComment(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, comment);
+          }
         }
       } else {
         result = false;

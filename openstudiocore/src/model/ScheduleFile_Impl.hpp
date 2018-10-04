@@ -71,12 +71,16 @@ namespace detail {
 
     virtual std::vector<ResourceObject> resources() const override;
 
+    // These are pure virtual methods that were defined in ScheduleBase_Impl
+
+    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
+    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
+    virtual bool resetScheduleTypeLimits() override;
+
+
     //@}
     /** @name Getters */
     //@{
-
-    // TODO: Check return type. From object lists, some candidates are: ScheduleTypeLimits.
-    boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const;
 
     ExternalFile externalFile() const;
 
@@ -107,11 +111,6 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
-
-    // TODO: Check argument type. From object lists, some candidates are: ScheduleTypeLimits.
-    bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits);
-
-    bool resetScheduleTypeLimits();
 
     bool setColumnNumber(int columnNumber);
 
