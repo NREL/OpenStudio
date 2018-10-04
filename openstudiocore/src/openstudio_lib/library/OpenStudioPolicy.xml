@@ -406,19 +406,16 @@
   <POLICY IddObjectType="OS_Fan_ConstantVolume">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
-    <rule IddField="End-Use Subcategory" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Fan_OnOff">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
-    <rule IddField="End-Use Subcategory" Access="HIDDEN"/>
     <rule IddField="Fan Power Ratio Function of Speed Ratio Curve Name" Access="LOCKED"/>
     <rule IddField="Fan Efficiency Ratio Function of Speed Ratio Curve Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Fan_VariableVolume">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
-    <rule IddField="End-Use Subcategory" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Fan_ZoneExhaust">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
