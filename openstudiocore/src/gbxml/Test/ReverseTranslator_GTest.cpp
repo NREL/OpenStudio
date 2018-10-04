@@ -48,11 +48,16 @@
 #include "../../model/Space_Impl.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/Surface_Impl.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
 #include "../../model/StandardOpaqueMaterial.hpp"
 #include "../../model/StandardOpaqueMaterial_Impl.hpp"
 
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/Optional.hpp"
+
+#include <utilities/idd/OS_Surface_FieldEnums.hxx>
+#include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
 
 #include <resources.hxx>
 
@@ -113,6 +118,65 @@ TEST_F(gbXMLFixture, ReverseTranslator_Constructions)
   auto oconstruct = osurf->construction();
   ASSERT_TRUE(oconstruct);
   EXPECT_EQ("Floor: Floor 1", oconstruct->name().get());
+
+  int count = 0;
+  for (auto &srf : model->getModelObjects<Surface>()) {
+    if (srf.outsideBoundaryCondition() != "Surface") {
+      continue;
+    }
+    if (srf.name().get().find("Reversed") == std::string::npos) {
+      auto other_name = srf.name().get() + " Reversed";
+      auto other_surf = model->getModelObjectByName<Surface>(other_name);
+      ASSERT_TRUE(other_surf);
+      // Check the surface
+      auto oc = srf.construction();
+      ASSERT_TRUE(oc);
+      auto ofield = srf.getString(OS_SurfaceFields::ConstructionName);
+      ASSERT_TRUE(ofield);
+      EXPECT_EQ(oc->name().get(), ofield.get());
+      // And the other surface
+      ofield = other_surf->getString(OS_SurfaceFields::ConstructionName);
+      ASSERT_TRUE(ofield);
+      EXPECT_TRUE(ofield.get().empty());
+      ++count;
+    }
+  }
+  EXPECT_EQ(20, count);
+
+}
+
+TEST_F(gbXMLFixture, ReverseTranslator_SubSurfaceConstructions)
+{
+
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/seb.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model);
+
+  model->save(resourcesPath() / openstudio::toPath("gbxml/seb.osm"), true);
+
+  auto osurf = model->getModelObjectByName<SubSurface>("Sub_Surface_8");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("Outdoors", osurf->outsideBoundaryCondition());
+
+  auto oconstruct = osurf->construction();
+  ASSERT_TRUE(oconstruct);
+  EXPECT_EQ("3\'0\" x 3\'0\" Double pane  Alum Construction", oconstruct->name().get());
+  auto ofield = osurf->getString(OS_SubSurfaceFields::ConstructionName);
+  ASSERT_TRUE(ofield);
+  EXPECT_EQ("3\'0\" x 3\'0\" Double pane  Alum Construction", ofield.get());
+
+  int count = 0;
+  for (auto &srf : model->getModelObjects<SubSurface>()) {
+    auto oc = srf.construction();
+    ASSERT_TRUE(oc);
+    ofield = srf.getString(OS_SubSurfaceFields::ConstructionName);
+    ASSERT_TRUE(ofield);
+    EXPECT_EQ(oc->name().get(), ofield.get());
+    ++count;
+  }
+  EXPECT_EQ(8, count);
 
 }
 

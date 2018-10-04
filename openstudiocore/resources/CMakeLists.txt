@@ -300,6 +300,7 @@ CREATE_SRC_GROUPS("${ResultsViewer_resources_src}")
 set(ENERGYPLUS_OUTPUTS "")
 
 SET(gbxml_resources_src
+  gbxml/seb.xml
   gbxml/simpleBox_vasari.xml
   gbxml/TestCube.xml
   gbxml/TestCubeAlternateUnits.xml
