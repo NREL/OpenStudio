@@ -39,6 +39,7 @@
 #include "../../model/DaylightingControl.hpp"
 #include "../../model/AdditionalProperties.hpp"
 
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/WindowShadingControl_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -54,6 +55,13 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
 {
   // after pre-processing in ForwardTranslator, all ShadingControls should only reference subsurfaces in a single zone
   // additionally, the additional property "Shading Control Sequence Number" is set as an integer
+  
+  std::vector<SubSurface> subSurfaces = modelObject.subSurfaces();
+
+  if (subSurfaces.empty()) {
+    LOG(Warn, modelObject.briefDescription() << " does not control any SubSurfaces, will not be translated");
+    return boost::none;
+  }
 
   IdfObject idfObject(openstudio::IddObjectType::WindowShadingControl);
 
@@ -63,7 +71,6 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
 
   std::string zoneName;
   boost::optional<ThermalZone> zone;
-  std::vector<SubSurface> subSurfaces = modelObject.subSurfaces();
   for (const auto& subSurface : subSurfaces) {
     boost::optional<Space> space = subSurface.space();
     if (space) {
@@ -146,6 +153,13 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
   //idfObject.setString(WindowShadingControlFields::SlatAngleScheduleName, "");
 
   //idfObject.setDouble(WindowShadingControlFields::Setpoint2, 0.0);
+
+  idfObject.clearExtensibleGroups();
+  for (const SubSurface& subSurface : subSurfaces) {
+    IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+    OS_ASSERT(group.numFields() == 1);
+    group.setString(0, subSurface.nameString());
+  }
 
   return idfObject;
 }

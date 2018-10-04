@@ -379,7 +379,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   std::map<Handle, ShadingControlVector> zoneHandleToShadingControlVectorMap;
   for (auto& shadingControl : shadingControls) {
     std::set<Handle> thisZoneHandleSet;
-    for (const auto& subSurface : shadingControl.subSurfaces()) {
+    for (auto& subSurface : shadingControl.subSurfaces()) {
       boost::optional<Space> space = subSurface.space();
       if (space) {
         boost::optional<ThermalZone> thermalZone = space->thermalZone();
@@ -403,6 +403,8 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
             // additional thermal zone, must clone
             thisZoneHandleSet.insert(zoneHandle);
             ShadingControl clone = shadingControl.clone(model).cast<ShadingControl>();
+            // assign clone to control subSurface
+            subSurface.setShadingControl(clone);
             auto it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
             if (it == zoneHandleToShadingControlVectorMap.end()) {
               zoneHandleToShadingControlVectorMap.insert(std::make_pair(zoneHandle, std::vector<ShadingControl>()));
