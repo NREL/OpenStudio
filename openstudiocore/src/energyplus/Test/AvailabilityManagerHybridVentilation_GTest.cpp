@@ -27,73 +27,46 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef OPENSTUDIO_LIBRARYTABWIDGET_HPP
-#define OPENSTUDIO_LIBRARYTABWIDGET_HPP
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
 
-#include <QWidget>
-#include <vector>
+#include "../ForwardTranslator.hpp"
 
-class QStackedWidget;
+#include "../../model/AvailabilityManagerHybridVentilation.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/AirLoopHVAC.hpp"
 
-class QPushButton;
+#include <utilities/idd/AvailabilityManager_HybridVentilation_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
-namespace openstudio {
+using namespace openstudio::energyplus;
+using namespace openstudio::model;
+using namespace openstudio;
 
-class LibraryTabWidget : public QWidget
-{
-  Q_OBJECT
+TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerHybridVentilation) {
 
-  public:
+  Model m;
 
-  LibraryTabWidget(QWidget * parent = nullptr);
+  AvailabilityManagerHybridVentilation avm(m);
 
-  virtual ~LibraryTabWidget() {}
+  // Assign it to a plant loop
+  AirLoopHVAC a(m);
+  a.addAvailabilityManager(avm);
 
-  void showRemoveButton();
+  // ForwardTranslate
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(m);
 
-  void hideRemoveButton();
+  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::AvailabilityManager_HybridVentilation));
+  EXPECT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_avm(idfObjs[0]);
 
-  void addTab( QWidget * widget,
-               const QString & selectedImagePath,
-               const QString & unSelectedImagePath );
+  // HVAC Air Loop Name
+  EXPECT_EQ(a.name().get(), idf_avm.getString(AvailabilityManager_HybridVentilationFields::HVACAirLoopName).get());
 
-  /* This method, given a tab widget, will change the currentIndex to be the following if there is one, or zero otherwise
-   * It will hide the tab by hide the corresponding button.
-   * Useful to hide the LoopChooserView for components that don't have a water coil for eg. */
-  void hideTab(QWidget * widget, bool hide = true);
+}
 
-  signals:
 
-  void removeButtonClicked(bool);
 
-  public slots:
 
-  void setCurrentIndex(int index);
-
-  void setCurrentWidget(QWidget * widget);
-
-  private slots:
-
-  void select();
-
-  private:
-
-  QStackedWidget * m_pageStack;
-
-  QWidget * m_tabBar;
-
-  std::vector<QString> m_selectedPixmaps;
-
-  std::vector<QString> m_neighborSelectedPixmaps;
-
-  std::vector<QString> m_unSelectedPixmaps;
-
-  std::vector<QPushButton *> m_tabButtons;
-
-  QPushButton * m_removeButton = nullptr;
-};
-
-} // namespace openstudio
-
-#endif // OPENSTUDIO_LIBRARYTABWIDGET_HPP
 
