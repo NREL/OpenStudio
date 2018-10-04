@@ -33,8 +33,6 @@
 
 #include "../AirTerminalDualDuctConstantVolume.hpp"
 #include "../AirTerminalDualDuctConstantVolume_Impl.hpp"
-#include "../AirTerminalSingleDuctUncontrolled.hpp"
-#include "../AirTerminalSingleDuctUncontrolled_Impl.hpp"
 
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVAC_Impl.hpp"

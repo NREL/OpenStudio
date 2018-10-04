@@ -33,7 +33,7 @@
 
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
-#include "../AirTerminalSingleDuctUncontrolled.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "../CoilCoolingDXSingleSpeed.hpp"
 #include "../CoilHeatingWater.hpp"
 #include "../CurveBiquadratic.hpp"
@@ -152,7 +152,7 @@ TEST_F(ModelFixture,ThermalZone_AddToNode_SPM)
   ThermalZone thermalZone(m);
   ThermalZone thermalZone2(m);
   ScheduleCompact s(m);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal(m,s);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal(m,s);
   SetpointManagerSingleZoneReheat spm(m);
 
   Node outletNode = airLoopHVAC.supplyOutletNode();
@@ -330,7 +330,7 @@ TEST_F(ModelFixture,ThermalZone_equipment) {
   AirLoopHVAC airLoopHVAC(model);
 
   ScheduleCompact scheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal(model,scheduleCompact);
 
   airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal);
 

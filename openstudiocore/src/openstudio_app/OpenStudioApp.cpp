@@ -55,7 +55,7 @@
 #include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
 #include "../model/AirTerminalSingleDuctConstantVolumeReheat.hpp"
 #include "../model/AirTerminalSingleDuctParallelPIUReheat.hpp"
-#include "../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVNoReheat.hpp"
 #include "../model/BuildingStory.hpp"

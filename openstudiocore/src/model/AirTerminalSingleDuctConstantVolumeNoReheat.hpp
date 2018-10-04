@@ -27,8 +27,8 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_AIRTERMINALSINGLEDUCTUNCONTROLLED_HPP
-#define MODEL_AIRTERMINALSINGLEDUCTUNCONTROLLED_HPP
+#ifndef MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMENOREHEAT_HPP
+#define MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMENOREHEAT_HPP
 
 #include "ModelObject.hpp"
 #include "StraightComponent.hpp"
@@ -43,27 +43,27 @@ class Schedule;
 
 namespace detail {
 
-  class AirTerminalSingleDuctUncontrolled_Impl;
+  class AirTerminalSingleDuctConstantVolumeNoReheat_Impl;
 
 } // detail
 
-/** AirTerminalSingleDuctUncontrolled is an interface to the EnergyPlus IDD object
- *  named "AirTerminal:SingleDuct:Uncontrolled"
+/** AirTerminalSingleDuctConstantVolumeNoReheat is an interface to the EnergyPlus IDD object
+ *  named "AirTerminal:SingleDuct:ConstantVolume:NoReheat"
  *
  *  The purpose of this class is to simplify the construction and manipulation
- *  AirTerminal:SingleDuct:Uncontrolled objects in energyplus.
+ *  AirTerminal:SingleDuct:ConstantVolume:NoReheat objects in energyplus.
  */
-class MODEL_API AirTerminalSingleDuctUncontrolled : public StraightComponent {
+class MODEL_API AirTerminalSingleDuctConstantVolumeNoReheat : public StraightComponent {
 
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  /** Constructs a new AirTerminalSingleDuctUncontrolled object and places it inside the
+  /** Constructs a new AirTerminalSingleDuctConstantVolumeNoReheat object and places it inside the
    *  model.  The object is fully initialized with all companion objects. */
-  AirTerminalSingleDuctUncontrolled(const Model& model, Schedule & availabilitySchedule);
+  AirTerminalSingleDuctConstantVolumeNoReheat(const Model& model, Schedule & availabilitySchedule);
 
-  virtual ~AirTerminalSingleDuctUncontrolled() {}
+  virtual ~AirTerminalSingleDuctConstantVolumeNoReheat() {}
 
   //@}
 
@@ -74,7 +74,6 @@ class MODEL_API AirTerminalSingleDuctUncontrolled : public StraightComponent {
 
   /** Sets the Schedule referred to by the AvailabilityScheduleName field. **/
   bool setAvailabilitySchedule(Schedule& schedule);
-
 
   boost::optional<double> maximumAirFlowRate() const;
 
@@ -99,22 +98,26 @@ class MODEL_API AirTerminalSingleDuctUncontrolled : public StraightComponent {
   friend class openstudio::detail::IdfObject_Impl;
 
   /// @cond
-  typedef detail::AirTerminalSingleDuctUncontrolled_Impl ImplType;
+  typedef detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl ImplType;
 
-  explicit AirTerminalSingleDuctUncontrolled(std::shared_ptr<detail::AirTerminalSingleDuctUncontrolled_Impl> impl);
+  explicit AirTerminalSingleDuctConstantVolumeNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl> impl);
 
  private:
-  REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctUncontrolled");
+  REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctConstantVolumeNoReheat");
   /// @endcond
 };
 
-typedef boost::optional<AirTerminalSingleDuctUncontrolled> OptionalAirTerminalSingleDuctUncontrolled;
+typedef boost::optional<AirTerminalSingleDuctConstantVolumeNoReheat> OptionalAirTerminalSingleDuctConstantVolumeNoReheat;
 
-typedef std::vector<AirTerminalSingleDuctUncontrolled> AirTerminalSingleDuctUncontrolledVector;
+typedef std::vector<AirTerminalSingleDuctConstantVolumeNoReheat> AirTerminalSingleDuctConstantVolumeNoReheatVector;
+
+// In E+ 9.0.0, ATU SingleDuctUncontrolled was renamed to SingleDuctConstantVolumeNoReheat
+// To be more consistent with the naming convention of others ATU. We typedef for backwards compatibility
+typedef AirTerminalSingleDuctConstantVolumeNoReheat AirTerminalSingleDuctUncontrolled;
 
 } // model
 
 } // openstudio
 
-#endif // MODEL_AIRTERMINALSINGLEDUCTUNCONTROLLED_HPP
+#endif // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMENOREHEAT_HPP
 

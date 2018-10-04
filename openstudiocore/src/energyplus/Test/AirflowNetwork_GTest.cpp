@@ -58,8 +58,8 @@
 #include "../../model/SetpointManagerSingleZoneReheat_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
-#include "../../model/AirTerminalSingleDuctUncontrolled.hpp"
-#include "../../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
@@ -103,7 +103,7 @@ Model createModelWithSimpleAirLoop(){
   auto node1 = coilHeatingGas.outletModelObject().get();// .to_Node.get
   //setpointMSZR.addToNode(node1);
 
-  AirTerminalSingleDuctUncontrolled terminal(m, alwaysOn);
+  AirTerminalSingleDuctConstantVolumeNoReheat terminal(m, alwaysOn);
 
   a.addBranchForHVACComponent(terminal);
 

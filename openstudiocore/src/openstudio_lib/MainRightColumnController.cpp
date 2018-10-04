@@ -1170,7 +1170,7 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_Reheat,"AirTerminal Heat and Cool Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat,"AirTerminal Heat and Cool No Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat,"AirTerminal Single Duct VAV NoReheat");
-  libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled,"AirTerminal Single Duct Uncontrolled");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat,"AirTerminal Single Duct Constant Volume No Reheat");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume, "Air Terminal Dual Duct Constant Volume");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_DualDuct_VAV, "Air Terminal Dual Duct VAV");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir, "Air Terminal Dual Duct VAV Outdoor Air");

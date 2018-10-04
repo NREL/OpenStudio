@@ -34,7 +34,7 @@
 #include "../openstudio_lib/OSAppBase.hpp"
 
 #include "../model/Model.hpp"
-#include "../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat.hpp"
 #include "../model/FanConstantVolume.hpp"
 #include "../model/CurveQuadratic.hpp"

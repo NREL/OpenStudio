@@ -40,6 +40,7 @@ namespace model {
 class Construction;
 class ShadingMaterial;
 class Schedule;
+class SubSurface;
 
 namespace detail {
 
@@ -117,6 +118,8 @@ class MODEL_API ShadingControl : public ResourceObject {
   //@}
   /** @name Other */
   //@{
+
+  std::vector<SubSurface> subSurfaces() const;
 
   //@}
  protected:

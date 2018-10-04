@@ -37,7 +37,6 @@
 #include "../Node.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 #include "../AirLoopHVACZoneMixer.hpp"
-#include "../AirTerminalSingleDuctUncontrolled.hpp"
 #include "../FanConstantVolume.hpp"
 #include "../FanConstantVolume_Impl.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
@@ -45,7 +44,6 @@
 #include <utilities/idd/OS_AirLoopHVAC_FieldEnums.hxx>
 #include <utilities/idd/OS_Node_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ZoneSplitter_FieldEnums.hxx>
-#include <utilities/idd/OS_AirTerminal_SingleDuct_Uncontrolled_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

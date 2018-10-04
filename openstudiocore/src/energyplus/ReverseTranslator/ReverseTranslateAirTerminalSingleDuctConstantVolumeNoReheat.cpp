@@ -28,11 +28,11 @@
 ***********************************************************************************************************************/
 
 #include "../ReverseTranslator.hpp"
-#include "../../model/AirTerminalSingleDuctUncontrolled.hpp"
-#include "../../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
-#include <utilities/idd/AirTerminal_SingleDuct_Uncontrolled_FieldEnums.hxx>
+#include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_NoReheat_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -42,17 +42,19 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctUncontrolled( const WorkspaceObject & workspaceObject )
+OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctConstantVolumeNoReheat( const WorkspaceObject & workspaceObject )
 {
-  if( workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_Uncontrolled )
+  // SingleDuctUncontrolled was renamed as SingleDuctConstantVolumeNoReheat in E+ 9.0.0, but both can be used currently
+  if( !( (workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat )
+      || (workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_Uncontrolled ) ) )
   {
-     LOG(Error, "WorkspaceObject is not IddObjectType: AirTerminal_SingleDuct_Uncontrolled");
+     LOG(Error, "WorkspaceObject is not IddObjectType: AirTerminal_SingleDuct_ConstantVolume_NoReheat");
      return boost::none;
   }
 
-  boost::optional<WorkspaceObject> wo = workspaceObject.getTarget(AirTerminal_SingleDuct_UncontrolledFields::AvailabilityScheduleName);
+  boost::optional<WorkspaceObject> wo = workspaceObject.getTarget(AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AvailabilityScheduleName);
   boost::optional<Schedule> schedule;
-  boost::optional<AirTerminalSingleDuctUncontrolled> airTerminal;
+  boost::optional<AirTerminalSingleDuctConstantVolumeNoReheat> airTerminal;
   boost::optional<double> value;
 
   if( wo )
@@ -71,23 +73,23 @@ OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctUncontrolle
 
   if( schedule )
   {
-    airTerminal = AirTerminalSingleDuctUncontrolled(m_model,schedule.get());
+    airTerminal = AirTerminalSingleDuctConstantVolumeNoReheat(m_model,schedule.get());
   }
 
   if( airTerminal )
   {
-    boost::optional<std::string> s = workspaceObject.getString(AirTerminal_SingleDuct_UncontrolledFields::Name);
+    boost::optional<std::string> s = workspaceObject.getString(AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::Name);
     if( s )
     {
       airTerminal->setName(s.get());
     }
 
-    s = workspaceObject.getString(AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate);
+    s = workspaceObject.getString(AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate);
     if( s && istringEqual(s.get(),"AutoSize") )
     {
       airTerminal->autosizeMaximumAirFlowRate();
     }
-    else if( (value = workspaceObject.getDouble(AirTerminal_SingleDuct_UncontrolledFields::MaximumAirFlowRate)) )
+    else if( (value = workspaceObject.getDouble(AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate)) )
     {
       airTerminal->setMaximumAirFlowRate(value.get());
     }

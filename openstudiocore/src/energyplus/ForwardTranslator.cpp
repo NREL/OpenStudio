@@ -54,6 +54,9 @@
 #include "../model/UtilityBill_Impl.hpp"
 #include "../model/ElectricLoadCenterDistribution.hpp"
 #include "../model/ElectricLoadCenterDistribution_Impl.hpp"
+#include "../model/ShadingControl.hpp"
+#include "../model/ShadingControl_Impl.hpp"
+#include "../model/AdditionalProperties.hpp"
 #include "../model/ConcreteModelObjects.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
@@ -369,6 +372,56 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
+  // ensure shading controls only reference windows in a single zone and determine control sequence number
+  // DLM: ideally E+ would not need to know the zone, shading controls could work across zones
+  std::vector<ShadingControl> shadingControls = model.getConcreteModelObjects<ShadingControl>();
+  std::sort(shadingControls.begin(), shadingControls.end(), WorkspaceObjectNameLess());
+  std::map<Handle, ShadingControlVector> zoneHandleToShadingControlVectorMap;
+  for (auto& shadingControl : shadingControls) {
+    std::set<Handle> thisZoneHandleSet;
+    for (auto& subSurface : shadingControl.subSurfaces()) {
+      boost::optional<Space> space = subSurface.space();
+      if (space) {
+        boost::optional<ThermalZone> thermalZone = space->thermalZone();
+        if (thermalZone) {
+          Handle zoneHandle = thermalZone->handle();
+          if (thisZoneHandleSet.empty()) {
+            // first thermal zone, no clone
+            thisZoneHandleSet.insert(zoneHandle);
+            auto it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
+            if (it == zoneHandleToShadingControlVectorMap.end()) {
+              zoneHandleToShadingControlVectorMap.insert(std::make_pair(zoneHandle, std::vector<ShadingControl>()));
+            }
+            it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
+            OS_ASSERT(it != zoneHandleToShadingControlVectorMap.end());
+            it->second.push_back(shadingControl);
+            shadingControl.additionalProperties().setFeature("Shading Control Sequence Number", (int)it->second.size());
+          } else if (thisZoneHandleSet.find(zoneHandle) != thisZoneHandleSet.end()) {
+            // already in here, good to go
+
+          } else {
+            // additional thermal zone, must clone
+            thisZoneHandleSet.insert(zoneHandle);
+            ShadingControl clone = shadingControl.clone(model).cast<ShadingControl>();
+            // assign clone to control subSurface
+            subSurface.setShadingControl(clone);
+            auto it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
+            if (it == zoneHandleToShadingControlVectorMap.end()) {
+              zoneHandleToShadingControlVectorMap.insert(std::make_pair(zoneHandle, std::vector<ShadingControl>()));
+            }
+            it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
+            OS_ASSERT(it != zoneHandleToShadingControlVectorMap.end());
+            it->second.push_back(clone);
+            clone.additionalProperties().setFeature("Shading Control Sequence Number", (int)it->second.size());
+          }
+        } else {
+          LOG(Warn, "Cannot find ThermalZone for " << subSurface.briefDescription() << " referencing " << shadingControl.briefDescription());
+        }
+      } else {
+        LOG(Warn, "Cannot find Space for " << subSurface.briefDescription() << " referencing " << shadingControl.briefDescription());
+      }
+    }
+  }
 
 
   // temp code
@@ -643,10 +696,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirTerminalSingleDuctSeriesPIUReheat(airTerminal);
       break;
     }
-  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled :
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat :
     {
-      model::AirTerminalSingleDuctUncontrolled airTerminal = modelObject.cast<AirTerminalSingleDuctUncontrolled>();
-      retVal = translateAirTerminalSingleDuctUncontrolled(airTerminal);
+      model::AirTerminalSingleDuctConstantVolumeNoReheat airTerminal = modelObject.cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
+      retVal = translateAirTerminalSingleDuctConstantVolumeNoReheat(airTerminal);
       break;
     }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat :
@@ -3365,7 +3418,8 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume);
   result.push_back(IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir);
   result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam);
-  result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled);
+  result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat);
+  // Unlike other AVMs, this one doesn't live on the AVM AssignmentList, so need to tell it to translate all the time
   result.push_back(IddObjectType::OS_AvailabilityManager_HybridVentilation);
   result.push_back(IddObjectType::OS_Chiller_Electric_EIR);
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_SingleSpeed);
