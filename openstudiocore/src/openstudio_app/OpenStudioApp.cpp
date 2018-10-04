@@ -1216,7 +1216,7 @@ void OpenStudioApp::writeLibraryPaths(std::vector<openstudio::path> paths) {
           // TODO: there is probably a more reliable way to do this, it works on linux but unsure on Windows
           s_path = s_path.substr(s_resPath.length() + 1);
           openstudio::path rel_path = openstudio::path(s_path);
-          std::cout << "For '" << path << "', computed relative: " << rel_path << "\n";
+          // std::cout << "For '" << path << "', computed relative: " << rel_path << "\n";
           settings.setValue("path",QString::fromStdString(rel_path.string()));
 
         } else {
@@ -1354,13 +1354,13 @@ std::vector<openstudio::path> OpenStudioApp::libraryPaths() const {
     auto is_resource = settings.value("is_resource", false).toBool();
     // We stored resources path as relative, so recompute an absolute canonical path
     if (is_resource) {
-      std::cout << "i=" << i << "; Path rel=" << path << "\n";
-      std::cout << "i=" << i << "; Path abs=" << resPath / path << "\n";
+      // std::cout << "i=" << i << "; Path rel=" << path << "\n";
+      // std::cout << "i=" << i << "; Path abs=" << resPath / path << "\n";
 
       paths.push_back(resPath / path);
 
     } else {
-      std::cout << "i=" << i << "; Path is already abs=" << resPath / path << "\n";
+      // std::cout << "i=" << i << "; Path is already abs=" << resPath / path << "\n";
       paths.push_back(path);
     }
   }
