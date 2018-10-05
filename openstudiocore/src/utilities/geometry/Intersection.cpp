@@ -561,7 +561,9 @@ namespace openstudio{
       result.push_back(resultPoint);
     }
 
-    OS_ASSERT(polygon.inners().empty());
+    if (!polygon.inners().empty()) {
+      LOG_FREE(Warn, "utilities.geometry.verticesFromBoostPolygon", "Converting polygon with " << polygon.inners().size() << " inner loops to OpenStudio vertices, inner loops ignored");
+    }
 
     result = removeCollinearLegacy(result);
 
