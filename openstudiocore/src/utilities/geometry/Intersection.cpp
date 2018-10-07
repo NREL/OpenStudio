@@ -740,7 +740,11 @@ namespace openstudio{
       return boost::none;
     }else if (unionResult.size() > 1){
       return boost::none;
-    }
+    }else if (!unionResult[0].inners().empty()) {
+      // check for holes
+      LOG_FREE(Error, "utilities.geometry.join", "Union has inner loops");
+      return boost::none;
+    };
 
     std::vector<Point3d> unionVertices = verticesFromBoostPolygon(unionResult[0], allPoints, tol);
     boost::optional<double> testArea = boost::geometry::area(unionResult[0]);
@@ -751,18 +755,13 @@ namespace openstudio{
       LOG_FREE(Info, "utilities.geometry.join", "Union has very small area of " << *testArea << " m^2");
       return boost::none;
     }
+
     try{
       boost::geometry::detail::overlay::has_self_intersections(unionResult[0]);
     }catch(const boost::geometry::overlay_invalid_input_exception&){
       LOG_FREE(Error, "utilities.geometry.join", "Union is self intersecting");
       return boost::none;
     }
-
-    // check for holes
-    if (!unionResult[0].inners().empty()){
-      LOG_FREE(Error, "utilities.geometry.join", "Union has inner loops");
-      return boost::none;
-    };
 
     unionVertices = reorderULC(unionVertices);
     unionVertices = removeCollinearLegacy(unionVertices);
@@ -790,8 +789,6 @@ namespace openstudio{
         }
       }
     }
-
-
 
     std::vector<std::vector<unsigned> > connectedComponents = findConnectedComponents(A);
     for (const std::vector<unsigned>& component : connectedComponents){
