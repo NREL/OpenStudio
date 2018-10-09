@@ -56,6 +56,8 @@ class FuelSupplyConstituent {
 
   std::string name() const;
   double molarFraction() const;
+  std::vector<std::string> nameValues() const;
+  std::vector<std::string> validNameValues() const;
  private:
   std::string m_name;
   double m_molarFraction;

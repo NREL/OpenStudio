@@ -67,6 +67,15 @@ double AirSupplyConstituent::molarFraction() const {
   return m_molarFraction;
 }
 
+std::vector<std::string> AirSupplyConstituent::nameValues() const {
+  return getIddKeyNames(IddFactory::instance().getObject(GeneratorFuelCellAirSupply::iddObjectType()).get(),
+                        OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName);
+}
+
+std::vector<std::string> AirSupplyConstituent::validNameValues() const {
+  return nameValues();
+}
+
 std::ostream& operator<< (std::ostream& out, const AirSupplyConstituent& constituent) {
   out << "name=" << constituent.name() << ", molar fraction=" << constituent.molarFraction();
   return out;
