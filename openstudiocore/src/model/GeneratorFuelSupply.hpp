@@ -104,7 +104,7 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
   boost::optional<unsigned int> numberofConstituentsinGaseousConstituentFuelSupply() const;
 
   // Return optional parent generator
-  GeneratorFuelCell fuelCell() const;
+  boost::optional<GeneratorFuelCell> fuelCell() const;
 
   //@}
   /** @name Setters */
@@ -148,9 +148,9 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
 
   void resetLiquidGenericFuelCO2EmissionFactor();
 
-  bool setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply);
-
-  void resetNumberofConstituentsinGaseousConstituentFuelSupply();
+  // Automatically handled by addConstituent, removeConstituent
+  // bool setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply);
+  // void resetNumberofConstituentsinGaseousConstituentFuelSupply();
 
 
   //@}

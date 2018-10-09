@@ -110,7 +110,7 @@ namespace detail {
     boost::optional<unsigned int> numberofConstituentsinGaseousConstituentFuelSupply() const;
 
     // Return optional parent generator
-    GeneratorFuelCell fuelCell() const;
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
     //@}
     /** @name Setters */
@@ -154,10 +154,6 @@ namespace detail {
 
     void resetLiquidGenericFuelCO2EmissionFactor();
 
-    bool setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply);
-
-    void resetNumberofConstituentsinGaseousConstituentFuelSupply();
-
     //@}
     /** @name Other */
     //@{
@@ -170,6 +166,9 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.GeneratorFuelSupply");
+    // Not to be exposed publicly, automatically handled by addConstituent, removeConstituent
+    bool setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply);
+    void resetNumberofConstituentsinGaseousConstituentFuelSupply();
   };
 
 } // detail
