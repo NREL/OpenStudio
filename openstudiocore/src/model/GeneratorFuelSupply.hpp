@@ -67,7 +67,8 @@ class FuelSupplyConstituent {
   REGISTER_LOGGER("openstudio.model.FuelSupplyConstituent");
 };
 
-
+// Overload operator<<
+std::ostream& operator<< (std::ostream& out, const openstudio::model::FuelSupplyConstituent& constituent);
 
 /** GeneratorFuelSupply is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelSupply'. */
 class MODEL_API GeneratorFuelSupply : public ModelObject {

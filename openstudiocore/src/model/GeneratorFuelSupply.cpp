@@ -96,7 +96,7 @@ std::vector<std::string> FuelSupplyConstituent::validConstituentNameValues() {
   return constituentNameValues();
 }
 
-std::ostream& operator<< (std::ostream& out, const FuelSupplyConstituent& constituent) {
+std::ostream& operator<< (std::ostream& out, const openstudio::model::FuelSupplyConstituent& constituent) {
   out << "name=" << constituent.constituentName() << ", molar fraction=" << constituent.molarFraction();
   return out;
 }

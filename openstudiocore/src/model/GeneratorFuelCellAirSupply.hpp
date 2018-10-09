@@ -61,6 +61,8 @@ class AirSupplyConstituent {
   REGISTER_LOGGER("openstudio.model.AirSupplyConstituent");
 };
 
+// Overload operator<<
+std::ostream& operator<< (std::ostream& out, const openstudio::model::AirSupplyConstituent& constituent);
 
 namespace detail {
 
