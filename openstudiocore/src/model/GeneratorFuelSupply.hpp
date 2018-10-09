@@ -48,6 +48,20 @@ namespace detail {
 
 } // detail
 
+
+/** This class implements a constituent */
+class FuelSupplyConstituent {
+ public:
+  FuelSupplyConstituent(std::string name, double molarFraction);
+
+  std::string name() const;
+  double molarFraction() const;
+ private:
+  std::string m_name;
+  double m_molarFraction;
+};
+
+
 /** GeneratorFuelSupply is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelSupply'. */
 class MODEL_API GeneratorFuelSupply : public ModelObject {
  public:
@@ -70,13 +84,15 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
 
   //extensible fields
 
+  bool addConstituent(const FuelSupplyConstituent& constituent);
+  // Convenience function to add a constituent without explicitly creating a FuelSupplyConstituent
   bool addConstituent(std::string name, double molarFraction);
 
   void removeConstituent(int groupIndex);
 
   void removeAllConstituents();
 
-  std::vector< std::pair<std::string, double> > constituents();
+  std::vector<FuelSupplyConstituent> constituents();
 
   /** @name Getters */
   //@{

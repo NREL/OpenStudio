@@ -40,6 +40,7 @@ class Node;
 class Schedule;
 class CurveCubic;
 class GeneratorFuelCell;
+class FuelSupplyConstituent;
 
 namespace detail {
 
@@ -74,14 +75,14 @@ namespace detail {
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //extensible fields
-
+    bool addConstituent(const FuelSupplyConstituent& constituent);
     bool addConstituent(std::string name, double molarFraction);
 
     void removeConstituent(unsigned groupIndex);
 
     void removeAllConstituents();
 
-    std::vector< std::pair<std::string, double> > constituents();
+    std::vector<FuelSupplyConstituent> constituents();
 
     //@}
     /** @name Getters */
