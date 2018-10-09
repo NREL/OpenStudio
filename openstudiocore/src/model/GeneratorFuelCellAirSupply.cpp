@@ -329,6 +329,19 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  double GeneratorFuelCellAirSupply_Impl::sumofConstituentsMolarFractions() const {
+    double result = 0;
+    if (numberofUserDefinedConstituents() == 0) {
+      LOG(Warn, briefDescription() << " does not have any constituents");
+    } else {
+      for (const AirSupplyConstituent& constituent: constituents()) {
+        result += constituent.molarFraction();
+      }
+    }
+
+    return result;
+  }
+
   bool GeneratorFuelCellAirSupply_Impl::addConstituent(const AirSupplyConstituent& constituent) {
 
     bool result;
@@ -580,6 +593,14 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
 
 IddObjectType GeneratorFuelCellAirSupply::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_FuelCell_AirSupply);
+}
+
+double GeneratorFuelCellAirSupply::sumofConstituentsMolarFractions() const {
+  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->sumofConstituentsMolarFractions();
+}
+
+bool GeneratorFuelCellAirSupply::addConstituent(const AirSupplyConstituent& constituent) {
+  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->addConstituent(constituent);
 }
 
 bool GeneratorFuelCellAirSupply::addConstituent(std::string name, double molarFraction) {

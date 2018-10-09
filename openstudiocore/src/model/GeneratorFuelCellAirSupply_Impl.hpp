@@ -113,6 +113,9 @@ namespace detail {
 
     unsigned int numberofUserDefinedConstituents() const;
 
+    // Convenience function to check that it's equal to 1.0 (If no constituents, returns 0 and warns)
+    double sumofConstituentsMolarFractions() const;
+
     // Return optional parent generator
     boost::optional<GeneratorFuelCell> fuelCell() const;
 

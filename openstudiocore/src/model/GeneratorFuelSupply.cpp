@@ -365,6 +365,19 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  double GeneratorFuelSupply_Impl::sumofConstituentsMolarFractions() const {
+    double result = 0;
+    if (numberofConstituentsinGaseousConstituentFuelSupply() == 0) {
+      LOG(Warn, briefDescription() << " does not have any constituents");
+    } else {
+      for (const FuelSupplyConstituent& constituent: constituents()) {
+        result += constituent.molarFraction();
+      }
+    }
+
+    return result;
+  }
+
   bool GeneratorFuelSupply_Impl::addConstituent(const FuelSupplyConstituent& constituent) {
     bool result;
 
@@ -509,6 +522,10 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
 
 IddObjectType GeneratorFuelSupply::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_FuelSupply);
+}
+
+double GeneratorFuelSupply::sumofConstituentsMolarFractions() const {
+  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->sumofConstituentsMolarFractions();
 }
 
 bool GeneratorFuelSupply::addConstituent(const FuelSupplyConstituent& constituent) {
