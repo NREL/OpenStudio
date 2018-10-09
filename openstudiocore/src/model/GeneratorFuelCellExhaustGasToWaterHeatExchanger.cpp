@@ -103,21 +103,28 @@ namespace detail {
 
   // This will clone both the GeneratorFuelCellExhaustGasToWaterHeatExchanger and its linked GeneratorFuelCell
   // and will return a reference to the GeneratorFuelCellExhaustGasToWaterHeatExchanger
+  // TODO: Note JM 2018-10-09 this is only done to allow dragging from library in OpenStudio Application
   ModelObject GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::clone(Model model) const {
 
-    // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
-    GeneratorFuelCell fs = fuelCell();
-    GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
+    boost::optional<ModelObject> hxClone;
 
-    // We get the clone of the parent generator's GeneratorFuelCellExhaustGasToWaterHeatExchanger so we can return that
-    GeneratorFuelCellExhaustGasToWaterHeatExchanger hxClone = fsClone.heatExchanger();
+    // We call the parent generator's Clone method which will clone both the fuelCell and its children
+    if (boost::optional<GeneratorFuelCell> fc = fuelCell()) {
+      GeneratorFuelCell fcClone = fc->clone(model).cast<GeneratorFuelCell>();
 
+      // We get the clone of the parent generator's GeneratorFuelCellExhaustGasToWaterHeatExchanger so we can return that
+      hxClone = fcClone.waterSupply();
+    } else {
+      // We only clone this one
+      hxClone = StraightComponent_Impl::clone(model);
+    }
 
-    return hxClone;
+    return hxClone.get();
   }
 
   std::vector<IddObjectType> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::allowableChildTypes() const {
     std::vector<IddObjectType> result;
+    // Also only for OS App related reasons
     result.push_back(IddObjectType::OS_Generator_FuelCell);
     return result;
   }
@@ -125,7 +132,7 @@ namespace detail {
   // Returns the children object
   std::vector<ModelObject> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::children() const {
     std::vector<ModelObject> result;
-
+    // Also only for OS App related reasons
     if (boost::optional<GeneratorFuelCell> fc = fuelCell()) {
       result.push_back(fc.get());
     }
@@ -134,18 +141,19 @@ namespace detail {
   }
 
   // Get the parent GeneratorFuelCell
-  GeneratorFuelCell GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::fuelCell() const {
+  boost::optional<GeneratorFuelCell> GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl::fuelCell() const {
 
-    boost::optional<GeneratorFuelCell> value;
-    for (const GeneratorFuelCell& fc : this->model().getConcreteModelObjects<GeneratorFuelCell>()) {
-      if (boost::optional<GeneratorFuelCellExhaustGasToWaterHeatExchanger> fcHX = fc.heatExchanger()) {
-        if (fcHX->handle() == this->handle()) {
-          value = fc;
-        }
+    boost::optional<GeneratorFuelCell> fc;
+    // We use getModelObjectSources to check if more than one
+    std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
+
+    if( fcs.size() > 0u) {
+      if( fcs.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
       }
+      fc = fcs[0];
     }
-    OS_ASSERT(value);
-    return value.get();
+    return fc;
 
   }
 
@@ -819,7 +827,7 @@ void GeneratorFuelCellExhaustGasToWaterHeatExchanger::resetMethod4CondensationTh
   getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->resetMethod4CondensationThreshold();
 }
 
-GeneratorFuelCell GeneratorFuelCellExhaustGasToWaterHeatExchanger::fuelCell() const {
+boost::optional<GeneratorFuelCell> GeneratorFuelCellExhaustGasToWaterHeatExchanger::fuelCell() const {
   return getImpl<detail::GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl>()->fuelCell();
 }
 
