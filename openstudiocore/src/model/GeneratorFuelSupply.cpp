@@ -470,6 +470,7 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model, Schedule& tempSched
   setCompressorHeatLossFactor(1);
 
   // From E+ 9.0.0, Microcogeneration.idf
+  // LiquidGeneric is broken, see https://github.com/NREL/EnergyPlus/issues/6998
   setName("NATURALGAS");
   setFuelType("GaseousConstituents");
   addConstituent("METHANE", 0.9490);
@@ -507,6 +508,7 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
   setCompressorHeatLossFactor(1);
 
   // From E+ 9.0.0, Microcogeneration.idf
+  // LiquidGeneric is broken, see https://github.com/NREL/EnergyPlus/issues/6998
   setName("NATURALGAS");
   setFuelType("GaseousConstituents");
   addConstituent("METHANE", 0.9490);
