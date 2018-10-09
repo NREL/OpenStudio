@@ -1,8 +1,8 @@
-# OpenStudio Version 2.6.0
+# OpenStudio Version 2.7.0
 
-_Release Notes – 6/30/2018_
+_Release Notes – 10/12/2018_
 
-These release notes describe version 2.6.0 of the OpenStudio software suite developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Systems, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
+These release notes describe version 2.7.0 of the OpenStudio software suite developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Systems, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
 - Where to Find OpenStudio Documentation
 - Installation Notes
@@ -18,9 +18,9 @@ These release notes describe version 2.6.0 of the OpenStudio software suite deve
 
 OpenStudio is supported on Windows 7 – Windows 10, OS X 10.10 – 10.11, and 64-bit Ubuntu 14.04.
 
-OpenStudio 2.6.0 supports EnergyPlus Release 8.9.0, which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio 2.6.0.
+OpenStudio 2.7.0 supports EnergyPlus Release 9.0, which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio 2.7.0.
 
-OpenStudio 2.6.0 supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer must install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio 2.6.0.
+OpenStudio 2.7.0 supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer must install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio 2.7.0.
 
 
 ## Installation Steps
@@ -34,36 +34,50 @@ For help with common installation problems please visit, [http://nrel.github.io/
 
 # Overview
 
+An important announcement related to future development of the OpenStudio Application is available at: [https://www.openstudio.net/new-future-for-openstudio-application](https://www.openstudio.net/new-future-for-openstudio-application). Please read this announcement carefully to understand changes coming for the OpenStudio Application over future releases.  Please send any questions, comments, or concerns to [mailto:OpenStudio@nrel.gov?subject=OpenStudio%20Application%20Transition](OpenStudio@nrel.gov) and we will try our best to address them.
+
 ## OpenStudio SDK:
-The 2.6.0 release of OpenStudio includes new features to help write better measures!  The new measure templates have been updated to create a license and README.mb.erb for each new measure.  When a measure is updated, the README.mb.erb is configured with information from the measure to create a README.md file which is the perfect place to document your measure. You can reference images or other content your measure’s docs/ folder from the README.md file to make your documentation really stand out.  Additionally, a new option has been added to the OpenStudio CLI which runs the tests for all measures in a directory and saves a dashboard with results: `openstudio measure -r /dir/to/measures/`.  This dashboard quickly shows all passing/failing tests as well as provide input on Ruby style using Rubocop.  Code coverage will be added to the measure testing dashboard in a future release.
-
-The following new model objects have been added to the OpenStudio SDK:
-
-- GeneratorPVWatts 
-- ElectricLoadCenterInverterPVWatts 
-- PlantComponentUserDefined
-- AirTerminalSingleDuctConstantVolumeFourPipeBeam
-- CoilCoolingFourPipeBeam
-- CoilHeatingFourPipeBeam
-
-EMS Sensor and Actuator have been expanded to include SpaceLoads arguments.  This will allow for correct EMS actuators on SpaceLoads that end up in ZoneLists in E+.  The next release will expand on this capability.
+The 2.7.0 release updates OpenStudio to use EnergyPlus 9.0.  This update includes several new features, performance improvements, and bug fixes.  This release also includes two new command line switches for the OpenStudio Command Line Interface (CLI): `--bundle` and `--bundle_path`.  These switches allow the OpenStudio CLI to use a pre-made bundle of Ruby gems, allowing more control over gems used by measures.  Geometry import and merge functionality was enhanced from gbXML, IDF, and OSM sources.  Users can import and merge geometry from these file types with their existing OpenStudio Models.  The OpenStudio API was extended to support multiple AirloopHVAC objects per ThermalZone.  New model objects were added for ExternalFile and ScheduleFile allowing CSV files to be used for schedule input.  There is a [https://github.com/NREL/OpenStudio/issues/3297](known issue (#3297)) with ScheduleFile objects created using Apply Measure Now.  The ElectricLoadCenterTransformer object was also added to allow modeling of electrical transformers.  Many bugs were addressed in this release.  Several issues with forward translation of EMS programs were resolved.
 
 ## OpenStudio Server:
 OpenStudio Server has been updated to address several important issues:
 
-- Fix cursor deleted with accessing /analyses/<id>/analysis_data
-- Set version of mongo and redis for docker deploys
-- Backend for Docker deployment now used Resque with Redis instead of delayed jobs.
-- Large Uploads to Server (i.e. lots of weather files) seem to Timeout
+The OpenStudio Server was updated to run datapoints via the OpenStudio Command Line Interface rather than Workflow Gem.  This update includes use of the new `--bundle` and `--bundle_path` command line switches allowing OpenStudio gems (bundle) to be customized independent of OpenStudio Server bundle.  Analysis Initialize and Finalize Scripts can be run for Resque-based environments (ie not on local PAT). Datapoint Initialize and Finalize Scripts have been restructured and can be run on Resque-based environments. 
 
 ## OpenStudio Standards:
-OpenStudio Standards has the following updates:
 
-- Added additional DEER prototypes, including multifamily
-- Added service hot water to DEER prototypes
-- General bug fixes for DEER prototypes
+OpenStudio Standards underwent a major HVAC system code refactor with updates to the DOE and DEER Prototypes.
+
+- Adds optimum start
+- Adds door and attic infiltration to DOE prototypes
+- Adds skylight frames
+- Fixes construction sets for attics and soffits
+- Disables ERV SAT outlet control
+- Updates motorized OA damper control to skip loop if a schedule other than AlwaysOn is set for min OA
+- Changes SEER and EER to COP conversion formulas
+- Changes UnitHeaters to be normal (as opposed to small) fans
+- Adds vestibule control for unit heaters
+- Condenses geometry and HVAC JSON files for DOE prototypes to avoid duplication
+- Updates water heater skin loss coefficients
+- Adds water heater to zone (instead of assuming 70F air)
+- Other minor changes to hard-coded DOE prototype assumptions
+- Fixes to DOE and DEER prototype geometries
+- Moves HVAC inference and size categorization to the standards spreadsheet
+- Adds fans as a database in standards spreadsheet
+- HVAC system methods now use keyword arguments and assume defaults, with component constructors (coils, fans, boilers) moved to their own modules
+- Adds several NZE systems, including: 
+    - VRF
+    - DOAS
+    - DOAS with DCV controls
+- Name HVAC objects, including naming nodes to be more descriptive
+- Aligns design system, coil, loop, and setpoint manager temperatures where appropriate
+- General bug fixes to HVAC systems
+- Set acoustical tile ceiling construction for models with plenum zones (DOE MediumOffice, DOE LargeOffice, and most DEER models)
+- Adds infiltration to 'DOE Ref 1980-2004' and 'DOE Ref Pre-1980' plenums
+
 
 ## Issue Statistics Since Previous Release
 
-- 48 new issues were filed since the 2.5.0 release of OpenStudio (not including opened pull requests).
-- 15 issues were closed since the 2.5.0 release of OpenStudio (not including closed pull requests).
+- 39 new issues were filed since the 2.6.0 release of OpenStudio (not including opened pull requests).
+- 73 issues were closed since the 2.6.0 release of OpenStudio (not including closed pull requests).
+
