@@ -81,7 +81,7 @@ namespace detail {
     bool addConstituent(const AirSupplyConstituent& constituent);
     bool addConstituent(std::string name, double molarFraction);
 
-    void removeConstituent(unsigned groupIndex);
+    bool removeConstituent(unsigned groupIndex);
 
     void removeAllConstituents();
 
@@ -111,7 +111,7 @@ namespace detail {
 
     std::string airSupplyConstituentMode() const;
 
-    boost::optional<unsigned int> numberofUserDefinedConstituents() const;
+    unsigned int numberofUserDefinedConstituents() const;
 
     // Return optional parent generator
     boost::optional<GeneratorFuelCell> fuelCell() const;

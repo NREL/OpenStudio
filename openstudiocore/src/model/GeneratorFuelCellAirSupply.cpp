@@ -209,17 +209,6 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<unsigned int> GeneratorFuelCellAirSupply_Impl::numberofUserDefinedConstituents() const {
-    boost::optional<unsigned int> value;
-    boost::optional<int> temp = getInt(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, true);
-    if (temp) {
-      if (temp >= 0) {
-        value = temp;
-      }
-    }
-    return value;
-  }
-
   bool GeneratorFuelCellAirSupply_Impl::setAirInletNode(const Node& connection) {
     bool result = setPointer(OS_Generator_FuelCell_AirSupplyFields::AirInletNodeName, connection.handle());
     return result;
@@ -307,11 +296,18 @@ namespace detail {
     return result;
   }
 
+  // TODO: this field shouldn't even exist in the IDD
+  unsigned int GeneratorFuelCellAirSupply_Impl::numberofUserDefinedConstituents() const {
+    return numExtensibleGroups();
+  }
+
+  // TODO: this shouldn't even exist in IDD
   bool GeneratorFuelCellAirSupply_Impl::setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents) {
     bool result = setInt(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, numberofUserDefinedConstituents);
     return result;
   }
 
+  // TODO: this shouldn't even exist in IDD
   void GeneratorFuelCellAirSupply_Impl::resetNumberofUserDefinedConstituents() {
     bool result = setInt(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, 0);
     OS_ASSERT(result);
@@ -322,40 +318,43 @@ namespace detail {
   }
 
   bool GeneratorFuelCellAirSupply_Impl::addConstituent(std::string name, double molarFraction) {
-    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    bool temp = false;
-    bool ok = false;
-    unsigned int num;
-    if (numberofUserDefinedConstituents()) {
-      num = numberofUserDefinedConstituents().get();
-    } else {
-      num = 0;
-    }
-    //max number of constituents is 5
-    if (num < 5) {
-      temp = eg.setString(OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, name);
-      ok = eg.setDouble(OS_Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction, molarFraction);
-    }
-    if (temp && ok) {
-      setNumberofUserDefinedConstituents(num + 1);
-    } else {
-      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
-    }
-    return temp;
-  }
+    bool result;
 
-  void GeneratorFuelCellAirSupply_Impl::removeConstituent(unsigned groupIndex) {
-    unsigned numberofDataPairs = numExtensibleGroups();
-    if (groupIndex < numberofDataPairs) {
-      unsigned int num;
-      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
-      if (numberofUserDefinedConstituents()) {
-        num = numberofUserDefinedConstituents().get();
-        setNumberofUserDefinedConstituents(num - 1);
+    unsigned int num = numberofUserDefinedConstituents();
+    // Max number of constituents is 5
+    if (num >= 5) {
+      LOG(Warn, briefDescription() << " already has 5 constituents which is the limit");
+      result = false;
+    } else {
+      // Push an extensible group
+      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      bool temp = eg.setString(OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, name);
+      bool ok = eg.setDouble(OS_Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction, molarFraction);
+      if (temp && ok) {
+        setNumberofUserDefinedConstituents(num + 1);
+        result = true;
       } else {
-        setNumberofUserDefinedConstituents(numExtensibleGroups());
+        // Something went wrong, probably the constituent name isn't in the list of possible choices
+        // So erase the new extensible group
+        getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+        result = false;
       }
     }
+    return result;
+  }
+
+  bool GeneratorFuelCellAirSupply_Impl::removeConstituent(unsigned groupIndex) {
+    bool result;
+
+    unsigned int num = numberofUserDefinedConstituents();
+    if (groupIndex < num) {
+      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+      setNumberofUserDefinedConstituents(num - 1);
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
   }
 
   void GeneratorFuelCellAirSupply_Impl::removeAllConstituents() {
