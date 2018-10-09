@@ -60,6 +60,18 @@
 namespace openstudio {
 namespace model {
 
+FuelSupplyConstituent::FuelSupplyConstituent(std::string name, double molarFraction)
+  : m_name(name), m_molarFraction(molarFraction) { };
+
+std::string FuelSupplyConstituent::name() const {
+  return m_name;
+}
+
+double FuelSupplyConstituent::molarFraction() const {
+  return m_molarFraction;
+}
+
+
 namespace detail {
 
   GeneratorFuelSupply_Impl::GeneratorFuelSupply_Impl(const IdfObject& idfObject,
@@ -128,18 +140,19 @@ namespace detail {
   }
 
   // Get the parent GeneratorFuelCell
-  GeneratorFuelCell GeneratorFuelSupply_Impl::fuelCell() const {
+  boost::optional<GeneratorFuelCell> GeneratorFuelSupply_Impl::fuelCell() const {
 
-    boost::optional<GeneratorFuelCell> value;
-    for (const GeneratorFuelCell& fc : this->model().getConcreteModelObjects<GeneratorFuelCell>()) {
-      if (boost::optional<GeneratorFuelSupply> fcHX = fc.fuelSupply()) {
-        if (fcHX->handle() == this->handle()) {
-          value = fc;
-        }
+    boost::optional<GeneratorFuelCell> fc;
+    // We use getModelObjectSources to check if more than one
+    std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
+
+    if( fcs.size() > 0u) {
+      if( fcs.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
       }
+      fc = fcs[0];
     }
-    OS_ASSERT(value);
-    return value.get();
+    return fc;
 
   }
 
@@ -342,6 +355,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool GeneratorFuelSupply_Impl::addConstituent(const FuelSupplyConstituent& constituent) {
+    return addConstituent(constituent.name(), constituent.molarFraction());
+  }
+
   bool GeneratorFuelSupply_Impl::addConstituent(std::string name, double molarFraction) {
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
     bool temp = false;
@@ -386,8 +403,8 @@ namespace detail {
     resetNumberofConstituentsinGaseousConstituentFuelSupply();
   }
 
-  std::vector< std::pair<std::string, double> > GeneratorFuelSupply_Impl::constituents() {
-    std::vector< std::pair<std::string, double> > result;
+  std::vector<FuelSupplyConstituent> GeneratorFuelSupply_Impl::constituents() {
+    std::vector<FuelSupplyConstituent> result;
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
@@ -396,7 +413,8 @@ namespace detail {
       boost::optional<double> molarFraction = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction);
 
       if (name && molarFraction) {
-        result.push_back(std::make_pair(name.get(), molarFraction.get()));
+        FuelSupplyConstituent constituent(name.get(), molarFraction.get());
+        result.push_back(constituent);
       }
     }
 
@@ -478,7 +496,7 @@ void GeneratorFuelSupply::removeAllConstituents() {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->removeAllConstituents();
 }
 
-std::vector< std::pair<std::string, double> > GeneratorFuelSupply::constituents() {
+std::vector<FuelSupplyConstituent> GeneratorFuelSupply::constituents() {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->constituents();
 }
 
@@ -612,15 +630,7 @@ void GeneratorFuelSupply::resetLiquidGenericFuelCO2EmissionFactor() {
   getImpl<detail::GeneratorFuelSupply_Impl>()->resetLiquidGenericFuelCO2EmissionFactor();
 }
 
-bool GeneratorFuelSupply::setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->setNumberofConstituentsinGaseousConstituentFuelSupply(numberofConstituentsinGaseousConstituentFuelSupply);
-}
-
-void GeneratorFuelSupply::resetNumberofConstituentsinGaseousConstituentFuelSupply() {
-  getImpl<detail::GeneratorFuelSupply_Impl>()->resetNumberofConstituentsinGaseousConstituentFuelSupply();
-}
-
-GeneratorFuelCell GeneratorFuelSupply::fuelCell() const {
+boost::optional<GeneratorFuelCell> GeneratorFuelSupply::fuelCell() const {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->fuelCell();
 }
 
