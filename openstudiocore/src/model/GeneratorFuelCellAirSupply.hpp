@@ -42,6 +42,20 @@ class CurveCubic;
 class CurveQuadratic;
 class GeneratorFuelCell;
 
+
+/** This class implements a constituent */
+class AirSupplyConstituent {
+ public:
+  AirSupplyConstituent(std::string name, double molarFraction);
+
+  std::string name() const;
+  double molarFraction() const;
+ private:
+  std::string m_name;
+  double m_molarFraction;
+};
+
+
 namespace detail {
 
   class GeneratorFuelCellAirSupply_Impl;
@@ -83,14 +97,15 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   static std::vector<std::string> airSupplyConstituentModeValues();
 
   //extensible fields
-
+  bool addConstituent(const AirSupplyConstituent& constituent);
+  // Convenience function to add a constituent without explicitly creating a FuelSupplyConstituent
   bool addConstituent(std::string name, double molarFraction);
 
   void removeConstituent(int groupIndex);
 
   void removeAllConstituents();
 
-  std::vector< std::pair<std::string, double> > constituents();
+  std::vector<AirSupplyConstituent> constituents();
 
   /** @name Getters */
   //@{
@@ -175,10 +190,6 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
  private:
-  // Not to be exposed publicly, handled automatically by add/removeConstituent
-  bool setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents);
-  void resetNumberofUserDefinedConstituents();
-
   REGISTER_LOGGER("openstudio.model.GeneratorFuelCellAirSupply");
 };
 

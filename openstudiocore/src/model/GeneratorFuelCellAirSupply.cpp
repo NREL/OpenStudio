@@ -56,6 +56,17 @@
 namespace openstudio {
 namespace model {
 
+AirSupplyConstituent::AirSupplyConstituent(std::string name, double molarFraction)
+  : m_name(name), m_molarFraction(molarFraction) { };
+
+std::string AirSupplyConstituent::name() const {
+  return m_name;
+}
+
+double AirSupplyConstituent::molarFraction() const {
+  return m_molarFraction;
+}
+
 namespace detail {
 
   GeneratorFuelCellAirSupply_Impl::GeneratorFuelCellAirSupply_Impl(const IdfObject& idfObject,
@@ -292,6 +303,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool GeneratorFuelCellAirSupply_Impl::addConstituent(const AirSupplyConstituent& constituent) {
+    return addConstituent(constituent.name(), constituent.molarFraction());
+  }
+
   bool GeneratorFuelCellAirSupply_Impl::addConstituent(std::string name, double molarFraction) {
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
     bool temp = false;
@@ -334,8 +349,8 @@ namespace detail {
     resetNumberofUserDefinedConstituents();
   }
 
-  std::vector< std::pair<std::string, double> > GeneratorFuelCellAirSupply_Impl::constituents() {
-    std::vector< std::pair<std::string, double> > result;
+  std::vector<AirSupplyConstituent> GeneratorFuelCellAirSupply_Impl::constituents() {
+    std::vector<AirSupplyConstituent> result;
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
@@ -344,7 +359,8 @@ namespace detail {
       boost::optional<double> molarFraction = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction);
 
       if (name && molarFraction) {
-        result.push_back(std::make_pair(name.get(), molarFraction.get()));
+        AirSupplyConstituent constituent(name.get(), molarFraction.get());
+        result.push_back(constituent);
       }
     }
 
@@ -385,7 +401,6 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
   setAirRateFunctionofFuelRateCurve(fuelRateCurve);
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
-  setNumberofUserDefinedConstituents(0);
 }
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
@@ -436,7 +451,6 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
   }
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
-  setNumberofUserDefinedConstituents(0);
 }
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
@@ -473,7 +487,6 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
 
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
-  setNumberofUserDefinedConstituents(0);
 }
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
@@ -502,7 +515,6 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
   setAirRateAirTemperatureCoefficient(0.00283);
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
-  setNumberofUserDefinedConstituents(0);
 
   CurveQuadratic curveQ(model);
   curveQ.setCoefficient1Constant(1.50976E-3);
@@ -550,7 +562,7 @@ void GeneratorFuelCellAirSupply::removeAllConstituents() {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->removeAllConstituents();
 }
 
-std::vector< std::pair<std::string, double> > GeneratorFuelCellAirSupply::constituents() {
+std::vector<AirSupplyConstituent> GeneratorFuelCellAirSupply::constituents() {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->constituents();
 }
 

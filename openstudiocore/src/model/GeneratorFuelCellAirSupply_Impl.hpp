@@ -40,6 +40,7 @@ class Node;
 class CurveCubic;
 class CurveQuadratic;
 class GeneratorFuelCell;
+class AirSupplyConstituent;
 
 namespace detail {
 
@@ -77,14 +78,14 @@ namespace detail {
 
 
     //extensible fields.
-
+    bool addConstituent(const AirSupplyConstituent& constituent);
     bool addConstituent(std::string name, double molarFraction);
 
     void removeConstituent(unsigned groupIndex);
 
     void removeAllConstituents();
 
-    std::vector< std::pair<std::string, double> > constituents();
+    std::vector<AirSupplyConstituent> constituents();
 
     //@}
     /** @name Getters */
@@ -153,10 +154,6 @@ namespace detail {
 
     bool setAirSupplyConstituentMode(const std::string& airSupplyConstituentMode);
 
-    // Automatically handled by addConstituent/removeConstituent
-    // bool setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents);
-    // void resetNumberofUserDefinedConstituents();
-
     //@}
     /** @name Other */
     //@{
@@ -164,6 +161,10 @@ namespace detail {
     //@}
    protected:
    private:
+    // Not to be exposed publicly, handled automatically by add/removeConstituent
+    bool setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents);
+    void resetNumberofUserDefinedConstituents();
+
     REGISTER_LOGGER("openstudio.model.GeneratorFuelCellAirSupply");
   };
 
