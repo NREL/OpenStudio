@@ -67,6 +67,11 @@ double AirSupplyConstituent::molarFraction() const {
   return m_molarFraction;
 }
 
+std::ostream& operator<< (std::ostream& out, const AirSupplyConstituent& constituent) {
+  out << "name=" << constituent.name() << ", molar fraction=" << constituent.molarFraction();
+  return out;
+}
+
 namespace detail {
 
   GeneratorFuelCellAirSupply_Impl::GeneratorFuelCellAirSupply_Impl(const IdfObject& idfObject,
