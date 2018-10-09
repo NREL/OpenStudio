@@ -330,10 +330,7 @@ namespace detail {
   }
 
   bool GeneratorFuelCellAirSupply_Impl::addConstituent(const AirSupplyConstituent& constituent) {
-    return addConstituent(constituent.constituentName(), constituent.molarFraction());
-  }
 
-  bool GeneratorFuelCellAirSupply_Impl::addConstituent(std::string name, double molarFraction) {
     bool result;
 
     unsigned int num = numberofUserDefinedConstituents();
@@ -344,8 +341,8 @@ namespace detail {
     } else {
       // Push an extensible group
       WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-      bool temp = eg.setString(OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, name);
-      bool ok = eg.setDouble(OS_Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction, molarFraction);
+      bool temp = eg.setString(OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, constituent.constituentName());
+      bool ok = eg.setDouble(OS_Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction, constituent.molarFraction());
       if (temp && ok) {
         setNumberofUserDefinedConstituents(num + 1);
         result = true;
@@ -357,6 +354,12 @@ namespace detail {
       }
     }
     return result;
+  }
+
+  bool GeneratorFuelCellAirSupply_Impl::addConstituent(std::string name, double molarFraction) {
+    // Make a constituent (which will check for validity), and then call the above function
+    AirSupplyConstituent constituent(name, molarFraction);
+    return addConstituent(constituent);
   }
 
   bool GeneratorFuelCellAirSupply_Impl::removeConstituent(unsigned groupIndex) {

@@ -366,10 +366,6 @@ namespace detail {
   }
 
   bool GeneratorFuelSupply_Impl::addConstituent(const FuelSupplyConstituent& constituent) {
-    return addConstituent(constituent.constituentName(), constituent.molarFraction());
-  }
-
-  bool GeneratorFuelSupply_Impl::addConstituent(std::string name, double molarFraction) {
     bool result;
 
     unsigned int num = numberofConstituentsinGaseousConstituentFuelSupply();
@@ -380,8 +376,8 @@ namespace detail {
     } else {
       // Push an extensible group
       WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-      bool temp = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName, name);
-      bool ok = eg.setDouble(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, molarFraction);
+      bool temp = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName, constituent.constituentName());
+      bool ok = eg.setDouble(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, constituent.molarFraction());
       if (temp && ok) {
         setNumberofConstituentsinGaseousConstituentFuelSupply(num + 1);
         result = true;
@@ -393,7 +389,12 @@ namespace detail {
       }
     }
     return result;
+  }
 
+  bool GeneratorFuelSupply_Impl::addConstituent(std::string name, double molarFraction) {
+   // Make a constituent (which will check for validity), and then call the above function
+    FuelSupplyConstituent constituent(name, molarFraction);
+    return addConstituent(constituent);
   }
 
   bool GeneratorFuelSupply_Impl::removeConstituent(unsigned groupIndex) {
