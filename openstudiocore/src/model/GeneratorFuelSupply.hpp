@@ -52,12 +52,12 @@ namespace detail {
 /** This class implements a constituent */
 class FuelSupplyConstituent {
  public:
-  FuelSupplyConstituent(std::string name, double molarFraction);
+  FuelSupplyConstituent(std::string constituentName, double molarFraction);
 
-  std::string name() const;
+  std::string constituentName() const;
   double molarFraction() const;
-  std::vector<std::string> nameValues() const;
-  std::vector<std::string> validNameValues() const;
+  std::vector<std::string> constituentNameValues() const;
+  std::vector<std::string> validConstituentNameValues() const;
  private:
   std::string m_name;
   double m_molarFraction;

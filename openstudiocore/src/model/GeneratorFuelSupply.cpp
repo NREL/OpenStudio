@@ -60,10 +60,10 @@
 namespace openstudio {
 namespace model {
 
-FuelSupplyConstituent::FuelSupplyConstituent(std::string name, double molarFraction)
-  : m_name(name), m_molarFraction(molarFraction) { };
+FuelSupplyConstituent::FuelSupplyConstituent(std::string constituentName, double molarFraction)
+  : m_name(constituentName), m_molarFraction(molarFraction) { };
 
-std::string FuelSupplyConstituent::name() const {
+std::string FuelSupplyConstituent::constituentName() const {
   return m_name;
 }
 
@@ -71,17 +71,17 @@ double FuelSupplyConstituent::molarFraction() const {
   return m_molarFraction;
 }
 
-std::vector<std::string> FuelSupplyConstituent::nameValues() const {
+std::vector<std::string> FuelSupplyConstituent::constituentNameValues() const {
   return getIddKeyNames(IddFactory::instance().getObject(GeneratorFuelCellAirSupply::iddObjectType()).get(),
                         OS_Generator_FuelSupplyExtensibleFields::ConstituentName);
 }
 
-std::vector<std::string> FuelSupplyConstituent::validNameValues() const {
-  return nameValues();
+std::vector<std::string> FuelSupplyConstituent::validConstituentNameValues() const {
+  return constituentNameValues();
 }
 
 std::ostream& operator<< (std::ostream& out, const FuelSupplyConstituent& constituent) {
-  out << "name=" << constituent.name() << ", molar fraction=" << constituent.molarFraction();
+  out << "name=" << constituent.constituentName() << ", molar fraction=" << constituent.molarFraction();
   return out;
 }
 
@@ -351,7 +351,7 @@ namespace detail {
   }
 
   bool GeneratorFuelSupply_Impl::addConstituent(const FuelSupplyConstituent& constituent) {
-    return addConstituent(constituent.name(), constituent.molarFraction());
+    return addConstituent(constituent.constituentName(), constituent.molarFraction());
   }
 
   bool GeneratorFuelSupply_Impl::addConstituent(std::string name, double molarFraction) {
@@ -503,8 +503,9 @@ bool GeneratorFuelSupply::addConstituent(std::string name, double molarFraction)
   return getImpl<detail::GeneratorFuelSupply_Impl>()->addConstituent(name, molarFraction);
 }
 
+// TODO: change to bool
 void GeneratorFuelSupply::removeConstituent(int groupIndex) {
-  return getImpl<detail::GeneratorFuelSupply_Impl>()->removeConstituent(groupIndex);
+  getImpl<detail::GeneratorFuelSupply_Impl>()->removeConstituent(groupIndex);
 }
 
 void GeneratorFuelSupply::removeAllConstituents() {

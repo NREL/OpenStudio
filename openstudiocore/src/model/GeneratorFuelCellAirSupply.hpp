@@ -46,12 +46,12 @@ class GeneratorFuelCell;
 /** This class implements a constituent */
 class AirSupplyConstituent {
  public:
-  AirSupplyConstituent(std::string name, double molarFraction);
+  AirSupplyConstituent(std::string constituentName, double molarFraction);
 
-  std::string name() const;
+  std::string constituentName() const;
   double molarFraction() const;
-  std::vector<std::string> nameValues() const;
-  std::vector<std::string> validNameValues() const;
+  std::vector<std::string> constituentNameValues() const;
+  std::vector<std::string> validConstituentNameValues() const;
  private:
   std::string m_name;
   double m_molarFraction;
