@@ -67,10 +67,10 @@ set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.$
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 9)
 set(ENERGYPLUS_VERSION_MINOR 0)
-set(ENERGYPLUS_VERSION_PATCH 0)
+set(ENERGYPLUS_VERSION_PATCH 1)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "2ef880da82")
+set(ENERGYPLUS_BUILD_SHA "bb7ca4f0da")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -143,6 +143,7 @@ option(BUILD_TESTING "Build testing targets" OFF)
 
 # Build package
 # Requires: EnergyPlus, Radiance
+# TODO: this option is actually unused...
 option(BUILD_PACKAGE "Build package" OFF)
 
 # Build with OpenSSL support
@@ -379,14 +380,14 @@ endif()
 set(ENERGYPLUS_RELEASE_NAME "v9.0.0")
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH d32acc270285b38abba2c551787c3677)
+    set(ENERGYPLUS_EXPECTED_HASH 2fda5cab98e8969f0cf87a45a526e9f7)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH xyz)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 3651af4921f5343a42760baf52232cdb)
+    set(ENERGYPLUS_EXPECTED_HASH 64d189b8ad96812e73c66a1c65d4e010)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -408,7 +409,7 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 6a1bcff4d329f314740e88b104a2c937)
+    set(ENERGYPLUS_EXPECTED_HASH 69b601fb0ddfac2e9b9457bce9afa1ca)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
