@@ -134,6 +134,7 @@ namespace detail {
     }
     return fc;
   }
+
   std::vector<ScheduleTypeKey> GeneratorFuelCellWaterSupply_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
     std::vector<ScheduleTypeKey> result;
