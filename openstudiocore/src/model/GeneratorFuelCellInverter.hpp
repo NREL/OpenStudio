@@ -75,7 +75,7 @@ class MODEL_API GeneratorFuelCellInverter : public ModelObject {
   boost::optional<CurveQuadratic> efficiencyFunctionofDCPowerCurve() const;
 
   // Return optional parent generator
-  GeneratorFuelCell fuelCell() const;
+  boost::optional<GeneratorFuelCell> fuelCell() const;
 
   //@}
   /** @name Setters */
