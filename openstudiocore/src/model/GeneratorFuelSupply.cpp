@@ -110,15 +110,23 @@ namespace detail {
   // and will return a reference to the GeneratorFuelSupply
   ModelObject GeneratorFuelSupply_Impl::clone(Model model) const {
 
+    boost::optional<ModelObject> fsClone;
+
+    // TODO: JM: @macumber, I'm not sure I understand the rationale. And give the variable names,
+    // I'm pretty sure you just copy-pasted from GeneratorFuelCellExhaustGasToWaterHeatExchanger.cpp
+
     // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
-    GeneratorFuelCell fs = fuelCell();
-    GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
+    if (boost::optional<GeneratorFuelCell> fc = fuelCell()) {
+      GeneratorFuelCell fcClone = fc->clone(model).cast<GeneratorFuelCell>();
 
-    // We get the clone of the parent generator's GeneratorFuelSupply so we can return that
-    GeneratorFuelSupply hxClone = fsClone.fuelSupply();
+      // We get the clone of the parent generator's GeneratorFuelSupply so we can return that
+      fsClone = fcClone.fuelSupply();
+    } else {
+      // We only clone this one
+      fsClone = ModelObject_Impl::clone(model);
+    }
 
-
-    return hxClone;
+    return fsClone.get();
   }
 
   std::vector<IddObjectType> GeneratorFuelSupply_Impl::allowableChildTypes() const {
