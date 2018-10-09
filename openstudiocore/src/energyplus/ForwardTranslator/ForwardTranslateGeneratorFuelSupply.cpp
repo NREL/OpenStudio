@@ -141,7 +141,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelSupply(Gener
   std::vector<FuelSupplyConstituent> constituents = modelObject.constituents();
   for (const FuelSupplyConstituent& constituent : constituents) {
     auto eg = pcm.pushExtensibleGroup();
-    eg.setString(Generator_FuelSupplyExtensibleFields::ConstituentName, constituent.name());
+    eg.setString(Generator_FuelSupplyExtensibleFields::ConstituentName, constituent.constituentName());
     eg.setDouble(Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, constituent.molarFraction());
   }
 
