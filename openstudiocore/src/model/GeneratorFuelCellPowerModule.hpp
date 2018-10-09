@@ -157,7 +157,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   double maximumOperatingPoint() const;
 
   // Return optional parent generator
-  GeneratorFuelCell fuelCell() const;
+  boost::optional<GeneratorFuelCell> fuelCell() const;
 
   //@}
   /** @name Setters */
