@@ -90,6 +90,7 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
   // Convenience function to add a constituent without explicitly creating a FuelSupplyConstituent
   bool addConstituent(std::string name, double molarFraction);
 
+  // TODO: this should return bool (to indicate whether groupIndex is valid...)
   void removeConstituent(int groupIndex);
 
   void removeAllConstituents();
@@ -119,6 +120,7 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
 
   boost::optional<double> liquidGenericFuelCO2EmissionFactor() const;
 
+  // TODO: this should be non optional
   boost::optional<unsigned int> numberofConstituentsinGaseousConstituentFuelSupply() const;
 
   // Return optional parent generator

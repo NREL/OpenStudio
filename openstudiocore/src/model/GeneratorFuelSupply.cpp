@@ -227,17 +227,6 @@ namespace detail {
     return value;
   }
 
-  boost::optional<unsigned int> GeneratorFuelSupply_Impl::numberofConstituentsinGaseousConstituentFuelSupply() const {
-    boost::optional<unsigned int> value;
-    boost::optional<int> temp = getInt(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, true);
-    if (temp) {
-      if (temp >= 0) {
-        value = temp;
-      }
-    }
-    return value;
-  }
-
   bool GeneratorFuelSupply_Impl::setFuelTemperatureModelingMode(const std::string& fuelTemperatureModelingMode) {
     bool result = setString(OS_Generator_FuelSupplyFields::FuelTemperatureModelingMode, fuelTemperatureModelingMode);
     return result;
@@ -344,11 +333,18 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  // TODO: this field shouldn't even exist in the IDD
+  unsigned int GeneratorFuelSupply_Impl::numberofConstituentsinGaseousConstituentFuelSupply() const {
+    return numExtensibleGroups();
+  }
+
+  // TODO: this field shouldn't even exist in the IDD
   bool GeneratorFuelSupply_Impl::setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply) {
     bool result = setInt(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, numberofConstituentsinGaseousConstituentFuelSupply);
     return result;
   }
 
+  // TODO: this field shouldn't even exist in the IDD
   void GeneratorFuelSupply_Impl::resetNumberofConstituentsinGaseousConstituentFuelSupply() {
     bool result = setInt(OS_Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, 0);
     OS_ASSERT(result);
@@ -359,42 +355,44 @@ namespace detail {
   }
 
   bool GeneratorFuelSupply_Impl::addConstituent(std::string name, double molarFraction) {
-    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    bool temp = false;
-    bool ok = false;
-    unsigned int num;
-    if (numberofConstituentsinGaseousConstituentFuelSupply()) {
-      num = numberofConstituentsinGaseousConstituentFuelSupply().get();
+    bool result;
+
+    unsigned int num = numberofConstituentsinGaseousConstituentFuelSupply();
+    // Max number of constituents is 12
+    if (num >= 12) {
+      LOG(Warn, briefDescription() << " already has 12 constituents which is the limit");
+      result = false;
     } else {
-      num = 0;
-    }
-    //max number of constituents is 12
-    if (num < 12) {
-      temp = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName, name);
-      ok = eg.setDouble(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, molarFraction);
-    }
-    if (temp && ok) {
-      setNumberofConstituentsinGaseousConstituentFuelSupply(num + 1);
-    } else {
-      if (!eg.empty()) {
+      // Push an extensible group
+      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      bool temp = eg.setString(OS_Generator_FuelSupplyExtensibleFields::ConstituentName, name);
+      bool ok = eg.setDouble(OS_Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, molarFraction);
+      if (temp && ok) {
+        setNumberofConstituentsinGaseousConstituentFuelSupply(num + 1);
+        result = true;
+      } else {
+        // Something went wrong, probably the constituent name isn't in the list of possible choices
+        // So erase the new extensible group
         getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+        result = false;
       }
     }
-    return temp;
+    return result;
+
   }
 
-  void GeneratorFuelSupply_Impl::removeConstituent(unsigned groupIndex) {
-    unsigned numberofDataPairs = numExtensibleGroups();
-    if (groupIndex < numberofDataPairs) {
-      unsigned int num;
+  bool GeneratorFuelSupply_Impl::removeConstituent(unsigned groupIndex) {
+    bool result;
+
+    unsigned int num = numberofConstituentsinGaseousConstituentFuelSupply();
+    if (groupIndex < num) {
       getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
-      if (numberofConstituentsinGaseousConstituentFuelSupply()) {
-        num = numberofConstituentsinGaseousConstituentFuelSupply().get();
-        setNumberofConstituentsinGaseousConstituentFuelSupply(num - 1);
-      } else {
-        setNumberofConstituentsinGaseousConstituentFuelSupply(numExtensibleGroups());
-      }
+      setNumberofConstituentsinGaseousConstituentFuelSupply(num - 1);
+      result = true;
+    } else {
+      result = false;
     }
+    return result;
   }
 
   void GeneratorFuelSupply_Impl::removeAllConstituents() {

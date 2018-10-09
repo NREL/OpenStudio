@@ -82,8 +82,7 @@ namespace detail {
     bool addConstituent(const FuelSupplyConstituent& constituent);
     bool addConstituent(std::string name, double molarFraction);
 
-    void removeConstituent(unsigned groupIndex);
-
+    bool removeConstituent(unsigned groupIndex);
     void removeAllConstituents();
 
     std::vector<FuelSupplyConstituent> constituents();
@@ -112,7 +111,7 @@ namespace detail {
 
     boost::optional<double> liquidGenericFuelCO2EmissionFactor() const;
 
-    boost::optional<unsigned int> numberofConstituentsinGaseousConstituentFuelSupply() const;
+    unsigned int numberofConstituentsinGaseousConstituentFuelSupply() const;
 
     // Return optional parent generator
     boost::optional<GeneratorFuelCell> fuelCell() const;
