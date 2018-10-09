@@ -50,11 +50,15 @@ class AirSupplyConstituent {
 
   std::string constituentName() const;
   double molarFraction() const;
-  std::vector<std::string> constituentNameValues() const;
-  std::vector<std::string> validConstituentNameValues() const;
+
+  static bool isValid(std::string constituentName);
+  static std::vector<std::string> constituentNameValues();
+  static std::vector<std::string> validConstituentNameValues();
+
  private:
   std::string m_name;
   double m_molarFraction;
+  REGISTER_LOGGER("openstudio.model.AirSupplyConstituent");
 };
 
 

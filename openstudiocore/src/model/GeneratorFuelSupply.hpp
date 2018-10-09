@@ -56,12 +56,17 @@ class FuelSupplyConstituent {
 
   std::string constituentName() const;
   double molarFraction() const;
-  std::vector<std::string> constituentNameValues() const;
-  std::vector<std::string> validConstituentNameValues() const;
+
+  static bool isValid(std::string constituentName);
+  static std::vector<std::string> constituentNameValues();
+  static std::vector<std::string> validConstituentNameValues();
+
  private:
   std::string m_name;
   double m_molarFraction;
+  REGISTER_LOGGER("openstudio.model.FuelSupplyConstituent");
 };
+
 
 
 /** GeneratorFuelSupply is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelSupply'. */

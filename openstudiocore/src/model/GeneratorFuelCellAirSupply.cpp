@@ -57,7 +57,15 @@ namespace openstudio {
 namespace model {
 
 AirSupplyConstituent::AirSupplyConstituent(std::string constituentName, double molarFraction)
-  : m_name(constituentName), m_molarFraction(molarFraction) { };
+  : m_name(constituentName), m_molarFraction(molarFraction) {
+
+  if ((m_molarFraction < 0) || (m_molarFraction > 1)) {
+    LOG_AND_THROW("Unable to create constituent '" << m_name << "', molar fraction of " << m_molarFraction << " is outside the range [0, 1]");
+  }
+  if (!isValid(m_name)) {
+    LOG_AND_THROW("ConstituentName '" << m_name << " is not valid. Check AirSupplyConstituent::constituentNameValues() to see possible names.");
+  }
+}
 
 std::string AirSupplyConstituent::constituentName() const {
   return m_name;
@@ -67,12 +75,20 @@ double AirSupplyConstituent::molarFraction() const {
   return m_molarFraction;
 }
 
-std::vector<std::string> AirSupplyConstituent::constituentNameValues() const {
+bool AirSupplyConstituent::isValid(std::string constituentName) {
+  std::vector<std::string> validConstituentNames = constituentNameValues();
+  return std::find_if(validConstituentNames.begin(),
+                      validConstituentNames.end(),
+                      std::bind(istringEqual, constituentName, std::placeholders::_1)) != validConstituentNames.end();
+
+}
+
+std::vector<std::string> AirSupplyConstituent::constituentNameValues() {
   return getIddKeyNames(IddFactory::instance().getObject(GeneratorFuelCellAirSupply::iddObjectType()).get(),
                         OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName);
 }
 
-std::vector<std::string> AirSupplyConstituent::validConstituentNameValues() const {
+std::vector<std::string> AirSupplyConstituent::validConstituentNameValues() {
   return constituentNameValues();
 }
 
