@@ -424,12 +424,19 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model, Schedule& tempSched
       << powerCurve.briefDescription() << ".");
   }
   setCompressorHeatLossFactor(1);
-  setFuelType("LiquidGeneric");
-  setLiquidGenericFuelLowerHeatingValue(43100);
-  setLiquidGenericFuelHigherHeatingValue(46200);
-  setLiquidGenericFuelMolecularWeight(1);
-  setLiquidGenericFuelCO2EmissionFactor(0);
-  setNumberofConstituentsinGaseousConstituentFuelSupply(0);
+
+  // From E+ 9.0.0, Microcogeneration.idf
+  // LiquidGeneric is broken, see https://github.com/NREL/EnergyPlus/issues/6998
+  setName("NATURALGAS");
+  setFuelType("GaseousConstituents");
+  addConstituent("METHANE", 0.9490);
+  addConstituent("CarbonDioxide", 0.0070);
+  addConstituent("NITROGEN", 0.0160);
+  addConstituent("ETHANE", 0.0250);
+  addConstituent("PROPANE", 0.0020);
+  addConstituent("BUTANE", 0.0006);
+  addConstituent("PENTANE", 0.0002);
+  addConstituent("OXYGEN", 0.0002);
 }
 
 GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
@@ -455,11 +462,19 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
   curveCubic.setName("Compressor Power Multiplier Function of FuelRate Curve");
   setCompressorPowerMultiplierFunctionofFuelRateCurve(curveCubic);
   setCompressorHeatLossFactor(1);
-  setFuelType("LiquidGeneric");
-  setLiquidGenericFuelLowerHeatingValue(43100);
-  setLiquidGenericFuelHigherHeatingValue(46200);
-  setLiquidGenericFuelMolecularWeight(1);
-  setNumberofConstituentsinGaseousConstituentFuelSupply(0);
+
+  // From E+ 9.0.0, Microcogeneration.idf
+  // LiquidGeneric is broken, see https://github.com/NREL/EnergyPlus/issues/6998
+  setName("NATURALGAS");
+  setFuelType("GaseousConstituents");
+  addConstituent("METHANE", 0.9490);
+  addConstituent("CarbonDioxide", 0.0070);
+  addConstituent("NITROGEN", 0.0160);
+  addConstituent("ETHANE", 0.0250);
+  addConstituent("PROPANE", 0.0020);
+  addConstituent("BUTANE", 0.0006);
+  addConstituent("PENTANE", 0.0002);
+  addConstituent("OXYGEN", 0.0002);
 }
 
 IddObjectType GeneratorFuelSupply::iddObjectType() {
