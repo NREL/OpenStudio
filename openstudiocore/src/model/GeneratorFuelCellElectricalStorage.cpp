@@ -27,8 +27,13 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+
 #include "GeneratorFuelCellElectricalStorage.hpp"
 #include "GeneratorFuelCellElectricalStorage_Impl.hpp"
+#include "GeneratorFuelCell.hpp"
+#include "GeneratorFuelCell_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -73,6 +78,22 @@ namespace detail {
 
   IddObjectType GeneratorFuelCellElectricalStorage_Impl::iddObjectType() const {
     return GeneratorFuelCellElectricalStorage::iddObjectType();
+  }
+
+  // Get the parent GeneratorFuelCell
+  boost::optional<GeneratorFuelCell> GeneratorFuelCellElectricalStorage_Impl::fuelCell() const {
+
+    boost::optional<GeneratorFuelCell> fc;
+    // We use getModelObjectSources to check if more than one
+    std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
+
+    if( fcs.size() > 0u) {
+      if( fcs.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
+      }
+      fc = fcs[0];
+    }
+    return fc;
   }
 
   std::string GeneratorFuelCellElectricalStorage_Impl::choiceofModel() const {
@@ -228,6 +249,10 @@ IddObjectType GeneratorFuelCellElectricalStorage::iddObjectType() {
 std::vector<std::string> GeneratorFuelCellElectricalStorage::choiceofModelValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Generator_FuelCell_ElectricalStorageFields::ChoiceofModel);
+}
+
+boost::optional<GeneratorFuelCell> GeneratorFuelCellElectricalStorage::fuelCell() const {
+  return getImpl<detail::GeneratorFuelCellElectricalStorage_Impl>()->fuelCell();
 }
 
 std::string GeneratorFuelCellElectricalStorage::choiceofModel() const {
