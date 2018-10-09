@@ -284,7 +284,8 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetFuelType() {
-    bool result = setString(OS_Generator_FuelSupplyFields::FuelType, "LiquidGeneric");
+    // TODO A bit unusual to set a default that doesn't exist in IDD
+    bool result = setString(OS_Generator_FuelSupplyFields::FuelType, "GaseousConstituents");
     OS_ASSERT(result);
   }
 
