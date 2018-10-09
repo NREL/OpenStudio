@@ -108,7 +108,7 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
 
   void removeAllConstituents();
 
-  std::vector<AirSupplyConstituent> constituents();
+  std::vector<AirSupplyConstituent> constituents() const;
 
   /** @name Getters */
   //@{
@@ -133,7 +133,7 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
 
   std::string airSupplyConstituentMode() const;
 
-  // TODO: this should be an non optional
+  // TODO: this should be a non optional
   boost::optional<unsigned int> numberofUserDefinedConstituents() const;
 
   // Return optional parent generator

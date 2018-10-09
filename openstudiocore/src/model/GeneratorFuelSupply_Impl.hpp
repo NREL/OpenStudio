@@ -85,7 +85,7 @@ namespace detail {
     bool removeConstituent(unsigned groupIndex);
     void removeAllConstituents();
 
-    std::vector<FuelSupplyConstituent> constituents();
+    std::vector<FuelSupplyConstituent> constituents() const;
 
     //@}
     /** @name Getters */

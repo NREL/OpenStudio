@@ -95,7 +95,7 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
 
   void removeAllConstituents();
 
-  std::vector<FuelSupplyConstituent> constituents();
+  std::vector<FuelSupplyConstituent> constituents() const;
 
   /** @name Getters */
   //@{

@@ -85,7 +85,7 @@ namespace detail {
 
     void removeAllConstituents();
 
-    std::vector<AirSupplyConstituent> constituents();
+    std::vector<AirSupplyConstituent> constituents() const;
 
     //@}
     /** @name Getters */

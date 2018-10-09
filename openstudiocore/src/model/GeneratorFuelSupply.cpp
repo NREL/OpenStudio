@@ -400,7 +400,7 @@ namespace detail {
     resetNumberofConstituentsinGaseousConstituentFuelSupply();
   }
 
-  std::vector<FuelSupplyConstituent> GeneratorFuelSupply_Impl::constituents() {
+  std::vector<FuelSupplyConstituent> GeneratorFuelSupply_Impl::constituents() const {
     std::vector<FuelSupplyConstituent> result;
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
@@ -512,7 +512,7 @@ void GeneratorFuelSupply::removeAllConstituents() {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->removeAllConstituents();
 }
 
-std::vector<FuelSupplyConstituent> GeneratorFuelSupply::constituents() {
+std::vector<FuelSupplyConstituent> GeneratorFuelSupply::constituents() const {
   return getImpl<detail::GeneratorFuelSupply_Impl>()->constituents();
 }
 

@@ -362,7 +362,7 @@ namespace detail {
     resetNumberofUserDefinedConstituents();
   }
 
-  std::vector<AirSupplyConstituent> GeneratorFuelCellAirSupply_Impl::constituents() {
+  std::vector<AirSupplyConstituent> GeneratorFuelCellAirSupply_Impl::constituents() const {
     std::vector<AirSupplyConstituent> result;
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
@@ -576,7 +576,7 @@ void GeneratorFuelCellAirSupply::removeAllConstituents() {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->removeAllConstituents();
 }
 
-std::vector<AirSupplyConstituent> GeneratorFuelCellAirSupply::constituents() {
+std::vector<AirSupplyConstituent> GeneratorFuelCellAirSupply::constituents() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->constituents();
 }
 
