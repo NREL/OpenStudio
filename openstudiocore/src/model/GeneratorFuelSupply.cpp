@@ -71,6 +71,10 @@ double FuelSupplyConstituent::molarFraction() const {
   return m_molarFraction;
 }
 
+std::ostream& operator<< (std::ostream& out, const FuelSupplyConstituent& constituent) {
+  out << "name=" << constituent.name() << ", molar fraction=" << constituent.molarFraction();
+  return out;
+}
 
 namespace detail {
 
