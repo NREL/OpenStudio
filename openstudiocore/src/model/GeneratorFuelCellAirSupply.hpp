@@ -118,7 +118,7 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   boost::optional<unsigned int> numberofUserDefinedConstituents() const;
 
   // Return optional parent generator
-  GeneratorFuelCell fuelCell() const;
+  boost::optional<GeneratorFuelCell> fuelCell() const;
 
   //@}
   /** @name Setters */
@@ -158,10 +158,6 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
 
   bool setAirSupplyConstituentMode(const std::string& airSupplyConstituentMode);
 
-  bool setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents);
-
-  void resetNumberofUserDefinedConstituents();
-
   //@}
   /** @name Other */
   //@{
@@ -179,6 +175,10 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
  private:
+  // Not to be exposed publicly, handled automatically by add/removeConstituent
+  bool setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents);
+  void resetNumberofUserDefinedConstituents();
+
   REGISTER_LOGGER("openstudio.model.GeneratorFuelCellAirSupply");
 };
 

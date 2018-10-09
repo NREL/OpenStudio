@@ -71,6 +71,11 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual std::vector<IddObjectType> allowableChildTypes() const;
+
+    virtual std::vector<ModelObject> children() const;
+
+
     //extensible fields.
 
     bool addConstituent(std::string name, double molarFraction);
@@ -108,7 +113,7 @@ namespace detail {
     boost::optional<unsigned int> numberofUserDefinedConstituents() const;
 
     // Return optional parent generator
-    GeneratorFuelCell fuelCell() const;
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
     //@}
     /** @name Setters */
@@ -148,19 +153,13 @@ namespace detail {
 
     bool setAirSupplyConstituentMode(const std::string& airSupplyConstituentMode);
 
-    bool setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents);
-
-    void resetNumberofUserDefinedConstituents();
+    // Automatically handled by addConstituent/removeConstituent
+    // bool setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents);
+    // void resetNumberofUserDefinedConstituents();
 
     //@}
     /** @name Other */
     //@{
-
-    virtual ModelObject clone(Model model) const override;
-
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
-
-    virtual std::vector<ModelObject> children() const;
 
     //@}
    protected:
