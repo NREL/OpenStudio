@@ -445,8 +445,6 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelSupply_Impl>());
 
-  setLiquidGenericFuelCO2EmissionFactor(0);
-
   setFuelTemperatureModelingMode("Scheduled");
   ScheduleConstant schedule(model);
   schedule.setValue(20);
