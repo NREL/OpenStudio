@@ -300,7 +300,8 @@ namespace detail {
   }
 
   void GeneratorFuelSupply_Impl::resetFuelType() {
-    bool result = setString(OS_Generator_FuelSupplyFields::FuelType, "LiquidGeneric");
+    // TODO A bit unusual to set a default that doesn't exist in IDD
+    bool result = setString(OS_Generator_FuelSupplyFields::FuelType, "GaseousConstituents");
     OS_ASSERT(result);
   }
 
@@ -488,8 +489,6 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
 {
   OS_ASSERT(getImpl<detail::GeneratorFuelSupply_Impl>());
 
-  setLiquidGenericFuelCO2EmissionFactor(0);
-
   setFuelTemperatureModelingMode("Scheduled");
   ScheduleConstant schedule(model);
   schedule.setValue(20);
@@ -519,7 +518,6 @@ GeneratorFuelSupply::GeneratorFuelSupply(const Model& model)
   addConstituent("BUTANE", 0.0006);
   addConstituent("PENTANE", 0.0002);
   addConstituent("OXYGEN", 0.0002);
-
 }
 
 IddObjectType GeneratorFuelSupply::iddObjectType() {
