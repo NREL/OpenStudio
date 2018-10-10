@@ -182,11 +182,6 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   #endif
 
   waitDialog()->show();
-  // Get the descriptionLabel
-  QLabel * descriptionLabel = qobject_cast<QLabel*>(waitDialog()->upperLayout()->itemAt(1)->widget());
-  if (descriptionLabel) {
-    descriptionLabel->setText("Starting Measure Manager");
-  }
 
   // We are using the wait dialog to lock out the app so
   // use processEvents to make sure the dialog is up before we
