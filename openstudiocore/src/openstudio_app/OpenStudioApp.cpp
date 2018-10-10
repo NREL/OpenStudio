@@ -344,24 +344,17 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
   //}
 
   // Get the first Qlabel waitDialog (0 = stretch, 1 = "Loading model", 2 = "This may take a minute...", 3=hidden lable,   = stretch)
-  QLabel * descriptionLabel1 = qobject_cast<QLabel*>(waitDialog()->upperLayout()->itemAt(1)->widget());
-  if (descriptionLabel1) {
-    descriptionLabel1->setText("Loading library files");
-  }
-  QLabel * descriptionLabel2 = qobject_cast<QLabel*>(waitDialog()->upperLayout()->itemAt(2)->widget());
-  if (descriptionLabel2) {
-    descriptionLabel2->setText("If this takes too long, try resetting the default libraries in Preferences > Change default libraries");
-  }
-  }
+  waitDialog()->m_firstLine->setText("Loading Library Files");
+  waitDialog()->m_secondLine->setText("If this takes too long, try resetting the default libraries in Preferences > Change default libraries");
+  // Make it visible
+  waitDialog()->m_thirdLine->setVisible(true);
 
   m_compLibrary = model::Model();
 
   for( auto path : libraryPaths() ) {
     try {
       if ( exists(path) ) {
-        if (descriptionLabel3) {
-          descriptionLabel3->setText(toQString(path));
-        }
+        waitDialog()->m_thirdLine->setText(toQString(path));
         osversion::VersionTranslator versionTranslator;
         versionTranslator.setAllowNewerVersions(false);
         boost::optional<Model> temp = versionTranslator.loadModel(path);
