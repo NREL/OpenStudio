@@ -50,6 +50,10 @@ public:
 
   QSize sizeHint() const override;
 
+  // Reset waitDialog labels to default value/visible state/objectName
+  // It's also for the initial creation in createWidgets
+  void resetLabels();
+
   // Convenience to avoid having to do QLabel * descriptionLabel1 = qobject_cast<QLabel*>(waitDialog()->upperLayout()->itemAt(1)->widget());
   QLabel * m_firstLine;
   QLabel * m_secondLine;

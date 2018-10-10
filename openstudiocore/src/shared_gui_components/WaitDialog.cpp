@@ -66,8 +66,7 @@ void WaitDialog::createWidgets()
 
   upperLayout()->addStretch();
 
-  m_firstLine = new QLabel(m_windowMessage);
-  m_firstLine->setObjectName("H2");
+  m_firstLine = new QLabel();
   upperLayout()->addWidget(m_firstLine, 0, Qt::AlignCenter);
 
   //BusyWidget * busyWidget = new BusyWidget();
@@ -77,15 +76,15 @@ void WaitDialog::createWidgets()
   //connect(timer,SIGNAL(timeout()),busyWidget,SLOT(rotate()));
   //timer->start(50);
 
-  m_secondLine = new QLabel("This may take a minute...");
-  m_secondLine->setObjectName("H2");
+  m_secondLine = new QLabel();
   upperLayout()->addWidget(m_secondLine, 0, Qt::AlignCenter);
 
   // a Third line, disabled by default
   m_thirdLine = new QLabel();
-  m_thirdLine->setObjectName("H3");
   upperLayout()->addWidget(m_thirdLine, 0, Qt::AlignCenter);
-  m_thirdLine->setVisible(false);
+
+  // Will populate label text and set visible state + objectname for styling
+  resetLabels();
 
   upperLayout()->addStretch();
 
@@ -106,10 +105,15 @@ void WaitDialog::createWidgets()
 
 void WaitDialog::resetLabels() {
   m_firstLine->setText(m_windowMessage);
+  m_firstLine->setObjectName("H2");
   m_firstLine->setVisible(true);
+
   m_secondLine->setText("This may take a minute...");
+  m_secondLine->setObjectName("H2");
   m_secondLine->setVisible(true);
+
   m_thirdLine->setText("");
+  m_thirdLine->setObjectName("H3");
   m_thirdLine->setVisible(false);
 }
 
