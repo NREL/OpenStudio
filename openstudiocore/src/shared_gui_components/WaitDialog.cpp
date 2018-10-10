@@ -63,13 +63,12 @@ QSize WaitDialog::sizeHint() const
 
 void WaitDialog::createWidgets()
 {
-  QLabel * label = nullptr;
 
   upperLayout()->addStretch();
 
-  label = new QLabel(m_windowMessage);
-  label->setObjectName("H2");
-  upperLayout()->addWidget(label,0,Qt::AlignCenter);
+  m_firstLine = new QLabel(m_windowMessage);
+  m_firstLine->setObjectName("H2");
+  upperLayout()->addWidget(m_firstLine, 0, Qt::AlignCenter);
 
   //BusyWidget * busyWidget = new BusyWidget();
   //upperLayout()->addWidget(busyWidget,0,Qt::AlignCenter);
@@ -78,9 +77,15 @@ void WaitDialog::createWidgets()
   //connect(timer,SIGNAL(timeout()),busyWidget,SLOT(rotate()));
   //timer->start(50);
 
-  label = new QLabel("This may take a minute...");
-  label->setObjectName("H2");
-  upperLayout()->addWidget(label,0,Qt::AlignCenter);
+  m_secondLine = new QLabel("This may take a minute...");
+  m_secondLine->setObjectName("H2");
+  upperLayout()->addWidget(m_secondLine, 0, Qt::AlignCenter);
+
+  // a Third line, disabled by default
+  m_thirdLine = new QLabel();
+  m_thirdLine->setObjectName("H3");
+  upperLayout()->addWidget(m_thirdLine, 0, Qt::AlignCenter);
+  m_thirdLine->setVisible(false);
 
   upperLayout()->addStretch();
 

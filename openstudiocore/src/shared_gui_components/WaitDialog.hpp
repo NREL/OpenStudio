@@ -32,6 +32,8 @@
 
 #include "OSDialog.hpp"
 
+class QLabel;
+
 namespace openstudio{
 
 class WaitDialog : public OSDialog
@@ -48,6 +50,11 @@ public:
 
   QSize sizeHint() const override;
 
+  // Convenience to avoid having to do QLabel * descriptionLabel1 = qobject_cast<QLabel*>(waitDialog()->upperLayout()->itemAt(1)->widget());
+  QLabel * m_firstLine;
+  QLabel * m_secondLine;
+  QLabel * m_thirdLine;
+
 protected slots:
 
   virtual void on_cancelButton(bool checked) override;
@@ -61,6 +68,7 @@ private:
   virtual void createWidgets();
 
   QString m_windowMessage;
+
 
 };
 
