@@ -113,7 +113,7 @@ namespace detail {
       GeneratorFuelCell fcClone = fc->clone(model).cast<GeneratorFuelCell>();
 
       // We get the clone of the parent generator's GeneratorFuelCellExhaustGasToWaterHeatExchanger so we can return that
-      hxClone = fcClone.waterSupply();
+      hxClone = fcClone.heatExchanger();
     } else {
       // We only clone this one
       hxClone = StraightComponent_Impl::clone(model);
