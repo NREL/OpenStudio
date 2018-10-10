@@ -84,8 +84,10 @@ bool AirSupplyConstituent::isValid(std::string constituentName) {
 }
 
 std::vector<std::string> AirSupplyConstituent::constituentNameValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(GeneratorFuelCellAirSupply::iddObjectType()).get(),
-                        OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName);
+  IddObject obj = IddFactory::instance().getObject(GeneratorFuelCellAirSupply::iddObjectType()).get();
+  // Return IddKeyNames in extensible portion
+  return getIddKeyNames(obj,
+                        obj.numFields() + OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName);
 }
 
 std::vector<std::string> AirSupplyConstituent::validConstituentNameValues() {

@@ -88,8 +88,10 @@ bool FuelSupplyConstituent::isValid(std::string constituentName) {
 }
 
 std::vector<std::string> FuelSupplyConstituent::constituentNameValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(GeneratorFuelSupply::iddObjectType()).get(),
-                        OS_Generator_FuelSupplyExtensibleFields::ConstituentName);
+  IddObject obj = IddFactory::instance().getObject(GeneratorFuelSupply::iddObjectType()).get();
+  // Return IddKeyNames in extensible portion
+  return getIddKeyNames(obj,
+                        obj.numFields() + OS_Generator_FuelSupplyExtensibleFields::ConstituentName);
 }
 
 std::vector<std::string> FuelSupplyConstituent::validConstituentNameValues() {
