@@ -355,10 +355,17 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
 
   m_compLibrary = model::Model();
 
+  std::string thisVersion = openStudioVersion();
+
   for( auto path : libraryPaths() ) {
     try {
       if ( exists(path) ) {
-        waitDialog()->m_thirdLine->setText(toQString(path));
+        boost::optional<VersionString> version = openstudio::IdfFile::loadVersionOnly(path);
+        if (version) {
+          waitDialog()->m_thirdLine->setText(QString::fromStdString("From version " + version->str() + " to " + thisVersion + ": ") + toQString(path));
+        } else {
+          waitDialog()->m_thirdLine->setText(toQString(path));
+        }
         osversion::VersionTranslator versionTranslator;
         versionTranslator.setAllowNewerVersions(false);
         boost::optional<Model> temp = versionTranslator.loadModel(path);
@@ -797,9 +804,8 @@ void OpenStudioApp::open()
 
   setLastPath(QFileInfo(fileName).path());
 
-  // Update line
-  waitDialog()->m_firstLine->setText("Loading Model: " + fileName);
   openFile(fileName);
+
   // Reset the labels
   waitDialog()->resetLabels();
 }
