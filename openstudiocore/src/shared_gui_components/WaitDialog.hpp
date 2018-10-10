@@ -58,6 +58,7 @@ public:
   QLabel * m_firstLine;
   QLabel * m_secondLine;
   QLabel * m_thirdLine;
+  QLabel * m_fourthLine;
 
 protected slots:
 

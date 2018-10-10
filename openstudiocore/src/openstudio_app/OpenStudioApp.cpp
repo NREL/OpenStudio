@@ -347,6 +347,7 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
   waitDialog()->m_secondLine->setText("If this takes too long, try resetting the default libraries in Preferences > Change default libraries");
   // Make it visible
   waitDialog()->m_thirdLine->setVisible(true);
+  waitDialog()->m_fourthLine->setVisible(true);
 
   m_compLibrary = model::Model();
 
@@ -357,10 +358,14 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
       if ( exists(path) ) {
         boost::optional<VersionString> version = openstudio::IdfFile::loadVersionOnly(path);
         if (version) {
-          waitDialog()->m_thirdLine->setText(QString::fromStdString("From version " + version->str() + " to " + thisVersion + ": ") + toQString(path));
+          waitDialog()->m_thirdLine->setText(QString::fromStdString("Translation From version " + version->str()
+                                          + " to " + thisVersion + ": "));
         } else {
-          waitDialog()->m_thirdLine->setText(toQString(path));
+          waitDialog()->m_thirdLine->setText("Unknown starting version");
         }
+
+        waitDialog()->m_fourthLine->setText(toQString(path));
+
         osversion::VersionTranslator versionTranslator;
         versionTranslator.setAllowNewerVersions(false);
         boost::optional<Model> temp = versionTranslator.loadModel(path);

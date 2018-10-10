@@ -79,9 +79,11 @@ void WaitDialog::createWidgets()
   m_secondLine = new QLabel();
   upperLayout()->addWidget(m_secondLine, 0, Qt::AlignCenter);
 
-  // a Third line, disabled by default
   m_thirdLine = new QLabel();
   upperLayout()->addWidget(m_thirdLine, 0, Qt::AlignCenter);
+
+  m_fourthLine = new QLabel();
+  upperLayout()->addWidget(m_fourthLine, 0, Qt::AlignCenter);
 
   // Will populate label text and set visible state + objectname for styling
   resetLabels();
@@ -112,9 +114,15 @@ void WaitDialog::resetLabels() {
   m_secondLine->setObjectName("H2");
   m_secondLine->setVisible(true);
 
+  // Third and fourth line, disabled by default
   m_thirdLine->setText("");
-  m_thirdLine->setObjectName("H3");
+  m_thirdLine->setObjectName("H2");
   m_thirdLine->setVisible(false);
+
+  m_fourthLine->setText("");
+  m_fourthLine->setObjectName("H3");
+  m_fourthLine->setVisible(false);
+
 }
 
 //***** SLOTS *****
