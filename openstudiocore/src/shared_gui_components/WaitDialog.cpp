@@ -104,6 +104,15 @@ void WaitDialog::createWidgets()
 
 }
 
+void WaitDialog::resetLabels() {
+  m_firstLine->setText(m_windowMessage);
+  m_firstLine->setVisible(true);
+  m_secondLine->setText("This may take a minute...");
+  m_secondLine->setVisible(true);
+  m_thirdLine->setText("");
+  m_thirdLine->setVisible(false);
+}
+
 //***** SLOTS *****
 
 void WaitDialog::on_cancelButton(bool checked)

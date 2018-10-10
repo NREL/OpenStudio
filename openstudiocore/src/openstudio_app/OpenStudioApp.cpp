@@ -372,6 +372,9 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
     }
   }
 
+  // Reset all labels
+  waitDialog()->resetLabels();
+
   return failed;
 }
 
