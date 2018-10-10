@@ -71,6 +71,9 @@ set(ENERGYPLUS_VERSION_PATCH 1)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
 set(ENERGYPLUS_BUILD_SHA "bb7ca4f0da")
+# ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
+# from the github releases
+set(ENERGYPLUS_RELEASE_NAME "v9.0.1")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -375,9 +378,6 @@ endif()
 
 # EnergyPlus
 
-# ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
-# from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.0.0")
 if(UNIX)
   if(APPLE)
     set(ENERGYPLUS_EXPECTED_HASH 2fda5cab98e8969f0cf87a45a526e9f7)
