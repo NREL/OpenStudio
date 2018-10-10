@@ -275,13 +275,14 @@ void OpenStudioApp::onMeasureManagerAndLibraryReady() {
 
 bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
 {
+  // Note: already checked for in open() before calling this
   if(fileName.length() > 0)
   {
     osversion::VersionTranslator versionTranslator;
     versionTranslator.setAllowNewerVersions(false);
 
     boost::optional<openstudio::model::Model> temp = versionTranslator.loadModel(toPath(fileName));
-
+    // If VT worked
     if (temp) {
       model::Model model = temp.get();
 
@@ -304,6 +305,9 @@ bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
         processEvents();
       }
 
+      // TODO: waitDialog isn't showed until VT has actually happened and worked?
+      // I tried to show it visible in the begining of the method, but it isn't displayed correctly:
+      // transparent + hidden by Filedialog which isn't closed yet.
       waitDialog()->setVisible(true);
       processEvents();
 
@@ -793,7 +797,11 @@ void OpenStudioApp::open()
 
   setLastPath(QFileInfo(fileName).path());
 
+  // Update line
+  waitDialog()->m_firstLine->setText("Loading Model: " + fileName);
   openFile(fileName);
+  // Reset the labels
+  waitDialog()->resetLabels();
 }
 
 //void OpenStudioApp::loadLibrary()
