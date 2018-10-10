@@ -71,6 +71,9 @@ set(ENERGYPLUS_VERSION_PATCH 1)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
 set(ENERGYPLUS_BUILD_SHA "bb7ca4f0da")
+# ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
+# from the github releases
+set(ENERGYPLUS_RELEASE_NAME "v9.0.1")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -375,19 +378,16 @@ endif()
 
 # EnergyPlus
 
-# ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
-# from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.0.0")
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 2fda5cab98e8969f0cf87a45a526e9f7)
+    set(ENERGYPLUS_EXPECTED_HASH 7b8b8481a5f261800570de0d86e9c608)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH xyz)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 64d189b8ad96812e73c66a1c65d4e010)
+    set(ENERGYPLUS_EXPECTED_HASH 135e17dd5e4ca355b25bf77b61fc8cf2)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -409,7 +409,7 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 69b601fb0ddfac2e9b9457bce9afa1ca)
+    set(ENERGYPLUS_EXPECTED_HASH 4094c49b908ba2feb3f0b352126ea0ac)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
