@@ -182,6 +182,12 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   #endif
 
   waitDialog()->show();
+  // Get the descriptionLabel
+  QLabel * descriptionLabel = qobject_cast<QLabel*>(waitDialog()->upperLayout()->itemAt(1)->widget());
+  if (descriptionLabel) {
+    descriptionLabel->setText("Starting Measure Manager");
+  }
+
   // We are using the wait dialog to lock out the app so
   // use processEvents to make sure the dialog is up before we
   // proceed to startMeasureManagerProcess
@@ -331,9 +337,21 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
 {
   std::vector<std::string> failed;
 
-  QWidget * parent = nullptr;
-  if( this->currentDocument() ){
-    parent = this->currentDocument()->mainWindow();
+  // This is unused
+  //QWidget * parent = nullptr;
+  //if( this->currentDocument() ){
+    //parent = this->currentDocument()->mainWindow();
+  //}
+
+  // Get the first Qlabel waitDialog (0 = stretch, 1 = "Loading model", 2 = "This may take a minute...", 3=hidden lable,   = stretch)
+  QLabel * descriptionLabel1 = qobject_cast<QLabel*>(waitDialog()->upperLayout()->itemAt(1)->widget());
+  if (descriptionLabel1) {
+    descriptionLabel1->setText("Loading library files");
+  }
+  QLabel * descriptionLabel2 = qobject_cast<QLabel*>(waitDialog()->upperLayout()->itemAt(2)->widget());
+  if (descriptionLabel2) {
+    descriptionLabel2->setText("If this takes too long, try resetting the default libraries in Preferences > Change default libraries");
+  }
   }
 
   m_compLibrary = model::Model();
@@ -341,6 +359,9 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
   for( auto path : libraryPaths() ) {
     try {
       if ( exists(path) ) {
+        if (descriptionLabel3) {
+          descriptionLabel3->setText(toQString(path));
+        }
         osversion::VersionTranslator versionTranslator;
         versionTranslator.setAllowNewerVersions(false);
         boost::optional<Model> temp = versionTranslator.loadModel(path);
