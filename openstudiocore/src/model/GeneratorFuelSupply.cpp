@@ -527,7 +527,7 @@ IddObjectType GeneratorFuelSupply::iddObjectType() {
 }
 
 double GeneratorFuelSupply::sumofConstituentsMolarFractions() const {
-  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->sumofConstituentsMolarFractions();
+  return getImpl<detail::GeneratorFuelSupply_Impl>()->sumofConstituentsMolarFractions();
 }
 
 bool GeneratorFuelSupply::addConstituent(const FuelSupplyConstituent& constituent) {
