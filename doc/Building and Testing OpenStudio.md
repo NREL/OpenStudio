@@ -224,6 +224,9 @@ In CMake **uncheck** the following:
 - CPACK_BINARY_FOO (uncheck all)
 - CPACK_SOURCE_FOO (uncheck all)
 
+In CMake **check** the following:
+
+- CPACK\_BINARY\_IFW
 
 Press `Configure` and `Generate` in CMake
 

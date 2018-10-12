@@ -37,7 +37,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctParallelPIUReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctSeriesPIUReheat.cpp
-  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctUncontrolled.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctInletSideMixer.cpp
@@ -397,7 +397,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateAirLoopHVAC.cpp
   ReverseTranslator/ReverseTranslateAirLoopHVACOutdoorAirSystem.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
-  ReverseTranslator/ReverseTranslateAirTerminalSingleDuctUncontrolled.cpp
+  ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeNoReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctVAVNoReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctVAVReheat.cpp
   ReverseTranslator/ReverseTranslateBuilding.cpp
@@ -552,6 +552,7 @@ set(${target_name}_test_src
   Test/AvailabilityManagerLowTemperatureTurnOn_GTest.cpp
   Test/AvailabilityManagerLowTemperatureTurnOff_GTest.cpp
   Test/AvailabilityManagerNightCycle_GTest.cpp
+  Test/AvailabilityManagerHybridVentilation_GTest
   Test/Building_GTest.cpp
 
   Test/CentralHeatPumpSystem_GTest.cpp

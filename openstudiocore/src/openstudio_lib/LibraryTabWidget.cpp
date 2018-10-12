@@ -127,6 +127,36 @@ void LibraryTabWidget::addTab( QWidget * widget,
   setCurrentIndex(0);
 }
 
+void LibraryTabWidget::hideTab(QWidget * widget, bool hide)
+{
+  int index = m_pageStack->indexOf(widget);
+  OS_ASSERT(index >= 0);
+
+  int currentIndex = m_pageStack->currentIndex();
+  if(currentIndex == index){
+    if(currentIndex + 1 < m_pageStack->count()){
+      currentIndex++;
+    } else if (currentIndex != 0) {
+      currentIndex = 0;
+    } else {
+      // index and currentIndex are both 0
+      // can't hide both the tab and the page
+      return;
+    }
+  }
+
+  QPushButton * button = nullptr;
+  button = m_tabButtons.at(index);
+  OS_ASSERT(button);
+  if(hide){
+    button->hide();
+  } else {
+    button->show();
+  }
+
+  setCurrentIndex(currentIndex);
+}
+
 void LibraryTabWidget::select()
 {
   QPushButton * button = qobject_cast<QPushButton *>(sender());

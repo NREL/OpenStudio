@@ -384,7 +384,7 @@ namespace detail{
     // * AirTerminalDualDuctVAV
     // * AirTerminalSingleDuctConstantVolumeCooledBeam
     // * AirTerminalSingleDuctInletSideMixer
-    // * AirTerminalSingleDuctUncontrolled
+    // * AirTerminalSingleDuctConstantVolumeNoReheat (previously named AirTerminalSingleDuctUncontrolled)
     // * AirTerminalSingleDuctVAVHeatAndCoolNoReheat
     // * AirTerminalSingleDuctVAVNoReheat
 
@@ -912,3 +912,4 @@ boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingWater::airflowNetworkEq
 
 } // model
 } // openstudio
+

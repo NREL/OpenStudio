@@ -169,13 +169,13 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
     subSurface->setViewFactortoGround(*d);
   }
 
-  target = workspaceObject.getTarget(openstudio::FenestrationSurface_DetailedFields::ShadingControlName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject && modelObject->optionalCast<model::ShadingControl>()){
-      subSurface->setShadingControl(modelObject->cast<model::ShadingControl>());
-    }
-  }
+  //target = workspaceObject.getTarget(openstudio::FenestrationSurface_DetailedFields::ShadingControlName);
+  //if (target){
+  //  OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+  //  if (modelObject && modelObject->optionalCast<model::ShadingControl>()){
+  //    subSurface->setShadingControl(modelObject->cast<model::ShadingControl>());
+  //  }
+  //}
 
   target = workspaceObject.getTarget(openstudio::FenestrationSurface_DetailedFields::FrameandDividerName);
   if (target){

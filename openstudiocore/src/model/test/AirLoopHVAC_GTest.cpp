@@ -44,8 +44,8 @@
 #include "../AirLoopHVACZoneMixer_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 #include "../AirLoopHVACZoneSplitter_Impl.hpp"
-#include "../AirTerminalSingleDuctUncontrolled.hpp"
-#include "../AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 
 #include "../PlantLoop.hpp"
 #include "../CoilCoolingWater.hpp"
@@ -201,7 +201,7 @@ TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal = AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
@@ -220,8 +220,8 @@ TEST_F(ModelFixture,AirLoopHVAC_multiAddBranchForZone)
   AirLoopHVAC airLoopHVAC2 = AirLoopHVAC(model);
   ThermalZone thermalZone = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal2 = AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal = AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal2 = AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
   ASSERT_TRUE(airLoopHVAC.multiAddBranchForZone(thermalZone,singleDuctTerminal));
@@ -240,20 +240,26 @@ TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
-                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal =
+                                                         AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
 
-  ASSERT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
+  // Inlet Node, splitter, placeholder node, mixer, outlet node
+  EXPECT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
 
   airLoopHVAC.addBranchForZone(thermalZone, singleDuctTerminal);
 
-  ASSERT_EQ( unsigned(8),airLoopHVAC.demandComponents().size() );
+  // Inlet Node, splitter, ATU inlet Node, ATU, TZ inlet Node, Thermal Zone, TZ outlet Node, mixer, outlet node
+  // So 5 + 4 = 9
+  EXPECT_EQ( unsigned(9),airLoopHVAC.demandComponents().size() );
 
+  // This clones the last terminal too
+  // Adds: ATU inlet Node, ATU, TZ inlet Node, Thermal Zone, TZ outlet Node
+  // So 9 + 5 = 14
   airLoopHVAC.addBranchForZone(thermalZone2, boost::optional<StraightComponent>());
 
-  ASSERT_EQ( unsigned(12),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ( unsigned(14),airLoopHVAC.demandComponents().size() );
 
-  ASSERT_EQ( thermalZone,airLoopHVAC.demandComponents( airLoopHVAC.zoneSplitter().outletModelObject(0)->cast<HVACComponent>(),
+  EXPECT_EQ( thermalZone,airLoopHVAC.demandComponents( airLoopHVAC.zoneSplitter().outletModelObject(0)->cast<HVACComponent>(),
                                                        airLoopHVAC.zoneMixer().inletModelObject(0)->cast<HVACComponent>(),
                                                        thermalZone.iddObjectType() ).front() );
 }
@@ -285,7 +291,7 @@ TEST_F(ModelFixture,AirLoopHVAC_removeBranchForZone)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal(model,scheduleCompact);
   SetpointManagerSingleZoneReheat spm(model);
 
   Node outletNode = airLoopHVAC.supplyOutletNode();
@@ -298,15 +304,15 @@ TEST_F(ModelFixture,AirLoopHVAC_removeBranchForZone)
 
   EXPECT_EQ(thermalZone, spm.controlZone());
 
-  EXPECT_EQ( unsigned(8),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ( unsigned(9),airLoopHVAC.demandComponents().size() );
 
   EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
 
-  EXPECT_EQ( unsigned(12),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ( unsigned(14),airLoopHVAC.demandComponents().size() );
 
   EXPECT_TRUE(airLoopHVAC.removeBranchForZone(thermalZone2));
 
-  EXPECT_EQ( unsigned(8),airLoopHVAC.demandComponents().size() );
+  EXPECT_EQ( unsigned(9),airLoopHVAC.demandComponents().size() );
 
   EXPECT_TRUE(airLoopHVAC.removeBranchForZone(thermalZone));
 
@@ -325,8 +331,8 @@ TEST_F(ModelFixture,ThermalZone_remove)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
-                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal =
+                                                         AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
 
@@ -346,8 +352,8 @@ TEST_F(ModelFixture,AirLoopHVAC_remove)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
-                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal =
+                                                         AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
 
@@ -534,8 +540,8 @@ TEST_F(ModelFixture, AirLoopHVAC_Cost)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
-                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal =
+                                                         AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
   boost::optional<LifeCycleCost> cost1 = LifeCycleCost::createLifeCycleCost("Install", airLoopHVAC, 1000.0, "CostPerEach", "Construction");
@@ -579,8 +585,8 @@ TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal)
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal =
-                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal =
+                                                         AirTerminalSingleDuctConstantVolumeNoReheat(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
 
@@ -592,8 +598,8 @@ TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal)
 
   EXPECT_EQ(1u, airLoopHVAC.thermalZones().size());
 
-  AirTerminalSingleDuctUncontrolled term2 =
-    singleDuctTerminal.clone(model).cast<AirTerminalSingleDuctUncontrolled>();
+  AirTerminalSingleDuctConstantVolumeNoReheat term2 =
+    singleDuctTerminal.clone(model).cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
 
   EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,term2));
 
@@ -612,10 +618,10 @@ TEST_F(ModelFixture, AirLoopHVAC_edges)
   ThermalZone thermalZone3(m);
   ThermalZone thermalZone4(m);
   ScheduleCompact s(m);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal(m, s);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal2(m, s);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal3(m, s);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal4(m, s);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal(m, s);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal2(m, s);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal3(m, s);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal4(m, s);
 
   AirLoopHVACZoneSplitter splitter = airLoopHVAC.zoneSplitter();
   AirLoopHVACZoneMixer mixer = airLoopHVAC.zoneMixer();
@@ -1420,8 +1426,8 @@ TEST_F(ModelFixture,AirLoopHVAC_multiloops) {
   ThermalZone z2(m);
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
-  AirTerminalSingleDuctUncontrolled atu1(m, sch);
-  AirTerminalSingleDuctUncontrolled atu2(m, sch);
+  AirTerminalSingleDuctConstantVolumeNoReheat atu1(m, sch);
+  AirTerminalSingleDuctConstantVolumeNoReheat atu2(m, sch);
 
   EXPECT_TRUE(a1.multiAddBranchForZone(z1, atu1));
   EXPECT_TRUE(a2.multiAddBranchForZone(z1, atu2));

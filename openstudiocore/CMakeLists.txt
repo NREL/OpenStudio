@@ -65,12 +65,15 @@ set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJ
 set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_BUILD}")
 
 # EnergyPlus Idd version
-set(ENERGYPLUS_VERSION_MAJOR 8)
-set(ENERGYPLUS_VERSION_MINOR 9)
-set(ENERGYPLUS_VERSION_PATCH 0)
+set(ENERGYPLUS_VERSION_MAJOR 9)
+set(ENERGYPLUS_VERSION_MINOR 0)
+set(ENERGYPLUS_VERSION_PATCH 1)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "eba93e8e1b")
+set(ENERGYPLUS_BUILD_SHA "bb7ca4f0da")
+# ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
+# from the github releases
+set(ENERGYPLUS_RELEASE_NAME "v9.0.1")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -143,6 +146,7 @@ option(BUILD_TESTING "Build testing targets" OFF)
 
 # Build package
 # Requires: EnergyPlus, Radiance
+# TODO: this option is actually unused...
 option(BUILD_PACKAGE "Build package" OFF)
 
 # Build with OpenSSL support
@@ -374,18 +378,16 @@ endif()
 
 # EnergyPlus
 
-# ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
-# from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v8.9.0-WithIDDFixes")
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH df69477dc6598a3b873bb006b9039a3d)
+    set(ENERGYPLUS_EXPECTED_HASH 7b8b8481a5f261800570de0d86e9c608)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
+    # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH xyz)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 92cdf52bb3a2eff5f6b3c485bdce98b1)
+    set(ENERGYPLUS_EXPECTED_HASH 135e17dd5e4ca355b25bf77b61fc8cf2)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -407,10 +409,11 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH a78e35abe81c7a25b8ac4f7e95307e0f)
+    set(ENERGYPLUS_EXPECTED_HASH 4094c49b908ba2feb3f0b352126ea0ac)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
+    ## TODO: update md5 hash, but not present on GitHub as .zip, only .exe for now at least
     set(ENERGYPLUS_EXPECTED_HASH a2cbd995acd1928a7baa18407bb8e949)
   endif()
   if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
@@ -585,8 +588,8 @@ endif()
 # to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
 # next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20180904.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "65e787705580be7d76393cfc61b225c9")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20181010.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e07e5bd74ab643f7ed9f0e013db8c2d0")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -1534,7 +1537,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_6_0_20180630.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_7_0_20181012.pdf" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../LICENSE.md" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../CHANGELOG.md" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../copyright.txt" DESTINATION .)

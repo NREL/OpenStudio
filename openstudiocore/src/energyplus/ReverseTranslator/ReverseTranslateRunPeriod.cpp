@@ -164,11 +164,19 @@ OptionalModelObject ReverseTranslator::translateRunPeriod( const WorkspaceObject
       runPeriod.setUseWeatherFileSnowInd(true);
     }
   }
-  i = workspaceObject.getInt(openstudio::RunPeriodFields::NumberofTimesRunperiodtobeRepeated);
-  if( i )
-  {
-    runPeriod.setNumTimePeriodRepeats(*i);
+
+  auto beginYear = workspaceObject.getInt(openstudio::RunPeriodFields::BeginYear);
+  auto endYear = workspaceObject.getInt(openstudio::RunPeriodFields::EndYear);
+
+  if ( beginYear ) {
+    auto yd = runPeriod.model().getUniqueModelObject<model::YearDescription>();
+    yd.setCalendarYear(beginYear.get());
+
+    if ( endYear ) {
+      runPeriod.setNumTimePeriodRepeats(endYear.get() - beginYear.get());
+    }
   }
+
   result = runPeriod;
   return result;
 }
