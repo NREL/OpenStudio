@@ -588,8 +588,8 @@ endif()
 # to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
 # next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20181004.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "4e9295cc8bc18971e83a32b57f303182")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20181010.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e07e5bd74ab643f7ed9f0e013db8c2d0")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -1537,7 +1537,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_6_0_20180630.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_7_0_20181012.pdf" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../LICENSE.md" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../CHANGELOG.md" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../copyright.txt" DESTINATION .)
