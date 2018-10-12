@@ -149,7 +149,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCell(Generat
     if(boost::optional<IdfObject> _sc = translateAndMapModelObject(*sc)) {
       fc.setString(Generator_FuelCellFields::StackCoolerName, _sc->nameString());
     } else {
-      LOG(Error, "In Fuel cell " << modelObject.nameString() << ", the Generator:FuelCell:StackCooler couldn't be translated when it is required in E+");
+      LOG(Warn, "In Fuel cell " << modelObject.nameString() << ", the Generator:FuelCell:StackCooler is set but couldn't be translated (note: it's optional in E+)");
     }
   }
 
