@@ -8,6 +8,7 @@ path = File.join(File.dirname(__FILE__), '../../openstudiocore/**/*.osm')
 
 Dir.glob(path) do |model_path|
 
+  puts "Starting for '#{model_path}'"
   if /sketchup_plugin\/resources\/templates/.match(model_path)
     # do this
   elsif /openstudio_app\/Resources/.match(model_path)
