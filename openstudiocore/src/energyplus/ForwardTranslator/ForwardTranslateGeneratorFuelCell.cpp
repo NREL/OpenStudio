@@ -86,18 +86,24 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCell(Generat
   GeneratorFuelCellPowerModule pm = modelObject.powerModule();
   if (boost::optional<IdfObject> _pm = translateAndMapModelObject(pm)) {
     fc.setString(Generator_FuelCellFields::PowerModuleName, _pm->nameString());
+  } else {
+    LOG(Error, "In Fuel cell " << modelObject.nameString() << ", the Generator:FuelCell:PowerModule couldn't be translated when it is required in E+");
   }
 
   //AirSupplyName
   GeneratorFuelCellAirSupply as = modelObject.airSupply();
-  if (boost::optional<IdfObject> _as = translateAndMapModelObject(pm)) {
+  if (boost::optional<IdfObject> _as = translateAndMapModelObject(as)) {
     fc.setString(Generator_FuelCellFields::AirSupplyName, _as->nameString());
+  } else {
+    LOG(Error, "In Fuel cell " << modelObject.nameString() << ", the Generator:FuelCell:AirSupply couldn't be translated when it is required in E+");
   }
 
   //FuelSupplyName
   GeneratorFuelSupply fs = modelObject.fuelSupply();
   if (boost::optional<IdfObject> _fs = translateAndMapModelObject(fs)) {
     fc.setString(Generator_FuelCellFields::FuelSupplyName, _fs->nameString());
+  } else {
+    LOG(Error, "In Fuel cell " << modelObject.nameString() << ", the Generator:FuelSupply  couldn't be translated when it is required in E+");
   }
 
   //WaterSupplyName
@@ -109,24 +115,32 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCell(Generat
   GeneratorFuelCellAuxiliaryHeater ah = modelObject.auxiliaryHeater();
   if (boost::optional<IdfObject> _ah = translateAndMapModelObject(ah)) {
     fc.setString(Generator_FuelCellFields::AuxiliaryHeaterName, _ah->nameString());
+  } else {
+    LOG(Error, "In Fuel cell " << modelObject.nameString() << ", the Generator:FuelCell:AuxiliaryHeater couldn't be translated when it is required in E+");
   }
 
   //HeatExchangerName
   GeneratorFuelCellExhaustGasToWaterHeatExchanger he = modelObject.heatExchanger();
   if (boost::optional<IdfObject> _he = translateAndMapModelObject(he)) {
     fc.setString(Generator_FuelCellFields::HeatExchangerName, _he->nameString());
+  } else {
+    LOG(Error, "In Fuel cell " << modelObject.nameString() << ", the Generator:FuelCell:ExhaustGasToWaterHeatExchanger couldn't be translated when it is required in E+");
   }
 
   //ElectricalStorageName
   GeneratorFuelCellElectricalStorage es = modelObject.electricalStorage();
   if (boost::optional<IdfObject> _es = translateAndMapModelObject(es)) {
     fc.setString(Generator_FuelCellFields::ElectricalStorageName, _es->nameString());
+  } else {
+    LOG(Error, "In Fuel cell " << modelObject.nameString() << ", the Generator:FuelCell:ElectricalStorage couldn't be translated when it is required in E+");
   }
 
   //InverterName
   GeneratorFuelCellInverter inv = modelObject.inverter();
   if (boost::optional<IdfObject> _inv = translateAndMapModelObject(inv)) {
     fc.setString(Generator_FuelCellFields::InverterName, _inv->nameString());
+  } else {
+    LOG(Error, "In Fuel cell " << modelObject.nameString() << ", the Generator:FuelCell:Inverter couldn't be translated when it is required in E+");
   }
 
   //StackCoolerName: optional
@@ -134,6 +148,8 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCell(Generat
   if (sc) {
     if(boost::optional<IdfObject> _sc = translateAndMapModelObject(*sc)) {
       fc.setString(Generator_FuelCellFields::StackCoolerName, _sc->nameString());
+    } else {
+      LOG(Error, "In Fuel cell " << modelObject.nameString() << ", the Generator:FuelCell:StackCooler couldn't be translated when it is required in E+");
     }
   }
 
