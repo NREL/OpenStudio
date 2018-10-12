@@ -44,6 +44,7 @@ class People;
 class Lights;
 class Luminaire;
 class ElectricEquipment;
+class ElectricEquipmentITEAirCooled;
 class GasEquipment;
 class HotWaterEquipment;
 class SteamEquipment;
@@ -164,6 +165,9 @@ namespace detail {
 
     /// Returns all ElectricEquipment in this space type.
     std::vector<ElectricEquipment> electricEquipment() const;
+
+    /// Returns all ElectricEquipmentITEAirCooled in this space type.
+    std::vector<ElectricEquipmentITEAirCooled> electricEquipmentITEAirCooled() const;
 
     /// Returns all GasEquipment in this space type.
     std::vector<GasEquipment> gasEquipment() const;
@@ -316,6 +320,11 @@ namespace detail {
 
     double getElectricEquipmentPowerPerPerson(double floorArea, double numPeople) const;
 
+    /** Returns the total IT equipment power per space floor area, if it can be calculated
+    *  directly from the underlying electricEquipmentITEAirCooled() data (without knowing floorArea and
+    *  numPeople). */
+    boost::optional<double> electricEquipmentITEAirCooledPowerPerFloorArea() const;
+
     /** Returns the total gas equipment power per space floor area, if it can be calculated
      *  directly from the underlying gasEquipment() data (without knowing floorArea and
      *  numPeople). */
@@ -372,6 +381,7 @@ namespace detail {
     std::vector<ModelObject> lightsAsModelObjects() const;
     std::vector<ModelObject> luminairesAsModelObjects() const;
     std::vector<ModelObject> electricEquipmentAsModelObjects() const;
+    std::vector<ModelObject> electricEquipmentITEAirCooledAsModelObjects() const;
     std::vector<ModelObject> gasEquipmentAsModelObjects() const;
     std::vector<ModelObject> hotWaterEquipmentAsModelObjects() const;
     std::vector<ModelObject> steamEquipmentAsModelObjects() const;
