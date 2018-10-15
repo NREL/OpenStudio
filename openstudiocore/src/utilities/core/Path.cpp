@@ -32,32 +32,49 @@
 
 #include <QDir>
 
-namespace openstudio {
+#include <iostream>
+#include <string>
 
 #ifdef Q_OS_WIN
-
-#include <windows.h>
-
-QString longPathName(const QString& path)
-{
-  if (path.isEmpty())
-    return QString();
-  QString maybeShort = QDir::toNativeSeparators(path);
-  QByteArray shortName = maybeShort.toLocal8Bit();
-  char longPath[MAX_PATH];
-  int err = GetLongPathName(shortName.constData(), longPath, MAX_PATH);
-  (void)err;
-  return QDir::fromNativeSeparators(QString::fromLocal8Bit(longPath));
-}
-
-#else
-
-QString longPathName(const QString& path)
-{
-  return path;
-}
-
+#include <locale>
+#include <codecvt>
 #endif
+
+namespace openstudio {
+
+//#ifdef Q_OS_WIN
+//
+//#include <windows.h>
+//
+//QString longPathName(const QString& path)
+//{
+//  if (path.isEmpty())
+//    return QString();
+//  QString maybeShort = QDir::toNativeSeparators(path);
+//  QByteArray shortName = maybeShort.toLocal8Bit();
+//  char longPath[MAX_PATH];
+//  int err = GetLongPathName(shortName.constData(), longPath, MAX_PATH);
+//  (void)err;
+//  return QDir::fromNativeSeparators(QString::fromLocal8Bit(longPath));
+//}
+//
+//#else
+//
+//QString longPathName(const QString& path)
+//{
+//  return path;
+//}
+//
+//#endif
+
+/*
+  | Class       | Internal      | Platform  |
+  | std::string | UTF-8, char   | All       |
+  | path        | UTF-8, char   | Unix, Mac |
+  | path        | UTF-16, wchar | Windows   |
+  | QString     | UTF-16, wchar | All       |
+
+*/
 
 
 // allow path to be written to cout on Windows
@@ -70,8 +87,11 @@ std::ostream& operator<<(std::ostream& os, const path& p)
 /** QString to path*/
 path toPath(const QString& q)
 {
-  std::string s = toString(q);
-  return path(s);
+  #ifdef Q_OS_WIN
+    return path(q.toStdWString());
+  #endif
+
+  return path(q.toStdString());
 }
 
 /** path to a temporary directory. */
@@ -83,13 +103,22 @@ path tempDir()
 /** path to UTF-8 encoding. */
 std::string toString(const path& p)
 {
+  #ifdef Q_OS_WIN
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>,wchar_t> converter;
+    std::string s = converter.to_bytes(p.generic_wstring());
+    return s;
+  #endif
+
   return p.generic_string();
 }
 
 /** path to QString. */
 QString toQString(const path& p)
 {
-  return toQString(toString(p));
+  #ifdef Q_OS_WIN
+    return QString::fromStdWString(p.generic_wstring());
+  #endif
+  return QString::fromUtf8(p.generic_string().c_str());
 }
 
 /** UTF-8 encoded char* to path*/
@@ -101,7 +130,14 @@ path toPath(const char* s)
 /** UTF-8 encoded std::string to path*/
 path toPath(const std::string& s)
 {
-  return toPath(toQString(s));
+  #ifdef Q_OS_WIN
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>,wchar_t> converter;
+    std::wstring wstr = converter.from_bytes(s);
+    return path(wstr);
+  #endif
+
+  // else
+  return path(s);
 }
 
 } // openstudio

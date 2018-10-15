@@ -75,6 +75,7 @@ namespace gbxml {
   private:
     openstudio::Unit m_temperatureUnit;
     openstudio::Unit m_lengthUnit;
+    double m_nonBaseMultiplier;
     double m_lengthMultiplier;
     openstudio::Unit m_areaUnit;
     openstudio::Unit m_volumeUnit;
@@ -102,6 +103,7 @@ namespace gbxml {
     boost::optional<openstudio::model::ModelObject> translateSpace(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateSubSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::Surface& surface);
+    boost::optional<openstudio::model::ModelObject> translateCADObjectId(const QDomElement& element, const QDomDocument& doc, openstudio::model::ModelObject& modelObject);
 
     StringStreamLogSink m_logSink;
 

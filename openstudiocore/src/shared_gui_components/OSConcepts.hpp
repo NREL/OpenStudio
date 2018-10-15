@@ -422,9 +422,10 @@ class CheckBoxConceptBoolReturn : public BaseConcept
 {
 public:
 
+  /* This concept will allow click focus IIF Heading is passed with t_showColumnButton=true */
   CheckBoxConceptBoolReturn(const Heading &t_heading,
-    const std::string & t_tooltip)
-    : BaseConcept(t_heading),
+                            const std::string & t_tooltip)
+    : BaseConcept(t_heading, t_heading.showButton() ),
     m_tooltip(t_tooltip)
   {
   }
@@ -541,8 +542,23 @@ class RequiredChoiceConceptImpl : public ChoiceConcept {
       // Oops, we forgot to update the choices
       this->choices();
     }
-    OS_ASSERT(m_choicesMap.find(result) != m_choicesMap.end());
-    return result;
+
+    // If we can find the result in choicesMap, just use that
+    if (m_choicesMap.find(result) != m_choicesMap.end()) {
+      return result;
+    // Otherwise, it's likely a casing problem
+    } else {
+      for (auto const& x: m_choicesMap) {
+        // Case insensitive match
+        if (openstudio::istringEqual(result, x.first)) {
+          // Return it with proper casing
+          return x.first;
+        }
+      }
+      // We shouldn't get here...
+      OS_ASSERT(false);
+      return "";
+    }
   }
 
   virtual bool set(std::string value) override {
@@ -653,7 +669,11 @@ class OptionalChoiceConceptImpl : public ChoiceConcept {
           // Oops, we forgot to update the choices
           this->choices();
         }
-        OS_ASSERT(m_choicesMap.find(result) != m_choicesMap.end());
+        // If editable, the user can add their own entry, so we don't necesarilly except to find it
+        // If not editable, it should be found in the list of choices
+        if( !this->editable() ) {
+          OS_ASSERT(m_choicesMap.find(result) != m_choicesMap.end());
+        }
       }
     }
     return result;

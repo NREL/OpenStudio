@@ -1,7 +1,7 @@
 
 OS:Version,
-  {35963c26-3592-4982-b85b-c5e70a02f950}, !- Handle
-  2.6.0;                                  !- Version Identifier
+  {3944b8bd-ed06-4f19-9d5c-f74bb26838f7}, !- Handle
+  2.7.0;                                  !- Version Identifier
 
 ! Always OnOff Discrete Schedule Type Limits
 OS:ScheduleTypeLimits,
@@ -655,7 +655,11 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   0,                                      !- Drift Loss Fraction
   0,                                      !- Blowdown Concentration Ratio
   ,                                       !- Effectiveness Flow Ratio Modifier Curve Name
-  0.1;                                    !- Water Pump Power Sizing Factor {W/(m3/s)}
+  0.1,                                    !- Water Pump Power Sizing Factor {W/(m3/s)}
+  ,                                       !- Water Pump Power Modifier Curve Name
+  -99,                                    !- Evaporative Operation Minimum Drybulb Temperature
+  99,                                     !- Evaporative Operation Maximum Limit Wetbulb Temperature
+  99;                                     !- Evaporative Operation Maximum Limit Drybulb Temperature
 
 OS:AirTerminal:DualDuct:VAV,
   {1a944c0e-23c0-4649-bb65-af3745a1927f}, !- Handle
@@ -866,13 +870,27 @@ OS:EvaporativeFluidCooler:TwoSpeed,
   3,                                      !- Blowdown Concentration Ratio
   ;                                       !- Blowdown Makeup Water Usage Schedule Name
 
-OS:AirTerminal:SingleDuct:Uncontrolled,
-  {b883cca7-f436-48ce-ad23-7e8310c7a85d}, ! Handle
-  Diffuser,                               ! Name
-  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
-  ,                                       ! Inlet Air Node Name
-  ,                                       ! Zone Supply Air Node Name
-  AutoSize;                               ! Maximum Air Flow Rate {m3/s}
+OS:Node,
+  {77cfc820-a7bc-45dc-a913-c82a49be522e}, !- Handle
+  Diffuser Inlet Node,                    !- Name
+  ,                                       !- Inlet Port
+  {0869edf9-8014-4a20-a418-78e3091922f3}; !- Outlet Port
+
+OS:Connection,
+  {0869edf9-8014-4a20-a418-78e3091922f3}, !- Handle
+  {ea3fb0c0-a5eb-4070-b454-808e00c03682}, !- Name
+  {77cfc820-a7bc-45dc-a913-c82a49be522e}, !- Source Object
+  3,                                      !- Outlet Port
+  {b883cca7-f436-48ce-ad23-7e8310c7a85d}, !- Target Object
+  3;                                      !- Inlet Port
+
+OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat,
+  {b883cca7-f436-48ce-ad23-7e8310c7a85d}, !- Handle
+  Diffuser,                               !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  {0869edf9-8014-4a20-a418-78e3091922f3}, !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  AutoSize;                               !- Maximum Air Flow Rate {m3/s}
 
 OS:AirTerminal:SingleDuct:VAV:NoReheat,
   {bede16a8-c558-4028-9110-70994233f6f9}, !- Handle
@@ -1055,7 +1073,7 @@ OS:Fan:ConstantVolume,
   {95ce84e5-c2ba-4833-a75d-3c89720f76d4}, !- Handle
   Parallel PIU Gas Rht Fan,               !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   ,                                       !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -1100,7 +1118,7 @@ OS:Fan:ConstantVolume,
   {a638e8d6-0db3-43dd-b160-aaae12a7abbc}, !- Handle
   Parallel PIU HW Rht Fan,                !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   ,                                       !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -1131,7 +1149,7 @@ OS:Fan:ConstantVolume,
   {6bab1791-64db-4620-aff4-f0682054ce4f}, !- Handle
   Series PIU Fan,                         !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   ,                                       !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -2784,7 +2802,7 @@ OS:Fan:OnOff,
   {3c032b65-9422-46d8-9b1e-658967e53026}, !- Handle
   HPWH Stratified - Wrapped Cond - Fan,   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -2927,7 +2945,7 @@ OS:Fan:OnOff,
   {d609f359-7cae-452b-ad72-7a7d35e5408c}, !- Handle
   HPWH Fan,                               !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -3109,7 +3127,7 @@ OS:Fan:ConstantVolume,
   {d81187b2-ccea-4a08-a9ca-3aabbb4ee2fb}, !- Handle
   CV Unit Heater Fan,                     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   ,                                       !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -3122,7 +3140,7 @@ OS:Fan:VariableVolume,
   {14f0828b-9d6d-4e07-abbf-ba58c5265285}, !- Handle
   VAV Unit Heater Fan,                    !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6045,                                 !- Fan Efficiency
+  0.6045,                                 !- Fan Total Efficiency
   1017.592,                               !- Pressure Rise {Pa}
   Autosize,                               !- Maximum Flow Rate {m3/s}
   FixedFlowRate,                          !- Fan Power Minimum Flow Rate Input Method
@@ -3273,7 +3291,7 @@ OS:Fan:OnOff,
   {182c837c-0413-4a6e-8328-7adc0c5d00d6}, !- Handle
   Wtr-to-Air HP Elec Backup Fan On Off,   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6045,                                 !- Fan Efficiency
+  0.6045,                                 !- Fan Total Efficiency
   250,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -3372,7 +3390,7 @@ OS:Fan:OnOff,
   {686ec71a-e2b4-4e6c-bb5a-b8245ecd33e4}, !- Handle
   Wtr-to-Air HP Gas Backup Fan On Off,    !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6045,                                 !- Fan Efficiency
+  0.6045,                                 !- Fan Total Efficiency
   250,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -3440,7 +3458,7 @@ OS:Fan:OnOff,
   {c947bbf7-a7f6-473b-af51-f5709ab08feb}, !- Handle
   Wtr-to-Air HP HW Backup Fan On Off,     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6045,                                 !- Fan Efficiency
+  0.6045,                                 !- Fan Total Efficiency
   250,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -5391,7 +5409,7 @@ OS:Fan:OnOff,
   {de259b99-d14c-4c97-a714-fc200c52027a}, !- Handle
   VRF Zone Terminal Fan,                  !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -5433,7 +5451,7 @@ OS:Fan:ZoneExhaust,
   {2d1f9bb9-ce2d-4f23-8f07-8b93615770b1}, !- Handle
   Zone Exhaust Fan,                       !- Name
   ,                                       !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   0,                                      !- Pressure Rise {Pa}
   ,                                       !- Maximum Flow Rate {m3/s}
   ,                                       !- Air Inlet Node Name
@@ -5499,7 +5517,7 @@ OS:Fan:OnOff,
   {2e28adfb-474c-4f0c-84c5-88884963b30e}, !- Handle
   Fan On Off 5,                           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -5754,7 +5772,7 @@ OS:Fan:OnOff,
   {9be5fc48-23e1-43f4-9f73-8b838bf3ab13}, !- Handle
   Fan On Off 12,                          !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -6039,7 +6057,7 @@ OS:Fan:OnOff,
   {92d46b63-bee9-4a68-9b87-0cf64c3c6db6}, !- Handle
   Fan On Off 10,                          !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -6264,7 +6282,7 @@ OS:Fan:OnOff,
   {d89faefb-347b-43f3-a961-af51209d1bda}, !- Handle
   Fan On Off 13,                          !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -6485,7 +6503,7 @@ OS:Fan:OnOff,
   {e803e540-d848-409c-9bad-0c0dc9c7b50a}, !- Handle
   Fan On Off 14,                          !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -6676,7 +6694,7 @@ OS:Fan:OnOff,
   {705d20c8-7569-40b3-b69d-0ea966344238}, !- Handle
   Fan On Off 9,                           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -6871,7 +6889,7 @@ OS:Fan:VariableVolume,
   {057b7168-bdc2-418a-9961-3bfe683a200e}, !- Handle
   Fan Variable Volume 1,                  !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6045,                                 !- Fan Efficiency
+  0.6045,                                 !- Fan Total Efficiency
   1017.592,                               !- Pressure Rise {Pa}
   Autosize,                               !- Maximum Flow Rate {m3/s}
   FixedFlowRate,                          !- Fan Power Minimum Flow Rate Input Method
@@ -6997,7 +7015,7 @@ OS:Fan:ConstantVolume,
   {0c016d27-85cb-4254-8b85-9a16c4586de5}, !- Handle
   Fan Constant Volume 2,                  !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   ,                                       !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -7115,7 +7133,7 @@ OS:Fan:OnOff,
   {499db098-1af5-4236-8115-51a38ac8163e}, !- Handle
   Fan On Off 7,                           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -7262,7 +7280,7 @@ OS:Fan:OnOff,
   {1fb3620b-be0e-4bf3-bdab-3320a2807269}, !- Handle
   Fan On Off 4,                           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -7474,7 +7492,7 @@ OS:Fan:OnOff,
   {69bcd821-df0e-4a8c-bced-33315e849e64}, !- Handle
   Fan On Off 8,                           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -7656,7 +7674,7 @@ OS:Fan:OnOff,
   {37e35cd8-c016-4d24-80db-b070cc5a1999}, !- Handle
   Fan On Off 6,                           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -7750,7 +7768,7 @@ OS:Fan:OnOff,
   {9be0b11b-c585-4514-aa5a-9cb276e583c5}, !- Handle
   Fan On Off 11,                          !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -8158,7 +8176,7 @@ OS:Fan:ConstantVolume,
   {5893df9a-65df-4686-bfae-fb4564bef2b9}, !- Handle
   VAV Changeover Bypass CV Fan,           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   ,                                       !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -8213,7 +8231,7 @@ OS:Fan:ConstantVolume,
   {49a478a7-2b88-4566-a68c-568f31353af8}, !- Handle
   Fan Coil with Const Fan Var Fluid Flow - Fan, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   ,                                       !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -8289,7 +8307,7 @@ OS:Fan:OnOff,
   {d5c825bb-4747-40b1-a6cc-c85df16d7718}, !- Handle
   Fan Coil with Cycling Fan - Fan,        !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -8390,7 +8408,7 @@ OS:Fan:VariableVolume,
   {e0cfb885-12c5-4d01-b86f-6514d92205f9}, !- Handle
   Fan Coil with Var Fan Var Fluid Flow - Fan, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6045,                                 !- Fan Efficiency
+  0.6045,                                 !- Fan Total Efficiency
   1017.592,                               !- Pressure Rise {Pa}
   Autosize,                               !- Maximum Flow Rate {m3/s}
   FixedFlowRate,                          !- Fan Power Minimum Flow Rate Input Method
@@ -8474,7 +8492,7 @@ OS:Fan:VariableVolume,
   {b5c75ce0-7c70-4dac-bacb-0c1a5a1a5dab}, !- Handle
   Fan Coil with Var Fan Const Fluid Flow - Fan, !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6045,                                 !- Fan Efficiency
+  0.6045,                                 !- Fan Total Efficiency
   1017.592,                               !- Pressure Rise {Pa}
   Autosize,                               !- Maximum Flow Rate {m3/s}
   FixedFlowRate,                          !- Fan Power Minimum Flow Rate Input Method
@@ -8573,7 +8591,7 @@ OS:Fan:OnOff,
   {0591f811-25a9-4262-b630-cd4de5473511}, !- Handle
   Cycling HW PTAC Fan,                    !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   250,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -8745,7 +8763,7 @@ OS:Fan:OnOff,
   {09e11b87-7cd6-49eb-a230-4116b8ae969e}, !- Handle
   Cycling Gas PTAC Fan,                   !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   250,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -8904,7 +8922,7 @@ OS:Fan:OnOff,
   {1ba4b960-da18-4801-8105-30ec0f154de4}, !- Handle
   Cycling Elec PTAC Fan,                  !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   250,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -9059,7 +9077,7 @@ OS:Fan:ConstantVolume,
   {a8ca4d86-300f-4a29-8b9c-fb947f1c7332}, !- Handle
   Gas PTAC Fan,                           !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   250,                                    !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -9193,7 +9211,7 @@ OS:Fan:ConstantVolume,
   {fc6a08c7-e44c-46da-9007-101277535b08}, !- Handle
   Elec PTAC Fan,                          !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   250,                                    !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -10097,7 +10115,7 @@ OS:Fan:OnOff,
   {d3ca499f-ae74-4f5d-831d-8464be067dcd}, !- Handle
   ERV Supply Fan,                         !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -10135,7 +10153,7 @@ OS:Fan:OnOff,
   {39be15fa-c4bd-41c2-a950-a8d2ebacd3d6}, !- Handle
   ERV Exhaust Fan,                        !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -10194,7 +10212,7 @@ OS:Fan:ConstantVolume,
   {a6eb7086-f867-4f03-bf3e-5436a8e8bfb9}, !- Handle
   Fan Constant Volume,                    !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   ,                                       !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -10246,7 +10264,7 @@ OS:Fan:ConstantVolume,
   {7bd8c0d0-d89c-401a-bfe2-34197acde9b9}, !- Handle
   Fan Constant Volume 3,                  !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   ,                                       !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -10298,7 +10316,7 @@ OS:Fan:ConstantVolume,
   {53473293-5b6b-4350-ad43-4513bb2f6e87}, !- Handle
   Fan Constant Volume 1,                  !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   ,                                       !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -10347,7 +10365,7 @@ OS:Fan:OnOff,
   {9403933f-2f7f-4c08-9cfc-4a2e4686d6dd}, !- Handle
   Fan On Off 1,                           !- Name
   ,                                       !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -10424,7 +10442,7 @@ OS:Fan:OnOff,
   {1de181b7-cdad-45a4-b128-ca4ad5c4bda7}, !- Handle
   Fan On Off 2,                           !- Name
   ,                                       !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -10501,7 +10519,7 @@ OS:Fan:OnOff,
   {b1bd7d0d-c9f6-43b3-b9ee-e526307bc075}, !- Handle
   Fan On Off 3,                           !- Name
   ,                                       !- Availability Schedule Name
-  0.6,                                    !- Fan Efficiency
+  0.6,                                    !- Fan Total Efficiency
   300,                                    !- Pressure Rise {Pa}
   autosize,                               !- Maximum Flow Rate {m3/s}
   0.8,                                    !- Motor Efficiency
@@ -10595,8 +10613,8 @@ OS:ZoneHVAC:UnitVentilator,
 OS:Fan:VariableVolume,
   {3a5c4d7d-b0cc-4ab2-a4d7-3760f8f8c23d}, !- Handle
   Fan Variable Volume 4,                  !- Name
-  ,                                       !- Availability Schedule Name
-  0.6045,                                 !- Fan Efficiency
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.6045,                                 !- Fan Total Efficiency
   1017.592,                               !- Pressure Rise {Pa}
   Autosize,                               !- Maximum Flow Rate {m3/s}
   FixedFlowRate,                          !- Fan Power Minimum Flow Rate Input Method
@@ -10655,8 +10673,8 @@ OS:ZoneHVAC:UnitVentilator,
 OS:Fan:VariableVolume,
   {bad53ddc-aa16-4015-892c-f5ff046eee38}, !- Handle
   Fan Variable Volume 2,                  !- Name
-  ,                                       !- Availability Schedule Name
-  0.6045,                                 !- Fan Efficiency
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.6045,                                 !- Fan Total Efficiency
   1017.592,                               !- Pressure Rise {Pa}
   Autosize,                               !- Maximum Flow Rate {m3/s}
   FixedFlowRate,                          !- Fan Power Minimum Flow Rate Input Method
@@ -10715,8 +10733,8 @@ OS:ZoneHVAC:UnitVentilator,
 OS:Fan:VariableVolume,
   {a225515b-f5e9-4836-8df4-889357ca2700}, !- Handle
   Fan Variable Volume 3,                  !- Name
-  ,                                       !- Availability Schedule Name
-  0.6045,                                 !- Fan Efficiency
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  0.6045,                                 !- Fan Total Efficiency
   1017.592,                               !- Pressure Rise {Pa}
   Autosize,                               !- Maximum Flow Rate {m3/s}
   FixedFlowRate,                          !- Fan Power Minimum Flow Rate Input Method

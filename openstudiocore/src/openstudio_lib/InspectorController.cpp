@@ -136,7 +136,7 @@ void InspectorController::addBranchForZone(model::ThermalZone & zone)
   {
     model::Model model = zone.model();
 
-    airLoop->addBranchForZone(zone,boost::none);
+    airLoop->multiAddBranchForZone(zone);
   }
 }
 

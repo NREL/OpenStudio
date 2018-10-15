@@ -76,8 +76,10 @@ Workspace testWorkspace(const CoordinateSystem& system, const CoordinateSystem& 
     ,                        !- Name \n\
     1,                       !- Begin Month \n\
     1,                       !- Begin Day of Month \n\
+    ,                        !- Begin Year \n\
     1,                       !- End Month \n\
     1,                       !- End Day of Month \n\
+    ,                        !- End Year \n\
     Tuesday,                 !- Day of Week for Start Day \n\
     Yes,                     !- Use Weather File Holidays and Special Days \n\
     Yes,                     !- Use Weather File Daylight Saving Period \n\

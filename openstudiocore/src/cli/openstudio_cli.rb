@@ -144,6 +144,9 @@ class Specification < BasicSpecification
 end
 end
 
+# have to do some forward declaration and pre-require to get around autoload cycles
+#module Bundler
+#end
 
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
@@ -365,6 +368,58 @@ def parse_main_args(main_args)
     ENV['GEM_HOME'] = new_home
   end
 
+  # Operate on the bundle option to set BUNDLE_GEMFILE
+  use_bundler = false
+  if main_args.include? '--bundle'
+    option_index = main_args.index '--bundle'
+    path_index = option_index + 1
+    gemfile = main_args[path_index]
+    main_args.slice! path_index
+    main_args.slice! main_args.index '--bundle'
+
+    $logger.info "Setting BUNDLE_GEMFILE to #{gemfile}"
+    ENV['BUNDLE_GEMFILE'] = gemfile
+    use_bundler = true
+    
+  elsif ENV['BUNDLE_GEMFILE']
+    # no argument but env var is set
+    $logger.info "ENV['BUNDLE_GEMFILE'] set to '#{ENV['BUNDLE_GEMFILE']}'"
+    use_bundler = true
+  
+  end  
+  
+  if main_args.include? '--bundle_path'
+    option_index = main_args.index '--bundle_path'
+    path_index = option_index + 1
+    bundle_path = main_args[path_index]
+    main_args.slice! path_index
+    main_args.slice! main_args.index '--bundle_path'
+
+    $logger.info "Setting BUNDLE_PATH to #{bundle_path}"
+    ENV['BUNDLE_PATH'] = bundle_path
+  
+  elsif ENV['BUNDLE_PATH']
+    # no argument but env var is set
+    $logger.info "ENV['BUNDLE_PATH'] set to '#{ENV['BUNDLE_PATH']}'"
+  
+  elsif use_bundler
+    # bundle was requested but bundle_path was not provided
+    $logger.warn "Bundle activated but ENV['BUNDLE_PATH'] is not set"
+    
+    $logger.info "Setting BUNDLE_PATH to ':/ruby/2.2.0/'"
+    ENV['BUNDLE_PATH'] = ':/ruby/2.2.0/'
+    
+    # match configuration in build_openstudio_gems
+    $logger.info "Setting BUNDLE_WITHOUT to 'test'"
+    ENV['BUNDLE_WITHOUT'] = 'test'
+    
+    # ignore any local config on disk
+    #DLM: this would be correct if the bundle was created here
+    #it would not be correct if the bundle was transfered from another computer
+    #ENV['BUNDLE_IGNORE_CONFIG'] = 'true'
+  
+  end  
+  
   Gem.paths.path << ':/ruby/2.2.0/gems/'
   Gem.paths.path << ':/ruby/2.2.0/bundler/gems/'
 
@@ -404,122 +459,137 @@ def parse_main_args(main_args)
     # EmbeddedScripting not available
   end
 
-  # activate bundler
-  #Gem::Specification.each do |spec|
-  #  if spec.gem_dir.chars.first == ':'
-  #    if spec.name == 'bundler'
-  #      # DLM would like to have bundler support in the cli
-  #      #spec.activate
-  #      
-  #      # DLM: for now remove this gem
-  #      Gem::Specification.remove_spec(spec)
-  #    end
-  #  end
-  #end
-
-  # require bundler
-  # have to do some forward declaration and pre-require to get around autoload cycles
-  #module Bundler
-  #end
-  #require 'bundler/gem_helpers'
-  #require 'bundler/errors'
-  #require 'bundler/plugin'
-  #require 'bundler/source'
-  #require 'bundler/definition'
-  #require 'bundler/dsl'
-  #require 'bundler/dsl'
-  #require 'bundler'
-
-  #begin
-  #  # activate bundled gems
-  #  # bundler will look in:
-  #  # 1) ENV["BUNDLE_GEMFILE"]
-  #  # 2) find_file("Gemfile", "gems.rb")
-  #  Bundler.setup
-  #  Bundler.require
-  #rescue Bundler::BundlerError => e
-  #  puts "#{e.message}"
-  #  #puts e.backtrace.join("\n")
-  #  if e.is_a?(Bundler::GemNotFound)
-  #    puts "Run `bundle install` to install missing gems."
-  #  elsif e.is_a?(Bundler::ProductionError)
-  #
-  #  else
-  #
-  #  end
-  #  exit e.status_code
-  #end
-
-  # DLM: test code, useful for testing from command line using system ruby
-  #Gem::Specification.each do |spec|
-  #  if /openstudio/.match(spec.name) 
-  #    original_embedded_gems[spec.name] = spec
-  #  end
-  #end
-
-  # find final set of embedded gems that are also found on disk with equal or higher version but compatible major version
-  final_embedded_gems = original_embedded_gems.clone
+  # activate or remove bundler
   Gem::Specification.each do |spec|
-    current_embedded_gem = final_embedded_gems[spec.name]
-    
-    # not an embedded gem
-    next if current_embedded_gem.nil?
-    
-    if spec.version > current_embedded_gem.version
-      # only allow higher versions with compatible major version
-      if spec.version.to_s.split('.').first == current_embedded_gem.version.to_s.split('.').first
-        $logger.debug "Found system gem #{spec.name} #{spec.version}, overrides embedded gem"
-        final_embedded_gems[spec.name] = spec
+    if spec.gem_dir.chars.first == ':'
+      if spec.name == 'bundler'
+        if use_bundler
+          spec.activate
+        else
+          # DLM: don't remove, used by Resolver
+          #Gem::Specification.remove_spec(spec)
+        end
       end
     end
   end
   
-  # get a list of all the embedded gems and their dependencies 
-  dependencies = []
-  final_embedded_gems.each_value do |spec|
-    #$logger.debug "Accumulating dependencies for #{spec.name} #{spec.version}"
-    dependencies << Gem::Dependency.new(spec.name)
-    dependencies.concat(spec.runtime_dependencies)
-  end
-  #dependencies.each {|d| $logger.debug "Found dependency #{d}"}
+  if use_bundler
+  
+    current_dir = Dir.pwd
+  
+    # require bundler
+    # have to do some forward declaration and pre-require to get around autoload cycles
+    require 'bundler/errors'
+    #require 'bundler/environment_preserver'
+    require 'bundler/plugin'
+    #require 'bundler/rubygems_ext'
+    require 'bundler/rubygems_integration'
+    require 'bundler/version'
+    require 'bundler/ruby_version'
+    #require 'bundler/constants'
+    #require 'bundler/current_ruby'  
+    require 'bundler/gem_helpers'
+    #require 'bundler/plugin'
+    require 'bundler/source'
+    require 'bundler/definition'
+    require 'bundler/dsl'
+    require 'bundler'
 
-  # resolve dependencies
-  activation_errors = false
-  original_load_path = $:.clone
-  resolver = Gem::Resolver.for_current_gems(dependencies)
-  resolver.resolve.each do |request|
-    do_activate = true
-    spec = request.spec
+    begin
+      # activate bundled gems
+      # bundler will look in:
+      # 1) ENV["BUNDLE_GEMFILE"]
+      # 2) find_file("Gemfile", "gems.rb")
+      #require 'bundler/setup'
 
-    # check if this is one of our embedded gems
-    if final_embedded_gems[spec.name]
+      Bundler.setup
+      #Bundler.require
+    #rescue Bundler::BundlerError => e
+    
+      #$logger.info e.backtrace.join("\n")
+      #$logger.error "Bundler #{e.class}: Use `bundle install` to install missing gems"
+      #exit e.status_code
 
-      # check if gem can be loaded from RUBYLIB, this supports developer use case
-      original_load_path.each do |lp|
-        if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
-          $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
-          Gem::Specification.remove_spec(spec)
-          do_activate = false
-          break
+    ensure
+    
+      Dir.chdir(current_dir)
+    end
+
+  else 
+    # not using_bundler
+    
+    # DLM: test code, useful for testing from command line using system ruby
+    #Gem::Specification.each do |spec|
+    #  if /openstudio/.match(spec.name) 
+    #    original_embedded_gems[spec.name] = spec
+    #  end
+    #end
+
+    # find final set of embedded gems that are also found on disk with equal or higher version but compatible major version
+    final_embedded_gems = original_embedded_gems.clone
+    Gem::Specification.each do |spec|
+      current_embedded_gem = final_embedded_gems[spec.name]
+      
+      # not an embedded gem
+      next if current_embedded_gem.nil?
+      
+      if spec.version > current_embedded_gem.version
+        # only allow higher versions with compatible major version
+        if spec.version.to_s.split('.').first == current_embedded_gem.version.to_s.split('.').first
+          $logger.debug "Found system gem #{spec.name} #{spec.version}, overrides embedded gem"
+          final_embedded_gems[spec.name] = spec
         end
       end
     end
     
-    if do_activate
-      $logger.debug "Activating gem #{spec.spec_file}"
-      begin
-        spec.activate
-      rescue Gem::LoadError
-        $logger.error "Error activating gem #{spec.spec_file}"
-      end
+    # get a list of all the embedded gems and their dependencies 
+    dependencies = []
+    final_embedded_gems.each_value do |spec|
+      #$logger.debug "Accumulating dependencies for #{spec.name} #{spec.version}"
+      dependencies << Gem::Dependency.new(spec.name)
+      dependencies.concat(spec.runtime_dependencies)
     end
-      
-  end
-  
-  if activation_errors
-    return false
-  end
+    #dependencies.each {|d| $logger.debug "Found dependency #{d}"}
 
+    # resolve dependencies
+    activation_errors = false
+    original_load_path = $:.clone
+    resolver = Gem::Resolver.for_current_gems(dependencies)
+    resolver.resolve.each do |request|
+      do_activate = true
+      spec = request.spec
+
+      # check if this is one of our embedded gems
+      if final_embedded_gems[spec.name]
+
+        # check if gem can be loaded from RUBYLIB, this supports developer use case
+        original_load_path.each do |lp|
+          if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
+            $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
+            Gem::Specification.remove_spec(spec)
+            do_activate = false
+            break
+          end
+        end
+      end
+      
+      if do_activate
+        $logger.debug "Activating gem #{spec.spec_file}"
+        begin
+          spec.activate
+        rescue Gem::LoadError
+          $logger.error "Error activating gem #{spec.spec_file}"
+        end
+      end
+        
+    end
+    
+    if activation_errors
+      return false
+    end
+    
+  end # use_bundler
+    
   # Handle -e commands
   remove_indices = []
   $eval_cmds = []
@@ -661,7 +731,7 @@ class CLI
                   '--no-ssl',
                   '-i', '--include',
                   '-e', '--execute',
-                  '--gem_path', '--gem_home']
+                  '--gem_path', '--gem_home', '--bundle', '--bundle_path']
       command_list.each do |key, data|
         # Skip non-primary commands. These only show up in extended
         # help output.
@@ -681,6 +751,8 @@ class CLI
         o.on('-e', '--execute CMD', 'Execute one line of script (may be used more than once). Returns after executing commands.')
         o.on('--gem_path DIR', 'Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)')
         o.on('--gem_home DIR', 'Set GEM_HOME environment variable')
+        o.on('--bundle GEMFILE', 'Use bundler for GEMFILE')
+        o.on('--bundle_path BUNDLE_PATH', 'Use bundler installed gems in BUNDLE_PATH')
         o.separator ''
         o.separator 'Common commands:'
 

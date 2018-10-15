@@ -1,0 +1,4 @@
+source 'http://rubygems.org'
+
+gem 'ffi', '1.9.25'
+gem 'rubyXL', '3.3.29'

@@ -8,6 +8,7 @@
 
 %include <model/Model_Common_Include.i>
 %import <model/ModelCore.i>
+%import <model/ModelSimulation.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
@@ -29,10 +30,11 @@ MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeCooledBeam);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeFourPipeBeam);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeReheat);
+// For backward compat, we also provide the old name (AirTerminalSingleDuctUncontrolled) below
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctInletSideMixer);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctParallelPIUReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctSeriesPIUReheat);
-MODELOBJECT_TEMPLATES(AirTerminalSingleDuctUncontrolled);
+MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeNoReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVHeatAndCoolReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVNoReheat);
@@ -108,7 +110,7 @@ SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctInletSideMixer,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctParallelPIUReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctSeriesPIUReheat,1);
-SWIG_MODELOBJECT(AirTerminalSingleDuctUncontrolled,1);
+SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeNoReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctVAVHeatAndCoolNoReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctVAVHeatAndCoolReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctVAVNoReheat,1);
@@ -172,5 +174,21 @@ SWIG_MODELOBJECT(SolarCollectorIntegralCollectorStorage,1);
 SWIG_MODELOBJECT(TemperingValve,1);
 SWIG_MODELOBJECT(ThermalStorageIceDetailed,1);
 SWIG_MODELOBJECT(WaterUseConnections,1);
+
+#if defined SWIGRUBY
+
+  // Provide alternative name for backwards compatibility between old=AirTerminalSingleDuctUncontrolled and new=AirTerminalSingleDuctConstantVolumeNoReheat
+  %init %{
+    // Alias class name, which allows instantion of new object
+    rb_eval_string("OpenStudio::Model::AirTerminalSingleDuctUncontrolled = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat");
+
+    // Provide get methods
+    rb_eval_string("OpenStudio::IdfObject.class_eval { define_method(:to_AirTerminalSingleDuctUncontrolled) { OpenStudio::Model::toAirTerminalSingleDuctConstantVolumeNoReheat(self); } }");
+    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:getAirTerminalSingleDuctUncontrolled) { |handle| OpenStudio::Model::getAirTerminalSingleDuctConstantVolumeNoReheat(self, handle); } }");
+    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:getAirTerminalSingleDuctUncontrolleds) { OpenStudio::Model::getAirTerminalSingleDuctConstantVolumeNoReheats(self); } }");
+    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:getAirTerminalSingleDuctUncontrolledByName) { |name| OpenStudio::Model::getAirTerminalSingleDuctConstantVolumeNoReheatByName(self, name); } }");
+    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:getAirTerminalSingleDuctUncontrolledsByName) { |name, exactMatch| OpenStudio::Model::getAirTerminalSingleDuctConstantVolumeNoReheatsByName(self, name, exactMatch); } }");
+  %}
+#endif
 
 #endif

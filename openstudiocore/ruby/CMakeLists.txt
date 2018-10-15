@@ -40,7 +40,6 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioUtilitiesUnits
  ruby_OpenStudioModelHVAC
  ruby_OpenStudioModelZoneHVAC
- ruby_OpenStudioModelSetpointManager
  ruby_OpenStudioModelAvailabilityManager
  ruby_OpenStudioModelPlantEquipmentOperationScheme
  ruby_OpenStudioModelStraightComponent
@@ -132,11 +131,17 @@ install(TARGETS openstudio_rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(FILES openstudio.rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(DIRECTORY openstudio DESTINATION Ruby COMPONENT "RubyAPI")
 
-
-
 if( BUILD_PAT )
   if( APPLE )
     install(TARGETS openstudio_rb
+      DESTINATION ParametricAnalysisTool.app/Contents/Resources/OpenStudio/Ruby/
+      COMPONENT PAT
+    )
+    install(FILES openstudio.rb
+      DESTINATION ParametricAnalysisTool.app/Contents/Resources/OpenStudio/Ruby/
+      COMPONENT PAT
+    )
+    install(DIRECTORY openstudio
       DESTINATION ParametricAnalysisTool.app/Contents/Resources/OpenStudio/Ruby/
       COMPONENT PAT
     )

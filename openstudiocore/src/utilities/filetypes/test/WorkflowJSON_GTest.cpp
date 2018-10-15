@@ -939,6 +939,50 @@ TEST(Filetypes, WorkflowStepResult_EscapeCharacters2)
 
 }
 
+TEST(Filetypes, WorkflowStepResult_RepeatedKeys) {
+  WorkflowStepResult result;
+
+  result.addStepValue(WorkflowStepValue("key1", 1.1));
+
+  ASSERT_EQ(1u, result.stepValues().size());
+  EXPECT_EQ("key1", result.stepValues()[0].name());
+  EXPECT_EQ(1.1, result.stepValues()[0].valueAsDouble());
+
+  result.addStepValue(WorkflowStepValue("key2", 2.1));
+
+  ASSERT_EQ(2u, result.stepValues().size());
+  EXPECT_EQ("key1", result.stepValues()[0].name());
+  EXPECT_EQ(1.1, result.stepValues()[0].valueAsDouble());
+  EXPECT_EQ("key2", result.stepValues()[1].name());
+  EXPECT_EQ(2.1, result.stepValues()[1].valueAsDouble());
+
+  result.addStepValue(WorkflowStepValue("key1", 1.2));
+
+  ASSERT_EQ(2u, result.stepValues().size());
+  EXPECT_EQ("key2", result.stepValues()[0].name());
+  EXPECT_EQ(2.1, result.stepValues()[0].valueAsDouble());
+  EXPECT_EQ("key1", result.stepValues()[1].name());
+  EXPECT_EQ(1.2, result.stepValues()[1].valueAsDouble());
+
+  result.addStepValue(WorkflowStepValue("key2", 2.2));
+
+  ASSERT_EQ(2u, result.stepValues().size());
+  EXPECT_EQ("key1", result.stepValues()[0].name());
+  EXPECT_EQ(1.2, result.stepValues()[0].valueAsDouble());
+  EXPECT_EQ("key2", result.stepValues()[1].name());
+  EXPECT_EQ(2.2, result.stepValues()[1].valueAsDouble());
+
+  result.addStepValue(WorkflowStepValue("Key1", 1.3));
+
+  ASSERT_EQ(3u, result.stepValues().size());
+  EXPECT_EQ("key1", result.stepValues()[0].name());
+  EXPECT_EQ(1.2, result.stepValues()[0].valueAsDouble());
+  EXPECT_EQ("key2", result.stepValues()[1].name());
+  EXPECT_EQ(2.2, result.stepValues()[1].valueAsDouble());
+  EXPECT_EQ("Key1", result.stepValues()[1].name());
+  EXPECT_EQ(1.3, result.stepValues()[1].valueAsDouble());
+}
+
 TEST(Filetypes, WorkflowJSON_Setters)
 {
   WorkflowJSON workflowJSON;

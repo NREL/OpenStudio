@@ -44,8 +44,8 @@
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../../model/ScheduleCompact.hpp"
 #include "../../model/ScheduleCompact_Impl.hpp"
-#include "../../model/AirTerminalSingleDuctUncontrolled.hpp"
-#include "../../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
@@ -276,7 +276,7 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
               // Possible Zone Equipment
               //
               // ZoneHVAC:AirDistributionUnit
-              // AirTerminal:SingleDuct:Uncontrolled
+              // AirTerminal:SingleDuct:ConstantVolume:NoReheat (previously named AirTerminal:SingleDuct:Uncontrolled before 9.0.0)
               // ZoneHVAC:EnergyRecoveryVentilator
               // ZoneHVAC:FourPipeFanCoil
               // ZoneHVAC:OutdoorAirUnit
@@ -303,6 +303,12 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
               //
               if( zoneEquipmentName )
               {
+                if( istringEqual(optionalString.get(),"AirTerminal:SingleDuct:ConstantVolume:NoReheat") )
+                {
+                  _airTerminal = _workspace.getObjectByTypeAndName(IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat,zoneEquipmentName.get());
+
+                  break;
+                }
                 if( istringEqual(optionalString.get(),"AirTerminal:SingleDuct:Uncontrolled") )
                 {
                   _airTerminal = _workspace.getObjectByTypeAndName(IddObjectType::AirTerminal_SingleDuct_Uncontrolled,zoneEquipmentName.get());

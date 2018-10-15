@@ -1,4 +1,4 @@
-!IDD_Version 2.6.0
+!IDD_Version 2.7.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -2207,12 +2207,17 @@ OS:SpaceType,
   A6, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
-  A7, \field Standards Building Type
+  A7, \field Standards Template
+       \type alpha
+       \note This is a freeform field used to identify the energy standard template for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+  A8, \field Standards Building Type
        \type alpha
        \note This is a freeform field used to identify the building type for standards.
        \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
-  A8; \field Standards Space Type
+  A9; \field Standards Space Type
        \type alpha
        \note This is a freeform field used to identify the space type for standards.
        \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
@@ -4726,6 +4731,88 @@ OS:ScheduleTypeLimits,
        \key ControlMode
        \key LinearPowerDensity
 
+OS:External:File,
+       \min-fields 3
+       \memo An External:File points to a text computer file for use in Schedule:File objects.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ExternalFileNames
+  A3,  \field File Name
+       \required-field
+       \retaincase
+  A4;  \field Column Separator
+       \note Currently unused
+       \type choice
+       \key Comma
+       \key Tab
+       \key Space
+       \key Semicolon
+       \default Comma
+
+OS:Schedule:File,
+       \min-fields 6
+       \memo A Schedule:File points to a text computer file that has 8760-8784 hours of data.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ScheduleNames
+  A3,  \field Schedule Type Limits Name
+       \type object-list
+       \object-list ScheduleTypeLimitsNames
+  A4,  \field External File Name
+       \type object-list
+       \object-list ExternalFileNames
+  N1,  \field Column Number
+       \required-field
+       \type integer
+       \minimum 1
+  N2,  \field Rows to Skip at Top
+       \required-field
+       \type integer
+       \minimum 0
+  N3,  \field Number of Hours of Data
+       \note 8760 hours does not account for leap years, 8784 does.
+       \note should be either 8760 or 8784
+       \default 8760
+       \minimum 8760
+       \maximum 8784
+  A5,  \field Column Separator
+       \type choice
+       \key Comma
+       \key Tab
+       \key Fixed
+       \key Semicolon
+       \default Comma
+  A6,  \field Interpolate to Timestep
+       \note when the interval does not match the user specified timestep a "Yes" choice will average between the intervals request (to
+       \note timestep resolution.  a "No" choice will use the interval value at the simulation timestep without regard to if it matches
+       \note the boundary or not.
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  N4;  \field Minutes per Item
+       \type choice
+       \key 1
+       \key 2
+       \key 3
+       \key 4
+       \key 5
+       \key 6
+       \key 10
+       \key 12
+       \key 15
+       \key 20
+       \key 30
+       \key 60
+
 \group OpenStudio Geometry
 
 OS:Building,
@@ -4772,7 +4859,12 @@ OS:Building,
   N4, \field Standards Number of Above Ground Stories
        \type integer
        \minimum 0
-  A7, \field Standards Building Type
+  A7, \field Standards Template
+       \type alpha
+       \note This is a freeform field used to identify the energy standard template for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+  A8, \field Standards Building Type
        \type alpha
        \note This is a freeform field used to identify the building type for standards.
        \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
@@ -4780,7 +4872,7 @@ OS:Building,
   N5, \field Standards Number of Living Units
        \type integer
        \minimum 0
-  A8, \field Relocatable
+  A9, \field Relocatable
        \type choice
        \default False
        \key True
@@ -5167,6 +5259,7 @@ OS:SubSurface,
        \type alpha
        \required-field
        \reference SubSurfNames
+       \reference GlazedExtSubSurfNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames
@@ -8198,6 +8291,7 @@ OS:Refrigeration:SecondarySystem,
         \type real
         \minimum 0.0
         \units Pa
+        \ip-units ftH2O
         \note Either the Total Pump Power or the Total Pump Head is required.
   N11,  \field PhaseChange Circulating Rate
         \type real
@@ -10696,7 +10790,10 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
        \default Autocalculate
 
 OS:AirTerminal:SingleDuct:Uncontrolled,
-       \min-fields 6
+      \memo Central air system terminal unit, single duct, constant volume, no controls other than
+      \memo on/off schedule.
+      \obsolete New=>OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat
+      \min-fields 6
   A1, \field Handle
        \type handle
        \required-field
@@ -10720,6 +10817,41 @@ OS:AirTerminal:SingleDuct:Uncontrolled,
        \autosizable
        \units m3/s
        \minimum 0
+
+OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat,
+       \memo Central air system terminal unit, single duct, constant volume, without reheat coil
+       \min-fields 6
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3,  \field Availability Schedule Name
+       \type object-list
+       \required-field
+       \object-list ScheduleNames
+  A4,  \field Air Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+       \note The air-inlet node name that connects the air splitter to the individual zone air distribution
+       \note unit. This node should also be one of the outlet air node of an AirLoopHVAC:ZoneSplitter or
+       \note AirLoopHVAC:SupplyPlenum component.
+  A5,  \field Air Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+       \note This is an air outlet node from the air distribution unit. This node name should be one of the
+       \note supply air inlet node names of a zone served by this component.
+  N1; \field Maximum Air Flow Rate
+      \type real
+      \required-field
+      \autosizable
+      \units m3/s
+      \minimum 0
+
 
 OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \min-fields 1
@@ -10761,7 +10893,8 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \note is optional; if a value is entered, then it is used for sizing normal-action reheat coils.
        \note If both this field and the following field are entered, the larger result is used.
        \type real
-       \default 0.3
+       \autosizable
+       \default autosize
   N3 , \field Fixed Minimum Air Flow Rate
        \note This field is used if the field Zone Minimum Air Flow Input Method is FixedFlowRate.
        \note If the field Zone Minimum Air Flow Input Method is Scheduled, then this field
@@ -10769,7 +10902,8 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \note If both this field and the previous field are entered, the larger result is used.
        \type real
        \units m3/s
-       \default 0.0
+       \autosizable
+       \default autosize
   A7 , \field Minimum Air Flow Fraction Schedule Name
        \note This field is used if the field Zone Minimum Air Flow Input Method is Scheduled
        \note Schedule values are fractions, 0.0 to 1.0.
@@ -10821,7 +10955,8 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \note is optional; if a value is entered, then it is used for sizing normal-action reheat coils.
        \note If both this field and the following field are entered, the larger result is used.
        \type real
-       \default 0.3
+       \autosizable
+       \default autosize
   N3, \field Fixed Minimum Air Flow Rate
        \note This field is used if the field Zone Minimum Air Flow Input Method is FixedFlowRate.
        \note If the field Zone Minimum Air Flow Input Method is Scheduled, then this field
@@ -10829,7 +10964,8 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \note If both this field and the previous field are entered, the larger result is used.
        \type real
        \units m3/s
-       \default 0.0
+       \autosizable
+       \default autosize
   A7, \field Minimum Air Flow Fraction Schedule Name
        \note This field is used if the field Zone Minimum Air Flow Input Method is Scheduled
        \note Schedule values are fractions, 0.0 to 1.0.
@@ -17384,10 +17520,12 @@ OS:Controller:WaterCoil,
        \type real
        \autosizable
        \units m3/s
+       \ip-units gal/min
        \default Autosize
   N3; \field Minimum Actuated Flow
        \type real
        \units m3/s
+       \ip-units gal/min
        \default 0.0000001
 
 OS:Curve:Linear,
@@ -19299,7 +19437,7 @@ OS:Fan:ConstantVolume,
        \type object-list
        \required-field
        \object-list ScheduleNames
-  N1, \field Fan Efficiency
+  N1, \field Fan Total Efficiency
        \type real
        \minimum> 0
        \maximum 1
@@ -19356,7 +19494,7 @@ OS:Fan:VariableVolume,
        \type object-list
        \required-field
        \object-list ScheduleNames
-  N1, \field Fan Efficiency
+  N1, \field Fan Total Efficiency
        \type real
        \minimum> 0
        \maximum 1
@@ -19441,7 +19579,7 @@ OS:Fan:OnOff,
        \type object-list
        \required-field
        \object-list ScheduleNames
-  N1, \field Fan Efficiency
+  N1, \field Fan Total Efficiency
        \type real
        \minimum> 0
        \maximum 1
@@ -19503,7 +19641,7 @@ OS:Fan:ZoneExhaust,
        \note If this field is blank, the system is always available.
        \type object-list
        \object-list ScheduleNames
-  N1, \field Fan Efficiency
+  N1, \field Fan Total Efficiency
        \type real
        \minimum> 0.0
        \maximum 1.0
@@ -21678,11 +21816,12 @@ OS:Sizing:System,
        \units m3/s
        \minimum 0
        \default autosize
-  N2, \field Minimum System Air Flow Ratio
+  N2, \field Central Heating Maximum System Air Flow Ratio
        \type real
-       \required-field
        \minimum 0
        \maximum 1
+       \autosizable
+       \default autosize
   N3, \field Preheat Design Temperature
        \type real
        \required-field
@@ -22162,10 +22301,10 @@ OS:ThermalZone,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A9, \field Zone Return Air Node Name
+  A9, \field Zone Return Air Port List
        \type object-list
        \required-field
-       \object-list ConnectionNames
+       \object-list PortLists
   A10, \field Primary Daylighting Control Name
        \note For export to EnergyPlus
        \type object-list
@@ -22337,7 +22476,14 @@ OS:ZoneHVAC:EquipmentList,
   A3 , \field Thermal Zone
        \type object-list
        \object-list AllObjects
-  A4 , \field Zone Equipment 1
+  A4, \field Load Distribution Scheme
+       \type choice
+       \key SequentialLoad
+       \key UniformLoad
+       \key UniformPLR
+       \key SequentialUniformPLR
+       \default SequentialLoad
+  A5 , \field Zone Equipment 1
        \required-field
        \type object-list
        \object-list AllObjects
@@ -23005,6 +23151,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \object-list ScheduleNames
    N4 , \field Rated Pump Head
         \units Pa
+        \ip-units ftH2O
         \default 179352
         \note default head is 60 feet
    N5 , \field Rated Power Consumption
@@ -23592,10 +23739,24 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \note cycling fan operation (fan cycles with cooling or heating coil). Schedule values greater
         \note than 0 denote constant fan operation (fan runs continually regardless of coil operation).
         \note The fan operating mode defaults to cycling fan operation if this field is left blank.
-   A14; \field Availability Manager List Name
+   A14, \field Availability Manager List Name
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
+   A15, \field Heat Pump Coil Water Flow Mode
+        \type choice
+        \key Constant
+        \key Cycling
+        \key ConstantOnDemand
+        \default Cycling
+        \note used only when the heat pump coils are of the type WaterToAirHeatPump:EquationFit
+        \note Constant results in 100% water flow regardless of compressor PLR
+        \note Cycling results in water flow that matches compressor PLR
+        \note ConstantOnDemand results in 100% water flow whenever the coil is on, but is 0% whenever the coil has no load
+   A26; \field Design Specification ZoneHVAC Sizing Object Name
+        \note Enter the name of a DesignSpecificationZoneHVACSizing object.
+        \type object-list
+        \object-list DesignSpecificationZoneHVACSizingName
 
 OS:ZoneHVAC:UnitHeater,
        \min-fields 10
@@ -25544,6 +25705,100 @@ OS:WaterHeater:Stratified,
        \note This field is only used if the previous is set to IndirectHeatAlternateSetpoint
        \type object-list
        \object-list ScheduleNames
+
+OS:WaterHeater:Sizing,
+       \min-fields 5
+       \memo This input object is used with WaterHeater:Mixed or
+       \memo with WaterHeater:Stratified to autosize tank volume and heater capacity
+       \memo This object is not needed if water heaters are not autosized.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field WaterHeater Name
+       \required-field
+       \type object-list
+       \object-list WaterHeaterNames
+  A3 , \field Design Mode
+       \type choice
+       \key PeakDraw
+       \key ResidentialHUD-FHAMinimum
+       \key PerPerson
+       \key PerFloorArea
+       \key PerUnit
+       \key PerSolarCollectorArea
+  N1 , \field Time Storage Can Meet Peak Draw
+       \type real
+       \units hr
+       \note Only used for Design Mode = PeakDraw
+       \minimum 0.0
+  N2 , \field Time for Tank Recovery
+       \type real
+       \units hr
+       \note Only used for Design Mode = PeakDraw
+       \minimum 0.0
+  N3 , \field Nominal Tank Volume for Autosizing Plant Connections
+       \type real
+       \units m3
+       \ip-units gal
+       \note Only used if Design Mode = PeakDraw and the water heater also
+       \note has autosized flow rates for connections on the demand side of a plant loop
+  N4 , \field Number of Bedrooms
+       \type integer
+       \note Only used for Design Mode = ResidentialHUD-FHAMinimum
+       \minimum 1
+  N5 , \field Number of Bathrooms
+       \type integer
+       \note Only used for Design Mode = ResidentialHUD-FHAMinimum
+       \minimum 1
+  N6 , \field Storage Capacity per Person
+       \type real
+       \units m3/person
+       \ip-units gal/person
+       \note Only used for Design Mode = PerPerson
+       \minimum 0.0
+  N7 , \field Recovery Capacity per Person
+       \type real
+       \units m3/hr-person
+       \ip-units gal/hr-person
+       \note Only used for Design Mode = PerPerson
+       \minimum 0.0
+  N8 , \field Storage Capacity per Floor Area
+       \type real
+       \units m3/m2
+       \ip-units gal/ft2
+       \note Only used for Design Mode = PerFloorArea
+       \minimum 0.0
+  N9 , \field Recovery Capacity per Floor Area
+       \type real
+       \units m3/hr-m2
+       \ip-units gal/hr-ft2
+       \note Only used for Design Mode = PerFloorArea
+       \minimum 0.0
+  N10, \field Number of Units
+       \type real
+       \note Only used for Design Mode = PerUnit
+  N11, \field Storage Capacity per Unit
+       \units m3
+       \ip-units gal
+       \type real
+       \note Only used for Design Mode = PerUnit
+       \minimum 0.0
+  N12, \field Recovery Capacity PerUnit
+       \units m3/hr
+       \ip-units gal/hr
+       \type real
+       \note Only used for Design Mode = PerUnit
+       \minimum 0.0
+  N13, \field Storage Capacity per Collector Area
+       \units m3/m2
+       \ip-units gal/ft2
+       \type real
+       \note Only used for Design Mode = PerSolarCollectorArea
+       \minimum 0.0
+  N14; \field Height Aspect Ratio
+       \type real
+       \note only used if for WaterHeater:Stratified
+       \minimum 0.0
 
 OS:WaterUse:Equipment,
   A1, \field Handle
@@ -27771,6 +28026,129 @@ OS:ElectricLoadCenter:Storage:Simple,
   N7;  \field Initial State of Charge
        \units J
 
+OS:ElectricLoadCenter:Transformer,
+       \memo a list of meters that can be reported are available after a run on
+       \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
+       \extensible:1
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference TransformerNames
+  A3,  \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A4,  \field Transformer Usage
+       \type choice
+       \key PowerInFromGrid
+       \key PowerOutToGrid
+       \key LoadCenterPowerConditioning
+       \default PowerInFromGrid
+       \note A transformer can be used to transfer electric energy from utility grid to
+       \note building (PowerInFromGrid)or from building on-site generation to
+       \note the grid (PowerOutToGrid) or within a load center to match generation
+       \note to the facility service main panel (LoadCenterPowerConditioning)
+  A5,  \field Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+       \note Enter name of zone to receive transformer losses as heat
+       \note if blank then transformer losses are dissipated to outdoors
+  N1,  \field Radiative Fraction
+       \type real
+       \minimum 0
+       \maximum 1.0
+       \default 0
+  N2,  \field Rated Capacity
+       \type real
+       \minimum 0
+       \units VA
+       \note the unit is VA, instead of kVA as usually shown on transformer nameplates.
+  N3,  \field Phase
+       \type choice
+       \key 1
+       \key 3
+       \default 3
+       \note Must be single or three phase transformer.
+       \note NOT used in the current model.
+  A6,  \field Conductor Material
+       \type choice
+       \key Copper
+       \key Aluminum
+       \default Aluminum
+       \note Winding material used by the transformer.
+  N4,  \field Full Load Temperature Rise
+       \type real
+       \units C
+       \minimum 50
+       \maximum 180
+       \default 150
+  N5,  \field Fraction of Eddy Current Losses
+       \type real
+       \minimum 0
+       \maximum 1.0
+       \default 0.1
+  A7,  \field Performance Input Method
+       \type choice
+       \key RatedLosses
+       \key NominalEfficiency
+       \default RatedLosses
+       \note User can define transformer performance by specifying
+       \note load and no load losses at rated conditions or
+       \note nameplate efficiency and maximum efficiency
+  N6,  \field Rated No Load Loss
+       \type real
+       \units W
+       \minimum> 0
+       \note Only required when RatedLosses is the performance input method
+  N7,  \field Rated Load Loss
+       \type real
+       \units W
+       \minimum 0
+       \note Only required when RatedLosses is the performance input method
+  N8,  \field Nameplate Efficiency
+       \type real
+       \minimum> 0
+       \maximum 1.0
+       \default 0.98
+       \note Only required when NominalEfficiency is the performance input method
+  N9,  \field Per Unit Load for Nameplate Efficiency
+       \type real
+       \minimum> 0
+       \maximum 1.0
+       \default 0.35
+       \note Percentage of the rated capacity at which the nameplate efficiency is defined
+       \note Only required when NominalEfficiency is the performance input method
+  N10, \field Reference Temperature for Nameplate Efficiency
+       \type real
+       \units C
+       \minimum 20
+       \maximum 150
+       \default 75
+       \note Conductor operating temperature at which the nameplate efficiency is defined
+       \note Only required when NominalEfficiency is the performance input method
+  N11, \field Per Unit Load for Maximum Efficiency
+       \type real
+       \minimum> 0
+       \maximum 1.0
+       \note Percentage of the rate capacity at which the maximum efficiency is obtained
+       \note Only required when NominalEfficiency is the performance input method
+  A8,  \field Consider Transformer Loss for Utility Cost
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+       \note Only required when the transformer is used for power in from the utility grid
+  A9;  \field Meter 1 Name
+       \begin-extensible
+       \type alpha
+       \memo type external-list
+       \memo external-list autoRDDmeter
+       \note Must be an electric meter (with electricity as the resource type)
+       \note Only required when transformer is used for power in from the utility grid
+
 OS:ElectricLoadCenter:Distribution,
        \memo a list of meters that can be reported are available after a run on
        \memo the meter dictionary file (.mdd) if the Output:VariableDictionary has been requested.
@@ -27805,8 +28183,8 @@ OS:ElectricLoadCenter:Distribution,
   A6 , \field Track Meter Scheme Meter Name
        \type alpha
        \note required when Generator Operation Scheme Type=TrackMeter
-       \memo type external list
-       \memo external list autoRDDmeter
+       \memo type external-list
+       \memo external-list autoRDDmeter
   A7 , \field Electrical Buss Type
        \type choice
        \key AlternatingCurrent
@@ -28843,9 +29221,12 @@ OS:EnergyManagementSystem:Actuator,
   A4, \field Actuated Component Type
        \required-field
        \type alpha
-  A5; \field Actuated Component Control Type
+  A5, \field Actuated Component Control Type
        \required-field
        \type alpha
+  A6; \field Zone Name
+       \type object-list
+       \object-list AllObjects
 
 OS:EnergyManagementSystem:ProgramCallingManager,
        \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
@@ -30653,7 +31034,7 @@ OS:PlantComponent:UserDefined,
       \min-fields 6
   A1, \field Handle
       \type handle
-      \required-field    
+      \required-field
   A2, \field Name
       \required-field
       \type alpha
@@ -30663,7 +31044,7 @@ OS:PlantComponent:UserDefined,
       \object-list ErlProgramCallingManagerNames
   A4, \field Main Model Program Name
       \type object-list
-      \object-list ErlProgramNames    
+      \object-list ErlProgramNames
   A5, \field Plant Inlet Node Name
       \type object-list
       \object-list ConnectionNames
@@ -30691,13 +31072,13 @@ OS:PlantComponent:UserDefined,
       \object-list ErlProgramCallingManagerNames
   A10, \field Plant Initialization Program Name
       \type object-list
-      \object-list ErlProgramNames      
+      \object-list ErlProgramNames
   A11, \field Plant Simulation Program Calling Manager Name
       \type object-list
       \object-list ErlProgramCallingManagerNames
   A12, \field Plant Simulation Program Name
       \type object-list
-      \object-list ErlProgramNames      
+      \object-list ErlProgramNames
   A13, \field Design Volume Flow Rate Actuator
        \type object-list
        \object-list ErlActuatorNames
@@ -30721,9 +31102,9 @@ OS:PlantComponent:UserDefined,
        \object-list ErlActuatorNames
   A20, \field Mass Flow Rate Actuator
        \type object-list
-       \object-list ErlActuatorNames       
+       \object-list ErlActuatorNames
   A21; \field Ambient Zone Name
        \type object-list
        \object-list ThermalZoneNames
        \note Used for modeling device losses to surrounding zone
-      
+

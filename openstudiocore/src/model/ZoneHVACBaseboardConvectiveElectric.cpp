@@ -241,7 +241,7 @@ namespace detail {
     return 0; // this object has no inlet or outlet node
   }
 
-  boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveElectric_Impl::thermalZone()
+  boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveElectric_Impl::thermalZone() const
   {
     ModelObject thisObject = this->getObject<ModelObject>();
     std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
@@ -391,7 +391,7 @@ void ZoneHVACBaseboardConvectiveElectric::resetEfficiency() {
   getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->resetEfficiency();
 }
 
-boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveElectric::thermalZone()
+boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveElectric::thermalZone() const
 {
   return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->thermalZone();
 }

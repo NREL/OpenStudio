@@ -1,6 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
   <qresource>
-    <file>resources/standards/OpenStudio_Standards.json</file>
+    <file>resources/standards/OpenStudio_Standards_space_types_merged.json</file>
+    <file>resources/standards/OpenStudio_Standards_materials_merged.json</file>
   </qresource>
 </RCC>
 

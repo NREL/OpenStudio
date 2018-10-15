@@ -406,19 +406,16 @@
   <POLICY IddObjectType="OS_Fan_ConstantVolume">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
-    <rule IddField="End-Use Subcategory" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Fan_OnOff">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
-    <rule IddField="End-Use Subcategory" Access="HIDDEN"/>
     <rule IddField="Fan Power Ratio Function of Speed Ratio Curve Name" Access="LOCKED"/>
     <rule IddField="Fan Efficiency Ratio Function of Speed Ratio Curve Name" Access="LOCKED"/>
   </POLICY>
   <POLICY IddObjectType="OS_Fan_VariableVolume">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
-    <rule IddField="End-Use Subcategory" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Fan_ZoneExhaust">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
@@ -736,6 +733,11 @@
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat">
+    <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirTerminal_SingleDuct_Uncontrolled">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Inlet Air Node Name" Access="HIDDEN"/>
@@ -829,33 +831,44 @@
   </POLICY>
   <POLICY IddObjectType="OS_People">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Number of People Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Activity Level Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Lights">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Luminaire">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_ElectricEquipment">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_GasEquipment">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_HotWaterEquipment">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_SteamEquipment">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_OtherEquipment">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_SpaceInfiltration_DesignFlowRate">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_SpaceInfiltration_EffectiveLeakageArea">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
+    <rule IddField="Schedule Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_DesignSpecification_OutdoorAir">
     <rule IddField="Space or SpaceType Name" Access="HIDDEN"/>
