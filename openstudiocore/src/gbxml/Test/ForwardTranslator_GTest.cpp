@@ -41,7 +41,9 @@
 #include "../../model/Building.hpp"
 #include "../../model/Building_Impl.hpp"
 #include "../../model/MasslessOpaqueMaterial.hpp"
+#include "../../model/MasslessOpaqueMaterial_Impl.hpp"
 #include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial_Impl.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/ThermalZone.hpp"
 
@@ -120,15 +122,25 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
   Model model;
 
   Construction construction(model);
-  construction.setName("Construction");
+  construction.setName("Construction1");
 
   MaterialVector layers;
 
   MasslessOpaqueMaterial material1(model);
+  material1.setName("Material1");
   layers.push_back(material1);
 
   StandardOpaqueMaterial material2(model);
+  material2.setName("Material2");
   layers.push_back(material2);
+
+  MasslessOpaqueMaterial material3(model);
+  material3.setName("Material3");
+  layers.push_back(material3);
+
+  StandardOpaqueMaterial material4(model);
+  material4.setName("Material4");
+  layers.push_back(material4);
 
   construction.setLayers(layers);
 
@@ -137,7 +149,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
   Building building = model.getUniqueModelObject<Building>();
 
   Space space(model);
-  space.setName("Space 1");
+  space.setName("Space1");
 
   Point3dVector points;
   points.push_back(Point3d(0, 0, 1));
@@ -145,9 +157,11 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
   points.push_back(Point3d(1, 0, 0));
   points.push_back(Point3d(1, 0, 1));
 
+  //std::string surfname("Surface 1"); // DLM: note this will fail because "Surface 1" gets round tripped as "Surface_1"
   std::string surfname("Surface1");
   Surface surface(points, model);
   surface.setName(surfname);
+  surface.setConstruction(construction);
   surface.setSpace(space);
 
   ThermalZone zone(model);
@@ -166,7 +180,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
   boost::optional<Model> model2 = reverseTranslator.loadModel(p);
 
   ASSERT_TRUE(model2);
-  std::cout << *model2 << std::endl;
+  //std::cout << *model2 << std::endl;
   auto osurf = model2->getModelObjectByName<Surface>(surfname);  
   ASSERT_TRUE(osurf);
   auto ocons = osurf->construction();
@@ -174,4 +188,8 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
   auto olayeredcons = ocons->optionalCast<Construction>();
   ASSERT_TRUE(olayeredcons);
   ASSERT_EQ(4u, olayeredcons->layers().size());
+  EXPECT_TRUE(olayeredcons->layers()[0].optionalCast<MasslessOpaqueMaterial>());
+  EXPECT_TRUE(olayeredcons->layers()[1].optionalCast<StandardOpaqueMaterial>());
+  EXPECT_TRUE(olayeredcons->layers()[2].optionalCast<MasslessOpaqueMaterial>());
+  EXPECT_TRUE(olayeredcons->layers()[3].optionalCast<StandardOpaqueMaterial>());
 }
