@@ -238,7 +238,12 @@ class ModelObjectField
     return result
   end
 
-  def getterReturnType
+  # Compute return type
+  # @param forceOptional [Bool, or nil]: whether to force optional return type.
+  # Useful for the reverse translator
+  # if nil, will check optionalGetter
+  # @return result [String]: the getter return type
+  def getterReturnType(forceOptional=nil)
     result = nil
     if isInteger?
       result = "int"
@@ -256,8 +261,14 @@ class ModelObjectField
       result = "Node"
     end
 
-    if result and optionalGetter?
-      result = "boost::optional<" + result + ">"
+    if result
+      if forceOptional.nil?
+        if optionalGetter?
+          result = "boost::optional<" + result + ">"
+        end
+      elsif forceOptional
+        result = "boost::optional<" + result + ">"
+      end
     end
 
     raise "Unexpected field type " + @iddField.properties.type.valueName + "." if not result
