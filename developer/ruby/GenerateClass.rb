@@ -43,6 +43,7 @@ require_relative 'SubProjectClassGenerators/SubProjectClassGenerator.rb'
 require_relative 'SubProjectClassGenerators/ModelClassGenerator.rb'
 require_relative 'SubProjectClassGenerators/ProjectClassGenerator.rb'
 require_relative 'SubProjectClassGenerators/AnalysisClassGenerator.rb'
+require_relative 'SubProjectClassGenerators/FileHeader.rb'
 
 # HANDLE INPUT ARGUMENTS
 
@@ -123,7 +124,7 @@ end
 # START ALL FILES
 
 fileHeader = String.new
-fileHeader << "/***********************************************************************************************************************\n"
+fileHeader = fileHeader()
 fileHeader << " *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.\n"
 fileHeader << " *\n"
 fileHeader << " *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the\n"
