@@ -44,6 +44,7 @@ require_relative 'SubProjectClassGenerators/SubProjectClassGenerator.rb'
 require_relative 'SubProjectClassGenerators/ModelClassGenerator.rb'
 require_relative 'SubProjectClassGenerators/ProjectClassGenerator.rb'
 require_relative 'SubProjectClassGenerators/AnalysisClassGenerator.rb'
+require_relative 'SubProjectClassGenerators/FileHeader.rb'
 
 # HANDLE INPUT ARGUMENTS
 
