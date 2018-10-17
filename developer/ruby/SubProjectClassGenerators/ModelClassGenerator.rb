@@ -89,6 +89,10 @@ class ModelObjectField
     return (@iddField.properties.type == "ObjectListType".to_IddFieldType)
   end
 
+  def isNode?
+    return (@iddField.properties.type == "node".to_IddFieldType)
+  end
+
   def isSchedule?
     result = false
     @iddField.properties.objectLists.each { |objectList|
@@ -248,6 +252,8 @@ class ModelObjectField
       end
     elsif isObjectList?
       result = objectListClassName
+    elsif isNode?
+      result = "Node"
     end
 
     if result and optionalGetter?
@@ -269,6 +275,8 @@ class ModelObjectField
       result = "getString"
     elsif isObjectList?
       result = "getObject<ModelObject>().getModelObjectTarget<" + objectListClassName + ">"
+    elsif isNode?
+      result = "getObject<ModelObject>().getModelObjectTarget<Node>"
     end
     return result
   end
@@ -481,7 +489,7 @@ class ModelClassGenerator < SubProjectClassGenerator
       result << "#include <utilities/idd/" << @iddObjectType.valueName << "_FieldEnums.hxx>\n\n"
 
       if @hasRealFields
-		result << "#include \"../utilities/units/Unit.hpp\"\n\n"
+        result << "#include \"../utilities/units/Unit.hpp\"\n\n"
       end
 
       result << "#include \"../utilities/core/Assert.hpp\"\n\n"
