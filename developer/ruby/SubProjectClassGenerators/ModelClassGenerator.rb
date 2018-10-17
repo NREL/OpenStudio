@@ -744,7 +744,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.setCanFail?
           result << "  bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         else
-          result << "  void " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
+          # Note: JM 2018-10-17: even if the setter can't fail, we return bool
+          result << "  bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         end
 
         if field.hasReset?
@@ -860,7 +861,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.setCanFail?
           result << "    bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         else
-          result << "    void " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
+          # Note: JM 2018-10-17: even if the setter can't fail, we return bool
+          result << "    bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         end
 
         if field.hasReset?
@@ -1043,7 +1045,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.setCanFail?
           result << "  bool "
         else
-          result << "  void "
+          # Note: JM 2018-10-17: even if the setter can't fail, we return bool
+          result << "  bool "
         end
 
         result << @className << "_Impl::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
