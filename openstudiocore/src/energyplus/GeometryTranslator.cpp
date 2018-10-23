@@ -985,7 +985,6 @@ namespace energyplus {
       fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::Name, FenestrationSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::ShadingControlName, FenestrationSurface_DetailedFields::ShadingControlName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::FrameandDividerName, FenestrationSurface_DetailedFields::FrameandDividerName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(WindowFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier));
 
@@ -1115,7 +1114,6 @@ namespace energyplus {
       fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::Name, FenestrationSurface_DetailedFields::Name));
       fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::ConstructionName, FenestrationSurface_DetailedFields::ConstructionName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::BuildingSurfaceName, FenestrationSurface_DetailedFields::BuildingSurfaceName));
-      fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::ShadingControlName, FenestrationSurface_DetailedFields::ShadingControlName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::FrameandDividerName, FenestrationSurface_DetailedFields::FrameandDividerName));
       fieldMap.push_back(std::pair<unsigned, unsigned>(GlazedDoorFields::Multiplier, FenestrationSurface_DetailedFields::Multiplier));
 

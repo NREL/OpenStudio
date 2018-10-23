@@ -78,9 +78,11 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemPro
   boost::optional<ModelObject> mObject;
 
   for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
-    IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
     OptionalString line = eg.getString(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine);
+    // If there is actually something in the line
     if (line) {
+      // Then, we push an extensible group (E+ fatals out if program line is empty)
+      IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
       //find uids
       newline = line.get();
       boost::sregex_token_iterator j(line.get().begin(), line.get().end(), uuidInString(), subs);
@@ -99,11 +101,12 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemPro
         }
       }
       group.setString(EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, newline);
+      OptionalString comment = eg.fieldComment(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine);
+      if (comment) {
+        group.setFieldComment(EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, comment.get());
+      }
     }
-    OptionalString comment = eg.fieldComment(OS_EnergyManagementSystem_ProgramExtensibleFields::ProgramLine);
-    if (comment) {
-      group.setFieldComment(EnergyManagementSystem_ProgramExtensibleFields::ProgramLine, comment.get());
-    }
+
   }
   return idfObject;
 }

@@ -58,6 +58,7 @@
 #include "../model/Construction_Impl.hpp"
 #include "../model/AirWallMaterial.hpp"
 #include "../model/AirWallMaterial_Impl.hpp"
+#include "../model/AdditionalProperties.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
@@ -85,7 +86,7 @@ namespace gbxml {
   }
 
   ReverseTranslator::ReverseTranslator()
-    : m_lengthMultiplier(1.0)
+    : m_nonBaseMultiplier(1.0), m_lengthMultiplier(1.0)
   {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.gbxml\\.ReverseTranslator"));
@@ -103,6 +104,8 @@ namespace gbxml {
     m_logSink.setThreadId(QThread::currentThread());
 
     m_logSink.resetStringStream();
+
+    m_idToObjectMap.clear();
 
     boost::optional<openstudio::model::Model> result;
 
@@ -189,17 +192,21 @@ namespace gbxml {
     // TODO: still need some help with some units
     QString lengthUnit = element.attribute("lengthUnit");
     if (lengthUnit.contains("Kilometers", Qt::CaseInsensitive)){
-      //m_lengthUnit = UnitFactory::instance().createUnit("F").get();
+      m_nonBaseMultiplier = 1000.0;
+      m_lengthUnit = UnitFactory::instance().createUnit("m").get();
     }else if (lengthUnit.contains("Centimeters", Qt::CaseInsensitive)){
-      //m_lengthUnit = UnitFactory::instance().createUnit("C").get();
+      m_nonBaseMultiplier = 1.0e-2;
+      m_lengthUnit = UnitFactory::instance().createUnit("m").get();
     }else if (lengthUnit.contains("Millimeters", Qt::CaseInsensitive)){
-      //m_lengthUnit = UnitFactory::instance().createUnit("K").get();
+      m_nonBaseMultiplier = 1.0e-3;
+      m_lengthUnit = UnitFactory::instance().createUnit("K").get();
     }else if (lengthUnit.contains("Meters", Qt::CaseInsensitive)){
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
     }else if (lengthUnit.contains("Miles", Qt::CaseInsensitive)){
       m_lengthUnit = UnitFactory::instance().createUnit("mi").get();
     }else if (lengthUnit.contains("Yards", Qt::CaseInsensitive)){
-      //m_lengthUnit = UnitFactory::instance().createUnit("m").get();
+      m_nonBaseMultiplier = 3.0;
+      m_lengthUnit = UnitFactory::instance().createUnit("ft").get();
     }else if (lengthUnit.contains("Feet", Qt::CaseInsensitive)){
       m_lengthUnit = UnitFactory::instance().createUnit("ft").get();
     }else if (lengthUnit.contains("Inches", Qt::CaseInsensitive)){
@@ -209,7 +216,7 @@ namespace gbxml {
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
     }
 
-    Quantity unitLength(1.0, m_lengthUnit);
+    Quantity unitLength(m_nonBaseMultiplier, m_lengthUnit);
     Unit targetUnit = UnitFactory::instance().createUnit("m").get();
     m_lengthMultiplier = QuantityConverter::instance().convert(unitLength, targetUnit)->value();
 
@@ -448,6 +455,13 @@ namespace gbxml {
 
     // DLM: todo, translate setpoints
 
+    // import CADObjectId
+    QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    if (cadObjectIdElements.size() >= 1){
+      // TODO: import multiple CADObjectIds
+      translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, zone);
+    }
+
     return zone;
   }
   boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
@@ -505,6 +519,13 @@ namespace gbxml {
       if (spaceType){
         space.setSpaceType(*spaceType);
       }
+    }
+
+    // import CADObjectId
+    QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    if (cadObjectIdElements.size() >= 1){
+      // TODO: import multiple CADObjectIds
+      translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, space);
     }
 
     return space;
@@ -606,6 +627,9 @@ namespace gbxml {
         surface.setSurfaceType("Wall");
       }else if (surfaceType.contains("UndergroundWall")){
         surface.setSurfaceType("Wall");
+        surface.setOutsideBoundaryCondition("Ground");
+        surface.setSunExposure("NoSun");
+        surface.setWindExposure("NoWind");
       // roof types
       }else if (surfaceType.contains("Roof")){
         surface.setSurfaceType("RoofCeiling");
@@ -708,26 +732,111 @@ namespace gbxml {
       }
 
       if (space && adjacentSpaceElements.size() == 2){
-
         QString adjacentSpaceId = adjacentSpaceElements.at(1).toElement().attribute("spaceIdRef");
         auto adjacentSpaceIt = m_idToObjectMap.find(adjacentSpaceId);
-        if (adjacentSpaceIt != m_idToObjectMap.end()){
+        if (adjacentSpaceIt != m_idToObjectMap.end()) {
           boost::optional<model::Space> adjacentSpace = adjacentSpaceIt->second.optionalCast<openstudio::model::Space>();
-          if (adjacentSpace){
-            // DLM: we have issues if interior ceilings/floors are mislabeled, override surface type for adjacent surfaces
-            // http://code.google.com/p/cbecc/issues/detail?id=471
+          if (adjacentSpace) {
+
             std::string currentSurfaceType = surface.surfaceType();
-            surface.assignDefaultSurfaceType();
-            if (currentSurfaceType != surface.surfaceType()){
-              LOG(Warn, "Changing surface type from '" << currentSurfaceType << "' to '" << surface.surfaceType() << "' for surface '" << surface.name().get() << "'");
+            if (currentSurfaceType == "RoofCeiling" || currentSurfaceType == "Floor") {
+              // DLM: we have issues if interior ceilings/floors are mislabeled, override surface type for adjacent surfaces
+              // http://code.google.com/p/cbecc/issues/detail?id=471
+              // Try to figure it out based on the surfaceType
+              bool figuredOut = false;
+              QString spaceSurfaceType = adjacentSpaceElements.at(0).toElement().attribute("surfaceType");
+              QString adjacentSpaceSurfaceType = adjacentSpaceElements.at(1).toElement().attribute("surfaceType");
+              if (!spaceSurfaceType.isEmpty()) {
+                if (currentSurfaceType == "Floor") {
+                  if (spaceSurfaceType == "InteriorFloor") {
+                    // No changes
+                    figuredOut = true;
+                  } else if (spaceSurfaceType == "Ceiling") {
+                    // Swap roles of space and adjacentSpace
+                    surface.setSpace(*adjacentSpace);
+                    auto temp = space;
+                    space = adjacentSpace;
+                    adjacentSpace = temp;
+                    figuredOut = true;
+                  }
+                } else if (currentSurfaceType == "RoofCeiling") {
+                  if (spaceSurfaceType == "Ceiling") {
+                    // No changes
+                    figuredOut = true;
+                  } else if (spaceSurfaceType == "InteriorFloor") {
+                    // Swap roles of space and adjacentSpace
+                    surface.setSpace(*adjacentSpace);
+                    auto temp = space;
+                    space = adjacentSpace;
+                    adjacentSpace = temp;
+                    figuredOut = true;
+                  }
+                }
+              } else if (!adjacentSpaceSurfaceType.isEmpty()) {
+                if (currentSurfaceType == "Floor") {
+                  if (adjacentSpaceSurfaceType == "InteriorFloor") {
+                    // No changes
+                    figuredOut = true;
+                  } else if (adjacentSpaceSurfaceType == "Ceiling") {
+                    // Swap roles of space and adjacentSpace
+                    surface.setSpace(*adjacentSpace);
+                    auto temp = space;
+                    space = adjacentSpace;
+                    adjacentSpace = temp;
+                    figuredOut = true;
+                  }
+                } else if (currentSurfaceType == "RoofCeiling") {
+                  if (adjacentSpaceSurfaceType == "Ceiling") {
+                    // No changes
+                    figuredOut = true;
+                  } else if (adjacentSpaceSurfaceType == "InteriorFloor") {
+                    // Swap roles of space and adjacentSpace
+                    surface.setSpace(*adjacentSpace);
+                    auto temp = space;
+                    space = adjacentSpace;
+                    adjacentSpace = temp;
+                    figuredOut = true;
+                  }
+                }
+              }
+              if (!figuredOut) {
+                surface.assignDefaultSurfaceType();
+                if (currentSurfaceType != surface.surfaceType()) {
+                  LOG(Warn, "Changing surface type from '" << currentSurfaceType << "' to '" << surface.surfaceType() << "' for surface '" << surface.name().get() << "'");
+                }
+              }
+
+            } else {
+              surface.assignDefaultSurfaceType();
+              if (currentSurfaceType != surface.surfaceType()) {
+                LOG(Warn, "Changing surface type from '" << currentSurfaceType << "' to '" << surface.surfaceType() << "' for surface '" << surface.name().get() << "'");
+              }
             }
 
             // clone the surface and sub surfaces and reverse vertices
             boost::optional<openstudio::model::Surface> otherSurface = surface.createAdjacentSurface(*adjacentSpace);
-            if (!otherSurface){
+            if (!otherSurface) {
               LOG(Error, "Could not create adjacent surface in adjacent space '" << adjacentSpace->name().get() << "' for surface '" << surface.name().get() << "' in space '" << space->name().get() << "'");
             }
           }
+        } else {
+          LOG(Error, "Could not find adjacent space '" << adjacentSpaceId.toStdString() << "' for surface '" << surface.name().get() << "'");
+        }
+      }
+    }
+
+    OS_ASSERT(result);
+
+    // import CADObjectId
+    QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    if (cadObjectIdElements.size() >= 1){
+      // TODO: import multiple CADObjectIds
+      translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *result);
+
+      if (result->optionalCast<model::Surface>()){
+        boost::optional<openstudio::model::Surface> otherSurface = result->cast<model::Surface>().adjacentSurface();
+        if (otherSurface) {
+          translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *otherSurface);
         }
       }
     }
@@ -791,10 +900,10 @@ namespace gbxml {
       subSurface.setSubSurfaceType("Skylight");
     }else if (openingType.contains("OperableSkylight")){
       subSurface.setSubSurfaceType("Skylight");
+    }else if (openingType.contains("NonSlidingDoor")){ // do before testing contains door
+      subSurface.setSubSurfaceType("Door");
     }else if (openingType.contains("SlidingDoor")){
       subSurface.setSubSurfaceType("GlassDoor");
-    }else if (openingType.contains("NonSlidingDoor")){
-      subSurface.setSubSurfaceType("Door");
     } else if (openingType.contains("Air")){
       // use default sub surface type?
     }
@@ -838,6 +947,34 @@ namespace gbxml {
 
     // todo: translate "interiorShadeType", "exteriorShadeType", and other properties of the opening
 
+    // import CADObjectId
+    QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    if (cadObjectIdElements.size() >= 1){
+      // TODO: import multiple CADObjectIds
+      translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, subSurface);
+
+      boost::optional<openstudio::model::SubSurface> otherSubSurface = subSurface.adjacentSubSurface();
+      if (otherSubSurface) {
+        translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *otherSubSurface);
+      }
+    }
+
+    return result;
+  }
+
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCADObjectId(const QDomElement& element, const QDomDocument& doc, openstudio::model::ModelObject& modelObject)
+  {
+    model::AdditionalProperties result = modelObject.additionalProperties();
+
+    QString cadObjectId = element.text();
+    if (!cadObjectId.isEmpty()) {
+      result.setFeature("CADObjectId", toString(cadObjectId));
+
+      QString programIdRef = element.attribute("programIdRef");
+      if (!programIdRef.isEmpty()) {
+        result.setFeature("programIdRef", toString(programIdRef));
+      }
+    }
 
     return result;
   }

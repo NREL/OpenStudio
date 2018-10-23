@@ -64,6 +64,7 @@
 #include "../model/ScheduleConstant_Impl.hpp"
 #include "../model/ScheduleDay.hpp"
 #include "../model/ScheduleDay_Impl.hpp"
+#include "../model/AdditionalProperties.hpp"
 
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/EulerAngles.hpp"
@@ -727,6 +728,9 @@ namespace gbxml {
     //  Temperature
     // unit "F", "C", "K", "R"
 
+    // export CADObjectId if present
+    translateCADObjectId(space, result, doc);
+
     return result;
   }
 
@@ -827,6 +831,8 @@ namespace gbxml {
           result.setAttribute("surfaceType", "InteriorWall");
         } else if (surface.isGroundSurface()){
           result.setAttribute("surfaceType", "UndergroundWall");
+        } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
+          result.setAttribute("surfaceType", "InteriorWall");
         }
       } else if (istringEqual("RoofCeiling", surfaceType)){
         if (istringEqual("Outdoors", outsideBoundaryCondition)){
@@ -835,6 +841,8 @@ namespace gbxml {
           result.setAttribute("surfaceType", "Ceiling");
         } else if (surface.isGroundSurface()){
           result.setAttribute("surfaceType", "UndergroundCeiling");
+        } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
+          result.setAttribute("surfaceType", "InteriorWall");
         }
       } else if (istringEqual("Floor", surfaceType)){
         if (istringEqual("Outdoors", outsideBoundaryCondition)){
@@ -844,6 +852,8 @@ namespace gbxml {
           result.setAttribute("surfaceType", "UndergroundSlab"); // might be SlabOnGrade, check vertices later
         } else if (istringEqual("Surface", outsideBoundaryCondition)){
           result.setAttribute("surfaceType", "InteriorFloor");
+        } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
+          result.setAttribute("surfaceType", "InteriorWall");
         }
       }
     }
@@ -855,7 +865,7 @@ namespace gbxml {
       if (construction->isOpaque()){
         result.setAttribute("constructionIdRef", escapeName(constructionName));
       } else{
-        result.setAttribute("windowTypeIdRef", escapeName(constructionName));
+        result.setAttribute("constructionIdRef", escapeName(constructionName));
       }
     }
 
@@ -908,11 +918,11 @@ namespace gbxml {
     if (outwardNormal && area > 0){
 
       // get tilt, duplicate code in planar surface
-      Vector3d up(0.0,0.0,1.0);
+      Vector3d up(0.0, 0.0, 1.0);
       double tiltRadians = getAngle(*outwardNormal, up);
 
       // get azimuth, duplicate code in planar surface
-      Vector3d north(0.0,1.0,0.0);
+      Vector3d north(0.0, 1.0, 0.0);
       double azimuthRadians = getAngle(*outwardNormal, north);
       if (outwardNormal->x() < 0.0) {
         azimuthRadians = -azimuthRadians + 2.0*boost::math::constants::pi<double>();
@@ -927,7 +937,7 @@ namespace gbxml {
       double height = faceBoundingBox.maxY().get() - faceBoundingBox.minY().get();
       double areaCorrection = 1.0;
       if (width > 0 && height > 0){
-        areaCorrection = sqrt(area/(width*height));
+        areaCorrection = sqrt(area / (width*height));
       }
 
       // pick lower left corner vertex in face coordinates
@@ -1005,6 +1015,14 @@ namespace gbxml {
       coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
     }
 
+    // export CADObjectId if present
+    if (!translateCADObjectId(surface, result, doc)) {
+      boost::optional<model::Surface> otherSurface = surface.adjacentSurface();
+      if (otherSurface) {
+        translateCADObjectId(*otherSurface, result, doc);
+      }
+    }
+
     // translate sub surfaces
     for (const model::SubSurface& subSurface : surface.subSurfaces()){
       boost::optional<QDomElement> openingElement = translateSubSurface(subSurface, transformation, doc);
@@ -1053,12 +1071,18 @@ namespace gbxml {
         result.setAttribute("openingType", "FixedWindow");
       }else if(istringEqual("OperableWindow", subSurfaceType)){
         result.setAttribute("openingType", "OperableWindow");
-      }else if (istringEqual("Skylight", subSurfaceType)){
-        result.setAttribute("openingType", "FixedSkylight");
       }else if (istringEqual("Door", subSurfaceType)){
         result.setAttribute("openingType", "NonSlidingDoor");
+      }else if (istringEqual("GlassDoor", subSurfaceType)){
+        result.setAttribute("openingType", "SlidingDoor");
       }else if (istringEqual("OverheadDoor", subSurfaceType)){
         result.setAttribute("openingType", "NonSlidingDoor");
+      }else if (istringEqual("Skylight", subSurfaceType)){
+        result.setAttribute("openingType", "FixedSkylight");
+      }else if (istringEqual("TubularDaylightDome", subSurfaceType)){
+        result.setAttribute("openingType", "FixedSkylight");
+      }else if (istringEqual("TubularDaylightDiffuser", subSurfaceType)){
+        result.setAttribute("openingType", "FixedSkylight");
       }
     }
 
@@ -1169,6 +1193,13 @@ namespace gbxml {
       coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
     }
 
+    // export CADObjectId if present
+    if (!translateCADObjectId(subSurface, result, doc)){
+      boost::optional<model::SubSurface> otherSubSurface = subSurface.adjacentSubSurface();
+      if (otherSubSurface) {
+        translateCADObjectId(*otherSubSurface, result, doc);
+      }
+    }
     return result;
   }
 
@@ -1203,15 +1234,22 @@ namespace gbxml {
     Transformation transformation;
     boost::optional<model::Space> space = shadingSurface.space();
     if (space){
-      transformation = space->siteTransformation();
+      boost::optional<model::ShadingSurfaceGroup> shadingSurfaceGroup = shadingSurface.shadingSurfaceGroup();
+      if (shadingSurfaceGroup) {
+        transformation = shadingSurfaceGroup->siteTransformation();
+      } else {
+        transformation = space->siteTransformation();
+      }
 
       std::string spaceName = space->name().get();
       QDomElement adjacentSpaceIdElement = doc.createElement("AdjacentSpaceId");
       result.appendChild(adjacentSpaceIdElement);
       adjacentSpaceIdElement.setAttribute("spaceIdRef", escapeName(spaceName));
-    } else{
+    } else {
       boost::optional<model::ShadingSurfaceGroup> shadingSurfaceGroup = shadingSurface.shadingSurfaceGroup();
       if (shadingSurfaceGroup){
+        transformation = shadingSurfaceGroup->siteTransformation();
+
         std::string spaceName = shadingSurfaceGroup->name().get();
         QDomElement adjacentSpaceIdElement = doc.createElement("AdjacentSpaceId");
         result.appendChild(adjacentSpaceIdElement);
@@ -1325,6 +1363,9 @@ namespace gbxml {
       coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
     }
 
+    // export CADObjectId if present
+    translateCADObjectId(shadingSurface, result, doc);
+
     return result;
   }
 
@@ -1388,6 +1429,36 @@ namespace gbxml {
       result.appendChild(designCoolTElement);
     }
 
+    // export CADObjectId if present
+    translateCADObjectId(thermalZone, result, doc);
+
+    return result;
+  }
+
+  boost::optional<QDomElement> ForwardTranslator::translateCADObjectId(const openstudio::model::ModelObject& modelObject, QDomElement& parentElement, QDomDocument& doc)
+  {
+    boost::optional<QDomElement> result;
+
+    if (modelObject.hasAdditionalProperties()) {
+      model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
+      if (additionalProperties.hasFeature("CADObjectId")) {
+        boost::optional<std::string> cadObjectId = additionalProperties.getFeatureAsString("CADObjectId");
+        if (cadObjectId) {
+          QDomElement cadObjectIdElement = doc.createElement("CADObjectId");
+          cadObjectIdElement.appendChild(doc.createTextNode(toQString(*cadObjectId)));
+
+          if (additionalProperties.hasFeature("programIdRef")) {
+            boost::optional<std::string> programIdRef = additionalProperties.getFeatureAsString("programIdRef");
+            if (programIdRef){
+              cadObjectIdElement.setAttribute("programIdRef", toQString(*programIdRef));
+            }
+          }
+
+          parentElement.appendChild(cadObjectIdElement);
+          result = cadObjectIdElement;
+        }
+      }
+    }
     return result;
   }
 

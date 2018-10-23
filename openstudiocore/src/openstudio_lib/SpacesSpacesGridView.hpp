@@ -83,6 +83,9 @@ namespace openstudio{
 
     REGISTER_LOGGER("openstudio.SpacesSpacesGridView");
 
+    // Overrides SpacesSubtabGrid view to trigger appropriate filtering
+    virtual bool hasSubRows() override { return false; };
+
   protected slots:
 
    virtual void onSelectItem() override;

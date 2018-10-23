@@ -374,8 +374,8 @@ public:
 
 private:
 
-  std::string m_controlTypeName;
   std::string m_componentTypeName;
+  std::string m_controlTypeName;
 };
 
 class MODEL_API HaystackTags

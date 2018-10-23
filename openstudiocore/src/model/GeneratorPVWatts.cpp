@@ -37,6 +37,8 @@
 #include "Surface_Impl.hpp"
 #include "ShadingSurface.hpp"
 #include "ShadingSurface_Impl.hpp"
+#include "ElectricLoadCenterDistribution.hpp"
+#include "ElectricLoadCenterDistribution_Impl.hpp"
 
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
@@ -120,7 +122,7 @@ namespace detail {
     OS_ASSERT(value);
     return value.get();
   }
-  
+
   double GeneratorPVWatts_Impl::dcSystemCapacity() const {
     boost::optional<double> value = getDouble(OS_Generator_PVWattsFields::DCSystemCapacity);
     OS_ASSERT(value);
@@ -298,6 +300,9 @@ GeneratorPVWatts::GeneratorPVWatts(const Model& model, double dcSystemCapacity)
     this->remove();
     LOG_AND_THROW("Cannot create a pvwatts generator with dc system capacity " << dcSystemCapacity);
   }
+  //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
+  ElectricLoadCenterDistribution elcd(model);
+  elcd.addGenerator(*this);
 }
 
 GeneratorPVWatts::GeneratorPVWatts(const Model& model, const PlanarSurface& surface, double dcSystemCapacity)
@@ -318,6 +323,9 @@ GeneratorPVWatts::GeneratorPVWatts(const Model& model, const PlanarSurface& surf
     this->remove();
     LOG_AND_THROW("Cannot create a pvwatts generator with dc system capacity " << dcSystemCapacity);
   }
+  //Add ElectricLoadCenterDistribution to get ElectricLoadCenterGenerators
+  ElectricLoadCenterDistribution elcd(model);
+  elcd.addGenerator(*this);
 }
 
 IddObjectType GeneratorPVWatts::iddObjectType() {

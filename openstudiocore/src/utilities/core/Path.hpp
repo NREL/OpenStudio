@@ -37,15 +37,11 @@
 
 #include "Filesystem.hpp"
 
-
-
 // forward declarations
 class QString;
 class QTextStream;
 
 namespace openstudio {
-
-
 
 // allow wpath to be written to cout on Windows
 UTILITIES_API ::std::ostream& operator<<(::std::ostream& os, const path& p);
@@ -74,7 +70,7 @@ typedef boost::optional<path> OptionalPath;
 typedef std::pair<path,path> PathPair;
 
 /// Return the fully expanded Windows path name ie "c:\Progra~1" into "C:\Program Files"
-UTILITIES_API QString longPathName(const QString& path);
+//UTILITIES_API QString longPathName(const QString& path);
 
 } // openstudio
 

@@ -95,11 +95,22 @@ boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemAct
 
     // check if actuatedComponent is a SpaceLoad
     if (auto load = m.optionalCast<model::SpaceLoadInstance>()) {
-
+      const boost::optional<ModelObject> m_zN = modelObject.zoneName();
       // if SpaceLoad, check if thermalzone names exist
       auto space = load->space();
       auto spaceType = load->spaceType();
       if (spaceType) {
+        if (m_zN){
+          //ZoneName object exists so set name to be the concatonation of it plus the spaceloadobject
+          std::string tz_name = m_zN.get().nameString() + " " + m.nameString();
+          idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, tz_name);
+          idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, modelObject.actuatedComponentType());
+          idfObject.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, modelObject.actuatedComponentControlType());
+
+          m_idfObjects.push_back(idfObject);
+          return idfObject;
+        }
+        //ZoneName object does not exist so try and translate anyway
 
         // should not also have a space assigned
         OS_ASSERT(!space);

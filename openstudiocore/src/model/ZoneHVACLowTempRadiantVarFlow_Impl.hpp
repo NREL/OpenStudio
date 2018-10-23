@@ -158,7 +158,7 @@ namespace detail {
 
     bool setCircuitLength(double circuitLength);
 
-    boost::optional<ThermalZone> thermalZone() const;
+    boost::optional<ThermalZone> thermalZone() const override;
 
     bool addToThermalZone(ThermalZone & thermalZone) override;
 

@@ -342,7 +342,7 @@ bool ZoneHVACBaseboardRadiantConvectiveWater::setHeatingCoil(const HVACComponent
   return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->setHeatingCoil(radBaseboardHeatingCoil);
 }
 
-boost::optional<ThermalZone> ZoneHVACBaseboardRadiantConvectiveWater::thermalZone() {
+boost::optional<ThermalZone> ZoneHVACBaseboardRadiantConvectiveWater::thermalZone() const {
   return getImpl<detail::ZoneHVACBaseboardRadiantConvectiveWater_Impl>()->thermalZone();
 }
 

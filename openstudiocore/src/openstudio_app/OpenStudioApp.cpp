@@ -55,7 +55,7 @@
 #include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
 #include "../model/AirTerminalSingleDuctConstantVolumeReheat.hpp"
 #include "../model/AirTerminalSingleDuctParallelPIUReheat.hpp"
-#include "../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVNoReheat.hpp"
 #include "../model/BuildingStory.hpp"
@@ -230,8 +230,8 @@ void OpenStudioApp::onMeasureManagerAndLibraryReady() {
       boost::optional<openstudio::model::Model> model = versionTranslator.loadModel(toPath(fileName));
       if( model ){
 
-        m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
-                                                                   resourcesPath(), 
+        m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(),
+                                                                   resourcesPath(),
                                                                    model,
                                                                    fileName) );
 
@@ -691,12 +691,11 @@ bool OpenStudioApp::closeDocument()
 
     auto messageBox = new QMessageBox(parent);
 
+    messageBox->setWindowTitle("Save Changes?");
     messageBox->setText("The document has been modified.");
-
     messageBox->setInformativeText("Do you want to save your changes?");
 
     messageBox->setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-
     messageBox->setDefaultButton(QMessageBox::Save);
 
     messageBox->button(QMessageBox::Save)->setShortcut(QKeySequence(Qt::Key_S));
@@ -897,14 +896,17 @@ void OpenStudioApp::reloadFile(const QString& osmPath, bool modified, bool saveC
 
 openstudio::path OpenStudioApp::resourcesPath() const
 {
+  openstudio::path p;
   if (applicationIsRunningFromBuildDirectory())
   {
-    return getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources");
+    p = boost::filesystem::canonical(openstudio::toPath("src/openstudio_app/Resources"), getApplicationSourceDirectory());
   }
   else
   {
-    return getApplicationDirectory() / openstudio::toPath("../Resources");
+    p = boost::filesystem::canonical(openstudio::toPath("../Resources"), getApplicationDirectory());
   }
+
+  return p;
 }
 
 openstudio::path OpenStudioApp::openstudioCLIPath() const
@@ -1067,16 +1069,29 @@ void OpenStudioApp::revertToSaved()
   QString fileName = this->currentDocument()->mainWindow()->windowFilePath();
 
   QFile testFile(fileName);
-  if(!testFile.exists()) return;
+  if( !testFile.exists() ) {
+    // Tell the user the file has never been saved, and ask them if they want to create a new file
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(mainWidget(), QString("Revert to Saved"), QString("This model has never been saved.\nDo you want to create a new model?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+    {
+      // JM: copied DLM's hack below so we do not trigger prompt to save in call to closeDocument during newModel()
+      // this->currentDocument()->markAsUnmodified();
 
-  QMessageBox::StandardButton reply;
-  reply = QMessageBox::question(mainWidget(), QString("Revert to Saved"), QString("Are you sure you want to revert to the last saved version?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
-  if (reply == QMessageBox::Yes)
-  {
-    // DLM: quick hack so we do not trigger prompt to save in call to closeDocument during openFile
-    this->currentDocument()->markAsUnmodified();
+      newModel();
+    }
 
-    openFile(fileName, true);
+  } else {
+    // Ask for confirmation
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(mainWidget(), QString("Revert to Saved"), QString("Are you sure you want to revert to the last saved version?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
+    if (reply == QMessageBox::Yes)
+    {
+      // DLM: quick hack so we do not trigger prompt to save in call to closeDocument during openFile
+      this->currentDocument()->markAsUnmodified();
+
+      openFile(fileName, true);
+    }
   }
 
 }
@@ -1163,32 +1178,94 @@ void OpenStudioApp::startMeasureManagerProcess(){
   m_measureManagerProcess->start(program, arguments);
 }
 
+
+
+void OpenStudioApp::writeLibraryPaths(std::vector<openstudio::path> paths) {
+
+    auto defaultPaths = defaultLibraryPaths();
+
+    QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+    if ( paths == defaultPaths ) {
+      settings.remove("library");
+    } else {
+      // Write the paths
+      settings.remove("library");
+      settings.beginWriteArray("library");
+      int i = 0;
+      auto resPath = resourcesPath();
+      std::string s_resPath = toString(resPath);
+
+      for( const auto path : paths ) {
+        settings.setArrayIndex(i);
+
+        // If this is one of the defaultPaths
+        // if (std::find(defaultPaths.begin(),defaultPaths.end(),path) == defaultPaths.end())
+        // If path is located in the 'Resources' folder
+
+        openstudio::path::const_iterator begin1 = resPath.begin();
+        openstudio::path::const_iterator end1 = resPath.end();
+
+        openstudio::path::const_iterator begin2 = path.begin();
+        openstudio::path::const_iterator end2 = path.end();
+
+        bool is_resource = false;
+
+        if (std::distance(begin1, end1) > std::distance(begin2, end2))
+        {
+          is_resource = false; // the run dir has fewer elements than the build dir - cannot be running from builddir
+        } else {
+          // if the rundir begins with the builddir, we know it's running from the builddir
+          is_resource = std::equal(begin1, end1, begin2);
+        }
+
+        if (is_resource) {
+          // Only in boost < 1.6... : boost::filesystem::relative
+          std::string s_path = toString(path);
+
+          // Every path here is an absolute canonical path, so we can just slice the path up to the
+          // 'Resources' part, +1 to strip also the delimiter
+          // TODO: there is probably a more reliable way to do this, it works on linux but unsure on Windows
+          s_path = s_path.substr(s_resPath.length() + 1);
+          openstudio::path rel_path = openstudio::path(s_path);
+          // std::cout << "For '" << path << "', computed relative: " << rel_path << "\n";
+          settings.setValue("path",QString::fromStdString(rel_path.string()));
+
+        } else {
+          settings.setValue("path",QString::fromStdString(path.string()));
+
+        }
+
+        settings.setValue("is_resource", is_resource);
+
+
+        ++i;
+      }
+      settings.endArray();
+    }
+
+}
+
 void OpenStudioApp::loadLibrary() {
   if ( this->currentDocument() ) {
     QWidget * parent = this->currentDocument()->mainWindow();
-  
+
     QString fileName = QFileDialog::getOpenFileName( parent,
                                                     tr("Select Library"),
                                                     toQString(resourcesPath()),
                                                     tr("(*.osm)") );
-  
+
     if( ! (fileName == "") ) {
       QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
       auto paths = libraryPaths();
 
       auto path = toPath(fileName.toStdString());
+
       if( std::find(paths.begin(),paths.end(),path) == paths.end() ) {
+        // If the loaded library isn't already in the list of paths, we add it and rewrite all
         paths.push_back(path);
-        settings.remove("library");
-        settings.beginWriteArray("library");
-        int i = 0;
-        for( const auto ipath : paths ) {
-          settings.setArrayIndex(i);
-          settings.setValue("path",QString::fromStdString(ipath.string()));
-          ++i;
-        }
-        settings.endArray();
+        writeLibraryPaths(paths);
 
         auto future = QtConcurrent::run(this,&OpenStudioApp::buildCompLibraries);
         m_changeLibrariesWatcher.setFuture(future);
@@ -1201,29 +1278,19 @@ void OpenStudioApp::loadLibrary() {
 void OpenStudioApp::changeDefaultLibraries() {
   auto defaultPaths = defaultLibraryPaths();
   auto paths = libraryPaths();
-
-  auto resources = resourcesPath(); 
+  auto resources = resourcesPath();
+  // Starts the library dialog
   LibraryDialog dialog(paths, defaultPaths, resources);
   auto code = dialog.exec();
   auto newPaths = dialog.paths();
 
+  // If user accepts its changes, and there are actually changes to the list of paths
   if ( (code == QDialog::Accepted) && (paths != newPaths) ) {
-    QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
-    if ( newPaths == defaultPaths ) {
-      settings.remove("library");
-    } else {
-      settings.remove("library");
-      settings.beginWriteArray("library");
-      int i = 0;
-      for( const auto path : newPaths ) {
-        settings.setArrayIndex(i);
-        settings.setValue("path",QString::fromStdString(path.string()));
-        ++i;
-      }
-      settings.endArray();
-    }
+    // Write the library settings
+    writeLibraryPaths(newPaths);
 
+    // Trigger actual loading of the libraries
     auto future = QtConcurrent::run(this,&OpenStudioApp::buildCompLibraries);
     m_changeLibrariesWatcher.setFuture(future);
     connect(&m_changeLibrariesWatcher, &QFutureWatcher<std::vector<std::string> >::finished, this, &OpenStudioApp::onChangeDefaultLibrariesDone);
@@ -1231,22 +1298,11 @@ void OpenStudioApp::changeDefaultLibraries() {
 }
 
 void OpenStudioApp::removeLibraryFromsSettings( const openstudio::path & path ) {
+  // erase the given path from the current list of paths
   auto paths = libraryPaths();
   paths.erase(std::remove(paths.begin(), paths.end(), path), paths.end());
-
-  QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
-  settings.remove("library");
-
-  if ( paths != defaultLibraryPaths() ) {
-    settings.beginWriteArray("library");
-    int i = 0;
-    for( const auto newpath : paths ) {
-      settings.setArrayIndex(i);
-      settings.setValue("path",QString::fromStdString(newpath.string()));
-      ++i;
-    }
-    settings.endArray();
-  }
+  // Rewrite all
+  writeLibraryPaths(paths);
 }
 
 void OpenStudioApp::showFailedLibraryDialog(const std::vector<std::string> & failed) {
@@ -1256,7 +1312,21 @@ void OpenStudioApp::showFailedLibraryDialog(const std::vector<std::string> & fai
       text.append(QString::fromStdString(path));
       text.append("\n");
     }
-    QMessageBox::critical(nullptr, QString("Failed to load library"), text);
+    // text.append("\n\nYou will now be able to modify the library paths or restore to the default paths");
+    // QMessageBox::critical(nullptr, QString("Failed to load library"), text);
+
+    text.append("\n\nWould you like to Restore library paths to default values or Open the library settings to change them manually?");
+
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(mainWidget(), QString("Failed to load library"), text,
+                                  QMessageBox::RestoreDefaults|QMessageBox::Open, QMessageBox::Open);
+    if (reply == QMessageBox::RestoreDefaults) {
+      QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+      settings.remove("library");
+    } else {
+      // Open the library dialog
+      changeDefaultLibraries();
+    }
   }
 }
 
@@ -1285,11 +1355,26 @@ std::vector<openstudio::path> OpenStudioApp::libraryPaths() const {
 
   QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
+  openstudio::path resPath = resourcesPath();
+
   int size = settings.beginReadArray("library");
   for (int i = 0; i < size; ++i) {
     settings.setArrayIndex(i);
     auto path = toPath(settings.value("path").toString());
-    paths.push_back(path);
+
+    // Read whether this path is in the resource folder, if not present, assume its absolute
+    auto is_resource = settings.value("is_resource", false).toBool();
+    // We stored resources path as relative, so recompute an absolute canonical path
+    if (is_resource) {
+      // std::cout << "i=" << i << "; Path rel=" << path << "\n";
+      // std::cout << "i=" << i << "; Path abs=" << resPath / path << "\n";
+
+      paths.push_back(resPath / path);
+
+    } else {
+      // std::cout << "i=" << i << "; Path is already abs=" << resPath / path << "\n";
+      paths.push_back(path);
+    }
   }
   settings.endArray();
 

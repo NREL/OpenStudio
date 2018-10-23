@@ -69,7 +69,10 @@ class MODEL_API FanConstantVolume : public StraightComponent {
 
   Schedule availabilitySchedule() const;
 
-  /** Returns the value of the FanEfficiency field. **/
+  /** Returns the value of the Fan Total Efficiency field **/
+  double fanTotalEfficiency() const;
+
+  /** Returns the value of the Fan Total Efficiency field. Deprecated, forwards to fanTotalEfficiency **/
   double fanEfficiency() const;
 
   /** Returns the value of the PressureRise field. **/
@@ -90,7 +93,10 @@ class MODEL_API FanConstantVolume : public StraightComponent {
 
   bool setAvailabilitySchedule(Schedule& s);
 
-  /** Sets the value of the FanEfficiency field. **/
+  /** Sets the value of the Fan Total Efficiency field. **/
+  bool setFanTotalEfficiency(double value);
+
+  /** Sets the value of the Fan Total Efficiency field. Deprecated, forwards to setFanTotalEfficiency. **/
   bool setFanEfficiency(double value);
 
   /** Sets the value of the PressureRise field. **/

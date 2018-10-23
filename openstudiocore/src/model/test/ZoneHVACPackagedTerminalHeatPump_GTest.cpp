@@ -56,7 +56,7 @@ using namespace openstudio;
 
 using namespace openstudio::model;
 
-TEST(ZoneHVACPackagedTerminalHeatPump,ZoneHVACPackagedTerminalHeatPump_ZoneHVACPackagedTerminalHeatPump)
+TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_ZoneHVACPackagedTerminalHeatPump)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 

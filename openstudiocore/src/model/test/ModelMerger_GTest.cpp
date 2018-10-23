@@ -642,3 +642,30 @@ TEST_F(ModelFixture, ModelMerger_ThermalZone) {
 
   }
 }
+
+TEST_F(ModelFixture, ModelMerger_SuggestMapping_ExampleModel) {
+  Model model1 = exampleModel();
+  Model model2 = exampleModel();
+
+  ModelMerger mm;
+
+  // map model with itself
+  std::map<UUID, UUID> suggestedHandleMapping1 = mm.suggestHandleMapping(model1, model1);
+  unsigned size1 = suggestedHandleMapping1.size();
+  EXPECT_TRUE(size1 > 0);
+  for (const auto& mapPair : suggestedHandleMapping1) {
+    EXPECT_EQ(mapPair.first, mapPair.second);
+  }
+
+  // map model with other model, different handles, same names
+  std::map<UUID, UUID> suggestedHandleMapping2 = mm.suggestHandleMapping(model1, model2);
+  unsigned size2 = suggestedHandleMapping2.size();
+  EXPECT_TRUE(size1 > 0);
+  EXPECT_EQ(size1, size2);
+  for (const auto& mapPair : suggestedHandleMapping2) {
+    EXPECT_NE(mapPair.first, mapPair.second);
+    ASSERT_TRUE(model1.getObject(mapPair.first));
+    ASSERT_TRUE(model2.getObject(mapPair.second));
+    EXPECT_EQ(model1.getObject(mapPair.first)->nameString(), model2.getObject(mapPair.second)->nameString());
+  }
+}

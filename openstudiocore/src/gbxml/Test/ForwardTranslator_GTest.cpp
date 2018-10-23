@@ -32,6 +32,8 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../ReverseTranslator.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
 
 #include "../../model/Model.hpp"
 
@@ -64,4 +66,42 @@ TEST_F(gbXMLFixture, ForwardTranslator_exampleModel)
 
   path p2 = resourcesPath() / openstudio::toPath("gbxml/exampleModel2.osm");
   model2->save(p2, true);
+}
+
+TEST_F(gbXMLFixture, ForwardTranslator_AdiabaticSurface)
+{
+  Model model = exampleModel();
+
+  std::string surfname("Adiabatic_Surface");
+
+  // Find a surface, make it adiabatic
+  for (auto &surf : model.getModelObjects<Surface>()) {
+    if (surf.outsideBoundaryCondition() == "Outdoors") {
+      surf.setOutsideBoundaryCondition("Adiabatic");
+      surf.setSunExposure("NoSun");
+      surf.setWindExposure("NoWind");
+      surf.setName(surfname);
+      break;
+    }
+  }
+
+  // Write out the XML
+  path p = resourcesPath() / openstudio::toPath("gbxml/exampleModelAdiabatic.xml");
+
+  ForwardTranslator forwardTranslator;
+  bool test = forwardTranslator.modelToGbXML(model, p);
+
+  EXPECT_TRUE(test);
+
+  // Read the XML back in and check the surface
+  ReverseTranslator reverseTranslator;
+  boost::optional<Model> model2 = reverseTranslator.loadModel(p);
+
+  ASSERT_TRUE(model2);
+
+  auto osurf = model2->getModelObjectByName<Surface>(surfname);
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("Adiabatic", osurf->outsideBoundaryCondition());
+  EXPECT_EQ("NoSun", osurf->sunExposure());
+  EXPECT_EQ("NoWind", osurf->windExposure());
 }

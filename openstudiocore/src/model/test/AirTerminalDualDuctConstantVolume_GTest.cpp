@@ -157,6 +157,7 @@ TEST_F(ModelFixture,AirTerminalDualDuctConstantVolume_AddToAirLoopHVAC) {
     EXPECT_EQ(7u,a.demandComponents().size());
 
     // Make sure we can't add the same zone again
+    EXPECT_EQ(1u,zone.airLoopHVACs().size());
     EXPECT_FALSE(a.addBranchForZone(zone));
 
     // Remove the whole branch
