@@ -716,7 +716,7 @@ if(UNIX)
   # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
   ExternalProject_Add(SWIG
     URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.12.tar.gz
-    URL_MD5 c804efcd8e5085f69f417ba8a9c220f7
+    URL_MD5 41609f61cbfa23d482fa31e4cbe6d939
     PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/../dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && ./Tools/pcre-build.sh
     CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
     BUILD_COMMAND ${MAKE}
