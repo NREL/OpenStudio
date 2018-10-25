@@ -1,0 +1,7 @@
+SET CL="/MP"
+
+perl Configure VC-WIN${OPENSSL_ARCH}A --prefix=${OPENSSL_ROOT_DIR} --openssldir=${OPENSSL_ROOT_DIR}/certs
+nmake
+REM nmake test
+nmake install
+cd ..
