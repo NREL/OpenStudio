@@ -44,7 +44,7 @@ require_relative 'SubProjectClassGenerators/ModelClassGenerator.rb'
 require_relative 'SubProjectClassGenerators/ProjectClassGenerator.rb'
 require_relative 'SubProjectClassGenerators/AnalysisClassGenerator.rb'
 require_relative 'SubProjectClassGenerators/FileHeader.rb'
-require_relative 'SubProjectClassGenerators/ReverseTranslatorGenerator.rb'
+require_relative 'SubProjectClassGenerators/TranslatorGenerator.rb'
 
 
 # Reverse Translation
@@ -53,10 +53,23 @@ def reverseTranslate(options)
     if options[:iddObjectType]
       # Strip out the "OS:"
       epIddName = options[:iddObjectType].to_s.sub(/^OS:/, '')
-      rtgen = ReverseTranslatorGenerator.new(epIddName)
-      rtgen.write_file
+      tgen = TranslatorGenerator.new(epIddName)
+      tgen.write_reverse_translator
     else
-      raise "WARNING: cannot reverse translate without iddObjectType"
+      raise "WARNING: cannot Forward Translate without iddObjectType"
+    end
+  end
+end
+
+def forwardTranslate(options)
+  if options [:forwardTranslator]
+    if options[:iddObjectType]
+      # Strip out the "OS:"
+      epIddName = options[:iddObjectType].to_s.sub(/^OS:/, '')
+      tgen = TranslatorGenerator.new(epIddName)
+      tgen.write_forward_translator
+    else
+      raise "WARNING: cannot Forward Translate without iddObjectType"
     end
   end
 end
@@ -100,6 +113,10 @@ optparse = OptionParser.new do |opts|
     options [:reverseTranslator] = rt
   end
 
+  opts.on( '-f', '--[no-]forwardTanslator', "Autogenerate the ReverseTranslator code for IddObjectType") do |ft|
+    options [:forwardTranslator] = ft
+  end
+
 end
 
 # parse the input parameters
@@ -110,13 +127,13 @@ puts options
 
 # check for required parameters
 if (not options[:className] or not options[:sourceDirectory])
-  if options [:reverseTranslator]
+  if options[:reverseTranslator] or options[:forwardTranslator]
     reverseTranslate(options)
-    exit
+    forwardTranslate(options)
   else
     puts optparse
-    exit
   end
+  exit
 end
 
 # get options out
@@ -565,3 +582,6 @@ if options[:reverseTranslator]
   reverseTranslate(options)
 end
 
+if options [:forwardTranslator]
+  forwardTranslate(options)
+end
