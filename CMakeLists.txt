@@ -292,12 +292,12 @@ if( BUILD_RUBY )
 
   if( UNIX )
     set(RUBY_EXT_CONFIG "")
-    if (NOT Apple)
-      # DLM: still missing: curses, dbm, gdbm
-      # sudo apt-get -y install ruby autoconf automake libtool bison libgdbm-dev zlib1g-dev libffi-dev libssl-dev
-      # sudo apt-get -y install build-essential libssl-dev libreadline-dev zlib1g-dev
-      set(RUBY_EXT_CONFIG "--with-openssl-dir=/usr --with-readline-dir=/usr --with-zlib-dir=/usr")
-    endif()
+    #if (NOT APPLE)
+    #  # DLM: still missing: curses, dbm, gdbm
+    #  # sudo apt-get -y install ruby autoconf automake libtool bison libgdbm-dev zlib1g-dev libffi-dev libssl-dev
+    #  # sudo apt-get -y install build-essential libssl-dev libreadline-dev zlib1g-dev
+    #  set(RUBY_EXT_CONFIG "--with-openssl-dir=/usr --with-readline-dir=/usr --with-zlib-dir=/usr")
+    #endif()
 
     # KSB: For Mac, you may need to install some things...
     # brew install homebrew/dupes/zlib
@@ -305,8 +305,8 @@ if( BUILD_RUBY )
     # brew install autoconf automake libtool
     # brew link autoconf automake libtool
     ExternalProject_Add(Ruby
-      URL https://codeload.github.com/ruby/ruby/tar.gz/v2_2_4
-      URL_MD5 3f0d280116092dc5278b6cff31948aad
+      URL https://codeload.github.com/ruby/ruby/tar.gz/v2_5_1
+      URL_MD5 98b550a05fec0f7a43a22d6c37404fd4
       BUILD_IN_SOURCE 1
       PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch
       CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext ${RUBY_EXT_CONFIG} --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
