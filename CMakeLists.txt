@@ -183,28 +183,8 @@ if(CPUCOUNT EQUAL 0)
 endif()
 
 if(UNIX)
-  if(CPUCOUNT EQUAL 1)
-    set(BOOST_CPUCOUNT "1")
-    set(QT_CPUCOUNT "1")
-  elseif(CPUCOUNT EQUAL 2)
-    set(BOOST_CPUCOUNT "1")
-    set(QT_CPUCOUNT "1")
-  elseif(CPUCOUNT EQUAL 4)
-    set(BOOST_CPUCOUNT "1")
-    set(QT_CPUCOUNT "3")
-  elseif(CPUCOUNT EQUAL 8)
-    set(BOOST_CPUCOUNT "2")
-    set(QT_CPUCOUNT "6")
-  elseif(CPUCOUNT EQUAL 12)
-    set(BOOST_CPUCOUNT "3")
-    set(QT_CPUCOUNT "9")
-  elseif(CPUCOUNT EQUAL 16)
-    set(BOOST_CPUCOUNT "4")
-    set(QT_CPUCOUNT "12")
-  else()
-    set(BOOST_CPUCOUNT "1")
-    set(QT_CPUCOUNT "1")
-  endif()
+  set(BOOST_CPUCOUNT ${CPUCOUNT})
+  set(QT_CPUCOUNT ${CPUCOUNT})
 endif()
 
 mark_as_advanced(
@@ -390,7 +370,7 @@ endif()
 option(BUILD_BOOST "Build Boost" OFF)
 if(BUILD_BOOST)
   if(APPLE)
-    set(apple-flags "-std=c11 -std=c++11 -stdlib=libc++")
+    set(apple-flags "-std=c17 -std=c++17 -stdlib=libc++")
     ExternalProject_Add(Boost
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_68_0.tar.gz
       URL_MD5 5d8b4503582fffa9eefdb9045359c239
@@ -406,7 +386,7 @@ if(BUILD_BOOST)
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_68_0.tar.gz
       URL_MD5 5d8b4503582fffa9eefdb9045359c239
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/gcc_5_no_cxx11.patch
+      PATCH_COMMAND ""
       BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 cxxflags=-fPIC link=static variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-atomic --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
       INSTALL_COMMAND ""
     )
