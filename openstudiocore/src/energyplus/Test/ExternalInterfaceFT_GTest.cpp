@@ -49,7 +49,6 @@
 #include "../../model/ElectricEquipment_Impl.hpp"
 #include "../../model/ElectricEquipmentDefinition.hpp"
 #include "../../model/ElectricEquipmentDefinition_Impl.hpp"
-#include "../../model/Schedule.hpp"
 
 #include "../../model/ExternalInterface.hpp"
 #include "../../model/ExternalInterface_Impl.hpp"

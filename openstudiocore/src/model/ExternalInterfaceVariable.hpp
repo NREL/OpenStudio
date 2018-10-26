@@ -30,7 +30,7 @@
 #ifndef MODEL_EXTERNALINTERFACEVARIABLE_HPP
 #define MODEL_EXTERNALINTERFACEVARIABLE_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
 namespace openstudio {
@@ -105,4 +105,4 @@ typedef std::vector<ExternalInterfaceVariable> ExternalInterfaceVariableVector;
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEVARIABLE_HPP
+#endif // MODEL_EXTERNALINTERFACEVARIABLE_HPP

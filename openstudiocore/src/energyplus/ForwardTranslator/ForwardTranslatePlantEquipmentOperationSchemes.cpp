@@ -58,8 +58,6 @@
 #include "../../model/CoolingTowerTwoSpeed_Impl.hpp"
 #include "../../model/GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp"
 #include "../../model/GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl.hpp"
-#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
-#include "../../model/GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 #include "../../model/GroundHeatExchangerVertical.hpp"
 #include "../../model/GroundHeatExchangerVertical_Impl.hpp"
 #include "../../model/GroundHeatExchangerHorizontalTrench.hpp"
