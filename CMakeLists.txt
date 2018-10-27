@@ -446,18 +446,17 @@ if(BUILD_QT)
   elseif( UNIX )
     # install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
     # also reference https://wiki.qt.io/Building_Qt_5_from_Git
-    # need to apply the workaround at https://bugreports.qt.io/browse/QTBUG-52605 manually
     if( Qt5Static )
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install")
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -static -openssl -no-pch -no-ssse3 -sql-sqlite -plugin-sql-sqlite -skip enginio -skip qtconnectivity -skip qtmultimedia -skip qtpurchasing -skip qtsensors -skip qtwayland -no-compile-examples -nomake examples -nomake tests -nomake tools -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install")
     else()
       message(WARNING "Shared Unix Qt build untested")
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -shared -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -shared -openssl -no-pch -no-ssse3 -sql-sqlite -plugin-sql-sqlite -skip enginio -skip qtconnectivity -skip qtmultimedia -skip qtpurchasing -skip qtsensors -skip qtwayland -no-compile-examples -nomake examples -nomake tests -nomake tools -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
     endif()
     ExternalProject_Add(Qt
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-src-5.11.2.tar.xz
       URL_MD5 152a8ade9c11fe33ff5bc95310a1bb64
       CONFIGURE_COMMAND sh -c "./configure ${QT_CONFIGURE_COMMAND}"
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/qt/qstatic_version_tag.patch
+      PATCH_COMMAND ""
       BUILD_COMMAND sh -c "make -j${CPUCOUNT} && make install"
       INSTALL_COMMAND ""
       BUILD_IN_SOURCE 1
