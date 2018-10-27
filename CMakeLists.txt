@@ -336,10 +336,10 @@ if( BUILD_RUBY )
     # Please install DevKit even though the build will be done by msvc the ruby build system uses some traditionally unix tools
     ExternalProject_Add(Ruby
       DEPENDS ZLib
-      URL https://codeload.github.com/ruby/ruby/tar.gz/v2_2_4
-      URL_MD5 3f0d280116092dc5278b6cff31948aad
+      URL https://codeload.github.com/ruby/ruby/tar.gz/v2_5_1
+      URL_MD5 98b550a05fec0f7a43a22d6c37404fd4
       BUILD_IN_SOURCE 1
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch
+      PATCH_COMMAND "" #${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch
       CONFIGURE_COMMAND ""
       BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat"
       INSTALL_COMMAND ""
