@@ -56,9 +56,6 @@
 
 #include <qevent.h>
 
-#include <QtPlugin>
-//Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
-
 #include "qwinwidget.h"
 
 #include <qt_windows.h>
@@ -121,11 +118,14 @@ QWinWidget::QWinWidget(CWnd *parentWnd, QObject *parent, Qt::WindowFlags f)
 #endif
 
 
-void QWinWidget::init()
+void QWinWidget::init() 
 {
     Q_ASSERT(hParent);
 
     if (hParent) {
+#if QT_VERSION >= 0x050000
+        setProperty("_q_embedded_native_parent_handle", WId(hParent));
+#endif
 	// make the widget window style be WS_CHILD so SetParent will work
 	QT_WA({
         SetWindowLong((HWND)winId(), GWL_STYLE, WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
@@ -134,7 +134,6 @@ void QWinWidget::init()
 	})
 #if QT_VERSION >= 0x050000
         QWindow *window = windowHandle();
-        window->setProperty("_q_embedded_native_parent_handle", (WId)hParent);
         HWND h = static_cast<HWND>(QGuiApplication::platformNativeInterface()->
                                 nativeResourceForWindow("handle", window));
         SetParent(h, hParent);
@@ -193,7 +192,7 @@ void QWinWidget::saveFocus()
 
 /*!
     Shows this widget. Overrides QWidget::show().
-
+    
     \sa showCentered()
 */
 void QWinWidget::show()
@@ -320,7 +319,7 @@ bool QWinWidget::eventFilter(QObject *o, QEvent *e)
     default:
 	break;
     }
-
+    
     return QWidget::eventFilter(o, e);
 }
 
