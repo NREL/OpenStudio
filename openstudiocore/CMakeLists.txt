@@ -1296,7 +1296,6 @@ if(BUILD_OS_APP)
   list(APPEND project_directories "bimserver")
   list(APPEND project_directories "openstudio_lib")
   list(APPEND project_directories "openstudio_app")
-  list(APPEND project_directories "qwt")
 endif()
 
 # Include the resources, should happen after find EnergyPlus
