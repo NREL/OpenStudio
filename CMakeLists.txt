@@ -463,7 +463,18 @@ if(BUILD_QT)
     set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/")
 
   else()
-    # to initialize command prompt run: "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build\vcvarsall.bat" amd64
+    # DLM: I could not get Qt to install Webengine correctly from the super build level it would return the following message:
+    #    Could not detect Windows SDK version ('WindowsSDKVersion' environment variable is not set).
+    #    Qt WebEngine on Windows requires a Windows SDK version 10.0.10586 or newer.
+    #    QtWebEngine will not be built.
+    # Installed the Windows 10 SDK and initializing the command prompt would set that env variable but Qt did not recognize it:
+    #    "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build\vcvarsall.bat" amd64
+    # Initializing the command prompt and calling 'nmake install' from inside the qtwebengine did install Webengine components
+    # In the end I uploaded two zip files, one zip of the official installer downloaded from Qt 'qt_5_11_msvc2017_64_shared.zip' 
+    # The other one was built by me 'qt_5_11_msvc2017_64_shared_nrel_build.zip'
+    # I reccomend using the official one, will make it easier to update in the future
+    # Static Qt libraries are built by NREL using script below
+    
     configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_static_qt.bat.in" "${CMAKE_BINARY_DIR}/build_static_qt.bat")
     configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_shared_qt.bat.in" "${CMAKE_BINARY_DIR}/build_shared_qt.bat")
     if( Qt5Static )
