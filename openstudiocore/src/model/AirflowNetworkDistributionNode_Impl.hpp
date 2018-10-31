@@ -30,7 +30,7 @@
 #ifndef MODEL_AIRFLOWNETWORKDISTRIBUTIONNODE_IMPL_HPP
 #define MODEL_AIRFLOWNETWORKDISTRIBUTIONNODE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
 #include "AirflowNetworkNode_Impl.hpp"
 

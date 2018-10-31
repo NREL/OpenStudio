@@ -27,15 +27,15 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <model/AirflowNetworkEffectiveLeakageArea.hpp>
-#include <model/AirflowNetworkEffectiveLeakageArea_Impl.hpp>
+#include "AirflowNetworkEffectiveLeakageArea.hpp"
+#include "AirflowNetworkEffectiveLeakageArea_Impl.hpp"
 
 #include <utilities/idd/OS_AirflowNetworkEffectiveLeakageArea_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

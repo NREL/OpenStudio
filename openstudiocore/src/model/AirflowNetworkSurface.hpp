@@ -30,7 +30,7 @@
 #ifndef MODEL_AIRFLOWNETWORKSURFACE_HPP
 #define MODEL_AIRFLOWNETWORKSURFACE_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "AirflowNetworkLinkage.hpp"
 
 namespace openstudio {

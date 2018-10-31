@@ -29,7 +29,7 @@
 #ifndef MODEL_COILHEATINGFOURPIPEBEAM_HPP
 #define MODEL_COILHEATINGFOURPIPEBEAM_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
 
 namespace openstudio {

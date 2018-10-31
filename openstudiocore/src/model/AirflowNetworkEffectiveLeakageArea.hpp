@@ -30,7 +30,7 @@
 #ifndef MODEL_AIRFLOWNETWORKEFFECTIVELEAKAGEAREA_HPP
 #define MODEL_AIRFLOWNETWORKEFFECTIVELEAKAGEAREA_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
 #include "AirflowNetworkComponent.hpp"
 
