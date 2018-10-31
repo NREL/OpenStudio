@@ -717,12 +717,12 @@ else()
 endif()
 
 
-# using forked version of SWIG at https://github.com/macumber/swig
+# using forked version of SWIG at https://github.com/macumber/swig/tree/openstudio_swig_3_0_12
 if(UNIX)
   # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
   ExternalProject_Add(SWIG
     URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.12.tar.gz
-    URL_MD5 3197d5a4a0245e12b19fa7898da2fda8
+    URL_MD5 a7d384966974ed79455a455b517ad83d
     PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/../dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && ./Tools/pcre-build.sh
     CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
     BUILD_COMMAND ${MAKE}
@@ -734,7 +734,7 @@ else()
   # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
   set(SWIG_ZIP "swigwin-3.0.12.zip")
   set(SWIG_DIR "swigwin-3.0.12")
-  set(SWIG_EXPECTED_HASH "19a24f42564efae4ef4e249bafc1c944")
+  set(SWIG_EXPECTED_HASH "8ee412d1278ba3cac22e58f26a842918")
   if(EXISTS "${CMAKE_BINARY_DIR}/${SWIG_ZIP}")
     file(MD5 "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" SWIG_HASH)
   endif()
