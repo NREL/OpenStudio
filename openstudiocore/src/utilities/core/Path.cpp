@@ -32,8 +32,6 @@
 
 #include <QDir>
 
-#include <iostream>
-#include <string>
 
 #ifdef Q_OS_WIN
 #include <locale>

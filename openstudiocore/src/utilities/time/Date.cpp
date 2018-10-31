@@ -28,9 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "Date.hpp"
-#include "../core/Exception.hpp"
 
-#include <sstream>
 
 using namespace std;
 using namespace boost;

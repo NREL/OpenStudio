@@ -32,12 +32,10 @@
 #include "../math/FloatCompare.hpp"
 
 #include <random>
-#include <set>
 
 // this should all be moved to a utilities/core/Random.h
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
-#include <boost/optional.hpp>
 
 namespace openstudio{
 

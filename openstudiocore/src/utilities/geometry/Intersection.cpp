@@ -53,7 +53,6 @@ typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
 
 #include <polypartition/polypartition.h>
 
-#include <list>
 
 namespace openstudio{
 

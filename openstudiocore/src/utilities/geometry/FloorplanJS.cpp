@@ -31,18 +31,13 @@
 #include "ThreeJS.hpp"
 #include "Vector3d.hpp"
 #include "Geometry.hpp"
-#include "Plane.hpp"
 #include "Intersection.hpp"
 
 #include "../core/Assert.hpp"
-#include "../core/Compare.hpp"
 //#include "../core/Path.hpp"
 #include "../core/Json.hpp"
 
-#include <jsoncpp/json.h>
 
-#include <iostream>
-#include <string>
 
 namespace openstudio{
 
