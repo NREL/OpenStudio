@@ -191,7 +191,7 @@ license you like.
 
 #  if _MSC_VER >= 1500 // MSVC 2008
     /// Indicates that the following function is deprecated.
-#    define JSONCPP_DEPRECATED(message) __declspec(deprecated(message))
+#    define JSONCPP_DEPRECATED(message) //__declspec(deprecated(message))
 #  endif
 
 #endif // defined(_MSC_VER)
