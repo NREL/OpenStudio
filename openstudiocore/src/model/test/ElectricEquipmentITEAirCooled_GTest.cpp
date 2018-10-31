@@ -96,8 +96,8 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_DefaultConstructor2) {
 
   // Create the curves
   CurveBiquadratic cPUPowerInputFunctionofLoadingandAirTemperatureCurve(model);
-  cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient1Constant(-10.0);
-  cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient2x(10.0);
+  cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient1Constant(-1.0);
+  cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient2x(1.0);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient3xPOW2(0.0);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient4y(0.06667);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient5yPOW2(0.0);
@@ -108,7 +108,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_DefaultConstructor2) {
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setMaximumValueofy(99.0);
 
   CurveBiquadratic airFlowFunctionofLoadingandAirTemperatureCurve(model);
-  airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient1Constant(-10.4);
+  airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient1Constant(-1.4);
   airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient2x(0.9);
   airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient3xPOW2(0.0);
   airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient4y(0.1);
@@ -120,7 +120,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_DefaultConstructor2) {
   airFlowFunctionofLoadingandAirTemperatureCurve.setMaximumValueofy(99.0);
 
   CurveQuadratic fanPowerInputFunctionofFlowCurve(model);
-  fanPowerInputFunctionofFlowCurve.setCoefficient1Constant(10.0);
+  fanPowerInputFunctionofFlowCurve.setCoefficient1Constant(0.0);
   fanPowerInputFunctionofFlowCurve.setCoefficient2x(1.0);
   fanPowerInputFunctionofFlowCurve.setCoefficient3xPOW2(0.0);
   fanPowerInputFunctionofFlowCurve.setMinimumValueofx(0.0);

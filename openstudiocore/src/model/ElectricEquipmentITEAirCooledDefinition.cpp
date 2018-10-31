@@ -298,6 +298,8 @@ namespace detail {
       OS_ASSERT(result);
       result = setSupplyTemperatureDifference(supplyTemperatureDifference());
       OS_ASSERT(result);
+      result = setReturnTemperatureDifference(returnTemperatureDifference());
+      OS_ASSERT(result);
       return result;
     }
 
@@ -557,11 +559,12 @@ ElectricEquipmentITEAirCooledDefinition::ElectricEquipmentITEAirCooledDefinition
   OS_ASSERT(getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>());
 
   //assign default curves
+  //reference: Comparative Study of High Ambient Inlet Temperature Effects on the Performance of Air vs. Liquid Cooled IT Equipment
   CurveBiquadratic cPUPowerInputFunctionofLoadingandAirTemperatureCurve(model);
-  cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient1Constant(-1.0);
+  cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient1Constant(-0.035289);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient2x(1.0);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient3xPOW2(0.0);
-  cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient4y(0.06667);
+  cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient4y(0.0015684);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient5yPOW2(0.0);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient6xTIMESY(0.0);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setMinimumValueofx(0.0);
@@ -570,11 +573,12 @@ ElectricEquipmentITEAirCooledDefinition::ElectricEquipmentITEAirCooledDefinition
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setMaximumValueofy(99.0);
   setCPUPowerInputFunctionofLoadingandAirTemperatureCurve(cPUPowerInputFunctionofLoadingandAirTemperatureCurve);
   
+  //reference: Comparative Study of High Ambient Inlet Temperature Effects on the Performance of Air vs. Liquid Cooled IT Equipment
   CurveBiquadratic airFlowFunctionofLoadingandAirTemperatureCurve(model);
-  airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient1Constant(-1.4);
+  airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient1Constant(-1.025);
   airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient2x(0.9);
   airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient3xPOW2(0.0);
-  airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient4y(0.1);
+  airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient4y(0.05);
   airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient5yPOW2(0.0);
   airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient6xTIMESY(0.0);
   airFlowFunctionofLoadingandAirTemperatureCurve.setMinimumValueofx(0.0);

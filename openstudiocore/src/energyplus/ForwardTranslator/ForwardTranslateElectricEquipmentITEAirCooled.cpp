@@ -92,9 +92,20 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCo
       // Assign object to zone
       idfObject.setString(ElectricEquipment_ITE_AirCooledFields::ZoneName, thermalZone->name().get());
       // attach the supply air node to zone if there is an available supply air node
+      // search airloop first
       if (auto mo = thermalZone->inletPortList().airLoopHVACModelObject()) {
         if (auto node = mo->optionalCast<Node>()) {
           idfObject.setString(ElectricEquipment_ITE_AirCooledFields::SupplyAirNodeName, node->name().get());
+        }
+      } else {
+        // if no airloop, just get a supply node of the thermal zone (could be zoneHVAC)
+        if (thermalZone->inletPortList().modelObjects().size() > 0) {
+          std::vector<ModelObject> objects = thermalZone->inletPortList().modelObjects();
+          for (const auto & elem : objects) {
+            if (auto node = elem.optionalCast<Node>()) {
+              idfObject.setString(ElectricEquipment_ITE_AirCooledFields::SupplyAirNodeName, node->name().get());
+            }
+          }
         }
       }
     }
@@ -137,6 +148,10 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCo
   idfObject.setString(ElectricEquipment_ITE_AirCooledFields::AirFlowCalculationMethod, definition.airFlowCalculationMethod());
   
   idfObject.setString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, definition.designPowerInputCalculationMethod());
+
+  // To match other equipment objects, the Number of Units field was dropped. Users can just use multiplier for both Watts/Area and Watts/Unit definitions
+  // this is to get rid of the warning message for leaving the Number of Units field blank.
+  idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::NumberofUnits, 1.0);
   
   double multiplier = modelObject.multiplier();
 
@@ -205,15 +220,18 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCo
     idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::FractionofElectricPowerSupplyLossestoZone, definition.fractionofElectricPowerSupplyLossestoZone());
   }
 
-  if (!modelObject.isCPUEndUseSubcategoryDefaulted()) {
+  OptionalString s = modelObject.cPUEndUseSubcategory();
+  if (s) {
     idfObject.setString(ElectricEquipment_ITE_AirCooledFields::CPUEndUseSubcategory, modelObject.cPUEndUseSubcategory());
   }
 
-  if (!modelObject.isFanEndUseSubcategoryDefaulted()) {
+  s = modelObject.fanEndUseSubcategory();
+  if (s) {
     idfObject.setString(ElectricEquipment_ITE_AirCooledFields::FanEndUseSubcategory, modelObject.fanEndUseSubcategory());
   }
 
-  if (!modelObject.isElectricPowerSupplyEndUseSubcategoryDefaulted()) {
+  s = modelObject.electricPowerSupplyEndUseSubcategory();
+  if (s) {
     idfObject.setString(ElectricEquipment_ITE_AirCooledFields::ElectricPowerSupplyEndUseSubcategory, modelObject.electricPowerSupplyEndUseSubcategory());
   }
 
