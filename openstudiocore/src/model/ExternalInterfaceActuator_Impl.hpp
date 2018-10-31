@@ -30,7 +30,7 @@
 #ifndef MODEL_EXTERNALINTERFACEACTUATOR_IMPL_HPP
 #define MODEL_EXTERNALINTERFACEACTUATOR_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
 namespace openstudio {
@@ -115,4 +115,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEACTUATOR_IMPL_HPP
+#endif // MODEL_EXTERNALINTERFACEACTUATOR_IMPL_HPP

@@ -28,7 +28,7 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
 #include "../AvailabilityManagerScheduled.hpp"
 #include "../AvailabilityManagerScheduled_Impl.hpp"

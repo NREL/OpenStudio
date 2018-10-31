@@ -58,7 +58,6 @@
 #include "DefaultConstructionSet_Impl.hpp"
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
-#include "ShadingSurfaceGroup.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
 #include "DaylightingControl.hpp"
 #include "DaylightingControl_Impl.hpp"
