@@ -30,20 +30,14 @@
 #include <gtest/gtest.h>
 #include "BCLFixture.hpp"
 
-#include "../BCLComponent.hpp"
-#include "../BCLMeasure.hpp"
 #include "../LocalBCL.hpp"
 #include "../RemoteBCL.hpp"
-#include "../../data/Attribute.hpp"
 #include "../../idd/IddFile.hpp"
 #include "../../idf/Workspace.hpp"
-#include "../../time/DateTime.hpp"
 #include "../../core/FilesystemHelpers.hpp"
 
-#include <QDateTime>
 #include <QDir>
 
-#include <time.h>
 
 using namespace openstudio;
 
