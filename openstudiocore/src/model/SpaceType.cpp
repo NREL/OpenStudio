@@ -96,13 +96,16 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
+#include <QJsonArray>
+#include <QJsonValue>
+#include <QString>
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
-  QMap<QString, QVariant> SpaceType_Impl::m_standardsMap;
+  QJsonArray SpaceType_Impl::m_standardsArr;
 
   SpaceType_Impl::SpaceType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
@@ -286,30 +289,138 @@ namespace detail {
     setString(OS_SpaceTypeFields::GroupRenderingName, "");
   }
 
+
+  boost::optional<std::string> SpaceType_Impl::standardsTemplate() const
+  {
+    boost::optional<std::string> result;
+    if( boost::optional<std::string> standardsTemplate = getString(OS_SpaceTypeFields::StandardsTemplate, false, true) ) {
+      result = standardsTemplate.get();
+    } else {
+      // If not set, try to inherit from building
+      boost::optional<Building> building = this->model().getOptionalUniqueModelObject<Building>();
+      if (building){
+        result = building->standardsTemplate();
+      }
+    }
+    return result;
+  }
+
+  std::vector<std::string> SpaceType_Impl::suggestedStandardsTemplates() const
+  {
+    std::vector<std::string> result;
+
+    boost::optional<std::string> standardsTemplate = this->standardsTemplate();
+
+    // include values from json
+    parseStandardsJSON();
+
+    // Find the possible template names
+    // m_standardsArr is an array of hashes (no nested levels)
+    for( const QJsonValue& v: m_standardsArr) {
+      QJsonObject space_type = v.toObject();
+      result.push_back(toString(space_type["template"].toString()));
+    }
+
+    // include values from model
+
+    boost::optional<Building> building = this->model().getOptionalUniqueModelObject<Building>();
+    boost::optional<std::string> buildingStandardsTemplate;
+    if (building){
+      buildingStandardsTemplate = building->standardsTemplate();
+    }
+
+    for (const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>()){
+      if (other.handle() == this->handle()){
+        continue;
+      }
+      boost::optional<std::string> otherTemplate = other.standardsTemplate();
+      if (otherTemplate){
+        result.push_back(*otherTemplate);
+      }
+    }
+
+    // remove buildingStandardsTemplate and standardsTemplate
+    IstringFind finder;
+    if (buildingStandardsTemplate){
+      finder.addTarget(*buildingStandardsTemplate);
+    }
+    if (standardsTemplate){
+      finder.addTarget(*standardsTemplate);
+    }
+    auto it = std::remove_if(result.begin(), result.end(), finder);
+    result.resize( std::distance(result.begin(),it) );
+
+    // sort
+    std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    it = std::unique(result.begin(), result.end(), IstringEqual());
+    result.resize( std::distance(result.begin(),it) );
+
+    // add building value to front
+    if (buildingStandardsTemplate){
+      result.insert(result.begin(), *buildingStandardsTemplate);
+    }
+
+    // add current to front
+    if (standardsTemplate){
+      result.insert(result.begin(), *standardsTemplate);
+    }
+
+    return result;
+  }
+
+  bool SpaceType_Impl::setStandardsTemplate(const std::string& standardsTemplate)
+  {
+    bool test = setString(OS_SpaceTypeFields::StandardsTemplate, standardsTemplate);
+    OS_ASSERT(test);
+    return test;
+  }
+
+  void SpaceType_Impl::resetStandardsTemplate()
+  {
+    bool test = setString(OS_SpaceTypeFields::StandardsTemplate, "");
+    OS_ASSERT(test);
+  }
+
+  /** STANDARDS BUILDING TYPE */
   boost::optional<std::string> SpaceType_Impl::standardsBuildingType() const
   {
-    return getString(OS_SpaceTypeFields::StandardsBuildingType, false, true);
+    boost::optional<std::string> result;
+    if( boost::optional<std::string> standardsBuildingType = getString(OS_SpaceTypeFields::StandardsBuildingType, false, true) ) {
+      result = standardsBuildingType.get();
+    } else {
+      // If not set, try to inherit from building
+      boost::optional<Building> building = this->model().getOptionalUniqueModelObject<Building>();
+      if (building){
+        result = building->standardsBuildingType();
+      }
+    }
+
+    return result;
   }
 
   std::vector<std::string> SpaceType_Impl::suggestedStandardsBuildingTypes() const
   {
     std::vector<std::string> result;
 
+
+    boost::optional<std::string> standardsTemplate = this->standardsTemplate();
     boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
 
-    // include values from json
-    parseStandardsMap();
+    // include values from json if template is already set
+    if( standardsTemplate ){
+      parseStandardsJSON();
 
-    QMap<QString, QVariant> templates = m_standardsMap["space_types"].toMap();
-    for (QString template_name : templates.uniqueKeys()) {
-      QMap<QString, QVariant> climate_sets = templates[template_name].toMap();
-      for (QString climate_set_name : climate_sets.uniqueKeys()) {
-
-        QMap<QString, QVariant> building_types = climate_sets[climate_set_name].toMap();
-        for (QString building_type_name : building_types.uniqueKeys()) {
-
-          result.push_back(toString(building_type_name));
-
+      // Find the possible building_type names that have the template name
+      // m_standardsArr is an array of hashes (no nested levels)
+      for( const QJsonValue& v: m_standardsArr) {
+        QJsonObject space_type = v.toObject();
+        // TODO: use case insensitive compare?
+        // if( QString::compare(space_type["building_type"].toString(), toQString(*standardsBuildingType), Qt::CaseInsensitive) )
+        if( space_type["template"].toString() == toQString(*standardsTemplate) ) {
+          result.push_back(toString(space_type["building_type"].toString()));
         }
       }
     }
@@ -377,6 +488,7 @@ namespace detail {
     OS_ASSERT(test);
   }
 
+  /** STANDARDS SPACE TYPE */
   boost::optional<std::string> SpaceType_Impl::standardsSpaceType() const
   {
     return getString(OS_SpaceTypeFields::StandardsSpaceType, false, true);
@@ -386,24 +498,23 @@ namespace detail {
   {
     std::vector<std::string> result;
 
+    boost::optional<std::string> standardsTemplate = this->standardsTemplate();
     boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
     boost::optional<std::string> standardsSpaceType = this->standardsSpaceType();
 
-    // include values from json
-    if (standardsBuildingType){
-      parseStandardsMap();
+    // include values from json if template and building_type are set
+    if (standardsTemplate && standardsBuildingType){
+      parseStandardsJSON();
 
-      QMap<QString, QVariant> templates = m_standardsMap["space_types"].toMap();
-      for (QString template_name : templates.uniqueKeys()) {
-        QMap<QString, QVariant> climate_sets = templates[template_name].toMap();
-        for (QString climate_set_name : climate_sets.uniqueKeys()) {
-
-          QMap<QString, QVariant> building_types = climate_sets[climate_set_name].toMap();
-          QMap<QString, QVariant> specific_types = building_types[toQString(*standardsBuildingType)].toMap();
-          for (QString specific_type_name : specific_types.uniqueKeys()) {
-            result.push_back(toString(specific_type_name));
-
-          }
+      // Find the possible space_type names that have the right template and building_type name
+      // m_standardsArr is an array of hashes (no nested levels)
+      for( const QJsonValue& v: m_standardsArr) {
+        QJsonObject space_type = v.toObject();
+        // TODO: use case insensitive compare?
+        // if( QString::compare(space_type["building_type"].toString(), toQString(*standardsBuildingType), Qt::CaseInsensitive) )
+        if( (space_type["template"].toString() == toQString(*standardsTemplate)) &&
+            (space_type["building_type"].toString() == toQString(*standardsBuildingType)) ) {
+          result.push_back(toString(space_type["space_type"].toString()));
         }
       }
     }
@@ -1401,20 +1512,31 @@ namespace detail {
     OS_ASSERT(count == 1);
   }
 
-  void SpaceType_Impl::parseStandardsMap() const
+  void SpaceType_Impl::parseStandardsJSON() const
   {
-    if (m_standardsMap.empty()){
-      QFile file(":/resources/standards/OpenStudio_Standards.json");
+    if (m_standardsArr.empty()){
+      QFile file(":/resources/standards/OpenStudio_Standards_space_types_merged.json");
       if (file.open(QFile::ReadOnly)) {
         QJsonParseError parseError;
         QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll(), &parseError);
         file.close();
         if( QJsonParseError::NoError == parseError.error) {
-          m_standardsMap = jsonDoc.object().toVariantMap();
+          QJsonObject jsonObj = jsonDoc.object();
+          if( (jsonObj.size() == 1) && jsonObj.contains("space_types") && jsonObj["space_types"].isArray()) {
+            m_standardsArr = jsonObj["space_types"].toArray();
+          } else {
+            LOG_AND_THROW("Wrong format encountered in JSON file at 'resources/standards/OpenStudio_Standards_space_types.json'");
+          }
+        } else {
+          LOG_AND_THROW("Problem occured in parsing JSON file at 'resources/standards/OpenStudio_Standards_space_types.json'");
         }
+      } else {
+        LOG_AND_THROW("Cannot open file at 'resources/standards/OpenStudio_Standards_space_types.json' for parsing");
       }
     }
   }
+
+
 
 } // detail
 
@@ -1477,6 +1599,26 @@ bool SpaceType::setRenderingColor(const RenderingColor& renderingColor)
 void SpaceType::resetRenderingColor()
 {
   getImpl<detail::SpaceType_Impl>()->resetRenderingColor();
+}
+
+boost::optional<std::string> SpaceType::standardsTemplate() const
+{
+  return getImpl<detail::SpaceType_Impl>()->standardsTemplate();
+}
+
+std::vector<std::string> SpaceType::suggestedStandardsTemplates() const
+{
+  return getImpl<detail::SpaceType_Impl>()->suggestedStandardsTemplates();
+}
+
+bool SpaceType::setStandardsTemplate(const std::string& standardsTemplate)
+{
+  return getImpl<detail::SpaceType_Impl>()->setStandardsTemplate(standardsTemplate);
+}
+
+void SpaceType::resetStandardsTemplate()
+{
+  getImpl<detail::SpaceType_Impl>()->resetStandardsTemplate();
 }
 
 boost::optional<std::string> SpaceType::standardsBuildingType() const

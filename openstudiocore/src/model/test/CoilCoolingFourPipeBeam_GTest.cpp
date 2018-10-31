@@ -28,7 +28,7 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
 #include "../CoilCoolingFourPipeBeam.hpp"
 #include "../CoilCoolingFourPipeBeam_Impl.hpp"

@@ -30,7 +30,7 @@
 #ifndef MODEL_AIRFLOWNETWORKEQUIVALENTDUCT_IMPL_HPP
 #define MODEL_AIRFLOWNETWORKEQUIVALENTDUCT_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "AirflowNetworkComponent_Impl.hpp"
 
 namespace openstudio {
@@ -64,9 +64,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     virtual boost::optional<ModelObject> componentModelObject() const override;
 

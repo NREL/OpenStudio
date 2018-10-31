@@ -85,7 +85,7 @@ namespace detail {
 
     virtual void removeFromThermalZone() override;
 
-    virtual boost::optional<ThermalZone> thermalZone() override;
+    virtual boost::optional<ThermalZone> thermalZone() const override;
 
     //@}
     /** @name Getters */
@@ -289,4 +289,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONAIRCHILLER_IMPL_HPP
+#endif // MODEL_REFRIGERATIONAIRCHILLER_IMPL_HPP

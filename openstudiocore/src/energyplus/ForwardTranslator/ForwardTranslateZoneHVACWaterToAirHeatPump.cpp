@@ -435,6 +435,13 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACWaterToAirHeatPum
     }
   }
 
+  // TODO: field 'Availability Manager List Name' isn't implemented
+
+  // HeatPumpCoilWaterFlowMode
+  idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpCoilWaterFlowMode,modelObject.heatPumpCoilWaterFlowMode());
+
+  // TODO: field 'Design Specification ZoneHVAC Sizing' isn't implemented since the object isn't wrapped in SDK
+
   return idfObject;
 }
 

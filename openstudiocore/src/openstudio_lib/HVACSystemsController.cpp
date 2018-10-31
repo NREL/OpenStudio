@@ -132,6 +132,9 @@
 #include <QLayout>
 #include <QMutex>
 
+// Switch log Level in one go
+#define LOGLEVEL Trace
+
 namespace openstudio {
 
 const QString SHW = "SHW";
@@ -168,6 +171,24 @@ HVACSystemsController::HVACSystemsController(bool isIP, const model::Model & mod
   connect(m_hvacSystemsView->hvacToolbarView->controlsViewButton, &QPushButton::clicked, this, &HVACSystemsController::onShowControlsClicked);
 
   connect(m_hvacSystemsView->hvacToolbarView->gridViewButton, &QPushButton::clicked, this, &HVACSystemsController::onShowGridClicked);
+
+
+  // connect initial loops to trigger a refresh of the system combo box
+  auto airloops = m_model.getModelObjects<model::AirLoopHVAC>();
+  std::sort(airloops.begin(),airloops.end(),WorkspaceObjectNameLess());
+  for( auto it = airloops.begin(); it != airloops.end(); ++it ) {
+    // Trigger a full refresh if the airLoop name changes
+    LOG(LOGLEVEL, "HVACSystemsController Ctor: Attaching name change for AirLoopHVAC " << it->nameString());
+    it->getImpl<detail::IdfObject_Impl>().get()->detail::IdfObject_Impl::onNameChange.connect<HVACSystemsController, &HVACSystemsController::repopulateSystemComboBox>(this);
+  }
+
+  auto plantloops = m_model.getModelObjects<model::PlantLoop>();
+  std::sort(plantloops.begin(),plantloops.end(),WorkspaceObjectNameLess());
+  for( auto it = plantloops.begin(); it != plantloops.end(); ++it ) {
+    LOG(LOGLEVEL, "HVACSystemsController Ctor: Attaching name change for PlantLoop " << it->nameString());
+    it->getImpl<detail::IdfObject_Impl>().get()->detail::IdfObject_Impl::onNameChange.connect<HVACSystemsController, &HVACSystemsController::repopulateSystemComboBox>(this);
+  }
+
 
   m_updateMutex = new QMutex();
 
@@ -206,6 +227,92 @@ model::Model HVACSystemsController::model() const
   return m_model;
 }
 
+
+void HVACSystemsController::repopulateSystemComboBox() {
+
+  LOG(LOGLEVEL, "repopulateSystemComboBox() called");
+
+  QComboBox * systemComboBox = m_hvacSystemsView->hvacToolbarView->systemComboBox;
+  bool signalsAlreadyBlocked = systemComboBox->signalsBlocked();
+
+  // If not already blocked, we do it
+  if( !signalsAlreadyBlocked ) {
+    // we want to avoid onSystemComboBoxIndexChanged that triggers setCurrentHandle With triggers update
+    // which will retrigger this very function...
+    systemComboBox->blockSignals(true);
+  }
+
+  // Repopulate
+  systemComboBox->clear();
+
+  // Populate system combo box
+  auto airloops = m_model.getModelObjects<model::AirLoopHVAC>();
+  std::sort(airloops.begin(),airloops.end(),WorkspaceObjectNameLess());
+  for( auto it = airloops.begin(); it != airloops.end(); ++it ) {
+    systemComboBox->addItem(QString::fromStdString(it->name().get()), toQString(it->handle()));
+  }
+
+  auto plantloops = m_model.getModelObjects<model::PlantLoop>();
+  std::sort(plantloops.begin(),plantloops.end(),WorkspaceObjectNameLess());
+  for( auto it = plantloops.begin(); it != plantloops.end(); ++it ) {
+    systemComboBox->addItem(QString::fromStdString(it->name().get()), toQString(it->handle()));
+  }
+
+  // TODO: When addressing issue #961 - HVAC Toolbar review, that's where you start
+  systemComboBox->addItem("Service Hot Water",SHW);
+  systemComboBox->addItem("Refrigeration",REFRIGERATION);
+  systemComboBox->addItem("VRF",VRF);
+
+  // Set system combo box current index
+  QString handle = currentHandle();
+  if( handle == SHW  ||
+      m_model.getModelObject<model::WaterUseConnections>(toUUID(handle))
+    )
+  {
+    int index = systemComboBox->findData(SHW);
+
+    OS_ASSERT(index >= 0);
+
+    systemComboBox->setCurrentIndex(index);
+  }
+  else if( handle == REFRIGERATION )
+  {
+    int index = systemComboBox->findData(REFRIGERATION);
+
+    OS_ASSERT(index >= 0);
+
+    systemComboBox->setCurrentIndex(index);
+  }
+  else if( handle == VRF )
+  {
+    int index = systemComboBox->findData(VRF);
+
+    OS_ASSERT(index >= 0);
+
+    systemComboBox->setCurrentIndex(index);
+  }
+  else
+  {
+    int index = systemComboBox->findData(handle);
+
+    if(index >= 0)
+    {
+      systemComboBox->setCurrentIndex(index);
+    }
+    else
+    {
+      systemComboBox->setCurrentIndex(systemComboBox->findData(SHW));
+    }
+  }
+
+
+  // Release if needed
+  if( !signalsAlreadyBlocked ) {
+    // Don't forget to renable both the combobox AND the HVACSystemsController!
+    systemComboBox->blockSignals(false);
+  }
+}
+
 void HVACSystemsController::update()
 {
   if( ! m_updateMutex->tryLock() ) {
@@ -221,70 +328,15 @@ void HVACSystemsController::update()
 
     QComboBox * systemComboBox = m_hvacSystemsView->hvacToolbarView->systemComboBox;
 
+    LOG(LOGLEVEL, "update() called");
     systemComboBox->blockSignals(true);
 
-    systemComboBox->clear();
-
-    // Populate system combo box
-    auto airloops = m_model.getModelObjects<model::AirLoopHVAC>();
-    std::sort(airloops.begin(),airloops.end(),WorkspaceObjectNameLess());
-    for( auto it = airloops.begin(); it != airloops.end(); ++it ) {
-      systemComboBox->addItem(QString::fromStdString(it->name().get()), toQString(it->handle()));
-    }
-
-    auto plantloops = m_model.getModelObjects<model::PlantLoop>();
-    std::sort(plantloops.begin(),plantloops.end(),WorkspaceObjectNameLess());
-    for( auto it = plantloops.begin(); it != plantloops.end(); ++it ) {
-      systemComboBox->addItem(QString::fromStdString(it->name().get()), toQString(it->handle()));
-    }
-
-    systemComboBox->addItem("Service Hot Water",SHW);
-    systemComboBox->addItem("Refrigeration",REFRIGERATION);
-    systemComboBox->addItem("VRF",VRF);
-
-    // Set system combo box current index
-    QString handle = currentHandle();
-    if( handle == SHW  ||
-        m_model.getModelObject<model::WaterUseConnections>(toUUID(handle))
-      )
-    {
-      int index = systemComboBox->findData(SHW);
-
-      OS_ASSERT(index >= 0);
-
-      systemComboBox->setCurrentIndex(index);
-    }
-    else if( handle == REFRIGERATION )
-    {
-      int index = systemComboBox->findData(REFRIGERATION);
-
-      OS_ASSERT(index >= 0);
-
-      systemComboBox->setCurrentIndex(index);
-    }
-    else if( handle == VRF )
-    {
-      int index = systemComboBox->findData(VRF);
-
-      OS_ASSERT(index >= 0);
-
-      systemComboBox->setCurrentIndex(index);
-    }
-    else
-    {
-      int index = systemComboBox->findData(handle);
-
-      if(index >= 0)
-      {
-        systemComboBox->setCurrentIndex(index);
-      }
-      else
-      {
-        systemComboBox->setCurrentIndex(systemComboBox->findData(SHW));
-      }
-    }
+    // Repopulate
+    repopulateSystemComboBox();
 
     // Show layout
+    QString handle = currentHandle();
+
 
     m_hvacSystemsView->hvacToolbarView->zoomInButton->show();
     m_hvacSystemsView->hvacToolbarView->zoomOutButton->show();
@@ -457,9 +509,17 @@ void HVACSystemsController::onObjectAdded(const WorkspaceObject& workspaceObject
 {
   std::vector<IddObjectType> types = systemComboBoxTypes();
 
-  if(std::find(types.begin(),types.end(),workspaceObject.cast<model::ModelObject>().iddObjectType()) != types.end())
+  auto newObjectIddType = workspaceObject.cast<model::ModelObject>().iddObjectType();
+  if(std::find(types.begin(),types.end(),newObjectIddType) != types.end())
   {
     updateLater();
+  }
+
+  // If it's a Loop, we trigger a repopulation of the System Combobox upon name change
+  if( (newObjectIddType == model::PlantLoop::iddObjectType() )
+      || (newObjectIddType == model::AirLoopHVAC::iddObjectType() ) ) {
+    LOG(LOGLEVEL, "onObjectAdded: Attaching name change for " << workspaceObject.briefDescription());
+    workspaceObject.getImpl<detail::IdfObject_Impl>().get()->detail::IdfObject_Impl::onNameChange.connect<HVACSystemsController, &HVACSystemsController::repopulateSystemComboBox>(this);
   }
 }
 
@@ -541,7 +601,12 @@ void HVACLayoutController::addLibraryObjectToModelNode(OSItemId itemid, model::H
         // When you have a WaterToWaterComponent that has a tertiaryPlantLoop, you should override the addToNode method
         // to call addToTertiaryNode when needed. This will work with addSupplyBranchForComponent (etc) too
         // Take a look at CentralHeatPumpSystem::addToNode (and CentralHeatPumpSystem::addToTertiaryNode) for an actual example
-        added = hvacComponent->addToNode(node.get());
+        auto zone = hvacComponent->optionalCast<model::ThermalZone>();
+        if ( zone ) {
+          added = zone->multiAddToNode(node.get());
+        } else {
+          added = hvacComponent->addToNode(node.get());
+        }
       }
       else if( boost::optional<model::Splitter> splitter = comp.optionalCast<model::Splitter>() )
       {
@@ -560,7 +625,7 @@ void HVACLayoutController::addLibraryObjectToModelNode(OSItemId itemid, model::H
         {
           if( boost::optional<model::ThermalZone> zone = object->optionalCast<model::ThermalZone>() )
           {
-            added = airLoop->addBranchForZone(zone.get());
+            added = airLoop->multiAddBranchForZone(zone.get());
           }
         }
       }

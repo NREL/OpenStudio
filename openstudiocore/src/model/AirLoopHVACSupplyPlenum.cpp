@@ -43,8 +43,8 @@
 #include "Model_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include "AirTerminalSingleDuctUncontrolled.hpp"
-#include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_SupplyPlenum_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -161,12 +161,12 @@ namespace detail {
 
     boost::optional<ModelObject> inletObj = node.inletModelObject();
     boost::optional<ModelObject> outletObj = node.outletModelObject();
-    boost::optional<AirTerminalSingleDuctUncontrolled> directAirModelObject;
+    boost::optional<AirTerminalSingleDuctConstantVolumeNoReheat> directAirModelObject;
     boost::optional<ModelObject> directAirInletModelObject;
 
-    if( inletObj && inletObj->optionalCast<AirTerminalSingleDuctUncontrolled>() )
+    if( inletObj && inletObj->optionalCast<AirTerminalSingleDuctConstantVolumeNoReheat>() )
     {
-      directAirModelObject = inletObj->cast<AirTerminalSingleDuctUncontrolled>();
+      directAirModelObject = inletObj->cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
       directAirInletModelObject = directAirModelObject->inletModelObject();
     }
 
@@ -292,7 +292,7 @@ namespace detail {
     OS_ASSERT(splitter);
     OS_ASSERT(mixer);
 
-    return AirLoopHVAC_Impl::addBranchForZoneImpl(thermalZone,t_airLoopHVAC.get(),splitter.get(),mixer.get(),terminal);
+    return AirLoopHVAC_Impl::addBranchForZoneImpl(thermalZone,t_airLoopHVAC.get(),splitter.get(),mixer.get(),true,terminal);
   }
 
   std::vector<IdfObject> AirLoopHVACSupplyPlenum_Impl::remove()

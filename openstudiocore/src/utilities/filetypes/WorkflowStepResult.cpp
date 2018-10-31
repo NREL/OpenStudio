@@ -696,6 +696,11 @@ namespace detail {
 
   void WorkflowStepResult_Impl::addStepValue(const WorkflowStepValue& value)
   {
+    // remove any values with the same name
+    m_stepValues.erase(std::remove_if(m_stepValues.begin(), m_stepValues.end(),
+      [&value](const WorkflowStepValue& x) {return x.name() == value.name(); }),
+      m_stepValues.end());
+
     m_stepValues.push_back(value);
   }
 
@@ -706,6 +711,11 @@ namespace detail {
 
   void WorkflowStepResult_Impl::addStepFile(const openstudio::path& path)
   {
+    // remove any values with the same path
+    m_stepFiles.erase(std::remove_if(m_stepFiles.begin(), m_stepFiles.end(),
+      [&path](const openstudio::path& x) {return x == path; }),
+      m_stepFiles.end());
+
     m_stepFiles.push_back(path);
   }
 

@@ -228,6 +228,8 @@ namespace detail {
 
     OptionalModelObject returnAirModelObject();
 
+    std::vector<ModelObject> returnAirModelObjects() const;
+
     Node zoneAirNode();
 
     boost::optional<DaylightingControl> primaryDaylightingControl() const;
@@ -373,17 +375,27 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
+    bool addToNodeImpl(Node & node);
+
+    bool multiAddToNode(Node & node);
+
     PortList inletPortList() const;
 
     PortList exhaustPortList() const;
+
+    PortList returnPortList() const;
 
     bool addEquipment(const ModelObject & equipment);
 
     bool removeEquipment(const ModelObject & equipment);
 
+    std::string loadDistributionScheme();
+
+    bool setLoadDistributionScheme(std::string scheme);
+
     bool setCoolingPriority(const ModelObject & equipment, unsigned priority);
 
-    bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+    bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
 
     std::vector<ModelObject> equipmentInHeatingOrder();
 
@@ -402,18 +414,25 @@ namespace detail {
     bool setSupplyPlenum(const ThermalZone & plenumZone);
     bool setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex);
     void removeSupplyPlenum();
-    bool setReturnPlenum(const ThermalZone & plenumZone);
-    void removeReturnPlenum();
     void removeSupplyPlenum(unsigned branchIndex);
+    void removeSupplyPlenum(const AirLoopHVAC & airloop);
+    void removeSupplyPlenum(const AirLoopHVAC & airloop, unsigned branchIndex);
+    bool setReturnPlenum(const ThermalZone & plenumZone);
+    bool setReturnPlenum(const ThermalZone & plenumZone, AirLoopHVAC & airLoop);
+    void removeReturnPlenum();
+    void removeReturnPlenum(AirLoopHVAC & airLoop);
 
     std::vector<ZoneMixing> zoneMixing() const;
     std::vector<ZoneMixing> supplyZoneMixing() const;
     std::vector<ZoneMixing> exhaustZoneMixing() const;
 
     boost::optional<HVACComponent> airLoopHVACTerminal() const;
+    std::vector<HVACComponent> airLoopHVACTerminals() const;
 
     AirflowNetworkZone getAirflowNetworkZone();
     boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
+
+    std::vector<AirLoopHVAC> airLoopHVACs() const;
 
    protected:
 

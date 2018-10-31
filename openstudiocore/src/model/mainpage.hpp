@@ -772,7 +772,7 @@ namespace model {
  *      <ul>
  *        <li> (HVACComponent)
  *      </ul>
- *    <li> AirTerminalSingleDuctUncontrolled (StraightComponent)
+ *    <li> AirTerminalSingleDuctConstantVolumeNoReheat (StraightComponent)
  *    <li> AirTerminalSingleDuctVAVReheat (StraightComponent)
  *    <li> FanConstantVolume (StraightComponent)
  *    <li> FanVariableVolume (StraightComponent)

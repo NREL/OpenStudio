@@ -286,21 +286,24 @@ void DesignDayGridController::addColumns(const QString &/*category*/, std::vecto
   for (const QString& field : fields) {
     // Evan note: addCheckBoxColumn does not yet handle reset and default
     if (field == DAYLIGHTSAVINGTIMEINDICATOR) {
-      addCheckBoxColumn(Heading(QString(DAYLIGHTSAVINGTIMEINDICATOR), true, false),
+      // We add the "Apply Selected" button to this column by passing 3rd arg, t_showColumnButton=true
+      addCheckBoxColumn(Heading(QString(DAYLIGHTSAVINGTIMEINDICATOR), true, true),
         std::string("Check to enable daylight saving time indicator."),
         NullAdapter(&model::DesignDay::daylightSavingTimeIndicator),
         NullAdapter(&model::DesignDay::setDaylightSavingTimeIndicator)
         );
     }
     else if (field == RAININDICATOR) {
-      addCheckBoxColumn(Heading(QString(RAININDICATOR), true, false),
+      // We add the "Apply Selected" button to this column by passing 3rd arg, t_showColumnButton=true
+      addCheckBoxColumn(Heading(QString(RAININDICATOR), true, true),
         std::string("Check to enable rain indicator."),
         NullAdapter(&model::DesignDay::rainIndicator),
         NullAdapter(&model::DesignDay::setRainIndicator)
         );
     }
     else if (field == SNOWINDICATOR) {
-      addCheckBoxColumn(Heading(QString(SNOWINDICATOR), true, false),
+      // We add the "Apply Selected" button to this column by passing 3rd arg, t_showColumnButton=true
+      addCheckBoxColumn(Heading(QString(SNOWINDICATOR), true, true),
         std::string("Check to enable snow indicator."),
         NullAdapter(&model::DesignDay::snowIndicator),
         NullAdapter(&model::DesignDay::setSnowIndicator)

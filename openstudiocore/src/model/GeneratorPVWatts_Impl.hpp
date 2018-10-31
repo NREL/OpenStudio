@@ -29,7 +29,7 @@
 #ifndef MODEL_GENERATORPVWATTS_IMPL_HPP
 #define MODEL_GENERATORPVWATTS_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "Generator_Impl.hpp"
 
 namespace openstudio {

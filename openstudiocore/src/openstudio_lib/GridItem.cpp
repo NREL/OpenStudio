@@ -1146,8 +1146,12 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
       for( const auto & centerComp : centerComps ) {
         boost::optional<model::HVACComponent> keyComp = centerComp;
         if( auto zone = centerComp.optionalCast<model::ThermalZone>() ) {
-          if( auto terminal = zone->airLoopHVACTerminal() ) {
-            keyComp = terminal;
+          auto terminals = zone->airLoopHVACTerminals();
+          for( const auto & term : terminals ) {
+            auto a = term.airLoopHVAC();
+            if ( a && ( a->handle() == airLoop->handle() ) ) {
+              keyComp = term;
+            }
           }
         }
         OS_ASSERT(keyComp);

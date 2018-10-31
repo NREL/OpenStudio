@@ -329,9 +329,17 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateAirTerminalSingleDuctConstantVolumeReheat(workspaceObject );
       break;
     }
+
   case openstudio::IddObjectType::AirTerminal_SingleDuct_Uncontrolled :
     {
-      //modelObject = translateAirTerminalSingleDuctUncontrolled(workspaceObject );
+      // We map this to ATU:CV:NoReheat which is the new name
+      modelObject = translateAirTerminalSingleDuctConstantVolumeNoReheat(workspaceObject );
+      break;
+    }
+
+  case openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat :
+    {
+      modelObject = translateAirTerminalSingleDuctConstantVolumeNoReheat(workspaceObject );
       break;
     }
   case openstudio::IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat :
@@ -790,6 +798,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     {
       modelObject = translateScheduleDayHourly(workspaceObject);
       break;
+    }
+  case openstudio::IddObjectType::Schedule_File:
+    {
+    modelObject = translateScheduleFile(workspaceObject);
+    break;
     }
   case openstudio::IddObjectType::Schedule_Day_Interval :
     {
