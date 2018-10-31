@@ -30,8 +30,6 @@
 #include "TimeSeries.hpp"
 #include "../core/Assert.hpp"
 
-#include <exception>
-#include <set>
 
 using namespace std;
 using namespace boost;

@@ -30,13 +30,9 @@
 #include "ZipFile.hpp"
 #include "FilesystemHelpers.hpp"
 
-#include <zlib/zconf.h>
-#include <zlib/zlib.h>
 #include <zlib/contrib/minizip/zip.h>
 
-#include <QDir>
 
-#include <fstream>
 
 namespace openstudio {
 

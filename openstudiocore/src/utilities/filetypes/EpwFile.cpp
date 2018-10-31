@@ -33,16 +33,9 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../core/Checksum.hpp"
 #include "../core/StringHelpers.hpp"
-#include "../core/FilesystemHelpers.hpp"
 #include "../core/Assert.hpp"
-#include "../units/QuantityConverter.hpp"
 
-#include <QStringList>
-#include <QTextStream>
 
-#include <cmath>
-#include <string>
-#include <fstream>
 
 namespace openstudio{
 

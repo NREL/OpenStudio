@@ -32,7 +32,6 @@
 
 #include "../idd/IddObject.hpp"
 
-#include "../core/Optional.hpp"
 #include "../core/Assert.hpp"
 
 namespace openstudio {

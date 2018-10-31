@@ -30,10 +30,7 @@
 #include "WorkflowJSON.hpp"
 #include "WorkflowJSON_Impl.hpp"
 
-#include "WorkflowStep.hpp"
 #include "WorkflowStep_Impl.hpp"
-#include "WorkflowStepResult.hpp"
-#include "RunOptions.hpp"
 #include "RunOptions_Impl.hpp"
 
 #include "../core/Assert.hpp"
@@ -41,10 +38,7 @@
 #include "../core/Checksum.hpp"
 #include "../time/DateTime.hpp"
 
-#include <boost/optional.hpp>
 
-#include <string>
-#include <fstream>
 
 namespace openstudio{
 namespace detail{
