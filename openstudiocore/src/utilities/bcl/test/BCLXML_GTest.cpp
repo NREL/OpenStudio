@@ -30,6 +30,7 @@
 #include <gtest/gtest.h>
 #include "BCLFixture.hpp"
 
+#include "../BCLXML.hpp"
 
 using namespace openstudio;
 
