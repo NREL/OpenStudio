@@ -137,7 +137,7 @@ namespace detail {
 
   bool AdditionalProperties_Impl::hasFeature(const std::string &name) const
   {
-    return getFeatureGroupByName(name);
+    return getFeatureGroupByName(name).has_value();
   }
 
   boost::optional<std::string> AdditionalProperties_Impl::getFeatureDataType(const std::string &name) const

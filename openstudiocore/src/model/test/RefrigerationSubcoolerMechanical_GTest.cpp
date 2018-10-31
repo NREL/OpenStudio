@@ -73,7 +73,7 @@ TEST_F(ModelFixture,RefrigerationSubcoolerMechanical_CapacityProvidingSystem)
   refrigerationSubcoolerMechanical.setCapacityProvidingSystem(refrigerationSystem);
 
   boost::optional<RefrigerationSystem> refrigerationSystem2 = refrigerationSubcoolerMechanical.capacityProvidingSystem();
-  EXPECT_TRUE(refrigerationSystem2 != nullptr);
+  EXPECT_TRUE(refrigerationSystem2.has_value());
   EXPECT_EQ( refrigerationSystem.handle(), refrigerationSystem2.get().handle());
 }
 
