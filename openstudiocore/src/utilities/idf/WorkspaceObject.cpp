@@ -410,7 +410,7 @@ namespace detail {
 
     // regular field -- name or data
     if ((index == 0) && (iddObject().hasNameField())) {
-      return setName(value,checkValidity);
+      return setName(value,checkValidity).has_value();
     } // name
 
     // record diffs at start
@@ -736,7 +736,7 @@ namespace detail {
     if (m_handle.isNull()) {
       return false;
     }
-    return m_sourceData;
+    return m_sourceData.has_value();
   }
 
   bool WorkspaceObject_Impl::canBeSource(unsigned index,const StringVector& refLists) const {
@@ -759,7 +759,7 @@ namespace detail {
 
   bool WorkspaceObject_Impl::isTarget() const {
     if (m_handle.isNull()) { return false; }
-    return m_targetData;
+    return m_targetData.has_value();
   }
 
   std::vector<std::string> WorkspaceObject_Impl::canBeTarget() const {

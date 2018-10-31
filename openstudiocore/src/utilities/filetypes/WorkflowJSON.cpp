@@ -274,7 +274,7 @@ namespace detail{
     unsigned index = currentStepIndex();
     m_value["current_step"] = index + 1;
     onUpdate();
-    return currentStep();
+    return currentStep().is_initialized();
   }
 
   boost::optional<std::string> WorkflowJSON_Impl::completedStatus() const
