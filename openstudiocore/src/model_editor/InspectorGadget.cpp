@@ -227,7 +227,7 @@ void InspectorGadget::layoutModelObj(openstudio::WorkspaceObject& workspaceObj,
 
   m_workspaceObj = workspaceObj;
 
-  m_objectHasName = workspaceObj.name();
+  m_objectHasName = workspaceObj.name().has_value();
   if (m_objectHasName){
     IddField iddField = workspaceObj.iddObject().getField(0).get();
     std::string fieldName = iddField.name();
