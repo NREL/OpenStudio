@@ -2,9 +2,9 @@
  * \file DMS.cpp
  * \brief Implementation for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/DMS.hpp>
@@ -19,11 +19,11 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const string DMS::hemispheres_ = "SNWE";
-  const string DMS::signs_ = "-+";
-  const string DMS::digits_ = "0123456789";
-  const string DMS::dmsindicators_ = "D'\":";
-  const string DMS::components_[] = {"degrees", "minutes", "seconds"};
+  const char* const DMS::hemispheres_ = "SNWE";
+  const char* const DMS::signs_ = "-+";
+  const char* const DMS::digits_ = "0123456789";
+  const char* const DMS::dmsindicators_ = "D'\":";
+  const char* const DMS::components_[] = {"degrees", "minutes", "seconds"};
 
   Math::real DMS::Decode(const std::string& dms, flag& ind) {
     string dmsa = dms;
@@ -157,17 +157,17 @@ namespace GeographicLib {
             k = npiece;
           }
           if (unsigned(k) == npiece - 1) {
-            errormsg = "Repeated " + components_[k] +
+            errormsg = "Repeated " + string(components_[k]) +
               " component in " + dmsa.substr(beg, end - beg);
             break;
           } else if (unsigned(k) < npiece) {
-            errormsg = components_[k] + " component follows "
-              + components_[npiece - 1] + " component in "
+            errormsg = string(components_[k]) + " component follows "
+              + string(components_[npiece - 1]) + " component in "
               + dmsa.substr(beg, end - beg);
             break;
           }
           if (ncurrent == 0) {
-            errormsg = "Missing numbers in " + components_[k] +
+            errormsg = "Missing numbers in " + string(components_[k]) +
               " component of " + dmsa.substr(beg, end - beg);
             break;
           }
@@ -236,8 +236,10 @@ namespace GeographicLib {
       // Assume check on range of result is made by calling routine (which
       // might be able to offer a better diagnostic).
       return real(sign) *
-        ( fpieces[2] ? (60*(60*fpieces[0] + fpieces[1]) + fpieces[2]) / 3600 :
-          ( fpieces[1] ? (60*fpieces[0] + fpieces[1]) / 60 : fpieces[0] ) );
+        ( fpieces[2] != 0 ?
+          (60*(60*fpieces[0] + fpieces[1]) + fpieces[2]) / 3600 :
+          ( fpieces[1] != 0 ?
+            (60*fpieces[0] + fpieces[1]) / 60 : fpieces[0] ) );
     } while (false);
     real val = Utility::nummatch<real>(dmsa);
     if (val == 0)

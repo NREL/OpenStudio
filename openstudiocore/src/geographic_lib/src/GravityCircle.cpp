@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/GravityCircle.hpp>
@@ -16,11 +16,11 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Math::real GravityCircle::Gravity(real lon, real& gx, real& gy, real& gz)
-    const {
-    real clam, slam, M[Geocentric::dim2_];
+  Math::real GravityCircle::Gravity(real lon,
+                                    real& gx, real& gy, real& gz) const {
+    real slam, clam, M[Geocentric::dim2_];
     Math::sincosd(lon, slam, clam);
-    real Wres = W(clam, slam, gx, gy, gz);
+    real Wres = W(slam, clam, gx, gy, gz);
     Geocentric::Rotation(_sphi, _cphi, slam, clam, M);
     Geocentric::Unrotate(M, gx, gy, gz, gx, gy, gz);
     return Wres;
@@ -28,9 +28,9 @@ namespace GeographicLib {
 
   Math::real GravityCircle::Disturbance(real lon, real& deltax, real& deltay,
                                         real& deltaz) const {
-    real clam, slam, M[Geocentric::dim2_];
+    real slam, clam, M[Geocentric::dim2_];
     Math::sincosd(lon, slam, clam);
-    real Tres = InternalT(clam, slam, deltax, deltay, deltaz, true, true);
+    real Tres = InternalT(slam, clam, deltax, deltay, deltaz, true, true);
     Geocentric::Rotation(_sphi, _cphi, slam, clam, M);
     Geocentric::Unrotate(M, deltax, deltay, deltaz, deltax, deltay, deltaz);
     return Tres;
@@ -39,25 +39,24 @@ namespace GeographicLib {
   Math::real GravityCircle::GeoidHeight(real lon) const {
     if ((_caps & GEOID_HEIGHT) != GEOID_HEIGHT)
       return Math::NaN();
-    real clam, slam, dummy;
+    real slam, clam, dummy;
     Math::sincosd(lon, slam, clam);
-    real T = InternalT(clam, slam, dummy, dummy, dummy, false, false);
-    real correction = _corrmult * _correction(clam, slam);
+    real T = InternalT(slam, clam, dummy, dummy, dummy, false, false);
+    real correction = _corrmult * _correction(slam, clam);
     return T/_gamma0 + correction;
   }
 
   void GravityCircle::SphericalAnomaly(real lon,
-                                       real& Dg01, real& xi, real& eta)
-    const {
+                                       real& Dg01, real& xi, real& eta) const {
     if ((_caps & SPHERICAL_ANOMALY) != SPHERICAL_ANOMALY) {
       Dg01 = xi = eta = Math::NaN();
       return;
     }
-    real clam, slam;
+    real slam, clam;
     Math::sincosd(lon, slam, clam);
     real
       deltax, deltay, deltaz,
-      T = InternalT(clam, slam, deltax, deltay, deltaz, true, false);
+      T = InternalT(slam, clam, deltax, deltay, deltaz, true, false);
     // Rotate cartesian into spherical coordinates
     real MC[Geocentric::dim2_];
     Geocentric::Rotation(_spsi, _cpsi, slam, clam, MC);
@@ -68,23 +67,22 @@ namespace GeographicLib {
     eta = -(deltax/_gamma) / Math::degree();
   }
 
-  Math::real GravityCircle::W(real clam, real slam,
+  Math::real GravityCircle::W(real slam, real clam,
                               real& gX, real& gY, real& gZ) const {
-    real Wres = V(clam, slam, gX, gY, gZ) + _frot * _Px / 2;
+    real Wres = V(slam, clam, gX, gY, gZ) + _frot * _Px / 2;
     gX += _frot * clam;
     gY += _frot * slam;
     return Wres;
   }
 
-  Math::real GravityCircle::V(real clam, real slam,
-                              real& GX, real& GY, real& GZ)
-    const {
+  Math::real GravityCircle::V(real slam, real clam,
+                              real& GX, real& GY, real& GZ) const {
     if ((_caps & GRAVITY) != GRAVITY) {
       GX = GY = GZ = Math::NaN();
       return Math::NaN();
     }
     real
-      Vres = _gravitational(clam, slam, GX, GY, GZ),
+      Vres = _gravitational(slam, clam, GX, GY, GZ),
       f = _GMmodel / _amodel;
     Vres *= f;
     GX *= f;
@@ -93,7 +91,7 @@ namespace GeographicLib {
     return Vres;
   }
 
-  Math::real GravityCircle::InternalT(real clam, real slam,
+  Math::real GravityCircle::InternalT(real slam, real clam,
                                       real& deltaX, real& deltaY, real& deltaZ,
                                       bool gradp, bool correct) const {
     if (gradp) {
@@ -108,8 +106,8 @@ namespace GeographicLib {
     if (_dzonal0 == 0)
       correct = false;
     real T = (gradp
-              ? _disturbing(clam, slam, deltaX, deltaY, deltaZ)
-              : _disturbing(clam, slam));
+              ? _disturbing(slam, clam, deltaX, deltaY, deltaZ)
+              : _disturbing(slam, clam));
     T = (T / _amodel - (correct ? _dzonal0 : 0) * _invR) * _GMmodel;
     if (gradp) {
       real f = _GMmodel / _amodel;

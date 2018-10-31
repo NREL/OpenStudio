@@ -2,9 +2,9 @@
  * \file GeoCoords.cpp
  * \brief Implementation for GeographicLib::GeoCoords class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/GeoCoords.hpp>
@@ -50,7 +50,7 @@ namespace GeographicLib {
                             + " (ex: 38n, 09s, n)");
       UTMUPS::DecodeZone(sa[zoneind], _zone, _northp);
       for (unsigned i = 0; i < 2; ++i)
-        (i ? _northing : _easting) = DMS::Decode(sa[coordind + i]);
+        (i ? _northing : _easting) = Utility::val<real>(sa[coordind + i]);
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
                       _lat, _long, _gamma, _k);
       FixHemisphere();
@@ -108,7 +108,8 @@ namespace GeographicLib {
                                bool abbrev, std::string& utm) {
     ostringstream os;
     prec = max(-5, min(9 + Math::extra_digits(), prec));
-    real scale = prec < 0 ? pow(real(10), -prec) : real(1);
+    // Need extra real because, since C++11, pow(float, int) returns double
+    real scale = prec < 0 ? real(pow(real(10), -prec)) : real(1);
     os << UTMUPS::EncodeZone(zone, northp, abbrev) << fixed << setfill('0');
     if (Math::isfinite(easting)) {
       os << " " << Utility::str(easting / scale, max(0, prec));
@@ -131,8 +132,8 @@ namespace GeographicLib {
     return utm;
   }
 
-  string GeoCoords::UTMUPSRepresentation(bool northp, int prec, bool abbrev)
-    const {
+  string GeoCoords::UTMUPSRepresentation(bool northp, int prec,
+                                         bool abbrev) const {
     real e, n;
     int z;
     UTMUPS::Transfer(_zone, _northp, _easting, _northing,
@@ -149,8 +150,8 @@ namespace GeographicLib {
     return utm;
   }
 
-  string GeoCoords::AltUTMUPSRepresentation(bool northp, int prec, bool abbrev)
-    const {
+  string GeoCoords::AltUTMUPSRepresentation(bool northp, int prec,
+                                            bool abbrev) const {
     real e, n;
     int z;
     UTMUPS::Transfer(_alt_zone, _northp, _alt_easting, _alt_northing,

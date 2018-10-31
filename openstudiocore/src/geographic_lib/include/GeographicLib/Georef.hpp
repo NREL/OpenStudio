@@ -2,9 +2,9 @@
  * \file Georef.hpp
  * \brief Header for GeographicLib::Georef class
  *
- * Copyright (c) Charles Karney (2015) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2015-2017) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOREF_HPP)
@@ -38,10 +38,10 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Georef {
   private:
     typedef Math::real real;
-    static const std::string digits_;
-    static const std::string lontile_;
-    static const std::string lattile_;
-    static const std::string degrees_;
+    static const char* const digits_;
+    static const char* const lontile_;
+    static const char* const lattile_;
+    static const char* const degrees_;
     enum {
       tile_ = 15,               // The size of tile in degrees
       lonorig_ = -180,          // Origin for longitude
@@ -125,7 +125,8 @@ namespace GeographicLib {
         using std::pow;
         // Treat prec = 1 as 2.
         prec = (std::max)(2, (std::min)(int(maxprec_), prec));
-        return 1/(60 * pow(real(base_), prec - 2));
+        // Need extra real because, since C++11, pow(float, int) returns double
+        return 1/(60 * real(pow(real(base_), prec - 2)));
       }
     }
 

@@ -104,7 +104,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 *** GeographicLib *************************************************************
-Copyright (c) 2008-2015, Charles Karney
+The MIT License (MIT); this license applies to GeographicLib,
+versions 1.12 and later.
+
+Copyright (c) 2008-2017, Charles Karney
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -125,7 +128,6 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-
 
 *** LiteSQL *******************************************************************
 BSD License

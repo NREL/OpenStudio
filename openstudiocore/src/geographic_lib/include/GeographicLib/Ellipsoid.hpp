@@ -2,9 +2,9 @@
  * \file Ellipsoid.hpp
  * \brief Header for GeographicLib::Ellipsoid class
  *
- * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ELLIPSOID_HPP)
@@ -505,8 +505,10 @@ namespace GeographicLib {
      * <i>e''</i> <sup>2</sup> should lie in (&minus;1, 1).
      * The returned value \e f lies in (&minus;&infin;, 1).
      **********************************************************************/
-    static Math::real ThirdEccentricitySqToFlattening(real epp2)
-    { return 2 * epp2 / (sqrt((1 - epp2) * (1 + epp2)) + 1 + epp2); }
+    static Math::real ThirdEccentricitySqToFlattening(real epp2) {
+      using std::sqrt;
+      return 2 * epp2 / (sqrt((1 - epp2) * (1 + epp2)) + 1 + epp2);
+    }
 
     /**
      * @param[in] f = (\e a &minus; \e b) / \e a, the flattening.

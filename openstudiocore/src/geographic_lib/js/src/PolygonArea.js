@@ -9,12 +9,12 @@
  *
  *    Charles F. F. Karney,
  *    Algorithms for geodesics, J. Geodesy 87, 43-55 (2013);
- *    https://dx.doi.org/10.1007/s00190-012-0578-z
- *    Addenda: http://geographiclib.sf.net/geod-addenda.html
+ *    https://doi.org/10.1007/s00190-012-0578-z
+ *    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
  *
- * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  */
 
 // Load AFTER GeographicLib/Math.js and GeographicLib/Geodesic.js
@@ -27,7 +27,6 @@
    *   class.
    */
   p, g, m, a) {
-  "use strict";
 
   var transit, transitdirect;
   transit = function(lon1, lon2) {
@@ -37,9 +36,9 @@
     // Compute lon12 the same way as Geodesic::Inverse.
     lon1 = m.AngNormalize(lon1);
     lon2 = m.AngNormalize(lon2);
-    lon12 = m.AngDiff(lon1, lon2);
-    cross = lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
-      (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
+    lon12 = m.AngDiff(lon1, lon2).s;
+    cross = lon1 <= 0 && lon2 > 0 && lon12 > 0 ? 1 :
+      (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
     return cross;
   };
 
@@ -152,10 +151,14 @@
    *   counter-clockwise) traversal counts as a positive area.
    * @param {bool} sign if true then return a signed result for the area if the
    *   polygon is traversed in the "wrong" direction instead of returning the
+   *   area for the rest of the earth.
    * @returns {object} r where r.number is the number of vertices, r.perimeter
    *   is the perimeter (meters), and r.area (only returned if polyline is
    *   false) is the area (meters<sup>2</sup>).
-   * @description More points can be added to the polygon after this call.
+   * @description If the object is a polygon (and not a polygon), the perimeter
+   *   includes the length of a final edge connecting the current point to the
+   *   initial point.  If the object is a polyline, then area is nan.  More
+   *   points can be added to the polygon after this call.
    */
   p.PolygonArea.prototype.Compute = function(reverse, sign) {
     var vals = {number: this.num}, t, tempsum, crossings;
@@ -275,7 +278,7 @@
    * @description A new vertex is *not* added to the polygon.
    */
   p.PolygonArea.prototype.TestEdge = function(azi, s, reverse, sign) {
-    var vals = {number: this.num ? this.num + 1 : 0}, t, tempsump, crossings;
+    var vals = {number: this.num ? this.num + 1 : 0}, t, tempsum, crossings;
     if (this.num === 0)
       return vals;
     vals.perimeter = this._perimetersum.Sum() + s;
@@ -287,8 +290,8 @@
     t = this._geod.Direct(this.lat, this.lon, azi, s, this._mask);
     tempsum += t.S12;
     crossings += transitdirect(this.lon, t.lon2);
-    t = this._geod(t.lat2, t.lon2, this._lat0, this._lon0, this._mask);
-    perimeter += t.s12;
+    t = this._geod.Inverse(t.lat2, t.lon2, this._lat0, this._lon0, this._mask);
+    vals.perimeter += t.s12;
     tempsum += t.S12;
     crossings += transit(t.lon2, this._lon0);
 

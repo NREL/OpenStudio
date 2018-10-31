@@ -9,8 +9,13 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = src man tools doc js include matlab python cmake examples
 
-EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL README.md pom.xml \
-	Makefile.mk CMakeLists.txt windows maxima doc legacy java js dotnet
+EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL README.md \
+	Makefile.mk CMakeLists.txt windows maxima doc legacy java js dotnet \
+	wrapper
+
+# Install the pkg-config file; the directory is set using
+# PKG_INSTALLDIR in configure.ac.
+pkgconfig_DATA = cmake/geographiclib.pc
 
 dist-hook:
 	rm -rf $(distdir)/doc/html $(distdir)/doc/manpages \
@@ -18,6 +23,9 @@ dist-hook:
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf
 	rm -rf $(distdir)/java/targets
 	find $(distdir)/java -type f -name '*.class' | xargs rm -rf
+	find $(distdir)/wrapper -mindepth 2 -type d | xargs rm -rf
+	find $(distdir)/wrapper -type f -name '*.o' -o -name '*.mex*' | \
+		xargs rm -f
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf
 	find $(distdir)/windows -type f \
 		! \( -name '*.sln' -o -name '*.vc*proj' -o -name '*.mk' \)| \

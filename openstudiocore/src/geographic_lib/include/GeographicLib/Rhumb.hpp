@@ -2,9 +2,9 @@
  * \file Rhumb.hpp
  * \brief Header for GeographicLib::Rhumb and GeographicLib::RhumbLine classes
  *
- * Copyright (c) Charles Karney (2014-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_RHUMB_HPP)
@@ -75,7 +75,7 @@ namespace GeographicLib {
     static const int maxpow_ = GEOGRAPHICLIB_RHUMBAREA_ORDER;
     // _R[0] unused
     real _R[maxpow_ + 1];
-    static inline real gd(real x)
+    static real gd(real x)
     { using std::atan; using std::sinh; return atan(sinh(x)); }
 
     // Use divided differences to determine (mu2 - mu1) / (psi2 - psi1)
@@ -86,61 +86,62 @@ namespace GeographicLib {
     //   W. M. Kahan and R. J. Fateman,
     //   Symbolic computation of divided differences,
     //   SIGSAM Bull. 33(3), 7-28 (1999)
-    //   https://dx.doi.org/10.1145/334714.334716
+    //   https://doi.org/10.1145/334714.334716
     //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
 
-    static inline real Dlog(real x, real y) {
+    static real Dlog(real x, real y) {
       real t = x - y;
-      return t ? 2 * Math::atanh(t / (x + y)) / t : 1 / x;
+      return t != 0 ? 2 * Math::atanh(t / (x + y)) / t : 1 / x;
     }
     // N.B., x and y are in degrees
-    static inline real Dtan(real x, real y) {
+    static real Dtan(real x, real y) {
       real d = x - y, tx = Math::tand(x), ty = Math::tand(y), txy = tx * ty;
-      return d ?
+      return d != 0 ?
         (2 * txy > -1 ? (1 + txy) * Math::tand(d) : tx - ty) /
         (d * Math::degree()) :
         1 + txy;
     }
-    static inline real Datan(real x, real y) {
+    static real Datan(real x, real y) {
       using std::atan;
       real d = x - y, xy = x * y;
-      return d ? (2 * xy > -1 ? atan( d / (1 + xy) ) : atan(x) - atan(y)) / d :
+      return d != 0 ?
+        (2 * xy > -1 ? atan( d / (1 + xy) ) : atan(x) - atan(y)) / d :
         1 / (1 + xy);
     }
-    static inline real Dsin(real x, real y) {
+    static real Dsin(real x, real y) {
       using std::sin; using std::cos;
       real d = (x - y) / 2;
-      return cos((x + y)/2) * (d ? sin(d) / d : 1);
+      return cos((x + y)/2) * (d != 0 ? sin(d) / d : 1);
     }
-    static inline real Dsinh(real x, real y) {
+    static real Dsinh(real x, real y) {
       using std::sinh; using std::cosh;
       real d = (x - y) / 2;
-      return cosh((x + y) / 2) * (d ? sinh(d) / d : 1);
+      return cosh((x + y) / 2) * (d != 0 ? sinh(d) / d : 1);
     }
-    static inline real Dcosh(real x, real y) {
+    static real Dcosh(real x, real y) {
       using std::sinh;
       real d = (x - y) / 2;
-      return sinh((x + y) / 2) * (d ? sinh(d) / d : 1);
+      return sinh((x + y) / 2) * (d != 0 ? sinh(d) / d : 1);
     }
-    static inline real Dasinh(real x, real y) {
+    static real Dasinh(real x, real y) {
       real d = x - y,
         hx = Math::hypot(real(1), x), hy = Math::hypot(real(1), y);
-      return d ? Math::asinh(x*y > 0 ? d * (x + y) / (x*hy + y*hx) :
-                             x*hy - y*hx) / d :
+      return d != 0 ? Math::asinh(x*y > 0 ? d * (x + y) / (x*hy + y*hx) :
+                                  x*hy - y*hx) / d :
         1 / hx;
     }
-    static inline real Dgd(real x, real y) {
+    static real Dgd(real x, real y) {
       using std::sinh;
       return Datan(sinh(x), sinh(y)) * Dsinh(x, y);
     }
     // N.B., x and y are the tangents of the angles
-    static inline real Dgdinv(real x, real y)
+    static real Dgdinv(real x, real y)
     { return Dasinh(x, y) / Datan(x, y); }
     // Copied from LambertConformalConic...
     // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
-    inline real Deatanhe(real x, real y) const {
+    real Deatanhe(real x, real y) const {
       real t = x - y, d = 1 - _ell._e2 * x * y;
-      return t ? Math::eatanhe(t / d, _ell._es) / t : _ell._e2 / d;
+      return t != 0 ? Math::eatanhe(t / d, _ell._es) / t : _ell._e2 / d;
     }
     // (E(x) - E(y)) / (x - y) -- E = incomplete elliptic integral of 2nd kind
     real DE(real x, real y) const;
@@ -218,14 +219,10 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = 1U<<14,
       /**
-       * Unroll \e lon2 in the direct calculation.  (This flag used to be
-       * called LONG_NOWRAP.)
+       * Unroll \e lon2 in the direct calculation.
        * @hideinitializer
        **********************************************************************/
       LONG_UNROLL   = 1U<<15,
-      /// \cond SKIP
-      LONG_NOWRAP   = LONG_UNROLL,
-      /// \endcond
       /**
        * Calculate everything.  (LONG_UNROLL is not included in this mask.)
        * @hideinitializer
@@ -262,7 +259,7 @@ namespace GeographicLib {
      * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
      *
      * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].  The value of
-     * \e lon2 returned is in the range [&minus;180&deg;, 180&deg;).
+     * \e lon2 returned is in the range [&minus;180&deg;, 180&deg;].
      *
      * If point 1 is a pole, the cosine of its latitude is taken to be
      * 1/&epsilon;<sup>2</sup> (where &epsilon; is 2<sup>-52</sup>).  This
@@ -307,14 +304,14 @@ namespace GeographicLib {
      * - \e outmask |= Rhumb::AREA for the area \e S12;
      * - \e outmask |= Rhumb::ALL for all of the above;
      * - \e outmask |= Rhumb::LONG_UNROLL to unroll \e lon2 instead of wrapping
-     *   it into the range [&minus;180&deg;, 180&deg;).
+     *   it into the range [&minus;180&deg;, 180&deg;].
      * .
      * With the Rhumb::LONG_UNROLL bit set, the quantity \e lon2 &minus;
      * \e lon1 indicates how many times and in what sense the rhumb line
      * encircles the ellipsoid.
      **********************************************************************/
-    void GenDirect(real lat1, real lon1, real azi12, real s12, unsigned outmask,
-                   real& lat2, real& lon2, real& S12) const;
+    void GenDirect(real lat1, real lon1, real azi12, real s12,
+                   unsigned outmask, real& lat2, real& lon2, real& S12) const;
 
     /**
      * Solve the inverse rhumb problem returning also the area.
@@ -331,7 +328,7 @@ namespace GeographicLib {
      * meridians, there are two shortest rhumb lines and the east-going one is
      * chosen.  \e lat1 and \e lat2 should be in the range [&minus;90&deg;,
      * 90&deg;].  The value of \e azi12 returned is in the range
-     * [&minus;180&deg;, 180&deg;).
+     * [&minus;180&deg;, 180&deg;].
      *
      * If either point is a pole, the cosine of its latitude is taken to be
      * 1/&epsilon;<sup>2</sup> (where &epsilon; is 2<sup>-52</sup>).  This
@@ -484,14 +481,10 @@ namespace GeographicLib {
        **********************************************************************/
       AREA          = Rhumb::AREA,
       /**
-       * Unroll \e lon2 in the direct calculation.  (This flag used to be
-       * called LONG_NOWRAP.)
+       * Unroll \e lon2 in the direct calculation.
        * @hideinitializer
        **********************************************************************/
       LONG_UNROLL   = Rhumb::LONG_UNROLL,
-      /// \cond SKIP
-      LONG_NOWRAP   = LONG_UNROLL,
-      /// \endcond
       /**
        * Calculate everything.  (LONG_UNROLL is not included in this mask.)
        * @hideinitializer
@@ -510,7 +503,7 @@ namespace GeographicLib {
      * @param[out] S12 area under the rhumb line (meters<sup>2</sup>).
      *
      * The value of \e lon2 returned is in the range [&minus;180&deg;,
-     * 180&deg;).
+     * 180&deg;].
      *
      * If \e s12 is large enough that the rhumb line crosses a pole, the
      * longitude of point 2 is indeterminate (a NaN is returned for \e lon2 and
@@ -547,7 +540,7 @@ namespace GeographicLib {
      * - \e outmask |= RhumbLine::AREA for the area \e S12;
      * - \e outmask |= RhumbLine::ALL for all of the above;
      * - \e outmask |= RhumbLine::LONG_UNROLL to unroll \e lon2 instead of
-     *   wrapping it into the range [&minus;180&deg;, 180&deg;).
+     *   wrapping it into the range [&minus;180&deg;, 180&deg;].
      * .
      * With the RhumbLine::LONG_UNROLL bit set, the quantity \e lon2 &minus; \e
      * lon1 indicates how many times and in what sense the rhumb line encircles

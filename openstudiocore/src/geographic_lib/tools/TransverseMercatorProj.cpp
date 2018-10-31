@@ -2,16 +2,15 @@
  * \file TransverseMercatorProj.cpp
  * \brief Command line utility for transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  *
  * See the <a href="TransverseMercatorProj.1.html">man page</a> for usage
  * information.
  **********************************************************************/
 
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -28,7 +27,7 @@
 
 #include "TransverseMercatorProj.usage"
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
@@ -73,7 +72,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-k") {
         if (++m >= argc) return usage(1, true);
         try {
-          k0 = Utility::num<real>(std::string(argv[m]));
+          k0 = Utility::val<real>(std::string(argv[m]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding argument of " << arg << ": "
@@ -83,7 +82,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
-          a = Utility::num<real>(std::string(argv[m + 1]));
+          a = Utility::val<real>(std::string(argv[m + 1]));
           f = Utility::fract<real>(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
@@ -92,11 +91,11 @@ int main(int argc, char* argv[]) {
         }
         m += 2;
       } else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
-          prec = Utility::num<int>(std::string(argv[m]));
+          prec = Utility::val<int>(std::string(argv[m]));
         }
         catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
@@ -177,7 +176,7 @@ int main(int argc, char* argv[]) {
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     std::string s, eol, stra, strb, strc;
-    std::istringstream str(s);
+    std::istringstream str;
     int retval = 0;
     std::cout << std::fixed;
     while (std::getline(*input, s)) {
@@ -195,8 +194,8 @@ int main(int argc, char* argv[]) {
         if (!(str >> stra >> strb))
           throw GeographicErr("Incomplete input: " + s);
         if (reverse) {
-          x = Utility::num<real>(stra);
-          y = Utility::num<real>(strb);
+          x = Utility::val<real>(stra);
+          y = Utility::val<real>(strb);
         } else
           DMS::DecodeLatLon(stra, strb, lat, lon, longfirst);
         if (str >> strc)

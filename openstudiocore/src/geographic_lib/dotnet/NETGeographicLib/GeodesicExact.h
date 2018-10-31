@@ -7,7 +7,7 @@
  * GeographicLib is Copyright (c) Charles Karney (2010-2012)
  * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 #include "NETGeographicLib.h"
 
@@ -164,12 +164,10 @@ namespace NETGeographicLib
            **********************************************************************/
           AREA          = 1U<<14 | unsigned(captype::CAP_C4),
           /**
-           * Unroll \e lon2 in the direct calculation.  (This flag used to be
-           * called LONG_NOWRAP.)
+           * Unroll \e lon2 in the direct calculation.
            * @hideinitializer
            **********************************************************************/
           LONG_UNROLL   = 1U<<15,
-          LONG_NOWRAP   = LONG_UNROLL,
           /**
            * All capabilities, calculate everything.  (LONG_UNROLL is not
            * included in this mask.)
@@ -653,6 +651,98 @@ namespace NETGeographicLib
         GeodesicLineExact^ Line(double lat1, double lon1, double azi1,
             NETGeographicLib::Mask caps );
 
+        /**
+        * Define a GeodesicLineExact in terms of the inverse geodesic problem.
+        *
+        * @param[in] lat1 latitude of point 1 (degrees).
+        * @param[in] lon1 longitude of point 1 (degrees).
+        * @param[in] lat2 latitude of point 2 (degrees).
+        * @param[in] lon2 longitude of point 2 (degrees).
+        * @param[in] caps bitor'ed combination of GeodesicExact::mask values
+        *   specifying the capabilities the GeodesicLineExact object should
+        *   possess, i.e., which quantities can be returned in calls to
+        *   GeodesicLineExact::Position.
+        * @return a GeodesicLineExact object.
+        *
+        * This function sets point 3 of the GeodesicLineExact to correspond to
+        * point 2 of the inverse geodesic problem.
+        *
+        * \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;].
+        **********************************************************************/
+        GeodesicLineExact^ InverseLine(double lat1, double lon1, double lat2,
+            double lon2, NETGeographicLib::Mask caps );
+
+        /**
+        * Define a GeodesicLineExact in terms of the direct geodesic problem
+        * specified in terms of distance.
+        *
+        * @param[in] lat1 latitude of point 1 (degrees).
+        * @param[in] lon1 longitude of point 1 (degrees).
+        * @param[in] azi1 azimuth at point 1 (degrees).
+        * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+        *   negative.
+        * @param[in] caps bitor'ed combination of GeodesicExact::mask values
+        *   specifying the capabilities the GeodesicLineExact object should
+        *   possess, i.e., which quantities can be returned in calls to
+        *   GeodesicLineExact::Position.
+        * @return a GeodesicLineExact object.
+        *
+        * This function sets point 3 of the GeodesicLineExact to correspond to
+        * point 2 of the direct geodesic problem.
+        *
+        * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
+        **********************************************************************/
+        GeodesicLineExact^ DirectLine(double lat1, double lon1, double azi1,
+            double s12, NETGeographicLib::Mask caps);
+
+        /**
+        * Define a GeodesicLineExact in terms of the direct geodesic problem
+        * specified in terms of arc length.
+        *
+        * @param[in] lat1 latitude of point 1 (degrees).
+        * @param[in] lon1 longitude of point 1 (degrees).
+        * @param[in] azi1 azimuth at point 1 (degrees).
+        * @param[in] a12 arc length between point 1 and point 2 (degrees); it can
+        *   be negative.
+        * @param[in] caps bitor'ed combination of GeodesicExact::mask values
+        *   specifying the capabilities the GeodesicLineExact object should
+        *   possess, i.e., which quantities can be returned in calls to
+        *   GeodesicLineExact::Position.
+        * @return a GeodesicLineExact object.
+        *
+        * This function sets point 3 of the GeodesicLineExact to correspond to
+        * point 2 of the direct geodesic problem.
+        *
+        * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
+        **********************************************************************/
+        GeodesicLineExact^ ArcDirectLine(double lat1, double lon1, double azi1,
+            double a12, NETGeographicLib::Mask caps);
+
+        /**
+        * Define a GeodesicLineExact in terms of the direct geodesic problem
+        * specified in terms of either distance or arc length.
+        *
+        * @param[in] lat1 latitude of point 1 (degrees).
+        * @param[in] lon1 longitude of point 1 (degrees).
+        * @param[in] azi1 azimuth at point 1 (degrees).
+        * @param[in] arcmode boolean flag determining the meaning of the \e
+        *   s12_a12.
+        * @param[in] s12_a12 if \e arcmode is false, this is the distance between
+        *   point 1 and point 2 (meters); otherwise it is the arc length between
+        *   point 1 and point 2 (degrees); it can be negative.
+        * @param[in] caps bitor'ed combination of GeodesicExact::mask values
+        *   specifying the capabilities the GeodesicLineExact object should
+        *   possess, i.e., which quantities can be returned in calls to
+        *   GeodesicLineExact::Position.
+        * @return a GeodesicLineExact object.
+        *
+        * This function sets point 3 of the GeodesicLineExact to correspond to
+        * point 2 of the direct geodesic problem.
+        *
+        * \e lat1 should be in the range [&minus;90&deg;, 90&deg;].
+        **********************************************************************/
+        GeodesicLineExact^ GenDirectLine(double lat1, double lon1, double azi1,
+            bool arcmode, double s12_a12, NETGeographicLib::Mask caps);
         ///@}
 
         /** \name Inspector functions.

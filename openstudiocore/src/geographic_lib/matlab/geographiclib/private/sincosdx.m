@@ -21,8 +21,10 @@ function [sinx, cosx] = sincosdx(x)
     q = mod(q, 4);
     r = r * (pi/180);
     sinx = sin(r); cosx = cos(r);
-    t = q == 1; z = 0 - sinx(t); sinx(t) = cosx(t); cosx(t) = z;
-    t = q == 2; sinx(t) = 0 - sinx(t); cosx(t) = 0 - cosx(t);
-    t = q == 3; z = sinx(t); sinx(t) = 0 - cosx(t); cosx(t) = z;
+    t = q == 1; z = -sinx(t); sinx(t) = cosx(t); cosx(t) = z;
+    t = q == 2; sinx(t) = -sinx(t); cosx(t) = -cosx(t);
+    t = q == 3; z = sinx(t); sinx(t) = -cosx(t); cosx(t) = z;
   end
+  sinx(x ~= 0) = 0 + sinx(x ~= 0);
+  cosx(x ~= 0) = 0 + cosx(x ~= 0);
 end

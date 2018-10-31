@@ -2,9 +2,9 @@
  * \file Geocentric.hpp
  * \brief Header for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)
@@ -29,7 +29,7 @@ namespace GeographicLib {
    * The conversion from geographic to geocentric coordinates is
    * straightforward.  For the reverse transformation we use
    * - H. Vermeille,
-   *   <a href="https://dx.doi.org/10.1007/s00190-002-0273-6"> Direct
+   *   <a href="https://doi.org/10.1007/s00190-002-0273-6"> Direct
    *   transformation from geocentric coordinates to geodetic coordinates</a>,
    *   J. Geodesy 76, 451--454 (2002).
    * .
@@ -37,15 +37,15 @@ namespace GeographicLib {
    * results for all finite inputs (even if \e h is infinite).  The changes are
    * described in Appendix B of
    * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
+   *   <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
    *   on an ellipsoid of revolution</a>,
    *   Feb. 2011;
    *   preprint
-   *   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
+   *   <a href="https://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
    * .
    * Vermeille similarly updated his method in
    * - H. Vermeille,
-   *   <a href="https://dx.doi.org/10.1007/s00190-010-0419-x">
+   *   <a href="https://doi.org/10.1007/s00190-010-0419-x">
    *   An analytical method to transform geocentric into
    *   geodetic coordinates</a>, J. Geodesy 85, 105--117 (2011).
    * .
@@ -189,7 +189,7 @@ namespace GeographicLib {
      * returned.  The value of \e h returned satisfies \e h &ge; &minus; \e a
      * (1 &minus; <i>e</i><sup>2</sup>) / sqrt(1 &minus; <i>e</i><sup>2</sup>
      * sin<sup>2</sup>\e lat).  The value of \e lon returned is in the range
-     * [&minus;180&deg;, 180&deg;).
+     * [&minus;180&deg;, 180&deg;].
      **********************************************************************/
     void Reverse(real X, real Y, real Z, real& lat, real& lon, real& h)
       const {
@@ -254,15 +254,6 @@ namespace GeographicLib {
     Math::real Flattening() const
     { return Init() ? _f : Math::NaN(); }
     ///@}
-
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the ellipsoid.
-     **********************************************************************/
-    Math::real InverseFlattening() const
-    { return Init() ? 1/_f : Math::NaN(); }
-    /// \endcond
 
     /**
      * A global instantiation of Geocentric with the parameters for the WGS84

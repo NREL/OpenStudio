@@ -1,6 +1,6 @@
 {
   "name": "geographiclib",
-  "version": "1.45.0",
+  "version": "1.49.0",
   "description":
   "JavaScript implementation of geodesic routines in GeographicLib",
   "main": "geographiclib.js",
@@ -9,9 +9,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://git.code.sf.net/p/geographiclib/code geographiclib-code"
+    "url": "git://git.code.sourceforge.net/p/geographiclib/code"
   },
-  "url": "https://geographiclib.sf.net",
+  "url": "https://geographiclib.sourceforge.net",
   "keywords": [
     "geodesics",
     "geometry",

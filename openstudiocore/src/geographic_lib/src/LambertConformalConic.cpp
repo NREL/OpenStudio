@@ -2,9 +2,9 @@
  * \file LambertConformalConic.cpp
  * \brief Implementation for GeographicLib::LambertConformalConic class
  *
- * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/LambertConformalConic.hpp>
@@ -19,15 +19,15 @@ namespace GeographicLib {
     , epsx_(Math::sq(eps_))
     , ahypover_(Math::digits() * log(real(numeric_limits<real>::radix)) + 2)
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
+    , _f(f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
   {
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     if (!(Math::isfinite(_f) && _f < 1))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
     if (!(Math::isfinite(k0) && k0 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
@@ -44,15 +44,15 @@ namespace GeographicLib {
     , epsx_(Math::sq(eps_))
     , ahypover_(Math::digits() * log(real(numeric_limits<real>::radix)) + 2)
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
+    , _f(f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
   {
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     if (!(Math::isfinite(_f) && _f < 1))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
     if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat1) <= 90))
@@ -73,15 +73,15 @@ namespace GeographicLib {
     , epsx_(Math::sq(eps_))
     , ahypover_(Math::digits() * log(real(numeric_limits<real>::radix)) + 2)
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
+    , _f(f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
   {
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     if (!(Math::isfinite(_f) && _f < 1))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
     if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(coslat1 >= 0))
@@ -169,8 +169,8 @@ namespace GeographicLib {
         //   = log(tchi2 + scchi2) - log(tchi1 + scchi1)
         //
         // then den * (1 - n) =
-        // (log((tchi2 + scchi2)/(2*scbet2)) - log((tchi1 + scchi1)/(2*scbet1)))
-        // / (tphi2 - tphi1)
+        // (log((tchi2 + scchi2)/(2*scbet2)) -
+        //  log((tchi1 + scchi1)/(2*scbet1))) / (tphi2 - tphi1)
         // = Dlog1p(a2, a1) * (tchi2+scchi2 + tchi1+scchi1)/(4*scbet1*scbet2)
         //   * fm * Q
         //
@@ -329,8 +329,8 @@ namespace GeographicLib {
   }
 
   void LambertConformalConic::Forward(real lon0, real lat, real lon,
-                                      real& x, real& y, real& gamma, real& k)
-    const {
+                                      real& x, real& y,
+                                      real& gamma, real& k) const {
     lon = Math::AngDiff(lon0, lon);
     // From Snyder, we have
     //
@@ -358,9 +358,9 @@ namespace GeographicLib {
                           (tchi > 0 ? 1/(scchi + tchi) : (scchi - tchi))
                           - (_t0nm1 + 1))/(-_n) :
                          Dexp(-_n * psi, -_n * _psi0) * dpsi);
-    x = (_nrho0 + _n * drho) * (_n ? stheta / _n : lam);
+    x = (_nrho0 + _n * drho) * (_n != 0 ? stheta / _n : lam);
     y = _nrho0 *
-      (_n ?
+      (_n != 0 ?
        (ctheta < 0 ? 1 - ctheta : Math::sq(stheta)/(1 + ctheta)) / _n : 0)
       - drho * ctheta;
     k = _k0 * (scbet/_scbet0) /
@@ -372,8 +372,7 @@ namespace GeographicLib {
 
   void LambertConformalConic::Reverse(real lon0, real x, real y,
                                       real& lat, real& lon,
-                                      real& gamma, real& k)
-    const {
+                                      real& gamma, real& k) const {
     // From Snyder, we have
     //
     //        x = rho * sin(theta)
@@ -389,7 +388,7 @@ namespace GeographicLib {
     y *= _sign;
     real
       // Guard against 0 * inf in computation of ny
-      nx = _n * x, ny = _n ? _n * y : 0, y1 = _nrho0 - ny,
+      nx = _n * x, ny = _n != 0 ? _n * y : 0, y1 = _nrho0 - ny,
       den = Math::hypot(nx, y1) + _nrho0, // 0 implies origin with polar aspect
       // isfinite test is to avoid inf/inf
       drho = ((den != 0 && Math::isfinite(den))
@@ -429,12 +428,12 @@ namespace GeographicLib {
     real
       tphi = Math::tauf(tchi, _es),
       scbet = hyp(_fm * tphi), scchi = hyp(tchi),
-      lam = _n ? gamma / _n : x / y1;
+      lam = _n != 0 ? gamma / _n : x / y1;
     lat = Math::atand(_sign * tphi);
     lon = lam / Math::degree();
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
     k = _k0 * (scbet/_scbet0) /
-      (exp(_nc ? - (Math::sq(_nc)/(1 + _n)) * dpsi : 0)
+      (exp(_nc != 0 ? - (Math::sq(_nc)/(1 + _n)) * dpsi : 0)
        * (tchi >= 0 ? scchi + tchi : 1 / (scchi - tchi)) / (_scchi0 + _tchi0));
     gamma /= _sign * Math::degree();
   }

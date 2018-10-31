@@ -25,14 +25,15 @@ function [x, y, azi, rk] = eqdazim_fwd(lat0, lon0, lat, lon, ellipsoid)
 %
 %   Section 14 of
 %
-%     C. F. F. Karney, Geodesics on an ellipsoid of revolution (2011),
-%     http://arxiv.org/abs/1102.1215
-%     Errata: http://geographiclib.sf.net/geod-addenda.html#geod-errata
+%    C. F. F. Karney, Geodesics on an ellipsoid of revolution (2011),
+%    https://arxiv.org/abs/1102.1215
+%    Errata: https://geographiclib.sourceforge.io/geod-addenda.html#geod-errata
 %
 %   describes how to use this projection in the determination of maritime
 %   boundaries (finding the median line).
 %
-%   See also PROJDOC, EQDAZIM_INV, GEODDISTANCE, DEFAULTELLIPSOID.
+%   See also PROJDOC, EQDAZIM_INV, GEODDISTANCE, DEFAULTELLIPSOID,
+%     FLAT2ECC.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 

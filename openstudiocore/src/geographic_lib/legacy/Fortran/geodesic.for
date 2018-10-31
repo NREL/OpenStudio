@@ -1,5 +1,5 @@
 * The subroutines in this files are documented at
-* http://geographiclib.sourceforge.net/html/Fortran/
+* https://geographiclib.sourceforge.io/html/Fortran/
 *
 *> @file geodesic.for
 *! @brief Implementation of geodesic routines in Fortran
@@ -7,12 +7,12 @@
 *! This is a Fortran implementation of the geodesic algorithms described
 *! in
 *! - C. F. F. Karney,
-*!   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+*!   <a href="https://doi.org/10.1007/s00190-012-0578-z">
 *!   Algorithms for geodesics</a>,
 *!   J. Geodesy <b>87</b>, 43--55 (2013);
-*!   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+*!   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
 *!   10.1007/s00190-012-0578-z</a>;
-*!   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+*!   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
 *!   geod-addenda.html</a>.
 *! .
 *! The principal advantages of these algorithms over previous ones
@@ -101,24 +101,24 @@
 *!   &rarr; [\e azi1, \e azi2] + [\e d, \e d], for arbitrary \e d.
 *!
 *! These routines are a simple transcription of the corresponding C++
-*! classes in <a href="http://geographiclib.sf.net"> GeographicLib</a>.
-*! Because of the limitations of Fortran 77, the classes have been
-*! replaced by simple subroutines with no attempt to save "state" across
-*! subroutine calls.  Most of the internal comments have been retained.
-*! However, in the process of transcription some documentation has been
-*! lost and the documentation for the C++ classes,
-*! GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
+*! classes in <a href="https://geographiclib.sourceforge.io">
+*! GeographicLib</a>.  Because of the limitations of Fortran 77, the
+*! classes have been replaced by simple subroutines with no attempt to
+*! save "state" across subroutine calls.  Most of the internal comments
+*! have been retained.  However, in the process of transcription some
+*! documentation has been lost and the documentation for the C++
+*! classes, GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
 *! GeographicLib::PolygonAreaT, should be consulted.  The C++ code
 *! remains the "reference implementation".  Think twice about
 *! restructuring the internals of the Fortran code since this may make
 *! porting fixes from the C++ code more difficult.
 *!
-*! Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and
+*! Copyright (c) Charles Karney (2012-2017) <charles@karney.com> and
 *! licensed under the MIT/X11 License.  For more information, see
-*! http://geographiclib.sourceforge.net/
+*! https://geographiclib.sourceforge.io/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.45.
+*! <a href="../index.html">GeographicLib</a> 1.49.
 
 *> Solve the direct geodesic problem
 *!
@@ -129,8 +129,8 @@
 *! @param[in] lon1 longitude of point 1 (degrees).
 *! @param[in] azi1 azimuth at point 1 (degrees).
 *! @param[in] s12a12 if \e arcmode is not set, this is the distance
-*!   between point 1 and point 2 (meters); otherwise it is the arc
-*!   length between point 1 and point 2 (degrees); it can be negative.
+*!   from point 1 to point 2 (meters); otherwise it is the arc
+*!   length from point 1 to point 2 (degrees); it can be negative.
 *! @param[in] flags a bitor'ed combination of the \e arcmode and \e
 *!   unroll flags.
 *! @param[out] lat2 latitude of point 2 (degrees).
@@ -139,8 +139,8 @@
 *! @param[in] omask a bitor'ed combination of mask values
 *!   specifying which of the following parameters should be set.
 *! @param[out] a12s12 if \e arcmode is not set, this is the arc length
-*!   between point 1 and point 2 (degrees); otherwise it is the distance
-*!   between point 1 and point 2 (meters).
+*!   from point 1 to point 2 (degrees); otherwise it is the distance
+*!   from point 1 to point 2 (meters).
 *! @param[out] m12 reduced length of geodesic (meters).
 *! @param[out] MM12 geodesic scale of point 2 relative to point 1
 *!   (dimensionless).
@@ -156,7 +156,7 @@
 *! If \e arcmode is not set, \e s12a12 is \e s12 and \e a12s12 is \e
 *! a12; otherwise, \e s12a12 is \e a12 and \e a12s12 is \e s12.  It \e
 *! unroll is not set, the value \e lon2 returned is in the range
-*! [&minus;180&deg;, 180&deg;); if unroll is set, the longitude variable
+*! [&minus;180&deg;, 180&deg;]; if unroll is set, the longitude variable
 *! is "unrolled" so that \e lon2 &minus; \e lon1 indicates how many
 *! times and in what sense the geodesic encircles the ellipsoid.
 *!
@@ -168,7 +168,7 @@
 *! - 8 return \e SS12
 *!
 *! \e lat1 should be in the range [&minus;90&deg;, 90&deg;].  The value
-*! \e azi2 returned is in the range [&minus;180&deg;, 180&deg;).
+*! \e azi2 returned is in the range [&minus;180&deg;, 180&deg;].
 *!
 *! If either point is at a pole, the azimuth is defined by keeping the
 *! longitude fixed, writing \e lat = \e lat = &plusmn;(90&deg; &minus;
@@ -254,7 +254,7 @@
 
       call sncsdx(AngRnd(LatFix(lat1)), sbet1, cbet1)
       sbet1 = f1 * sbet1
-      call norm2(sbet1, cbet1)
+      call norm2x(sbet1, cbet1)
 * Ensure cbet1 = +dbleps at poles
       cbet1 = max(tiny, cbet1)
       dn1 = sqrt(1 + ep2 * sbet1**2)
@@ -283,8 +283,8 @@
       end if
       comg1 = csig1
 * sig1 in (-pi, pi]
-      call norm2(ssig1, csig1)
-* norm2(somg1, comg1); -- don't need to normalize!
+      call norm2x(ssig1, csig1)
+* norm2x(somg1, comg1); -- don't need to normalize!
 
       k2 = calp0**2 * ep2
       eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
@@ -424,7 +424,6 @@
         lon2 = AngNm(AngNm(lon1) + AngNm(lon12))
       end if
       lat2 = atn2dx(sbet2, f1 * cbet2)
-* minus signs give range [-180, 180). 0- converts -0 to +0.
       azi2 = atn2dx(salp2, calp2)
 
       if (redlp .or. scalp) then
@@ -448,13 +447,6 @@
 * alp12 = alp2 - alp1, used in atan2 so no need to normalize
           salp12 = salp2 * calp1 - calp2 * salp1
           calp12 = calp2 * calp1 + salp2 * salp1
-* The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
-* salp12 = -0 and alp12 = -180.  However this depends on the sign being
-* attached to 0 correctly.  The following ensures the correct behavior.
-          if (salp12 .eq. 0 .and. calp12 .lt. 0) then
-            salp12 = tiny * calp1
-            calp12 = -1
-          end if
         else
 * tan(alp) = tan(alp0) * sec(sig)
 * tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)
@@ -495,12 +487,12 @@
 *! @param[in] lon1 longitude of point 1 (degrees).
 *! @param[in] lat2 latitude of point 2 (degrees).
 *! @param[in] lon2 longitude of point 2 (degrees).
-*! @param[out] s12 distance between point 1 and point 2 (meters).
+*! @param[out] s12 distance from point 1 to point 2 (meters).
 *! @param[out] azi1 azimuth at point 1 (degrees).
 *! @param[out] azi2 (forward) azimuth at point 2 (degrees).
 *! @param[in] omask a bitor'ed combination of mask values
 *!   specifying which of the following parameters should be set.
-*! @param[out] a12 arc length of between point 1 and point 2 (degrees).
+*! @param[out] a12 arc length from point 1 to point 2 (degrees).
 *! @param[out] m12 reduced length of geodesic (meters).
 *! @param[out] MM12 geodesic scale of point 2 relative to point 1
 *!   (dimensionless).
@@ -517,7 +509,7 @@
 *!
 *! \e lat1 and \e lat2 should be in the range [&minus;90&deg;, 90&deg;].
 *! The values of \e azi1 and \e azi2 returned are in the range
-*! [&minus;180&deg;, 180&deg;).
+*! [&minus;180&deg;, 180&deg;].
 *!
 *! If either point is at a pole, the azimuth is defined by keeping the
 *! longitude fixed, writing \e lat = &plusmn;(90&deg; &minus;
@@ -558,11 +550,11 @@
      +    lat1x, lat2x, salp0, calp0, k2, eps,
      +    salp1, calp1, ssig1, csig1, cbet1, sbet1, dbet1, dn1,
      +    salp2, calp2, ssig2, csig2, sbet2, cbet2, dbet2, dn2,
-     +    slam12, clam12, salp12, calp12, omg12, lam12, lon12,
+     +    slam12, clam12, salp12, calp12, omg12, lam12, lon12, lon12s,
      +    salp1a, calp1a, salp1b, calp1b,
-     +    dalp1, sdalp1, cdalp1, nsalp1, alp12, somg12, domg12,
+     +    dalp1, sdalp1, cdalp1, nsalp1, alp12, somg12, comg12, domg12,
      +    sig12, v, dv, dnm, dummy,
-     +    A4, B41, B42, s12x, m12x, a12x
+     +    A4, B41, B42, s12x, m12x, a12x, sdomg12, cdomg12
 
       double precision dblmin, dbleps, pi, degree, tiny,
      +    tol0, tol1, tol2, tolb, xthrsh
@@ -608,14 +600,23 @@
 * in [-180, 180] but -180 is only for west-going geodesics.  180 is for
 * east-going and meridional geodesics.
 * If very close to being on the same half-meridian, then make it so.
-      lon12 = AngRnd(AngDif(lon1, lon2))
+      lon12 = AngDif(lon1, lon2, lon12s)
 * Make longitude difference positive.
       if (lon12 .ge. 0) then
         lonsgn = 1
       else
         lonsgn = -1
       end if
-      lon12 = lon12 * lonsgn
+      lon12 = lonsgn * AngRnd(lon12)
+      lon12s = AngRnd((180 - lon12) - lonsgn * lon12s)
+      lam12 = lon12 * degree
+      if (lon12 .gt. 90) then
+        call sncsdx(lon12s, slam12, clam12)
+        clam12 = -clam12
+      else
+        call sncsdx(lon12, slam12, clam12)
+      end if
+
 * If really close to the equator, treat as on equator.
       lat1x = AngRnd(LatFix(lat1))
       lat2x = AngRnd(LatFix(lat2))
@@ -652,13 +653,13 @@
 
       call sncsdx(lat1x, sbet1, cbet1)
       sbet1 = f1 * sbet1
-      call norm2(sbet1, cbet1)
+      call norm2x(sbet1, cbet1)
 * Ensure cbet1 = +dbleps at poles
       cbet1 = max(tiny, cbet1)
 
       call sncsdx(lat2x, sbet2, cbet2)
       sbet2 = f1 * sbet2
-      call norm2(sbet2, cbet2)
+      call norm2x(sbet2, cbet2)
 * Ensure cbet2 = +dbleps at poles
       cbet2 = max(tiny, cbet2)
 
@@ -679,9 +680,6 @@
 
       dn1 = sqrt(1 + ep2 * sbet1**2)
       dn2 = sqrt(1 + ep2 * sbet2**2)
-
-      lam12 = lon12 * degree
-      call sncsdx(lon12, slam12, clam12)
 
 * Suppress bogus warnings about unitialized variables
       a12x = 0
@@ -707,7 +705,7 @@
 
 * sig12 = sig2 - sig1
         sig12 = atan2(0d0 + max(0d0, csig1 * ssig2 - ssig1 * csig2),
-     +      csig1 * csig2 + ssig1 * ssig2)
+     +                               csig1 * csig2 + ssig1 * ssig2)
         call Lengs(n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
      +      cbet1, cbet2, lmask,
      +      s12x, m12x, dummy, MM12, MM21, ep2, Ca)
@@ -734,9 +732,12 @@
         end if
       end if
 
-* Mimic the way Lambda12 works with calp1 = 0
+      omg12 = 0
+* somg12 > 1 marks that it needs to be calculated
+      somg12 = 2
+      comg12 = 0
       if (.not. merid .and. sbet1 .eq. 0 .and.
-     +    (f .le. 0 .or. lam12 .le. pi - f * pi)) then
+     +    (f .le. 0 .or. lon12s .ge. f * 180)) then
 
 * Geodesic runs along equator
         calp1 = 0
@@ -758,7 +759,7 @@
 
 * Figure a starting point for Newton's method
         sig12 = InvSta(sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
-     +      f, A3x, salp1, calp1, salp2, calp2, dnm, Ca)
+     +      slam12, clam12, f, A3x, salp1, calp1, salp2, calp2, dnm, Ca)
 
         if (sig12 .ge. 0) then
 * Short lines (InvSta sets salp2, calp2, dnm)
@@ -795,16 +796,14 @@
 * the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
 * WGS84 and random input: mean = 2.85, sd = 0.60
             v = Lam12f(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-     +          salp1, calp1, f, A3x, C3x, salp2, calp2, sig12,
-     +          ssig1, csig1, ssig2, csig2,
-     +          eps, omg12, numit .lt. maxit1, dv,
-     +          Ca) - lam12
-* 2 * tol0 is approximately 1 ulp for a number in [0, pi].
+     +          salp1, calp1, slam12, clam12, f, A3x, C3x, salp2, calp2,
+     +          sig12, ssig1, csig1, ssig2, csig2,
+     +          eps, domg12, numit .lt. maxit1, dv, Ca)
 * Reversed test to allow escape with NaNs
             if (tripn) then
               dummy = 8
             else
-              dummy = 2
+              dummy = 1
             end if
             if (tripb .or. .not. (abs(v) .ge. dummy * tol0))
      +          go to 20
@@ -826,7 +825,7 @@
               if (nsalp1 .gt. 0 .and. abs(dalp1) .lt. pi) then
                 calp1 = calp1 * cdalp1 - salp1 * sdalp1
                 salp1 = nsalp1
-                call norm2(salp1, calp1)
+                call norm2x(salp1, calp1)
 * In some regimes we don't get quadratic convergence because
 * slope -> 0.  So use convergence conditions based on dbleps
 * instead of sqrt(dbleps).
@@ -834,7 +833,7 @@
                 go to 10
               end if
             end if
-* Either dv was not postive or updated value was outside legal
+* Either dv was not positive or updated value was outside legal
 * range.  Use the midpoint of the bracket as the next estimate.
 * This mechanism is not needed for the WGS84 ellipsoid, but it does
 * catch problems with more eccentric ellipsoids.  Its efficacy is
@@ -844,7 +843,7 @@
 * WGS84 and random input: mean = 4.74, sd = 0.99
             salp1 = (salp1a + salp1b)/2
             calp1 = (calp1a + calp1b)/2
-            call norm2(salp1, calp1)
+            call norm2x(salp1, calp1)
             tripn = .false.
             tripb = abs(salp1a - salp1) + (calp1a - calp1) .lt. tolb
      +          .or. abs(salp1 - salp1b) + (calp1 - calp1b) .lt. tolb
@@ -856,7 +855,12 @@
           m12x = m12x * b
           s12x = s12x * b
           a12x = sig12 / degree
-          omg12 = lam12 - omg12
+          if (areap) then
+            sdomg12 = sin(domg12)
+            cdomg12 = cos(domg12)
+            somg12 = slam12 * cdomg12 - clam12 * sdomg12
+            comg12 = clam12 * cdomg12 + slam12 * sdomg12
+          end if
         end if
       end if
 
@@ -878,8 +882,8 @@
           eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
 * Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
           A4 = a**2 * calp0 * salp0 * e2
-          call norm2(ssig1, csig1)
-          call norm2(ssig2, csig2)
+          call norm2x(ssig1, csig1)
+          call norm2x(ssig2, csig2)
           call C4f(eps, C4x, Ca)
           B41 = TrgSum(.false., ssig1, csig1, Ca, nC4)
           B42 = TrgSum(.false., ssig2, csig2, Ca, nC4)
@@ -889,13 +893,17 @@
           SS12 = 0
         end if
 
-        if (.not. merid .and. omg12 .lt. 0.75d0 * pi
+        if (.not. merid .and. somg12 .gt. 1) then
+          somg12 = sin(omg12)
+          comg12 = cos(omg12)
+        end if
+
+        if (.not. merid .and. comg12 .ge. 0.7071d0
      +      .and. sbet2 - sbet1 .lt. 1.75d0) then
 * Use tan(Gamma/2) = tan(omg12/2)
 * * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
 * with tan(x/2) = sin(x)/(1+cos(x))
-          somg12 = sin(omg12)
-          domg12 = 1 + cos(omg12)
+          domg12 = 1 + comg12
           dbet1 = 1 + cbet1
           dbet2 = 1 + cbet2
           alp12 = 2 * atan2(somg12 * (sbet1 * dbet2 + sbet2 * dbet1),
@@ -932,7 +940,6 @@
       salp2 = salp2 * swapp * lonsgn
       calp2 = calp2 * swapp * latsgn
 
-* minus signs give range [-180, 180). 0- converts -0 to +0.
       azi1 = atn2dx(salp1, calp1)
       azi2 = atn2dx(salp2, calp2)
 
@@ -1030,7 +1037,7 @@
       integer major, minor, patch
 
       major = 1
-      minor = 45
+      minor = 49
       patch = 0
 
       return
@@ -1066,7 +1073,7 @@
 * is used.  The larger value is used here to avoid complaints about a
 * IEEE_UNDERFLOW_FLAG IEEE_DENORMAL signal.  This is triggered when
 * invers is called with points at opposite poles.
-      tiny = 0.5d0**((1022+2)/3)
+      tiny = 0.5d0**((1022+1)/3)
       tol0 = dbleps
 * Increase multiplier in defn of tol1 from 100 to 200 to fix inverse
 * case 52.784459512564 0 -52.784459512563990912 179.634407464943777557
@@ -1238,15 +1245,15 @@
       end
 
       double precision function InvSta(sbet1, cbet1, dn1,
-     +    sbet2, cbet2, dn2, lam12, f, A3x,
+     +    sbet2, cbet2, dn2, lam12, slam12, clam12, f, A3x,
      +    salp1, calp1, salp2, calp2, dnm,
      +    Ca)
 * Return a starting point for Newton's method in salp1 and calp1
 * (function value is -1).  If Newton's method doesn't need to be used,
 * return also salp2, calp2, and dnm and function value is sig12.
 * input
-      double precision sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
-     +    f, A3x(*)
+      double precision sbet1, cbet1, dn1, sbet2, cbet2, dn2,
+     +    lam12, slam12, clam12, f, A3x(*)
 * output
       double precision salp1, calp1, salp2, calp2, dnm
 * temporary
@@ -1257,7 +1264,7 @@
       double precision f1, e2, ep2, n, etol2, k2, eps, sig12,
      +    sbet12, cbet12, sbt12a, omg12, somg12, comg12, ssig12, csig12,
      +    x, y, lamscl, betscl, cbt12a, bt12a, m12b, m0, dummy,
-     +    k, omg12a, sbetm2
+     +    k, omg12a, sbetm2, lam12x
 
       double precision dblmin, dbleps, pi, degree, tiny,
      +    tol0, tol1, tol2, tolb, xthrsh
@@ -1293,17 +1300,19 @@
       shortp = cbet12 .ge. 0 .and. sbet12 .lt. 0.5d0 .and.
      +    cbet2 * lam12 .lt. 0.5d0
 
-      omg12 = lam12
       if (shortp) then
         sbetm2 = (sbet1 + sbet2)**2
 * sin((bet1+bet2)/2)^2
 *  =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
         sbetm2 = sbetm2 / (sbetm2 + (cbet1 + cbet2)**2)
         dnm = sqrt(1 + ep2 * sbetm2)
-        omg12 = omg12 / (f1 * dnm)
+        omg12 = lam12 / (f1 * dnm)
+        somg12 = sin(omg12)
+        comg12 = cos(omg12)
+      else
+        somg12 = slam12
+        comg12 = clam12
       end if
-      somg12 = sin(omg12)
-      comg12 = cos(omg12)
 
       salp1 = cbet2 * somg12
       if (comg12 .ge. 0) then
@@ -1324,7 +1333,7 @@
           calp2 = 1 - comg12
         end if
         calp2 = sbet12 - cbet1 * sbet2 * calp2
-        call norm2(salp2, calp2)
+        call norm2x(salp2, calp2)
 * Set return value
         sig12 = atan2(ssig12, csig12)
       else if (abs(n) .gt. 0.1d0 .or. csig12 .ge. 0 .or.
@@ -1332,6 +1341,8 @@
 * Nothing to do, zeroth order spherical approximation is OK
         continue
       else
+* lam12 - pi
+        lam12x = atan2(-slam12, -clam12)
 * Scale lam12 and bet2 to x, y coordinate system where antipodal point
 * is at origin and singular point is at y = 0, x = -1.
         if (f .ge. 0) then
@@ -1340,7 +1351,7 @@
           eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
           lamscl = f * cbet1 * A3f(eps, A3x) * pi
           betscl = lamscl * cbet1
-          x = (lam12 - pi) / lamscl
+          x = lam12x / lamscl
           y = sbt12a / betscl
         else
 * f < 0: x = dlat, y = dlong
@@ -1358,7 +1369,7 @@
             betscl = -f * cbet1**2 * pi
           end if
           lamscl = betscl / cbet1
-          y = (lam12 - pi) / lamscl
+          y = lam12x / lamscl
         end if
 
         if (y .gt. -tol1 .and. x .gt. -1 - xthrsh) then
@@ -1426,7 +1437,7 @@
       end if
 * Sanity check on starting guess.  Backwards check allows NaN through.
       if (.not. (salp1 .le. 0)) then
-        call norm2(salp1, calp1)
+        call norm2x(salp1, calp1)
       else
         salp1 = 1
         calp1 = 0
@@ -1437,12 +1448,12 @@
       end
 
       double precision function Lam12f(sbet1, cbet1, dn1,
-     +    sbet2, cbet2, dn2, salp1, calp1, f, A3x, C3x, salp2, calp2,
-     +    sig12, ssig1, csig1, ssig2, csig2, eps, domg12, diffp, dlam12,
-     +    Ca)
+     +    sbet2, cbet2, dn2, salp1, calp1, slm120, clm120, f, A3x, C3x,
+     +    salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
+     +    domg12, diffp, dlam12, Ca)
 * input
       double precision sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-     +    salp1, calp1, f, A3x(*), C3x(*)
+     +    salp1, calp1, slm120, clm120, f, A3x(*), C3x(*)
       logical diffp
 * output
       double precision salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
@@ -1458,7 +1469,8 @@
       double precision hypotx, A3f, TrgSum
 
       double precision f1, e2, ep2, salp0, calp0,
-     +    somg1, comg1, somg2, comg2, omg12, lam12, B312, h0, k2, dummy
+     +    somg1, comg1, somg2, comg2, somg12, comg12,
+     +    lam12, eta, B312, k2, dummy
 
       double precision dblmin, dbleps, pi, degree, tiny,
      +    tol0, tol1, tol2, tolb, xthrsh
@@ -1485,8 +1497,8 @@
       somg1 = salp0 * sbet1
       csig1 = calp1 * cbet1
       comg1 = csig1
-      call norm2(ssig1, csig1)
-* norm2(somg1, comg1); -- don't need to normalize!
+      call norm2x(ssig1, csig1)
+* norm2x(somg1, comg1); -- don't need to normalize!
 
 * Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
 * about this case, since this can yield singularities in the Newton
@@ -1517,24 +1529,26 @@
       somg2 = salp0 * sbet2
       csig2 = calp2 * cbet2
       comg2 = csig2
-      call norm2(ssig2, csig2)
-* norm2(somg2, comg2); -- don't need to normalize!
+      call norm2x(ssig2, csig2)
+* norm2x(somg2, comg2); -- don't need to normalize!
 
 * sig12 = sig2 - sig1, limit to [0, pi]
       sig12 = atan2(0d0 + max(0d0, csig1 * ssig2 - ssig1 * csig2),
-     +    csig1 * csig2 + ssig1 * ssig2)
+     +                             csig1 * csig2 + ssig1 * ssig2)
 
 * omg12 = omg2 - omg1, limit to [0, pi]
-      omg12 = atan2(0d0 + max(0d0, comg1 * somg2 - somg1 * comg2),
-     +    comg1 * comg2 + somg1 * somg2)
+      somg12 = 0d0 + max(0d0, comg1 * somg2 - somg1 * comg2)
+      comg12 =                comg1 * comg2 + somg1 * somg2
+* eta = omg12 - lam120
+      eta = atan2(somg12 * clm120 - comg12 * slm120,
+     +    comg12 * clm120 + somg12 * slm120);
       k2 = calp0**2 * ep2
       eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
       call C3f(eps, C3x, Ca)
       B312 = (TrgSum(.true., ssig2, csig2, Ca, nC3-1) -
      +    TrgSum(.true., ssig1, csig1, Ca, nC3-1))
-      h0 = -f * A3f(eps, A3x)
-      domg12 = salp0 * h0 * (sig12 + B312)
-      lam12 = omg12 + domg12
+      domg12 = -f * A3f(eps, A3x) * salp0 * (sig12 + B312)
+      lam12 = eta + domg12
 
       if (diffp) then
         if (calp2 .eq. 0) then
@@ -1897,9 +1911,9 @@
       double precision x
 
       AngNm = mod(x, 360d0)
-      if (AngNm .lt. -180) then
+      if (AngNm .le. -180) then
         AngNm = AngNm + 360
-      else if (AngNm .ge. 180) then
+      else if (AngNm .gt. 180) then
         AngNm = AngNm - 360
       end if
 
@@ -1918,20 +1932,23 @@
       return
       end
 
-      double precision function AngDif(x, y)
+      double precision function AngDif(x, y, e)
 * Compute y - x.  x and y must both lie in [-180, 180].  The result is
 * equivalent to computing the difference exactly, reducing it to (-180,
 * 180] and rounding the result.  Note that this prescription allows -180
-* to be returned (e.g., if x is tiny and negative and y = 180).
+* to be returned (e.g., if x is tiny and negative and y = 180).  The
+* error in the difference is returned in e
 * input
       double precision x, y
+* output
+      double precision e
 
       double precision d, t, sumx, AngNm
-      d = - AngNm(sumx(AngNm(x), AngNm(-y), t))
-      if (d .eq. 180 .and. t .lt. 0) then
+      d = AngNm(sumx(AngNm(-x), AngNm(y), t))
+      if (d .eq. 180 .and. t .gt. 0) then
         d = -180
       end if
-      AngDif = d - t
+      AngDif = sumx(d, t, e)
 
       return
       end
@@ -1951,7 +1968,8 @@
       y = abs(x)
 * The compiler mustn't "simplify" z - (z - y) to y
       if (y .lt. z) y = z - (z - y)
-      AngRnd = 0 + sign(y, x)
+      AngRnd = sign(y, x)
+      if (x .eq. 0) AngRnd = 0
 
       return
       end
@@ -1972,12 +1990,13 @@
 * input
       double precision x, y
 
+* With Fortran 2008, this becomes: hypotx = hypot(x, y)
       hypotx = sqrt(x**2 + y**2)
 
       return
       end
 
-      subroutine norm2(x, y)
+      subroutine norm2x(x, y)
 * input/output
       double precision x, y
 
@@ -2009,6 +2028,7 @@
 * input
       double precision x
 
+* With Fortran 2008, this becomes: atanhx = atanh(x)
       double precision log1px, y
       y = abs(x)
       y = log1px(2 * y/(1 - y))/2
@@ -2072,14 +2092,14 @@
 * input
       double precision lon1, lon2
 
-      double precision lon1x, lon2x, lon12, AngNm, AngDif
+      double precision lon1x, lon2x, lon12, AngNm, AngDif, e
       lon1x = AngNm(lon1)
       lon2x = AngNm(lon2)
-      lon12 = AngDif(lon1x, lon2x)
+      lon12 = AngDif(lon1x, lon2x, e)
       trnsit = 0
-      if (lon1x .lt. 0 .and. lon2x .ge. 0 .and. lon12 .gt. 0) then
+      if (lon1x .le. 0 .and. lon2x .gt. 0 .and. lon12 .gt. 0) then
         trnsit = 1
-      else if (lon2x .lt. 0 .and. lon1x .ge. 0 .and. lon12 .lt. 0) then
+      else if (lon2x .le. 0 .and. lon1x .gt. 0 .and. lon12 .lt. 0) then
         trnsit = -1
       end if
 
@@ -2136,21 +2156,28 @@
       q = nint(r / 90)
       r = (r - 90 * q) * degree
       s = sin(r)
+* sin(-0) isn't reliably -0, so...
+      if (x .eq. 0) s = x
       c = cos(r)
       q = mod(q + 4, 4)
       if (q .eq. 0) then
-        sinx =     s
-        cosx =     c
+        sinx =  s
+        cosx =  c
       else if (q .eq. 1) then
-        sinx =     c
-        cosx = 0 - s
+        sinx =  c
+        cosx = -s
       else if (q .eq. 2) then
-        sinx = 0 - s
-        cosx = 0 - c
+        sinx = -s
+        cosx = -c
       else
 * q.eq.3
-        sinx = 0 - c
-        cosx =     s
+        sinx = -c
+        cosx =  s
+      end if
+
+      if (x .ne. 0) then
+        sinx = 0d0 + sinx
+        cosx = 0d0 + cosx
       end if
 
       return
@@ -2184,7 +2211,7 @@
       end if
       atn2dx = atan2(yy, xx) / degree
       if (q .eq. 1) then
-        if (yy .gt. 0) then
+        if (yy .ge. 0) then
           atn2dx =  180 - atn2dx
         else
           atn2dx = -180 - atn2dx
@@ -2242,7 +2269,7 @@
 *    meridian      merid
 *    outmask       omask
 *    shortline     shortp
-*    norm          norm2
+*    norm          norm2x
 *    SinCosSeries  TrgSum
 *    xthresh       xthrsh
 *    transit       trnsit

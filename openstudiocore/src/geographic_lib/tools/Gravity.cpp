@@ -2,9 +2,9 @@
  * \file Gravity.cpp
  * \brief Command line utility for evaluating gravity fields
  *
- * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  *
  * See the <a href="Gravity.1.html">man page</a> for usage information.
  **********************************************************************/
@@ -26,7 +26,7 @@
 
 #include "Gravity.usage"
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
             throw GeographicErr("Bad hemisphere letter on latitude");
           if (!(abs(lat) <= 90))
             throw GeographicErr("Latitude not in [-90d, 90d]");
-          h = Utility::num<real>(std::string(argv[++m]));
+          h = Utility::val<real>(std::string(argv[++m]));
           circle = true;
         }
         catch (const std::exception& e) {
@@ -81,11 +81,11 @@ int main(int argc, char* argv[]) {
           return 1;
         }
       } else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
-          prec = Utility::num<int>(std::string(argv[m]));
+          prec = Utility::val<int>(std::string(argv[m]));
         }
         catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
@@ -254,9 +254,9 @@ int main(int argc, char* argv[]) {
                 g.Disturbance(lat, lon, h, deltax, deltay, deltaz);
               }
               // Convert to mGals
-              *output << Utility::str(deltax * 1e5, prec) << " "
-                      << Utility::str(deltay * 1e5, prec) << " "
-                      << Utility::str(deltaz * 1e5, prec)
+              *output << Utility::str(deltax * 100000, prec) << " "
+                      << Utility::str(deltay * 100000, prec) << " "
+                      << Utility::str(deltaz * 100000, prec)
                       << eol;
             }
             break;
@@ -267,7 +267,7 @@ int main(int argc, char* argv[]) {
                 c.SphericalAnomaly(lon, Dg01, xi, eta);
               else
                 g.SphericalAnomaly(lat, lon, h, Dg01, xi, eta);
-              Dg01 *= 1e5;      // Convert to mGals
+              Dg01 *= 100000;      // Convert to mGals
               xi *= 3600;       // Convert to arcsecs
               eta *= 3600;
               *output << Utility::str(Dg01, prec) << " "

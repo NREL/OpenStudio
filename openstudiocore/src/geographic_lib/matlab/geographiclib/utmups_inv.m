@@ -29,12 +29,14 @@ function [lat, lon, gam, k] = utmups_inv(x, y, zone, isnorth)
 %        UPS: x and y in [1200 km, 2800 km] for northern hemisphere
 %             x and y in [700 km, 3300 km] for southern hemisphere
 %
+%   The ranges are 100 km less restrictive than for mgrs_fwd.
+%
 %   UTMUPS_INV checks that (x,y) lie in the limits given above.  If these
 %   conditions don't hold (lat,lon), gam, k are converted to NaN.
 %
 %   See also UTMUPS_FWD, TRANMERC_INV, POLARST_INV, MGRS_INV.
 
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2016) <charles@karney.com>.
 
   narginchk(4, 4)
   try

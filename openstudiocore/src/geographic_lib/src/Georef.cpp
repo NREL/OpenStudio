@@ -2,9 +2,9 @@
  * \file Georef.cpp
  * \brief Implementation for GeographicLib::Georef class
  *
- * Copyright (c) Charles Karney (2015) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2015-2017) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/Georef.hpp>
@@ -14,10 +14,10 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const string Georef::digits_ = "0123456789";
-  const string Georef::lontile_ = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-  const string Georef::lattile_ = "ABCDEFGHJKLM";
-  const string Georef::degrees_ = "ABCDEFGHJKLMNPQ";
+  const char* const Georef::digits_ = "0123456789";
+  const char* const Georef::lontile_ = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const char* const Georef::lattile_ = "ABCDEFGHJKLM";
+  const char* const Georef::degrees_ = "ABCDEFGHJKLMNPQ";
 
   void Georef::Forward(real lat, real lon, int prec, std::string& georef) {
     if (abs(lat) > 90)
@@ -37,8 +37,8 @@ namespace GeographicLib {
                                 "long long not wide enough to store 21600e9");
     const long long m = 60000000000LL;
     long long
-      x = (long long)(floor(lon * m)) - lonorig_ * m,
-      y = (long long)(floor(lat * m)) - latorig_ * m;
+      x = (long long)(floor(lon * real(m))) - lonorig_ * m,
+      y = (long long)(floor(lat * real(m))) - latorig_ * m;
     int ilon = int(x / m); int ilat = int(y / m);
     char georef1[maxlen_];
     georef1[0] = lontile_[ilon / tile_];
@@ -109,7 +109,8 @@ namespace GeographicLib {
                               + georef.substr(baselen_));
         if (prec1 > maxprec_)
           throw GeographicErr("More than " + Utility::str(2*maxprec_)
-                              + " digits in georef " + georef.substr(baselen_));
+                              + " digits in georef "
+                              + georef.substr(baselen_));
         for (int i = 0; i < prec1; ++i) {
           int m = i ? base_ : 6;
           unit *= m;

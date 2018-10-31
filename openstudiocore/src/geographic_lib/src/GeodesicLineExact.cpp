@@ -2,9 +2,9 @@
  * \file GeodesicLineExact.cpp
  * \brief Implementation for GeographicLib::GeodesicLineExact class
  *
- * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  *
  * This is a reformulation of the geodesic problem.  The notation is as
  * follows:
@@ -32,25 +32,25 @@ namespace GeographicLib {
 
   using namespace std;
 
-  GeodesicLineExact::GeodesicLineExact(const GeodesicExact& g,
-                                       real lat1, real lon1, real azi1,
-                                       unsigned caps)
-    : tiny_(g.tiny_)
-    , _lat1(Math::LatFix(lat1))
-    , _lon1(lon1)
-    , _azi1(Math::AngNormalize(azi1))
-    , _a(g._a)
-    , _f(g._f)
-    , _b(g._b)
-    , _c2(g._c2)
-    , _f1(g._f1)
-    , _e2(g._e2)
-    , _E(0, 0)
-      // Always allow latitude and azimuth and unrolling of longitude
-    , _caps(caps | LATITUDE | AZIMUTH | LONG_UNROLL)
-  {
-    // Guard against underflow in salp0
-    Math::sincosd(Math::AngRound(_azi1), _salp1, _calp1);
+  void GeodesicLineExact::LineInit(const GeodesicExact& g,
+                                   real lat1, real lon1,
+                                   real azi1, real salp1, real calp1,
+                                   unsigned caps) {
+    tiny_ = g.tiny_;
+    _lat1 = Math::LatFix(lat1);
+    _lon1 = lon1;
+    _azi1 = azi1;
+    _salp1 = salp1;
+    _calp1 = calp1;
+    _a = g._a;
+    _f = g._f;
+    _b = g._b;
+    _c2 = g._c2;
+    _f1 = g._f1;
+    _e2 = g._e2;
+    // Always allow latitude and azimuth and unrolling of longitude
+    _caps = caps | LATITUDE | AZIMUTH | LONG_UNROLL;
+
     real cbet1, sbet1;
     Math::sincosd(Math::AngRound(_lat1), sbet1, cbet1); sbet1 *= _f1;
     // Ensure cbet1 = +epsilon at poles
@@ -111,6 +111,27 @@ namespace GeographicLib {
       _A4 = Math::sq(_a) * _calp0 * _salp0 * _e2;
       _B41 = GeodesicExact::CosSeries(_ssig1, _csig1, _C4a, nC4_);
     }
+
+    _a13 = _s13 = Math::NaN();
+  }
+
+  GeodesicLineExact::GeodesicLineExact(const GeodesicExact& g,
+                                       real lat1, real lon1, real azi1,
+                                       unsigned caps) {
+    azi1 = Math::AngNormalize(azi1);
+    real salp1, calp1;
+    // Guard against underflow in salp0.  Also -0 is converted to +0.
+    Math::sincosd(Math::AngRound(azi1), salp1, calp1);
+    LineInit(g, lat1, lon1, azi1, salp1, calp1, caps);
+  }
+
+  GeodesicLineExact::GeodesicLineExact(const GeodesicExact& g,
+                                       real lat1, real lon1,
+                                       real azi1, real salp1, real calp1,
+                                       unsigned caps,
+                                       bool arcmode, real s13_a13) {
+    LineInit(g, lat1, lon1, azi1, salp1, calp1, caps);
+    GenSetDistance(arcmode, s13_a13);
   }
 
   Math::real GeodesicLineExact::GenPosition(bool arcmode, real s12_a12,
@@ -118,10 +139,9 @@ namespace GeographicLib {
                                             real& lat2, real& lon2, real& azi2,
                                             real& s12, real& m12,
                                             real& M12, real& M21,
-                                            real& S12)
-  const {
+                                            real& S12) const {
     outmask &= _caps & OUT_MASK;
-    if (!( Init() && (arcmode || (_caps & DISTANCE_IN & OUT_MASK)) ))
+    if (!( Init() && (arcmode || (_caps & (OUT_MASK & DISTANCE_IN))) ))
       // Uninitialized or impossible distance calculation requested
       return Math::NaN();
 
@@ -172,8 +192,8 @@ namespace GeographicLib {
       s12 = arcmode ? _b * (_E0 * sig12 + AB1) : s12_a12;
 
     if (outmask & LONGITUDE) {
-      real somg2 = _salp0 * ssig2, comg2 = csig2;  // No need to normalize
-      int E = _salp0 < 0 ? -1 : 1;                 // east-going?
+      real somg2 = _salp0 * ssig2, comg2 = csig2,  // No need to normalize
+        E = Math::copysign(real(1), _salp0);       // east-going?
       // Without normalization we have schi2 = somg2.
       real cchi2 =  _f1 * dn2 *  comg2;
       real chi12 = outmask & LONG_UNROLL
@@ -183,7 +203,8 @@ namespace GeographicLib {
         : atan2(somg2 * _cchi1 - cchi2 * _somg1,
                 cchi2 * _cchi1 + somg2 * _somg1);
       real lam12 = chi12 -
-        _e2/_f1 * _salp0 * _H0 * (sig12 + (_E.deltaH(ssig2, csig2, dn2) - _H1));
+        _e2/_f1 * _salp0 * _H0 *
+        (sig12 + (_E.deltaH(ssig2, csig2, dn2) - _H1));
       real lon12 = lam12 / Math::degree();
       lon2 = outmask & LONG_UNROLL ? _lon1 + lon12 :
         Math::AngNormalize(Math::AngNormalize(_lon1) +
@@ -218,13 +239,13 @@ namespace GeographicLib {
         // alp12 = alp2 - alp1, used in atan2 so no need to normalize
         salp12 = salp2 * _calp1 - calp2 * _salp1;
         calp12 = calp2 * _calp1 + salp2 * _salp1;
-        // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
-        // salp12 = -0 and alp12 = -180.  However this depends on the sign being
-        // attached to 0 correctly.  The following ensures the correct behavior.
-        if (salp12 == 0 && calp12 < 0) {
-          salp12 = tiny_ * _calp1;
-          calp12 = -1;
-        }
+        // We used to include here some patch up code that purported to deal
+        // with nearly meridional geodesics properly.  However, this turned out
+        // to be wrong once _salp1 = -0 was allowed (via
+        // GeodesicExact::InverseLine).  In fact, the calculation of {s,c}alp12
+        // was already correct (following the IEEE rules for handling signed
+        // zeros).  So the patch up code was unnecessary (as well as
+        // dangerous).
       } else {
         // tan(alp) = tan(alp0) * sec(sig)
         // tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)
@@ -243,6 +264,26 @@ namespace GeographicLib {
     }
 
     return arcmode ? s12_a12 : sig12 / Math::degree();
+  }
+
+  void GeodesicLineExact::SetDistance(real s13) {
+    _s13 = s13;
+    real t;
+    // This will set _a13 to NaN if the GeodesicLineExact doesn't have the
+    // DISTANCE_IN capability.
+    _a13 = GenPosition(false, _s13, 0u, t, t, t, t, t, t, t, t);
+  }
+
+  void GeodesicLineExact::SetArc(real a13) {
+    _a13 = a13;
+    // In case the GeodesicLineExact doesn't have the DISTANCE capability.
+    _s13 = Math::NaN();
+    real t;
+    GenPosition(true, _a13, DISTANCE, t, t, t, _s13, t, t, t, t);
+  }
+
+  void GeodesicLineExact::GenSetDistance(bool arcmode, real s13_a13) {
+    arcmode ? SetArc(s13_a13) : SetDistance(s13_a13);
   }
 
 } // namespace GeographicLib

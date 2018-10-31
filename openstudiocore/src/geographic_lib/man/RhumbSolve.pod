@@ -4,7 +4,7 @@ RhumbSolve -- perform rhumb line calculations
 
 =head1 SYNOPSIS
 
-B<RhumbSolve> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi12> ]
+B<RhumbSolve> [ B<-i> | B<-L> I<lat1> I<lon1> I<azi12> ]
 [ B<-e> I<a> I<f> ]
 [ B<-d> | B<-:> ] [ B<-w> ] [ B<-p> I<prec> ] [ B<-s> ]
 [ B<--comment-delimiter> I<commentdelim> ]
@@ -43,18 +43,18 @@ standard output.  This is the direct calculation.
 
 =item 2.
 
-Command line arguments B<-l> I<lat1> I<lon1> I<azi12> specify a rhumb
-line.  B<RhumbSolve> then accepts a sequence of I<s12> values (one per
-line) on standard input and prints I<lat2> I<lon2> I<S12> for each.
-This generates a sequence of points on a rhumb line.
-
-=item 3.
-
 With the B<-i> command line argument, B<RhumbSolve> performs the inverse
 calculation.  It reads lines containing I<lat1> I<lon1> I<lat2> I<lon2>
 and prints the values of I<azi12> I<s12> I<S12> for the corresponding
 shortest rhumb lines.  If the end points are on opposite meridians,
 there are two shortest rhumb lines and the east-going one is chosen.
+
+=item 3.
+
+Command line arguments B<-L> I<lat1> I<lon1> I<azi12> specify a rhumb
+line.  B<RhumbSolve> then accepts a sequence of I<s12> values (one per
+line) on standard input and prints I<lat2> I<lon2> I<S12> for each.
+This generates a sequence of points on a rhumb line.
 
 =back
 
@@ -64,19 +64,20 @@ there are two shortest rhumb lines and the east-going one is chosen.
 
 =item B<-i>
 
-perform an inverse calculation (see 3 above).
+perform an inverse calculation (see 2 above).
 
-=item B<-l>
+=item B<-L> I<lat1> I<lon1> I<azi12>
 
-line mode (see 2 above); generate a sequence of points along the rhumb
+line mode (see 3 above); generate a sequence of points along the rhumb
 line specified by I<lat1> I<lon1> I<azi12>.  The B<-w> flag can be used
 to swap the default order of the 2 geographic coordinates, provided that
-it appears before B<-l>.
+it appears before B<-L>.  (B<-l> is an alternative, deprecated, spelling
+of this flag.)
 
-=item B<-e>
+=item B<-e> I<a> I<f>
 
-specify the ellipsoid via I<a> I<f>; the equatorial radius is I<a> and
-the flattening is I<f>.  Setting I<f> = 0 results in a sphere.  Specify
+specify the ellipsoid via the equatorial radius, I<a> and
+the flattening, I<f>.  Setting I<f> = 0 results in a sphere.  Specify
 I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  By default, the WGS84 ellipsoid is used, I<a> =
 6378137 m, I<f> = 1/298.257223563.
@@ -96,7 +97,7 @@ on input and output, longitude precedes latitude (except that on input
 this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
 I<W>).
 
-=item B<-p>
+=item B<-p> I<prec>
 
 set the output precision to I<prec> (default 3); I<prec> is the
 precision relative to 1 m.  See L</PRECISION>.
@@ -111,7 +112,7 @@ difference is computed using Krueger series for the transverse Mercator
 projection which is only accurate for |I<f>| E<lt> 0.01.  See
 L</ACCURACY>.
 
-=item B<--comment-delimiter>
+=item B<--comment-delimiter> I<commentdelim>
 
 set the comment delimiter to I<commentdelim> (e.g., "#" or "//").  If
 set, the input lines will be scanned for this delimiter and, if found,
@@ -131,23 +132,23 @@ print usage and exit.
 
 print full documentation and exit.
 
-=item B<--input-file>
+=item B<--input-file> I<infile>
 
 read input from the file I<infile> instead of from standard input; a file
 name of "-" stands for standard input.
 
-=item B<--input-string>
+=item B<--input-string> I<instring>
 
 read input from the string I<instring> instead of from standard input.
 All occurrences of the line separator character (default is a semicolon)
 in I<instring> are converted to newlines before the reading begins.
 
-=item B<--line-separator>
+=item B<--line-separator> I<linesep>
 
 set the line separator character to I<linesep>.  By default this is a
 semicolon.
 
-=item B<--output-file>
+=item B<--output-file> I<outfile>
 
 write output to the file I<outfile> instead of to standard output; a
 file name of "-" stands for standard output.
@@ -218,26 +219,26 @@ considerably longer than the geodesic given by GeodSolve(1).
 Waypoints on the route at intervals of 2000km:
 
    for ((i = 0; i <= 20; i += 2)); do echo ${i}000000;done |
-   RhumbSolve -l 40:38:23N 073:46:44W 103:34:58.2 -: -p 0
+   RhumbSolve -L 40:38:23N 073:46:44W 103:34:58.2 -: -p 0
 
-   40:38:23.0N 073:46:44.0W
-   36:24:30.3N 051:28:26.4W
-   32:10:26.8N 030:20:57.3W
-   27:56:13.2N 010:10:54.2W
-   23:41:50.1N 009:12:45.5E
-   19:27:18.7N 027:59:22.1E
-   15:12:40.2N 046:17:01.1E
-   10:57:55.9N 064:12:52.8E
-   06:43:07.3N 081:53:28.8E
-   02:28:16.2N 099:24:54.5E
-   01:46:36.0S 116:52:59.7E
+   40:38:23.0N 073:46:44.0W 0
+   36:24:30.3N 051:28:26.4W 9817078307821
+   32:10:26.8N 030:20:57.3W 18224745682005
+   27:56:13.2N 010:10:54.2W 25358020327741
+   23:41:50.1N 009:12:45.5E 31321269267102
+   19:27:18.7N 027:59:22.1E 36195163180159
+   15:12:40.2N 046:17:01.1E 40041499143669
+   10:57:55.9N 064:12:52.8E 42906570007050
+   06:43:07.3N 081:53:28.8E 44823504180200
+   02:28:16.2N 099:24:54.5E 45813843358737
+   01:46:36.0S 116:52:59.7E 45888525219677
 
 =head1 SEE ALSO
 
 GeoConvert(1), GeodSolve(1), TransverseMercatorProj(1).
 
 An online version of this utility is availbable at
-L<http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve>.
+L<https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve>.
 
 The Wikipedia page, Rhumb line,
 L<https://en.wikipedia.org/wiki/Rhumb_line>.
@@ -248,5 +249,5 @@ B<RhumbSolve> was written by Charles Karney.
 
 =head1 HISTORY
 
-B<RhumbSolve> was added to GeographicLib, L<http://geographiclib.sf.net>,
-in version 1.37.
+B<RhumbSolve> was added to GeographicLib,
+L<https://geographiclib.sourceforge.io>, in version 1.37.

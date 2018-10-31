@@ -3,32 +3,31 @@
   <head>
     <title>Geodesic calculations for an ellipsoid done right</title>
     <meta name="description"
-	  content="Geodesic calculations for an ellipsoid done right" />
+          content="Geodesic calculations for an ellipsoid done right" />
     <meta name="author" content="Charles F. F. Karney">
     <meta name="keywords"
-	  content="geodesics,
-		   geodesic distance,
-		   geographic distance,
-		   shortest path,
-		   direct geodesic problem,
-		   inverse geodesic problem,
-		   distance and azimuth,
-		   distance and heading,
-		   range and bearing,
-		   geographic area,
-		   geodesic polygon,
-		   spheroidal triangle,
-		   latitude and longitude,
-		   online calculator,
-		   WGS84 ellipsoid,
-		   GeographicLib" />
-    <meta http-equiv="Content-Type"
-	  content="text/html; charset=ISO-8859-1">
+          content="geodesics,
+                   geodesic distance,
+                   geographic distance,
+                   shortest path,
+                   direct geodesic problem,
+                   inverse geodesic problem,
+                   distance and azimuth,
+                   distance and heading,
+                   range and bearing,
+                   geographic area,
+                   geodesic polygon,
+                   spheroidal triangle,
+                   latitude and longitude,
+                   online calculator,
+                   WGS84 ellipsoid,
+                   GeographicLib" />
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <!--
-	 Full URL for latest version of geographiclib.min.js is
-	 http://geographiclib.sf.net/scripts/geographiclib.min.js
-	 URL for a specific version is, for example,
-	 http://geographiclib.sf.net/scripts/geographiclib-1.45.min.js
+        Full URL for latest version of geographiclib.min.js is
+        https://geographiclib.sourceforge.io/scripts/geographiclib.min.js
+        URL for a specific version is, for example,
+        https://geographiclib.sourceforge.io/scripts/geographiclib-1.45.min.js
       -->
     <script type="text/javascript" src="geographiclib.min.js">
     </script>
@@ -52,28 +51,23 @@ var geod = GeographicLib.Geodesic.WGS84,
   };
 
   /*
-   * split a geodesic line into k equal pieces which are no longer than about
-   * ds12 (but k cannot exceed maxk, default 20), and returns an array of
-   * length k + 1 of objects with fields lat, lon, azi.
+   * split a geodesic line into k approximately equal pieces which are no
+   * longer than about ds12 (but k cannot exceed maxk, default 20), and returns
+   * an array of length k + 1 of objects with fields lat, lon, azi.
    */
   g.Geodesic.prototype.InversePath =
     function(lat1, lon1, lat2, lon2, ds12, maxk) {
-      var t = this.Inverse(lat1, lon1, lat2, lon2),
-          k, points, line, da12, vals, i;
+      var line = this.InverseLine(lat1, lon1, lat2, lon2, g.STANDARD),
+          k, points, da12, vals, i;
       if (!maxk) maxk = 20;
       if (!(ds12 > 0))
         throw new Error("ds12 must be a positive number");
-      k = Math.max(1, Math.min(maxk, Math.ceil(t.s12/ds12)));
+      k = Math.max(1, Math.min(maxk, Math.ceil(line.s13 / ds12)));
       points = new Array(k + 1);
-      points[0] = {lat: t.lat1, lon: t.lon1, azi: t.azi1};
-      points[k] = {lat: t.lat2, lon: t.lon2, azi: t.azi2};
-      if (k > 1) {
-        line = this.Line(t.lat1, t.lon1, t.azi1, g.STANDARD);
-        da12 = t.a12/k;
-        for (i = 1; i < k; ++i) {
-          vals = line.ArcPosition(i * da12);
-          points[i] = {lat: vals.lat2, lon: vals.lon2, azi: vals.azi2};
-        }
+      da12 = line.a13 / k;
+      for (i = 0; i <= k; ++i) {
+        vals = line.ArcPosition(i * da12);
+        points[i] = {lat: vals.lat2, lon: vals.lon2, azi: vals.azi2};
       }
       return points;
     };
@@ -236,24 +230,25 @@ function GeodesicArea(input, polyline) {
       This page illustrates the geodesic routines available in
       JavaScript package
       <a href="https://www.npmjs.com/package/geographiclib">
-	geographiclib</a>, which is documented
-      <a href="http://geographiclib.sourceforge.net/html/js/">
-	here</a>.
+        geographiclib, the geodesic routines in GeographicLib</a>
+      (<a href="https://geographiclib.sourceforge.io/html/js/">
+        documentation</a>).
       The algorithms are considerably more accurate than Vincenty's
       method, and offer more functionality (an inverse method which
       never fails to converge, differential properties of the geodesic,
       and the area under a geodesic).  The algorithms are derived in
       <blockquote>
-	Charles F. F. Karney,<br>
-	<a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
-	  <i>Algorithms for geodesics</i></a>,<br>
-	J. Geodesy <b>87</b>(1), 43&ndash;55 (Jan. 2013);<br>
-	DOI:
-	<a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
-	  10.1007/s00190-012-0578-z</a>
-	(<a href="https://dx.doi.org/10.1007/s00190-012-0578-z">pdf</a>);
-	addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
-	  geod-addenda.html</a>.
+        Charles F. F. Karney,<br>
+        <a href="https://doi.org/10.1007/s00190-012-0578-z">
+          <i>Algorithms for geodesics</i></a>,<br>
+        J. Geodesy <b>87</b>(1), 43&ndash;55 (Jan. 2013);<br>
+        DOI:
+        <a href="https://doi.org/10.1007/s00190-012-0578-z">
+          10.1007/s00190-012-0578-z</a>
+        (<a href="https://doi.org/10.1007/s00190-012-0578-z">pdf</a>);
+        addenda:
+        <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+          geod-addenda.html</a>.
       </blockquote>
       This page just provides a basic interface.  Enter latitudes,
       longitudes, and azimuths as degrees and distances as meters using
@@ -265,110 +260,112 @@ function GeodesicArea(input, polyline) {
       areas).  A slicker page where the geodesics are incorporated into
       Google Maps is given <a href="geod-google.html">here</a>.  Basic
       online tools which provide similar capabilities are
-      <a href="http://geographiclib.sf.net/cgi-bin/GeodSolve">GeodSolve</a>
+      <a href="https://geographiclib.sourceforge.io/cgi-bin/GeodSolve">
+        GeodSolve</a>
       and
-      <a href="http://geographiclib.sf.net/cgi-bin/Planimeter">Planimeter</a>;
+      <a href="https://geographiclib.sourceforge.io/cgi-bin/Planimeter">
+        Planimeter</a>;
       these call a C++ backend.  This page uses version
       <script type="text/javascript">
-	document.write(GeographicLib.Constants.version_string);
+        document.write(GeographicLib.Constants.version_string);
       </script>
       of the geodesic code.
     <p>
       Jump to:
       <ul>
-	<li><a href="#inverse">Inverse problem</a></li>
-	<li><a href="#direct">Direct problem</a></li>
-	<li><a href="#path">Geodesic path</a></li>
-	<li><a href="#area">Polygon area</a></li>
-	<li><a href="geod-google.html">Geodesic lines, circles, and
-	envelopes in Google Maps</a></li>
+        <li><a href="#inverse">Inverse problem</a></li>
+        <li><a href="#direct">Direct problem</a></li>
+        <li><a href="#path">Geodesic path</a></li>
+        <li><a href="#area">Polygon area</a></li>
+        <li><a href="geod-google.html">Geodesic lines, circles, and
+        envelopes in Google Maps</a></li>
       </ul>
     </p>
     <hr>
     <form name="inverse" >
       <h3><a class="anchor" id="inverse">Inverse problem</h3>
       <p>
-	Find the shortest path between two points on the earth.  The
-	path is characterized by its length <i>s12</i> and its azimuth
-	at the two ends <i>azi1</i> and <i>azi2</i>.  See
-	<a href="http://geographiclib.sf.net/html/GeodSolve.1.html">
-	  GeodSolve(1)</a>
-	for the definition of the
-	quantities <i>a12</i>, <i>m12</i>, <i>M12</i>, <i>M21</i>,
-	and <i>S12</i>.  The sample calculation finds the shortest path
-	between Wellington, New Zealand, and Salamanca, Spain.  To
-	perform the calculation, press the &ldquo;COMPUTE&rdquo; button.
+        Find the shortest path between two points on the earth.  The
+        path is characterized by its length <i>s12</i> and its azimuth
+        at the two ends <i>azi1</i> and <i>azi2</i>.  See
+        <a href="https://geographiclib.sourceforge.io/html/GeodSolve.1.html">
+          GeodSolve(1)</a>
+        for the definition of the
+        quantities <i>a12</i>, <i>m12</i>, <i>M12</i>, <i>M21</i>,
+        and <i>S12</i>.  The sample calculation finds the shortest path
+        between Wellington, New Zealand, and Salamanca, Spain.  To
+        perform the calculation, press the &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2&rdquo;</i>:</p>
       <p>input:
         <input name="input" size=72 value="-41.32 174.81 40.96 -5.50" />
       </p>
       <p>
-	Output format:&nbsp;&nbsp;<label for="ig">
-	  <input type="radio" value="g" name="format" id="ig" checked>
-	  decimal degrees
-	</label>&nbsp;
-	<label for="id">
-	  <input type="radio" value="d" name="format" id="id">
-	  degrees minutes seconds
-	</label><br>
-	Output precision:&nbsp;&nbsp;<select name="prec" size=1>
-	  <option value='0'> 1m 0.00001d 0.1"</option>
-	  <option value='1'> 100mm 0.01"</option>
-	  <option value='2'> 10mm 0.001"</option>
-	  <option value='3' selected> 1mm 0.0001"</option>
-	  <option value='4'> 100um 0.00001"</option>
-	  <option value='5'> 10um 0.000001"</option>
-	  <option value='6'> 1um 0.0000001"</option>
-	  <option value='7'> 100nm 0.00000001"</option>
-	  <option value='8'> 10nm 0.000000001"</option>
-	  <option value='9'> 1nm 0.0000000001"</option>
-	</select>
+        Output format:&nbsp;&nbsp;<label for="ig">
+          <input type="radio" value="g" name="format" id="ig" checked>
+          decimal degrees
+        </label>&nbsp;
+        <label for="id">
+          <input type="radio" value="d" name="format" id="id">
+          degrees minutes seconds
+        </label><br>
+        Output precision:&nbsp;&nbsp;<select name="prec" size=1>
+          <option value='0'> 1m 0.00001d 0.1"</option>
+          <option value='1'> 100mm 0.01"</option>
+          <option value='2'> 10mm 0.001"</option>
+          <option value='3' selected> 1mm 0.0001"</option>
+          <option value='4'> 100um 0.00001"</option>
+          <option value='5'> 10um 0.000001"</option>
+          <option value='6'> 1um 0.0000001"</option>
+          <option value='7'> 100nm 0.00000001"</option>
+          <option value='8'> 10nm 0.000000001"</option>
+          <option value='9'> 1nm 0.0000000001"</option>
+        </select>
       </p>
       <p>
         <input type="button" value="COMPUTE"
-	       onclick="var t = GeodesicInverse(document.inverse.input.value,
-			        document.inverse.format[1].checked,
-				document.inverse.prec.selectedIndex);
-			document.inverse.status.value = t.status;
-			document.inverse.p1.value = t.p1;
-			document.inverse.p2.value = t.p2;
-			document.inverse.s12.value = t.s12;
-			document.inverse.a12.value = t.a12;
-			document.inverse.m12.value = t.m12;
-			document.inverse.M1221.value = t.M1221;
-			document.inverse.S12.value = t.S12;" />
+               onclick="var t = GeodesicInverse(document.inverse.input.value,
+                                document.inverse.format[1].checked,
+                                document.inverse.prec.selectedIndex);
+                        document.inverse.status.value = t.status;
+                        document.inverse.p1.value = t.p1;
+                        document.inverse.p2.value = t.p2;
+                        document.inverse.s12.value = t.s12;
+                        document.inverse.a12.value = t.a12;
+                        document.inverse.m12.value = t.m12;
+                        document.inverse.M1221.value = t.M1221;
+                        document.inverse.S12.value = t.S12;" />
       </p>
       <p>
-	status:
+        status:
         <input name="status" size=50 readonly />
       </p>
       <p>
-	lat1 lon1 <font color='blue'>azi1</font>:
+        lat1 lon1 <font color='blue'>azi1</font>:
         <input name="p1" size=75 readonly />
       </p>
       <p>
-	lat2 lon2 <font color='blue'>azi2</font>:
+        lat2 lon2 <font color='blue'>azi2</font>:
         <input name="p2" size=75 readonly />
       </p>
       <p>
-	<font color='blue'>s12</font>:
+        <font color='blue'>s12</font>:
         <input name="s12" size=25 readonly />
       </p>
       <p>
-	<font color='blue'>a12</font>:
+        <font color='blue'>a12</font>:
         <input name="a12" size=25 readonly />
       </p>
       <p>
-	<font color='blue'>m12</font>:
+        <font color='blue'>m12</font>:
         <input name="m12" size=25 readonly />
       </p>
       <p>
-	<font color='blue'>M12 M21</font>:
+        <font color='blue'>M12 M21</font>:
         <input name="M1221" size=50 readonly />
       </p>
       <p>
-	<font color='blue'>S12</font>:
+        <font color='blue'>S12</font>:
         <input name="S12" size=25 readonly />
       </p>
     </form>
@@ -376,88 +373,88 @@ function GeodesicArea(input, polyline) {
     <form name="direct">
       <h3><a class="anchor" id="direct">Direct problem</h3>
       <p>
-	Find the destination traveling a given distance along a geodesic
-	with a given azimuth at the starting point.  The destination is
-	characterized by its position <i>lat2, lon2</i> and its azimuth
-	at the destination <i>azi2</i>.  See
-	<a href="http://geographiclib.sf.net/html/GeodSolve.1.html">
-	  GeodSolve(1)</a>
-	for the definition of the
-	quantities <i>a12</i>, <i>m12</i>, <i>M12</i>, <i>M21</i>,
-	and <i>S12</i>.  The sample calculation shows the result of
-	travelling 10000 km NE from JFK airport.  To perform the
-	calculation, press the &ldquo;COMPUTE&rdquo; button.
+        Find the destination traveling a given distance along a geodesic
+        with a given azimuth at the starting point.  The destination is
+        characterized by its position <i>lat2, lon2</i> and its azimuth
+        at the destination <i>azi2</i>.  See
+        <a href="https://geographiclib.sourceforge.io/html/GeodSolve.1.html">
+          GeodSolve(1)</a>
+        for the definition of the
+        quantities <i>a12</i>, <i>m12</i>, <i>M12</i>, <i>M21</i>,
+        and <i>S12</i>.  The sample calculation shows the result of
+        travelling 10000 km NE from JFK airport.  To perform the
+        calculation, press the &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 azi1 s12&rdquo;</i>:</p>
       <p>input:
         <input name="input" size=72 value="40.6 -73.8 45 10000e3" />
       </p>
       <p>
-	Output format:&nbsp;&nbsp;<label for="dg">
-	  <input type="radio" value="g" name="format" id="dg" checked>
-	  decimal degrees
-	</label>&nbsp;
-	<label for="dd">
-	  <input type="radio" value="d" name="format" id="dd">
-	  degrees minutes seconds
-	</label><br>
-	Output precision:&nbsp;&nbsp;<select name="prec" size=1>
-	  <option value='0'> 1m 0.00001d 0.1"</option>
-	  <option value='1'> 100mm 0.01"</option>
-	  <option value='2'> 10mm 0.001"</option>
-	  <option value='3' selected> 1mm 0.0001"</option>
-	  <option value='4'> 100um 0.00001"</option>
-	  <option value='5'> 10um 0.000001"</option>
-	  <option value='6'> 1um 0.0000001"</option>
-	  <option value='7'> 100nm 0.00000001"</option>
-	  <option value='8'> 10nm 0.000000001"</option>
-	  <option value='9'> 1nm 0.0000000001"</option>
-	</select>
+        Output format:&nbsp;&nbsp;<label for="dg">
+          <input type="radio" value="g" name="format" id="dg" checked>
+          decimal degrees
+        </label>&nbsp;
+        <label for="dd">
+          <input type="radio" value="d" name="format" id="dd">
+          degrees minutes seconds
+        </label><br>
+        Output precision:&nbsp;&nbsp;<select name="prec" size=1>
+          <option value='0'> 1m 0.00001d 0.1"</option>
+          <option value='1'> 100mm 0.01"</option>
+          <option value='2'> 10mm 0.001"</option>
+          <option value='3' selected> 1mm 0.0001"</option>
+          <option value='4'> 100um 0.00001"</option>
+          <option value='5'> 10um 0.000001"</option>
+          <option value='6'> 1um 0.0000001"</option>
+          <option value='7'> 100nm 0.00000001"</option>
+          <option value='8'> 10nm 0.000000001"</option>
+          <option value='9'> 1nm 0.0000000001"</option>
+        </select>
       </p>
       <p>
         <input type="button" value="COMPUTE"
-	       onclick="var t = GeodesicDirect(document.direct.input.value,
-			        document.direct.format[1].checked,
-				document.direct.prec.selectedIndex);
-			document.direct.status.value = t.status;
-			document.direct.p1.value = t.p1;
-			document.direct.p2.value = t.p2;
-			document.direct.s12.value = t.s12;
-			document.direct.a12.value = t.a12;
-			document.direct.m12.value = t.m12;
-			document.direct.M1221.value = t.M1221;
-			document.direct.S12.value = t.S12;" />
+               onclick="var t = GeodesicDirect(document.direct.input.value,
+                                document.direct.format[1].checked,
+                                document.direct.prec.selectedIndex);
+                        document.direct.status.value = t.status;
+                        document.direct.p1.value = t.p1;
+                        document.direct.p2.value = t.p2;
+                        document.direct.s12.value = t.s12;
+                        document.direct.a12.value = t.a12;
+                        document.direct.m12.value = t.m12;
+                        document.direct.M1221.value = t.M1221;
+                        document.direct.S12.value = t.S12;" />
       </p>
       <p>
-	status:
+        status:
         <input name="status" size=50 readonly />
       </p>
       <p>
-	lat1 lon1 azi1:
+        lat1 lon1 azi1:
         <input name="p1" size=75 readonly />
       </p>
       <p>
-	<font color='blue'>lat2 lon2 azi2</font>:
+        <font color='blue'>lat2 lon2 azi2</font>:
         <input name="p2" size=75 readonly />
       </p>
       <p>
-	s12:
+        s12:
         <input name="s12" size=25 readonly />
       </p>
       <p>
-	<font color='blue'>a12</font>:
+        <font color='blue'>a12</font>:
         <input name="a12" size=25 readonly />
       </p>
       <p>
-	<font color='blue'>m12</font>:
+        <font color='blue'>m12</font>:
         <input name="m12" size=25 readonly />
       </p>
       <p>
-	<font color='blue'>M12 M21</font>:
+        <font color='blue'>M12 M21</font>:
         <input name="M1221" size=50 readonly />
       </p>
       <p>
-	<font color='blue'>S12</font>:
+        <font color='blue'>S12</font>:
         <input name="S12" size=25 readonly />
       </p>
     </form>
@@ -465,57 +462,57 @@ function GeodesicArea(input, polyline) {
     <form name="path">
       <h3><a class="anchor" id="path">Geodesic path</h3>
       <p>
-	Find intermediate points along a geodesic.  In addition to
-	specifying the endpoints, give <i>ds12</i>, the maximum distance
-	between the intermediate points and <i>maxk</i>, the maximum
-	number of intervals the geodesic is broken into.  The output
-	gives a sequence of positions <i>lat, lon</i> together with the
-	corresponding azimuths <i>azi</i>.  The sample shows the path
-	from JFK to Singapore's Changi Airport at about 1000 km
-	intervals.  (In this example, the path taken by Google Earth
-	deviates from the shortest path by about 2.9 km.)  To perform
-	the calculation, press the &ldquo;COMPUTE&rdquo; button.
+        Find intermediate points along a geodesic.  In addition to
+        specifying the endpoints, give <i>ds12</i>, the maximum distance
+        between the intermediate points and <i>maxk</i>, the maximum
+        number of intervals the geodesic is broken into.  The output
+        gives a sequence of positions <i>lat, lon</i> together with the
+        corresponding azimuths <i>azi</i>.  The sample shows the path
+        from JFK to Singapore's Changi Airport at about 1000 km
+        intervals.  (In this example, the path taken by Google Earth
+        deviates from the shortest path by about 2.9 km.)  To perform
+        the calculation, press the &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2 ds12 maxk&rdquo;</i>:</p>
       <p>input:
         <input name="input" size=72 value="40.6 -73.8 1.4 104 1000e3 20" />
       </p>
       <p>
-	Output format:&nbsp;&nbsp;<label for="pg">
-	  <input type="radio" value="g" name="format" id="pg" checked>
-	  decimal degrees
-	</label>&nbsp;
-	<label for="pd">
-	  <input type="radio" value="d" name="format" id="pd">
-	  degrees minutes seconds
-	</label><br>
-	Output precision:&nbsp;&nbsp;<select name="prec" size=1>
-	  <option value='0' selected> 1m 0.00001d 0.1"</option>
-	  <option value='1'> 100mm 0.01"</option>
-	  <option value='2'> 10mm 0.001"</option>
-	  <option value='3'> 1mm 0.0001"</option>
-	  <option value='4'> 100um 0.00001"</option>
-	  <option value='5'> 10um 0.000001"</option>
-	  <option value='6'> 1um 0.0000001"</option>
-	  <option value='7'> 100nm 0.00000001"</option>
-	  <option value='8'> 10nm 0.000000001"</option>
-	  <option value='9'> 1nm 0.0000000001"</option>
-	</select>
+        Output format:&nbsp;&nbsp;<label for="pg">
+          <input type="radio" value="g" name="format" id="pg" checked>
+          decimal degrees
+        </label>&nbsp;
+        <label for="pd">
+          <input type="radio" value="d" name="format" id="pd">
+          degrees minutes seconds
+        </label><br>
+        Output precision:&nbsp;&nbsp;<select name="prec" size=1>
+          <option value='0' selected> 1m 0.00001d 0.1"</option>
+          <option value='1'> 100mm 0.01"</option>
+          <option value='2'> 10mm 0.001"</option>
+          <option value='3'> 1mm 0.0001"</option>
+          <option value='4'> 100um 0.00001"</option>
+          <option value='5'> 10um 0.000001"</option>
+          <option value='6'> 1um 0.0000001"</option>
+          <option value='7'> 100nm 0.00000001"</option>
+          <option value='8'> 10nm 0.000000001"</option>
+          <option value='9'> 1nm 0.0000000001"</option>
+        </select>
       </p>
       <p>
         <input type="button" value="COMPUTE"
-	       onclick="var t = GeodesicInversePath(document.path.input.value,
-			        document.path.format[1].checked,
-				document.path.prec.selectedIndex);
-			document.path.status.value = t.status;
-			document.path.points.value = t.points;" />
+               onclick="var t = GeodesicInversePath(document.path.input.value,
+                                document.path.format[1].checked,
+                                document.path.prec.selectedIndex);
+                        document.path.status.value = t.status;
+                        document.path.points.value = t.points;" />
       </p>
       <p>
-	status:
+        status:
         <input name="status" size=50 readonly />
       </p>
       <p>
-	points (lat lon azi):<br>
+        points (lat lon azi):<br>
         <textarea name="points" cols=70 rows=21 readonly></textarea>
       </p>
     </form>
@@ -523,19 +520,19 @@ function GeodesicArea(input, polyline) {
     <form name="area">
       <h3><a class="anchor" id="area">Polygon area</h3>
       <p>
-	Find the perimeter and area of a polygon whose sides are
-	geodesics.  The polygon must be simple (i.e., must not intersect
-	itself).  (There's no need to ensure that the polygon is
-	closed.)  Counter-clockwise traversal of the polygon results in
-	a positive area.  The polygon can encircle one or both poles.
-	The sample gives the approximate perimeter (in m) and area (in
-	m<sup>2</sup>) of Antarctica.  (For this example, Google Earth
-	Pro returns an area which is 30 times too large!  However this
-	is a little unfair, since Google Earth has no concept of
-	polygons which encircle a pole.)  If the <i>polyline</i> option
-	is selected then just the length of the line joining the points
-	is returned.  To perform the calculation, press the
-	&ldquo;COMPUTE&rdquo; button.
+        Find the perimeter and area of a polygon whose sides are
+        geodesics.  The polygon must be simple (i.e., must not intersect
+        itself).  (There's no need to ensure that the polygon is
+        closed.)  Counter-clockwise traversal of the polygon results in
+        a positive area.  The polygon can encircle one or both poles.
+        The sample gives the approximate perimeter (in m) and area (in
+        m<sup>2</sup>) of Antarctica.  (For this example, Google Earth
+        Pro returns an area which is 30 times too large!  However this
+        is a little unfair, since Google Earth has no concept of
+        polygons which encircle a pole.)  If the <i>polyline</i> option
+        is selected then just the length of the line joining the points
+        is returned.  To perform the calculation, press the
+        &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter points, one per line, as <i>&ldquo;lat lon&rdquo;</i>:</p>
       <p>points (lat lon):<br>
@@ -560,28 +557,28 @@ function GeodesicArea(input, polyline) {
 </textarea>
       </p>
       <p>
-	Treat points as:&nbsp;&nbsp;<label for="lg">
-	  <input type="radio" value="p" name="polyline" id="lg" checked>
-	  polygon
-	</label>&nbsp;
-	<label for="ll">
-	  <input type="radio" value="l" name="polyline" id="ll">
-	  polyline
-	</label>
+        Treat points as:&nbsp;&nbsp;<label for="lg">
+          <input type="radio" value="p" name="polyline" id="lg" checked>
+          polygon
+        </label>&nbsp;
+        <label for="ll">
+          <input type="radio" value="l" name="polyline" id="ll">
+          polyline
+        </label>
       </p>
       <p>
         <input type="button" value="COMPUTE"
-	       onclick="var t = GeodesicArea(document.area.input.value,
-			document.area.polyline[1].checked);
-			document.area.status.value = t.status;
-			document.area.area.value = t.area;" />
+               onclick="var t = GeodesicArea(document.area.input.value,
+                        document.area.polyline[1].checked);
+                        document.area.status.value = t.status;
+                        document.area.area.value = t.area;" />
       </p>
       <p>
-	status:
+        status:
         <input name="status" size=50 readonly />
       </p>
       <p>
-	number perimeter area:
+        number perimeter area:
         <input name="area" size=55 readonly />
       </p>
     </form>
@@ -590,6 +587,7 @@ function GeodesicArea(input, polyline) {
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
       (2015-08-12)</address>
     <br>
-    <a href="http://geographiclib.sf.net">Geographiclib Sourceforge</a>
+    <a href="https://geographiclib.sourceforge.io">
+      Geographiclib Sourceforge</a>
   </body>
 </html>

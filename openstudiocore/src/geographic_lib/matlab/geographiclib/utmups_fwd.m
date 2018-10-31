@@ -34,7 +34,7 @@ function [x, y, zone, isnorth, gam, k] = utmups_fwd(lat, lon, setzone)
 %        UPS: x and y in [1200 km, 2800 km] for northern hemisphere
 %             x and y in [700 km, 3300 km] for southern hemisphere
 %
-%   The ranges are 100 km more restrictive than for mgrs_fwd.
+%   The ranges are 100 km less restrictive than for mgrs_fwd.
 %
 %   UTMUPS_FWD checks its arguments and requires that lat is in
 %   [-90deg,90deg] and that (x,y) lie in the limits given above.  If these
@@ -43,7 +43,7 @@ function [x, y, zone, isnorth, gam, k] = utmups_fwd(lat, lon, setzone)
 %
 %   See also UTMUPS_INV, TRANMERC_FWD, POLARST_FWD, MGRS_FWD.
 
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2016) <charles@karney.com>.
 
   narginchk(2, 3)
   if nargin < 3, setzone = -1; end

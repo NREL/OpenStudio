@@ -7,7 +7,7 @@
 <link rev="made" href="mailto:root@localhost" />
 </head>
 
-<body style="background-color: white">
+<body>
 
 
 
@@ -17,7 +17,7 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<p><b>RhumbSolve</b> [ <b>-i</b> | <b>-l</b> <i>lat1</i> <i>lon1</i> <i>azi12</i> ] [ <b>-e</b> <i>a</i> <i>f</i> ] [ <b>-d</b> | <b>-:</b> ] [ <b>-w</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-s</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
+<p><b>RhumbSolve</b> [ <b>-i</b> | <b>-L</b> <i>lat1</i> <i>lon1</i> <i>azi12</i> ] [ <b>-e</b> <i>a</i> <i>f</i> ] [ <b>-d</b> | <b>-:</b> ] [ <b>-w</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-s</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
@@ -32,10 +32,10 @@
 <li><p>By default, <b>RhumbSolve</b> accepts lines on the standard input containing <i>lat1</i> <i>lon1</i> <i>azi12</i> <i>s12</i> and prints <i>lat2</i> <i>lon2</i> <i>S12</i> on standard output. This is the direct calculation.</p>
 
 </li>
-<li><p>Command line arguments <b>-l</b> <i>lat1</i> <i>lon1</i> <i>azi12</i> specify a rhumb line. <b>RhumbSolve</b> then accepts a sequence of <i>s12</i> values (one per line) on standard input and prints <i>lat2</i> <i>lon2</i> <i>S12</i> for each. This generates a sequence of points on a rhumb line.</p>
+<li><p>With the <b>-i</b> command line argument, <b>RhumbSolve</b> performs the inverse calculation. It reads lines containing <i>lat1</i> <i>lon1</i> <i>lat2</i> <i>lon2</i> and prints the values of <i>azi12</i> <i>s12</i> <i>S12</i> for the corresponding shortest rhumb lines. If the end points are on opposite meridians, there are two shortest rhumb lines and the east-going one is chosen.</p>
 
 </li>
-<li><p>With the <b>-i</b> command line argument, <b>RhumbSolve</b> performs the inverse calculation. It reads lines containing <i>lat1</i> <i>lon1</i> <i>lat2</i> <i>lon2</i> and prints the values of <i>azi12</i> <i>s12</i> <i>S12</i> for the corresponding shortest rhumb lines. If the end points are on opposite meridians, there are two shortest rhumb lines and the east-going one is chosen.</p>
+<li><p>Command line arguments <b>-L</b> <i>lat1</i> <i>lon1</i> <i>azi12</i> specify a rhumb line. <b>RhumbSolve</b> then accepts a sequence of <i>s12</i> values (one per line) on standard input and prints <i>lat2</i> <i>lon2</i> <i>S12</i> for each. This generates a sequence of points on a rhumb line.</p>
 
 </li>
 </ol>
@@ -47,19 +47,19 @@
 <dt id="i"><b>-i</b></dt>
 <dd>
 
-<p>perform an inverse calculation (see 3 above).</p>
+<p>perform an inverse calculation (see 2 above).</p>
 
 </dd>
-<dt id="l"><b>-l</b></dt>
+<dt id="L-lat1-lon1-azi12"><b>-L</b> <i>lat1</i> <i>lon1</i> <i>azi12</i></dt>
 <dd>
 
-<p>line mode (see 2 above); generate a sequence of points along the rhumb line specified by <i>lat1</i> <i>lon1</i> <i>azi12</i>. The <b>-w</b> flag can be used to swap the default order of the 2 geographic coordinates, provided that it appears before <b>-l</b>.</p>
+<p>line mode (see 3 above); generate a sequence of points along the rhumb line specified by <i>lat1</i> <i>lon1</i> <i>azi12</i>. The <b>-w</b> flag can be used to swap the default order of the 2 geographic coordinates, provided that it appears before <b>-L</b>. (<b>-l</b> is an alternative, deprecated, spelling of this flag.)</p>
 
 </dd>
-<dt id="e"><b>-e</b></dt>
+<dt id="e-a-f"><b>-e</b> <i>a</i> <i>f</i></dt>
 <dd>
 
-<p>specify the ellipsoid via <i>a</i> <i>f</i>; the equatorial radius is <i>a</i> and the flattening is <i>f</i>. Setting <i>f</i> = 0 results in a sphere. Specify <i>f</i> &lt; 0 for a prolate ellipsoid. A simple fraction, e.g., 1/297, is allowed for <i>f</i>. By default, the WGS84 ellipsoid is used, <i>a</i> = 6378137 m, <i>f</i> = 1/298.257223563.</p>
+<p>specify the ellipsoid via the equatorial radius, <i>a</i> and the flattening, <i>f</i>. Setting <i>f</i> = 0 results in a sphere. Specify <i>f</i> &lt; 0 for a prolate ellipsoid. A simple fraction, e.g., 1/297, is allowed for <i>f</i>. By default, the WGS84 ellipsoid is used, <i>a</i> = 6378137 m, <i>f</i> = 1/298.257223563.</p>
 
 </dd>
 <dt id="d"><b>-d</b></dt>
@@ -80,7 +80,7 @@
 <p>on input and output, longitude precedes latitude (except that on input this can be overridden by a hemisphere designator, <i>N</i>, <i>S</i>, <i>E</i>, <i>W</i>).</p>
 
 </dd>
-<dt id="p"><b>-p</b></dt>
+<dt id="p-prec"><b>-p</b> <i>prec</i></dt>
 <dd>
 
 <p>set the output precision to <i>prec</i> (default 3); <i>prec</i> is the precision relative to 1 m. See <a href="#PRECISION">&quot;PRECISION&quot;</a>.</p>
@@ -92,7 +92,7 @@
 <p>By default, the rhumb line calculations are carried out exactly in terms of elliptic integrals. This includes the use of the addition theorem for elliptic integrals to compute the divided difference of the isometric and rectifying latitudes. If <b>-s</b> is supplied this divided difference is computed using Krueger series for the transverse Mercator projection which is only accurate for |<i>f</i>| &lt; 0.01. See <a href="#ACCURACY">&quot;ACCURACY&quot;</a>.</p>
 
 </dd>
-<dt id="comment-delimiter"><b>--comment-delimiter</b></dt>
+<dt id="comment-delimiter-commentdelim"><b>--comment-delimiter</b> <i>commentdelim</i></dt>
 <dd>
 
 <p>set the comment delimiter to <i>commentdelim</i> (e.g., &quot;#&quot; or &quot;//&quot;). If set, the input lines will be scanned for this delimiter and, if found, the delimiter and the rest of the line will be removed prior to processing and subsequently appended to the output line (separated by a space).</p>
@@ -116,25 +116,25 @@
 <p>print full documentation and exit.</p>
 
 </dd>
-<dt id="input-file"><b>--input-file</b></dt>
+<dt id="input-file-infile"><b>--input-file</b> <i>infile</i></dt>
 <dd>
 
 <p>read input from the file <i>infile</i> instead of from standard input; a file name of &quot;-&quot; stands for standard input.</p>
 
 </dd>
-<dt id="input-string"><b>--input-string</b></dt>
+<dt id="input-string-instring"><b>--input-string</b> <i>instring</i></dt>
 <dd>
 
 <p>read input from the string <i>instring</i> instead of from standard input. All occurrences of the line separator character (default is a semicolon) in <i>instring</i> are converted to newlines before the reading begins.</p>
 
 </dd>
-<dt id="line-separator"><b>--line-separator</b></dt>
+<dt id="line-separator-linesep"><b>--line-separator</b> <i>linesep</i></dt>
 <dd>
 
 <p>set the line separator character to <i>linesep</i>. By default this is a semicolon.</p>
 
 </dd>
-<dt id="output-file"><b>--output-file</b></dt>
+<dt id="output-file-outfile"><b>--output-file</b> <i>outfile</i></dt>
 <dd>
 
 <p>write output to the file <i>outfile</i> instead of to standard output; a file name of &quot;-&quot; stands for standard output.</p>
@@ -174,25 +174,25 @@
 <p>Waypoints on the route at intervals of 2000km:</p>
 
 <pre><code>   for ((i = 0; i &lt;= 20; i += 2)); do echo ${i}000000;done |
-   RhumbSolve -l 40:38:23N 073:46:44W 103:34:58.2 -: -p 0
+   RhumbSolve -L 40:38:23N 073:46:44W 103:34:58.2 -: -p 0
 
-   40:38:23.0N 073:46:44.0W
-   36:24:30.3N 051:28:26.4W
-   32:10:26.8N 030:20:57.3W
-   27:56:13.2N 010:10:54.2W
-   23:41:50.1N 009:12:45.5E
-   19:27:18.7N 027:59:22.1E
-   15:12:40.2N 046:17:01.1E
-   10:57:55.9N 064:12:52.8E
-   06:43:07.3N 081:53:28.8E
-   02:28:16.2N 099:24:54.5E
-   01:46:36.0S 116:52:59.7E</code></pre>
+   40:38:23.0N 073:46:44.0W 0
+   36:24:30.3N 051:28:26.4W 9817078307821
+   32:10:26.8N 030:20:57.3W 18224745682005
+   27:56:13.2N 010:10:54.2W 25358020327741
+   23:41:50.1N 009:12:45.5E 31321269267102
+   19:27:18.7N 027:59:22.1E 36195163180159
+   15:12:40.2N 046:17:01.1E 40041499143669
+   10:57:55.9N 064:12:52.8E 42906570007050
+   06:43:07.3N 081:53:28.8E 44823504180200
+   02:28:16.2N 099:24:54.5E 45813843358737
+   01:46:36.0S 116:52:59.7E 45888525219677</code></pre>
 
 <h1 id="SEE-ALSO">SEE ALSO</h1>
 
 <p>GeoConvert(1), GeodSolve(1), TransverseMercatorProj(1).</p>
 
-<p>An online version of this utility is availbable at <a href="http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve">http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve</a>.</p>
+<p>An online version of this utility is availbable at <a href="https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve">https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve</a>.</p>
 
 <p>The Wikipedia page, Rhumb line, <a href="https://en.wikipedia.org/wiki/Rhumb_line">https://en.wikipedia.org/wiki/Rhumb_line</a>.</p>
 
@@ -202,7 +202,7 @@
 
 <h1 id="HISTORY">HISTORY</h1>
 
-<p><b>RhumbSolve</b> was added to GeographicLib, <a href="http://geographiclib.sf.net">http://geographiclib.sf.net</a>, in version 1.37.</p>
+<p><b>RhumbSolve</b> was added to GeographicLib, <a href="https://geographiclib.sourceforge.io">https://geographiclib.sourceforge.io</a>, in version 1.37.</p>
 
 
 </body>

@@ -5,21 +5,21 @@ function gedoc
 %   problems for great ellipses on the surface of an ellipsoid of
 %   revolution.  For more information, see
 %
-%     http://geographiclib.sf.net/html/greatellipse.html
+%     https://geographiclib.sourceforge.io/html/greatellipse.html
 %
 %   Great ellipses are sometimes proposed as alternatives to computing
 %   ellipsoidal geodesics.  However geodesic calculations are easy to
 %   perform using geoddistance and geodreckon, and these should normally be
 %   used instead of gedistance and gereckon.  For a discussion, see
 %
-%     http://geographiclib.sf.net/html/greatellipse.html#gevsgeodesic
+%     https://geographiclib.sourceforge.io/html/greatellipse.html#gevsgeodesic
 %
 %   The method involves stretching the ellipse along the axis until it
 %   becomes a sphere, solving the corresponding great circle problem on the
 %   sphere and mapping the results back to the ellipsoid.  For details,
 %   see
 %
-%     http://geographiclib.sf.net/html/greatellipse.html#geformulation
+%     https://geographiclib.sourceforge.io/html/greatellipse.html#geformulation
 %
 %   Consider two points on the ellipsoid at (lat1, lon1) and (lat2, lon2).
 %   The plane containing these points and the center of the ellipsoid
@@ -77,7 +77,7 @@ function gedoc
 %   Larger values of e can be used with a corresponding drop in accuracy.
 %   The following table gives the approximate maximum error in gedistance
 %   and gereckon (expressed as a distance) for an ellipsoid with the same
-%   major radius as the WGS84 ellipsoid and different values of the
+%   equatorial radius as the WGS84 ellipsoid and different values of the
 %   flattening (nm means nanometer and um means micrometer).
 %
 %        |f|     error
@@ -114,7 +114,7 @@ function gedoc
 %   See also GEDISTANCE, GERECKON, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
 %     GEODDISTANCE, GEODRECKON.
 
-% Copyright (c) Charles Karney (2014-2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2014-2017) <charles@karney.com>.
 
   help gedoc
 end

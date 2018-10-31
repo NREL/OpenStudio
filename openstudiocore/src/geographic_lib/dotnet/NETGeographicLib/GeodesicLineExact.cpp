@@ -6,7 +6,7 @@
  * GeographicLib is Copyright (c) Charles Karney (2010-2012)
  * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 #include "stdafx.h"
 #include "GeographicLib/GeodesicLineExact.hpp"
@@ -42,6 +42,20 @@ GeodesicLineExact::GeodesicLineExact(GeodesicExact^ g, double lat1,
     catch ( std::bad_alloc )
     {
         throw gcnew GeographicErr( BADALLOC );
+    }
+}
+
+//*****************************************************************************
+GeodesicLineExact::GeodesicLineExact(
+    const GeographicLib::GeodesicLineExact& gle)
+{
+    try
+    {
+        m_pGeodesicLineExact = new GeographicLib::GeodesicLineExact(gle);
+    }
+    catch (std::bad_alloc)
+    {
+        throw gcnew GeographicErr(BADALLOC);
     }
 }
 
@@ -346,9 +360,51 @@ double GeodesicLineExact::Flattening::get()
 { return m_pGeodesicLineExact->Flattening(); }
 
 //*****************************************************************************
+double GeodesicLineExact::Distance::get()
+{ return m_pGeodesicLineExact->Distance(); }
+
+//*****************************************************************************
+double GeodesicLineExact::Arc::get()
+{ return m_pGeodesicLineExact->Arc(); }
+
+//*****************************************************************************
 NETGeographicLib::Mask GeodesicLineExact::Capabilities()
 { return static_cast<NETGeographicLib::Mask>(m_pGeodesicLineExact->Capabilities()); }
 
 //*****************************************************************************
 bool GeodesicLineExact::Capabilities(NETGeographicLib::Mask testcaps)
 { return m_pGeodesicLineExact->Capabilities(static_cast<unsigned>(testcaps)); }
+
+//*****************************************************************************
+void GeodesicLineExact::SetDistance(double s13)
+{ m_pGeodesicLineExact->SetDistance(s13); }
+
+//*****************************************************************************
+void GeodesicLineExact::SetArc(double a13)
+{ m_pGeodesicLineExact->SetArc(a13); }
+
+//*****************************************************************************
+void GeodesicLineExact::GenSetDistance(bool arcmode, double s13_a13)
+{ m_pGeodesicLineExact->GenSetDistance(arcmode, s13_a13); }
+
+//*****************************************************************************
+void GeodesicLineExact::AzimuthSinCos(double% sazi1, double% cazi1)
+{
+    double x1, x2;
+    m_pGeodesicLineExact->Azimuth(x1, x2);
+    sazi1 = x1;
+    cazi1 = x2;
+}
+
+//*****************************************************************************
+void GeodesicLineExact::EquatorialAzimuthSinCos(double% sazi0, double% cazi0)
+{
+    double x1, x2;
+    m_pGeodesicLineExact->EquatorialAzimuth(x1, x2);
+    sazi0 = x1;
+    cazi0 = x2;
+}
+
+//*****************************************************************************
+double GeodesicLineExact::GenDistance(bool arcmode)
+{ return m_pGeodesicLineExact->GenDistance(arcmode); }

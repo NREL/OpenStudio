@@ -14,7 +14,7 @@ int main() {
      f = Constants::WGS84_f(),
      lat1 = 40 + 58/60.0, lat2 = 39 + 56/60.0, // standard parallels
      k1 = 1,                                   // scale
-     lon0 = -77 - 45/60.0;                     // Central meridan
+     lon0 = -77 - 45/60.0;                     // Central meridian
    // Set up basic projection
    const AlbersEqualArea albers(a, f, lat1, lat2, k1);
    {
@@ -36,5 +36,4 @@ int main() {
     cerr << "Caught exception: " << e.what() << "\n";
     return 1;
   }
-  return 0;
 }

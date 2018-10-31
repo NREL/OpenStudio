@@ -2,9 +2,9 @@
  * \file AlbersEqualArea.hpp
  * \brief Header for GeographicLib::AlbersEqualArea class
  *
- * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
@@ -66,18 +66,18 @@ namespace GeographicLib {
     real _n0, _m02, _nrho0, _k2, _txi0, _scxi0, _sxi0;
     static const int numit_ = 5;   // Newton iterations in Reverse
     static const int numit0_ = 20; // Newton iterations in Init
-    static inline real hyp(real x) { return Math::hypot(real(1), x); }
+    static real hyp(real x) { return Math::hypot(real(1), x); }
     // atanh(      e   * x)/      e   if f > 0
     // atan (sqrt(-e2) * x)/sqrt(-e2) if f < 0
     // x                              if f = 0
-    inline real atanhee(real x) const {
+    real atanhee(real x) const {
       using std::atan2; using std::abs;
       return _f > 0 ? Math::atanh(_e * x)/_e :
         // We only invoke atanhee in txif for positive latitude.  Then x is
         // only negative for very prolate ellipsoids (_b/_a >= sqrt(2)) and we
         // still need to return a positive result in this case; hence the need
         // for the call to atan2.
-        (_f < 0 ? (atan2(_e * abs(x), x < 0 ? -1 : 1)/_e) : x);
+        (_f < 0 ? (atan2(_e * abs(x), real(x < 0 ? -1 : 1))/_e) : x);
     }
     // return atanh(sqrt(x))/sqrt(x) - 1, accurate for small x
     static real atanhxm1(real x);
@@ -88,7 +88,7 @@ namespace GeographicLib {
     //   W. M. Kahan and R. J. Fateman,
     //   Symbolic computation of divided differences,
     //   SIGSAM Bull. 33(3), 7-28 (1999)
-    //   https://dx.doi.org/10.1145/334714.334716
+    //   https://doi.org/10.1145/334714.334716
     //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
     //
     // General rules
@@ -99,16 +99,16 @@ namespace GeographicLib {
     //                = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2
     //
     // sn(x) = x/sqrt(1+x^2): Dsn(x,y) = (x+y)/((sn(x)+sn(y))*(1+x^2)*(1+y^2))
-    static inline real Dsn(real x, real y, real sx, real sy) {
+    static real Dsn(real x, real y, real sx, real sy) {
       // sx = x/hyp(x)
       real t = x * y;
       return t > 0 ? (x + y) * Math::sq( (sx * sy)/t ) / (sx + sy) :
         (x - y != 0 ? (sx - sy) / (x - y) : 1);
     }
     // Datanhee(x,y) = atanhee((x-y)/(1-e^2*x*y))/(x-y)
-    inline real Datanhee(real x, real y) const {
+    real Datanhee(real x, real y) const {
       real t = x - y, d = 1 - _e2 * x * y;
-      return t ? atanhee(t / d) / t : 1 / d;
+      return t != 0 ? atanhee(t / d) / t : 1 / d;
     }
     // DDatanhee(x,y) = (Datanhee(1,y) - Datanhee(1,x))/(y-x)
     real DDatanhee(real x, real y) const;
@@ -227,7 +227,7 @@ namespace GeographicLib {
      *
      * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No
      * false easting or northing is added.  The value of \e lon returned is in
-     * the range [&minus;180&deg;, 180&deg;).  The value of \e lat returned is
+     * the range [&minus;180&deg;, 180&deg;].  The value of \e lat returned is
      * in the range [&minus;90&deg;, 90&deg;].  If the input point is outside
      * the legal projected space the nearest pole is returned.
      **********************************************************************/
@@ -268,14 +268,6 @@ namespace GeographicLib {
      *   the constructor.
      **********************************************************************/
     Math::real Flattening() const { return _f; }
-
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the ellipsoid.
-     **********************************************************************/
-    Math::real InverseFlattening() const { return 1/_f; }
-    /// \endcond
 
     /**
      * @return latitude of the origin for the projection (degrees).

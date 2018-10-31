@@ -2,15 +2,14 @@
  * \file RhumbSolve.cpp
  * \brief Command line utility for rhumb line calculations
  *
- * Copyright (c) Charles Karney (2014-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  *
  * See the <a href="RhumbSolve.1.html">man page</a> for usage information.
  **********************************************************************/
 
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -48,7 +47,7 @@ std::string AzimuthString(real azi, int prec, bool dms, char dmssep) {
     DMS::Encode(azi, prec + 5, DMS::NUMBER);
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* const argv[]) {
   try {
     Utility::set_digits();
     bool linecalc = false, inverse = false, dms = false, exact = true,
@@ -66,7 +65,7 @@ int main(int argc, char* argv[]) {
       if (arg == "-i") {
         inverse = true;
         linecalc = false;
-      } else if (arg == "-l") {
+      } else if (arg == "-L" || arg == "-l") { // -l is DEPRECATED
         inverse = false;
         linecalc = true;
         if (m + 3 >= argc) return usage(1, true);
@@ -76,14 +75,14 @@ int main(int argc, char* argv[]) {
           azi12 = DMS::DecodeAzimuth(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {
-          std::cerr << "Error decoding arguments of -l: " << e.what() << "\n";
+          std::cerr << "Error decoding arguments of -L: " << e.what() << "\n";
           return 1;
         }
         m += 3;
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
-          a = Utility::num<real>(std::string(argv[m + 1]));
+          a = Utility::val<real>(std::string(argv[m + 1]));
           f = Utility::fract<real>(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
@@ -99,11 +98,11 @@ int main(int argc, char* argv[]) {
         dms = true;
         dmssep = ':';
       } else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
-          prec = Utility::num<int>(std::string(argv[m]));
+          prec = Utility::val<int>(std::string(argv[m]));
         }
         catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";

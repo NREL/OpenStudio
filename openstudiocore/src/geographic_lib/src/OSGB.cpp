@@ -2,9 +2,9 @@
  * \file OSGB.cpp
  * \brief Implementation for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/OSGB.hpp>
@@ -14,8 +14,8 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const string OSGB::letters_ = "ABCDEFGHJKLMNOPQRSTUVWXYZ";
-  const string OSGB::digits_ = "0123456789";
+  const char* const OSGB::letters_ = "ABCDEFGHJKLMNOPQRSTUVWXYZ";
+  const char* const OSGB::digits_ = "0123456789";
 
   const TransverseMercator& OSGB::OSGBTM() {
     static const TransverseMercator osgbtm(MajorRadius(), Flattening(),
@@ -55,7 +55,8 @@ namespace GeographicLib {
                         * tilegrid_ + (xh / tilegrid_)];
     grid[z++] = letters_[(tilegrid_ - (yh % tilegrid_) - 1)
                         * tilegrid_ + (xh % tilegrid_)];
-    real mult = pow(real(base_), max(tilelevel_ - prec, 0));
+    // Need extra real because, since C++11, pow(float, int) returns double
+    real mult = real(pow(real(base_), max(tilelevel_ - prec, 0)));
     int
       ix = int(floor(xf / mult)),
       iy = int(floor(yf / mult));
@@ -68,7 +69,7 @@ namespace GeographicLib {
     if (prec > tilelevel_) {
       xf -= floor(xf / mult);
       yf -= floor(yf / mult);
-      mult = pow(real(base_), prec - tilelevel_);
+      mult = real(pow(real(base_), prec - tilelevel_));
       ix = int(floor(xf * mult));
       iy = int(floor(yf * mult));
       for (int c = prec - tilelevel_; c--;) {

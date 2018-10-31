@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/PolygonArea.hpp>
@@ -22,7 +22,8 @@ namespace GeographicLib {
       _lon0 = _lon1 = lon;
     } else {
       real s12, S12, t;
-      _earth.GenInverse(_lat1, _lon1, lat, lon, _mask, s12, t, t, t, t, t, S12);
+      _earth.GenInverse(_lat1, _lon1, lat, lon, _mask,
+                        s12, t, t, t, t, t, S12);
       _perimetersum += s12;
       if (!_polyline) {
         _areasum += S12;
@@ -52,7 +53,8 @@ namespace GeographicLib {
 
   template <class GeodType>
   unsigned PolygonAreaT<GeodType>::Compute(bool reverse, bool sign,
-                                           real& perimeter, real& area) const {
+                                           real& perimeter, real& area) const
+  {
     real s12, S12, t;
     if (_num < 2) {
       perimeter = 0;
@@ -148,7 +150,8 @@ namespace GeographicLib {
   template <class GeodType>
   unsigned PolygonAreaT<GeodType>::TestEdge(real azi, real s,
                                             bool reverse, bool sign,
-                                            real& perimeter, real& area) const {
+                                            real& perimeter, real& area) const
+  {
     if (_num == 0) {            // we don't have a starting point!
       perimeter = Math::NaN();
       if (!_polyline)
@@ -169,7 +172,8 @@ namespace GeographicLib {
       tempsum += S12;
       crossings += transitdirect(_lon1, lon);
       lon = Math::AngNormalize(lon);
-      _earth.GenInverse(lat, lon, _lat0, _lon0, _mask, s12, t, t, t, t, t, S12);
+      _earth.GenInverse(lat, lon, _lat0, _lon0, _mask,
+                        s12, t, t, t, t, t, S12);
       perimeter += s12;
       tempsum += S12;
       crossings += transit(lon, _lon0);

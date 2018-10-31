@@ -5,11 +5,11 @@
 # geodesicline.py.  See the documentation for the GeographicLib::Geodesic class
 # for more information at
 #
-#    http://geographiclib.sourceforge.net/html/annotated.html
+#    https://geographiclib.sourceforge.io/html/annotated.html
 #
 # Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
-# http://geographiclib.sourceforge.net/
+# https://geographiclib.sourceforge.io/
 ######################################################################
 
 class GeodesicCapability(object):
@@ -38,5 +38,4 @@ class GeodesicCapability(object):
   GEODESICSCALE = 1 << 13 | CAP_C1 | CAP_C2
   AREA          = 1 << 14 | CAP_C4
   LONG_UNROLL   = 1 << 15
-  LONG_NOWRAP   = LONG_UNROLL       # For backwards compatibility only
   ALL           = OUT_ALL | CAP_ALL # Does not include LONG_UNROLL

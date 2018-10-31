@@ -7,6 +7,6 @@ function f = ecc2flat(e)
 %
 %   See also FLAT2ECC.
 
-  e2 = e.^2;
+  e2 = real(e.^2);
   f = e2 ./ (1 + sqrt(1 - e2));
 end

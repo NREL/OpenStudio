@@ -6,7 +6,7 @@
  * GeographicLib is Copyright (c) Charles Karney (2010-2012)
  * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 #include "stdafx.h"
 #include "GeographicLib/NormalGravity.hpp"
@@ -29,11 +29,11 @@ NormalGravity::!NormalGravity(void)
 }
 
 //*****************************************************************************
-NormalGravity::NormalGravity(double a, double GM, double omega, double f, double J2)
+NormalGravity::NormalGravity(double a, double GM, double omega, double f_J2, bool geometricp)
 {
     try
     {
-        m_pNormalGravity = new GeographicLib::NormalGravity( a, GM, omega, f, J2 );
+      m_pNormalGravity = new GeographicLib::NormalGravity( a, GM, omega, f_J2, geometricp );
     }
     catch ( std::bad_alloc )
     {

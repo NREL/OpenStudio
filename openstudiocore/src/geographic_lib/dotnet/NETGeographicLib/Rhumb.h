@@ -7,7 +7,7 @@
  * GeographicLib is Copyright (c) Charles Karney (2010-2012)
  * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 namespace NETGeographicLib {
@@ -107,12 +107,10 @@ namespace NETGeographicLib {
        **********************************************************************/
       AREA          = 1U<<14,
       /**
-       * Unroll \e lon2 in the direct calculation.  (This flag used to be
-       * called LONG_NOWRAP.)
+       * Unroll \e lon2 in the direct calculation.
        * @hideinitializer
        **********************************************************************/
       LONG_UNROLL   = 1U<<15,
-      LONG_NOWRAP   = LONG_UNROLL,
       /**
        * Calculate everything.  (LONG_UNROLL is not included in this mask.)
        * @hideinitializer
@@ -413,12 +411,10 @@ namespace NETGeographicLib {
        **********************************************************************/
       AREA          = 1U<<14, //Rhumb::AREA,
       /**
-       * Unroll \e lon2 in the direct calculation.  (This flag used to be
-       * called LONG_NOWRAP.)
+       * Unroll \e lon2 in the direct calculation.
        * @hideinitializer
        **********************************************************************/
       LONG_UNROLL   = 1U<<15, //Rhumb::LONG_UNROLL,
-      LONG_NOWRAP   = LONG_UNROLL,
       /**
        * Calculate everything.  (LONG_UNROLL is not included in this mask.)
        * @hideinitializer
