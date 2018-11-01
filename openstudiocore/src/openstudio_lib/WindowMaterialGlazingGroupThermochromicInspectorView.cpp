@@ -144,7 +144,7 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::attach(openstudio::mo
   m_nameEdit->bind(
     *m_thermochromicGlazing,
     OptionalStringGetter(std::bind(&model::ThermochromicGlazing::name, m_thermochromicGlazing.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::ThermochromicGlazing::setName, m_thermochromicGlazing.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::ThermochromicGlazing::setName, m_thermochromicGlazing.get_ptr(),std::placeholders::_1))
   );
 
   //m_opticalDataTemperature->bind( // TODO

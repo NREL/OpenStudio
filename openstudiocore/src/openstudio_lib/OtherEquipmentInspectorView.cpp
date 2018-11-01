@@ -158,7 +158,7 @@ void OtherEquipmentDefinitionInspectorView::attach(openstudio::model::OtherEquip
   m_nameEdit->bind(
     *m_otherEquipmentDefinition,
     OptionalStringGetter(std::bind(&model::OtherEquipmentDefinition::name, m_otherEquipmentDefinition.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::OtherEquipmentDefinition::setName, m_otherEquipmentDefinition.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::OtherEquipmentDefinition::setName, m_otherEquipmentDefinition.get_ptr(),std::placeholders::_1))
   );
 
   // m_designLevelEdit->bind(otherEquipmentDefinition,"designLevel",m_isIP);

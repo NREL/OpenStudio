@@ -158,7 +158,7 @@ void SteamEquipmentDefinitionInspectorView::attach(openstudio::model::SteamEquip
   m_nameEdit->bind(
     *m_steamEquipmentDefinition,
     OptionalStringGetter(std::bind(&model::SteamEquipmentDefinition::name, m_steamEquipmentDefinition.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::SteamEquipmentDefinition::setName, m_steamEquipmentDefinition.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::SteamEquipmentDefinition::setName, m_steamEquipmentDefinition.get_ptr(),std::placeholders::_1))
   );
 
   // m_designLevelEdit->bind(steamEquipmentDefinition,"designLevel",m_isIP);

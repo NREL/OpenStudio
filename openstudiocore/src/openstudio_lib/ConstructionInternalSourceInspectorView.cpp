@@ -227,7 +227,7 @@ void ConstructionInternalSourceInspectorView::attach(openstudio::model::Construc
   m_nameEdit->bind(
     *m_constructionWithInternalSource,
     OptionalStringGetter(std::bind(&model::ConstructionWithInternalSource::name, m_constructionWithInternalSource.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::ConstructionWithInternalSource::setName, m_constructionWithInternalSource.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::ConstructionWithInternalSource::setName, m_constructionWithInternalSource.get_ptr(),std::placeholders::_1))
   );
 
   m_sourcePresentAfterLayerNumberEdit->bind(

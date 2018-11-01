@@ -228,7 +228,7 @@ void WindowMaterialGasInspectorView::attach(openstudio::model::Gas & gas)
   m_nameEdit->bind(
     *m_gas,
     OptionalStringGetter(std::bind(&model::Gas::name, m_gas.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::Gas::setName, m_gas.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::Gas::setName, m_gas.get_ptr(),std::placeholders::_1))
   );
 
 

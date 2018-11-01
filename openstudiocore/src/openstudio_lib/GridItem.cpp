@@ -1131,7 +1131,7 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
     OS_ASSERT(loop);
     auto airLoop = loop->optionalCast<model::AirLoopHVAC>();
 
-    bool isSupplySide = loop->supplyComponent(splitter.handle());
+    bool isSupplySide = loop->supplyComponent(splitter.handle()).has_value();
 
     if( airLoop && (! isSupplySide) ) {
       // Why is there these extra hoops for air loop demand?

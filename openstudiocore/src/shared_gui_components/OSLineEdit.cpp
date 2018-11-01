@@ -99,6 +99,21 @@ void OSLineEdit2::bind(model::ModelObject& modelObject,
 }
 
 void OSLineEdit2::bind(model::ModelObject& modelObject,
+  OptionalStringGetter get,
+  boost::optional<StringSetterOptionalStringReturn> set,
+  boost::optional<NoFailAction> reset,
+  boost::optional<BasicQuery> isDefaulted)
+{
+  m_modelObject = modelObject;
+  m_getOptional = get;
+  m_setOptionalStringReturn = set;
+  m_reset = reset;
+  m_isDefaulted = isDefaulted;
+
+  completeBind();
+}
+
+void OSLineEdit2::bind(model::ModelObject& modelObject,
                        OptionalStringGetterBoolArg get,
                        boost::optional<StringSetterOptionalStringReturn> set,
                        boost::optional<NoFailAction> reset,

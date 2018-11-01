@@ -193,7 +193,7 @@ void MaterialNoMassInspectorView::attach(openstudio::model::MasslessOpaqueMateri
   m_nameEdit->bind(
     *m_masslessOpaqueMaterial,
     OptionalStringGetter(std::bind(&model::MasslessOpaqueMaterial::name, m_masslessOpaqueMaterial.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::MasslessOpaqueMaterial::setName, m_masslessOpaqueMaterial.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::MasslessOpaqueMaterial::setName, m_masslessOpaqueMaterial.get_ptr(),std::placeholders::_1))
   );
 
 

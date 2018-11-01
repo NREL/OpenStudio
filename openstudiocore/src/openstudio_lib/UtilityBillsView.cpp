@@ -400,7 +400,7 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
   m_name->bind(
     *m_utilityBill,
     OptionalStringGetter(std::bind(&model::UtilityBill::name,m_utilityBill.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::UtilityBill::setName,m_utilityBill.get_ptr(),std::placeholders::_1)));
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::UtilityBill::setName,m_utilityBill.get_ptr(),std::placeholders::_1)));
 
   m_consumptionUnits->bind<std::string>(
       *m_utilityBill,
@@ -690,7 +690,7 @@ void UtilityBillsInspectorView::refresh()
     this->stackedWidget()->setCurrentIndex(m_hiddenWidgetIndex);
     emit enableAddNewObjectButton(true);
   }
-  showSubTabView(dates);
+  showSubTabView(dates.has_value());
 }
 
 ////// SLOTS ///////

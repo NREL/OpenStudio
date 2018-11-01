@@ -337,7 +337,7 @@ void WaterUseEquipmentDefinitionInspectorView::attach(openstudio::model::WaterUs
   m_nameEdit->bind(
     *m_waterUseEquipmentDefinition,
     OptionalStringGetter(std::bind(&model::WaterUseEquipmentDefinition::name, m_waterUseEquipmentDefinition.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::WaterUseEquipmentDefinition::setName, m_waterUseEquipmentDefinition.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::WaterUseEquipmentDefinition::setName, m_waterUseEquipmentDefinition.get_ptr(),std::placeholders::_1))
   );
 
   // m_endUseSubcategoryEdit->bind(waterUseEquipmentDefinition,"endUseSubcategory");

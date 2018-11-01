@@ -135,7 +135,7 @@ void MaterialAirGapInspectorView::attach(openstudio::model::AirGap & airGap)
   m_nameEdit->bind(
     *m_airGap,
     OptionalStringGetter(std::bind(&model::AirGap::name, m_airGap.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::AirGap::setName, m_airGap.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::AirGap::setName, m_airGap.get_ptr(),std::placeholders::_1))
   );
 
   // m_thermalResistance->bind(airGap,"thermalResistance",m_isIP);

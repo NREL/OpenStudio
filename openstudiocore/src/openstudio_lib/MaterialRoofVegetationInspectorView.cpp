@@ -320,7 +320,7 @@ void MaterialRoofVegetationInspectorView::attach(openstudio::model::RoofVegetati
   m_nameEdit->bind(
     *m_roofVegetation,
     OptionalStringGetter(std::bind(&model::RoofVegetation::name, m_roofVegetation.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::RoofVegetation::setName, m_roofVegetation.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::RoofVegetation::setName, m_roofVegetation.get_ptr(),std::placeholders::_1))
   );
 
   // m_soilLayerName->bind(roofVegetation,"soilLayerName");

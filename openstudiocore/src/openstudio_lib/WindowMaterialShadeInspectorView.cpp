@@ -263,7 +263,7 @@ void WindowMaterialShadeInspectorView::attach(openstudio::model::Shade & shade)
   m_nameEdit->bind(
     *m_shade,
     OptionalStringGetter(std::bind(&model::Shade::name, m_shade.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::Shade::setName, m_shade.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::Shade::setName, m_shade.get_ptr(),std::placeholders::_1))
   );
 
   // m_solarTransmittance->bind(shade,"solarTransmittance",m_isIP);
