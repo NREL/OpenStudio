@@ -22,6 +22,11 @@ macro(FIND_QT_STATIC_LIB NAMES P)
   else()
     #message("LOOKING FOR ${NAMES} in ${P}")
     find_library(QT_STATIC_LIB NAMES ${NAMES} PATHS ${P} NO_DEFAULT_PATH)
+    
+    if(QT_STATIC_LIB)
+    else()
+      message(SEND_ERROR "Cannot find ${NAMES} in ${P}")
+    endif()
   endif()
 
   if(QT_STATIC_LIB)

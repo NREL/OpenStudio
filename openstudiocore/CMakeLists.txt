@@ -1219,10 +1219,14 @@ if( APPLE )
 endif()
 
 if( WIN32 )
+  FIND_QT_STATIC_LIB("Qt5FontDatabaseSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5PlatformCompositorSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
+  FIND_QT_STATIC_LIB("Qt5ThemeSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
+  FIND_QT_STATIC_LIB("Qt5EventDispatcherSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qtfreetype" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qtharfbuzz" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qtpcre2" "${QT_STATIC_INSTALL_DIR}/lib/")
+  FIND_QT_STATIC_LIB("qtlibpng" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qsqlite" "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/")
   FIND_QT_STATIC_LIB("qwindows" "${QT_STATIC_INSTALL_DIR}/plugins/platforms/")
 
@@ -1235,10 +1239,15 @@ if( WIN32 )
   FIND_QT_STATIC_LIB("iphlpapi" "*")
   FIND_QT_STATIC_LIB("dbghelp" "*")
   FIND_QT_STATIC_LIB("Shlwapi" "*")
-
+  FIND_QT_STATIC_LIB("Netapi32" "*")
+  FIND_QT_STATIC_LIB("version" "*")
+  FIND_QT_STATIC_LIB("Userenv" "*")
+  FIND_QT_STATIC_LIB("legacy_stdio_definitions" "*")
+  
+  
   if(BUILD_WITH_OPENSSL)
-    FIND_QT_STATIC_LIB("libcrypto" "${OPENSSL_ROOT_DIR}/lib")
-    FIND_QT_STATIC_LIB("libssl" "${OPENSSL_ROOT_DIR}/lib")
+    FIND_QT_STATIC_LIB("libcrypto" "${OPENSSL_ROOT_DIR}/lib/")
+    FIND_QT_STATIC_LIB("libssl" "${OPENSSL_ROOT_DIR}/lib/")
   endif()
 endif()
 
