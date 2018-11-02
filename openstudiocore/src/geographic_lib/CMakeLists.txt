@@ -463,7 +463,7 @@ else ()
 endif ()
 if (MAINTAINER)
   add_custom_target (distrib-all)
-  add_dependencies (distrib-all distrib-man)
+ # add_dependencies (distrib-all distrib-man)
 endif ()
 
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
