@@ -61,7 +61,7 @@
 #include "../../model/CurveQuadratic_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVACZoneSplitter.hpp"
-#include "../../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "../../model/AirTerminalSingleDuctVAVReheat.hpp"
 #include "../../model/CoilHeatingElectric.hpp"
 #include "../../model/Node.hpp"
@@ -348,46 +348,34 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Supply
 
   AirLoopHVAC airLoopHVAC(model);
   ThermalZone thermalZone(model);
-  ThermalZone thermalZone2(model);
   ScheduleCompact schedule(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal(model, schedule);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal(model, schedule);
   Space space(model);
-  Space space2(model);
   space.setThermalZone(thermalZone);
-  space2.setThermalZone(thermalZone2);
 
   // connect the thermal zone to airloopHVAC
-  Node inletNode = airLoopHVAC.zoneSplitter().lastOutletModelObject()->cast<Node>();
-  EXPECT_TRUE(thermalZone.addToNode(inletNode));
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, singleDuctTerminal));
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone, singleDuctTerminal));
 
-  ElectricEquipmentITEAirCooledDefinition definition(model),definition2(model);
-  ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled(definition), electricEquipmentITEAirCooled2(definition2);
+  ElectricEquipmentITEAirCooledDefinition definition(model);
+  ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled(definition);
   electricEquipmentITEAirCooled.setSpace(space);
-  electricEquipmentITEAirCooled2.setSpace(space2);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   // get the thermal zone inlet node
   ASSERT_TRUE(thermalZone.inletPortList().airLoopHVACModelObject()->optionalCast<Node>());
-  ASSERT_TRUE(thermalZone2.inletPortList().airLoopHVACModelObject()->optionalCast<Node>());
   std::string nodeName = thermalZone.inletPortList().airLoopHVACModelObject()->optionalCast<Node>()->name().get();
-  std::string nodeName2 = thermalZone2.inletPortList().airLoopHVACModelObject()->optionalCast<Node>()->name().get();
   std::cout << "node name = " << nodeName << "\n";
-  std::cout << "node name 2 = " << nodeName2 << "\n";
 
-  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
-  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
 
   WorkspaceObject electricEquipmentITEAirCooledObject = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[0];
-  WorkspaceObject electricEquipmentITEAirCooledObject2 = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[1];
   IdfObject electricEquipmentITEAirCooledIdfObject = electricEquipmentITEAirCooledObject.idfObject();
-  IdfObject electricEquipmentITEAirCooledIdfObject2 = electricEquipmentITEAirCooledObject2.idfObject();
   WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
-
+  
   ASSERT_TRUE(electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneName));
   ASSERT_EQ(nodeName, electricEquipmentITEAirCooledIdfObject.getString(ElectricEquipment_ITE_AirCooledFields::SupplyAirNodeName));
-  ASSERT_EQ(nodeName2, electricEquipmentITEAirCooledIdfObject2.getString(ElectricEquipment_ITE_AirCooledFields::SupplyAirNodeName));
   EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneName)->handle());
 
   model.save(toPath("./ITE_translator_SupplyAirNodeConnection.osm"), true);

@@ -45,7 +45,7 @@
 
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
-#include "../AirTerminalSingleDuctUncontrolled.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "../LifeCycleCost.hpp"
 #include "../LifeCycleCost_Impl.hpp"
 #include "../Node.hpp"
@@ -96,10 +96,10 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_DefaultConstructor2) {
 
   // Create the curves
   CurveBiquadratic cPUPowerInputFunctionofLoadingandAirTemperatureCurve(model);
-  cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient1Constant(-1.0);
+  cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient1Constant(-0.035289);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient2x(1.0);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient3xPOW2(0.0);
-  cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient4y(0.06667);
+  cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient4y(0.0015684);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient5yPOW2(0.0);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setCoefficient6xTIMESY(0.0);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setMinimumValueofx(0.0);
@@ -108,10 +108,10 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_DefaultConstructor2) {
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setMaximumValueofy(99.0);
 
   CurveBiquadratic airFlowFunctionofLoadingandAirTemperatureCurve(model);
-  airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient1Constant(-1.4);
+  airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient1Constant(-1.025);
   airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient2x(0.9);
   airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient3xPOW2(0.0);
-  airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient4y(0.1);
+  airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient4y(0.05);
   airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient5yPOW2(0.0);
   airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient6xTIMESY(0.0);
   airFlowFunctionofLoadingandAirTemperatureCurve.setMinimumValueofx(0.0);
@@ -139,7 +139,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_DefaultConstructor2) {
   EXPECT_EQ("Watts/Unit", definition.designPowerInputCalculationMethod());
   EXPECT_EQ("None", definition.environmentalClass());
   EXPECT_EQ("AdjustedSupply", definition.airInletConnectionType());
-  EXPECT_EQ(-10.0, definition.cPUPowerInputFunctionofLoadingandAirTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+  EXPECT_EQ(-0.035289, definition.cPUPowerInputFunctionofLoadingandAirTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
 
   ASSERT_EQ(5.0, definition.supplyTemperatureDifference());
 
@@ -250,7 +250,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_inletportlist) {
   ThermalZone thermalZone(m);
   ThermalZone thermalZone2(m);
   ScheduleCompact s(m);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal(m, s);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal(m, s);
 
   Node inletNode = airLoopHVAC.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
