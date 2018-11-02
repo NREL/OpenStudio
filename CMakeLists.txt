@@ -6,6 +6,13 @@ set(CMAKE_VERSION_MAJOR 2)
 set(CMAKE_VERSION_MINOR 7)
 set(CMAKE_VERSION_PATCH 1)
 
+# Use ccache is available, has to be before "project()"
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+  # Support Unix Makefiles and Ninja
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+endif()
+
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
 
@@ -74,6 +81,9 @@ option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 # Requires: EnergyPlus
 option(BUILD_TESTING "Build testing targets" OFF)
 
+# Build the actual openstudiocore project
+option(BUILD_OSCORE "Build openstudiocore" ON)
+
 # Build package
 # Requires: EnergyPlus
 option(BUILD_PACKAGE "Build package" OFF)
@@ -90,6 +100,47 @@ mark_as_advanced(MAXIMIZE_CPU_USAGE)
 MESSAGE("CMAKE_C_COMPILER_VERSION = ${CMAKE_C_COMPILER_VERSION}")
 MESSAGE("CMAKE_GENERATOR = ${CMAKE_GENERATOR}")
 MESSAGE("CMAKE_GENERATOR_TOOLSET = ${CMAKE_GENERATOR_TOOLSET}")
+
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
+    "MinSizeRel" "RelWithDebInfo")
+endif()
+
+# Xcode/Ninja generators undefined MAKE
+if(CMAKE_GENERATOR MATCHES "Make")
+  set(MAKE "$(MAKE)")
+else()
+  set(MAKE make)
+endif()
+
+# Add Color Output if Using Ninja
+macro(AddCXXFlagIfSupported flag test)
+   CHECK_CXX_COMPILER_FLAG(${flag} ${test})
+   if( ${${test}} )
+      message("adding ${flag}")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
+   endif()
+endmacro()
+
+if("Ninja" STREQUAL ${CMAKE_GENERATOR})
+  # Clang
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    AddCXXFlagIfSupported(-fcolor-diagnostics COMPILER_SUPPORTS_fcolor-diagnostics)
+  endif()
+
+  # g++
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    # For some reason it doesn't say its supported, but it works...
+    # AddCXXFlagIfSupported(-fdiagnostics-color COMPILER_SUPPORTS_fdiagnostics-color)
+    message(STATUS "Forcing -fdiagnostics-color=always")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
+  endif()
+endif()
+
 #if(MSVC)
 #  # Visual Studio compiler check
 #  # http://en.wikipedia.org/wiki/Visual_C%2B%2B#32-bit_and_64-bit_versions
@@ -266,8 +317,8 @@ if(BUILD_NODE)
   ExternalProject_Add(Node
     URL http://nodejs.org/dist/v0.10.28/node-v0.10.28.tar.gz
     CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && sh -c "./configure --prefix=${CMAKE_BINARY_DIR}/Node-prefix/src/Node-install"
-    BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && $(MAKE)
-    INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && $(MAKE) install && $(MAKE) install-includes && ../Node-install/bin/npm install jasmine-node node-gyp -g && ../Node-install/bin/node ../Node-install/bin/node-gyp install
+    BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && ${MAKE}
+    INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && ${MAKE} install && ${MAKE} install-includes && ../Node-install/bin/npm install jasmine-node node-gyp -g && ../Node-install/bin/node ../Node-install/bin/node-gyp install
   )
   set(NODE_BIN_DIR ${CMAKE_BINARY_DIR}/Node-prefix/src/Node-install/bin/)
   set(NODE_INCLUDE_DIR "$ENV{HOME}/.node-gyp/0.10.28")
@@ -276,8 +327,8 @@ endif()
 if(BUILD_V8)
   ExternalProject_Add(V8
     SVN_REPOSITORY http://v8.googlecode.com/svn/branches/3.19
-    CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/V8-prefix/src/V8 && $(MAKE) dependencies
-    BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/V8-prefix/src/V8 && $(MAKE) x64
+    CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/V8-prefix/src/V8 && ${MAKE} dependencies
+    BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/V8-prefix/src/V8 && ${MAKE} x64
     INSTALL_COMMAND ""
   )
   set(V8_INCLUDE_DIR ${CMAKE_BINARY_DIR}/V8-prefix/src/V8/include)
@@ -321,12 +372,12 @@ if( BUILD_RUBY )
       BUILD_IN_SOURCE 1
       PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch
       CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext ${RUBY_EXT_CONFIG} --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
-      BUILD_COMMAND $(MAKE) # cd ext/openssl && ../../ruby extconf.rb && cd ../readline && ../../ruby extconf.rb && cd ../../ && $(MAKE)
-      INSTALL_COMMAND $(MAKE) install && sh -c "cp ./rbconfig.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ruby/2.5.0/." && sh -c "rm -rf ./ext/-test-" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc" && sh -c "find ./ext -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext/" && sh -c "find ./enc -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc"
+      BUILD_COMMAND ${MAKE} # cd ext/openssl && ../../ruby extconf.rb && cd ../readline && ../../ruby extconf.rb && cd ../../ && ${MAKE}
+      INSTALL_COMMAND ${MAKE} install && sh -c "cp ./rbconfig.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ruby/2.5.0/." && sh -c "rm -rf ./ext/-test-" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc" && sh -c "find ./ext -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext/" && sh -c "find ./enc -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc"
     )
     find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/" )
     set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
-    set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0")
+    set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.5.0")
     set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
     set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
     set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install")
@@ -354,7 +405,7 @@ option(BUILD_OPENSTUDIO_GEMS "Build OpenStudio Gems" OFF)
 if(BUILD_OPENSTUDIO_GEMS)
   # depends on system Ruby and Git, Ruby must be same version as OpenStudio
   if (WIN32)
-    file(GLOB POTENTIAL_RUBY_LOCATIONS "c:/ruby*2.2.*/bin")
+    file(GLOB POTENTIAL_RUBY_LOCATIONS "c:/ruby*2.5.*/bin")
     get_filename_component(POTENTIAL_TAR_LOCATIONS ${GIT_EXECUTABLE} DIRECTORY )
     list(APPEND POTENTIAL_TAR_LOCATIONS "${POTENTIAL_TAR_LOCATIONS}/../bin" "${POTENTIAL_TAR_LOCATIONS}/../usr/bin")
   endif()
@@ -362,7 +413,7 @@ if(BUILD_OPENSTUDIO_GEMS)
   find_program(TAR_EXE tar HINTS ${POTENTIAL_TAR_LOCATIONS})
   set(OPENSTUDIO_GEMS_DIR "${CMAKE_BINARY_DIR}/openstudio-gems")
   add_custom_target(openstudio-gems ALL
-                    ${RUBY_EXE} "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}" "${TAR_EXE}" "2.2.4"
+                    ${RUBY_EXE} "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}" "${TAR_EXE}" "2.5.1"
                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
                     DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb")
 endif()
@@ -552,137 +603,139 @@ if(BUILD_V8)
   list(APPEND OpenStudioCore_DEPENDS V8)
 endif()
 
-if(MSVC)
-  set(OS_BUILD_COMMAND BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build" --config $(Configuration) -- /maxcpucount)
-else()
-  set(OS_BUILD_COMMAND "")
-endif()
+if (BUILD_OSCORE)
+  if(MSVC)
+    set(OS_BUILD_COMMAND BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build" --config $(Configuration) -- /maxcpucount)
+  else()
+    set(OS_BUILD_COMMAND "")
+  endif()
 
-ExternalProject_Add(OSCore
-  DEPENDS ${OpenStudioCore_DEPENDS}
-  SOURCE_DIR ${CMAKE_SOURCE_DIR}/openstudiocore
-  ${OS_BUILD_COMMAND}
-  CMAKE_CACHE_ARGS
-    -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
-    -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
-    -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-    -DBUILD_DOCUMENTATION:BOOL=${BUILD_DOCUMENTATION}
-    -DBUILD_CSHARP_BINDINGS:BOOL=${BUILD_CSHARP_BINDINGS}
-    -DBUILD_JAVA_BINDINGS:BOOL=${BUILD_JAVA_BINDINGS}
-    -DBUILD_V8_BINDINGS:BOOL=${BUILD_V8_BINDINGS}
-    -DBUILD_NODE_MODULES:BOOL=${BUILD_NODE_MODULES}
-    -DBUILD_PYTHON_BINDINGS:BOOL=${BUILD_PYTHON_BINDINGS}
-    -DBUILD_TESTING:BOOL=${BUILD_TESTING}
-    -DBUILD_PACKAGE:BOOL=${BUILD_PACKAGE}
-    -DBUILD_PAT:BOOL=${BUILD_PAT}
-    -DBUILD_WITH_MULTIPLE_PROCESSES:BOOL=${BUILD_WITH_MULTIPLE_PROCESSES}
-    -DUSE_PCH:BOOL=${USE_PCH}
-    -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-    -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-    -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-    -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
-    -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-    -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
-    -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-    -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_INSTALL_PREFIX}
-    -DCMAKE_PREFIX_PATH:STRING=${CMAKE_PREFIX_PATH}
-    -DBOOST_ROOT:STRING=${BOOST_ROOT}
-    -DBOOST_LIBRARYDIR:STRING=${BOOST_LIBRARYDIR}
-    -DQT_INSTALL_DIR:PATH=${QT_INSTALL_DIR}
-    -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
-    -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}
-    -DNODE_INCLUDE_DIR:STRING=${NODE_INCLUDE_DIR}
-    -DV8_INCLUDE_DIR:STRING=${V8_INCLUDE_DIR}
-    -DDOXYGEN_EXECUTABLE:STRING=${DOXYGEN_EXECUTABLE}
-    -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
-    -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
-    -DRUBY_INSTALL_DIR:PATH=${RUBY_INSTALL_DIR}
-    INSTALL_COMMAND ""
-)
-
-#if(BUILD_QT AND MSVC)
-#  file(GLOB dlls ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin/*.dll)
-#  foreach(dll ${dlls})
-#    get_filename_component(filename "${dll}" NAME_WE)
-#    ExternalProject_Add_Step(OSCore "Install${filename}ReleaseDLL"
-#      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release"
-#      DEPENDERS configure
-#    )
-#    ExternalProject_Add_Step(OSCore "Install${filename}DebugDLL"
-#      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug"
-#      DEPENDERS configure
-#    )
-#    ExternalProject_Add_Step(OSCore "Install${filename}RelWithDebInfoDLL"
-#      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo"
-#      DEPENDERS configure
-#    )
-#    ExternalProject_Add_Step(OSCore "Install${filename}MinSizeRelDLL"
-#      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel"
-#      DEPENDERS configure
-#    )
-#  endforeach()
-#endif()
-
-#if(MSVC)
-#  ExternalProject_Add_Step(OSCore MakeRubyReleaseFolder
-#    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release
-#    DEPENDERS configure
-#  )
-#  ExternalProject_Add_Step(OSCore MakeRubyDebugFolder
-#    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug
-#    DEPENDERS configure
-#  )
-#  ExternalProject_Add_Step(OSCore MakeRubyRelWithDebInfoFolder
-#    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo
-#    DEPENDERS configure
-#  )
-#  ExternalProject_Add_Step(OSCore MakeRubyMinSizeRelFolder
-#    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel
-#    DEPENDERS configure
-#  )
-#
-#
-#  ExternalProject_Add_Step(OSCore MakeRubyReleaseDLL
-#    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release/${RUBY_DLL}"
-#    DEPENDERS configure
-#  )
-#  ExternalProject_Add_Step(OSCore MakeRubyDebugDLL
-#    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug/${RUBY_DLL}"
-#    DEPENDERS configure
-#  )
-#  ExternalProject_Add_Step(OSCore MakeRubyRelWithDebInfoDLL
-#    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo/${RUBY_DLL}"
-#    DEPENDERS configure
-#  )
-#  ExternalProject_Add_Step(OSCore MakeRubyMinSizeRelDLL
-#    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel/${RUBY_DLL}"
-#    DEPENDERS configure
-#  )
-#
-#endif()
-
-
-set(OPENSTUDIOCORE_BUILD_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
-set(OPENSTUDIOCORE_LIB_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products)
-set(OPENSTUDIOCORE_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/openstudiocore/src)
-set(OPENSTUDIOCORE_ROOT_DIR ${CMAKE_SOURCE_DIR}/openstudiocore/)
-
-###############################################################################
-# Use CPack
-if(BUILD_PACKAGE)
-  include(OpenStudioCPack.cmake)
-endif()
-###############################################################################
-
-
-if(BUILD_REGRESSIONS)
-  ExternalProject_Add(Regressions
-    DEPENDS OSCore
-    GIT_REPOSITORY git://github.com/NREL/OpenStudio-resources
-    GIT_TAG develop
+  ExternalProject_Add(OSCore
+    DEPENDS ${OpenStudioCore_DEPENDS}
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/openstudiocore
+    ${OS_BUILD_COMMAND}
     CMAKE_CACHE_ARGS
-      -DOPENSTUDIO_BUILD_DIR:PATH=${CMAKE_BINARY_DIR}
+      -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
+      -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
+      -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
+      -DBUILD_DOCUMENTATION:BOOL=${BUILD_DOCUMENTATION}
+      -DBUILD_CSHARP_BINDINGS:BOOL=${BUILD_CSHARP_BINDINGS}
+      -DBUILD_JAVA_BINDINGS:BOOL=${BUILD_JAVA_BINDINGS}
+      -DBUILD_V8_BINDINGS:BOOL=${BUILD_V8_BINDINGS}
+      -DBUILD_NODE_MODULES:BOOL=${BUILD_NODE_MODULES}
+      -DBUILD_PYTHON_BINDINGS:BOOL=${BUILD_PYTHON_BINDINGS}
+      -DBUILD_TESTING:BOOL=${BUILD_TESTING}
+      -DBUILD_PACKAGE:BOOL=${BUILD_PACKAGE}
+      -DBUILD_PAT:BOOL=${BUILD_PAT}
+      -DBUILD_WITH_MULTIPLE_PROCESSES:BOOL=${BUILD_WITH_MULTIPLE_PROCESSES}
+      -DUSE_PCH:BOOL=${USE_PCH}
+      -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+      -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+      -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+      -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
+      -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
+      -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
+      -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
+      -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_INSTALL_PREFIX}
+      -DCMAKE_PREFIX_PATH:STRING=${CMAKE_PREFIX_PATH}
+      -DBOOST_ROOT:STRING=${BOOST_ROOT}
+      -DBOOST_LIBRARYDIR:STRING=${BOOST_LIBRARYDIR}
       -DQT_INSTALL_DIR:PATH=${QT_INSTALL_DIR}
-    INSTALL_COMMAND ""
+      -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
+      -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}
+      -DNODE_INCLUDE_DIR:STRING=${NODE_INCLUDE_DIR}
+      -DV8_INCLUDE_DIR:STRING=${V8_INCLUDE_DIR}
+      -DDOXYGEN_EXECUTABLE:STRING=${DOXYGEN_EXECUTABLE}
+      -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
+      -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
+      -DRUBY_INSTALL_DIR:PATH=${RUBY_INSTALL_DIR}
+      INSTALL_COMMAND ""
   )
+
+  #if(BUILD_QT AND MSVC)
+  #  file(GLOB dlls ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin/*.dll)
+  #  foreach(dll ${dlls})
+  #    get_filename_component(filename "${dll}" NAME_WE)
+  #    ExternalProject_Add_Step(OSCore "Install${filename}ReleaseDLL"
+  #      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release"
+  #      DEPENDERS configure
+  #    )
+  #    ExternalProject_Add_Step(OSCore "Install${filename}DebugDLL"
+  #      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug"
+  #      DEPENDERS configure
+  #    )
+  #    ExternalProject_Add_Step(OSCore "Install${filename}RelWithDebInfoDLL"
+  #      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo"
+  #      DEPENDERS configure
+  #    )
+  #    ExternalProject_Add_Step(OSCore "Install${filename}MinSizeRelDLL"
+  #      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel"
+  #      DEPENDERS configure
+  #    )
+  #  endforeach()
+  #endif()
+
+  #if(MSVC)
+  #  ExternalProject_Add_Step(OSCore MakeRubyReleaseFolder
+  #    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release
+  #    DEPENDERS configure
+  #  )
+  #  ExternalProject_Add_Step(OSCore MakeRubyDebugFolder
+  #    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug
+  #    DEPENDERS configure
+  #  )
+  #  ExternalProject_Add_Step(OSCore MakeRubyRelWithDebInfoFolder
+  #    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo
+  #    DEPENDERS configure
+  #  )
+  #  ExternalProject_Add_Step(OSCore MakeRubyMinSizeRelFolder
+  #    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel
+  #    DEPENDERS configure
+  #  )
+  #
+  #
+  #  ExternalProject_Add_Step(OSCore MakeRubyReleaseDLL
+  #    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release/${RUBY_DLL}"
+  #    DEPENDERS configure
+  #  )
+  #  ExternalProject_Add_Step(OSCore MakeRubyDebugDLL
+  #    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug/${RUBY_DLL}"
+  #    DEPENDERS configure
+  #  )
+  #  ExternalProject_Add_Step(OSCore MakeRubyRelWithDebInfoDLL
+  #    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo/${RUBY_DLL}"
+  #    DEPENDERS configure
+  #  )
+  #  ExternalProject_Add_Step(OSCore MakeRubyMinSizeRelDLL
+  #    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel/${RUBY_DLL}"
+  #    DEPENDERS configure
+  #  )
+  #
+  #endif()
+
+
+  set(OPENSTUDIOCORE_BUILD_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
+  set(OPENSTUDIOCORE_LIB_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products)
+  set(OPENSTUDIOCORE_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/openstudiocore/src)
+  set(OPENSTUDIOCORE_ROOT_DIR ${CMAKE_SOURCE_DIR}/openstudiocore/)
+
+  ###############################################################################
+  # Use CPack
+  if(BUILD_PACKAGE)
+    include(OpenStudioCPack.cmake)
+  endif()
+  ###############################################################################
+
+
+  if(BUILD_REGRESSIONS)
+    ExternalProject_Add(Regressions
+      DEPENDS OSCore
+      GIT_REPOSITORY git://github.com/NREL/OpenStudio-resources
+      GIT_TAG develop
+      CMAKE_CACHE_ARGS
+        -DOPENSTUDIO_BUILD_DIR:PATH=${CMAKE_BINARY_DIR}
+        -DQT_INSTALL_DIR:PATH=${QT_INSTALL_DIR}
+      INSTALL_COMMAND ""
+    )
+  endif()
 endif()
