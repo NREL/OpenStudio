@@ -63,7 +63,7 @@ namespace openstudio {
     }
 
     try {
-      std::ifstream ifs(openstudio::toString(localPath).c_str(), std::ios_base::in | std::ios_base::binary);
+      std::ifstream ifs(openstudio::toSystemFilename(localPath), std::ios_base::in | std::ios_base::binary);
 
       if (!ifs.is_open() || ifs.fail())
       {

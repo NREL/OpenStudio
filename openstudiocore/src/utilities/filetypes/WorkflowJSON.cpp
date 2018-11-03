@@ -79,7 +79,8 @@ namespace detail{
       openstudio::path p = toPath(s);
       if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
         // open file
-        std::ifstream ifs(openstudio::toString(p));
+        std::ifstream ifs(openstudio::toSystemFilename(p));
+
         m_value.clear();
         parsingSuccessful = reader.parse(ifs, m_value);
       }
@@ -100,7 +101,7 @@ namespace detail{
     }
 
     // open file
-    std::ifstream ifs(openstudio::toString(p));
+    std::ifstream ifs(openstudio::toSystemFilename(p));
 
     Json::Reader reader;
     bool parsingSuccessful = reader.parse(ifs, m_value);
@@ -197,7 +198,8 @@ namespace detail{
     }
 
     if (makeParentFolder(*p)) {
-      std::ofstream outFile(openstudio::toString(*p));
+      std::ofstream outFile(openstudio::toSystemFilename(*p));
+
       if (outFile) {
         try {
           outFile << string();

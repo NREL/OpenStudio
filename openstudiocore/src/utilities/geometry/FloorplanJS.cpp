@@ -234,7 +234,7 @@ namespace openstudio{
       openstudio::path p = toPath(s);
       if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
         // open file
-        std::ifstream ifs(openstudio::toString(p));
+        std::ifstream ifs(openstudio::toSystemFilename(p));
         m_value.clear();
         parsingSuccessful = reader.parse(ifs, m_value);
       }
