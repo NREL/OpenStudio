@@ -31,18 +31,13 @@
 #include "ThreeJS.hpp"
 #include "Vector3d.hpp"
 #include "Geometry.hpp"
-#include "Plane.hpp"
 #include "Intersection.hpp"
 
 #include "../core/Assert.hpp"
-#include "../core/Compare.hpp"
 //#include "../core/Path.hpp"
 #include "../core/Json.hpp"
 
-#include <jsoncpp/json.h>
 
-#include <iostream>
-#include <string>
 
 namespace openstudio{
 
@@ -239,7 +234,7 @@ namespace openstudio{
       openstudio::path p = toPath(s);
       if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
         // open file
-        std::ifstream ifs(openstudio::toString(p));
+        std::ifstream ifs(openstudio::toSystemFilename(p));
         m_value.clear();
         parsingSuccessful = reader.parse(ifs, m_value);
       }

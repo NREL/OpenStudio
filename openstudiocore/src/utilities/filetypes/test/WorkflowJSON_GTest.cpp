@@ -532,7 +532,7 @@ TEST(Filetypes, WorkflowJSON_Full)
     openstudio::path expectedSeedPath = resourcesPath() / toPath("osversion/1_9_0/example.osm");
     if (!boost::filesystem::exists(expectedSeedPath)){
       boost::filesystem::create_directories(expectedSeedPath.parent_path());
-      std::ofstream outFile(openstudio::toString(expectedSeedPath));
+      std::ofstream outFile(openstudio::toSystemFilename(expectedSeedPath));
       if (outFile) {
         outFile << "OS:Version,\n\
                     {8b3ac8ca-71e7-486e-ac28-74f6e601c3f2}, !- Handle\n\

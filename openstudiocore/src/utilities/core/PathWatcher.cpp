@@ -31,7 +31,6 @@
 #include "Application.hpp"
 #include "Checksum.hpp"
 #include "Assert.hpp"
-#include "Logger.hpp"
 
 #include <QFileSystemWatcher>
 #include <QTimer>
