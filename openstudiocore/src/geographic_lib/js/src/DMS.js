@@ -5,9 +5,9 @@
  * See the documentation for the C++ class.  The conversion is a literal
  * conversion from C++.
  *
- * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  */
 
 GeographicLib.DMS = {};
@@ -32,9 +32,8 @@ GeographicLib.DMS = {};
    *     - SECOND.
    */
   d) {
-  "use strict";
 
-  var lookup, zerofill, InternalDecode, NumMatch,
+  var lookup, zerofill, internalDecode, numMatch,
       hemispheres_ = "SNWE",
       signs_ = "-+",
       digits_ = "0123456789",
@@ -62,7 +61,7 @@ GeographicLib.DMS = {};
    * @description The interpretation of the string is given in the
    *   documentation of the corresponding function, Decode(string&, flag&)
    *   in the {@link
-   *   http://geographiclib.sourceforge.net/html/classGeographicLib_1_1DMS.html
+   *   https://geographiclib.sourceforge.io/html/classGeographicLib_1_1DMS.html
    *   C++ DMS class}
    * @param {string} dms the string.
    * @returns {object} r where r.val is the decoded value (degrees) and r.ind
@@ -101,11 +100,11 @@ GeographicLib.DMS = {};
       if (mi < 0) mi = end; else mi += pa;
       if (pi < 0) pi = end; else pi += pa;
       pb = Math.min(mi, pi);
-      vals = InternalDecode(dmsa.substr(p, pb - p));
+      vals = internalDecode(dmsa.substr(p, pb - p));
       v += vals.val; ind2 = vals.ind;
-      if (ind1 == d.NONE)
+      if (ind1 === d.NONE)
         ind1 = ind2;
-      else if (!(ind2 == d.NONE || ind1 == ind2))
+      else if (!(ind2 === d.NONE || ind1 === ind2))
         throw new Error("Incompatible hemisphere specifies in " +
                         dmsa.substr(0, pb));
     }
@@ -114,7 +113,7 @@ GeographicLib.DMS = {};
     return {val: v, ind: ind1};
   };
 
-  InternalDecode = function(dmsa) {
+  internalDecode = function(dmsa) {
     var vals = {}, errormsg = "",
         sign, beg, end, ind1, k,
         ipieces, fpieces, npiece,
@@ -279,7 +278,7 @@ GeographicLib.DMS = {};
           ( fpieces[1] ? (60*fpieces[0] + fpieces[1]) / 60 : fpieces[0] ) );
       return vals;
     } while (false);
-    vals.val = NumMatch(dmsa);
+    vals.val = numMatch(dmsa);
     if (vals.val === 0)
       throw new Error(errormsg);
     else
@@ -287,11 +286,11 @@ GeographicLib.DMS = {};
     return vals;
   };
 
-  NumMatch = function(s) {
+  numMatch = function(s) {
     var t, sign, p0, p1;
     if (s.length < 3)
       return 0;
-    t = s.toUpperCase().replace(/0+$/,"");
+    t = s.toUpperCase().replace(/0+$/, "");
     sign = t.charAt(0) === '-' ? -1 : 1;
     p0 = t.charAt(0) === '-' || t.charAt(0) === '+' ? 1 : 0;
     p1 = t.length - 1;
@@ -357,7 +356,8 @@ GeographicLib.DMS = {};
     var vals = d.Decode(angstr),
         ang = vals.val, ind = vals.ind;
     if (ind !== d.NONE)
-      throw new Error("Arc angle " + angstr + " includes a hemisphere N/E/W/S");
+      throw new Error("Arc angle " + angstr +
+                      " includes a hemisphere N/E/W/S");
     return ang;
   };
 
@@ -425,7 +425,7 @@ GeographicLib.DMS = {};
     fdegree = (angle - idegree) * scale + 0.5;
     f = Math.floor(fdegree);
     // Implement the "round ties to even" rule
-    fdegree = (f == fdegree && (f & 1)) ? f - 1 : f;
+    fdegree = (f === fdegree && (f & 1) === 1) ? f - 1 : f;
     fdegree /= scale;
 
     fdegree = Math.floor((angle - idegree) * scale + 0.5) / scale;

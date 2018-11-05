@@ -2,9 +2,9 @@
  * \file DMS.hpp
  * \brief Header for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_DMS_HPP)
@@ -100,11 +100,11 @@ namespace GeographicLib {
         s.replace(p, pat.length(), 1, c);
       }
     }
-    static const std::string hemispheres_;
-    static const std::string signs_;
-    static const std::string digits_;
-    static const std::string dmsindicators_;
-    static const std::string components_[3];
+    static const char* const hemispheres_;
+    static const char* const signs_;
+    static const char* const digits_;
+    static const char* const dmsindicators_;
+    static const char* const components_[3];
     static Math::real NumMatch(const std::string& s);
     static Math::real InternalDecode(const std::string& dmsa, flag& ind);
     DMS();                      // Disable constructor
@@ -170,12 +170,12 @@ namespace GeographicLib {
      * - <i>ILLEGAL</i> (the exception thrown explains the problem)
      *   - 70:01:15W+0:0:15N, W70:01:15+W0:0:15
      *
-     * <b>WARNING:</b> "Exponential" notation is not recognized.  Thus
+     * \warning The "exponential" notation is not recognized.  Thus
      * <code>7.0E1</code> is illegal, while <code>7.0E+1</code> is parsed as
      * <code>(7.0E) + (+1)</code>, yielding the same result as
      * <code>8.0E</code>.
      *
-     * <b>NOTE:</b> At present, all the string handling in the C++
+     * \note At present, all the string handling in the C++
      * implementation %GeographicLib is with 8-bit characters.  The support for
      * unicode symbols for degrees, minutes, and seconds is therefore via the
      * <a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a> encoding.  (The
@@ -222,31 +222,6 @@ namespace GeographicLib {
      **********************************************************************/
     static Math::real Decode(real d, real m = 0, real s = 0)
     { return d + (m + s / 60) / 60; }
-
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b> (use Utility::num, instead).
-     * Convert a string to a real number.
-     *
-     * @param[in] str string input.
-     * @exception GeographicErr if \e str is malformed.
-     * @return decoded number.
-     **********************************************************************/
-    static Math::real Decode(const std::string& str)
-    { return Utility::num<real>(str); }
-
-    /**
-     * <b>DEPRECATED</b> (use Utility::fract, instead).
-     * Convert a string to a real number treating the case where the string is
-     * a simple fraction.
-     *
-     * @param[in] str string input.
-     * @exception GeographicErr if \e str is malformed.
-     * @return decoded number.
-     **********************************************************************/
-    static Math::real DecodeFraction(const std::string& str)
-    { return Utility::fract<real>(str); }
-    /// \endcond
 
     /**
      * Convert a pair of strings to latitude and longitude.
@@ -295,7 +270,7 @@ namespace GeographicLib {
      * @exception GeographicErr if \e azistr is malformed.
      * @exception GeographicErr if \e azistr includes a N/S designator.
      * @return azimuth (degrees) reduced to the range [&minus;180&deg;,
-     *   180&deg;).
+     *   180&deg;].
      *
      * A hemisphere designator E/W can be used; the result is multiplied by
      * &minus;1 if W is present.

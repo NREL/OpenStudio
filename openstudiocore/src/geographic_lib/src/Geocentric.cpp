@@ -2,9 +2,9 @@
  * \file Geocentric.cpp
  * \brief Implementation for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/Geocentric.hpp>
@@ -15,7 +15,7 @@ namespace GeographicLib {
 
   Geocentric::Geocentric(real a, real f)
     : _a(a)
-    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
+    , _f(f)
     , _e2(_f * (2 - _f))
     , _e2m(Math::sq(1 - _f))    // 1 - _e2
     , _e2a(abs(_e2))
@@ -23,9 +23,9 @@ namespace GeographicLib {
     , _maxrad(2 * _a / numeric_limits<real>::epsilon())
   {
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     if (!(Math::isfinite(_f) && _f < 1))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
   }
 
   const Geocentric& Geocentric::WGS84() {
@@ -53,8 +53,8 @@ namespace GeographicLib {
                               real M[dim2_]) const {
     real
       R = Math::hypot(X, Y),
-      slam = R ? Y / R : 0,
-      clam = R ? X / R : 1;
+      slam = R != 0 ? Y / R : 0,
+      clam = R != 0 ? X / R : 1;
     h = Math::hypot(R, Z);      // Distance to center of earth
     real sphi, cphi;
     if (h > _maxrad) {
@@ -65,8 +65,8 @@ namespace GeographicLib {
       //
       // Treat the case X, Y finite, but R overflows to +inf by scaling by 2.
       R = Math::hypot(X/2, Y/2);
-      slam = R ? (Y/2) / R : 0;
-      clam = R ? (X/2) / R : 1;
+      slam = R != 0 ? (Y/2) / R : 0;
+      clam = R != 0 ? (X/2) / R : 1;
       real H = Math::hypot(Z/2, R);
       sphi = (Z/2) / H;
       cphi = R / H;
@@ -104,7 +104,7 @@ namespace GeographicLib {
           // N.B. cbrt always returns the real root.  cbrt(-8) = -2.
           real T = Math::cbrt(T3); // T = r * t
           // T can be zero; but then r2 / T -> 0.
-          u += T + (T ? r2 / T : 0);
+          u += T + (T != 0 ? r2 / T : 0);
         } else {
           // T is complex, but the way u is defined the result is real.
           real ang = atan2(sqrt(-disc), -(S + r3));

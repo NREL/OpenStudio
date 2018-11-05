@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELLEXHAUSTGASTOWATERHEATEXCHANGER_HPP
 #define MODEL_GENERATORFUELCELLEXHAUSTGASTOWATERHEATEXCHANGER_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
 
 namespace openstudio {
@@ -112,7 +112,7 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger : public Straigh
   boost::optional<double> method4CondensationThreshold() const;
 
   // Return optional parent generator
-  GeneratorFuelCell fuelCell() const;
+  boost::optional<GeneratorFuelCell> fuelCell() const;
 
   //@}
   /** @name Setters */

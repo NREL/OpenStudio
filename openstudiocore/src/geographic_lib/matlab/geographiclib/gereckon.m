@@ -28,7 +28,8 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
 %   geodreckon solves the equivalent geodesic problem and usually this is
 %   preferable to using GERECKON.
 %
-%   See also GEDOC, GEDISTANCE, DEFAULTELLIPSOID, GEODDISTANCE, GEODRECKON.
+%   See also GEDOC, GEDISTANCE, DEFAULTELLIPSOID, FLAT2ECC, GEODDISTANCE,
+%     GEODRECKON.
 
 % Copyright (c) Charles Karney (2014-2015) <charles@karney.com>.
 
@@ -47,7 +48,7 @@ function [lat2, lon2, azi2, S12] = gereckon(lat1, lon1, s12, azi1, ellipsoid)
   Z = zeros(prod(S),1);
 
   a = ellipsoid(1);
-  e2 = ellipsoid(2)^2;
+  e2 = real(ellipsoid(2)^2);
   f = e2 / (1 + sqrt(1 - e2));
   f1 = 1 - f;
 

@@ -11255,18 +11255,34 @@ OS:Curve:Quadratic,
 
 OS:Generator:FuelSupply,
   {a9cb7b8d-a10a-4cab-909b-3ec4ce27017b}, !- Handle
-  Generator Fuel Supply 1,                !- Name
+  NATURALGAS,                             !- Name
   Scheduled,                              !- Fuel Temperature Modeling Mode
   ,                                       !- Fuel Temperature Reference Node Name
   {0fb785ba-88c0-438a-9d31-1a88979dab95}, !- Fuel Temperature Schedule Name
   {197d60a6-b60d-4e87-a76b-392da18ab1bb}, !- Compressor Power Multiplier Function of Fuel Rate Curve Name
   1,                                      !- Compressor Heat Loss Factor
-  LiquidGeneric,                          !- Fuel Type
-  43100,                                  !- Liquid Generic Fuel Lower Heating Value {kJ/kg}
-  46200,                                  !- Liquid Generic Fuel Higher Heating Value {kJ/kg}
-  1,                                      !- Liquid Generic Fuel Molecular Weight {g/mol}
-  0,                                      !- Liquid Generic Fuel CO2 Emission Factor
-  0;                                      !- Number of Constituents in Gaseous Constituent Fuel Supply
+  GaseousConstituents,                    !- Fuel Type
+  ,                                       !- Liquid Generic Fuel Lower Heating Value {kJ/kg}
+  ,                                       !- Liquid Generic Fuel Higher Heating Value {kJ/kg}
+  ,                                       !- Liquid Generic Fuel Molecular Weight {g/mol}
+  ,                                       !- Liquid Generic Fuel CO2 Emission Factor
+  8,                                      !- Number of Constituents in Gaseous Constituent Fuel Supply
+  METHANE,                                !- Constituent Name 1
+  0.949,                                  !- Constituent Molar Fraction 1
+  CarbonDioxide,                          !- Constituent Name 2
+  0.007,                                  !- Constituent Molar Fraction 2
+  NITROGEN,                               !- Constituent Name 3
+  0.016,                                  !- Constituent Molar Fraction 3
+  ETHANE,                                 !- Constituent Name 4
+  0.025,                                  !- Constituent Molar Fraction 4
+  PROPANE,                                !- Constituent Name 5
+  0.002,                                  !- Constituent Molar Fraction 5
+  BUTANE,                                 !- Constituent Name 6
+  0.0006,                                 !- Constituent Molar Fraction 6
+  PENTANE,                                !- Constituent Name 7
+  0.0002,                                 !- Constituent Molar Fraction 7
+  OXYGEN,                                 !- Constituent Name 8
+  0.0002;                                 !- Constituent Molar Fraction 8
 
 OS:Schedule:Constant,
   {0fb785ba-88c0-438a-9d31-1a88979dab95}, !- Handle
@@ -12031,4 +12047,3 @@ OS:Table:MultiVariableLookup,
   1,                                      !- Data 4
   1.2857,                                 !- Data 5
   1.0778;                                 !- Data 6
-

@@ -28,30 +28,21 @@
 ***********************************************************************************************************************/
 
 #include "WorkspaceObject.hpp"
-#include "WorkspaceObject_Impl.hpp"
 
 #include "Workspace.hpp"
 #include "Workspace_Impl.hpp"
 #include "WorkspaceObjectDiff.hpp"
 #include "WorkspaceObjectDiff_Impl.hpp"
 #include "WorkspaceExtensibleGroup.hpp"
-#include "IdfExtensibleGroup.hpp"
 #include "ValidityReport.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../idd/IddObjectProperties.hpp"
-#include "../idd/IddFieldProperties.hpp"
 
-#include "../core/Compare.hpp"
 #include "../core/Assert.hpp"
-#include "../core/Containers.hpp"
 #include "../core/StringHelpers.hpp"
 
-#include <boost/lexical_cast.hpp>
-#include <boost/regex.hpp>
 
-#include <iostream>
 using namespace std;
 
 using openstudio::detail::WorkspaceObject_Impl;
@@ -410,7 +401,7 @@ namespace detail {
 
     // regular field -- name or data
     if ((index == 0) && (iddObject().hasNameField())) {
-      return setName(value,checkValidity);
+      return setName(value,checkValidity).has_value();
     } // name
 
     // record diffs at start
@@ -736,7 +727,7 @@ namespace detail {
     if (m_handle.isNull()) {
       return false;
     }
-    return m_sourceData;
+    return m_sourceData.has_value();
   }
 
   bool WorkspaceObject_Impl::canBeSource(unsigned index,const StringVector& refLists) const {
@@ -759,7 +750,7 @@ namespace detail {
 
   bool WorkspaceObject_Impl::isTarget() const {
     if (m_handle.isNull()) { return false; }
-    return m_targetData;
+    return m_targetData.has_value();
   }
 
   std::vector<std::string> WorkspaceObject_Impl::canBeTarget() const {

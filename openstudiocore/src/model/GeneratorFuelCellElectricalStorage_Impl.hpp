@@ -30,11 +30,13 @@
 #ifndef MODEL_GENERATORFUELCELLELECTRICALSTORAGE_IMPL_HPP
 #define MODEL_GENERATORFUELCELLELECTRICALSTORAGE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
+
+class GeneratorFuelCell;
 
 namespace detail {
 
@@ -83,6 +85,9 @@ namespace detail {
     double simpleMaximumPowerStore() const;
 
     double initialChargeState() const;
+
+    // Return optional parent generator
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
     //@}
     /** @name Setters */

@@ -3,7 +3,7 @@
  *
  * Copyright (c) Charles Karney (2013-2014) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 package net.sf.geographiclib;
 
@@ -86,8 +86,4 @@ public class GeodesicMask {
    * Unroll <i>lon2</i>.
    **********************************************************************/
   public static final int LONG_UNROLL   = 1<<15;
-  /**
-   * For backward compatibility only; use LONG_UNROLL instead.
-   **********************************************************************/
-  public static final int LONG_NOWRAP   = LONG_UNROLL;
 }

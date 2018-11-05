@@ -159,7 +159,7 @@ void LightsDefinitionInspectorView::attach(openstudio::model::LightsDefinition &
   m_nameEdit->bind(
     *m_lightsDefinition,
     OptionalStringGetter(std::bind(&model::LightsDefinition::name, m_lightsDefinition.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::LightsDefinition::setName, m_lightsDefinition.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::LightsDefinition::setName, m_lightsDefinition.get_ptr(),std::placeholders::_1))
   );
 
   // m_lightingLevelEdit->bind(lightsDefinition,"lightingLevel",m_isIP);

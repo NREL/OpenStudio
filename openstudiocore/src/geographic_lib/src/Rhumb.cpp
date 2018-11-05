@@ -3,9 +3,9 @@
  * \brief Implementation for GeographicLib::Rhumb and GeographicLib::RhumbLine
  * classes
  *
- * Copyright (c) Charles Karney (2014-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <algorithm>
@@ -140,7 +140,8 @@ namespace GeographicLib {
   }
 
   const Rhumb& Rhumb::WGS84() {
-    static const Rhumb wgs84(Constants::WGS84_a(), Constants::WGS84_f(), false);
+    static const Rhumb
+      wgs84(Constants::WGS84_a(), Constants::WGS84_f(), false);
     return wgs84;
   }
 
@@ -176,7 +177,7 @@ namespace GeographicLib {
     const EllipticFunction& ei = _ell._ell;
     real d = x - y;
     if (x * y <= 0)
-      return d ? (ei.E(x) - ei.E(y)) / d : 1;
+      return d != 0 ? (ei.E(x) - ei.E(y)) / d : 1;
     // See DLMF: Eqs (19.11.2) and (19.11.4) letting
     // theta -> x, phi -> -y, psi -> z
     //
@@ -197,7 +198,7 @@ namespace GeographicLib {
       ((cx + cy) * (sx * ei.Delta(sy, cy) + sy * ei.Delta(sx, cx))),
       t = d * Dt, Dsz = 2 * Dt / (1 + t*t),
       sz = d * Dsz, cz = (1 - t) * (1 + t) / (1 + t*t);
-    return ((sz ? ei.E(sz, cz, ei.Delta(sz, cz)) / sz : 1)
+    return ((sz != 0 ? ei.E(sz, cz, ei.Delta(sz, cz)) / sz : 1)
             - ei.k2() * sx * sy) * Dsz;
   }
 
@@ -253,8 +254,8 @@ namespace GeographicLib {
     //    t =  (c[0] * I  - b[2]) * f[0](x,y) + b[1] * f[1](x,y)
     // c[0] is not accessed for s = t[2]
     real p = x + y, d = x - y,
-      cp = cos(p), cd =     cos(d),
-      sp = sin(p), sd = d ? sin(d)/d : 1,
+      cp = cos(p), cd =          cos(d),
+      sp = sin(p), sd = d != 0 ? sin(d)/d : 1,
       m = 2 * cp * cd, s = sp * sd;
     // 2x2 matrices stored in row-major order
     const real a[4] = {m, -s * d * d, -4 * s, m};
@@ -350,7 +351,7 @@ namespace GeographicLib {
       mu2 = _mu1 + mu12;
     real psi2, lat2x, lon2x;
     if (abs(mu2) <= 90) {
-      if (_calp) {
+      if (_calp != 0) {
         lat2x = _rh._ell.InverseRectifyingLatitude(mu2);
         real psi12 = _rh.DRectifyingToIsometric(  mu2 * Math::degree(),
                                                  _mu1 * Math::degree()) * mu12;

@@ -2314,7 +2314,7 @@ namespace detail {
         std::string surfaceHandle = toString(surface.handle());
         if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()){
           hasSubSurfaceMap[surfaceHandle] = !surface.subSurfaces().empty();
-          hasAdjacentSurfaceMap[surfaceHandle] = surface.adjacentSurface();
+          hasAdjacentSurfaceMap[surfaceHandle] = surface.adjacentSurface().has_value();
         }
 
         if (hasSubSurfaceMap[surfaceHandle] || hasAdjacentSurfaceMap[surfaceHandle]){
@@ -2325,7 +2325,7 @@ namespace detail {
           std::string otherSurfaceHandle = toString(otherSurface.handle());
           if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()){
             hasSubSurfaceMap[otherSurfaceHandle] = !otherSurface.subSurfaces().empty();
-            hasAdjacentSurfaceMap[otherSurfaceHandle] = otherSurface.adjacentSurface();
+            hasAdjacentSurfaceMap[otherSurfaceHandle] = otherSurface.adjacentSurface().has_value();
           }
 
           if (hasSubSurfaceMap[otherSurfaceHandle] || hasAdjacentSurfaceMap[otherSurfaceHandle]){

@@ -30,7 +30,7 @@
 #ifndef MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOSCHEDULE_HPP
 #define MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOSCHEDULE_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "Schedule.hpp"
 
 #include "ExternalInterfaceFunctionalMockupUnitImport.hpp"
@@ -116,4 +116,4 @@ typedef std::vector<ExternalInterfaceFunctionalMockupUnitImportToSchedule> Exter
 } // model
 } // openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOSCHEDULE_HPP
+#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOSCHEDULE_HPP

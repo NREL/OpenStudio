@@ -55,8 +55,8 @@ Planimeter: Planimeter.o
 RhumbSolve: RhumbSolve.o
 TransverseMercatorProj: TransverseMercatorProj.o
 
-CartConvert.o: CartConvert.usage Config.h Constants.hpp DMS.hpp Geocentric.hpp \
-	LocalCartesian.hpp Math.hpp Utility.hpp
+CartConvert.o: CartConvert.usage Config.h Constants.hpp DMS.hpp \
+	Geocentric.hpp LocalCartesian.hpp Math.hpp Utility.hpp
 ConicProj.o: ConicProj.usage Config.h AlbersEqualArea.hpp Constants.hpp \
 	DMS.hpp LambertConformalConic.hpp Math.hpp Utility.hpp
 GeoConvert.o: GeoConvert.usage Config.h Constants.hpp DMS.hpp GeoCoords.hpp \
@@ -65,17 +65,18 @@ GeodSolve.o: GeodSolve.usage Config.h Constants.hpp DMS.hpp Geodesic.hpp \
 	GeodesicExact.hpp GeodesicLine.hpp GeodesicLineExact.hpp Math.hpp \
 	Utility.hpp
 GeodesicProj.o: GeodesicProj.usage Config.h AzimuthalEquidistant.hpp \
-	CassiniSoldner.hpp Constants.hpp DMS.hpp Geodesic.hpp GeodesicLine.hpp \
-	Gnomonic.hpp Math.hpp Utility.hpp
+	CassiniSoldner.hpp Constants.hpp DMS.hpp Geodesic.hpp \
+	GeodesicLine.hpp Gnomonic.hpp Math.hpp Utility.hpp
 GeoidEval.o: GeoidEval.usage Config.h Constants.hpp DMS.hpp GeoCoords.hpp \
 	Geoid.hpp Math.hpp UTMUPS.hpp Utility.hpp
 Gravity.o: Gravity.usage Config.h CircularEngine.hpp Constants.hpp DMS.hpp \
 	Geocentric.hpp GravityCircle.hpp GravityModel.hpp Math.hpp \
 	NormalGravity.hpp SphericalEngine.hpp SphericalHarmonic.hpp \
 	SphericalHarmonic1.hpp Utility.hpp
-MagneticField.o: MagneticField.usage Config.h CircularEngine.hpp Constants.hpp \
-	DMS.hpp Geocentric.hpp MagneticCircle.hpp MagneticModel.hpp Math.hpp \
-	SphericalEngine.hpp SphericalHarmonic.hpp Utility.hpp
+MagneticField.o: MagneticField.usage Config.h CircularEngine.hpp \
+	Constants.hpp DMS.hpp Geocentric.hpp MagneticCircle.hpp \
+	MagneticModel.hpp Math.hpp SphericalEngine.hpp SphericalHarmonic.hpp \
+	Utility.hpp
 Planimeter.o: Planimeter.usage Config.h Accumulator.hpp Constants.hpp DMS.hpp \
 	Ellipsoid.hpp GeoCoords.hpp Geodesic.hpp Math.hpp PolygonArea.hpp \
 	UTMUPS.hpp Utility.hpp

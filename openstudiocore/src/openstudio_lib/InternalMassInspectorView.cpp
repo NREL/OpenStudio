@@ -150,7 +150,7 @@ void InternalMassDefinitionInspectorView::attach(openstudio::model::InternalMass
   m_nameEdit->bind(
     *m_internalMassDefinition,
     OptionalStringGetter(std::bind(&model::InternalMassDefinition::name, m_internalMassDefinition.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::InternalMassDefinition::setName, m_internalMassDefinition.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::InternalMassDefinition::setName, m_internalMassDefinition.get_ptr(),std::placeholders::_1))
   );
 
   // m_surfaceAreaEdit->bind(internalMassDefinition,"surfaceArea",m_isIP);

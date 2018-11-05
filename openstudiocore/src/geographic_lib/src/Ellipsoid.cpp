@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/Ellipsoid.hpp>
@@ -16,7 +16,7 @@ namespace GeographicLib {
   Ellipsoid::Ellipsoid(real a, real f)
     : stol_(real(0.01) * sqrt(numeric_limits<real>::epsilon()))
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
+    , _f(f)
     , _f1(1 - _f)
     , _f12(Math::sq(_f1))
     , _e2(_f * (2 - _f))
@@ -114,8 +114,7 @@ namespace GeographicLib {
     return _a / sqrt(v);
   }
 
-  Math::real Ellipsoid::NormalCurvatureRadius(real phi, real azi)
-    const {
+  Math::real Ellipsoid::NormalCurvatureRadius(real phi, real azi) const {
     real calp, salp,
       v = 1 - _e2 * Math::sq(Math::sind(Math::LatFix(phi)));
     Math::sincosd(azi, salp, calp);

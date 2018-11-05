@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELLAIRSUPPLY_IMPL_HPP
 #define MODEL_GENERATORFUELCELLAIRSUPPLY_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
 namespace openstudio {
@@ -40,6 +40,7 @@ class Node;
 class CurveCubic;
 class CurveQuadratic;
 class GeneratorFuelCell;
+class AirSupplyConstituent;
 
 namespace detail {
 
@@ -71,15 +72,20 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
-    //extensible fields.
+    virtual std::vector<IddObjectType> allowableChildTypes() const;
 
+    virtual std::vector<ModelObject> children() const;
+
+
+    //extensible fields.
+    bool addConstituent(const AirSupplyConstituent& constituent);
     bool addConstituent(std::string name, double molarFraction);
 
-    void removeConstituent(unsigned groupIndex);
+    bool removeConstituent(unsigned groupIndex);
 
     void removeAllConstituents();
 
-    std::vector< std::pair<std::string, double> > constituents();
+    std::vector<AirSupplyConstituent> constituents() const;
 
     //@}
     /** @name Getters */
@@ -105,10 +111,13 @@ namespace detail {
 
     std::string airSupplyConstituentMode() const;
 
-    boost::optional<unsigned int> numberofUserDefinedConstituents() const;
+    unsigned int numberofUserDefinedConstituents() const;
+
+    // Convenience function to check that it's equal to 1.0 (If no constituents, returns 0 and warns)
+    double sumofConstituentsMolarFractions() const;
 
     // Return optional parent generator
-    GeneratorFuelCell fuelCell() const;
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
     //@}
     /** @name Setters */
@@ -148,23 +157,17 @@ namespace detail {
 
     bool setAirSupplyConstituentMode(const std::string& airSupplyConstituentMode);
 
-    bool setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents);
-
-    void resetNumberofUserDefinedConstituents();
-
     //@}
     /** @name Other */
     //@{
 
-    virtual ModelObject clone(Model model) const override;
-
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
-
-    virtual std::vector<ModelObject> children() const;
-
     //@}
    protected:
    private:
+    // Not to be exposed publicly, handled automatically by add/removeConstituent
+    bool setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents);
+    void resetNumberofUserDefinedConstituents();
+
     REGISTER_LOGGER("openstudio.model.GeneratorFuelCellAirSupply");
   };
 

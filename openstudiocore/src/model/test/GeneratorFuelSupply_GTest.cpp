@@ -29,7 +29,7 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
 #include "../GeneratorFuelSupply.hpp"
 #include "../GeneratorFuelSupply_Impl.hpp"
@@ -113,12 +113,16 @@ TEST_F(ModelFixture, FuelCellFuelSupply) {
 
   // CTOR creates 8 to match natural gas
   EXPECT_EQ(8, fuelsupply.numberofConstituentsinGaseousConstituentFuelSupply().get());
+  // And it should have a sum of molar fraction equal to 1
+  EXPECT_DOUBLE_EQ(1.0, fuelsupply.sumofConstituentsMolarFractions());
 
   fuelsupply.removeAllConstituents();
 
   EXPECT_EQ(0, fuelsupply.numberofConstituentsinGaseousConstituentFuelSupply().get());
-  //should fail since name is wrong
-  ASSERT_FALSE(fuelsupply.addConstituent("MadeUp", 0.0092));
+  //should throw in Ctor of FuelSupplyConstituent since name is wrong
+  EXPECT_THROW(fuelsupply.addConstituent("MadeUp", 0.0092), openstudio::Exception);
+  EXPECT_EQ(0, fuelsupply.numberofConstituentsinGaseousConstituentFuelSupply().get());
+
   EXPECT_EQ(0, fuelsupply.numberofConstituentsinGaseousConstituentFuelSupply().get());
   ASSERT_TRUE(fuelsupply.addConstituent("CarbonDioxide", 0.0003));
   EXPECT_EQ(1, fuelsupply.numberofConstituentsinGaseousConstituentFuelSupply().get());
@@ -144,6 +148,7 @@ TEST_F(ModelFixture, FuelCellFuelSupply) {
   EXPECT_EQ(11, fuelsupply.numberofConstituentsinGaseousConstituentFuelSupply().get());
   ASSERT_TRUE(fuelsupply.addConstituent("Hexane", 0.00));
   EXPECT_EQ(12, fuelsupply.numberofConstituentsinGaseousConstituentFuelSupply().get());
+
   //should fail since only 12 allowed
   ASSERT_FALSE(fuelsupply.addConstituent("Methanol", 0.00));
   fuelsupply.removeConstituent(11);

@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELLEXHAUSTGASTOWATERHEATEXCHANGER_IMPL_HPP
 #define MODEL_GENERATORFUELCELLEXHAUSTGASTOWATERHEATEXCHANGER_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
@@ -69,6 +69,27 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl : public St
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+    virtual unsigned inletPort() override;
+
+    virtual unsigned outletPort() override;
+
+    bool addToNode(Node & node) override;
+
+    /*
+     *For OS App-related reasons, so we can drag this object from library onto a plantLoop
+     *This will clone the parent fuelCell (which clones all of his children) and return a reference
+     *to that clone's HX
+     */
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+
+    virtual std::vector<ModelObject> children() const override;
 
     //@}
     /** @name Getters */
@@ -117,11 +138,8 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl : public St
     boost::optional<double> method4CondensationThreshold() const;
 
     // Return optional parent generator
-    GeneratorFuelCell fuelCell() const;
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
-
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */
@@ -215,17 +233,7 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl : public St
     /** @name Other */
     //@{
 
-    virtual unsigned inletPort() override;
 
-    virtual unsigned outletPort() override;
-
-    bool addToNode(Node & node) override;
-
-    virtual ModelObject clone(Model model) const override;
-
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
-
-    virtual std::vector<ModelObject> children() const override;
 
 
     //@}

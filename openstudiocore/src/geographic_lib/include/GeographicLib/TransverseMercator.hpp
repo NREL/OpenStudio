@@ -2,9 +2,9 @@
  * \file TransverseMercator.hpp
  * \brief Header for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
@@ -30,23 +30,23 @@ namespace GeographicLib {
    * This uses Kr&uuml;ger's method which evaluates the projection and its
    * inverse in terms of a series.  See
    *  - L. Kr&uuml;ger,
-   *    <a href="https://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+   *    <a href="https://doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    *    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of the
    *    ellipsoidal earth to the plane), Royal Prussian Geodetic Institute, New
    *    Series 52, 172 pp. (1912).
    *  - C. F. F. Karney,
-   *    <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">
+   *    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    *    Transverse Mercator with an accuracy of a few nanometers,</a>
    *    J. Geodesy 85(8), 475--485 (Aug. 2011);
    *    preprint
-   *    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
+   *    <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
    *
    * Kr&uuml;ger's method has been extended from 4th to 6th order.  The maximum
    * error is 5 nm (5 nanometers), ground distance, for all positions within 35
    * degrees of the central meridian.  The error in the convergence is 2
    * &times; 10<sup>&minus;15</sup>&quot; and the relative error in the scale
    * is 6 &times; 10<sup>&minus;12</sup>%%.  See Sec. 4 of
-   * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details.
+   * <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details.
    * The speed penalty in going to 6th order is only about 1%.
    *
    * There's a singularity in the projection at &phi; = 0&deg;, &lambda;
@@ -73,6 +73,10 @@ namespace GeographicLib {
    * Grid (<a href="http://www.spatialreference.org/ref/epsg/7405/">
    * EPSG:7405</a>) which requires the use of a latitude of origin.  This is
    * implemented by the GeographicLib::OSGB class.
+   *
+   * This class also returns the meridian convergence \e gamma and scale \e k.
+   * The meridian convergence is the bearing of grid north (the \e y axis)
+   * measured clockwise from true north.
    *
    * See TransverseMercator.cpp for more information on the implementation.
    *
@@ -138,7 +142,7 @@ namespace GeographicLib {
      * @param[out] k scale of projection at point.
      *
      * No false easting or northing is added.  The value of \e lon returned is
-     * in the range [&minus;180&deg;, 180&deg;).
+     * in the range [&minus;180&deg;, 180&deg;].
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const;
@@ -175,14 +179,6 @@ namespace GeographicLib {
      *   the constructor.
      **********************************************************************/
     Math::real Flattening() const { return _f; }
-
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the ellipsoid.
-     **********************************************************************/
-    Math::real InverseFlattening() const { return 1/_f; }
-    /// \endcond
 
     /**
      * @return \e k0 central scale for the projection.  This is the value of \e

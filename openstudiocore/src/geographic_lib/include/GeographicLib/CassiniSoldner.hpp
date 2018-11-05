@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
@@ -197,14 +197,6 @@ namespace GeographicLib {
     Math::real Flattening() const { return _earth.Flattening(); }
     ///@}
 
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the ellipsoid.
-     **********************************************************************/
-    Math::real InverseFlattening() const
-    { return _earth.InverseFlattening(); }
-    /// \endcond
   };
 
 } // namespace GeographicLib

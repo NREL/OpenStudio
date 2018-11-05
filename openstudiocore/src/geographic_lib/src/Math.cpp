@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/Math.hpp>
@@ -15,8 +15,6 @@
 #endif
 
 namespace GeographicLib {
-
-  /// \cond SKIP
 
   using namespace std;
 
@@ -55,11 +53,11 @@ namespace GeographicLib {
     return tau;
   }
 
+  /// \cond SKIP
   // Instantiate
   template Math::real Math::eatanhe<Math::real>(Math::real, Math::real);
   template Math::real Math::taupf<Math::real>(Math::real, Math::real);
   template Math::real Math::tauf<Math::real>(Math::real, Math::real);
-
   /// \endcond
 
 } // namespace GeographicLib

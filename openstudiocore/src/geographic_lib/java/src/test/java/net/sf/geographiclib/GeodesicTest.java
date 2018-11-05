@@ -225,7 +225,7 @@ public class GeodesicTest {
     assertEquals(dir.lat2, 90, 0.5e-5);
     if (dir.lon2 < 0) {
       assertEquals(dir.lon2, -150, 0.5e-5);
-      assertEquals(dir.azi2, -180, 0.5e-5);
+      assertEquals(Math.abs(dir.azi2), 180, 0.5e-5);
     } else {
       assertEquals(dir.lon2, 30, 0.5e-5);
       assertEquals(dir.azi2, 0, 0.5e-5);
@@ -243,8 +243,8 @@ public class GeodesicTest {
     inv = Geodesic.WGS84.Inverse(89.262080389218, 0,
                                  -89.262080389218, 179.992207982775375662);
     assertEquals(inv.s12, 20003925.854, 0.5e-3);
-    inv = Geodesic.WGS84.Inverse(89.333123580033, 0,
-                                 -89.333123580032997687, 179.99295812360148422);
+    inv = Geodesic.WGS84.Inverse(89.333123580033, 0, -89.333123580032997687,
+                                 179.99295812360148422);
     assertEquals(inv.s12, 20003926.881, 0.5e-3);
   }
 
@@ -378,11 +378,11 @@ public class GeodesicTest {
     assertEquals(inv.s12, 19980862, 0.5);
     inv = Geodesic.WGS84.Inverse(0, 0, 0, 180);
     assertEquals(inv.azi1, 0.00000, 0.5e-5);
-    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
     assertEquals(inv.s12, 20003931, 0.5);
     inv = Geodesic.WGS84.Inverse(0, 0, 1, 180);
     assertEquals(inv.azi1, 0.00000, 0.5e-5);
-    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
     assertEquals(inv.s12, 19893357, 0.5);
     Geodesic geod = new Geodesic(6.4e6, 0);
     inv = geod.Inverse(0, 0, 0, 179);
@@ -391,11 +391,11 @@ public class GeodesicTest {
     assertEquals(inv.s12, 19994492, 0.5);
     inv = geod.Inverse(0, 0, 0, 180);
     assertEquals(inv.azi1, 0.00000, 0.5e-5);
-    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
     assertEquals(inv.s12, 20106193, 0.5);
     inv = geod.Inverse(0, 0, 1, 180);
     assertEquals(inv.azi1, 0.00000, 0.5e-5);
-    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
     assertEquals(inv.s12, 19994492, 0.5);
     geod = new Geodesic(6.4e6, -1/300.0);
     inv = geod.Inverse(0, 0, 0, 179);
@@ -412,7 +412,7 @@ public class GeodesicTest {
     assertEquals(inv.s12, 20082617, 0.5);
     inv = geod.Inverse(0, 0, 1, 180);
     assertEquals(inv.azi1, 0.00000, 0.5e-5);
-    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
     assertEquals(inv.s12, 20027270, 0.5);
   }
 
@@ -428,6 +428,146 @@ public class GeodesicTest {
     assertTrue(isNaN(inv.azi1));
     assertTrue(isNaN(inv.azi2));
     assertTrue(isNaN(inv.s12));
+  }
+
+  @Test
+  public void GeodSolve59() {
+    // Check for points close with longitudes close to 180 deg apart.
+    GeodesicData inv = Geodesic.WGS84.Inverse(5, 0.00000000000001, 10, 180);
+    assertEquals(inv.azi1, 0.000000000000035, 1.5e-14);
+    assertEquals(inv.azi2, 179.99999999999996, 1.5e-14);
+    assertEquals(inv.s12, 18345191.174332713, 4e-9);
+  }
+
+  @Test
+  public void GeodSolve61() {
+    // Make sure small negative azimuths are west-going
+    GeodesicData dir =
+      Geodesic.WGS84.Direct(45, 0, -0.000000000000000003, 1e7,
+                            GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat2, 45.30632, 0.5e-5);
+    assertEquals(dir.lon2, -180, 0.5e-5);
+    assertEquals(Math.abs(dir.azi2), 180, 0.5e-5);
+    GeodesicLine line = Geodesic.WGS84.InverseLine(45, 0, 80,
+                                                   -0.000000000000000003);
+    dir = line.Position(1e7, GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat2, 45.30632, 0.5e-5);
+    assertEquals(dir.lon2, -180, 0.5e-5);
+    assertEquals(Math.abs(dir.azi2), 180, 0.5e-5);
+  }
+
+  @Test
+  public void GeodSolve65() {
+    // Check for bug in east-going check in GeodesicLine (needed to check for
+    // sign of 0) and sign error in area calculation due to a bogus override
+    // of the code for alp12.  Found/fixed on 2015-12-19.
+    GeodesicLine line = Geodesic.WGS84.InverseLine(30, -0.000000000000000001,
+                                                   -31, 180);
+    GeodesicData dir =
+      line.Position(1e7, GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat1, 30.00000  , 0.5e-5);
+    assertEquals(dir.lon1, -0.00000  , 0.5e-5);
+    assertEquals(Math.abs(dir.azi1), 180.00000, 0.5e-5);
+    assertEquals(dir.lat2, -60.23169 , 0.5e-5);
+    assertEquals(dir.lon2, -0.00000  , 0.5e-5);
+    assertEquals(Math.abs(dir.azi2), 180.00000, 0.5e-5);
+    assertEquals(dir.s12 , 10000000  , 0.5);
+    assertEquals(dir.a12 , 90.06544  , 0.5e-5);
+    assertEquals(dir.m12 , 6363636   , 0.5);
+    assertEquals(dir.M12 , -0.0012834, 0.5e7);
+    assertEquals(dir.M21 , 0.0013749 , 0.5e-7);
+    assertEquals(dir.S12 , 0         , 0.5);
+    dir = line.Position(2e7, GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat1, 30.00000  , 0.5e-5);
+    assertEquals(dir.lon1, -0.00000  , 0.5e-5);
+    assertEquals(Math.abs(dir.azi1), 180.00000, 0.5e-5);
+    assertEquals(dir.lat2, -30.03547 , 0.5e-5);
+    assertEquals(dir.lon2, -180.00000, 0.5e-5);
+    assertEquals(dir.azi2, -0.00000  , 0.5e-5);
+    assertEquals(dir.s12 , 20000000  , 0.5);
+    assertEquals(dir.a12 , 179.96459 , 0.5e-5);
+    assertEquals(dir.m12 , 54342     , 0.5);
+    assertEquals(dir.M12 , -1.0045592, 0.5e7);
+    assertEquals(dir.M21 , -0.9954339, 0.5e-7);
+    assertEquals(dir.S12 , 127516405431022.0, 0.5);
+  }
+
+  @Test
+  public void GeodSolve69() {
+    // Check for InverseLine if line is slightly west of S and that s13 is
+    // correctly set.
+    GeodesicLine line =
+      Geodesic.WGS84.InverseLine(-5, -0.000000000000002, -10, 180);
+    GeodesicData dir =
+      line.Position(2e7, GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat2, 4.96445   , 0.5e-5);
+    assertEquals(dir.lon2, -180.00000, 0.5e-5);
+    assertEquals(dir.azi2, -0.00000  , 0.5e-5);
+    dir = line.Position(0.5 * line.Distance(),
+                        GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat2, -87.52461 , 0.5e-5);
+    assertEquals(dir.lon2, -0.00000  , 0.5e-5);
+    assertEquals(dir.azi2, -180.00000, 0.5e-5);
+  }
+
+  @Test
+  public void GeodSolve71() {
+    // Check that DirectLine sets s13.
+    GeodesicLine line = Geodesic.WGS84.DirectLine(1, 2, 45, 1e7);
+    GeodesicData dir =
+      line.Position(0.5 * line.Distance(),
+                    GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
+    assertEquals(dir.lat2, 30.92625, 0.5e-5);
+    assertEquals(dir.lon2, 37.54640, 0.5e-5);
+    assertEquals(dir.azi2, 55.43104, 0.5e-5);
+  }
+
+  @Test
+  public void GeodSolve73() {
+    // Check for backwards from the pole bug reported by Anon on 2016-02-13.
+    // This only affected the Java implementation.  It was introduced in Java
+    // version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+    GeodesicData dir = Geodesic.WGS84.Direct(90, 10, 180, -1e6);
+    assertEquals(dir.lat2, 81.04623, 0.5e-5);
+    assertEquals(dir.lon2, -170, 0.5e-5);
+    assertEquals(dir.azi2, 0, 0.5e-5);
+  }
+
+  @Test
+  public void GeodSolve74() {
+    // Check fix for inaccurate areas, bug introduced in v1.46, fixed
+    // 2015-10-16.
+    GeodesicData inv = Geodesic.WGS84.Inverse(54.1589, 15.3872,
+                                              54.1591, 15.3877,
+                                              GeodesicMask.ALL);
+    assertEquals(inv.azi1, 55.723110355, 5e-9);
+    assertEquals(inv.azi2, 55.723515675, 5e-9);
+    assertEquals(inv.s12,  39.527686385, 5e-9);
+    assertEquals(inv.a12,   0.000355495, 5e-9);
+    assertEquals(inv.m12,  39.527686385, 5e-9);
+    assertEquals(inv.M12,   0.999999995, 5e-9);
+    assertEquals(inv.M21,   0.999999995, 5e-9);
+    assertEquals(inv.S12, 286698586.30197, 5e-4);
+  }
+
+  @Test
+  public void GeodSolve76() {
+    // The distance from Wellington and Salamanca (a classic failure of
+    // Vincenty)
+    GeodesicData inv = Geodesic.WGS84.Inverse(-(41+19/60.0), 174+49/60.0,
+                                              40+58/60.0, -(5+30/60.0));
+    assertEquals(inv.azi1, 160.39137649664, 0.5e-11);
+    assertEquals(inv.azi2,  19.50042925176, 0.5e-11);
+    assertEquals(inv.s12,  19960543.857179, 0.5e-6);
+  }
+
+  @Test
+  public void GeodSolve78() {
+    // An example where the NGS calculator fails to converge */
+    GeodesicData inv = Geodesic.WGS84.Inverse(27.2, 0.0, -27.1, 179.5);
+    assertEquals(inv.azi1,  45.82468716758, 0.5e-11);
+    assertEquals(inv.azi2, 134.22776532670, 0.5e-11);
+    assertEquals(inv.s12,  19974354.765767, 0.5e-6);
   }
 
   @Test

@@ -416,7 +416,7 @@ void WindowMaterialBlindInspectorView::attach(openstudio::model::Blind & materia
   m_nameEdit->bind(
     *m_material,
     OptionalStringGetter(std::bind(&model::Blind::name, m_material.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::Blind::setName, m_material.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::Blind::setName, m_material.get_ptr(),std::placeholders::_1))
   );
 
   // m_slatWidth->bind(material,"slatWidth",m_isIP);

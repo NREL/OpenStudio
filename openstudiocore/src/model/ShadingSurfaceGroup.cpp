@@ -257,7 +257,7 @@ namespace detail {
       resetSpace();
       result = setString(OS_ShadingSurfaceGroupFields::ShadingSurfaceType, shadingSurfaceType);
     }else if (istringEqual("Space", shadingSurfaceType)){
-      result = this->space();
+      result = this->space().has_value();
       if (result){
         bool test = setString(OS_ShadingSurfaceGroupFields::ShadingSurfaceType, shadingSurfaceType);
         OS_ASSERT(test);

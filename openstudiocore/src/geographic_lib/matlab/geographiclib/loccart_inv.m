@@ -19,7 +19,7 @@ function [lat, lon, h, M] = loccart_inv(lat0, lon0, h0, x, y, z, ellipsoid)
 %   transpose of M transforms the vector to local cartesian coordinates at
 %   (lat, lon, h).
 %
-%   See also LOCCART_FWD, DEFAULTELLIPSOID.
+%   See also LOCCART_FWD, DEFAULTELLIPSOID, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 

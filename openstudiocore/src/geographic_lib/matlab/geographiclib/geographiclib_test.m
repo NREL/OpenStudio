@@ -7,13 +7,17 @@ function geographiclib_test
 
   n = 0;
   i = testrand; if i, n=n+1; fprintf('testrand fail: %d\n', i); end
-  i = GeodSolve0; if i, n=n+1; fprintf('GeodSolve0 fail: %d\n', i); end
-  i = GeodSolve1; if i, n=n+1; fprintf('GeodSolve1 fail: %d\n', i); end
-  i = GeodSolve2; if i, n=n+1; fprintf('GeodSolve2 fail: %d\n', i); end
-  i = GeodSolve4; if i, n=n+1; fprintf('GeodSolve4 fail: %d\n', i); end
-  i = GeodSolve5; if i, n=n+1; fprintf('GeodSolve5 fail: %d\n', i); end
-  i = GeodSolve6; if i, n=n+1; fprintf('GeodSolve6 fail: %d\n', i); end
-  i = GeodSolve9; if i, n=n+1; fprintf('GeodSolve9 fail: %d\n', i); end
+  i = GeoConvert0 ; if i, n=n+1; fprintf('GeoConvert0  fail: %d\n', i); end
+  i = GeoConvert8 ; if i, n=n+1; fprintf('GeoConvert8  fail: %d\n', i); end
+  i = GeoConvert16; if i, n=n+1; fprintf('GeoConvert16 fail: %d\n', i); end
+  i = GeoConvert17; if i, n=n+1; fprintf('GeoConvert17 fail: %d\n', i); end
+  i = GeodSolve0 ; if i, n=n+1; fprintf('GeodSolve0  fail: %d\n', i); end
+  i = GeodSolve1 ; if i, n=n+1; fprintf('GeodSolve1  fail: %d\n', i); end
+  i = GeodSolve2 ; if i, n=n+1; fprintf('GeodSolve2  fail: %d\n', i); end
+  i = GeodSolve4 ; if i, n=n+1; fprintf('GeodSolve4  fail: %d\n', i); end
+  i = GeodSolve5 ; if i, n=n+1; fprintf('GeodSolve5  fail: %d\n', i); end
+  i = GeodSolve6 ; if i, n=n+1; fprintf('GeodSolve6  fail: %d\n', i); end
+  i = GeodSolve9 ; if i, n=n+1; fprintf('GeodSolve9  fail: %d\n', i); end
   i = GeodSolve10; if i, n=n+1; fprintf('GeodSolve10 fail: %d\n', i); end
   i = GeodSolve11; if i, n=n+1; fprintf('GeodSolve11 fail: %d\n', i); end
   i = GeodSolve12; if i, n=n+1; fprintf('GeodSolve12 fail: %d\n', i); end
@@ -24,11 +28,24 @@ function geographiclib_test
   i = GeodSolve28; if i, n=n+1; fprintf('GeodSolve28 fail: %d\n', i); end
   i = GeodSolve33; if i, n=n+1; fprintf('GeodSolve33 fail: %d\n', i); end
   i = GeodSolve55; if i, n=n+1; fprintf('GeodSolve55 fail: %d\n', i); end
-  i = Planimeter0; if i, n=n+1; fprintf('Planimeter0 fail: %d\n', i); end
-  i = Planimeter5; if i, n=n+1; fprintf('Planimeter5 fail: %d\n', i); end
-  i = Planimeter6; if i, n=n+1; fprintf('Planimeter6 fail: %d\n', i); end
+  i = GeodSolve59; if i, n=n+1; fprintf('GeodSolve59 fail: %d\n', i); end
+  i = GeodSolve61; if i, n=n+1; fprintf('GeodSolve61 fail: %d\n', i); end
+  i = GeodSolve73; if i, n=n+1; fprintf('GeodSolve73 fail: %d\n', i); end
+  i = GeodSolve74; if i, n=n+1; fprintf('GeodSolve74 fail: %d\n', i); end
+  i = GeodSolve76; if i, n=n+1; fprintf('GeodSolve76 fail: %d\n', i); end
+  i = GeodSolve78; if i, n=n+1; fprintf('GeodSolve78 fail: %d\n', i); end
+  i = Planimeter0 ; if i, n=n+1; fprintf('Planimeter0  fail: %d\n', i); end
+  i = Planimeter5 ; if i, n=n+1; fprintf('Planimeter5  fail: %d\n', i); end
+  i = Planimeter6 ; if i, n=n+1; fprintf('Planimeter6  fail: %d\n', i); end
   i = Planimeter12; if i, n=n+1; fprintf('Planimeter12 fail: %d\n', i); end
   i = Planimeter13; if i, n=n+1; fprintf('Planimeter13 fail: %d\n', i); end
+  i = TransverseMercatorProj1;
+  if i, n=n+1; fprintf('TransverseMercatorProj1 fail: %d\n', i); end
+  i = TransverseMercatorProj3;
+  if i, n=n+1; fprintf('TransverseMercatorProj3 fail: %d\n', i); end
+  i = TransverseMercatorProj5;
+  if i, n=n+1; fprintf('TransverseMercatorProj5 fail: %d\n', i); end
+  i = geodreckon0; if i, n=n+1; fprintf('geodreckon0 fail: %d\n', i); end
   i = gedistance0; if i, n=n+1; fprintf('gedistance0 fail: %d\n', i); end
   i = tranmerc0; if i, n=n+1; fprintf('tranmerc0 fail: %d\n', i); end
   i = mgrs0; if i, n=n+1; fprintf('mgrs0 fail: %d\n', i); end
@@ -175,6 +192,39 @@ function ell = ellipsoid(a, f)
   ell = [a, flat2ecc(f)];
 end
 
+function n = GeoConvert0
+  n = 0;
+  [x, y, zone, isnorth] = utmups_fwd(33.3, 44.4);
+  mgrs = mgrs_fwd(x, y, zone, isnorth, 2);
+  n = n + ~strcmp(mgrs, '38SMB4484');
+end
+
+function n = GeoConvert8
+% Check fix to PolarStereographic es initialization blunder (2015-05-18)
+  n = 0;
+  [x, y, zone, isnorth] = utmups_fwd(86, 0);
+  n = n + ~(zone == 0);
+  n = n + ~(isnorth);
+  n = n + assertEquals(x, 2000000, 0.5e-6);
+  n = n + assertEquals(y, 1555731.570643, 0.5e-6);
+end
+
+function n = GeoConvert16
+% Check MGRS::Forward improved rounding fix, 2015-07-22
+  n = 0;
+  mgrs = mgrs_fwd(444140.6, 3684706.3, 38, true, 8);
+  n = n + ~strcmp(mgrs, '38SMB4414060084706300');
+end
+
+function n = GeoConvert17
+% Check MGRS::Forward digit consistency fix, 2015-07-23
+  n = 0;
+  mgrs = mgrs_fwd(500000, 63.811, 38, true, 8);
+  n = n + ~strcmp(mgrs, '38NNF0000000000063811');
+  mgrs = mgrs_fwd(500000, 63.811, 38, true, 9);
+  n = n + ~strcmp(mgrs, '38NNF000000000000638110');
+end
+
 function n = GeodSolve0
   n = 0;
   [s12, azi1, azi2] = geoddistance(40.6, -73.8, 49.01666667, 2.55);
@@ -222,7 +272,7 @@ function n = GeodSolve5
   n = n + assertEquals(lat2, 90, 0.5e-5);
   if lon2 < 0
     n = n + assertEquals(lon2, -150, 0.5e-5);
-    n = n + assertEquals(azi2, -180, 0.5e-5);
+    n = n + assertEquals(abs(azi2), 180, 0.5e-5);
   else
     n = n + assertEquals(lon2, 30, 0.5e-5);
     n = n + assertEquals(azi2, 0, 0.5e-5);
@@ -345,11 +395,11 @@ function n = GeodSolve33
   n = n + assertEquals(s12, 19980862, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 0, 180);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 20003931, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 1, 180);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 19893357, 0.5);
   ell = ellipsoid(6.4e6, 0);
   [s12, azi1, azi2] = geoddistance(0, 0, 0, 179, ell);
@@ -358,11 +408,11 @@ function n = GeodSolve33
   n = n + assertEquals(s12, 19994492, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 0, 180, ell);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 20106193, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 1, 180, ell);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 19994492, 0.5);
   ell = ellipsoid(6.4e6, -1/300.0);
   [s12, azi1, azi2] = geoddistance(0, 0, 0, 179, ell);
@@ -379,7 +429,7 @@ function n = GeodSolve33
   n = n + assertEquals(s12, 20082617, 0.5);
   [s12, azi1, azi2] = geoddistance(0, 0, 1, 180, ell);
   n = n + assertEquals(azi1, 0.00000, 0.5e-5);
-  n = n + assertEquals(azi2, -180.00000, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180.00000, 0.5e-5);
   n = n + assertEquals(s12, 20027270, 0.5);
   % Check also octave-specific versions of this problem.
   % In 1.44 this returned [-2.0004e+07, -2.0004e+07, 0.0000e+00, 0.0000e+00]
@@ -399,6 +449,71 @@ function n = GeodSolve55
   n = n + assertNaN(azi1);
   n = n + assertNaN(azi2);
   n = n + assertNaN(s12);
+end
+
+function n = GeodSolve59
+% Check for points close with longitudes close to 180 deg apart.
+  n = 0;
+  [s12, azi1, azi2] = geoddistance(5, 0.00000000000001, 10, 180);
+  n = n + assertEquals(azi1, 0.000000000000035, 1.5e-14);
+  n = n + assertEquals(azi2, 179.99999999999996, 1.5e-14);
+  n = n + assertEquals(s12, 18345191.174332713, 2.5e-9);
+end
+
+function n = GeodSolve61
+% Make sure small negative azimuths are west-going
+  n = 0;
+  [lat2, lon2, azi2] = geodreckon(45, 0, 1e7, -0.000000000000000003, 2);
+  n = n + assertEquals(lat2, 45.30632, 0.5e-5);
+  n = n + assertEquals(lon2, -180, 0.5e-5);
+  n = n + assertEquals(abs(azi2), 180, 0.5e-5);
+end
+
+function n = GeodSolve73
+% Check for backwards from the pole bug reported by Anon on 2016-02-13.
+% This only affected the Java implementation.  It was introduced in Java
+% version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+  n = 0;
+  [lat2, lon2, azi2] = geodreckon(90, 10, -1e6, 180);
+  n = n + assertEquals(lat2, 81.04623, 0.5e-5);
+  n = n + assertEquals(lon2, -170, 0.5e-5);
+  n = n + assertEquals(azi2, 0, 0.5e-5);
+end
+
+function n = GeodSolve74
+% Check fix for inaccurate areas, bug introduced in v1.46, fixed
+% 2015-10-16.
+  n = 0;
+  [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
+      geoddistance(54.1589, 15.3872, 54.1591, 15.3877);
+  n = n + assertEquals(azi1, 55.723110355, 5e-9);
+  n = n + assertEquals(azi2, 55.723515675, 5e-9);
+  n = n + assertEquals(s12,  39.527686385, 5e-9);
+  n = n + assertEquals(a12,   0.000355495, 5e-9);
+  n = n + assertEquals(m12,  39.527686385, 5e-9);
+  n = n + assertEquals(M12,   0.999999995, 5e-9);
+  n = n + assertEquals(M21,   0.999999995, 5e-9);
+  n = n + assertEquals(S12, 286698586.30197, 5e-4);
+end
+
+function n = GeodSolve76
+% The distance from Wellington and Salamanca (a classic failure of
+% Vincenty)
+  n = 0;
+  [s12, azi1, azi2] = ...
+      geoddistance(-(41+19/60), 174+49/60, 40+58/60, -(5+30/60));
+  n = n + assertEquals(azi1, 160.39137649664, 0.5e-11);
+  n = n + assertEquals(azi2,  19.50042925176, 0.5e-11);
+  n = n + assertEquals(s12,  19960543.857179, 0.5e-6);
+end
+
+function n = GeodSolve78
+% An example where the NGS calculator fails to converge
+  n = 0;
+  [s12, azi1, azi2] = geoddistance(27.2, 0.0, -27.1, 179.5);
+  n = n + assertEquals(azi1,  45.82468716758, 0.5e-11);
+  n = n + assertEquals(azi2, 134.22776532670, 0.5e-11);
+  n = n + assertEquals(s12,  19974354.765767, 0.5e-6);
 end
 
 function n = Planimeter0
@@ -474,6 +589,65 @@ function n = Planimeter13
   [area, perimeter] = geodarea(points(:,1), points(:,2));
   n = n + assertEquals(perimeter, 1160741, 1);
   n = n + assertEquals(area, 32415230256.0, 1);
+end
+
+function n = TransverseMercatorProj1
+% Test fix to bad meridian convergence at pole with
+% TransverseMercatorExact found 2013-06-26
+  n = 0;
+  [x, y, gam, k] = tranmerc_fwd(0, 0, 90, 75);
+  n = n + assertEquals(x, 0, 0.5e-6);
+  n = n + assertEquals(y, 10001965.72935, 0.5e-4);
+  n = n + assertEquals(gam, 75, 0.5e-12);
+  n = n + assertEquals(k, 1, 0.5e-12);
+end
+
+function n = TransverseMercatorProj3
+% Test fix to bad scale at pole with TransverseMercatorExact
+% found 2013-06-30 (quarter meridian = 10001965.7293127228128889202m)
+  n = 0;
+  [lat, lon, gam, k] = tranmerc_inv(0, 0, 0, 10001965.7293127228);
+  n = n + assertEquals(lat, 90, 1e-11);
+  if abs(lon) < 90
+    n = n + assertEquals(lon, 0, 0.5e-12);
+    n = n + assertEquals(gam, 0, 0.5e-12);
+  else
+    n = n + assertEquals(abs(lon), 180, 0.5e-12);
+    n = n + assertEquals(abs(gam), 180, 0.5e-12);
+  end
+  n = n + assertEquals(k, 1.0, 0.5e-12);
+end
+
+function n = TransverseMercatorProj5
+% Generic tests for transverse Mercator added 2017-04-15 to check use of
+% complex arithmetic to do Clenshaw sum.
+  n = 0;
+  k0 = 0.9996;
+  ell = ellipsoid(6.4e6, 1/150);
+  [x, y, gam, k] = tranmerc_fwd(0, 0, 20, 30, ell);
+  n = n + assertEquals(x * k0, 3266035.453860, 0.5e-6);
+  n = n + assertEquals(y * k0, 2518371.552676, 0.5e-6);
+  n = n + assertEquals(gam, 11.207356502141, 0.5e-12);
+  n = n + assertEquals(k * k0, 1.134138960741, 0.5e-12);
+  [lat, lon, gam, k] = tranmerc_inv(0, 0, 3.3e6 / k0, 2.5e6 / k0, ell);
+  n = n + assertEquals(lat, 19.80370996793, 0.5e-11);
+  n = n + assertEquals(lon, 30.24919702282, 0.5e-11);
+  n = n + assertEquals(gam, 11.214378172893, 0.5e-12);
+  n = n + assertEquals(k * k0, 1.137025775759, 0.5e-12);
+end
+
+function n = geodreckon0
+% Check mixed array size bugs
+  n = 0;
+  % lat1 is an array, azi1 is a scalar: 2015-08-10
+  [~, ~, ~, S12] = geodreckon([10 20], 0, 0, 0);
+  if length(S12) ~= 2, n = n+1; end
+  % scalar args except s12 is empty: 2017-03-26
+  [~, ~, ~, S12] = geodreckon(10, 0, [], 0);
+  if ~isempty(S12), n = n+1; end
+  % atan2dx needs to accommodate scalar + array arguments: 2017-03-27
+  lat2 = geodreckon(3, 4, [1, 2], 90);
+  if length(lat2) ~= 2, n = n+1; end
 end
 
 function n = gedistance0

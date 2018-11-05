@@ -37,7 +37,7 @@ GeodesicLine.Position}, etc., return an object with
   (meters<sup>2</sup>)
 
 The input parameters together with *a12* are always included in the
-object.  Azimuths are reduced to the range [&minus;180&deg;, 180&deg;).
+object.  Azimuths are reduced to the range [&minus;180&deg;, 180&deg;].
 See {@tutorial 1-geodesics} for the definitions of these quantities.
 
 ### <a name="outmask"></a>The *outmask* and *caps* parameters
@@ -48,11 +48,13 @@ length *a12*.  The optional output mask parameter, *outmask*, can be
 used to tailor which quantities to calculate.  In addition, when a
 {@link module:GeographicLib/GeodesicLine.GeodesicLine GeodesicLine} is
 constructed it can be provided with the optional capabilities parameter,
-*caps*.
+*caps*, which specifies what quantities can be returned from the
+resulting object.
 
 Both *outmask* and *caps* are obtained by or'ing together the following
 values
 * Geodesic.NONE, no capabilities, no output;
+* Geodesic.ARC, compute arc length, *a12*; this is always implicitly set;
 * Geodesic.LATITUDE, compute latitude, *lat2*;
 * Geodesic.LONGITUDE, compute longitude, *lon2*;
 * Geodesic.AZIMUTH, compute azimuths, *azi1* and *azi2*;
@@ -69,25 +71,29 @@ Geodesic.DISTANCE_IN is a capability provided to the
 {@link module:GeographicLib/GeodesicLine.GeodesicLine GeodesicLine}
 constructor.  It allows the position on the line to specified in terms
 of distance.  (Without this, the position can only be specified in terms
-of the arc length.)
+of the arc length.)  This only makes sense in the *caps* parameter.
 
 Geodesic.LONG_UNROLL controls the treatment of longitude.  If it is not
 set then the *lon1* and *lon2* fields are both reduced to the range
-[&minus;180&deg;, 180&deg;).  If it is set, then *lon1* is as given in
+[&minus;180&deg;, 180&deg;].  If it is set, then *lon1* is as given in
 the function call and (*lon2* &minus; *lon1*) determines how many times
-and in what sense the geodesic has encircled the ellipsoid.
+and in what sense the geodesic has encircled the ellipsoid.  This only
+makes sense in the *outmask* parameter.
+
+Note that *a12* is always included in the result.
 
 ### <a name="restrict"></a>Restrictions on the parameters
 
-* Latitudes must lie in [&minus;90&deg;, 90&deg;].  Latitudes outside of
+* Latitudes must lie in [&minus;90&deg;, 90&deg;].  Latitudes outside
   this range are replaced by NaNs.
 * The distance *s12* is unrestricted.  This allows geodesics to wrap
   around the ellipsoid.  Such geodesics are no longer shortest paths.
   However they retain the property that they are the straightest curves
   on the surface.
 * Similarly, the spherical arc length *a12* is unrestricted.
-* Azimuths are unrestricted; internally these are exactly reduced to
-  the range [&minus;180&deg;, 180&deg;).
+* Longitudes and azimuths are unrestricted; internally these are exactly
+  reduced to the range [&minus;180&deg;, 180&deg;]; but see also the
+  LONG_UNROLL bit.
 * The equatorial radius *a* and the polar semi-axis *b* must both be
   positive and finite (this implies that &minus;&infin; &lt; *f* &lt; 1).
 * The flattening *f* should satisfy *f* &isin; [&minus;1/50,1/50] in
@@ -96,7 +102,7 @@ and in what sense the geodesic has encircled the ellipsoid.
 
 Reasonably accurate results can be obtained for &minus;0.2 &le; *f* &le;
 0.2.  Here is a table of the approximate maximum error (expressed as a
-distance) for an ellipsoid with the same major radius as the WGS84
+distance) for an ellipsoid with the same equatorial radius as the WGS84
 ellipsoid and different values of the flattening.
 
   | abs(f) | error
@@ -108,4 +114,4 @@ ellipsoid and different values of the flattening.
   | 0.1    | 1.5 mm
   | 0.2    | 300 mm
 
-Here 1 nm (nanometer) = 10<sup>&minus;9</sup> m (*not* nautical mile!)
+Here 1 nm = 1 nanometer = 10<sup>&minus;9</sup> m (*not* 1 nautical mile!)

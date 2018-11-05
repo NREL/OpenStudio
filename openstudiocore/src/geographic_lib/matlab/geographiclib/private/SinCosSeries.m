@@ -9,7 +9,7 @@ function y = SinCosSeries(sinp, sinx, cosx, c)
 %   and cosx.  sinp is a scalar.  sinx, cosx, and y are K x 1 arrays.  c is
 %   a K x N array.
 
-  if isempty(sinx), y = []; return, end
+  if isempty(sinx), y = sinx; return, end
   n = size(c, 2);
   ar = 2 * (cosx - sinx) .* (cosx + sinx);
   y1 = zeros(length(sinx), 1);

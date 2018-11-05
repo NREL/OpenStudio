@@ -89,7 +89,7 @@ index ac79c86..39fb0f0 100644
 +win32ole
 +zlib
 diff --git a/ext/zlib/extconf.rb b/ext/zlib/extconf.rb
-index fd2f168..2a198ab 100644
+index fd2f168..ba63d9b 100644
 --- a/ext/zlib/extconf.rb
 +++ b/ext/zlib/extconf.rb
 @@ -11,7 +11,7 @@
@@ -97,10 +97,37 @@ index fd2f168..2a198ab 100644
  
  
 -if %w'z libz zlib1 zlib zdll zlibwapi'.find {|z| have_library(z, 'deflateReset')} and
-++if %w'zlibstatic zlibstaticd'.find {|z| have_library(z, 'deflateReset', 'zlib.h')} and
++if %w'z zlibstatic zlibstaticd'.find {|z| have_library(z, 'deflateReset', 'zlib.h')} and
      have_header('zlib.h') then
    have_zlib = true
  else
+diff --git a/lib/mkmf.rb b/lib/mkmf.rb
+index 7f53bb4..20ac890 100644
+--- a/lib/mkmf.rb
++++ b/lib/mkmf.rb
+@@ -2708,7 +2708,21 @@ def MAIN_DOES_NOTHING(*refs)
+   ##
+   # A C main function which does no work
+ 
+-  MAIN_DOES_NOTHING = config_string('MAIN_DOES_NOTHING') || "int main(int argc, char **argv)\n{\n  return 0;\n}"
++  MAIN_DOES_NOTHING = config_string('MAIN_DOES_NOTHING') || <<-SRC
++int main(int argc, char **argv)
++{
++  return 0;
++}
++
++int rb_hasFile(const char *t_filename) {
++  return 0;
++}
++
++int rb_require_embedded(const char *t_filename) {
++  return 0;
++}
++SRC
++
+   UNIVERSAL_INTS = config_string('UNIVERSAL_INTS') {|s| Shellwords.shellwords(s)} ||
+     %w[int short long long\ long]
+ 
 diff --git a/lib/rubygems.rb b/lib/rubygems.rb
 index 2762bfc..2280a9e 100644
 --- a/lib/rubygems.rb

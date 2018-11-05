@@ -3,14 +3,14 @@ Compute the series expansions for the ellipsoidal geodesic problem.
 
 Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and
 licensed under the MIT/X11 License.  For more information, see
-http://geographiclib.sourceforge.net/
+https://geographiclib.sourceforge.io/
 
 References:
 
    Charles F. F. Karney,
    Algorithms for geodesics, J. Geodesy 87, 43-55 (2013),
-   https://dx.doi.org/10.1007/s00190-012-0578-z
-   Addenda: http://geographiclib.sf.net/geod-addenda.html
+   https://doi.org/10.1007/s00190-012-0578-z
+   Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 
 There are 4 sections in this file
 
@@ -151,11 +151,11 @@ computeI2(maxpow):=block([sintegrand,sintegrandexp,s,sigma,tau1,k2,eps],
 
 Express
 
-    I3 = integrate( (2-f)/(1+(1-f)*sqrt(1+k2*sin(sigma1)^2)), sigma1, 0, sigma )
+   I3 = integrate( (2-f)/(1+(1-f)*sqrt(1+k2*sin(sigma1)^2)), sigma1, 0, sigma )
 
 as a series
 
-    A3 * ( sigma + sum(C3[l] * sin(2*l*sigma), l, 1, maxpow-1) )
+   A3 * ( sigma + sum(C3[l] * sin(2*l*sigma), l, 1, maxpow-1) )
 
 valid for f and k2 small.  It is convenient to write k2 = 4 * eps / (1 -
 eps)^2 and f = 2*n/(1+n) and expand in eps and n.  This procedure leads

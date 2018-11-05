@@ -1566,7 +1566,7 @@ namespace detail {
       for (const auto& child : spaceType->children()){
         if (child.optionalCast<SpaceLoad>()){
           if (child.cast<SpaceLoad>().isAbsolute()){
-            LOG(Warn, "SpaceType '" << spaceType->name() << "' contains absolute loads, cannot be shared by combined spaces.")
+            LOG(Warn, "SpaceType '" << spaceType->nameString() << "' contains absolute loads, cannot be shared by combined spaces.")
             spaceType.reset();
             break;
           }
@@ -1709,10 +1709,10 @@ namespace detail {
           if (isAirWall && isAdjacentAirWall){
             continue;
           } else if (isAirWall){
-            LOG(Warn, "Interior surface '" << surface.name() << "' is an air wall but adjacent surface '" << adjacentSurface->name() << "' is not, ignoring internal mass.")
+            LOG(Warn, "Interior surface '" << surface.nameString() << "' is an air wall but adjacent surface '" << adjacentSurface->nameString() << "' is not, ignoring internal mass.")
               continue;
           } else if (isAdjacentAirWall){
-            LOG(Warn, "Interior surface '" << adjacentSurface->name() << "' is an air wall but adjacent surface '" << surface.name() << "' is not, ignoring internal mass.")
+            LOG(Warn, "Interior surface '" << adjacentSurface->nameString() << "' is an air wall but adjacent surface '" << surface.nameString() << "' is not, ignoring internal mass.")
             continue;
           }
 
@@ -1790,7 +1790,7 @@ namespace detail {
       designSpecificationOutdoorAir->setOutdoorAirFlowAirChangesperHour(outdoorAirForVolume);
 
       if (anyDesignSpecificationOutdoorAirSchedules){
-        LOG(Warn, "DesignSpecificationOutdoorAir objects merged for ThermalZone '" << this->name() << "', could not preserve outdoor air flow rate fraction schedules");
+        LOG(Warn, "DesignSpecificationOutdoorAir objects merged for ThermalZone '" << this->nameString() << "', could not preserve outdoor air flow rate fraction schedules");
       }
 
       newSpace.setDesignSpecificationOutdoorAir(*designSpecificationOutdoorAir);

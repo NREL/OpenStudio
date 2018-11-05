@@ -36,6 +36,8 @@
 #include "WorkspaceObject.hpp"
 #include "ObjectOrderBase.hpp"
 
+#include <optional>
+
 namespace openstudio {
 
 struct IddObjectType;

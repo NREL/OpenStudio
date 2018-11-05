@@ -139,7 +139,7 @@ void LuminaireDefinitionInspectorView::attach(openstudio::model::LuminaireDefini
   m_nameEdit->bind(
     *m_luminaireDefinition,
     OptionalStringGetter(std::bind(&model::LuminaireDefinition::name, m_luminaireDefinition.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::LuminaireDefinition::setName, m_luminaireDefinition.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::LuminaireDefinition::setName, m_luminaireDefinition.get_ptr(),std::placeholders::_1))
   );
   // m_lightingPowerEdit->bind(luminaireDefinition,"lightingPower",m_isIP);
   m_lightingPowerEdit->bind(

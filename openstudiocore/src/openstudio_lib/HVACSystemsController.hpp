@@ -317,7 +317,7 @@ class SystemAvailabilityVectorController : public ModelObjectVectorController
 
   SystemAvailabilityVectorController();
 
-  virtual ~SystemAvailabilityVectorController() { delete m_reportItemsMutex; }
+  virtual ~SystemAvailabilityVectorController();
 
   boost::optional<model::AirLoopHVAC> airLoopHVAC();
 
@@ -356,7 +356,7 @@ class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
 
   SupplyAirTempScheduleVectorController();
 
-  virtual ~SupplyAirTempScheduleVectorController() { delete m_reportItemsMutex; }
+  virtual ~SupplyAirTempScheduleVectorController();
 
   boost::optional<model::SetpointManagerScheduled> setpointManagerScheduled();
 
@@ -396,7 +396,7 @@ class AvailabilityManagerObjectVectorController : public ModelObjectVectorContro
 
   AvailabilityManagerObjectVectorController();
 
-  virtual ~AvailabilityManagerObjectVectorController()  { delete m_reportItemsMutex; }
+  virtual ~AvailabilityManagerObjectVectorController();
 
   void attach(const model::ModelObject& modelObject) override;
 

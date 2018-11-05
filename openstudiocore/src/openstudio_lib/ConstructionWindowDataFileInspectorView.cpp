@@ -106,7 +106,7 @@ void ConstructionWindowDataFileInspectorView::attach(openstudio::model::WindowDa
   m_nameEdit->bind(
     *m_windowDataFile,
     OptionalStringGetter(std::bind(&model::WindowDataFile::name, m_windowDataFile.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::WindowDataFile::setName, m_windowDataFile.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::WindowDataFile::setName, m_windowDataFile.get_ptr(),std::placeholders::_1))
   );
 
   // m_urlEdit->bind(windowDataFile,"url");

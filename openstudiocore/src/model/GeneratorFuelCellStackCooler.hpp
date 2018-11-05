@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELLSTACKCOOLER_HPP
 #define MODEL_GENERATORFUELCELLSTACKCOOLER_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
 
 namespace openstudio {

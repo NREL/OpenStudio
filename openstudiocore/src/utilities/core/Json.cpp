@@ -30,13 +30,9 @@
 #include "Json.hpp"
 
 #include "Assert.hpp"
-#include "Compare.hpp"
-#include "Logger.hpp"
 #include "PathHelpers.hpp"
 #include "FilesystemHelpers.hpp"
-#include "String.hpp"
 
-#include <jsoncpp/json.h>
 
 #include <OpenStudio.hxx>
 
@@ -172,7 +168,7 @@ VersionString extractOpenStudioVersion(const QVariant& variant) {
   }
   OS_ASSERT(version);
   if (version.get() > VersionString(openStudioVersion())) {
-    LOG_FREE(Warn,"openstudio.Json","Loading json file from version " << version
+    LOG_FREE(Warn,"openstudio.Json","Loading json file from version " << *version
              << " with OpenStudio version " << VersionString(openStudioVersion())
              << ". OpenStudio json files are not designed to be forwards-compatible. "
              << "Unexpected behavior may result.")

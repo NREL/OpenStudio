@@ -27,13 +27,13 @@ function [geodetic, rot] = localcartesianreverse(origin, cartesian, a, f)
 %           h0) by the transpose of M transforms the vector to local
 %           cartesian coordinates at (lat, lon, h).
 %
-%   a = major radius (meters)
+%   a = equatorial radius (meters)
 %   f = flattening (0 means a sphere)
 %   If a and f are omitted, the WGS84 values are used.
 %
 %   See also LOCCART_INV.
 
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2017) <charles@karney.com>.
 
   if (nargin < 3)
     ellipsoid = defaultellipsoid;

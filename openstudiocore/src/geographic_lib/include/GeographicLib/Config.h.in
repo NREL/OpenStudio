@@ -18,8 +18,8 @@
 // Constants.hpp.  In this case, the appropriate value (0 or 1) for
 // GEOGRAPHICLIB_SHARED_LIB must be specified when compiling any program that
 // includes Geographic.hpp.  This is done automatically if GeographicLib and
-// the the user's code were built with cmake version 2.8.11 (which introduced
-// the command target_compile_definitions) or later.
+// the user's code were built with cmake version 2.8.11 (which introduced the
+// command target_compile_definitions) or later.
 #if !defined(GEOGRAPHICLIB_SHARED_LIB)
 #define GEOGRAPHICLIB_SHARED_LIB @GEOGRAPHICLIB_LIB_TYPE_VAL@
 #endif

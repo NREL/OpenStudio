@@ -373,9 +373,9 @@ namespace openstudio {
     m_grid->requestRefreshGrid();
   }
 
-  boost::optional<const model::ModelObject &> ObjectSelector::getObject(const int t_row, const int t_column, const boost::optional<int> &t_subrow)
+  boost::optional<model::ModelObject> ObjectSelector::getObject(const int t_row, const int t_column, const boost::optional<int> &t_subrow)
   {
-    boost::optional<const model::ModelObject &> object;
+    boost::optional<model::ModelObject> object;
 
     for (auto &widgetLoc : m_widgetMap)
     {
@@ -406,7 +406,7 @@ namespace openstudio {
   void ObjectSelector::updateWidgets(const int t_row, const boost::optional<int> &t_subrow, bool t_objectSelected, bool t_objectVisible)
   {
     std::set<std::pair<QWidget *, int>> widgetsToUpdate;
-    bool isSubRow = t_subrow;
+    bool isSubRow = t_subrow.has_value();
 
     // determine if we want to update the parent widget or the child widget
     for( auto &widgetLoc : m_widgetMap ) {
@@ -440,7 +440,7 @@ namespace openstudio {
         bool objectSelected = false;
 
         // If that object is present in m_filteredObjects
-        boost::optional<const model::ModelObject &> _rowLevelObj = getObject(t_row, 0, boost::optional<int>());
+        boost::optional<model::ModelObject> _rowLevelObj = getObject(t_row, 0, boost::optional<int>());
         if( _rowLevelObj && (m_filteredObjects.count(_rowLevelObj.get()) != 0 ) ) {
           // LOG(Debug, "Hidding t_row=" << t_row << " matched as rowLevelObj (=" << _rowLevelObj.get().briefDescription() << ")");
           objectVisible = false;
@@ -957,7 +957,7 @@ namespace openstudio {
       loadName->bind(t_mo,
         OptionalStringGetter(std::bind(&LoadNameConcept::get, loadNameConcept.data(), t_mo, true)),
         // If the concept is read only, pass an empty optional
-        loadNameConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&LoadNameConcept::set, loadNameConcept.data(), t_mo, std::placeholders::_1)),
+        loadNameConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&LoadNameConcept::setReturnBool, loadNameConcept.data(), t_mo, std::placeholders::_1)),
         boost::optional<NoFailAction>(std::bind(&LoadNameConcept::reset, loadNameConcept.data(), t_mo)));
 
       //connect(loadName, OSLoadNamePixmapLineEdit::itemClicked, gridView(), OSGridView::dropZoneItemClicked);
@@ -991,7 +991,7 @@ namespace openstudio {
       nameLineEdit->bind(t_mo,
         OptionalStringGetter(std::bind(&NameLineEditConcept::get, nameLineEditConcept.data(), t_mo, true)),
         // If the concept is read only, pass an empty optional
-        readOnly ? boost::none : boost::optional<StringSetter>(std::bind(&NameLineEditConcept::set, nameLineEditConcept.data(), t_mo, std::placeholders::_1)),
+        readOnly ? boost::none : boost::optional<StringSetter>(std::bind(&NameLineEditConcept::setReturnBool, nameLineEditConcept.data(), t_mo, std::placeholders::_1)),
         boost::optional<NoFailAction>(std::bind(&NameLineEditConcept::reset, nameLineEditConcept.data(), t_mo)));
 
       if (nameLineEditConcept->isInspectable()) {
@@ -1946,7 +1946,7 @@ namespace openstudio {
         // Sub rows present, either in a widget, or in a row
         const DataSource &source = dataSource->source();
         QSharedPointer<BaseConcept> dropZoneConcept = source.dropZoneConcept();
-        boost::optional<const model::ModelObject &> object = this->m_objectSelector->getObject(selectedRow, selectedColumn, selectedSubrow);
+        boost::optional<model::ModelObject> object = this->m_objectSelector->getObject(selectedRow, selectedColumn, selectedSubrow);
         if (object) {
           for (auto modelObject : selectedObjects) {
             // Don't set the chosen object when iterating through the selected objects

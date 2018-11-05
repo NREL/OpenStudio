@@ -32,12 +32,10 @@
 #include "../math/FloatCompare.hpp"
 
 #include <random>
-#include <set>
 
 // this should all be moved to a utilities/core/Random.h
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
-#include <boost/optional.hpp>
 
 namespace openstudio{
 
@@ -272,6 +270,18 @@ namespace openstudio{
   /// generates a Matrix of M*N points randomly drawn between and including a and b.
   Matrix randMatrix(double a, double b, unsigned M, unsigned N)
   {
+    Matrix result(M, N);
+
+    // handle degenerate case
+	  if (equal(a, b)) {
+      for (unsigned i = 0; i < M; ++i) {
+        for (unsigned j = 0; j < N; ++j) {
+          result(i, j) = a;
+        }
+      }
+      return result;
+	  }
+
     // ETH@20100120. What library does this come from? The user should be able to seed the
     // generator independently of this function.
     // seed random number generator
@@ -283,23 +293,9 @@ namespace openstudio{
     // create a generator
     boost::variate_generator<std::minstd_rand&, boost::uniform_real<> > uniformGenerator(generator, dist);
 
-    // ETH@20120723 Started seeing this as DataFixture.Matrix_RandMatrix hanging on Windows 7,
-    // with BoostPro installer.
-    // handle degenerate case
-    boost::optional<double> singlePoint;
-    if (equal(a,b)) {
-      singlePoint = (a + b) / 2.0;
-    }
-
-    Matrix result(M, N);
     for (unsigned i = 0; i < M; ++i){
       for (unsigned j = 0; j < N; ++j){
-        if (singlePoint) {
-          result(i,j) = *singlePoint;
-        }
-        else {
-          result(i,j) = uniformGenerator();
-        }
+        result(i,j) = uniformGenerator();
       }
     }
     return result;

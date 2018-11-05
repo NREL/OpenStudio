@@ -16,7 +16,7 @@ function [lat, lon, h, M] = geocent_inv(X, Y, Z, ellipsoid)
 %   unit vector in geocentric coordinates by the transpose of M transforms
 %   the vector to local cartesian coordinates (east, north, up).
 %
-%   See also GEOCENT_FWD, DEFAULTELLIPSOID.
+%   See also GEOCENT_FWD, DEFAULTELLIPSOID, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 
@@ -33,7 +33,7 @@ function [lat, lon, h, M] = geocent_inv(X, Y, Z, ellipsoid)
   X = X + z; Y = Y + z; Z = Z + z;
 
   a = ellipsoid(1);
-  e2 = ellipsoid(2)^2;
+  e2 = real(ellipsoid(2)^2);
   e2m = 1 - e2;
   e2a = abs(e2);
   e4a = e2^2;
@@ -141,7 +141,6 @@ function [lat, lon, h, M] = geocent_inv(X, Y, Z, ellipsoid)
     cphi(far) = R(far) ./ H;
   end
   lat = atan2dx(sphi, cphi);
-  % Negative signs return lon in [-180, 180).  0- converts -0 to +0.
   lon = atan2dx(slam, clam);
   if nargout > 3
     M = GeoRotation(sphi, cphi, slam, clam);

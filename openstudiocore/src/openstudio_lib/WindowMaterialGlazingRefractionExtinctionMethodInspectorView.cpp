@@ -233,7 +233,7 @@ void WindowMaterialGlazingRefractionExtinctionMethodInspectorView::attach(openst
   m_nameEdit->bind(
     *m_refractionExtinctionGlazing,
     OptionalStringGetter(std::bind(&model::RefractionExtinctionGlazing::name, m_refractionExtinctionGlazing.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::RefractionExtinctionGlazing::setName, m_refractionExtinctionGlazing.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::RefractionExtinctionGlazing::setName, m_refractionExtinctionGlazing.get_ptr(),std::placeholders::_1))
   );
 
   // m_conductivity->bind(refractionExtinctionGlazing,"conductivity",m_isIP);

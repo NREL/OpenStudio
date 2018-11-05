@@ -495,7 +495,7 @@ SpaceLoadInstanceMiniView::SpaceLoadInstanceMiniView(const model::SpaceLoadInsta
   m_nameEdit->bind(
     *opt_spaceLoadInstance,
     OptionalStringGetter(std::bind(&model::SpaceLoadInstance::name, opt_spaceLoadInstance.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::SpaceLoadInstance::setName, opt_spaceLoadInstance.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::SpaceLoadInstance::setName, opt_spaceLoadInstance.get_ptr(),std::placeholders::_1))
   );
 
   if (isDefault){

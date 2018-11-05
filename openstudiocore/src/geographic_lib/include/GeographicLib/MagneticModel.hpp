@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_MAGNETICMODEL_HPP)
@@ -40,18 +40,24 @@ namespace GeographicLib {
    * - General information:
    *   - http://geomag.org/models/index.html
    * - WMM2010:
-   *   - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
-   *   - http://ngdc.noaa.gov/geomag/WMM/data/WMM2010/WMM2010COF.zip
+   *   - https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+   *   - https://ngdc.noaa.gov/geomag/WMM/data/WMM2010/WMM2010COF.zip
    * - WMM2015:
-   *   - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
-   *   - http://ngdc.noaa.gov/geomag/WMM/data/WMM2015/WMM2015COF.zip
+   *   - https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+   *   - https://ngdc.noaa.gov/geomag/WMM/data/WMM2015/WMM2015COF.zip
    * - IGRF11:
-   *   - http://ngdc.noaa.gov/IAGA/vmod/igrf.html
-   *   - http://ngdc.noaa.gov/IAGA/vmod/igrf11coeffs.txt
-   *   - http://ngdc.noaa.gov/IAGA/vmod/geomag70_linux.tar.gz
+   *   - https://ngdc.noaa.gov/IAGA/vmod/igrf.html
+   *   - https://ngdc.noaa.gov/IAGA/vmod/igrf11coeffs.txt
+   *   - https://ngdc.noaa.gov/IAGA/vmod/geomag70_linux.tar.gz
    * - EMM2010:
-   *   - http://ngdc.noaa.gov/geomag/EMM/index.html
-   *   - http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip
+   *   - https://ngdc.noaa.gov/geomag/EMM/index.html
+   *   - https://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip
+   * - EMM2015:
+   *   - https://ngdc.noaa.gov/geomag/EMM/index.html
+   *   - https://www.ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2015_Sph_Linux.zip
+   * - EMM2017:
+   *   - https://ngdc.noaa.gov/geomag/EMM/index.html
+   *   - https://www.ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2017_Sph_Linux.zip
    *
    * Example of use:
    * \include example-MagneticModel.cpp
@@ -126,7 +132,8 @@ namespace GeographicLib {
      * @param[in] lon longitude of the point (degrees).
      * @param[in] h the height of the point above the ellipsoid (meters).
      * @param[out] Bx the easterly component of the magnetic field (nanotesla).
-     * @param[out] By the northerly component of the magnetic field (nanotesla).
+     * @param[out] By the northerly component of the magnetic field
+     *   (nanotesla).
      * @param[out] Bz the vertical (up) component of the magnetic field
      *   (nanotesla).
      **********************************************************************/
@@ -145,7 +152,8 @@ namespace GeographicLib {
      * @param[in] lon longitude of the point (degrees).
      * @param[in] h the height of the point above the ellipsoid (meters).
      * @param[out] Bx the easterly component of the magnetic field (nanotesla).
-     * @param[out] By the northerly component of the magnetic field (nanotesla).
+     * @param[out] By the northerly component of the magnetic field
+     *   (nanotesla).
      * @param[out] Bz the vertical (up) component of the magnetic field
      *   (nanotesla).
      * @param[out] Bxt the rate of change of \e Bx (nT/yr).

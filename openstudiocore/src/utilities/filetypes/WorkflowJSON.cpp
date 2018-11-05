@@ -30,10 +30,7 @@
 #include "WorkflowJSON.hpp"
 #include "WorkflowJSON_Impl.hpp"
 
-#include "WorkflowStep.hpp"
 #include "WorkflowStep_Impl.hpp"
-#include "WorkflowStepResult.hpp"
-#include "RunOptions.hpp"
 #include "RunOptions_Impl.hpp"
 
 #include "../core/Assert.hpp"
@@ -41,10 +38,7 @@
 #include "../core/Checksum.hpp"
 #include "../time/DateTime.hpp"
 
-#include <boost/optional.hpp>
 
-#include <string>
-#include <fstream>
 
 namespace openstudio{
 namespace detail{
@@ -85,7 +79,8 @@ namespace detail{
       openstudio::path p = toPath(s);
       if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
         // open file
-        std::ifstream ifs(openstudio::toString(p));
+        std::ifstream ifs(openstudio::toSystemFilename(p));
+
         m_value.clear();
         parsingSuccessful = reader.parse(ifs, m_value);
       }
@@ -106,7 +101,7 @@ namespace detail{
     }
 
     // open file
-    std::ifstream ifs(openstudio::toString(p));
+    std::ifstream ifs(openstudio::toSystemFilename(p));
 
     Json::Reader reader;
     bool parsingSuccessful = reader.parse(ifs, m_value);
@@ -203,7 +198,8 @@ namespace detail{
     }
 
     if (makeParentFolder(*p)) {
-      std::ofstream outFile(openstudio::toString(*p));
+      std::ofstream outFile(openstudio::toSystemFilename(*p));
+
       if (outFile) {
         try {
           outFile << string();
@@ -274,7 +270,7 @@ namespace detail{
     unsigned index = currentStepIndex();
     m_value["current_step"] = index + 1;
     onUpdate();
-    return currentStep();
+    return currentStep().is_initialized();
   }
 
   boost::optional<std::string> WorkflowJSON_Impl::completedStatus() const

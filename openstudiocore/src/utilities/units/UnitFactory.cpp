@@ -754,7 +754,7 @@ std::string replaceUnitString(const std::string& text,const std::string& newUnit
 
 bool isUnitString(const std::string& unitString) {
   OptionalUnit unit = createUnit(unitString);
-  return unit;
+  return unit.has_value();
 }
 
 Unit createDimensionlessUnit(UnitSystem system) {

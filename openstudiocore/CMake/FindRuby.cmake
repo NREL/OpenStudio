@@ -1,3 +1,6 @@
+# Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
+# file Copyright.txt or https://cmake.org/licensing for details.
+
 #.rst:
 # FindRuby
 # --------
@@ -30,20 +33,6 @@
 # ``RUBY_INCLUDE_PATH``
 #   same as RUBY_INCLUDE_DIRS, only provided for compatibility reasons, don't use it
 
-#=============================================================================
-# Copyright 2004-2009 Kitware, Inc.
-# Copyright 2008-2009 Alexander Neundorf <neundorf@kde.org>
-#
-# Distributed under the OSI-approved BSD License (the "License");
-# see accompanying file Copyright.txt for details.
-#
-# This software is distributed WITHOUT ANY WARRANTY; without even the
-# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the License for more information.
-#=============================================================================
-# (To distribute this file outside of CMake, substitute the full
-#  License text for the above reference.)
-
 #   RUBY_ARCHDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"archdir"@:>@)'`
 #   RUBY_SITEARCHDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"sitearchdir"@:>@)'`
 #   RUBY_SITEDIR=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"sitelibdir"@:>@)'`
@@ -51,7 +40,7 @@
 #   RUBY_LIBRUBYARG=`$RUBY -r rbconfig -e 'printf("%s",Config::CONFIG@<:@"LIBRUBYARG_SHARED"@:>@)'`
 
 # uncomment the following line to get debug output for this file
-# set(_RUBY_DEBUG_OUTPUT TRUE)
+ set(_RUBY_DEBUG_OUTPUT TRUE)
 
 # Determine the list of possible names of the ruby executable depending
 # on which version of ruby is required
@@ -70,6 +59,10 @@ else()
 endif()
 
 if(NOT Ruby_FIND_VERSION_EXACT)
+  list(APPEND _RUBY_POSSIBLE_EXECUTABLE_NAMES ruby2.5 ruby25)
+  list(APPEND _RUBY_POSSIBLE_EXECUTABLE_NAMES ruby2.4 ruby24)
+  list(APPEND _RUBY_POSSIBLE_EXECUTABLE_NAMES ruby2.3 ruby23)
+  list(APPEND _RUBY_POSSIBLE_EXECUTABLE_NAMES ruby2.2 ruby22)
   list(APPEND _RUBY_POSSIBLE_EXECUTABLE_NAMES ruby2.1 ruby21)
   list(APPEND _RUBY_POSSIBLE_EXECUTABLE_NAMES ruby2.0 ruby20)
   list(APPEND _RUBY_POSSIBLE_EXECUTABLE_NAMES ruby1.9 ruby19)
@@ -167,19 +160,39 @@ if(RUBY_EXECUTABLE AND NOT RUBY_VERSION_MAJOR)
    set(RUBY_VERSION_MINOR 8)
    set(RUBY_VERSION_PATCH 0)
    # check whether we found 1.9.x
-   if(${RUBY_EXECUTABLE} MATCHES "ruby1.?9")
+   if(${RUBY_EXECUTABLE} MATCHES "ruby1\\.?9")
       set(RUBY_VERSION_MAJOR 1)
       set(RUBY_VERSION_MINOR 9)
    endif()
    # check whether we found 2.0.x
-   if(${RUBY_EXECUTABLE} MATCHES "ruby2.?0")
+   if(${RUBY_EXECUTABLE} MATCHES "ruby2\\.?0")
       set(RUBY_VERSION_MAJOR 2)
       set(RUBY_VERSION_MINOR 0)
    endif()
    # check whether we found 2.1.x
-   if(${RUBY_EXECUTABLE} MATCHES "ruby2.?1")
+   if(${RUBY_EXECUTABLE} MATCHES "ruby2\\.?1")
       set(RUBY_VERSION_MAJOR 2)
       set(RUBY_VERSION_MINOR 1)
+   endif()
+   # check whether we found 2.2.x
+   if(${RUBY_EXECUTABLE} MATCHES "ruby2\\.?2")
+      set(RUBY_VERSION_MAJOR 2)
+      set(RUBY_VERSION_MINOR 2)
+   endif()
+   # check whether we found 2.3.x
+   if(${RUBY_EXECUTABLE} MATCHES "ruby2\\.?3")
+      set(RUBY_VERSION_MAJOR 2)
+      set(RUBY_VERSION_MINOR 3)
+   endif()
+   # check whether we found 2.4.x
+   if(${RUBY_EXECUTABLE} MATCHES "ruby2\\.?4")
+      set(RUBY_VERSION_MAJOR 2)
+      set(RUBY_VERSION_MINOR 4)
+   endif()
+   # check whether we found 2.5.x
+   if(${RUBY_EXECUTABLE} MATCHES "ruby2\\.?5")
+      set(RUBY_VERSION_MAJOR 2)
+      set(RUBY_VERSION_MINOR 5)
    endif()
 endif()
 
@@ -218,25 +231,64 @@ set(_RUBY_POSSIBLE_LIB_NAMES ruby ruby-static ruby${_RUBY_VERSION_SHORT} ruby${_
 
 if(WIN32)
    set( _RUBY_MSVC_RUNTIME "" )
-   if( MSVC60 )
+   if( MSVC_VERSION EQUAL 1200 )
      set( _RUBY_MSVC_RUNTIME "60" )
    endif()
-   if( MSVC70 )
+   if( MSVC_VERSION EQUAL 1300 )
      set( _RUBY_MSVC_RUNTIME "70" )
    endif()
-   if( MSVC71 )
+   if( MSVC_VERSION EQUAL 1310 )
      set( _RUBY_MSVC_RUNTIME "71" )
    endif()
-   if( MSVC80 )
+   if( MSVC_VERSION EQUAL 1400 )
      set( _RUBY_MSVC_RUNTIME "80" )
    endif()
-   if( MSVC90 )
+   if( MSVC_VERSION EQUAL 1500 )
      set( _RUBY_MSVC_RUNTIME "90" )
    endif()
-   if( MSVC12 )
+   if( MSVC_VERSION EQUAL 1600 )
+     set( _RUBY_MSVC_RUNTIME "100" )
+   endif()
+   if( MSVC_VERSION EQUAL 1700 )
+     set( _RUBY_MSVC_RUNTIME "110" )
+   endif()
+   if( MSVC_VERSION EQUAL 1800 )
      set( _RUBY_MSVC_RUNTIME "120" )
    endif()
-
+   if( MSVC_VERSION EQUAL 1900 )
+     set( _RUBY_MSVC_RUNTIME "140" )
+   endif()
+   if( MSVC_VERSION EQUAL 1910 )
+     set( _RUBY_MSVC_RUNTIME "150" )
+   endif()
+   if( MSVC_VERSION EQUAL 1911 )
+     set( _RUBY_MSVC_RUNTIME "150" )
+   endif()
+   if( MSVC_VERSION EQUAL 1912 )
+     set( _RUBY_MSVC_RUNTIME "150" )
+   endif()
+   if( MSVC_VERSION EQUAL 1913 )
+     set( _RUBY_MSVC_RUNTIME "150" )
+   endif()
+   if( MSVC_VERSION EQUAL 1914 )
+     set( _RUBY_MSVC_RUNTIME "150" )
+   endif()
+   if( MSVC_VERSION EQUAL 1915 )
+     set( _RUBY_MSVC_RUNTIME "150" )
+   endif()
+   if( MSVC_VERSION EQUAL 1916 )
+     set( _RUBY_MSVC_RUNTIME "150" )
+   endif()
+   if( MSVC_VERSION EQUAL 1917 )
+     set( _RUBY_MSVC_RUNTIME "150" )
+   endif()
+   if( MSVC_VERSION EQUAL 1918 )
+     set( _RUBY_MSVC_RUNTIME "150" )
+   endif()
+   if( MSVC_VERSION EQUAL 1919 )
+     set( _RUBY_MSVC_RUNTIME "150" )
+   endif()
+   
    set(_RUBY_ARCH_PREFIX "")
    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
      set(_RUBY_ARCH_PREFIX "x64-")

@@ -252,13 +252,13 @@ namespace isomodel {
 
   // trim from front
   static inline std::string &ltrim(std::string &s) {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int c) {return !std::isspace(c); } ));
     return s;
   }
 
   // trim from back
   static inline std::string &rtrim(std::string &s) {
-    s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](int c) {return !std::isspace(c); }).base(), s.end());
     return s;
   }
 
@@ -575,7 +575,7 @@ namespace isomodel {
   }
   void UserModel::loadBuilding(const openstudio::path &buildingFile){
     string line;
-    ifstream inputFile(openstudio::toString(buildingFile).c_str());
+    ifstream inputFile(openstudio::toSystemFilename(buildingFile));
     if (inputFile.is_open()) {
       while (inputFile.good()) {
         getline (inputFile,line);
@@ -663,7 +663,7 @@ namespace isomodel {
   void UserModel::save(const openstudio::path &t_buildingFile) const
   {
 
-    std::ofstream ofile(openstudio::toString(t_buildingFile).c_str());
+    std::ofstream ofile(openstudio::toSystemFilename(t_buildingFile));
 
     ofile << "terrainClass = " << _terrainClass << std::endl;
     ofile << "floorArea = " << _floorArea << std::endl;

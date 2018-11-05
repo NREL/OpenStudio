@@ -28,9 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "Date.hpp"
-#include "../core/Exception.hpp"
 
-#include <sstream>
 
 using namespace std;
 using namespace boost;
@@ -379,7 +377,7 @@ namespace openstudio{
   }
 
   /// base year
-  optional<int> Date::baseYear() const
+  boost::optional<int> Date::baseYear() const
   {
     return m_baseYear;
   }

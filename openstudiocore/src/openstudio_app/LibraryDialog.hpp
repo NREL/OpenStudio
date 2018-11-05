@@ -27,6 +27,9 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#ifndef OPENSTUDIO_LIBRARYDIALOG_HPP
+#define OPENSTUDIO_LIBRARYDIALOG_HPP
+
 #include <QDialog>
 #include <vector>
 #include "../utilities/core/Filesystem.hpp"
@@ -60,4 +63,6 @@ class LibraryDialog: public QDialog
 };
 
 } // openstudio
+
+#endif // OPENSTUDIO_LIBRARYDIALOG_HPP
 

@@ -105,7 +105,7 @@ namespace detail {
   }
 
   bool ElectricLoadCenterInverterPVWatts_Impl::setThermalZone(const ThermalZone& thermalZone) {
-    return boost::none;
+    return false;
   }
 
   void ElectricLoadCenterInverterPVWatts_Impl::resetThermalZone() {

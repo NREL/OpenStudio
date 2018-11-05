@@ -30,27 +30,12 @@
 #include <gtest/gtest.h>
 #include "IddFixture.hpp"
 
-#include "../IddFieldProperties.hpp"
 #include "../IddKey.hpp"
 
-#include "../../time/Time.hpp"
-
-
-#include "../../core/String.hpp"
 #include "../../core/StringStreamLogSink.hpp"
-#include "../../core/Path.hpp"
 #include "../../core/Containers.hpp"
-#include "../../core/Compare.hpp"
 
 #include <OpenStudio.hxx>
-#include <resources.hxx>
-
-#include <boost/algorithm/string.hpp>
-
-
-#include <utilities/idd/IddEnums.hxx>
-
-#include <algorithm>
 
 using namespace std;
 using namespace boost;

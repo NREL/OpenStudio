@@ -32,10 +32,8 @@
 #include "Assert.hpp"
 #include "Checksum.hpp"
 #include "PathHelpers.hpp"
-#include "../time/DateTime.hpp"
 #include "../core/FilesystemHelpers.hpp"
 
-#include <QDateTime>
 
 namespace openstudio {
 

@@ -6,7 +6,7 @@
  * GeographicLib is Copyright (c) Charles Karney (2010-2012)
  * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 #pragma once
 
@@ -28,7 +28,7 @@ namespace NETGeographicLib
    * The conversion from geographic to geocentric coordinates is
    * straightforward.  For the reverse transformation we use
    * - H. Vermeille,
-   *   <a href="https://dx.doi.org/10.1007/s00190-002-0273-6"> Direct
+   *   <a href="https://doi.org/10.1007/s00190-002-0273-6"> Direct
    *   transformation from geocentric coordinates to geodetic coordinates</a>,
    *   J. Geodesy 76, 451--454 (2002).
    * .
@@ -36,11 +36,11 @@ namespace NETGeographicLib
    * results for all finite inputs (even if \e h is infinite).  The changes are
    * described in Appendix B of
    * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
+   *   <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
    *   on an ellipsoid of revolution</a>,
    *   Feb. 2011;
    *   preprint
-   *   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
+   *   <a href="https://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
    * .
    * See \ref geocentric for more information.
    *

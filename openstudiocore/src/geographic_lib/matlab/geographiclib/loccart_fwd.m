@@ -20,7 +20,7 @@ function [x, y, z, M] = loccart_fwd(lat0, lon0, h0, lat, lon, h, ellipsoid)
 %   transforms the vector to local cartesian coordinates at (lat0, lon0,
 %   h0).
 %
-%   See also LOCCART_INV, DEFAULTELLIPSOID.
+%   See also LOCCART_INV, DEFAULTELLIPSOID, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 

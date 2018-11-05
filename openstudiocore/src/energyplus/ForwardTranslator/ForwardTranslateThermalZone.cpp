@@ -329,11 +329,6 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
       boost::optional<DaylightingControl> secondaryDaylightingControl = modelObject.secondaryDaylightingControl();
 
-      int numPoints = 1;
-      if (secondaryDaylightingControl){
-        numPoints = 2;
-      }
-
       IdfObject daylightingControlObject(openstudio::IddObjectType::Daylighting_Controls);
       // Name it like the Zone name + " DaylightingControls"
       daylightingControlObject.setName(modelObject.name().get() + " DaylightingControls");

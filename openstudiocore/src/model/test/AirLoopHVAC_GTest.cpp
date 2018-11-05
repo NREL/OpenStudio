@@ -34,7 +34,6 @@
 #include "../AirLoopHVACSupplyPlenum.hpp"
 #include "../AirLoopHVACReturnPlenum.hpp"
 
-#include "../CoilCoolingWater.hpp"
 #include "../ControllerWaterCoil.hpp"
 #include "../AirLoopHVACOutdoorAirSystem.hpp"
 #include "../ControllerOutdoorAir.hpp"
@@ -69,8 +68,6 @@
 #include "../AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
 #include "../AirTerminalSingleDuctConstantVolumeReheat.hpp"
 #include "../AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp"
-
-#include "../FanConstantVolume.hpp"
 
 #include "../ThermalZone.hpp"
 #include "../ScheduleCompact.hpp"

@@ -3,7 +3,7 @@ Compute series approximations for Transverse Mercator Projection
 
 Copyright (c) Charles Karney (2009-2010) <charles@karney.com> and
 licensed under the MIT/X11 License.  For more information, see
-http://geographiclib.sourceforge.net/
+https://geographiclib.sourceforge.io/
 
 Reference:
 
@@ -11,8 +11,8 @@ Reference:
    Transverse Mercator with an accuracy of a few nanometers,
    J. Geodesy 85(8), 475-485 (Aug. 2011).
    DOI 10.1007/s00190-011-0445-3
-   preprint http://arxiv.org/abs/1002.1417
-   resource page http://geographiclib.sf.net/tm.html
+   preprint https://arxiv.org/abs/1002.1417
+   resource page https://geographiclib.sourceforge.io/tm.html
 
 Compute coefficient for forward and inverse trigonometric series for
 conversion from conformal latitude to rectifying latitude.  This prints

@@ -189,7 +189,7 @@ void PeopleDefinitionInspectorView::attach(openstudio::model::PeopleDefinition& 
   m_peopleDefinition = peopleDefinition;
   m_nameEdit->bind(*m_peopleDefinition,
                    OptionalStringGetter(std::bind(&model::PeopleDefinition::name,m_peopleDefinition.get_ptr(),true)),
-                   boost::optional<StringSetter>(std::bind(&model::PeopleDefinition::setName,m_peopleDefinition.get_ptr(),std::placeholders::_1)));
+                   boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::PeopleDefinition::setName,m_peopleDefinition.get_ptr(),std::placeholders::_1)));
 
   // bind to PeopleDefinition methods
   m_numberofPeopleEdit->bind(

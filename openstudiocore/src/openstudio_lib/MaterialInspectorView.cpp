@@ -239,7 +239,7 @@ void MaterialInspectorView::attach(openstudio::model::StandardOpaqueMaterial & s
   m_nameEdit->bind(
     *m_standardOpaqueMaterial,
     OptionalStringGetter(std::bind(&model::StandardOpaqueMaterial::name, m_standardOpaqueMaterial.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::StandardOpaqueMaterial::setName, m_standardOpaqueMaterial.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::StandardOpaqueMaterial::setName, m_standardOpaqueMaterial.get_ptr(),std::placeholders::_1))
   );
 
   // m_roughness->bind(standardOpaqueMaterial,"roughness");

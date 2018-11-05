@@ -48,7 +48,9 @@ SYSMANPAGES = geographiclib-get-geoids.8 \
 
 POD2MAN = pod2man --center="GeographicLib Utilities" \
 	--release="$(PACKAGE_STRING)"
-PODFIX = sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%' -e 's%<code>\([^<>]*\)(\(.\))</code>%<a href="\1.\2.html">&</a>%'g
+PODFIX = sed \
+	-e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%' \
+	-e 's%<code>\([^<>]*\)(\(.\))</code>%<a href="\1.\2.html">&</a>%'g
 man1_MANS = $(MANPAGES)
 man8_MANS = $(SYSMANPAGES)
 

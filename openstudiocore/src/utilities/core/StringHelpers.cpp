@@ -28,16 +28,11 @@
 ***********************************************************************************************************************/
 
 #include "Assert.hpp"
-#include "Optional.hpp"
 #include "StringHelpers.hpp"
 #include "../math/FloatCompare.hpp"
 
-#include <boost/regex.hpp>
-#include <boost/algorithm/string.hpp>
 
-#include <cmath>
 #include <iomanip>
-#include <sstream>
 
 namespace openstudio {
 

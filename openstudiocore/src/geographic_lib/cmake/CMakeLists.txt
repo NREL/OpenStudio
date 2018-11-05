@@ -13,8 +13,13 @@
 #  "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config.cmake" @ONLY)
 #configure_file (project-config-version.cmake.in
 #  "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config-version.cmake" @ONLY)
-#export (TARGETS ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES} #${TOOLS}
+#export (TARGETS
+#  ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES} ${TOOLS}
 #  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-targets.cmake")
+#export (TARGETS
+#  ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES} ${TOOLS}
+#  NAMESPACE ${PROJECT_NAME}::
+#  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-namespace-targets.cmake")
 #
 ## geographiclib-config.cmake for the install tree.  It's installed in
 ## ${INSTALL_CMAKE_DIR} and @PROJECT_ROOT_DIR@ is the relative
@@ -49,9 +54,27 @@
 #install (EXPORT targets
 #  FILE ${PROJECT_NAME_LOWER}-targets.cmake
 #  DESTINATION "${INSTALL_CMAKE_DIR}")
+#install (EXPORT targets
+#  NAMESPACE ${PROJECT_NAME}::
+#  FILE ${PROJECT_NAME_LOWER}-namespace-targets.cmake
+#  DESTINATION "${INSTALL_CMAKE_DIR}")
 #
 #if (MSVC AND PACKAGE_DEBUG_LIBS)
 #  install (FILES
 #    "${PROJECT_BINARY_DIR}/cmake/CMakeFiles/Export/cmake/${PROJECT_NAME_LOWER}-targets-debug.cmake"
 #    DESTINATION "${INSTALL_CMAKE_DIR}" CONFIGURATIONS Release)
 #endif ()
+#
+## Support for pkgconfig/geographiclib.pc
+#set (prefix ${CMAKE_INSTALL_PREFIX})
+#set (exec_prefix "\${prefix}")
+#set (libdir "\${exec_prefix}/lib${LIB_SUFFIX}")
+#set (includedir "\${prefix}/include")
+#set (bindir "\${exec_prefix}/bin")
+#set (PACKAGE_NAME "${PROJECT_NAME}")
+#set (PACKAGE_VERSION "${PROJECT_VERSION}")
+#
+#configure_file (project.pc.in geographiclib.pc @ONLY)
+#install (FILES
+#  "${CMAKE_CURRENT_BINARY_DIR}/geographiclib.pc"
+#  DESTINATION "lib${LIB_SUFFIX}/pkgconfig")

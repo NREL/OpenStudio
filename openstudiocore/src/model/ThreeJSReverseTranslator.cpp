@@ -90,8 +90,6 @@
 #include "Space_Impl.hpp"
 #include "DefaultConstructionSet.hpp"
 #include "DefaultConstructionSet_Impl.hpp"
-#include "ShadingSurfaceGroup.hpp"
-#include "InteriorPartitionSurfaceGroup.hpp"
 #include "DaylightingControl.hpp"
 #include "AirWallMaterial.hpp"
 
@@ -590,7 +588,7 @@ namespace openstudio
               bool test;
 
               Surface surface(face, model);
-              test = surface.setName(name);
+              test = surface.setName(name).has_value();
               if (!test){
                 LOG(Warn, "Could not set Surface name '" << name << "' for Surface '" << surface.nameString() << "'");
               }
@@ -646,7 +644,7 @@ namespace openstudio
               bool test;
 
               SubSurface subSurface(face, model);
-              test = subSurface.setName(name);
+              test = subSurface.setName(name).has_value();
               if (!test){
                 LOG(Warn, "Could not set SubSurface name '" << name << "' for SubSurface '" << subSurface.nameString() << "'");
               }
@@ -738,7 +736,7 @@ namespace openstudio
               bool test;
 
               ShadingSurface shadingSurface(face, model);
-              test = shadingSurface.setName(name);
+              test = shadingSurface.setName(name).has_value();
               if (!test){
                 LOG(Warn, "Could not set ShadingSurface name '" << name << "' for ShadingSurface '" << shadingSurface.nameString() << "'");
               }

@@ -2,15 +2,14 @@
  * \file GeoConvert.cpp
  * \brief Command line utility for geographic coordinate conversions
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  *
  * See the <a href="GeoConvert.1.html">man page</a> for usage information.
  **********************************************************************/
 
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -26,7 +25,7 @@
 
 #include "GeoConvert.usage"
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
@@ -38,7 +37,7 @@ int main(int argc, char* argv[]) {
     bool centerp = true, longfirst = false;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
-    bool sethemisphere = false, northp = false, abbrev = true;
+    bool sethemisphere = false, northp = false, abbrev = true, latch = false;
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -79,18 +78,29 @@ int main(int argc, char* argv[]) {
           }
           sethemisphere = false;
         }
+        latch = false;
       } else if (arg == "-s") {
         zone = UTMUPS::STANDARD;
         sethemisphere = false;
+        latch = false;
+      } else if (arg == "-S") {
+        zone = UTMUPS::STANDARD;
+        sethemisphere = false;
+        latch = true;
       } else if (arg == "-t") {
         zone = UTMUPS::UTM;
         sethemisphere = false;
+        latch = false;
+      } else if (arg == "-T") {
+        zone = UTMUPS::UTM;
+        sethemisphere = false;
+        latch = true;
       } else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
-          prec = Utility::num<int>(std::string(argv[m]));
+          prec = Utility::val<int>(std::string(argv[m]));
         }
         catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
@@ -206,6 +216,13 @@ int main(int argc, char* argv[]) {
             os = Utility::str(gamma, prec1 + 5) + " "
               + Utility::str(k, prec1 + 7);
           }
+        }
+        if (latch &&
+            zone < UTMUPS::MINZONE && p.AltZone() >= UTMUPS::MINZONE) {
+          zone = p.AltZone();
+          northp = p.Northp();
+          sethemisphere = true;
+          latch = false;
         }
       }
       catch (const std::exception& e) {

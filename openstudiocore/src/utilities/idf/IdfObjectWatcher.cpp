@@ -29,7 +29,6 @@
 
 #include "IdfObjectWatcher.hpp"
 #include "IdfObject_Impl.hpp"
-#include "../core/Assert.hpp"
 
 namespace openstudio {
 

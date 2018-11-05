@@ -603,7 +603,7 @@ namespace detail {
   {
     bool result = false;
     if (name) {
-      result = this->setName(*name);
+      result = this->setName(*name).has_value();
     }
     return result;
   }

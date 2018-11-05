@@ -35,16 +35,13 @@
 
 #include "../core/Assert.hpp"
 #include "../core/PathHelpers.hpp"
-#include "../core/String.hpp"
 
-#include <boost/algorithm/string.hpp>
 #include <boost/iostreams/filter/newline.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 
 
 
 
-#include <sstream>
 
 namespace openstudio{
 

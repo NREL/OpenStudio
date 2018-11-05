@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELLAUXILIARYHEATER_HPP
 #define MODEL_GENERATORFUELCELLAUXILIARYHEATER_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
 namespace openstudio {
@@ -90,7 +90,7 @@ class MODEL_API GeneratorFuelCellAuxiliaryHeater : public ModelObject {
   double minimumHeatingCapacityinKmolperSecond() const;
 
   // Return optional parent generator
-  GeneratorFuelCell fuelCell() const;
+  boost::optional<GeneratorFuelCell> fuelCell() const;
 
   //@}
   /** @name Setters */

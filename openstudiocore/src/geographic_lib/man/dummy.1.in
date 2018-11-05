@@ -3,7 +3,7 @@
 @TOOL@ \-\- a GeographicLib utility
 .SH DESCRIPTION
 .B @TOOL@
-is part of GeographicLib, <http://geographiclib.sf.net>.  For
+is part of GeographicLib, <https://geographiclib.sourceforge.io>.  For
 documentation, see
 .PP
-    http://geographiclib.sf.net/@PROJECT_VERSION@/@TOOL@.1.html
+    https://geographiclib.sourceforge.io/@PROJECT_VERSION@/@TOOL@.1.html

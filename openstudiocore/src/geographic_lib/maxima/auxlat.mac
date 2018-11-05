@@ -1,9 +1,9 @@
 /*
 Compute series expansions for the auxiliary latitudes.
 
-Copyright (c) Charles Karney (2014) <charles@karney.com> and licensed
-under the MIT/X11 License.  For more information, see
-http://geographiclib.sourceforge.net/
+Copyright (c) Charles Karney (2014-2017) <charles@karney.com> and
+licensed under the MIT/X11 License.  For more information, see
+https://geographiclib.sourceforge.io/
 
 This maxima program compute the coefficients for trigonometric series
 relating the six latitudes
@@ -19,7 +19,7 @@ All 30 inter-relations are found.  The coefficients are expressed as
 Taylor series in the third flattening n.  This generates the series
 given on the page
 
-  http://geographiclib.sourceforge.net/html/auxlat.html
+  https://geographiclib.sourceforge.io/html/auxlat.html
 
 Instructions:
 
@@ -30,6 +30,14 @@ Instructions:
      dispall()$
      closefile()$
 
+Timings:
+maxpow time(s)
+   6     13
+   8     41
+  10    114
+  12    293
+  14    708
+  16   1629
 */
 
 /*
@@ -51,10 +59,13 @@ reverta(expr,var1,var2,eps,pow):=block([tauacc:1,sigacc:0,dsig],
   var2+sigacc)$
 
 /* beta in terms of phi */
-beta_phi:taylor(atan((1-n)/(1+n)*tan(phi)),n,0,maxpow)$
-beta_phi:subst([atan(tan(phi))=phi,tan(phi)=sin(phi)/cos(phi)],
-  ratdisrep(beta_phi))$
-beta_phi:trigreduce(ratsimp(beta_phi))$
+beta_phi:phi+sum((-n)^j/j*sin(2*j*phi),j,1,maxpow)$
+/* Alt:
+  beta_phi:taylor(atan((1-n)/(1+n)*tan(phi)),n,0,maxpow)$
+  beta_phi:subst([atan(tan(phi))=phi,tan(phi)=sin(phi)/cos(phi)],
+    ratdisrep(beta_phi))$
+  beta_phi:trigreduce(ratsimp(beta_phi))$
+*/
 /* phi in terms of beta */
 phi_beta:subst([n=-n,phi=beta],beta_phi)$
 /* Alt:
@@ -125,11 +136,13 @@ chi_beta:expand(trigreduce(taylor(subst([phi=phi_beta],chi_phi),n,0,maxpow)))$
 beta_theta:expand(trigreduce
   (taylor(subst([phi=phi_theta],beta_phi),n,0,maxpow)))$
 beta_xi:expand(trigreduce(taylor(subst([phi=phi_xi],beta_phi),n,0,maxpow)))$
-chi_theta:expand(trigreduce(taylor(subst([phi=phi_theta],chi_phi),n,0,maxpow)))$
+chi_theta:expand(trigreduce
+  (taylor(subst([phi=phi_theta],chi_phi),n,0,maxpow)))$
 chi_xi:expand(trigreduce(taylor(subst([phi=phi_xi],chi_phi),n,0,maxpow)))$
 mu_theta:expand(trigreduce(taylor(subst([phi=phi_theta],mu_phi),n,0,maxpow)))$
 mu_xi:expand(trigreduce(taylor(subst([phi=phi_xi],mu_phi),n,0,maxpow)))$
-theta_chi:expand(trigreduce(taylor(subst([phi=phi_chi],theta_phi),n,0,maxpow)))$
+theta_chi:expand(trigreduce
+  (taylor(subst([phi=phi_chi],theta_phi),n,0,maxpow)))$
 theta_mu:expand(trigreduce(taylor(subst([phi=phi_mu],theta_phi),n,0,maxpow)))$
 theta_xi:expand(trigreduce(taylor(subst([phi=phi_xi],theta_phi),n,0,maxpow)))$
 xi_beta:expand(trigreduce(taylor(subst([phi=phi_beta],xi_phi),n,0,maxpow)))$

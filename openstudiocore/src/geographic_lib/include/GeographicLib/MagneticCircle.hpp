@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_MAGNETICCIRCLE_HPP)
@@ -106,7 +106,8 @@ namespace GeographicLib {
      *
      * @param[in] lon longitude of the point (degrees).
      * @param[out] Bx the easterly component of the magnetic field (nanotesla).
-     * @param[out] By the northerly component of the magnetic field (nanotesla).
+     * @param[out] By the northerly component of the magnetic field
+     *   (nanotesla).
      * @param[out] Bz the vertical (up) component of the magnetic field
      *   (nanotesla).
      **********************************************************************/
@@ -121,7 +122,8 @@ namespace GeographicLib {
      *
      * @param[in] lon longitude of the point (degrees).
      * @param[out] Bx the easterly component of the magnetic field (nanotesla).
-     * @param[out] By the northerly component of the magnetic field (nanotesla).
+     * @param[out] By the northerly component of the magnetic field
+     *   (nanotesla).
      * @param[out] Bz the vertical (up) component of the magnetic field
      *   (nanotesla).
      * @param[out] Bxt the rate of change of \e Bx (nT/yr).

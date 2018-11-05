@@ -15,7 +15,8 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   set_target_properties (${EXAMPLE} PROPERTIES COMPILE_FLAGS "/clr")
   # This is set up for Release builds only.  Change
   # Release/NETGeographic.dll to Debug/NETGeographic_d.dll for Debug
-  # builds.
+  # builds.  TODO: get this to work for Debug + Release.  Unfortunately
+  # generator expressions don't work in this context.
   set_target_properties (${EXAMPLE} PROPERTIES VS_DOTNET_REFERENCES
     "${PROJECT_BINARY_DIR}/bin/Release/NETGeographic.dll")
 endforeach ()

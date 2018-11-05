@@ -52,7 +52,7 @@ function N = geoid_height(lat, lon, geoidname, geoiddir)
 %   Information on downloading and installing the data for the supported
 %   geoid models is available at
 %
-%     http://geographiclib.sf.net/html/geoid.html#geoidinst
+%     https://geographiclib.sourceforge.io/html/geoid.html#geoidinst
 %
 %   GEOID_HEIGHT uses cubic interpolation on gridded data that has been
 %   quantized at a resolution of 3mm.

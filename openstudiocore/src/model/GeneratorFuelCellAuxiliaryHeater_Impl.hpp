@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELLAUXILIARYHEATER_IMPL_HPP
 #define MODEL_GENERATORFUELCELLAUXILIARYHEATER_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
 namespace openstudio {
@@ -69,6 +69,10 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual std::vector<IddObjectType> allowableChildTypes() const;
+
+    virtual std::vector<ModelObject> children() const;
+
     //@}
     /** @name Getters */
     //@{
@@ -96,7 +100,7 @@ namespace detail {
     double minimumHeatingCapacityinKmolperSecond() const;
 
     // Return optional parent generator
-    GeneratorFuelCell fuelCell() const;
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
     //@}
     /** @name Setters */
@@ -149,11 +153,8 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-    virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
 
-    virtual std::vector<ModelObject> children() const;
     //@}
    protected:
    private:

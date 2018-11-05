@@ -153,7 +153,7 @@ void WindowMaterialSimpleGlazingSystemInspectorView::attach(openstudio::model::S
   m_nameEdit->bind(
     *m_simpleGlazing,
     OptionalStringGetter(std::bind(&model::SimpleGlazing::name, m_simpleGlazing.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::SimpleGlazing::setName, m_simpleGlazing.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::SimpleGlazing::setName, m_simpleGlazing.get_ptr(),std::placeholders::_1))
   );
 
   // m_uFactor->bind(simpleGlazing,"uFactor",m_isIP);

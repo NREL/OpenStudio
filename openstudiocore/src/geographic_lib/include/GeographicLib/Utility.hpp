@@ -2,9 +2,9 @@
  * \file Utility.hpp
  * \brief Header for GeographicLib::Utility class
  *
- * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_UTILITY_HPP)
@@ -16,6 +16,7 @@
 #include <sstream>
 #include <cctype>
 #include <ctime>
+#include <cstring>
 
 #if defined(_MSC_VER)
 // Squelch warnings about constant conditional expressions and unsafe gmtime
@@ -99,8 +100,8 @@ namespace GeographicLib {
         (1461 * y) / 4 // Julian years converted to days.  Julian year is 365 +
                        // 1/4 = 1461/4 days.
         // Gregorian leap year corrections.  The 2 offset with respect to the
-        // Julian calendar synchronizes the vernal equinox with that at the time
-        // of the Council of Nicea (325 AD).
+        // Julian calendar synchronizes the vernal equinox with that at the
+        // time of the Council of Nicea (325 AD).
         + (greg ? (y / 100) / 4 - (y / 100) + 2 : 0)
         + (153 * m + 2) / 5     // The zero-based start of the m'th month
         + d - 1                 // The zero-based day
@@ -188,27 +189,27 @@ namespace GeographicLib {
       const char* digits = "0123456789";
       std::string::size_type p1 = s.find_first_not_of(digits);
       if (p1 == std::string::npos)
-        y1 = num<int>(s);
+        y1 = val<int>(s);
       else if (s[p1] != '-')
         throw GeographicErr("Delimiter not hyphen in date " + s);
       else if (p1 == 0)
         throw GeographicErr("Empty year field in date " + s);
       else {
-        y1 = num<int>(s.substr(0, p1));
+        y1 = val<int>(s.substr(0, p1));
         if (++p1 == s.size())
           throw GeographicErr("Empty month field in date " + s);
         std::string::size_type p2 = s.find_first_not_of(digits, p1);
         if (p2 == std::string::npos)
-          m1 = num<int>(s.substr(p1));
+          m1 = val<int>(s.substr(p1));
         else if (s[p2] != '-')
           throw GeographicErr("Delimiter not hyphen in date " + s);
         else if (p2 == p1)
           throw GeographicErr("Empty month field in date " + s);
         else {
-          m1 = num<int>(s.substr(p1, p2 - p1));
+          m1 = val<int>(s.substr(p1, p2 - p1));
           if (++p2 == s.size())
             throw GeographicErr("Empty day field in date " + s);
-          d1 = num<int>(s.substr(p2));
+          d1 = val<int>(s.substr(p2));
         }
       }
       y = y1; m = m1; d = d1;
@@ -251,10 +252,9 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static T fractionalyear(const std::string& s) {
       try {
-        return num<T>(s);
+        return val<T>(s);
       }
-      catch (const std::exception&) {
-      }
+      catch (const std::exception&) {}
       int y, m, d;
       date(s, y, m, d);
       int t = day(y, m, d, true);
@@ -298,7 +298,7 @@ namespace GeographicLib {
       std::ostringstream s;
 #if GEOGRAPHICLIB_PRECISION == 4
       // boost-quadmath treats precision == 0 as "use as many digits as
-      // necessary", so...
+      // necessary" (see https://svn.boost.org/trac/boost/ticket/10103), so...
       using std::floor; using std::fmod;
       if (p == 0) {
         x += Math::real(0.5);
@@ -316,26 +316,51 @@ namespace GeographicLib {
     }
 
     /**
-     * Convert a string to an object of type T.
+     * Trim the white space from the beginning and end of a string.
      *
-     * @tparam T the type of the return value.
-     * @param[in] s the string to be converted.
-     * @exception GeographicErr is \e s is not readable as a T.
-     * @return object of type T
-     *
-     * White space at the beginning and end of \e s is ignored.
+     * @param[in] s the string to be trimmed
+     * @return the trimmed string
      **********************************************************************/
-    template<typename T> static T num(const std::string& s) {
-      T x;
-      std::string errmsg;
-      std::string::size_type
+    static std::string trim(const std::string& s) {
+      unsigned
         beg = 0,
         end = unsigned(s.size());
       while (beg < end && isspace(s[beg]))
         ++beg;
       while (beg < end && isspace(s[end - 1]))
         --end;
-      std::string t = s.substr(beg, end-beg);
+      return std::string(s, beg, end-beg);
+    }
+
+    /**
+     * Convert a string to type T.
+     *
+     * @tparam T the type of the return value.
+     * @param[in] s the string to be converted.
+     * @exception GeographicErr is \e s is not readable as a T.
+     * @return object of type T.
+     *
+     * White space at the beginning and end of \e s is ignored.
+     *
+     * Special handling is provided for some types.
+     *
+     * If T is a floating point type, then inf and nan are recognized.
+     *
+     * If T is bool, then \e s should either be string a representing 0 (false)
+     * or 1 (true) or one of the strings
+     * - "false", "f", "nil", "no", "n", "off", or "" meaning false,
+     * - "true", "t", "yes", "y", or "on" meaning true;
+     * .
+     * case is ignored.
+     *
+     * If T is std::string, then \e s is returned (with the white space at the
+     * beginning and end removed).
+     **********************************************************************/
+    template<typename T> static T val(const std::string& s) {
+      // If T is bool, then the specialization val<bool>() defined below is
+      // used.
+      T x;
+      std::string errmsg, t(trim(s));
       do {                     // Executed once (provides the ability to break)
         std::istringstream is(t);
         if (!(is >> x)) {
@@ -354,11 +379,20 @@ namespace GeographicLib {
         throw GeographicErr(errmsg);
       return x;
     }
+    /**
+     * \deprecated An old name for val<T>(s).
+     **********************************************************************/
+    template<typename T>
+      // GEOGRAPHICLIB_DEPRECATED("Use new Utility::val<T>(s)")
+      static T num(const std::string& s) {
+      return val<T>(s);
+    }
 
     /**
      * Match "nan" and "inf" (and variants thereof) in a string.
      *
-     * @tparam T the type of the return value.
+     * @tparam T the type of the return value (this should be a floating point
+     *   type).
      * @param[in] s the string to be matched.
      * @return appropriate special value (&plusmn;&infin;, nan) or 0 if none is
      *   found.
@@ -368,9 +402,9 @@ namespace GeographicLib {
     template<typename T> static T nummatch(const std::string& s) {
       if (s.length() < 3)
         return 0;
-      std::string t;
-      t.resize(s.length());
-      std::transform(s.begin(), s.end(), t.begin(), (int(*)(int))std::toupper);
+      std::string t(s);
+      for (std::string::iterator p = t.begin(); p != t.end(); ++p)
+        *p = char(std::toupper(*p));
       for (size_t i = s.length(); i--;)
         t[i] = char(std::toupper(s[i]));
       int sign = t[0] == '-' ? -1 : 1;
@@ -393,10 +427,11 @@ namespace GeographicLib {
      *
      * @tparam T the type of the return value.
      * @param[in] s the string to be converted.
-     * @exception GeographicErr is \e s is not readable as a fraction of type T.
+     * @exception GeographicErr is \e s is not readable as a fraction of type
+     *   T.
      * @return object of type T
      *
-     * <b>NOTE</b>: The msys shell under Windows converts arguments which look
+     * \note The msys shell under Windows converts arguments which look
      * like pathnames into their Windows equivalents.  As a result the argument
      * "-1/300" gets mangled into something unrecognizable.  A workaround is to
      * use a floating point number in the numerator, i.e., "-1.0/300".
@@ -405,9 +440,9 @@ namespace GeographicLib {
       std::string::size_type delim = s.find('/');
       return
         !(delim != std::string::npos && delim >= 1 && delim + 2 <= s.size()) ?
-        num<T>(s) :
+        val<T>(s) :
         // delim in [1, size() - 2]
-        num<T>(s.substr(0, delim)) / num<T>(s.substr(delim + 1));
+        val<T>(s.substr(0, delim)) / val<T>(s.substr(delim + 1));
     }
 
     /**
@@ -427,6 +462,22 @@ namespace GeographicLib {
     }
 
     /**
+     * Lookup up a character in a char*.
+     *
+     * @param[in] s the char* string to be searched.
+     * @param[in] c the character to look for.
+     * @return the index of the first occurrence character in the string or
+     *   &minus;1 is the character is not present.
+     *
+     * \e c is converted to upper case before search \e s.  Therefore, it is
+     * intended that \e s should not contain any lower case letters.
+     **********************************************************************/
+    static int lookup(const char* s, char c) {
+      const char* p = std::strchr(s, toupper(c));
+      return p != NULL ? int(p - s) : -1;
+    }
+
+    /**
      * Read data of type ExtT from a binary stream to an array of type IntT.
      * The data in the file is in (bigendp ? big : little)-endian format.
      *
@@ -440,8 +491,7 @@ namespace GeographicLib {
      * @exception GeographicErr if the data cannot be read.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
-      static inline void readarray(std::istream& str,
-                                   IntT array[], size_t num) {
+      static void readarray(std::istream& str, IntT array[], size_t num) {
 #if GEOGRAPHICLIB_PRECISION < 4
       if (sizeof(IntT) == sizeof(ExtT) &&
           std::numeric_limits<IntT>::is_integer ==
@@ -492,8 +542,7 @@ namespace GeographicLib {
      * @exception GeographicErr if the data cannot be read.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
-      static inline void readarray(std::istream& str,
-                                   std::vector<IntT>& array) {
+      static void readarray(std::istream& str, std::vector<IntT>& array) {
       if (array.size() > 0)
         readarray<ExtT, IntT, bigendp>(str, &array[0], array.size());
     }
@@ -511,8 +560,8 @@ namespace GeographicLib {
      * @exception GeographicErr if the data cannot be written.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
-      static inline void writearray(std::ostream& str,
-                                    const IntT array[], size_t num) {
+      static void writearray(std::ostream& str, const IntT array[], size_t num)
+    {
 #if GEOGRAPHICLIB_PRECISION < 4
       if (sizeof(IntT) == sizeof(ExtT) &&
           std::numeric_limits<IntT>::is_integer ==
@@ -558,8 +607,7 @@ namespace GeographicLib {
      * @exception GeographicErr if the data cannot be written.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
-      static inline void writearray(std::ostream& str,
-                                   std::vector<IntT>& array) {
+      static void writearray(std::ostream& str, std::vector<IntT>& array) {
       if (array.size() > 0)
         writearray<ExtT, IntT, bigendp>(str, &array[0], array.size());
     }
@@ -591,7 +639,7 @@ namespace GeographicLib {
      *   256 (i.e., about 77 decimal digits).
      * @return the resulting number of bits of precision.
      *
-     * This only has an effect when GEOGRAPHICLIB_PRECISION == 5.  The
+     * This only has an effect when GEOGRAPHICLIB_PRECISION = 5.  The
      * precision should only be set once and before calls to any other
      * GeographicLib functions.  (Several functions, for example Math::pi(),
      * cache the return value in a static local variable.  The precision needs
@@ -602,6 +650,50 @@ namespace GeographicLib {
     static int set_digits(int ndigits = 0);
 
   };
+
+  /**
+   * The specialization of Utility::val<T>() for strings.
+   **********************************************************************/
+  template<> inline std::string Utility::val<std::string>(const std::string& s)
+  { return trim(s); }
+
+  /**
+   * The specialization of Utility::val<T>() for bools.
+   **********************************************************************/
+  template<> inline bool Utility::val<bool>(const std::string& s) {
+    std::string t(trim(s));
+    if (t.empty()) return false;
+    bool x;
+    std::istringstream is(t);
+    if (is >> x) {
+      int pos = int(is.tellg()); // Returns -1 at end of string?
+      if (!(pos < 0 || pos == int(t.size())))
+        throw GeographicErr("Extra text " + t.substr(pos) +
+                            " at end of " + t);
+      return x;
+    }
+    for (std::string::iterator p = t.begin(); p != t.end(); ++p)
+      *p = char(std::tolower(*p));
+    switch (t[0]) {             // already checked that t isn't empty
+    case 'f':
+      if (t == "f" || t == "false") return false;
+      break;
+    case 'n':
+      if (t == "n" || t == "nil" || t == "no") return false;
+      break;
+    case 'o':
+      if (t == "off") return false;
+      else if (t == "on") return true;
+      break;
+    case 't':
+      if (t == "t" || t == "true") return true;
+      break;
+    case 'y':
+      if (t == "y" || t == "yes") return true;
+      break;
+    }
+    throw GeographicErr("Cannot decode " + t + " as a bool");
+  }
 
 } // namespace GeographicLib
 

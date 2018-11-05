@@ -120,7 +120,7 @@ ExternalInterfaceVariable::ExternalInterfaceVariable(const Model& model, const s
   : ModelObject(ExternalInterfaceVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ExternalInterfaceVariable_Impl>());
-  bool ok = getImpl<detail::ExternalInterfaceVariable_Impl>()->setName(variableName);
+  bool ok = getImpl<detail::ExternalInterfaceVariable_Impl>()->setName(variableName).has_value();
   if ( (!ok) || (variableName != this->nameString() )) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s Name to " << variableName << ".");
@@ -163,4 +163,4 @@ ExternalInterfaceVariable::ExternalInterfaceVariable(std::shared_ptr<detail::Ext
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

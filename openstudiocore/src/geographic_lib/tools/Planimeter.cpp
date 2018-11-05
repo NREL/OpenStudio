@@ -2,9 +2,9 @@
  * \file Planimeter.cpp
  * \brief Command line utility for measuring the area of geodesic polygons
  *
- * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  *
  * See the <a href="Planimeter.1.html">man page</a> for usage information.
  **********************************************************************/
@@ -26,7 +26,7 @@
 
 #include "Planimeter.usage"
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
     typedef Math::real real;
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
       else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
-          a = Utility::num<real>(std::string(argv[m + 1]));
+          a = Utility::val<real>(std::string(argv[m + 1]));
           f = Utility::fract<real>(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
@@ -61,11 +61,11 @@ int main(int argc, char* argv[]) {
         }
         m += 2;
       } else if (arg == "-w")
-        longfirst = true;
+        longfirst = !longfirst;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
-          prec = Utility::num<int>(std::string(argv[m]));
+          prec = Utility::val<int>(std::string(argv[m]));
         }
         catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
@@ -174,7 +174,7 @@ int main(int argc, char* argv[]) {
       bool endpoly = s.empty();
       if (!endpoly) {
         try {
-          p.Reset(s, longfirst);
+          p.Reset(s, true, longfirst);
           if (Math::isnan(p.Latitude()) || Math::isnan(p.Longitude()))
             endpoly = true;
         }

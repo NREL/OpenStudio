@@ -24,7 +24,7 @@ function [latlong, aux] = geodesicline(lat1, lon1, azi1, distances, a, f)
 %       geodesic scale 2 to 1 = aux(:,4)
 %       area under geodesic = aux(:,5) in meters^2
 %
-%   a = major radius (meters)
+%   a = equatorial radius (meters)
 %   f = flattening (0 means a sphere)
 %   If a and f are omitted, the WGS84 values are used.
 %
@@ -34,7 +34,7 @@ function [latlong, aux] = geodesicline(lat1, lon1, azi1, distances, a, f)
 %
 %   See also GEODRECKON.
 
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2017) <charles@karney.com>.
 
   if (nargin < 5)
     ellipsoid = defaultellipsoid;

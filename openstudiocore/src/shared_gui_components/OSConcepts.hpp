@@ -1182,6 +1182,7 @@ class NameLineEditConcept : public BaseConcept
 
   virtual boost::optional<std::string> get(const ConceptProxy & obj, bool) = 0;
   virtual boost::optional<std::string> set(const ConceptProxy & obj, const std::string &) = 0;
+  virtual bool setReturnBool(const ConceptProxy & obj, const std::string &) = 0;
   virtual void reset(const ConceptProxy & obj) = 0;
   virtual bool readOnly() const = 0;
   bool isInspectable() { return m_isInspectable; }
@@ -1233,6 +1234,11 @@ class NameLineEditConceptImpl : public NameLineEditConcept
     }
   }
 
+  virtual bool setReturnBool(const ConceptProxy & t_obj, const std::string & value) override
+  {
+    return set(t_obj, value).has_value();
+  }
+
   virtual void reset(const ConceptProxy & t_obj) override
   {
     if (m_reset) {
@@ -1271,6 +1277,7 @@ public:
 
   virtual boost::optional<std::string> get(const ConceptProxy & obj, bool) = 0;
   virtual boost::optional<std::string> set(const ConceptProxy & obj, const std::string &) = 0;
+  virtual bool setReturnBool(const ConceptProxy & obj, const std::string &) = 0;
   virtual void reset(const ConceptProxy & obj) = 0;
   virtual bool readOnly() const = 0;
 };
@@ -1309,6 +1316,11 @@ public:
     else {
       return boost::optional<std::string>();
     }
+  }
+
+  virtual bool setReturnBool(const ConceptProxy & t_obj, const std::string & value) override
+  {
+    return set(t_obj, value).has_value();
   }
 
   virtual void reset(const ConceptProxy & t_obj) override

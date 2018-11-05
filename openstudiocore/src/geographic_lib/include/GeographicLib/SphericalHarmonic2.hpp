@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_SPHERICALHARMONIC2_HPP)
@@ -52,11 +52,6 @@ namespace GeographicLib {
        * @hideinitializer
        **********************************************************************/
       SCHMIDT = SphericalEngine::SCHMIDT,
-      /// \cond SKIP
-      // These are deprecated...
-      full = FULL,
-      schmidt = SCHMIDT,
-      /// \endcond
     };
 
   private:
@@ -188,7 +183,8 @@ namespace GeographicLib {
      * Compute a spherical harmonic sum with two correction terms.
      *
      * @param[in] tau1 multiplier for correction coefficients \e C' and \e S'.
-     * @param[in] tau2 multiplier for correction coefficients \e C'' and \e S''.
+     * @param[in] tau2 multiplier for correction coefficients \e C'' and \e
+     *   S''.
      * @param[in] x cartesian coordinate.
      * @param[in] y cartesian coordinate.
      * @param[in] z cartesian coordinate.
@@ -220,7 +216,8 @@ namespace GeographicLib {
      * gradient.
      *
      * @param[in] tau1 multiplier for correction coefficients \e C' and \e S'.
-     * @param[in] tau2 multiplier for correction coefficients \e C'' and \e S''.
+     * @param[in] tau2 multiplier for correction coefficients \e C'' and \e
+     *   S''.
      * @param[in] x cartesian coordinate.
      * @param[in] y cartesian coordinate.
      * @param[in] z cartesian coordinate.
@@ -256,7 +253,8 @@ namespace GeographicLib {
      * points on a circle of latitude at fixed values of \e tau1 and \e tau2.
      *
      * @param[in] tau1 multiplier for correction coefficients \e C' and \e S'.
-     * @param[in] tau2 multiplier for correction coefficients \e C'' and \e S''.
+     * @param[in] tau2 multiplier for correction coefficients \e C'' and \e
+     *   S''.
      * @param[in] p the radius of the circle.
      * @param[in] z the height of the circle above the equatorial plane.
      * @param[in] gradp if true the returned object will be able to compute the

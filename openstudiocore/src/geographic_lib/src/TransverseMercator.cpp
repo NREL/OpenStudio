@@ -2,12 +2,11 @@
  * \file TransverseMercator.cpp
  * \brief Implementation for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  *
- * This implementation follows closely
- * <a href="http://www.jhs-suositukset.fi/suomi/jhs154"> JHS 154, ETRS89 -
+ * This implementation follows closely JHS 154, ETRS89 -
  * j&auml;rjestelm&auml;&auml;n liittyv&auml;t karttaprojektiot,
  * tasokoordinaatistot ja karttalehtijako</a> (Map projections, plane
  * coordinates, and map sheet index for ETRS89), published by JUHTA, Finnish
@@ -33,12 +32,10 @@
  * to an integer between 4 and 8, then this specifies the order of the series
  * used for the forward and reverse transformations.  The default value is 6.
  * (The series accurate to 12th order is given in \ref tmseries.)
- *
- * Other equivalent implementations are given in
- *  - http://www.ign.fr/DISPLAY/000/526/702/5267021/NTG_76.pdf
- *  - http://www.lantmateriet.se/upload/filer/kartor/geodesi_gps_och_detaljmatning/geodesi/Formelsamling/Gauss_Conformal_Projection.pdf
  **********************************************************************/
 
+#include <iostream>
+#include <complex>
 #include <GeographicLib/TransverseMercator.hpp>
 
 namespace GeographicLib {
@@ -47,7 +44,7 @@ namespace GeographicLib {
 
   TransverseMercator::TransverseMercator(real a, real f, real k0)
     : _a(a)
-    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
+    , _f(f)
     , _k0(k0)
     , _e2(_f * (2 - _f))
     , _es((f < 0 ? -1 : 1) * sqrt(abs(_e2)))
@@ -58,9 +55,9 @@ namespace GeographicLib {
     , _n(_f / (2 - _f))
   {
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     if (!(Math::isfinite(_f) && _f < 1))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
     if (!(Math::isfinite(_k0) && _k0 > 0))
       throw GeographicErr("Scale is not positive");
 
@@ -351,14 +348,14 @@ namespace GeographicLib {
   // tan(phi), taup = sinh(psi)
 
   void TransverseMercator::Forward(real lon0, real lat, real lon,
-                                   real& x, real& y, real& gamma, real& k)
-    const {
+                                   real& x, real& y,
+                                   real& gamma, real& k) const {
     lat = Math::LatFix(lat);
     lon = Math::AngDiff(lon0, lon);
     // Explicitly enforce the parity
     int
-      latsign = lat < 0 ? -1 : 1,
-      lonsign = lon < 0 ? -1 : 1;
+      latsign = (lat < 0) ? -1 : 1,
+      lonsign = (lon < 0) ? -1 : 1;
     lon *= lonsign;
     lat *= latsign;
     bool backside = lon > 90;
@@ -436,73 +433,77 @@ namespace GeographicLib {
     // which is used in Reverse.
     //
     // Evaluate sums via Clenshaw method.  See
-    //    http://mathworld.wolfram.com/ClenshawRecurrenceFormula.html
+    //    https://en.wikipedia.org/wiki/Clenshaw_algorithm
     //
     // Let
     //
-    //    S = sum(c[k] * F[k](x), k = 0..N)
-    //    F[n+1](x) = alpha(n,x) * F[n](x) + beta(n,x) * F[n-1](x)
+    //    S = sum(a[k] * phi[k](x), k = 0..n)
+    //    phi[k+1](x) = alpha[k](x) * phi[k](x) + beta[k](x) * phi[k-1](x)
     //
     // Evaluate S with
     //
-    //    y[N+2] = y[N+1] = 0
-    //    y[k] = alpha(k,x) * y[k+1] + beta(k+1,x) * y[k+2] + c[k]
-    //    S = c[0] * F[0](x) + y[1] * F[1](x) + beta(1,x) * F[0](x) * y[2]
+    //    b[n+2] = b[n+1] = 0
+    //    b[k] = alpha[k](x) * b[k+1] + beta[k+1](x) * b[k+2] + a[k]
+    //    S = (a[0] + beta[1](x) * b[2]) * phi[0](x) + b[1] * phi[1](x)
     //
     // Here we have
     //
     //    x = 2 * zeta'
-    //    F[n](x) = sin(n * x)
-    //    a(n, x) = 2 * cos(x)
-    //    b(n, x) = -1
-    //    [ sin(A+B) - 2*cos(B)*sin(A) + sin(A-B) = 0, A = n*x, B = x ]
-    //    N = maxpow_
-    //    c[k] = _alp[k]
-    //    S = y[1] * sin(x)
+    //    phi[k](x) = sin(k * x)
+    //    alpha[k](x) = 2 * cos(x)
+    //    beta[k](x) = -1
+    //    [ sin(A+B) - 2*cos(B)*sin(A) + sin(A-B) = 0, A = k*x, B = x ]
+    //    n = maxpow_
+    //    a[k] = _alp[k]
+    //    S = b[1] * sin(x)
     //
     // For the derivative we have
     //
     //    x = 2 * zeta'
-    //    F[n](x) = cos(n * x)
-    //    a(n, x) = 2 * cos(x)
-    //    b(n, x) = -1
-    //    [ cos(A+B) - 2*cos(B)*cos(A) + cos(A-B) = 0, A = n*x, B = x ]
-    //    c[0] = 1; c[k] = 2*k*_alp[k]
-    //    S = (c[0] - y[2]) + y[1] * cos(x)
+    //    phi[k](x) = cos(k * x)
+    //    alpha[k](x) = 2 * cos(x)
+    //    beta[k](x) = -1
+    //    [ cos(A+B) - 2*cos(B)*cos(A) + cos(A-B) = 0, A = k*x, B = x ]
+    //    a[0] = 1; a[k] = 2*k*_alp[k]
+    //    S = (a[0] - b[2]) + b[1] * cos(x)
+    //
+    // Matrix formulation (not used here):
+    //    phi[k](x) = [sin(k * x); k * cos(k * x)]
+    //    alpha[k](x) = 2 * [cos(x), 0; -sin(x), cos(x)]
+    //    beta[k](x) = -1 * [1, 0; 0, 1]
+    //    a[k] = _alp[k] * [1, 0; 0, 1]
+    //    b[n+2] = b[n+1] = [0, 0; 0, 0]
+    //    b[k] = alpha[k](x) * b[k+1] + beta[k+1](x) * b[k+2] + a[k]
+    //    N.B., for all k: b[k](1,2) = 0; b[k](1,1) = b[k](2,2)
+    //    S = (a[0] + beta[1](x) * b[2]) * phi[0](x) + b[1] * phi[1](x)
+    //    phi[0](x) = [0; 0]
+    //    phi[1](x) = [sin(x); cos(x)]
     real
       c0 = cos(2 * xip), ch0 = cosh(2 * etap),
-      s0 = sin(2 * xip), sh0 = sinh(2 * etap),
-      ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta')
+      s0 = sin(2 * xip), sh0 = sinh(2 * etap);
+    complex<real> a(2 * c0 * ch0, -2 * s0 * sh0); // 2 * cos(2*zeta')
     int n = maxpow_;
-    real
-      xi0 = (n & 1 ? _alp[n] : 0), eta0 = 0,
-      xi1 = 0, eta1 = 0;
-    real                        // Accumulators for dzeta/dzeta'
-      yr0 = (n & 1 ? 2 * maxpow_ * _alp[n--] : 0), yi0 = 0,
-      yr1 = 0, yi1 = 0;
+    complex<real>
+      y0(n & 1 ?       _alp[n] : 0), y1, // default initializer is 0+i0
+      z0(n & 1 ? 2*n * _alp[n] : 0), z1;
+    if (n & 1) --n;
     while (n) {
-      xi1  = ar * xi0 - ai * eta0 - xi1 + _alp[n];
-      eta1 = ai * xi0 + ar * eta0 - eta1;
-      yr1 = ar * yr0 - ai * yi0 - yr1 + 2 * n * _alp[n];
-      yi1 = ai * yr0 + ar * yi0 - yi1;
+      y1 = a * y0 - y1 +       _alp[n];
+      z1 = a * z0 - z1 + 2*n * _alp[n];
       --n;
-      xi0  = ar * xi1 - ai * eta1 - xi0 + _alp[n];
-      eta0 = ai * xi1 + ar * eta1 - eta0;
-      yr0 = ar * yr1 - ai * yi1 - yr0 + 2 * n * _alp[n];
-      yi0 = ai * yr1 + ar * yi1 - yi0;
+      y0 = a * y1 - y0 +       _alp[n];
+      z0 = a * z1 - z0 + 2*n * _alp[n];
       --n;
     }
-    ar /= 2; ai /= 2;           // cos(2*zeta')
-    yr1 = 1 - yr1 + ar * yr0 - ai * yi0;
-    yi1 =   - yi1 + ai * yr0 + ar * yi0;
-    ar = s0 * ch0; ai = c0 * sh0; // sin(2*zeta')
-    real
-      xi  = xip  + ar * xi0 - ai * eta0,
-      eta = etap + ai * xi0 + ar * eta0;
+    a /= real(2);               // cos(2*zeta')
+    z1 = real(1) - z1 + a * z0;
+    a = complex<real>(s0 * ch0, c0 * sh0); // sin(2*zeta')
+    y1 = complex<real>(xip, etap) + a * y0;
     // Fold in change in convergence and scale for Gauss-Schreiber TM to
     // Gauss-Krueger TM.
-    gamma -= Math::atan2d(yi1, yr1);
-    k *= _b1 * Math::hypot(yr1, yi1);
+    gamma -= Math::atan2d(z1.imag(), z1.real());
+    k *= _b1 * abs(z1);
+    real xi = y1.real(), eta = y1.imag();
     y = _a1 * _k0 * (backside ? Math::pi() - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
     if (backside)
@@ -513,8 +514,8 @@ namespace GeographicLib {
   }
 
   void TransverseMercator::Reverse(real lon0, real x, real y,
-                                   real& lat, real& lon, real& gamma, real& k)
-    const {
+                                   real& lat, real& lon,
+                                   real& gamma, real& k) const {
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
     // reverted series to express zeta' in terms of zeta. (2) Newton's method
     // to solve for phi in terms of tan(phi).
@@ -523,8 +524,8 @@ namespace GeographicLib {
       eta = x / (_a1 * _k0);
     // Explicitly enforce the parity
     int
-      xisign = xi < 0 ? -1 : 1,
-      etasign = eta < 0 ? -1 : 1;
+      xisign = (xi < 0) ? -1 : 1,
+      etasign = (eta < 0) ? -1 : 1;
     xi *= xisign;
     eta *= etasign;
     bool backside = xi > Math::pi()/2;
@@ -532,43 +533,35 @@ namespace GeographicLib {
       xi = Math::pi() - xi;
     real
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
-      s0 = sin(2 * xi), sh0 = sinh(2 * eta),
-      ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta)
+      s0 = sin(2 * xi), sh0 = sinh(2 * eta);
+    complex<real> a(2 * c0 * ch0, -2 * s0 * sh0); // 2 * cos(2*zeta)
     int n = maxpow_;
-    real                        // Accumulators for zeta'
-      xip0 = (n & 1 ? -_bet[n] : 0), etap0 = 0,
-      xip1 = 0, etap1 = 0;
-    real                        // Accumulators for dzeta'/dzeta
-      yr0 = (n & 1 ? - 2 * maxpow_ * _bet[n--] : 0), yi0 = 0,
-      yr1 = 0, yi1 = 0;
+    complex<real>
+      y0(n & 1 ?       -_bet[n] : 0), y1, // default initializer is 0+i0
+      z0(n & 1 ? -2*n * _bet[n] : 0), z1;
+    if (n & 1) --n;
     while (n) {
-      xip1  = ar * xip0 - ai * etap0 - xip1 - _bet[n];
-      etap1 = ai * xip0 + ar * etap0 - etap1;
-      yr1 = ar * yr0 - ai * yi0 - yr1 - 2 * n * _bet[n];
-      yi1 = ai * yr0 + ar * yi0 - yi1;
+      y1 = a * y0 - y1 -       _bet[n];
+      z1 = a * z0 - z1 - 2*n * _bet[n];
       --n;
-      xip0  = ar * xip1 - ai * etap1 - xip0 - _bet[n];
-      etap0 = ai * xip1 + ar * etap1 - etap0;
-      yr0 = ar * yr1 - ai * yi1 - yr0 - 2 * n * _bet[n];
-      yi0 = ai * yr1 + ar * yi1 - yi0;
+      y0 = a * y1 - y0 -       _bet[n];
+      z0 = a * z1 - z0 - 2*n * _bet[n];
       --n;
     }
-    ar /= 2; ai /= 2;           // cos(2*zeta')
-    yr1 = 1 - yr1 + ar * yr0 - ai * yi0;
-    yi1 =   - yi1 + ai * yr0 + ar * yi0;
-    ar = s0 * ch0; ai = c0 * sh0; // sin(2*zeta)
-    real
-      xip  = xi  + ar * xip0 - ai * etap0,
-      etap = eta + ai * xip0 + ar * etap0;
+    a /= real(2);               // cos(2*zeta)
+    z1 = real(1) - z1 + a * z0;
+    a = complex<real>(s0 * ch0, c0 * sh0); // sin(2*zeta)
+    y1 = complex<real>(xi, eta) + a * y0;
     // Convergence and scale for Gauss-Schreiber TM to Gauss-Krueger TM.
-    gamma = Math::atan2d(yi1, yr1);
-    k = _b1 / Math::hypot(yr1, yi1);
+    gamma = Math::atan2d(z1.imag(), z1.real());
+    k = _b1 / abs(z1);
     // JHS 154 has
     //
     //   phi' = asin(sin(xi') / cosh(eta')) (Krueger p 17 (25))
     //   lam = asin(tanh(eta') / cos(phi')
     //   psi = asinh(tan(phi'))
     real
+      xip = y1.real(), etap = y1.imag(),
       s = sinh(etap),
       c = max(real(0), cos(xip)), // cos(pi/2) might be negative
       r = Math::hypot(s, c);

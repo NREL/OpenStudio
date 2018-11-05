@@ -2,9 +2,9 @@
  * \file Constants.hpp
  * \brief Header for GeographicLib::Constants class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
@@ -58,6 +58,7 @@
 //   1700     vc11  (2012)
 //   1800     vc12  (2013)
 //   1900     vc14  (2015)
+//   1910+    vc15  (2017)
 #    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 1
 #  else
 #    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 0
@@ -88,6 +89,21 @@
 #  endif
 #else
 #  define GEOGRAPHICLIB_EXPORT
+#endif
+
+// Use GEOGRAPHICLIB_DEPRECATED to mark functions, types or variables as
+// deprecated.  Code inspired by Apache Subversion's svn_types.h file (via
+// MPFR).
+#if defined(__GNUC__)
+#  if __GNUC__ > 4
+#    define GEOGRAPHICLIB_DEPRECATED(msg) __attribute__((deprecated(msg)))
+#  else
+#    define GEOGRAPHICLIB_DEPRECATED(msg) __attribute__((deprecated))
+#  endif
+#elif defined(_MSC_VER) && _MSC_VER >= 1300
+#  define GEOGRAPHICLIB_DEPRECATED(msg) __declspec(deprecated(msg))
+#else
+#  define GEOGRAPHICLIB_DEPRECATED(msg)
 #endif
 
 #include <stdexcept>
@@ -121,16 +137,16 @@ namespace GeographicLib {
     /**
      * A synonym for Math::degree<real>().
      **********************************************************************/
-    static inline Math::real degree() { return Math::degree(); }
+    static Math::real degree() { return Math::degree(); }
     /**
      * @return the number of radians in an arcminute.
      **********************************************************************/
-    static inline Math::real arcminute()
+    static Math::real arcminute()
     { return Math::degree() / 60; }
     /**
      * @return the number of radians in an arcsecond.
      **********************************************************************/
-    static inline Math::real arcsecond()
+    static Math::real arcsecond()
     { return Math::degree() / 3600; }
 
     /** \name Ellipsoid parameters
@@ -140,17 +156,17 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return the equatorial radius of WGS84 ellipsoid (6378137 m).
      **********************************************************************/
-    template<typename T> static inline T WGS84_a()
+    template<typename T> static T WGS84_a()
     { return 6378137 * meter<T>(); }
     /**
      * A synonym for WGS84_a<real>().
      **********************************************************************/
-    static inline Math::real WGS84_a() { return WGS84_a<real>(); }
+    static Math::real WGS84_a() { return WGS84_a<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the flattening of WGS84 ellipsoid (1/298.257223563).
      **********************************************************************/
-    template<typename T> static inline T WGS84_f() {
+    template<typename T> static T WGS84_f() {
       // Evaluating this as 1000000000 / T(298257223563LL) reduces the
       // round-off error by about 10%.  However, expressing the flattening as
       // 1/298.257223563 is well ingrained.
@@ -159,63 +175,50 @@ namespace GeographicLib {
     /**
      * A synonym for WGS84_f<real>().
      **********************************************************************/
-    static inline Math::real WGS84_f() { return WGS84_f<real>(); }
+    static Math::real WGS84_f() { return WGS84_f<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the gravitational constant of the WGS84 ellipsoid, \e GM, in
      *   m<sup>3</sup> s<sup>&minus;2</sup>.
      **********************************************************************/
-    template<typename T> static inline T WGS84_GM()
+    template<typename T> static T WGS84_GM()
     { return T(3986004) * 100000000 + 41800000; }
     /**
      * A synonym for WGS84_GM<real>().
      **********************************************************************/
-    static inline Math::real WGS84_GM() { return WGS84_GM<real>(); }
+    static Math::real WGS84_GM() { return WGS84_GM<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the angular velocity of the WGS84 ellipsoid, &omega;, in rad
      *   s<sup>&minus;1</sup>.
      **********************************************************************/
-    template<typename T> static inline T WGS84_omega()
+    template<typename T> static T WGS84_omega()
     { return 7292115 / (T(1000000) * 100000); }
     /**
      * A synonym for WGS84_omega<real>().
      **********************************************************************/
-    static inline Math::real WGS84_omega() { return WGS84_omega<real>(); }
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return the reciprocal flattening of WGS84 ellipsoid.
-     **********************************************************************/
-    template<typename T> static inline T WGS84_r()
-    { return 1/WGS84_f<T>(); }
-    /**
-     * <b>DEPRECATED</b>
-     * A synonym for WGS84_r<real>().
-     **********************************************************************/
-    static inline Math::real WGS84_r() { return WGS84_r<real>(); }
-    /// \endcond
+    static Math::real WGS84_omega() { return WGS84_omega<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the equatorial radius of GRS80 ellipsoid, \e a, in m.
      **********************************************************************/
-    template<typename T> static inline T GRS80_a()
+    template<typename T> static T GRS80_a()
     { return 6378137 * meter<T>(); }
     /**
      * A synonym for GRS80_a<real>().
      **********************************************************************/
-    static inline Math::real GRS80_a() { return GRS80_a<real>(); }
+    static Math::real GRS80_a() { return GRS80_a<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the gravitational constant of the GRS80 ellipsoid, \e GM, in
      *   m<sup>3</sup> s<sup>&minus;2</sup>.
      **********************************************************************/
-    template<typename T> static inline T GRS80_GM()
+    template<typename T> static T GRS80_GM()
     { return T(3986005) * 100000000; }
     /**
      * A synonym for GRS80_GM<real>().
      **********************************************************************/
-    static inline Math::real GRS80_GM() { return GRS80_GM<real>(); }
+    static Math::real GRS80_GM() { return GRS80_GM<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the angular velocity of the GRS80 ellipsoid, &omega;, in rad
@@ -228,43 +231,43 @@ namespace GeographicLib {
      * approximation (because the Gregorian year includes the precession of the
      * earth's axis).
      **********************************************************************/
-    template<typename T> static inline T GRS80_omega()
+    template<typename T> static T GRS80_omega()
     { return 7292115 / (T(1000000) * 100000); }
     /**
      * A synonym for GRS80_omega<real>().
      **********************************************************************/
-    static inline Math::real GRS80_omega() { return GRS80_omega<real>(); }
+    static Math::real GRS80_omega() { return GRS80_omega<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the dynamical form factor of the GRS80 ellipsoid,
      *   <i>J</i><sub>2</sub>.
      **********************************************************************/
-    template<typename T> static inline T GRS80_J2()
+    template<typename T> static T GRS80_J2()
     { return T(108263) / 100000000; }
     /**
      * A synonym for GRS80_J2<real>().
      **********************************************************************/
-    static inline Math::real GRS80_J2() { return GRS80_J2<real>(); }
+    static Math::real GRS80_J2() { return GRS80_J2<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the central scale factor for UTM (0.9996).
      **********************************************************************/
-    template<typename T> static inline T UTM_k0()
+    template<typename T> static T UTM_k0()
     {return T(9996) / 10000; }
     /**
      * A synonym for UTM_k0<real>().
      **********************************************************************/
-    static inline Math::real UTM_k0() { return UTM_k0<real>(); }
+    static Math::real UTM_k0() { return UTM_k0<real>(); }
     /**
      * @tparam T the type of the returned value.
      * @return the central scale factor for UPS (0.994).
      **********************************************************************/
-    template<typename T> static inline T UPS_k0()
+    template<typename T> static T UPS_k0()
     { return T(994) / 1000; }
     /**
      * A synonym for UPS_k0<real>().
      **********************************************************************/
-    static inline Math::real UPS_k0() { return UPS_k0<real>(); }
+    static Math::real UPS_k0() { return UPS_k0<real>(); }
     ///@}
 
     /** \name SI units
@@ -277,21 +280,21 @@ namespace GeographicLib {
      * This is unity, but this lets the internal system of units be changed if
      * necessary.
      **********************************************************************/
-    template<typename T> static inline T meter() { return T(1); }
+    template<typename T> static T meter() { return T(1); }
     /**
      * A synonym for meter<real>().
      **********************************************************************/
-    static inline Math::real meter() { return meter<real>(); }
+    static Math::real meter() { return meter<real>(); }
     /**
      * @return the number of meters in a kilometer.
      **********************************************************************/
-    static inline Math::real kilometer()
+    static Math::real kilometer()
     { return 1000 * meter<real>(); }
     /**
      * @return the number of meters in a nautical mile (approximately 1 arc
      *   minute)
      **********************************************************************/
-    static inline Math::real nauticalmile()
+    static Math::real nauticalmile()
     { return 1852 * meter<real>(); }
 
     /**
@@ -301,27 +304,27 @@ namespace GeographicLib {
      * This is unity, but this lets the internal system of units be changed if
      * necessary.
      **********************************************************************/
-    template<typename T> static inline T square_meter()
+    template<typename T> static T square_meter()
     { return meter<real>() * meter<real>(); }
     /**
      * A synonym for square_meter<real>().
      **********************************************************************/
-    static inline Math::real square_meter()
+    static Math::real square_meter()
     { return square_meter<real>(); }
     /**
      * @return the number of square meters in a hectare.
      **********************************************************************/
-    static inline Math::real hectare()
+    static Math::real hectare()
     { return 10000 * square_meter<real>(); }
     /**
      * @return the number of square meters in a square kilometer.
      **********************************************************************/
-    static inline Math::real square_kilometer()
+    static Math::real square_kilometer()
     { return kilometer() * kilometer(); }
     /**
      * @return the number of square meters in a square nautical mile.
      **********************************************************************/
-    static inline Math::real square_nauticalmile()
+    static Math::real square_nauticalmile()
     { return nauticalmile() * nauticalmile(); }
     ///@}
 
@@ -331,36 +334,36 @@ namespace GeographicLib {
     /**
      * @return the number of meters in an international foot.
      **********************************************************************/
-    static inline Math::real foot()
+    static Math::real foot()
     { return real(254 * 12) / 10000 * meter<real>(); }
     /**
      * @return the number of meters in a yard.
      **********************************************************************/
-    static inline Math::real yard() { return 3 * foot(); }
+    static Math::real yard() { return 3 * foot(); }
     /**
      * @return the number of meters in a fathom.
      **********************************************************************/
-    static inline Math::real fathom() { return 2 * yard(); }
+    static Math::real fathom() { return 2 * yard(); }
     /**
      * @return the number of meters in a chain.
      **********************************************************************/
-    static inline Math::real chain() { return 22 * yard(); }
+    static Math::real chain() { return 22 * yard(); }
     /**
      * @return the number of meters in a furlong.
      **********************************************************************/
-    static inline Math::real furlong() { return 10 * chain(); }
+    static Math::real furlong() { return 10 * chain(); }
     /**
      * @return the number of meters in a statute mile.
      **********************************************************************/
-    static inline Math::real mile() { return 8 * furlong(); }
+    static Math::real mile() { return 8 * furlong(); }
     /**
      * @return the number of square meters in an acre.
      **********************************************************************/
-    static inline Math::real acre() { return chain() * furlong(); }
+    static Math::real acre() { return chain() * furlong(); }
     /**
      * @return the number of square meters in a square statute mile.
      **********************************************************************/
-    static inline Math::real square_mile() { return mile() * mile(); }
+    static Math::real square_mile() { return mile() * mile(); }
     ///@}
 
     /** \name Anachronistic US units
@@ -369,7 +372,7 @@ namespace GeographicLib {
     /**
      * @return the number of meters in a US survey foot.
      **********************************************************************/
-    static inline Math::real surveyfoot()
+    static Math::real surveyfoot()
     { return real(1200) / 3937 * meter<real>(); }
     ///@}
   };

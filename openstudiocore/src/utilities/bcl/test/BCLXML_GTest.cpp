@@ -29,7 +29,6 @@
 
 #include <gtest/gtest.h>
 #include "BCLFixture.hpp"
-#include <resources.hxx>
 
 #include "../BCLXML.hpp"
 

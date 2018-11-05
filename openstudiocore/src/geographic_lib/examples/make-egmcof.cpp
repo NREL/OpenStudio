@@ -42,5 +42,4 @@ int main() {
     cerr << "Caught unknown exception\n";
     return 1;
   }
-  return 0;
 }

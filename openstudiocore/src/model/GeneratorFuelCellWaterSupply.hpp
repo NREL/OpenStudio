@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELLWATERSUPPLY_HPP
 #define MODEL_GENERATORFUELCELLWATERSUPPLY_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
 namespace openstudio {
@@ -94,7 +94,7 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
   boost::optional<Schedule> waterTemperatureSchedule() const;
 
   // Return optional parent generator
-  GeneratorFuelCell fuelCell() const;
+  boost::optional<GeneratorFuelCell> fuelCell() const;
 
   //@}
   /** @name Setters */

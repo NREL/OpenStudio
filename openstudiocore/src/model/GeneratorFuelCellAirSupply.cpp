@@ -56,6 +56,49 @@
 namespace openstudio {
 namespace model {
 
+AirSupplyConstituent::AirSupplyConstituent(std::string constituentName, double molarFraction)
+  : m_name(constituentName), m_molarFraction(molarFraction) {
+
+  if ((m_molarFraction < 0) || (m_molarFraction > 1)) {
+    LOG_AND_THROW("Unable to create constituent '" << m_name << "', molar fraction of " << m_molarFraction << " is outside the range [0, 1]");
+  }
+  if (!isValid(m_name)) {
+    LOG_AND_THROW("ConstituentName '" << m_name << " is not valid. Check AirSupplyConstituent::constituentNameValues() to see possible names.");
+  }
+}
+
+std::string AirSupplyConstituent::constituentName() const {
+  return m_name;
+}
+
+double AirSupplyConstituent::molarFraction() const {
+  return m_molarFraction;
+}
+
+bool AirSupplyConstituent::isValid(std::string constituentName) {
+  std::vector<std::string> validConstituentNames = constituentNameValues();
+  return std::find_if(validConstituentNames.begin(),
+                      validConstituentNames.end(),
+                      std::bind(istringEqual, constituentName, std::placeholders::_1)) != validConstituentNames.end();
+
+}
+
+std::vector<std::string> AirSupplyConstituent::constituentNameValues() {
+  IddObject obj = IddFactory::instance().getObject(GeneratorFuelCellAirSupply::iddObjectType()).get();
+  // Return IddKeyNames in extensible portion
+  return getIddKeyNames(obj,
+                        obj.numFields() + OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName);
+}
+
+std::vector<std::string> AirSupplyConstituent::validConstituentNameValues() {
+  return constituentNameValues();
+}
+
+std::ostream& operator<< (std::ostream& out, const openstudio::model::AirSupplyConstituent& constituent) {
+  out << "name=" << constituent.constituentName() << ", molar fraction=" << constituent.molarFraction();
+  return out;
+}
+
 namespace detail {
 
   GeneratorFuelCellAirSupply_Impl::GeneratorFuelCellAirSupply_Impl(const IdfObject& idfObject,
@@ -90,21 +133,6 @@ namespace detail {
     return GeneratorFuelCellAirSupply::iddObjectType();
   }
 
-  // This will clone both the GeneratorFuelCellAirSupply and its linked GeneratorFuelCell
-  // and will return a reference to the GeneratorFuelCellAirSupply
-  ModelObject GeneratorFuelCellAirSupply_Impl::clone(Model model) const {
-
-    // We call the parent generator's Clone method which will clone both the fuelCell and airSupply
-    GeneratorFuelCell fs = fuelCell();
-    GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
-
-    // We get the clone of the parent generator's airSupply so we can return that
-    GeneratorFuelCellAirSupply hxClone = fsClone.airSupply();
-
-
-    return hxClone;
-  }
-
   std::vector<IddObjectType> GeneratorFuelCellAirSupply_Impl::allowableChildTypes() const {
     std::vector<IddObjectType> result;
     result.push_back(IddObjectType::OS_Curve_Cubic);
@@ -132,19 +160,19 @@ namespace detail {
   }
 
   // Get the parent GeneratorFuelCell
-  GeneratorFuelCell GeneratorFuelCellAirSupply_Impl::fuelCell() const {
+  boost::optional<GeneratorFuelCell> GeneratorFuelCellAirSupply_Impl::fuelCell() const {
 
-    boost::optional<GeneratorFuelCell> value;
-    for (const GeneratorFuelCell& fc : this->model().getConcreteModelObjects<GeneratorFuelCell>()) {
-      if (boost::optional<GeneratorFuelCellAirSupply> fcHX = fc.airSupply()) {
-        if (fcHX->handle() == this->handle()) {
-          value = fc;
-        }
+    boost::optional<GeneratorFuelCell> fc;
+    // We use getModelObjectSources to check if more than one
+    std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
+
+    if( fcs.size() > 0u) {
+      if( fcs.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
       }
+      fc = fcs[0];
     }
-    OS_ASSERT(value);
-    return value.get();
-
+    return fc;
   }
 
   boost::optional<Node> GeneratorFuelCellAirSupply_Impl::airInletNode() const {
@@ -197,17 +225,6 @@ namespace detail {
     boost::optional<std::string> value = getString(OS_Generator_FuelCell_AirSupplyFields::AirSupplyConstituentMode,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  boost::optional<unsigned int> GeneratorFuelCellAirSupply_Impl::numberofUserDefinedConstituents() const {
-    boost::optional<unsigned int> value;
-    boost::optional<int> temp = getInt(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, true);
-    if (temp) {
-      if (temp >= 0) {
-        value = temp;
-      }
-    }
-    return value;
   }
 
   bool GeneratorFuelCellAirSupply_Impl::setAirInletNode(const Node& connection) {
@@ -297,51 +314,81 @@ namespace detail {
     return result;
   }
 
+  // TODO: this field shouldn't even exist in the IDD
+  unsigned int GeneratorFuelCellAirSupply_Impl::numberofUserDefinedConstituents() const {
+    return numExtensibleGroups();
+  }
+
+  // TODO: this shouldn't even exist in IDD
   bool GeneratorFuelCellAirSupply_Impl::setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents) {
     bool result = setInt(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, numberofUserDefinedConstituents);
     return result;
   }
 
+  // TODO: this shouldn't even exist in IDD
   void GeneratorFuelCellAirSupply_Impl::resetNumberofUserDefinedConstituents() {
     bool result = setInt(OS_Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, 0);
     OS_ASSERT(result);
   }
 
-  bool GeneratorFuelCellAirSupply_Impl::addConstituent(std::string name, double molarFraction) {
-    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    bool temp = false;
-    bool ok = false;
-    unsigned int num;
-    if (numberofUserDefinedConstituents()) {
-      num = numberofUserDefinedConstituents().get();
+  double GeneratorFuelCellAirSupply_Impl::sumofConstituentsMolarFractions() const {
+    double result = 0;
+    if (numberofUserDefinedConstituents() == 0) {
+      LOG(Warn, briefDescription() << " does not have any constituents");
     } else {
-      num = 0;
-    }
-    //max number of constituents is 5
-    if (num < 5) {
-      temp = eg.setString(OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, name);
-      ok = eg.setDouble(OS_Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction, molarFraction);
-    }
-    if (temp && ok) {
-      setNumberofUserDefinedConstituents(num + 1);
-    } else {
-      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
-    }
-    return temp;
-  }
-
-  void GeneratorFuelCellAirSupply_Impl::removeConstituent(unsigned groupIndex) {
-    unsigned numberofDataPairs = numExtensibleGroups();
-    if (groupIndex < numberofDataPairs) {
-      unsigned int num;
-      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
-      if (numberofUserDefinedConstituents()) {
-        num = numberofUserDefinedConstituents().get();
-        setNumberofUserDefinedConstituents(num - 1);
-      } else {
-        setNumberofUserDefinedConstituents(numExtensibleGroups());
+      for (const AirSupplyConstituent& constituent: constituents()) {
+        result += constituent.molarFraction();
       }
     }
+
+    return result;
+  }
+
+  bool GeneratorFuelCellAirSupply_Impl::addConstituent(const AirSupplyConstituent& constituent) {
+
+    bool result;
+
+    unsigned int num = numberofUserDefinedConstituents();
+    // Max number of constituents is 5
+    if (num >= 5) {
+      LOG(Warn, briefDescription() << " already has 5 constituents which is the limit");
+      result = false;
+    } else {
+      // Push an extensible group
+      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      bool temp = eg.setString(OS_Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, constituent.constituentName());
+      bool ok = eg.setDouble(OS_Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction, constituent.molarFraction());
+      if (temp && ok) {
+        setNumberofUserDefinedConstituents(num + 1);
+        result = true;
+      } else {
+        // Something went wrong, probably the constituent name isn't in the list of possible choices
+        // So erase the new extensible group
+        getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+        result = false;
+      }
+    }
+    return result;
+  }
+
+  bool GeneratorFuelCellAirSupply_Impl::addConstituent(std::string name, double molarFraction) {
+    // Make a constituent (which will check for validity), and then call the above function
+    AirSupplyConstituent constituent(name, molarFraction);
+    return addConstituent(constituent);
+  }
+
+  bool GeneratorFuelCellAirSupply_Impl::removeConstituent(unsigned groupIndex) {
+    bool result;
+
+    unsigned int num = numberofUserDefinedConstituents();
+    if (groupIndex < num) {
+      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+      setNumberofUserDefinedConstituents(num - 1);
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
   }
 
   void GeneratorFuelCellAirSupply_Impl::removeAllConstituents() {
@@ -349,8 +396,8 @@ namespace detail {
     resetNumberofUserDefinedConstituents();
   }
 
-  std::vector< std::pair<std::string, double> > GeneratorFuelCellAirSupply_Impl::constituents() {
-    std::vector< std::pair<std::string, double> > result;
+  std::vector<AirSupplyConstituent> GeneratorFuelCellAirSupply_Impl::constituents() const {
+    std::vector<AirSupplyConstituent> result;
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
@@ -359,7 +406,8 @@ namespace detail {
       boost::optional<double> molarFraction = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction);
 
       if (name && molarFraction) {
-        result.push_back(std::make_pair(name.get(), molarFraction.get()));
+        AirSupplyConstituent constituent(name.get(), molarFraction.get());
+        result.push_back(constituent);
       }
     }
 
@@ -400,7 +448,6 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
   setAirRateFunctionofFuelRateCurve(fuelRateCurve);
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
-  setNumberofUserDefinedConstituents(0);
 }
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
@@ -451,7 +498,6 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
   }
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
-  setNumberofUserDefinedConstituents(0);
 }
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
@@ -488,7 +534,6 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model,
 
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
-  setNumberofUserDefinedConstituents(0);
 }
 
 GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
@@ -517,7 +562,6 @@ GeneratorFuelCellAirSupply::GeneratorFuelCellAirSupply(const Model& model)
   setAirRateAirTemperatureCoefficient(0.00283);
   setAirIntakeHeatRecoveryMode("NoRecovery");
   setAirSupplyConstituentMode("AmbientAir");
-  setNumberofUserDefinedConstituents(0);
 
   CurveQuadratic curveQ(model);
   curveQ.setCoefficient1Constant(1.50976E-3);
@@ -553,19 +597,28 @@ IddObjectType GeneratorFuelCellAirSupply::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Generator_FuelCell_AirSupply);
 }
 
+double GeneratorFuelCellAirSupply::sumofConstituentsMolarFractions() const {
+  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->sumofConstituentsMolarFractions();
+}
+
+bool GeneratorFuelCellAirSupply::addConstituent(const AirSupplyConstituent& constituent) {
+  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->addConstituent(constituent);
+}
+
 bool GeneratorFuelCellAirSupply::addConstituent(std::string name, double molarFraction) {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->addConstituent(name, molarFraction);
 }
 
+// TODO: change to bool
 void GeneratorFuelCellAirSupply::removeConstituent(int groupIndex) {
-  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->removeConstituent(groupIndex);
+  getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->removeConstituent(groupIndex);
 }
 
 void GeneratorFuelCellAirSupply::removeAllConstituents() {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->removeAllConstituents();
 }
 
-std::vector< std::pair<std::string, double> > GeneratorFuelCellAirSupply::constituents() {
+std::vector<AirSupplyConstituent> GeneratorFuelCellAirSupply::constituents() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->constituents();
 }
 
@@ -696,15 +749,7 @@ bool GeneratorFuelCellAirSupply::setAirSupplyConstituentMode(const std::string& 
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->setAirSupplyConstituentMode(airSupplyConstituentMode);
 }
 
-bool GeneratorFuelCellAirSupply::setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents) {
-  return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->setNumberofUserDefinedConstituents(numberofUserDefinedConstituents);
-}
-
-void GeneratorFuelCellAirSupply::resetNumberofUserDefinedConstituents() {
-  getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->resetNumberofUserDefinedConstituents();
-}
-
-GeneratorFuelCell GeneratorFuelCellAirSupply::fuelCell() const {
+boost::optional<GeneratorFuelCell> GeneratorFuelCellAirSupply::fuelCell() const {
   return getImpl<detail::GeneratorFuelCellAirSupply_Impl>()->fuelCell();
 }
 

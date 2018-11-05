@@ -7,7 +7,7 @@
  * GeographicLib is Copyright (c) Charles Karney (2010-2012)
  * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 #include <string>
 
@@ -92,7 +92,7 @@ namespace NETGeographicLib
        * Do not wrap the \e lon2 in the direct calculation.
        * @hideinitializer
        **********************************************************************/
-      LONG_NOWRAP   = 1U<<15,
+      LONG_UNROLL   = 1U<<15,
       /**
        * All capabilities, calculate everything.
        * @hideinitializer

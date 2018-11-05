@@ -1,9 +1,8 @@
 // Example of using the GeographicLib::PolarStereographic class
 
 #include <iostream>
-#include <exception>
-#include <string>
 #include <iomanip>
+#include <exception>
 #include <GeographicLib/PolarStereographic.hpp>
 
 using namespace std;
@@ -35,5 +34,4 @@ int main() {
     cerr << "Caught exception: " << e.what() << "\n";
     return 1;
   }
-  return 0;
 }

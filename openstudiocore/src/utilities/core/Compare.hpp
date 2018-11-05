@@ -40,6 +40,20 @@
 #include <boost/optional.hpp>
 #include <boost/algorithm/string.hpp>
 
+// In the GNU C Library, "minor" is defined
+// by <sys/sysmacros.h>. For historical compatibility, it is
+// currently defined by <sys/types.h> as well, but we plan to
+// remove this soon. To use "minor", include <sys/sysmacros.h>
+// directly. If you did not intend to use a system-defined macro
+// "minor", you should undefine it after including <sys/types.h>.
+// int minor() const;
+#ifdef major
+#undef major
+#endif
+#ifdef minor
+#undef minor
+#endif
+
 namespace openstudio {
 
 class BCLComponent;

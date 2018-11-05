@@ -34,6 +34,7 @@ EXAMPLE_FILES = \
 	example-MagneticCircle.cpp \
 	example-MagneticModel.cpp \
 	example-Math.cpp \
+	example-NearestNeighbor.cpp \
 	example-NormalGravity.cpp \
 	example-OSGB.cpp \
 	example-PolarStereographic.cpp \

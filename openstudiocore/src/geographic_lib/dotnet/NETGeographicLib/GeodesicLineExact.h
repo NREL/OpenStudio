@@ -7,7 +7,7 @@
  * GeographicLib is Copyright (c) Charles Karney (2010-2012)
  * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 #include "NETGeographicLib.h"
 
@@ -36,12 +36,16 @@ namespace NETGeographicLib
    *
    * The following functions are implemented as properties:
    * Latitude, Longitude, Azimuth, EquatorialAzimuth, EquatorialArc,
-   * MajorRadius, and Flattening.
+   * MajorRadius, Distance, Arc, and Flattening.
    *
    * The constructors, GenPosition, and Capabilities functions accept the
    * "capabilities mask" as a NETGeographicLib::Mask rather than an
    * unsigned.  The Capabilities function returns a NETGeographicLib::Mask
    * rather than an unsigned.
+   *
+   * The overloaded Azimuth and EquatorialAzimuth functions that return
+   * the sin and cosine terms have been renamed AzimuthSinCos and
+   * EquatorialAzimuthSinCos, repectively.
    **********************************************************************/
     public ref class GeodesicLineExact
     {
@@ -59,7 +63,7 @@ namespace NETGeographicLib
           OUT_MASK = 0xFF80U,       // Includes LONG_UNROLL
         };
         // a pointer to the GeographicLib::GeodesicLineExact.
-        const GeographicLib::GeodesicLineExact* m_pGeodesicLineExact;
+        GeographicLib::GeodesicLineExact* m_pGeodesicLineExact;
 
         // the finalizer frees the unmanaged memory when the object is destroyed.
         !GeodesicLineExact(void);
@@ -124,12 +128,10 @@ namespace NETGeographicLib
            **********************************************************************/
           AREA          = 1U<<14 | unsigned(captype::CAP_C4),
           /**
-           * Unroll \e lon2 in the direct calculation.  (This flag used to be
-           * called LONG_NOWRAP.)
+           * Unroll \e lon2 in the direct calculation.
            * @hideinitializer
            **********************************************************************/
           LONG_UNROLL   = 1U<<15,
-          LONG_NOWRAP   = LONG_UNROLL,
           /**
            * All capabilities, calculate everything.  (LONG_UNROLL is not
            * included in this mask.)
@@ -189,6 +191,13 @@ namespace NETGeographicLib
          **********************************************************************/
         GeodesicLineExact(double lat1, double lon1, double azi1,
                           NETGeographicLib::Mask caps);
+
+        /**
+        * This constructor accepts a reference to an unmanaged
+        * GeodesicLineExact.
+        * FOR INTERNAL USE ONLY.
+        **********************************************************************/
+        GeodesicLineExact(const GeographicLib::GeodesicLineExact& gle);
         ///@}
 
         /**
@@ -479,6 +488,79 @@ namespace NETGeographicLib
 
         ///@}
 
+        /** \name Setting point 3
+        **********************************************************************/
+        ///@{
+
+        /**
+        * Specify position of point 3 in terms of distance.
+        *
+        * @param[in] s13 the distance from point 1 to point 3 (meters); it
+        *   can be negative.
+        *
+        * This is only useful if the GeodesicLineExact object has been constructed
+        * with \e caps |= GeodesicLineExact::DISTANCE_IN.
+        **********************************************************************/
+        void SetDistance(double s13);
+
+        /**
+        * Specify position of point 3 in terms of arc length.
+        *
+        * @param[in] a13 the arc length from point 1 to point 3 (degrees); it
+        *   can be negative.
+        *
+        * The distance \e s13 is only set if the GeodesicLineExact object has been
+        * constructed with \e caps |= GeodesicLineExact::DISTANCE.
+        **********************************************************************/
+        void SetArc(double a13);
+
+        /**
+        * Specify position of point 3 in terms of either distance or arc length.
+        *
+        * @param[in] arcmode boolean flag determining the meaning of the second
+        *   parameter; if \e arcmode is false, then the GeodesicLineExact object
+        *   must have been constructed with \e caps |=
+        *   GeodesicLineExact::DISTANCE_IN.
+        * @param[in] s13_a13 if \e arcmode is false, this is the distance from
+        *   point 1 to point 3 (meters); otherwise it is the arc length from
+        *   point 1 to point 3 (degrees); it can be negative.
+        **********************************************************************/
+        void GenSetDistance(bool arcmode, double s13_a13);
+
+        /**
+        * The distance or arc length to point 3.
+        *
+        * @param[in] arcmode boolean flag determining the meaning of returned
+        *   value.
+        * @return \e s13 if \e arcmode is false; \e a13 if \e arcmode is true.
+        **********************************************************************/
+        double GenDistance(bool arcmode);
+        ///@}
+
+        /** \name Trigonometric accessor functions
+        **********************************************************************/
+        ///@{
+        /**
+        * The sine and cosine of \e azi1.
+        *
+        * @param[out] sazi1 the sine of \e azi1.
+        * @param[out] cazi1 the cosine of \e azi1.
+        **********************************************************************/
+        void AzimuthSinCos(
+            [System::Runtime::InteropServices::Out] double% sazi1,
+            [System::Runtime::InteropServices::Out] double% cazi1);
+
+        /**
+        * The sine and cosine of \e azi0.
+        *
+        * @param[out] sazi0 the sine of \e azi0.
+        * @param[out] cazi0 the cosine of \e azi0.
+        **********************************************************************/
+        void EquatorialAzimuthSinCos(
+            [System::Runtime::InteropServices::Out] double% sazi0,
+            [System::Runtime::InteropServices::Out] double% cazi0);
+        ///@}
+
         /** \name Inspector functions
          **********************************************************************/
         ///@{
@@ -521,6 +603,16 @@ namespace NETGeographicLib
          *   inherited from the GeodesicExact object used in the constructor.
          **********************************************************************/
         property double Flattening { double get(); }
+
+        /**
+        * @return \e s13, the distance to point 3 (meters).
+        **********************************************************************/
+        property double Distance { double get(); }
+
+        /**
+        * @return \e a13, the arc length to point 3 (degrees).
+        **********************************************************************/
+        property double Arc { double get(); }
 
         /**
          * @return \e caps the computational capabilities that this object was

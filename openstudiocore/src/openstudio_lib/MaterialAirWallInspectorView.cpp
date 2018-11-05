@@ -124,7 +124,7 @@ void MaterialAirWallInspectorView::attach(openstudio::model::AirWallMaterial & a
   m_nameEdit->bind(
     *m_airWallMaterial,
     OptionalStringGetter(std::bind(&model::AirWallMaterial::name, m_airWallMaterial.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::AirWallMaterial::setName, m_airWallMaterial.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::AirWallMaterial::setName, m_airWallMaterial.get_ptr(),std::placeholders::_1))
   );
 
   m_standardsInformationWidget->attach(airWallMaterial);

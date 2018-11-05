@@ -26,8 +26,8 @@ function projdoc
 %
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
-%     https://dx.doi.org/10.1007/s00190-012-0578-z
-%     Addenda: http://geographiclib.sf.net/geod-addenda.html
+%     https://doi.org/10.1007/s00190-012-0578-z
+%     Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 %
 %   The parameters of the ellipsoid are specified by the optional ellipsoid
 %   argument to the routines.  This is a two-element vector of the form
@@ -63,8 +63,8 @@ function projdoc
 %       applications in geodesy.
 %
 %   See also TRANMERC_FWD, TRANMERC_INV, POLARST_FWD, POLARST_INV,
-%     EQDAZIM_FWD, EQDAZIM_INV, CASSINI_FWD, CASSINI_INV,
-%     GNOMONIC_FWD, GNOMONIC_INV, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC.
+%     EQDAZIM_FWD, EQDAZIM_INV, CASSINI_FWD, CASSINI_INV, GNOMONIC_FWD,
+%     GNOMONIC_INV, DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 

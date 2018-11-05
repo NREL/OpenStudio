@@ -7,7 +7,7 @@
 <link rev="made" href="mailto:root@localhost" />
 </head>
 
-<body style="background-color: white">
+<body>
 
 
 
@@ -17,7 +17,7 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<p><b>GeoConvert</b> [ <b>-g</b> | <b>-d</b> | <b>-:</b> | <b>-u</b> | <b>-m</b> | <b>-c</b> ] [ <b>-z</b> <i>zone</i> | <b>-s</b> | <b>-t</b> ] [ <b>-n</b> ] [ <b>-w</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-l</b> | <b>-a</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
+<p><b>GeoConvert</b> [ <b>-g</b> | <b>-d</b> | <b>-:</b> | <b>-u</b> | <b>-m</b> | <b>-c</b> ] [ <b>-z</b> <i>zone</i> | <b>-s</b> | <b>-t</b> | <b>-S</b> | <b>-T</b> ] [ <b>-n</b> ] [ <b>-w</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-l</b> | <b>-a</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
@@ -96,10 +96,10 @@
 <dt id="c"><b>-c</b></dt>
 <dd>
 
-<p>output meridian convergence and scale for the corresponding UTM or UPS projection. Convergence is the bearing of grid north given as degrees clockwise from true north.</p>
+<p>output meridian convergence and scale for the corresponding UTM or UPS projection. The meridian convergence is the bearing of grid north given as degrees clockwise from true north.</p>
 
 </dd>
-<dt id="z"><b>-z</b></dt>
+<dt id="z-zone"><b>-z</b> <i>zone</i></dt>
 <dd>
 
 <p>set the zone to <i>zone</i> for output. Use either 0 &lt; <i>zone</i> &lt;= 60 for a UTM zone or <i>zone</i> = 0 for UPS. Alternatively use a <i>zone</i>+<i>hemisphere</i> designation, e.g., 38n. See <a href="#ZONE">&quot;ZONE&quot;</a>.</p>
@@ -117,6 +117,12 @@
 <p>similar to <b>-s</b> but forces UPS regions to the closest UTM zone.</p>
 
 </dd>
+<dt id="S-or--T"><b>-S</b> or <b>-T</b></dt>
+<dd>
+
+<p>behave the same as <b>-s</b> and <b>-t</b>, respectively, until the first legal conversion is performed. For subsequent points, the zone and hemisphere of that conversion are used. This enables a sequence of points to be converted into UTM or UPS using a consistent coordinate system.</p>
+
+</dd>
 <dt id="n"><b>-n</b></dt>
 <dd>
 
@@ -126,10 +132,10 @@
 <dt id="w"><b>-w</b></dt>
 <dd>
 
-<p>on input and output, longitude precedes latitude (except that, on input, this can be overridden by a hemisphere designator, <i>N</i>, <i>S</i>, <i>E</i>, <i>W</i>).</p>
+<p>toggle the longitude first flag (it starts off); if the flag is on, then on input and output, longitude precedes latitude (except that, on input, this can be overridden by a hemisphere designator, <i>N</i>, <i>S</i>, <i>E</i>, <i>W</i>).</p>
 
 </dd>
-<dt id="p"><b>-p</b></dt>
+<dt id="p-prec"><b>-p</b> <i>prec</i></dt>
 <dd>
 
 <p>set the output precision to <i>prec</i> (default 0); <i>prec</i> is the precision relative to 1 m. See <a href="#PRECISION">&quot;PRECISION&quot;</a>.</p>
@@ -147,7 +153,7 @@
 <p>on output, UTM/UPS uses the abbreviations <i>n</i> and <i>s</i> to designate the hemisphere instead of <i>north</i> or <i>south</i>; this is the default representation.</p>
 
 </dd>
-<dt id="comment-delimiter"><b>--comment-delimiter</b></dt>
+<dt id="comment-delimiter-commentdelim"><b>--comment-delimiter</b> <i>commentdelim</i></dt>
 <dd>
 
 <p>set the comment delimiter to <i>commentdelim</i> (e.g., &quot;#&quot; or &quot;//&quot;). If set, the input lines will be scanned for this delimiter and, if found, the delimiter and the rest of the line will be removed prior to processing and subsequently appended to the output line (separated by a space).</p>
@@ -171,25 +177,25 @@
 <p>print full documentation and exit.</p>
 
 </dd>
-<dt id="input-file"><b>--input-file</b></dt>
+<dt id="input-file-infile"><b>--input-file</b> <i>infile</i></dt>
 <dd>
 
 <p>read input from the file <i>infile</i> instead of from standard input; a file name of &quot;-&quot; stands for standard input.</p>
 
 </dd>
-<dt id="input-string"><b>--input-string</b></dt>
+<dt id="input-string-instring"><b>--input-string</b> <i>instring</i></dt>
 <dd>
 
 <p>read input from the string <i>instring</i> instead of from standard input. All occurrences of the line separator character (default is a semicolon) in <i>instring</i> are converted to newlines before the reading begins.</p>
 
 </dd>
-<dt id="line-separator"><b>--line-separator</b></dt>
+<dt id="line-separator-linesep"><b>--line-separator</b> <i>linesep</i></dt>
 <dd>
 
 <p>set the line separator character to <i>linesep</i>. By default this is a semicolon.</p>
 
 </dd>
-<dt id="output-file"><b>--output-file</b></dt>
+<dt id="output-file-outfile"><b>--output-file</b> <i>outfile</i></dt>
 <dd>
 
 <p>write output to the file <i>outfile</i> instead of to standard output; a file name of &quot;-&quot; stands for standard output.</p>
@@ -199,7 +205,7 @@
 
 <h1 id="PRECISION">PRECISION</h1>
 
-<p><i>prec</i> gives precision of the output with <i>prec</i> = 0 giving 1 m precision, <i>prec</i> = 3 giving 1 mm precision, etc. <i>prec</i> is the number of digits after the decimal point for UTM/UPS. The number of digits per coordinate for MGRS is 5 + <i>prec</i>. For decimal degrees, the number of digits after the decimal point is 5 + <i>prec</i>. For DMS (degree, minute, seconds) output, the number of digits after the decimal point in the seconds components is 1 + <i>prec</i>; if this is negative then use minutes (<i>prec</i> = -2 or -3) or degrees (<i>prec</i> &lt;= -4) as the least significant component. Print convergence, resp. scale, with 5 + <i>prec</i>, resp. 7 + <i>prec</i>, digits after the decimal point. The minimum value of <i>prec</i> is -5 and the maximum is 9 for UTM/UPS, 9 for decimal degrees, 10 for DMS, 6 for MGRS, and 8 for convergence and scale.</p>
+<p><i>prec</i> gives precision of the output with <i>prec</i> = 0 giving 1 m precision, <i>prec</i> = 3 giving 1 mm precision, etc. <i>prec</i> is the number of digits after the decimal point for UTM/UPS. For MGRS, The number of digits per coordinate is 5 + <i>prec</i>; &lt;prec&gt; = -6 results in just the grid zone. For decimal degrees, the number of digits after the decimal point is 5 + <i>prec</i>. For DMS (degree, minute, seconds) output, the number of digits after the decimal point in the seconds components is 1 + <i>prec</i>; if this is negative then use minutes (<i>prec</i> = -2 or -3) or degrees (<i>prec</i> &lt;= -4) as the least significant component. Print convergence, resp. scale, with 5 + <i>prec</i>, resp. 7 + <i>prec</i>, digits after the decimal point. The minimum value of <i>prec</i> is -5 (-6 for MGRS) and the maximum is 9 for UTM/UPS, 9 for decimal degrees, 10 for DMS, 6 for MGRS, and 8 for convergence and scale.</p>
 
 <h1 id="GEOGRAPHIC-COORDINATES">GEOGRAPHIC COORDINATES</h1>
 
@@ -209,7 +215,7 @@
 
 <pre><code>    39N 70W+0:0:15E</code></pre>
 
-<p><b>WARNING:</b> &quot;Exponential&quot; notation is not recognized for geographic coordinates; instead 7.0E+1 is parsed as (7.0E) + (+1), yielding the same result as 8.0E.</p>
+<p><b>WARNING:</b> &quot;Exponential&quot; notation is not recognized for geographic coordinates. Thus 7.0E1 is illegal, while 7.0E+1 is parsed as (7.0E) + (+1), yielding the same result as 8.0E.</p>
 
 <p>Various unicode characters (encoded with UTF-8) may also be used to denote degrees, minutes, and seconds, e.g., the degree, prime, and double prime symbols; in addition two single quotes can be used to represent &quot;.</p>
 
@@ -353,9 +359,9 @@
 
 <h1 id="SEE-ALSO">SEE ALSO</h1>
 
-<p>An online version of this utility is availbable at <a href="http://geographiclib.sourceforge.net/cgi-bin/GeoConvert">http://geographiclib.sourceforge.net/cgi-bin/GeoConvert</a>.</p>
+<p>An online version of this utility is availbable at <a href="https://geographiclib.sourceforge.io/cgi-bin/GeoConvert">https://geographiclib.sourceforge.io/cgi-bin/GeoConvert</a>.</p>
 
-<p>The algorithms for the transverse Mercator projection are described in C. F. F. Karney, <i>Transverse Mercator with an accuracy of a few nanometers</i>, J. Geodesy <b>85</b>(8), 475-485 (Aug. 2011); DOI <a href="https://dx.doi.org/10.1007/s00190-011-0445-3">https://dx.doi.org/10.1007/s00190-011-0445-3</a>; preprint <a href="http://arxiv.org/abs/1002.1417">http://arxiv.org/abs/1002.1417</a>.</p>
+<p>The algorithms for the transverse Mercator projection are described in C. F. F. Karney, <i>Transverse Mercator with an accuracy of a few nanometers</i>, J. Geodesy <b>85</b>(8), 475-485 (Aug. 2011); DOI <a href="https://doi.org/10.1007/s00190-011-0445-3">https://doi.org/10.1007/s00190-011-0445-3</a>; preprint <a href="https://arxiv.org/abs/1002.1417">https://arxiv.org/abs/1002.1417</a>.</p>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 
@@ -363,7 +369,7 @@
 
 <h1 id="HISTORY">HISTORY</h1>
 
-<p><b>GeoConvert</b> was added to GeographicLib, <a href="http://geographiclib.sf.net">http://geographiclib.sf.net</a>, in 2009-01.</p>
+<p><b>GeoConvert</b> was added to GeographicLib, <a href="https://geographiclib.sourceforge.io">https://geographiclib.sourceforge.io</a>, in 2009-01.</p>
 
 
 </body>

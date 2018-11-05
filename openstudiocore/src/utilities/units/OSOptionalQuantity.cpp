@@ -72,7 +72,7 @@ bool OSOptionalQuantity::empty() const {
 }
 
 bool OSOptionalQuantity::isSet() const {
-  return m_value;
+  return m_value.has_value();
 }
 
 Quantity OSOptionalQuantity::get() const {

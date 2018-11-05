@@ -9,12 +9,12 @@
  *
  *    Charles F. F. Karney,
  *    Algorithms for geodesics, J. Geodesy 87, 43-55 (2013);
- *    https://dx.doi.org/10.1007/s00190-012-0578-z
- *    Addenda: http://geographiclib.sf.net/geod-addenda.html
+ *    https://doi.org/10.1007/s00190-012-0578-z
+ *    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
  *
- * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  */
 
 // Load AFTER Math.js
@@ -30,7 +30,6 @@ GeographicLib.PolygonArea = {};
    *   {@link module:GeographicLib/Geodesic.Geodesic Geodesic} class.
    */
   g, l, p, m, c) {
-  "use strict";
 
   var GEOGRAPHICLIB_GEODESIC_ORDER = 6,
       nA1_ = GEOGRAPHICLIB_GEODESIC_ORDER,
@@ -49,7 +48,7 @@ GeographicLib.PolygonArea = {};
       CAP_ALL  = 0x1F,
       CAP_MASK = CAP_ALL,
       OUT_ALL  = 0x7F80,
-      Astroid,
+      astroid,
       A1m1f_coeff, C1f_coeff, C1pf_coeff,
       A2m1f_coeff, C2f_coeff,
       A3_coeff, C3_coeff, C4_coeff;
@@ -61,7 +60,7 @@ GeographicLib.PolygonArea = {};
   g.nC3_ = GEOGRAPHICLIB_GEODESIC_ORDER;
   g.nC4_ = GEOGRAPHICLIB_GEODESIC_ORDER;
   nC3x_ = (g.nC3_ * (g.nC3_ - 1)) / 2;
-  nC4x_ = (g.nC4_ * (g.nC4_ + 1)) / 2,
+  nC4x_ = (g.nC4_ * (g.nC4_ + 1)) / 2;
   g.CAP_C1   = 1<<0;
   g.CAP_C1p  = 1<<1;
   g.CAP_C2   = 1<<2;
@@ -69,6 +68,7 @@ GeographicLib.PolygonArea = {};
   g.CAP_C4   = 1<<4;
 
   g.NONE          = 0;
+  g.ARC           = 1<<6;
   g.LATITUDE      = 1<<7  | CAP_NONE;
   g.LONGITUDE     = 1<<8  | g.CAP_C3;
   g.AZIMUTH       = 1<<9  | CAP_NONE;
@@ -103,7 +103,7 @@ GeographicLib.PolygonArea = {};
             cosx * (y0 - y1));            // cos(x) * (y0 - y1)
   };
 
-  Astroid = function(x, y) {
+  astroid = function(x, y) {
     // Solve k^4+2*k^3-(x^2+y^2-1)*k^2-2*y^2*k-y^2 = 0 for positive
     // root k.  This solution is adapted from Geocentric::Reverse.
     var k,
@@ -116,7 +116,7 @@ GeographicLib.PolygonArea = {};
       // equations for s and t by r^3 and r, resp.
       S = p * q / 4;            // S = r^3 * s
       r2 = m.sq(r);
-      r3 = r * r2
+      r3 = r * r2;
       // The discriminant of the quadratic equation for T3.  This is
       // zero on the evolute curve p^(1/3)+q^(1/3) = 1
       disc = S * (S + 2 * r3);
@@ -157,7 +157,7 @@ GeographicLib.PolygonArea = {};
 
   A1m1f_coeff = [
     // (1-eps)*A1-1, polynomial in eps2 of order 3
-      +1, 4, 64, 0, 256,
+      +1, 4, 64, 0, 256
   ];
 
   // The scale factor A1-1 = mean value of (d/dsigma)I1 - 1
@@ -179,7 +179,7 @@ GeographicLib.PolygonArea = {};
     // C1[5]/eps^5, polynomial in eps2 of order 0
       -7, 1280,
     // C1[6]/eps^6, polynomial in eps2 of order 0
-      -7, 2048,
+      -7, 2048
   ];
 
   // The coefficients C1[l] in the Fourier expansion of B1
@@ -208,7 +208,7 @@ GeographicLib.PolygonArea = {};
     // C1p[5]/eps^5, polynomial in eps2 of order 0
       +3467, 7680,
     // C1p[6]/eps^6, polynomial in eps2 of order 0
-      +38081, 61440,
+      +38081, 61440
   ];
 
   // The coefficients C1p[l] in the Fourier expansion of B1p
@@ -227,7 +227,7 @@ GeographicLib.PolygonArea = {};
 
   A2m1f_coeff = [
     // (eps+1)*A2-1, polynomial in eps2 of order 3
-      -11, -28, -192, 0, 256,
+      -11, -28, -192, 0, 256
   ];
 
   // The scale factor A2-1 = mean value of (d/dsigma)I2 - 1
@@ -249,7 +249,7 @@ GeographicLib.PolygonArea = {};
     // C2[5]/eps^5, polynomial in eps2 of order 0
       +63, 1280,
     // C2[6]/eps^6, polynomial in eps2 of order 0
-      +77, 2048,
+      +77, 2048
   ];
 
   // The coefficients C2[l] in the Fourier expansion of B2
@@ -317,9 +317,9 @@ GeographicLib.PolygonArea = {};
       Math.sqrt( Math.max(0.001, Math.abs(this.f)) *
                  Math.min(1.0, 1 - this.f/2) / 2 );
     if (!(isFinite(this.a) && this.a > 0))
-      throw new Error("Major radius is not positive");
+      throw new Error("Equatorial radius is not positive");
     if (!(isFinite(this._b) && this._b > 0))
-      throw new Error("Minor radius is not positive");
+      throw new Error("Polar semi-axis is not positive");
     this._A3x = new Array(nA3x_);
     this._C3x = new Array(nC3x_);
     this._C4x = new Array(nC4x_);
@@ -340,7 +340,7 @@ GeographicLib.PolygonArea = {};
     // A3, coeff of eps^1, polynomial in n of order 1
       +1, -1, 2,
     // A3, coeff of eps^0, polynomial in n of order 0
-      +1, 1,
+      +1, 1
   ];
 
   // The scale factor A3 = mean value of (d/dsigma)I3
@@ -349,8 +349,8 @@ GeographicLib.PolygonArea = {};
         j, p;
     for (j = nA3_ - 1; j >= 0; --j) { // coeff of eps^j
       p = Math.min(nA3_ - j - 1, j);  // order of polynomial in n
-      this._A3x[k++] = m.polyval(p, A3_coeff, o, this._n)
-        / A3_coeff[o + p + 1];
+      this._A3x[k++] = m.polyval(p, A3_coeff, o, this._n) /
+        A3_coeff[o + p + 1];
       o += p + 2;
     }
   };
@@ -385,7 +385,7 @@ GeographicLib.PolygonArea = {};
     // C3[4], coeff of eps^4, polynomial in n of order 1
       -14, 7, 512,
     // C3[5], coeff of eps^5, polynomial in n of order 0
-      +21, 2560,
+      +21, 2560
   ];
 
   // The coefficients C3[l] in the Fourier expansion of B3
@@ -444,7 +444,7 @@ GeographicLib.PolygonArea = {};
     // C4[4], coeff of eps^4, polynomial in n of order 1
       -2560, 832, 405405,
     // C4[5], coeff of eps^5, polynomial in n of order 0
-      +128, 99099,
+      +128, 99099
   ];
 
   g.Geodesic.prototype.C4coeff = function() {
@@ -453,8 +453,8 @@ GeographicLib.PolygonArea = {};
     for (l = 0; l < g.nC4_; ++l) {        // l is index of C4[l]
       for (j = g.nC4_ - 1; j >= l; --j) { // coeff of eps^j
         p = g.nC4_ - j - 1;               // order of polynomial in n
-        this._C4x[k++] = m.polyval(p, C4_coeff, o, this._n)
-          / C4_coeff[o + p + 1];
+        this._C4x[k++] = m.polyval(p, C4_coeff, o, this._n) /
+          C4_coeff[o + p + 1];
         o += p + 2;
       }
     }
@@ -552,7 +552,8 @@ GeographicLib.PolygonArea = {};
 
   // return sig12, salp1, calp1, salp2, calp2, dnm
   g.Geodesic.prototype.InverseStart = function(sbet1, cbet1, dn1,
-                                               sbet2, cbet2, dn2, lam12,
+                                               sbet2, cbet2, dn2,
+                                               lam12, slam12, clam12,
                                                C1a, C2a) {
     // Return a starting point for Newton's method in salp1 and calp1
     // (function value is -1).  If Newton's method doesn't need to be
@@ -564,7 +565,7 @@ GeographicLib.PolygonArea = {};
         cbet12 = cbet2 * cbet1 + sbet2 * sbet1,
         sbet12a, shortline, omg12, sbetm2, somg12, comg12, t, ssig12, csig12,
         x, y, lamscale, betscale, k2, eps, cbet12a, bet12a, m12b, m0, nvals,
-        k, omg12a;
+        k, omg12a, lam12x;
     vals.sig12 = -1;        // Return value
     // Volatile declaration needed to fix inverse cases
     // 88.202499451857 0 -88.202499451857 179.981022032992859592
@@ -575,16 +576,17 @@ GeographicLib.PolygonArea = {};
     sbet12a += cbet2 * sbet1;
 
     shortline = cbet12 >= 0 && sbet12 < 0.5 && cbet2 * lam12 < 0.5;
-    omg12 = lam12;
     if (shortline) {
       sbetm2 = m.sq(sbet1 + sbet2);
       // sin((bet1+bet2)/2)^2
       // =  (sbet1 + sbet2)^2 / ((sbet1 + sbet2)^2 + (cbet1 + cbet2)^2)
       sbetm2 /= sbetm2 + m.sq(cbet1 + cbet2);
       vals.dnm = Math.sqrt(1 + this._ep2 * sbetm2);
-      omg12 /= this._f1 * vals.dnm;
+      omg12 = lam12 / (this._f1 * vals.dnm);
+      somg12 = Math.sin(omg12); comg12 = Math.cos(omg12);
+    } else {
+      somg12 = slam12; comg12 = clam12;
     }
-    somg12 = Math.sin(omg12); comg12 = Math.cos(omg12);
 
     vals.salp1 = cbet2 * somg12;
     vals.calp1 = comg12 >= 0 ?
@@ -593,7 +595,6 @@ GeographicLib.PolygonArea = {};
 
     ssig12 = m.hypot(vals.salp1, vals.calp1);
     csig12 = sbet1 * sbet2 + cbet1 * cbet2 * comg12;
-
     if (shortline && ssig12 < this._etol2) {
       // really short lines
       vals.salp2 = cbet1 * somg12;
@@ -610,6 +611,7 @@ GeographicLib.PolygonArea = {};
     } else {
       // Scale lam12 and bet2 to x, y coordinate system where antipodal
       // point is at origin and singular point is at y = 0, x = -1.
+      lam12x = Math.atan2(-slam12, -clam12); // lam12 - pi
       if (this.f >= 0) {       // In fact f == 0 does not get here
         // x = dlong, y = dlat
         k2 = m.sq(sbet1) * this._ep2;
@@ -617,7 +619,7 @@ GeographicLib.PolygonArea = {};
         lamscale = this.f * cbet1 * this.A3f(eps) * Math.PI;
         betscale = lamscale * cbet1;
 
-        x = (lam12 - Math.PI) / lamscale;
+        x = lam12x / lamscale;
         y = sbet12a / betscale;
       } else {                  // f < 0
         // x = dlat, y = dlong
@@ -633,14 +635,14 @@ GeographicLib.PolygonArea = {};
         betscale = x < -0.01 ? sbet12a / x :
           -this.f * m.sq(cbet1) * Math.PI;
         lamscale = betscale / cbet1;
-        y = (lam12 - Math.PI) / lamscale;
+        y = lam12 / lamscale;
       }
 
       if (y > -tol1_ && x > -1 - xthresh_) {
         // strip near cut
         if (this.f >= 0) {
           vals.salp1 = Math.min(1, -x);
-          vals.calp1 = - Math.sqrt(1 - m.sq(vals.salp1));
+          vals.calp1 = -Math.sqrt(1 - m.sq(vals.salp1));
         } else {
           vals.calp1 = Math.max(x > -tol1_ ? 0 : -1, x);
           vals.salp1 = Math.sqrt(1 - m.sq(vals.calp1));
@@ -680,7 +682,7 @@ GeographicLib.PolygonArea = {};
         //    6    56      0
         //
         // Because omg12 is near pi, estimate work with omg12a = pi - omg12
-        k = Astroid(x, y);
+        k = astroid(x, y);
         omg12a = lamscale * ( this.f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k );
         somg12 = Math.sin(omg12a); comg12 = -Math.cos(omg12a);
         // Update spherical estimate of alp1 using omg12 instead of
@@ -691,7 +693,7 @@ GeographicLib.PolygonArea = {};
       }
     }
     // Sanity check on starting guess.  Backwards check allows NaN through.
-    if (!(vals.salp1 <= 0)) {
+    if (!(vals.salp1 <= 0.0)) {
       // norm(vals.salp1, vals.calp1);
       t = m.hypot(vals.salp1, vals.calp1); vals.salp1 /= t; vals.calp1 /= t;
     } else {
@@ -702,12 +704,13 @@ GeographicLib.PolygonArea = {};
 
   // return lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
   // domg12, dlam12,
-  g.Geodesic.prototype.Lambda12 = function(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-                                           salp1, calp1, diffp,
-                                           C1a, C2a, C3a) {
+  g.Geodesic.prototype.Lambda12 = function(sbet1, cbet1, dn1,
+                                           sbet2, cbet2, dn2,
+                                           salp1, calp1, slam120, clam120,
+                                           diffp, C1a, C2a, C3a) {
     var vals = {},
         t, salp0, calp0,
-        somg1, comg1, somg2, comg2, omg12, B312, h0, k2, nvals;
+        somg1, comg1, somg2, comg2, somg12, comg12, B312, eta, k2, nvals;
     if (sbet1 === 0 && calp1 === 0)
       // Break degeneracy of equatorial line.  This case has already been
       // handled.
@@ -749,24 +752,26 @@ GeographicLib.PolygonArea = {};
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     vals.sig12 = Math.atan2(Math.max(0, vals.csig1 * vals.ssig2 -
-                                     vals.ssig1 * vals.csig2),
-                            vals.csig1 * vals.csig2 + vals.ssig1 * vals.ssig2);
+                                        vals.ssig1 * vals.csig2),
+                                        vals.csig1 * vals.csig2 +
+                                        vals.ssig1 * vals.ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
-    omg12 = Math.atan2(Math.max(0, comg1 * somg2 - somg1 * comg2),
-                       comg1 * comg2 + somg1 * somg2);
+    somg12 = Math.max(0, comg1 * somg2 - somg1 * comg2);
+    comg12 =             comg1 * comg2 + somg1 * somg2;
+    // eta = omg12 - lam120
+    eta = Math.atan2(somg12 * clam120 - comg12 * slam120,
+                     comg12 * clam120 + somg12 * slam120);
     k2 = m.sq(calp0) * this._ep2;
     vals.eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
     this.C3f(vals.eps, C3a);
     B312 = (g.SinCosSeries(true, vals.ssig2, vals.csig2, C3a) -
             g.SinCosSeries(true, vals.ssig1, vals.csig1, C3a));
-    h0 = -this.f * this.A3f(vals.eps);
-    vals.domg12 = salp0 * h0 * (vals.sig12 + B312);
-    vals.lam12 = omg12 + vals.domg12;
-
+    vals.domg12 =  -this.f * this.A3f(vals.eps) * salp0 * (vals.sig12 + B312);
+    vals.lam12 = eta + vals.domg12;
     if (diffp) {
       if (vals.calp2 === 0)
-        vals.dlam12 = - 2 * this._f1 * dn1 / sbet1;
+        vals.dlam12 = -2 * this._f1 * dn1 / sbet1;
       else {
         nvals = this.Lengths(vals.eps, vals.sig12,
                              vals.ssig1, vals.csig1, dn1,
@@ -792,8 +797,22 @@ GeographicLib.PolygonArea = {};
    *   2-interface}, "The outmask and caps parameters".
    */
   g.Geodesic.prototype.Inverse = function(lat1, lon1, lat2, lon2, outmask) {
+    var r, vals;
+    if (!outmask) outmask = g.STANDARD;
+    if (outmask === g.LONG_UNROLL) outmask |= g.STANDARD;
+    outmask &= g.OUT_MASK;
+    r = this.InverseInt(lat1, lon1, lat2, lon2, outmask);
+    vals = r.vals;
+    if (outmask & g.AZIMUTH) {
+      vals.azi1 = m.atan2d(r.salp1, r.calp1);
+      vals.azi2 = m.atan2d(r.salp2, r.calp2);
+    }
+    return vals;
+  };
+
+  g.Geodesic.prototype.InverseInt = function(lat1, lon1, lat2, lon2, outmask) {
     var vals = {},
-        lon12, lonsign, t, swapp, latsign,
+        lon12, lon12s, lonsign, t, swapp, latsign,
         sbet1, cbet1, sbet2, cbet2, s12x, m12x,
         dn1, dn2, lam12, slam12, clam12,
         sig12, calp1, salp1, calp2, salp2, C1a, C2a, C3a, meridian, nvals,
@@ -801,28 +820,29 @@ GeographicLib.PolygonArea = {};
         numit, salp1a, calp1a, salp1b, calp1b,
         tripn, tripb, v, dv, dalp1, sdalp1, cdalp1, nsalp1,
         lengthmask, salp0, calp0, alp12, k2, A4, C4a, B41, B42,
-        somg12, domg12, dbet1, dbet2, salp12, calp12;
-    if (!outmask) outmask = g.STANDARD;
-    if (outmask == g.LONG_UNROLL) outmask |= g.STANDARD;
-    outmask &= g.OUT_MASK;
+        somg12, comg12, domg12, dbet1, dbet2, salp12, calp12, sdomg12, cdomg12;
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
     vals.lat1 = lat1 = m.LatFix(lat1); vals.lat2 = lat2 = m.LatFix(lat2);
-    lon12 = m.AngDiff(lon1, lon2);
-    if (outmask & g.LONG_UNROLL) {
-      vals.lon1 = lon1; vals.lon2 = lon1 + lon12;
-    } else {
-      vals.lon1 = m.AngNormalize(lon1); vals.lon2 = m.AngNormalize(lon2);
-    }
-    // If very close to being on the same half-meridian, then make it so.
-    lon12 = m.AngRound(lon12);
-    // Make longitude difference positive.
-    lonsign = lon12 >= 0 ? 1 : -1;
-    lon12 *= lonsign;
     // If really close to the equator, treat as on equator.
     lat1 = m.AngRound(lat1);
     lat2 = m.AngRound(lat2);
+    lon12 = m.AngDiff(lon1, lon2); lon12s = lon12.t; lon12 = lon12.s;
+    if (outmask & g.LONG_UNROLL) {
+      vals.lon1 = lon1; vals.lon2 = (lon1 + lon12) + lon12s;
+    } else {
+      vals.lon1 = m.AngNormalize(lon1); vals.lon2 = m.AngNormalize(lon2);
+    }
+    // Make longitude difference positive.
+    lonsign = lon12 >= 0 ? 1 : -1;
+    // If very close to being on the same half-meridian, then make it so.
+    lon12 = lonsign * m.AngRound(lon12);
+    lon12s = m.AngRound((180 - lon12) - lonsign * lon12s);
+    lam12 = lon12 * m.degree;
+    t = m.sincosd(lon12 > 90 ? lon12s : lon12);
+    slam12 = t.s; clam12 = (lon12 > 90 ? -1 : 1) * t.c;
+
     // Swap points so that point with higher (abs) latitude is point 1
     // If one latitude is a nan, then it becomes lat1.
     swapp = Math.abs(lat1) < Math.abs(lat2) ? -1 : 1;
@@ -880,12 +900,9 @@ GeographicLib.PolygonArea = {};
     dn1 = Math.sqrt(1 + this._ep2 * m.sq(sbet1));
     dn2 = Math.sqrt(1 + this._ep2 * m.sq(sbet2));
 
-    lam12 = lon12 * m.degree;
-    t = m.sincosd(lon12); slam12 = t.s; clam12 = t.c;
-
     // index zero elements of these arrays are unused
     C1a = new Array(g.nC1_ + 1);
-    C2a = new Array(g.nC2_ + 1)
+    C2a = new Array(g.nC2_ + 1);
     C3a = new Array(g.nC3_);
 
     meridian = lat1 === -90 || slam12 === 0;
@@ -903,7 +920,7 @@ GeographicLib.PolygonArea = {};
 
       // sig12 = sig2 - sig1
       sig12 = Math.atan2(Math.max(0, csig1 * ssig2 - ssig1 * csig2),
-                         csig1 * csig2 + ssig1 * ssig2);
+                                     csig1 * csig2 + ssig1 * ssig2);
       nvals = this.Lengths(this._n, sig12,
                            ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
                            outmask | g.DISTANCE | g.REDUCEDLENGTH,
@@ -911,7 +928,7 @@ GeographicLib.PolygonArea = {};
       s12x = nvals.s12b;
       m12x = nvals.m12b;
       // Ignore m0
-      if ((outmask & g.GEODESICSCALE) !== 0) {
+      if (outmask & g.GEODESICSCALE) {
         vals.M12 = nvals.M12;
         vals.M21 = nvals.M21;
       }
@@ -934,10 +951,10 @@ GeographicLib.PolygonArea = {};
         meridian = false;
     }
 
+    somg12 = 2;
     if (!meridian &&
         sbet1 === 0 &&           // and sbet2 == 0
-        // Mimic the way Lambda12 works with calp1 = 0
-        (this.f <= 0 || lam12 <= Math.PI - this.f * Math.PI)) {
+        (this.f <= 0 || lon12s >= this.f * 180)) {
 
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
@@ -954,8 +971,8 @@ GeographicLib.PolygonArea = {};
       // meridian and geodesic is neither meridional or equatorial.
 
       // Figure a starting point for Newton's method
-      nvals = this.InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12,
-                                C1a, C2a);
+      nvals = this.InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
+                                lam12, slam12, clam12, C1a, C2a);
       sig12 = nvals.sig12;
       salp1 = nvals.salp1;
       calp1 = nvals.calp1;
@@ -992,9 +1009,9 @@ GeographicLib.PolygonArea = {};
           // the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
           // WGS84 and random input: mean = 2.85, sd = 0.60
           nvals = this.Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
-                                salp1, calp1, numit < maxit1_,
+                                salp1, calp1, slam12, clam12, numit < maxit1_,
                                 C1a, C2a, C3a);
-          v = nvals.lam12 - lam12;
+          v = nvals.lam12;
           salp2 = nvals.salp2;
           calp2 = nvals.calp2;
           sig12 = nvals.sig12;
@@ -1003,16 +1020,16 @@ GeographicLib.PolygonArea = {};
           ssig2 = nvals.ssig2;
           csig2 = nvals.csig2;
           eps = nvals.eps;
-          omg12 = nvals.domg12;
+          domg12 = nvals.domg12;
           dv = nvals.dlam12;
 
           // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
           // Reversed test to allow escape with NaNs
-          if (tripb || !(Math.abs(v) >= (tripn ? 8 : 2) * tol0_))
+          if (tripb || !(Math.abs(v) >= (tripn ? 8 : 1) * tol0_))
             break;
           // Update bracketing values
           if (v > 0 && (numit < maxit1_ || calp1/salp1 > calp1b/salp1b)) {
-              salp1b = salp1; calp1b = calp1;
+            salp1b = salp1; calp1b = calp1;
           } else if (v < 0 &&
                      (numit < maxit1_ || calp1/salp1 < calp1a/salp1a)) {
             salp1a = salp1; calp1a = calp1;
@@ -1033,7 +1050,7 @@ GeographicLib.PolygonArea = {};
               continue;
             }
           }
-          // Either dv was not postive or updated value was outside legal
+          // Either dv was not positive or updated value was outside legal
           // range.  Use the midpoint of the bracket as the next estimate.
           // This mechanism is not needed for the WGS84 ellipsoid, but it does
           // catch problems with more eccentric ellipsoids.  Its efficacy is
@@ -1053,19 +1070,25 @@ GeographicLib.PolygonArea = {};
             (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE) ?
              g.DISTANCE : g.NONE);
         nvals = this.Lengths(eps, sig12,
-                             ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+                             ssig1, csig1, dn1, ssig2, csig2, dn2,
+                             cbet1, cbet2,
                              lengthmask, C1a, C2a);
         s12x = nvals.s12b;
         m12x = nvals.m12b;
         // Ignore m0
-        if ((outmask & g.GEODESICSCALE) !== 0) {
+        if (outmask & g.GEODESICSCALE) {
           vals.M12 = nvals.M12;
           vals.M21 = nvals.M21;
         }
         m12x *= this._b;
         s12x *= this._b;
         vals.a12 = sig12 / m.degree;
-        omg12 = lam12 - omg12;
+        if (outmask & g.AREA) {
+          // omg12 = lam12 - domg12
+          sdomg12 = Math.sin(domg12); cdomg12 = Math.cos(domg12);
+          somg12 = slam12 * cdomg12 - clam12 * sdomg12;
+          comg12 = clam12 * cdomg12 + slam12 * sdomg12;
+        }
       }
     }
 
@@ -1099,14 +1122,16 @@ GeographicLib.PolygonArea = {};
       } else
         // Avoid problems with indeterminate sig1, sig2 on equator
         vals.S12 = 0;
+      if (!meridian && somg12 > 1) {
+        somg12 = Math.sin(omg12); comg12 = Math.cos(omg12);
+      }
       if (!meridian &&
-          omg12 < 0.75 * Math.PI && // Long difference too big
-          sbet2 - sbet1 < 1.75) {   // Lat difference too big
-          // Use tan(Gamma/2) = tan(omg12/2)
-          // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
-          // with tan(x/2) = sin(x)/(1+cos(x))
-        somg12 = Math.sin(omg12); domg12 = 1 + Math.cos(omg12);
-        dbet1 = 1 + cbet1; dbet2 = 1 + cbet2;
+          comg12 > -0.7071 &&      // Long difference not too big
+          sbet2 - sbet1 < 1.75) { // Lat difference not too big
+        // Use tan(Gamma/2) = tan(omg12/2)
+        // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
+        // with tan(x/2) = sin(x)/(1+cos(x))
+        domg12 = 1 + comg12; dbet1 = 1 + cbet1; dbet2 = 1 + cbet2;
         alp12 = 2 * Math.atan2( somg12 * (sbet1*dbet2 + sbet2*dbet1),
                                 domg12 * (sbet1*sbet2 + dbet1*dbet2) );
       } else {
@@ -1150,13 +1175,9 @@ GeographicLib.PolygonArea = {};
     salp1 *= swapp * lonsign; calp1 *= swapp * latsign;
     salp2 *= swapp * lonsign; calp2 *= swapp * latsign;
 
-    if (outmask & g.AZIMUTH) {
-      vals.azi1 = m.atan2d(salp1, calp1);
-      vals.azi2 = m.atan2d(salp2, calp2);
-    }
-
-    // Returned value in [0, 180]
-    return vals;
+    return {vals: vals,
+            salp1: salp1, calp1: calp1,
+            salp2: salp2, calp2: calp2};
   };
 
   /**
@@ -1174,16 +1195,14 @@ GeographicLib.PolygonArea = {};
    *   parameter, see {@tutorial 2-interface}, "The outmask and caps
    *   parameters".
    */
-  g.Geodesic.prototype.GenDirect = function (lat1, lon1, azi1,
-                                             arcmode, s12_a12, outmask) {
+  g.Geodesic.prototype.GenDirect = function(lat1, lon1, azi1,
+                                            arcmode, s12_a12, outmask) {
     var line;
-    if (!outmask)
-      outmask = g.STANDARD;
-    else if (outmask == g.LONG_UNROLL)
-      outmask |= g.STANDARD;
-    line = new l.GeodesicLine(this, lat1, lon1, azi1,
-                              // Automatically supply DISTANCE_IN if necessary
-                              outmask | (arcmode ? g.NONE : g.DISTANCE_IN));
+    if (!outmask) outmask = g.STANDARD;
+    else if (outmask === g.LONG_UNROLL) outmask |= g.STANDARD;
+    // Automatically supply DISTANCE_IN if necessary
+    if (!arcmode) outmask |= g.DISTANCE_IN;
+    line = new l.GeodesicLine(this, lat1, lon1, azi1, outmask);
     return line.GenPosition(arcmode, s12_a12, outmask);
   };
 
@@ -1200,7 +1219,7 @@ GeographicLib.PolygonArea = {};
    *   always set.  For details on the outmask parameter, see {@tutorial
    *   2-interface}, "The outmask and caps parameters".
    */
-  g.Geodesic.prototype.Direct = function (lat1, lon1, azi1, s12, outmask) {
+  g.Geodesic.prototype.Direct = function(lat1, lon1, azi1, s12, outmask) {
     return this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
   };
 
@@ -1217,7 +1236,7 @@ GeographicLib.PolygonArea = {};
    *   always set.  For details on the outmask parameter, see {@tutorial
    *   2-interface}, "The outmask and caps parameters".
    */
-  g.Geodesic.prototype.ArcDirect = function (lat1, lon1, azi1, a12, outmask) {
+  g.Geodesic.prototype.ArcDirect = function(lat1, lon1, azi1, a12, outmask) {
     return this.GenDirect(lat1, lon1, azi1, true, a12, outmask);
   };
 
@@ -1236,8 +1255,119 @@ GeographicLib.PolygonArea = {};
    * @description For details on the caps parameter, see {@tutorial
    *   2-interface}, "The outmask and caps parameters".
    */
-  g.Geodesic.prototype.Line = function (lat1, lon1, azi1, caps) {
+  g.Geodesic.prototype.Line = function(lat1, lon1, azi1, caps) {
     return new l.GeodesicLine(this, lat1, lon1, azi1, caps);
+  };
+
+  /**
+   * @summary Define a {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} in terms of the direct geodesic problem specified in terms
+   *   of distance.
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} azi1 the azimuth at the first point in degrees.
+   *   degrees.
+   * @param {number} s12 the distance between point 1 and point 2 (meters); it
+   *   can be negative.
+   * @param {bitmask} [caps = STANDARD | DISTANCE_IN] which capabilities to
+   *   include.
+   * @returns {object} the
+   *   {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} object
+   * @description This function sets point 3 of the GeodesicLine to correspond
+   *   to point 2 of the direct geodesic problem.  For details on the caps
+   *   parameter, see {@tutorial 2-interface}, "The outmask and caps
+   *   parameters".
+   */
+  g.Geodesic.prototype.DirectLine = function(lat1, lon1, azi1, s12, caps) {
+    return this.GenDirectLine(lat1, lon1, azi1, false, s12, caps);
+  };
+
+  /**
+   * @summary Define a {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} in terms of the direct geodesic problem specified in terms
+   *   of arc length.
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} azi1 the azimuth at the first point in degrees.
+   *   degrees.
+   * @param {number} a12 the arc length between point 1 and point 2 (degrees);
+   *   it can be negative.
+   * @param {bitmask} [caps = STANDARD | DISTANCE_IN] which capabilities to
+   *   include.
+   * @returns {object} the
+   *   {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} object
+   * @description This function sets point 3 of the GeodesicLine to correspond
+   *   to point 2 of the direct geodesic problem.  For details on the caps
+   *   parameter, see {@tutorial 2-interface}, "The outmask and caps
+   *   parameters".
+   */
+  g.Geodesic.prototype.ArcDirectLine = function(lat1, lon1, azi1, a12, caps) {
+    return this.GenDirectLine(lat1, lon1, azi1, true, a12, caps);
+  };
+
+  /**
+   * @summary Define a {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} in terms of the direct geodesic problem specified in terms
+   *   of either distance or arc length.
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} azi1 the azimuth at the first point in degrees.
+   *   degrees.
+   * @param {bool} arcmode boolean flag determining the meaning of the
+   *   s12_a12.
+   * @param {number} s12_a12 if arcmode is false, this is the distance between
+   *   point 1 and point 2 (meters); otherwise it is the arc length between
+   *   point 1 and point 2 (degrees); it can be negative.
+   * @param {bitmask} [caps = STANDARD | DISTANCE_IN] which capabilities to
+   *   include.
+   * @returns {object} the
+   *   {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} object
+   * @description This function sets point 3 of the GeodesicLine to correspond
+   *   to point 2 of the direct geodesic problem.  For details on the caps
+   *   parameter, see {@tutorial 2-interface}, "The outmask and caps
+   *   parameters".
+   */
+  g.Geodesic.prototype.GenDirectLine = function(lat1, lon1, azi1,
+                                                arcmode, s12_a12, caps) {
+    var t;
+    if (!caps) caps = g.STANDARD | g.DISTANCE_IN;
+    // Automatically supply DISTANCE_IN if necessary
+    if (!arcmode) caps |= g.DISTANCE_IN;
+    t = new l.GeodesicLine(this, lat1, lon1, azi1, caps);
+    t.GenSetDistance(arcmode, s12_a12);
+    return t;
+  };
+
+  /**
+   * @summary Define a {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} in terms of the inverse geodesic problem.
+   * @param {number} lat1 the latitude of the first point in degrees.
+   * @param {number} lon1 the longitude of the first point in degrees.
+   * @param {number} lat2 the latitude of the second point in degrees.
+   * @param {number} lon2 the longitude of the second point in degrees.
+   * @param {bitmask} [caps = STANDARD | DISTANCE_IN] which capabilities to
+   *   include.
+   * @returns {object} the
+   *   {@link module:GeographicLib/GeodesicLine.GeodesicLine
+   *   GeodesicLine} object
+   * @description This function sets point 3 of the GeodesicLine to correspond
+   *   to point 2 of the inverse geodesic problem.  For details on the caps
+   *   parameter, see {@tutorial 2-interface}, "The outmask and caps
+   *   parameters".
+   */
+  g.Geodesic.prototype.InverseLine = function(lat1, lon1, lat2, lon2, caps) {
+    var r, t, azi1;
+    if (!caps) caps = g.STANDARD | g.DISTANCE_IN;
+    r = this.InverseInt(lat1, lon1, lat2, lon2, g.ARC);
+    azi1 = m.atan2d(r.salp1, r.calp1);
+    // Ensure that a12 can be converted to a distance
+    if (caps & (g.OUT_MASK & g.DISTANCE_IN)) caps |= g.DISTANCE;
+    t = new l.GeodesicLine(this, lat1, lon1, azi1, caps, r.salp1, r.calp1);
+    t.SetArc(r.vals.a12);
+    return t;
   };
 
   /**
@@ -1249,7 +1379,7 @@ GeographicLib.PolygonArea = {};
    *   {@link module:GeographicLib/PolygonArea.PolygonArea
    *   PolygonArea} object
    */
-  g.Geodesic.prototype.Polygon = function (polyline) {
+  g.Geodesic.prototype.Polygon = function(polyline) {
     return new p.PolygonArea(this, polyline);
   };
 
