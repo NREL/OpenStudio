@@ -101,61 +101,27 @@ extern "C" {
   void Init_windows_1257();
   void Init_windows_31j();
 
-  //void Init_encdb();
-  //void Init_big5();
-  //void Init_cp949();
-  //void Init_emacs_mule();
-  //void Init_euc_jp();
-  //void Init_euc_kr();
-  //void Init_euc_tw();
-  //void Init_gb2312();
-  //void Init_gb18030();
-  //void Init_gbk();
-  //void Init_iso_8859_1();
-  //void Init_iso_8859_2();
-  //void Init_iso_8859_3();
-  //void Init_iso_8859_4();
-  //void Init_iso_8859_5();
-  //void Init_iso_8859_6();
-  //void Init_iso_8859_7();
-  //void Init_iso_8859_8();
-  //void Init_iso_8859_9();
-  //void Init_iso_8859_10();
-  //void Init_iso_8859_11();
-  //void Init_iso_8859_13();
-  //void Init_iso_8859_14();
-  //void Init_iso_8859_15();
-  //void Init_iso_8859_16();
-  //void Init_koi8_r();
-  //void Init_koi8_u();
-  //void Init_shift_jis();
-  //void Init_utf_16be();
-  //void Init_utf_16le();
-  //void Init_utf_32be();
-  //void Init_utf_32le();
-  //void Init_windows_31j();
-  //void Init_windows_1251();
-
   void Init_transdb();
 
-  //void Init_trans_big5();
-  //void Init_trans_chinese();
-  //void Init_trans_emoji();
-  //void Init_trans_emoji_iso2022_kddi();
-  //void Init_trans_emoji_sjis_docomo();
-  //void Init_trans_emoji_sjis_kddi();
-  //void Init_trans_emoji_sjis_softbank();
-  //void Init_trans_escape();
-  //void Init_trans_gb18030();
-  //void Init_trans_gbk();
-  //void Init_trans_iso2022();
-  //void Init_trans_japanese();
-  //void Init_trans_japanese_euc();
-  //void Init_trans_japanese_sjis();
-  //void Init_trans_korean();
-  //void Init_trans_single_byte();
-  //void Init_trans_utf8_mac();
-  //void Init_trans_utf_16_32();
+  void Init_trans_big5();
+  void Init_trans_chinese();
+  void Init_trans_ebcdic();
+  void Init_trans_emoji();
+  void Init_trans_emoji_iso2022_kddi();
+  void Init_trans_emoji_sjis_docomo();
+  void Init_trans_emoji_sjis_kddi();
+  void Init_trans_emoji_sjis_softbank();
+  void Init_trans_escape();
+  void Init_trans_gb18030();
+  void Init_trans_gbk();
+  void Init_trans_iso2022();
+  void Init_trans_japanese();
+  void Init_trans_japanese_euc();
+  void Init_trans_japanese_sjis();
+  void Init_trans_korean();
+  void Init_trans_single_byte();
+  void Init_trans_utf8_mac();
+  void Init_trans_utf_16_32();
 
   void Init_bigdecimal();
   void Init_bigdecimal(void);
@@ -326,6 +292,62 @@ int main(int argc, char *argv[])
 
     //Init_trans_big5();
     //rb_provide("enc/trans/big5.so");
+    Init_trans_big5();
+    rb_provide("enc/trans/big5.so");
+
+    Init_trans_chinese();
+    rb_provide("enc/trans/chinese.so");
+
+    Init_trans_ebcdic();
+    rb_provide("enc/trans/ebcdic.so");
+
+    Init_trans_emoji();
+    rb_provide("enc/trans/emoji.so");
+
+    Init_trans_emoji_iso2022_kddi();
+    rb_provide("enc/trans/emoji_iso2022_kddi.so");
+
+    Init_trans_emoji_sjis_docomo();
+    rb_provide("enc/trans/emoji_sjis_docomo.so");
+
+    Init_trans_emoji_sjis_kddi();
+    rb_provide("enc/trans/emoji_sjis_kddi.so");
+
+    Init_trans_emoji_sjis_softbank();
+    rb_provide("enc/trans/emoji_sjis_softbank.so");
+
+    Init_trans_escape();
+    rb_provide("enc/trans/escape.o");
+
+    Init_trans_gb18030();
+    rb_provide("enc/trans/gb18030.o");
+
+    Init_trans_gbk();
+    rb_provide("enc/trans/gbk.o");
+
+    Init_trans_iso2022();
+    rb_provide("enc/trans/iso2022.o");
+
+    Init_trans_japanese();
+    rb_provide("enc/trans/japanese.o");
+
+    Init_trans_japanese_euc();
+    rb_provide("enc/trans/japanese_euc.o");
+
+    Init_trans_japanese_sjis();
+    rb_provide("enc/trans/japanese_sjis.o");
+
+    Init_trans_korean();
+    rb_provide("enc/trans/korean.o");
+
+    Init_trans_single_byte();
+    rb_provide("enc/trans/single_byte.o");
+
+    Init_trans_utf8_mac();
+    rb_provide("enc/trans/utf8_mac.o");
+
+    Init_trans_utf_16_32();
+    rb_provide("enc/trans/utf_16_32.o");
 
     // in case any further init methods try to require files, init this first
     Init_EmbeddedScripting();

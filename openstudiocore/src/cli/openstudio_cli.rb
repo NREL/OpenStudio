@@ -712,7 +712,7 @@ class CLI
       result = 1
     end
 
-    result = 0 unless result.is_a?(Fixnum)
+    result = 0 unless result.is_a?(Integer)
     result
   end
 
