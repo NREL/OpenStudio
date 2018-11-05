@@ -30,7 +30,7 @@
 #ifndef MODEL_SURFACEPROPERTYOTHERSIDECOEFFICIENTS_HPP
 #define MODEL_SURFACEPROPERTYOTHERSIDECOEFFICIENTS_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ResourceObject.hpp"
 
 namespace openstudio {

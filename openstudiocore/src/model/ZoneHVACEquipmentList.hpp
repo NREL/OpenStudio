@@ -54,6 +54,10 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
 
   static IddObjectType iddObjectType();
 
+  std::string loadDistributionScheme() const;
+
+  bool setLoadDistributionScheme(std::string scheme);
+
   /** Add new equipment setting the heating and cooling priorities
    *  to the next available priority level.
    *  Air terminals associated with AirLoopHVAC will be moved to first priority.

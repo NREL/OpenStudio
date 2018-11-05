@@ -27,33 +27,20 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "BCLComponent.hpp"
-#include "BCLMeasure.hpp"
 #include "LocalBCL.hpp"
 #include "RemoteBCL.hpp"
 #include "../core/Application.hpp"
 #include "../core/Assert.hpp"
-#include "../data/Attribute.hpp"
 #include "../time/DateTime.hpp"
-#include "../core/Path.hpp"
 #include "../core/PathHelpers.hpp"
-#include "../core/System.hpp"
 
 #include <QDir>
 #include <QIcon>
 #include <QInputDialog>
 #include <QSettings>
-#include <QSqlDatabase>
-#include <QSqlDriver>
-#include <QSqlError>
 #include <QSqlQuery>
-#include <QSqlResult>
 
-#include <boost/lexical_cast.hpp>
 
-#include <algorithm>
-#include <set>
-#include <vector>
 
 namespace openstudio{
 

@@ -37,6 +37,9 @@
 namespace openstudio {
 namespace model {
 
+// Foward declaration
+class TableMultiVariableLookupPoint;
+
 namespace detail {
 
   /** TableMultiVariableLookup_Impl is a Curve_Impl that is the implementation class for TableMultiVariableLookup.*/
@@ -147,7 +150,8 @@ namespace detail {
 
     int numberofIndependentVariables() const;
 
-    // TODO: Handle this object's extensible fields.
+    /** Print a fixed-width table of the points, precision is the number of decimals */
+    std::string printTable(unsigned int precision) const;
 
     //@}
     /** @name Setters */
@@ -279,19 +283,21 @@ namespace detail {
 
     double evaluate(const std::vector<double>& x) const override;
 
+    // Primary way to add a point
+    bool addPoint(const TableMultiVariableLookupPoint& point);
+
+    // Convenience functions
     bool addPoint(const std::vector<double> & xValues, double yValue);
-
     bool addPoint(double x1, double yValue);
-
     bool addPoint(double x1, double x2, double yValue);
-
     bool addPoint(double x1, double x2, double x3, double yValue);
-
     bool addPoint(double x1, double x2, double x3, double x4, double yValue);
-
     bool addPoint(double x1, double x2, double x3, double x4, double x5, double yValue);
 
-    std::vector<std::pair<std::vector<double>,double> > points() const;
+    // Directly set the points from a vector, will delete any existing points
+    bool setPoints(const std::vector<TableMultiVariableLookupPoint>& points);
+
+    std::vector<TableMultiVariableLookupPoint> points() const;
 
     static bool xValuesEqual(const std::vector<double> & a, const std::vector<double> & b);
 

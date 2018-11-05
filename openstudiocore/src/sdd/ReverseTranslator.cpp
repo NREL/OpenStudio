@@ -65,7 +65,6 @@
 #include "../model/PlantLoop_Impl.hpp"
 #include "../model/Timestep.hpp"
 #include "../model/Timestep_Impl.hpp"
-#include "../model/OutputMeter.hpp"
 #include "../model/OutputVariable.hpp"
 #include "../model/SimulationControl.hpp"
 #include "../model/SimulationControl_Impl.hpp"

@@ -32,7 +32,6 @@
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
 #include "Node.hpp"
-#include "AirTerminalSingleDuctUncontrolled.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include <utilities/idd/OS_Connector_Splitter_FieldEnums.hxx>

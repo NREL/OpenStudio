@@ -43,19 +43,6 @@ namespace detail {
   /** AirTerminalSingleDuctVAVNoReheat_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctVAVNoReheat.*/
   class MODEL_API AirTerminalSingleDuctVAVNoReheat_Impl : public StraightComponent_Impl {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -99,7 +86,6 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule availabilitySchedule() const;
 
     boost::optional<double> maximumAirFlowRate() const;
@@ -109,27 +95,27 @@ namespace detail {
     boost::optional<std::string> zoneMinimumAirFlowInputMethod() const;
 
     boost::optional<double> constantMinimumAirFlowFraction() const;
-
+    bool isConstantMinimumAirFlowFractionAutosized() const;
     bool isConstantMinimumAirFlowFractionDefaulted() const;
 
     boost::optional<double> fixedMinimumAirFlowRate() const;
-
+    bool isFixedMinimumAirFlowRateAutosized() const;
     bool isFixedMinimumAirFlowRateDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumAirFlowRate() const;
+    boost::optional<double> autosizedConstantMinimumAirFlowFraction() const;
+    boost::optional<double> autosizedFixedMinimumAirFlowRate() const;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     bool setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate);
@@ -142,12 +128,12 @@ namespace detail {
 
     void resetZoneMinimumAirFlowInputMethod();
 
-    bool setConstantMinimumAirFlowFraction(boost::optional<double> constantMinimumAirFlowFraction);
-
+    bool setConstantMinimumAirFlowFraction(double constantMinimumAirFlowFraction);
+    void autosizeConstantMinimumAirFlowFraction();
     void resetConstantMinimumAirFlowFraction();
 
-    bool setFixedMinimumAirFlowRate(boost::optional<double> fixedMinimumAirFlowRate);
-
+    bool setFixedMinimumAirFlowRate(double fixedMinimumAirFlowRate);
+    void autosizeFixedMinimumAirFlowRate();
     void resetFixedMinimumAirFlowRate();
 
     bool setMinimumAirFlowFractionSchedule(Schedule& schedule);

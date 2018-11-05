@@ -28,30 +28,21 @@
 ***********************************************************************************************************************/
 
 #include "WorkspaceObject.hpp"
-#include "WorkspaceObject_Impl.hpp"
 
 #include "Workspace.hpp"
 #include "Workspace_Impl.hpp"
 #include "WorkspaceObjectDiff.hpp"
 #include "WorkspaceObjectDiff_Impl.hpp"
 #include "WorkspaceExtensibleGroup.hpp"
-#include "IdfExtensibleGroup.hpp"
 #include "ValidityReport.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../idd/IddObjectProperties.hpp"
-#include "../idd/IddFieldProperties.hpp"
 
-#include "../core/Compare.hpp"
 #include "../core/Assert.hpp"
-#include "../core/Containers.hpp"
 #include "../core/StringHelpers.hpp"
 
-#include <boost/lexical_cast.hpp>
-#include <boost/regex.hpp>
 
-#include <iostream>
 using namespace std;
 
 using openstudio::detail::WorkspaceObject_Impl;

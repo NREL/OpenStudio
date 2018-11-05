@@ -110,7 +110,7 @@ namespace detail{
       // The following node variable is also available for system nodes that are for “air”:
       // TODO: implement check? If no, make result non static and remove the result.empty() check
       "System Node Current Density Volume Flow Rate",
-      "Average, System Node Current Density"
+      "System Node Current Density"
 
       // The following node variables are “advanced” and normally used for debugging unusual cases:
       //"System Node Minimum Temperature",

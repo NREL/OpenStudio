@@ -96,7 +96,6 @@
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
 #include "../model/AirLoopHVAC.hpp"
 #include "../model/AirLoopHVAC_Impl.hpp"
-#include "../model/SurfacePropertyConvectionCoefficients.hpp"
 
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"

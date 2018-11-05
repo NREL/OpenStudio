@@ -29,7 +29,6 @@
 
 #include "UUID.hpp"
 #include "String.hpp"
-#include "Checksum.hpp"
 #include "StaticInitializer.hpp"
 
 #include <sstream>

@@ -1123,9 +1123,9 @@ Model::Model(const openstudio::Workspace& workspace)
   getImpl<detail::Model_Impl>()->createComponentWatchers();
 }
 
-boost::optional<Model> Model::load(const path& p) {
+boost::optional<Model> Model::load(const path& osmPath) {
   OptionalModel result;
-  OptionalIdfFile oIdfFile = IdfFile::load(p,IddFileType::OpenStudio);
+  OptionalIdfFile oIdfFile = IdfFile::load(osmPath,IddFileType::OpenStudio);
   if (oIdfFile) {
     try {
       result = Model(*oIdfFile);
@@ -1134,7 +1134,8 @@ boost::optional<Model> Model::load(const path& p) {
   }
 
   if (result){
-    path workflowJSONPath = p.parent_path() / p.stem() / toPath("workflow.osw");
+    // Load the workflow.osw in the model's companion folder
+    path workflowJSONPath = getCompanionFolder(osmPath) / toPath("workflow.osw");
     if (exists(workflowJSONPath)){
       boost::optional<WorkflowJSON> workflowJSON = WorkflowJSON::load(workflowJSONPath);
       if (workflowJSON){
@@ -1819,7 +1820,7 @@ void addExampleModelObjects(Model& model)
                                         partLoadFraction );
   EvaporativeCoolerDirectResearchSpecial evaporativeCoolerDirectResearchSpecial(model,alwaysOnSchedule);
 
-  AirTerminalSingleDuctUncontrolled airTerminalSingleDuctUncontrolled(model,alwaysOnSchedule);
+  AirTerminalSingleDuctConstantVolumeNoReheat airTerminalSingleDuctConstantVolumeNoReheat(model,alwaysOnSchedule);
 
   ControllerOutdoorAir controller(model);
 
@@ -1827,7 +1828,7 @@ void addExampleModelObjects(Model& model)
 
   AirLoopHVAC airLoopHVAC(model);
 
-  airLoopHVAC.addBranchForZone(thermalZone,airTerminalSingleDuctUncontrolled);
+  airLoopHVAC.addBranchForZone(thermalZone,airTerminalSingleDuctConstantVolumeNoReheat);
 
   Node supplyInletNode = airLoopHVAC.supplyInletNode();
   Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
@@ -2563,7 +2564,7 @@ void Model::applySizingValues() {
 
 std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::ModelObjectCreator::getNew(
   Model_Impl * model,
-  const IdfObject& obj, 
+  const IdfObject& obj,
   bool keepHandle) const
 {
   auto typeToCreate = obj.iddObject().type();
@@ -2576,7 +2577,7 @@ std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::Mo
 }
 
 std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::ModelObjectCreator::getCopy(
-  Model_Impl * model, 
+  Model_Impl * model,
   const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& obj,
   bool keepHandle) const
 {
@@ -2639,7 +2640,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeReheat);
   REGISTER_CONSTRUCTOR(AirTerminalSingleDuctParallelPIUReheat);
   REGISTER_CONSTRUCTOR(AirTerminalSingleDuctSeriesPIUReheat);
-  REGISTER_CONSTRUCTOR(AirTerminalSingleDuctUncontrolled);
+  REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeNoReheat);
   REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVReheat);
   REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVNoReheat);
   REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
@@ -2792,6 +2793,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(ExteriorFuelEquipmentDefinition);
   REGISTER_CONSTRUCTOR(ExteriorWaterEquipment);
   REGISTER_CONSTRUCTOR(ExteriorWaterEquipmentDefinition);
+  REGISTER_CONSTRUCTOR(ExternalFile);
   REGISTER_CONSTRUCTOR(ExternalInterface);
   REGISTER_CONSTRUCTOR(ExternalInterfaceActuator);
   REGISTER_CONSTRUCTOR(ExternalInterfaceFunctionalMockupUnitExportFromVariable);
@@ -2927,6 +2929,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(ScheduleCompact);
   REGISTER_CONSTRUCTOR(ScheduleConstant);
   REGISTER_CONSTRUCTOR(ScheduleDay);
+  REGISTER_CONSTRUCTOR(ScheduleFile);
   REGISTER_CONSTRUCTOR(ScheduleFixedInterval);
   REGISTER_CONSTRUCTOR(ScheduleTypeLimits);
   REGISTER_CONSTRUCTOR(ScheduleVariableInterval);
@@ -3116,7 +3119,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeReheat);
   REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctParallelPIUReheat);
   REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctSeriesPIUReheat);
-  REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctUncontrolled);
+  REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeNoReheat);
   REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVReheat);
   REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVNoReheat);
   REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
@@ -3269,6 +3272,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(ExteriorFuelEquipmentDefinition);
   REGISTER_COPYCONSTRUCTORS(ExteriorWaterEquipment);
   REGISTER_COPYCONSTRUCTORS(ExteriorWaterEquipmentDefinition);
+  REGISTER_COPYCONSTRUCTORS(ExternalFile);
   REGISTER_COPYCONSTRUCTORS(ExternalInterface);
   REGISTER_COPYCONSTRUCTORS(ExternalInterfaceActuator);
   REGISTER_COPYCONSTRUCTORS(ExternalInterfaceFunctionalMockupUnitExportFromVariable);
@@ -3405,6 +3409,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(ScheduleConstant);
   REGISTER_COPYCONSTRUCTORS(ScheduleDay);
   REGISTER_COPYCONSTRUCTORS(ScheduleFixedInterval);
+  REGISTER_COPYCONSTRUCTORS(ScheduleFile);
   REGISTER_COPYCONSTRUCTORS(ScheduleTypeLimits);
   REGISTER_COPYCONSTRUCTORS(ScheduleVariableInterval);
   REGISTER_COPYCONSTRUCTORS(ScheduleRule);

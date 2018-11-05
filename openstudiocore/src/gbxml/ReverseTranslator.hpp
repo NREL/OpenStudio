@@ -75,6 +75,7 @@ namespace gbxml {
   private:
     openstudio::Unit m_temperatureUnit;
     openstudio::Unit m_lengthUnit;
+    double m_nonBaseMultiplier;
     double m_lengthMultiplier;
     openstudio::Unit m_areaUnit;
     openstudio::Unit m_volumeUnit;

@@ -29,7 +29,7 @@
 #ifndef MODEL_GENERATORPVWATTS_HPP
 #define MODEL_GENERATORPVWATTS_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "Generator.hpp"
 
 #include "PlanarSurface.hpp"

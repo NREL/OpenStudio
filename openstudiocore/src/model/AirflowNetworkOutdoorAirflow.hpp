@@ -30,7 +30,7 @@
 #ifndef MODEL_AIRFLOWNETWORKOUTDOORAIRFLOW_HPP
 #define MODEL_AIRFLOWNETWORKOUTDOORAIRFLOW_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
 namespace openstudio {

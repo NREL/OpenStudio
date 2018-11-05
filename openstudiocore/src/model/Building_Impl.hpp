@@ -57,37 +57,6 @@ namespace detail {
   /** Building_Impl is a ParentObject_Impl that is the implementation class for Building.*/
   class MODEL_API Building_Impl : public ParentObject_Impl {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   public:
     /** @name Constructors and Destructors */
     //@{
@@ -136,8 +105,10 @@ namespace detail {
 
     boost::optional<double> nominalFloortoCeilingHeight() const;
 
-    boost::optional<std::string> standardsBuildingType() const;
+    boost::optional<std::string> standardsTemplate() const;
+    std::vector<std::string> suggestedStandardsTemplates() const;
 
+    boost::optional<std::string> standardsBuildingType() const;
     std::vector<std::string> suggestedStandardsBuildingTypes() const;
 
     bool relocatable() const;
@@ -166,6 +137,9 @@ namespace detail {
 
     bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
     void resetNominalFloortoCeilingHeight();
+
+    bool setStandardsTemplate(const std::string& standardsTemplate);
+    void resetStandardsTemplate();
 
     bool setStandardsBuildingType(const std::string& standardsBuildingType);
     void resetStandardsBuildingType();

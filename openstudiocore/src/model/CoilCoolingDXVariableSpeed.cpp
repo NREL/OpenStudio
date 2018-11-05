@@ -448,11 +448,12 @@ namespace detail {
   }
 
   bool CoilCoolingDXVariableSpeed_Impl::addSpeed( const CoilCoolingDXVariableSpeedSpeedData & speed) {
+    bool result = false;
     auto modelObjectList = speedDataList();
     if( modelObjectList ) {
-      modelObjectList->addModelObject(speed);
+      result = modelObjectList->addModelObject(speed);
     }
-    return false;
+    return result;
   }
 
   void CoilCoolingDXVariableSpeed_Impl::removeSpeed( const CoilCoolingDXVariableSpeedSpeedData & speed) {
@@ -934,4 +935,4 @@ CoilCoolingDXVariableSpeed::CoilCoolingDXVariableSpeed(std::shared_ptr<detail::C
   }
 
 } // model
-} // openstudio
+} // openstudio

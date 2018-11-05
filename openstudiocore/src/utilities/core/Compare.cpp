@@ -28,12 +28,10 @@
 ***********************************************************************************************************************/
 
 #include "Compare.hpp"
-#include "Logger.hpp"
 #include "../idf/WorkspaceObject.hpp"
 #include "../bcl/BCLComponent.hpp"
 #include "Assert.hpp"
 
-#include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 
 namespace openstudio {

@@ -58,8 +58,6 @@
 #include "../../model/CoolingTowerTwoSpeed_Impl.hpp"
 #include "../../model/GeneratorFuelCellExhaustGasToWaterHeatExchanger.hpp"
 #include "../../model/GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl.hpp"
-#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
-#include "../../model/GeneratorMicroTurbineHeatRecovery_Impl.hpp"
 #include "../../model/GroundHeatExchangerVertical.hpp"
 #include "../../model/GroundHeatExchangerVertical_Impl.hpp"
 #include "../../model/GroundHeatExchangerHorizontalTrench.hpp"
@@ -429,8 +427,19 @@ ComponentType componentType(const HVACComponent & component)
             // Might be better to do a recursive call to see what type of equipment you have on the supply side of the plant loop though
             return plantLoopType(_p.get());
 
+          // We also need to check if the tank isn't attached to a HPWH, in which case we return Heating
+          // There's some magic later that'll put the HPWH itself and not the tank on the PlantEquipmentOperation,
+          // see function operationSchemeComponent()
+          } else if ( boost::optional<ZoneHVACComponent> zoneComp = wh.containingZoneHVACComponent() ) {
+            // We don't have to explicitly check if it's a WaterHeaterHeatPump or WaterHeaterHeatPumpWrappedCondenser since
+            // these are the only two types of zoneHVACComponent that could have a WaterHeater object, but this might change in the future
+            IddObjectType zoneCompIdd = zoneComp->iddObjectType();
+            if ( (zoneCompIdd == openstudio::IddObjectType::OS_WaterHeater_HeatPump) ||
+                 (zoneCompIdd == openstudio::IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser) ) {
+              return ComponentType::HEATING;
+            }
           } else {
-            // It isn't connected to a source side, and has zero capacity => it's a buffer tank => NONE
+            // It isn't connected to a source side, and has zero capacity, and not part of HPWH => it's a buffer tank => NONE
             return ComponentType::NONE;
           } // End if has source loop
 
@@ -458,8 +467,16 @@ ComponentType componentType(const HVACComponent & component)
             if ( boost::optional<PlantLoop> _p = wh.secondaryPlantLoop() ) {
               // Here we go check what's on the supply side of the secondary plantLoop
               return plantLoopType(_p.get());
+
+            // If it's attached to a HPWH, it's Heating (see detailed note for WaterHeaterMixed above)
+            } else if ( boost::optional<ZoneHVACComponent> zoneComp = wh.containingZoneHVACComponent() ) {
+              IddObjectType zoneCompIdd = zoneComp->iddObjectType();
+              if ( (zoneCompIdd == openstudio::IddObjectType::OS_WaterHeater_HeatPump) ||
+                   (zoneCompIdd == openstudio::IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser) ) {
+                return ComponentType::HEATING;
+              }
             } else {
-              // It isn't connected to a source side, and has zero capacity => it's a buffer tank => NONE
+              // It isn't connected to a source side, and has zero capacity, and not part of HPWH => it's a buffer tank => NONE
               return ComponentType::NONE;
             }
           }

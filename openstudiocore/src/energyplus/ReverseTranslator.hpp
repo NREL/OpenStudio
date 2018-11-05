@@ -85,7 +85,7 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateAirTerminalSingleDuctConstantVolumeReheat(const WorkspaceObject& workspaceObject);
 
-  boost::optional<model::ModelObject> translateAirTerminalSingleDuctUncontrolled(const WorkspaceObject& workspaceObject);
+  boost::optional<model::ModelObject> translateAirTerminalSingleDuctConstantVolumeNoReheat(const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translateAirTerminalSingleDuctVAVNoReheat(const WorkspaceObject& workspaceObject);
 
@@ -250,6 +250,8 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateScheduleDayHourly(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateScheduleDayInterval(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateScheduleFile(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateScheduleTypeLimits(const WorkspaceObject & workspaceObject);
 

@@ -53,6 +53,10 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 
+// TODO: only needed for API warning
+#include <OpenStudio.hxx>
+
+
 namespace openstudio {
 
 namespace model {
@@ -358,9 +362,18 @@ namespace detail{
     }
   }
 
-  double AirTerminalSingleDuctVAVReheat_Impl::constantMinimumAirFlowFraction()
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::constantMinimumAirFlowFraction() const
   {
-    return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ConstantMinimumAirFlowFraction).get();
+    return getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ConstantMinimumAirFlowFraction);
+  }
+
+  bool AirTerminalSingleDuctVAVReheat_Impl::isConstantMinimumAirFlowFractionAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ConstantMinimumAirFlowFraction, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "Autosize");
+    }
+    return result;
   }
 
   bool AirTerminalSingleDuctVAVReheat_Impl::setConstantMinimumAirFlowFraction( double value )
@@ -368,14 +381,33 @@ namespace detail{
     return this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ConstantMinimumAirFlowFraction,value);
   }
 
-  double AirTerminalSingleDuctVAVReheat_Impl::fixedMinimumAirFlowRate()
+  void AirTerminalSingleDuctVAVReheat_Impl::autosizeConstantMinimumAirFlowFraction() {
+    bool result = setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::ConstantMinimumAirFlowFraction, "Autosize");
+    OS_ASSERT(result);
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::fixedMinimumAirFlowRate() const
   {
-    return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::FixedMinimumAirFlowRate).get();
+    return getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::FixedMinimumAirFlowRate);
+  }
+
+  bool AirTerminalSingleDuctVAVReheat_Impl::isFixedMinimumAirFlowRateAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::FixedMinimumAirFlowRate, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "Autosize");
+    }
+    return result;
   }
 
   bool AirTerminalSingleDuctVAVReheat_Impl::setFixedMinimumAirFlowRate( double value )
   {
     return this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::FixedMinimumAirFlowRate,value);
+  }
+
+  void AirTerminalSingleDuctVAVReheat_Impl::autosizeFixedMinimumAirFlowRate() {
+    bool result = setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::FixedMinimumAirFlowRate, "Autosize");
+    OS_ASSERT(result);
   }
 
   boost::optional<Schedule> AirTerminalSingleDuctVAVReheat_Impl::minimumAirFlowFractionSchedule() const
@@ -685,6 +717,14 @@ namespace detail{
     return getAutosizedValue("Design Size Maximum Air Flow Rate", "m3/s");
   }
 
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedConstantMinimumAirFlowFraction() const {
+    return getAutosizedValue("Design Size Constant Minimum Air Flow Fraction", "");
+  }
+
+  boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedFixedMinimumAirFlowRate() const {
+    return getAutosizedValue("Design Size Minimum Air Flow Rate", "m3/s");
+  }
+
   boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::autosizedMaximumHotWaterOrSteamFlowRate() const {
     return getAutosizedValue("Design Size Maximum Reheat Water Flow Rate", "m3/s");
   }
@@ -699,6 +739,8 @@ namespace detail{
 
   void AirTerminalSingleDuctVAVReheat_Impl::autosize() {
     autosizeMaximumAirFlowRate();
+    autosizeConstantMinimumAirFlowFraction();
+    autosizeFixedMinimumAirFlowRate();
     autosizeMaximumHotWaterOrSteamFlowRate();
     autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
     autosizeMaximumFlowFractionDuringReheat();
@@ -709,6 +751,16 @@ namespace detail{
     val = autosizedMaximumAirFlowRate();
     if (val) {
       setMaximumAirFlowRate(val.get());
+    }
+
+    val = autosizedConstantMinimumAirFlowFraction();
+    if (val) {
+      setConstantMinimumAirFlowFraction(val.get());
+    }
+
+    val = autosizedFixedMinimumAirFlowRate();
+    if (val) {
+      setFixedMinimumAirFlowRate(val.get());
     }
 
     val = autosizedMaximumHotWaterOrSteamFlowRate();
@@ -725,6 +777,8 @@ namespace detail{
     if (val) {
       setMaximumFlowFractionDuringReheat(val.get());
     }
+
+
 
   }
 
@@ -821,9 +875,21 @@ bool AirTerminalSingleDuctVAVReheat::setZoneMinimumAirFlowMethod( std::string va
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setZoneMinimumAirFlowMethod(value);
 }
 
-double AirTerminalSingleDuctVAVReheat::constantMinimumAirFlowFraction()
+boost::optional<double> AirTerminalSingleDuctVAVReheat::constantMinimumAirFlowFraction() const
 {
+  if( VersionString( openStudioVersion() ) < VersionString("2.8.0") ) {
+    // TODO: remove in 2 versions
+    LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, it now returns an Optional double");
+  } else {
+    // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
+    LOG(Debug, "Please go tell a developper to remove the warning in AirTerminalSingleDuctVAVReheat::constantMinimumAirFlowFraction");
+    OS_ASSERT(false);
+  }
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->constantMinimumAirFlowFraction();
+}
+
+bool AirTerminalSingleDuctVAVReheat::isConstantMinimumAirFlowFractionAutosized() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->isConstantMinimumAirFlowFractionAutosized();
 }
 
 bool AirTerminalSingleDuctVAVReheat::setConstantMinimumAirFlowFraction( double value )
@@ -831,15 +897,37 @@ bool AirTerminalSingleDuctVAVReheat::setConstantMinimumAirFlowFraction( double v
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setConstantMinimumAirFlowFraction(value);
 }
 
-double AirTerminalSingleDuctVAVReheat::fixedMinimumAirFlowRate()
+void AirTerminalSingleDuctVAVReheat::autosizeConstantMinimumAirFlowFraction() {
+  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizeConstantMinimumAirFlowFraction();
+}
+
+
+boost::optional<double> AirTerminalSingleDuctVAVReheat::fixedMinimumAirFlowRate() const
 {
+  if( VersionString( openStudioVersion() ) < VersionString("2.8.0") ) {
+    // TODO: remove in 2 versions
+    LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, it now returns an Optional double");
+  } else {
+    // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
+    LOG(Debug, "Please go tell a developper to remove the warning AirTerminalSingleDuctVAVReheat::fixedMinimumAirFlowRate");
+    OS_ASSERT(false);
+  }
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->fixedMinimumAirFlowRate();
+}
+
+bool AirTerminalSingleDuctVAVReheat::isFixedMinimumAirFlowRateAutosized() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->isFixedMinimumAirFlowRateAutosized();
 }
 
 bool AirTerminalSingleDuctVAVReheat::setFixedMinimumAirFlowRate( double value )
 {
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setFixedMinimumAirFlowRate(value);
 }
+
+void AirTerminalSingleDuctVAVReheat::autosizeFixedMinimumAirFlowRate() {
+  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizeFixedMinimumAirFlowRate();
+}
+
 
 boost::optional<Schedule> AirTerminalSingleDuctVAVReheat::minimumAirFlowFractionSchedule() const
 {
@@ -995,21 +1083,29 @@ boost::optional<AirflowNetworkEquivalentDuct> AirTerminalSingleDuctVAVReheat::ai
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->airflowNetworkEquivalentDuct();
 }
 
-  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumAirFlowRate() const {
-    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumAirFlowRate();
-  }
+boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumAirFlowRate() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumAirFlowRate();
+}
 
-  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumHotWaterOrSteamFlowRate() const {
-    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumHotWaterOrSteamFlowRate();
-  }
+boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedConstantMinimumAirFlowFraction() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedConstantMinimumAirFlowFraction();
+}
 
-  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const {
-    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumFlowPerZoneFloorAreaDuringReheat();
-  }
+boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedFixedMinimumAirFlowRate() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedFixedMinimumAirFlowRate();
+}
 
-  boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumFlowFractionDuringReheat() const {
-    return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumFlowFractionDuringReheat();
-  }
+boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumHotWaterOrSteamFlowRate() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumHotWaterOrSteamFlowRate();
+}
+
+boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumFlowPerZoneFloorAreaDuringReheat();
+}
+
+boost::optional<double> AirTerminalSingleDuctVAVReheat::autosizedMaximumFlowFractionDuringReheat() const {
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->autosizedMaximumFlowFractionDuringReheat();
+}
 
 } // model
 

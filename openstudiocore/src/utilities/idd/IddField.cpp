@@ -34,7 +34,6 @@
 #include "CommentRegex.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
-#include "../units/Unit.hpp"
 #include "../units/UnitFactory.hpp"
 #include "../units/IddUnitString.hpp"
 #include "../units/QuantityConverter.hpp"
@@ -42,15 +41,12 @@
 #include "../units/IPUnit.hpp"
 #include "../units/Quantity.hpp"
 
-#include "../core/Finder.hpp"
 #include "../core/Assert.hpp"
 #include "../core/Containers.hpp"
 
 
-#include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include <algorithm>
 
 using boost::algorithm::trim;
 

@@ -184,9 +184,9 @@ set(${target_name}_src
   AirTerminalSingleDuctSeriesPIUReheat.hpp
   AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp
   AirTerminalSingleDuctSeriesPIUReheat.cpp
-  AirTerminalSingleDuctUncontrolled.hpp
-  AirTerminalSingleDuctUncontrolled_Impl.hpp
-  AirTerminalSingleDuctUncontrolled.cpp
+  AirTerminalSingleDuctConstantVolumeNoReheat.hpp
+  AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeNoReheat.cpp
   AirTerminalSingleDuctVAVNoReheat.hpp
   AirTerminalSingleDuctVAVNoReheat_Impl.hpp
   AirTerminalSingleDuctVAVNoReheat.cpp
@@ -704,6 +704,9 @@ set(${target_name}_src
   ExternalInterfaceVariable.hpp
   ExternalInterfaceVariable_Impl.hpp
   ExternalInterfaceVariable.cpp
+  ExternalFile.hpp
+  ExternalFile_Impl.hpp
+  ExternalFile.cpp
   Facility.hpp
   Facility_Impl.hpp
   Facility.cpp
@@ -1135,6 +1138,9 @@ set(${target_name}_src
   ScheduleDay.hpp
   ScheduleDay_Impl.hpp
   ScheduleDay.cpp
+  ScheduleFile.hpp
+  ScheduleFile_Impl.hpp
+  ScheduleFile.cpp
   ScheduleFixedInterval.hpp
   ScheduleFixedInterval_Impl.hpp
   ScheduleFixedInterval.cpp
@@ -1581,14 +1587,18 @@ set(${target_name}_src
 set(${target_name}_swig_src
   Model_Common_Include.i
   Model.i
+  ModelAirflow.i
+  ModelAvailabilityManager.i
   ModelCore.i
-  ModelSimulation.i
-  ModelResources.i
+  ModelGenerators.i
   ModelGeometry.i
   ModelHVAC.i
-  ModelAirflow.i
+  ModelPlantEquipmentOperationScheme.i
   ModelRefrigeration.i
-  ModelGenerators.i
+  ModelResources.i
+  ModelSimulation.i
+  ModelStraightComponent.i
+  ModelZoneHVAC.i
 )
 
 qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
@@ -1666,7 +1676,7 @@ set(${target_name}_test_src
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
   test/AirTerminalSingleDuctSeriesPIUReheat_GTest.cpp
-  test/AirTerminalSingleDuctUncontrolled_GTest.cpp
+  test/AirTerminalSingleDuctConstantVolumeNoReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVNoReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVHeatAndCoolReheat_GTest.cpp
@@ -2040,7 +2050,7 @@ list(APPEND OpenStudioModelSwigs OpenStudioModelCore)
 MAKE_SWIG_TARGET(OpenStudioModelSimulation model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSimulation.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelCore)
 list(APPEND OpenStudioModelSwigs OpenStudioModelSimulation)
 
-MAKE_SWIG_TARGET(OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelCore)
+MAKE_SWIG_TARGET(OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelSimulation)
 list(APPEND OpenStudioModelSwigs OpenStudioModelResources)
 
 MAKE_SWIG_TARGET(OpenStudioModelGeometry model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGeometry.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelResources)
@@ -2051,9 +2061,6 @@ list(APPEND OpenStudioModelSwigs OpenStudioModelHVAC)
 
 MAKE_SWIG_TARGET(OpenStudioModelZoneHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelZoneHVAC.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelZoneHVAC)
-
-MAKE_SWIG_TARGET(OpenStudioModelSetpointManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSetpointManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
-list(APPEND OpenStudioModelSwigs OpenStudioModelSetpointManager)
 
 MAKE_SWIG_TARGET(OpenStudioModelAvailabilityManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAvailabilityManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelAvailabilityManager)

@@ -193,7 +193,7 @@ std::string EpwData::toISOData() const {
 void EpwData::loadData(const openstudio::path &fn)
 {
   // Array was fully initialized in constructor
-  std::ifstream myfile(openstudio::toString(fn).c_str());
+  std::ifstream myfile(openstudio::toSystemFilename(fn));
   if (myfile.is_open())
   {
     size_t i = 0;

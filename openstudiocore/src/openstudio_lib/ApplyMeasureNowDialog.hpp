@@ -116,6 +116,8 @@ private:
 
   void removeWorkingDir();
 
+  void createWorkingDir();
+
   boost::optional<BCLMeasure> m_bclMeasure;
 
   QSharedPointer<measuretab::MeasureStepItem> m_currentMeasureStepItem;
@@ -153,6 +155,8 @@ private:
   QString m_advancedOutput;
 
   openstudio::path m_workingDir;
+
+  openstudio::path m_workingFilesDir;
 
   TextEditDialog * m_advancedOutputDialog;
 

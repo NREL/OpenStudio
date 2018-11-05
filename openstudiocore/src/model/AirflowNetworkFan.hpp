@@ -30,7 +30,7 @@
 #ifndef MODEL_AIRFLOWNETWORKFAN_HPP
 #define MODEL_AIRFLOWNETWORKFAN_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "AirflowNetworkComponent.hpp"
 
 namespace openstudio {

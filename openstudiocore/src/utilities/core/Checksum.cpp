@@ -29,7 +29,6 @@
 
 #include "Checksum.hpp"
 
-#include <ios>
 #include <sstream>
 
 #include <boost/crc.hpp>

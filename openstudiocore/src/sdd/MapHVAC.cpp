@@ -128,7 +128,7 @@
 #include "../model/ThermalStorageChilledWaterStratified.hpp"
 #include "../model/ThermalStorageChilledWaterStratified_Impl.hpp"
 #include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
-#include "../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVNoReheat.hpp"
 #include "../model/AirTerminalSingleDuctParallelPIUReheat.hpp"
@@ -1155,11 +1155,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   value = dsgnAirFlowMinRatElement.text().toDouble(&ok);
   if( ok )
   {
-    sizingSystem.setMinimumSystemAirFlowRatio(value);
+    sizingSystem.setCentralHeatingMaximumSystemAirFlowRatio(value);
   }
   else
   {
-    sizingSystem.setMinimumSystemAirFlowRatio(0.3);
+    sizingSystem.setCentralHeatingMaximumSystemAirFlowRatio(0.3);
   }
 
   // DsgnPrehtTemp
@@ -5394,7 +5394,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
   {
     model::Schedule schedule = alwaysOnSchedule(model);
 
-    model::AirTerminalSingleDuctUncontrolled terminal(model,schedule);
+    model::AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,schedule);
 
     // PriAirFlow
     if( primaryAirFlow )
@@ -5408,7 +5408,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
   {
     model::Schedule schedule = alwaysOnSchedule(model);
 
-    model::AirTerminalSingleDuctUncontrolled terminal(model,schedule);
+    model::AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,schedule);
 
     result = terminal;
   }
@@ -7374,7 +7374,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       value = unitToUnit(value,"cfm","m^3/s").get();
       heatPump.setEvaporatorAirFlowRate(value);
     } else {
-			heatPump.autosizeEvaporatorAirFlowRate();	
+			heatPump.autosizeEvaporatorAirFlowRate();
 		}
 
     heatPump.setMinimumInletAirTemperatureforCompressorOperation(5.0);

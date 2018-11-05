@@ -221,7 +221,7 @@ class ObjectSelector : public QObject, public Nano::Observer
     bool containsObject(const openstudio::model::ModelObject &t_obj) const;
     void selectAll();
     void clearSelection();
-    void updateWidgets();
+    void updateWidgets(bool isRowLevel=false);
 
     std::set<model::ModelObject> m_selectedObjects;
     std::set<model::ModelObject> m_selectorObjects;
@@ -232,6 +232,9 @@ class ObjectSelector : public QObject, public Nano::Observer
 
   private slots:
     void widgetDestroyed(QObject *t_obj);
+
+  protected:
+    REGISTER_LOGGER("openstudio.ObjectSelector");
 
   private:
     void updateWidgets(const model::ModelObject &t_obj);
@@ -309,10 +312,10 @@ public:
 
   template<typename DataSourceType>
   void addCheckBoxColumn(const Heading &heading,
-    const std::string & tooltip,
-    std::function<bool(DataSourceType *)>  t_getter,
-    std::function<bool(DataSourceType *, bool)> t_setter,
-    const boost::optional<DataSource> &t_source = boost::none)
+                         const std::string & tooltip,
+                         std::function<bool(DataSourceType *)>  t_getter,
+                         std::function<bool(DataSourceType *, bool)> t_setter,
+                         const boost::optional<DataSource> &t_source = boost::none)
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<CheckBoxConceptBoolReturn>(new CheckBoxConceptBoolReturnImpl<DataSourceType>(heading, tooltip, t_getter, t_setter)), t_source));
   }

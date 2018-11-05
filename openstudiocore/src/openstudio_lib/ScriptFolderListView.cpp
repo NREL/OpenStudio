@@ -122,7 +122,7 @@ void ScriptFolderListView::createEmptyScript(const openstudio::path &t_folder_na
   // Scope for creating and closing file.
   {
     openstudio::filesystem::create_directories(m_rootPath / t_folder_name);
-    std::ofstream ofs(openstudio::toString(filename).c_str());
+    std::ofstream ofs(openstudio::toSystemFilename(filename));
     ofs << "# Empty Script" << std::endl;
   }
 

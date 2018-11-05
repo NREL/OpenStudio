@@ -32,10 +32,11 @@
 
 #include <QDir>
 
-#include <iostream>
-#include <string>
+
+#ifdef Q_OS_WIN
 #include <locale>
 #include <codecvt>
+#endif
 
 namespace openstudio {
 
@@ -136,6 +137,20 @@ path toPath(const std::string& s)
   // else
   return path(s);
 }
+
+#ifdef WIN32
+/** UTF-16 encoded std::wstring for opening fstreams*/
+std::wstring toSystemFilename(const path& p)
+{
+  return p.wstring();
+}
+#else
+/** UTF-8 encoded std::string for opening fstreams*/
+std::string toSystemFilename(const path& p) 
+{
+  return p.string();
+}
+#endif
 
 } // openstudio
 

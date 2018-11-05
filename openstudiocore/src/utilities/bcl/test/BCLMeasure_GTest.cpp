@@ -30,9 +30,7 @@
 #include <gtest/gtest.h>
 #include "BCLFixture.hpp"
 #include "../../core/PathHelpers.hpp"
-#include <resources.hxx>
 
-#include "../BCLFileReference.hpp"
 #include "../BCLMeasure.hpp"
 
 

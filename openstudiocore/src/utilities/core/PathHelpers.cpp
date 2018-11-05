@@ -28,11 +28,9 @@
 ***********************************************************************************************************************/
 
 #include "PathHelpers.hpp"
-#include "Logger.hpp"
 #include "Assert.hpp"
 #include "FilesystemHelpers.hpp"
 
-#include <QDir>
 #include <QRegularExpression>
 
 #ifdef Q_OS_WIN
@@ -253,6 +251,28 @@ path relocatePath(const path& originalPath,
     LOG_FREE(Debug,"openstudio.utilities.core","Relocating path to '" << toString(result) << "'.");
   }
   return result;
+}
+
+path getCompanionFolder(const path& osmPath)
+{
+  // Note: JM 2018-09-05
+  // We could include a variety of checks (verify that we passed a file, that the file exists, that extension is osm)
+  // if( boost::filesystem::is_regular_file(osmPath) && (getFileExtension(osmPath) == "osm") && boost::filesystem::exists(osmPath) )
+  // Not doing it for speed, we assume we do only use this with the path to an OSM, so stem() will do the right thing, that is split on the last "."
+  return osmPath.parent_path() / osmPath.stem();
+}
+
+path getLastLevelDirectoryName(const path& directory)
+{
+  // Note: JM 2018-09-05
+  // We could do a variety of checks here to ensure that we did pass a directory and not a file, not doing it for speed
+  // (boost::filesystem::is_directory and boost::filesystem::exists)
+
+  // We are using filename() (badly named here) and not stem() because we passed a directory, and if there is a "." in the directory name
+  // stem() is going to think the part after the last '.' is the extension.
+  // filename() just strips out the parent_path which is exactly what we need
+  return directory.filename();
+
 }
 
 std::ostream& printPathInformation(std::ostream& os,const path& p) {

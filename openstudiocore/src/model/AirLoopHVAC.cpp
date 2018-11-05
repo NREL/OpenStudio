@@ -66,11 +66,6 @@
 #include "AirLoopHVACZoneMixer.hpp"
 #include "AirLoopHVACZoneMixer_Impl.hpp"
 
-#include "AirTerminalSingleDuctUncontrolled.hpp"
-#include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
-#include "AirTerminalSingleDuctVAVReheat.hpp"
-#include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
-
 #include "CoilHeatingWater.hpp"
 #include "CoilHeatingWater_Impl.hpp"
 #include "CoilCoolingWater.hpp"
@@ -107,7 +102,7 @@
 #include <utilities/idd/OS_AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/OS_Node_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ZoneSplitter_FieldEnums.hxx>
-#include <utilities/idd/OS_AirTerminal_SingleDuct_Uncontrolled_FieldEnums.hxx>
+#include <utilities/idd/OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat_FieldEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
@@ -344,7 +339,7 @@ namespace detail {
                 return hvacComponent;
               }
             }
-               
+
           }
         }
       } else if ( ! upstreamComp->optionalCast<Splitter>() && ! upstreamComp->optionalCast<Mixer>() && ! upstreamComp->optionalCast<Node>() ) {
@@ -368,7 +363,7 @@ namespace detail {
 
     if( (optAirTerminal && _model != optAirTerminal->model()) ||
          _model != splitter.model() ||
-         _model != mixer.model() ) 
+         _model != mixer.model() )
     {
       return false;
     }
@@ -569,7 +564,7 @@ namespace detail {
     for( unsigned i = 0; i < demandInletNodes().size(); ++i ) {
       thermalZone.removeSupplyPlenum(airloop, i);
     }
-    thermalZone.removeReturnPlenum();
+    thermalZone.removeReturnPlenum(airloop);
 
     for( auto & modelObject : modelObjects ) {
       if( (! modelObject.optionalCast<Node>()) && (! modelObject.optionalCast<ThermalZone>()) ) {
@@ -792,7 +787,7 @@ namespace detail {
         return (type ==  comp.iddObjectType());
       });
       if ( it != terms.end() ) {
-        uniqueterms.push_back(*it); 
+        uniqueterms.push_back(*it);
       }
     }
 
@@ -922,7 +917,7 @@ namespace detail {
     auto splitter = thisloop.zoneSplitter();
     auto mixer = thisloop.zoneMixer();
     auto result = addBranchForZoneImpl(thermalZone, thisloop, splitter, mixer, true, comp);
-    
+
     //if ( result ) {
     //  for ( auto & loop : loops ) {
     //    loop.removeBranchForZone(thermalZone);

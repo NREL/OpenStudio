@@ -101,13 +101,15 @@ namespace detail {
 
     bool setZoneMinimumAirFlowMethod( std::string value );
 
-    double constantMinimumAirFlowFraction();
-
+    boost::optional<double> constantMinimumAirFlowFraction() const;
+    bool isConstantMinimumAirFlowFractionAutosized() const;
     bool setConstantMinimumAirFlowFraction( double value );
+    void autosizeConstantMinimumAirFlowFraction();
 
-    double fixedMinimumAirFlowRate();
-
+    boost::optional<double> fixedMinimumAirFlowRate() const;
+    bool isFixedMinimumAirFlowRateAutosized() const;
     bool setFixedMinimumAirFlowRate( double value );
+    void autosizeFixedMinimumAirFlowRate();
 
     boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
 
@@ -163,20 +165,24 @@ namespace detail {
 
     bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumAirFlowRate() const;
 
-  boost::optional<double> autosizedMaximumHotWaterOrSteamFlowRate() const ;
+    boost::optional<double> autosizedConstantMinimumAirFlowFraction() const;
 
-  boost::optional<double> autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const ;
+    boost::optional<double> autosizedFixedMinimumAirFlowRate() const;
 
-  boost::optional<double> autosizedMaximumFlowFractionDuringReheat() const ;
+    boost::optional<double> autosizedMaximumHotWaterOrSteamFlowRate() const;
 
-  virtual void autosize() override;
+    boost::optional<double> autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const;
 
-  virtual void applySizingValues() override;
+    boost::optional<double> autosizedMaximumFlowFractionDuringReheat() const;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
 
     AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-    
+
     boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
    private:
