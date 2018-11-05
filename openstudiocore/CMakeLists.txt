@@ -541,7 +541,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
       # ubuntu 18.04
       # This should work with 16.04 and 14.04 too.
       set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "4d993b641d4852c10099da9d99f7900d")
+      set(RUBY_ZIP_EXPECTED_MD5 "3962cdfec7f9a6b58060c5924734166c")
     else()
       # 16.04
       set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static_xenial.tar.gz")
