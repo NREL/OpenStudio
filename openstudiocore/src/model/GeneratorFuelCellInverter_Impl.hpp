@@ -69,6 +69,10 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual std::vector<IddObjectType> allowableChildTypes() const;
+
+    virtual std::vector<ModelObject> children() const;
+
     //@}
     /** @name Getters */
     //@{
@@ -80,7 +84,7 @@ namespace detail {
     boost::optional<CurveQuadratic> efficiencyFunctionofDCPowerCurve() const;
 
     // Return optional parent generator
-    GeneratorFuelCell fuelCell() const;
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
     //@}
     /** @name Setters */
@@ -102,11 +106,6 @@ namespace detail {
     /** @name Other */
     //@{
 
-    virtual ModelObject clone(Model model) const override;
-
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
-
-    virtual std::vector<ModelObject> children() const;
 
     //@}
    protected:
