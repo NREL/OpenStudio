@@ -256,7 +256,18 @@ target_link_libraries(openstudio
 )
 
 if( UNIX AND NOT APPLE )
+  target_link_libraries(openstudio
+    ${READLINE}
+    ${GDBM}
+    ${GDBM_COMPAT}
+    ${CURSES}
+    ${FFI}
+    ${YAML}
+  )
   target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY}  "dl" "crypt" "ssl")
+
+  # Order of link matters! Ruby needs to lookup symbols inside GMP, so this one needs to be linked after
+  target_link_libraries(openstudio ${GMP})
 elseif(WIN32)
   target_link_libraries(openstudio debug ${RUBY_STATIC_LIBRARY_DEBUG} optimized ${RUBY_STATIC_LIBRARY})
   target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi)
