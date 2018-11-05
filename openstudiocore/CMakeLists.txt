@@ -907,7 +907,7 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
       # ubuntu 18.04
       # This should work with 16.04 and 14.04 too.
       set(BOOST_ZIP_FILENAME "boost_1_68_0_linux.tar.gz")
-      set(BOOST_ZIP_EXPECTED_MD5 "bea55ee70ec096792136b91b879bb4f2")
+      set(BOOST_ZIP_EXPECTED_MD5 "0d6a2bf1bb403cde1a5396d0ef3dda4e")
     else()
       # 16.04
       set(BOOST_ZIP_FILENAME "boost_1_68_0_linux_xenial.tar.gz")
@@ -1125,7 +1125,7 @@ elseif(EXISTS "/etc/redhat-release")
 else()
   if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
     set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static.tar.gz")
-    set(QT_STATIC_ZIP_EXPECTED_MD5 "24030785000d4bacb8f0ff64acc4bfab")
+    set(QT_STATIC_ZIP_EXPECTED_MD5 "fb9298e6d74c207742ab5ab50e18b8e2")
   else()
     # 16.04
     set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static_xenial.tar.gz")
