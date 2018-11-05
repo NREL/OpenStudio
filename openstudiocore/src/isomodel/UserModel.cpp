@@ -575,7 +575,7 @@ namespace isomodel {
   }
   void UserModel::loadBuilding(const openstudio::path &buildingFile){
     string line;
-    ifstream inputFile(openstudio::toString(buildingFile).c_str());
+    ifstream inputFile(openstudio::toSystemFilename(buildingFile));
     if (inputFile.is_open()) {
       while (inputFile.good()) {
         getline (inputFile,line);
@@ -663,7 +663,7 @@ namespace isomodel {
   void UserModel::save(const openstudio::path &t_buildingFile) const
   {
 
-    std::ofstream ofile(openstudio::toString(t_buildingFile).c_str());
+    std::ofstream ofile(openstudio::toSystemFilename(t_buildingFile));
 
     ofile << "terrainClass = " << _terrainClass << std::endl;
     ofile << "floorArea = " << _floorArea << std::endl;

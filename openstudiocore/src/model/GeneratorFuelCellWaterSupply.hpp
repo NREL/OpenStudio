@@ -94,7 +94,7 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
   boost::optional<Schedule> waterTemperatureSchedule() const;
 
   // Return optional parent generator
-  GeneratorFuelCell fuelCell() const;
+  boost::optional<GeneratorFuelCell> fuelCell() const;
 
   //@}
   /** @name Setters */

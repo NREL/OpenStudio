@@ -63,7 +63,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRunPeriod( RunPeriod& mod
 
   model::YearDescription yd = modelObject.model().getUniqueModelObject<model::YearDescription>();
   Date firstDay = yd.makeDate(modelObject.getBeginMonth(), modelObject.getBeginDayOfMonth());
-  Date endDay = yd.makeDate(modelObject.getEndMonth(), modelObject.getEndMonth());
+  Date endDay = yd.makeDate(modelObject.getEndMonth(), modelObject.getEndDayOfMonth());
 
   int beginYear = firstDay.year();
   int endYear = 0;

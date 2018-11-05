@@ -87,21 +87,6 @@ namespace detail {
     return GeneratorFuelCellPowerModule::iddObjectType();
   }
 
-  // This will clone both the GeneratorFuelCellPowerModule and its linked GeneratorFuelCell
-  // and will return a reference to the GeneratorFuelCellPowerModule
-  ModelObject GeneratorFuelCellPowerModule_Impl::clone(Model model) const {
-
-    // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
-    GeneratorFuelCell fs = fuelCell();
-    GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
-
-    // We get the clone of the parent generator's MTHR so we can return that
-    GeneratorFuelCellPowerModule hxClone = fsClone.powerModule();
-
-
-    return hxClone;
-  }
-
   std::vector<IddObjectType> GeneratorFuelCellPowerModule_Impl::allowableChildTypes() const {
     std::vector<IddObjectType> result;
     result.push_back(IddObjectType::OS_Curve_Quadratic);
@@ -124,19 +109,19 @@ namespace detail {
   }
 
   // Get the parent GeneratorFuelCell
-  GeneratorFuelCell GeneratorFuelCellPowerModule_Impl::fuelCell() const {
+  boost::optional<GeneratorFuelCell> GeneratorFuelCellPowerModule_Impl::fuelCell() const {
 
-    boost::optional<GeneratorFuelCell> value;
-    for (const GeneratorFuelCell& fc : this->model().getConcreteModelObjects<GeneratorFuelCell>()) {
-      if (boost::optional<GeneratorFuelCellPowerModule> fcHX = fc.powerModule()) {
-        if (fcHX->handle() == this->handle()) {
-          value = fc;
-        }
+    boost::optional<GeneratorFuelCell> fc;
+    // We use getModelObjectSources to check if more than one
+    std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
+
+    if( fcs.size() > 0u) {
+      if( fcs.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
       }
+      fc = fcs[0];
     }
-    OS_ASSERT(value);
-    return value.get();
-
+    return fc;
   }
 
   std::string GeneratorFuelCellPowerModule_Impl::efficiencyCurveMode() const {
@@ -1433,7 +1418,7 @@ void GeneratorFuelCellPowerModule::resetMaximumOperatingPoint() {
   getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->resetMaximumOperatingPoint();
 }
 
-GeneratorFuelCell GeneratorFuelCellPowerModule::fuelCell() const {
+ boost::optional<GeneratorFuelCell> GeneratorFuelCellPowerModule::fuelCell() const {
   return getImpl<detail::GeneratorFuelCellPowerModule_Impl>()->fuelCell();
 }
 

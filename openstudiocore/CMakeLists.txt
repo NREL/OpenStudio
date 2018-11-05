@@ -764,6 +764,13 @@ endif()
 
 # SWIG
 
+# Xcode/Ninja generators undefined MAKE
+if(CMAKE_GENERATOR MATCHES "Make")
+  set(MAKE "$(MAKE)")
+else()
+  set(MAKE make)
+endif()
+
 # using forked version of SWIG at https://github.com/macumber/swig/tree/openstudio_swig_3_0_12
 if(UNIX)
   # We patch it up with a version of pcre we provide to avoid having to have the requirement locally

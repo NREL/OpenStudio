@@ -60,12 +60,12 @@ endmacro()
 # Add google tests macro
 macro(ADD_GOOGLE_TESTS executable)
   if(MSVC)
-    file(TO_NATIVE_PATH "${QT_LIBRARY_DIR}" QT_LIB_PATH)
-    set(NEWPATH "${QT_LIB_PATH};$ENV{PATH}")
+    file(TO_NATIVE_PATH "${QT_INSTALL_DIR}/bin" QT_BIN_PATH)
+    set(NEWPATH "${QT_BIN_PATH};$ENV{PATH}")
   else()
     set(NEWPATH $ENV{PATH})
   endif()
-
+  
   foreach(source ${ARGN})
     if(NOT "${source}" MATCHES "/moc_.*cxx")
       string(REGEX MATCH .*cpp source "${source}")

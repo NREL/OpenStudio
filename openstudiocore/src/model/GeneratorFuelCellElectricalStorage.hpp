@@ -37,6 +37,8 @@ namespace openstudio {
 
 namespace model {
 
+class GeneratorFuelCell;
+
 namespace detail {
 
   class GeneratorFuelCellElectricalStorage_Impl;
@@ -75,6 +77,9 @@ class MODEL_API GeneratorFuelCellElectricalStorage : public ModelObject {
   double simpleMaximumPowerStore() const;
 
   double initialChargeState() const;
+
+  // Return optional parent generator
+  boost::optional<GeneratorFuelCell> fuelCell() const;
 
   //@}
   /** @name Setters */

@@ -478,7 +478,7 @@ std::ostream& IddFile::print(std::ostream& os) const
 
 std::pair<VersionString, std::string> IddFile::parseVersionBuild(const openstudio::path &p)
 {
-  std::ifstream ifs(openstudio::toString(p));
+  std::ifstream ifs(openstudio::toSystemFilename(p));
 
   if (!ifs.good()) {
     throw std::runtime_error("Unable to open file for reading: " + openstudio::toString(p));

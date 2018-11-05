@@ -40,6 +40,7 @@ class Node;
 class Schedule;
 class CurveCubic;
 class GeneratorFuelCell;
+class FuelSupplyConstituent;
 
 namespace detail {
 
@@ -73,15 +74,18 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //extensible fields
+    virtual std::vector<IddObjectType> allowableChildTypes() const;
 
+    virtual std::vector<ModelObject> children() const;
+
+    //extensible fields
+    bool addConstituent(const FuelSupplyConstituent& constituent);
     bool addConstituent(std::string name, double molarFraction);
 
-    void removeConstituent(unsigned groupIndex);
-
+    bool removeConstituent(unsigned groupIndex);
     void removeAllConstituents();
 
-    std::vector< std::pair<std::string, double> > constituents();
+    std::vector<FuelSupplyConstituent> constituents() const;
 
     //@}
     /** @name Getters */
@@ -107,10 +111,13 @@ namespace detail {
 
     boost::optional<double> liquidGenericFuelCO2EmissionFactor() const;
 
-    boost::optional<unsigned int> numberofConstituentsinGaseousConstituentFuelSupply() const;
+    unsigned int numberofConstituentsinGaseousConstituentFuelSupply() const;
+
+    // Convenience function to check that it's equal to 1.0 (If no constituents, returns 0 and warns)
+    double sumofConstituentsMolarFractions() const;
 
     // Return optional parent generator
-    GeneratorFuelCell fuelCell() const;
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
     //@}
     /** @name Setters */
@@ -154,22 +161,17 @@ namespace detail {
 
     void resetLiquidGenericFuelCO2EmissionFactor();
 
-    bool setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply);
-
-    void resetNumberofConstituentsinGaseousConstituentFuelSupply();
-
     //@}
     /** @name Other */
     //@{
-    virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
-
-    virtual std::vector<ModelObject> children() const;
     //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.GeneratorFuelSupply");
+    // Not to be exposed publicly, automatically handled by addConstituent, removeConstituent
+    bool setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply);
+    void resetNumberofConstituentsinGaseousConstituentFuelSupply();
   };
 
 } // detail

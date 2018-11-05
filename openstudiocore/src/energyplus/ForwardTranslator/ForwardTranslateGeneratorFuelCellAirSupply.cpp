@@ -78,99 +78,101 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelCellAirSuppl
   boost::optional<Node> node;
   boost::optional<CurveCubic> curve;
   boost::optional<CurveQuadratic> curvequad;
-  std::vector< std::pair<std::string, double> > constituents;
 
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_AirSupply, modelObject);
+  IdfObject idf_aS = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelCell_AirSupply, modelObject);
   //Name
   s = modelObject.name();
   if (s) {
-    pcm.setName(*s);
+    idf_aS.setName(*s);
   }
 
   //AirInletNodeName
   node = modelObject.airInletNode();
   if (node) {
-    pcm.setString(Generator_FuelCell_AirSupplyFields::AirInletNodeName, node.get().nameString());
+    idf_aS.setString(Generator_FuelCell_AirSupplyFields::AirInletNodeName, node.get().nameString());
   } else {
     auto name = modelObject.nameString() + " OA Node";
     IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
     oaNodeListIdf.setString(0, name);
     m_idfObjects.push_back(oaNodeListIdf);
 
-    pcm.setString(openstudio::Generator_FuelCell_AirSupplyFields::AirInletNodeName, name);
+    idf_aS.setString(openstudio::Generator_FuelCell_AirSupplyFields::AirInletNodeName, name);
   }
 
   //blowerPowerCurve
   curve = modelObject.blowerPowerCurve();
   if (curve) {
-    pcm.setString(Generator_FuelCell_AirSupplyFields::BlowerPowerCurveName, curve.get().nameString());
+    idf_aS.setString(Generator_FuelCell_AirSupplyFields::BlowerPowerCurveName, curve.get().nameString());
   }
 
   //BlowerHeatLossFactor
   d = modelObject.blowerHeatLossFactor();
   if (d) {
-    pcm.setDouble(Generator_FuelCell_AirSupplyFields::BlowerHeatLossFactor, d.get());
+    idf_aS.setDouble(Generator_FuelCell_AirSupplyFields::BlowerHeatLossFactor, d.get());
   }
 
   //AirSupplyRateCalculationMode
   s = modelObject.airSupplyRateCalculationMode();
   if (s) {
-    pcm.setString(Generator_FuelCell_AirSupplyFields::AirSupplyRateCalculationMode, s.get());
+    idf_aS.setString(Generator_FuelCell_AirSupplyFields::AirSupplyRateCalculationMode, s.get());
   }
 
   //StoichiometricRatio
   d = modelObject.stoichiometricRatio();
   if (d) {
-    pcm.setDouble(Generator_FuelCell_AirSupplyFields::StoichiometricRatio, d.get());
+    idf_aS.setDouble(Generator_FuelCell_AirSupplyFields::StoichiometricRatio, d.get());
   }
 
   //AirRateFunctionofElectricPowerCurveName
   curvequad = modelObject.airRateFunctionofElectricPowerCurve();
   if (curvequad) {
-    pcm.setString(Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName, curvequad.get().nameString());
+    idf_aS.setString(Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName, curvequad.get().nameString());
   }
 
   //AirRateAirTemperatureCoefficient
   d = modelObject.airRateAirTemperatureCoefficient();
   if (d) {
-    pcm.setDouble(Generator_FuelCell_AirSupplyFields::AirRateAirTemperatureCoefficient, d.get());
+    idf_aS.setDouble(Generator_FuelCell_AirSupplyFields::AirRateAirTemperatureCoefficient, d.get());
   }
 
   //AirRateFunctionofElectricPowerCurveName
   curvequad = modelObject.airRateFunctionofElectricPowerCurve();
   if (curvequad) {
-    pcm.setString(Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName, curvequad.get().nameString());
+    idf_aS.setString(Generator_FuelCell_AirSupplyFields::AirRateFunctionofElectricPowerCurveName, curvequad.get().nameString());
   }
 
   //AirIntakeHeatRecoveryMode
   s = modelObject.airIntakeHeatRecoveryMode();
   if (s) {
-    pcm.setString(Generator_FuelCell_AirSupplyFields::AirIntakeHeatRecoveryMode, s.get());
+    idf_aS.setString(Generator_FuelCell_AirSupplyFields::AirIntakeHeatRecoveryMode, s.get());
   }
 
   //AirSupplyConstituentMode
   s = modelObject.airSupplyConstituentMode();
   if (s) {
-    pcm.setString(Generator_FuelCell_AirSupplyFields::AirSupplyConstituentMode, s.get());
+    idf_aS.setString(Generator_FuelCell_AirSupplyFields::AirSupplyConstituentMode, s.get());
   }
 
   //UserDefinedConstituents
-  constituents = modelObject.constituents();
+  std::vector<AirSupplyConstituent> constituents = modelObject.constituents();
   if (!constituents.empty()) {
-    for (auto constituent : constituents) {
-      auto eg = pcm.pushExtensibleGroup();
-      eg.setString(Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, constituent.first);
-      eg.setDouble(Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction, constituent.second);
+    // E+ expects the sum of the molar fractions to be 1
+    double sumFractions = modelObject.sumofConstituentsMolarFractions();
+    if ((sumFractions < 0.98) || (sumFractions > 1.02)) {
+      LOG(Warn, "For " << modelObject.briefDescription()
+          << ", the sum of molar fractions of the constituent isn't equal to 1, but " << sumFractions << ".");
+    }
+    for (const AirSupplyConstituent& constituent : constituents) {
+      auto eg = idf_aS.pushExtensibleGroup();
+      eg.setString(Generator_FuelCell_AirSupplyExtensibleFields::ConstituentName, constituent.constituentName());
+      eg.setDouble(Generator_FuelCell_AirSupplyExtensibleFields::MolarFraction, constituent.molarFraction());
     }
   }
 
   //NumberofUserDefinedConstituents
-  i = constituents.size();
-  if (i) {
-    pcm.setDouble(Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, i.get());
-  }
+  idf_aS.setInt(Generator_FuelCell_AirSupplyFields::NumberofUserDefinedConstituents, constituents.size());
 
-  return pcm;
+  return idf_aS;
 
 }
 
