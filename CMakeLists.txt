@@ -266,7 +266,7 @@ if(UNIX)
 elseif(WIN32)
 
   option(BUILD_OPENSSL "Build OpenSSL From Source" OFF)
-  
+
   set(OPENSSL_VERSION "1.1.0i")
   set(OPENSSL_SOURCE_URL "https://github.com/openssl/openssl/archive/OpenSSL_1_1_0i.zip")
   set(OPENSSL_SOURCE_HASH fb2aa1a8ceb85f68055044a85f1dbc94)
@@ -279,7 +279,7 @@ elseif(WIN32)
   endif()
   set(OPENSSL_PATH "OpenSSL-Win${OPENSSL_ARCH}")
   set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
-  
+
   if(BUILD_OPENSSL)
     # requires perl (http://strawberryperl.com/) and NASM (https://www.nasm.us/) in the path
     # http://p-nand-q.com/programming/windows/building_openssl_with_visual_studio_2013.html
@@ -294,7 +294,7 @@ elseif(WIN32)
       INSTALL_COMMAND ""
       BUILD_IN_SOURCE 1
     )
-    
+
   else()
     # download pre-built binaries
     if(EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
@@ -306,9 +306,9 @@ elseif(WIN32)
       execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
     endif()
-    
+
   endif()
-  
+
   MESSAGE("OPENSSL_ROOT_DIR = ${OPENSSL_ROOT_DIR}")
 endif()
 
