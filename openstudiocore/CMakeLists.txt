@@ -1119,7 +1119,7 @@ else()
   else()
     # 16.04
     set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static_xenial.tar.gz")
-    set(QT_STATIC_ZIP_EXPECTED_MD5 "8f702fb5600326b6f8e684f90961453f")
+    set(QT_STATIC_ZIP_EXPECTED_MD5 "e6969f05b84a20d4610b1d35170a2329")
   endif()
 endif()
 
@@ -1206,6 +1206,9 @@ if( UNIX AND NOT APPLE )
   FIND_QT_STATIC_LIB("X11-xcb.so" "*")
   FIND_QT_STATIC_LIB("Xext.so" "*")
   FIND_QT_STATIC_LIB("crypto.so" "*")
+
+  #FIND_QT_STATIC_LIB("icui18n" "*")
+  #FIND_QT_STATIC_LIB("icuuc" "*")
 
   if(EXISTS "/etc/redhat-release")
     FIND_QT_STATIC_LIB("rt" "*")
