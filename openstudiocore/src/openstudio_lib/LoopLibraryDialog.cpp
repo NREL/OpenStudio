@@ -137,7 +137,6 @@ LoopLibraryDialog::LoopLibraryDialog(QWidget * parent)
            QString("Empty Plant Loop"),
            QPixmap(":/images/plant_loop_icon.png") );
 
-  // TODO: create a new icon!
   newItem( ADDTOMODEL_SHWLOOP,
            QString("Service Hot Water Plant Loop"),
            QPixmap(":/images/shw_loop_icon.png") );
