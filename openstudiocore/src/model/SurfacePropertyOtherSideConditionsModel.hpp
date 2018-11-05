@@ -30,7 +30,7 @@
 #ifndef MODEL_SURFACEPROPERTYOTHERSIDECONDITIONSMODEL_HPP
 #define MODEL_SURFACEPROPERTYOTHERSIDECONDITIONSMODEL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ResourceObject.hpp"
 
 namespace openstudio {

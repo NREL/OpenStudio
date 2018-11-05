@@ -354,9 +354,17 @@ In S3:
 
 On [OpenStudio.net](https://www.openstudio.net/):
 
-- Select `Edit OpenStudio Release Links`
-- Update `Current Release Version` or `Develop Release Version` (depending on whether a major or iteration build is being done)
-- Replace the S3 build URLs with those generated above
+Your account must have admin privileges in order to perform the following actions.
+- Select `Edit OpenStudio Release Links` in the gray menu bar at the top
+    - Update `Current Release Version` or `Develop Release Version` (depending on whether a major or iteration build is being done)
+    - Replace the S3 build URLs with those generated above
+- Click on `Add Announcement` and/or `Add Developer News Item` in the gray menu bar at the top to add a release announcement.  Announcements are featured on the `Home` page, while Developer news items are featured on the `Developers` tab.
+    
+In openstudio-web repo, master branch:
+
+- Update the `docroot\update.html` file with the new OpenStudio release information (version, date, release notes URL) in both the <release> tag and in the [CDATA] section. 
+- Commit to both the NREL repo and the Acquia repo (you will need to get access and to add a remote to commit to the Acquia repo).
+- Deploy the changes to production via the Acquia Insight
 
 
 Verification of Posted Software

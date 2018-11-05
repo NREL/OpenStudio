@@ -29,11 +29,8 @@
 
 #include "BCLFileReference.hpp"
 #include "../core/Checksum.hpp"
-#include "../core/String.hpp"
-#include "../core/System.hpp"
 
 #include <QDomDocument>
-#include <QDomElement>
 
 namespace openstudio{
 

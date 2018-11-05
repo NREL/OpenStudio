@@ -30,17 +30,10 @@
 #include "System.hpp"
 #include "Application.hpp"
 
-#include <boost/lexical_cast.hpp>
 #include <boost/thread.hpp>
 
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/matrix_sparse.hpp>
-#include <boost/numeric/ublas/io.hpp>
-#include <boost/numeric/ublas/matrix_proxy.hpp>
-#include <boost/numeric/ublas/triangular.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 
-#include <cassert>
 
 namespace openstudio{
 

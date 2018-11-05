@@ -29,7 +29,7 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
 #include "../AirflowNetworkZone.hpp"
 #include "../AirflowNetworkZone_Impl.hpp"

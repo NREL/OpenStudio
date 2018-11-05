@@ -39,6 +39,7 @@
 #include <sstream>
 
 #include <ruby.h>
+#include <ruby/encoding.h>
 // SWIGRubyRuntime.hxx includes ruby.h which includes ruby/win32.h, which has some brain damaged notions of
 // what standard errno values should be.
 

@@ -30,7 +30,7 @@
 #ifndef MODEL_AVAILABILITYMANAGERSCHEDULED_HPP
 #define MODEL_AVAILABILITYMANAGERSCHEDULED_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "AvailabilityManager.hpp"
 
 namespace openstudio {
