@@ -29,7 +29,7 @@
 #ifndef MODEL_SCHEDULEFILE_IMPL_HPP
 #define MODEL_SCHEDULEFILE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ScheduleInterval_Impl.hpp"
 
 namespace openstudio {

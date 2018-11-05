@@ -30,7 +30,6 @@
 #include "Geometry.hpp"
 #include "Intersection.hpp"
 #include "Transformation.hpp"
-#include "Point3d.hpp"
 #include "Vector3d.hpp"
 
 #include "../core/Assert.hpp"
@@ -39,7 +38,6 @@
 
 #include <polypartition/polypartition.h>
 
-#include <list>
 
 namespace openstudio{
   /// convert degrees to radians

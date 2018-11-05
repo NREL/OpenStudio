@@ -90,8 +90,6 @@
 #include "Space_Impl.hpp"
 #include "DefaultConstructionSet.hpp"
 #include "DefaultConstructionSet_Impl.hpp"
-#include "ShadingSurfaceGroup.hpp"
-#include "InteriorPartitionSurfaceGroup.hpp"
 #include "DaylightingControl.hpp"
 #include "AirWallMaterial.hpp"
 

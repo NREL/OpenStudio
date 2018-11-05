@@ -30,8 +30,8 @@
 #ifndef MODEL_AIRFLOWNETWORKCRACK_IMPL_HPP
 #define MODEL_AIRFLOWNETWORKCRACK_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject_Impl.hpp"
 
 #include "AirflowNetworkComponent_Impl.hpp"
 

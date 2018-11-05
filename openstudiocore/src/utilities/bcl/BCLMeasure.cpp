@@ -30,24 +30,18 @@
 #include "BCLMeasure.hpp"
 #include "LocalBCL.hpp"
 
-#include "../core/System.hpp"
-#include "../core/Path.hpp"
 #include "../core/PathHelpers.hpp"
 #include "../core/FilesystemHelpers.hpp"
 #include "../core/StringHelpers.hpp"
 #include "../core/FileReference.hpp"
-#include "../data/Attribute.hpp"
 #include "../core/Assert.hpp"
-#include "../core/Checksum.hpp"
 
 #include <OpenStudio.hxx>
 
 #include <QDir>
-#include <QDomDocument>
 #include <QSettings>
 #include <QRegularExpression>
 
-#include <boost/algorithm/string/predicate.hpp>
 
 #include <src/utilities/embedded_files.hxx>
 

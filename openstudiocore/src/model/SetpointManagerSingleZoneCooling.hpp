@@ -30,7 +30,7 @@
 #ifndef MODEL_SETPOINTMANAGERSINGLEZONECOOLING_HPP
 #define MODEL_SETPOINTMANAGERSINGLEZONECOOLING_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "SetpointManager.hpp"
 
 namespace openstudio {

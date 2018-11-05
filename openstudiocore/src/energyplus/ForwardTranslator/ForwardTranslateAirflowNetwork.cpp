@@ -38,8 +38,6 @@
 #include "../../model/AirflowNetworkExternalNode.hpp"
 #include "../../model/AirflowNetworkExternalNode_Impl.hpp"
 #include "../../model/AirflowNetworkComponent.hpp"
-#include "../../model/AirflowNetworkOccupantVentilationControl.hpp"
-#include "../../model/AirflowNetworkOccupantVentilationControl_Impl.hpp"
 #include "../../model/AirflowNetworkReferenceCrackConditions.hpp"
 #include "../../model/AirflowNetworkReferenceCrackConditions_Impl.hpp"
 #include "../../model/AirflowNetworkCrack.hpp"

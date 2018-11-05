@@ -74,7 +74,6 @@
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/sql/SqlFile.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
-#include "../../utilities/idf/IdfObject.hpp"
 
 // OS FieldEnums
 // #include <utilities/idd/OS_CentralHeatPumpSystem_FieldEnums.hxx>
@@ -83,8 +82,6 @@
 
 // E+ FieldEnums
 #include <utilities/idd/CentralHeatPumpSystem_FieldEnums.hxx>
-
-#include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
 
 #include <utilities/idd/PlantLoop_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentOperationSchemes_FieldEnums.hxx>
