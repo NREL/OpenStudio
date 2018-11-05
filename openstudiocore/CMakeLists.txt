@@ -1227,8 +1227,8 @@ if( UNIX AND NOT APPLE )
   FIND_QT_STATIC_LIB("Xext.so" "*")
   FIND_QT_STATIC_LIB("crypto.so" "*")
 
-  #FIND_QT_STATIC_LIB("icui18n" "*")
-  #FIND_QT_STATIC_LIB("icuuc" "*")
+  FIND_QT_STATIC_LIB("icui18n" "*")
+  FIND_QT_STATIC_LIB("icuuc" "*")
 
   if(EXISTS "/etc/redhat-release")
     FIND_QT_STATIC_LIB("rt" "*")
