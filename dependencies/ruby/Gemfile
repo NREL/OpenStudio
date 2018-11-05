@@ -7,7 +7,7 @@ source 'http://rubygems.org'
 gem 'openstudio-workflow', '= 1.3.3'
 #gem 'openstudio-workflow', :github => 'NREL/OpenStudio-workflow-gem', :ref => '3e62211b29e28d341c4a84794f35a772c91a2145'
 
-gem 'openstudio-standards', '= 0.2.3'
+gem 'openstudio-standards', '= 0.2.6'
 #gem 'openstudio-standards', :github => 'NREL/openstudio-standards', :ref => '1a6a81d242f1783ace78c737059d2ef6121e5675'
 
 gem 'simplecov', :github => 'NREL/simplecov', :ref => '98c33ffcb40fe867857a44b4d1a308f015b32e27'

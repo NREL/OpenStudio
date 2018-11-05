@@ -28,15 +28,11 @@
 ***********************************************************************************************************************/
 
 #include "IdfExtensibleGroup.hpp"
-#include "IdfObject.hpp"
 #include "IdfObject_Impl.hpp"
 
-#include "../idd/IddObjectProperties.hpp"
-#include "../idd/IddFieldProperties.hpp"
 
 #include "../core/Assert.hpp"
 
-#include <boost/lexical_cast.hpp>
 
 namespace openstudio {
 

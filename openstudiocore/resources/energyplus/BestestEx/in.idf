@@ -5,7 +5,7 @@
 !BESTEST-EX Case L200EX-PH BASE-CASE, developed by NREL
 !Use EnergyPlus IDFEditor to view inputs in IP units
 
-  Version,8.9;
+  Version,9.0;
 
   SimulationControl,
     No,                      !- Do Zone Sizing Calculation
@@ -40,15 +40,17 @@
     ,                        !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
-    UseWeatherFile,          !- Day of Week for Start Day
+    ,                        !- End Year
+    ,                        !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     No,                      !- Use Weather File Rain Indicators
     No,                      !- Use Weather File Snow Indicators
-    1;                       !- Number of Times Runperiod to be Repeated
+    ;                        !- Treat Weather as Actual
 
   Site:GroundReflectance,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2;
 
@@ -915,7 +917,6 @@
     Z1 NORTH WALL BATTING,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -931,7 +932,6 @@
     Z1 SOUTH WALL BATTING,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -947,7 +947,6 @@
     Z1 SOUTH WALL BATTING,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -963,7 +962,6 @@
     Z1 EAST WALL BATTING,    !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -979,7 +977,6 @@
     Z1 EAST WALL BATTING,    !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -995,7 +992,6 @@
     Z1 EAST WALL BATTING,    !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1011,7 +1007,6 @@
     Z1 EAST WALL BATTING,    !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1027,7 +1022,6 @@
     Z1 WEST WALL BATTING,    !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1043,7 +1037,6 @@
     Z1 WEST WALL BATTING,    !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1059,7 +1052,6 @@
     Z1 WEST WALL BATTING,    !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1075,7 +1067,6 @@
     Z1 WEST WALL BATTING,    !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1091,7 +1082,6 @@
     Z1 NORTH WALL BATTING,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1107,7 +1097,6 @@
     Z1 NORTH WALL BATTING,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1123,7 +1112,6 @@
     Z1 NORTH WALL BATTING,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1139,7 +1127,6 @@
     Z1 NORTH WALL BATTING,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1155,7 +1142,6 @@
     Z1 SOUTH WALL BATTING,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1171,7 +1157,6 @@
     Z1 SOUTH WALL BATTING,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -1187,7 +1172,6 @@
     Z1 SOUTH WALL BATTING,   !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices

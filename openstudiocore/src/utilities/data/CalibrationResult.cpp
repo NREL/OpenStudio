@@ -30,7 +30,6 @@
 #include "CalibrationResult.hpp"
 #include "../core/Assert.hpp"
 #include "../time/Date.hpp"
-#include "DataEnums.hpp"
 
 namespace openstudio {
 

@@ -29,13 +29,14 @@
 
 #include <gtest/gtest.h>
 
+#include "ModelFixture.hpp"
+
 #include "../Model.hpp"
 #include "../Connection.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../Node.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 #include "../AirLoopHVACZoneMixer.hpp"
-#include "../AirTerminalSingleDuctUncontrolled.hpp"
 #include "../FanConstantVolume.hpp"
 #include "../FanConstantVolume_Impl.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
@@ -43,14 +44,13 @@
 #include <utilities/idd/OS_AirLoopHVAC_FieldEnums.hxx>
 #include <utilities/idd/OS_Node_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ZoneSplitter_FieldEnums.hxx>
-#include <utilities/idd/OS_AirTerminal_SingleDuct_Uncontrolled_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST(Connection, Name)
+TEST_F(ModelFixture, Connection_Name)
 {
   openstudio::IdfObject airLoopIdfObject(openstudio::IddObjectType::OS_AirLoopHVAC);
   ASSERT_TRUE(airLoopIdfObject.name());

@@ -283,6 +283,8 @@ class ThermalZoneInspectorView : public BaseInspectorView
 
   void update() override;
   InspectorGadget * m_inspectorGadget;
+  EMSInspectorView * m_emsActuatorView;
+  EMSInspectorView * m_emsSensorView;
   PlenumChooserView * m_plenumChooser;
   bool m_displayIP;
   boost::optional<model::ModelObject> m_modelObject;

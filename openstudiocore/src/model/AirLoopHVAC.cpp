@@ -66,11 +66,6 @@
 #include "AirLoopHVACZoneMixer.hpp"
 #include "AirLoopHVACZoneMixer_Impl.hpp"
 
-#include "AirTerminalSingleDuctUncontrolled.hpp"
-#include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
-#include "AirTerminalSingleDuctVAVReheat.hpp"
-#include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
-
 #include "CoilHeatingWater.hpp"
 #include "CoilHeatingWater_Impl.hpp"
 #include "CoilCoolingWater.hpp"
@@ -107,7 +102,7 @@
 #include <utilities/idd/OS_AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/OS_Node_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ZoneSplitter_FieldEnums.hxx>
-#include <utilities/idd/OS_AirTerminal_SingleDuct_Uncontrolled_FieldEnums.hxx>
+#include <utilities/idd/OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat_FieldEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>

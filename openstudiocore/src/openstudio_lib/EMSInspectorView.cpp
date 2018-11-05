@@ -41,6 +41,7 @@
 #include <QCheckBox>
 #include <QFrame>
 #include <QLabel>
+#include <QScrollArea>
 #include <functional>
 
 namespace openstudio {
@@ -203,12 +204,30 @@ EMSInspectorView::EMSInspectorView(QWidget* parent, EMSInspectorView::Type type)
   QWidget(parent),
   m_type(type)
 {
-  setContentsMargins(0,0,0,0);
+  setContentsMargins(0, 0, 0, 0);
   m_layout = new QVBoxLayout();
   m_layout->setSpacing(10);
   m_layout->setMargin(0);
   m_layout->setAlignment(Qt::AlignTop);
-  setLayout(m_layout);
+  //setLayout(m_layout);
+
+  auto scrollWidget = new QWidget();
+  scrollWidget->setObjectName("ScrollWidget");
+  scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
+  scrollWidget->setLayout(m_layout);
+
+  m_scrollArea = new QScrollArea();
+  m_scrollArea->setFrameStyle(QFrame::NoFrame);
+  m_scrollArea->setWidget(scrollWidget);
+  m_scrollArea->setWidgetResizable(true);
+  m_scrollArea->setBackgroundRole(QPalette::NoRole);
+
+  //m_layout->addWidget(m_scrollArea);
+  auto scrollLayout = new QVBoxLayout();
+  scrollLayout->setContentsMargins(0,0,0,0);
+  scrollLayout->addWidget(m_scrollArea);
+
+  setLayout(scrollLayout);
 }
 
 void EMSInspectorView::layoutModelObject( const model::ModelObject & modelObject ) {
@@ -222,8 +241,14 @@ void EMSInspectorView::layoutModelObject( const model::ModelObject & modelObject
 
   for( const auto & objecti : modelObjects ) {
     if( m_type == Type::ACTUATOR ) {
-      auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Acuators");
-      m_layout->addWidget(label);
+      if (objecti.nameString().empty()) {
+        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.iddObjectType().valueName()) + " Acuators");
+        m_layout->addWidget(label);
+      }
+      else {
+        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Acuators");
+        m_layout->addWidget(label);
+      }
 
       const auto actuatorNames = objecti.emsActuatorNames();
 
@@ -232,8 +257,14 @@ void EMSInspectorView::layoutModelObject( const model::ModelObject & modelObject
         m_layout->addWidget(actuatorWidget);
       }
     } else if( m_type == Type::SENSOR ) {
-      auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Sensors");
-      m_layout->addWidget(label);
+      if (objecti.nameString().empty()) {
+        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.iddObjectType().valueName()) + " Sensors");
+        m_layout->addWidget(label);
+      }
+      else {
+        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Sensors");
+        m_layout->addWidget(label);
+      }
 
       const auto sensorNames = objecti.outputVariableNames();
 

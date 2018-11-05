@@ -29,7 +29,6 @@
 
 #include "IddFieldProperties.hpp"
 
-#include "../core/Optional.hpp"
 #include "../core/Containers.hpp"
 
 #include <sstream>
