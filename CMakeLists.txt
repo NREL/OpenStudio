@@ -176,7 +176,7 @@ endif()
 
 # Apple Sanity Check
 if(APPLE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c17 -std=c++17 -stdlib=libc++")
   #if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
   #  message(FATAL_ERROR "OSX Deployment Target Must Be Set")
   #endif()
@@ -523,11 +523,11 @@ if(BUILD_QT)
     # Installed the Windows 10 SDK and initializing the command prompt would set that env variable but Qt did not recognize it:
     #    "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build\vcvarsall.bat" amd64
     # Initializing the command prompt and calling 'nmake install' from inside the qtwebengine did install Webengine components
-    # In the end I uploaded two zip files, one zip of the official installer downloaded from Qt 'qt_5_11_msvc2017_64_shared.zip' 
+    # In the end I uploaded two zip files, one zip of the official installer downloaded from Qt 'qt_5_11_msvc2017_64_shared.zip'
     # The other one was built by me 'qt_5_11_msvc2017_64_shared_nrel_build.zip'
     # I reccomend using the official one, will make it easier to update in the future
     # Static Qt libraries are built by NREL using script below
-    
+
     configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_static_qt.bat.in" "${CMAKE_BINARY_DIR}/build_static_qt.bat")
     configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_shared_qt.bat.in" "${CMAKE_BINARY_DIR}/build_shared_qt.bat")
     if( Qt5Static )
