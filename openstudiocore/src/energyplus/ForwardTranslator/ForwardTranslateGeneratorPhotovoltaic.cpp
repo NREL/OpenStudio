@@ -75,7 +75,7 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorPhotovoltaic(mod
 
   idfObject.setString(Generator_PhotovoltaicFields::HeatTransferIntegrationMode, modelObject.heatTransferIntegrationMode());
 
-  idfObject.setDouble(Generator_PhotovoltaicFields::NumberofModulesinParallel, modelObject.numberOfModulesInParallel());
+  idfObject.setDouble(Generator_PhotovoltaicFields::NumberofSeriesStringsinParallel, modelObject.numberOfModulesInParallel());
 
   idfObject.setDouble(Generator_PhotovoltaicFields::NumberofModulesinSeries, modelObject.numberOfModulesInSeries());
 

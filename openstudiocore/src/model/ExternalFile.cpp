@@ -218,13 +218,19 @@ ExternalFile::ExternalFile(const Model& model, const std::string &filename)
   }
   OS_ASSERT(exists(p));
 
-  path rootDir = workflow.absoluteRootDir();
-  path dest = rootDir / p.filename();
+  path destDir;
+  std::vector<path> absoluteFilePaths = workflow.absoluteFilePaths();
+  if (absoluteFilePaths.empty()) {
+    destDir = workflow.absoluteRootDir();
+  } else {
+    destDir = absoluteFilePaths[0];
+  }
+  path dest = destDir / p.filename();
 
   if (exists(dest)) {
     if (checksum(p) != checksum(dest)){
       this->remove();
-      LOG_AND_THROW("File \"" << p.filename() << "\" already exists in \"" << rootDir << "\"");
+      LOG_AND_THROW("File \"" << p.filename() << "\" already exists in \"" << destDir << "\"");
     }
   } else{
 

@@ -52,6 +52,9 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
   boost::optional<std::string> s;
   boost::optional<double> value;
 
+  if (modelObject.speeds().size() == 0) {
+    // TODO: if it has zero speed data, Log and don't translate
+  }
   // Name
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX_VariableSpeed, modelObject);
 

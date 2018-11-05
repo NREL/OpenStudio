@@ -1,4 +1,4 @@
-!IDD_Version 2.7.0
+!IDD_Version 2.7.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -2207,12 +2207,17 @@ OS:SpaceType,
   A6, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
-  A7, \field Standards Building Type
+  A7, \field Standards Template
+       \type alpha
+       \note This is a freeform field used to identify the energy standard template for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+  A8, \field Standards Building Type
        \type alpha
        \note This is a freeform field used to identify the building type for standards.
        \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
-  A8; \field Standards Space Type
+  A9; \field Standards Space Type
        \type alpha
        \note This is a freeform field used to identify the space type for standards.
        \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
@@ -4854,7 +4859,12 @@ OS:Building,
   N4, \field Standards Number of Above Ground Stories
        \type integer
        \minimum 0
-  A7, \field Standards Building Type
+  A7, \field Standards Template
+       \type alpha
+       \note This is a freeform field used to identify the energy standard template for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+  A8, \field Standards Building Type
        \type alpha
        \note This is a freeform field used to identify the building type for standards.
        \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
@@ -4862,7 +4872,7 @@ OS:Building,
   N5, \field Standards Number of Living Units
        \type integer
        \minimum 0
-  A8, \field Relocatable
+  A9, \field Relocatable
        \type choice
        \default False
        \key True
@@ -5249,6 +5259,7 @@ OS:SubSurface,
        \type alpha
        \required-field
        \reference SubSurfNames
+       \reference GlazedExtSubSurfNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames
@@ -10779,7 +10790,10 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
        \default Autocalculate
 
 OS:AirTerminal:SingleDuct:Uncontrolled,
-       \min-fields 6
+      \memo Central air system terminal unit, single duct, constant volume, no controls other than
+      \memo on/off schedule.
+      \obsolete New=>OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat
+      \min-fields 6
   A1, \field Handle
        \type handle
        \required-field
@@ -10803,6 +10817,41 @@ OS:AirTerminal:SingleDuct:Uncontrolled,
        \autosizable
        \units m3/s
        \minimum 0
+
+OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat,
+       \memo Central air system terminal unit, single duct, constant volume, without reheat coil
+       \min-fields 6
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3,  \field Availability Schedule Name
+       \type object-list
+       \required-field
+       \object-list ScheduleNames
+  A4,  \field Air Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+       \note The air-inlet node name that connects the air splitter to the individual zone air distribution
+       \note unit. This node should also be one of the outlet air node of an AirLoopHVAC:ZoneSplitter or
+       \note AirLoopHVAC:SupplyPlenum component.
+  A5,  \field Air Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+       \note This is an air outlet node from the air distribution unit. This node name should be one of the
+       \note supply air inlet node names of a zone served by this component.
+  N1; \field Maximum Air Flow Rate
+      \type real
+      \required-field
+      \autosizable
+      \units m3/s
+      \minimum 0
+
 
 OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \min-fields 1
@@ -25656,6 +25705,100 @@ OS:WaterHeater:Stratified,
        \note This field is only used if the previous is set to IndirectHeatAlternateSetpoint
        \type object-list
        \object-list ScheduleNames
+
+OS:WaterHeater:Sizing,
+       \min-fields 5
+       \memo This input object is used with WaterHeater:Mixed or
+       \memo with WaterHeater:Stratified to autosize tank volume and heater capacity
+       \memo This object is not needed if water heaters are not autosized.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field WaterHeater Name
+       \required-field
+       \type object-list
+       \object-list WaterHeaterNames
+  A3 , \field Design Mode
+       \type choice
+       \key PeakDraw
+       \key ResidentialHUD-FHAMinimum
+       \key PerPerson
+       \key PerFloorArea
+       \key PerUnit
+       \key PerSolarCollectorArea
+  N1 , \field Time Storage Can Meet Peak Draw
+       \type real
+       \units hr
+       \note Only used for Design Mode = PeakDraw
+       \minimum 0.0
+  N2 , \field Time for Tank Recovery
+       \type real
+       \units hr
+       \note Only used for Design Mode = PeakDraw
+       \minimum 0.0
+  N3 , \field Nominal Tank Volume for Autosizing Plant Connections
+       \type real
+       \units m3
+       \ip-units gal
+       \note Only used if Design Mode = PeakDraw and the water heater also
+       \note has autosized flow rates for connections on the demand side of a plant loop
+  N4 , \field Number of Bedrooms
+       \type integer
+       \note Only used for Design Mode = ResidentialHUD-FHAMinimum
+       \minimum 1
+  N5 , \field Number of Bathrooms
+       \type integer
+       \note Only used for Design Mode = ResidentialHUD-FHAMinimum
+       \minimum 1
+  N6 , \field Storage Capacity per Person
+       \type real
+       \units m3/person
+       \ip-units gal/person
+       \note Only used for Design Mode = PerPerson
+       \minimum 0.0
+  N7 , \field Recovery Capacity per Person
+       \type real
+       \units m3/hr-person
+       \ip-units gal/hr-person
+       \note Only used for Design Mode = PerPerson
+       \minimum 0.0
+  N8 , \field Storage Capacity per Floor Area
+       \type real
+       \units m3/m2
+       \ip-units gal/ft2
+       \note Only used for Design Mode = PerFloorArea
+       \minimum 0.0
+  N9 , \field Recovery Capacity per Floor Area
+       \type real
+       \units m3/hr-m2
+       \ip-units gal/hr-ft2
+       \note Only used for Design Mode = PerFloorArea
+       \minimum 0.0
+  N10, \field Number of Units
+       \type real
+       \note Only used for Design Mode = PerUnit
+  N11, \field Storage Capacity per Unit
+       \units m3
+       \ip-units gal
+       \type real
+       \note Only used for Design Mode = PerUnit
+       \minimum 0.0
+  N12, \field Recovery Capacity PerUnit
+       \units m3/hr
+       \ip-units gal/hr
+       \type real
+       \note Only used for Design Mode = PerUnit
+       \minimum 0.0
+  N13, \field Storage Capacity per Collector Area
+       \units m3/m2
+       \ip-units gal/ft2
+       \type real
+       \note Only used for Design Mode = PerSolarCollectorArea
+       \minimum 0.0
+  N14; \field Height Aspect Ratio
+       \type real
+       \note only used if for WaterHeater:Stratified
+       \minimum 0.0
 
 OS:WaterUse:Equipment,
   A1, \field Handle

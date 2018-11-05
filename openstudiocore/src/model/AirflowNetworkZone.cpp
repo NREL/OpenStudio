@@ -35,8 +35,6 @@
 #include "ThermalZone_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
 #include "AirflowNetworkOccupantVentilationControl.hpp"
 #include "AirflowNetworkOccupantVentilationControl_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"

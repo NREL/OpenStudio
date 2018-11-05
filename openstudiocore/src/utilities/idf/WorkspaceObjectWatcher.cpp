@@ -28,9 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "WorkspaceObjectWatcher.hpp"
-#include "WorkspaceObject.hpp"
 #include "WorkspaceObject_Impl.hpp"
-#include "../core/Assert.hpp"
 
 namespace openstudio {
 

@@ -30,7 +30,7 @@
 #ifndef MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTFROMVARIABLE_IMPL_HPP
 #define MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTFROMVARIABLE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 #include "ExternalInterfaceFunctionalMockupUnitImport.hpp"
 #include "ExternalInterfaceFunctionalMockupUnitImport_Impl.hpp"

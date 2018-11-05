@@ -970,13 +970,12 @@ NotAWindow, \n\
   Window,                  !- Name \n\
   ,                        !- Construction Name \n\
   Wall,                    !- Building Surface Name \n\
-  ,                        !- Shading Control Name \n\
   ,                        !- Frame and Divider Name \n\
   ,                        !- Multiplier \n\
-  1,                      !- Starting X Coordinate {m} \n\
-  1,                      !- Starting Z Coordinate {m} \n\
-  1,                      !- Length {m} \n\
-  2;                      !- Height {m}";
+  1,                       !- Starting X Coordinate {m} \n\
+  1,                       !- Starting Z Coordinate {m} \n\
+  1,                       !- Length {m} \n\
+  2;                       !- Height {m}";
 
   // keeps bad object
   IdfFile idfFile = IdfFile::load(original, IddFileType::EnergyPlus).get();

@@ -31,17 +31,12 @@
 #include "SqlFileTimeSeriesQuery.hpp"
 #include "OpenStudio.hxx"
 
-#include "../core/String.hpp"
 #include "../time/Calendar.hpp"
 #include "../filetypes/EpwFile.hpp"
 #include "../core/Containers.hpp"
-#include "../core/Optional.hpp"
-#include "../time/DateTime.hpp"
 #include "../core/Assert.hpp"
 
 
-#include <boost/lexical_cast.hpp>
-#include <boost/regex.hpp>
 
 using boost::multi_index_container;
 using boost::multi_index::indexed_by;

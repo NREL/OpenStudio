@@ -30,7 +30,7 @@
 #ifndef MODEL_EXTERNALINTERFACE_HPP
 #define MODEL_EXTERNALINTERFACE_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
 namespace openstudio {

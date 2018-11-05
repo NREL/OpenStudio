@@ -101,12 +101,16 @@ namespace detail {
     /// Returns the rendering color.
     boost::optional<RenderingColor> renderingColor() const;
 
-    boost::optional<std::string> standardsBuildingType() const;
+    /** This corresponds to the energy Standard that is used: eg: 90.1-2010, 90.1-2013 **/
+    boost::optional<std::string> standardsTemplate() const;
+    std::vector<std::string> suggestedStandardsTemplates() const;
 
+    /** This corresponds to the Building Types in the template: eg: FullServiceRestaurant, Hospital **/
+    boost::optional<std::string> standardsBuildingType() const;
     std::vector<std::string> suggestedStandardsBuildingTypes() const;
 
+    /** This corresponds to the Space Types under the Building Type: eg: Kitchen, Corridor **/
     boost::optional<std::string> standardsSpaceType() const;
-
     std::vector<std::string> suggestedStandardsSpaceTypes() const;
 
     //@}
@@ -130,6 +134,9 @@ namespace detail {
 
     /// Resets the rendering color.
     void resetRenderingColor();
+
+    bool setStandardsTemplate(const std::string& standardsTemplate);
+    void resetStandardsTemplate();
 
     bool setStandardsBuildingType(const std::string& standardsBuildingType);
     void resetStandardsBuildingType();
@@ -390,8 +397,8 @@ namespace detail {
     template <typename T>
     void removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep);
 
-    static QMap<QString, QVariant> m_standardsMap;
-    void parseStandardsMap() const;
+    static QJsonArray m_standardsArr;
+    void parseStandardsJSON() const;
   };
 
 } // detail
