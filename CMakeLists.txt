@@ -585,10 +585,7 @@ if( BUILD_DVIEW )
     )
 endif()
 
-set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
-
 # Set up the dependencies for OpenStudioCore
-
 if(BUILD_BOOST)
   list(APPEND OpenStudioCore_DEPENDS Boost)
 endif()
@@ -606,6 +603,8 @@ if(BUILD_V8)
 endif()
 
 if (BUILD_OSCORE)
+  set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
+
   if(MSVC)
     set(OS_BUILD_COMMAND BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build" --config $(Configuration) -- /maxcpucount)
   else()
