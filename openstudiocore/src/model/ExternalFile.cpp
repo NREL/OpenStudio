@@ -37,6 +37,7 @@
 #include <utilities/idd/OS_External_File_FieldEnums.hxx>
 
 #include "../utilities/filetypes/WorkflowJSON.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/Checksum.hpp"
 #include "../utilities/core/Assert.hpp"
 
@@ -126,7 +127,13 @@ namespace detail {
   }
 
   path ExternalFile_Impl::filePath() const {
-    path result = this->model().workflowJSON().absoluteRootDir() / toPath(fileName());
+    path result;
+    std::vector<path> absoluteFilePaths = this->model().workflowJSON().absoluteFilePaths();
+    if (absoluteFilePaths.empty()) {
+      result = this->model().workflowJSON().absoluteRootDir() / toPath(fileName());
+    } else {
+      result = absoluteFilePaths[0] / toPath(fileName());
+    }
     return result;
   }
 
@@ -235,6 +242,7 @@ ExternalFile::ExternalFile(const Model& model, const std::string &filename)
   } else{
 
     try {
+      makeParentFolder(dest, path(), true);
       boost::filesystem::copy(p, dest);
     } catch (std::exception&) {
       this->remove();
