@@ -33,7 +33,7 @@
 ! WeatherFileName=USA_CO_Boulder_TMY2.epw
 ! End SimMetaData
 
-  Version,8.9;
+  Version,9.0;
 
   Timestep,6;
 
@@ -48,15 +48,17 @@
     ,                        !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Sunday,                  !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes,                     !- Use Weather File Snow Indicators
-    1.0000;                  !- Number of Times Runperiod to be Repeated
+    ;                        !- Treat Weather as Actual
 
   SurfaceConvectionAlgorithm:Inside,TARP;
 
@@ -941,7 +943,6 @@
     Classroom Daylighting Wall,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    Shade_control-view,      !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -957,7 +958,6 @@
     Classroom Daylighting Wall,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    Shade_control-view,      !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -973,7 +973,6 @@
     Classroom Daylighting Wall,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    Shade_control-view,      !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -989,7 +988,6 @@
     Classroom Daylighting Wall,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1053,7 +1051,6 @@
     Classroom Clerestory Wall,  !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -2370,8 +2367,10 @@
     9.144000,9.144000,2.438400,  !- X,Y,Z ==> Vertex 3 {m}
     0.000000,9.144000,2.438400;  !- X,Y,Z ==> Vertex 4 {m}
 
-  WindowProperty:ShadingControl,
-    Shade_control-view,      !- Name
+  WindowShadingControl,
+    Shade_control-view-Classroom,  !- Name
+    Classroom,               !- Zone Name
+    1,                       !- Shading Control Sequence Number
     InteriorShade,           !- Shading Type
     ,                        !- Construction with Shading Name
     AlwaysOn,                !- Shading Control Type
@@ -2381,7 +2380,13 @@
     NO,                      !- Glare Control Is Active
     MEDIUM REFLECT - MEDIUM TRANS SHADE,  !- Shading Device Material Name
     FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
-    ;                        !- Slat Angle Schedule Name
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    Classroom_DaylCtrl,      !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Punched Window 1,        !- Fenestration Surface 1 Name
+    Punched Window 2,        !- Fenestration Surface 2 Name
+    Punched Window 3;        !- Fenestration Surface 3 Name
 
   WindowMaterial:Shade,
     MEDIUM REFLECT - MEDIUM TRANS SHADE,  !- Name

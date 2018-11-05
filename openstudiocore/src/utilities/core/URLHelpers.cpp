@@ -28,8 +28,6 @@
 ***********************************************************************************************************************/
 
 #include "URLHelpers.hpp"
-#include "Path.hpp"
-#include "String.hpp"
 
 #include <QRegularExpression>
 

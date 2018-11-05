@@ -128,7 +128,7 @@
 #include "../model/ThermalStorageChilledWaterStratified.hpp"
 #include "../model/ThermalStorageChilledWaterStratified_Impl.hpp"
 #include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
-#include "../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVNoReheat.hpp"
 #include "../model/AirTerminalSingleDuctParallelPIUReheat.hpp"
@@ -5394,7 +5394,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
   {
     model::Schedule schedule = alwaysOnSchedule(model);
 
-    model::AirTerminalSingleDuctUncontrolled terminal(model,schedule);
+    model::AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,schedule);
 
     // PriAirFlow
     if( primaryAirFlow )
@@ -5408,7 +5408,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
   {
     model::Schedule schedule = alwaysOnSchedule(model);
 
-    model::AirTerminalSingleDuctUncontrolled terminal(model,schedule);
+    model::AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,schedule);
 
     result = terminal;
   }

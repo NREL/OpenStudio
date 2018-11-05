@@ -30,7 +30,6 @@
 #include "ObjectOrderBase.hpp"
 #include "../math/Permutation.hpp"
 
-#include "../core/Assert.hpp"
 
 namespace openstudio {
 

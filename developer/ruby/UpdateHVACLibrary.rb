@@ -3,11 +3,38 @@
 # openstudio.exe UpdateHVACLibrary.rb
 
 require 'openstudio'
+require 'etc'
+# gem install parallel
+# gem install ruby-progressbar
+require 'parallel'
+
+# Environment variables
+if ENV['N'].nil?
+  # Number of parallel runs caps to nproc - 1
+  nproc = [1, Etc.nprocessors - 1].max
+  puts "Defaulted Nproc to #{nproc}"
+else
+  nproc = ENV['N'].to_i
+end
+
+# If CTRL+C is pressed, kill every sub-processes
+trap("TERM") do
+  puts "KILLING"
+  raise Parallel::Kill
+  exit!
+end
 
 path = File.join(File.dirname(__FILE__), '../../openstudiocore/**/*.osm')
 
-Dir.glob(path) do |model_path|
+start_time = Time.now
 
+files = Dir.glob(path)
+
+Parallel.map(files,
+             in_threads: nproc,
+             progress: "Updating Libraries") do |model_path|
+
+  puts "Starting for '#{model_path}'"
   if /sketchup_plugin\/resources\/templates/.match(model_path)
     # do this
   elsif /openstudio_app\/Resources/.match(model_path)
@@ -37,3 +64,9 @@ Dir.glob(path) do |model_path|
   # Save updated model
   model.save(model_path,true)
 end
+
+# Show the timing
+end_time = Time.now
+total_time_min = ((end_time - start_time)/60.0).round(1)
+puts "*** Finished Updating #{files.size} files at: #{end_time}, time elapsed = #{total_time_min} min."
+

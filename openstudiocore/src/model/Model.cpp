@@ -1820,7 +1820,7 @@ void addExampleModelObjects(Model& model)
                                         partLoadFraction );
   EvaporativeCoolerDirectResearchSpecial evaporativeCoolerDirectResearchSpecial(model,alwaysOnSchedule);
 
-  AirTerminalSingleDuctUncontrolled airTerminalSingleDuctUncontrolled(model,alwaysOnSchedule);
+  AirTerminalSingleDuctConstantVolumeNoReheat airTerminalSingleDuctConstantVolumeNoReheat(model,alwaysOnSchedule);
 
   ControllerOutdoorAir controller(model);
 
@@ -1828,7 +1828,7 @@ void addExampleModelObjects(Model& model)
 
   AirLoopHVAC airLoopHVAC(model);
 
-  airLoopHVAC.addBranchForZone(thermalZone,airTerminalSingleDuctUncontrolled);
+  airLoopHVAC.addBranchForZone(thermalZone,airTerminalSingleDuctConstantVolumeNoReheat);
 
   Node supplyInletNode = airLoopHVAC.supplyInletNode();
   Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
@@ -2640,7 +2640,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeReheat);
   REGISTER_CONSTRUCTOR(AirTerminalSingleDuctParallelPIUReheat);
   REGISTER_CONSTRUCTOR(AirTerminalSingleDuctSeriesPIUReheat);
-  REGISTER_CONSTRUCTOR(AirTerminalSingleDuctUncontrolled);
+  REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeNoReheat);
   REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVReheat);
   REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVNoReheat);
   REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
@@ -3119,7 +3119,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeReheat);
   REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctParallelPIUReheat);
   REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctSeriesPIUReheat);
-  REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctUncontrolled);
+  REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeNoReheat);
   REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVReheat);
   REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVNoReheat);
   REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);

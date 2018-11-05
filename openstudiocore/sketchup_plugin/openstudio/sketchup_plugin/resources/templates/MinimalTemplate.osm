@@ -1,7 +1,7 @@
 
 OS:Version,
-  {5086ac0a-e2ff-417b-81db-5b977907f84a}, !- Handle
-  2.6.0;                                  !- Version Identifier
+  {75c78dc0-37e4-4b61-8b1c-9406b524766e}, !- Handle
+  2.7.0;                                  !- Version Identifier
 
 OS:SpaceType,
   {e0526529-4fdb-4700-9395-efccd411628b}, !- Handle
@@ -10,6 +10,7 @@ OS:SpaceType,
   {bd248468-2b4d-4fda-84f6-16603de1c13b}, !- Default Schedule Set Name
   {6378dbec-eb36-48ce-bad0-f6c4e6eb1a52}, !- Group Rendering Name
   {275b2507-2551-4c6b-9576-0694f401735c}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   BreakRoom;                              !- Standards Space Type
 
@@ -895,6 +896,7 @@ OS:SpaceType,
   {5d322b6b-cb8d-45a5-926d-f9c72152fa67}, !- Default Schedule Set Name
   {ba1f766f-181c-458c-9ef5-bb86302e4a6d}, !- Group Rendering Name
   {1bd42bc7-ba48-4bab-8bd8-c05a26eb63e0}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   ClosedOffice;                           !- Standards Space Type
 
@@ -1138,6 +1140,7 @@ OS:SpaceType,
   {3e0b0dad-0c6c-44d2-adc1-f951602a0e11}, !- Default Schedule Set Name
   {6ead6b3f-309f-49fb-902f-df18e88201ae}, !- Group Rendering Name
   {efbb3cc1-cd4b-4dc5-8eb7-eebc742afbdc}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Conference;                             !- Standards Space Type
 
@@ -1243,6 +1246,7 @@ OS:SpaceType,
   {93b960b9-288d-4e3e-9dbf-401e526d7881}, !- Default Schedule Set Name
   {f2532a3e-1ca1-4db9-998c-227431dfa48e}, !- Group Rendering Name
   {92dce51d-bb1c-4f88-86ed-bc5545e26f09}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Corridor;                               !- Standards Space Type
 
@@ -1348,6 +1352,7 @@ OS:SpaceType,
   {d0496fd5-d8fa-48c2-a08b-ee1a622b5531}, !- Default Schedule Set Name
   {1f1f3d07-6d31-4834-9dcb-30d44551a6f6}, !- Group Rendering Name
   {890f4b3a-8ddf-43e6-aa80-3b305b723267}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Elec/MechRoom;                          !- Standards Space Type
 
@@ -1438,6 +1443,7 @@ OS:SpaceType,
   {5622bbb1-9a77-45dc-a18f-dc497a8a33f2}, !- Default Schedule Set Name
   {e45237c0-fb92-4607-bd04-df09fc52bb34}, !- Group Rendering Name
   {514bdf65-6520-4040-8ce1-c99180e69ac4}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   IT_Room;                                !- Standards Space Type
 
@@ -1543,6 +1549,7 @@ OS:SpaceType,
   {ccdf5295-f0d4-4f6c-bf0b-ec05e68ff062}, !- Default Schedule Set Name
   {f2ffe214-9259-4b2f-8e48-35543d5fba21}, !- Group Rendering Name
   {f86340de-6056-4920-a25b-2457bbcdf377}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Lobby;                                  !- Standards Space Type
 
@@ -1648,6 +1655,7 @@ OS:SpaceType,
   {099b25e9-1f86-4748-926f-b2984180c55b}, !- Default Schedule Set Name
   {a2c602da-91b1-4db5-892c-de58e18075ce}, !- Group Rendering Name
   {1c52920b-7e50-4069-8337-699cc915ed7c}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   OpenOffice;                             !- Standards Space Type
 
@@ -1763,6 +1771,7 @@ OS:SpaceType,
   {4c0775f5-9288-426b-9158-ad3b65f7b409}, !- Default Schedule Set Name
   {15265381-e5e1-46ed-aa83-2328823b2654}, !- Group Rendering Name
   {58570dd6-8afc-4dcd-b069-b470e899067e}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   PrintRoom;                              !- Standards Space Type
 
@@ -1868,6 +1877,7 @@ OS:SpaceType,
   {3236b5e2-ab04-499e-83ff-49911d42d0b9}, !- Default Schedule Set Name
   {dd022378-ee6c-48ca-9a39-68a7adc126bd}, !- Group Rendering Name
   {bde92cb9-71ea-4377-ba7a-5ec383b04669}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Restroom;                               !- Standards Space Type
 
@@ -1973,6 +1983,7 @@ OS:SpaceType,
   {f57f9d59-d62c-4160-a1c2-840b96adae39}, !- Default Schedule Set Name
   {a3d4d349-0de7-4e4f-ac21-f62447e12181}, !- Group Rendering Name
   {874a5fad-e186-4960-9b2a-0fba73083a6e}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Stair;                                  !- Standards Space Type
 
@@ -2049,6 +2060,7 @@ OS:SpaceType,
   {345f6ea5-c8b7-4c3e-9b1d-60fc7281be1e}, !- Default Schedule Set Name
   {abf602e1-5689-4887-bc4d-e6f2fc2451e4}, !- Group Rendering Name
   {4b03ea2e-ed8e-4436-b327-2f6e8ab4b5fb}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Storage;                                !- Standards Space Type
 
@@ -2125,6 +2137,7 @@ OS:SpaceType,
   {0838572c-132f-4843-8fd9-83b4d866683f}, !- Default Schedule Set Name
   {5d8d43b8-7e07-431a-89e4-e65ffc0a4f50}, !- Group Rendering Name
   {b486263b-55be-4328-a2c1-e999b7a6be2a}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Vending;                                !- Standards Space Type
 
@@ -2230,6 +2243,7 @@ OS:SpaceType,
   {2d5b1b79-6a62-4d22-8d3d-c44b0032433a}, !- Default Schedule Set Name
   {ae6193b8-9d13-45ab-a3c0-13ea1b2d2000}, !- Group Rendering Name
   {b212614e-35f5-4376-9ba6-f2029aa777a8}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   WholeBuilding - Lg Office;              !- Standards Space Type
 
@@ -3127,6 +3141,7 @@ OS:SpaceType,
   {4a553eaa-0607-4c0f-82d7-679fd2cefe0e}, !- Default Schedule Set Name
   {5975c023-a3df-4e88-aa90-8dff615de763}, !- Group Rendering Name
   {7851d678-e330-4e18-a2dc-5b9884d95f5d}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   WholeBuilding - Md Office;              !- Standards Space Type
 
@@ -3656,6 +3671,7 @@ OS:SpaceType,
   {64f79cfb-a26b-4691-bf55-eb2661e53843}, !- Default Schedule Set Name
   {6b14889b-0e4f-4f9c-b271-99b0da5e1a5b}, !- Group Rendering Name
   {aadd82c0-abc4-48dc-965e-f55d797a6f83}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   WholeBuilding - Sm Office;              !- Standards Space Type
 
@@ -4408,6 +4424,7 @@ OS:SpaceType,
   {3d2883f3-fbdc-415a-b765-cd09d718eca9}, !- Default Schedule Set Name
   {1ed40ce3-764d-4f1c-9541-cc382456360f}, !- Group Rendering Name
   {ede6a50d-2362-413c-be0a-bdd7b6d2c9d0}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   BreakRoom;                              !- Standards Space Type
 
@@ -4513,6 +4530,7 @@ OS:SpaceType,
   {a300eb3d-86b2-4fd6-bc37-e7119c532048}, !- Default Schedule Set Name
   {5a97a52e-68b4-4e2f-81c9-ef166edd12b7}, !- Group Rendering Name
   {2b42e002-98dd-4f77-80c3-8b0dfe621cbd}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   ClosedOffice;                           !- Standards Space Type
 
@@ -4618,6 +4636,7 @@ OS:SpaceType,
   {7ea93f09-5fbf-44b1-893b-6050d3bc380b}, !- Default Schedule Set Name
   {9db44ca4-e829-4339-9e20-ab6d324a2f13}, !- Group Rendering Name
   {3254b270-d949-4693-9412-a307428311f3}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Conference;                             !- Standards Space Type
 
@@ -4723,6 +4742,7 @@ OS:SpaceType,
   {273643f4-d2c4-447c-a8e2-6bfece7170d9}, !- Default Schedule Set Name
   {443e22e7-6eeb-4aff-b50d-5194717eb0c9}, !- Group Rendering Name
   {c0a4b775-f7e6-42e2-bdf4-0bffce82561e}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Corridor;                               !- Standards Space Type
 
@@ -4828,6 +4848,7 @@ OS:SpaceType,
   {341faeb6-1972-4002-bff6-c38270a2132b}, !- Default Schedule Set Name
   {6b853132-842e-4b4c-87a0-08e9ec11a8b4}, !- Group Rendering Name
   {5989f72c-8f33-401b-b226-56e3e1abb858}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Elec/MechRoom;                          !- Standards Space Type
 
@@ -4918,6 +4939,7 @@ OS:SpaceType,
   {32ca4412-a520-49f5-94da-e0ab4f00e2da}, !- Default Schedule Set Name
   {e316459c-6c67-447f-b244-fafe96fcff21}, !- Group Rendering Name
   {f91e193c-4dfa-4e1f-891d-1bb64193ea5b}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   IT_Room;                                !- Standards Space Type
 
@@ -5023,6 +5045,7 @@ OS:SpaceType,
   {28993f87-bc77-46fe-b7fe-bf3872e7b108}, !- Default Schedule Set Name
   {f005d03e-0b41-4986-84d0-fadf1332ea93}, !- Group Rendering Name
   {9fdbf61f-10d9-4b28-9ae1-1b51b92263e7}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Lobby;                                  !- Standards Space Type
 
@@ -5128,6 +5151,7 @@ OS:SpaceType,
   {ba53edd6-5b2b-478b-a905-cda25e2ad585}, !- Default Schedule Set Name
   {3f9553ae-707b-4ca2-9ad4-508d4a337b65}, !- Group Rendering Name
   {732b6e8d-3ef7-48e5-8767-bf2a7dd07286}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   OpenOffice;                             !- Standards Space Type
 
@@ -5233,6 +5257,7 @@ OS:SpaceType,
   {e251b654-04f7-4aef-a135-05e65bb14d8d}, !- Default Schedule Set Name
   {49ec93b0-9819-4bc1-abb0-0362d9489542}, !- Group Rendering Name
   {22b64ce4-85f1-4486-ba51-0520b58b4036}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   PrintRoom;                              !- Standards Space Type
 
@@ -5338,6 +5363,7 @@ OS:SpaceType,
   {f67d2cb8-ba88-4246-8424-0d81e10a8a40}, !- Default Schedule Set Name
   {0ce100a3-8370-4435-8ece-bb19c786174d}, !- Group Rendering Name
   {1d1baaa5-7430-41b6-bee8-7d557cf9ef11}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Restroom;                               !- Standards Space Type
 
@@ -5443,6 +5469,7 @@ OS:SpaceType,
   {133bf7d1-f409-4ed6-9745-c3c0bc3b41ba}, !- Default Schedule Set Name
   {d95685b7-d199-47d9-836d-5cfeadd0d02d}, !- Group Rendering Name
   {b23e46f7-9428-4374-b1e1-95dc075b9e8f}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Stair;                                  !- Standards Space Type
 
@@ -5519,6 +5546,7 @@ OS:SpaceType,
   {38eab2ae-9f8a-4f40-9f5f-832f45c0b2a0}, !- Default Schedule Set Name
   {c7c07727-31ed-467f-b95f-c553a9d8cefa}, !- Group Rendering Name
   {6bd2ae33-3b8d-41c5-af06-a8c2741a36e6}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Storage;                                !- Standards Space Type
 
@@ -5595,6 +5623,7 @@ OS:SpaceType,
   {f6ba3801-3553-4d04-8ce7-07c424f52662}, !- Default Schedule Set Name
   {0963579a-0629-49d6-b65b-e2668ce49487}, !- Group Rendering Name
   {183fab5d-7028-4226-9cb5-a62ab42d5281}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   Vending;                                !- Standards Space Type
 
@@ -5700,6 +5729,7 @@ OS:SpaceType,
   {380bd50a-3e07-40f8-b894-f554e86b3ed7}, !- Default Schedule Set Name
   {895a3c08-736f-4eb5-b38f-47b931baf61d}, !- Group Rendering Name
   {3363fbbc-9f8e-4798-9f00-77f9b1cd0205}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   WholeBuilding - Lg Office;              !- Standards Space Type
 
@@ -5805,6 +5835,7 @@ OS:SpaceType,
   {59290883-ecb6-4345-b17f-8a5a15e8c430}, !- Default Schedule Set Name
   {db7493ef-58a7-41dc-898e-5b22bdb034c4}, !- Group Rendering Name
   {8b7b5719-1328-4ea2-81d7-406171c96a5f}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   WholeBuilding - Md Office;              !- Standards Space Type
 
@@ -5910,6 +5941,7 @@ OS:SpaceType,
   {b7236350-3bd7-433c-9ac4-cc40866152bd}, !- Default Schedule Set Name
   {1188d48c-a7ad-4b93-a4bb-209e009e0771}, !- Group Rendering Name
   {e1dd38dc-047c-4596-aff9-f45b7d535229}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   Office,                                 !- Standards Building Type
   WholeBuilding - Sm Office;              !- Standards Space Type
 

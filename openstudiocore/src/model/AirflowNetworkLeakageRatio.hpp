@@ -30,7 +30,7 @@
 #ifndef MODEL_AIRFLOWNETWORKLEAKAGERATIO_HPP
 #define MODEL_AIRFLOWNETWORKLEAKAGERATIO_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "AirflowNetworkComponent.hpp"
 
 namespace openstudio {

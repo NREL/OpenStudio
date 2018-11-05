@@ -57,6 +57,11 @@ class LibraryTabWidget : public QWidget
                const QString & selectedImagePath,
                const QString & unSelectedImagePath );
 
+  /* This method, given a tab widget, will change the currentIndex to be the following if there is one, or zero otherwise
+   * It will hide the tab by hide the corresponding button.
+   * Useful to hide the LoopChooserView for components that don't have a water coil for eg. */
+  void hideTab(QWidget * widget, bool hide = true);
+
   signals:
 
   void removeButtonClicked(bool);

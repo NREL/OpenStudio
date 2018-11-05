@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELLEXHAUSTGASTOWATERHEATEXCHANGER_HPP
 #define MODEL_GENERATORFUELCELLEXHAUSTGASTOWATERHEATEXCHANGER_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
 
 namespace openstudio {

@@ -35,8 +35,8 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
-#include "../../model/AirTerminalSingleDuctUncontrolled.hpp"
-#include "../../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_SupplyPlenum_FieldEnums.hxx>
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idd/IddEnums.hpp"
@@ -90,8 +90,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACSupplyPlenum( 
   std::vector<ModelObject> outletModelObjects = modelObject.outletModelObjects();
   for( const auto & outletModelObject : outletModelObjects )
   {
-    if( OptionalAirTerminalSingleDuctUncontrolled airTerminal =
-        outletModelObject.optionalCast<AirTerminalSingleDuctUncontrolled>() )
+    if( OptionalAirTerminalSingleDuctConstantVolumeNoReheat airTerminal =
+        outletModelObject.optionalCast<AirTerminalSingleDuctConstantVolumeNoReheat>() )
     {
       if( boost::optional<model::ModelObject> node = airTerminal->outletModelObject() )
       {

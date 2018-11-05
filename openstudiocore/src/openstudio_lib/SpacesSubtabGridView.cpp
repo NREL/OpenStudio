@@ -864,27 +864,39 @@ namespace openstudio {
 
   void SpacesSubtabGridView::filterChanged()
   {
-    std::set<openstudio::model::ModelObject> allFilteredObjects = m_objectsFilteredByStory;
+    // Note: JM 2018-08-21
+    // The distinction between these two is especially needed for the "Loads" Subtab
+    // because it can't match SpaceLoadInstances to a Space if the load is inherited from a SpaceType rather than the space
+
+    /****************************************************************************
+     * Filters that should apply at the ROW level because they are Space-related
+     ***************************************************************************/
+    std::set<openstudio::model::ModelObject> spaceFilteredObjects = m_objectsFilteredByStory;
 
     for (auto obj : m_objectsFilteredByThermalZone) {
-      if (allFilteredObjects.count(obj) == 0) {
-        allFilteredObjects.insert(obj);
+      if (spaceFilteredObjects.count(obj) == 0) {
+        spaceFilteredObjects.insert(obj);
       }
     }
 
     for (auto obj : m_objectsFilterdBySpaceType) {
-      if (allFilteredObjects.count(obj) == 0) {
-        allFilteredObjects.insert(obj);
-      }
-    }
-
-    for (auto obj : m_objectsFilterdBySubSurfaceType) {
-      if (allFilteredObjects.count(obj) == 0) {
-        allFilteredObjects.insert(obj);
+      if (spaceFilteredObjects.count(obj) == 0) {
+        spaceFilteredObjects.insert(obj);
       }
     }
 
     for (auto obj : m_objectsFilteredBySpaceName) {
+      if (spaceFilteredObjects.count(obj) == 0) {
+        spaceFilteredObjects.insert(obj);
+      }
+    }
+
+    /***********************************************************************************
+     * Filters that should apply at the SUBROW level because they are DataObject-related
+     ***********************************************************************************/
+    std::set<openstudio::model::ModelObject> allFilteredObjects;
+
+    for (auto obj : m_objectsFilterdBySubSurfaceType) {
       if (allFilteredObjects.count(obj) == 0) {
         allFilteredObjects.insert(obj);
       }
@@ -920,9 +932,22 @@ namespace openstudio {
       }
     }
 
-    this->m_gridController->getObjectSelector()->m_filteredObjects = allFilteredObjects;
-
-    this->m_gridController->getObjectSelector()->updateWidgets();
+    if( this->hasSubRows() ) {
+      // We do it in two steps, the row level stuff (=space related)
+      bool isRowLevel=true;
+      this->m_gridController->getObjectSelector()->m_filteredObjects = spaceFilteredObjects;
+      this->m_gridController->getObjectSelector()->updateWidgets(isRowLevel);
+      // The subrow level stuff, that could link to Space and/or Space Type
+      isRowLevel=false;
+      this->m_gridController->getObjectSelector()->m_filteredObjects = allFilteredObjects;
+      this->m_gridController->getObjectSelector()->updateWidgets(isRowLevel);
+    } else {
+      // One step
+      bool isRowLevel=false;
+      allFilteredObjects.insert(spaceFilteredObjects.begin(), spaceFilteredObjects.end());
+      this->m_gridController->getObjectSelector()->m_filteredObjects = allFilteredObjects;
+      this->m_gridController->getObjectSelector()->updateWidgets(isRowLevel);
+    }
   }
 
   void SpacesSubtabGridView::addObject(const IddObjectType& iddObjectType)

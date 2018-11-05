@@ -158,6 +158,8 @@ namespace openstudio{
 
     void filterChanged();
 
+    // All these sets will store the objects that DO NEED to be hidden
+    // So if the set is empty -> show all
     std::set<openstudio::model::ModelObject> m_objectsFilteredByStory;
 
     std::set<openstudio::model::ModelObject> m_objectsFilteredByThermalZone;
@@ -206,7 +208,13 @@ namespace openstudio{
 
     virtual void interiorPartitionGroupFilterChanged(const QString & text);
 
+  private:
+    // All of the subtabs except the main SpacesSpace subtab will return true
+    // We use this in filterChanged
+    virtual bool hasSubRows() { return true; };
   };
+
+
 
 } // openstudio
 

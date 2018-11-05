@@ -334,7 +334,13 @@ namespace detail {
   }
 
   boost::optional<double> ZoneHVACHighTemperatureRadiant_Impl::autosizedMaximumPowerInput() const {
-    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+    boost::optional<double> result;
+    result = getAutosizedValue("Design Size Heating Design Capacity", "W");
+    // E+ 9.0.0 wrongly returns as User-Specified
+    if (!result) {
+      result = getAutosizedValue("User-Specified Heating Design Capacity", "W");
+    }
+    return result;
   }
 
   void ZoneHVACHighTemperatureRadiant_Impl::autosize() {

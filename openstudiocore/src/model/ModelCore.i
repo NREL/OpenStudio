@@ -109,7 +109,7 @@ class Node;
 }
 
 // DLM: forward declaring these classes and requesting the valuewrapper feature seems to be sufficient for the Ruby bindings
-// For C# we ignore any methods using these and then reimpliment using partial class later
+// For C# we ignore any methods using these and then reimplement using partial class later
 %feature("valuewrapper") SpaceType;
 %feature("valuewrapper") Node;
 

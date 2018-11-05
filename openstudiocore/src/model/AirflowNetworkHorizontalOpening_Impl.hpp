@@ -30,8 +30,8 @@
 #ifndef MODEL_AIRFLOWNETWORKHORIZONTALOPENING_IMPL_HPP
 #define MODEL_AIRFLOWNETWORKHORIZONTALOPENING_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/AirflowNetworkComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "AirflowNetworkComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
