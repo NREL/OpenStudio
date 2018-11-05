@@ -500,9 +500,9 @@ if(BUILD_QT)
     # install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
     # also reference https://wiki.qt.io/Building_Qt_5_from_Git
     if( Qt5Static )
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -static -openssl -no-pch -no-ssse3 -sql-sqlite -plugin-sql-sqlite -skip enginio -skip qtconnectivity -skip qtlocation -skip qtmultimedia -skip qtpurchasing -skip qtsensors -skip qtwayland -no-compile-examples -nomake examples -nomake tests -nomake tools -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install")
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -static -openssl -no-pch -no-ssse3 -sql-sqlite -plugin-sql-sqlite -skip enginio -skip qtconnectivity -skip qtlocation -skip qtmultimedia -skip qtpurchasing -skip qtsensors -skip qtwayland -no-compile-examples -nomake examples -nomake tests -nomake tools -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install")
     else()
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -shared -openssl -no-pch -no-ssse3 -sql-sqlite -plugin-sql-sqlite -skip enginio -skip qtconnectivity -skip qtmultimedia -skip qtpurchasing -skip qtsensors -skip qtwayland -no-compile-examples -nomake examples -nomake tests -nomake tools -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -shared -openssl -no-pch -no-ssse3 -sql-sqlite -plugin-sql-sqlite -skip enginio -skip qtconnectivity -skip qtmultimedia -skip qtpurchasing -skip qtsensors -skip qtwayland -no-compile-examples -nomake examples -nomake tests -nomake tools -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
     endif()
     ExternalProject_Add(Qt
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-src-5.11.2.tar.xz

@@ -1182,7 +1182,7 @@ if( UNIX AND NOT APPLE )
   FIND_QT_STATIC_LIB("qsqlite" "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/")
 
   FIND_QT_STATIC_LIB("qtpcre2" "${QT_STATIC_INSTALL_DIR}/lib/")
-  #FIND_QT_STATIC_LIB("qtharfbuzz" "${QT_STATIC_INSTALL_DIR}/lib/") # use system harfbuzz
+  FIND_QT_STATIC_LIB("qtharfbuzz" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5XcbQpa" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5PlatformCompositorSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5Sql" "${QT_STATIC_INSTALL_DIR}/lib/")
@@ -1270,7 +1270,7 @@ if( WIN32 )
   FIND_QT_STATIC_LIB("qtlibpng" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qsqlite" "${QT_STATIC_INSTALL_DIR}/plugins/sqldrivers/")
   FIND_QT_STATIC_LIB("qwindows" "${QT_STATIC_INSTALL_DIR}/plugins/platforms/")
-  
+
   FIND_QT_STATIC_LIB("Crypt32" "*")
   FIND_QT_STATIC_LIB("imm32" "*")
   FIND_QT_STATIC_LIB("winmm" "*")
@@ -1285,8 +1285,8 @@ if( WIN32 )
   FIND_QT_STATIC_LIB("Userenv" "*")
   FIND_QT_STATIC_LIB("Dwmapi" "*")
   FIND_QT_STATIC_LIB("legacy_stdio_definitions" "*")
-  
-  
+
+
   if(BUILD_WITH_OPENSSL)
     FIND_QT_STATIC_LIB("libcrypto" "${OPENSSL_ROOT_DIR}/lib/")
     FIND_QT_STATIC_LIB("libssl" "${OPENSSL_ROOT_DIR}/lib/")
