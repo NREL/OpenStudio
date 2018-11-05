@@ -36,6 +36,8 @@
 namespace openstudio {
 namespace model {
 
+class GeneratorFuelCell;
+
 namespace detail {
 
   /** GeneratorFuelCellElectricalStorage_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellElectricalStorage.*/
@@ -83,6 +85,9 @@ namespace detail {
     double simpleMaximumPowerStore() const;
 
     double initialChargeState() const;
+
+    // Return optional parent generator
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
     //@}
     /** @name Setters */

@@ -53,10 +53,29 @@ namespace openstudio {
   }
 }
 
+%extend openstudio::model::AirSupplyConstituent {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
+%extend openstudio::model::FuelSupplyConstituent {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 MODELOBJECT_TEMPLATES(PhotovoltaicPerformance);
 MODELOBJECT_TEMPLATES(Generator);
 MODELOBJECT_TEMPLATES(Inverter);
 MODELOBJECT_TEMPLATES(ElectricalStorage);
+MODELOBJECT_TEMPLATES(AirSupplyConstituent);
 MODELOBJECT_TEMPLATES(GeneratorFuelCellAirSupply);
 MODELOBJECT_TEMPLATES(GeneratorFuelCellAuxiliaryHeater);
 MODELOBJECT_TEMPLATES(GeneratorFuelCellElectricalStorage);
@@ -65,6 +84,7 @@ MODELOBJECT_TEMPLATES(GeneratorFuelCellInverter);
 MODELOBJECT_TEMPLATES(GeneratorFuelCellPowerModule);
 MODELOBJECT_TEMPLATES(GeneratorFuelCellStackCooler);
 MODELOBJECT_TEMPLATES(GeneratorFuelCellWaterSupply);
+MODELOBJECT_TEMPLATES(FuelSupplyConstituent);
 MODELOBJECT_TEMPLATES(GeneratorFuelSupply);
 MODELOBJECT_TEMPLATES(GeneratorFuelCell);
 MODELOBJECT_TEMPLATES(GeneratorPhotovoltaic);
