@@ -366,6 +366,14 @@ if("Ninja" STREQUAL ${CMAKE_GENERATOR})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
   endif()
 endif()
+
+# Xcode/Ninja generators undefined MAKE
+if(CMAKE_GENERATOR MATCHES "Make")
+  set(MAKE "$(MAKE)")
+else()
+  set(MAKE make)
+endif()
+
 ##############################################################################
 
 
@@ -379,6 +387,17 @@ endif()
 
 ###############################################################################
 # Dependencies
+
+# If Linux, check LSB_RELEASE globally so we can use it after
+if( UNIX AND NOT APPLE )
+
+  find_program(LSB_RELEASE lsb_release)
+  execute_process(COMMAND ${LSB_RELEASE} -r
+    OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  message(STATUS "LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
+endif()
 
 # EnergyPlus
 
@@ -516,8 +535,18 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     set(RUBY_ZIP_FILENAME "ruby_2_2_4_redhat_static.tar.gz")
     set(RUBY_ZIP_EXPECTED_MD5 "0491123e60186896bae838f7d148bf20")
   else()
-    set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "4d993b641d4852c10099da9d99f7900d")
+
+    if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
+      # ubuntu 18.04
+      # This should work with 16.04 and 14.04 too.
+      set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static.tar.gz")
+      set(RUBY_ZIP_EXPECTED_MD5 "4d993b641d4852c10099da9d99f7900d")
+    else()
+      # 16.04
+      set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static_xenial.tar.gz")
+      set(RUBY_ZIP_EXPECTED_MD5 "832a185b0086941780c4f54489c7f465")
+    endif()
+
   endif()
 
   set(RUBY_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_ZIP_FILENAME}")
@@ -710,14 +739,6 @@ endif()
 
 # SWIG
 
-# Xcode/Ninja generators undefined MAKE
-if(CMAKE_GENERATOR MATCHES "Make")
-  set(MAKE "$(MAKE)")
-else()
-  set(MAKE make)
-endif()
-
-
 # using forked version of SWIG at https://github.com/macumber/swig/tree/openstudio_swig_3_0_12
 if(UNIX)
   # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
@@ -867,18 +888,16 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
     set(BOOST_ZIP_FILENAME "DOES_NOT_EXIST_boost_1_68_0_redhat.tar.gz")
     set(BOOST_ZIP_EXPECTED_MD5 "de952e0c36900a3ad000d74a1c41b7d2")
   else()
-    find_program(LSB_RELEASE lsb_release)
-    execute_process(COMMAND ${LSB_RELEASE} -r
-      OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    message("LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
-    #if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
+    if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
       # ubuntu 18.04
       # This should work with 16.04 and 14.04 too.
       set(BOOST_ZIP_FILENAME "boost_1_68_0_linux.tar.gz")
       set(BOOST_ZIP_EXPECTED_MD5 "bea55ee70ec096792136b91b879bb4f2")
-    #endif()
+    else()
+      # 16.04
+      set(BOOST_ZIP_FILENAME "boost_1_68_0_linux_xenial.tar.gz")
+      set(BOOST_ZIP_EXPECTED_MD5 "10fe1825fb303b3515762a313e230b81")
+    endif()
   endif()
 
   set(BOOST_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${BOOST_ZIP_FILENAME}")
@@ -945,8 +964,15 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
     set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_redhat_shared.tar.gz")
     set(QT_ZIP_EXPECTED_MD5 "b0610716854ed91a003347c455b22eb8")
   else()
-    set(QT_ZIP_FILENAME "qt_5_11_linux_shared.tar.gz")
-    set(QT_ZIP_EXPECTED_MD5 "33c5a562935612625ec5e41fe4b75e17")
+    if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
+      set(QT_ZIP_FILENAME "qt_5_11_linux_shared.tar.gz")
+      set(QT_ZIP_EXPECTED_MD5 "33c5a562935612625ec5e41fe4b75e17")
+    else()
+      # 16.04
+      set(QT_ZIP_FILENAME "qt_5_11_linux_shared_xenial.tar.gz")
+      set(QT_ZIP_EXPECTED_MD5 "9b0e89433cf1a79c84f84f85c8fef168")
+    endif()
+
   endif()
 
   set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_ZIP_FILENAME}")
@@ -1082,8 +1108,14 @@ elseif(EXISTS "/etc/redhat-release")
   set(QT_STATIC_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_redhat_static.tar.gz")
   set(QT_STATIC_ZIP_EXPECTED_MD5 "f5d9406349d1688e99db012862c22072")
 else()
-  set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static.tar.gz")
-  set(QT_STATIC_ZIP_EXPECTED_MD5 "24030785000d4bacb8f0ff64acc4bfab")
+  if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
+    set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static.tar.gz")
+    set(QT_STATIC_ZIP_EXPECTED_MD5 "24030785000d4bacb8f0ff64acc4bfab")
+  else()
+    # 16.04
+    set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static_xenial.tar.gz")
+    set(QT_STATIC_ZIP_EXPECTED_MD5 "8f702fb5600326b6f8e684f90961453f")
+  endif()
 endif()
 
 set(QT_STATIC_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_STATIC_ZIP_FILENAME}")
