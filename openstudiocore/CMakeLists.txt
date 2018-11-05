@@ -392,7 +392,8 @@ endif()
 if( UNIX AND NOT APPLE )
 
   find_program(LSB_RELEASE lsb_release)
-  execute_process(COMMAND ${LSB_RELEASE} -r
+  # -rs outputs only 16.04, or 18.04
+  execute_process(COMMAND ${LSB_RELEASE} -rs
     OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
