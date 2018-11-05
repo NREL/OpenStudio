@@ -386,9 +386,10 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     # If 'AppleClang' or 'Clang'
     if("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(Apple)?Clang$")
       # Prevent excessive warnings from generated swig files, suppress deprecated declarations
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare")
+      # Suppress 'register' storage class specified warnings (coming from Ruby)
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-deprecated-register")
     else()
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare")
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-deprecated-register")
     endif()
   endif()
 
