@@ -30,10 +30,8 @@
 #include "IddKey.hpp"
 #include "IddKey_Impl.hpp"
 
-#include "IddKeyProperties.hpp"
 #include "IddRegex.hpp"
 
-#include <boost/algorithm/string.hpp>
 
 namespace openstudio {
 

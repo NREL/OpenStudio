@@ -28,11 +28,9 @@
 ***********************************************************************************************************************/
 
 #include "PathHelpers.hpp"
-#include "Logger.hpp"
 #include "Assert.hpp"
 #include "FilesystemHelpers.hpp"
 
-#include <QDir>
 #include <QRegularExpression>
 
 #ifdef Q_OS_WIN

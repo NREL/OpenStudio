@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELL_HPP
 #define MODEL_GENERATORFUELCELL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "Generator.hpp"
 
 #include "GeneratorFuelCellPowerModule.hpp"

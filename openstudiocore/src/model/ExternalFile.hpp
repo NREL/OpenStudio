@@ -29,7 +29,7 @@
 #ifndef MODEL_EXTERNALFILE_HPP
 #define MODEL_EXTERNALFILE_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ResourceObject.hpp"
 
 namespace openstudio {

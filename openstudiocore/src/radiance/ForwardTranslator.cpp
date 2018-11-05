@@ -327,7 +327,7 @@ namespace radiance {
 
       // write options files
       std::string dcmatsStringin;
-      std::ifstream dcmatfilein(openstudio::toString(radDir / openstudio::toPath("materials/materials_dc.rad")).c_str());
+      std::ifstream dcmatfilein(openstudio::toSystemFilename(radDir / openstudio::toPath("materials/materials_dc.rad")));
 
       while (dcmatfilein.good())
       {

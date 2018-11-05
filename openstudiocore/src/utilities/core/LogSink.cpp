@@ -32,17 +32,10 @@
 
 #include "Logger.hpp"
 
-#include <boost/log/common.hpp>
 #include <boost/log/support/regex.hpp>
 #include <boost/log/expressions.hpp>
-#include <boost/log/expressions/keyword.hpp>
-#include <boost/log/expressions/attr_fwd.hpp>
-#include <boost/log/expressions/attr.hpp>
-#include <boost/log/attributes/value_extraction.hpp>
 
 #include <QReadWriteLock>
-#include <QWriteLocker>
-#include <QThread>
 
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;

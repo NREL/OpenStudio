@@ -31,7 +31,6 @@
 #include "Workspace_Impl.hpp"
 #include "../core/Assert.hpp"
 
-#include <QTimer>
 
 namespace openstudio {
 

@@ -41,7 +41,7 @@ TEST_F(GeometryFixture, ThreeJS)
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/threejs.json");
   ASSERT_TRUE(exists(p));
 
-  std::ifstream ifs(toString(p));
+  std::ifstream ifs(toSystemFilename(p));
   EXPECT_TRUE(ifs.is_open());
 
   std::istreambuf_iterator<char> eos;

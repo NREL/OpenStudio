@@ -8,14 +8,9 @@
 
 %include <model/Model_Common_Include.i>
 %import <model/ModelCore.i>
+%import <model/ModelSimulation.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
-%import <model/ModelZoneHVAC.i>
-%import <model/ModelAvailabilityManager.i>
-%import <model/ModelPlantEquipmentOperationScheme.i>
-%import <model/ModelStraightComponent.i>
-%import <model/ModelAirflow.i>
-%import <model/ModelRefrigeration.i>
 
 %{
   #include <model/HVACTemplates.hpp>
@@ -26,29 +21,29 @@
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelHVAC
 
-  
+
   // ignore airflow objects for now, add back in with partial classes in ModelAirflow.i
   %ignore openstudio::model::AirLoopHVACOutdoorAirSystem::getAirflowNetworkDistributionNode;
   %ignore openstudio::model::AirLoopHVACOutdoorAirSystem::airflowNetworkDistributionNode;
   %ignore openstudio::model::AirLoopHVACZoneMixer::getAirflowNetworkDistributionNode;
-  %ignore openstudio::model::AirLoopHVACZoneMixer::airflowNetworkDistributionNode;  
+  %ignore openstudio::model::AirLoopHVACZoneMixer::airflowNetworkDistributionNode;
   %ignore openstudio::model::AirLoopHVACZoneSplitter::getAirflowNetworkDistributionNode;
-  %ignore openstudio::model::AirLoopHVACZoneSplitter::airflowNetworkDistributionNode; 
+  %ignore openstudio::model::AirLoopHVACZoneSplitter::airflowNetworkDistributionNode;
   %ignore openstudio::model::CoilCoolingWater::getAirflowNetworkEquivalentDuct;
-  %ignore openstudio::model::CoilCoolingWater::airflowNetworkEquivalentDuct;   
+  %ignore openstudio::model::CoilCoolingWater::airflowNetworkEquivalentDuct;
   %ignore openstudio::model::CoilHeatingWater::getAirflowNetworkEquivalentDuct;
-  %ignore openstudio::model::CoilHeatingWater::airflowNetworkEquivalentDuct;    
+  %ignore openstudio::model::CoilHeatingWater::airflowNetworkEquivalentDuct;
   %ignore openstudio::model::ControllerOutdoorAir::getAirflowNetworkOutdoorAirflow;
-  %ignore openstudio::model::ControllerOutdoorAir::airflowNetworkOutdoorAirflow;  
+  %ignore openstudio::model::ControllerOutdoorAir::airflowNetworkOutdoorAirflow;
   %ignore openstudio::model::HeatExchangerAirToAirSensibleAndLatent::getAirflowNetworkEquivalentDuct;
-  %ignore openstudio::model::HeatExchangerAirToAirSensibleAndLatent::airflowNetworkEquivalentDuct;    
+  %ignore openstudio::model::HeatExchangerAirToAirSensibleAndLatent::airflowNetworkEquivalentDuct;
   %ignore openstudio::model::Node::getAirflowNetworkDistributionNode;
   %ignore openstudio::model::Node::airflowNetworkDistributionNode;
   %ignore openstudio::model::ThermalZone::getAirflowNetworkZone;
   %ignore openstudio::model::ThermalZone::airflowNetworkZone;
-  
-  
-  
+
+
+
 #endif
 
 namespace openstudio {

@@ -27,16 +27,16 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <model/AirflowNetworkDetailedOpening.hpp>
-#include <model/AirflowNetworkDetailedOpening_Impl.hpp>
+#include "AirflowNetworkDetailedOpening.hpp"
+#include "AirflowNetworkDetailedOpening_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_AirflowNetworkDetailedOpening_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 #include "ModelExtensibleGroup.hpp"
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

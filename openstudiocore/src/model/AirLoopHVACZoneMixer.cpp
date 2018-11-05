@@ -34,7 +34,6 @@
 #include "AirflowNetworkDistributionNode.hpp"
 #include "AirflowNetworkDistributionNode_Impl.hpp"
 #include "Node.hpp"
-#include "AirTerminalSingleDuctUncontrolled.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
