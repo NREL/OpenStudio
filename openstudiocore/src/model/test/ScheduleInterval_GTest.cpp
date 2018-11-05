@@ -41,6 +41,7 @@
 #include "../ScheduleTypeLimits.hpp"
 #include "../ScheduleTypeLimits_Impl.hpp"
 
+#include "../../utilities/core/PathHelpers.hpp"
 #include "../../utilities/data/TimeSeries.hpp"
 
 using namespace openstudio::model;
@@ -256,12 +257,26 @@ TEST_F(ModelFixture, ScheduleFile)
   path p = resourcesPath() / toPath("model/schedulefile.csv");
   EXPECT_TRUE(exists(p));
 
+  path expectedDestDir;
+  std::vector<path> absoluteFilePaths = model.workflowJSON().absoluteFilePaths();
+  if (absoluteFilePaths.empty()) {
+    expectedDestDir = model.workflowJSON().absoluteRootDir();
+  } else {
+    expectedDestDir = absoluteFilePaths[0];
+  }
+
+  if (exists(expectedDestDir)) {
+    removeDirectory(expectedDestDir);
+  }
+  ASSERT_FALSE(exists(expectedDestDir));
+  
   boost::optional<ExternalFile> externalfile = ExternalFile::getExternalFile(model, openstudio::toString(p));
   ASSERT_TRUE(externalfile);
   EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
   EXPECT_EQ(0u, externalfile->scheduleFiles().size());
   EXPECT_EQ(openstudio::toString(p.filename()), externalfile->fileName());
   //EXPECT_TRUE(externalfile.isColumnSeparatorDefaulted());
+  EXPECT_EQ(expectedDestDir / externalfile->fileName(), externalfile->filePath());
   EXPECT_TRUE(exists(externalfile->filePath()));
   EXPECT_NE(p, externalfile->filePath());
 
