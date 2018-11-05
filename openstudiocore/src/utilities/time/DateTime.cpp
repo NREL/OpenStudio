@@ -29,7 +29,6 @@
 
 #include "DateTime.hpp"
 #include <QDateTime>
-#include <cmath>
 
 using namespace std;
 using namespace boost;

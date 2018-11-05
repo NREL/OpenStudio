@@ -92,8 +92,8 @@
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
-#include "AirTerminalSingleDuctUncontrolled.hpp"
-#include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 #include "AirTerminalSingleDuctVAVReheat.hpp"
 #include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
 #include "ControllerOutdoorAir.hpp"
@@ -349,7 +349,7 @@ Loop addSystemType3(Model & model)
   Node node1 = fan.outletModelObject()->cast<Node>();
   setpointMSZR.addToNode(node1);
 
-  AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule);
+  AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,_alwaysOnSchedule);
 
   airLoopHVAC.addBranchForHVACComponent(terminal);
 
@@ -412,7 +412,7 @@ Loop addSystemType4(Model & model)
   coilHeatingElectric.addToNode(supplyOutletNode);
   supplyFan.addToNode(supplyOutletNode);
 
-  AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule);
+  AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,_alwaysOnSchedule);
 
   airLoopHVAC.addBranchForHVACComponent(terminal);
 
@@ -920,7 +920,7 @@ Loop addSystemType9(Model & model)
   Node node1 = fan.outletModelObject()->cast<Node>();
   setpointMSZR.addToNode(node1);
 
-  AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule);
+  AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,_alwaysOnSchedule);
 
   airLoopHVAC.addBranchForHVACComponent(terminal);
 
@@ -982,7 +982,7 @@ Loop addSystemType10(Model & model)
   Node node1 = fan.outletModelObject()->cast<Node>();
   setpointMSZR.addToNode(node1);
 
-  AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule);
+  AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,_alwaysOnSchedule);
 
   airLoopHVAC.addBranchForHVACComponent(terminal);
 

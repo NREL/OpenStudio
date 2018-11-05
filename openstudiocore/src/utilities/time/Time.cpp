@@ -29,7 +29,6 @@
 
 #include "Time.hpp"
 
-#include <cmath>
 
 using namespace std;
 using namespace boost;

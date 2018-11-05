@@ -381,7 +381,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 
   if( (value = modelObject.ratedTotalHeatingCapacitySizingRatio()) )
   {
-    idfObject.setDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::RatedTotalHeatingCapacitySizingRatio,value.get());
+    idfObject.setDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::RatedHeatingCapacitySizingRatio,value.get());
   }
 
   return idfObject;
@@ -390,4 +390,3 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 } // energyplus
 
 } // openstudio
-

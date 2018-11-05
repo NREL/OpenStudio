@@ -30,7 +30,7 @@
 #ifndef MODEL_AIRFLOWNETWORKDUCTVIEWFACTORS_HPP
 #define MODEL_AIRFLOWNETWORKDUCTVIEWFACTORS_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 #include <vector>
 #include <unordered_map>

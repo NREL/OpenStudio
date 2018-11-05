@@ -61,9 +61,9 @@ boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyGlazingSp
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
     OS_ASSERT(group.numFields() == 4);
     group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Wavelength, spectralDataField.wavelength());
-    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::transmittance, spectralDataField.transmittance());
-    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::frontreflectance, spectralDataField.frontReflectance());
-    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::backreflectance, spectralDataField.backReflectance());
+    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Transmittance, spectralDataField.transmittance());
+    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::FrontReflectance, spectralDataField.frontReflectance());
+    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::BackReflectance, spectralDataField.backReflectance());
   }
 
   return boost::optional<IdfObject>(idfObject);

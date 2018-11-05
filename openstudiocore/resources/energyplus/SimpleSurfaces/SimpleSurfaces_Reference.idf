@@ -1,7 +1,7 @@
 ! Basecase reference for SimpleSurfaces_Test
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,8.9;
+  Version,9.0;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -32,14 +32,17 @@
     ,                        !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Sunday,                  !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
-    Yes;                     !- Use Weather File Snow Indicators
+    Yes,                     !- Use Weather File Snow Indicators
+    ;                        !- Treat Weather as Actual
 
 !-   ===========  ALL OBJECTS IN CLASS: LOCATION ===========
 
@@ -375,7 +378,6 @@
     Zone1 Roof,              !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -540,7 +542,6 @@
     Zone2 Roof,              !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -588,7 +589,6 @@
     Zone1 Front Wall,        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -614,7 +614,6 @@
     Zone2 Front Wall,        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -660,7 +659,6 @@
     Zone1 Interior Wall,     !- Building Surface Name
     Zone2 Interior Window,   !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -676,7 +674,6 @@
     Zone2 Interior Wall,     !- Building Surface Name
     Zone1 Interior Window,   !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices

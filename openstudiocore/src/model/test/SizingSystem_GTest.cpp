@@ -28,6 +28,9 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
+
+#include "ModelFixture.hpp"
+
 #include "../Model.hpp"
 #include "../SizingSystem.hpp"
 #include "../SizingSystem_Impl.hpp"
@@ -36,7 +39,7 @@
 
 using namespace openstudio;
 
-TEST(SizingSystem,SizingSystem_SizingSystem)
+TEST_F(ModelFixture, SizingSystem_SizingSystem)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
