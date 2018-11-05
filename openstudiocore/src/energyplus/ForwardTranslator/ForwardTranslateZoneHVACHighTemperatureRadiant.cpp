@@ -90,6 +90,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACHighTemperatureRa
     }
   }
 
+  // OpenStudio only supports "Heating Design Capacity", which is the default in IDD
+  idfObject.setString(ZoneHVAC_HighTemperatureRadiantFields::HeatingDesignCapacityMethod, "HeatingDesignCapacity");
+
   //MaximumPowerInput
   if( modelObject.isMaximumPowerInputAutosized() )
   {

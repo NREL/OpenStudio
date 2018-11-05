@@ -28,6 +28,9 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
+
+#include "ModelFixture.hpp"
+
 #include "../Model.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
@@ -36,7 +39,7 @@
 
 using namespace openstudio;
 
-TEST(ControllerWaterCoil,ControllerWaterCoil_ControllerWaterCoil)
+TEST_F(ModelFixture,ControllerWaterCoil_ControllerWaterCoil)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 

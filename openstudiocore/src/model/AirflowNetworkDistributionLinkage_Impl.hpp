@@ -30,7 +30,7 @@
 #ifndef MODEL_AIRFLOWNETWORKDISTRIBUTIONLINKAGE_IMPL_HPP
 #define MODEL_AIRFLOWNETWORKDISTRIBUTIONLINKAGE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
 #include "AirflowNetworkLinkage_Impl.hpp"
 

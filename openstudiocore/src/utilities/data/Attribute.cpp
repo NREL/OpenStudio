@@ -35,19 +35,13 @@
 #include "../core/Json.hpp"
 #include "../core/FilesystemHelpers.hpp"
 
-#include "../units/UnitFactory.hpp"
-#include "../units/Quantity.hpp"
 #include "../units/QuantityFactory.hpp"
 #include "../units/OSOptionalQuantity.hpp"
 
-#include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include <sstream>
-#include <limits>
 
 #include <QDomElement>
-#include <QDomDocument>
 
 namespace openstudio {
 namespace detail{

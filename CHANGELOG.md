@@ -1,3 +1,89 @@
+## OpenStudio v2.7.0
+###### 2018-10-12 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.6.0...v2.7.0 )
+
+- ![Fixed:][fixed] [#78]( https://github.com/NREL/OpenStudio/issues/78 ), Zones Tab - Minor issue but why don't we display color for thermal zone like we do elsewhere (Bugzilla #546)
+- ![Fixed:][fixed] [#297]( https://github.com/NREL/OpenStudio/issues/297 ), The save as dialog does not pre-populate the file name with the current filename. (Bugzilla #1162)
+- ![Fixed:][fixed] [#402]( https://github.com/NREL/OpenStudio/issues/402 ), OS app HVAC and loads tab - water use equipment icon missing or wrong
+- ![Fixed:][fixed] [#535]( https://github.com/NREL/OpenStudio/issues/535 ), Renamed loop doesn't get updated in pull down until you switch to "control tab" or change loops
+- ![Fixed:][fixed] [#749]( https://github.com/NREL/OpenStudio/issues/749 ), When two spaces in zone have mis-matched "Part of total floor area" flag we should issue a warning on export ot IDF
+- ![Fixed:][fixed] [#979]( https://github.com/NREL/OpenStudio/issues/979 ), Exterior lights don't make it through reverse translation
+- ![Fixed:][fixed] [#1329]( https://github.com/NREL/OpenStudio/issues/1329 ), OS:WindowMaterial:GlazingGroup:Thermochromic inspector is wrong
+- ![Fixed:][fixed] [#1445]( https://github.com/NREL/OpenStudio/issues/1445 ), Add schedule type limits to schedules in HVAC libraries
+- ![Fixed:][fixed] [#1554]( https://github.com/NREL/OpenStudio/issues/1554 ), Always enable revert to saved
+- ![Fixed:][fixed] [#1566]( https://github.com/NREL/OpenStudio/issues/1566 ), ptac default view in the inspector is not consistent with other zone hvac objects
+- ![Fixed:][fixed] [#1717]( https://github.com/NREL/OpenStudio/issues/1717 ), Direction of fan in outdoor air supply
+- ![Fixed:][fixed] [#1794]( https://github.com/NREL/OpenStudio/issues/1794 ), Minor update issue on Surface sub-tab of Space tab
+- ![Fixed:][fixed] [#1797]( https://github.com/NREL/OpenStudio/issues/1797 ), "Shading" Sub-tab on building tab, pull down list shouldn't show "Space" as option
+- ![Fixed:][fixed] [#1801]( https://github.com/NREL/OpenStudio/issues/1801 ), HeatPump:WaterHeater Inlet Air Zone Name Not Exposed
+- ![Fixed:][fixed] [#1877]( https://github.com/NREL/OpenStudio/issues/1877 ), Edit tab for many zone objects have an extra non-functional iink sub-tab
+- ![Fixed:][fixed] [#2000]( https://github.com/NREL/OpenStudio/issues/2000 ), Constructions from BCL can't be dropped on drop zones in spaces tab
+- ![Fixed:][fixed] [#2057]( https://github.com/NREL/OpenStudio/issues/2057 ), Wrong IP units for controllerWaterCoil min/max flow
+- ![Fixed:][fixed] [#2059]( https://github.com/NREL/OpenStudio/issues/2059 ), change Fan Efficiency field to Fan Total Efficiency
+- ![Fixed:][fixed] [#2109]( https://github.com/NREL/OpenStudio/issues/2109 ), OS:ZoneAirContaminantBalance not translated
+- ![Fixed:][fixed] [#2125]( https://github.com/NREL/OpenStudio/issues/2125 ), heat pump water heater (hpwh) object cooling/heating priority always 1
+- ![Fixed:][fixed] [#2206]( https://github.com/NREL/OpenStudio/issues/2206 ), Deleting Evaporative cooler on relief branch of outside air system orphans node
+- ![Fixed:][fixed] [#2274]( https://github.com/NREL/OpenStudio/issues/2274 ), Water Heat Trank associated with Heat Pump Water Heater can't be dragged from My Model to Plant Loop
+- ![Fixed:][fixed] [#2343]( https://github.com/NREL/OpenStudio/issues/2343 ), Odd 'Rated Pump Head' display unit for LowTemperatureRadiant:ConstantFlow
+- ![Fixed:][fixed] [#2357]( https://github.com/NREL/OpenStudio/issues/2357 ), OS app crashes under edge case on schedule tab
+- ![Fixed:][fixed] [#2422]( https://github.com/NREL/OpenStudio/issues/2422 ), Export gbXML bug for shading surfaces
+- ![Fixed:][fixed] [#2432]( https://github.com/NREL/OpenStudio/issues/2432 ), HVAC library empty in OpenStudioApp 2.0.0
+- ![Fixed:][fixed] [#2458]( https://github.com/NREL/OpenStudio/issues/2458 ), WSHP, GSHP Plant loop temperatures 
+- ![Fixed:][fixed] [#2468]( https://github.com/NREL/OpenStudio/issues/2468 ), Attempting to add WaterHeater:HeatPump to supply side of plant loop creates orphaned node
+- ![Fixed:][fixed] [#2555]( https://github.com/NREL/OpenStudio/issues/2555 ), Larger font on Windows in vrf system view 
+- ![Fixed:][fixed] [#2600]( https://github.com/NREL/OpenStudio/issues/2600 ), Apply Measure Now incorrectly reporting warning message count with data from info messages.
+- ![Fixed:][fixed] [#2625]( https://github.com/NREL/OpenStudio/issues/2625 ), VAV air terminals missing Autosized option for Fixed Minimum Air Flow Rate field
+- ![Fixed:][fixed] [#2633]( https://github.com/NREL/OpenStudio/issues/2633 ), Hide "Schedule" for SpaceInfiltrationDesignFlowRate in OS App
+- ![Fixed:][fixed] [#2712]( https://github.com/NREL/OpenStudio/issues/2712 ), Add Ideal Air Load Column as Multi-Selectable in the Thermal Zones Tab
+- ![Fixed:][fixed] [#2718]( https://github.com/NREL/OpenStudio/issues/2718 ), SystemSizing object N2, \field Central Heating Maximum System Air Flow Ratio
+- ![Fixed:][fixed] [#2776]( https://github.com/NREL/OpenStudio/issues/2776 ), Spaces tab Filters do not work for all sub-tabs
+- ![Fixed:][fixed] [#2805]( https://github.com/NREL/OpenStudio/issues/2805 ), Missing SPM:HumidityMinimum in 2.3.0 hvac_library
+- ![Fixed:][fixed] [#2814]( https://github.com/NREL/OpenStudio/issues/2814 ), OSApp in Debug crashes when switch to "Humidity" subtab of DesignDayGridView
+- ![Fixed:][fixed] [#2832]( https://github.com/NREL/OpenStudio/issues/2832 ), Double-clicking osm does not load file if file path contains white space
+- ![Fixed:][fixed] [#2934]( https://github.com/NREL/OpenStudio/issues/2934 ), Fix qt warnings in app
+- ![Fixed:][fixed] [#3019]( https://github.com/NREL/OpenStudio/issues/3019 ), OS App mac will crash if you go 
+- ![Fixed:][fixed] [#3080]( https://github.com/NREL/OpenStudio/issues/3080 ), Stop using Handles in some object names
+- ![Fixed:][fixed] [#3093]( https://github.com/NREL/OpenStudio/issues/3093 ), Fix failing Model Gtest CoilHeatingDesuperheater_addToNode
+- ![Fixed:][fixed] [#3115]( https://github.com/NREL/OpenStudio/issues/3115 ), VRF Terminal group missing from My Model pane
+- ![Fixed:][fixed] [#3116]( https://github.com/NREL/OpenStudio/issues/3116 ), OpenStudio Crashes while selecting plant loop
+- ![Fixed:][fixed] [#3119]( https://github.com/NREL/OpenStudio/issues/3119 ), Schedules tab crashes when removing Run Period Profile from schedule
+- ![Fixed:][fixed] [#3124]( https://github.com/NREL/OpenStudio/issues/3124 ), FanVariableVolume availability schedule name changes unexpectedly
+- ![Fixed:][fixed] [#3138]( https://github.com/NREL/OpenStudio/issues/3138 ), Implement Gem resolver in CLI
+- ![Fixed:][fixed] [#3142]( https://github.com/NREL/OpenStudio/issues/3142 ), Copying a zone attached to an air loop and attaching the cloned zone to the same air loop breaks the loop
+- ![Fixed:][fixed] [#3155]( https://github.com/NREL/OpenStudio/issues/3155 ), Can't Launch DView on mac
+- ![Fixed:][fixed] [#3164]( https://github.com/NREL/OpenStudio/issues/3164 ), WaterHeater:Mixed/Stratified ComponentType:Heating when linked to an HPWH
+- ![Fixed:][fixed] [#3165]( https://github.com/NREL/OpenStudio/issues/3165 ), E+ example file 1ZoneDataCenterCRAC_wPumpedDXCoolingCoil.idf fails to import
+- ![Fixed:][fixed] [#3169]( https://github.com/NREL/OpenStudio/issues/3169 ), Problems with getFoo paths on linux
+- ![Fixed:][fixed] [#3180]( https://github.com/NREL/OpenStudio/issues/3180 ), Opening specific older OSM file in OS app crashes
+- ![Fixed:][fixed] [#3181]( https://github.com/NREL/OpenStudio/issues/3181 ), Update SDK Documentation references for OS API to "Latest Iteration" to point to OS v2.6.0
+- ![Fixed:][fixed] [#3182]( https://github.com/NREL/OpenStudio/issues/3182 ), EnergyManagementSystem:MeteredOutputVariable emsVariableName translation issue
+- ![Fixed:][fixed] [#3183]( https://github.com/NREL/OpenStudio/issues/3183 ), AVM:HybridVentilation not translated
+- ![Fixed:][fixed] [#3188]( https://github.com/NREL/OpenStudio/issues/3188 ), EnergyManagementSystem:InternalVariable internalDataIndexKeyName translation issue
+- ![Fixed:][fixed] [#3218]( https://github.com/NREL/OpenStudio/issues/3218 ), Fans not allowed on oa system until after oa is attached to an air loop.
+- ![Fixed:][fixed] [#3220]( https://github.com/NREL/OpenStudio/issues/3220 ), AirLoopHVAC remove - multiple loops
+- ![Fixed:][fixed] [#3222]( https://github.com/NREL/OpenStudio/issues/3222 ), outputVariableNames contain "Average," or "Sum,"
+- ![Fixed:][fixed] [#3244]( https://github.com/NREL/OpenStudio/issues/3244 ), Write versionTranslator for new EvporativeCooler:Direct:ResearchSpecial
+- ![Fixed:][fixed] [#3249]( https://github.com/NREL/OpenStudio/issues/3249 ), Measure in user's directory that has a dot in path refuses to run in Apply Now
+- ![Fixed:][fixed] [#3250]( https://github.com/NREL/OpenStudio/issues/3250 ), C# bindings fail after HVAC split-up.
+- ![Fixed:][fixed] [#3260]( https://github.com/NREL/OpenStudio/issues/3260 ), expose End Use Subcategory field for Fan objects
+- ![Fixed:][fixed] [#3261]( https://github.com/NREL/OpenStudio/issues/3261 ), OpenStudio.Path() constructor is looking for a Path and not a String
+- ![Fixed:][fixed] [#3291]( https://github.com/NREL/OpenStudio/issues/3291 ), Multiple calls to runner.validateArguments register attributes each time, cause failures in show runner output
+- ![Fixed:][fixed] [#3299]( https://github.com/NREL/OpenStudio/issues/3299 ), OpenStudio Plugin error visualizing surfaces
+- ![Fixed:][fixed] [#2319]( https://github.com/NREL/OpenStudio/issues/2319 ), Adiabatic boundary conditions are not exported to gbXML
+- ![Fixed:][fixed] [#3190]( https://github.com/NREL/OpenStudio/issues/3190 ), OS App looks for outdated library paths when installing a new version
+- ![Fixed:][fixed] [#3107]( https://github.com/NREL/OpenStudio/issues/3107 ), Display issue on EMS Sensor tab when list too long
+- ![Fixed:][fixed] [#3121]( https://github.com/NREL/OpenStudio/issues/3121 ), gbXML Reverse Translator does not import UndergroundWall from gbXML
+- ![Fixed:][fixed] [#2992]( https://github.com/NREL/OpenStudio/issues/2992 ), gbXML from Revit imported with mixed up floors/ceilings
+- ![Fixed:][fixed] [#2319]( https://github.com/NREL/OpenStudio/issues/2319 ), Adiabatic boundary conditions are not exported to gbXML
+- ![Fixed:][fixed] [#3171]( https://github.com/NREL/OpenStudio/pull/3171 ), Add support for multiple AirLoopHVAC objects per ThermalZone
+- ![Fixed:][fixed] [#3175]( https://github.com/NREL/OpenStudio/pull/3175 ), Add ElectricLoadCenterTransformer object
+- ![Fixed:][fixed] [#3179]( https://github.com/NREL/OpenStudio/pull/3179 ), Add ability to use bundle to specify gem dependencies
+- ![Fixed:][fixed] [#3206]( https://github.com/NREL/OpenStudio/pull/3206 ), Updated gbxml, idf, and osm import
+- ![Fixed:][fixed] [#3219]( https://github.com/NREL/OpenStudio/pull/3219 ), Allow fans on oa system even without AirLoopHVAC
+- ![Fixed:][fixed] [#3243]( https://github.com/NREL/OpenStudio/pull/3243 ), Wrap Schedule:File
+- ![Fixed:][fixed] [#3276]( https://github.com/NREL/OpenStudio/pull/3276 ), Handle TableMultiVariableLookup::points
+- ![Fixed:][fixed] [#3286]( https://github.com/NREL/OpenStudio/pull/3286 ), Update to EnergyPlus 9.0.0
+
+
 ## OpenStudio v2.6.0
 ###### 2018-06-30 — [Diff]( https://github.com/NREL/OpenStudio/compare/v2.5.0...v2.6.0 )
 

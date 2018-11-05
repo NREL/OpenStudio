@@ -39,7 +39,6 @@
 #include "../model/ThreeJSReverseTranslator.hpp"
 #include "../model/ThreeJSForwardTranslator.hpp"
 #include "../model/FloorplanJSForwardTranslator.hpp"
-#include "../model/FloorplanJSForwardTranslator.hpp"
 #include "../model/Building.hpp"
 #include "../model/Building_Impl.hpp"
 #include "../model/BuildingStory.hpp"
@@ -82,7 +81,6 @@
 #include <QTimer>
 #include <QStackedWidget>
 #include <QVBoxLayout>
-#include <QLabel>
 #include <QPushButton>
 #include <QWebEnginePage>
 #include <QWebEngineSettings>

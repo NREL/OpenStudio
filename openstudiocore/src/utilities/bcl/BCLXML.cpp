@@ -29,15 +29,9 @@
 
 #include "BCLXML.hpp"
 
-#include "../data/Attribute.hpp"
 
-#include "../units/Unit.hpp"
 #include "../units/Quantity.hpp"
-#include "../core/Compare.hpp"
-#include "../core/String.hpp"
-#include "../core/System.hpp"
 #include "../core/Checksum.hpp"
-#include "../core/Assert.hpp"
 #include "../core/FilesystemHelpers.hpp"
 #include "../time/DateTime.hpp"
 

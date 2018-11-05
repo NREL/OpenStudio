@@ -16,9 +16,9 @@ BEGIN
             VALUE "FileDescription",  "OpenStudio\0"
             VALUE "FileVersion",      "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_BUILD}\0"
             VALUE "InternalName",     "OpenStudio\0"
-            VALUE "LegalCopyright",   "Copyright � 2018 National Renewable Energy Laboratory\0"
+            VALUE "LegalCopyright",   "Copyright © 2008-2018, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.\0"
             VALUE "LegalTrademarks",  "OpenStudio (TM) is a trademark of NREL\0"
-            VALUE "OriginalFilename", "OpenStudio.exe\0"
+            VALUE "OriginalFilename", "OpenStudioApp.exe\0"
             VALUE "ProductName",      "OpenStudio\0"
             VALUE "ProductVersion",   "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}\0"
         END

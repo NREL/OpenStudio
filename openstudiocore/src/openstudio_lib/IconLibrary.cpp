@@ -88,7 +88,7 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeam).value()] = new QPixmap(":images/airterminal_fourpipebeam.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ParallelPIU_Reheat).value()] = new QPixmap(":images/parallel_fan_terminal.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_SeriesPIU_Reheat).value()] = new QPixmap(":images/series_fan_terminal.png");
-  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled).value()] = new QPixmap(":images/direct-air.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat).value()] = new QPixmap(":images/direct-air.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat).value()] = new QPixmap(":images/vav_noreheat.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_Reheat).value()] = new QPixmap(":images/vav-reheat.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_InletSideMixer).value()] = new QPixmap(":images/air_terminal_inlet_mixer.png");
@@ -273,7 +273,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Indoor).value()] = new QPixmap(":images/mini_icons/mini_pipe_indoor.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Outdoor).value()] = new QPixmap(":images/mini_icons/mini_pipe_outdoor.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_PlantComponent_TemperatureSource).value()] = new QPixmap(":images/mini_icons/mini_plant_temp_source.png");
-  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_PlantComponent_UserDefined).value()] = new QPixmap(":images/mini_icons/user_defined.png");  
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_PlantComponent_UserDefined).value()] = new QPixmap(":images/mini_icons/user_defined.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Compressor).value()] = new QPixmap(":images/mini_icons/mini_compressor.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_AirCooled).value()] = new QPixmap(":images/mini_icons/mini_condensor.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Case).value()] = new QPixmap(":images/mini_icons/mini_display_case.png");
@@ -335,7 +335,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_Reheat).value()] = new QPixmap(":images/mini_icons/cav_reheat.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ParallelPIU_Reheat).value()] = new QPixmap(":images/mini_icons/parallel_fan_terminal.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_SeriesPIU_Reheat).value()] = new QPixmap(":images/mini_icons/series_fan_terminal.png");
-  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled).value()] = new QPixmap(":images/mini_icons/direct-air.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat).value()] = new QPixmap(":images/mini_icons/direct-air.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat).value()] = new QPixmap(":images/mini_icons/vav_noreheat.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_Reheat).value()] = new QPixmap(":images/mini_icons/vav-reheat.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_HeatAndCool_NoReheat).value()] = new QPixmap(":images/mini_icons/vav_noreheat.png");

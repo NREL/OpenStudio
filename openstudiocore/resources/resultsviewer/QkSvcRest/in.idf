@@ -69,7 +69,7 @@
 ! ExtWallConstruction=Wood-Framed and Other
 ! End SimMetaData
 
-  Version,8.9;
+  Version,9.0;
 
   Timestep,6;
 
@@ -84,29 +84,33 @@
     WinterRunPeriod,         !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     1,                       !- End Month
     15,                      !- End Day of Month
+    ,                        !- End Year
     Sunday,                  !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes,                     !- Use Weather File Snow Indicators
-    1;                       !- Number of Times Runperiod to be Repeated
+    ;                        !- Treat Weather as Actual
 
   RunPeriod,
     SummerRunPeriod,         !- Name
     7,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     7,                       !- End Month
     15,                      !- End Day of Month
+    ,                        !- End Year
     Sunday,                  !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes,                     !- Use Weather File Snow Indicators
-    1;                       !- Number of Times Runperiod to be Repeated
+    ;                        !- Treat Weather as Actual
 
   SurfaceConvectionAlgorithm:Inside,TARP;
 
@@ -1775,7 +1779,6 @@
     Dining_Wall_East,        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1807,7 +1810,6 @@
     Dining_Wall_South,       !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1839,7 +1841,6 @@
     Dining_Wall_West,        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
