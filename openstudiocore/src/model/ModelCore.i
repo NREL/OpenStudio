@@ -109,7 +109,7 @@ class Node;
 }
 
 // DLM: forward declaring these classes and requesting the valuewrapper feature seems to be sufficient for the Ruby bindings
-// For C# we ignore any methods using these and then reimplement using partial class later
+// For C# we ignore any methods using these and then reimpliment using partial class later
 %feature("valuewrapper") SpaceType;
 %feature("valuewrapper") Node;
 
@@ -209,12 +209,12 @@ MODELOBJECT_TEMPLATES(EnergyManagementSystemConstructionIndexVariable);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemCurveOrTableIndexVariable);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemGlobalVariable);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemInternalVariable);
-MODELOBJECT_TEMPLATES(EnergyManagementSystemMeteredOutputVariable);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemTrendVariable);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemSubroutine);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemProgram);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemProgramCallingManager);
 MODELOBJECT_TEMPLATES(EnergyManagementSystemOutputVariable);
+MODELOBJECT_TEMPLATES(EnergyManagementSystemMeteredOutputVariable);
 UNIQUEMODELOBJECT_TEMPLATES(OutputEnergyManagementSystem);
 UNIQUEMODELOBJECT_TEMPLATES(ExternalInterface);
 MODELOBJECT_TEMPLATES(ExternalInterfaceActuator);
@@ -262,12 +262,12 @@ SWIG_MODELOBJECT(EnergyManagementSystemConstructionIndexVariable, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemCurveOrTableIndexVariable, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemGlobalVariable, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemInternalVariable, 1);
-SWIG_MODELOBJECT(EnergyManagementSystemMeteredOutputVariable, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemTrendVariable, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemSubroutine, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemProgram, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemProgramCallingManager, 1);
 SWIG_MODELOBJECT(EnergyManagementSystemOutputVariable, 1);
+SWIG_MODELOBJECT(EnergyManagementSystemMeteredOutputVariable, 1);
 SWIG_UNIQUEMODELOBJECT(OutputEnergyManagementSystem);
 SWIG_UNIQUEMODELOBJECT(ExternalInterface);
 SWIG_MODELOBJECT(ExternalInterfaceActuator, 1);
