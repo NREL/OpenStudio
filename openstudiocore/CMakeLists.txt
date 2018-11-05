@@ -621,6 +621,16 @@ if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
 endif()
 endif()
 
+if( UNIX ) 
+  find_library(GDBM libgdbm.a PATHS /usr/local/opt/gdbm/lib )
+  find_library(GMP libgmp.a PATHS /usr/local/opt/gmp/lib )
+  find_library(EDIT libedit.dylib )
+  find_library(UTIL libutil.dylib )
+  find_library(CURSES libncurses.dylib )
+  find_library(Z libz.dylib )
+  find_library(FFI libffi.dylib )
+endif()
+
 # openstudio gems
 
 # to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
