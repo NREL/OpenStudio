@@ -32,9 +32,6 @@
 #include "IdfRegex.hpp"
 #include "ValidityReport.hpp"
 
-#include <utilities/idd/IddObject_Impl.hpp> // needed for serialization
-#include <utilities/idd/IddField_Impl.hpp> // needed for serialization
-#include <utilities/idd/IddFile_Impl.hpp> // needed for serialization
 #include "../idd/IddRegex.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -43,19 +40,13 @@
 
 #include "../plot/ProgressBar.hpp"
 #include "../core/PathHelpers.hpp"
-#include "../core/String.hpp"
 #include "../core/Assert.hpp"
-#include "../core/Compare.hpp"
 
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/split.hpp>
-#include <boost/regex.hpp>
 
 
 #include <boost/iostreams/filter/newline.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 
-#include <sstream>
 
 namespace openstudio {
 

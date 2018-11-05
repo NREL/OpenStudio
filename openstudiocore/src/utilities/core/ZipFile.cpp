@@ -30,13 +30,9 @@
 #include "ZipFile.hpp"
 #include "FilesystemHelpers.hpp"
 
-#include <zlib/zconf.h>
-#include <zlib/zlib.h>
 #include <zlib/contrib/minizip/zip.h>
 
-#include <QDir>
 
-#include <fstream>
 
 namespace openstudio {
 
@@ -67,7 +63,7 @@ namespace openstudio {
     }
 
     try {
-      std::ifstream ifs(openstudio::toString(localPath).c_str(), std::ios_base::in | std::ios_base::binary);
+      std::ifstream ifs(openstudio::toSystemFilename(localPath), std::ios_base::in | std::ios_base::binary);
 
       if (!ifs.is_open() || ifs.fail())
       {

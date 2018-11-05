@@ -67,7 +67,8 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   m_fileMenu->addSeparator();
 
   m_revertToSavedAction = new QAction(tr("&Revert to Saved"), this);
-  m_revertToSavedAction->setDisabled(true);
+  // m_revertToSavedAction->setDisabled(true);
+  m_revertToSavedAction->setDisabled(false);
   m_fileMenu->addAction(m_revertToSavedAction);
   connect(m_revertToSavedAction, &QAction::triggered, this, &MainMenu::revertFileClicked, Qt::QueuedConnection);
 
@@ -247,7 +248,17 @@ void MainMenu::displayIPUnitsClicked()
 
 void MainMenu::enableRevertToSavedAction(bool enable)
 {
-  m_revertToSavedAction->setEnabled(enable);
+  // We no longer switch the action ON/OFF
+  // m_revertToSavedAction->setEnabled(enable);
+
+  // Instead, we display an asterisk to indicate whether we think the model is dirty or not
+  // Note: (The MainWindow also displays an asterisk, so perhaps it's not needed)
+  if( enable ) {
+    //m_revertToSavedAction->setText(tr("&Revert to Saved *"));
+    m_revertToSavedAction->setText(tr("&Revert to Saved"));
+  } else {
+    m_revertToSavedAction->setText(tr("&Revert to Saved"));
+  }
 }
 
 void MainMenu::enableFileImportActions(bool enable)

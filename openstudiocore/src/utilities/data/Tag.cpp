@@ -30,7 +30,6 @@
 #include "Tag.hpp"
 
 #include "../core/String.hpp"
-#include "../core/Compare.hpp"
 
 namespace openstudio {
 

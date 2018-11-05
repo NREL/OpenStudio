@@ -136,7 +136,9 @@ ModelObject SetpointManagerMixedAir_Impl::clone(Model model) const
 
 std::string SetpointManagerMixedAir_Impl::controlVariable() const
 {
-  return getString(OS_SetpointManager_MixedAirFields::ControlVariable).get();
+  boost::optional<std::string> value = getString(OS_SetpointManager_MixedAirFields::ControlVariable, true);
+  OS_ASSERT(value);
+  return value.get();
 }
 
 bool SetpointManagerMixedAir_Impl::setControlVariable( const std::string& value )

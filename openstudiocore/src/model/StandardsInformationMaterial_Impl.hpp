@@ -145,8 +145,8 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.StandardsInformationMaterial");
 
-    void parseStandardsMap() const;
-    static QMap<QString, QVariant> m_standardsMap;
+    void parseStandardsJSON() const;
+    static QJsonArray m_standardsArr;
   };
 
 } // detail
