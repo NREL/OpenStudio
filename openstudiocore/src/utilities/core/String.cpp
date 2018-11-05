@@ -31,14 +31,8 @@
 
 #include "Logger.hpp"
 
-#include <boost/lexical_cast.hpp>
-#include <boost/numeric/conversion/cast.hpp>
 
-#include <sstream>
 #include <iomanip>
-#include <limits>
-#include <cmath>
-#include <cfloat>
 
 namespace openstudio {
 

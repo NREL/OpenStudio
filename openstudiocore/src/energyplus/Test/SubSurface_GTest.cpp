@@ -60,7 +60,6 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_GlassDoorToSubSurface) {
     Perimeter_ZN_1_wall_south,  !- Building Surface Name\n\
     ,                        !- Outside Boundary Condition Object\n\
     AutoCalculate,           !- View Factor to Ground\n\
-    ,                        !- Shading Control Name\n\
     ,                        !- Frame and Divider Name\n\
     1.0000,                  !- Multiplier\n\
     4,                       !- Number of Vertices\n\

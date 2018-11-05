@@ -29,7 +29,6 @@
 
 #include "FilesystemHelpers.hpp"
 #include "Path.hpp"
-#include "String.hpp"
 #include "Assert.hpp"
 
 namespace openstudio {

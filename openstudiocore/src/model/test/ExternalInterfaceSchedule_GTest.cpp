@@ -29,7 +29,7 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
 #include "../ExternalInterfaceSchedule.hpp"
 #include "../ExternalInterfaceSchedule_Impl.hpp"

@@ -170,9 +170,12 @@ namespace openstudio {
 
     openstudio::path modelTempDir;
     if (!m_savePath.isEmpty()){
-      modelTempDir = model::initializeModel(*model, toPath(m_savePath));
+      auto p = toPath(m_savePath);
+      modelTempDir = model::initializeModel(*model, p);
+      m_mainWindow->setWindowTitle(toQString(p.filename()) + "[*]");
     } else{
       modelTempDir = model::initializeModel(*model);
+      m_mainWindow->setWindowTitle("Untitled[*]");
     }
     m_modelTempDir = toQString(modelTempDir);
 
@@ -992,22 +995,7 @@ namespace openstudio {
       // relative weather file path
       epwPathAbsolute = false;
 
-      if (!m_savePath.isEmpty()){
-        openstudio::path osmPath = toPath(m_savePath);
-        openstudio::path searchResourcesDir = osmPath.parent_path() / osmPath.stem();
-        openstudio::path searchFilesDir = osmPath.parent_path() / toPath("files") / osmPath.stem();
-
-        epwInUserPath = searchResourcesDir / *weatherFilePath;
-        if (boost::filesystem::exists(epwInUserPath)){
-          epwInUserPathChecksum = checksum(epwInUserPath);
-        } else{
-          epwInUserPath = searchFilesDir / *weatherFilePath;
-          if (boost::filesystem::exists(epwInUserPath)){
-            epwInUserPathChecksum = checksum(epwInUserPath);
-          }
-        }
-      }
-
+      // Look in temp model "resources" and "resources/files"
       epwInTempPath = tempResourcesDir / *weatherFilePath;
       if (boost::filesystem::exists(epwInTempPath)){
         epwInTempPathChecksum = checksum(epwInTempPath);
@@ -1015,6 +1003,28 @@ namespace openstudio {
         epwInTempPath = tempFilesDir / *weatherFilePath;
         if (boost::filesystem::exists(epwInTempPath)){
           epwInTempPathChecksum = checksum(epwInTempPath);
+        }
+      }
+
+      if (!m_savePath.isEmpty()){
+        // We look where the actual model is saved on disk (non temp folder)
+        // eg: /path/to/model.osm
+        openstudio::path osmPath = toPath(m_savePath);
+        // eg: /path/to/model/
+        openstudio::path searchCompanionDir = getCompanionFolder(osmPath);
+        // eg: /path/to/model/files/
+        openstudio::path searchFilesDir = searchCompanionDir / toPath("files");
+
+        // Expected location is companion_folder/files
+        epwInUserPath = searchFilesDir / *weatherFilePath;
+        if (boost::filesystem::exists(epwInUserPath)){
+          epwInUserPathChecksum = checksum(epwInUserPath);
+        } else{
+          // Just in case, we look in the companion_folder
+          epwInUserPath = searchCompanionDir / *weatherFilePath;
+          if (boost::filesystem::exists(epwInUserPath)){
+            epwInUserPathChecksum = checksum(epwInUserPath);
+          }
         }
       }
 
@@ -1598,6 +1608,7 @@ namespace openstudio {
         return m_compLibrary.getModelObject<model::ModelObject>(handle);
       }
     }
+    // TODO: should we handle BCL objects here?
 
     return boost::none;
   }
@@ -1731,11 +1742,17 @@ namespace openstudio {
 
   void OSDocument::updateWindowFilePath()
   {
-    if (m_savePath.isEmpty()){
-      m_mainWindow->setWindowFilePath("Untitled");
+    if( m_savePath.isEmpty() ) {
+      // Because we use the setWindowModified, we need to set the WindowTitle with a "[*]" placeholder where the '*' should appear
+      // m_mainWindow->setWindowFilePath("Untitled");
+      m_mainWindow->setWindowTitle("Untitled[*]");
     }
     else{
+      // m_mainWindow->setWindowTitle();
       m_mainWindow->setWindowFilePath(m_savePath);
+      QFileInfo fi(m_savePath);
+      QString fileName = fi.fileName();
+      m_mainWindow->setWindowTitle(fileName +"[*]");
     }
   }
 

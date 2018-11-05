@@ -350,11 +350,23 @@ namespace detail {
   }
 
   boost::optional<double> ZoneHVACEnergyRecoveryVentilator_Impl::autosizedSupplyAirFlowRate() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate", "m3/s");
+    boost::optional<double> result;
+    result = getAutosizedValue("Design Size Supply Air Flow Rate", "m3/s");
+    // E+ 9.0.0 wrongly returns as User-Specified
+    if (!result) {
+      result = getAutosizedValue("User-Specified Supply Air Flow Rate", "m3/s");
+    }
+    return result;
   }
 
   boost::optional<double> ZoneHVACEnergyRecoveryVentilator_Impl::autosizedExhaustAirFlowRate() const {
-    return getAutosizedValue("Design Size Exhaust Air Flow Rate", "m3/s");
+    boost::optional<double> result;
+    result = getAutosizedValue("Design Size Exhaust Air Flow Rate", "m3/s");
+    // E+ 9.0.0 wrongly returns as User-Specified
+    if (!result) {
+      result = getAutosizedValue("User-Specified Exhaust Air Flow Rate", "m3/s");
+    }
+    return result;
   }
 
   void ZoneHVACEnergyRecoveryVentilator_Impl::autosize() {

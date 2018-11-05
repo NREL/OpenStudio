@@ -8,7 +8,7 @@ if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-project(OpenStudio VERSION 2.7.0)
+project(OpenStudio VERSION 2.7.1)
 
 include(ExternalProject)
 include(CPackComponent)
@@ -65,12 +65,15 @@ set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJ
 set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_BUILD}")
 
 # EnergyPlus Idd version
-set(ENERGYPLUS_VERSION_MAJOR 8)
-set(ENERGYPLUS_VERSION_MINOR 9)
-set(ENERGYPLUS_VERSION_PATCH 0)
+set(ENERGYPLUS_VERSION_MAJOR 9)
+set(ENERGYPLUS_VERSION_MINOR 0)
+set(ENERGYPLUS_VERSION_PATCH 1)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "eba93e8e1b")
+set(ENERGYPLUS_BUILD_SHA "bb7ca4f0da")
+# ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
+# from the github releases
+set(ENERGYPLUS_RELEASE_NAME "v9.0.1")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -82,7 +85,7 @@ configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStu
 if(APPLE)
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPENSTUDIO_VERSION}")
   set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION_BUILD}")
-  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2018 National Renewable Energy Laboratory")
+  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2008-2018, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.")
 endif()
 
 # compiler id for about boxes
@@ -143,6 +146,7 @@ option(BUILD_TESTING "Build testing targets" OFF)
 
 # Build package
 # Requires: EnergyPlus, Radiance
+# TODO: this option is actually unused...
 option(BUILD_PACKAGE "Build package" OFF)
 
 # Build with OpenSSL support
@@ -374,18 +378,16 @@ endif()
 
 # EnergyPlus
 
-# ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
-# from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v8.9.0-WithIDDFixes")
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH df69477dc6598a3b873bb006b9039a3d)
+    set(ENERGYPLUS_EXPECTED_HASH 7b8b8481a5f261800570de0d86e9c608)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
+    # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH xyz)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 92cdf52bb3a2eff5f6b3c485bdce98b1)
+    set(ENERGYPLUS_EXPECTED_HASH 135e17dd5e4ca355b25bf77b61fc8cf2)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -407,10 +409,11 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH a78e35abe81c7a25b8ac4f7e95307e0f)
+    set(ENERGYPLUS_EXPECTED_HASH 4094c49b908ba2feb3f0b352126ea0ac)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
+    ## TODO: update md5 hash, but not present on GitHub as .zip, only .exe for now at least
     set(ENERGYPLUS_EXPECTED_HASH a2cbd995acd1928a7baa18407bb8e949)
   endif()
   if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
@@ -585,8 +588,8 @@ endif()
 # to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
 # next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20180904.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "65e787705580be7d76393cfc61b225c9")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20181010.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e07e5bd74ab643f7ed9f0e013db8c2d0")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -708,11 +711,12 @@ else()
 endif()
 
 
+# using forked version of SWIG at https://github.com/macumber/swig/tree/openstudio_swig_3_0_12
 if(UNIX)
   # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
   ExternalProject_Add(SWIG
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.7.tar.gz
-    URL_MD5 7fff46c84b8c630ede5b0f0827e3d90a
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.12.tar.gz
+    URL_MD5 a7d384966974ed79455a455b517ad83d
     PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/../dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && ./Tools/pcre-build.sh
     CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
     BUILD_COMMAND ${MAKE}
@@ -722,9 +726,9 @@ if(UNIX)
   set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
 else()
   # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
-  set(SWIG_ZIP "swigwin-3.0.7.zip")
-  set(SWIG_DIR "swigwin-3.0.7")
-  set(SWIG_EXPECTED_HASH "d8b5a9ce49c819cc1bfc1e797b85ba7a")
+  set(SWIG_ZIP "swigwin-3.0.12.zip")
+  set(SWIG_DIR "swigwin-3.0.12")
+  set(SWIG_EXPECTED_HASH "8ee412d1278ba3cac22e58f26a842918")
   if(EXISTS "${CMAKE_BINARY_DIR}/${SWIG_ZIP}")
     file(MD5 "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" SWIG_HASH)
   endif()
@@ -1534,7 +1538,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_6_0_20180630.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_7_0_20181012.pdf" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../LICENSE.md" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../CHANGELOG.md" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../copyright.txt" DESTINATION .)
@@ -1559,7 +1563,7 @@ set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
 # Trusty (14.04) uses 3.0-0, all other including Xenial (16.04) use 3.0-0v5
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-0v5 (>= 3.0.0) | libwxgtk3.0-0 (>=3.0.0)")
-# Default the debian package name to include version to allow several versions to be installed concurrently instead of overwritting any existing one
+# Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
 set(CPACK_DEBIAN_PACKAGE_NAME "openstudio-${OpenStudio_VERSION}")
 # CPACK_DEBIAN_PACKAGE_DESCRIPTION defaults to this one too. dpkg-deb -I xxx.deb will show this description
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenStudio is a cross-platform collection of software tools to support whole building energy modeling using EnergyPlus and advanced daylight analysis using Radiance")
@@ -1578,7 +1582,7 @@ elseif( UNIX )
   set( CPACK_SET_DESTDIR ON )
   set( CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/ )
   # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio
-  # Add an abritary link (broken) at build/openstudio (if build/ is your build folder) that already points to the **future** /usr/local/openstudio-x.y.z/bin/openstudio
+  # Add an arbitrary link (broken) at build/openstudio (if build/ is your build folder) that already points to the **future** /usr/local/openstudio-x.y.z/bin/openstudio
   execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio openstudio)
   # Plus a versioned one
   execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio openstudio-${OpenStudio_VERSION})

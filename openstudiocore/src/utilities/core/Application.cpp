@@ -29,11 +29,8 @@
 
 #include "Application.hpp"
 #include "ApplicationPathHelpers.hpp"
-#include "PathHelpers.hpp"
 #include "String.hpp"
-#include <OpenStudio.hxx>
 
-#include <QWidget>
 #include <QSettings>
 
 #if _WIN32 || _MSC_VER
@@ -44,7 +41,6 @@
   #include <dlfcn.h>
 #endif
 
-#include <iostream>
 
 namespace openstudio{
 

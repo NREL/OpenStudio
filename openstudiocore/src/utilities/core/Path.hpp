@@ -64,6 +64,14 @@ UTILITIES_API path toPath(const std::string& s);
 /** QString to path*/
 UTILITIES_API path toPath(const QString& q);
 
+#ifdef WIN32
+/** UTF-16 encoded std::wstring for opening fstreams*/
+UTILITIES_API std::wstring toSystemFilename(const path& p);
+#else
+/** UTF-8 encoded std::string for opening fstreams*/
+UTILITIES_API std::string toSystemFilename(const path& p);
+#endif
+
 /** Optional path*/
 typedef boost::optional<path> OptionalPath;
 

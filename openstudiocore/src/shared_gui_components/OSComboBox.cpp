@@ -300,7 +300,10 @@ void OSComboBox2::onEditTextChanged(const QString & text)
 
     this->blockSignals(true);
     m_choiceConcept->set(value);
-    onModelObjectChanged(); // will be sure to display actual value
+    // We need to trigger repopulating of the ComboBox items so we can actually set the index...
+    // No need to check if m_choiceConcept->editable(), because this slot is connected in completeBind
+    // only if it's editable
+    onChoicesRefreshTrigger();
     this->blockSignals(false);
   }
 }
