@@ -252,13 +252,7 @@ target_link_libraries(openstudio
  openstudio_isomodel_static
  openstudio_gbxml_static
  openstudio_radiance_static
- ${GDBM}
- ${GMP}
- ${EDIT}
- ${UTIL}
- ${CURSES}
- ${Z}
- ${FFI}
+ ${ADDITIONAL_RUBY_LIBS}
 )
 
 if (UNIX AND NOT APPLE)

@@ -583,7 +583,7 @@ if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
 endif()
 endif()
 
-if( UNIX ) 
+if( APPLE ) 
   find_library(GDBM libgdbm.a PATHS /usr/local/opt/gdbm/lib )
   find_library(GMP libgmp.a PATHS /usr/local/opt/gmp/lib )
   find_library(EDIT libedit.dylib )
@@ -591,6 +591,7 @@ if( UNIX )
   find_library(CURSES libncurses.dylib )
   find_library(Z libz.dylib )
   find_library(FFI libffi.dylib )
+  set(ADDITIONAL_RUBY_LIBS GDBM GMP EDIT UTIL CURSES Z FFI)
 endif()
 
 # openstudio gems
