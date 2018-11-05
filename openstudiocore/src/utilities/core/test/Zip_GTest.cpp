@@ -84,7 +84,7 @@ TEST_F(CoreFixture, Unzip_ExtractFileTest)
   ASSERT_TRUE(openstudio::filesystem::exists(outfile1));
 
 
-  std::ifstream ifs(openstudio::toString(outfile1).c_str());
+  std::ifstream ifs(openstudio::toSystemFilename(outfile1));
 
   std::string line;
   std::getline(ifs, line);

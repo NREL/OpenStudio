@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELLWATERSUPPLY_HPP
 #define MODEL_GENERATORFUELCELLWATERSUPPLY_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
 namespace openstudio {

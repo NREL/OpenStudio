@@ -32,18 +32,11 @@
 #include "Application.hpp"
 #include <OpenStudio.hxx>
 
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QDomDocument>
-#include <QThread>
-#include <QAbstractEventDispatcher>
 
-#include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/algorithm/string.hpp>
 
-#include <iostream>
 
 namespace openstudio{
 

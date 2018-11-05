@@ -29,7 +29,6 @@
 
 #include "Vector.hpp"
 
-#include <algorithm>
 #include <random>
 
 // this should all be moved to a utilities/core/Random.h

@@ -1,6 +1,6 @@
 
 OS:Version,
-  {c94f22bd-5ef9-43ab-b862-eff9bda3b729}, !- Handle
+  {3944b8bd-ed06-4f19-9d5c-f74bb26838f7}, !- Handle
   2.7.0;                                  !- Version Identifier
 
 ! Always OnOff Discrete Schedule Type Limits
@@ -871,15 +871,15 @@ OS:EvaporativeFluidCooler:TwoSpeed,
   ;                                       !- Blowdown Makeup Water Usage Schedule Name
 
 OS:Node,
-  {94a940b7-cece-41b6-bf3c-ace7185778a4}, !- Handle
+  {77cfc820-a7bc-45dc-a913-c82a49be522e}, !- Handle
   Diffuser Inlet Node,                    !- Name
   ,                                       !- Inlet Port
-  {058a2b4b-f2bc-44ff-8dd2-6ac249324751}; !- Outlet Port
+  {0869edf9-8014-4a20-a418-78e3091922f3}; !- Outlet Port
 
 OS:Connection,
-  {058a2b4b-f2bc-44ff-8dd2-6ac249324751}, !- Handle
-  {80d121d9-f8de-4f49-878a-c9475d5e9654}, !- Name
-  {94a940b7-cece-41b6-bf3c-ace7185778a4}, !- Source Object
+  {0869edf9-8014-4a20-a418-78e3091922f3}, !- Handle
+  {ea3fb0c0-a5eb-4070-b454-808e00c03682}, !- Name
+  {77cfc820-a7bc-45dc-a913-c82a49be522e}, !- Source Object
   3,                                      !- Outlet Port
   {b883cca7-f436-48ce-ad23-7e8310c7a85d}, !- Target Object
   3;                                      !- Inlet Port
@@ -888,7 +888,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat,
   {b883cca7-f436-48ce-ad23-7e8310c7a85d}, !- Handle
   Diffuser,                               !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  {058a2b4b-f2bc-44ff-8dd2-6ac249324751}, !- Air Inlet Node Name
+  {0869edf9-8014-4a20-a418-78e3091922f3}, !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   AutoSize;                               !- Maximum Air Flow Rate {m3/s}
 

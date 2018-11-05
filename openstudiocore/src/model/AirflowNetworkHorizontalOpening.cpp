@@ -27,15 +27,15 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <model/AirflowNetworkHorizontalOpening.hpp>
-#include <model/AirflowNetworkHorizontalOpening_Impl.hpp>
+#include "AirflowNetworkHorizontalOpening.hpp"
+#include "AirflowNetworkHorizontalOpening_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_AirflowNetworkHorizontalOpening_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

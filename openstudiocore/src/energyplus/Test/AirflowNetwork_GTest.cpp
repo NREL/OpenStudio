@@ -36,8 +36,6 @@
 #include "../../model/Model.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
-#include "../../model/CoilCoolingDXSingleSpeed.hpp"
-#include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../../model/AirflowNetworkSimulationControl.hpp"
 #include "../../model/AirflowNetworkSimulationControl_Impl.hpp"
 #include "../../model/AirflowNetworkDistributionNode.hpp"
