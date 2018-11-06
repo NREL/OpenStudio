@@ -32,8 +32,7 @@
 
 #include <stdexcept>
 
-#include <QRegExp>
-#include <QString>
+#include <boost/regex.hpp>
 
 namespace openstudio
 {
@@ -54,10 +53,9 @@ namespace openstudio
       {
         std::string result;
 
-        QRegExp regex("(\\w*\\.rb:\\d*)");
-        int pos = regex.indexIn(QString::fromStdString(m_location));
-        if (pos > -1) {
-          result = regex.cap(1).toStdString();
+        boost::regex regex("\\w*\\.rb:\\d*");
+        if (boost::regex_search(location, m, regex)) {
+          result = m[0];
         }
 
         return result;
