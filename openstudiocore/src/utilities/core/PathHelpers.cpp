@@ -360,6 +360,8 @@ bool isNetworkPath(const path& p)
 
 #ifdef Q_OS_WIN
 
+  // TODO: JM 2018-11-06: couldn't this entire block be replaced by "PathIsNetworkPath"?
+
   // if this is a windows drive, check if this is mapped to a remote drive
   boost::optional<std::string> wdl = windowsDriveLetter(p);
   if (wdl){
