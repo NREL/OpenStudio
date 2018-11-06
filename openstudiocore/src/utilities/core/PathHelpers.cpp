@@ -31,7 +31,7 @@
 #include "Assert.hpp"
 #include "FilesystemHelpers.hpp"
 
-#include <QRegularExpression>
+#include <boost/regex.hpp>
 
 #ifdef Q_OS_WIN
 #include <Windows.h>
@@ -340,12 +340,13 @@ bool isEmptyDirectory(const path& dirName)
 boost::optional<std::string> windowsDriveLetter(const path& p)
 {
   boost::optional<std::string> result;
-  QString q = toQString(p);
 
-  QRegularExpression regex("^([a-zA-Z]):");
-  QRegularExpressionMatch match = regex.match(q);
-  if (match.hasMatch()){
-    result = toString(match.captured(1));
+  std::string path_str = toString(p);
+
+  boost::regex regex("^([a-zA-Z]):");
+  boost::smatch m;
+  if (boost::regex_search(path_str, m, regex)) {
+    result = m[1];
   }
 
   return result;
@@ -369,10 +370,9 @@ bool isNetworkPath(const path& p)
   }
 
   // check if path begins with \\, e.g. \\server\file
-  QString q = toQString(p.string()); // toQString(p) converts backslashes to slashes
-  QRegularExpression regex("^\\\\\\\\");
-  QRegularExpressionMatch match = regex.match(q);
-  if (match.hasMatch()){
+  // Shouldn't convert backslashes to slashes
+  boost::regex regex("^\\\\\\\\");
+  if (boost::regex_search(p.string(), regex)) {
     return true;
   }
 
