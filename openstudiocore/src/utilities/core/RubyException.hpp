@@ -54,7 +54,8 @@ namespace openstudio
         std::string result;
 
         boost::regex regex("\\w*\\.rb:\\d*");
-        if (boost::regex_search(location, m, regex)) {
+        boost::smatch m;
+        if (boost::regex_search(m_location, m, regex)) {
           result = m[0];
         }
 
