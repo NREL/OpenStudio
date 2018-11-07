@@ -1611,8 +1611,11 @@ set(${target_name}_qrc
 # DLM: TODO, replace with embed_files
 qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
-# Glob all files inside model/resources
-file(GLOB_RECURSE embedded_files  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/resources/**/*.*")")
+# Glob all JSON files inside model/resources
+file(GLOB_RECURSE embedded_files "${CMAKE_CURRENT_SOURCE_DIR}/resources/**/*.*")
+# Exclude rb scripts (helpers to generate JSON files)
+list(LENGTH embedded_files LENFILES) 
+list(FILTER embedded_files EXCLUDE REGEX ".*\.rb")
 foreach( _FILE ${embedded_files} )
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
   list(APPEND E_FILES ${_FILE})
