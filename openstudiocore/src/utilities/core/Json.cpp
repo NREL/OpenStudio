@@ -107,7 +107,7 @@ Json::Value parseStandardsJSON(const std::string& embedded_path, const std::stri
 
   bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &m_standardsRoot, &formattedErrors);
   if (!parsingSuccessful){
-     openstudio::Exception(std::string("Embedded JSON file at '" + embedded_path + "' cannot be processed: " + formattedErrors));
+    throw openstudio::Exception(std::string("Embedded JSON file at '" + embedded_path + "' cannot be processed: " + formattedErrors));
   }
 
   // Check that primary key is indeed in there, and that the resulting object is an array

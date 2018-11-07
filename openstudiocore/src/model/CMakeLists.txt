@@ -1611,11 +1611,11 @@ qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
 
 # Embed resource files
-# Glob all JSON files inside model/resources
-file(GLOB_RECURSE embedded_files "${CMAKE_CURRENT_SOURCE_DIR}/resources/**/*.*")
+# Glob all files inside model/Resources
+file(GLOB_RECURSE embedded_files "${CMAKE_CURRENT_SOURCE_DIR}/Resources/**/*.*")
 # Exclude rb scripts (helpers to generate JSON files)
-list(LENGTH embedded_files LENFILES) 
 list(FILTER embedded_files EXCLUDE REGEX ".*\.rb")
+# We compute a relative path, so that they end up in :/Resources/
 foreach( _FILE ${embedded_files} )
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
   list(APPEND E_FILES ${_FILE})
