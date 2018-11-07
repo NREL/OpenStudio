@@ -1617,6 +1617,17 @@ set(${target_name}_qrc
 # DLM: TODO, replace with embed_files
 qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
+# Glob all files inside model/resources
+file(GLOB_RECURSE embedded_files  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/resources/**/*.*")")
+foreach( _FILE ${embedded_files} )
+  file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
+  list(APPEND E_FILES ${_FILE})
+  list(APPEND E_PATHS ${LOCATION})
+endforeach()
+
+include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+embed_files("${E_FILES}" "${E_PATHS}" OUTPUT openstudio)
+
 
 set(${target_name}_depends
   openstudio_utilities

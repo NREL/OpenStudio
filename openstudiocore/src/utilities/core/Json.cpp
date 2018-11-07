@@ -34,6 +34,7 @@
 #include "FilesystemHelpers.hpp"
 
 #include <OpenStudio.hxx>
+#include <utilities/embedded_files.hxx>
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -94,23 +95,19 @@ bool checkKeyAndType(const Json::Value& value, const std::string& key, const Jso
   return (checkKey(value, key) && checkType(value, key, valueType));
 }
 
-Json::Value parseStandardsJSON(openstudio::filesystem::path& path, std::string primaryKey) {
+Json::Value parseStandardsJSON(const std::string& embedded_path, const std::string& primaryKey) {
   Json::Value m_standardsRoot;
 
-  if (!boost::filesystem::exists(path) || !boost::filesystem::is_regular_file(path)){
-     openstudio::Exception(std::string("Path '" + path.string() + "' is not a valid file"));
-  }
-
-  // open file
-  std::ifstream ifs(openstudio::toSystemFilename(path));
+  std::string fileContent = ::openstudio::embedded_files::getFileAsString(embedded_path);
+  std::istringstream ss(fileContent);
 
   Json::CharReaderBuilder rbuilder;
   rbuilder["collectComments"] = false;
   std::string formattedErrors;
 
-  bool parsingSuccessful = Json::parseFromStream(rbuilder, ifs, &m_standardsRoot, &formattedErrors);
+  bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &m_standardsRoot, &formattedErrors);
   if (!parsingSuccessful){
-     openstudio::Exception(std::string("JSON file at '" + path.string() + "' cannot be processed: " + formattedErrors));
+     openstudio::Exception(std::string("Embedded JSON file at '" + embedded_path + "' cannot be processed: " + formattedErrors));
   }
 
   // Check that primary key is indeed in there, and that the resulting object is an array

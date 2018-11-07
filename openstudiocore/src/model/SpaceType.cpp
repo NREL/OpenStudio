@@ -1518,14 +1518,13 @@ namespace detail {
 
   void SpaceType_Impl::parseStandardsJSON() const
   {
-    std::string fileName = "OpenStudio_Standards_space_types_merged.json";
-    std::string primaryKey = "space_types";
     if (m_standardsArr.empty()) {
-      // Hum, problem is where we will find this file now...
-      // QFile file(toQString(":/resources/standards/" + fileName));
+      // Embedded file path
+      std::string embedded_path = ":/resources/standards/OpenStudio_Standards_space_types_merged.json";
+      std::string primaryKey = "space_types";
+
       // Call utilities/core/Json.cpp helper
-      openstudio::path p = toPath(fileName);
-      m_standardsArr = openstudio::parseStandardsJSON(p, primaryKey);
+      m_standardsArr = openstudio::parseStandardsJSON(embedded_path, primaryKey);
     }
   }
 
