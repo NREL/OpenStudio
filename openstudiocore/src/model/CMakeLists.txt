@@ -1603,14 +1603,8 @@ set(${target_name}_swig_src
 
 qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
-set(${target_name}_qrc
-  Model.qrc
-)
 
-# generate rules for building source files from the resources
-# DLM: TODO, replace with embed_files
-qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
-
+# Embed resource files
 # Glob all JSON files inside model/resources
 file(GLOB_RECURSE embedded_files "${CMAKE_CURRENT_SOURCE_DIR}/resources/**/*.*")
 # Exclude rb scripts (helpers to generate JSON files)
@@ -1630,7 +1624,7 @@ set(${target_name}_depends
   openstudio_utilities
 )
 
-add_library(${target_name} ${${target_name}_src} ${${target_name}_moc_src} ${${target_name}_qrcs})
+add_library(${target_name} ${${target_name}_src} ${${target_name}_moc_src})
 target_link_libraries(${target_name} "${${target_name}_depends}")
 AddPCH(${target_name})
 
@@ -1638,7 +1632,7 @@ set(${target_name}_static_depends
   openstudio_utilities_static
 )
 
-add_library(${target_name}_static ${${target_name}_src} ${${target_name}_moc_src} ${${target_name}_qrcs})
+add_library(${target_name}_static ${${target_name}_src} ${${target_name}_moc_src})
 
 target_link_libraries(${target_name}_static "${${target_name}_static_depends}")
 
