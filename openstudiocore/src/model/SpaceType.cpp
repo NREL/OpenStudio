@@ -92,6 +92,10 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include "../utilities/core/Json.hpp"
+#include <jsoncpp/json.h>
+
+
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -1514,25 +1518,14 @@ namespace detail {
 
   void SpaceType_Impl::parseStandardsJSON() const
   {
-    if (m_standardsArr.empty()){
-      QFile file(":/resources/standards/OpenStudio_Standards_space_types_merged.json");
-      if (file.open(QFile::ReadOnly)) {
-        QJsonParseError parseError;
-        QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll(), &parseError);
-        file.close();
-        if( QJsonParseError::NoError == parseError.error) {
-          QJsonObject jsonObj = jsonDoc.object();
-          if( (jsonObj.size() == 1) && jsonObj.contains("space_types") && jsonObj["space_types"].isArray()) {
-            m_standardsArr = jsonObj["space_types"].toArray();
-          } else {
-            LOG_AND_THROW("Wrong format encountered in JSON file at 'resources/standards/OpenStudio_Standards_space_types.json'");
-          }
-        } else {
-          LOG_AND_THROW("Problem occured in parsing JSON file at 'resources/standards/OpenStudio_Standards_space_types.json'");
-        }
-      } else {
-        LOG_AND_THROW("Cannot open file at 'resources/standards/OpenStudio_Standards_space_types.json' for parsing");
-      }
+    std::string fileName = "OpenStudio_Standards_space_types_merged.json";
+    std::string primaryKey = "space_types";
+    if (m_standardsArr.empty()) {
+      // Hum, problem is where we will find this file now...
+      // QFile file(toQString(":/resources/standards/" + fileName));
+      // Call utilities/core/Json.cpp helper
+      openstudio::path p = toPath(fileName);
+      m_standardsArr = openstudio::parseStandardsJSON(p, primaryKey);
     }
   }
 

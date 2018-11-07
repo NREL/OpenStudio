@@ -33,7 +33,6 @@
 #include "PathHelpers.hpp"
 #include "FilesystemHelpers.hpp"
 
-
 #include <OpenStudio.hxx>
 
 #include <QJsonDocument>
@@ -94,6 +93,37 @@ bool checkKeyAndType(const Json::Value& value, const std::string& key, const Jso
 {
   return (checkKey(value, key) && checkType(value, key, valueType));
 }
+
+Json::Value parseStandardsJSON(openstudio::filesystem::path& path, std::string primaryKey) {
+  Json::Value m_standardsRoot;
+
+  if (!boost::filesystem::exists(path) || !boost::filesystem::is_regular_file(path)){
+     openstudio::Exception(std::string("Path '" + path.string() + "' is not a valid file"));
+  }
+
+  // open file
+  std::ifstream ifs(openstudio::toSystemFilename(path));
+
+  Json::CharReaderBuilder rbuilder;
+  rbuilder["collectComments"] = false;
+  std::string formattedErrors;
+
+  bool parsingSuccessful = Json::parseFromStream(rbuilder, ifs, &m_standardsRoot, &formattedErrors);
+  if (!parsingSuccessful){
+     openstudio::Exception(std::string("JSON file at '" + path.string() + "' cannot be processed: " + formattedErrors));
+  }
+
+  // Check that primary key is indeed in there, and that the resulting object is an array
+  openstudio::assertKeyAndType(m_standardsRoot, primaryKey, Json::arrayValue);
+
+  // Return that
+  return m_standardsRoot.get(primaryKey, Json::arrayValue);
+
+}
+
+/*****************************************************************************************************************************************************
+*                                                          Below everything is with QJson                                                           *
+*****************************************************************************************************************************************************/
 
 
 QVariant jsonMetadata() {
