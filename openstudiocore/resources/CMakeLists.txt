@@ -42,6 +42,7 @@ set(utilities_resources_src
   utilities/Filetypes/USA_CT_New.Haven-Tweed.AP.725045_TMY3.epw
   utilities/Filetypes/TDV_2008_kBtu_CZ13.csv
   utilities/Filetypes/TUN_Tunis.607150_IWEC.epw
+  utilities/Filetypes/leapday-test.epw
   utilities/Filetypes/min.osw
   utilities/Filetypes/full.osw
   utilities/Geometry/floorplan.json

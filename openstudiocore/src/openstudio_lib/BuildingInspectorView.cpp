@@ -285,6 +285,25 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   ++row;
 
+    // Standards Template
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Template: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_standardsTemplateComboBox = new QComboBox();
+  m_standardsTemplateComboBox->setEditable(true);
+  m_standardsTemplateComboBox->setDuplicatesEnabled(false);
+  m_standardsTemplateComboBox->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_standardsTemplateComboBox);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
   // Standards Building Type
   vLayout = new QVBoxLayout();
 
@@ -298,23 +317,6 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   m_standardsBuildingTypeComboBox->setDuplicatesEnabled(false);
   m_standardsBuildingTypeComboBox->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_standardsBuildingTypeComboBox);
-
-  vLayout->addStretch();
-
-  mainGridLayout->addLayout(vLayout, row, 0);
-  mainGridLayout->setRowMinimumHeight(row, 30);
-
-  // Relocatable
-  vLayout = new QVBoxLayout();
-
-  label = new QLabel();
-  label->setText("Relocatable: ");
-  label->setObjectName("StandardsInfo");
-  vLayout->addWidget(label);
-
-  m_relocatable = new OSSwitch2();
-  m_relocatable->makeTrueFalse();
-  vLayout->addWidget(m_relocatable);
 
   vLayout->addStretch();
 
@@ -417,6 +419,25 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   mainGridLayout->addLayout(vLayout, row, 0);
   mainGridLayout->setRowMinimumHeight(row, 30);
 
+    // Relocatable
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Relocatable: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_relocatable = new OSSwitch2();
+  m_relocatable->makeTrueFalse();
+  vLayout->addWidget(m_relocatable);
+
+  vLayout->addStretch();
+
+  mainGridLayout->addLayout(vLayout, row, 1);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+
+  // Separator line
   ++row;
 
   line = new QFrame();
@@ -535,6 +556,33 @@ void BuildingInspectorView::onUpdate()
 {
 }
 
+void BuildingInspectorView::editStandardsTemplate(const QString & text)
+{
+  if (m_building){
+    std::string standardsTemplate = toString(text);
+    if (standardsTemplate.empty()){
+      m_building->resetStandardsTemplate();
+    }else{
+      m_building->setStandardsTemplate(standardsTemplate);
+    }
+  }
+}
+
+void BuildingInspectorView::standardsTemplateChanged(const QString & text)
+{
+  if (m_building){
+    std::string standardsTemplate = toString(text);
+    if (standardsTemplate.empty()){
+      m_building->resetStandardsTemplate();
+    }else{
+      m_building->setStandardsTemplate(standardsTemplate);
+    }
+    populateStandardsTemplates();
+    // Repopulate standards Template
+    populateStandardsBuildingTypes();
+  }
+}
+
 void BuildingInspectorView::editStandardsBuildingType(const QString & text)
 {
   if (m_building){
@@ -571,6 +619,7 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
     boost::optional<StringSetter>(std::bind(&model::Building::setName, m_building.get_ptr(),std::placeholders::_1))
   );
 
+  populateStandardsTemplates();
   populateStandardsBuildingTypes();
 
   m_spaceTypeVectorController->attach(building);
@@ -659,6 +708,9 @@ void BuildingInspectorView::detach()
 
   m_nameEdit->unbind();
 
+  disconnect(m_standardsTemplateComboBox, nullptr, this, nullptr);
+  m_standardsTemplateComboBox->clear();
+
   disconnect(m_standardsBuildingTypeComboBox, nullptr, this, nullptr);
   m_standardsBuildingTypeComboBox->clear();
 
@@ -673,6 +725,30 @@ void BuildingInspectorView::detach()
   m_relocatable->unbind();
   m_floorToCeilingHeight->unbind();
 
+}
+
+void BuildingInspectorView::populateStandardsTemplates()
+{
+  disconnect(m_standardsTemplateComboBox, nullptr, this, nullptr);
+
+  m_standardsTemplateComboBox->clear();
+  if (m_building){
+    m_standardsTemplateComboBox->addItem("");
+    std::vector<std::string> suggestedStandardsTemplates = m_building->suggestedStandardsTemplates();
+    for (const std::string& standardsTemplate : suggestedStandardsTemplates) {
+      m_standardsTemplateComboBox->addItem(toQString(standardsTemplate));
+    }
+    boost::optional<std::string> standardsTemplate = m_building->standardsTemplate();
+    if (standardsTemplate){
+      OS_ASSERT(!suggestedStandardsTemplates.empty());
+      m_standardsTemplateComboBox->setCurrentIndex(1);
+    }else{
+      m_standardsTemplateComboBox->setCurrentIndex(0);
+    }
+  }
+
+  connect(m_standardsTemplateComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &BuildingInspectorView::standardsTemplateChanged);
+  connect(m_standardsTemplateComboBox, &QComboBox::editTextChanged, this, &BuildingInspectorView::editStandardsTemplate);
 }
 
 void BuildingInspectorView::populateStandardsBuildingTypes()

@@ -37,7 +37,6 @@
 #include "Node.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
-#include "AirTerminalSingleDuctUncontrolled.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_ZoneSplitter_FieldEnums.hxx>

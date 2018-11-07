@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELLPOWERMODULE_HPP
 #define MODEL_GENERATORFUELCELLPOWERMODULE_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 #include "GeneratorFuelCell.hpp"
 #include "GeneratorFuelCell_Impl.hpp"
@@ -157,7 +157,7 @@ class MODEL_API GeneratorFuelCellPowerModule : public ModelObject {
   double maximumOperatingPoint() const;
 
   // Return optional parent generator
-  GeneratorFuelCell fuelCell() const;
+  boost::optional<GeneratorFuelCell> fuelCell() const;
 
   //@}
   /** @name Setters */

@@ -29,7 +29,7 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
 #include "../ExternalInterfaceFunctionalMockupUnitExportToSchedule.hpp"
 #include "../ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl.hpp"

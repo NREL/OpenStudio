@@ -31,25 +31,13 @@
 #include "RemoteBCL.hpp"
 #include "../core/Application.hpp"
 #include "../core/Assert.hpp"
-#include "../core/Path.hpp"
 #include "../core/PathHelpers.hpp"
 #include "../core/System.hpp"
 #include "../core/UnzipFile.hpp"
-#include "../core/ZipFile.hpp"
 
 #include <QDir>
-#include <QDomDocument>
-#include <QDomElement>
-#include <QFile>
-#include <QMessageBox>
 #include <QMutex>
-#include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QNetworkRequest>
-#include <QSslError>
-#include <QTextStream>
-#include <QSslSocket>
-#include <QUrlQuery>
 
 #define REMOTE_PRODUCTION_SERVER "https://bcl.nrel.gov"
 #define REMOTE_DEVELOPMENT_SERVER "http://bcl7.development.nrel.gov"

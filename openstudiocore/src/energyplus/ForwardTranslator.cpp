@@ -54,6 +54,9 @@
 #include "../model/UtilityBill_Impl.hpp"
 #include "../model/ElectricLoadCenterDistribution.hpp"
 #include "../model/ElectricLoadCenterDistribution_Impl.hpp"
+#include "../model/ShadingControl.hpp"
+#include "../model/ShadingControl_Impl.hpp"
+#include "../model/AdditionalProperties.hpp"
 #include "../model/ConcreteModelObjects.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
@@ -369,6 +372,56 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
+  // ensure shading controls only reference windows in a single zone and determine control sequence number
+  // DLM: ideally E+ would not need to know the zone, shading controls could work across zones
+  std::vector<ShadingControl> shadingControls = model.getConcreteModelObjects<ShadingControl>();
+  std::sort(shadingControls.begin(), shadingControls.end(), WorkspaceObjectNameLess());
+  std::map<Handle, ShadingControlVector> zoneHandleToShadingControlVectorMap;
+  for (auto& shadingControl : shadingControls) {
+    std::set<Handle> thisZoneHandleSet;
+    for (auto& subSurface : shadingControl.subSurfaces()) {
+      boost::optional<Space> space = subSurface.space();
+      if (space) {
+        boost::optional<ThermalZone> thermalZone = space->thermalZone();
+        if (thermalZone) {
+          Handle zoneHandle = thermalZone->handle();
+          if (thisZoneHandleSet.empty()) {
+            // first thermal zone, no clone
+            thisZoneHandleSet.insert(zoneHandle);
+            auto it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
+            if (it == zoneHandleToShadingControlVectorMap.end()) {
+              zoneHandleToShadingControlVectorMap.insert(std::make_pair(zoneHandle, std::vector<ShadingControl>()));
+            }
+            it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
+            OS_ASSERT(it != zoneHandleToShadingControlVectorMap.end());
+            it->second.push_back(shadingControl);
+            shadingControl.additionalProperties().setFeature("Shading Control Sequence Number", (int)it->second.size());
+          } else if (thisZoneHandleSet.find(zoneHandle) != thisZoneHandleSet.end()) {
+            // already in here, good to go
+
+          } else {
+            // additional thermal zone, must clone
+            thisZoneHandleSet.insert(zoneHandle);
+            ShadingControl clone = shadingControl.clone(model).cast<ShadingControl>();
+            // assign clone to control subSurface
+            subSurface.setShadingControl(clone);
+            auto it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
+            if (it == zoneHandleToShadingControlVectorMap.end()) {
+              zoneHandleToShadingControlVectorMap.insert(std::make_pair(zoneHandle, std::vector<ShadingControl>()));
+            }
+            it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
+            OS_ASSERT(it != zoneHandleToShadingControlVectorMap.end());
+            it->second.push_back(clone);
+            clone.additionalProperties().setFeature("Shading Control Sequence Number", (int)it->second.size());
+          }
+        } else {
+          LOG(Warn, "Cannot find ThermalZone for " << subSurface.briefDescription() << " referencing " << shadingControl.briefDescription());
+        }
+      } else {
+        LOG(Warn, "Cannot find Space for " << subSurface.briefDescription() << " referencing " << shadingControl.briefDescription());
+      }
+    }
+  }
 
 
   // temp code
@@ -643,10 +696,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirTerminalSingleDuctSeriesPIUReheat(airTerminal);
       break;
     }
-  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled :
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat :
     {
-      model::AirTerminalSingleDuctUncontrolled airTerminal = modelObject.cast<AirTerminalSingleDuctUncontrolled>();
-      retVal = translateAirTerminalSingleDuctUncontrolled(airTerminal);
+      model::AirTerminalSingleDuctConstantVolumeNoReheat airTerminal = modelObject.cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
+      retVal = translateAirTerminalSingleDuctConstantVolumeNoReheat(airTerminal);
       break;
     }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat :
@@ -1771,74 +1824,75 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell:
   {
-    // Will also translate the Generator:FuelCell if there is one
+    // Will also translate all children of Generator:FuelCell (Generator:FuelCell:AirSupply, etc)
     model::GeneratorFuelCell temp = modelObject.cast<GeneratorFuelCell>();
     retVal = translateGeneratorFuelCell(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_AirSupply:
   {
-    // Will also translate the Generator:FuelCell:AirSupply if there is one
     model::GeneratorFuelCellAirSupply temp = modelObject.cast<GeneratorFuelCellAirSupply>();
     retVal = translateGeneratorFuelCellAirSupply(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_AuxiliaryHeater:
   {
-    // Will also translate the Generator:FuelCell:AuxiliaryHeater if there is one
     model::GeneratorFuelCellAuxiliaryHeater temp = modelObject.cast<GeneratorFuelCellAuxiliaryHeater>();
     retVal = translateGeneratorFuelCellAuxiliaryHeater(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_ElectricalStorage:
   {
-    // Will also translate the Generator:FuelCell:ElectricalStorage if there is one
     model::GeneratorFuelCellElectricalStorage temp = modelObject.cast<GeneratorFuelCellElectricalStorage>();
     retVal = translateGeneratorFuelCellElectricalStorage(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger:
   {
-    // Will also translate the Generator:FuelCell:ExhaustGasToWaterHeatExchanger if there is one
     model::GeneratorFuelCellExhaustGasToWaterHeatExchanger temp = modelObject.cast<GeneratorFuelCellExhaustGasToWaterHeatExchanger>();
     retVal = translateGeneratorFuelCellExhaustGasToWaterHeatExchanger(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_Inverter:
   {
-    // Will also translate the Generator:FuelCell:Inverter if there is one
     model::GeneratorFuelCellInverter temp = modelObject.cast<GeneratorFuelCellInverter>();
     retVal = translateGeneratorFuelCellInverter(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_PowerModule:
   {
-    // Will also translate the Generator:FuelCell:PowerModule if there is one
     model::GeneratorFuelCellPowerModule temp = modelObject.cast<GeneratorFuelCellPowerModule>();
     retVal = translateGeneratorFuelCellPowerModule(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_StackCooler:
   {
-    // Will also translate the Generator:FuelCell:StackCooler if there is one
     model::GeneratorFuelCellStackCooler temp = modelObject.cast<GeneratorFuelCellStackCooler>();
     retVal = translateGeneratorFuelCellStackCooler(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_WaterSupply:
   {
-    // Will also translate the Generator:FuelCell:WaterSupply if there is one
     model::GeneratorFuelCellWaterSupply temp = modelObject.cast<GeneratorFuelCellWaterSupply>();
     retVal = translateGeneratorFuelCellWaterSupply(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelSupply:
   {
-    // Will also translate the Generator:FuelSupply if there is one
     model::GeneratorFuelSupply temp = modelObject.cast<GeneratorFuelSupply>();
     retVal = translateGeneratorFuelSupply(temp);
     break;
   }
+  // TODO: JM 2018-10-12 Placeholder for Generator:MicroCHP if/when it is implemented
+  // to remember that translateGeneratorMicroCHP should be calling translation of child GeneratorFuelSupply as needed
+  /*
+   *case openstudio::IddObjectType::OS_Generator_MicroCHP:
+   *{
+   *  model::GeneratorFuelSupply temp = modelObject.cast<GeneratorMicroCHP>();
+   *  retVal = translateGeneratorMicroCHP(temp);
+   *  break;
+   *}
+   */
   case openstudio::IddObjectType::OS_Generator_Photovoltaic:
   {
     model::GeneratorPhotovoltaic temp = modelObject.cast<GeneratorPhotovoltaic>();
@@ -3365,13 +3419,9 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_AirTerminal_DualDuct_ConstantVolume);
   result.push_back(IddObjectType::OS_AirTerminal_DualDuct_VAV_OutdoorAir);
   result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam);
-  result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled);
-
-  // TODO: @kbenne is this needed here?
-  // Does this mean these objects get translated even if not connected to anything?
-  result.push_back(IddObjectType::OS_AvailabilityManagerAssignmentList);
-  result.push_back(IddObjectType::OS_AvailabilityManager_Scheduled);
-
+  result.push_back(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat);
+  // Unlike other AVMs, this one doesn't live on the AVM AssignmentList, so need to tell it to translate all the time
+  result.push_back(IddObjectType::OS_AvailabilityManager_HybridVentilation);
   result.push_back(IddObjectType::OS_Chiller_Electric_EIR);
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_SingleSpeed);
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_TwoSpeed);
@@ -3428,15 +3478,18 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Distribution);
   result.push_back(IddObjectType::OS_Generator_MicroTurbine);
   result.push_back(IddObjectType::OS_Generator_FuelCell);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_AirSupply);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_AuxiliaryHeater);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_ElectricalStorage);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_Inverter);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_PowerModule);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_StackCooler);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_WaterSupply);
-  result.push_back(IddObjectType::OS_Generator_FuelSupply);
+  // Fuel Cell is responsible for translating these
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_AirSupply);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_AuxiliaryHeater);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_ElectricalStorage);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_Inverter);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_PowerModule);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_StackCooler);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_WaterSupply);
+  // Fuel Cell (and MicroCHP when implemented) are responsible for translating this one
+  // result.push_back(IddObjectType::OS_Generator_FuelSupply);
+
   result.push_back(IddObjectType::OS_Generator_Photovoltaic);
   result.push_back(IddObjectType::OS_Generator_PVWatts);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);

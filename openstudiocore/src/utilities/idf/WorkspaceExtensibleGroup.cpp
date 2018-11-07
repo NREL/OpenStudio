@@ -31,10 +31,7 @@
 #include "WorkspaceObject.hpp"
 #include "WorkspaceObject_Impl.hpp"
 
-#include "../idd/IddObjectProperties.hpp"
-#include "../idd/IddFieldProperties.hpp"
 
-#include <boost/lexical_cast.hpp>
 
 using std::shared_ptr;
 using std::dynamic_pointer_cast;

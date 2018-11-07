@@ -1409,7 +1409,7 @@ namespace openstudio {
     int numWidgets = 0;
 
     // start with a default sane value
-    QSize recommendedSize(100, 20);
+    QSize recommendedSize(100, 20); // TODO: unused
     bool hasSubRows = false;
 
     // wrapper - this is the thing that will be returned by this method.  The outermost widget that forms a gridview cell.

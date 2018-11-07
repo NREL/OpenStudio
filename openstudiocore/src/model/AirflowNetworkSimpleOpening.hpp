@@ -30,7 +30,7 @@
 #ifndef MODEL_AIRFLOWNETWORKSIMPLEOPENING_HPP
 #define MODEL_AIRFLOWNETWORKSIMPLEOPENING_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
 #include "AirflowNetworkComponent.hpp"
 

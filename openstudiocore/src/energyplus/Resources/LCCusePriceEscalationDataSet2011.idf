@@ -23,7 +23,7 @@
 ! converted into EnergyPlus objects using a spreadsheet called ConvertENCOSTtoEnergyPlusLifeCycleCost.xls
 ! which is available upon request.
 
-  Version,8.9;
+  Version,9.0;
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Residential-Electricity,  !- LCC Price Escalation Name
@@ -39,27 +39,27 @@
     0.9944,                  !- Year 7 Escalation
     0.9870,                  !- Year 8 Escalation
     0.9845,                  !- Year 9 Escalation
-    0.9780,                  !- Year 10 Escalation
-    0.9696,                  !- Year 11 Escalation
-    0.9611,                  !- Year 12 Escalation
-    0.9540,                  !- Year 13 Escalation
-    0.9486,                  !- Year 14 Escalation
-    0.9410,                  !- Year 15 Escalation
-    0.9337,                  !- Year 16 Escalation
-    0.9274,                  !- Year 17 Escalation
-    0.9223,                  !- Year 18 Escalation
-    0.9184,                  !- Year 19 Escalation
-    0.9164,                  !- Year 20 Escalation
-    0.9184,                  !- Year 21 Escalation
-    0.9208,                  !- Year 22 Escalation
-    0.9249,                  !- Year 23 Escalation
-    0.9287,                  !- Year 24 Escalation
-    0.9272,                  !- Year 25 Escalation
-    0.9236,                  !- Year 26 Escalation
-    0.9201,                  !- Year 27 Escalation
-    0.9166,                  !- Year 28 Escalation
-    0.9132,                  !- Year 29 Escalation
-    0.9097;                  !- Year 30 Escalation
+    0.9780,                  !- <none>
+    0.9696,                  !- <none>
+    0.9611,                  !- <none>
+    0.9540,                  !- <none>
+    0.9486,                  !- <none>
+    0.9410,                  !- <none>
+    0.9337,                  !- <none>
+    0.9274,                  !- <none>
+    0.9223,                  !- <none>
+    0.9184,                  !- <none>
+    0.9164,                  !- <none>
+    0.9184,                  !- <none>
+    0.9208,                  !- <none>
+    0.9249,                  !- <none>
+    0.9287,                  !- <none>
+    0.9272,                  !- <none>
+    0.9236,                  !- <none>
+    0.9201,                  !- <none>
+    0.9166,                  !- <none>
+    0.9132,                  !- <none>
+    0.9097;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Residential-Distillate Oil,  !- LCC Price Escalation Name
@@ -75,27 +75,27 @@
     1.0906,                  !- Year 7 Escalation
     1.1185,                  !- Year 8 Escalation
     1.1371,                  !- Year 9 Escalation
-    1.1515,                  !- Year 10 Escalation
-    1.1705,                  !- Year 11 Escalation
-    1.1826,                  !- Year 12 Escalation
-    1.2031,                  !- Year 13 Escalation
-    1.2161,                  !- Year 14 Escalation
-    1.2263,                  !- Year 15 Escalation
-    1.2402,                  !- Year 16 Escalation
-    1.2509,                  !- Year 17 Escalation
-    1.2639,                  !- Year 18 Escalation
-    1.2649,                  !- Year 19 Escalation
-    1.2672,                  !- Year 20 Escalation
-    1.2718,                  !- Year 21 Escalation
-    1.2751,                  !- Year 22 Escalation
-    1.2825,                  !- Year 23 Escalation
-    1.2895,                  !- Year 24 Escalation
-    1.2932,                  !- Year 25 Escalation
-    1.2960,                  !- Year 26 Escalation
-    1.2993,                  !- Year 27 Escalation
-    1.3020,                  !- Year 28 Escalation
-    1.3048,                  !- Year 29 Escalation
-    1.3081;                  !- Year 30 Escalation
+    1.1515,                  !- <none>
+    1.1705,                  !- <none>
+    1.1826,                  !- <none>
+    1.2031,                  !- <none>
+    1.2161,                  !- <none>
+    1.2263,                  !- <none>
+    1.2402,                  !- <none>
+    1.2509,                  !- <none>
+    1.2639,                  !- <none>
+    1.2649,                  !- <none>
+    1.2672,                  !- <none>
+    1.2718,                  !- <none>
+    1.2751,                  !- <none>
+    1.2825,                  !- <none>
+    1.2895,                  !- <none>
+    1.2932,                  !- <none>
+    1.2960,                  !- <none>
+    1.2993,                  !- <none>
+    1.3020,                  !- <none>
+    1.3048,                  !- <none>
+    1.3081;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Residential-Natural gas,  !- LCC Price Escalation Name
@@ -111,27 +111,27 @@
     0.9728,                  !- Year 7 Escalation
     0.9868,                  !- Year 8 Escalation
     1.0025,                  !- Year 9 Escalation
-    1.0182,                  !- Year 10 Escalation
-    1.0330,                  !- Year 11 Escalation
-    1.0470,                  !- Year 12 Escalation
-    1.0602,                  !- Year 13 Escalation
-    1.0743,                  !- Year 14 Escalation
-    1.0866,                  !- Year 15 Escalation
-    1.1007,                  !- Year 16 Escalation
-    1.1122,                  !- Year 17 Escalation
-    1.1254,                  !- Year 18 Escalation
-    1.1378,                  !- Year 19 Escalation
-    1.1502,                  !- Year 20 Escalation
-    1.1617,                  !- Year 21 Escalation
-    1.1733,                  !- Year 22 Escalation
-    1.1840,                  !- Year 23 Escalation
-    1.1947,                  !- Year 24 Escalation
-    1.2063,                  !- Year 25 Escalation
-    1.2186,                  !- Year 26 Escalation
-    1.2302,                  !- Year 27 Escalation
-    1.2434,                  !- Year 28 Escalation
-    1.2558,                  !- Year 29 Escalation
-    1.2690;                  !- Year 30 Escalation
+    1.0182,                  !- <none>
+    1.0330,                  !- <none>
+    1.0470,                  !- <none>
+    1.0602,                  !- <none>
+    1.0743,                  !- <none>
+    1.0866,                  !- <none>
+    1.1007,                  !- <none>
+    1.1122,                  !- <none>
+    1.1254,                  !- <none>
+    1.1378,                  !- <none>
+    1.1502,                  !- <none>
+    1.1617,                  !- <none>
+    1.1733,                  !- <none>
+    1.1840,                  !- <none>
+    1.1947,                  !- <none>
+    1.2063,                  !- <none>
+    1.2186,                  !- <none>
+    1.2302,                  !- <none>
+    1.2434,                  !- <none>
+    1.2558,                  !- <none>
+    1.2690;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Residential-LPG,  !- LCC Price Escalation Name
@@ -147,27 +147,27 @@
     1.1354,                  !- Year 7 Escalation
     1.1513,                  !- Year 8 Escalation
     1.1656,                  !- Year 9 Escalation
-    1.1793,                  !- Year 10 Escalation
-    1.1906,                  !- Year 11 Escalation
-    1.2017,                  !- Year 12 Escalation
-    1.2118,                  !- Year 13 Escalation
-    1.2209,                  !- Year 14 Escalation
-    1.2296,                  !- Year 15 Escalation
-    1.2371,                  !- Year 16 Escalation
-    1.2433,                  !- Year 17 Escalation
-    1.2488,                  !- Year 18 Escalation
-    1.2530,                  !- Year 19 Escalation
-    1.2556,                  !- Year 20 Escalation
-    1.2566,                  !- Year 21 Escalation
-    1.2576,                  !- Year 22 Escalation
-    1.2576,                  !- Year 23 Escalation
-    1.2576,                  !- Year 24 Escalation
-    1.2589,                  !- Year 25 Escalation
-    1.2611,                  !- Year 26 Escalation
-    1.2631,                  !- Year 27 Escalation
-    1.2650,                  !- Year 28 Escalation
-    1.2673,                  !- Year 29 Escalation
-    1.2692;                  !- Year 30 Escalation
+    1.1793,                  !- <none>
+    1.1906,                  !- <none>
+    1.2017,                  !- <none>
+    1.2118,                  !- <none>
+    1.2209,                  !- <none>
+    1.2296,                  !- <none>
+    1.2371,                  !- <none>
+    1.2433,                  !- <none>
+    1.2488,                  !- <none>
+    1.2530,                  !- <none>
+    1.2556,                  !- <none>
+    1.2566,                  !- <none>
+    1.2576,                  !- <none>
+    1.2576,                  !- <none>
+    1.2576,                  !- <none>
+    1.2589,                  !- <none>
+    1.2611,                  !- <none>
+    1.2631,                  !- <none>
+    1.2650,                  !- <none>
+    1.2673,                  !- <none>
+    1.2692;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Commercial-Electricity,  !- LCC Price Escalation Name
@@ -183,27 +183,27 @@
     0.9042,                  !- Year 7 Escalation
     0.9105,                  !- Year 8 Escalation
     0.9231,                  !- Year 9 Escalation
-    0.9315,                  !- Year 10 Escalation
-    0.9365,                  !- Year 11 Escalation
-    0.9392,                  !- Year 12 Escalation
-    0.9411,                  !- Year 13 Escalation
-    0.9436,                  !- Year 14 Escalation
-    0.9411,                  !- Year 15 Escalation
-    0.9387,                  !- Year 16 Escalation
-    0.9367,                  !- Year 17 Escalation
-    0.9343,                  !- Year 18 Escalation
-    0.9332,                  !- Year 19 Escalation
-    0.9335,                  !- Year 20 Escalation
-    0.9367,                  !- Year 21 Escalation
-    0.9400,                  !- Year 22 Escalation
-    0.9452,                  !- Year 23 Escalation
-    0.9510,                  !- Year 24 Escalation
-    0.9496,                  !- Year 25 Escalation
-    0.9455,                  !- Year 26 Escalation
-    0.9417,                  !- Year 27 Escalation
-    0.9378,                  !- Year 28 Escalation
-    0.9337,                  !- Year 29 Escalation
-    0.9299;                  !- Year 30 Escalation
+    0.9315,                  !- <none>
+    0.9365,                  !- <none>
+    0.9392,                  !- <none>
+    0.9411,                  !- <none>
+    0.9436,                  !- <none>
+    0.9411,                  !- <none>
+    0.9387,                  !- <none>
+    0.9367,                  !- <none>
+    0.9343,                  !- <none>
+    0.9332,                  !- <none>
+    0.9335,                  !- <none>
+    0.9367,                  !- <none>
+    0.9400,                  !- <none>
+    0.9452,                  !- <none>
+    0.9510,                  !- <none>
+    0.9496,                  !- <none>
+    0.9455,                  !- <none>
+    0.9417,                  !- <none>
+    0.9378,                  !- <none>
+    0.9337,                  !- <none>
+    0.9299;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Commercial-Distillate Oil,  !- LCC Price Escalation Name
@@ -219,27 +219,27 @@
     1.1706,                  !- Year 7 Escalation
     1.2023,                  !- Year 8 Escalation
     1.2235,                  !- Year 9 Escalation
-    1.2405,                  !- Year 10 Escalation
-    1.2654,                  !- Year 11 Escalation
-    1.2786,                  !- Year 12 Escalation
-    1.3024,                  !- Year 13 Escalation
-    1.3167,                  !- Year 14 Escalation
-    1.3273,                  !- Year 15 Escalation
-    1.3443,                  !- Year 16 Escalation
-    1.3559,                  !- Year 17 Escalation
-    1.3718,                  !- Year 18 Escalation
-    1.3697,                  !- Year 19 Escalation
-    1.3718,                  !- Year 20 Escalation
-    1.3771,                  !- Year 21 Escalation
-    1.3803,                  !- Year 22 Escalation
-    1.3893,                  !- Year 23 Escalation
-    1.3972,                  !- Year 24 Escalation
-    1.4015,                  !- Year 25 Escalation
-    1.4047,                  !- Year 26 Escalation
-    1.4078,                  !- Year 27 Escalation
-    1.4115,                  !- Year 28 Escalation
-    1.4147,                  !- Year 29 Escalation
-    1.4179;                  !- Year 30 Escalation
+    1.2405,                  !- <none>
+    1.2654,                  !- <none>
+    1.2786,                  !- <none>
+    1.3024,                  !- <none>
+    1.3167,                  !- <none>
+    1.3273,                  !- <none>
+    1.3443,                  !- <none>
+    1.3559,                  !- <none>
+    1.3718,                  !- <none>
+    1.3697,                  !- <none>
+    1.3718,                  !- <none>
+    1.3771,                  !- <none>
+    1.3803,                  !- <none>
+    1.3893,                  !- <none>
+    1.3972,                  !- <none>
+    1.4015,                  !- <none>
+    1.4047,                  !- <none>
+    1.4078,                  !- <none>
+    1.4115,                  !- <none>
+    1.4147,                  !- <none>
+    1.4179;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Commercial-Residual Oil,  !- LCC Price Escalation Name
@@ -255,27 +255,27 @@
     0.9655,                  !- Year 7 Escalation
     0.9818,                  !- Year 8 Escalation
     1.0054,                  !- Year 9 Escalation
-    1.0297,                  !- Year 10 Escalation
-    1.0608,                  !- Year 11 Escalation
-    1.1041,                  !- Year 12 Escalation
-    1.1257,                  !- Year 13 Escalation
-    1.1378,                  !- Year 14 Escalation
-    1.1493,                  !- Year 15 Escalation
-    1.1601,                  !- Year 16 Escalation
-    1.1696,                  !- Year 17 Escalation
-    1.1784,                  !- Year 18 Escalation
-    1.1831,                  !- Year 19 Escalation
-    1.1892,                  !- Year 20 Escalation
-    1.1912,                  !- Year 21 Escalation
-    1.1980,                  !- Year 22 Escalation
-    1.2061,                  !- Year 23 Escalation
-    1.2155,                  !- Year 24 Escalation
-    1.2209,                  !- Year 25 Escalation
-    1.2250,                  !- Year 26 Escalation
-    1.2297,                  !- Year 27 Escalation
-    1.2338,                  !- Year 28 Escalation
-    1.2385,                  !- Year 29 Escalation
-    1.2426;                  !- Year 30 Escalation
+    1.0297,                  !- <none>
+    1.0608,                  !- <none>
+    1.1041,                  !- <none>
+    1.1257,                  !- <none>
+    1.1378,                  !- <none>
+    1.1493,                  !- <none>
+    1.1601,                  !- <none>
+    1.1696,                  !- <none>
+    1.1784,                  !- <none>
+    1.1831,                  !- <none>
+    1.1892,                  !- <none>
+    1.1912,                  !- <none>
+    1.1980,                  !- <none>
+    1.2061,                  !- <none>
+    1.2155,                  !- <none>
+    1.2209,                  !- <none>
+    1.2250,                  !- <none>
+    1.2297,                  !- <none>
+    1.2338,                  !- <none>
+    1.2385,                  !- <none>
+    1.2426;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Commercial-Natural gas,  !- LCC Price Escalation Name
@@ -291,27 +291,27 @@
     0.9164,                  !- Year 7 Escalation
     0.9279,                  !- Year 8 Escalation
     0.9415,                  !- Year 9 Escalation
-    0.9540,                  !- Year 10 Escalation
-    0.9655,                  !- Year 11 Escalation
-    0.9781,                  !- Year 12 Escalation
-    0.9906,                  !- Year 13 Escalation
-    1.0031,                  !- Year 14 Escalation
-    1.0125,                  !- Year 15 Escalation
-    1.0230,                  !- Year 16 Escalation
-    1.0334,                  !- Year 17 Escalation
-    1.0428,                  !- Year 18 Escalation
-    1.0522,                  !- Year 19 Escalation
-    1.0627,                  !- Year 20 Escalation
-    1.0711,                  !- Year 21 Escalation
-    1.0794,                  !- Year 22 Escalation
-    1.0857,                  !- Year 23 Escalation
-    1.0940,                  !- Year 24 Escalation
-    1.1066,                  !- Year 25 Escalation
-    1.1212,                  !- Year 26 Escalation
-    1.1369,                  !- Year 27 Escalation
-    1.1526,                  !- Year 28 Escalation
-    1.1682,                  !- Year 29 Escalation
-    1.1850;                  !- Year 30 Escalation
+    0.9540,                  !- <none>
+    0.9655,                  !- <none>
+    0.9781,                  !- <none>
+    0.9906,                  !- <none>
+    1.0031,                  !- <none>
+    1.0125,                  !- <none>
+    1.0230,                  !- <none>
+    1.0334,                  !- <none>
+    1.0428,                  !- <none>
+    1.0522,                  !- <none>
+    1.0627,                  !- <none>
+    1.0711,                  !- <none>
+    1.0794,                  !- <none>
+    1.0857,                  !- <none>
+    1.0940,                  !- <none>
+    1.1066,                  !- <none>
+    1.1212,                  !- <none>
+    1.1369,                  !- <none>
+    1.1526,                  !- <none>
+    1.1682,                  !- <none>
+    1.1850;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Commercial-Coal,  !- LCC Price Escalation Name
@@ -327,27 +327,27 @@
     1.0435,                  !- Year 7 Escalation
     1.0471,                  !- Year 8 Escalation
     1.0471,                  !- Year 9 Escalation
-    1.0507,                  !- Year 10 Escalation
-    1.0543,                  !- Year 11 Escalation
-    1.0580,                  !- Year 12 Escalation
-    1.0543,                  !- Year 13 Escalation
-    1.0580,                  !- Year 14 Escalation
-    1.0652,                  !- Year 15 Escalation
-    1.0725,                  !- Year 16 Escalation
-    1.0761,                  !- Year 17 Escalation
-    1.0870,                  !- Year 18 Escalation
-    1.0906,                  !- Year 19 Escalation
-    1.0942,                  !- Year 20 Escalation
-    1.0978,                  !- Year 21 Escalation
-    1.1051,                  !- Year 22 Escalation
-    1.1087,                  !- Year 23 Escalation
-    1.1159,                  !- Year 24 Escalation
-    1.1196,                  !- Year 25 Escalation
-    1.1232,                  !- Year 26 Escalation
-    1.1268,                  !- Year 27 Escalation
-    1.1268,                  !- Year 28 Escalation
-    1.1304,                  !- Year 29 Escalation
-    1.1341;                  !- Year 30 Escalation
+    1.0507,                  !- <none>
+    1.0543,                  !- <none>
+    1.0580,                  !- <none>
+    1.0543,                  !- <none>
+    1.0580,                  !- <none>
+    1.0652,                  !- <none>
+    1.0725,                  !- <none>
+    1.0761,                  !- <none>
+    1.0870,                  !- <none>
+    1.0906,                  !- <none>
+    1.0942,                  !- <none>
+    1.0978,                  !- <none>
+    1.1051,                  !- <none>
+    1.1087,                  !- <none>
+    1.1159,                  !- <none>
+    1.1196,                  !- <none>
+    1.1232,                  !- <none>
+    1.1268,                  !- <none>
+    1.1268,                  !- <none>
+    1.1304,                  !- <none>
+    1.1341;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Industrial-Electricity,  !- LCC Price Escalation Name
@@ -363,27 +363,27 @@
     0.9525,                  !- Year 7 Escalation
     0.9707,                  !- Year 8 Escalation
     0.9970,                  !- Year 9 Escalation
-    1.0182,                  !- Year 10 Escalation
-    1.0329,                  !- Year 11 Escalation
-    1.0465,                  !- Year 12 Escalation
-    1.0581,                  !- Year 13 Escalation
-    1.0698,                  !- Year 14 Escalation
-    1.0748,                  !- Year 15 Escalation
-    1.0789,                  !- Year 16 Escalation
-    1.0844,                  !- Year 17 Escalation
-    1.0905,                  !- Year 18 Escalation
-    1.1001,                  !- Year 19 Escalation
-    1.1062,                  !- Year 20 Escalation
-    1.1138,                  !- Year 21 Escalation
-    1.1213,                  !- Year 22 Escalation
-    1.1314,                  !- Year 23 Escalation
-    1.1421,                  !- Year 24 Escalation
-    1.1456,                  !- Year 25 Escalation
-    1.1466,                  !- Year 26 Escalation
-    1.1476,                  !- Year 27 Escalation
-    1.1481,                  !- Year 28 Escalation
-    1.1491,                  !- Year 29 Escalation
-    1.1502;                  !- Year 30 Escalation
+    1.0182,                  !- <none>
+    1.0329,                  !- <none>
+    1.0465,                  !- <none>
+    1.0581,                  !- <none>
+    1.0698,                  !- <none>
+    1.0748,                  !- <none>
+    1.0789,                  !- <none>
+    1.0844,                  !- <none>
+    1.0905,                  !- <none>
+    1.1001,                  !- <none>
+    1.1062,                  !- <none>
+    1.1138,                  !- <none>
+    1.1213,                  !- <none>
+    1.1314,                  !- <none>
+    1.1421,                  !- <none>
+    1.1456,                  !- <none>
+    1.1466,                  !- <none>
+    1.1476,                  !- <none>
+    1.1481,                  !- <none>
+    1.1491,                  !- <none>
+    1.1502;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Industrial-Distillate Oil,  !- LCC Price Escalation Name
@@ -399,27 +399,27 @@
     1.1711,                  !- Year 7 Escalation
     1.2022,                  !- Year 8 Escalation
     1.2229,                  !- Year 9 Escalation
-    1.2394,                  !- Year 10 Escalation
-    1.2642,                  !- Year 11 Escalation
-    1.2777,                  !- Year 12 Escalation
-    1.3014,                  !- Year 13 Escalation
-    1.3154,                  !- Year 14 Escalation
-    1.3257,                  !- Year 15 Escalation
-    1.3423,                  !- Year 16 Escalation
-    1.3537,                  !- Year 17 Escalation
-    1.3697,                  !- Year 18 Escalation
-    1.3671,                  !- Year 19 Escalation
-    1.3687,                  !- Year 20 Escalation
-    1.3738,                  !- Year 21 Escalation
-    1.3769,                  !- Year 22 Escalation
-    1.3857,                  !- Year 23 Escalation
-    1.3935,                  !- Year 24 Escalation
-    1.3976,                  !- Year 25 Escalation
-    1.4007,                  !- Year 26 Escalation
-    1.4043,                  !- Year 27 Escalation
-    1.4074,                  !- Year 28 Escalation
-    1.4105,                  !- Year 29 Escalation
-    1.4142;                  !- Year 30 Escalation
+    1.2394,                  !- <none>
+    1.2642,                  !- <none>
+    1.2777,                  !- <none>
+    1.3014,                  !- <none>
+    1.3154,                  !- <none>
+    1.3257,                  !- <none>
+    1.3423,                  !- <none>
+    1.3537,                  !- <none>
+    1.3697,                  !- <none>
+    1.3671,                  !- <none>
+    1.3687,                  !- <none>
+    1.3738,                  !- <none>
+    1.3769,                  !- <none>
+    1.3857,                  !- <none>
+    1.3935,                  !- <none>
+    1.3976,                  !- <none>
+    1.4007,                  !- <none>
+    1.4043,                  !- <none>
+    1.4074,                  !- <none>
+    1.4105,                  !- <none>
+    1.4142;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Industrial-Residual Oil,  !- LCC Price Escalation Name
@@ -435,27 +435,27 @@
     1.1633,                  !- Year 7 Escalation
     1.1779,                  !- Year 8 Escalation
     1.2014,                  !- Year 9 Escalation
-    1.2270,                  !- Year 10 Escalation
-    1.2595,                  !- Year 11 Escalation
-    1.3038,                  !- Year 12 Escalation
-    1.3260,                  !- Year 13 Escalation
-    1.3384,                  !- Year 14 Escalation
-    1.3502,                  !- Year 15 Escalation
-    1.3612,                  !- Year 16 Escalation
-    1.3709,                  !- Year 17 Escalation
-    1.3799,                  !- Year 18 Escalation
-    1.3848,                  !- Year 19 Escalation
-    1.3910,                  !- Year 20 Escalation
-    1.3931,                  !- Year 21 Escalation
-    1.4000,                  !- Year 22 Escalation
-    1.4090,                  !- Year 23 Escalation
-    1.4180,                  !- Year 24 Escalation
-    1.4235,                  !- Year 25 Escalation
-    1.4284,                  !- Year 26 Escalation
-    1.4325,                  !- Year 27 Escalation
-    1.4367,                  !- Year 28 Escalation
-    1.4415,                  !- Year 29 Escalation
-    1.4457;                  !- Year 30 Escalation
+    1.2270,                  !- <none>
+    1.2595,                  !- <none>
+    1.3038,                  !- <none>
+    1.3260,                  !- <none>
+    1.3384,                  !- <none>
+    1.3502,                  !- <none>
+    1.3612,                  !- <none>
+    1.3709,                  !- <none>
+    1.3799,                  !- <none>
+    1.3848,                  !- <none>
+    1.3910,                  !- <none>
+    1.3931,                  !- <none>
+    1.4000,                  !- <none>
+    1.4090,                  !- <none>
+    1.4180,                  !- <none>
+    1.4235,                  !- <none>
+    1.4284,                  !- <none>
+    1.4325,                  !- <none>
+    1.4367,                  !- <none>
+    1.4415,                  !- <none>
+    1.4457;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Industrial-Natural gas,  !- LCC Price Escalation Name
@@ -471,27 +471,27 @@
     0.9918,                  !- Year 7 Escalation
     1.0065,                  !- Year 8 Escalation
     1.0228,                  !- Year 9 Escalation
-    1.0392,                  !- Year 10 Escalation
-    1.0538,                  !- Year 11 Escalation
-    1.0701,                  !- Year 12 Escalation
-    1.0865,                  !- Year 13 Escalation
-    1.1044,                  !- Year 14 Escalation
-    1.1175,                  !- Year 15 Escalation
-    1.1321,                  !- Year 16 Escalation
-    1.1468,                  !- Year 17 Escalation
-    1.1582,                  !- Year 18 Escalation
-    1.1729,                  !- Year 19 Escalation
-    1.1860,                  !- Year 20 Escalation
-    1.1958,                  !- Year 21 Escalation
-    1.2072,                  !- Year 22 Escalation
-    1.2170,                  !- Year 23 Escalation
-    1.2251,                  !- Year 24 Escalation
-    1.2447,                  !- Year 25 Escalation
-    1.2675,                  !- Year 26 Escalation
-    1.2920,                  !- Year 27 Escalation
-    1.3165,                  !- Year 28 Escalation
-    1.3426,                  !- Year 29 Escalation
-    1.3670;                  !- Year 30 Escalation
+    1.0392,                  !- <none>
+    1.0538,                  !- <none>
+    1.0701,                  !- <none>
+    1.0865,                  !- <none>
+    1.1044,                  !- <none>
+    1.1175,                  !- <none>
+    1.1321,                  !- <none>
+    1.1468,                  !- <none>
+    1.1582,                  !- <none>
+    1.1729,                  !- <none>
+    1.1860,                  !- <none>
+    1.1958,                  !- <none>
+    1.2072,                  !- <none>
+    1.2170,                  !- <none>
+    1.2251,                  !- <none>
+    1.2447,                  !- <none>
+    1.2675,                  !- <none>
+    1.2920,                  !- <none>
+    1.3165,                  !- <none>
+    1.3426,                  !- <none>
+    1.3670;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Industrial-Coal,  !- LCC Price Escalation Name
@@ -507,27 +507,27 @@
     1.0260,                  !- Year 7 Escalation
     1.0260,                  !- Year 8 Escalation
     1.0292,                  !- Year 9 Escalation
-    1.0292,                  !- Year 10 Escalation
-    1.0325,                  !- Year 11 Escalation
-    1.0292,                  !- Year 12 Escalation
-    1.0357,                  !- Year 13 Escalation
-    1.0357,                  !- Year 14 Escalation
-    1.0390,                  !- Year 15 Escalation
-    1.0422,                  !- Year 16 Escalation
-    1.0487,                  !- Year 17 Escalation
-    1.0552,                  !- Year 18 Escalation
-    1.0552,                  !- Year 19 Escalation
-    1.0584,                  !- Year 20 Escalation
-    1.0617,                  !- Year 21 Escalation
-    1.0649,                  !- Year 22 Escalation
-    1.0714,                  !- Year 23 Escalation
-    1.0747,                  !- Year 24 Escalation
-    1.0779,                  !- Year 25 Escalation
-    1.0812,                  !- Year 26 Escalation
-    1.0844,                  !- Year 27 Escalation
-    1.0877,                  !- Year 28 Escalation
-    1.0909,                  !- Year 29 Escalation
-    1.0909;                  !- Year 30 Escalation
+    1.0292,                  !- <none>
+    1.0325,                  !- <none>
+    1.0292,                  !- <none>
+    1.0357,                  !- <none>
+    1.0357,                  !- <none>
+    1.0390,                  !- <none>
+    1.0422,                  !- <none>
+    1.0487,                  !- <none>
+    1.0552,                  !- <none>
+    1.0552,                  !- <none>
+    1.0584,                  !- <none>
+    1.0617,                  !- <none>
+    1.0649,                  !- <none>
+    1.0714,                  !- <none>
+    1.0747,                  !- <none>
+    1.0779,                  !- <none>
+    1.0812,                  !- <none>
+    1.0844,                  !- <none>
+    1.0877,                  !- <none>
+    1.0909,                  !- <none>
+    1.0909;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Residential-Electricity,  !- LCC Price Escalation Name
@@ -543,27 +543,27 @@
     0.9617,                  !- Year 7 Escalation
     0.9532,                  !- Year 8 Escalation
     0.9468,                  !- Year 9 Escalation
-    0.9407,                  !- Year 10 Escalation
-    0.9352,                  !- Year 11 Escalation
-    0.9318,                  !- Year 12 Escalation
-    0.9281,                  !- Year 13 Escalation
-    0.9264,                  !- Year 14 Escalation
-    0.9261,                  !- Year 15 Escalation
-    0.9244,                  !- Year 16 Escalation
-    0.9247,                  !- Year 17 Escalation
-    0.9288,                  !- Year 18 Escalation
-    0.9305,                  !- Year 19 Escalation
-    0.9315,                  !- Year 20 Escalation
-    0.9332,                  !- Year 21 Escalation
-    0.9352,                  !- Year 22 Escalation
-    0.9373,                  !- Year 23 Escalation
-    0.9403,                  !- Year 24 Escalation
-    0.9410,                  !- Year 25 Escalation
-    0.9407,                  !- Year 26 Escalation
-    0.9407,                  !- Year 27 Escalation
-    0.9403,                  !- Year 28 Escalation
-    0.9400,                  !- Year 29 Escalation
-    0.9396;                  !- Year 30 Escalation
+    0.9407,                  !- <none>
+    0.9352,                  !- <none>
+    0.9318,                  !- <none>
+    0.9281,                  !- <none>
+    0.9264,                  !- <none>
+    0.9261,                  !- <none>
+    0.9244,                  !- <none>
+    0.9247,                  !- <none>
+    0.9288,                  !- <none>
+    0.9305,                  !- <none>
+    0.9315,                  !- <none>
+    0.9332,                  !- <none>
+    0.9352,                  !- <none>
+    0.9373,                  !- <none>
+    0.9403,                  !- <none>
+    0.9410,                  !- <none>
+    0.9407,                  !- <none>
+    0.9407,                  !- <none>
+    0.9403,                  !- <none>
+    0.9400,                  !- <none>
+    0.9396;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Residential-Distillate Oil,  !- LCC Price Escalation Name
@@ -579,27 +579,27 @@
     1.0104,                  !- Year 7 Escalation
     1.0378,                  !- Year 8 Escalation
     1.0563,                  !- Year 9 Escalation
-    1.0671,                  !- Year 10 Escalation
-    1.0785,                  !- Year 11 Escalation
-    1.0913,                  !- Year 12 Escalation
-    1.1092,                  !- Year 13 Escalation
-    1.1229,                  !- Year 14 Escalation
-    1.1352,                  !- Year 15 Escalation
-    1.1461,                  !- Year 16 Escalation
-    1.1579,                  !- Year 17 Escalation
-    1.1678,                  !- Year 18 Escalation
-    1.1764,                  !- Year 19 Escalation
-    1.1816,                  !- Year 20 Escalation
-    1.1858,                  !- Year 21 Escalation
-    1.1887,                  !- Year 22 Escalation
-    1.1962,                  !- Year 23 Escalation
-    1.2033,                  !- Year 24 Escalation
-    1.2071,                  !- Year 25 Escalation
-    1.2099,                  !- Year 26 Escalation
-    1.2128,                  !- Year 27 Escalation
-    1.2161,                  !- Year 28 Escalation
-    1.2189,                  !- Year 29 Escalation
-    1.2217;                  !- Year 30 Escalation
+    1.0671,                  !- <none>
+    1.0785,                  !- <none>
+    1.0913,                  !- <none>
+    1.1092,                  !- <none>
+    1.1229,                  !- <none>
+    1.1352,                  !- <none>
+    1.1461,                  !- <none>
+    1.1579,                  !- <none>
+    1.1678,                  !- <none>
+    1.1764,                  !- <none>
+    1.1816,                  !- <none>
+    1.1858,                  !- <none>
+    1.1887,                  !- <none>
+    1.1962,                  !- <none>
+    1.2033,                  !- <none>
+    1.2071,                  !- <none>
+    1.2099,                  !- <none>
+    1.2128,                  !- <none>
+    1.2161,                  !- <none>
+    1.2189,                  !- <none>
+    1.2217;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Residential-Natural gas,  !- LCC Price Escalation Name
@@ -615,27 +615,27 @@
     0.9882,                  !- Year 7 Escalation
     1.0043,                  !- Year 8 Escalation
     1.0310,                  !- Year 9 Escalation
-    1.0557,                  !- Year 10 Escalation
-    1.0728,                  !- Year 11 Escalation
-    1.0910,                  !- Year 12 Escalation
-    1.1135,                  !- Year 13 Escalation
-    1.1328,                  !- Year 14 Escalation
-    1.1499,                  !- Year 15 Escalation
-    1.1681,                  !- Year 16 Escalation
-    1.1809,                  !- Year 17 Escalation
-    1.1906,                  !- Year 18 Escalation
-    1.1981,                  !- Year 19 Escalation
-    1.2088,                  !- Year 20 Escalation
-    1.2227,                  !- Year 21 Escalation
-    1.2420,                  !- Year 22 Escalation
-    1.2634,                  !- Year 23 Escalation
-    1.2891,                  !- Year 24 Escalation
-    1.3073,                  !- Year 25 Escalation
-    1.3223,                  !- Year 26 Escalation
-    1.3383,                  !- Year 27 Escalation
-    1.3544,                  !- Year 28 Escalation
-    1.3704,                  !- Year 29 Escalation
-    1.3876;                  !- Year 30 Escalation
+    1.0557,                  !- <none>
+    1.0728,                  !- <none>
+    1.0910,                  !- <none>
+    1.1135,                  !- <none>
+    1.1328,                  !- <none>
+    1.1499,                  !- <none>
+    1.1681,                  !- <none>
+    1.1809,                  !- <none>
+    1.1906,                  !- <none>
+    1.1981,                  !- <none>
+    1.2088,                  !- <none>
+    1.2227,                  !- <none>
+    1.2420,                  !- <none>
+    1.2634,                  !- <none>
+    1.2891,                  !- <none>
+    1.3073,                  !- <none>
+    1.3223,                  !- <none>
+    1.3383,                  !- <none>
+    1.3544,                  !- <none>
+    1.3704,                  !- <none>
+    1.3876;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Residential-LPG,!- LCC Price Escalation Name
@@ -651,27 +651,27 @@
     1.2242,                  !- Year 7 Escalation
     1.2461,                  !- Year 8 Escalation
     1.2662,                  !- Year 9 Escalation
-    1.2845,                  !- Year 10 Escalation
-    1.3003,                  !- Year 11 Escalation
-    1.3151,                  !- Year 12 Escalation
-    1.3291,                  !- Year 13 Escalation
-    1.3422,                  !- Year 14 Escalation
-    1.3540,                  !- Year 15 Escalation
-    1.3641,                  !- Year 16 Escalation
-    1.3728,                  !- Year 17 Escalation
-    1.3807,                  !- Year 18 Escalation
-    1.3868,                  !- Year 19 Escalation
-    1.3907,                  !- Year 20 Escalation
-    1.3920,                  !- Year 21 Escalation
-    1.3934,                  !- Year 22 Escalation
-    1.3938,                  !- Year 23 Escalation
-    1.3942,                  !- Year 24 Escalation
-    1.3964,                  !- Year 25 Escalation
-    1.3990,                  !- Year 26 Escalation
-    1.4017,                  !- Year 27 Escalation
-    1.4047,                  !- Year 28 Escalation
-    1.4073,                  !- Year 29 Escalation
-    1.4104;                  !- Year 30 Escalation
+    1.2845,                  !- <none>
+    1.3003,                  !- <none>
+    1.3151,                  !- <none>
+    1.3291,                  !- <none>
+    1.3422,                  !- <none>
+    1.3540,                  !- <none>
+    1.3641,                  !- <none>
+    1.3728,                  !- <none>
+    1.3807,                  !- <none>
+    1.3868,                  !- <none>
+    1.3907,                  !- <none>
+    1.3920,                  !- <none>
+    1.3934,                  !- <none>
+    1.3938,                  !- <none>
+    1.3942,                  !- <none>
+    1.3964,                  !- <none>
+    1.3990,                  !- <none>
+    1.4017,                  !- <none>
+    1.4047,                  !- <none>
+    1.4073,                  !- <none>
+    1.4104;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Commercial-Electricity,  !- LCC Price Escalation Name
@@ -687,27 +687,27 @@
     0.9535,                  !- Year 7 Escalation
     0.9448,                  !- Year 8 Escalation
     0.9388,                  !- Year 9 Escalation
-    0.9325,                  !- Year 10 Escalation
-    0.9273,                  !- Year 11 Escalation
-    0.9249,                  !- Year 12 Escalation
-    0.9225,                  !- Year 13 Escalation
-    0.9209,                  !- Year 14 Escalation
-    0.9205,                  !- Year 15 Escalation
-    0.9186,                  !- Year 16 Escalation
-    0.9205,                  !- Year 17 Escalation
-    0.9253,                  !- Year 18 Escalation
-    0.9273,                  !- Year 19 Escalation
-    0.9293,                  !- Year 20 Escalation
-    0.9325,                  !- Year 21 Escalation
-    0.9352,                  !- Year 22 Escalation
-    0.9388,                  !- Year 23 Escalation
-    0.9440,                  !- Year 24 Escalation
-    0.9460,                  !- Year 25 Escalation
-    0.9464,                  !- Year 26 Escalation
-    0.9468,                  !- Year 27 Escalation
-    0.9476,                  !- Year 28 Escalation
-    0.9480,                  !- Year 29 Escalation
-    0.9484;                  !- Year 30 Escalation
+    0.9325,                  !- <none>
+    0.9273,                  !- <none>
+    0.9249,                  !- <none>
+    0.9225,                  !- <none>
+    0.9209,                  !- <none>
+    0.9205,                  !- <none>
+    0.9186,                  !- <none>
+    0.9205,                  !- <none>
+    0.9253,                  !- <none>
+    0.9273,                  !- <none>
+    0.9293,                  !- <none>
+    0.9325,                  !- <none>
+    0.9352,                  !- <none>
+    0.9388,                  !- <none>
+    0.9440,                  !- <none>
+    0.9460,                  !- <none>
+    0.9464,                  !- <none>
+    0.9468,                  !- <none>
+    0.9476,                  !- <none>
+    0.9480,                  !- <none>
+    0.9484;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Commercial-Distillate Oil,  !- LCC Price Escalation Name
@@ -723,27 +723,27 @@
     1.0778,                  !- Year 7 Escalation
     1.1083,                  !- Year 8 Escalation
     1.1291,                  !- Year 9 Escalation
-    1.1431,                  !- Year 10 Escalation
-    1.1628,                  !- Year 11 Escalation
-    1.1763,                  !- Year 12 Escalation
-    1.1980,                  !- Year 13 Escalation
-    1.2125,                  !- Year 14 Escalation
-    1.2240,                  !- Year 15 Escalation
-    1.2385,                  !- Year 16 Escalation
-    1.2509,                  !- Year 17 Escalation
-    1.2649,                  !- Year 18 Escalation
-    1.2670,                  !- Year 19 Escalation
-    1.2691,                  !- Year 20 Escalation
-    1.2737,                  !- Year 21 Escalation
-    1.2768,                  !- Year 22 Escalation
-    1.2851,                  !- Year 23 Escalation
-    1.2929,                  !- Year 24 Escalation
-    1.2970,                  !- Year 25 Escalation
-    1.3002,                  !- Year 26 Escalation
-    1.3038,                  !- Year 27 Escalation
-    1.3069,                  !- Year 28 Escalation
-    1.3100,                  !- Year 29 Escalation
-    1.3136;                  !- Year 30 Escalation
+    1.1431,                  !- <none>
+    1.1628,                  !- <none>
+    1.1763,                  !- <none>
+    1.1980,                  !- <none>
+    1.2125,                  !- <none>
+    1.2240,                  !- <none>
+    1.2385,                  !- <none>
+    1.2509,                  !- <none>
+    1.2649,                  !- <none>
+    1.2670,                  !- <none>
+    1.2691,                  !- <none>
+    1.2737,                  !- <none>
+    1.2768,                  !- <none>
+    1.2851,                  !- <none>
+    1.2929,                  !- <none>
+    1.2970,                  !- <none>
+    1.3002,                  !- <none>
+    1.3038,                  !- <none>
+    1.3069,                  !- <none>
+    1.3100,                  !- <none>
+    1.3136;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Commercial-Residual Oil,  !- LCC Price Escalation Name
@@ -759,27 +759,27 @@
     1.2811,                  !- Year 7 Escalation
     1.3158,                  !- Year 8 Escalation
     1.3382,                  !- Year 9 Escalation
-    1.3584,                  !- Year 10 Escalation
-    1.3779,                  !- Year 11 Escalation
-    1.3981,                  !- Year 12 Escalation
-    1.4147,                  !- Year 13 Escalation
-    1.4314,                  !- Year 14 Escalation
-    1.4473,                  !- Year 15 Escalation
-    1.4603,                  !- Year 16 Escalation
-    1.4689,                  !- Year 17 Escalation
-    1.4689,                  !- Year 18 Escalation
-    1.4559,                  !- Year 19 Escalation
-    1.4501,                  !- Year 20 Escalation
-    1.4436,                  !- Year 21 Escalation
-    1.4415,                  !- Year 22 Escalation
-    1.4487,                  !- Year 23 Escalation
-    1.4538,                  !- Year 24 Escalation
-    1.4588,                  !- Year 25 Escalation
-    1.4632,                  !- Year 26 Escalation
-    1.4675,                  !- Year 27 Escalation
-    1.4725,                  !- Year 28 Escalation
-    1.4769,                  !- Year 29 Escalation
-    1.4812;                  !- Year 30 Escalation
+    1.3584,                  !- <none>
+    1.3779,                  !- <none>
+    1.3981,                  !- <none>
+    1.4147,                  !- <none>
+    1.4314,                  !- <none>
+    1.4473,                  !- <none>
+    1.4603,                  !- <none>
+    1.4689,                  !- <none>
+    1.4689,                  !- <none>
+    1.4559,                  !- <none>
+    1.4501,                  !- <none>
+    1.4436,                  !- <none>
+    1.4415,                  !- <none>
+    1.4487,                  !- <none>
+    1.4538,                  !- <none>
+    1.4588,                  !- <none>
+    1.4632,                  !- <none>
+    1.4675,                  !- <none>
+    1.4725,                  !- <none>
+    1.4769,                  !- <none>
+    1.4812;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Commercial-Natural gas,  !- LCC Price Escalation Name
@@ -795,27 +795,27 @@
     0.9520,                  !- Year 7 Escalation
     0.9676,                  !- Year 8 Escalation
     0.9952,                  !- Year 9 Escalation
-    1.0192,                  !- Year 10 Escalation
-    1.0372,                  !- Year 11 Escalation
-    1.0552,                  !- Year 12 Escalation
-    1.0779,                  !- Year 13 Escalation
-    1.0971,                  !- Year 14 Escalation
-    1.1139,                  !- Year 15 Escalation
-    1.1307,                  !- Year 16 Escalation
-    1.1439,                  !- Year 17 Escalation
-    1.1523,                  !- Year 18 Escalation
-    1.1583,                  !- Year 19 Escalation
-    1.1679,                  !- Year 20 Escalation
-    1.1823,                  !- Year 21 Escalation
-    1.1990,                  !- Year 22 Escalation
-    1.2194,                  !- Year 23 Escalation
-    1.2458,                  !- Year 24 Escalation
-    1.2650,                  !- Year 25 Escalation
-    1.2818,                  !- Year 26 Escalation
-    1.2998,                  !- Year 27 Escalation
-    1.3177,                  !- Year 28 Escalation
-    1.3369,                  !- Year 29 Escalation
-    1.3549;                  !- Year 30 Escalation
+    1.0192,                  !- <none>
+    1.0372,                  !- <none>
+    1.0552,                  !- <none>
+    1.0779,                  !- <none>
+    1.0971,                  !- <none>
+    1.1139,                  !- <none>
+    1.1307,                  !- <none>
+    1.1439,                  !- <none>
+    1.1523,                  !- <none>
+    1.1583,                  !- <none>
+    1.1679,                  !- <none>
+    1.1823,                  !- <none>
+    1.1990,                  !- <none>
+    1.2194,                  !- <none>
+    1.2458,                  !- <none>
+    1.2650,                  !- <none>
+    1.2818,                  !- <none>
+    1.2998,                  !- <none>
+    1.3177,                  !- <none>
+    1.3369,                  !- <none>
+    1.3549;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Commercial-Coal,!- LCC Price Escalation Name
@@ -831,27 +831,27 @@
     1.0246,                  !- Year 7 Escalation
     1.0277,                  !- Year 8 Escalation
     1.0277,                  !- Year 9 Escalation
-    1.0277,                  !- Year 10 Escalation
-    1.0308,                  !- Year 11 Escalation
-    1.0338,                  !- Year 12 Escalation
-    1.0369,                  !- Year 13 Escalation
-    1.0431,                  !- Year 14 Escalation
-    1.0462,                  !- Year 15 Escalation
-    1.0523,                  !- Year 16 Escalation
-    1.0585,                  !- Year 17 Escalation
-    1.0677,                  !- Year 18 Escalation
-    1.0677,                  !- Year 19 Escalation
-    1.0708,                  !- Year 20 Escalation
-    1.0738,                  !- Year 21 Escalation
-    1.0800,                  !- Year 22 Escalation
-    1.0831,                  !- Year 23 Escalation
-    1.0862,                  !- Year 24 Escalation
-    1.0892,                  !- Year 25 Escalation
-    1.0923,                  !- Year 26 Escalation
-    1.0954,                  !- Year 27 Escalation
-    1.0985,                  !- Year 28 Escalation
-    1.1015,                  !- Year 29 Escalation
-    1.1015;                  !- Year 30 Escalation
+    1.0277,                  !- <none>
+    1.0308,                  !- <none>
+    1.0338,                  !- <none>
+    1.0369,                  !- <none>
+    1.0431,                  !- <none>
+    1.0462,                  !- <none>
+    1.0523,                  !- <none>
+    1.0585,                  !- <none>
+    1.0677,                  !- <none>
+    1.0677,                  !- <none>
+    1.0708,                  !- <none>
+    1.0738,                  !- <none>
+    1.0800,                  !- <none>
+    1.0831,                  !- <none>
+    1.0862,                  !- <none>
+    1.0892,                  !- <none>
+    1.0923,                  !- <none>
+    1.0954,                  !- <none>
+    1.0985,                  !- <none>
+    1.1015,                  !- <none>
+    1.1015;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Industrial-Electricity,  !- LCC Price Escalation Name
@@ -867,27 +867,27 @@
     0.9768,                  !- Year 7 Escalation
     0.9706,                  !- Year 8 Escalation
     0.9672,                  !- Year 9 Escalation
-    0.9632,                  !- Year 10 Escalation
-    0.9604,                  !- Year 11 Escalation
-    0.9610,                  !- Year 12 Escalation
-    0.9604,                  !- Year 13 Escalation
-    0.9610,                  !- Year 14 Escalation
-    0.9615,                  !- Year 15 Escalation
-    0.9610,                  !- Year 16 Escalation
-    0.9649,                  !- Year 17 Escalation
-    0.9711,                  !- Year 18 Escalation
-    0.9745,                  !- Year 19 Escalation
-    0.9774,                  !- Year 20 Escalation
-    0.9825,                  !- Year 21 Escalation
-    0.9870,                  !- Year 22 Escalation
-    0.9926,                  !- Year 23 Escalation
-    1.0006,                  !- Year 24 Escalation
-    1.0051,                  !- Year 25 Escalation
-    1.0074,                  !- Year 26 Escalation
-    1.0102,                  !- Year 27 Escalation
-    1.0125,                  !- Year 28 Escalation
-    1.0147,                  !- Year 29 Escalation
-    1.0175;                  !- Year 30 Escalation
+    0.9632,                  !- <none>
+    0.9604,                  !- <none>
+    0.9610,                  !- <none>
+    0.9604,                  !- <none>
+    0.9610,                  !- <none>
+    0.9615,                  !- <none>
+    0.9610,                  !- <none>
+    0.9649,                  !- <none>
+    0.9711,                  !- <none>
+    0.9745,                  !- <none>
+    0.9774,                  !- <none>
+    0.9825,                  !- <none>
+    0.9870,                  !- <none>
+    0.9926,                  !- <none>
+    1.0006,                  !- <none>
+    1.0051,                  !- <none>
+    1.0074,                  !- <none>
+    1.0102,                  !- <none>
+    1.0125,                  !- <none>
+    1.0147,                  !- <none>
+    1.0175;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Industrial-Distillate Oil,  !- LCC Price Escalation Name
@@ -903,27 +903,27 @@
     1.0770,                  !- Year 7 Escalation
     1.1066,                  !- Year 8 Escalation
     1.1264,                  !- Year 9 Escalation
-    1.1422,                  !- Year 10 Escalation
-    1.1658,                  !- Year 11 Escalation
-    1.1777,                  !- Year 12 Escalation
-    1.2004,                  !- Year 13 Escalation
-    1.2137,                  !- Year 14 Escalation
-    1.2236,                  !- Year 15 Escalation
-    1.2394,                  !- Year 16 Escalation
-    1.2502,                  !- Year 17 Escalation
-    1.2651,                  !- Year 18 Escalation
-    1.2626,                  !- Year 19 Escalation
-    1.2621,                  !- Year 20 Escalation
-    1.2665,                  !- Year 21 Escalation
-    1.2695,                  !- Year 22 Escalation
-    1.2774,                  !- Year 23 Escalation
-    1.2848,                  !- Year 24 Escalation
-    1.2887,                  !- Year 25 Escalation
-    1.2917,                  !- Year 26 Escalation
-    1.2947,                  !- Year 27 Escalation
-    1.2981,                  !- Year 28 Escalation
-    1.3011,                  !- Year 29 Escalation
-    1.3045;                  !- Year 30 Escalation
+    1.1422,                  !- <none>
+    1.1658,                  !- <none>
+    1.1777,                  !- <none>
+    1.2004,                  !- <none>
+    1.2137,                  !- <none>
+    1.2236,                  !- <none>
+    1.2394,                  !- <none>
+    1.2502,                  !- <none>
+    1.2651,                  !- <none>
+    1.2626,                  !- <none>
+    1.2621,                  !- <none>
+    1.2665,                  !- <none>
+    1.2695,                  !- <none>
+    1.2774,                  !- <none>
+    1.2848,                  !- <none>
+    1.2887,                  !- <none>
+    1.2917,                  !- <none>
+    1.2947,                  !- <none>
+    1.2981,                  !- <none>
+    1.3011,                  !- <none>
+    1.3045;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Industrial-Residual Oil,  !- LCC Price Escalation Name
@@ -939,27 +939,27 @@
     1.2393,                  !- Year 7 Escalation
     1.2740,                  !- Year 8 Escalation
     1.2976,                  !- Year 9 Escalation
-    1.3191,                  !- Year 10 Escalation
-    1.3397,                  !- Year 11 Escalation
-    1.3604,                  !- Year 12 Escalation
-    1.3789,                  !- Year 13 Escalation
-    1.3959,                  !- Year 14 Escalation
-    1.4121,                  !- Year 15 Escalation
-    1.4261,                  !- Year 16 Escalation
-    1.4350,                  !- Year 17 Escalation
-    1.4357,                  !- Year 18 Escalation
-    1.4225,                  !- Year 19 Escalation
-    1.4165,                  !- Year 20 Escalation
-    1.4106,                  !- Year 21 Escalation
-    1.4084,                  !- Year 22 Escalation
-    1.4158,                  !- Year 23 Escalation
-    1.4217,                  !- Year 24 Escalation
-    1.4261,                  !- Year 25 Escalation
-    1.4306,                  !- Year 26 Escalation
-    1.4357,                  !- Year 27 Escalation
-    1.4402,                  !- Year 28 Escalation
-    1.4446,                  !- Year 29 Escalation
-    1.4498;                  !- Year 30 Escalation
+    1.3191,                  !- <none>
+    1.3397,                  !- <none>
+    1.3604,                  !- <none>
+    1.3789,                  !- <none>
+    1.3959,                  !- <none>
+    1.4121,                  !- <none>
+    1.4261,                  !- <none>
+    1.4350,                  !- <none>
+    1.4357,                  !- <none>
+    1.4225,                  !- <none>
+    1.4165,                  !- <none>
+    1.4106,                  !- <none>
+    1.4084,                  !- <none>
+    1.4158,                  !- <none>
+    1.4217,                  !- <none>
+    1.4261,                  !- <none>
+    1.4306,                  !- <none>
+    1.4357,                  !- <none>
+    1.4402,                  !- <none>
+    1.4446,                  !- <none>
+    1.4498;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Industrial-Natural gas,  !- LCC Price Escalation Name
@@ -975,27 +975,27 @@
     1.0565,                  !- Year 7 Escalation
     1.0766,                  !- Year 8 Escalation
     1.1149,                  !- Year 9 Escalation
-    1.1512,                  !- Year 10 Escalation
-    1.1774,                  !- Year 11 Escalation
-    1.2036,                  !- Year 12 Escalation
-    1.2339,                  !- Year 13 Escalation
-    1.2621,                  !- Year 14 Escalation
-    1.2863,                  !- Year 15 Escalation
-    1.3125,                  !- Year 16 Escalation
-    1.3347,                  !- Year 17 Escalation
-    1.3448,                  !- Year 18 Escalation
-    1.3528,                  !- Year 19 Escalation
-    1.3629,                  !- Year 20 Escalation
-    1.3810,                  !- Year 21 Escalation
-    1.4073,                  !- Year 22 Escalation
-    1.4375,                  !- Year 23 Escalation
-    1.4758,                  !- Year 24 Escalation
-    1.5060,                  !- Year 25 Escalation
-    1.5363,                  !- Year 26 Escalation
-    1.5645,                  !- Year 27 Escalation
-    1.5948,                  !- Year 28 Escalation
-    1.6270,                  !- Year 29 Escalation
-    1.6593;                  !- Year 30 Escalation
+    1.1512,                  !- <none>
+    1.1774,                  !- <none>
+    1.2036,                  !- <none>
+    1.2339,                  !- <none>
+    1.2621,                  !- <none>
+    1.2863,                  !- <none>
+    1.3125,                  !- <none>
+    1.3347,                  !- <none>
+    1.3448,                  !- <none>
+    1.3528,                  !- <none>
+    1.3629,                  !- <none>
+    1.3810,                  !- <none>
+    1.4073,                  !- <none>
+    1.4375,                  !- <none>
+    1.4758,                  !- <none>
+    1.5060,                  !- <none>
+    1.5363,                  !- <none>
+    1.5645,                  !- <none>
+    1.5948,                  !- <none>
+    1.6270,                  !- <none>
+    1.6593;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     MidWest  Industrial-Coal,!- LCC Price Escalation Name
@@ -1011,27 +1011,27 @@
     0.9704,                  !- Year 7 Escalation
     0.9704,                  !- Year 8 Escalation
     0.9704,                  !- Year 9 Escalation
-    0.9704,                  !- Year 10 Escalation
-    0.9741,                  !- Year 11 Escalation
-    0.9815,                  !- Year 12 Escalation
-    0.9889,                  !- Year 13 Escalation
-    0.9963,                  !- Year 14 Escalation
-    1.0000,                  !- Year 15 Escalation
-    1.0074,                  !- Year 16 Escalation
-    1.0111,                  !- Year 17 Escalation
-    1.0148,                  !- Year 18 Escalation
-    1.0148,                  !- Year 19 Escalation
-    1.0185,                  !- Year 20 Escalation
-    1.0259,                  !- Year 21 Escalation
-    1.0296,                  !- Year 22 Escalation
-    1.0407,                  !- Year 23 Escalation
-    1.0481,                  !- Year 24 Escalation
-    1.0519,                  !- Year 25 Escalation
-    1.0556,                  !- Year 26 Escalation
-    1.0593,                  !- Year 27 Escalation
-    1.0630,                  !- Year 28 Escalation
-    1.0667,                  !- Year 29 Escalation
-    1.0667;                  !- Year 30 Escalation
+    0.9704,                  !- <none>
+    0.9741,                  !- <none>
+    0.9815,                  !- <none>
+    0.9889,                  !- <none>
+    0.9963,                  !- <none>
+    1.0000,                  !- <none>
+    1.0074,                  !- <none>
+    1.0111,                  !- <none>
+    1.0148,                  !- <none>
+    1.0148,                  !- <none>
+    1.0185,                  !- <none>
+    1.0259,                  !- <none>
+    1.0296,                  !- <none>
+    1.0407,                  !- <none>
+    1.0481,                  !- <none>
+    1.0519,                  !- <none>
+    1.0556,                  !- <none>
+    1.0593,                  !- <none>
+    1.0630,                  !- <none>
+    1.0667,                  !- <none>
+    1.0667;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Residential-Electricity,  !- LCC Price Escalation Name
@@ -1047,27 +1047,27 @@
     0.9949,                  !- Year 7 Escalation
     0.9953,                  !- Year 8 Escalation
     0.9993,                  !- Year 9 Escalation
-    1.0014,                  !- Year 10 Escalation
-    1.0014,                  !- Year 11 Escalation
-    1.0020,                  !- Year 12 Escalation
-    1.0027,                  !- Year 13 Escalation
-    1.0064,                  !- Year 14 Escalation
-    1.0112,                  !- Year 15 Escalation
-    1.0159,                  !- Year 16 Escalation
-    1.0197,                  !- Year 17 Escalation
-    1.0224,                  !- Year 18 Escalation
-    1.0214,                  !- Year 19 Escalation
-    1.0234,                  !- Year 20 Escalation
-    1.0268,                  !- Year 21 Escalation
-    1.0302,                  !- Year 22 Escalation
-    1.0339,                  !- Year 23 Escalation
-    1.0393,                  !- Year 24 Escalation
-    1.0431,                  !- Year 25 Escalation
-    1.0461,                  !- Year 26 Escalation
-    1.0488,                  !- Year 27 Escalation
-    1.0515,                  !- Year 28 Escalation
-    1.0542,                  !- Year 29 Escalation
-    1.0569;                  !- Year 30 Escalation
+    1.0014,                  !- <none>
+    1.0014,                  !- <none>
+    1.0020,                  !- <none>
+    1.0027,                  !- <none>
+    1.0064,                  !- <none>
+    1.0112,                  !- <none>
+    1.0159,                  !- <none>
+    1.0197,                  !- <none>
+    1.0224,                  !- <none>
+    1.0214,                  !- <none>
+    1.0234,                  !- <none>
+    1.0268,                  !- <none>
+    1.0302,                  !- <none>
+    1.0339,                  !- <none>
+    1.0393,                  !- <none>
+    1.0431,                  !- <none>
+    1.0461,                  !- <none>
+    1.0488,                  !- <none>
+    1.0515,                  !- <none>
+    1.0542,                  !- <none>
+    1.0569;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Residential-Distillate Oil,  !- LCC Price Escalation Name
@@ -1083,27 +1083,27 @@
     1.0683,                  !- Year 7 Escalation
     1.0969,                  !- Year 8 Escalation
     1.1158,                  !- Year 9 Escalation
-    1.1284,                  !- Year 10 Escalation
-    1.1405,                  !- Year 11 Escalation
-    1.1541,                  !- Year 12 Escalation
-    1.1730,                  !- Year 13 Escalation
-    1.1875,                  !- Year 14 Escalation
-    1.2006,                  !- Year 15 Escalation
-    1.2117,                  !- Year 16 Escalation
-    1.2234,                  !- Year 17 Escalation
-    1.2340,                  !- Year 18 Escalation
-    1.2427,                  !- Year 19 Escalation
-    1.2481,                  !- Year 20 Escalation
-    1.2529,                  !- Year 21 Escalation
-    1.2558,                  !- Year 22 Escalation
-    1.2636,                  !- Year 23 Escalation
-    1.2708,                  !- Year 24 Escalation
-    1.2742,                  !- Year 25 Escalation
-    1.2771,                  !- Year 26 Escalation
-    1.2805,                  !- Year 27 Escalation
-    1.2834,                  !- Year 28 Escalation
-    1.2863,                  !- Year 29 Escalation
-    1.2897;                  !- Year 30 Escalation
+    1.1284,                  !- <none>
+    1.1405,                  !- <none>
+    1.1541,                  !- <none>
+    1.1730,                  !- <none>
+    1.1875,                  !- <none>
+    1.2006,                  !- <none>
+    1.2117,                  !- <none>
+    1.2234,                  !- <none>
+    1.2340,                  !- <none>
+    1.2427,                  !- <none>
+    1.2481,                  !- <none>
+    1.2529,                  !- <none>
+    1.2558,                  !- <none>
+    1.2636,                  !- <none>
+    1.2708,                  !- <none>
+    1.2742,                  !- <none>
+    1.2771,                  !- <none>
+    1.2805,                  !- <none>
+    1.2834,                  !- <none>
+    1.2863,                  !- <none>
+    1.2897;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Residential-Natural gas,  !- LCC Price Escalation Name
@@ -1119,27 +1119,27 @@
     1.0106,                  !- Year 7 Escalation
     1.0176,                  !- Year 8 Escalation
     1.0344,                  !- Year 9 Escalation
-    1.0537,                  !- Year 10 Escalation
-    1.0714,                  !- Year 11 Escalation
-    1.0907,                  !- Year 12 Escalation
-    1.1128,                  !- Year 13 Escalation
-    1.1348,                  !- Year 14 Escalation
-    1.1515,                  !- Year 15 Escalation
-    1.1665,                  !- Year 16 Escalation
-    1.1771,                  !- Year 17 Escalation
-    1.1833,                  !- Year 18 Escalation
-    1.1903,                  !- Year 19 Escalation
-    1.2026,                  !- Year 20 Escalation
-    1.2176,                  !- Year 21 Escalation
-    1.2326,                  !- Year 22 Escalation
-    1.2502,                  !- Year 23 Escalation
-    1.2714,                  !- Year 24 Escalation
-    1.2863,                  !- Year 25 Escalation
-    1.2996,                  !- Year 26 Escalation
-    1.3119,                  !- Year 27 Escalation
-    1.3251,                  !- Year 28 Escalation
-    1.3392,                  !- Year 29 Escalation
-    1.3533;                  !- Year 30 Escalation
+    1.0537,                  !- <none>
+    1.0714,                  !- <none>
+    1.0907,                  !- <none>
+    1.1128,                  !- <none>
+    1.1348,                  !- <none>
+    1.1515,                  !- <none>
+    1.1665,                  !- <none>
+    1.1771,                  !- <none>
+    1.1833,                  !- <none>
+    1.1903,                  !- <none>
+    1.2026,                  !- <none>
+    1.2176,                  !- <none>
+    1.2326,                  !- <none>
+    1.2502,                  !- <none>
+    1.2714,                  !- <none>
+    1.2863,                  !- <none>
+    1.2996,                  !- <none>
+    1.3119,                  !- <none>
+    1.3251,                  !- <none>
+    1.3392,                  !- <none>
+    1.3533;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Residential-LPG,  !- LCC Price Escalation Name
@@ -1155,27 +1155,27 @@
     1.1543,                  !- Year 7 Escalation
     1.1717,                  !- Year 8 Escalation
     1.1871,                  !- Year 9 Escalation
-    1.2014,                  !- Year 10 Escalation
-    1.2136,                  !- Year 11 Escalation
-    1.2255,                  !- Year 12 Escalation
-    1.2363,                  !- Year 13 Escalation
-    1.2464,                  !- Year 14 Escalation
-    1.2555,                  !- Year 15 Escalation
-    1.2635,                  !- Year 16 Escalation
-    1.2702,                  !- Year 17 Escalation
-    1.2761,                  !- Year 18 Escalation
-    1.2806,                  !- Year 19 Escalation
-    1.2834,                  !- Year 20 Escalation
-    1.2848,                  !- Year 21 Escalation
-    1.2855,                  !- Year 22 Escalation
-    1.2855,                  !- Year 23 Escalation
-    1.2855,                  !- Year 24 Escalation
-    1.2869,                  !- Year 25 Escalation
-    1.2894,                  !- Year 26 Escalation
-    1.2914,                  !- Year 27 Escalation
-    1.2935,                  !- Year 28 Escalation
-    1.2960,                  !- Year 29 Escalation
-    1.2981;                  !- Year 30 Escalation
+    1.2014,                  !- <none>
+    1.2136,                  !- <none>
+    1.2255,                  !- <none>
+    1.2363,                  !- <none>
+    1.2464,                  !- <none>
+    1.2555,                  !- <none>
+    1.2635,                  !- <none>
+    1.2702,                  !- <none>
+    1.2761,                  !- <none>
+    1.2806,                  !- <none>
+    1.2834,                  !- <none>
+    1.2848,                  !- <none>
+    1.2855,                  !- <none>
+    1.2855,                  !- <none>
+    1.2855,                  !- <none>
+    1.2869,                  !- <none>
+    1.2894,                  !- <none>
+    1.2914,                  !- <none>
+    1.2935,                  !- <none>
+    1.2960,                  !- <none>
+    1.2981;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Commercial-Electricity,  !- LCC Price Escalation Name
@@ -1191,27 +1191,27 @@
     0.9870,                  !- Year 7 Escalation
     0.9886,                  !- Year 8 Escalation
     0.9951,                  !- Year 9 Escalation
-    0.9976,                  !- Year 10 Escalation
-    0.9988,                  !- Year 11 Escalation
-    1.0008,                  !- Year 12 Escalation
-    1.0029,                  !- Year 13 Escalation
-    1.0069,                  !- Year 14 Escalation
-    1.0122,                  !- Year 15 Escalation
-    1.0175,                  !- Year 16 Escalation
-    1.0224,                  !- Year 17 Escalation
-    1.0244,                  !- Year 18 Escalation
-    1.0228,                  !- Year 19 Escalation
-    1.0248,                  !- Year 20 Escalation
-    1.0285,                  !- Year 21 Escalation
-    1.0318,                  !- Year 22 Escalation
-    1.0354,                  !- Year 23 Escalation
-    1.0419,                  !- Year 24 Escalation
-    1.0464,                  !- Year 25 Escalation
-    1.0493,                  !- Year 26 Escalation
-    1.0525,                  !- Year 27 Escalation
-    1.0558,                  !- Year 28 Escalation
-    1.0590,                  !- Year 29 Escalation
-    1.0623;                  !- Year 30 Escalation
+    0.9976,                  !- <none>
+    0.9988,                  !- <none>
+    1.0008,                  !- <none>
+    1.0029,                  !- <none>
+    1.0069,                  !- <none>
+    1.0122,                  !- <none>
+    1.0175,                  !- <none>
+    1.0224,                  !- <none>
+    1.0244,                  !- <none>
+    1.0228,                  !- <none>
+    1.0248,                  !- <none>
+    1.0285,                  !- <none>
+    1.0318,                  !- <none>
+    1.0354,                  !- <none>
+    1.0419,                  !- <none>
+    1.0464,                  !- <none>
+    1.0493,                  !- <none>
+    1.0525,                  !- <none>
+    1.0558,                  !- <none>
+    1.0590,                  !- <none>
+    1.0623;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Commercial-Distillate Oil,  !- LCC Price Escalation Name
@@ -1227,27 +1227,27 @@
     1.1436,                  !- Year 7 Escalation
     1.1761,                  !- Year 8 Escalation
     1.1981,                  !- Year 9 Escalation
-    1.2141,                  !- Year 10 Escalation
-    1.2350,                  !- Year 11 Escalation
-    1.2493,                  !- Year 12 Escalation
-    1.2724,                  !- Year 13 Escalation
-    1.2884,                  !- Year 14 Escalation
-    1.3005,                  !- Year 15 Escalation
-    1.3159,                  !- Year 16 Escalation
-    1.3291,                  !- Year 17 Escalation
-    1.3434,                  !- Year 18 Escalation
-    1.3462,                  !- Year 19 Escalation
-    1.3484,                  !- Year 20 Escalation
-    1.3533,                  !- Year 21 Escalation
-    1.3566,                  !- Year 22 Escalation
-    1.3654,                  !- Year 23 Escalation
-    1.3737,                  !- Year 24 Escalation
-    1.3775,                  !- Year 25 Escalation
-    1.3814,                  !- Year 26 Escalation
-    1.3847,                  !- Year 27 Escalation
-    1.3880,                  !- Year 28 Escalation
-    1.3919,                  !- Year 29 Escalation
-    1.3952;                  !- Year 30 Escalation
+    1.2141,                  !- <none>
+    1.2350,                  !- <none>
+    1.2493,                  !- <none>
+    1.2724,                  !- <none>
+    1.2884,                  !- <none>
+    1.3005,                  !- <none>
+    1.3159,                  !- <none>
+    1.3291,                  !- <none>
+    1.3434,                  !- <none>
+    1.3462,                  !- <none>
+    1.3484,                  !- <none>
+    1.3533,                  !- <none>
+    1.3566,                  !- <none>
+    1.3654,                  !- <none>
+    1.3737,                  !- <none>
+    1.3775,                  !- <none>
+    1.3814,                  !- <none>
+    1.3847,                  !- <none>
+    1.3880,                  !- <none>
+    1.3919,                  !- <none>
+    1.3952;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Commercial-Residual Oil,  !- LCC Price Escalation Name
@@ -1263,27 +1263,27 @@
     1.4286,                  !- Year 7 Escalation
     1.4634,                  !- Year 8 Escalation
     1.4890,                  !- Year 9 Escalation
-    1.5174,                  !- Year 10 Escalation
-    1.5449,                  !- Year 11 Escalation
-    1.5742,                  !- Year 12 Escalation
-    1.6016,                  !- Year 13 Escalation
-    1.6245,                  !- Year 14 Escalation
-    1.6447,                  !- Year 15 Escalation
-    1.6621,                  !- Year 16 Escalation
-    1.6740,                  !- Year 17 Escalation
-    1.6832,                  !- Year 18 Escalation
-    1.6703,                  !- Year 19 Escalation
-    1.6630,                  !- Year 20 Escalation
-    1.6548,                  !- Year 21 Escalation
-    1.6520,                  !- Year 22 Escalation
-    1.6612,                  !- Year 23 Escalation
-    1.6685,                  !- Year 24 Escalation
-    1.6740,                  !- Year 25 Escalation
-    1.6795,                  !- Year 26 Escalation
-    1.6859,                  !- Year 27 Escalation
-    1.6914,                  !- Year 28 Escalation
-    1.6978,                  !- Year 29 Escalation
-    1.7033;                  !- Year 30 Escalation
+    1.5174,                  !- <none>
+    1.5449,                  !- <none>
+    1.5742,                  !- <none>
+    1.6016,                  !- <none>
+    1.6245,                  !- <none>
+    1.6447,                  !- <none>
+    1.6621,                  !- <none>
+    1.6740,                  !- <none>
+    1.6832,                  !- <none>
+    1.6703,                  !- <none>
+    1.6630,                  !- <none>
+    1.6548,                  !- <none>
+    1.6520,                  !- <none>
+    1.6612,                  !- <none>
+    1.6685,                  !- <none>
+    1.6740,                  !- <none>
+    1.6795,                  !- <none>
+    1.6859,                  !- <none>
+    1.6914,                  !- <none>
+    1.6978,                  !- <none>
+    1.7033;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Commercial-Natural gas,  !- LCC Price Escalation Name
@@ -1299,27 +1299,27 @@
     0.9642,                  !- Year 7 Escalation
     0.9695,                  !- Year 8 Escalation
     0.9874,                  !- Year 9 Escalation
-    1.0074,                  !- Year 10 Escalation
-    1.0263,                  !- Year 11 Escalation
-    1.0473,                  !- Year 12 Escalation
-    1.0736,                  !- Year 13 Escalation
-    1.0957,                  !- Year 14 Escalation
-    1.1136,                  !- Year 15 Escalation
-    1.1293,                  !- Year 16 Escalation
-    1.1409,                  !- Year 17 Escalation
-    1.1451,                  !- Year 18 Escalation
-    1.1504,                  !- Year 19 Escalation
-    1.1598,                  !- Year 20 Escalation
-    1.1746,                  !- Year 21 Escalation
-    1.1893,                  !- Year 22 Escalation
-    1.2050,                  !- Year 23 Escalation
-    1.2271,                  !- Year 24 Escalation
-    1.2440,                  !- Year 25 Escalation
-    1.2587,                  !- Year 26 Escalation
-    1.2744,                  !- Year 27 Escalation
-    1.2902,                  !- Year 28 Escalation
-    1.3060,                  !- Year 29 Escalation
-    1.3228;                  !- Year 30 Escalation
+    1.0074,                  !- <none>
+    1.0263,                  !- <none>
+    1.0473,                  !- <none>
+    1.0736,                  !- <none>
+    1.0957,                  !- <none>
+    1.1136,                  !- <none>
+    1.1293,                  !- <none>
+    1.1409,                  !- <none>
+    1.1451,                  !- <none>
+    1.1504,                  !- <none>
+    1.1598,                  !- <none>
+    1.1746,                  !- <none>
+    1.1893,                  !- <none>
+    1.2050,                  !- <none>
+    1.2271,                  !- <none>
+    1.2440,                  !- <none>
+    1.2587,                  !- <none>
+    1.2744,                  !- <none>
+    1.2902,                  !- <none>
+    1.3060,                  !- <none>
+    1.3228;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Commercial-Coal,  !- LCC Price Escalation Name
@@ -1335,27 +1335,27 @@
     0.8943,                  !- Year 7 Escalation
     0.8914,                  !- Year 8 Escalation
     0.8943,                  !- Year 9 Escalation
-    0.8971,                  !- Year 10 Escalation
-    0.9000,                  !- Year 11 Escalation
-    0.8971,                  !- Year 12 Escalation
-    0.8971,                  !- Year 13 Escalation
-    0.9000,                  !- Year 14 Escalation
-    0.9057,                  !- Year 15 Escalation
-    0.9086,                  !- Year 16 Escalation
-    0.9171,                  !- Year 17 Escalation
-    0.9286,                  !- Year 18 Escalation
-    0.9314,                  !- Year 19 Escalation
-    0.9400,                  !- Year 20 Escalation
-    0.9457,                  !- Year 21 Escalation
-    0.9514,                  !- Year 22 Escalation
-    0.9543,                  !- Year 23 Escalation
-    0.9571,                  !- Year 24 Escalation
-    0.9600,                  !- Year 25 Escalation
-    0.9629,                  !- Year 26 Escalation
-    0.9657,                  !- Year 27 Escalation
-    0.9686,                  !- Year 28 Escalation
-    0.9714,                  !- Year 29 Escalation
-    0.9714;                  !- Year 30 Escalation
+    0.8971,                  !- <none>
+    0.9000,                  !- <none>
+    0.8971,                  !- <none>
+    0.8971,                  !- <none>
+    0.9000,                  !- <none>
+    0.9057,                  !- <none>
+    0.9086,                  !- <none>
+    0.9171,                  !- <none>
+    0.9286,                  !- <none>
+    0.9314,                  !- <none>
+    0.9400,                  !- <none>
+    0.9457,                  !- <none>
+    0.9514,                  !- <none>
+    0.9543,                  !- <none>
+    0.9571,                  !- <none>
+    0.9600,                  !- <none>
+    0.9629,                  !- <none>
+    0.9657,                  !- <none>
+    0.9686,                  !- <none>
+    0.9714,                  !- <none>
+    0.9714;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Industrial-Electricity,  !- LCC Price Escalation Name
@@ -1371,27 +1371,27 @@
     0.9882,                  !- Year 7 Escalation
     0.9900,                  !- Year 8 Escalation
     0.9965,                  !- Year 9 Escalation
-    1.0006,                  !- Year 10 Escalation
-    1.0035,                  !- Year 11 Escalation
-    1.0065,                  !- Year 12 Escalation
-    1.0100,                  !- Year 13 Escalation
-    1.0159,                  !- Year 14 Escalation
-    1.0230,                  !- Year 15 Escalation
-    1.0301,                  !- Year 16 Escalation
-    1.0378,                  !- Year 17 Escalation
-    1.0425,                  !- Year 18 Escalation
-    1.0425,                  !- Year 19 Escalation
-    1.0466,                  !- Year 20 Escalation
-    1.0531,                  !- Year 21 Escalation
-    1.0590,                  !- Year 22 Escalation
-    1.0649,                  !- Year 23 Escalation
-    1.0744,                  !- Year 24 Escalation
-    1.0809,                  !- Year 25 Escalation
-    1.0862,                  !- Year 26 Escalation
-    1.0915,                  !- Year 27 Escalation
-    1.0974,                  !- Year 28 Escalation
-    1.1027,                  !- Year 29 Escalation
-    1.1080;                  !- Year 30 Escalation
+    1.0006,                  !- <none>
+    1.0035,                  !- <none>
+    1.0065,                  !- <none>
+    1.0100,                  !- <none>
+    1.0159,                  !- <none>
+    1.0230,                  !- <none>
+    1.0301,                  !- <none>
+    1.0378,                  !- <none>
+    1.0425,                  !- <none>
+    1.0425,                  !- <none>
+    1.0466,                  !- <none>
+    1.0531,                  !- <none>
+    1.0590,                  !- <none>
+    1.0649,                  !- <none>
+    1.0744,                  !- <none>
+    1.0809,                  !- <none>
+    1.0862,                  !- <none>
+    1.0915,                  !- <none>
+    1.0974,                  !- <none>
+    1.1027,                  !- <none>
+    1.1080;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Industrial-Distillate Oil,  !- LCC Price Escalation Name
@@ -1407,27 +1407,27 @@
     1.1266,                  !- Year 7 Escalation
     1.1584,                  !- Year 8 Escalation
     1.1796,                  !- Year 9 Escalation
-    1.1965,                  !- Year 10 Escalation
-    1.2219,                  !- Year 11 Escalation
-    1.2352,                  !- Year 12 Escalation
-    1.2595,                  !- Year 13 Escalation
-    1.2738,                  !- Year 14 Escalation
-    1.2844,                  !- Year 15 Escalation
-    1.3014,                  !- Year 16 Escalation
-    1.3130,                  !- Year 17 Escalation
-    1.3289,                  !- Year 18 Escalation
-    1.3263,                  !- Year 19 Escalation
-    1.3263,                  !- Year 20 Escalation
-    1.3310,                  !- Year 21 Escalation
-    1.3337,                  !- Year 22 Escalation
-    1.3427,                  !- Year 23 Escalation
-    1.3506,                  !- Year 24 Escalation
-    1.3543,                  !- Year 25 Escalation
-    1.3575,                  !- Year 26 Escalation
-    1.3612,                  !- Year 27 Escalation
-    1.3644,                  !- Year 28 Escalation
-    1.3681,                  !- Year 29 Escalation
-    1.3713;                  !- Year 30 Escalation
+    1.1965,                  !- <none>
+    1.2219,                  !- <none>
+    1.2352,                  !- <none>
+    1.2595,                  !- <none>
+    1.2738,                  !- <none>
+    1.2844,                  !- <none>
+    1.3014,                  !- <none>
+    1.3130,                  !- <none>
+    1.3289,                  !- <none>
+    1.3263,                  !- <none>
+    1.3263,                  !- <none>
+    1.3310,                  !- <none>
+    1.3337,                  !- <none>
+    1.3427,                  !- <none>
+    1.3506,                  !- <none>
+    1.3543,                  !- <none>
+    1.3575,                  !- <none>
+    1.3612,                  !- <none>
+    1.3644,                  !- <none>
+    1.3681,                  !- <none>
+    1.3713;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Industrial-Residual Oil,  !- LCC Price Escalation Name
@@ -1443,27 +1443,27 @@
     1.2528,                  !- Year 7 Escalation
     1.2834,                  !- Year 8 Escalation
     1.3060,                  !- Year 9 Escalation
-    1.3309,                  !- Year 10 Escalation
-    1.3551,                  !- Year 11 Escalation
-    1.3808,                  !- Year 12 Escalation
-    1.4050,                  !- Year 13 Escalation
-    1.4251,                  !- Year 14 Escalation
-    1.4428,                  !- Year 15 Escalation
-    1.4581,                  !- Year 16 Escalation
-    1.4686,                  !- Year 17 Escalation
-    1.4750,                  !- Year 18 Escalation
-    1.4646,                  !- Year 19 Escalation
-    1.4581,                  !- Year 20 Escalation
-    1.4509,                  !- Year 21 Escalation
-    1.4477,                  !- Year 22 Escalation
-    1.4541,                  !- Year 23 Escalation
-    1.4597,                  !- Year 24 Escalation
-    1.4646,                  !- Year 25 Escalation
-    1.4694,                  !- Year 26 Escalation
-    1.4750,                  !- Year 27 Escalation
-    1.4799,                  !- Year 28 Escalation
-    1.4847,                  !- Year 29 Escalation
-    1.4903;                  !- Year 30 Escalation
+    1.3309,                  !- <none>
+    1.3551,                  !- <none>
+    1.3808,                  !- <none>
+    1.4050,                  !- <none>
+    1.4251,                  !- <none>
+    1.4428,                  !- <none>
+    1.4581,                  !- <none>
+    1.4686,                  !- <none>
+    1.4750,                  !- <none>
+    1.4646,                  !- <none>
+    1.4581,                  !- <none>
+    1.4509,                  !- <none>
+    1.4477,                  !- <none>
+    1.4541,                  !- <none>
+    1.4597,                  !- <none>
+    1.4646,                  !- <none>
+    1.4694,                  !- <none>
+    1.4750,                  !- <none>
+    1.4799,                  !- <none>
+    1.4847,                  !- <none>
+    1.4903;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Industrial-Natural gas,  !- LCC Price Escalation Name
@@ -1479,27 +1479,27 @@
     1.0611,                  !- Year 7 Escalation
     1.0633,                  !- Year 8 Escalation
     1.0882,                  !- Year 9 Escalation
-    1.1267,                  !- Year 10 Escalation
-    1.1629,                  !- Year 11 Escalation
-    1.2036,                  !- Year 12 Escalation
-    1.2534,                  !- Year 13 Escalation
-    1.2964,                  !- Year 14 Escalation
-    1.3303,                  !- Year 15 Escalation
-    1.3597,                  !- Year 16 Escalation
-    1.3756,                  !- Year 17 Escalation
-    1.3801,                  !- Year 18 Escalation
-    1.3824,                  !- Year 19 Escalation
-    1.3982,                  !- Year 20 Escalation
-    1.4231,                  !- Year 21 Escalation
-    1.4457,                  !- Year 22 Escalation
-    1.4751,                  !- Year 23 Escalation
-    1.5181,                  !- Year 24 Escalation
-    1.5520,                  !- Year 25 Escalation
-    1.5837,                  !- Year 26 Escalation
-    1.6176,                  !- Year 27 Escalation
-    1.6516,                  !- Year 28 Escalation
-    1.6855,                  !- Year 29 Escalation
-    1.7217;                  !- Year 30 Escalation
+    1.1267,                  !- <none>
+    1.1629,                  !- <none>
+    1.2036,                  !- <none>
+    1.2534,                  !- <none>
+    1.2964,                  !- <none>
+    1.3303,                  !- <none>
+    1.3597,                  !- <none>
+    1.3756,                  !- <none>
+    1.3801,                  !- <none>
+    1.3824,                  !- <none>
+    1.3982,                  !- <none>
+    1.4231,                  !- <none>
+    1.4457,                  !- <none>
+    1.4751,                  !- <none>
+    1.5181,                  !- <none>
+    1.5520,                  !- <none>
+    1.5837,                  !- <none>
+    1.6176,                  !- <none>
+    1.6516,                  !- <none>
+    1.6855,                  !- <none>
+    1.7217;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Industrial-Coal,  !- LCC Price Escalation Name
@@ -1515,27 +1515,27 @@
     0.9592,                  !- Year 7 Escalation
     0.9621,                  !- Year 8 Escalation
     0.9650,                  !- Year 9 Escalation
-    0.9650,                  !- Year 10 Escalation
-    0.9650,                  !- Year 11 Escalation
-    0.9650,                  !- Year 12 Escalation
-    0.9679,                  !- Year 13 Escalation
-    0.9708,                  !- Year 14 Escalation
-    0.9738,                  !- Year 15 Escalation
-    0.9796,                  !- Year 16 Escalation
-    0.9854,                  !- Year 17 Escalation
-    0.9883,                  !- Year 18 Escalation
-    0.9913,                  !- Year 19 Escalation
-    0.9942,                  !- Year 20 Escalation
-    1.0029,                  !- Year 21 Escalation
-    1.0087,                  !- Year 22 Escalation
-    1.0117,                  !- Year 23 Escalation
-    1.0146,                  !- Year 24 Escalation
-    1.0204,                  !- Year 25 Escalation
-    1.0204,                  !- Year 26 Escalation
-    1.0233,                  !- Year 27 Escalation
-    1.0262,                  !- Year 28 Escalation
-    1.0292,                  !- Year 29 Escalation
-    1.0321;                  !- Year 30 Escalation
+    0.9650,                  !- <none>
+    0.9650,                  !- <none>
+    0.9650,                  !- <none>
+    0.9679,                  !- <none>
+    0.9708,                  !- <none>
+    0.9738,                  !- <none>
+    0.9796,                  !- <none>
+    0.9854,                  !- <none>
+    0.9883,                  !- <none>
+    0.9913,                  !- <none>
+    0.9942,                  !- <none>
+    1.0029,                  !- <none>
+    1.0087,                  !- <none>
+    1.0117,                  !- <none>
+    1.0146,                  !- <none>
+    1.0204,                  !- <none>
+    1.0204,                  !- <none>
+    1.0233,                  !- <none>
+    1.0262,                  !- <none>
+    1.0292,                  !- <none>
+    1.0321;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Residential-Electricity,  !- LCC Price Escalation Name
@@ -1551,27 +1551,27 @@
     0.9793,                  !- Year 7 Escalation
     0.9746,                  !- Year 8 Escalation
     0.9701,                  !- Year 9 Escalation
-    0.9676,                  !- Year 10 Escalation
-    0.9691,                  !- Year 11 Escalation
-    0.9714,                  !- Year 12 Escalation
-    0.9736,                  !- Year 13 Escalation
-    0.9774,                  !- Year 14 Escalation
-    0.9822,                  !- Year 15 Escalation
-    0.9809,                  !- Year 16 Escalation
-    0.9774,                  !- Year 17 Escalation
-    0.9771,                  !- Year 18 Escalation
-    0.9714,                  !- Year 19 Escalation
-    0.9679,                  !- Year 20 Escalation
-    0.9656,                  !- Year 21 Escalation
-    0.9644,                  !- Year 22 Escalation
-    0.9663,                  !- Year 23 Escalation
-    0.9726,                  !- Year 24 Escalation
-    0.9749,                  !- Year 25 Escalation
-    0.9755,                  !- Year 26 Escalation
-    0.9758,                  !- Year 27 Escalation
-    0.9761,                  !- Year 28 Escalation
-    0.9765,                  !- Year 29 Escalation
-    0.9768;                  !- Year 30 Escalation
+    0.9676,                  !- <none>
+    0.9691,                  !- <none>
+    0.9714,                  !- <none>
+    0.9736,                  !- <none>
+    0.9774,                  !- <none>
+    0.9822,                  !- <none>
+    0.9809,                  !- <none>
+    0.9774,                  !- <none>
+    0.9771,                  !- <none>
+    0.9714,                  !- <none>
+    0.9679,                  !- <none>
+    0.9656,                  !- <none>
+    0.9644,                  !- <none>
+    0.9663,                  !- <none>
+    0.9726,                  !- <none>
+    0.9749,                  !- <none>
+    0.9755,                  !- <none>
+    0.9758,                  !- <none>
+    0.9761,                  !- <none>
+    0.9765,                  !- <none>
+    0.9768;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Residential-Distillate Oil,  !- LCC Price Escalation Name
@@ -1587,27 +1587,27 @@
     1.0299,                  !- Year 7 Escalation
     1.0555,                  !- Year 8 Escalation
     1.0779,                  !- Year 9 Escalation
-    1.1017,                  !- Year 10 Escalation
-    1.1208,                  !- Year 11 Escalation
-    1.1348,                  !- Year 12 Escalation
-    1.1511,                  !- Year 13 Escalation
-    1.1656,                  !- Year 14 Escalation
-    1.1786,                  !- Year 15 Escalation
-    1.1917,                  !- Year 16 Escalation
-    1.2015,                  !- Year 17 Escalation
-    1.2122,                  !- Year 18 Escalation
-    1.2253,                  !- Year 19 Escalation
-    1.2299,                  !- Year 20 Escalation
-    1.2281,                  !- Year 21 Escalation
-    1.2267,                  !- Year 22 Escalation
-    1.2299,                  !- Year 23 Escalation
-    1.2360,                  !- Year 24 Escalation
-    1.2397,                  !- Year 25 Escalation
-    1.2430,                  !- Year 26 Escalation
-    1.2458,                  !- Year 27 Escalation
-    1.2486,                  !- Year 28 Escalation
-    1.2519,                  !- Year 29 Escalation
-    1.2547;                  !- Year 30 Escalation
+    1.1017,                  !- <none>
+    1.1208,                  !- <none>
+    1.1348,                  !- <none>
+    1.1511,                  !- <none>
+    1.1656,                  !- <none>
+    1.1786,                  !- <none>
+    1.1917,                  !- <none>
+    1.2015,                  !- <none>
+    1.2122,                  !- <none>
+    1.2253,                  !- <none>
+    1.2299,                  !- <none>
+    1.2281,                  !- <none>
+    1.2267,                  !- <none>
+    1.2299,                  !- <none>
+    1.2360,                  !- <none>
+    1.2397,                  !- <none>
+    1.2430,                  !- <none>
+    1.2458,                  !- <none>
+    1.2486,                  !- <none>
+    1.2519,                  !- <none>
+    1.2547;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Residential-Natural gas,  !- LCC Price Escalation Name
@@ -1623,27 +1623,27 @@
     1.0204,                  !- Year 7 Escalation
     1.0387,                  !- Year 8 Escalation
     1.0652,                  !- Year 9 Escalation
-    1.0916,                  !- Year 10 Escalation
-    1.1100,                  !- Year 11 Escalation
-    1.1273,                  !- Year 12 Escalation
-    1.1456,                  !- Year 13 Escalation
-    1.1619,                  !- Year 14 Escalation
-    1.1792,                  !- Year 15 Escalation
-    1.1996,                  !- Year 16 Escalation
-    1.2159,                  !- Year 17 Escalation
-    1.2291,                  !- Year 18 Escalation
-    1.2424,                  !- Year 19 Escalation
-    1.2546,                  !- Year 20 Escalation
-    1.2688,                  !- Year 21 Escalation
-    1.2892,                  !- Year 22 Escalation
-    1.3106,                  !- Year 23 Escalation
-    1.3350,                  !- Year 24 Escalation
-    1.3513,                  !- Year 25 Escalation
-    1.3656,                  !- Year 26 Escalation
-    1.3809,                  !- Year 27 Escalation
-    1.3961,                  !- Year 28 Escalation
-    1.4124,                  !- Year 29 Escalation
-    1.4277;                  !- Year 30 Escalation
+    1.0916,                  !- <none>
+    1.1100,                  !- <none>
+    1.1273,                  !- <none>
+    1.1456,                  !- <none>
+    1.1619,                  !- <none>
+    1.1792,                  !- <none>
+    1.1996,                  !- <none>
+    1.2159,                  !- <none>
+    1.2291,                  !- <none>
+    1.2424,                  !- <none>
+    1.2546,                  !- <none>
+    1.2688,                  !- <none>
+    1.2892,                  !- <none>
+    1.3106,                  !- <none>
+    1.3350,                  !- <none>
+    1.3513,                  !- <none>
+    1.3656,                  !- <none>
+    1.3809,                  !- <none>
+    1.3961,                  !- <none>
+    1.4124,                  !- <none>
+    1.4277;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Residential-LPG,   !- LCC Price Escalation Name
@@ -1659,27 +1659,27 @@
     1.1201,                  !- Year 7 Escalation
     1.1375,                  !- Year 8 Escalation
     1.1530,                  !- Year 9 Escalation
-    1.1675,                  !- Year 10 Escalation
-    1.1799,                  !- Year 11 Escalation
-    1.1919,                  !- Year 12 Escalation
-    1.2025,                  !- Year 13 Escalation
-    1.2124,                  !- Year 14 Escalation
-    1.2216,                  !- Year 15 Escalation
-    1.2297,                  !- Year 16 Escalation
-    1.2360,                  !- Year 17 Escalation
-    1.2420,                  !- Year 18 Escalation
-    1.2466,                  !- Year 19 Escalation
-    1.2495,                  !- Year 20 Escalation
-    1.2505,                  !- Year 21 Escalation
-    1.2509,                  !- Year 22 Escalation
-    1.2509,                  !- Year 23 Escalation
-    1.2509,                  !- Year 24 Escalation
-    1.2523,                  !- Year 25 Escalation
-    1.2548,                  !- Year 26 Escalation
-    1.2569,                  !- Year 27 Escalation
-    1.2590,                  !- Year 28 Escalation
-    1.2615,                  !- Year 29 Escalation
-    1.2636;                  !- Year 30 Escalation
+    1.1675,                  !- <none>
+    1.1799,                  !- <none>
+    1.1919,                  !- <none>
+    1.2025,                  !- <none>
+    1.2124,                  !- <none>
+    1.2216,                  !- <none>
+    1.2297,                  !- <none>
+    1.2360,                  !- <none>
+    1.2420,                  !- <none>
+    1.2466,                  !- <none>
+    1.2495,                  !- <none>
+    1.2505,                  !- <none>
+    1.2509,                  !- <none>
+    1.2509,                  !- <none>
+    1.2509,                  !- <none>
+    1.2523,                  !- <none>
+    1.2548,                  !- <none>
+    1.2569,                  !- <none>
+    1.2590,                  !- <none>
+    1.2615,                  !- <none>
+    1.2636;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Commercial-Electricity,  !- LCC Price Escalation Name
@@ -1695,27 +1695,27 @@
     0.9432,                  !- Year 7 Escalation
     0.9350,                  !- Year 8 Escalation
     0.9298,                  !- Year 9 Escalation
-    0.9256,                  !- Year 10 Escalation
-    0.9275,                  !- Year 11 Escalation
-    0.9305,                  !- Year 12 Escalation
-    0.9327,                  !- Year 13 Escalation
-    0.9367,                  !- Year 14 Escalation
-    0.9406,                  !- Year 15 Escalation
-    0.9347,                  !- Year 16 Escalation
-    0.9269,                  !- Year 17 Escalation
-    0.9226,                  !- Year 18 Escalation
-    0.9145,                  !- Year 19 Escalation
-    0.9096,                  !- Year 20 Escalation
-    0.9060,                  !- Year 21 Escalation
-    0.9024,                  !- Year 22 Escalation
-    0.9024,                  !- Year 23 Escalation
-    0.9079,                  !- Year 24 Escalation
-    0.9089,                  !- Year 25 Escalation
-    0.9076,                  !- Year 26 Escalation
-    0.9063,                  !- Year 27 Escalation
-    0.9050,                  !- Year 28 Escalation
-    0.9037,                  !- Year 29 Escalation
-    0.9027;                  !- Year 30 Escalation
+    0.9256,                  !- <none>
+    0.9275,                  !- <none>
+    0.9305,                  !- <none>
+    0.9327,                  !- <none>
+    0.9367,                  !- <none>
+    0.9406,                  !- <none>
+    0.9347,                  !- <none>
+    0.9269,                  !- <none>
+    0.9226,                  !- <none>
+    0.9145,                  !- <none>
+    0.9096,                  !- <none>
+    0.9060,                  !- <none>
+    0.9024,                  !- <none>
+    0.9024,                  !- <none>
+    0.9079,                  !- <none>
+    0.9089,                  !- <none>
+    0.9076,                  !- <none>
+    0.9063,                  !- <none>
+    0.9050,                  !- <none>
+    0.9037,                  !- <none>
+    0.9027;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Commercial-Distillate Oil,  !- LCC Price Escalation Name
@@ -1731,27 +1731,27 @@
     1.0108,                  !- Year 7 Escalation
     1.0396,                  !- Year 8 Escalation
     1.0632,                  !- Year 9 Escalation
-    1.0879,                  !- Year 10 Escalation
-    1.1136,                  !- Year 11 Escalation
-    1.1285,                  !- Year 12 Escalation
-    1.1501,                  !- Year 13 Escalation
-    1.1645,                  !- Year 14 Escalation
-    1.1769,                  !- Year 15 Escalation
-    1.1933,                  !- Year 16 Escalation
-    1.2041,                  !- Year 17 Escalation
-    1.2185,                  !- Year 18 Escalation
-    1.2262,                  !- Year 19 Escalation
-    1.2288,                  !- Year 20 Escalation
-    1.2298,                  !- Year 21 Escalation
-    1.2303,                  !- Year 22 Escalation
-    1.2355,                  !- Year 23 Escalation
-    1.2437,                  !- Year 24 Escalation
-    1.2478,                  !- Year 25 Escalation
-    1.2509,                  !- Year 26 Escalation
-    1.2545,                  !- Year 27 Escalation
-    1.2576,                  !- Year 28 Escalation
-    1.2612,                  !- Year 29 Escalation
-    1.2643;                  !- Year 30 Escalation
+    1.0879,                  !- <none>
+    1.1136,                  !- <none>
+    1.1285,                  !- <none>
+    1.1501,                  !- <none>
+    1.1645,                  !- <none>
+    1.1769,                  !- <none>
+    1.1933,                  !- <none>
+    1.2041,                  !- <none>
+    1.2185,                  !- <none>
+    1.2262,                  !- <none>
+    1.2288,                  !- <none>
+    1.2298,                  !- <none>
+    1.2303,                  !- <none>
+    1.2355,                  !- <none>
+    1.2437,                  !- <none>
+    1.2478,                  !- <none>
+    1.2509,                  !- <none>
+    1.2545,                  !- <none>
+    1.2576,                  !- <none>
+    1.2612,                  !- <none>
+    1.2643;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Commercial-Residual Oil,  !- LCC Price Escalation Name
@@ -1767,27 +1767,27 @@
     1.4249,                  !- Year 7 Escalation
     1.4548,                  !- Year 8 Escalation
     1.4881,                  !- Year 9 Escalation
-    1.5162,                  !- Year 10 Escalation
-    1.5417,                  !- Year 11 Escalation
-    1.5698,                  !- Year 12 Escalation
-    1.5900,                  !- Year 13 Escalation
-    1.6111,                  !- Year 14 Escalation
-    1.6330,                  !- Year 15 Escalation
-    1.6497,                  !- Year 16 Escalation
-    1.6620,                  !- Year 17 Escalation
-    1.6725,                  !- Year 18 Escalation
-    1.6752,                  !- Year 19 Escalation
-    1.6752,                  !- Year 20 Escalation
-    1.6558,                  !- Year 21 Escalation
-    1.6585,                  !- Year 22 Escalation
-    1.6585,                  !- Year 23 Escalation
-    1.6655,                  !- Year 24 Escalation
-    1.6716,                  !- Year 25 Escalation
-    1.6778,                  !- Year 26 Escalation
-    1.6831,                  !- Year 27 Escalation
-    1.6892,                  !- Year 28 Escalation
-    1.6945,                  !- Year 29 Escalation
-    1.6997;                  !- Year 30 Escalation
+    1.5162,                  !- <none>
+    1.5417,                  !- <none>
+    1.5698,                  !- <none>
+    1.5900,                  !- <none>
+    1.6111,                  !- <none>
+    1.6330,                  !- <none>
+    1.6497,                  !- <none>
+    1.6620,                  !- <none>
+    1.6725,                  !- <none>
+    1.6752,                  !- <none>
+    1.6752,                  !- <none>
+    1.6558,                  !- <none>
+    1.6585,                  !- <none>
+    1.6585,                  !- <none>
+    1.6655,                  !- <none>
+    1.6716,                  !- <none>
+    1.6778,                  !- <none>
+    1.6831,                  !- <none>
+    1.6892,                  !- <none>
+    1.6945,                  !- <none>
+    1.6997;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Commercial-Natural gas,  !- LCC Price Escalation Name
@@ -1803,27 +1803,27 @@
     0.9807,                  !- Year 7 Escalation
     1.0000,                  !- Year 8 Escalation
     1.0295,                  !- Year 9 Escalation
-    1.0556,                  !- Year 10 Escalation
-    1.0749,                  !- Year 11 Escalation
-    1.0919,                  !- Year 12 Escalation
-    1.1112,                  !- Year 13 Escalation
-    1.1283,                  !- Year 14 Escalation
-    1.1430,                  !- Year 15 Escalation
-    1.1657,                  !- Year 16 Escalation
-    1.1827,                  !- Year 17 Escalation
-    1.1952,                  !- Year 18 Escalation
-    1.2066,                  !- Year 19 Escalation
-    1.2179,                  !- Year 20 Escalation
-    1.2327,                  !- Year 21 Escalation
-    1.2520,                  !- Year 22 Escalation
-    1.2724,                  !- Year 23 Escalation
-    1.2963,                  !- Year 24 Escalation
-    1.3144,                  !- Year 25 Escalation
-    1.3314,                  !- Year 26 Escalation
-    1.3473,                  !- Year 27 Escalation
-    1.3644,                  !- Year 28 Escalation
-    1.3825,                  !- Year 29 Escalation
-    1.4007;                  !- Year 30 Escalation
+    1.0556,                  !- <none>
+    1.0749,                  !- <none>
+    1.0919,                  !- <none>
+    1.1112,                  !- <none>
+    1.1283,                  !- <none>
+    1.1430,                  !- <none>
+    1.1657,                  !- <none>
+    1.1827,                  !- <none>
+    1.1952,                  !- <none>
+    1.2066,                  !- <none>
+    1.2179,                  !- <none>
+    1.2327,                  !- <none>
+    1.2520,                  !- <none>
+    1.2724,                  !- <none>
+    1.2963,                  !- <none>
+    1.3144,                  !- <none>
+    1.3314,                  !- <none>
+    1.3473,                  !- <none>
+    1.3644,                  !- <none>
+    1.3825,                  !- <none>
+    1.4007;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Commercial-Coal,   !- LCC Price Escalation Name
@@ -1839,27 +1839,27 @@
     1.0313,                  !- Year 7 Escalation
     1.0339,                  !- Year 8 Escalation
     1.0365,                  !- Year 9 Escalation
-    1.0469,                  !- Year 10 Escalation
-    1.0573,                  !- Year 11 Escalation
-    1.0625,                  !- Year 12 Escalation
-    1.0729,                  !- Year 13 Escalation
-    1.0781,                  !- Year 14 Escalation
-    1.0833,                  !- Year 15 Escalation
-    1.0885,                  !- Year 16 Escalation
-    1.0964,                  !- Year 17 Escalation
-    1.1094,                  !- Year 18 Escalation
-    1.1146,                  !- Year 19 Escalation
-    1.1224,                  !- Year 20 Escalation
-    1.1276,                  !- Year 21 Escalation
-    1.1354,                  !- Year 22 Escalation
-    1.1406,                  !- Year 23 Escalation
-    1.1406,                  !- Year 24 Escalation
-    1.1432,                  !- Year 25 Escalation
-    1.1458,                  !- Year 26 Escalation
-    1.1484,                  !- Year 27 Escalation
-    1.1484,                  !- Year 28 Escalation
-    1.1510,                  !- Year 29 Escalation
-    1.1536;                  !- Year 30 Escalation
+    1.0469,                  !- <none>
+    1.0573,                  !- <none>
+    1.0625,                  !- <none>
+    1.0729,                  !- <none>
+    1.0781,                  !- <none>
+    1.0833,                  !- <none>
+    1.0885,                  !- <none>
+    1.0964,                  !- <none>
+    1.1094,                  !- <none>
+    1.1146,                  !- <none>
+    1.1224,                  !- <none>
+    1.1276,                  !- <none>
+    1.1354,                  !- <none>
+    1.1406,                  !- <none>
+    1.1406,                  !- <none>
+    1.1432,                  !- <none>
+    1.1458,                  !- <none>
+    1.1484,                  !- <none>
+    1.1484,                  !- <none>
+    1.1510,                  !- <none>
+    1.1536;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Industrial-Electricity,  !- LCC Price Escalation Name
@@ -1875,27 +1875,27 @@
     0.9471,                  !- Year 7 Escalation
     0.9410,                  !- Year 8 Escalation
     0.9340,                  !- Year 9 Escalation
-    0.9284,                  !- Year 10 Escalation
-    0.9288,                  !- Year 11 Escalation
-    0.9316,                  !- Year 12 Escalation
-    0.9345,                  !- Year 13 Escalation
-    0.9373,                  !- Year 14 Escalation
-    0.9424,                  !- Year 15 Escalation
-    0.9391,                  !- Year 16 Escalation
-    0.9354,                  !- Year 17 Escalation
-    0.9340,                  !- Year 18 Escalation
-    0.9256,                  !- Year 19 Escalation
-    0.9209,                  !- Year 20 Escalation
-    0.9185,                  !- Year 21 Escalation
-    0.9171,                  !- Year 22 Escalation
-    0.9185,                  !- Year 23 Escalation
-    0.9251,                  !- Year 24 Escalation
-    0.9265,                  !- Year 25 Escalation
-    0.9260,                  !- Year 26 Escalation
-    0.9256,                  !- Year 27 Escalation
-    0.9256,                  !- Year 28 Escalation
-    0.9251,                  !- Year 29 Escalation
-    0.9246;                  !- Year 30 Escalation
+    0.9284,                  !- <none>
+    0.9288,                  !- <none>
+    0.9316,                  !- <none>
+    0.9345,                  !- <none>
+    0.9373,                  !- <none>
+    0.9424,                  !- <none>
+    0.9391,                  !- <none>
+    0.9354,                  !- <none>
+    0.9340,                  !- <none>
+    0.9256,                  !- <none>
+    0.9209,                  !- <none>
+    0.9185,                  !- <none>
+    0.9171,                  !- <none>
+    0.9185,                  !- <none>
+    0.9251,                  !- <none>
+    0.9265,                  !- <none>
+    0.9260,                  !- <none>
+    0.9256,                  !- <none>
+    0.9256,                  !- <none>
+    0.9251,                  !- <none>
+    0.9246;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Industrial-Distillate Oil,  !- LCC Price Escalation Name
@@ -1911,27 +1911,27 @@
     1.0277,                  !- Year 7 Escalation
     1.0570,                  !- Year 8 Escalation
     1.0797,                  !- Year 9 Escalation
-    1.1019,                  !- Year 10 Escalation
-    1.1296,                  !- Year 11 Escalation
-    1.1432,                  !- Year 12 Escalation
-    1.1664,                  !- Year 13 Escalation
-    1.1800,                  !- Year 14 Escalation
-    1.1901,                  !- Year 15 Escalation
-    1.2078,                  !- Year 16 Escalation
-    1.2184,                  !- Year 17 Escalation
-    1.2345,                  !- Year 18 Escalation
-    1.2365,                  !- Year 19 Escalation
-    1.2370,                  !- Year 20 Escalation
-    1.2395,                  !- Year 21 Escalation
-    1.2416,                  !- Year 22 Escalation
-    1.2476,                  !- Year 23 Escalation
-    1.2562,                  !- Year 24 Escalation
-    1.2602,                  !- Year 25 Escalation
-    1.2637,                  !- Year 26 Escalation
-    1.2668,                  !- Year 27 Escalation
-    1.2703,                  !- Year 28 Escalation
-    1.2733,                  !- Year 29 Escalation
-    1.2763;                  !- Year 30 Escalation
+    1.1019,                  !- <none>
+    1.1296,                  !- <none>
+    1.1432,                  !- <none>
+    1.1664,                  !- <none>
+    1.1800,                  !- <none>
+    1.1901,                  !- <none>
+    1.2078,                  !- <none>
+    1.2184,                  !- <none>
+    1.2345,                  !- <none>
+    1.2365,                  !- <none>
+    1.2370,                  !- <none>
+    1.2395,                  !- <none>
+    1.2416,                  !- <none>
+    1.2476,                  !- <none>
+    1.2562,                  !- <none>
+    1.2602,                  !- <none>
+    1.2637,                  !- <none>
+    1.2668,                  !- <none>
+    1.2703,                  !- <none>
+    1.2733,                  !- <none>
+    1.2763;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Industrial-Residual Oil,  !- LCC Price Escalation Name
@@ -1947,27 +1947,27 @@
     1.0059,                  !- Year 7 Escalation
     1.0306,                  !- Year 8 Escalation
     1.0546,                  !- Year 9 Escalation
-    1.0748,                  !- Year 10 Escalation
-    1.0936,                  !- Year 11 Escalation
-    1.1125,                  !- Year 12 Escalation
-    1.1287,                  !- Year 13 Escalation
-    1.1443,                  !- Year 14 Escalation
-    1.1586,                  !- Year 15 Escalation
-    1.1710,                  !- Year 16 Escalation
-    1.1801,                  !- Year 17 Escalation
-    1.1827,                  !- Year 18 Escalation
-    1.1756,                  !- Year 19 Escalation
-    1.1723,                  !- Year 20 Escalation
-    1.1638,                  !- Year 21 Escalation
-    1.1632,                  !- Year 22 Escalation
-    1.1671,                  !- Year 23 Escalation
-    1.1730,                  !- Year 24 Escalation
-    1.1769,                  !- Year 25 Escalation
-    1.1808,                  !- Year 26 Escalation
-    1.1853,                  !- Year 27 Escalation
-    1.1892,                  !- Year 28 Escalation
-    1.1938,                  !- Year 29 Escalation
-    1.1977;                  !- Year 30 Escalation
+    1.0748,                  !- <none>
+    1.0936,                  !- <none>
+    1.1125,                  !- <none>
+    1.1287,                  !- <none>
+    1.1443,                  !- <none>
+    1.1586,                  !- <none>
+    1.1710,                  !- <none>
+    1.1801,                  !- <none>
+    1.1827,                  !- <none>
+    1.1756,                  !- <none>
+    1.1723,                  !- <none>
+    1.1638,                  !- <none>
+    1.1632,                  !- <none>
+    1.1671,                  !- <none>
+    1.1730,                  !- <none>
+    1.1769,                  !- <none>
+    1.1808,                  !- <none>
+    1.1853,                  !- <none>
+    1.1892,                  !- <none>
+    1.1938,                  !- <none>
+    1.1977;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Industrial-Natural gas,  !- LCC Price Escalation Name
@@ -1983,27 +1983,27 @@
     1.0489,                  !- Year 7 Escalation
     1.0771,                  !- Year 8 Escalation
     1.1165,                  !- Year 9 Escalation
-    1.1560,                  !- Year 10 Escalation
-    1.1805,                  !- Year 11 Escalation
-    1.2030,                  !- Year 12 Escalation
-    1.2274,                  !- Year 13 Escalation
-    1.2481,                  !- Year 14 Escalation
-    1.2707,                  !- Year 15 Escalation
-    1.2989,                  !- Year 16 Escalation
-    1.3214,                  !- Year 17 Escalation
-    1.3402,                  !- Year 18 Escalation
-    1.3571,                  !- Year 19 Escalation
-    1.3684,                  !- Year 20 Escalation
-    1.3853,                  !- Year 21 Escalation
-    1.4117,                  !- Year 22 Escalation
-    1.4398,                  !- Year 23 Escalation
-    1.4756,                  !- Year 24 Escalation
-    1.5038,                  !- Year 25 Escalation
-    1.5320,                  !- Year 26 Escalation
-    1.5583,                  !- Year 27 Escalation
-    1.5865,                  !- Year 28 Escalation
-    1.6165,                  !- Year 29 Escalation
-    1.6466;                  !- Year 30 Escalation
+    1.1560,                  !- <none>
+    1.1805,                  !- <none>
+    1.2030,                  !- <none>
+    1.2274,                  !- <none>
+    1.2481,                  !- <none>
+    1.2707,                  !- <none>
+    1.2989,                  !- <none>
+    1.3214,                  !- <none>
+    1.3402,                  !- <none>
+    1.3571,                  !- <none>
+    1.3684,                  !- <none>
+    1.3853,                  !- <none>
+    1.4117,                  !- <none>
+    1.4398,                  !- <none>
+    1.4756,                  !- <none>
+    1.5038,                  !- <none>
+    1.5320,                  !- <none>
+    1.5583,                  !- <none>
+    1.5865,                  !- <none>
+    1.6165,                  !- <none>
+    1.6466;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     West  Industrial-Coal,   !- LCC Price Escalation Name
@@ -2019,27 +2019,27 @@
     0.9847,                  !- Year 7 Escalation
     0.9847,                  !- Year 8 Escalation
     0.9885,                  !- Year 9 Escalation
-    1.0038,                  !- Year 10 Escalation
-    1.0153,                  !- Year 11 Escalation
-    1.0230,                  !- Year 12 Escalation
-    1.0345,                  !- Year 13 Escalation
-    1.0421,                  !- Year 14 Escalation
-    1.0498,                  !- Year 15 Escalation
-    1.0498,                  !- Year 16 Escalation
-    1.0536,                  !- Year 17 Escalation
-    1.0613,                  !- Year 18 Escalation
-    1.0690,                  !- Year 19 Escalation
-    1.0766,                  !- Year 20 Escalation
-    1.0843,                  !- Year 21 Escalation
-    1.0881,                  !- Year 22 Escalation
-    1.0920,                  !- Year 23 Escalation
-    1.0958,                  !- Year 24 Escalation
-    1.0996,                  !- Year 25 Escalation
-    1.0996,                  !- Year 26 Escalation
-    1.1034,                  !- Year 27 Escalation
-    1.1073,                  !- Year 28 Escalation
-    1.1111,                  !- Year 29 Escalation
-    1.1149;                  !- Year 30 Escalation
+    1.0038,                  !- <none>
+    1.0153,                  !- <none>
+    1.0230,                  !- <none>
+    1.0345,                  !- <none>
+    1.0421,                  !- <none>
+    1.0498,                  !- <none>
+    1.0498,                  !- <none>
+    1.0536,                  !- <none>
+    1.0613,                  !- <none>
+    1.0690,                  !- <none>
+    1.0766,                  !- <none>
+    1.0843,                  !- <none>
+    1.0881,                  !- <none>
+    1.0920,                  !- <none>
+    1.0958,                  !- <none>
+    1.0996,                  !- <none>
+    1.0996,                  !- <none>
+    1.1034,                  !- <none>
+    1.1073,                  !- <none>
+    1.1111,                  !- <none>
+    1.1149;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Residential-Electricity,  !- LCC Price Escalation Name
@@ -2055,27 +2055,27 @@
     0.9841,                  !- Year 7 Escalation
     0.9806,                  !- Year 8 Escalation
     0.9800,                  !- Year 9 Escalation
-    0.9781,                  !- Year 10 Escalation
-    0.9759,                  !- Year 11 Escalation
-    0.9747,                  !- Year 12 Escalation
-    0.9738,                  !- Year 13 Escalation
-    0.9747,                  !- Year 14 Escalation
-    0.9763,                  !- Year 15 Escalation
-    0.9769,                  !- Year 16 Escalation
-    0.9769,                  !- Year 17 Escalation
-    0.9778,                  !- Year 18 Escalation
-    0.9759,                  !- Year 19 Escalation
-    0.9763,                  !- Year 20 Escalation
-    0.9778,                  !- Year 21 Escalation
-    0.9803,                  !- Year 22 Escalation
-    0.9831,                  !- Year 23 Escalation
-    0.9881,                  !- Year 24 Escalation
-    0.9897,                  !- Year 25 Escalation
-    0.9900,                  !- Year 26 Escalation
-    0.9906,                  !- Year 27 Escalation
-    0.9913,                  !- Year 28 Escalation
-    0.9919,                  !- Year 29 Escalation
-    0.9925;                  !- Year 30 Escalation
+    0.9781,                  !- <none>
+    0.9759,                  !- <none>
+    0.9747,                  !- <none>
+    0.9738,                  !- <none>
+    0.9747,                  !- <none>
+    0.9763,                  !- <none>
+    0.9769,                  !- <none>
+    0.9769,                  !- <none>
+    0.9778,                  !- <none>
+    0.9759,                  !- <none>
+    0.9763,                  !- <none>
+    0.9778,                  !- <none>
+    0.9803,                  !- <none>
+    0.9831,                  !- <none>
+    0.9881,                  !- <none>
+    0.9897,                  !- <none>
+    0.9900,                  !- <none>
+    0.9906,                  !- <none>
+    0.9913,                  !- <none>
+    0.9919,                  !- <none>
+    0.9925;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Residential-Distillate Oil,  !- LCC Price Escalation Name
@@ -2091,27 +2091,27 @@
     1.0822,                  !- Year 7 Escalation
     1.1102,                  !- Year 8 Escalation
     1.1289,                  !- Year 9 Escalation
-    1.1433,                  !- Year 10 Escalation
-    1.1611,                  !- Year 11 Escalation
-    1.1737,                  !- Year 12 Escalation
-    1.1937,                  !- Year 13 Escalation
-    1.2073,                  !- Year 14 Escalation
-    1.2185,                  !- Year 15 Escalation
-    1.2316,                  !- Year 16 Escalation
-    1.2428,                  !- Year 17 Escalation
-    1.2554,                  !- Year 18 Escalation
-    1.2577,                  !- Year 19 Escalation
-    1.2610,                  !- Year 20 Escalation
-    1.2656,                  !- Year 21 Escalation
-    1.2684,                  !- Year 22 Escalation
-    1.2764,                  !- Year 23 Escalation
-    1.2834,                  !- Year 24 Escalation
-    1.2857,                  !- Year 25 Escalation
-    1.2880,                  !- Year 26 Escalation
-    1.2908,                  !- Year 27 Escalation
-    1.2937,                  !- Year 28 Escalation
-    1.2969,                  !- Year 29 Escalation
-    1.2997;                  !- Year 30 Escalation
+    1.1433,                  !- <none>
+    1.1611,                  !- <none>
+    1.1737,                  !- <none>
+    1.1937,                  !- <none>
+    1.2073,                  !- <none>
+    1.2185,                  !- <none>
+    1.2316,                  !- <none>
+    1.2428,                  !- <none>
+    1.2554,                  !- <none>
+    1.2577,                  !- <none>
+    1.2610,                  !- <none>
+    1.2656,                  !- <none>
+    1.2684,                  !- <none>
+    1.2764,                  !- <none>
+    1.2834,                  !- <none>
+    1.2857,                  !- <none>
+    1.2880,                  !- <none>
+    1.2908,                  !- <none>
+    1.2937,                  !- <none>
+    1.2969,                  !- <none>
+    1.2997;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Residential-Natural gas,  !- LCC Price Escalation Name
@@ -2127,27 +2127,27 @@
     0.9952,                  !- Year 7 Escalation
     1.0096,                  !- Year 8 Escalation
     1.0315,                  !- Year 9 Escalation
-    1.0525,                  !- Year 10 Escalation
-    1.0707,                  !- Year 11 Escalation
-    1.0879,                  !- Year 12 Escalation
-    1.1079,                  !- Year 13 Escalation
-    1.1251,                  !- Year 14 Escalation
-    1.1414,                  !- Year 15 Escalation
-    1.1585,                  !- Year 16 Escalation
-    1.1719,                  !- Year 17 Escalation
-    1.1815,                  !- Year 18 Escalation
-    1.1920,                  !- Year 19 Escalation
-    1.2044,                  !- Year 20 Escalation
-    1.2178,                  !- Year 21 Escalation
-    1.2350,                  !- Year 22 Escalation
-    1.2521,                  !- Year 23 Escalation
-    1.2732,                  !- Year 24 Escalation
-    1.2865,                  !- Year 25 Escalation
-    1.2999,                  !- Year 26 Escalation
-    1.3133,                  !- Year 27 Escalation
-    1.3286,                  !- Year 28 Escalation
-    1.3429,                  !- Year 29 Escalation
-    1.3582;                  !- Year 30 Escalation
+    1.0525,                  !- <none>
+    1.0707,                  !- <none>
+    1.0879,                  !- <none>
+    1.1079,                  !- <none>
+    1.1251,                  !- <none>
+    1.1414,                  !- <none>
+    1.1585,                  !- <none>
+    1.1719,                  !- <none>
+    1.1815,                  !- <none>
+    1.1920,                  !- <none>
+    1.2044,                  !- <none>
+    1.2178,                  !- <none>
+    1.2350,                  !- <none>
+    1.2521,                  !- <none>
+    1.2732,                  !- <none>
+    1.2865,                  !- <none>
+    1.2999,                  !- <none>
+    1.3133,                  !- <none>
+    1.3286,                  !- <none>
+    1.3429,                  !- <none>
+    1.3582;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Residential-LPG,  !- LCC Price Escalation Name
@@ -2163,27 +2163,27 @@
     1.1688,                  !- Year 7 Escalation
     1.1875,                  !- Year 8 Escalation
     1.2041,                  !- Year 9 Escalation
-    1.2198,                  !- Year 10 Escalation
-    1.2333,                  !- Year 11 Escalation
-    1.2461,                  !- Year 12 Escalation
-    1.2577,                  !- Year 13 Escalation
-    1.2689,                  !- Year 14 Escalation
-    1.2791,                  !- Year 15 Escalation
-    1.2877,                  !- Year 16 Escalation
-    1.2952,                  !- Year 17 Escalation
-    1.3020,                  !- Year 18 Escalation
-    1.3068,                  !- Year 19 Escalation
-    1.3102,                  !- Year 20 Escalation
-    1.3117,                  !- Year 21 Escalation
-    1.3125,                  !- Year 22 Escalation
-    1.3128,                  !- Year 23 Escalation
-    1.3132,                  !- Year 24 Escalation
-    1.3136,                  !- Year 25 Escalation
-    1.3155,                  !- Year 26 Escalation
-    1.3177,                  !- Year 27 Escalation
-    1.3203,                  !- Year 28 Escalation
-    1.3226,                  !- Year 29 Escalation
-    1.3252;                  !- Year 30 Escalation
+    1.2198,                  !- <none>
+    1.2333,                  !- <none>
+    1.2461,                  !- <none>
+    1.2577,                  !- <none>
+    1.2689,                  !- <none>
+    1.2791,                  !- <none>
+    1.2877,                  !- <none>
+    1.2952,                  !- <none>
+    1.3020,                  !- <none>
+    1.3068,                  !- <none>
+    1.3102,                  !- <none>
+    1.3117,                  !- <none>
+    1.3125,                  !- <none>
+    1.3128,                  !- <none>
+    1.3132,                  !- <none>
+    1.3136,                  !- <none>
+    1.3155,                  !- <none>
+    1.3177,                  !- <none>
+    1.3203,                  !- <none>
+    1.3226,                  !- <none>
+    1.3252;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Commercial-Electricity,  !- LCC Price Escalation Name
@@ -2199,27 +2199,27 @@
     0.9539,                  !- Year 7 Escalation
     0.9521,                  !- Year 8 Escalation
     0.9546,                  !- Year 9 Escalation
-    0.9550,                  !- Year 10 Escalation
-    0.9553,                  !- Year 11 Escalation
-    0.9564,                  !- Year 12 Escalation
-    0.9575,                  !- Year 13 Escalation
-    0.9596,                  !- Year 14 Escalation
-    0.9618,                  !- Year 15 Escalation
-    0.9614,                  !- Year 16 Escalation
-    0.9618,                  !- Year 17 Escalation
-    0.9618,                  !- Year 18 Escalation
-    0.9593,                  !- Year 19 Escalation
-    0.9589,                  !- Year 20 Escalation
-    0.9607,                  !- Year 21 Escalation
-    0.9625,                  !- Year 22 Escalation
-    0.9650,                  !- Year 23 Escalation
-    0.9708,                  !- Year 24 Escalation
-    0.9751,                  !- Year 25 Escalation
-    0.9762,                  !- Year 26 Escalation
-    0.9766,                  !- Year 27 Escalation
-    0.9766,                  !- Year 28 Escalation
-    0.9769,                  !- Year 29 Escalation
-    0.9773;                  !- Year 30 Escalation
+    0.9550,                  !- <none>
+    0.9553,                  !- <none>
+    0.9564,                  !- <none>
+    0.9575,                  !- <none>
+    0.9596,                  !- <none>
+    0.9618,                  !- <none>
+    0.9614,                  !- <none>
+    0.9618,                  !- <none>
+    0.9618,                  !- <none>
+    0.9593,                  !- <none>
+    0.9589,                  !- <none>
+    0.9607,                  !- <none>
+    0.9625,                  !- <none>
+    0.9650,                  !- <none>
+    0.9708,                  !- <none>
+    0.9751,                  !- <none>
+    0.9762,                  !- <none>
+    0.9766,                  !- <none>
+    0.9766,                  !- <none>
+    0.9769,                  !- <none>
+    0.9773;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Commercial-Distillate Oil,  !- LCC Price Escalation Name
@@ -2235,27 +2235,27 @@
     1.1267,                  !- Year 7 Escalation
     1.1580,                  !- Year 8 Escalation
     1.1792,                  !- Year 9 Escalation
-    1.1967,                  !- Year 10 Escalation
-    1.2200,                  !- Year 11 Escalation
-    1.2333,                  !- Year 12 Escalation
-    1.2566,                  !- Year 13 Escalation
-    1.2709,                  !- Year 14 Escalation
-    1.2826,                  !- Year 15 Escalation
-    1.2985,                  !- Year 16 Escalation
-    1.3102,                  !- Year 17 Escalation
-    1.3250,                  !- Year 18 Escalation
-    1.3261,                  !- Year 19 Escalation
-    1.3282,                  !- Year 20 Escalation
-    1.3324,                  !- Year 21 Escalation
-    1.3356,                  !- Year 22 Escalation
-    1.3431,                  !- Year 23 Escalation
-    1.3510,                  !- Year 24 Escalation
-    1.3568,                  !- Year 25 Escalation
-    1.3606,                  !- Year 26 Escalation
-    1.3637,                  !- Year 27 Escalation
-    1.3674,                  !- Year 28 Escalation
-    1.3706,                  !- Year 29 Escalation
-    1.3743;                  !- Year 30 Escalation
+    1.1967,                  !- <none>
+    1.2200,                  !- <none>
+    1.2333,                  !- <none>
+    1.2566,                  !- <none>
+    1.2709,                  !- <none>
+    1.2826,                  !- <none>
+    1.2985,                  !- <none>
+    1.3102,                  !- <none>
+    1.3250,                  !- <none>
+    1.3261,                  !- <none>
+    1.3282,                  !- <none>
+    1.3324,                  !- <none>
+    1.3356,                  !- <none>
+    1.3431,                  !- <none>
+    1.3510,                  !- <none>
+    1.3568,                  !- <none>
+    1.3606,                  !- <none>
+    1.3637,                  !- <none>
+    1.3674,                  !- <none>
+    1.3706,                  !- <none>
+    1.3743;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Commercial-Residual Oil,  !- LCC Price Escalation Name
@@ -2271,27 +2271,27 @@
     0.9897,                  !- Year 7 Escalation
     1.0075,                  !- Year 8 Escalation
     1.0314,                  !- Year 9 Escalation
-    1.0554,                  !- Year 10 Escalation
-    1.0861,                  !- Year 11 Escalation
-    1.1278,                  !- Year 12 Escalation
-    1.1497,                  !- Year 13 Escalation
-    1.1620,                  !- Year 14 Escalation
-    1.1743,                  !- Year 15 Escalation
-    1.1852,                  !- Year 16 Escalation
-    1.1948,                  !- Year 17 Escalation
-    1.2037,                  !- Year 18 Escalation
-    1.2071,                  !- Year 19 Escalation
-    1.2119,                  !- Year 20 Escalation
-    1.2139,                  !- Year 21 Escalation
-    1.2194,                  !- Year 22 Escalation
-    1.2276,                  !- Year 23 Escalation
-    1.2365,                  !- Year 24 Escalation
-    1.2420,                  !- Year 25 Escalation
-    1.2461,                  !- Year 26 Escalation
-    1.2509,                  !- Year 27 Escalation
-    1.2550,                  !- Year 28 Escalation
-    1.2591,                  !- Year 29 Escalation
-    1.2638;                  !- Year 30 Escalation
+    1.0554,                  !- <none>
+    1.0861,                  !- <none>
+    1.1278,                  !- <none>
+    1.1497,                  !- <none>
+    1.1620,                  !- <none>
+    1.1743,                  !- <none>
+    1.1852,                  !- <none>
+    1.1948,                  !- <none>
+    1.2037,                  !- <none>
+    1.2071,                  !- <none>
+    1.2119,                  !- <none>
+    1.2139,                  !- <none>
+    1.2194,                  !- <none>
+    1.2276,                  !- <none>
+    1.2365,                  !- <none>
+    1.2420,                  !- <none>
+    1.2461,                  !- <none>
+    1.2509,                  !- <none>
+    1.2550,                  !- <none>
+    1.2591,                  !- <none>
+    1.2638;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Commercial-Natural gas,  !- LCC Price Escalation Name
@@ -2307,27 +2307,27 @@
     0.9512,                  !- Year 7 Escalation
     0.9645,                  !- Year 8 Escalation
     0.9856,                  !- Year 9 Escalation
-    1.0067,                  !- Year 10 Escalation
-    1.0222,                  !- Year 11 Escalation
-    1.0410,                  !- Year 12 Escalation
-    1.0610,                  !- Year 13 Escalation
-    1.0787,                  !- Year 14 Escalation
-    1.0942,                  !- Year 15 Escalation
-    1.1098,                  !- Year 16 Escalation
-    1.1220,                  !- Year 17 Escalation
-    1.1308,                  !- Year 18 Escalation
-    1.1386,                  !- Year 19 Escalation
-    1.1486,                  !- Year 20 Escalation
-    1.1619,                  !- Year 21 Escalation
-    1.1763,                  !- Year 22 Escalation
-    1.1918,                  !- Year 23 Escalation
-    1.2118,                  !- Year 24 Escalation
-    1.2284,                  !- Year 25 Escalation
-    1.2439,                  !- Year 26 Escalation
-    1.2605,                  !- Year 27 Escalation
-    1.2772,                  !- Year 28 Escalation
-    1.2938,                  !- Year 29 Escalation
-    1.3115;                  !- Year 30 Escalation
+    1.0067,                  !- <none>
+    1.0222,                  !- <none>
+    1.0410,                  !- <none>
+    1.0610,                  !- <none>
+    1.0787,                  !- <none>
+    1.0942,                  !- <none>
+    1.1098,                  !- <none>
+    1.1220,                  !- <none>
+    1.1308,                  !- <none>
+    1.1386,                  !- <none>
+    1.1486,                  !- <none>
+    1.1619,                  !- <none>
+    1.1763,                  !- <none>
+    1.1918,                  !- <none>
+    1.2118,                  !- <none>
+    1.2284,                  !- <none>
+    1.2439,                  !- <none>
+    1.2605,                  !- <none>
+    1.2772,                  !- <none>
+    1.2938,                  !- <none>
+    1.3115;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Commercial-Coal,  !- LCC Price Escalation Name
@@ -2343,27 +2343,27 @@
     1.0030,                  !- Year 7 Escalation
     1.0059,                  !- Year 8 Escalation
     1.0089,                  !- Year 9 Escalation
-    1.0119,                  !- Year 10 Escalation
-    1.0148,                  !- Year 11 Escalation
-    1.0178,                  !- Year 12 Escalation
-    1.0208,                  !- Year 13 Escalation
-    1.0267,                  !- Year 14 Escalation
-    1.0297,                  !- Year 15 Escalation
-    1.0356,                  !- Year 16 Escalation
-    1.0415,                  !- Year 17 Escalation
-    1.0534,                  !- Year 18 Escalation
-    1.0564,                  !- Year 19 Escalation
-    1.0593,                  !- Year 20 Escalation
-    1.0653,                  !- Year 21 Escalation
-    1.0712,                  !- Year 22 Escalation
-    1.0742,                  !- Year 23 Escalation
-    1.0801,                  !- Year 24 Escalation
-    1.0831,                  !- Year 25 Escalation
-    1.0831,                  !- Year 26 Escalation
-    1.0861,                  !- Year 27 Escalation
-    1.0890,                  !- Year 28 Escalation
-    1.0920,                  !- Year 29 Escalation
-    1.0950;                  !- Year 30 Escalation
+    1.0119,                  !- <none>
+    1.0148,                  !- <none>
+    1.0178,                  !- <none>
+    1.0208,                  !- <none>
+    1.0267,                  !- <none>
+    1.0297,                  !- <none>
+    1.0356,                  !- <none>
+    1.0415,                  !- <none>
+    1.0534,                  !- <none>
+    1.0564,                  !- <none>
+    1.0593,                  !- <none>
+    1.0653,                  !- <none>
+    1.0712,                  !- <none>
+    1.0742,                  !- <none>
+    1.0801,                  !- <none>
+    1.0831,                  !- <none>
+    1.0831,                  !- <none>
+    1.0861,                  !- <none>
+    1.0890,                  !- <none>
+    1.0920,                  !- <none>
+    1.0950;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Industrial-Electricity,  !- LCC Price Escalation Name
@@ -2379,27 +2379,27 @@
     0.9725,                  !- Year 7 Escalation
     0.9725,                  !- Year 8 Escalation
     0.9752,                  !- Year 9 Escalation
-    0.9769,                  !- Year 10 Escalation
-    0.9791,                  !- Year 11 Escalation
-    0.9818,                  !- Year 12 Escalation
-    0.9851,                  !- Year 13 Escalation
-    0.9890,                  !- Year 14 Escalation
-    0.9934,                  !- Year 15 Escalation
-    0.9956,                  !- Year 16 Escalation
-    1.0000,                  !- Year 17 Escalation
-    1.0039,                  !- Year 18 Escalation
-    1.0044,                  !- Year 19 Escalation
-    1.0066,                  !- Year 20 Escalation
-    1.0110,                  !- Year 21 Escalation
-    1.0149,                  !- Year 22 Escalation
-    1.0198,                  !- Year 23 Escalation
-    1.0286,                  !- Year 24 Escalation
-    1.0347,                  !- Year 25 Escalation
-    1.0380,                  !- Year 26 Escalation
-    1.0413,                  !- Year 27 Escalation
-    1.0440,                  !- Year 28 Escalation
-    1.0473,                  !- Year 29 Escalation
-    1.0501;                  !- Year 30 Escalation
+    0.9769,                  !- <none>
+    0.9791,                  !- <none>
+    0.9818,                  !- <none>
+    0.9851,                  !- <none>
+    0.9890,                  !- <none>
+    0.9934,                  !- <none>
+    0.9956,                  !- <none>
+    1.0000,                  !- <none>
+    1.0039,                  !- <none>
+    1.0044,                  !- <none>
+    1.0066,                  !- <none>
+    1.0110,                  !- <none>
+    1.0149,                  !- <none>
+    1.0198,                  !- <none>
+    1.0286,                  !- <none>
+    1.0347,                  !- <none>
+    1.0380,                  !- <none>
+    1.0413,                  !- <none>
+    1.0440,                  !- <none>
+    1.0473,                  !- <none>
+    1.0501;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Industrial-Distillate Oil,  !- LCC Price Escalation Name
@@ -2415,27 +2415,27 @@
     1.0905,                  !- Year 7 Escalation
     1.1207,                  !- Year 8 Escalation
     1.1421,                  !- Year 9 Escalation
-    1.1595,                  !- Year 10 Escalation
-    1.1851,                  !- Year 11 Escalation
-    1.1984,                  !- Year 12 Escalation
-    1.2214,                  !- Year 13 Escalation
-    1.2352,                  !- Year 14 Escalation
-    1.2454,                  !- Year 15 Escalation
-    1.2623,                  !- Year 16 Escalation
-    1.2735,                  !- Year 17 Escalation
-    1.2889,                  !- Year 18 Escalation
-    1.2873,                  !- Year 19 Escalation
-    1.2873,                  !- Year 20 Escalation
-    1.2919,                  !- Year 21 Escalation
-    1.2945,                  !- Year 22 Escalation
-    1.3021,                  !- Year 23 Escalation
-    1.3098,                  !- Year 24 Escalation
-    1.3144,                  !- Year 25 Escalation
-    1.3175,                  !- Year 26 Escalation
-    1.3206,                  !- Year 27 Escalation
-    1.3241,                  !- Year 28 Escalation
-    1.3272,                  !- Year 29 Escalation
-    1.3308;                  !- Year 30 Escalation
+    1.1595,                  !- <none>
+    1.1851,                  !- <none>
+    1.1984,                  !- <none>
+    1.2214,                  !- <none>
+    1.2352,                  !- <none>
+    1.2454,                  !- <none>
+    1.2623,                  !- <none>
+    1.2735,                  !- <none>
+    1.2889,                  !- <none>
+    1.2873,                  !- <none>
+    1.2873,                  !- <none>
+    1.2919,                  !- <none>
+    1.2945,                  !- <none>
+    1.3021,                  !- <none>
+    1.3098,                  !- <none>
+    1.3144,                  !- <none>
+    1.3175,                  !- <none>
+    1.3206,                  !- <none>
+    1.3241,                  !- <none>
+    1.3272,                  !- <none>
+    1.3308;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Industrial-Residual Oil,  !- LCC Price Escalation Name
@@ -2451,27 +2451,27 @@
     1.2179,                  !- Year 7 Escalation
     1.2446,                  !- Year 8 Escalation
     1.2676,                  !- Year 9 Escalation
-    1.2920,                  !- Year 10 Escalation
-    1.3173,                  !- Year 11 Escalation
-    1.3456,                  !- Year 12 Escalation
-    1.3677,                  !- Year 13 Escalation
-    1.3861,                  !- Year 14 Escalation
-    1.4021,                  !- Year 15 Escalation
-    1.4159,                  !- Year 16 Escalation
-    1.4266,                  !- Year 17 Escalation
-    1.4327,                  !- Year 18 Escalation
-    1.4258,                  !- Year 19 Escalation
-    1.4220,                  !- Year 20 Escalation
-    1.4182,                  !- Year 21 Escalation
-    1.4174,                  !- Year 22 Escalation
-    1.4235,                  !- Year 23 Escalation
-    1.4304,                  !- Year 24 Escalation
-    1.4365,                  !- Year 25 Escalation
-    1.4411,                  !- Year 26 Escalation
-    1.4457,                  !- Year 27 Escalation
-    1.4511,                  !- Year 28 Escalation
-    1.4557,                  !- Year 29 Escalation
-    1.4602;                  !- Year 30 Escalation
+    1.2920,                  !- <none>
+    1.3173,                  !- <none>
+    1.3456,                  !- <none>
+    1.3677,                  !- <none>
+    1.3861,                  !- <none>
+    1.4021,                  !- <none>
+    1.4159,                  !- <none>
+    1.4266,                  !- <none>
+    1.4327,                  !- <none>
+    1.4258,                  !- <none>
+    1.4220,                  !- <none>
+    1.4182,                  !- <none>
+    1.4174,                  !- <none>
+    1.4235,                  !- <none>
+    1.4304,                  !- <none>
+    1.4365,                  !- <none>
+    1.4411,                  !- <none>
+    1.4457,                  !- <none>
+    1.4511,                  !- <none>
+    1.4557,                  !- <none>
+    1.4602;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Industrial-Natural gas,  !- LCC Price Escalation Name
@@ -2487,27 +2487,27 @@
     1.0517,                  !- Year 7 Escalation
     1.0661,                  !- Year 8 Escalation
     1.0971,                  !- Year 9 Escalation
-    1.1343,                  !- Year 10 Escalation
-    1.1632,                  !- Year 11 Escalation
-    1.1942,                  !- Year 12 Escalation
-    1.2314,                  !- Year 13 Escalation
-    1.2665,                  !- Year 14 Escalation
-    1.2934,                  !- Year 15 Escalation
-    1.3202,                  !- Year 16 Escalation
-    1.3388,                  !- Year 17 Escalation
-    1.3492,                  !- Year 18 Escalation
-    1.3574,                  !- Year 19 Escalation
-    1.3719,                  !- Year 20 Escalation
-    1.3905,                  !- Year 21 Escalation
-    1.4153,                  !- Year 22 Escalation
-    1.4421,                  !- Year 23 Escalation
-    1.4793,                  !- Year 24 Escalation
-    1.5062,                  !- Year 25 Escalation
-    1.5331,                  !- Year 26 Escalation
-    1.5640,                  !- Year 27 Escalation
-    1.5950,                  !- Year 28 Escalation
-    1.6260,                  !- Year 29 Escalation
-    1.6591;                  !- Year 30 Escalation
+    1.1343,                  !- <none>
+    1.1632,                  !- <none>
+    1.1942,                  !- <none>
+    1.2314,                  !- <none>
+    1.2665,                  !- <none>
+    1.2934,                  !- <none>
+    1.3202,                  !- <none>
+    1.3388,                  !- <none>
+    1.3492,                  !- <none>
+    1.3574,                  !- <none>
+    1.3719,                  !- <none>
+    1.3905,                  !- <none>
+    1.4153,                  !- <none>
+    1.4421,                  !- <none>
+    1.4793,                  !- <none>
+    1.5062,                  !- <none>
+    1.5331,                  !- <none>
+    1.5640,                  !- <none>
+    1.5950,                  !- <none>
+    1.6260,                  !- <none>
+    1.6591;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Industrial-Coal,  !- LCC Price Escalation Name
@@ -2523,25 +2523,25 @@
     0.9734,                  !- Year 7 Escalation
     0.9734,                  !- Year 8 Escalation
     0.9767,                  !- Year 9 Escalation
-    0.9767,                  !- Year 10 Escalation
-    0.9801,                  !- Year 11 Escalation
-    0.9834,                  !- Year 12 Escalation
-    0.9867,                  !- Year 13 Escalation
-    0.9934,                  !- Year 14 Escalation
-    0.9967,                  !- Year 15 Escalation
-    1.0033,                  !- Year 16 Escalation
-    1.0066,                  !- Year 17 Escalation
-    1.0100,                  !- Year 18 Escalation
-    1.0133,                  !- Year 19 Escalation
-    1.0166,                  !- Year 20 Escalation
-    1.0233,                  !- Year 21 Escalation
-    1.0299,                  !- Year 22 Escalation
-    1.0365,                  !- Year 23 Escalation
-    1.0432,                  !- Year 24 Escalation
-    1.0465,                  !- Year 25 Escalation
-    1.0465,                  !- Year 26 Escalation
-    1.0498,                  !- Year 27 Escalation
-    1.0532,                  !- Year 28 Escalation
-    1.0565,                  !- Year 29 Escalation
-    1.0598;                  !- Year 30 Escalation
+    0.9767,                  !- <none>
+    0.9801,                  !- <none>
+    0.9834,                  !- <none>
+    0.9867,                  !- <none>
+    0.9934,                  !- <none>
+    0.9967,                  !- <none>
+    1.0033,                  !- <none>
+    1.0066,                  !- <none>
+    1.0100,                  !- <none>
+    1.0133,                  !- <none>
+    1.0166,                  !- <none>
+    1.0233,                  !- <none>
+    1.0299,                  !- <none>
+    1.0365,                  !- <none>
+    1.0432,                  !- <none>
+    1.0465,                  !- <none>
+    1.0465,                  !- <none>
+    1.0498,                  !- <none>
+    1.0532,                  !- <none>
+    1.0565,                  !- <none>
+    1.0598;                  !- <none>
 

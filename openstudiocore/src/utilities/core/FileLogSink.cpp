@@ -33,7 +33,6 @@
 #include "Assert.hpp"
 
 #include <QReadWriteLock>
-#include <QWriteLocker>
 
 namespace openstudio{
 

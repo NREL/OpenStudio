@@ -29,7 +29,6 @@
 
 #include "Variant.hpp"
 
-#include "../core/Assert.hpp"
 
 namespace openstudio {
 

@@ -32,7 +32,6 @@
 #include "../core/Assert.hpp"
 
 #include <QDomDocument>
-#include <QDomElement>
 
 namespace openstudio{
 

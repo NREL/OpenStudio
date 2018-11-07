@@ -37,6 +37,7 @@
 #include <utilities/idd/OS_External_File_FieldEnums.hxx>
 
 #include "../utilities/filetypes/WorkflowJSON.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/Checksum.hpp"
 #include "../utilities/core/Assert.hpp"
 
@@ -126,7 +127,13 @@ namespace detail {
   }
 
   path ExternalFile_Impl::filePath() const {
-    path result = this->model().workflowJSON().absoluteRootDir() / toPath(fileName());
+    path result;
+    std::vector<path> absoluteFilePaths = this->model().workflowJSON().absoluteFilePaths();
+    if (absoluteFilePaths.empty()) {
+      result = this->model().workflowJSON().absoluteRootDir() / toPath(fileName());
+    } else {
+      result = absoluteFilePaths[0] / toPath(fileName());
+    }
     return result;
   }
 
@@ -218,17 +225,24 @@ ExternalFile::ExternalFile(const Model& model, const std::string &filename)
   }
   OS_ASSERT(exists(p));
 
-  path rootDir = workflow.absoluteRootDir();
-  path dest = rootDir / p.filename();
+  path destDir;
+  std::vector<path> absoluteFilePaths = workflow.absoluteFilePaths();
+  if (absoluteFilePaths.empty()) {
+    destDir = workflow.absoluteRootDir();
+  } else {
+    destDir = absoluteFilePaths[0];
+  }
+  path dest = destDir / p.filename();
 
   if (exists(dest)) {
     if (checksum(p) != checksum(dest)){
       this->remove();
-      LOG_AND_THROW("File \"" << p.filename() << "\" already exists in \"" << rootDir << "\"");
+      LOG_AND_THROW("File \"" << p.filename() << "\" already exists in \"" << destDir << "\"");
     }
   } else{
 
     try {
+      makeParentFolder(dest, path(), true);
       boost::filesystem::copy(p, dest);
     } catch (std::exception&) {
       this->remove();

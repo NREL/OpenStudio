@@ -1,7 +1,7 @@
 ! File to test the import of simple surfaces
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,8.9;
+  Version,9.0;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -32,14 +32,17 @@
     ,                        !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Sunday,                  !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
-    Yes;                     !- Use Weather File Snow Indicators
+    Yes,                     !- Use Weather File Snow Indicators
+    ;                        !- Treat Weather as Actual
 
 !-   ===========  ALL OBJECTS IN CLASS: LOCATION ===========
 
@@ -506,7 +509,6 @@
     Zone1 Skylight,          !- Name
     Exterior Window,         !- Construction Name
     Zone1 Roof,              !- Building Surface Name
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}
@@ -730,7 +732,6 @@
     Zone2 Skylight,          !- Name
     Exterior Window,         !- Construction Name
     Zone2 Roof,              !- Building Surface Name
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}
@@ -816,7 +817,6 @@
     Zone1 Window,            !- Name
     Exterior Window,         !- Construction Name
     Zone1 Front Wall,        !- Building Surface Name
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     10,                      !- Starting X Coordinate {m}

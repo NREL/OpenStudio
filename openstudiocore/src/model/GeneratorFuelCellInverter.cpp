@@ -83,21 +83,6 @@ namespace detail {
     return GeneratorFuelCellInverter::iddObjectType();
   }
 
-  // This will clone both the GeneratorFuelCellInverter and its linked GeneratorFuelCell
-  // and will return a reference to the GeneratorFuelCellInverter
-  ModelObject GeneratorFuelCellInverter_Impl::clone(Model model) const {
-
-    // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
-    GeneratorFuelCell fs = fuelCell();
-    GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
-
-    // We get the clone of the parent generator's GeneratorFuelCellInverter so we can return that
-    GeneratorFuelCellInverter hxClone = fsClone.inverter();
-
-
-    return hxClone;
-  }
-
   std::vector<IddObjectType> GeneratorFuelCellInverter_Impl::allowableChildTypes() const {
     std::vector<IddObjectType> result;
     result.push_back(IddObjectType::OS_Curve_Quadratic);
@@ -117,19 +102,19 @@ namespace detail {
   }
 
   // Get the parent GeneratorFuelCell
-  GeneratorFuelCell GeneratorFuelCellInverter_Impl::fuelCell() const {
+  boost::optional<GeneratorFuelCell> GeneratorFuelCellInverter_Impl::fuelCell() const {
 
-    boost::optional<GeneratorFuelCell> value;
-    for (const GeneratorFuelCell& fc : this->model().getConcreteModelObjects<GeneratorFuelCell>()) {
-      if (boost::optional<GeneratorFuelCellInverter> fcHX = fc.inverter()) {
-        if (fcHX->handle() == this->handle()) {
-          value = fc;
-        }
+    boost::optional<GeneratorFuelCell> fc;
+    // We use getModelObjectSources to check if more than one
+    std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
+
+    if( fcs.size() > 0u) {
+      if( fcs.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
       }
+      fc = fcs[0];
     }
-    OS_ASSERT(value);
-    return value.get();
-
+    return fc;
   }
 
   std::string GeneratorFuelCellInverter_Impl::inverterEfficiencyCalculationMode() const {
@@ -258,7 +243,7 @@ void GeneratorFuelCellInverter::resetEfficiencyFunctionofDCPowerCurve() {
   getImpl<detail::GeneratorFuelCellInverter_Impl>()->resetEfficiencyFunctionofDCPowerCurve();
 }
 
-GeneratorFuelCell GeneratorFuelCellInverter::fuelCell() const {
+boost::optional<GeneratorFuelCell> GeneratorFuelCellInverter::fuelCell() const {
   return getImpl<detail::GeneratorFuelCellInverter_Impl>()->fuelCell();
 }
 

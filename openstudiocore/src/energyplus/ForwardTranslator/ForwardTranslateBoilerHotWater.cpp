@@ -113,13 +113,6 @@ boost::optional<IdfObject> ForwardTranslator::translateBoilerHotWater( BoilerHot
     }
   }
 
-  // DesignWaterOutletTemperature
-
-  if( (value = modelObject.designWaterOutletTemperature()) )
-  {
-    idfObject.setDouble(Boiler_HotWaterFields::DesignWaterOutletTemperature,value.get());
-  }
-
   // DesignWaterFlowRate
 
   if( modelObject.isDesignWaterFlowRateAutosized() )
