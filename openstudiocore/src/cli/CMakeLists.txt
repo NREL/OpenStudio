@@ -243,6 +243,7 @@ target_link_libraries(openstudio
  init_openstudio
  ${EXTENSION_LIBS}
  ${ENC_LIBS}
+ ${ADDITIONAL_RUBY_LIBS}
  openstudio_airflow_static
  openstudio_model_static
  openstudio_energyplus_static
@@ -252,21 +253,20 @@ target_link_libraries(openstudio
  openstudio_isomodel_static
  openstudio_gbxml_static
  openstudio_radiance_static
- ${ADDITIONAL_RUBY_LIBS}
 )
 
 if (UNIX AND NOT APPLE)
-  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY}  "dl" "crypt" "ssl")
+  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} ${EXTENSION_LIBS} dl crypt ssl)
 elseif(WIN32)
   target_link_libraries(openstudio debug ${RUBY_STATIC_LIBRARY_DEBUG} optimized ${RUBY_STATIC_LIBRARY})
   target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi)
   set_target_properties(openstudio PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
 else()
-  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} )
+  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY})
 endif()
 
 if( APPLE )
-  target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY} )
+  target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY})
 endif()
 
 install(TARGETS openstudio DESTINATION bin COMPONENT "CLI")

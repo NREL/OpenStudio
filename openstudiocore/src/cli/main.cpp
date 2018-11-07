@@ -160,6 +160,10 @@ extern "C" {
   void Init_syslog(void);
   void Init_wait(void);
   void Init_zlib(void);
+  #ifdef __linux__
+    void Init_openssl(void);
+    void Init_nonblock(void);
+  #endif
 
 }
 
@@ -501,6 +505,16 @@ int main(int argc, char *argv[])
     Init_zlib();
     rb_provide("zlib");
     rb_provide("zlib.so");
+
+    #ifdef __linux__
+      Init_openssl();
+      rb_provide("openssl");
+      rb_provide("openssl.so");
+
+      Init_nonblock();
+      rb_provide("io/nonblock");
+      rb_provide("io/nonblock.so");
+    #endif
 
    // openstudio
    init_openstudio_internal();
