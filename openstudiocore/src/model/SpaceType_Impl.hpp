@@ -402,7 +402,7 @@ namespace detail {
     void removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep);
 
     static Json::Value m_standardsArr;
-    // Now in utilities/core/Json.hpp since it's used in several places
+    // Relies on utilities/core/Json.hpp since it's used in several places
     void parseStandardsJSON() const;
   };
 
