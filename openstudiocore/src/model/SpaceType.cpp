@@ -109,7 +109,8 @@ namespace model {
 
 namespace detail {
 
-  QJsonArray SpaceType_Impl::m_standardsArr;
+  // Initialize the JSON holder
+  Json::Value SpaceType_Impl::m_standardsArr;
 
   SpaceType_Impl::SpaceType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
@@ -311,6 +312,7 @@ namespace detail {
 
   std::vector<std::string> SpaceType_Impl::suggestedStandardsTemplates() const
   {
+    // TODO: JM 2018-11-07 replace with a std::unordered_set?
     std::vector<std::string> result;
 
     boost::optional<std::string> standardsTemplate = this->standardsTemplate();
@@ -320,9 +322,11 @@ namespace detail {
 
     // Find the possible template names
     // m_standardsArr is an array of hashes (no nested levels)
-    for( const QJsonValue& v: m_standardsArr) {
-      QJsonObject space_type = v.toObject();
-      result.push_back(toString(space_type["template"].toString()));
+    for( const auto& v: m_standardsArr) {
+      const Json::Value _template = v["template"];
+      if (_template.isString()) {
+        result.push_back(_template.asString());
+      }
     }
 
     // include values from model
@@ -409,7 +413,6 @@ namespace detail {
   {
     std::vector<std::string> result;
 
-
     boost::optional<std::string> standardsTemplate = this->standardsTemplate();
     boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
 
@@ -417,14 +420,17 @@ namespace detail {
     if( standardsTemplate ){
       parseStandardsJSON();
 
+      std::string thisTemplate;
+
       // Find the possible building_type names that have the template name
       // m_standardsArr is an array of hashes (no nested levels)
-      for( const QJsonValue& v: m_standardsArr) {
-        QJsonObject space_type = v.toObject();
-        // TODO: use case insensitive compare?
-        // if( QString::compare(space_type["building_type"].toString(), toQString(*standardsBuildingType), Qt::CaseInsensitive) )
-        if( space_type["template"].toString() == toQString(*standardsTemplate) ) {
-          result.push_back(toString(space_type["building_type"].toString()));
+      for( const auto& v: m_standardsArr) {
+        thisTemplate = v["template"].asString();
+        if (thisTemplate == standardsTemplate.get()) {
+          const Json::Value _buildingType = v["building_type"];
+          if (_buildingType.isString()) {
+            result.push_back(_buildingType.asString());
+          }
         }
       }
     }
@@ -510,15 +516,20 @@ namespace detail {
     if (standardsTemplate && standardsBuildingType){
       parseStandardsJSON();
 
+      std::string thisTemplate;
+      std::string thisBuildingType;
+
       // Find the possible space_type names that have the right template and building_type name
       // m_standardsArr is an array of hashes (no nested levels)
-      for( const QJsonValue& v: m_standardsArr) {
-        QJsonObject space_type = v.toObject();
-        // TODO: use case insensitive compare?
-        // if( QString::compare(space_type["building_type"].toString(), toQString(*standardsBuildingType), Qt::CaseInsensitive) )
-        if( (space_type["template"].toString() == toQString(*standardsTemplate)) &&
-            (space_type["building_type"].toString() == toQString(*standardsBuildingType)) ) {
-          result.push_back(toString(space_type["space_type"].toString()));
+      for( const auto& v: m_standardsArr) {
+        thisTemplate = v["template"].asString();
+        thisBuildingType = v["building_type"].asString();
+        if ( (thisTemplate == standardsTemplate.get()) &&
+             (thisBuildingType == standardsBuildingType.get()) ) {
+          const Json::Value _spaceType = v["space_type"];
+          if (_spaceType.isString()) {
+            result.push_back(_spaceType.asString());
+          }
         }
       }
     }
