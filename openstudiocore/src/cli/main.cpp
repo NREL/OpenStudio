@@ -143,7 +143,6 @@ extern "C" {
   void Init_parser(void);
   void Init_pathname(void);
   void Init_psych(void);
-  
   void Init_ripper(void);
   void Init_rmd160(void);
   void Init_sdbm(void);
