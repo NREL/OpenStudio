@@ -1500,7 +1500,7 @@ namespace detail {
   {
     if (m_standardsArr.empty()) {
       // Embedded file path
-      std::string embedded_path = ":/resources/standards/OpenStudio_Standards_space_types_merged.json";
+      std::string embedded_path = ":/Resources/standards/OpenStudio_Standards_space_types_merged.json";
       std::string primaryKey = "space_types";
 
       // Call utilities/core/Json.cpp helper

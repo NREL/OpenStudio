@@ -69,14 +69,6 @@ using openstudio::detail::WorkspaceObject_Impl;
 
 using std::dynamic_pointer_cast;
 
-struct ModelResourceInitializer{
-  ModelResourceInitializer()
-  {
-    Q_INIT_RESOURCE(Model);
-  }
-};
-static ModelResourceInitializer __modelResourceInitializer__;
-
 namespace openstudio {
 namespace model {
 
