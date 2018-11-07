@@ -33,6 +33,10 @@
 #include "ModelAPI.hpp"
 #include "ResourceObject_Impl.hpp"
 
+namespace Json {
+  class Value;
+}
+
 namespace openstudio {
 namespace model {
 
@@ -397,7 +401,8 @@ namespace detail {
     template <typename T>
     void removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep);
 
-    static QJsonArray m_standardsArr;
+    static Json::Value m_standardsArr;
+    // Now in utilities/core/Json.hpp since it's used in several places
     void parseStandardsJSON() const;
   };
 

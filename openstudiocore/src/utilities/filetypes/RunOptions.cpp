@@ -31,7 +31,7 @@
 #include "RunOptions_Impl.hpp"
 
 #include "../core/Assert.hpp"
-
+#include <jsoncpp/json.h>
 
 namespace openstudio{
 namespace detail{
