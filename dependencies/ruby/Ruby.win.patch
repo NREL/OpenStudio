@@ -1,3 +1,20 @@
+diff --git a/ext/fiddle/extconf.rb b/ext/fiddle/extconf.rb
+index 2c333001e5..b4ae8cc048 100644
+--- a/ext/fiddle/extconf.rb
++++ b/ext/fiddle/extconf.rb
+@@ -9,6 +9,12 @@
+ 
+   pkg_config("libffi") and
+     ver = pkg_config("libffi", "modversion")
++    
++  if $mswin
++    $defs << "-DFFI_BUILDING"
++    CONFIG['CFLAGS'] << " -DFFI_BUILDING"
++    $CFLAGS << " -DFFI_BUILDING"
++  end
+ 
+   if have_header(ffi_header = 'ffi.h')
+     true
 diff --git a/win32/Makefile.sub b/win32/Makefile.sub
 index 70440e1c9d..0bb61fbf75 100644
 --- a/win32/Makefile.sub
@@ -11,4 +28,3 @@ index 70440e1c9d..0bb61fbf75 100644
  !endif
  MINIRUBY = $(MINIRUBY) $(MINIRUBYOPT)
  RUNRUBY = $(RUNRUBY) "$(srcdir)/tool/runruby.rb" --extout="$(EXTOUT)" $(RUNRUBYOPT) -- $(RUN_OPTS)
- 
