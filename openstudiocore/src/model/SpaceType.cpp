@@ -508,7 +508,7 @@ namespace detail {
     boost::optional<std::string> standardsSpaceType = this->standardsSpaceType();
 
     // include values from json if template and building_type are set
-    if (standardsTemplate && standardsBuildingType){
+    if (standardsTemplate && standardsBuildingType) {
       parseStandardsJSON();
 
       std::string thisTemplate;

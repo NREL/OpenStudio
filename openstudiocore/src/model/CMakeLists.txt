@@ -1,5 +1,8 @@
 set(target_name openstudio_model)
 
+include_directories(${CMAKE_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 set(${target_name}_src
 
   mainpage.hpp
@@ -1603,6 +1606,9 @@ set(${target_name}_swig_src
 
 qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
+set(${target_name}_depends
+  openstudio_utilities
+)
 
 # Embed resource files
 # Glob all files inside model/Resources
@@ -1615,16 +1621,20 @@ foreach( _FILE ${embedded_files} )
   list(APPEND E_FILES ${_FILE})
   list(APPEND E_PATHS ${LOCATION})
 endforeach()
+# message("E_FILES: ${E_FILES}")
+# message("E_PATHS: ${E_PATHS}")
 
 include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
-embed_files("${E_FILES}" "${E_PATHS}" OUTPUT openstudio)
+# EMBEDDED_OUTPUT stores the lsit of cxx files that we need to link later
+embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudio)
+# message("EMBEDDED_OUTPUT: ${EMBEDDED_OUTPUT}")
+
+# set up groups of source files for Visual Studio
+source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
 
-set(${target_name}_depends
-  openstudio_utilities
-)
 
-add_library(${target_name} ${${target_name}_src} ${${target_name}_moc_src})
+add_library(${target_name} ${${target_name}_src} ${${target_name}_moc_src} ${EMBEDDED_OUTPUT})
 target_link_libraries(${target_name} "${${target_name}_depends}")
 AddPCH(${target_name})
 
@@ -1632,7 +1642,7 @@ set(${target_name}_static_depends
   openstudio_utilities_static
 )
 
-add_library(${target_name}_static ${${target_name}_src} ${${target_name}_moc_src})
+add_library(${target_name}_static ${${target_name}_src} ${${target_name}_moc_src} ${EMBEDDED_OUTPUT})
 
 target_link_libraries(${target_name}_static "${${target_name}_static_depends}")
 
