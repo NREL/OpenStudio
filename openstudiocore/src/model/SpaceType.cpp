@@ -95,15 +95,6 @@
 #include "../utilities/core/Json.hpp"
 #include <jsoncpp/json.h>
 
-
-#include <QFile>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonParseError>
-#include <QJsonArray>
-#include <QJsonValue>
-#include <QString>
-
 namespace openstudio {
 namespace model {
 
@@ -294,6 +285,18 @@ namespace detail {
     setString(OS_SpaceTypeFields::GroupRenderingName, "");
   }
 
+
+  void SpaceType_Impl::parseStandardsJSON() const
+  {
+    if (m_standardsArr.empty()) {
+      // Embedded file path
+      std::string embedded_path = ":/Resources/standards/OpenStudio_Standards_space_types_merged.json";
+      std::string primaryKey = "space_types";
+
+      // Call utilities/core/Json.cpp helper
+      m_standardsArr = openstudio::parseStandardsJSON(embedded_path, primaryKey);
+    }
+  }
 
   boost::optional<std::string> SpaceType_Impl::standardsTemplate() const
   {
@@ -1526,20 +1529,6 @@ namespace detail {
     }
     OS_ASSERT(count == 1);
   }
-
-  void SpaceType_Impl::parseStandardsJSON() const
-  {
-    if (m_standardsArr.empty()) {
-      // Embedded file path
-      std::string embedded_path = ":/Resources/standards/OpenStudio_Standards_space_types_merged.json";
-      std::string primaryKey = "space_types";
-
-      // Call utilities/core/Json.cpp helper
-      m_standardsArr = openstudio::parseStandardsJSON(embedded_path, primaryKey);
-    }
-  }
-
-
 
 } // detail
 
