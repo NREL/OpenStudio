@@ -407,6 +407,10 @@ if( BUILD_RUBY )
     # DLM notes:
     # @$(WIN32DIR:/=\)\rtname conftest.exe >>$(MAKEFILE) is used to determine which MSCV Runtime is linked
     
+    # Post Build:
+    # rename libs to : x64-msvcr140-ruby251.lib and x64-msvcr140-ruby251-static.lib 
+    # copy OpenSSL dlls into release and debug bin directories
+    # tar -zcvf ruby_2_5_1_msvc2017_static.tar.gz Ruby-install
     ExternalProject_Add(Ruby
       DEPENDS ZLib FFI
       URL https://codeload.github.com/ruby/ruby/tar.gz/v2_5_1

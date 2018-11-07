@@ -235,6 +235,10 @@ add_executable(openstudio
  ${OUTPUT}
 )
 
+if(MSVC)
+  set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
+endif()
+
 set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")

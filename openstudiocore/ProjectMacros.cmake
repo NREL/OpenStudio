@@ -381,7 +381,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
   if(MSVC)
     #set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EXTCONF_H=<osruby_config.h> -DRUBY_EMBEDDED /bigobj /wd4996") ## /wd4996 suppresses deprecated warning
-    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
+    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033") ## /wd4996 suppresses deprecated warning, /wd5033 supresses 'register' is no longer a supported storage class
   elseif(UNIX)
     # If 'AppleClang' or 'Clang'
     if("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(Apple)?Clang$")

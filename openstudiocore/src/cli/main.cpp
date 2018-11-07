@@ -125,19 +125,16 @@ extern "C" {
 
   void Init_bigdecimal();
   void Init_bigdecimal(void);
-  void Init_console(void);
   void Init_continuation(void);
   void Init_coverage(void);
   void Init_cparse(void);
   void Init_date_core(void);
-  void Init_dbm(void);
   void Init_digest(void);
   void Init_escape(void);
   void Init_etc(void);
   void Init_fcntl(void);
   void Init_fiber(void);
   void Init_fiddle(void);
-  void Init_gdbm(void);
   void Init_generator(void);
   void Init_md5(void);
   void Init_nkf(void);
@@ -146,8 +143,7 @@ extern "C" {
   void Init_parser(void);
   void Init_pathname(void);
   void Init_psych(void);
-  void Init_pty(void);
-  void Init_readline(void);
+  
   void Init_ripper(void);
   void Init_rmd160(void);
   void Init_sdbm(void);
@@ -157,14 +153,20 @@ extern "C" {
   void Init_socket(void);
   void Init_stringio(void);
   void Init_strscan(void);
-  void Init_syslog(void);
   void Init_wait(void);
   void Init_zlib(void);
-  #ifdef __linux__
-    void Init_openssl(void);
-    void Init_nonblock(void);
-  #endif
 
+  void Init_openssl(void);
+  void Init_nonblock(void);
+
+  #ifndef WIN32
+    void Init_console(void);
+    void Init_dbm(void);
+    void Init_gdbm(void);
+    void Init_pty(void);
+    void Init_readline(void);
+    void Init_syslog(void);
+  #endif
 }
 
 std::vector<std::string> paths;
@@ -202,6 +204,13 @@ int main(int argc, char *argv[])
     swig::GC_VALUE::rshift_id = rb_intern(">>");
 
     INIT_CALLS;
+
+    // in case any further init methods try to require files, init this first
+    Init_EmbeddedScripting();
+
+    // Need embedded_help for requiring files out of the embedded system
+    auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
+    rubyInterpreter.evalString(embedded_extensions_string);
 
     //// encodings
     Init_encdb();
@@ -353,20 +362,9 @@ int main(int argc, char *argv[])
     Init_trans_utf_16_32();
     rb_provide("enc/trans/utf_16_32.o");
 
-    // in case any further init methods try to require files, init this first
-    Init_EmbeddedScripting();
-
-    // Need embedded_help for requiring files out of the embedded system
-    auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
-    rubyInterpreter.evalString(embedded_extensions_string);
-
     Init_bigdecimal();
     rb_provide("bigdecimal");
     rb_provide("bigdecimal.so");
-    
-    Init_console();
-    rb_provide("console");
-    rb_provide("console.so");
     
     Init_continuation();
     rb_provide("continuation");
@@ -383,10 +381,6 @@ int main(int argc, char *argv[])
     Init_date_core();
     rb_provide("date_core");
     rb_provide("date_core.so");
-    
-    Init_dbm();
-    rb_provide("dbm");
-    rb_provide("dbm.so");
     
     Init_digest();
     rb_provide("digest");
@@ -411,10 +405,6 @@ int main(int argc, char *argv[])
     Init_fiddle();
     rb_provide("fiddle");
     rb_provide("fiddle.so");
-    
-    Init_gdbm();
-    rb_provide("gdbm");
-    rb_provide("gdbm.so");
     
     Init_generator();
     rb_provide("generator");
@@ -447,14 +437,6 @@ int main(int argc, char *argv[])
     Init_psych();
     rb_provide("psych");
     rb_provide("psych.so");
-    
-    Init_pty();
-    rb_provide("pty");
-    rb_provide("pty.so");
-    
-    Init_readline();
-    rb_provide("readline");
-    rb_provide("readline.so");
     
     Init_ripper();
     rb_provide("ripper");
@@ -492,10 +474,6 @@ int main(int argc, char *argv[])
     rb_provide("strscan");
     rb_provide("strscan.so");
     
-    Init_syslog();
-    rb_provide("syslog");
-    rb_provide("syslog.so");
-    
     Init_wait();
     rb_provide("wait");
     rb_provide("io/wait");
@@ -506,18 +484,43 @@ int main(int argc, char *argv[])
     rb_provide("zlib");
     rb_provide("zlib.so");
 
-    #ifdef __linux__
-      Init_openssl();
-      rb_provide("openssl");
-      rb_provide("openssl.so");
+    Init_openssl();
+    rb_provide("openssl");
+    rb_provide("openssl.so");
 
-      Init_nonblock();
-      rb_provide("io/nonblock");
-      rb_provide("io/nonblock.so");
+    Init_nonblock();
+    rb_provide("io/nonblock");
+    rb_provide("io/nonblock.so");
+
+   #ifndef WIN32
+
+     Init_console();
+     rb_provide("console");
+     rb_provide("console.so");
+
+     Init_dbm();
+     rb_provide("dbm");
+     rb_provide("dbm.so");
+
+     Init_gdbm();
+     rb_provide("gdbm");
+     rb_provide("gdbm.so");
+
+     Init_pty();
+     rb_provide("pty");
+     rb_provide("pty.so");
+
+     Init_readline();
+     rb_provide("readline");
+     rb_provide("readline.so");
+
+     Init_syslog();
+     rb_provide("syslog");
+     rb_provide("syslog.so");
     #endif
 
-   // openstudio
-   init_openstudio_internal();
+    // openstudio
+     init_openstudio_internal();
   }
 
   // DLM: this will interpret any strings passed on the command line as UTF-8
