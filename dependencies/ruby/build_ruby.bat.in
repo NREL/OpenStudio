@@ -12,9 +12,9 @@ cd ..\Ruby-release
 set CFLAGS = MD -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600 
 call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-openssl-dir="${CMAKE_BINARY_DIR}/OpenSSL-Win64/" --with-libffi-dir="${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release" --target=x64-mswin64
 set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstatic.lib" "${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/lib/libffi.lib"
-REM nmake /K libenc
-REM nmake /K libencs
-REM nmake /K libtrans
+nmake /K libenc
+nmake /K libencs
+nmake /K libtrans
 nmake /K 
 nmake install
 "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/encinit.c" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/include/"
