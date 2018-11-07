@@ -32,6 +32,10 @@
 
 #include "ModelObject_Impl.hpp"
 
+namespace Json {
+  class Value;
+}
+
 namespace openstudio {
 namespace model {
 
@@ -145,8 +149,9 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.StandardsInformationMaterial");
 
+    static Json::Value m_standardsArr;
+    // Relies on utilities/core/Json.hpp since it's used in several places
     void parseStandardsJSON() const;
-    static QJsonArray m_standardsArr;
   };
 
 } // detail
