@@ -233,8 +233,6 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl : public St
     /** @name Other */
     //@{
 
-    virtual ModelObject clone(Model model) const override;
-
     //@}
    protected:
    private:
