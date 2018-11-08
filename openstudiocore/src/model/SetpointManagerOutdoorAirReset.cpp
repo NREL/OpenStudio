@@ -83,21 +83,13 @@ namespace detail {
     return SetpointManagerOutdoorAirReset::iddObjectType();
   }
 
-  bool SetpointManagerOutdoorAirReset_Impl::addToNode(Node & node) {
-    bool added = SetpointManager_Impl::addToNode( node );
-    if( added ) {
-      return added;
-    } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
-      if( plantLoop->supplyComponent(node.handle()) ) {
-        return this->setSetpointNode(node);
-      }
-    }
-    return added;
+  /** This SPM is allowed on a PlantLoop */
+  bool SetpointManagerOutdoorAirReset_Impl::isAllowedOnPlantLoop() const {
+    return true;
   }
 
   std::vector<ScheduleTypeKey> SetpointManagerOutdoorAirReset_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());

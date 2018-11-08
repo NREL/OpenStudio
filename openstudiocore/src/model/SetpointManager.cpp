@@ -34,6 +34,9 @@
 #include "Node_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "PlantLoop.hpp"
+#include "Splitter.hpp"
+#include "Mixer.hpp"
+#include <algorithm>
 
 #include "../utilities/core/Assert.hpp"
 
@@ -90,6 +93,14 @@ namespace detail{
     return result;
   }
 
+
+  /** Returns false by default. This is a virtual method which will be overriden for specific SPMs to return true
+   * if they are allowed on a plantLoop
+   **/
+  bool SetpointManager_Impl::isAllowedOnPlantLoop() const {
+    return false;
+  }
+
   bool SetpointManager_Impl::addToNode(Node & node)
   {
     if( node.model() != this->model() )
@@ -97,6 +108,8 @@ namespace detail{
       return false;
     }
 
+    // Erase any existing setpoint manager that has the same control variable
+    // eg you can't have two temperature ones. But Humidity ones can be MaximumHumidityRatio or MinimumHumidityRatio so you can have a Min and Max
     std::vector<SetpointManager> _setpointManagers = node.setpointManagers();
     if( !_setpointManagers.empty() )
     {
@@ -113,6 +126,7 @@ namespace detail{
 
     if( OptionalAirLoopHVAC airLoop = node.airLoopHVAC() )
     {
+      // If this is one of the regular nodes of the supply path (eg not in the AirLoopHVACOASys)
       if( airLoop->supplyComponent(node.handle()) )
       {
         return this->setSetpointNode(node);
@@ -121,7 +135,35 @@ namespace detail{
 
     if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = node.airLoopHVACOutdoorAirSystem())
     {
-      return this->setSetpointNode(node);
+      // We only accept it if it's neither the relief or the OA node (doesn't make sense to place one there)
+      if ( (node != oaSystem->outboardReliefNode()) && (node != oaSystem->outboardOANode()) ) {
+        return this->setSetpointNode(node);
+      }
+    }
+
+    // If the specific SPM (derived class) is allowed on PlantLoop, then we allow it on the supply side,
+    // or the demand side EXCEPT on a demand branch
+    if ( boost::optional<PlantLoop> plant = node.plantLoop() ) {
+      if( this->isAllowedOnPlantLoop() ) {
+        // If it's the supply side
+        if( plant->supplyComponent(node.handle()) ) {
+          return this->setSetpointNode(node);
+        } else {
+          // On the demand side
+          Splitter splitter = plant->demandSplitter();
+          Mixer mixer = plant->demandMixer();
+          // We check that the node is NOT between the splitter and the mixer
+          auto branchcomps = plant->demandComponents(splitter, mixer);
+          if ( std::find(branchcomps.begin(), branchcomps.end(), node) == branchcomps.end() ) {
+            return this->setSetpointNode(node);
+          } else {
+            LOG(Info, this->briefDescription() << " cannot be added on a demand branch");
+
+          }
+        }
+      } else {
+        LOG(Info,"This SetpointManager cannot be connected to a PlantLoop, for " << this->briefDescription());
+      }
     }
 
     return false;
@@ -198,6 +240,13 @@ bool SetpointManager::setControlVariable(const std::string & value)
 {
   return getImpl<detail::SetpointManager_Impl>()->setControlVariable(value);
 }
+
+bool SetpointManager::isAllowedOnPlantLoop() const
+{
+  return getImpl<detail::SetpointManager_Impl>()->isAllowedOnPlantLoop();
+}
+
+
 
 } // model
 } // openstudio
