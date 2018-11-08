@@ -51,6 +51,7 @@
 
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 namespace openstudio {
 namespace model {
@@ -441,6 +442,12 @@ namespace detail {
                    "', frequency = '" << frequency <<
                    "', name = '" << name <<
                    "', keyValue = '' did not return a TimeSeries");
+
+        if (boost::contains(name, "FuelOil_")) {
+          name = boost::replace_all_copy(name, "FuelOil_", "FuelOil#");
+
+          result = sqlFile->timeSeries(envPeriod, frequency, name, "");
+        }
 
       }
     }
