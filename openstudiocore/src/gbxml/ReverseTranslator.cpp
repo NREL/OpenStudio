@@ -627,9 +627,6 @@ namespace gbxml {
         surface.setSurfaceType("Wall");
       }else if (surfaceType.contains("UndergroundWall")){
         surface.setSurfaceType("Wall");
-        surface.setOutsideBoundaryCondition("Ground");
-        surface.setSunExposure("NoSun");
-        surface.setWindExposure("NoWind");
       // roof types
       }else if (surfaceType.contains("Roof")){
         surface.setSurfaceType("RoofCeiling");
@@ -657,11 +654,19 @@ namespace gbxml {
         surface.setOutsideBoundaryCondition("Outdoors");
         surface.setSunExposure("SunExposed");
         surface.setWindExposure("WindExposed");
-      }else if (surfaceType.contains("InteriorWall")){
+      }else if (surfaceType.contains("Interior")){
         surface.setOutsideBoundaryCondition("Adiabatic");
         surface.setSunExposure("NoSun");
         surface.setWindExposure("NoWind");
-      }else if (surfaceType.contains("SlabOnGrade")){
+      } else if (surfaceType.contains("Ceiling")) {
+        surface.setOutsideBoundaryCondition("Adiabatic");
+        surface.setSunExposure("NoSun");
+        surface.setWindExposure("NoWind");
+      } else if (surfaceType.contains("SlabOnGrade")) {
+        surface.setOutsideBoundaryCondition("Ground");
+        surface.setSunExposure("NoSun");
+        surface.setWindExposure("NoWind");
+      } else if (surfaceType.contains("Underground")) {
         surface.setOutsideBoundaryCondition("Ground");
         surface.setSunExposure("NoSun");
         surface.setWindExposure("NoWind");
@@ -738,78 +743,107 @@ namespace gbxml {
           boost::optional<model::Space> adjacentSpace = adjacentSpaceIt->second.optionalCast<openstudio::model::Space>();
           if (adjacentSpace) {
 
+            // DLM: we have issues if interior ceilings/floors are mislabeled, override surface type for adjacent surfaces
+            // http://code.google.com/p/cbecc/issues/detail?id=471
+
+            // the surfaceType at this point has been set based on the surfaceType attribute of the surface
+            // if there are two spaces, we do not know which copy of the surface should go into which space
+            // in the case of a floor/ceiling pair, this can lead to putting the floor in the bottom space and the ceiling in the top space rather than vice versa
+            // in the case of interior walls, this can lead to incorrect surface normals (e.g. wall with right-pointing normal placed in the right space instead of left)
+            // we can try to use the adjacent space attribute surfaceType to put floors and ceilings in the right space
+            // we cannot ensure that wall normals are handled correctly, that will require a convention that vertices are not reversed in the first space listed or additional attribute
+            std::string gbXMLSurfaceType = surface.surfaceType();
+
+            // we now assign the default surface type based on outward normal
+            // this is needed in case floor vertices (i.e. normal down) are provided for a surface labeled ceiling
+            surface.assignDefaultSurfaceType();
+
+            // currentSurfaceType is the surface type assigned by vertices
             std::string currentSurfaceType = surface.surfaceType();
-            if (currentSurfaceType == "RoofCeiling" || currentSurfaceType == "Floor") {
-              // DLM: we have issues if interior ceilings/floors are mislabeled, override surface type for adjacent surfaces
-              // http://code.google.com/p/cbecc/issues/detail?id=471
-              // Try to figure it out based on the surfaceType
-              bool figuredOut = false;
-              QString spaceSurfaceType = adjacentSpaceElements.at(0).toElement().attribute("surfaceType");
-              QString adjacentSpaceSurfaceType = adjacentSpaceElements.at(1).toElement().attribute("surfaceType");
-              if (!spaceSurfaceType.isEmpty()) {
-                if (currentSurfaceType == "Floor") {
-                  if (spaceSurfaceType == "InteriorFloor") {
-                    // No changes
-                    figuredOut = true;
-                  } else if (spaceSurfaceType == "Ceiling") {
-                    // Swap roles of space and adjacentSpace
-                    surface.setSpace(*adjacentSpace);
-                    auto temp = space;
-                    space = adjacentSpace;
-                    adjacentSpace = temp;
-                    figuredOut = true;
-                  }
-                } else if (currentSurfaceType == "RoofCeiling") {
-                  if (spaceSurfaceType == "Ceiling") {
-                    // No changes
-                    figuredOut = true;
-                  } else if (spaceSurfaceType == "InteriorFloor") {
-                    // Swap roles of space and adjacentSpace
-                    surface.setSpace(*adjacentSpace);
-                    auto temp = space;
-                    space = adjacentSpace;
-                    adjacentSpace = temp;
-                    figuredOut = true;
-                  }
-                }
-              } else if (!adjacentSpaceSurfaceType.isEmpty()) {
-                if (currentSurfaceType == "Floor") {
-                  if (adjacentSpaceSurfaceType == "InteriorFloor") {
-                    // No changes
-                    figuredOut = true;
-                  } else if (adjacentSpaceSurfaceType == "Ceiling") {
-                    // Swap roles of space and adjacentSpace
-                    surface.setSpace(*adjacentSpace);
-                    auto temp = space;
-                    space = adjacentSpace;
-                    adjacentSpace = temp;
-                    figuredOut = true;
-                  }
-                } else if (currentSurfaceType == "RoofCeiling") {
-                  if (adjacentSpaceSurfaceType == "Ceiling") {
-                    // No changes
-                    figuredOut = true;
-                  } else if (adjacentSpaceSurfaceType == "InteriorFloor") {
-                    // Swap roles of space and adjacentSpace
-                    surface.setSpace(*adjacentSpace);
-                    auto temp = space;
-                    space = adjacentSpace;
-                    adjacentSpace = temp;
-                    figuredOut = true;
-                  }
-                }
-              }
-              if (!figuredOut) {
-                surface.assignDefaultSurfaceType();
-                if (currentSurfaceType != surface.surfaceType()) {
-                  LOG(Warn, "Changing surface type from '" << currentSurfaceType << "' to '" << surface.surfaceType() << "' for surface '" << surface.name().get() << "'");
-                }
-              }
+
+            // spaceSurfaceType is the surfaceType that should be in the first space
+            QString spaceSurfaceType = adjacentSpaceElements.at(0).toElement().attribute("surfaceType");
+
+            // spaceSurfaceType is the surfaceType that should be in the second space
+            QString adjacentSpaceSurfaceType = adjacentSpaceElements.at(1).toElement().attribute("surfaceType");
+
+            // we will mark figuredOut as true if we are sure of our assignment, otherwise we will log a warning
+            bool figuredOut = false;
+            
+            if (spaceSurfaceType.isEmpty() && adjacentSpaceSurfaceType.isEmpty()) {
+              // this is ok but gives us no new information, no warning issued
+
+            } else if (spaceSurfaceType.isEmpty() && !adjacentSpaceSurfaceType.isEmpty()) {
+
+              // if one adjacent space surfaceType is given then the other should be too
+              LOG(Warn, "Only one adjacent surfaceType listed for '" << surface.name().get() << "'");
+
+            } else if (!spaceSurfaceType.isEmpty() && adjacentSpaceSurfaceType.isEmpty()) {
+
+              // if one adjacent surfaceType is given then the other should be too
+              LOG(Warn, "Only one adjacent surfaceType listed for '" << surface.name().get() << "'");
 
             } else {
-              surface.assignDefaultSurfaceType();
-              if (currentSurfaceType != surface.surfaceType()) {
-                LOG(Warn, "Changing surface type from '" << currentSurfaceType << "' to '" << surface.surfaceType() << "' for surface '" << surface.name().get() << "'");
+
+              // have both spaceSurfaceType and adjacentSpaceSurfaceType
+
+              if (currentSurfaceType == "RoofCeiling" || currentSurfaceType == "Floor") {
+
+                // both the spaceSurfaceType and adjacentSpaceSurfaceType should be either Ceiling or InteriorFloor
+                if (!((spaceSurfaceType == "InteriorFloor" || spaceSurfaceType == "Ceiling") && (adjacentSpaceSurfaceType == "InteriorFloor" || adjacentSpaceSurfaceType == "Ceiling"))) {
+
+                  // one of the spaces lists this as a wall or some other surfaceType
+                  // we could try to reapply the surfaceType from the gbXML back here, but then we would be in the same problem as before
+                  // at least now we have a surface type that matches the vertex outward normal
+                  LOG(Warn, "Adjacent surfaceTypes '" << toString(spaceSurfaceType) << "' and  '" << toString(adjacentSpaceSurfaceType) << "' listed for '" << surface.name().get() << "' do not match vertices");
+
+                } else if (spaceSurfaceType == adjacentSpaceSurfaceType) {
+
+                  // both spaceSurfaceType and adjacentSpaceSurfaceType are either InteriorFloor or Ceiling, not allowed
+                  LOG(Warn, "Duplicate surfaceType '" << toString(spaceSurfaceType) << "' listed for '" << surface.name().get() << "'");
+
+                } else {
+
+                  if (currentSurfaceType == "Floor") {
+                    // vertices indicate floor, normal is down
+                    if (spaceSurfaceType == "InteriorFloor") {
+                      // No changes, floor should go into first space
+                      figuredOut = true;
+                    } else if (spaceSurfaceType == "Ceiling") {
+                      // Swap roles of space and adjacentSpace, floor should go into second space
+                      surface.setSpace(*adjacentSpace);
+                      auto temp = space;
+                      space = adjacentSpace;
+                      adjacentSpace = temp;
+                      figuredOut = true;
+                    }
+                  } else if (currentSurfaceType == "RoofCeiling") {
+                    // vertices indicate ceiling, normal is up
+                    if (spaceSurfaceType == "Ceiling") {
+                      // No changes, ceiling should go into first space
+                      figuredOut = true;
+                    } else if (spaceSurfaceType == "InteriorFloor") {
+                      // Swap roles of space and adjacentSpace, ceiling should go into second space
+                      surface.setSpace(*adjacentSpace);
+                      auto temp = space;
+                      space = adjacentSpace;
+                      adjacentSpace = temp;
+                      figuredOut = true;
+                    }
+                  }
+                }
+              } else {
+
+                // currentSurfaceType is Wall, we can't be sure it is in correct space (with normal pointing out) but don't issue warning
+                // need to have either 1) convention that vertices are not reversed in first space, 2) some new attribute (e.g. 'reversed=true/false'), or 3) heuristic checking outward normal
+                // if doing a hueristic, best to run at the end after all other geometry is created so you can tell which way is out of the space (all surfaces should point out of the space)
+              }
+            }
+                
+            // if we changed surface type and didn't figure out if that is ok, issue warning
+            if (!figuredOut) {
+              if (currentSurfaceType != gbXMLSurfaceType) {
+                LOG(Warn, "Changing surface type from '" << gbXMLSurfaceType << "' to '" << currentSurfaceType << "' for surface '" << surface.name().get() << "'");
               }
             }
 
