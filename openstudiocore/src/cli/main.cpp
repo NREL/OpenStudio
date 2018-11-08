@@ -209,7 +209,20 @@ int main(int argc, char *argv[])
 
     // Need embedded_help for requiring files out of the embedded system
     auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
-    rubyInterpreter.evalString(embedded_extensions_string);
+
+    try {
+      rubyInterpreter.evalString(embedded_extensions_string);
+    }
+    catch (const std::exception& e) {
+      rubyInterpreter.evalString(R"(STDOUT.flush)");
+      std::cout << "Exception in embedded_help: " << e.what() << std::endl; // endl will flush
+      return ruby_cleanup(1);
+    }
+    catch (...) {
+      rubyInterpreter.evalString(R"(STDOUT.flush)");
+      std::cout << "Unknown Exception in embedded_help" << std::endl; // endl will flush
+      return ruby_cleanup(1);
+    }
 
     //// encodings
     Init_encdb();
