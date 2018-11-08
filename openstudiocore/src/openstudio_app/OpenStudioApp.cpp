@@ -344,7 +344,7 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
 
   // Get the first Qlabel waitDialog (0 = stretch, 1 = "Loading model", 2 = "This may take a minute...", 3=hidden lable,   = stretch)
   waitDialog()->m_firstLine->setText("Loading Library Files");
-  waitDialog()->m_secondLine->setText("If this takes too long, try resetting the default libraries in Preferences > Change default libraries");
+  waitDialog()->m_secondLine->setText("(Manage library files in Preferences->Change default libraries)");
   // Make it visible
   waitDialog()->m_thirdLine->setVisible(true);
   waitDialog()->m_fourthLine->setVisible(true);
