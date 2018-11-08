@@ -44,7 +44,8 @@ module OpenStudio
 end
 
 BINDING = Kernel::binding()
-Encoding.default_external = Encoding::ASCII
+#puts Encoding.list
+#Encoding.default_external = Encoding::UTF_8
 
 module Kernel
   # ":" is our root path to the embedded file system
