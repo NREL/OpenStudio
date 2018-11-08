@@ -138,6 +138,20 @@ path toPath(const std::string& s)
   return path(s);
 }
 
+#ifdef WIN32
+/** UTF-16 encoded std::wstring for opening fstreams*/
+std::wstring toSystemFilename(const path& p)
+{
+  return p.wstring();
+}
+#else
+/** UTF-8 encoded std::string for opening fstreams*/
+std::string toSystemFilename(const path& p) 
+{
+  return p.string();
+}
+#endif
+
 } // openstudio
 
 // allow path to be written to QTextStream

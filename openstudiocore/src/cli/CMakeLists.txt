@@ -235,6 +235,10 @@ add_executable(openstudio
  ${OUTPUT}
 )
 
+if(MSVC)
+  set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
+endif()
+
 set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
@@ -243,6 +247,7 @@ target_link_libraries(openstudio
  init_openstudio
  ${EXTENSION_LIBS}
  ${ENC_LIBS}
+ ${ADDITIONAL_RUBY_LIBS}
  openstudio_airflow_static
  openstudio_model_static
  openstudio_energyplus_static
@@ -252,32 +257,20 @@ target_link_libraries(openstudio
  openstudio_isomodel_static
  openstudio_gbxml_static
  openstudio_radiance_static
- ${ADDITIONAL_RUBY_LIBS}
 )
 
-if( UNIX AND NOT APPLE )
-  target_link_libraries(openstudio
-    ${READLINE}
-    ${GDBM}
-    ${GDBM_COMPAT}
-    ${CURSES}
-    ${FFI}
-    ${YAML}
-  )
-  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY}  "dl" "crypt" "ssl")
-
-  # Order of link matters! Ruby needs to lookup symbols inside GMP, so this one needs to be linked after
-  target_link_libraries(openstudio ${GMP})
+if (UNIX AND NOT APPLE)
+  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} ${EXTENSION_LIBS} dl crypt ssl)
 elseif(WIN32)
   target_link_libraries(openstudio debug ${RUBY_STATIC_LIBRARY_DEBUG} optimized ${RUBY_STATIC_LIBRARY})
   target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi)
   set_target_properties(openstudio PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
 else()
-  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} )
+  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY})
 endif()
 
 if( APPLE )
-  target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY} )
+  target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY})
 endif()
 
 install(TARGETS openstudio DESTINATION bin COMPONENT "CLI")

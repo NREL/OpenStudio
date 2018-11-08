@@ -2719,7 +2719,7 @@ namespace openstudio{
     m_checksum = openstudio::checksum(m_path);
 
     // open file
-    std::ifstream ifs(openstudio::toString(m_path));
+    std::ifstream ifs(openstudio::toSystemFilename(m_path));
 
     if (!parse(ifs, storeData)){
       ifs.close();
@@ -2858,7 +2858,7 @@ namespace openstudio{
       m_checksum = openstudio::checksum(m_path);
 
       // open file
-      std::ifstream ifs(openstudio::toString(m_path));
+      std::ifstream ifs(openstudio::toSystemFilename(m_path));
 
       if (!parse(ifs, true)){
         ifs.close();
@@ -4024,7 +4024,7 @@ namespace openstudio{
       m_checksum = openstudio::checksum(m_path);
 
       // open file
-      std::ifstream ifs(openstudio::toString(m_path));
+      std::ifstream ifs(openstudio::toSystemFilename(m_path));
 
       if (!parse(ifs)){
         ifs.close();
@@ -4048,7 +4048,7 @@ namespace openstudio{
       m_checksum = openstudio::checksum(m_path);
 
       // open file
-      std::ifstream ifs(openstudio::toString(m_path));
+      std::ifstream ifs(openstudio::toSystemFilename(m_path));
 
       if (!parse(ifs, true)) {
         ifs.close();
@@ -4098,7 +4098,7 @@ namespace openstudio{
       m_checksum = openstudio::checksum(m_path);
 
       // open file
-      std::ifstream ifs(openstudio::toString(m_path));
+      std::ifstream ifs(openstudio::toSystemFilename(m_path));
 
       if (!parse(ifs, true)) {
         ifs.close();
@@ -4171,7 +4171,7 @@ namespace openstudio{
       m_checksum = openstudio::checksum(m_path);
 
       // open file
-      std::ifstream ifs(openstudio::toString(m_path));
+      std::ifstream ifs(openstudio::toSystemFilename(m_path));
 
       if (!parse(ifs, true)) {
         ifs.close();

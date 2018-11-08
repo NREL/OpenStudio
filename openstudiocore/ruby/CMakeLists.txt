@@ -18,6 +18,10 @@ add_library( init_openstudio STATIC
   RubyAPI.hpp
 )
 
+if(MSVC)
+  set_target_properties(init_openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
+endif()
+
 target_link_libraries(init_openstudio
  ruby_OpenStudioAirflow
  ruby_OpenStudioModelCore
@@ -77,6 +81,10 @@ if(APPLE)
   set_target_properties(openstudio_rb PROPERTIES SUFFIX ".bundle" )
 else()
   set_target_properties(openstudio_rb PROPERTIES SUFFIX ".so" )
+endif()
+
+if(MSVC)
+  set_target_properties(openstudio_rb PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
 endif()
 
 add_custom_command(TARGET openstudio_rb
