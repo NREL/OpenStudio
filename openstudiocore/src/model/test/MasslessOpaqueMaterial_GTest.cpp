@@ -39,8 +39,16 @@
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
 
+#include <utilities/embedded_files.hxx>
+
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture, Material_EmbeddedFile) {
+
+  ASSERT_TRUE(::openstudio::embedded_files::hasFile(":/Resources/standards/OpenStudio_Standards_materials_merged.json"));
+
+}
 
 TEST_F(ModelFixture,MasslessOpaqueMaterial_ThermalResistance_Quantity) {
   Model model;
