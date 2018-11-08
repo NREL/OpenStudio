@@ -174,12 +174,12 @@ namespace detail{
     return result;
   }
 
-  unsigned CoilHeatingGas_Impl::inletPort()
+  unsigned CoilHeatingGas_Impl::inletPort() const
   {
     return OS_Coil_Heating_GasFields::AirInletNodeName;
   }
 
-  unsigned CoilHeatingGas_Impl::outletPort()
+  unsigned CoilHeatingGas_Impl::outletPort() const
   {
     return OS_Coil_Heating_GasFields::AirOutletNodeName;
   }

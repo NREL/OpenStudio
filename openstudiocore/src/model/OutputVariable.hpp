@@ -145,4 +145,4 @@ typedef std::vector<OutputVariable> OutputVariableVector;
 } // model
 } // openstudio
 
-#endif // MODEL_VARIABLE_HPP
+#endif // MODEL_VARIABLE_HPP

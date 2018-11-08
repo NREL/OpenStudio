@@ -365,4 +365,4 @@ CurveExponent::CurveExponent(std::shared_ptr<detail::CurveExponent_Impl> impl)
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

@@ -366,12 +366,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned CoilHeatingDXSingleSpeed_Impl::inletPort()
+  unsigned CoilHeatingDXSingleSpeed_Impl::inletPort() const
   {
     return OS_Coil_Heating_DX_SingleSpeedFields::AirInletNodeName;
   }
 
-  unsigned CoilHeatingDXSingleSpeed_Impl::outletPort()
+  unsigned CoilHeatingDXSingleSpeed_Impl::outletPort() const
   {
     return OS_Coil_Heating_DX_SingleSpeedFields::AirOutletNodeName;
   }

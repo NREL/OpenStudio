@@ -387,22 +387,22 @@ namespace detail {
     return newCoil;
   }
 
-  unsigned CoilCoolingWater_Impl::airInletPort()
+  unsigned CoilCoolingWater_Impl::airInletPort() const
   {
     return OS_Coil_Cooling_WaterFields::AirInletNodeName;
   }
 
-  unsigned CoilCoolingWater_Impl::airOutletPort()
+  unsigned CoilCoolingWater_Impl::airOutletPort() const
   {
     return OS_Coil_Cooling_WaterFields::AirOutletNodeName;
   }
 
-  unsigned CoilCoolingWater_Impl::waterInletPort()
+  unsigned CoilCoolingWater_Impl::waterInletPort() const
   {
     return OS_Coil_Cooling_WaterFields::WaterInletNodeName;
   }
 
-  unsigned CoilCoolingWater_Impl::waterOutletPort()
+  unsigned CoilCoolingWater_Impl::waterOutletPort() const
   {
     return OS_Coil_Cooling_WaterFields::WaterOutletNodeName;
   }

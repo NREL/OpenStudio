@@ -334,4 +334,4 @@ RefrigerationCondenserCascade::RefrigerationCondenserCascade(std::shared_ptr<det
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

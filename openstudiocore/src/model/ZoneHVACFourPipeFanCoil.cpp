@@ -1538,4 +1538,4 @@ ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(std::shared_ptr<detail::ZoneHVA
   }
 
 } // model
-} // openstudio
+} // openstudio

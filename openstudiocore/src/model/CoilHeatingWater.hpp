@@ -210,4 +210,4 @@ typedef boost::optional<CoilHeatingWater> OptionalCoilHeatingWater;
 } // model
 } // openstudio
 
-#endif // MODEL_COILHEATINGWATER_HPP
+#endif // MODEL_COILHEATINGWATER_HPP

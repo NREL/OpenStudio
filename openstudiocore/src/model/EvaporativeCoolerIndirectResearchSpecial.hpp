@@ -225,4 +225,4 @@ typedef std::vector<EvaporativeCoolerIndirectResearchSpecial> EvaporativeCoolerI
 } // model
 } // openstudio
 
-#endif // MODEL_EVAPORATIVECOOLERINDIRECTRESEARCHSPECIAL_HPP
+#endif // MODEL_EVAPORATIVECOOLERINDIRECTRESEARCHSPECIAL_HPP

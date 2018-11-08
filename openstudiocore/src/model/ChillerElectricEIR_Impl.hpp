@@ -76,13 +76,13 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   virtual bool removeFromSecondaryPlantLoop() override;
 
-  virtual unsigned supplyInletPort() override;
+  virtual unsigned supplyInletPort() const override;
 
-  virtual unsigned supplyOutletPort() override;
+  virtual unsigned supplyOutletPort() const override;
 
-  virtual unsigned demandInletPort() override;
+  virtual unsigned demandInletPort() const override;
 
-  virtual unsigned demandOutletPort() override;
+  virtual unsigned demandOutletPort() const override;
 
   virtual unsigned tertiaryInletPort() const override;
 

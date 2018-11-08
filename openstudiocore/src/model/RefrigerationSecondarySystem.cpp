@@ -1084,4 +1084,4 @@ RefrigerationSecondarySystem::RefrigerationSecondarySystem(std::shared_ptr<detai
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

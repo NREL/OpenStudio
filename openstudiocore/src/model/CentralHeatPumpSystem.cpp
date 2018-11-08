@@ -158,23 +158,23 @@ namespace detail {
 
 
   // CoolingLoop
-  unsigned CentralHeatPumpSystem_Impl::supplyInletPort()
+  unsigned CentralHeatPumpSystem_Impl::supplyInletPort() const
   {
     return OS_CentralHeatPumpSystemFields::CoolingLoopInletNodeName;
   }
 
-  unsigned CentralHeatPumpSystem_Impl::supplyOutletPort()
+  unsigned CentralHeatPumpSystem_Impl::supplyOutletPort() const
   {
     return OS_CentralHeatPumpSystemFields::CoolingLoopOutletNodeName;
   }
 
   // SourceLoop
-  unsigned CentralHeatPumpSystem_Impl::demandInletPort()
+  unsigned CentralHeatPumpSystem_Impl::demandInletPort() const
   {
     return OS_CentralHeatPumpSystemFields::SourceLoopInletNodeName;
   }
 
-  unsigned CentralHeatPumpSystem_Impl::demandOutletPort()
+  unsigned CentralHeatPumpSystem_Impl::demandOutletPort() const
   {
     return OS_CentralHeatPumpSystemFields::SourceLoopOutletNodeName;
   }

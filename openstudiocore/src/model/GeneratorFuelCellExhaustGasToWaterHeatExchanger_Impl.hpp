@@ -233,8 +233,13 @@ class MODEL_API GeneratorFuelCellExhaustGasToWaterHeatExchanger_Impl : public St
     /** @name Other */
     //@{
 
+    virtual unsigned inletPort() const override;
 
+    virtual unsigned outletPort() const override;
 
+    bool addToNode(Node & node) override;
+
+    virtual ModelObject clone(Model model) const override;
 
     //@}
    protected:

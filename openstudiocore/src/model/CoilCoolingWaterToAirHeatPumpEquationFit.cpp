@@ -420,22 +420,22 @@ namespace detail {
     return result;
   }
 
-  unsigned CoilCoolingWaterToAirHeatPumpEquationFit_Impl::airInletPort()
+  unsigned CoilCoolingWaterToAirHeatPumpEquationFit_Impl::airInletPort() const
   {
     return OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirInletNodeName;
   }
 
-  unsigned CoilCoolingWaterToAirHeatPumpEquationFit_Impl::airOutletPort()
+  unsigned CoilCoolingWaterToAirHeatPumpEquationFit_Impl::airOutletPort() const
   {
     return OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName;
   }
 
-  unsigned CoilCoolingWaterToAirHeatPumpEquationFit_Impl::waterInletPort()
+  unsigned CoilCoolingWaterToAirHeatPumpEquationFit_Impl::waterInletPort() const
   {
     return OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::WaterInletNodeName;
   }
 
-  unsigned CoilCoolingWaterToAirHeatPumpEquationFit_Impl::waterOutletPort()
+  unsigned CoilCoolingWaterToAirHeatPumpEquationFit_Impl::waterOutletPort() const
   {
     return OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::WaterOutletNodeName;
   }

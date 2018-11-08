@@ -77,12 +77,12 @@ IddObjectType PipeAdiabatic_Impl::iddObjectType() const {
   return PipeAdiabatic::iddObjectType();
 }
 
-unsigned PipeAdiabatic_Impl::inletPort()
+unsigned PipeAdiabatic_Impl::inletPort() const
 {
   return OS_Pipe_AdiabaticFields::InletNodeName;
 }
 
-unsigned PipeAdiabatic_Impl::outletPort()
+unsigned PipeAdiabatic_Impl::outletPort() const
 {
   return OS_Pipe_AdiabaticFields::OutletNodeName;
 }
@@ -106,12 +106,12 @@ PipeAdiabatic::PipeAdiabatic(const Model& model)
   OS_ASSERT(getImpl<detail::PipeAdiabatic_Impl>());
 }
 
-unsigned PipeAdiabatic::inletPort()
+unsigned PipeAdiabatic::inletPort() const
 {
   return getImpl<detail::PipeAdiabatic_Impl>()->inletPort();
 }
 
-unsigned PipeAdiabatic::outletPort()
+unsigned PipeAdiabatic::outletPort() const
 {
   return getImpl<detail::PipeAdiabatic_Impl>()->outletPort();
 }

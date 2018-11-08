@@ -713,22 +713,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned ChillerElectricEIR_Impl::supplyInletPort()
+  unsigned ChillerElectricEIR_Impl::supplyInletPort() const
   {
     return OS_Chiller_Electric_EIRFields::ChilledWaterInletNodeName;
   }
 
-  unsigned ChillerElectricEIR_Impl::supplyOutletPort()
+  unsigned ChillerElectricEIR_Impl::supplyOutletPort() const
   {
     return OS_Chiller_Electric_EIRFields::ChilledWaterOutletNodeName;
   }
 
-  unsigned ChillerElectricEIR_Impl::demandInletPort()
+  unsigned ChillerElectricEIR_Impl::demandInletPort() const
   {
     return OS_Chiller_Electric_EIRFields::CondenserInletNodeName;
   }
 
-  unsigned ChillerElectricEIR_Impl::demandOutletPort()
+  unsigned ChillerElectricEIR_Impl::demandOutletPort() const
   {
     return OS_Chiller_Electric_EIRFields::CondenserOutletNodeName;
   }

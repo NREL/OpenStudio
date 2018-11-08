@@ -375,19 +375,19 @@ namespace detail {
     return result;
   }
 
-  unsigned ChillerAbsorption_Impl::supplyInletPort() {
+  unsigned ChillerAbsorption_Impl::supplyInletPort() const {
     return OS_Chiller_AbsorptionFields::ChilledWaterInletNodeName;
   }
 
-  unsigned ChillerAbsorption_Impl::supplyOutletPort() {
+  unsigned ChillerAbsorption_Impl::supplyOutletPort() const {
     return OS_Chiller_AbsorptionFields::ChilledWaterOutletNodeName;
   }
 
-  unsigned ChillerAbsorption_Impl::demandInletPort() {
+  unsigned ChillerAbsorption_Impl::demandInletPort() const {
     return OS_Chiller_AbsorptionFields::CondenserInletNodeName;
   }
 
-  unsigned ChillerAbsorption_Impl::demandOutletPort() {
+  unsigned ChillerAbsorption_Impl::demandOutletPort() const {
     return OS_Chiller_AbsorptionFields::CondenserOutletNodeName;
   }
 

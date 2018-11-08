@@ -145,4 +145,4 @@ typedef std::vector<CurveLinear> CurveLinearVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVELINEAR_HPP
+#endif // MODEL_CURVELINEAR_HPP
