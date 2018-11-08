@@ -726,6 +726,9 @@ namespace detail {
     airLoopClone.setString(demandInletPortB(),"");
     airLoopClone.setString(demandOutletPort(),"");
 
+    // Sizing:System was already cloned because it is declared as a child
+    // And because it has the setParent method overriden, no need to do anything
+
     {
       auto clone = availabilitySchedule().clone(model).cast<Schedule>();
       airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilitySchedule,clone.handle());
@@ -735,12 +738,6 @@ namespace detail {
       AvailabilityManagerAssignmentList avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
       avmListClone.setName(airLoopClone.name().get() + " AvailabilityManagerAssigmentList");
       airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilityManagerListName, avmListClone.handle());
-    }
-
-    {
-      auto sizing = sizingSystem();
-      auto sizingClone = sizing.clone(model).cast<SizingSystem>();
-      sizingClone.setAirLoopHVAC(airLoopClone);
     }
 
     airLoopClone.getImpl<detail::AirLoopHVAC_Impl>()->createTopology();
@@ -755,6 +752,13 @@ namespace detail {
       } else {
         auto compClone = comp.clone(model).cast<HVACComponent>();
         compClone.addToNode(outletNodeClone);
+        // If the original component was also on a PlantLoop
+        if( boost::optional<HVACComponent> hvacComp = comp.optionalCast<HVACComponent>() ) {
+          if( boost::optional<PlantLoop> pl = hvacComp->plantLoop() ) {
+            // Connect the clone to the plantLoop too
+            pl->addDemandBranchForComponent(compClone);
+          }
+        }
       }
     }
 
@@ -779,6 +783,8 @@ namespace detail {
       termtypes.push_back(comp.iddObjectType());
     });
 
+    // std::unique only works on sorted vectors, need to sort
+    std::sort(termtypes.begin(), termtypes.end());
     auto uniquetypes = std::vector<IddObjectType>(termtypes.begin(), std::unique(termtypes.begin(), termtypes.end()));
     std::vector<HVACComponent> uniqueterms;
 
@@ -896,12 +902,12 @@ namespace detail {
     return result;
   }
 
-  Splitter AirLoopHVAC_Impl::demandSplitter()
+  Splitter AirLoopHVAC_Impl::demandSplitter() const
   {
     return this->zoneSplitter();
   }
 
-  Mixer AirLoopHVAC_Impl::demandMixer()
+  Mixer AirLoopHVAC_Impl::demandMixer() const
   {
     return this->zoneMixer();
   }

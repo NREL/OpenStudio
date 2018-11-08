@@ -134,6 +134,14 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   virtual std::vector<openstudio::IdfObject> remove() override;
 
+  /**
+   * This method will clone an AirLoopHVAC with the following rationale:
+   * - Handle all non-branch components from both the supply and the demand side
+   * - On the demand side branches, place one terminal of each IddObjectType that is present on the original AirLoopHVAC
+   * - Clone any SetpointManagers and add them to the correct location
+   * - If the supply component that is cloned is connected to a PlantLoop,
+   *   we try to the connect the clone to the same PlantLoop by adding a demand branch
+   */
   virtual ModelObject clone(Model model) const override;
 
   virtual const std::vector<std::string>& outputVariableNames() const override;
@@ -142,9 +150,9 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  Splitter demandSplitter() override;
+  virtual Splitter demandSplitter() const override;
 
-  Mixer demandMixer() override;
+  virtual Mixer demandMixer() const override;
 
   boost::optional<HVACComponent> supplyFan() const;
 
@@ -263,7 +271,15 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::vector<HVACComponent> terminals() const;
 
-  void createTopology();
+  /**
+   * This method creates the basic, barebone, AirLoopHVAC topology:
+   * - Supply inlet & oulet nodes,
+   * - Demand inlet & outlet nodes,
+   * - Demand splitter & mixer,
+   * - A demand branch with a node
+   * - A Demand branch with a node (Branch Node)
+   */
+  virtual void createTopology() override;
 
   virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
