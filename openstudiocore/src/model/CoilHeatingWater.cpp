@@ -45,6 +45,8 @@
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "ZoneHVACUnitHeater.hpp"
 #include "ZoneHVACUnitHeater_Impl.hpp"
+#include "ZoneHVACUnitVentilator.hpp"
+#include "ZoneHVACUnitVentilator_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
@@ -610,7 +612,25 @@ namespace detail{
           return elem;
         }
       }
-     }
+    }
+
+    // ZoneHVACUnitVentilator
+
+    std::vector<ZoneHVACUnitVentilator> zoneHVACUnitVentilator;
+
+    zoneHVACUnitVentilator = this->model().getConcreteModelObjects<ZoneHVACUnitVentilator>();
+
+    for( const auto & elem : zoneHVACUnitVentilator )
+    {
+      if( boost::optional<HVACComponent> coil = elem.heatingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return elem;
+        }
+      }
+    }
+
 
     return boost::none;
   }

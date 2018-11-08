@@ -44,6 +44,8 @@
 #include "ZoneHVACComponent_Impl.hpp"
 #include "ZoneHVACFourPipeFanCoil.hpp"
 #include "ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "ZoneHVACUnitVentilator.hpp"
+#include "ZoneHVACUnitVentilator_Impl.hpp"
 
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
@@ -471,18 +473,19 @@ namespace detail {
   boost::optional<ZoneHVACComponent> CoilCoolingWater_Impl::containingZoneHVACComponent() const
   {
     // ZoneHVACFourPipeFanCoil
-
-    std::vector<ZoneHVACFourPipeFanCoil> zoneHVACFourPipeFanCoils;
-
-    zoneHVACFourPipeFanCoils = this->model().getConcreteModelObjects<ZoneHVACFourPipeFanCoil>();
-
-    for( const auto & zoneHVACFourPipeFanCoil : zoneHVACFourPipeFanCoils )
-    {
-      if( boost::optional<HVACComponent> coil = zoneHVACFourPipeFanCoil.coolingCoil() )
-      {
-        if( coil->handle() == this->handle() )
-        {
+    for( const auto & zoneHVACFourPipeFanCoil : this->model().getConcreteModelObjects<ZoneHVACFourPipeFanCoil>() ) {
+      if( boost::optional<HVACComponent> coil = zoneHVACFourPipeFanCoil.coolingCoil() ) {
+        if( coil->handle() == this->handle() ) {
           return zoneHVACFourPipeFanCoil;
+        }
+      }
+    }
+
+    // ZoneHVACUnitVentilator
+    for( const auto & zoneHVACUnitVentilator : this->model().getConcreteModelObjects<ZoneHVACUnitVentilator>() ) {
+      if( boost::optional<HVACComponent> coil = zoneHVACUnitVentilator.coolingCoil() ) {
+        if( coil->handle() == this->handle() ) {
+          return zoneHVACUnitVentilator;
         }
       }
     }
