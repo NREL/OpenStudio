@@ -186,22 +186,25 @@ namespace detail {
       return result;
     }
 
-    // If Material Standard is set
-    if (materialStandard.is_initialized()) {
-      // include values from json
-      parseStandardsJSON();
+    // include values from json
+    parseStandardsJSON();
 
-      std::string thisMaterialStandard;
+    std::string thisMaterialStandard;
 
-      for( const auto& v: m_standardsArr) {
+    for( const auto& v: m_standardsArr) {
+      // If materialStandard is initialized, then we have to match against it
+      if (materialStandard.is_initialized()) {
+        // It's fine to call asString directly here because it'll return an empty string
+        // if it's null, and therefore won't match against our material standard anyways
         thisMaterialStandard = v["material"].asString();
-
-        if (thisMaterialStandard == *materialStandard) {
-          const Json::Value _tmp = v["material_standard_source"];
-          if (_tmp.isString()) {
-            result.push_back(_tmp.asString());
-          }
+        if (thisMaterialStandard != materialStandard.get()) {
+          continue;
         }
+      }
+
+      const Json::Value _tmp = v["material_standard_source"];
+      if (_tmp.isString()) {
+        result.push_back(_tmp.asString());
       }
     }
 
@@ -261,23 +264,25 @@ namespace detail {
 
     boost::optional<std::string> standardsCategory = this->standardsCategory();
 
-    // If Material Standard is set
-    if (materialStandard.is_initialized()) {
+    // include values from json
+    parseStandardsJSON();
 
-      // include values from json
-      parseStandardsJSON();
+    std::string thisMaterialStandard;
 
-      std::string thisMaterialStandard;
-
-      for( const auto& v: m_standardsArr) {
-        thisMaterialStandard = v["material_standard"].asString();
-
-        if (thisMaterialStandard == *materialStandard) {
-          const Json::Value _tmp = v["code_category"];
-          if (_tmp.isString()) {
-            result.push_back(_tmp.asString());
-          }
+    for( const auto& v: m_standardsArr) {
+      // If materialStandard is initialized, then we have to match against it
+      if (materialStandard.is_initialized()) {
+        // It's fine to call asString directly here because it'll return an empty string
+        // if it's null, and therefore won't match against our material standard anyways
+        thisMaterialStandard = v["material"].asString();
+        if (thisMaterialStandard != materialStandard.get()) {
+          continue;
         }
+      }
+
+      const Json::Value _tmp = v["code_category"];
+      if (_tmp.isString()) {
+        result.push_back(_tmp.asString());
       }
     }
 
@@ -364,25 +369,32 @@ namespace detail {
       return result;
     }
 
-    // include values from json if materialStandard and standardsCategory are set
-    if (materialStandard.is_initialized() && standardsCategory.is_initialized() ) {
-      // include values from json
-      parseStandardsJSON();
+    // include values from json
+    parseStandardsJSON();
 
-      std::string thisMaterialStandard;
-      std::string thisStandardsCategory;
+    std::string thisMaterialStandard;
+    std::string thisStandardsCategory;
 
-      for( const auto& v: m_standardsArr) {
-        thisMaterialStandard = v["material_standard"].asString();
-        thisStandardsCategory = v["code_category"].asString();
-
-        if ( (thisMaterialStandard == *materialStandard) &&
-             (thisStandardsCategory == *standardsCategory) ) {
-          const Json::Value _tmp = v["code_identifier"];
-          if (_tmp.isString()) {
-            result.push_back(_tmp.asString());
-          }
+    for( const auto& v: m_standardsArr) {
+      // If materialStandard is initialized, then we have to match against it
+      if (materialStandard.is_initialized()) {
+        thisMaterialStandard = v["material"].asString();
+        if (thisMaterialStandard != materialStandard.get()) {
+          continue;
         }
+      }
+
+      // If standardsCategory is initialized, then we have to match against it
+      if (standardsCategory.is_initialized()) {
+        thisStandardsCategory = v["code_category"].asString();
+        if (thisStandardsCategory != standardsCategory.get()) {
+          continue;
+        }
+      }
+
+      const Json::Value _tmp = v["code_identifier"];
+      if (_tmp.isString()) {
+        result.push_back(_tmp.asString());
       }
     }
 
@@ -454,26 +466,32 @@ namespace detail {
 
     boost::optional<std::string> compositeFramingMaterial = this->compositeFramingMaterial();
 
-    // include values from json if materialStandard and standardsCategory are set
-    if (materialStandard.is_initialized() && standardsCategory.is_initialized() ) {
+    // include values from json
+    parseStandardsJSON();
 
-      // include values from json
-      parseStandardsJSON();
+    std::string thisMaterialStandard;
+    std::string thisStandardsCategory;
 
-      std::string thisMaterialStandard;
-      std::string thisStandardsCategory;
-
-      for( const auto& v: m_standardsArr) {
-        thisMaterialStandard = v["material_standard"].asString();
-        thisStandardsCategory = v["code_category"].asString();
-
-        if ( (thisMaterialStandard == *materialStandard) &&
-             (thisStandardsCategory == *standardsCategory) ) {
-          const Json::Value _tmp = v["framing_material"];
-          if (_tmp.isString()) {
-            result.push_back(_tmp.asString());
-          }
+    for( const auto& v: m_standardsArr) {
+      // If materialStandard is initialized, then we have to match against it
+      if (materialStandard.is_initialized()) {
+        thisMaterialStandard = v["material"].asString();
+        if (thisMaterialStandard != materialStandard.get()) {
+          continue;
         }
+      }
+
+      // If standardsCategory is initialized, then we have to match against it
+      if (standardsCategory.is_initialized()) {
+        thisStandardsCategory = v["code_category"].asString();
+        if (thisStandardsCategory != standardsCategory.get()) {
+          continue;
+        }
+      }
+
+      const Json::Value _tmp = v["framing_material"];
+      if (_tmp.isString()) {
+        result.push_back(_tmp.asString());
       }
     }
 
@@ -547,27 +565,32 @@ namespace detail {
 
     boost::optional<std::string> compositeFramingConfiguration = this->compositeFramingConfiguration();
 
+    // include values from json
+    parseStandardsJSON();
 
-    // include values from json if materialStandard and standardsCategory are set
-    if (materialStandard.is_initialized() && standardsCategory.is_initialized() ) {
+    std::string thisMaterialStandard;
+    std::string thisStandardsCategory;
 
-      // include values from json
-      parseStandardsJSON();
-
-      std::string thisMaterialStandard;
-      std::string thisStandardsCategory;
-
-      for( const auto& v: m_standardsArr) {
-        thisMaterialStandard = v["material_standard"].asString();
-        thisStandardsCategory = v["code_category"].asString();
-
-        if ( (thisMaterialStandard == *materialStandard) &&
-             (thisStandardsCategory == *standardsCategory) ) {
-          const Json::Value _tmp = v["framing_configuration"];
-          if (_tmp.isString()) {
-            result.push_back(_tmp.asString());
-          }
+    for( const auto& v: m_standardsArr) {
+      // If materialStandard is initialized, then we have to match against it
+      if (materialStandard.is_initialized()) {
+        thisMaterialStandard = v["material"].asString();
+        if (thisMaterialStandard != materialStandard.get()) {
+          continue;
         }
+      }
+
+      // If standardsCategory is initialized, then we have to match against it
+      if (standardsCategory.is_initialized()) {
+        thisStandardsCategory = v["code_category"].asString();
+        if (thisStandardsCategory != standardsCategory.get()) {
+          continue;
+        }
+      }
+
+      const Json::Value _tmp = v["framing_configuration"];
+      if (_tmp.isString()) {
+        result.push_back(_tmp.asString());
       }
     }
 
@@ -641,26 +664,32 @@ namespace detail {
 
     boost::optional<std::string> compositeFramingDepth = this->compositeFramingDepth();
 
-    // include values from json if materialStandard and standardsCategory are set
-    if (materialStandard.is_initialized() && standardsCategory.is_initialized() ) {
+    // include values from json
+    parseStandardsJSON();
 
-      // include values from json
-      parseStandardsJSON();
+    std::string thisMaterialStandard;
+    std::string thisStandardsCategory;
 
-      std::string thisMaterialStandard;
-      std::string thisStandardsCategory;
-
-      for( const auto& v: m_standardsArr) {
-        thisMaterialStandard = v["material_standard"].asString();
-        thisStandardsCategory = v["code_category"].asString();
-
-        if ( (thisMaterialStandard == *materialStandard) &&
-             (thisStandardsCategory == *standardsCategory) ) {
-          const Json::Value _tmp = v["framing_depth"];
-          if (_tmp.isString()) {
-            result.push_back(_tmp.asString());
-          }
+    for( const auto& v: m_standardsArr) {
+      // If materialStandard is initialized, then we have to match against it
+      if (materialStandard.is_initialized()) {
+        thisMaterialStandard = v["material"].asString();
+        if (thisMaterialStandard != materialStandard.get()) {
+          continue;
         }
+      }
+
+      // If standardsCategory is initialized, then we have to match against it
+      if (standardsCategory.is_initialized()) {
+        thisStandardsCategory = v["code_category"].asString();
+        if (thisStandardsCategory != standardsCategory.get()) {
+          continue;
+        }
+      }
+
+      const Json::Value _tmp = v["framing_depth"];
+      if (_tmp.isString()) {
+        result.push_back(_tmp.asString());
       }
     }
 
@@ -734,26 +763,32 @@ namespace detail {
 
     boost::optional<std::string> compositeFramingSize = this->compositeFramingSize();
 
-    // include values from json if materialStandard and standardsCategory are set
-    if (materialStandard.is_initialized() && standardsCategory.is_initialized() ) {
+    // include values from json
+    parseStandardsJSON();
 
-      // include values from json
-      parseStandardsJSON();
+    std::string thisMaterialStandard;
+    std::string thisStandardsCategory;
 
-      std::string thisMaterialStandard;
-      std::string thisStandardsCategory;
-
-      for( const auto& v: m_standardsArr) {
-        thisMaterialStandard = v["material_standard"].asString();
-        thisStandardsCategory = v["code_category"].asString();
-
-        if ( (thisMaterialStandard == *materialStandard) &&
-             (thisStandardsCategory == *standardsCategory) ) {
-          const Json::Value _tmp = v["framing_size"];
-          if (_tmp.isString()) {
-            result.push_back(_tmp.asString());
-          }
+    for( const auto& v: m_standardsArr) {
+      // If materialStandard is initialized, then we have to match against it
+      if (materialStandard.is_initialized()) {
+        thisMaterialStandard = v["material"].asString();
+        if (thisMaterialStandard != materialStandard.get()) {
+          continue;
         }
+      }
+
+      // If standardsCategory is initialized, then we have to match against it
+      if (standardsCategory.is_initialized()) {
+        thisStandardsCategory = v["code_category"].asString();
+        if (thisStandardsCategory != standardsCategory.get()) {
+          continue;
+        }
+      }
+
+      const Json::Value _tmp = v["framing_size"];
+      if (_tmp.isString()) {
+        result.push_back(_tmp.asString());
       }
     }
 
@@ -827,29 +862,34 @@ namespace detail {
 
     boost::optional<std::string> compositeCavityInsulation = this->compositeCavityInsulation();
 
+    // include values from json
+    parseStandardsJSON();
 
-    // include values from json if materialStandard and standardsCategory are set
-    if (materialStandard.is_initialized() && standardsCategory.is_initialized() ) {
+    std::string thisMaterialStandard;
+    std::string thisStandardsCategory;
 
-      // include values from json
-      parseStandardsJSON();
-
-      std::string thisMaterialStandard;
-      std::string thisStandardsCategory;
-
-      for( const auto& v: m_standardsArr) {
-        thisMaterialStandard = v["material_standard"].asString();
-        thisStandardsCategory = v["code_category"].asString();
-
-        if ( (thisMaterialStandard == *materialStandard) &&
-             (thisStandardsCategory == *standardsCategory) ) {
-          const Json::Value _tmp = v["cavity_insulation"];
-          // Note JM 2018-11-07: cavity_insulation is stored in the JSON as a number (a double), and not a string
-          // Json::Value.asString() will not work, so we get it as Double, then convert to a string
-          if (_tmp.isDouble()) {
-            result.push_back(std::to_string(_tmp.asDouble()));
-          }
+    for( const auto& v: m_standardsArr) {
+      // If materialStandard is initialized, then we have to match against it
+      if (materialStandard.is_initialized()) {
+        thisMaterialStandard = v["material"].asString();
+        if (thisMaterialStandard != materialStandard.get()) {
+          continue;
         }
+      }
+
+      // If standardsCategory is initialized, then we have to match against it
+      if (standardsCategory.is_initialized()) {
+        thisStandardsCategory = v["code_category"].asString();
+        if (thisStandardsCategory != standardsCategory.get()) {
+          continue;
+        }
+      }
+
+      const Json::Value _tmp = v["cavity_insulation"];
+      // Note JM 2018-11-07: cavity_insulation is stored in the JSON as a number (a double), and not a string
+      // Json::Value.asString() will not work, so we get it as Double, then convert to a string
+      if (_tmp.isDouble()) {
+        result.push_back(std::to_string(_tmp.asDouble()));
       }
     }
 
