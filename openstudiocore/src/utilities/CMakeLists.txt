@@ -84,6 +84,11 @@ set(core_src
   core/UnzipFile.cpp
   core/ZipFile.hpp
   core/ZipFile.cpp
+
+  #  TODO: JM 2018-11-08: remove ASAP
+  # OSArgument and Attribute still rely on QVariant stuff
+  core/QJson.hpp
+  core/QJson.cpp
 )
 
 set(data_src

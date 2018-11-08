@@ -32,7 +32,7 @@
 
 #include "../core/Assert.hpp"
 #include "../core/Containers.hpp"
-#include "../core/Json.hpp"
+#include "../core/QJson.hpp"
 #include "../core/FilesystemHelpers.hpp"
 
 #include "../units/QuantityFactory.hpp"
