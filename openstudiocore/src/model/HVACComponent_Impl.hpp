@@ -87,6 +87,8 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
 
   virtual bool isRemovable() const;
 
+  // children controls what we see in the Inspector in OS App, and it's not necessarilly what we want to clone
+  // So the parent/children link is broken on purpose here as it will forward to ModelObject_Impl::clone and **not** ParentObject_Impl
   virtual ModelObject clone(Model model) const override;
 
   /** This function returns a vector of HVACComponent that are directly downstream
