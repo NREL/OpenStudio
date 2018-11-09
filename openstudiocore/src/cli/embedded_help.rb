@@ -45,7 +45,9 @@ end
 
 BINDING = Kernel::binding()
 #puts Encoding.list
-#Encoding.default_external = Encoding::UTF_8
+
+# DLM: ignore for now
+#Encoding.default_external = Encoding::ASCII
 
 module Kernel
   # ":" is our root path to the embedded file system
@@ -56,7 +58,7 @@ module Kernel
   $LOAD_PATH << ':'
   $LOAD_PATH << ':/ruby/2.5.0'
   $LOAD_PATH << ':/ruby/2.5.0/x86_64-darwin16'
-  $LOAD_PATH << ':/ruby/2.5.0/x64-mswin64_120'
+  $LOAD_PATH << ':/ruby/2.5.0/x64-mswin64_140'
   # DLM: now done in embedded gem initialization section in openstudio_cli.rb
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')
