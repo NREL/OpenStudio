@@ -34,10 +34,6 @@
 #include "FilesystemHelpers.hpp"
 
 #include <OpenStudio.hxx>
-#include <utilities/embedded_files.hxx>
-
-#include <QJsonDocument>
-#include <QJsonObject>
 
 namespace openstudio {
 
@@ -93,29 +89,6 @@ bool checkType(const Json::Value& value, const std::string& key, const Json::Val
 bool checkKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType)
 {
   return (checkKey(value, key) && checkType(value, key, valueType));
-}
-
-Json::Value parseStandardsJSON(const std::string& embedded_path, const std::string& primaryKey) {
-  Json::Value m_standardsRoot;
-
-  std::string fileContent = ::openstudio::embedded_files::getFileAsString(embedded_path);
-  std::istringstream ss(fileContent);
-
-  Json::CharReaderBuilder rbuilder;
-  rbuilder["collectComments"] = false;
-  std::string formattedErrors;
-
-  bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &m_standardsRoot, &formattedErrors);
-  if (!parsingSuccessful){
-    throw openstudio::Exception(std::string("Embedded JSON file at '" + embedded_path + "' cannot be processed: " + formattedErrors));
-  }
-
-  // Check that primary key is indeed in there, and that the resulting object is an array
-  openstudio::assertKeyAndType(m_standardsRoot, primaryKey, Json::arrayValue);
-
-  // Return that
-  return m_standardsRoot.get(primaryKey, Json::arrayValue);
-
 }
 
 } // openstudio
