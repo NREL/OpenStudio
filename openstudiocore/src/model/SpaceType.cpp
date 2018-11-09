@@ -88,6 +88,8 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include <model/embedded_files.hxx>
+#include "../utilities/filetypes/StandardsJSON.hpp"
 #include "../utilities/core/Json.hpp"
 #include <jsoncpp/json.h>
 
@@ -280,13 +282,21 @@ namespace detail {
 
   void SpaceType_Impl::parseStandardsJSON() const
   {
+
     if (m_standardsArr.empty()) {
       // Embedded file path
       std::string embedded_path = ":/Resources/standards/OpenStudio_Standards_space_types_merged.json";
+      std::string fileContent = ::openstudio::embedded_files::getFileAsString(embedded_path);
+
+      // Create a StandardsJSON
+      StandardsJSON standard(fileContent);
+
+      // Now try to get the primaryKey
       std::string primaryKey = "space_types";
 
-      // Call utilities/core/Json.cpp helper
-      m_standardsArr = openstudio::parseStandardsJSON(embedded_path, primaryKey);
+      if (boost::optional<Json::Value> _standardsArr = standard.getPrimaryKey(primaryKey)) {
+        m_standardsArr = _standardsArr.get();
+      }
     }
   }
 
