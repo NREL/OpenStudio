@@ -123,12 +123,15 @@ TEST_F(ModelFixture, MasslessOpaqueMaterial_StandardsInformation)
   MasslessOpaqueMaterial masslessOpaqueMaterial(model);
   StandardsInformationMaterial info = masslessOpaqueMaterial.standardsInformation();
 
+  std::vector<std::string> suggestedMatStandards = info.suggestedMaterialStandards();
+  EXPECT_LT(0u, suggestedMatStandards.size()); // For now only "CEC Title24-2013"
   EXPECT_LT(0u, info.suggestedCompositeFramingMaterials().size());
   EXPECT_LT(0u, info.suggestedCompositeFramingConfigurations().size());
   EXPECT_LT(0u, info.suggestedCompositeFramingDepths().size());
   EXPECT_LT(0u, info.suggestedCompositeFramingSizes().size());
   EXPECT_LT(0u, info.suggestedCompositeCavityInsulations().size());
 
+  EXPECT_TRUE(std::find(suggestedMatStandards.begin(), suggestedMatStandards.end(), "CEC Title24-2013") != suggestedMatStandards.end());
   info.setMaterialStandard("CEC Title24-2013");
   ASSERT_TRUE(info.materialStandard());
   EXPECT_EQ("CEC Title24-2013", info.materialStandard().get());
