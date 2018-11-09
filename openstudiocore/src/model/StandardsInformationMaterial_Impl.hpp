@@ -149,8 +149,10 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.StandardsInformationMaterial");
 
+    // Relies on utilties/StandardsJSON since it's used in several places
+    // Here we store a Json::Value rather than the StandardsJSON because we only care about the "materials" primaryKey
+    // Not the whole StandardsJSON
     static Json::Value m_standardsArr;
-    // Relies on utilities/core/Json.hpp since it's used in several places
     void parseStandardsJSON() const;
   };
 
