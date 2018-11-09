@@ -44,8 +44,6 @@ namespace detail{
   {
     std::istringstream ss(s);
 
-    Json::Value m_standardsRoot;
-
     Json::CharReaderBuilder rbuilder;
     rbuilder["collectComments"] = false;
     std::string formattedErrors;
@@ -64,7 +62,6 @@ namespace detail{
 
     if (!m_standardsRoot.isObject()) {
       LOG(Warn, "Root isn't an object");
-      LOG(Warn, string()); // TODO: remove
       return false;
     }
 
