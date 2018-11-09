@@ -118,6 +118,9 @@ set(filetypes_src
   filetypes/RunOptions.hpp
   filetypes/RunOptions_Impl.hpp
   filetypes/RunOptions.cpp
+  filetypes/StandardsJSON.hpp
+  filetypes/StandardsJSON_Impl.hpp
+  filetypes/StandardsJSON.cpp
   filetypes/WorkflowJSON.hpp
   filetypes/WorkflowJSON_Impl.hpp
   filetypes/WorkflowJSON.cpp
@@ -422,6 +425,7 @@ set(${target_name}_test_src
 
   filetypes/test/EpwFile_GTest.cpp
   filetypes/test/WorkflowJSON_GTest.cpp
+  filetypes/test/StandardsJSON_GTest.cpp
 
   geometry/Test/BoundingBox_GTest.cpp
   geometry/Test/GeometryFixture.hpp
