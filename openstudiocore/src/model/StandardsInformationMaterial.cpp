@@ -207,7 +207,7 @@ namespace detail {
       if (materialStandard.is_initialized()) {
         // It's fine to call asString directly here because it'll return an empty string
         // if it's null, and therefore won't match against our material standard anyways
-        thisMaterialStandard = v["material"].asString();
+        thisMaterialStandard = v["material_standard"].asString();
         if (thisMaterialStandard != materialStandard.get()) {
           continue;
         }
@@ -285,7 +285,7 @@ namespace detail {
       if (materialStandard.is_initialized()) {
         // It's fine to call asString directly here because it'll return an empty string
         // if it's null, and therefore won't match against our material standard anyways
-        thisMaterialStandard = v["material"].asString();
+        thisMaterialStandard = v["material_standard"].asString();
         if (thisMaterialStandard != materialStandard.get()) {
           continue;
         }
@@ -389,7 +389,7 @@ namespace detail {
     for( const auto& v: m_standardsArr) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
-        thisMaterialStandard = v["material"].asString();
+        thisMaterialStandard = v["material_standard"].asString();
         if (thisMaterialStandard != materialStandard.get()) {
           continue;
         }
@@ -486,7 +486,7 @@ namespace detail {
     for( const auto& v: m_standardsArr) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
-        thisMaterialStandard = v["material"].asString();
+        thisMaterialStandard = v["material_standard"].asString();
         if (thisMaterialStandard != materialStandard.get()) {
           continue;
         }
@@ -585,7 +585,7 @@ namespace detail {
     for( const auto& v: m_standardsArr) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
-        thisMaterialStandard = v["material"].asString();
+        thisMaterialStandard = v["material_standard"].asString();
         if (thisMaterialStandard != materialStandard.get()) {
           continue;
         }
@@ -684,7 +684,7 @@ namespace detail {
     for( const auto& v: m_standardsArr) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
-        thisMaterialStandard = v["material"].asString();
+        thisMaterialStandard = v["material_standard"].asString();
         if (thisMaterialStandard != materialStandard.get()) {
           continue;
         }
@@ -783,7 +783,7 @@ namespace detail {
     for( const auto& v: m_standardsArr) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
-        thisMaterialStandard = v["material"].asString();
+        thisMaterialStandard = v["material_standard"].asString();
         if (thisMaterialStandard != materialStandard.get()) {
           continue;
         }
@@ -882,7 +882,7 @@ namespace detail {
     for( const auto& v: m_standardsArr) {
       // If materialStandard is initialized, then we have to match against it
       if (materialStandard.is_initialized()) {
-        thisMaterialStandard = v["material"].asString();
+        thisMaterialStandard = v["material_standard"].asString();
         if (thisMaterialStandard != materialStandard.get()) {
           continue;
         }
