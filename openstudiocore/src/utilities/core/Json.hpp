@@ -37,14 +37,8 @@
 
 #include <jsoncpp/json.h>
 
-#include <QVariant>
-
 #include <string>
 #include <vector>
-
-namespace Json{
-  class Value;
-}
 
 namespace openstudio {
 
@@ -65,10 +59,6 @@ UTILITIES_API bool checkType(const Json::Value& value, const std::string& key, c
 
 /// check key is present and type is correct, return false if key not found or type is not correct
 UTILITIES_API bool checkKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType);
-
-/** Helper function load openstudio standards JSON files
- * embedded_path is the path to the embedded json file, eg: ':/resources/standards/xxx.json' */
-UTILITIES_API Json::Value parseStandardsJSON(const std::string& embedded_path, const std::string& primaryKey);
 
 }
 
