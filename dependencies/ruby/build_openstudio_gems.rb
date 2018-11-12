@@ -8,13 +8,15 @@ expected_ruby_version = ARGV[2]
 
 def system_call(cmd)
   puts cmd
-  system(cmd)
+  system(ENV, cmd)
 end
 
-ENV['PATH'] = "#{ENV['PATH']}#{File::PATH_SEPARATOR}#{File.dirname(tar_exe)}"
+ruby_dir = File.expand_path('..', RbConfig.ruby)
+
+ENV['PATH'] = "#{ruby_dir}#{File::PATH_SEPARATOR}#{ENV['PATH']}#{File::PATH_SEPARATOR}#{File.dirname(tar_exe)}"
 
 if RUBY_VERSION != expected_ruby_version
-  raise "Incorrect Ruby version ${RUBY_VERSION} used, expecting #{expected_ruby_version}"
+  raise "Incorrect Ruby version #{RUBY_VERSION} used, expecting #{expected_ruby_version}"
 end
 
 ruby_gem_dir = Gem.default_dir.split('/').last
@@ -115,7 +117,7 @@ FileUtils.cp('Gemfile.lock', "#{install_dir}/.")
 
 Dir.chdir("#{install_dir}/..")
 
-new_file_name = "openstudio-gems-#{DateTime.now.strftime("%Y%m%d")}.tar.gz"
+new_file_name = "openstudio3-gems-#{DateTime.now.strftime("%Y%m%d")}.tar.gz"
 system_call("\"#{tar_exe}\" -zcvf \"#{new_file_name}\" \"openstudio-gems\"")
 
 puts
