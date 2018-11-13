@@ -21,3 +21,4 @@ gem 'openstudio_measure_tester', '= 0.1.5' # This includes the dependencies for 
 
 gem 'bundler', '= 1.14.4'
 gem 'parallel', '= 1.12.1'
+gem 'json_pure', '= 2.1.0'

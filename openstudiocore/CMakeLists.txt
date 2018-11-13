@@ -649,7 +649,7 @@ endif()
 # next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
 set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20181112.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "08cce166d629e6513c636d007c8a2138")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "f9f446d7ec67272a7ff37ad31335d205")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
