@@ -42,11 +42,11 @@ namespace openstudio{
   }
 
   // Downloaded component from component.xml
-  BCLComponent::BCLComponent(const std::string& dir):
+  BCLComponent::BCLComponent(const openstudio::path& dir):
     m_directory(dir)
   {
     QDomDocument component("component.xml");
-    component.setContent(openstudio::filesystem::read_as_QByteArray(openstudio::toPath(m_directory) / "component.xml"));
+    component.setContent(openstudio::filesystem::read_as_QByteArray(m_directory / "component.xml"));
 
     QDomElement comp = component.firstChildElement("component");
     m_name = comp.firstChildElement("name").firstChild().nodeValue().replace("_", " ")
@@ -172,8 +172,7 @@ namespace openstudio{
     {
       if (m_filetypes[i]==filetype)
       {
-        matches.push_back(directory()+"/files/"
-          +m_files[i]);
+        matches.push_back(toString(directory() / "files" / m_files[i]));
       }
     }
     return matches;
@@ -189,7 +188,7 @@ namespace openstudio{
     return m_attributes;
   }
 
-  std::string BCLComponent::directory() const
+  openstudio::path BCLComponent::directory() const
   {
     return m_directory;
   }
