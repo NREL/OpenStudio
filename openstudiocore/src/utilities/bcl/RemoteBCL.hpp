@@ -34,10 +34,10 @@
 #include "../core/Path.hpp"
 
 #include <QDomDocument>
+#include <mutex>
 
 class QNetworkAccessManager;
 class QNetworkRequest;
-class QMutex;
 class QSslError;
 class QFile;
 
@@ -277,7 +277,7 @@ namespace openstudio{
 
     QNetworkReply* m_downloadReply;
 
-    QMutex* m_mutex;
+    mutable std::mutex m_mutex;
 
     boost::optional<RemoteQueryResponse> m_queryResponse;
 

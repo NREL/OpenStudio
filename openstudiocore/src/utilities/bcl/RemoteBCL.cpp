@@ -36,7 +36,6 @@
 #include "../core/UnzipFile.hpp"
 
 #include <QDir>
-#include <QMutex>
 #include <QNetworkReply>
 
 #define REMOTE_PRODUCTION_SERVER "https://bcl.nrel.gov"
@@ -65,7 +64,6 @@ namespace openstudio{
 
   RemoteBCL::RemoteBCL():
     m_networkManager(new QNetworkAccessManager()),
-    m_mutex(new QMutex()),
     m_numResultsPerQuery(10),
     m_apiVersion("2.0")
   {
@@ -87,7 +85,6 @@ namespace openstudio{
   RemoteBCL::~RemoteBCL()
   {
     delete m_networkManager;
-    delete m_mutex;
   }
 
   bool RemoteBCL::initializeSSL(const openstudio::path &t_pathToSSLLibraries)
@@ -225,7 +222,7 @@ namespace openstudio{
 
     for (const BCLComponent& component : LocalBCL::instance().components()) {
       // can't start another search until the last one is done
-      if (!m_mutex->tryLock()){
+      if (!m_mutex.try_lock()){
         return 0;
       }
 
@@ -266,7 +263,7 @@ namespace openstudio{
 
     for (const BCLMeasure& measure : LocalBCL::instance().measures()) {
       // can't start another search until the last one is done
-      if (!m_mutex->tryLock()){
+      if (!m_mutex.try_lock()){
         return 0;
       }
 
@@ -494,7 +491,7 @@ namespace openstudio{
       }
 
       // Run validation query
-      if (!m_mutex->tryLock()){
+      if (!m_mutex.try_lock()){
         return false;
       }
 
@@ -592,13 +589,13 @@ namespace openstudio{
     }
 
     // can't start another download until last one is done
-    if (!m_mutex->tryLock()){
+    if (!m_mutex.try_lock()){
       return false;
     }
 
     m_downloadFile = std::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+uid+".bcl"))));
     if (!m_downloadFile->open(QIODevice::WriteOnly | QIODevice::Truncate)){
-      m_mutex->unlock();
+      m_mutex.unlock();
       return false;
     }
 
@@ -623,7 +620,7 @@ namespace openstudio{
 
     m_downloadReply = m_networkManager->get(request);
     if (!m_downloadReply->isRunning()){
-      m_mutex->unlock();
+      m_mutex.unlock();
       m_downloadReply->deleteLater();
       m_downloadReply = nullptr;
       return false;
@@ -642,7 +639,7 @@ namespace openstudio{
   bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, const std::string& componentType, const std::string& filterType)
   {
     // can't start another download until last one is done
-    if (!m_mutex->tryLock()){
+    if (!m_mutex.try_lock()){
       return false;
     }
 
@@ -688,7 +685,7 @@ namespace openstudio{
   bool RemoteBCL::startComponentLibraryMetaSearch(const std::string& searchTerm, const unsigned componentTypeTID, const std::string& filterType)
   {
     // can't start another download until last one is done
-    if (!m_mutex->tryLock()){
+    if (!m_mutex.try_lock()){
       return false;
     }
 
@@ -733,7 +730,7 @@ namespace openstudio{
   bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const std::string& componentType, const std::string& filterType, const unsigned page)
   {
     // can't start another download until last one is done
-    if (!m_mutex->tryLock()){
+    if (!m_mutex.try_lock()){
       return false;
     }
 
@@ -784,7 +781,7 @@ namespace openstudio{
   bool RemoteBCL::startComponentLibrarySearch(const std::string& searchTerm, const unsigned componentTypeTID, const std::string& filterType, const unsigned page)
   {
     // can't start another download until last one is done
-    if (!m_mutex->tryLock()){
+    if (!m_mutex.try_lock()){
       return false;
     }
 
@@ -839,8 +836,8 @@ namespace openstudio{
     {
 
       // if we can get the lock then the download is complete
-      if (m_mutex->tryLock()){
-        m_mutex->unlock();
+      if (m_mutex.try_lock()){
+        m_mutex.unlock();
         return true;
       }
 
@@ -855,7 +852,7 @@ namespace openstudio{
       ++current;
     }
 
-    m_mutex->unlock();
+    m_mutex.unlock();
     return false;
   }
 
@@ -1117,7 +1114,7 @@ namespace openstudio{
         emit componentDownloaded(m_downloadUid, m_lastComponentDownload);
       }
 
-      m_mutex->unlock();
+      m_mutex.unlock();
     }
     reply->deleteLater();
   }
@@ -1144,7 +1141,7 @@ namespace openstudio{
 
       emit metaSearchCompleted(m_lastMetaSearch);
 
-      m_mutex->unlock();
+      m_mutex.unlock();
     }
     reply->deleteLater();
   }
@@ -1165,7 +1162,7 @@ namespace openstudio{
 
       emit searchCompleted(m_lastSearch);
 
-      m_mutex->unlock();
+      m_mutex.unlock();
     }
     reply->deleteLater();
   }
