@@ -190,8 +190,6 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 
-#include <QThread>
-
 #include <resources.hxx>
 
 #include <sstream>

@@ -83,7 +83,7 @@
 
 #include <QDomDocument>
 #include <QDomElement>
-#include <QThread>
+#include <thread>
 
 #include <regex>
 
@@ -94,7 +94,7 @@ namespace gbxml {
   {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.gbxml\\.ForwardTranslator"));
-    m_logSink.setThreadId(QThread::currentThread());
+    m_logSink.setThreadId(std::this_thread::get_id());
   }
 
   ForwardTranslator::~ForwardTranslator()
@@ -105,7 +105,7 @@ namespace gbxml {
   {
     m_progressBar = progressBar;
 
-    m_logSink.setThreadId(QThread::currentThread());
+    m_logSink.setThreadId(std::this_thread::get_id());
 
     m_logSink.resetStringStream();
 

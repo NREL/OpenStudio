@@ -32,7 +32,7 @@
 
 #include "Assert.hpp"
 
-#include <QReadWriteLock>
+#include <shared_mutex>
 
 namespace openstudio{
 
@@ -54,7 +54,7 @@ namespace openstudio{
 
     openstudio::path FileLogSink_Impl::path() const
     {
-      QReadLocker l(m_mutex);
+      std::shared_lock l{m_mutex};
 
       return m_path;
     }

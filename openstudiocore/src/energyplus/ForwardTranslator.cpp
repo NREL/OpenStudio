@@ -85,7 +85,7 @@
 #include "../utilities/idd/IddEnums.hpp"
 
 #include <QFile>
-#include <QThread>
+#include <thread>
 
 #include <sstream>
 
@@ -101,7 +101,7 @@ ForwardTranslator::ForwardTranslator()
 {
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ForwardTranslator"));
-  m_logSink.setThreadId(QThread::currentThread());
+  m_logSink.setThreadId(std::this_thread::get_id());
   createFluidPropertiesMap();
 
   // temp code
@@ -3941,7 +3941,7 @@ void ForwardTranslator::reset()
 
   m_constructionHandleToReversedConstructions.clear();
 
-  m_logSink.setThreadId(QThread::currentThread());
+  m_logSink.setThreadId(std::this_thread::get_id());
 
   m_logSink.resetStringStream();
 

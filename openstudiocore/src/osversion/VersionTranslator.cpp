@@ -63,7 +63,7 @@
 
 #include <OpenStudio.hxx>
 
-#include <QThread>
+#include <thread>
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -78,7 +78,7 @@ VersionTranslator::VersionTranslator()
 {
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.osversion\\.VersionTranslator"));
-  m_logSink.setThreadId(QThread::currentThread());
+  m_logSink.setThreadId(std::this_thread::get_id());
 
   // Register required update methods, indexed on the file version returned by the method (the
   // target version).
@@ -389,7 +389,7 @@ boost::optional<model::Model> VersionTranslator::updateVersion(std::istream& is,
                                                                ProgressBar* progressBar) {
   m_originalVersion = VersionString("0.0.0");
   m_map.clear();
-  m_logSink.setThreadId(QThread::currentThread());
+  m_logSink.setThreadId(std::this_thread::get_id());
   m_logSink.resetStringStream();
   m_deprecated.clear();
   m_untranslated.clear();

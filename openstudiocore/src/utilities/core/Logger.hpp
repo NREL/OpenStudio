@@ -42,9 +42,7 @@
 #include <sstream>
 #include <set>
 #include <map>
-
-class QReadWriteLock;
-class QWriteLocker;
+#include <shared_mutex>
 
 /// defines method logChannel() to get a logger for a class
 #define REGISTER_LOGGER(__logChannel__) \
@@ -120,7 +118,7 @@ namespace openstudio{
     /// private constructor
     LoggerSingleton();
 
-    mutable QReadWriteLock* m_mutex;
+    mutable std::shared_mutex m_mutex;
 
     /// standard out logger
     LogSink m_standardOutLogger;
