@@ -117,7 +117,6 @@
 #include <QFileOpenEvent>
 #include <QMessageBox>
 #include <QStringList>
-#include <QThread>
 #include <QTimer>
 #include <QWidget>
 #include <QProcess>
