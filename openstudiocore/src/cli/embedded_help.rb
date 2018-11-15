@@ -1,10 +1,4 @@
 
-module RbConfig
-  def RbConfig.ruby
-    EmbeddedScripting::applicationFilePath;
-  end
-end
-
 module OpenStudio
 
   # check if this is CLI
@@ -68,6 +62,7 @@ module Kernel
   alias :original_open :open
 
   def require path
+    original_directory = Dir.pwd
     rb_path = path
 
     if path.include? 'openstudio/energyplus/find_energyplus'
@@ -100,17 +95,35 @@ module Kernel
       end
     end
 
-    return original_require path
+    result = original_require path
+    
+    current_directory = Dir.pwd 
+    if original_directory != current_directory
+      Dir.chdir(original_directory)
+      puts "Directory changed from '#{original_directory}' to '#{current_directory}' while requiring '#{path}', result = #{result}, restoring original_directory"
+      STDOUT.flush
+    end
+    
+    return result
   end
 
   def require_embedded_absolute path
+    original_directory = Dir.pwd
+    
     $LOADED << path
     s = EmbeddedScripting::getFileAsString(path)
 
     s = OpenStudio::preprocess_ruby_script(s)
 
     result = eval(s,BINDING,path)
-
+    
+    current_directory = Dir.pwd 
+    if original_directory != current_directory
+      Dir.chdir(original_directory)
+      puts "Directory changed from '#{original_directory}' to '#{current_directory}' while require_embedded_absolute '#{path}', result = #{result}, restoring original_directory"
+      STDOUT.flush
+    end
+    
     return result
   end
 
@@ -697,5 +710,13 @@ module Find
         end
       end
     end
+  end
+end
+
+require 'rbconfig'
+
+module RbConfig
+  def RbConfig.ruby
+    EmbeddedScripting::applicationFilePath;
   end
 end
