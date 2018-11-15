@@ -102,7 +102,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << "#include <utilities/core/Singleton.hpp>" << std::endl
     << "#include <utilities/core/Compare.hpp>" << std::endl
     << "#include <utilities/core/Logger.hpp>" << std::endl
-    << "#include <QMutex>" << std::endl
+    << "#include <mutex>" << std::endl
     << std::endl
     << "#include <map>" << std::endl
     << std::endl
@@ -219,7 +219,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << "  typedef std::function<IddObject ()> CreateIddObjectCallback;" << std::endl
     << "  typedef std::map<IddObjectType,CreateIddObjectCallback> IddObjectCallbackMap;" << std::endl
     << "  IddObjectCallbackMap m_callbackMap;" << std::endl
-    << "  mutable QMutex m_callbackmutex;" << std::endl
+    << "  mutable std::mutex m_callbackmutex;" << std::endl
     << std::endl
     << "  typedef std::multimap<IddObjectType,IddFileType> IddObjectSourceFileMap;" << std::endl
     << "  IddObjectSourceFileMap m_sourceFileMap;" << std::endl
@@ -258,7 +258,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << std::endl
     << "#include <OpenStudio.hxx>" << std::endl
     << std::endl
-    << "#include <QMutexLocker>" << std::endl
+    << "#include <mutex>" << std::endl
     << "#include <QMetaType>" << std::endl
     << std::endl
     << "int _IddObjectType_id = qRegisterMetaType<openstudio::IddObjectType>(\"openstudio::IddObjectType\");" << std::endl
@@ -284,7 +284,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
       << "#include <utilities/core/Assert.hpp>" << std::endl
       << "#include <utilities/core/Compare.hpp>" << std::endl
       << std::endl
-      << "#include <QMutexLocker>" << std::endl
+      << "#include <mutex>" << std::endl
       << std::endl
       << "namespace openstudio {" << std::endl;
   }
@@ -529,7 +529,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
       << std::endl
       << "  for (IddObjectCallbackMap::const_iterator it = m_callbackMap.begin()," << std::endl
       << "       itEnd = m_callbackMap.end(); it != itEnd; ++it) {" << std::endl
-      << "    QMutexLocker l(&m_callbackmutex);" << std::endl
+      << "    std::scoped_lock l{m_callbackmutex};" << std::endl
       << "    result.push_back(it->second());" << std::endl
       << "  }" << std::endl
       << std::endl
@@ -543,7 +543,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
       << "      itend = m_callbackMap.end(); it != itend; ++it) {" << std::endl
       << "    if (isInFile(it->first,fileType)) { " << std::endl
       << "      // This lock is necessary to protect construction of the statics used in the callbacks " << std::endl
-      << "      QMutexLocker l(&m_callbackmutex);" << std::endl
+      << "      std::scoped_lock l{m_callbackmutex};" << std::endl
       << "      result.push_back(it->second()); " << std::endl
       << "    }" << std::endl
       << "  }" << std::endl
@@ -658,7 +658,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
       << "  IddObjectCallbackMap::const_iterator lookupPair;" << std::endl
       << "  lookupPair = m_callbackMap.find(objectType);" << std::endl
       << "  if (lookupPair != m_callbackMap.end()) { " << std::endl
-      << "    QMutexLocker l(&m_callbackmutex);" << std::endl
+      << "    std::scoped_lock l{m_callbackmutex};" << std::endl
       << "    result = lookupPair->second(); " << std::endl
       << "  }" << std::endl
       << "  else { " << std::endl
@@ -679,9 +679,10 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "  for (IddObjectCallbackMap::const_iterator it = m_callbackMap.begin()," << std::endl
     << "    itEnd = m_callbackMap.end(); it != itEnd; ++it) {" << std::endl
     << "    // This lock is necessary to protect construction of the statics used in the callbacks " << std::endl
-    << "    QMutexLocker l(&m_callbackmutex);" << std::endl
-    << "    IddObject candidate = it->second();" << std::endl
-    << "    l.unlock(); " << std::endl
+    << "    const auto candidate = [&](){ " << std::endl
+    << "      std::scoped_lock l{m_callbackmutex};" << std::endl
+    << "      return it->second();" << std::endl
+    << "    }();" << std::endl
     << "    if (candidate.properties().required) {" << std::endl
     << "      result.push_back(candidate);" << std::endl
     << "    }" << std::endl
@@ -713,9 +714,11 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << std::endl
     << "  for (IddObjectCallbackMap::const_iterator it = m_callbackMap.begin()," << std::endl
     << "    itEnd = m_callbackMap.end(); it != itEnd; ++it) {" << std::endl
-    << "    QMutexLocker l(&m_callbackmutex);" << std::endl
-    << "    IddObject candidate = it->second();" << std::endl
-    << "    l.unlock(); " << std::endl
+    << "    // This lock is necessary to protect construction of the statics used in the callbacks " << std::endl
+    << "    const auto candidate = [&](){ " << std::endl
+    << "      std::scoped_lock l{m_callbackmutex};" << std::endl
+    << "      return it->second();" << std::endl
+    << "    }();" << std::endl
     << "    if (candidate.properties().unique) {" << std::endl
     << "      result.push_back(candidate);" << std::endl
     << "    }" << std::endl
@@ -757,7 +760,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "      itend = m_callbackMap.end(); it != itend; ++it) {" << std::endl
     << "    if (isInFile(it->first,fileType)) {" << std::endl
     << "      // This lock is necessary to protect construction of the statics used in the callbacks " << std::endl
-    << "      QMutexLocker l(&m_callbackmutex);" << std::endl
+    << "      std::scoped_lock l{m_callbackmutex};" << std::endl
     << "      result.addObject(it->second());" << std::endl
     << "    }" << std::endl
     << "  }" << std::endl
@@ -809,7 +812,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "      result = IddFile::load(ss);" << std::endl
     << "    }" << std::endl
     << "    if (result) {" << std::endl
-    << "      QMutexLocker l(&m_callbackmutex);" << std::endl
+    << "      std::scoped_lock l{m_callbackmutex};" << std::endl
     << "      m_osIddFiles[version] = *result;" << std::endl
     << "    }" << std::endl
     << "  }" << std::endl
