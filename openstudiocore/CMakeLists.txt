@@ -588,8 +588,8 @@ endif()
 # to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
 # next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20181108.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "b729f99ce0b8e88674f0ffea42d153cc")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20181114.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "9269ecc31aae33a0a23eccdf2f56988e")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
