@@ -709,6 +709,16 @@ if(BUILD_WITH_OPENSSL)
     set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
     set(LIBEAY32_PATH "${OPENSSL_ROOT_DIR}/bin/libcrypto-1_1-x64.dll")
     set(SSLEAY32_PATH "${OPENSSL_ROOT_DIR}/bin/libssl-1_1-x64.dll")
+    set(LIB_EAY_DEBUG "${OPENSSL_ROOT_DIR}/lib/libcrypto.lib")
+    set(LIB_EAY_RELEASE "${OPENSSL_ROOT_DIR}/lib/libcrypto.lib")
+    set(SSL_EAY_DEBUG "${OPENSSL_ROOT_DIR}/lib/libssl.lib")
+    set(SSL_EAY_RELEASE "${OPENSSL_ROOT_DIR}/lib/libssl.lib")
+    mark_as_advanced(
+      LIB_EAY_DEBUG
+      LIB_EAY_RELEASE
+      SSL_EAY_DEBUG
+      SSL_EAY_RELEASE
+    )
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Release/")
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Debug/")
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/RelWithDebInfo/")
