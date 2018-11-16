@@ -711,22 +711,22 @@ namespace detail {
     return false;
   }
 
-  unsigned HeatExchangerAirToAirSensibleAndLatent_Impl::primaryAirInletPort()
+  unsigned HeatExchangerAirToAirSensibleAndLatent_Impl::primaryAirInletPort() const
   {
     return OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNode;
   }
 
-  unsigned HeatExchangerAirToAirSensibleAndLatent_Impl::primaryAirOutletPort()
+  unsigned HeatExchangerAirToAirSensibleAndLatent_Impl::primaryAirOutletPort() const
   {
     return OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletNode;
   }
 
-  unsigned HeatExchangerAirToAirSensibleAndLatent_Impl::secondaryAirInletPort()
+  unsigned HeatExchangerAirToAirSensibleAndLatent_Impl::secondaryAirInletPort() const
   {
     return OS_HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirInletNode;
   }
 
-  unsigned HeatExchangerAirToAirSensibleAndLatent_Impl::secondaryAirOutletPort()
+  unsigned HeatExchangerAirToAirSensibleAndLatent_Impl::secondaryAirOutletPort() const
   {
     return OS_HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNode;
   }

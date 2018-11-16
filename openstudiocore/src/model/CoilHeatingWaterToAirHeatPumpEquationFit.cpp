@@ -100,22 +100,22 @@ namespace detail {
     return CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType();
   }
 
-  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::airInletPort()
+  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::airInletPort() const
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirInletNodeName;
   }
 
-  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::airOutletPort()
+  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::airOutletPort() const
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName;
   }
 
-  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::waterInletPort()
+  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::waterInletPort() const
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterInletNodeName;
   }
 
-  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::waterOutletPort()
+  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::waterOutletPort() const
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterOutletNodeName;
   }

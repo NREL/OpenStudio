@@ -70,7 +70,9 @@ namespace detail {
 
     virtual ModelObject clone(Model model) const override;
 
-    virtual bool addToNode(Node & node) override;
+    // virtual bool addToNode(Node & node) override;
+
+    virtual bool isAllowedOnPlantLoop() const override;
 
     //@}
     /** @name Getters */

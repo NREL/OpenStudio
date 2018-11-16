@@ -310,7 +310,7 @@ TEST_F(ModelFixture, AdditionalProperties_ChildClone) {
 TEST_F(ModelFixture, AdditionalProperties_AdditionalProperties2) {
   Model model;
   EXPECT_EQ(0u, model.getConcreteModelObjects<AdditionalProperties>().size());
-  auto size = model.modelObjects().size();
+  // auto size = model.modelObjects().size();
   StandardOpaqueMaterial material(model);
   AdditionalProperties props = material.additionalProperties();
   EXPECT_EQ(1u, model.getConcreteModelObjects<AdditionalProperties>().size());

@@ -76,22 +76,22 @@ WaterToWaterComponent_Impl::WaterToWaterComponent_Impl(const WaterToWaterCompone
 {
 }
 
-OptionalModelObject WaterToWaterComponent_Impl::supplyInletModelObject()
+OptionalModelObject WaterToWaterComponent_Impl::supplyInletModelObject() const
 {
   return connectedObject(supplyInletPort());
 }
 
-OptionalModelObject WaterToWaterComponent_Impl::supplyOutletModelObject()
+OptionalModelObject WaterToWaterComponent_Impl::supplyOutletModelObject() const
 {
   return connectedObject(supplyOutletPort());
 }
 
-OptionalModelObject WaterToWaterComponent_Impl::demandInletModelObject()
+OptionalModelObject WaterToWaterComponent_Impl::demandInletModelObject() const
 {
   return connectedObject(demandInletPort());
 }
 
-OptionalModelObject WaterToWaterComponent_Impl::demandOutletModelObject()
+OptionalModelObject WaterToWaterComponent_Impl::demandOutletModelObject() const
 {
   return connectedObject(demandOutletPort());
 }
@@ -463,42 +463,42 @@ WaterToWaterComponent::WaterToWaterComponent(std::shared_ptr<detail::WaterToWate
   : HVACComponent(std::move(p))
 {}
 
-unsigned WaterToWaterComponent::supplyInletPort()
+unsigned WaterToWaterComponent::supplyInletPort() const
 {
   return getImpl<detail::WaterToWaterComponent_Impl>()->supplyInletPort();
 }
 
-unsigned WaterToWaterComponent::supplyOutletPort()
+unsigned WaterToWaterComponent::supplyOutletPort() const
 {
   return getImpl<detail::WaterToWaterComponent_Impl>()->supplyOutletPort();
 }
 
-OptionalModelObject WaterToWaterComponent::supplyInletModelObject()
+OptionalModelObject WaterToWaterComponent::supplyInletModelObject() const
 {
   return getImpl<detail::WaterToWaterComponent_Impl>()->supplyInletModelObject();
 }
 
-OptionalModelObject WaterToWaterComponent::supplyOutletModelObject()
+OptionalModelObject WaterToWaterComponent::supplyOutletModelObject() const
 {
   return getImpl<detail::WaterToWaterComponent_Impl>()->supplyOutletModelObject();
 }
 
-unsigned WaterToWaterComponent::demandInletPort()
+unsigned WaterToWaterComponent::demandInletPort() const
 {
   return getImpl<detail::WaterToWaterComponent_Impl>()->demandInletPort();
 }
 
-unsigned WaterToWaterComponent::demandOutletPort()
+unsigned WaterToWaterComponent::demandOutletPort() const
 {
   return getImpl<detail::WaterToWaterComponent_Impl>()->demandOutletPort();
 }
 
-OptionalModelObject WaterToWaterComponent::demandInletModelObject()
+OptionalModelObject WaterToWaterComponent::demandInletModelObject() const
 {
   return getImpl<detail::WaterToWaterComponent_Impl>()->demandInletModelObject();
 }
 
-OptionalModelObject WaterToWaterComponent::demandOutletModelObject()
+OptionalModelObject WaterToWaterComponent::demandOutletModelObject() const
 {
   return getImpl<detail::WaterToWaterComponent_Impl>()->demandOutletModelObject();
 }

@@ -1637,22 +1637,22 @@ namespace detail {
     return true;
   }
 
-  unsigned WaterHeaterMixed_Impl::supplyInletPort()
+  unsigned WaterHeaterMixed_Impl::supplyInletPort() const
   {
     return OS_WaterHeater_MixedFields::UseSideInletNodeName;
   }
 
-  unsigned WaterHeaterMixed_Impl::supplyOutletPort()
+  unsigned WaterHeaterMixed_Impl::supplyOutletPort() const
   {
     return OS_WaterHeater_MixedFields::UseSideOutletNodeName;
   }
 
-  unsigned WaterHeaterMixed_Impl::demandInletPort()
+  unsigned WaterHeaterMixed_Impl::demandInletPort() const
   {
     return OS_WaterHeater_MixedFields::SourceSideInletNodeName;
   }
 
-  unsigned WaterHeaterMixed_Impl::demandOutletPort()
+  unsigned WaterHeaterMixed_Impl::demandOutletPort() const
   {
     return OS_WaterHeater_MixedFields::SourceSideOutletNodeName;
   }
@@ -2622,4 +2622,4 @@ WaterHeaterMixed::WaterHeaterMixed(std::shared_ptr<detail::WaterHeaterMixed_Impl
   }
 
 } // model
-} // openstudio
+} // openstudio

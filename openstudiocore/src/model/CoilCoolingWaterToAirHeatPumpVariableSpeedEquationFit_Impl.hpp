@@ -70,13 +70,13 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned airInletPort() override;
+    virtual unsigned airInletPort() const override;
 
-    virtual unsigned airOutletPort() override;
+    virtual unsigned airOutletPort() const override;
 
-    virtual unsigned waterInletPort() override;
+    virtual unsigned waterInletPort() const override;
 
-    virtual unsigned waterOutletPort() override;
+    virtual unsigned waterOutletPort() const override;
 
     virtual ModelObject clone(Model model) const override;
 
@@ -184,4 +184,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_COILCOOLINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFIT_IMPL_HPP
+#endif // MODEL_COILCOOLINGWATERTOAIRHEATPUMPVARIABLESPEEDEQUATIONFIT_IMPL_HPP

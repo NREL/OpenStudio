@@ -121,11 +121,11 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<WaterToAirComponent>(OS_CoilSystem_Cooling_Water_HeatExchangerAssistedFields::CoolingCoil);
   }
 
-  unsigned CoilSystemCoolingWaterHeatExchangerAssisted_Impl::inletPort() {
+  unsigned CoilSystemCoolingWaterHeatExchangerAssisted_Impl::inletPort() const {
     return OS_CoilSystem_Cooling_Water_HeatExchangerAssistedFields::AirInletNodeName;
   }
 
-  unsigned CoilSystemCoolingWaterHeatExchangerAssisted_Impl::outletPort() {
+  unsigned CoilSystemCoolingWaterHeatExchangerAssisted_Impl::outletPort() const {
     return OS_CoilSystem_Cooling_Water_HeatExchangerAssistedFields::AirOutletNodeName;
   }
 

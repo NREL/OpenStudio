@@ -222,15 +222,15 @@ namespace detail {
 
     //@}
 
-    unsigned returnAirPort();
+    unsigned returnAirPort() const;
 
-    unsigned zoneAirPort();
+    unsigned zoneAirPort() const;
 
-    OptionalModelObject returnAirModelObject();
+    OptionalModelObject returnAirModelObject() const;
 
     std::vector<ModelObject> returnAirModelObjects() const;
 
-    Node zoneAirNode();
+    Node zoneAirNode() const;
 
     boost::optional<DaylightingControl> primaryDaylightingControl() const;
 
@@ -389,7 +389,7 @@ namespace detail {
 
     bool removeEquipment(const ModelObject & equipment);
 
-    std::string loadDistributionScheme();
+    std::string loadDistributionScheme() const;
 
     bool setLoadDistributionScheme(std::string scheme);
 
@@ -397,9 +397,9 @@ namespace detail {
 
     bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
 
-    std::vector<ModelObject> equipmentInHeatingOrder();
+    std::vector<ModelObject> equipmentInHeatingOrder() const;
 
-    std::vector<ModelObject> equipmentInCoolingOrder();
+    std::vector<ModelObject> equipmentInCoolingOrder() const;
 
     ZoneHVACEquipmentList zoneHVACEquipmentList() const;
 

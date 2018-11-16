@@ -449,4 +449,4 @@ typedef std::vector<AirLoopHVACUnitarySystem> AirLoopHVACUnitarySystemVector;
 } // model
 } // openstudio
 
-#endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP
+#endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP

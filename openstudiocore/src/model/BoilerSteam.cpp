@@ -704,12 +704,12 @@ namespace detail {
     return getSizingFactor(true);
   }
 
-  unsigned BoilerSteam_Impl::inletPort()
+  unsigned BoilerSteam_Impl::inletPort() const
   {
     return OS_Boiler_SteamFields::WaterInletNodeName;
   }
 
-  unsigned BoilerSteam_Impl::outletPort()
+  unsigned BoilerSteam_Impl::outletPort() const
   {
     return OS_Boiler_SteamFields::SteamOutletNodeName;
   }

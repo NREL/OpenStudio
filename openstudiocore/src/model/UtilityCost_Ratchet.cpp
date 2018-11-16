@@ -257,4 +257,4 @@ IddObjectType UtilityCost_Ratchet::iddObjectType()
 }
 
 } // model
-} // openstudio
+} // openstudio

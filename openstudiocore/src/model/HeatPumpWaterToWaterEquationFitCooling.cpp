@@ -348,22 +348,22 @@ namespace detail {
     return this->setPointer(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CompanionHeatingHeatPumpName, companionHP.handle());
   }
 
-  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::supplyInletPort()
+  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::supplyInletPort() const
   {
     return OS_HeatPump_WaterToWater_EquationFit_CoolingFields::SourceSideInletNodeName;
   }
 
-  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::supplyOutletPort()
+  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::supplyOutletPort() const
   {
     return OS_HeatPump_WaterToWater_EquationFit_CoolingFields::SourceSideOutletNodeName;
   }
 
-  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::demandInletPort()
+  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::demandInletPort() const
   {
     return OS_HeatPump_WaterToWater_EquationFit_CoolingFields::LoadSideInletNodeName;
   }
 
-  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::demandOutletPort()
+  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::demandOutletPort() const
   {
     return OS_HeatPump_WaterToWater_EquationFit_CoolingFields::LoadSideOutletNodeName;
   }

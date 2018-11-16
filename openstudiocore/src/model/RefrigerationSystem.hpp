@@ -251,4 +251,4 @@ typedef std::vector<RefrigerationSystem> RefrigerationSystemVector;
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONSYSTEM_HPP
+#endif // MODEL_REFRIGERATIONSYSTEM_HPP

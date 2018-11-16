@@ -79,9 +79,9 @@ namespace detail {
 
     virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    virtual unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 

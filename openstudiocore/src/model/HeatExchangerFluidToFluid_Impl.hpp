@@ -71,6 +71,18 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual unsigned supplyInletPort() const override;
+
+    virtual unsigned supplyOutletPort() const override;
+
+    virtual unsigned demandInletPort() const override;
+
+    virtual unsigned demandOutletPort() const override;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
     //@}
     /** @name Getters */
     //@{
@@ -121,15 +133,11 @@ namespace detail {
 
     boost::optional<double> operationMaximumTemperatureLimit() const;
 
-  boost::optional<double> autosizedLoopDemandSideDesignFlowRate() const ;
+    boost::optional<double> autosizedLoopDemandSideDesignFlowRate() const ;
 
-  boost::optional<double> autosizedLoopSupplySideDesignFlowRate() const ;
+    boost::optional<double> autosizedLoopSupplySideDesignFlowRate() const ;
 
-  boost::optional<double> autosizedHeatExchangerUFactorTimesAreaValue() const ;
-
-  virtual void autosize() override;
-
-  virtual void applySizingValues() override;
+    boost::optional<double> autosizedHeatExchangerUFactorTimesAreaValue() const ;
 
     //@}
     /** @name Setters */
@@ -195,14 +203,6 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-
-    unsigned supplyInletPort() override;
-
-    unsigned supplyOutletPort() override;
-
-    unsigned demandInletPort() override;
-
-    unsigned demandOutletPort() override;
 
     //@}
    protected:

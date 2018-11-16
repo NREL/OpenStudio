@@ -55,13 +55,13 @@ class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
 
   virtual ~WaterToAirComponent_Impl() {}
 
-  virtual boost::optional<ModelObject> airInletModelObject();
+  virtual boost::optional<ModelObject> airInletModelObject() const;
 
-  virtual boost::optional<ModelObject> airOutletModelObject();
+  virtual boost::optional<ModelObject> airOutletModelObject() const;
 
-  virtual boost::optional<ModelObject> waterInletModelObject();
+  virtual boost::optional<ModelObject> waterInletModelObject() const;
 
-  virtual boost::optional<ModelObject> waterOutletModelObject();
+  virtual boost::optional<ModelObject> waterOutletModelObject() const;
 
   virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & previous) override;
 
@@ -71,13 +71,13 @@ class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
 
   virtual boost::optional<Loop> loop() const override;
 
-  virtual unsigned airInletPort() = 0;
+  virtual unsigned airInletPort() const = 0;
 
-  virtual unsigned airOutletPort() = 0;
+  virtual unsigned airOutletPort() const = 0;
 
-  virtual unsigned waterInletPort() = 0;
+  virtual unsigned waterInletPort() const = 0;
 
-  virtual unsigned waterOutletPort() = 0;
+  virtual unsigned waterOutletPort() const = 0;
 
   virtual bool addToNode(Node & node) override;
 

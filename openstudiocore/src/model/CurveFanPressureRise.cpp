@@ -345,4 +345,4 @@ CurveFanPressureRise::CurveFanPressureRise(std::shared_ptr<detail::CurveFanPress
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio
