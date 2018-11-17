@@ -28,6 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "FilesystemHelpers.hpp"
+#include "Filesystem.hpp"
 #include "Path.hpp"
 #include "Assert.hpp"
 
@@ -171,6 +172,38 @@ namespace openstudio {
     time_t last_write_time_as_time_t(const openstudio::path &t_path)
     {
       return to_time_t(openstudio::filesystem::last_write_time(t_path));
+    }
+
+    openstudio::path create_temporary_directory(const openstudio::path &basename)
+    {
+      // making this count static/atomic so that we reduce the chance of collisions
+      // on each run of the binary. This is threadsafe, with the atomic
+      static std::atomic<unsigned int> count = 0;
+      constexpr auto allowed_attempts = 1000;
+
+      const auto temp_dir = openstudio::filesystem::temp_directory_path();
+
+      int attempts{0};
+
+      while (attempts < allowed_attempts) {
+        // concat number to path basename, without adding a new path element
+        auto filename = basename;
+        filename += openstudio::toPath("-" + std::to_string(count++));
+        const auto full_pathname = temp_dir / filename;
+        // full_path_name = {temp_path}/{base_name}-{count++}
+
+        try {
+          if (openstudio::filesystem::create_directories(full_pathname)) {
+            // if the path was created, then we know it was created for us
+            return full_pathname;
+          }
+        } catch (...) {
+          // swallow exceptions, we don't care, we only care when it succeeds
+        }
+      }
+
+      // after too many attempts we never made a path
+      return {};
     }
   }
 }

@@ -79,14 +79,12 @@
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 
 #include <OpenStudio.hxx>
 
 #include <QDir>
 #include <QMessageBox>
-#include <QTemporaryFile>
-
-
 
 
 namespace openstudio {
@@ -290,31 +288,10 @@ QString longPathName(const QString& path)
 
   openstudio::path createModelTempDir()
   {
-    openstudio::path result;
-    auto tempFile = new QTemporaryFile();
-
-    if (tempFile->open())
-    {
-      QString path = longPathName(tempFile->fileName());
-
-      // must close tempFile so you can create directory with same name on Windows
-      delete tempFile;
-
-      QDir modelTempDir(path);
-      LOG_FREE(Info, "createModelTempDir", "Creating directory '" << toString(modelTempDir.path()) << "'");
-      bool test = modelTempDir.mkpath(modelTempDir.path());
-      OS_ASSERT(test);
-
-      result = toPath(path);
-
-      return result;
-    }
-
-    delete tempFile;
-
-    OS_ASSERT(false);
-
-    return openstudio::path();
+    const auto result = openstudio::filesystem::create_temporary_directory("osmodel");
+    LOG_FREE(Info, "createModelTempDir", "Created directory '" << toString(result) << "'");
+    OS_ASSERT(!result.empty());
+    return result;
   }
 
   bool initializeModelTempDir(const openstudio::path& osmPath, const openstudio::path& modelTempDir)

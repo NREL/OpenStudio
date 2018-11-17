@@ -70,6 +70,12 @@ namespace openstudio {
     UTILITIES_API void write(openstudio::filesystem::ofstream &t_file, const QString &);
 
     UTILITIES_API time_t last_write_time_as_time_t(const openstudio::path &t_path);
+
+    /// Creates a new temporary directory in the form of
+    /// "/systemtemppath/{base_name}-id"
+    /// where `id` is unique identifier determined by the runtime.
+    /// \returns path created or empty path if creation failed
+    UTILITIES_API openstudio::path create_temporary_directory(const openstudio::path &base_name);
   }
 }
 
