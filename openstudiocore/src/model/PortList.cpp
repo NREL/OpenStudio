@@ -144,7 +144,7 @@ unsigned PortList_Impl::port(unsigned portIndex) const
   return result;
 }
 
-unsigned PortList_Impl::portIndex(unsigned port)
+unsigned PortList_Impl::portIndex(unsigned port) const
 {
   unsigned result;
   result = numNonextensibleFields();
@@ -152,7 +152,7 @@ unsigned PortList_Impl::portIndex(unsigned port)
   return result;
 }
 
-unsigned PortList_Impl::nextPort()
+unsigned PortList_Impl::nextPort() const
 {
   return port( nextPortIndex() );
 }
@@ -376,12 +376,12 @@ unsigned PortList::port(unsigned portIndex) const
   return getImpl<detail::PortList_Impl>()->port(portIndex);
 }
 
-unsigned PortList::portIndex(unsigned port)
+unsigned PortList::portIndex(unsigned port) const
 {
   return getImpl<detail::PortList_Impl>()->portIndex(port);
 }
 
-unsigned PortList::nextPort()
+unsigned PortList::nextPort() const
 {
   return getImpl<detail::PortList_Impl>()->nextPort();
 }

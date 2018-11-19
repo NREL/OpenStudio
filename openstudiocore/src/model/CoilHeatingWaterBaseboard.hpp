@@ -65,9 +65,9 @@ class MODEL_API CoilHeatingWaterBaseboard : public StraightComponent {
   /** @name Getters */
   //@{
 
-  unsigned inletPort();
+  unsigned inletPort() const;
 
-  unsigned outletPort();
+  unsigned outletPort() const;
 
   std::string heatingDesignCapacityMethod() const;
 

@@ -62,9 +62,9 @@ class MODEL_API CoilCoolingLowTempRadiantConstFlow : public StraightComponent {
 
   virtual ~CoilCoolingLowTempRadiantConstFlow() {}
 
-  //virtual unsigned inletPort();
+  //virtual unsigned inletPort() const;
 
-  //virtual unsigned outletPort();
+  //virtual unsigned outletPort() const;
   //@}
 
   static IddObjectType iddObjectType();

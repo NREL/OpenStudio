@@ -337,11 +337,12 @@ class MODEL_API PlantLoop : public Loop {
   OS_DEPRECATED void resetAvailabilityManager();
   // END DEPRECATED
 
-  protected:
+ protected:
 
   friend class Model;
 
   friend class openstudio::IdfObject;
+  friend class openstudio::detail::IdfObject_Impl;
 
   /// @cond
 
@@ -349,7 +350,7 @@ class MODEL_API PlantLoop : public Loop {
 
   explicit PlantLoop(std::shared_ptr<ImplType> impl);
 
-  private:
+ private:
 
   unsigned supplyInletPort() const;
 

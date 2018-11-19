@@ -726,6 +726,9 @@ namespace detail {
     airLoopClone.setString(demandInletPortB(),"");
     airLoopClone.setString(demandOutletPort(),"");
 
+    // Sizing:System was already cloned because it is declared as a child
+    // And because it has the setParent method overriden, no need to do anything
+
     {
       auto clone = availabilitySchedule().clone(model).cast<Schedule>();
       airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilitySchedule,clone.handle());
@@ -735,12 +738,6 @@ namespace detail {
       AvailabilityManagerAssignmentList avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
       avmListClone.setName(airLoopClone.name().get() + " AvailabilityManagerAssigmentList");
       airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilityManagerListName, avmListClone.handle());
-    }
-
-    {
-      auto sizing = sizingSystem();
-      auto sizingClone = sizing.clone(model).cast<SizingSystem>();
-      sizingClone.setAirLoopHVAC(airLoopClone);
     }
 
     airLoopClone.getImpl<detail::AirLoopHVAC_Impl>()->createTopology();
@@ -755,6 +752,13 @@ namespace detail {
       } else {
         auto compClone = comp.clone(model).cast<HVACComponent>();
         compClone.addToNode(outletNodeClone);
+        // If the original component was also on a PlantLoop
+        if( boost::optional<HVACComponent> hvacComp = comp.optionalCast<HVACComponent>() ) {
+          if( boost::optional<PlantLoop> pl = hvacComp->plantLoop() ) {
+            // Connect the clone to the plantLoop too
+            pl->addDemandBranchForComponent(compClone);
+          }
+        }
       }
     }
 
@@ -779,6 +783,8 @@ namespace detail {
       termtypes.push_back(comp.iddObjectType());
     });
 
+    // std::unique only works on sorted vectors, need to sort
+    std::sort(termtypes.begin(), termtypes.end());
     auto uniquetypes = std::vector<IddObjectType>(termtypes.begin(), std::unique(termtypes.begin(), termtypes.end()));
     std::vector<HVACComponent> uniqueterms;
 
@@ -840,6 +846,18 @@ namespace detail {
     }
   }
 
+  boost::optional<Node> AirLoopHVAC_Impl::outdoorAirNode() const
+  {
+    if( airLoopHVACOutdoorAirSystem() )
+    {
+      return airLoopHVACOutdoorAirSystem()->outboardOANode();
+    }
+    else
+    {
+      return boost::optional<Node>();
+    }
+  }
+
   boost::optional<Node> AirLoopHVAC_Impl::reliefAirNode() const
   {
     if( airLoopHVACOutdoorAirSystem() )
@@ -896,12 +914,12 @@ namespace detail {
     return result;
   }
 
-  Splitter AirLoopHVAC_Impl::demandSplitter()
+  Splitter AirLoopHVAC_Impl::demandSplitter() const
   {
     return this->zoneSplitter();
   }
 
-  Mixer AirLoopHVAC_Impl::demandMixer()
+  Mixer AirLoopHVAC_Impl::demandMixer() const
   {
     return this->zoneMixer();
   }
@@ -1375,6 +1393,21 @@ namespace detail {
     if( boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVACOutdoorAirSystem() )
     {
       if( boost::optional<ModelObject> mo = oaSystem->mixedAirModelObject() )
+      {
+        result = mo->optionalCast<Node>();
+      }
+    }
+
+    return result;
+  }
+
+  boost::optional<Node> AirLoopHVAC_Impl::returnAirNode() const
+  {
+    boost::optional<Node> result;
+
+    if( boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVACOutdoorAirSystem() )
+    {
+      if( boost::optional<ModelObject> mo = oaSystem->returnAirModelObject() )
       {
         result = mo->optionalCast<Node>();
       }
@@ -2129,26 +2162,24 @@ std::vector<ModelObject> AirLoopHVAC::oaComponents(openstudio::IddObjectType typ
   return getImpl<detail::AirLoopHVAC_Impl>()->oaComponents( type );
 }
 
-boost::optional<Node> AirLoopHVAC::outdoorAirNode()
+boost::optional<Node> AirLoopHVAC::outdoorAirNode() const
 {
-  // ETH@20111101 Adding to get Ruby bindings building.
-  LOG_AND_THROW("Not implemented.");
+  return getImpl<detail::AirLoopHVAC_Impl>()->outdoorAirNode();
 }
 
-boost::optional<Node> AirLoopHVAC::reliefAirNode()
+boost::optional<Node> AirLoopHVAC::reliefAirNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->reliefAirNode();
 }
 
-boost::optional<Node> AirLoopHVAC::mixedAirNode()
+boost::optional<Node> AirLoopHVAC::mixedAirNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->mixedAirNode();
 }
 
-boost::optional<Node> AirLoopHVAC::returnAirNode()
+boost::optional<Node> AirLoopHVAC::returnAirNode() const
 {
-  // ETH@20111101 Adding to get Ruby bindings building.
-  LOG_AND_THROW("Not implemented.");
+  return getImpl<detail::AirLoopHVAC_Impl>()->returnAirNode();
 }
 
 boost::optional<Splitter> AirLoopHVAC::supplySplitter() const {

@@ -180,4 +180,4 @@ typedef std::vector<CurveQuadraticLinear> CurveQuadraticLinearVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEQUADRATICLINEAR_HPP
+#endif // MODEL_CURVEQUADRATICLINEAR_HPP

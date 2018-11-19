@@ -106,7 +106,7 @@ namespace detail {
 
     virtual unsigned nextInletPort() const override;
 
-    unsigned newInletPortAfterBranch(unsigned branchIndex) override;
+    virtual unsigned newInletPortAfterBranch(unsigned branchIndex) override;
 
     void removePortForBranch(unsigned branchIndex) override;
 

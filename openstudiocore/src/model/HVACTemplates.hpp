@@ -63,6 +63,9 @@ MODEL_API Loop addSystemType9(Model & model);
 
 MODEL_API Loop addSystemType10(Model & model);
 
+/** Add an example Service Hot Water (SHW) Loop */
+MODEL_API Loop addSHWLoop(Model & model);
+
 } // model
 
 } // openstudio

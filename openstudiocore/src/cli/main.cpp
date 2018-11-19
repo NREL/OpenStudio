@@ -58,7 +58,7 @@ extern "C" {
 
   void Init_encdb();
 
-  //void Init_ascii();
+  //void Init_ascii(); // this is not included in libenc
   void Init_big5();
   void Init_cp949();
   void Init_emacs_mule();
@@ -86,13 +86,13 @@ extern "C" {
   void Init_koi8_r();
   void Init_koi8_u();
   void Init_shift_jis();
-  //void Init_unicode();
-  //void Init_us_ascii();
+  //void Init_unicode(); // this is not included in libenc
+  //void Init_us_ascii(); // this is not included in libenc
   void Init_utf_16be();
   void Init_utf_16le();
   void Init_utf_32be();
   void Init_utf_32le();
-  //void Init_utf_8();
+  //void Init_utf_8(); // this is not included in libenc
   void Init_windows_1250();
   void Init_windows_1251();
   void Init_windows_1252();
@@ -424,8 +424,10 @@ int main(int argc, char *argv[])
 
     Init_md5();
     rb_provide("md5");
+    rb_provide("digest/md5");
     rb_provide("md5.so");
-
+    rb_provide("digest/md5.so");
+    
     Init_nkf();
     rb_provide("nkf");
     rb_provide("nkf.so");
@@ -456,20 +458,26 @@ int main(int argc, char *argv[])
 
     Init_rmd160();
     rb_provide("rmd160");
+    rb_provide("digest/rmd160");
     rb_provide("rmd160.so");
-
+    rb_provide("digest/rmd160.so");
+    
     Init_sdbm();
     rb_provide("sdbm");
     rb_provide("sdbm.so");
 
     Init_sha1();
     rb_provide("sha1");
+    rb_provide("digest/sha1");
     rb_provide("sha1.so");
-
+    rb_provide("digest/sha1.so");
+    
     Init_sha2();
     rb_provide("sha2");
+    rb_provide("digest/sha2");
     rb_provide("sha2.so");
-
+    rb_provide("digest/sha2.so");
+    
     Init_sizeof();
     rb_provide("sizeof");
     rb_provide("sizeof.so");
@@ -506,6 +514,7 @@ int main(int argc, char *argv[])
 
    #ifndef WIN32
 
+    // DLM: we have Init_console on Windows but crashes when try to init it, fails to load openssl
      Init_console();
      rb_provide("console");
      rb_provide("console.so");
@@ -536,12 +545,14 @@ int main(int argc, char *argv[])
   }
 
   // DLM: this will interpret any strings passed on the command line as UTF-8
-  // can we be smarter and detect the correct encoding?
-  // might want to follow ruby and allow '--external-encoding=UTF-8' as an input argument?
+  // can we be smarter and detect the correct encoding? use wmain on windows to get utf-16?
+  // or we might want to follow ruby and allow '--external-encoding=UTF-8' as an input argument?
   rb_enc_set_default_external(rb_enc_from_encoding(rb_utf8_encoding()));
 
   // chop off the first argument which is the exe path/name
   ruby_set_argv(argc - 1,argv + 1);
+
+  // DLM: we could restore external encoding here, argv is already tagged with encoding
 
   try{
     rubyInterpreter.evalString("begin \n (require 'openstudio_cli') \n rescue Exception => e \n puts \n puts \"Error: #{e.message}\" \n puts \"Backtrace:\n\t\" + e.backtrace.join(\"\\n\\t\") \n raise \n end");

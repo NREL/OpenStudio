@@ -432,4 +432,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_IMPL_HPP
+#endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_IMPL_HPP

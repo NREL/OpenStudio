@@ -71,9 +71,9 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     virtual bool addToNode(Node & node) override;
 
@@ -314,4 +314,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_EVAPORATIVEFLUIDCOOLERTWOSPEED_IMPL_HPP
+#endif // MODEL_EVAPORATIVEFLUIDCOOLERTWOSPEED_IMPL_HPP

@@ -182,6 +182,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   #endif
 
   waitDialog()->show();
+
   // We are using the wait dialog to lock out the app so
   // use processEvents to make sure the dialog is up before we
   // proceed to startMeasureManagerProcess
@@ -269,13 +270,14 @@ void OpenStudioApp::onMeasureManagerAndLibraryReady() {
 
 bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
 {
+  // Note: already checked for in open() before calling this
   if(fileName.length() > 0)
   {
     osversion::VersionTranslator versionTranslator;
     versionTranslator.setAllowNewerVersions(false);
 
     boost::optional<openstudio::model::Model> temp = versionTranslator.loadModel(toPath(fileName));
-
+    // If VT worked
     if (temp) {
       model::Model model = temp.get();
 
@@ -298,6 +300,9 @@ bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
         processEvents();
       }
 
+      // TODO: waitDialog isn't showed until VT has actually happened and worked?
+      // I tried to show it visible in the begining of the method, but it isn't displayed correctly:
+      // transparent + hidden by Filedialog which isn't closed yet.
       waitDialog()->setVisible(true);
       processEvents();
 
@@ -331,16 +336,36 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
 {
   std::vector<std::string> failed;
 
-  QWidget * parent = nullptr;
-  if( this->currentDocument() ){
-    parent = this->currentDocument()->mainWindow();
-  }
+  // This is unused
+  //QWidget * parent = nullptr;
+  //if( this->currentDocument() ){
+    //parent = this->currentDocument()->mainWindow();
+  //}
+
+  // Get the first Qlabel waitDialog (0 = stretch, 1 = "Loading model", 2 = "This may take a minute...", 3=hidden lable,   = stretch)
+  waitDialog()->m_firstLine->setText("Loading Library Files");
+  waitDialog()->m_secondLine->setText("(Manage library files in Preferences->Change default libraries)");
+  // Make it visible
+  waitDialog()->m_thirdLine->setVisible(true);
+  waitDialog()->m_fourthLine->setVisible(true);
 
   m_compLibrary = model::Model();
+
+  std::string thisVersion = openStudioVersion();
 
   for( auto path : libraryPaths() ) {
     try {
       if ( exists(path) ) {
+        boost::optional<VersionString> version = openstudio::IdfFile::loadVersionOnly(path);
+        if (version) {
+          waitDialog()->m_thirdLine->setText(QString::fromStdString("Translation From version " + version->str()
+                                          + " to " + thisVersion + ": "));
+        } else {
+          waitDialog()->m_thirdLine->setText("Unknown starting version");
+        }
+
+        waitDialog()->m_fourthLine->setText(toQString(path));
+
         osversion::VersionTranslator versionTranslator;
         versionTranslator.setAllowNewerVersions(false);
         boost::optional<Model> temp = versionTranslator.loadModel(path);
@@ -357,6 +382,9 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
       failed.push_back(path.string());
     }
   }
+
+  // Reset all labels
+  waitDialog()->resetLabels();
 
   return failed;
 }
@@ -777,6 +805,9 @@ void OpenStudioApp::open()
   setLastPath(QFileInfo(fileName).path());
 
   openFile(fileName);
+
+  // Reset the labels
+  waitDialog()->resetLabels();
 }
 
 //void OpenStudioApp::loadLibrary()

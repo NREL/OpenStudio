@@ -651,8 +651,8 @@ endif()
 # to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
 # next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20181010.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e07e5bd74ab643f7ed9f0e013db8c2d0")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20181114.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "286b8677857a130e5a69372e814bd97a")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -712,6 +712,16 @@ if(BUILD_WITH_OPENSSL)
     set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
     set(LIBEAY32_PATH "${OPENSSL_ROOT_DIR}/bin/libcrypto-1_1-x64.dll")
     set(SSLEAY32_PATH "${OPENSSL_ROOT_DIR}/bin/libssl-1_1-x64.dll")
+    set(LIB_EAY_DEBUG "${OPENSSL_ROOT_DIR}/lib/libcrypto.lib")
+    set(LIB_EAY_RELEASE "${OPENSSL_ROOT_DIR}/lib/libcrypto.lib")
+    set(SSL_EAY_DEBUG "${OPENSSL_ROOT_DIR}/lib/libssl.lib")
+    set(SSL_EAY_RELEASE "${OPENSSL_ROOT_DIR}/lib/libssl.lib")
+    mark_as_advanced(
+      LIB_EAY_DEBUG
+      LIB_EAY_RELEASE
+      SSL_EAY_DEBUG
+      SSL_EAY_RELEASE
+    )
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Release/")
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Debug/")
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/RelWithDebInfo/")

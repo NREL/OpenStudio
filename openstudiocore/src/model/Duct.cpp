@@ -75,12 +75,12 @@ namespace detail {
     return Duct::iddObjectType();
   }
 
-  unsigned Duct_Impl::inletPort()
+  unsigned Duct_Impl::inletPort() const
   {
     return OS_DuctFields::InletNode;
   }
 
-  unsigned Duct_Impl::outletPort()
+  unsigned Duct_Impl::outletPort() const
   {
     return OS_DuctFields::OutletNode;
   }

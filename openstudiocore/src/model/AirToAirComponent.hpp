@@ -62,32 +62,32 @@ class MODEL_API AirToAirComponent : public HVACComponent
    *  the primary air stream is often thought of as the supply side air stream
    *  which is the supply of outdoor air into the system.
    */
-  unsigned primaryAirInletPort();
+  unsigned primaryAirInletPort() const;
 
   /** Returns the primary air stream outlet port. **/
-  unsigned primaryAirOutletPort();
+  unsigned primaryAirOutletPort() const;
 
   /** Returns the optional ModelObject connected to the primary air stream inlet port. **/
-  boost::optional<ModelObject> primaryAirInletModelObject();
+  boost::optional<ModelObject> primaryAirInletModelObject() const;
 
   /** Returns the optional ModelObject connected to the primary air stream outlet port. **/
-  boost::optional<ModelObject> primaryAirOutletModelObject();
+  boost::optional<ModelObject> primaryAirOutletModelObject() const;
 
   /** Returns the secondary air stream inlet port.
    *
    *  In the context of air to air heat recovery devices in EnergyPlus,
    *  the secondary air stream is often the exhaust air stream leaving the system.
    */
-  unsigned secondaryAirInletPort();
+  unsigned secondaryAirInletPort() const;
 
   /** Returns the secondary air stream outlet port. **/
-  unsigned secondaryAirOutletPort();
+  unsigned secondaryAirOutletPort() const;
 
   /** Returns the optional ModelObject connected to the secondary air stream inlet port. **/
-  boost::optional<ModelObject> secondaryAirInletModelObject();
+  boost::optional<ModelObject> secondaryAirInletModelObject() const;
 
   /** Returns the optional ModelObject connected to the secondary air stream outlet port. **/
-  boost::optional<ModelObject> secondaryAirOutletModelObject();
+  boost::optional<ModelObject> secondaryAirOutletModelObject() const;
 
   bool addToNode(Node & node);
 

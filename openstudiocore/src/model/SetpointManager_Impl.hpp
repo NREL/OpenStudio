@@ -53,6 +53,14 @@ namespace detail {
 
     virtual ~SetpointManager_Impl();
 
+    /** This method will delete any existing SPM with the same controlVariable, and check if placing the SPM is allowed:
+     * <ul>
+     *  <li>Airside: only allows placement of the SPM on the supply side of an AirLoopHVAC,
+     *      or the node of an AirLoopHVACOutdoorAirSystem EXCEPT on the outdoorAirNode or reliefAirNode</li>
+     *  <li>Waterside: if isAllowedOnPlantLoop() returns true, it will allow connection on the supply side,
+     *  or the demand side EXCEPT between the demand splitter and demand mixer (i.e. not allowed on a demand branch)</li>
+     * </ul>.
+     */
     virtual bool addToNode(Node & node) override;
 
     virtual std::vector<openstudio::IdfObject> remove() override;
@@ -78,6 +86,10 @@ namespace detail {
     virtual boost::optional<Loop> loop() const override;
 
     virtual boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const override;
+
+    /** Defaults to false. Must be overriden by derived classes that can be actually placed on a PlantLoop to return true.
+     * If true, addToNode will allow connection on a PlantLoop (supply side, or demand side EXCEPT between splitter and mixer) */
+    virtual bool isAllowedOnPlantLoop() const;
 
    private:
 
