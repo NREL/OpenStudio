@@ -219,11 +219,11 @@ namespace openstudio{
     bool errorsFound = false;
     for (const auto& p: vals) {
       if (sqlite3_bind_text(sqlStmtPtr, 1, p.first.c_str(), p.first.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
-        LOG(Error, "Error binding to the 1st parameter: " << p.first);
+        LOG(Error, "Error binding to the 1st parameter (initializeLocalDb): " << p.first);
         errorsFound = true;
       }
       else if (sqlite3_bind_text(sqlStmtPtr, 2, p.second.c_str(), p.second.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
-        LOG(Error, "Error binding to the 2nd parameter: " << p.second);
+        LOG(Error, "Error binding to the 2nd parameter (initializeLocalDb): " << p.second);
         errorsFound = true;
       }
       else if (sqlite3_step(sqlStmtPtr) != SQLITE_DONE) {
@@ -235,6 +235,9 @@ namespace openstudio{
         sqlite3_reset(sqlStmtPtr);
         return false;
       }
+
+      // Reset the statement to allow binding variables on the next iteration
+     sqlite3_reset(sqlStmtPtr);
 
     }
 
@@ -354,6 +357,9 @@ namespace openstudio{
                 return false;
               }
 
+              // Reset the statement to allow binding variables on the next iteration
+              sqlite3_reset(sqlStmtPtr);
+
             }
 
             sqlite3_finalize(sqlStmtPtr);
@@ -408,7 +414,7 @@ namespace openstudio{
       {
 
         // Update statement
-        std::string update_attribute_record = "UPDATE Attributes SET version_ID = ? WHERE uid = ?";
+        std::string update_attribute_record = "UPDATE Attributes SET version_ID=? WHERE uid=?";
         sqlite3_stmt * updateAtrStmtPtr;
         if (sqlite3_prepare_v2(m_db, update_attribute_record.c_str(), update_attribute_record.size(), &updateAtrStmtPtr, nullptr) != SQLITE_OK) {
           LOG(Error, "Error preparing update_attribute_record statement");
@@ -418,7 +424,7 @@ namespace openstudio{
           return false;
         }
 
-        std::string update_file_record = "UPDATE Files SET version_ID = ? WHERE uid = ?";
+        std::string update_file_record = "UPDATE Files SET version_ID=? WHERE uid=?";
         sqlite3_stmt * updateFileStmtPtr;
         if (sqlite3_prepare_v2(m_db, update_file_record.c_str(), update_file_record.size(), &updateFileStmtPtr, nullptr) != SQLITE_OK) {
           LOG(Error, "Error preparing update_file_record statement");
@@ -458,6 +464,9 @@ namespace openstudio{
             } else if (sqlite3_step(updateAtrStmtPtr) != SQLITE_DONE) {
               LOG(Error, "Error executing prepared updateAtrStmtPtr");
               errorsFound = true;
+            } else {
+              // Reset the statement to allow binding variables on the next iteration
+              sqlite3_reset(updateAtrStmtPtr);
             }
 
             // Update record
@@ -471,8 +480,10 @@ namespace openstudio{
             } else if (sqlite3_step(updateFileStmtPtr) != SQLITE_DONE) {
               LOG(Error, "Error executing prepared updateFileStmtPtr");
               errorsFound = true;
+            } else {
+              // Reset the statement to allow binding variables on the next iteration
+              sqlite3_reset(updateFileStmtPtr);
             }
-
 
           }
           else  // i didn't get a row.  something is wrong so set the exit condition.
@@ -1377,10 +1388,11 @@ namespace openstudio{
     {
 
       // Prepare a statement that we'll bind
-      std::string statement = "SELECT uid, version_id FROM Attributes WHERE name='?' COLLATE NOCASE AND value='?' COLLATE NOCASE";
+      // (Note: do not do name='?', it won't think it's a bind parameter)
+      std::string statement = "SELECT uid, version_id FROM Attributes WHERE name=? COLLATE NOCASE AND value=? COLLATE NOCASE";
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
-        LOG(Error, "Cannot prepare statement in searchTerms");
+        LOG(Error, "Cannot prepare statement (in searchTerms)");
         sqlite3_finalize(sqlStmtPtr);
         return UidsType();
       }
@@ -1389,17 +1401,20 @@ namespace openstudio{
 
         UidsType theseUids;
 
+        // Reset the statement to allow binding variables on the next iteration
+        sqlite3_reset(sqlStmtPtr);
+
         // Bind the values now
         std::string name = escape(searchTerm.first);
         std::string value = escape(searchTerm.second);
 
         if (sqlite3_bind_text(sqlStmtPtr, 1, name.c_str(), name.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
-          LOG(Error, "Error binding to the 1st parameter name: " << name);
+          LOG(Error, "Error binding to the 1st parameter (in searchTerms), name: " << name);
           sqlite3_finalize(sqlStmtPtr);
           return UidsType();
         }
         else if (sqlite3_bind_text(sqlStmtPtr, 2, value.c_str(), value.size(), SQLITE_TRANSIENT) != SQLITE_OK) {
-          LOG(Error, "Error binding to the 2nd parameter value: " << value);
+          LOG(Error, "Error binding to the 2nd parameter (in searchTerms), value: " << value);
           sqlite3_finalize(sqlStmtPtr);
           return UidsType();
         }
@@ -1435,6 +1450,7 @@ namespace openstudio{
           sqlite3_finalize(sqlStmtPtr);
           return UidsType();
         }
+
 
       } // End loop on searchTerms
 
