@@ -59,6 +59,10 @@ namespace openstudio {
     /// Result values are relative to t_path
     UTILITIES_API std::vector<openstudio::path> directory_files(const openstudio::path &t_path);
 
+    /// Returns all dir paths (non recursively) in the directory t_path.
+    /// Result values are relative to t_path
+    UTILITIES_API std::vector<openstudio::path> directory_directories(const openstudio::path &t_path);
+
     /// Returns all file paths (recursively) in the directory t_path.
     /// Result values are relative to t_path
     UTILITIES_API std::vector<openstudio::path> recursive_directory_files(const openstudio::path &t_path);
@@ -76,6 +80,11 @@ namespace openstudio {
     /// where `id` is unique identifier determined by the runtime.
     /// \returns path created or empty path if creation failed
     UTILITIES_API openstudio::path create_temporary_directory(const openstudio::path &base_name);
+
+
+    /// Returns the current user's home path
+    UTILITIES_API openstudio::path home_path();
+
   }
 }
 

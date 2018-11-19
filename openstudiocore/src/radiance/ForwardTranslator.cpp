@@ -86,9 +86,9 @@
 
 #include <QPolygonF>
 #include <QPointF>
-#include <QDir>
 #include <QDateTime>
 #include <QThread>
+#include <QFile>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/regex.hpp>

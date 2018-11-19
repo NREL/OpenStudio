@@ -36,8 +36,6 @@
 #include "../../idf/Workspace.hpp"
 #include "../../core/FilesystemHelpers.hpp"
 
-#include <QDir>
-
 
 using namespace openstudio;
 
@@ -242,7 +240,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   EXPECT_FALSE(lastDownload->files().empty());
   for (const std::string& file : lastDownload->files()) {
     openstudio::path path = toPath(lastDownload->directory() + "/files/" + file);
-    EXPECT_TRUE(QDir().exists(toQString(path)));
+    EXPECT_TRUE(openstudio::filesystem::exists(path));
 
     const auto time = openstudio::filesystem::last_write_time_as_time_t(path);
     EXPECT_GT(time, startTime);
@@ -256,7 +254,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   EXPECT_FALSE(component->files().empty());
   for (const std::string& file : component->files()) {
     openstudio::path path = toPath(component->directory() + "/files/" + file);
-    EXPECT_TRUE(QDir().exists(toQString(path)));
+    EXPECT_TRUE(openstudio::filesystem::exists(path));
 
     const auto time = openstudio::filesystem::last_write_time_as_time_t(path);
     EXPECT_GT(time, startTime);
@@ -277,7 +275,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   ASSERT_FALSE(oscFiles.empty());
   EXPECT_EQ(1u, oscFiles.size());
   openstudio::path oscPath = toPath(oscFiles[0]);
-  EXPECT_TRUE(QDir().exists(toQString(oscPath)));
+  EXPECT_TRUE(openstudio::filesystem::exists(oscPath));
   // DLM: the real loading procedure would be to run this through the version translator first
   boost::optional<Workspace> workspace = Workspace::load(oscPath, IddFile::catchallIddFile());
   // This will fail on Windows if the path is greater than MAX_PATH

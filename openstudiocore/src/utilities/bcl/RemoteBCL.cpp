@@ -35,7 +35,7 @@
 #include "../core/System.hpp"
 #include "../core/UnzipFile.hpp"
 
-#include <QDir>
+#include <QFile>
 #include <QMutex>
 #include <QNetworkReply>
 
@@ -596,7 +596,7 @@ namespace openstudio{
       return false;
     }
 
-    m_downloadFile = std::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+uid+".bcl"))));
+    m_downloadFile = std::make_shared<QFile>(toQString(openstudio::filesystem::temp_directory_path() / toPath(uid + ".bcl")));
     if (!m_downloadFile->open(QIODevice::WriteOnly | QIODevice::Truncate)){
       m_mutex->unlock();
       return false;
@@ -1009,12 +1009,12 @@ namespace openstudio{
 
           // Extract the files to a temp location
           openstudio::path src = toPath(fileName);
-          openstudio::path tempDest = toPath(QDir::tempPath().append(toQString("/" + m_downloadUid + "/")));
+          openstudio::path tempDest = openstudio::filesystem::temp_directory_path() / toPath(m_downloadUid  + '/');
 
-          if (QDir().exists(toQString(tempDest))) {
+          if (openstudio::filesystem::is_directory(tempDest)) {
             removeDirectory(tempDest);
           }
-          QDir().mkpath(toQString(tempDest));
+          openstudio::filesystem::create_directories(tempDest);
 
           std::vector<openstudio::path> createdFiles;
           try {
@@ -1062,7 +1062,7 @@ namespace openstudio{
               // check if component has proper uid and vid
               if (!uid.empty() && !versionId.empty()) {
 
-                dest = toPath(LocalBCL::instance().libraryPath().append(toQString("/" + uid + "/" + versionId)));
+                dest = LocalBCL::instance().libraryPath() / openstudio::toPath(uid) / openstudio::toPath(versionId);
 
                 removeDirectory(dest);
                 if (copyDirectory(componentXmlPath.parent_path(), dest))
@@ -1085,7 +1085,7 @@ namespace openstudio{
                 // check if component has proper uid and vid
                 if (!uid.empty() && !versionId.empty()) {
 
-                  dest = toPath(LocalBCL::instance().libraryPath().append(toQString("/" + uid + "/" + versionId)));
+                dest = LocalBCL::instance().libraryPath() / openstudio::toPath(uid) / openstudio::toPath(versionId);
 
                   removeDirectory(dest);
                   if (copyDirectory(measureXmlPath.parent_path(), dest))

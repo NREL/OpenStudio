@@ -30,8 +30,6 @@
 #include "Path.hpp"
 #include "String.hpp"
 
-#include <QDir>
-
 
 #ifdef Q_OS_WIN
 #include <locale>
@@ -40,30 +38,6 @@
 
 namespace openstudio {
 
-//#ifdef Q_OS_WIN
-//
-//#include <windows.h>
-//
-//QString longPathName(const QString& path)
-//{
-//  if (path.isEmpty())
-//    return QString();
-//  QString maybeShort = QDir::toNativeSeparators(path);
-//  QByteArray shortName = maybeShort.toLocal8Bit();
-//  char longPath[MAX_PATH];
-//  int err = GetLongPathName(shortName.constData(), longPath, MAX_PATH);
-//  (void)err;
-//  return QDir::fromNativeSeparators(QString::fromLocal8Bit(longPath));
-//}
-//
-//#else
-//
-//QString longPathName(const QString& path)
-//{
-//  return path;
-//}
-//
-//#endif
 
 /*
   | Class       | Internal      | Platform  |
@@ -95,7 +69,7 @@ path toPath(const QString& q)
 /** path to a temporary directory. */
 path tempDir()
 {
-  return toPath(QDir::tempPath());
+  return openstudio::filesystem::temp_directory_path();
 }
 
 /** path to UTF-8 encoding. */
