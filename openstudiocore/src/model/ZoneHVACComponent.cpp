@@ -199,7 +199,7 @@ namespace detail {
         inlet->remove();
         auto branch = plenum->branchIndexForInletModelObject(plenumInletNode.get());
         plenum->removePortForBranch(branch);
-        m.connect(plenumInletNode.get(), plenumInletNode->outletPort(), thisObject, thisObject.inletPort()); 
+        m.connect(plenumInletNode.get(), plenumInletNode->outletPort(), thisObject, thisObject.inletPort());
         plenumInlets = plenum->inletModelObjects();
         if ( plenumInlets.empty() ) {
           plenum->remove();
@@ -366,7 +366,8 @@ namespace detail {
   {
     removeFromThermalZone();
 
-    removeFromAirLoopHVAC();
+    bool result = removeFromAirLoopHVAC();
+    OS_ASSERT(result || !airLoopHVAC());
 
     return HVACComponent_Impl::remove();
   }
@@ -471,30 +472,41 @@ namespace detail {
 
   bool ZoneHVACComponent_Impl::removeFromAirLoopHVAC()
   {
-    if( auto t_loop = airLoopHVAC() ) {
-      if( auto t_oaSystem = t_loop->airLoopHVACOutdoorAirSystem() ) {
-        if( t_oaSystem->oaComponent(handle()) ) {
-          return HVACComponent_Impl::removeFromLoop(t_oaSystem->outboardOANode().get(),
-                 t_oaSystem.get(),
-                 inletPort(),
-                 outletPort());
-        } else if( t_oaSystem->reliefComponent(handle()) ) {
-          return HVACComponent_Impl::removeFromLoop(t_oaSystem.get(),
-                 t_oaSystem->outboardReliefNode().get(),
-                 inletPort(),
-                 outletPort());
-        }
-      } else  {
-        if( t_loop->supplyComponent(handle()) ) {
-          return HVACComponent_Impl::removeFromLoop(t_loop->supplyInletNode(),
-                 t_loop->supplyOutletNode(),
-                 inletPort(),
-                 outletPort());
-        }
+    // Note JM 2018-09-22:
+    // This calls HVACComponent::airLoopHVACOutdoorAirSystem
+    // It returns an AirLoopHVACOutdoorAirSystem that this component is ON
+    // Not to be confused with this->airLoopHVAC()->airLoopHVACOutdoorAirSystem() which returns an
+    // eventual AirLoopHVACOutdoorAirSystem whether this component is on it or not!
+    if( auto t_oaSystem = airLoopHVACOutdoorAirSystem() ) {
+      if( t_oaSystem->oaComponent(handle()) ) {
+        return HVACComponent_Impl::removeFromLoop(t_oaSystem->outboardOANode().get(),
+               t_oaSystem.get(),
+               inletPort(),
+               outletPort());
+      } else if( t_oaSystem->reliefComponent(handle()) ) {
+        return HVACComponent_Impl::removeFromLoop(t_oaSystem.get(),
+               t_oaSystem->outboardReliefNode().get(),
+               inletPort(),
+               outletPort());
       }
+    } else if( auto t_loop = loop() ) {
+      if( t_loop->supplyComponent(handle()) ) {
+        return HVACComponent_Impl::removeFromLoop(t_loop->supplyInletNode(),
+               t_loop->supplyOutletNode(),
+               inletPort(),
+               outletPort());
+      }
+      /*
+       *else if( t_loop->demandComponent(handle()) ) {
+       *  return HVACComponent_Impl::removeFromLoop(t_loop->demandInletNode(),
+       *         t_loop->demandOutletNode(),
+       *         inletPort(),
+       *         outletPort());
+       *}
+       */
     }
-
     return false;
+
   }
 
   boost::optional<ModelObject> ZoneHVACComponent_Impl::airInletModelObject() const

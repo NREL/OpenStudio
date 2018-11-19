@@ -32,12 +32,9 @@
 
 #include "Assert.hpp"
 
-#include <boost/lexical_cast.hpp>
 
-#include <sstream>
 
 #include <QReadWriteLock>
-#include <QWriteLocker>
 
 namespace openstudio{
 

@@ -54,7 +54,7 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
 
   static IddObjectType iddObjectType();
 
-  std::string loadDistributionScheme();
+  std::string loadDistributionScheme() const;
 
   bool setLoadDistributionScheme(std::string scheme);
 
@@ -86,18 +86,18 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
   std::vector<ModelObject> equipment() const;
 
   /** Return all equipment.  Order is determined by heating priority */
-  std::vector<ModelObject> equipmentInHeatingOrder();
+  std::vector<ModelObject> equipmentInHeatingOrder() const;
 
   /** Return all equipment.  Order is determined by coooling priority */
-  std::vector<ModelObject> equipmentInCoolingOrder();
+  std::vector<ModelObject> equipmentInCoolingOrder() const;
 
   ThermalZone thermalZone() const;
 
   /** Return the heating priority for equipment */
-  unsigned heatingPriority(const ModelObject & equipment);
+  unsigned heatingPriority(const ModelObject & equipment) const;
 
   /** Return the cooling priority for equipment */
-  unsigned coolingPriority(const ModelObject & equipment);
+  unsigned coolingPriority(const ModelObject & equipment) const;
 
   protected:
 

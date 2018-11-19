@@ -305,12 +305,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned AirTerminalSingleDuctParallelPIUReheat_Impl::inletPort()
+  unsigned AirTerminalSingleDuctParallelPIUReheat_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::SupplyAirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctParallelPIUReheat_Impl::outletPort()
+  unsigned AirTerminalSingleDuctParallelPIUReheat_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::OutletNodeName;
   }

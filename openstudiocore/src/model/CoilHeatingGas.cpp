@@ -30,14 +30,24 @@
 #include "CoilHeatingGas.hpp"
 #include "CoilHeatingGas_Impl.hpp"
 #include "Model.hpp"
+#include "AirTerminalSingleDuctConstantVolumeReheat.hpp"
+#include "AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
 #include "AirTerminalSingleDuctVAVReheat.hpp"
 #include "AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "AirTerminalSingleDuctVAVHeatAndCoolReheat.hpp"
+#include "AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "ZoneHVACWaterToAirHeatPump.hpp"
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "ZoneHVACUnitHeater.hpp"
+#include "ZoneHVACUnitHeater_Impl.hpp"
+#include "ZoneHVACUnitVentilator.hpp"
+#include "ZoneHVACUnitVentilator_Impl.hpp"
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
@@ -174,12 +184,12 @@ namespace detail{
     return result;
   }
 
-  unsigned CoilHeatingGas_Impl::inletPort()
+  unsigned CoilHeatingGas_Impl::inletPort() const
   {
     return OS_Coil_Heating_GasFields::AirInletNodeName;
   }
 
-  unsigned CoilHeatingGas_Impl::outletPort()
+  unsigned CoilHeatingGas_Impl::outletPort() const
   {
     return OS_Coil_Heating_GasFields::AirOutletNodeName;
   }
@@ -310,6 +320,41 @@ namespace detail{
       }
     }
 
+
+    // AirTerminalSingleDuctVAVHeatAndCoolReheat
+
+    std::vector<AirTerminalSingleDuctVAVHeatAndCoolReheat> airTerminalSingleDuctVAVHeatAndCoolReheatObjects;
+
+    airTerminalSingleDuctVAVHeatAndCoolReheatObjects = this->model().getConcreteModelObjects<AirTerminalSingleDuctVAVHeatAndCoolReheat>();
+
+    for( const auto & airTerminalSingleDuctVAVHeatAndCoolReheatObject : airTerminalSingleDuctVAVHeatAndCoolReheatObjects )
+    {
+      if( boost::optional<HVACComponent> coil = airTerminalSingleDuctVAVHeatAndCoolReheatObject.reheatCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return airTerminalSingleDuctVAVHeatAndCoolReheatObject;
+        }
+      }
+    }
+
+    // AirTerminalSingleDuctConstantVolumeReheat
+
+    std::vector<AirTerminalSingleDuctConstantVolumeReheat> airTerminalSingleDuctConstantVolumeReheatObjects;
+
+    airTerminalSingleDuctConstantVolumeReheatObjects = this->model().getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeReheat>();
+
+    for( const auto & airTerminalSingleDuctConstantVolumeReheatObject : airTerminalSingleDuctConstantVolumeReheatObjects )
+    {
+      if( boost::optional<HVACComponent> coil = airTerminalSingleDuctConstantVolumeReheatObject.reheatCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return airTerminalSingleDuctConstantVolumeReheatObject;
+        }
+      }
+    }
+
     // AirTerminalSingleDuctParallelPIUReheat
 
     std::vector<AirTerminalSingleDuctParallelPIUReheat> airTerminalSingleDuctParallelPIUReheatObjects;
@@ -382,6 +427,58 @@ namespace detail{
         }
       }
     }
+
+    // ZoneHVACPackagedTerminalAirConditioner
+
+    std::vector<ZoneHVACPackagedTerminalAirConditioner> zoneHVACPackagedTerminalAirConditioners;
+
+    zoneHVACPackagedTerminalAirConditioners = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
+
+    for( const auto & zoneHVACPackagedTerminalAirConditioner : zoneHVACPackagedTerminalAirConditioners )
+    {
+      if( boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalAirConditioner.heatingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return zoneHVACPackagedTerminalAirConditioner;
+        }
+      }
+    }
+
+    // ZoneHVACUnitHeater
+
+    std::vector<ZoneHVACUnitHeater> zoneHVACUnitHeaters;
+
+    zoneHVACUnitHeaters = this->model().getConcreteModelObjects<ZoneHVACUnitHeater>();
+
+    for( const auto & zoneHVACUnitHeater : zoneHVACUnitHeaters )
+    {
+      if( boost::optional<HVACComponent> coil = zoneHVACUnitHeater.heatingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return zoneHVACUnitHeater;
+        }
+      }
+    }
+
+    // ZoneHVACUnitHeater
+
+    std::vector<ZoneHVACUnitVentilator> zoneHVACUnitVentilators;
+
+    zoneHVACUnitVentilators = this->model().getConcreteModelObjects<ZoneHVACUnitVentilator>();
+
+    for( const auto & zoneHVACUnitVentilator : zoneHVACUnitVentilators )
+    {
+      if( boost::optional<HVACComponent> coil = zoneHVACUnitVentilator.heatingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return zoneHVACUnitVentilator;
+        }
+      }
+    }
+
 
     return boost::none;
   }

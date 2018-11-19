@@ -1064,4 +1064,4 @@ RefrigerationSystem::RefrigerationSystem(std::shared_ptr<detail::RefrigerationSy
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

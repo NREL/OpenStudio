@@ -184,9 +184,9 @@ class MODEL_API PlantComponentUserDefined_Impl : public StraightComponent_Impl {
     /** @name Other */
     //@{
 
-    virtual unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     bool addToNode(Node & node) override;
 

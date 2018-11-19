@@ -484,6 +484,8 @@ namespace detail {
 
   ModelObject HVACComponent_Impl::clone(Model model) const
   {
+    // Note: JM 2018-08-29: children controls what we see in the Inspector in OS App, and it's not necessarilly what we want to clone
+    // So the parent/children link is broken on purpose here
     return ModelObject_Impl::clone(model);
   }
 

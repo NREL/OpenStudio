@@ -68,7 +68,9 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
-    virtual bool addToNode(Node & node) override;
+    // virtual bool addToNode(Node & node) override;
+
+    virtual bool isAllowedOnPlantLoop() const override;
 
     //@}
     /** @name Getters */

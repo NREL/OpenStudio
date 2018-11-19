@@ -42,11 +42,6 @@ namespace detail {
 
 class MODEL_API SetpointManagerScheduled_Impl : public SetpointManager_Impl {
 
-
-
-
-
-
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -73,7 +68,9 @@ class MODEL_API SetpointManagerScheduled_Impl : public SetpointManager_Impl {
 
   virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  virtual bool addToNode(Node & node) override;
+  // virtual bool addToNode(Node & node) override;
+
+  virtual bool isAllowedOnPlantLoop() const override;
 
   //@}
   /** @name Getters */

@@ -149,4 +149,4 @@ typedef std::vector<CurveExponent> CurveExponentVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CURVEEXPONENT_HPP
+#endif // MODEL_CURVEEXPONENT_HPP

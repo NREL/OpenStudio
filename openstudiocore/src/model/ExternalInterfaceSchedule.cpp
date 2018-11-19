@@ -220,4 +220,4 @@ ExternalInterfaceSchedule::ExternalInterfaceSchedule(std::shared_ptr<detail::Ext
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

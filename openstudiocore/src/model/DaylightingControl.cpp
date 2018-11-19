@@ -701,4 +701,4 @@ DaylightingControl::DaylightingControl(std::shared_ptr<detail::DaylightingContro
 
 
 } // model
-} // openstudio
+} // openstudio

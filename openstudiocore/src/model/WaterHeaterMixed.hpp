@@ -476,4 +476,4 @@ typedef std::vector<WaterHeaterMixed> WaterHeaterMixedVector;
 } // model
 } // openstudio
 
-#endif // MODEL_WATERHEATERMIXED_HPP
+#endif // MODEL_WATERHEATERMIXED_HPP

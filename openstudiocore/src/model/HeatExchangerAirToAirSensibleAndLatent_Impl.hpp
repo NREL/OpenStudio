@@ -39,7 +39,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
 class Connection;
 
@@ -47,7 +46,7 @@ namespace detail {
 
   /** HeatExchangerAirToAirSensibleAndLatent_Impl is a AirToAirComponent_Impl that is the implementation class for HeatExchangerAirToAirSensibleAndLatent.*/
   class MODEL_API HeatExchangerAirToAirSensibleAndLatent_Impl : public AirToAirComponent_Impl {
-    
+
    public:
 
     /** @name Constructors and Destructors */
@@ -79,11 +78,23 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    virtual unsigned primaryAirInletPort() const override;
+
+    virtual unsigned primaryAirOutletPort() const override;
+
+    virtual unsigned secondaryAirInletPort() const override;
+
+    virtual unsigned secondaryAirOutletPort() const override;
+
+
     //@}
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule availabilitySchedule() const;
 
     boost::optional<double> nominalSupplyAirFlowRate() const;
@@ -150,17 +161,13 @@ namespace detail {
 
     bool economizerLockout() const;
 
-  boost::optional<double> autosizedNominalSupplyAirFlowRate() const ;
+    boost::optional<double> autosizedNominalSupplyAirFlowRate() const ;
 
-  virtual void autosize() override;
-
-  virtual void applySizingValues() override;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     bool setNominalSupplyAirFlowRate(boost::optional<double> nominalSupplyAirFlowRate);
@@ -234,14 +241,6 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-
-    unsigned primaryAirInletPort() override;
-
-    unsigned primaryAirOutletPort() override;
-
-    unsigned secondaryAirInletPort() override;
-
-    unsigned secondaryAirOutletPort() override;
 
     AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
     boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;

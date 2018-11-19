@@ -384,4 +384,4 @@ CurveCubic::CurveCubic(std::shared_ptr<detail::CurveCubic_Impl> impl)
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

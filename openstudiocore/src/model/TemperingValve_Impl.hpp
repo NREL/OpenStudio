@@ -98,11 +98,11 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
-    bool addToNode(Node & node) override;
+    virtual bool addToNode(Node & node) override;
 
     // Set pumpOutletNode, temperatureSetpointNode, and stream2SourceNode to reasonable values if they are not set
     bool setControlNodes();

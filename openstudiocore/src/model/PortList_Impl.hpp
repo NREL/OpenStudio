@@ -65,9 +65,9 @@ class MODEL_API PortList_Impl : public ModelObject_Impl {
 
   unsigned port(unsigned portIndex) const;
 
-  unsigned portIndex(unsigned port);
+  unsigned portIndex(unsigned port) const;
 
-  unsigned nextPort();
+  unsigned nextPort() const;
 
   boost::optional<ModelObject> modelObject(unsigned portIndex) const;
 

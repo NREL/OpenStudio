@@ -31,15 +31,10 @@
 
 #include "LocalBCL.hpp"
 #include "RemoteBCL.hpp"
-#include "BCLComponent.hpp"
-#include "BCLMeasure.hpp"
 
 #include "../core/Assert.hpp"
-#include "../data/Attribute.hpp"
 
-#include <QDomElement>
 
-#include <boost/lexical_cast.hpp>
 
 namespace openstudio{
 

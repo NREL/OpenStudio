@@ -33,9 +33,7 @@
 
 #include "../idd/IddObject.hpp"
 
-#include "../core/Compare.hpp"
 #include "../core/Assert.hpp"
-#include "../core/Optional.hpp"
 
 namespace openstudio {
 

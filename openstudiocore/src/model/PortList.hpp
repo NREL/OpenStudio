@@ -70,11 +70,11 @@ class MODEL_API PortList : public ModelObject {
    *  Consider that a "port" is simply an unsigned, so
    *  port and port index share the same type, but they do not share the same value.
    */
-  unsigned portIndex(unsigned port);
+  unsigned portIndex(unsigned port) const;
 
   /** Returns the next available port.  This will be the first port
    *  with no connected objects */
-  unsigned nextPort();
+  unsigned nextPort() const;
 
   /** Returns the optional ModelObject connected to the port designated by portIndex.
    *  If there is no connected object then the optional will be false.

@@ -42,7 +42,7 @@ TEST_F(GeometryFixture, FloorplanJS)
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
   ASSERT_TRUE(exists(p));
 
-  std::ifstream ifs(toString(p));
+  std::ifstream ifs(toSystemFilename(p));
   EXPECT_TRUE(ifs.is_open());
 
   std::istreambuf_iterator<char> eos;

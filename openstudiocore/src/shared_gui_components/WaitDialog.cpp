@@ -63,13 +63,11 @@ QSize WaitDialog::sizeHint() const
 
 void WaitDialog::createWidgets()
 {
-  QLabel * label = nullptr;
 
   upperLayout()->addStretch();
 
-  label = new QLabel(m_windowMessage);
-  label->setObjectName("H2");
-  upperLayout()->addWidget(label,0,Qt::AlignCenter);
+  m_firstLine = new QLabel();
+  upperLayout()->addWidget(m_firstLine, 0, Qt::AlignCenter);
 
   //BusyWidget * busyWidget = new BusyWidget();
   //upperLayout()->addWidget(busyWidget,0,Qt::AlignCenter);
@@ -78,9 +76,17 @@ void WaitDialog::createWidgets()
   //connect(timer,SIGNAL(timeout()),busyWidget,SLOT(rotate()));
   //timer->start(50);
 
-  label = new QLabel("This may take a minute...");
-  label->setObjectName("H2");
-  upperLayout()->addWidget(label,0,Qt::AlignCenter);
+  m_secondLine = new QLabel();
+  upperLayout()->addWidget(m_secondLine, 0, Qt::AlignCenter);
+
+  m_thirdLine = new QLabel();
+  upperLayout()->addWidget(m_thirdLine, 0, Qt::AlignCenter);
+
+  m_fourthLine = new QLabel();
+  upperLayout()->addWidget(m_fourthLine, 0, Qt::AlignCenter);
+
+  // Will populate label text and set visible state + objectname for styling
+  resetLabels();
 
   upperLayout()->addStretch();
 
@@ -96,6 +102,26 @@ void WaitDialog::createWidgets()
   #elif defined(Q_OS_WIN)
     setWindowFlags(Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
   #endif
+
+}
+
+void WaitDialog::resetLabels() {
+  m_firstLine->setText(m_windowMessage);
+  m_firstLine->setObjectName("H2");
+  m_firstLine->setVisible(true);
+
+  m_secondLine->setText("This may take a minute...");
+  m_secondLine->setObjectName("H2");
+  m_secondLine->setVisible(true);
+
+  // Third and fourth line, disabled by default
+  m_thirdLine->setText("");
+  m_thirdLine->setObjectName("H2");
+  m_thirdLine->setVisible(false);
+
+  m_fourthLine->setText("");
+  m_fourthLine->setObjectName("H3");
+  m_fourthLine->setVisible(false);
 
 }
 

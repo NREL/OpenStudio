@@ -87,12 +87,12 @@ namespace detail {
     return CoilCoolingFourPipeBeam::iddObjectType();
   }
 
-  unsigned CoilCoolingFourPipeBeam_Impl::inletPort()
+  unsigned CoilCoolingFourPipeBeam_Impl::inletPort() const
   {
     return OS_Coil_Cooling_FourPipeBeamFields::ChilledWaterInletNodeName;
   }
 
-  unsigned CoilCoolingFourPipeBeam_Impl::outletPort()
+  unsigned CoilCoolingFourPipeBeam_Impl::outletPort() const
   {
     return OS_Coil_Cooling_FourPipeBeamFields::ChilledWaterOutletNodeName;
   }

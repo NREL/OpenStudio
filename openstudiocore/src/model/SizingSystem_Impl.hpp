@@ -63,6 +63,9 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   virtual IddObjectType iddObjectType() const override;
 
+  virtual bool setParent(ParentObject& newParent) override;
+
+
   std::string typeofLoadtoSizeOn() const;
 
   bool isTypeofLoadtoSizeOnDefaulted() const;

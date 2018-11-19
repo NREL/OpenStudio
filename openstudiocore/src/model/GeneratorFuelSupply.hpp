@@ -48,6 +48,28 @@ namespace detail {
 
 } // detail
 
+
+/** This class implements a constituent */
+class FuelSupplyConstituent {
+ public:
+  FuelSupplyConstituent(std::string constituentName, double molarFraction);
+
+  std::string constituentName() const;
+  double molarFraction() const;
+
+  static bool isValid(std::string constituentName);
+  static std::vector<std::string> constituentNameValues();
+  static std::vector<std::string> validConstituentNameValues();
+
+ private:
+  std::string m_name;
+  double m_molarFraction;
+  REGISTER_LOGGER("openstudio.model.FuelSupplyConstituent");
+};
+
+// Overload operator<<
+std::ostream& operator<< (std::ostream& out, const openstudio::model::FuelSupplyConstituent& constituent);
+
 /** GeneratorFuelSupply is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelSupply'. */
 class MODEL_API GeneratorFuelSupply : public ModelObject {
  public:
@@ -70,13 +92,16 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
 
   //extensible fields
 
+  bool addConstituent(const FuelSupplyConstituent& constituent);
+  // Convenience function to add a constituent without explicitly creating a FuelSupplyConstituent
   bool addConstituent(std::string name, double molarFraction);
 
+  // TODO: this should return bool (to indicate whether groupIndex is valid...)
   void removeConstituent(int groupIndex);
 
   void removeAllConstituents();
 
-  std::vector< std::pair<std::string, double> > constituents();
+  std::vector<FuelSupplyConstituent> constituents() const;
 
   /** @name Getters */
   //@{
@@ -101,10 +126,14 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
 
   boost::optional<double> liquidGenericFuelCO2EmissionFactor() const;
 
+  // TODO: this should be non optional
   boost::optional<unsigned int> numberofConstituentsinGaseousConstituentFuelSupply() const;
 
+  // Convenience function to check that it's equal to 1.0 (If no constituents, returns 0 and warns)
+  double sumofConstituentsMolarFractions() const;
+
   // Return optional parent generator
-  GeneratorFuelCell fuelCell() const;
+  boost::optional<GeneratorFuelCell> fuelCell() const;
 
   //@}
   /** @name Setters */
@@ -148,9 +177,9 @@ class MODEL_API GeneratorFuelSupply : public ModelObject {
 
   void resetLiquidGenericFuelCO2EmissionFactor();
 
-  bool setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply);
-
-  void resetNumberofConstituentsinGaseousConstituentFuelSupply();
+  // Automatically handled by addConstituent, removeConstituent
+  // bool setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply);
+  // void resetNumberofConstituentsinGaseousConstituentFuelSupply();
 
 
   //@}

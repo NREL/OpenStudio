@@ -75,6 +75,15 @@ namespace detail {
     return SizingPlant::iddObjectType();
   }
 
+  bool SizingPlant_Impl::setParent(ParentObject& newParent)
+  {
+    bool result = false;
+    if( boost::optional<PlantLoop> plantLoop = newParent.optionalCast<PlantLoop>()){
+      result = this->setPlantLoop(plantLoop.get());
+    }
+    return result;
+  }
+
   PlantLoop SizingPlant_Impl::plantLoop() const {
     boost::optional<PlantLoop> value = optionalPlantLoop();
     if (!value) {

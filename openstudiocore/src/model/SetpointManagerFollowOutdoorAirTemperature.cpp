@@ -80,14 +80,9 @@ namespace detail{
     return SetpointManagerFollowOutdoorAirTemperature::iddObjectType();
   }
 
-  bool SetpointManagerFollowOutdoorAirTemperature_Impl::addToNode(Node & node) {
-    bool added = SetpointManager_Impl::addToNode( node );
-    if( added ) {
-      return added;
-    } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
-      return this->setSetpointNode(node);
-    }
-    return added;
+  /** This SPM is allowed on a PlantLoop */
+  bool SetpointManagerFollowOutdoorAirTemperature_Impl::isAllowedOnPlantLoop() const {
+    return true;
   }
 
   boost::optional<Node> SetpointManagerFollowOutdoorAirTemperature_Impl::setpointNode() const

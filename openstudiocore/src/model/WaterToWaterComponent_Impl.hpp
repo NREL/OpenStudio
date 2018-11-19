@@ -58,21 +58,21 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
 
   virtual ~WaterToWaterComponent_Impl() {}
 
-  virtual unsigned supplyInletPort() = 0;
+  virtual unsigned supplyInletPort() const = 0;
 
-  virtual unsigned supplyOutletPort() = 0;
+  virtual unsigned supplyOutletPort() const = 0;
 
-  virtual unsigned demandInletPort() = 0;
+  virtual unsigned demandInletPort() const = 0;
 
-  virtual unsigned demandOutletPort() = 0;
+  virtual unsigned demandOutletPort() const = 0;
 
-  virtual boost::optional<ModelObject> supplyInletModelObject();
+  virtual boost::optional<ModelObject> supplyInletModelObject() const;
 
-  virtual boost::optional<ModelObject> supplyOutletModelObject();
+  virtual boost::optional<ModelObject> supplyOutletModelObject() const;
 
-  virtual boost::optional<ModelObject> demandInletModelObject();
+  virtual boost::optional<ModelObject> demandInletModelObject() const;
 
-  virtual boost::optional<ModelObject> demandOutletModelObject();
+  virtual boost::optional<ModelObject> demandOutletModelObject() const;
 
   virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 

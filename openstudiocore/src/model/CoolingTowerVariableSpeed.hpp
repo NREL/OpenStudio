@@ -263,4 +263,4 @@ typedef std::vector<CoolingTowerVariableSpeed> CoolingTowerVariableSpeedVector;
 } // model
 } // openstudio
 
-#endif // MODEL_COOLINGTOWERVARIABLESPEED_HPP
+#endif // MODEL_COOLINGTOWERVARIABLESPEED_HPP

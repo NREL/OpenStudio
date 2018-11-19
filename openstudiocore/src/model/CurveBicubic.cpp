@@ -603,4 +603,4 @@ CurveBicubic::CurveBicubic(std::shared_ptr<detail::CurveBicubic_Impl> impl)
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

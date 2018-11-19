@@ -70,9 +70,12 @@ TEST_F(ModelFixture, FuelCellAirSupply) {
   boost::optional<CurveQuadratic> fuelCurve = airSupply.airRateFunctionofFuelRateCurve();
   ASSERT_TRUE(fuelCurve);
   EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents().get());
-  //should fail since name is wrong
-  ASSERT_FALSE(airSupply.addConstituent("MadeUp", 0.0092));
+
+  //should throw in Ctor of AirSupplyConstituent since name is wrong
+  EXPECT_THROW(airSupply.addConstituent("MadeUp", 0.0092), openstudio::Exception);
   EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents().get());
+
+
   ASSERT_TRUE(airSupply.addConstituent("CarbonDioxide", 0.0003));
   EXPECT_EQ(1, airSupply.numberofUserDefinedConstituents().get());
   ASSERT_TRUE(airSupply.addConstituent("Nitrogen", 0.7728));

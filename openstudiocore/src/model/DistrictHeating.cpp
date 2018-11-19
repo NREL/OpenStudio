@@ -108,12 +108,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned DistrictHeating_Impl::inletPort()
+  unsigned DistrictHeating_Impl::inletPort() const
   {
     return OS_DistrictHeatingFields::HotWaterInletNodeName;
   }
 
-  unsigned DistrictHeating_Impl::outletPort()
+  unsigned DistrictHeating_Impl::outletPort() const
   {
     return OS_DistrictHeatingFields::HotWaterOutletNodeName;
   }
