@@ -35,7 +35,6 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class ElectricEquipmentITEAirCooledDefinition;
 class ElectricEquipmentITEAirCooled;
 class Curve;
@@ -86,16 +85,13 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: ElectricEquipmentITEAirCooledDefinition.
     ElectricEquipmentITEAirCooledDefinition electricEquipmentITEAirCooledDefinition() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     // Return the Design Power Input Schedule. If not specified, default to always 1.
     boost::optional<Schedule> designPowerInputSchedule() const;
 
     bool isDesignPowerInputScheduleDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     // Return the CPU Loading Schedule. If not specified, default to always 1.
     boost::optional<Schedule> cPULoadingSchedule() const;
 
@@ -117,19 +113,16 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: ElectricEquipmentITEAirCooledDefinition.
     bool setElectricEquipmentITEAirCooledDefinition(const ElectricEquipmentITEAirCooledDefinition& electricEquipmentITEAirCooledDefinition);
 
     /** Sets the definition of this instance. */
     virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
   // Note Schedules are passed by reference, not const reference.
     bool setDesignPowerInputSchedule(Schedule& schedule);
 
     void resetDesignPowerInputSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
   // Note Schedules are passed by reference, not const reference.
     bool setCPULoadingSchedule(Schedule& schedule);
 
@@ -174,11 +167,6 @@ namespace detail {
      
    private:
     REGISTER_LOGGER("openstudio.model.ElectricEquipmentITEAirCooled");
-
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
 
     boost::optional<ModelObject> scheduleAsModelObject() const;
     boost::optional<ModelObject> electricEquipmentITEAirCooledDefinitionAsModelObject() const;

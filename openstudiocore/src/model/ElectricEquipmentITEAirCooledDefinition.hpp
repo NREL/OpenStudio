@@ -36,7 +36,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Curve;
 class Connection;
 class Schedule;
@@ -86,7 +85,6 @@ class MODEL_API ElectricEquipmentITEAirCooledDefinition : public SpaceLoadDefini
 
   boost::optional<double> wattsperZoneFloorArea() const;
 
-  // TODO: Check return type. From object lists, some candidates are: BiVariateCurves, BiVariateTables.
   Curve cPUPowerInputFunctionofLoadingandAirTemperatureCurve() const;
 
   double designFanPowerInputFraction() const;
@@ -95,10 +93,8 @@ class MODEL_API ElectricEquipmentITEAirCooledDefinition : public SpaceLoadDefini
 
   boost::optional<double> designFanAirFlowRateperPowerInput() const;
 
-  // TODO: Check return type. From object lists, some candidates are: BiVariateCurves, BiVariateTables.
   Curve airFlowFunctionofLoadingandAirTemperatureCurve() const;
 
-  // TODO: Check return type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
   Curve fanPowerInputFunctionofFlowCurve() const;
 
   double designEnteringAirTemperature() const;
@@ -109,21 +105,16 @@ class MODEL_API ElectricEquipmentITEAirCooledDefinition : public SpaceLoadDefini
 
   std::string airInletConnectionType() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> supplyAirNode() const;
-
   double designRecirculationFraction() const;
 
   bool isDesignRecirculationFractionDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: BiVariateCurves, BiVariateTables.
   boost::optional<Curve> recirculationFunctionofLoadingandSupplyTemperatureCurve() const;
 
   double designElectricPowerSupplyEfficiency() const;
 
   bool isDesignElectricPowerSupplyEfficiencyDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
   boost::optional<Curve> electricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve() const;
 
   double fractionofElectricPowerSupplyLossestoZone() const;
@@ -134,14 +125,12 @@ class MODEL_API ElectricEquipmentITEAirCooledDefinition : public SpaceLoadDefini
 
   bool isSupplyTemperatureDifferenceDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> supplyTemperatureDifferenceSchedule() const;
 
   double returnTemperatureDifference() const;
 
   bool isReturnTemperatureDifferenceDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> returnTemperatureDifferenceSchedule() const;
 
   //@}
@@ -156,7 +145,6 @@ class MODEL_API ElectricEquipmentITEAirCooledDefinition : public SpaceLoadDefini
 
   bool setWattsperZoneFloorArea(double wattsperZoneFloorArea);
 
-  // TODO: Check argument type. From object lists, some candidates are: BiVariateCurves, BiVariateTables.
   bool setCPUPowerInputFunctionofLoadingandAirTemperatureCurve(const Curve& curve);
 
   bool setDesignFanPowerInputFraction(double designFanPowerInputFraction);
@@ -165,10 +153,8 @@ class MODEL_API ElectricEquipmentITEAirCooledDefinition : public SpaceLoadDefini
 
   bool setDesignFanAirFlowRateperPowerInput(double designFanAirFlowRateperPowerInput);
 
-  // TODO: Check argument type. From object lists, some candidates are: BiVariateCurves, BiVariateTables.
   bool setAirFlowFunctionofLoadingandAirTemperatureCurve(const Curve& curve);
 
-  // TODO: Check argument type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
   bool setFanPowerInputFunctionofFlowCurve(const Curve& curve);
 
   void setDesignEnteringAirTemperature(double designEnteringAirTemperature);
@@ -179,16 +165,10 @@ class MODEL_API ElectricEquipmentITEAirCooledDefinition : public SpaceLoadDefini
 
   bool setAirInletConnectionType(const std::string& airInletConnectionType);
 
-  //// TODO: Check argument type. From object lists, some candidates are: Connection.
-  //bool setSupplyAirNode(const Connection& connection);
-
-  //void resetSupplyAirNode();
-
   bool setDesignRecirculationFraction(double designRecirculationFraction);
 
   void resetDesignRecirculationFraction();
 
-  // TODO: Check argument type. From object lists, some candidates are: BiVariateCurves, BiVariateTables.
   bool setRecirculationFunctionofLoadingandSupplyTemperatureCurve(const Curve& curve);
 
   void resetRecirculationFunctionofLoadingandSupplyTemperatureCurve();
@@ -197,7 +177,6 @@ class MODEL_API ElectricEquipmentITEAirCooledDefinition : public SpaceLoadDefini
 
   void resetDesignElectricPowerSupplyEfficiency();
 
-  // TODO: Check argument type. From object lists, some candidates are: UniVariateCurves, UniVariateTables.
   bool setElectricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve(const Curve& curve);
 
   void resetElectricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve();
@@ -210,7 +189,6 @@ class MODEL_API ElectricEquipmentITEAirCooledDefinition : public SpaceLoadDefini
 
   void resetSupplyTemperatureDifference();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   // Note Schedules are passed by reference, not const reference.
   bool setSupplyTemperatureDifferenceSchedule(Schedule& schedule);
 
@@ -220,7 +198,6 @@ class MODEL_API ElectricEquipmentITEAirCooledDefinition : public SpaceLoadDefini
 
   void resetReturnTemperatureDifference();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   // Note Schedules are passed by reference, not const reference.
   bool setReturnTemperatureDifferenceSchedule(Schedule& schedule);
 

@@ -117,8 +117,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooledDefinit
 
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
 
-  model.save(toPath("./ITE_translator_definition.osm"), true);
-  workspace.save(toPath("./ITE_translator_definition.idf"), true);
+  //model.save(toPath("./ITE_translator_definition.osm"), true);
+  //workspace.save(toPath("./ITE_translator_definition.idf"), true);
 
 }
 
@@ -134,8 +134,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_NoSpac
 
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
 
-  model.save(toPath("./ITE_translator_NoSpace.osm"), true);
-  workspace.save(toPath("./ITE_translator_NoSpace.idf"), true);
+  //model.save(toPath("./ITE_translator_NoSpace.osm"), true);
+  //workspace.save(toPath("./ITE_translator_NoSpace.idf"), true);
 
 }
 
@@ -164,8 +164,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Space)
   ASSERT_TRUE(electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneName));
   EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneName)->handle());
 
-  model.save(toPath("./ITE_translator_Space.osm"), true);
-  workspace.save(toPath("./ITE_translator_Space.idf"), true);
+  //model.save(toPath("./ITE_translator_Space.osm"), true);
+  //workspace.save(toPath("./ITE_translator_Space.idf"), true);
 
 }
 
@@ -173,11 +173,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Space)
 TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceType) {
   Model model;
 
-  ThermalZone thermalZone(model);
-  Space space(model);
+  ThermalZone thermalZone1(model);
+  ThermalZone thermalZone2(model);
+  Space space1(model);
+  Space space2(model);
   SpaceType spaceType(model);
-  space.setSpaceType(spaceType);
-  space.setThermalZone(thermalZone);
+  space1.setSpaceType(spaceType);
+  space2.setSpaceType(spaceType);
+  space1.setThermalZone(thermalZone1);
+  space2.setThermalZone(thermalZone2);
 
   ElectricEquipmentITEAirCooledDefinition definition(model);
   ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled(definition);
@@ -186,17 +190,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
+  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
 
   WorkspaceObject electricEquipmentITEAirCooledObject = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled)[0];
   WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
 
   ASSERT_TRUE(electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneName));
-  EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneName)->handle());
+  //EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneName)->handle());
 
-  model.save(toPath("./ITE_translator_SpaceType.osm"), true);
-  workspace.save(toPath("./ITE_translator_SpaceType.idf"), true);
+  //model.save(toPath("./ITE_translator_SpaceType.osm"), true);
+  //workspace.save(toPath("./ITE_translator_SpaceType.idf"), true);
 
 }
 
@@ -258,8 +262,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_OneSpa
   ASSERT_TRUE(electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneName));
   EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneName)->handle());
 
-  model.save(toPath("./ITE_translator_OneSpaceType_OneThermalZone.osm"), true);
-  workspace.save(toPath("./ITE_translator_OneSpaceType_OneThermalZone.idf"), true);
+  //model.save(toPath("./ITE_translator_OneSpaceType_OneThermalZone.osm"), true);
+  //workspace.save(toPath("./ITE_translator_OneSpaceType_OneThermalZone.idf"), true);
 
 }
 
@@ -334,8 +338,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_TwoSpa
   EXPECT_TRUE(foundITEquipmentPower2000);
   EXPECT_TRUE(foundITEquipmentPower3000);
 
-  model.save(toPath("./ITE_translator_TwoSpaceTypes_OneThermalZone.osm"), true);
-  workspace.save(toPath("./ITE_translator_TwoSpaceTypes_OneThermalZone.idf"), true);
+  //model.save(toPath("./ITE_translator_TwoSpaceTypes_OneThermalZone.osm"), true);
+  //workspace.save(toPath("./ITE_translator_TwoSpaceTypes_OneThermalZone.idf"), true);
 
 }
 
@@ -378,8 +382,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Supply
   ASSERT_EQ(nodeName, electricEquipmentITEAirCooledIdfObject.getString(ElectricEquipment_ITE_AirCooledFields::SupplyAirNodeName));
   EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneName)->handle());
 
-  model.save(toPath("./ITE_translator_SupplyAirNodeConnection.osm"), true);
-  workspace.save(toPath("./ITE_translator_SupplyAirNodeConnection.idf"), true);
+  //model.save(toPath("./ITE_translator_SupplyAirNodeConnection.osm"), true);
+  //workspace.save(toPath("./ITE_translator_SupplyAirNodeConnection.idf"), true);
 
 }
 
@@ -421,8 +425,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Constr
   ASSERT_TRUE(electricEquipmentITEAirCooledObject2.getString(ElectricEquipment_ITE_AirCooledFields::AirFlowCalculationMethod, false));
   EXPECT_EQ("FlowControlWithApproachTemperatures", electricEquipmentITEAirCooledObject2.getString(ElectricEquipment_ITE_AirCooledFields::AirFlowCalculationMethod, false).get());
 
-  model.save(toPath("./ITE_translator_constraint1.osm"), true);
-  workspace.save(toPath("./ITE_translator_constraint1.idf"), true);
+  //model.save(toPath("./ITE_translator_constraint1.osm"), true);
+  //workspace.save(toPath("./ITE_translator_constraint1.idf"), true);
 
 }
 
@@ -460,7 +464,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Constr
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
+  // electricEquipmentITEAirCooled2 was not translated because the terminal is not single duct VAV terminal
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
   ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
 
   // should return warning that "The FlowControlWithApproachTemperatures only applies to ITE zones with single duct VAV terminal unit."
@@ -468,10 +473,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Constr
   for (const LogMessage& warning : forwardTranslator.warnings()) {
     warnings += warning.logMessage() + "\n";
   }
-  EXPECT_EQ(1u, forwardTranslator.warnings().size());
-  std::cout << "warnings: " << warnings << "\n";
-  
-  model.save(toPath("./ITE_translator_constraint2.osm"), true);
-  workspace.save(toPath("./ITE_translator_constraint2.idf"), true);
+  std::cout << "Warnings: \n" << warnings;
+
+  //model.save(toPath("./ITE_translator_constraint2.osm"), true);
+  //workspace.save(toPath("./ITE_translator_constraint2.idf"), true);
 
 }

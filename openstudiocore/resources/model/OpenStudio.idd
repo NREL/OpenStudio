@@ -4125,13 +4125,6 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \key AdjustedSupply
        \key ZoneAirNode
        \default AdjustedSupply
-  A10, \field Supply Air Node Name
-       \note Name of the supply air inlet node serving this ITE. Required if the
-       \note Air Node Connection Type = AdjustedSupply. Also required if
-       \note Calculation Method = FlowControlWithApproachTemperatures. Also required if reporting of
-       \note Supply Heat Index is desired.
-       \type object-list
-       \object-list ConnectionNames
   N6,  \field Design Recirculation Fraction
        \note The recirculation fraction for this equipment at design conditions. This field is used only
        \note if the Air Node Connection Type = AdjustedSupply. The default is 0.0 (no recirculation).
@@ -4140,7 +4133,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \minimum 0.0
        \maximum 0.5
        \default 0.0
-  A11, \field Recirculation Function of Loading and Supply Temperature Curve Name
+  A10, \field Recirculation Function of Loading and Supply Temperature Curve Name
        \note The name of a two-variable curve or table lookup object which modifies the recirculation
        \note fractionas a function of CPU loading (x) and supply air node temperature (y).
        \note This curve (table) should equal 1.0 at design conditions (CPU loading = 1.0 and
@@ -4157,7 +4150,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \minimum> 0.0
        \maximum 1.0
        \default 1.0
-  A12, \field Electric Power Supply Efficiency Function of Part Load Ratio Curve Name
+  A11, \field Electric Power Supply Efficiency Function of Part Load Ratio Curve Name
        \note The name of a single-variable curve or table lookup object which modifies the electric
        \note power supply efficiency as a function of part-load ratio (x).
        \note This curve (table) should equal 1.0 at full load (PLR = 1.0).
@@ -4180,7 +4173,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \units deltaC
        \ip-units F
        \default 5.0
-  A13, \field Supply Temperature Difference Schedule
+  A12, \field Supply Temperature Difference Schedule
        \note The difference schedule of the IT inlet temperature from the AHU supply air temperature.
        \note Either Supply Temperature Difference or Supply Temperature Difference Schedule is required if Air Flow Calculation Method is set to FlowControlWithApproachTemperatures.
        \note This field is ignored when Air Flow Calculation Method is FlowFromSystem.
@@ -4194,7 +4187,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \units deltaC
        \ip-units F
        \default 2.0
-  A14; \field Return Temperature Difference Schedule
+  A13; \field Return Temperature Difference Schedule
        \note The difference schedule of the AHU return air temperature from IT outlet temperature.
        \note Either Return Temperature Difference or Return Temperature Difference Schedule is required if Air Flow Calculation Method is set to FlowControlWithApproachTemperatures.
        \note This field is ignored when Air Flow Calculation Method is FlowFromSystem.

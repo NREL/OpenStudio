@@ -29,7 +29,6 @@
 #include "ElectricEquipmentITEAirCooledDefinition.hpp"
 #include "ElectricEquipmentITEAirCooledDefinition_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
 #include "../model/CurveBiquadratic.hpp"
@@ -93,7 +92,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> ElectricEquipmentITEAirCooledDefinition_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -215,10 +213,6 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<Connection> ElectricEquipmentITEAirCooledDefinition_Impl::supplyAirNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::SupplyAirNodeName);
-  }
-
   double ElectricEquipmentITEAirCooledDefinition_Impl::designRecirculationFraction() const {
     boost::optional<double> value = getDouble(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::DesignRecirculationFraction,true);
     OS_ASSERT(value);
@@ -257,7 +251,6 @@ namespace detail {
     return isEmpty(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::FractionofElectricPowerSupplyLossestoZone);
   }
 
-  //TODO: check the default value setting, if the default values are passed correctly. (Situation: OS idd has default but E+ doesn't)
   double ElectricEquipmentITEAirCooledDefinition_Impl::supplyTemperatureDifference() const {
     boost::optional<double> value = getDouble(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::SupplyTemperatureDifference, true);
     OS_ASSERT(value);
@@ -407,16 +400,6 @@ namespace detail {
     return result;
   }
 
-  /*bool ElectricEquipmentITEAirCooledDefinition_Impl::setSupplyAirNode(const Connection& connection) {
-    bool result = setPointer(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::SupplyAirNodeName, connection.handle());
-    return result;
-  }
-
-  void ElectricEquipmentITEAirCooledDefinition_Impl::resetSupplyAirNode() {
-    bool result = setString(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::SupplyAirNodeName, "");
-    OS_ASSERT(result);
-  }*/
-
   bool ElectricEquipmentITEAirCooledDefinition_Impl::setDesignRecirculationFraction(double designRecirculationFraction) {
     bool result = setDouble(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::DesignRecirculationFraction, designRecirculationFraction);
     return result;
@@ -467,14 +450,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  //TODO: check the default value setting, if the default values are passed correctly. (Situation: OS idd has default but E+ doesn't)
   bool ElectricEquipmentITEAirCooledDefinition_Impl::setSupplyTemperatureDifference(double supplyTemperatureDifference) {
     bool result = setDouble(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::SupplyTemperatureDifference, supplyTemperatureDifference);
     OS_ASSERT(result);
     return result;
   }
 
-  //TODO: check the default value setting, if the default values are passed correctly. (Situation: OS idd has default but E+ doesn't)
   void ElectricEquipmentITEAirCooledDefinition_Impl::resetSupplyTemperatureDifference() {
     bool result = setString(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::SupplyTemperatureDifference, "");
     OS_ASSERT(result);
@@ -493,14 +474,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  //TODO: check the default value setting, if the default values are passed correctly. (Situation: OS idd has default but E+ doesn't)
   bool ElectricEquipmentITEAirCooledDefinition_Impl::setReturnTemperatureDifference(double returnTemperatureDifference) {
     bool result = setDouble(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::ReturnTemperatureDifference, returnTemperatureDifference);
     OS_ASSERT(result);
     return result;
   }
 
-  //TODO: check the default value setting, if the default values are passed correctly. (Situation: OS idd has default but E+ doesn't)
   void ElectricEquipmentITEAirCooledDefinition_Impl::resetReturnTemperatureDifference() {
     bool result = setString(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::ReturnTemperatureDifference, "");
     OS_ASSERT(result);
@@ -696,10 +675,6 @@ std::string ElectricEquipmentITEAirCooledDefinition::airInletConnectionType() co
   return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->airInletConnectionType();
 }
 
-boost::optional<Connection> ElectricEquipmentITEAirCooledDefinition::supplyAirNode() const {
-  return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->supplyAirNode();
-}
-
 double ElectricEquipmentITEAirCooledDefinition::designRecirculationFraction() const {
   return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->designRecirculationFraction();
 }
@@ -811,14 +786,6 @@ bool ElectricEquipmentITEAirCooledDefinition::setEnvironmentalClass(const std::s
 bool ElectricEquipmentITEAirCooledDefinition::setAirInletConnectionType(const std::string& airInletConnectionType) {
   return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->setAirInletConnectionType(airInletConnectionType);
 }
-
-//bool ElectricEquipmentITEAirCooledDefinition::setSupplyAirNode(const Connection& connection) {
-//  return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->setSupplyAirNode(connection);
-//}
-//
-//void ElectricEquipmentITEAirCooledDefinition::resetSupplyAirNode() {
-//  getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->resetSupplyAirNode();
-//}
 
 bool ElectricEquipmentITEAirCooledDefinition::setDesignRecirculationFraction(double designRecirculationFraction) {
   return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->setDesignRecirculationFraction(designRecirculationFraction);

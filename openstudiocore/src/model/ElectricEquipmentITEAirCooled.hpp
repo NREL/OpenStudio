@@ -36,7 +36,6 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class ElectricEquipmentITEAirCooledDefinition;
 class Curve;
 class Schedule;
@@ -65,16 +64,13 @@ class MODEL_API ElectricEquipmentITEAirCooled : public SpaceLoadInstance {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: ElectricEquipmentITEAirCooledDefinition.
   ElectricEquipmentITEAirCooledDefinition electricEquipmentITEAirCooledDefinition() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   // Return the Design Power Input Schedule. If not specified, default to always 1.
   boost::optional<Schedule> designPowerInputSchedule() const;
 
   bool isDesignPowerInputScheduleDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   // Return the CPU Loading Schedule. If not specified, default to always 1.
   boost::optional<Schedule> cPULoadingSchedule() const;
 
@@ -96,16 +92,13 @@ class MODEL_API ElectricEquipmentITEAirCooled : public SpaceLoadInstance {
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: ElectricEquipmentITEAirCooledDefinition.
   bool setElectricEquipmentITEAirCooledDefinition(const ElectricEquipmentITEAirCooledDefinition& electricEquipmentITEAirCooledDefinition);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   // Note Schedules are passed by reference, not const reference.
   bool setDesignPowerInputSchedule(Schedule& schedule);
 
   void resetDesignPowerInputSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   // Note Schedules are passed by reference, not const reference.
   bool setCPULoadingSchedule(Schedule& schedule);
 

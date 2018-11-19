@@ -83,7 +83,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_DefaultConstructor1) {
   EXPECT_EQ("None", definition.environmentalClass());
   EXPECT_EQ("AdjustedSupply", definition.airInletConnectionType());
 
-  model.save(toPath("./ITE1.osm"), true);
+  //model.save(toPath("./ITE1.osm"), true);
 
   ASSERT_TRUE(definition.wattsperUnit());
   EXPECT_EQ(0, definition.wattsperUnit().get());
@@ -143,7 +143,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_DefaultConstructor2) {
 
   ASSERT_EQ(5.0, definition.supplyTemperatureDifference());
 
-  model.save(toPath("./ITE2.osm"), true);
+  //model.save(toPath("./ITE2.osm"), true);
 
 }
 
@@ -176,7 +176,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_equipmentLevel) {
   ASSERT_TRUE(definition.setDesignPowerInputCalculationMethod("Watts/Area", electricEquipmentITEAirCooled.floorArea()));
   EXPECT_EQ(0.5, definition.wattsperZoneFloorArea());
 
-  model.save(toPath("./ITE3.osm"), true);
+  //model.save(toPath("./ITE3.osm"), true);
 
 }
 
@@ -194,7 +194,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_FlowControlWithApproachTemper
   ASSERT_TRUE(definition.setSupplyTemperatureDifference(10.0));
   ASSERT_EQ(10.0, definition.supplyTemperatureDifference());
 
-  model.save(toPath("./ITE4.osm"), true);
+  //model.save(toPath("./ITE4.osm"), true);
 
 }
 
@@ -216,7 +216,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_Remove) {
   EXPECT_EQ(1u, model.getModelObjects<ElectricEquipmentITEAirCooledDefinition>().size());
   EXPECT_EQ(4u, model.numObjects());
 
-  model.save(toPath("./ITE5.osm"), true);
+  //model.save(toPath("./ITE5.osm"), true);
 
 }
 
@@ -239,7 +239,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_RemoveDefinition) {
   EXPECT_EQ(0u, model.getModelObjects<ElectricEquipmentITEAirCooledDefinition>().size());
   EXPECT_EQ(3u, model.numObjects());
 
-  model.save(toPath("./ITE6.osm"), true);
+  //model.save(toPath("./ITE6.osm"), true);
 
 }
 
@@ -257,7 +257,7 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_inletportlist) {
   EXPECT_TRUE(thermalZone.addToNode(inletNode));
   EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, singleDuctTerminal));
 
-  m.save(toPath("./ITE7.osm"), true);
+  //m.save(toPath("./ITE7.osm"), true);
 
   std::cout << thermalZone.inletPortList().airLoopHVACModelObject()->optionalCast<Node>()->name().get() << "\n";
 

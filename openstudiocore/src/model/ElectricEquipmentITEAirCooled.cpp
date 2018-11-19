@@ -29,7 +29,6 @@
 #include "ElectricEquipmentITEAirCooled.hpp"
 #include "ElectricEquipmentITEAirCooled_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "ElectricEquipmentITEAirCooledDefinition.hpp"
 #include "ElectricEquipmentITEAirCooledDefinition_Impl.hpp"
 #include "Schedule.hpp"
@@ -155,7 +154,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> ElectricEquipmentITEAirCooled_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -427,7 +425,6 @@ ElectricEquipmentITEAirCooled::ElectricEquipmentITEAirCooled(const ElectricEquip
 {
   OS_ASSERT(getImpl<detail::ElectricEquipmentITEAirCooled_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
   //     OS_ElectricEquipment_ITE_AirCooledFields::ElectricEquipmentITEAirCooledDefinitionName
   bool ok = this->setElectricEquipmentITEAirCooledDefinition(electricEquipmentITEAirCooledDefinition);
   OS_ASSERT(ok);

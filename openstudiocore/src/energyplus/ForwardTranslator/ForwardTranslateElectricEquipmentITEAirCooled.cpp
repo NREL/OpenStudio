@@ -74,7 +74,6 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCooled( ElectricEquipmentITEAirCooled & modelObject )
 {
   IdfObject idfObject(openstudio::IddObjectType::ElectricEquipment_ITE_AirCooled);
-  m_idfObjects.push_back(idfObject);
 
   for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
@@ -133,6 +132,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCo
         if (terminal) {
           if (!terminal->optionalCast<AirTerminalSingleDuctVAVReheat>() && !terminal->optionalCast<AirTerminalSingleDuctVAVNoReheat>()) {
             LOG(Warn, modelObject.briefDescription() << " The FlowControlWithApproachTemperatures only applies to ITE zones with single duct VAV terminal unit.");
+            return boost::none;
           }
         }
       }
@@ -142,6 +142,8 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCo
     LOG(Warn, modelObject.briefDescription() << " not assigned to a valid space.");
   } // end of pre-process
 
+  // After pre-checking gets through, add the object to the translation list
+  m_idfObjects.push_back(idfObject);
 
   idfObject.setString(ElectricEquipment_ITE_AirCooledFields::Name, modelObject.name().get());
 
@@ -177,9 +179,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCo
 
   idfObject.setString(ElectricEquipment_ITE_AirCooledFields::CPUPowerInputFunctionofLoadingandAirTemperatureCurveName, definition.cPUPowerInputFunctionofLoadingandAirTemperatureCurve().name().get());
 
-  if (!definition.isDesignFanPowerInputFractionDefaulted()) {
-    idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::DesignFanPowerInputFraction, definition.designFanPowerInputFraction());
-  }
+  idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::DesignFanPowerInputFraction, definition.designFanPowerInputFraction());
 
   d = definition.designFanAirFlowRateperPowerInput();
   if (d) {
@@ -190,35 +190,27 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCo
 
   idfObject.setString(ElectricEquipment_ITE_AirCooledFields::FanPowerInputFunctionofFlowCurveName, definition.fanPowerInputFunctionofFlowCurve().name().get());
 
-  if (!definition.isDesignEnteringAirTemperatureDefaulted()) {
-    idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::DesignEnteringAirTemperature, definition.designEnteringAirTemperature());
-  }
+  idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::DesignEnteringAirTemperature, definition.designEnteringAirTemperature());
 
   idfObject.setString(ElectricEquipment_ITE_AirCooledFields::EnvironmentalClass, definition.environmentalClass());
 
   idfObject.setString(ElectricEquipment_ITE_AirCooledFields::AirInletConnectionType, definition.airInletConnectionType());
 
-  if (!definition.isDesignRecirculationFractionDefaulted()) {
-    idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::DesignRecirculationFraction, definition.designRecirculationFraction());
-  }
+  idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::DesignRecirculationFraction, definition.designRecirculationFraction());
 
   boost::optional<Curve> recirculationFunctionofLoadingandSupplyTemperatureCurve = definition.recirculationFunctionofLoadingandSupplyTemperatureCurve();
   if (recirculationFunctionofLoadingandSupplyTemperatureCurve) {
     idfObject.setString(ElectricEquipment_ITE_AirCooledFields::RecirculationFunctionofLoadingandSupplyTemperatureCurveName, recirculationFunctionofLoadingandSupplyTemperatureCurve->name().get());
   }
 
-  if (!definition.isDesignElectricPowerSupplyEfficiencyDefaulted()) {
-    idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::DesignElectricPowerSupplyEfficiency, definition.designElectricPowerSupplyEfficiency());
-  }
+  idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::DesignElectricPowerSupplyEfficiency, definition.designElectricPowerSupplyEfficiency());
 
   boost::optional<Curve> electricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve = definition.electricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve();
   if (electricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve) {
     idfObject.setString(ElectricEquipment_ITE_AirCooledFields::ElectricPowerSupplyEfficiencyFunctionofPartLoadRatioCurveName, electricPowerSupplyEfficiencyFunctionofPartLoadRatioCurve->name().get());
   }
 
-  if (!definition.isFractionofElectricPowerSupplyLossestoZoneDefaulted()) {
-    idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::FractionofElectricPowerSupplyLossestoZone, definition.fractionofElectricPowerSupplyLossestoZone());
-  }
+  idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::FractionofElectricPowerSupplyLossestoZone, definition.fractionofElectricPowerSupplyLossestoZone());
 
   OptionalString s = modelObject.cPUEndUseSubcategory();
   if (s) {
@@ -235,18 +227,14 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCo
     idfObject.setString(ElectricEquipment_ITE_AirCooledFields::ElectricPowerSupplyEndUseSubcategory, modelObject.electricPowerSupplyEndUseSubcategory());
   }
 
-  if (!definition.isSupplyTemperatureDifferenceDefaulted()) {
-    idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::SupplyTemperatureDifference, definition.supplyTemperatureDifference());
-  }
+  idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::SupplyTemperatureDifference, definition.supplyTemperatureDifference());
 
   boost::optional<Schedule> supplyTemperatureDifferenceSchedule = definition.supplyTemperatureDifferenceSchedule();
   if (supplyTemperatureDifferenceSchedule) {
     idfObject.setString(ElectricEquipment_ITE_AirCooledFields::SupplyTemperatureDifferenceSchedule, supplyTemperatureDifferenceSchedule->name().get());
   }
 
-  if (!definition.isReturnTemperatureDifferenceDefaulted()) {
-    idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::ReturnTemperatureDifference, definition.returnTemperatureDifference());
-  }
+  idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::ReturnTemperatureDifference, definition.returnTemperatureDifference());
 
   boost::optional<Schedule> returnTemperatureDifferenceSchedule = definition.returnTemperatureDifferenceSchedule();
   if (returnTemperatureDifferenceSchedule) {
