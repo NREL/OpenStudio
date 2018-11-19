@@ -953,7 +953,7 @@ namespace detail {
       }
     }
 
-    if ((numRoof > 0) * (numFloor > 0)){
+    if ((numRoof > 0) && (numFloor > 0)){
       roofHeight /= numRoof;
       floorHeight /= numFloor;
       result = (roofHeight - floorHeight) * this->floorArea();

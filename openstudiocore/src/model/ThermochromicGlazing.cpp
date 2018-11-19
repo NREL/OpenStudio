@@ -151,9 +151,10 @@ namespace detail {
   }
 
   double ThermochromicGlazing_Impl::opticalDataTemperature() const {
-    boost::optional<double> value = getDouble(OS_WindowMaterial_GlazingGroup_ThermochromicExtensibleFields::OpticalDataTemperature,false); // no default
-    //OS_ASSERT(value); TODO
-    //return value.get(); TODO
+    // TODO
+    // boost::optional<double> value = getDouble(OS_WindowMaterial_GlazingGroup_ThermochromicExtensibleFields::OpticalDataTemperature,false); // no default
+    //OS_ASSERT(value);
+    //return value.get();
     return 0;
   }
 
