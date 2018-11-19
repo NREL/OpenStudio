@@ -136,7 +136,8 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
   try{
     BCLMeasure measure("Test Measure", className, dir, "Envelope.Fenestration",
                        MeasureType::ModelMeasure, "Description", "Modeler Description");
-  }catch(std::exception&){
+  }catch(const std::exception &e){
+    LOG_FREE(Error, "BCLFixture", "exception during measure creation: " << e.what());
     ASSERT_TRUE(false);
   }
   ASSERT_TRUE(exists(dir));

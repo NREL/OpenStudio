@@ -33,8 +33,8 @@
 #include "../core/Assert.hpp"
 #include "../time/DateTime.hpp"
 #include "../core/PathHelpers.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
-#include <QDir>
 #include <QIcon>
 #include <QInputDialog>
 #include <QSettings>
@@ -45,23 +45,21 @@
 namespace openstudio{
 
   LocalBCL::LocalBCL(const path& libraryPath):
-    m_libraryPath(QDir().cleanPath(toQString(libraryPath))),
-    m_dbName(QString("/components.sql")),
+    m_libraryPath(libraryPath.lexically_normal()),
+    m_dbName(openstudio::toPath("components.sql")),
     dbVersion("1.3")
   {
     //Make sure a QApplication exists
     openstudio::Application::instance().application(false);
 
-    QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", m_libraryPath+m_dbName);
-    database.setDatabaseName(m_libraryPath+m_dbName);
+    QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", toQString(dbPath()));
+    database.setDatabaseName(toQString(dbPath()));
 
-    //Check for BCL directory
-    if (!QDir(m_libraryPath).exists())
-    {
-      QDir().mkpath(m_libraryPath);
-    }
+    // path already existing is not an error condition
+    openstudio::filesystem::create_directories(m_libraryPath);
+
     //Check for local database
-    if (!openstudio::filesystem::exists(openstudio::toPath(m_libraryPath+m_dbName)))
+    if (!openstudio::filesystem::exists(dbPath()))
     {
       initializeLocalDb();
     }
@@ -91,6 +89,16 @@ namespace openstudio{
     }
   }
 
+  openstudio::filesystem::path LocalBCL::dbPath() const
+  {
+    return m_libraryPath / m_dbName;
+  }
+
+  QSqlDatabase LocalBCL::getDatabase(const bool open) const {
+    return QSqlDatabase::database(toQString(dbPath()), open);
+  }
+
+
   // http://sqlite.org/faq.html#q14
   QString LocalBCL::escape(const std::string& s) const
   {
@@ -103,8 +111,8 @@ namespace openstudio{
     if (!ptr) {
       QSettings settings("OpenStudio", "LocalBCL");
       // DLM: might want to put this somewhere a little more hidden
-      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(toPath(settings.value("libraryPath",
-        QDir::homePath().append("/BCL")).toString())));
+      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(
+          toPath(settings.value("libraryPath", toQString(openstudio::filesystem::home_path() / toPath("BCL"))).toString())));
     }
     return *ptr;
   }
@@ -117,7 +125,7 @@ namespace openstudio{
     }
     else
     {
-      if (ptr->libraryPath() != toQString(libraryPath)) {
+      if (ptr->libraryPath() != libraryPath) {
         ptr.reset();
         ptr = std::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
       }
@@ -138,23 +146,23 @@ namespace openstudio{
 
   LocalBCL::~LocalBCL()
   {
-    // we cannot cleanup if the driver has already bee
+    // we cannot cleanup if the driver has already been
     if (QSqlDatabase::isDriverAvailable("QSQLITE"))
     {
       {
-        QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName, false);
+        auto database = getDatabase(false);
         if (database.isValid() && database.isOpen())
         {
           database.close();
         }
       }
-      QSqlDatabase::removeDatabase(m_libraryPath+m_dbName);
+      QSqlDatabase::removeDatabase(toQString(dbPath()));
     }
   }
 
   bool LocalBCL::initializeLocalDb()
   {
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     if (database.open())
     {
       QSqlQuery query(database);
@@ -184,7 +192,7 @@ namespace openstudio{
 
   bool LocalBCL::updateLocalDb()
   {
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     QSqlQuery query(database);
 
     // If latest version, do nothing
@@ -253,7 +261,11 @@ namespace openstudio{
 
         query.exec("SELECT uid, version_id, directory FROM Components");
         while (query.next()) {
-          path src = toPath(m_libraryPath + "/" + query.value(0).toString() + "/" + query.value(1).toString() + query.value(2).toString().mid(query.value(2).toString().lastIndexOf("/")));
+          const auto src = m_libraryPath 
+            / toPath(query.value(0).toString()) 
+            / toPath(query.value(1).toString()) 
+            / toPath(query.value(2).toString().mid(query.value(2).toString().lastIndexOf("/")));
+
           path dest = src.parent_path();
           openstudio::filesystem::remove(dest / toPath("DISCLAIMER.txt"));
           openstudio::filesystem::remove(dest / toPath("README.txt"));
@@ -286,7 +298,7 @@ namespace openstudio{
 
   boost::optional<BCLComponent> LocalBCL::getComponent(const std::string& uid, const std::string& versionId) const
   {
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     QSqlQuery query(database);
     if (versionId.empty())
     {
@@ -307,7 +319,7 @@ namespace openstudio{
 
   boost::optional<BCLMeasure> LocalBCL::getMeasure(const std::string& uid, const std::string& versionId) const
   {
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     QSqlQuery query(database);
     if (versionId.empty())
     {
@@ -318,7 +330,7 @@ namespace openstudio{
       while (query.next())
       {
         try{
-          BCLMeasure measure(toPath(m_libraryPath) / toPath(uid) / toPath(toString(query.value(0).toString())));
+          BCLMeasure measure(m_libraryPath / toPath(uid) / toPath(toString(query.value(0).toString())));
 
           boost::optional<DateTime> versionModified = measure.versionModified();
           if (mostRecentModified){
@@ -340,7 +352,7 @@ namespace openstudio{
     if (query.next())
     {
       try{
-        return boost::optional<BCLMeasure>(toPath(m_libraryPath) / toPath(uid) / toPath(versionId));
+        return boost::optional<BCLMeasure>(m_libraryPath / toPath(uid) / toPath(versionId));
       }catch(const std::exception&){
       }
     }
@@ -350,13 +362,13 @@ namespace openstudio{
   std::vector<BCLComponent> LocalBCL::components() const
   {
     std::vector<BCLComponent> allComponents;
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     QSqlQuery query(database);
     query.exec("SELECT uid, version_id FROM Components");
     while (query.next())
     {
       // DLM: this does not look like it is handling error of missing file correctly
-      boost::optional<BCLComponent> current(toString(toPath(m_libraryPath) / toPath(query.value(0).toString()) / toPath(query.value(1).toString())));
+      boost::optional<BCLComponent> current(toString(m_libraryPath / toPath(query.value(0).toString()) / toPath(query.value(1).toString())));
       if (current)
       {
         allComponents.push_back(*current);
@@ -368,12 +380,12 @@ namespace openstudio{
   std::vector<BCLMeasure> LocalBCL::measures() const
   {
     std::vector<BCLMeasure> allMeasures;
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     QSqlQuery query(database);
     query.exec("SELECT uid, version_id FROM Measures");
     while (query.next())
     {
-      boost::optional<BCLMeasure> current = BCLMeasure::load(toPath(m_libraryPath) / toPath(query.value(0).toString()) / toPath(query.value(1).toString()));
+      boost::optional<BCLMeasure> current = BCLMeasure::load(m_libraryPath / toPath(query.value(0).toString()) / toPath(query.value(1).toString()));
       if (current)
       {
         allMeasures.push_back(*current);
@@ -385,7 +397,7 @@ namespace openstudio{
   std::vector<std::string> LocalBCL::measureUids() const
   {
     std::vector<std::string> uids;
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     QSqlQuery query(database);
     query.exec("SELECT DISTINCT uid FROM Measures");
     while (query.next())
@@ -399,13 +411,13 @@ namespace openstudio{
     const std::string& componentType) const
   {
     std::vector<BCLComponent> results;
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     QSqlQuery query(database);
     query.exec(toQString("SELECT uid, version_id FROM Components where name LIKE \"%"+searchTerm+"%\" OR description LIKE \"%"+searchTerm+"%\""));
     while (query.next())
     {
       // DLM: this does not look like it is handling error of missing file correctly
-      boost::optional<BCLComponent> current(toString(toPath(m_libraryPath) / toPath(query.value(0).toString()) / toPath(query.value(1).toString())));
+      boost::optional<BCLComponent> current(toString(m_libraryPath / toPath(query.value(0).toString()) / toPath(query.value(1).toString())));
       if (current)
       {
         results.push_back(*current);
@@ -424,13 +436,13 @@ namespace openstudio{
     const std::string& componentType) const
   {
     std::vector<BCLMeasure> results;
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     QSqlQuery query(database);
     query.exec(toQString("SELECT uid, version_id FROM Measures where name LIKE \"%"+searchTerm+"%\""
       "OR description LIKE \"%"+searchTerm+"%\" OR modeler_description LIKE \"%"+searchTerm+"%\""));
     while (query.next())
     {
-      boost::optional<BCLMeasure> current = BCLMeasure::load(toPath(m_libraryPath) / toPath(query.value(0).toString()) / toPath(query.value(1).toString()));
+      boost::optional<BCLMeasure> current = BCLMeasure::load(m_libraryPath / toPath(query.value(0).toString()) / toPath(query.value(1).toString()));
       if (current)
       {
         results.push_back(*current);
@@ -449,7 +461,7 @@ namespace openstudio{
 
   bool LocalBCL::addComponent(BCLComponent& component)
   {
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     QSqlQuery query(database);
     //Check for uid
     if (!component.uid().empty() && !component.versionId().empty())
@@ -522,17 +534,15 @@ namespace openstudio{
     }
 
     // proceed deleting component
-    openstudio::path pathToRemove = toPath(m_libraryPath) / toPath(component.uid()) / toPath(component.versionId());
-    QDir dir(toQString(pathToRemove.parent_path()));
-    dir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
-    // Only one versionId, delete the uid directory
-    if (dir.entryInfoList().size() == 1)
+    openstudio::path pathToRemove = m_libraryPath / toPath(component.uid()) / toPath(component.versionId());
+    if (openstudio::filesystem::directory_directories(pathToRemove).size() == 1)
     {
+      // Only one versionId, delete the uid directory
       pathToRemove = pathToRemove.parent_path();
     }
     removeDirectory(pathToRemove);
 
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     QSqlQuery query(database);
     bool test = query.exec(QString("DELETE FROM Components WHERE uid='%1' AND version_id='%2'").arg(escape(component.uid()),
       escape(component.versionId())));
@@ -551,7 +561,7 @@ namespace openstudio{
 
   bool LocalBCL::addMeasure(BCLMeasure& measure)
   {
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     QSqlQuery query(database);
     //Check for uid
     if (!measure.uid().empty() && !measure.versionId().empty())
@@ -624,17 +634,15 @@ namespace openstudio{
     }
 
     // proceed deleting measure
-    openstudio::path pathToRemove = toPath(m_libraryPath) / toPath(measure.uid()) / toPath(measure.versionId());
-    QDir dir(toQString(pathToRemove.parent_path()));
-    dir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
-    // Only one versionId, delete the uid directory
-    if (dir.entryInfoList().size() == 1)
+    openstudio::path pathToRemove = m_libraryPath / toPath(measure.uid()) / toPath(measure.versionId());
+    if (openstudio::filesystem::directory_directories(pathToRemove).size() == 1)
     {
+      // Only one versionId, delete the uid directory
       pathToRemove = pathToRemove.parent_path();
     }
     removeDirectory(pathToRemove);
 
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     QSqlQuery query(database);
     bool test = query.exec(QString("DELETE FROM Measures WHERE uid='%1' AND version_id='%2'").arg(escape(measure.uid()),
       escape(measure.versionId())));
@@ -698,7 +706,7 @@ namespace openstudio{
     typedef std::set<std::pair<std::string, std::string> > UidsType;
 
     UidsType uids;
-    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    auto database = getDatabase();
     QSqlQuery query(database);
     std::string tableName = componentType == "component" ? "Components" : componentType == "measure" ? "Measures" : "";
     query.exec(toQString("SELECT DISTINCT uid, version_id FROM " + tableName));
@@ -827,7 +835,7 @@ namespace openstudio{
     {
       m_prodAuthKey = authKey;
       //Overwrite prodAuthKey in database
-      QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+      auto database = getDatabase();
       QSqlQuery query(database);
       return query.exec(QString("UPDATE Settings SET data='%1' WHERE name='prodAuthKey'").arg(escape(authKey)));
     }
@@ -846,42 +854,43 @@ namespace openstudio{
     {
       m_devAuthKey = authKey;
       //Overwrite devAuthKey in database
-      QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+      auto database = getDatabase();
       QSqlQuery query(database);
       return query.exec(QString("UPDATE Settings SET data='%1' WHERE name='devAuthKey'").arg(escape(authKey)));
     }
     return false;
   }
 
-  QString LocalBCL::libraryPath() const
+  openstudio::path LocalBCL::libraryPath() const
   {
     return m_libraryPath;
   }
 
-  bool LocalBCL::setLibraryPath(const std::string& libraryPath)
+  bool LocalBCL::setLibraryPath(const openstudio::path& libraryPath)
   {
     //cleanup old straggling one if it exists
-    QSqlDatabase::removeDatabase(m_libraryPath+m_dbName);
+    auto database = getDatabase();
 
-    QString path = QDir().cleanPath(toQString(libraryPath));
-    if (!QDir(path).exists())
+    const auto path = libraryPath.lexically_normal();
+    openstudio::filesystem::create_directories(path);
+    if (!openstudio::filesystem::is_directory(path))
     {
-      bool success = QDir().mkpath(path);
+      const bool success = openstudio::filesystem::create_directories(path);
       if (!success) return false;
     }
     m_libraryPath = path;
 
-    if (!openstudio::filesystem::exists(openstudio::toPath(path+m_dbName)))
+    if (!openstudio::filesystem::exists(dbPath()))
     {
-      QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", path+m_dbName);
-      database.setDatabaseName(path+m_dbName);
+      QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", toQString(dbPath()));
+      database.setDatabaseName(toQString(dbPath()));
 
       bool success = initializeLocalDb();
       if (!success) return false;
     }
 
     QSettings settings("OpenStudio", "LocalBCL");
-    settings.setValue("libraryPath", path);
+    settings.setValue("libraryPath", toQString(path));
 
     return true;
   }

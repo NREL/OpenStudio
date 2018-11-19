@@ -32,8 +32,6 @@
 
 #include "RubyException.hpp"
 
-#include <QDir>
-
 // SWIGRubyRuntime.hxx includes ruby.h which includes ruby/win32.h, which has some brain damaged notions of
 // what standard errno values should be. We solved this in systemoutliner with some creative
 // compilation firewalls and opaque types and such. We don't have quite as much flexibility here
@@ -904,9 +902,9 @@ end # module OpenStudio
           int error;
 
           // save and restore the current working directory in case the call to ruby upsets it
-          QDir cwd = QDir::current();
+          const auto cwd = openstudio::filesystem::current_path();
           rb_protect(evaluateSimpleImpl,val,&error);
-          QDir::setCurrent(cwd.dirName());
+          openstudio::filesystem::current_path(cwd);
 
 
           if (error != 0)

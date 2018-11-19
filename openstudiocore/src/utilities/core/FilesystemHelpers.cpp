@@ -89,33 +89,47 @@ namespace openstudio {
         return result;
       }
 
-    std::vector<openstudio::path> directory_files(const openstudio::path &t_path)
-    {
-      std::vector<openstudio::path> files;
 
-      const auto num_path_elems = [&](){
-        const auto distance = std::distance(t_path.begin(), t_path.end());
-        if (openstudio::toString(t_path.filename()) == ".") {
-          return distance - 1;
-        } else {
-          return distance;
-        }
-      }();
-
-      for (auto dir_itr = openstudio::filesystem::directory_iterator(t_path);
-           dir_itr != openstudio::filesystem::directory_iterator();
-           ++dir_itr)
+    template<typename Predicate>
+      std::vector<openstudio::path> directory_elements(const openstudio::path &t_path, Predicate predicate)
       {
-        // skip the path so these names are all relative
-        const auto p = dir_itr->path();
-        if (openstudio::filesystem::is_regular_file(p)) {
-          files.push_back(rebuild_path(advance_itr_copy(p.begin(), num_path_elems), p.end()));
-          LOG_FREE(Debug, "FilesystemHelpers", "directory_file '" << openstudio::toString(p) << "' -> '" << openstudio::toString(files.back()) << "'");
+        std::vector<openstudio::path> files;
+
+        const auto num_path_elems = [&](){
+          const auto distance = std::distance(t_path.begin(), t_path.end());
+          if (openstudio::toString(t_path.filename()) == ".") {
+            return distance - 1;
+          } else {
+            return distance;
+          }
+        }();
+
+        for (auto dir_itr = openstudio::filesystem::directory_iterator(t_path);
+            dir_itr != openstudio::filesystem::directory_iterator();
+            ++dir_itr)
+        {
+          // skip the path so these names are all relative
+          const auto p = dir_itr->path();
+          if (predicate(p)) {
+            files.push_back(rebuild_path(advance_itr_copy(p.begin(), num_path_elems), p.end()));
+            LOG_FREE(Debug, "FilesystemHelpers", 
+                "directory_elements '" << openstudio::toString(p) << "' -> '" << openstudio::toString(files.back()) << "'");
+          }
         }
+
+        return files;
       }
 
-      return files;
+    std::vector<openstudio::path> directory_files(const openstudio::path &t_path)
+    {
+      return directory_elements(t_path, [](const auto &f) { return openstudio::filesystem::is_regular_file(f); } );
     }
+
+    std::vector<openstudio::path> directory_directories(const openstudio::path &t_path)
+    {
+      return directory_elements(t_path, [](const auto &f) { return openstudio::filesystem::is_directory(f); } );
+    }
+
 
     std::vector<openstudio::path> recursive_directory_files(const openstudio::path &t_path)
     {
@@ -204,6 +218,49 @@ namespace openstudio {
 
       // after too many attempts we never made a path
       return {};
+    }
+
+
+    openstudio::path home_path()
+    {
+      const auto build_path = [](const auto & ... elem) {
+        auto path_elem = [](auto &missing, const auto & env_var) {
+          if (const auto var = std::getenv(env_var); var != nullptr) {
+            return toPath(var);
+          } else {
+            missing = true;
+            return openstudio::path{};
+          }
+        };
+
+        bool missing_element = false;
+
+        const auto path = (path_elem(missing_element, elem) / ...).lexically_normal();
+
+        if (!missing_element && openstudio::filesystem::is_directory(path)) {
+          return path;
+        } else {
+          return openstudio::path{};
+        }
+      };
+
+      if (const auto home = build_path("USERPROFILE"); !home.empty()) {
+        LOG_FREE(Info, "FilesystemHelpers", "home_path USERPROFILE: " << toString(home));
+        return home;
+      }
+
+      if (const auto home = build_path("HOMEDRIVE", "HOMEPATH"); !home.empty()) {
+        LOG_FREE(Info, "FilesystemHelpers", "home_path HOMEDRIVE/HOMEPATH: " << toString(home));
+        return home;
+      }
+
+      if (const auto home = build_path("HOME"); !home.empty()) {
+        LOG_FREE(Info, "FilesystemHelpers", "home_path HOME: " << toString(home));
+        return home;
+      }
+
+      LOG_FREE(Warn, "FilesystemHelpers", "home_path No Home Found");
+      return toPath("/");
     }
   }
 }

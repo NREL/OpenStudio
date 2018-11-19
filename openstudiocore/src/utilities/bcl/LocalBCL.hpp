@@ -150,10 +150,14 @@ namespace openstudio{
     bool setDevAuthKey(const std::string& devAuthKey);
 
     /// Returns the path to the local BCL library
-    QString libraryPath() const;
+    openstudio::path libraryPath() const;
 
     /// Relocates the local BCL library, stores the library path in user preferences
-    bool setLibraryPath(const std::string& libraryPath);
+    bool setLibraryPath(const openstudio::path& libraryPath);
+
+    /// returns the fully qualified path of the current database file
+    openstudio::filesystem::path dbPath() const;
+
 
     //@}
   private:
@@ -161,8 +165,8 @@ namespace openstudio{
     /// private constructor
     LocalBCL(const path& libraryPath);
 
-    // no body on purpose, do not want this generated
-    LocalBCL(const LocalBCL& other);
+    /// Explicitly not copyable
+    LocalBCL(const LocalBCL& other) = delete;
 
     bool initializeLocalDb();
 
@@ -179,10 +183,14 @@ namespace openstudio{
 
     std::string formatString(double d, uint prec = 15);
 
+    /// returns the current database referenced by the current file
+    QSqlDatabase getDatabase(const bool open = true) const;
+
+
     static std::shared_ptr<LocalBCL> &instanceInternal();
 
-    QString m_libraryPath;
-    const QString m_dbName;
+    openstudio::path m_libraryPath;
+    const openstudio::path m_dbName;
     QString dbVersion;
     std::string m_prodAuthKey;
     std::string m_devAuthKey;
