@@ -431,4 +431,4 @@ ZoneHVACEnergyRecoveryVentilatorController::ZoneHVACEnergyRecoveryVentilatorCont
 /// @endcond
 
 } // model
-} // openstudio
+} // openstudio

@@ -29,7 +29,6 @@
 
 #include "BCLComponent.hpp"
 #include "../core/System.hpp"
-#include "../data/Attribute.hpp"
 #include "../core/FilesystemHelpers.hpp"
 
 #include <QDomDocument>

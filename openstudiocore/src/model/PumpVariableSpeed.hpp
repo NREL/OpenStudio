@@ -335,4 +335,4 @@ typedef std::vector<PumpVariableSpeed> PumpVariableSpeedVector;
 } // model
 } // openstudio
 
-#endif // MODEL_PUMPVARIABLESPEED_HPP
+#endif // MODEL_PUMPVARIABLESPEED_HPP

@@ -68,6 +68,19 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual unsigned supplyInletPort() const override;
+
+    virtual unsigned supplyOutletPort() const override;
+
+    virtual unsigned demandInletPort() const override;
+
+    virtual unsigned demandOutletPort() const override;
+
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
     //@}
     /** @name Getters */
     //@{
@@ -118,17 +131,13 @@ namespace detail {
 
     boost::optional<HeatPumpWaterToWaterEquationFitHeating> companionHeatingHeatPump() const;
 
-  boost::optional<double> autosizedReferenceLoadSideFlowRate() const ;
+    boost::optional<double> autosizedReferenceLoadSideFlowRate() const ;
 
-  boost::optional<double> autosizedReferenceSourceSideFlowRate() const ;
+    boost::optional<double> autosizedReferenceSourceSideFlowRate() const ;
 
-  boost::optional<double> autosizedRatedCoolingCapacity() const ;
+    boost::optional<double> autosizedRatedCoolingCapacity() const ;
 
-  boost::optional<double> autosizedRatedCoolingPowerConsumption() const;
-
-  virtual void autosize() override;
-
-  virtual void applySizingValues() override;
+    boost::optional<double> autosizedRatedCoolingPowerConsumption() const;
 
     //@}
     /** @name Setters */
@@ -179,14 +188,6 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-
-    virtual unsigned supplyInletPort() override;
-
-    virtual unsigned supplyOutletPort() override;
-
-    virtual unsigned demandInletPort() override;
-
-    virtual unsigned demandOutletPort() override;
 
     //@}
    protected:

@@ -310,4 +310,4 @@ typedef std::vector<EvaporativeFluidCoolerTwoSpeed> EvaporativeFluidCoolerTwoSpe
 } // model
 } // openstudio
 
-#endif // MODEL_EVAPORATIVEFLUIDCOOLERTWOSPEED_HPP
+#endif // MODEL_EVAPORATIVEFLUIDCOOLERTWOSPEED_HPP

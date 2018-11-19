@@ -588,8 +588,8 @@ endif()
 # to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
 # next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20181010.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e07e5bd74ab643f7ed9f0e013db8c2d0")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20181114.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "9269ecc31aae33a0a23eccdf2f56988e")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -711,11 +711,12 @@ else()
 endif()
 
 
+# using forked version of SWIG at https://github.com/macumber/swig/tree/openstudio_swig_3_0_12
 if(UNIX)
   # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
   ExternalProject_Add(SWIG
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.7.tar.gz
-    URL_MD5 7fff46c84b8c630ede5b0f0827e3d90a
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.12.tar.gz
+    URL_MD5 a7d384966974ed79455a455b517ad83d
     PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/../dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && ./Tools/pcre-build.sh
     CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
     BUILD_COMMAND ${MAKE}
@@ -725,9 +726,9 @@ if(UNIX)
   set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
 else()
   # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
-  set(SWIG_ZIP "swigwin-3.0.7.zip")
-  set(SWIG_DIR "swigwin-3.0.7")
-  set(SWIG_EXPECTED_HASH "d8b5a9ce49c819cc1bfc1e797b85ba7a")
+  set(SWIG_ZIP "swigwin-3.0.12.zip")
+  set(SWIG_DIR "swigwin-3.0.12")
+  set(SWIG_EXPECTED_HASH "8ee412d1278ba3cac22e58f26a842918")
   if(EXISTS "${CMAKE_BINARY_DIR}/${SWIG_ZIP}")
     file(MD5 "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" SWIG_HASH)
   endif()

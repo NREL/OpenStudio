@@ -1862,6 +1862,7 @@ set(${target_name}_test_src
   test/LightingSimulationControl_GTest.cpp
   test/LightingSimulationZone_GTest.cpp
   test/Lights_GTest.cpp
+  test/Loop_GTest.cpp
   test/Luminaire_GTest.cpp
   test/MasslessOpaqueMaterial_GTest.cpp
   test/Material_GTest.cpp

@@ -227,4 +227,4 @@ typedef std::vector<ChillerAbsorptionIndirect> ChillerAbsorptionIndirectVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CHILLERABSORPTIONINDIRECT_HPP
+#endif // MODEL_CHILLERABSORPTIONINDIRECT_HPP

@@ -87,12 +87,12 @@ const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableName
     return CoilHeatingFourPipeBeam::iddObjectType();
   }
 
-  unsigned CoilHeatingFourPipeBeam_Impl::inletPort()
+  unsigned CoilHeatingFourPipeBeam_Impl::inletPort() const
   {
     return OS_Coil_Heating_FourPipeBeamFields::HotWaterInletNodeName;
   }
 
-  unsigned CoilHeatingFourPipeBeam_Impl::outletPort()
+  unsigned CoilHeatingFourPipeBeam_Impl::outletPort() const
   {
     return OS_Coil_Heating_FourPipeBeamFields::HotWaterOutletNodeName;
   }
@@ -160,9 +160,7 @@ const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableName
   /* Nodes */
 
   boost::optional<Node> CoilHeatingFourPipeBeam_Impl::hotWaterInletNode() const {
-    // TODO: use this once port methods are set to const
-    // unsigned port = inletPort();
-    unsigned port = OS_Coil_Heating_FourPipeBeamFields::HotWaterInletNodeName;
+    unsigned port = inletPort();
     boost::optional<ModelObject> mo = connectedObject(port);
     boost::optional<Node> result;
 
@@ -178,9 +176,7 @@ const std::vector<std::string>& CoilHeatingFourPipeBeam_Impl::outputVariableName
   }
 
   boost::optional<Node> CoilHeatingFourPipeBeam_Impl::hotWaterOutletNode() const {
-    // TODO: use this once port methods are set to const
-    // unsigned port = outletPort();
-    unsigned port = OS_Coil_Heating_FourPipeBeamFields::HotWaterOutletNodeName;
+    unsigned port = outletPort();
 
     boost::optional<ModelObject> mo = connectedObject(port);
     boost::optional<Node> result;

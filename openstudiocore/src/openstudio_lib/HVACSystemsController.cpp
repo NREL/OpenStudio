@@ -900,6 +900,11 @@ void HVACSystemsController::addToModel(AddToModelEnum addToModelEnum)
 
       break;
     }
+    case ADDTOMODEL_SHWLOOP:
+    {
+      loop = model::addSHWLoop(m_model);
+      break;
+    }
     case ADDTOMODEL_SYSTEM_TYPE_3:
     {
       loop = model::addSystemType3(m_model);

@@ -125,8 +125,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.6.1")] = &VersionTranslator::update_2_6_0_to_2_6_1;
   m_updateMethods[VersionString("2.6.2")] = &VersionTranslator::update_2_6_1_to_2_6_2;
   m_updateMethods[VersionString("2.7.0")] = &VersionTranslator::update_2_6_2_to_2_7_0;
-  m_updateMethods[VersionString("2.7.1")] = &VersionTranslator::defaultUpdate;
-  //
+  m_updateMethods[VersionString("2.7.1")] = &VersionTranslator::update_2_7_0_to_2_7_1;
+  // m_updateMethods[VersionString("2.7.2")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -4009,10 +4009,12 @@ std::string VersionTranslator::update_2_4_3_to_2_5_0(const IdfFile& idf_2_4_3, c
 
 std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, const IddFileAndFactoryWrapper& idd_2_6_1) {
   std::stringstream ss;
+  boost::optional<std::string> value;
 
   ss << idf_2_6_0.header() << std::endl << std::endl;
   IdfFile targetIdf(idd_2_6_1.iddFile());
   ss << targetIdf.versionObject().get();
+
 
   struct ConnectionInfo {
     std::string zoneHandle;
@@ -4026,7 +4028,7 @@ std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, c
   auto zones = idf_2_6_0.getObjectsByType(idf_2_6_0.iddFile().getObject("OS:ThermalZone").get());
   for ( auto & zone : zones ) {
     // index 12 is the handle of a connection that will need fixing
-    auto value = zone.getString(12);
+    value = zone.getString(12);
     if ( value ) {
       ConnectionInfo info;
       info.zoneHandle = zone.getString(0).get();
@@ -4049,7 +4051,7 @@ std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, c
       newReturnPortList.setString(2,object.getString(0).get());
 
       for ( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
-        auto value = object.getString(i);
+        value = object.getString(i);
         if ( value ) {
           if ( i == 12 ) {
             auto eg = newReturnPortList.pushExtensibleGroup();
@@ -4067,13 +4069,13 @@ std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, c
       ss << newObject;
       ss << newReturnPortList;
     } else if ( iddname == "OS:Connection" ) {
-      auto value = object.getString(0);
+      value = object.getString(0);
       OS_ASSERT(value);
       auto c = connectionsToFix.find(value.get());
       if ( c != connectionsToFix.end() ) {
         IdfObject newConnection(idd_2_6_1.getObject("OS:Connection").get());
         for ( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
-          auto value = object.getString(i);
+          value = object.getString(i);
           if ( value ) {
             newConnection.setString(i, value.get());
           }
@@ -4087,7 +4089,7 @@ std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, c
       } else {
         ss << object;
       }
-
+    // No-op
     } else {
       ss << object;
     }
@@ -4357,6 +4359,46 @@ std::string VersionTranslator::update_2_6_2_to_2_7_0(const IdfFile& idf_2_6_2, c
   }
 
   return ss.str();
+}
+
+std::string VersionTranslator::update_2_7_0_to_2_7_1(const IdfFile& idf_2_7_0, const IddFileAndFactoryWrapper& idd_2_7_1) {
+  std::stringstream ss;
+  boost::optional<std::string> value;
+
+  ss << idf_2_7_0.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_7_1.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_2_7_0.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if ( iddname == "OS:Sizing:System" ) {
+      // Note JM 2018-11-05:
+      // We deprecated the 'Latent' option which is no longer used by E+ (and hasn't been for a long time)
+      // It should have produced a crash anyways before, but if we find 'Latent', we replace by 'Total'
+      // Why did I choose 'Total' and not 'Sensible' (or VentilationRequirement)?
+      // 'Sensible' is the default choice, but if the user had picked 'Latent', they probably didn't want 'Sensible', so I went with 'Total' instead.
+      value = object.getString(2);
+      if( value && istringEqual(value.get(), "Latent") ) {
+        IdfObject newObject = object.clone(true);
+        newObject.setString(2, "Total");
+        LOG(Warn, "OS:Sizing:System does not support 'Latent' as 'Type of Load To Size On'. "
+               << "It was replaced by 'Total' instead for object with handle '"
+               << newObject.getString(0).get() << "'. Please review carefully.");
+
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newObject) );
+        ss << newObject;
+      } else {
+        // Nothing to do here
+        ss << object;
+      }
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+
 }
 
 } // osversion

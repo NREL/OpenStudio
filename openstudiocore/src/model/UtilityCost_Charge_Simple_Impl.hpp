@@ -96,4 +96,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_CHARGE_SIMPLE_IMPL_HPP
+#endif // MODEL_UTILITYCOST_CHARGE_SIMPLE_IMPL_HPP

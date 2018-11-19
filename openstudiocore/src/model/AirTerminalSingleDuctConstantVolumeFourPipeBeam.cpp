@@ -245,12 +245,12 @@ namespace detail {
     return result;
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::inletPort()
+  unsigned AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::outletPort()
+  unsigned AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirOutletNodeName;
   }
@@ -382,9 +382,7 @@ namespace detail {
 
   /* Air Nodes */
   boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::primaryAirInletNode() const {
-    // TODO: Use this once port methods are set to const
-    // unsigned port = inletPort();
-    unsigned port = OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirInletNodeName;
+    unsigned port = inletPort();
     boost::optional<ModelObject> mo = connectedObject(port);
     boost::optional<Node> result;
     if( mo )
@@ -398,9 +396,7 @@ namespace detail {
   }
 
   boost::optional<Node> AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl::primaryAirOutletNode() const {
-    // TODO: use this once port methods are set to const
-    // unsigned port = outletPort();
-    unsigned port = OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeamFields::PrimaryAirOutletNodeName;
+    unsigned port = outletPort();
     boost::optional<ModelObject> mo = connectedObject(port);
     boost::optional<Node> result;
 

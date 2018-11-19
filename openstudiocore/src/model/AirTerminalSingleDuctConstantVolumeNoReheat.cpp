@@ -127,12 +127,12 @@ namespace detail{
     return result;
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeNoReheat_Impl::inletPort()
+  unsigned AirTerminalSingleDuctConstantVolumeNoReheat_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctConstantVolumeNoReheat_Impl::outletPort()
+  unsigned AirTerminalSingleDuctConstantVolumeNoReheat_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::AirOutletNodeName;
   }

@@ -45,20 +45,6 @@ namespace detail {
   /** SizingPlant_Impl is a ModelObject_Impl that is the implementation class for SizingPlant.*/
   class MODEL_API SizingPlant_Impl : public ModelObject_Impl {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public:
 
     SizingPlant_Impl(const IdfObject& idfObject,
@@ -78,6 +64,8 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
+
+    virtual bool setParent(ParentObject& newParent) override;
 
     PlantLoop plantLoop() const;
 

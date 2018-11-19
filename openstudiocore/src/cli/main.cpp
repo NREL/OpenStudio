@@ -495,6 +495,11 @@ int main(int argc, char *argv[])
    init_openstudio_internal();
   }
 
+  // DLM: this will interpret any strings passed on the command line as UTF-8
+  // can we be smarter and detect the correct encoding?
+  // might want to follow ruby and allow '--external-encoding=UTF-8' as an input argument?
+  rb_enc_set_default_external(rb_enc_from_encoding(rb_utf8_encoding()));
+
   // chop off the first argument which is the exe path/name
   ruby_set_argv(argc - 1,argv + 1);
 

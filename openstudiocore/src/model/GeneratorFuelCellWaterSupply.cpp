@@ -96,21 +96,6 @@ namespace detail {
     return GeneratorFuelCellWaterSupply::iddObjectType();
   }
 
-  // This will clone both the GeneratorFuelCellWaterSupply and its linked GeneratorFuelCell
-  // and will return a reference to the GeneratorFuelCellWaterSupply
-  ModelObject GeneratorFuelCellWaterSupply_Impl::clone(Model model) const {
-
-    // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
-    GeneratorFuelCell fs = fuelCell();
-    GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
-
-    // We get the clone of the parent generator's GeneratorFuelCellWaterSupply so we can return that
-    GeneratorFuelCellWaterSupply hxClone = fsClone.waterSupply();
-
-
-    return hxClone;
-  }
-
   std::vector<IddObjectType> GeneratorFuelCellWaterSupply_Impl::allowableChildTypes() const {
     std::vector<IddObjectType> result;
     result.push_back(IddObjectType::OS_Curve_Cubic);
@@ -135,20 +120,21 @@ namespace detail {
   }
 
   // Get the parent GeneratorFuelCell
-  GeneratorFuelCell GeneratorFuelCellWaterSupply_Impl::fuelCell() const {
+  boost::optional<GeneratorFuelCell> GeneratorFuelCellWaterSupply_Impl::fuelCell() const {
 
-    boost::optional<GeneratorFuelCell> value;
-    for (const GeneratorFuelCell& fc : this->model().getConcreteModelObjects<GeneratorFuelCell>()) {
-      if (boost::optional<GeneratorFuelCellWaterSupply> fcHX = fc.waterSupply()) {
-        if (fcHX->handle() == this->handle()) {
-          value = fc;
-        }
+    boost::optional<GeneratorFuelCell> fc;
+    // We use getModelObjectSources to check if more than one
+    std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
+
+    if( fcs.size() > 0u) {
+      if( fcs.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
       }
+      fc = fcs[0];
     }
-    OS_ASSERT(value);
-    return value.get();
-
+    return fc;
   }
+
   std::vector<ScheduleTypeKey> GeneratorFuelCellWaterSupply_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
     std::vector<ScheduleTypeKey> result;
@@ -481,7 +467,7 @@ void GeneratorFuelCellWaterSupply::resetWaterTemperatureSchedule() {
   getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->resetWaterTemperatureSchedule();
 }
 
-GeneratorFuelCell GeneratorFuelCellWaterSupply::fuelCell() const {
+boost::optional<GeneratorFuelCell> GeneratorFuelCellWaterSupply::fuelCell() const {
   return getImpl<detail::GeneratorFuelCellWaterSupply_Impl>()->fuelCell();
 }
 

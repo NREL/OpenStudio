@@ -32,7 +32,6 @@
 
 #include "../utilities/core/Assert.hpp"
 
-#include "../utilities/data/Attribute.hpp"
 
 #include <jsoncpp/json.h>
 

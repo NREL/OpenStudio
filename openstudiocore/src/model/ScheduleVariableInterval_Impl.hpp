@@ -128,4 +128,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_SCHEDULEVARIABLEINTERVAL_IMPL_HPP
+#endif // MODEL_SCHEDULEVARIABLEINTERVAL_IMPL_HPP

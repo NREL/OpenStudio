@@ -71,7 +71,9 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual bool addToNode(Node & node) override;
+    // virtual bool addToNode(Node & node) override;
+
+    virtual bool isAllowedOnPlantLoop() const override;
 
     //@}
     /** @name Getters */

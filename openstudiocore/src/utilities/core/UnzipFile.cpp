@@ -28,11 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "UnzipFile.hpp"
-#include "FilesystemHelpers.hpp"
-#include <zlib/zconf.h>
-#include <zlib/zlib.h>
 #include <zlib/contrib/minizip/unzip.h>
-#include <fstream>
 
 
 #include <QDir>

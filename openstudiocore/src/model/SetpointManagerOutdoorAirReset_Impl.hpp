@@ -47,44 +47,6 @@ namespace detail {
   /** SetpointManagerOutdoorAirReset_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerOutdoorAirReset.*/
   class MODEL_API SetpointManagerOutdoorAirReset_Impl : public SetpointManager_Impl {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -113,7 +75,9 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual bool addToNode(Node & node) override;
+    // virtual bool addToNode(Node & node) override;
+
+    virtual bool isAllowedOnPlantLoop() const override;
 
     //@}
     /** @name Getters */
@@ -256,4 +220,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_SETPOINTMANAGEROUTDOORAIRRESET_IMPL_HPP
+#endif // MODEL_SETPOINTMANAGEROUTDOORAIRRESET_IMPL_HPP

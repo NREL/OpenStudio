@@ -68,10 +68,10 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned supplyInletPort() override;
-    virtual unsigned supplyOutletPort() override;
-    virtual unsigned demandInletPort() override;
-    virtual unsigned demandOutletPort() override;
+    virtual unsigned supplyInletPort() const override;
+    virtual unsigned supplyOutletPort() const override;
+    virtual unsigned demandInletPort() const override;
+    virtual unsigned demandOutletPort() const override;
     virtual unsigned tertiaryInletPort() const override;
     virtual unsigned tertiaryOutletPort() const override;
 
@@ -240,4 +240,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CHILLERABSORPTIONINDIRECT_IMPL_HPP
+#endif // MODEL_CHILLERABSORPTIONINDIRECT_IMPL_HPP

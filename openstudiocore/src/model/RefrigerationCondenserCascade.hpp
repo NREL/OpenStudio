@@ -137,4 +137,4 @@ typedef std::vector<RefrigerationCondenserCascade> RefrigerationCondenserCascade
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONCONDENSERCASCADE_HPP
+#endif // MODEL_REFRIGERATIONCONDENSERCASCADE_HPP
