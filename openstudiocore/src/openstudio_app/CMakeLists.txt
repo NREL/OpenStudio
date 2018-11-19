@@ -86,8 +86,6 @@ endif()
 add_custom_command(TARGET ${target_name}
   POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${target_name}>/platforms/
-  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${target_name}>/sqldrivers/
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QSQLiteDriverPlugin> $<TARGET_FILE_DIR:${target_name}>/sqldrivers/
   #COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${target_name}>/sceneparsers/
   #COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::GLTFSceneParserPlugin> $<TARGET_FILE_DIR:${target_name}>/sceneparsers/
   #COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::AssimpParserPlugin> $<TARGET_FILE_DIR:${target_name}>/sceneparsers/
@@ -117,7 +115,6 @@ elseif( UNIX )
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Qt5XcbQpaLib} $<TARGET_FILE_DIR:${target_name}>/
     COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/platforms/$<TARGET_FILE_NAME:Qt5::QXcbIntegrationPlugin>
     COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/xcbglintegrations/$<TARGET_FILE_NAME:Qt5::QXcbGlxIntegrationPlugin>
-    COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/sqldrivers/$<TARGET_FILE_NAME:Qt5::QSQLiteDriverPlugin>
     #COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/sceneparsers/$<TARGET_FILE_NAME:Qt5::GLTFSceneParserPlugin>
     #COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/sceneparsers/$<TARGET_FILE_NAME:Qt5::AssimpParserPlugin>
     VERBATIM
@@ -264,14 +261,12 @@ if( NOT APPLE )
   if(WIN32)
     install(PROGRAMS ${QtWebEngineProcess} DESTINATION bin COMPONENT OpenStudioApp )
     install(PROGRAMS $<TARGET_FILE:Qt5::QWindowsIntegrationPlugin> DESTINATION bin/platforms/ COMPONENT OpenStudioApp)
-    install(PROGRAMS $<TARGET_FILE:Qt5::QSQLiteDriverPlugin> DESTINATION bin/sqldrivers/ COMPONENT OpenStudioApp)
     #install(PROGRAMS $<TARGET_FILE:Qt5::GLTFSceneParserPlugin> DESTINATION bin/sceneparsers/ COMPONENT OpenStudioApp)
     #install(PROGRAMS $<TARGET_FILE:Qt5::AssimpParserPlugin> DESTINATION bin/sceneparsers/ COMPONENT OpenStudioApp)
   elseif(UNIX)
     install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/QtWebEngineProcess DESTINATION bin/ COMPONENT OpenStudioApp)
     install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/platforms/$<TARGET_FILE_NAME:Qt5::QXcbIntegrationPlugin> DESTINATION bin/platforms/ COMPONENT OpenStudioApp)
     install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/xcbglintegrations/$<TARGET_FILE_NAME:Qt5::QXcbGlxIntegrationPlugin> DESTINATION bin/xcbglintegrations/ COMPONENT OpenStudioApp)
-    install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/sqldrivers/$<TARGET_FILE_NAME:Qt5::QSQLiteDriverPlugin> DESTINATION bin/sqldrivers/ COMPONENT OpenStudioApp)
     #install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/sceneparsers/$<TARGET_FILE_NAME:Qt5::GLTFSceneParserPlugin> DESTINATION bin/sceneparsers/ COMPONENT OpenStudioApp)
     #install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/sceneparsers/$<TARGET_FILE_NAME:Qt5::AssimpParserPlugin> DESTINATION bin/sceneparsers/ COMPONENT OpenStudioApp)
     install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/libQt5XcbQpa.so.5 DESTINATION bin/ COMPONENT OpenStudioApp)
@@ -288,7 +283,6 @@ endif()
 
 if( APPLE )
   list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/libqcocoa.dylib")
-  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sqldrivers/libqsqlite.dylib")
   #list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sceneparsers/libgltfsceneparser.dylib")
   #list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sceneparsers/libassimpsceneparser.dylib")
   install(DIRECTORY ${QtWebEngineProcess} DESTINATION "OpenStudioApp.app/Contents/Frameworks/QtWebEngineCore.framework/Versions/5/Helpers/" COMPONENT OpenStudioApp USE_SOURCE_PERMISSIONS)
