@@ -202,7 +202,7 @@ namespace openstudio {
       while (attempts < allowed_attempts) {
         // concat number to path basename, without adding a new path element
         auto filename = basename;
-        filename += openstudio::toPath("-" + std::to_string(count++));
+        filename += openstudio::toPath("-" + std::to_string(std::time(nullptr)) + "-" + std::to_string(count++));
         const auto full_pathname = temp_dir / filename;
         // full_path_name = {temp_path}/{base_name}-{count++}
 
@@ -226,7 +226,9 @@ namespace openstudio {
       const auto build_path = [](const auto & ... elem) {
         auto path_elem = [](auto &missing, const auto & env_var) {
           if (const auto var = std::getenv(env_var); var != nullptr) {
-            return toPath(var);
+            const auto path = toPath(var);
+            if (path.empty()) { missing = true; }
+            return path;
           } else {
             missing = true;
             return openstudio::path{};
@@ -235,6 +237,7 @@ namespace openstudio {
 
         bool missing_element = false;
 
+        // build up the path from the environment variable names passed in.
         const auto path = (path_elem(missing_element, elem) / ...).lexically_normal();
 
         if (!missing_element && openstudio::filesystem::is_directory(path)) {
@@ -245,17 +248,17 @@ namespace openstudio {
       };
 
       if (const auto home = build_path("USERPROFILE"); !home.empty()) {
-        LOG_FREE(Info, "FilesystemHelpers", "home_path USERPROFILE: " << toString(home));
+        LOG_FREE(Debug, "FilesystemHelpers", "home_path USERPROFILE: " << toString(home));
         return home;
       }
 
       if (const auto home = build_path("HOMEDRIVE", "HOMEPATH"); !home.empty()) {
-        LOG_FREE(Info, "FilesystemHelpers", "home_path HOMEDRIVE/HOMEPATH: " << toString(home));
+        LOG_FREE(Debug, "FilesystemHelpers", "home_path HOMEDRIVE/HOMEPATH: " << toString(home));
         return home;
       }
 
       if (const auto home = build_path("HOME"); !home.empty()) {
-        LOG_FREE(Info, "FilesystemHelpers", "home_path HOME: " << toString(home));
+        LOG_FREE(Debug, "FilesystemHelpers", "home_path HOME: " << toString(home));
         return home;
       }
 
