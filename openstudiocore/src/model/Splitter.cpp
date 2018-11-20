@@ -185,7 +185,7 @@ void Splitter_Impl::disconnect()
 
   _model.disconnect(mo, inletPort());
   auto end = nextBranchIndex();
-  for( auto i = 0; i != end; ++i ) {
+  for( unsigned i = 0; i != end; ++i ) {
     _model.disconnect(mo, outletPort(i));
   }
 }

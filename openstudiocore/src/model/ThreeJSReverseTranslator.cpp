@@ -352,7 +352,7 @@ namespace openstudio
         }else if (istringEqual(iddObjectType, "OS:BuildingStory")){
           BuildingStory buildingStory(model);
 
-          boost::optional<unsigned> multiplier = m.multiplier(); // DLM: should we apply multipliers only to Spaces in ThreeJS?
+          // boost::optional<unsigned> multiplier = m.multiplier(); // DLM: should we apply multipliers only to Spaces in ThreeJS?
           boost::optional<double> nominalZCoordinate = m.nominalZCoordinate();
           boost::optional<double> belowFloorPlenumHeight = m.belowFloorPlenumHeight();
           boost::optional<double> floorToCeilingHeight = m.floorToCeilingHeight();
@@ -425,25 +425,25 @@ namespace openstudio
         std::string name = userData.name();
         std::string surfaceType = userData.surfaceType();
         std::string constructionName = userData.constructionName();
-        UUID constructionHandle = toUUID(userData.constructionHandle());
+        // UUID constructionHandle = toUUID(userData.constructionHandle());
         std::string surfaceName = userData.surfaceName();
-        UUID surfaceHandle = toUUID(userData.surfaceHandle());
+        // UUID surfaceHandle = toUUID(userData.surfaceHandle());
         std::string subSurfaceName = userData.subSurfaceName();
-        UUID subSurfaceHandle = toUUID(userData.subSurfaceHandle());
+        // UUID subSurfaceHandle = toUUID(userData.subSurfaceHandle());
         std::string spaceName = userData.spaceName();
-        UUID spaceHandle = toUUID(userData.spaceHandle());
+        // UUID spaceHandle = toUUID(userData.spaceHandle());
         std::string shadingName = userData.shadingName();
-        UUID shadingHandle = toUUID(userData.shadingHandle());
+        // UUID shadingHandle = toUUID(userData.shadingHandle());
         std::string thermalZoneName = userData.thermalZoneName();
-        UUID thermalZoneHandle = toUUID(userData.thermalZoneHandle());
+        // UUID thermalZoneHandle = toUUID(userData.thermalZoneHandle());
         std::string spaceTypeName = userData.spaceTypeName();
-        UUID spaceTypeHandle = toUUID(userData.spaceTypeHandle());
+        // UUID spaceTypeHandle = toUUID(userData.spaceTypeHandle());
         std::string buildingStoryName = userData.buildingStoryName();
-        UUID buildingStoryHandle = toUUID(userData.buildingStoryHandle());
+        // UUID buildingStoryHandle = toUUID(userData.buildingStoryHandle());
         std::string buildingUnitName = userData.buildingUnitName();
-        UUID buildingUnitHandle = toUUID(userData.buildingUnitHandle());
+        // UUID buildingUnitHandle = toUUID(userData.buildingUnitHandle());
         std::string constructionSetName = userData.constructionSetName();
-        UUID constructionSetHandle = toUUID(userData.constructionSetHandle());
+        // UUID constructionSetHandle = toUUID(userData.constructionSetHandle());
         std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
         std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
         std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();

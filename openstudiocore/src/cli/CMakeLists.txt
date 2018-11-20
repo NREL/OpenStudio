@@ -227,11 +227,18 @@ add_executable(openstudio
  ${OUTPUT}
 )
 
+
+# -Wno-deprecated-declaration, /wd4996: suppresses deprecated warning
+# -Wno-register, /wd5033: ISO C++1z does not allow ‘register’ storage class specifier
 if(MSVC)
   set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
+  set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
+else()
+  set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-register")
+  set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-unused-variable" )
 endif()
 
-set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
+
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 

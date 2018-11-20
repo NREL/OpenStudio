@@ -172,10 +172,10 @@ namespace detail {
     auto controllerOutdoorAir = getControllerOutdoorAir().clone(model).cast<ControllerOutdoorAir>();
     oaclone.setControllerOutdoorAir(controllerOutdoorAir);
 
-    oaclone.setString(oaclone.mixedAirPort(),""); 
-    oaclone.setString(oaclone.returnAirPort(),""); 
-    oaclone.setString(oaclone.outdoorAirPort(),""); 
-    oaclone.setString(oaclone.reliefAirPort(),""); 
+    oaclone.setString(oaclone.mixedAirPort(),"");
+    oaclone.setString(oaclone.returnAirPort(),"");
+    oaclone.setString(oaclone.outdoorAirPort(),"");
+    oaclone.setString(oaclone.reliefAirPort(),"");
 
     Node oaNodeClone(model);
     model.connect(oaNodeClone,oaNodeClone.outletPort(),oaclone,oaclone.outdoorAirPort());
@@ -278,7 +278,7 @@ namespace detail {
       OptionalNode sourceModelObject;
       targetModelObject = this->mixedAirModelObject()->optionalCast<Node>();
       sourceModelObject = this->returnAirModelObject()->optionalCast<Node>();
-      OptionalUnsigned targetPort = this->connectedObjectPort(openstudio::OS_AirLoopHVAC_OutdoorAirSystemFields::MixedAirNodeName);
+      // OptionalUnsigned targetPort = this->connectedObjectPort(openstudio::OS_AirLoopHVAC_OutdoorAirSystemFields::MixedAirNodeName);
       OptionalUnsigned sourcePort = this->connectedObjectPort(openstudio::OS_AirLoopHVAC_OutdoorAirSystemFields::ReturnAirStreamNodeName);
 
       OptionalModelObject target2ModelObject = targetModelObject->outletModelObject();
