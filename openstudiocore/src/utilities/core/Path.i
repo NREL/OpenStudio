@@ -21,6 +21,8 @@
   #include <utilities/core/PathHelpers.hpp>
   #include <utilities/core/String.hpp>
 
+  #include <fstream>
+
   namespace openstudio{
 //    #ifdef _WINDOWS
 //      typedef wchar_t PathCharType;
@@ -136,26 +138,6 @@ namespace openstudio {
   // path to a temporary directory.
   path tempDir();
 
-  // path to std::string.
-  // DLM: deprecate in favor of path.to_s
-  std::string toString(const path& p);
-
-  // path to QString.
-  // DLM: deprecate
-  //QString toQString(const path& p);
-
-  // UTF-8 encoded char* to path
-  // DLM: deprecate
-  path toPath(const char* s);
-
-  // UTF-8 encoded std::string to path
-  // DLM: deprecate in favor of Path.new(string)
-  path toPath(const std::string& s);
-
-  // QString to path
-  // DLM: deprecate
-  //path toPath(const QString& q);
-
   // does the path exist
   bool exists(const path& p);
 
@@ -178,6 +160,51 @@ namespace openstudio {
   // complete the path according to system rules and return an absolute path, behavior is not portable
   path system_complete(const path& p);
 
+  #ifdef SWIGCSHARP
+
+    // C# uses UTF-16 encoded strings
+    std::string toString(const path& p)
+    {
+      std::ofstream outfile;
+      outfile.open("out.txt", std::ios_base::app);
+      outfile << "toString p = " << p << std::endl;
+      std::wstring w = p.wstring();
+      std::string s(w.begin(), w.end());
+      outfile << "toString s = " << s << std::endl;
+      outfile.close();
+      return s;
+    }
+
+    // C# uses UTF-16 encoded strings
+    path toPath(const std::string& s)
+    {
+      std::ofstream outfile;
+      outfile.open("out.txt", std::ios_base::app);
+      outfile << "toPath s = " << s << std::endl;
+      std::wstring w(s.begin(), s.end());
+      path* p = new path(w);
+      outfile << "toPath p = " << p << std::endl;
+      outfile.close();
+      return p;
+    }
+
+  #else
+
+    // UTF-8 encoded char* to path
+    // DLM: deprecate
+    path toPath(const char* s);
+
+    // UTF-8 encoded std::string to path
+    // DLM: deprecate in favor of Path.new(string)
+    path toPath(const std::string& s);
+
+    // path to std::string.
+    // DLM: deprecate in favor of path.to_s
+    std::string toString(const path& p);
+
+  #endif
+
+
   %extend path{
 
     // append to path
@@ -190,9 +217,18 @@ namespace openstudio {
       return toString(*self);
     }
 
-    #ifndef SWIGCSHARP
-      // DLM: this generates code that does not compile due to compiler error C2733
-      // I think this may be a SWIG bug, for now users of C# will have to call toPath(string) instead
+    #ifdef SWIGCSHARP
+
+      // C# on Windows uses UTF-16 strings
+      path(const std::string& s) {
+        std::wstring w(s.begin(), s.end());
+        std::cout << "path s = " << s << std::endl;
+        //std::cout << "w = " << w << std::endl;
+        path* p = new path(w);
+        return p;
+      }
+
+    #else
 
       // from char*
       // ensure that we use conversion from string to path
@@ -207,6 +243,7 @@ namespace openstudio {
          path* p = new path(toPath(s));
          return p;
       }
+
     #endif
 
     #ifdef SWIGJAVASCRIPT
