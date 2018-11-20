@@ -33,7 +33,6 @@
 
 #include "PrjModelImpl.hpp"
 
-#include <QFile>
 
 struct ContamResourceInitializer{
   ContamResourceInitializer()

@@ -35,7 +35,6 @@
 #include "../core/System.hpp"
 #include "../core/UnzipFile.hpp"
 
-#include <QFile>
 #include <QMutex>
 #include <QNetworkReply>
 
@@ -62,6 +61,40 @@ namespace openstudio{
   {
     return m_domDocument;
   }
+
+
+  bool RemoteBCL::DownloadFile::open()
+  {
+    OS_ASSERT(!m_fileName.empty());
+    m_ofs.open(toString(m_fileName).c_str(), std::ios_base::trunc | std::ios_base::out);
+    return m_ofs.good();
+  }
+
+  RemoteBCL::DownloadFile::DownloadFile(openstudio::path t_path) 
+    : m_fileName(std::move(t_path))
+  {
+  }
+
+  void RemoteBCL::DownloadFile::flush()
+  {
+    if (m_ofs.good()) { m_ofs.flush(); }
+  }
+
+  const openstudio::path& RemoteBCL::DownloadFile::fileName() const noexcept
+  {
+    return m_fileName;
+  }
+
+  void RemoteBCL::DownloadFile::close()
+  {
+    m_ofs.close();
+  }
+
+  void RemoteBCL::DownloadFile::write(const std::string &data)
+  {
+    m_ofs.write(data.c_str(), data.size());
+  }
+
 
   RemoteBCL::RemoteBCL():
     m_networkManager(new QNetworkAccessManager()),
@@ -596,8 +629,8 @@ namespace openstudio{
       return false;
     }
 
-    m_downloadFile = std::make_shared<QFile>(toQString(openstudio::filesystem::temp_directory_path() / toPath(uid + ".bcl")));
-    if (!m_downloadFile->open(QIODevice::WriteOnly | QIODevice::Truncate)){
+    m_downloadFile = std::make_unique<DownloadFile>(openstudio::filesystem::temp_directory_path() / toPath(uid + ".bcl"));
+    if (!m_downloadFile->open()){
       m_mutex->unlock();
       return false;
     }
@@ -980,7 +1013,9 @@ namespace openstudio{
   void RemoteBCL::downloadData()
   {
     OS_ASSERT(m_downloadReply);
-    m_downloadFile->write(m_downloadReply->readAll());
+    const auto result = m_downloadReply->readAll();
+    const auto string = std::string{result.begin(), result.end()};
+    m_downloadFile->write(string);
   }
 
   void RemoteBCL::onDownloadComplete(QNetworkReply* reply)
@@ -992,7 +1027,7 @@ namespace openstudio{
       m_downloadReply = m_networkManager->get(request);
       connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
     } else {
-      QString fileName = m_downloadFile->fileName();
+      const auto src = m_downloadFile->fileName();
       m_downloadFile->flush();
       m_downloadFile->close();
       std::string componentType;
@@ -1008,7 +1043,6 @@ namespace openstudio{
         }*/
 
           // Extract the files to a temp location
-          openstudio::path src = toPath(fileName);
           openstudio::path tempDest = openstudio::filesystem::temp_directory_path() / toPath(m_downloadUid  + '/');
 
           if (openstudio::filesystem::is_directory(tempDest)) {
@@ -1023,7 +1057,7 @@ namespace openstudio{
           } catch (const std::exception &e) {
             LOG(Error, "Cannot unzip file: " << e.what());
           }
-          QFile::remove(toQString(src));
+          openstudio::filesystem::remove(src);
 
           // search for component.xml or measure.xml file
           boost::optional<openstudio::path> xmlPath;
@@ -1045,9 +1079,9 @@ namespace openstudio{
           if (xmlPath) {
             path src = xmlPath->parent_path();
             path dest = src.parent_path();
-            QFile::remove(toQString(dest / toPath("DISCLAIMER.txt")));
-            QFile::remove(toQString(dest / toPath("README.txt")));
-            QFile::remove(toQString(dest / toPath("output.xml")));
+            openstudio::filesystem::remove(dest / toPath("DISCLAIMER.txt"));
+            openstudio::filesystem::remove(dest / toPath("README.txt"));
+            openstudio::filesystem::remove(dest / toPath("output.xml"));
             copyDirectory(src, dest);
             removeDirectory(src);
 

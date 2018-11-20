@@ -250,8 +250,8 @@ namespace openstudio{
 
     REGISTER_LOGGER("openstudio.RemoteBCL");
 
-    // no body on purpose, do not want this generated
-    RemoteBCL(const RemoteBCL& other);
+    // explicitly deleted copy constructor
+    RemoteBCL(const RemoteBCL& other) = delete;
 
     // DLM: once this actually uses the website it will need a non-blocking implementation
     /// Validate an OAuth key
@@ -281,7 +281,22 @@ namespace openstudio{
 
     boost::optional<RemoteQueryResponse> m_queryResponse;
 
-    std::shared_ptr<QFile> m_downloadFile;
+    struct DownloadFile
+    {
+      DownloadFile(const DownloadFile &) = delete;
+      explicit DownloadFile(openstudio::path);
+      void flush();
+      void close();
+      const openstudio::path &fileName() const noexcept;
+      void write(const std::string &data);
+      bool open();
+
+      private:
+        openstudio::path m_fileName;
+        std::ofstream m_ofs;
+    };
+
+    std::unique_ptr<DownloadFile> m_downloadFile;
 
     std::string m_downloadUid;
 
