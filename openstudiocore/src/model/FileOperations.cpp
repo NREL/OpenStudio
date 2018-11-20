@@ -96,7 +96,7 @@ namespace model {
     const auto dest = openstudio::filesystem::canonical(destinationDir);
 
     if (src == dest) {
-      LOG_FREE(Warning, "Refusing to copy directory '" << toString(sourceDir) << "' only itself '" << toString(destinationDir) 
+      LOG_FREE(Warn, "copyDir", "Refusing to copy directory '" << toString(sourceDir) << "' only itself '" << toString(destinationDir) 
           << "' canonical path: '" << toString(src) << "'");
       return true; // there is no error, just nothing to do
     }
