@@ -4,7 +4,7 @@ project(OpenStudioMeta)
 
 set(CMAKE_VERSION_MAJOR 2)
 set(CMAKE_VERSION_MINOR 7)
-set(CMAKE_VERSION_PATCH 1)
+set(CMAKE_VERSION_PATCH 2)
 
 # Use ccache is available, has to be before "project()"
 find_program(CCACHE_PROGRAM ccache)
