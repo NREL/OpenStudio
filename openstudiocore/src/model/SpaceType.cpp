@@ -304,6 +304,9 @@ namespace detail {
 
       if (boost::optional<Json::Value> _standardsArr = standard.getPrimaryKey(primaryKey)) {
         m_standardsArr = _standardsArr.get();
+      } else {
+        // This should never happen really, until we implement the ability to supply a custom StandardsJSON
+        LOG(Error, "Cannot find the primaryKey '" << primaryKey << "' in the StandardsJSON");
       }
     }
   }
