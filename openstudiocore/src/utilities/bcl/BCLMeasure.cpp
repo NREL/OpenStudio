@@ -40,7 +40,6 @@
 
 #include <QSettings>
 #include <QRegularExpression>
-#include <QFile>
 
 #include <src/utilities/embedded_files.hxx>
 
@@ -321,13 +320,12 @@ namespace openstudio{
     // write test epw
     {
       if (!testEPWString.isEmpty()){
-        QFile file(toQString(testEPWPath));
-        bool opened = file.open(QIODevice::WriteOnly);
-        if (!opened){
+        openstudio::filesystem::ofstream file(testEPWPath);
+        if (!file.good()){
           LOG_AND_THROW("Cannot write test epw file to '" << toString(testEPWPath) << "'");
         }
-        QTextStream textStream(&file);
-        textStream << testEPWString;
+
+        file << toString(testEPWString);
         file.close();
 
         BCLFileReference measureTestEPWFileReference(testEPWPath, true);

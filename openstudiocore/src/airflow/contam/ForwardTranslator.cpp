@@ -99,24 +99,23 @@ static std::string convertDateTime(const DateTime &datetime)
 
 bool CvFile::write(openstudio::path filepath)
 {
-  QFile file(toQString(filepath));
-  if(file.open(QFile::WriteOnly))
+  openstudio::filesystem::ofstream file{filepath};
+  if(file.good())
   {
-    QTextStream textStream(&file);
-    textStream << "ContinuousValuesFile ContamW 2.1\n";
-    textStream << "CVF file from E+ results\n";
-    textStream << month(m_start.monthOfYear()) << '/' << m_start.dayOfMonth() << '\t'
+    file << "ContinuousValuesFile ContamW 2.1\n";
+    file << "CVF file from E+ results\n";
+    file << month(m_start.monthOfYear()) << '/' << m_start.dayOfMonth() << '\t'
       <<  month(m_end.monthOfYear())  << '/' <<  m_end.dayOfMonth()  << '\n';
-    textStream << m_names.size() << '\n';
+    file << m_names.size() << '\n';
     for(unsigned int i=0;i<m_names.size();i++)
     {
-      textStream << m_names[i] << '\n';
+      file << m_names[i] << '\n';
     }
     Time delta(0,1,0,0); // Hard code hourly data for now
     DateTime current(m_start);
     DateTime last = current;
     // Another hard code for 8760 hours, really not sure what to do with 1/1 00:00:00
-    textStream << convertDateTime(current);
+    file << convertDateTime(current);
     for(unsigned int i=0;i<m_names.size();i++)
     {
       double value = m_series[i].value(current+delta); // This works now...
@@ -124,9 +123,9 @@ bool CvFile::write(openstudio::path filepath)
       {
         value += 273.15;
       }
-      textStream << '\t' << value;
+      file << '\t' << value;
     }
-    textStream << '\n';
+    file << '\n';
     // And the big hardcoded loop
     for(int j=0;j<8760;j++)
     {
@@ -134,12 +133,12 @@ bool CvFile::write(openstudio::path filepath)
       // Mess with the time a little bit to put 24:00:00 in for 00:00:00
       if(current.time().hours() == 0 && current.time().minutes() == 0 && current.time().seconds() == 0)
       {
-        textStream << QString().sprintf("%02d/%02d\t24:00:00",month(last.date().monthOfYear()),
+        file << QString().sprintf("%02d/%02d\t24:00:00",month(last.date().monthOfYear()),
           last.date().dayOfMonth()).toStdString();
       }
       else
       {
-        textStream << convertDateTime(current);
+        file << convertDateTime(current);
       }
       last = current;
       // Write out the data. May need more conversion here in the future.
@@ -150,9 +149,9 @@ bool CvFile::write(openstudio::path filepath)
         {
           value += 273.15;
         }
-        textStream << '\t' << value;
+        file << '\t' << value;
       }
-      textStream << '\n';
+      file << '\n';
     }
     file.close();
     return true;
@@ -418,12 +417,10 @@ bool ForwardTranslator::modelToPrj(const openstudio::model::Model& model, const 
     {
       return false;
     }
-    QFile file(toQString(path));
-    if(file.open(QFile::WriteOnly))
+    openstudio::filesystem::ofstream file(path);
+    if(file.good())
     {
-      QTextStream textStream(&file);
-      textStream << *output;
-      file.close();
+      file << *output;
       return true;
     }
   }
