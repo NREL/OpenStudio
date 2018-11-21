@@ -330,7 +330,7 @@ foreach(f ${RUBY_TEST_SRC})
     if(BUILD_TESTING)
       if(MSVC)
         add_test(NAME "CLITest-${FILE_NAME}-${TEST_NAME}"
-          COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>"
+          COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}"
           "$<TARGET_FILE:openstudio>" "${f}" "--name=test_${TEST_NAME}"
         )
       else()
