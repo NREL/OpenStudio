@@ -218,14 +218,30 @@ set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TR
 
 source_group(embedded_files FILES ${OUTPUT})
 
-add_executable(openstudio
- main.cpp
- "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
- RubyException.hpp
- RubyInterpreter.hpp
- "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
- ${OUTPUT}
-)
+if(WIN32)
+  configure_file(openstudio.rc.in "${CMAKE_CURRENT_BINARY_DIR}/openstudio.rc")
+endif()
+
+if(WIN32)
+  add_executable(openstudio
+    main.cpp
+    "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
+    RubyException.hpp
+    RubyInterpreter.hpp
+    "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
+    ${OUTPUT}
+    "${CMAKE_CURRENT_BINARY_DIR}/openstudio.rc"
+  )
+else()
+  add_executable(openstudio
+    main.cpp
+    "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
+    RubyException.hpp
+    RubyInterpreter.hpp
+    "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
+    ${OUTPUT}
+  )
+endif()
 
 
 # -Wno-deprecated-declaration, /wd4996: suppresses deprecated warning
@@ -264,8 +280,6 @@ target_link_libraries(openstudio
  openstudio_radiance_static
 )
 
-
-
 if (UNIX AND NOT APPLE)
   target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} ${EXTENSION_LIBS} dl crypt ssl)
 elseif(WIN32)
@@ -296,7 +310,6 @@ if( BUILD_PAT )
     )
   endif()
 endif()
-
 
 
 # find all tests
