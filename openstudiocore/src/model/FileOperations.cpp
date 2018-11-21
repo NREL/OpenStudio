@@ -88,13 +88,13 @@
 
 namespace openstudio {
 namespace model {
-  bool copyDir(const openstudio::path &sourceDir, const openstudio::path &destinationDir)
+  bool replaceDir(const openstudio::path &sourceDir, const openstudio::path &destinationDir)
   {
     const auto src = openstudio::filesystem::canonical(sourceDir);
     const auto dest = openstudio::filesystem::canonical(destinationDir);
 
     if (src == dest) {
-      LOG_FREE(Warn, "copyDir", "Refusing to copy directory '" << toString(sourceDir) << "' only itself '" << toString(destinationDir) 
+      LOG_FREE(Warn, "replaceDir", "Refusing to copy directory '" << toString(sourceDir) << "' only itself '" << toString(destinationDir) 
           << "' canonical path: '" << toString(src) << "'");
       return true; // there is no error, just nothing to do
     }
@@ -102,17 +102,29 @@ namespace model {
 
     if (!openstudio::filesystem::exists(src) || !openstudio::filesystem::is_directory(src))
     {
-      throw std::runtime_error("Source directory " + src.string() + " does not exist or is not a directory");
+      LOG_FREE(Error, "replaceDir", "Source directory does not exist: " << toString(src));
+      return false;
     }
 
     if (openstudio::filesystem::exists(dest))
     {
-      throw std::runtime_error("Destination directory " + dest.string() + " already exists");
+      if (openstudio::filesystem::is_directory(dest)) {
+        try {
+          openstudio::filesystem::remove_all(dest);
+        } catch (const std::exception &e) {
+          LOG_FREE(Error, "replaceDir", "Destination directory could not be removed: " << toString(dest));
+          return false;
+        }
+      } else {
+        LOG_FREE(Error, "replaceDir", "Destination exists and is not a directory, aborting: " << toString(dest));
+        return false;
+      }
     }
 
     if (!openstudio::filesystem::create_directory(dest))
     {
-      throw std::runtime_error("Cannot create destination directory " + dest.string());
+      LOG_FREE(Error, "replaceDir", "Could not create destination directory: " << toString(dest));
+      return false;
     }
 
     for (const auto& dirEnt : openstudio::filesystem::recursive_directory_iterator{src})
@@ -124,7 +136,7 @@ namespace model {
       try {
         openstudio::filesystem::copy(path, dest / relativePathStr);
       } catch (const std::exception &e) {
-        LOG_FREE(Error, "copyDir", "Error copying from: " << toString(path) << " to: " << toString(dest / relativePathStr) << " Description: " << e.what());
+        LOG_FREE(Error, "replaceDir", "Error copying from: " << toString(path) << " to: " << toString(dest / relativePathStr) << " Description: " << e.what());
         return false;
       }
     }
@@ -184,7 +196,7 @@ namespace model {
       if (openstudio::filesystem::exists(sourceDir)){
         LOG_FREE(Debug, "initializeModelTempDir", "Copying '" << toString(sourceDir) << "' to '" << toString(destDir) << "'");
 
-        test = copyDir(sourceDir, destDir);
+        test = replaceDir(sourceDir, destDir);
         if (!test){
           LOG_FREE(Error, "initializeModelTempDir", "Could not copy '" << toString(sourceDir) << "' to '" << toString(destDir) << "'");
           result = false;
@@ -345,7 +357,7 @@ namespace model {
 
       LOG_FREE(Debug, "saveModelTempDir", "Copying " << toString(srcDir) << " to " << toString(dstDir));
 
-      test = copyDir(srcDir, dstDir);
+      test = replaceDir(srcDir, dstDir);
       if (!test){
         LOG_FREE(Error, "saveModelTempDir", "Could not copy '" << toString(srcDir) << "' to '" << toString(dstDir) << "'");
       }
