@@ -292,6 +292,33 @@ namespace detail {
       "Zone Hot Water Equipment Total Heating Energy",
       "Zone Hot Water Equipment Total Heating Rate",
 
+      // IT Equipment
+      "Zone ITE Adjusted Return Air Temperature ",
+      "Zone ITE CPU Electric Power ",
+      "Zone ITE Fan Electric Power ",
+      "Zone ITE UPS Electric Power ",
+      "Zone ITE CPU Electric Power at Design Inlet Conditions ",
+      "Zone ITE Fan Electric Power at Design Inlet Conditions ",
+      "Zone ITE UPS Heat Gain to Zone Rate ",
+      "Zone ITE Total Heat Gain to Zone Rate ",
+      "Zone ITE CPU Electric Energy ",
+      "Zone ITE Fan Electric Energy ",
+      "Zone ITE UPS Electric Energy ",
+      "Zone ITE CPU Electric Energy at Design Inlet Conditions ",
+      "Zone ITE Fan Electric Energy at Design Inlet Conditions ",
+      "Zone ITE UPS Heat Gain to Zone Energy ",
+      "Zone ITE Total Heat Gain to Zone Energy ",
+      "Zone ITE Standard Density Air Volume Flow Rate ",
+      "Zone ITE Air Mass Flow Rate ",
+      "Zone ITE Average Supply Heat Index ",
+      "Zone ITE Any Air Inlet Operating Range Exceeded Time ",
+      "Zone ITE Any Air Inlet Dry-Bulb Temperature Above Operating Range Time ",
+      "Zone ITE Any Air Inlet Dry-Bulb Temperature Below Operating Range Time ",
+      "Zone ITE Any Air Inlet Dewpoint Temperature Above Operating Range Time ",
+      "Zone ITE Any Air Inlet Dewpoint Temperature Below Operating Range Time ",
+      "Zone ITE Any Air Inlet Relative Humidity Above Operating Range Time ",
+      "Zone ITE Any Air Inlet Relative Humidity Below Operating Range Time ",
+
       // Lights
       // TODO: if zone.spaces.select{|s| s.lights.size > 0}.size > 0
       "Zone Lights Electric Power",

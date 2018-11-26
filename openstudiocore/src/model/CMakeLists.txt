@@ -572,6 +572,12 @@ set(${target_name}_src
   ElectricEquipmentDefinition.hpp
   ElectricEquipmentDefinition_Impl.hpp
   ElectricEquipmentDefinition.cpp
+  ElectricEquipmentITEAirCooled.hpp
+  ElectricEquipmentITEAirCooled_Impl.hpp
+  ElectricEquipmentITEAirCooled.cpp
+  ElectricEquipmentITEAirCooledDefinition.hpp
+  ElectricEquipmentITEAirCooledDefinition_Impl.hpp
+  ElectricEquipmentITEAirCooledDefinition.cpp
   ElectricLoadCenterDistribution.hpp
   ElectricLoadCenterDistribution_Impl.hpp
   ElectricLoadCenterDistribution.cpp
@@ -1768,6 +1774,7 @@ set(${target_name}_test_src
   test/DistrictHeating_GTest.cpp
   test/Duct_GTest.cpp
   test/ElectricEquipment_GTest.cpp
+  test/ElectricEquipmentITEAirCooled_GTest.cpp
   test/ElectricLoadCenterDistribution_GTest.cpp
   test/ElectricLoadCenterInverterSimple_GTest.cpp
   test/ElectricLoadCenterInverterPVWatts_GTest.cpp

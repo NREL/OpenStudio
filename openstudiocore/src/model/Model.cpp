@@ -2764,6 +2764,8 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(Duct);
   REGISTER_CONSTRUCTOR(ElectricEquipment);
   REGISTER_CONSTRUCTOR(ElectricEquipmentDefinition);
+  REGISTER_CONSTRUCTOR(ElectricEquipmentITEAirCooled);
+  REGISTER_CONSTRUCTOR(ElectricEquipmentITEAirCooledDefinition);
   REGISTER_CONSTRUCTOR(ElectricLoadCenterDistribution);
   REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterLookUpTable);
   REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterSimple);
@@ -3243,6 +3245,8 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(Duct);
   REGISTER_COPYCONSTRUCTORS(ElectricEquipment);
   REGISTER_COPYCONSTRUCTORS(ElectricEquipmentDefinition);
+  REGISTER_COPYCONSTRUCTORS(ElectricEquipmentITEAirCooled);
+  REGISTER_COPYCONSTRUCTORS(ElectricEquipmentITEAirCooledDefinition);
   REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterDistribution);
   REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterLookUpTable);
   REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterSimple);
