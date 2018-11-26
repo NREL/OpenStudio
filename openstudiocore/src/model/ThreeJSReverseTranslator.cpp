@@ -101,7 +101,7 @@
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 
-#include <QThread>
+#include <thread>
 
 #include <cmath>
 
@@ -167,7 +167,7 @@ namespace openstudio
     {
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
-      m_logSink.setThreadId(QThread::currentThread());
+      m_logSink.setThreadId(std::this_thread::get_id());
     }
 
     std::vector<LogMessage> ThreeJSReverseTranslator::warnings() const
@@ -273,7 +273,7 @@ namespace openstudio
 
     boost::optional<Model> ThreeJSReverseTranslator::modelFromThreeJS(const ThreeScene& scene)
     {
-      m_logSink.setThreadId(QThread::currentThread());
+      m_logSink.setThreadId(std::this_thread::get_id());
       m_logSink.resetStringStream();
 
       /// Mapping between handles referenced in ThreeScene (keys) and handles of objects in returned model (values) for last translation

@@ -65,7 +65,7 @@
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 
-#include <QThread>
+#include <thread>
 
 #include <cmath>
 
@@ -78,7 +78,7 @@ namespace openstudio
     {
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.FloorplanJSForwardTranslator"));
-      m_logSink.setThreadId(QThread::currentThread());
+      m_logSink.setThreadId(std::this_thread::get_id());
     }
 
     std::vector<LogMessage> FloorplanJSForwardTranslator::warnings() const
@@ -109,7 +109,7 @@ namespace openstudio
 
     FloorplanJS FloorplanJSForwardTranslator::updateFloorplanJS(const FloorplanJS& floorplan, const Model& model, bool removeMissingObjects)
     {
-      m_logSink.setThreadId(QThread::currentThread());
+      m_logSink.setThreadId(std::this_thread::get_id());
       m_logSink.resetStringStream();
 
       FloorplanJS result(floorplan.toJSON());

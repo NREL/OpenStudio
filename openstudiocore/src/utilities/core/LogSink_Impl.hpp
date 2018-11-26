@@ -37,9 +37,7 @@
 
 #include <boost/optional.hpp>
 
-class QReadWriteLock;
-class QWriteLocker;
-class QThread;
+#include <shared_mutex>
 
 namespace openstudio{
 
@@ -91,12 +89,10 @@ namespace openstudio{
       void setAutoFlush(bool autoFlush);
 
       /// get the thread id that messages are filtered by
-      /// thread id is the value returned by QThread::currentThread()
-      QThread* threadId() const;
+      std::thread::id threadId() const;
 
       /// set the thread id that messages are filtered by
-      /// thread id is the value returned by QThread::currentThread()
-      void setThreadId(QThread* threadId);
+      void setThreadId(std::thread::id threadId);
 
       /// reset the thread id that messages are filtered by
       void resetThreadId();
@@ -114,16 +110,16 @@ namespace openstudio{
       // for adding cout and cerr sinks to logger
       boost::shared_ptr<LogSinkBackend> sink() const;
 
-      mutable QReadWriteLock* m_mutex;
+      mutable std::shared_mutex m_mutex;
 
     private:
 
-      void updateFilter(const QWriteLocker& l);
+      void updateFilter(const std::unique_lock<std::shared_mutex>& l);
 
       boost::optional<LogLevel> m_logLevel;
       boost::optional<boost::regex> m_channelRegex;
       bool m_autoFlush;
-      QThread* m_threadId;
+      std::thread::id m_threadId;
       boost::shared_ptr<LogSinkBackend> m_sink;
     };
 

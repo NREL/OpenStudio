@@ -35,7 +35,6 @@
 #include <boost/log/support/regex.hpp>
 #include <boost/log/expressions.hpp>
 
-#include <QReadWriteLock>
 
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
@@ -46,14 +45,13 @@ namespace openstudio{
   namespace detail{
 
     LogSink_Impl::LogSink_Impl()
-      : m_mutex(new QReadWriteLock()), m_threadId(nullptr)
+      : m_mutex{}, m_threadId{}
     {
       m_sink = boost::shared_ptr<LogSinkBackend>(new LogSinkBackend());
     }
 
     LogSink_Impl::~LogSink_Impl()
     {
-      delete m_mutex;
     }
 
     bool LogSink_Impl::isEnabled() const
@@ -73,14 +71,14 @@ namespace openstudio{
 
     boost::optional<LogLevel> LogSink_Impl::logLevel() const
     {
-      QReadLocker l(m_mutex);
+      std::shared_lock l{m_mutex};
 
       return m_logLevel;
     }
 
     void LogSink_Impl::setLogLevel(LogLevel logLevel)
     {
-      QWriteLocker l(m_mutex);
+      std::unique_lock l{m_mutex};
 
       m_logLevel = logLevel;
 
@@ -89,7 +87,7 @@ namespace openstudio{
 
     void LogSink_Impl::resetLogLevel()
     {
-      QWriteLocker l(m_mutex);
+      std::unique_lock l{m_mutex};
 
       m_logLevel.reset();
 
@@ -98,14 +96,14 @@ namespace openstudio{
 
     boost::optional<boost::regex> LogSink_Impl::channelRegex() const
     {
-      QReadLocker l(m_mutex);
+      std::shared_lock l{m_mutex};
 
       return m_channelRegex;
     }
 
     void LogSink_Impl::setChannelRegex(const boost::regex& channelRegex)
     {
-      QWriteLocker l(m_mutex);
+      std::unique_lock l{m_mutex};
 
       m_channelRegex = channelRegex;
 
@@ -120,7 +118,7 @@ namespace openstudio{
 
     void LogSink_Impl::resetChannelRegex()
     {
-      QWriteLocker l(m_mutex);
+      std::unique_lock l{m_mutex};
 
       m_channelRegex.reset();
 
@@ -129,30 +127,30 @@ namespace openstudio{
 
     bool LogSink_Impl::autoFlush() const
     {
-      QReadLocker l(m_mutex);
+      std::shared_lock l{m_mutex};
 
       return m_autoFlush;
     }
 
     void LogSink_Impl::setAutoFlush(bool autoFlush)
     {
-      QWriteLocker l(m_mutex);
+      std::unique_lock l{m_mutex};
 
       m_autoFlush = autoFlush;
 
       m_sink->locked_backend()->auto_flush(autoFlush);
     }
 
-    QThread* LogSink_Impl::threadId() const
+    std::thread::id LogSink_Impl::threadId() const
     {
-      QWriteLocker l(m_mutex);
+      std::shared_lock l{m_mutex};
 
       return m_threadId;
     }
 
-    void LogSink_Impl::setThreadId(QThread* threadId)
+    void LogSink_Impl::setThreadId(const std::thread::id threadId)
     {
-      QWriteLocker l(m_mutex);
+      std::unique_lock l{m_mutex};
 
       m_threadId = threadId;
 
@@ -161,16 +159,16 @@ namespace openstudio{
 
     void LogSink_Impl::resetThreadId()
     {
-      QWriteLocker l(m_mutex);
+      std::unique_lock l{m_mutex};
 
-      m_threadId = nullptr;
+      m_threadId = std::thread::id{}; // default represents no thread
 
       this->updateFilter(l);
     }
 
     void LogSink_Impl::setStream(boost::shared_ptr<std::ostream> os)
     {
-      QWriteLocker l(m_mutex);
+      std::unique_lock l{m_mutex};
 
       m_sink->locked_backend()->add_stream(os);
 
@@ -186,7 +184,7 @@ namespace openstudio{
       //m_sink->locked_backend()->set_formatter(fmt::stream
       //  << "[" << fmt::attr< LogChannel >("Channel")
       //  << "] <" << fmt::attr< LogLevel >("Severity")
-      //  << "> @" << fmt::attr< QThread* >("QThread") << ", " << fmt::message());
+      //  << "> @" << fmt::attr< std::thread::id >("ThreadId") << ", " << fmt::message());
 
       this->updateFilter(l);
 
@@ -198,12 +196,12 @@ namespace openstudio{
 
     boost::shared_ptr<LogSinkBackend> LogSink_Impl::sink() const
     {
-      QReadLocker l(m_mutex);
+      std::shared_lock l{m_mutex};
 
       return m_sink;
     }
 
-    void LogSink_Impl::updateFilter(const QWriteLocker& l)
+    void LogSink_Impl::updateFilter(const std::unique_lock<std::shared_mutex>& l)
     {
       m_sink->reset_filter();
 
@@ -217,9 +215,9 @@ namespace openstudio{
         filterChannelRegex = *m_channelRegex;
       }
 
-      if (m_threadId){
+      if (m_threadId != std::thread::id{}){
         m_sink->set_filter(expr::attr< LogLevel >("Severity") >= filterLogLevel &&
-                           expr::attr< QThread* >("QThread") == m_threadId &&
+                           expr::attr< std::thread::id >("ThreadId") == m_threadId &&
                            expr::matches(expr::attr< LogChannel >("Channel"), filterChannelRegex));
       }else{
         m_sink->set_filter(expr::attr< LogLevel >("Severity") >= filterLogLevel &&
@@ -298,12 +296,12 @@ namespace openstudio{
     m_impl->setAutoFlush(autoFlush);
   }
 
-  QThread* LogSink::threadId() const
+  std::thread::id LogSink::threadId() const
   {
     return m_impl->threadId();
   }
 
-  void LogSink::setThreadId(QThread* threadId)
+  void LogSink::setThreadId(const std::thread::id threadId)
   {
     m_impl->setThreadId(threadId);
   }

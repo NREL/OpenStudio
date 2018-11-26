@@ -88,7 +88,7 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 
-#include <QThread>
+#include <future>
 
 #include <resources.hxx>
 
@@ -597,21 +597,32 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
 
   // This thread calls forward translator, this is not a good example of threading
   // just used for testing
-  class ForwardTranslatorThread : public QThread {
+  class ForwardTranslatorThread {
   public:
 
+    boost::optional<Workspace> workspace;
     ForwardTranslator translator;
     Model model;
-    boost::optional<Workspace> workspace;
 
     ForwardTranslatorThread(Model _model)
       : model(_model)
     {}
 
-  protected:
-    void run() override{
-      workspace = translator.translateModel(model);
+    void start() {
+      future = std::async(std::launch::async, [&]{
+          return translator.translateModel(model);
+        });
     }
+
+    void wait() {
+      if (future.valid()) {
+        workspace = future.get();
+      }
+    }
+
+
+  private:
+    std::future<Workspace> future;
   };
 
   // Logger::instance().standardOutLogger().enable();

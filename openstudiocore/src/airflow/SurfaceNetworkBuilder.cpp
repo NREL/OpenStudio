@@ -41,7 +41,7 @@
 
 #include "../utilities/plot/ProgressBar.hpp"
 
-#include <QThread>
+#include <thread>
 
 namespace openstudio {
 namespace airflow {
@@ -50,7 +50,7 @@ SurfaceNetworkBuilder::SurfaceNetworkBuilder(ProgressBar *progressBar) : m_progr
 {
   m_logSink.setLogLevel(Info);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.SurfaceNetworkBuilder"));
-  m_logSink.setThreadId(QThread::currentThread());
+  m_logSink.setThreadId(std::this_thread::get_id());
   m_progressBar = nullptr;
 }
 
@@ -105,7 +105,7 @@ bool SurfaceNetworkBuilder::build(model::Model &model)
   bool nowarnings = true;
   QVector<openstudio::Handle> used;
 
-  m_logSink.setThreadId(QThread::currentThread());
+  m_logSink.setThreadId(std::this_thread::get_id());
   m_logSink.resetStringStream();
 
   std::vector<model::Surface> surfaces = model.getConcreteModelObjects<model::Surface>();

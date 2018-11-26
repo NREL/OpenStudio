@@ -37,12 +37,8 @@
 #include "../Application.hpp"
 #include "../System.hpp"
 
-
-
-
-#include <QThread>
-
 #include <iostream>
+#include <thread>
 
 using std::ios_base;
 using openstudio::toPath;
@@ -66,47 +62,29 @@ struct TestPathWatcher : public openstudio::PathWatcher{
 };
 
 // writes seem to have to occur in another thread for watcher to detect them
-struct TestFileWriter : public QThread{
-
-  TestFileWriter(const openstudio::path& path, const std::string& contents)
-    : m_path(path), m_contents(contents)
-  {}
-
-  void run() override{
-    openstudio::filesystem::ofstream outFile(m_path, ios_base::out | ios_base::trunc);
-    ASSERT_TRUE(outFile?true:false);
-    outFile << m_contents;
-    outFile.close();
-  }
-
-  openstudio::path m_path;
-  std::string m_contents;
+void write_file(const openstudio::path& path, const std::string& contents)
+{
+  openstudio::filesystem::ofstream outFile(path, ios_base::out | ios_base::trunc);
+  ASSERT_TRUE(outFile?true:false);
+  outFile << contents;
+  outFile.close();
 };
 
 // removes seem to have to occur in another thread for watcher to detect them
-struct TestFileRemover : public QThread{
+void remove_file(const openstudio::path& path)
+{
+  openstudio::filesystem::remove(path);
+}
 
-  TestFileRemover(const openstudio::path& path)
-    : m_path(path)
-  {}
-
-  void run() override{
-    openstudio::filesystem::remove(m_path);
-  }
-
-  openstudio::path m_path;
-};
 
 TEST_F(CoreFixture, PathWatcher_File)
 {
   Application::instance().application(false);
 
   openstudio::path path = toPath("./PathWatcher_File");
-  TestFileWriter w1(path, "test 1"); w1.start();
-  while (!w1.isFinished()){
-    // do not call process events
-    QThread::yieldCurrentThread();
-  }
+  auto w1 = std::thread(write_file, path, "test 1");
+  w1.join();
+
   ASSERT_TRUE(openstudio::filesystem::exists(path));
 
   TestPathWatcher watcher(path);
@@ -116,11 +94,9 @@ TEST_F(CoreFixture, PathWatcher_File)
 
   EXPECT_EQ(path.string(), watcher.path().string());
 
-  TestFileWriter w2(path, "test 2"); w2.start();
-  while (!w2.isFinished()){
-    // do not call process events
-    QThread::yieldCurrentThread();
-  }
+  auto w2 = std::thread(write_file, path, "test 2");
+  w2.join();
+
   EXPECT_TRUE(openstudio::filesystem::exists(path));
 
   // calls processEvents
@@ -132,11 +108,9 @@ TEST_F(CoreFixture, PathWatcher_File)
   watcher.changed = false;
   EXPECT_FALSE(watcher.changed);
 
-  TestFileRemover r1(path); r1.start();
-  while (!r1.isFinished()){
-    // do not call process events
-    QThread::yieldCurrentThread();
-  }
+  auto r1 = std::thread(remove_file, path);
+  r1.join();
+
   EXPECT_FALSE(openstudio::filesystem::exists(path));
 
   // calls processEvents
@@ -166,11 +140,9 @@ TEST_F(CoreFixture, PathWatcher_Dir)
   EXPECT_EQ(path.string(), watcher.path().string());
 
   // catches the file addition
-  TestFileWriter w1(filePath, "test 1"); w1.start();
-  while (!w1.isFinished()){
-    // do not call process events
-    QThread::yieldCurrentThread();
-  }
+  auto w1 = std::thread(write_file, filePath, "test 1");
+  w1.join();
+
   EXPECT_TRUE(openstudio::filesystem::exists(filePath));
 
   // calls processEvents
@@ -181,11 +153,9 @@ TEST_F(CoreFixture, PathWatcher_Dir)
   EXPECT_FALSE(watcher.changed);
 
   // does not catch changes to the file
-  TestFileWriter w2(filePath, "test 2"); w2.start();
-  while (!w2.isFinished()){
-    // do not call process events
-    QThread::yieldCurrentThread();
-  }
+  auto w2 = std::thread(write_file, filePath, "test 2");
+  w2.join();
+
   EXPECT_TRUE(openstudio::filesystem::exists(filePath));
 
   // calls processEvents
@@ -194,11 +164,9 @@ TEST_F(CoreFixture, PathWatcher_Dir)
   EXPECT_FALSE(watcher.changed);
 
   // catches file removal
-  TestFileRemover r1(filePath); r1.start();
-  while (!r1.isFinished()){
-    // do not call process events
-    QThread::yieldCurrentThread();
-  }
+  auto r1 = std::thread(remove_file, filePath);
+  r1.join();
+
   EXPECT_FALSE(openstudio::filesystem::exists(filePath));
 
   // calls processEvents
