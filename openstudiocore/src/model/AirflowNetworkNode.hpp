@@ -57,16 +57,16 @@ class MODEL_API AirflowNetworkNode : public ModelObject
   //bool removeFromLoop();
 
   //** Returns the inlet port. **/
-  //unsigned inletPort();
+  //unsigned inletPort() const;
 
   //** Returns the outlet port. **/
-  //unsigned outletPort();
+  //unsigned outletPort() const;
 
   //** Returns the optional ModelObject connected to the inlet port. **/
-  //boost::optional<ModelObject> inletModelObject();
+  //boost::optional<ModelObject> inletModelObject() const;
 
   //** Returns the optional ModelObject connected to the outlet port. **/
-  //boost::optional<ModelObject> outletModelObject();
+  //boost::optional<ModelObject> outletModelObject() const;
 
   //** Returns the optional AirLoopHVAC object that this AirToAirComponent is attached to.
   // *
@@ -86,7 +86,7 @@ class MODEL_API AirflowNetworkNode : public ModelObject
 
   friend class openstudio::IdfObject;
 
-  /// @cond 
+  /// @cond
 
   typedef detail::AirflowNetworkNode_Impl ImplType;
 
@@ -96,7 +96,7 @@ class MODEL_API AirflowNetworkNode : public ModelObject
 
   REGISTER_LOGGER("openstudio.model.AirflowNetworkNode");
 
-  /// @endcond 
+  /// @endcond
 
 };
 

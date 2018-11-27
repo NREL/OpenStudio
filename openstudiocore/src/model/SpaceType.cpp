@@ -55,6 +55,10 @@
 #include "ElectricEquipment_Impl.hpp"
 #include "ElectricEquipmentDefinition.hpp"
 #include "ElectricEquipmentDefinition_Impl.hpp"
+#include "ElectricEquipmentITEAirCooled.hpp"
+#include "ElectricEquipmentITEAirCooled_Impl.hpp"
+#include "ElectricEquipmentITEAirCooledDefinition.hpp"
+#include "ElectricEquipmentITEAirCooledDefinition_Impl.hpp"
 #include "GasEquipment.hpp"
 #include "GasEquipment_Impl.hpp"
 #include "GasEquipmentDefinition.hpp"
@@ -154,6 +158,10 @@ namespace detail {
     // electric equipment
     ElectricEquipmentVector electricEquipment = this->electricEquipment();
     result.insert(result.end(), electricEquipment.begin(), electricEquipment.end());
+
+    // IT electric equipment
+    ElectricEquipmentITEAirCooledVector electricEquipmentITEAirCooled = this->electricEquipmentITEAirCooled();
+    result.insert(result.end(), electricEquipmentITEAirCooled.begin(), electricEquipmentITEAirCooled.end());
 
     // gas equipment
     GasEquipmentVector gasEquipment = this->gasEquipment();
@@ -652,6 +660,11 @@ namespace detail {
       ElectricEquipment::iddObjectType());
   }
 
+  ElectricEquipmentITEAirCooledVector SpaceType_Impl::electricEquipmentITEAirCooled() const {
+    return getObject<ModelObject>().getModelObjectSources<ElectricEquipmentITEAirCooled>(
+      ElectricEquipmentITEAirCooled::iddObjectType());
+  }
+
   GasEquipmentVector SpaceType_Impl::gasEquipment() const
   {
     return getObject<ModelObject>().getModelObjectSources<GasEquipment>(
@@ -1037,6 +1050,19 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> SpaceType_Impl::electricEquipmentITEAirCooledPowerPerFloorArea() const {
+    double result(0.0);
+    for (const ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled()) {
+      OptionalDouble temp = iTequipment.wattsperZoneFloorArea();
+      if (temp) {
+        result += temp.get();
+      } else {
+        return boost::none;
+      }
+    }
+    return result;
+  }
+
   bool SpaceType_Impl::setElectricEquipmentPowerPerFloorArea(
       boost::optional<double> electricEquipmentPowerPerFloorArea)
   {
@@ -1392,6 +1418,11 @@ namespace detail {
     return result;
   }
 
+  std::vector<ModelObject> SpaceType_Impl::electricEquipmentITEAirCooledAsModelObjects() const {
+    ModelObjectVector result = castVector<ModelObject>(electricEquipmentITEAirCooled());
+    return result;
+  }
+
   std::vector<ModelObject> SpaceType_Impl::gasEquipmentAsModelObjects() const {
     ModelObjectVector result = castVector<ModelObject>(gasEquipment());
     return result;
@@ -1660,6 +1691,11 @@ std::vector<ElectricEquipment> SpaceType::electricEquipment() const {
   return getImpl<detail::SpaceType_Impl>()->electricEquipment();
 }
 
+std::vector<ElectricEquipmentITEAirCooled> SpaceType::electricEquipmentITEAirCooled() const {
+  return getImpl<detail::SpaceType_Impl>()->electricEquipmentITEAirCooled();
+}
+
+
 std::vector<GasEquipment> SpaceType::gasEquipment() const {
   return getImpl<detail::SpaceType_Impl>()->gasEquipment();
 }
@@ -1786,6 +1822,11 @@ double SpaceType::getLightingPowerPerPerson(double floorArea, double numPeople) 
 boost::optional<double> SpaceType::electricEquipmentPowerPerFloorArea() const {
   return getImpl<detail::SpaceType_Impl>()->electricEquipmentPowerPerFloorArea();
 }
+
+boost::optional<double> SpaceType::electricEquipmentITEAirCooledPowerPerFloorArea() const {
+  return getImpl<detail::SpaceType_Impl>()->electricEquipmentITEAirCooledPowerPerFloorArea();
+}
+
 
 bool SpaceType::setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea) {
   return getImpl<detail::SpaceType_Impl>()->setElectricEquipmentPowerPerFloorArea(electricEquipmentPowerPerFloorArea);

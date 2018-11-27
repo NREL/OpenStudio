@@ -90,12 +90,12 @@ namespace detail{
     return ModelObject_Impl::remove();
   }
 
-  unsigned ConnectorSplitter_Impl::inletPort()
+  unsigned ConnectorSplitter_Impl::inletPort() const
   {
     return OS_Connector_SplitterFields::InletBranchName;
   }
 
-  unsigned ConnectorSplitter_Impl::outletPort(unsigned branchIndex)
+  unsigned ConnectorSplitter_Impl::outletPort(unsigned branchIndex) const
   {
     unsigned result;
     result = numNonextensibleFields();
@@ -103,7 +103,7 @@ namespace detail{
     return result;
   }
 
-  unsigned ConnectorSplitter_Impl::nextOutletPort()
+  unsigned ConnectorSplitter_Impl::nextOutletPort() const
   {
     return outletPort( this->nextBranchIndex() );
   }
@@ -182,17 +182,17 @@ std::vector<openstudio::IdfObject> ConnectorSplitter::remove()
   return getImpl<detail::ConnectorSplitter_Impl>()->remove();
 }
 
-unsigned ConnectorSplitter::inletPort()
+unsigned ConnectorSplitter::inletPort() const
 {
   return getImpl<detail::ConnectorSplitter_Impl>()->inletPort();
 }
 
-unsigned ConnectorSplitter::outletPort(unsigned branchIndex)
+unsigned ConnectorSplitter::outletPort(unsigned branchIndex) const
 {
   return getImpl<detail::ConnectorSplitter_Impl>()->outletPort(branchIndex);
 }
 
-unsigned ConnectorSplitter::nextOutletPort()
+unsigned ConnectorSplitter::nextOutletPort() const
 {
   return getImpl<detail::ConnectorSplitter_Impl>()->nextOutletPort();
 }

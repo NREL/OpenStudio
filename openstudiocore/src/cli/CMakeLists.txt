@@ -226,32 +226,48 @@ set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TR
 
 source_group(embedded_files FILES ${OUTPUT})
 
-add_executable(openstudio
- main.cpp
- "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
- RubyException.hpp
- RubyInterpreter.hpp
- "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
- ${OUTPUT}
-)
+if(WIN32)
+  configure_file(openstudio.rc.in "${CMAKE_CURRENT_BINARY_DIR}/openstudio.rc")
+endif()
+
+if(WIN32)
+  add_executable(openstudio
+    main.cpp
+    "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
+    RubyException.hpp
+    RubyInterpreter.hpp
+    "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
+    ${OUTPUT}
+    "${CMAKE_CURRENT_BINARY_DIR}/openstudio.rc"
+  )
+else()
+  add_executable(openstudio
+    main.cpp
+    "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
+    RubyException.hpp
+    RubyInterpreter.hpp
+    "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
+    ${OUTPUT}
+  )
+endif()
 
 set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
 target_link_libraries(openstudio
- init_openstudio
- ${EXTENSION_LIBS}
- ${ENC_LIBS}
- openstudio_airflow_static
- openstudio_model_static
- openstudio_energyplus_static
- openstudio_measure_static
- openstudio_osversion_static
- openstudio_sdd_static
- openstudio_isomodel_static
- openstudio_gbxml_static
- openstudio_radiance_static
+  init_openstudio
+  ${EXTENSION_LIBS}
+  ${ENC_LIBS}
+  openstudio_airflow_static
+  openstudio_model_static
+  openstudio_energyplus_static
+  openstudio_measure_static
+  openstudio_osversion_static
+  openstudio_sdd_static
+  openstudio_isomodel_static
+  openstudio_gbxml_static
+  openstudio_radiance_static
 )
 
 if (UNIX AND NOT APPLE)
@@ -303,7 +319,7 @@ foreach(f ${RUBY_TEST_SRC})
     if(BUILD_TESTING)
       if(MSVC)
         add_test(NAME "CLITest-${FILE_NAME}-${TEST_NAME}"
-          COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>"
+          COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}"
           "$<TARGET_FILE:openstudio>" "${f}" "--name=test_${TEST_NAME}"
         )
       else()

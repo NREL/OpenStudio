@@ -55,6 +55,7 @@ class People;
 class Lights;
 class Luminaire;
 class ElectricEquipment;
+class ElectricEquipmentITEAirCooled;
 class GasEquipment;
 class HotWaterEquipment;
 class SteamEquipment;
@@ -204,6 +205,9 @@ class MODEL_API Space : public PlanarSurfaceGroup {
 
   /// Returns all ElectricEquipment in this space.
   std::vector<ElectricEquipment> electricEquipment() const;
+
+  /// Returns all ElectricEquipmentITEAirCooled in this space.
+  std::vector<ElectricEquipmentITEAirCooled> electricEquipmentITEAirCooled() const;
 
   /// Returns all GasEquipment in this space.
   std::vector<GasEquipment> gasEquipment() const;
@@ -435,6 +439,16 @@ class MODEL_API Space : public PlanarSurfaceGroup {
    *  attached directly to this Space, not to a SpaceType. */
   bool setElectricEquipmentPowerPerPerson(double electricEquipmentPowerPerPerson,
                                           const ElectricEquipment& templateElectricEquipment);
+
+  /** Returns the IT equipment power (W) of this space. */
+  /// Does not include space multiplier in calculation.
+  /// Does include equipment multiplier in calculation.
+  double electricEquipmentITEAirCooledPower() const;
+
+  /** Returns the IT equipment power density (W/m^2) of this space. */
+  /// Does not include space multiplier in calculation.
+  /// Does include equipment multiplier in calculation.
+  double electricEquipmentITEAirCooledPowerPerFloorArea() const;
 
   /** Returns the gas equipment power (W) of this space. */
   /// Does not include space multiplier in calculation.

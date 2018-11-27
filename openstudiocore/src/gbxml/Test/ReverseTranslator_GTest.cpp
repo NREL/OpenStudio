@@ -128,16 +128,22 @@ TEST_F(gbXMLFixture, ReverseTranslator_Constructions)
       auto other_name = srf.name().get() + " Reversed";
       auto other_surf = model->getModelObjectByName<Surface>(other_name);
       ASSERT_TRUE(other_surf);
-      // Check the surface
-      auto oc = srf.construction();
-      ASSERT_TRUE(oc);
-      auto ofield = srf.getString(OS_SurfaceFields::ConstructionName);
-      ASSERT_TRUE(ofield);
-      EXPECT_EQ(oc->name().get(), ofield.get());
-      // And the other surface
-      ofield = other_surf->getString(OS_SurfaceFields::ConstructionName);
-      ASSERT_TRUE(ofield);
-      EXPECT_TRUE(ofield.get().empty());
+
+      // the construction will be assigned to one of these surfaces, the other surface will have an empty construction
+      // the reversed construction will be created and assigned at translation time
+      auto srfConstructionName = srf.getString(OS_SurfaceFields::ConstructionName, false, true);
+      auto other_srfConstructionName = other_surf->getString(OS_SurfaceFields::ConstructionName, false, true);
+      if (srfConstructionName) {
+        EXPECT_FALSE(other_srfConstructionName);
+        auto oc = srf.construction();
+        ASSERT_TRUE(oc);
+        EXPECT_EQ(oc->name().get(), srfConstructionName.get());
+      } else {
+        EXPECT_FALSE(srfConstructionName);
+        auto oc = other_surf->construction();
+        ASSERT_TRUE(oc);
+        EXPECT_EQ(oc->name().get(), other_srfConstructionName.get());
+      }
       ++count;
     }
   }

@@ -347,4 +347,4 @@ ScheduleVariableInterval::ScheduleVariableInterval(std::shared_ptr<detail::Sched
 
 
 } // model
-} // openstudio
+} // openstudio

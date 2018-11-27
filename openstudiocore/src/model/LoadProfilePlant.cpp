@@ -111,12 +111,12 @@ namespace detail {
     return result;
   }
 
-  unsigned LoadProfilePlant_Impl::inletPort()
+  unsigned LoadProfilePlant_Impl::inletPort() const
   {
     return OS_LoadProfile_PlantFields::InletNodeName;
   }
 
-  unsigned LoadProfilePlant_Impl::outletPort()
+  unsigned LoadProfilePlant_Impl::outletPort() const
   {
     return OS_LoadProfile_PlantFields::OutletNodeName;
   }

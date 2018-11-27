@@ -537,7 +537,7 @@ TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACUnitHeater)
   ZoneHVACUnitHeater zoneHVACUnitHeater(m, s, fan, heatingCoil);
 
   boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
-  EXPECT_FALSE(component);
+  EXPECT_TRUE(component);
 }
 
 TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACTerminalUnitVariableRefrigerantFlow)

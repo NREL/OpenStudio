@@ -292,6 +292,33 @@ namespace detail {
       "Zone Hot Water Equipment Total Heating Energy",
       "Zone Hot Water Equipment Total Heating Rate",
 
+      // IT Equipment
+      "Zone ITE Adjusted Return Air Temperature ",
+      "Zone ITE CPU Electric Power ",
+      "Zone ITE Fan Electric Power ",
+      "Zone ITE UPS Electric Power ",
+      "Zone ITE CPU Electric Power at Design Inlet Conditions ",
+      "Zone ITE Fan Electric Power at Design Inlet Conditions ",
+      "Zone ITE UPS Heat Gain to Zone Rate ",
+      "Zone ITE Total Heat Gain to Zone Rate ",
+      "Zone ITE CPU Electric Energy ",
+      "Zone ITE Fan Electric Energy ",
+      "Zone ITE UPS Electric Energy ",
+      "Zone ITE CPU Electric Energy at Design Inlet Conditions ",
+      "Zone ITE Fan Electric Energy at Design Inlet Conditions ",
+      "Zone ITE UPS Heat Gain to Zone Energy ",
+      "Zone ITE Total Heat Gain to Zone Energy ",
+      "Zone ITE Standard Density Air Volume Flow Rate ",
+      "Zone ITE Air Mass Flow Rate ",
+      "Zone ITE Average Supply Heat Index ",
+      "Zone ITE Any Air Inlet Operating Range Exceeded Time ",
+      "Zone ITE Any Air Inlet Dry-Bulb Temperature Above Operating Range Time ",
+      "Zone ITE Any Air Inlet Dry-Bulb Temperature Below Operating Range Time ",
+      "Zone ITE Any Air Inlet Dewpoint Temperature Above Operating Range Time ",
+      "Zone ITE Any Air Inlet Dewpoint Temperature Below Operating Range Time ",
+      "Zone ITE Any Air Inlet Relative Humidity Above Operating Range Time ",
+      "Zone ITE Any Air Inlet Relative Humidity Below Operating Range Time ",
+
       // Lights
       // TODO: if zone.spaces.select{|s| s.lights.size > 0}.size > 0
       "Zone Lights Electric Power",
@@ -865,17 +892,17 @@ namespace detail {
     return pl.get();
   }
 
-  unsigned ThermalZone_Impl::returnAirPort()
+  unsigned ThermalZone_Impl::returnAirPort() const
   {
     return returnPortList().port(0);
   }
 
-  unsigned ThermalZone_Impl::zoneAirPort()
+  unsigned ThermalZone_Impl::zoneAirPort() const
   {
     return OS_ThermalZoneFields::ZoneAirNodeName;
   }
 
-  OptionalModelObject ThermalZone_Impl::returnAirModelObject()
+  OptionalModelObject ThermalZone_Impl::returnAirModelObject() const
   {
     return returnPortList().connectedObject(this->returnAirPort());
   }
@@ -885,7 +912,7 @@ namespace detail {
     return returnPortList().modelObjects();
   }
 
-  Node ThermalZone_Impl::zoneAirNode()
+  Node ThermalZone_Impl::zoneAirNode() const
   {
     return this->connectedObject(this->zoneAirPort())->cast<Node>();
   }
@@ -2317,7 +2344,7 @@ namespace detail {
     return zoneHVACEquipmentList().equipment();
   }
 
-  std::string ThermalZone_Impl::loadDistributionScheme()
+  std::string ThermalZone_Impl::loadDistributionScheme() const
   {
     return zoneHVACEquipmentList().loadDistributionScheme();
   }
@@ -2327,12 +2354,12 @@ namespace detail {
     return zoneHVACEquipmentList().setLoadDistributionScheme(scheme);
   }
 
-  std::vector<ModelObject> ThermalZone_Impl::equipmentInHeatingOrder()
+  std::vector<ModelObject> ThermalZone_Impl::equipmentInHeatingOrder() const
   {
     return zoneHVACEquipmentList().equipmentInHeatingOrder();
   }
 
-  std::vector<ModelObject> ThermalZone_Impl::equipmentInCoolingOrder()
+  std::vector<ModelObject> ThermalZone_Impl::equipmentInCoolingOrder() const
   {
     return zoneHVACEquipmentList().equipmentInCoolingOrder();
   }
@@ -3056,17 +3083,17 @@ void ThermalZone::resetFractionofZoneControlledbySecondaryDaylightingControl() {
   getImpl<detail::ThermalZone_Impl>()->resetFractionofZoneControlledbySecondaryDaylightingControl();
 }
 
-unsigned ThermalZone::returnAirPort()
+unsigned ThermalZone::returnAirPort() const
 {
   return getImpl<detail::ThermalZone_Impl>()->returnAirPort();
 }
 
-unsigned ThermalZone::zoneAirPort()
+unsigned ThermalZone::zoneAirPort() const
 {
   return getImpl<detail::ThermalZone_Impl>()->zoneAirPort();
 }
 
-OptionalModelObject ThermalZone::returnAirModelObject()
+OptionalModelObject ThermalZone::returnAirModelObject() const
 {
   return getImpl<detail::ThermalZone_Impl>()->returnAirModelObject();
 }
@@ -3076,7 +3103,7 @@ std::vector<ModelObject> ThermalZone::returnAirModelObjects() const
   return getImpl<detail::ThermalZone_Impl>()->returnAirModelObjects();
 }
 
-Node ThermalZone::zoneAirNode()
+Node ThermalZone::zoneAirNode() const
 {
   return getImpl<detail::ThermalZone_Impl>()->zoneAirNode();
 }
@@ -3358,7 +3385,7 @@ std::vector<ModelObject> ThermalZone::equipment() const
   return getImpl<detail::ThermalZone_Impl>()->equipment();
 }
 
-std::string ThermalZone::loadDistributionScheme()
+std::string ThermalZone::loadDistributionScheme() const
 {
   return getImpl<detail::ThermalZone_Impl>()->loadDistributionScheme();
 }
@@ -3368,12 +3395,12 @@ bool ThermalZone::setLoadDistributionScheme(std::string scheme)
   return getImpl<detail::ThermalZone_Impl>()->setLoadDistributionScheme(scheme);
 }
 
-std::vector<ModelObject> ThermalZone::equipmentInHeatingOrder()
+std::vector<ModelObject> ThermalZone::equipmentInHeatingOrder() const
 {
   return getImpl<detail::ThermalZone_Impl>()->equipmentInHeatingOrder();
 }
 
-std::vector<ModelObject> ThermalZone::equipmentInCoolingOrder()
+std::vector<ModelObject> ThermalZone::equipmentInCoolingOrder() const
 {
   return getImpl<detail::ThermalZone_Impl>()->equipmentInCoolingOrder();
 }

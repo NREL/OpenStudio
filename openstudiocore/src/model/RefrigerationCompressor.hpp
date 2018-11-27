@@ -157,4 +157,4 @@ typedef std::vector<RefrigerationCompressor> RefrigerationCompressorVector;
 } // model
 } // openstudio
 
-#endif // MODEL_REFRIGERATIONCOMPRESSOR_HPP
+#endif // MODEL_REFRIGERATIONCOMPRESSOR_HPP

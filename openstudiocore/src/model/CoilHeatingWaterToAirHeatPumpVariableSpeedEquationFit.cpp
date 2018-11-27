@@ -113,19 +113,19 @@ namespace detail {
     return CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::iddObjectType();
   }
 
-  unsigned CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::airInletPort() {
+  unsigned CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::airInletPort() const {
     return OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitFields::IndoorAirInletNodeName;
   }
 
-  unsigned CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::airOutletPort() {
+  unsigned CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::airOutletPort() const {
     return OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitFields::IndoorAirOutletNodeName;
   }
 
-  unsigned CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::waterInletPort() {
+  unsigned CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::waterInletPort() const {
     return OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitFields::WatertoRefrigerantHXWaterInletNodeName;
   }
 
-  unsigned CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::waterOutletPort() {
+  unsigned CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::waterOutletPort() const {
     return OS_Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFitFields::WatertoRefrigerantHXWaterOutletNodeName;
   }
 
@@ -569,4 +569,4 @@ CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::CoilHeatingWaterToAirHeat
   }
 
 } // model
-} // openstudio
+} // openstudio
