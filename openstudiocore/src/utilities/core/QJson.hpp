@@ -27,7 +27,8 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-//  TODO: JM 2018-11-08: remove ASAP
+// TODO: JM 2018-11-08: remove ASAP
+// TODO: QT-Separation-Move
 // OSArgument and Attribute still rely on QVariant stuff
 
 #ifndef UTILITIES_CORE_QJSON_HPP
