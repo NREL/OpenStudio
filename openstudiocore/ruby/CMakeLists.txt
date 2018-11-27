@@ -91,7 +91,7 @@ foreach(OPENSTUDIO_FILE ${OPENSTUDIO_FILES})
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/${OPENSTUDIO_FILE}" "$<TARGET_FILE_DIR:openstudio_rb>/openstudio/${OPENSTUDIO_FILE}"
   )
 endforeach()
-  
+
 target_link_libraries(openstudio_rb
   init_openstudio
   ruby_OpenStudioModelEditor
@@ -117,9 +117,6 @@ if( UNIX AND NOT APPLE )
   )
   target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a" -Wl,--no-whole-archive
-  )
-  target_link_libraries(openstudio_rb
-    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5Sql.a" -Wl,--no-whole-archive
   )
 endif()
 

@@ -37,7 +37,7 @@
 #include <string>
 #include <vector>
 
-class QSqlDatabase;
+struct sqlite3;
 class QWidget;
 
 namespace openstudio{
@@ -150,7 +150,7 @@ namespace openstudio{
     bool setDevAuthKey(const std::string& devAuthKey);
 
     /// Returns the path to the local BCL library
-    QString libraryPath() const;
+    openstudio::path libraryPath() const;
 
     /// Relocates the local BCL library, stores the library path in user preferences
     bool setLibraryPath(const std::string& libraryPath);
@@ -171,7 +171,7 @@ namespace openstudio{
     bool validateProdAuthKey(const std::string& authKey);
     bool validateDevAuthKey(const std::string& authKey);
 
-    QString escape(const std::string& s) const;
+    std::string escape(const std::string& s) const;
 
     std::set<std::pair<std::string, std::string> > attributeSearch(
       const std::vector<std::pair<std::string, std::string> >& searchTerms,
@@ -181,11 +181,22 @@ namespace openstudio{
 
     static std::shared_ptr<LocalBCL> &instanceInternal();
 
-    QString m_libraryPath;
-    const QString m_dbName;
-    QString dbVersion;
+    openstudio::path m_libraryPath;
+    const std::string m_dbName;
+    const std::string m_dbVersion;
+    bool m_connectionOpen;
+
     std::string m_prodAuthKey;
     std::string m_devAuthKey;
+
+    sqlite3* m_db;
+    openstudio::path m_sqliteFilePath;
+    std::string m_sqliteFilename;
+
+    // Helper function to retrieve a string
+    std::string columnText(const unsigned char* column) const;
+
+    REGISTER_LOGGER("openstudio.bcl.LocalBCL");
   };
 
 } // openstudio

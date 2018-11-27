@@ -1062,7 +1062,7 @@ namespace openstudio{
               // check if component has proper uid and vid
               if (!uid.empty() && !versionId.empty()) {
 
-                dest = toPath(LocalBCL::instance().libraryPath().append(toQString("/" + uid + "/" + versionId)));
+                dest = LocalBCL::instance().libraryPath() / uid / versionId;
 
                 removeDirectory(dest);
                 if (copyDirectory(componentXmlPath.parent_path(), dest))
@@ -1085,7 +1085,7 @@ namespace openstudio{
                 // check if component has proper uid and vid
                 if (!uid.empty() && !versionId.empty()) {
 
-                  dest = toPath(LocalBCL::instance().libraryPath().append(toQString("/" + uid + "/" + versionId)));
+                  dest = LocalBCL::instance().libraryPath() / uid / versionId;
 
                   removeDirectory(dest);
                   if (copyDirectory(measureXmlPath.parent_path(), dest))

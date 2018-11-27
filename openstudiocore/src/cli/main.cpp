@@ -50,8 +50,6 @@
 #pragma warning(disable : 4101 )
 #endif
 
-Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
-
 extern "C" {
   void Init_EmbeddedScripting(void);
   INIT_DECLARATIONS;
