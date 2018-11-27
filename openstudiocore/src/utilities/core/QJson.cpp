@@ -27,6 +27,7 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+// TODO: QT-Separation-Move
 #include "QJson.hpp"
 
 #include "Assert.hpp"
