@@ -53,7 +53,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 //TEST_F(ModelFixture, SpaceType_EmbeddedFile) {
-//  ASSERT_TRUE(::openstudio::embedded_files::hasFile(":/Resources/standards/OpenStudio_Standards_space_types_merged.json"));
+//  ASSERT_TRUE(::openstudiomodel::embedded_files::hasFile(":/Resources/standards/OpenStudio_Standards_space_types_merged.json"));
 //}
 
 TEST_F(ModelFixture, SpaceType_InternalGainAttributes_PeoplePerFloorArea) {
