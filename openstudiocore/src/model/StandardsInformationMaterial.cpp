@@ -111,7 +111,7 @@ namespace detail {
     if (m_standardsArr.empty()) {
       // Embedded file path
       std::string embedded_path = ":/Resources/standards/OpenStudio_Standards_materials_merged.json";
-      std::string fileContent = ::openstudio::embedded_files::getFileAsString(embedded_path);
+      std::string fileContent = ::openstudiomodel::embedded_files::getFileAsString(embedded_path);
 
       // Create a StandardsJSON
       StandardsJSON standard(fileContent);

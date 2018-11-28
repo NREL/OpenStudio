@@ -45,7 +45,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 //TEST_F(ModelFixture, Material_EmbeddedFile) {
-  //ASSERT_TRUE(::openstudio::embedded_files::hasFile(":/Resources/standards/OpenStudio_Standards_materials_merged.json"));
+  //ASSERT_TRUE(::openstudiomodel::embedded_files::hasFile(":/Resources/standards/OpenStudio_Standards_materials_merged.json"));
 //}
 
 TEST_F(ModelFixture,MasslessOpaqueMaterial_ThermalResistance_Quantity) {

@@ -1632,7 +1632,7 @@ endforeach()
 
 include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 # EMBEDDED_OUTPUT stores the lsit of cxx files that we need to link later
-embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudio)
+embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudiomodel)
 # message("EMBEDDED_OUTPUT: ${EMBEDDED_OUTPUT}")
 
 # set up groups of source files for Visual Studio
