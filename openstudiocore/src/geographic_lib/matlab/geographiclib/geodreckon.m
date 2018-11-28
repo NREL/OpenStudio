@@ -31,7 +31,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %   returned in the final output variable a12_s12 (in meters).
 %
 %   If long_unroll is unset (the default), then the value lon2 is in the
-%   range [-180,180).  If long_unroll is set, the longitude is "unrolled"
+%   range [-180,180].  If long_unroll is set, the longitude is "unrolled"
 %   so that the quantity lon2 - lon1 indicates how many times and in what
 %   sense the geodesic encircles the ellipsoid.
 %
@@ -50,8 +50,8 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
-%     https://dx.doi.org/10.1007/s00190-012-0578-z
-%     Addenda: http://geographiclib.sf.net/geod-addenda.html
+%     https://doi.org/10.1007/s00190-012-0578-z
+%     Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 %
 %   This function duplicates some of the functionality of the RECKON
 %   function in the MATLAB mapping toolbox.  Differences are
@@ -64,10 +64,9 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %       points on a single geodesic.
 %     * Additional properties of the geodesic are calcuated.
 %
-%   See also GEODDOC, GEODDISTANCE, GEODAREA, GEODESICDIRECT, GEODESICLINE,
-%     DEFAULTELLIPSOID.
+%   See also GEODDOC, GEODDISTANCE, GEODAREA, DEFAULTELLIPSOID, FLAT2ECC.
 
-% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
@@ -113,7 +112,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   tiny = sqrt(realmin);
 
   a = ellipsoid(1);
-  e2 = ellipsoid(2)^2;
+  e2 = real(ellipsoid(2)^2);
   f = e2 / (1 + sqrt(1 - e2));
   f1 = 1 - f;
   ep2 = e2 / (1 - e2);
@@ -191,7 +190,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
   somg2 = salp0 .* ssig2; comg2 = csig2;
   salp2 = salp0; calp2 = calp0 .* csig2;
   if long_unroll
-    E = 1 - 2*(salp0 < 0);
+    E = copysignx(1, salp0);
     omg12 = E .* (sig12 ...
                   - (atan2(   ssig2, csig2) - atan2(   ssig1, csig1)) ...
                   + (atan2(E.*somg2, comg2) - atan2(E.*somg1, comg1)));
@@ -248,13 +247,14 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
                    ssig12 .* (csig1 .* ssig12 ./ (1 + csig12) + ssig1), ...
                    csig12 <= 0);
     calp12 = salp0.^2 + calp0.^2 .* csig1 .* csig2;
-    % Enlarge salp1, calp1 is case lat1 is an array and azi1 is a scalar
-    s = zeros(size(salp0)); salp1 = salp1 + s; calp1 = calp1 + s;
-    s = calp0 == 0 | salp0 == 0;
-    salp12(s) = salp2(s) .* calp1(s) - calp2(s) .* salp1(s);
-    calp12(s) = calp2(s) .* calp1(s) + salp2(s) .* salp1(s);
-    s = s & salp12 == 0 & calp12 < 0;
-    salp12(s) = tiny * calp1(s); calp12(s) = -1;
+    % Deal with geodreckon(10, 0, [], 0) which has calp2 = []
+    if ~isempty(Z)
+      % Enlarge salp1, calp1 is case lat1 is an array and azi1 is a scalar
+      s = zeros(size(salp0)); salp1 = salp1 + s; calp1 = calp1 + s;
+      s = calp0 == 0 | salp0 == 0;
+      salp12(s) = salp2(s) .* calp1(s) - calp2(s) .* salp1(s);
+      calp12(s) = calp2(s) .* calp1(s) + salp2(s) .* salp1(s);
+    end
     if e2 ~= 0
       c2 = (a^2 + b^2 * eatanhe(1, e2) / e2) / 2;
     else

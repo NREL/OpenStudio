@@ -2,9 +2,9 @@
  * \file NormalGravity.hpp
  * \brief Header for GeographicLib::NormalGravity class
  *
- * Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_NORMALGRAVITY_HPP)
@@ -21,23 +21,36 @@ namespace GeographicLib {
    * "Normal" gravity refers to an idealization of the earth which is modeled
    * as an rotating ellipsoid.  The eccentricity of the ellipsoid, the rotation
    * speed, and the distribution of mass within the ellipsoid are such that the
-   * surface of the ellipsoid is a surface of constant potential (gravitational
-   * plus centrifugal).  The acceleration due to gravity is therefore
-   * perpendicular to the surface of the ellipsoid.
+   * ellipsoid is a "level ellipoid", a surface of constant potential
+   * (gravitational plus centrifugal).  The acceleration due to gravity is
+   * therefore perpendicular to the surface of the ellipsoid.
+   *
+   * Because the distribution of mass within the ellipsoid is unspecified, only
+   * the potential exterior to the ellipsoid is well defined.  In this class,
+   * the mass is assumed to be to concentrated on a "focal disc" of radius,
+   * (<i>a</i><sup>2</sup> &minus; <i>b</i><sup>2</sup>)<sup>1/2</sup>, where
+   * \e a is the equatorial radius of the ellipsoid and \e b is its polar
+   * semi-axis.  In the case of an oblate ellipsoid, the mass is concentrated
+   * on a "focal rod" of length 2(<i>b</i><sup>2</sup> &minus;
+   * <i>a</i><sup>2</sup>)<sup>1/2</sup>.  As a result the potential is well
+   * defined everywhere.
    *
    * There is a closed solution to this problem which is implemented here.
    * Series "approximations" are only used to evaluate certain combinations of
    * elementary functions where use of the closed expression results in a loss
-   * of accuracy for small arguments due to cancellation of the two leading
-   * terms.  However these series include sufficient terms to give full machine
+   * of accuracy for small arguments due to cancellation of the leading terms.
+   * However these series include sufficient terms to give full machine
    * precision.
+   *
+   * Although the formulation used in this class applies to ellipsoids with
+   * arbitrary flattening, in practice, its use should be limited to about
+   * <i>b</i>/\e a &isin; [0.01, 100] or \e f &isin; [&minus;99, 0.99].
    *
    * Definitions:
    * - <i>V</i><sub>0</sub>, the gravitational contribution to the normal
    *   potential;
    * - &Phi;, the rotational contribution to the normal potential;
-   * - \e U = <i>V</i><sub>0</sub> + &Phi;, the total
-   *   potential;
+   * - \e U = <i>V</i><sub>0</sub> + &Phi;, the total potential;
    * - <b>&Gamma;</b> = &nabla;<i>V</i><sub>0</sub>, the acceleration due to
    *   mass of the earth;
    * - <b>f</b> = &nabla;&Phi;, the centrifugal acceleration;
@@ -48,10 +61,16 @@ namespace GeographicLib {
    *   north and up directions.
    *
    * References:
+   * - C. Somigliana, Teoria generale del campo gravitazionale dell'ellissoide
+   *   di rotazione, Mem. Soc. Astron. Ital, <b>4</b>, 541--599 (1929).
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
    *   Francisco, 1967), Secs. 1-19, 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).
+   * - B. Hofmann-Wellenhof, H. Moritz, Physical Geodesy (Second edition,
+   *   Springer, 2006) https://doi.org/10.1007/978-3-211-33545-1
    * - H. Moritz, Geodetic Reference System 1980, J. Geodesy 54(3), 395-405
-   *   (1980) https://dx.doi.org/10.1007/BF02521480
+   *   (1980) https://doi.org/10.1007/BF02521480
+   *
+   * For more information on normal gravity see \ref normalgravity.
    *
    * Example of use:
    * \include example-NormalGravity.cpp
@@ -59,20 +78,32 @@ namespace GeographicLib {
 
   class GEOGRAPHICLIB_EXPORT NormalGravity {
   private:
-    static const int maxit_ = 10;
+    static const int maxit_ = 20;
     typedef Math::real real;
     friend class GravityModel;
     real _a, _GM, _omega, _f, _J2, _omega2, _aomega2;
-    real _e2, _ep2, _b, _E, _U0, _gammae, _gammap, _q0, _m, _k, _fstar;
+    real _e2, _ep2, _b, _E, _U0, _gammae, _gammap, _Q0, _k, _fstar;
     Geocentric _earth;
-    // (atan(y)-(y-y^3/3))/y^5 (y = sqrt(x)) = 1/5-y/7+y^2/9-y^3/11...
-    static real atan5(real x);
-    // (atan(y)-(y-y^3/3+y^5/5))/y^7 (y = sqrt(x)) = -1/7+x/9-x^2/11+x^3/13...
-    static real atan7(real x);
-    static real qf(real ep2);
-    static real dq(real ep2);
-    static real qpf(real ep2);
+    static real atanzz(real x, bool alt) {
+      // This routine obeys the identity
+      //   atanzz(x, alt) = atanzz(-x/(1+x), !alt)
+      //
+      // Require x >= -1.  Best to call with alt, s.t. x >= 0; this results in
+      // a call to atan, instead of asin, or to asinh, instead of atanh.
+      using std::sqrt; using std::abs; using std::atan; using std::asin;
+      real z = sqrt(abs(x));
+      return x == 0 ? 1 :
+        (alt ?
+         (!(x < 0) ? Math::asinh(z) : asin(z)) / sqrt(abs(x) / (1 + x)) :
+         (!(x < 0) ? atan(z) : Math::atanh(z)) / z);
+    }
+    static real atan7series(real x);
+    static real atan5series(real x);
+    static real Qf(real x, bool alt);
+    static real Hf(real x, bool alt);
+    static real QH3f(real x, bool alt);
     real Jn(int n) const;
+    void Initialize(real a, real GM, real omega, real f_J2, bool geometricp);
   public:
 
     /** \name Setting up the normal gravity
@@ -80,6 +111,38 @@ namespace GeographicLib {
     ///@{
     /**
      * Constructor for the normal gravity.
+     *
+     * @param[in] a equatorial radius (meters).
+     * @param[in] GM mass constant of the ellipsoid
+     *   (meters<sup>3</sup>/seconds<sup>2</sup>); this is the product of \e G
+     *   the gravitational constant and \e M the mass of the earth (usually
+     *   including the mass of the earth's atmosphere).
+     * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
+     * @param[in] f_J2 either the flattening of the ellipsoid \e f or the
+     *   the dynamical form factor \e J2.
+     * @param[out] geometricp if true (the default), then \e f_J2 denotes the
+     *   flattening, else it denotes the dynamical form factor \e J2.
+     * @exception if \e a is not positive or if the other parameters do not
+     *   obey the restrictions given below.
+     *
+     * The shape of the ellipsoid can be given in one of two ways:
+     * - geometrically (\e geomtricp = true), the ellipsoid is defined by the
+     *   flattening \e f = (\e a &minus; \e b) / \e a, where \e a and \e b are
+     *   the equatorial radius and the polar semi-axis.  The parameters should
+     *   obey \e a &gt; 0, \e f &lt; 1.  There are no restrictions on \e GM or
+     *   \e omega, in particular, \e GM need not be positive.
+     * - physically (\e geometricp = false), the ellipsoid is defined by the
+     *   dynamical form factor <i>J</i><sub>2</sub> = (\e C &minus; \e A) /
+     *   <i>Ma</i><sup>2</sup>, where \e A and \e C are the equatorial and
+     *   polar moments of inertia and \e M is the mass of the earth.  The
+     *   parameters should obey \e a &gt; 0, \e GM &gt; 0 and \e J2 &lt; 1/3
+     *   &minus; (<i>omega</i><sup>2</sup><i>a</i><sup>3</sup>/<i>GM</i>)
+     *   8/(45&pi;).  There is no restriction on \e omega.
+     **********************************************************************/
+    NormalGravity(real a, real GM, real omega, real f_J2,
+                  bool geometricp = true);
+    /**
+     * \deprecated Old constructor for the normal gravity.
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] GM mass constant of the ellipsoid
@@ -106,6 +169,7 @@ namespace GeographicLib {
      * If \e omega, \e f, and \e J2 are all zero, then the ellipsoid becomes a
      * sphere.
      **********************************************************************/
+    GEOGRAPHICLIB_DEPRECATED("Use new NormalGravity constructor")
     NormalGravity(real a, real GM, real omega, real f, real J2);
 
     /**
@@ -143,7 +207,8 @@ namespace GeographicLib {
      *   (m s<sup>&minus;2</sup>).
      * @param[out] gammaz the upward component of the acceleration
      *   (m s<sup>&minus;2</sup>); this is usually negative.
-     * @return \e U the corresponding normal potential.
+     * @return \e U the corresponding normal potential
+     *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      *
      * Due to the axial symmetry of the ellipsoid, the result is independent of
      * the value of the longitude and the easterly component of the
@@ -178,18 +243,17 @@ namespace GeographicLib {
                  real& gammaX, real& gammaY, real& gammaZ) const;
 
     /**
-     * Evaluate the components of the acceleration due to gravity alone in
-     * geocentric coordinates.
+     * Evaluate the components of the acceleration due to the gravitational
+     * force in geocentric coordinates.
      *
      * @param[in] X geocentric coordinate of point (meters).
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[in] Z geocentric coordinate of point (meters).
-     * @param[out] GammaX the \e X component of the acceleration due to gravity
-     *   (m s<sup>&minus;2</sup>).
-     * @param[out] GammaY the \e Y component of the acceleration due to gravity
-     *   (m s<sup>&minus;2</sup>).
-     * @param[out] GammaZ the \e Z component of the acceleration due to gravity
-     *   (m s<sup>&minus;2</sup>).
+     * @param[out] GammaX the \e X component of the acceleration due to the
+     *   gravitational force (m s<sup>&minus;2</sup>).
+     * @param[out] GammaY the \e Y component of the acceleration due to the
+     * @param[out] GammaZ the \e Z component of the acceleration due to the
+     *   gravitational force (m s<sup>&minus;2</sup>).
      * @return <i>V</i><sub>0</sub> the gravitational potential
      *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      *
@@ -327,6 +391,12 @@ namespace GeographicLib {
      * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
      * @param[in] J2 the dynamical form factor.
      * @return \e f the flattening of the ellipsoid.
+     *
+     * This routine requires \e a &gt; 0, \e GM &gt; 0, \e J2 &lt; 1/3 &minus;
+     * <i>omega</i><sup>2</sup><i>a</i><sup>3</sup>/<i>GM</i> 8/(45&pi;).  A
+     * NaN is returned if these conditions do not hold.  The restriction to
+     * positive \e GM is made because for negative \e GM two solutions are
+     * possible.
      **********************************************************************/
     static Math::real J2ToFlattening(real a, real GM, real omega, real J2);
 
@@ -341,6 +411,9 @@ namespace GeographicLib {
      * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
      * @param[in] f the flattening of the ellipsoid.
      * @return \e J2 the dynamical form factor.
+     *
+     * This routine requires \e a &gt; 0, \e GM &ne; 0, \e f &lt; 1.  The
+     * values of these parameters are not checked.
      **********************************************************************/
     static Math::real FlatteningToJ2(real a, real GM, real omega, real f);
   };

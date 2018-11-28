@@ -4,13 +4,14 @@
  *
  * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOID_HPP)
 #define GEOGRAPHICLIB_GEOID_HPP 1
 
 #include <vector>
+#include <ios>
 #include <fstream>
 #include <GeographicLib/Constants.hpp>
 
@@ -123,7 +124,7 @@ namespace GeographicLib {
       _file.seekg(
 #if !(defined(__GNUC__) && __GNUC__ < 4)
                   // g++ 3.x doesn't know about the cast to streamoff.
-                  std::ios::streamoff
+                  std::streamoff
 #endif
                   (_datastart +
                    pixel_size_ * (unsigned(iy)*_swidth + unsigned(ix))));
@@ -170,8 +171,7 @@ namespace GeographicLib {
         }
       }
     }
-    real height(real lat, real lon, bool gradp,
-                real& grade, real& gradn) const;
+    real height(real lat, real lon) const;
     Geoid(const Geoid&);            // copy constructor not allowed
     Geoid& operator=(const Geoid&); // copy assignment not allowed
   public:
@@ -227,9 +227,11 @@ namespace GeographicLib {
     /**
      * Set up a cache.
      *
-     * @param[in] south latitude (degrees) of the south edge of the cached area.
+     * @param[in] south latitude (degrees) of the south edge of the cached
+     *   area.
      * @param[in] west longitude (degrees) of the west edge of the cached area.
-     * @param[in] north latitude (degrees) of the north edge of the cached area.
+     * @param[in] north latitude (degrees) of the north edge of the cached
+     *   area.
      * @param[in] east longitude (degrees) of the east edge of the cached area.
      * @exception GeographicErr if the memory necessary for caching the data
      *   can't be allocated (in this case, you will have no cache and can try
@@ -278,40 +280,15 @@ namespace GeographicLib {
      * @param[in] lat latitude of the point (degrees).
      * @param[in] lon longitude of the point (degrees).
      * @exception GeographicErr if there's a problem reading the data; this
-     *   never happens if (\e lat, \e lon) is within a successfully cached area.
+     *   never happens if (\e lat, \e lon) is within a successfully cached
+     *   area.
      * @return the height of the geoid above the ellipsoid (meters).
      *
      * The latitude should be in [&minus;90&deg;, 90&deg;].
      **********************************************************************/
     Math::real operator()(real lat, real lon) const {
-      real gradn, grade;
-      return height(lat, lon, false, gradn, grade);
+      return height(lat, lon);
     }
-
-    /// \cond SKIP
-    /**
-     * Compute the geoid height and gradient at a point
-     *
-     * @param[in] lat latitude of the point (degrees).
-     * @param[in] lon longitude of the point (degrees).
-     * @param[out] gradn northerly gradient (dimensionless).
-     * @param[out] grade easterly gradient (dimensionless).
-     * @exception GeographicErr if there's a problem reading the data; this
-     *   never happens if (\e lat, \e lon) is within a successfully cached area.
-     * @return geoid height (meters).
-     *
-     * The latitude should be in [&minus;90&deg;, 90&deg;].  As a result of the
-     * way that the geoid data is stored, the calculation of gradients can
-     * result in large quantization errors.  This is particularly acute for
-     * fine grids, at high latitudes, and for the easterly gradient.  For this
-     * reason, the computation of the gradient is <b>DEPRECATED</b>.  If you
-     * need to compute the direction of the acceleration due to gravity
-     * accurately, you should use GravityModel::Gravity.
-     **********************************************************************/
-    Math::real operator()(real lat, real lon, real& gradn, real& grade) const {
-      return height(lat, lon, true, gradn, grade);
-    }
-    /// \endcond
 
     /**
      * Convert a height above the geoid to a height above the ellipsoid and
@@ -325,13 +302,13 @@ namespace GeographicLib {
      *   geoid to a height above the ellipsoid; Geoid::ELLIPSOIDTOGEOID means
      *   convert a height above the ellipsoid to a height above the geoid.
      * @exception GeographicErr if there's a problem reading the data; this
-     *   never happens if (\e lat, \e lon) is within a successfully cached area.
+     *   never happens if (\e lat, \e lon) is within a successfully cached
+     *   area.
      * @return converted height (meters).
      **********************************************************************/
     Math::real ConvertHeight(real lat, real lon, real h,
                              convertflag d) const {
-      real gradn, grade;
-      return h + real(d) * height(lat, lon, false, gradn, grade);
+      return h + real(d) * height(lat, lon);
     }
 
     ///@}
@@ -467,15 +444,6 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const { return Constants::WGS84_f(); }
     ///@}
-
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the WGS84 ellipsoid.
-     **********************************************************************/
-    Math::real InverseFlattening() const
-    { return 1/Constants::WGS84_f(); }
-    /// \endcond
 
     /**
      * @return the default path for geoid data files.

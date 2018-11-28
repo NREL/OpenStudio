@@ -2,12 +2,12 @@
  * \file TransverseMercatorExact.cpp
  * \brief Implementation for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  *
  * The relevant section of Lee's paper is part V, pp 67--101,
- * <a href="https://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
+ * <a href="https://doi.org/10.3138/X687-1574-4325-WM62">Conformal
  * Projections Based On Jacobian Elliptic Functions</a>.
  *
  * The method entails using the Thompson Transverse Mercator as an
@@ -53,11 +53,10 @@ namespace GeographicLib {
   TransverseMercatorExact::TransverseMercatorExact(real a, real f, real k0,
                                                    bool extendp)
     : tol_(numeric_limits<real>::epsilon())
-    , tol1_(real(0.1) * sqrt(tol_))
     , tol2_(real(0.1) * tol_)
     , taytol_(pow(tol_, real(0.6)))
     , _a(a)
-    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
+    , _f(f)
     , _k0(k0)
     , _mu(_f * (2 - _f))        // e^2
     , _mv(1 - _mu)              // 1 - e^2
@@ -67,11 +66,11 @@ namespace GeographicLib {
     , _Ev(_mv)
   {
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     if (!(_f > 0))
       throw GeographicErr("Flattening is not positive");
     if (!(_f < 1))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
     if (!(Math::isfinite(_k0) && _k0 > 0))
       throw GeographicErr("Scale is not positive");
   }
@@ -96,8 +95,8 @@ namespace GeographicLib {
     real
       d1 = sqrt(Math::sq(cnu) + _mv * Math::sq(snu * snv)),
       d2 = sqrt(_mu * Math::sq(cnu) + _mv * Math::sq(cnv)),
-      t1 = (d1 ? snu * dnv / d1 : (snu < 0 ? -overflow : overflow)),
-      t2 = (d2 ? sinh( _e * Math::asinh(_e * snu / d2) ) :
+      t1 = (d1 != 0 ? snu * dnv / d1 : (snu < 0 ? -overflow : overflow)),
+      t2 = (d2 != 0 ? sinh( _e * Math::asinh(_e * snu / d2) ) :
             (snu < 0 ? -overflow : overflow));
     // psi = asinh(t1) - asinh(t2)
     // taup = sinh(psi)
@@ -120,8 +119,8 @@ namespace GeographicLib {
   }
 
   // Starting point for zetainv
-  bool TransverseMercatorExact::zetainv0(real psi, real lam, real& u, real& v)
-    const {
+  bool TransverseMercatorExact::zetainv0(real psi, real lam,
+                                         real& u, real& v) const {
     bool retval = false;
     if (psi < -_e * Math::pi()/4 &&
         lam > (1 - 2 * _e) * Math::pi()/2 &&
@@ -185,8 +184,8 @@ namespace GeographicLib {
   }
 
   // Invert zeta using Newton's method
-  void TransverseMercatorExact::zetainv(real taup, real lam, real& u, real& v)
-    const  {
+  void TransverseMercatorExact::zetainv(real taup, real lam,
+                                        real& u, real& v) const  {
     real
       psi = Math::asinh(taup),
       scal = 1/Math::hypot(real(1), taup);
@@ -243,8 +242,8 @@ namespace GeographicLib {
   }
 
   // Starting point for sigmainv
-  bool TransverseMercatorExact::sigmainv0(real xi, real eta, real& u, real& v)
-    const {
+  bool TransverseMercatorExact::sigmainv0(real xi, real eta,
+                                          real& u, real& v) const {
     bool retval = false;
     if (eta > real(1.25) * _Ev.KE() ||
         (xi < -real(0.25) * _Eu.E() && xi < eta - _Ev.KE())) {
@@ -293,8 +292,8 @@ namespace GeographicLib {
   }
 
   // Invert sigma using Newton's method
-  void TransverseMercatorExact::sigmainv(real xi, real eta, real& u, real& v)
-    const {
+  void TransverseMercatorExact::sigmainv(real xi, real eta,
+                                         real& u, real& v) const {
     if (sigmainv0(xi, eta, u, v))
       return;
     // min iterations = 2, max iterations = 7; mean = 3.9
@@ -347,8 +346,8 @@ namespace GeographicLib {
   }
 
   void TransverseMercatorExact::Forward(real lon0, real lat, real lon,
-                                        real& x, real& y, real& gamma, real& k)
-    const {
+                                        real& x, real& y,
+                                        real& gamma, real& k) const {
     lat = Math::LatFix(lat);
     lon = Math::AngDiff(lon0, lon);
     // Explicitly enforce the parity
@@ -408,8 +407,7 @@ namespace GeographicLib {
 
   void TransverseMercatorExact::Reverse(real lon0, real x, real y,
                                         real& lat, real& lon,
-                                        real& gamma, real& k)
-    const {
+                                        real& gamma, real& k) const {
     // This undoes the steps in Forward.
     real
       xi = y / (_a * _k0),

@@ -507,7 +507,7 @@ namespace detail {
     std::string value = encodeString(_value);
 
     if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex())) {
-      return IdfObject_Impl::setName(value,checkValidity);
+      return IdfObject_Impl::setName(value,checkValidity).has_value();
     }
 
     // push fields and groups if necessary and possible
@@ -656,7 +656,7 @@ namespace detail {
     // get new index
     unsigned index = m_fields.size();
     if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex())) {
-      return IdfObject_Impl::setName(value,checkValidity);
+      return IdfObject_Impl::setName(value,checkValidity).has_value();
     }
 
     // ok if nonextensible, or extensible w/ group size 1

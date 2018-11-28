@@ -22,7 +22,7 @@ function [x, y, gam, k] = polarst_fwd(isnorth, lat, lon, ellipsoid)
 %   dimensionless.
 %
 %   See also PROJDOC, POLARST_INV, UTMUPS_FWD, UTMUPS_INV,
-%     DEFAULTELLIPSOID.
+%     DEFAULTELLIPSOID, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 
@@ -39,7 +39,7 @@ function [x, y, gam, k] = polarst_fwd(isnorth, lat, lon, ellipsoid)
 
   overflow = 1/eps^2;
   a = ellipsoid(1);
-  e2 = ellipsoid(2)^2;
+  e2 = real(ellipsoid(2)^2);
   e2m = 1 - e2;
   c = sqrt(e2m) * exp(eatanhe(1, e2));
 

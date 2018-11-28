@@ -23,13 +23,13 @@ function [geodetic, rot] = geocentricreverse(geocentric, a, f)
 %           transforms the vector to local cartesian coordinates
 %           (east, north, up).
 %
-%   a = major radius (meters)
+%   a = equatorial radius (meters)
 %   f = flattening (0 means a sphere)
 %   If a and f are omitted, the WGS84 values are used.
 %
 %   See also GEOCENT_INV.
 
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2017) <charles@karney.com>.
 
   if (nargin < 2)
     ellipsoid = defaultellipsoid;

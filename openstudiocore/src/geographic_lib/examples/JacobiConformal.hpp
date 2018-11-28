@@ -7,7 +7,7 @@
  *
  * Copyright (c) Charles Karney (2014-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/EllipticFunction.hpp>
@@ -46,7 +46,7 @@ namespace GeographicLib {
     { real z = Math::hypot(x, y); x /= z; y /= z; }
   public:
     /**
-     * Constructor for a trixial ellipsoid with semi-axes
+     * Constructor for a trixial ellipsoid with semi-axes.
      *
      * @param[in] a the largest semi-axis.
      * @param[in] b the middle semi-axis.
@@ -66,10 +66,11 @@ namespace GeographicLib {
       , _ey(_bc2 / _ac2 * Math::sq(_a / _b), +_bc2 / Math::sq(_b),
             _ab2 / _ac2 * Math::sq(_c / _b), Math::sq(_c / _b))
     {
-      if (!(a >= b && b >= c && c > 0))
+      if (!(Math::isfinite(_a) && _a >= _b && _b >= _c && _c > 0))
         throw GeographicErr("JacobiConformal: axes are not in order");
-      if (!(a > c))
-        throw GeographicErr("JacobiConformal: use alternate constructor for sphere");
+      if (!(_a > _c))
+        throw GeographicErr
+          ("JacobiConformal: use alternate constructor for sphere");
     }
     /**
      * Alternate constructor for a triaxial ellipsoid.
@@ -97,21 +98,22 @@ namespace GeographicLib {
             +(_b - _c) * (_b + _c) / Math::sq(_b),
             _ab2 / _ac2 * Math::sq(_c / _b), Math::sq(_c / _b))
     {
-      if (!(a >= b && b >= c && c > 0 && ab >= 0 && bc >= 0))
+      if (!(Math::isfinite(_a) && _a >= _b && _b >= _c && _c > 0 &&
+            ab >= 0 && bc >= 0))
         throw GeographicErr("JacobiConformal: axes are not in order");
-      if (!(ab + bc > 0))
+      if (!(ab + bc > 0 && Math::isfinite(_ac2)))
         throw GeographicErr("JacobiConformal: ab + bc must be positive");
     }
     /**
-     * @return the quadrant length in the \e x direction
+     * @return the quadrant length in the \e x direction.
      **********************************************************************/
     Math::real x() const { return Math::sq(_a / _b) * _ex.Pi(); }
     /**
-     * The \e x projection
+     * The \e x projection.
      *
-     * @param[in] somg sin(&omega;)
-     * @param[in] comg cos(&omega;)
-     * @return \e x
+     * @param[in] somg sin(&omega;).
+     * @param[in] comg cos(&omega;).
+     * @return \e x.
      **********************************************************************/
     Math::real x(real somg, real comg) const {
       real somg1 = _b * somg, comg1 = _a * comg; norm(somg1, comg1);
@@ -119,10 +121,10 @@ namespace GeographicLib {
         * _ex.Pi(somg1, comg1, _ex.Delta(somg1, comg1));
     }
     /**
-     * The \e x projection
+     * The \e x projection.
      *
-     * @param[in] omg &omega; (in degrees)
-     * @return \e x (in degrees)
+     * @param[in] omg &omega; (in degrees).
+     * @return \e x (in degrees).
      *
      * &omega; must be in (&minus;180&deg;, 180&deg;].
      **********************************************************************/
@@ -132,15 +134,15 @@ namespace GeographicLib {
       return x(somg, comg) / Math::degree();
     }
     /**
-     * @return the quadrant length in the \e y direction
+     * @return the quadrant length in the \e y direction.
      **********************************************************************/
     Math::real y() const { return Math::sq(_c / _b) * _ey.Pi(); }
     /**
-     * The \e y projection
+     * The \e y projection.
      *
-     * @param[in] sbet sin(&beta;)
-     * @param[in] cbet cos(&beta;)
-     * @return \e y
+     * @param[in] sbet sin(&beta;).
+     * @param[in] cbet cos(&beta;).
+     * @return \e y.
      **********************************************************************/
     Math::real y(real sbet, real cbet) const {
       real sbet1 = _b * sbet, cbet1 = _c * cbet; norm(sbet1, cbet1);
@@ -148,10 +150,10 @@ namespace GeographicLib {
         * _ey.Pi(sbet1, cbet1, _ey.Delta(sbet1, cbet1));
     }
     /**
-     * The \e y projection
+     * The \e y projection.
      *
-     * @param[in] bet &beta; (in degrees)
-     * @return \e y (in degrees)
+     * @param[in] bet &beta; (in degrees).
+     * @return \e y (in degrees).
      *
      * &beta; must be in (&minus;180&deg;, 180&deg;].
      **********************************************************************/

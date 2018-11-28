@@ -32,11 +32,8 @@
 #include <boost/log/common.hpp>
 #include <boost/log/attributes/function.hpp>
 
-#include <boost/utility/empty_deleter.hpp>
+#include <boost/core/null_deleter.hpp>
 
-
-#include <QReadWriteLock>
-#include <QThread>
 
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
@@ -80,19 +77,18 @@ namespace openstudio{
   }
 
   LoggerSingleton::LoggerSingleton()
-    : m_mutex(new QReadWriteLock())
   {
-    // Make QThread attribute available to logging
-    boost::log::core::get()->add_global_attribute("QThread", boost::log::attributes::make_function(&QThread::currentThread));
+    // Make current thread id attribute available to logging
+    boost::log::core::get()->add_global_attribute("ThreadId", boost::log::attributes::make_function(&std::this_thread::get_id));
 
-    // We have to provide an empty deleter to avoid destroying the global stream
-    boost::shared_ptr<std::ostream> stdOut(&std::cout, boost::empty_deleter());
+    // We have to provide an null deleter to avoid destroying the global stream
+    boost::shared_ptr<std::ostream> stdOut(&std::cout, boost::null_deleter());
     m_standardOutLogger.setStream(stdOut);
     m_standardOutLogger.setLogLevel(Warn);
     this->addSink(m_standardOutLogger.sink());
 
     // We have to provide an empty deleter to avoid destroying the global stream
-    boost::shared_ptr<std::ostream> stdErr(&std::cerr, boost::empty_deleter());
+    boost::shared_ptr<std::ostream> stdErr(&std::cerr, boost::null_deleter());
     m_standardErrLogger.setStream(stdErr);
     m_standardErrLogger.setLogLevel(Warn);
     //this->addSink(m_standardErrLogger.sink());
@@ -105,27 +101,25 @@ namespace openstudio{
   {
     // unregister Qt message handler
     //qInstallMsgHandler(consoleLogQtMessage);
-
-    delete m_mutex;
   }
 
   LogSink LoggerSingleton::standardOutLogger() const
   {
-    QReadLocker l(m_mutex);
+    std::shared_lock l{m_mutex};
 
     return m_standardOutLogger;
   }
 
   LogSink LoggerSingleton::standardErrLogger() const
   {
-    QReadLocker l(m_mutex);
+    std::shared_lock l{m_mutex};
 
     return m_standardErrLogger;
   }
 
   LoggerType& LoggerSingleton::loggerFromChannel(const LogChannel& logChannel)
   {
-    QReadLocker l(m_mutex);
+    std::shared_lock l{m_mutex};
 
     auto it = m_loggerMap.find(logChannel);
     if (it == m_loggerMap.end()){
@@ -137,7 +131,7 @@ namespace openstudio{
       // Drop the read lock and grab a write lock - we need to add the new file to the map
       // this will reduce contention when multiple threads trying to log at once.
       l.unlock();
-      QWriteLocker l2(m_mutex);
+      std::unique_lock l2{m_mutex};
 
       std::pair<LoggerMapType::iterator, bool> inserted = m_loggerMap.insert(newPair);
 
@@ -150,7 +144,7 @@ namespace openstudio{
 
   bool LoggerSingleton::findSink(boost::shared_ptr<LogSinkBackend> sink)
   {
-    QWriteLocker l(m_mutex);
+    std::unique_lock l{m_mutex};
 
     auto it = m_sinks.find(sink);
 
@@ -159,7 +153,7 @@ namespace openstudio{
 
   void LoggerSingleton::addSink(boost::shared_ptr<LogSinkBackend> sink)
   {
-    QWriteLocker l(m_mutex);
+    std::shared_lock l{m_mutex};
 
     auto it = m_sinks.find(sink);
     if (it == m_sinks.end()){
@@ -167,7 +161,7 @@ namespace openstudio{
       // Drop the read lock and grab a write lock - we need to add the new file to the map
       // this will reduce contention when multiple threads trying to log at once.
       l.unlock();
-      QWriteLocker l2(m_mutex);
+      std::unique_lock l2{m_mutex};
 
       m_sinks.insert(sink);
 
@@ -178,7 +172,7 @@ namespace openstudio{
 
   void LoggerSingleton::removeSink(boost::shared_ptr<LogSinkBackend> sink)
   {
-    QWriteLocker l(m_mutex);
+    std::shared_lock l{m_mutex};
 
     auto it = m_sinks.find(sink);
     if (it != m_sinks.end()){
@@ -186,7 +180,7 @@ namespace openstudio{
       // Drop the read lock and grab a write lock - we need to add the new file to the map
       // this will reduce contention when multiple threads trying to log at once.
       l.unlock();
-      QWriteLocker l2(m_mutex);
+      std::unique_lock l2{m_mutex};
 
       m_sinks.erase(it);
 

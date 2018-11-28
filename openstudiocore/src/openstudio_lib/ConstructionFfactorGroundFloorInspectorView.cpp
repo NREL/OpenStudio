@@ -173,7 +173,7 @@ void ConstructionFfactorGroundFloorInspectorView::attach(openstudio::model::FFac
   m_nameEdit->bind(
     *m_fFactorGroundFloorConstruction,
     OptionalStringGetter(std::bind(&model::FFactorGroundFloorConstruction::name, m_fFactorGroundFloorConstruction.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::FFactorGroundFloorConstruction::setName, m_fFactorGroundFloorConstruction.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::FFactorGroundFloorConstruction::setName, m_fFactorGroundFloorConstruction.get_ptr(),std::placeholders::_1))
   );
 
   m_ffactorEdit->bind(

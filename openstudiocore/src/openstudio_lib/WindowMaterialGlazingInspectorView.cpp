@@ -299,7 +299,7 @@ void WindowMaterialGlazingInspectorView::attach(openstudio::model::StandardGlazi
   m_nameEdit->bind(
     *m_glazing,
     OptionalStringGetter(std::bind(&model::StandardGlazing::name, m_glazing.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::StandardGlazing::setName, m_glazing.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::StandardGlazing::setName, m_glazing.get_ptr(),std::placeholders::_1))
   );
 
   // m_windowGlassSpectralDataSetName->bind(glazing,"windowGlassSpectralDataSetName");

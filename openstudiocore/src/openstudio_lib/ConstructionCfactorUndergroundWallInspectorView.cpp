@@ -161,7 +161,7 @@ void ConstructionCfactorUndergroundWallInspectorView::attach(openstudio::model::
   m_nameEdit->bind(
     *m_cFactorUndergroundWallConstruction,
     OptionalStringGetter(std::bind(&model::CFactorUndergroundWallConstruction::name, m_cFactorUndergroundWallConstruction.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::CFactorUndergroundWallConstruction::setName, m_cFactorUndergroundWallConstruction.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::CFactorUndergroundWallConstruction::setName, m_cFactorUndergroundWallConstruction.get_ptr(),std::placeholders::_1))
   );
 
   // m_cfactorEdit->bind(cFactorUndergroundWallConstruction,"cFactor",m_isIP);

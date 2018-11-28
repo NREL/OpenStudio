@@ -31,6 +31,7 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/MagneticCircle.hpp \
 			GeographicLib/MagneticModel.hpp \
 			GeographicLib/Math.hpp \
+			GeographicLib/NearestNeighbor.hpp \
 			GeographicLib/NormalGravity.hpp \
 			GeographicLib/OSGB.hpp \
 			GeographicLib/PolarStereographic.hpp \

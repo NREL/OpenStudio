@@ -7,15 +7,15 @@ function geoddoc
 %
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
-%     https://dx.doi.org/10.1007/s00190-012-0578-z
-%     Addenda: http://geographiclib.sf.net/geod-addenda.html
+%     https://doi.org/10.1007/s00190-012-0578-z
+%     Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 %
 %   which, in turn, is based on the classic solution of the geodesic
 %   problems pioneered by Legendre (1806), Bessel (1825), and Helmert
 %   (1880).  Links for these and other original papers on geodesics are
 %   given in
 %
-%     http://geographiclib.sf.net/geodesic-papers/biblio.html
+%     https://geographiclib.sourceforge.io/geodesic-papers/biblio.html
 %
 %   The shortest path between two points on the ellipsoid at (lat1, lon1)
 %   and (lat2, lon2) is called the geodesic.  Its length is s12 and the
@@ -102,8 +102,8 @@ function geoddoc
 %    Larger values of e can be used with a corresponding drop in accuracy.
 %    The following table gives the approximate maximum error in
 %    geoddistance and geodreckon (expressed as a distance) for an ellipsoid
-%    with the same major radius as the WGS84 ellipsoid and different values
-%    of the flattening (nm means nanometer and um means micrometer).
+%    with the same equatorial radius as the WGS84 ellipsoid and different
+%    values of the flattening (nm means nanometer and um means micrometer).
 %
 %         |f|     error
 %         0.01    25 nm
@@ -163,10 +163,9 @@ function geoddoc
 %       polygon.
 %
 %   See also GEODDISTANCE, GEODRECKON, GEODAREA,
-%     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC,
-%     GEODESICDIRECT, GEODESICLINE, GEODESICINVERSE, POLYGONAREA.
+%     DEFAULTELLIPSOID, ECC2FLAT, FLAT2ECC.
 
-% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 
   help geoddoc
 end

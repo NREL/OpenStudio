@@ -134,7 +134,6 @@
 
 #include <QDomDocument>
 #include <QDomElement>
-#include <QThread>
 
 namespace openstudio {
 namespace sdd {
@@ -154,7 +153,7 @@ namespace sdd {
   {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.sdd\\.ReverseTranslator"));
-    m_logSink.setThreadId(QThread::currentThread());
+    m_logSink.setThreadId(std::this_thread::get_id());
   }
 
   ReverseTranslator::~ReverseTranslator()
@@ -167,7 +166,7 @@ namespace sdd {
 
     m_progressBar = progressBar;
 
-    m_logSink.setThreadId(QThread::currentThread());
+    m_logSink.setThreadId(std::this_thread::get_id());
 
     m_logSink.resetStringStream();
 

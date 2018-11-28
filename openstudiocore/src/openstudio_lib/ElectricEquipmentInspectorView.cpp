@@ -159,7 +159,7 @@ void ElectricEquipmentDefinitionInspectorView::attach(openstudio::model::Electri
   m_nameEdit->bind(
     *m_electricEquipmentDefinition,
     OptionalStringGetter(std::bind(&model::ElectricEquipmentDefinition::name, m_electricEquipmentDefinition.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::ElectricEquipmentDefinition::setName, m_electricEquipmentDefinition.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::ElectricEquipmentDefinition::setName, m_electricEquipmentDefinition.get_ptr(),std::placeholders::_1))
   );
 
   // m_designLevelEdit->bind(electricEquipmentDefinition,"designLevel",m_isIP);

@@ -137,7 +137,7 @@ void WindowMaterialDaylightRedirectionDeviceInspectorView::attach(openstudio::mo
   m_nameEdit->bind(
     *m_material,
     OptionalStringGetter(std::bind(&model::DaylightRedirectionDevice::name, m_material.get_ptr(), true)),
-    boost::optional<StringSetter>(std::bind(&model::DaylightRedirectionDevice::setName, m_material.get_ptr(), std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::DaylightRedirectionDevice::setName, m_material.get_ptr(), std::placeholders::_1))
   );
 
   m_daylightRedirectionDeviceType->bind<std::string>(

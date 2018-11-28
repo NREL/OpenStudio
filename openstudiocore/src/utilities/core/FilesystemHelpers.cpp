@@ -28,6 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "FilesystemHelpers.hpp"
+#include "Filesystem.hpp"
 #include "Path.hpp"
 #include "Assert.hpp"
 
@@ -88,33 +89,47 @@ namespace openstudio {
         return result;
       }
 
-    std::vector<openstudio::path> directory_files(const openstudio::path &t_path)
-    {
-      std::vector<openstudio::path> files;
 
-      const auto num_path_elems = [&](){
-        const auto distance = std::distance(t_path.begin(), t_path.end());
-        if (openstudio::toString(t_path.filename()) == ".") {
-          return distance - 1;
-        } else {
-          return distance;
-        }
-      }();
-
-      for (auto dir_itr = openstudio::filesystem::directory_iterator(t_path);
-           dir_itr != openstudio::filesystem::directory_iterator();
-           ++dir_itr)
+    template<typename Predicate>
+      std::vector<openstudio::path> directory_elements(const openstudio::path &t_path, Predicate predicate)
       {
-        // skip the path so these names are all relative
-        const auto p = dir_itr->path();
-        if (openstudio::filesystem::is_regular_file(p)) {
-          files.push_back(rebuild_path(advance_itr_copy(p.begin(), num_path_elems), p.end()));
-          LOG_FREE(Debug, "FilesystemHelpers", "directory_file '" << openstudio::toString(p) << "' -> '" << openstudio::toString(files.back()) << "'");
+        std::vector<openstudio::path> files;
+
+        const auto num_path_elems = [&](){
+          const auto distance = std::distance(t_path.begin(), t_path.end());
+          if (openstudio::toString(t_path.filename()) == ".") {
+            return distance - 1;
+          } else {
+            return distance;
+          }
+        }();
+
+        for (auto dir_itr = openstudio::filesystem::directory_iterator(t_path);
+            dir_itr != openstudio::filesystem::directory_iterator();
+            ++dir_itr)
+        {
+          // skip the path so these names are all relative
+          const auto p = dir_itr->path();
+          if (predicate(p)) {
+            files.push_back(rebuild_path(advance_itr_copy(p.begin(), num_path_elems), p.end()));
+            LOG_FREE(Debug, "FilesystemHelpers", 
+                "directory_elements '" << openstudio::toString(p) << "' -> '" << openstudio::toString(files.back()) << "'");
+          }
         }
+
+        return files;
       }
 
-      return files;
+    std::vector<openstudio::path> directory_files(const openstudio::path &t_path)
+    {
+      return directory_elements(t_path, [](const auto &f) { return openstudio::filesystem::is_regular_file(f); } );
     }
+
+    std::vector<openstudio::path> directory_directories(const openstudio::path &t_path)
+    {
+      return directory_elements(t_path, [](const auto &f) { return openstudio::filesystem::is_directory(f); } );
+    }
+
 
     std::vector<openstudio::path> recursive_directory_files(const openstudio::path &t_path)
     {
@@ -171,6 +186,84 @@ namespace openstudio {
     time_t last_write_time_as_time_t(const openstudio::path &t_path)
     {
       return to_time_t(openstudio::filesystem::last_write_time(t_path));
+    }
+
+    openstudio::path create_temporary_directory(const openstudio::path &basename)
+    {
+      // making this count static/atomic so that we reduce the chance of collisions
+      // on each run of the binary. This is threadsafe, with the atomic
+      static std::atomic<unsigned int> count = 0;
+      constexpr auto allowed_attempts = 1000;
+
+      const auto temp_dir = openstudio::filesystem::temp_directory_path();
+
+      int attempts{0};
+
+      while (attempts < allowed_attempts) {
+        // concat number to path basename, without adding a new path element
+        auto filename = basename;
+        filename += openstudio::toPath("-" + std::to_string(std::time(nullptr)) + "-" + std::to_string(count++));
+        const auto full_pathname = temp_dir / filename;
+        // full_path_name = {temp_path}/{base_name}-{count++}
+
+        try {
+          if (openstudio::filesystem::create_directories(full_pathname)) {
+            // if the path was created, then we know it was created for us
+            return full_pathname;
+          }
+        } catch (...) {
+          // swallow exceptions, we don't care, we only care when it succeeds
+        }
+      }
+
+      // after too many attempts we never made a path
+      return {};
+    }
+
+
+    openstudio::path home_path()
+    {
+      const auto build_path = [](const auto & ... elem) {
+        auto path_elem = [](auto &missing, const auto & env_var) {
+          if (const auto var = std::getenv(env_var); var != nullptr) {
+            const auto path = toPath(var);
+            if (path.empty()) { missing = true; }
+            return path;
+          } else {
+            missing = true;
+            return openstudio::path{};
+          }
+        };
+
+        bool missing_element = false;
+
+        // build up the path from the environment variable names passed in.
+        const auto path = (path_elem(missing_element, elem) / ...).lexically_normal();
+
+        if (!missing_element && openstudio::filesystem::is_directory(path)) {
+          return path;
+        } else {
+          return openstudio::path{};
+        }
+      };
+
+      if (const auto home = build_path("USERPROFILE"); !home.empty()) {
+        LOG_FREE(Debug, "FilesystemHelpers", "home_path USERPROFILE: " << toString(home));
+        return home;
+      }
+
+      if (const auto home = build_path("HOMEDRIVE", "HOMEPATH"); !home.empty()) {
+        LOG_FREE(Debug, "FilesystemHelpers", "home_path HOMEDRIVE/HOMEPATH: " << toString(home));
+        return home;
+      }
+
+      if (const auto home = build_path("HOME"); !home.empty()) {
+        LOG_FREE(Debug, "FilesystemHelpers", "home_path HOME: " << toString(home));
+        return home;
+      }
+
+      LOG_FREE(Warn, "FilesystemHelpers", "home_path No Home Found");
+      return toPath("/");
     }
   }
 }

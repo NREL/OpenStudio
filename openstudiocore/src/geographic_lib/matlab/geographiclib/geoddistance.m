@@ -26,8 +26,8 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
-%     https://dx.doi.org/10.1007/s00190-012-0578-z
-%     Addenda: http://geographiclib.sf.net/geod-addenda.html
+%     https://doi.org/10.1007/s00190-012-0578-z
+%     Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 %
 %   This function duplicates some of the functionality of the distance
 %   function in the MATLAB mapping toolbox.  Differences are
@@ -39,10 +39,9 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %     * The algorithm converges for all pairs of input points.
 %     * Additional properties of the geodesic are calcuated.
 %
-%   See also GEODDOC, GEODRECKON, GEODAREA, GEODESICINVERSE,
-%     DEFAULTELLIPSOID.
+%   See also GEODDOC, GEODRECKON, GEODAREA, DEFAULTELLIPSOID, FLAT2ECC.
 
-% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
@@ -74,7 +73,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   maxit2 = maxit1 + (-log2(eps) + 1) + 10;
 
   a = ellipsoid(1);
-  e2 = ellipsoid(2)^2;
+  e2 = real(ellipsoid(2)^2);
   f = e2 / (1 + sqrt(1 - e2));
 
   f1 = 1 - f;
@@ -98,9 +97,15 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   A3x = A3coeff(n);
   C3x = C3coeff(n);
 
-  lon12 = AngRound(AngDiff(lon1(:), lon2(:)));
+  [lon12, lon12s] = AngDiff(lon1(:), lon2(:));
   lonsign = 2 * (lon12 >= 0) - 1;
-  lon12 = lonsign .* lon12;
+  lon12 = lonsign .* AngRound(lon12);
+  lon12s = AngRound((180 -lon12) - lonsign .* lon12s);
+  lam12 = lon12 * degree; slam12 = Z; clam12 = Z;
+  l = lon12 > 90;
+  [slam12( l), clam12( l)] = sincosdx(lon12s(l)); clam12(l) = -clam12(l);
+  [slam12(~l), clam12(~l)] = sincosdx(lon12(~l));
+
   lat1 = AngRound(LatFix(lat1(:)));
   lat2 = AngRound(LatFix(lat2(:)));
   swapp = 2 * ~(abs(lat1) < abs(lat2)) - 1;
@@ -124,12 +129,11 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 
   dn1 = sqrt(1 + ep2 * sbet1.^2);
   dn2 = sqrt(1 + ep2 * sbet2.^2);
-  lam12 = lon12 * degree;
-  [slam12, clam12] = sincosdx(lon12);
 
   sig12 = Z; ssig1 = Z; csig1 = Z; ssig2 = Z; csig2 = Z;
   calp1 = Z; salp1 = Z; calp2 = Z; salp2 = Z;
-  s12 = Z; m12 = Z; M12 = Z; M21 = Z; omg12 = Z;
+  s12 = Z; m12 = Z; M12 = Z; M21 = Z;
+  omg12 = Z; somg12 = 2+Z; comg12 = Z; domg12 = Z;
 
   m = lat1 == -90 | slam12 == 0;
 
@@ -157,7 +161,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 
   eq = ~m & sbet1 == 0;
   if f > 0
-    eq = eq & lam12 < pi - f * pi;
+    eq = eq & lon12s >= f * 180;
   end
   calp1(eq) = 0; calp2(eq) = 0; salp1(eq) = 1; salp2(eq) = 1;
   s12(eq) = a * lam12(eq); sig12(eq) = lam12(eq) / f1; omg12(eq) = sig12(eq);
@@ -168,8 +172,9 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
   if any(g)
     dnm = Z;
     [sig12(g), salp1(g), calp1(g), salp2(g), calp2(g), dnm(g)] = ...
-        InverseStart(sbet1(g), cbet1(g), dn1(g), sbet2(g), cbet2(g), dn2(g), ...
-                     lam12(g), f, A3x);
+        InverseStart(sbet1(g), cbet1(g), dn1(g), ...
+                     sbet2(g), cbet2(g), dn2(g), ...
+                     lam12(g), slam12(g), clam12(g), f, A3x);
 
     s = g & sig12 >= 0;
     s12(s) = b * sig12(s) .* dnm(s);
@@ -195,12 +200,11 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
         numit(g) = k;
         [v(g), dv(g), ...
          salp2(g), calp2(g), sig12(g), ...
-         ssig1(g), csig1(g), ssig2(g), csig2(g), epsi(g), omg12(g)] = ...
+         ssig1(g), csig1(g), ssig2(g), csig2(g), epsi(g), domg12(g)] = ...
             Lambda12(sbet1(g), cbet1(g), dn1(g), ...
                      sbet2(g), cbet2(g), dn2(g), ...
-                     salp1(g), calp1(g), f, A3x, C3x);
-        v = v - lam12;
-        g = g & ~(tripb | ~(abs(v) >= ((tripn * 6) + 2) * tol0));
+                     salp1(g), calp1(g), slam12(g), clam12(g), f, A3x, C3x);
+        g = g & ~(tripb | ~(abs(v) >= ((tripn * 7) + 1) * tol0));
         if ~any(g), break, end
 
         c = g & v > 0;
@@ -250,7 +254,11 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 
       m12(g) = m12(g) * b;
       s12(g) = s12(g) * b;
-      omg12(g) = lam12(g) - omg12(g);
+      if areap
+        sdomg12 = sin(domg12(g)); cdomg12 = cos(domg12(g));
+        somg12(g) = slam12(g) .* cdomg12 - clam12(g) .* sdomg12;
+        comg12(g) = clam12(g) .* cdomg12 + slam12(g) .* sdomg12;
+      end
     end
   end
 
@@ -273,12 +281,16 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
     S12 = A4 .* (B42 - B41);
     S12(calp0 == 0 | salp0 == 0) = 0;
 
-    l = ~m & omg12 < 0.75 * pi & sbet2 - sbet1 < 1.75;
+    l = ~m & somg12 > 1;
+    somg12(l) = sin(omg12(l)); comg12(l) = cos(omg12(l));
+
+    l = ~m & comg12 > -0.7071 & sbet2 - sbet1 < 1.75;
     alp12 = Z;
-    somg12 = sin(omg12(l)); domg12 = 1 + cos(omg12(l));
+    domg12 = 1 + comg12(l);
     dbet1 = 1 + cbet1(l); dbet2 = 1 + cbet2(l);
-    alp12(l) = 2 * atan2(somg12 .* (sbet1(l) .* dbet2 + sbet2(l) .* dbet1), ...
-                         domg12 .* (sbet1(l) .* sbet2(l) + dbet1 .* dbet2));
+    alp12(l) = 2 * ...
+        atan2(somg12(l) .* (sbet1(l) .* dbet2 + sbet2(l) .* dbet1), ...
+              domg12    .* (sbet1(l) .* sbet2(l) + dbet1 .* dbet2));
     l = ~l;
     salp12 = salp2(l) .* calp1(l) - calp2(l) .* salp1(l);
     calp12 = calp2(l) .* calp1(l) + salp2(l) .* salp1(l);
@@ -319,7 +331,8 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 end
 
 function [sig12, salp1, calp1, salp2, calp2, dnm] = ...
-      InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2, lam12, f, A3x)
+      InverseStart(sbet1, cbet1, dn1, sbet2, cbet2, dn2, ...
+                   lam12, slam12, clam12, f, A3x)
 %INVERSESTART  Compute a starting point for Newton's method
 
   N = length(sbet1);
@@ -344,7 +357,8 @@ function [sig12, salp1, calp1, salp2, calp2, dnm] = ...
   sbetm2 = sbetm2 ./ (sbetm2 + (cbet1(s) + cbet2(s)).^2);
   dnm(s) = sqrt(1 + ep2 * sbetm2);
   omg12(s) = omg12(s) ./ (f1 * dnm(s));
-  somg12 = sin(omg12); comg12 = cos(omg12);
+  somg12 = slam12; comg12 = clam12;
+  somg12(s) = sin(omg12(s)); comg12(s) = cos(omg12(s));
 
   salp1 = cbet2 .* somg12;
   t = cbet2 .* sbet1 .* somg12.^2;
@@ -366,12 +380,13 @@ function [sig12, salp1, calp1, salp2, calp2, dnm] = ...
   s = ~(s | abs(n) > 0.1 | csig12 >= 0 | ssig12 >= 6 * abs(n) * pi * cbet1.^2);
 
   if any(s)
+    lam12x = atan2(-slam12(s), -clam12(s));
     if f >= 0
       k2 = sbet1(s).^2 * ep2;
       epsi = k2 ./ (2 * (1 + sqrt(1 + k2)) + k2);
       lamscale = f * cbet1(s) .* A3f(epsi, A3x) * pi;
       betscale = lamscale .* cbet1(s);
-      x = (lam12(s) - pi) ./ lamscale;
+      x = lam12x ./ lamscale;
       y = sbet12a(s) ./ betscale;
     else
       cbet12a = cbet2(s) .* cbet1(s) - sbet2(s) .* sbet1(s);
@@ -384,7 +399,7 @@ function [sig12, salp1, calp1, salp2, calp2, dnm] = ...
       betscale = cvmgt(sbet12a(s) ./ min(-0.01, x), - f * cbet1(s).^2 * pi, ...
                        x < -0.01);
      lamscale = betscale ./ cbet1(s);
-      y = (lam12(s) - pi) ./ lamscale;
+      y = lam12x ./ lamscale;
     end
     k = Astroid(x, y);
     str = y > -tol1 & x > -1 - xthresh;
@@ -455,8 +470,10 @@ function k = Astroid(x, y)
 end
 
 function [lam12, dlam12, ...
-          salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, epsi, domg12] = ...
-    Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1, f, A3x, C3x)
+          salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, epsi, ...
+          domg12] = ...
+    Lambda12(sbet1, cbet1, dn1, sbet2, cbet2, dn2, salp1, calp1, ...
+             slam120, clam120, f, A3x, C3x)
 %LAMBDA12  Solve the hybrid problem
 
   tiny = sqrt(realmin);
@@ -486,16 +503,17 @@ function [lam12, dlam12, ...
   sig12 = atan2(0 + max(0, csig1 .* ssig2 - ssig1 .* csig2), ...
                 csig1 .* csig2 + ssig1 .* ssig2);
 
-  omg12 = atan2(0 + max(0, comg1 .* somg2 - somg1 .* comg2), ...
-                comg1 .* comg2 + somg1 .* somg2);
+  somg12 = 0 + max(0, comg1 .* somg2 - somg1 .* comg2);
+  comg12 =            comg1 .* comg2 + somg1 .* somg2;
+  eta = atan2(somg12 .* clam120 - comg12 .* slam120, ...
+              comg12 .* clam120 + somg12 .* slam120);
   k2 = calp0.^2 * ep2;
   epsi = k2 ./ (2 * (1 + sqrt(1 + k2)) + k2);
   Ca = C3f(epsi, C3x);
   B312 = SinCosSeries(true, ssig2, csig2, Ca) - ...
          SinCosSeries(true, ssig1, csig1, Ca);
-  h0 = -f * A3f(epsi, A3x);
-  domg12 = salp0 .* h0 .* (sig12 + B312);
-  lam12 = omg12 + domg12;
+  domg12 = -f * A3f(epsi, A3x) .* salp0 .* (sig12 + B312);
+  lam12 = eta + domg12;
 
   [~, dlam12] = ...
       Lengths(epsi, sig12, ...

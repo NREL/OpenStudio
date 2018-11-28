@@ -6,9 +6,7 @@ function height = geoidheight(latlong, geoidname, geoiddir)
 %
 %   This is a legacy function to replace a compiled interface function of
 %   the same name.  This now calls geoid_height which is implemented as
-%   native Matlab code.  (Note that, unlike the compiled interface, this
-%   wrapper function does not return the gradient of the geoid height; this
-%   is now a deprecated feature of the Geoid class.)
+%   native Matlab code.
 %
 %   latlong is an M x 2 matrix
 %       latitude = latlong(:,1) in degrees
@@ -25,7 +23,7 @@ function height = geoidheight(latlong, geoidname, geoiddir)
 %
 %   See also GEOID_HEIGHT.
 
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2016) <charles@karney.com>.
 
   if nargin < 2
     geoidname = '';

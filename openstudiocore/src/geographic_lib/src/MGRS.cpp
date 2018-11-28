@@ -2,9 +2,9 @@
  * \file MGRS.cpp
  * \brief Implementation for GeographicLib::MGRS class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/MGRS.hpp>
@@ -14,25 +14,25 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const string MGRS::hemispheres_ = "SN";
-  const string MGRS::utmcols_[3] = { "ABCDEFGH", "JKLMNPQR", "STUVWXYZ" };
-  const string MGRS::utmrow_ = "ABCDEFGHJKLMNPQRSTUV";
-  const string MGRS::upscols_[4] =
+  const char* const MGRS::hemispheres_ = "SN";
+  const char* const MGRS::utmcols_[] = { "ABCDEFGH", "JKLMNPQR", "STUVWXYZ" };
+  const char* const MGRS::utmrow_ = "ABCDEFGHJKLMNPQRSTUV";
+  const char* const MGRS::upscols_[] =
     { "JKLPQRSTUXYZ", "ABCFGHJKLPQR", "RSTUXYZ", "ABCFGHJ" };
-  const string MGRS::upsrows_[2] =
+  const char* const MGRS::upsrows_[] =
     { "ABCDEFGHJKLMNPQRSTUVWXYZ", "ABCDEFGHJKLMNP" };
-  const string MGRS::latband_ = "CDEFGHJKLMNPQRSTUVWX";
-  const string MGRS::upsband_ = "ABYZ";
-  const string MGRS::digits_ = "0123456789";
+  const char* const MGRS::latband_ = "CDEFGHJKLMNPQRSTUVWX";
+  const char* const MGRS::upsband_ = "ABYZ";
+  const char* const MGRS::digits_ = "0123456789";
 
-  const int MGRS::mineasting_[4] =
+  const int MGRS::mineasting_[] =
     { minupsSind_, minupsNind_, minutmcol_, minutmcol_ };
-  const int MGRS::maxeasting_[4] =
+  const int MGRS::maxeasting_[] =
     { maxupsSind_, maxupsNind_, maxutmcol_, maxutmcol_ };
-  const int MGRS::minnorthing_[4] =
+  const int MGRS::minnorthing_[] =
     { minupsSind_, minupsNind_,
       minutmSrow_, minutmSrow_ - (maxutmSrow_ - minutmNrow_) };
-  const int MGRS::maxnorthing_[4] =
+  const int MGRS::maxnorthing_[] =
     { maxupsSind_, maxupsNind_,
       maxutmNrow_ + (maxutmSrow_ - minutmNrow_), maxutmNrow_ };
 
@@ -40,7 +40,7 @@ namespace GeographicLib {
                      int prec, std::string& mgrs) {
     // The smallest angle s.t., 90 - angeps() < 90 (approx 50e-12 arcsec)
     // 7 = ceil(log_2(90))
-    static const real angeps = pow(real(0.5), Math::digits() - 7);
+    static const real angeps = ldexp(real(1), -(Math::digits() - 7));
     if (zone == UTMUPS::INVALID ||
         Math::isnan(x) || Math::isnan(y) || Math::isnan(lat)) {
       mgrs = "INVALID";
@@ -94,7 +94,8 @@ namespace GeographicLib {
       int iband = (northp ? 2 : 0) + (eastp ? 1 : 0);
       mgrs1[z++] = upsband_[iband];
       mgrs1[z++] = upscols_[iband][xh - (eastp ? upseasting_ :
-                                         (northp ? minupsNind_ : minupsSind_))];
+                                         (northp ? minupsNind_ :
+                                          minupsSind_))];
       mgrs1[z++] = upsrows_[northp][yh - (northp ? minupsNind_ : minupsSind_)];
     }
     if (prec > 0) {
@@ -124,7 +125,7 @@ namespace GeographicLib {
       // the actual latitude.
       ys /= tile_;
       if (abs(ys) < 1)
-        lat = 0.9 * ys;         // accurate enough estimate near equator
+        lat = real(0.9) * ys;         // accurate enough estimate near equator
       else {
         real
           // The poleward bound is a fit from above of lat(x,y)
@@ -178,7 +179,7 @@ namespace GeographicLib {
       throw GeographicErr("MGRS string too short " + mgrs);
     bool utmp = zone1 != UTMUPS::UPS;
     int zonem1 = zone1 - 1;
-    const string& band = utmp ? latband_ : upsband_;
+    const char* band = utmp ? latband_ : upsband_;
     int iband = Utility::lookup(band, mgrs[p++]);
     if (iband < 0)
       throw GeographicErr("Band letter " + Utility::str(mgrs[p-1]) + " not in "
@@ -206,8 +207,8 @@ namespace GeographicLib {
       return;
     } else if (len - p < 2)
       throw GeographicErr("Missing row letter in " + mgrs);
-    const string& col = utmp ? utmcols_[zonem1 % 3] : upscols_[iband];
-    const string& row = utmp ? utmrow_ : upsrows_[northp1];
+    const char* col = utmp ? utmcols_[zonem1 % 3] : upscols_[iband];
+    const char* row = utmp ? utmrow_ : upsrows_[northp1];
     int icol = Utility::lookup(col, mgrs[p++]);
     if (icol < 0)
       throw GeographicErr("Column letter " + Utility::str(mgrs[p-1])
@@ -282,7 +283,7 @@ namespace GeographicLib {
     // The smallest length s.t., 1.0e7 - eps() < 1.0e7 (approx 1.9 nm)
     // 25 = ceil(log_2(2e7)) -- use half circumference here because
     // northing 195e5 is a legal in the "southern" hemisphere.
-    static const real eps = pow(real(0.5), Math::digits() - 25);
+    static const real eps = ldexp(real(1), -(Math::digits() - 25));
     int
       ix = int(floor(x / tile_)),
       iy = int(floor(y / tile_)),
@@ -418,7 +419,8 @@ namespace GeographicLib {
       throw GeographicErr("MGRS::Check: Svalbard exception creates a gap");
     UTMUPS::Reverse(0, true , 20*t, 13*t, lat, lon);
     if (!( lat <  84 ))
-      throw GeographicErr("MGRS::Check: North UPS doesn't reach latitude = 84");
+      throw
+        GeographicErr("MGRS::Check: North UPS doesn't reach latitude = 84");
     UTMUPS::Reverse(0, false, 20*t,  8*t, lat, lon);
     if (!( lat > -80 ))
       throw

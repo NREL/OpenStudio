@@ -2,9 +2,9 @@
  * \file GARS.hpp
  * \brief Header for GeographicLib::GARS class
  *
- * Copyright (c) Charles Karney (2015) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2015-2017) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GARS_HPP)
@@ -38,8 +38,8 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT GARS {
   private:
     typedef Math::real real;
-    static const std::string digits_;
-    static const std::string letters_;
+    static const char* const digits_;
+    static const char* const letters_;
     enum {
       lonorig_ = -180,          // Origin for longitude
       latorig_ = -90,           // Origin for latitude

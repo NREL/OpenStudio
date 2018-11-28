@@ -1,0 +1,14 @@
+geographiclib-get-geoids
+geographiclib-get-gravity
+geographiclib-get-magnetic
+CartConvert
+ConicProj
+GeoConvert
+GeodSolve
+GeodesicProj
+GeoidEval
+Gravity
+MagneticField
+Planimeter
+RhumbSolve
+TransverseMercatorProj

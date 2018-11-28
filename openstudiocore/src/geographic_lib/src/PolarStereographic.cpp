@@ -2,9 +2,9 @@
  * \file PolarStereographic.cpp
  * \brief Implementation for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/PolarStereographic.hpp>
@@ -15,7 +15,7 @@ namespace GeographicLib {
 
   PolarStereographic::PolarStereographic(real a, real f, real k0)
     : _a(a)
-    , _f(f <= 1 ? f : 1/f)      // f > 1 behavior is DEPRECATED
+    , _f(f)
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
     , _e2m(1 - _e2)
@@ -23,9 +23,9 @@ namespace GeographicLib {
     , _k0(k0)
   {
     if (!(Math::isfinite(_a) && _a > 0))
-      throw GeographicErr("Major radius is not positive");
+      throw GeographicErr("Equatorial radius is not positive");
     if (!(Math::isfinite(_f) && _f < 1))
-      throw GeographicErr("Minor radius is not positive");
+      throw GeographicErr("Polar semi-axis is not positive");
     if (!(Math::isfinite(_k0) && _k0 > 0))
       throw GeographicErr("Scale is not positive");
   }
@@ -59,8 +59,8 @@ namespace GeographicLib {
   //   secphip = taup = exp(-e * atanh(e)) * tau = exp(-e * atanh(e)) * secphi
 
   void PolarStereographic::Forward(bool northp, real lat, real lon,
-                                   real& x, real& y, real& gamma, real& k)
-    const {
+                                   real& x, real& y,
+                                   real& gamma, real& k) const {
     lat = Math::LatFix(lat);
     lat *= northp ? 1 : -1;
     real
@@ -79,16 +79,17 @@ namespace GeographicLib {
   }
 
   void PolarStereographic::Reverse(bool northp, real x, real y,
-                                   real& lat, real& lon, real& gamma, real& k)
-    const {
+                                   real& lat, real& lon,
+                                   real& gamma, real& k) const {
     real
       rho = Math::hypot(x, y),
-      t = rho ? rho / (2 * _k0 * _a / _c) :
+      t = rho != 0 ? rho / (2 * _k0 * _a / _c) :
       Math::sq(numeric_limits<real>::epsilon()),
       taup = (1 / t - t) / 2,
       tau = Math::tauf(taup, _es),
       secphi = Math::hypot(real(1), tau);
-    k = rho ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) : _k0;
+    k = rho != 0 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) :
+      _k0;
     lat = (northp ? 1 : -1) * Math::atand(tau);
     lon = Math::atan2d(x, northp ? -y : y );
     gamma = Math::AngNormalize(northp ? lon : -lon);

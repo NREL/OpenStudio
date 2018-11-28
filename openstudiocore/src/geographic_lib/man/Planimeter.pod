@@ -71,10 +71,10 @@ polyline.  For a polyline, the number of points and the length of the
 path joining them is returned; the path is not closed and the area is
 not reported.
 
-=item B<-e>
+=item B<-e> I<a> I<f>
 
-specify the ellipsoid via I<a> I<f>; the equatorial radius is I<a> and
-the flattening is I<f>.  Setting I<f> = 0 results in a sphere.  Specify
+specify the ellipsoid via the equatorial radius, I<a> and
+the flattening, I<f>.  Setting I<f> = 0 results in a sphere.  Specify
 I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  By default, the WGS84 ellipsoid is used, I<a> =
 6378137 m, I<f> = 1/298.257223563.  If entering vertices as UTM/UPS or
@@ -84,10 +84,11 @@ parameters.
 
 =item B<-w>
 
+toggle the longitude first flag (it starts off); if the flag is on, then
 when reading geographic coordinates, longitude precedes latitude (this
 can be overridden by a hemisphere designator, I<N>, I<S>, I<E>, I<W>).
 
-=item B<-p>
+=item B<-p> I<prec>
 
 set the output precision to I<prec> (default 6); the perimeter is given
 (in meters) with I<prec> digits after the decimal point; the area is
@@ -118,7 +119,7 @@ sufficiently short.  The perimeter calculation is not accurate.
 
 The lines joining the vertices are rhumb lines instead of geodesics.
 
-=item B<--comment-delimiter>
+=item B<--comment-delimiter> I<commentdelim>
 
 set the comment delimiter to I<commentdelim> (e.g., "#" or "//").  If
 set, the input lines will be scanned for this delimiter and, if found,
@@ -138,23 +139,23 @@ print usage and exit.
 
 print full documentation and exit.
 
-=item B<--input-file>
+=item B<--input-file> I<infile>
 
 read input from the file I<infile> instead of from standard input; a file
 name of "-" stands for standard input.
 
-=item B<--input-string>
+=item B<--input-string> I<instring>
 
 read input from the string I<instring> instead of from standard input.
 All occurrences of the line separator character (default is a semicolon)
 in I<instring> are converted to newlines before the reading begins.
 
-=item B<--line-separator>
+=item B<--line-separator> I<linesep>
 
 set the line separator character to I<linesep>.  By default this is a
 semicolon.
 
-=item B<--output-file>
+=item B<--output-file> I<outfile>
 
 write output to the file I<outfile> instead of to standard output; a
 file name of "-" stands for standard output.
@@ -199,13 +200,13 @@ covered by the data (assuming the edges of the image are geodesics).
 GeoConvert(1), GeodSolve(1).
 
 An online version of this utility is availbable at
-L<http://geographiclib.sourceforge.net/cgi-bin/Planimeter>.
+L<https://geographiclib.sourceforge.io/cgi-bin/Planimeter>.
 
 The algorithm for the area of geodesic polygon is
 given in Section 6 of C. F. F. Karney, I<Algorithms for geodesics>,
 J. Geodesy 87, 43-55 (2013);
-DOI L<https://dx.doi.org/10.1007/s00190-012-0578-z>;
-addenda: L<http://geographiclib.sf.net/geod-addenda.html>.
+DOI L<https://doi.org/10.1007/s00190-012-0578-z>;
+addenda: L<https://geographiclib.sourceforge.io/geod-addenda.html>.
 
 =head1 AUTHOR
 
@@ -214,4 +215,4 @@ B<Planimeter> was written by Charles Karney.
 =head1 HISTORY
 
 B<Planimeter> was added to GeographicLib,
-L<http://geographiclib.sf.net>, in version 1.4.
+L<https://geographiclib.sourceforge.io>, in version 1.4.

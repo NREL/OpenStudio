@@ -1,9 +1,9 @@
 // Example of using the GeographicLib::RhumbLine class
 
 #include <iostream>
+#include <iomanip>
 #include <exception>
 #include <cmath>
-#include <iomanip>
 #include <GeographicLib/Rhumb.hpp>
 #include <GeographicLib/Constants.hpp>
 
@@ -40,5 +40,4 @@ int main() {
     cerr << "Caught exception: " << e.what() << "\n";
     return 1;
   }
-  return 0;
 }

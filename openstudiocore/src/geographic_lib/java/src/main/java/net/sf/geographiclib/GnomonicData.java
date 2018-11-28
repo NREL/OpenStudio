@@ -1,9 +1,9 @@
 /**
  * Implementation of the net.sf.geographiclib.GnomonicData class
  *
- * Copyright (c) BMW Car IT GmbH (2014) <sebastian.mattheis@bmw-carit.de> and
- * licensed under the MIT/X11 License. For more information, see
- * http://geographiclib.sourceforge.net/
+ * Copyright (c) BMW Car IT GmbH (2014-2016) <sebastian.mattheis@bmw-carit.de>
+ * and licensed under the MIT/X11 License. For more information, see
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 package net.sf.geographiclib;
 
@@ -15,9 +15,9 @@ package net.sf.geographiclib;
  * (<i>lat</i>, <i>lon</i>) given a center point of projection (<i>lat0</i>,
  * <i>lon0</i>). The returned GnomonicData objects always include the
  * parameters provided to
- * {@link Gnomonic#Forward(double, double, double, double) Gnomonic.Forward}
+ * {@link Gnomonic#Forward Gnomonic.Forward}
  * and
- * {@link Gnomonic#Reverse(double, double, double, double) Gnomonic.Reverse}
+ * {@link Gnomonic#Reverse Gnomonic.Reverse}
  * and it always includes the fields <i>x</i>, <i>y</i>, <i>azi</i>. and
  * <i>rk</i>.
  **********************************************************************/

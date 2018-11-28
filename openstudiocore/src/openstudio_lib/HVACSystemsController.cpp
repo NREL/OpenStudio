@@ -1830,6 +1830,11 @@ SystemAvailabilityVectorController::SystemAvailabilityVectorController()
   m_reportItemsMutex = new QMutex();
 }
 
+SystemAvailabilityVectorController::~SystemAvailabilityVectorController()
+{
+  delete m_reportItemsMutex;
+}
+
 void SystemAvailabilityVectorController::attach(const model::ModelObject& modelObject)
 {
   detach();
@@ -1943,6 +1948,12 @@ SupplyAirTempScheduleVectorController::SupplyAirTempScheduleVectorController()
 {
   m_reportItemsMutex = new QMutex();
 }
+
+SupplyAirTempScheduleVectorController::~SupplyAirTempScheduleVectorController()
+{
+  delete m_reportItemsMutex;
+}
+
 
 void SystemAvailabilityVectorController::onDropZoneItemClicked(OSItem* item) {
   OSAppBase::instance()->currentDocument()->mainRightColumnController()->inspectModelObjectByItem(item, false);
@@ -2083,6 +2094,10 @@ AvailabilityManagerObjectVectorController::AvailabilityManagerObjectVectorContro
   m_reportItemsMutex = new QMutex();
 }
 
+AvailabilityManagerObjectVectorController::~AvailabilityManagerObjectVectorController()
+{
+  delete m_reportItemsMutex;
+}
 
 void AvailabilityManagerObjectVectorController::attach(const model::ModelObject& modelObject)
 {

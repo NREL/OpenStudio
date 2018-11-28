@@ -210,7 +210,7 @@ class ObjectSelector : public QObject, public Nano::Observer
         const boost::optional<int> &subrow, bool t_selector);
     void setObjectSelection(const model::ModelObject &t_obj, bool t_selected);
     bool getObjectSelection(const model::ModelObject &t_obj) const;
-    boost::optional<const model::ModelObject &> getObject(const int t_row, const int t_column, const boost::optional<int> &t_subrow);
+    boost::optional<model::ModelObject> getObject(const int t_row, const int t_column, const boost::optional<int> &t_subrow);
     QWidget * getWidget(const int t_row, const int t_column, const boost::optional<int> &t_subrow);
     std::set<model::ModelObject> getSelectedObjects() const;
     std::vector<QWidget *> getColumnsSelectedWidgets(int column);

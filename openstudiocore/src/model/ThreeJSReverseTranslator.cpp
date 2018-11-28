@@ -101,7 +101,7 @@
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 
-#include <QThread>
+#include <thread>
 
 #include <cmath>
 
@@ -167,7 +167,7 @@ namespace openstudio
     {
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
-      m_logSink.setThreadId(QThread::currentThread());
+      m_logSink.setThreadId(std::this_thread::get_id());
     }
 
     std::vector<LogMessage> ThreeJSReverseTranslator::warnings() const
@@ -273,7 +273,7 @@ namespace openstudio
 
     boost::optional<Model> ThreeJSReverseTranslator::modelFromThreeJS(const ThreeScene& scene)
     {
-      m_logSink.setThreadId(QThread::currentThread());
+      m_logSink.setThreadId(std::this_thread::get_id());
       m_logSink.resetStringStream();
 
       /// Mapping between handles referenced in ThreeScene (keys) and handles of objects in returned model (values) for last translation
@@ -352,7 +352,7 @@ namespace openstudio
         }else if (istringEqual(iddObjectType, "OS:BuildingStory")){
           BuildingStory buildingStory(model);
 
-          boost::optional<unsigned> multiplier = m.multiplier(); // DLM: should we apply multipliers only to Spaces in ThreeJS?
+          // boost::optional<unsigned> multiplier = m.multiplier(); // DLM: should we apply multipliers only to Spaces in ThreeJS?
           boost::optional<double> nominalZCoordinate = m.nominalZCoordinate();
           boost::optional<double> belowFloorPlenumHeight = m.belowFloorPlenumHeight();
           boost::optional<double> floorToCeilingHeight = m.floorToCeilingHeight();
@@ -425,25 +425,25 @@ namespace openstudio
         std::string name = userData.name();
         std::string surfaceType = userData.surfaceType();
         std::string constructionName = userData.constructionName();
-        UUID constructionHandle = toUUID(userData.constructionHandle());
+        // UUID constructionHandle = toUUID(userData.constructionHandle());
         std::string surfaceName = userData.surfaceName();
-        UUID surfaceHandle = toUUID(userData.surfaceHandle());
+        // UUID surfaceHandle = toUUID(userData.surfaceHandle());
         std::string subSurfaceName = userData.subSurfaceName();
-        UUID subSurfaceHandle = toUUID(userData.subSurfaceHandle());
+        // UUID subSurfaceHandle = toUUID(userData.subSurfaceHandle());
         std::string spaceName = userData.spaceName();
-        UUID spaceHandle = toUUID(userData.spaceHandle());
+        // UUID spaceHandle = toUUID(userData.spaceHandle());
         std::string shadingName = userData.shadingName();
-        UUID shadingHandle = toUUID(userData.shadingHandle());
+        // UUID shadingHandle = toUUID(userData.shadingHandle());
         std::string thermalZoneName = userData.thermalZoneName();
-        UUID thermalZoneHandle = toUUID(userData.thermalZoneHandle());
+        // UUID thermalZoneHandle = toUUID(userData.thermalZoneHandle());
         std::string spaceTypeName = userData.spaceTypeName();
-        UUID spaceTypeHandle = toUUID(userData.spaceTypeHandle());
+        // UUID spaceTypeHandle = toUUID(userData.spaceTypeHandle());
         std::string buildingStoryName = userData.buildingStoryName();
-        UUID buildingStoryHandle = toUUID(userData.buildingStoryHandle());
+        // UUID buildingStoryHandle = toUUID(userData.buildingStoryHandle());
         std::string buildingUnitName = userData.buildingUnitName();
-        UUID buildingUnitHandle = toUUID(userData.buildingUnitHandle());
+        // UUID buildingUnitHandle = toUUID(userData.buildingUnitHandle());
         std::string constructionSetName = userData.constructionSetName();
-        UUID constructionSetHandle = toUUID(userData.constructionSetHandle());
+        // UUID constructionSetHandle = toUUID(userData.constructionSetHandle());
         std::string outsideBoundaryCondition = userData.outsideBoundaryCondition();
         std::string outsideBoundaryConditionObjectName = userData.outsideBoundaryConditionObjectName();
         std::string outsideBoundaryConditionObjectHandle = userData.outsideBoundaryConditionObjectHandle();
@@ -588,7 +588,7 @@ namespace openstudio
               bool test;
 
               Surface surface(face, model);
-              test = surface.setName(name);
+              test = surface.setName(name).has_value();
               if (!test){
                 LOG(Warn, "Could not set Surface name '" << name << "' for Surface '" << surface.nameString() << "'");
               }
@@ -644,7 +644,7 @@ namespace openstudio
               bool test;
 
               SubSurface subSurface(face, model);
-              test = subSurface.setName(name);
+              test = subSurface.setName(name).has_value();
               if (!test){
                 LOG(Warn, "Could not set SubSurface name '" << name << "' for SubSurface '" << subSurface.nameString() << "'");
               }
@@ -736,7 +736,7 @@ namespace openstudio
               bool test;
 
               ShadingSurface shadingSurface(face, model);
-              test = shadingSurface.setName(name);
+              test = shadingSurface.setName(name).has_value();
               if (!test){
                 LOG(Warn, "Could not set ShadingSurface name '" << name << "' for ShadingSurface '" << shadingSurface.nameString() << "'");
               }

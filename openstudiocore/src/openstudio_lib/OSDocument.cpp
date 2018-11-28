@@ -120,7 +120,6 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QString>
-#include <QTemporaryFile>
 #include <QTimer>
 #include <QWidget>
 

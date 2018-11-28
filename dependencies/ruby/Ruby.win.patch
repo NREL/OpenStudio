@@ -1,72 +1,30 @@
-diff --git a/enc/make_encmake.rb b/enc/make_encmake.rb
-index 6ea2213..9b20dee 100755
---- a/enc/make_encmake.rb
-+++ b/enc/make_encmake.rb
-@@ -43,7 +43,7 @@ end
+diff --git a/ext/fiddle/extconf.rb b/ext/fiddle/extconf.rb
+index 2c333001e5..b4ae8cc048 100644
+--- a/ext/fiddle/extconf.rb
++++ b/ext/fiddle/extconf.rb
+@@ -9,6 +9,12 @@
  
- ALPHANUMERIC_ORDER = proc {|e| e.scan(/(\d+)|(\D+)/).map {|n,a| a||[n.size,n.to_i]}.flatten}
- def target_encodings
--  encs = Dir.open($srcdir) {|d| d.grep(/.+\.c\z/)} - BUILTIN_ENCS - ["mktable.c"]
-+  encs = Dir.open($srcdir) {|d| d.grep(/.+\.c\z/)} - BUILTIN_ENCS - ["mktable.c", "encinit.c"]
-   encs.each {|e| e.chomp!(".c")}
-   encs.reject! {|e| !ENC_PATTERNS.any? {|p| File.fnmatch?(p, e)}} if !ENC_PATTERNS.empty?
-   encs.reject! {|e| NOENC_PATTERNS.any? {|p| File.fnmatch?(p, e)}}
-diff --git a/ext/Setup b/ext/Setup
-index 98ffffd..688219c 100644
---- a/ext/Setup
-+++ b/ext/Setup
-@@ -1,28 +1,28 @@
--#option nodynamic
-+option nodynamic
+   pkg_config("libffi") and
+     ver = pkg_config("libffi", "modversion")
++    
++  if $mswin
++    $defs << "-DFFI_BUILDING"
++    CONFIG['CFLAGS'] << " -DFFI_BUILDING"
++    $CFLAGS << " -DFFI_BUILDING"
++  end
  
--#Win32API
--#bigdecimal
--#dbm
--#digest
--#digest/md5
--#digest/rmd160
--#digest/sha1
--#digest/sha2
--#etc
--#fcntl
--#gdbm
--#io/wait
--#nkf
--#openssl
--#pty
--#racc/cparse
--#readline
--#ripper
--#sdbm
--#socket
--#stringio
--#strscan
--#syslog
--#tk
-+Win32API
-+bigdecimal
-+dbm
-+digest
-+digest/md5
-+digest/rmd160
-+digest/sha1
-+digest/sha2
-+etc
-+fcntl
-+gdbm
-+io/wait
-+nkf
-+openssl
-+pty
-+racc/cparse
-+readline
-+ripper
-+sdbm
-+socket
-+stringio
-+strscan
-+syslog
-+tk
- #win32ole
--#zlib
-+zlib
+   if have_header(ffi_header = 'ffi.h')
+     true
+diff --git a/win32/Makefile.sub b/win32/Makefile.sub
+index 70440e1c9d..0bb61fbf75 100644
+--- a/win32/Makefile.sub
++++ b/win32/Makefile.sub
+@@ -305,7 +305,7 @@ MINIRUBY = $(RUBY) -I$(MAKEDIR) -r$(arch)-fake
+ RUNRUBY = $(MINIRUBY)
+ !else
+ MINIRUBY = .\miniruby$(EXEEXT) -I$(srcdir)/lib -I.
+-RUNRUBY = .\$(PROGRAM) -I$(srcdir)/lib -I"$(EXTOUT)/$(arch)" -I.
++RUNRUBY = .\$(PROGRAM) --disable-gems -I$(srcdir)/lib -I"$(EXTOUT)/$(arch)" -I.
+ !endif
+ MINIRUBY = $(MINIRUBY) $(MINIRUBYOPT)
+ RUNRUBY = $(RUNRUBY) "$(srcdir)/tool/runruby.rb" --extout="$(EXTOUT)" $(RUNRUBYOPT) -- $(RUN_OPTS)

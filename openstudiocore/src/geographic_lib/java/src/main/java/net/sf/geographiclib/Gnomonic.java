@@ -1,9 +1,9 @@
 /**
  * Implementation of the net.sf.geographiclib.Gnomonic class
  *
- * Copyright (c) BMW Car IT GmbH (2014) <sebastian.mattheis@bmw-carit.de> and
- * licensed under the MIT/X11 License. For more information, see
- * http://geographiclib.sourceforge.net/
+ * Copyright (c) BMW Car IT GmbH (2014-2017) <sebastian.mattheis@bmw-carit.de>
+ * and licensed under the MIT/X11 License. For more information, see
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 package net.sf.geographiclib;
 
@@ -19,11 +19,11 @@ package net.sf.geographiclib;
  * ellipsoid. This projection is derived in Section 8 of
  * <ul>
  * <li>
- * C. F. F. Karney, <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+ * C. F. F. Karney, <a href="https://doi.org/10.1007/s00190-012-0578-z">
  * Algorithms for geodesics</a>, J. Geodesy <b>87</b>, 43&ndash;55 (2013);
- * DOI: <a href="http://dx.doi.org/10.1007/s00190-012-0578-z">
+ * DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
  * 10.1007/s00190-012-0578-z</a>; addenda:
- * <a href="http://geographiclib.sf.net/geod-addenda.html">
+ * <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
  * geod-addenda.html</a>.
  * </li>
  * </ul>
@@ -56,7 +56,8 @@ package net.sf.geographiclib;
  * maximum deviation (as a true distance) of the corresponding gnomonic line
  * segment (i.e., with the same end points) from the geodesic is<br>
  * <br>
- * (<i>K</i>(<i>T</i>) - <i>K</i>(<i>C</i>)) <i>l</i><sup>2</sup> <i>t</i> / 32.
+ * (<i>K</i>(<i>T</i>) &minus; <i>K</i>(<i>C</i>))
+ * <i>l</i><sup>2</sup> <i>t</i> / 32.
  * <br>
  * <br>
  * where <i>K</i> is the Gaussian curvature.
@@ -68,9 +69,6 @@ package net.sf.geographiclib;
  * when their azimuths from the center are &plusmn; 45&deg; or &plusmn;
  * 135&deg;. To lowest order in <i>r</i> and the flattening <i>f</i>, the
  * deviation is <i>f</i> (<i>r</i>/2<i>a</i>)<sup>3</sup> <i>r</i>.
- * <p>
- * The conversions all take place using a Geodesic object (by default
- * Geodesic::WGS84). For more information on geodesics see \ref geodesic.
  * <p>
  * <b>CAUTION:</b> The definition of this projection for a sphere is standard.
  * However, there is no standard for how it should be extended to an ellipsoid.
@@ -142,7 +140,7 @@ public class Gnomonic {
    * Constructor for Gnomonic.
    * <p>
    * @param earth the {@link Geodesic} object to use for geodesic
-   *   calculations. By default the WGS84 ellipsoid should be used.
+   *   calculations.
    */
   public Gnomonic(Geodesic earth) {
     _earth = earth;
@@ -175,8 +173,9 @@ public class Gnomonic {
   public GnomonicData Forward(double lat0, double lon0, double lat, double lon)
   {
     GeodesicData inv =
-      _earth.Inverse(lat0, lon0, lat, lon, GeodesicMask.AZIMUTH
-                     | GeodesicMask.GEODESICSCALE | GeodesicMask.REDUCEDLENGTH);
+      _earth.Inverse(lat0, lon0, lat, lon,
+                     GeodesicMask.AZIMUTH | GeodesicMask.GEODESICSCALE |
+                     GeodesicMask.REDUCEDLENGTH);
     GnomonicData fwd =
       new GnomonicData(lat0, lon0, lat, lon, Double.NaN, Double.NaN,
                        inv.azi2, inv.M12);
@@ -205,7 +204,7 @@ public class Gnomonic {
    * <i>lat0</i> should be in the range [&minus;90&deg;, 90&deg;] and
    * <i>lon0</i> should be in the range [&minus;540&deg;, 540&deg;).
    * <i>lat</i> will be in the range [&minus;90&deg;, 90&deg;] and <i>lon</i>
-   * will be in the range [&minus;180&deg;, 180&deg;). The scale of the
+   * will be in the range [&minus;180&deg;, 180&deg;]. The scale of the
    * projection is 1/<i>rk<sup>2</sup></i> in the "radial" direction,
    * <i>azi</i> clockwise from true north, and is 1/<i>rk</i> in the direction
    * perpendicular to this. Even though all inputs should return a valid

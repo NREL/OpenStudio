@@ -38,8 +38,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <ostream>
-
-class QThread;
+#include <thread>
 
 namespace openstudio{
 
@@ -89,12 +88,10 @@ namespace openstudio{
     void setAutoFlush(bool autoFlush);
 
     /// get the thread id that messages are filtered by
-    /// thread id is the value returned by QThread::currentThread()
-    QThread* threadId() const;
+    std::thread::id threadId() const;
 
     /// set the thread id that messages are filtered by
-    /// thread id is the value returned by QThread::currentThread()
-    void setThreadId(QThread* threadId);
+    void setThreadId(std::thread::id threadId);
 
     /// reset the thread id that messages are filtered by
     void resetThreadId();

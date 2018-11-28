@@ -18,8 +18,7 @@ foreach (TOOL ${TOOLS})
   set_source_files_properties (${TOOL}.cpp PROPERTIES
     OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/${TOOL}.usage)
 
-  target_link_libraries (${TOOL} ${PROJECT_LIBRARIES}
-    ${QUAD_LIBRARIES} ${MPFR_LIBRARIES})
+  target_link_libraries (${TOOL} ${PROJECT_LIBRARIES} ${HIGHPREC_LIBRARIES})
 
 endforeach ()
 
@@ -56,6 +55,3 @@ if (NOT WIN32)
   endforeach ()
   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
 endif ()
-
-# The test suite -- split into a separate file because it's rather large.
-include (tests.cmake)

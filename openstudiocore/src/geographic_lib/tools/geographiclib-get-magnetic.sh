@@ -4,7 +4,7 @@
 #
 # Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
-# http://geographiclib.sourceforge.net/
+# https://geographiclib.sourceforge.io/
 
 DEFAULTDIR="@GEOGRAPHICLIB_DATA@"
 SUBDIR=magnetic
@@ -28,8 +28,9 @@ table:
   wmm2015    12    2015-2020      2       3
   igrf11     13    1900-2015      7      25
   igrf12     13    1900-2020      7      26
-  emm2010   740    2010-2015    3700    4400
-  emm2015   730    2000-2020     660    4300
+  emm2010   739    2010-2015    3700    4400
+  emm2015   729    2000-2020     660    4300
+  emm2017   790    2000-2022    1740    5050
 
 The size columns give the download and installed sizes of the datasets.
 In addition you can specify
@@ -54,7 +55,7 @@ will be saved.  -h prints this help.
 
 For more information on the magnetic models, visit
 
-  http://geographiclib.sourceforge.net/html/$NAME.html
+  https://geographiclib.sourceforge.io/html/$NAME.html
 
 EOF
 }
@@ -118,6 +119,7 @@ wmm2010
 wmm2015
 emm2010
 emm2015
+emm2017
 igrf11
 igrf12
 EOF
@@ -152,7 +154,7 @@ while read file; do
     fi
     echo download $file.tar.bz2 ...
     echo $file >> $TEMP/download
-    URL="http://downloads.sourceforge.net/project/geographiclib/$SUBDIR-distrib/$file.tar.bz2?use_mirror=autoselect"
+    URL="https://downloads.sourceforge.net/project/geographiclib/$SUBDIR-distrib/$file.tar.bz2?use_mirror=autoselect"
     ARCHIVE=$TEMP/$file.tar.bz2
     wget -O$ARCHIVE $URL
     echo unpack $file.tar.bz2 ...

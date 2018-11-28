@@ -204,7 +204,7 @@ describe("GeographicLib", function() {
     it("GeodSolve4", function() {
       // Check fix for short line bug found 2010-05-21
       var geod = g.WGS84,
-          inv = geod.Inverse(36.493349428792, 0, 36.49334942879201, .0000008);
+          inv = geod.Inverse(36.493349428792, 0, 36.49334942879201, 0.0000008);
       assert.approx(inv.s12, 0.072, 0.5e-3);
     });
 
@@ -215,7 +215,7 @@ describe("GeographicLib", function() {
       assert.approx(dir.lat2, 90, 0.5e-5);
       if (dir.lon2 < 0) {
         assert.approx(dir.lon2, -150, 0.5e-5);
-        assert.approx(dir.azi2, -180, 0.5e-5);
+        assert.approx(Math.abs(dir.azi2), 180, 0.5e-5);
       } else {
         assert.approx(dir.lon2, 30, 0.5e-5);
         assert.approx(dir.azi2, 0, 0.5e-5);
@@ -294,13 +294,13 @@ describe("GeographicLib", function() {
     it("GeodSolve17", function() {
       // Check fix for LONG_UNROLL bug found on 2015-05-07
       var geod = g.WGS84,
-          dir = geod.Direct(40, -75, -10, 2e7, g.STANDARD | g.LONG_UNROLL),
+          dir = geod.Direct(40, -75, -10, 2e7, g.LONG_UNROLL),
           line;
       assert.approx(dir.lat2, -39, 1);
       assert.approx(dir.lon2, -254, 1);
       assert.approx(dir.azi2, -170, 1);
       line = geod.Line(40, -75, -10);
-      dir = line.Position(2e7, g.STANDARD | g.LONG_UNROLL);
+      dir = line.Position(2e7, g.LONG_UNROLL);
       assert.approx(dir.lat2, -39, 1);
       assert.approx(dir.lon2, -254, 1);
       assert.approx(dir.azi2, -170, 1);
@@ -336,7 +336,7 @@ describe("GeographicLib", function() {
       assert.approx(dir.lon1, 179, 1e-10);
       assert.approx(dir.lon2, -179, 1e-10);
       assert.approx(dir.s12, 222639, 0.5);
-      dir = geod.Inverse(0, 539, 0, 181, g.STANDARD | g.LONG_UNROLL);
+      dir = geod.Inverse(0, 539, 0, 181, g.LONG_UNROLL);
       assert.approx(dir.lon1, 539, 1e-10);
       assert.approx(dir.lon2, 541, 1e-10);
       assert.approx(dir.s12, 222639, 0.5);
@@ -357,11 +357,11 @@ describe("GeographicLib", function() {
       assert.approx(inv.s12, 19980862, 0.5);
       inv = geod.Inverse(0, 0, 0, 180);
       assert.approx(inv.azi1, 0.00000, 0.5e-5);
-      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(Math.abs(inv.azi2), 180.00000, 0.5e-5);
       assert.approx(inv.s12, 20003931, 0.5);
       inv = geod.Inverse(0, 0, 1, 180);
       assert.approx(inv.azi1, 0.00000, 0.5e-5);
-      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(Math.abs(inv.azi2), 180.00000, 0.5e-5);
       assert.approx(inv.s12, 19893357, 0.5);
       geod = new g.Geodesic(6.4e6, 0);
       inv = geod.Inverse(0, 0, 0, 179);
@@ -370,11 +370,11 @@ describe("GeographicLib", function() {
       assert.approx(inv.s12, 19994492, 0.5);
       inv = geod.Inverse(0, 0, 0, 180);
       assert.approx(inv.azi1, 0.00000, 0.5e-5);
-      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(Math.abs(inv.azi2), 180.00000, 0.5e-5);
       assert.approx(inv.s12, 20106193, 0.5);
       inv = geod.Inverse(0, 0, 1, 180);
       assert.approx(inv.azi1, 0.00000, 0.5e-5);
-      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(Math.abs(inv.azi2), 180.00000, 0.5e-5);
       assert.approx(inv.s12, 19994492, 0.5);
       geod = new g.Geodesic(6.4e6, -1/300.0);
       inv = geod.Inverse(0, 0, 0, 179);
@@ -391,7 +391,7 @@ describe("GeographicLib", function() {
       assert.approx(inv.s12, 20082617, 0.5);
       inv = geod.Inverse(0, 0, 1, 180);
       assert.approx(inv.azi1, 0.00000, 0.5e-5);
-      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(Math.abs(inv.azi2), 180.00000, 0.5e-5);
       assert.approx(inv.s12, 20027270, 0.5);
     });
 
@@ -408,6 +408,138 @@ describe("GeographicLib", function() {
       assert(isNaN(inv.azi2));
       assert(isNaN(inv.s12));
     });
+
+    it("GeodSolve59", function() {
+      // Check for points close with longitudes close to 180 deg apart.
+      var geod = g.WGS84,
+          inv = geod.Inverse(5, 0.00000000000001, 10, 180);
+      assert.approx(inv.azi1, 0.000000000000035, 1.5e-14);
+      assert.approx(inv.azi2, 179.99999999999996, 1.5e-14);
+      assert.approx(inv.s12, 18345191.174332713, 4e-9);
+    });
+
+    it("GeodSolve61", function() {
+      // Make sure small negative azimuths are west-going
+      var geod = g.WGS84,
+          dir = geod.Direct(45, 0, -0.000000000000000003, 1e7,
+                            g.LONG_UNROLL),
+          line;
+      assert.approx(dir.lat2, 45.30632, 0.5e-5);
+      assert.approx(dir.lon2, -180, 0.5e-5);
+      assert.approx(Math.abs(dir.azi2), 180, 0.5e-5);
+      line = geod.InverseLine(45, 0, 80, -0.000000000000000003);
+      dir = line.Position(1e7, g.LONG_UNROLL);
+      assert.approx(dir.lat2, 45.30632, 0.5e-5);
+      assert.approx(dir.lon2, -180, 0.5e-5);
+      assert.approx(Math.abs(dir.azi2), 180, 0.5e-5);
+    });
+
+    it("GeodSolve65", function() {
+      // Check for bug in east-going check in GeodesicLine (needed to check for
+      // sign of 0) and sign error in area calculation due to a bogus override
+      // of the code for alp12.  Found/fixed on 2015-12-19.
+      var geod = g.WGS84,
+          line = geod.InverseLine(30, -0.000000000000000001, -31, 180,
+                                  g.ALL),
+          dir = line.Position(1e7, g.ALL | g.LONG_UNROLL);
+      assert.approx(dir.lat1, 30.00000  , 0.5e-5);
+      assert.approx(dir.lon1, -0.00000  , 0.5e-5);
+      assert.approx(Math.abs(dir.azi1), 180.00000, 0.5e-5);
+      assert.approx(dir.lat2, -60.23169 , 0.5e-5);
+      assert.approx(dir.lon2, -0.00000  , 0.5e-5);
+      assert.approx(Math.abs(dir.azi2), 180.00000, 0.5e-5);
+      assert.approx(dir.s12 , 10000000  , 0.5);
+      assert.approx(dir.a12 , 90.06544  , 0.5e-5);
+      assert.approx(dir.m12 , 6363636   , 0.5);
+      assert.approx(dir.M12 , -0.0012834, 0.5e7);
+      assert.approx(dir.M21 , 0.0013749 , 0.5e-7);
+      assert.approx(dir.S12 , 0         , 0.5);
+      dir = line.Position(2e7, g.ALL | g.LONG_UNROLL);
+      assert.approx(dir.lat1, 30.00000  , 0.5e-5);
+      assert.approx(dir.lon1, -0.00000  , 0.5e-5);
+      assert.approx(Math.abs(dir.azi1), 180.00000, 0.5e-5);
+      assert.approx(dir.lat2, -30.03547 , 0.5e-5);
+      assert.approx(dir.lon2, -180.00000, 0.5e-5);
+      assert.approx(dir.azi2, -0.00000  , 0.5e-5);
+      assert.approx(dir.s12 , 20000000  , 0.5);
+      assert.approx(dir.a12 , 179.96459 , 0.5e-5);
+      assert.approx(dir.m12 , 54342     , 0.5);
+      assert.approx(dir.M12 , -1.0045592, 0.5e7);
+      assert.approx(dir.M21 , -0.9954339, 0.5e-7);
+      assert.approx(dir.S12 , 127516405431022.0, 0.5);
+    });
+
+    it("GeodSolve69", function() {
+      // Check for InverseLine if line is slightly west of S and that s13 is
+      // correctly set.
+      var geod = g.WGS84,
+          line = geod.InverseLine(-5, -0.000000000000002, -10, 180),
+          dir = line.Position(2e7, g.LONG_UNROLL);
+      assert.approx(dir.lat2, 4.96445   , 0.5e-5);
+      assert.approx(dir.lon2, -180.00000, 0.5e-5);
+      assert.approx(dir.azi2, -0.00000  , 0.5e-5);
+      dir = line.Position(0.5 * line.s13, g.LONG_UNROLL);
+      assert.approx(dir.lat2, -87.52461 , 0.5e-5);
+      assert.approx(dir.lon2, -0.00000  , 0.5e-5);
+      assert.approx(dir.azi2, -180.00000, 0.5e-5);
+    });
+
+    it("GeodSolve71", function() {
+      // Check that DirectLine sets s13.
+      var geod = g.WGS84,
+          line = geod.DirectLine(1, 2, 45, 1e7),
+          dir = line.Position(0.5 * line.s13, g.LONG_UNROLL);
+      assert.approx(dir.lat2, 30.92625, 0.5e-5);
+      assert.approx(dir.lon2, 37.54640, 0.5e-5);
+      assert.approx(dir.azi2, 55.43104, 0.5e-5);
+    });
+
+    it("GeodSolve73", function() {
+      // Check for backwards from the pole bug reported by Anon on 2016-02-13.
+      // This only affected the Java implementation.  It was introduced in Java
+      // version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+      var geod = g.WGS84,
+          dir = geod.Direct(90, 10, 180, -1e6);
+      assert.approx(dir.lat2, 81.04623, 0.5e-5);
+      assert.approx(dir.lon2, -170, 0.5e-5);
+      assert.approx(dir.azi2, 0, 0.5e-5);
+    });
+
+    it("GeodSolve74", function() {
+      // Check fix for inaccurate areas, bug introduced in v1.46, fixed
+      // 2015-10-16.
+      var geod = g.WGS84,
+          inv = geod.Inverse(54.1589, 15.3872, 54.1591, 15.3877, g.ALL);
+      assert.approx(inv.azi1, 55.723110355, 5e-9);
+      assert.approx(inv.azi2, 55.723515675, 5e-9);
+      assert.approx(inv.s12,  39.527686385, 5e-9);
+      assert.approx(inv.a12,   0.000355495, 5e-9);
+      assert.approx(inv.m12,  39.527686385, 5e-9);
+      assert.approx(inv.M12,   0.999999995, 5e-9);
+      assert.approx(inv.M21,   0.999999995, 5e-9);
+      assert.approx(inv.S12, 286698586.30197, 5e-4);
+    });
+
+    it("GeodSolve76", function() {
+      // The distance from Wellington and Salamanca (a classic failure of
+      // Vincenty)
+      var geod = g.WGS84,
+          inv = geod.Inverse(-(41+19/60.0), 174+49/60.0,
+                             40+58/60.0, -(5+30/60.0));
+      assert.approx(inv.azi1, 160.39137649664, 0.5e-11);
+      assert.approx(inv.azi2,  19.50042925176, 0.5e-11);
+      assert.approx(inv.s12,  19960543.857179, 0.5e-6);
+    });
+
+    it("GeodSolve78", function() {
+      // An example where the NGS calculator fails to converge
+      var geod = g.WGS84,
+          inv = geod.Inverse(27.2, 0.0, -27.1, 179.5);
+      assert.approx(inv.azi1,  45.82468716758, 0.5e-11);
+      assert.approx(inv.azi2, 134.22776532670, 0.5e-11);
+      assert.approx(inv.s12,  19974354.765767, 0.5e-6);
+    });
+
   });
 
   describe("Planimeter", function () {
@@ -424,7 +556,7 @@ describe("GeographicLib", function() {
         polygon.AddPoint(points[i][0], points[i][1]);
       }
       return polygon.Compute(false, true);
-    }
+    };
 
     PolyLength = function(points) {
       var i;
@@ -433,7 +565,7 @@ describe("GeographicLib", function() {
         polyline.AddPoint(points[i][0], points[i][1]);
       }
       return polyline.Compute(false, true);
-    }
+    };
 
     it("Planimeter0", function() {
       // Check fix for pole-encircling bug found 2011-03-16
@@ -508,6 +640,14 @@ describe("GeographicLib", function() {
       a =  Planimeter(points);
       assert.approx(a.perimeter, 1160741, 1);
       assert.approx(a.area, 32415230256.0, 1);
+    });
+
+    it("check TestEdge", function() {
+      // Check fix of bugs found by threepointone, 2015-10-14
+      polygon.Clear();
+      polygon.AddPoint(33, 44);
+      polygon.TestEdge(90, 10e3, false, true);
+      polygon.AddEdge(90, 10e3, false, true);
     });
 
   });

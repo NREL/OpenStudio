@@ -6,10 +6,11 @@
  * GeographicLib is Copyright (c) Charles Karney (2010-2012)
  * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 #include "stdafx.h"
 #include <GeographicLib/Geodesic.hpp>
+#include <GeographicLib/GeodesicLine.hpp>
 #include "Geodesic.h"
 #include "GeodesicLine.h"
 #include "NETGeographicLib.h"
@@ -471,6 +472,38 @@ GeodesicLine^ Geodesic::Line(double lat1, double lon1, double azi1,
                              NETGeographicLib::Mask caps )
 {
     return gcnew GeodesicLine( this, lat1, lon1, azi1, caps );
+}
+
+//*****************************************************************************
+GeodesicLine^ Geodesic::InverseLine(double lat1, double lon1, double lat2,
+    double lon2, NETGeographicLib::Mask caps)
+{
+    return gcnew GeodesicLine(m_pGeodesic->InverseLine(lat1, lon1, lat2,
+        lon2, static_cast<unsigned int>(caps)));
+}
+
+//*****************************************************************************
+GeodesicLine^ Geodesic::DirectLine(double lat1, double lon1, double azi1,
+    double s12, NETGeographicLib::Mask caps)
+{
+    return gcnew GeodesicLine(m_pGeodesic->DirectLine(lat1, lon1, azi1,
+        s12, static_cast<unsigned int>(caps)));
+}
+
+//*****************************************************************************
+GeodesicLine^ Geodesic::ArcDirectLine(double lat1, double lon1, double azi1,
+    double a12, NETGeographicLib::Mask caps)
+{
+    return gcnew GeodesicLine(m_pGeodesic->ArcDirectLine(lat1, lon1, azi1,
+        a12, static_cast<unsigned int>(caps)));
+}
+
+//*****************************************************************************
+GeodesicLine^ Geodesic::GenDirectLine(double lat1, double lon1, double azi1,
+    bool arcmode, double s12_a12, NETGeographicLib::Mask caps)
+{
+    return gcnew GeodesicLine(m_pGeodesic->GenDirectLine(lat1, lon1, azi1,
+        arcmode, s12_a12, static_cast<unsigned int>(caps)));
 }
 
 //*****************************************************************************

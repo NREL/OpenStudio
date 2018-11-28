@@ -7,7 +7,7 @@
 <link rev="made" href="mailto:root@localhost" />
 </head>
 
-<body style="background-color: white">
+<body>
 
 
 
@@ -31,13 +31,13 @@
 
 <dl>
 
-<dt id="n"><b>-n</b></dt>
+<dt id="n-name"><b>-n</b> <i>name</i></dt>
 <dd>
 
 <p>use gravity field model <i>name</i> instead of the default <code>egm96</code>. See <a href="#MODELS">&quot;MODELS&quot;</a>.</p>
 
 </dd>
-<dt id="d"><b>-d</b></dt>
+<dt id="d-dir"><b>-d</b> <i>dir</i></dt>
 <dd>
 
 <p>read gravity models from <i>dir</i> instead of the default. See <a href="#MODELS">&quot;MODELS&quot;</a>.</p>
@@ -67,7 +67,7 @@
 <p>compute the height of the geoid above the reference ellipsoid (in meters). In this case, <i>h</i> should be zero. The results accurately match the results of the NGA&#39;s synthesis programs. GeoidEval(1) can compute geoid heights much more quickly by interpolating on a grid of precomputed results; however the results from GeoidEval(1) are only accurate to a few millimeters.</p>
 
 </dd>
-<dt id="c"><b>-c</b></dt>
+<dt id="c-lat-h"><b>-c</b> <i>lat</i> <i>h</i></dt>
 <dd>
 
 <p>evaluate the field on a circle of latitude given by <i>lat</i> and <i>h</i> instead of reading these quantities from the input lines. In this case, <b>Gravity</b> can calculate the field considerably more quickly. If geoid heights are being computed (the <b>-H</b> option), then <i>h</i> must be zero.</p>
@@ -76,10 +76,10 @@
 <dt id="w"><b>-w</b></dt>
 <dd>
 
-<p>on input and output, longitude precedes latitude (except that on input this can be overridden by a hemisphere designator, <i>N</i>, <i>S</i>, <i>E</i>, <i>W</i>).</p>
+<p>toggle the longitude first flag (it starts off); if the flag is on, then on input and output, longitude precedes latitude (except that, on input, this can be overridden by a hemisphere designator, <i>N</i>, <i>S</i>, <i>E</i>, <i>W</i>).</p>
 
 </dd>
-<dt id="p"><b>-p</b></dt>
+<dt id="p-prec"><b>-p</b> <i>prec</i></dt>
 <dd>
 
 <p>set the output precision to <i>prec</i>. By default <i>prec</i> is 5 for acceleration due to gravity, 3 for the gravity disturbance and anomaly, and 4 for the geoid height.</p>
@@ -91,7 +91,7 @@
 <p>print information about the gravity model on standard error before processing the input.</p>
 
 </dd>
-<dt id="comment-delimiter"><b>--comment-delimiter</b></dt>
+<dt id="comment-delimiter-commentdelim"><b>--comment-delimiter</b> <i>commentdelim</i></dt>
 <dd>
 
 <p>set the comment delimiter to <i>commentdelim</i> (e.g., &quot;#&quot; or &quot;//&quot;). If set, the input lines will be scanned for this delimiter and, if found, the delimiter and the rest of the line will be removed prior to processing and subsequently appended to the output line (separated by a space).</p>
@@ -115,25 +115,25 @@
 <p>print full documentation and exit.</p>
 
 </dd>
-<dt id="input-file"><b>--input-file</b></dt>
+<dt id="input-file-infile"><b>--input-file</b> <i>infile</i></dt>
 <dd>
 
 <p>read input from the file <i>infile</i> instead of from standard input; a file name of &quot;-&quot; stands for standard input.</p>
 
 </dd>
-<dt id="input-string"><b>--input-string</b></dt>
+<dt id="input-string-instring"><b>--input-string</b> <i>instring</i></dt>
 <dd>
 
 <p>read input from the string <i>instring</i> instead of from standard input. All occurrences of the line separator character (default is a semicolon) in <i>instring</i> are converted to newlines before the reading begins.</p>
 
 </dd>
-<dt id="line-separator"><b>--line-separator</b></dt>
+<dt id="line-separator-linesep"><b>--line-separator</b> <i>linesep</i></dt>
 <dd>
 
 <p>set the line separator character to <i>linesep</i>. By default this is a semicolon.</p>
 
 </dd>
-<dt id="output-file"><b>--output-file</b></dt>
+<dt id="output-file-outfile"><b>--output-file</b> <i>outfile</i></dt>
 <dd>
 
 <p>write output to the file <i>outfile</i> instead of to standard output; a file name of &quot;-&quot; stands for standard output.</p>
@@ -160,7 +160,7 @@
 
 <p>The gravity models will be loaded from a directory specified at compile time. This may changed by setting the environment variables <code>GEOGRAPHICLIB_GRAVITY_PATH</code> or <code>GEOGRAPHICLIB_DATA</code>, or with the <b>-d</b> option. The <b>-h</b> option prints the default gravity path and name. Use the <b>-v</b> option to ascertain the full path name of the data file.</p>
 
-<p>Instructions for downloading and installing gravity models are available at <a href="http://geographiclib.sf.net/html/gravity.html#gravityinst">http://geographiclib.sf.net/html/gravity.html#gravityinst</a>.</p>
+<p>Instructions for downloading and installing gravity models are available at <a href="https://geographiclib.sourceforge.io/html/gravity.html#gravityinst">https://geographiclib.sourceforge.io/html/gravity.html#gravityinst</a>.</p>
 
 <h1 id="ENVIRONMENT">ENVIRONMENT</h1>
 
@@ -207,7 +207,7 @@
 
 <h1 id="HISTORY">HISTORY</h1>
 
-<p><b>Gravity</b> was added to GeographicLib, <a href="http://geographiclib.sf.net">http://geographiclib.sf.net</a>, in version 1.16.</p>
+<p><b>Gravity</b> was added to GeographicLib, <a href="https://geographiclib.sourceforge.io">https://geographiclib.sourceforge.io</a>, in version 1.16.</p>
 
 
 </body>

@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
  * the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_SPHERICALHARMONIC1_HPP)
@@ -49,11 +49,6 @@ namespace GeographicLib {
        * @hideinitializer
        **********************************************************************/
       SCHMIDT = SphericalEngine::SCHMIDT,
-      /// \cond SKIP
-      // These are deprecated...
-      full = FULL,
-      schmidt = SCHMIDT,
-      /// \endcond
     };
 
   private:

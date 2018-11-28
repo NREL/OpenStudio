@@ -7,7 +7,7 @@
  * GeographicLib is Copyright (c) Charles Karney (2010-2012)
  * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 namespace NETGeographicLib
@@ -21,12 +21,12 @@ namespace NETGeographicLib
    * %Gnomonic projection centered at an arbitrary position \e C on the
    * ellipsoid.  This projection is derived in Section 8 of
    * - C. F. F. Karney,
-   *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   Algorithms for geodesics</a>,
    *   J. Geodesy <b>87</b>, 43--55 (2013);
-   *   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+   *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
-   *   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+   *   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    *   geod-addenda.html</a>.
    * .
    * The projection of \e P is defined as follows: compute the geodesic line

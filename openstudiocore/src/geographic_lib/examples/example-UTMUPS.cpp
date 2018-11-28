@@ -1,9 +1,9 @@
 // Example of using the GeographicLib::UTMUPS class
 
 #include <iostream>
+#include <iomanip>
 #include <exception>
 #include <string>
-#include <iomanip>
 #include <GeographicLib/UTMUPS.hpp>
 
 using namespace std;
@@ -39,5 +39,4 @@ int main() {
     cerr << "Caught exception: " << e.what() << "\n";
     return 1;
   }
-  return 0;
 }

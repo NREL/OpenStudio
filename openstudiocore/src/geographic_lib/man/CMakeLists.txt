@@ -33,10 +33,11 @@ foreach (TOOL ${TOOLS})
         ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod > ${TOOL}.1
       COMMENT "Building man page for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
-    add_custom_command (OUTPUT ${TOOL}.1.html
-      COMMAND
-        pod2html --title "'${TOOL}(1)'" --noindex ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod |
-        sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%'
+    add_custom_command (OUTPUT ${TOOL}.1.html COMMAND
+        pod2html --title "'${TOOL}(1)'"
+          --noindex ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod |
+        sed
+          -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%'
           -e 's%<code>\\\([^<>]*\\\)\(\\\(.\\\)\)</code>%<a href="\\1.\\2.html">&</a>%'g > ${TOOL}.1.html &&
         cp ${TOOL}.1.html ../doc/html-stage/
       COMMENT "Building html version of man page for ${TOOL}"
@@ -76,7 +77,7 @@ if (NOT WIN32)
     set (SYSMANPAGES ${SYSMANPAGES} ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT}.8)
     configure_file (script.8.in ${SCRIPT}.8 @ONLY)
   endforeach ()
-endif()
+endif ()
 
 # Add the extra maintainer tasks into the dependency list.  The
 # distrib-man target copies the derived documentation files into the

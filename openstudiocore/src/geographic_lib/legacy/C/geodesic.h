@@ -1,15 +1,15 @@
 /**
  * \file geodesic.h
- * \brief Header for the geodesic routines in C
+ * \brief API for the geodesic routines in C
  *
  * This an implementation in C of the geodesic algorithms described in
  * - C. F. F. Karney,
- *   <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+ *   <a href="https://doi.org/10.1007/s00190-012-0578-z">
  *   Algorithms for geodesics</a>,
  *   J. Geodesy <b>87</b>, 43--55 (2013);
- *   DOI: <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">
+ *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
  *   10.1007/s00190-012-0578-z</a>;
- *   addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">
+ *   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
  *   geod-addenda.html</a>.
  * .
  * The principal advantages of these algorithms over previous ones (e.g.,
@@ -96,8 +96,8 @@
  *   [\e d, \e d], for arbitrary \e d.
  *
  * These routines are a simple transcription of the corresponding C++ classes
- * in <a href="http://geographiclib.sf.net"> GeographicLib</a>.  The "class
- * data" is represented by the structs geod_geodesic, geod_geodesicline,
+ * in <a href="https://geographiclib.sourceforge.io"> GeographicLib</a>.  The
+ * "class data" is represented by the structs geod_geodesic, geod_geodesicline,
  * geod_polygon and pointers to these objects are passed as initial arguments
  * to the member functions.  Most of the internal comments have been retained.
  * However, in the process of transcription some documentation has been lost
@@ -107,12 +107,12 @@
  * twice about restructuring the internals of the C code since this may make
  * porting fixes from the C++ code more difficult.
  *
- * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  *
  * This library was distributed with
- * <a href="../index.html">GeographicLib</a> 1.45.
+ * <a href="../index.html">GeographicLib</a> 1.49.
  **********************************************************************/
 
 #if !defined(GEODESIC_H)
@@ -127,7 +127,7 @@
  * The minor version of the geodesic library.  (This tracks the version of
  * GeographicLib.)
  **********************************************************************/
-#define GEODESIC_VERSION_MINOR 45
+#define GEODESIC_VERSION_MINOR 49
 /**
  * The patch level of the geodesic library.  (This tracks the version of
  * GeographicLib.)
@@ -176,7 +176,8 @@ extern "C" {
 
   /**
    * The struct containing information about a single geodesic.  This must be
-   * initialized by geod_lineinit() before use.
+   * initialized by geod_lineinit(), geod_directline(), geod_gendirectline(),
+   * or geod_inverseline() before use.
    **********************************************************************/
   struct geod_geodesicline {
     double lat1;                /**< the starting latitude */
@@ -184,9 +185,13 @@ extern "C" {
     double azi1;                /**< the starting azimuth */
     double a;                   /**< the equatorial radius */
     double f;                   /**< the flattening */
+    double salp1;               /**< sine of \e azi1 */
+    double calp1;               /**< cosine of \e azi1 */
+    double a13;                 /**< arc length to reference point */
+    double s13;                 /**< distance to reference point */
     /**< @cond SKIP */
     double b, c2, f1, salp0, calp0, k2,
-      salp1, calp1, ssig1, csig1, dn1, stau1, ctau1, somg1, comg1,
+      ssig1, csig1, dn1, stau1, ctau1, somg1, comg1,
       A1m1, A2m1, A3c, B11, B21, B31, A4, B41;
     double C1a[6+1], C1pa[6+1], C2a[6+1], C3a[6], C4a[6];
     /**< @endcond */
@@ -220,6 +225,166 @@ extern "C" {
    * @param[in] f the flattening.
    **********************************************************************/
   void geod_init(struct geod_geodesic* g, double a, double f);
+
+  /**
+   * Solve the direct geodesic problem.
+   *
+   * @param[in] g a pointer to the geod_geodesic object specifying the
+   *   ellipsoid.
+   * @param[in] lat1 latitude of point 1 (degrees).
+   * @param[in] lon1 longitude of point 1 (degrees).
+   * @param[in] azi1 azimuth at point 1 (degrees).
+   * @param[in] s12 distance from point 1 to point 2 (meters); it can be
+   *   negative.
+   * @param[out] plat2 pointer to the latitude of point 2 (degrees).
+   * @param[out] plon2 pointer to the longitude of point 2 (degrees).
+   * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
+   *
+   * \e g must have been initialized with a call to geod_init().  \e lat1
+   * should be in the range [&minus;90&deg;, 90&deg;].  The values of \e lon2
+   * and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;].  Any of
+   * the "return" arguments \e plat2, etc., may be replaced by 0, if you do not
+   * need some quantities computed.
+   *
+   * If either point is at a pole, the azimuth is defined by keeping the
+   * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;), and
+   * taking the limit &epsilon; &rarr; 0+.  An arc length greater that 180&deg;
+   * signifies a geodesic which is not a shortest path.  (For a prolate
+   * ellipsoid, an additional condition is necessary for a shortest path: the
+   * longitudinal extent must not exceed of 180&deg;.)
+   *
+   * Example, determine the point 10000 km NE of JFK:
+   @code{.c}
+   struct geod_geodesic g;
+   double lat, lon;
+   geod_init(&g, 6378137, 1/298.257223563);
+   geod_direct(&g, 40.64, -73.78, 45.0, 10e6, &lat, &lon, 0);
+   printf("%.5f %.5f\n", lat, lon);
+   @endcode
+   **********************************************************************/
+  void geod_direct(const struct geod_geodesic* g,
+                   double lat1, double lon1, double azi1, double s12,
+                   double* plat2, double* plon2, double* pazi2);
+
+  /**
+   * The general direct geodesic problem.
+   *
+   * @param[in] g a pointer to the geod_geodesic object specifying the
+   *   ellipsoid.
+   * @param[in] lat1 latitude of point 1 (degrees).
+   * @param[in] lon1 longitude of point 1 (degrees).
+   * @param[in] azi1 azimuth at point 1 (degrees).
+   * @param[in] flags bitor'ed combination of geod_flags(); \e flags &
+   *   GEOD_ARCMODE determines the meaning of \e s12_a12 and \e flags &
+   *   GEOD_LONG_UNROLL "unrolls" \e lon2.
+   * @param[in] s12_a12 if \e flags & GEOD_ARCMODE is 0, this is the distance
+   *   from point 1 to point 2 (meters); otherwise it is the arc length
+   *   from point 1 to point 2 (degrees); it can be negative.
+   * @param[out] plat2 pointer to the latitude of point 2 (degrees).
+   * @param[out] plon2 pointer to the longitude of point 2 (degrees).
+   * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
+   * @param[out] ps12 pointer to the distance from point 1 to point 2
+   *   (meters).
+   * @param[out] pm12 pointer to the reduced length of geodesic (meters).
+   * @param[out] pM12 pointer to the geodesic scale of point 2 relative to
+   *   point 1 (dimensionless).
+   * @param[out] pM21 pointer to the geodesic scale of point 1 relative to
+   *   point 2 (dimensionless).
+   * @param[out] pS12 pointer to the area under the geodesic
+   *   (meters<sup>2</sup>).
+   * @return \e a12 arc length from point 1 to point 2 (degrees).
+   *
+   * \e g must have been initialized with a call to geod_init().  \e lat1
+   * should be in the range [&minus;90&deg;, 90&deg;].  The function value \e
+   * a12 equals \e s12_a12 if \e flags & GEOD_ARCMODE.  Any of the "return"
+   * arguments, \e plat2, etc., may be replaced by 0, if you do not need some
+   * quantities computed.
+   *
+   * With \e flags & GEOD_LONG_UNROLL bit set, the longitude is "unrolled" so
+   * that the quantity \e lon2 &minus; \e lon1 indicates how many times and in
+   * what sense the geodesic encircles the ellipsoid.
+   **********************************************************************/
+  double geod_gendirect(const struct geod_geodesic* g,
+                        double lat1, double lon1, double azi1,
+                        unsigned flags, double s12_a12,
+                        double* plat2, double* plon2, double* pazi2,
+                        double* ps12, double* pm12, double* pM12, double* pM21,
+                        double* pS12);
+
+  /**
+   * Solve the inverse geodesic problem.
+   *
+   * @param[in] g a pointer to the geod_geodesic object specifying the
+   *   ellipsoid.
+   * @param[in] lat1 latitude of point 1 (degrees).
+   * @param[in] lon1 longitude of point 1 (degrees).
+   * @param[in] lat2 latitude of point 2 (degrees).
+   * @param[in] lon2 longitude of point 2 (degrees).
+   * @param[out] ps12 pointer to the distance from point 1 to point 2
+   *   (meters).
+   * @param[out] pazi1 pointer to the azimuth at point 1 (degrees).
+   * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
+   *
+   * \e g must have been initialized with a call to geod_init().  \e lat1 and
+   * \e lat2 should be in the range [&minus;90&deg;, 90&deg;].  The values of
+   * \e azi1 and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;].
+   * Any of the "return" arguments, \e ps12, etc., may be replaced by 0, if you
+   * do not need some quantities computed.
+   *
+   * If either point is at a pole, the azimuth is defined by keeping the
+   * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;), and
+   * taking the limit &epsilon; &rarr; 0+.
+   *
+   * The solution to the inverse problem is found using Newton's method.  If
+   * this fails to converge (this is very unlikely in geodetic applications
+   * but does occur for very eccentric ellipsoids), then the bisection method
+   * is used to refine the solution.
+   *
+   * Example, determine the distance between JFK and Singapore Changi Airport:
+   @code{.c}
+   struct geod_geodesic g;
+   double s12;
+   geod_init(&g, 6378137, 1/298.257223563);
+   geod_inverse(&g, 40.64, -73.78, 1.36, 103.99, &s12, 0, 0);
+   printf("%.3f\n", s12);
+   @endcode
+   **********************************************************************/
+  void geod_inverse(const struct geod_geodesic* g,
+                    double lat1, double lon1, double lat2, double lon2,
+                    double* ps12, double* pazi1, double* pazi2);
+
+  /**
+   * The general inverse geodesic calculation.
+   *
+   * @param[in] g a pointer to the geod_geodesic object specifying the
+   *   ellipsoid.
+   * @param[in] lat1 latitude of point 1 (degrees).
+   * @param[in] lon1 longitude of point 1 (degrees).
+   * @param[in] lat2 latitude of point 2 (degrees).
+   * @param[in] lon2 longitude of point 2 (degrees).
+   * @param[out] ps12 pointer to the distance from point 1 to point 2
+   *  (meters).
+   * @param[out] pazi1 pointer to the azimuth at point 1 (degrees).
+   * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
+   * @param[out] pm12 pointer to the reduced length of geodesic (meters).
+   * @param[out] pM12 pointer to the geodesic scale of point 2 relative to
+   *   point 1 (dimensionless).
+   * @param[out] pM21 pointer to the geodesic scale of point 1 relative to
+   *   point 2 (dimensionless).
+   * @param[out] pS12 pointer to the area under the geodesic
+   *   (meters<sup>2</sup>).
+   * @return \e a12 arc length from point 1 to point 2 (degrees).
+   *
+   * \e g must have been initialized with a call to geod_init().  \e lat1 and
+   * \e lat2 should be in the range [&minus;90&deg;, 90&deg;].  Any of the
+   * "return" arguments \e ps12, etc., may be replaced by 0, if you do not need
+   * some quantities computed.
+   **********************************************************************/
+  double geod_geninverse(const struct geod_geodesic* g,
+                         double lat1, double lon1, double lat2, double lon2,
+                         double* ps12, double* pazi1, double* pazi2,
+                         double* pm12, double* pM12, double* pM21,
+                         double* pS12);
 
   /**
    * Initialize a geod_geodesicline object.
@@ -256,110 +421,113 @@ extern "C" {
    * A value of \e caps = 0 is treated as GEOD_LATITUDE | GEOD_LONGITUDE |
    * GEOD_AZIMUTH | GEOD_DISTANCE_IN (to support the solution of the "standard"
    * direct problem).
+   *
+   * When initialized by this function, point 3 is undefined (l->s13 = l->a13 =
+   * NaN).
    **********************************************************************/
   void geod_lineinit(struct geod_geodesicline* l,
                      const struct geod_geodesic* g,
                      double lat1, double lon1, double azi1, unsigned caps);
 
   /**
-   * Solve the direct geodesic problem.
+   * Initialize a geod_geodesicline object in terms of the direct geodesic
+   * problem.
    *
+   * @param[out] l a pointer to the object to be initialized.
    * @param[in] g a pointer to the geod_geodesic object specifying the
    *   ellipsoid.
    * @param[in] lat1 latitude of point 1 (degrees).
    * @param[in] lon1 longitude of point 1 (degrees).
    * @param[in] azi1 azimuth at point 1 (degrees).
-   * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+   * @param[in] s12 distance from point 1 to point 2 (meters); it can be
    *   negative.
-   * @param[out] plat2 pointer to the latitude of point 2 (degrees).
-   * @param[out] plon2 pointer to the longitude of point 2 (degrees).
-   * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
+   * @param[in] caps bitor'ed combination of geod_mask() values specifying the
+   *   capabilities the geod_geodesicline object should possess, i.e., which
+   *   quantities can be returned in calls to geod_position() and
+   *   geod_genposition().
    *
-   * \e g must have been initialized with a call to geod_init().  \e lat1
-   * should be in the range [&minus;90&deg;, 90&deg;].  The values of \e lon2
-   * and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;).  Any of
-   * the "return" arguments \e plat2, etc., may be replaced by 0, if you do not
-   * need some quantities computed.
-   *
-   * If either point is at a pole, the azimuth is defined by keeping the
-   * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;), and
-   * taking the limit &epsilon; &rarr; 0+.  An arc length greater that 180&deg;
-   * signifies a geodesic which is not a shortest path.  (For a prolate
-   * ellipsoid, an additional condition is necessary for a shortest path: the
-   * longitudinal extent must not exceed of 180&deg;.)
-   *
-   * Example, determine the point 10000 km NE of JFK:
-   @code{.c}
-   struct geod_geodesic g;
-   double lat, lon;
-   geod_init(&g, 6378137, 1/298.257223563);
-   geod_direct(&g, 40.64, -73.78, 45.0, 10e6, &lat, &lon, 0);
-   printf("%.5f %.5f\n", lat, lon);
-   @endcode
+   * This function sets point 3 of the geod_geodesicline to correspond to point
+   * 2 of the direct geodesic problem.  See geod_lineinit() for more
+   * information.
    **********************************************************************/
-  void geod_direct(const struct geod_geodesic* g,
-                   double lat1, double lon1, double azi1, double s12,
-                   double* plat2, double* plon2, double* pazi2);
+  void geod_directline(struct geod_geodesicline* l,
+                       const struct geod_geodesic* g,
+                       double lat1, double lon1, double azi1, double s12,
+                       unsigned caps);
 
   /**
-   * Solve the inverse geodesic problem.
+   * Initialize a geod_geodesicline object in terms of the direct geodesic
+   * problem spacified in terms of either distance or arc length.
    *
+   * @param[out] l a pointer to the object to be initialized.
+   * @param[in] g a pointer to the geod_geodesic object specifying the
+   *   ellipsoid.
+   * @param[in] lat1 latitude of point 1 (degrees).
+   * @param[in] lon1 longitude of point 1 (degrees).
+   * @param[in] azi1 azimuth at point 1 (degrees).
+   * @param[in] flags either GEOD_NOFLAGS or GEOD_ARCMODE to determining the
+   *   meaning of the \e s12_a12.
+   * @param[in] s12_a12 if \e flags = GEOD_NOFLAGS, this is the distance
+   *   from point 1 to point 2 (meters); if \e flags = GEOD_ARCMODE, it is
+   *   the arc length from point 1 to point 2 (degrees); it can be
+   *   negative.
+   * @param[in] caps bitor'ed combination of geod_mask() values specifying the
+   *   capabilities the geod_geodesicline object should possess, i.e., which
+   *   quantities can be returned in calls to geod_position() and
+   *   geod_genposition().
+   *
+   * This function sets point 3 of the geod_geodesicline to correspond to point
+   * 2 of the direct geodesic problem.  See geod_lineinit() for more
+   * information.
+   **********************************************************************/
+  void geod_gendirectline(struct geod_geodesicline* l,
+                          const struct geod_geodesic* g,
+                          double lat1, double lon1, double azi1,
+                          unsigned flags, double s12_a12,
+                          unsigned caps);
+
+  /**
+   * Initialize a geod_geodesicline object in terms of the inverse geodesic
+   * problem.
+   *
+   * @param[out] l a pointer to the object to be initialized.
    * @param[in] g a pointer to the geod_geodesic object specifying the
    *   ellipsoid.
    * @param[in] lat1 latitude of point 1 (degrees).
    * @param[in] lon1 longitude of point 1 (degrees).
    * @param[in] lat2 latitude of point 2 (degrees).
    * @param[in] lon2 longitude of point 2 (degrees).
-   * @param[out] ps12 pointer to the distance between point 1 and point 2
-   *   (meters).
-   * @param[out] pazi1 pointer to the azimuth at point 1 (degrees).
-   * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
+   * @param[in] caps bitor'ed combination of geod_mask() values specifying the
+   *   capabilities the geod_geodesicline object should possess, i.e., which
+   *   quantities can be returned in calls to geod_position() and
+   *   geod_genposition().
    *
-   * \e g must have been initialized with a call to geod_init().  \e lat1 and
-   * \e lat2 should be in the range [&minus;90&deg;, 90&deg;].  The values of
-   * \e azi1 and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;).
-   * Any of the "return" arguments, \e ps12, etc., may be replaced by 0, if you
-   * do not need some quantities computed.
-   *
-   * If either point is at a pole, the azimuth is defined by keeping the
-   * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;), and
-   * taking the limit &epsilon; &rarr; 0+.
-   *
-   * The solution to the inverse problem is found using Newton's method.  If
-   * this fails to converge (this is very unlikely in geodetic applications
-   * but does occur for very eccentric ellipsoids), then the bisection method
-   * is used to refine the solution.
-   *
-   * Example, determine the distance between JFK and Singapore Changi Airport:
-   @code{.c}
-   struct geod_geodesic g;
-   double s12;
-   geod_init(&g, 6378137, 1/298.257223563);
-   geod_inverse(&g, 40.64, -73.78, 1.36, 103.99, &s12, 0, 0);
-   printf("%.3f\n", s12);
-   @endcode
+   * This function sets point 3 of the geod_geodesicline to correspond to point
+   * 2 of the inverse geodesic problem.  See geod_lineinit() for more
+   * information.
    **********************************************************************/
-  void geod_inverse(const struct geod_geodesic* g,
-                    double lat1, double lon1, double lat2, double lon2,
-                    double* ps12, double* pazi1, double* pazi2);
+  void geod_inverseline(struct geod_geodesicline* l,
+                       const struct geod_geodesic* g,
+                       double lat1, double lon1, double lat2, double lon2,
+                       unsigned caps);
 
   /**
    * Compute the position along a geod_geodesicline.
    *
    * @param[in] l a pointer to the geod_geodesicline object specifying the
    *   geodesic line.
-   * @param[in] s12 distance between point 1 and point 2 (meters); it can be
+   * @param[in] s12 distance from point 1 to point 2 (meters); it can be
    *   negative.
    * @param[out] plat2 pointer to the latitude of point 2 (degrees).
    * @param[out] plon2 pointer to the longitude of point 2 (degrees); requires
    *   that \e l was initialized with \e caps |= GEOD_LONGITUDE.
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
    *
-   * \e l must have been initialized with a call to geod_lineinit() with \e
-   * caps |= GEOD_DISTANCE_IN.  The values of \e lon2 and \e azi2 returned are
-   * in the range [&minus;180&deg;, 180&deg;).  Any of the "return" arguments
-   * \e plat2, etc., may be replaced by 0, if you do not need some quantities
-   * computed.
+   * \e l must have been initialized with a call, e.g., to geod_lineinit(),
+   * with \e caps |= GEOD_DISTANCE_IN.  The values of \e lon2 and \e azi2
+   * returned are in the range [&minus;180&deg;, 180&deg;].  Any of the
+   * "return" arguments \e plat2, etc., may be replaced by 0, if you do not
+   * need some quantities computed.
    *
    * Example, compute way points between JFK and Singapore Changi Airport
    * the "obvious" way using geod_direct():
@@ -378,97 +546,18 @@ extern "C" {
    @code{.c}
    struct geod_geodesic g;
    struct geod_geodesicline l;
-   double s12, azi1, lat[101],lon[101];
+   double lat[101],lon[101];
    int i;
    geod_init(&g, 6378137, 1/298.257223563);
-   geod_inverse(&g, 40.64, -73.78, 1.36, 103.99, &s12, &azi1, 0);
-   geod_lineinit(&l, &g, 40.64, -73.78, azi1, 0);
-   for (i = 0; i < 101; ++i) {
-     geod_position(&l, i * s12 * 0.01, lat + i, lon + i, 0);
+   geod_inverseline(&l, &g, 40.64, -73.78, 1.36, 103.99, 0);
+   for (i = 0; i <= 100; ++i) {
+     geod_position(&l, i * l.s13 * 0.01, lat + i, lon + i, 0);
      printf("%.5f %.5f\n", lat[i], lon[i]);
    }
    @endcode
    **********************************************************************/
   void geod_position(const struct geod_geodesicline* l, double s12,
                      double* plat2, double* plon2, double* pazi2);
-
-  /**
-   * The general direct geodesic problem.
-   *
-   * @param[in] g a pointer to the geod_geodesic object specifying the
-   *   ellipsoid.
-   * @param[in] lat1 latitude of point 1 (degrees).
-   * @param[in] lon1 longitude of point 1 (degrees).
-   * @param[in] azi1 azimuth at point 1 (degrees).
-   * @param[in] flags bitor'ed combination of geod_flags(); \e flags &
-   *   GEOD_ARCMODE determines the meaning of \e s12_a12 and \e flags &
-   *   GEOD_LONG_UNROLL "unrolls" \e lon2.
-   * @param[in] s12_a12 if \e flags & GEOD_ARCMODE is 0, this is the distance
-   *   between point 1 and point 2 (meters); otherwise it is the arc length
-   *   between point 1 and point 2 (degrees); it can be negative.
-   * @param[out] plat2 pointer to the latitude of point 2 (degrees).
-   * @param[out] plon2 pointer to the longitude of point 2 (degrees).
-   * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
-   * @param[out] ps12 pointer to the distance between point 1 and point 2
-   *   (meters).
-   * @param[out] pm12 pointer to the reduced length of geodesic (meters).
-   * @param[out] pM12 pointer to the geodesic scale of point 2 relative to
-   *   point 1 (dimensionless).
-   * @param[out] pM21 pointer to the geodesic scale of point 1 relative to
-   *   point 2 (dimensionless).
-   * @param[out] pS12 pointer to the area under the geodesic
-   *   (meters<sup>2</sup>).
-   * @return \e a12 arc length of between point 1 and point 2 (degrees).
-   *
-   * \e g must have been initialized with a call to geod_init().  \e lat1
-   * should be in the range [&minus;90&deg;, 90&deg;].  The function value \e
-   * a12 equals \e s12_a12 if \e flags & GEOD_ARCMODE.  Any of the "return"
-   * arguments, \e plat2, etc., may be replaced by 0, if you do not need some
-   * quantities computed.
-   *
-   * With \e flags & GEOD_LONG_UNROLL bit set, the longitude is "unrolled" so
-   * that the quantity \e lon2 &minus; \e lon1 indicates how many times and in
-   * what sense the geodesic encircles the ellipsoid.
-   **********************************************************************/
-  double geod_gendirect(const struct geod_geodesic* g,
-                        double lat1, double lon1, double azi1,
-                        unsigned flags, double s12_a12,
-                        double* plat2, double* plon2, double* pazi2,
-                        double* ps12, double* pm12, double* pM12, double* pM21,
-                        double* pS12);
-
-  /**
-   * The general inverse geodesic calculation.
-   *
-   * @param[in] g a pointer to the geod_geodesic object specifying the
-   *   ellipsoid.
-   * @param[in] lat1 latitude of point 1 (degrees).
-   * @param[in] lon1 longitude of point 1 (degrees).
-   * @param[in] lat2 latitude of point 2 (degrees).
-   * @param[in] lon2 longitude of point 2 (degrees).
-   * @param[out] ps12 pointer to the distance between point 1 and point 2
-   *  (meters).
-   * @param[out] pazi1 pointer to the azimuth at point 1 (degrees).
-   * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
-   * @param[out] pm12 pointer to the reduced length of geodesic (meters).
-   * @param[out] pM12 pointer to the geodesic scale of point 2 relative to
-   *   point 1 (dimensionless).
-   * @param[out] pM21 pointer to the geodesic scale of point 1 relative to
-   *   point 2 (dimensionless).
-   * @param[out] pS12 pointer to the area under the geodesic
-   *   (meters<sup>2</sup>).
-   * @return \e a12 arc length of between point 1 and point 2 (degrees).
-   *
-   * \e g must have been initialized with a call to geod_init().  \e lat1 and
-   * \e lat2 should be in the range [&minus;90&deg;, 90&deg;].  Any of the
-   * "return" arguments \e ps12, etc., may be replaced by 0, if you do not need
-   * some quantities computed.
-   **********************************************************************/
-  double geod_geninverse(const struct geod_geodesic* g,
-                         double lat1, double lon1, double lat2, double lon2,
-                         double* ps12, double* pazi1, double* pazi2,
-                         double* pm12, double* pM12, double* pM21,
-                         double* pS12);
 
   /**
    * The general position function.
@@ -480,14 +569,14 @@ extern "C" {
    *   GEOD_LONG_UNROLL "unrolls" \e lon2; if \e flags & GEOD_ARCMODE is 0,
    *   then \e l must have been initialized with \e caps |= GEOD_DISTANCE_IN.
    * @param[in] s12_a12 if \e flags & GEOD_ARCMODE is 0, this is the
-   *   distance between point 1 and point 2 (meters); otherwise it is the
-   *   arc length between point 1 and point 2 (degrees); it can be
+   *   distance from point 1 to point 2 (meters); otherwise it is the
+   *   arc length from point 1 to point 2 (degrees); it can be
    *   negative.
    * @param[out] plat2 pointer to the latitude of point 2 (degrees).
    * @param[out] plon2 pointer to the longitude of point 2 (degrees); requires
    *   that \e l was initialized with \e caps |= GEOD_LONGITUDE.
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
-   * @param[out] ps12 pointer to the distance between point 1 and point 2
+   * @param[out] ps12 pointer to the distance from point 1 to point 2
    *   (meters); requires that \e l was initialized with \e caps |=
    *   GEOD_DISTANCE.
    * @param[out] pm12 pointer to the reduced length of geodesic (meters);
@@ -501,11 +590,11 @@ extern "C" {
    * @param[out] pS12 pointer to the area under the geodesic
    *   (meters<sup>2</sup>); requires that \e l was initialized with \e caps |=
    *   GEOD_AREA.
-   * @return \e a12 arc length of between point 1 and point 2 (degrees).
+   * @return \e a12 arc length from point 1 to point 2 (degrees).
    *
    * \e l must have been initialized with a call to geod_lineinit() with \e
    * caps |= GEOD_DISTANCE_IN.  The value \e azi2 returned is in the range
-   * [&minus;180&deg;, 180&deg;).  Any of the "return" arguments \e plat2,
+   * [&minus;180&deg;, 180&deg;].  Any of the "return" arguments \e plat2,
    * etc., may be replaced by 0, if you do not need some quantities
    * computed.  Requesting a value which \e l is not capable of computing
    * is not an error; the corresponding argument will not be altered.
@@ -514,22 +603,21 @@ extern "C" {
    * that the quantity \e lon2 &minus; \e lon1 indicates how many times and in
    * what sense the geodesic encircles the ellipsoid.
    *
-   * Example, compute way points between JFK and Singapore Changi Airport
-   * using geod_genposition().  In this example, the points are evenly space in
-   * arc length (and so only approximately equally space in distance).  This is
-   * faster than using geod_position() would be appropriate if drawing the path
-   * on a map.
+   * Example, compute way points between JFK and Singapore Changi Airport using
+   * geod_genposition().  In this example, the points are evenly space in arc
+   * length (and so only approximately equally spaced in distance).  This is
+   * faster than using geod_position() and would be appropriate if drawing the
+   * path on a map.
    @code{.c}
    struct geod_geodesic g;
    struct geod_geodesicline l;
-   double a12, azi1, lat[101], lon[101];
+   double lat[101], lon[101];
    int i;
    geod_init(&g, 6378137, 1/298.257223563);
-   a12 = geod_geninverse(&g, 40.64, -73.78, 1.36, 103.99,
-                         0, &azi1, 0, 0, 0, 0, 0);
-   geod_lineinit(&l, &g, 40.64, -73.78, azi1, GEOD_LATITUDE | GEOD_LONGITUDE);
-   for (i = 0; i < 101; ++i) {
-     geod_genposition(&l, 1, i * a12 * 0.01,
+   geod_inverseline(&l, &g, 40.64, -73.78, 1.36, 103.99,
+                    GEOD_LATITUDE | GEOD_LONGITUDE);
+   for (i = 0; i <= 100; ++i) {
+     geod_genposition(&l, GEOD_ARCMODE, i * l.a13 * 0.01,
                       lat + i, lon + i, 0, 0, 0, 0, 0, 0);
      printf("%.5f %.5f\n", lat[i], lon[i]);
    }
@@ -541,6 +629,36 @@ extern "C" {
                           double* ps12, double* pm12,
                           double* pM12, double* pM21,
                           double* pS12);
+
+  /**
+   * Specify position of point 3 in terms of distance.
+   *
+   * @param[inout] l a pointer to the geod_geodesicline object.
+   * @param[in] s13 the distance from point 1 to point 3 (meters); it
+   *   can be negative.
+   *
+   * This is only useful if the geod_geodesicline object has been constructed
+   * with \e caps |= GEOD_DISTANCE_IN.
+   **********************************************************************/
+  void geod_setdistance(struct geod_geodesicline* l, double s13);
+
+  /**
+   * Specify position of point 3 in terms of either distance or arc length.
+   *
+   * @param[inout] l a pointer to the geod_geodesicline object.
+   * @param[in] flags either GEOD_NOFLAGS or GEOD_ARCMODE to determining the
+   *   meaning of the \e s13_a13.
+   * @param[in] s13_a13 if \e flags = GEOD_NOFLAGS, this is the distance
+   *   from point 1 to point 3 (meters); if \e flags = GEOD_ARCMODE, it is
+   *   the arc length from point 1 to point 3 (degrees); it can be
+   *   negative.
+   *
+   * If flags = GEOD_NOFLAGS, this calls geod_setdistance().  If flags =
+   * GEOD_ARCMODE, the \e s13 is only set if the geod_geodesicline object has
+   * been constructed with \e caps |= GEOD_DISTANCE.
+   **********************************************************************/
+  void geod_gensetdistance(struct geod_geodesicline* l,
+                           unsigned flags, double s13_a13);
 
   /**
    * Initialize a geod_polygon object.
@@ -763,16 +881,16 @@ extern "C" {
    * mask values for the \e caps argument to geod_lineinit().
    **********************************************************************/
   enum geod_mask {
-    GEOD_NONE         = 0U,                     /**< Calculate nothing */
-    GEOD_LATITUDE     = 1U<<7  | 0U,            /**< Calculate latitude */
-    GEOD_LONGITUDE    = 1U<<8  | 1U<<3,         /**< Calculate longitude */
-    GEOD_AZIMUTH      = 1U<<9  | 0U,            /**< Calculate azimuth */
-    GEOD_DISTANCE     = 1U<<10 | 1U<<0,         /**< Calculate distance */
-    GEOD_DISTANCE_IN  = 1U<<11 | 1U<<0 | 1U<<1, /**< Allow distance as input  */
-    GEOD_REDUCEDLENGTH= 1U<<12 | 1U<<0 | 1U<<2, /**< Calculate reduced length */
-    GEOD_GEODESICSCALE= 1U<<13 | 1U<<0 | 1U<<2, /**< Calculate geodesic scale */
-    GEOD_AREA         = 1U<<14 | 1U<<4,         /**< Calculate reduced length */
-    GEOD_ALL          = 0x7F80U| 0x1FU          /**< Calculate everything */
+    GEOD_NONE         = 0U,                    /**< Calculate nothing */
+    GEOD_LATITUDE     = 1U<<7  | 0U,           /**< Calculate latitude */
+    GEOD_LONGITUDE    = 1U<<8  | 1U<<3,        /**< Calculate longitude */
+    GEOD_AZIMUTH      = 1U<<9  | 0U,           /**< Calculate azimuth */
+    GEOD_DISTANCE     = 1U<<10 | 1U<<0,        /**< Calculate distance */
+    GEOD_DISTANCE_IN  = 1U<<11 | 1U<<0 | 1U<<1,/**< Allow distance as input  */
+    GEOD_REDUCEDLENGTH= 1U<<12 | 1U<<0 | 1U<<2,/**< Calculate reduced length */
+    GEOD_GEODESICSCALE= 1U<<13 | 1U<<0 | 1U<<2,/**< Calculate geodesic scale */
+    GEOD_AREA         = 1U<<14 | 1U<<4,        /**< Calculate reduced length */
+    GEOD_ALL          = 0x7F80U| 0x1FU         /**< Calculate everything */
   };
 
   /**
@@ -782,10 +900,7 @@ extern "C" {
   enum geod_flags {
     GEOD_NOFLAGS      = 0U,     /**< No flags */
     GEOD_ARCMODE      = 1U<<0,  /**< Position given in terms of arc distance */
-    GEOD_LONG_UNROLL  = 1U<<15, /**< Unroll the longitude */
-    /**< @cond SKIP */
-    GEOD_LONG_NOWRAP  = GEOD_LONG_UNROLL /* For backward compatibility only */
-    /**< @endcond */
+    GEOD_LONG_UNROLL  = 1U<<15  /**< Unroll the longitude */
   };
 
 #if defined(__cplusplus)

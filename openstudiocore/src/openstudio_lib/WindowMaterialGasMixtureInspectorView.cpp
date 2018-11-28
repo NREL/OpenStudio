@@ -293,7 +293,7 @@ void WindowMaterialGasMixtureInspectorView::attach(openstudio::model::GasMixture
   m_nameEdit->bind(
     *m_gasMixture,
     OptionalStringGetter(std::bind(&model::GasMixture::name, m_gasMixture.get_ptr(), true)),
-    boost::optional<StringSetter>(std::bind(&model::GasMixture::setName, m_gasMixture.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::GasMixture::setName, m_gasMixture.get_ptr(),std::placeholders::_1))
   );
 
   // OSQuantityEdit2

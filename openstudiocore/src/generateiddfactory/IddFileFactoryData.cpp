@@ -196,9 +196,10 @@ void IddFileFactoryData::parseFile(const path& outPath,
       << std::endl
       << "IddObject create" << objectName.first << "IddObject() {" << std::endl
       << std::endl
-      << "  static IddObject object;" << std::endl
+      << "  static const IddObject object = []{" << std::endl
       << std::endl
-      << "  if (object.type() == IddObjectType::Catchall) {" << std::endl
+      << "    // Rely on C++11 static initialization and Initialize on First Use Idiom" << std::endl
+      << "    // to make sure all statics are initialized properly, thread safely" << std::endl
       << "    std::stringstream ss;" << std::endl
       << "    ss << \"" << m_readyLineForOutput(line) << "\\n\";";
 
@@ -221,8 +222,8 @@ void IddFileFactoryData::parseFile(const path& outPath,
           << "                                             ss.str()," << std::endl
           << "                                             objType);" << std::endl
           << "    OS_ASSERT(oObj);" << std::endl
-          << "    object = *oObj;" << std::endl
-          << "  }" << std::endl
+          << "    return *oObj;" << std::endl
+          << "  }(); // immediately invoked lambda" << std::endl
           << std::endl
           << "  OS_ASSERT(object.type() == IddObjectType::" << objectName.first << ");" << std::endl
           << "  return object;" << std::endl

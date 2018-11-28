@@ -2,9 +2,9 @@
  * \file GravityModel.cpp
  * \brief Implementation for GeographicLib::GravityModel class
  *
- * Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/GravityModel.hpp>
@@ -129,7 +129,7 @@ namespace GeographicLib {
     string::size_type n = line.find_first_of(spaces, 5);
     if (n != string::npos)
       n -= 5;
-    string version = line.substr(5, n);
+    string version(line, 5, n);
     if (version != "1")
       throw GeographicErr("Unknown version in " + _filename + ": " + version);
     string key, val;
@@ -145,15 +145,15 @@ namespace GeographicLib {
       else if (key == "ReleaseDate")
         _date = val;
       else if (key == "ModelRadius")
-        _amodel = Utility::num<real>(val);
+        _amodel = Utility::val<real>(val);
       else if (key == "ModelMass")
-        _GMmodel = Utility::num<real>(val);
+        _GMmodel = Utility::val<real>(val);
       else if (key == "AngularVelocity")
-        omega = Utility::num<real>(val);
+        omega = Utility::val<real>(val);
       else if (key == "ReferenceRadius")
-        a = Utility::num<real>(val);
+        a = Utility::val<real>(val);
       else if (key == "ReferenceMass")
-        GM = Utility::num<real>(val);
+        GM = Utility::val<real>(val);
       else if (key == "Flattening")
         f = Utility::fract<real>(val);
       else if (key == "DynamicalFormFactor")
@@ -189,7 +189,10 @@ namespace GeographicLib {
       throw GeographicErr("Height offset must be finite");
     if (int(_id.size()) != idlength_)
       throw GeographicErr("Invalid ID");
-    _earth = NormalGravity(a, GM, omega, f, J2);
+    if (Math::isfinite(f) && Math::isfinite(J2))
+      throw GeographicErr("Cannot specify both f and J2");
+    _earth = NormalGravity(a, GM, omega,
+                           Math::isfinite(f) ? f : J2, Math::isfinite(f));
   }
 
   Math::real GravityModel::InternalT(real X, real Y, real Z,
@@ -244,8 +247,7 @@ namespace GeographicLib {
   }
 
   void GravityModel::SphericalAnomaly(real lat, real lon, real h,
-                                      real& Dg01, real& xi, real& eta)
-    const {
+                                      real& Dg01, real& xi, real& eta) const {
     real X, Y, Z, M[Geocentric::dim2_];
     _earth.Earth().IntForward(lat, lon, h, X, Y, Z, M);
     real
@@ -255,8 +257,8 @@ namespace GeographicLib {
       P = Math::hypot(X, Y),
       R = Math::hypot(P, Z),
       // psi is geocentric latitude
-      cpsi = R ? P / R : M[7],
-      spsi = R ? Z / R : M[8];
+      cpsi = R != 0 ? P / R : M[7],
+      spsi = R != 0 ? Z / R : M[8];
     // Rotate cartesian into spherical coordinates
     real MC[Geocentric::dim2_];
     Geocentric::Rotation(spsi, cpsi, slam, clam, MC);
@@ -293,8 +295,8 @@ namespace GeographicLib {
     return Wres;
   }
   Math::real GravityModel::Disturbance(real lat, real lon, real h,
-                                       real& deltax, real& deltay, real& deltaz)
-    const {
+                                       real& deltax, real& deltay,
+                                       real& deltaz) const {
     real X, Y, Z, M[Geocentric::dim2_];
     _earth.Earth().IntForward(lat, lon, h, X, Y, Z, M);
     real Tres = InternalT(X, Y, Z, deltax, deltay, deltaz, true, true);
@@ -329,7 +331,7 @@ namespace GeographicLib {
                          CircularEngine(),
                          // N.B. If CAP_DELTA is set then CAP_T should be too.
                          caps & CAP_T ?
-                         _disturbing.Circle(-1, X, Z, (caps & CAP_DELTA) != 0) :
+                         _disturbing.Circle(-1, X, Z, (caps&CAP_DELTA) != 0) :
                          CircularEngine(),
                          caps & CAP_C ?
                          _correction.Circle(invR * X, invR * Z, false) :

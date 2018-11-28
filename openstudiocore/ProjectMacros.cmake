@@ -22,6 +22,11 @@ macro(FIND_QT_STATIC_LIB NAMES P)
   else()
     #message("LOOKING FOR ${NAMES} in ${P}")
     find_library(QT_STATIC_LIB NAMES ${NAMES} PATHS ${P} NO_DEFAULT_PATH)
+
+    if(QT_STATIC_LIB)
+    else()
+      message(SEND_ERROR "Cannot find ${NAMES} in ${P}")
+    endif()
   endif()
 
   if(QT_STATIC_LIB)
@@ -55,8 +60,10 @@ endmacro()
 # Add google tests macro
 macro(ADD_GOOGLE_TESTS executable)
   if(MSVC)
-    file(TO_NATIVE_PATH "${QT_INSTALL_DIR}/bin" QT_BIN_PATH)
-    set(NEWPATH "${QT_BIN_PATH};$ENV{PATH}")
+    file(TO_NATIVE_PATH "${QT_INSTALL_DIR}/bin/" QT_BIN_PATH)
+    file(TO_NATIVE_PATH "${OPENSSL_ROOT_DIR}/bin/" OPENSSL_BIN_PATH)
+    string(REGEX REPLACE "([^\\]);" "\\1\\\\;" CURRENT_ENV "$ENV{PATH}")  
+    set(NEWPATH "${QT_BIN_PATH};${OPENSSL_BIN_PATH};${CURRENT_ENV}")
   else()
     set(NEWPATH $ENV{PATH})
   endif()
@@ -376,14 +383,15 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
   if(MSVC)
     #set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EXTCONF_H=<osruby_config.h> -DRUBY_EMBEDDED /bigobj /wd4996") ## /wd4996 suppresses deprecated warning
-    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warning
+    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033") ## /wd4996 suppresses deprecated warning, /wd5033 supresses 'register' is no longer a supported storage class
   elseif(UNIX)
     # If 'AppleClang' or 'Clang'
     if("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(Apple)?Clang$")
       # Prevent excessive warnings from generated swig files, suppress deprecated declarations
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
+      # Suppress 'register' storage class specified warnings (coming from Ruby)
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-register")
     else()
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-register")
     endif()
   endif()
 
@@ -525,7 +533,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     # Add the -py3 flag if the version used is Python 3
     set(SWIG_PYTHON_3_FLAG "")
-    if (PYTHON_VERSION_MAJOR) 
+    if (PYTHON_VERSION_MAJOR)
       if (PYTHON_VERSION_MAJOR EQUAL 3)
         set(SWIG_PYTHON_3_FLAG -py3)
         message(STATUS "${MODULE} - Building SWIG Bindings for Python 3")
@@ -539,7 +547,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     add_custom_command(
       OUTPUT "${SWIG_WRAPPER_FULL_PATH}"
       COMMAND "${SWIG_EXECUTABLE}"
-              "-python" ${SWIG_PYTHON_3_FLAG} "-c++" ${PYTHON_AUTODOC} 
+              "-python" ${SWIG_PYTHON_3_FLAG} "-c++" ${PYTHON_AUTODOC}
               -outdir ${PYTHON_GENERATED_SRC_DIR} "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
               -module "${MODULE}"
               -o "${SWIG_WRAPPER_FULL_PATH}"
@@ -547,7 +555,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       DEPENDS ${this_depends}
     )
 
-    
+
     set_source_files_properties(${SWIG_WRAPPER_FULL_PATH} PROPERTIES GENERATED TRUE)
     set_source_files_properties(${PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
 
@@ -574,9 +582,9 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
     elseif(UNIX)
       if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
-        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations")
+        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare")
       else()
-        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare")
       endif()
     endif()
 
@@ -611,7 +619,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       OpenStudioRadiance
       OpenStudioSDD
     )
-    
+
     set( model_names
       OpenStudioMeasure
       OpenStudioModel
@@ -799,7 +807,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996") ## /wd4996 suppresses deprecated warnings
       set(final_name "${JAVA_OUTPUT_NAME}.dll")
     elseif(UNIX)
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare")
     endif()
 
     target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${JAVA_JVM_LIBRARY})
@@ -927,7 +935,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     if(MSVC)
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /DBUILDING_NODE_EXTENSION /wd4996")  ## /wd4996 suppresses deprecated warnings
     elseif(UNIX)
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DBUILDING_NODE_EXTENSION -Wno-deprecated-declarations")
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DBUILDING_NODE_EXTENSION -Wno-deprecated-declarations -Wno-sign-compare")
     endif()
 
     if(APPLE)
@@ -1117,4 +1125,23 @@ function(QT5_WRAP_CPP_MINIMALLY outfiles)
 
   # Restore include directories
   set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${_orig_DIRS}")
+endfunction()
+
+# link target with debug and release libs
+function(LINK_DEBUG_AND_RELEASE this_target debug_libs release_libs)
+  list(LENGTH debug_libs len1)
+  list(LENGTH release_libs len2)
+
+  if (NOT len1 EQUAL len2)
+    message(SEND_ERROR "Unequal lists passed to LINK_DEBUG_AND_RELEASE")
+  endif()
+
+  math(EXPR len "${len1} - 1")
+
+  foreach(i RANGE ${len})
+    list(GET debug_libs ${i} debug_lib)
+    list(GET release_libs ${i} release_lib)
+    target_link_libraries(${this_target} debug ${debug_lib} optimized ${release_lib})
+  endforeach()
+
 endfunction()

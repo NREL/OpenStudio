@@ -1426,7 +1426,7 @@ TEST_F(GeometryFixture, simplify)
   EXPECT_NEAR(*area, *area3, tol*tol);
 
   ASSERT_EQ(points2.size(), expectedPoints.size());
-  for (auto i = 0; i < expectedPoints.size(); ++i){
+  for (Point3dVector::size_type i = 0; i < expectedPoints.size(); ++i){
     EXPECT_EQ(expectedPoints[i].x(), points2[i].x()) << i;
     EXPECT_EQ(expectedPoints[i].y(), points2[i].y()) << i;
     EXPECT_EQ(expectedPoints[i].z(), points2[i].z()) << i;
@@ -1535,7 +1535,7 @@ TEST_F(GeometryFixture, simplify2)
   EXPECT_NEAR(*area, *area3, tol*tol);
 
   ASSERT_EQ(points2.size(), expectedPoints.size());
-  for (auto i = 0; i < expectedPoints.size(); ++i){
+  for (Point3dVector::size_type i = 0; i < expectedPoints.size(); ++i){
     EXPECT_EQ(expectedPoints[i].x(), points2[i].x()) << i;
     EXPECT_EQ(expectedPoints[i].y(), points2[i].y()) << i;
     EXPECT_EQ(expectedPoints[i].z(), points2[i].z()) << i;
@@ -1613,7 +1613,7 @@ TEST_F(GeometryFixture, simplify3)
   EXPECT_NEAR(*area, *area3, tol*tol);
 
   ASSERT_EQ(points2.size(), expectedPoints.size());
-  for (auto i = 0; i < expectedPoints.size(); ++i){
+  for (Point3dVector::size_type i = 0; i < expectedPoints.size(); ++i){
     EXPECT_EQ(expectedPoints[i].x(), points2[i].x()) << i;
     EXPECT_EQ(expectedPoints[i].y(), points2[i].y()) << i;
     EXPECT_EQ(expectedPoints[i].z(), points2[i].z()) << i;
@@ -1664,7 +1664,7 @@ TEST_F(GeometryFixture, simplify4)
   ASSERT_EQ(points2.size(), expectedPoints.size());
   std::cout << points2 << std::endl;
   std::cout << expectedPoints << std::endl;
-  for (auto i = 0; i < expectedPoints.size(); ++i){
+  for (Point3dVector::size_type i = 0; i < expectedPoints.size(); ++i){
     EXPECT_EQ(expectedPoints[i].x(), points2[i].x()) << i;
     EXPECT_EQ(expectedPoints[i].y(), points2[i].y()) << i;
     EXPECT_EQ(expectedPoints[i].z(), points2[i].z()) << i;
@@ -1718,7 +1718,7 @@ TEST_F(GeometryFixture, simplify5)
   EXPECT_NEAR(*area, *area3, tol*tol);
 
   ASSERT_EQ(points2.size(), expectedPoints.size());
-  for (auto i = 0; i < expectedPoints.size(); ++i){
+  for (Point3dVector::size_type i = 0; i < expectedPoints.size(); ++i){
     EXPECT_EQ(expectedPoints[i].x(), points2[i].x()) << i;
     EXPECT_EQ(expectedPoints[i].y(), points2[i].y()) << i;
     EXPECT_EQ(expectedPoints[i].z(), points2[i].z()) << i;
@@ -1787,7 +1787,7 @@ TEST_F(GeometryFixture, simplify6)
   EXPECT_NEAR(*area, *area3, tol*tol);
 
   ASSERT_EQ(points2.size(), expectedPoints.size());
-  for (auto i = 0; i < expectedPoints.size(); ++i){
+  for (Point3dVector::size_type i = 0; i < expectedPoints.size(); ++i){
     EXPECT_EQ(expectedPoints[i].x(), points2[i].x()) << i;
     EXPECT_EQ(expectedPoints[i].y(), points2[i].y()) << i;
     EXPECT_EQ(expectedPoints[i].z(), points2[i].z()) << i;
@@ -1852,7 +1852,7 @@ TEST_F(GeometryFixture, simplify7)
   EXPECT_NEAR(*area, *area3, tol*tol);
 
   ASSERT_EQ(points2.size(), expectedPoints.size());
-  for (auto i = 0; i < expectedPoints.size(); ++i){
+  for (Point3dVector::size_type i = 0; i < expectedPoints.size(); ++i){
     EXPECT_EQ(expectedPoints[i].x(), points2[i].x()) << i;
     EXPECT_EQ(expectedPoints[i].y(), points2[i].y()) << i;
     EXPECT_EQ(expectedPoints[i].z(), points2[i].z()) << i;

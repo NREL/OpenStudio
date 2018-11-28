@@ -157,7 +157,7 @@
 
 #include <QDomDocument>
 #include <QDomElement>
-#include <QThread>
+#include <thread>
 
 #include <algorithm>
 
@@ -170,7 +170,7 @@ namespace sdd {
   {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.sdd\\.ForwardTranslator"));
-    m_logSink.setThreadId(QThread::currentThread());
+    m_logSink.setThreadId(std::this_thread::get_id());
   }
 
   ForwardTranslator::~ForwardTranslator()
@@ -184,7 +184,7 @@ namespace sdd {
     m_ignoreTypes.clear();
     m_ignoreObjects.clear();
 
-    m_logSink.setThreadId(QThread::currentThread());
+    m_logSink.setThreadId(std::this_thread::get_id());
 
     m_logSink.resetStringStream();
 

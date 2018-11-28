@@ -560,7 +560,7 @@ CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 
 set(${target_name}_static_depends
-  sqlite
+  #sqlite # will be provided by qsqlite for now
   jsoncpp
   miniziplib
   ${Boost_LIBRARIES}

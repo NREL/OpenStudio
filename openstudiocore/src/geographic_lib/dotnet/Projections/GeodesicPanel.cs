@@ -11,7 +11,7 @@
  * GeographicLib is Copyright (c) Charles Karney (2010-2012)
  * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 using System;
 using System.Collections.Generic;
@@ -426,6 +426,9 @@ namespace Projections
                     outd != distance || fm12 != M12 || fm21 != M21 || frd != reducedLength)
                     throw new Exception("Geodesic.Inverse #6 failed");
                 GeodesicLine gl = g.Line(32.0, -86.0, 45.0, Mask.ALL);
+                gl = g.InverseLine(32.0, -86.0, 33.0, -87.0, Mask.ALL);
+                gl = g.DirectLine(32.0, -86.0, 45.0, 10000.0, Mask.ALL);
+                gl = g.ArcDirectLine(32.0, -86.0, 45.0, 10000.0, Mask.ALL);
                 gl = new GeodesicLine(32.0, -86.0, 45.0, Mask.ALL);
                 gl = new GeodesicLine(g, 32.0, -86.0, 45.0, Mask.ALL);
                 arcDistance = gl.Position(10000.0, out finalLatitude, out finalLongitude, out finalAzimuth,
@@ -563,6 +566,9 @@ namespace Projections
                     outd != distance || fm12 != M12 || fm21 != M21 || frd != reducedLength)
                     throw new Exception("GeodesicExact.Inverse #6 failed");
                 GeodesicLineExact gle = ge.Line(32.0, -86.0, 45.0, Mask.ALL);
+                gle = ge.InverseLine(32.0, -86.0, 33.0, -87.0, Mask.ALL);
+                gle = ge.DirectLine(32.0, -86.0, 45.0, 10000.0, Mask.ALL);
+                gle = ge.ArcDirectLine(32.0, -86.0, 45.0, 10000.0, Mask.ALL);
                 gle = new GeodesicLineExact(32.0, -86.0, 45.0, Mask.ALL);
                 gle = new GeodesicLineExact(ge, 32.0, -86.0, 45.0, Mask.ALL);
                 arcDistance = gle.Position(10000.0, out finalLatitude, out finalLongitude, out finalAzimuth,

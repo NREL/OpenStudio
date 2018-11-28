@@ -1,6 +1,7 @@
 .idea
 .ruby-version
 .bundle
+.vs
 test_gems
 test_fails.txt
 /build/
@@ -17,6 +18,8 @@ test_fails.txt
 /build-profile/
 /core-build/
 /super-build/
+/super-build-shared/
+/super-build-static/
 
 *.sublime-workspace
 

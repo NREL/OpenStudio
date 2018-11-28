@@ -1,7 +1,7 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 
-AC_INIT([GeographicLib],[1.45],[charles@karney.com])
+AC_INIT([GeographicLib],[1.49],[charles@karney.com])
 AC_CANONICAL_SYSTEM
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
@@ -9,7 +9,7 @@ AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE
 
 GEOGRAPHICLIB_VERSION_MAJOR=1
-GEOGRAPHICLIB_VERSION_MINOR=45
+GEOGRAPHICLIB_VERSION_MINOR=49
 GEOGRAPHICLIB_VERSION_PATCH=0
 AC_DEFINE_UNQUOTED([GEOGRAPHICLIB_VERSION_MAJOR],
         [$GEOGRAPHICLIB_VERSION_MAJOR],[major version number])
@@ -34,9 +34,9 @@ dnl Library code modified:              REVISION++
 dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
-LT_CURRENT=16
-LT_REVISION=1
-LT_AGE=2
+LT_CURRENT=18
+LT_REVISION=2
+LT_AGE=1
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
@@ -61,16 +61,20 @@ AX_CHECK_COMPILE_FLAG([-std=c++11],
         [AX_CHECK_COMPILE_FLAG([-std=c++0x],
                 [CXXFLAGS="$CXXFLAGS -std=c++0x"])])
 # Check for C++11 math functions
-AC_TRY_COMPILE([#include <cmath>],
+AC_MSG_CHECKING([for C++11 math functions])
+AC_LINK_IFELSE([AC_LANG_PROGRAM(
+        [#include <cmath>],
         [int q;
          return int(std::hypot(3.0, 4.0) + std::expm1(0.5) +
                     std::log1p(2.0) + std::asinh(10.0) +
                     std::atanh(0.8) + std::cbrt(8.0) +
                     std::fma(1.0, 2.0, 3.0) + std::remquo(100.0, 90.0, &q) +
-                    std::remainder(100.0, 90.0)) +
-                    std::isfinite(4.0) + std::isnan(0.0);],
-        [CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=1"],
-        [CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=0"])
+                    std::remainder(100.0, 90.0) + std::copysign(1.0, -0.0)) +
+                    std::isfinite(4.0) + std::isnan(0.0);])],
+        [AC_MSG_RESULT([yes]);
+	 CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=1"],
+        [AC_MSG_RESULT([no]);
+	 CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=0"])
 
 # Check for doxygen.  Version 1.8.7 or later needed for &hellip;
 AC_CHECK_PROGS([DOXYGEN], [doxygen])
@@ -99,4 +103,10 @@ python/Makefile
 cmake/Makefile
 examples/Makefile
 ])
+
+PKG_PROG_PKG_CONFIG
+PKG_INSTALLDIR
+
+AC_CONFIG_FILES([cmake/geographiclib.pc:cmake/project.pc.in])
+
 AC_OUTPUT

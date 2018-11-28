@@ -377,7 +377,7 @@ namespace openstudio{
   }
 
   /// base year
-  optional<int> Date::baseYear() const
+  boost::optional<int> Date::baseYear() const
   {
     return m_baseYear;
   }

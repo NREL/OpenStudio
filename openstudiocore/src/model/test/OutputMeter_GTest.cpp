@@ -43,7 +43,8 @@
 #include <utilities/idd/OS_Output_Meter_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <QThreadPool>
+#include <future>
+#include <vector>
 
 using namespace openstudio::model;
 using namespace openstudio;
@@ -395,27 +396,30 @@ TEST_F(ModelFixture, MeterEnumValues)
   }
 }
 
-
-class GetMeterRegex : public QRunnable
+void get_meter_regex()
 {
-    void run() override
-    {
-      std::string subject = "Electricity:Facility";
-      boost::smatch matches;
-      boost::regex_search(subject, matches, OutputMeter::meterRegex());
-    }
-};
+  std::this_thread::yield();
+  std::string subject = "Electricity:Facility";
+  boost::smatch matches;
+  boost::regex_search(subject, matches, OutputMeter::meterRegex());
+}
 
 TEST_F(ModelFixture, GetMeterRegex_ThreadSafe)
 {
-  unsigned N = 20;
-  std::vector<GetMeterRegex*> workers;
+  const unsigned N = 50;
+  std::vector<std::future<void>> workers;
   for (unsigned i = 0; i < N; ++i){
-    workers.push_back(new GetMeterRegex());
+    workers.push_back(std::async(std::launch::async, get_meter_regex));
   }
-  QThreadPool::globalInstance()->setMaxThreadCount(N);
-  for (unsigned i = 0; i < N; ++i){
-    EXPECT_TRUE( QThreadPool::globalInstance()->tryStart(workers[i]) );
+
+  for (auto &f : workers) {
+    EXPECT_TRUE( f.valid() );
   }
-  EXPECT_TRUE( QThreadPool::globalInstance()->waitForDone(3000) );
+
+  for (auto &f : workers) {
+    f.get();
+  }
+
 }
+
+

@@ -25,7 +25,7 @@
       read(*, *, end=90, err=90) lat1, lon1, lat2, lon2
       call invers(a, f, lat1, lon1, lat2, lon2,
      +    s12, azi1, azi2, omask,
-     +    dummy1, dummy2, dummy3, dummy4 , dummy5)
+     +    dummy1, dummy2, dummy3, dummy4, dummy5)
       print 20, azi1, azi2, s12
  20   format(1x, f20.15, 1x, f20.15, 1x, f19.10)
       go to 10

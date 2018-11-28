@@ -7,7 +7,7 @@
  * GeographicLib is Copyright (c) Charles Karney (2010-2012)
  * <charles@karney.com> and licensed under the MIT/X11 License.
  * For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 namespace NETGeographicLib
@@ -41,15 +41,6 @@ namespace NETGeographicLib
    *
    * See \ref geoid for details of how to install the data sets, the data
    * format, estimates of the interpolation errors, and how to use caching.
-   *
-   * In addition to returning the geoid height, the gradient of the geoid can
-   * be calculated.  The gradient is defined as the rate of change of the geoid
-   * as a function of position on the ellipsoid.  This uses the parameters for
-   * the WGS84 ellipsoid.  The gradient defined in terms of the interpolated
-   * heights.  As a result of the way that the geoid data is stored, the
-   * calculation of gradients can result in large quantization errors.  This is
-   * particularly acute for fine grids, at high latitudes, and for the easterly
-   * gradient.
    *
    * This class is typically \e not thread safe in that a single instantiation
    * cannot be safely used by multiple threads because of the way the object
@@ -198,28 +189,6 @@ namespace NETGeographicLib
          * The latitude should be in [&minus;90&deg;, 90&deg;].
          **********************************************************************/
         double Height(double lat, double lon);
-
-        /**
-         * Compute the geoid height and gradient at a point
-         *
-         * @param[in] lat latitude of the point (degrees).
-         * @param[in] lon longitude of the point (degrees).
-         * @param[out] gradn northerly gradient (dimensionless).
-         * @param[out] grade easterly gradient (dimensionless).
-         * @exception GeographicErr if there's a problem reading the data; this
-         *   never happens if (\e lat, \e lon) is within a successfully cached area.
-         * @return geoid height (meters).
-         *
-         * The latitude should be in [&minus;90&deg;, 90&deg;].  As a result of
-         * the way that the geoid data is stored, the calculation of gradients
-         * can result in large quantization errors.  This is particularly acute
-         * for fine grids, at high latitudes, and for the easterly gradient.
-         * If you need to compute the direction of the acceleration due to
-         * gravity accurately, you should use GravityModel::Gravity.
-         **********************************************************************/
-        double Height(double lat, double lon,
-            [System::Runtime::InteropServices::Out] double% gradn,
-            [System::Runtime::InteropServices::Out] double% grade);
 
         /**
          * Convert a height above the geoid to a height above the ellipsoid and

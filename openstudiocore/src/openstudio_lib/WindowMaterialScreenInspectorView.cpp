@@ -280,7 +280,7 @@ void WindowMaterialScreenInspectorView::attach(openstudio::model::Screen & scree
   m_nameEdit->bind(
     *m_screen,
     OptionalStringGetter(std::bind(&model::Screen::name, m_screen.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::Screen::setName, m_screen.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::Screen::setName, m_screen.get_ptr(),std::placeholders::_1))
   );
 
   // m_diffuseSolarReflectance->bind(screen,"diffuseSolarReflectance",m_isIP);

@@ -33,9 +33,6 @@
 #include "Assert.hpp"
 
 
-
-#include <QReadWriteLock>
-
 namespace openstudio{
 
   namespace detail{
@@ -57,7 +54,7 @@ namespace openstudio{
 
     std::string StringStreamLogSink_Impl::string() const
     {
-      QReadLocker l(m_mutex);
+      std::shared_lock l{m_mutex};
 
       return m_stringstream->str();
     }
@@ -69,7 +66,7 @@ namespace openstudio{
 
     void StringStreamLogSink_Impl::resetStringStream()
     {
-      QWriteLocker l(m_mutex);
+      std::unique_lock l{m_mutex};
 
       m_stringstream->str("");
     }

@@ -80,7 +80,7 @@ EnergyManagementSystemGlobalVariable::EnergyManagementSystemGlobalVariable(const
   : ModelObject(EnergyManagementSystemGlobalVariable::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>());
-  bool ok = getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>()->setName(variableName);
+  bool ok = getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>()->setName(variableName).has_value();
   if ((!ok) || (variableName != this->nameString())) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s Name to " << variableName << ".");

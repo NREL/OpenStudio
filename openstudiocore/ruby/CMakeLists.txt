@@ -18,6 +18,10 @@ add_library( init_openstudio STATIC
   RubyAPI.hpp
 )
 
+if(MSVC)
+  set_target_properties(init_openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
+endif()
+
 target_link_libraries(init_openstudio
  ruby_OpenStudioAirflow
  ruby_OpenStudioModelCore
@@ -79,6 +83,10 @@ else()
   set_target_properties(openstudio_rb PROPERTIES SUFFIX ".so" )
 endif()
 
+if(MSVC)
+  set_target_properties(openstudio_rb PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
+endif()
+
 add_custom_command(TARGET openstudio_rb
   POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb $<TARGET_FILE_DIR:openstudio_rb>/openstudio.rb
@@ -112,9 +120,19 @@ if( UNIX AND NOT APPLE )
   target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libxcb-static.a" -Wl,--no-whole-archive
   )
+#target_link_libraries(openstudio_rb
+#    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a" -Wl,--no-whole-archive
+#  )
   target_link_libraries(openstudio_rb
-    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a" -Wl,--no-whole-archive
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5FontDatabaseSupport.a" -Wl,--no-whole-archive
   )
+  target_link_libraries(openstudio_rb
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5EventDispatcherSupport.a" -Wl,--no-whole-archive
+  )
+  target_link_libraries(openstudio_rb
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5ThemeSupport.a" -Wl,--no-whole-archive
+  )
+
   target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a" -Wl,--no-whole-archive
   )

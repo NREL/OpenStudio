@@ -183,7 +183,7 @@ void ConstructionInspectorView::attach(openstudio::model::Construction & constru
   m_nameEdit->bind(
     *m_construction,
     OptionalStringGetter(std::bind(&model::Construction::name, m_construction.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::Construction::setName, m_construction.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::Construction::setName, m_construction.get_ptr(),std::placeholders::_1))
   );
 
   m_constructionVC->attach(construction);

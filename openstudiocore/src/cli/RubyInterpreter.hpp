@@ -777,9 +777,9 @@ class RubyInterpreter
       int error;
 
       // save and restore the current working directory in case the call to ruby upsets it
-//      QDir cwd = QDir::current();
+//      const auto cwd = openstudio::filesystem::current_dir();
       rb_protect(evaluateSimpleImpl,val,&error);
-//      QDir::setCurrent(cwd.dirName());
+//      openstudio::filesystem::current_dir(cwd);
 
 
       if (error != 0)

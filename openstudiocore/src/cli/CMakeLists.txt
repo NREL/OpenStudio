@@ -2,24 +2,16 @@ if (APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 endif (APPLE)
 
-set(EXTENSION_LIBS "")
-set(EXTENSION_LIBS_LIST "")
 if( UNIX )
   file(GLOB EXTENSION_LIBS "${RUBY_INSTALL_DIR}/lib/ext/*.a")
-  set(EXTENSION_LIBS_LIST ${EXTENSION_LIBS})
 
   file(GLOB ENC_LIBS "${RUBY_INSTALL_DIR}/lib/enc/*.a")
-  set(ENC_LIBS_LIST ${ENC_LIBS})
 else()
   file(GLOB EXTENSION_LIBS_RELEASE "${RUBY_INSTALL_DIR}/lib/ext/*.lib")
   file(GLOB EXTENSION_LIBS_DEBUG "${RUBY_INSTALL_DIR}/../debug/lib/ext/*.lib")
-  set(EXTENSION_LIBS optimized ${EXTENSION_LIBS_RELEASE} debug ${EXTENSION_LIBS_DEBUG})
-  set(EXTENSION_LIBS_LIST ${EXTENSION_LIBS_RELEASE})
 
   file(GLOB ENC_LIBS_RELEASE "${RUBY_INSTALL_DIR}/lib/enc/*.lib")
   file(GLOB ENC_LIBS_DEBUG "${RUBY_INSTALL_DIR}/../debug/lib/enc/*.lib")
-  set(ENC_LIBS optimized ${ENC_LIBS_RELEASE} debug ${ENC_LIBS_DEBUG})
-  set(ENC_LIBS_LIST ${ENC_LIBS_RELEASE})
 endif()
 
 set(INIT_CALLS "")
@@ -251,37 +243,57 @@ else()
   )
 endif()
 
-set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
+
+# -Wno-deprecated-declaration, /wd4996: suppresses deprecated warning
+# -Wno-register, /wd5033: ISO C++1z does not allow ‘register’ storage class specifier
+if(MSVC)
+  set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
+  set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
+else()
+  set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-register")
+  set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-unused-variable" )
+endif()
+
+
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
+target_link_libraries(openstudio init_openstudio)
+
+if( UNIX )
+ target_link_libraries(openstudio ${EXTENSION_LIBS} ${ENC_LIBS} ${ADDITIONAL_RUBY_LIBS})
+else()
+ LINK_DEBUG_AND_RELEASE(openstudio "${EXTENSION_LIBS_DEBUG}" "${EXTENSION_LIBS_RELEASE}")
+ LINK_DEBUG_AND_RELEASE(openstudio "${ENC_LIBS_DEBUG}" "${ENC_LIBS_RELEASE}")
+ target_link_libraries(openstudio ${ADDITIONAL_RUBY_LIBS})
+endif()
+
 target_link_libraries(openstudio
-  init_openstudio
-  ${EXTENSION_LIBS}
-  ${ENC_LIBS}
-  openstudio_airflow_static
-  openstudio_model_static
-  openstudio_energyplus_static
-  openstudio_measure_static
-  openstudio_osversion_static
-  openstudio_sdd_static
-  openstudio_isomodel_static
-  openstudio_gbxml_static
-  openstudio_radiance_static
+ openstudio_airflow_static
+ openstudio_model_static
+ openstudio_energyplus_static
+ openstudio_measure_static
+ openstudio_osversion_static
+ openstudio_sdd_static
+ openstudio_isomodel_static
+ openstudio_gbxml_static
+ openstudio_radiance_static
 )
 
 if (UNIX AND NOT APPLE)
-  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY}  "dl" "crypt" "ssl")
+  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} ${EXTENSION_LIBS} dl crypt ssl)
 elseif(WIN32)
   target_link_libraries(openstudio debug ${RUBY_STATIC_LIBRARY_DEBUG} optimized ${RUBY_STATIC_LIBRARY})
   target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi)
+  target_link_libraries(openstudio ${LIB_EAY_RELEASE})
+  target_link_libraries(openstudio ${SSL_EAY_RELEASE})
   set_target_properties(openstudio PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
 else()
-  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} )
+  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY})
 endif()
 
 if( APPLE )
-  target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY} )
+  target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY})
 endif()
 
 install(TARGETS openstudio DESTINATION bin COMPONENT "CLI")
@@ -298,7 +310,6 @@ if( BUILD_PAT )
     )
   endif()
 endif()
-
 
 
 # find all tests

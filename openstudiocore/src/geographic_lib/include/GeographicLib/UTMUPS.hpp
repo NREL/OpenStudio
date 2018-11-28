@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_UTMUPS_HPP)
@@ -337,7 +337,8 @@ namespace GeographicLib {
      * south, 3north are legal.  0n, 001s, +3n, 61n, 38P are illegal.  INV is a
      * special value for which the returned value of \e is UTMUPS::INVALID.
      **********************************************************************/
-    static void DecodeZone(const std::string& zonestr, int& zone, bool& northp);
+    static void DecodeZone(const std::string& zonestr,
+                           int& zone, bool& northp);
 
     /**
      * Encode a UTM/UPS zone string.
@@ -414,14 +415,6 @@ namespace GeographicLib {
     { return Constants::WGS84_f(); }
     ///@}
 
-    /// \cond SKIP
-    /**
-     * <b>DEPRECATED</b>
-     * @return \e r the inverse flattening of the WGS84 ellipsoid.
-     **********************************************************************/
-    static Math::real InverseFlattening()
-    { return 1/Constants::WGS84_f(); }
-    /// \endcond
   };
 
 } // namespace GeographicLib

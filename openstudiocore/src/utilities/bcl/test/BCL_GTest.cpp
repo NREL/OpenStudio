@@ -36,8 +36,6 @@
 #include "../../idf/Workspace.hpp"
 #include "../../core/FilesystemHelpers.hpp"
 
-#include <QDir>
-
 
 using namespace openstudio;
 
@@ -242,7 +240,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   EXPECT_FALSE(lastDownload->files().empty());
   for (const std::string& file : lastDownload->files()) {
     openstudio::path path = lastDownload->directory() / "files" / file;
-    EXPECT_TRUE(QDir().exists(toQString(path)));
+    EXPECT_TRUE(openstudio::filesystem::exists(path));
 
     const auto time = openstudio::filesystem::last_write_time_as_time_t(path);
     EXPECT_GT(time, startTime);
@@ -256,7 +254,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   EXPECT_FALSE(component->files().empty());
   for (const std::string& file : component->files()) {
     openstudio::path path = component->directory() / "files" / file;
-    EXPECT_TRUE(QDir().exists(toQString(path)));
+    EXPECT_TRUE(openstudio::filesystem::exists(path));
 
     const auto time = openstudio::filesystem::last_write_time_as_time_t(path);
     EXPECT_GT(time, startTime);
@@ -277,7 +275,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   ASSERT_FALSE(oscFiles.empty());
   EXPECT_EQ(1u, oscFiles.size());
   openstudio::path oscPath = toPath(oscFiles[0]);
-  EXPECT_TRUE(QDir().exists(toQString(oscPath)));
+  EXPECT_TRUE(openstudio::filesystem::exists(oscPath));
   // DLM: the real loading procedure would be to run this through the version translator first
   boost::optional<Workspace> workspace = Workspace::load(oscPath, IddFile::catchallIddFile());
   // This will fail on Windows if the path is greater than MAX_PATH
@@ -342,7 +340,7 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   typedef std::pair<std::string, uint> PairType;
 
   // get all constructions, via empty first arg and tid
-  bool test = remoteBCL.metaSearchComponentLibrary("",127);
+  bool test = remoteBCL.metaSearchComponentLibrary("",127).has_value();
   ASSERT_TRUE(test);
   boost::optional<BCLMetaSearchResult> result = remoteBCL.waitForMetaSearch();
   ASSERT_TRUE(result);
@@ -360,7 +358,7 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
 
 
   // get all exterior wall constructions, via empty first arg and non-null second string
-  test = remoteBCL.metaSearchComponentLibrary("","Exterior Wall");
+  test = remoteBCL.metaSearchComponentLibrary("","Exterior Wall").has_value();
   ASSERT_TRUE(test);
   result = remoteBCL.waitForMetaSearch();
   ASSERT_TRUE(result);
@@ -378,7 +376,7 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   EXPECT_FALSE(result->taxonomyTerms().empty());
 
   // get all constructions, via non-null first and second strings
-  test = remoteBCL.metaSearchComponentLibrary("office",127);
+  test = remoteBCL.metaSearchComponentLibrary("office",127).has_value();
   ASSERT_TRUE(test);
   result = remoteBCL.waitForMetaSearch();
   ASSERT_TRUE(result);
@@ -396,7 +394,7 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   EXPECT_FALSE(result->taxonomyTerms().empty());
 
   // get all things office, via non-null first string and empty second string
-  test = remoteBCL.metaSearchComponentLibrary("office","");
+  test = remoteBCL.metaSearchComponentLibrary("office","").has_value();
   ASSERT_TRUE(test);
   result = remoteBCL.waitForMetaSearch();
   ASSERT_TRUE(result);
@@ -414,7 +412,7 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   EXPECT_FALSE(result->taxonomyTerms().empty());
 
   // there are no components in this category
-  test = remoteBCL.metaSearchComponentLibrary("","Constructions");
+  test = remoteBCL.metaSearchComponentLibrary("","Constructions").has_value();
   ASSERT_TRUE(test);
   result = remoteBCL.waitForMetaSearch();
   ASSERT_TRUE(result);

@@ -38,10 +38,9 @@
 
 #include <OpenStudio.hxx>
 
-#include <QDir>
 #include <QSettings>
 #include <QRegularExpression>
-
+#include <QFile>
 
 #include <src/utilities/embedded_files.hxx>
 
@@ -53,7 +52,7 @@ namespace openstudio{
         LOG_AND_THROW("'" << toString(dir) << "' exists but is not an empty directory");
       }
     }else{
-      if (!QDir().mkpath(toQString(dir))){
+      if (!openstudio::filesystem::create_directories(dir)) {
         LOG_AND_THROW("'" << toString(dir) << "' cannot be created as an empty directory");
       }
     }
@@ -61,7 +60,7 @@ namespace openstudio{
 
   bool BCLMeasure::copyDirectory(const path& source, const path& destination) const {
 
-    if (!QDir().mkpath(toQString(destination)))
+    if (!openstudio::filesystem::create_directories(destination))
     {
       return false;
     }
@@ -501,7 +500,7 @@ namespace openstudio{
   openstudio::path BCLMeasure::userMeasuresDir()
   {
     QSettings settings("OpenStudio", "BCLMeasure");
-    QString value = settings.value("userMeasuresDir", QDir::homePath().append("/OpenStudio/Measures")).toString();
+    QString value = settings.value("userMeasuresDir", toQString(openstudio::filesystem::home_path() / toPath("OpenStudio/Measures"))).toString();
     openstudio::path result = toPath(value);
     return openstudio::filesystem::system_complete(result);
   }
@@ -512,7 +511,7 @@ namespace openstudio{
       return false;
     }
     if (!exists(userMeasuresDir)){
-      if (!QDir().mkpath(toQString(userMeasuresDir))){
+      if (!openstudio::filesystem::create_directories(userMeasuresDir)) {
         return false;
       }
     }
@@ -1251,7 +1250,7 @@ namespace openstudio{
         return boost::none;
       }
     }else{
-      if (!QDir().mkpath(toQString(newDir))){
+      if (!openstudio::filesystem::create_directories(newDir)) {
         return boost::none;
       }
     }

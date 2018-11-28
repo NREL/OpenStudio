@@ -4,11 +4,11 @@
 # This is a rather literal translation of the GeographicLib::Math class to
 # python.  See the documentation for the C++ class for more information at
 #
-#    http://geographiclib.sourceforge.net/html/annotated.html
+#    https://geographiclib.sourceforge.io/html/annotated.html
 #
-# Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
-# http://geographiclib.sourceforge.net/
+# https://geographiclib.sourceforge.io/
 ######################################################################
 
 import sys
@@ -73,6 +73,15 @@ class Math(object):
     return -y if x < 0 else y
   atanh = staticmethod(atanh)
 
+  def copysign(x, y):
+    """return x with the sign of y (missing from python 2.5.2)"""
+
+    if sys.version_info > (2, 6):
+      return math.copysign(x, y)
+
+    return math.fabs(x) * (-1 if y < 0 or (y == 0 and 1/y < 0) else 1)
+  copysign = staticmethod(copysign)
+
   def norm(x, y):
     """Private: Normalize a two-vector."""
     r = math.hypot(x, y)
@@ -114,15 +123,19 @@ class Math(object):
     y = abs(x)
     # The compiler mustn't "simplify" z - (z - y) to y
     if y < z: y = z - (z - y)
-    return 0 - y if x < 0 else y
+    return 0.0 if x == 0 else (-y if x < 0 else y)
   AngRound = staticmethod(AngRound)
 
   def AngNormalize(x):
-    """reduce angle to [-180,180)"""
+    """reduce angle to (-180,180]"""
 
-    x = math.fmod(x, 360)
-    return (x + 360 if x < -180 else
-            (x if x < 180 else x - 360))
+    y = math.fmod(x, 360)
+    # On Windows 32-bit with python 2.7, math.fmod(-0.0, 360) = +0.0
+    # This fixes this bug.  See also Math::AngNormalize in the C++ library.
+    # sincosd has a similar fix.
+    y = x if x == 0 else y
+    return (y + 360 if y <= -180 else
+            (y if y <= 180 else y - 360))
   AngNormalize = staticmethod(AngNormalize)
 
   def LatFix(x):
@@ -134,9 +147,9 @@ class Math(object):
   def AngDiff(x, y):
     """compute y - x and reduce to [-180,180] accurately"""
 
-    d, t = Math.sum(Math.AngNormalize(x), Math.AngNormalize(-y))
-    d = - Math.AngNormalize(d)
-    return (-180 if d == 180 and t < 0 else d) - t
+    d, t = Math.sum(Math.AngNormalize(-x), Math.AngNormalize(y))
+    d = Math.AngNormalize(d)
+    return Math.sum(-180 if d == 180 and t > 0 else d, t)
   AngDiff = staticmethod(AngDiff)
 
   def sincosd(x):
@@ -148,11 +161,16 @@ class Math(object):
     s = math.sin(r); c = math.cos(r)
     q = q % 4
     if q == 1:
-      s, c =   c, 0-s
+      s, c =  c, -s
     elif q == 2:
-      s, c = 0-s, 0-c
+      s, c = -s, -c
     elif q == 3:
-      s, c = 0-c,   s
+      s, c = -c,  s
+    # Remove the minus sign on -0.0 except for sin(-0.0).
+    # On Windows 32-bit with python 2.7, math.fmod(-0.0, 360) = +0.0
+    # (x, c) here fixes this bug.  See also Math::sincosd in the C++ library.
+    # AngNormalize has a similar fix.
+    s, c = (x, c) if x == 0 else (0.0+s, 0.0+c)
     return s, c
   sincosd = staticmethod(sincosd)
 
@@ -167,7 +185,7 @@ class Math(object):
       q += 1; x = -x
     ang = math.degrees(math.atan2(y, x))
     if q == 1:
-      ang = (180 if y > 0 else -180) - ang
+      ang = (180 if y >= 0 else -180) - ang
     elif q == 2:
       ang =  90 - ang
     elif q == 3:

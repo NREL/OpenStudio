@@ -7,7 +7,7 @@
 <link rev="made" href="mailto:root@localhost" />
 </head>
 
-<body style="background-color: white">
+<body>
 
 
 
@@ -53,19 +53,19 @@
 <p>toggle whether the vertices represent a polygon (the default) or a polyline. For a polyline, the number of points and the length of the path joining them is returned; the path is not closed and the area is not reported.</p>
 
 </dd>
-<dt id="e"><b>-e</b></dt>
+<dt id="e-a-f"><b>-e</b> <i>a</i> <i>f</i></dt>
 <dd>
 
-<p>specify the ellipsoid via <i>a</i> <i>f</i>; the equatorial radius is <i>a</i> and the flattening is <i>f</i>. Setting <i>f</i> = 0 results in a sphere. Specify <i>f</i> &lt; 0 for a prolate ellipsoid. A simple fraction, e.g., 1/297, is allowed for <i>f</i>. By default, the WGS84 ellipsoid is used, <i>a</i> = 6378137 m, <i>f</i> = 1/298.257223563. If entering vertices as UTM/UPS or MGRS coordinates, use the default ellipsoid, since the conversion of these coordinates to latitude and longitude always uses the WGS84 parameters.</p>
+<p>specify the ellipsoid via the equatorial radius, <i>a</i> and the flattening, <i>f</i>. Setting <i>f</i> = 0 results in a sphere. Specify <i>f</i> &lt; 0 for a prolate ellipsoid. A simple fraction, e.g., 1/297, is allowed for <i>f</i>. By default, the WGS84 ellipsoid is used, <i>a</i> = 6378137 m, <i>f</i> = 1/298.257223563. If entering vertices as UTM/UPS or MGRS coordinates, use the default ellipsoid, since the conversion of these coordinates to latitude and longitude always uses the WGS84 parameters.</p>
 
 </dd>
 <dt id="w"><b>-w</b></dt>
 <dd>
 
-<p>when reading geographic coordinates, longitude precedes latitude (this can be overridden by a hemisphere designator, <i>N</i>, <i>S</i>, <i>E</i>, <i>W</i>).</p>
+<p>toggle the longitude first flag (it starts off); if the flag is on, then when reading geographic coordinates, longitude precedes latitude (this can be overridden by a hemisphere designator, <i>N</i>, <i>S</i>, <i>E</i>, <i>W</i>).</p>
 
 </dd>
-<dt id="p"><b>-p</b></dt>
+<dt id="p-prec"><b>-p</b> <i>prec</i></dt>
 <dd>
 
 <p>set the output precision to <i>prec</i> (default 6); the perimeter is given (in meters) with <i>prec</i> digits after the decimal point; the area is given (in meters^2) with (<i>prec</i> - 5) digits after the decimal point.</p>
@@ -95,7 +95,7 @@
 <p>The lines joining the vertices are rhumb lines instead of geodesics.</p>
 
 </dd>
-<dt id="comment-delimiter"><b>--comment-delimiter</b></dt>
+<dt id="comment-delimiter-commentdelim"><b>--comment-delimiter</b> <i>commentdelim</i></dt>
 <dd>
 
 <p>set the comment delimiter to <i>commentdelim</i> (e.g., &quot;#&quot; or &quot;//&quot;). If set, the input lines will be scanned for this delimiter and, if found, the delimiter and the rest of the line will be removed prior to processing. For a given polygon, the last such string found will be appended to the output line (separated by a space).</p>
@@ -119,25 +119,25 @@
 <p>print full documentation and exit.</p>
 
 </dd>
-<dt id="input-file"><b>--input-file</b></dt>
+<dt id="input-file-infile"><b>--input-file</b> <i>infile</i></dt>
 <dd>
 
 <p>read input from the file <i>infile</i> instead of from standard input; a file name of &quot;-&quot; stands for standard input.</p>
 
 </dd>
-<dt id="input-string"><b>--input-string</b></dt>
+<dt id="input-string-instring"><b>--input-string</b> <i>instring</i></dt>
 <dd>
 
 <p>read input from the string <i>instring</i> instead of from standard input. All occurrences of the line separator character (default is a semicolon) in <i>instring</i> are converted to newlines before the reading begins.</p>
 
 </dd>
-<dt id="line-separator"><b>--line-separator</b></dt>
+<dt id="line-separator-linesep"><b>--line-separator</b> <i>linesep</i></dt>
 <dd>
 
 <p>set the line separator character to <i>linesep</i>. By default this is a semicolon.</p>
 
 </dd>
-<dt id="output-file"><b>--output-file</b></dt>
+<dt id="output-file-outfile"><b>--output-file</b> <i>outfile</i></dt>
 <dd>
 
 <p>write output to the file <i>outfile</i> instead of to standard output; a file name of &quot;-&quot; stands for standard output.</p>
@@ -181,9 +181,9 @@
 
 <p>GeoConvert(1), GeodSolve(1).</p>
 
-<p>An online version of this utility is availbable at <a href="http://geographiclib.sourceforge.net/cgi-bin/Planimeter">http://geographiclib.sourceforge.net/cgi-bin/Planimeter</a>.</p>
+<p>An online version of this utility is availbable at <a href="https://geographiclib.sourceforge.io/cgi-bin/Planimeter">https://geographiclib.sourceforge.io/cgi-bin/Planimeter</a>.</p>
 
-<p>The algorithm for the area of geodesic polygon is given in Section 6 of C. F. F. Karney, <i>Algorithms for geodesics</i>, J. Geodesy 87, 43-55 (2013); DOI <a href="https://dx.doi.org/10.1007/s00190-012-0578-z">https://dx.doi.org/10.1007/s00190-012-0578-z</a>; addenda: <a href="http://geographiclib.sf.net/geod-addenda.html">http://geographiclib.sf.net/geod-addenda.html</a>.</p>
+<p>The algorithm for the area of geodesic polygon is given in Section 6 of C. F. F. Karney, <i>Algorithms for geodesics</i>, J. Geodesy 87, 43-55 (2013); DOI <a href="https://doi.org/10.1007/s00190-012-0578-z">https://doi.org/10.1007/s00190-012-0578-z</a>; addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">https://geographiclib.sourceforge.io/geod-addenda.html</a>.</p>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 
@@ -191,7 +191,7 @@
 
 <h1 id="HISTORY">HISTORY</h1>
 
-<p><b>Planimeter</b> was added to GeographicLib, <a href="http://geographiclib.sf.net">http://geographiclib.sf.net</a>, in version 1.4.</p>
+<p><b>Planimeter</b> was added to GeographicLib, <a href="https://geographiclib.sourceforge.io">https://geographiclib.sourceforge.io</a>, in version 1.4.</p>
 
 
 </body>

@@ -389,12 +389,12 @@ TEST_F(ModelFixture, ModelMerger_Clobber) {
   space2_2->setThermalZone(zone2_2);
 
   // set up handle map
-  UUID space1_1_handle = space1_1->handle();
-  UUID space2_1_handle = space2_1->handle();
+  //UUID space1_1_handle = space1_1->handle();
+  //UUID space2_1_handle = space2_1->handle();
   UUID space1_2_handle = space1_2->handle();
   UUID space2_2_handle = space2_2->handle();
-  UUID zone1_1_handle = zone1_1.handle();
-  UUID zone2_1_handle = zone2_1.handle();
+  //UUID zone1_1_handle = zone1_1.handle();
+  //UUID zone2_1_handle = zone2_1.handle();
   UUID zone1_2_handle = zone1_2.handle();
   UUID zone2_2_handle = zone2_2.handle();
 

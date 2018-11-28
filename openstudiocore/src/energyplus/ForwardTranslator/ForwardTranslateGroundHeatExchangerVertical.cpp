@@ -142,11 +142,11 @@ boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerVertic
   auto groundModelName = modelObject.nameString() + " Ground Temps";
   idfObject.setString(GroundHeatExchanger_SystemFields::UndisturbedGroundTemperatureModelName,groundModelName);
 
-  if ( value = modelObject.groundThermalConductivity() ) {
+  if ( (value = modelObject.groundThermalConductivity()) ) {
     idfObject.setDouble(GroundHeatExchanger_SystemFields::GroundThermalConductivity, value.get());
   }
 
-  if ( value = modelObject.groundThermalHeatCapacity() ) {
+  if ( (value = modelObject.groundThermalHeatCapacity()) ) {
     idfObject.setDouble(GroundHeatExchanger_SystemFields::GroundThermalHeatCapacity, value.get());
   }
 
@@ -160,36 +160,36 @@ boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerVertic
   propertiesIdfObject.setName( propertiesObjectName );
 
   propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::DepthofTopofBorehole, 1);
-  
-  if( value = modelObject.boreHoleLength() ) {
+
+  if( (value = modelObject.boreHoleLength()) ) {
     propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::BoreholeLength, value.get());
   }
 
-  if( value = modelObject.boreHoleRadius() ) {
+  if( (value = modelObject.boreHoleRadius()) ) {
     propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::BoreholeDiameter, value.get() * 2.0);
   }
 
-  if( value = modelObject.groutThermalConductivity() ) {
+  if( (value = modelObject.groutThermalConductivity()) ) {
     propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::GroutThermalConductivity, value.get());
   }
 
   propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::GroutThermalHeatCapacity, 3.90E+06);
 
-  if( value = modelObject.pipeThermalConductivity() ) {
+  if( (value = modelObject.pipeThermalConductivity()) ) {
     propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::PipeThermalConductivity, value.get());
   }
 
   propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::PipeThermalHeatCapacity, 1.77E+06);
 
-  if( value = modelObject.pipeOutDiameter() ) {
+  if( (value = modelObject.pipeOutDiameter()) ) {
     propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::PipeOuterDiameter, value.get());
   }
 
-  if( value = modelObject.pipeThickness() ) {
+  if( (value = modelObject.pipeThickness()) ) {
     propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::PipeThickness, value.get());
   }
 
-  if( value = modelObject.uTubeDistance() ) {
+  if( (value = modelObject.uTubeDistance()) ) {
     propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::UTubeDistance, value.get());
   }
 
@@ -198,17 +198,17 @@ boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerVertic
 
   groundIdfObject.setName(groundModelName);
 
-  if ( value = modelObject.groundThermalConductivity() ) {
+  if( (value = modelObject.groundThermalConductivity()) ) {
     groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilThermalConductivity, value.get());
   }
 
   groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilDensity, 920.0);
 
-  if ( value = modelObject.groundThermalHeatCapacity() ) {
-    groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat, value.get() / 920.0 ); 
+  if( (value = modelObject.groundThermalHeatCapacity()) ) {
+    groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat, value.get() / 920.0 );
   }
 
-  if ( value = modelObject.groundTemperature() ) {
+  if( (value = modelObject.groundTemperature()) ) {
     groundIdfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature, value.get());
   }
 
@@ -223,11 +223,11 @@ boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerVertic
 
   rfIdfObject.setString(GroundHeatExchanger_ResponseFactorsFields::GHE_Vertical_PropertiesObjectName, propertiesObjectName);
 
-  if( value = modelObject.numberofBoreHoles() ) {
+  if( (value = modelObject.numberofBoreHoles()) ) {
     rfIdfObject.setDouble(GroundHeatExchanger_ResponseFactorsFields::NumberofBoreholes, value.get());
   }
 
-  if( value = modelObject.gFunctionReferenceRatio() ) {
+  if( (value = modelObject.gFunctionReferenceRatio()) ) {
     rfIdfObject.setDouble(GroundHeatExchanger_ResponseFactorsFields::GFunctionReferenceRatio, value.get());
   }
 

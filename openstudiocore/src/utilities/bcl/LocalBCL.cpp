@@ -38,7 +38,6 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
-#include <QDir>
 #include <QIcon>
 #include <QInputDialog>
 #include <QSettings>

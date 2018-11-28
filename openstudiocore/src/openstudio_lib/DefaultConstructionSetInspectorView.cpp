@@ -1621,7 +1621,7 @@ void DefaultConstructionSetInspectorView::attach(openstudio::model::DefaultConst
   m_nameEdit->bind(
     *m_defaultConstructionSet,
     OptionalStringGetter(std::bind(&model::DefaultConstructionSet::name, m_defaultConstructionSet.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::DefaultConstructionSet::setName, m_defaultConstructionSet.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::DefaultConstructionSet::setName, m_defaultConstructionSet.get_ptr(),std::placeholders::_1))
   );
 
   this->stackedWidget()->setCurrentIndex(1);

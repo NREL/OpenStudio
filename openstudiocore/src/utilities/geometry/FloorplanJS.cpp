@@ -911,7 +911,7 @@ namespace openstudio{
               doorVertices.push_back(Point3d(doorw2.x(), doorw2.y(), 0.0));
               doorVertices.push_back(Point3d(doorw2.x(), doorw2.y(), height));
 
-              size_t parentSubSurfaceIndex = allFinalDoorVertices.size();
+              // size_t parentSubSurfaceIndex = allFinalDoorVertices.size();
               allFinalDoorVertices.push_back(doorVertices);
 
             }
@@ -1598,18 +1598,18 @@ namespace openstudio{
           if (value2.isString()){
             std::string s = value2.asString();
             unsigned id = strtoul(s.c_str(), nullptr, 0);
-            if (id > 100){
-              // DLM: TODO test code, remove
-              bool test= false;
-            }
+            //if (id > 100){
+              //// DLM: TODO test code, remove
+              //bool test= false;
+            //}
             m_lastId = std::max(m_lastId, id);
           } else if (value2.isConvertibleTo(Json::ValueType::uintValue)){
             unsigned id = value2.asUInt();
-            if (id > 100){
-              // DLM: TODO test code, remove
-              bool test = false;
-            }
-            m_lastId = std::max(m_lastId, value2.asUInt());
+            //if (id > 100){
+              //// DLM: TODO test code, remove
+              //bool test = false;
+            //}
+            m_lastId = std::max(m_lastId, id);
           }
         }
       }

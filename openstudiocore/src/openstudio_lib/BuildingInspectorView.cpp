@@ -616,7 +616,7 @@ void BuildingInspectorView::attach(openstudio::model::Building& building)
   m_nameEdit->bind(
     *m_building,
     OptionalStringGetter(std::bind(&model::Building::name, m_building.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::Building::setName, m_building.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::Building::setName, m_building.get_ptr(),std::placeholders::_1))
   );
 
   populateStandardsTemplates();

@@ -34,13 +34,14 @@ function [x, y, azi, rk] = gnomonic_fwd(lat0, lon0, lat, lon, ellipsoid)
 %
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
-%     https://dx.doi.org/10.1007/s00190-012-0578-z
-%     Addenda: http://geographiclib.sf.net/geod-addenda.html
+%     https://doi.org/10.1007/s00190-012-0578-z
+%     Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 %
 %   which also includes methods for solving the "intersection" and
 %   "interception" problems using the gnomonic projection.
 %
-%   See also PROJDOC, GNOMONIC_INV, GEODDISTANCE, DEFAULTELLIPSOID.
+%   See also PROJDOC, GNOMONIC_INV, GEODDISTANCE, DEFAULTELLIPSOID,
+%     FLAT2ECC.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 

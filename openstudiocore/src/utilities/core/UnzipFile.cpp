@@ -31,8 +31,6 @@
 #include <zlib/contrib/minizip/unzip.h>
 
 
-#include <QDir>
-
 namespace openstudio {
 
   UnzipFile::UnzipFile(const openstudio::path &filename)
@@ -90,8 +88,7 @@ namespace openstudio {
       bool cont = true;
 
       openstudio::path createdFile = outputPath / filename;
-
-      QDir().mkpath(toQString(createdFile.parent_path()));
+      openstudio::filesystem::create_directories(createdFile.parent_path());
 
       openstudio::filesystem::ofstream file(createdFile, std::ios_base::trunc | std::ios_base::binary);
       while (cont)

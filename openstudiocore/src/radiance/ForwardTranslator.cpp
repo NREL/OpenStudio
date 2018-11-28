@@ -86,9 +86,9 @@
 
 #include <QPolygonF>
 #include <QPointF>
-#include <QDir>
 #include <QDateTime>
-#include <QThread>
+#include <thread>
+#include <QFile>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/regex.hpp>
@@ -178,7 +178,7 @@ namespace radiance {
   {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.radiance\\.ForwardTranslator"));
-    m_logSink.setThreadId(QThread::currentThread());
+    m_logSink.setThreadId(std::this_thread::get_id());
   }
 
   std::vector<openstudio::path> ForwardTranslator::translateModel(const openstudio::path& outPath, const openstudio::model::Model& model)
@@ -187,7 +187,7 @@ namespace radiance {
 
     m_model.purgeUnusedResourceObjects();
 
-    m_logSink.setThreadId(QThread::currentThread());
+    m_logSink.setThreadId(std::this_thread::get_id());
 
     m_logSink.resetStringStream();
 

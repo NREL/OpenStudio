@@ -169,7 +169,7 @@ void GasEquipmentDefinitionInspectorView::attach(openstudio::model::GasEquipment
   m_nameEdit->bind(
     *m_gasEquipmentDefinition,
     OptionalStringGetter(std::bind(&model::GasEquipmentDefinition::name, m_gasEquipmentDefinition.get_ptr(),true)),
-    boost::optional<StringSetter>(std::bind(&model::GasEquipmentDefinition::setName, m_gasEquipmentDefinition.get_ptr(),std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::GasEquipmentDefinition::setName, m_gasEquipmentDefinition.get_ptr(),std::placeholders::_1))
   );
 
   // m_designLevelEdit->bind(gasEquipmentDefinition,"designLevel",m_isIP);

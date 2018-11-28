@@ -5,22 +5,31 @@ simplenum:true$
 count:0$
 jtaylor(expr,var1,var2,ord):=expand(subst([zz=1],
     ratdisrep(taylor(subst([var1=zz*var1,var2=zz*var2],expr),zz,0,ord))))$
-h(x):=if x=0 then 0 else block([n:0],while integerp(x/16) do (x:x/16,n:n+1),n);
-formatnum(x):=block([n:h(x)],
-  if n>4 then (x:x/16^n,n:concat("<<",4*n)) else n:"",
-  concat(if x=0 then "0"
-  else if abs(x)<1000000 then string(x)
-  else concat(if x<0 then "-" else "",
-    "0x",block([obase:16,s],
-      s:sdowncase(string(abs(x))),
-      if substring(s,1,2) = "0" then s:substring(s,2),
-      s)),"LL",n))$
+h(x):=if x=0 then 0 else block([n:0],while not(oddp(x)) do (x:x/2,n:n+1),n);
+decorhex(x):=if x=0 then "0" else if abs(x)<10^12 then string(x)
+else concat(if x<0 then "-" else "",
+  "0x",block([obase:16,s],
+    s:sdowncase(string(abs(x))),
+    if substring(s,1,2) = "0" then s:substring(s,2),
+    s))$
+formatnum(x):=block([n,neg:is(x<0),s1,s2,ll],x:abs(x),n:h(x),
+  ll:if x<2^31 then "" else "LL",
+  s1:concat(if neg then "-" else "", decorhex(x), ll),
+  s2:concat(if neg then "-(" else "", decorhex(x/2^n), ll, "<<", n,
+    if neg then ")" else ""),
+  if slength(s2) < slength(s1) then s2 else s1)$
 formatnumx(x):=if simplenum then
 concat(string(x),if abs(x) < 2^31 then "" else "LL") else
-if abs(x)<2^63
-then concat("real(",formatnum(x),")") else
-concat("reale(",formatnum(floor(x/2^52)),",",
-  formatnum(x-floor(x/2^52)*2^52),")")$
+if abs(x)<2^63 then (if abs(x) < 2^24
+  /* test used to be: abs(x)/2^h(abs(x)) < 2^24; but Visual Studio
+  complains about truncation of __int64 to real even if trailing bits
+  are zero */
+  then formatnum(x)
+  else concat(s:if x<0 then "-" else "","real(",formatnum(abs(x)),")"))
+else
+block([s:if x<0 then "-" else ""], x:abs(x),
+  concat(s,"reale(",formatnum(floor(x/2^52)),",",
+    formatnum(x-floor(x/2^52)*2^52),")"))$
 printterm(x,line):=block([lx:slength(x)+1,lline:slength(line)],
   count:count+1,
   x:concat(x,if simplenum then ", " else ","),

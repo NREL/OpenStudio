@@ -2,9 +2,9 @@
  * \file GravityCircle.hpp
  * \brief Header for GeographicLib::GravityCircle class
  *
- * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GRAVITYCIRCLE_HPP)
@@ -89,11 +89,11 @@ namespace GeographicLib {
     {}
 
     friend class GravityModel; // GravityModel calls the private constructor
-    Math::real W(real clam, real slam,
+    Math::real W(real slam, real clam,
                  real& gX, real& gY, real& gZ) const;
-    Math::real V(real clam, real slam,
+    Math::real V(real slam, real clam,
                  real& gX, real& gY, real& gZ) const;
-    Math::real InternalT(real clam, real slam,
+    Math::real InternalT(real slam, real clam,
                          real& deltaX, real& deltaY, real& deltaZ,
                          bool gradp, bool correct) const;
   public:
@@ -117,7 +117,8 @@ namespace GeographicLib {
      *   (m s<sup>&minus;2</sup>).
      * @param[out] gz the upward component of the acceleration
      *   (m s<sup>&minus;2</sup>); this is usually negative.
-     * @return \e W the sum of the gravitational and centrifugal potentials.
+     * @return \e W the sum of the gravitational and centrifugal potentials
+     *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      *
      * The function includes the effects of the earth's rotation.
      **********************************************************************/
@@ -133,7 +134,8 @@ namespace GeographicLib {
      *   (m s<sup>&minus;2</sup>).
      * @param[out] deltaz the upward component of the disturbance vector
      *   (m s<sup>&minus;2</sup>).
-     * @return \e T the corresponding disturbing potential.
+     * @return \e T the corresponding disturbing potential
+     *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real Disturbance(real lon, real& deltax, real& deltay, real& deltaz)
       const;
@@ -184,9 +186,9 @@ namespace GeographicLib {
      *   centrifugal potentials (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real W(real lon, real& gX, real& gY, real& gZ) const {
-      real clam, slam;
+      real slam, clam;
       Math::sincosd(lon, slam, clam);
-      return W(clam, slam, gX, gY, gZ);
+      return W(slam, clam, gX, gY, gZ);
     }
 
     /**
@@ -204,9 +206,9 @@ namespace GeographicLib {
      *   (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real V(real lon, real& GX, real& GY, real& GZ) const {
-      real clam, slam;
+      real slam, clam;
       Math::sincosd(lon, slam, clam);
-      return V(clam, slam, GX, GY, GZ);
+      return V(slam, clam, GX, GY, GZ);
     }
 
     /**
@@ -225,9 +227,9 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real T(real lon, real& deltaX, real& deltaY, real& deltaZ)
       const {
-      real clam, slam;
+      real slam, clam;
       Math::sincosd(lon, slam, clam);
-      return InternalT(clam, slam, deltaX, deltaY, deltaZ, true, true);
+      return InternalT(slam, clam, deltaX, deltaY, deltaZ, true, true);
     }
 
     /**
@@ -238,9 +240,9 @@ namespace GeographicLib {
      *   anomalous potential) (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real T(real lon) const {
-      real clam, slam, dummy;
+      real slam, clam, dummy;
       Math::sincosd(lon, slam, clam);
-      return InternalT(clam, slam, dummy, dummy, dummy, false, true);
+      return InternalT(slam, clam, dummy, dummy, dummy, false, true);
     }
 
     ///@}

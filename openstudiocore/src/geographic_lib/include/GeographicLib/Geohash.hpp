@@ -2,9 +2,9 @@
  * \file Geohash.hpp
  * \brief Header for GeographicLib::Geohash class
  *
- * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOHASH_HPP)
@@ -42,8 +42,8 @@ namespace GeographicLib {
     typedef Math::real real;
     static const int maxlen_ = 18;
     static const unsigned long long mask_ = 1ULL << 45;
-    static const std::string lcdigits_;
-    static const std::string ucdigits_;
+    static const char* const lcdigits_;
+    static const char* const ucdigits_;
     Geohash();                     // Disable constructor
 
   public:
@@ -97,9 +97,9 @@ namespace GeographicLib {
      * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
     static Math::real LatitudeResolution(int len) {
-      using std::pow;
+      using std::ldexp;
       len = (std::max)(0, (std::min)(int(maxlen_), len));
-      return 180 * pow(real(0.5), 5 * len / 2);
+      return ldexp(real(180), -(5 * len / 2));
     }
 
     /**
@@ -111,9 +111,9 @@ namespace GeographicLib {
      * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
     static Math::real LongitudeResolution(int len) {
-      using std::pow;
+      using std::ldexp;
       len = (std::max)(0, (std::min)(int(maxlen_), len));
-      return 360 * pow(real(0.5), 5 * len - 5 * len / 2);
+      return ldexp(real(360), -(5 * len - 5 * len / 2));
     }
 
     /**

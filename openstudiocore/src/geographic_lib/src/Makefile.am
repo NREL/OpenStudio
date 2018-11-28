@@ -75,6 +75,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		../include/GeographicLib/MagneticCircle.hpp \
 		../include/GeographicLib/MagneticModel.hpp \
 		../include/GeographicLib/Math.hpp \
+		../include/GeographicLib/NearestNeighbor.hpp \
 		../include/GeographicLib/NormalGravity.hpp \
 		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \
@@ -103,4 +104,4 @@ geographiclib_data=$(datadir)/GeographicLib
 
 DEFS=-DGEOGRAPHICLIB_DATA=\"$(geographiclib_data)\" @DEFS@
 
-EXTRA_DIST = Makefile.mk CMakeLists.txt GeographicLib.pro
+EXTRA_DIST = Makefile.mk CMakeLists.txt
