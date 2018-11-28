@@ -334,12 +334,14 @@ std::vector<bool> OSArgument::domainAsBool() const {
   if (!hasDomain()) {
     LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
   }
-  BoolVector result;
-  for (const QVariant& value : m_domain) {
-    if ("true" == value.toString()) {
-      result.push_back(true);
-    }
-    result.push_back(false);
+  if (type() != OSArgumentType::Boolean) {
+    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
+  }
+
+  std::vector<bool> result;
+
+  for (const OSArgumentVariant& value: m_domain) {
+    result.push_back(std::get<bool>(value));
   }
   return result;
 }
