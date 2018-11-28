@@ -38,11 +38,18 @@
 #include "../utilities/core/Enum.hpp"
 #include "../utilities/core/Logger.hpp"
 
-#include <QVariant>
+#include <variant>
+
+// Note JM 2018-11-28:
+// typedef for the std::variant we will use for value, default value, and domain
+// we add std::monostate to allow the variant to be empty basically
+typedef std::variant<std::monostate, bool, double, int, std::string, openstudio::path> OSArgumentVariant;
+
 
 namespace openstudio {
 namespace measure {
 
+  // TODO: JM 2018-11-28 Update docstring (remove quantity)
 /** \class OSArgumentType
  *  \brief Listing of OSArgument data types. Quantity type is deprecated.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
@@ -92,6 +99,7 @@ OPENSTUDIO_ENUM( OSDomainType,
 );
 
 /** Preserves old name for OSArgumentType. \deprecated */
+// TODO: JM 2018-11-28: Time to remove no?
 typedef OSArgumentType UserScriptArgumentType;
 
 /** OSArgument is an argument to an OSMeasure. **/
@@ -155,15 +163,14 @@ class MEASURE_API OSArgument {
 
   //@}
 
+  /** @name Factory methods */
+  //@{
+
   /** Creates an OSArgument for bool values. Defaults domainType() to OSDomainType::Enumeration. */
   static OSArgument makeBoolArgument(const std::string& name, bool required = true, bool modelDependent = false);
 
   /** Creates an OSArgument for double values. Defaults domaintType() to OSDomainType::Interval. */
   static OSArgument makeDoubleArgument(const std::string& name, bool required = true, bool modelDependent = false);
-
-  /** Creates an OSArgument for Quantity values. Defaults domaintType() to
-   *  OSDomainType::Interval. \deprecated */
-  static OSArgument makeQuantityArgument(const std::string& name, bool required = true, bool modelDependent = false);
 
   /** Creates an OSArgument for int values. Defaults domaintType() to OSDomainType::Interval. */
   static OSArgument makeIntegerArgument(const std::string& name, bool required = true, bool modelDependent = false);
@@ -196,6 +203,13 @@ class MEASURE_API OSArgument {
 
   /** Creates a separator OSArgument, cannot be used to store a value, cannot be required. */
   static OSArgument makeSeparatorArgument(const std::string& name, bool modelDependent = false);
+
+  // TODO: JM 2018-11-28 Actually remove?
+  /** Creates an OSArgument for Quantity values. Defaults domaintType() to
+   *  OSDomainType::Interval. \deprecated */
+  // static OSArgument makeQuantityArgument(const std::string& name, bool required = true, bool modelDependent = false);
+
+  //@}
 
   /** @name Getters */
   //@{
@@ -238,9 +252,10 @@ class MEASURE_API OSArgument {
    *  OSArgumentType::Double. */
   double valueAsDouble() const;
 
+  // TODO: JM 2018-11-28 Remove?
   /** Returns this argument's value as a Quantity. Throws if not hasValue() or if type() !=
    *  OSArgumentType::Quantity. \deprecated */
-  Quantity valueAsQuantity() const;
+  // Quantity valueAsQuantity() const;
 
   /** Returns this argument's value as an int. Throws if not hasValue() or if type() !=
    *  OSArgumentType::Integer. */
@@ -267,7 +282,7 @@ class MEASURE_API OSArgument {
 
   /** Returns this argument's default value as a Quantity. Throws if not hasDefaultValue() or if
    *  type() != OSArgumentType::Quantity. \deprecated */
-  Quantity defaultValueAsQuantity() const;
+  // Quantity defaultValueAsQuantity() const;
 
   /** Returns this argument's default value as an int. Throws if not hasDefaultValue() or if
    *  type() != OSArgumentType::Integer. */
@@ -301,7 +316,7 @@ class MEASURE_API OSArgument {
 
   /** Returns the domain as a vector of Quantities. Will throw if not hasDomain() or type() !=
    *  OSArgumentType::Quantity. \deprecated */
-  std::vector<Quantity> domainAsQuantity() const;
+  // std::vector<Quantity> domainAsQuantity() const;
 
   /** Returns the domain as a vector of ints. Will throw if not hasDomain() or type() !=
    *  OSArgumentType::Integer. */
@@ -314,8 +329,9 @@ class MEASURE_API OSArgument {
    *  OSArgumentType::Path. */
   std::vector<openstudio::path> domainAsPath() const;
 
+  // TODO: JM 2018-11-28 Address this one
   /** For serialization, not for general use. */
-  std::vector<QVariant> domainAsQVariant() const;
+  // std::vector<QVariant> domainAsQVariant() const;
 
   //@}
   /** @name Choice Argument Getters */
@@ -372,7 +388,7 @@ class MEASURE_API OSArgument {
   /// \overload
   bool setValue(double value);
   /// \overload \deprecated
-  bool setValue(const Quantity& value);
+  // bool setValue(const Quantity& value);
   /// \overload
   bool setValue(int value);
   /// \overload
@@ -393,7 +409,7 @@ class MEASURE_API OSArgument {
   /// \overload
   bool setDefaultValue(double defaultValue);
   /// \overload \deprecated
-  bool setDefaultValue(const Quantity& value);
+  // bool setDefaultValue(const Quantity& value);
   /// \overload
   bool setDefaultValue(int defaultValue);
   /// \overload
@@ -413,8 +429,9 @@ class MEASURE_API OSArgument {
   bool setDomain(const std::vector<bool>& domain);
   /// \overload
   bool setDomain(const std::vector<double>& domain);
+  // TODO: JM 2018-11-28 Remove?
   /// \overload \deprecated
-  bool setDomain(const std::vector<Quantity>& domain);
+  // bool setDomain(const std::vector<Quantity>& domain);
   /// \overload
   bool setDomain(const std::vector<int>& domain);
   /// \overload
@@ -474,15 +491,18 @@ class MEASURE_API OSArgument {
   friend struct std::_Pair_base<std::string, OSArgument>;
 #endif
 
+  // TODO
   bool setStringInternal(QVariant& variant, const std::string& value);
 
-  std::string printQVariant(const QVariant& toPrint) const;
+  // TODO
+  // std::string printQVariant(const QVariant& toPrint) const;
 
+  // This also OS App related
   void onChange();
 
-  QVariant valueAsQVariant() const;
-
-  QVariant defaultValueAsQVariant() const;
+  // TODO: JM 2018-11-28 Need to keep for OSApp?
+  //QVariant valueAsQVariant() const;
+  //QVariant defaultValueAsQVariant() const;
 
   openstudio::UUID m_uuid;
   openstudio::UUID m_versionUUID;
@@ -493,10 +513,10 @@ class MEASURE_API OSArgument {
   boost::optional<std::string> m_units;
   bool m_required;
   bool m_modelDependent;
-  QVariant m_value;
-  QVariant m_defaultValue;
+  OSArgumentVariant m_value;
+  OSArgumentVariant m_defaultValue;
   OSDomainType m_domainType;
-  std::vector<QVariant> m_domain;
+  std::vector<OSArgumentVariant> m_domain;
   std::vector<std::string> m_choices;
   std::vector<std::string> m_choiceDisplayNames;
   bool m_isRead;
