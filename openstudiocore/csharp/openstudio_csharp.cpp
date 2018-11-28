@@ -2,7 +2,6 @@
 
 #include <QtPlugin>
 
-Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
 #if defined(Q_OS_OSX)
   Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
 #elif defined(Q_OS_WIN)

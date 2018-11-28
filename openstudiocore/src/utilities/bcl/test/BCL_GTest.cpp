@@ -241,7 +241,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
 
   EXPECT_FALSE(lastDownload->files().empty());
   for (const std::string& file : lastDownload->files()) {
-    openstudio::path path = toPath(lastDownload->directory() + "/files/" + file);
+    openstudio::path path = lastDownload->directory() / "files" / file;
     EXPECT_TRUE(QDir().exists(toQString(path)));
 
     const auto time = openstudio::filesystem::last_write_time_as_time_t(path);
@@ -255,7 +255,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   // check that actually was downloaded
   EXPECT_FALSE(component->files().empty());
   for (const std::string& file : component->files()) {
-    openstudio::path path = toPath(component->directory() + "/files/" + file);
+    openstudio::path path = component->directory() / "files" / file;
     EXPECT_TRUE(QDir().exists(toQString(path)));
 
     const auto time = openstudio::filesystem::last_write_time_as_time_t(path);
@@ -430,3 +430,4 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   }
   EXPECT_TRUE(result->taxonomyTerms().empty());
 }
+
