@@ -38,6 +38,8 @@
 #include <vector>
 
 struct sqlite3;
+
+class QSqlDatabase;
 class QWidget;
 
 namespace openstudio{
@@ -185,7 +187,6 @@ namespace openstudio{
 
     /// returns the current database referenced by the current file
     QSqlDatabase getDatabase(const bool open = true) const;
-
 
     static std::shared_ptr<LocalBCL> &instanceInternal();
 

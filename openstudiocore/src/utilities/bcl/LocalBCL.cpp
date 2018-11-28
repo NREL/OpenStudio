@@ -33,6 +33,7 @@
 #include "../core/Assert.hpp"
 #include "../time/DateTime.hpp"
 #include "../core/PathHelpers.hpp"
+#include "../core/FilesystemHelpers.hpp"
 
 #include <sqlite/sqlite3.h>
 
@@ -130,8 +131,8 @@ namespace openstudio{
     if (!ptr) {
       QSettings settings("OpenStudio", "LocalBCL");
       // DLM: might want to put this somewhere a little more hidden
-      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(toPath(settings.value("libraryPath",
-        QDir::homePath().append("/BCL")).toString())));
+      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(
+          toPath(settings.value("libraryPath", toQString(openstudio::filesystem::home_path() / toPath("BCL"))).toString())));
     }
     return *ptr;
   }
@@ -1609,7 +1610,7 @@ namespace openstudio{
     return m_libraryPath;
   }
 
-  bool LocalBCL::setLibraryPath(const std::string& libraryPath)
+  bool LocalBCL::setLibraryPath(const path& libraryPath)
   {
 
     // TODO: JM 2018-11-14 Can't we just call this? then write the settings
@@ -1618,17 +1619,15 @@ namespace openstudio{
     // cleanup old staggling one if it exists
     close();
 
-
-    m_libraryPath = libraryPath;
-
-    //Check for BCL directory
-    if (!openstudio::filesystem::is_directory(m_libraryPath) || !openstudio::filesystem::exists(m_libraryPath)) {
-      openstudio::filesystem::create_directory(m_libraryPath);
+    const auto path = libraryPath.lexically_normal();
+    
+    openstudio::filesystem::create_directories(path);
+    if (!openstudio::filesystem::is_directory(path))
+    {
+      const bool success = openstudio::filesystem::create_directories(path);
+      if (!success) return false;
     }
-
-    // Now we know the library path exists for sure (needed for canonical call),
-    // we convert to an absolute path with no symlink, or dot, or dot-dot elements
-    m_libraryPath = openstudio::filesystem::canonical(m_libraryPath);
+    m_libraryPath = path;
 
     m_sqliteFilePath = m_libraryPath / m_dbName;
     m_sqliteFilename = toString(m_sqliteFilePath.make_preferred().native());
