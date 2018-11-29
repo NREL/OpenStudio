@@ -544,7 +544,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     else()
       # 16.04
       set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static_xenial.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "84446e0c4f25ed69dc25ae145900c889")
+      set(RUBY_ZIP_EXPECTED_MD5 "832a185b0086941780c4f54489c7f465")
     endif()
   endif()
 
@@ -1158,7 +1158,7 @@ else()
     set(QT_STATIC_ZIP_EXPECTED_MD5 "fb9298e6d74c207742ab5ab50e18b8e2")
   else()
     # 16.04
-    set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static_xenial.tar.gz")
+    set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static_xenial_harfbuzz.tar.gz")
     set(QT_STATIC_ZIP_EXPECTED_MD5 "e6969f05b84a20d4610b1d35170a2329")
   endif()
 endif()
