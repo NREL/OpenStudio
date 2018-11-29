@@ -112,7 +112,7 @@ namespace model {
       if (openstudio::filesystem::is_directory(dest)) {
         try {
           openstudio::filesystem::remove_all(dest);
-        } catch (const std::exception &e) {
+        } catch (const std::exception&) {
           LOG_FREE(Error, "replaceDir", "Destination directory could not be removed: " << toString(dest));
           return false;
         }

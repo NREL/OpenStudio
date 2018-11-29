@@ -115,6 +115,11 @@ namespace openstudio{
 
   }
 
+  openstudio::filesystem::path LocalBCL::dbPath() const
+  {
+    return m_libraryPath / m_dbName;
+  }
+
   std::string LocalBCL::columnText(const unsigned char* column) const {
     return std::string(reinterpret_cast<const char*>(column));
   }
