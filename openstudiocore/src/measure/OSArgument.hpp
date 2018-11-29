@@ -116,48 +116,6 @@ class MEASURE_API OSArgument {
   OSArgument();
   OSArgument(const std::string& name, const OSArgumentType& type, bool required, bool modelDependent);
 
-  /** Constructor provided for deserialization; not for general use. */
-  // DLM: OS 2.0, remove?
-  /*
-  OSArgument(const UUID& uuid,
-             const UUID& versionUUID,
-             const std::string& name,
-             const std::string& displayName,
-             const boost::optional<std::string>& description,
-             const OSArgumentType& type,
-             const boost::optional<std::string>& units,
-             bool required,
-             bool modelDependent,
-             const boost::optional<std::string>& value,
-             const boost::optional<std::string>& defaultValue,
-             const OSDomainType& domainType,
-             std::vector<std::string>& domain,
-             const std::vector<std::string>& choices,
-             const std::vector<std::string>& choiceDisplayNames,
-             bool isRead,
-             const std::string& extension);
-*/
-  /** Constructor provided for deserialization; not for general use. */
-  // DLM: OS 2.0, remove?
-  /*
-  OSArgument(const UUID& uuid,
-             const UUID& versionUUID,
-             const std::string& name,
-             const std::string& displayName,
-             const boost::optional<std::string>& description,
-             const OSArgumentType& type,
-             const boost::optional<std::string>& units,
-             bool required,
-             bool modelDependent,
-             const QVariant& value,
-             const QVariant& defaultValue,
-             const OSDomainType& domainType,
-             std::vector<QVariant>& domain,
-             const std::vector<std::string>& choices,
-             const std::vector<std::string>& choiceDisplayNames,
-             bool isRead,
-             const std::string& extension);
-             */
   /** Creates a copy with new UUIDs. */
   OSArgument clone() const;
 
@@ -495,7 +453,7 @@ class MEASURE_API OSArgument {
   bool setStringInternal(QVariant& variant, const std::string& value);
 
   // TODO
-  // std::string printQVariant(const QVariant& toPrint) const;
+  std::string printVariant(const OSArgumentVariant& toPrint) const;
 
   // This also OS App related
   void onChange();
