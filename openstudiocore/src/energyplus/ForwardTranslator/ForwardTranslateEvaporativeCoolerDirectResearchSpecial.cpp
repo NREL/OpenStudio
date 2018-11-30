@@ -84,7 +84,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectRe
   // Primary Air Design Flow Rate
   if ( modelObject.isPrimaryAirDesignFlowRateAutosized() ) {
     idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate,"Autosize");
-  } else if( (optD = modelObject.recirculatingWaterPumpPowerConsumption()) ) {
+  } else if( (optD = modelObject.primaryAirDesignFlowRate()) ) {
     idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate, optD.get());
   }
 
