@@ -649,23 +649,10 @@ bool OSArgument::setDefaultValue(const openstudio::path& defaultValue) {
 }
 
 bool OSArgument::setDefaultValue(const std::string& defaultValue) {
-  bool result = false;
-  if (m_type == OSArgumentType::String) {
-    m_defaultValue.setValue(toQString(defaultValue));
-    OS_ASSERT(hasDefaultValue());
+  bool result = setStringInternal(m_defaultValue, defaultValue);
+  if (result) {
+    OS_ASSERT(hasValue());
     onChange();
-    result = true;
-  } else if (m_type == OSArgumentType::Choice) {
-    if ((std::find(m_choices.begin(), m_choices.end(), defaultValue) != m_choices.end()) ||
-        (std::find(m_choiceDisplayNames.begin(), m_choiceDisplayNames.end(), defaultValue) != m_choiceDisplayNames.end()))
-    {
-      m_defaultValue.setValue(toQString(defaultValue));
-      OS_ASSERT(hasDefaultValue());
-      onChange();
-      result = true;
-    }
-  } else{
-    result = setStringInternal(m_defaultValue, defaultValue);
   }
   return result;
 }
@@ -789,16 +776,17 @@ bool OSArgument::setDomain(const std::vector<openstudio::path>& domain) {
   return result;
 }
 
-// TODO
 bool OSArgument::setDomain(const std::vector<std::string>& domain) {
   bool result(false);
   if ((m_domainType != OSDomainType::Interval) || (domain.size() == 2u)) {
-    std::vector<QVariant> originalDomain = m_domain;
+    // Store the original, in case we fail to set one element
+    std::vector<OSArgumentVariant> originalDomain = m_domain;
     m_domain.clear();
     for (const std::string& value : domain) {
-      QVariant newValue;
-      result = setStringInternal(newValue,value);
+      OSArgumentVariant newValue;
+      result = setStringInternal(newValue, value);
       if (!result) {
+        // Restore the original domain
         m_domain = originalDomain;
         break;
       }
@@ -1114,7 +1102,7 @@ std::string OSArgument::printOSArgumentVariant(const OSArgumentVariant& toPrint)
           ss << val;
         }
       },
-      arg);
+      toPrint);
 
   return ss.str();
 }
