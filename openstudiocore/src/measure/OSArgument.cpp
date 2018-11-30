@@ -224,8 +224,8 @@ std::string OSArgument::valueAsString() const
   if (!hasValue()) {
     LOG_AND_THROW("Argument " << name() << " has no value.");
   }
-  // TODO: not good.
-  return std::get<std::string>(m_value);
+
+  return printOSArgumentVariant(m_value);
 }
 
 openstudio::path OSArgument::valueAsPath() const
@@ -258,7 +258,7 @@ bool OSArgument::defaultValueAsBool() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
   }
 
-  return std::get<bool>(m_value);
+  return std::get<bool>(m_defaultValue);
 }
 
 double OSArgument::defaultValueAsDouble() const
@@ -270,7 +270,7 @@ double OSArgument::defaultValueAsDouble() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
   }
 
-  return std::get<double>(m_value);
+  return std::get<double>(m_defaultValue);
 }
 
 //Quantity OSArgument::defaultValueAsQuantity() const
@@ -293,7 +293,7 @@ int OSArgument::defaultValueAsInteger() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
   }
 
-  return std::get<int>(m_value);
+  return std::get<int>(m_defaultValue);
 }
 
 std::string OSArgument::defaultValueAsString() const
@@ -302,8 +302,7 @@ std::string OSArgument::defaultValueAsString() const
     LOG_AND_THROW("Argument " << name() << " does not have a default value.");
   }
 
-  // TODO: Not good!
-  return std::get<std::string>(m_value);
+  return printOSArgumentVariant(m_defaultValue);
 }
 
 openstudio::path OSArgument::defaultValueAsPath() const
@@ -315,7 +314,7 @@ openstudio::path OSArgument::defaultValueAsPath() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Path.");
   }
 
-  return std::get<openstudio::path>(m_value);
+  return std::get<openstudio::path>(m_defaultValue);
 }
 
 // TODO: JM 2018-11-28 remove
@@ -408,6 +407,22 @@ std::vector<openstudio::path> OSArgument::domainAsPath() const {
   return result;
 }
 
+// TODO: should work with
+std::vector<std::string> OSArgument::domainAsString() const {
+  if (!hasDomain()) {
+    LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
+  }
+
+  // TODO: add check for arg type?
+
+  std::vector<std::string> result;
+
+  for (const OSArgumentVariant& value: m_domain) {
+    result.push_back(printOSArgumentVariant(value));
+  }
+  return result;
+}
+
 //std::vector<QVariant> OSArgument::domainAsQVariant() const {
   //if (!hasDomain()) {
     //LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
@@ -415,22 +430,6 @@ std::vector<openstudio::path> OSArgument::domainAsPath() const {
   //return m_domain;
 //}
 
-// TODO: should work with
-std::vector<std::string> OSArgument::domainAsString() const {
-  if (!hasDomain()) {
-    LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
-  }
-  if (type() != OSArgumentType::String) {
-    LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
-  }
-
-  std::vector<std::string> result;
-
-  for (const OSArgumentVariant& value: m_domain) {
-    result.push_back(std::get<std::string>(value));
-  }
-  return result;
-}
 
 std::vector<std::string> OSArgument::choiceValues() const {
   return m_choices;
@@ -504,7 +503,17 @@ bool OSArgument::setValue(double value) {
     OS_ASSERT(hasValue());
     onChange();
     result = true;
+
+  } else if (m_type == OSArgumentType::Integer) {
+    // Let a double be assigned to an int, only if said double is really an integer expressed as a double
+    int test = floor(value);
+    if (test == value){
+      result = setValue(test);
+    } else {
+      result = false;
+    }
   }
+
   return result;
 }
 
@@ -523,27 +532,20 @@ bool OSArgument::setValue(int value) {
   bool result = false;
   if (m_type == OSArgumentType::Integer) {
     m_value = value;
-    OS_ASSERT(hasValue());
-    onChange();
+    result = true;
+
+  } else if (m_type == OSArgumentType::Double) {
+    // If we pass an int, but our type is double, we let it happen
+    m_value.emplace<double>(value);
     result = true;
   }
-  else if (m_type == OSArgumentType::Double) {
-    m_value.emplace<double>(value);
-  }
-  return result;
-}
 
-bool OSArgument::setValue(const std::string& value) {
-  bool result = setStringInternal(m_value, value);
   if (result) {
     OS_ASSERT(hasValue());
     onChange();
   }
-  return result;
-}
 
-bool OSArgument::setValue(const char* value) {
-  return setValue(std::string(value));
+  return result;
 }
 
 bool OSArgument::setValue(const openstudio::path& value) {
@@ -553,6 +555,16 @@ bool OSArgument::setValue(const openstudio::path& value) {
     OS_ASSERT(hasValue());
     onChange();
     result = true;
+  }
+  return result;
+}
+
+// TODO
+bool OSArgument::setValue(const std::string& value) {
+  bool result = setStringInternal(m_value, value);
+  if (result) {
+    OS_ASSERT(hasValue());
+    onChange();
   }
   return result;
 }
@@ -581,6 +593,14 @@ bool OSArgument::setDefaultValue(double defaultValue) {
     OS_ASSERT(hasDefaultValue());
     onChange();
     result = true;
+  } else if (m_type == OSArgumentType::Integer) {
+    // Let a double be assigned to an int, only if said double is really an integer expressed as a double
+    int test = floor(defaultValue);
+    if (test == defaultValue) {
+      result = setDefaultValue(test);
+    } else {
+      result = false;
+    }
   }
   return result;
 }
@@ -601,12 +621,29 @@ bool OSArgument::setDefaultValue(int defaultValue)
   bool result = false;
   if (m_type == OSArgumentType::Integer){
     m_defaultValue = defaultValue;
+    result = true;
+
+  } else if (m_type == OSArgumentType::Double) {
+    // If we pass an int, but our type is double, we let it happen
+    m_defaultValue.emplace<double>(defaultValue);
+    result =true;
+  }
+
+  if (result) {
     OS_ASSERT(hasDefaultValue());
     onChange();
-    result = true;
   }
-  else if (m_type == OSArgumentType::Double) {
-    result = setDefaultValue(double(defaultValue));
+
+  return result;
+}
+
+bool OSArgument::setDefaultValue(const openstudio::path& defaultValue) {
+  bool result = false;
+    if (m_type == OSArgumentType::Path) {
+    m_defaultValue = defaultValue;
+    OS_ASSERT(hasValue());
+    onChange();
+    result = true;
   }
   return result;
 }
@@ -629,21 +666,6 @@ bool OSArgument::setDefaultValue(const std::string& defaultValue) {
     }
   } else{
     result = setStringInternal(m_defaultValue, defaultValue);
-  }
-  return result;
-}
-
-bool OSArgument::setDefaultValue(const char* defaultValue) {
-  return setDefaultValue(std::string(defaultValue));
-}
-
-bool OSArgument::setDefaultValue(const openstudio::path& defaultValue) {
-  bool result = false;
-  if (m_type == OSArgumentType::Path){
-    m_defaultValue.setValue(toQString(defaultValue));
-    OS_ASSERT(hasDefaultValue());
-    onChange();
-    result = true;
   }
   return result;
 }
@@ -686,12 +708,7 @@ bool OSArgument::setDomain(const std::vector<bool>& domain) {
     // could check for uniqueness, but pass on that for now
     m_domain.clear();
     for (bool value : domain) {
-      if (value) {
-        m_domain.push_back(QVariant(QString("true")));
-      }
-      else {
-        m_domain.push_back(QVariant(QString("false")));
-      }
+      m_domain.push_back(OSArgumentVariant(value));
     }
     onChange();
     result = true;
@@ -706,7 +723,7 @@ bool OSArgument::setDomain(const std::vector<double>& domain) {
       // could check for uniqueness, min < max, but pass on that for now
       m_domain.clear();
       for (double value : domain) {
-        m_domain.push_back(QVariant(value));
+        m_domain.push_back(OSArgumentVariant(value));
       }
       onChange();
       result = true;
@@ -715,21 +732,21 @@ bool OSArgument::setDomain(const std::vector<double>& domain) {
   return result;
 }
 
-bool OSArgument::setDomain(const std::vector<Quantity>& domain) {
-  bool result(false);
-  if (m_type == OSArgumentType::Quantity) {
-    if ((m_domainType != OSDomainType::Interval) || (domain.size() == 2u)) {
-      // could check for uniqueness, min < max, but pass on that for now
-      m_domain.clear();
-      for (const Quantity& value : domain) {
-        m_domain.push_back(QVariant::fromValue<openstudio::Quantity>(value));
-      }
-      onChange();
-      result = true;
-    }
-  }
-  return result;
-}
+//bool OSArgument::setDomain(const std::vector<Quantity>& domain) {
+  //bool result(false);
+  //if (m_type == OSArgumentType::Quantity) {
+    //if ((m_domainType != OSDomainType::Interval) || (domain.size() == 2u)) {
+      //// could check for uniqueness, min < max, but pass on that for now
+      //m_domain.clear();
+      //for (const Quantity& value : domain) {
+        //m_domain.push_back(QVariant::fromValue<openstudio::Quantity>(value));
+      //}
+      //onChange();
+      //result = true;
+    //}
+  //}
+  //return result;
+//}
 
 bool OSArgument::setDomain(const std::vector<int>& domain) {
   bool result(false);
@@ -738,7 +755,17 @@ bool OSArgument::setDomain(const std::vector<int>& domain) {
       // could check for uniqueness, min < max, but pass on that for now
       m_domain.clear();
       for (int value : domain) {
-        m_domain.push_back(QVariant(value));
+        m_domain.push_back(OSArgumentVariant(value));
+      }
+      onChange();
+      result = true;
+    }
+  } else  if (m_type == OSArgumentType::Double) {
+    if ((m_domainType != OSDomainType::Interval) || (domain.size() == 2u)) {
+      // could check for uniqueness, min < max, but pass on that for now
+      m_domain.clear();
+      for (int value : domain) {
+        m_domain.push_back(OSArgumentVariant(double(value)));
       }
       onChange();
       result = true;
@@ -747,6 +774,22 @@ bool OSArgument::setDomain(const std::vector<int>& domain) {
   return result;
 }
 
+bool OSArgument::setDomain(const std::vector<openstudio::path>& domain) {
+  bool result(false);
+  if (m_type == OSArgumentType::Path) {
+    OS_ASSERT(m_domainType == OSDomainType::Enumeration);
+    // could check for uniqueness, but pass on that for now
+    m_domain.clear();
+    for (const openstudio::path& value : domain) {
+      m_domain.push_back(OSArgumentVariant(value));
+    }
+    onChange();
+    result = true;
+  }
+  return result;
+}
+
+// TODO
 bool OSArgument::setDomain(const std::vector<std::string>& domain) {
   bool result(false);
   if ((m_domainType != OSDomainType::Interval) || (domain.size() == 2u)) {
@@ -768,21 +811,6 @@ bool OSArgument::setDomain(const std::vector<std::string>& domain) {
   return result;
 }
 
-bool OSArgument::setDomain(const std::vector<openstudio::path>& domain) {
-  bool result(false);
-  if (m_type == OSArgumentType::Path) {
-    OS_ASSERT(m_domainType == OSDomainType::Enumeration);
-    // could check for uniqueness, but pass on that for now
-    m_domain.clear();
-    for (const openstudio::path& value : domain) {
-      m_domain.push_back(QVariant(toQString(value)));
-    }
-    onChange();
-    result = true;
-  }
-  return result;
-}
-
 void OSArgument::clearDomain() {
   m_domain.clear();
 }
@@ -791,7 +819,9 @@ bool OSArgument::setMinValue(double minValue)
 {
   if (m_type == OSArgumentType::Integer){
     int test = floor(minValue);
-    if (test == minValue){
+    if (test == minValue) {
+      // If int expressed as double (eg: 1.0 when type = int)
+      // Then we call the int overload instead
       return setMinValue(test);
     }
     return false;
@@ -800,6 +830,7 @@ bool OSArgument::setMinValue(double minValue)
   }
 
   double maxValue = std::numeric_limits<double>::max();
+  // Try to fetch the existing maxValue
   if (hasDomain() && (m_domainType == OSDomainType::Interval)){
     std::vector<double> domain = domainAsDouble();
     if (domain.size() == 2){
@@ -809,8 +840,8 @@ bool OSArgument::setMinValue(double minValue)
 
   m_domainType = OSDomainType::Interval;
   m_domain.clear();
-  m_domain.push_back(QVariant(minValue));
-  m_domain.push_back(QVariant(maxValue));
+  m_domain.push_back(OSArgumentVariant(minValue));
+  m_domain.push_back(OSArgumentVariant(maxValue));
 
   onChange();
 
@@ -826,7 +857,7 @@ bool OSArgument::setMinValue(int minValue)
     return false;
   }
 
-  double maxValue = std::numeric_limits<int>::max();
+  int maxValue = std::numeric_limits<int>::max();
   if (hasDomain() && (m_domainType == OSDomainType::Interval)){
     std::vector<int> domain = domainAsInteger();
     if (domain.size() == 2){
@@ -836,8 +867,8 @@ bool OSArgument::setMinValue(int minValue)
 
   m_domainType = OSDomainType::Interval;
   m_domain.clear();
-  m_domain.push_back(QVariant(minValue));
-  m_domain.push_back(QVariant(maxValue));
+  m_domain.push_back(OSArgumentVariant(minValue));
+  m_domain.push_back(OSArgumentVariant(maxValue));
 
   onChange();
 
@@ -867,8 +898,8 @@ bool OSArgument::setMaxValue(double maxValue)
 
   m_domainType = OSDomainType::Interval;
   m_domain.clear();
-  m_domain.push_back(QVariant(minValue));
-  m_domain.push_back(QVariant(maxValue));
+  m_domain.push_back(OSArgumentVariant(minValue));
+  m_domain.push_back(OSArgumentVariant(maxValue));
 
   onChange();
 
@@ -885,7 +916,7 @@ bool OSArgument::setMaxValue(int maxValue)
     return false;
   }
 
-  double minValue = std::numeric_limits<int>::min();
+  int minValue = std::numeric_limits<int>::min();
   if (hasDomain() && (m_domainType == OSDomainType::Interval)){
     std::vector<int> domain = domainAsInteger();
     if (domain.size() == 2){
@@ -895,8 +926,8 @@ bool OSArgument::setMaxValue(int maxValue)
 
   m_domainType = OSDomainType::Interval;
   m_domain.clear();
-  m_domain.push_back(QVariant(minValue));
-  m_domain.push_back(QVariant(maxValue));
+  m_domain.push_back(OSArgumentVariant(minValue));
+  m_domain.push_back(OSArgumentVariant(maxValue));
 
   onChange();
 
@@ -949,12 +980,12 @@ std::string OSArgument::print() const {
     ss << m_domainType.valueName() << " Domain: ";
     if (m_domainType == OSDomainType::Interval) {
       OS_ASSERT(m_domain.size() == 2u);
-      ss << "[" << printQVariant(m_domain[0]) << ", " << printQVariant(m_domain[1]) << "]" << std::endl;
+      ss << "[" << printOSArgumentVariant(m_domain[0]) << ", " << printOSArgumentVariant(m_domain[1]) << "]" << std::endl;
     }
     else {
       ss << std::endl;
-      for (const QVariant& value : m_domain) {
-        ss << "  " << printQVariant(value) << std::endl;
+      for (const OSArgumentVariant& value : m_domain) {
+        ss << "  " << printOSArgumentVariant(value) << std::endl;
       }
     }
   }
@@ -966,7 +997,7 @@ std::string OSArgument::print() const {
 std::string OSArgument::printValue(bool printDefault) const {
   std::string result;
 
-  QVariant toPrint;
+  OSArgumentVariant toPrint;
   if (hasValue()) {
     toPrint = m_value;
   }
@@ -974,8 +1005,9 @@ std::string OSArgument::printValue(bool printDefault) const {
     toPrint = m_defaultValue;
   }
 
-  if (!toPrint.isNull()) {
-    result = printQVariant(toPrint);
+  // If not std::monostate (= empty)
+  if (toPrint.index() != 0) {
+    result = printOSArgumentVariant(toPrint);
   }
 
   return result;
@@ -985,7 +1017,7 @@ std::string OSArgument::printDefaultValue() const {
   std::string result;
 
   if (hasDefaultValue()) {
-    result = printQVariant(m_defaultValue);
+    result = printOSArgumentVariant(m_defaultValue);
   }
 
   return result;
@@ -1008,43 +1040,45 @@ OSArgument::OSArgument(const std::string& name,
     m_isRead(false)
 {}
 
-bool OSArgument::setStringInternal(QVariant& variant, const std::string& value) {
+bool OSArgument::setStringInternal(OSArgumentVariant& variant, const std::string& value) {
   bool result = false;
+
   if (m_type == OSArgumentType::Boolean) {
     if (value == "true") {
-      variant.setValue(QString("true"));
+      variant = true;
       result = true;
     }
     else if (value == "false") {
-      variant.setValue(QString("false"));
+      variant = false;
       result = true;
     }
   } else if (m_type == OSArgumentType::Double) {
-    bool test;
-    double temp = toQString(value).toDouble(&test);
-    if (test){
-      variant.setValue(temp);
+    try {
+      auto const double_val = std::stod(value, nullptr);
+      variant = double_val;
       result = true;
-    }
-  } else if (m_type == OSArgumentType::Quantity) {
-    OptionalQuantity oq = createQuantity(value);
-    if (oq) {
-      variant = QVariant::fromValue<openstudio::Quantity>(*oq);
-      result = true;
-    }
+    } catch (std::exception e) { }
+
+  /*
+   *} else if (m_type == OSArgumentType::Quantity) {
+   *  OptionalQuantity oq = createQuantity(value);
+   *  if (oq) {
+   *    variant = QVariant::fromValue<openstudio::Quantity>(*oq);
+   *    result = true;
+   *  }
+   */
   } else if (m_type == OSArgumentType::Integer) {
-    bool test;
-    int temp = toQString(value).toInt(&test);
-    if (test){
-      variant.setValue(temp);
+    try {
+      auto const int_val = std::stoi(value, nullptr);
+      variant = int_val;
       result = true;
-    }
+    } catch (std::exception e) { }
   } else if (m_type == OSArgumentType::String) {
-    variant.setValue(toQString(value));
+    variant = value;
     result = true;
   } else if (m_type == OSArgumentType::Choice) {
     if (std::find(m_choices.begin(), m_choices.end(), value) != m_choices.end()){
-      variant.setValue(toQString(value));
+      variant = value;
       result = true;
     } else {
       // can also set using display name
@@ -1052,48 +1086,37 @@ bool OSArgument::setStringInternal(QVariant& variant, const std::string& value) 
       if (it != m_choiceDisplayNames.end()) {
         int index = int(it - m_choiceDisplayNames.begin());
         if (index < int(m_choices.size())) {
-          variant.setValue(toQString(m_choices[index]));
+          variant = m_choices[index];
           result = true;
         }
       }
     }
   } else if (m_type == OSArgumentType::Path) {
-    QString temp = toQString(toPath(value));
-    if (!temp.isEmpty()){
-      variant.setValue(temp);
+    openstudio::path temp = toPath(value);
+      variant = temp;
       result = true;
-    }
   }
+
   return result;
 }
 
-std::string OSArgument::printVariant(const OSArgumentVariant& toPrint) const {
-  OS_ASSERT(!toPrint.isNull());
-  std::string result;
+std::string OSArgument::printOSArgumentVariant(const OSArgumentVariant& toPrint) const {
+  OS_ASSERT(toPrint.index() != 0);
 
   std::stringstream ss;
-  switch (m_type.value()) {
-    case OSArgumentType::Double:
-      result = toString(toPrint.toDouble());
-      break;
-    case OSArgumentType::Quantity:
-      ss << toPrint.value<openstudio::Quantity>();
-      result = ss.str();
-      break;
-    case OSArgumentType::Integer:
-      result = boost::lexical_cast<std::string>(toPrint.toInt());
-      break;
-    case OSArgumentType::Boolean:
-    case OSArgumentType::String:
-    case OSArgumentType::Choice:
-    case OSArgumentType::Path:
-      result = toPrint.toString().toStdString();
-      break;
-    default:
-      OS_ASSERT(false);
-  }
+  // We use std::visit, filtering out the case where it's monostate
+  // Aside from monostate, every possible type is streamable
+  std::visit(
+      [&ss](const auto& val){
+        //Needed to properly compare the types
+      using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
+        if constexpr (!std::is_same_v<T, std::monostate>) {
+          ss << val;
+        }
+      },
+      arg);
 
-  return result;
+  return ss.str();
 }
 
 void OSArgument::onChange() {

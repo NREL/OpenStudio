@@ -341,7 +341,8 @@ class MEASURE_API OSArgument {
    *  nothing and return false if the data is of an incorrect type. These methods do not check
    *  value against the domain (if set), as the domain is just a guideline for users. The string
    *  setter will try to convert the string to the correct type for this argument. Integers can
-   *  be used to set the values of arguments of type double. */
+   *  be used to set the values of arguments of type double. A double  that is really an int (eg: 1.0)
+   *  can also be accepted to set integer arguments. */
   bool setValue(bool value);
   /// \overload
   bool setValue(double value);
@@ -352,8 +353,6 @@ class MEASURE_API OSArgument {
   /// \overload
   bool setValue(const std::string& value);
   /// \overload
-  bool setValue(const char* value);
-  /// \overload
   bool setValue(const openstudio::path& value);
 
   void clearValue();
@@ -362,7 +361,8 @@ class MEASURE_API OSArgument {
    *  will do nothing and return false if the data is of an incorrect type. These methods do not
    *  check defaultValue against the domain (if set), as the domain is just a guideline for users.
    *  The string setter will try to convert the string to the correct type for this argument.
-   *  Integers can be used to set the default values of arguments of type double. */
+   *  Integers can be used to set the default values of arguments of type double.
+   *  A double  that is really an int (eg: 1.0) can also be accepted to set integer arguments. */
   bool setDefaultValue(bool defaultValue);
   /// \overload
   bool setDefaultValue(double defaultValue);
@@ -372,8 +372,6 @@ class MEASURE_API OSArgument {
   bool setDefaultValue(int defaultValue);
   /// \overload
   bool setDefaultValue(const std::string& defaultValue);
-  /// \overload
-  bool setDefaultValue(const char* defaultValue);
   /// \overload
   bool setDefaultValue(const openstudio::path& defaultValue);
 
@@ -450,10 +448,10 @@ class MEASURE_API OSArgument {
 #endif
 
   // TODO
-  bool setStringInternal(QVariant& variant, const std::string& value);
+  bool setStringInternal(OSArgumentVariant& variant, const std::string& value);
 
   // TODO
-  std::string printVariant(const OSArgumentVariant& toPrint) const;
+  std::string printOSArgumentVariant(const OSArgumentVariant& toPrint) const;
 
   // This also OS App related
   void onChange();
