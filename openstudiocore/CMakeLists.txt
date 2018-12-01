@@ -544,7 +544,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     else()
       # 16.04
       set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static_xenial.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "84446e0c4f25ed69dc25ae145900c889")
+      set(RUBY_ZIP_EXPECTED_MD5 "832a185b0086941780c4f54489c7f465")
     endif()
   endif()
 
@@ -641,8 +641,25 @@ if( UNIX )
     set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML} )
   endif()
 else()
-  # TODO Remove/change when done
-  find_library(FFI libffi.lib PATHS D:/openstudio_refactor/super-build/FFI-prefix/src/FFI-install/lib )
+  set(FFI_ZIP_FILENAME "FFI_3_2_1-msvc2017.zip")
+  set(FFI_ZIP_EXPECTED_MD5 "a375aa12367becd107defb7fd6f9df8d")
+  set(FFI_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${FFI_ZIP_FILENAME}")
+  if(EXISTS "${FFI_ZIP_LOCAL_PATH}")
+    file(MD5 "${FFI_ZIP_LOCAL_PATH}" FFI_ZIP_MD5)
+  endif()
+
+  if( NOT FFI_ZIP_MD5 STREQUAL FFI_ZIP_EXPECTED_MD5)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${FFI_ZIP_FILENAME}"
+      ${FFI_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${FFI_ZIP_EXPECTED_MD5})
+
+    file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/FFI-install")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${FFI_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+
+  find_library(FFI libffi.lib PATHS "${CMAKE_BINARY_DIR}/FFI-install/lib" )
   set(ADDITIONAL_RUBY_LIBS ${FFI})
 endif()
 
@@ -1158,7 +1175,7 @@ else()
     set(QT_STATIC_ZIP_EXPECTED_MD5 "fb9298e6d74c207742ab5ab50e18b8e2")
   else()
     # 16.04
-    set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static_xenial.tar.gz")
+    set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static_xenial_harfbuzz.tar.gz")
     set(QT_STATIC_ZIP_EXPECTED_MD5 "e6969f05b84a20d4610b1d35170a2329")
   endif()
 endif()
@@ -1220,6 +1237,7 @@ if( UNIX AND NOT APPLE )
   FIND_QT_STATIC_LIB("qtpcre2" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qtharfbuzz" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5XcbQpa" "${QT_STATIC_INSTALL_DIR}/lib/")
+  FIND_QT_STATIC_LIB("Qt5ServiceSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5PlatformCompositorSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5Gui" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5DBus" "${QT_STATIC_INSTALL_DIR}/lib/")
