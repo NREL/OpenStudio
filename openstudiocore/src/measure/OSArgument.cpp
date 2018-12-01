@@ -38,7 +38,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/core/Compare.hpp"
-#include "../utilities/core/Json.hpp"
+#include "../utilities/core/QJson.hpp"
 
 #include <boost/lexical_cast.hpp>
 #include <boost/functional/value_factory.hpp>

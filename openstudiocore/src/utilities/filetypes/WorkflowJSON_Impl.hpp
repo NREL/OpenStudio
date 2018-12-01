@@ -47,6 +47,7 @@
 namespace openstudio{
 
 class DateTime;
+class WorkflowJSON;
 
 namespace detail {
 

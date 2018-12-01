@@ -107,6 +107,10 @@
 #include "../../model/ElectricEquipment_Impl.hpp"
 #include "../../model/ElectricEquipmentDefinition.hpp"
 #include "../../model/ElectricEquipmentDefinition_Impl.hpp"
+#include "../../model/ElectricEquipmentITEAirCooled.hpp"
+#include "../../model/ElectricEquipmentITEAirCooled_Impl.hpp"
+#include "../../model/ElectricEquipmentITEAirCooledDefinition.hpp"
+#include "../../model/ElectricEquipmentITEAirCooledDefinition_Impl.hpp"
 #include "../../model/GasEquipment.hpp"
 #include "../../model/GasEquipment_Impl.hpp"
 #include "../../model/GasEquipmentDefinition.hpp"
@@ -293,6 +297,13 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     std::sort(electricEquipment.begin(), electricEquipment.end(), WorkspaceObjectNameLess());
     for (ElectricEquipment& equipment : electricEquipment){
       translateAndMapModelObject(equipment);
+    }
+
+    // translate IT electric equipment
+    ElectricEquipmentITEAirCooledVector electricEquipmentITEAirCooled = spaces[0].electricEquipmentITEAirCooled();
+    std::sort(electricEquipmentITEAirCooled.begin(), electricEquipmentITEAirCooled.end(), WorkspaceObjectNameLess());
+    for (ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled) {
+      translateAndMapModelObject(iTequipment);
     }
 
     // translate gas equipment

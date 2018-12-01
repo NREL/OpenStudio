@@ -109,10 +109,13 @@ class Bundle_Test < Minitest::Test
     assert(File.exists?(gemfile))
     assert(File.exists?(gemlock))
     assert(!File.exists?(gemcnfg))
+    
+    FileUtils.cp(gemfile, File.join(File.dirname(__FILE__), 'bundle_default', 'Gemfile'))
+    FileUtils.cp(gemlock, File.join(File.dirname(__FILE__), 'bundle_default', 'Gemfile.lock'))
     Dir.chdir(File.join(File.dirname(__FILE__), 'bundle_default'))
 
     # don't pass bundle_path since we want to use embedded gems
-    assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle '#{gemfile}' --verbose test.rb"))
+    assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle './Gemfile' --verbose test.rb"))
     
   ensure
     Dir.chdir(original_dir)  

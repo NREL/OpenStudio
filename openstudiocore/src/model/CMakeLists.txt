@@ -1,5 +1,8 @@
 set(target_name openstudio_model)
 
+include_directories(${CMAKE_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 set(${target_name}_src
 
   mainpage.hpp
@@ -572,6 +575,12 @@ set(${target_name}_src
   ElectricEquipmentDefinition.hpp
   ElectricEquipmentDefinition_Impl.hpp
   ElectricEquipmentDefinition.cpp
+  ElectricEquipmentITEAirCooled.hpp
+  ElectricEquipmentITEAirCooled_Impl.hpp
+  ElectricEquipmentITEAirCooled.cpp
+  ElectricEquipmentITEAirCooledDefinition.hpp
+  ElectricEquipmentITEAirCooledDefinition_Impl.hpp
+  ElectricEquipmentITEAirCooledDefinition.cpp
   ElectricLoadCenterDistribution.hpp
   ElectricLoadCenterDistribution_Impl.hpp
   ElectricLoadCenterDistribution.cpp
@@ -1603,20 +1612,35 @@ set(${target_name}_swig_src
 
 qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
-set(${target_name}_qrc
-  Model.qrc
-)
-
-# generate rules for building source files from the resources
-# DLM: TODO, replace with embed_files
-qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
-
-
 set(${target_name}_depends
   openstudio_utilities
 )
 
-add_library(${target_name} ${${target_name}_src} ${${target_name}_moc_src} ${${target_name}_qrcs})
+# Embed resource files
+# Glob all files inside model/Resources
+file(GLOB_RECURSE embedded_files "${CMAKE_CURRENT_SOURCE_DIR}/Resources/**/*.*")
+# Exclude rb scripts (helpers to generate JSON files)
+list(FILTER embedded_files EXCLUDE REGEX ".*\.rb")
+# We compute a relative path, so that they end up in :/Resources/
+foreach( _FILE ${embedded_files} )
+  file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
+  list(APPEND E_FILES ${_FILE})
+  list(APPEND E_PATHS ${LOCATION})
+endforeach()
+# message("E_FILES: ${E_FILES}")
+# message("E_PATHS: ${E_PATHS}")
+
+include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+# EMBEDDED_OUTPUT stores the lsit of cxx files that we need to link later
+embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudiomodel)
+# message("EMBEDDED_OUTPUT: ${EMBEDDED_OUTPUT}")
+
+# set up groups of source files for Visual Studio
+source_group(embedded FILES ${EMBEDDED_OUTPUT})
+
+
+
+add_library(${target_name} ${${target_name}_src} ${${target_name}_moc_src} ${EMBEDDED_OUTPUT})
 target_link_libraries(${target_name} "${${target_name}_depends}")
 AddPCH(${target_name})
 
@@ -1624,7 +1648,7 @@ set(${target_name}_static_depends
   openstudio_utilities_static
 )
 
-add_library(${target_name}_static ${${target_name}_src} ${${target_name}_moc_src} ${${target_name}_qrcs})
+add_library(${target_name}_static ${${target_name}_src} ${${target_name}_moc_src} ${EMBEDDED_OUTPUT})
 
 target_link_libraries(${target_name}_static "${${target_name}_static_depends}")
 
@@ -1768,6 +1792,7 @@ set(${target_name}_test_src
   test/DistrictHeating_GTest.cpp
   test/Duct_GTest.cpp
   test/ElectricEquipment_GTest.cpp
+  test/ElectricEquipmentITEAirCooled_GTest.cpp
   test/ElectricLoadCenterDistribution_GTest.cpp
   test/ElectricLoadCenterInverterSimple_GTest.cpp
   test/ElectricLoadCenterInverterPVWatts_GTest.cpp

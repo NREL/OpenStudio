@@ -57,7 +57,9 @@ OPENSTUDIO_ENUM(DefaultScheduleType,
   ((InfiltrationSchedule)(Infiltration Schedule)(8))
   ((SteamEquipmentSchedule)(Steam Equipment Schedule)(9))
   ((OtherEquipmentSchedule)(Other Equipment Schedule)(10))
-);
+  ((DesignPowerInputScheduleName)(Design Power Input Schedule)(11))
+  ((CPULoadingScheduleName)(CPU Loading Schedule)(12))
+  );
 
 /** DefaultScheduleSet is a ResourceObject that wraps the OpenStudio IDD object
  *  'OS:DefaultScheduleSet'. */

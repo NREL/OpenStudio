@@ -39,8 +39,6 @@ namespace Qt{
   #include <QModelIndexList>
   #include <QDateTime>
   #include <QDomElement>
-  #include <QSqlQuery>
-  #include <QSqlDatabase>
   #include <QUrl>
   #include <QNetworkRequest>
   #include <QNetworkReply>
@@ -220,12 +218,6 @@ class QNetworkReply
 
 %nodefaultctor QNetworkAccessManager;
 class QNetworkAccessManager : public QObject
-{};
-
-class QSqlQuery
-{};
-
-class QSqlDatabase
 {};
 
 class QStandardItem

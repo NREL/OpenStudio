@@ -182,6 +182,7 @@ class DistrictCooling;
 class DistrictHeating;
 class Duct;
 class ElectricEquipment;
+class ElectricEquipmentITEAirCooled;
 class ElectricLoadCenterDistribution;
 class ElectricLoadCenterInverterLookUpTable;
 class ElectricLoadCenterInverterSimple;
@@ -795,6 +796,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateElectricEquipment( model::ElectricEquipment & modelObject );
 
+  boost::optional<IdfObject> translateElectricEquipmentITEAirCooled(model::ElectricEquipmentITEAirCooled & modelObject);
+  
   boost::optional<IdfObject> translateElectricLoadCenterDistribution( model::ElectricLoadCenterDistribution & modelObject );
 
   boost::optional<IdfObject> translateElectricLoadCenterInverterLookUpTable( model::ElectricLoadCenterInverterLookUpTable & modelObject );

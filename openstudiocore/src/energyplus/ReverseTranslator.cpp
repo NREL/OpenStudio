@@ -42,7 +42,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 
-#include <QThread>
+#include <thread>
 #include <boost/serialization/version.hpp>
 
 using namespace openstudio::model;
@@ -57,7 +57,7 @@ ReverseTranslator::ReverseTranslator()
 {
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ReverseTranslator"));
-  m_logSink.setThreadId(QThread::currentThread());
+  m_logSink.setThreadId(std::this_thread::get_id());
 }
 
 boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::path& path, ProgressBar* progressBar)
@@ -74,7 +74,7 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
 
   m_logSink.resetStringStream();
 
-  m_logSink.setThreadId(QThread::currentThread());
+  m_logSink.setThreadId(std::this_thread::get_id());
 
   m_logSink.setChannelRegex(boost::regex("openstudio\\.IdfFile"));
 

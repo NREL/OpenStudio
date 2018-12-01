@@ -73,7 +73,7 @@
 
 #include <utilities/idd/IddFactory.hxx>
 
-#include <QThread>
+#include <thread>
 
 #include <cmath>
 #include <tuple>
@@ -96,7 +96,7 @@ namespace openstudio
 
       m_logSink.setLogLevel(Warn);
       //m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.ThreeJSReverseTranslator"));
-      m_logSink.setThreadId(QThread::currentThread());
+      m_logSink.setThreadId(std::this_thread::get_id());
     }
 
     std::map<UUID, UUID> ModelMerger::suggestHandleMapping(const Model& currentModel, const Model& newModel) const
@@ -879,7 +879,7 @@ namespace openstudio
 
     void ModelMerger::mergeModels(Model& currentModel, const Model& newModel, const std::map<UUID, UUID>& handleMapping)
     {
-      m_logSink.setThreadId(QThread::currentThread());
+      m_logSink.setThreadId(std::this_thread::get_id());
       m_logSink.resetStringStream();
 
       m_currentModel = currentModel;

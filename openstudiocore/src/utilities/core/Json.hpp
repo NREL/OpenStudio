@@ -37,14 +37,8 @@
 
 #include <jsoncpp/json.h>
 
-#include <QVariant>
-
 #include <string>
 #include <vector>
-
-namespace Json{
-  class Value;
-}
 
 namespace openstudio {
 
@@ -65,131 +59,6 @@ UTILITIES_API bool checkType(const Json::Value& value, const std::string& key, c
 
 /// check key is present and type is correct, return false if key not found or type is not correct
 UTILITIES_API bool checkKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType);
-
-// DLM: need to start getting rid of all this Qt Json stuff
-
-/** Helper function to construct meta-data object containing openstudio_version for JSON files. */
-UTILITIES_API QVariant jsonMetadata();
-
-/** Helper function to save top-level json files. */
-UTILITIES_API bool saveJSON(const QVariant& json, openstudio::path p, bool overwrite);
-
-/** Helper function to print top-level json files to string. */
-UTILITIES_API std::string toJSON(const QVariant& json);
-
-/** Helper function to load top-level json files. */
-UTILITIES_API QVariant loadJSON(const openstudio::path& p);
-
-/** Helper function to load top-level json data. Retrieved data is in .first,
- *  OpenStudio version of serialization is in .second. */
-UTILITIES_API QVariant loadJSON(const std::string& json);
-
-/** Returns the openstudio_version stored in the top-level JSON variant. */
-UTILITIES_API VersionString extractOpenStudioVersion(const QVariant& variant);
-
-template<typename T>
-std::vector<T> deserializeOrderedVector(const QVariantList& list,
-                                        const std::string& valueKey,
-                                        const std::string& indexKey,
-                                        std::function<T (QVariant*)> typeConverter)
-{
-  unsigned n = list.size();
-  std::vector<T> result(n,T());
-  for (const QVariant& listItem : list) {
-    QVariantMap listItemMap = listItem.toMap();
-    int index = listItemMap[toQString(indexKey)].toInt();
-    T value = typeConverter(&listItemMap[toQString(valueKey)]);
-    result[index] = value;
-  }
-  return result;
-}
-
-template<typename T>
-std::vector<T> deserializeOrderedVector(const QVariantList& list,
-                                        const std::string& indexKey,
-                                        std::function<T (QVariant*)> typeConverter)
-{
-  unsigned n = list.size();
-  std::vector<T> result(n,T());
-  for (const QVariant& listItem : list) {
-    QVariantMap listItemMap = listItem.toMap();
-    int index = listItemMap[toQString(indexKey)].toInt();
-    QVariant listItemVariant(listItemMap);
-    T value = typeConverter(&listItemVariant);
-    result[index] = value;
-  }
-  return result;
-}
-
-/** Deserializes vectors where a QVariantList holds maps containing an index entry and a
- *  value entry. */
-template<typename T>
-std::vector<T> deserializeOrderedVector(const QVariantList& list,
-                                        const std::string& valueKey,
-                                        const std::string& indexKey,
-                                        std::function<T (const QVariant&)> typeConverter)
-{
-  std::vector<std::pair<int,T> > data;
-  for (const QVariant& listItem : list) {
-    QVariantMap listItemMap = listItem.toMap();
-    int index = listItemMap[toQString(indexKey)].toInt();
-    T value = typeConverter(listItemMap[toQString(valueKey)]);
-    data.push_back(std::make_pair(index,value));
-  }
-
-  std::sort(data.begin(),data.end(),FirstOfPairLess<std::pair<int,T> >());
-  std::vector<T> result;
-  std::transform(data.begin(), data.end(), std::back_inserter(result), GetSecondOfPair<int,T>());
-
-  return result;
-}
-
-/** Deserializes vectors where a QVariantList holds serialized objects to which an
- *  index entry has been added. */
-template<typename T>
-std::vector<T> deserializeOrderedVector(const QVariantList& list,
-                                        const std::string& indexKey,
-                                        std::function<T (const QVariant&)> typeConverter)
-{
-  std::vector<std::pair<int,T> > data;
-  for (const QVariant& listItem : list) {
-    QVariantMap listItemMap = listItem.toMap();
-    int index = listItemMap[toQString(indexKey)].toInt();
-    T value = typeConverter(listItemMap);
-    data.push_back(std::make_pair(index,value));
-  }
-
-  std::sort(data.begin(),data.end(),FirstOfPairLess<std::pair<int,T> >());
-  std::vector<T> result;
-  std::transform(data.begin(), data.end(), std::back_inserter(result), GetSecondOfPair<int,T>());
-
-  return result;
-}
-
-template<typename T>
-std::vector<T> deserializeUnorderedVector(const QVariantList& list,
-                                          std::function<T (QVariant*)> typeConverter)
-{
-  std::vector<T> result;
-  for (const QVariant& listItem : list) {
-    QVariant listItemCopy(listItem);
-    T value = typeConverter(&listItemCopy);
-    result.push_back(value);
-  }
-  return result;
-}
-
-template<typename T>
-std::vector<T> deserializeUnorderedVector(const QVariantList& list,
-                                          std::function<T (const QVariant&)> typeConverter)
-{
-  std::vector<T> result;
-  for (const QVariant& listItem : list) {
-    T value = typeConverter(listItem);
-    result.push_back(value);
-  }
-  return result;
-}
 
 }
 

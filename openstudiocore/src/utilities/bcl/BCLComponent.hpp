@@ -52,9 +52,13 @@ namespace openstudio{
     /// Default constructor for a new component
     BCLComponent();
 
+    /// Constructor for downloaded components, path is to directory containing "component.xml" file
+    BCLComponent(const openstudio::path& dir);
+
+    // Note JM 2018-11-14: SHOULD BE REMOVED
     // DLM: TODO, this should really take an openstudio::path, other parts of this class should be converted to path as well
     /// Constructor for downloaded components, path is to directory containing "component.xml" file
-    BCLComponent(const std::string& dir);
+    // BCLComponent(const std::string& dir);
 
     //@}
     /** @name Destructor */
@@ -67,7 +71,7 @@ namespace openstudio{
     /** @name Getters */
     //@{
 
-    std::string directory() const;
+    openstudio::path directory() const;
 
     std::string uid() const;
 
@@ -77,6 +81,8 @@ namespace openstudio{
 
     std::string description() const;
 
+    // TODO: JM 2018-11-14
+    // These should probably be a std::vector<openstudio::path> too
     std::vector<std::string> files() const;
 
     std::vector<std::string> files(std::string filetype) const;
@@ -103,7 +109,7 @@ namespace openstudio{
 
 //@}
   private:
-    std::string m_directory;
+    openstudio::path m_directory;
     std::string m_name;
     std::string m_uid;
     std::string m_versionId;

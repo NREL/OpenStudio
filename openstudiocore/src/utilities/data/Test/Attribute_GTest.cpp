@@ -32,7 +32,7 @@
 
 #include "../Attribute.hpp"
 
-#include "../../core/Json.hpp"
+#include "../../core/QJson.hpp"
 
 #include <QDomDocument>
 

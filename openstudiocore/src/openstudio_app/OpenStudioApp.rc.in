@@ -5,7 +5,7 @@ IDI_ICON4   ICON  DISCARDABLE  "${CMAKE_CURRENT_SOURCE_DIR}/../../icons/ossr.ico
 
 1 RT_MANIFEST "${CMAKE_CURRENT_SOURCE_DIR}/OpenStudio.exe.manifest"
 1 VERSIONINFO
-FILEVERSION ${PROJECT_VERSION_MAJOR},${PROJECT_VERSION_MINOR},${PROJECT_VERSION_PATCH},${RC_BUILD_STR}
+FILEVERSION ${PROJECT_VERSION_MAJOR},${PROJECT_VERSION_MINOR},${PROJECT_VERSION_PATCH}
 PRODUCTVERSION ${PROJECT_VERSION_MAJOR},${PROJECT_VERSION_MINOR},${PROJECT_VERSION_PATCH}
 BEGIN
     BLOCK "StringFileInfo"
@@ -14,13 +14,13 @@ BEGIN
         BEGIN
             VALUE "CompanyName",      "NREL\0"
             VALUE "FileDescription",  "OpenStudio\0"
-            VALUE "FileVersion",      "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_BUILD}\0"
-            VALUE "InternalName",     "OpenStudio\0"
-            VALUE "LegalCopyright",   "Copyright © 2008-2018, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.\0"
+            VALUE "FileVersion",      "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}\0"
+            VALUE "InternalName",     "OpenStudioApp\0"
+            VALUE "LegalCopyright",   "Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.\0"
             VALUE "LegalTrademarks",  "OpenStudio (TM) is a trademark of NREL\0"
             VALUE "OriginalFilename", "OpenStudioApp.exe\0"
             VALUE "ProductName",      "OpenStudio\0"
-            VALUE "ProductVersion",   "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}\0"
+            VALUE "ProductVersion",   "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_BUILD}\0"
         END
     END
     BLOCK "VarFileInfo"

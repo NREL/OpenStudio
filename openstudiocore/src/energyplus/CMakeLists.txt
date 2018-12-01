@@ -131,6 +131,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateDistrictHeating.cpp
   ForwardTranslator/ForwardTranslateDuct.cpp
   ForwardTranslator/ForwardTranslateElectricEquipment.cpp
+  ForwardTranslator/ForwardTranslateElectricEquipmentITEAirCooled.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterDistribution.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterLookUpTable.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp
@@ -564,6 +565,7 @@ set(${target_name}_test_src
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
+  Test/ElectricEquipmentITEAirCooled_GTest.cpp
   Test/ElectricLoadCenterTransformer_GTest.cpp
   Test/EMS_GTest.cpp
   Test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp

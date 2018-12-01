@@ -136,9 +136,6 @@ if( UNIX AND NOT APPLE )
   target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a" -Wl,--no-whole-archive
   )
-  target_link_libraries(openstudio_rb
-    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5Sql.a" -Wl,--no-whole-archive
-  )
 endif()
 
 if( WIN32 )

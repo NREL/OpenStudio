@@ -34,10 +34,10 @@
 #include "../core/Path.hpp"
 
 #include <QDomDocument>
+#include <mutex>
 
 class QNetworkAccessManager;
 class QNetworkRequest;
-class QMutex;
 class QSslError;
 
 namespace openstudio{
@@ -182,19 +182,19 @@ namespace openstudio{
 
     /// Wait number of milliseconds for download to complete
     /// Returns the download if it completed in the allowable time
-    boost::optional<BCLComponent> waitForComponentDownload(int msec = 50000) const;
+    boost::optional<BCLComponent> waitForComponentDownload(int msec = 120000) const;
 
     /// Wait number of milliseconds for download to complete
     /// Returns the download if it completed in the allowable time
-    boost::optional<BCLMeasure> waitForMeasureDownload(int msec = 50000) const;
+    boost::optional<BCLMeasure> waitForMeasureDownload(int msec = 120000) const;
 
     /// Wait number of milliseconds for download to complete
     /// Returns the download if it completed in the allowable time
-    boost::optional<BCLMetaSearchResult> waitForMetaSearch(int msec = 50000) const;
+    boost::optional<BCLMetaSearchResult> waitForMetaSearch(int msec = 120000) const;
 
     /// Wait number of milliseconds for download to complete
     /// Returns the download if it completed in the allowable time
-    std::vector<BCLSearchResult> waitForSearch(int msec = 50000) const;
+    std::vector<BCLSearchResult> waitForSearch(int msec = 120000) const;
 
     static bool initializeSSL(const openstudio::path &t_pathToSSLLibraries = openstudio::path());
 
@@ -276,7 +276,7 @@ namespace openstudio{
 
     QNetworkReply* m_downloadReply;
 
-    QMutex* m_mutex;
+    mutable std::mutex m_mutex;
 
     boost::optional<RemoteQueryResponse> m_queryResponse;
 

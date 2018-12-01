@@ -55,6 +55,10 @@
 #include "ElectricEquipment_Impl.hpp"
 #include "ElectricEquipmentDefinition.hpp"
 #include "ElectricEquipmentDefinition_Impl.hpp"
+#include "ElectricEquipmentITEAirCooled.hpp"
+#include "ElectricEquipmentITEAirCooled_Impl.hpp"
+#include "ElectricEquipmentITEAirCooledDefinition.hpp"
+#include "ElectricEquipmentITEAirCooledDefinition_Impl.hpp"
 #include "GasEquipment.hpp"
 #include "GasEquipment_Impl.hpp"
 #include "GasEquipmentDefinition.hpp"
@@ -88,20 +92,18 @@
 
 #include "../utilities/core/Assert.hpp"
 
-#include <QFile>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonParseError>
-#include <QJsonArray>
-#include <QJsonValue>
-#include <QString>
+#include <model/embedded_files.hxx>
+#include "../utilities/filetypes/StandardsJSON.hpp"
+#include "../utilities/core/Json.hpp"
+#include <jsoncpp/json.h>
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
 
-  QJsonArray SpaceType_Impl::m_standardsArr;
+  // Initialize the JSON holder
+  Json::Value SpaceType_Impl::m_standardsArr;
 
   SpaceType_Impl::SpaceType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : ResourceObject_Impl(idfObject,model,keepHandle)
@@ -156,6 +158,10 @@ namespace detail {
     // electric equipment
     ElectricEquipmentVector electricEquipment = this->electricEquipment();
     result.insert(result.end(), electricEquipment.begin(), electricEquipment.end());
+
+    // IT electric equipment
+    ElectricEquipmentITEAirCooledVector electricEquipmentITEAirCooled = this->electricEquipmentITEAirCooled();
+    result.insert(result.end(), electricEquipmentITEAirCooled.begin(), electricEquipmentITEAirCooled.end());
 
     // gas equipment
     GasEquipmentVector gasEquipment = this->gasEquipment();
@@ -282,6 +288,29 @@ namespace detail {
   }
 
 
+  void SpaceType_Impl::parseStandardsJSON() const
+  {
+
+    if (m_standardsArr.empty()) {
+      // Embedded file path
+      std::string embedded_path = ":/Resources/standards/OpenStudio_Standards_space_types_merged.json";
+      std::string fileContent = ::openstudiomodel::embedded_files::getFileAsString(embedded_path);
+
+      // Create a StandardsJSON
+      StandardsJSON standard(fileContent);
+
+      // Now try to get the primaryKey
+      std::string primaryKey = "space_types";
+
+      if (boost::optional<Json::Value> _standardsArr = standard.getPrimaryKey(primaryKey)) {
+        m_standardsArr = _standardsArr.get();
+      } else {
+        // This should never happen really, until we implement the ability to supply a custom StandardsJSON
+        LOG(Error, "Cannot find the primaryKey '" << primaryKey << "' in the StandardsJSON");
+      }
+    }
+  }
+
   boost::optional<std::string> SpaceType_Impl::standardsTemplate() const
   {
     boost::optional<std::string> result;
@@ -299,6 +328,7 @@ namespace detail {
 
   std::vector<std::string> SpaceType_Impl::suggestedStandardsTemplates() const
   {
+    // TODO: JM 2018-11-07 replace with a std::unordered_set?
     std::vector<std::string> result;
 
     boost::optional<std::string> standardsTemplate = this->standardsTemplate();
@@ -308,9 +338,11 @@ namespace detail {
 
     // Find the possible template names
     // m_standardsArr is an array of hashes (no nested levels)
-    for( const QJsonValue& v: m_standardsArr) {
-      QJsonObject space_type = v.toObject();
-      result.push_back(toString(space_type["template"].toString()));
+    for( const auto& v: m_standardsArr) {
+      const Json::Value _template = v["template"];
+      if (_template.isString()) {
+        result.push_back(_template.asString());
+      }
     }
 
     // include values from model
@@ -397,7 +429,6 @@ namespace detail {
   {
     std::vector<std::string> result;
 
-
     boost::optional<std::string> standardsTemplate = this->standardsTemplate();
     boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
 
@@ -405,14 +436,17 @@ namespace detail {
     if( standardsTemplate ){
       parseStandardsJSON();
 
+      std::string thisTemplate;
+
       // Find the possible building_type names that have the template name
       // m_standardsArr is an array of hashes (no nested levels)
-      for( const QJsonValue& v: m_standardsArr) {
-        QJsonObject space_type = v.toObject();
-        // TODO: use case insensitive compare?
-        // if( QString::compare(space_type["building_type"].toString(), toQString(*standardsBuildingType), Qt::CaseInsensitive) )
-        if( space_type["template"].toString() == toQString(*standardsTemplate) ) {
-          result.push_back(toString(space_type["building_type"].toString()));
+      for( const auto& v: m_standardsArr) {
+        thisTemplate = v["template"].asString();
+        if (thisTemplate == standardsTemplate.get()) {
+          const Json::Value _buildingType = v["building_type"];
+          if (_buildingType.isString()) {
+            result.push_back(_buildingType.asString());
+          }
         }
       }
     }
@@ -495,18 +529,23 @@ namespace detail {
     boost::optional<std::string> standardsSpaceType = this->standardsSpaceType();
 
     // include values from json if template and building_type are set
-    if (standardsTemplate && standardsBuildingType){
+    if (standardsTemplate && standardsBuildingType) {
       parseStandardsJSON();
+
+      std::string thisTemplate;
+      std::string thisBuildingType;
 
       // Find the possible space_type names that have the right template and building_type name
       // m_standardsArr is an array of hashes (no nested levels)
-      for( const QJsonValue& v: m_standardsArr) {
-        QJsonObject space_type = v.toObject();
-        // TODO: use case insensitive compare?
-        // if( QString::compare(space_type["building_type"].toString(), toQString(*standardsBuildingType), Qt::CaseInsensitive) )
-        if( (space_type["template"].toString() == toQString(*standardsTemplate)) &&
-            (space_type["building_type"].toString() == toQString(*standardsBuildingType)) ) {
-          result.push_back(toString(space_type["space_type"].toString()));
+      for( const auto& v: m_standardsArr) {
+        thisTemplate = v["template"].asString();
+        thisBuildingType = v["building_type"].asString();
+        if ( (thisTemplate == standardsTemplate.get()) &&
+             (thisBuildingType == standardsBuildingType.get()) ) {
+          const Json::Value _spaceType = v["space_type"];
+          if (_spaceType.isString()) {
+            result.push_back(_spaceType.asString());
+          }
         }
       }
     }
@@ -619,6 +658,11 @@ namespace detail {
   {
     return getObject<ModelObject>().getModelObjectSources<ElectricEquipment>(
       ElectricEquipment::iddObjectType());
+  }
+
+  ElectricEquipmentITEAirCooledVector SpaceType_Impl::electricEquipmentITEAirCooled() const {
+    return getObject<ModelObject>().getModelObjectSources<ElectricEquipmentITEAirCooled>(
+      ElectricEquipmentITEAirCooled::iddObjectType());
   }
 
   GasEquipmentVector SpaceType_Impl::gasEquipment() const
@@ -1006,6 +1050,19 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> SpaceType_Impl::electricEquipmentITEAirCooledPowerPerFloorArea() const {
+    double result(0.0);
+    for (const ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled()) {
+      OptionalDouble temp = iTequipment.wattsperZoneFloorArea();
+      if (temp) {
+        result += temp.get();
+      } else {
+        return boost::none;
+      }
+    }
+    return result;
+  }
+
   bool SpaceType_Impl::setElectricEquipmentPowerPerFloorArea(
       boost::optional<double> electricEquipmentPowerPerFloorArea)
   {
@@ -1361,6 +1418,11 @@ namespace detail {
     return result;
   }
 
+  std::vector<ModelObject> SpaceType_Impl::electricEquipmentITEAirCooledAsModelObjects() const {
+    ModelObjectVector result = castVector<ModelObject>(electricEquipmentITEAirCooled());
+    return result;
+  }
+
   std::vector<ModelObject> SpaceType_Impl::gasEquipmentAsModelObjects() const {
     ModelObjectVector result = castVector<ModelObject>(gasEquipment());
     return result;
@@ -1480,32 +1542,6 @@ namespace detail {
     }
     OS_ASSERT(count == 1);
   }
-
-  void SpaceType_Impl::parseStandardsJSON() const
-  {
-    if (m_standardsArr.empty()){
-      QFile file(":/resources/standards/OpenStudio_Standards_space_types_merged.json");
-      if (file.open(QFile::ReadOnly)) {
-        QJsonParseError parseError;
-        QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll(), &parseError);
-        file.close();
-        if( QJsonParseError::NoError == parseError.error) {
-          QJsonObject jsonObj = jsonDoc.object();
-          if( (jsonObj.size() == 1) && jsonObj.contains("space_types") && jsonObj["space_types"].isArray()) {
-            m_standardsArr = jsonObj["space_types"].toArray();
-          } else {
-            LOG_AND_THROW("Wrong format encountered in JSON file at 'resources/standards/OpenStudio_Standards_space_types.json'");
-          }
-        } else {
-          LOG_AND_THROW("Problem occured in parsing JSON file at 'resources/standards/OpenStudio_Standards_space_types.json'");
-        }
-      } else {
-        LOG_AND_THROW("Cannot open file at 'resources/standards/OpenStudio_Standards_space_types.json' for parsing");
-      }
-    }
-  }
-
-
 
 } // detail
 
@@ -1655,6 +1691,11 @@ std::vector<ElectricEquipment> SpaceType::electricEquipment() const {
   return getImpl<detail::SpaceType_Impl>()->electricEquipment();
 }
 
+std::vector<ElectricEquipmentITEAirCooled> SpaceType::electricEquipmentITEAirCooled() const {
+  return getImpl<detail::SpaceType_Impl>()->electricEquipmentITEAirCooled();
+}
+
+
 std::vector<GasEquipment> SpaceType::gasEquipment() const {
   return getImpl<detail::SpaceType_Impl>()->gasEquipment();
 }
@@ -1781,6 +1822,11 @@ double SpaceType::getLightingPowerPerPerson(double floorArea, double numPeople) 
 boost::optional<double> SpaceType::electricEquipmentPowerPerFloorArea() const {
   return getImpl<detail::SpaceType_Impl>()->electricEquipmentPowerPerFloorArea();
 }
+
+boost::optional<double> SpaceType::electricEquipmentITEAirCooledPowerPerFloorArea() const {
+  return getImpl<detail::SpaceType_Impl>()->electricEquipmentITEAirCooledPowerPerFloorArea();
+}
+
 
 bool SpaceType::setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea) {
   return getImpl<detail::SpaceType_Impl>()->setElectricEquipmentPowerPerFloorArea(electricEquipmentPowerPerFloorArea);

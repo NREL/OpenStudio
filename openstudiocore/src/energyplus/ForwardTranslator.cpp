@@ -84,7 +84,7 @@
 
 #include "../utilities/idd/IddEnums.hpp"
 
-#include <QThread>
+#include <thread>
 
 #include <sstream>
 
@@ -100,7 +100,7 @@ ForwardTranslator::ForwardTranslator()
 {
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ForwardTranslator"));
-  m_logSink.setThreadId(QThread::currentThread());
+  m_logSink.setThreadId(std::this_thread::get_id());
   createFluidPropertiesMap();
 
   // temp code
@@ -262,6 +262,26 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       }
       //now, delete the one that points to a spacetype
       otherEquipment.remove();
+    }
+  }
+
+  // Energyplus only allows single zone input for ITE object. If space type is assigned in OS, 
+  // will translate to multiple ITE objects assigned to each zone under the same space type.
+  // then delete the one that pointed to a spacetype.
+  // By doing this, we can solve the potential problem that if this load is applied to a space type, 
+  // the load gets copied to each space of the space type, which may cause conflict of supply air node.
+  std::vector<ElectricEquipmentITEAirCooled> iTEAirCooledEquipments = model.getConcreteModelObjects<ElectricEquipmentITEAirCooled>();
+  for (ElectricEquipmentITEAirCooled iTequipment : iTEAirCooledEquipments) {
+    boost::optional<SpaceType> spaceTypeOfITEquipment = iTequipment.spaceType();
+    if (spaceTypeOfITEquipment) {
+      //loop through the spaces in this space type and make a new instance for each one
+      std::vector<Space> spaces = spaceTypeOfITEquipment.get().spaces();
+      for (Space space : spaces) {
+        ElectricEquipmentITEAirCooled iTEquipmentForSpace = iTequipment.clone().cast<ElectricEquipmentITEAirCooled>();
+        iTEquipmentForSpace.setSpace(space);
+      }
+      //now, delete the one that points to a spacetype
+      iTequipment.remove();
     }
   }
 
@@ -1502,6 +1522,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       break;
     }
+  case openstudio::IddObjectType::OS_ElectricEquipment_ITE_AirCooled:
+  {
+    model::ElectricEquipmentITEAirCooled equipmentITE = modelObject.cast<ElectricEquipmentITEAirCooled>();
+    retVal = translateElectricEquipmentITEAirCooled(equipmentITE);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ElectricEquipment_ITE_AirCooled_Definition:
+  {
+    // no-op
+    break;
+  }
   case openstudio::IddObjectType::OS_ElectricLoadCenter_Distribution:
   {
     model::ElectricLoadCenterDistribution temp = modelObject.cast<ElectricLoadCenterDistribution>();
@@ -3397,6 +3428,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Lights);
   result.push_back(IddObjectType::OS_Luminaire);
   result.push_back(IddObjectType::OS_ElectricEquipment);
+  result.push_back(IddObjectType::OS_ElectricEquipment_ITE_AirCooled);
   result.push_back(IddObjectType::OS_GasEquipment);
   result.push_back(IddObjectType::OS_HotWaterEquipment);
   result.push_back(IddObjectType::OS_SteamEquipment);
@@ -3940,7 +3972,7 @@ void ForwardTranslator::reset()
 
   m_constructionHandleToReversedConstructions.clear();
 
-  m_logSink.setThreadId(QThread::currentThread());
+  m_logSink.setThreadId(std::this_thread::get_id());
 
   m_logSink.resetStringStream();
 

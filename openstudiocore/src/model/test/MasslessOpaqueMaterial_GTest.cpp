@@ -39,8 +39,14 @@
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
 
+//#include <utilities/embedded_files.hxx>
+
 using namespace openstudio;
 using namespace openstudio::model;
+
+//TEST_F(ModelFixture, Material_EmbeddedFile) {
+  //ASSERT_TRUE(::openstudiomodel::embedded_files::hasFile(":/Resources/standards/OpenStudio_Standards_materials_merged.json"));
+//}
 
 TEST_F(ModelFixture,MasslessOpaqueMaterial_ThermalResistance_Quantity) {
   Model model;
@@ -117,12 +123,15 @@ TEST_F(ModelFixture, MasslessOpaqueMaterial_StandardsInformation)
   MasslessOpaqueMaterial masslessOpaqueMaterial(model);
   StandardsInformationMaterial info = masslessOpaqueMaterial.standardsInformation();
 
+  std::vector<std::string> suggestedMatStandards = info.suggestedMaterialStandards();
+  EXPECT_LT(0u, suggestedMatStandards.size()); // For now only "CEC Title24-2013"
   EXPECT_LT(0u, info.suggestedCompositeFramingMaterials().size());
   EXPECT_LT(0u, info.suggestedCompositeFramingConfigurations().size());
   EXPECT_LT(0u, info.suggestedCompositeFramingDepths().size());
   EXPECT_LT(0u, info.suggestedCompositeFramingSizes().size());
   EXPECT_LT(0u, info.suggestedCompositeCavityInsulations().size());
 
+  EXPECT_TRUE(std::find(suggestedMatStandards.begin(), suggestedMatStandards.end(), "CEC Title24-2013") != suggestedMatStandards.end());
   info.setMaterialStandard("CEC Title24-2013");
   ASSERT_TRUE(info.materialStandard());
   EXPECT_EQ("CEC Title24-2013", info.materialStandard().get());

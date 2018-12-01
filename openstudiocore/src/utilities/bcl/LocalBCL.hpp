@@ -37,6 +37,8 @@
 #include <string>
 #include <vector>
 
+struct sqlite3;
+
 class QSqlDatabase;
 class QWidget;
 
@@ -175,7 +177,7 @@ namespace openstudio{
     bool validateProdAuthKey(const std::string& authKey);
     bool validateDevAuthKey(const std::string& authKey);
 
-    QString escape(const std::string& s) const;
+    std::string escape(const std::string& s) const;
 
     std::set<std::pair<std::string, std::string> > attributeSearch(
       const std::vector<std::pair<std::string, std::string> >& searchTerms,
@@ -186,14 +188,24 @@ namespace openstudio{
     /// returns the current database referenced by the current file
     QSqlDatabase getDatabase(const bool open = true) const;
 
-
     static std::shared_ptr<LocalBCL> &instanceInternal();
 
     openstudio::path m_libraryPath;
     const openstudio::path m_dbName;
-    QString dbVersion;
+    const std::string m_dbVersion;
+    bool m_connectionOpen;
+
     std::string m_prodAuthKey;
     std::string m_devAuthKey;
+
+    sqlite3* m_db;
+    openstudio::path m_sqliteFilePath;
+    std::string m_sqliteFilename;
+
+    // Helper function to retrieve a string
+    std::string columnText(const unsigned char* column) const;
+
+    REGISTER_LOGGER("openstudio.bcl.LocalBCL");
   };
 
 } // openstudio

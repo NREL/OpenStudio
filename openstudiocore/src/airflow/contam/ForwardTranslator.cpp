@@ -65,7 +65,7 @@
 #include <QList>
 #include <QStringList>
 #include <QMap>
-#include <QThread>
+#include <thread>
 
 #include <algorithm>
 
@@ -163,7 +163,7 @@ ForwardTranslator::ForwardTranslator()
 {
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.contam\\.ForwardTranslator"));
-  m_logSink.setThreadId(QThread::currentThread());
+  m_logSink.setThreadId(std::this_thread::get_id());
   clear();
 }
 
@@ -438,7 +438,7 @@ bool compareElevation(openstudio::model::BuildingStory a, openstudio::model::Bui
 // This is particularly true for the HVAC translation.
 boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Model model)
 {
-  m_logSink.setThreadId(QThread::currentThread());
+  m_logSink.setThreadId(std::this_thread::get_id());
   m_logSink.resetStringStream();
 
   {

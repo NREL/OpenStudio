@@ -904,6 +904,8 @@ namespace openstudio{
 
     if (reversed){
       tmp = reorderULC(reverse(tmp));
+    } else {
+      tmp = reorderULC(tmp);
     }
 
     if (removeCollinear){

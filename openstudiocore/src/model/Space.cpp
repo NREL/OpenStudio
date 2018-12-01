@@ -84,6 +84,10 @@
 #include "ElectricEquipment_Impl.hpp"
 #include "ElectricEquipmentDefinition.hpp"
 #include "ElectricEquipmentDefinition_Impl.hpp"
+#include "ElectricEquipmentITEAirCooled.hpp"
+#include "ElectricEquipmentITEAirCooled_Impl.hpp"
+#include "ElectricEquipmentITEAirCooledDefinition.hpp"
+#include "ElectricEquipmentITEAirCooledDefinition_Impl.hpp"
 #include "GasEquipment.hpp"
 #include "GasEquipment_Impl.hpp"
 #include "GasEquipmentDefinition.hpp"
@@ -209,6 +213,10 @@ namespace detail {
     ElectricEquipmentVector electricEquipment = this->electricEquipment();
     result.insert(result.end(), electricEquipment.begin(), electricEquipment.end());
 
+    // IT electric equipment
+    ElectricEquipmentITEAirCooledVector electricEquipmentITEAirCooled = this->electricEquipmentITEAirCooled();
+    result.insert(result.end(), electricEquipmentITEAirCooled.begin(), electricEquipmentITEAirCooled.end());
+
     // gas equipment
     GasEquipmentVector gasEquipment = this->gasEquipment();
     result.insert(result.end(), gasEquipment.begin(), gasEquipment.end());
@@ -263,6 +271,7 @@ namespace detail {
     result.push_back(IddObjectType::OS_Luminaire);
     result.push_back(IddObjectType::OS_People);
     result.push_back(IddObjectType::OS_ElectricEquipment);
+    result.push_back(IddObjectType::OS_ElectricEquipment_ITE_AirCooled);
     result.push_back(IddObjectType::OS_GasEquipment);
     result.push_back(IddObjectType::OS_HotWaterEquipment);
     result.push_back(IddObjectType::OS_Daylighting_Control);
@@ -791,6 +800,11 @@ namespace detail {
       ElectricEquipment::iddObjectType());
   }
 
+  ElectricEquipmentITEAirCooledVector Space_Impl::electricEquipmentITEAirCooled() const {
+    return getObject<ModelObject>().getModelObjectSources<ElectricEquipmentITEAirCooled>(
+      ElectricEquipmentITEAirCooled::iddObjectType());
+  }
+
   GasEquipmentVector Space_Impl::gasEquipment() const
   {
     return getObject<ModelObject>().getModelObjectSources<GasEquipment>(
@@ -953,7 +967,7 @@ namespace detail {
       }
     }
 
-    if ((numRoof > 0) * (numFloor > 0)){
+    if ((numRoof > 0) && (numFloor > 0)){
       roofHeight /= numRoof;
       floorHeight /= numFloor;
       result = (roofHeight - floorHeight) * this->floorArea();
@@ -1482,6 +1496,23 @@ namespace detail {
     return result;
   }
 
+  double Space_Impl::electricEquipmentITEAirCooledPower() const {
+    double result(0.0);
+    double area = floorArea();
+
+    for (const ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled()) {
+      result += iTequipment.getWattsperUnit(area);
+    }
+
+    if (OptionalSpaceType spaceType = this->spaceType()) {
+      for (const ElectricEquipmentITEAirCooled& iTequipment : spaceType->electricEquipmentITEAirCooled()) {
+        result += iTequipment.getWattsperUnit(area);
+      }
+    }
+
+    return result;
+  }
+
   bool Space_Impl::setElectricEquipmentPower(double electricEquipmentPower) {
     OptionalElectricEquipment templateEquipment;
     ElectricEquipmentVector myEquipment = electricEquipment();
@@ -1557,6 +1588,23 @@ namespace detail {
     if (OptionalSpaceType spaceType = this->spaceType()) {
       for (const ElectricEquipment& equipment : spaceType->electricEquipment()) {
         result += equipment.getPowerPerFloorArea(area,numPeople);
+      }
+    }
+
+    return result;
+  }
+
+  double Space_Impl::electricEquipmentITEAirCooledPowerPerFloorArea() const {
+    double result(0.0);
+    double area = floorArea();
+
+    for (const ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled()) {
+      result += iTequipment.getWattsperZoneFloorArea(area);
+    }
+
+    if (OptionalSpaceType spaceType = this->spaceType()) {
+      for (const ElectricEquipmentITEAirCooled& iTequipment : spaceType->electricEquipmentITEAirCooled()) {
+        result += iTequipment.getWattsperZoneFloorArea(area);
       }
     }
 
@@ -2553,6 +2601,11 @@ namespace detail {
     return result;
   }
 
+  std::vector<ModelObject> Space_Impl::electricEquipmentITEAirCooledAsModelObjects() const {
+    ModelObjectVector result = castVector<ModelObject>(electricEquipmentITEAirCooled());
+    return result;
+  }
+
   std::vector<ModelObject> Space_Impl::gasEquipmentAsModelObjects() const {
     ModelObjectVector result = castVector<ModelObject>(gasEquipment());
     return result;
@@ -3130,6 +3183,10 @@ std::vector<ElectricEquipment> Space::electricEquipment() const {
   return getImpl<detail::Space_Impl>()->electricEquipment();
 }
 
+std::vector<ElectricEquipmentITEAirCooled> Space::electricEquipmentITEAirCooled() const {
+  return getImpl<detail::Space_Impl>()->electricEquipmentITEAirCooled();
+}
+
 std::vector<GasEquipment> Space::gasEquipment() const {
   return getImpl<detail::Space_Impl>()->gasEquipment();
 }
@@ -3287,6 +3344,10 @@ double Space::electricEquipmentPower() const {
   return getImpl<detail::Space_Impl>()->electricEquipmentPower();
 }
 
+double Space::electricEquipmentITEAirCooledPower() const {
+  return getImpl<detail::Space_Impl>()->electricEquipmentITEAirCooledPower();
+}
+
 bool Space::setElectricEquipmentPower(double electricEquipmentPower) {
   return getImpl<detail::Space_Impl>()->setElectricEquipmentPower(electricEquipmentPower);
 }
@@ -3299,6 +3360,10 @@ bool Space::setElectricEquipmentPower(double electricEquipmentPower,
 
 double Space::electricEquipmentPowerPerFloorArea() const {
   return getImpl<detail::Space_Impl>()->electricEquipmentPowerPerFloorArea();
+}
+
+double Space::electricEquipmentITEAirCooledPowerPerFloorArea() const {
+  return getImpl<detail::Space_Impl>()->electricEquipmentITEAirCooledPowerPerFloorArea();
 }
 
 bool Space::setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea) {

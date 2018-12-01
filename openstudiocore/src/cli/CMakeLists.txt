@@ -218,20 +218,43 @@ set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TR
 
 source_group(embedded_files FILES ${OUTPUT})
 
-add_executable(openstudio
- main.cpp
- "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
- RubyException.hpp
- RubyInterpreter.hpp
- "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
- ${OUTPUT}
-)
-
-if(MSVC)
-  set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
+if(WIN32)
+  configure_file(openstudio.rc.in "${CMAKE_CURRENT_BINARY_DIR}/openstudio.rc")
 endif()
 
-set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
+if(WIN32)
+  add_executable(openstudio
+    main.cpp
+    "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
+    RubyException.hpp
+    RubyInterpreter.hpp
+    "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
+    ${OUTPUT}
+    "${CMAKE_CURRENT_BINARY_DIR}/openstudio.rc"
+  )
+else()
+  add_executable(openstudio
+    main.cpp
+    "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
+    RubyException.hpp
+    RubyInterpreter.hpp
+    "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
+    ${OUTPUT}
+  )
+endif()
+
+
+# -Wno-deprecated-declaration, /wd4996: suppresses deprecated warning
+# -Wno-register, /wd5033: ISO C++1z does not allow ‘register’ storage class specifier
+if(MSVC)
+  set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
+  set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
+else()
+  set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-register")
+  set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-unused-variable" )
+endif()
+
+
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
@@ -256,8 +279,6 @@ target_link_libraries(openstudio
  openstudio_gbxml_static
  openstudio_radiance_static
 )
-
-
 
 if (UNIX AND NOT APPLE)
   target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} ${EXTENSION_LIBS} dl crypt ssl)
@@ -291,7 +312,6 @@ if( BUILD_PAT )
 endif()
 
 
-
 # find all tests
 file(GLOB RUBY_TEST_SRC "test/test*.rb")
 
@@ -310,7 +330,7 @@ foreach(f ${RUBY_TEST_SRC})
     if(BUILD_TESTING)
       if(MSVC)
         add_test(NAME "CLITest-${FILE_NAME}-${TEST_NAME}"
-          COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>"
+          COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}"
           "$<TARGET_FILE:openstudio>" "${f}" "--name=test_${TEST_NAME}"
         )
       else()
