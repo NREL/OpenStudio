@@ -87,7 +87,6 @@
 #include <QPolygonF>
 #include <QPointF>
 #include <QDateTime>
-#include <QFile>
 
 #include <thread>
 
@@ -95,6 +94,7 @@
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/math/constants/constants.hpp>
 
+#include <radiance/embedded_files.hxx>
 
 
 #include <cstring>
@@ -124,15 +124,6 @@ using openstudio::model::OptionalInteriorPartitionSurfaceGroup;
 using openstudio::model::OptionalSurface;
 
 typedef openstudio::filesystem::basic_ofstream<char> OFSTREAM;
-
-struct RadianceResourceInitializer{
-  RadianceResourceInitializer()
-  {
-    Q_INIT_RESOURCE(radiance);
-  }
-};
-static RadianceResourceInitializer __radianceResourceInitializer__;
-
 
 namespace openstudio {
 namespace radiance {
@@ -1677,13 +1668,8 @@ namespace radiance {
 
 										// read BSDF from resource dll
 										// must be referenced in openstudiocore/src/radiance/radiance.qrc
-										QString defaultFile;
-										QFile inFile(toQString(":/resources/" + shadeBSDF));
-										if (inFile.open(QFile::ReadOnly)){
-											QTextStream docIn(&inFile);
-											defaultFile = docIn.readAll();
-											inFile.close();
-										}
+										QString defaultFile
+                                                                                  = toQString(::openstudioradiance::embedded_files::getFileAsString(":/resources/" + shadeBSDF));
 
 										// write shade BSDF
                                                                                 openstudio::filesystem::ofstream outfile(shadeBSDFPath);
@@ -1708,13 +1694,8 @@ namespace radiance {
 
 									// read BSDF from resource dll
 									// must be in openstudiocore/src/radiance/radiance.qrc
-									QString defaultFile;
-									QFile inFileAir(":/resources/air.xml");
-									if (inFileAir.open(QFile::ReadOnly)){
-										QTextStream docIn(&inFileAir);
-										defaultFile = docIn.readAll();
-										inFileAir.close();
-									}
+									QString defaultFile
+                                                                                  = toQString(::openstudioradiance::embedded_files::getFileAsString(":/resources/air.xml"));
 
 									// write shade BSDF
                                                                         openstudio::filesystem::ofstream outFileAir(airBSDFPath);

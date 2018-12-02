@@ -46,7 +46,7 @@ endforeach()
 
 include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudiocontam)
-message("EMBEDDED_OUTPUT: ${EMBEDDED_OUTPUT}")
+# message("EMBEDDED_OUTPUT: ${EMBEDDED_OUTPUT}")
 
 # set up groups of source files for Visual Studio
 source_group(embedded FILES ${EMBEDDED_OUTPUT})
