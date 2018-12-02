@@ -60,7 +60,8 @@
 
 #include <boost/math/constants/constants.hpp>
 
-#include <QFile>
+#include <airflow/embedded_files.hxx>
+
 #include <QTextStream>
 #include <QList>
 #include <QStringList>
@@ -442,9 +443,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
   m_logSink.resetStringStream();
 
   {
-    QFile f(":/templates/template.prj");
-    f.open(QFile::ReadOnly);
-    QString s = f.readAll();
+    QString s = toQString(::openstudiocontam::embedded_files::getFileAsString(":/templates/template.prj"));
     Reader r(&s);
     m_prjModel.read(r);
     if (!m_prjModel.valid()) {

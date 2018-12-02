@@ -34,14 +34,6 @@
 #include "PrjModelImpl.hpp"
 
 
-struct ContamResourceInitializer{
-  ContamResourceInitializer()
-  {
-    Q_INIT_RESOURCE(contam);
-  }
-};
-static ContamResourceInitializer __contamResourceInitializer__;
-
 namespace openstudio {
 namespace contam {
 
