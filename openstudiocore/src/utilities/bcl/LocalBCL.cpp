@@ -120,6 +120,10 @@ namespace openstudio{
     return m_libraryPath / m_dbName;
   }
 
+  QSqlDatabase LocalBCL::getDatabase(const bool open) const {
+    return QSqlDatabase::database(toQString(dbPath()), open);
+  }
+
   std::string LocalBCL::columnText(const unsigned char* column) const {
     return std::string(reinterpret_cast<const char*>(column));
   }

@@ -42,6 +42,7 @@
 #include <boost/regex.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <QFile>
+#include <QFile>
 
 #include <src/utilities/embedded_files.hxx>
 

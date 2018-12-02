@@ -89,6 +89,7 @@
 #include <QDateTime>
 #include <thread>
 #include <QFile>
+#include <QFile>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/regex.hpp>

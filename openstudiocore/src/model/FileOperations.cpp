@@ -101,6 +101,7 @@ namespace model {
       return true; // there is no error, just nothing to do
     }
 
+
     if (!openstudio::filesystem::exists(src) || !openstudio::filesystem::is_directory(src))
     {
       LOG_FREE(Error, "replaceDir", "Source directory does not exist: " << toString(src));
@@ -128,6 +129,8 @@ namespace model {
       return false;
     }
 
+
+
     bool result = true;
     for (const auto& dirEnt : openstudio::filesystem::recursive_directory_iterator{src})
     {
@@ -143,7 +146,7 @@ namespace model {
       }
     }
 
-    return result;
+    return true;
   }
 
   bool removeDir(const openstudio::path &path)
