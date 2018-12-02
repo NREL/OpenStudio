@@ -185,9 +185,6 @@ namespace openstudio{
 
     std::string formatString(double d, uint prec = 15);
 
-    /// returns the current database referenced by the current file
-    QSqlDatabase getDatabase(const bool open = true) const;
-
     static std::shared_ptr<LocalBCL> &instanceInternal();
 
     openstudio::path m_libraryPath;
