@@ -31,7 +31,6 @@
 
 #include <resources.hxx>
 
-
 #include "CoreFixture.hpp"
 #include "../Path.hpp"
 #include "../PathHelpers.hpp"
@@ -39,7 +38,6 @@
 #include "../Filesystem.hpp"
 #include "utilities/sql/SqlFileDataDictionary.hpp"
 
-#include <QTextCodec>
 #include <clocale>
 
 using openstudio::path;
@@ -481,3 +479,4 @@ TEST_F(CoreFixture, LastLevelDirectoryWithDot) {
   EXPECT_EQ("A measure with 90.1 dots", toString(lastLevelDir));
   EXPECT_EQ(measure_directory, measure_directory.parent_path() / lastLevelDir);
 }
+

@@ -35,7 +35,6 @@
 #include "../core/System.hpp"
 #include "../core/UnzipFile.hpp"
 
-#include <QMutex>
 #include <QNetworkReply>
 
 #define REMOTE_PRODUCTION_SERVER "https://bcl.nrel.gov"
@@ -1094,6 +1093,7 @@ namespace openstudio{
               // check if component has proper uid and vid
               if (!uid.empty() && !versionId.empty()) {
                 dest = LocalBCL::instance().libraryPath() / uid / versionId;
+
                 removeDirectory(dest);
                 if (copyDirectory(componentXmlPath.parent_path(), dest))
                 {

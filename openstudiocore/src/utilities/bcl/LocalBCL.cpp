@@ -729,6 +729,7 @@ namespace openstudio{
   std::vector<BCLComponent> LocalBCL::components() const
   {
     std::vector<BCLComponent> allComponents;
+
     if (m_db) {
       std::string statement = "SELECT uid, version_id FROM Components";
       sqlite3_stmt* sqlStmtPtr;
@@ -812,6 +813,7 @@ namespace openstudio{
   {
     std::vector<std::string> uids;
 
+
     if (m_db) {
       std::string statement = "SELECT DISTINCT uid FROM Measures";
       sqlite3_stmt* sqlStmtPtr;
@@ -847,6 +849,7 @@ namespace openstudio{
     const std::string& componentType) const
   {
     std::vector<BCLComponent> results;
+
 
     if (m_db) {
       std::string statement("SELECT uid, version_id FROM Components where name"
@@ -1348,6 +1351,7 @@ namespace openstudio{
     typedef std::set<std::pair<std::string, std::string> > UidsType;
 
     UidsType uids;
+
 
     if (!m_db) {
       return uids;

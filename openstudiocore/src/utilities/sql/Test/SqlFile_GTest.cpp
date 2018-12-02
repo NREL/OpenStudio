@@ -40,11 +40,9 @@
 #include "../../units/UnitFactory.hpp"
 #include "../../core/Application.hpp"
 
-#include <QRegularExpression>
-
-#include <resources.hxx>
-
 #include <iostream>
+#include <boost/regex.hpp>
+#include <resources.hxx>
 
 using namespace std;
 using namespace boost;
@@ -337,10 +335,11 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   EXPECT_NO_THROW(sqlFile = SqlFile(path));
   ASSERT_TRUE(sqlFile);
 
-  QRegularExpression re("1ZoneEvapCooler-V(.*)\\.sql");
-  QRegularExpressionMatch match = re.match(toQString(name));
-  ASSERT_TRUE(match.hasMatch());
-  VersionString expected(toString(match.captured(1)));
+  // Capture the version (1st group)
+  boost::regex re("1ZoneEvapCooler-V(.*)\\.sql");
+  boost::smatch m;
+  ASSERT_TRUE(boost::regex_match(name, m, re));
+  VersionString expected(m[1]);
   VersionString actual(sqlFile->energyPlusVersion());
   EXPECT_EQ(expected.major(), actual.major());
   EXPECT_EQ(expected.minor(), actual.minor());
