@@ -52,7 +52,7 @@ namespace measure {
 
   // TODO: JM 2018-11-28 Update docstring (remove quantity)
 /** \class OSArgumentType
- *  \brief Listing of OSArgument data types. Quantity type is deprecated.
+ *  \brief Listing of OSArgument data types. Quantity type is deprecated (will map to Double instead).
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
  *  macro call is:
  *  \code
@@ -84,7 +84,7 @@ OPENSTUDIO_ENUM( OSArgumentType,
 
 /** \class OSDomainType
  *  \brief Methods for restricting the domain of an OSArgument.
- *  \details Numerical OSArguments (Double, Quantity, Integer) can be given either an Interval
+ *  \details Numerical OSArguments (Double, Integer) can be given either an Interval
  *  (range) or an Enumeration. The other OSArgument types can only be enumerated.
  *
  *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
@@ -163,11 +163,6 @@ class MEASURE_API OSArgument {
   /** Creates a separator OSArgument, cannot be used to store a value, cannot be required. */
   static OSArgument makeSeparatorArgument(const std::string& name, bool modelDependent = false);
 
-  // TODO: JM 2018-11-28 Actually remove?
-  /** Creates an OSArgument for Quantity values. Defaults domaintType() to
-   *  OSDomainType::Interval. \deprecated */
-  // static OSArgument makeQuantityArgument(const std::string& name, bool required = true, bool modelDependent = false);
-
   //@}
 
   /** @name Getters */
@@ -211,11 +206,6 @@ class MEASURE_API OSArgument {
    *  OSArgumentType::Double. */
   double valueAsDouble() const;
 
-  // TODO: JM 2018-11-28 Remove?
-  /** Returns this argument's value as a Quantity. Throws if not hasValue() or if type() !=
-   *  OSArgumentType::Quantity. \deprecated */
-  // Quantity valueAsQuantity() const;
-
   /** Returns this argument's value as an int. Throws if not hasValue() or if type() !=
    *  OSArgumentType::Integer. */
   int valueAsInteger() const;
@@ -238,10 +228,6 @@ class MEASURE_API OSArgument {
   /** Returns this argument's default value as a double. Throws if not hasDefaultValue() or if
    *  type() != OSArgumentType::Double. */
   double defaultValueAsDouble() const;
-
-  /** Returns this argument's default value as a Quantity. Throws if not hasDefaultValue() or if
-   *  type() != OSArgumentType::Quantity. \deprecated */
-  // Quantity defaultValueAsQuantity() const;
 
   /** Returns this argument's default value as an int. Throws if not hasDefaultValue() or if
    *  type() != OSArgumentType::Integer. */
@@ -272,10 +258,6 @@ class MEASURE_API OSArgument {
   /** Returns the domain as a vector of doubles. Will throw if not hasDomain() or type() !=
    *  OSArgumentType::Double. */
   std::vector<double> domainAsDouble() const;
-
-  /** Returns the domain as a vector of Quantities. Will throw if not hasDomain() or type() !=
-   *  OSArgumentType::Quantity. \deprecated */
-  // std::vector<Quantity> domainAsQuantity() const;
 
   /** Returns the domain as a vector of ints. Will throw if not hasDomain() or type() !=
    *  OSArgumentType::Integer. */
@@ -347,8 +329,6 @@ class MEASURE_API OSArgument {
   bool setValue(bool value);
   /// \overload
   bool setValue(double value);
-  /// \overload \deprecated
-  // bool setValue(const Quantity& value);
   /// \overload
   bool setValue(int value);
   /// \overload
@@ -367,8 +347,6 @@ class MEASURE_API OSArgument {
   bool setDefaultValue(bool defaultValue);
   /// \overload
   bool setDefaultValue(double defaultValue);
-  /// \overload \deprecated
-  // bool setDefaultValue(const Quantity& value);
   /// \overload
   bool setDefaultValue(int defaultValue);
   /// \overload
@@ -386,9 +364,6 @@ class MEASURE_API OSArgument {
   bool setDomain(const std::vector<bool>& domain);
   /// \overload
   bool setDomain(const std::vector<double>& domain);
-  // TODO: JM 2018-11-28 Remove?
-  /// \overload \deprecated
-  // bool setDomain(const std::vector<Quantity>& domain);
   /// \overload
   bool setDomain(const std::vector<int>& domain);
   /// \overload
@@ -519,19 +494,6 @@ MEASURE_API OSArgument makeChoiceArgumentOfWorkspaceObjects(
 
 /** Converts a vector of OSArgument to a map of OSArgument using name as the key. \relates OSArgument */
 MEASURE_API std::map<std::string,OSArgument> convertOSArgumentVectorToMap(const std::vector<OSArgument>& arguments);
-
-namespace detail {
-
-  /** Non-member function to convert argument into a QJSON-ready QVariant. */
-  //MEASURE_API QVariant toVariant(const OSArgument& argument);
-
-  //MEASURE_API OSArgument toOSArgument(const QVariant& variant, const VersionString& version);
-
-  //QVariant toQuantityQVariant(const QVariantMap& map,
-  //                            const std::string& valueKey,
-  //                            const std::string& unitsKey);
-
-}
 
 } // measure
 } // openstudio

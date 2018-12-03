@@ -33,8 +33,6 @@
 
 #include "../utilities/idd/IddObject.hpp"
 
-#include "../utilities/units/QuantityFactory.hpp"
-
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/core/Compare.hpp"
@@ -70,14 +68,6 @@ OSArgument OSArgument::makeDoubleArgument(const std::string& name, bool required
   result.setDomainType(OSDomainType::Interval);
   return result;
 }
-
-// TODO: JM 2018-11-28 Remove?
-//OSArgument OSArgument::makeQuantityArgument(const std::string& name, bool required, bool modelDependent)
-//{
-  //OSArgument result(name, OSArgumentType::Quantity, required, modelDependent);
-  //result.setDomainType(OSDomainType::Interval);
-  //return result;
-//}
 
 OSArgument OSArgument::makeIntegerArgument(const std::string& name, bool required, bool modelDependent)
 {
@@ -195,18 +185,6 @@ double OSArgument::valueAsDouble() const
   return std::get<double>(m_value);
 }
 
-// TODO: JM 2018-11-28 comment
-//Quantity OSArgument::valueAsQuantity() const
-//{
-  //if (!hasValue()) {
-    //LOG_AND_THROW("This argument does not have a value set.")
-  //}
-  //if (type() != OSArgumentType::Quantity) {
-    //LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Quantity.");
-  //}
-  //return m_value.value<openstudio::Quantity>();
-//}
-
 int OSArgument::valueAsInteger() const
 {
   if (!hasValue()) {
@@ -272,17 +250,6 @@ double OSArgument::defaultValueAsDouble() const
 
   return std::get<double>(m_defaultValue);
 }
-
-//Quantity OSArgument::defaultValueAsQuantity() const
-//{
-  //if (!hasDefaultValue()) {
-    //LOG_AND_THROW("This argument does not have a default value set.")
-  //}
-  //if (type() != OSArgumentType::Quantity) {
-    //LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Quantity.");
-  //}
-  //return std::get<Quantity>(m_value);
-//}
 
 int OSArgument::defaultValueAsInteger() const
 {
@@ -362,19 +329,6 @@ std::vector<double> OSArgument::domainAsDouble() const {
   return result;
 }
 
-// TODO: JM 2018-11-28 comment
-//std::vector<Quantity> OSArgument::domainAsQuantity() const {
-  //if (!hasDomain()) {
-    //LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
-  //}
-  //std::vector<Quantity> result;
-
-  //for (const OSArgumentVariant& value: m_domain) {
-    //result.push_back(std::get<Quantity>(value));
-  //}
-  //return result;
-//}
-
 std::vector<int> OSArgument::domainAsInteger() const {
   if (!hasDomain()) {
     LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
@@ -407,14 +361,12 @@ std::vector<openstudio::path> OSArgument::domainAsPath() const {
   return result;
 }
 
-// TODO: should work with
 std::vector<std::string> OSArgument::domainAsString() const {
   if (!hasDomain()) {
     LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
   }
 
   // TODO: add check for arg type?
-
   std::vector<std::string> result;
 
   for (const OSArgumentVariant& value: m_domain) {
@@ -517,17 +469,6 @@ bool OSArgument::setValue(double value) {
   return result;
 }
 
-//bool OSArgument::setValue(const Quantity& value) {
-  //bool result = false;
-  //if (m_type == OSArgumentType::Quantity) {
-    //m_value = value;
-    //OS_ASSERT(hasValue());
-    //onChange();
-    //result = true;
-  //}
-  //return result;
-//}
-
 bool OSArgument::setValue(int value) {
   bool result = false;
   if (m_type == OSArgumentType::Integer) {
@@ -559,7 +500,6 @@ bool OSArgument::setValue(const openstudio::path& value) {
   return result;
 }
 
-// TODO
 bool OSArgument::setValue(const std::string& value) {
   bool result = setStringInternal(m_value, value);
   if (result) {
@@ -604,17 +544,6 @@ bool OSArgument::setDefaultValue(double defaultValue) {
   }
   return result;
 }
-
-//bool OSArgument::setDefaultValue(const Quantity& value) {
-  //bool result = false;
-  //if (m_type == OSArgumentType::Quantity) {
-    //m_defaultValue = QVariant::fromValue<openstudio::Quantity>(value);
-    //OS_ASSERT(hasDefaultValue());
-    //onChange();
-    //result = true;
-  //}
-  //return result;
-//}
 
 bool OSArgument::setDefaultValue(int defaultValue)
 {
@@ -718,22 +647,6 @@ bool OSArgument::setDomain(const std::vector<double>& domain) {
   }
   return result;
 }
-
-//bool OSArgument::setDomain(const std::vector<Quantity>& domain) {
-  //bool result(false);
-  //if (m_type == OSArgumentType::Quantity) {
-    //if ((m_domainType != OSDomainType::Interval) || (domain.size() == 2u)) {
-      //// could check for uniqueness, min < max, but pass on that for now
-      //m_domain.clear();
-      //for (const Quantity& value : domain) {
-        //m_domain.push_back(QVariant::fromValue<openstudio::Quantity>(value));
-      //}
-      //onChange();
-      //result = true;
-    //}
-  //}
-  //return result;
-//}
 
 bool OSArgument::setDomain(const std::vector<int>& domain) {
   bool result(false);
@@ -944,15 +857,6 @@ bool OSArgument::setStringInternal(OSArgumentVariant& variant, const std::string
     } catch (std::exception e) {
       LOG(Debug, "Unable to convert value '" << value << "' to argument of type Double.");
     }
-
-  /*
-   *} else if (m_type == OSArgumentType::Quantity) {
-   *  OptionalQuantity oq = createQuantity(value);
-   *  if (oq) {
-   *    variant = QVariant::fromValue<openstudio::Quantity>(*oq);
-   *    result = true;
-   *  }
-   */
   } else if (m_type == OSArgumentType::Integer) {
     try {
       auto const int_val = std::stoi(value, nullptr);
@@ -1081,35 +985,35 @@ std::string OSArgument::printDefaultValue() const {
   return result;
 }
 
-std::string OSArgument::printOSArgumentVariant(const OSArgumentVariant& toPrint) const {
-  OS_ASSERT(toPrint.index() != 0);
-
-  std::stringstream ss;
-  // We use std::visit, filtering out the case where it's monostate
-  // Aside from monostate, every possible type is streamable
-  std::visit(
-      [&ss](const auto& val){
-      //Needed to properly compare the types
-      using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
-        if constexpr (!std::is_same_v<T, std::monostate>) {
-          ss << val;
-        }
-      },
-      toPrint);
-
-  return ss.str();
-}
-
-// ostream operator for OSArgumentVariant&
-std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg) {
-  os << print(OSArgumentVariant(arg);
-}
-
+// ostream operators for OSArgument and OSArgumentVariant
 std::ostream& operator<<(std::ostream& os, const OSArgument& arg) {
   os << arg.print();
   return os;
 }
 
+std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg) {
+  // We use std::visit, filtering out the case where it's monostate
+  // Aside from monostate, every possible type is streamable
+  std::visit(
+      [&os](const auto& val){
+      //Needed to properly compare the types
+      using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
+        if constexpr (!std::is_same_v<T, std::monostate>) {
+          os << val;
+        }
+      },
+      arg);
+
+  return os;
+}
+
+std::string OSArgument::printOSArgumentVariant(const OSArgumentVariant& toPrint) const {
+  OS_ASSERT(toPrint.index() != 0);
+  // Call the overloaded ostream operator, and return str() of that
+  std::stringstream ss;
+  ss << toPrint;
+  return ss.str();
+}
 
 OSArgument::OSArgument()
   : m_uuid(createUUID()), m_versionUUID(createUUID())
