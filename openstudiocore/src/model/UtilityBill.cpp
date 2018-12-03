@@ -56,8 +56,6 @@
 
 #include "../utilities/core/Assert.hpp"
 
-#include <QDate>
-
 namespace openstudio {
 namespace model {
 

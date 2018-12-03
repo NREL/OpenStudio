@@ -28,7 +28,6 @@
 ***********************************************************************************************************************/
 
 #include "DateTime.hpp"
-#include <QDateTime>
 
 using namespace std;
 using namespace boost;
@@ -355,41 +354,6 @@ std::ostream& operator<<(std::ostream& os, const DateTime& dateTime)
 {
   os << dateTime.toString();
   return os;
-}
-
-// conversion for QDateTime
-DateTime toDateTime(const QDateTime &qdt)
-{
-  Date d = Date::fromDayOfYear(qdt.date().dayOfYear(), qdt.date().year());
-  Time t(0, qdt.time().hour(), qdt.time().minute(), qdt.time().second());
-  int secondsFromUtc = qdt.offsetFromUtc();
-  double utcOffset = secondsFromUtc * HOURS_PER_SECOND;
-
-  return DateTime(d, t, utcOffset);
-}
-
-QDateTime toQDateTime(const DateTime& dt) {
-  return QDateTime(
-      QDate(dt.date().year(),
-            (dt.date().monthOfYear().value()) - openstudio::MonthOfYear::Jan + 1,
-            dt.date().dayOfMonth()),
-      QTime(dt.time().hours(),
-            dt.time().minutes(),
-            dt.time().seconds()),
-      Qt::OffsetFromUTC,
-      dt.utcOffset() * SECONDS_PER_MINUTE * MINUTES_PER_HOUR
-      );
-}
-
-namespace detail{
-  DateTimeMetaTypeInitializer::DateTimeMetaTypeInitializer()
-  {
-    // int type;
-    /* type =*/ qRegisterMetaType<openstudio::DateTime>("openstudio::DateTime");
-    /* type =*/ qRegisterMetaType<openstudio::Date>("openstudio::Date");
-    /* type =*/ qRegisterMetaType<openstudio::Time>("openstudio::Time");
-  }
-  static DateTimeMetaTypeInitializer __dateTimeMetaTypeInitializer__;
 }
 
 } // openstudio

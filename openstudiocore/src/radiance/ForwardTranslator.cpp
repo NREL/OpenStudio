@@ -86,7 +86,6 @@
 
 #include <QPolygonF>
 #include <QPointF>
-#include <QDateTime>
 
 #include <thread>
 
