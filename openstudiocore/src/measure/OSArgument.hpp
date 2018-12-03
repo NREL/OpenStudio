@@ -40,17 +40,16 @@
 
 #include <variant>
 
-// Note JM 2018-11-28:
-// typedef for the std::variant we will use for value, default value, and domain
-// we add std::monostate to allow the variant to be empty basically
-typedef std::variant<std::monostate, bool, double, int, std::string, openstudio::path> OSArgumentVariant;
-
-std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg);
-
 namespace openstudio {
 namespace measure {
 
-  // TODO: JM 2018-11-28 Update docstring (remove quantity)
+  // Note JM 2018-11-28:
+  // typedef for the std::variant we will use for value, default value, and domain
+  // we add std::monostate to allow the variant to be empty basically
+  typedef std::variant<std::monostate, bool, double, int, std::string, openstudio::path> OSArgumentVariant;
+
+  std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg);
+
 /** \class OSArgumentType
  *  \brief Listing of OSArgument data types. Quantity type is deprecated (will map to Double instead).
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual
