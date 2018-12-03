@@ -84,7 +84,6 @@
 
 #include "../utilities/idd/IddEnums.hpp"
 
-#include <QFile>
 #include <thread>
 
 #include <sstream>

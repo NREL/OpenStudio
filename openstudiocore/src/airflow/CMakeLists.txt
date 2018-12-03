@@ -1,3 +1,6 @@
+include_directories(${CMAKE_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 set(target_name openstudio_airflow)
 
 set(${target_name}_src
@@ -32,13 +35,23 @@ set(${target_name}_src
 )
 
 # resource files
-# DLM: TODO, replace with embed_files
-set(${target_name}_qrc
-  contam.qrc
-)
+include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+# EMBEDDED_OUTPUT stores the list of cxx files that we need to link later
+file(GLOB_RECURSE IDD_FILES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/templates/*.prj")
+foreach( _FILE ${IDD_FILES} )
+  file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
+  list(APPEND E_FILES ${_FILE})
+  list(APPEND E_PATHS ${LOCATION})
+endforeach()
 
-# generate rules for building source files from the resources
-qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
+include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudiocontam)
+# message("EMBEDDED_OUTPUT: ${EMBEDDED_OUTPUT}")
+
+# set up groups of source files for Visual Studio
+source_group(embedded FILES ${EMBEDDED_OUTPUT})
+
+
 
 set(${target_name}_test_src
   Test/AirflowFixture.hpp
@@ -65,7 +78,7 @@ set(${target_name}_depends
 
 add_library(${target_name}
   ${${target_name}_src}
-  ${${target_name}_qrcs}
+  ${EMBEDDED_OUTPUT}
 )
 
 target_link_libraries(${target_name} ${${target_name}_depends})
@@ -99,7 +112,7 @@ set(${target_name}_static_depends
 
 add_library(${target_name}_static
   ${${target_name}_src}
-  ${${target_name}_qrcs}
+  ${EMBEDDED_OUTPUT}
 )
 target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 

@@ -40,7 +40,9 @@
 
 #include <QSettings>
 #include <QRegularExpression>
-#include <QFile>
+
+#include <boost/regex.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 #include <src/utilities/embedded_files.hxx>
 
@@ -321,13 +323,12 @@ namespace openstudio{
     // write test epw
     {
       if (!testEPWString.isEmpty()){
-        QFile file(toQString(testEPWPath));
-        bool opened = file.open(QIODevice::WriteOnly);
-        if (!opened){
+        openstudio::filesystem::ofstream file(testEPWPath);
+        if (!file.good()){
           LOG_AND_THROW("Cannot write test epw file to '" << toString(testEPWPath) << "'");
         }
-        QTextStream textStream(&file);
-        textStream << testEPWString;
+
+        file << toString(testEPWString);
         file.close();
 
         BCLFileReference measureTestEPWFileReference(testEPWPath, true);
@@ -910,35 +911,53 @@ namespace openstudio{
     boost::optional<openstudio::path> path = primaryRubyScriptPath();
     if (path && exists(*path)){
 
-      QString fileString;
+      std::string fileString;
       openstudio::filesystem::ifstream file(*path, std::ios_base::binary);
       if (file.is_open()){
 
-        QRegularExpression::PatternOptions opts = QRegularExpression::DotMatchesEverythingOption | QRegularExpression::MultilineOption;
-        QString nameFunction = "\\1def name\n\\1  return \"" + toQString(name) + "\"\n\\1end";
-        QString descriptionFunction = "\\1def description\n\\1  return \"" + toQString(description) + "\"\n\\1end";
-        QString modelerDescriptionFunction = "\\1def modeler_description\n\\1  return \"" + toQString(modelerDescription) + "\"\n\\1end";
+        // Replacement paterns
+        std::string nameFunction = "$1def name\n$1  return \"" + name + "\"\n$1end";
+        std::string descriptionFunction = "$1def description\n$1  return \"" + description + "\"\n$1end";
+        std::string modelerDescriptionFunction = "$1def modeler_description\n$1  return \"" + modelerDescription + "\"\n$1end";
 
-        fileString = openstudio::filesystem::read_as_QByteArray(file);
+        fileString = openstudio::filesystem::read_as_string(file);
+
+        boost::regex re;
 
         if (oldMeasureType != newMeasureType){
-          fileString.replace(toQString(oldMeasureType.valueName()), toQString(newMeasureType.valueName()));
+          // TODO: JM 2018-11-06 boost::replace_all should work but I'm using GCC-7 to build the pre update_depends branch
+          // so boost was compiled with an older GCC (there was ABI compatibility breakage in between)
+          // boost::replace_all(fileString, oldMeasureType.valueName(), newMeasureType.valueName());
+          re.set_expression(oldMeasureType.valueName());
+          fileString = boost::regex_replace(fileString, re, newMeasureType.valueName());
         }
 
         if (!oldClassName.empty() && !newClassName.empty() && oldClassName != newClassName){
           // DLM: might also want to check that oldClassName is greater than 3 characters long?
           // should we be doing a more selective replace (like require leading space and trailing space, ., or :)?
-          fileString.replace(toQString(oldClassName), toQString(newClassName));
+          // TODO: same as above
+          // boost::replace_all(fileString, oldClassName, newClassName);
+          re.set_expression(oldClassName);
+          fileString = boost::regex_replace(fileString, re, newClassName);
         }
 
-        fileString.replace(QRegularExpression("^(\\s+)def\\s+name(.*?)end[\\s#]?$", opts), nameFunction);
-        fileString.replace(QRegularExpression("^(\\s+)def\\s+description(.*?)end[\\s#]?$", opts), descriptionFunction);
-        fileString.replace(QRegularExpression("^(\\s+)def\\s+modeler_description(.*?)end[\\s#]?$", opts), modelerDescriptionFunction);
+        // Note JM 2018-11-06: Use the iterator overload of regex_replace for inplace replacement? Actually don't.
+        // There's undefined behavior when you end up replacing with something that doesn't have the same length
+        re.set_expression("^([\t ]*?)def\\s+name(.*?)end[\\s#]?$");
+        fileString = boost::regex_replace(fileString, re, nameFunction);
+
+        re.set_expression("^([\t ]*?)def\\s+description(.*?)end[\\s#]?$");
+        fileString = boost::regex_replace(fileString, re, descriptionFunction);
+
+        re.set_expression("^([\t ]*?)def\\s+modeler_description(.*?)end[\\s#]?$");
+        fileString = boost::regex_replace(fileString, re, modelerDescriptionFunction);
+
         file.close();
 
         openstudio::filesystem::ofstream ofile(*path, std::ios_base::binary);
         if (ofile.is_open()){
-          openstudio::filesystem::write(ofile, fileString);
+          ofile << fileString;
+          // openstudio::filesystem::write(ofile, fileString);
           ofile.close();
           return true;
         }

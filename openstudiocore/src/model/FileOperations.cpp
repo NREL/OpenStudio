@@ -83,8 +83,6 @@
 
 #include <OpenStudio.hxx>
 
-#include <QFile>
-#include <QFileInfo>
 #include <QMessageBox>
 
 
@@ -101,6 +99,7 @@ namespace model {
       return true; // there is no error, just nothing to do
     }
 
+
     if (!openstudio::filesystem::exists(src) || !openstudio::filesystem::is_directory(src))
     {
       LOG_FREE(Error, "replaceDir", "Source directory does not exist: " << toString(src));
@@ -112,8 +111,8 @@ namespace model {
       if (openstudio::filesystem::is_directory(dest)) {
         try {
           openstudio::filesystem::remove_all(dest);
-        } catch (const std::exception&) {
-          LOG_FREE(Error, "replaceDir", "Destination directory could not be removed: " << toString(dest));
+        } catch (const std::exception &e) {
+          LOG_FREE(Error, "replaceDir", "Destination directory could not be removed: " << toString(dest) << "error: " << e.what());
           return false;
         }
       } else {
@@ -127,6 +126,8 @@ namespace model {
       LOG_FREE(Error, "replaceDir", "Could not create destination directory: " << toString(dest));
       return false;
     }
+
+
 
     bool result = true;
     for (const auto& dirEnt : openstudio::filesystem::recursive_directory_iterator{src})
@@ -143,7 +144,7 @@ namespace model {
       }
     }
 
-    return result;
+    return true;
   }
 
   bool removeDir(const openstudio::path &path)
@@ -182,9 +183,14 @@ namespace model {
       LOG_FREE(Debug, "initializeModelTempDir", "Copying '" << toString(osmPath) << "' to '" << toString(destination) << "'");
 
       // copy osm file
-      bool test = QFile::copy(toQString(osmPath), toQString(destination));
-      if (!test){
-        LOG_FREE(Error, "initializeModelTempDir", "Could not copy '" << toString(osmPath) << "' to '" << toString(destination) << "'");
+      bool test = true;
+      try {
+        openstudio::filesystem::copy_file(osmPath, destination);
+        test = true;
+      } catch (const std::exception &e) {
+        LOG_FREE(Error, "initializeModelTempDir", "Could not copy osm from '" << toString(osmPath) << "' to '" << toString(destination) << "' error"
+            << e.what());
+        test = false;
       }
 
       // Copy all files from existing resources dir into temp dir when opening
@@ -334,24 +340,19 @@ namespace model {
   {
     bool test = true;
 
-    // must remove file, QFile::copy does not overwrite
-    QFileInfo osmInfo(toQString(osmPath));
-    if (osmInfo.exists() && osmInfo.isFile()){
-      test = QFile::remove(toQString(osmPath));
-      if (!test){
-        LOG_FREE(Error, "saveModelTempDir", "Could not remove previous osm at '" << toString(osmPath) << "'");
-      }
-    }
-
     // copy osm file
     openstudio::path srcPath = modelTempDir / osmPath.filename();
-    test = QFile::copy(toQString(srcPath), toQString(osmPath));
-    if (!test){
-      LOG_FREE(Error, "saveModelTempDir", "Could not copy osm from '" << toString(srcPath) << "' to '" << toString(osmPath) << "'");
+
+    try {
+      openstudio::filesystem::copy_file(srcPath, osmPath, openstudio::filesystem::copy_option::overwrite_if_exists);
+      test = true;
+    } catch (const std::exception &e) {
+      LOG_FREE(Error, "saveModelTempDir", "Could not copy osm from '" << toString(srcPath) << "' to '" << toString(osmPath) << "' error"
+               << e.what());
+      test = false;
     }
 
-    if (QFileInfo(toQString(osmPath)).exists()) {
-
+    if (openstudio::filesystem::is_regular_file(osmPath)) {
       // copy resources
       openstudio::path srcDir = modelTempDir / toPath("resources");
       // Get the companion directory

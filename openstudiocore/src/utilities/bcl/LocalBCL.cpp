@@ -46,8 +46,8 @@
 namespace openstudio{
 
   LocalBCL::LocalBCL(const path& libraryPath):
-    m_libraryPath(libraryPath),
-    m_dbName("/components.sql"),
+    m_libraryPath(libraryPath.lexically_normal()),
+    m_dbName("components.sql"),
     m_dbVersion("1.3"),
     m_connectionOpen(false)
   {
@@ -186,7 +186,6 @@ namespace openstudio{
 
   bool LocalBCL::initializeLocalDb()
   {
-
     std::string create_statements(
         "CREATE TABLE Settings (name VARCHAR, data VARCHAR);"
         "CREATE TABLE Components (uid VARCHAR, version_id VARCHAR, name VARCHAR, description VARCHAR, date_added DATETIME, date_modified DATETIME);"

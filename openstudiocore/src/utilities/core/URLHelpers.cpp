@@ -29,7 +29,7 @@
 
 #include "URLHelpers.hpp"
 
-#include <QRegularExpression>
+#include <boost/regex.hpp>
 
 namespace openstudio {
 
@@ -101,13 +101,14 @@ boost::optional<openstudio::path> getOptionalOriginalPath(const Url& url)
 {
   boost::optional<openstudio::path> result;
   if (url.scheme() == "file" || url.scheme().isEmpty()){
-    QString localFile = url.toLocalFile();
+    std::string localFile = toString(url.toLocalFile());
 
     // test for root slash added to windows paths, "/E:/test/CloudTest/scripts/StandardReports/measure.rb"
-    const QRegularExpression regexp("^\\/([a-zA-Z]:\\/.*)");
-    QRegularExpressionMatch match = regexp.match(localFile);
-    if (match.hasMatch()){
-      localFile = match.captured(1);
+    boost::regex re("^\\/([a-zA-Z]:\\/.*)");
+    boost::smatch m;
+
+    if (boost::regex_search(localFile, m, re)) {
+      localFile = m[1];
     }
 
     result = toPath(localFile);
