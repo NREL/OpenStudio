@@ -173,23 +173,7 @@ typedef std::vector<DateTime> DateTimeVector;
 // std::ostream operator<<
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const DateTime& dateTime);
 
-// conversion from QDateTime
-UTILITIES_API DateTime toDateTime(const QDateTime &qdt);
-
-// conversion to QDateTime
-UTILITIES_API QDateTime toQDateTime(const DateTime& dt);
-
 } // openstudio
-
-namespace openstudio {
-namespace detail {
-
-  // register meta datatypes
-  struct DateTimeMetaTypeInitializer{
-    DateTimeMetaTypeInitializer();
-  };
-}
-}
 
 
 #endif // UTILITIES_TIME_DATETIME_HPP

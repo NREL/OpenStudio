@@ -85,7 +85,6 @@
 #include "../utilities/bcl/RemoteBCL.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
 
-#include <QDateTime>
 
 #include <thread>
 
