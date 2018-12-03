@@ -80,12 +80,11 @@
 #include "../utilities/time/DateTime.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Intersection.hpp"
 #include "../utilities/bcl/BCL.hpp"
 #include "../utilities/bcl/RemoteBCL.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
 
-#include <QPolygonF>
-#include <QPointF>
 #include <QDateTime>
 
 #include <thread>
@@ -488,9 +487,9 @@ namespace radiance {
     return result;
   }
 
-  openstudio::Point3dVector ForwardTranslator::getPolygon(const openstudio::model::Surface& surface)
+  openstudio::Point3dVectorVector ForwardTranslator::getPolygons(const openstudio::model::Surface& surface)
   {
-    openstudio::Point3dVector result;
+    openstudio::Point3dVectorVector result;
 
     Transformation buildingTransformation;
     OptionalBuilding building = surface.model().getOptionalUniqueModelObject<Building>();
@@ -510,33 +509,33 @@ namespace radiance {
     // get the current vertices and convert to face coordinates
     Point3dVector surfaceFaceVertices = alignFace.inverse()*surface.vertices();
 
-    // subtract sub surface polygons from surface polygon
-    QPolygonF outer;
-    for (const Point3d& point : surfaceFaceVertices){
-      if (std::abs(point.z()) > 0.001){
-        LOG(Warn, "Surface point z not on plane, z =" << point.z());
-      }
-      outer << QPointF(point.x(),point.y());
-    }
+    // boost polygon wants vertices in clockwise order, faceVertices must be reversed, otherFaceVertices already CCW
+    std::reverse(surfaceFaceVertices.begin(), surfaceFaceVertices.end());
 
+    // get the current subsurfaces and convert to face coordinates
+    std::vector<std::vector<Point3d> > holes;
     for (const SubSurface& subSurface : surface.subSurfaces()){
-      Point3dVector subsurfaceFaceVertices = alignFace.inverse()*subSurface.vertices();
-      QPolygonF inner;
-      for (const Point3d& point : subsurfaceFaceVertices){
-        if (std::abs(point.z()) > 0.001){
-          LOG(Warn, "Subsurface point z not on plane, z =" << point.z());
-        }
-        inner << QPointF(point.x(),point.y());
-      }
-      outer = outer.subtracted(inner);
-
+      Point3dVector hole = alignFace.inverse()*subSurface.vertices();
+      std::reverse(hole.begin(), hole.end());
+      holes.push_back(hole);
     }
 
-    for (const QPointF& point : outer){
-      result.push_back(openstudio::Point3d(point.x(),point.y(), 0));
+    // perform the subtraction
+    std::vector<std::vector<Point3d> > faceResult = openstudio::subtract(surfaceFaceVertices, holes, 0.01);
+
+    if (faceResult.empty()) {
+      // DLM: is this an error (fail simulation) or a warning?  Should we attempt to put the whole surface in here?
+      LOG(Warn, "Failed to create surface polygons for Surface '" << surface.nameString() << "'");
     }
 
-    return buildingTransformation*spaceTransformation*alignFace*result;
+    // convert to absolute coordinates
+    for (const Point3dVector& face : faceResult) {
+      Point3dVector worldFace = buildingTransformation*spaceTransformation*alignFace*face;
+      std::reverse(worldFace.begin(), worldFace.end());
+      result.push_back(worldFace);
+    }
+
+    return result;
   }
 
   openstudio::Point3dVector ForwardTranslator::getPolygon(const openstudio::model::SubSurface& subSurface)
@@ -1115,66 +1114,67 @@ namespace radiance {
         }
 
         // create polygon object
-        openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(surface);
+        openstudio::Point3dVectorVector polygons = openstudio::radiance::ForwardTranslator::getPolygons(surface);
+        for (const openstudio::Point3dVector& polygon : polygons) {
 
+          if (!surface.adjacentSurface()) {
+            // 2-sided material
 
-        if (!surface.adjacentSurface()){
-          // 2-sided material
+            // header
+            m_radSpaces[space_name] += "# reflectance (int) = " + formatString(interiorVisibleReflectance, 3) + \
+              "\n# reflectance (ext) = " + formatString(exteriorVisibleReflectance, 3) + "\n";
 
-          // header
-          m_radSpaces[space_name] += "# reflectance (int) = " + formatString(interiorVisibleReflectance, 3) + \
-          "\n# reflectance (ext) = " + formatString(exteriorVisibleReflectance, 3) + "\n";
+            // material definition
 
-          // material definition
-
-          //interior
-          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3)
-            + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3)
-            + " " + formatString(interiorVisibleReflectance, 3)
-            + " " + formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
-          //exterior
-          m_radMaterials.insert("void plastic refl_" + formatString(exteriorVisibleReflectance, 3)
-            + "\n0\n0\n5\n" + formatString(exteriorVisibleReflectance, 3)
-            + " " + formatString(exteriorVisibleReflectance, 3)
-            + " " + formatString(exteriorVisibleReflectance, 3) + " 0 0\n\n");
-          // mixfunc
-          m_radMixMaterials.insert("void mixfunc reflBACK_" + formatString(interiorVisibleReflectance, 3) + \
+            //interior
+            m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3)
+              + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3)
+              + " " + formatString(interiorVisibleReflectance, 3)
+              + " " + formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
+            //exterior
+            m_radMaterials.insert("void plastic refl_" + formatString(exteriorVisibleReflectance, 3)
+              + "\n0\n0\n5\n" + formatString(exteriorVisibleReflectance, 3)
+              + " " + formatString(exteriorVisibleReflectance, 3)
+              + " " + formatString(exteriorVisibleReflectance, 3) + " 0 0\n\n");
+            // mixfunc
+            m_radMixMaterials.insert("void mixfunc reflBACK_" + formatString(interiorVisibleReflectance, 3) + \
               "_reflFRONT_" + formatString(exteriorVisibleReflectance, 3) + "\n4 " + \
               "refl_" + formatString(exteriorVisibleReflectance, 3) + " " + \
               "refl_" + formatString(interiorVisibleReflectance, 3) + " if(Rdot,1,0) .\n0\n0\n\n");
 
-          // polygon reference
-          m_radSpaces[space_name] += "reflBACK_" + formatString(interiorVisibleReflectance, 3) + \
+            // polygon reference
+            m_radSpaces[space_name] += "reflBACK_" + formatString(interiorVisibleReflectance, 3) + \
               "_reflFRONT_" + formatString(exteriorVisibleReflectance, 3) + " polygon " + \
               surface_name + "\n0\n0\n" + formatString(polygon.size() * 3) + "\n";
-        }else{
-          // interior-only material
+          }
+          else {
+            // interior-only material
 
-          // header
-          m_radSpaces[space_name] += "# reflectance: " + formatString(interiorVisibleReflectance, 3) + "\n";
+            // header
+            m_radSpaces[space_name] += "# reflectance: " + formatString(interiorVisibleReflectance, 3) + "\n";
 
-          // material definition
-          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3)
-            + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3)
-            + " " + formatString(interiorVisibleReflectance, 3)
-            + " " + formatString(interiorVisibleReflectance, 3) + " 0 0\n");
+            // material definition
+            m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3)
+              + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3)
+              + " " + formatString(interiorVisibleReflectance, 3)
+              + " " + formatString(interiorVisibleReflectance, 3) + " 0 0\n");
 
-          // polygon reference
-          m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3)
-          + " polygon " + surface_name + "\n0\n0\n" + formatString(polygon.size() * 3) + "\n";
+            // polygon reference
+            m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3)
+              + " polygon " + surface_name + "\n0\n0\n" + formatString(polygon.size() * 3) + "\n";
 
-        };
+          };
 
+          // add polygon vertices
+          for (const auto & vertex : polygon)
+          {
+            m_radSpaces[space_name] += formatString(vertex.x()) + " "
+              + formatString(vertex.y()) + " "
+              + formatString(vertex.z()) + "\n";
+          }
+          m_radSpaces[space_name] += "\n";
 
-        // add polygon vertices
-        for (const auto & vertex : polygon)
-        {
-          m_radSpaces[space_name] += formatString(vertex.x()) + " "
-            + formatString(vertex.y()) + " "
-            + formatString(vertex.z()) + "\n";
         }
-        m_radSpaces[space_name] += "\n";
-
         // end(surface)
 
 
@@ -1198,7 +1198,7 @@ namespace radiance {
           boost::optional<model::WindowPropertyFrameAndDivider> frameAndDivider = subSurface.windowPropertyFrameAndDivider();
 
           // get the polygon
-          polygon = openstudio::radiance::ForwardTranslator::getPolygon(subSurface);
+          openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(subSurface);
 
           std::string subSurface_name = cleanName(subSurface.name().get());
 

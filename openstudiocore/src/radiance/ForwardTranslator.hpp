@@ -81,7 +81,7 @@ namespace radiance {
     /// subtract subsurfaces from surface polygon and return
     /// resulting polygons as vector of Point3dVector, these vertices
     /// will be in absolute coodinates
-    static openstudio::Point3dVector getPolygon(const openstudio::model::Surface& surface);
+    static openstudio::Point3dVectorVector getPolygons(const openstudio::model::Surface& surface);
 
     /// convert subsurface vertices to absolute coodinates
     static openstudio::Point3dVector getPolygon(const openstudio::model::SubSurface& subSurface);
