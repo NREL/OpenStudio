@@ -30,7 +30,6 @@
 #include "PrjModelImpl.hpp"
 #include "PrjReader.hpp"
 #include "SimFile.hpp"
-#include <QFile>
 #include <algorithm>
 
 namespace openstudio {
