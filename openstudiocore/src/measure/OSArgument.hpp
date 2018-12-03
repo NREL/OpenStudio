@@ -45,6 +45,7 @@
 // we add std::monostate to allow the variant to be empty basically
 typedef std::variant<std::monostate, bool, double, int, std::string, openstudio::path> OSArgumentVariant;
 
+std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg);
 
 namespace openstudio {
 namespace measure {
