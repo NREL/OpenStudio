@@ -36,6 +36,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 
 namespace openstudio {
 namespace model {
@@ -209,13 +210,13 @@ namespace detail {
   {
     std::string method = designLevelCalculationMethod();
 
-    if (method == "EquipmentLevel") {
+    if (openstudio::istringEqual("EquipmentLevel", method)) {
       return designLevel().get();
     }
-    else if (method == "Watts/Area") {
+    else if (openstudio::istringEqual("Watts/Area", method)) {
       return wattsperSpaceFloorArea().get() * floorArea;
     }
-    else if (method == "Watts/Person") {
+    else if (openstudio::istringEqual("Watts/Person", method)) {
       return wattsperPerson().get() * numPeople;
     }
 
@@ -228,13 +229,13 @@ namespace detail {
   {
     std::string method = designLevelCalculationMethod();
 
-    if (method == "EquipmentLevel") {
+    if (openstudio::istringEqual("EquipmentLevel", method)) {
       return designLevel().get() / floorArea;
     }
-    else if (method == "Watts/Area") {
+    else if (openstudio::istringEqual("Watts/Area", method)) {
       return wattsperSpaceFloorArea().get();
     }
-    else if (method == "Watts/Person") {
+    else if (openstudio::istringEqual("Watts/Person", method)) {
       return wattsperPerson().get() * numPeople / floorArea;
     }
 
@@ -247,13 +248,13 @@ namespace detail {
   {
     std::string method = designLevelCalculationMethod();
 
-    if (method == "EquipmentLevel") {
+    if (openstudio::istringEqual("EquipmentLevel", method)) {
       return designLevel().get() / numPeople;
     }
-    else if (method == "Watts/Area") {
+    else if (openstudio::istringEqual("Watts/Area", method)) {
       return wattsperSpaceFloorArea().get() * floorArea / numPeople;
     }
-    else if (method == "Watts/Person") {
+    else if (openstudio::istringEqual("Watts/Person", method)) {
       return wattsperPerson().get();
     }
 
@@ -265,16 +266,13 @@ namespace detail {
                                                                       double floorArea,
                                                                       double numPeople)
   {
-    std::string wmethod(method);
-    boost::to_lower(wmethod);
-
-    if (wmethod == "equipmentlevel") {
+    if (openstudio::istringEqual("equipmentlevel", method)) {
       return setDesignLevel(getDesignLevel(floorArea,numPeople));
     }
-    else if (wmethod == "watts/area") {
+    else if (openstudio::istringEqual("watts/area", method)) {
       return setWattsperSpaceFloorArea(getPowerPerFloorArea(floorArea,numPeople));
     }
-    else if (wmethod == "watts/person") {
+    else if (openstudio::istringEqual("watts/person", method)) {
       return setWattsperPerson(getPowerPerPerson(floorArea,numPeople));
     }
 

@@ -64,8 +64,6 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
-    // Attributes
-
     /** @name Getters */
     //@{
 
