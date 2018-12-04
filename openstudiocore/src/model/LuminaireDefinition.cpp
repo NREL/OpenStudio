@@ -34,25 +34,13 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/math/FloatCompare.hpp"
-
+#include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,lightingPower,LightingPower,
-                           LuminaireDefinition,0,OS_Luminaire_Definition,LightingPower)
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,fractionRadiant,FractionRadiant,
-                           LuminaireDefinition,0,OS_Luminaire_Definition,FractionRadiant)
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,fractionVisible,FractionVisible,
-                           LuminaireDefinition,0,OS_Luminaire_Definition,FractionVisible)
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,returnAirFraction,ReturnAirFraction,
-                           LuminaireDefinition,0,OS_Luminaire_Definition,ReturnAirFraction)
 
   LuminaireDefinition_Impl::LuminaireDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
@@ -90,9 +78,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool LuminaireDefinition_Impl::isLightingPowerDefaulted() const {
-  //  return isEmpty(OS_Luminaire_DefinitionFields::LightingPower);
-  //}
+  bool LuminaireDefinition_Impl::isLightingPowerDefaulted() const {
+    return isEmpty(OS_Luminaire_DefinitionFields::LightingPower);
+  }
 
   double LuminaireDefinition_Impl::fractionRadiant() const {
     boost::optional<double> value = getDouble(OS_Luminaire_DefinitionFields::FractionRadiant,true);
@@ -100,9 +88,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool LuminaireDefinition_Impl::isFractionRadiantDefaulted() const {
-  //  return isEmpty(OS_Luminaire_DefinitionFields::FractionRadiant);
-  //}
+  bool LuminaireDefinition_Impl::isFractionRadiantDefaulted() const {
+    return isEmpty(OS_Luminaire_DefinitionFields::FractionRadiant);
+  }
 
   double LuminaireDefinition_Impl::fractionVisible() const {
     boost::optional<double> value = getDouble(OS_Luminaire_DefinitionFields::FractionVisible,true);
@@ -110,9 +98,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool LuminaireDefinition_Impl::isFractionVisibleDefaulted() const {
-  //  return isEmpty(OS_Luminaire_DefinitionFields::FractionVisible);
-  //}
+  bool LuminaireDefinition_Impl::isFractionVisibleDefaulted() const {
+    return isEmpty(OS_Luminaire_DefinitionFields::FractionVisible);
+  }
 
   double LuminaireDefinition_Impl::returnAirFraction() const {
     boost::optional<double> value = getDouble(OS_Luminaire_DefinitionFields::ReturnAirFraction,true);
@@ -120,9 +108,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool LuminaireDefinition_Impl::isReturnAirFractionDefaulted() const {
-  //  return isEmpty(OS_Luminaire_DefinitionFields::ReturnAirFraction);
-  //}
+  bool LuminaireDefinition_Impl::isReturnAirFractionDefaulted() const {
+    return isEmpty(OS_Luminaire_DefinitionFields::ReturnAirFraction);
+  }
 
   bool LuminaireDefinition_Impl::returnAirFractionCalculatedfromPlenumTemperature() const {
     boost::optional<std::string> value = getString(OS_Luminaire_DefinitionFields::ReturnAirFractionCalculatedfromPlenumTemperature,true);
@@ -159,40 +147,40 @@ namespace detail {
     return result;
   }
 
-  //void LuminaireDefinition_Impl::resetLightingPower() {
-  //  bool result = setString(OS_Luminaire_DefinitionFields::LightingPower, "");
-  //  OS_ASSERT(result);
-  //}
+  void LuminaireDefinition_Impl::resetLightingPower() {
+    bool result = setString(OS_Luminaire_DefinitionFields::LightingPower, "");
+    OS_ASSERT(result);
+  }
 
   bool LuminaireDefinition_Impl::setFractionRadiant(double fractionRadiant) {
     bool result = setDouble(OS_Luminaire_DefinitionFields::FractionRadiant, fractionRadiant);
     return result;
   }
 
-  //void LuminaireDefinition_Impl::resetFractionRadiant() {
-  //  bool result = setString(OS_Luminaire_DefinitionFields::FractionRadiant, "");
-  //  OS_ASSERT(result);
-  //}
+  void LuminaireDefinition_Impl::resetFractionRadiant() {
+    bool result = setString(OS_Luminaire_DefinitionFields::FractionRadiant, "");
+    OS_ASSERT(result);
+  }
 
   bool LuminaireDefinition_Impl::setFractionVisible(double fractionVisible) {
     bool result = setDouble(OS_Luminaire_DefinitionFields::FractionVisible, fractionVisible);
     return result;
   }
 
-  //void LuminaireDefinition_Impl::resetFractionVisible() {
-  //  bool result = setString(OS_Luminaire_DefinitionFields::FractionVisible, "");
-  //  OS_ASSERT(result);
-  //}
+  void LuminaireDefinition_Impl::resetFractionVisible() {
+    bool result = setString(OS_Luminaire_DefinitionFields::FractionVisible, "");
+    OS_ASSERT(result);
+  }
 
   bool LuminaireDefinition_Impl::setReturnAirFraction(double returnAirFraction) {
     bool result = setDouble(OS_Luminaire_DefinitionFields::ReturnAirFraction, returnAirFraction);
     return result;
   }
 
-  //void LuminaireDefinition_Impl::resetReturnAirFraction() {
-  //  bool result = setString(OS_Luminaire_DefinitionFields::ReturnAirFraction, "");
-  //  OS_ASSERT(result);
-  //}
+  void LuminaireDefinition_Impl::resetReturnAirFraction() {
+    bool result = setString(OS_Luminaire_DefinitionFields::ReturnAirFraction, "");
+    OS_ASSERT(result);
+  }
 
   bool LuminaireDefinition_Impl::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
     bool result = false;
