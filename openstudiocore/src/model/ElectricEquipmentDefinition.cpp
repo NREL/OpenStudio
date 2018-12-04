@@ -45,24 +45,6 @@ namespace model {
 
 namespace detail {
 
-  ATTRIBUTE_IMPLEMENTATION(1,0,0,designLevel,DesignLevel,
-                           ElectricEquipmentDefinition,0,OS_ElectricEquipment_Definition,DesignLevel)
-
-  ATTRIBUTE_IMPLEMENTATION(1,0,0,wattsperSpaceFloorArea,WattsperSpaceFloorArea,
-                           ElectricEquipmentDefinition,0,OS_ElectricEquipment_Definition,WattsperSpaceFloorArea)
-
-  ATTRIBUTE_IMPLEMENTATION(1,0,0,wattsperPerson,WattsperPerson,
-                           ElectricEquipmentDefinition,0,OS_ElectricEquipment_Definition,WattsperPerson)
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,fractionRadiant,FractionRadiant,
-                           ElectricEquipmentDefinition,0,OS_ElectricEquipment_Definition,FractionRadiant)
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,fractionLatent,FractionLatent,
-                           ElectricEquipmentDefinition,0,OS_ElectricEquipment_Definition,FractionLatent)
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,fractionLost,FractionLost,
-                           ElectricEquipmentDefinition,0,OS_ElectricEquipment_Definition,FractionLost)
-
   ElectricEquipmentDefinition_Impl::ElectricEquipmentDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
   {
@@ -83,7 +65,6 @@ namespace detail {
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {}
 
-  // TODO: remove
   const std::vector<std::string>& ElectricEquipmentDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -134,9 +115,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool ElectricEquipmentDefinition_Impl::isFractionLatentDefaulted() const {
-  //  return isEmpty(OS_ElectricEquipment_DefinitionFields::FractionLatent);
-  //}
+  bool ElectricEquipmentDefinition_Impl::isFractionLatentDefaulted() const {
+    return isEmpty(OS_ElectricEquipment_DefinitionFields::FractionLatent);
+  }
 
   double ElectricEquipmentDefinition_Impl::fractionRadiant() const {
     boost::optional<double> value = getDouble(OS_ElectricEquipment_DefinitionFields::FractionRadiant,true);
@@ -144,9 +125,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool ElectricEquipmentDefinition_Impl::isFractionRadiantDefaulted() const {
-  //  return isEmpty(OS_ElectricEquipment_DefinitionFields::FractionRadiant);
-  //}
+  bool ElectricEquipmentDefinition_Impl::isFractionRadiantDefaulted() const {
+    return isEmpty(OS_ElectricEquipment_DefinitionFields::FractionRadiant);
+  }
 
   double ElectricEquipmentDefinition_Impl::fractionLost() const {
     boost::optional<double> value = getDouble(OS_ElectricEquipment_DefinitionFields::FractionLost,true);
@@ -154,9 +135,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool ElectricEquipmentDefinition_Impl::isFractionLostDefaulted() const {
-  //  return isEmpty(OS_ElectricEquipment_DefinitionFields::FractionLost);
-  //}
+  bool ElectricEquipmentDefinition_Impl::isFractionLostDefaulted() const {
+    return isEmpty(OS_ElectricEquipment_DefinitionFields::FractionLost);
+  }
 
   bool ElectricEquipmentDefinition_Impl::setDesignLevel(boost::optional<double> designLevel) {
     bool result = true;
@@ -232,30 +213,30 @@ namespace detail {
     return result;
   }
 
-  //void ElectricEquipmentDefinition_Impl::resetFractionLatent() {
-  //  bool result = setString(OS_ElectricEquipment_DefinitionFields::FractionLatent, "");
-  //  OS_ASSERT(result);
-  //}
+  void ElectricEquipmentDefinition_Impl::resetFractionLatent() {
+    bool result = setString(OS_ElectricEquipment_DefinitionFields::FractionLatent, "");
+    OS_ASSERT(result);
+  }
 
   bool ElectricEquipmentDefinition_Impl::setFractionRadiant(double fractionRadiant) {
     bool result = setDouble(OS_ElectricEquipment_DefinitionFields::FractionRadiant, fractionRadiant);
     return result;
   }
 
-  //void ElectricEquipmentDefinition_Impl::resetFractionRadiant() {
-  //  bool result = setString(OS_ElectricEquipment_DefinitionFields::FractionRadiant, "");
-  //  OS_ASSERT(result);
-  //}
+  void ElectricEquipmentDefinition_Impl::resetFractionRadiant() {
+    bool result = setString(OS_ElectricEquipment_DefinitionFields::FractionRadiant, "");
+    OS_ASSERT(result);
+  }
 
   bool ElectricEquipmentDefinition_Impl::setFractionLost(double fractionLost) {
     bool result = setDouble(OS_ElectricEquipment_DefinitionFields::FractionLost, fractionLost);
     return result;
   }
 
-  //void ElectricEquipmentDefinition_Impl::resetFractionLost() {
-  //  bool result = setString(OS_ElectricEquipment_DefinitionFields::FractionLost, "");
-  //  OS_ASSERT(result);
-  //}
+  void ElectricEquipmentDefinition_Impl::resetFractionLost() {
+    bool result = setString(OS_ElectricEquipment_DefinitionFields::FractionLost, "");
+    OS_ASSERT(result);
+  }
 
   double ElectricEquipmentDefinition_Impl::getDesignLevel(double floorArea, double numPeople) const
   {
