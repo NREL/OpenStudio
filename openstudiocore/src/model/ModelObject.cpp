@@ -58,8 +58,6 @@
 #include "../utilities/sql/SqlFileTimeSeriesQuery.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/idf/ValidityReport.hpp"
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 #include <utilities/idd/OS_Output_Variable_FieldEnums.hxx>
 #include "../utilities/data/TimeSeries.hpp"

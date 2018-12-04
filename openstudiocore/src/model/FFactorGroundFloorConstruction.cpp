@@ -86,57 +86,36 @@ namespace detail {
     return OS_Construction_FfactorGroundFloorFields::SurfaceRenderingName;
   }
 
-  //double FFactorGroundFloorConstruction_Impl::fFactor() const
-  //{
-  //  boost::optional<double> value = getDouble(OS_Construction_FfactorGroundFloorFields::FFactor,true);
-  //  OS_ASSERT(value);
-  //  return value.get();
-  //}
-
   double FFactorGroundFloorConstruction_Impl::fFactor() const {
-    Quantity q = getFFactor(false);
-    return q.value();
+    boost::optional<double> value = getDouble(OS_Construction_FfactorGroundFloorFields::FFactor,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   bool FFactorGroundFloorConstruction_Impl::setFFactor(double fFactor) {
-    OSOptionalQuantity temp = getQuantity(OS_Construction_FfactorGroundFloorFields::FFactor,true,false);
-    bool result = setFFactor(Quantity(fFactor,temp.units()));
+    bool result = setDouble(OS_Construction_FfactorGroundFloorFields::FFactor, fFactor);
     return result;
   }
 
-  //double FFactorGroundFloorConstruction_Impl::area() const
-  //{
-  //  boost::optional<double> value = getDouble(OS_Construction_FfactorGroundFloorFields::Area,true);
-  //  OS_ASSERT(value);
-  //  return value.get();
-  //}
-
   double FFactorGroundFloorConstruction_Impl::area() const {
-    Quantity q = getArea(false);
-    return q.value();
+    boost::optional<double> value = getDouble(OS_Construction_FfactorGroundFloorFields::Area,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   bool FFactorGroundFloorConstruction_Impl::setArea(double area) {
-    OSOptionalQuantity temp = getQuantity(OS_Construction_FfactorGroundFloorFields::Area,true,false);
-    bool result = setArea(Quantity(area,temp.units()));
+    bool result = setDouble(OS_Construction_FfactorGroundFloorFields::Area, area);
     return result;
   }
 
-  //double FFactorGroundFloorConstruction_Impl::perimeterExposed() const
-  //{
-  //  boost::optional<double> value = getDouble(OS_Construction_FfactorGroundFloorFields::PerimeterExposed,true);
-  //  OS_ASSERT(value);
-  //  return value.get();
-  //}
-
   double FFactorGroundFloorConstruction_Impl::perimeterExposed() const {
-    Quantity q = getPerimeterExposed(false);
-    return q.value();
+    boost::optional<double> value = getDouble(OS_Construction_FfactorGroundFloorFields::PerimeterExposed,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   bool FFactorGroundFloorConstruction_Impl::setPerimeterExposed(double perimeterExposed) {
-    OSOptionalQuantity temp = getQuantity(OS_Construction_FfactorGroundFloorFields::PerimeterExposed,true,false);
-    bool result = setPerimeterExposed(Quantity(perimeterExposed,temp.units()));
+    bool result = setDouble(OS_Construction_FfactorGroundFloorFields::PerimeterExposed, perimeterExposed);
     return result;
   }
 
@@ -160,11 +139,6 @@ IddObjectType FFactorGroundFloorConstruction::iddObjectType() {
   return result;
 }
 
-//double FFactorGroundFloorConstruction::fFactor() const
-//{
-//  return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->fFactor();
-//}
-
 double FFactorGroundFloorConstruction::fFactor() const {
   return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->fFactor();
 }
@@ -173,11 +147,6 @@ bool FFactorGroundFloorConstruction::setFFactor(double fFactor) {
   return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->setFFactor(fFactor);
 }
 
-//double FFactorGroundFloorConstruction::area() const
-//{
-//  return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->area();
-//}
-
 double FFactorGroundFloorConstruction::area() const {
   return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->area();
 }
@@ -185,11 +154,6 @@ double FFactorGroundFloorConstruction::area() const {
 bool FFactorGroundFloorConstruction::setArea(double area) {
   return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->setArea(area);
 }
-
-//double FFactorGroundFloorConstruction::perimeterExposed() const
-//{
-//  return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->perimeterExposed();
-//}
 
 double FFactorGroundFloorConstruction::perimeterExposed() const {
   return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->perimeterExposed();

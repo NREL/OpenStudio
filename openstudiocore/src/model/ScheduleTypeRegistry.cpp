@@ -34,9 +34,6 @@
 #include "Schedule_Impl.hpp"
 #include "Model.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
-
 #include "../utilities/core/Containers.hpp"
 
 namespace openstudio {

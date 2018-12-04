@@ -87,39 +87,25 @@ namespace detail {
     return OS_Construction_CfactorUndergroundWallFields::SurfaceRenderingName;
   }
 
-  //double CFactorUndergroundWallConstruction_Impl::cFactor() const
-  //{
-  //  boost::optional<double> value = getDouble(OS_Construction_CfactorUndergroundWallFields::CFactor,true);
-  //  OS_ASSERT(value);
-  //  return value.get();
-  //}
-
   double CFactorUndergroundWallConstruction_Impl::cFactor() const {
-    Quantity q = getCFactor(false);
-    return q.value();
+    boost::optional<double> value = getDouble(OS_Construction_CfactorUndergroundWallFields::CFactor,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   bool CFactorUndergroundWallConstruction_Impl::setCFactor(double cFactor) {
-    OSOptionalQuantity temp = getQuantity(OS_Construction_CfactorUndergroundWallFields::CFactor,true,false);
-    bool result = setCFactor(Quantity(cFactor,temp.units()));
+    bool result = setDouble(OS_Construction_CfactorUndergroundWallFields::CFactor, cFactor);
     return result;
   }
 
-  //double CFactorUndergroundWallConstruction_Impl::height() const
-  //{
-  //  boost::optional<double> value = getDouble(OS_Construction_CfactorUndergroundWallFields::Height,true);
-  //  OS_ASSERT(value);
-  //  return value.get();
-  //}
-
   double CFactorUndergroundWallConstruction_Impl::height() const {
-    Quantity q = getHeight(false);
-    return q.value();
+    boost::optional<double> value = getDouble(OS_Construction_CfactorUndergroundWallFields::Height,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   bool CFactorUndergroundWallConstruction_Impl::setHeight(double height) {
-    OSOptionalQuantity temp = getQuantity(OS_Construction_CfactorUndergroundWallFields::Height,true,false);
-    bool result = setHeight(Quantity(height,temp.units()));
+    bool result = setDouble(OS_Construction_CfactorUndergroundWallFields::Height, height);
     return result;
   }
 
