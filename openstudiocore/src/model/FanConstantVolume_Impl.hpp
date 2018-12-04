@@ -36,15 +36,12 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class AirflowNetworkFan;
 
 namespace detail {
 
   class MODEL_API FanConstantVolume_Impl : public StraightComponent_Impl {
 
-    // TODO: @macumber, isn't this deprecated now?!
-    Q_PROPERTY( boost::optional<openstudio::model::ModelObject> availabilitySchedule
-                READ availabilityScheduleAsModelObject
-                WRITE setAvailibiltyScheduleAsModelObject);
    public:
     /** @name Constructors and Destructors */
     //@{
