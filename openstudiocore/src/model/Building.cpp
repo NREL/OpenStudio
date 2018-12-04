@@ -67,7 +67,6 @@
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/units/QuantityConverter.hpp"
 
 #include <boost/optional.hpp>
 #include <boost/algorithm/string.hpp>
@@ -896,7 +895,7 @@ namespace detail {
       }
       LOG_AND_THROW("Calculation would require division by 0.");
     }
-    return convert(idfr/volume,"1/s","1/h").get();
+    return (idfr/volume) * 3600.0;
   }
 
   Transformation Building_Impl::transformation() const

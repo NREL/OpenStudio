@@ -115,7 +115,6 @@
 #include "../utilities/geometry/Vector3d.hpp"
 
 #include "../utilities/units/Unit.hpp"
-#include "../utilities/units/QuantityConverter.hpp"
 
 #include "../utilities/math/FloatCompare.hpp"
 
@@ -1204,7 +1203,7 @@ namespace detail {
       }
       LOG_AND_THROW("Calculation would require division by 0.");
     }
-    return convert(idfr/volume,"1/s","1/h").get();
+    return (idfr/volume) * 3600.0;
   }
 
   boost::optional<std::string> ThermalZone_Impl::isConditioned() const {
