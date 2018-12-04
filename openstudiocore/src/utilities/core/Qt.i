@@ -141,15 +141,6 @@ public:
   void setVisible(bool visible);
 };
 
-class QMainWindow : public QWidget
-{};
-
-class QDialog : public QWidget
-{};
-
-class QComboBox : public QWidget
-{};
-
 class QTextStream{};
 
 class QRgb{};
@@ -162,8 +153,6 @@ class QString{};
     return toString(*self);
   }
 }
-
-class QDateTime{};
 
 class QModelIndex{};
 
@@ -275,25 +264,6 @@ class QVariant {
   const char* typeToName( Type typ );
 };
 
-class QThread : public QObject
-{
- public:
-  enum Priority { IdlePriority, LowestPriority, LowPriority, NormalPriority, InheritPriority };
-
-  void exit ( int returnCode = 0 );
-  bool isFinished () const;
-  bool isRunning () const;
-  void quit ();
-  void start ( Priority priority = InheritPriority );
-  void terminate ();
-
- protected:
-  virtual void run();
-  int exec();
-};
-
-class QFile
-{};
 
 #endif
 
