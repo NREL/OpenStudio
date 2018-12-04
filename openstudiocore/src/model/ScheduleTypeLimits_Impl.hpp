@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ResourceObject_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -77,11 +75,7 @@ namespace detail {
 
     boost::optional<double> lowerLimitValue() const;
 
-    OSOptionalQuantity getLowerLimitValue(bool returnIP=false) const;
-
     boost::optional<double> upperLimitValue() const;
-
-    OSOptionalQuantity getUpperLimitValue(bool returnIP=false) const;
 
     boost::optional<std::string> numericType() const;
 
@@ -97,13 +91,9 @@ namespace detail {
 
     bool setLowerLimitValue(boost::optional<double> lowerLimitValue);
 
-    bool setLowerLimitValue(const OSOptionalQuantity& lowerLimitValue);
-
     void resetLowerLimitValue();
 
     bool setUpperLimitValue(boost::optional<double> upperLimitValue);
-
-    bool setUpperLimitValue(const OSOptionalQuantity& upperLimitValue);
 
     void resetUpperLimitValue();
 
@@ -121,19 +111,10 @@ namespace detail {
 
     //@}
    protected:
-    virtual OSOptionalQuantity getQuantityFromDouble(unsigned index,
-                                                     boost::optional<double> value,
-                                                     bool returnIP) const override;
-
-    virtual boost::optional<double> getDoubleFromQuantity(unsigned index, Quantity q) const;
 
    private:
     REGISTER_LOGGER("openstudio.model.ScheduleTypeLimits");
 
-    openstudio::OSOptionalQuantity lowerLimitValue_SI() const;
-    openstudio::OSOptionalQuantity lowerLimitValue_IP() const;
-    openstudio::OSOptionalQuantity upperLimitValue_SI() const;
-    openstudio::OSOptionalQuantity upperLimitValue_IP() const;
     std::vector<std::string> numericTypeValues() const;
     std::vector<std::string> unitTypeValues() const;
   };

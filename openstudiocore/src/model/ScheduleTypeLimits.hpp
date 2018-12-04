@@ -34,8 +34,6 @@
 #include "ResourceObject.hpp"
 
 namespace openstudio {
-class Quantity;
-class OSOptionalQuantity;
 namespace model {
 
 namespace detail {
@@ -71,11 +69,7 @@ class MODEL_API ScheduleTypeLimits : public ResourceObject {
 
   boost::optional<double> lowerLimitValue() const;
 
-  OSOptionalQuantity getLowerLimitValue(bool returnIP=false) const;
-
   boost::optional<double> upperLimitValue() const;
-
-  OSOptionalQuantity getUpperLimitValue(bool returnIP=false) const;
 
   boost::optional<std::string> numericType() const;
 
@@ -94,13 +88,9 @@ class MODEL_API ScheduleTypeLimits : public ResourceObject {
 
   bool setLowerLimitValue(double lowerLimitValue);
 
-  bool setLowerLimitValue(const Quantity& lowerLimitValue);
-
   void resetLowerLimitValue();
 
   bool setUpperLimitValue(double upperLimitValue);
-
-  bool setUpperLimitValue(const Quantity& upperLimitValue);
 
   void resetUpperLimitValue();
 

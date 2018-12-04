@@ -42,30 +42,6 @@
 namespace openstudio {
 namespace model {
 
-OSOptionalQuantity ScheduleType::getLowerLimitValue(bool returnIP) const {
-  if (OptionalUnit u = ScheduleTypeLimits::units(unitType,returnIP)) {
-    if (lowerLimitValue) {
-      return OSOptionalQuantity(Quantity(*lowerLimitValue,*u));
-    }
-    return OSOptionalQuantity(*u);
-  }
-  LOG_FREE_AND_THROW("openstudio.model.ScheduleTypeRegistry",
-                     "Cannot return any units for unitType " << unitType << ".");
-  return OSOptionalQuantity(UnitSystem(UnitSystem::SI));
-}
-
-OSOptionalQuantity ScheduleType::getUpperLimitValue(bool returnIP) const {
-  if (OptionalUnit u = ScheduleTypeLimits::units(unitType,returnIP)) {
-    if (upperLimitValue) {
-      return OSOptionalQuantity(Quantity(*upperLimitValue,*u));
-    }
-    return OSOptionalQuantity(*u);
-  }
-  LOG_FREE_AND_THROW("openstudio.model.ScheduleTypeRegistry",
-                     "Cannot return any units for unitType " << unitType << ".");
-  return OSOptionalQuantity(UnitSystem(UnitSystem::SI));
-}
-
 std::vector<std::string> ScheduleTypeRegistrySingleton::classNames() const {
   StringVector result;
   for (const ClassNameToScheduleTypesMap::value_type& p : m_classNameToScheduleTypesMap) {

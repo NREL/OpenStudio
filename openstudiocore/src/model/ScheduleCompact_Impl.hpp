@@ -89,8 +89,6 @@ namespace detail {
 
     bool setToConstantValue(double value);
 
-    bool setToConstantValue(const Quantity& value);
-
     // ensure that this object does not contain the date 2/29
     virtual void ensureNoLeapDays() override;
 
@@ -102,7 +100,6 @@ namespace detail {
 
     boost::optional<double> constantValue() const;
 
-    boost::optional<Quantity> getConstantValue(bool returnIP=false) const;
 
     //@}
    private:

@@ -117,10 +117,6 @@ namespace detail {
     return *result;
   }
 
-  boost::optional<Quantity> ScheduleConstant_Impl::getValue(bool returnIP) const {
-    return toQuantity(value(),returnIP);
-  }
-
   bool ScheduleConstant_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
     if (scheduleTypeLimits.model() != model()) {
       return false;
@@ -142,15 +138,6 @@ namespace detail {
     bool ok = setDouble(OS_Schedule_ConstantFields::Value, value);
     OS_ASSERT(ok);
     return ok;
-  }
-
-  bool ScheduleConstant_Impl::setValue(const Quantity& value) {
-    OptionalDouble dval = toDouble(value);
-    if (dval) {
-      setValue(*dval);
-      return true;
-    }
-    return false;
   }
 
   void ScheduleConstant_Impl::ensureNoLeapDays()
@@ -187,19 +174,11 @@ IddObjectType ScheduleConstant::iddObjectType() {
   return result;
 }
 
-boost::optional<Quantity> ScheduleConstant::getValue(bool returnIP) const {
-  return getImpl<detail::ScheduleConstant_Impl>()->getValue(returnIP);
-}
-
 double ScheduleConstant::value() const {
   return getImpl<detail::ScheduleConstant_Impl>()->value();
 }
 
 bool ScheduleConstant::setValue(double value) {
-  return getImpl<detail::ScheduleConstant_Impl>()->setValue(value);
-}
-
-bool ScheduleConstant::setValue(const Quantity& value) {
   return getImpl<detail::ScheduleConstant_Impl>()->setValue(value);
 }
 

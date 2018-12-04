@@ -35,12 +35,6 @@
 
 #include "../utilities/idf/ValidityReport.hpp"
 
-#include "../utilities/units/Unit.hpp"
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSQuantityVector.hpp"
-#include "../utilities/units/QuantityConverter.hpp"
-#include "../utilities/units/ScaleFactory.hpp"
-
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -66,61 +60,6 @@ namespace detail {
                                        bool keepHandles)
     : ResourceObject_Impl(other, model,keepHandles)
   {}
-
-  OSQuantityVector ScheduleBase_Impl::getValues(bool returnIP) const {
-    OSQuantityVector result;
-    if (OptionalScheduleTypeLimits scheduleTypeLimits = this->scheduleTypeLimits()) {
-      if (OptionalUnit siUnits = ScheduleTypeLimits::units(scheduleTypeLimits->unitType(),false)) {
-        result = OSQuantityVector(*siUnits,values());
-        if (returnIP) {
-          OptionalUnit ipUnits = ScheduleTypeLimits::units(scheduleTypeLimits->unitType(),returnIP);
-          OS_ASSERT(ipUnits);
-          if (ipUnits.get() != siUnits.get()) {
-            result = convert(result,*ipUnits);
-          }
-        }
-      }
-    }
-    return result;
-  }
-
-  boost::optional<Quantity> ScheduleBase_Impl::toQuantity(double value, bool returnIP) const {
-    OptionalQuantity result;
-    if (OptionalScheduleTypeLimits scheduleTypeLimits = this->scheduleTypeLimits()) {
-      if (OptionalUnit siUnits = ScheduleTypeLimits::units(scheduleTypeLimits->unitType(),false)) {
-        result = Quantity(value,*siUnits);
-        if (returnIP) {
-          OptionalUnit ipUnits = ScheduleTypeLimits::units(scheduleTypeLimits->unitType(),returnIP);
-          OS_ASSERT(ipUnits);
-          if (ipUnits.get() != siUnits.get()) {
-            result = convert(*result,*ipUnits);
-          }
-        }
-      }
-    }
-    return result;
-  }
-
-  boost::optional<double> ScheduleBase_Impl::toDouble(const Quantity& quantity) const {
-    OptionalDouble result;
-    OptionalQuantity working(quantity);
-    if (OptionalScheduleTypeLimits scheduleTypeLimits = this->scheduleTypeLimits()) {
-      if (OptionalUnit siUnits = ScheduleTypeLimits::units(scheduleTypeLimits->unitType(),false)) {
-        if (siUnits) {
-          if (working->units() == *siUnits) {
-            working->setScale(siUnits->scale().exponent);
-          }
-          else {
-            working = convert(*working,*siUnits);
-          }
-          if (working) {
-            result = working->value();
-          }
-        }
-      }
-    }
-    return result;
-  }
 
   bool ScheduleBase_Impl::okToResetScheduleTypeLimits() const {
     // can only reset if not used by object with keys

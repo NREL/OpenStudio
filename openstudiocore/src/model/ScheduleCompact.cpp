@@ -170,15 +170,6 @@ namespace detail {
     return true;
   }
 
-  bool ScheduleCompact_Impl::setToConstantValue(const Quantity& value) {
-    OptionalDouble dval = toDouble(value);
-    if (dval) {
-      setToConstantValue(*dval);
-      return true;
-    }
-    return false;
-  }
-
   void ScheduleCompact_Impl::ensureNoLeapDays()
   {
     LOG(Warn, "Ensure no leap days is not yet implemented for schedule compact");
@@ -198,14 +189,6 @@ namespace detail {
       return scheduleData[3].getDouble(0);
     }
     return boost::none;
-  }
-
-  boost::optional<Quantity> ScheduleCompact_Impl::getConstantValue(bool returnIP) const {
-    OptionalQuantity result;
-    if (OptionalDouble value = constantValue()) {
-      result = toQuantity(*value,returnIP);
-    }
-    return result;
   }
 
   std::vector<EMSActuatorNames> ScheduleCompact_Impl::emsActuatorNames() const {
@@ -233,13 +216,6 @@ ScheduleCompact::ScheduleCompact(const Model& model,double constantValue)
   setToConstantValue(constantValue);
 }
 
-ScheduleCompact::ScheduleCompact(const Model& model,const Quantity& constantValue)
-  : Schedule(ScheduleCompact::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ScheduleCompact_Impl>());
-  setToConstantValue(constantValue);
-}
-
 // constructor
 ScheduleCompact::ScheduleCompact(std::shared_ptr<detail::ScheduleCompact_Impl> impl)
   : Schedule(std::move(impl))
@@ -249,20 +225,12 @@ bool ScheduleCompact::setToConstantValue(double value) {
   return getImpl<detail::ScheduleCompact_Impl>()->setToConstantValue(value);
 }
 
-bool ScheduleCompact::setToConstantValue(const Quantity& value) {
-  return getImpl<detail::ScheduleCompact_Impl>()->setToConstantValue(value);
-}
-
 bool ScheduleCompact::isConstantValue() const {
   return getImpl<detail::ScheduleCompact_Impl>()->isConstantValue();
 }
 
 boost::optional<double> ScheduleCompact::constantValue() const {
   return getImpl<detail::ScheduleCompact_Impl>()->constantValue();
-}
-
-boost::optional<Quantity> ScheduleCompact::getConstantValue(bool returnIP) const {
-  return getImpl<detail::ScheduleCompact_Impl>()->getConstantValue(returnIP);
 }
 
 IddObjectType ScheduleCompact::iddObjectType() {
