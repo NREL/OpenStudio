@@ -29,15 +29,13 @@
 
 #include "ElectricEquipmentDefinition.hpp"
 #include "ElectricEquipmentDefinition_Impl.hpp"
-#include "attributes.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
-
 #include <utilities/idd/OS_ElectricEquipment_Definition_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/math/FloatCompare.hpp"
-
+#include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {

@@ -31,17 +31,12 @@
 
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
-#include "../model/CurveBiquadratic.hpp"
-#include "../model/CurveBiquadratic_Impl.hpp"
-#include "../model/CurveQuadratic.hpp"
-#include "../model/CurveQuadratic_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveQuadratic.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
-#include "attributes.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -49,7 +44,7 @@
 
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/math/FloatCompare.hpp"
-
+#include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -279,7 +274,7 @@ namespace detail {
     boost::to_lower(wmethod);
 
     if (wmethod == "flowfromsystem") {
-      return setString(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::AirFlowCalculationMethod, "FlowFromSystem"); 
+      return setString(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::AirFlowCalculationMethod, "FlowFromSystem");
     } else if (wmethod == "flowcontrolwithapproachtemperatures") {
       bool result;
       result = setString(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::AirFlowCalculationMethod, "FlowControlWithApproachTemperatures");
@@ -546,7 +541,7 @@ ElectricEquipmentITEAirCooledDefinition::ElectricEquipmentITEAirCooledDefinition
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setMinimumValueofy(-10);
   cPUPowerInputFunctionofLoadingandAirTemperatureCurve.setMaximumValueofy(99.0);
   setCPUPowerInputFunctionofLoadingandAirTemperatureCurve(cPUPowerInputFunctionofLoadingandAirTemperatureCurve);
-  
+
   //reference: Comparative Study of High Ambient Inlet Temperature Effects on the Performance of Air vs. Liquid Cooled IT Equipment
   CurveBiquadratic airFlowFunctionofLoadingandAirTemperatureCurve(model);
   airFlowFunctionofLoadingandAirTemperatureCurve.setCoefficient1Constant(-1.025);
@@ -577,7 +572,7 @@ ElectricEquipmentITEAirCooledDefinition::ElectricEquipmentITEAirCooledDefinition
   Curve& cPUPowerInputFunctionofLoadingandAirTemperatureCurve,
   Curve& airFlowFunctionofLoadingandAirTemperatureCurve,
   Curve& fanPowerInputFunctionofFlowCurve)
-  : SpaceLoadDefinition(ElectricEquipmentITEAirCooledDefinition::iddObjectType(), model) 
+  : SpaceLoadDefinition(ElectricEquipmentITEAirCooledDefinition::iddObjectType(), model)
 {
   OS_ASSERT(getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>());
 
