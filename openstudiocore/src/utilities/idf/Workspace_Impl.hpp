@@ -462,7 +462,7 @@ namespace detail {
 
     /// report caption describing what we are currently doing
     // void progressCaption(const QString& caption) const;
-    mutable Nano::Signal<void(const QString&)> progressCaption;
+    mutable Nano::Signal<void(const std::string&)> progressCaption;
 
     /** Emitted on any change to this Workspace and its contents. */
     // void onChange() const;

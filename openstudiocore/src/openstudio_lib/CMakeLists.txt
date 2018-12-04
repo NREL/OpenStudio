@@ -438,6 +438,8 @@ set(${target_name}_SRC
   ../shared_gui_components/OSListView.hpp
   ../shared_gui_components/OSLoadNamePixmapLineEdit.cpp
   ../shared_gui_components/OSLoadNamePixmapLineEdit.hpp
+  ../shared_gui_components/OSProgressBar.cpp
+  ../shared_gui_components/OSProgressBar.hpp 
   ../shared_gui_components/OSQObjectController.cpp
   ../shared_gui_components/OSQObjectController.hpp
   ../shared_gui_components/OSQuantityEdit.cpp

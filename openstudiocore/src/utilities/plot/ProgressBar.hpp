@@ -41,58 +41,45 @@
 
 namespace openstudio{
 
-  /** ProgressBar wraps a QProgressBar and provides virtual methods setRange, setValue, and setWindowTitle(QString)
+  /** ProgressBar is a pure virtual class providing virtual methods setRange, setValue, and setWindowTitle   
    *  which may be overridden.
-   *
-   *  ProgressBar an atypical QObject because it is designed to be stack allocated.  In many cases it
-   *  would be preferred to connect your own heap allocated QObject to the signals directly rather
-   *  than using this convenience class.
    **/
   class UTILITIES_API ProgressBar {
 
   public:
 
-    /// constructor
-    ProgressBar(QWidget* parent = nullptr);
-
-    /// constructor
-    ProgressBar(bool visible, QWidget* parent = nullptr);
-
-    /// constructor from impl
-    //ProgressBar(const std::shared_ptr<QProgressBar>& impl);
-
     /// virtual destructor
     virtual ~ProgressBar();
 
     /// get min
-    int minimum() const;
+    virtual int minimum() const = 0;
 
     /// set min
-    void setMinimum(int min);
+    virtual void setMinimum(int min) = 0;
 
     /// get max
-    int maximum() const;
+    virtual int maximum() const = 0;
 
     /// set max
-    void setMaximum(int max);
+    virtual void setMaximum(int max) = 0;
 
     /// get value
-    int value() const;
+    virtual int value() const = 0;
 
     /// get the window title
-    std::string windowTitle() const;
+    virtual std::string windowTitle() const = 0;
 
     /// set the window title
-    void setWindowTitle(const std::string& title);
+    virtual void setWindowTitle(const std::string& title) = 0;
 
     /// get the text
-    std::string text() const;
+    virtual std::string text() const = 0;
 
     /// get if visible
-    bool isVisible() const;
+    virtual  bool isVisible() const = 0;
 
     /// set if visible
-    void setVisible(bool visible);
+    virtual void setVisible(bool visible) = 0;
 
     /// virtual method called every time percentageUpdated fires
     virtual void onPercentageUpdated(double percentage);
@@ -100,30 +87,23 @@ namespace openstudio{
   // public slots:
 
     /// set range
-    void setRange(int min, int max);
+    virtual void setRange(int min, int max) = 0;
 
     /// set value
-    void setValue(int value);
-
-    /// set window title
-    void setWindowTitle(const QString& windowTitle);
+    virtual void setValue(int value) = 0;
 
   // signals:
 
     /// called every time progress increases by 1% more than last progress
     Nano::Signal<void(double)> percentageUpdated;
 
-
   protected:
-
-    /// return the impl
-    //std::shared_ptr<QProgressBar> impl() const;
-
-  private:
-    /// impl
-    std::shared_ptr<QProgressBar> m_impl;
+  
+    ProgressBar();
 
     void updatePercentage();
+    
+  private:
 
     double m_percentage;
   };

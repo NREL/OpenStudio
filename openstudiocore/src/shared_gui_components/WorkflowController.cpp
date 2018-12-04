@@ -37,6 +37,7 @@
 #include "../openstudio_lib/OSDocument.hpp"
 #include "LocalLibraryController.hpp"
 #include "WorkflowTools.hpp"
+#include "OSProgressBar.hpp"
 
 #include "../energyplus/ForwardTranslator.hpp"
 
@@ -47,7 +48,6 @@
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/filetypes/WorkflowStep_Impl.hpp"
-#include "../utilities/plot/ProgressBar.hpp"
 
 #include <QByteArray>
 #include <QDialog>

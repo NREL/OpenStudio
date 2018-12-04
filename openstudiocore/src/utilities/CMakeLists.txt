@@ -268,10 +268,6 @@ set(data_moc
 #  data/Attribute_Impl.hpp
 )
 
-set(plot_moc
-#  plot/ProgressBar.hpp
-)
-
 ###############################################################################
 # idf_moc files include generated source code.  It is important that these
 # generated files are generated before moc runs.
@@ -304,7 +300,6 @@ qt5_wrap_cpp_minimally(bcl_moc_src ${bcl_moc})
 qt5_wrap_cpp_minimally(core_moc_src ${core_moc}) # RM
 qt5_wrap_cpp_minimally(idf_moc_src ${idfxx_moc})
 qt5_wrap_cpp_minimally(data_moc_src ${data_moc}) # RM
-qt5_wrap_cpp_minimally(plot_moc_src ${plot_moc}) # [sudo] RM [-rf]
 
 
 # embedded files, bump again to update common files
@@ -377,7 +372,6 @@ set(${target_name}_src
   ${geometry_src}
   ${math_src}
   ${plot_src}
-  ${plot_moc_src}
   ${time_src}
   ${units_src}
   ${EMBEDDED_OUTPUT}
@@ -440,8 +434,6 @@ set(${target_name}_test_src
   math/test/FloatCompare_GTest.cpp
   math/test/Permutation_GTest.cpp
   math/test/Primes_GTest.cpp
-
-  plot/Test/ProgressBar_GTest.cpp
 
   time/Test/Calendar_GTest.cpp
   time/Test/Date_GTest.cpp
@@ -520,7 +512,6 @@ set(${target_name}_swig_src
   data/TimeSeries.i
   data/Variant.i
   data/Vector.i
-  plot/Plot.i
   plot/ProgressBar.i
   units/Scale.i
   units/ScaleFactory.i

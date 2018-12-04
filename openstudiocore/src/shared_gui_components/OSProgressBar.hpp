@@ -27,49 +27,95 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "ProgressBar.hpp"
+#ifndef SHAREDGUICOMPONENTS_OSProgressBar_HPP
+#define SHAREDGUICOMPONENTS_OSProgressBar_HPP
 
-#include "../core/Application.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/core/Macro.hpp"
+#include "../utilities/core/String.hpp"
 
-#include <cmath>
-#include <nano/nano_signal_slot.hpp>
+#include <QProgressBar>
+#include <memory>
+
+class QWidget;
 
 namespace openstudio{
 
-  /// constructor
-  ProgressBar::ProgressBar()
-    : m_percentage(0.0)
-  {
-    updatePercentage();
-  }
+  /** OSProgressBar wraps a QProgressBar and provides virtual methods setRange, setValue, and setWindowTitle(QString)
+   *  which may be overridden.
+   *
+   *  OSProgressBar an atypical QObject because it is designed to be stack allocated.  In many cases it
+   *  would be preferred to connect your own heap allocated QObject to the signals directly rather
+   *  than using this convenience class.
+   **/
+  class OSProgressBar : public ProgressBar {
 
-  /// virtual destructor
-  ProgressBar::~ProgressBar()
-  {
-  }
+  public:
 
-  /// virtual method called every time progressUpdated fires
-  void ProgressBar::onPercentageUpdated(double percentage)
-  {
-  }
+    /// constructor
+    OSProgressBar(QWidget* parent = nullptr);
 
-  void ProgressBar::updatePercentage()
-  {
-    double value = this->value();
-    double max = this->maximum();
-    double min = this->minimum();
-    double range = max - min;
+    /// constructor
+    OSProgressBar(bool visible, QWidget* parent = nullptr);
 
-    double newPercentage = 0.0;
-    if (range > 0.0){
-      newPercentage = 100.0 * (value - min) / range;
-    }
+    /// virtual destructor
+    virtual ~OSProgressBar();
 
-    if (fabs(newPercentage-m_percentage) >= 1.0){
-      m_percentage = newPercentage;
-      this->percentageUpdated.nano_emit(m_percentage);
-      onPercentageUpdated(m_percentage);
-    }
-  }
+    /// get min
+    int minimum() const;
+
+    /// set min
+    void setMinimum(int min);
+
+    /// get max
+    int maximum() const;
+
+    /// set max
+    void setMaximum(int max);
+
+    /// get value
+    int value() const;
+
+    /// get the window title
+    std::string windowTitle() const;
+
+    /// set the window title
+    void setWindowTitle(const std::string& title);
+
+    /// get the text
+    std::string text() const;
+
+    /// get if visible
+    bool isVisible() const;
+
+    /// set if visible
+    void setVisible(bool visible);
+
+    /// virtual method called every time percentageUpdated fires
+    virtual void onPercentageUpdated(double percentage);
+
+  // public slots:
+
+    /// set range
+    void setRange(int min, int max);
+
+    /// set value
+    void setValue(int value);
+
+    /// set window title
+    void setWindowTitle(const QString& windowTitle);
+
+  protected:
+
+    /// return the impl
+    //std::shared_ptr<QProgressBar> impl() const;
+
+  private:
+    /// impl
+    std::shared_ptr<QProgressBar> m_impl;
+
+  };
 
 } // openstudio
+
+#endif //SHAREDGUICOMPONENTS_OSProgressBar_HPP
