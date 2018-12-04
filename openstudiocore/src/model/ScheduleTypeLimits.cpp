@@ -112,14 +112,9 @@ namespace detail {
     return ScheduleTypeLimits::units(unitType(), returnIP);
   }
 
-  bool ScheduleTypeLimits_Impl::setLowerLimitValue(boost::optional<double> lowerLimitValue) {
+  bool ScheduleTypeLimits_Impl::setLowerLimitValue(double lowerLimitValue) {
     bool result = false;
-    if (lowerLimitValue) {
-      result = setDouble(OS_ScheduleTypeLimitsFields::LowerLimitValue, lowerLimitValue.get());
-    } else {
-      result = setString(OS_ScheduleTypeLimitsFields::LowerLimitValue, "");
-    }
-    OS_ASSERT(result);
+    result = setDouble(OS_ScheduleTypeLimitsFields::LowerLimitValue, lowerLimitValue);
     return result;
   }
 
@@ -128,14 +123,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ScheduleTypeLimits_Impl::setUpperLimitValue(boost::optional<double> upperLimitValue) {
+  bool ScheduleTypeLimits_Impl::setUpperLimitValue(double upperLimitValue) {
     bool result = false;
-    if (upperLimitValue) {
-      result = setDouble(OS_ScheduleTypeLimitsFields::UpperLimitValue, upperLimitValue.get());
-    } else {
-      result = setString(OS_ScheduleTypeLimitsFields::UpperLimitValue, "");
-    }
-    OS_ASSERT(result);
+    result = setDouble(OS_ScheduleTypeLimitsFields::UpperLimitValue, upperLimitValue);
     return result;
   }
 
@@ -144,13 +134,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ScheduleTypeLimits_Impl::setNumericType(boost::optional<std::string> numericType) {
+  bool ScheduleTypeLimits_Impl::setNumericType(std::string numericType) {
     bool result = false;
-    if (numericType) {
-      result = setString(OS_ScheduleTypeLimitsFields::NumericType, numericType.get());
-    } else {
-      result = setString(OS_ScheduleTypeLimitsFields::NumericType, "");
-    }
+    result = setString(OS_ScheduleTypeLimitsFields::NumericType, numericType);
     return result;
   }
 
@@ -167,16 +153,6 @@ namespace detail {
   void ScheduleTypeLimits_Impl::resetUnitType() {
     bool result = setString(OS_ScheduleTypeLimitsFields::UnitType, "");
     OS_ASSERT(result);
-  }
-
-  // TODO: This is probably not needed here:
-  std::vector<std::string> ScheduleTypeLimits_Impl::numericTypeValues() const {
-    return ScheduleTypeLimits::numericTypeValues();
-  }
-
-  // TODO: This is probably not needed here:
-  std::vector<std::string> ScheduleTypeLimits_Impl::unitTypeValues() const {
-    return ScheduleTypeLimits::unitTypeValues();
   }
 
 } // detail

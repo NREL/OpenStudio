@@ -89,15 +89,15 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setLowerLimitValue(boost::optional<double> lowerLimitValue);
+    bool setLowerLimitValue(double lowerLimitValue);
 
     void resetLowerLimitValue();
 
-    bool setUpperLimitValue(boost::optional<double> upperLimitValue);
+    bool setUpperLimitValue(double upperLimitValue);
 
     void resetUpperLimitValue();
 
-    bool setNumericType(boost::optional<std::string> numericType);
+    bool setNumericType(std::string numericType);
 
     void resetNumericType();
 
@@ -115,8 +115,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.ScheduleTypeLimits");
 
-    std::vector<std::string> numericTypeValues() const;
-    std::vector<std::string> unitTypeValues() const;
   };
 
 } // detail
