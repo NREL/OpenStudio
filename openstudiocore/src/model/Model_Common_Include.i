@@ -28,9 +28,6 @@
 
   #include <utilities/data/EndUses.hpp>
 
-  #include <utilities/units/Quantity.hpp>
-  #include <utilities/units/OSOptionalQuantity.hpp>
-  #include <utilities/units/OSQuantityVector.hpp>
   #include <utilities/units/Unit.hpp>
   #include <utilities/units/SIUnit.hpp>
   #include <utilities/units/IPUnit.hpp>
