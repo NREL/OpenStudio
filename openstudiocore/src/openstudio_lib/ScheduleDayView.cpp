@@ -560,35 +560,62 @@ void ScheduleLimitsView::onToggleUnitsClicked(bool displayIP)
   m_upperTypeLimit.reset();
 
   double lowerViewLimitSpinBoxValue = LOWER_LIMIT;
+  double upperViewLimitSpinBoxValue = UPPER_LIMIT;
+
   if (m_scheduleTypeLimits) {
-    OSOptionalQuantity lowerLimitQ = m_scheduleTypeLimits->getLowerLimitValue(m_isIP);
-    if (lowerLimitQ.isSet()) {
-      m_lowerTypeLimit = lowerLimitQ.get().value();
+
+    // Get as SI units for potential conversion
+    boost::optional<Unit> _siUnits = m_scheduleTypeLimits->units(false);
+    // Get as target units (depends on m_isIP)
+    boost::optional<Unit> _toUnits = m_scheduleTypeLimits->units(m_isIP);
+
+
+    // Lower Limit
+    boost::optional<double>  _value = m_scheduleTypeLimits->lowerLimitValue();
+
+    if (_value.is_initialized() && m_isIP && (_siUnits.get() != _toUnits.get() )) {
+      // Do conversion:
+      Quantity q = openstudio::Quantity(_value.get(), _siUnits.get());
+      OptionalQuantity result = openstudio::convert(q, _toUnits.get());
+      OS_ASSERT(result);
+      m_lowerTypeLimit = result.get().value();
+
     } else {
-      // DLM: used for dimensionless numbers
-      m_lowerTypeLimit = m_scheduleTypeLimits->lowerLimitValue();
+      // Used for dimensionless numbers for eg (and also those where you have no limit)
+      m_lowerTypeLimit = _value;
     }
+
     if (m_lowerTypeLimit){
       lowerViewLimitSpinBoxValue = *m_lowerTypeLimit;
     }
+
+    // Upper Limit
+    _value = m_scheduleTypeLimits->upperLimitValue();
+
+    if (_value.is_initialized() && m_isIP && (_siUnits.get() != _toUnits.get() )) {
+      // Do conversion:
+      Quantity q = openstudio::Quantity(_value.get(), _siUnits.get());
+      OptionalQuantity result = openstudio::convert(q, _toUnits.get());
+      OS_ASSERT(result);
+      m_upperTypeLimit = result.get().value();
+
+    } else {
+      // Used for dimensionless numbers for eg (and also those where you have no limit)
+      m_upperTypeLimit = _value;
+    }
+
+    if (m_upperTypeLimit){
+      upperViewLimitSpinBoxValue = *m_upperTypeLimit;
+    }
+
+
   }
+
+
   m_lowerViewLimitSpinBox->setValue(lowerViewLimitSpinBoxValue);
   m_lowerViewLimitSpinBox->setMinimum(-1E10);
   //onLowerViewLimitChanged(lowerViewLimitSpinBoxValue);
 
-  double upperViewLimitSpinBoxValue = UPPER_LIMIT;
-  if (m_scheduleTypeLimits) {
-    OSOptionalQuantity upperLimitQ = m_scheduleTypeLimits->getUpperLimitValue(m_isIP);
-    if (upperLimitQ.isSet()) {
-      m_upperTypeLimit = upperLimitQ.get().value();
-    } else {
-      // DLM: used for dimensionless numbers
-      m_upperTypeLimit = m_scheduleTypeLimits->upperLimitValue();
-    }
-    if (m_upperTypeLimit){
-      upperViewLimitSpinBoxValue = *m_upperTypeLimit;
-    }
-  }
   m_upperViewLimitSpinBox->setValue(upperViewLimitSpinBoxValue);
   m_upperViewLimitSpinBox->setMaximum(1E10);
   //onUpperViewLimitChanged(upperViewLimitSpinBoxValue);
