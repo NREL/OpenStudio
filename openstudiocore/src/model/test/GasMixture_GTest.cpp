@@ -32,10 +32,6 @@
 #include "ModelFixture.hpp"
 
 #include "../GasMixture.hpp"
-#include "../GasMixture_Impl.hpp"
-
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -54,7 +50,6 @@ TEST_F(ModelFixture, GasMixture) {
     },
     ::testing::ExitedWithCode(0), "" );
 }
-
 
 TEST_F(ModelFixture, GasMixture_Getters_Setters) {
 

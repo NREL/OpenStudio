@@ -30,43 +30,19 @@
 #include <gtest/gtest.h>
 
 #include "ModelFixture.hpp"
-
 #include "../OutputControlReportingTolerances.hpp"
 #include "../OutputControlReportingTolerances_Impl.hpp"
-
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,OutputControlReportingTolerances_ToleranceforTimeHeatingSetpointNotMet_Quantity) {
+TEST_F(ModelFixture,OutputControlReportingTolerances_TolerancesGettersSetters) {
   Model model;
-  // TODO: Check constructor.
   OutputControlReportingTolerances outputControlReportingTolerances = model.getUniqueModelObject<OutputControlReportingTolerances>();
 
-  Unit units = outputControlReportingTolerances.getToleranceforTimeHeatingSetpointNotMet(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(outputControlReportingTolerances.setToleranceforTimeHeatingSetpointNotMet(testQ));
-  Quantity q = outputControlReportingTolerances.getToleranceforTimeHeatingSetpointNotMet(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  EXPECT_TRUE(outputControlReportingTolerances.setToleranceforTimeHeatingSetpointNotMet(1.16));
+  EXPECT_DOUBLE_EQ(1.16, outputControlReportingTolerances.toleranceforTimeHeatingSetpointNotMet());
+
+  EXPECT_TRUE(outputControlReportingTolerances.setToleranceforTimeCoolingSetpointNotMet(0.75));
+  EXPECT_DOUBLE_EQ(0.75, outputControlReportingTolerances.toleranceforTimeCoolingSetpointNotMet());
 }
-
-TEST_F(ModelFixture,OutputControlReportingTolerances_ToleranceforTimeCoolingSetpointNotMet_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  OutputControlReportingTolerances outputControlReportingTolerances = model.getUniqueModelObject<OutputControlReportingTolerances>();
-
-  Unit units = outputControlReportingTolerances.getToleranceforTimeCoolingSetpointNotMet(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(outputControlReportingTolerances.setToleranceforTimeCoolingSetpointNotMet(testQ));
-  Quantity q = outputControlReportingTolerances.getToleranceforTimeCoolingSetpointNotMet(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-

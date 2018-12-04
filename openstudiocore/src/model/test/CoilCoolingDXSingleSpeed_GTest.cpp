@@ -45,7 +45,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,CoilCoolingDXSingleSpeed_RatedTotalCoolingCapacity_Quantity) {
+TEST_F(ModelFixture,CoilCoolingDXSingleSpeed_RatedTotalCoolingCapacity_GettersSetters) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   CurveBiquadratic totalCoolingCapacityFunctionofTemperatureCurve(m);

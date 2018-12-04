@@ -31,8 +31,6 @@
 #include "ModelFixture.hpp"
 #include "../DistrictHeating.hpp"
 #include "../DistrictHeating_Impl.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
@@ -101,7 +99,7 @@ TEST_F(ModelFixture,DistrictHeating_connections)
 }
 
 //test setting and getting the nominal capacity
-TEST_F(ModelFixture,DistrictHeating_NominalCapacity_Quantity) {
+TEST_F(ModelFixture,DistrictHeating_NominalCapacity) {
 
   Model m;
   DistrictHeating districtHeating(m);
