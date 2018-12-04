@@ -260,19 +260,6 @@ TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_Clone)
   totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient5yPOW2(0.000148716);
   totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient6xTIMESY(0.0);
 
-  //ASSERT_NO_THROW(totalHeatingCapacityFunctionofTemperatureCurve.getQuantity(
-  //  OS_Curve_BiquadraticFields::Coefficient1Constant,true));
-  //ASSERT_NO_THROW(totalHeatingCapacityFunctionofTemperatureCurve.getQuantity(
-  //  OS_Curve_BiquadraticFields::Coefficient2x,true));
-  //ASSERT_NO_THROW(totalHeatingCapacityFunctionofTemperatureCurve.getQuantity(
-  //  OS_Curve_BiquadraticFields::Coefficient3x_POW_2,true));
-  //ASSERT_NO_THROW(totalHeatingCapacityFunctionofTemperatureCurve.getQuantity(
-  //  OS_Curve_BiquadraticFields::Coefficient4y,true));
-  //ASSERT_NO_THROW(totalHeatingCapacityFunctionofTemperatureCurve.getQuantity(
-  //  OS_Curve_BiquadraticFields::Coefficient5y_POW_2,true));
-  //ASSERT_NO_THROW(totalHeatingCapacityFunctionofTemperatureCurve.getQuantity(
-  //  OS_Curve_BiquadraticFields::Coefficient6x_TIMES_y,true));
-
   CurveQuadratic  totalHeatingCapacityFunctionofFlowFractionCurve(m);
   totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient1Constant(0.84);
   totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient2x(0.16);
