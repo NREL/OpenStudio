@@ -27,8 +27,8 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef SHAREDGUICOMPONENTS_OSProgressBar_HPP
-#define SHAREDGUICOMPONENTS_OSProgressBar_HPP
+#ifndef MODELEDITOR_OSProgressBar_HPP
+#define MODELEDITOR_OSProgressBar_HPP
 
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Macro.hpp"
@@ -118,4 +118,4 @@ namespace openstudio{
 
 } // openstudio
 
-#endif //SHAREDGUICOMPONENTS_OSProgressBar_HPP
+#endif //MODELEDITOR_OSProgressBar_HPP

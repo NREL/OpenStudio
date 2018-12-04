@@ -25,6 +25,7 @@
   #include <model_editor/InspectorGadget.hpp>
   #include <model_editor/InspectorDialog.hpp>
   #include <model_editor/ModalDialogs.hpp>
+  #include <model_editor/OSProgressBar.hpp>
 
   #include <model/Model.hpp>
   #include <model/ModelObject.hpp>
@@ -75,5 +76,8 @@
 
 %feature("director") ModelObjectSelectorDialogWatcher;
 %include <model_editor/ModalDialogs.hpp>
+
+%feature("director") OSProgressBar;
+%include <model_editor/OSProgressBar.hpp>
 
 #endif //MODELEDITOR_LIB_I

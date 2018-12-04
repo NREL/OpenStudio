@@ -28,6 +28,8 @@ set(${target_name}_src
   modeltest.cpp
   ObjectExplorer.hpp
   ObjectExplorer.cpp
+  OSProgressBar.hpp
+  OSProgressBar.cpp
   tablemodel.h
   tablemodel.cpp
   TableView.hpp

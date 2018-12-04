@@ -54,12 +54,12 @@
 #include "../utilities/idf/IdfFile.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/WorkspaceObjectOrder.hpp"
-#include "../shared_gui_components/OSProgressBar.hpp"
 #include "../utilities/core/Compare.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
 #include "ModelExplorer.hpp"
+#include "OSProgressBar.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;
