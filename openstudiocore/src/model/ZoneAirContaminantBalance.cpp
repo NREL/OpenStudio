@@ -142,7 +142,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ZoneAirContaminantBalance_Impl::setOutdoorCarbonDioxideSchedule(Schedule& schedule) {
+  bool ZoneAirContaminantBalance_Impl::setOutdoorCarbonDioxideSchedule(const Schedule& schedule) {
     bool result = setSchedule(OS_ZoneAirContaminantBalanceFields::OutdoorCarbonDioxideScheduleName,
                               "ZoneAirContaminantBalance",
                               "Outdoor Carbon Dioxide",

@@ -88,10 +88,6 @@
 %ignore std::vector<openstudio::model::Component>::resize(size_type);
 %template(ComponentVector) std::vector<openstudio::model::Component>;
 %template(OptionalComponent) boost::optional<openstudio::model::Component>;
-%ignore std::vector<openstudio::model::Relationship>::vector(size_type);
-%ignore std::vector<openstudio::model::Relationship>::resize(size_type);
-// %template(RelationshipVector) std::vector<openstudio::model::Relationship>;
-// %template(OptionalRelationship) boost::optional<openstudio::model::Relationship>;
 
 // ignore visitor for now.
 %ignore openstudio::model::ModelObject::accept;
@@ -130,7 +126,6 @@ class Node;
 %include <model/Model.hpp>
 %include <model/ModelExtensibleGroup.hpp>
 %include <model/Component.hpp>
-// %include <model/Relationship.hpp>
 %include <model/FileOperations.hpp>
 
 

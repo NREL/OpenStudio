@@ -76,7 +76,6 @@
 #include "../ZoneHVACUnitHeater_Impl.hpp"
 
 #include "../../utilities/core/Containers.hpp"
-#include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
