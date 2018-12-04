@@ -910,46 +910,6 @@ namespace detail {
     return openstudio::model::generateSkylightPattern(this->spaces(), 0.0, skylightToProjectedFloorRatio, desiredWidth, desiredHeight);
   }
 
-  openstudio::Quantity Building_Impl::northAxis_SI() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_BuildingFields::NorthAxis,true,false);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  openstudio::Quantity Building_Impl::northAxis_IP() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_BuildingFields::NorthAxis,true,true);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  bool Building_Impl::setNorthAxis(const Quantity& northAxis)
-  {
-    bool result = setQuantity(OS_BuildingFields::NorthAxis, northAxis);
-    return result;
-  }
-
-  openstudio::Quantity Building_Impl::nominalFloortoFloorHeight_SI() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_BuildingFields::NominalFloortoFloorHeight,true,false);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  openstudio::Quantity Building_Impl::nominalFloortoFloorHeight_IP() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_BuildingFields::NominalFloortoFloorHeight,true,true);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  bool Building_Impl::setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight)
-  {
-    bool result = setQuantity(OS_BuildingFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
-    return result;
-  }
-
   boost::optional<ModelObject> Building_Impl::spaceTypeAsModelObject() const {
     OptionalModelObject result;
     OptionalSpaceType intermediate = spaceType();

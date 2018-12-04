@@ -162,11 +162,6 @@ namespace detail {
     return getDouble(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::DesignFanAirFlowRateperPowerInput, true);
   }
 
-  OSOptionalQuantity ElectricEquipmentITEAirCooledDefinition_Impl::getDesignFanAirFlowRateperPowerInput(bool returnIP) const {
-    OptionalDouble value = designFanAirFlowRateperPowerInput();
-    return getQuantityFromDouble(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::DesignFanAirFlowRateperPowerInput, value, returnIP);
-  }
-
   Curve ElectricEquipmentITEAirCooledDefinition_Impl::airFlowFunctionofLoadingandAirTemperatureCurve() const {
     boost::optional<Curve> value = optionalAirFlowFunctionofLoadingandAirTemperatureCurve();
     if (!value) {
@@ -875,4 +870,3 @@ ElectricEquipmentITEAirCooledDefinition::ElectricEquipmentITEAirCooledDefinition
 
 } // model
 } // openstudio
-

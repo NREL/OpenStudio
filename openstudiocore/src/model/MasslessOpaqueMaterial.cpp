@@ -207,20 +207,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity MasslessOpaqueMaterial_Impl::getThermalResistance(bool returnIP) const {
-    OptionalDouble value = thermalResistance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_Material_NoMassFields::ThermalResistance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
-  Quantity MasslessOpaqueMaterial_Impl::getThermalAbsorptance(bool returnIP) const {
-    OptionalDouble value = thermalAbsorptance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_Material_NoMassFields::ThermalAbsorptance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool MasslessOpaqueMaterial_Impl::isThermalAbsorptanceDefaulted() const {
     return isEmpty(OS_Material_NoMassFields::ThermalAbsorptance);
   }
@@ -231,22 +217,8 @@ namespace detail {
     return value.get();
   }
 
-  Quantity MasslessOpaqueMaterial_Impl::getSolarAbsorptance(bool returnIP) const {
-    OptionalDouble value = solarAbsorptance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_Material_NoMassFields::SolarAbsorptance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool MasslessOpaqueMaterial_Impl::isSolarAbsorptanceDefaulted() const {
     return isEmpty(OS_Material_NoMassFields::SolarAbsorptance);
-  }
-
-  Quantity MasslessOpaqueMaterial_Impl::getVisibleAbsorptance(bool returnIP) const {
-    OptionalDouble value = visibleAbsorptance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_Material_NoMassFields::VisibleAbsorptance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool MasslessOpaqueMaterial_Impl::isVisibleAbsorptanceDefaulted() const {
@@ -263,25 +235,9 @@ namespace detail {
     return result;
   }
 
-  bool MasslessOpaqueMaterial_Impl::setThermalResistance(const Quantity& thermalResistance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_Material_NoMassFields::ThermalResistance,thermalResistance);
-    if (!value) {
-      return false;
-    }
-    return setThermalResistance(value.get());
-  }
-
   bool MasslessOpaqueMaterial_Impl::setThermalAbsorptance(double thermalAbsorptance) {
     bool result = setDouble(OS_Material_NoMassFields::ThermalAbsorptance, thermalAbsorptance);
     return result;
-  }
-
-  bool MasslessOpaqueMaterial_Impl::setThermalAbsorptance(const Quantity& thermalAbsorptance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_Material_NoMassFields::ThermalAbsorptance,thermalAbsorptance);
-    if (!value) {
-      return false;
-    }
-    return setThermalAbsorptance(value.get());
   }
 
   void MasslessOpaqueMaterial_Impl::resetThermalAbsorptance() {
@@ -294,14 +250,6 @@ namespace detail {
     return result;
   }
 
-  bool MasslessOpaqueMaterial_Impl::setSolarAbsorptance(const Quantity& solarAbsorptance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_Material_NoMassFields::SolarAbsorptance,solarAbsorptance);
-    if (!value) {
-      return false;
-    }
-    return setSolarAbsorptance(value.get());
-  }
-
   void MasslessOpaqueMaterial_Impl::resetSolarAbsorptance() {
     bool result = setString(OS_Material_NoMassFields::SolarAbsorptance, "");
     OS_ASSERT(result);
@@ -310,14 +258,6 @@ namespace detail {
   bool MasslessOpaqueMaterial_Impl::setVisibleAbsorptance(double visibleAbsorptance) {
     bool result = setDouble(OS_Material_NoMassFields::VisibleAbsorptance, visibleAbsorptance);
     return result;
-  }
-
-  bool MasslessOpaqueMaterial_Impl::setVisibleAbsorptance(const Quantity& visibleAbsorptance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_Material_NoMassFields::VisibleAbsorptance,visibleAbsorptance);
-    if (!value) {
-      return false;
-    }
-    return setVisibleAbsorptance(value.get());
   }
 
   void MasslessOpaqueMaterial_Impl::resetVisibleAbsorptance() {
@@ -329,38 +269,6 @@ namespace detail {
     return MasslessOpaqueMaterial::roughnessValues();
   }
 
-  openstudio::Quantity MasslessOpaqueMaterial_Impl::thermalResistance_SI() const {
-    return getThermalResistance(false);
-  }
-
-  openstudio::Quantity MasslessOpaqueMaterial_Impl::thermalResistance_IP() const {
-    return getThermalResistance(true);
-  }
-
-  openstudio::Quantity MasslessOpaqueMaterial_Impl::thermalAbsorptance_SI() const {
-    return getThermalAbsorptance(false);
-  }
-
-  openstudio::Quantity MasslessOpaqueMaterial_Impl::thermalAbsorptance_IP() const {
-    return getThermalAbsorptance(true);
-  }
-
-  openstudio::Quantity MasslessOpaqueMaterial_Impl::solarAbsorptance_SI() const {
-    return getSolarAbsorptance(false);
-  }
-
-  openstudio::Quantity MasslessOpaqueMaterial_Impl::solarAbsorptance_IP() const {
-    return getSolarAbsorptance(true);
-  }
-
-  openstudio::Quantity MasslessOpaqueMaterial_Impl::visibleAbsorptance_SI() const {
-    return getVisibleAbsorptance(false);
-  }
-
-  openstudio::Quantity MasslessOpaqueMaterial_Impl::visibleAbsorptance_IP() const {
-    return getVisibleAbsorptance(true);
-  }
-
   double MasslessOpaqueMaterial_Impl::conductivity() const {
     OptionalDouble od = getDouble(OS_MaterialFields::Conductivity,true);
     if (!od) {
@@ -370,31 +278,8 @@ namespace detail {
     return *od;
   }
 
- openstudio::Quantity MasslessOpaqueMaterial_Impl::conductivity_SI() const {
-    return getConductivity(false);
-  }
-
-  openstudio::Quantity MasslessOpaqueMaterial_Impl::conductivity_IP() const {
-    return getConductivity(true);
-  }
-
-  Quantity MasslessOpaqueMaterial_Impl::getConductivity(bool returnIP) const {
-    OptionalDouble value = conductivity();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::Conductivity, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool MasslessOpaqueMaterial_Impl::setConductivity(double value) {
     return setDouble(OS_MaterialFields::Conductivity,value);
-  }
-
-  bool MasslessOpaqueMaterial_Impl::setConductivity(const Quantity& conductivity) {
-    OptionalDouble value = getDoubleFromQuantity(OS_MaterialFields::Conductivity,conductivity);
-    if (!value) {
-      return false;
-    }
-    return setConductivity(value.get());
   }
 
   double MasslessOpaqueMaterial_Impl::density() const {
@@ -406,31 +291,8 @@ namespace detail {
     return *od;
   }
 
-   openstudio::Quantity MasslessOpaqueMaterial_Impl::density_SI() const {
-    return getDensity(false);
-  }
-
-  openstudio::Quantity MasslessOpaqueMaterial_Impl::density_IP() const {
-    return getDensity(true);
-  }
-
-  Quantity MasslessOpaqueMaterial_Impl::getDensity(bool returnIP) const {
-    OptionalDouble value = density();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::Density, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool MasslessOpaqueMaterial_Impl::setDensity(double value) {
     return setDouble(OS_MaterialFields::Density,value);
-  }
-
-  bool MasslessOpaqueMaterial_Impl::setDensity(const Quantity& density) {
-    OptionalDouble value = getDoubleFromQuantity(OS_MaterialFields::Density,density);
-    if (!value) {
-      return false;
-    }
-    return setDensity(value.get());
   }
 
   double MasslessOpaqueMaterial_Impl::specificHeat() const {
@@ -442,31 +304,8 @@ namespace detail {
     return *od;
   }
 
-   openstudio::Quantity MasslessOpaqueMaterial_Impl::specificHeat_SI() const {
-    return getSpecificHeat(false);
-  }
-
-  openstudio::Quantity MasslessOpaqueMaterial_Impl::specificHeat_IP() const {
-    return getSpecificHeat(true);
-  }
-
-  Quantity MasslessOpaqueMaterial_Impl::getSpecificHeat(bool returnIP) const {
-    OptionalDouble value = specificHeat();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::SpecificHeat, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool MasslessOpaqueMaterial_Impl::setSpecificHeat(double value) {
     return setDouble(OS_MaterialFields::SpecificHeat,value);
-  }
-
-  bool MasslessOpaqueMaterial_Impl::setSpecificHeat(const Quantity& specificHeat) {
-    OptionalDouble value = getDoubleFromQuantity(OS_MaterialFields::SpecificHeat,specificHeat);
-    if (!value) {
-      return false;
-    }
-    return setSpecificHeat(value.get());
   }
 
 } // detail
@@ -520,28 +359,12 @@ double MasslessOpaqueMaterial::thermalResistance() const {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->thermalResistance();
 }
 
-Quantity MasslessOpaqueMaterial::getThermalResistance(bool returnIP) const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->getThermalResistance(returnIP);
-}
-
-Quantity MasslessOpaqueMaterial::getThermalAbsorptance(bool returnIP) const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->getThermalAbsorptance(returnIP);
-}
-
 bool MasslessOpaqueMaterial::isThermalAbsorptanceDefaulted() const {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->isThermalAbsorptanceDefaulted();
 }
 
-Quantity MasslessOpaqueMaterial::getSolarAbsorptance(bool returnIP) const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->getSolarAbsorptance(returnIP);
-}
-
 bool MasslessOpaqueMaterial::isSolarAbsorptanceDefaulted() const {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->isSolarAbsorptanceDefaulted();
-}
-
-Quantity MasslessOpaqueMaterial::getVisibleAbsorptance(bool returnIP) const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->getVisibleAbsorptance(returnIP);
 }
 
 bool MasslessOpaqueMaterial::isVisibleAbsorptanceDefaulted() const {
@@ -556,15 +379,7 @@ bool MasslessOpaqueMaterial::setThermalResistance(double thermalResistance) {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setThermalResistance(thermalResistance);
 }
 
-bool MasslessOpaqueMaterial::setThermalResistance(const Quantity& thermalResistance) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setThermalResistance(thermalResistance);
-}
-
 bool MasslessOpaqueMaterial::setThermalAbsorptance(double thermalAbsorptance) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setThermalAbsorptance(thermalAbsorptance);
-}
-
-bool MasslessOpaqueMaterial::setThermalAbsorptance(const Quantity& thermalAbsorptance) {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setThermalAbsorptance(thermalAbsorptance);
 }
 
@@ -576,19 +391,11 @@ bool MasslessOpaqueMaterial::setSolarAbsorptance(double solarAbsorptance) {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setSolarAbsorptance(solarAbsorptance);
 }
 
-bool MasslessOpaqueMaterial::setSolarAbsorptance(const Quantity& solarAbsorptance) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setSolarAbsorptance(solarAbsorptance);
-}
-
 void MasslessOpaqueMaterial::resetSolarAbsorptance() {
   getImpl<detail::MasslessOpaqueMaterial_Impl>()->resetSolarAbsorptance();
 }
 
 bool MasslessOpaqueMaterial::setVisibleAbsorptance(double visibleAbsorptance) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setVisibleAbsorptance(visibleAbsorptance);
-}
-
-bool MasslessOpaqueMaterial::setVisibleAbsorptance(const Quantity& visibleAbsorptance) {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setVisibleAbsorptance(visibleAbsorptance);
 }
 
@@ -600,15 +407,7 @@ double MasslessOpaqueMaterial::conductivity() const {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->conductivity();
 }
 
-Quantity MasslessOpaqueMaterial::getConductivity(bool returnIP) const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->getConductivity(returnIP);
-}
-
 bool MasslessOpaqueMaterial::setConductivity(double value) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setConductivity(value);
-}
-
-bool MasslessOpaqueMaterial::setConductivity(const Quantity& value) {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setConductivity(value);
 }
 
@@ -616,15 +415,7 @@ double MasslessOpaqueMaterial::density() const {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->density();
 }
 
-Quantity MasslessOpaqueMaterial::getDensity(bool returnIP) const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->getDensity(returnIP);
-}
-
 bool MasslessOpaqueMaterial::setDensity(double value) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setDensity(value);
-}
-
-bool MasslessOpaqueMaterial::setDensity(const Quantity& value) {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setDensity(value);
 }
 
@@ -632,15 +423,7 @@ double MasslessOpaqueMaterial::specificHeat() const {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->specificHeat();
 }
 
-Quantity MasslessOpaqueMaterial::getSpecificHeat(bool returnIP) const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->getSpecificHeat(returnIP);
-}
-
 bool MasslessOpaqueMaterial::setSpecificHeat(double value) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setSpecificHeat(value);
-}
-
-bool MasslessOpaqueMaterial::setSpecificHeat(const Quantity& value) {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setSpecificHeat(value);
 }
 
@@ -652,4 +435,3 @@ MasslessOpaqueMaterial::MasslessOpaqueMaterial(std::shared_ptr<detail::MasslessO
 
 } // model
 } // openstudio
-

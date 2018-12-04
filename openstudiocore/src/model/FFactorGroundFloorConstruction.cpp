@@ -98,28 +98,10 @@ namespace detail {
     return q.value();
   }
 
-  Quantity FFactorGroundFloorConstruction_Impl::getFFactor(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_Construction_FfactorGroundFloorFields::FFactor,true,returnIP);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  openstudio::Quantity FFactorGroundFloorConstruction_Impl::fFactor_SI() const {
-    return getFFactor(false);
-  }
-
-  openstudio::Quantity FFactorGroundFloorConstruction_Impl::fFactor_IP() const {
-    return getFFactor(true);
-  }
-
   bool FFactorGroundFloorConstruction_Impl::setFFactor(double fFactor) {
     OSOptionalQuantity temp = getQuantity(OS_Construction_FfactorGroundFloorFields::FFactor,true,false);
     bool result = setFFactor(Quantity(fFactor,temp.units()));
     return result;
-  }
-
-  bool FFactorGroundFloorConstruction_Impl::setFFactor(const Quantity& fFactor) {
-    return setQuantity(OS_Construction_FfactorGroundFloorFields::FFactor,fFactor);
   }
 
   //double FFactorGroundFloorConstruction_Impl::area() const
@@ -134,28 +116,10 @@ namespace detail {
     return q.value();
   }
 
-  Quantity FFactorGroundFloorConstruction_Impl::getArea(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_Construction_FfactorGroundFloorFields::Area,true,returnIP);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  openstudio::Quantity FFactorGroundFloorConstruction_Impl::area_SI() const {
-    return getArea(false);
-  }
-
-  openstudio::Quantity FFactorGroundFloorConstruction_Impl::area_IP() const {
-    return getArea(true);
-  }
-
   bool FFactorGroundFloorConstruction_Impl::setArea(double area) {
     OSOptionalQuantity temp = getQuantity(OS_Construction_FfactorGroundFloorFields::Area,true,false);
     bool result = setArea(Quantity(area,temp.units()));
     return result;
-  }
-
-  bool FFactorGroundFloorConstruction_Impl::setArea(const Quantity& area) {
-    return setQuantity(OS_Construction_FfactorGroundFloorFields::Area,area);
   }
 
   //double FFactorGroundFloorConstruction_Impl::perimeterExposed() const
@@ -170,28 +134,10 @@ namespace detail {
     return q.value();
   }
 
-  Quantity FFactorGroundFloorConstruction_Impl::getPerimeterExposed(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_Construction_FfactorGroundFloorFields::PerimeterExposed,true,returnIP);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  openstudio::Quantity FFactorGroundFloorConstruction_Impl::perimeterExposed_SI() const {
-    return getPerimeterExposed(false);
-  }
-
-  openstudio::Quantity FFactorGroundFloorConstruction_Impl::perimeterExposed_IP() const {
-    return getPerimeterExposed(true);
-  }
-
   bool FFactorGroundFloorConstruction_Impl::setPerimeterExposed(double perimeterExposed) {
     OSOptionalQuantity temp = getQuantity(OS_Construction_FfactorGroundFloorFields::PerimeterExposed,true,false);
     bool result = setPerimeterExposed(Quantity(perimeterExposed,temp.units()));
     return result;
-  }
-
-  bool FFactorGroundFloorConstruction_Impl::setPerimeterExposed(const Quantity& perimeterExposed) {
-    return setQuantity(OS_Construction_FfactorGroundFloorFields::PerimeterExposed,perimeterExposed);
   }
 
 } // detail
@@ -223,15 +169,7 @@ double FFactorGroundFloorConstruction::fFactor() const {
   return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->fFactor();
 }
 
-Quantity FFactorGroundFloorConstruction::getFFactor(bool returnIP) const {
-  return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->getFFactor(returnIP);
-}
-
 bool FFactorGroundFloorConstruction::setFFactor(double fFactor) {
-  return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->setFFactor(fFactor);
-}
-
-bool FFactorGroundFloorConstruction::setFFactor(const Quantity& fFactor) {
   return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->setFFactor(fFactor);
 }
 
@@ -244,15 +182,7 @@ double FFactorGroundFloorConstruction::area() const {
   return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->area();
 }
 
-Quantity FFactorGroundFloorConstruction::getArea(bool returnIP) const {
-  return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->getArea(returnIP);
-}
-
 bool FFactorGroundFloorConstruction::setArea(double area) {
-  return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->setArea(area);
-}
-
-bool FFactorGroundFloorConstruction::setArea(const Quantity& area) {
   return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->setArea(area);
 }
 
@@ -265,15 +195,7 @@ double FFactorGroundFloorConstruction::perimeterExposed() const {
   return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->perimeterExposed();
 }
 
-Quantity FFactorGroundFloorConstruction::getPerimeterExposed(bool returnIP) const {
-  return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->getPerimeterExposed(returnIP);
-}
-
 bool FFactorGroundFloorConstruction::setPerimeterExposed(double perimeterExposed) {
-  return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->setPerimeterExposed(perimeterExposed);
-}
-
-bool FFactorGroundFloorConstruction::setPerimeterExposed(const Quantity& perimeterExposed) {
   return getImpl<detail::FFactorGroundFloorConstruction_Impl>()->setPerimeterExposed(perimeterExposed);
 }
 

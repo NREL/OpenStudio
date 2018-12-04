@@ -1229,11 +1229,6 @@ namespace detail {
     return getDouble(OS_AirLoopHVACFields::DesignSupplyAirFlowRate,true);
   }
 
-  OSOptionalQuantity AirLoopHVAC_Impl::getDesignSupplyAirFlowRate(bool returnIP) const {
-    OptionalDouble value = designSupplyAirFlowRate();
-    return getQuantityFromDouble(OS_AirLoopHVACFields::DesignSupplyAirFlowRate, value, returnIP);
-  }
-
   bool AirLoopHVAC_Impl::isDesignSupplyAirFlowRateAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_AirLoopHVACFields::DesignSupplyAirFlowRate, true);
@@ -1253,23 +1248,6 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
-    return result;
-  }
-
-  bool AirLoopHVAC_Impl::setDesignSupplyAirFlowRate(const OSOptionalQuantity& designSupplyAirFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (designSupplyAirFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_AirLoopHVACFields::DesignSupplyAirFlowRate,designSupplyAirFlowRate.get());
-      if (value) {
-        setDesignSupplyAirFlowRate(value);
-        result = true;
-      }
-    }
-    else {
-      setDesignSupplyAirFlowRate(value);
-      result = true;
-    }
     return result;
   }
 
@@ -2243,19 +2221,11 @@ boost::optional<double> AirLoopHVAC::designSupplyAirFlowRate() const {
   return getImpl<detail::AirLoopHVAC_Impl>()->designSupplyAirFlowRate();
 }
 
-OSOptionalQuantity AirLoopHVAC::getDesignSupplyAirFlowRate(bool returnIP) const {
-  return getImpl<detail::AirLoopHVAC_Impl>()->getDesignSupplyAirFlowRate(returnIP);
-}
-
 bool AirLoopHVAC::isDesignSupplyAirFlowRateAutosized() const {
   return getImpl<detail::AirLoopHVAC_Impl>()->isDesignSupplyAirFlowRateAutosized();
 }
 
 bool AirLoopHVAC::setDesignSupplyAirFlowRate(double designSupplyAirFlowRate) {
-  return getImpl<detail::AirLoopHVAC_Impl>()->setDesignSupplyAirFlowRate(designSupplyAirFlowRate);
-}
-
-bool AirLoopHVAC::setDesignSupplyAirFlowRate(const Quantity& designSupplyAirFlowRate) {
   return getImpl<detail::AirLoopHVAC_Impl>()->setDesignSupplyAirFlowRate(designSupplyAirFlowRate);
 }
 

@@ -101,13 +101,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity ZoneCapacitanceMultiplierResearchSpecial_Impl::getTemperatureCapacityMultiplier(bool returnIP) const {
-    OptionalDouble value = temperatureCapacityMultiplier();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool ZoneCapacitanceMultiplierResearchSpecial_Impl::isTemperatureCapacityMultiplierDefaulted() const {
     return isEmpty(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier);
   }
@@ -116,13 +109,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::HumidityCapacityMultiplier,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity ZoneCapacitanceMultiplierResearchSpecial_Impl::getHumidityCapacityMultiplier(bool returnIP) const {
-    OptionalDouble value = humidityCapacityMultiplier();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::HumidityCapacityMultiplier, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool ZoneCapacitanceMultiplierResearchSpecial_Impl::isHumidityCapacityMultiplierDefaulted() const {
@@ -135,13 +121,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity ZoneCapacitanceMultiplierResearchSpecial_Impl::getCarbonDioxideCapacityMultiplier(bool returnIP) const {
-    OptionalDouble value = carbonDioxideCapacityMultiplier();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool ZoneCapacitanceMultiplierResearchSpecial_Impl::isCarbonDioxideCapacityMultiplierDefaulted() const {
     return isEmpty(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier);
   }
@@ -149,14 +128,6 @@ namespace detail {
   bool ZoneCapacitanceMultiplierResearchSpecial_Impl::setTemperatureCapacityMultiplier(double temperatureCapacityMultiplier) {
     bool result = setDouble(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier, temperatureCapacityMultiplier);
     return result;
-  }
-
-  bool ZoneCapacitanceMultiplierResearchSpecial_Impl::setTemperatureCapacityMultiplier(const Quantity& temperatureCapacityMultiplier) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier,temperatureCapacityMultiplier);
-    if (!value) {
-      return false;
-    }
-    return setTemperatureCapacityMultiplier(value.get());
   }
 
   void ZoneCapacitanceMultiplierResearchSpecial_Impl::resetTemperatureCapacityMultiplier() {
@@ -169,14 +140,6 @@ namespace detail {
     return result;
   }
 
-  bool ZoneCapacitanceMultiplierResearchSpecial_Impl::setHumidityCapacityMultiplier(const Quantity& humidityCapacityMultiplier) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::HumidityCapacityMultiplier,humidityCapacityMultiplier);
-    if (!value) {
-      return false;
-    }
-    return setHumidityCapacityMultiplier(value.get());
-  }
-
   void ZoneCapacitanceMultiplierResearchSpecial_Impl::resetHumidityCapacityMultiplier() {
     bool result = setString(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::HumidityCapacityMultiplier, "");
     OS_ASSERT(result);
@@ -187,41 +150,9 @@ namespace detail {
     return result;
   }
 
-  bool ZoneCapacitanceMultiplierResearchSpecial_Impl::setCarbonDioxideCapacityMultiplier(const Quantity& carbonDioxideCapacityMultiplier) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier,carbonDioxideCapacityMultiplier);
-    if (!value) {
-      return false;
-    }
-    return setCarbonDioxideCapacityMultiplier(value.get());
-  }
-
   void ZoneCapacitanceMultiplierResearchSpecial_Impl::resetCarbonDioxideCapacityMultiplier() {
     bool result = setString(OS_ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier, "");
     OS_ASSERT(result);
-  }
-
-  openstudio::Quantity ZoneCapacitanceMultiplierResearchSpecial_Impl::temperatureCapacityMultiplier_SI() const {
-    return getTemperatureCapacityMultiplier(false);
-  }
-
-  openstudio::Quantity ZoneCapacitanceMultiplierResearchSpecial_Impl::temperatureCapacityMultiplier_IP() const {
-    return getTemperatureCapacityMultiplier(true);
-  }
-
-  openstudio::Quantity ZoneCapacitanceMultiplierResearchSpecial_Impl::humidityCapacityMultiplier_SI() const {
-    return getHumidityCapacityMultiplier(false);
-  }
-
-  openstudio::Quantity ZoneCapacitanceMultiplierResearchSpecial_Impl::humidityCapacityMultiplier_IP() const {
-    return getHumidityCapacityMultiplier(true);
-  }
-
-  openstudio::Quantity ZoneCapacitanceMultiplierResearchSpecial_Impl::carbonDioxideCapacityMultiplier_SI() const {
-    return getCarbonDioxideCapacityMultiplier(false);
-  }
-
-  openstudio::Quantity ZoneCapacitanceMultiplierResearchSpecial_Impl::carbonDioxideCapacityMultiplier_IP() const {
-    return getCarbonDioxideCapacityMultiplier(true);
   }
 
 } // detail
@@ -234,20 +165,12 @@ double ZoneCapacitanceMultiplierResearchSpecial::temperatureCapacityMultiplier()
   return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->temperatureCapacityMultiplier();
 }
 
-Quantity ZoneCapacitanceMultiplierResearchSpecial::getTemperatureCapacityMultiplier(bool returnIP) const {
-  return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->getTemperatureCapacityMultiplier(returnIP);
-}
-
 bool ZoneCapacitanceMultiplierResearchSpecial::isTemperatureCapacityMultiplierDefaulted() const {
   return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->isTemperatureCapacityMultiplierDefaulted();
 }
 
 double ZoneCapacitanceMultiplierResearchSpecial::humidityCapacityMultiplier() const {
   return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->humidityCapacityMultiplier();
-}
-
-Quantity ZoneCapacitanceMultiplierResearchSpecial::getHumidityCapacityMultiplier(bool returnIP) const {
-  return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->getHumidityCapacityMultiplier(returnIP);
 }
 
 bool ZoneCapacitanceMultiplierResearchSpecial::isHumidityCapacityMultiplierDefaulted() const {
@@ -258,19 +181,11 @@ double ZoneCapacitanceMultiplierResearchSpecial::carbonDioxideCapacityMultiplier
   return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->carbonDioxideCapacityMultiplier();
 }
 
-Quantity ZoneCapacitanceMultiplierResearchSpecial::getCarbonDioxideCapacityMultiplier(bool returnIP) const {
-  return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->getCarbonDioxideCapacityMultiplier(returnIP);
-}
-
 bool ZoneCapacitanceMultiplierResearchSpecial::isCarbonDioxideCapacityMultiplierDefaulted() const {
   return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->isCarbonDioxideCapacityMultiplierDefaulted();
 }
 
 bool ZoneCapacitanceMultiplierResearchSpecial::setTemperatureCapacityMultiplier(double temperatureCapacityMultiplier) {
-  return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->setTemperatureCapacityMultiplier(temperatureCapacityMultiplier);
-}
-
-bool ZoneCapacitanceMultiplierResearchSpecial::setTemperatureCapacityMultiplier(const Quantity& temperatureCapacityMultiplier) {
   return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->setTemperatureCapacityMultiplier(temperatureCapacityMultiplier);
 }
 
@@ -282,19 +197,11 @@ bool ZoneCapacitanceMultiplierResearchSpecial::setHumidityCapacityMultiplier(dou
   return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->setHumidityCapacityMultiplier(humidityCapacityMultiplier);
 }
 
-bool ZoneCapacitanceMultiplierResearchSpecial::setHumidityCapacityMultiplier(const Quantity& humidityCapacityMultiplier) {
-  return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->setHumidityCapacityMultiplier(humidityCapacityMultiplier);
-}
-
 void ZoneCapacitanceMultiplierResearchSpecial::resetHumidityCapacityMultiplier() {
   getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->resetHumidityCapacityMultiplier();
 }
 
 bool ZoneCapacitanceMultiplierResearchSpecial::setCarbonDioxideCapacityMultiplier(double carbonDioxideCapacityMultiplier) {
-  return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->setCarbonDioxideCapacityMultiplier(carbonDioxideCapacityMultiplier);
-}
-
-bool ZoneCapacitanceMultiplierResearchSpecial::setCarbonDioxideCapacityMultiplier(const Quantity& carbonDioxideCapacityMultiplier) {
   return getImpl<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl>()->setCarbonDioxideCapacityMultiplier(carbonDioxideCapacityMultiplier);
 }
 
@@ -316,4 +223,3 @@ ZoneCapacitanceMultiplierResearchSpecial::ZoneCapacitanceMultiplierResearchSpeci
 
 } // model
 } // openstudio
-
