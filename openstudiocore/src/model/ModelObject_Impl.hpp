@@ -31,10 +31,9 @@
 #define MODEL_MODELOBJECT_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject.hpp" // required for Q_PROPERTY
-#include "../nano/nano_signal_slot.hpp" // Signal-Slot replacement
-
 #include "../utilities/idf/WorkspaceObject_Impl.hpp"
+
+#include "../nano/nano_signal_slot.hpp" // Signal-Slot replacement
 
 #include "../utilities/core/Optional.hpp"
 
@@ -46,13 +45,17 @@ class TimeSeries;
 namespace model {
 
 class Model;
+class ModelObject;
+
 class Component;
-class LifeCycleCosts;
+class LifeCycleCost;
 
 class FieldViewer;
 
 class ParentObject;
 class ResourceObject;
+
+class Schedule;
 
 class OutputVariable;
 class Meter;
@@ -62,6 +65,11 @@ class EMSActuatorNames;
 
 class AdditionalProperties;
 
+
+/** Typedef for ScheduleTypeRegistry key. First is a string representation of the class name.
+ *  Second is a display name for the schedule. \relates ModelObject */
+typedef std::pair<std::string,std::string> ScheduleTypeKey;
+
 namespace detail {
 
   class Model_Impl;
@@ -70,12 +78,6 @@ namespace detail {
    *  should provide an implementation class that derives from ModelObject_Impl. */
   class MODEL_API ModelObject_Impl : public openstudio::detail::WorkspaceObject_Impl {
 
-    //
-    //
-    //
-
-    //
-    //
    public:
 
     /** @name Constructors and Destructors */
