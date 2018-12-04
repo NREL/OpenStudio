@@ -36,19 +36,19 @@
 #include "../core/FilesystemHelpers.hpp"
 
 #include "../units/QuantityFactory.hpp"
-#include "../units/OSOptionalQuantity.hpp"
 
 #include <boost/lexical_cast.hpp>
-
 
 #include <QDomElement>
 
 namespace openstudio {
-namespace detail{
+namespace detail {
+
 
   //int __attribute_type__ = qRegisterMetaType<openstudio::Attribute>("openstudio::Attribute");
   int __attribute_optional_type__ = qRegisterMetaType<boost::optional<openstudio::Attribute> >("boost::optional<openstudio::Attribute>");
   int __attribute_vector_type__ = qRegisterMetaType<std::vector<openstudio::Attribute> >("std::vector<openstudio::Attribute>");
+
 
   // constructors
   Attribute_Impl::Attribute_Impl(const std::string& name,
@@ -111,71 +111,6 @@ namespace detail{
   {
   }
 
-  Attribute_Impl::Attribute_Impl(const std::string& name, const OSOptionalQuantity& value)
-    : m_uuid(createUUID()),
-      m_versionUUID(createUUID()),
-      m_name(name)
-  {
-    if (value.isSet()) {
-      m_valueType = AttributeValueType::Quantity;
-      m_value = QVariant::fromValue(value.get());
-    }
-    else {
-      m_valueType = AttributeValueType::Unit;
-      m_value = QVariant::fromValue(value);
-    }
-  }
-
-  Attribute_Impl::Attribute_Impl(const std::string& name, const Quantity& value)
-    : m_uuid(createUUID()),
-      m_versionUUID(createUUID()),
-      m_name(name),
-      m_valueType(AttributeValueType::Quantity),
-      m_value(QVariant::fromValue(value))
-  {
-  }
-
-  Attribute_Impl::Attribute_Impl(const openstudio::UUID& uuid,
-                                 const openstudio::UUID& versionUUID,
-                                 const std::string& name,
-                                 const boost::optional<std::string>& displayName,
-                                 const Quantity& value,
-                                 const std::string& source)
-    : m_uuid(uuid),
-      m_versionUUID(versionUUID),
-      m_name(name),
-      m_displayName(displayName),
-      m_source(source),
-      m_valueType(AttributeValueType::Quantity),
-      m_value(QVariant::fromValue(value))
-  {
-  }
-
-  Attribute_Impl::Attribute_Impl(const std::string& name, const Unit& value)
-    : m_uuid(createUUID()),
-      m_versionUUID(createUUID()),
-      m_name(name),
-      m_valueType(AttributeValueType::Unit),
-      m_value(QVariant::fromValue(OSOptionalQuantity(value)))
-  {
-  }
-
-  Attribute_Impl::Attribute_Impl(const openstudio::UUID& uuid,
-                                 const openstudio::UUID& versionUUID,
-                                 const std::string& name,
-                                 const boost::optional<std::string>& displayName,
-                                 const Unit& value,
-                                 const std::string& source)
-    : m_uuid(uuid),
-      m_versionUUID(versionUUID),
-      m_name(name),
-      m_displayName(displayName),
-      m_source(source),
-      m_valueType(AttributeValueType::Unit),
-      m_value(QVariant::fromValue(OSOptionalQuantity(value)))
-  {
-  }
-
   Attribute_Impl::Attribute_Impl(const std::string& name,
                                  int value,
                                  const boost::optional<std::string>& units)
@@ -236,6 +171,7 @@ namespace detail{
   {
   }
 
+  // Probably not needed, will convert const char* to std::string by default...
   Attribute_Impl::Attribute_Impl(const std::string& name,
                                  const char* value,
                                  const boost::optional<std::string>& units)
@@ -243,10 +179,9 @@ namespace detail{
       m_versionUUID(createUUID()),
       m_name(name),
       m_valueType(AttributeValueType::String),
-      m_value(),
+      m_value(std::string(value)),
       m_units(units)
   {
-    m_value.setValue(std::string(value));
   }
 
   Attribute_Impl::Attribute_Impl(const openstudio::UUID& uuid,
@@ -262,10 +197,9 @@ namespace detail{
       m_displayName(displayName),
       m_source(source),
       m_valueType(AttributeValueType::String),
-      m_value(),
+      m_value(std::string(value)),
       m_units(units)
   {
-    m_value.setValue(std::string(value));
   }
 
   Attribute_Impl::Attribute_Impl(const std::string& name,
@@ -275,10 +209,9 @@ namespace detail{
       m_versionUUID(createUUID()),
       m_name(name),
       m_valueType(AttributeValueType::String),
-      m_value(),
+      m_value(std::string(value)),
       m_units(units)
   {
-    m_value.setValue(value);
   }
 
   Attribute_Impl::Attribute_Impl(const openstudio::UUID& uuid,
@@ -294,10 +227,9 @@ namespace detail{
       m_displayName(displayName),
       m_source(source),
       m_valueType(AttributeValueType::String),
-      m_value(),
+      m_value(value),
       m_units(units)
   {
-    m_value.setValue(value);
   }
 
   Attribute_Impl::Attribute_Impl(const std::string& name,
@@ -307,10 +239,9 @@ namespace detail{
       m_versionUUID(createUUID()),
       m_name(name),
       m_valueType(AttributeValueType::AttributeVector),
-      m_value(),
+      m_value(value),
       m_units(units)
   {
-    m_value.setValue(value);
   }
 
   Attribute_Impl::Attribute_Impl(const openstudio::UUID& uuid,
@@ -326,10 +257,9 @@ namespace detail{
       m_displayName(displayName),
       m_source(source),
       m_valueType(AttributeValueType::AttributeVector),
-      m_value(),
+      m_value(value),
       m_units(units)
   {
-    m_value.setValue(value);
   }
 
   Attribute_Impl::Attribute_Impl(const QDomElement& element)
@@ -389,6 +319,8 @@ namespace detail{
       sys = UnitSystem(unitSystemElement.firstChild().nodeValue().toStdString());
     }
 
+    // TODO: handle units?
+
     std::vector<Attribute> children;
     QDomNodeList childNodes = valueElement.childNodes();
 
@@ -400,38 +332,43 @@ namespace detail{
         m_value = false;
       }
       break;
-        case AttributeValueType::Integer:
+    case AttributeValueType::Integer:
       m_value = valueElement.firstChild().nodeValue().toInt();
       break;
-        case AttributeValueType::Unsigned:
+    case AttributeValueType::Unsigned:
       m_value = valueElement.firstChild().nodeValue().toUInt();
       break;
-        case AttributeValueType::Double:
+    case AttributeValueType::Double:
       m_value = valueElement.firstChild().nodeValue().toDouble();
       break;
-        case AttributeValueType::Quantity :
-      OS_ASSERT(m_units);
-      OS_ASSERT(sys);
-      m_value = QVariant::fromValue(Quantity(valueElement.firstChild().nodeValue().toDouble(),createUnit(*m_units,*sys).get()));
-      m_units.reset();
+    //case AttributeValueType::Quantity :
+      //OS_ASSERT(m_units);
+      //OS_ASSERT(sys);
+      //// TODO
+      //m_value = QVariant::fromValue(Quantity(valueElement.firstChild().nodeValue().toDouble(),
+                                             //createUnit(*m_units,*sys).get()));
+      //m_units.reset();
+      //break;
+    //case AttributeValueType::Unit :
+      //OS_ASSERT(m_units);
+      //OS_ASSERT(sys);
+
+      //m_value = OSAttributeVariant();
+
+      //m_value = QVariant::fromValue(OSOptionalQuantity();
+      //m_units.reset();
+      //break;
+    case AttributeValueType::String:
+      m_value = valueElement.firstChild().nodeValue().toStdString();
       break;
-        case AttributeValueType::Unit :
-      OS_ASSERT(m_units);
-      OS_ASSERT(sys);
-      m_value = QVariant::fromValue(OSOptionalQuantity(createUnit(*m_units,*sys).get()));
-      m_units.reset();
-      break;
-        case AttributeValueType::String:
-      m_value.setValue(valueElement.firstChild().nodeValue().toStdString());
-      break;
-        case AttributeValueType::AttributeVector:
+    case AttributeValueType::AttributeVector:
       for (int i = 0; i < childNodes.count(); i++){
         QDomElement childElement = childNodes.at(i).toElement();
         children.push_back(Attribute(childElement));
       }
-      m_value.setValue(children);
+      m_value = children;
       break;
-        default:
+    default:
       OS_ASSERT(false);
       break;
     }
@@ -444,7 +381,7 @@ namespace detail{
       m_displayName(other.displayName()),
       m_source(other.source()),
       m_valueType(other.valueType()),
-      m_value(other.valueAsQVariant()),
+      m_value(other.m_value),
       m_units(other.units())
   {}
 
@@ -505,13 +442,17 @@ namespace detail{
     return m_valueType;
   }
 
+  bool Attribute_Impl::hasValue() const {
+    return (m_value.index() != 0);
+  }
+
   bool Attribute_Impl::valueAsBoolean() const
   {
     if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::Boolean){
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Boolean.");
     }
-    return m_value.value<bool>();
+    return std::get<bool>(m_value);
   }
 
   void Attribute_Impl::setValue(bool value) {
@@ -529,7 +470,7 @@ namespace detail{
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Integer.");
     }
-    return m_value.value<int>();
+    return std::get<int>(m_value);
   }
 
   void Attribute_Impl::setValue(int value) {
@@ -547,7 +488,7 @@ namespace detail{
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Unsigned.");
     }
-    return m_value.value<unsigned>();
+    return std::get<unsigned>(m_value);
   }
 
   void Attribute_Impl::setValue(unsigned value) {
@@ -565,7 +506,7 @@ namespace detail{
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Double.");
     }
-    return m_value.value<double>();
+    return std::get<double>(m_value);
   }
 
   void Attribute_Impl::setValue(double value) {
@@ -577,49 +518,13 @@ namespace detail{
     m_versionUUID = createUUID();
   }
 
-  Quantity Attribute_Impl::valueAsQuantity() const
-  {
-    if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::Quantity){
-      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
-                    << valueType().valueDescription() << " to Quantity.");
-    }
-    return m_value.value<openstudio::Quantity>();
-  }
-
-  void Attribute_Impl::setValue(const Quantity& value) {
-    if (m_valueType != AttributeValueType::Quantity) {
-      LOG_AND_THROW("Attribute is '" << name() << "' is of type "
-                    << valueType().valueDescription() << ", not Quantity.");
-    }
-    m_value.setValue(value);
-    m_versionUUID = createUUID();
-  }
-
-  Unit Attribute_Impl::valueAsUnit() const
-  {
-    if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::Unit){
-      LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
-                    << valueType().valueDescription() << " to Unit.");
-    }
-    return m_value.value<openstudio::OSOptionalQuantity>().units();
-  }
-
-  void Attribute_Impl::setValue(const Unit& value) {
-    if (m_valueType != AttributeValueType::Unit) {
-      LOG_AND_THROW("Attribute is '" << name() << "' is of type "
-                    << valueType().valueDescription() << ", not Unit.");
-    }
-    m_value.setValue(OSOptionalQuantity(value));
-    m_versionUUID = createUUID();
-  }
-
   std::string Attribute_Impl::valueAsString() const
   {
     if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::String){
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to String.");
     }
-    return m_value.value<std::string>();
+    return std::get<std::string>(m_value);
   }
 
   void Attribute_Impl::setValue(const char* value) {
@@ -646,7 +551,7 @@ namespace detail{
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to AttributeVector.");
     }
-    return m_value.value<std::vector<Attribute> >();
+    return std::get<std::vector<Attribute> >(m_value);
   }
 
   void Attribute_Impl::setValue(const std::vector<Attribute>& value) {
@@ -703,49 +608,55 @@ namespace detail{
 
   std::string Attribute_Impl::toString() const
   {
-    std::string result;
+    // Use overloaded ostream
     std::stringstream ss;
-    QString str;
-    QTextStream qts(&str);
+    ss << m_value;
+    return ss.str();
 
-    switch(this->valueType().value()) {
-      case AttributeValueType::Boolean:
-        if (this->valueAsBoolean()) {
-          result = "true";
-        }
-        else {
-          result = "false";
-        }
-        break;
-      case AttributeValueType::Integer:
-        result = boost::lexical_cast<std::string>(this->valueAsInteger());
-        break;
-      case AttributeValueType::Unsigned:
-        result = boost::lexical_cast<std::string>(this->valueAsUnsigned());
-        break;
-      case AttributeValueType::Double:
-        result = openstudio::toString(this->valueAsDouble());
-        break;
-      case AttributeValueType::Quantity :
-        ss << this->valueAsQuantity();
-        result = ss.str();
-        break;
-      case AttributeValueType::Unit :
-        ss << this->valueAsUnit();
-        result = ss.str();
-        break;
-      case AttributeValueType::String :
-        result = this->valueAsString();
-        break;
-      case AttributeValueType::AttributeVector:
-        this->toXml().save(qts, 2);
-        result = str.toStdString();
-        break;
-      default:
-        OS_ASSERT(false);
-        break;
-    }
-    return result;
+    // TODO: remove
+/*
+ *    QString str;
+ *    QTextStream qts(&str);
+ *
+ *    switch(this->valueType().value()) {
+ *      case AttributeValueType::Boolean:
+ *        if (this->valueAsBoolean()) {
+ *          result = "true";
+ *        }
+ *        else {
+ *          result = "false";
+ *        }
+ *        break;
+ *      case AttributeValueType::Integer:
+ *        result = boost::lexical_cast<std::string>(this->valueAsInteger());
+ *        break;
+ *      case AttributeValueType::Unsigned:
+ *        result = boost::lexical_cast<std::string>(this->valueAsUnsigned());
+ *        break;
+ *      case AttributeValueType::Double:
+ *        result = openstudio::toString(this->valueAsDouble());
+ *        break;
+ *      case AttributeValueType::Quantity :
+ *        ss << this->valueAsQuantity();
+ *        result = ss.str();
+ *        break;
+ *      case AttributeValueType::Unit :
+ *        ss << this->valueAsUnit();
+ *        result = ss.str();
+ *        break;
+ *      case AttributeValueType::String :
+ *        result = this->valueAsString();
+ *        break;
+ *      case AttributeValueType::AttributeVector:
+ *        this->toXml().save(qts, 2);
+ *        result = str.toStdString();
+ *        break;
+ *      default:
+ *        OS_ASSERT(false);
+ *        break;
+ *    }
+ *    return result;
+ */
   }
 
   QDomDocument Attribute_Impl::toXml() const
@@ -944,6 +855,34 @@ namespace detail{
   }
 
 } // detail
+
+
+std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attribute) {
+
+  // We use std::visit, filtering out the case where it's monostate
+  // Aside from monostate, every possible type is streamable
+  // AttributeVector needs a special treatment though
+  std::visit(
+      [&os](const auto& val){
+        // Needed to properly compare the types
+        using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
+        if constexpr (!std::is_same_v<T, openstudio::Attribute>) {
+          // TODO: call toXml()
+          // This will change anyways once QXML is removed
+          QString str;
+          QTextStream qts(&str);
+          this->toXml().save(qts, 2);
+          os << str.toStdString();
+        } else if constexpr (!std::is_same_v<T, std::monostate>) {
+            os << val;
+        }
+      },
+      attribute);
+
+  return os;
+}
+
+
 
 AttributeDescription::AttributeDescription(const std::string& t_name,
                                            const std::string& t_displayName,
@@ -1506,22 +1445,6 @@ double Attribute::valueAsDouble() const
 }
 
 void Attribute::setValue(double value) {
-  m_impl->setValue(value);
-}
-
-Quantity Attribute::valueAsQuantity() const {
-  return m_impl->valueAsQuantity();
-}
-
-void Attribute::setValue(const Quantity& value) {
-  m_impl->setValue(value);
-}
-
-Unit Attribute::valueAsUnit() const {
-  return m_impl->valueAsUnit();
-}
-
-void Attribute::setValue(const Unit& value) {
   m_impl->setValue(value);
 }
 

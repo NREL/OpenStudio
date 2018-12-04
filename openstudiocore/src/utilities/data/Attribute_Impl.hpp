@@ -38,8 +38,7 @@
 #include "../core/Logger.hpp"
 #include "../core/UUID.hpp"
 
-#include <QVariant>
-#include <QMetaType>
+// #include <QMetaType>
 
 class QDomElement;
 class QDomDocument;
@@ -51,6 +50,9 @@ namespace detail {
   {
 
    public:
+
+      // Note JM 2018-12-04: As far as a I can tell, the only Ctor actually uses are the simple ones,
+      // name, value, optional<string> units
 
       /// constructors
       Attribute_Impl(const std::string& name, bool value, const boost::optional<std::string>& units);
@@ -69,24 +71,6 @@ namespace detail {
                      const boost::optional<std::string>& displayName,
                      double value,
                      const boost::optional<std::string>& units,
-                     const std::string& source = std::string());
-
-      Attribute_Impl(const std::string& name, const OSOptionalQuantity& value);
-
-      Attribute_Impl(const std::string& name, const Quantity& value);
-      Attribute_Impl(const openstudio::UUID& uuid,
-                     const openstudio::UUID& versionUUID,
-                     const std::string& name,
-                     const boost::optional<std::string>& displayName,
-                     const Quantity& value,
-                     const std::string& source = std::string());
-
-      Attribute_Impl(const std::string& name, const Unit& value);
-      Attribute_Impl(const openstudio::UUID& uuid,
-                     const openstudio::UUID& versionUUID,
-                     const std::string& name,
-                     const boost::optional<std::string>& displayName,
-                     const Unit& value,
                      const std::string& source = std::string());
 
       Attribute_Impl(const std::string& name, int value, const boost::optional<std::string>& units);
@@ -172,6 +156,10 @@ namespace detail {
       /// get the attribute value type
       AttributeValueType valueType() const;
 
+
+      // Check if it has a value set
+      bool hasValue() const;
+
       /// get value as a bool
       bool valueAsBoolean() const;
 
@@ -195,18 +183,6 @@ namespace detail {
 
       /// set value. throws if wrong type.
       void setValue(double value);
-
-      /// get value as Quantity
-      Quantity valueAsQuantity() const;
-
-      /// set value. throws if wrong type.
-      void setValue(const Quantity& value);
-
-      /// get value as Unit
-      Unit valueAsUnit() const;
-
-      /// set value. throws if wrong type.
-      void setValue(const Unit& value);
 
       /// get value as string
       std::string valueAsString() const;
@@ -267,7 +243,7 @@ namespace detail {
       boost::optional<std::string> m_displayName;
       std::string m_source;
       AttributeValueType m_valueType;
-      QVariant m_value;
+      OSAttributeVariant m_value;
       boost::optional<std::string> m_units;
   };
 
