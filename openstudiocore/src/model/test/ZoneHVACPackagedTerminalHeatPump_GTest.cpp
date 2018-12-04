@@ -50,7 +50,6 @@
 #include "../ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "../ScheduleCompact.hpp"
 #include <utilities/idd/OS_Curve_Biquadratic_FieldEnums.hxx>
-#include "../../utilities/units/Quantity.hpp"
 
 using namespace openstudio;
 
@@ -326,4 +325,3 @@ TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_Clone)
 
   pthp2.remove();
 }
-

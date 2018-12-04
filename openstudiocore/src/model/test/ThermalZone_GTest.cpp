@@ -77,8 +77,6 @@
 
 #include "../../utilities/core/Containers.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -180,82 +178,15 @@ TEST_F(ModelFixture,ThermalZone_sizingZone)
   ASSERT_NO_THROW(zone1.sizingZone());
 }
 
-TEST_F(ModelFixture,ThermalZone_CeilingHeight_Quantity) {
-  Model model;
-  ThermalZone thermalZone(model);
-
-  Unit units = thermalZone.getCeilingHeight(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(thermalZone.setCeilingHeight(testQ));
-  OSOptionalQuantity q = thermalZone.getCeilingHeight(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.get().units().standardString());
-}
-
-TEST_F(ModelFixture,ThermalZone_Volume_Quantity) {
-  Model model;
-  ThermalZone thermalZone(model);
-
-  Unit units = thermalZone.getVolume(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(thermalZone.setVolume(testQ));
-  OSOptionalQuantity q = thermalZone.getVolume(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.get().units().standardString());
-}
-
-TEST_F(ModelFixture,ThermalZone_FractionofZoneControlledbyPrimaryDaylightingControl_Quantity) {
-  Model model;
-  ThermalZone thermalZone(model);
-
-  Unit units = thermalZone.getFractionofZoneControlledbyPrimaryDaylightingControl(true).units(); // Get IP units.
-  double value(0.5);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(thermalZone.setFractionofZoneControlledbyPrimaryDaylightingControl(testQ));
-  Quantity q = thermalZone.getFractionofZoneControlledbyPrimaryDaylightingControl(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,ThermalZone_FractionofZoneControlledbySecondaryDaylightingControl_Quantity) {
-  Model model;
-  ThermalZone thermalZone(model);
-
-  Unit units = thermalZone.getFractionofZoneControlledbySecondaryDaylightingControl(true).units(); // Get IP units.
-  double value(0.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(thermalZone.setFractionofZoneControlledbySecondaryDaylightingControl(testQ));
-  Quantity q = thermalZone.getFractionofZoneControlledbySecondaryDaylightingControl(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
 /* Tests that you cannot set Fractions that sum to greater than 1 */
 TEST_F(ModelFixture,ThermalZone_FractionofZoneControlledbyDaylightingControl_PriSecLimits) {
   Model m;
   ThermalZone z(m);
 
-  // As Fraction
   ASSERT_TRUE(z.setFractionofZoneControlledbyPrimaryDaylightingControl(0.5));
   ASSERT_TRUE(z.setFractionofZoneControlledbySecondaryDaylightingControl(0.5));
   ASSERT_FALSE(z.setFractionofZoneControlledbySecondaryDaylightingControl(0.75));
   ASSERT_FALSE(z.setFractionofZoneControlledbyPrimaryDaylightingControl(0.75));
-
-  // As Quantity
-  Unit units = z.getFractionofZoneControlledbySecondaryDaylightingControl(true).units(); // Get IP units.
-  double value(0.5);
-  double value2(0.7);
-  Quantity testQ(value, units);
-  Quantity testQ2(value2, units);
-
-  ASSERT_TRUE(z.setFractionofZoneControlledbyPrimaryDaylightingControl(testQ));
-  ASSERT_TRUE(z.setFractionofZoneControlledbySecondaryDaylightingControl(testQ));
-  ASSERT_FALSE(z.setFractionofZoneControlledbyPrimaryDaylightingControl(testQ2));
-  ASSERT_FALSE(z.setFractionofZoneControlledbySecondaryDaylightingControl(testQ2));
 
 }
 
@@ -830,4 +761,3 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
     EXPECT_EQ(2u,m.getModelObjects<model::ZoneControlHumidistat>().size());
   }
 }
-

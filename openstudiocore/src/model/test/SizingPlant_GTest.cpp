@@ -30,11 +30,7 @@
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
 #include "../SizingPlant.hpp"
-#include "../SizingPlant_Impl.hpp"
 #include "../PlantLoop.hpp"
-#include "../PlantLoop_Impl.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -54,4 +50,3 @@ TEST_F(ModelFixture,SizingPlant) {
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
-
