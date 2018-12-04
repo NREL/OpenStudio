@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -88,19 +86,13 @@ namespace detail {
 
     double temperatureCapacityMultiplier() const;
 
-    Quantity getTemperatureCapacityMultiplier(bool returnIP=false) const;
-
     bool isTemperatureCapacityMultiplierDefaulted() const;
 
     double humidityCapacityMultiplier() const;
 
-    Quantity getHumidityCapacityMultiplier(bool returnIP=false) const;
-
     bool isHumidityCapacityMultiplierDefaulted() const;
 
     double carbonDioxideCapacityMultiplier() const;
-
-    Quantity getCarbonDioxideCapacityMultiplier(bool returnIP=false) const;
 
     bool isCarbonDioxideCapacityMultiplierDefaulted() const;
 
@@ -110,19 +102,13 @@ namespace detail {
 
     bool setTemperatureCapacityMultiplier(double temperatureCapacityMultiplier);
 
-    bool setTemperatureCapacityMultiplier(const Quantity& temperatureCapacityMultiplier);
-
     void resetTemperatureCapacityMultiplier();
 
     bool setHumidityCapacityMultiplier(double humidityCapacityMultiplier);
 
-    bool setHumidityCapacityMultiplier(const Quantity& humidityCapacityMultiplier);
-
     void resetHumidityCapacityMultiplier();
 
     bool setCarbonDioxideCapacityMultiplier(double carbonDioxideCapacityMultiplier);
-
-    bool setCarbonDioxideCapacityMultiplier(const Quantity& carbonDioxideCapacityMultiplier);
 
     void resetCarbonDioxideCapacityMultiplier();
 
@@ -137,12 +123,6 @@ namespace detail {
 
     REGISTER_LOGGER("openstudio.model.ZoneCapacitanceMultiplierResearchSpecial");
 
-    openstudio::Quantity temperatureCapacityMultiplier_SI() const;
-    openstudio::Quantity temperatureCapacityMultiplier_IP() const;
-    openstudio::Quantity humidityCapacityMultiplier_SI() const;
-    openstudio::Quantity humidityCapacityMultiplier_IP() const;
-    openstudio::Quantity carbonDioxideCapacityMultiplier_SI() const;
-    openstudio::Quantity carbonDioxideCapacityMultiplier_IP() const;
   };
 
 } // detail
@@ -151,4 +131,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONECAPACITANCEMULTIPLIERRESEARCHSPECIAL_IMPL_HPP
-

@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "Glazing_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -96,45 +94,27 @@ namespace detail {
 
     virtual boost::optional<double> exteriorVisibleAbsorptance() const override;
 
-    Quantity getThickness(bool returnIP=false) const;
-
     double solarIndexofRefraction() const;
-
-    Quantity getSolarIndexofRefraction(bool returnIP=false) const;
 
     double solarExtinctionCoefficient() const;
 
-    Quantity getSolarExtinctionCoefficient(bool returnIP=false) const;
-
     double visibleIndexofRefraction() const;
-
-    Quantity getVisibleIndexofRefraction(bool returnIP=false) const;
 
     double visibleExtinctionCoefficient() const;
 
-    Quantity getVisibleExtinctionCoefficient(bool returnIP=false) const;
-
     double infraredTransmittanceatNormalIncidence() const;
-
-    Quantity getInfraredTransmittanceatNormalIncidence(bool returnIP=false) const;
 
     bool isInfraredTransmittanceatNormalIncidenceDefaulted() const;
 
     double infraredHemisphericalEmissivity() const;
 
-    Quantity getInfraredHemisphericalEmissivity(bool returnIP=false) const;
-
     bool isInfraredHemisphericalEmissivityDefaulted() const;
 
     virtual double conductivity() const;
 
-    virtual Quantity getConductivity(bool returnIP=false) const;
-
     virtual bool isConductivityDefaulted() const;
 
     virtual double dirtCorrectionFactorforSolarandVisibleTransmittance() const;
-
-    virtual Quantity getDirtCorrectionFactorforSolarandVisibleTransmittance(bool returnIP=false) const;
 
     virtual bool isDirtCorrectionFactorforSolarandVisibleTransmittanceDefaulted() const;
 
@@ -158,45 +138,27 @@ namespace detail {
 
     bool setThickness(double thickness) override;
 
-    bool setThickness(const Quantity& thickness);
-
     bool setSolarIndexofRefraction(double solarIndexofRefraction);
-
-    bool setSolarIndexofRefraction(const Quantity& solarIndexofRefraction);
 
     bool setSolarExtinctionCoefficient(double solarExtinctionCoefficient);
 
-    bool setSolarExtinctionCoefficient(const Quantity& solarExtinctionCoefficient);
-
     bool setVisibleIndexofRefraction(double visibleIndexofRefraction);
-
-    bool setVisibleIndexofRefraction(const Quantity& visibleIndexofRefraction);
 
     bool setVisibleExtinctionCoefficient(double visibleExtinctionCoefficient);
 
-    bool setVisibleExtinctionCoefficient(const Quantity& visibleExtinctionCoefficient);
-
     bool setInfraredTransmittanceatNormalIncidence(double infraredTransmittanceatNormalIncidence);
-
-    bool setInfraredTransmittanceatNormalIncidence(const Quantity& infraredTransmittanceatNormalIncidence);
 
     void resetInfraredTransmittanceatNormalIncidence();
 
     bool setInfraredHemisphericalEmissivity(double infraredHemisphericalEmissivity);
 
-    bool setInfraredHemisphericalEmissivity(const Quantity& infraredHemisphericalEmissivity);
-
     void resetInfraredHemisphericalEmissivity();
 
     virtual bool setConductivity(double conductivity);
 
-    virtual bool setConductivity(const Quantity& conductivity);
-
     virtual void resetConductivity();
 
     virtual bool setDirtCorrectionFactorforSolarandVisibleTransmittance(double dirtCorrectionFactorforSolarandVisibleTransmittance);
-
-    virtual bool setDirtCorrectionFactorforSolarandVisibleTransmittance(const Quantity& dirtCorrectionFactorforSolarandVisibleTransmittance);
 
     virtual void resetDirtCorrectionFactorforSolarandVisibleTransmittance();
 
@@ -213,24 +175,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.RefractionExtinctionGlazing");
 
-    openstudio::Quantity thickness_SI() const;
-    openstudio::Quantity thickness_IP() const;
-    openstudio::Quantity solarIndexofRefraction_SI() const;
-    openstudio::Quantity solarIndexofRefraction_IP() const;
-    openstudio::Quantity solarExtinctionCoefficient_SI() const;
-    openstudio::Quantity solarExtinctionCoefficient_IP() const;
-    openstudio::Quantity visibleIndexofRefraction_SI() const;
-    openstudio::Quantity visibleIndexofRefraction_IP() const;
-    openstudio::Quantity visibleExtinctionCoefficient_SI() const;
-    openstudio::Quantity visibleExtinctionCoefficient_IP() const;
-    openstudio::Quantity infraredTransmittanceatNormalIncidence_SI() const;
-    openstudio::Quantity infraredTransmittanceatNormalIncidence_IP() const;
-    openstudio::Quantity infraredHemisphericalEmissivity_SI() const;
-    openstudio::Quantity infraredHemisphericalEmissivity_IP() const;
-    openstudio::Quantity conductivity_SI() const;
-    openstudio::Quantity conductivity_IP() const;
-    openstudio::Quantity dirtCorrectionFactorforSolarandVisibleTransmittance_SI() const;
-    openstudio::Quantity dirtCorrectionFactorforSolarandVisibleTransmittance_IP() const;
   };
 
 } // detail

@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "Glazing_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -88,51 +86,31 @@ namespace detail {
 
     double solarTransmittance() const;
 
-    Quantity getThickness(bool returnIP=false) const;
-
     boost::optional<double> solarTransmittanceatNormalIncidence() const;
-
-    OSOptionalQuantity getSolarTransmittanceatNormalIncidence(bool returnIP=false) const;
 
     boost::optional<double> frontSideSolarReflectanceatNormalIncidence() const;
 
-    OSOptionalQuantity getFrontSideSolarReflectanceatNormalIncidence(bool returnIP=false) const;
-
     boost::optional<double> backSideSolarReflectanceatNormalIncidence() const;
-
-    OSOptionalQuantity getBackSideSolarReflectanceatNormalIncidence(bool returnIP=false) const;
 
     virtual boost::optional<double> getVisibleTransmittance() const override;
 
     boost::optional<double> visibleTransmittanceatNormalIncidence() const;
 
-    OSOptionalQuantity getVisibleTransmittanceatNormalIncidence(bool returnIP=false) const;
-
     boost::optional<double> frontSideVisibleReflectanceatNormalIncidence() const;
 
-    OSOptionalQuantity getFrontSideVisibleReflectanceatNormalIncidence(bool returnIP=false) const;
-
     boost::optional<double> backSideVisibleReflectanceatNormalIncidence() const;
-
-    OSOptionalQuantity getBackSideVisibleReflectanceatNormalIncidence(bool returnIP=false) const;
 
     double infraredTransmittance() const;
 
     double infraredTransmittanceatNormalIncidence() const;
 
-    Quantity getInfraredTransmittanceatNormalIncidence(bool returnIP=false) const;
-
     bool isInfraredTransmittanceatNormalIncidenceDefaulted() const;
 
     double frontSideInfraredHemisphericalEmissivity() const;
 
-    Quantity getFrontSideInfraredHemisphericalEmissivity(bool returnIP=false) const;
-
     bool isFrontSideInfraredHemisphericalEmissivityDefaulted() const;
 
     double backSideInfraredHemisphericalEmissivity() const;
-
-    Quantity getBackSideInfraredHemisphericalEmissivity(bool returnIP=false) const;
 
     bool isBackSideInfraredHemisphericalEmissivityDefaulted() const;
 
@@ -141,13 +119,9 @@ namespace detail {
 
     double conductivity() const;
 
-    Quantity getConductivity(bool returnIP=false) const;
-
     bool isConductivityDefaulted() const;
 
     double dirtCorrectionFactorforSolarandVisibleTransmittance() const;
-
-    Quantity getDirtCorrectionFactorforSolarandVisibleTransmittance(bool returnIP=false) const;
 
     bool isDirtCorrectionFactorforSolarandVisibleTransmittanceDefaulted() const;
 
@@ -170,25 +144,17 @@ namespace detail {
     /** Set thickness to value (m). */
     virtual bool setThickness(double value) override;
 
-    bool setThickness(const Quantity& thickness);
-
     bool setSolarTransmittance(double value);
 
     bool setSolarTransmittanceatNormalIncidence(boost::optional<double> solarTransmittanceatNormalIncidence);
-
-    bool setSolarTransmittanceatNormalIncidence(const OSOptionalQuantity& solarTransmittanceatNormalIncidence);
 
     void resetSolarTransmittanceatNormalIncidence();
 
     bool setFrontSideSolarReflectanceatNormalIncidence(boost::optional<double> frontSideSolarReflectanceatNormalIncidence);
 
-    bool setFrontSideSolarReflectanceatNormalIncidence(const OSOptionalQuantity& frontSideSolarReflectanceatNormalIncidence);
-
     void resetFrontSideSolarReflectanceatNormalIncidence();
 
     bool setBackSideSolarReflectanceatNormalIncidence(boost::optional<double> backSideSolarReflectanceatNormalIncidence);
-
-    bool setBackSideSolarReflectanceatNormalIncidence(const OSOptionalQuantity& backSideSolarReflectanceatNormalIncidence);
 
     void resetBackSideSolarReflectanceatNormalIncidence();
 
@@ -196,19 +162,13 @@ namespace detail {
 
     bool setVisibleTransmittanceatNormalIncidence(boost::optional<double> visibleTransmittanceatNormalIncidence);
 
-    bool setVisibleTransmittanceatNormalIncidence(const OSOptionalQuantity& visibleTransmittanceatNormalIncidence);
-
     void resetVisibleTransmittanceatNormalIncidence();
 
     bool setFrontSideVisibleReflectanceatNormalIncidence(boost::optional<double> frontSideVisibleReflectanceatNormalIncidence);
 
-    bool setFrontSideVisibleReflectanceatNormalIncidence(const OSOptionalQuantity& frontSideVisibleReflectanceatNormalIncidence);
-
     void resetFrontSideVisibleReflectanceatNormalIncidence();
 
     bool setBackSideVisibleReflectanceatNormalIncidence(boost::optional<double> backSideVisibleReflectanceatNormalIncidence);
-
-    bool setBackSideVisibleReflectanceatNormalIncidence(const OSOptionalQuantity& backSideVisibleReflectanceatNormalIncidence);
 
     void resetBackSideVisibleReflectanceatNormalIncidence();
 
@@ -216,19 +176,13 @@ namespace detail {
 
     bool setInfraredTransmittanceatNormalIncidence(double infraredTransmittanceatNormalIncidence);
 
-    bool setInfraredTransmittanceatNormalIncidence(const Quantity& infraredTransmittanceatNormalIncidence);
-
     void resetInfraredTransmittanceatNormalIncidence();
 
     bool setFrontSideInfraredHemisphericalEmissivity(double frontSideInfraredHemisphericalEmissivity);
 
-    bool setFrontSideInfraredHemisphericalEmissivity(const Quantity& frontSideInfraredHemisphericalEmissivity);
-
     void resetFrontSideInfraredHemisphericalEmissivity();
 
     bool setBackSideInfraredHemisphericalEmissivity(double backSideInfraredHemisphericalEmissivity);
-
-    bool setBackSideInfraredHemisphericalEmissivity(const Quantity& backSideInfraredHemisphericalEmissivity);
 
     void resetBackSideInfraredHemisphericalEmissivity();
 
@@ -237,13 +191,9 @@ namespace detail {
 
     bool setConductivity(double conductivity);
 
-    bool setConductivity(const Quantity& conductivity);
-
     void resetConductivity();
 
     bool setDirtCorrectionFactorforSolarandVisibleTransmittance(double dirtCorrectionFactorforSolarandVisibleTransmittance);
-
-    bool setDirtCorrectionFactorforSolarandVisibleTransmittance(const Quantity& dirtCorrectionFactorforSolarandVisibleTransmittance);
 
     void resetDirtCorrectionFactorforSolarandVisibleTransmittance();
 
@@ -287,30 +237,6 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.StandardGlazing");
 
     std::vector<std::string> opticalDataTypeValues() const;
-    openstudio::Quantity thickness_SI() const;
-    openstudio::Quantity thickness_IP() const;
-    openstudio::OSOptionalQuantity solarTransmittanceatNormalIncidence_SI() const;
-    openstudio::OSOptionalQuantity solarTransmittanceatNormalIncidence_IP() const;
-    openstudio::OSOptionalQuantity frontSideSolarReflectanceatNormalIncidence_SI() const;
-    openstudio::OSOptionalQuantity frontSideSolarReflectanceatNormalIncidence_IP() const;
-    openstudio::OSOptionalQuantity backSideSolarReflectanceatNormalIncidence_SI() const;
-    openstudio::OSOptionalQuantity backSideSolarReflectanceatNormalIncidence_IP() const;
-    openstudio::OSOptionalQuantity visibleTransmittanceatNormalIncidence_SI() const;
-    openstudio::OSOptionalQuantity visibleTransmittanceatNormalIncidence_IP() const;
-    openstudio::OSOptionalQuantity frontSideVisibleReflectanceatNormalIncidence_SI() const;
-    openstudio::OSOptionalQuantity frontSideVisibleReflectanceatNormalIncidence_IP() const;
-    openstudio::OSOptionalQuantity backSideVisibleReflectanceatNormalIncidence_SI() const;
-    openstudio::OSOptionalQuantity backSideVisibleReflectanceatNormalIncidence_IP() const;
-    openstudio::Quantity infraredTransmittanceatNormalIncidence_SI() const;
-    openstudio::Quantity infraredTransmittanceatNormalIncidence_IP() const;
-    openstudio::Quantity frontSideInfraredHemisphericalEmissivity_SI() const;
-    openstudio::Quantity frontSideInfraredHemisphericalEmissivity_IP() const;
-    openstudio::Quantity backSideInfraredHemisphericalEmissivity_SI() const;
-    openstudio::Quantity backSideInfraredHemisphericalEmissivity_IP() const;
-    openstudio::Quantity conductivity_SI() const;
-    openstudio::Quantity conductivity_IP() const;
-    openstudio::Quantity dirtCorrectionFactorforSolarandVisibleTransmittance_SI() const;
-    openstudio::Quantity dirtCorrectionFactorforSolarandVisibleTransmittance_IP() const;
   };
 
 } // detail

@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "SpaceLoad_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -107,15 +105,10 @@ namespace detail {
 
     double effectiveAirLeakageArea() const;
 
-    Quantity getEffectiveAirLeakageArea(bool returnIP=false) const;
-
     double stackCoefficient() const;
-
-    Quantity getStackCoefficient(bool returnIP=false) const;
 
     double windCoefficient() const;
 
-    Quantity getWindCoefficient(bool returnIP=false) const;
 
     //@}
     /** @name Setters */
@@ -129,15 +122,10 @@ namespace detail {
 
     bool setEffectiveAirLeakageArea(double effectiveAirLeakageArea);
 
-    bool setEffectiveAirLeakageArea(const Quantity& effectiveAirLeakageArea);
-
     bool setStackCoefficient(double stackCoefficient);
-
-    bool setStackCoefficient(const Quantity& stackCoefficient);
 
     bool setWindCoefficient(double windCoefficient);
 
-    bool setWindCoefficient(const Quantity& windCoefficient);
 
     //@}
    protected:
@@ -147,13 +135,6 @@ namespace detail {
 
    private:
     REGISTER_LOGGER("openstudio.model.SpaceInfiltrationEffectiveLeakageArea");
-
-    openstudio::Quantity effectiveAirLeakageArea_SI() const;
-    openstudio::Quantity effectiveAirLeakageArea_IP() const;
-    openstudio::Quantity stackCoefficient_SI() const;
-    openstudio::Quantity stackCoefficient_IP() const;
-    openstudio::Quantity windCoefficient_SI() const;
-    openstudio::Quantity windCoefficient_IP() const;
 
     boost::optional<ModelObject> scheduleAsModelObject() const;
 
@@ -166,4 +147,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SPACEINFILTRATIONEFFECTIVELEAKAGEAREA_IMPL_HPP
-

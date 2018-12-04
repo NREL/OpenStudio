@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "GasLayer_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -103,33 +101,24 @@ namespace detail {
 
     double getSpecificHeat(double temperature) const;
 
-    Quantity getThickness(bool returnIP=false) const;
-
     int numberofGasesinMixture() const;
 
     std::string gas1Type() const;
 
     double gas1Fraction() const;
 
-    Quantity getGas1Fraction(bool returnIP=false) const;
-
     std::string gas2Type() const;
 
     double gas2Fraction() const;
-
-    Quantity getGas2Fraction(bool returnIP=false) const;
 
     std::string gas3Type() const;
 
     boost::optional<double> gas3Fraction() const;
 
-    OSOptionalQuantity getGas3Fraction(bool returnIP=false) const;
-
     std::string gas4Type() const;
 
     boost::optional<double> gas4Fraction() const;
 
-    OSOptionalQuantity getGas4Fraction(bool returnIP=false) const;
 
     //@}
     /** @name Setters */
@@ -156,8 +145,6 @@ namespace detail {
     /** Assign gas fraction at index to 1.0 - sum(other gas fractions), if index < numGases. */
     bool balanceFractions(unsigned index);
 
-    bool setThickness(const Quantity& thickness);
-
     bool setNumberofGasesinMixture(int numberofGasesinMixture);
 
     bool setGas1Type(std::string gas1Type);
@@ -165,8 +152,6 @@ namespace detail {
     void resetGas1Type();
 
     bool setGas1Fraction(double gas1Fraction);
-
-    bool setGas1Fraction(const Quantity& gas1Fraction);
 
     void resetGas1Fraction();
 
@@ -176,8 +161,6 @@ namespace detail {
 
     bool setGas2Fraction(double gas2Fraction);
 
-    bool setGas2Fraction(const Quantity& gas2Fraction);
-
     void resetGas2Fraction();
 
     bool setGas3Type(boost::optional<std::string> gas3Type);
@@ -186,8 +169,6 @@ namespace detail {
 
     bool setGas3Fraction(boost::optional<double> gas3Fraction);
 
-    bool setGas3Fraction(const OSOptionalQuantity& gas3Fraction);
-
     void resetGas3Fraction();
 
     bool setGas4Type(boost::optional<std::string> gas4Type);
@@ -195,8 +176,6 @@ namespace detail {
     void resetGas4Type();
 
     bool setGas4Fraction(boost::optional<double> gas4Fraction);
-
-    bool setGas4Fraction(const OSOptionalQuantity& gas4Fraction);
 
     void resetGas4Fraction();
 
@@ -220,20 +199,10 @@ namespace detail {
 
     unsigned mf_getGasFractionFieldIndex(unsigned gasIndex) const;
 
-    openstudio::Quantity thickness_SI() const;
-    openstudio::Quantity thickness_IP() const;
     std::vector<std::string> gas1TypeValues() const;
-    openstudio::Quantity gas1Fraction_SI() const;
-    openstudio::Quantity gas1Fraction_IP() const;
     std::vector<std::string> gas2TypeValues() const;
-    openstudio::Quantity gas2Fraction_SI() const;
-    openstudio::Quantity gas2Fraction_IP() const;
     std::vector<std::string> gas3TypeValues() const;
-    openstudio::OSOptionalQuantity gas3Fraction_SI() const;
-    openstudio::OSOptionalQuantity gas3Fraction_IP() const;
     std::vector<std::string> gas4TypeValues() const;
-    openstudio::OSOptionalQuantity gas4Fraction_SI() const;
-    openstudio::OSOptionalQuantity gas4Fraction_IP() const;
   };
 
 } // detail
@@ -242,4 +211,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_GASMIXTURE_IMPL_HPP
-

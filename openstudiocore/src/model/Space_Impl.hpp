@@ -33,7 +33,6 @@
 #include "ModelAPI.hpp"
 #include "PlanarSurfaceGroup_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
 
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>
@@ -487,22 +486,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.Space");
 
-    openstudio::Quantity directionofRelativeNorth_SI() const;
-    openstudio::Quantity directionofRelativeNorth_IP() const;
-    bool setDirectionofRelativeNorth(const Quantity& directionofRelativeNorth);
-
-    openstudio::Quantity xOrigin_SI() const;
-    openstudio::Quantity xOrigin_IP() const;
-    bool setXOrigin(const Quantity& xOrigin);
-
-    openstudio::Quantity yOrigin_SI() const;
-    openstudio::Quantity yOrigin_IP() const;
-    bool setYOrigin(const Quantity& yOrigin);
-
-    openstudio::Quantity zOrigin_SI() const;
-    openstudio::Quantity zOrigin_IP() const;
-    bool setZOrigin(const Quantity& zOrigin);
-
     boost::optional<ModelObject> spaceTypeAsModelObject() const;
     boost::optional<ModelObject> defaultConstructionSetAsModelObject() const;
     boost::optional<ModelObject> defaultScheduleSetAsModelObject() const;
@@ -550,4 +533,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SPACE_IMPL_HPP
-

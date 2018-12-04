@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "SetpointManager_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -89,19 +87,11 @@ namespace detail {
 
     double setpointatOutdoorLowTemperature() const;
 
-    Quantity getSetpointatOutdoorLowTemperature(bool returnIP=false) const;
-
     double outdoorLowTemperature() const;
-
-    Quantity getOutdoorLowTemperature(bool returnIP=false) const;
 
     double setpointatOutdoorHighTemperature() const;
 
-    Quantity getSetpointatOutdoorHighTemperature(bool returnIP=false) const;
-
     double outdoorHighTemperature() const;
-
-    Quantity getOutdoorHighTemperature(bool returnIP=false) const;
 
     virtual boost::optional<Node> setpointNode() const override;
 
@@ -109,19 +99,12 @@ namespace detail {
 
     boost::optional<double> setpointatOutdoorLowTemperature2() const;
 
-    OSOptionalQuantity getSetpointatOutdoorLowTemperature2(bool returnIP=false) const;
-
     boost::optional<double> outdoorLowTemperature2() const;
-
-    OSOptionalQuantity getOutdoorLowTemperature2(bool returnIP=false) const;
 
     boost::optional<double> setpointatOutdoorHighTemperature2() const;
 
-    OSOptionalQuantity getSetpointatOutdoorHighTemperature2(bool returnIP=false) const;
-
     boost::optional<double> outdoorHighTemperature2() const;
 
-    OSOptionalQuantity getOutdoorHighTemperature2(bool returnIP=false) const;
 
     //@}
     /** @name Setters */
@@ -133,19 +116,11 @@ namespace detail {
 
     bool setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature);
 
-    bool setSetpointatOutdoorLowTemperature(const Quantity& setpointatOutdoorLowTemperature);
-
     bool setOutdoorLowTemperature(double outdoorLowTemperature);
-
-    bool setOutdoorLowTemperature(const Quantity& outdoorLowTemperature);
 
     bool setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature);
 
-    bool setSetpointatOutdoorHighTemperature(const Quantity& setpointatOutdoorHighTemperature);
-
     bool setOutdoorHighTemperature(double outdoorHighTemperature);
-
-    bool setOutdoorHighTemperature(const Quantity& outdoorHighTemperature);
 
     bool setSchedule(Schedule& schedule);
 
@@ -153,25 +128,17 @@ namespace detail {
 
     bool setSetpointatOutdoorLowTemperature2(boost::optional<double> setpointatOutdoorLowTemperature2);
 
-    bool setSetpointatOutdoorLowTemperature2(const OSOptionalQuantity& setpointatOutdoorLowTemperature2);
-
     void resetSetpointatOutdoorLowTemperature2();
 
     bool setOutdoorLowTemperature2(boost::optional<double> outdoorLowTemperature2);
-
-    bool setOutdoorLowTemperature2(const OSOptionalQuantity& outdoorLowTemperature2);
 
     void resetOutdoorLowTemperature2();
 
     bool setSetpointatOutdoorHighTemperature2(boost::optional<double> setpointatOutdoorHighTemperature2);
 
-    bool setSetpointatOutdoorHighTemperature2(const OSOptionalQuantity& setpointatOutdoorHighTemperature2);
-
     void resetSetpointatOutdoorHighTemperature2();
 
     bool setOutdoorHighTemperature2(boost::optional<double> outdoorHighTemperature2);
-
-    bool setOutdoorHighTemperature2(const OSOptionalQuantity& outdoorHighTemperature2);
 
     void resetOutdoorHighTemperature2();
 
@@ -191,23 +158,6 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.SetpointManagerOutdoorAirReset");
 
     std::vector<std::string> controlVariableValues() const;
-    openstudio::Quantity setpointatOutdoorLowTemperature_SI() const;
-    openstudio::Quantity setpointatOutdoorLowTemperature_IP() const;
-    openstudio::Quantity outdoorLowTemperature_SI() const;
-    openstudio::Quantity outdoorLowTemperature_IP() const;
-    openstudio::Quantity setpointatOutdoorHighTemperature_SI() const;
-    openstudio::Quantity setpointatOutdoorHighTemperature_IP() const;
-    openstudio::Quantity outdoorHighTemperature_SI() const;
-    openstudio::Quantity outdoorHighTemperature_IP() const;
-    openstudio::OSOptionalQuantity setpointatOutdoorLowTemperature2_SI() const;
-    openstudio::OSOptionalQuantity setpointatOutdoorLowTemperature2_IP() const;
-    openstudio::OSOptionalQuantity outdoorLowTemperature2_SI() const;
-    openstudio::OSOptionalQuantity outdoorLowTemperature2_IP() const;
-    openstudio::OSOptionalQuantity setpointatOutdoorHighTemperature2_SI() const;
-    openstudio::OSOptionalQuantity setpointatOutdoorHighTemperature2_IP() const;
-    openstudio::OSOptionalQuantity outdoorHighTemperature2_SI() const;
-    openstudio::OSOptionalQuantity outdoorHighTemperature2_IP() const;
-
     boost::optional<ModelObject> setpointNodeAsModelObject() const;
     boost::optional<ModelObject> scheduleAsModelObject() const;
 

@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "Glazing_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -79,15 +77,10 @@ namespace detail {
 
     double uFactor() const;
 
-    Quantity getUFactor(bool returnIP=false) const;
-
     double solarHeatGainCoefficient() const;
-
-    Quantity getSolarHeatGainCoefficient(bool returnIP=false) const;
 
     boost::optional<double> visibleTransmittance() const;
 
-    OSOptionalQuantity getVisibleTransmittance(bool returnIP=false) const;
 
     //@}
     /** @name Setters */
@@ -95,15 +88,9 @@ namespace detail {
 
     bool setUFactor(double uFactor);
 
-    bool setUFactor(const Quantity& uFactor);
-
     bool setSolarHeatGainCoefficient(double solarHeatGainCoefficient);
 
-    bool setSolarHeatGainCoefficient(const Quantity& solarHeatGainCoefficient);
-
     bool setVisibleTransmittance(boost::optional<double> visibleTransmittance);
-
-    bool setVisibleTransmittance(const OSOptionalQuantity& visibleTransmittance);
 
     void resetVisibleTransmittance();
 
@@ -116,12 +103,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.SimpleGlazing");
 
-    openstudio::Quantity uFactor_SI() const;
-    openstudio::Quantity uFactor_IP() const;
-    openstudio::Quantity solarHeatGainCoefficient_SI() const;
-    openstudio::Quantity solarHeatGainCoefficient_IP() const;
-    openstudio::OSOptionalQuantity visibleTransmittance_SI() const;
-    openstudio::OSOptionalQuantity visibleTransmittance_IP() const;
   };
 
 } // detail
@@ -130,4 +111,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SIMPLEGLAZING_IMPL_HPP
-

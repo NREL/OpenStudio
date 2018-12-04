@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -77,13 +75,9 @@ namespace detail {
 
     double toleranceforTimeHeatingSetpointNotMet() const;
 
-    Quantity getToleranceforTimeHeatingSetpointNotMet(bool returnIP=false) const;
-
     bool isToleranceforTimeHeatingSetpointNotMetDefaulted() const;
 
     double toleranceforTimeCoolingSetpointNotMet() const;
-
-    Quantity getToleranceforTimeCoolingSetpointNotMet(bool returnIP=false) const;
 
     bool isToleranceforTimeCoolingSetpointNotMetDefaulted() const;
 
@@ -93,13 +87,9 @@ namespace detail {
 
     bool setToleranceforTimeHeatingSetpointNotMet(double toleranceforTimeHeatingSetpointNotMet);
 
-    bool setToleranceforTimeHeatingSetpointNotMet(const Quantity& toleranceforTimeHeatingSetpointNotMet);
-
     void resetToleranceforTimeHeatingSetpointNotMet();
 
     bool setToleranceforTimeCoolingSetpointNotMet(double toleranceforTimeCoolingSetpointNotMet);
-
-    bool setToleranceforTimeCoolingSetpointNotMet(const Quantity& toleranceforTimeCoolingSetpointNotMet);
 
     void resetToleranceforTimeCoolingSetpointNotMet();
 
@@ -112,10 +102,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.OutputControlReportingTolerances");
 
-    openstudio::Quantity toleranceforTimeHeatingSetpointNotMet_SI() const;
-    openstudio::Quantity toleranceforTimeHeatingSetpointNotMet_IP() const;
-    openstudio::Quantity toleranceforTimeCoolingSetpointNotMet_SI() const;
-    openstudio::Quantity toleranceforTimeCoolingSetpointNotMet_IP() const;
   };
 
 } // detail
@@ -124,4 +110,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_OUTPUTCONTROLREPORTINGTOLERANCES_IMPL_HPP
-

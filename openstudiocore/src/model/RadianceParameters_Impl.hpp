@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -81,25 +79,17 @@ namespace detail {
 
     double directThreshold() const;
 
-    Quantity getDirectThreshold(bool returnIP=false) const;
-
     bool isDirectThresholdDefaulted() const;
 
     double directCertainty() const;
-
-    Quantity getDirectCertainty(bool returnIP=false) const;
 
     bool isDirectCertaintyDefaulted() const;
 
     double directJitter() const;
 
-    Quantity getDirectJitter(bool returnIP=false) const;
-
     bool isDirectJitterDefaulted() const;
 
     double directPretest() const;
-
-    Quantity getDirectPretest(bool returnIP=false) const;
 
     bool isDirectPretestDefaulted() const;
 
@@ -125,13 +115,9 @@ namespace detail {
 
     double limitWeightVMX() const;
 
-    Quantity getLimitWeightVMX(bool returnIP=false) const;
-
     bool isLimitWeightVMXDefaulted() const;
 
     double limitWeightDMX() const;
-
-    Quantity getLimitWeightDMX(bool returnIP=false) const;
 
     bool isLimitWeightDMXDefaulted() const;
 
@@ -155,25 +141,17 @@ namespace detail {
 
     bool setDirectThreshold(double directThreshold);
 
-    bool setDirectThreshold(const Quantity& directThreshold);
-
     void resetDirectThreshold();
 
     bool setDirectCertainty(double directCertainty);
-
-    bool setDirectCertainty(const Quantity& directCertainty);
 
     void resetDirectCertainty();
 
     bool setDirectJitter(double directJitter);
 
-    bool setDirectJitter(const Quantity& directJitter);
-
     void resetDirectJitter();
 
     bool setDirectPretest(double directPretest);
-
-    bool setDirectPretest(const Quantity& directPretest);
 
     void resetDirectPretest();
 
@@ -199,13 +177,9 @@ namespace detail {
 
     bool setLimitWeightVMX(double limitWeightVMX);
 
-    bool setLimitWeightVMX(const Quantity& limitWeightVMX);
-
     void resetLimitWeightVMX();
 
     bool setLimitWeightDMX(double limitWeightDMX);
-
-    bool setLimitWeightDMX(const Quantity& limitWeightDMX);
 
     void resetLimitWeightDMX();
 
@@ -230,18 +204,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.RadianceParameters");
 
-    openstudio::Quantity directThreshold_SI() const;
-    openstudio::Quantity directThreshold_IP() const;
-    openstudio::Quantity directCertainty_SI() const;
-    openstudio::Quantity directCertainty_IP() const;
-    openstudio::Quantity directJitter_SI() const;
-    openstudio::Quantity directJitter_IP() const;
-    openstudio::Quantity directPretest_SI() const;
-    openstudio::Quantity directPretest_IP() const;
-    openstudio::Quantity limitWeightVMX_SI() const;
-    openstudio::Quantity limitWeightVMX_IP() const;
-    openstudio::Quantity limitWeightDMX_SI() const;
-    openstudio::Quantity limitWeightDMX_IP() const;
     std::vector<std::string> skyDiscretizationResolutionValues() const;
  };
 

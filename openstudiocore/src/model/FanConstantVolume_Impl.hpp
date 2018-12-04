@@ -125,13 +125,9 @@ namespace detail {
 
     boost::optional<double> maximumFlowRate() const;
 
-    OSOptionalQuantity getMaximumFlowRate(bool returnIP=false) const;
-
     bool isMaximumFlowRateAutosized() const;
 
     bool setMaximumFlowRate(boost::optional<double> maximumFlowRate);
-
-    bool setMaximumFlowRate(const OSOptionalQuantity& maximumFlowRate);
 
     void resetMaximumFlowRate();
 
@@ -175,4 +171,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_FANCONSTANTVOLUME_IMPL_HPP
-

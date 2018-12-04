@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ShadingMaterial_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -100,59 +98,37 @@ namespace detail {
 
     double diffuseSolarReflectance() const;
 
-    Quantity getDiffuseSolarReflectance(bool returnIP=false) const;
-
     double diffuseVisibleReflectance() const;
 
-    Quantity getDiffuseVisibleReflectance(bool returnIP=false) const;
-
     double thermalHemisphericalEmissivity() const;
-
-    Quantity getThermalHemisphericalEmissivity(bool returnIP=false) const;
 
     bool isThermalHemisphericalEmissivityDefaulted() const;
 
     double conductivity() const;
 
-    Quantity getConductivity(bool returnIP=false) const;
-
     bool isConductivityDefaulted() const;
 
     double screenMaterialSpacing() const;
 
-    Quantity getScreenMaterialSpacing(bool returnIP=false) const;
-
     double screenMaterialDiameter() const;
 
-    Quantity getScreenMaterialDiameter(bool returnIP=false) const;
-
     double screentoGlassDistance() const;
-
-    Quantity getScreentoGlassDistance(bool returnIP=false) const;
 
     bool isScreentoGlassDistanceDefaulted() const;
 
     double topOpeningMultiplier() const;
 
-    Quantity getTopOpeningMultiplier(bool returnIP=false) const;
-
     bool isTopOpeningMultiplierDefaulted() const;
 
     double bottomOpeningMultiplier() const;
-
-    Quantity getBottomOpeningMultiplier(bool returnIP=false) const;
 
     bool isBottomOpeningMultiplierDefaulted() const;
 
     double leftSideOpeningMultiplier() const;
 
-    Quantity getLeftSideOpeningMultiplier(bool returnIP=false) const;
-
     bool isLeftSideOpeningMultiplierDefaulted() const;
 
     double rightSideOpeningMultiplier() const;
-
-    Quantity getRightSideOpeningMultiplier(bool returnIP=false) const;
 
     bool isRightSideOpeningMultiplierDefaulted() const;
 
@@ -179,59 +155,37 @@ namespace detail {
 
     bool setDiffuseSolarReflectance(double diffuseSolarReflectance);
 
-    bool setDiffuseSolarReflectance(const Quantity& diffuseSolarReflectance);
-
     bool setDiffuseVisibleReflectance(double diffuseVisibleReflectance);
 
-    bool setDiffuseVisibleReflectance(const Quantity& diffuseVisibleReflectance);
-
     bool setThermalHemisphericalEmissivity(double thermalHemisphericalEmissivity);
-
-    bool setThermalHemisphericalEmissivity(const Quantity& thermalHemisphericalEmissivity);
 
     void resetThermalHemisphericalEmissivity();
 
     bool setConductivity(double conductivity);
 
-    bool setConductivity(const Quantity& conductivity);
-
     void resetConductivity();
 
     bool setScreenMaterialSpacing(double screenMaterialSpacing);
 
-    bool setScreenMaterialSpacing(const Quantity& screenMaterialSpacing);
-
     bool setScreenMaterialDiameter(double screenMaterialDiameter);
 
-    bool setScreenMaterialDiameter(const Quantity& screenMaterialDiameter);
-
     bool setScreentoGlassDistance(double screentoGlassDistance);
-
-    bool setScreentoGlassDistance(const Quantity& screentoGlassDistance);
 
     void resetScreentoGlassDistance();
 
     bool setTopOpeningMultiplier(double topOpeningMultiplier);
 
-    bool setTopOpeningMultiplier(const Quantity& topOpeningMultiplier);
-
     void resetTopOpeningMultiplier();
 
     bool setBottomOpeningMultiplier(double bottomOpeningMultiplier);
-
-    bool setBottomOpeningMultiplier(const Quantity& bottomOpeningMultiplier);
 
     void resetBottomOpeningMultiplier();
 
     bool setLeftSideOpeningMultiplier(double leftSideOpeningMultiplier);
 
-    bool setLeftSideOpeningMultiplier(const Quantity& leftSideOpeningMultiplier);
-
     void resetLeftSideOpeningMultiplier();
 
     bool setRightSideOpeningMultiplier(double rightSideOpeningMultiplier);
-
-    bool setRightSideOpeningMultiplier(const Quantity& rightSideOpeningMultiplier);
 
     void resetRightSideOpeningMultiplier();
 
@@ -248,28 +202,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.Screen");
 
-    openstudio::Quantity diffuseSolarReflectance_SI() const;
-    openstudio::Quantity diffuseSolarReflectance_IP() const;
-    openstudio::Quantity diffuseVisibleReflectance_SI() const;
-    openstudio::Quantity diffuseVisibleReflectance_IP() const;
-    openstudio::Quantity thermalHemisphericalEmissivity_SI() const;
-    openstudio::Quantity thermalHemisphericalEmissivity_IP() const;
-    openstudio::Quantity conductivity_SI() const;
-    openstudio::Quantity conductivity_IP() const;
-    openstudio::Quantity screenMaterialSpacing_SI() const;
-    openstudio::Quantity screenMaterialSpacing_IP() const;
-    openstudio::Quantity screenMaterialDiameter_SI() const;
-    openstudio::Quantity screenMaterialDiameter_IP() const;
-    openstudio::Quantity screentoGlassDistance_SI() const;
-    openstudio::Quantity screentoGlassDistance_IP() const;
-    openstudio::Quantity topOpeningMultiplier_SI() const;
-    openstudio::Quantity topOpeningMultiplier_IP() const;
-    openstudio::Quantity bottomOpeningMultiplier_SI() const;
-    openstudio::Quantity bottomOpeningMultiplier_IP() const;
-    openstudio::Quantity leftSideOpeningMultiplier_SI() const;
-    openstudio::Quantity leftSideOpeningMultiplier_IP() const;
-    openstudio::Quantity rightSideOpeningMultiplier_SI() const;
-    openstudio::Quantity rightSideOpeningMultiplier_IP() const;
     std::vector<std::string> reflectedBeamTransmittanceAccountingMethodValues() const;
     std::vector<std::string> angleofResolutionforScreenTransmittanceOutputMapValues() const;
   };
@@ -280,4 +212,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SCREEN_IMPL_HPP
-

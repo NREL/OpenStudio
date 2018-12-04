@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ShadingMaterial_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -107,63 +105,35 @@ namespace detail {
 
     double visibleReflectance() const;
 
-    Quantity getSolarTransmittance(bool returnIP=false) const;
-
-    Quantity getSolarReflectance(bool returnIP=false) const;
-
     double visibleTransmittance() const;
 
     virtual boost::optional<double> getVisibleTransmittance() const override;
 
-    Quantity getVisibleTransmittance(bool returnIP) const;
-
-    Quantity getVisibleReflectance(bool returnIP=false) const;
-
     double thermalHemisphericalEmissivity() const;
-
-    Quantity getThermalHemisphericalEmissivity(bool returnIP=false) const;
-
-    Quantity getThermalTransmittance(bool returnIP=false) const;
-
-    Quantity getThickness(bool returnIP=false) const;
 
     double conductivity() const;
 
-    Quantity getConductivity(bool returnIP=false) const;
-
     double shadetoGlassDistance() const;
-
-    Quantity getShadetoGlassDistance(bool returnIP=false) const;
 
     bool isShadetoGlassDistanceDefaulted() const;
 
     double topOpeningMultiplier() const;
 
-    Quantity getTopOpeningMultiplier(bool returnIP=false) const;
-
     bool isTopOpeningMultiplierDefaulted() const;
 
     double bottomOpeningMultiplier() const;
-
-    Quantity getBottomOpeningMultiplier(bool returnIP=false) const;
 
     bool isBottomOpeningMultiplierDefaulted() const;
 
     double leftSideOpeningMultiplier() const;
 
-    Quantity getLeftSideOpeningMultiplier(bool returnIP=false) const;
-
     bool isLeftSideOpeningMultiplierDefaulted() const;
 
     double rightSideOpeningMultiplier() const;
 
-    Quantity getRightSideOpeningMultiplier(bool returnIP=false) const;
-
     bool isRightSideOpeningMultiplierDefaulted() const;
 
     double airflowPermeability() const;
-
-    Quantity getAirflowPermeability(bool returnIP=false) const;
 
     bool isAirflowPermeabilityDefaulted() const;
 
@@ -196,59 +166,31 @@ namespace detail {
 
     bool setVisibleReflectance(double value);
 
-    bool setSolarTransmittance(const Quantity& solarTransmittance);
-
-    bool setSolarReflectance(const Quantity& solarReflectance);
-
-    bool setVisibleTransmittance(const Quantity& visibleTransmittance);
-
-    bool setVisibleReflectance(const Quantity& visibleReflectance);
-
     bool setThermalHemisphericalEmissivity(double thermalHemisphericalEmissivity);
-
-    bool setThermalHemisphericalEmissivity(const Quantity& thermalHemisphericalEmissivity);
-
-    bool setThermalTransmittance(const Quantity& thermalTransmittance);
-
-    bool setThickness(const Quantity& thickness);
 
     bool setConductivity(double conductivity);
 
-    bool setConductivity(const Quantity& conductivity);
-
     bool setShadetoGlassDistance(double shadetoGlassDistance);
-
-    bool setShadetoGlassDistance(const Quantity& shadetoGlassDistance);
 
     void resetShadetoGlassDistance();
 
     bool setTopOpeningMultiplier(double topOpeningMultiplier);
 
-    bool setTopOpeningMultiplier(const Quantity& topOpeningMultiplier);
-
     void resetTopOpeningMultiplier();
 
     bool setBottomOpeningMultiplier(double bottomOpeningMultiplier);
-
-    bool setBottomOpeningMultiplier(const Quantity& bottomOpeningMultiplier);
 
     void resetBottomOpeningMultiplier();
 
     bool setLeftSideOpeningMultiplier(double leftSideOpeningMultiplier);
 
-    bool setLeftSideOpeningMultiplier(const Quantity& leftSideOpeningMultiplier);
-
     void resetLeftSideOpeningMultiplier();
 
     bool setRightSideOpeningMultiplier(double rightSideOpeningMultiplier);
 
-    bool setRightSideOpeningMultiplier(const Quantity& rightSideOpeningMultiplier);
-
     void resetRightSideOpeningMultiplier();
 
     bool setAirflowPermeability(double airflowPermeability);
-
-    bool setAirflowPermeability(const Quantity& airflowPermeability);
 
     void resetAirflowPermeability();
 
@@ -261,34 +203,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.Shade");
 
-    openstudio::Quantity solarTransmittance_SI() const;
-    openstudio::Quantity solarTransmittance_IP() const;
-    openstudio::Quantity solarReflectance_SI() const;
-    openstudio::Quantity solarReflectance_IP() const;
-    openstudio::Quantity visibleTransmittance_SI() const;
-    openstudio::Quantity visibleTransmittance_IP() const;
-    openstudio::Quantity visibleReflectance_SI() const;
-    openstudio::Quantity visibleReflectance_IP() const;
-    openstudio::Quantity thermalHemisphericalEmissivity_SI() const;
-    openstudio::Quantity thermalHemisphericalEmissivity_IP() const;
-    openstudio::Quantity thermalTransmittance_SI() const;
-    openstudio::Quantity thermalTransmittance_IP() const;
-    openstudio::Quantity thickness_SI() const;
-    openstudio::Quantity thickness_IP() const;
-    openstudio::Quantity conductivity_SI() const;
-    openstudio::Quantity conductivity_IP() const;
-    openstudio::Quantity shadetoGlassDistance_SI() const;
-    openstudio::Quantity shadetoGlassDistance_IP() const;
-    openstudio::Quantity topOpeningMultiplier_SI() const;
-    openstudio::Quantity topOpeningMultiplier_IP() const;
-    openstudio::Quantity bottomOpeningMultiplier_SI() const;
-    openstudio::Quantity bottomOpeningMultiplier_IP() const;
-    openstudio::Quantity leftSideOpeningMultiplier_SI() const;
-    openstudio::Quantity leftSideOpeningMultiplier_IP() const;
-    openstudio::Quantity rightSideOpeningMultiplier_SI() const;
-    openstudio::Quantity rightSideOpeningMultiplier_IP() const;
-    openstudio::Quantity airflowPermeability_SI() const;
-    openstudio::Quantity airflowPermeability_IP() const;
   };
 
 } // detail
@@ -297,4 +211,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SHADE_IMPL_HPP
-

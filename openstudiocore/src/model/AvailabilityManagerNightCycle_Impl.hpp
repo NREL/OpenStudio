@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "AvailabilityManager_Impl.hpp"
 #include "ModelObjectList.hpp"
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -82,10 +80,8 @@ namespace detail {
     void resetControlType();
 
     double thermostatTolerance() const;
-    Quantity getThermostatTolerance(bool returnIP=false) const;
     bool isThermostatToleranceDefaulted() const;
     bool setThermostatTolerance(double thermostatTolerance);
-    bool setThermostatTolerance(const Quantity& thermostatTolerance);
     void resetThermostatTolerance();
 
     std::string cyclingRunTimeControlType() const;
@@ -94,10 +90,8 @@ namespace detail {
     void resetCyclingRunTimeControlType();
 
     double cyclingRunTime() const;
-    Quantity getCyclingRunTime(bool returnIP=false) const;
     bool isCyclingRunTimeDefaulted() const;
     bool setCyclingRunTime(double cyclingRunTime);
-    bool setCyclingRunTime(const Quantity& cyclingRunTime);
     void resetCyclingRunTime();
 
 
@@ -125,11 +119,6 @@ namespace detail {
     boost::optional<Schedule> optionalFanSchedule() const;
 
     std::vector<std::string> controlTypeValues() const;
-    openstudio::Quantity thermostatTolerance_SI() const;
-    openstudio::Quantity thermostatTolerance_IP() const;
-    openstudio::Quantity cyclingRunTime_SI() const;
-    openstudio::Quantity cyclingRunTime_IP() const;
-
     std::vector<std::string> cyclingRunTimeControlTypeValues() const;
 
 

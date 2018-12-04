@@ -76,17 +76,13 @@ class MODEL_API ControllerOutdoorAir : public ParentObject {
   void resetTimeofDayEconomizerControlSchedule();
 
   boost::optional<double> minimumOutdoorAirFlowRate() const;
-  OSOptionalQuantity getMinimumOutdoorAirFlowRate(bool returnIP=false) const;
   bool isMinimumOutdoorAirFlowRateAutosized() const;
   bool setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate);
-  bool setMinimumOutdoorAirFlowRate(const Quantity& minimumOutdoorAirFlowRate);
   void autosizeMinimumOutdoorAirFlowRate();
 
   boost::optional<double> maximumOutdoorAirFlowRate() const;
-  OSOptionalQuantity getMaximumOutdoorAirFlowRate(bool returnIP=false) const;
   bool isMaximumOutdoorAirFlowRateAutosized() const;
   bool setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate);
-  bool setMaximumOutdoorAirFlowRate(const Quantity& maximumOutdoorAirFlowRate);
   void autosizeMaximumOutdoorAirFlowRate();
 
   ControllerMechanicalVentilation controllerMechanicalVentilation() const;

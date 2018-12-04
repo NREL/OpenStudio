@@ -125,13 +125,9 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
 
   boost::optional<double> nominalCapacity() const;
 
-  OSOptionalQuantity getNominalCapacity(bool returnIP=false) const;
-
   bool isNominalCapacityAutosized() const;
 
   bool setNominalCapacity(double nominalCapacity);
-
-  bool setNominalCapacity(const Quantity& nominalCapacity);
 
   void resetNominalCapacity();
 

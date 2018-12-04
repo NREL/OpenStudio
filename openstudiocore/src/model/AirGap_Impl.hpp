@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "OpaqueMaterial_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -77,8 +75,6 @@ namespace detail {
 
     double thermalResistance() const override;
 
-    OSOptionalQuantity getThermalResistance(bool returnIP=false) const;
-
     virtual double thickness() const override;
 
     /** The conductivitiy of the material in W/m*K. Always throws because no real thickness, which
@@ -112,8 +108,6 @@ namespace detail {
     //@{
 
     bool setThermalResistance(boost::optional<double> thermalResistance);
-
-    bool setThermalResistance(const OSOptionalQuantity& thermalResistance);
 
     void resetThermalResistance();
 
@@ -152,8 +146,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.AirGap");
 
-    openstudio::OSOptionalQuantity thermalResistance_SI() const;
-    openstudio::OSOptionalQuantity thermalResistance_IP() const;
   };
 
 } // detail
@@ -162,4 +154,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_AIRGAP_IMPL_HPP
-

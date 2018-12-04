@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -66,15 +64,12 @@ class MODEL_API AirGap : public OpaqueMaterial {
 
   double thermalResistance() const;
 
-  OSOptionalQuantity getThermalResistance(bool returnIP=false) const;
 
   //@}
   /** @name Setters */
   //@{
 
   bool setThermalResistance(double thermalResistance);
-
-  bool setThermalResistance(const Quantity& thermalResistance);
 
   void resetThermalResistance();
 
@@ -108,4 +103,3 @@ typedef std::vector<AirGap> AirGapVector;
 } // openstudio
 
 #endif // MODEL_AIRGAP_HPP
-

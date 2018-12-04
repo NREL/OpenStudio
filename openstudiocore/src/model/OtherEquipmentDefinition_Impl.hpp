@@ -208,4 +208,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_OTHEREQUIPMENTDEFINITION_IMPL_HPP
-

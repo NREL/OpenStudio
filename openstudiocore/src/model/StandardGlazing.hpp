@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -82,49 +80,29 @@ class MODEL_API StandardGlazing : public Glazing {
 
   double solarTransmittance() const;
 
-  Quantity getThickness(bool returnIP=false) const;
-
   boost::optional<double> solarTransmittanceatNormalIncidence() const;
-
-  OSOptionalQuantity getSolarTransmittanceatNormalIncidence(bool returnIP=false) const;
 
   boost::optional<double> frontSideSolarReflectanceatNormalIncidence() const;
 
-  OSOptionalQuantity getFrontSideSolarReflectanceatNormalIncidence(bool returnIP=false) const;
-
   boost::optional<double> backSideSolarReflectanceatNormalIncidence() const;
-
-  OSOptionalQuantity getBackSideSolarReflectanceatNormalIncidence(bool returnIP=false) const;
 
   boost::optional<double> visibleTransmittanceatNormalIncidence() const;
 
-  OSOptionalQuantity getVisibleTransmittanceatNormalIncidence(bool returnIP=false) const;
-
   boost::optional<double> frontSideVisibleReflectanceatNormalIncidence() const;
-
-  OSOptionalQuantity getFrontSideVisibleReflectanceatNormalIncidence(bool returnIP=false) const;
 
   boost::optional<double> backSideVisibleReflectanceatNormalIncidence() const;
 
   double infraredTransmittance() const;
 
-  OSOptionalQuantity getBackSideVisibleReflectanceatNormalIncidence(bool returnIP=false) const;
-
   double infraredTransmittanceatNormalIncidence() const;
-
-  Quantity getInfraredTransmittanceatNormalIncidence(bool returnIP=false) const;
 
   bool isInfraredTransmittanceatNormalIncidenceDefaulted() const;
 
   double frontSideInfraredHemisphericalEmissivity() const;
 
-  Quantity getFrontSideInfraredHemisphericalEmissivity(bool returnIP=false) const;
-
   bool isFrontSideInfraredHemisphericalEmissivityDefaulted() const;
 
   double backSideInfraredHemisphericalEmissivity() const;
-
-  Quantity getBackSideInfraredHemisphericalEmissivity(bool returnIP=false) const;
 
   bool isBackSideInfraredHemisphericalEmissivityDefaulted() const;
 
@@ -133,13 +111,9 @@ class MODEL_API StandardGlazing : public Glazing {
 
   double conductivity() const;
 
-  Quantity getConductivity(bool returnIP=false) const;
-
   bool isConductivityDefaulted() const;
 
   double dirtCorrectionFactorforSolarandVisibleTransmittance() const;
-
-  Quantity getDirtCorrectionFactorforSolarandVisibleTransmittance(bool returnIP=false) const;
 
   bool isDirtCorrectionFactorforSolarandVisibleTransmittanceDefaulted() const;
 
@@ -162,25 +136,17 @@ class MODEL_API StandardGlazing : public Glazing {
 
   bool setThickness(double thickness);
 
-  bool setThickness(const Quantity& thickness);
-
   bool setSolarTransmittance(double value);
 
   bool setSolarTransmittanceatNormalIncidence(double solarTransmittanceatNormalIncidence);
-
-  bool setSolarTransmittanceatNormalIncidence(const Quantity& solarTransmittanceatNormalIncidence);
 
   void resetSolarTransmittanceatNormalIncidence();
 
   bool setFrontSideSolarReflectanceatNormalIncidence(double frontSideSolarReflectanceatNormalIncidence);
 
-  bool setFrontSideSolarReflectanceatNormalIncidence(const Quantity& frontSideSolarReflectanceatNormalIncidence);
-
   void resetFrontSideSolarReflectanceatNormalIncidence();
 
   bool setBackSideSolarReflectanceatNormalIncidence(double backSideSolarReflectanceatNormalIncidence);
-
-  bool setBackSideSolarReflectanceatNormalIncidence(const Quantity& backSideSolarReflectanceatNormalIncidence);
 
   void resetBackSideSolarReflectanceatNormalIncidence();
 
@@ -188,19 +154,13 @@ class MODEL_API StandardGlazing : public Glazing {
 
   bool setVisibleTransmittanceatNormalIncidence(double visibleTransmittanceatNormalIncidence);
 
-  bool setVisibleTransmittanceatNormalIncidence(const Quantity& visibleTransmittanceatNormalIncidence);
-
   void resetVisibleTransmittanceatNormalIncidence();
 
   bool setFrontSideVisibleReflectanceatNormalIncidence(double frontSideVisibleReflectanceatNormalIncidence);
 
-  bool setFrontSideVisibleReflectanceatNormalIncidence(const Quantity& frontSideVisibleReflectanceatNormalIncidence);
-
   void resetFrontSideVisibleReflectanceatNormalIncidence();
 
   bool setBackSideVisibleReflectanceatNormalIncidence(double backSideVisibleReflectanceatNormalIncidence);
-
-  bool setBackSideVisibleReflectanceatNormalIncidence(const Quantity& backSideVisibleReflectanceatNormalIncidence);
 
   void resetBackSideVisibleReflectanceatNormalIncidence();
 
@@ -208,19 +168,13 @@ class MODEL_API StandardGlazing : public Glazing {
 
   bool setInfraredTransmittanceatNormalIncidence(double infraredTransmittanceatNormalIncidence);
 
-  bool setInfraredTransmittanceatNormalIncidence(const Quantity& infraredTransmittanceatNormalIncidence);
-
   void resetInfraredTransmittanceatNormalIncidence();
 
   bool setFrontSideInfraredHemisphericalEmissivity(double frontSideInfraredHemisphericalEmissivity);
 
-  bool setFrontSideInfraredHemisphericalEmissivity(const Quantity& frontSideInfraredHemisphericalEmissivity);
-
   void resetFrontSideInfraredHemisphericalEmissivity();
 
   bool setBackSideInfraredHemisphericalEmissivity(double backSideInfraredHemisphericalEmissivity);
-
-  bool setBackSideInfraredHemisphericalEmissivity(const Quantity& backSideInfraredHemisphericalEmissivity);
 
   void resetBackSideInfraredHemisphericalEmissivity();
 
@@ -229,13 +183,9 @@ class MODEL_API StandardGlazing : public Glazing {
 
   bool setConductivity(double conductivity);
 
-  bool setConductivity(const Quantity& conductivity);
-
   void resetConductivity();
 
   bool setDirtCorrectionFactorforSolarandVisibleTransmittance(double dirtCorrectionFactorforSolarandVisibleTransmittance);
-
-  bool setDirtCorrectionFactorforSolarandVisibleTransmittance(const Quantity& dirtCorrectionFactorforSolarandVisibleTransmittance);
 
   void resetDirtCorrectionFactorforSolarandVisibleTransmittance();
 

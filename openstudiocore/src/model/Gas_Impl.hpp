@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "GasLayer_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -121,51 +119,28 @@ namespace detail {
 
     boost::optional<double> customMolecularWeight() const;
 
-    Quantity getThickness(bool returnIP=false) const;
-
     boost::optional<double> conductivityCoefficientA() const;
-
-    OSOptionalQuantity getConductivityCoefficientA(bool returnIP=false) const;
 
     boost::optional<double> conductivityCoefficientB() const;
 
-    OSOptionalQuantity getConductivityCoefficientB(bool returnIP=false) const;
-
     boost::optional<double> conductivityCoefficientC() const;
-
-    OSOptionalQuantity getConductivityCoefficientC(bool returnIP=false) const;
 
     boost::optional<double> viscosityCoefficientA() const;
 
-    OSOptionalQuantity getViscosityCoefficientA(bool returnIP=false) const;
-
     boost::optional<double> viscosityCoefficientB() const;
-
-    OSOptionalQuantity getViscosityCoefficientB(bool returnIP=false) const;
 
     boost::optional<double> viscosityCoefficientC() const;
 
-    OSOptionalQuantity getViscosityCoefficientC(bool returnIP=false) const;
-
     boost::optional<double> specificHeatCoefficientA() const;
-
-    OSOptionalQuantity getSpecificHeatCoefficientA(bool returnIP=false) const;
 
     boost::optional<double> specificHeatCoefficientB() const;
 
-    OSOptionalQuantity getSpecificHeatCoefficientB(bool returnIP=false) const;
-
     boost::optional<double> specificHeatCoefficientC() const;
-
-    OSOptionalQuantity getSpecificHeatCoefficientC(bool returnIP=false) const;
 
     boost::optional<double> molecularWeight() const;
 
-    OSOptionalQuantity getMolecularWeight(bool returnIP=false) const;
-
     boost::optional<double> specificHeatRatio() const;
 
-    OSOptionalQuantity getSpecificHeatRatio(bool returnIP=false) const;
 
     //@}
     /** @name Setters */
@@ -183,71 +158,47 @@ namespace detail {
 
     bool setGasType(std::string gasType);
 
-    bool setThickness(const Quantity& thickness);
-
     bool setConductivityCoefficientA(boost::optional<double> conductivityCoefficientA);
-
-    bool setConductivityCoefficientA(const OSOptionalQuantity& conductivityCoefficientA);
 
     void resetConductivityCoefficientA();
 
     bool setConductivityCoefficientB(boost::optional<double> conductivityCoefficientB);
 
-    bool setConductivityCoefficientB(const OSOptionalQuantity& conductivityCoefficientB);
-
     void resetConductivityCoefficientB();
 
     bool setConductivityCoefficientC(boost::optional<double> conductivityCoefficientC);
-
-    bool setConductivityCoefficientC(const OSOptionalQuantity& conductivityCoefficientC);
 
     void resetConductivityCoefficientC();
 
     bool setViscosityCoefficientA(boost::optional<double> viscosityCoefficientA);
 
-    bool setViscosityCoefficientA(const OSOptionalQuantity& viscosityCoefficientA);
-
     void resetViscosityCoefficientA();
 
     bool setViscosityCoefficientB(boost::optional<double> viscosityCoefficientB);
-
-    bool setViscosityCoefficientB(const OSOptionalQuantity& viscosityCoefficientB);
 
     void resetViscosityCoefficientB();
 
     bool setViscosityCoefficientC(boost::optional<double> viscosityCoefficientC);
 
-    bool setViscosityCoefficientC(const OSOptionalQuantity& viscosityCoefficientC);
-
     void resetViscosityCoefficientC();
 
     bool setSpecificHeatCoefficientA(boost::optional<double> specificHeatCoefficientA);
-
-    bool setSpecificHeatCoefficientA(const OSOptionalQuantity& specificHeatCoefficientA);
 
     void resetSpecificHeatCoefficientA();
 
     bool setSpecificHeatCoefficientB(boost::optional<double> specificHeatCoefficientB);
 
-    bool setSpecificHeatCoefficientB(const OSOptionalQuantity& specificHeatCoefficientB);
-
     void resetSpecificHeatCoefficientB();
 
     bool setSpecificHeatCoefficientC(boost::optional<double> specificHeatCoefficientC);
-
-    bool setSpecificHeatCoefficientC(const OSOptionalQuantity& specificHeatCoefficientC);
 
     void resetSpecificHeatCoefficientC();
 
     bool setMolecularWeight(boost::optional<double> molecularWeight);
 
-    bool setMolecularWeight(const OSOptionalQuantity& molecularWeight);
-
     void resetMolecularWeight();
 
     bool setSpecificHeatRatio(boost::optional<double> specificHeatRatio);
-
-    bool setSpecificHeatRatio(const OSOptionalQuantity& specificHeatRatio);
 
     void resetSpecificHeatRatio();
 
@@ -266,30 +217,6 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.Gas");
 
     std::vector<std::string> gasTypeValues() const;
-    openstudio::Quantity thickness_SI() const;
-    openstudio::Quantity thickness_IP() const;
-    openstudio::OSOptionalQuantity conductivityCoefficientA_SI() const;
-    openstudio::OSOptionalQuantity conductivityCoefficientA_IP() const;
-    openstudio::OSOptionalQuantity conductivityCoefficientB_SI() const;
-    openstudio::OSOptionalQuantity conductivityCoefficientB_IP() const;
-    openstudio::OSOptionalQuantity conductivityCoefficientC_SI() const;
-    openstudio::OSOptionalQuantity conductivityCoefficientC_IP() const;
-    openstudio::OSOptionalQuantity viscosityCoefficientA_SI() const;
-    openstudio::OSOptionalQuantity viscosityCoefficientA_IP() const;
-    openstudio::OSOptionalQuantity viscosityCoefficientB_SI() const;
-    openstudio::OSOptionalQuantity viscosityCoefficientB_IP() const;
-    openstudio::OSOptionalQuantity viscosityCoefficientC_SI() const;
-    openstudio::OSOptionalQuantity viscosityCoefficientC_IP() const;
-    openstudio::OSOptionalQuantity specificHeatCoefficientA_SI() const;
-    openstudio::OSOptionalQuantity specificHeatCoefficientA_IP() const;
-    openstudio::OSOptionalQuantity specificHeatCoefficientB_SI() const;
-    openstudio::OSOptionalQuantity specificHeatCoefficientB_IP() const;
-    openstudio::OSOptionalQuantity specificHeatCoefficientC_SI() const;
-    openstudio::OSOptionalQuantity specificHeatCoefficientC_IP() const;
-    openstudio::OSOptionalQuantity molecularWeight_SI() const;
-    openstudio::OSOptionalQuantity molecularWeight_IP() const;
-    openstudio::OSOptionalQuantity specificHeatRatio_SI() const;
-    openstudio::OSOptionalQuantity specificHeatRatio_IP() const;
   };
 
 } // detail

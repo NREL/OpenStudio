@@ -34,8 +34,6 @@
 #include "OpaqueMaterial_Impl.hpp"
 
 #include <QObject>
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -107,39 +105,25 @@ namespace detail {
 
     virtual double thickness() const override;
 
-    virtual Quantity getThickness(bool returnIP) const;
-
     virtual double conductivity() const;
-
-    virtual Quantity getConductivity(bool returnIP) const;
 
     virtual double density() const;
 
-    virtual Quantity getDensity(bool returnIP) const;
-
     virtual double specificHeat() const;
-
-    virtual Quantity getSpecificHeat(bool returnIP) const;
 
     virtual double thermalAbsorptance() const override;
 
-    virtual Quantity getThermalAbsorptance(bool returnIP) const;
-
     virtual double solarAbsorptance() const override;
-
-    virtual Quantity getSolarAbsorptance(bool returnIP=false) const;
 
     virtual bool isSolarAbsorptanceDefaulted() const;
 
     virtual double visibleAbsorptance() const override;
 
-    virtual Quantity getVisibleAbsorptance(bool returnIP=false) const;
-
     virtual bool isVisibleAbsorptanceDefaulted() const;
 
-	virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-	virtual std::vector<std::string> emsInternalVariableNames() const override;
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
 
     //@}
     /** @name Setters */
@@ -171,23 +155,13 @@ namespace detail {
 
     virtual bool setThickness(double thickness) override;
 
-    virtual bool setThickness(const Quantity& thickness);
-
     virtual bool setConductivity(double conductivity);
-
-    virtual bool setConductivity(const Quantity& conductivity);
 
     virtual bool setDensity(double density);
 
-    virtual bool setDensity(const Quantity& density);
-
     virtual bool setSpecificHeat(double specificHeat);
 
-    virtual bool setSpecificHeat(const Quantity& specificHeat);
-
     virtual bool setThermalAbsorptance(double thermalAbsorptance) override;
-
-    virtual bool setThermalAbsorptance(const Quantity& thermalAbsorptance);
 
     virtual void resetThermalAbsorptance();
 
@@ -195,13 +169,9 @@ namespace detail {
 
     virtual bool setSolarAbsorptance(double solarAbsorptance);
 
-    virtual bool setSolarAbsorptance(const Quantity& solarAbsorptance);
-
     virtual void resetSolarAbsorptance();
 
     virtual bool setVisibleAbsorptance(double visibleAbsorptance);
-
-    virtual bool setVisibleAbsorptance(const Quantity& visibleAbsorptance);
 
     virtual void resetVisibleAbsorptance();
 
@@ -225,20 +195,7 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.StandardOpaqueMaterial");
 
     std::vector<std::string> roughnessValues() const;
-    openstudio::Quantity thickness_SI() const;
-    openstudio::Quantity thickness_IP() const;
-    openstudio::Quantity conductivity_SI() const;
-    openstudio::Quantity conductivity_IP() const;
-    openstudio::Quantity density_SI() const;
-    openstudio::Quantity density_IP() const;
-    openstudio::Quantity specificHeat_SI() const;
-    openstudio::Quantity specificHeat_IP() const;
-    openstudio::Quantity thermalAbsorptance_SI() const;
-    openstudio::Quantity thermalAbsorptance_IP() const;
-    openstudio::Quantity solarAbsorptance_SI() const;
-    openstudio::Quantity solarAbsorptance_IP() const;
-    openstudio::Quantity visibleAbsorptance_SI() const;
-    openstudio::Quantity visibleAbsorptance_IP() const;
+
   };
 
 } // detail

@@ -57,21 +57,13 @@ class MODEL_API FFactorGroundFloorConstruction : public ConstructionBase {
 
   /** Attribute Name: 'fFactor' */
   virtual double fFactor() const;
-  virtual Quantity getFFactor(bool returnIP = false) const;
   virtual bool setFFactor(double fFactor);
-  virtual bool setFFactor(const Quantity& fFactor);
-
   /** Attribute Name: 'area' */
   virtual double area() const;
-  virtual Quantity getArea(bool returnIP = false) const;
   virtual bool setArea(double area);
-  virtual bool setArea(const Quantity& area);
-
   /** Attribute Name: 'perimeterExposed' */
   virtual double perimeterExposed() const;
-  virtual Quantity getPerimeterExposed(bool returnIP = false) const;
   virtual bool setPerimeterExposed(double perimeterExposed);
-  virtual bool setPerimeterExposed(const Quantity& perimeterExposed);
 
   //@}
   /** @name Static Methods */

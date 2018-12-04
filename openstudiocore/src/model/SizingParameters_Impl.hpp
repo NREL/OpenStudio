@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -80,13 +78,9 @@ namespace detail {
 
     double heatingSizingFactor() const;
 
-    Quantity getHeatingSizingFactor(bool returnIP=false) const;
-
     bool isHeatingSizingFactorDefaulted() const;
 
     double coolingSizingFactor() const;
-
-    Quantity getCoolingSizingFactor(bool returnIP=false) const;
 
     bool isCoolingSizingFactorDefaulted() const;
 
@@ -98,13 +92,9 @@ namespace detail {
 
     bool setHeatingSizingFactor(double heatingSizingFactor);
 
-    bool setHeatingSizingFactor(const Quantity& heatingSizingFactor);
-
     void resetHeatingSizingFactor();
 
     bool setCoolingSizingFactor(double coolingSizingFactor);
-
-    bool setCoolingSizingFactor(const Quantity& coolingSizingFactor);
 
     void resetCoolingSizingFactor();
 
@@ -121,10 +111,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.SizingParameters");
 
-    openstudio::Quantity heatingSizingFactor_SI() const;
-    openstudio::Quantity heatingSizingFactor_IP() const;
-    openstudio::Quantity coolingSizingFactor_SI() const;
-    openstudio::Quantity coolingSizingFactor_IP() const;
   };
 
 } // detail
@@ -133,4 +119,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_SIZINGPARAMETERS_IMPL_HPP
-
