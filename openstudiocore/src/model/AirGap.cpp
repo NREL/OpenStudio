@@ -195,7 +195,9 @@ namespace detail {
   }
 
   void AirGap_Impl::resetThermalResistance() {
-    bool result = setString(OS_Material_AirGapFields::ThermalResistance, "");
+    // Note JM 2018-12-04: Reset to the Ctor default of 0.1
+    // thermalResistance returns a double, so we CANNOT leave this field empty since it has no IDD default!
+    bool result = setDouble(OS_Material_AirGapFields::ThermalResistance, 0.1);
     OS_ASSERT(result);
   }
 

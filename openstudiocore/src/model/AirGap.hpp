@@ -71,6 +71,7 @@ class MODEL_API AirGap : public OpaqueMaterial {
 
   bool setThermalResistance(double thermalResistance);
 
+  // Resets the thermal resistance to the default of 0.1 m2-K/W
   void resetThermalResistance();
 
   //@}
