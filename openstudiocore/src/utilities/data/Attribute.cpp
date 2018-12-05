@@ -580,9 +580,32 @@ namespace detail {
 
   std::string Attribute_Impl::toString() const
   {
-    // Use overloaded ostream
     std::stringstream ss;
-    ss << m_value;
+
+    // We use std::visit, filtering out the case where it's monostate
+    // Aside from monostate, every possible type is streamable
+    // expect AttributeVector that needs a special treatment
+    std::visit(
+        [this, &ss](const auto& val){
+          // Needed to properly compare the types
+          using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
+
+          // If it's a vector of attributes
+          if constexpr (std::is_same_v<T, openstudio::Attribute>) {
+            // TODO: call toXml()
+            // This will change anyways once QXML is removed
+            QString str;
+            QTextStream qts(&str);
+            this->toXml().save(qts, 2);
+            ss << str.toStdString();
+
+          // Otherwise, if anything else but monostate
+          } else if constexpr (!std::is_same_v<T, std::monostate>) {
+            ss << std::boolalpha << val;
+          }
+        },
+        this->m_value);
+
     return ss.str();
 
     // TODO: remove
@@ -631,6 +654,10 @@ namespace detail {
  */
   }
 
+
+
+
+
   QDomDocument Attribute_Impl::toXml() const
   {
     QDomDocument doc;
@@ -647,45 +674,45 @@ namespace detail {
   {
     bool result = false;
 
-    QVariant otherValue = other.valueAsQVariant();
+    AttributeValueType thisValueType = this->valueType();
+    AttributeValueType otherValueType = other.valueType();
 
-    if (this->valueType() == AttributeValueType::Quantity) {
-      if (otherValue.canConvert<openstudio::Quantity>()) {
-        result = (this->valueAsQuantity() == otherValue.value<openstudio::Quantity>());
-      }
-    }else if (this->valueType() == AttributeValueType::Unit) {
-      if (otherValue.canConvert<openstudio::OSOptionalQuantity>()) {
-        result = (this->valueAsUnit() == otherValue.value<openstudio::OSOptionalQuantity>().units());
-      }
-    }else if (this->valueType() == AttributeValueType::String){
-      if (otherValue.canConvert<std::string>()){
-        result = (this->valueAsString() == otherValue.value<std::string>());
-      }
-    }else if (this->valueType() == AttributeValueType::AttributeVector){
-      if (otherValue.canConvert<std::vector<Attribute> >()){
+    // std::variant operator== will start by comparing indexes (=same type),
+    // and if that works, compares std::get<i>(v) == std::get<i>(w), but that must be returning a type converting to bool
+    // Which is true except for AttributeVector, and probably undefined for std::monostate
 
-        std::vector<Attribute> thisAttributes = this->valueAsAttributeVector();
-        std::vector<Attribute> otherAttributes = other.valueAsAttributeVector();
+    // No need to proceed with value comparison if types aren't the same,
+    // and they must either have both a value or none should have one
+    if ((thisValueType == otherValueType) && (this->hasValue() == other.hasValue()) ) {
 
-        if (thisAttributes.size() == otherAttributes.size()){
-          result = true;
-          for (unsigned i = 0; i < thisAttributes.size(); ++i){
-            result = result && (thisAttributes[i] == otherAttributes[i]);
-            if (!result){
-              break;
+      // If there's a value to compare, let's do this
+      if (this->hasValue()) {
+        if (thisValueType == AttributeValueType::AttributeVector){
+            std::vector<Attribute> thisAttributes = this->valueAsAttributeVector();
+            std::vector<Attribute> otherAttributes = other.valueAsAttributeVector();
+            if (thisAttributes.size() == otherAttributes.size()) {
+              result = true;
+              for (unsigned i = 0; i < thisAttributes.size(); ++i){
+                result = result && (thisAttributes[i] == otherAttributes[i]);
+                if (!result){
+                  break;
+                }
+              }
             }
-          }
+
+        } else {
+          OSAttributeVariant otherValue = other.getImpl<Attribute_Impl>()->m_value;
+          result = (m_value == otherValue);
         }
-
       }
-    }else{
-      result = (m_value == otherValue);
-    }
 
-    if (m_units){
-      result = result && other.units() && (*m_units == other.units().get());
-    }else{
-      result = result && !other.units();
+      // Now we check the units
+      if (m_units){
+        result = result && other.units() && (*m_units == other.units().get());
+      } else {
+        result = result && !other.units();
+      }
+
     }
 
     return result;
@@ -753,18 +780,6 @@ namespace detail {
       text = doc.createTextNode(toQString(temp));
       childElement.appendChild(text);
       break;
-    case AttributeValueType::Quantity:
-      temp = boost::regex_replace(openstudio::toString(QString::number(this->valueAsQuantity().value(),
-                                                                       'G',
-                                                                       std::numeric_limits<double>::digits10)),
-                                  boost::regex("\\+"),"");
-      text = doc.createTextNode(toQString(temp));
-      childElement.appendChild(text);
-      break;
-    case AttributeValueType::Unit:
-      text = doc.createTextNode(QString());
-      childElement.appendChild(text);
-      break;
     case AttributeValueType::String:
       text = doc.createTextNode(QString::fromStdString(this->valueAsString()));
       childElement.appendChild(text);
@@ -780,27 +795,30 @@ namespace detail {
     }
     element.appendChild(childElement);
 
-    if ((m_valueType.value() == AttributeValueType::Quantity) ||
-        (m_valueType.value() == AttributeValueType::Unit))
-    {
-      OptionalUnit units;
-      if (m_valueType.value() == AttributeValueType::Quantity) {
-        units = this->valueAsQuantity().units();
-      }
-      else {
-        units = this->valueAsUnit();
-      }
-
-      childElement = doc.createElement(QString::fromStdString("Units"));
-      text = doc.createTextNode(QString::fromStdString(units->standardString()));
-      childElement.appendChild(text);
-      element.appendChild(childElement);
-
-      childElement = doc.createElement(QString::fromStdString("UnitSystem"));
-      text = doc.createTextNode(QString::fromStdString(units->system().valueName()));
-      childElement.appendChild(text);
-      element.appendChild(childElement);
-    }else if(m_units){
+/*
+ *    if ((m_valueType.value() == AttributeValueType::Quantity) ||
+ *        (m_valueType.value() == AttributeValueType::Unit))
+ *    {
+ *      OptionalUnit units;
+ *      if (m_valueType.value() == AttributeValueType::Quantity) {
+ *        units = this->valueAsQuantity().units();
+ *      }
+ *      else {
+ *        units = this->valueAsUnit();
+ *      }
+ *
+ *      childElement = doc.createElement(QString::fromStdString("Units"));
+ *      text = doc.createTextNode(QString::fromStdString(units->standardString()));
+ *      childElement.appendChild(text);
+ *      element.appendChild(childElement);
+ *
+ *      childElement = doc.createElement(QString::fromStdString("UnitSystem"));
+ *      text = doc.createTextNode(QString::fromStdString(units->system().valueName()));
+ *      childElement.appendChild(text);
+ *      element.appendChild(childElement);
+ *    }else
+ */
+    if(m_units){
       childElement = doc.createElement(QString::fromStdString("Units"));
       text = doc.createTextNode(QString::fromStdString(*m_units));
       childElement.appendChild(text);
@@ -808,48 +826,29 @@ namespace detail {
     }
   }
 
-  void Attribute_Impl::setValue(const QVariant& value, bool check)
-  {
-    if (check) {
-      if (OptionalAttribute validator = Attribute::fromQVariant(name(),value)) {
-        if (validator->valueType() != valueType()) {
-          LOG_AND_THROW("QVariant value of type " << value.typeName()
-              << " does not convert to AttributeValueType " << valueType().valueDescription()
-              << ".");
-        }
-      }
-      else {
-        LOG_AND_THROW("Unable to construct Attribute using QVariant value of type "
-            << value.typeName() << ".");
-      }
-    }
-    m_value = value;
-  }
-
 } // detail
 
+// For debug purposes only
+std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attributeVariant) {
 
-std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attribute) {
+    // We use std::visit, filtering out the case where it's monostate
+    // Aside from monostate, every possible type is streamable
+    // expect AttributeVector that needs a special treatment
+    std::visit(
+        [&os](const auto& val){
+          // Needed to properly compare the types
+          using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
 
-  // We use std::visit, filtering out the case where it's monostate
-  // Aside from monostate, every possible type is streamable
-  // AttributeVector needs a special treatment though
-  std::visit(
-      [&os](const auto& val){
-        // Needed to properly compare the types
-        using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
-        if constexpr (!std::is_same_v<T, openstudio::Attribute>) {
-          // TODO: call toXml()
-          // This will change anyways once QXML is removed
-          QString str;
-          QTextStream qts(&str);
-          this->toXml().save(qts, 2);
-          os << str.toStdString();
-        } else if constexpr (!std::is_same_v<T, std::monostate>) {
+          // If it's a vector of attributes
+          if constexpr (std::is_same_v<T, openstudio::Attribute>) {
+            // Will end up calling toString, which calls toXml
             os << val;
-        }
-      },
-      attribute);
+          // Otherwise, if anything else but monostate
+          } else if constexpr (!std::is_same_v<T, std::monostate>) {
+            os << std::boolalpha << val;
+          }
+        },
+        attributeVariant);
 
   return os;
 }
@@ -873,7 +872,7 @@ AttributeDescription::AttributeDescription(const std::string& t_name,
                                            const std::string& t_description,
                                            const AttributeValueType& t_validValueType,
                                            bool t_required,
-                                           QVariant t_defaultValue)
+                                           OSAttributeVariant t_defaultValue)
   : name(t_name),
     displayName(t_displayName),
     description(t_description),
@@ -899,7 +898,7 @@ AttributeDescription::AttributeDescription(const std::string& t_name,
                                            const std::string& t_description,
                                            const std::vector<AttributeValueType>& t_validValueTypes,
                                            bool t_required,
-                                           QVariant t_defaultValue)
+                                           OSAttributeVariant t_defaultValue)
   : name(t_name),
     displayName(t_displayName),
     description(t_description),
@@ -1190,71 +1189,73 @@ Attribute::Attribute(const std::shared_ptr<detail::Attribute_Impl>& impl)
   OS_ASSERT(m_impl);
 }
 
-boost::optional<Attribute> Attribute::fromQVariant(const std::string& name, const QVariant& value, const boost::optional<std::string>& units)
-{
+//boost::optional<Attribute> Attribute::fromQVariant(const std::string& name, const QVariant& value, const boost::optional<std::string>& units)
+//{
 
-  boost::optional<Attribute> result;
-  std::string typeName = value.typeName();
+  //boost::optional<Attribute> result;
+  //std::string typeName = value.typeName();
 
-  switch (value.type()) {
-  case QVariant::Bool :
-    result = Attribute(name, value.toBool(), units);
-    break;
-  case QVariant::Int :
-    result = Attribute(name, value.toInt(), units);
-    break;
-  case QVariant::UInt :
-    result = Attribute(name, value.toUInt(), units);
-    break;
-  case QVariant::Double :
-    result = Attribute(name, value.toDouble(), units);
-    break;
-  case QVariant::UserType :
+  //switch (value.type()) {
+  //case QVariant::Bool :
+    //result = Attribute(name, value.toBool(), units);
+    //break;
+  //case QVariant::Int :
+    //result = Attribute(name, value.toInt(), units);
+    //break;
+  //case QVariant::UInt :
+    //result = Attribute(name, value.toUInt(), units);
+    //break;
+  //case QVariant::Double :
+    //result = Attribute(name, value.toDouble(), units);
+    //break;
+  //case QVariant::UserType :
 
-    if (typeName == "std::string") {
-      result = Attribute(name, value.value<std::string>(), units);
-    }else if (typeName == "openstudio::Attribute") {
-      LOG(Error, "openstudio::Attribute is not yet registered with QMetaType");
-      //result = value.value<openstudio::Attribute>();
-    }else if (typeName == "boost::optional<int>") {
-      boost::optional<int> test = value.value<boost::optional<int> >();
-      if (test){
-        result = Attribute(name, *test, units);
-      }
-    }else if (typeName == "boost::optional<unsigned>") {
-      boost::optional<unsigned> test = value.value<boost::optional<unsigned> >();
-      if (test){
-        result = Attribute(name, *test, units);
-      }
-    }else if (typeName == "boost::optional<double>") {
-      boost::optional<double> test = value.value<boost::optional<double> >();
-      if (test){
-        result = Attribute(name, *test, units);
-      }
-    }else if (typeName == "openstudio::Quantity") {
-      result = Attribute(name,value.value<openstudio::Quantity>());
-    }else if (typeName == "openstudio::OSOptionalQuantity") {
-      result = Attribute(name,value.value<openstudio::OSOptionalQuantity>());
-    }else if (typeName == "boost::optional<std::string>") {
-      boost::optional<std::string> test = value.value<boost::optional<std::string> >();
-      if (test){
-        result = Attribute(name, *test, units);
-      }
-    }else if (typeName == "boost::optional<openstudio::Attribute>") {
-      boost::optional<openstudio::Attribute> test = value.value<boost::optional<openstudio::Attribute> >();
-      if (test){
-        result = *test;
-      }
-    }else if (typeName == "std::vector<openstudio::Attribute>") {
-      result = Attribute(name,value.value<std::vector<openstudio::Attribute> >(),units);
-    }
-    break;
-    default:
-    ;
-  };
+    //if (typeName == "std::string") {
+      //result = Attribute(name, value.value<std::string>(), units);
+    //}else if (typeName == "openstudio::Attribute") {
+      //LOG(Error, "openstudio::Attribute is not yet registered with QMetaType");
+      ////result = value.value<openstudio::Attribute>();
+    //}else if (typeName == "boost::optional<int>") {
+      //boost::optional<int> test = value.value<boost::optional<int> >();
+      //if (test){
+        //result = Attribute(name, *test, units);
+      //}
+    //}else if (typeName == "boost::optional<unsigned>") {
+      //boost::optional<unsigned> test = value.value<boost::optional<unsigned> >();
+      //if (test){
+        //result = Attribute(name, *test, units);
+      //}
+    //}else if (typeName == "boost::optional<double>") {
+      //boost::optional<double> test = value.value<boost::optional<double> >();
+      //if (test){
+        //result = Attribute(name, *test, units);
+      //}
+    /*
+     *}else if (typeName == "openstudio::Quantity") {
+     *  result = Attribute(name,value.value<openstudio::Quantity>());
+     *}else if (typeName == "openstudio::OSOptionalQuantity") {
+     *  result = Attribute(name,value.value<openstudio::OSOptionalQuantity>());
+     */
+    //}else if (typeName == "boost::optional<std::string>") {
+      //boost::optional<std::string> test = value.value<boost::optional<std::string> >();
+      //if (test){
+        //result = Attribute(name, *test, units);
+      //}
+    //}else if (typeName == "boost::optional<openstudio::Attribute>") {
+      //boost::optional<openstudio::Attribute> test = value.value<boost::optional<openstudio::Attribute> >();
+      //if (test){
+        //result = *test;
+      //}
+    //}else if (typeName == "std::vector<openstudio::Attribute>") {
+      //result = Attribute(name,value.value<std::vector<openstudio::Attribute> >(),units);
+    //}
+    //break;
+    //default:
+    //;
+  //};
 
-  return result;
-}
+  //return result;
+//}
 
 boost::optional<Attribute> Attribute::loadFromXml(const openstudio::path& path)
 {
@@ -1574,15 +1575,17 @@ namespace detail {
     }
     AttributeValueType valueType = attribute.valueType();
     attributeData["value_type"] = toQString(valueType.valueName());
-    if (valueType == AttributeValueType::Quantity) {
-      Quantity value = attribute.valueAsQuantity();
-      attributeData["value"] = QVariant(value.value());
-      attributeData["units"] = toQString(value.units().standardString());
-    }
-    else if (valueType == AttributeValueType::Unit) {
-      attributeData["units"] = toQString(attribute.valueAsUnit().standardString());
-    }
-    else if (valueType == AttributeValueType::AttributeVector) {
+    /*
+     *if (valueType == AttributeValueType::Quantity) {
+     *  Quantity value = attribute.valueAsQuantity();
+     *  attributeData["value"] = QVariant(value.value());
+     *  attributeData["units"] = toQString(value.units().standardString());
+     *}
+     *else if (valueType == AttributeValueType::Unit) {
+     *  attributeData["units"] = toQString(attribute.valueAsUnit().standardString());
+     *} else
+     */
+    if (valueType == AttributeValueType::AttributeVector) {
       QVariantList childAttributesList;
       for (const Attribute& child : attribute.valueAsAttributeVector()) {
         childAttributesList.push_back(toVariant(child));
@@ -1645,24 +1648,26 @@ namespace detail {
                          map["value"].toDouble(),
                          map.contains("units") ? map["units"].toString().toStdString() : OptionalString(),
                          source);
-      case AttributeValueType::Quantity :
-        oq = createQuantity(map["value"].toDouble(),map["units"].toString().toStdString());
-        OS_ASSERT(oq);
-        return Attribute(uuid,
-                         versionUUID,
-                         name,
-                         displayName,
-                         oq.get(),
-                         source);
-      case AttributeValueType::Unit :
-        ou = createUnit(map["units"].toString().toStdString());
-        OS_ASSERT(ou);
-        return Attribute(uuid,
-                         versionUUID,
-                         name,
-                         displayName,
-                         ou.get(),
-                         source);
+      /*
+       *case AttributeValueType::Quantity :
+       *  oq = createQuantity(map["value"].toDouble(),map["units"].toString().toStdString());
+       *  OS_ASSERT(oq);
+       *  return Attribute(uuid,
+       *                   versionUUID,
+       *                   name,
+       *                   displayName,
+       *                   oq.get(),
+       *                   source);
+       *case AttributeValueType::Unit :
+       *  ou = createUnit(map["units"].toString().toStdString());
+       *  OS_ASSERT(ou);
+       *  return Attribute(uuid,
+       *                   versionUUID,
+       *                   name,
+       *                   displayName,
+       *                   ou.get(),
+       *                   source);
+       */
       case AttributeValueType::Integer :
         return Attribute(uuid,
                          versionUUID,
@@ -1735,17 +1740,19 @@ namespace detail {
         case AttributeValueType::Double :
           map[qName] = attribute.valueAsDouble();
           break;
-        case AttributeValueType::Quantity :
-          // designation as Quantity will be lost on deserialization
-          // (will be Double + units)
-          map[qName] = attribute.valueAsQuantity().value();
-          map[toQString(attribute.name() + std::string("_units"))] = toQString(attribute.valueAsQuantity().units().print());
-          break;
-        case AttributeValueType::Unit :
-          // designation as Unit will be lost on deserialization
-          // (will be of type String)
-          map[qName] = toQString(attribute.valueAsUnit().print());
-          break;
+        /*
+         *case AttributeValueType::Quantity :
+         *  // designation as Quantity will be lost on deserialization
+         *  // (will be Double + units)
+         *  map[qName] = attribute.valueAsQuantity().value();
+         *  map[toQString(attribute.name() + std::string("_units"))] = toQString(attribute.valueAsQuantity().units().print());
+         *  break;
+         *case AttributeValueType::Unit :
+         *  // designation as Unit will be lost on deserialization
+         *  // (will be of type String)
+         *  map[qName] = toQString(attribute.valueAsUnit().print());
+         *  break;
+         */
         case AttributeValueType::String :
           map[qName] = toQString(attribute.valueAsString());
           break;
@@ -1853,6 +1860,37 @@ namespace detail {
         QVariant value = map[toQString(attributeName)];
         ++itemCount;
         // determine type
+        switch (value.type()) {
+          case QVariant::Bool:
+            result.push_back(Attribute(attributeName,value.toBool()));
+           break;
+          case QVariant::Int:
+          case QVariant::LongLong:
+          case QVariant::UInt:
+          case QVariant::ULongLong:
+            result.push_back(Attribute(attributeName,value.toInt()));
+           break;
+          case QVariant::Double:
+            result.push_back(Attribute(attributeName,value.toDouble()));
+           break;
+          case QVariant::String:
+            result.push_back(Attribute(attributeName,value.toString().toStdString()));
+           break;
+          case QVariant::Map:
+            result.push_back(Attribute(attributeName,toVectorOfAttribute(value,version)));
+           break;
+          default:
+            LOG_FREE_AND_THROW("openstudio.Attribute","Unexpected QVariant::Type " << value.typeName() << ".");
+        }
+        // set displayName
+        QString key = toQString(attributeName + std::string("_display_name"));
+        if (map.contains(key)) {
+          result.back().setDisplayName(map[key].toString().toStdString());
+          ++itemCount;
+        }
+        // set source
+        key = toQString(attributeName + std::string("_source"));
+        if (map.contains(key)) {
         switch (value.type()) {
           case QVariant::Bool:
             result.push_back(Attribute(attributeName,value.toBool()));
