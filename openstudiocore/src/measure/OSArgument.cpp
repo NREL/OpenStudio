@@ -178,11 +178,19 @@ double OSArgument::valueAsDouble() const
   if (!hasValue()) {
     LOG_AND_THROW("This argument does not have a value set.")
   }
-  if (type() != OSArgumentType::Double) {
+  if ((type() != OSArgumentType::Double) and (type() != OSArgumentType::Integer)) {
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
   }
 
-  return std::get<double>(m_value);
+  double result;
+  if (type() == OSArgumentType::Double) {
+    result = std::get<double>(m_value);
+  } else {
+    result = std::get<int>(m_value);
+    LOG(Warn, "This argument is of type 'Integer' but returning as a Double as requested. You should consider using valueAsInteger instead");
+  }
+
+  return result;
 }
 
 int OSArgument::valueAsInteger() const
@@ -317,14 +325,23 @@ std::vector<double> OSArgument::domainAsDouble() const {
   if (!hasDomain()) {
     LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
   }
-  if (type() != OSArgumentType::Double) {
+  if ((type() != OSArgumentType::Double) and (type() != OSArgumentType::Integer)) {
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
   }
 
   std::vector<double> result;
 
-  for (const OSArgumentVariant& value: m_domain) {
-    result.push_back(std::get<double>(value));
+  if (type() == OSArgumentType::Double) {
+    for (const OSArgumentVariant& value: m_domain) {
+      result.push_back(std::get<double>(value));
+    }
+  } else {
+    // It's an int
+    LOG(Warn, "This argument is of type 'Integer' but returning Domain as a Double as requested. "
+              "You should consider using domainAsInteger instead");
+    for (const OSArgumentVariant& value: m_domain) {
+      result.push_back(std::get<int>(value));
+    }
   }
   return result;
 }

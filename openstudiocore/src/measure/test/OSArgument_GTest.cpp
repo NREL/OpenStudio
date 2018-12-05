@@ -205,7 +205,7 @@ TEST_F(MeasureFixture, OSArgument_Domain) {
   EXPECT_EQ(0.0, doubleArg.domainAsDouble()[0]);
   EXPECT_EQ(1.0, doubleArg.domainAsDouble()[1]);
   EXPECT_EQ(0, integerArg.domainAsInteger()[0]);
-  EXPECT_EQ(1, integerArg.domainAsDouble()[1]);
+  EXPECT_EQ(1, integerArg.domainAsInteger()[1]);
 
   // the domain is not currently used to validate these values
   EXPECT_TRUE(doubleArg.setValue(-1.0));
