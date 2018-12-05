@@ -53,6 +53,8 @@
   }
 %}
 
+%include <model_editor/Qt.i>
+
 // it seems that SWIG tries to create conversions of QObjects to these
 %ignore QAction;
 %ignore QDomNode;
@@ -68,6 +70,8 @@
 %ignore openstudio::RemoteBCL;
 %ignore openstudio::LocalBCL;
 %ignore openstudio::WorkspaceWatcher;
+
+%include <model_editor/Application.i>
 
 %include <model_editor/InspectorGadget.hpp>
 

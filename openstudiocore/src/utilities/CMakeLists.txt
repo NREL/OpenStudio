@@ -16,8 +16,6 @@ configure_file("core/ApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}
 set(core_src
   core/ApplicationPathHelpers.hpp
   ${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx
-  core/Application.hpp
-  core/Application.cpp
   core/Assert.hpp
   core/Checksum.hpp
   core/Checksum.cpp
@@ -475,7 +473,6 @@ set(${target_name}_swig_src
   ${idf_swig_src}
   ${sql_swig_src}
   bcl/LocalBCL.i
-  core/Application.i
   core/Checksum.i
   core/CommonImport.i
   core/CommonInclude.i

@@ -8,6 +8,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # lib files
 set(${target_name}_src
+  Application.hpp
+  Application.cpp
   BridgeClasses.hpp
   BridgeClasses.cpp
   ClassViewWidget.hpp
@@ -174,6 +176,8 @@ endif()
 # lib swig files
 set(${target_name}_swig_src
   ModelEditor.i
+  Application.i
+  Qt.i
 )
 
 set(swig_target_name ${target_name}_static)
