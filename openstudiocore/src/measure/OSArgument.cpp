@@ -599,7 +599,7 @@ bool OSArgument::setDefaultValue(const openstudio::path& defaultValue) {
 }
 
 bool OSArgument::setDefaultValue(const char* defaultValue) {
-  return defaultValue(std::string(defaultValue));
+  return setDefaultValue(std::string(defaultValue));
 }
 
 bool OSArgument::setDefaultValue(const std::string& defaultValue) {

@@ -586,7 +586,7 @@ namespace detail {
     // Aside from monostate, every possible type is streamable
     // expect AttributeVector that needs a special treatment
     std::visit(
-        [this, &ss](const auto& val){
+        [this, &ss](const auto& val) {
           // Needed to properly compare the types
           using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
 
@@ -687,14 +687,14 @@ namespace detail {
 
       // If there's a value to compare, let's do this
       if (this->hasValue()) {
-        if (thisValueType == AttributeValueType::AttributeVector){
+        if (thisValueType == AttributeValueType::AttributeVector) {
             std::vector<Attribute> thisAttributes = this->valueAsAttributeVector();
             std::vector<Attribute> otherAttributes = other.valueAsAttributeVector();
             if (thisAttributes.size() == otherAttributes.size()) {
               result = true;
-              for (unsigned i = 0; i < thisAttributes.size(); ++i){
+              for (unsigned i = 0; i < thisAttributes.size(); ++i) {
                 result = result && (thisAttributes[i] == otherAttributes[i]);
-                if (!result){
+                if (!result) {
                   break;
                 }
               }
@@ -707,7 +707,7 @@ namespace detail {
       }
 
       // Now we check the units
-      if (m_units){
+      if (m_units) {
         result = result && other.units() && (*m_units == other.units().get());
       } else {
         result = result && !other.units();
@@ -818,7 +818,7 @@ namespace detail {
  *      element.appendChild(childElement);
  *    }else
  */
-    if(m_units){
+    if(m_units) {
       childElement = doc.createElement(QString::fromStdString("Units"));
       text = doc.createTextNode(QString::fromStdString(*m_units));
       childElement.appendChild(text);
@@ -835,7 +835,7 @@ std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attributeVa
     // Aside from monostate, every possible type is streamable
     // expect AttributeVector that needs a special treatment
     std::visit(
-        [&os](const auto& val){
+        [&os](const auto& val) {
           // Needed to properly compare the types
           using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
 
@@ -1860,37 +1860,6 @@ namespace detail {
         QVariant value = map[toQString(attributeName)];
         ++itemCount;
         // determine type
-        switch (value.type()) {
-          case QVariant::Bool:
-            result.push_back(Attribute(attributeName,value.toBool()));
-           break;
-          case QVariant::Int:
-          case QVariant::LongLong:
-          case QVariant::UInt:
-          case QVariant::ULongLong:
-            result.push_back(Attribute(attributeName,value.toInt()));
-           break;
-          case QVariant::Double:
-            result.push_back(Attribute(attributeName,value.toDouble()));
-           break;
-          case QVariant::String:
-            result.push_back(Attribute(attributeName,value.toString().toStdString()));
-           break;
-          case QVariant::Map:
-            result.push_back(Attribute(attributeName,toVectorOfAttribute(value,version)));
-           break;
-          default:
-            LOG_FREE_AND_THROW("openstudio.Attribute","Unexpected QVariant::Type " << value.typeName() << ".");
-        }
-        // set displayName
-        QString key = toQString(attributeName + std::string("_display_name"));
-        if (map.contains(key)) {
-          result.back().setDisplayName(map[key].toString().toStdString());
-          ++itemCount;
-        }
-        // set source
-        key = toQString(attributeName + std::string("_source"));
-        if (map.contains(key)) {
         switch (value.type()) {
           case QVariant::Bool:
             result.push_back(Attribute(attributeName,value.toBool()));
