@@ -189,7 +189,7 @@ TEST_F(MeasureFixture, OSArgument_Domain) {
   EXPECT_EQ(0.0, doubleArg.domainAsDouble()[0]);
   EXPECT_EQ(std::numeric_limits<double>::max(), doubleArg.domainAsDouble()[1]);
   EXPECT_EQ(0, integerArg.domainAsInteger()[0]);
-  EXPECT_EQ(std::numeric_limits<int>::max(), integerArg.domainAsDouble()[1]);
+  EXPECT_EQ(std::numeric_limits<int>::max(), integerArg.domainAsInteger()[1]);
 
   d = 1.0;
   i = 1;
