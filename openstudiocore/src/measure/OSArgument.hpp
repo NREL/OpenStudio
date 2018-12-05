@@ -330,6 +330,8 @@ class MEASURE_API OSArgument {
   bool setValue(double value);
   /// \overload
   bool setValue(int value);
+  /// \overload forwards to std::string& one
+  bool setValue(const char * value);
   /// \overload
   bool setValue(const std::string& value);
   /// \overload
@@ -348,6 +350,8 @@ class MEASURE_API OSArgument {
   bool setDefaultValue(double defaultValue);
   /// \overload
   bool setDefaultValue(int defaultValue);
+  /// \overload forwards to std::string& one
+  bool setDefaultValue(const char * defaultValue);
   /// \overload
   bool setDefaultValue(const std::string& defaultValue);
   /// \overload

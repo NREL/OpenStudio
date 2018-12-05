@@ -500,6 +500,10 @@ bool OSArgument::setValue(const openstudio::path& value) {
   return result;
 }
 
+bool OSArgument::setValue(const char* value) {
+  return setValue(std::string(value));
+}
+
 bool OSArgument::setValue(const std::string& value) {
   bool result = setStringInternal(m_value, value);
   if (result) {
@@ -575,6 +579,10 @@ bool OSArgument::setDefaultValue(const openstudio::path& defaultValue) {
     result = true;
   }
   return result;
+}
+
+bool OSArgument::setDefaultValue(const char* defaultValue) {
+  return defaultValue(std::string(defaultValue));
 }
 
 bool OSArgument::setDefaultValue(const std::string& defaultValue) {
