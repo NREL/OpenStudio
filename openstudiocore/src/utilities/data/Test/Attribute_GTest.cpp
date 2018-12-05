@@ -287,8 +287,9 @@ TEST_F(DataFixture, Attribute_Equal)
   EXPECT_TRUE(Attribute("name", false) == Attribute("name", false));
   EXPECT_TRUE(Attribute("name", static_cast<int>(1), std::string("m")) == Attribute("name", static_cast<int>(1), std::string("m")));
   EXPECT_TRUE(Attribute("name", static_cast<unsigned>(1), std::string("m")) == Attribute("name", static_cast<unsigned>(1), std::string("m")));
-  EXPECT_TRUE(Attribute("name", static_cast<int>(1)) == Attribute("name", static_cast<unsigned>(1))); // QVariant comparison does this
-  EXPECT_TRUE(Attribute("name", static_cast<int>(1)) == Attribute("name", 1.0)); // QVariant comparison does this
+  EXPECT_FALSE(Attribute("name", static_cast<int>(1)) == Attribute("name", static_cast<unsigned>(1))); // Types don't match
+  EXPECT_FALSE(Attribute("name", static_cast<int>(1)) == Attribute("name", 1.0)); // Types don't match
+
   EXPECT_TRUE(Attribute("name", "value") == Attribute("name", "value"));
   EXPECT_TRUE(Attribute("name", 1.23) == Attribute("name", 1.23));
 
