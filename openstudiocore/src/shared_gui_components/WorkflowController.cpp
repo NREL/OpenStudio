@@ -37,7 +37,7 @@
 #include "../openstudio_lib/OSDocument.hpp"
 #include "LocalLibraryController.hpp"
 #include "WorkflowTools.hpp"
-#include "OSProgressBar.hpp"
+#include "../model_editor/OSProgressBar.hpp"
 
 #include "../energyplus/ForwardTranslator.hpp"
 
