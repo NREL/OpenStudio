@@ -2019,13 +2019,31 @@ void DayScheduleScene::refresh()
 
     std::vector<openstudio::Time> times = m_scheduleDay.times();
 
-    std::vector<double> realvalues;
-    if (m_scheduleDay.scheduleTypeLimits()) {
-      OSQuantityVector quantities = m_scheduleDay.getValues(m_scheduleDayView->schedulesView()->isIP());
-      realvalues = quantities.values();
-    }
-    else {
-      realvalues = m_scheduleDay.values();
+    // Get the values as is
+    std::vector<double> realvalues = m_scheduleDay.values();
+
+    // Now, if we need and can convert, we do it
+    if (boost::optional<model::ScheduleTypeLimits> _scheduleTypeLimits = m_scheduleDay.scheduleTypeLimits()) {
+
+      // Get as SI units for potential conversion
+      boost::optional<Unit> _siUnits = _scheduleTypeLimits->units(false);
+
+      bool isIP = m_scheduleDayView->schedulesView()->isIP();
+      // Get as target units (depends on m_isIP)
+      boost::optional<Unit> _toUnits = _scheduleTypeLimits->units(isIP);
+
+      if (isIP && (_siUnits.get() != _toUnits.get())) {
+        OSQuantityVector quantities;
+        for (const auto& value: m_scheduleDay.values()) {
+          // Do conversion:
+          Quantity q = openstudio::Quantity(value, _siUnits.get());
+          OptionalQuantity result = openstudio::convert(q, _toUnits.get());
+          OS_ASSERT(result);
+          quantities.push_back(result.get());
+        }
+
+        realvalues = quantities.values();
+      }
     }
 
     // The upper and lower type limits come from the model ScheduleTypeLimits.
