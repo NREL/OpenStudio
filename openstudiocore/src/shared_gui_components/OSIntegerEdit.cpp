@@ -33,7 +33,6 @@
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Containers.hpp"
-#include "../utilities/data/Attribute.hpp"
 
 #include <iomanip>
 

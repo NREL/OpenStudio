@@ -32,9 +32,7 @@
 #include "../model/ModelObject_Impl.hpp"
 
 #include "../utilities/core/Containers.hpp"
-#include "../utilities/data/Attribute.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
-#include "../utilities/units/Quantity.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/StringHelpers.hpp"

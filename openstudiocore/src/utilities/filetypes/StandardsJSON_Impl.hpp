@@ -35,8 +35,6 @@
 #include "RunOptions.hpp"
 
 #include "../core/Logger.hpp"
-#include "../data/Variant.hpp"
-#include "../data/Attribute.hpp"
 
 #include <nano/nano_signal_slot.hpp>
 #include <jsoncpp/json.h>

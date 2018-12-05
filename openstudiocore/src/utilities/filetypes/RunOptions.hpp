@@ -33,8 +33,6 @@
 #include "../UtilitiesAPI.hpp"
 
 #include "../core/Logger.hpp"
-#include "../data/Variant.hpp"
-#include "../data/Attribute.hpp"
 
 namespace openstudio{
 namespace detail{
