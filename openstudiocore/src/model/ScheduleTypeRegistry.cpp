@@ -35,6 +35,8 @@
 #include "Model.hpp"
 
 #include "../utilities/core/Containers.hpp"
+// Used in isCompatible()
+#include "../utilities/units/Unit.hpp"
 
 namespace openstudio {
 namespace model {

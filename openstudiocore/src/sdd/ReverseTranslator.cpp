@@ -121,6 +121,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/IPUnit.hpp"
 #include "../utilities/units/SIUnit.hpp"
 #include "../utilities/units/BTUUnit.hpp"
