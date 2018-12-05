@@ -171,37 +171,6 @@ namespace detail {
   {
   }
 
-  // Probably not needed, will convert const char* to std::string by default...
-  Attribute_Impl::Attribute_Impl(const std::string& name,
-                                 const char* value,
-                                 const boost::optional<std::string>& units)
-    : m_uuid(createUUID()),
-      m_versionUUID(createUUID()),
-      m_name(name),
-      m_valueType(AttributeValueType::String),
-      m_value(std::string(value)),
-      m_units(units)
-  {
-  }
-
-  Attribute_Impl::Attribute_Impl(const openstudio::UUID& uuid,
-                                 const openstudio::UUID& versionUUID,
-                                 const std::string& name,
-                                 const boost::optional<std::string>& displayName,
-                                 const char* value,
-                                 const boost::optional<std::string>& units,
-                                 const std::string& source)
-    : m_uuid(uuid),
-      m_versionUUID(versionUUID),
-      m_name(name),
-      m_displayName(displayName),
-      m_source(source),
-      m_valueType(AttributeValueType::String),
-      m_value(std::string(value)),
-      m_units(units)
-  {
-  }
-
   Attribute_Impl::Attribute_Impl(const std::string& name,
                                  const std::string& value,
                                  const boost::optional<std::string>& units)
@@ -448,7 +417,7 @@ namespace detail {
 
   bool Attribute_Impl::valueAsBoolean() const
   {
-    if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::Boolean){
+    if(!hasValue() || m_valueType != AttributeValueType::Boolean){
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Boolean.");
     }
@@ -466,7 +435,7 @@ namespace detail {
 
   int Attribute_Impl::valueAsInteger() const
   {
-    if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::Integer){
+    if(!hasValue() || m_valueType != AttributeValueType::Integer){
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Integer.");
     }
@@ -484,7 +453,7 @@ namespace detail {
 
   unsigned Attribute_Impl::valueAsUnsigned() const
   {
-    if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::Unsigned){
+    if(!hasValue() || m_valueType != AttributeValueType::Unsigned){
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Unsigned.");
     }
@@ -502,7 +471,7 @@ namespace detail {
 
   double Attribute_Impl::valueAsDouble() const
   {
-    if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::Double){
+    if(!hasValue() || m_valueType != AttributeValueType::Double){
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Double.");
     }
@@ -520,7 +489,7 @@ namespace detail {
 
   std::string Attribute_Impl::valueAsString() const
   {
-    if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::String){
+    if(!hasValue() || m_valueType != AttributeValueType::String){
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to String.");
     }
@@ -532,7 +501,7 @@ namespace detail {
       LOG_AND_THROW("Attribute is '" << name() << "' is of type "
                     << valueType().valueDescription() << ", not String.");
     }
-    m_value.setValue(std::string(value));
+    m_value = std::string(value);
     m_versionUUID = createUUID();
   }
 
@@ -541,17 +510,25 @@ namespace detail {
       LOG_AND_THROW("Attribute is '" << name() << "' is of type "
                     << valueType().valueDescription() << ", not String.");
     }
-    m_value.setValue(value);
+    m_value = value;
     m_versionUUID = createUUID();
   }
 
   std::vector<Attribute> Attribute_Impl::valueAsAttributeVector() const
   {
-    if(!m_value.isValid() || m_value.isNull() || m_valueType != AttributeValueType::AttributeVector){
+    if(!hasValue() || m_valueType != AttributeValueType::AttributeVector){
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to AttributeVector.");
     }
     return std::get<std::vector<Attribute> >(m_value);
+  }
+
+  QVariant Attribute_Impl::valueAsQVariant() const
+  {
+    // TODO: temporary hack to make code compile
+    std::stringstream ss;
+    ss << m_value;
+    return QVariant::fromValue(ss.str());
   }
 
   void Attribute_Impl::setValue(const std::vector<Attribute>& value) {
@@ -559,13 +536,8 @@ namespace detail {
       LOG_AND_THROW("Attribute is '" << name() << "' is of type "
                     << valueType().valueDescription() << ", not AttributeVector.");
     }
-    m_value.setValue(value);
+    m_value = value;
     m_versionUUID = createUUID();
-  }
-
-  QVariant Attribute_Impl::valueAsQVariant() const
-  {
-    return m_value;
   }
 
   struct FindChildByName {
@@ -584,7 +556,7 @@ namespace detail {
   boost::optional<Attribute> Attribute_Impl::findChildByName(const std::string& name) const
   {
     boost::optional<Attribute> result;
-    if (m_value.isValid() && !m_value.isNull() && m_valueType == AttributeValueType::AttributeVector){
+    if (hasValue() && m_valueType == AttributeValueType::AttributeVector){
       std::vector<Attribute> children = this->valueAsAttributeVector();
       std::vector<Attribute>::const_iterator it = std::find_if(children.begin(), children.end(), FindChildByName(name));
       if (it != children.end()){
@@ -1010,59 +982,6 @@ Attribute::Attribute(const openstudio::UUID& uuid,
   OS_ASSERT(m_impl);
 }
 
-Attribute::Attribute(const std::string& name, const OSOptionalQuantity& value)
-  : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(name,value)))
-{
-  OS_ASSERT(m_impl);
-}
-
-Attribute::Attribute(const std::string& name, const Quantity& value)
-  : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(name, value)))
-{
-  OS_ASSERT(m_impl);
-}
-Attribute::Attribute(const openstudio::UUID& uuid,
-                     const openstudio::UUID& versionUUID,
-                     const std::string& name,
-                     const boost::optional<std::string>& displayName,
-                     const Quantity& value,
-                     const std::string& source)
-  : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid,
-                                        versionUUID,
-                                        name,
-                                        displayName,
-                                        value,
-                                        source)))
-{
-  OS_ASSERT(m_impl);
-}
-
-Attribute::Attribute(const std::string& name, const Unit& value)
-  : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(name,value)))
-{
-  OS_ASSERT(m_impl);
-}
-Attribute::Attribute(const openstudio::UUID& uuid,
-                     const openstudio::UUID& versionUUID,
-                     const std::string& name,
-                     const boost::optional<std::string>& displayName,
-                     const Unit& value,
-                     const std::string& source)
-  : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid,
-                                        versionUUID,
-                                        name,
-                                        displayName,
-                                        value,
-                                        source)))
-{
-  OS_ASSERT(m_impl);
-}
-
 Attribute::Attribute(const std::string& name, int value)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
              new detail::Attribute_Impl(name, value, boost::none)))
@@ -1123,43 +1042,6 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      unsigned value,
-                     const boost::optional<std::string>& units,
-                     const std::string& source)
-  : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid,
-                                        versionUUID,
-                                        name,
-                                        displayName,
-                                        value,
-                                        units,
-                                        source)))
-{
-  OS_ASSERT(m_impl);
-}
-
-Attribute::Attribute(const std::string& name, const char* value)
-  : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(name, value, boost::none)))
-{
-  OS_ASSERT(m_impl);
-}
-Attribute::Attribute(const std::string& name, const char* value, const std::string& units)
-  : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(name, value, units)))
-{
-  OS_ASSERT(m_impl);
-}
-Attribute::Attribute(const std::string& name, const char* value, const boost::optional<std::string>& units)
-  : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(name, value, units)))
-{
-  OS_ASSERT(m_impl);
-}
-Attribute::Attribute(const openstudio::UUID& uuid,
-                     const openstudio::UUID& versionUUID,
-                     const std::string& name,
-                     const boost::optional<std::string>& displayName,
-                     const char* value,
                      const boost::optional<std::string>& units,
                      const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
@@ -1412,6 +1294,10 @@ AttributeValueType Attribute::valueType() const
   return m_impl->valueType();
 }
 
+bool Attribute::hasValue() const {
+  return m_impl->hasValue();
+}
+
 bool Attribute::valueAsBoolean() const
 {
   return m_impl->valueAsBoolean();
@@ -1520,11 +1406,6 @@ bool Attribute::saveToXml(const openstudio::path& path) const
 bool Attribute::operator==(const Attribute& other) const
 {
   return m_impl->operator==(other);
-}
-
-void Attribute::setValue(const QVariant& value)
-{
-  m_impl->setValue(value,true);
 }
 
 std::ostream& operator<<(std::ostream& os, const Attribute& attribute)

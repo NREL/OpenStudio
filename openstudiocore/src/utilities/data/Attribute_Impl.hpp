@@ -91,15 +91,6 @@ namespace detail {
                      const boost::optional<std::string>& units,
                      const std::string& source = std::string());
 
-      Attribute_Impl(const std::string& name, const char* value, const boost::optional<std::string>& units);
-      Attribute_Impl(const openstudio::UUID& uuid,
-                     const openstudio::UUID& versionUUID,
-                     const std::string& name,
-                     const boost::optional<std::string>& displayName,
-                     const char* value,
-                     const boost::optional<std::string>& units,
-                     const std::string& source = std::string());
-
       Attribute_Impl(const std::string& name, const std::string& value, const boost::optional<std::string>& units);
       Attribute_Impl(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
@@ -199,6 +190,7 @@ namespace detail {
       /// set value. throws if wrong type.
       void setValue(const std::vector<Attribute>& value);
 
+      // TODO: JM 2018-12-05 REMOVE
       /// get value as qvariant
       QVariant valueAsQVariant() const;
 
@@ -225,9 +217,6 @@ namespace detail {
     protected:
 
       friend class openstudio::Attribute;
-
-      // for setting after construction
-      void setValue(const QVariant& value, bool check);
 
       /// write values to an xml element
       /// override in derived classes

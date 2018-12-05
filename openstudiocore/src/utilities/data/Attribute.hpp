@@ -141,6 +141,8 @@ class UTILITIES_API Attribute {
   typedef detail::Attribute_Impl ImplType;
 
   /// constructors
+
+  // AttributeValueType::Boolean
   Attribute(const std::string& name, bool value);
   Attribute(const std::string& name, bool value, const std::string& units);
   Attribute(const std::string& name, bool value, const boost::optional<std::string>& units);
@@ -152,6 +154,7 @@ class UTILITIES_API Attribute {
             const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
+  // AttributeValueType::Double
   Attribute(const std::string& name, double value);
   Attribute(const std::string& name, double value, const std::string& units);
   Attribute(const std::string& name, double value, const boost::optional<std::string>& units);
@@ -163,6 +166,7 @@ class UTILITIES_API Attribute {
             const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
+  // AttributeValueType::Integer
   Attribute(const std::string& name, int value);
   Attribute(const std::string& name, int value, const std::string& units);
   Attribute(const std::string& name, int value, const boost::optional<std::string>& units);
@@ -174,6 +178,7 @@ class UTILITIES_API Attribute {
             const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
+  // AttributeValueType::Unsigned
   Attribute(const std::string& name, unsigned value);
   Attribute(const std::string& name, unsigned value, const std::string& units);
   Attribute(const std::string& name, unsigned value, const boost::optional<std::string>& units);
@@ -185,17 +190,7 @@ class UTILITIES_API Attribute {
             const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
-  Attribute(const std::string& name, const char* value);
-  Attribute(const std::string& name, const char* value, const std::string& units);
-  Attribute(const std::string& name, const char* value, const boost::optional<std::string>& units);
-  Attribute(const openstudio::UUID& uuid,
-            const openstudio::UUID& versionUUID,
-            const std::string& name,
-            const boost::optional<std::string>& displayName,
-            const char* value,
-            const boost::optional<std::string>& units,
-            const std::string& source = std::string());
-
+  // AttributeValueType::String
   Attribute(const std::string& name, const std::string& value);
   Attribute(const std::string& name, const std::string& value, const std::string& units);
   Attribute(const std::string& name, const std::string& value, const boost::optional<std::string>& units);
@@ -207,6 +202,7 @@ class UTILITIES_API Attribute {
             const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
+  // AttributeValueType::AttributeVector
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value);
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value, const std::string& units);
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value, const boost::optional<std::string>& units);
@@ -230,7 +226,7 @@ class UTILITIES_API Attribute {
   Attribute clone() const;
 
   /// static constructor from QVariant
-  static boost::optional<Attribute> fromQVariant(const std::string& name, const QVariant& value, const boost::optional<std::string>& units = boost::none);
+  // static boost::optional<Attribute> fromQVariant(const std::string& name, const QVariant& value, const boost::optional<std::string>& units = boost::none);
 
   /// static constructor from xml
   static boost::optional<Attribute> loadFromXml(const openstudio::path& path);
@@ -311,9 +307,6 @@ class UTILITIES_API Attribute {
 
   /// get value as qvariant
   QVariant valueAsQVariant() const;
-
-  // set value. throws if wrong type.
-  void setValue(const QVariant& value);
 
   /// find child attribute by name
   boost::optional<Attribute> findChildByName(const std::string& name) const;
