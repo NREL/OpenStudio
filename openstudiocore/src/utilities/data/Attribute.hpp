@@ -191,6 +191,18 @@ class UTILITIES_API Attribute {
             const std::string& source = std::string());
 
   // AttributeValueType::String
+  // Const char overload is needed because otherwise it'll resolve to the bool constructor (implicit conversion of pointer to bool)
+  Attribute(const std::string& name, const char* value);
+  Attribute(const std::string& name, const char* value, const std::string& units);
+  Attribute(const std::string& name, const char* value, const boost::optional<std::string>& units);
+  Attribute(const openstudio::UUID& uuid,
+            const openstudio::UUID& versionUUID,
+            const std::string& name,
+            const boost::optional<std::string>& displayName,
+            const char* value,
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
+
   Attribute(const std::string& name, const std::string& value);
   Attribute(const std::string& name, const std::string& value, const std::string& units);
   Attribute(const std::string& name, const std::string& value, const boost::optional<std::string>& units);

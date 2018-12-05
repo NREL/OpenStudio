@@ -181,6 +181,17 @@ TEST_F(DataFixture, Attribute_String)
     openstudio::filesystem::remove(xmlPath);
   }
 
+  {
+    // Call the std::string constructor, should be no problem
+    std::string value = "value";
+    Attribute attribute("string", value);
+    EXPECT_EQ("string", attribute.name());
+    EXPECT_EQ(AttributeValueType::String, attribute.valueType().value());
+    EXPECT_EQ("value", attribute.valueAsString());
+    EXPECT_FALSE(attribute.units());
+  }
+
+  // This one calls the const char * constructor, which is needed to avoid resolution to bool ctor
   Attribute attribute("string", "value");
   EXPECT_EQ("string", attribute.name());
   EXPECT_EQ(AttributeValueType::String, attribute.valueType().value());
@@ -269,66 +280,6 @@ TEST_F(DataFixture, Attribute_Throw)
   EXPECT_THROW(attribute.valueAsDouble(), openstudio::Exception);
   EXPECT_THROW(attribute.valueAsString(), openstudio::Exception);
   EXPECT_NO_THROW(attribute.valueAsAttributeVector());
-}
-
-TEST_F(DataFixture, Attribute_FromQVariant)
-{
-
-  QVariant value = QVariant::fromValue(false);
-  boost::optional<Attribute> attribute = Attribute::fromQVariant("bool", value);
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("bool", attribute->name());
-  EXPECT_EQ(AttributeValueType::Boolean, attribute->valueType().value());
-  EXPECT_FALSE(attribute->valueAsBoolean());
-  EXPECT_FALSE(attribute->units());
-
-  value = QVariant::fromValue(static_cast<int>(2));
-  attribute = Attribute::fromQVariant("int", value);
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("int", attribute->name());
-  EXPECT_EQ(AttributeValueType::Integer, attribute->valueType().value());
-  EXPECT_EQ(2, attribute->valueAsInteger());
-  EXPECT_FALSE(attribute->units());
-
-  value = QVariant::fromValue(static_cast<unsigned>(10));
-  attribute = Attribute::fromQVariant("unsigned", value, std::string("ft"));
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("unsigned", attribute->name());
-  EXPECT_EQ(AttributeValueType::Unsigned, attribute->valueType().value());
-  EXPECT_EQ(10u, attribute->valueAsUnsigned());
-  ASSERT_TRUE(attribute->units());
-  EXPECT_EQ("ft", attribute->units().get());
-
-  value = QVariant::fromValue(1.234);
-  attribute = Attribute::fromQVariant("double", value, std::string("m"));
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("double", attribute->name());
-  EXPECT_EQ(AttributeValueType::Double, attribute->valueType().value());
-  EXPECT_EQ(1.234, attribute->valueAsDouble());
-  ASSERT_TRUE(attribute->units());
-  EXPECT_EQ("m", attribute->units().get());
-
-  value = QVariant::fromValue(std::string("hello"));
-  attribute = Attribute::fromQVariant("std::string", value);
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("std::string", attribute->name());
-  EXPECT_EQ(AttributeValueType::String, attribute->valueType().value());
-  EXPECT_EQ("hello", attribute->valueAsString());
-  EXPECT_FALSE(attribute->units());
-
-  boost::optional<double> d = 1.234;
-  value = QVariant::fromValue(d);
-  attribute = Attribute::fromQVariant("set optional", value);
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("set optional", attribute->name());
-  EXPECT_EQ(AttributeValueType::Double, attribute->valueType().value());
-  EXPECT_EQ(1.234, attribute->valueAsDouble());
-  EXPECT_FALSE(attribute->units());
-
-  d.reset();
-  value = QVariant::fromValue(d);
-  attribute = Attribute::fromQVariant("unset optional", value);
-  EXPECT_FALSE(attribute);
 }
 
 TEST_F(DataFixture, Attribute_Equal)

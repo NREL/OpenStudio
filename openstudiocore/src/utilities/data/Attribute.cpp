@@ -1056,6 +1056,44 @@ Attribute::Attribute(const openstudio::UUID& uuid,
   OS_ASSERT(m_impl);
 }
 
+
+Attribute::Attribute(const std::string& name, const char* value)
+  : m_impl(std::shared_ptr<detail::Attribute_Impl>(
+             new detail::Attribute_Impl(name, std::string(value), boost::none)))
+{
+  OS_ASSERT(m_impl);
+}
+Attribute::Attribute(const std::string& name, const char* value, const std::string& units)
+  : m_impl(std::shared_ptr<detail::Attribute_Impl>(
+             new detail::Attribute_Impl(name, std::string(value), units)))
+{
+  OS_ASSERT(m_impl);
+}
+Attribute::Attribute(const std::string& name, const char* value, const boost::optional<std::string>& units)
+  : m_impl(std::shared_ptr<detail::Attribute_Impl>(
+             new detail::Attribute_Impl(name, std::string(value), units)))
+{
+  OS_ASSERT(m_impl);
+}
+Attribute::Attribute(const openstudio::UUID& uuid,
+                     const openstudio::UUID& versionUUID,
+                     const std::string& name,
+                     const boost::optional<std::string>& displayName,
+                     const char* value,
+                     const boost::optional<std::string>& units,
+                     const std::string& source)
+  : m_impl(std::shared_ptr<detail::Attribute_Impl>(
+             new detail::Attribute_Impl(uuid,
+                                        versionUUID,
+                                        name,
+                                        displayName,
+                                        std::string(value),
+                                        units,
+                                        source)))
+{
+  OS_ASSERT(m_impl);
+}
+
 Attribute::Attribute(const std::string& name, const std::string& value)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
              new detail::Attribute_Impl(name, value, boost::none)))
