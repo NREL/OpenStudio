@@ -37,6 +37,8 @@
   #include <utilities/idf/IdfObject.hpp>
   #include <utilities/idf/WorkspaceObject.hpp>
   #include <QNetworkAccessManager>
+  #include <QComboBox>
+  #include <QMainWindow>
   #include <utilities/core/PathWatcher.hpp>
   #include <utilities/core/UpdateManager.hpp>
 %}

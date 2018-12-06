@@ -141,6 +141,15 @@ public:
   void setVisible(bool visible);
 };
 
+class QMainWindow : public QWidget
+{};
+
+class QDialog : public QWidget
+{};
+
+class QComboBox : public QWidget
+{};
+
 class QTextStream{};
 
 class QRgb{};
