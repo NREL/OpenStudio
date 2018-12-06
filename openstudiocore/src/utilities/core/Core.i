@@ -39,7 +39,6 @@
 %include <utilities/core/Path.i>
 %include <OpenStudio.hxx>
 %include <utilities/core/ApplicationPathHelpers.hpp>
-%include <utilities/core/PathWatcher.i>
 %include <utilities/core/String.hpp>
 %include <utilities/core/StringHelpers.hpp>
 %include <utilities/core/Singleton.i>

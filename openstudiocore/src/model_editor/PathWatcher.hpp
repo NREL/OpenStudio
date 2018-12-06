@@ -27,11 +27,10 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_CORE_PATHWATCHER_HPP
-#define UTILITIES_CORE_PATHWATCHER_HPP
+#ifndef MODELEDITOR_PATHWATCHER_HPP
+#define MODELEDITOR_PATHWATCHER_HPP
 
-#include "../UtilitiesAPI.hpp"
-#include "Path.hpp"
+#include <utilities/core/Path.hpp>
 
 #include <QObject>
 #include <QString>
@@ -45,7 +44,7 @@ namespace openstudio {
   /** Class for watching either a file or directory, QFileSystemWatcher has issues when watching
    **  many files so it is not recommended to use too many of these objects.
    **/
-  class UTILITIES_API PathWatcher : public QObject{
+  class PathWatcher : public QObject{
 
     Q_OBJECT;
 
@@ -120,4 +119,4 @@ namespace openstudio {
 
 } // openstudio
 
-#endif // UTILITIES_CORE_PATHWATCHER_HPP
+#endif // MODELEDITOR_PATHWATCHER_HPP

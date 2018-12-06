@@ -3,13 +3,12 @@
 
 
 %{
-  #include <utilities/core/Application.hpp>
+  #include <model_editor/Application.hpp>
 %}
 
 
 %template(Application) openstudio::Singleton<openstudio::ApplicationSingleton>;
 
-
-%include <utilities/core/Application.hpp>
+%include <model_editor/Application.hpp>
 
 #endif //UTILITIES_CORE_APPLICATION_I

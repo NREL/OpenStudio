@@ -28,8 +28,9 @@
 ***********************************************************************************************************************/
 
 #include "Application.hpp"
-#include "ApplicationPathHelpers.hpp"
-#include "String.hpp"
+
+#include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/String.hpp>
 
 #include <QSettings>
 

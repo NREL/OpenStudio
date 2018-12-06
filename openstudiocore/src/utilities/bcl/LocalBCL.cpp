@@ -29,7 +29,6 @@
 
 #include "LocalBCL.hpp"
 #include "RemoteBCL.hpp"
-#include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 #include "../time/DateTime.hpp"
 #include "../core/PathHelpers.hpp"
@@ -51,8 +50,9 @@ namespace openstudio{
     m_dbVersion("1.3"),
     m_connectionOpen(false)
   {
+    //TODO: QT - Separation - Move
     //Make sure a QApplication exists
-    openstudio::Application::instance().application(false);
+    //openstudio::Application::instance().application(false);
 
     //Check for BCL directory
     if (!openstudio::filesystem::is_directory(m_libraryPath) || !openstudio::filesystem::exists(m_libraryPath)) {
@@ -1488,7 +1488,7 @@ namespace openstudio{
     return s;
   }
 
-
+  /*
   bool LocalBCL::prodAuthKeyUserPrompt(QWidget* parent)
   {
     // make sure application is initialized
@@ -1550,7 +1550,7 @@ namespace openstudio{
 
     return result;
   }
-
+  */
   std::string LocalBCL::prodAuthKey() const
   {
     return m_prodAuthKey;

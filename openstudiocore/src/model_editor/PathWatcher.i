@@ -2,11 +2,11 @@
 #define UTILITIES_CORE_PATHWATCHER_I
 
 %{
-  #include <utilities/core/PathWatcher.hpp>
+  #include <model_editor/PathWatcher.hpp>
 %}
 
 %feature("director") PathWatcher;
 
-%include <utilities/core/PathWatcher.hpp>
+%include <model_editor/PathWatcher.hpp>
 
 #endif // UTILITIES_CORE_PATHWATCHER_I

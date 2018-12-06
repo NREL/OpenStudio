@@ -29,6 +29,8 @@
 
 #include "ModalDialogs.hpp"
 
+#include "Application.hpp"
+
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelObject.hpp"
@@ -56,7 +58,6 @@
 #include "../model/People.hpp"
 #include "../model/PeopleDefinition.hpp"
 
-#include "../utilities/core/Application.hpp"
 #include "../utilities/core/System.hpp"
 #include "../utilities/core/Assert.hpp"
 

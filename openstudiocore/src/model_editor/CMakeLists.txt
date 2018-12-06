@@ -32,6 +32,8 @@ set(${target_name}_src
   ObjectExplorer.cpp
   OSProgressBar.hpp
   OSProgressBar.cpp
+  PathWatcher.hpp
+  PathWatcher.cpp
   tablemodel.h
   tablemodel.cpp
   TableView.hpp
@@ -69,6 +71,7 @@ set(${target_name}_moc
   ModalDialogs.hpp
   ModelExplorer.hpp
   ObjectExplorer.hpp
+  PathWatcher.hpp
   tablemodel.h
   TableView.hpp
   TableWidget.hpp
@@ -145,6 +148,9 @@ set(${target_name}_static_depends
 
 target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
+target_compile_definitions(${target_name} PUBLIC model_editor_EXPORTS)
+target_compile_definitions(${target_name}_static PUBLIC model_editor_EXPORTS)
+
 #if(NOT APPLE)
 #  install(TARGETS ${target_name}
 #    RUNTIME DESTINATION bin
@@ -157,6 +163,7 @@ set(${target_name}_test_src
   test/ModelEditorFixture.cpp
   test/InspectorDialog_GTest.cpp
   test/ModalDialogs_GTest.cpp
+  test/PathWatcher_GTest.cpp
 )
 
 set(${target_name}_test_depends
@@ -177,6 +184,7 @@ endif()
 set(${target_name}_swig_src
   ModelEditor.i
   Application.i
+  PathWatcher.i
   Qt.i
 )
 

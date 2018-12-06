@@ -28,7 +28,6 @@
 ***********************************************************************************************************************/
 
 #include "System.hpp"
-#include "Application.hpp"
 
 #include <boost/thread.hpp>
 
@@ -83,7 +82,9 @@ namespace openstudio{
     int remainingtime = msecs;
     while ( remainingtime > 0 )
     {
-      bool didwork = openstudio::Application::instance().processEvents(remainingtime);
+      //TODO: QT - Separation - Move
+      //bool didwork = openstudio::Application::instance().processEvents(remainingtime);
+      bool didwork = false;
       remainingtime = msecs - (boost::posix_time::microsec_clock::universal_time() - start).total_milliseconds();
 //      std::cout << "time " << msecs << " remainingtime " << remainingtime << std::endl;
 
@@ -106,7 +107,8 @@ namespace openstudio{
 #endif
     }
 
-    openstudio::Application::instance().processEvents(); // process any outstanding events
+    // TODO: QT-Separation-Move
+    //openstudio::Application::instance().processEvents(); // process any outstanding events
   }
 
   unsigned System::numberOfProcessors()

@@ -27,11 +27,10 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_CORE_APPLICATION_HPP
-#define UTILITIES_CORE_APPLICATION_HPP
+#ifndef MODELEDITOR_APPLICATION_HPP
+#define MODELEDITOR_APPLICATION_HPP
 
-#include "../UtilitiesAPI.hpp"
-#include "Singleton.hpp"
+#include <utilities/core/Singleton.hpp>
 
 #include <QApplication>
 
@@ -41,7 +40,7 @@ namespace openstudio{
 
   /** Singleton application wide configuration management.
   */
-  class UTILITIES_API ApplicationSingleton
+  class ApplicationSingleton
   {
 
     friend class Singleton<ApplicationSingleton>;
@@ -111,11 +110,17 @@ namespace openstudio{
 
   typedef openstudio::Singleton<ApplicationSingleton> Application;
 
+#if defined(model_editor_EXPORTS)
+  #define MODELEDITOR_TEMPLATE_EXT
+#else
+  #define MODELEDITOR_TEMPLATE_EXT extern
+#endif
+
 #if _WIN32 || _MSC_VER
   /// Explicitly instantiate and export ApplicationSingleton Singleton template instance
-  /// so that the same instance is shared between the DLL's that link to Utilities.dll
-  UTILITIES_TEMPLATE_EXT template class UTILITIES_API openstudio::Singleton<ApplicationSingleton>;
+  /// so that the same instance is shared between the DLL's that link to this dll
+  MODELEDITOR_TEMPLATE_EXT template class openstudio::Singleton<ApplicationSingleton>;
 #endif
 } // openstudio
 
-#endif // UTILITIES_CORE_APPLICATION_HPP
+#endif // MODELEDITOR_APPLICATION_HPP

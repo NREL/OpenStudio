@@ -55,8 +55,6 @@ set(core_src
   core/Path.cpp
   core/PathHelpers.hpp
   core/PathHelpers.cpp
-  core/PathWatcher.hpp
-  core/PathWatcher.cpp
   core/Queue.hpp
   core/RubyInterpreter.hpp
   core/RubyException.hpp
@@ -249,7 +247,6 @@ set(bcl_moc
 #)
 
 set(core_moc
-  core/PathWatcher.hpp
   core/UpdateManager.hpp
 )
 
@@ -397,7 +394,6 @@ set(${target_name}_test_src
   core/test/Logger_GTest.cpp
   core/test/Optional_GTest.cpp
   core/test/Path_GTest.cpp
-  core/test/PathWatcher_GTest.cpp
   core/test/SharedFromThis_GTest.cpp
   core/test/System_GTest.cpp
   core/test/String_GTest.cpp
@@ -481,7 +477,6 @@ set(${target_name}_swig_src
   core/Exception.i
   core/Logger.i
   core/Path.i
-  core/PathWatcher.i
   core/Qt.i
   core/Singleton.i
   core/System.i

@@ -29,7 +29,7 @@
 
 #include "OSProgressBar.hpp"
 
-#include "../utilities/core/Application.hpp"
+#include "Application.hpp"
 
 #include <cmath>
 #include <nano/nano_signal_slot.hpp>

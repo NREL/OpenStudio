@@ -31,11 +31,13 @@
 
 #include <resources.hxx>
 
-#include "CoreFixture.hpp"
-#include "../Path.hpp"
+#include "ModelEditorFixture.hpp"
+
 #include "../PathWatcher.hpp"
 #include "../Application.hpp"
-#include "../System.hpp"
+
+#include <utilities/core/Path.hpp>
+#include <utilities/core/System.hpp>
 
 #include <iostream>
 #include <thread>
@@ -77,7 +79,7 @@ void remove_file(const openstudio::path& path)
 }
 
 
-TEST_F(CoreFixture, PathWatcher_File)
+TEST_F(ModelEditorFixture, PathWatcher_File)
 {
   Application::instance().application(false);
 
@@ -121,7 +123,7 @@ TEST_F(CoreFixture, PathWatcher_File)
   EXPECT_TRUE(watcher.removed);
 }
 
-TEST_F(CoreFixture, PathWatcher_Dir)
+TEST_F(ModelEditorFixture, PathWatcher_Dir)
 {
   Application::instance().application(false);
 

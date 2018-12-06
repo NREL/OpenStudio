@@ -22,11 +22,13 @@
 #endif
 
 %{
+  #include <model_editor/Application.hpp>
   #include <model_editor/InspectorGadget.hpp>
   #include <model_editor/InspectorDialog.hpp>
   #include <model_editor/ModalDialogs.hpp>
   #include <model_editor/OSProgressBar.hpp>
-
+  #include <model_editor/PathWatcher.hpp>
+ 
   #include <model/Model.hpp>
   #include <model/ModelObject.hpp>
 
@@ -72,6 +74,7 @@
 %ignore openstudio::WorkspaceWatcher;
 
 %include <model_editor/Application.i>
+%include <model_editor/PathWatcher.i>
 
 %include <model_editor/InspectorGadget.hpp>
 

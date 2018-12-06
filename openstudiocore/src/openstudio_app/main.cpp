@@ -33,11 +33,12 @@
 #define COMPILING_FROM_OSAPP
 #include "../openstudio_lib/OpenStudioAPI.hpp"
 #include "OpenStudioApp.hpp"
+#include "../model_editor/Application.hpp"
 
 #include "../measure/OSArgument.hpp"
 
 #include "../openstudio_lib/MainWindow.hpp"
-#include "../utilities/core/Application.hpp"
+
 #include "../utilities/core/FileLogSink.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Logger.hpp"

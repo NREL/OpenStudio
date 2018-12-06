@@ -29,8 +29,9 @@
 
 #include "PathWatcher.hpp"
 #include "Application.hpp"
-#include "Checksum.hpp"
-#include "Assert.hpp"
+
+#include <utilities/core/Checksum.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <QFileSystemWatcher>
 #include <QTimer>

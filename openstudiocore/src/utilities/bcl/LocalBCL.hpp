@@ -136,8 +136,8 @@ namespace openstudio{
 
     /// Prompt the user for auth key using a modal dialog, this is a blocking call that requires user input.
     /// If user enters input returns the value of setAuthKey, otherwise returns false
-    bool prodAuthKeyUserPrompt(QWidget* parent = nullptr);
-    bool devAuthKeyUserPrompt(QWidget* parent = nullptr);
+    //bool prodAuthKeyUserPrompt(QWidget* parent = nullptr);
+    //bool devAuthKeyUserPrompt(QWidget* parent = nullptr);
 
     /// Return production OAuth key
     std::string prodAuthKey() const;

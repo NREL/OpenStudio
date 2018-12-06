@@ -43,8 +43,9 @@
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/bcl/RemoteBCL.hpp"
 #include "../utilities/data/Attribute.hpp"
-#include "../utilities/core/Application.hpp"
 #include "../utilities/core/Assert.hpp"
+
+#include "../model_editor/Application.hpp"
 
 #include <QApplication>
 #include <QBoxLayout>

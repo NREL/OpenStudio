@@ -29,8 +29,6 @@
 
 #include "ProgressBar.hpp"
 
-#include "../core/Application.hpp"
-
 #include <cmath>
 #include <nano/nano_signal_slot.hpp>
 
