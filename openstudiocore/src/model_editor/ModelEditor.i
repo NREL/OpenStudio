@@ -5,7 +5,6 @@
 %module openstudiomodeleditor
 #endif
 
-
 #define UTILITIES_API
 #define MODEL_API
 #define MODELEDITOR_API
@@ -45,7 +44,6 @@
   namespace openstudio{
     class ProgressBar;
     class UpdateManager;
-    class PathWatcher;
     class IdfObjectWatcher;
     class BCL;
     class RemoteBCL;
@@ -64,22 +62,40 @@
 %ignore QDomDocument;
 %ignore QNetworkAccessManager;
 %ignore QThread;
-%ignore openstudio::ProgressBar;
 %ignore openstudio::UpdateManager;
-%ignore openstudio::PathWatcher;
 %ignore openstudio::IdfObjectWatcher;
 %ignore openstudio::BCL;
 %ignore openstudio::RemoteBCL;
 %ignore openstudio::LocalBCL;
 %ignore openstudio::WorkspaceWatcher;
 
-%include <model_editor/Application.i>
-%include <model_editor/PathWatcher.i>
+%template(Application) openstudio::Singleton<openstudio::ApplicationSingleton>;
+%include <model_editor/Application.hpp>
+
+%feature("director") PathWatcher;
+%include <model_editor/PathWatcher.hpp>
 
 %include <model_editor/InspectorGadget.hpp>
 
 %feature("director") InspectorDialog;
 %include <model_editor/InspectorDialog.hpp>
+
+// do not know why SWIG is not pulling in these methods from QMainWindow base class
+%extend InspectorDialog {        
+    void setVisible(bool visible){$self->setVisible(visible); }
+    void setHidden(bool hidden){$self->setHidden(hidden); }
+    void show(){$self->show(); }
+    void hide(){$self->hide(); }
+
+    void showMinimized(){$self->showMinimized(); }
+    void showMaximized(){$self->showMaximized(); }
+    void showFullScreen(){$self->showFullScreen(); }
+    void showNormal(){$self->showNormal(); }
+
+    bool close(){return $self->close(); }
+    void raise(){$self->raise(); }
+    void lower(){$self->lower(); }
+};
 
 %feature("director") ModelObjectSelectorDialogWatcher;
 %include <model_editor/ModalDialogs.hpp>

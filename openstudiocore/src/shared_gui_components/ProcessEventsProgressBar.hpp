@@ -37,7 +37,7 @@ namespace openstudio {
 
 // uses the progress bar interface in energy plus and version translators
 // to call process events
-class ProcessEventsProgressBar : public openstudio::OSProgressBar
+class ProcessEventsProgressBar : public OSProgressBar
 {
 public:
   ProcessEventsProgressBar();

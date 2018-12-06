@@ -30,10 +30,6 @@ namespace Qt{
 %{
   #include <QObject>
   #include <QColor>
-  #include <QWidget>
-  #include <QDialog>
-  #include <QComboBox>
-  #include <QMainWindow>
   #include <QAbstractItemModel>
   #include <QModelIndex>
   #include <QModelIndexList>
@@ -47,8 +43,6 @@ namespace Qt{
   #include <QVariant>
   #include <QThread>
   #include <QFile>
-  #include <QCoreApplication>
-  #include <QApplication>
 %}
 
 class QObject
@@ -114,33 +108,6 @@ public:
     bool operator==(const QColor &c) const;
     bool operator!=(const QColor &c) const;
 };
-
-class QWidget : public QObject
-{
-public:
-  void show();
-  void hide();
-  bool isWindow() const;
-  QString windowTitle() const;
-  void setWindowTitle(const QString &);
-  bool isActiveWindow() const;
-  void activateWindow();
-  void raise();
-  void lower();
-  bool isAncestorOf(const QWidget* child) const;
-  bool isEnabled() const;
-  bool isEnabledTo(QWidget * ancestor) const;
-  void setEnabled(bool enabled);
-  bool isFullScreen() const;
-  bool isHidden() const;
-  bool isMaximized() const;
-  bool isMinimized() const;
-  bool isModal() const;
-  bool isVisible() const;
-  bool isVisibleTo(QWidget* ancestor) const;
-  void setVisible(bool visible);
-};
-
 class QTextStream{};
 
 class QRgb{};
@@ -157,27 +124,6 @@ class QString{};
 class QModelIndex{};
 
 class QModelIndexList{};
-
-%nodefaultctor QCoreApplication;
-class QCoreApplication{};
-
-%extend QCoreApplication{
-
-  void setApplicationName(const std::string& applicationName) const{
-    self->setApplicationName(toQString(applicationName));
-  }
-
-  void setOrganizationName(const std::string& organizationName) const{
-    self->setOrganizationName(toQString(organizationName));
-  }
-  void setOrganizationDomain(const std::string& organizationDomain) const{
-    self->setOrganizationDomain(toQString(organizationDomain));
-  }
-}
-
-%nodefaultctor QApplication;
-class QApplication : public QCoreApplication
-{};
 
 class QFont{};
 

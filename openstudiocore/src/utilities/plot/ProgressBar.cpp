@@ -38,7 +38,6 @@ namespace openstudio{
   ProgressBar::ProgressBar()
     : m_percentage(0.0)
   {
-    updatePercentage();
   }
 
   /// virtual destructor

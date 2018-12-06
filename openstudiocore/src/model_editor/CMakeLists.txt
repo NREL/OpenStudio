@@ -183,8 +183,6 @@ endif()
 # lib swig files
 set(${target_name}_swig_src
   ModelEditor.i
-  Application.i
-  PathWatcher.i
   Qt.i
 )
 

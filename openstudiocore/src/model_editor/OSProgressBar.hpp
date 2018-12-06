@@ -39,83 +39,80 @@
 
 class QWidget;
 
-namespace openstudio{
+/** OSProgressBar wraps a QProgressBar and provides virtual methods setRange, setValue, and setWindowTitle(QString)
+  *  which may be overridden.
+  *
+  *  OSProgressBar an atypical QObject because it is designed to be stack allocated.  In many cases it
+  *  would be preferred to connect your own heap allocated QObject to the signals directly rather
+  *  than using this convenience class.
+  **/
+class OSProgressBar : public openstudio::ProgressBar {
 
-  /** OSProgressBar wraps a QProgressBar and provides virtual methods setRange, setValue, and setWindowTitle(QString)
-   *  which may be overridden.
-   *
-   *  OSProgressBar an atypical QObject because it is designed to be stack allocated.  In many cases it
-   *  would be preferred to connect your own heap allocated QObject to the signals directly rather
-   *  than using this convenience class.
-   **/
-  class OSProgressBar : public ProgressBar {
+public:
 
-  public:
+  /// constructor
+  OSProgressBar(QWidget* parent = nullptr);
 
-    /// constructor
-    OSProgressBar(QWidget* parent = nullptr);
+  /// constructor
+  OSProgressBar(bool visible, QWidget* parent = nullptr);
 
-    /// constructor
-    OSProgressBar(bool visible, QWidget* parent = nullptr);
+  /// virtual destructor
+  virtual ~OSProgressBar();
 
-    /// virtual destructor
-    virtual ~OSProgressBar();
+  /// get min
+  int minimum() const;
 
-    /// get min
-    int minimum() const;
+  /// set min
+  void setMinimum(int min);
 
-    /// set min
-    void setMinimum(int min);
+  /// get max
+  int maximum() const;
 
-    /// get max
-    int maximum() const;
+  /// set max
+  void setMaximum(int max);
 
-    /// set max
-    void setMaximum(int max);
+  /// get value
+  int value() const;
 
-    /// get value
-    int value() const;
+  /// get the window title
+  std::string windowTitle() const;
 
-    /// get the window title
-    std::string windowTitle() const;
+  /// set the window title
+  void setWindowTitle(const std::string& title);
 
-    /// set the window title
-    void setWindowTitle(const std::string& title);
+  /// get the text
+  std::string text() const;
 
-    /// get the text
-    std::string text() const;
+  /// get if visible
+  bool isVisible() const;
 
-    /// get if visible
-    bool isVisible() const;
+  /// set if visible
+  void setVisible(bool visible);
 
-    /// set if visible
-    void setVisible(bool visible);
+  /// virtual method called every time percentageUpdated fires
+  virtual void onPercentageUpdated(double percentage);
 
-    /// virtual method called every time percentageUpdated fires
-    virtual void onPercentageUpdated(double percentage);
+// public slots:
 
-  // public slots:
+  /// set range
+  void setRange(int min, int max);
 
-    /// set range
-    void setRange(int min, int max);
+  /// set value
+  void setValue(int value);
 
-    /// set value
-    void setValue(int value);
+  /// set window title
+  void setWindowTitle(const QString& windowTitle);
 
-    /// set window title
-    void setWindowTitle(const QString& windowTitle);
+protected:
 
-  protected:
+  /// return the impl
+  //std::shared_ptr<QProgressBar> impl() const;
 
-    /// return the impl
-    //std::shared_ptr<QProgressBar> impl() const;
+private:
+  /// impl
+  std::shared_ptr<QProgressBar> m_impl;
 
-  private:
-    /// impl
-    std::shared_ptr<QProgressBar> m_impl;
+};
 
-  };
-
-} // openstudio
 
 #endif //MODELEDITOR_OSProgressBar_HPP

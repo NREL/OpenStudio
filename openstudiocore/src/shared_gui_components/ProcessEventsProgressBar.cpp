@@ -34,7 +34,7 @@
 namespace openstudio {
 
   ProcessEventsProgressBar::ProcessEventsProgressBar()
-    : openstudio::OSProgressBar(false, nullptr)
+    : OSProgressBar(false, nullptr)
   {
   }
 

@@ -27,6 +27,7 @@
 ########################################################################################################################
 
 require("openstudio")
+require("openstudio_modeleditor")
 require("openstudio/sketchup_plugin/lib/AnimationManager")
 require("openstudio/sketchup_plugin/lib/CommandManager")
 require("openstudio/sketchup_plugin/lib/DialogManager")

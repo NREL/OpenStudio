@@ -126,7 +126,7 @@ namespace modeleditor
 
     mProgressBarLbl = new QLabel();
     mQProgressBar = new QProgressBar(this);
-    mProgressBar = new openstudio::OSProgressBar(mQProgressBar);
+    mProgressBar = new OSProgressBar(mQProgressBar);
 
     auto layout = new QVBoxLayout();
     layout->addWidget(mProgressBarLbl);

@@ -36,189 +36,185 @@
 #include <QFileSystemWatcher>
 #include <QTimer>
 
-namespace openstudio {
+/// constructor
+PathWatcher::PathWatcher(const openstudio::path& p, int msec)
+  : m_impl(new QFileSystemWatcher()),
+  m_enabled(true), m_isDirectory(openstudio::filesystem::is_directory(p) || openstudio::toString(p.filename())=="." || openstudio::toString(p.filename())=="/"),
+  m_exists(openstudio::filesystem::exists(p)), m_dirty(false),
+  m_checksum(openstudio::checksum(p)), m_path(p), m_msec(msec)
+{
+  // make sure a QApplication exists
+  openstudio::Application::instance().application(false);
+  openstudio::Application::instance().processEvents();
 
-  /// constructor
-  PathWatcher::PathWatcher(const openstudio::path& p, int msec)
-    : m_impl(new QFileSystemWatcher()),
-    m_enabled(true), m_isDirectory(openstudio::filesystem::is_directory(p) || toString(p.filename())=="." || toString(p.filename())=="/"),
-    m_exists(openstudio::filesystem::exists(p)), m_dirty(false),
-    m_checksum(openstudio::checksum(p)), m_path(p), m_msec(msec)
-  {
-    // make sure a QApplication exists
-    openstudio::Application::instance().application(false);
-    openstudio::Application::instance().processEvents();
+  if (m_isDirectory){
 
-    if (m_isDirectory){
-
-      if (!m_exists){
-        LOG_FREE_AND_THROW("openstudio.PathWatcher", "Directory '" << openstudio::toString(p) << "' does not exist, cannot be watched");
-      }
-
-      connect(m_impl.get(), &QFileSystemWatcher::directoryChanged, this, &PathWatcher::directoryChanged);
-      m_impl->addPath(openstudio::toQString(p));
-
-    }else{
-      m_timer = std::shared_ptr<QTimer>(new QTimer());
-      connect(m_timer.get(), &QTimer::timeout, this, &PathWatcher::checkFile);
-      m_timer->start(m_msec);
-
-      // DLM: do not use QFileSystemWatcher to watch individual files, was acting glitchy
-      //connected = this->connect(m_impl.get(), SIGNAL(fileChanged(const QString&)), SLOT(fileChanged(const QString&)));
-      //OS_ASSERT(connected);
-      //m_impl->addPath(openstudio::toQString(p));
+    if (!m_exists){
+      LOG_FREE_AND_THROW("openstudio.PathWatcher", "Directory '" << openstudio::toString(p) << "' does not exist, cannot be watched");
     }
 
+    connect(m_impl.get(), &QFileSystemWatcher::directoryChanged, this, &PathWatcher::directoryChanged);
+    m_impl->addPath(openstudio::toQString(p));
+
+  }else{
+    m_timer = std::shared_ptr<QTimer>(new QTimer());
+    connect(m_timer.get(), &QTimer::timeout, this, &PathWatcher::checkFile);
+    m_timer->start(m_msec);
+
+    // DLM: do not use QFileSystemWatcher to watch individual files, was acting glitchy
+    //connected = this->connect(m_impl.get(), SIGNAL(fileChanged(const QString&)), SLOT(fileChanged(const QString&)));
+    //OS_ASSERT(connected);
+    //m_impl->addPath(openstudio::toQString(p));
   }
 
-  PathWatcher::~PathWatcher()
-  {}
+}
 
-  bool PathWatcher::enabled() const
-  {
-    return m_enabled;
+PathWatcher::~PathWatcher()
+{}
+
+bool PathWatcher::enabled() const
+{
+  return m_enabled;
+}
+
+void PathWatcher::enable()
+{
+  m_enabled = true;
+
+  if (!m_timer->isActive()){
+    m_timer->start(m_msec);
+  }
+}
+
+bool PathWatcher::disable()
+{
+  if (m_timer->isActive()){
+    m_timer->stop();
   }
 
-  void PathWatcher::enable()
-  {
-    m_enabled = true;
+  bool result = m_enabled;
+  m_enabled = false;
+  return result;
+}
 
-    if (!m_timer->isActive()){
-      m_timer->start(m_msec);
+openstudio::path PathWatcher::path() const
+{
+  return m_path;
+}
+
+bool PathWatcher::dirty() const
+{
+  return m_dirty;
+}
+
+void PathWatcher::clearState()
+{
+  m_exists = openstudio::filesystem::exists(m_path);
+  m_dirty = false;
+  m_checksum = openstudio::checksum(m_path);
+}
+
+void PathWatcher::onPathAdded()
+{
+}
+
+void PathWatcher::onPathChanged()
+{
+}
+
+void PathWatcher::onPathRemoved()
+{
+}
+
+void PathWatcher::directoryChanged(const QString & path)
+{
+  bool exists = openstudio::filesystem::exists(m_path);
+
+  if (m_exists && exists){
+
+    // regular change
+    m_dirty = true;
+
+    if (m_enabled){
+      onPathChanged();
     }
-  }
 
-  bool PathWatcher::disable()
-  {
-    if (m_timer->isActive()){
-      m_timer->stop();
+  }else if (m_exists && !exists){
+
+    // used to exist, now does not
+    m_exists = exists;
+    m_dirty = true;
+
+    if (m_enabled){
+      onPathRemoved();
     }
 
-    bool result = m_enabled;
-    m_enabled = false;
-    return result;
+  }else if (!m_exists && exists){
+
+    // did not exist, now does
+    m_exists = exists;
+    m_dirty = true;
+
+    if (m_enabled){
+      onPathAdded();
+    }
+
+  }else{
+    // should never get this
+  }
+}
+
+void PathWatcher::fileChanged(const QString & path)
+{
+  checkFile();
+}
+
+void PathWatcher::checkFile()
+{
+  bool exists = openstudio::filesystem::exists(m_path);
+  std::string checksum = openstudio::checksum(m_path);
+
+  if (checksum == "00000000"){
+    exists = false;
   }
 
-  openstudio::path PathWatcher::path() const
-  {
-    return m_path;
-  }
+  if (m_exists && exists){
 
-  bool PathWatcher::dirty() const
-  {
-    return m_dirty;
-  }
-
-  void PathWatcher::clearState()
-  {
-    m_exists = openstudio::filesystem::exists(m_path);
-    m_dirty = false;
-    m_checksum = openstudio::checksum(m_path);
-  }
-
-  void PathWatcher::onPathAdded()
-  {
-  }
-
-  void PathWatcher::onPathChanged()
-  {
-  }
-
-  void PathWatcher::onPathRemoved()
-  {
-  }
-
-  void PathWatcher::directoryChanged(const QString & path)
-  {
-    bool exists = openstudio::filesystem::exists(m_path);
-
-    if (m_exists && exists){
+    // first check checksum
+    if (checksum != m_checksum){
+      m_dirty = true;
+      m_checksum = checksum;
 
       // regular change
-      m_dirty = true;
-
       if (m_enabled){
         onPathChanged();
       }
-
-    }else if (m_exists && !exists){
-
-      // used to exist, now does not
-      m_exists = exists;
-      m_dirty = true;
-
-      if (m_enabled){
-        onPathRemoved();
-      }
-
-    }else if (!m_exists && exists){
-
-      // did not exist, now does
-      m_exists = exists;
-      m_dirty = true;
-
-      if (m_enabled){
-        onPathAdded();
-      }
-
-    }else{
-      // should never get this
-    }
-  }
-
-  void PathWatcher::fileChanged(const QString & path)
-  {
-    checkFile();
-  }
-
-  void PathWatcher::checkFile()
-  {
-    bool exists = openstudio::filesystem::exists(m_path);
-    std::string checksum = openstudio::checksum(m_path);
-
-    if (checksum == "00000000"){
-      exists = false;
     }
 
-    if (m_exists && exists){
+  }else if (m_exists && !exists){
 
-      // first check checksum
-      if (checksum != m_checksum){
-        m_dirty = true;
-        m_checksum = checksum;
+    // used to exist, now does not
+    m_dirty = true;
+    m_exists = exists;
+    m_checksum = openstudio::checksum(m_path);
 
-        // regular change
-        if (m_enabled){
-          onPathChanged();
-        }
-      }
-
-    }else if (m_exists && !exists){
-
-      // used to exist, now does not
-      m_dirty = true;
-      m_exists = exists;
-      m_checksum = openstudio::checksum(m_path);
-
-      if (m_enabled){
-        onPathRemoved();
-      }
-
-    }else if (!m_exists && exists){
-
-      // did not exist, now does
-      m_dirty = true;
-      m_exists = exists;
-      m_checksum = openstudio::checksum(m_path);
-
-      if (m_enabled){
-        onPathAdded();
-      }
-
-    }else{
-      // !m_exists && !exists
-      // no change
+    if (m_enabled){
+      onPathRemoved();
     }
-  }
 
+  }else if (!m_exists && exists){
+
+    // did not exist, now does
+    m_dirty = true;
+    m_exists = exists;
+    m_checksum = openstudio::checksum(m_path);
+
+    if (m_enabled){
+      onPathAdded();
+    }
+
+  }else{
+    // !m_exists && !exists
+    // no change
+  }
 }

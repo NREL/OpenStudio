@@ -34,142 +34,139 @@
 #include <cmath>
 #include <nano/nano_signal_slot.hpp>
 
-namespace openstudio{
+/// constructor
+OSProgressBar::OSProgressBar(QWidget* parent)
+{
+  // make sure a QApplication exists
+  openstudio::Application::instance().application(true);
 
-  /// constructor
-  OSProgressBar::OSProgressBar(QWidget* parent)
-  {
-    // make sure a QApplication exists
-    openstudio::Application::instance().application(true);
+  // create a QProgressBar
+  m_impl = std::shared_ptr<QProgressBar>(new QProgressBar(parent));
 
-    // create a QProgressBar
-    m_impl = std::shared_ptr<QProgressBar>(new QProgressBar(parent));
-
-    // if no parent assume we want this visible
-    if (parent == nullptr){
-      m_impl->setVisible(true);
-    }
-
-    updatePercentage();
+  // if no parent assume we want this visible
+  if (parent == nullptr){
+    m_impl->setVisible(true);
   }
 
-  /// constructor
-  OSProgressBar::OSProgressBar(bool visible, QWidget* parent)
-  {
-    // make sure a QApplication exists
-    openstudio::Application::instance().application(true);
+  updatePercentage();
+}
 
-    // create a QProgressBar
-    m_impl = std::shared_ptr<QProgressBar>(new QProgressBar(parent));
+/// constructor
+OSProgressBar::OSProgressBar(bool visible, QWidget* parent)
+{
+  // make sure a QApplication exists
+  openstudio::Application::instance().application(true);
 
-    // set visibility
-    m_impl->setVisible(visible);
+  // create a QProgressBar
+  m_impl = std::shared_ptr<QProgressBar>(new QProgressBar(parent));
 
-    updatePercentage();
-  }
+  // set visibility
+  m_impl->setVisible(visible);
 
-  /// constructor from impl
-  //OSProgressBar::OSProgressBar(const std::shared_ptr<QProgressBar>& impl)
-  //  : m_impl(impl), m_percentage(0.0)
-  //{}
+  updatePercentage();
+}
 
-  /// virtual destructor
-  OSProgressBar::~OSProgressBar()
-  {
-    m_impl->setVisible(false);
-  }
+/// constructor from impl
+//OSProgressBar::OSProgressBar(const std::shared_ptr<QProgressBar>& impl)
+//  : m_impl(impl), m_percentage(0.0)
+//{}
 
-  /// get min
-  int OSProgressBar::minimum() const
-  {
-    return m_impl->minimum();
-  }
+/// virtual destructor
+OSProgressBar::~OSProgressBar()
+{
+  m_impl->setVisible(false);
+}
 
-  /// set min
-  void OSProgressBar::setMinimum(int min)
-  {
-    m_impl->setMinimum(min);
-    updatePercentage();
-  }
+/// get min
+int OSProgressBar::minimum() const
+{
+  return m_impl->minimum();
+}
 
-  /// get max
-  int OSProgressBar::maximum() const
-  {
-    return m_impl->maximum();
-  }
+/// set min
+void OSProgressBar::setMinimum(int min)
+{
+  m_impl->setMinimum(min);
+  updatePercentage();
+}
 
-  /// set max
-  void OSProgressBar::setMaximum(int max)
-  {
-    m_impl->setMaximum(max);
-    updatePercentage();
-  }
+/// get max
+int OSProgressBar::maximum() const
+{
+  return m_impl->maximum();
+}
 
-  /// get value
-  int OSProgressBar::value() const
-  {
-    return m_impl->value();
-  }
+/// set max
+void OSProgressBar::setMaximum(int max)
+{
+  m_impl->setMaximum(max);
+  updatePercentage();
+}
 
-  /// get the window title
-  std::string OSProgressBar::windowTitle() const
-  {
-    return toString(m_impl->windowTitle());
-  }
+/// get value
+int OSProgressBar::value() const
+{
+  return m_impl->value();
+}
 
-  /// set the window title
-  void OSProgressBar::setWindowTitle(const std::string& title)
-  {
-    this->setWindowTitle(toQString(title));
-  }
+/// get the window title
+std::string OSProgressBar::windowTitle() const
+{
+  return openstudio::toString(m_impl->windowTitle());
+}
 
-  /// get the text
-  std::string OSProgressBar::text() const
-  {
-    return toString(m_impl->text());
-  }
+/// set the window title
+void OSProgressBar::setWindowTitle(const std::string& title)
+{
+  this->setWindowTitle(openstudio::toQString(title));
+}
 
-  /// get if visible
-  bool OSProgressBar::isVisible() const
-  {
-    return m_impl->isVisible();
-  }
+/// get the text
+std::string OSProgressBar::text() const
+{
+  return openstudio::toString(m_impl->text());
+}
 
-  /// set if visible
-  void OSProgressBar::setVisible(bool visible)
-  {
-    m_impl->setVisible(visible);
-  }
+/// get if visible
+bool OSProgressBar::isVisible() const
+{
+  return m_impl->isVisible();
+}
 
-  /// virtual method called every time progressUpdated fires
-  void OSProgressBar::onPercentageUpdated(double percentage)
-  {
-  }
+/// set if visible
+void OSProgressBar::setVisible(bool visible)
+{
+  m_impl->setVisible(visible);
+}
 
-  /// set range
-  void OSProgressBar::setRange(int min, int max)
-  {
-    m_impl->setMinimum(min);
-    m_impl->setMaximum(max);
-    updatePercentage();
-  }
+/// virtual method called every time progressUpdated fires
+void OSProgressBar::onPercentageUpdated(double percentage)
+{
+}
 
-  /// set value
-  void OSProgressBar::setValue(int value)
-  {
-    m_impl->setValue(value);
-    updatePercentage();
-  }
+/// set range
+void OSProgressBar::setRange(int min, int max)
+{
+  m_impl->setMinimum(min);
+  m_impl->setMaximum(max);
+  updatePercentage();
+}
 
-  /// set window title
-  void OSProgressBar::setWindowTitle(const QString& windowTitle)
-  {
-    m_impl->setWindowTitle(windowTitle);
-  }
+/// set value
+void OSProgressBar::setValue(int value)
+{
+  m_impl->setValue(value);
+  updatePercentage();
+}
 
-  //std::shared_ptr<QProgressBar> OSProgressBar::impl() const
-  //{
-  //  return m_impl;
-  //}
+/// set window title
+void OSProgressBar::setWindowTitle(const QString& windowTitle)
+{
+  m_impl->setWindowTitle(windowTitle);
+}
 
-} // openstudio
+//std::shared_ptr<QProgressBar> OSProgressBar::impl() const
+//{
+//  return m_impl;
+//}
+

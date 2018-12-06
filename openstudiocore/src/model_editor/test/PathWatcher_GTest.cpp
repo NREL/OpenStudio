@@ -47,7 +47,7 @@ using openstudio::toPath;
 using openstudio::Application;
 using openstudio::System;
 
-struct TestPathWatcher : public openstudio::PathWatcher{
+struct TestPathWatcher : public PathWatcher{
 
   // set periodic timer to 1 ms
   TestPathWatcher(const openstudio::path& path)
