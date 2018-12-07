@@ -95,6 +95,18 @@
     bool close(){return $self->close(); }
     void raise(){$self->raise(); }
     void lower(){$self->lower(); }
+
+    bool isActiveWindow() const {return $self->isActiveWindow(); }
+    void activateWindow() {$self->activateWindow(); }
+    bool isEnabled() const {return $self->isEnabled(); }
+    void setEnabled(bool enabled) {$self->setEnabled(enabled); }
+    bool isFullScreen() const {return $self->isFullScreen(); }
+    bool isHidden() const {return $self->isHidden(); }
+    bool isMaximized() const {return $self->isMaximized(); }
+    bool isMinimized() const {return $self->isMinimized(); }
+    bool isModal() const {return $self->isModal(); }
+    bool isVisible() const {return $self->isVisible(); }
+    void setVisible(bool visible) {$self->setVisible(visible); }
 };
 
 %feature("director") ModelObjectSelectorDialogWatcher;
