@@ -39,7 +39,6 @@
 #include <OpenStudio.hxx>
 
 #include <QSettings>
-#include <QRegularExpression>
 
 #include <boost/regex.hpp>
 #include <boost/algorithm/string/replace.hpp>
