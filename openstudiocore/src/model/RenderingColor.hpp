@@ -42,6 +42,19 @@ namespace detail {
 
 } // detail
 
+class MODEL_API ColorRGB {
+public:
+  /// Integer components of RGB color from 0-255
+  ColorRGB(int r, int g, int b);
+  int red() const;
+  int green() const;
+  int blue() const;
+private:
+  int m_red;
+  int m_green;
+  int m_blue;
+};
+
 /** RenderingColor is a ResourceObject that wraps the OpenStudio IDD object 'OS_Rendering_Color'. */
 class MODEL_API RenderingColor : public ResourceObject {
  public:
@@ -58,8 +71,7 @@ class MODEL_API RenderingColor : public ResourceObject {
   /** @name Static Methods */
   //@{
 
-  /// Returns length 3 vector of ints representing red, green, blue in range 0-256
-  static std::vector<int> randomColor();
+  static ColorRGB randomColor();
 
   static IddObjectType iddObjectType();
 
