@@ -35,12 +35,10 @@
   using namespace openstudio::model;
 
   // to be ignored
-  class QAction;
   class QDomNode;
   class QDomElement;
   class QDomDocument;
   class QNetworkAccessManager;
-  class QThread;
   namespace openstudio{
     class ProgressBar;
     class UpdateManager;
@@ -56,12 +54,10 @@
 %include <model_editor/Qt.i>
 
 // it seems that SWIG tries to create conversions of QObjects to these
-%ignore QAction;
 %ignore QDomNode;
 %ignore QDomElement;
 %ignore QDomDocument;
 %ignore QNetworkAccessManager;
-%ignore QThread;
 %ignore openstudio::UpdateManager;
 %ignore openstudio::IdfObjectWatcher;
 %ignore openstudio::BCL;

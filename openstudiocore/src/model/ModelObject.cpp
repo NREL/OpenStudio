@@ -951,42 +951,6 @@ namespace detail {
     return boost::optional<unsigned>();
   }
 
-
-  // void ModelObject_Impl::requestProperties(const QStringList& names)
-  // {
-  //   QVariantMap properties;
-
-  //   QStringList::const_iterator it = names.begin();
-  //   QStringList::const_iterator itend = names.end();
-  //   for (; it != itend; ++it){
-  //     QVariant value = QObject::property(it->toStdString().c_str());
-  //     if (value.isNull() || !value.isValid()){
-  //       LOG(Warn, "ModelObject of type '" << this->iddObjectType().valueName() << "' does not have property '" << it->toStdString() << "'");
-  //     }
-  //     properties.insert(*it, value);
-  //   }
-  //   this->reportProperties.nano_emit(properties);
-  // }
-
-  // void ModelObject_Impl::setProperties(const QVariantMap& properties)
-  // {
-  //   bool anyFailures = false;
-
-  //   QVariantMap::const_iterator it = properties.begin();
-  //   QVariantMap::const_iterator itend = properties.end();
-  //   for (; it != itend; ++it){
-  //     bool test = QObject::setProperty(it.key().toStdString().c_str(), it.value());
-  //     if (!test){
-  //       anyFailures = true;
-  //       LOG(Warn, "Failed to set property '" << it.key().toStdString() << "' for ModelObject of type '" << this->iddObjectType().valueName() << "'");
-  //     }
-  //   }
-
-  //   if (anyFailures){
-  //     this->onChange.nano_emit();
-  //   }
-  // }
-
   ModelObject ModelObject_Impl::clone(Model model) const
   {
     WorkspaceObjectVector result;

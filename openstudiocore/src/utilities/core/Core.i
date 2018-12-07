@@ -17,7 +17,6 @@
   #include <utilities/math/FloatCompare.hpp>
 
   #include <OpenStudio.hxx>
-  #include <QAction>
 %}
 
 #if defined(SWIGJAVA)

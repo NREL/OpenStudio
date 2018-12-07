@@ -11,7 +11,6 @@
   #include <utilities/bcl/LocalBCL.hpp>
   #include <utilities/bcl/RemoteBCL.hpp>
   #include <utilities/core/FileReference.hpp>
-  #include <QAction>
   #include <utilities/plot/ProgressBar.hpp>
   #include <utilities/core/UpdateManager.hpp>
 %}

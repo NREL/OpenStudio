@@ -34,7 +34,6 @@
 #include "../core/Macro.hpp"
 #include "../core/String.hpp"
 
-#include <QProgressBar>
 #include <nano/nano_signal_slot.hpp>
 
 #include <memory>

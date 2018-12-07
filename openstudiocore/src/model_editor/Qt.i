@@ -195,12 +195,7 @@ class QApplication : public QCoreApplication
 
 //class QFont{};
 
-//%nodefaultctor QAction;
-//class QAction : public QObject
-//{};
-
-//class QDomNode
-//{};
+//class QDomNode{};
 
 //class QDomElement : public QDomNode
 //{};

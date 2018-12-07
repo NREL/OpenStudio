@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ResourceObject.hpp"
 
-class QColor;
-
 namespace openstudio {
 namespace model {
 
@@ -60,7 +58,8 @@ class MODEL_API RenderingColor : public ResourceObject {
   /** @name Static Methods */
   //@{
 
-  static QColor randomColor();
+  /// Returns length 3 vector of ints representing red, green, blue in range 0-256
+  static std::vector<int> randomColor();
 
   static IddObjectType iddObjectType();
 
