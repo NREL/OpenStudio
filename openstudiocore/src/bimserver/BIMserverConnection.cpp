@@ -857,9 +857,8 @@ namespace bimserver {
       if (m_operationDone) {
         return true;
       }
-
-      // this calls process events
-      System::msleep(msecPerLoop);
+      
+      Application::instance().processEvents(msecPerLoop);
 
       if (current > numTries) {
         LOG(Error, "waitForLock timeout");

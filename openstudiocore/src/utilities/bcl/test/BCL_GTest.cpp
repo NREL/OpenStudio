@@ -41,6 +41,7 @@ using namespace openstudio;
 
 TEST_F(BCLFixture, LocalBCL_AuthKey)
 {
+  FAIL() << "LocalBCL::setProdAuthKey currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
   EXPECT_TRUE(LocalBCL::instance().setProdAuthKey(defaultProdAuthKey));
   EXPECT_EQ(defaultProdAuthKey, LocalBCL::instance().prodAuthKey());
 
@@ -51,6 +52,7 @@ TEST_F(BCLFixture, LocalBCL_AuthKey)
 
 TEST_F(BCLFixture, RemoteBCLTest)
 {
+  FAIL() << "RemoteBCL currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
   RemoteBCL remoteBCL;
 
   // set temporary production auth key
@@ -201,6 +203,8 @@ TEST_F(BCLFixture, RemoteBCLTest)
 
 TEST_F(BCLFixture, RemoteBCLTest2)
 {
+  FAIL() << "RemoteBCL currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
+
   time_t startTime;
   time(&startTime);
 
@@ -302,6 +306,8 @@ TEST_F(BCLFixture, RemoteBCLTest2)
 
 TEST_F(BCLFixture, GetComponentByUID)
 {
+  FAIL() << "RemoteBCL currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
+
   std::string uid = "c2c40a00-5ea5-0130-aa1d-14109fdf0b37";
   std::string versionId = "0c316887-63ef-45a3-a132-3b0a1c566b77";
 
@@ -335,6 +341,8 @@ TEST_F(BCLFixture, GetComponentByUID)
 
 TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
 {
+  FAIL() << "RemoteBCL currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
+
   RemoteBCL remoteBCL;
 
   typedef std::pair<std::string, uint> PairType;

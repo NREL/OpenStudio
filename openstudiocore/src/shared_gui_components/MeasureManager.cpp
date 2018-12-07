@@ -126,8 +126,7 @@ void MeasureManager::waitForStarted(int msec)
     if (error == QNetworkReply::NoError){
       success = true;
     } else{
-      // this calls process events
-      System::msleep(msecPerLoop);
+      Application::instance().processEvents(msecPerLoop);
     }
 
     ++current;

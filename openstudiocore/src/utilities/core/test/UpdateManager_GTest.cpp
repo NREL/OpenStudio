@@ -42,10 +42,11 @@ namespace openstudio
 
   TEST(UpdateManager, GeneralTest)
   {
-    FAIL() << "UpdateManager currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager if replaced";
+    FAIL() << "UpdateManager currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
     UpdateManager manager("GTest");
     EXPECT_EQ("GTest", manager.appName());
     while (!manager.finished()){
+      // DLM: no longer calls Application::instance().processEvents(msecPerLoop);
       System::msleep(100);
     }
     EXPECT_TRUE(manager.finished());
@@ -54,11 +55,12 @@ namespace openstudio
 
   TEST(UpdateManager, ExpandedTest)
   {
-    FAIL() << "UpdateManager currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager if replaced";
+    FAIL() << "UpdateManager currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
     std::string url = "https://www.openstudio.net/updateGTest.html?app=GTest&version=0.0.0";
     UpdateManager manager("GTest", url);
     EXPECT_EQ("GTest", manager.appName());
     while (!manager.finished()){
+      // DLM: no longer calls Application::instance().processEvents(msecPerLoop);
       System::msleep(100);
     }
     EXPECT_TRUE(manager.finished());

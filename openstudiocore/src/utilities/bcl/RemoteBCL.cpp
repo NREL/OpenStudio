@@ -874,6 +874,7 @@ namespace openstudio{
         return true;
       }
 
+      // DLM: no longer calls Application::instance().processEvents(msecPerLoop);
       // this calls process events
       System::msleep(msecPerLoop);
 

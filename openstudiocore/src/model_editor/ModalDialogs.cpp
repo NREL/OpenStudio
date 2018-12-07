@@ -349,8 +349,7 @@ void ensureThermalZone(openstudio::model::Space& space)
     ModelObjectSelectorDialogWatcher watcher(dialog);
 
     while (!watcher.isSelectionFinal()){
-      // msleep calls processEvents
-      openstudio::System::msleep(1);
+      Application::instance().processEvents(1);
     }
 
     selectedModelObject = watcher.selectedModelObject();
@@ -435,8 +434,7 @@ void ensureSpaceLoadDefinition(openstudio::model::SpaceLoadInstance& instance)
     ModelObjectSelectorDialogWatcher watcher(dialog);
 
     while (!watcher.isSelectionFinal()){
-      // msleep calls processEvents
-      openstudio::System::msleep(1);
+      Application::instance().processEvents(1);
     }
 
     boost::optional<ModelObject> selectedModelObject = watcher.selectedModelObject();
