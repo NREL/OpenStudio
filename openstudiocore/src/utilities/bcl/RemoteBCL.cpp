@@ -936,7 +936,6 @@ namespace openstudio{
         LOG(Error, "Network Error: Host " << remoteUrl() << " not found");
       }else if (reply->error() == QNetworkReply::UnknownNetworkError && reply->errorString().startsWith("Error creating SSL context")){
         LOG(Error, "Network Error: Unable to create SSL connection.  Verify that SSL libraries are in the system path.");
-        //QMessageBox::warning(0, "Unable to Create SSL Connection", "Verify that SSL libraries are in the system path");
       }else{
         LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << " - " << reply->errorString().toStdString());
       }

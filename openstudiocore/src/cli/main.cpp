@@ -27,9 +27,6 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <QByteArray>
-#include <QtPlugin>
-
 #include "RubyInterpreter.hpp"
 #include "GC_Value.hpp"
 #include "InitMacros.hxx"

@@ -83,8 +83,6 @@
 
 #include <OpenStudio.hxx>
 
-#include <QMessageBox>
-
 
 namespace openstudio {
 namespace model {

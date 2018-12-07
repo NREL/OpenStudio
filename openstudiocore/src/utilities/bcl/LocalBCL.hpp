@@ -39,7 +39,6 @@
 
 struct sqlite3;
 
-class QSqlDatabase;
 class QWidget;
 
 namespace openstudio{
