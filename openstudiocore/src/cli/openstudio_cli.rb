@@ -30,8 +30,6 @@
 
 require 'openstudio'
 
-OpenStudio::Application::instance().application(false)
-
 #File.open('E:\test\test.log', 'w') do |f|
 #  ENV.each_key {|k| f.puts "#{k} = #{ENV[k]}" }
 #end

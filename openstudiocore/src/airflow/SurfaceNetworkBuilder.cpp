@@ -43,6 +43,8 @@
 
 #include <thread>
 
+#include <QVector>
+
 namespace openstudio {
 namespace airflow {
 

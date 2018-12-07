@@ -28,8 +28,10 @@
 ***********************************************************************************************************************/
 
 #include "NetworkProxyDialog.hpp"
+
+#include "../model_editor/Application.hpp"
+
 #include "../utilities/core/String.hpp"
-#include "../utilities/core/Application.hpp"
 
 #include <QLineEdit>
 #include <QComboBox>

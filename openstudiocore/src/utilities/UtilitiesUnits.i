@@ -33,7 +33,6 @@
   namespace openstudio{}
   using namespace openstudio;
 
-  #include <utilities/core/Application.hpp>
   #include <utilities/idf/IdfObject.hpp>
   #include <utilities/idf/WorkspaceObject.hpp>
 

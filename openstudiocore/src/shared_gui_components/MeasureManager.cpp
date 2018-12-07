@@ -37,11 +37,12 @@
 #include "BuildingComponentDialog.hpp"
 #include "OSDialog.hpp"
 
+#include "../model_editor/Application.hpp"
+
 #include "../measure/OSArgument.hpp"
 
 #include "../model/Model.hpp"
 
-#include "../utilities/core/Application.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/RubyException.hpp"

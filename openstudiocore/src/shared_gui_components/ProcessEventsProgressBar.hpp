@@ -30,14 +30,14 @@
 #ifndef SHAREDGUICOMPONENTS_PROCESSEVENTSPROGRESSBAR_HPP
 #define SHAREDGUICOMPONENTS_PROCESSEVENTSPROGRESSBAR_HPP
 
-#include "../utilities/plot/ProgressBar.hpp"
+#include "../model_editor/OSProgressBar.hpp"
 
 namespace openstudio {
 
 
 // uses the progress bar interface in energy plus and version translators
 // to call process events
-class ProcessEventsProgressBar : public openstudio::ProgressBar
+class ProcessEventsProgressBar : public OSProgressBar
 {
 public:
   ProcessEventsProgressBar();

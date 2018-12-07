@@ -52,7 +52,6 @@
 //#include "../runmanager/lib/RubyJobUtils.hpp"
 //#include "../runmanager/lib/RunManager.hpp"
 
-#include "../utilities/core/Application.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/sql/SqlFile.hpp"
@@ -60,9 +59,9 @@
 
 #include "../shared_gui_components/WorkflowTools.hpp"
 
-
-
 #include "../energyplus/ForwardTranslator.hpp"
+
+#include "../model_editor/Application.hpp"
 
 #include <QButtonGroup>
 #include <QDir>

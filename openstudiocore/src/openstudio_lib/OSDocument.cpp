@@ -80,7 +80,6 @@
 #include "../utilities/bcl/BCLComponent.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/bcl/RemoteBCL.hpp"
-#include "../utilities/core/Application.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Checksum.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -104,6 +103,8 @@
 
 //#include "../runmanager/lib/WorkItem.hpp"
 
+#include "../model_editor/Application.hpp"
+
 #include <OpenStudio.hxx>
 
 #include "../energyplus/ForwardTranslator.hpp"
@@ -122,6 +123,9 @@
 #include <QString>
 #include <QTimer>
 #include <QWidget>
+#include <QIcon>
+#include <QInputDialog>
+#include <QSettings>
 
 #ifdef _WINDOWS
 #include <windows.h>
@@ -1760,11 +1764,42 @@ namespace openstudio {
     m_subTabIds.at(m_verticalId) = id;
   }
 
+  bool prodAuthKeyUserPrompt(QWidget* parent)
+  {
+    // make sure application is initialized
+    Application::instance().application(false);
+
+    QInputDialog inputDlg(parent);
+    inputDlg.setInputMode(QInputDialog::TextInput);
+    inputDlg.setLabelText("BCL Auth Key:                                            ");
+    inputDlg.setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
+    inputDlg.setWindowTitle("Enter Your BCL Auth Key");
+    if (Application::instance().isDefaultInstance())
+    {
+      QIcon icon = QIcon(":/images/os_16.png");
+      icon.addPixmap(QPixmap(":/images/os_32.png"));
+      icon.addPixmap(QPixmap(":/images/os_48.png"));
+      icon.addPixmap(QPixmap(":/images/os_64.png"));
+      icon.addPixmap(QPixmap(":/images/os_128.png"));
+      icon.addPixmap(QPixmap(":/images/os_256.png"));
+      inputDlg.setWindowIcon(icon);
+    }
+    bool result = inputDlg.exec();
+    QString text = inputDlg.textValue();
+
+    if (result && !text.isEmpty()) {
+      std::string authKey = toString(text);
+      result = LocalBCL::instance().setProdAuthKey(authKey);
+    }
+
+    return result;
+  }
+
   void OSDocument::openBclDlg()
   {
     std::string authKey = LocalBCL::instance().prodAuthKey();
     if (!LocalBCL::instance().setProdAuthKey(authKey)){
-      LocalBCL::instance().prodAuthKeyUserPrompt(m_mainWindow);
+      prodAuthKeyUserPrompt(m_mainWindow);
       authKey = LocalBCL::instance().prodAuthKey();
 
       while (!LocalBCL::instance().setProdAuthKey(authKey)){
@@ -1784,7 +1819,7 @@ namespace openstudio {
           return;
         }
         else if (ret == QMessageBox::Retry){
-          LocalBCL::instance().prodAuthKeyUserPrompt(m_mainWindow);
+          prodAuthKeyUserPrompt(m_mainWindow);
           authKey = LocalBCL::instance().prodAuthKey();
         }
         else{
@@ -1835,7 +1870,7 @@ namespace openstudio {
   {
     std::string authKey = LocalBCL::instance().prodAuthKey();
     if (!LocalBCL::instance().setProdAuthKey(authKey)){
-      LocalBCL::instance().prodAuthKeyUserPrompt(m_mainWindow);
+      prodAuthKeyUserPrompt(m_mainWindow);
       authKey = LocalBCL::instance().prodAuthKey();
 
       while (!LocalBCL::instance().setProdAuthKey(authKey)){
@@ -1855,7 +1890,7 @@ namespace openstudio {
           return;
         }
         else if (ret == QMessageBox::Retry){
-          LocalBCL::instance().prodAuthKeyUserPrompt(m_mainWindow);
+          prodAuthKeyUserPrompt(m_mainWindow);
           authKey = LocalBCL::instance().prodAuthKey();
         }
         else{

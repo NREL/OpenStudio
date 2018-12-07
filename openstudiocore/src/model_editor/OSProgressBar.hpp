@@ -27,101 +27,92 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <gtest/gtest.h>
+#ifndef MODELEDITOR_OSProgressBar_HPP
+#define MODELEDITOR_OSProgressBar_HPP
 
-#include "../ProgressBar.hpp"
-#include "../../core/Application.hpp"
-#include "../../core/System.hpp"
-#include "../../idf/Workspace.hpp"
-#include "../../idf/WorkspaceObject.hpp"
-#include "../../idf/IdfObject.hpp"
-#include "../../idd/IddEnums.hpp"
-#include <utilities/idd/IddEnums.hxx>
+#include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/core/Macro.hpp"
+#include "../utilities/core/String.hpp"
 
-using namespace openstudio;
+#include <QProgressBar>
+#include <memory>
 
-///////////////////////////////////////////////////////////////////////////////
-// *** HELPER CLASSES ***
-///////////////////////////////////////////////////////////////////////////////
+class QWidget;
 
+/** OSProgressBar wraps a QProgressBar and provides virtual methods setRange, setValue, and setWindowTitle(QString)
+  *  which may be overridden.
+  *
+  *  OSProgressBar an atypical QObject because it is designed to be stack allocated.  In many cases it
+  *  would be preferred to connect your own heap allocated QObject to the signals directly rather
+  *  than using this convenience class.
+  **/
+class OSProgressBar : public openstudio::ProgressBar {
 
-class ProgressBar2 : public ProgressBar
-{
 public:
-  ProgressBar2()
-    : m_called(false)
-  {}
 
-  virtual void onPercentageUpdated(double percentage) override
-  {
-    m_called = true;
-  }
+  /// constructor
+  OSProgressBar(QWidget* parent = nullptr);
 
-  bool called() const {return m_called;}
+  /// constructor
+  OSProgressBar(bool visible, QWidget* parent = nullptr);
+
+  /// virtual destructor
+  virtual ~OSProgressBar();
+
+  /// get min
+  int minimum() const;
+
+  /// set min
+  void setMinimum(int min);
+
+  /// get max
+  int maximum() const;
+
+  /// set max
+  void setMaximum(int max);
+
+  /// get value
+  int value() const;
+
+  /// get the window title
+  std::string windowTitle() const;
+
+  /// set the window title
+  void setWindowTitle(const std::string& title);
+
+  /// get the text
+  std::string text() const;
+
+  /// get if visible
+  bool isVisible() const;
+
+  /// set if visible
+  void setVisible(bool visible);
+
+  /// virtual method called every time percentageUpdated fires
+  virtual void onPercentageUpdated(double percentage);
+
+// public slots:
+
+  /// set range
+  void setRange(int min, int max);
+
+  /// set value
+  void setValue(int value);
+
+  /// set window title
+  void setWindowTitle(const QString& windowTitle);
+
+protected:
+
+  /// return the impl
+  //std::shared_ptr<QProgressBar> impl() const;
 
 private:
-  bool m_called;
+  /// impl
+  std::shared_ptr<QProgressBar> m_impl;
+
 };
 
-///////////////////////////////////////////////////////////////////////////////
-// *** BEGIN TESTS ***
-///////////////////////////////////////////////////////////////////////////////
 
-TEST(ProgressBar, BasicTest)
-{
-  if (!Application::instance().hasApplication()){
-    Application::instance().application(true);
-  }
-  if (Application::instance().hasGUI()){
-    ProgressBar pb;
-    for (int i = 0; i <= 100; ++i){
-      pb.setValue(i);
-      EXPECT_EQ(i, pb.value());
-      System::msleep(10);
-    }
-  }
-}
-
-TEST(ProgressBar, AdvancedTest)
-{
-  if (!Application::instance().hasApplication()){
-    Application::instance().application(true);
-  }
-  if (Application::instance().hasGUI()){
-    ProgressBar pb1;
-    ProgressBar pb2;
-    ProgressBar pb3;
-
-    for (unsigned i = 0; i <= 100; ++i){
-      pb1.setValue(i);
-      pb2.setValue(100 - i);
-      pb3.setValue((10 * i) % 100);
-      System::msleep(10);
-    }
-  }
-}
-
-TEST(ProgressBar, WorkspaceTest)
-{
-  if (!Application::instance().hasApplication()){
-    Application::instance().application(true);
-  }
-  if (Application::instance().hasGUI()){
-    ProgressBar2 pb;
-    EXPECT_FALSE(pb.called());
-
-    StrictnessLevel level(StrictnessLevel::Draft);
-    IddFileType fileType(IddFileType::EnergyPlus);
-    Workspace workspace(level, fileType);
-    workspace.connectProgressBar(pb);
-
-    IdfObjectVector objects;
-    objects.push_back(IdfObject(IddObjectType::Zone));
-    workspace.addObjects(objects);
-
-    System::msleep(10);
-
-    EXPECT_TRUE(pb.called());
-  }
-}
-
+#endif //MODELEDITOR_OSProgressBar_HPP

@@ -30,7 +30,6 @@
 #include <gtest/gtest.h>
 
 #include "../UpdateManager.hpp"
-#include "../Application.hpp"
 #include "../System.hpp"
 #include <OpenStudio.hxx>
 
@@ -43,6 +42,7 @@ namespace openstudio
 
   TEST(UpdateManager, GeneralTest)
   {
+    FAIL() << "UpdateManager currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager if replaced";
     UpdateManager manager("GTest");
     EXPECT_EQ("GTest", manager.appName());
     while (!manager.finished()){
@@ -54,6 +54,7 @@ namespace openstudio
 
   TEST(UpdateManager, ExpandedTest)
   {
+    FAIL() << "UpdateManager currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager if replaced";
     std::string url = "https://www.openstudio.net/updateGTest.html?app=GTest&version=0.0.0";
     UpdateManager manager("GTest", url);
     EXPECT_EQ("GTest", manager.appName());

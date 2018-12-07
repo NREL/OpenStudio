@@ -7,8 +7,6 @@
 
 %feature("director") ProgressBar;
 
-%ignore ProgressBar(const std::shared_ptr<QProgressBar>& impl);
-
 %ignore percentageUpdated;
 
 %include <utilities/plot/ProgressBar.hpp>

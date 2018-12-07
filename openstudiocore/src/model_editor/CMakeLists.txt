@@ -8,6 +8,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # lib files
 set(${target_name}_src
+  Application.hpp
+  Application.cpp
   BridgeClasses.hpp
   BridgeClasses.cpp
   ClassViewWidget.hpp
@@ -28,6 +30,10 @@ set(${target_name}_src
   modeltest.cpp
   ObjectExplorer.hpp
   ObjectExplorer.cpp
+  OSProgressBar.hpp
+  OSProgressBar.cpp
+  PathWatcher.hpp
+  PathWatcher.cpp
   tablemodel.h
   tablemodel.cpp
   TableView.hpp
@@ -65,6 +71,7 @@ set(${target_name}_moc
   ModalDialogs.hpp
   ModelExplorer.hpp
   ObjectExplorer.hpp
+  PathWatcher.hpp
   tablemodel.h
   TableView.hpp
   TableWidget.hpp
@@ -141,6 +148,9 @@ set(${target_name}_static_depends
 
 target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
+target_compile_definitions(${target_name} PUBLIC model_editor_EXPORTS)
+target_compile_definitions(${target_name}_static PUBLIC model_editor_EXPORTS)
+
 #if(NOT APPLE)
 #  install(TARGETS ${target_name}
 #    RUNTIME DESTINATION bin
@@ -153,6 +163,7 @@ set(${target_name}_test_src
   test/ModelEditorFixture.cpp
   test/InspectorDialog_GTest.cpp
   test/ModalDialogs_GTest.cpp
+  test/PathWatcher_GTest.cpp
 )
 
 set(${target_name}_test_depends
@@ -172,6 +183,7 @@ endif()
 # lib swig files
 set(${target_name}_swig_src
   ModelEditor.i
+  Qt.i
 )
 
 set(swig_target_name ${target_name}_static)

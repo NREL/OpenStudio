@@ -38,9 +38,6 @@
 
 #include "../utilities/core/Optional.hpp"
 
-// #include <QVariant>
-// #include <QStringList>
-
 namespace openstudio {
 
 class Attribute;
@@ -260,10 +257,6 @@ namespace detail {
     // Nano::Signal<void(const QVariantMap&)> reportProperties;
 
     //@}
-
-    // void requestProperties(const QStringList& names);
-
-    // bool setProperties(const QVariantMap& properties);
 
     /** Gets the autosized component value from the sql file **/
     boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString) const;

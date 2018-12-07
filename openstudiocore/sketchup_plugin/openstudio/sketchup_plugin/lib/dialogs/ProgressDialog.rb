@@ -28,7 +28,7 @@
 
 module OpenStudio
 
-  class ProgressDialog < ProgressBar
+  class ProgressDialog < Modeleditor::OSProgressBar
 
     def initialize(message)
       super(false)

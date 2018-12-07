@@ -29,7 +29,6 @@
 
 #include "LocalBCL.hpp"
 #include "RemoteBCL.hpp"
-#include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 #include "../core/PathHelpers.hpp"
 #include "../core/System.hpp"
@@ -100,8 +99,9 @@ namespace openstudio{
     m_numResultsPerQuery(10),
     m_apiVersion("2.0")
   {
+    // TODO: QT-Separation-Move
     // make sure application is initialized
-    openstudio::Application::instance().application(false);
+    //openstudio::Application::instance().application(false);
 
     m_prodAuthKey = LocalBCL::instance().prodAuthKey();
     m_devAuthKey = LocalBCL::instance().devAuthKey();

@@ -12,7 +12,6 @@
 
 %{
   #include <model/ScheduleTypeRegistry.hpp>
-  #include <QColor>
   #include <utilities/data/TimeSeries.hpp>
   #include <utilities/sql/SqlFile.hpp>
 %}

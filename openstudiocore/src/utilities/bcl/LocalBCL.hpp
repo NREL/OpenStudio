@@ -39,8 +39,6 @@
 
 struct sqlite3;
 
-class QWidget;
-
 namespace openstudio{
 
   /// \todo This class is currently a singleton implemented with a first use static
@@ -133,11 +131,6 @@ namespace openstudio{
     /// Search for measures with attributes matching those in searchTerms
     std::vector<BCLMeasure> measureAttributeSearch(const std::vector<std::pair<std::string, std::string> >& searchTerms) const;
 
-    /// Prompt the user for auth key using a modal dialog, this is a blocking call that requires user input.
-    /// If user enters input returns the value of setAuthKey, otherwise returns false
-    bool prodAuthKeyUserPrompt(QWidget* parent = nullptr);
-    bool devAuthKeyUserPrompt(QWidget* parent = nullptr);
-
     /// Return production OAuth key
     std::string prodAuthKey() const;
 
@@ -158,7 +151,6 @@ namespace openstudio{
 
     /// returns the fully qualified path of the current database file
     openstudio::filesystem::path dbPath() const;
-
 
     //@}
   private:

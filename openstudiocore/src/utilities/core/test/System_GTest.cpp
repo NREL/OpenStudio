@@ -53,5 +53,10 @@ TEST(System, ExceptionHandling)
   System::testExceptions3();
   System::testExceptions4();
   System::testExceptions5();
+}
 
+TEST(System, MSleep)
+{
+  // make sure this doesn't timeout
+  System::msleep(10);
 }

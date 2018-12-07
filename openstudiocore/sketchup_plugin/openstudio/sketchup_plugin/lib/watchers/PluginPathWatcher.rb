@@ -28,7 +28,7 @@
 
 module OpenStudio
 
-  class PluginPathWatcher < PathWatcher
+  class PluginPathWatcher < Modeleditor::PathWatcher
 
     def initialize(model_interface, path)
       super(path)
