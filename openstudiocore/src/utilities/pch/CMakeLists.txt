@@ -1,8 +1,8 @@
 # Add PCH support
 
 macro(GCCConfigurePCHFile ARCH)
-  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/PCH.hpp.gcc.in" "${CMAKE_CURRENT_BINARY_DIR}/${ARCH}/PCH.hpp")
-  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/PCH.hpp.gcc.in" "${CMAKE_CURRENT_BINARY_DIR}/${ARCH}/PCH.cpp")
+  CONFIGURE_FILE_WITH_CHECKSUM("${CMAKE_CURRENT_SOURCE_DIR}/PCH.hpp.gcc.in" "${CMAKE_CURRENT_BINARY_DIR}/${ARCH}/PCH.hpp")
+  CONFIGURE_FILE_WITH_CHECKSUM("${CMAKE_CURRENT_SOURCE_DIR}/PCH.hpp.gcc.in" "${CMAKE_CURRENT_BINARY_DIR}/${ARCH}/PCH.cpp")
 endmacro()
 
 macro(GCCAddPCHTarget ARCH)
@@ -55,7 +55,7 @@ if(USE_PCH)
       GCCConfigurePCHFile("")
     endif()
   elseif(MSVC)
-    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/PCH.hpp.msvc.in" "${CMAKE_CURRENT_BINARY_DIR}/PCH.hpp")
+    CONFIGURE_FILE_WITH_CHECKSUM("${CMAKE_CURRENT_SOURCE_DIR}/PCH.hpp.msvc.in" "${CMAKE_CURRENT_BINARY_DIR}/PCH.hpp")
   endif()
 
   if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
