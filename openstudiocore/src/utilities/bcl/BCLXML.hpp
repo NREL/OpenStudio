@@ -96,7 +96,8 @@ namespace openstudio{
     //@{
 
     /// Virtual destructor
-    virtual ~BCLXML();
+    virtual ~BCLXML()
+    {}
 
     //@}
     /** @name Getters */

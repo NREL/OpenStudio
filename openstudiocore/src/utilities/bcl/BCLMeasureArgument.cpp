@@ -31,69 +31,57 @@
 
 #include "../core/Assert.hpp"
 
-#include <QDomDocument>
+#include <pugixml.hpp>
 
 namespace openstudio{
 
-  BCLMeasureArgument::BCLMeasureArgument(const QDomElement& element)
+  BCLMeasureArgument::BCLMeasureArgument(const pugi::xml_node &element)
   {
     // todo: escape name
-    m_name = element.firstChildElement("name").firstChild().nodeValue().toStdString();
+    m_name = element.child("name").text().as_string();
 
-    m_displayName = element.firstChildElement("display_name").firstChild().nodeValue().toStdString();
+    m_displayName = element.child("display_name").text().as_string();
 
-    if (!element.firstChildElement("description").isNull()){
-      m_description = element.firstChildElement("description").firstChild().nodeValue().toStdString();
-    }
+    m_description = element.child("description").text().as_string();
 
-    m_type = element.firstChildElement("type").firstChild().nodeValue().toStdString();
+    m_type = element.child("type").text().as_string();
 
-    if (!element.firstChildElement("units").isNull()){
-      m_units = element.firstChildElement("units").firstChild().nodeValue().toStdString();
-    }
+    m_units = element.child("units").text().as_string();
 
-    QString test = element.firstChildElement("required").firstChild().nodeValue();
+    m_required = false;
+    auto test = element.child("required").text().as_string();
     if (test == "true"){
       m_required = true;
-    } else {
-      m_required = false;
     }
 
-    test = element.firstChildElement("model_dependent").firstChild().nodeValue();
+    m_modelDependent = false;
+    test = element.child("model_dependent").text().as_string();
     if (test == "true"){
       m_modelDependent = true;
-    } else {
-      m_modelDependent = false;
     }
 
-    if (!element.firstChildElement("default_value").isNull()){
-      m_defaultValue = element.firstChildElement("default_value").firstChild().nodeValue().toStdString();
-    }
+    m_defaultValue = element.child("default_value").text().as_string();
 
-    QDomElement choiceElement = element.firstChildElement("choices").firstChildElement("choice");
-    while (!choiceElement.isNull()){
-      if (choiceElement.hasChildNodes()){
-        std::string choiceValue = choiceElement.firstChildElement("value").firstChild().nodeValue().toStdString();
-        m_choiceValues.push_back(choiceValue);
-
-        if (choiceElement.firstChildElement("display_name").isNull()){
-          // DLM: this is technically an invalid file, attempt to fix it here
-          m_choiceDisplayNames.push_back(choiceValue);
-        } else {
-          std::string displayValue = choiceElement.firstChildElement("display_name").firstChild().nodeValue().toStdString();
-          m_choiceDisplayNames.push_back(displayValue);
+    auto subelement = element.child("choices");
+    if (subelement) {
+      for (auto &choiceElement : subelement.children("choice")) {
+        std::string choiceValue = choiceElement.child("value").text().as_string();
+        if(!choiceValue.empty()) { // Not exactly the same test as before, probably needs a better test and/or error reporting
+          m_choiceValues.push_back(choiceValue);
+          auto display_name = choiceElement.child("display_name");
+          if (!display_name) {
+            // DLM: this is technically an invalid file, attempt to fix it here
+            m_choiceDisplayNames.push_back(choiceValue);
+          } else {
+            m_choiceDisplayNames.push_back(display_name.text().as_string());
+          }
         }
       }
-      choiceElement = choiceElement.nextSiblingElement("choice");
     }
 
-    if (!element.firstChildElement("min_value").isNull()){
-      m_minValue = element.firstChildElement("min_value").firstChild().nodeValue().toStdString();
-    }
+    m_minValue = element.child("min_value").text().as_string();
 
-    if (!element.firstChildElement("max_value").isNull()){
-      m_maxValue = element.firstChildElement("max_value").firstChild().nodeValue().toStdString();
-    }
+    m_maxValue = element.child("max_value").text().as_string();
 
   }
 
@@ -178,75 +166,73 @@ namespace openstudio{
     return m_maxValue;
   }
 
-  void BCLMeasureArgument::writeValues(QDomDocument& doc, QDomElement& element) const
+  void BCLMeasureArgument::writeValues(pugi::xml_node &element) const
   {
-    QDomElement nameElement = doc.createElement("name");
-    element.appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode(toQString(m_name)));
+    auto subElement = element.append_child("name");
+    auto text = subElement.text();
+    text.set(m_name.c_str());
 
-    QDomElement displayNameElement = doc.createElement("display_name");
-    element.appendChild(displayNameElement);
-    displayNameElement.appendChild(doc.createTextNode(toQString(m_displayName)));
+    subElement = element.append_child("display_name");
+    text = subElement.text();
+    text.set(m_displayName.c_str());
 
     if (m_description){
-      QDomElement descriptionElement = doc.createElement("description");
-      element.appendChild(descriptionElement);
-      descriptionElement.appendChild(doc.createTextNode(toQString(*m_description)));
+      subElement = element.append_child("description");
+      text = subElement.text();
+      text.set((*m_description).c_str());
     }
 
-    QDomElement typeElement = doc.createElement("type");
-    element.appendChild(typeElement);
-    typeElement.appendChild(doc.createTextNode(toQString(m_type)));
+    subElement = element.append_child("type");
+    text = subElement.text();
+    text.set(m_type.c_str());
 
     if (m_units){
-      QDomElement unitsElement = doc.createElement("units");
-      element.appendChild(unitsElement);
-      unitsElement.appendChild(doc.createTextNode(toQString(*m_units)));
+      subElement = element.append_child("units");
+      text = subElement.text();
+      text.set((*m_units).c_str());
     }
 
-    QDomElement requiredElement = doc.createElement("required");
-    element.appendChild(requiredElement);
-    requiredElement.appendChild(doc.createTextNode(m_required ? "true" : "false"));
+    subElement = element.append_child("required");
+    text = subElement.text();
+    text.set(m_required ? "true" : "false");
 
-    QDomElement modelDependentElement = doc.createElement("model_dependent");
-    element.appendChild(modelDependentElement);
-    modelDependentElement.appendChild(doc.createTextNode(m_modelDependent ? "true" : "false"));
+    subElement = element.append_child("model_dependent");
+    text = subElement.text();
+    text.set(m_modelDependent ? "true" : "false");
 
     if (m_defaultValue){
-      QDomElement defaultValueElement = doc.createElement("default_value");
-      element.appendChild(defaultValueElement);
-      defaultValueElement.appendChild(doc.createTextNode(toQString(*m_defaultValue)));
+      subElement = element.append_child("default_value");
+      text = subElement.text();
+      text.set((*m_defaultValue).c_str());
     }
 
     unsigned n = m_choiceValues.size();
     OS_ASSERT(n == m_choiceDisplayNames.size());
     if (n > 0){
-      QDomElement choicesElement = doc.createElement("choices");
-      element.appendChild(choicesElement);
+      auto choicesElement = element.append_child("choices");
       for (unsigned i = 0; i < n; ++i){
-        QDomElement choiceElement = doc.createElement("choice");
-        choicesElement.appendChild(choiceElement);
+        auto choiceElement = choicesElement.append_child("choice");
 
-        QDomElement valueElement = doc.createElement("value");
-        choiceElement.appendChild(valueElement);
-        valueElement.appendChild(doc.createTextNode(toQString(m_choiceValues[i])));
+        auto valueElement = choiceElement.append_child("value");
+        text = valueElement.text();
+        text.set(m_choiceValues[i].c_str());
 
-        QDomElement displayName2Element = doc.createElement("display_name");
-        choiceElement.appendChild(displayName2Element);
-        displayName2Element.appendChild(doc.createTextNode(toQString(m_choiceDisplayNames[i])));
+        auto displayNameElement = choiceElement.append_child("display_name");
+        text = displayNameElement.text();
+        text.set(m_choiceDisplayNames[i].c_str());
       }
     }
 
     if (m_minValue){
-      QDomElement minValueElement = doc.createElement("min_value");
-      element.appendChild(minValueElement);
-      minValueElement.appendChild(doc.createTextNode(toQString(*m_minValue)));
+      subElement = element.append_child("min_value");
+      text = subElement.text();
+      text.set((*m_minValue).c_str());
     }
 
     if (m_maxValue){
-      QDomElement maxValueElement = doc.createElement("max_value");
-      element.appendChild(maxValueElement);
-      maxValueElement.appendChild(doc.createTextNode(toQString(*m_maxValue)));
+      subElement = element.append_child("max_value");
+      text = subElement.text();
+      text.set((*m_maxValue).c_str());
     }
   }
 
@@ -349,15 +335,11 @@ namespace openstudio{
 
   std::ostream& operator<<(std::ostream& os, const BCLMeasureArgument& argument)
   {
-    QDomDocument doc;
-    QDomElement element = doc.createElement(QString("Argument"));
-    doc.appendChild(element);
-    argument.writeValues(doc, element);
+    pugi::xml_document doc;
+    auto element = doc.append_child("Argument");
+    argument.writeValues(element);
 
-    QString str;
-    QTextStream qts(&str);
-    doc.save(qts, 2);
-    os << str.toStdString();
+    doc.save(os, "  ");
     return os;
   }
 

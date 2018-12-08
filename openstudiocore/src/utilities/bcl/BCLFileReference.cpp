@@ -30,7 +30,7 @@
 #include "BCLFileReference.hpp"
 #include "../core/Checksum.hpp"
 
-#include <QDomDocument>
+#include <pugixml.hpp>
 
 namespace openstudio{
 
@@ -147,49 +147,48 @@ namespace openstudio{
     m_usageType = usageType;
   }
 
-  void BCLFileReference::writeValues(QDomDocument& doc, QDomElement& element) const
+  void BCLFileReference::writeValues(pugi::xml_node &element) const
   {
     if (m_usageType == "script" && !m_softwareProgram.empty() && !m_softwareProgramVersion.empty()){
-      QDomElement versionElement = doc.createElement("version");
-      element.appendChild(versionElement);
+      auto versionElement = element.append_child("version");
 
-      QDomElement softwareProgramElement = doc.createElement("software_program");
-      versionElement.appendChild(softwareProgramElement);
-      softwareProgramElement.appendChild(doc.createTextNode(toQString(m_softwareProgram)));
+      auto subelement = versionElement.append_child("software_program");
+      auto text = subelement.text();
+      text.set(m_softwareProgram.c_str());
 
-      QDomElement softwareProgramVersionElement = doc.createElement("identifier");
-      versionElement.appendChild(softwareProgramVersionElement);
-      softwareProgramVersionElement.appendChild(doc.createTextNode(toQString(m_softwareProgramVersion)));
+      subelement = versionElement.append_child("identifier");
+      text = subelement.text();
+      text.set(m_softwareProgramVersion.c_str());
 
       if (m_minCompatibleVersion){
-        QDomElement minCompatibleVersionElement = doc.createElement("min_compatible");
-        versionElement.appendChild(minCompatibleVersionElement);
-        minCompatibleVersionElement.appendChild(doc.createTextNode(toQString(m_minCompatibleVersion->str())));
+        subelement = versionElement.append_child("min_compatible");
+        text = subelement.text();
+        text.set(m_minCompatibleVersion->str().c_str());
       }
 
       if (m_maxCompatibleVersion){
-        QDomElement maxCompatibleVersionElement = doc.createElement("max_compatible");
-        versionElement.appendChild(maxCompatibleVersionElement);
-        maxCompatibleVersionElement.appendChild(doc.createTextNode(toQString(m_maxCompatibleVersion->str())));
+        subelement = versionElement.append_child("max_compatible");
+        text = subelement.text();
+        text.set(m_maxCompatibleVersion->str().c_str());
       }
 
     }
 
-    QDomElement fileNameElement = doc.createElement("filename");
-    element.appendChild(fileNameElement);
-    fileNameElement.appendChild(doc.createTextNode(toQString(fileName()))); // careful to write out function result instead of member
+    auto subelement = element.append_child("filename");
+    auto text = subelement.text();
+    text.set(fileName().c_str()); // careful to write out function result instead of member
 
-    QDomElement fileTypeElement = doc.createElement("filetype");
-    element.appendChild(fileTypeElement);
-    fileTypeElement.appendChild(doc.createTextNode(toQString(fileType()))); // careful to write out function result instead of member
+    subelement = element.append_child("filetype");
+    text = subelement.text();
+    text.set(fileType().c_str()); // careful to write out function result instead of member
 
-    QDomElement usageTypeElement = doc.createElement("usage_type");
-    element.appendChild(usageTypeElement);
-    usageTypeElement.appendChild(doc.createTextNode(toQString(m_usageType)));
+    subelement = element.append_child("usage_type");
+    text = subelement.text();
+    text.set(m_usageType.c_str());
 
-    QDomElement checksumElement = doc.createElement("checksum");
-    element.appendChild(checksumElement);
-    checksumElement.appendChild(doc.createTextNode(toQString(m_checksum)));
+    subelement = element.append_child("checksum");
+    text = subelement.text();
+    text.set(m_checksum.c_str());
   }
 
   bool BCLFileReference::checkForUpdate()
@@ -204,15 +203,11 @@ namespace openstudio{
 
   std::ostream& operator<<(std::ostream& os, const BCLFileReference& file)
   {
-    QDomDocument doc;
-    QDomElement element = doc.createElement(QString("File"));
-    doc.appendChild(element);
-    file.writeValues(doc, element);
+    pugi::xml_document doc;
+    auto element = doc.append_child("File");
+    file.writeValues(element);
 
-    QString str;
-    QTextStream qts(&str);
-    doc.save(qts, 2);
-    os << str.toStdString();
+    doc.save(os, "  ");
     return os;
   }
 
