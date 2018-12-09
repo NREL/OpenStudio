@@ -583,8 +583,8 @@ namespace bimserver {
     parameters["fileSize"] = QJsonValue(QString::number(openstudio::filesystem::file_size(path)));
     parameters["fileName"] = QJsonValue(openstudio::toQString(path.stem()));
     //encode file into Base64
-    QByteArray fileArray = openstudio::filesystem::read_as_QByteArray(file);
-    QByteArray fileArrayEncoded = fileArray.toBase64();
+    std::vector<char> data = openstudio::filesystem::read(file);
+    QByteArray fileArrayEncoded = QByteArray(data.data(), data.size()).toBase64();
     QString fileEncoded(fileArrayEncoded);
     parameters["data"] = QJsonValue(fileEncoded);
     parameters["merge"] = QJsonValue(false);

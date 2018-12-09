@@ -27,11 +27,11 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include "stdlib.h"
 #include "System.hpp"
 #include "Application.hpp"
 
 #include <boost/thread.hpp>
-
 #include <boost/numeric/ublas/lu.hpp>
 
 
@@ -108,6 +108,37 @@ namespace openstudio{
 
     openstudio::Application::instance().processEvents(); // process any outstanding events
   }
+
+  /// \note not using string_view because we need null terminated strings
+  boost::optional<std::string> System::getenv(const std::string &name) noexcept
+  {
+    const char *ptr = std::getenv(name.c_str());
+    if (ptr) {
+      return std::string{ptr};
+    } else {
+      return {};
+    }
+  }
+
+  /// \note not using string_view because we need null terminated strings
+  void System::setenv(const std::string &name, const std::string &value)
+  {
+#ifdef _WINDOWS
+    if (const auto result = ::_setenv_s(name.c_str(), value.c_str()); result != 0) {
+      throw std::runtime_error("Unable to set environment variable: unknown error");
+    }
+#else
+    if (const auto result = ::setenv(name.c_str(), value.c_str(), 1); result == EINVAL) {
+      throw std::runtime_error("Unable to set environment variable: invalid value: " + name);
+    } else if (result == ENOMEM) {
+      throw std::runtime_error("Unable to set environment variable: insufficient memory");
+    } else if (result != 0) {
+      throw std::runtime_error("Unable to set environment variable: unknown error");
+    }
+#endif
+
+  }
+
 
   unsigned System::numberOfProcessors()
   {

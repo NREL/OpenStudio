@@ -31,6 +31,7 @@
 #include "../core/Checksum.hpp"
 
 #include <QDomDocument>
+#include <QTextStream>
 
 namespace openstudio{
 

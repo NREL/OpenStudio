@@ -42,6 +42,7 @@
 
 
 #include <QDomElement>
+#include <QTextStream>
 
 namespace openstudio {
 namespace detail{
@@ -1406,7 +1407,8 @@ boost::optional<Attribute> Attribute::loadFromXml(const openstudio::path& path)
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       QDomDocument qDomDocument;
-      qDomDocument.setContent(openstudio::filesystem::read_as_QByteArray(file));
+      const auto data = openstudio::filesystem::read(file);
+      qDomDocument.setContent(QByteArray(data.data(), data.size()));
       file.close();
 
       result = Attribute(qDomDocument.documentElement());

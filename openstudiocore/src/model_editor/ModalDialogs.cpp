@@ -81,6 +81,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QIcon>
+#include <QTextStream>
 
 #include <algorithm>
 

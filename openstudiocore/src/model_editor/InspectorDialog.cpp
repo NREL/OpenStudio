@@ -49,6 +49,7 @@
 #include <QIcon>
 #include <QListWidget>
 #include <QTimer>
+#include <QTextStream>
 #include <QStackedWidget>
 #include <QTableWidget>
 #include <QPushButton>
@@ -522,6 +523,9 @@ void InspectorDialog::init(InspectorDialogClient client)
 {
 
   QFile sketchUpPluginPolicy(":/SketchUpPluginPolicy.xml");
+  const auto toVector = [](const auto &data) {
+    return std::vector<char>(data.begin(), data.end());
+  };
 
   switch (client.value()){
     case InspectorDialogClient::AllOpenStudio:
@@ -538,7 +542,7 @@ void InspectorDialog::init(InspectorDialogClient client)
       break;
     case InspectorDialogClient::SketchUpPlugin:
 
-      openstudio::model::AccessPolicyStore::Instance().loadFile(sketchUpPluginPolicy.readAll());
+      openstudio::model::AccessPolicyStore::Instance().loadFile(toVector(sketchUpPluginPolicy.readAll()));
 
       m_iddFile = IddFactory::instance().getIddFile(IddFileType::OpenStudio);
 

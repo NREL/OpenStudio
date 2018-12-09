@@ -29,6 +29,7 @@
 
 #include "Tag.hpp"
 
+#include <QVariant>
 #include "../core/String.hpp"
 
 namespace openstudio {

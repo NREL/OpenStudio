@@ -31,6 +31,9 @@
 
 #include <QStringList>
 
+#include <map>
+#include <vector>
+
 namespace openstudio {
 namespace contam {
 
@@ -92,7 +95,7 @@ bool SimFile::readLfr(QString fileName)
     LOG(Error,"Failed to open LFR file '" << fileName.toStdString() << "'");
     return false;
   }
-  QMap<int,int> nrMap;
+  std::map<int,int> nrMap;
   // Read the header
   std::string headerstr;
   std::getline(file, headerstr);
@@ -143,7 +146,7 @@ bool SimFile::readLfr(QString fileName)
       LOG(Error,"Invalid link number '" << row[2].toStdString() << "'");
       return false;
     }
-    if(!nrMap.contains(nr))
+    if(nrMap.count(nr) == 0)
     {
       int sz = nrMap.size();
       nrMap[nr] = sz;
@@ -178,11 +181,9 @@ bool SimFile::readLfr(QString fileName)
 
   }
   // Unwind the zone number map;
-  QList<int> keys = nrMap.keys();
-  m_pathNr.resize(keys.size());
-  for(int i=0;i<keys.size();i++)
-  {
-    m_pathNr[nrMap[keys[i]]] = keys[i];
+  m_pathNr.resize(nrMap.size());
+  for(const auto &[key, value] : nrMap) {
+    m_pathNr[value] = key;
   }
   file.close();
   // Compute the required date/time objects - this needs to be moved elsewhere if the NCR and NFR are also read
@@ -215,7 +216,7 @@ bool SimFile::readNfr(QString fileName)
     return false;
   }
 
-  QMap<int,int> nrMap;
+  std::map<int,int> nrMap;
   // Read the header
   std::string headerstr;
   std::getline(file, headerstr);
@@ -267,7 +268,7 @@ bool SimFile::readNfr(QString fileName)
       LOG(Error,"Invalid node number '" << row[2].toStdString() << "'");
       return false;
     }
-    if(!nrMap.contains(nr))
+    if(nrMap.count(nr) == 0)
     {
       int sz = nrMap.size();
       nrMap[nr] = sz;
@@ -309,11 +310,9 @@ bool SimFile::readNfr(QString fileName)
 
   }
   // Unwind the zone number map;
-  QList<int> keys = nrMap.keys();
-  m_nodeNr.resize(keys.size());
-  for(int i=0;i<keys.size();i++)
-  {
-    m_nodeNr[nrMap[keys[i]]] = keys[i];
+  m_pathNr.resize(nrMap.size());
+  for(const auto &[key, value] : nrMap) {
+    m_pathNr[value] = key;
   }
   file.close();
   // Something should probably be done here to make sure that the times here match up with what we

@@ -57,7 +57,8 @@ namespace openstudio{
     QDomDocument bclXML("bclXML");
     openstudio::filesystem::ifstream file(m_path);
     if (file.is_open()){
-      bclXML.setContent(openstudio::filesystem::read_as_QByteArray(file));
+      const auto data = openstudio::filesystem::read(file);
+      bclXML.setContent(QByteArray(data.data(), data.size()));
       file.close();
     }else{
       file.close();

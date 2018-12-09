@@ -134,6 +134,7 @@
 
 #include <QDomDocument>
 #include <QDomElement>
+#include <QTextStream>
 
 namespace openstudio {
 namespace sdd {
@@ -176,7 +177,7 @@ namespace sdd {
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()){
         QDomDocument doc;
-        bool ok = doc.setContent(openstudio::filesystem::read_as_QByteArray(file));
+        bool ok = doc.setContent(toQString(openstudio::filesystem::read_as_string(file)));
         file.close();
 
         if (ok) {

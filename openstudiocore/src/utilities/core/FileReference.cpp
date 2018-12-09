@@ -34,6 +34,8 @@
 #include "PathHelpers.hpp"
 #include "../core/FilesystemHelpers.hpp"
 
+#include <QVariant>
+
 
 namespace openstudio {
 

@@ -75,7 +75,8 @@ QVariant loadJSON(const openstudio::path& p) {
   openstudio::filesystem::ifstream file(p, std::ios_base::binary);
   if (file.is_open()) {
     QJsonParseError err;
-    QJsonDocument doc = QJsonDocument::fromJson(openstudio::filesystem::read_as_QByteArray(file), &err);
+    const auto data = openstudio::filesystem::read(file);
+    QJsonDocument doc = QJsonDocument::fromJson(QByteArray(data.data(), data.size()), &err);
     file.close();
     if (err.error) {
       LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(err.errorString()));

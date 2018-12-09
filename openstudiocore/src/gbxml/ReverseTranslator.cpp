@@ -71,6 +71,7 @@
 
 #include <QDomDocument>
 #include <QDomElement>
+#include <QTextStream>
 #include <thread>
 
 namespace openstudio {
@@ -113,8 +114,9 @@ namespace gbxml {
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()) {
+        const auto data = openstudio::filesystem::read(file);
         QDomDocument doc;
-        doc.setContent(openstudio::filesystem::read_as_QByteArray(file));
+        doc.setContent(QByteArray(data.data(), data.size()));
         file.close();
 
         result = this->convert(doc);

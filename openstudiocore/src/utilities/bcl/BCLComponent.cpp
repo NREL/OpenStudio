@@ -46,7 +46,8 @@ namespace openstudio{
     m_directory(dir)
   {
     QDomDocument component("component.xml");
-    component.setContent(openstudio::filesystem::read_as_QByteArray(m_directory / "component.xml"));
+    const auto data = openstudio::filesystem::read(m_directory / "component.xml");
+    component.setContent(QByteArray(data.data(), data.size()));
 
     QDomElement comp = component.firstChildElement("component");
     m_name = comp.firstChildElement("name").firstChild().nodeValue().replace("_", " ")
