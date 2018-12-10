@@ -29,6 +29,8 @@
 
 #include "BIMserverConnection.hpp"
 
+#include "../model_editor/Application.hpp"
+
 #include "../utilities/core/System.hpp"
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
