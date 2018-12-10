@@ -30,6 +30,7 @@
 #include "SimFile.hpp"
 
 #include <QStringList>
+#include <QMap>
 
 namespace openstudio {
 namespace contam {
