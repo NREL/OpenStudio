@@ -53,6 +53,7 @@
 #include <QTableWidget>
 #include <QTimer>
 #include <QTreeView>
+#include <QTextStream>
 
 namespace openstudio {
 

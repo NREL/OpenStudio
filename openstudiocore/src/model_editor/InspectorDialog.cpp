@@ -60,6 +60,7 @@
 #include <QShowEvent>
 #include <QCloseEvent>
 #include <QSettings>
+#include <QTextStream>
 
 using namespace openstudio;
 using namespace openstudio::model;
