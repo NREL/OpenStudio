@@ -42,6 +42,7 @@
 
 
 #include <QDomElement>
+#include <QTextStream>
 
 namespace openstudio {
 namespace detail{
