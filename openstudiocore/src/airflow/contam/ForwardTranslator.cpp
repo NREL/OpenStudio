@@ -62,7 +62,6 @@
 
 #include <airflow/embedded_files.hxx>
 
-#include <QTextStream>
 #include <QList>
 #include <QStringList>
 #include <QMap>

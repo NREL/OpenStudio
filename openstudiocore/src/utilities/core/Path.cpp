@@ -128,9 +128,3 @@ std::string toSystemFilename(const path& p)
 
 } // openstudio
 
-// allow path to be written to QTextStream
-QTextStream& operator<<(QTextStream& qts, const openstudio::path& p)
-{
-  qts << openstudio::toQString(p);
-  return qts;
-}
