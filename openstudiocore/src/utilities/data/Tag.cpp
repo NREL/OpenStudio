@@ -31,6 +31,8 @@
 
 #include "../core/String.hpp"
 
+#include <QVariant>
+
 namespace openstudio {
 
 Tag::Tag(const std::string& name)

@@ -1552,7 +1552,6 @@ namespace openstudio{
 
   boost::optional<std::string> EpwDataPoint::toWthString() const
   {
-    QStringList output;
     std::string date = QString("%1/%2").arg(m_month).arg(m_day).toStdString();
     std::string string = date;
     QString qhms = QString().sprintf("%02d:%02d:00", m_hour, m_minute);
