@@ -87,8 +87,12 @@ std::string Reader::readString()
 
       m_entries.clear();
       for (const auto &s : strs) {
-        if (!s.empty()) {
-          m_entries.push_back(s);
+        std::string s2 = boost::replace_all_copy(s, " ", "");
+        boost::replace_all(s2, "\r", "");
+        boost::replace_all(s2, "\n", "");
+        boost::replace_all(s2, "\t", "");
+        if (!s2.empty()) {
+          m_entries.push_back(s2);
         }
       }
     }
