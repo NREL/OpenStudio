@@ -161,7 +161,6 @@ namespace openstudio{
       }
     }
 
-    //QDomElement fileElement = element.firstChildElement("files").firstChildElement("file");
     subelement = element.child("files");
     if (subelement) {
       for (auto &fileElement : subelement.children("file")) {
@@ -239,7 +238,6 @@ namespace openstudio{
       }
     }
 
-    //QDomElement attributeElement = element.firstChildElement("attributes").firstChildElement("attribute");
     subelement = element.child("attributes");
     if (subelement) {
       for (auto &attributeElement : subelement.children("attribute")) {
@@ -632,7 +630,6 @@ namespace openstudio{
     }
 
     pugi::xml_document doc;
-    //QDomDocument doc;
     //doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
 
     pugi::xml_node docElement;

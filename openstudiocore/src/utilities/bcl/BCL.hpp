@@ -39,8 +39,11 @@
 
 #include <QObject>
 
-class QDomElement;
 class QNetworkReply;
+
+namespace pugi {
+  class xml_node;
+}
 
 namespace openstudio{
 
@@ -48,7 +51,7 @@ namespace openstudio{
   /// A facet is an optional search filter which may be applied to narrow down search results.
   class UTILITIES_API BCLFacet {
   public:
-    BCLFacet(const QDomElement& facetElement);
+    BCLFacet(const pugi::xml_node& facetElement);
 
     /// Field name of the facet to use during meta searches,
     /// e.g. 'construction_type'
@@ -71,7 +74,7 @@ namespace openstudio{
   /// This gives information about a taxonomy term from the taxonomy.
   class UTILITIES_API BCLTaxonomyTerm {
   public:
-    BCLTaxonomyTerm(const QDomElement& taxonomyElement);
+    BCLTaxonomyTerm(const pugi::xml_node& taxonomyElement);
 
     std::string name() const;
     unsigned tid() const;
@@ -86,7 +89,7 @@ namespace openstudio{
   /// This gives information about a single file in a BCL search result.
   class UTILITIES_API BCLFile {
   public:
-    BCLFile(const QDomElement& fileElement);
+    BCLFile(const pugi::xml_node& fileElement);
 
     std::string softwareProgram() const;
     std::string identifier() const;
@@ -113,7 +116,7 @@ namespace openstudio{
   /// This gives information about the provenance of a single file in a BCL search result.
   class UTILITIES_API BCLProvenance {
   public:
-    BCLProvenance(const QDomElement& provenanceElement);
+    BCLProvenance(const pugi::xml_node& provenanceElement);
 
     std::string author() const;
     std::string datetime() const;
@@ -128,7 +131,7 @@ namespace openstudio{
   /// This gives information about a cost in a BCL search result.
   class UTILITIES_API BCLCost {
   public:
-    BCLCost(const QDomElement& costElement);
+    BCLCost(const pugi::xml_node& costElement);
 
     std::string instanceName() const;
     std::string costType() const;
@@ -166,7 +169,7 @@ namespace openstudio{
   class UTILITIES_API BCLMetaSearchResult {
   public:
 
-    BCLMetaSearchResult(const QDomElement& resultElement);
+    BCLMetaSearchResult(const pugi::xml_node& resultElement);
 
     unsigned numResults() const;
     std::vector<BCLFacet> facets() const;
@@ -183,7 +186,7 @@ namespace openstudio{
   /// This gives information about an item in a BCL search result.
   class UTILITIES_API BCLSearchResult {
   public:
-    BCLSearchResult(const QDomElement& componentElement);
+    BCLSearchResult(const pugi::xml_node& componentElement);
 
     std::string name() const;
     std::string uid() const;
