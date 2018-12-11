@@ -41,7 +41,10 @@
 #include <QSettings>
 
 #include <boost/regex.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 #include <src/utilities/embedded_files.hxx>
 
@@ -409,32 +412,41 @@ namespace openstudio{
 
   std::string BCLMeasure::makeClassName(const std::string& name)
   {
-    QString str = toQString(name);
+    std::string str(name);
 
     bool startsWithLetter = false;
     for (int i = 0; i < str.size(); ++i){
-      if (!str[i].isLetterOrNumber()){
+      if (!(isalpha(str[i]) || isdigit(str[i]))){
         str[i] = ' ';
       }else if(i == 0){
-        startsWithLetter = str[i].isLetter();
+        startsWithLetter = isalpha(str[i]);
       }
     }
 
-    QString result;
-    QStringList parts = str.split(' ', QString::SkipEmptyParts);
-    for (QString part : parts) {
-      part[0] = part[0].toUpper();
-      result.append(part);
+    std::string result;
+    std::vector<std::string> parts;
+    boost::split(parts, str, boost::is_any_of(" "));
+    for (auto& part : parts) {
+      boost::replace_all(part, " ", "");
+      boost::replace_all(part, "\n", "");
+      boost::replace_all(part, "\r", "");
+      boost::replace_all(part, "\t", "");
+      if (!part.empty()) {
+        part[0] = toupper(part[0]);
+        result.append(part);
+      }
     }
 
-    if (result.isEmpty()){
-      result = QString("A") + openstudio::toQString(createUUID());
-      result.replace('{',"").replace('}',"").replace('-',"");
+    if (result.empty()){
+      result = std::string("A") + openstudio::toString(createUUID());
+      boost::replace_all(result, "{", "");
+      boost::replace_all(result, "}", "");
+      boost::replace_all(result, "-", "");
     }else if (!startsWithLetter){
-      result.prepend("A");
+      result = std::string("A") + result;
     }
 
-    return result.toStdString();
+    return result;
   }
 
   boost::optional<BCLMeasure> BCLMeasure::load(const openstudio::path& dir)

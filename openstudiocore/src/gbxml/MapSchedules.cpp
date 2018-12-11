@@ -52,7 +52,6 @@
 
 #include <QDomDocument>
 #include <QDomElement>
-#include <QStringList>
 
 namespace openstudio {
 namespace gbxml {
@@ -198,23 +197,25 @@ namespace gbxml {
     for (int i = 0; i < scheduleYearElements.count(); i++){
       QDomElement scheduleYearElement = scheduleYearElements.at(i).toElement();
 
-      QString beginDateString = scheduleYearElement.elementsByTagName("BeginDate").at(0).toElement().text();
-      QStringList beginDateParts = beginDateString.split('-'); // 2011-01-01
+      std::string beginDateString = scheduleYearElement.elementsByTagName("BeginDate").at(0).toElement().text().toStdString();
+      std::vector<std::string> beginDateParts;
+      boost::split(beginDateParts, beginDateString, boost::is_any_of("-")); // 2011-01-01
       OS_ASSERT(beginDateParts.size() == 3);
-      yd.setCalendarYear(beginDateParts.at(0).toInt());
-      openstudio::Date beginDate = yd.makeDate(beginDateParts.at(1).toInt(), beginDateParts.at(2).toInt());
+      yd.setCalendarYear(std::stoi(beginDateParts[0]));
+      openstudio::Date beginDate = yd.makeDate(std::stoi(beginDateParts[1]), std::stoi(beginDateParts[2]));
 
       // handle case if schedule does not start on 1/1
       if ((i == 0) && (beginDate != yd.makeDate(1,1))){
         OS_ASSERT(false);
       }
 
-      QString endDateString = scheduleYearElement.elementsByTagName("EndDate").at(0).toElement().text();
-      QStringList endDateParts = endDateString.split('-'); // 2011-12-31
+      std::string endDateString = scheduleYearElement.elementsByTagName("EndDate").at(0).toElement().text().toStdString();
+      std::vector<std::string> endDateParts;
+      boost::split(endDateParts, endDateString, boost::is_any_of("-")); // 2011-12-31
       OS_ASSERT(endDateParts.size() == 3);
       OS_ASSERT(yd.calendarYear());
-      OS_ASSERT(yd.calendarYear().get() == endDateParts.at(0).toInt());
-      openstudio::Date endDate = yd.makeDate(endDateParts.at(1).toInt(), endDateParts.at(2).toInt());
+      OS_ASSERT(yd.calendarYear().get() == std::stoi(endDateParts[0]));
+      openstudio::Date endDate = yd.makeDate(std::stoi(endDateParts[1]), std::stoi(endDateParts[2]));
 
       QString weekScheduleId = element.elementsByTagName("WeekScheduleId").at(0).toElement().attribute("weekScheduleIdRef");
 
