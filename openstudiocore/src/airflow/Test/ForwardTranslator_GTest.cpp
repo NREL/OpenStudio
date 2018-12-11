@@ -62,7 +62,6 @@
 #include <resources.hxx>
 
 #include <sstream>
-#include <QVector>
 
 TEST_F(AirflowFixture, ForwardTranslator_exampleModel)
 {
