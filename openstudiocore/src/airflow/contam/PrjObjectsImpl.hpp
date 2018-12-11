@@ -250,7 +250,7 @@ private:
   int m_u_aD;  // units of axial diffusion (I2)
   int m_u_L;  // units of c/d axis limits (I2)
 
-  QVector<PRJFLOAT> m_ic;
+  std::vector<PRJFLOAT> m_ic;
 
 };
 

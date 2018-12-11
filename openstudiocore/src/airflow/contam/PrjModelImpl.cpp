@@ -227,7 +227,7 @@ bool IndexModelImpl::read(Reader &input)
   std::string dct = input.readSection(); // Skip it
   m_unsupported["DuctSegment"] = dct;
   // Section 20: Source/Sinks
-  //m_sourceSinks = input.readSectionVector<SourceSink>(QString("source/sink"));
+  //m_sourceSinks = input.readSectionVector<SourceSink>(std::string("source/sink"));
   std::string css = input.readSection(); // Skip it
   m_unsupported["SourceSink"] = css;
   // Section 21: Occupancy Schedules
@@ -416,12 +416,12 @@ void IndexModelImpl::setDef_flows(const int def_flows)
 
 double IndexModelImpl::def_T() const
 {
-  return m_def_T.toDouble();
+  return FLOAT_NO_CHECK(m_def_T);
 }
 
 bool IndexModelImpl::setDef_T(const double def_T)
 {
-  m_def_T = QString::number(def_T);
+  m_def_T = std::to_string(def_T);
   return true;
 }
 
@@ -449,12 +449,12 @@ void IndexModelImpl::setUdefT(const int udefT)
 
 double IndexModelImpl::rel_N() const
 {
-  return m_rel_N.toDouble();
+  return FLOAT_NO_CHECK(m_rel_N);
 }
 
 bool IndexModelImpl::setRel_N(const double rel_N)
 {
-  m_rel_N = QString::number(rel_N);
+  m_rel_N = std::to_string(rel_N);
   return true;
 }
 
@@ -472,12 +472,12 @@ bool IndexModelImpl::setRel_N(const std::string &rel_N)
 
 double IndexModelImpl::wind_H() const
 {
-  return m_wind_H.toDouble();
+  return FLOAT_NO_CHECK(m_wind_H);
 }
 
 bool IndexModelImpl::setWind_H(const double wind_H)
 {
-  m_wind_H = QString::number(wind_H);
+  m_wind_H = std::to_string(wind_H);
   return true;
 }
 
@@ -505,12 +505,12 @@ void IndexModelImpl::setUwH(const int uwH)
 
 double IndexModelImpl::wind_Ao() const
 {
-  return m_wind_Ao.toDouble();
+  return FLOAT_NO_CHECK(m_wind_Ao);
 }
 
 bool IndexModelImpl::setWind_Ao(const double wind_Ao)
 {
-  m_wind_Ao = QString::number(wind_Ao);
+  m_wind_Ao = std::to_string(wind_Ao);
   return true;
 }
 
@@ -528,12 +528,12 @@ bool IndexModelImpl::setWind_Ao(const std::string &wind_Ao)
 
 double IndexModelImpl::wind_a() const
 {
-  return m_wind_a.toDouble();
+  return FLOAT_NO_CHECK(m_wind_a);
 }
 
 bool IndexModelImpl::setWind_a(const double wind_a)
 {
-  m_wind_a = QString::number(wind_a);
+  m_wind_a = std::to_string(wind_a);
   return true;
 }
 
@@ -551,12 +551,12 @@ bool IndexModelImpl::setWind_a(const std::string &wind_a)
 
 double IndexModelImpl::scale() const
 {
-  return m_scale.toDouble();
+  return FLOAT_NO_CHECK(m_scale);
 }
 
 bool IndexModelImpl::setScale(const double scale)
 {
-  m_scale = QString::number(scale);
+  m_scale = std::to_string(scale);
   return true;
 }
 
@@ -714,12 +714,12 @@ void IndexModelImpl::setWPCdesc(const std::string &WPCdesc)
 
 double IndexModelImpl::X0() const
 {
-  return m_X0.toDouble();
+  return FLOAT_NO_CHECK(m_X0);
 }
 
 bool IndexModelImpl::setX0(const double X0)
 {
-  m_X0 = QString::number(X0);
+  m_X0 = std::to_string(X0);
   return true;
 }
 
@@ -737,12 +737,12 @@ bool IndexModelImpl::setX0(const std::string &X0)
 
 double IndexModelImpl::Y0() const
 {
-  return m_Y0.toDouble();
+  return FLOAT_NO_CHECK(m_Y0);
 }
 
 bool IndexModelImpl::setY0(const double Y0)
 {
-  m_Y0 = QString::number(Y0);
+  m_Y0 = std::to_string(Y0);
   return true;
 }
 
@@ -760,12 +760,12 @@ bool IndexModelImpl::setY0(const std::string &Y0)
 
 double IndexModelImpl::Z0() const
 {
-  return m_Z0.toDouble();
+  return FLOAT_NO_CHECK(m_Z0);
 }
 
 bool IndexModelImpl::setZ0(const double Z0)
 {
-  m_Z0 = QString::number(Z0);
+  m_Z0 = std::to_string(Z0);
   return true;
 }
 
@@ -783,12 +783,12 @@ bool IndexModelImpl::setZ0(const std::string &Z0)
 
 double IndexModelImpl::angle() const
 {
-  return m_angle.toDouble();
+  return FLOAT_NO_CHECK(m_angle);
 }
 
 bool IndexModelImpl::setAngle(const double angle)
 {
-  m_angle = QString::number(angle);
+  m_angle = std::to_string(angle);
   return true;
 }
 
@@ -816,12 +816,12 @@ void IndexModelImpl::setU_XYZ(const int u_XYZ)
 
 double IndexModelImpl::epsPath() const
 {
-  return m_epsPath.toDouble();
+  return FLOAT_NO_CHECK(m_epsPath);
 }
 
 bool IndexModelImpl::setEpsPath(const double epsPath)
 {
-  m_epsPath = QString::number(epsPath);
+  m_epsPath = std::to_string(epsPath);
   return true;
 }
 
@@ -839,12 +839,12 @@ bool IndexModelImpl::setEpsPath(const std::string &epsPath)
 
 double IndexModelImpl::epsSpcs() const
 {
-  return m_epsSpcs.toDouble();
+  return FLOAT_NO_CHECK(m_epsSpcs);
 }
 
 bool IndexModelImpl::setEpsSpcs(const double epsSpcs)
 {
-  m_epsSpcs = QString::number(epsSpcs);
+  m_epsSpcs = std::to_string(epsSpcs);
   return true;
 }
 
@@ -922,12 +922,12 @@ void IndexModelImpl::setWpctrig(const int wpctrig)
 
 double IndexModelImpl::latd() const
 {
-  return m_latd.toDouble();
+  return FLOAT_NO_CHECK(m_latd);
 }
 
 bool IndexModelImpl::setLatd(const double latd)
 {
-  m_latd = QString::number(latd);
+  m_latd = std::to_string(latd);
   return true;
 }
 
@@ -945,12 +945,12 @@ bool IndexModelImpl::setLatd(const std::string &latd)
 
 double IndexModelImpl::lgtd() const
 {
-  return m_lgtd.toDouble();
+  return FLOAT_NO_CHECK(m_lgtd);
 }
 
 bool IndexModelImpl::setLgtd(const double lgtd)
 {
-  m_lgtd = QString::number(lgtd);
+  m_lgtd = std::to_string(lgtd);
   return true;
 }
 
@@ -968,12 +968,12 @@ bool IndexModelImpl::setLgtd(const std::string &lgtd)
 
 double IndexModelImpl::Tznr() const
 {
-  return m_Tznr.toDouble();
+  return FLOAT_NO_CHECK(m_Tznr);
 }
 
 bool IndexModelImpl::setTznr(const double Tznr)
 {
-  m_Tznr = QString::number(Tznr);
+  m_Tznr = std::to_string(Tznr);
   return true;
 }
 
@@ -991,12 +991,12 @@ bool IndexModelImpl::setTznr(const std::string &Tznr)
 
 double IndexModelImpl::altd() const
 {
-  return m_altd.toDouble();
+  return FLOAT_NO_CHECK(m_altd);
 }
 
 bool IndexModelImpl::setAltd(const double altd)
 {
-  m_altd = QString::number(altd);
+  m_altd = std::to_string(altd);
   return true;
 }
 
@@ -1014,12 +1014,12 @@ bool IndexModelImpl::setAltd(const std::string &altd)
 
 double IndexModelImpl::Tgrnd() const
 {
-  return m_Tgrnd.toDouble();
+  return FLOAT_NO_CHECK(m_Tgrnd);
 }
 
 bool IndexModelImpl::setTgrnd(const double Tgrnd)
 {
-  m_Tgrnd = QString::number(Tgrnd);
+  m_Tgrnd = std::to_string(Tgrnd);
   return true;
 }
 
@@ -1218,17 +1218,14 @@ void IndexModelImpl::readZoneIc(Reader &input)
     unsigned int nctm = contaminants().size();
     if(nn != nctm*m_zones.size())
     {
-      QString mesg("Mismatch between number of zones, contaminants, and initial conditions");
-      LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
+      LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator", "Mismatch between number of zones, contaminants, and initial conditions");
     }
     for(unsigned int i=0;i<m_zones.size();i++)
     {
       unsigned int nr = input.readUInt();
       if(nr != i+1)
       {
-        QString mesg = QString("Mismatch between zone IC number and zone number at line %1 ")
-          .arg(input.lineNumber());
-        LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
+        LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator", "Mismatch between zone IC number and zone number at line " << input.lineNumber());
       }
       std::vector<std::string> ic;
       for(unsigned int j=0;j<nctm;j++)

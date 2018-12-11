@@ -111,10 +111,9 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
   EXPECT_EQ(2,systemZoneCount);
   EXPECT_EQ(4,interiorZoneCount);
   // 26 Paths
-  QVector<double> interiorMult, exteriorRoofMult, exteriorWallMult;
-  interiorMult << 9 << 21 << 30;
-  exteriorRoofMult << 30 << 70 << 136;
-  exteriorWallMult << 9 << 21 << 24 << 30 << 51;
+  std::vector<double> interiorMult({ 9, 21, 30 });
+  std::vector<double> exteriorRoofMult({ 30, 70, 136 });
+  std::vector<double> exteriorWallMult({ 9, 21, 24, 30, 51 });
   EXPECT_EQ(26,prjModel->airflowPaths().size());
   int exhaustPathCount=0;
   int systemPathCount=0;
@@ -128,9 +127,9 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
     } else if(afp.windPressure()) {
       // This should be an exterior flow path
       if(afp.pe() == 5) {
-        EXPECT_TRUE(exteriorWallMult.contains(afp.mult()));
+        EXPECT_FALSE(std::find(exteriorWallMult.begin(), exteriorWallMult.end(), afp.mult()) == exteriorWallMult.end());
       } else {
-        EXPECT_TRUE(exteriorRoofMult.contains(afp.mult()));
+        EXPECT_FALSE(std::find(exteriorRoofMult.begin(), exteriorRoofMult.end(), afp.mult()) == exteriorRoofMult.end());
       }
       windPressurePathCount++;
     } else if(afp.exhaust()) {
@@ -141,7 +140,7 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
       recirculationPathCount++;
     } else {
       // This is an interior flow path
-      EXPECT_TRUE(interiorMult.contains(afp.mult()));
+      EXPECT_FALSE(std::find(interiorMult.begin(), interiorMult.end(), afp.mult()) == interiorMult.end());
       plainPathCount++;
     }
   }
@@ -153,9 +152,8 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
   EXPECT_EQ(1,exhaustPathCount);
 
   // Check out the zones using the zone map
-  QVector<std::string> zoneNames;
-  zoneNames << "Library Zone" << "Office 1 Zone" << "Office 2 Zone" << "Hallway Zone";
-  QMap<std::string,int> exteriorWallCount;
+  std::vector<std::string> zoneNames({ "Library Zone", "Office 1 Zone", "Office 2 Zone", "Hallway Zone" });
+  std::map<std::string,int> exteriorWallCount;
   exteriorWallCount["Library Zone"] = 4;
   exteriorWallCount["Office 1 Zone"] = 3;
   exteriorWallCount["Office 2 Zone"] = 3;
@@ -168,7 +166,7 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
   EXPECT_EQ(6,exteriorFlowPaths.size());
 
   for(const openstudio::model::ThermalZone& thermalZone : model.getConcreteModelObjects<openstudio::model::ThermalZone>()) {
-    ASSERT_TRUE(zoneNames.contains(thermalZone.name().get()));
+    ASSERT_FALSE(std::find(zoneNames.begin(), zoneNames.end(), thermalZone.name().get()) == zoneNames.end());
     unsigned zoneNumber = zoneMap[thermalZone.handle()];
     ASSERT_TRUE(zoneNumber > 0);
     ASSERT_TRUE(zoneNumber <= prjModel->zones().size());
