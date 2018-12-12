@@ -80,7 +80,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
           zoneName = thermalZone->nameString();
           zone = thermalZone;
         } else if (zoneName != thermalZone->nameString()) {
-          LOG(Error, modelObject.briefDescription() << " controls SubSurfaces in multiple zones");
+          LOG(Warn, modelObject.briefDescription() << " controls SubSurfaces in multiple zones");
         }
       } else {
         LOG(Error, "Cannot find ThermalZone for " << subSurface.briefDescription() << " referencing " << modelObject.briefDescription());
