@@ -54,7 +54,26 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_GettersSetters)
+TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_WrongOrderConstructor)
+{
+  model::Model m;
+  model::Schedule availabilitySchedule = m.alwaysOnDiscreteSchedule();
+  model::FanConstantVolume fan(m,availabilitySchedule);
+  model::CoilHeatingWater heatingCoil(m,availabilitySchedule);
+  CoilCoolingWater coolingCoil(m,availabilitySchedule);
+
+  // Takes in cooling coil THEN heating coil
+  ASSERT_THROW(
+    model::ZoneHVACFourPipeFanCoil fpfc( m,
+                                         availabilitySchedule,
+                                         fan,
+                                         heatingCoil,
+                                         coolingCoil ),
+    openstudio::Exception
+  );
+}
+
+TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters)
 {
   model::Model m;
   model::Schedule availabilitySchedule = m.alwaysOnDiscreteSchedule();
@@ -65,8 +84,8 @@ TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_GettersSetters)
   model::ZoneHVACFourPipeFanCoil fpfc( m,
                                        availabilitySchedule,
                                        fan,
-                                       heatingCoil,
-                                       coolingCoil );
+                                       coolingCoil,
+                                       heatingCoil );
 
 
   // Availability Schedule Name:  Object
@@ -153,7 +172,7 @@ TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_GettersSetters)
   EXPECT_EQ(coolingCoil, fpfc.coolingCoil());
   CoilCoolingWater coolingCoil2(m);
   EXPECT_TRUE(fpfc.setCoolingCoil(coolingCoil2));
-  EXPECT_EQ(coolingCoil2, fpfc.coolingCoil());
+  EXPECT_EQ(coolingCoil2.handle(), fpfc.coolingCoil().handle());
 
   // Maximum Cold Water Flow Rate: Optional Double
   // No Default
@@ -215,25 +234,25 @@ TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_GettersSetters)
 
   // Supply Air Fan Operating Mode Schedule Name: Optional Object
   // No Default
-  EXPECT_FALSE(fpfc.supplyAirFanOperatingModelSchedule());
+  EXPECT_FALSE(fpfc.supplyAirFanOperatingModeSchedule());
   ScheduleCompact sch_op(m);
-  EXPECT_TRUE(fpfc.setSupplyAirFanOperatingModelSchedule(sch_op));
-  ASSERT_TRUE(fpfc.supplyAirFanOperatingModelSchedule());
-  EXPECT_EQ(sch_op, fpfc.supplyAirFanOperatingModelSchedule().get());
+  EXPECT_TRUE(fpfc.setSupplyAirFanOperatingModeSchedule(sch_op));
+  ASSERT_TRUE(fpfc.supplyAirFanOperatingModeSchedule());
+  EXPECT_EQ(sch_op, fpfc.supplyAirFanOperatingModeSchedule().get());
 
 
   // Minimum Supply Air Temperature in Cooling Mode: Optional Double
   // No Default
-  EXPECT_TRUE(fpfc.setMinimumSupplyAirTemperatureinCoolingMode(1.0));
-  ASSERT_TRUE(fpfc.minimumSupplyAirTemperatureinCoolingMode());
-  EXPECT_EQ(1.0, fpfc.minimumSupplyAirTemperatureinCoolingMode().get());
+  EXPECT_TRUE(fpfc.setMinimumSupplyAirTemperatureInCoolingMode(1.0));
+  ASSERT_TRUE(fpfc.minimumSupplyAirTemperatureInCoolingMode());
+  EXPECT_EQ(1.0, fpfc.minimumSupplyAirTemperatureInCoolingMode().get());
 
 
   // Maximum Supply Air Temperature in Heating Mode: Optional Double
   // No Default
-  EXPECT_TRUE(fpfc.setMaximumSupplyAirTemperatureinHeatingMode(1.0));
-  ASSERT_TRUE(fpfc.maximumSupplyAirTemperatureinHeatingMode());
-  EXPECT_EQ(1.0, fpfc.maximumSupplyAirTemperatureinHeatingMode().get());
+  EXPECT_TRUE(fpfc.setMaximumSupplyAirTemperatureInHeatingMode(1.0));
+  ASSERT_TRUE(fpfc.maximumSupplyAirTemperatureInHeatingMode());
+  EXPECT_EQ(1.0, fpfc.maximumSupplyAirTemperatureInHeatingMode().get());
 
 }
 
@@ -290,8 +309,8 @@ TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_AddRemoveAirLoopHVAC)
   model::ZoneHVACFourPipeFanCoil fpfc( m,
                                        availabilitySchedule,
                                        fan,
-                                       heatingCoil,
-                                       coolingCoil );
+                                       coolingCoil,
+                                       heatingCoil );
 
   AirLoopHVAC airLoop(m);
   ThermalZone thermalZone(m);

@@ -550,7 +550,15 @@ namespace detail {
 
   bool ZoneHVACFourPipeFanCoil_Impl::setHeatingCoil( HVACComponent & heatingCoil )
   {
-    return setPointer(OS_ZoneHVAC_FourPipeFanCoilFields::HeatingCoilName,heatingCoil.handle());
+    bool result = false;
+
+    // Only accept if type is allowed
+    if ( ( heatingCoil.iddObjectType() == IddObjectType::OS_Coil_Heating_Water ) ||
+         ( heatingCoil.iddObjectType() == IddObjectType::OS_Coil_Heating_Electric ) ) {
+      result = setPointer(OS_ZoneHVAC_FourPipeFanCoilFields::HeatingCoilName, heatingCoil.handle());
+    }
+
+    return result;
   }
 
   bool ZoneHVACFourPipeFanCoil_Impl::setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate) {
@@ -863,10 +871,24 @@ ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(const Model& model,
 
   resetOutdoorAirSchedule();
   setOutdoorAirMixerObjectType("OutdoorAir:Mixer");
-  setSupplyAirFan(supplyAirFan);
-  setHeatingCoil(heatingCoil);
-  setCoolingCoil(coolingCoil);
-
+  ok = setSupplyAirFan(supplyAirFan);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s supply air fan to "
+                  << supplyAirFan.briefDescription() << ".");
+  }
+  ok = setHeatingCoil(heatingCoil);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s heating coil to "
+                  << heatingCoil.briefDescription() << ".");
+  }
+  ok = setCoolingCoil(coolingCoil);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s cooling coil to "
+                  << coolingCoil.briefDescription() << ".");
+  }
   autosizeMaximumSupplyAirFlowRate();
   autosizeMaximumOutdoorAirFlowRate();
   autosizeMaximumColdWaterFlowRate();
