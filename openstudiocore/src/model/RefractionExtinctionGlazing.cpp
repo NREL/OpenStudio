@@ -311,10 +311,6 @@ RefractionExtinctionGlazing::RefractionExtinctionGlazing(const Model& model,
 {
   OS_ASSERT(getImpl<detail::RefractionExtinctionGlazing_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //bool ok = true;
-  //ok = setHandle();
-  //OS_ASSERT(ok);
   bool ok = this->setThickness(thickness);
   OS_ASSERT(ok);
   ok = this->setSolarIndexofRefraction(solarIndexofRefraction);

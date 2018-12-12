@@ -113,6 +113,7 @@ class MODEL_API RadianceParameters : public ModelObject {
 
   bool isKlemsSamplingDensityDefaulted() const;
 
+  // Note JM 2018-12-12: It's a discrete choice field of numbers, perhaps we should return as an int?
   std::string skyDiscretizationResolution() const;
 
   bool isCoarseSettings();
