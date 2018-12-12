@@ -108,16 +108,20 @@ class MODEL_API Blind : public ShadingMaterial {
 
   double slatBeamVisibleTransmittance() const;
 
+  // TODO: has a default, should be double, not optional double
   boost::optional<double> frontSideSlatBeamVisibleReflectance() const;
 
+  // TODO: has a default, should be double, not optional double
   boost::optional<double> backSideSlatBeamVisibleReflectance() const;
 
   double slatDiffuseVisibleTransmittance() const;
 
   bool isSlatDiffuseVisibleTransmittanceDefaulted() const;
 
+  // TODO: has a default, should be double, not optional double
   boost::optional<double> frontSideSlatDiffuseVisibleReflectance() const;
 
+  // TODO: has a default, should be double, not optional double
   boost::optional<double> backSideSlatDiffuseVisibleReflectance() const;
 
   double slatInfraredHemisphericalTransmittance() const;

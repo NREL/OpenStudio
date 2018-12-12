@@ -34,508 +34,251 @@
 #include "../Blind.hpp"
 #include "../Blind_Impl.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,Blind_SlatWidth_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getSlatWidth(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(blind.setSlatWidth(testQ));
-  Quantity q = blind.getSlatWidth(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_SlatSeparation_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getSlatSeparation(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(blind.setSlatSeparation(testQ));
-  Quantity q = blind.getSlatSeparation(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_SlatThickness_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getSlatThickness(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(blind.setSlatThickness(testQ));
-  Quantity q = blind.getSlatThickness(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_SlatAngle_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getSlatAngle(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(blind.setSlatAngle(testQ));
-  Quantity q = blind.getSlatAngle(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_SlatConductivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getSlatConductivity(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(blind.setSlatConductivity(testQ));
-  Quantity q = blind.getSlatConductivity(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_SlatBeamSolarTransmittance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getSlatBeamSolarTransmittance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setSlatBeamSolarTransmittance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setSlatBeamSolarTransmittance(testQ2));
-  Quantity q2 = blind.getSlatBeamSolarTransmittance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-
-}
-
-TEST_F(ModelFixture,Blind_FrontSideSlatBeamSolarReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getFrontSideSlatBeamSolarReflectance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setFrontSideSlatBeamSolarReflectance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setFrontSideSlatBeamSolarReflectance(testQ2));
-  Quantity q2 = blind.getFrontSideSlatBeamSolarReflectance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_BackSideSlatBeamSolarReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getBackSideSlatBeamSolarReflectance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setBackSideSlatBeamSolarReflectance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setBackSideSlatBeamSolarReflectance(testQ2));
-  Quantity q2 = blind.getBackSideSlatBeamSolarReflectance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_SlatDiffuseSolarTransmittance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getSlatDiffuseSolarTransmittance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setSlatDiffuseSolarTransmittance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setSlatDiffuseSolarTransmittance(testQ2));
-  Quantity q2 = blind.getSlatDiffuseSolarTransmittance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_FrontSideSlatDiffuseSolarReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getFrontSideSlatDiffuseSolarReflectance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setFrontSideSlatDiffuseSolarReflectance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setFrontSideSlatDiffuseSolarReflectance(testQ2));
-  Quantity q2 = blind.getFrontSideSlatDiffuseSolarReflectance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_BackSideSlatDiffuseSolarReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getBackSideSlatDiffuseSolarReflectance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setBackSideSlatDiffuseSolarReflectance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setBackSideSlatDiffuseSolarReflectance(testQ2));
-  Quantity q2 = blind.getBackSideSlatDiffuseSolarReflectance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_SlatBeamVisibleTransmittance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getSlatBeamVisibleTransmittance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setSlatBeamVisibleTransmittance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setSlatBeamVisibleTransmittance(testQ2));
-  Quantity q2 = blind.getSlatBeamVisibleTransmittance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_FrontSideSlatBeamVisibleReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getFrontSideSlatBeamVisibleReflectance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setFrontSideSlatBeamVisibleReflectance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setFrontSideSlatBeamVisibleReflectance(testQ2));
-  OSOptionalQuantity q = blind.getFrontSideSlatBeamVisibleReflectance(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value2,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_BackSideSlatBeamVisibleReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getBackSideSlatBeamVisibleReflectance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setBackSideSlatBeamVisibleReflectance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setBackSideSlatBeamVisibleReflectance(testQ2));
-  OSOptionalQuantity q = blind.getBackSideSlatBeamVisibleReflectance(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value2,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_SlatDiffuseVisibleTransmittance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getSlatDiffuseVisibleTransmittance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setSlatDiffuseVisibleTransmittance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setSlatDiffuseVisibleTransmittance(testQ2));
-  Quantity q2 = blind.getSlatDiffuseVisibleTransmittance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_FrontSideSlatDiffuseVisibleReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getFrontSideSlatDiffuseVisibleReflectance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setFrontSideSlatDiffuseVisibleReflectance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setFrontSideSlatDiffuseVisibleReflectance(testQ2));
-  OSOptionalQuantity q = blind.getFrontSideSlatDiffuseVisibleReflectance(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value2,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_BackSideSlatDiffuseVisibleReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getBackSideSlatDiffuseVisibleReflectance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setBackSideSlatDiffuseVisibleReflectance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setBackSideSlatDiffuseVisibleReflectance(testQ2));
-  OSOptionalQuantity q = blind.getBackSideSlatDiffuseVisibleReflectance(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value2,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_SlatInfraredHemisphericalTransmittance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getSlatInfraredHemisphericalTransmittance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setSlatInfraredHemisphericalTransmittance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setSlatInfraredHemisphericalTransmittance(testQ2));
-  Quantity q2 = blind.getSlatInfraredHemisphericalTransmittance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_FrontSideSlatInfraredHemisphericalEmissivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getFrontSideSlatInfraredHemisphericalEmissivity(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setFrontSideSlatInfraredHemisphericalEmissivity(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setFrontSideSlatInfraredHemisphericalEmissivity(testQ2));
-  Quantity q2 = blind.getFrontSideSlatInfraredHemisphericalEmissivity(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_BackSideSlatInfraredHemisphericalEmissivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getBackSideSlatInfraredHemisphericalEmissivity(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(blind.setBackSideSlatInfraredHemisphericalEmissivity(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(blind.setBackSideSlatInfraredHemisphericalEmissivity(testQ2));
-  Quantity q2 = blind.getBackSideSlatInfraredHemisphericalEmissivity(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_BlindtoGlassDistance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getBlindtoGlassDistance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(blind.setBlindtoGlassDistance(testQ));
-  Quantity q = blind.getBlindtoGlassDistance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_BlindTopOpeningMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getBlindTopOpeningMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(blind.setBlindTopOpeningMultiplier(testQ));
-  Quantity q = blind.getBlindTopOpeningMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_BlindBottomOpeningMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getBlindBottomOpeningMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(blind.setBlindBottomOpeningMultiplier(testQ));
-  Quantity q = blind.getBlindBottomOpeningMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_BlindLeftSideOpeningMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getBlindLeftSideOpeningMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(blind.setBlindLeftSideOpeningMultiplier(testQ));
-  Quantity q = blind.getBlindLeftSideOpeningMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_BlindRightSideOpeningMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getBlindRightSideOpeningMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(blind.setBlindRightSideOpeningMultiplier(testQ));
-  Quantity q = blind.getBlindRightSideOpeningMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_MinimumSlatAngle_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getMinimumSlatAngle(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(blind.setMinimumSlatAngle(testQ));
-  Quantity q = blind.getMinimumSlatAngle(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Blind_MaximumSlatAngle_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Blind blind(model);
-
-  Unit units = blind.getMaximumSlatAngle(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(blind.setMaximumSlatAngle(testQ));
-  Quantity q = blind.getMaximumSlatAngle(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+TEST_F(ModelFixture, Blind_GettersSetters) {
+
+  Model m;
+  Blind blind(m);
+
+  // Slat Orientation:  String
+  // Check Idd default: "Horizontal"
+  EXPECT_EQ("Horizontal", blind.slatOrientation());
+  // Test a valid choice
+  EXPECT_TRUE(blind.setSlatOrientation("Vertical"));
+  EXPECT_EQ("Vertical", blind.slatOrientation());
+  // Test an invalid choice
+  EXPECT_FALSE(blind.setSlatOrientation("BadChoice"));
+  EXPECT_EQ("Vertical", blind.slatOrientation());
+
+
+  // Slat Width:  Double
+  // Check Idd default: 0.025
+  EXPECT_EQ(0.025, blind.slatWidth());
+  EXPECT_TRUE(blind.setSlatWidth(0.01));
+  EXPECT_EQ(0.01, blind.slatWidth());
+
+
+  // Slat Separation:  Double
+  // Check Idd default: 0.01875
+  EXPECT_EQ(0.01875, blind.slatSeparation());
+  EXPECT_TRUE(blind.setSlatSeparation(0.01));
+  EXPECT_EQ(0.01, blind.slatSeparation());
+
+
+  // Slat Thickness:  Double
+  // Check Idd default: 0.001
+  EXPECT_EQ(0.001, blind.slatThickness());
+  EXPECT_TRUE(blind.setSlatThickness(0.021));
+  EXPECT_EQ(0.021, blind.slatThickness());
+  blind.resetSlatThickness();
+  EXPECT_EQ(0.001, blind.slatThickness());
+
+
+  // Slat Angle:  Double
+  // Check Idd default: 45
+  EXPECT_EQ(45, blind.slatAngle());
+  EXPECT_TRUE(blind.setSlatAngle(22.5));
+  EXPECT_EQ(22.5, blind.slatAngle());
+  blind.resetSlatAngle();
+  EXPECT_EQ(45, blind.slatAngle());
+
+
+  // Slat Conductivity:  Double
+  // Check Idd default: 221.0
+  EXPECT_EQ(221.0, blind.slatConductivity());
+  EXPECT_TRUE(blind.setSlatConductivity(110.5));
+  EXPECT_EQ(110.5, blind.slatConductivity());
+  blind.resetSlatConductivity();
+  EXPECT_EQ(221.0, blind.slatConductivity());
+
+
+  // Slat Beam Solar Transmittance:  Double
+  // Check Idd default: 0.0
+  EXPECT_EQ(0.0, blind.slatBeamSolarTransmittance());
+  EXPECT_TRUE(blind.setSlatBeamSolarTransmittance(0.35));
+  EXPECT_EQ(0.35, blind.slatBeamSolarTransmittance());
+  blind.resetSlatBeamSolarTransmittance();
+  EXPECT_EQ(0.0, blind.slatBeamSolarTransmittance());
+
+
+  // Front Side Slat Beam Solar Reflectance:  Double
+  // Check Idd default: 0.5
+  EXPECT_EQ(0.5, blind.frontSideSlatBeamSolarReflectance());
+  EXPECT_TRUE(blind.setFrontSideSlatBeamSolarReflectance(0.205));
+  EXPECT_EQ(0.205, blind.frontSideSlatBeamSolarReflectance());
+
+
+  // Back Side Slat Beam Solar Reflectance:  Double
+  // Check Idd default: 0.5
+  EXPECT_EQ(0.5, blind.backSideSlatBeamSolarReflectance());
+  EXPECT_TRUE(blind.setBackSideSlatBeamSolarReflectance(0.105));
+  EXPECT_EQ(0.105, blind.backSideSlatBeamSolarReflectance());
+
+
+  // Slat Diffuse Solar Transmittance:  Double
+  // Check Idd default: 0.0
+  EXPECT_EQ(0.0, blind.slatDiffuseSolarTransmittance());
+  EXPECT_TRUE(blind.setSlatDiffuseSolarTransmittance(0.31));
+  EXPECT_EQ(0.31, blind.slatDiffuseSolarTransmittance());
+
+
+  // Front Side Slat Diffuse Solar Reflectance:  Double
+  // Check Idd default: 0.5
+  EXPECT_EQ(0.5, blind.frontSideSlatDiffuseSolarReflectance());
+  EXPECT_TRUE(blind.setFrontSideSlatDiffuseSolarReflectance(0.225));
+  EXPECT_EQ(0.225, blind.frontSideSlatDiffuseSolarReflectance());
+
+
+  // Back Side Slat Diffuse Solar Reflectance:  Double
+  // Check Idd default: 0.5
+  EXPECT_EQ(0.5, blind.backSideSlatDiffuseSolarReflectance());
+  EXPECT_TRUE(blind.setBackSideSlatDiffuseSolarReflectance(0.336));
+  EXPECT_EQ(0.336, blind.backSideSlatDiffuseSolarReflectance());
+
+
+  // Slat Beam Visible Transmittance:  Double
+  // Check Idd default: 0.0
+  EXPECT_EQ(0.0, blind.slatBeamVisibleTransmittance());
+  EXPECT_TRUE(blind.setSlatBeamVisibleTransmittance(0.112));
+  EXPECT_EQ(0.112, blind.slatBeamVisibleTransmittance());
+
+
+  // Front Side Slat Beam Visible Reflectance:  Double
+  // Check Idd default: 0.5
+  EXPECT_EQ(0.5, blind.frontSideSlatBeamVisibleReflectance());
+  EXPECT_TRUE(blind.setFrontSideSlatBeamVisibleReflectance(0.145));
+  EXPECT_EQ(0.145, blind.frontSideSlatBeamVisibleReflectance());
+  blind.resetFrontSideSlatBeamVisibleReflectance();
+  EXPECT_EQ(0.5, blind.frontSideSlatBeamVisibleReflectance());
+
+
+  // Back Side Slat Beam Visible Reflectance:  Double
+  // Check Idd default: 0.5
+  EXPECT_EQ(0.5, blind.backSideSlatBeamVisibleReflectance());
+  EXPECT_TRUE(blind.setBackSideSlatBeamVisibleReflectance(0.185));
+  EXPECT_EQ(0.185, blind.backSideSlatBeamVisibleReflectance());
+  blind.resetBackSideSlatBeamVisibleReflectance();
+  EXPECT_EQ(0.5, blind.backSideSlatBeamVisibleReflectance());
+
+
+  // Slat Diffuse Visible Transmittance:  Double
+  // Check Idd default: 0.0
+  EXPECT_EQ(0.0, blind.slatDiffuseVisibleTransmittance());
+  EXPECT_TRUE(blind.setSlatDiffuseVisibleTransmittance(0.015));
+  EXPECT_EQ(0.015, blind.slatDiffuseVisibleTransmittance());
+  blind.resetSlatDiffuseVisibleTransmittance();
+  EXPECT_EQ(0.0, blind.slatDiffuseVisibleTransmittance());
+
+
+  // Front Side Slat Diffuse Visible Reflectance:  Double
+  // Check Idd default: 0.5
+  EXPECT_EQ(0.5, blind.frontSideSlatDiffuseVisibleReflectance());
+  EXPECT_TRUE(blind.setFrontSideSlatDiffuseVisibleReflectance(0.055));
+  EXPECT_EQ(0.055, blind.frontSideSlatDiffuseVisibleReflectance());
+  blind.resetFrontSideSlatDiffuseVisibleReflectance();
+  EXPECT_EQ(0.5, blind.frontSideSlatDiffuseVisibleReflectance());
+
+
+  // Back Side Slat Diffuse Visible Reflectance:  Double
+  // Check Idd default: 0.5
+  EXPECT_EQ(0.5, blind.backSideSlatDiffuseVisibleReflectance());
+  EXPECT_TRUE(blind.setBackSideSlatDiffuseVisibleReflectance(0.085));
+  EXPECT_EQ(0.085, blind.backSideSlatDiffuseVisibleReflectance());
+  blind.resetBackSideSlatDiffuseVisibleReflectance();
+  EXPECT_EQ(0.5, blind.backSideSlatDiffuseVisibleReflectance());
+
+
+  // Slat Infrared Hemispherical Transmittance:  Double
+  // Check Idd default: 0.0
+  EXPECT_EQ(0.0, blind.slatInfraredHemisphericalTransmittance());
+  EXPECT_TRUE(blind.setSlatInfraredHemisphericalTransmittance(0.095));
+  EXPECT_EQ(0.095, blind.slatInfraredHemisphericalTransmittance());
+  blind.resetSlatInfraredHemisphericalTransmittance();
+  EXPECT_EQ(0.0, blind.slatInfraredHemisphericalTransmittance());
+
+
+  // Front Side Slat Infrared Hemispherical Emissivity:  Double
+  // Check Idd default: 0.9
+  EXPECT_EQ(0.9, blind.frontSideSlatInfraredHemisphericalEmissivity());
+  EXPECT_TRUE(blind.setFrontSideSlatInfraredHemisphericalEmissivity(0.451));
+  EXPECT_EQ(0.451, blind.frontSideSlatInfraredHemisphericalEmissivity());
+  blind.resetFrontSideSlatInfraredHemisphericalEmissivity();
+  EXPECT_EQ(0.9, blind.frontSideSlatInfraredHemisphericalEmissivity());
+
+
+  // Back Side Slat Infrared Hemispherical Emissivity:  Double
+  // Check Idd default: 0.9
+  EXPECT_EQ(0.9, blind.backSideSlatInfraredHemisphericalEmissivity());
+  EXPECT_TRUE(blind.setBackSideSlatInfraredHemisphericalEmissivity(0.455));
+  EXPECT_EQ(0.455, blind.backSideSlatInfraredHemisphericalEmissivity());
+  blind.resetBackSideSlatInfraredHemisphericalEmissivity();
+  EXPECT_EQ(0.9, blind.backSideSlatInfraredHemisphericalEmissivity());
+
+
+  // Blind to Glass Distance:  Double
+  // Check Idd default: 0.050
+  EXPECT_EQ(0.050, blind.blindtoGlassDistance());
+  EXPECT_TRUE(blind.setBlindtoGlassDistance(0.033));
+  EXPECT_EQ(0.033, blind.blindtoGlassDistance());
+  blind.resetBlindtoGlassDistance();
+  EXPECT_EQ(0.050, blind.blindtoGlassDistance());
+
+
+  // Blind Top Opening Multiplier:  Double
+  // Check Idd default: 0.5
+  EXPECT_EQ(0.5, blind.blindTopOpeningMultiplier());
+  EXPECT_TRUE(blind.setBlindTopOpeningMultiplier(0.259));
+  EXPECT_EQ(0.259, blind.blindTopOpeningMultiplier());
+  blind.resetBlindTopOpeningMultiplier();
+  EXPECT_EQ(0.5, blind.blindTopOpeningMultiplier());
+
+
+  // Blind Bottom Opening Multiplier:  Double
+  // Check Idd default: 0.5
+  EXPECT_EQ(0.5, blind.blindBottomOpeningMultiplier());
+  EXPECT_TRUE(blind.setBlindBottomOpeningMultiplier(0.278));
+  EXPECT_EQ(0.278, blind.blindBottomOpeningMultiplier());
+  blind.resetBlindBottomOpeningMultiplier();
+  EXPECT_EQ(0.5, blind.blindBottomOpeningMultiplier());
+
+
+  // Blind Left Side Opening Multiplier:  Double
+  // Check Idd default: 0.5
+  EXPECT_EQ(0.5, blind.blindLeftSideOpeningMultiplier());
+  EXPECT_TRUE(blind.setBlindLeftSideOpeningMultiplier(0.324));
+  EXPECT_EQ(0.324, blind.blindLeftSideOpeningMultiplier());
+  blind.resetBlindLeftSideOpeningMultiplier();
+  EXPECT_EQ(0.5, blind.blindLeftSideOpeningMultiplier());
+
+
+  // Blind Right Side Opening Multiplier:  Double
+  // Check Idd default: 0.5
+  EXPECT_EQ(0.5, blind.blindRightSideOpeningMultiplier());
+  EXPECT_TRUE(blind.setBlindRightSideOpeningMultiplier(0.165));
+  EXPECT_EQ(0.165, blind.blindRightSideOpeningMultiplier());
+  blind.resetBlindRightSideOpeningMultiplier();
+  EXPECT_EQ(0.5, blind.blindRightSideOpeningMultiplier());
+
+
+  // Minimum Slat Angle:  Double
+  // Check Idd default: 0
+  EXPECT_EQ(0, blind.minimumSlatAngle());
+  EXPECT_TRUE(blind.setMinimumSlatAngle(13.0));
+  EXPECT_EQ(13.0, blind.minimumSlatAngle());
+  blind.resetMinimumSlatAngle();
+  EXPECT_EQ(0, blind.minimumSlatAngle());
+
+
+  // Maximum Slat Angle:  Double
+  // Check Idd default: 180
+  EXPECT_EQ(180, blind.maximumSlatAngle());
+  EXPECT_TRUE(blind.setMaximumSlatAngle(74.0));
+  EXPECT_EQ(74.0, blind.maximumSlatAngle());
+  blind.resetMaximumSlatAngle();
+  EXPECT_EQ(180, blind.maximumSlatAngle());
+
 }
