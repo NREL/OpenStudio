@@ -47,276 +47,196 @@
 #include "../ThermalZone_Impl.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
+#include "../ScheduleCompact.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_MaximumSupplyAirFlowRate_Quantity) {
-  Model model;
-  EXPECT_EQ(0u,model.objects().size());
-  EXPECT_TRUE(model.versionObject());
-  // need schedule
-  ScheduleConstant sched(model);
-  EXPECT_EQ(1u,model.objects().size());
-  sched.setValue(1.0); // Always on
-  // need fan
-  FanConstantVolume fan(model,sched);
-  // need cooling and heating coils
-  CoilCoolingWater coolingCoil(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  // construct object
-  ZoneHVACFourPipeFanCoil zoneHVACFourPipeFanCoil(model,sched,fan,coolingCoil,heatingCoil);
-  EXPECT_EQ(6u,model.objects().size());
+TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_GettersSetters)
+{
+  model::Model m;
+  model::Schedule availabilitySchedule = m.alwaysOnDiscreteSchedule();
+  model::FanConstantVolume fan(m,availabilitySchedule);
+  model::CoilHeatingWater heatingCoil(m,availabilitySchedule);
+  CoilCoolingWater coolingCoil(m,availabilitySchedule);
 
-  Unit units = zoneHVACFourPipeFanCoil.getMaximumSupplyAirFlowRate(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(zoneHVACFourPipeFanCoil.setMaximumSupplyAirFlowRate(testQ));
-  OSOptionalQuantity q = zoneHVACFourPipeFanCoil.getMaximumSupplyAirFlowRate(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  model::ZoneHVACFourPipeFanCoil fpfc( m,
+                                       availabilitySchedule,
+                                       fan,
+                                       heatingCoil,
+                                       coolingCoil );
+
+
+  // Availability Schedule Name:  Object
+  EXPECT_EQ(availabilitySchedule, fpfc.availabilitySchedule());
+  ScheduleCompact sch(m);
+  EXPECT_TRUE(fpfc.setAvailabilitySchedule(sch));
+  EXPECT_EQ(sch, fpfc.availabilitySchedule());
+
+
+  // Capacity Control Method:  String
+  // No Default
+  // Test a valid choice
+  EXPECT_TRUE(fpfc.setCapacityControlMethod("ConstantFanVariableFlow"));
+  EXPECT_EQ("ConstantFanVariableFlow", fpfc.capacityControlMethod());
+  // Test an invalid choice
+  EXPECT_FALSE(fpfc.setCapacityControlMethod("BadChoice"));
+  EXPECT_EQ("ConstantFanVariableFlow", fpfc.capacityControlMethod());
+
+
+  // Maximum Supply Air Flow Rate: Optional Double
+  // No Default
+  EXPECT_TRUE(fpfc.setMaximumSupplyAirFlowRate(10.03));
+  ASSERT_TRUE(fpfc.maximumSupplyAirFlowRate());
+  EXPECT_EQ(10.03, fpfc.maximumSupplyAirFlowRate().get());
+
+
+  // Low Speed Supply Air Flow Ratio:  Double
+  // Check Idd default: 0.33
+  EXPECT_EQ(0.33, fpfc.lowSpeedSupplyAirFlowRatio());
+  EXPECT_TRUE(fpfc.setLowSpeedSupplyAirFlowRatio(0.165));
+  EXPECT_EQ(0.165, fpfc.lowSpeedSupplyAirFlowRatio());
+  fpfc.resetLowSpeedSupplyAirFlowRatio();
+  EXPECT_EQ(0.33, fpfc.lowSpeedSupplyAirFlowRatio());
+
+
+  // Medium Speed Supply Air Flow Ratio:  Double
+  // Check Idd default: 0.66
+  EXPECT_EQ(0.66, fpfc.mediumSpeedSupplyAirFlowRatio());
+  EXPECT_TRUE(fpfc.setMediumSpeedSupplyAirFlowRatio(0.33));
+  EXPECT_EQ(0.33, fpfc.mediumSpeedSupplyAirFlowRatio());
+  fpfc.resetMediumSpeedSupplyAirFlowRatio();
+  EXPECT_EQ(0.66, fpfc.mediumSpeedSupplyAirFlowRatio());
+
+
+  // Maximum Outdoor Air Flow Rate: Optional Double
+  // No Default
+  EXPECT_TRUE(fpfc.setMaximumOutdoorAirFlowRate(10.03));
+  ASSERT_TRUE(fpfc.maximumOutdoorAirFlowRate());
+  EXPECT_EQ(10.03, fpfc.maximumOutdoorAirFlowRate().get());
+
+
+  // Outdoor Air Schedule Name: Optional Object
+  // No Default
+  EXPECT_FALSE(fpfc.outdoorAirSchedule());
+  ScheduleCompact sch_oa(m);
+  EXPECT_TRUE(fpfc.setOutdoorAirSchedule(sch_oa));
+  ASSERT_TRUE(fpfc.outdoorAirSchedule());
+  EXPECT_EQ(sch_oa, fpfc.outdoorAirSchedule().get());
+
+  // Air Inlet Node Name:  Object
+  // Air Outlet Node Name:  Object
+
+  // Outdoor Air Mixer Object Type:  String
+  // No Default
+  // Test a valid choice
+  EXPECT_TRUE(fpfc.setOutdoorAirMixerObjectType("OutdoorAir:Mixer"));
+  EXPECT_EQ("OutdoorAir:Mixer", fpfc.outdoorAirMixerObjectType());
+  // Test an invalid choice
+  EXPECT_FALSE(fpfc.setOutdoorAirMixerObjectType("BadChoice"));
+  EXPECT_EQ("OutdoorAir:Mixer", fpfc.outdoorAirMixerObjectType());
+
+
+  // Outdoor Air Mixer Name:  Object
+
+
+  // Supply Air Fan Name:  Object
+  EXPECT_EQ(fan, fpfc.supplyAirFan());
+  FanConstantVolume fan2(m);
+  EXPECT_TRUE(fpfc.setSupplyAirFan(fan2));
+  EXPECT_EQ(fan2, fpfc.supplyAirFan());
+
+  // Cooling Coil Name:  Object
+  // No Default
+  EXPECT_EQ(coolingCoil, fpfc.coolingCoil());
+  CoilCoolingWater coolingCoil2(m);
+  EXPECT_TRUE(fpfc.setCoolingCoil(coolingCoil2));
+  EXPECT_EQ(coolingCoil2, fpfc.coolingCoil());
+
+  // Maximum Cold Water Flow Rate: Optional Double
+  // No Default
+  EXPECT_TRUE(fpfc.setMaximumColdWaterFlowRate(10.03));
+  ASSERT_TRUE(fpfc.maximumColdWaterFlowRate());
+  EXPECT_EQ(10.03, fpfc.maximumColdWaterFlowRate().get());
+
+
+  // Minimum Cold Water Flow Rate:  Double
+  // Check Idd default: 0.0
+  EXPECT_EQ(0.0, fpfc.minimumColdWaterFlowRate());
+  EXPECT_TRUE(fpfc.setMinimumColdWaterFlowRate(-1.0));
+  EXPECT_EQ(-1.0, fpfc.minimumColdWaterFlowRate());
+  fpfc.resetMinimumColdWaterFlowRate();
+  EXPECT_EQ(0.0, fpfc.minimumColdWaterFlowRate());
+
+
+  // Cooling Convergence Tolerance:  Double
+  // Check Idd default: 0.001
+  EXPECT_EQ(0.001, fpfc.coolingConvergenceTolerance());
+  EXPECT_TRUE(fpfc.setCoolingConvergenceTolerance(0.0005));
+  EXPECT_EQ(0.0005, fpfc.coolingConvergenceTolerance());
+  fpfc.resetCoolingConvergenceTolerance();
+  EXPECT_EQ(0.001, fpfc.coolingConvergenceTolerance());
+
+
+  // Heating Coil Name:  Object
+  // No Default
+  EXPECT_EQ(heatingCoil, fpfc.heatingCoil());
+  CoilHeatingWater heatingCoil2(m);
+  EXPECT_TRUE(fpfc.setHeatingCoil(heatingCoil2));
+  EXPECT_EQ(heatingCoil2, fpfc.heatingCoil());
+
+
+  // Maximum Hot Water Flow Rate: Optional Double
+  // No Default
+  EXPECT_TRUE(fpfc.setMaximumHotWaterFlowRate(10.03));
+  ASSERT_TRUE(fpfc.maximumHotWaterFlowRate());
+  EXPECT_EQ(10.03, fpfc.maximumHotWaterFlowRate().get());
+
+
+  // Minimum Hot Water Flow Rate:  Double
+  // Check Idd default: 0.0
+  EXPECT_EQ(0.0, fpfc.minimumHotWaterFlowRate());
+  EXPECT_TRUE(fpfc.setMinimumHotWaterFlowRate(-1.0));
+  EXPECT_EQ(-1.0, fpfc.minimumHotWaterFlowRate());
+  fpfc.resetMinimumHotWaterFlowRate();
+  EXPECT_EQ(0.0, fpfc.minimumHotWaterFlowRate());
+
+
+  // Heating Convergence Tolerance:  Double
+  // Check Idd default: 0.001
+  EXPECT_EQ(0.001, fpfc.heatingConvergenceTolerance());
+  EXPECT_TRUE(fpfc.setHeatingConvergenceTolerance(0.0005));
+  EXPECT_EQ(0.0005, fpfc.heatingConvergenceTolerance());
+  fpfc.resetHeatingConvergenceTolerance();
+  EXPECT_EQ(0.001, fpfc.heatingConvergenceTolerance());
+
+
+  // Supply Air Fan Operating Mode Schedule Name: Optional Object
+  // No Default
+  EXPECT_FALSE(fpfc.supplyAirFanOperatingModelSchedule());
+  ScheduleCompact sch_op(m);
+  EXPECT_TRUE(fpfc.setSupplyAirFanOperatingModelSchedule(sch_op));
+  ASSERT_TRUE(fpfc.supplyAirFanOperatingModelSchedule());
+  EXPECT_EQ(sch_op, fpfc.supplyAirFanOperatingModelSchedule().get());
+
+
+  // Minimum Supply Air Temperature in Cooling Mode: Optional Double
+  // No Default
+  EXPECT_TRUE(fpfc.setMinimumSupplyAirTemperatureinCoolingMode(1.0));
+  ASSERT_TRUE(fpfc.minimumSupplyAirTemperatureinCoolingMode());
+  EXPECT_EQ(1.0, fpfc.minimumSupplyAirTemperatureinCoolingMode().get());
+
+
+  // Maximum Supply Air Temperature in Heating Mode: Optional Double
+  // No Default
+  EXPECT_TRUE(fpfc.setMaximumSupplyAirTemperatureinHeatingMode(1.0));
+  ASSERT_TRUE(fpfc.maximumSupplyAirTemperatureinHeatingMode());
+  EXPECT_EQ(1.0, fpfc.maximumSupplyAirTemperatureinHeatingMode().get());
+
 }
 
-TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_LowSpeedSupplyAirFlowRatio_Quantity) {
-  Model model;
-  EXPECT_EQ(0u,model.objects().size());
-  EXPECT_TRUE(model.versionObject());
-  // need schedule
-  ScheduleConstant sched(model);
-  EXPECT_EQ(1u,model.objects().size());
-  sched.setValue(1.0); // Always on
-  // need fan
-  FanConstantVolume fan(model,sched);
-  // need cooling and heating coils
-  CoilCoolingWater coolingCoil(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  // construct object
-  ZoneHVACFourPipeFanCoil zoneHVACFourPipeFanCoil(model,sched,fan,coolingCoil,heatingCoil);
-  EXPECT_EQ(6u,model.objects().size());
-
-  Unit units = zoneHVACFourPipeFanCoil.getLowSpeedSupplyAirFlowRatio(true).units(); // Get IP units.
-  double value(0.33);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(zoneHVACFourPipeFanCoil.setLowSpeedSupplyAirFlowRatio(testQ));
-  Quantity q = zoneHVACFourPipeFanCoil.getLowSpeedSupplyAirFlowRatio(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_MediumSpeedSupplyAirFlowRatio_Quantity) {
-  Model model;
-  EXPECT_EQ(0u,model.objects().size());
-  EXPECT_TRUE(model.versionObject());
-  // need schedule
-  ScheduleConstant sched(model);
-  EXPECT_EQ(1u,model.objects().size());
-  sched.setValue(1.0); // Always on
-  // need fan
-  FanConstantVolume fan(model,sched);
-  // need cooling and heating coils
-  CoilCoolingWater coolingCoil(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  // construct object
-  ZoneHVACFourPipeFanCoil zoneHVACFourPipeFanCoil(model,sched,fan,coolingCoil,heatingCoil);
-  EXPECT_EQ(6u,model.objects().size());
-
-  Unit units = zoneHVACFourPipeFanCoil.getMediumSpeedSupplyAirFlowRatio(true).units(); // Get IP units.
-  double value(0.66);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(zoneHVACFourPipeFanCoil.setMediumSpeedSupplyAirFlowRatio(testQ));
-  Quantity q = zoneHVACFourPipeFanCoil.getMediumSpeedSupplyAirFlowRatio(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_MaximumOutdoorAirFlowRate_Quantity) {
-  Model model;
-  EXPECT_EQ(0u,model.objects().size());
-  EXPECT_TRUE(model.versionObject());
-  // need schedule
-  ScheduleConstant sched(model);
-  EXPECT_EQ(1u,model.objects().size());
-  sched.setValue(1.0); // Always on
-  // need fan
-  FanConstantVolume fan(model,sched);
-  // need cooling and heating coils
-  CoilCoolingWater coolingCoil(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  // construct object
-  ZoneHVACFourPipeFanCoil zoneHVACFourPipeFanCoil(model,sched,fan,coolingCoil,heatingCoil);
-  EXPECT_EQ(6u,model.objects().size());
-
-  Unit units = zoneHVACFourPipeFanCoil.getMaximumOutdoorAirFlowRate(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(zoneHVACFourPipeFanCoil.setMaximumOutdoorAirFlowRate(testQ));
-  OSOptionalQuantity q = zoneHVACFourPipeFanCoil.getMaximumOutdoorAirFlowRate(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_MaximumColdWaterFlowRate_Quantity) {
-  Model model;
-  EXPECT_EQ(0u,model.objects().size());
-  EXPECT_TRUE(model.versionObject());
-  // need schedule
-  ScheduleConstant sched(model);
-  EXPECT_EQ(1u,model.objects().size());
-  sched.setValue(1.0); // Always on
-  // need fan
-  FanConstantVolume fan(model,sched);
-  // need cooling and heating coils
-  CoilCoolingWater coolingCoil(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  // construct object
-  ZoneHVACFourPipeFanCoil zoneHVACFourPipeFanCoil(model,sched,fan,coolingCoil,heatingCoil);
-  EXPECT_EQ(6u,model.objects().size());
-
-  Unit units = zoneHVACFourPipeFanCoil.getMaximumColdWaterFlowRate(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(zoneHVACFourPipeFanCoil.setMaximumColdWaterFlowRate(testQ));
-  OSOptionalQuantity q = zoneHVACFourPipeFanCoil.getMaximumColdWaterFlowRate(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_MinimumColdWaterFlowRate_Quantity) {
-  Model model;
-  EXPECT_EQ(0u,model.objects().size());
-  EXPECT_TRUE(model.versionObject());
-  // need schedule
-  ScheduleConstant sched(model);
-  EXPECT_EQ(1u,model.objects().size());
-  sched.setValue(1.0); // Always on
-  // need fan
-  FanConstantVolume fan(model,sched);
-  // need cooling and heating coils
-  CoilCoolingWater coolingCoil(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  // construct object
-  ZoneHVACFourPipeFanCoil zoneHVACFourPipeFanCoil(model,sched,fan,coolingCoil,heatingCoil);
-  EXPECT_EQ(6u,model.objects().size());
-
-  Unit units = zoneHVACFourPipeFanCoil.getMinimumColdWaterFlowRate(true).units(); // Get IP units.
-  double value(0.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(zoneHVACFourPipeFanCoil.setMinimumColdWaterFlowRate(testQ));
-  Quantity q = zoneHVACFourPipeFanCoil.getMinimumColdWaterFlowRate(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_CoolingConvergenceTolerance_Quantity) {
-  Model model;
-  EXPECT_EQ(0u,model.objects().size());
-  EXPECT_TRUE(model.versionObject());
-  // need schedule
-  ScheduleConstant sched(model);
-  EXPECT_EQ(1u,model.objects().size());
-  sched.setValue(1.0); // Always on
-  // need fan
-  FanConstantVolume fan(model,sched);
-  // need cooling and heating coils
-  CoilCoolingWater coolingCoil(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  // construct object
-  ZoneHVACFourPipeFanCoil zoneHVACFourPipeFanCoil(model,sched,fan,coolingCoil,heatingCoil);
-  EXPECT_EQ(6u,model.objects().size());
-
-  Unit units = zoneHVACFourPipeFanCoil.getCoolingConvergenceTolerance(true).units(); // Get IP units.
-  double value(0.001);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(zoneHVACFourPipeFanCoil.setCoolingConvergenceTolerance(testQ));
-  Quantity q = zoneHVACFourPipeFanCoil.getCoolingConvergenceTolerance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_MaximumHotWaterFlowRate_Quantity) {
-  Model model;
-  EXPECT_EQ(0u,model.objects().size());
-  EXPECT_TRUE(model.versionObject());
-  // need schedule
-  ScheduleConstant sched(model);
-  EXPECT_EQ(1u,model.objects().size());
-  sched.setValue(1.0); // Always on
-  // need fan
-  FanConstantVolume fan(model,sched);
-  // need cooling and heating coils
-  CoilCoolingWater coolingCoil(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  // construct object
-  ZoneHVACFourPipeFanCoil zoneHVACFourPipeFanCoil(model,sched,fan,coolingCoil,heatingCoil);
-  EXPECT_EQ(6u,model.objects().size());
-
-  Unit units = zoneHVACFourPipeFanCoil.getMaximumHotWaterFlowRate(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(zoneHVACFourPipeFanCoil.setMaximumHotWaterFlowRate(testQ));
-  OSOptionalQuantity q = zoneHVACFourPipeFanCoil.getMaximumHotWaterFlowRate(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_MinimumHotWaterFlowRate_Quantity) {
-  Model model;
-  EXPECT_EQ(0u,model.objects().size());
-  EXPECT_TRUE(model.versionObject());
-  // need schedule
-  ScheduleConstant sched(model);
-  EXPECT_EQ(1u,model.objects().size());
-  sched.setValue(1.0); // Always on
-  // need fan
-  FanConstantVolume fan(model,sched);
-  // need cooling and heating coils
-  CoilCoolingWater coolingCoil(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  // construct object
-  ZoneHVACFourPipeFanCoil zoneHVACFourPipeFanCoil(model,sched,fan,coolingCoil,heatingCoil);
-  EXPECT_EQ(6u,model.objects().size());
-
-  Unit units = zoneHVACFourPipeFanCoil.getMinimumHotWaterFlowRate(true).units(); // Get IP units.
-  double value(0.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(zoneHVACFourPipeFanCoil.setMinimumHotWaterFlowRate(testQ));
-  Quantity q = zoneHVACFourPipeFanCoil.getMinimumHotWaterFlowRate(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_HeatingConvergenceTolerance_Quantity) {
-  Model model;
-  EXPECT_EQ(0u,model.objects().size());
-  EXPECT_TRUE(model.versionObject());
-  // need schedule
-  ScheduleConstant sched(model);
-  EXPECT_EQ(1u,model.objects().size());
-  sched.setValue(1.0); // Always on
-  // need fan
-  FanConstantVolume fan(model,sched);
-  // need cooling and heating coils
-  CoilCoolingWater coolingCoil(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  // construct object
-  ZoneHVACFourPipeFanCoil zoneHVACFourPipeFanCoil(model,sched,fan,coolingCoil,heatingCoil);
-  EXPECT_EQ(6u,model.objects().size());
-
-  Unit units = zoneHVACFourPipeFanCoil.getHeatingConvergenceTolerance(true).units(); // Get IP units.
-  double value(0.001);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(zoneHVACFourPipeFanCoil.setHeatingConvergenceTolerance(testQ));
-  Quantity q = zoneHVACFourPipeFanCoil.getHeatingConvergenceTolerance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
 
 TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_addToThermalZone) {
   Model model;
@@ -414,5 +334,4 @@ TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_AddRemoveAirLoopHVAC)
   ASSERT_EQ(thermalZone,fpfc.thermalZone().get());
   ASSERT_EQ(1u,thermalZone.equipment().size());
 }
-
 
