@@ -35,7 +35,6 @@
 #include "../HVACComponent_Impl.hpp"
 #include "../BoilerHotWater.hpp"
 #include "../BoilerHotWater_Impl.hpp"
-#include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
@@ -95,4 +94,3 @@ TEST_F(ModelFixture,PlantEquipmentOperationCoolingLoad) {
     EXPECT_EQ(0u,plantOperationScheme.equipment(upperLimits[0]).size());
   }
 }
-
