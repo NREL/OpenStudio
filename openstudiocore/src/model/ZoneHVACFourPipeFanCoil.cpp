@@ -116,20 +116,20 @@ namespace detail {
 
   std::vector<IdfObject> ZoneHVACFourPipeFanCoil_Impl::remove()
   {
-    if( boost::optional<CoilHeatingWater> waterHeatingCoil =
-          heatingCoil().optionalCast<CoilHeatingWater>() )
-    {
-      if( boost::optional<PlantLoop> plantLoop = waterHeatingCoil->plantLoop() )
-      {
-        plantLoop->removeDemandBranchWithComponent( waterHeatingCoil.get() );
+    // Careful here, remove could be called during the Ctor, and the coils might not be set actually!
+    if (boost::optional<HVACComponent> _hc = optionalHeatingCoil()) {
+      if (boost::optional<CoilHeatingWater> waterHeatingCoil = _hc->optionalCast<CoilHeatingWater>()) {
+        if (boost::optional<PlantLoop> plantLoop = waterHeatingCoil->plantLoop()) {
+          plantLoop->removeDemandBranchWithComponent( waterHeatingCoil.get() );
+        }
       }
     }
-    if( boost::optional<CoilCoolingWater> waterCoolingCoil =
-          coolingCoil().optionalCast<CoilCoolingWater>() )
-    {
-      if( boost::optional<PlantLoop> plantLoop = waterCoolingCoil->plantLoop() )
-      {
-        plantLoop->removeDemandBranchWithComponent( waterCoolingCoil.get() );
+
+    if (boost::optional<HVACComponent> _cc = optionalCoolingCoil()) {
+      if (boost::optional<CoilCoolingWater> waterCoolingCoil = _cc->optionalCast<CoilCoolingWater>()) {
+        if (boost::optional<PlantLoop> plantLoop = waterCoolingCoil->plantLoop()) {
+          plantLoop->removeDemandBranchWithComponent( waterCoolingCoil.get() );
+        }
       }
     }
     return ZoneHVACComponent_Impl::remove();
