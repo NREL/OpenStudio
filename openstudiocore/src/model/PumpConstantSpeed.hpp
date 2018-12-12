@@ -141,6 +141,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   void resetRotationalSpeed();
 
+  // TODO: this should be renamed ThermalZone for consistency
   boost::optional<ThermalZone> zone() const;
 
   boost::optional<double> skinLossRadiativeFraction() const;
