@@ -43,7 +43,6 @@
 #include "../EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
 #include "../HVACTemplates.hpp"
 #include "../ScheduleCompact.hpp"
-#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

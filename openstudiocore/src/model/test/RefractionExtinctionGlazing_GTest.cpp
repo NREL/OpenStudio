@@ -34,8 +34,6 @@
 #include "../RefractionExtinctionGlazing.hpp"
 #include "../RefractionExtinctionGlazing_Impl.hpp"
 
-#include "../../utilities/units/Unit.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 

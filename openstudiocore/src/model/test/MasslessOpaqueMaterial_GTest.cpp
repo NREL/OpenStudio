@@ -36,8 +36,6 @@
 #include "../StandardsInformationMaterial.hpp"
 #include "../StandardsInformationMaterial_Impl.hpp"
 
-#include "../../utilities/units/Unit.hpp"
-
 //#include <utilities/embedded_files.hxx>
 
 using namespace openstudio;
