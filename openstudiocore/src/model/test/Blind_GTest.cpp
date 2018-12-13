@@ -34,8 +34,6 @@
 #include "../Blind.hpp"
 #include "../Blind_Impl.hpp"
 
-#include "../../utilities/units/Unit.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
