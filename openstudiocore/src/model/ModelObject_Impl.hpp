@@ -192,8 +192,6 @@ namespace detail {
     /** @name Nano Signals */
     //@{
 
-    // Nano::Signal<void(const QVariantMap&)> reportProperties;
-
     //@}
 
     /** Gets the autosized component value from the sql file **/

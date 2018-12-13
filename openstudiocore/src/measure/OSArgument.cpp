@@ -36,7 +36,6 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/core/Compare.hpp"
-#include "../utilities/core/QJson.hpp"
 
 #include <boost/lexical_cast.hpp>
 #include <boost/functional/value_factory.hpp>
@@ -226,11 +225,6 @@ openstudio::path OSArgument::valueAsPath() const
   return std::get<openstudio::path>(m_value);
 }
 
-// TODO: JM 2018-11-28: remove definitely?
-//QVariant OSArgument::valueAsQVariant() const {
-//  return m_value;
-//}
-
 bool OSArgument::hasDefaultValue() const {
   return (m_defaultValue.index() != 0);
 }
@@ -291,11 +285,6 @@ openstudio::path OSArgument::defaultValueAsPath() const
 
   return std::get<openstudio::path>(m_defaultValue);
 }
-
-// TODO: JM 2018-11-28 remove
-//QVariant OSArgument::defaultValueAsQVariant() const {
-//  return m_defaultValue;
-//}
 
 bool OSArgument::hasDomain() const {
   return !m_domain.empty();
@@ -391,14 +380,6 @@ std::vector<std::string> OSArgument::domainAsString() const {
   }
   return result;
 }
-
-//std::vector<QVariant> OSArgument::domainAsQVariant() const {
-  //if (!hasDomain()) {
-    //LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
-  //}
-  //return m_domain;
-//}
-
 
 std::vector<std::string> OSArgument::choiceValues() const {
   return m_choices;

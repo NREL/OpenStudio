@@ -190,10 +190,6 @@ namespace detail {
       /// set value. throws if wrong type.
       void setValue(const std::vector<Attribute>& value);
 
-      // TODO: JM 2018-12-05 REMOVE
-      /// get value as qvariant
-      QVariant valueAsQVariant() const;
-
       /// find child attribute by name
       boost::optional<Attribute> findChildByName(const std::string& name) const;
 

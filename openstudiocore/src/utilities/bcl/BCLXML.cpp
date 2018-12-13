@@ -922,8 +922,6 @@ namespace openstudio{
       // DLM: in the end just create a new method that won't change
       printAttributeForChecksum(ss, attribute, "  ");
     }
-    //toJSON(m_attributes, ss); // can't use this because it writes out the openstudio version
-    //ss << toJSONWithoutMetadata(m_attributes); // don't use this because it may change
 
     // tags are edited in the xml
     ss << "Tags: " << std::endl;

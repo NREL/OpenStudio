@@ -237,9 +237,6 @@ class UTILITIES_API Attribute {
 
   Attribute clone() const;
 
-  /// static constructor from QVariant
-  // static boost::optional<Attribute> fromQVariant(const std::string& name, const QVariant& value, const boost::optional<std::string>& units = boost::none);
-
   /// static constructor from xml
   static boost::optional<Attribute> loadFromXml(const openstudio::path& path);
 
@@ -316,9 +313,6 @@ class UTILITIES_API Attribute {
 
   /// set value. throws if wrong type.
   void setValue(const std::vector<Attribute>& value);
-
-  /// get value as qvariant
-  QVariant valueAsQVariant() const;
 
   /// find child attribute by name
   boost::optional<Attribute> findChildByName(const std::string& name) const;
@@ -411,62 +405,6 @@ UTILITIES_API std::vector<int> getIntVectorFromAttribute(const Attribute& attrib
 /** \relates Attribute */
 // DLM: can this be a member of Attribute?
 UTILITIES_API std::vector<double> getDoubleVectorFromAttribute(const Attribute& attribute);
-
-/** Returns true if candidate and description have matching names and types. \relates Attribute */
-// DLM: can this be a member of Attribute?
-UTILITIES_API bool isConsistent(const Attribute& candidate,const AttributeDescription& description);
-
-/** Copies description's display name over to attribute. Will return false if
- *  !isConsistent(attribute,description). \relates Attribute */
-// DLM: can this be a member of Attribute?
-UTILITIES_API bool prepareForDisplay(Attribute& attribute, const AttributeDescription& description);
-
-/** Saves attributes in a flat json file. Discards uuid and version_uuid information.
- *  Recasts Unsigned attributes as Integer attributes.
- *  \relates Attribute */
-UTILITIES_API bool saveJSON(const std::vector<Attribute>& attributes,
-                            const openstudio::path& p,
-                            bool overwrite=false);
-
-/** Puts attributes out to os in a flat json format. Discards uuid and version_uuid
- *  information. Recasts Unsigned attributes as Integer attributes.
- *  \relates Attribute */
-UTILITIES_API std::ostream& toJSON(const std::vector<Attribute>& attributes,
-                                   std::ostream& os);
-
-/** Returns attributes as a string in a flat json format. Discards uuid and version_uuid
- *  information. Recasts Unsigned attributes as Integer attributes.
- *  \relates Attribute */
-UTILITIES_API std::string toJSON(const std::vector<Attribute>& attributes);
-
-/** Returns attributes as a string in a flat json format. Discards uuid and version_uuid
-*  information. Recasts Unsigned attributes as Integer attributes. Does not print metadata.
-*  \relates Attribute */
-UTILITIES_API std::string toJSONWithoutMetadata(const std::vector<Attribute>& attributes);
-
-/** Deserializes the flat attribute json format. \relates Attribute */
-UTILITIES_API std::vector<Attribute> toVectorOfAttribute(const openstudio::path& pathToJson);
-
-/** Deserializes the flat attribute json format. \relates Attribute */
-UTILITIES_API std::vector<Attribute> toVectorOfAttribute(std::istream& json);
-
-/** Deserializes the flat attribute json format. \relates Attribute */
-UTILITIES_API std::vector<Attribute> toVectorOfAttribute(const std::string& json);
-
-namespace detail {
-  /** Places attribute's data in a QVariant for JSON serialization. */
-  UTILITIES_API QVariant toVariant(const Attribute& attribute);
-
-  /** Deserializes json variant to Attribute. */
-  UTILITIES_API Attribute toAttribute(const QVariant& variant, const VersionString& version);
-
-  /** Places a vector of attributes' data in a flat QVariant for JSON serialization. Discards
-   *  uuid and version_uuid information. Recasts Unsigned attributes as Integer attributes. */
-  UTILITIES_API QVariant toVariant(const std::vector<Attribute>& attributes);
-
-  /** Deserializes (flat) json variant to std::vector<Attribute>. */
-  UTILITIES_API std::vector<Attribute> toVectorOfAttribute(const QVariant& variant, const VersionString& version);
-}
 
 } // openstudio
 

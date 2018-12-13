@@ -32,8 +32,6 @@
 
 #include "../Attribute.hpp"
 
-#include "../../core/QJson.hpp"
-
 #include <QDomDocument>
 
 #include <boost/regex.hpp>
@@ -332,13 +330,6 @@ TEST_F(DataFixture, Attribute_NumberFormatting) {
   EXPECT_EQ("3.14159E52",boost::regex_replace(toString(str),boost::regex("\\+"),""));
 }
 
-TEST_F(DataFixture, Attribute_JsonSerialization) {
-  // right now, just test string because know that fails
-  Attribute attribute("EnergyPlusVersion","EnergyPlus-Windows-64 8.0.0.008, YMD=2013.10.02 16:22");
-  QVariant variant = detail::toVariant(attribute);
-  EXPECT_NO_THROW(toJSON(variant));
-}
-
 TEST_F(DataFixture, Attribute_DisplayName) {
   Attribute attribute("WWR",0.23);
   OptionalString displayName = attribute.displayName();
@@ -373,15 +364,6 @@ TEST_F(DataFixture, Attribute_Source) {
     EXPECT_TRUE(attributeCopy.source().empty());
   }
 
-  // json and back
-  QVariant variant = detail::toVariant(attributes);
-  int n = variant.toMap().size();
-  attributesCopy = detail::toVectorOfAttribute(variant,VersionString(openStudioVersion()));
-  EXPECT_EQ(attributes.size(),attributesCopy.size());
-  for (const Attribute& attributeCopy : attributesCopy) {
-    EXPECT_TRUE(attributeCopy.source().empty());
-  }
-
   // apply same source to all attributes
   for (Attribute& attribute : attributes) {
     attribute.setSource("big data set");
@@ -392,15 +374,6 @@ TEST_F(DataFixture, Attribute_Source) {
   containerCopy = Attribute::loadFromXml(doc);
   ASSERT_TRUE(containerCopy);
   attributesCopy = containerCopy.get().valueAsAttributeVector();
-  EXPECT_EQ(attributes.size(),attributesCopy.size());
-  for (const Attribute& attributeCopy : attributesCopy) {
-    EXPECT_EQ("big data set",attributeCopy.source());
-  }
-
-  // json and back
-  variant = detail::toVariant(attributes);
-  EXPECT_EQ(n+1,variant.toMap().size());
-  attributesCopy = detail::toVectorOfAttribute(variant,VersionString(openStudioVersion()));
   EXPECT_EQ(attributes.size(),attributesCopy.size());
   for (const Attribute& attributeCopy : attributesCopy) {
     EXPECT_EQ("big data set",attributeCopy.source());
@@ -420,14 +393,7 @@ TEST_F(DataFixture, Attribute_Source) {
   }
   EXPECT_EQ("a wiki",attributesCopy[2].source());
 
-  // json and back
-  variant = detail::toVariant(attributes);
-  EXPECT_EQ(n+attributes.size(),variant.toMap().size());
-  attributesCopy = detail::toVectorOfAttribute(variant,VersionString(openStudioVersion()));
-  EXPECT_EQ(attributes.size(),attributesCopy.size());
-  for (const Attribute& attributeCopy : attributesCopy) {
-    EXPECT_FALSE(attributeCopy.source().empty());
-  }
+
   // order is not guaranteed
 
 }

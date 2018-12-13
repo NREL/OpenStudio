@@ -269,10 +269,6 @@ class MEASURE_API OSArgument {
    *  OSArgumentType::Path. */
   std::vector<openstudio::path> domainAsPath() const;
 
-  // TODO: JM 2018-11-28 Address this one
-  /** For serialization, not for general use. */
-  // std::vector<QVariant> domainAsQVariant() const;
-
   //@}
   /** @name Choice Argument Getters */
   //@{
@@ -426,18 +422,12 @@ class MEASURE_API OSArgument {
   friend struct std::_Pair_base<std::string, OSArgument>;
 #endif
 
-  // TODO
   bool setStringInternal(OSArgumentVariant& variant, const std::string& value);
 
-  // TODO
   std::string printOSArgumentVariant(const OSArgumentVariant& toPrint) const;
 
   // This also OS App related
   void onChange();
-
-  // TODO: JM 2018-11-28 Need to keep for OSApp?
-  //QVariant valueAsQVariant() const;
-  //QVariant defaultValueAsQVariant() const;
 
   openstudio::UUID m_uuid;
   openstudio::UUID m_versionUUID;
