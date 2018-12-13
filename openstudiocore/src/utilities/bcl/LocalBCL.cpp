@@ -38,8 +38,6 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
-#include <QSettings>
-
 namespace openstudio{
 
   LocalBCL::LocalBCL(const path& libraryPath):
@@ -132,10 +130,8 @@ namespace openstudio{
   {
     std::shared_ptr<LocalBCL> &ptr = instanceInternal();
     if (!ptr) {
-      QSettings settings("OpenStudio", "LocalBCL");
       // DLM: might want to put this somewhere a little more hidden
-      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(
-          toPath(settings.value("libraryPath", toQString(openstudio::filesystem::home_path() / toPath("BCL"))).toString())));
+      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(openstudio::filesystem::home_path() / toPath("BCL")));
     }
     return *ptr;
   }
@@ -1549,6 +1545,7 @@ namespace openstudio{
     return m_libraryPath;
   }
 
+  /*
   bool LocalBCL::setLibraryPath(const path& libraryPath)
   {
 
@@ -1595,6 +1592,6 @@ namespace openstudio{
 
     return true;
   }
-
+  */
 
 } // openstudio
