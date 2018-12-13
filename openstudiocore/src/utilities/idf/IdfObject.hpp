@@ -35,6 +35,7 @@
 #include "Handle.hpp"
 
 #include "../core/Logger.hpp"
+#include "../core/Url.hpp"
 
 #include <boost/optional.hpp>
 
@@ -54,8 +55,6 @@ class DataError;
 class StrictnessLevel;
 class Quantity;
 class OSOptionalQuantity;
-
-class Url;
 
 namespace detail{
   class IdfObject_Impl;

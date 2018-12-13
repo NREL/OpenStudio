@@ -39,6 +39,7 @@
 #include <sstream>
 #include <string>
 
+#include <model_editor/QMetaTypes.hpp> // TODO: Temp
 #include <QVariant>
 
 using namespace openstudio;
@@ -46,13 +47,13 @@ using namespace openstudio;
 
 TEST_F(IddFixture,IddObject_URL)
 {
-OptionalIddObject object1 =
+  OptionalIddObject object1 =
   IddFactory::instance().getObject(IddObjectType::Schedule_File);
- ASSERT_TRUE(object1);
- EXPECT_TRUE(object1->hasURL());
- UnsignedVector vec  = object1->urlFields();
- EXPECT_TRUE(vec.size() == 1);
- EXPECT_TRUE(vec[0] == 2);
+  ASSERT_TRUE(object1);
+  EXPECT_TRUE(object1->hasURL());
+  UnsignedVector vec  = object1->urlFields();
+  EXPECT_TRUE(vec.size() == 1);
+  EXPECT_TRUE(vec[0] == 2);
 }
 
 TEST_F(IddFixture,IddObject_EqualityOperators) {
