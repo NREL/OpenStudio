@@ -62,8 +62,6 @@
 #include <utilities/idd/OS_Output_Variable_FieldEnums.hxx>
 #include "../utilities/data/TimeSeries.hpp"
 
-#include <QMetaProperty>
-
 #include <boost/algorithm/string.hpp>
 
 using openstudio::Handle;
@@ -74,10 +72,6 @@ using openstudio::WorkspaceObjectVector;
 using openstudio::Workspace;
 
 using std::vector;
-
-// calls to register the meta types
-// int __metaType1__ = qRegisterMetaType<boost::optional<openstudio::model::ModelObject> >("boost::optional<openstudio::model::ModelObject>");
-// int __metaType2__ = qRegisterMetaType<std::vector<openstudio::model::ModelObject> >("std::vector<openstudio::model::ModelObject>" );
 
 namespace openstudio {
 namespace model {

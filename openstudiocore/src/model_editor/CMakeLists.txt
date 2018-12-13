@@ -34,6 +34,9 @@ set(${target_name}_src
   OSProgressBar.cpp
   PathWatcher.hpp
   PathWatcher.cpp
+  #  TODO: Unsure if needed? 
+  QMetaTypes.hpp
+  QMetaTypes.cpp
   tablemodel.h
   tablemodel.cpp
   TableView.hpp

@@ -409,9 +409,4 @@ UTILITIES_API std::vector<double> getDoubleVectorFromAttribute(const Attribute& 
 
 } // openstudio
 
-// declare these types so we can use them as properties
-//Q_DECLARE_METATYPE(openstudio::Attribute);
-Q_DECLARE_METATYPE(boost::optional<openstudio::Attribute>);
-Q_DECLARE_METATYPE(std::vector<openstudio::Attribute>);
-
 #endif // UTILITIES_DATA_ATTRIBUTE_HPP

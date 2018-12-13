@@ -27,32 +27,44 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "Tag.hpp"
-
-#include "../core/String.hpp"
+#include "QMetaTypes.hpp"
 
 namespace openstudio {
+namespace detail{
 
-Tag::Tag(const std::string& name)
-  : m_uuid(createUUID()), m_name(name)
-{}
+    OpenStudioMetaTypeInitializer::OpenStudioMetaTypeInitializer() {
+      qRegisterMetaType<openstudio::IddObjectType>("openstudio::IddObjectType");
+      qRegisterMetaType<openstudio::IddFileType>("openstudio::IddFileType");
 
-Tag::Tag(const UUID& uuid,const std::string& name)
-  : m_uuid(uuid), m_name(name)
-{}
+      qRegisterMetaType<OSItemId>("OSItemId");
+      qRegisterMetaType<std::vector<OSItemId> >("std::vector<OSItemId>");
 
-Tag Tag::clone() const {
-  Tag result(*this);
-  result.m_uuid = createUUID();
-  return result;
-}
+      // qRegisterMetaType<openstudio::model::ModelObject>("openstudio::model::ModelObject"); // No default constructor!
+      // qRegisterMetaType<boost::optional<openstudio::model::ModelObject> >("boost::optional<openstudio::model::ModelObject>");
+      // qRegisterMetaType<std::vector<openstudio::model::ModelObject> >("std::vector<openstudio::model::ModelObject>" );
 
-UUID Tag::uuid() const {
-  return m_uuid;
-}
+      qRegisterMetaType<openstudio::UUID>("openstudio::UUID");
 
-std::string Tag::name() const {
-  return m_name;
-}
+      qRegisterMetaType<std::string>("std::string");
+      qRegisterMetaType<std::vector<std::string> >("std::vector<std::string>");
 
+      qRegisterMetaType<boost::optional<double> >("boost::optional<double>");
+      qRegisterMetaType<boost::optional<unsigned> >("boost::optional<unsigned>");
+      qRegisterMetaType<boost::optional<int> >("boost::optional<int>");
+      qRegisterMetaType<boost::optional<std::string> >("boost::optional<std::string>");
+
+      // qRegisterMetaType<openstudio::Attribute>("openstudio::Attribute");
+      qRegisterMetaType<boost::optional<openstudio::Attribute> >("boost::optional<openstudio::Attribute>");
+      qRegisterMetaType<std::vector<openstudio::Attribute> >("std::vector<openstudio::Attribute>");
+
+      qRegisterMetaType<openstudio::Quantity>("openstudio::Quantity");
+      qRegisterMetaType<openstudio::OSOptionalQuantity>("openstudio::OSOptionalQuantity");
+
+      qRegisterMetaType<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> >();
+
+    }
+
+    OpenStudioMetaTypeInitializer __openStudioMetaTypeInitializer__;
+
+} // detail
 } // openstudio
