@@ -196,10 +196,6 @@ namespace detail {
 
     //@}
 
-    // void requestProperties(const QStringList& names);
-
-    // bool setProperties(const QVariantMap& properties);
-
     /** Gets the autosized component value from the sql file **/
     boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString) const;
 

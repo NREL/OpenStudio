@@ -36,8 +36,6 @@
 
 #include <boost/regex.hpp>
 
-#include <QTextStream>
-
 #include <iostream>
 
 using std::string;

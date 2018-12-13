@@ -54,12 +54,12 @@
 #include "../utilities/idf/IdfFile.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/WorkspaceObjectOrder.hpp"
-#include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Compare.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
 #include "ModelExplorer.hpp"
+#include "OSProgressBar.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;
@@ -126,7 +126,7 @@ namespace modeleditor
 
     mProgressBarLbl = new QLabel();
     mQProgressBar = new QProgressBar(this);
-    mProgressBar = new openstudio::ProgressBar(mQProgressBar);
+    mProgressBar = new OSProgressBar(mQProgressBar);
 
     auto layout = new QVBoxLayout();
     layout->addWidget(mProgressBarLbl);

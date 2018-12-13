@@ -38,13 +38,15 @@ namespace openstudio {
 namespace contam {
 
 Reader::Reader( openstudio::filesystem::ifstream &file )
-  : m_stream(openstudio::filesystem::read_as_QByteArray(file)), m_lineNumber(0)
+  : m_stream(openstudio::filesystem::read_as_string(file)), m_lineNumber(0)
 {
 }
 
 Reader::Reader(QString *string, int starting) : m_lineNumber(starting)
 {
-  m_stream.setString(string);
+  if (string) {
+    m_stream.str(toString(*string));
+  }
 }
 
 Reader::~Reader()
@@ -81,23 +83,33 @@ QString Reader::readQString()
 {
   while(1) {
     while(m_entries.size() == 0) {
-      QString input = m_stream.readLine();
-      LOG(Debug, "Line read: " << input.toStdString());
-      if(input.isNull()) {
+      std::string input;
+      std::getline(m_stream, input);
+      LOG(Debug, "Line read: " << input);
+      if(!m_stream) {
         QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
         LOG_AND_THROW(mesg.toStdString());
       }
       m_lineNumber++;
       while(input[0]=='!') {
-        input = m_stream.readLine();
-        LOG(Debug, "Line read: " << input.toStdString());
-        if(input.isNull()) {
+        std::getline(m_stream, input);
+        LOG(Debug, "Line read: " << input);
+        if(!m_stream) {
           QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
           LOG_AND_THROW(mesg.toStdString());
         }
         m_lineNumber++;
       }
-      m_entries = input.split(" ",QString::SkipEmptyParts);
+
+      std::vector<std::string> strs;
+      boost::split(strs,input,boost::is_any_of(" "));
+
+      m_entries.clear();
+      for (const auto &s : strs) {
+        if (!s.empty()) {
+          m_entries.push_back(toQString(s));
+        }
+      }
     }
     QString out = m_entries.takeFirst();
     if(out[0] == '!') {
@@ -154,23 +166,24 @@ QString Reader::readLineQString()
   if(m_entries.size()) {
     m_entries.clear();
   }
-  QString input = m_stream.readLine();
-  LOG(Debug, "Line read: " << input.toStdString());
-  if(input.isNull()) {
+  std::string input;
+  std::getline(m_stream, input);
+  LOG(Debug, "Line read: " << input);
+  if(!m_stream) {
     QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
     LOG_AND_THROW(mesg.toStdString());
   }
   m_lineNumber++;
   while(input[0]=='!') {
-    input = m_stream.readLine();
-    LOG(Debug, "Line read: " << input.toStdString());
-    if(input.isNull()) {
+    std::getline(m_stream, input);
+    LOG(Debug, "Line read: " << input);
+    if(!m_stream) {
       QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
       LOG_AND_THROW(mesg.toStdString());
     }
     m_lineNumber++;
   }
-  return input;
+  return toQString(input);
 }
 
 void Reader::read999()
@@ -209,14 +222,15 @@ std::string Reader::readSection()
 {
   QString section;
   while(1) {
-    QString input = m_stream.readLine();
-    if(input.isNull()) {
+    std::string input;
+    std::getline(m_stream, input);
+    if(!m_stream) {
       QString mesg = QString("Failed to read input at line %1").arg(m_lineNumber);
       LOG_AND_THROW(mesg.toStdString());
     }
     m_lineNumber++;
-    section += input + '\n';
-    if(input.startsWith(QString("-999"))) {
+    section += toQString(input + '\n');
+    if(input.find("-999") == 0) {
       break;
     }
   }

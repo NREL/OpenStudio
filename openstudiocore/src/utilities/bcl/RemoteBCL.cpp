@@ -29,7 +29,6 @@
 
 #include "LocalBCL.hpp"
 #include "RemoteBCL.hpp"
-#include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 #include "../core/PathHelpers.hpp"
 #include "../core/System.hpp"
@@ -100,8 +99,9 @@ namespace openstudio{
     m_numResultsPerQuery(10),
     m_apiVersion("2.0")
   {
+    // TODO: QT-Separation-Move
     // make sure application is initialized
-    openstudio::Application::instance().application(false);
+    //openstudio::Application::instance().application(false);
 
     m_prodAuthKey = LocalBCL::instance().prodAuthKey();
     m_devAuthKey = LocalBCL::instance().devAuthKey();
@@ -874,6 +874,7 @@ namespace openstudio{
         return true;
       }
 
+      // DLM: no longer calls Application::instance().processEvents(msecPerLoop);
       // this calls process events
       System::msleep(msecPerLoop);
 
@@ -936,7 +937,6 @@ namespace openstudio{
         LOG(Error, "Network Error: Host " << remoteUrl() << " not found");
       }else if (reply->error() == QNetworkReply::UnknownNetworkError && reply->errorString().startsWith("Error creating SSL context")){
         LOG(Error, "Network Error: Unable to create SSL connection.  Verify that SSL libraries are in the system path.");
-        //QMessageBox::warning(0, "Unable to Create SSL Connection", "Verify that SSL libraries are in the system path");
       }else{
         LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << " - " << reply->errorString().toStdString());
       }

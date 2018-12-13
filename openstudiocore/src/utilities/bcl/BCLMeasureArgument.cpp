@@ -32,6 +32,7 @@
 #include "../core/Assert.hpp"
 
 #include <QDomDocument>
+#include <QTextStream>
 
 namespace openstudio{
 

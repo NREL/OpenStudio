@@ -51,6 +51,7 @@
 #include "../../model/ThermalZone_Impl.hpp"
 
 #include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/geometry/Geometry.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
@@ -91,12 +92,20 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnGround)
 
   surface.setSpace(space);
 
-  Point3dVector polygon = ForwardTranslator::getPolygon(surface);
-  EXPECT_EQ(vertices.size(), polygon.size());
+  Point3dVectorVector polygons = ForwardTranslator::getPolygons(surface);
+  ASSERT_EQ(1u, polygons.size());
+  EXPECT_EQ(vertices.size(), polygons[0].size());
 
-  for (const Point3d& vertex : polygon){
-    LOG_FREE(::Info, "Radiance", vertex);
+  double area = 0;
+  for (const Point3dVector& polygon : polygons) {
+    OptionalDouble d = getArea(polygon);
+    ASSERT_TRUE(d);
+    area += *d;
+    for (const Point3d& vertex : polygon) {
+      LOG_FREE(::Info, "Radiance", vertex);
+    }
   }
+  EXPECT_NEAR(1.0, area, 0.0001);
 }
 
 TEST(Radiance, ForwardTranslator_SurfaceOnlyOnXZ)
@@ -114,12 +123,20 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnXZ)
   Surface surface(vertices, model);
   surface.setSpace(space);
 
-  Point3dVector polygon = ForwardTranslator::getPolygon(surface);
-  EXPECT_EQ(vertices.size(), polygon.size());
+  Point3dVectorVector polygons = ForwardTranslator::getPolygons(surface);
+  ASSERT_EQ(1u, polygons.size());
+  EXPECT_EQ(vertices.size(), polygons[0].size());
 
-  for (const Point3d& vertex : polygon){
-    LOG_FREE(::Info, "Radiance", vertex);
+  double area = 0;
+  for (const Point3dVector& polygon : polygons) {
+    OptionalDouble d = getArea(polygon);
+    ASSERT_TRUE(d);
+    area += *d;
+    for (const Point3d& vertex : polygon) {
+      LOG_FREE(::Info, "Radiance", vertex);
+    }
   }
+  EXPECT_NEAR(1.0, area, 0.0001);
 }
 
 TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnGround)
@@ -145,12 +162,19 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnGround)
   SubSurface subSurface(vertices, model);
   subSurface.setSurface(surface);
 
-  Point3dVector polygon = ForwardTranslator::getPolygon(surface);
-  EXPECT_TRUE(vertices.size() < polygon.size());
+  Point3dVectorVector polygons = ForwardTranslator::getPolygons(surface);
+  ASSERT_FALSE(polygons.empty());
 
-  for (const Point3d& vertex : polygon){
-    LOG_FREE(::Info, "Radiance", vertex);
+  double area = 0;
+  for (const Point3dVector& polygon : polygons) {
+    OptionalDouble d = getArea(polygon);
+    ASSERT_TRUE(d);
+    area += *d;
+    for (const Point3d& vertex : polygon) {
+      LOG_FREE(::Info, "Radiance", vertex);
+    }
   }
+  EXPECT_NEAR(0.75, area, 0.0001);
 }
 
 TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ)
@@ -176,12 +200,19 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ)
   SubSurface subSurface(vertices, model);
   subSurface.setSurface(surface);
 
-  Point3dVector polygon = ForwardTranslator::getPolygon(surface);
-  EXPECT_TRUE(vertices.size() < polygon.size());
+  Point3dVectorVector polygons = ForwardTranslator::getPolygons(surface);
+  ASSERT_FALSE(polygons.empty());
 
-  for (const Point3d& vertex : polygon){
-    LOG_FREE(::Info, "Radiance", vertex);
+  double area = 0;
+  for (const Point3dVector& polygon : polygons) {
+    OptionalDouble d = getArea(polygon);
+    ASSERT_TRUE(d);
+    area += *d;
+    for (const Point3d& vertex : polygon) {
+      LOG_FREE(::Info, "Radiance", vertex);
+    }
   }
+  EXPECT_NEAR(0.75, area, 0.0001);
 }
 
 

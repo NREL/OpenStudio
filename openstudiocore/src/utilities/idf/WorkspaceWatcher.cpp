@@ -41,7 +41,6 @@ WorkspaceWatcher::WorkspaceWatcher(const Workspace& work)
   wsImpl.get()->detail::Workspace_Impl::onChange.connect<WorkspaceWatcher, &WorkspaceWatcher::change>(this);
 
   // ideally this would be a queued connection so objects can be initialized before signal is processed
-  // However, WorkspaceObject is not a QObject.  Instead we use QTimer to give a delay.
   wsImpl.get()->detail::Workspace_Impl::addWorkspaceObject.connect<WorkspaceWatcher, &WorkspaceWatcher::objectAdd>(this);
 
   // this signal happens immediately

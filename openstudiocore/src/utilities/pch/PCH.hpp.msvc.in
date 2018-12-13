@@ -510,6 +510,5 @@
 #include <QMetaType>
 #include <QObject>
 #include <QString>
-#include <QTextStream>
 #include <QUrl>
 #include <QVariant>

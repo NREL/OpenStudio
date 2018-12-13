@@ -58,7 +58,6 @@
 #include "../WorkspaceWatcher.hpp"
 #include "IdfTestQObjects.hpp"
 
-#include "../../core/Application.hpp"
 #include "../../core/Path.hpp"
 #include "../../core/Optional.hpp"
 
@@ -2005,7 +2004,6 @@ TEST_F(IdfFixture, Workspace_AddObjects3) {
 
 TEST_F(IdfFixture, Workspace_Signals)
 {
-  openstudio::Application::instance().application(false);
   IdfFile idfFile(IddFileType::EnergyPlus);
   Workspace workspace(idfFile);
 

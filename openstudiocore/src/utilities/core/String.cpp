@@ -145,9 +145,3 @@ namespace detail{
 
 } // openstudio
 
-// allow string to be written to QTextStream
-QTextStream& operator<<(QTextStream& qts, const std::string& s)
-{
-  qts << openstudio::toQString(s);
-  return qts;
-}

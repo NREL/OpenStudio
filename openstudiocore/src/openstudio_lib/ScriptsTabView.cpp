@@ -39,8 +39,6 @@
 #include "../shared_gui_components/SyncMeasuresDialog.hpp"
 #include "../shared_gui_components/EditController.hpp"
 
-#include "../utilities/plot/ProgressBar.hpp"
-
 #include "../energyplus/ForwardTranslator.hpp"
 
 #include <QLabel>

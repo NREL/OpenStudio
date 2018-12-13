@@ -135,6 +135,7 @@
 
 #include <QDomDocument>
 #include <QDomElement>
+#include <QTextStream>
 
 namespace openstudio {
 namespace sdd {

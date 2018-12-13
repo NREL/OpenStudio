@@ -39,7 +39,6 @@
 
 // forward declarations
 class QString;
-class QTextStream;
 
 namespace openstudio {
 
@@ -81,9 +80,6 @@ typedef std::pair<path,path> PathPair;
 //UTILITIES_API QString longPathName(const QString& path);
 
 } // openstudio
-
-// allow path to be written to QTextStream
-QTextStream& operator<<(QTextStream& qts, const openstudio::path& p);
 
 
 #endif // UTILITIES_CORE_PATH_HPP

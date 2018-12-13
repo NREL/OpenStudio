@@ -33,6 +33,7 @@
 #include <QStringList>
 #include <QVector>
 #include <QSharedPointer>
+#include <sstream>
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Filesystem.hpp"
 
@@ -83,7 +84,7 @@ private:
   std::string readStdString();
   QString readLineQString();
 
-  QTextStream m_stream;
+  std::stringstream m_stream;
   int m_lineNumber;
   QStringList m_entries;
 

@@ -29,26 +29,14 @@ namespace Qt{
 
 %{
   #include <QObject>
-  #include <QColor>
-  #include <QWidget>
-  #include <QDialog>
-  #include <QComboBox>
-  #include <QMainWindow>
-  #include <QAbstractItemModel>
-  #include <QModelIndex>
-  #include <QModelIndexList>
   #include <QDateTime>
   #include <QDomElement>
   #include <QUrl>
   #include <QNetworkRequest>
   #include <QNetworkReply>
   #include <QNetworkAccessManager>
-  #include <QStandardItem>
   #include <QVariant>
-  #include <QThread>
   #include <QFile>
-  #include <QCoreApplication>
-  #include <QApplication>
 %}
 
 class QObject
@@ -57,102 +45,7 @@ class QObject
   QObject(QObject* parent);
 };
 
-%rename(Color) QColor;
-class QColor
-{
-public:
-    enum Spec { Invalid, Rgb, Hsv, Cmyk };
-
-    QColor();
-    QColor(int r, int g, int b, int a = 255);
-    QColor(QRgb rgb);
-    QColor(const QString& name);
-    QColor(const char *name);
-    QColor(const QColor &color);
-    QColor(Qt::GlobalColor color);
-    bool isValid() const;
-    QString name() const;
-    void setNamedColor(const QString& name);
-    static QStringList colorNames();
-    Spec spec() const;
-    int alpha() const;
-    void setAlpha(int alpha);
-    double alphaF() const;
-    void setAlphaF(qreal alpha);
-    int red() const;
-    int green() const;
-    int blue() const;
-    void setRed(int red);
-    void setGreen(int green);
-    void setBlue(int blue);
-    void getRgb(int *r, int *g, int *b, int *a = 0) const;
-    void setRgb(int r, int g, int b, int a = 255);
-    int hue() const; // 0 <= hue < 360
-    int saturation() const;
-    int value() const;
-    void getHsv(int *h, int *s, int *v, int *a = 0) const;
-    void setHsv(int h, int s, int v, int a = 255);
-    int cyan() const;
-    int magenta() const;
-    int yellow() const;
-    int black() const;
-    void getCmyk(int *c, int *m, int *y, int *k, int *a = 0);
-    void setCmyk(int c, int m, int y, int k, int a = 255);
-    QColor toRgb() const;
-    QColor toHsv() const;
-    QColor toCmyk() const;
-    QColor convertTo(Spec colorSpec) const;
-    static QColor fromRgb(int r, int g, int b, int a = 255);
-    static QColor fromHsv(int h, int s, int v, int a = 255);
-    static QColor fromCmyk(int c, int m, int y, int k, int a = 255);
-    QColor light(int f = 150) const;
-    QColor lighter(int f = 150) const;
-    QColor dark(int f = 200) const;
-    QColor darker(int f = 200) const;
-    QColor &operator=(const QColor &);
-    QColor &operator=(Qt::GlobalColor color);
-    bool operator==(const QColor &c) const;
-    bool operator!=(const QColor &c) const;
-};
-
-class QWidget : public QObject
-{
-public:
-  void show();
-  void hide();
-  bool isWindow() const;
-  QString windowTitle() const;
-  void setWindowTitle(const QString &);
-  bool isActiveWindow() const;
-  void activateWindow();
-  void raise();
-  void lower();
-  bool isAncestorOf(const QWidget* child) const;
-  bool isEnabled() const;
-  bool isEnabledTo(QWidget * ancestor) const;
-  void setEnabled(bool enabled);
-  bool isFullScreen() const;
-  bool isHidden() const;
-  bool isMaximized() const;
-  bool isMinimized() const;
-  bool isModal() const;
-  bool isVisible() const;
-  bool isVisibleTo(QWidget* ancestor) const;
-  void setVisible(bool visible);
-};
-
-class QMainWindow : public QWidget
-{};
-
-class QDialog : public QWidget
-{};
-
-class QComboBox : public QWidget
-{};
-
 class QTextStream{};
-
-class QRgb{};
 
 class QString{};
 
@@ -163,41 +56,7 @@ class QString{};
   }
 }
 
-class QDateTime{};
-
-class QModelIndex{};
-
-class QModelIndexList{};
-
-%nodefaultctor QCoreApplication;
-class QCoreApplication{};
-
-%extend QCoreApplication{
-
-  void setApplicationName(const std::string& applicationName) const{
-    self->setApplicationName(toQString(applicationName));
-  }
-
-  void setOrganizationName(const std::string& organizationName) const{
-    self->setOrganizationName(toQString(organizationName));
-  }
-  void setOrganizationDomain(const std::string& organizationDomain) const{
-    self->setOrganizationDomain(toQString(organizationDomain));
-  }
-}
-
-%nodefaultctor QApplication;
-class QApplication : public QCoreApplication
-{};
-
-class QFont{};
-
-%nodefaultctor QAction;
-class QAction : public QObject
-{};
-
-class QDomNode
-{};
+class QDomNode{};
 
 class QDomElement : public QDomNode
 {};
@@ -218,9 +77,6 @@ class QNetworkReply
 
 %nodefaultctor QNetworkAccessManager;
 class QNetworkAccessManager : public QObject
-{};
-
-class QStandardItem
 {};
 
 #if defined SWIGJAVA
@@ -275,25 +131,6 @@ class QVariant {
   const char* typeToName( Type typ );
 };
 
-class QThread : public QObject
-{
- public:
-  enum Priority { IdlePriority, LowestPriority, LowPriority, NormalPriority, InheritPriority };
-
-  void exit ( int returnCode = 0 );
-  bool isFinished () const;
-  bool isRunning () const;
-  void quit ();
-  void start ( Priority priority = InheritPriority );
-  void terminate ();
-
- protected:
-  virtual void run();
-  int exec();
-};
-
-class QFile
-{};
 
 #endif
 

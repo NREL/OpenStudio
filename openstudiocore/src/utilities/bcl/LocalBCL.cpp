@@ -29,7 +29,6 @@
 
 #include "LocalBCL.hpp"
 #include "RemoteBCL.hpp"
-#include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 #include "../time/DateTime.hpp"
 #include "../core/PathHelpers.hpp"
@@ -39,8 +38,6 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
-#include <QIcon>
-#include <QInputDialog>
 #include <QSettings>
 
 namespace openstudio{
@@ -51,8 +48,9 @@ namespace openstudio{
     m_dbVersion("1.3"),
     m_connectionOpen(false)
   {
+    //TODO: QT - Separation - Move
     //Make sure a QApplication exists
-    openstudio::Application::instance().application(false);
+    //openstudio::Application::instance().application(false);
 
     //Check for BCL directory
     if (!openstudio::filesystem::is_directory(m_libraryPath) || !openstudio::filesystem::exists(m_libraryPath)) {
@@ -1486,69 +1484,6 @@ namespace openstudio{
       }
     }
     return s;
-  }
-
-
-  bool LocalBCL::prodAuthKeyUserPrompt(QWidget* parent)
-  {
-    // make sure application is initialized
-    Application::instance().application(false);
-
-    QInputDialog inputDlg(parent);
-    inputDlg.setInputMode(QInputDialog::TextInput);
-    inputDlg.setLabelText("BCL Auth Key:                                            ");
-    inputDlg.setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
-    inputDlg.setWindowTitle("Enter Your BCL Auth Key");
-    if (Application::instance().isDefaultInstance())
-    {
-      QIcon icon = QIcon(":/images/os_16.png");
-      icon.addPixmap(QPixmap(":/images/os_32.png"));
-      icon.addPixmap(QPixmap(":/images/os_48.png"));
-      icon.addPixmap(QPixmap(":/images/os_64.png"));
-      icon.addPixmap(QPixmap(":/images/os_128.png"));
-      icon.addPixmap(QPixmap(":/images/os_256.png"));
-      inputDlg.setWindowIcon(icon);
-    }
-    bool result = inputDlg.exec();
-    QString text = inputDlg.textValue();
-
-    if (result && !text.isEmpty()){
-      std::string authKey = toString(text);
-      result = setProdAuthKey(authKey);
-    }
-
-    return result;
-  }
-
-  bool LocalBCL::devAuthKeyUserPrompt(QWidget* parent)
-  {
-    // make sure application is initialized
-    openstudio::Application::instance().application(false);
-
-    QInputDialog inputDlg(parent);
-    inputDlg.setInputMode(QInputDialog::TextInput);
-    inputDlg.setLabelText("BCL Dev Auth Key:                                            ");
-    inputDlg.setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
-    inputDlg.setWindowTitle("Enter Your BCL Dev Auth Key");
-    if (Application::instance().isDefaultInstance())
-    {
-      QIcon icon = QIcon(":/images/os_16.png");
-      icon.addPixmap(QPixmap(":/images/os_32.png"));
-      icon.addPixmap(QPixmap(":/images/os_48.png"));
-      icon.addPixmap(QPixmap(":/images/os_64.png"));
-      icon.addPixmap(QPixmap(":/images/os_128.png"));
-      icon.addPixmap(QPixmap(":/images/os_256.png"));
-      inputDlg.setWindowIcon(icon);
-    }
-    bool result = inputDlg.exec();
-    QString text = inputDlg.textValue();
-
-    if (result && !text.isEmpty()){
-      std::string devAuthKey = toString(text);
-      result = setDevAuthKey(devAuthKey);
-    }
-
-    return result;
   }
 
   std::string LocalBCL::prodAuthKey() const

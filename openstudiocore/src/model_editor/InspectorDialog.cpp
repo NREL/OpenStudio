@@ -30,19 +30,19 @@
 #include "InspectorGadget.hpp"
 #include "InspectorDialog.hpp"
 
-#include "../model/Model.hpp"
-#include "../model/Model_Impl.hpp"
-#include "../model/ModelObject.hpp"
-#include "../model/ModelObject_Impl.hpp"
-#include "../model/ResourceObject.hpp"
-#include "../model/ResourceObject_Impl.hpp"
-#include "../model/AccessPolicyStore.hpp"
+#include "Application.hpp"
 
-#include "../utilities/core/Application.hpp"
-#include "../utilities/core/Assert.hpp"
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
+#include <model/ModelObject.hpp>
+#include <model/ModelObject_Impl.hpp>
+#include <model/ResourceObject.hpp>
+#include <model/ResourceObject_Impl.hpp>
+#include <model/AccessPolicyStore.hpp>
 
-#include "../utilities/idd/IddFile.hpp"
-#include "../utilities/idd/IddObject.hpp"
+#include <utilities/core/Assert.hpp>
+#include <utilities/idd/IddFile.hpp>
+#include <utilities/idd/IddObject.hpp>
 #include <utilities/idd/IddFactory.hxx>
 
 #include <QLabel>
@@ -60,6 +60,7 @@
 #include <QShowEvent>
 #include <QCloseEvent>
 #include <QSettings>
+#include <QTextStream>
 
 using namespace openstudio;
 using namespace openstudio::model;

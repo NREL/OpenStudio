@@ -26,11 +26,11 @@
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **********************************************************************************************************************/
 
-#include "init_openstudio.hpp"
 #include <RubyAPI.hpp>
 #include <QtPlugin>
 #include <iostream>
 #include <ruby.h>
+
 
 #if defined(Q_OS_OSX)
   Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
@@ -40,11 +40,25 @@
   Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);
 #endif
 
+inline void initResources() {
+
+  #ifndef SHARED_OS_LIBS
+    Q_INIT_RESOURCE(modeleditorlib);
+  #endif // SHARED_OS_LIBS
+
+}
+
 extern "C" {
+ 
+void Init_openstudiomodeleditor(void);
 
-RUBY_API void Init_openstudio(void) {
+RUBY_API void Init_openstudio_modeleditor(void) {
 
-  init_openstudio_internal();
+  initResources();
+
+  Init_openstudiomodeleditor();
+  rb_provide("openstudiomodeleditor");
+  rb_provide("openstudiomodeleditor.so");
 
 }
 

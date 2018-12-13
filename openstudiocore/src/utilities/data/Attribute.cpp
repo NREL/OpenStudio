@@ -40,6 +40,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <QDomElement>
+#include <QTextStream>
 
 namespace openstudio {
 namespace detail {

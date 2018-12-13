@@ -36,16 +36,10 @@
   #include <utilities/units/OSOptionalQuantity.hpp>
 
   // to be ignored
-  class QAction;
   class QDomNode;
   class QDomElement;
   class QDomDocument;
   class QNetworkAccessManager;
-  class QThread;
-  class QWidget;
-  class QDialog;
-  class QComboBox;
-  class QMainWindow;
   namespace openstudio{
     class RemoteBCL;
     class UpdateManager;
@@ -54,16 +48,10 @@
 %}
 
 // it seems that SWIG tries to create conversions of QObjects to these
-%ignore QAction;
 %ignore QDomNode;
 %ignore QDomElement;
 %ignore QDomDocument;
 %ignore QNetworkAccessManager;
-%ignore QThread;
-%ignore QWidget;
-%ignore QDialog;
-%ignore QComboBox;
-%ignore QMainWindow;
 %ignore openstudio::PathWatcher;
 %ignore openstudio::RemoteBCL;
 %ignore openstudio::UpdateManager;

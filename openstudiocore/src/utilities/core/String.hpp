@@ -36,7 +36,6 @@
 #include <vector>
 
 #include <QString>
-#include <QTextStream>
 #include <QMetaType>
 
 /** \file String.hpp
@@ -82,8 +81,6 @@ namespace openstudio {
 Q_DECLARE_METATYPE(std::string);
 Q_DECLARE_METATYPE(std::vector<std::string>);
 
-// allow string to be written to QTextStream
-UTILITIES_API QTextStream& operator<<(QTextStream& qts, const std::string& s);
 
 namespace openstudio {
 namespace detail {
