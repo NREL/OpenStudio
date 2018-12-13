@@ -751,14 +751,6 @@ namespace openstudio{
           value = attribute.toString();
           dataType = "float";
           break;
-        case AttributeValueType::Quantity :
-          value = toString(attribute.valueAsQuantity().value());
-          dataType = "float";
-          break;
-        case AttributeValueType::Unit :
-          value = attribute.valueAsUnit().standardString();
-          dataType = "string";
-          break;
         case AttributeValueType::Integer :
           value = attribute.toString();
           dataType = "integer";

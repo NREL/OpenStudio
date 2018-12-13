@@ -558,14 +558,6 @@ void Component::createCompleteLayout()
         }
       } else if (type == AttributeValueType::Double){
         string = string.setNum(attribute.valueAsDouble());
-      } else if (type == AttributeValueType::Quantity){
-        Quantity quantity = attribute.valueAsQuantity();
-        string = string.setNum(quantity.value());
-        string += " ";
-        string += quantity.prettyUnitsString().c_str();
-      } else if (type == AttributeValueType::Unit){
-        Unit unit = attribute.valueAsUnit();
-        string = unit.prettyString().c_str();
       } else if (type == AttributeValueType::Integer){
         string = string.setNum(attribute.valueAsInteger());
       } else if (type == AttributeValueType::Unsigned){
