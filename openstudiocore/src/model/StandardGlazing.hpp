@@ -125,6 +125,7 @@ class MODEL_API StandardGlazing : public Glazing {
   /** @name Setters */
   //@{
 
+  // TODO: JM 2018-12-13 This needs to be removed as it will be set by setWindowGlassSpectralDataSet/resetWindowGlassSpectalDataSet
   bool setOpticalDataType(std::string opticalDataType);
 
   /** deprecated **/

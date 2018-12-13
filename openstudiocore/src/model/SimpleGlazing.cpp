@@ -33,8 +33,6 @@
 #include <utilities/idd/OS_WindowMaterial_SimpleGlazingSystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -130,10 +128,7 @@ SimpleGlazing::SimpleGlazing(const Model& model,
 {
   OS_ASSERT(getImpl<detail::SimpleGlazing_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
   ok = setUFactor(uFactor);
   OS_ASSERT(ok);
   ok = setSolarHeatGainCoefficient(solarHeatGainCoefficient);
