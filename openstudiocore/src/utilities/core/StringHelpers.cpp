@@ -392,5 +392,12 @@ std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std
 
 }
 
+std::string toUpper(std::string &string)
+{
+  std::transform(string.begin(), string.end(), string.begin(),
+    [](unsigned char c) -> unsigned char { return std::toupper(c); });
+  return string;
+}
+
 
 } // openstudio

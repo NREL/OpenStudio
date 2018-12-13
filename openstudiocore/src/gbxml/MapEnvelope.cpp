@@ -53,8 +53,196 @@
 #include <QDomDocument>
 #include <QDomElement>
 
+#include <pugixml.hpp>
+
 namespace openstudio {
 namespace gbxml {
+
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConstruction(const pugi::xml_node& element, const std::unordered_map<std::string, pugi::xml_node> &layerElements, openstudio::model::Model& model)
+  {
+    // Krishnan, this constructor should only be used for unique objects like Building and Site
+    //openstudio::model::Construction construction = model.getUniqueModelObject<openstudio::model::Construction>();
+
+    openstudio::model::Construction construction(model);
+    std::string constructionId = element.attribute("id").value();
+    m_idToObjectMapS.insert(std::make_pair(constructionId, construction));
+
+    std::string constructionName = element.child("Name").text().as_string();
+    construction.setName(escapeName(constructionId, constructionName));
+
+    auto layerIdList = element.children("LayerId");
+
+    // Construction::LayerId (layerIdList) -> Layer (layerElements), Layer::MaterialId -> Material
+    std::vector<openstudio::model::Material> materials;
+    for (auto &layerIdEl : element.children("LayerId")) {
+      std::string layerId = layerIdEl.attribute("layerIdRef").value();
+
+      // find this layerId in all the layers
+      auto result = layerElements.find(layerId);
+      if (result != layerElements.end()) {
+        for (auto &materialIdElement : result->second.children("MaterialId")) {
+          std::string materialId = materialIdElement.attribute("materialIdRef").value();
+          auto materialIt = m_idToObjectMapS.find(materialId);
+          if (materialIt != m_idToObjectMapS.end()) {
+            boost::optional<openstudio::model::Material> material = materialIt->second.optionalCast<openstudio::model::Material>();
+            OS_ASSERT(material); // Krishnan, what type of error handling do you want?
+            materials.push_back(*material);
+          }
+        }
+      } else {
+        // Error handling?
+      }
+    }
+
+    if (materials.empty()) {
+      return construction;
+    }
+
+    // now assign all layers to real material, does gbXML have same layer order convention as E+?
+    for (unsigned i = 0; i < materials.size(); ++i) {
+      bool test = false;
+
+      if (materials[i].optionalCast<openstudio::model::OpaqueMaterial>()) {
+        test = construction.insertLayer(i, materials[i].cast<openstudio::model::OpaqueMaterial>());
+      } else if (materials[i].optionalCast<openstudio::model::FenestrationMaterial>()) {
+        test = construction.insertLayer(i, materials[i].cast<openstudio::model::FenestrationMaterial>());
+      } else if (materials[i].optionalCast<openstudio::model::ModelPartitionMaterial>()) {
+        test = construction.setLayer(materials[i].cast<openstudio::model::ModelPartitionMaterial>());
+      }
+
+      OS_ASSERT(test); // Krishnan, what type of error handling do you want?
+    }
+
+    return construction;
+  }
+
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWindowType(const pugi::xml_node &element, openstudio::model::Model& model)
+  {
+    openstudio::model::Construction construction(model);
+    std::string windowTypeId = element.attribute("id").value();
+    m_idToObjectMapS.insert(std::make_pair(windowTypeId, construction));
+
+    std::string windowTypeName = element.child("Name").text().as_string();
+    construction.setName(escapeName(windowTypeId, windowTypeName));
+
+    boost::optional<double> uValue;
+    boost::optional<double> shgc;
+    boost::optional<double> tVis;
+
+    for (auto &uValueElement : element.children("U-value")) {
+      if (uValueElement.attribute("unit").value() == "WPerSquareMeterK") {
+        uValue = uValueElement.text().as_double();
+        break;
+      }
+    }
+
+    for (auto &shgcElement : element.children("SolarHeatGainCoeff")) {
+      if (shgcElement.attribute("unit").value() == "Fraction") {
+        shgc = shgcElement.text().as_double();
+        break;
+      }
+    }
+
+    for (auto &transmittanceElement : element.children("Transmittance")) {
+      if (transmittanceElement.attribute("type").value() == "Visible") {
+        tVis = transmittanceElement.text().as_double();
+        break;
+      }
+    }
+
+    if (uValue && shgc && tVis) {
+      model::SimpleGlazing glazing(model);
+      glazing.setUFactor(*uValue);
+      glazing.setSolarHeatGainCoefficient(*shgc);
+      glazing.setVisibleTransmittance(*tVis);
+
+      std::vector<model::Material> layers;
+      layers.push_back(glazing);
+      construction.setLayers(layers);
+    }
+
+    return construction;
+  }
+
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateMaterial(const pugi::xml_node& element, openstudio::model::Model& model)
+  {
+    boost::optional<openstudio::model::ModelObject> result;
+
+    auto rvalueElement = element.child("R-value");
+    auto densityElement = element.child("Density");
+    auto conductivityElement = element.child("Conductivity");
+    auto thicknessElement = element.child("Thickness");
+    auto specificHeatElement = element.child("SpecificHeat");
+    auto roughnessElement = element.child("Roughness");
+
+    if (!(densityElement.empty() || conductivityElement.empty() || thicknessElement.empty() || specificHeatElement.empty())) {
+
+      double density = densityElement.text().as_double();
+      double conductivity = conductivityElement.text().as_double();
+      double thickness = thicknessElement.text().as_double();
+      double specificHeat = specificHeatElement.text().as_double();
+
+      std::string roughness = "MediumRough";
+      if (!roughnessElement.empty()) {
+        roughness = roughnessElement.text().as_string();
+      }
+
+      openstudio::model::StandardOpaqueMaterial material(model);
+      result = material;
+
+      std::string id = element.attribute("id").value();
+      m_idToObjectMapS.insert(std::make_pair(id, material));
+
+      std::string name = element.child("Name").text().as_string();
+      material.setName(escapeName(id, name));
+
+      material.setDensity(density);
+      material.setThermalConductivity(conductivity);
+      material.setThickness(thickness);
+      material.setSpecificHeat(specificHeat);
+      material.setRoughness(roughness);
+
+    } else if (!rvalueElement.empty())  //Material no mass that has only R-value
+    {
+      // Krishnan, this constructor should only be used for unique objects like Building and Site
+      //openstudio::model::MasslessOpaqueMaterial material = model.getUniqueModelObject<openstudio::model::MasslessOpaqueMaterial>();
+
+      double rvalue = rvalueElement.text().as_double();
+
+      // the idd specifies a minimum value of .001 for rvalue
+      rvalue = std::max(rvalue, .001);
+
+      openstudio::model::MasslessOpaqueMaterial material(model);
+      result = material;
+
+      std::string id = element.attribute("id").value();
+      m_idToObjectMapS.insert(std::make_pair(id, material));
+
+      std::string name = element.child("Name").text().as_string();
+      material.setName(escapeName(id, name));
+
+      material.setThermalResistance(rvalue);
+
+    } else {
+
+      // make a stub material
+      openstudio::model::MasslessOpaqueMaterial material(model);
+      result = material;
+
+      std::string id = element.attribute("id").value();
+      m_idToObjectMapS.insert(std::make_pair(id, material));
+
+      std::string name = element.child("Name").text().as_string();
+      material.setName(escapeName(id, name));
+
+      LOG(Warn, "Creating stub material '" << name << "'");
+
+      material.setThermalResistance(.001);
+    }
+
+    return result;
+  }
+
 
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConstruction(const QDomElement& element, const QDomNodeList& layerElements, const QDomDocument& doc, openstudio::model::Model& model)
   {

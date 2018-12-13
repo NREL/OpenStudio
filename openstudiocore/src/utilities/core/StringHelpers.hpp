@@ -131,6 +131,9 @@ namespace openstudio {
    */
   UTILITIES_API std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string delimiters=" +-*/^=<>&|");
 
+  /** Convert a string into an uppercase version. This should only be used in cases known to be using the ASCII character set,
+   *  anything else will be a problem. */
+  UTILITIES_API std::string toUpper(std::string &string);
 }
 
 #endif // UTILITIES_CORE_STRINGHELPERS_HPP
