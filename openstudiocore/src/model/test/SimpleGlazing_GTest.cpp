@@ -34,67 +34,53 @@
 #include "../SimpleGlazing.hpp"
 #include "../SimpleGlazing_Impl.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,SimpleGlazing_UFactor_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SimpleGlazing simpleGlazing(model);
+TEST_F(ModelFixture, SimpleGlazing_DefaultConstructor)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Unit units = simpleGlazing.getUFactor(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(simpleGlazing.setUFactor(testQ));
-  Quantity q = simpleGlazing.getUFactor(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  ASSERT_EXIT (
+  {
+    Model m;
+    SimpleGlazing simpleGlazing(m);
+
+    exit(0);
+  } ,
+    ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,SimpleGlazing_SolarHeatGainCoefficient_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SimpleGlazing simpleGlazing(model);
+TEST_F(ModelFixture, SimpleGlazing_GettersSetters)
+{
+  Model m;
+  SimpleGlazing simpleGlazing(m);
 
-  Unit units = simpleGlazing.getSolarHeatGainCoefficient(true).units(); // Get IP units.
+  // Ctor argument defaults
+  double uFactor = 0.1;
+  double solarHeatGainCoefficient = 0.1;
 
-  // Bounds: 0.0 < value < 1.0
+  // U-Factor:  Double
+  // Default in Ctor
+  EXPECT_EQ(uFactor, simpleGlazing.uFactor());
+  EXPECT_TRUE(simpleGlazing.setUFactor(0.5));
+  EXPECT_EQ(0.5, simpleGlazing.uFactor());
 
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(simpleGlazing.setSolarHeatGainCoefficient(testQ));
 
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(simpleGlazing.setSolarHeatGainCoefficient(testQ2));
-  Quantity q2 = simpleGlazing.getSolarHeatGainCoefficient(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
+  // Solar Heat Gain Coefficient:  Double
+  // Default in Ctor
+  EXPECT_EQ(solarHeatGainCoefficient, simpleGlazing.solarHeatGainCoefficient());
+  EXPECT_TRUE(simpleGlazing.setSolarHeatGainCoefficient(0.68));
+  EXPECT_EQ(0.68, simpleGlazing.solarHeatGainCoefficient());
+
+
+  // Visible Transmittance: Optional Double
+  // No Default
+  EXPECT_FALSE(simpleGlazing.visibleTransmittance());
+  EXPECT_TRUE(simpleGlazing.setVisibleTransmittance(0.45));
+  ASSERT_TRUE(simpleGlazing.visibleTransmittance());
+  EXPECT_EQ(0.45, simpleGlazing.visibleTransmittance().get());
+  simpleGlazing.resetVisibleTransmittance();
+  EXPECT_FALSE(simpleGlazing.visibleTransmittance());
+
 }
-
-TEST_F(ModelFixture,SimpleGlazing_VisibleTransmittance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SimpleGlazing simpleGlazing(model);
-
-  Unit units = simpleGlazing.getVisibleTransmittance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 < value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(simpleGlazing.setVisibleTransmittance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(simpleGlazing.setVisibleTransmittance(testQ2));
-  OSOptionalQuantity q = simpleGlazing.getVisibleTransmittance(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value2,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
