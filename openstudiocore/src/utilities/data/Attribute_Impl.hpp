@@ -38,10 +38,10 @@
 #include "../core/Logger.hpp"
 #include "../core/UUID.hpp"
 
-// #include <QMetaType>
-
-class QDomElement;
-class QDomDocument;
+namespace pugi {
+  class xml_document;
+  class xml_node;
+}
 
 namespace openstudio {
 namespace detail {
@@ -109,7 +109,9 @@ namespace detail {
                      const boost::optional<std::string>& units,
                      const std::string& source = std::string());
 
-      Attribute_Impl(const QDomElement& element);
+      // constructor from xml, throws if required arguments are missing
+      Attribute_Impl(const pugi::xml_node& element);
+
       Attribute_Impl(const Attribute_Impl& other);
 
       // Destructor
@@ -146,7 +148,6 @@ namespace detail {
 
       /// get the attribute value type
       AttributeValueType valueType() const;
-
 
       // Check if it has a value set
       bool hasValue() const;
@@ -205,7 +206,7 @@ namespace detail {
       std::string toString() const;
 
       /// write object and all children to xml
-      QDomDocument toXml() const;
+      pugi::xml_document toXml() const;
 
       /// comparison
       bool operator==(const Attribute& other) const;
@@ -216,7 +217,7 @@ namespace detail {
 
       /// write values to an xml element
       /// override in derived classes
-      virtual void writeValues(QDomDocument& doc, QDomElement& element) const;
+      virtual void writeValues(pugi::xml_node& element) const;
 
     private:
 

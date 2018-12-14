@@ -147,8 +147,8 @@ namespace openstudio{
         }
       }
 
-      auto sublement = element.child("outputs");
-      if(subelement) {
+      auto subelement = element.child("outputs");
+      if (subelement) {
         for (auto &outputElement : subelement.children("output")) {
           if (outputElement.first_child()) {
             try {

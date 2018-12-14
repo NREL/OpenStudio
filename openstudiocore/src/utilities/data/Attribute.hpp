@@ -41,10 +41,11 @@
 #include <boost/optional.hpp>
 
 #include <variant>
-// #include <QMetaType>
 
-class QDomDocument;
-class QDomElement;
+namespace pugi {
+  class xml_document;
+  class xml_node;
+}
 
 namespace openstudio {
 
@@ -230,18 +231,16 @@ class UTILITIES_API Attribute {
   // Destructor
   virtual ~Attribute() {}
 
-
-  explicit Attribute(const QDomElement& element);
+  // constructor from xml, throws if required arguments are missing
+  explicit Attribute(const pugi::xml_node& element);
 
   Attribute(const Attribute& other);
 
   Attribute clone() const;
 
+  // TODO: keep both? Keep public?
   /// static constructor from xml
   static boost::optional<Attribute> loadFromXml(const openstudio::path& path);
-
-  /// static constructor from loaded xml
-  static boost::optional<Attribute> loadFromXml(const QDomDocument& doc);
 
   openstudio::UUID uuid() const;
 
@@ -328,9 +327,6 @@ class UTILITIES_API Attribute {
   *  as XML. */
   std::string toString() const;
 
-  /// write object and all children to xml
-  QDomDocument toXml() const;
-
   /// write object and all children out as xml to path.
   bool saveToXml(const openstudio::path& path) const;
 
@@ -359,6 +355,11 @@ class UTILITIES_API Attribute {
   }
 
  protected:
+
+  friend std::ostream& operator<<(std::ostream& os, const Attribute& attribute);
+  // TODO: remove from public API or make protected/private
+  /// write object and all children to xml
+  pugi::xml_document toXml() const;
 
   friend class detail::Attribute_Impl;
   friend class EndUses;
