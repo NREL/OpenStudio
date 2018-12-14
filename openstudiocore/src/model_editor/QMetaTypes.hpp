@@ -32,6 +32,7 @@
 
 #include <QMetaType>
 
+#include <QModelIndex>
 Q_DECLARE_METATYPE(QModelIndex)
 
 #include <utilities/idd/IddEnums.hpp>

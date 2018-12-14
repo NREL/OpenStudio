@@ -39,9 +39,6 @@
 #include <sstream>
 #include <string>
 
-#include <model_editor/QMetaTypes.hpp> // TODO: Temp
-#include <QVariant>
-
 using namespace openstudio;
 
 
@@ -125,16 +122,6 @@ TEST_F(IddFixture,IddObjectVector_GetTypes) {
   EXPECT_EQ(2*objects.size(),typeVector.size());
   IddObjectTypeSet typeSet = getIddObjectTypeSet(roundtripObjects);
   EXPECT_EQ(objects.size(),typeSet.size());
-}
-
-TEST_F(IddFixture,IddObjectType_QVariant)
-{
-  IddObjectType type(IddObjectType::Zone);
-  QVariant variant = QVariant::fromValue(type);
-  EXPECT_EQ("openstudio::IddObjectType", std::string(variant.typeName()));
-  ASSERT_TRUE(variant.canConvert<IddObjectType>());
-  IddObjectType type2 = variant.value<IddObjectType>();
-  EXPECT_EQ(type.value(), type2.value());
 }
 
 TEST_F(IddFixture,IddObject_InsertHandleField) {
