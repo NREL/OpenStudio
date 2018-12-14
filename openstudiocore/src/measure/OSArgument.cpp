@@ -572,7 +572,7 @@ bool OSArgument::setDefaultValue(const openstudio::path& defaultValue) {
   bool result = false;
     if (m_type == OSArgumentType::Path) {
     m_defaultValue = defaultValue;
-    OS_ASSERT(hasValue());
+    OS_ASSERT(hasDefaultValue());
     onChange();
     result = true;
   }
@@ -586,7 +586,7 @@ bool OSArgument::setDefaultValue(const char* defaultValue) {
 bool OSArgument::setDefaultValue(const std::string& defaultValue) {
   bool result = setStringInternal(m_defaultValue, defaultValue);
   if (result) {
-    OS_ASSERT(hasValue());
+    OS_ASSERT(hasDefaultValue());
     onChange();
   }
   return result;
