@@ -13,7 +13,7 @@
 // all signals are turned private
 #define signals private
 
-// DLM commented out while still defined in Utiltities Qt.i
+// DLM commented out while still defined in Utilities Qt.i
 // DLM@20091231: we need to generalize our plotting stuff
 //namespace Qt{
 //  enum GlobalColor { white, black, red, darkRed, green, darkGreen, blue, darkBlue, cyan,
@@ -118,7 +118,7 @@
 //    bool operator!=(const QColor &c) const;
 //};
 
-class QWidget 
+class QWidget
 {
 public:
   QWidget();
@@ -221,57 +221,59 @@ class QApplication : public QCoreApplication
 //class QStandardItem
 //{};
 
-//#if defined SWIGJAVA
-//%rename(toQString) QVariant::toString;
-//#endif
 
-//%template(QVariantVector) std::vector<QVariant>;
-//%template(QVariantVectorVector) std::vector<std::vector<QVariant> >;
-//class QVariant {
-// public:
-//  enum Type { Invalid = 0,
-//              Bool = 1,
-//             Int = 2,
-//              UInt = 3,
-//              LongLong = 4,
-//              ULongLong = 5,
-//              Double = 6,
-//              String = 10,
-//              Url = 17,
-//              UserType = 127 };
+// TODO: Check if actually needed...
+#if defined SWIGJAVA
+%rename(toQString) QVariant::toString;
+#endif
 
-//  QVariant();
-//  explicit QVariant( const QVariant& p);
-//  explicit QVariant( int val );
-//  explicit QVariant( uint val );
-//  explicit QVariant( bool val );
-//  explicit QVariant( double val );
-//  explicit QVariant( const char* val );
-//  explicit QVariant( const QString& val );
-//  explicit QVariant( const QUrl& val );
-//  ~QVariant();
+%template(QVariantVector) std::vector<QVariant>;
+%template(QVariantVectorVector) std::vector<std::vector<QVariant> >;
+class QVariant {
+ public:
+  enum Type { Invalid = 0,
+              Bool = 1,
+             Int = 2,
+              UInt = 3,
+              LongLong = 4,
+              ULongLong = 5,
+              Double = 6,
+              String = 10,
+              Url = 17,
+              UserType = 127 };
 
-//  bool canConvert( Type t ) const;
-//  void clear();
-//  bool convert( Type t );
-//  bool isNull() const;
-//  bool isValid() const;
-//  bool toBool() const;
-//  double toDouble() const;
-//  int toInt() const;
-//  QString toString() const;
-//  uint toUInt() const;
-//  QUrl toUrl() const;
-//  Type type() const;
-//  const char * typeName() const;
+  QVariant();
+  explicit QVariant( const QVariant& p);
+  explicit QVariant( int val );
+  explicit QVariant( uint val );
+  explicit QVariant( bool val );
+  explicit QVariant( double val );
+  explicit QVariant( const char* val );
+  explicit QVariant( const QString& val );
+  explicit QVariant( const QUrl& val );
+  ~QVariant();
 
-//  bool operator!=( const QVariant& v) const;
-//  QVariant& operator=( const QVariant& variant);
-//  bool operator==(const QVariant& v) const;
+  bool canConvert( Type t ) const;
+  void clear();
+  bool convert( Type t );
+  bool isNull() const;
+  bool isValid() const;
+  bool toBool() const;
+  double toDouble() const;
+  int toInt() const;
+  QString toString() const;
+  uint toUInt() const;
+  QUrl toUrl() const;
+  Type type() const;
+  const char * typeName() const;
 
-//  static Type nameToType( const char* name);
-//  const char* typeToName( Type typ );
-//};
+  bool operator!=( const QVariant& v) const;
+  QVariant& operator=( const QVariant& variant);
+  bool operator==(const QVariant& v) const;
+
+  static Type nameToType( const char* name);
+  const char* typeToName( Type typ );
+};
 
 
 #endif // MODELEDITOR_QT_I
