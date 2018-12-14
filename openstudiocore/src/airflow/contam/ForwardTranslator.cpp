@@ -62,9 +62,6 @@
 
 #include <airflow/embedded_files.hxx>
 
-#include <QList>
-#include <QStringList>
-#include <QMap>
 #include <thread>
 
 #include <algorithm>
@@ -93,8 +90,10 @@ void CvFile::addTimeSeries(std::string name, TimeSeries series)
 
 static std::string convertDateTime(const DateTime &datetime)
 {
-  return QString().sprintf("%02d/%02d\t%02d:%02d:%02d", month(datetime.date().monthOfYear()), datetime.date().dayOfMonth(),
-    datetime.time().hours(),datetime.time().minutes(),datetime.time().seconds()).toStdString();
+  char buffer[256];
+  sprintf(buffer, "%02d/%02d\t%02d:%02d:%02d", month(datetime.date().monthOfYear()), datetime.date().dayOfMonth(),
+    datetime.time().hours(), datetime.time().minutes(), datetime.time().seconds());
+  return std::string(buffer);
 }
 
 bool CvFile::write(openstudio::path filepath)
@@ -133,8 +132,9 @@ bool CvFile::write(openstudio::path filepath)
       // Mess with the time a little bit to put 24:00:00 in for 00:00:00
       if(current.time().hours() == 0 && current.time().minutes() == 0 && current.time().seconds() == 0)
       {
-        file << QString().sprintf("%02d/%02d\t24:00:00",month(last.date().monthOfYear()),
-          last.date().dayOfMonth()).toStdString();
+        char buffer[256];
+        sprintf(buffer, "%02d/%02d\t24:00:00",month(last.date().monthOfYear()), last.date().dayOfMonth());
+        file << buffer;
       }
       else
       {
@@ -170,11 +170,11 @@ ForwardTranslator::ForwardTranslator()
 void ForwardTranslator::clear()
 {
   m_afeMap = std::map<std::string,int>();
-  m_levelMap = QMap <Handle, int>();
+  m_levelMap = std::map <Handle, int>();
   m_zoneMap = std::map <Handle, int>();
-  m_pathMap = QMap <std::string, int>();
+  m_pathMap = std::map <std::string, int>();
   m_surfaceMap = std::map <Handle, int>();
-  m_ahsMap = QMap <Handle, int>();
+  m_ahsMap = std::map <Handle, int>();
   m_leakageDescriptor = boost::optional<std::string>("Average");
   m_returnSupplyRatio = 1.0;
   m_ratioOverride = false;
@@ -183,46 +183,36 @@ void ForwardTranslator::clear()
   m_translateHVAC = true;
 }
 
-int ForwardTranslator::tableLookup(QMap<std::string,int> map, std::string str, const char *name)
+int ForwardTranslator::tableLookup(std::map<std::string,int> map, std::string str, const char *name)
 {
-  int nr = map.value(str,0);
-  if(!nr)
+  const auto& it = map.find(str);
+  if(it == map.end())
   {
     LOG(Warn, "Unable to look up '" << str << "' in " << name);
   }
-  return nr;
-}
-
-int ForwardTranslator::tableLookup(QMap<Handle,int> map, Handle handle, const char *name)
-{
-  int nr = map.value(handle,0);
-  if(!nr)
-  {
-    LOG(Warn, "Unable to look up '" << handle << "' in " << name);
-  }
-  return nr;
+  return it->second;
 }
 
 int ForwardTranslator::tableLookup(std::map<Handle,int> map, Handle handle, const char *name)
 {
-  std::map<Handle,int>::const_iterator iter = map.find(handle);
-  int nr = 0;
-  if(iter == map.end())
+  const auto& it = map.find(handle);
+  if (it == map.end())
   {
     LOG(Warn, "Unable to look up '" << handle << "' in " << name);
   }
-  else
-  {
-    nr = iter->second;
-  }
-  return nr;
+  return it->second;
 }
 
-std::string ForwardTranslator::reverseLookup(QMap<std::string,int> map, int nr, const char *name)
+std::string ForwardTranslator::reverseLookup(std::map<std::string,int> map, int nr, const char *name)
 {
   if(nr > 0)
   {
-    QList<std::string> keys = map.keys(nr);
+    std::vector<std::string> keys;
+    for (const auto& pair : map) {
+      if (pair.second == nr) {
+        keys.push_back(pair.first);
+      }
+    }
     if(keys.size()>0)
     {
       if(keys.size()>1)
@@ -236,11 +226,16 @@ std::string ForwardTranslator::reverseLookup(QMap<std::string,int> map, int nr, 
   return std::string();
 }
 
-Handle ForwardTranslator::reverseLookup(QMap<Handle,int> map, int nr, const char *name)
+Handle ForwardTranslator::reverseLookup(std::map<Handle,int> map, int nr, const char *name)
 {
   if(nr > 0)
   {
-    QList<Handle> keys = map.keys(nr);
+    std::vector<Handle> keys;
+    for (const auto& pair : map) {
+      if (pair.second == nr) {
+        keys.push_back(pair.first);
+      }
+    }
     if(keys.size()>0)
     {
       if(keys.size()>1)
@@ -313,13 +308,17 @@ bool ForwardTranslator::applyAirtightnessLevel(contam::IndexModel model)
     return false;
   }
   std::map<std::string,int> afeMap;
-  QList<std::string> grade, wallExt, wallInt, floor, roof;
-  grade << "Leaky" << "Average" << "Tight";
-  wallExt << "ExtWallLeaky" << "ExtWallAvg" << "ExtWallTight";
-  wallInt << "IntWallLeaky" << "IntWallAvg" << "IntWallTight";
-  floor << "FloorLeaky" << "FloorAvg" << "FloorTight";
-  roof << "RoofLeaky" << "RoofAvg" << "RoofTight";
-  int index = grade.indexOf(m_leakageDescriptor.get());
+  std::vector<std::string> grade({ "Leaky", "Average", "Tight" });
+  std::vector<std::string> wallExt({ "ExtWallLeaky", "ExtWallAvg", "ExtWallTight" });
+  std::vector<std::string> wallInt({ "IntWallLeaky", "IntWallAvg", "IntWallTight" });
+  std::vector<std::string> floor({ "FloorLeaky", "FloorAvg", "FloorTight" });
+  std::vector<std::string> roof({ "RoofLeaky", "RoofAvg", "RoofTight" });
+  int index = -1;
+  for (int i=0; i < grade.size(); ++i) {
+    if (grade[i] == m_leakageDescriptor.get()) {
+      index = i;
+    }
+  }
   if(index == -1) // Default to average, unknown leakage level
   {
     LOG(Warn, "Unknown airtightness level '" << m_leakageDescriptor.get() << "', defaulting to 'Average'");
@@ -442,8 +441,8 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
   m_logSink.resetStringStream();
 
   {
-    QString s = toQString(::openstudiocontam::embedded_files::getFileAsString(":/templates/template.prj"));
-    Reader r(&s);
+    std::string s = ::openstudiocontam::embedded_files::getFileAsString(":/templates/template.prj");
+    Reader r(s);
     m_prjModel.read(r);
     if (!m_prjModel.valid()) {
       LOG(Error, "Unable to load templates");
@@ -467,28 +466,33 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
     }
   }
 
-  QString output;
+  std::string output;
   int nr;
   // Set top-level model info
   boost::optional<model::Building> building = model.getOptionalUniqueModelObject<model::Building>();
-  QString modelDescr = QString("Automatically generated OpenStudio model");
+  std::string modelDescr = std::string("Automatically generated OpenStudio model");
   if(building) {
     boost::optional<std::string> name = building->name();
     if (name) {
-      modelDescr = QString("Automatically generated from \"%1\" OpenStudio model").arg(openstudio::toQString(name.get()));
+      modelDescr = std::string("Automatically generated from \"") + name.get() + std::string("\" OpenStudio model");
     }
   }
-  m_prjModel.setDesc(modelDescr.toStdString());
+  m_prjModel.setDesc(modelDescr);
   // Set the simulation length to match the length of the E+ simulation
   boost::optional<openstudio::model::RunPeriod> rp = model.runPeriod();
   if(rp) {
     bool goodDates = true;
     std::string startString,endString;
     try {
+      char buffer[256];
+
       openstudio::Date start(rp->getBeginMonth(),rp->getBeginDayOfMonth());
-      startString = start.monthOfYear().valueName() + QString().sprintf("%02d",start.dayOfMonth()).toStdString();
+      sprintf(buffer, "%02d", start.dayOfMonth());
+      startString = start.monthOfYear().valueName() + std::string(buffer);
       openstudio::Date end(rp->getEndMonth(),rp->getEndDayOfMonth());
-      endString = end.monthOfYear().valueName() + QString().sprintf("%02d",end.dayOfMonth()).toStdString();
+
+      sprintf(buffer, "%02d", end.dayOfMonth());
+      endString = end.monthOfYear().valueName() + std::string(buffer);
       m_startDateTime = boost::optional<DateTime>(DateTime(start,Time(0)));
       m_endDateTime = boost::optional<DateTime>(DateTime(end,Time(0,24)));
     } catch(...) {
@@ -527,21 +531,21 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
   double totalHeight = 0;
   for (const openstudio::model::BuildingStory& buildingStory : stories) {
     openstudio::contam::Level level;
-    level.setName(QString("<%1>").arg(nr).toStdString());
+    level.setName(std::string("<")+std::to_string(nr)+std::string(">"));
     m_levelMap[buildingStory.handle()] = nr;
     double ht = buildingStory.nominalFloortoFloorHeight().get();
     totalHeight += ht;
     double z = buildingStory.nominalZCoordinate().get();
     level.setNr(nr);
-    level.setRefht(QString("%1").arg(z).toStdString());
-    level.setDelht(QString("%1").arg(ht).toStdString());
+    level.setRefht(std::to_string(z));
+    level.setDelht(std::to_string(ht));
     m_prjModel.addLevel(level);
     nr++;
     //if (m_progressBar) {
     //  m_progressBar->setValue(m_progressBar->value() + 1);
     //}
   }
-  m_prjModel.setWind_H(QString().sprintf("%g",totalHeight).toStdString());
+  m_prjModel.setWind_H(std::to_string(totalHeight));
   // Check for levels - translation can't proceed without levels
   if(m_prjModel.levels().size() == 0) {
     LOG(Error, "Failed to find building stories in model, translation aborted");
@@ -558,11 +562,11 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
     m_zoneMap[thermalZone.handle()] = nr;
     //volumeMap[thermalZone.name().get()] = nr;
     zone.setNr(nr);
-    zone.setName(QString("Zone_%1").arg(nr).toStdString());
+    zone.setName(std::string("Zone_") + std::to_string(nr));
     boost::optional<double> volume = thermalZone.volume();
-    QString volString("0.0");
+    std::string volString("0.0");
     if(volume) {
-      volString = QString("%1").arg(*volume);
+      volString = std::to_string(*volume);
     } else {
       // Since it seems this is a pretty common thing, no warning unless we can't get a value
       // LOG(Warn, "Zone '" << name.toStdString() << "' has zero volume, trying to sum space volumes");
@@ -573,10 +577,10 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       if(vol == 0.0) {
         LOG(Warn, "Failed to compute volume for Zone '" << thermalZone.name().get() << "'");
       } else {
-        volString = QString("%1").arg(vol);
+        volString = std::to_string(vol);
       }
     }
-    zone.setVol(volString.toStdString());
+    zone.setVol(volString);
     zone.setVariablePressure(true);
     zone.setVariableContaminants(true);
     // Set level - this is not great and will fail to create a legitimate model in cases
@@ -597,7 +601,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       return boost::optional<contam::IndexModel>();
     }
     // set T0
-    zone.setT0(QString("293.15").toStdString());
+    zone.setT0("293.15");
     m_prjModel.addZone(zone);
     progress();
   }
@@ -625,23 +629,23 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       openstudio::contam::Ahs ahs;
       ahs.setNr(++nr);
       m_ahsMap[airloop.handle()] = nr;
-      ahs.setName(QString("AHS_%1").arg(nr).toStdString());
+      ahs.setName(std::string("AHS_")+std::to_string(nr));
       // Create supply and return zones
       openstudio::contam::Zone rz;
       rz.setNr(m_prjModel.zones().size()+1);
       rz.setPl(1);
-      rz.setT0(QString("293.15").toStdString());
+      rz.setT0("293.15");
       rz.setSystem(true);
       rz.setVariableContaminants(true);
-      rz.setName(QString("AHS_%1(Rec)").arg(nr).toStdString());
+      rz.setName(std::string("AHS_")+std::to_string(nr)+std::string("(Rec)"));
       //volumeMap[rz.name.toStdString()] = rz.nr;
       openstudio::contam::Zone sz;
       sz.setNr(rz.nr()+1);
       sz.setPl(1);
-      sz.setT0(QString("293.15").toStdString());
+      sz.setT0("293.15");
       sz.setSystem(true);
       sz.setVariableContaminants(true);
-      sz.setName(QString("AHS_%1(Sup)").arg(nr).toStdString());
+      sz.setName(std::string("AHS_")+std::to_string(nr)+std::string("(Sup)"));
       //volumeMap[sz.name.toStdString()] = sz.nr;
       // Store the zone numbers in the ahs
       ahs.setZone_r(rz.nr());
@@ -682,7 +686,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
     // Now loop back through the AHS list and connect the supply and return zones together
     for(unsigned int i=0;i<m_prjModel.ahs().size();i++)
     {
-      std::string loopName = QString("AHS_%1").arg(i+1).toStdString();
+      std::string loopName = std::string("AHS_") + std::to_string(i+1);
       // Recirculation path
       openstudio::contam::AirflowPath recirc;
       recirc.setNr(m_prjModel.airflowPaths().size()+1);
@@ -753,8 +757,8 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
             int nr =  m_zoneMap[thermalZone.handle()];
             // std::cout << "Found time series for zone " << name.get() << ", CONTAM index " << nr << std::endl;
             // Create a control node
-            std::string controlName = QString("ctrl_z_%1").arg(nr).toStdString();
-            std::string valueName = QString("temp_%1").arg(nr).toStdString();
+            std::string controlName = std::string("ctrl_z_")+std::to_string(nr);
+            std::string valueName = std::string("temp_")+std::to_string(nr);
             m_cvf.addTimeSeries(valueName,*timeSeries);
             CvfDat ctrl;
             ctrl.setName(controlName);
@@ -788,15 +792,19 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
               "System Node MassFlowRate", keyValue);
             if (timeSeries) {
               //std::cout << "Found time series for supply to zone " << thermalZone.name().get() << std::endl;
-              nr = m_pathMap.value(thermalZone.name().get()+" supply",0);
+              nr = 0;
+              const auto& it = m_pathMap.find(thermalZone.name().get() + " supply");
+              if (it != m_pathMap.end()) {
+                nr = it->second;
+              }
               // There really should not be a case of missing number here, but it is better to be safe
               if(!nr) {
                 LOG(Error,"Supply node for zone '" << thermalZone.name().get() << "' has no associated CONTAM path");
                 continue;
               }
               // Create a control node
-              std::string controlName = QString("ctrl_p_%1").arg(nr).toStdString();
-              std::string valueName = QString("supply_%1").arg(nr).toStdString();
+              std::string controlName = std::string("ctrl_p_")+std::to_string(nr);
+              std::string valueName = std::string("supply_")+std::to_string(nr);
               m_cvf.addTimeSeries(valueName,*timeSeries);
               CvfDat ctrl;
               ctrl.setName(controlName);
@@ -807,15 +815,19 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
               if(m_ratioOverride) { // This assumes that there *is* a return, which could be wrong? maybe?
                 // Create a new time series
                 TimeSeries returnSeries = (*timeSeries)*m_returnSupplyRatio;
-                nr = m_pathMap.value(thermalZone.name().get()+" return",0);
+                nr = 0;
+                const auto& it = m_pathMap.find(thermalZone.name().get() + " return");
+                if (it != m_pathMap.end()) {
+                  nr = it->second;
+                }
                 // There really should not be a case of missing number here, but it is better to be safe
                 if(!nr) {
                   LOG(Error,"Failed to find return path for zone '" << thermalZone.name().get() << "'");
                   continue;
                 }
                 // Create a control node
-                std::string controlName = QString("ctrl_p_%1r").arg(nr).toStdString();
-                std::string valueName = QString("return_%1").arg(nr).toStdString();
+                std::string controlName = std::string("ctrl_p_")+std::to_string(nr);
+                std::string valueName = std::string("return_")+std::to_string(nr);
                 m_cvf.addTimeSeries(valueName,*timeSeries);
                 CvfDat ctrl;
                 ctrl.setName(controlName);
@@ -840,15 +852,19 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
                 "System Node MassFlowRate", keyValue);
               if (timeSeries) {
                 //std::cout << "Found time series for return from zone " << thermalZone.name().get() << std::endl;
-                nr = m_pathMap.value(thermalZone.name().get()+" return",0);
+                nr = 0;
+                const auto& it = m_pathMap.find(thermalZone.name().get() + " return");
+                if (it != m_pathMap.end()) {
+                  nr = it->second;
+                }
                 // There really should not be a case of missing number here, but it is better to be safe
                 if(!nr) {
                   LOG(Error,"Return node for zone '" << thermalZone.name().get() << "' has no associated CONTAM path");
                   continue;
                 }
                 // Create a control node
-                std::string controlName = QString("ctrl_p_%1").arg(nr).toStdString();
-                std::string valueName = QString("return_%1").arg(nr).toStdString();
+                std::string controlName = std::string("ctrl_p_")+std::to_string(nr);
+                std::string valueName = std::string("return_")+std::to_string(nr);
                 m_cvf.addTimeSeries(valueName,*timeSeries);
                 CvfDat ctrl;
                 ctrl.setName(controlName);
@@ -877,13 +893,22 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
           double flowRate = area*0.00508*1.2041;  // Assume 1 scfm/ft^2 as an approximation
           std::string supplyName = thermalZone.name().get() + " supply";
           std::string returnName = thermalZone.name().get() + " return";
-          int supplyNr = m_pathMap.value(supplyName,0);
-          if(supplyNr) {
-            m_prjModel.airflowPaths()[supplyNr - 1].setFahs(QString().sprintf("%g", flowRate).toStdString());
+          int supplyNr = 0;
+          const auto& its = m_pathMap.find(supplyName);
+          if (its != m_pathMap.end()) {
+            supplyNr = its->second;
           }
-          int returnNr = m_pathMap.value(returnName,0);
+          if(supplyNr) {
+            m_prjModel.airflowPaths()[supplyNr - 1].setFahs(std::to_string(flowRate));
+          }
+
+          int returnNr = 0; 
+          const auto& itr = m_pathMap.find(returnName);
+          if (itr != m_pathMap.end()) {
+            returnNr = itr->second;
+          }
           if(returnNr) {
-            m_prjModel.airflowPaths()[returnNr - 1].setFahs(QString().sprintf("%g", m_returnSupplyRatio*flowRate).toStdString());
+            m_prjModel.airflowPaths()[returnNr - 1].setFahs(std::to_string(m_returnSupplyRatio*flowRate));
           }
         }
       }
@@ -950,11 +975,11 @@ int ForwardTranslator::addNewAirflowElement(contam::IndexModel model,std::string
   double Ct = F/(SRHO*std::pow(deltaP,n));
   double Cl = laminarCoefficient(Ct,n);
 
-  std::string lam = QString().sprintf("%g",Cl).toStdString();
-  std::string turb = QString().sprintf("%g",Ct).toStdString();
-  std::string expt = QString().sprintf("%g",n).toStdString();
-  std::string dP = QString().sprintf("%g",deltaP).toStdString();
-  std::string Flow = QString().sprintf("%g",F).toStdString();
+  std::string lam = std::to_string(Cl);
+  std::string turb = std::to_string(Ct);
+  std::string expt = std::to_string(n);
+  std::string dP = std::to_string(deltaP);
+  std::string Flow = std::to_string(F);
   int u_P = 0;
   int u_F = 1; // Display units are m^3/h
 

@@ -107,12 +107,12 @@ std::string WeatherDataImpl::write()
 
 double WeatherDataImpl::Tambt() const
 {
-  return m_Tambt.toDouble();
+  return FLOAT_NO_CHECK(m_Tambt);
 }
 
 bool WeatherDataImpl::setTambt(const double Tambt)
 {
-  m_Tambt = QString::number(Tambt);
+  m_Tambt = std::to_string(Tambt);
   return true;
 }
 
@@ -130,12 +130,12 @@ bool WeatherDataImpl::setTambt(const std::string &Tambt)
 
 double WeatherDataImpl::barpres() const
 {
-  return m_barpres.toDouble();
+  return FLOAT_NO_CHECK(m_barpres);
 }
 
 bool WeatherDataImpl::setBarpres(const double barpres)
 {
-  m_barpres = QString::number(barpres);
+  m_barpres = std::to_string(barpres);
   return true;
 }
 
@@ -153,12 +153,12 @@ bool WeatherDataImpl::setBarpres(const std::string &barpres)
 
 double WeatherDataImpl::windspd() const
 {
-  return m_windspd.toDouble();
+  return FLOAT_NO_CHECK(m_windspd);
 }
 
 bool WeatherDataImpl::setWindspd(const double windspd)
 {
-  m_windspd = QString::number(windspd);
+  m_windspd = std::to_string(windspd);
   return true;
 }
 
@@ -176,12 +176,12 @@ bool WeatherDataImpl::setWindspd(const std::string &windspd)
 
 double WeatherDataImpl::winddir() const
 {
-  return m_winddir.toDouble();
+  return FLOAT_NO_CHECK(m_winddir);
 }
 
 bool WeatherDataImpl::setWinddir(const double winddir)
 {
-  m_winddir = QString::number(winddir);
+  m_winddir = std::to_string(winddir);
   return true;
 }
 
@@ -199,12 +199,12 @@ bool WeatherDataImpl::setWinddir(const std::string &winddir)
 
 double WeatherDataImpl::relhum() const
 {
-  return m_relhum.toDouble();
+  return FLOAT_NO_CHECK(m_relhum);
 }
 
 bool WeatherDataImpl::setRelhum(const double relhum)
 {
-  m_relhum = QString::number(relhum);
+  m_relhum = std::to_string(relhum);
   return true;
 }
 

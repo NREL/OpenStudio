@@ -35,8 +35,6 @@
 
 #include "../utilities/core/String.hpp"
 
-#include <QVector>
-
 namespace openstudio {
 namespace contam {
 namespace detail {

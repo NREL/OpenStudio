@@ -35,8 +35,6 @@
 #include "../utilities/data/TimeSeries.hpp"
 #include "../utilities/core/Path.hpp"
 
-#include <QVector>
-
 #include "../AirflowAPI.hpp"
 
 namespace openstudio {
@@ -95,16 +93,16 @@ public:
 
 private:
   void clearLfr();
-  bool readLfr(QString fileName);
+  bool readLfr(const std::string& fileName);
   void clearNfr();
-  bool readNfr(QString fileName);
-  bool computeDateTimes(QVector<QString> day, QVector<QString> time);
+  bool readNfr(const std::string& fileName);
+  bool computeDateTimes(const std::vector<std::string>& day, const std::vector<std::string>& time);
 
-  QVector<int> m_pathNr;  // the CONTAM path index
+  std::vector<int> m_pathNr;  // the CONTAM path index
   std::vector<std::vector<double> > m_dP;
   std::vector<std::vector<double> > m_F0;
   std::vector<std::vector<double> > m_F1;
-  QVector<int> m_nodeNr;  // the CONTAM node index
+  std::vector<int> m_nodeNr;  // the CONTAM node index
   std::vector<std::vector<double> > m_T;
   std::vector<std::vector<double> > m_P;
   std::vector<std::vector<double> > m_D;

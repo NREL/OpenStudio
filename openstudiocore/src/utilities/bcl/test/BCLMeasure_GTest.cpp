@@ -133,6 +133,13 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
   std::string className = BCLMeasure::makeClassName(" _ $ Test & Measure");
   EXPECT_EQ("ATestMeasure", className);
 
+  std::string className2 = BCLMeasure::makeClassName("3 _ $ ");
+  EXPECT_EQ("A3", className2);
+
+  std::string className3 = BCLMeasure::makeClassName(" _ $ ");
+  ASSERT_FALSE(className3.empty());
+  EXPECT_EQ('A', className3[0]);
+
   try{
     BCLMeasure measure("Test Measure", className, dir, "Envelope.Fenestration",
                        MeasureType::ModelMeasure, "Description", "Modeler Description");

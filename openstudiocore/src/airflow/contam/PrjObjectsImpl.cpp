@@ -33,6 +33,31 @@ namespace openstudio {
 namespace contam {
 namespace detail {
 
+double contamFloatCheck(const std::string& a, bool* b) {
+  double result = 0.0;
+  try {
+    result = std::stod(a);
+    if (b != nullptr) {
+      *b = true;
+    }
+  } catch (const std::exception&) {
+    if (b != nullptr) {
+      *b = false;
+    }
+  }
+  return result;
+}
+
+double contamFloatNoCheck(const std::string& a) {
+  double result = 0.0;
+  try {
+    result = std::stod(a);
+  }
+  catch (const std::exception&) {
+  }
+  return result;
+}
+
 void ZoneImpl::setDefaults()
 {
   m_nr = 0;
@@ -263,12 +288,12 @@ void ZoneImpl::setPl(const int pl)
 
 double ZoneImpl::relHt() const
 {
-  return m_relHt.toDouble();
+  return FLOAT_NO_CHECK(m_relHt);
 }
 
 bool ZoneImpl::setRelHt(const double relHt)
 {
-  m_relHt = QString::number(relHt);
+  m_relHt = std::to_string(relHt);
   return true;
 }
 
@@ -286,12 +311,12 @@ bool ZoneImpl::setRelHt(const std::string &relHt)
 
 double ZoneImpl::Vol() const
 {
-  return m_Vol.toDouble();
+  return FLOAT_NO_CHECK(m_Vol);
 }
 
 bool ZoneImpl::setVol(const double Vol)
 {
-  m_Vol = QString::number(Vol);
+  m_Vol = std::to_string(Vol);
   return true;
 }
 
@@ -309,12 +334,12 @@ bool ZoneImpl::setVol(const std::string &Vol)
 
 double ZoneImpl::T0() const
 {
-  return m_T0.toDouble();
+  return FLOAT_NO_CHECK(m_T0);
 }
 
 bool ZoneImpl::setT0(const double T0)
 {
-  m_T0 = QString::number(T0);
+  m_T0 = std::to_string(T0);
   return true;
 }
 
@@ -332,12 +357,12 @@ bool ZoneImpl::setT0(const std::string &T0)
 
 double ZoneImpl::P0() const
 {
-  return m_P0.toDouble();
+  return FLOAT_NO_CHECK(m_P0);
 }
 
 bool ZoneImpl::setP0(const double P0)
 {
-  m_P0 = QString::number(P0);
+  m_P0 = std::to_string(P0);
   return true;
 }
 
@@ -445,12 +470,12 @@ void ZoneImpl::setCfdname(const std::string &cfdname)
 
 double ZoneImpl::X1() const
 {
-  return m_X1.toDouble();
+  return FLOAT_NO_CHECK(m_X1);
 }
 
 bool ZoneImpl::setX1(const double X1)
 {
-  m_X1 = QString::number(X1);
+  m_X1 = std::to_string(X1);
   return true;
 }
 
@@ -468,12 +493,12 @@ bool ZoneImpl::setX1(const std::string &X1)
 
 double ZoneImpl::Y1() const
 {
-  return m_Y1.toDouble();
+  return FLOAT_NO_CHECK(m_Y1);
 }
 
 bool ZoneImpl::setY1(const double Y1)
 {
-  m_Y1 = QString::number(Y1);
+  m_Y1 = std::to_string(Y1);
   return true;
 }
 
@@ -491,12 +516,12 @@ bool ZoneImpl::setY1(const std::string &Y1)
 
 double ZoneImpl::H1() const
 {
-  return m_H1.toDouble();
+  return FLOAT_NO_CHECK(m_H1);
 }
 
 bool ZoneImpl::setH1(const double H1)
 {
-  m_H1 = QString::number(H1);
+  m_H1 = std::to_string(H1);
   return true;
 }
 
@@ -514,12 +539,12 @@ bool ZoneImpl::setH1(const std::string &H1)
 
 double ZoneImpl::X2() const
 {
-  return m_X2.toDouble();
+  return FLOAT_NO_CHECK(m_X2);
 }
 
 bool ZoneImpl::setX2(const double X2)
 {
-  m_X2 = QString::number(X2);
+  m_X2 = std::to_string(X2);
   return true;
 }
 
@@ -537,12 +562,12 @@ bool ZoneImpl::setX2(const std::string &X2)
 
 double ZoneImpl::Y2() const
 {
-  return m_Y2.toDouble();
+  return FLOAT_NO_CHECK(m_Y2);
 }
 
 bool ZoneImpl::setY2(const double Y2)
 {
-  m_Y2 = QString::number(Y2);
+  m_Y2 = std::to_string(Y2);
   return true;
 }
 
@@ -560,12 +585,12 @@ bool ZoneImpl::setY2(const std::string &Y2)
 
 double ZoneImpl::H2() const
 {
-  return m_H2.toDouble();
+  return FLOAT_NO_CHECK(m_H2);
 }
 
 bool ZoneImpl::setH2(const double H2)
 {
-  m_H2 = QString::number(H2);
+  m_H2 = std::to_string(H2);
   return true;
 }
 
@@ -583,12 +608,12 @@ bool ZoneImpl::setH2(const std::string &H2)
 
 double ZoneImpl::celldx() const
 {
-  return m_celldx.toDouble();
+  return FLOAT_NO_CHECK(m_celldx);
 }
 
 bool ZoneImpl::setCelldx(const double celldx)
 {
-  m_celldx = QString::number(celldx);
+  m_celldx = std::to_string(celldx);
   return true;
 }
 
@@ -606,12 +631,12 @@ bool ZoneImpl::setCelldx(const std::string &celldx)
 
 double ZoneImpl::axialD() const
 {
-  return m_axialD.toDouble();
+  return FLOAT_NO_CHECK(m_axialD);
 }
 
 bool ZoneImpl::setAxialD(const double axialD)
 {
-  m_axialD = QString::number(axialD);
+  m_axialD = std::to_string(axialD);
   return true;
 }
 
@@ -688,7 +713,7 @@ bool ZoneImpl::system() const
 
 double ZoneImpl::ic(const int i) const
 {
-  return m_ic[i].toDouble();
+  return FLOAT_NO_CHECK(m_ic[i]);
 }
 
 std::vector<double> ZoneImpl::ic() const
@@ -696,14 +721,14 @@ std::vector<double> ZoneImpl::ic() const
   std::vector<double> out;
   for(int i=0;i<m_ic.size();i++)
   {
-    out.push_back(m_ic[i].toDouble());
+    out.push_back(FLOAT_NO_CHECK(m_ic[i]));
   }
   return out;
 }
 
 bool ZoneImpl::setIc(const int i, const double value)
 {
-  m_ic[i] = QString::number(value);
+  m_ic[i] = std::to_string(value);
   return true;
 }
 
@@ -721,10 +746,10 @@ bool ZoneImpl::setIc(const int i, const std::string &value)
 
 bool ZoneImpl::setIc(std::vector<double> &ic)
 {
-  QVector<QString> in;
+  std::vector<std::string> in;
   for(unsigned i=0;i<ic.size();i++)
   {
-    in << QString::number(ic[i]);
+    in.push_back(std::to_string(ic[i]));
   }
   m_ic = in;
   return true;
@@ -732,7 +757,7 @@ bool ZoneImpl::setIc(std::vector<double> &ic)
 
 bool ZoneImpl::setIc(std::vector<std::string> &ic)
 {
-  QVector<QString> in;
+  std::vector<std::string> in;
   for(unsigned i=0;i<ic.size();i++)
   {
     bool ok;
@@ -741,7 +766,7 @@ bool ZoneImpl::setIc(std::vector<std::string> &ic)
     {
       return false;
     }
-    in << STR_TO_FLOAT(ic[i]);
+    in.push_back(STR_TO_FLOAT(ic[i]));
   }
   m_ic = in;
   return true;
@@ -880,12 +905,12 @@ void SpeciesImpl::setNtflag(const bool ntflag)
 
 double SpeciesImpl::molwt() const
 {
-  return m_molwt.toDouble();
+  return FLOAT_NO_CHECK(m_molwt);
 }
 
 bool SpeciesImpl::setMolwt(const double molwt)
 {
-  m_molwt = QString::number(molwt);
+  m_molwt = std::to_string(molwt);
   return true;
 }
 
@@ -903,12 +928,12 @@ bool SpeciesImpl::setMolwt(const std::string &molwt)
 
 double SpeciesImpl::mdiam() const
 {
-  return m_mdiam.toDouble();
+  return FLOAT_NO_CHECK(m_mdiam);
 }
 
 bool SpeciesImpl::setMdiam(const double mdiam)
 {
-  m_mdiam = QString::number(mdiam);
+  m_mdiam = std::to_string(mdiam);
   return true;
 }
 
@@ -926,12 +951,12 @@ bool SpeciesImpl::setMdiam(const std::string &mdiam)
 
 double SpeciesImpl::edens() const
 {
-  return m_edens.toDouble();
+  return FLOAT_NO_CHECK(m_edens);
 }
 
 bool SpeciesImpl::setEdens(const double edens)
 {
-  m_edens = QString::number(edens);
+  m_edens = std::to_string(edens);
   return true;
 }
 
@@ -949,7 +974,7 @@ bool SpeciesImpl::setEdens(const std::string &edens)
 
 double SpeciesImpl::decay() const
 {
-  return m_decay.toDouble();
+  return FLOAT_NO_CHECK(m_decay);
 }
 
 bool SpeciesImpl::setDecay(const double decay)
@@ -972,12 +997,12 @@ bool SpeciesImpl::setDecay(const std::string &decay)
 
 double SpeciesImpl::Dm() const
 {
-  return m_Dm.toDouble();
+  return FLOAT_NO_CHECK(m_Dm);
 }
 
 bool SpeciesImpl::setDm(const double Dm)
 {
-  m_Dm = QString::number(Dm);
+  m_Dm = std::to_string(Dm);
   return true;
 }
 
@@ -995,12 +1020,12 @@ bool SpeciesImpl::setDm(const std::string &Dm)
 
 double SpeciesImpl::ccdef() const
 {
-  return m_ccdef.toDouble();
+  return FLOAT_NO_CHECK(m_ccdef);
 }
 
 bool SpeciesImpl::setCcdef(const double ccdef)
 {
-  m_ccdef = QString::number(ccdef);
+  m_ccdef = std::to_string(ccdef);
   return true;
 }
 
@@ -1018,7 +1043,7 @@ bool SpeciesImpl::setCcdef(const std::string &ccdef)
 
 double SpeciesImpl::Cp() const
 {
-  return m_Cp.toDouble();
+  return FLOAT_NO_CHECK(m_Cp);
 }
 
 bool SpeciesImpl::setCp(const double Cp)
@@ -1527,12 +1552,12 @@ void AirflowPathImpl::setPld(const int pld)
 
 double AirflowPathImpl::X() const
 {
-  return m_X.toDouble();
+  return FLOAT_NO_CHECK(m_X);
 }
 
 bool AirflowPathImpl::setX(const double X)
 {
-  m_X = QString::number(X);
+  m_X = std::to_string(X);
   return true;
 }
 
@@ -1550,12 +1575,12 @@ bool AirflowPathImpl::setX(const std::string &X)
 
 double AirflowPathImpl::Y() const
 {
-  return m_Y.toDouble();
+  return FLOAT_NO_CHECK(m_Y);
 }
 
 bool AirflowPathImpl::setY(const double Y)
 {
-  m_Y = QString::number(Y);
+  m_Y = std::to_string(Y);
   return true;
 }
 
@@ -1573,12 +1598,12 @@ bool AirflowPathImpl::setY(const std::string &Y)
 
 double AirflowPathImpl::relHt() const
 {
-  return m_relHt.toDouble();
+  return FLOAT_NO_CHECK(m_relHt);
 }
 
 bool AirflowPathImpl::setRelHt(const double relHt)
 {
-  m_relHt = QString::number(relHt);
+  m_relHt = std::to_string(relHt);
   return true;
 }
 
@@ -1596,12 +1621,12 @@ bool AirflowPathImpl::setRelHt(const std::string &relHt)
 
 double AirflowPathImpl::mult() const
 {
-  return m_mult.toDouble();
+  return FLOAT_NO_CHECK(m_mult);
 }
 
 bool AirflowPathImpl::setMult(const double mult)
 {
-  m_mult = QString::number(mult);
+  m_mult = std::to_string(mult);
   return true;
 }
 
@@ -1619,12 +1644,12 @@ bool AirflowPathImpl::setMult(const std::string &mult)
 
 double AirflowPathImpl::wPset() const
 {
-  return m_wPset.toDouble();
+  return FLOAT_NO_CHECK(m_wPset);
 }
 
 bool AirflowPathImpl::setWPset(const double wPset)
 {
-  m_wPset = QString::number(wPset);
+  m_wPset = std::to_string(wPset);
   return true;
 }
 
@@ -1642,12 +1667,12 @@ bool AirflowPathImpl::setWPset(const std::string &wPset)
 
 double AirflowPathImpl::wPmod() const
 {
-  return m_wPmod.toDouble();
+  return FLOAT_NO_CHECK(m_wPmod);
 }
 
 bool AirflowPathImpl::setWPmod(const double wPmod)
 {
-  m_wPmod = QString::number(wPmod);
+  m_wPmod = std::to_string(wPmod);
   return true;
 }
 
@@ -1665,12 +1690,12 @@ bool AirflowPathImpl::setWPmod(const std::string &wPmod)
 
 double AirflowPathImpl::wazm() const
 {
-  return m_wazm.toDouble();
+  return FLOAT_NO_CHECK(m_wazm);
 }
 
 bool AirflowPathImpl::setWazm(const double wazm)
 {
-  m_wazm = QString::number(wazm);
+  m_wazm = std::to_string(wazm);
   return true;
 }
 
@@ -1688,12 +1713,12 @@ bool AirflowPathImpl::setWazm(const std::string &wazm)
 
 double AirflowPathImpl::Fahs() const
 {
-  return m_Fahs.toDouble();
+  return FLOAT_NO_CHECK(m_Fahs);
 }
 
 bool AirflowPathImpl::setFahs(const double Fahs)
 {
-  m_Fahs = QString::number(Fahs);
+  m_Fahs = std::to_string(Fahs);
   return true;
 }
 
@@ -1711,12 +1736,12 @@ bool AirflowPathImpl::setFahs(const std::string &Fahs)
 
 double AirflowPathImpl::Xmax() const
 {
-  return m_Xmax.toDouble();
+  return FLOAT_NO_CHECK(m_Xmax);
 }
 
 bool AirflowPathImpl::setXmax(const double Xmax)
 {
-  m_Xmax = QString::number(Xmax);
+  m_Xmax = std::to_string(Xmax);
   return true;
 }
 
@@ -1734,12 +1759,12 @@ bool AirflowPathImpl::setXmax(const std::string &Xmax)
 
 double AirflowPathImpl::Xmin() const
 {
-  return m_Xmin.toDouble();
+  return FLOAT_NO_CHECK(m_Xmin);
 }
 
 bool AirflowPathImpl::setXmin(const double Xmin)
 {
-  m_Xmin = QString::number(Xmin);
+  m_Xmin = std::to_string(Xmin);
   return true;
 }
 
@@ -2484,12 +2509,12 @@ void RunControlImpl::setAfmaxi(const int afmaxi)
 
 double RunControlImpl::afrcnvg() const
 {
-  return m_afrcnvg.toDouble();
+  return FLOAT_NO_CHECK(m_afrcnvg);
 }
 
 bool RunControlImpl::setAfrcnvg(const double afrcnvg)
 {
-  m_afrcnvg = QString::number(afrcnvg);
+  m_afrcnvg = std::to_string(afrcnvg);
   return true;
 }
 
@@ -2507,12 +2532,12 @@ bool RunControlImpl::setAfrcnvg(const std::string &afrcnvg)
 
 double RunControlImpl::afacnvg() const
 {
-  return m_afacnvg.toDouble();
+  return FLOAT_NO_CHECK(m_afacnvg);
 }
 
 bool RunControlImpl::setAfacnvg(const double afacnvg)
 {
-  m_afacnvg = QString::number(afacnvg);
+  m_afacnvg = std::to_string(afacnvg);
   return true;
 }
 
@@ -2530,12 +2555,12 @@ bool RunControlImpl::setAfacnvg(const std::string &afacnvg)
 
 double RunControlImpl::afrelax() const
 {
-  return m_afrelax.toDouble();
+  return FLOAT_NO_CHECK(m_afrelax);
 }
 
 bool RunControlImpl::setAfrelax(const double afrelax)
 {
-  m_afrelax = QString::number(afrelax);
+  m_afrelax = std::to_string(afrelax);
   return true;
 }
 
@@ -2563,12 +2588,12 @@ void RunControlImpl::setUac2(const int uac2)
 
 double RunControlImpl::Pres() const
 {
-  return m_Pres.toDouble();
+  return FLOAT_NO_CHECK(m_Pres);
 }
 
 bool RunControlImpl::setPres(const double Pres)
 {
-  m_Pres = QString::number(Pres);
+  m_Pres = std::to_string(Pres);
   return true;
 }
 
@@ -2626,12 +2651,12 @@ void RunControlImpl::setAflmaxi(const int aflmaxi)
 
 double RunControlImpl::aflcnvg() const
 {
-  return m_aflcnvg.toDouble();
+  return FLOAT_NO_CHECK(m_aflcnvg);
 }
 
 bool RunControlImpl::setAflcnvg(const double aflcnvg)
 {
-  m_aflcnvg = QString::number(aflcnvg);
+  m_aflcnvg = std::to_string(aflcnvg);
   return true;
 }
 
@@ -2689,12 +2714,12 @@ void RunControlImpl::setCcmaxi(const int ccmaxi)
 
 double RunControlImpl::ccrcnvg() const
 {
-  return m_ccrcnvg.toDouble();
+  return FLOAT_NO_CHECK(m_ccrcnvg);
 }
 
 bool RunControlImpl::setCcrcnvg(const double ccrcnvg)
 {
-  m_ccrcnvg = QString::number(ccrcnvg);
+  m_ccrcnvg = std::to_string(ccrcnvg);
   return true;
 }
 
@@ -2712,12 +2737,12 @@ bool RunControlImpl::setCcrcnvg(const std::string &ccrcnvg)
 
 double RunControlImpl::ccacnvg() const
 {
-  return m_ccacnvg.toDouble();
+  return FLOAT_NO_CHECK(m_ccacnvg);
 }
 
 bool RunControlImpl::setCcacnvg(const double ccacnvg)
 {
-  m_ccacnvg = QString::number(ccacnvg);
+  m_ccacnvg = std::to_string(ccacnvg);
   return true;
 }
 
@@ -2735,12 +2760,12 @@ bool RunControlImpl::setCcacnvg(const std::string &ccacnvg)
 
 double RunControlImpl::ccrelax() const
 {
-  return m_ccrelax.toDouble();
+  return FLOAT_NO_CHECK(m_ccrelax);
 }
 
 bool RunControlImpl::setCcrelax(const double ccrelax)
 {
-  m_ccrelax = QString::number(ccrelax);
+  m_ccrelax = std::to_string(ccrelax);
   return true;
 }
 
@@ -2798,12 +2823,12 @@ void RunControlImpl::setMfnmaxi(const int mfnmaxi)
 
 double RunControlImpl::mfnrcnvg() const
 {
-  return m_mfnrcnvg.toDouble();
+  return FLOAT_NO_CHECK(m_mfnrcnvg);
 }
 
 bool RunControlImpl::setMfnrcnvg(const double mfnrcnvg)
 {
-  m_mfnrcnvg = QString::number(mfnrcnvg);
+  m_mfnrcnvg = std::to_string(mfnrcnvg);
   return true;
 }
 
@@ -2821,12 +2846,12 @@ bool RunControlImpl::setMfnrcnvg(const std::string &mfnrcnvg)
 
 double RunControlImpl::mfnacnvg() const
 {
-  return m_mfnacnvg.toDouble();
+  return FLOAT_NO_CHECK(m_mfnacnvg);
 }
 
 bool RunControlImpl::setMfnacnvg(const double mfnacnvg)
 {
-  m_mfnacnvg = QString::number(mfnacnvg);
+  m_mfnacnvg = std::to_string(mfnacnvg);
   return true;
 }
 
@@ -2844,12 +2869,12 @@ bool RunControlImpl::setMfnacnvg(const std::string &mfnacnvg)
 
 double RunControlImpl::mfnrelax() const
 {
-  return m_mfnrelax.toDouble();
+  return FLOAT_NO_CHECK(m_mfnrelax);
 }
 
 bool RunControlImpl::setMfnrelax(const double mfnrelax)
 {
-  m_mfnrelax = QString::number(mfnrelax);
+  m_mfnrelax = std::to_string(mfnrelax);
   return true;
 }
 
@@ -2867,12 +2892,12 @@ bool RunControlImpl::setMfnrelax(const std::string &mfnrelax)
 
 double RunControlImpl::mfngamma() const
 {
-  return m_mfngamma.toDouble();
+  return FLOAT_NO_CHECK(m_mfngamma);
 }
 
 bool RunControlImpl::setMfngamma(const double mfngamma)
 {
-  m_mfngamma = QString::number(mfngamma);
+  m_mfngamma = std::to_string(mfngamma);
   return true;
 }
 
@@ -2930,12 +2955,12 @@ void RunControlImpl::setMftmaxi(const int mftmaxi)
 
 double RunControlImpl::mftrcnvg() const
 {
-  return m_mftrcnvg.toDouble();
+  return FLOAT_NO_CHECK(m_mftrcnvg);
 }
 
 bool RunControlImpl::setMftrcnvg(const double mftrcnvg)
 {
-  m_mftrcnvg = QString::number(mftrcnvg);
+  m_mftrcnvg = std::to_string(mftrcnvg);
   return true;
 }
 
@@ -2953,12 +2978,12 @@ bool RunControlImpl::setMftrcnvg(const std::string &mftrcnvg)
 
 double RunControlImpl::mftacnvg() const
 {
-  return m_mftacnvg.toDouble();
+  return FLOAT_NO_CHECK(m_mftacnvg);
 }
 
 bool RunControlImpl::setMftacnvg(const double mftacnvg)
 {
-  m_mftacnvg = QString::number(mftacnvg);
+  m_mftacnvg = std::to_string(mftacnvg);
   return true;
 }
 
@@ -2976,12 +3001,12 @@ bool RunControlImpl::setMftacnvg(const std::string &mftacnvg)
 
 double RunControlImpl::mftrelax() const
 {
-  return m_mftrelax.toDouble();
+  return FLOAT_NO_CHECK(m_mftrelax);
 }
 
 bool RunControlImpl::setMftrelax(const double mftrelax)
 {
-  m_mftrelax = QString::number(mftrelax);
+  m_mftrelax = std::to_string(mftrelax);
   return true;
 }
 
@@ -2999,12 +3024,12 @@ bool RunControlImpl::setMftrelax(const std::string &mftrelax)
 
 double RunControlImpl::mftgamma() const
 {
-  return m_mftgamma.toDouble();
+  return FLOAT_NO_CHECK(m_mftgamma);
 }
 
 bool RunControlImpl::setMftgamma(const double mftgamma)
 {
-  m_mftgamma = QString::number(mftgamma);
+  m_mftgamma = std::to_string(mftgamma);
   return true;
 }
 
@@ -3062,12 +3087,12 @@ void RunControlImpl::setMfvmaxi(const int mfvmaxi)
 
 double RunControlImpl::mfvrcnvg() const
 {
-  return m_mfvrcnvg.toDouble();
+  return FLOAT_NO_CHECK(m_mfvrcnvg);
 }
 
 bool RunControlImpl::setMfvrcnvg(const double mfvrcnvg)
 {
-  m_mfvrcnvg = QString::number(mfvrcnvg);
+  m_mfvrcnvg = std::to_string(mfvrcnvg);
   return true;
 }
 
@@ -3085,12 +3110,12 @@ bool RunControlImpl::setMfvrcnvg(const std::string &mfvrcnvg)
 
 double RunControlImpl::mfvacnvg() const
 {
-  return m_mfvacnvg.toDouble();
+  return FLOAT_NO_CHECK(m_mfvacnvg);
 }
 
 bool RunControlImpl::setMfvacnvg(const double mfvacnvg)
 {
-  m_mfvacnvg = QString::number(mfvacnvg);
+  m_mfvacnvg = std::to_string(mfvacnvg);
   return true;
 }
 
@@ -3108,12 +3133,12 @@ bool RunControlImpl::setMfvacnvg(const std::string &mfvacnvg)
 
 double RunControlImpl::mfvrelax() const
 {
-  return m_mfvrelax.toDouble();
+  return FLOAT_NO_CHECK(m_mfvrelax);
 }
 
 bool RunControlImpl::setMfvrelax(const double mfvrelax)
 {
-  m_mfvrelax = QString::number(mfvrelax);
+  m_mfvrelax = std::to_string(mfvrelax);
   return true;
 }
 
@@ -3171,12 +3196,12 @@ void RunControlImpl::setSim_1dd(const int sim_1dd)
 
 double RunControlImpl::celldx() const
 {
-  return m_celldx.toDouble();
+  return FLOAT_NO_CHECK(m_celldx);
 }
 
 bool RunControlImpl::setCelldx(const double celldx)
 {
-  m_celldx = QString::number(celldx);
+  m_celldx = std::to_string(celldx);
   return true;
 }
 
@@ -3224,12 +3249,12 @@ void RunControlImpl::setCvode_mth(const int cvode_mth)
 
 double RunControlImpl::cvode_rcnvg() const
 {
-  return m_cvode_rcnvg.toDouble();
+  return FLOAT_NO_CHECK(m_cvode_rcnvg);
 }
 
 bool RunControlImpl::setCvode_rcnvg(const double cvode_rcnvg)
 {
-  m_cvode_rcnvg = QString::number(cvode_rcnvg);
+  m_cvode_rcnvg = std::to_string(cvode_rcnvg);
   return true;
 }
 
@@ -3247,12 +3272,12 @@ bool RunControlImpl::setCvode_rcnvg(const std::string &cvode_rcnvg)
 
 double RunControlImpl::cvode_acnvg() const
 {
-  return m_cvode_acnvg.toDouble();
+  return FLOAT_NO_CHECK(m_cvode_acnvg);
 }
 
 bool RunControlImpl::setCvode_acnvg(const double cvode_acnvg)
 {
-  m_cvode_acnvg = QString::number(cvode_acnvg);
+  m_cvode_acnvg = std::to_string(cvode_acnvg);
   return true;
 }
 
@@ -3270,12 +3295,12 @@ bool RunControlImpl::setCvode_acnvg(const std::string &cvode_acnvg)
 
 double RunControlImpl::cvode_dtmax() const
 {
-  return m_cvode_dtmax.toDouble();
+  return FLOAT_NO_CHECK(m_cvode_dtmax);
 }
 
 bool RunControlImpl::setCvode_dtmax(const double cvode_dtmax)
 {
-  m_cvode_dtmax = QString::number(cvode_dtmax);
+  m_cvode_dtmax = std::to_string(cvode_dtmax);
   return true;
 }
 
@@ -3303,12 +3328,12 @@ void RunControlImpl::setTsdens(const int tsdens)
 
 double RunControlImpl::tsrelax() const
 {
-  return m_tsrelax.toDouble();
+  return FLOAT_NO_CHECK(m_tsrelax);
 }
 
 bool RunControlImpl::setTsrelax(const double tsrelax)
 {
-  m_tsrelax = QString::number(tsrelax);
+  m_tsrelax = std::to_string(tsrelax);
   return true;
 }
 
@@ -3699,7 +3724,7 @@ std::vector<double> RunControlImpl::rvals() const
   std::vector<double> out;
   for(unsigned i=0;i<m_rvals.size();i++)
   {
-    out.push_back(m_rvals[i].toDouble());
+    out.push_back(FLOAT_NO_CHECK(m_rvals[i]));
   }
   return out;
 }
@@ -3708,7 +3733,7 @@ bool RunControlImpl::setRvals(const std::vector<double> &rvals)
 {
   for(unsigned i=0;i<rvals.size();i++)
   {
-    m_rvals.push_back(QString::number(rvals[i]));
+    m_rvals.push_back(std::to_string(rvals[i]));
   }
   return true;
 }
@@ -3772,12 +3797,12 @@ void RunControlImpl::setCfd_ctype(const int cfd_ctype)
 
 double RunControlImpl::cfd_convcpl() const
 {
-  return m_cfd_convcpl.toDouble();
+  return FLOAT_NO_CHECK(m_cfd_convcpl);
 }
 
 bool RunControlImpl::setCfd_convcpl(const double cfd_convcpl)
 {
-  m_cfd_convcpl = QString::number(cfd_convcpl);
+  m_cfd_convcpl = std::to_string(cfd_convcpl);
   return true;
 }
 
@@ -3914,12 +3939,12 @@ void LevelImpl::setNr(const int nr)
 
 double LevelImpl::refht() const
 {
-  return m_refht.toDouble();
+  return FLOAT_NO_CHECK(m_refht);
 }
 
 bool LevelImpl::setRefht(const double refht)
 {
-  m_refht = QString::number(refht);
+  m_refht = std::to_string(refht);
   return true;
 }
 
@@ -3937,12 +3962,12 @@ bool LevelImpl::setRefht(const std::string &refht)
 
 double LevelImpl::delht() const
 {
-  return m_delht.toDouble();
+  return FLOAT_NO_CHECK(m_delht);
 }
 
 bool LevelImpl::setDelht(const double delht)
 {
-  m_delht = QString::number(delht);
+  m_delht = std::to_string(delht);
   return true;
 }
 
