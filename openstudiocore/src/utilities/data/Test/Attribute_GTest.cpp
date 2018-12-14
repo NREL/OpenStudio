@@ -32,8 +32,6 @@
 
 #include "../Attribute.hpp"
 
-#include <QDomDocument>
-
 #include <boost/regex.hpp>
 
 #include <limits>
@@ -344,6 +342,12 @@ TEST_F(DataFixture, Attribute_DisplayName) {
 }
 
 TEST_F(DataFixture, Attribute_Source) {
+
+  openstudio::path xmlPath = openstudio::toPath("./report_attribute_source.xml");
+  if(openstudio::filesystem::exists(xmlPath)){
+    openstudio::filesystem::remove(xmlPath);
+  }
+
   AttributeVector attributes;
 
   // create vector of attributes with no sources
@@ -353,10 +357,13 @@ TEST_F(DataFixture, Attribute_Source) {
   attributes.push_back(Attribute("My String Attribute","flat finish"));
   attributes.push_back(Attribute("tricky_source","don't talk back"));
 
-  // xml and back
   Attribute container("Containing Attribute",attributes);
-  QDomDocument doc = container.toXml();
-  OptionalAttribute containerCopy = Attribute::loadFromXml(doc);
+
+  // save to xml
+  container.saveToXml(xmlPath);
+
+  // load back
+  boost::optional<Attribute> containerCopy = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(containerCopy);
   AttributeVector attributesCopy = containerCopy.get().valueAsAttributeVector();
   EXPECT_EQ(attributes.size(),attributesCopy.size());
@@ -370,8 +377,8 @@ TEST_F(DataFixture, Attribute_Source) {
   }
 
   // xml and back
-  doc = container.toXml();
-  containerCopy = Attribute::loadFromXml(doc);
+  container.saveToXml(xmlPath);
+  containerCopy = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(containerCopy);
   attributesCopy = containerCopy.get().valueAsAttributeVector();
   EXPECT_EQ(attributes.size(),attributesCopy.size());
@@ -383,8 +390,8 @@ TEST_F(DataFixture, Attribute_Source) {
   attributes[2].setSource("a wiki");
 
   // xml and back
-  doc = container.toXml();
-  containerCopy = Attribute::loadFromXml(doc);
+  container.saveToXml(xmlPath);
+  containerCopy = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(containerCopy);
   attributesCopy = containerCopy.get().valueAsAttributeVector();
   EXPECT_EQ(attributes.size(),attributesCopy.size());

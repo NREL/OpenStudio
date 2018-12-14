@@ -34,12 +34,11 @@
 #include "../core/Containers.hpp"
 #include "../core/FilesystemHelpers.hpp"
 
+// TODO: keep only if handling UnitSystem in fromXML...
 #include "../units/QuantityFactory.hpp"
 
 #include <boost/lexical_cast.hpp>
-
-#include <QDomElement>
-#include <QTextStream>
+#include <pugixml.hpp>
 
 namespace openstudio {
 namespace detail {
@@ -231,98 +230,97 @@ namespace detail {
   {
   }
 
-  Attribute_Impl::Attribute_Impl(const QDomElement& element)
+  Attribute_Impl::Attribute_Impl(const pugi::xml_node& element)
   {
-    if(element.isNull()){
-      LOG_AND_THROW("Cannot construct Attribute from null QDomElement");
+    if(!element){
+      LOG_AND_THROW("Cannot construct Attribute from null pugi::xml_node element");
     }
 
-    QDomElement uuidElement = element.firstChildElement(QString::fromStdString("UUID"));
-    QDomElement versionUUIDElement = element.firstChildElement(QString::fromStdString("VersionUUID"));
-    QDomElement nameElement = element.firstChildElement(QString::fromStdString("Name"));
-    QDomElement displayNameElement = element.firstChildElement(QString::fromStdString("DisplayName"));
-    QDomElement sourceElement = element.firstChildElement(QString::fromStdString("Source"));
-    QDomElement valueTypeElement = element.firstChildElement(QString::fromStdString("ValueType"));
-    QDomElement valueElement = element.firstChildElement(QString::fromStdString("Value"));
-    QDomElement unitsElement = element.firstChildElement(QString::fromStdString("Units"));
-    QDomElement unitSystemElement = element.firstChildElement(QString::fromStdString("UnitSystem"));
+    pugi::xml_node uuidElement = element.child("UUID");
+    pugi::xml_node versionUUIDElement = element.child("VersionUUID");
+    pugi::xml_node nameElement = element.child("Name");
+    pugi::xml_node displayNameElement = element.child("DisplayName");
+    pugi::xml_node sourceElement = element.child("Source");
+    pugi::xml_node valueTypeElement = element.child("ValueType");
+    pugi::xml_node valueElement = element.child("Value");
+    pugi::xml_node unitsElement = element.child("Units");
+    pugi::xml_node unitSystemElement = element.child("UnitSystem");
 
-    if(uuidElement.isNull()){
-      LOG_AND_THROW("uuidElement is null");
+    if(!uuidElement){
+      LOG_AND_THROW("UUID is required and cannot be null.");
     }
-    if(versionUUIDElement.isNull()){
-      LOG_AND_THROW("versionUUIDElement is null");
+    if(!versionUUIDElement){
+      LOG_AND_THROW("VersionUUID is required and cannot be null.");
     }
-    if(nameElement.isNull()){
-      LOG_AND_THROW("nameElement is null");
+    if(!nameElement){
+      LOG_AND_THROW("Name is required and cannot be null.");
     }
-    if(valueTypeElement.isNull()){
-      LOG_AND_THROW("valueTypeElement is null");
+    if(!valueTypeElement){
+      LOG_AND_THROW("ValueType is required and cannot be null.");
     }
-    if(valueElement.isNull()){
-      LOG_AND_THROW("valueElement is null");
-    }
-
-    m_uuid = toUUID(uuidElement.firstChild().nodeValue().toStdString());
-
-    m_versionUUID = toUUID(versionUUIDElement.firstChild().nodeValue().toStdString());
-
-    m_name = nameElement.firstChild().nodeValue().toStdString();
-
-    if (!displayNameElement.isNull()){
-      m_displayName = displayNameElement.firstChild().nodeValue().toStdString();
+    if(!valueElement){
+      LOG_AND_THROW("Value is required and cannot be null.");
     }
 
-    if (!sourceElement.isNull()) {
-      m_source = sourceElement.firstChild().nodeValue().toStdString();
+    std::string uuid = uuidElement.text().as_string();
+    m_uuid = toUUID(uuid);
+
+    std::string vuuid = versionUUIDElement.text().as_string();
+    m_versionUUID = toUUID(vuuid);
+
+    m_name = nameElement.text().as_string();
+
+    if (displayNameElement){
+      m_displayName = displayNameElement.text().as_string();
     }
 
-    m_valueType = AttributeValueType(valueTypeElement.firstChild().nodeValue().toStdString());
-
-    if (!unitsElement.isNull()) {
-      m_units = unitsElement.firstChild().nodeValue().toStdString();
+    if (sourceElement) {
+      m_source = sourceElement.text().as_string();
     }
 
+    m_valueType = AttributeValueType(valueTypeElement.text().as_string());
+
+    if (unitsElement) {
+      m_units = unitsElement.text().as_string();
+    }
+
+    // TODO: handle unitsSystem conversion? Otherwise just remove...
     OptionalUnitSystem sys;
-    if (!unitSystemElement.isNull()) {
-      sys = UnitSystem(unitSystemElement.firstChild().nodeValue().toStdString());
+    if (unitSystemElement) {
+      sys = UnitSystem(unitSystemElement.text().as_string());
     }
 
-    // TODO: handle units?
+
 
     std::vector<Attribute> children;
-    QDomNodeList childNodes = valueElement.childNodes();
 
-    switch(m_valueType.value()){
-    case AttributeValueType::Boolean:
-      if (valueElement.firstChild().nodeValue() == "true"){
-        m_value = true;
-      }else{
-        m_value = false;
-      }
-      break;
-    case AttributeValueType::Integer:
-      m_value = valueElement.firstChild().nodeValue().toInt();
-      break;
-    case AttributeValueType::Unsigned:
-      m_value = valueElement.firstChild().nodeValue().toUInt();
-      break;
-    case AttributeValueType::Double:
-      m_value = valueElement.firstChild().nodeValue().toDouble();
-      break;
-    case AttributeValueType::String:
-      m_value = valueElement.firstChild().nodeValue().toStdString();
-      break;
-    case AttributeValueType::AttributeVector:
-      for (int i = 0; i < childNodes.count(); i++){
-        QDomElement childElement = childNodes.at(i).toElement();
-        children.push_back(Attribute(childElement));
-      }
-      m_value = children;
-      break;
-    default:
-      OS_ASSERT(false);
-      break;
+    switch (m_valueType.value()) {
+      case AttributeValueType::Boolean:
+        m_value = valueElement.text().as_bool();
+        break;
+      case AttributeValueType::Integer:
+        m_value = valueElement.text().as_int();
+        break;
+      case AttributeValueType::Unsigned:
+        m_value = valueElement.text().as_uint();
+        break;
+      case AttributeValueType::Double:
+        m_value = valueElement.text().as_double();
+        break;
+      case AttributeValueType::String:
+        // Note JM 2018-12-14: Carefull not to end up with const char,
+        // since that'll emplace in bool by default
+        m_value.emplace<std::string>(valueElement.text().as_string());
+        break;
+      case AttributeValueType::AttributeVector:
+        for (pugi::xml_node& childElement: valueElement.children()) {
+          children.push_back(Attribute(childElement));
+        }
+        m_value = children;
+        break;
+      default:
+        OS_ASSERT(false);
+        break;
     }
   }
 
@@ -569,12 +567,10 @@ namespace detail {
           if constexpr (std::is_same_v<T, openstudio::Attribute>) {
             // TODO: call toXml()
             // This will change anyways once QXML is removed
-            QString str;
-            QTextStream qts(&str);
-            this->toXml().save(qts, 2);
-            ss << str.toStdString();
+            this->toXml().save(ss, "  ");
 
-          // Otherwise, if anything else but monostate
+          // Otherwise, if anything else but monostate, it's a simple type
+          // and we print the value as is
           } else if constexpr (!std::is_same_v<T, std::monostate>) {
             ss << std::boolalpha << val;
           }
@@ -583,65 +579,14 @@ namespace detail {
 
     return ss.str();
 
-    // TODO: remove
-/*
- *    QString str;
- *    QTextStream qts(&str);
- *
- *    switch(this->valueType().value()) {
- *      case AttributeValueType::Boolean:
- *        if (this->valueAsBoolean()) {
- *          result = "true";
- *        }
- *        else {
- *          result = "false";
- *        }
- *        break;
- *      case AttributeValueType::Integer:
- *        result = boost::lexical_cast<std::string>(this->valueAsInteger());
- *        break;
- *      case AttributeValueType::Unsigned:
- *        result = boost::lexical_cast<std::string>(this->valueAsUnsigned());
- *        break;
- *      case AttributeValueType::Double:
- *        result = openstudio::toString(this->valueAsDouble());
- *        break;
- *      case AttributeValueType::Quantity :
- *        ss << this->valueAsQuantity();
- *        result = ss.str();
- *        break;
- *      case AttributeValueType::Unit :
- *        ss << this->valueAsUnit();
- *        result = ss.str();
- *        break;
- *      case AttributeValueType::String :
- *        result = this->valueAsString();
- *        break;
- *      case AttributeValueType::AttributeVector:
- *        this->toXml().save(qts, 2);
- *        result = str.toStdString();
- *        break;
- *      default:
- *        OS_ASSERT(false);
- *        break;
- *    }
- *    return result;
- */
   }
 
 
-
-
-
-  QDomDocument Attribute_Impl::toXml() const
+  pugi::xml_document Attribute_Impl::toXml() const
   {
-    QDomDocument doc;
-    QDomElement element = doc.createElement(QString("Attribute"));
-    OS_ASSERT(!element.isNull());
-
-    this->writeValues(doc, element);
-    doc.appendChild(element);
-
+    pugi::xml_document doc;
+    pugi::xml_node element = doc.append_child("Attribute");
+    this->writeValues(element);
     return doc;
   }
 
@@ -693,84 +638,66 @@ namespace detail {
     return result;
   }
 
-  void Attribute_Impl::writeValues(QDomDocument& doc, QDomElement& element) const
+  void Attribute_Impl::writeValues(pugi::xml_node& element) const
   {
-    QDomElement childElement;
-    QDomText text;
+    pugi::xml_node subElement = element.append_child("UUID");
+    subElement.text().set(openstudio::toString(m_uuid).c_str());
 
-    childElement = doc.createElement(QString::fromStdString("UUID"));
-    text = doc.createTextNode(openstudio::toQString(m_uuid));
-    childElement.appendChild(text);
-    element.appendChild(childElement);
+    subElement = element.append_child("VersionUUID");
+    subElement.text().set(openstudio::toString(m_versionUUID).c_str());
 
-    childElement = doc.createElement(QString::fromStdString("VersionUUID"));
-    text = doc.createTextNode(openstudio::toQString(m_versionUUID));
-    childElement.appendChild(text);
-    element.appendChild(childElement);
-
-    childElement = doc.createElement(QString::fromStdString("Name"));
-    text = doc.createTextNode(toQString(m_name));
-    childElement.appendChild(text);
-    element.appendChild(childElement);
+    subElement = element.append_child("Name");
+    subElement.text().set(m_name.c_str());
 
     if (m_displayName){
-      childElement = doc.createElement(QString::fromStdString("DisplayName"));
-      text = doc.createTextNode(toQString(*m_displayName));
-      childElement.appendChild(text);
-      element.appendChild(childElement);
+      subElement = element.append_child("DisplayName");
+      subElement.text().set(m_displayName.get().c_str());
     }
 
     if (!m_source.empty()) {
-      childElement = doc.createElement(QString::fromStdString("Source"));
-      text = doc.createTextNode(toQString(m_source));
-      childElement.appendChild(text);
-      element.appendChild(childElement);
+      subElement = element.append_child("Source");
+      subElement.text().set(m_source.c_str());
     }
 
-    childElement = doc.createElement(QString::fromStdString("ValueType"));
-    text = doc.createTextNode(toQString(m_valueType.valueName()));
-    childElement.appendChild(text);
-    element.appendChild(childElement);
+    subElement = element.append_child("ValueType");
+    subElement.text().set(m_valueType.valueName().c_str());
 
-    std::string temp;
-    childElement = doc.createElement(QString::fromStdString("Value"));
-    switch(m_valueType.value()){
-    case AttributeValueType::Boolean:
-      text = doc.createTextNode(this->valueAsBoolean() ? QString::fromStdString("true") : QString::fromStdString("false"));
-      childElement.appendChild(text);
-      break;
-    case AttributeValueType::Integer:
-      text = doc.createTextNode(QString::number(this->valueAsInteger()));
-      childElement.appendChild(text);
-      break;
-    case AttributeValueType::Unsigned:
-      text = doc.createTextNode(QString::number(this->valueAsUnsigned()));
-      childElement.appendChild(text);
-      break;
-    case AttributeValueType::Double:
-      temp = boost::regex_replace(openstudio::toString(QString::number(this->valueAsDouble(),
-                                                                       'G',
-                                                                       std::numeric_limits<double>::digits10)),
-                                  boost::regex("\\+"),"");
-      text = doc.createTextNode(toQString(temp));
-      childElement.appendChild(text);
-      break;
-    case AttributeValueType::String:
-      text = doc.createTextNode(QString::fromStdString(this->valueAsString()));
-      childElement.appendChild(text);
-      break;
-    case AttributeValueType::AttributeVector:
-      for (const Attribute& attribute : this->valueAsAttributeVector()){
-        childElement.appendChild(attribute.toXml().documentElement());
-      }
-      break;
-        default:
-      OS_ASSERT(false);
-      break;
+    subElement = element.append_child("Value");
+    switch (m_valueType.value()) {
+      case AttributeValueType::Boolean:
+        subElement.text().set(this->valueAsBoolean());
+        break;
+      case AttributeValueType::Integer:
+        subElement.text().set(this->valueAsInteger());
+        break;
+      case AttributeValueType::Unsigned:
+        subElement.text().set(this->valueAsUnsigned());
+        break;
+      case AttributeValueType::Double:
+        subElement.text().set(this->valueAsDouble());
+        //temp = boost::regex_replace(openstudio::toString(QString::number(this->valueAsDouble(),
+                                                                         //'G',
+                                                                         //std::numeric_limits<double>::digits10)),
+                                    //boost::regex("\\+"),"");
+        break;
+      case AttributeValueType::String:
+        subElement.text().set(this->valueAsString().c_str());
+        break;
+      case AttributeValueType::AttributeVector:
+        for (const Attribute& attribute : this->valueAsAttributeVector()) {
+          // pugi::xml_node subSubElement = subElement.append_child("Attribute");
+          pugi::xml_document tempdoc = attribute.toXml();
+          // Cannot append_move, since this is limited to within the same tree (allow_insert_child wild return false)
+          subElement.append_copy(tempdoc.document_element());
+        }
+        break;
+      default:
+        OS_ASSERT(false);
+        break;
     }
-    element.appendChild(childElement);
 
-/*
+
+/*  TODO: REMOVE
  *    if ((m_valueType.value() == AttributeValueType::Quantity) ||
  *        (m_valueType.value() == AttributeValueType::Unit))
  *    {
@@ -793,13 +720,13 @@ namespace detail {
  *      element.appendChild(childElement);
  *    }else
  */
+
     if(m_units) {
-      childElement = doc.createElement(QString::fromStdString("Units"));
-      text = doc.createTextNode(QString::fromStdString(*m_units));
-      childElement.appendChild(text);
-      element.appendChild(childElement);
+      subElement = element.append_child("Units");
+      subElement.text().set(m_units.get().c_str());
     }
   }
+
 
 } // detail
 
@@ -812,11 +739,11 @@ std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attributeVa
     std::visit(
         [&os](const auto& val) {
           // Needed to properly compare the types
-          using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
+          using T = std::remove_cv_t<std::remove_reference_t<decltype(val)> >;
 
           // If it's a vector of attributes
           if constexpr (std::is_same_v<T, openstudio::Attribute>) {
-            // Will end up calling toString, which calls toXml
+            // Will end up calling toXml
             os << val;
           // Otherwise, if anything else but monostate
           } else if constexpr (!std::is_same_v<T, std::monostate>) {
@@ -1141,7 +1068,7 @@ Attribute::Attribute(const openstudio::UUID& uuid,
   OS_ASSERT(m_impl);
 }
 
-Attribute::Attribute(const QDomElement& element)
+Attribute::Attribute(const pugi::xml_node& element)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(new detail::Attribute_Impl(element)))
 {
   OS_ASSERT(m_impl);
@@ -1164,33 +1091,40 @@ Attribute::Attribute(const std::shared_ptr<detail::Attribute_Impl>& impl)
   OS_ASSERT(m_impl);
 }
 
-boost::optional<Attribute> Attribute::loadFromXml(const openstudio::path& path)
+boost::optional<Attribute> Attribute::loadFromXml(const openstudio::path& xmlPath)
 {
   boost::optional<Attribute> result;
 
-  if (openstudio::filesystem::exists(path)){
-    try{
+  if (!openstudio::filesystem::exists(xmlPath)) {
+    LOG(Error, "'" << xmlPath << "' does not exist.");
+    return result;
+  }
 
-      openstudio::filesystem::ifstream file(path, std::ios_base::binary);
-      QDomDocument qDomDocument;
-      qDomDocument.setContent(openstudio::filesystem::read_as_QByteArray(file));
-      file.close();
+  if (!openstudio::filesystem::is_regular_file(xmlPath)) {
+    LOG(Error, "'" << xmlPath << "' cannot be opened for reading Attribute XML data.");
+    return result;
+  }
 
-      result = Attribute(qDomDocument.documentElement());
-    }catch(...){
+  pugi::xml_document attributeXML;
+
+  openstudio::filesystem::ifstream file(xmlPath, std::ios_base::binary);
+  if (file.is_open()){
+    auto success = attributeXML.load_file(xmlPath.c_str());
+    if (!success) {
+      LOG(Error, "'" << xmlPath << "' could not be read as XML data");
+      return result;
     }
+    file.close();
+  } else {
+    file.close();
+    LOG(Error, "'" << xmlPath << "' could not be opened");
+    return result;
   }
 
-  return result;
-}
-
-boost::optional<Attribute> Attribute::loadFromXml(const QDomDocument& doc) {
-  boost::optional<Attribute> result;
   try {
-    result = Attribute(doc.documentElement());
-  }
-  catch (...) {
-  }
+    result = Attribute(attributeXML.child("Attribute"));
+  } catch(...) {  }
+
   return result;
 }
 
@@ -1322,7 +1256,8 @@ std::string Attribute::toString() const
   return m_impl->toString();
 }
 
-QDomDocument Attribute::toXml() const
+// Protected
+pugi::xml_document Attribute::toXml() const
 {
   return m_impl->toXml();
 }
@@ -1333,7 +1268,7 @@ bool Attribute::saveToXml(const openstudio::path& path) const
 
   try {
     openstudio::filesystem::ofstream file(path);
-    openstudio::filesystem::write(file, this->toXml().toString(2));
+    this->toXml().save(file, "  ");
     file.close();
     result = true;
   }
@@ -1351,10 +1286,8 @@ bool Attribute::operator==(const Attribute& other) const
 
 std::ostream& operator<<(std::ostream& os, const Attribute& attribute)
 {
-  QString str;
-  QTextStream qts(&str);
-  attribute.toXml().save(qts, 2);
-  os << str.toStdString();
+  pugi::xml_document doc = attribute.toXml();
+  doc.save(os, "  ");
   return os;
 }
 
