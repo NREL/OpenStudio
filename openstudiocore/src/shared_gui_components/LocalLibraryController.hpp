@@ -43,6 +43,7 @@
 #include <QLabel>
 #include <QObject>
 #include <QPointer>
+#include <QDomDocument>
 #include <QSettings>
 #include <QSharedPointer>
 #include <QVariant>
