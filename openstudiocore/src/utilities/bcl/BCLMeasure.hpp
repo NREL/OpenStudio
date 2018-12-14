@@ -117,19 +117,19 @@ namespace openstudio{
     //static openstudio::path patApplicationMeasuresDir();
 
     /// Load all measures in the local BCL.
-    static std::vector<BCLMeasure> localBCLMeasures();
+    //static std::vector<BCLMeasure> localBCLMeasures();
 
     /// Load all measures in the user measures directory.
-    static std::vector<BCLMeasure> userMeasures();
+    //static std::vector<BCLMeasure> userMeasures();
 
     /// Returns the path to the user measures directory stored in settings.
-    static openstudio::path userMeasuresDir();
+    //static openstudio::path defuserMeasuresDir();
 
     /// Changes the path to the user measures directory stored in settings.
-    static bool setUserMeasuresDir(const openstudio::path& userMeasuresDir);
+    //static bool setUserMeasuresDir(const openstudio::path& userMeasuresDir);
 
     /// Clears the path to the user measures directory stored in settings.
-    static void clearUserMeasuresDir();
+    //static void clearUserMeasuresDir();
 
     /// Suggested values for "Intended Software Tool" attribute
     static std::vector<std::string> suggestedIntendedSoftwareTools();
@@ -307,12 +307,13 @@ namespace openstudio{
     /// Update's the ruby measure tests to have this new information
     bool updateMeasureTests(const std::string& oldClassName, const std::string& newClassName);
 
+    /// get all measures in an input directory
+    static std::vector<BCLMeasure> getMeasuresInDir(const openstudio::path& dir);
+
   //@}
   private:
     // configure logging
     REGISTER_LOGGER("utilities.bcl.BCLMeasure");
-
-    static std::vector<BCLMeasure> getMeasuresInDir(openstudio::path dir);
 
     void createDirectory(const openstudio::path& dir) const;
 

@@ -27,93 +27,25 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODELEDITOR_PATHWATCHER_HPP
-#define MODELEDITOR_PATHWATCHER_HPP
+#ifndef MODELEDITOR_USERSETTINGS_HPP
+#define MODELEDITOR_USERSETTINGS_HPP
 
 #include <utilities/core/Path.hpp>
+#include <utilities/bcl/BCLMeasure.hpp>
 
-#include <QObject>
-#include <QString>
+/// Load all measures in the local BCL.
+std::vector<openstudio::BCLMeasure> localBCLMeasures();
 
-// forward declarations
-class QFileSystemWatcher;
-class QTimer;
+/// Load all measures in the user measures directory.
+std::vector<openstudio::BCLMeasure> userMeasures();
 
-/** Class for watching either a file or directory, QFileSystemWatcher has issues when watching
-  **  many files so it is not recommended to use too many of these objects.
-  **/
-class PathWatcher : public QObject{
+/// Returns the path to the user measures directory stored in settings.
+openstudio::path userMeasuresDir();
 
-  Q_OBJECT;
+/// Changes the path to the user measures directory stored in settings.
+bool setUserMeasuresDir(const openstudio::path& userMeasuresDir);
 
-  public:
+/// Clears the path to the user measures directory stored in settings.
+void clearUserMeasuresDir();
 
-    /// constructor with path
-
-    /// if path is a directory it must exist at time of construction, no periodic checks are performed for directory
-    /// if path is not a directory it is assumed to be a regular file which may or may not exist at construction,
-    /// a timer is used to periodically check for changes to the file
-    /// msec is the timer delay to check for updates to the file, msec does not apply if the path is a directory
-    PathWatcher(const openstudio::path& p, int msec = 1000);
-
-    /// virtual destructor
-    virtual ~PathWatcher();
-
-    /// is the watcher currently enabled
-    bool enabled() const;
-
-    /// enable the watcher
-    void enable();
-
-    // disable watcher, returns true if it was enabled
-    bool disable();
-
-    /// path that is being watched
-    openstudio::path path() const;
-
-    /// true if path has been changed
-    bool dirty() const;
-
-    /// reset state to clean
-    void clearState();
-
-    /// for files, called when watched file is added if watcher enabled
-    virtual void onPathAdded();
-
-    /// for files, called when watched file is modified if watcher enabled
-    /// for directories, called when file/directory is added or removed to the watched directory if watcher enabled
-    virtual void onPathChanged();
-
-    /// for files, called when watched file is removed if watcher enabled
-    /// for directories, called when the watched directory is removed if watcher enabled
-    virtual void onPathRemoved();
-
-  public slots:
-
-    /// called when file/directory is added or removed or when directory is removed
-    void directoryChanged(const QString& path);
-
-    /// called when file is modified or removed
-    void fileChanged(const QString& path);
-
-    /// periodically check for changes
-    void checkFile();
-
-  private:
-
-    /// impl
-    std::shared_ptr<QFileSystemWatcher> m_impl;
-    std::shared_ptr<QTimer> m_timer;
-
-    bool m_enabled;
-    bool m_isDirectory;
-    bool m_exists;
-    bool m_dirty;
-    std::string m_checksum;
-    openstudio::path m_path;
-    int m_msec;
-
-};
-
-
-#endif // MODELEDITOR_PATHWATCHER_HPP
+#endif // MODELEDITOR_USERSETTINGS_HPP

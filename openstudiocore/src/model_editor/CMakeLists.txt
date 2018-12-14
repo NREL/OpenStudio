@@ -52,6 +52,8 @@ set(${target_name}_src
   TreeViewWidget.cpp
   ViewWidget.hpp
   ViewWidget.cpp
+  UserSettings.hpp
+  UserSettings.cpp
   IGPrecisionDialog.hpp
   IGPrecisionDialog.cpp
   IGLineEdit.hpp

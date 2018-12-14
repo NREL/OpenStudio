@@ -38,8 +38,6 @@
 
 #include <OpenStudio.hxx>
 
-#include <QSettings>
-
 #include <boost/regex.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
@@ -485,7 +483,7 @@ namespace openstudio{
   BCLMeasure BCLMeasure::radianceMeasure() {
     return BCLMeasure(patApplicationMeasuresDir() / toPath("RadianceMeasure"));
   }
-  */
+
   std::vector<BCLMeasure> BCLMeasure::localBCLMeasures()
   {
     return LocalBCL::instance().measures();
@@ -529,7 +527,7 @@ namespace openstudio{
     QSettings settings("OpenStudio", "BCLMeasure");
     settings.remove("userMeasuresDir");
   }
-
+  */
   std::vector<std::string> BCLMeasure::suggestedIntendedSoftwareTools()
   {
     std::vector<std::string> result;
@@ -628,7 +626,7 @@ namespace openstudio{
     return result;
   }
 
-  std::vector<BCLMeasure> BCLMeasure::getMeasuresInDir(openstudio::path dir)
+  std::vector<BCLMeasure> BCLMeasure::getMeasuresInDir(const openstudio::path& dir)
   {
     LOG(Debug, "Loading measures in path: " << openstudio::toString(dir));
     std::vector<BCLMeasure> result;

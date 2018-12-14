@@ -39,6 +39,8 @@
 
 #include "../model_editor/Application.hpp"
 
+#include "../model_editor/UserSettings.hpp"
+
 #include "../measure/OSArgument.hpp"
 
 #include "../model/Model.hpp"
@@ -719,10 +721,10 @@ bool MeasureManager::isMeasureSelected()
 
 void MeasureManager::updateMeasuresLists()
 {
-  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+  openstudio::path umd = userMeasuresDir();
 
   auto updateUserMeasures = true;
-  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+  if (isNetworkPath(umd) && !isNetworkPathAvailable(umd)) {
     updateUserMeasures = false;
   }
 
@@ -734,7 +736,7 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
   checkForLocalBCLUpdates();
 
   if (updateUserMeasures) {
-    checkForUpdates(BCLMeasure::userMeasuresDir(), false);
+    checkForUpdates(userMeasuresDir(), false);
   }
 
   if (!m_mutex.tryLock()) {
@@ -746,8 +748,8 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
   m_measureArguments.clear();
 
   if (updateUserMeasures) {
-   std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
-    for( auto & measure : userMeasures )
+   std::vector<BCLMeasure> uMeasures = userMeasures();
+    for( auto & measure : uMeasures)
     {
       bool updateUUID = false;
       if (m_myMeasures.find(measure.uuid()) != m_myMeasures.end()){
@@ -766,8 +768,8 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
     }
   }
 
-  std::vector<BCLMeasure> localBCLMeasures = BCLMeasure::localBCLMeasures();
-  for( auto & measure : localBCLMeasures )
+  std::vector<BCLMeasure> lbm = localBCLMeasures();
+  for( auto & measure : lbm)
   {
     auto it = m_bclMeasures.find(measure.uuid());
     if (it != m_bclMeasures.end()){
