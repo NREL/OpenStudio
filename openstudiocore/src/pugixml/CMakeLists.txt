@@ -1,16 +1,21 @@
-cmake_minimum_required(VERSION 2.8.12)
+#cmake_minimum_required(VERSION 2.8.12)
 
-project(pugixml)
+#project(pugixml)
 
-option(BUILD_SHARED_LIBS "Build shared instead of static library" OFF)
-option(BUILD_TESTS "Build tests" OFF)
-option(BUILD_PKGCONFIG "Build in PKGCONFIG mode" OFF)
+#option(BUILD_SHARED_LIBS "Build shared instead of static library" OFF)
+#option(BUILD_TESTS "Build tests" OFF)
+#option(BUILD_PKGCONFIG "Build in PKGCONFIG mode" OFF)
+set(BUILD_SHARED_LIBS OFF)
+set(BUILD_TESTS OFF)
+set(BUILD_PKGCONFIG OFF)
 
-set(BUILD_DEFINES "" CACHE STRING "Build defines")
+#set(BUILD_DEFINES "" CACHE STRING "Build defines")
+set(BUILD_DEFINES "")
 
 if(MSVC)
-	option(STATIC_CRT "Use static CRT libraries" OFF)
-
+	#option(STATIC_CRT "Use static CRT libraries" OFF)
+  set(STATIC_CRT OFF)
+  
 	# Rewrite command line flags to use /MT if necessary
 	if(STATIC_CRT)
 		foreach(flag_var
@@ -24,8 +29,8 @@ if(MSVC)
 endif()
 
 # Pre-defines standard install locations on *nix systems.
-include(GNUInstallDirs)
-mark_as_advanced(CLEAR CMAKE_INSTALL_LIBDIR CMAKE_INSTALL_INCLUDEDIR)
+#include(GNUInstallDirs)
+#mark_as_advanced(CLEAR CMAKE_INSTALL_LIBDIR CMAKE_INSTALL_INCLUDEDIR)
 
 set(HEADERS src/pugixml.hpp src/pugiconfig.hpp)
 set(SOURCES src/pugixml.cpp)
@@ -64,12 +69,12 @@ target_include_directories(pugixml PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src>
 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}${INSTALL_SUFFIX}>)
 
-install(TARGETS pugixml EXPORT pugixml-config
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}${INSTALL_SUFFIX}
-	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}${INSTALL_SUFFIX}
-	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}${INSTALL_SUFFIX})
-install(EXPORT pugixml-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/pugixml)
+#install(TARGETS pugixml EXPORT pugixml-config
+#	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}${INSTALL_SUFFIX}
+#	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}${INSTALL_SUFFIX}
+#	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+#install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}${INSTALL_SUFFIX})
+#install(EXPORT pugixml-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/pugixml)
 
 if(BUILD_PKGCONFIG)
 	configure_file(scripts/pugixml.pc.in ${PROJECT_BINARY_DIR}/pugixml.pc @ONLY)
