@@ -26,7 +26,7 @@ foreach(LIB ${EXTENSION_LIBS_LIST})
   endif()
 endforeach()
 
-configure_file("InitMacros.hxx.in" "InitMacros.hxx")
+CONFIGURE_FILE_WITH_CHECKSUM("InitMacros.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/InitMacros.hxx")
 
 file(GLOB_RECURSE  EXTENSION_RB  FOLLOW_SYMLINKS "${RUBY_POSSIBLE_LIB_DIR}/**/*.rb")
 
@@ -219,7 +219,7 @@ set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TR
 source_group(embedded_files FILES ${OUTPUT})
 
 if(WIN32)
-  configure_file(openstudio.rc.in "${CMAKE_CURRENT_BINARY_DIR}/openstudio.rc")
+  CONFIGURE_FILE_WITH_CHECKSUM(openstudio.rc.in "${CMAKE_CURRENT_BINARY_DIR}/openstudio.rc")
 endif()
 
 if(WIN32)
