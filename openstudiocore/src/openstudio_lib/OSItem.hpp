@@ -195,7 +195,4 @@ class OSItem : public QWidget, public Nano::Observer
 
 } // openstudio
 
-Q_DECLARE_METATYPE(openstudio::OSItemId)
-Q_DECLARE_METATYPE(std::vector<openstudio::OSItemId>)
-
 #endif // OPENSTUDIO_OSITEM_HPP

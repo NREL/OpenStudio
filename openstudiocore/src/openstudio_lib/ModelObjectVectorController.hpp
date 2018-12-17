@@ -33,6 +33,7 @@
 #include "OSVectorController.hpp"
 #include "../model/ModelObject.hpp"
 #include "../model/Component.hpp"
+#include "../model_editor/QMetaTypes.hpp"
 #include <vector>
 
 namespace openstudio {

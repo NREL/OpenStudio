@@ -31,6 +31,7 @@
 #define OPENSTUDIO_VARIABLESTABVIEW_HPP
 
 #include "MainTabView.hpp"
+#include "../model_editor/QMetaTypes.hpp"
 #include "../model/Model.hpp"
 #include "../model/OutputVariable.hpp"
 #include <nano/nano_signal_slot.hpp> // Signal-Slot replacement

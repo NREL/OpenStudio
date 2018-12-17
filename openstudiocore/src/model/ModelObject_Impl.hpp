@@ -74,7 +74,7 @@ namespace detail {
 
   class Model_Impl;
 
-  /** Implemetation class for ModelObject. Each class deriving from ModelObject
+  /** Implementation class for ModelObject. Each class deriving from ModelObject
    *  should provide an implementation class that derives from ModelObject_Impl. */
   class MODEL_API ModelObject_Impl : public openstudio::detail::WorkspaceObject_Impl {
 

@@ -35,6 +35,7 @@
 
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
+#include "../model_editor/QMetaTypes.hpp"
 
 namespace openstudio {
 

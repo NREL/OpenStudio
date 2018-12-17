@@ -372,6 +372,4 @@ namespace detail {
 
 } // openstudio
 
-Q_DECLARE_METATYPE(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)
-
 #endif // UTILITIES_IDF_WORKSPACEOBJECT_IMPL_HPP

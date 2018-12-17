@@ -34,10 +34,6 @@
 
 #include <boost/optional.hpp>
 
-#include <QVariant>
-#include <QMetaType>
-#include <QUrl>
-
 #include <string>
 #include <ostream>
 
@@ -52,23 +48,6 @@ namespace openstudio {
   UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<unsigned>& x);
   UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<int>& x);
   UTILITIES_API std::ostream& operator<<(std::ostream& os, const boost::optional<std::string>& x);
-}
-
-// declare these types so we can use them as properties
-Q_DECLARE_METATYPE(boost::optional<double>);
-Q_DECLARE_METATYPE(boost::optional<unsigned>);
-Q_DECLARE_METATYPE(boost::optional<int>);
-Q_DECLARE_METATYPE(boost::optional<std::string>);
-
-namespace openstudio {
-namespace detail {
-
-  // register meta datatypes
-  struct OptionalMetaTypeInitializer{
-    OptionalMetaTypeInitializer();
-  };
-
-}
 }
 
 #endif // UTILITIES_CORE_OPTIONAL_HPP

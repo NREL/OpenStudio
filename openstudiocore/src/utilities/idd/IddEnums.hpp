@@ -38,8 +38,6 @@
 #include <vector>
 #include <set>
 
-#include <QMetaType>
-
 namespace openstudio {
 
 /** \class IddFileType
@@ -153,8 +151,5 @@ typedef boost::optional<std::vector<IddObjectType> > OptionalIddObjectTypeVector
 typedef boost::optional<std::set<IddObjectType> > OptionalIddObjectTypeSet;
 
 } // openstudio
-
-Q_DECLARE_METATYPE(openstudio::IddFileType)
-Q_DECLARE_METATYPE(openstudio::IddObjectType)
 
 #endif // UTILITIES_IDD_IDDENUMS_HXX

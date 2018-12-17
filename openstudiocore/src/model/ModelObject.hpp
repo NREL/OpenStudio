@@ -312,9 +312,4 @@ typedef std::vector<ModelObject> ModelObjectVector;
 } // model
 } // openstudio
 
-// declare types so we can use model objects in properties
-//Q_DECLARE_METATYPE(openstudio::model::ModelObject); // no default constructor
-// Q_DECLARE_METATYPE(boost::optional<openstudio::model::ModelObject>);
-// Q_DECLARE_METATYPE(std::vector<openstudio::model::ModelObject>);
-
 #endif // MODEL_MODELOBJECT_HPP

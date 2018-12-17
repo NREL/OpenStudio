@@ -65,7 +65,7 @@ namespace openstudio{
     return m_ofs.good();
   }
 
-  RemoteBCL::DownloadFile::DownloadFile(openstudio::path t_path) 
+  RemoteBCL::DownloadFile::DownloadFile(openstudio::path t_path)
     : m_fileName(std::move(t_path))
   {
   }
@@ -567,7 +567,8 @@ namespace openstudio{
   QString RemoteBCL::checkForRedirect(const QNetworkReply* reply) const
   {
     // In Qt > 5.3, use QNetworkRequest::FollowRedirectsAttribute instead
-    QVariant replyStatus = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    // TODO: JM 2018-12-14 QNetworkRequest will have to be removed anyway. Now just converting to int to remove last Q Variant
+    int replyStatus = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     if (replyStatus == 301 || replyStatus == 302) {
       return reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
     }

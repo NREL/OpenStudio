@@ -43,12 +43,6 @@
 namespace openstudio {
 namespace detail {
 
-
-  //int __attribute_type__ = qRegisterMetaType<openstudio::Attribute>("openstudio::Attribute");
-  int __attribute_optional_type__ = qRegisterMetaType<boost::optional<openstudio::Attribute> >("boost::optional<openstudio::Attribute>");
-  int __attribute_vector_type__ = qRegisterMetaType<std::vector<openstudio::Attribute> >("std::vector<openstudio::Attribute>");
-
-
   // constructors
   Attribute_Impl::Attribute_Impl(const std::string& name,
                                  bool value,

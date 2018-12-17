@@ -31,6 +31,7 @@
 #define SHAREDGUICOMPONENTS_BASEAPP_HPP
 
 #include "../utilities/core/Path.hpp"
+#include "../model_editor/QMetaTypes.hpp"
 
 #include <QWidget>
 #include <boost/optional.hpp>

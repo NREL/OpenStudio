@@ -27,63 +27,68 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef OPENSTUDIO_MODELOBJECTTREEWIDGET_HPP
-#define OPENSTUDIO_MODELOBJECTTREEWIDGET_HPP
+#ifndef MODELEDITOR_QMETATYPES
+#define MODELEDITOR_QMETATYPES
 
-#include "OSItemSelector.hpp"
-#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <QMetaType>
 
-#include "../model/Model.hpp"
-#include "../model_editor/QMetaTypes.hpp"
+#include <QModelIndex>
+Q_DECLARE_METATYPE(QModelIndex)
 
-class QTreeWidget;
+#include <utilities/idd/IddEnums.hpp>
+Q_DECLARE_METATYPE(openstudio::IddFileType)
+Q_DECLARE_METATYPE(openstudio::IddObjectType)
 
-class QVBoxLayout;
+#include "../openstudio_lib/OSItem.hpp"
+Q_DECLARE_METATYPE(openstudio::OSItemId)
+Q_DECLARE_METATYPE(std::vector<openstudio::OSItemId>)
 
+// #include <model/ModelObject.hpp>
+// Note JM 2018-12-13: Was already commented out
+// Q_DECLARE_METATYPE(openstudio::model::ModelObject); // no default constructor
+// Q_DECLARE_METATYPE(boost::optional<openstudio::model::ModelObject>);
+// Q_DECLARE_METATYPE(std::vector<openstudio::model::ModelObject>);
+
+
+#include <utilities/core/UUID.hpp>
+Q_DECLARE_METATYPE(openstudio::UUID);
+
+#include <string>
+Q_DECLARE_METATYPE(std::string);
+Q_DECLARE_METATYPE(std::vector<std::string>);
+
+
+#include <boost/optional.hpp>
+Q_DECLARE_METATYPE(boost::optional<double>);
+Q_DECLARE_METATYPE(boost::optional<unsigned>);
+Q_DECLARE_METATYPE(boost::optional<int>);
+Q_DECLARE_METATYPE(boost::optional<std::string>);
+
+#include <utilities/data/Attribute.hpp>
+//Q_DECLARE_METATYPE(openstudio::Attribute);
+Q_DECLARE_METATYPE(boost::optional<openstudio::Attribute>);
+Q_DECLARE_METATYPE(std::vector<openstudio::Attribute>);
+
+#include <utilities/units/Quantity.hpp>
+Q_DECLARE_METATYPE(openstudio::Quantity);
+
+#include <utilities/units/OSOptionalQuantity.hpp>
+Q_DECLARE_METATYPE(openstudio::OSOptionalQuantity);
+
+#include <utilities/idf/Workspace_Impl.hpp>
+Q_DECLARE_METATYPE(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)
+
+/*
 namespace openstudio {
+namespace detail {
 
-class ModelObjectTreeWidget : public OSItemSelector, public Nano::Observer
-{
-  Q_OBJECT
+  // register meta datatypes
+  struct OpenStudioMetaTypeInitializer{
+    OpenStudioMetaTypeInitializer();
+  };
 
-  public:
-
-    ModelObjectTreeWidget(const model::Model& model, QWidget * parent = nullptr);
-
-    virtual ~ModelObjectTreeWidget() {}
-
-    virtual OSItem* selectedItem() const override;
-
-    QTreeWidget* treeWidget() const;
-
-    QVBoxLayout* vLayout() const;
-
-    openstudio::model::Model model() const;
-
-  protected:
-
-    virtual void onObjectAdded(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) = 0;
-
-    virtual void onObjectRemoved(const openstudio::model::ModelObject& modelObject, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) = 0;
-
-    void refresh();
-
-  private slots:
-
-    void objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
-
-    void objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
-
-  private:
-
-    QTreeWidget* m_treeWidget;
-
-    QVBoxLayout* m_vLayout;
-
-    openstudio::model::Model m_model;
-};
-
+} // detail
 } // openstudio
+*/
 
-#endif // OPENSTUDIO_MODELOBJECTTREEWIDGET_HPP
-
+#endif // MODELEDITOR_QMETATYPES
