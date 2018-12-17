@@ -37,12 +37,12 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/SyncMeasuresDialog.hpp"
 
-#include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QProgressBar>
 
 #define NUM_COMPONENTS_DISPLAYED 10
 

@@ -38,7 +38,6 @@
 #include "../../data/TimeSeries.hpp"
 #include "../../filetypes/EpwFile.hpp"
 #include "../../units/UnitFactory.hpp"
-#include "../../core/Application.hpp"
 
 #include <iostream>
 #include <boost/regex.hpp>

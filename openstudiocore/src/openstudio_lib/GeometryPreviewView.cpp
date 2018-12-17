@@ -31,12 +31,13 @@
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 
+#include "../model_editor/Application.hpp"
+
+
 #include "../model/Model_Impl.hpp"
 #include "../model/ThreeJSForwardTranslator.hpp"
 
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/core/Application.hpp"
-
 #include <utilities/idd/IddEnums.hxx>
 
 #include <QStackedWidget>

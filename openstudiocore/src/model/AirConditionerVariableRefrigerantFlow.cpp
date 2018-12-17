@@ -1422,7 +1422,7 @@ namespace detail {
   {
     boost::optional<ModelObjectList> mo = getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_AirConditioner_VariableRefrigerantFlowFields::ZoneTerminalUnitList);
 
-    Q_ASSERT(mo);
+    OS_ASSERT(mo);
 
     return mo.get();
   }

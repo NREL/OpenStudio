@@ -16,8 +16,6 @@ configure_file("core/ApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}
 set(core_src
   core/ApplicationPathHelpers.hpp
   ${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx
-  core/Application.hpp
-  core/Application.cpp
   core/Assert.hpp
   core/Checksum.hpp
   core/Checksum.cpp
@@ -57,8 +55,6 @@ set(core_src
   core/Path.cpp
   core/PathHelpers.hpp
   core/PathHelpers.cpp
-  core/PathWatcher.hpp
-  core/PathWatcher.cpp
   core/Queue.hpp
   core/RubyInterpreter.hpp
   core/RubyException.hpp
@@ -251,7 +247,6 @@ set(bcl_moc
 #)
 
 set(core_moc
-  core/PathWatcher.hpp
   core/UpdateManager.hpp
 )
 
@@ -266,10 +261,6 @@ set(idf_moc
 
 set(data_moc
 #  data/Attribute_Impl.hpp
-)
-
-set(plot_moc
-#  plot/ProgressBar.hpp
 )
 
 ###############################################################################
@@ -304,7 +295,6 @@ qt5_wrap_cpp_minimally(bcl_moc_src ${bcl_moc})
 qt5_wrap_cpp_minimally(core_moc_src ${core_moc}) # RM
 qt5_wrap_cpp_minimally(idf_moc_src ${idfxx_moc})
 qt5_wrap_cpp_minimally(data_moc_src ${data_moc}) # RM
-qt5_wrap_cpp_minimally(plot_moc_src ${plot_moc}) # [sudo] RM [-rf]
 
 
 # embedded files, bump again to update common files
@@ -377,7 +367,6 @@ set(${target_name}_src
   ${geometry_src}
   ${math_src}
   ${plot_src}
-  ${plot_moc_src}
   ${time_src}
   ${units_src}
   ${EMBEDDED_OUTPUT}
@@ -405,7 +394,6 @@ set(${target_name}_test_src
   core/test/Logger_GTest.cpp
   core/test/Optional_GTest.cpp
   core/test/Path_GTest.cpp
-  core/test/PathWatcher_GTest.cpp
   core/test/SharedFromThis_GTest.cpp
   core/test/System_GTest.cpp
   core/test/String_GTest.cpp
@@ -440,8 +428,6 @@ set(${target_name}_test_src
   math/test/FloatCompare_GTest.cpp
   math/test/Permutation_GTest.cpp
   math/test/Primes_GTest.cpp
-
-  plot/Test/ProgressBar_GTest.cpp
 
   time/Test/Calendar_GTest.cpp
   time/Test/Date_GTest.cpp
@@ -483,7 +469,6 @@ set(${target_name}_swig_src
   ${idf_swig_src}
   ${sql_swig_src}
   bcl/LocalBCL.i
-  core/Application.i
   core/Checksum.i
   core/CommonImport.i
   core/CommonInclude.i
@@ -492,7 +477,6 @@ set(${target_name}_swig_src
   core/Exception.i
   core/Logger.i
   core/Path.i
-  core/PathWatcher.i
   core/Qt.i
   core/Singleton.i
   core/System.i
@@ -520,7 +504,6 @@ set(${target_name}_swig_src
   data/TimeSeries.i
   data/Variant.i
   data/Vector.i
-  plot/Plot.i
   plot/ProgressBar.i
   units/Scale.i
   units/ScaleFactory.i

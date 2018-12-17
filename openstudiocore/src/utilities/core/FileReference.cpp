@@ -36,7 +36,6 @@
 
 #include <QVariant>
 
-
 namespace openstudio {
 
 FileReference::FileReference(const openstudio::path& p)

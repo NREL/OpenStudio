@@ -125,7 +125,7 @@ module OpenStudio
       super
       activateWindow
 
-      #OpenStudio::Application.instance.processEvents
+      #OpenStudio::Modeleditor::Application.instance.processEvents
     end
 
     def update

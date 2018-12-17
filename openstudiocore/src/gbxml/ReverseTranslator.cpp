@@ -72,6 +72,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QTextStream>
+
 #include <thread>
 
 namespace openstudio {

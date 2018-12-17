@@ -29,6 +29,8 @@
 
 #include "BIMserverConnection.hpp"
 
+#include "../model_editor/Application.hpp"
+
 #include "../utilities/core/System.hpp"
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
@@ -857,9 +859,8 @@ namespace bimserver {
       if (m_operationDone) {
         return true;
       }
-
-      // this calls process events
-      System::msleep(msecPerLoop);
+      
+      Application::instance().processEvents(msecPerLoop);
 
       if (current > numTries) {
         LOG(Error, "waitForLock timeout");

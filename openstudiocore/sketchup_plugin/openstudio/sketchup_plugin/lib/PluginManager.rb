@@ -27,6 +27,7 @@
 ########################################################################################################################
 
 require("openstudio")
+require("openstudio_modeleditor")
 require("openstudio/sketchup_plugin/lib/AnimationManager")
 require("openstudio/sketchup_plugin/lib/CommandManager")
 require("openstudio/sketchup_plugin/lib/DialogManager")
@@ -212,7 +213,7 @@ module OpenStudio
 
       # process events in OpenStudio Model
       # this may add events to the Plugin event_queue
-      OpenStudio::Application.instance.processEvents
+      OpenStudio::Modeleditor::Application.instance.processEvents
 
       @model_manager.model_interfaces.each do |model_interface|
         model_interface.model_watcher.processAddedObjects
@@ -523,14 +524,15 @@ module OpenStudio
   end
 
   # initialize QApplication
-  Application::instance.application(true)
-  Application::instance.application.setOrganizationName("NREL")
-  Application::instance.application.setOrganizationDomain("nrel.gov")
-  Application::instance.application.setApplicationName("OpenStudio")
+  Modeleditor::Application::instance.application(true)
+  Modeleditor::Application::instance.application.setOrganizationName("NREL")
+  Modeleditor::Application::instance.application.setOrganizationDomain("nrel.gov")
+  Modeleditor::Application::instance.application.setApplicationName("OpenStudio")
 
   # get SketchUp Qt Widget if possible
-  SketchUpWidget = Application::instance.sketchUpWidget
-  SketchUpWidget.hide if SketchUpWidget
+  SketchUpWidget = Modeleditor::Application::instance.sketchUpWidget
+  # DLM: TODO, SWIG is not detecting methdods from the base class QWidget
+  #SketchUpWidget.hide if SketchUpWidget
 
   # Create a module constant to reference the plugin object anywhere within the module.
   Plugin = PluginManager.new

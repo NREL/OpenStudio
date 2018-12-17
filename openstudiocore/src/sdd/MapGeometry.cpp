@@ -113,7 +113,6 @@
 
 #include <QDomDocument>
 #include <QDomElement>
-#include <QStringList>
 
 namespace openstudio {
 namespace sdd {

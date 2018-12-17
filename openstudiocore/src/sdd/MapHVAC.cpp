@@ -228,7 +228,6 @@
 
 #include <QDomDocument>
 #include <QDomElement>
-#include <QStringList>
 #include <cmath>
 #include <functional>
 

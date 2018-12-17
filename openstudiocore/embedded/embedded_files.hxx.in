@@ -70,7 +70,7 @@ inline int inf(const EmbeddedFile & file, std::vector<uint8_t> & result)
 
   /* decompress until deflate stream ends or end of file */
   while( begin != end ) {
-    if( (begin + CHUNK) != end ) {
+    if( (begin + CHUNK) < end ) {
       std::copy(begin, begin + CHUNK, in);
       chunk_end = begin + CHUNK;
     } else {

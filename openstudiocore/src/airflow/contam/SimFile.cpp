@@ -30,6 +30,7 @@
 #include "SimFile.hpp"
 
 #include <QStringList>
+#include <QMap>
 
 #include <map>
 #include <vector>

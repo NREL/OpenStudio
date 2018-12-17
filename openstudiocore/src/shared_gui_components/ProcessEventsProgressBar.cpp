@@ -28,12 +28,13 @@
 ***********************************************************************************************************************/
 
 #include "ProcessEventsProgressBar.hpp"
-#include "../utilities/core/Application.hpp"
+
+#include "../model_editor/Application.hpp"
 
 namespace openstudio {
 
   ProcessEventsProgressBar::ProcessEventsProgressBar()
-    : openstudio::ProgressBar(false, nullptr)
+    : OSProgressBar(false, nullptr)
   {
   }
 
