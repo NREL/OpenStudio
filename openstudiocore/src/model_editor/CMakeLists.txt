@@ -75,9 +75,7 @@ set(${target_name}_moc
   ModelExplorer.hpp
   ObjectExplorer.hpp
   PathWatcher.hpp
-  #  TODO: Unsure if needed? 
-  QMetaTypes.hpp
-  QMetaTypes.cpp
+  QMetaTypes.hpp #  TODO: Unsure if needed?
   tablemodel.h
   TableView.hpp
   TableWidget.hpp

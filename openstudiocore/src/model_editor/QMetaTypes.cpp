@@ -64,7 +64,5 @@ namespace detail{
 
     }
 
-    OpenStudioMetaTypeInitializer __openStudioMetaTypeInitializer__;
-
 } // detail
 } // openstudio

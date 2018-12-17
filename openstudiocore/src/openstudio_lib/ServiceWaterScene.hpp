@@ -32,6 +32,7 @@
 
 #include "GridScene.hpp"
 #include "OSItem.hpp"
+#include "../model_editor/QMetaTypes.hpp"
 #include "../model/Model.hpp"
 #include "../model/WaterUseConnections.hpp"
 
