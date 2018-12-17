@@ -34,6 +34,8 @@
 
 #include <boost/regex.hpp>
 
+#include <pugixml.hpp>
+#include <sstream>
 #include <limits>
 
 #include <OpenStudio.hxx>
@@ -404,3 +406,136 @@ TEST_F(DataFixture, Attribute_Source) {
   // order is not guaranteed
 
 }
+
+
+TEST_F(DataFixture, Attribute_RequiredXMLNodes) {
+
+  pugi::xml_document attributeXML;
+
+  // Test that it works with something proper
+  {
+
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <ValueType>Double</ValueType>" << std::endl
+       << "  <Value>10.0</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    Attribute(attributeXML.child("Attribute"));
+  }
+
+  // Missing UUID
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <ValueType>Double</ValueType>" << std::endl
+       << "  <Value>10.0</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+  // Missing VersionUUID
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <ValueType>Double</ValueType>" << std::endl
+       << "  <Value>10.0</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+  // Missing Name
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <ValueType>Double</ValueType>" << std::endl
+       << "  <Value>10.0</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+
+  // Missing ValueType
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <Value>10.0</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+  // Wrong ValueType
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <ValueType>Something BAAAAAAAAAAAD</ValueType>" << std::endl
+       << "  <Value>10.0</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+  // Missing Value
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <ValueType>Double</ValueType>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+  // ValueType and Value Don't match: expect a double, but value is a string that doesn't represent a number instead
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <ValueType>Double</ValueType>" << std::endl
+       << "  <Value>Blabla</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+}
+

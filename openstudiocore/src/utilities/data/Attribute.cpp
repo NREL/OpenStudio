@@ -272,7 +272,23 @@ namespace detail {
       m_source = sourceElement.text().as_string();
     }
 
-    m_valueType = AttributeValueType(valueTypeElement.text().as_string());
+    std::string valueTypeString = valueTypeElement.text().as_string();
+    // Deprecated!
+    if (valueTypeString == "Unit") {
+      LOG(Warn, "AttributeValueType::Unit is deprecated and is mapped to String.");
+      valueTypeString = "String";
+    } else if (valueTypeString == "Quantity") {
+      // Deprecated!
+      LOG(Warn, "AttributeValueType::Quantity is deprecated and is mapped to Double.");
+      valueTypeString = "Double";
+      // Could check if units is also there, but we don't really care
+    }
+
+    try {
+      m_valueType = AttributeValueType(valueTypeString);
+    } catch (const std::exception &e) {
+      LOG_AND_THROW("Couldn't create an AttributeValueType with value: [" << valueTypeString << "].");
+    }
 
     if (unitsElement) {
       m_units = unitsElement.text().as_string();
@@ -284,37 +300,48 @@ namespace detail {
       sys = UnitSystem(unitSystemElement.text().as_string());
     }
 
+    // Note JM 2018-12-17: We do not use pugixml's text().as_double (as_int, as_uint)
+    // because it's too permissive and will return 0 even if the string isn't actually representing a number
+    // So we use boost::lexical_cast instead
 
+    if (m_valueType.value() == AttributeValueType::Boolean) {
+      m_value = valueElement.text().as_bool();
+    } else if (m_valueType.value() == AttributeValueType::Integer) {
+      try {
+        m_value = boost::lexical_cast<int>(valueElement.text().as_string());
+      } catch(const boost::bad_lexical_cast &) {
+        LOG_AND_THROW("Please double check your XML, you have an Attribute with a ValueType of 'Integer' "
+                   << "but the Value isn't an int: [" << valueElement.text().as_string() << "].");
+      }
+    } else if (m_valueType.value() == AttributeValueType::Unsigned) {
+      try {
+        m_value = boost::lexical_cast<unsigned>(valueElement.text().as_string());
+      } catch(const boost::bad_lexical_cast &) {
+        LOG_AND_THROW("Please double check your XML, you have an Attribute with a ValueType of 'Unsigned' "
+                   << "but the Value isn't an unsigned int: [" << valueElement.text().as_string() << "].");
+      }
+    } else if (m_valueType.value() == AttributeValueType::Double) {
+      try {
+        m_value = boost::lexical_cast<double>(valueElement.text().as_string());
+      } catch(const boost::bad_lexical_cast &) {
+        LOG_AND_THROW("Please double check your XML, you have an Attribute with a ValueType of 'Double' "
+                   << "but the Value isn't a double: [" << valueElement.text().as_string() << "].");
+      }
+    } else if (m_valueType.value() == AttributeValueType::String) {
+      // Note JM 2018-12-14: Carefull not to end up with const char,
+      // since that'll emplace in bool by default
+      m_value.emplace<std::string>(valueElement.text().as_string());
+    } else if (m_valueType.value() == AttributeValueType::AttributeVector) {
+      std::vector<Attribute> children;
 
-    std::vector<Attribute> children;
+      for (pugi::xml_node& childElement: valueElement.children()) {
+        children.push_back(Attribute(childElement));
+      }
+      m_value = children;
 
-    switch (m_valueType.value()) {
-      case AttributeValueType::Boolean:
-        m_value = valueElement.text().as_bool();
-        break;
-      case AttributeValueType::Integer:
-        m_value = valueElement.text().as_int();
-        break;
-      case AttributeValueType::Unsigned:
-        m_value = valueElement.text().as_uint();
-        break;
-      case AttributeValueType::Double:
-        m_value = valueElement.text().as_double();
-        break;
-      case AttributeValueType::String:
-        // Note JM 2018-12-14: Carefull not to end up with const char,
-        // since that'll emplace in bool by default
-        m_value.emplace<std::string>(valueElement.text().as_string());
-        break;
-      case AttributeValueType::AttributeVector:
-        for (pugi::xml_node& childElement: valueElement.children()) {
-          children.push_back(Attribute(childElement));
-        }
-        m_value = children;
-        break;
-      default:
-        OS_ASSERT(false);
-        break;
+    } else {
+      // Should never happen
+      OS_ASSERT(false);
     }
   }
 
@@ -1117,7 +1144,10 @@ boost::optional<Attribute> Attribute::loadFromXml(const openstudio::path& xmlPat
 
   try {
     result = Attribute(attributeXML.child("Attribute"));
-  } catch(...) {  }
+  } catch( const std::exception &e ) {
+    // Output any informative error message to the user
+    LOG(Error, "Cannot create attribute from XML: " << e.what());
+  }
 
   return result;
 }
