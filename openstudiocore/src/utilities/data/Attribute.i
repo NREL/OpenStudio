@@ -6,8 +6,6 @@
   #include <utilities/data/Attribute_Impl.hpp>
 %}
 
-%ignore QDomElement;
-
 // create an instantiation of the optional class
 %template(OptionalAttribute) boost::optional< openstudio::Attribute >;
 

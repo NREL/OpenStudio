@@ -44,8 +44,6 @@ class QObject
   QObject(QObject* parent);
 };
 
-class QTextStream{};
-
 class QString{};
 
 %extend QString{

@@ -34,9 +34,6 @@
 #include "../core/Containers.hpp"
 #include "../core/FilesystemHelpers.hpp"
 
-// TODO: keep only if handling UnitSystem in fromXML...
-#include "../units/QuantityFactory.hpp"
-
 #include <boost/lexical_cast.hpp>
 #include <pugixml.hpp>
 
@@ -294,10 +291,12 @@ namespace detail {
       m_units = unitsElement.text().as_string();
     }
 
-    // TODO: handle unitsSystem conversion? Otherwise just remove...
-    OptionalUnitSystem sys;
+    // TODO: handle unitsSystem conversion? I think it's redundant with the information contained inside "Units" and we're no longer
+    // creating quantities anyways
+    // OptionalUnitSystem sys;
     if (unitSystemElement) {
-      sys = UnitSystem(unitSystemElement.text().as_string());
+      LOG(Warn, "UnitSystem is deprecated and isn't used, units are stored as string within the 'Units' tag instead");
+      // sys = UnitSystem(unitSystemElement.text().as_string());
     }
 
     // Note JM 2018-12-17: We do not use pugixml's text().as_double (as_int, as_uint)
@@ -586,8 +585,7 @@ namespace detail {
 
           // If it's a vector of attributes
           if constexpr (std::is_same_v<T, openstudio::Attribute>) {
-            // TODO: call toXml()
-            // This will change anyways once QXML is removed
+            // Call toXml() and save to the stringstream
             this->toXml().save(ss, "  ");
 
           // Otherwise, if anything else but monostate, it's a simple type
@@ -716,31 +714,6 @@ namespace detail {
         OS_ASSERT(false);
         break;
     }
-
-
-/*  TODO: REMOVE
- *    if ((m_valueType.value() == AttributeValueType::Quantity) ||
- *        (m_valueType.value() == AttributeValueType::Unit))
- *    {
- *      OptionalUnit units;
- *      if (m_valueType.value() == AttributeValueType::Quantity) {
- *        units = this->valueAsQuantity().units();
- *      }
- *      else {
- *        units = this->valueAsUnit();
- *      }
- *
- *      childElement = doc.createElement(QString::fromStdString("Units"));
- *      text = doc.createTextNode(QString::fromStdString(units->standardString()));
- *      childElement.appendChild(text);
- *      element.appendChild(childElement);
- *
- *      childElement = doc.createElement(QString::fromStdString("UnitSystem"));
- *      text = doc.createTextNode(QString::fromStdString(units->system().valueName()));
- *      childElement.appendChild(text);
- *      element.appendChild(childElement);
- *    }else
- */
 
     if(m_units) {
       subElement = element.append_child("Units");
@@ -1145,8 +1118,8 @@ boost::optional<Attribute> Attribute::loadFromXml(const openstudio::path& xmlPat
   try {
     result = Attribute(attributeXML.child("Attribute"));
   } catch( const std::exception &e ) {
-    // Output any informative error message to the user
-    LOG(Error, "Cannot create attribute from XML: " << e.what());
+    // Output any other handled error's message to the user
+    // LOG(Error, "Cannot create attribute from XML: " << e.what());
   }
 
   return result;

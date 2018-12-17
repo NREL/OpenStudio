@@ -2,10 +2,9 @@
 #define UTILITIES_DATA_DATA_I
 
 %{
-  #include <QDomDocument>
   #include <boost/function.hpp>
   #include <utilities/data/DataEnums.hpp>
-  #include <utilities/data/Tag.hpp>
+  #include <utilities/data/Tag.hpp> // TODO: don't think this is used
   #include <utilities/data/Variant.hpp>
 
   #include <utilities/units/Quantity.hpp>
