@@ -1359,6 +1359,11 @@ add_subdirectory(src/sqlite)
 ################################################################################
 
 ###############################################################################
+## pugixml
+add_subdirectory(src/pugixml)
+###############################################################################
+
+###############################################################################
 # Add to include path
 
 # Project source directory
@@ -1366,6 +1371,9 @@ include_directories("${CMAKE_HOME_DIRECTORY}/src/")
 
 # For QWinWidget
 include_directories("${CMAKE_HOME_DIRECTORY}/src/qtwinmigrate")
+
+# XML
+include_directories("${CMAKE_HOME_DIRECTORY}/src/pugixml/src")
 
 # Project binary directory
 include_directories("${CMAKE_BINARY_DIR}/src/")

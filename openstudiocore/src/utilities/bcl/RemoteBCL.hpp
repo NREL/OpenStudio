@@ -33,8 +33,9 @@
 #include "BCL.hpp"
 #include "../core/Path.hpp"
 
-#include <QDomDocument>
+#include <pugixml.hpp>
 #include <mutex>
+#include <memory>
 
 class QNetworkAccessManager;
 class QNetworkRequest;
@@ -46,13 +47,13 @@ namespace openstudio{
   class UTILITIES_API RemoteQueryResponse {
   public:
 
-    RemoteQueryResponse(const QDomDocument& domDocument);
+    RemoteQueryResponse(std::shared_ptr<pugi::xml_document>& domDocument);
 
-    QDomDocument domDocument() const;
+    pugi::xml_node root() const;
 
   private:
 
-    QDomDocument m_domDocument;
+    std::shared_ptr<pugi::xml_document> m_domDocument;
   };
 
   /// Class for accessing the remote BCL.
