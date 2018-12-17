@@ -34,9 +34,8 @@ set(${target_name}_src
   OSProgressBar.cpp
   PathWatcher.hpp
   PathWatcher.cpp
-  #  TODO: Unsure if needed? 
   QMetaTypes.hpp
-  QMetaTypes.cpp
+  # QMetaTypes.cpp # Not needed
   tablemodel.h
   tablemodel.cpp
   TableView.hpp
@@ -75,7 +74,7 @@ set(${target_name}_moc
   ModelExplorer.hpp
   ObjectExplorer.hpp
   PathWatcher.hpp
-  QMetaTypes.hpp #  TODO: Unsure if needed?
+  # QMetaTypes.hpp # Not needed
   tablemodel.h
   TableView.hpp
   TableWidget.hpp

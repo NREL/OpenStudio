@@ -59,8 +59,6 @@ Q_DECLARE_METATYPE(std::vector<std::string>);
 
 
 #include <boost/optional.hpp>
-
-// Original comment: declare these types so we can use them as properties
 Q_DECLARE_METATYPE(boost::optional<double>);
 Q_DECLARE_METATYPE(boost::optional<unsigned>);
 Q_DECLARE_METATYPE(boost::optional<int>);
@@ -80,6 +78,7 @@ Q_DECLARE_METATYPE(openstudio::OSOptionalQuantity);
 #include <utilities/idf/Workspace_Impl.hpp>
 Q_DECLARE_METATYPE(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)
 
+/*
 namespace openstudio {
 namespace detail {
 
@@ -90,5 +89,6 @@ namespace detail {
 
 } // detail
 } // openstudio
+*/
 
 #endif // MODELEDITOR_QMETATYPES
