@@ -52,19 +52,19 @@ TEST_F(DataFixture, Variant)
   EXPECT_EQ(1.0, doubleVariant.valueAsDouble());
   EXPECT_EQ("1", stringVariant.valueAsString());
 
-  EXPECT_THROW(boolVariant.valueAsInteger(), boost::bad_get);
-  EXPECT_THROW(boolVariant.valueAsDouble(), boost::bad_get);
-  EXPECT_THROW(boolVariant.valueAsString(), boost::bad_get);
+  EXPECT_THROW(boolVariant.valueAsInteger(), std::bad_variant_access);
+  EXPECT_THROW(boolVariant.valueAsDouble(), std::bad_variant_access);
+  EXPECT_THROW(boolVariant.valueAsString(), std::bad_variant_access);
 
-  EXPECT_THROW(intVariant.valueAsBoolean(), boost::bad_get);
-  //EXPECT_THROW(intVariant.valueAsDouble(), boost::bad_get); // DLM: allowed this since double values in OSW might appear to be ints
-  EXPECT_THROW(intVariant.valueAsString(), boost::bad_get);
+  EXPECT_THROW(intVariant.valueAsBoolean(), std::bad_variant_access);
+  //EXPECT_THROW(intVariant.valueAsDouble(), std::bad_variant_access); // DLM: allowed this since double values in OSW might appear to be ints
+  EXPECT_THROW(intVariant.valueAsString(), std::bad_variant_access);
 
-  EXPECT_THROW(doubleVariant.valueAsBoolean(), boost::bad_get);
-  EXPECT_THROW(doubleVariant.valueAsInteger(), boost::bad_get);
-  EXPECT_THROW(doubleVariant.valueAsString(), boost::bad_get);
+  EXPECT_THROW(doubleVariant.valueAsBoolean(), std::bad_variant_access);
+  EXPECT_THROW(doubleVariant.valueAsInteger(), std::bad_variant_access);
+  EXPECT_THROW(doubleVariant.valueAsString(), std::bad_variant_access);
 
-  EXPECT_THROW(stringVariant.valueAsBoolean(), boost::bad_get);
-  EXPECT_THROW(stringVariant.valueAsInteger(), boost::bad_get);
-  EXPECT_THROW(stringVariant.valueAsDouble(), boost::bad_get);
+  EXPECT_THROW(stringVariant.valueAsBoolean(), std::bad_variant_access);
+  EXPECT_THROW(stringVariant.valueAsInteger(), std::bad_variant_access);
+  EXPECT_THROW(stringVariant.valueAsDouble(), std::bad_variant_access);
 }
