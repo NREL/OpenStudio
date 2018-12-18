@@ -268,7 +268,8 @@ void BuildingComponentDialogCentralWidget::lowerPushButtonClicked()
 
       if (m_filterType == "components")
       {
-        connect(remoteBCL, &RemoteBCL::componentDownloaded, this, &BuildingComponentDialogCentralWidget::componentDownloadComplete);
+        // DLM: replace with Nano Signal
+        //connect(remoteBCL, &RemoteBCL::componentDownloaded, this, &BuildingComponentDialogCentralWidget::componentDownloadComplete);
 
         bool downloadStarted = remoteBCL->downloadComponent(component->uid());
         if (downloadStarted){
@@ -293,7 +294,8 @@ void BuildingComponentDialogCentralWidget::lowerPushButtonClicked()
       }
       else if (m_filterType == "measures")
       {
-        connect(remoteBCL, &RemoteBCL::measureDownloaded, this, &BuildingComponentDialogCentralWidget::measureDownloadComplete);
+        // DLM: replace with Nano Signal
+        //connect(remoteBCL, &RemoteBCL::measureDownloaded, this, &BuildingComponentDialogCentralWidget::measureDownloadComplete);
 
         bool downloadStarted = remoteBCL->downloadMeasure(component->uid());
         if (downloadStarted){

@@ -1131,9 +1131,9 @@ namespace openstudio{
       }
 
       if (componentType == "measure") {
-        emit measureDownloaded(m_downloadUid, m_lastMeasureDownload);
+        //emit measureDownloaded(m_downloadUid, m_lastMeasureDownload);
       } else {
-        emit componentDownloaded(m_downloadUid, m_lastComponentDownload);
+        //emit componentDownloaded(m_downloadUid, m_lastComponentDownload);
       }
 
       m_mutex.unlock();
@@ -1161,7 +1161,7 @@ namespace openstudio{
         setLastTotalResults(0);
       }
 
-      emit metaSearchCompleted(m_lastMetaSearch);
+      //emit metaSearchCompleted(m_lastMetaSearch);
 
       m_mutex.unlock();
     }
@@ -1182,7 +1182,7 @@ namespace openstudio{
         m_lastSearch = processSearchResponse(*remoteQueryResponse);
       }
 
-      emit searchCompleted(m_lastSearch);
+      //emit searchCompleted(m_lastSearch);
 
       m_mutex.unlock();
     }
