@@ -1127,6 +1127,7 @@ function(QT5_WRAP_CPP_MINIMALLY outfiles)
   set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${_orig_DIRS}")
 endfunction()
 
+
 # link target with debug and release libs
 function(LINK_DEBUG_AND_RELEASE this_target debug_libs release_libs)
   list(LENGTH debug_libs len1)
@@ -1145,3 +1146,21 @@ function(LINK_DEBUG_AND_RELEASE this_target debug_libs release_libs)
   endforeach()
 
 endfunction()
+
+
+# adds custom command to update a resource via configure
+macro(CONFIGURE_FILE_WITH_CHECKSUM INPUT_FILE OUTPUT_FILE)
+  SET(TMP_OUTPUT_FILE "${OUTPUT_FILE}.tmp")
+  
+  if(NOT EXISTS "${OUTPUT_FILE}")
+    configure_file( "${INPUT_FILE}" "${OUTPUT_FILE}" )
+  else()
+    configure_file( "${INPUT_FILE}" "${TMP_OUTPUT_FILE}" )
+    file(MD5 "${OUTPUT_FILE}" EXISTING_HASH)
+    file(MD5 "${TMP_OUTPUT_FILE}" NEW_HASH)
+    if (NOT "${EXISTING_HASH}" MATCHES "${NEW_HASH}")
+      configure_file( "${INPUT_FILE}" "${OUTPUT_FILE}" )
+    endif()
+  endif()
+endmacro()
+

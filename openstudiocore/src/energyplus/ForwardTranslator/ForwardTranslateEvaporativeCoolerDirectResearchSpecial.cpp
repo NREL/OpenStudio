@@ -50,7 +50,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectResearchSpecial( EvaporativeCoolerDirectResearchSpecial & modelObject )
 {
   OptionalString s;
-  OptionalDouble OptD;
+  OptionalDouble optD;
   OptionalModelObject temp;
   double value;
 
@@ -77,8 +77,15 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectRe
   // RecirculatingWaterPumpPowerConsumption
   if ( modelObject.isRecirculatingWaterPumpPowerConsumptionAutosized() ) {
     idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,"autosize");
-  } else if( (OptD = modelObject.recirculatingWaterPumpPowerConsumption()) ) {
-    idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,OptD.get());
+  } else if( (optD = modelObject.recirculatingWaterPumpPowerConsumption()) ) {
+    idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower, optD.get());
+  }
+
+  // Primary Air Design Flow Rate
+  if ( modelObject.isPrimaryAirDesignFlowRateAutosized() ) {
+    idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate,"Autosize");
+  } else if( (optD = modelObject.primaryAirDesignFlowRate()) ) {
+    idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate, optD.get());
   }
 
   // AirInletNodeName

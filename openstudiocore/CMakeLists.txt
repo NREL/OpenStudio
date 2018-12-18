@@ -668,8 +668,9 @@ endif()
 # to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
 # next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20181114.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "286b8677857a130e5a69372e814bd97a")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20181217.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d87131108e1160037ab8d26b8c48f9cf")
+
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -1358,6 +1359,11 @@ add_subdirectory(src/sqlite)
 ################################################################################
 
 ###############################################################################
+## pugixml
+add_subdirectory(src/pugixml)
+###############################################################################
+
+###############################################################################
 # Add to include path
 
 # Project source directory
@@ -1365,6 +1371,9 @@ include_directories("${CMAKE_HOME_DIRECTORY}/src/")
 
 # For QWinWidget
 include_directories("${CMAKE_HOME_DIRECTORY}/src/qtwinmigrate")
+
+# XML
+include_directories("${CMAKE_HOME_DIRECTORY}/src/pugixml/src")
 
 # Project binary directory
 include_directories("${CMAKE_BINARY_DIR}/src/")

@@ -407,6 +407,14 @@ ModelObject PlantLoop_Impl::clone(Model model) const
 
       // allBranchComponents.push_back(branchComponents);
 
+      // Note JM 2018-12-17: There's one special case: the branch with the connector node
+      // We want to avoid looping on branchComponents otherwise we'll add the connector node to the nodes vector
+      // while the nodeClones will not, so it'll produce a diff
+      if (branchComponents.size() == 1 && branchComponents[0].optionalCast<Node>()) {
+        LOG(Trace, "On the Connector Node Branch, skipping it.");
+        continue;
+      }
+
       // Reference to the lastOutletNode
       boost::optional<Node> lastOutletNode;
 

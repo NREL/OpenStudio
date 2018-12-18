@@ -31,37 +31,29 @@
 
 #include "../core/Assert.hpp"
 
-#include <QDomDocument>
-#include <QTextStream>
+#include <pugixml.hpp>
 
 namespace openstudio{
 
-  BCLMeasureOutput::BCLMeasureOutput(const QDomElement& element)
+  BCLMeasureOutput::BCLMeasureOutput(const pugi::xml_node &element)
   {
     // todo: escape name
-    m_name = element.firstChildElement("name").firstChild().nodeValue().toStdString();
+    m_name = element.child("name").text().as_string();
 
-    m_displayName = element.firstChildElement("display_name").firstChild().nodeValue().toStdString();
+    m_displayName = element.child("display_name").text().as_string();
 
-    if (!element.firstChildElement("short_name").isNull()){
-      m_shortName = element.firstChildElement("short_name").firstChild().nodeValue().toStdString();
-    }
+    m_shortName = element.child("short_name").text().as_string();;
 
-    if (!element.firstChildElement("description").isNull()){
-      m_description = element.firstChildElement("description").firstChild().nodeValue().toStdString();
-    }
+    m_description = element.child("description").text().as_string();
 
-    m_type = element.firstChildElement("type").firstChild().nodeValue().toStdString();
+    m_type = element.child("type").text().as_string();
 
-    if (!element.firstChildElement("units").isNull()){
-      m_units = element.firstChildElement("units").firstChild().nodeValue().toStdString();
-    }
+    m_units = element.child("units").text().as_string();
 
-    QString test = element.firstChildElement("model_dependent").firstChild().nodeValue();
+    QString test = element.child("model_dependent").text().as_string();
+    m_modelDependent = false;
     if (test == "true"){
       m_modelDependent = true;
-    } else {
-      m_modelDependent = false;
     }
 
   }
@@ -112,41 +104,41 @@ namespace openstudio{
     return m_modelDependent;
   }
 
-  void BCLMeasureOutput::writeValues(QDomDocument& doc, QDomElement& element) const
+  void BCLMeasureOutput::writeValues(pugi::xml_node &element) const
   {
-    QDomElement nameElement = doc.createElement("name");
-    element.appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode(toQString(m_name)));
+    auto subelement = element.append_child("name");
+    auto text = subelement.text();
+    text.set(m_name.c_str());
 
-    QDomElement displayNameElement = doc.createElement("display_name");
-    element.appendChild(displayNameElement);
-    displayNameElement.appendChild(doc.createTextNode(toQString(m_displayName)));
+    subelement = element.append_child("display_name");
+    text = subelement.text();
+    text.set(m_displayName.c_str());
 
     if (m_shortName){
-      QDomElement shortNameElement = doc.createElement("short_name");
-      element.appendChild(shortNameElement);
-      shortNameElement.appendChild(doc.createTextNode(toQString(*m_shortName)));
+      subelement = element.append_child("short_name");
+      text = subelement.text();
+      text.set((*m_shortName).c_str());
     }
 
     if (m_description){
-      QDomElement descriptionElement = doc.createElement("description");
-      element.appendChild(descriptionElement);
-      descriptionElement.appendChild(doc.createTextNode(toQString(*m_description)));
+      subelement = element.append_child("description");
+      text = subelement.text();
+      text.set((*m_description).c_str());
     }
 
-    QDomElement typeElement = doc.createElement("type");
-    element.appendChild(typeElement);
-    typeElement.appendChild(doc.createTextNode(toQString(m_type)));
+    subelement = element.append_child("type");
+    text = subelement.text();
+    text.set(m_type.c_str());
 
     if (m_units){
-      QDomElement unitsElement = doc.createElement("units");
-      element.appendChild(unitsElement);
-      unitsElement.appendChild(doc.createTextNode(toQString(*m_units)));
+      subelement = element.append_child("units");
+      text = subelement.text();
+      text.set((*m_units).c_str());
     }
 
-    QDomElement modelDependentElement = doc.createElement("model_dependent");
-    element.appendChild(modelDependentElement);
-    modelDependentElement.appendChild(doc.createTextNode(m_modelDependent ? "true" : "false"));
+    subelement = element.append_child("model_dependent");
+    text = subelement.text();
+    text.set(m_modelDependent ? "true" : "false");
   }
 
   bool BCLMeasureOutput::operator == (const BCLMeasureOutput& other) const
@@ -202,15 +194,11 @@ namespace openstudio{
 
   std::ostream& operator<<(std::ostream& os, const BCLMeasureOutput& argument)
   {
-    QDomDocument doc;
-    QDomElement element = doc.createElement(QString("Output"));
-    doc.appendChild(element);
-    argument.writeValues(doc, element);
+    pugi::xml_document doc;
+    auto element = doc.append_child("Output");
+    argument.writeValues(element);
 
-    QString str;
-    QTextStream qts(&str);
-    doc.save(qts, 2);
-    os << str.toStdString();
+    doc.save(os, "  ");
     return os;
   }
 

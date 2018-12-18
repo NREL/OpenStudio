@@ -37,8 +37,9 @@
 
 #include <vector>
 
-class QDomDocument;
-class QDomElement;
+namespace pugi {
+  class xml_node;
+}
 
 namespace openstudio{
 
@@ -109,7 +110,7 @@ namespace openstudio{
     /** @name Operators */
     //@{
 
-    void writeValues(QDomDocument& doc, QDomElement& element) const;
+    void writeValues(pugi::xml_node &element) const;
 
     /// Check if the file has been updated and return if so.  Will update checksum.
     bool checkForUpdate();

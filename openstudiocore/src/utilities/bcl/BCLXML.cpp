@@ -35,7 +35,7 @@
 #include "../core/FilesystemHelpers.hpp"
 #include "../time/DateTime.hpp"
 
-#include <QDomDocument>
+#include <pugixml.hpp>
 
 namespace openstudio{
 
@@ -50,28 +50,35 @@ namespace openstudio{
   BCLXML::BCLXML(const openstudio::path& xmlPath):
     m_path(openstudio::filesystem::system_complete(xmlPath))
   {
-    if (!openstudio::filesystem::exists(xmlPath) || !openstudio::filesystem::is_regular_file(xmlPath)){
+    if (!openstudio::filesystem::exists(xmlPath)){
       LOG_AND_THROW("'" << toString(xmlPath) << "' does not exist");
+    } else if (!openstudio::filesystem::is_regular_file(xmlPath)) {
+      LOG_AND_THROW("'" << toString(xmlPath) << "' cannot be opened for reading BCL XML data");
     }
 
-    QDomDocument bclXML("bclXML");
+    pugi::xml_document bclXML;
+
     openstudio::filesystem::ifstream file(m_path);
     if (file.is_open()){
-      bclXML.setContent(openstudio::filesystem::read_as_QByteArray(file));
+      auto result = bclXML.load_file(m_path.c_str());
+      if (!result) {
+        LOG_AND_THROW("'" << toString(xmlPath) << "' could not be read as XML data");
+      }
+
       file.close();
-    }else{
+    } else {
       file.close();
       LOG_AND_THROW("'" << toString(xmlPath) << "' could not be opened");
     }
 
-    QDomElement element = bclXML.firstChildElement("component");
-    if (!element.isNull()){
+    auto element = bclXML.child("component");
+    if (element){
       m_bclXMLType = BCLXMLType::ComponentXML;
-    }else{
-      element = bclXML.firstChildElement("measure");
-      if (!element.isNull()){
+    } else {
+      element = bclXML.child("measure");
+      if (element){
         m_bclXMLType = BCLXMLType::MeasureXML;
-      }else{
+      } else {
         LOG_AND_THROW("'" << toString(xmlPath) << "' is not a correct BCL XML");
       }
     }
@@ -79,32 +86,31 @@ namespace openstudio{
     // get schema version to see if we need to upgrade anything
     // added in schema version 3
     VersionString startingVersion("2.0");
-    if (!element.firstChildElement("schema_version").isNull()){
+    auto subelement = element.child("schema_version");
+    if (subelement) {
       try{
-        startingVersion = VersionString(element.firstChildElement("schema_version").firstChild().nodeValue().toStdString());
+        startingVersion = VersionString(subelement.text().as_string());
       } catch (const std::exception&){
+        // Yuck
       }
     }
 
     // added in schema version 3
-    if (!element.firstChildElement("error").isNull()){
-      m_error = decodeString(element.firstChildElement("error").firstChild().nodeValue().toStdString());
-    }
+    m_error = decodeString(element.child("error").text().as_string());
 
-    m_name = decodeString(element.firstChildElement("name").firstChild().nodeValue().toStdString());
+    m_name = decodeString(element.child("name").text().as_string());
 
-    m_uid = element.firstChildElement("uid").firstChild().nodeValue().toStdString();
+    m_uid = element.child("uid").text().as_string();
 
-    m_versionId = element.firstChildElement("version_id").firstChild().nodeValue().toStdString();
+    m_versionId = element.child("version_id").text().as_string();
 
     if (m_name.empty() || m_uid.empty() || m_versionId.empty()){
       LOG_AND_THROW("'" << toString(xmlPath) << "' is not a correct BCL XML");
     }
 
-    if (element.firstChildElement("version_modified").isNull()){
-      m_versionModified = "";
-    } else {
-      m_versionModified = element.firstChildElement("version_modified").firstChild().nodeValue().toStdString();
+    subelement = element.child("version_modified");
+    if (subelement){
+      m_versionModified = subelement.text().as_string();
       if (!DateTime::fromISO8601(m_versionModified)){
         // not an allowable date time
         m_versionModified = "";
@@ -113,206 +119,195 @@ namespace openstudio{
 
     if (m_bclXMLType == BCLXMLType::MeasureXML){
       // added in schema version 3
-      if (element.firstChildElement("class_name").isNull()){
-        m_className = "";
-      } else {
-        m_className = decodeString(element.firstChildElement("class_name").firstChild().nodeValue().toStdString());
-      }
+      m_className = decodeString(element.child("class_name").text().as_string());
     }
 
     // added in schema version 3
-    if (element.firstChildElement("display_name").isNull()){
+    m_displayName = decodeString(element.child("display_name").text().as_string());
+    if (m_displayName.empty()){
       // use name
-      m_displayName = decodeString(element.firstChildElement("name").firstChild().nodeValue().toStdString());
-    }else{
-      m_displayName = decodeString(element.firstChildElement("display_name").firstChild().nodeValue().toStdString());
+      m_displayName = m_name;
     }
 
-    m_description = decodeString(element.firstChildElement("description").firstChild().nodeValue().toStdString());
+    m_description = decodeString(element.child("description").text().as_string());
 
     if (m_bclXMLType == BCLXMLType::MeasureXML){
-      m_modelerDescription = decodeString(element.firstChildElement("modeler_description").firstChild().nodeValue().toStdString());
+      m_modelerDescription = decodeString(element.child("modeler_description").text().as_string());
     }
 
     if (m_bclXMLType == BCLXMLType::MeasureXML){
-      QDomElement argumentElement = element.firstChildElement("arguments").firstChildElement("argument");
-      while (!argumentElement.isNull()){
-        if (argumentElement.hasChildNodes()){
-          try{
-            m_arguments.push_back(BCLMeasureArgument(argumentElement));
-          } catch (const std::exception&){
-            LOG(Error, "Bad argument in xml");
+      subelement = element.child("arguments");
+      if (subelement) {
+        for (auto &arg : subelement.children("argument")) {
+          try {
+            m_arguments.push_back(BCLMeasureArgument(arg));
+          } catch (const std::exception&) {
+            LOG(Error, "Bad argument in BCL XML");
           }
         }
-        argumentElement = argumentElement.nextSiblingElement("argument");
       }
 
-      QDomElement outputElement = element.firstChildElement("outputs").firstChildElement("output");
-      while (!outputElement.isNull()){
-        if (outputElement.hasChildNodes()){
-          try{
-            m_outputs.push_back(BCLMeasureOutput(outputElement));
-          } catch (const std::exception&){
-            LOG(Error, "Bad output in xml");
+      auto sublement = element.child("outputs");
+      if(subelement) {
+        for (auto &outputElement : subelement.children("output")) {
+          if (outputElement.first_child()) {
+            try {
+              m_outputs.push_back(BCLMeasureOutput(outputElement));
+            } catch (const std::exception&) {
+              LOG(Error, "Bad output in BCL XML");
+            }
           }
         }
-        outputElement = outputElement.nextSiblingElement("output");
       }
     }
 
-    QDomElement fileElement = element.firstChildElement("files").firstChildElement("file");
-    while (!fileElement.isNull()){
-      if (fileElement.hasChildNodes()){
+    subelement = element.child("files");
+    if (subelement) {
+      for (auto &fileElement : subelement.children("file")) {
+        if (fileElement.first_child()) {
 
-        std::string softwareProgram;
-        std::string softwareProgramVersion;
-        boost::optional<VersionString> minCompatibleVersion;
-        boost::optional<VersionString> maxCompatibleVersion;
-        QDomElement versionElement = fileElement.firstChildElement("version");
-        if (!versionElement.isNull()){
-          softwareProgram = versionElement.firstChildElement("software_program").firstChild().nodeValue().toStdString();
-          softwareProgramVersion = versionElement.firstChildElement("identifier").firstChild().nodeValue().toStdString();
+          std::string softwareProgram;
+          std::string softwareProgramVersion;
+          boost::optional<VersionString> minCompatibleVersion;
+          boost::optional<VersionString> maxCompatibleVersion;
+          auto versionElement = fileElement.child("version");
+          if (versionElement) {
+            softwareProgram = versionElement.child("software_program").text().as_string();
+            softwareProgramVersion = versionElement.child("identifier").text().as_string();
 
-          // added in schema version 3
-          QDomElement minCompatibleVersionElement = versionElement.firstChildElement("min_compatible");
-          if (minCompatibleVersionElement.isNull()){
-            try{
-              // if minCompatibleVersion not explicitly set, assume softwareProgramVersion is min
-              minCompatibleVersion = VersionString(softwareProgramVersion);
-            } catch (const std::exception&){
+            // added in schema version 3
+            auto minCompatibleVersionElement = versionElement.child("min_compatible");
+            if (!minCompatibleVersionElement) {
+              try {
+                // if minCompatibleVersion not explicitly set, assume softwareProgramVersion is min
+                minCompatibleVersion = VersionString(softwareProgramVersion);
+              } catch (const std::exception&) {
+              }
+            } else {
+              try {
+                minCompatibleVersion = VersionString(minCompatibleVersionElement.text().as_string());
+              } catch (const std::exception&) {
+              }
             }
-          }else{
-            try{
-              minCompatibleVersion = VersionString(minCompatibleVersionElement.firstChild().nodeValue().toStdString());
-            } catch (const std::exception&){
+
+            // added in schema version 3
+            auto maxCompatibleVersionElement = versionElement.child("max_compatible");
+            if (maxCompatibleVersionElement) {
+              try {
+                maxCompatibleVersion = VersionString(maxCompatibleVersionElement.text().as_string());
+              } catch (const std::exception&) {
+              }
             }
+
+          }
+          std::string fileName = fileElement.child("filename").text().as_string();
+          //std::string fileType = fileElement.firstChildElement("filetype").firstChild().nodeValue().toStdString();
+          std::string usageType = fileElement.child("usage_type").text().as_string();
+          std::string checksum = fileElement.child("checksum").text().as_string();
+
+          openstudio::path path; ;
+          if (usageType == "script") {
+            path = m_path.parent_path() / toPath(fileName);
+          } else if (usageType == "doc") {
+            path = m_path.parent_path() / toPath("docs") / toPath(fileName);
+          } else if (usageType == "test") {
+            path = m_path.parent_path() / toPath("tests") / toPath(fileName);
+          } else if (usageType == "resource") {
+            path = m_path.parent_path() / toPath("resources") / toPath(fileName);
+          } else {
+            path = m_path.parent_path() / toPath(fileName);
           }
 
-          // added in schema version 3
-          QDomElement maxCompatibleVersionElement = versionElement.firstChildElement("max_compatible");
-          if (!maxCompatibleVersionElement.isNull()){
-            try{
-              maxCompatibleVersion = VersionString(maxCompatibleVersionElement.firstChild().nodeValue().toStdString());
-            } catch (const std::exception&){
-            }
+          BCLFileReference file(path);
+          file.setSoftwareProgram(softwareProgram);
+          file.setSoftwareProgramVersion(softwareProgramVersion);
+          if (minCompatibleVersion) {
+            file.setMinCompatibleVersion(*minCompatibleVersion);
           }
+          if (maxCompatibleVersion) {
+            file.setMaxCompatibleVersion(*maxCompatibleVersion);
+          }
+          file.setUsageType(usageType);
+          file.setChecksum(checksum);
 
+          m_files.push_back(file);
+
+        } else {
+          break;
         }
-        std::string fileName = fileElement.firstChildElement("filename").firstChild().nodeValue().toStdString();
-        //std::string fileType = fileElement.firstChildElement("filetype").firstChild().nodeValue().toStdString();
-        std::string usageType = fileElement.firstChildElement("usage_type").firstChild().nodeValue().toStdString();
-        std::string checksum = fileElement.firstChildElement("checksum").firstChild().nodeValue().toStdString();
-
-        openstudio::path path; ;
-        if (usageType == "script"){
-          path = m_path.parent_path() / toPath(fileName);
-        }else if (usageType == "doc"){
-          path = m_path.parent_path() / toPath("docs") / toPath(fileName);
-        }else if (usageType == "test"){
-          path = m_path.parent_path() / toPath("tests") / toPath(fileName);
-        }else if (usageType == "resource"){
-          path = m_path.parent_path() / toPath("resources") / toPath(fileName);
-        }else{
-          path = m_path.parent_path() / toPath(fileName);
-        }
-
-        BCLFileReference file(path);
-        file.setSoftwareProgram(softwareProgram);
-        file.setSoftwareProgramVersion(softwareProgramVersion);
-        if (minCompatibleVersion){
-          file.setMinCompatibleVersion(*minCompatibleVersion);
-        }
-        if (maxCompatibleVersion){
-          file.setMaxCompatibleVersion(*maxCompatibleVersion);
-        }
-        file.setUsageType(usageType);
-        file.setChecksum(checksum);
-
-        m_files.push_back(file);
-
-      }else{
-        break;
       }
-      fileElement = fileElement.nextSiblingElement("file");
     }
 
-    QDomElement attributeElement = element.firstChildElement("attributes").firstChildElement("attribute");
-    while (!attributeElement.isNull()){
-      if (attributeElement.hasChildNodes()){
-        std::string name = attributeElement.firstChildElement("name").firstChild()
-          .nodeValue().toStdString();
-        std::string value = attributeElement.firstChildElement("value").firstChild()
-          .nodeValue().toStdString();
-        std::string datatype = attributeElement.firstChildElement("datatype").firstChild()
-          .nodeValue().toStdString();
+    subelement = element.child("attributes");
+    if (subelement) {
+      for (auto &attributeElement : subelement.children("attribute")) {
+        if (attributeElement.first_child()) {
+          std::string name = attributeElement.child("name").text().as_string();
+          std::string value = attributeElement.child("value").text().as_string();
+          std::string datatype = attributeElement.child("datatype").text().as_string();
 
-        // Units are optional
-        std::string units = attributeElement.firstChildElement("units").firstChild()
-          .nodeValue().toStdString();
+          // Units are optional
+          std::string units = attributeElement.child("units").text().as_string();
 
-        if (datatype == "float"){
-          if (units.empty()){
-            Attribute attr(name, boost::lexical_cast<double>(value));
-            m_attributes.push_back(attr);
-          }else{
-            Attribute attr(name, boost::lexical_cast<double>(value), units);
-            m_attributes.push_back(attr);
+          if (datatype == "float") {
+            if (units.empty()) {
+              Attribute attr(name, boost::lexical_cast<double>(value));
+              m_attributes.push_back(attr);
+            } else {
+              Attribute attr(name, boost::lexical_cast<double>(value), units);
+              m_attributes.push_back(attr);
+            }
+          } else if (datatype == "int") {
+            if (units.empty()) {
+              Attribute attr(name, boost::lexical_cast<int>(value));
+              m_attributes.push_back(attr);
+            } else {
+              Attribute attr(name, boost::lexical_cast<int>(value), units);
+              m_attributes.push_back(attr);
+            }
+          } else if (datatype == "boolean") {
+            bool temp;
+            if (value == "true") {
+              temp = true;
+            } else {
+              temp = false;
+            }
+            if (units.empty()) {
+              Attribute attr(name, temp);
+              m_attributes.push_back(attr);
+            } else {
+              Attribute attr(name, temp, units);
+              m_attributes.push_back(attr);
+            }
+          } else {
+            // Assume string
+            if (units.empty()) {
+              Attribute attr(name, value);
+              m_attributes.push_back(attr);
+            } else {
+              Attribute attr(name, value, units);
+              m_attributes.push_back(attr);
+            }
           }
-        }else if (datatype == "int"){
-          if (units.empty()){
-            Attribute attr(name, boost::lexical_cast<int>(value));
-            m_attributes.push_back(attr);
-          }else{
-            Attribute attr(name, boost::lexical_cast<int>(value), units);
-            m_attributes.push_back(attr);
-          }
-        }else if (datatype == "boolean"){
-          bool temp;
-          if (value == "true"){
-            temp = true;
-          }else{
-            temp = false;
-          }
-          if (units.empty()){
-            Attribute attr(name, temp);
-            m_attributes.push_back(attr);
-          }else{
-            Attribute attr(name, temp, units);
-            m_attributes.push_back(attr);
-          }
-        }else{
-          // Assume string
-          if (units.empty()){
-            Attribute attr(name, value);
-            m_attributes.push_back(attr);
-          }else{
-            Attribute attr(name, value, units);
-            m_attributes.push_back(attr);
-          }
+        } else {
+          break;
         }
-      }else{
-        break;
       }
-      attributeElement = attributeElement.nextSiblingElement("attribute");
     }
 
-    QDomElement tagElement = element.firstChildElement("tags").firstChildElement("tag");
-    while (!tagElement.isNull()){
-      m_tags.push_back(tagElement.firstChild().nodeValue().toStdString());
-      tagElement = tagElement.nextSiblingElement("tag");
+    subelement = element.child("tags");
+    if (subelement) {
+      for (auto &tagElement : subelement.children("tag")) {
+        auto text = tagElement.text();
+        if (!text.empty()) {
+          m_tags.push_back(text.as_string());
+        }
+      }
     }
 
     // added in schema version 3
-    if (element.firstChildElement("xml_checksum").isNull()){
-      // DLM: keep this empty for now
-      //m_xmlChecksum = computeXMLChecksum();
-    } else{
-      m_xmlChecksum = element.firstChildElement("xml_checksum").firstChild().nodeValue().toStdString();
-    }
-  }
+    m_xmlChecksum = subelement.text().as_string();
 
-  BCLXML::~BCLXML()
-  {
   }
 
   boost::optional<BCLXML> BCLXML::load(const openstudio::path& xmlPath)
@@ -634,106 +629,97 @@ namespace openstudio{
       return false;
     }
 
-    QDomDocument doc;
-    doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
+    pugi::xml_document doc;
+    //doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
 
-    QDomElement docElement;
+    pugi::xml_node docElement;
     if (m_bclXMLType == BCLXMLType::ComponentXML){
-      docElement = doc.createElement("component");
-      doc.appendChild(docElement);
+      docElement = doc.append_child("component");
     }else if (m_bclXMLType == BCLXMLType::MeasureXML){
-      docElement = doc.createElement("measure");
-      doc.appendChild(docElement);
+      docElement = doc.append_child("measure");
     }else{
       return false;
     }
 
-    QDomElement element = doc.createElement("schema_version");
-    docElement.appendChild(element);
-    element.appendChild(doc.createTextNode("3.0"));
+    auto element = docElement.append_child("schema_version");
+    auto text = element.text();
+    text.set("3.0");
 
     if (m_error){
-      element = doc.createElement("error");
-      docElement.appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(escapeString(*m_error))));
+      element = doc.append_child("error");
+      text = element.text();
+      text.set(escapeString(*m_error).c_str());
     }
 
-    element = doc.createElement("name");
-    docElement.appendChild(element);
-    element.appendChild(doc.createTextNode(toQString(escapeString(m_name))));
+    element = docElement.append_child("name");
+    text = element.text();
+    text.set(escapeString(m_name).c_str());
 
-    element = doc.createElement("uid");
-    docElement.appendChild(element);
-    element.appendChild(doc.createTextNode(toQString(m_uid)));
+    element = docElement.append_child("uid");
+    text = element.text();
+    text.set(m_uid.c_str());
 
-    element = doc.createElement("version_id");
-    docElement.appendChild(element);
-    element.appendChild(doc.createTextNode(toQString(m_versionId)));
+    element = docElement.append_child("version_id");
+    text = element.text();
+    text.set(m_versionId.c_str());
 
     if (!m_versionModified.empty()){
-      element = doc.createElement("version_modified");
-      docElement.appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(m_versionModified)));
+      element = docElement.append_child("version_modified");
+      text = element.text();
+      text.set(m_versionModified.c_str());
     }
 
-    element = doc.createElement("xml_checksum");
-    docElement.appendChild(element);
-    element.appendChild(doc.createTextNode(toQString(m_xmlChecksum)));
+    element = docElement.append_child("xml_checksum");
+    text = element.text();
+    text.set(m_xmlChecksum.c_str());
 
     if (m_bclXMLType == BCLXMLType::MeasureXML){
-      element = doc.createElement("class_name");
-      docElement.appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(m_className)));
+      element = docElement.append_child("class_name");
+      text = element.text();
+      text.set(m_className.c_str());
     }
 
-    element = doc.createElement("display_name");
-    docElement.appendChild(element);
-    element.appendChild(doc.createTextNode(toQString(m_displayName)));
+    element = docElement.append_child("display_name");
+    text = element.text();
+    text.set(m_displayName.c_str());
 
-    element = doc.createElement("description");
-    docElement.appendChild(element);
-    element.appendChild(doc.createTextNode(toQString(escapeString(m_description))));
+    element = docElement.append_child("description");
+    text = element.text();
+    text.set(escapeString(m_description).c_str());
 
     if (m_bclXMLType == BCLXMLType::MeasureXML){
-      element = doc.createElement("modeler_description");
-      docElement.appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(escapeString(m_modelerDescription))));
+      element = docElement.append_child("modeler_description");
+      text = element.text();
+      text.set(escapeString(m_modelerDescription).c_str());
     }
 
     if (m_bclXMLType == BCLXMLType::MeasureXML){
-      element = doc.createElement("arguments");
-      docElement.appendChild(element);
+      element = docElement.append_child("arguments");
       for (const BCLMeasureArgument& argument : m_arguments){
-        QDomElement argumentElement = doc.createElement("argument");
-        element.appendChild(argumentElement);
-        argument.writeValues(doc, argumentElement);
+        auto argumentElement = element.append_child("argument");
+        argument.writeValues(argumentElement);
       }
 
-      element = doc.createElement("outputs");
-      docElement.appendChild(element);
+      element = docElement.append_child("outputs");
       for (const BCLMeasureOutput& output : m_outputs){
-        QDomElement outputElement = doc.createElement("output");
-        element.appendChild(outputElement);
-        output.writeValues(doc, outputElement);
+        auto outputElement = element.append_child("output");
+        output.writeValues(outputElement);
       }
     }
 
     // TODO: write provenances
-    element = doc.createElement("provenances");
-    docElement.appendChild(element);
+    element = docElement.append_child("provenances");
 
     // write tags
-    element = doc.createElement("tags");
-    docElement.appendChild(element);
+    element = docElement.append_child("tags");
     for (const std::string& tag : m_tags) {
-      QDomElement tagElement = doc.createElement("tag");
-      element.appendChild(tagElement);
-      tagElement.appendChild(doc.createTextNode(toQString(tag)));
+      auto tagElement = element.append_child("tag");
+      text = tagElement.text();
+      text.set(tag.c_str());
     }
 
     // write attributes
-    element = doc.createElement("attributes");
-    docElement.appendChild(element);
+    element = docElement.append_child("attributes");
     for (const Attribute& attribute : m_attributes) {
 
       std::string value;
@@ -780,36 +766,33 @@ namespace openstudio{
           continue;
       }
 
-      QDomElement attributeElement = doc.createElement("attribute");
-      element.appendChild(attributeElement);
+      auto attributeElement = element.append_child("attribute");
 
-      QDomElement nameElement = doc.createElement("name");
-      attributeElement.appendChild(nameElement);
-      nameElement.appendChild(doc.createTextNode(toQString(attribute.name())));
+      auto subelement = attributeElement.append_child("name");
+      text = subelement.text();
+      text.set(attribute.name().c_str());
 
-      QDomElement valueElement = doc.createElement("value");
-      attributeElement.appendChild(valueElement);
-      valueElement.appendChild(doc.createTextNode(toQString(value)));
+      subelement = attributeElement.append_child("value");
+      text = subelement.text();
+      text.set(value.c_str());
 
-      QDomElement dataTypeElement = doc.createElement("datatype");
-      attributeElement.appendChild(dataTypeElement);
-      dataTypeElement.appendChild(doc.createTextNode(toQString(dataType)));
+      subelement = attributeElement.append_child("datatype");
+      text = subelement.text();
+      text.set(dataType.c_str());
 
       boost::optional<std::string> units = attribute.units();
       if (units){
-        QDomElement unitsElement = doc.createElement("units");
-        attributeElement.appendChild(unitsElement);
-        unitsElement.appendChild(doc.createTextNode(toQString(*units)));
+        subelement = attributeElement.append_child("units");
+        text = subelement.text();
+        text.set((*units).c_str());
       }
     }
 
     // write files
-    element = doc.createElement("files");
-    docElement.appendChild(element);
+    element = docElement.append_child("files");
     for (const BCLFileReference& file : m_files) {
-      QDomElement fileElement = doc.createElement("file");
-      element.appendChild(fileElement);
-      file.writeValues(doc, fileElement);
+      auto subelement = element.append_child("file");
+      file.writeValues(subelement);
     }
 
     // write to disk
@@ -818,7 +801,7 @@ namespace openstudio{
       return false;
     }
 
-    openstudio::filesystem::write(file, doc.toString(2));
+    doc.save(file, "  ");
     file.close();
     return true;
   }
