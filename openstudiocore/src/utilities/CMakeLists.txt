@@ -11,7 +11,7 @@ include(idf/CMakeLists.txt)
 include(sql/CMakeLists.txt)
 include(units/CMakeLists.txt)
 
-configure_file("core/ApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx")
+CONFIGURE_FILE_WITH_CHECKSUM("core/ApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx")
 
 set(core_src
   core/ApplicationPathHelpers.hpp

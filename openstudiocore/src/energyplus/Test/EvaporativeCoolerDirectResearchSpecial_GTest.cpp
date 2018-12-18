@@ -56,13 +56,16 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_EvaporativeCoolerDirectResearchSpecia
   Schedule sch =  m.alwaysOnDiscreteSchedule();
   EvaporativeCoolerDirectResearchSpecial e(m, sch);
 
-  ASSERT_TRUE(e.setEvaporativeOperationMinimumDrybulbTemperature(16));
-  ASSERT_TRUE(e.setEvaporativeOperationMaximumLimitWetbulbTemperature(24));
-  ASSERT_TRUE(e.setEvaporativeOperationMaximumLimitDrybulbTemperature(28));
+  EXPECT_TRUE(e.setPrimaryAirDesignFlowRate(1.05));
+  EXPECT_TRUE(e.setEvaporativeOperationMinimumDrybulbTemperature(16));
+  EXPECT_TRUE(e.setEvaporativeOperationMaximumLimitWetbulbTemperature(24));
+  EXPECT_TRUE(e.setEvaporativeOperationMaximumLimitDrybulbTemperature(28));
 
-  ASSERT_EQ(16, e.evaporativeOperationMinimumDrybulbTemperature());
-  ASSERT_EQ(24, e.evaporativeOperationMaximumLimitWetbulbTemperature());
-  ASSERT_EQ(28, e.evaporativeOperationMaximumLimitDrybulbTemperature());
+  ASSERT_TRUE(e.primaryAirDesignFlowRate());
+  EXPECT_DOUBLE_EQ(1.05, e.primaryAirDesignFlowRate().get());
+  EXPECT_DOUBLE_EQ(16, e.evaporativeOperationMinimumDrybulbTemperature());
+  EXPECT_DOUBLE_EQ(24, e.evaporativeOperationMaximumLimitWetbulbTemperature());
+  EXPECT_DOUBLE_EQ(28, e.evaporativeOperationMaximumLimitDrybulbTemperature());
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
@@ -72,11 +75,13 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_EvaporativeCoolerDirectResearchSpecia
 
   WorkspaceObject idfObj(idfObjs[0]);
 
-  ASSERT_EQ(e.evaporativeOperationMinimumDrybulbTemperature(),
+  EXPECT_DOUBLE_EQ(e.primaryAirDesignFlowRate().get(),
+            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate).get());
+  EXPECT_DOUBLE_EQ(e.evaporativeOperationMinimumDrybulbTemperature(),
             idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature).get());
-  ASSERT_EQ(e.evaporativeOperationMaximumLimitWetbulbTemperature(),
+  EXPECT_DOUBLE_EQ(e.evaporativeOperationMaximumLimitWetbulbTemperature(),
             idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature).get());
-  ASSERT_EQ(e.evaporativeOperationMaximumLimitDrybulbTemperature(),
+  EXPECT_DOUBLE_EQ(e.evaporativeOperationMaximumLimitDrybulbTemperature(),
             idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDrybulbTemperature).get());
 
 }

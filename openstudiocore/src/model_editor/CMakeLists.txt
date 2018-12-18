@@ -101,7 +101,7 @@ set(${target_name}_qrc
 
 # configure the AboutBox.hpp file
 # this needs to be configured to embed the build number
-configure_file(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
+CONFIGURE_FILE_WITH_CHECKSUM(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
 
 ## Qt MOC generation
 qt5_wrap_cpp_minimally(${target_name}_mocs ${${target_name}_moc})
