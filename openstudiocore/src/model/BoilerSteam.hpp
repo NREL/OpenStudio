@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -66,72 +64,50 @@ class MODEL_API BoilerSteam : public StraightComponent {
   bool setFuelType(std::string fuelType);
 
   boost::optional<double> maximumOperatingPressure() const;
-  OSOptionalQuantity getMaximumOperatingPressure(bool returnIP=false) const;
   bool setMaximumOperatingPressure(double maximumOperatingPressure);
-  bool setMaximumOperatingPressure(const Quantity& maximumOperatingPressure);
   void resetMaximumOperatingPressure();
 
   boost::optional<double> theoreticalEfficiency() const;
-  OSOptionalQuantity getTheoreticalEfficiency(bool returnIP=false) const;
   bool setTheoreticalEfficiency(double theoreticalEfficiency);
-  bool setTheoreticalEfficiency(const Quantity& theoreticalEfficiency);
   void resetTheoreticalEfficiency();
 
   boost::optional<double> designOutletSteamTemperature() const;
-  OSOptionalQuantity getDesignOutletSteamTemperature(bool returnIP=false) const;
   bool setDesignOutletSteamTemperature(double designOutletSteamTemperature);
-  bool setDesignOutletSteamTemperature(const Quantity& designOutletSteamTemperature);
   void resetDesignOutletSteamTemperature();
 
   boost::optional<double> nominalCapacity() const;
-  OSOptionalQuantity getNominalCapacity(bool returnIP=false) const;
   bool isNominalCapacityAutosized() const;
   bool setNominalCapacity(double nominalCapacity);
-  bool setNominalCapacity(const Quantity& nominalCapacity);
   void resetNominalCapacity();
   void autosizeNominalCapacity();
 
   boost::optional<double> minimumPartLoadRatio() const;
-  OSOptionalQuantity getMinimumPartLoadRatio(bool returnIP=false) const;
   bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
-  bool setMinimumPartLoadRatio(const Quantity& minimumPartLoadRatio);
   void resetMinimumPartLoadRatio();
 
   boost::optional<double> maximumPartLoadRatio() const;
-  OSOptionalQuantity getMaximumPartLoadRatio(bool returnIP=false) const;
   bool setMaximumPartLoadRatio(double maximumPartLoadRatio);
-  bool setMaximumPartLoadRatio(const Quantity& maximumPartLoadRatio);
   void resetMaximumPartLoadRatio();
 
   boost::optional<double> optimumPartLoadRatio() const;
-  OSOptionalQuantity getOptimumPartLoadRatio(bool returnIP=false) const;
   bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
-  bool setOptimumPartLoadRatio(const Quantity& optimumPartLoadRatio);
   void resetOptimumPartLoadRatio();
 
   boost::optional<double> coefficient1ofFuelUseFunctionofPartLoadRatioCurve() const;
-  OSOptionalQuantity getCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP=false) const;
   bool setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(double coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
-  bool setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(const Quantity& coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
   void resetCoefficient1ofFuelUseFunctionofPartLoadRatioCurve();
 
   boost::optional<double> coefficient2ofFuelUseFunctionofPartLoadRatioCurve() const;
-  OSOptionalQuantity getCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP=false) const;
   bool setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(double coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
-  bool setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(const Quantity& coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
   void resetCoefficient2ofFuelUseFunctionofPartLoadRatioCurve();
 
   boost::optional<double> coefficient3ofFuelUseFunctionofPartLoadRatioCurve() const;
-  OSOptionalQuantity getCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP=false) const;
   bool setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(double coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
-  bool setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(const Quantity& coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
   void resetCoefficient3ofFuelUseFunctionofPartLoadRatioCurve();
 
   double sizingFactor() const;
-  Quantity getSizingFactor(bool returnIP=false) const;
   bool isSizingFactorDefaulted() const;
   bool setSizingFactor(double sizingFactor);
-  bool setSizingFactor(const Quantity& sizingFactor);
   void resetSizingFactor();
 
   std::string endUseSubcategory() const;

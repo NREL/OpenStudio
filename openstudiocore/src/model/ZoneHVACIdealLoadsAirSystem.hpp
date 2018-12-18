@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -85,25 +83,17 @@ class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
 
   double maximumHeatingSupplyAirTemperature() const;
 
-  Quantity getMaximumHeatingSupplyAirTemperature(bool returnIP=false) const;
-
   bool isMaximumHeatingSupplyAirTemperatureDefaulted() const;
 
   double minimumCoolingSupplyAirTemperature() const;
-
-  Quantity getMinimumCoolingSupplyAirTemperature(bool returnIP=false) const;
 
   bool isMinimumCoolingSupplyAirTemperatureDefaulted() const;
 
   double maximumHeatingSupplyAirHumidityRatio() const;
 
-  Quantity getMaximumHeatingSupplyAirHumidityRatio(bool returnIP=false) const;
-
   bool isMaximumHeatingSupplyAirHumidityRatioDefaulted() const;
 
   double minimumCoolingSupplyAirHumidityRatio() const;
-
-  Quantity getMinimumCoolingSupplyAirHumidityRatio(bool returnIP=false) const;
 
   bool isMinimumCoolingSupplyAirHumidityRatioDefaulted() const;
 
@@ -113,13 +103,9 @@ class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
 
   boost::optional<double> maximumHeatingAirFlowRate() const;
 
-  OSOptionalQuantity getMaximumHeatingAirFlowRate(bool returnIP=false) const;
-
   bool isMaximumHeatingAirFlowRateAutosized() const;
 
   boost::optional<double> maximumSensibleHeatingCapacity() const;
-
-  OSOptionalQuantity getMaximumSensibleHeatingCapacity(bool returnIP=false) const;
 
   bool isMaximumSensibleHeatingCapacityAutosized() const;
 
@@ -129,13 +115,9 @@ class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
 
   boost::optional<double> maximumCoolingAirFlowRate() const;
 
-  OSOptionalQuantity getMaximumCoolingAirFlowRate(bool returnIP=false) const;
-
   bool isMaximumCoolingAirFlowRateAutosized() const;
 
   boost::optional<double> maximumTotalCoolingCapacity() const;
-
-  OSOptionalQuantity getMaximumTotalCoolingCapacity(bool returnIP=false) const;
 
   bool isMaximumTotalCoolingCapacityAutosized() const;
 
@@ -148,8 +130,6 @@ class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
   bool isDehumidificationControlTypeDefaulted() const;
 
   double coolingSensibleHeatRatio() const;
-
-  Quantity getCoolingSensibleHeatRatio(bool returnIP=false) const;
 
   bool isCoolingSensibleHeatRatioDefaulted() const;
 
@@ -173,13 +153,9 @@ class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
 
   double sensibleHeatRecoveryEffectiveness() const;
 
-  Quantity getSensibleHeatRecoveryEffectiveness(bool returnIP=false) const;
-
   bool isSensibleHeatRecoveryEffectivenessDefaulted() const;
 
   double latentHeatRecoveryEffectiveness() const;
-
-  Quantity getLatentHeatRecoveryEffectiveness(bool returnIP=false) const;
 
   bool isLatentHeatRecoveryEffectivenessDefaulted() const;
 
@@ -193,25 +169,17 @@ class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
 
   bool setMaximumHeatingSupplyAirTemperature(double maximumHeatingSupplyAirTemperature);
 
-  bool setMaximumHeatingSupplyAirTemperature(const Quantity& maximumHeatingSupplyAirTemperature);
-
   void resetMaximumHeatingSupplyAirTemperature();
 
   bool setMinimumCoolingSupplyAirTemperature(double minimumCoolingSupplyAirTemperature);
-
-  bool setMinimumCoolingSupplyAirTemperature(const Quantity& minimumCoolingSupplyAirTemperature);
 
   void resetMinimumCoolingSupplyAirTemperature();
 
   bool setMaximumHeatingSupplyAirHumidityRatio(double maximumHeatingSupplyAirHumidityRatio);
 
-  bool setMaximumHeatingSupplyAirHumidityRatio(const Quantity& maximumHeatingSupplyAirHumidityRatio);
-
   void resetMaximumHeatingSupplyAirHumidityRatio();
 
   bool setMinimumCoolingSupplyAirHumidityRatio(double minimumCoolingSupplyAirHumidityRatio);
-
-  bool setMinimumCoolingSupplyAirHumidityRatio(const Quantity& minimumCoolingSupplyAirHumidityRatio);
 
   void resetMinimumCoolingSupplyAirHumidityRatio();
 
@@ -221,15 +189,11 @@ class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
 
   bool setMaximumHeatingAirFlowRate(double maximumHeatingAirFlowRate);
 
-  bool setMaximumHeatingAirFlowRate(const Quantity& maximumHeatingAirFlowRate);
-
   void resetMaximumHeatingAirFlowRate();
 
   void autosizeMaximumHeatingAirFlowRate();
 
   bool setMaximumSensibleHeatingCapacity(double maximumSensibleHeatingCapacity);
-
-  bool setMaximumSensibleHeatingCapacity(const Quantity& maximumSensibleHeatingCapacity);
 
   void resetMaximumSensibleHeatingCapacity();
 
@@ -241,15 +205,11 @@ class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
 
   bool setMaximumCoolingAirFlowRate(double maximumCoolingAirFlowRate);
 
-  bool setMaximumCoolingAirFlowRate(const Quantity& maximumCoolingAirFlowRate);
-
   void resetMaximumCoolingAirFlowRate();
 
   void autosizeMaximumCoolingAirFlowRate();
 
   bool setMaximumTotalCoolingCapacity(double maximumTotalCoolingCapacity);
-
-  bool setMaximumTotalCoolingCapacity(const Quantity& maximumTotalCoolingCapacity);
 
   void resetMaximumTotalCoolingCapacity();
 
@@ -268,8 +228,6 @@ class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
   void resetDehumidificationControlType();
 
   bool setCoolingSensibleHeatRatio(double coolingSensibleHeatRatio);
-
-  bool setCoolingSensibleHeatRatio(const Quantity& coolingSensibleHeatRatio);
 
   void resetCoolingSensibleHeatRatio();
 
@@ -295,13 +253,9 @@ class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
 
   bool setSensibleHeatRecoveryEffectiveness(double sensibleHeatRecoveryEffectiveness);
 
-  bool setSensibleHeatRecoveryEffectiveness(const Quantity& sensibleHeatRecoveryEffectiveness);
-
   void resetSensibleHeatRecoveryEffectiveness();
 
   bool setLatentHeatRecoveryEffectiveness(double latentHeatRecoveryEffectiveness);
-
-  bool setLatentHeatRecoveryEffectiveness(const Quantity& latentHeatRecoveryEffectiveness);
 
   void resetLatentHeatRecoveryEffectiveness();
 
@@ -345,4 +299,3 @@ typedef std::vector<ZoneHVACIdealLoadsAirSystem> ZoneHVACIdealLoadsAirSystemVect
 } // openstudio
 
 #endif // MODEL_ZONEHVACIDEALLOADSAIRSYSTEM_HPP
-

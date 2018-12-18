@@ -42,8 +42,6 @@
 #include "../ThermalZone_Impl.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 #include "../LifeCycleCost.hpp"
 
 #include <utilities/idd/IddEnums.hxx>

@@ -35,8 +35,6 @@
 #include "../HVACComponent_Impl.hpp"
 #include "../BoilerHotWater.hpp"
 #include "../BoilerHotWater_Impl.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -54,4 +52,3 @@ TEST_F(ModelFixture,PlantEquipmentOperationHeatingLoad) {
     } ,
     ::testing::ExitedWithCode(0), "" );
 }
-

@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "SpaceLoadInstance_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 
@@ -144,37 +142,23 @@ namespace detail {
 
     double positionXcoordinate() const;
 
-    Quantity getPositionXcoordinate(bool returnIP=false) const;
-
     double positionYcoordinate() const;
-
-    Quantity getPositionYcoordinate(bool returnIP=false) const;
 
     double positionZcoordinate() const;
 
-    Quantity getPositionZcoordinate(bool returnIP=false) const;
-
     double psiRotationAroundXaxis() const;
-
-    Quantity getPsiRotationAroundXaxis(bool returnIP=false) const;
 
     bool isPsiRotationAroundXaxisDefaulted() const;
 
     double thetaRotationAroundYaxis() const;
 
-    Quantity getThetaRotationAroundYaxis(bool returnIP=false) const;
-
     bool isThetaRotationAroundYaxisDefaulted() const;
 
     double phiRotationAroundZaxis() const;
 
-    Quantity getPhiRotationAroundZaxis(bool returnIP=false) const;
-
     bool isPhiRotationAroundZaxisDefaulted() const;
 
     double fractionReplaceable() const;
-
-    Quantity getFractionReplaceable(bool returnIP=false) const;
 
     bool isFractionReplaceableDefaulted() const;
 
@@ -196,37 +180,23 @@ namespace detail {
 
     bool setPositionXcoordinate(double positionXcoordinate);
 
-    bool setPositionXcoordinate(const Quantity& positionXcoordinate);
-
     bool setPositionYcoordinate(double positionYcoordinate);
-
-    bool setPositionYcoordinate(const Quantity& positionYcoordinate);
 
     bool setPositionZcoordinate(double positionZcoordinate);
 
-    bool setPositionZcoordinate(const Quantity& positionZcoordinate);
-
     bool setPsiRotationAroundXaxis(double psiRotationAroundXaxis);
-
-    bool setPsiRotationAroundXaxis(const Quantity& psiRotationAroundXaxis);
 
     void resetPsiRotationAroundXaxis();
 
     bool setThetaRotationAroundYaxis(double thetaRotationAroundYaxis);
 
-    bool setThetaRotationAroundYaxis(const Quantity& thetaRotationAroundYaxis);
-
     void resetThetaRotationAroundYaxis();
 
     bool setPhiRotationAroundZaxis(double phiRotationAroundZaxis);
 
-    bool setPhiRotationAroundZaxis(const Quantity& phiRotationAroundZaxis);
-
     void resetPhiRotationAroundZaxis();
 
     bool setFractionReplaceable(double fractionReplaceable);
-
-    bool setFractionReplaceable(const Quantity& fractionReplaceable);
 
     void resetFractionReplaceable();
 
@@ -267,21 +237,6 @@ namespace detail {
 
    private:
     REGISTER_LOGGER("openstudio.model.Luminaire");
-
-    openstudio::Quantity positionXcoordinate_SI() const;
-    openstudio::Quantity positionXcoordinate_IP() const;
-    openstudio::Quantity positionYcoordinate_SI() const;
-    openstudio::Quantity positionYcoordinate_IP() const;
-    openstudio::Quantity positionZcoordinate_SI() const;
-    openstudio::Quantity positionZcoordinate_IP() const;
-    openstudio::Quantity psiRotationAroundXaxis_SI() const;
-    openstudio::Quantity psiRotationAroundXaxis_IP() const;
-    openstudio::Quantity thetaRotationAroundYaxis_SI() const;
-    openstudio::Quantity thetaRotationAroundYaxis_IP() const;
-    openstudio::Quantity phiRotationAroundZaxis_SI() const;
-    openstudio::Quantity phiRotationAroundZaxis_IP() const;
-    openstudio::Quantity fractionReplaceable_SI() const;
-    openstudio::Quantity fractionReplaceable_IP() const;
 
     boost::optional<ModelObject> luminaireDefinitionAsModelObject() const;
     boost::optional<ModelObject> scheduleAsModelObject() const;

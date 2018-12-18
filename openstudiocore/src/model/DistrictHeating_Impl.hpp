@@ -32,7 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
-#include "../utilities/units/Quantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -110,10 +109,6 @@ namespace detail {
 
     REGISTER_LOGGER("openstudio.model.DistrictHeating");
 
-    openstudio::Quantity nominalCapacity_SI() const;
-
-    openstudio::Quantity nominalCapacity_IP() const;
-
   };
 
 } // detail
@@ -127,6 +122,5 @@ namespace detail {
 
 
 #endif // MODEL_DISTRICTHEATING_IMPL_HPP
-
 
 

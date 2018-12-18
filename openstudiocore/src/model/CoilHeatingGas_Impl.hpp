@@ -110,13 +110,9 @@ namespace detail {
 
     boost::optional<double> nominalCapacity() const;
 
-    OSOptionalQuantity getNominalCapacity(bool returnIP=false) const;
-
     bool isNominalCapacityAutosized() const;
 
     bool setNominalCapacity(boost::optional<double> nominalCapacity);
-
-    bool setNominalCapacity(const OSOptionalQuantity& nominalCapacity);
 
     void resetNominalCapacity();
 

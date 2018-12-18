@@ -45,6 +45,7 @@ namespace detail {
 /** LuminaireDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
  *  'OS_Luminaire_Definition'. \sa Luminaire */
 class MODEL_API LuminaireDefinition : public SpaceLoadDefinition {
+
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -66,31 +67,24 @@ class MODEL_API LuminaireDefinition : public SpaceLoadDefinition {
   // TODO: Handle Non-Extensible IddField IES File Path.
 
   double lightingPower() const;
-
   bool isLightingPowerDefaulted() const;
 
   double fractionRadiant() const;
-
   bool isFractionRadiantDefaulted() const;
 
   double fractionVisible() const;
-
   bool isFractionVisibleDefaulted() const;
 
   double returnAirFraction() const;
-
   bool isReturnAirFractionDefaulted() const;
 
   bool returnAirFractionCalculatedfromPlenumTemperature() const;
-
   bool isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted() const;
 
   double returnAirFractionFunctionofPlenumTemperatureCoefficient1() const;
-
   bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted() const;
 
   double returnAirFractionFunctionofPlenumTemperatureCoefficient2() const;
-
   bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted() const;
 
   //@}
@@ -100,31 +94,24 @@ class MODEL_API LuminaireDefinition : public SpaceLoadDefinition {
   // TODO: Handle Non-Extensible IddField IES File Path.
 
   bool setLightingPower(double lightingPower);
-
   void resetLightingPower();
 
   bool setFractionRadiant(double fractionRadiant);
-
   void resetFractionRadiant();
 
   bool setFractionVisible(double fractionVisible);
-
   void resetFractionVisible();
 
   bool setReturnAirFraction(double returnAirFraction);
-
   void resetReturnAirFraction();
 
   bool setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature);
-
   void resetReturnAirFractionCalculatedfromPlenumTemperature();
 
   bool setReturnAirFractionFunctionofPlenumTemperatureCoefficient1(double returnAirFractionFunctionofPlenumTemperatureCoefficient1);
-
   void resetReturnAirFractionFunctionofPlenumTemperatureCoefficient1();
 
   bool setReturnAirFractionFunctionofPlenumTemperatureCoefficient2(double returnAirFractionFunctionofPlenumTemperatureCoefficient2);
-
   void resetReturnAirFractionFunctionofPlenumTemperatureCoefficient2();
 
   //@}

@@ -33,6 +33,7 @@
 #include "OSItemList.hpp"
 #include "OSVectorController.hpp"
 
+#include "../model_editor/QMetaTypes.hpp"
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 

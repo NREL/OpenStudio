@@ -49,6 +49,7 @@ namespace detail {
  *  \sa OtherEquipment
  */
 class MODEL_API OtherEquipmentDefinition : public SpaceLoadDefinition {
+
  public:
 
   /** @name Constructors and Destructors */
@@ -68,23 +69,17 @@ class MODEL_API OtherEquipmentDefinition : public SpaceLoadDefinition {
   //@{
 
   std::string designLevelCalculationMethod() const;
-
   boost::optional<double> designLevel() const;
-
   boost::optional<double> wattsperSpaceFloorArea() const;
-
   boost::optional<double> wattsperPerson() const;
 
   double fractionLatent() const;
-
   bool isFractionLatentDefaulted() const;
 
   double fractionRadiant() const;
-
   bool isFractionRadiantDefaulted() const;
 
   double fractionLost() const;
-
   bool isFractionLostDefaulted() const;
 
   //@}
@@ -104,15 +99,12 @@ class MODEL_API OtherEquipmentDefinition : public SpaceLoadDefinition {
   bool setWattsperPerson(double wattsperPerson);
 
   bool setFractionLatent(double fractionLatent);
-
   void resetFractionLatent();
 
   bool setFractionRadiant(double fractionRadiant);
-
   void resetFractionRadiant();
 
   bool setFractionLost(double fractionLost);
-
   void resetFractionLost();
 
   //@}

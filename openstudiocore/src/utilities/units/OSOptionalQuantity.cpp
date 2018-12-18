@@ -34,8 +34,6 @@
 
 #include <cmath>
 
-int _OptionalQuantityType = qRegisterMetaType<openstudio::OSOptionalQuantity>("openstudio::OSOptionalQuantity");
-
 namespace openstudio{
 
 OSOptionalQuantity::OSOptionalQuantity(const UnitSystem& sys)

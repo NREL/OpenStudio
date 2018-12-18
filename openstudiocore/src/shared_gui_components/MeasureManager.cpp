@@ -541,7 +541,8 @@ boost::optional<measure::OSArgument> MeasureManager::getArgument(const measure::
     }
 
   } else if (type.value() == measure::OSArgumentType::Quantity){
-    result = measure::OSArgument::makeQuantityArgument(name, required, modelDependent);
+    LOG(Warn, "Mapping deprecated OSArgumentType::Quantity to Double");
+    result = measure::OSArgument::makeDoubleArgument(name, required, modelDependent);
 
     if (argument.isMember("default_value")){
       double defaultValue = argument.get("default_value", Json::Value(0.0)).asDouble();

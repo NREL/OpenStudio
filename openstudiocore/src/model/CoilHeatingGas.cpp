@@ -73,8 +73,6 @@
 #include <utilities/idd/IddFactory.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -507,11 +505,6 @@ namespace detail{
     return getDouble(OS_Coil_Heating_GasFields::NominalCapacity,true);
   }
 
-  OSOptionalQuantity CoilHeatingGas_Impl::getNominalCapacity(bool returnIP) const {
-    OptionalDouble value = nominalCapacity();
-    return getQuantityFromDouble(OS_Coil_Heating_GasFields::NominalCapacity, value, returnIP);
-  }
-
   bool CoilHeatingGas_Impl::isNominalCapacityAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_Coil_Heating_GasFields::NominalCapacity, true);
@@ -531,23 +524,6 @@ namespace detail{
       result = true;
     }
     OS_ASSERT(result);
-    return result;
-  }
-
-  bool CoilHeatingGas_Impl::setNominalCapacity(const OSOptionalQuantity& nominalCapacity) {
-    bool result(false);
-    OptionalDouble value;
-    if (nominalCapacity.isSet()) {
-      value = getDoubleFromQuantity(OS_Coil_Heating_GasFields::NominalCapacity,nominalCapacity.get());
-      if (value) {
-        setNominalCapacity(value);
-        result = true;
-      }
-    }
-    else {
-      setNominalCapacity(value);
-      result = true;
-    }
     return result;
   }
 
@@ -780,19 +756,11 @@ boost::optional<double> CoilHeatingGas::nominalCapacity() const {
   return getImpl<detail::CoilHeatingGas_Impl>()->nominalCapacity();
 }
 
-OSOptionalQuantity CoilHeatingGas::getNominalCapacity(bool returnIP) const {
-  return getImpl<detail::CoilHeatingGas_Impl>()->getNominalCapacity(returnIP);
-}
-
 bool CoilHeatingGas::isNominalCapacityAutosized() const {
   return getImpl<detail::CoilHeatingGas_Impl>()->isNominalCapacityAutosized();
 }
 
 bool CoilHeatingGas::setNominalCapacity(double nominalCapacity) {
-  return getImpl<detail::CoilHeatingGas_Impl>()->setNominalCapacity(nominalCapacity);
-}
-
-bool CoilHeatingGas::setNominalCapacity(const Quantity& nominalCapacity) {
   return getImpl<detail::CoilHeatingGas_Impl>()->setNominalCapacity(nominalCapacity);
 }
 

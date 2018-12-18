@@ -32,7 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "SpaceLoadDefinition_Impl.hpp"
-#include "attributes.hpp"
 
 namespace openstudio {
 namespace model {
@@ -44,53 +43,6 @@ namespace detail {
   /** ElectricEquipmentDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for ElectricEquipmentDefinition.*/
   class MODEL_API ElectricEquipmentDefinition_Impl : public SpaceLoadDefinition_Impl {
 
-
-    Q_PROPERTY(openstudio::OSOptionalQuantity designLevel_SI
-               READ designLevel_SI
-               WRITE setDesignLevel);
-    Q_PROPERTY(openstudio::OSOptionalQuantity designLevel_IP
-               READ designLevel_IP
-               WRITE setDesignLevel);
-
-
-    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperSpaceFloorArea_SI
-               READ wattsperSpaceFloorArea_SI
-               WRITE setWattsperSpaceFloorArea);
-    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperSpaceFloorArea_IP
-               READ wattsperSpaceFloorArea_IP
-               WRITE setWattsperSpaceFloorArea);
-
-
-    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperPerson_SI
-               READ wattsperPerson_SI
-               WRITE setWattsperPerson);
-    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperPerson_IP
-               READ wattsperPerson_IP
-               WRITE setWattsperPerson);
-
-
-    Q_PROPERTY(openstudio::Quantity fractionRadiant_SI
-               READ fractionRadiant_SI
-               WRITE setFractionRadiant);
-    Q_PROPERTY(openstudio::Quantity fractionRadiant_IP
-               READ fractionRadiant_IP
-               WRITE setFractionRadiant);
-
-
-    Q_PROPERTY(openstudio::Quantity fractionLatent_SI
-               READ fractionLatent_SI
-               WRITE setFractionLatent);
-    Q_PROPERTY(openstudio::Quantity fractionLatent_IP
-               READ fractionLatent_IP
-               WRITE setFractionLatent);
-
-
-    Q_PROPERTY(openstudio::Quantity fractionLost_SI
-               READ fractionLost_SI
-               WRITE setFractionLost);
-    Q_PROPERTY(openstudio::Quantity fractionLost_IP
-               READ fractionLost_IP
-               WRITE setFractionLost);
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -109,64 +61,43 @@ namespace detail {
 
     //@}
 
-    // TODO: Remove
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
-
-    // Attributes
-
-    ATTRIBUTE_DEFINITION(1,0,0,designLevel,DesignLevel)
-    ATTRIBUTE_DEFINITION(1,0,0,wattsperPerson,WattsperPerson)
-    ATTRIBUTE_DEFINITION(1,0,0,wattsperSpaceFloorArea,WattsperSpaceFloorArea)
-    ATTRIBUTE_DEFINITION(0,1,0,fractionRadiant,FractionRadiant)
-    ATTRIBUTE_DEFINITION(0,1,0,fractionLatent,FractionLatent)
-    ATTRIBUTE_DEFINITION(0,1,0,fractionLost,FractionLost)
 
     /** @name Getters */
     //@{
 
     std::string designLevelCalculationMethod() const;
+    boost::optional<double> designLevel() const;
+    boost::optional<double> wattsperSpaceFloorArea() const;
+    boost::optional<double> wattsperPerson() const;
 
-    //boost::optional<double> designLevel() const;
+    double fractionLatent() const;
+    bool isFractionLatentDefaulted() const;
 
-    //boost::optional<double> wattsperSpaceFloorArea() const;
+    double fractionRadiant() const;
+    bool isFractionRadiantDefaulted() const;
 
-    //boost::optional<double> wattsperPerson() const;
-
-    //double fractionLatent() const;
-
-    //bool isFractionLatentDefaulted() const;
-
-    //double fractionRadiant() const;
-
-    //bool isFractionRadiantDefaulted() const;
-
-    //double fractionLost() const;
-
-    //bool isFractionLostDefaulted() const;
+    double fractionLost() const;
+    bool isFractionLostDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    //bool setDesignLevel(boost::optional<double> designLevel);
+    bool setDesignLevel(boost::optional<double> designLevel);
+    bool setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea);
+    bool setWattsperPerson(boost::optional<double> wattsperPerson);
 
-    //bool setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea);
+    bool setFractionLatent(double fractionLatent);
+    void resetFractionLatent();
 
-    //bool setWattsperPerson(boost::optional<double> wattsperPerson);
+    bool setFractionRadiant(double fractionRadiant);
+    void resetFractionRadiant();
 
-    //bool setFractionLatent(double fractionLatent);
-
-    //void resetFractionLatent();
-
-    //bool setFractionRadiant(double fractionRadiant);
-
-    //void resetFractionRadiant();
-
-    //bool setFractionLost(double fractionLost);
-
-    //void resetFractionLost();
+    bool setFractionLost(double fractionLost);
+    void resetFractionLost();
 
     //@}
     /** @name Other */

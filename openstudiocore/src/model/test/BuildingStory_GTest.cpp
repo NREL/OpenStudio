@@ -34,18 +34,13 @@
 #include "../BuildingStory.hpp"
 #include "../BuildingStory_Impl.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture,BuildingStory_NominalZCoordinate) {
   Model model;
-  // TODO: Check constructor.
   BuildingStory buildingStory(model);
 
-  // TODO: Check that value is appropriate (within bounds)
   double value(1.0);
   buildingStory.setNominalZCoordinate(value);
   boost::optional<double> result = buildingStory.nominalZCoordinate();

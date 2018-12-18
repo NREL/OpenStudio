@@ -37,8 +37,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -71,8 +69,6 @@ class MODEL_API AvailabilityManagerNightCycle : public AvailabilityManager {
 
 
   double thermostatTolerance() const;
-  Quantity getThermostatTolerance(bool returnIP=false) const;
-  bool setThermostatTolerance(const Quantity& thermostatTolerance);
   bool setThermostatTolerance(double thermostatTolerance);
   bool isThermostatToleranceDefaulted() const;
   void resetThermostatTolerance();
@@ -80,9 +76,7 @@ class MODEL_API AvailabilityManagerNightCycle : public AvailabilityManager {
 
   double cyclingRunTime() const;
   bool setCyclingRunTime(double cyclingRunTime);
-  bool setCyclingRunTime(const Quantity& cyclingRunTime);
   void resetCyclingRunTime();
-  Quantity getCyclingRunTime(bool returnIP=false) const;
   bool isCyclingRunTimeDefaulted() const;
 
 

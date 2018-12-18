@@ -33,7 +33,6 @@
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
 
 namespace openstudio {
 
@@ -116,4 +115,3 @@ class MODEL_API WaterUseConnections_Impl : public StraightComponent_Impl {
 } // openstudio
 
 #endif // MODEL_WATERUSECONNECTIONS_IMPL_HPP
-

@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -85,23 +83,13 @@ class MODEL_API Shade : public ShadingMaterial {
 
   double solarTransmittance() const;
 
-  Quantity getSolarTransmittance(bool returnIP=false) const;
-
   double solarReflectance() const;
-
-  Quantity getSolarReflectance(bool returnIP=false) const;
 
   double visibleTransmittance() const;
 
-  Quantity getVisibleTransmittance(bool returnIP=false) const;
-
   double visibleReflectance() const;
 
-  Quantity getVisibleReflectance(bool returnIP=false) const;
-
   double thermalHemisphericalEmissivity() const;
-
-  Quantity getThermalHemisphericalEmissivity(bool returnIP=false) const;
 
   double thermalTransmittance() const;
 
@@ -109,49 +97,31 @@ class MODEL_API Shade : public ShadingMaterial {
 
   double visibleAbsorptance() const;
 
-  Quantity getThermalTransmittance(bool returnIP=false) const;
-
   double thickness() const;
-
-  Quantity getThickness(bool returnIP=false) const;
 
   double conductivity() const;
 
-  Quantity getConductivity(bool returnIP=false) const;
-
   double shadetoGlassDistance() const;
-
-  Quantity getShadetoGlassDistance(bool returnIP=false) const;
 
   bool isShadetoGlassDistanceDefaulted() const;
 
   double topOpeningMultiplier() const;
 
-  Quantity getTopOpeningMultiplier(bool returnIP=false) const;
-
   bool isTopOpeningMultiplierDefaulted() const;
 
   double bottomOpeningMultiplier() const;
-
-  Quantity getBottomOpeningMultiplier(bool returnIP=false) const;
 
   bool isBottomOpeningMultiplierDefaulted() const;
 
   double leftSideOpeningMultiplier() const;
 
-  Quantity getLeftSideOpeningMultiplier(bool returnIP=false) const;
-
   bool isLeftSideOpeningMultiplierDefaulted() const;
 
   double rightSideOpeningMultiplier() const;
 
-  Quantity getRightSideOpeningMultiplier(bool returnIP=false) const;
-
   bool isRightSideOpeningMultiplierDefaulted() const;
 
   double airflowPermeability() const;
-
-  Quantity getAirflowPermeability(bool returnIP=false) const;
 
   bool isAirflowPermeabilityDefaulted() const;
 
@@ -181,61 +151,33 @@ class MODEL_API Shade : public ShadingMaterial {
 
   bool setVisibleReflectance(double value);
 
-  bool setSolarTransmittance(const Quantity& solarTransmittance);
-
-  bool setSolarReflectance(const Quantity& solarReflectance);
-
-  bool setVisibleTransmittance(const Quantity& visibleTransmittance);
-
-  bool setVisibleReflectance(const Quantity& visibleReflectance);
-
   bool setThermalHemisphericalEmissivity(double thermalHemisphericalEmissivity);
-
-  bool setThermalHemisphericalEmissivity(const Quantity& thermalHemisphericalEmissivity);
-
-  bool setThermalTransmittance(const Quantity& thermalTransmittance);
 
   bool setThickness(double thickness);
 
-  bool setThickness(const Quantity& thickness);
-
   bool setConductivity(double conductivity);
 
-  bool setConductivity(const Quantity& conductivity);
-
   bool setShadetoGlassDistance(double shadetoGlassDistance);
-
-  bool setShadetoGlassDistance(const Quantity& shadetoGlassDistance);
 
   void resetShadetoGlassDistance();
 
   bool setTopOpeningMultiplier(double topOpeningMultiplier);
 
-  bool setTopOpeningMultiplier(const Quantity& topOpeningMultiplier);
-
   void resetTopOpeningMultiplier();
 
   bool setBottomOpeningMultiplier(double bottomOpeningMultiplier);
-
-  bool setBottomOpeningMultiplier(const Quantity& bottomOpeningMultiplier);
 
   void resetBottomOpeningMultiplier();
 
   bool setLeftSideOpeningMultiplier(double leftSideOpeningMultiplier);
 
-  bool setLeftSideOpeningMultiplier(const Quantity& leftSideOpeningMultiplier);
-
   void resetLeftSideOpeningMultiplier();
 
   bool setRightSideOpeningMultiplier(double rightSideOpeningMultiplier);
 
-  bool setRightSideOpeningMultiplier(const Quantity& rightSideOpeningMultiplier);
-
   void resetRightSideOpeningMultiplier();
 
   bool setAirflowPermeability(double airflowPermeability);
-
-  bool setAirflowPermeability(const Quantity& airflowPermeability);
 
   void resetAirflowPermeability();
 
@@ -269,4 +211,3 @@ typedef std::vector<Shade> ShadeVector;
 } // openstudio
 
 #endif // MODEL_SHADE_HPP
-

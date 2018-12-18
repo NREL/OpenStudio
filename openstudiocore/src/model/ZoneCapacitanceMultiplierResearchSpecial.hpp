@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -63,19 +61,13 @@ class MODEL_API ZoneCapacitanceMultiplierResearchSpecial : public ModelObject {
 
   double temperatureCapacityMultiplier() const;
 
-  Quantity getTemperatureCapacityMultiplier(bool returnIP=false) const;
-
   bool isTemperatureCapacityMultiplierDefaulted() const;
 
   double humidityCapacityMultiplier() const;
 
-  Quantity getHumidityCapacityMultiplier(bool returnIP=false) const;
-
   bool isHumidityCapacityMultiplierDefaulted() const;
 
   double carbonDioxideCapacityMultiplier() const;
-
-  Quantity getCarbonDioxideCapacityMultiplier(bool returnIP=false) const;
 
   bool isCarbonDioxideCapacityMultiplierDefaulted() const;
 
@@ -85,19 +77,13 @@ class MODEL_API ZoneCapacitanceMultiplierResearchSpecial : public ModelObject {
 
   bool setTemperatureCapacityMultiplier(double temperatureCapacityMultiplier);
 
-  bool setTemperatureCapacityMultiplier(const Quantity& temperatureCapacityMultiplier);
-
   void resetTemperatureCapacityMultiplier();
 
   bool setHumidityCapacityMultiplier(double humidityCapacityMultiplier);
 
-  bool setHumidityCapacityMultiplier(const Quantity& humidityCapacityMultiplier);
-
   void resetHumidityCapacityMultiplier();
 
   bool setCarbonDioxideCapacityMultiplier(double carbonDioxideCapacityMultiplier);
-
-  bool setCarbonDioxideCapacityMultiplier(const Quantity& carbonDioxideCapacityMultiplier);
 
   void resetCarbonDioxideCapacityMultiplier();
 
@@ -133,4 +119,3 @@ typedef std::vector<ZoneCapacitanceMultiplierResearchSpecial> ZoneCapacitanceMul
 } // openstudio
 
 #endif // MODEL_ZONECAPACITANCEMULTIPLIERRESEARCHSPECIAL_HPP
-

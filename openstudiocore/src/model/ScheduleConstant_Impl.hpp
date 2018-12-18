@@ -41,10 +41,6 @@ namespace detail {
 
   class MODEL_API ScheduleConstant_Impl : public Schedule_Impl {
 
-
-    // ETH@20120724 Could have value_SI, value_IP properties, but these should be
-    // boost::optional<Quantity>, not OSOptionalQuantity. The latter is currently supported
-    // by Qt + Attribute, but the former is not.
    public:
 
     /** @name Constructors and Destructors */
@@ -88,8 +84,6 @@ namespace detail {
 
     double value() const;
 
-    boost::optional<Quantity> getValue(bool returnIP=false) const;
-
     virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
     virtual std::vector<std::string> emsInternalVariableNames() const override;
@@ -103,8 +97,6 @@ namespace detail {
     virtual bool resetScheduleTypeLimits() override;
 
     bool setValue(double value);
-
-    bool setValue(const Quantity& value);
 
     // ensure that this object does not contain the date 2/29
     virtual void ensureNoLeapDays() override;

@@ -32,8 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -73,11 +71,7 @@ namespace detail {
 
     double designLoopExitTemperature() const;
 
-    Quantity getDesignLoopExitTemperature(bool returnIP=false) const;
-
     double loopDesignTemperatureDifference() const;
-
-    Quantity getLoopDesignTemperatureDifference(bool returnIP=false) const;
 
     std::string sizingOption() const;
 
@@ -91,11 +85,7 @@ namespace detail {
 
     bool setDesignLoopExitTemperature(double designLoopExitTemperature);
 
-    bool setDesignLoopExitTemperature(const Quantity& designLoopExitTemperature);
-
     bool setLoopDesignTemperatureDifference(double loopDesignTemperatureDifference);
-
-    bool setLoopDesignTemperatureDifference(const Quantity& loopDesignTemperatureDifference);
 
     bool setSizingOption(std::string sizingOption);
 
@@ -116,11 +106,6 @@ namespace detail {
     boost::optional<PlantLoop> optionalPlantLoop() const;
 
     std::vector<std::string> loopTypeValues() const;
-    openstudio::Quantity designLoopExitTemperature_SI() const;
-    openstudio::Quantity designLoopExitTemperature_IP() const;
-    openstudio::Quantity loopDesignTemperatureDifference_SI() const;
-    openstudio::Quantity loopDesignTemperatureDifference_IP() const;
-
     boost::optional<ModelObject> plantLoopAsModelObject() const;
 
     bool setPlantLoopAsModelObject(const boost::optional<ModelObject>& modelObject);

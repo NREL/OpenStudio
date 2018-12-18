@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ZoneHVACComponent_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -87,25 +85,17 @@ namespace detail {
 
     double maximumHeatingSupplyAirTemperature() const;
 
-    Quantity getMaximumHeatingSupplyAirTemperature(bool returnIP=false) const;
-
     bool isMaximumHeatingSupplyAirTemperatureDefaulted() const;
 
     double minimumCoolingSupplyAirTemperature() const;
-
-    Quantity getMinimumCoolingSupplyAirTemperature(bool returnIP=false) const;
 
     bool isMinimumCoolingSupplyAirTemperatureDefaulted() const;
 
     double maximumHeatingSupplyAirHumidityRatio() const;
 
-    Quantity getMaximumHeatingSupplyAirHumidityRatio(bool returnIP=false) const;
-
     bool isMaximumHeatingSupplyAirHumidityRatioDefaulted() const;
 
     double minimumCoolingSupplyAirHumidityRatio() const;
-
-    Quantity getMinimumCoolingSupplyAirHumidityRatio(bool returnIP=false) const;
 
     bool isMinimumCoolingSupplyAirHumidityRatioDefaulted() const;
 
@@ -115,13 +105,9 @@ namespace detail {
 
     boost::optional<double> maximumHeatingAirFlowRate() const;
 
-    OSOptionalQuantity getMaximumHeatingAirFlowRate(bool returnIP=false) const;
-
     bool isMaximumHeatingAirFlowRateAutosized() const;
 
     boost::optional<double> maximumSensibleHeatingCapacity() const;
-
-    OSOptionalQuantity getMaximumSensibleHeatingCapacity(bool returnIP=false) const;
 
     bool isMaximumSensibleHeatingCapacityAutosized() const;
 
@@ -131,13 +117,9 @@ namespace detail {
 
     boost::optional<double> maximumCoolingAirFlowRate() const;
 
-    OSOptionalQuantity getMaximumCoolingAirFlowRate(bool returnIP=false) const;
-
     bool isMaximumCoolingAirFlowRateAutosized() const;
 
     boost::optional<double> maximumTotalCoolingCapacity() const;
-
-    OSOptionalQuantity getMaximumTotalCoolingCapacity(bool returnIP=false) const;
 
     bool isMaximumTotalCoolingCapacityAutosized() const;
 
@@ -150,8 +132,6 @@ namespace detail {
     bool isDehumidificationControlTypeDefaulted() const;
 
     double coolingSensibleHeatRatio() const;
-
-    Quantity getCoolingSensibleHeatRatio(bool returnIP=false) const;
 
     bool isCoolingSensibleHeatRatioDefaulted() const;
 
@@ -175,13 +155,9 @@ namespace detail {
 
     double sensibleHeatRecoveryEffectiveness() const;
 
-    Quantity getSensibleHeatRecoveryEffectiveness(bool returnIP=false) const;
-
     bool isSensibleHeatRecoveryEffectivenessDefaulted() const;
 
     double latentHeatRecoveryEffectiveness() const;
-
-    Quantity getLatentHeatRecoveryEffectiveness(bool returnIP=false) const;
 
     bool isLatentHeatRecoveryEffectivenessDefaulted() const;
 
@@ -211,25 +187,17 @@ namespace detail {
 
     bool setMaximumHeatingSupplyAirTemperature(double maximumHeatingSupplyAirTemperature);
 
-    bool setMaximumHeatingSupplyAirTemperature(const Quantity& maximumHeatingSupplyAirTemperature);
-
     void resetMaximumHeatingSupplyAirTemperature();
 
     bool setMinimumCoolingSupplyAirTemperature(double minimumCoolingSupplyAirTemperature);
-
-    bool setMinimumCoolingSupplyAirTemperature(const Quantity& minimumCoolingSupplyAirTemperature);
 
     void resetMinimumCoolingSupplyAirTemperature();
 
     bool setMaximumHeatingSupplyAirHumidityRatio(double maximumHeatingSupplyAirHumidityRatio);
 
-    bool setMaximumHeatingSupplyAirHumidityRatio(const Quantity& maximumHeatingSupplyAirHumidityRatio);
-
     void resetMaximumHeatingSupplyAirHumidityRatio();
 
     bool setMinimumCoolingSupplyAirHumidityRatio(double minimumCoolingSupplyAirHumidityRatio);
-
-    bool setMinimumCoolingSupplyAirHumidityRatio(const Quantity& minimumCoolingSupplyAirHumidityRatio);
 
     void resetMinimumCoolingSupplyAirHumidityRatio();
 
@@ -239,15 +207,11 @@ namespace detail {
 
     bool setMaximumHeatingAirFlowRate(boost::optional<double> maximumHeatingAirFlowRate);
 
-    bool setMaximumHeatingAirFlowRate(const OSOptionalQuantity& maximumHeatingAirFlowRate);
-
     void resetMaximumHeatingAirFlowRate();
 
     void autosizeMaximumHeatingAirFlowRate();
 
     bool setMaximumSensibleHeatingCapacity(boost::optional<double> maximumSensibleHeatingCapacity);
-
-    bool setMaximumSensibleHeatingCapacity(const OSOptionalQuantity& maximumSensibleHeatingCapacity);
 
     void resetMaximumSensibleHeatingCapacity();
 
@@ -259,15 +223,11 @@ namespace detail {
 
     bool setMaximumCoolingAirFlowRate(boost::optional<double> maximumCoolingAirFlowRate);
 
-    bool setMaximumCoolingAirFlowRate(const OSOptionalQuantity& maximumCoolingAirFlowRate);
-
     void resetMaximumCoolingAirFlowRate();
 
     void autosizeMaximumCoolingAirFlowRate();
 
     bool setMaximumTotalCoolingCapacity(boost::optional<double> maximumTotalCoolingCapacity);
-
-    bool setMaximumTotalCoolingCapacity(const OSOptionalQuantity& maximumTotalCoolingCapacity);
 
     void resetMaximumTotalCoolingCapacity();
 
@@ -286,8 +246,6 @@ namespace detail {
     void resetDehumidificationControlType();
 
     bool setCoolingSensibleHeatRatio(double coolingSensibleHeatRatio);
-
-    bool setCoolingSensibleHeatRatio(const Quantity& coolingSensibleHeatRatio);
 
     void resetCoolingSensibleHeatRatio();
 
@@ -313,13 +271,9 @@ namespace detail {
 
     bool setSensibleHeatRecoveryEffectiveness(double sensibleHeatRecoveryEffectiveness);
 
-    bool setSensibleHeatRecoveryEffectiveness(const Quantity& sensibleHeatRecoveryEffectiveness);
-
     void resetSensibleHeatRecoveryEffectiveness();
 
     bool setLatentHeatRecoveryEffectiveness(double latentHeatRecoveryEffectiveness);
-
-    bool setLatentHeatRecoveryEffectiveness(const Quantity& latentHeatRecoveryEffectiveness);
 
     void resetLatentHeatRecoveryEffectiveness();
 
@@ -332,36 +286,13 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.ZoneHVACIdealLoadsAirSystem");
 
-    openstudio::Quantity maximumHeatingSupplyAirTemperature_SI() const;
-    openstudio::Quantity maximumHeatingSupplyAirTemperature_IP() const;
-    openstudio::Quantity minimumCoolingSupplyAirTemperature_SI() const;
-    openstudio::Quantity minimumCoolingSupplyAirTemperature_IP() const;
-    openstudio::Quantity maximumHeatingSupplyAirHumidityRatio_SI() const;
-    openstudio::Quantity maximumHeatingSupplyAirHumidityRatio_IP() const;
-    openstudio::Quantity minimumCoolingSupplyAirHumidityRatio_SI() const;
-    openstudio::Quantity minimumCoolingSupplyAirHumidityRatio_IP() const;
     std::vector<std::string> heatingLimitValues() const;
-    openstudio::OSOptionalQuantity maximumHeatingAirFlowRate_SI() const;
-    openstudio::OSOptionalQuantity maximumHeatingAirFlowRate_IP() const;
-    openstudio::OSOptionalQuantity maximumSensibleHeatingCapacity_SI() const;
-    openstudio::OSOptionalQuantity maximumSensibleHeatingCapacity_IP() const;
     std::vector<std::string> coolingLimitValues() const;
-    openstudio::OSOptionalQuantity maximumCoolingAirFlowRate_SI() const;
-    openstudio::OSOptionalQuantity maximumCoolingAirFlowRate_IP() const;
-    openstudio::OSOptionalQuantity maximumTotalCoolingCapacity_SI() const;
-    openstudio::OSOptionalQuantity maximumTotalCoolingCapacity_IP() const;
     std::vector<std::string> dehumidificationControlTypeValues() const;
-    openstudio::Quantity coolingSensibleHeatRatio_SI() const;
-    openstudio::Quantity coolingSensibleHeatRatio_IP() const;
     std::vector<std::string> humidificationControlTypeValues() const;
     std::vector<std::string> demandControlledVentilationTypeValues() const;
     std::vector<std::string> outdoorAirEconomizerTypeValues() const;
     std::vector<std::string> heatRecoveryTypeValues() const;
-    openstudio::Quantity sensibleHeatRecoveryEffectiveness_SI() const;
-    openstudio::Quantity sensibleHeatRecoveryEffectiveness_IP() const;
-    openstudio::Quantity latentHeatRecoveryEffectiveness_SI() const;
-    openstudio::Quantity latentHeatRecoveryEffectiveness_IP() const;
-
     boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
     boost::optional<ModelObject> heatingAvailabilityScheduleAsModelObject() const;
     boost::optional<ModelObject> coolingAvailabilityScheduleAsModelObject() const;
@@ -379,4 +310,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONEHVACIDEALLOADSAIRSYSTEM_IMPL_HPP
-

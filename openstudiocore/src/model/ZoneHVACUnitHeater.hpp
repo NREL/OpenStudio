@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -158,4 +156,3 @@ typedef std::vector<ZoneHVACUnitHeater> ZoneHVACUnitHeaterVector;
 } // openstudio
 
 #endif // MODEL_ZONEHVACUNITHEATER_HPP
-

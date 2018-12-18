@@ -47,6 +47,7 @@ namespace detail {
  *  'Lights'. \sa Lights
  */
 class MODEL_API LightsDefinition : public SpaceLoadDefinition {
+
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -65,35 +66,26 @@ class MODEL_API LightsDefinition : public SpaceLoadDefinition {
   //@{
 
   std::string designLevelCalculationMethod() const;
-
   boost::optional<double> lightingLevel() const;
-
   boost::optional<double> wattsperSpaceFloorArea() const;
-
   boost::optional<double> wattsperPerson() const;
 
   double fractionRadiant() const;
-
   bool isFractionRadiantDefaulted() const;
 
   double fractionVisible() const;
-
   bool isFractionVisibleDefaulted() const;
 
   double returnAirFraction() const;
-
   bool isReturnAirFractionDefaulted() const;
 
   bool returnAirFractionCalculatedfromPlenumTemperature() const;
-
   bool isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted() const;
 
   double returnAirFractionFunctionofPlenumTemperatureCoefficient1() const;
-
   bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted() const;
 
   double returnAirFractionFunctionofPlenumTemperatureCoefficient2() const;
-
   bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted() const;
 
   //@}
@@ -113,27 +105,21 @@ class MODEL_API LightsDefinition : public SpaceLoadDefinition {
   bool setWattsperPerson(double wattsperPerson);
 
   bool setFractionRadiant(double fractionRadiant);
-
   void resetFractionRadiant();
 
   bool setFractionVisible(double fractionVisible);
-
   void resetFractionVisible();
 
   bool setReturnAirFraction(double returnAirFraction);
-
   void resetReturnAirFraction();
 
   bool setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature);
-
   void resetReturnAirFractionCalculatedfromPlenumTemperature();
 
   bool setReturnAirFractionFunctionofPlenumTemperatureCoefficient1(double returnAirFractionFunctionofPlenumTemperatureCoefficient1);
-
   void resetReturnAirFractionFunctionofPlenumTemperatureCoefficient1();
 
   bool setReturnAirFractionFunctionofPlenumTemperatureCoefficient2(double returnAirFractionFunctionofPlenumTemperatureCoefficient2);
-
   void resetReturnAirFractionFunctionofPlenumTemperatureCoefficient2();
 
   //@}

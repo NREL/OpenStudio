@@ -177,13 +177,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity ZoneHVACIdealLoadsAirSystem_Impl::getMaximumHeatingSupplyAirTemperature(bool returnIP) const {
-    OptionalDouble value = maximumHeatingSupplyAirTemperature();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirTemperature, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool ZoneHVACIdealLoadsAirSystem_Impl::isMaximumHeatingSupplyAirTemperatureDefaulted() const {
     return isEmpty(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirTemperature);
   }
@@ -192,13 +185,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirTemperature,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity ZoneHVACIdealLoadsAirSystem_Impl::getMinimumCoolingSupplyAirTemperature(bool returnIP) const {
-    OptionalDouble value = minimumCoolingSupplyAirTemperature();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirTemperature, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::isMinimumCoolingSupplyAirTemperatureDefaulted() const {
@@ -211,13 +197,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity ZoneHVACIdealLoadsAirSystem_Impl::getMaximumHeatingSupplyAirHumidityRatio(bool returnIP) const {
-    OptionalDouble value = maximumHeatingSupplyAirHumidityRatio();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirHumidityRatio, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool ZoneHVACIdealLoadsAirSystem_Impl::isMaximumHeatingSupplyAirHumidityRatioDefaulted() const {
     return isEmpty(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirHumidityRatio);
   }
@@ -226,13 +205,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirHumidityRatio,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity ZoneHVACIdealLoadsAirSystem_Impl::getMinimumCoolingSupplyAirHumidityRatio(bool returnIP) const {
-    OptionalDouble value = minimumCoolingSupplyAirHumidityRatio();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirHumidityRatio, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::isMinimumCoolingSupplyAirHumidityRatioDefaulted() const {
@@ -253,11 +225,6 @@ namespace detail {
     return getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingAirFlowRate,true);
   }
 
-  OSOptionalQuantity ZoneHVACIdealLoadsAirSystem_Impl::getMaximumHeatingAirFlowRate(bool returnIP) const {
-    OptionalDouble value = maximumHeatingAirFlowRate();
-    return getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingAirFlowRate, value, returnIP);
-  }
-
   bool ZoneHVACIdealLoadsAirSystem_Impl::isMaximumHeatingAirFlowRateAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingAirFlowRate, true);
@@ -269,11 +236,6 @@ namespace detail {
 
   boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::maximumSensibleHeatingCapacity() const {
     return getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumSensibleHeatingCapacity,true);
-  }
-
-  OSOptionalQuantity ZoneHVACIdealLoadsAirSystem_Impl::getMaximumSensibleHeatingCapacity(bool returnIP) const {
-    OptionalDouble value = maximumSensibleHeatingCapacity();
-    return getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumSensibleHeatingCapacity, value, returnIP);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::isMaximumSensibleHeatingCapacityAutosized() const {
@@ -299,11 +261,6 @@ namespace detail {
     return getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumCoolingAirFlowRate,true);
   }
 
-  OSOptionalQuantity ZoneHVACIdealLoadsAirSystem_Impl::getMaximumCoolingAirFlowRate(bool returnIP) const {
-    OptionalDouble value = maximumCoolingAirFlowRate();
-    return getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumCoolingAirFlowRate, value, returnIP);
-  }
-
   bool ZoneHVACIdealLoadsAirSystem_Impl::isMaximumCoolingAirFlowRateAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumCoolingAirFlowRate, true);
@@ -315,11 +272,6 @@ namespace detail {
 
   boost::optional<double> ZoneHVACIdealLoadsAirSystem_Impl::maximumTotalCoolingCapacity() const {
     return getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumTotalCoolingCapacity,true);
-  }
-
-  OSOptionalQuantity ZoneHVACIdealLoadsAirSystem_Impl::getMaximumTotalCoolingCapacity(bool returnIP) const {
-    OptionalDouble value = maximumTotalCoolingCapacity();
-    return getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumTotalCoolingCapacity, value, returnIP);
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::isMaximumTotalCoolingCapacityAutosized() const {
@@ -353,13 +305,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingSensibleHeatRatio,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity ZoneHVACIdealLoadsAirSystem_Impl::getCoolingSensibleHeatRatio(bool returnIP) const {
-    OptionalDouble value = coolingSensibleHeatRatio();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingSensibleHeatRatio, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::isCoolingSensibleHeatRatioDefaulted() const {
@@ -416,13 +361,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity ZoneHVACIdealLoadsAirSystem_Impl::getSensibleHeatRecoveryEffectiveness(bool returnIP) const {
-    OptionalDouble value = sensibleHeatRecoveryEffectiveness();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::SensibleHeatRecoveryEffectiveness, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool ZoneHVACIdealLoadsAirSystem_Impl::isSensibleHeatRecoveryEffectivenessDefaulted() const {
     return isEmpty(OS_ZoneHVAC_IdealLoadsAirSystemFields::SensibleHeatRecoveryEffectiveness);
   }
@@ -431,13 +369,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::LatentHeatRecoveryEffectiveness,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity ZoneHVACIdealLoadsAirSystem_Impl::getLatentHeatRecoveryEffectiveness(bool returnIP) const {
-    OptionalDouble value = latentHeatRecoveryEffectiveness();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::LatentHeatRecoveryEffectiveness, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool ZoneHVACIdealLoadsAirSystem_Impl::isLatentHeatRecoveryEffectivenessDefaulted() const {
@@ -462,14 +393,6 @@ namespace detail {
     return result;
   }
 
-  bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumHeatingSupplyAirTemperature(const Quantity& maximumHeatingSupplyAirTemperature) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirTemperature,maximumHeatingSupplyAirTemperature);
-    if (!value) {
-      return false;
-    }
-    return setMaximumHeatingSupplyAirTemperature(value.get());
-  }
-
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMaximumHeatingSupplyAirTemperature() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirTemperature, "");
     OS_ASSERT(result);
@@ -478,14 +401,6 @@ namespace detail {
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMinimumCoolingSupplyAirTemperature(double minimumCoolingSupplyAirTemperature) {
     bool result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirTemperature, minimumCoolingSupplyAirTemperature);
     return result;
-  }
-
-  bool ZoneHVACIdealLoadsAirSystem_Impl::setMinimumCoolingSupplyAirTemperature(const Quantity& minimumCoolingSupplyAirTemperature) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirTemperature,minimumCoolingSupplyAirTemperature);
-    if (!value) {
-      return false;
-    }
-    return setMinimumCoolingSupplyAirTemperature(value.get());
   }
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMinimumCoolingSupplyAirTemperature() {
@@ -498,14 +413,6 @@ namespace detail {
     return result;
   }
 
-  bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumHeatingSupplyAirHumidityRatio(const Quantity& maximumHeatingSupplyAirHumidityRatio) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirHumidityRatio,maximumHeatingSupplyAirHumidityRatio);
-    if (!value) {
-      return false;
-    }
-    return setMaximumHeatingSupplyAirHumidityRatio(value.get());
-  }
-
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMaximumHeatingSupplyAirHumidityRatio() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingSupplyAirHumidityRatio, "");
     OS_ASSERT(result);
@@ -514,14 +421,6 @@ namespace detail {
   bool ZoneHVACIdealLoadsAirSystem_Impl::setMinimumCoolingSupplyAirHumidityRatio(double minimumCoolingSupplyAirHumidityRatio) {
     bool result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirHumidityRatio, minimumCoolingSupplyAirHumidityRatio);
     return result;
-  }
-
-  bool ZoneHVACIdealLoadsAirSystem_Impl::setMinimumCoolingSupplyAirHumidityRatio(const Quantity& minimumCoolingSupplyAirHumidityRatio) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_IdealLoadsAirSystemFields::MinimumCoolingSupplyAirHumidityRatio,minimumCoolingSupplyAirHumidityRatio);
-    if (!value) {
-      return false;
-    }
-    return setMinimumCoolingSupplyAirHumidityRatio(value.get());
   }
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMinimumCoolingSupplyAirHumidityRatio() {
@@ -549,21 +448,6 @@ namespace detail {
     return result;
   }
 
-  bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumHeatingAirFlowRate(const OSOptionalQuantity& maximumHeatingAirFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumHeatingAirFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingAirFlowRate,maximumHeatingAirFlowRate.get());
-      if (value) {
-        result = setMaximumHeatingAirFlowRate(value);
-      }
-    }
-    else {
-      result = setMaximumHeatingAirFlowRate(value);
-    }
-    return result;
-  }
-
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMaximumHeatingAirFlowRate() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumHeatingAirFlowRate, "");
     OS_ASSERT(result);
@@ -580,21 +464,6 @@ namespace detail {
       result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumSensibleHeatingCapacity, maximumSensibleHeatingCapacity.get());
     } else {
       result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumSensibleHeatingCapacity, "");
-    }
-    return result;
-  }
-
-  bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumSensibleHeatingCapacity(const OSOptionalQuantity& maximumSensibleHeatingCapacity) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumSensibleHeatingCapacity.isSet()) {
-      value = getDoubleFromQuantity(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumSensibleHeatingCapacity,maximumSensibleHeatingCapacity.get());
-      if (value) {
-        result = setMaximumSensibleHeatingCapacity(value);
-      }
-    }
-    else {
-      result = setMaximumSensibleHeatingCapacity(value);
     }
     return result;
   }
@@ -629,21 +498,6 @@ namespace detail {
     return result;
   }
 
-  bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumCoolingAirFlowRate(const OSOptionalQuantity& maximumCoolingAirFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumCoolingAirFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumCoolingAirFlowRate,maximumCoolingAirFlowRate.get());
-      if (value) {
-        result = setMaximumCoolingAirFlowRate(value);
-      }
-    }
-    else {
-      result = setMaximumCoolingAirFlowRate(value);
-    }
-    return result;
-  }
-
   void ZoneHVACIdealLoadsAirSystem_Impl::resetMaximumCoolingAirFlowRate() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumCoolingAirFlowRate, "");
     OS_ASSERT(result);
@@ -660,21 +514,6 @@ namespace detail {
       result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumTotalCoolingCapacity, maximumTotalCoolingCapacity.get());
     } else {
       result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumTotalCoolingCapacity, "");
-    }
-    return result;
-  }
-
-  bool ZoneHVACIdealLoadsAirSystem_Impl::setMaximumTotalCoolingCapacity(const OSOptionalQuantity& maximumTotalCoolingCapacity) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumTotalCoolingCapacity.isSet()) {
-      value = getDoubleFromQuantity(OS_ZoneHVAC_IdealLoadsAirSystemFields::MaximumTotalCoolingCapacity,maximumTotalCoolingCapacity.get());
-      if (value) {
-        result = setMaximumTotalCoolingCapacity(value);
-      }
-    }
-    else {
-      result = setMaximumTotalCoolingCapacity(value);
     }
     return result;
   }
@@ -729,14 +568,6 @@ namespace detail {
   bool ZoneHVACIdealLoadsAirSystem_Impl::setCoolingSensibleHeatRatio(double coolingSensibleHeatRatio) {
     bool result = setDouble(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingSensibleHeatRatio, coolingSensibleHeatRatio);
     return result;
-  }
-
-  bool ZoneHVACIdealLoadsAirSystem_Impl::setCoolingSensibleHeatRatio(const Quantity& coolingSensibleHeatRatio) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_IdealLoadsAirSystemFields::CoolingSensibleHeatRatio,coolingSensibleHeatRatio);
-    if (!value) {
-      return false;
-    }
-    return setCoolingSensibleHeatRatio(value.get());
   }
 
   void ZoneHVACIdealLoadsAirSystem_Impl::resetCoolingSensibleHeatRatio() {
@@ -804,14 +635,6 @@ namespace detail {
     return result;
   }
 
-  bool ZoneHVACIdealLoadsAirSystem_Impl::setSensibleHeatRecoveryEffectiveness(const Quantity& sensibleHeatRecoveryEffectiveness) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_IdealLoadsAirSystemFields::SensibleHeatRecoveryEffectiveness,sensibleHeatRecoveryEffectiveness);
-    if (!value) {
-      return false;
-    }
-    return setSensibleHeatRecoveryEffectiveness(value.get());
-  }
-
   void ZoneHVACIdealLoadsAirSystem_Impl::resetSensibleHeatRecoveryEffectiveness() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::SensibleHeatRecoveryEffectiveness, "");
     OS_ASSERT(result);
@@ -822,101 +645,21 @@ namespace detail {
     return result;
   }
 
-  bool ZoneHVACIdealLoadsAirSystem_Impl::setLatentHeatRecoveryEffectiveness(const Quantity& latentHeatRecoveryEffectiveness) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_IdealLoadsAirSystemFields::LatentHeatRecoveryEffectiveness,latentHeatRecoveryEffectiveness);
-    if (!value) {
-      return false;
-    }
-    return setLatentHeatRecoveryEffectiveness(value.get());
-  }
-
   void ZoneHVACIdealLoadsAirSystem_Impl::resetLatentHeatRecoveryEffectiveness() {
     bool result = setString(OS_ZoneHVAC_IdealLoadsAirSystemFields::LatentHeatRecoveryEffectiveness, "");
     OS_ASSERT(result);
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::maximumHeatingSupplyAirTemperature_SI() const {
-    return getMaximumHeatingSupplyAirTemperature(false);
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::maximumHeatingSupplyAirTemperature_IP() const {
-    return getMaximumHeatingSupplyAirTemperature(true);
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::minimumCoolingSupplyAirTemperature_SI() const {
-    return getMinimumCoolingSupplyAirTemperature(false);
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::minimumCoolingSupplyAirTemperature_IP() const {
-    return getMinimumCoolingSupplyAirTemperature(true);
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::maximumHeatingSupplyAirHumidityRatio_SI() const {
-    return getMaximumHeatingSupplyAirHumidityRatio(false);
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::maximumHeatingSupplyAirHumidityRatio_IP() const {
-    return getMaximumHeatingSupplyAirHumidityRatio(true);
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::minimumCoolingSupplyAirHumidityRatio_SI() const {
-    return getMinimumCoolingSupplyAirHumidityRatio(false);
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::minimumCoolingSupplyAirHumidityRatio_IP() const {
-    return getMinimumCoolingSupplyAirHumidityRatio(true);
   }
 
   std::vector<std::string> ZoneHVACIdealLoadsAirSystem_Impl::heatingLimitValues() const {
     return ZoneHVACIdealLoadsAirSystem::heatingLimitValues();
   }
 
-  openstudio::OSOptionalQuantity ZoneHVACIdealLoadsAirSystem_Impl::maximumHeatingAirFlowRate_SI() const {
-    return getMaximumHeatingAirFlowRate(false);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACIdealLoadsAirSystem_Impl::maximumHeatingAirFlowRate_IP() const {
-    return getMaximumHeatingAirFlowRate(true);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACIdealLoadsAirSystem_Impl::maximumSensibleHeatingCapacity_SI() const {
-    return getMaximumSensibleHeatingCapacity(false);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACIdealLoadsAirSystem_Impl::maximumSensibleHeatingCapacity_IP() const {
-    return getMaximumSensibleHeatingCapacity(true);
-  }
-
   std::vector<std::string> ZoneHVACIdealLoadsAirSystem_Impl::coolingLimitValues() const {
     return ZoneHVACIdealLoadsAirSystem::coolingLimitValues();
   }
 
-  openstudio::OSOptionalQuantity ZoneHVACIdealLoadsAirSystem_Impl::maximumCoolingAirFlowRate_SI() const {
-    return getMaximumCoolingAirFlowRate(false);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACIdealLoadsAirSystem_Impl::maximumCoolingAirFlowRate_IP() const {
-    return getMaximumCoolingAirFlowRate(true);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACIdealLoadsAirSystem_Impl::maximumTotalCoolingCapacity_SI() const {
-    return getMaximumTotalCoolingCapacity(false);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACIdealLoadsAirSystem_Impl::maximumTotalCoolingCapacity_IP() const {
-    return getMaximumTotalCoolingCapacity(true);
-  }
-
   std::vector<std::string> ZoneHVACIdealLoadsAirSystem_Impl::dehumidificationControlTypeValues() const {
     return ZoneHVACIdealLoadsAirSystem::dehumidificationControlTypeValues();
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::coolingSensibleHeatRatio_SI() const {
-    return getCoolingSensibleHeatRatio(false);
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::coolingSensibleHeatRatio_IP() const {
-    return getCoolingSensibleHeatRatio(true);
   }
 
   std::vector<std::string> ZoneHVACIdealLoadsAirSystem_Impl::humidificationControlTypeValues() const {
@@ -933,22 +676,6 @@ namespace detail {
 
   std::vector<std::string> ZoneHVACIdealLoadsAirSystem_Impl::heatRecoveryTypeValues() const {
     return ZoneHVACIdealLoadsAirSystem::heatRecoveryTypeValues();
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::sensibleHeatRecoveryEffectiveness_SI() const {
-    return getSensibleHeatRecoveryEffectiveness(false);
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::sensibleHeatRecoveryEffectiveness_IP() const {
-    return getSensibleHeatRecoveryEffectiveness(true);
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::latentHeatRecoveryEffectiveness_SI() const {
-    return getLatentHeatRecoveryEffectiveness(false);
-  }
-
-  openstudio::Quantity ZoneHVACIdealLoadsAirSystem_Impl::latentHeatRecoveryEffectiveness_IP() const {
-    return getLatentHeatRecoveryEffectiveness(true);
   }
 
   boost::optional<ModelObject> ZoneHVACIdealLoadsAirSystem_Impl::availabilityScheduleAsModelObject() const {
@@ -1169,20 +896,12 @@ double ZoneHVACIdealLoadsAirSystem::maximumHeatingSupplyAirTemperature() const {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->maximumHeatingSupplyAirTemperature();
 }
 
-Quantity ZoneHVACIdealLoadsAirSystem::getMaximumHeatingSupplyAirTemperature(bool returnIP) const {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->getMaximumHeatingSupplyAirTemperature(returnIP);
-}
-
 bool ZoneHVACIdealLoadsAirSystem::isMaximumHeatingSupplyAirTemperatureDefaulted() const {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->isMaximumHeatingSupplyAirTemperatureDefaulted();
 }
 
 double ZoneHVACIdealLoadsAirSystem::minimumCoolingSupplyAirTemperature() const {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->minimumCoolingSupplyAirTemperature();
-}
-
-Quantity ZoneHVACIdealLoadsAirSystem::getMinimumCoolingSupplyAirTemperature(bool returnIP) const {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->getMinimumCoolingSupplyAirTemperature(returnIP);
 }
 
 bool ZoneHVACIdealLoadsAirSystem::isMinimumCoolingSupplyAirTemperatureDefaulted() const {
@@ -1193,20 +912,12 @@ double ZoneHVACIdealLoadsAirSystem::maximumHeatingSupplyAirHumidityRatio() const
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->maximumHeatingSupplyAirHumidityRatio();
 }
 
-Quantity ZoneHVACIdealLoadsAirSystem::getMaximumHeatingSupplyAirHumidityRatio(bool returnIP) const {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->getMaximumHeatingSupplyAirHumidityRatio(returnIP);
-}
-
 bool ZoneHVACIdealLoadsAirSystem::isMaximumHeatingSupplyAirHumidityRatioDefaulted() const {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->isMaximumHeatingSupplyAirHumidityRatioDefaulted();
 }
 
 double ZoneHVACIdealLoadsAirSystem::minimumCoolingSupplyAirHumidityRatio() const {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->minimumCoolingSupplyAirHumidityRatio();
-}
-
-Quantity ZoneHVACIdealLoadsAirSystem::getMinimumCoolingSupplyAirHumidityRatio(bool returnIP) const {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->getMinimumCoolingSupplyAirHumidityRatio(returnIP);
 }
 
 bool ZoneHVACIdealLoadsAirSystem::isMinimumCoolingSupplyAirHumidityRatioDefaulted() const {
@@ -1225,20 +936,12 @@ boost::optional<double> ZoneHVACIdealLoadsAirSystem::maximumHeatingAirFlowRate()
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->maximumHeatingAirFlowRate();
 }
 
-OSOptionalQuantity ZoneHVACIdealLoadsAirSystem::getMaximumHeatingAirFlowRate(bool returnIP) const {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->getMaximumHeatingAirFlowRate(returnIP);
-}
-
 bool ZoneHVACIdealLoadsAirSystem::isMaximumHeatingAirFlowRateAutosized() const {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->isMaximumHeatingAirFlowRateAutosized();
 }
 
 boost::optional<double> ZoneHVACIdealLoadsAirSystem::maximumSensibleHeatingCapacity() const {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->maximumSensibleHeatingCapacity();
-}
-
-OSOptionalQuantity ZoneHVACIdealLoadsAirSystem::getMaximumSensibleHeatingCapacity(bool returnIP) const {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->getMaximumSensibleHeatingCapacity(returnIP);
 }
 
 bool ZoneHVACIdealLoadsAirSystem::isMaximumSensibleHeatingCapacityAutosized() const {
@@ -1257,20 +960,12 @@ boost::optional<double> ZoneHVACIdealLoadsAirSystem::maximumCoolingAirFlowRate()
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->maximumCoolingAirFlowRate();
 }
 
-OSOptionalQuantity ZoneHVACIdealLoadsAirSystem::getMaximumCoolingAirFlowRate(bool returnIP) const {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->getMaximumCoolingAirFlowRate(returnIP);
-}
-
 bool ZoneHVACIdealLoadsAirSystem::isMaximumCoolingAirFlowRateAutosized() const {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->isMaximumCoolingAirFlowRateAutosized();
 }
 
 boost::optional<double> ZoneHVACIdealLoadsAirSystem::maximumTotalCoolingCapacity() const {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->maximumTotalCoolingCapacity();
-}
-
-OSOptionalQuantity ZoneHVACIdealLoadsAirSystem::getMaximumTotalCoolingCapacity(bool returnIP) const {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->getMaximumTotalCoolingCapacity(returnIP);
 }
 
 bool ZoneHVACIdealLoadsAirSystem::isMaximumTotalCoolingCapacityAutosized() const {
@@ -1295,10 +990,6 @@ bool ZoneHVACIdealLoadsAirSystem::isDehumidificationControlTypeDefaulted() const
 
 double ZoneHVACIdealLoadsAirSystem::coolingSensibleHeatRatio() const {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->coolingSensibleHeatRatio();
-}
-
-Quantity ZoneHVACIdealLoadsAirSystem::getCoolingSensibleHeatRatio(bool returnIP) const {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->getCoolingSensibleHeatRatio(returnIP);
 }
 
 bool ZoneHVACIdealLoadsAirSystem::isCoolingSensibleHeatRatioDefaulted() const {
@@ -1345,20 +1036,12 @@ double ZoneHVACIdealLoadsAirSystem::sensibleHeatRecoveryEffectiveness() const {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->sensibleHeatRecoveryEffectiveness();
 }
 
-Quantity ZoneHVACIdealLoadsAirSystem::getSensibleHeatRecoveryEffectiveness(bool returnIP) const {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->getSensibleHeatRecoveryEffectiveness(returnIP);
-}
-
 bool ZoneHVACIdealLoadsAirSystem::isSensibleHeatRecoveryEffectivenessDefaulted() const {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->isSensibleHeatRecoveryEffectivenessDefaulted();
 }
 
 double ZoneHVACIdealLoadsAirSystem::latentHeatRecoveryEffectiveness() const {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->latentHeatRecoveryEffectiveness();
-}
-
-Quantity ZoneHVACIdealLoadsAirSystem::getLatentHeatRecoveryEffectiveness(bool returnIP) const {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->getLatentHeatRecoveryEffectiveness(returnIP);
 }
 
 bool ZoneHVACIdealLoadsAirSystem::isLatentHeatRecoveryEffectivenessDefaulted() const {
@@ -1377,19 +1060,11 @@ bool ZoneHVACIdealLoadsAirSystem::setMaximumHeatingSupplyAirTemperature(double m
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMaximumHeatingSupplyAirTemperature(maximumHeatingSupplyAirTemperature);
 }
 
-bool ZoneHVACIdealLoadsAirSystem::setMaximumHeatingSupplyAirTemperature(const Quantity& maximumHeatingSupplyAirTemperature) {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMaximumHeatingSupplyAirTemperature(maximumHeatingSupplyAirTemperature);
-}
-
 void ZoneHVACIdealLoadsAirSystem::resetMaximumHeatingSupplyAirTemperature() {
   getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->resetMaximumHeatingSupplyAirTemperature();
 }
 
 bool ZoneHVACIdealLoadsAirSystem::setMinimumCoolingSupplyAirTemperature(double minimumCoolingSupplyAirTemperature) {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMinimumCoolingSupplyAirTemperature(minimumCoolingSupplyAirTemperature);
-}
-
-bool ZoneHVACIdealLoadsAirSystem::setMinimumCoolingSupplyAirTemperature(const Quantity& minimumCoolingSupplyAirTemperature) {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMinimumCoolingSupplyAirTemperature(minimumCoolingSupplyAirTemperature);
 }
 
@@ -1401,19 +1076,11 @@ bool ZoneHVACIdealLoadsAirSystem::setMaximumHeatingSupplyAirHumidityRatio(double
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMaximumHeatingSupplyAirHumidityRatio(maximumHeatingSupplyAirHumidityRatio);
 }
 
-bool ZoneHVACIdealLoadsAirSystem::setMaximumHeatingSupplyAirHumidityRatio(const Quantity& maximumHeatingSupplyAirHumidityRatio) {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMaximumHeatingSupplyAirHumidityRatio(maximumHeatingSupplyAirHumidityRatio);
-}
-
 void ZoneHVACIdealLoadsAirSystem::resetMaximumHeatingSupplyAirHumidityRatio() {
   getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->resetMaximumHeatingSupplyAirHumidityRatio();
 }
 
 bool ZoneHVACIdealLoadsAirSystem::setMinimumCoolingSupplyAirHumidityRatio(double minimumCoolingSupplyAirHumidityRatio) {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMinimumCoolingSupplyAirHumidityRatio(minimumCoolingSupplyAirHumidityRatio);
-}
-
-bool ZoneHVACIdealLoadsAirSystem::setMinimumCoolingSupplyAirHumidityRatio(const Quantity& minimumCoolingSupplyAirHumidityRatio) {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMinimumCoolingSupplyAirHumidityRatio(minimumCoolingSupplyAirHumidityRatio);
 }
 
@@ -1433,10 +1100,6 @@ bool ZoneHVACIdealLoadsAirSystem::setMaximumHeatingAirFlowRate(double maximumHea
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMaximumHeatingAirFlowRate(maximumHeatingAirFlowRate);
 }
 
-bool ZoneHVACIdealLoadsAirSystem::setMaximumHeatingAirFlowRate(const Quantity& maximumHeatingAirFlowRate) {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMaximumHeatingAirFlowRate(maximumHeatingAirFlowRate);
-}
-
 void ZoneHVACIdealLoadsAirSystem::resetMaximumHeatingAirFlowRate() {
   getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->resetMaximumHeatingAirFlowRate();
 }
@@ -1446,10 +1109,6 @@ void ZoneHVACIdealLoadsAirSystem::autosizeMaximumHeatingAirFlowRate() {
 }
 
 bool ZoneHVACIdealLoadsAirSystem::setMaximumSensibleHeatingCapacity(double maximumSensibleHeatingCapacity) {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMaximumSensibleHeatingCapacity(maximumSensibleHeatingCapacity);
-}
-
-bool ZoneHVACIdealLoadsAirSystem::setMaximumSensibleHeatingCapacity(const Quantity& maximumSensibleHeatingCapacity) {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMaximumSensibleHeatingCapacity(maximumSensibleHeatingCapacity);
 }
 
@@ -1473,10 +1132,6 @@ bool ZoneHVACIdealLoadsAirSystem::setMaximumCoolingAirFlowRate(double maximumCoo
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMaximumCoolingAirFlowRate(maximumCoolingAirFlowRate);
 }
 
-bool ZoneHVACIdealLoadsAirSystem::setMaximumCoolingAirFlowRate(const Quantity& maximumCoolingAirFlowRate) {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMaximumCoolingAirFlowRate(maximumCoolingAirFlowRate);
-}
-
 void ZoneHVACIdealLoadsAirSystem::resetMaximumCoolingAirFlowRate() {
   getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->resetMaximumCoolingAirFlowRate();
 }
@@ -1486,10 +1141,6 @@ void ZoneHVACIdealLoadsAirSystem::autosizeMaximumCoolingAirFlowRate() {
 }
 
 bool ZoneHVACIdealLoadsAirSystem::setMaximumTotalCoolingCapacity(double maximumTotalCoolingCapacity) {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMaximumTotalCoolingCapacity(maximumTotalCoolingCapacity);
-}
-
-bool ZoneHVACIdealLoadsAirSystem::setMaximumTotalCoolingCapacity(const Quantity& maximumTotalCoolingCapacity) {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setMaximumTotalCoolingCapacity(maximumTotalCoolingCapacity);
 }
 
@@ -1526,10 +1177,6 @@ void ZoneHVACIdealLoadsAirSystem::resetDehumidificationControlType() {
 }
 
 bool ZoneHVACIdealLoadsAirSystem::setCoolingSensibleHeatRatio(double coolingSensibleHeatRatio) {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setCoolingSensibleHeatRatio(coolingSensibleHeatRatio);
-}
-
-bool ZoneHVACIdealLoadsAirSystem::setCoolingSensibleHeatRatio(const Quantity& coolingSensibleHeatRatio) {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setCoolingSensibleHeatRatio(coolingSensibleHeatRatio);
 }
 
@@ -1581,19 +1228,11 @@ bool ZoneHVACIdealLoadsAirSystem::setSensibleHeatRecoveryEffectiveness(double se
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setSensibleHeatRecoveryEffectiveness(sensibleHeatRecoveryEffectiveness);
 }
 
-bool ZoneHVACIdealLoadsAirSystem::setSensibleHeatRecoveryEffectiveness(const Quantity& sensibleHeatRecoveryEffectiveness) {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setSensibleHeatRecoveryEffectiveness(sensibleHeatRecoveryEffectiveness);
-}
-
 void ZoneHVACIdealLoadsAirSystem::resetSensibleHeatRecoveryEffectiveness() {
   getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->resetSensibleHeatRecoveryEffectiveness();
 }
 
 bool ZoneHVACIdealLoadsAirSystem::setLatentHeatRecoveryEffectiveness(double latentHeatRecoveryEffectiveness) {
-  return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setLatentHeatRecoveryEffectiveness(latentHeatRecoveryEffectiveness);
-}
-
-bool ZoneHVACIdealLoadsAirSystem::setLatentHeatRecoveryEffectiveness(const Quantity& latentHeatRecoveryEffectiveness) {
   return getImpl<detail::ZoneHVACIdealLoadsAirSystem_Impl>()->setLatentHeatRecoveryEffectiveness(latentHeatRecoveryEffectiveness);
 }
 
@@ -1625,4 +1264,3 @@ ZoneHVACIdealLoadsAirSystem::ZoneHVACIdealLoadsAirSystem(std::shared_ptr<detail:
 
 } // model
 } // openstudio
-

@@ -115,13 +115,9 @@ class MODEL_API FanConstantVolume : public StraightComponent {
 
   boost::optional<double> maximumFlowRate() const;
 
-  OSOptionalQuantity getMaximumFlowRate(bool returnIP=false) const;
-
   bool isMaximumFlowRateAutosized() const;
 
   bool setMaximumFlowRate(double maximumFlowRate);
-
-  bool setMaximumFlowRate(const Quantity& maximumFlowRate);
 
   void resetMaximumFlowRate();
 
@@ -154,4 +150,3 @@ typedef std::vector<FanConstantVolume> FanConstantVolumeVector;
 } // openstudio
 
 #endif // MODEL_FANCONSTANTVOLUME_HPP
-

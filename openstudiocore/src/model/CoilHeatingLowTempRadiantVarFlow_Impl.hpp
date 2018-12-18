@@ -33,9 +33,6 @@
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
 
-//#include <utilities/units/Quantity.hpp>
-//#include <utilities/units/OSOptionalQuantity.hpp>
-
 namespace openstudio {
 namespace model {
 
@@ -87,8 +84,6 @@ namespace detail {
 
     boost::optional<double> maximumHotWaterFlow() const;
 
-    // OSOptionalQuantity getMaximumHotWaterFlow(bool returnIP=false) const;
-
     bool isMaximumHotWaterFlowDefaulted() const;
 
     bool isMaximumHotWaterFlowAutosized() const;
@@ -100,8 +95,6 @@ namespace detail {
     //Connection heatingWaterOutletNode() const;
 
     double heatingControlThrottlingRange() const;
-
-    //Quantity getHeatingControlThrottlingRange(bool returnIP=false) const;
 
     bool isHeatingControlThrottlingRangeDefaulted() const;
 
@@ -120,15 +113,11 @@ namespace detail {
 
     bool setMaximumHotWaterFlow(boost::optional<double> maximumHotWaterFlow);
 
-    //bool setMaximumHotWaterFlow(const OSOptionalQuantity& maximumHotWaterFlow);
-
     void resetMaximumHotWaterFlow();
 
     void autosizeMaximumHotWaterFlow();
 
     bool setHeatingControlThrottlingRange(double heatingControlThrottlingRange);
-
-    //bool setHeatingControlThrottlingRange(const Quantity& heatingControlThrottlingRange);
 
     void resetHeatingControlThrottlingRange();
 
@@ -158,11 +147,6 @@ namespace detail {
     //boost::optional<Connection> optionalHeatingWaterInletNode() const;
     //boost::optional<Connection> optionalHeatingWaterOutletNode() const;
 
-    //openstudio::OSOptionalQuantity maximumHotWaterFlow_SI() const;
-    //openstudio::OSOptionalQuantity maximumHotWaterFlow_IP() const;
-    //openstudio::Quantity heatingControlThrottlingRange_SI() const;
-    //openstudio::Quantity heatingControlThrottlingRange_IP() const;
-
     //boost::optional<ModelObject> heatingWaterInletNodeAsModelObject() const;
     //boost::optional<ModelObject> heatingWaterOutletNodeAsModelObject() const;
 
@@ -180,4 +164,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_COILHEATINGLOWTEMPRADIANTVARFLOW_IMPL_HPP
-

@@ -168,16 +168,6 @@ typedef boost::optional<FileReference> OptionalFileReference;
 /** \relates FileReference*/
 typedef std::vector<FileReference> FileReferenceVector;
 
-namespace detail {
-
-  /** Places attribute's data in a QVariant for JSON serialization. */
-  UTILITIES_API QVariant toVariant(const FileReference& fileReference);
-
-  /** Deserializes json variant to FileReference. */
-  UTILITIES_API FileReference toFileReference(const QVariant& variant, const VersionString& version);
-
-}
-
 } // openstudio
 
 #endif // UTILITIES_CORE_FILEREFERENCE_HPP

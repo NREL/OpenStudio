@@ -90,13 +90,9 @@ class MODEL_API AirLoopHVAC : public Loop
 
   boost::optional<double> designSupplyAirFlowRate() const;
 
-  OSOptionalQuantity getDesignSupplyAirFlowRate(bool returnIP=false) const;
-
   bool isDesignSupplyAirFlowRateAutosized() const;
 
   bool setDesignSupplyAirFlowRate(double designSupplyAirFlowRate);
-
-  bool setDesignSupplyAirFlowRate(const Quantity& designSupplyAirFlowRate);
 
   void resetDesignSupplyAirFlowRate();
 

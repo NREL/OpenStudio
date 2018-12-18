@@ -44,6 +44,7 @@
 #include <QAbstractListModel>
 #include <QPointer>
 #include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
+#include "../model_editor/QMetaTypes.hpp"
 
 class QMutex;
 

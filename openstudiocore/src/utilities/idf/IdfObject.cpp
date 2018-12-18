@@ -331,7 +331,7 @@ namespace detail {
     return result;
   }
 
-  boost::optional<QUrl> IdfObject_Impl::getURL(unsigned index,
+  boost::optional<Url> IdfObject_Impl::getURL(unsigned index,
                                                bool returnDefault) const
   {
     UnsignedVector urlIdx = m_iddObject.urlFields();
@@ -339,13 +339,13 @@ namespace detail {
     if( i != urlIdx.end() ) {
       OptionalString value = getString(index, returnDefault, false);
       if (value) {
-        boost::optional<QUrl> result(QString(value->c_str()));
+        boost::optional<Url> result(QString(value->c_str()));
         if( result->isValid() ) { return result; }
       }
     }
 
     // bad value (for whatever reason)
-    return boost::optional<QUrl>();
+    return boost::optional<Url>();
   }
 
   IdfExtensibleGroup IdfObject_Impl::getExtensibleGroup(unsigned groupIndex) const {
@@ -2193,7 +2193,7 @@ OptionalInt IdfObject::getInt(unsigned index, bool returnDefault) const {
   return m_impl->getInt(index,returnDefault);
 }
 
-boost::optional<QUrl> IdfObject::getURL(unsigned index, bool returnDefault) const
+boost::optional<Url> IdfObject::getURL(unsigned index, bool returnDefault) const
 {
   return m_impl->getURL(index,returnDefault);
 }

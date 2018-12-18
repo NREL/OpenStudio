@@ -38,11 +38,10 @@
 #include "../core/Logger.hpp"
 #include "../core/UUID.hpp"
 
-#include <QVariant>
-#include <QMetaType>
-
-class QDomElement;
-class QDomDocument;
+namespace pugi {
+  class xml_document;
+  class xml_node;
+}
 
 namespace openstudio {
 namespace detail {
@@ -51,6 +50,9 @@ namespace detail {
   {
 
    public:
+
+      // Note JM 2018-12-04: As far as a I can tell, the only Ctor actually uses are the simple ones,
+      // name, value, optional<string> units
 
       /// constructors
       Attribute_Impl(const std::string& name, bool value, const boost::optional<std::string>& units);
@@ -71,24 +73,6 @@ namespace detail {
                      const boost::optional<std::string>& units,
                      const std::string& source = std::string());
 
-      Attribute_Impl(const std::string& name, const OSOptionalQuantity& value);
-
-      Attribute_Impl(const std::string& name, const Quantity& value);
-      Attribute_Impl(const openstudio::UUID& uuid,
-                     const openstudio::UUID& versionUUID,
-                     const std::string& name,
-                     const boost::optional<std::string>& displayName,
-                     const Quantity& value,
-                     const std::string& source = std::string());
-
-      Attribute_Impl(const std::string& name, const Unit& value);
-      Attribute_Impl(const openstudio::UUID& uuid,
-                     const openstudio::UUID& versionUUID,
-                     const std::string& name,
-                     const boost::optional<std::string>& displayName,
-                     const Unit& value,
-                     const std::string& source = std::string());
-
       Attribute_Impl(const std::string& name, int value, const boost::optional<std::string>& units);
       Attribute_Impl(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
@@ -104,15 +88,6 @@ namespace detail {
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      unsigned value,
-                     const boost::optional<std::string>& units,
-                     const std::string& source = std::string());
-
-      Attribute_Impl(const std::string& name, const char* value, const boost::optional<std::string>& units);
-      Attribute_Impl(const openstudio::UUID& uuid,
-                     const openstudio::UUID& versionUUID,
-                     const std::string& name,
-                     const boost::optional<std::string>& displayName,
-                     const char* value,
                      const boost::optional<std::string>& units,
                      const std::string& source = std::string());
 
@@ -134,7 +109,9 @@ namespace detail {
                      const boost::optional<std::string>& units,
                      const std::string& source = std::string());
 
-      Attribute_Impl(const QDomElement& element);
+      // constructor from xml, throws if required arguments are missing
+      Attribute_Impl(const pugi::xml_node& element);
+
       Attribute_Impl(const Attribute_Impl& other);
 
       // Destructor
@@ -172,6 +149,9 @@ namespace detail {
       /// get the attribute value type
       AttributeValueType valueType() const;
 
+      // Check if it has a value set
+      bool hasValue() const;
+
       /// get value as a bool
       bool valueAsBoolean() const;
 
@@ -196,18 +176,6 @@ namespace detail {
       /// set value. throws if wrong type.
       void setValue(double value);
 
-      /// get value as Quantity
-      Quantity valueAsQuantity() const;
-
-      /// set value. throws if wrong type.
-      void setValue(const Quantity& value);
-
-      /// get value as Unit
-      Unit valueAsUnit() const;
-
-      /// set value. throws if wrong type.
-      void setValue(const Unit& value);
-
       /// get value as string
       std::string valueAsString() const;
 
@@ -222,9 +190,6 @@ namespace detail {
 
       /// set value. throws if wrong type.
       void setValue(const std::vector<Attribute>& value);
-
-      /// get value as qvariant
-      QVariant valueAsQVariant() const;
 
       /// find child attribute by name
       boost::optional<Attribute> findChildByName(const std::string& name) const;
@@ -241,7 +206,7 @@ namespace detail {
       std::string toString() const;
 
       /// write object and all children to xml
-      QDomDocument toXml() const;
+      pugi::xml_document toXml() const;
 
       /// comparison
       bool operator==(const Attribute& other) const;
@@ -250,12 +215,9 @@ namespace detail {
 
       friend class openstudio::Attribute;
 
-      // for setting after construction
-      void setValue(const QVariant& value, bool check);
-
       /// write values to an xml element
       /// override in derived classes
-      virtual void writeValues(QDomDocument& doc, QDomElement& element) const;
+      virtual void writeValues(pugi::xml_node& element) const;
 
     private:
 
@@ -267,7 +229,7 @@ namespace detail {
       boost::optional<std::string> m_displayName;
       std::string m_source;
       AttributeValueType m_valueType;
-      QVariant m_value;
+      OSAttributeVariant m_value;
       boost::optional<std::string> m_units;
   };
 

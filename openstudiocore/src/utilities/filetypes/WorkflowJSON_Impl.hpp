@@ -35,10 +35,7 @@
 #include "WorkflowStep.hpp"
 #include "RunOptions.hpp"
 
-#include "../core/Logger.hpp"
 #include "../core/Path.hpp"
-#include "../data/Variant.hpp"
-#include "../data/Attribute.hpp"
 
 #include <nano/nano_signal_slot.hpp>
 
@@ -48,6 +45,7 @@ namespace openstudio{
 
 class DateTime;
 class WorkflowJSON;
+class BCLMeasure;
 
 namespace detail {
 

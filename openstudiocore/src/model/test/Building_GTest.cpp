@@ -60,7 +60,6 @@
 #include "../Schedule.hpp"
 #include "../LifeCycleCost.hpp"
 
-#include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/geometry/Geometry.hpp"
 
 #include <math.h>

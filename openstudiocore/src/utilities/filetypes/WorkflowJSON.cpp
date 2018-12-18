@@ -38,8 +38,6 @@
 #include "../core/Checksum.hpp"
 #include "../time/DateTime.hpp"
 
-
-
 namespace openstudio{
 namespace detail{
 

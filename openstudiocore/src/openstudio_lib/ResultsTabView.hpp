@@ -32,6 +32,8 @@
 
 #include "MainTabView.hpp"
 
+#include "../model_editor/QMetaTypes.hpp"
+
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/units/Unit.hpp"
 
