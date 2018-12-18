@@ -35,8 +35,9 @@
 
 #include <vector>
 
-class QDomDocument;
-class QDomElement;
+namespace pugi {
+  class xml_node;
+}
 
 namespace openstudio{
 
@@ -46,7 +47,7 @@ namespace openstudio{
   public:
 
     // constructor from xml, throws if required arguments are missing
-    BCLMeasureOutput(const QDomElement& element);
+    BCLMeasureOutput(const pugi::xml_node &element);
 
     // constructor from xml, throws if required arguments are missing
     BCLMeasureOutput(const std::string& name, const std::string& displayName,
@@ -63,7 +64,7 @@ namespace openstudio{
     boost::optional<std::string> units() const;
     bool modelDependent() const;
 
-    void writeValues(QDomDocument& doc, QDomElement& element) const;
+    void writeValues(pugi::xml_node &element) const;
 
     bool operator==(const BCLMeasureOutput& other) const;
 

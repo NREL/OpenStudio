@@ -31,7 +31,8 @@
 #include "../core/System.hpp"
 #include "../core/FilesystemHelpers.hpp"
 
-#include <QDomDocument>
+#include <pugixml.hpp>
+#include <algorithm>
 
 namespace openstudio{
 
@@ -45,95 +46,84 @@ namespace openstudio{
   BCLComponent::BCLComponent(const openstudio::path& dir):
     m_directory(dir)
   {
-    QDomDocument component("component.xml");
-    const auto data = openstudio::filesystem::read(m_directory / "component.xml");
-    component.setContent(QByteArray(data.data(), data.size()));
+    pugi::xml_document component;
+    component.load_file((m_directory / "component.xml").c_str()); // No checking?
 
-    QDomElement comp = component.firstChildElement("component");
-    m_name = comp.firstChildElement("name").firstChild().nodeValue().replace("_", " ")
-      .toStdString();
-    m_uid = comp.firstChildElement("uid").firstChild().nodeValue().toStdString();
-    m_versionId = comp.firstChildElement("version_id").firstChild().nodeValue().toStdString();
-    m_description = comp.firstChildElement("description").firstChild().nodeValue().toStdString();
-    QDomElement componentElement = comp.firstChildElement("files").firstChildElement("file");
+    auto comp = component.child("component");
+    m_name = comp.child("name").text().as_string();
+    std::replace(m_name.begin(), m_name.end(), '_', ' ');
+    // m_name = comp.firstChildElement("name").firstChild().nodeValue().replace("_", " ").toStdString();
+    m_uid = comp.child("uid").text().as_string();
+    m_versionId = comp.child("version_id").text().as_string();
+    m_description = comp.child("description").text().as_string();
 
-    while (!componentElement.isNull())
-    {
-      if (componentElement.hasChildNodes())
-      {
-        m_files.push_back(componentElement.firstChildElement("filename").firstChild()
-          .nodeValue().toStdString());
-        m_filetypes.push_back(componentElement.firstChildElement("filetype").firstChild()
-          .nodeValue().toStdString());
-      }
-      else
-      {
-        break;
-      }
-      componentElement = componentElement.nextSiblingElement("file");
-    }
-    componentElement = comp.firstChildElement("attributes").firstChildElement("attribute");
-    while (!componentElement.isNull())
-    {
-      if (componentElement.hasChildNodes())
-      {
-        std::string name = componentElement.firstChildElement("name").firstChild()
-          .nodeValue().toStdString();
-        std::string value = componentElement.firstChildElement("value").firstChild()
-          .nodeValue().toStdString();
-        std::string datatype = componentElement.firstChildElement("datatype").firstChild()
-          .nodeValue().toStdString();
-
-        // Units are optional
-        std::string units = componentElement.firstChildElement("units").firstChild()
-          .nodeValue().toStdString();
-
-        if (datatype == "float"){
-          if (units.empty()){
-            Attribute attr(name, boost::lexical_cast<double>(value));
-            m_attributes.push_back(attr);
-          }else{
-            Attribute attr(name, boost::lexical_cast<double>(value), units);
-            m_attributes.push_back(attr);
-          }
-        }else if (datatype == "int"){
-          if (units.empty()){
-            Attribute attr(name, boost::lexical_cast<int>(value));
-            m_attributes.push_back(attr);
-          }else{
-            Attribute attr(name, boost::lexical_cast<int>(value), units);
-            m_attributes.push_back(attr);
-          }
-        }else if (datatype == "boolean"){
-          bool temp;
-          if (value == "true"){
-            temp = true;
-          }else{
-            temp = false;
-          }
-          if (units.empty()){
-            Attribute attr(name, temp);
-            m_attributes.push_back(attr);
-          }else{
-            Attribute attr(name, temp, units);
-            m_attributes.push_back(attr);
-          }
-        }else{
-          // Assume string
-          if (units.empty()){
-            Attribute attr(name, value);
-            m_attributes.push_back(attr);
-          }else{
-            Attribute attr(name, value, units);
-            m_attributes.push_back(attr);
-          }
+    auto files = comp.child("files");
+    if (files) {
+      for (auto &componentElement : files.children("file")) {
+        if (componentElement.first_child()) {
+          m_files.push_back(componentElement.child("filename").text().as_string());
+          m_filetypes.push_back(componentElement.child("filetype").text().as_string());
+        } else {
+          break;
         }
       }
-      else
-      {
-        break;
+    }
+
+    auto attributes = comp.child("attributes");
+    if (attributes) {
+      for (auto &componentElement : files.children("attribute")) {
+        if (componentElement.first_child()) {
+          std::string name = componentElement.child("name").text().as_string();
+          std::string value = componentElement.child("value").text().as_string();
+          std::string datatype = componentElement.child("datatype").text().as_string();
+
+          // Units are optional
+          std::string units = componentElement.child("units").text().as_string();
+
+          if (datatype == "float") {
+            if (units.empty()) {
+              Attribute attr(name, boost::lexical_cast<double>(value));
+              m_attributes.push_back(attr);
+            } else {
+              Attribute attr(name, boost::lexical_cast<double>(value), units);
+              m_attributes.push_back(attr);
+            }
+          } else if (datatype == "int") {
+            if (units.empty()) {
+              Attribute attr(name, boost::lexical_cast<int>(value));
+              m_attributes.push_back(attr);
+            } else {
+              Attribute attr(name, boost::lexical_cast<int>(value), units);
+              m_attributes.push_back(attr);
+            }
+          } else if (datatype == "boolean") {
+            bool temp;
+            if (value == "true") {
+              temp = true;
+            } else {
+              temp = false;
+            }
+            if (units.empty()) {
+              Attribute attr(name, temp);
+              m_attributes.push_back(attr);
+            } else {
+              Attribute attr(name, temp, units);
+              m_attributes.push_back(attr);
+            }
+          } else {
+            // Assume string
+            if (units.empty()) {
+              Attribute attr(name, value);
+              m_attributes.push_back(attr);
+            } else {
+              Attribute attr(name, value, units);
+              m_attributes.push_back(attr);
+            }
+          }
+        } else {
+          break;
+        }
       }
-      componentElement = componentElement.nextSiblingElement("attribute");
     }
   }
 

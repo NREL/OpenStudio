@@ -41,23 +41,20 @@
 
 namespace openstudio{
 
-  std::ostream& operator<<(std::ostream& os, const QDomElement& element)
+  std::ostream& operator<<(std::ostream& os, const pugi::xml_document& element)
   {
-    QString str;
-    QTextStream qts(&str);
-    element.save(qts, 2);
-    os << str.toStdString();
+    element.save(os, "  ");
     return os;
   }
 
-  RemoteQueryResponse::RemoteQueryResponse(const QDomDocument& domDocument)
+  RemoteQueryResponse::RemoteQueryResponse(std::shared_ptr<pugi::xml_document>& domDocument)
     : m_domDocument(domDocument)
   {
   }
 
-  QDomDocument RemoteQueryResponse::domDocument() const
+  pugi::xml_node RemoteQueryResponse::root() const
   {
-    return m_domDocument;
+    return m_domDocument->document_element();
   }
 
 
@@ -901,19 +898,19 @@ namespace openstudio{
         std::cout << toString(str) << ": " << toString(reply->rawHeader(reply->rawHeaderList()[i] ).constData()) << std::endl;
       }*/
       if (reply->error() == QNetworkReply::NoError){
-        QDomDocument document;
-        QString error;
-        if (document.setContent(reply, &error)){
+        std::shared_ptr<pugi::xml_document> document = std::make_shared<pugi::xml_document>();
+        auto result = document->load_string(reply->readAll().data());
+        if (!result) {
+          LOG(Error, "Bad XML Response: " << result.description());
+        } else {
           if (!m_useRemoteDevelopmentUrl){
             validProdAuthKey = true;
           } else {
             validDevAuthKey = true;
           }
           return RemoteQueryResponse(document);
-        }else{
-          LOG(Error, "Bad XML Response: " << toString(error));
         }
-      }else if (reply->error() == QNetworkReply::AuthenticationRequiredError){
+      } else if (reply->error() == QNetworkReply::AuthenticationRequiredError){
         if (!m_useRemoteDevelopmentUrl){
           if (m_prodAuthKey.empty()){
             LOG(Error, "Error: prodAuthKey missing");
@@ -946,12 +943,14 @@ namespace openstudio{
 
   boost::optional<BCLMetaSearchResult> RemoteBCL::processMetaSearchResponse(const RemoteQueryResponse& remoteQueryResponse) const
   {
-    QDomElement root = remoteQueryResponse.domDocument().documentElement();
+    auto root = remoteQueryResponse.root();
 
-    if (!root.isNull() && (root.tagName().startsWith("result"))){
-      QDomElement numResultsElement = root.firstChildElement("result_count");
-      if (!numResultsElement.isNull()){
-        return BCLMetaSearchResult(root);
+    if (root) {
+      if (std::string(root.name()).compare(0,6,"result") == 0) { // C++20: std::string(root.name()).starts_with("result")
+        auto numResultsElement = root.child("result_count");
+        if (numResultsElement) {
+          return BCLMetaSearchResult(root);
+        }
       }
     }
 
@@ -962,29 +961,20 @@ namespace openstudio{
   {
     std::vector<BCLSearchResult> searchResults;
 
-    QDomElement root = remoteQueryResponse.domDocument().documentElement();
-    QDomElement result = root.firstChildElement("result");
-    if (result.isNull()){
-      if (root.hasChildNodes()){
-        // single result
-        BCLSearchResult searchResult(root);
-        searchResults.push_back(searchResult);
-      }
-    }else{
-      // many results
-      QDomElement componentElement = result.firstChildElement();
+    auto root = remoteQueryResponse.root();
+    auto result = root.child("result");
+    if (result){
+      auto componentElement = result.first_child();
 
       //Basic check to see if it's non-empty
-      while (!componentElement.firstChildElement("name").isNull())
-      {
+      while (componentElement.child("name")) {
         //Skip components without a uid or version_id
-        if (!componentElement.firstChildElement("uuid").isNull() && !componentElement.firstChildElement("vuuid").isNull())
-        {
+        if (componentElement.child("uuid") && componentElement.child("vuuid")) {
           BCLSearchResult searchResult(componentElement);
           searchResults.push_back(searchResult);
         }
-        result = result.nextSiblingElement("result");
-        componentElement = result.firstChildElement();
+        result = result.next_sibling("result");
+        componentElement = result.first_child();
       }
     }
 

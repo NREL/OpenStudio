@@ -11,7 +11,7 @@ include(idf/CMakeLists.txt)
 include(sql/CMakeLists.txt)
 include(units/CMakeLists.txt)
 
-configure_file("core/ApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx")
+CONFIGURE_FILE_WITH_CHECKSUM("core/ApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx")
 
 set(core_src
   core/ApplicationPathHelpers.hpp
@@ -222,6 +222,7 @@ set(${target_name}_depends
   #litesql
   #litesql-util
   miniziplib
+  pugixml
   ${Boost_LIBRARIES}
   #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
   # ${CMAKE_THREAD_LIBS}
@@ -546,6 +547,7 @@ set(${target_name}_static_depends
   sqlite
   jsoncpp
   miniziplib
+  pugixml
   ${Boost_LIBRARIES}
 )
 
