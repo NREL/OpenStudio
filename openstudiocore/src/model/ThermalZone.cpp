@@ -173,6 +173,10 @@ namespace detail {
       result.push_back(afnz.get());
     }
 
+    if ( boost::optional<ZoneHVACEquipmentList> z_eq = this->zoneHVACEquipmentList() ) {
+      result.push_back(z_eq.get());
+    }
+
     return result;
   }
 
@@ -191,6 +195,7 @@ namespace detail {
     // DLM: this does not seem to agree with implementation of children()
     result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
     result.push_back(IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint);
+    result.push_back(IddObjectType::OS_ZoneHVAC_EquipmentList);
     return result;
   }
 
@@ -1850,8 +1855,8 @@ namespace detail {
     inletPortList().remove();
     exhaustPortList().remove();
 
-    // remove ZoneHVACEquipmentList
-    zoneHVACEquipmentList().remove();
+    // remove ZoneHVACEquipmentList: handled already by the fact that it's a child of this ParentObject
+    // zoneHVACEquipmentList().remove();
 
     // remove ZoneMixing objects
     for (auto mixing : this->zoneMixing()) {
