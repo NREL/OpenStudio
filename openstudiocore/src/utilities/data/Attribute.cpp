@@ -283,7 +283,7 @@ namespace detail {
 
     try {
       m_valueType = AttributeValueType(valueTypeString);
-    } catch (const std::exception &e) {
+    } catch (const std::exception &) {
       LOG_AND_THROW("Couldn't create an AttributeValueType with value: [" << valueTypeString << "].");
     }
 
@@ -1117,7 +1117,7 @@ boost::optional<Attribute> Attribute::loadFromXml(const openstudio::path& xmlPat
 
   try {
     result = Attribute(attributeXML.child("Attribute"));
-  } catch( const std::exception &e ) {
+  } catch( const std::exception & ) {
     // Output any other handled error's message to the user
     // LOG(Error, "Cannot create attribute from XML: " << e.what());
   }

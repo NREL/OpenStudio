@@ -177,7 +177,7 @@ double OSArgument::valueAsDouble() const
   if (!hasValue()) {
     LOG_AND_THROW("This argument does not have a value set.")
   }
-  if ((type() != OSArgumentType::Double) and (type() != OSArgumentType::Integer)) {
+  if ((type() != OSArgumentType::Double) && (type() != OSArgumentType::Integer)) {
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
   }
 
@@ -314,7 +314,7 @@ std::vector<double> OSArgument::domainAsDouble() const {
   if (!hasDomain()) {
     LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
   }
-  if ((type() != OSArgumentType::Double) and (type() != OSArgumentType::Integer)) {
+  if ((type() != OSArgumentType::Double) && (type() != OSArgumentType::Integer)) {
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
   }
 
