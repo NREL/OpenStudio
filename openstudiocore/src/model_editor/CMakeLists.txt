@@ -35,7 +35,7 @@ set(${target_name}_src
   PathWatcher.hpp
   PathWatcher.cpp
   QMetaTypes.hpp
-  # QMetaTypes.cpp # Not needed
+  QMetaTypes.cpp
   tablemodel.h
   tablemodel.cpp
   TableView.hpp
