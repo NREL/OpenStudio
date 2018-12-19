@@ -78,16 +78,4 @@ Q_DECLARE_METATYPE(openstudio::OSOptionalQuantity);
 #include <utilities/idf/Workspace_Impl.hpp>
 Q_DECLARE_METATYPE(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)
 
-
-namespace openstudio {
-namespace detail {
-
-  // Register meta datatypes
-  struct OpenStudioMetaTypeInitializer{
-    OpenStudioMetaTypeInitializer();
-  };
-
-} // detail
-} // openstudio
-
 #endif // MODELEDITOR_QMETATYPES

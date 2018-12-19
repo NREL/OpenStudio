@@ -35,43 +35,6 @@ namespace detail{
   // Note JM 2018-12-19: `Q_DECLARE_METATYPE` is enough to use a type inside a QVariant, but qRegisterMetaType is needed to use the type in
   // *queued* signals/slots and to dynamically create objects of these types at runtime
 
-  // Struct version
-  OpenStudioMetaTypeInitializer::OpenStudioMetaTypeInitializer() {
-    qRegisterMetaType<openstudio::IddObjectType>("openstudio::IddObjectType");
-    qRegisterMetaType<openstudio::IddFileType>("openstudio::IddFileType");
-
-    qRegisterMetaType<OSItemId>("OSItemId");
-    qRegisterMetaType<std::vector<OSItemId> >("std::vector<OSItemId>");
-
-    // qRegisterMetaType<openstudio::model::ModelObject>("openstudio::model::ModelObject"); // No default constructor!
-    // qRegisterMetaType<boost::optional<openstudio::model::ModelObject> >("boost::optional<openstudio::model::ModelObject>");
-    // qRegisterMetaType<std::vector<openstudio::model::ModelObject> >("std::vector<openstudio::model::ModelObject>" );
-
-    qRegisterMetaType<openstudio::UUID>("openstudio::UUID");
-
-    qRegisterMetaType<std::string>("std::string");
-    qRegisterMetaType<std::vector<std::string> >("std::vector<std::string>");
-
-    qRegisterMetaType<boost::optional<double> >("boost::optional<double>");
-    qRegisterMetaType<boost::optional<unsigned> >("boost::optional<unsigned>");
-    qRegisterMetaType<boost::optional<int> >("boost::optional<int>");
-    qRegisterMetaType<boost::optional<std::string> >("boost::optional<std::string>");
-
-    // qRegisterMetaType<openstudio::Attribute>("openstudio::Attribute");
-    qRegisterMetaType<boost::optional<openstudio::Attribute> >("boost::optional<openstudio::Attribute>");
-    qRegisterMetaType<std::vector<openstudio::Attribute> >("std::vector<openstudio::Attribute>");
-
-    qRegisterMetaType<openstudio::Quantity>("openstudio::Quantity");
-    qRegisterMetaType<openstudio::OSOptionalQuantity>("openstudio::OSOptionalQuantity");
-
-    qRegisterMetaType<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> >();
-  }
-
-  static OpenStudioMetaTypeInitializer __openStudioMetaTypeInitializer__;
-
-
-/*
-  // Non-struct version
   int __iddobjectype_type = qRegisterMetaType<openstudio::IddObjectType>("openstudio::IddObjectType");
   int __iddfiletype_type = qRegisterMetaType<openstudio::IddFileType>("openstudio::IddFileType");
 
@@ -82,7 +45,7 @@ namespace detail{
   // qRegisterMetaType<boost::optional<openstudio::model::ModelObject> >("boost::optional<openstudio::model::ModelObject>");
   // qRegisterMetaType<std::vector<openstudio::model::ModelObject> >("std::vector<openstudio::model::ModelObject>" );
 
-  int _uuid_type = qRegisterMetaType<openstudio::UUID>("openstudio::UUID");
+  int __uuid_type = qRegisterMetaType<openstudio::UUID>("openstudio::UUID");
 
   int __string_type = qRegisterMetaType<std::string>("std::string");
   int __string_vector_type = qRegisterMetaType<std::vector<std::string> >("std::vector<std::string>");
@@ -100,8 +63,6 @@ namespace detail{
   int __optionalquantity_type = qRegisterMetaType<openstudio::OSOptionalQuantity>("openstudio::OSOptionalQuantity");
 
   int __workspaceobject_type = qRegisterMetaType<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> >();
-*/
-
 
 } // detail
 } // openstudio
