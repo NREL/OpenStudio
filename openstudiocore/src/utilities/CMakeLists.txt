@@ -93,8 +93,6 @@ set(data_src
   data/EndUses.cpp
   data/Matrix.hpp
   data/Matrix.cpp
-  data/Tag.hpp
-  data/Tag.cpp
   data/TimeSeries.hpp
   data/TimeSeries.cpp
   data/Variant.hpp
