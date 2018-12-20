@@ -126,12 +126,16 @@ namespace gbxml {
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()) {
-        QDomDocument doc;
-        doc.setContent(openstudio::filesystem::read_as_QByteArray(file));
+       
+        pugi::xml_document doc;
+        auto load_result = doc.load(file);
+        if (load_result) {
+          result = this->convert(doc.document_element());
+        }
         file.close();
 
-        result = this->convert(doc);
       }
+      // JWD: Would be nice to add some error handling here
     }
 
     return result;
@@ -652,7 +656,7 @@ namespace gbxml {
     openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
 
     auto buildingElement = element.child("Building");
-    OS_ASSERT(buildingElement.next_sibling().empty());
+    OS_ASSERT(buildingElement.next_sibling("Building").empty());
 
     boost::optional<model::ModelObject> building = translateBuilding(buildingElement, model);
     OS_ASSERT(building);
@@ -960,7 +964,7 @@ namespace gbxml {
       std::array<double, 3> coords{ {0.0, 0.0, 0.0} };
       size_t i{ 0 };
       for (auto &el : coordinateElements) {
-        coords[i] = el.text().as_double();
+        coords[i] = m_lengthMultiplier*el.text().as_double();
         ++i;
         if (i == 3) {
           break;

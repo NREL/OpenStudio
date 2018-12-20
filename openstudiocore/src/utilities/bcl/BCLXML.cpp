@@ -60,7 +60,7 @@ namespace openstudio{
 
     openstudio::filesystem::ifstream file(m_path);
     if (file.is_open()){
-      auto result = bclXML.load_file(m_path.c_str());
+      auto result = bclXML.load(file);
       if (!result) {
         LOG_AND_THROW("'" << toString(xmlPath) << "' could not be read as XML data");
       }
