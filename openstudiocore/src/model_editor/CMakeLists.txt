@@ -10,6 +10,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(${target_name}_src
   Application.hpp
   Application.cpp
+  AccessPolicyStore.hpp
+  AccessPolicyStore.cpp
   BridgeClasses.hpp
   BridgeClasses.cpp
   ClassViewWidget.hpp

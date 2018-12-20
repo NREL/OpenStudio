@@ -31,7 +31,6 @@
 #define MODEL_MODELOBJECT_HPP
 
 #include "ModelAPI.hpp"
-#include "AccessPolicyStore.hpp"
 
 #include "../utilities/idf/WorkspaceObject.hpp"
 

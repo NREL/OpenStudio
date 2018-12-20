@@ -30,6 +30,7 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/WindowPropertyFrameAndDivider.hpp"
+#include "../../utilities/idd/IddObject.hpp"
 
 #include <utilities/idd/WindowProperty_FrameAndDivider_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

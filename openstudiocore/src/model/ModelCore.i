@@ -120,7 +120,6 @@ class Node;
 %template(ScheduleTypeKeyVector) std::vector< std::pair<std::string,std::string> >;
 
 // include initial objects
-%include <model/AccessPolicyStore.hpp>
 %include <model/ModelObject.hpp>
 %include <model/Model.hpp>
 %include <model/ModelExtensibleGroup.hpp>

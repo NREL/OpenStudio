@@ -35,6 +35,8 @@
 #include "../openstudio_lib/MainWindow.hpp"
 #include "../openstudio_lib/OSDocument.hpp"
 
+#include "../model_editor/AccessPolicyStore.hpp"
+
 #include "../shared_gui_components/WaitDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 

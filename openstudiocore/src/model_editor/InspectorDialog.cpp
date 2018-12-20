@@ -29,8 +29,8 @@
 
 #include "InspectorGadget.hpp"
 #include "InspectorDialog.hpp"
-
 #include "Application.hpp"
+#include "AccessPolicyStore.hpp"
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
@@ -38,7 +38,6 @@
 #include <model/ModelObject_Impl.hpp>
 #include <model/ResourceObject.hpp>
 #include <model/ResourceObject_Impl.hpp>
-#include <model/AccessPolicyStore.hpp>
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/idd/IddFile.hpp>

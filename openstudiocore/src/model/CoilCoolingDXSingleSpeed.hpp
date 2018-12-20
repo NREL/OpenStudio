@@ -125,7 +125,7 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   /** Returns the value of the latentCapacityTimeConstant field. **/
   boost::optional<double> latentCapacityTimeConstant()const;
 
-  OptionalString condenserAirInletNodeName()const;
+  boost::optional<std::string> condenserAirInletNodeName() const;
 
   /** Returns the value of the CondenserType field. **/
   std::string condenserType()const;
@@ -195,7 +195,7 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   boost::optional<double> getLatentCapacityTimeConstant()const;
 
   /** \deprecated */
-  OptionalString getCondenserAirInletNodeName()const;
+  boost::optional<std::string> getCondenserAirInletNodeName()const;
 
   /** \deprecated */
   std::string getCondenserType()const;

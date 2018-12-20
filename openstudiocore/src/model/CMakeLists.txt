@@ -24,8 +24,6 @@ set(${target_name}_src
   GenericModelObject.hpp
   GenericModelObject_Impl.hpp
   GenericModelObject.cpp
-  AccessPolicyStore.hpp
-  AccessPolicyStore.cpp
   ScheduleTypeRegistry.hpp
   ScheduleTypeRegistry.cpp
   ModelObjectList.hpp
