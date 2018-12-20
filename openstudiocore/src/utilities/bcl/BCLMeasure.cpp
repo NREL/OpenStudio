@@ -929,11 +929,10 @@ namespace openstudio{
           }
         }
 
-        QString fileString;
         openstudio::filesystem::ifstream file(newPath, std::ios_base::binary);
         if (file.is_open()){
 
-          fileString = openstudio::filesystem::read_as_QByteArray(file);
+          QString fileString = toQString(openstudio::filesystem::read(file));
           if (!oldClassName.empty() && !newClassName.empty() && oldClassName != newClassName){
             // DLM: might also want to check that oldClassName is greater than 3 characters long?
             // should we be doing a more selective replace (like require leading space and trailing space, ., or :)?

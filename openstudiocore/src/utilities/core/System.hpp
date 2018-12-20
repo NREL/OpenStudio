@@ -49,6 +49,12 @@ namespace openstudio {
     /// Returns the number of processors on this computer
     static unsigned numberOfProcessors();
 
+    /// \note not using string_view because we need null terminated strings
+    static boost::optional<std::string> getenv(const std::string &name) noexcept;
+
+    /// \note not using string_view because we need null terminated strings
+    static void setenv(const std::string &name, const std::string &value);
+
     /// Utility for testing exception handling within the system
     static void testExceptions1();
     static void testExceptions2();
