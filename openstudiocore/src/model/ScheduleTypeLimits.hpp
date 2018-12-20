@@ -34,6 +34,8 @@
 #include "ResourceObject.hpp"
 
 namespace openstudio {
+  class Unit;
+
 namespace model {
 
 namespace detail {

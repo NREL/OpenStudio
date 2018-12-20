@@ -129,13 +129,13 @@ class MODEL_API ControllerOutdoorAir : public ParentObject {
   //Zone getHumidistatControlZone() const;
   //bool setHumidistatControlZone(Zone z)
 
-  OptionalDouble getHighHumidityOutdoorAirFlowRatio() const;
+  boost::optional<double> getHighHumidityOutdoorAirFlowRatio() const;
   bool setHighHumidityOutdoorAirFlowRatio(double v);
 
   boost::optional<bool> getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const;
   bool setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v);
 
-  OptionalString getHeatRecoveryBypassControlType() const;
+  boost::optional<std::string> getHeatRecoveryBypassControlType() const;
   bool setHeatRecoveryBypassControlType(const std::string& v);
 
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;

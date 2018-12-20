@@ -34,7 +34,7 @@
 #include <QEvent>
 #include <QWidget>
 
-#include "../model/AccessPolicyStore.hpp"
+#include "AccessPolicyStore.hpp"
 #include "../model/ModelObject.hpp"
 
 #include "ModelEditorAPI.hpp"

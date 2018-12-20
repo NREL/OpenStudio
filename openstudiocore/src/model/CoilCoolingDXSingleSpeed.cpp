@@ -1324,12 +1324,12 @@ bool CoilCoolingDXSingleSpeed::setLatentCapacityTimeConstant( double value )
 }
 
 
-OptionalString CoilCoolingDXSingleSpeed::condenserAirInletNodeName()const
+boost::optional<std::string> CoilCoolingDXSingleSpeed::condenserAirInletNodeName()const
 {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->condenserAirInletNodeName();
 }
 // deprecated
-OptionalString CoilCoolingDXSingleSpeed::getCondenserAirInletNodeName()const
+boost::optional<std::string> CoilCoolingDXSingleSpeed::getCondenserAirInletNodeName()const
 {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->condenserAirInletNodeName();
 }

@@ -33,6 +33,7 @@
 #include "ResourceObject_Impl.hpp"
 
 namespace openstudio {
+
 namespace model {
 
 class ExternalFile;

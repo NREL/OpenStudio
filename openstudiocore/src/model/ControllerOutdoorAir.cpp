@@ -872,7 +872,7 @@ bool ControllerOutdoorAir::setHighHumidityControl(bool val)
   return getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityControl(val);
 }
 
-OptionalDouble ControllerOutdoorAir::getHighHumidityOutdoorAirFlowRatio() const
+boost::optional<double> ControllerOutdoorAir::getHighHumidityOutdoorAirFlowRatio() const
 {
   return getImpl<detail::ControllerOutdoorAir_Impl>()->getHighHumidityOutdoorAirFlowRatio();
 }
@@ -890,7 +890,7 @@ bool ControllerOutdoorAir::setControlHighIndoorHumidityBasedOnOutdoorHumidityRat
   return getImpl<detail::ControllerOutdoorAir_Impl>()->setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(v);
 }
 
-OptionalString ControllerOutdoorAir::getHeatRecoveryBypassControlType() const
+boost::optional<std::string> ControllerOutdoorAir::getHeatRecoveryBypassControlType() const
 {
   return getImpl<detail::ControllerOutdoorAir_Impl>()->getHeatRecoveryBypassControlType();
 }

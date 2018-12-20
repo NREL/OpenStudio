@@ -71,6 +71,8 @@
 %feature("director") PathWatcher;
 %include <model_editor/PathWatcher.hpp>
 
+%include <model_editor/AccessPolicyStore.hpp>
+
 %include <model_editor/InspectorGadget.hpp>
 
 %feature("director") InspectorDialog;
