@@ -27,56 +27,55 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_DATA_TAG_HPP
-#define UTILITIES_DATA_TAG_HPP
+#ifndef MODELEDITOR_QMETATYPES
+#define MODELEDITOR_QMETATYPES
 
-#include "../UtilitiesAPI.hpp"
+#include <QMetaType>
 
-#include "../core/UUID.hpp"
+#include <QModelIndex>
+Q_DECLARE_METATYPE(QModelIndex)
 
-#include <boost/optional.hpp>
+#include <utilities/idd/IddEnums.hpp>
+Q_DECLARE_METATYPE(openstudio::IddFileType)
+Q_DECLARE_METATYPE(openstudio::IddObjectType)
+
+#include "../openstudio_lib/OSItem.hpp"
+Q_DECLARE_METATYPE(openstudio::OSItemId)
+Q_DECLARE_METATYPE(std::vector<openstudio::OSItemId>)
+
+// #include <model/ModelObject.hpp>
+// Note JM 2018-12-13: Was already commented out
+// Q_DECLARE_METATYPE(openstudio::model::ModelObject); // no default constructor
+// Q_DECLARE_METATYPE(boost::optional<openstudio::model::ModelObject>);
+// Q_DECLARE_METATYPE(std::vector<openstudio::model::ModelObject>);
+
+
+#include <utilities/core/UUID.hpp>
+Q_DECLARE_METATYPE(openstudio::UUID);
 
 #include <string>
-#include <vector>
+Q_DECLARE_METATYPE(std::string);
+Q_DECLARE_METATYPE(std::vector<std::string>);
 
-namespace openstudio {
 
-class VersionString;
+#include <boost/optional.hpp>
+Q_DECLARE_METATYPE(boost::optional<double>);
+Q_DECLARE_METATYPE(boost::optional<unsigned>);
+Q_DECLARE_METATYPE(boost::optional<int>);
+Q_DECLARE_METATYPE(boost::optional<std::string>);
 
-class UTILITIES_API Tag {
- public:
-  explicit Tag(const std::string& name);
+#include <utilities/data/Attribute.hpp>
+//Q_DECLARE_METATYPE(openstudio::Attribute);
+Q_DECLARE_METATYPE(boost::optional<openstudio::Attribute>);
+Q_DECLARE_METATYPE(std::vector<openstudio::Attribute>);
 
-  /** Deserialization constructor, not for general use. */
-  Tag(const UUID& uuid,const std::string& name);
+#include <utilities/units/Quantity.hpp>
+Q_DECLARE_METATYPE(openstudio::Quantity);
 
-  Tag clone() const;
+#include <utilities/units/OSOptionalQuantity.hpp>
+Q_DECLARE_METATYPE(openstudio::OSOptionalQuantity);
 
-  UUID uuid() const;
+#include <utilities/idf/Workspace_Impl.hpp>
+Q_DECLARE_METATYPE(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)
 
-  std::string name() const;
-
- private:
-  UUID m_uuid;
-  std::string m_name;
-};
-
-/** \relates Tag */
-typedef boost::optional<Tag> OptionalTag;
-
-/** \relates Tag */
-typedef std::vector<Tag> TagVector;
-
-namespace detail {
-
-  /** Places tag's data in a QVariant for JSON serialization. */
-  UTILITIES_API QVariant toVariant(const Tag& tag);
-
-  /** Deserializes json variant to Tag. */
-  UTILITIES_API Tag toTag(const QVariant& variant, const VersionString& version);
-
-}
-
-} // openstudio
-
-#endif // UTILITIES_DATA_TAG_HPP
+#endif // MODELEDITOR_QMETATYPES

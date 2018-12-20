@@ -63,8 +63,6 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << "#include <vector>" << std::endl
     << "#include <set>" << std::endl
     << std::endl
-    << "#include <QMetaType>" << std::endl
-    << std::endl
     << "namespace openstudio {" << std::endl;
 
   // start IddFieldEnums.hxx
@@ -255,11 +253,6 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << "#include <utilities/embedded_files.hxx>" << std::endl
     << std::endl
     << "#include <OpenStudio.hxx>" << std::endl
-    << std::endl
-    << "#include <QMetaType>" << std::endl
-    << std::endl
-    << "int _IddObjectType_id = qRegisterMetaType<openstudio::IddObjectType>(\"openstudio::IddObjectType\");" << std::endl
-    << "int _IddFileType_id = qRegisterMetaType<openstudio::IddFileType>(\"openstudio::IddFileType\");" << std::endl
     << std::endl
     << "namespace openstudio {" << std::endl
     << std::endl

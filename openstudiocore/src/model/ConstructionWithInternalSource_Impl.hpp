@@ -32,8 +32,6 @@
 
 #include "LayeredConstruction_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -99,18 +97,12 @@ namespace detail {
 
     /// Returns tubeSpacing.
     double tubeSpacing() const;
-    Quantity getTubeSpacing(bool returnIP = false) const;
     bool setTubeSpacing(double tubeSpacing);
-    bool setTubeSpacing(const Quantity& tubeSpacing);
-
     ConstructionWithInternalSource reverseConstructionWithInternalSource() const;
 
   private:
 
     REGISTER_LOGGER("openstudio.model.ConstructionWithInternalSource");
-
-    openstudio::Quantity tubeSpacing_SI() const;
-    openstudio::Quantity tubeSpacing_IP() const;
 
     void onNumLayersChanged();
   };

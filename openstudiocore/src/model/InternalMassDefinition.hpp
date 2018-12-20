@@ -49,6 +49,7 @@ namespace detail {
  *  'InternalMass'. \sa InternalMass
  */
 class MODEL_API InternalMassDefinition : public SpaceLoadDefinition {
+
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -73,11 +74,8 @@ class MODEL_API InternalMassDefinition : public SpaceLoadDefinition {
   bool isConstructionDefaulted() const;
 
   std::string designLevelCalculationMethod() const;
-
   boost::optional<double> surfaceArea() const;
-
   boost::optional<double> surfaceAreaperSpaceFloorArea() const;
-
   boost::optional<double> surfaceAreaperPerson() const;
 
   //@}

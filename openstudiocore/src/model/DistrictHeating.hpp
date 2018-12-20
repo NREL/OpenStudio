@@ -34,8 +34,6 @@
 #include "StraightComponent.hpp"
 
 namespace openstudio {
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -123,6 +121,5 @@ typedef std::vector<DistrictHeating> DistrictHeatingVector;
 } // openstudio
 
 #endif // MODEL_DISTRICTHEATING_HPP
-
 
 

@@ -34,8 +34,6 @@
 
 #include "Unit.hpp"
 
-#include <QMetaType>
-
 namespace openstudio {
 
 /** Quantity class defines value, unit pairs. Units are set at construction and are modified by
@@ -224,9 +222,6 @@ UTILITIES_API bool operator==(const Quantity& lQuantity,const Quantity& rQuantit
 UTILITIES_API bool operator!=(const Quantity& lQuantity,const Quantity& rQuantity);
 
 } // openstudio
-
-// declare this type so we can use it in properties
-Q_DECLARE_METATYPE(openstudio::Quantity);
 
 #endif // UTILITIES_UNITS_QUANTITY_HPP
 

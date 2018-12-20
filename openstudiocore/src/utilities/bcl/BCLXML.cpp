@@ -147,8 +147,8 @@ namespace openstudio{
         }
       }
 
-      auto sublement = element.child("outputs");
-      if(subelement) {
+      auto subelement = element.child("outputs");
+      if (subelement) {
         for (auto &outputElement : subelement.children("output")) {
           if (outputElement.first_child()) {
             try {
@@ -737,14 +737,6 @@ namespace openstudio{
           value = attribute.toString();
           dataType = "float";
           break;
-        case AttributeValueType::Quantity :
-          value = toString(attribute.valueAsQuantity().value());
-          dataType = "float";
-          break;
-        case AttributeValueType::Unit :
-          value = attribute.valueAsUnit().standardString();
-          dataType = "string";
-          break;
         case AttributeValueType::Integer :
           value = attribute.toString();
           dataType = "integer";
@@ -913,8 +905,6 @@ namespace openstudio{
       // DLM: in the end just create a new method that won't change
       printAttributeForChecksum(ss, attribute, "  ");
     }
-    //toJSON(m_attributes, ss); // can't use this because it writes out the openstudio version
-    //ss << toJSONWithoutMetadata(m_attributes); // don't use this because it may change
 
     // tags are edited in the xml
     ss << "Tags: " << std::endl;

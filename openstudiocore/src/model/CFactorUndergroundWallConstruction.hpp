@@ -56,15 +56,10 @@ class MODEL_API CFactorUndergroundWallConstruction : public ConstructionBase {
 
   /** Attribute Name: 'cFactor' */
   virtual double cFactor() const;
-  virtual Quantity getCFactor(bool returnIP = false) const;
   virtual bool setCFactor(double cFactor);
-  virtual bool setCFactor(const Quantity& cFactor);
-
   /** Attribute Name: 'height' */
   virtual double height() const;
-  virtual Quantity getHeight(bool returnIP = false) const;
   virtual bool setHeight(double height);
-  virtual bool setHeight(const Quantity& height);
 
   //@}
   /** @name Static Methods */

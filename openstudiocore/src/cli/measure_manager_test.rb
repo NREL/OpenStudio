@@ -26,6 +26,9 @@
 #  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
+# start a measure manager server with `openstudio measure -s 1234`
+# then run this script
+
 require 'rubygems'
 
 require 'rest-client'
@@ -36,8 +39,8 @@ require 'fileutils'
 @user = 'user'
 @pass = 'password'
 @host = 'http://localhost:1234'
-#@measure_dir = 'E:/openstudio-measures/NREL working measures'
-@measure_dir = 'E:/test/measures'
+#@measure_dir = 'D:/openstudio-measures/NREL working measures'
+@measure_dir = 'D:/test/measures'
 
 def reset()
 
@@ -196,64 +199,98 @@ model = OpenStudio::Model::exampleModel
 model.save(osm_path, true)
 
 # these will succeed
+puts 1
 measures = bcl_measures
-download_bcl_measure('05e20922-6fe4-48a4-bddb-411f8167e757')
+#download_bcl_measure('05e20922-6fe4-48a4-bddb-411f8167e757')
 measures = bcl_measures
 measures = update_measures # defaults to 'My Measure' dir
 set({:my_measures_dir => @measure_dir})
 measures = update_measures # defaults to 'My Measure' dir
 measures = update_measures(@measure_dir)
-#puts measures
+puts measures
+puts 
+STDOUT.flush
 
+puts 1.1
 measures.each do |measure|
   # these will succeed
   info = compute_arguments(measure[:measure_dir])
   info = compute_arguments(measure[:measure_dir], osm_path)
-  #puts info
+  puts info
 end
 
 measures.each do |measure|
   # these will succeed
   info = compute_arguments(measure[:measure_dir])
   info = compute_arguments(measure[:measure_dir], osm_path)
-  #puts info
+  puts info
 end
+puts 
+STDOUT.flush
 
 # these will fail because measure does not exist
+puts 2
 info = compute_arguments('./output/MissingMeasure')
-#puts info
+puts info
 info = compute_arguments('./output/MissingMeasure', osm_path)
-#puts info
+puts info
+puts 
+STDOUT.flush
 
 # this will succeed
+puts 3
 measure_dir = './output/NewMeasure'
 result = create_measure(measure_dir, "NewMeasure", "NewMeasure", "Envelope.Form", "ModelMeasure", "No description", "No modeler description")
-#puts result
+puts result
+puts
+STDOUT.flush
 
 # this will fail because NewMeasure already exists
+puts 4
 measure_dir = './output/NewMeasure'
 result = create_measure(measure_dir, "NewMeasure", "NewMeasure", "Envelope.Form", "ModelMeasure", "No description", "No modeler description")
-#puts result
+puts result
+puts
+STDOUT.flush
 
 # these will succeed
+puts 5
 info = compute_arguments('./output/NewMeasure')
-#puts info
+puts info
+puts
+STDOUT.flush
+
+puts 6
 info = compute_arguments('./output/NewMeasure', osm_path)
-#puts info
+puts info
+puts
+STDOUT.flush
 
 # this will fail because model does not exist
+puts 7
 info = compute_arguments('./output/NewMeasure', './output/missing.osm')
-#puts info
+puts info
+puts
+STDOUT.flush
 
 # this will succeed
+puts 8
 new_measure_dir = './output/NewMeasureCopy'
 result = duplicate_measure(measure_dir, new_measure_dir, "NewMeasureCopy", "NewMeasureCopy", "Envelope.Form", "ModelMeasure", "No description again", "No modeler description again")
-#puts result
+puts result
+puts
+STDOUT.flush
 
 # this will fail because NewMeasureCopy already exists
+puts 9
 new_measure_dir = './output/NewMeasureCopy'
 result = duplicate_measure(measure_dir, new_measure_dir, "NewMeasureCopy2", "NewMeasureCopy2", "Envelope.Form", "ModelMeasure", "No description again 2", "No modeler description again 2")
-#puts result
+puts result
+puts
+STDOUT.flush
 
 # this will succeed
-#reset()
+puts 10
+reset()
+puts
+STDOUT.flush

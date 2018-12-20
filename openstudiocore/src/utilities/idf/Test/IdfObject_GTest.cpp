@@ -47,8 +47,6 @@
 
 #include <resources.hxx>
 
-#include <QVariant>
-
 #include <boost/lexical_cast.hpp>
 
 #include <sstream>
@@ -714,16 +712,6 @@ TEST_F(IdfFixture, IdfObject_ScheduleFileWithUrl)
 
   ASSERT_TRUE(object->getString(6));
   EXPECT_EQ("Comma", object->getString(6).get());
-}
-
-TEST_F(IdfFixture, Handle_QVariant)
-{
-  Handle handle = createUUID();
-  QVariant variant = QVariant::fromValue(handle);
-  EXPECT_EQ("openstudio::UUID", std::string(variant.typeName()));
-  ASSERT_TRUE(variant.canConvert<Handle>());
-  Handle handle2 = variant.value<Handle>();
-  EXPECT_TRUE(handle == handle2);
 }
 
 TEST_F(IdfFixture, DoubleDisplayedAsString) {

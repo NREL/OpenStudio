@@ -31,11 +31,7 @@
 #include "ModelFixture.hpp"
 #include "../Space.hpp"
 #include "../WaterUseEquipment.hpp"
-#include "../WaterUseEquipment_Impl.hpp"
 #include "../WaterUseEquipmentDefinition.hpp"
-#include "../WaterUseEquipmentDefinition_Impl.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

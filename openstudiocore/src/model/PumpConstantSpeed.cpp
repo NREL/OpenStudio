@@ -119,11 +119,6 @@ namespace detail {
     return getDouble(OS_Pump_ConstantSpeedFields::RatedFlowRate,true);
   }
 
-  OSOptionalQuantity PumpConstantSpeed_Impl::getRatedFlowRate(bool returnIP) const {
-    OptionalDouble value = ratedFlowRate();
-    return getQuantityFromDouble(OS_Pump_ConstantSpeedFields::RatedFlowRate, value, returnIP);
-  }
-
   bool PumpConstantSpeed_Impl::isRatedFlowRateAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_Pump_ConstantSpeedFields::RatedFlowRate, true);
@@ -139,24 +134,12 @@ namespace detail {
     return value.get();
   }
 
-  Quantity PumpConstantSpeed_Impl::getRatedPumpHead(bool returnIP) const {
-    OptionalDouble value = ratedPumpHead();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_ConstantSpeedFields::RatedPumpHead, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool PumpConstantSpeed_Impl::isRatedPumpHeadDefaulted() const {
     return isEmpty(OS_Pump_ConstantSpeedFields::RatedPumpHead);
   }
 
   boost::optional<double> PumpConstantSpeed_Impl::ratedPowerConsumption() const {
     return getDouble(OS_Pump_ConstantSpeedFields::RatedPowerConsumption,true);
-  }
-
-  OSOptionalQuantity PumpConstantSpeed_Impl::getRatedPowerConsumption(bool returnIP) const {
-    OptionalDouble value = ratedPowerConsumption();
-    return getQuantityFromDouble(OS_Pump_ConstantSpeedFields::RatedPowerConsumption, value, returnIP);
   }
 
   bool PumpConstantSpeed_Impl::isRatedPowerConsumptionAutosized() const {
@@ -174,13 +157,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity PumpConstantSpeed_Impl::getMotorEfficiency(bool returnIP) const {
-    OptionalDouble value = motorEfficiency();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_ConstantSpeedFields::MotorEfficiency, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool PumpConstantSpeed_Impl::isMotorEfficiencyDefaulted() const {
     return isEmpty(OS_Pump_ConstantSpeedFields::MotorEfficiency);
   }
@@ -189,13 +165,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_Pump_ConstantSpeedFields::FractionofMotorInefficienciestoFluidStream,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity PumpConstantSpeed_Impl::getFractionofMotorInefficienciestoFluidStream(bool returnIP) const {
-    OptionalDouble value = fractionofMotorInefficienciestoFluidStream();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_Pump_ConstantSpeedFields::FractionofMotorInefficienciestoFluidStream, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool PumpConstantSpeed_Impl::isFractionofMotorInefficienciestoFluidStreamDefaulted() const {
@@ -224,18 +193,8 @@ namespace detail {
     return getDouble(OS_Pump_ConstantSpeedFields::ImpellerDiameter,true);
   }
 
-  OSOptionalQuantity PumpConstantSpeed_Impl::getImpellerDiameter(bool returnIP) const {
-    OptionalDouble value = impellerDiameter();
-    return getQuantityFromDouble(OS_Pump_ConstantSpeedFields::ImpellerDiameter, value, returnIP);
-  }
-
   boost::optional<double> PumpConstantSpeed_Impl::rotationalSpeed() const {
     return getDouble(OS_Pump_ConstantSpeedFields::RotationalSpeed,true);
-  }
-
-  OSOptionalQuantity PumpConstantSpeed_Impl::getRotationalSpeed(bool returnIP) const {
-    OptionalDouble value = rotationalSpeed();
-    return getQuantityFromDouble(OS_Pump_ConstantSpeedFields::RotationalSpeed, value, returnIP);
   }
 
   boost::optional<ThermalZone> PumpConstantSpeed_Impl::zone() const {
@@ -244,11 +203,6 @@ namespace detail {
 
   boost::optional<double> PumpConstantSpeed_Impl::skinLossRadiativeFraction() const {
     return getDouble(OS_Pump_ConstantSpeedFields::SkinLossRadiativeFraction,true);
-  }
-
-  OSOptionalQuantity PumpConstantSpeed_Impl::getSkinLossRadiativeFraction(bool returnIP) const {
-    OptionalDouble value = skinLossRadiativeFraction();
-    return getQuantityFromDouble(OS_Pump_ConstantSpeedFields::SkinLossRadiativeFraction, value, returnIP);
   }
 
   bool PumpConstantSpeed_Impl::setRatedFlowRate(boost::optional<double> ratedFlowRate) {
@@ -261,24 +215,6 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
-    return result;
-  }
-
-  bool PumpConstantSpeed_Impl::setRatedFlowRate(const OSOptionalQuantity& ratedFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (ratedFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_Pump_ConstantSpeedFields::RatedFlowRate,ratedFlowRate.get());
-      if (value) {
-        setRatedFlowRate(value);
-
-        result = true;
-      }
-    }
-    else {
-      setRatedFlowRate(value);
-      result = true;
-    }
     return result;
   }
 
@@ -296,15 +232,6 @@ namespace detail {
     bool result = setDouble(OS_Pump_ConstantSpeedFields::RatedPumpHead, ratedPumpHead);
     OS_ASSERT(result);
     return result;
-  }
-
-  bool PumpConstantSpeed_Impl::setRatedPumpHead(const Quantity& ratedPumpHead) {
-    OptionalDouble value = getDoubleFromQuantity(OS_Pump_ConstantSpeedFields::RatedPumpHead,ratedPumpHead);
-    if (!value) {
-      return false;
-    }
-    setRatedPumpHead(value.get());
-    return true;
   }
 
   void PumpConstantSpeed_Impl::resetRatedPumpHead() {
@@ -325,24 +252,6 @@ namespace detail {
     return result;
   }
 
-  bool PumpConstantSpeed_Impl::setRatedPowerConsumption(const OSOptionalQuantity& ratedPowerConsumption) {
-    bool result(false);
-    OptionalDouble value;
-    if (ratedPowerConsumption.isSet()) {
-      value = getDoubleFromQuantity(OS_Pump_ConstantSpeedFields::RatedPowerConsumption,ratedPowerConsumption.get());
-      if (value) {
-        setRatedPowerConsumption(value);
-
-        result = true;
-      }
-    }
-    else {
-      setRatedPowerConsumption(value);
-      result = true;
-    }
-    return result;
-  }
-
   void PumpConstantSpeed_Impl::resetRatedPowerConsumption() {
     bool result = setString(OS_Pump_ConstantSpeedFields::RatedPowerConsumption, "");
     OS_ASSERT(result);
@@ -358,14 +267,6 @@ namespace detail {
     return result;
   }
 
-  bool PumpConstantSpeed_Impl::setMotorEfficiency(const Quantity& motorEfficiency) {
-    OptionalDouble value = getDoubleFromQuantity(OS_Pump_ConstantSpeedFields::MotorEfficiency,motorEfficiency);
-    if (!value) {
-      return false;
-    }
-    return setMotorEfficiency(value.get());
-  }
-
   void PumpConstantSpeed_Impl::resetMotorEfficiency() {
     bool result = setString(OS_Pump_ConstantSpeedFields::MotorEfficiency, "");
     OS_ASSERT(result);
@@ -374,14 +275,6 @@ namespace detail {
   bool PumpConstantSpeed_Impl::setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream) {
     bool result = setDouble(OS_Pump_ConstantSpeedFields::FractionofMotorInefficienciestoFluidStream, fractionofMotorInefficienciestoFluidStream);
     return result;
-  }
-
-  bool PumpConstantSpeed_Impl::setFractionofMotorInefficienciestoFluidStream(const Quantity& fractionofMotorInefficienciestoFluidStream) {
-    OptionalDouble value = getDoubleFromQuantity(OS_Pump_ConstantSpeedFields::FractionofMotorInefficienciestoFluidStream,fractionofMotorInefficienciestoFluidStream);
-    if (!value) {
-      return false;
-    }
-    return setFractionofMotorInefficienciestoFluidStream(value.get());
   }
 
   void PumpConstantSpeed_Impl::resetFractionofMotorInefficienciestoFluidStream() {
@@ -444,24 +337,6 @@ namespace detail {
     return result;
   }
 
-  bool PumpConstantSpeed_Impl::setImpellerDiameter(const OSOptionalQuantity& impellerDiameter) {
-    bool result(false);
-    OptionalDouble value;
-    if (impellerDiameter.isSet()) {
-      value = getDoubleFromQuantity(OS_Pump_ConstantSpeedFields::ImpellerDiameter,impellerDiameter.get());
-      if (value) {
-        setImpellerDiameter(value);
-
-        result = true;
-      }
-    }
-    else {
-      setImpellerDiameter(value);
-      result = true;
-    }
-    return result;
-  }
-
   void PumpConstantSpeed_Impl::resetImpellerDiameter() {
     bool result = setString(OS_Pump_ConstantSpeedFields::ImpellerDiameter, "");
     OS_ASSERT(result);
@@ -477,24 +352,6 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
-    return result;
-  }
-
-  bool PumpConstantSpeed_Impl::setRotationalSpeed(const OSOptionalQuantity& rotationalSpeed) {
-    bool result(false);
-    OptionalDouble value;
-    if (rotationalSpeed.isSet()) {
-      value = getDoubleFromQuantity(OS_Pump_ConstantSpeedFields::RotationalSpeed,rotationalSpeed.get());
-      if (value) {
-        setRotationalSpeed(value);
-
-        result = true;
-      }
-    }
-    else {
-      setRotationalSpeed(value);
-      result = true;
-    }
     return result;
   }
 
@@ -532,92 +389,13 @@ namespace detail {
     return result;
   }
 
-  bool PumpConstantSpeed_Impl::setSkinLossRadiativeFraction(const OSOptionalQuantity& skinLossRadiativeFraction) {
-    bool result(false);
-    OptionalDouble value;
-    if (skinLossRadiativeFraction.isSet()) {
-      value = getDoubleFromQuantity(OS_Pump_ConstantSpeedFields::SkinLossRadiativeFraction,skinLossRadiativeFraction.get());
-      if (value) {
-        result = setSkinLossRadiativeFraction(value);
-      }
-    }
-    else {
-      result = setSkinLossRadiativeFraction(value);
-    }
-    return result;
-  }
-
   void PumpConstantSpeed_Impl::resetSkinLossRadiativeFraction() {
     bool result = setString(OS_Pump_ConstantSpeedFields::SkinLossRadiativeFraction, "");
     OS_ASSERT(result);
   }
 
-  openstudio::OSOptionalQuantity PumpConstantSpeed_Impl::ratedFlowRate_SI() const {
-    return getRatedFlowRate(false);
-  }
-
-  openstudio::OSOptionalQuantity PumpConstantSpeed_Impl::ratedFlowRate_IP() const {
-    return getRatedFlowRate(true);
-  }
-
-  openstudio::Quantity PumpConstantSpeed_Impl::ratedPumpHead_SI() const {
-    return getRatedPumpHead(false);
-  }
-
-  openstudio::Quantity PumpConstantSpeed_Impl::ratedPumpHead_IP() const {
-    return getRatedPumpHead(true);
-  }
-
-  openstudio::OSOptionalQuantity PumpConstantSpeed_Impl::ratedPowerConsumption_SI() const {
-    return getRatedPowerConsumption(false);
-  }
-
-  openstudio::OSOptionalQuantity PumpConstantSpeed_Impl::ratedPowerConsumption_IP() const {
-    return getRatedPowerConsumption(true);
-  }
-
-  openstudio::Quantity PumpConstantSpeed_Impl::motorEfficiency_SI() const {
-    return getMotorEfficiency(false);
-  }
-
-  openstudio::Quantity PumpConstantSpeed_Impl::motorEfficiency_IP() const {
-    return getMotorEfficiency(true);
-  }
-
-  openstudio::Quantity PumpConstantSpeed_Impl::fractionofMotorInefficienciestoFluidStream_SI() const {
-    return getFractionofMotorInefficienciestoFluidStream(false);
-  }
-
-  openstudio::Quantity PumpConstantSpeed_Impl::fractionofMotorInefficienciestoFluidStream_IP() const {
-    return getFractionofMotorInefficienciestoFluidStream(true);
-  }
-
   std::vector<std::string> PumpConstantSpeed_Impl::pumpControlTypeValues() const {
     return PumpConstantSpeed::pumpControlTypeValues();
-  }
-
-  openstudio::OSOptionalQuantity PumpConstantSpeed_Impl::impellerDiameter_SI() const {
-    return getImpellerDiameter(false);
-  }
-
-  openstudio::OSOptionalQuantity PumpConstantSpeed_Impl::impellerDiameter_IP() const {
-    return getImpellerDiameter(true);
-  }
-
-  openstudio::OSOptionalQuantity PumpConstantSpeed_Impl::rotationalSpeed_SI() const {
-    return getRotationalSpeed(false);
-  }
-
-  openstudio::OSOptionalQuantity PumpConstantSpeed_Impl::rotationalSpeed_IP() const {
-    return getRotationalSpeed(true);
-  }
-
-  openstudio::OSOptionalQuantity PumpConstantSpeed_Impl::skinLossRadiativeFraction_SI() const {
-    return getSkinLossRadiativeFraction(false);
-  }
-
-  openstudio::OSOptionalQuantity PumpConstantSpeed_Impl::skinLossRadiativeFraction_IP() const {
-    return getSkinLossRadiativeFraction(true);
   }
 
   boost::optional<ModelObject> PumpConstantSpeed_Impl::pumpFlowRateScheduleAsModelObject() const {
@@ -828,20 +606,12 @@ boost::optional<double> PumpConstantSpeed::ratedFlowRate() const {
   return getImpl<detail::PumpConstantSpeed_Impl>()->ratedFlowRate();
 }
 
-OSOptionalQuantity PumpConstantSpeed::getRatedFlowRate(bool returnIP) const {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->getRatedFlowRate(returnIP);
-}
-
 bool PumpConstantSpeed::isRatedFlowRateAutosized() const {
   return getImpl<detail::PumpConstantSpeed_Impl>()->isRatedFlowRateAutosized();
 }
 
 double PumpConstantSpeed::ratedPumpHead() const {
   return getImpl<detail::PumpConstantSpeed_Impl>()->ratedPumpHead();
-}
-
-Quantity PumpConstantSpeed::getRatedPumpHead(bool returnIP) const {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->getRatedPumpHead(returnIP);
 }
 
 bool PumpConstantSpeed::isRatedPumpHeadDefaulted() const {
@@ -852,10 +622,6 @@ boost::optional<double> PumpConstantSpeed::ratedPowerConsumption() const {
   return getImpl<detail::PumpConstantSpeed_Impl>()->ratedPowerConsumption();
 }
 
-OSOptionalQuantity PumpConstantSpeed::getRatedPowerConsumption(bool returnIP) const {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->getRatedPowerConsumption(returnIP);
-}
-
 bool PumpConstantSpeed::isRatedPowerConsumptionAutosized() const {
   return getImpl<detail::PumpConstantSpeed_Impl>()->isRatedPowerConsumptionAutosized();
 }
@@ -864,20 +630,12 @@ double PumpConstantSpeed::motorEfficiency() const {
   return getImpl<detail::PumpConstantSpeed_Impl>()->motorEfficiency();
 }
 
-Quantity PumpConstantSpeed::getMotorEfficiency(bool returnIP) const {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->getMotorEfficiency(returnIP);
-}
-
 bool PumpConstantSpeed::isMotorEfficiencyDefaulted() const {
   return getImpl<detail::PumpConstantSpeed_Impl>()->isMotorEfficiencyDefaulted();
 }
 
 double PumpConstantSpeed::fractionofMotorInefficienciestoFluidStream() const {
   return getImpl<detail::PumpConstantSpeed_Impl>()->fractionofMotorInefficienciestoFluidStream();
-}
-
-Quantity PumpConstantSpeed::getFractionofMotorInefficienciestoFluidStream(bool returnIP) const {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->getFractionofMotorInefficienciestoFluidStream(returnIP);
 }
 
 bool PumpConstantSpeed::isFractionofMotorInefficienciestoFluidStreamDefaulted() const {
@@ -904,16 +662,8 @@ boost::optional<double> PumpConstantSpeed::impellerDiameter() const {
   return getImpl<detail::PumpConstantSpeed_Impl>()->impellerDiameter();
 }
 
-OSOptionalQuantity PumpConstantSpeed::getImpellerDiameter(bool returnIP) const {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->getImpellerDiameter(returnIP);
-}
-
 boost::optional<double> PumpConstantSpeed::rotationalSpeed() const {
   return getImpl<detail::PumpConstantSpeed_Impl>()->rotationalSpeed();
-}
-
-OSOptionalQuantity PumpConstantSpeed::getRotationalSpeed(bool returnIP) const {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->getRotationalSpeed(returnIP);
 }
 
 boost::optional<ThermalZone> PumpConstantSpeed::zone() const {
@@ -924,15 +674,7 @@ boost::optional<double> PumpConstantSpeed::skinLossRadiativeFraction() const {
   return getImpl<detail::PumpConstantSpeed_Impl>()->skinLossRadiativeFraction();
 }
 
-OSOptionalQuantity PumpConstantSpeed::getSkinLossRadiativeFraction(bool returnIP) const {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->getSkinLossRadiativeFraction(returnIP);
-}
-
 bool PumpConstantSpeed::setRatedFlowRate(double ratedFlowRate) {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->setRatedFlowRate(ratedFlowRate);
-}
-
-bool PumpConstantSpeed::setRatedFlowRate(const Quantity& ratedFlowRate) {
   return getImpl<detail::PumpConstantSpeed_Impl>()->setRatedFlowRate(ratedFlowRate);
 }
 
@@ -948,19 +690,11 @@ bool PumpConstantSpeed::setRatedPumpHead(double ratedPumpHead) {
   return getImpl<detail::PumpConstantSpeed_Impl>()->setRatedPumpHead(ratedPumpHead);
 }
 
-bool PumpConstantSpeed::setRatedPumpHead(const Quantity& ratedPumpHead) {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->setRatedPumpHead(ratedPumpHead);
-}
-
 void PumpConstantSpeed::resetRatedPumpHead() {
   getImpl<detail::PumpConstantSpeed_Impl>()->resetRatedPumpHead();
 }
 
 bool PumpConstantSpeed::setRatedPowerConsumption(double ratedPowerConsumption) {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
-}
-
-bool PumpConstantSpeed::setRatedPowerConsumption(const Quantity& ratedPowerConsumption) {
   return getImpl<detail::PumpConstantSpeed_Impl>()->setRatedPowerConsumption(ratedPowerConsumption);
 }
 
@@ -976,19 +710,11 @@ bool PumpConstantSpeed::setMotorEfficiency(double motorEfficiency) {
   return getImpl<detail::PumpConstantSpeed_Impl>()->setMotorEfficiency(motorEfficiency);
 }
 
-bool PumpConstantSpeed::setMotorEfficiency(const Quantity& motorEfficiency) {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->setMotorEfficiency(motorEfficiency);
-}
-
 void PumpConstantSpeed::resetMotorEfficiency() {
   getImpl<detail::PumpConstantSpeed_Impl>()->resetMotorEfficiency();
 }
 
 bool PumpConstantSpeed::setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream) {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->setFractionofMotorInefficienciestoFluidStream(fractionofMotorInefficienciestoFluidStream);
-}
-
-bool PumpConstantSpeed::setFractionofMotorInefficienciestoFluidStream(const Quantity& fractionofMotorInefficienciestoFluidStream) {
   return getImpl<detail::PumpConstantSpeed_Impl>()->setFractionofMotorInefficienciestoFluidStream(fractionofMotorInefficienciestoFluidStream);
 }
 
@@ -1024,19 +750,11 @@ bool PumpConstantSpeed::setImpellerDiameter(double impellerDiameter) {
   return getImpl<detail::PumpConstantSpeed_Impl>()->setImpellerDiameter(impellerDiameter);
 }
 
-bool PumpConstantSpeed::setImpellerDiameter(const Quantity& impellerDiameter) {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->setImpellerDiameter(impellerDiameter);
-}
-
 void PumpConstantSpeed::resetImpellerDiameter() {
   getImpl<detail::PumpConstantSpeed_Impl>()->resetImpellerDiameter();
 }
 
 bool PumpConstantSpeed::setRotationalSpeed(double rotationalSpeed) {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->setRotationalSpeed(rotationalSpeed);
-}
-
-bool PumpConstantSpeed::setRotationalSpeed(const Quantity& rotationalSpeed) {
   return getImpl<detail::PumpConstantSpeed_Impl>()->setRotationalSpeed(rotationalSpeed);
 }
 
@@ -1053,10 +771,6 @@ void PumpConstantSpeed::resetZone() {
 }
 
 bool PumpConstantSpeed::setSkinLossRadiativeFraction(double skinLossRadiativeFraction) {
-  return getImpl<detail::PumpConstantSpeed_Impl>()->setSkinLossRadiativeFraction(skinLossRadiativeFraction);
-}
-
-bool PumpConstantSpeed::setSkinLossRadiativeFraction(const Quantity& skinLossRadiativeFraction) {
   return getImpl<detail::PumpConstantSpeed_Impl>()->setSkinLossRadiativeFraction(skinLossRadiativeFraction);
 }
 

@@ -34,7 +34,6 @@
 #include <utilities/idd/OS_WaterUse_Equipment_Definition_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -93,13 +92,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity WaterUseEquipmentDefinition_Impl::getPeakFlowRate(bool returnIP) const {
-    OptionalDouble value = peakFlowRate();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WaterUse_Equipment_DefinitionFields::PeakFlowRate, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   boost::optional<Schedule> WaterUseEquipmentDefinition_Impl::targetTemperatureSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_WaterUse_Equipment_DefinitionFields::TargetTemperatureScheduleName);
   }
@@ -126,14 +118,6 @@ namespace detail {
   bool WaterUseEquipmentDefinition_Impl::setPeakFlowRate(double peakFlowRate) {
     bool result = setDouble(OS_WaterUse_Equipment_DefinitionFields::PeakFlowRate, peakFlowRate);
     return result;
-  }
-
-  bool WaterUseEquipmentDefinition_Impl::setPeakFlowRate(const Quantity& peakFlowRate) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WaterUse_Equipment_DefinitionFields::PeakFlowRate,peakFlowRate);
-    if (!value) {
-      return false;
-    }
-    return setPeakFlowRate(value.get());
   }
 
   bool WaterUseEquipmentDefinition_Impl::setTargetTemperatureSchedule(const boost::optional<Schedule>& targetTemperatureSchedule) {
@@ -179,14 +163,6 @@ namespace detail {
   void WaterUseEquipmentDefinition_Impl::resetLatentFractionSchedule() {
     bool result = setString(OS_WaterUse_Equipment_DefinitionFields::LatentFractionScheduleName, "");
     OS_ASSERT(result);
-  }
-
-  openstudio::Quantity WaterUseEquipmentDefinition_Impl::peakFlowRate_SI() const {
-    return getPeakFlowRate(false);
-  }
-
-  openstudio::Quantity WaterUseEquipmentDefinition_Impl::peakFlowRate_IP() const {
-    return getPeakFlowRate(true);
   }
 
   boost::optional<ModelObject> WaterUseEquipmentDefinition_Impl::targetTemperatureScheduleAsModelObject() const {
@@ -290,10 +266,6 @@ double WaterUseEquipmentDefinition::peakFlowRate() const {
   return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->peakFlowRate();
 }
 
-Quantity WaterUseEquipmentDefinition::getPeakFlowRate(bool returnIP) const {
-  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->getPeakFlowRate(returnIP);
-}
-
 boost::optional<Schedule> WaterUseEquipmentDefinition::targetTemperatureSchedule() const {
   return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->targetTemperatureSchedule();
 }
@@ -315,10 +287,6 @@ void WaterUseEquipmentDefinition::resetEndUseSubcategory() {
 }
 
 bool WaterUseEquipmentDefinition::setPeakFlowRate(double peakFlowRate) {
-  return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setPeakFlowRate(peakFlowRate);
-}
-
-bool WaterUseEquipmentDefinition::setPeakFlowRate(const Quantity& peakFlowRate) {
   return getImpl<detail::WaterUseEquipmentDefinition_Impl>()->setPeakFlowRate(peakFlowRate);
 }
 
@@ -354,4 +322,3 @@ WaterUseEquipmentDefinition::WaterUseEquipmentDefinition(std::shared_ptr<detail:
 
 } // model
 } // openstudio
-

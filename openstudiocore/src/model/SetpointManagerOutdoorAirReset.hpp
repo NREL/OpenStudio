@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -76,39 +74,19 @@ class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
 
   double setpointatOutdoorLowTemperature() const;
 
-  Quantity getSetpointatOutdoorLowTemperature(bool returnIP=false) const;
-
   bool setSetpointatOutdoorLowTemperature(double setpointatOutdoorLowTemperature);
-
-  bool setSetpointatOutdoorLowTemperature(const Quantity& setpointatOutdoorLowTemperature);
-
 
   double outdoorLowTemperature() const;
 
-  Quantity getOutdoorLowTemperature(bool returnIP=false) const;
-
   bool setOutdoorLowTemperature(double outdoorLowTemperature);
-
-  bool setOutdoorLowTemperature(const Quantity& outdoorLowTemperature);
-
 
   double setpointatOutdoorHighTemperature() const;
 
-  Quantity getSetpointatOutdoorHighTemperature(bool returnIP=false) const;
-
   bool setSetpointatOutdoorHighTemperature(double setpointatOutdoorHighTemperature);
-
-  bool setSetpointatOutdoorHighTemperature(const Quantity& setpointatOutdoorHighTemperature);
-
 
   double outdoorHighTemperature() const;
 
-  Quantity getOutdoorHighTemperature(bool returnIP=false) const;
-
   bool setOutdoorHighTemperature(double outdoorHighTemperature);
-
-  bool setOutdoorHighTemperature(const Quantity& outdoorHighTemperature);
-
 
   boost::optional<Schedule> schedule() const;
 
@@ -119,44 +97,28 @@ class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
 
   boost::optional<double> setpointatOutdoorLowTemperature2() const;
 
-  OSOptionalQuantity getSetpointatOutdoorLowTemperature2(bool returnIP=false) const;
-
   bool setSetpointatOutdoorLowTemperature2(double setpointatOutdoorLowTemperature2);
-
-  bool setSetpointatOutdoorLowTemperature2(const Quantity& setpointatOutdoorLowTemperature2);
 
   void resetSetpointatOutdoorLowTemperature2();
 
 
   boost::optional<double> outdoorLowTemperature2() const;
 
-  OSOptionalQuantity getOutdoorLowTemperature2(bool returnIP=false) const;
-
   bool setOutdoorLowTemperature2(double outdoorLowTemperature2);
-
-  bool setOutdoorLowTemperature2(const Quantity& outdoorLowTemperature2);
 
   void resetOutdoorLowTemperature2();
 
 
   boost::optional<double> setpointatOutdoorHighTemperature2() const;
 
-  OSOptionalQuantity getSetpointatOutdoorHighTemperature2(bool returnIP=false) const;
-
   bool setSetpointatOutdoorHighTemperature2(double setpointatOutdoorHighTemperature2);
-
-  bool setSetpointatOutdoorHighTemperature2(const Quantity& setpointatOutdoorHighTemperature2);
 
   void resetSetpointatOutdoorHighTemperature2();
 
 
   boost::optional<double> outdoorHighTemperature2() const;
 
-  OSOptionalQuantity getOutdoorHighTemperature2(bool returnIP=false) const;
-
   bool setOutdoorHighTemperature2(double outdoorHighTemperature2);
-
-  bool setOutdoorHighTemperature2(const Quantity& outdoorHighTemperature2);
 
   void resetOutdoorHighTemperature2();
 

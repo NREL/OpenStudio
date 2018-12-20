@@ -33,8 +33,6 @@
 
 #include "../utilities/core/Assert.hpp"
 
-Q_DECLARE_METATYPE(QModelIndex)
-
 /*!
     Connect to all of the models signals.  Whenever anything happens recheck everything.
 */
@@ -528,4 +526,5 @@ void ModelTest::rowsRemoved(const QModelIndex & parent, int start, int end)
     OS_ASSERT(c.last == model->data(model->index(start - 1, 0, c.parent)));
     OS_ASSERT(c.next == model->data(model->index(start, 0, c.parent)));
 }
+
 

@@ -33,6 +33,7 @@
 #include "../shared_gui_components/BaseApp.hpp"
 
 #include "../measure/OSMeasureInfoGetter.hpp"
+#include "../model_editor/QMetaTypes.hpp"
 
 #include "OpenStudioAPI.hpp"
 #include "../utilities/core/Logger.hpp"

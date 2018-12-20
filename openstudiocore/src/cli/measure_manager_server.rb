@@ -40,6 +40,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
     @mutex = Mutex.new
     #print_message("new @mutex = #{@mutex}")
     @measure_manager = MeasureManager.new
+    @my_measures_dir = File.join(Dir.home, "OpenStudio/Measures/").to_s
   end
 
   def print_message(message)
@@ -61,7 +62,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
       response.status = 200
       response.content_type = 'application/json'
 
-      result = {:status => "running", :my_measures_dir => OpenStudio::BCLMeasure.userMeasuresDir}
+      result = {:status => "running", :my_measures_dir => @my_measures_dir}
 
       case request.path
       when "/"
@@ -145,8 +146,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
         my_measures_dir = data[:my_measures_dir]
 
         if my_measures_dir
-          test = OpenStudio::BCLMeasure.setUserMeasuresDir(OpenStudio::toPath(my_measures_dir))
-          raise "Failed to set my_measures_dir = '#{my_measures_dir}'" if not test
+          @my_measures_dir = my_measures_dir.to_s
         end
 
         response.body = JSON.generate(result)
@@ -205,7 +205,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
         result = []
 
         data = JSON.parse(request.body, {:symbolize_names=>true})
-        measures_dir = data[:measures_dir] ? data[:measures_dir] : OpenStudio::BCLMeasure.userMeasuresDir.to_s
+        measures_dir = data[:measures_dir] ? data[:measures_dir] : @my_measures_dir
         force_reload = data[:force_reload] ? data[:force_reload] : false
 
         # loop over all directories

@@ -36,6 +36,7 @@
 #include "../model/Loop.hpp"
 #include "OSItem.hpp"
 #include "GridScene.hpp"
+#include "../model_editor/QMetaTypes.hpp"
 
 namespace openstudio {
 

@@ -336,39 +336,27 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
 
   boost::optional<double> ratedTotalCoolingCapacity() const;
 
-  OSOptionalQuantity getRatedTotalCoolingCapacity(bool returnIP=false) const;
-
   bool isRatedTotalCoolingCapacityAutosized() const;
 
   bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
-
-  bool setRatedTotalCoolingCapacity(const Quantity& ratedTotalCoolingCapacity);
 
   void autosizeRatedTotalCoolingCapacity();
 
 
   boost::optional<double> ratedSensibleHeatRatio() const;
 
-  OSOptionalQuantity getRatedSensibleHeatRatio(bool returnIP=false) const;
-
   bool isRatedSensibleHeatRatioAutosized() const;
 
   bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
-
-  bool setRatedSensibleHeatRatio(const Quantity& ratedSensibleHeatRatio);
 
   void autosizeRatedSensibleHeatRatio();
 
 
   boost::optional<double> ratedAirFlowRate() const;
 
-  OSOptionalQuantity getRatedAirFlowRate(bool returnIP=false) const;
-
   bool isRatedAirFlowRateAutosized() const;
 
   bool setRatedAirFlowRate(double ratedAirFlowRate);
-
-  bool setRatedAirFlowRate(const Quantity& ratedAirFlowRate);
 
   void autosizeRatedAirFlowRate();
 

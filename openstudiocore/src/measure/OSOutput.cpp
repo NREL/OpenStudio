@@ -31,7 +31,6 @@
 
 #include "../utilities/core/Assert.hpp"
 
-#include <boost/lexical_cast.hpp>
 #include <sstream>
 
 namespace openstudio {

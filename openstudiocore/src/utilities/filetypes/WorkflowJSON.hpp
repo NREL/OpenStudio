@@ -35,8 +35,6 @@
 #include "../core/Logger.hpp"
 #include "../core/Path.hpp"
 #include "../bcl/BCLMeasure.hpp"
-#include "../data/Variant.hpp"
-#include "../data/Attribute.hpp"
 
 #include <jsoncpp/json.h>
 

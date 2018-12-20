@@ -71,11 +71,8 @@ class MODEL_API SiteWaterMainsTemperature : public ModelObject {
 
   boost::optional<double> annualAverageOutdoorAirTemperature() const;
 
-  OSOptionalQuantity getAnnualAverageOutdoorAirTemperature(bool returnIP=false) const;
-
   boost::optional<double> maximumDifferenceInMonthlyAverageOutdoorAirTemperatures() const;
 
-  OSOptionalQuantity getMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(bool returnIP=false) const;
 
   //@}
   /** @name Setters */
@@ -92,16 +89,12 @@ class MODEL_API SiteWaterMainsTemperature : public ModelObject {
   bool setAnnualAverageOutdoorAirTemperature(double annualAverageOutdoorAirTemperature);
 
   /** Also sets calculation method to 'Correlation'. */
-  bool setAnnualAverageOutdoorAirTemperature(const Quantity& annualAverageOutdoorAirTemperature);
-
   void resetAnnualAverageOutdoorAirTemperature();
 
   /** Also sets calculation method to 'Correlation'. */
   bool setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(double maximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
 
   /** Also sets calculation method to 'Correlation'. */
-  bool setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(const Quantity& maximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
-
   void resetMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures();
 
   //@}

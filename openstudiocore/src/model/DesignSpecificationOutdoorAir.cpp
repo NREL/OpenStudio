@@ -102,13 +102,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity DesignSpecificationOutdoorAir_Impl::getOutdoorAirFlowperPerson(bool returnIP) const {
-    OptionalDouble value = outdoorAirFlowperPerson();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool DesignSpecificationOutdoorAir_Impl::isOutdoorAirFlowperPersonDefaulted() const {
     return isEmpty(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson);
   }
@@ -117,13 +110,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowperFloorArea,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity DesignSpecificationOutdoorAir_Impl::getOutdoorAirFlowperFloorArea(bool returnIP) const {
-    OptionalDouble value = outdoorAirFlowperFloorArea();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowperFloorArea, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool DesignSpecificationOutdoorAir_Impl::isOutdoorAirFlowperFloorAreaDefaulted() const {
@@ -136,13 +122,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity DesignSpecificationOutdoorAir_Impl::getOutdoorAirFlowRate(bool returnIP) const {
-    OptionalDouble value = outdoorAirFlowRate();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowRate, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool DesignSpecificationOutdoorAir_Impl::isOutdoorAirFlowRateDefaulted() const {
     return isEmpty(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowRate);
   }
@@ -151,13 +130,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity DesignSpecificationOutdoorAir_Impl::getOutdoorAirFlowAirChangesperHour(bool returnIP) const {
-    OptionalDouble value = outdoorAirFlowAirChangesperHour();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool DesignSpecificationOutdoorAir_Impl::isOutdoorAirFlowAirChangesperHourDefaulted() const {
@@ -183,14 +155,6 @@ namespace detail {
     return result;
   }
 
-  bool DesignSpecificationOutdoorAir_Impl::setOutdoorAirFlowperPerson(const Quantity& outdoorAirFlowperPerson) {
-    OptionalDouble value = getDoubleFromQuantity(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson,outdoorAirFlowperPerson);
-    if (!value) {
-      return false;
-    }
-    return setOutdoorAirFlowperPerson(value.get());
-  }
-
   void DesignSpecificationOutdoorAir_Impl::resetOutdoorAirFlowperPerson() {
     bool result = setString(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowperPerson, "");
     OS_ASSERT(result);
@@ -199,14 +163,6 @@ namespace detail {
   bool DesignSpecificationOutdoorAir_Impl::setOutdoorAirFlowperFloorArea(double outdoorAirFlowperFloorArea) {
     bool result = setDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowperFloorArea, outdoorAirFlowperFloorArea);
     return result;
-  }
-
-  bool DesignSpecificationOutdoorAir_Impl::setOutdoorAirFlowperFloorArea(const Quantity& outdoorAirFlowperFloorArea) {
-    OptionalDouble value = getDoubleFromQuantity(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowperFloorArea,outdoorAirFlowperFloorArea);
-    if (!value) {
-      return false;
-    }
-    return setOutdoorAirFlowperFloorArea(value.get());
   }
 
   void DesignSpecificationOutdoorAir_Impl::resetOutdoorAirFlowperFloorArea() {
@@ -219,14 +175,6 @@ namespace detail {
     return result;
   }
 
-  bool DesignSpecificationOutdoorAir_Impl::setOutdoorAirFlowRate(const Quantity& outdoorAirFlowRate) {
-    OptionalDouble value = getDoubleFromQuantity(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowRate,outdoorAirFlowRate);
-    if (!value) {
-      return false;
-    }
-    return setOutdoorAirFlowRate(value.get());
-  }
-
   void DesignSpecificationOutdoorAir_Impl::resetOutdoorAirFlowRate() {
     bool result = setString(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowRate, "");
     OS_ASSERT(result);
@@ -235,14 +183,6 @@ namespace detail {
   bool DesignSpecificationOutdoorAir_Impl::setOutdoorAirFlowAirChangesperHour(double outdoorAirFlowAirChangesperHour) {
     bool result = setDouble(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour, outdoorAirFlowAirChangesperHour);
     return result;
-  }
-
-  bool DesignSpecificationOutdoorAir_Impl::setOutdoorAirFlowAirChangesperHour(const Quantity& outdoorAirFlowAirChangesperHour) {
-    OptionalDouble value = getDoubleFromQuantity(OS_DesignSpecification_OutdoorAirFields::OutdoorAirFlowAirChangesperHour,outdoorAirFlowAirChangesperHour);
-    if (!value) {
-      return false;
-    }
-    return setOutdoorAirFlowAirChangesperHour(value.get());
   }
 
   void DesignSpecificationOutdoorAir_Impl::resetOutdoorAirFlowAirChangesperHour() {
@@ -265,38 +205,6 @@ namespace detail {
 
   std::vector<std::string> DesignSpecificationOutdoorAir_Impl::outdoorAirMethodValues() const {
     return DesignSpecificationOutdoorAir::outdoorAirMethodValues();
-  }
-
-  openstudio::Quantity DesignSpecificationOutdoorAir_Impl::outdoorAirFlowperPerson_SI() const {
-    return getOutdoorAirFlowperPerson(false);
-  }
-
-  openstudio::Quantity DesignSpecificationOutdoorAir_Impl::outdoorAirFlowperPerson_IP() const {
-    return getOutdoorAirFlowperPerson(true);
-  }
-
-  openstudio::Quantity DesignSpecificationOutdoorAir_Impl::outdoorAirFlowperFloorArea_SI() const {
-    return getOutdoorAirFlowperFloorArea(false);
-  }
-
-  openstudio::Quantity DesignSpecificationOutdoorAir_Impl::outdoorAirFlowperFloorArea_IP() const {
-    return getOutdoorAirFlowperFloorArea(true);
-  }
-
-  openstudio::Quantity DesignSpecificationOutdoorAir_Impl::outdoorAirFlowRate_SI() const {
-    return getOutdoorAirFlowRate(false);
-  }
-
-  openstudio::Quantity DesignSpecificationOutdoorAir_Impl::outdoorAirFlowRate_IP() const {
-    return getOutdoorAirFlowRate(true);
-  }
-
-  openstudio::Quantity DesignSpecificationOutdoorAir_Impl::outdoorAirFlowAirChangesperHour_SI() const {
-    return getOutdoorAirFlowAirChangesperHour(false);
-  }
-
-  openstudio::Quantity DesignSpecificationOutdoorAir_Impl::outdoorAirFlowAirChangesperHour_IP() const {
-    return getOutdoorAirFlowAirChangesperHour(true);
   }
 
   boost::optional<ModelObject> DesignSpecificationOutdoorAir_Impl::outdoorAirFlowRateFractionScheduleAsModelObject() const {
@@ -359,20 +267,12 @@ double DesignSpecificationOutdoorAir::outdoorAirFlowperPerson() const {
   return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->outdoorAirFlowperPerson();
 }
 
-Quantity DesignSpecificationOutdoorAir::getOutdoorAirFlowperPerson(bool returnIP) const {
-  return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->getOutdoorAirFlowperPerson(returnIP);
-}
-
 bool DesignSpecificationOutdoorAir::isOutdoorAirFlowperPersonDefaulted() const {
   return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->isOutdoorAirFlowperPersonDefaulted();
 }
 
 double DesignSpecificationOutdoorAir::outdoorAirFlowperFloorArea() const {
   return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->outdoorAirFlowperFloorArea();
-}
-
-Quantity DesignSpecificationOutdoorAir::getOutdoorAirFlowperFloorArea(bool returnIP) const {
-  return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->getOutdoorAirFlowperFloorArea(returnIP);
 }
 
 bool DesignSpecificationOutdoorAir::isOutdoorAirFlowperFloorAreaDefaulted() const {
@@ -383,20 +283,12 @@ double DesignSpecificationOutdoorAir::outdoorAirFlowRate() const {
   return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->outdoorAirFlowRate();
 }
 
-Quantity DesignSpecificationOutdoorAir::getOutdoorAirFlowRate(bool returnIP) const {
-  return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->getOutdoorAirFlowRate(returnIP);
-}
-
 bool DesignSpecificationOutdoorAir::isOutdoorAirFlowRateDefaulted() const {
   return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->isOutdoorAirFlowRateDefaulted();
 }
 
 double DesignSpecificationOutdoorAir::outdoorAirFlowAirChangesperHour() const {
   return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->outdoorAirFlowAirChangesperHour();
-}
-
-Quantity DesignSpecificationOutdoorAir::getOutdoorAirFlowAirChangesperHour(bool returnIP) const {
-  return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->getOutdoorAirFlowAirChangesperHour(returnIP);
 }
 
 bool DesignSpecificationOutdoorAir::isOutdoorAirFlowAirChangesperHourDefaulted() const {
@@ -419,19 +311,11 @@ bool DesignSpecificationOutdoorAir::setOutdoorAirFlowperPerson(double outdoorAir
   return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->setOutdoorAirFlowperPerson(outdoorAirFlowperPerson);
 }
 
-bool DesignSpecificationOutdoorAir::setOutdoorAirFlowperPerson(const Quantity& outdoorAirFlowperPerson) {
-  return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->setOutdoorAirFlowperPerson(outdoorAirFlowperPerson);
-}
-
 void DesignSpecificationOutdoorAir::resetOutdoorAirFlowperPerson() {
   getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->resetOutdoorAirFlowperPerson();
 }
 
 bool DesignSpecificationOutdoorAir::setOutdoorAirFlowperFloorArea(double outdoorAirFlowperFloorArea) {
-  return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->setOutdoorAirFlowperFloorArea(outdoorAirFlowperFloorArea);
-}
-
-bool DesignSpecificationOutdoorAir::setOutdoorAirFlowperFloorArea(const Quantity& outdoorAirFlowperFloorArea) {
   return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->setOutdoorAirFlowperFloorArea(outdoorAirFlowperFloorArea);
 }
 
@@ -443,19 +327,11 @@ bool DesignSpecificationOutdoorAir::setOutdoorAirFlowRate(double outdoorAirFlowR
   return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->setOutdoorAirFlowRate(outdoorAirFlowRate);
 }
 
-bool DesignSpecificationOutdoorAir::setOutdoorAirFlowRate(const Quantity& outdoorAirFlowRate) {
-  return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->setOutdoorAirFlowRate(outdoorAirFlowRate);
-}
-
 void DesignSpecificationOutdoorAir::resetOutdoorAirFlowRate() {
   getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->resetOutdoorAirFlowRate();
 }
 
 bool DesignSpecificationOutdoorAir::setOutdoorAirFlowAirChangesperHour(double outdoorAirFlowAirChangesperHour) {
-  return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->setOutdoorAirFlowAirChangesperHour(outdoorAirFlowAirChangesperHour);
-}
-
-bool DesignSpecificationOutdoorAir::setOutdoorAirFlowAirChangesperHour(const Quantity& outdoorAirFlowAirChangesperHour) {
   return getImpl<detail::DesignSpecificationOutdoorAir_Impl>()->setOutdoorAirFlowAirChangesperHour(outdoorAirFlowAirChangesperHour);
 }
 
@@ -479,4 +355,3 @@ DesignSpecificationOutdoorAir::DesignSpecificationOutdoorAir(std::shared_ptr<det
 
 } // model
 } // openstudio
-

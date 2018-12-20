@@ -31,8 +31,6 @@
 #include "ModelFixture.hpp"
 #include "../ZoneHVACBaseboardConvectiveElectric.hpp"
 #include "../ZoneHVACBaseboardConvectiveElectric_Impl.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
 #include "../ThermalZone.hpp"
@@ -70,4 +68,3 @@ TEST_F(ModelFixture,ZoneHVACBaseboardConvectiveElectric_Test) {
   // check to see if it doesn't have a thermal zone
   EXPECT_FALSE(zoneHVACBBConv.thermalZone());
 }
-

@@ -91,8 +91,6 @@ namespace detail {
     bool isDesignFanPowerInputFractionDefaulted() const;
 
     boost::optional<double> designFanAirFlowRateperPowerInput() const;
-    OSOptionalQuantity getDesignFanAirFlowRateperPowerInput(bool returnIP=false) const;
-
     Curve airFlowFunctionofLoadingandAirTemperatureCurve() const;
     boost::optional<Curve> optionalAirFlowFunctionofLoadingandAirTemperatureCurve() const;
 
@@ -225,4 +223,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ELECTRICEQUIPMENTITEAIRCOOLEDDEFINITION_IMPL_HPP
-

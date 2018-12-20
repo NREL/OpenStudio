@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-  class Quantity;
-  class OSOptionalQuantity;
 
 namespace model {
 
@@ -64,10 +62,7 @@ class MODEL_API WaterUseEquipmentDefinition : public SpaceLoadDefinition {
   void resetEndUseSubcategory();
 
   double peakFlowRate() const;
-  Quantity getPeakFlowRate(bool returnIP=false) const;
   bool setPeakFlowRate(double peakFlowRate);
-  bool setPeakFlowRate(const Quantity& peakFlowRate);
-
   boost::optional<Schedule> targetTemperatureSchedule() const;
   bool setTargetTemperatureSchedule(const Schedule& targetTemperatureSchedule);
   void resetTargetTemperatureSchedule();
@@ -104,4 +99,3 @@ typedef std::vector<WaterUseEquipmentDefinition> WaterUseEquipmentDefinitionVect
 } // openstudio
 
 #endif // MODEL_WATERUSEEQUIPMENTDEFINITION_HPP
-

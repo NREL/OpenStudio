@@ -36,14 +36,12 @@
 #include "../SpaceType.hpp"
 #include "../SpaceType_Impl.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,SpaceInfiltrationEffectiveLeakageArea_Quantity) {
+TEST_F(ModelFixture, SpaceInfiltrationEffectiveLeakageArea) {
   Model model;
 
   SpaceInfiltrationEffectiveLeakageArea spaceInfiltrationEffectiveLeakageArea(model);

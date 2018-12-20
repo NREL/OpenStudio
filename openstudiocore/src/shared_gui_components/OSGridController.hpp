@@ -31,7 +31,7 @@
 #define SHAREDGUICOMPONENTS_OSGRIDCONTROLLER_HPP
 
 #include "OSConcepts.hpp"
-
+#include "../model_editor/QMetaTypes.hpp"
 #include "../openstudio_lib/OSItem.hpp"
 #include "../openstudio_lib/OSVectorController.hpp"
 

@@ -38,8 +38,6 @@
 #include "../Site.hpp"
 #include "../Site_Impl.hpp"
 
-#include "../../utilities/data/Attribute.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 

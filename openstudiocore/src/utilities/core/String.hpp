@@ -36,7 +36,6 @@
 #include <vector>
 
 #include <QString>
-#include <QMetaType>
 
 /** \file String.hpp
  *
@@ -76,20 +75,5 @@ namespace openstudio {
   UTILITIES_API QString toQString(const std::wstring& w);
 
 } // openstudio
-
-// declare these types so we can use them as properties
-Q_DECLARE_METATYPE(std::string);
-Q_DECLARE_METATYPE(std::vector<std::string>);
-
-
-namespace openstudio {
-namespace detail {
-
-  // register meta datatypes
-  struct StringMetaTypeInitializer{
-    StringMetaTypeInitializer();
-  };
-}
-}
 
 #endif // UTILITIES_CORE_STRING_HPP

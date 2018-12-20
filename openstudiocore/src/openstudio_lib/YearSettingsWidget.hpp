@@ -30,6 +30,7 @@
 #ifndef OPENSTUDIO_YEARSETTINGSWIDGET_HPP
 #define OPENSTUDIO_YEARSETTINGSWIDGET_HPP
 
+#include "../model_editor/QMetaTypes.hpp"
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../model/YearDescription.hpp"

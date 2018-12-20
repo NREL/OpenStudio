@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -111,4 +109,3 @@ typedef std::vector<DaylightRedirectionDevice> DaylightRedirectionDeviceVector;
 } // openstudio
 
 #endif // MODEL_DAYLIGHTREDIRECTIONDEVICE_HPP
-

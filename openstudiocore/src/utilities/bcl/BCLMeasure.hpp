@@ -100,37 +100,6 @@ namespace openstudio{
     /// Try to load a BCLMeasure from a directory containing a "measure.xml" file.
     static boost::optional<BCLMeasure> load(const openstudio::path& dir);
 
-    /// Load all measures in the PAT application's measures directory.
-    //static std::vector<BCLMeasure> patApplicationMeasures();
-
-    //static BCLMeasure alternativeModelMeasure();
-
-    //static BCLMeasure reportRequestMeasure();
-
-    //static BCLMeasure standardReportMeasure();
-
-    //static BCLMeasure calibrationReportMeasure();
-
-    //static BCLMeasure radianceMeasure();
-
-    /// Returns the path to the PAT application's measures directory.
-    //static openstudio::path patApplicationMeasuresDir();
-
-    /// Load all measures in the local BCL.
-    static std::vector<BCLMeasure> localBCLMeasures();
-
-    /// Load all measures in the user measures directory.
-    static std::vector<BCLMeasure> userMeasures();
-
-    /// Returns the path to the user measures directory stored in settings.
-    static openstudio::path userMeasuresDir();
-
-    /// Changes the path to the user measures directory stored in settings.
-    static bool setUserMeasuresDir(const openstudio::path& userMeasuresDir);
-
-    /// Clears the path to the user measures directory stored in settings.
-    static void clearUserMeasuresDir();
-
     /// Suggested values for "Intended Software Tool" attribute
     static std::vector<std::string> suggestedIntendedSoftwareTools();
 
@@ -307,12 +276,13 @@ namespace openstudio{
     /// Update's the ruby measure tests to have this new information
     bool updateMeasureTests(const std::string& oldClassName, const std::string& newClassName);
 
+    /// get all measures in an input directory
+    static std::vector<BCLMeasure> getMeasuresInDir(const openstudio::path& dir);
+
   //@}
   private:
     // configure logging
     REGISTER_LOGGER("utilities.bcl.BCLMeasure");
-
-    static std::vector<BCLMeasure> getMeasuresInDir(openstudio::path dir);
 
     void createDirectory(const openstudio::path& dir) const;
 

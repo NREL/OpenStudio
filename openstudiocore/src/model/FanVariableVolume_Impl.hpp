@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 
@@ -88,17 +86,11 @@ namespace detail {
 
     double fanTotalEfficiency() const;
 
-    Quantity getFanTotalEfficiency(bool returnIP=false) const;
-
     bool isFanTotalEfficiencyDefaulted() const;
 
     double pressureRise() const;
 
-    Quantity getPressureRise(bool returnIP=false) const;
-
     boost::optional<double> maximumFlowRate() const;
-
-    OSOptionalQuantity getMaximumFlowRate(bool returnIP=false) const;
 
     bool isMaximumFlowRateAutosized() const;
 
@@ -108,45 +100,27 @@ namespace detail {
 
     double fanPowerMinimumFlowFraction() const;
 
-    Quantity getFanPowerMinimumFlowFraction(bool returnIP=false) const;
-
     bool isFanPowerMinimumFlowFractionDefaulted() const;
 
     boost::optional<double> fanPowerMinimumAirFlowRate() const;
 
-    OSOptionalQuantity getFanPowerMinimumAirFlowRate(bool returnIP=false) const;
-
     double motorEfficiency() const;
-
-    Quantity getMotorEfficiency(bool returnIP=false) const;
 
     bool isMotorEfficiencyDefaulted() const;
 
     double motorInAirstreamFraction() const;
 
-    Quantity getMotorInAirstreamFraction(bool returnIP=false) const;
-
     bool isMotorInAirstreamFractionDefaulted() const;
 
     boost::optional<double> fanPowerCoefficient1() const;
 
-    OSOptionalQuantity getFanPowerCoefficient1(bool returnIP=false) const;
-
     boost::optional<double> fanPowerCoefficient2() const;
-
-    OSOptionalQuantity getFanPowerCoefficient2(bool returnIP=false) const;
 
     boost::optional<double> fanPowerCoefficient3() const;
 
-    OSOptionalQuantity getFanPowerCoefficient3(bool returnIP=false) const;
-
     boost::optional<double> fanPowerCoefficient4() const;
 
-    OSOptionalQuantity getFanPowerCoefficient4(bool returnIP=false) const;
-
     boost::optional<double> fanPowerCoefficient5() const;
-
-    OSOptionalQuantity getFanPowerCoefficient5(bool returnIP=false) const;
 
     std::string endUseSubcategory() const;
 
@@ -170,17 +144,11 @@ namespace detail {
 
     bool setFanTotalEfficiency(double fanTotalEfficiency);
 
-    bool setFanTotalEfficiency(const Quantity& fanTotalEfficiency);
-
     void resetFanTotalEfficiency();
 
     bool setPressureRise(double pressureRise);
 
-    bool setPressureRise(const Quantity& pressureRise);
-
     bool setMaximumFlowRate(boost::optional<double> maximumFlowRate);
-
-    bool setMaximumFlowRate(const OSOptionalQuantity& maximumFlowRate);
 
     void resetMaximumFlowRate();
 
@@ -192,55 +160,37 @@ namespace detail {
 
     bool setFanPowerMinimumFlowFraction(double fanPowerMinimumFlowFraction);
 
-    bool setFanPowerMinimumFlowFraction(const Quantity& fanPowerMinimumFlowFraction);
-
     void resetFanPowerMinimumFlowFraction();
 
     bool setFanPowerMinimumAirFlowRate(boost::optional<double> fanPowerMinimumAirFlowRate);
-
-    bool setFanPowerMinimumAirFlowRate(const OSOptionalQuantity& fanPowerMinimumAirFlowRate);
 
     void resetFanPowerMinimumAirFlowRate();
 
     bool setMotorEfficiency(double motorEfficiency);
 
-    bool setMotorEfficiency(const Quantity& motorEfficiency);
-
     void resetMotorEfficiency();
 
     bool setMotorInAirstreamFraction(double motorInAirstreamFraction);
-
-    bool setMotorInAirstreamFraction(const Quantity& motorInAirstreamFraction);
 
     void resetMotorInAirstreamFraction();
 
     bool setFanPowerCoefficient1(boost::optional<double> fanPowerCoefficient1);
 
-    bool setFanPowerCoefficient1(const OSOptionalQuantity& fanPowerCoefficient1);
-
     void resetFanPowerCoefficient1();
 
     bool setFanPowerCoefficient2(boost::optional<double> fanPowerCoefficient2);
-
-    bool setFanPowerCoefficient2(const OSOptionalQuantity& fanPowerCoefficient2);
 
     void resetFanPowerCoefficient2();
 
     bool setFanPowerCoefficient3(boost::optional<double> fanPowerCoefficient3);
 
-    bool setFanPowerCoefficient3(const OSOptionalQuantity& fanPowerCoefficient3);
-
     void resetFanPowerCoefficient3();
 
     bool setFanPowerCoefficient4(boost::optional<double> fanPowerCoefficient4);
 
-    bool setFanPowerCoefficient4(const OSOptionalQuantity& fanPowerCoefficient4);
-
     void resetFanPowerCoefficient4();
 
     bool setFanPowerCoefficient5(boost::optional<double> fanPowerCoefficient5);
-
-    bool setFanPowerCoefficient5(const OSOptionalQuantity& fanPowerCoefficient5);
 
     void resetFanPowerCoefficient5();
 
@@ -256,32 +206,7 @@ namespace detail {
   private:
     REGISTER_LOGGER("openstudio.model.FanVariableVolume");
 
-    openstudio::Quantity fanTotalEfficiency_SI() const;
-    openstudio::Quantity fanTotalEfficiency_IP() const;
-    openstudio::Quantity pressureRise_SI() const;
-    openstudio::Quantity pressureRise_IP() const;
-    openstudio::OSOptionalQuantity maximumFlowRate_SI() const;
-    openstudio::OSOptionalQuantity maximumFlowRate_IP() const;
     std::vector<std::string> fanPowerMinimumFlowRateInputMethodValues() const;
-    openstudio::Quantity fanPowerMinimumFlowFraction_SI() const;
-    openstudio::Quantity fanPowerMinimumFlowFraction_IP() const;
-    openstudio::OSOptionalQuantity fanPowerMinimumAirFlowRate_SI() const;
-    openstudio::OSOptionalQuantity fanPowerMinimumAirFlowRate_IP() const;
-    openstudio::Quantity motorEfficiency_SI() const;
-    openstudio::Quantity motorEfficiency_IP() const;
-    openstudio::Quantity motorInAirstreamFraction_SI() const;
-    openstudio::Quantity motorInAirstreamFraction_IP() const;
-    openstudio::OSOptionalQuantity fanPowerCoefficient1_SI() const;
-    openstudio::OSOptionalQuantity fanPowerCoefficient1_IP() const;
-    openstudio::OSOptionalQuantity fanPowerCoefficient2_SI() const;
-    openstudio::OSOptionalQuantity fanPowerCoefficient2_IP() const;
-    openstudio::OSOptionalQuantity fanPowerCoefficient3_SI() const;
-    openstudio::OSOptionalQuantity fanPowerCoefficient3_IP() const;
-    openstudio::OSOptionalQuantity fanPowerCoefficient4_SI() const;
-    openstudio::OSOptionalQuantity fanPowerCoefficient4_IP() const;
-    openstudio::OSOptionalQuantity fanPowerCoefficient5_SI() const;
-    openstudio::OSOptionalQuantity fanPowerCoefficient5_IP() const;
-
     boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 
     bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);

@@ -1259,16 +1259,6 @@ namespace detail {
     return result;
   }
 
-  struct WorkspaceObjectMetaTypeInitializer
-  {
-    WorkspaceObjectMetaTypeInitializer()
-    {
-      qRegisterMetaType<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> >();
-    }
-  };
-
-  static WorkspaceObjectMetaTypeInitializer __workspaceObjectMetaTypeInitializer__;
-
 } // detail
 
 bool WorkspaceObject::operator < (const WorkspaceObject& right) const

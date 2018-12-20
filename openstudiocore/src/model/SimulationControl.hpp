@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -105,13 +103,9 @@ class MODEL_API SimulationControl : public ParentObject {
 
   double loadsConvergenceToleranceValue() const;
 
-  Quantity getLoadsConvergenceToleranceValue(bool returnIP=false) const;
-
   bool isLoadsConvergenceToleranceValueDefaulted() const;
 
   double temperatureConvergenceToleranceValue() const;
-
-  Quantity getTemperatureConvergenceToleranceValue(bool returnIP=false) const;
 
   bool isTemperatureConvergenceToleranceValueDefaulted() const;
 
@@ -163,13 +157,9 @@ class MODEL_API SimulationControl : public ParentObject {
 
   bool setLoadsConvergenceToleranceValue(double loadsConvergenceToleranceValue);
 
-  bool setLoadsConvergenceToleranceValue(const Quantity& loadsConvergenceToleranceValue);
-
   void resetLoadsConvergenceToleranceValue();
 
   bool setTemperatureConvergenceToleranceValue(double temperatureConvergenceToleranceValue);
-
-  bool setTemperatureConvergenceToleranceValue(const Quantity& temperatureConvergenceToleranceValue);
 
   void resetTemperatureConvergenceToleranceValue();
 

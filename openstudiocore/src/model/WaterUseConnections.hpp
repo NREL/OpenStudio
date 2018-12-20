@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -112,4 +110,3 @@ typedef std::vector<WaterUseConnections> WaterUseConnectionsVector;
 } // openstudio
 
 #endif // MODEL_WATERUSECONNECTIONS_HPP
-

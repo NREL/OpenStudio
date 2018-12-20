@@ -35,9 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
-
 namespace model {
 
 namespace detail {
@@ -109,35 +106,21 @@ class MODEL_API StandardOpaqueMaterial : public OpaqueMaterial {
 
   double thickness() const;
 
-  Quantity getThickness(bool returnIP=false) const;
-
   double conductivity() const;
-
-  Quantity getConductivity(bool returnIP=false) const;
 
   double density() const;
 
-  Quantity getDensity(bool returnIP=false) const;
-
   double specificHeat() const;
 
-  Quantity getSpecificHeat(bool returnIP=false) const;
-
   double thermalAbsorptance() const;
-
-  Quantity getThermalAbsorptance(bool returnIP=false) const;
 
   bool isThermalAbsorptanceDefaulted() const;
 
   double solarAbsorptance() const;
 
-  Quantity getSolarAbsorptance(bool returnIP=false) const;
-
   bool isSolarAbsorptanceDefaulted() const;
 
   double visibleAbsorptance() const;
-
-  Quantity getVisibleAbsorptance(bool returnIP=false) const;
 
   bool isVisibleAbsorptanceDefaulted() const;
 
@@ -199,35 +182,21 @@ class MODEL_API StandardOpaqueMaterial : public OpaqueMaterial {
 
   bool setThickness(double thickness);
 
-  bool setThickness(const Quantity& thickness);
-
   bool setConductivity(double conductivity);
-
-  bool setConductivity(const Quantity& conductivity);
 
   bool setDensity(double density);
 
-  bool setDensity(const Quantity& density);
-
   bool setSpecificHeat(double specificHeat);
 
-  bool setSpecificHeat(const Quantity& specificHeat);
-
   bool setThermalAbsorptance(double thermalAbsorptance);
-
-  bool setThermalAbsorptance(const Quantity& thermalAbsorptance);
 
   void resetThermalAbsorptance();
 
   bool setSolarAbsorptance(double solarAbsorptance);
 
-  bool setSolarAbsorptance(const Quantity& solarAbsorptance);
-
   void resetSolarAbsorptance();
 
   bool setVisibleAbsorptance(double visibleAbsorptance);
-
-  bool setVisibleAbsorptance(const Quantity& visibleAbsorptance);
 
   void resetVisibleAbsorptance();
 

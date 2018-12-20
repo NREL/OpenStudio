@@ -44,6 +44,8 @@
 
 #include "MeasureBadge.hpp"
 
+#include "../model_editor/UserSettings.hpp"
+
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
@@ -159,12 +161,12 @@ void LocalLibraryController::showMeasures()
 
 void LocalLibraryController::showMyMeasuresFolder()
 {
-  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+  openstudio::path umd = userMeasuresDir();
 
-  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+  if (isNetworkPath(umd) && !isNetworkPathAvailable(umd)) {
     QMessageBox::information(QApplication::activeWindow(), "Cannot Open Directory", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
   } else {
-    QString path = QDir::toNativeSeparators(toQString(userMeasuresDir));
+    QString path = QDir::toNativeSeparators(toQString(umd));
     QDesktopServices::openUrl(QUrl("file:///" + path));
   }
 }
@@ -711,7 +713,7 @@ void LibraryListController::createItems()
   std::sort(measures.begin(), measures.end(), MeasureSorter());
 
   // create items
-  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+  openstudio::path umd = userMeasuresDir();
 
   for( const auto & measure : measures )
   {
@@ -722,7 +724,7 @@ void LibraryListController::createItems()
       LocalLibrary::LibrarySource source = m_source;
       if (source == LocalLibrary::COMBINED){
         // check if this measure is in the my measures directory
-        if (userMeasuresDir == measure.directory().parent_path()){
+        if (umd == measure.directory().parent_path()){
           source = LocalLibrary::USER;
         }else{
           source = LocalLibrary::BCL;

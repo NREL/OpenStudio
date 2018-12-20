@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -68,25 +66,17 @@ class MODEL_API ZoneHVACBaseboardConvectiveElectric : public ZoneHVACComponent {
   **/
   boost::optional<double> nominalCapacity() const;
 
-  OSOptionalQuantity getNominalCapacity(bool returnIP=false) const;
-
   bool isNominalCapacityAutosized() const;
 
   bool setNominalCapacity(double nominalCapacity);
-
-  bool setNominalCapacity(const Quantity& nominalCapacity);
 
   void autosizeNominalCapacity();
 
   double efficiency() const;
 
-  Quantity getEfficiency(bool returnIP=false) const;
-
   bool isEfficiencyDefaulted() const;
 
   bool setEfficiency(double efficiency);
-
-  bool setEfficiency(const Quantity& efficiency);
 
   void resetEfficiency();
 

@@ -35,8 +35,6 @@
 #include "ZoneHVACComponent.hpp"
 #include "ZoneHVACComponent_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {

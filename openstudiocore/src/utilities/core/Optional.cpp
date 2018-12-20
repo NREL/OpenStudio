@@ -64,19 +64,6 @@ namespace openstudio {
     return os;
   }
 
-  namespace detail{
-    OptionalMetaTypeInitializer::OptionalMetaTypeInitializer()
-    {
-      // int type;
-      /* type = */ qRegisterMetaType<boost::optional<double> >("boost::optional<double>");
-      /* type = */ qRegisterMetaType<boost::optional<unsigned> >("boost::optional<unsigned>");
-      /* type = */ qRegisterMetaType<boost::optional<int> >("boost::optional<int>");
-      /* type = */ qRegisterMetaType<boost::optional<std::string> >("boost::optional<std::string>");
-    }
-
-     static OptionalMetaTypeInitializer __optionalMetaTypeInitializer__;
-  }
-
 } // openstudio
 
 
