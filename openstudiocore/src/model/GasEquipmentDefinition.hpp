@@ -68,27 +68,20 @@ class MODEL_API GasEquipmentDefinition : public SpaceLoadDefinition {
   //@{
 
   std::string designLevelCalculationMethod() const;
-
   boost::optional<double> designLevel() const;
-
   boost::optional<double> wattsperSpaceFloorArea() const;
-
   boost::optional<double> wattsperPerson() const;
 
   double fractionLatent() const;
-
   bool isFractionLatentDefaulted() const;
 
   double fractionRadiant() const;
-
   bool isFractionRadiantDefaulted() const;
 
   double fractionLost() const;
-
   bool isFractionLostDefaulted() const;
 
   double carbonDioxideGenerationRate() const;
-
   bool isCarbonDioxideGenerationRateDefaulted() const;
 
   //@}
@@ -105,19 +98,15 @@ class MODEL_API GasEquipmentDefinition : public SpaceLoadDefinition {
   bool setWattsperPerson(double wattsperPerson);
 
   bool setFractionLatent(double fractionLatent);
-
   void resetFractionLatent();
 
   bool setFractionRadiant(double fractionRadiant);
-
   void resetFractionRadiant();
 
   bool setFractionLost(double fractionLost);
-
   void resetFractionLost();
 
   bool setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate);
-
   void resetCarbonDioxideGenerationRate();
 
   //@}

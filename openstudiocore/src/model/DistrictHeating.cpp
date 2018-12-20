@@ -33,7 +33,6 @@
 #include <utilities/idd/OS_DistrictHeating_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
@@ -193,6 +192,5 @@ DistrictHeating::DistrictHeating(std::shared_ptr<detail::DistrictHeating_Impl> i
 } // model
 
 } // openstudio
-
 
 

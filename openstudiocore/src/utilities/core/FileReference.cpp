@@ -34,8 +34,6 @@
 #include "PathHelpers.hpp"
 #include "../core/FilesystemHelpers.hpp"
 
-#include <QVariant>
-
 namespace openstudio {
 
 FileReference::FileReference(const openstudio::path& p)
@@ -199,58 +197,6 @@ bool FileReference::update(const openstudio::path& searchDirectory) {
   }
   return false;
 }
-
-namespace detail {
-
-  QVariant toVariant(const FileReference& fileReference) {
-    QVariantMap fileReferenceData;
-
-    fileReferenceData["uuid"] = toQString(removeBraces(fileReference.uuid()));
-    fileReferenceData["version_uuid"] = toQString(removeBraces(fileReference.versionUUID()));
-    std::string str = fileReference.name();
-    if (!str.empty()) {
-      fileReferenceData["name"] = toQString(str);
-    }
-    str = fileReference.displayName();
-    if (!str.empty()) {
-      fileReferenceData["display_name"] = toQString(str);
-    }
-    str = fileReference.description();
-    if (!str.empty()) {
-      fileReferenceData["description"] = toQString(str);
-    }
-    fileReferenceData["path"] = toQString(fileReference.path());
-    fileReferenceData["file_type"] = toQString(fileReference.fileType().valueName());
-    fileReferenceData["timestamp_last"] = toQString(fileReference.timestampLast().toISO8601());
-    fileReferenceData["checksum_create"] = toQString(fileReference.checksumCreate());
-    fileReferenceData["checksum_last"] = toQString(fileReference.checksumLast());
-
-    return QVariant(fileReferenceData);
-  }
-
-  FileReference toFileReference(const QVariant& variant, const VersionString& version) {
-    QVariantMap map = variant.toMap();
-    OptionalDateTime timestampLast;
-    if (version < VersionString("1.0.4")) {
-      timestampLast = DateTime(map["timestamp_last"].toString().toStdString());
-    }
-    else {
-      timestampLast = DateTime::fromISO8601(map["timestamp_last"].toString().toStdString());
-    }
-    OS_ASSERT(timestampLast);
-    return FileReference(toUUID(map["uuid"].toString().toStdString()),
-                         toUUID(map["version_uuid"].toString().toStdString()),
-                         map.contains("name") ? map["name"].toString().toStdString() : std::string(),
-                         map.contains("display_name") ? map["display_name"].toString().toStdString() : std::string(),
-                         map.contains("description") ? map["description"].toString().toStdString() : std::string(),
-                         toPath(map["path"].toString()),
-                         FileReferenceType(map["file_type"].toString().toStdString()),
-                         timestampLast.get(),
-                         map["checksum_create"].toString().toStdString(),
-                         map["checksum_last"].toString().toStdString());
-  }
-
-} // detail
 
 } // openstudio
 

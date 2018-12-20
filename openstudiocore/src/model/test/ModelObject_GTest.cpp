@@ -43,30 +43,12 @@
 #include "../StandardOpaqueMaterial.hpp"
 #include "../StandardOpaqueMaterial_Impl.hpp"
 
-#include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/core/Containers.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;
-
-TEST_F(ModelFixture, ModelObject_Attributes)
-{
-  // Removed due to removal of attributes
-  // Model model;
-
-  // OptionalWorkspaceObject oObject = model.addObject(IdfObject(IddObjectType::OS_Version));
-  // ASSERT_TRUE(oObject);
-  // ModelObject version = oObject->cast<ModelObject>();
-  // StringVector versionAttributeNames = version.attributeNames();
-  // ASSERT_EQ(static_cast<unsigned>(3),versionAttributeNames.size());
-  // EXPECT_EQ("iddObjectType",versionAttributeNames[0]);
-  // EXPECT_EQ("handle",versionAttributeNames[1]);
-  // EXPECT_EQ("name",versionAttributeNames[2]);
-
-  // EXPECT_FALSE(version.getAttribute("N a m e"));
-}
 
 TEST_F(ModelFixture, ModelObject_Clone_SameModel) {
   // Make model object with resource that has children

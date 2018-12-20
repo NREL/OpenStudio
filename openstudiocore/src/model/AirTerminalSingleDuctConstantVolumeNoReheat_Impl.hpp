@@ -90,13 +90,9 @@ namespace detail {
 
     boost::optional<double> maximumAirFlowRate() const;
 
-    OSOptionalQuantity getMaximumAirFlowRate(bool returnIP=false) const;
-
     bool isMaximumAirFlowRateAutosized() const;
 
     bool setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate);
-
-    bool setMaximumAirFlowRate(const OSOptionalQuantity& maximumAirFlowRate);
 
     void autosizeMaximumAirFlowRate();
 

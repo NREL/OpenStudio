@@ -38,8 +38,6 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
-#include <QSettings>
-
 namespace openstudio{
 
   LocalBCL::LocalBCL(const path& libraryPath):
@@ -132,10 +130,8 @@ namespace openstudio{
   {
     std::shared_ptr<LocalBCL> &ptr = instanceInternal();
     if (!ptr) {
-      QSettings settings("OpenStudio", "LocalBCL");
       // DLM: might want to put this somewhere a little more hidden
-      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(
-          toPath(settings.value("libraryPath", toQString(openstudio::filesystem::home_path() / toPath("BCL"))).toString())));
+      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(openstudio::filesystem::home_path() / toPath("BCL")));
     }
     return *ptr;
   }
@@ -1548,53 +1544,5 @@ namespace openstudio{
   {
     return m_libraryPath;
   }
-
-  bool LocalBCL::setLibraryPath(const path& libraryPath)
-  {
-
-    // TODO: JM 2018-11-14 Can't we just call this? then write the settings
-    // &LocalBCL::instance(libraryPath):
-
-    // cleanup old staggling one if it exists
-    close();
-
-    const auto path = libraryPath.lexically_normal();
-    
-    openstudio::filesystem::create_directories(path);
-    if (!openstudio::filesystem::is_directory(path))
-    {
-      const bool success = openstudio::filesystem::create_directories(path);
-      if (!success) return false;
-    }
-    m_libraryPath = path;
-
-    m_sqliteFilePath = m_libraryPath / m_dbName;
-    m_sqliteFilename = toString(m_sqliteFilePath.make_preferred().native());
-
-    //Check for local database
-    bool initschema = !openstudio::filesystem::exists(m_sqliteFilePath);
-
-    // Open the database
-    int success = sqlite3_open_v2(m_sqliteFilename.c_str(), &m_db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_EXCLUSIVE, nullptr);
-    if (success != SQLITE_OK) {
-      LOG(Error, "Unable to open connection for LocalBCL at '" << m_sqliteFilename << "'.");
-      return false;
-    } else {
-      m_connectionOpen = true;
-    }
-
-    // If need to create it, and it didn't go well, throw
-    if (initschema && !initializeLocalDb()) {
-      LOG(Error, "Unable to initialize Local Database");
-    }
-
-    // TODO: JM 2018-11-14 In old implementation using Qt, there's no update call!
-
-    QSettings settings("OpenStudio", "LocalBCL");
-    settings.setValue("libraryPath", toQString(m_libraryPath));
-
-    return true;
-  }
-
 
 } // openstudio

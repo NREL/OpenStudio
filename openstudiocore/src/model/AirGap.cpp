@@ -182,11 +182,6 @@ namespace detail {
     return false;
   }
 
-  OSOptionalQuantity AirGap_Impl::getThermalResistance(bool returnIP) const {
-    double value = thermalResistance();
-    return getQuantityFromDouble(OS_Material_AirGapFields::ThermalResistance, value, returnIP);
-  }
-
   bool AirGap_Impl::setThermalResistance(boost::optional<double> thermalResistance) {
     bool result(false);
     if (thermalResistance) {
@@ -199,32 +194,11 @@ namespace detail {
     return result;
   }
 
-  bool AirGap_Impl::setThermalResistance(const OSOptionalQuantity& thermalResistance) {
-    bool result(false);
-    OptionalDouble value;
-    if (thermalResistance.isSet()) {
-      value = getDoubleFromQuantity(OS_Material_AirGapFields::ThermalResistance,thermalResistance.get());
-      if (value) {
-        result = setThermalResistance(value);
-      }
-    }
-    else {
-      result = setThermalResistance(value);
-    }
-    return result;
-  }
-
   void AirGap_Impl::resetThermalResistance() {
-    bool result = setString(OS_Material_AirGapFields::ThermalResistance, "");
+    // Note JM 2018-12-04: Reset to the Ctor default of 0.1
+    // thermalResistance returns a double, so we CANNOT leave this field empty since it has no IDD default!
+    bool result = setDouble(OS_Material_AirGapFields::ThermalResistance, 0.1);
     OS_ASSERT(result);
-  }
-
-  openstudio::OSOptionalQuantity AirGap_Impl::thermalResistance_SI() const {
-    return getThermalResistance(false);
-  }
-
-  openstudio::OSOptionalQuantity AirGap_Impl::thermalResistance_IP() const {
-    return getThermalResistance(true);
   }
 
 } // detail
@@ -251,15 +225,7 @@ double AirGap::thermalResistance() const {
   return getImpl<detail::AirGap_Impl>()->thermalResistance();
 }
 
-OSOptionalQuantity AirGap::getThermalResistance(bool returnIP) const {
-  return getImpl<detail::AirGap_Impl>()->getThermalResistance(returnIP);
-}
-
 bool AirGap::setThermalResistance(double thermalResistance) {
-  return getImpl<detail::AirGap_Impl>()->setThermalResistance(thermalResistance);
-}
-
-bool AirGap::setThermalResistance(const Quantity& thermalResistance) {
   return getImpl<detail::AirGap_Impl>()->setThermalResistance(thermalResistance);
 }
 
@@ -275,4 +241,3 @@ AirGap::AirGap(std::shared_ptr<detail::AirGap_Impl> impl)
 
 } // model
 } // openstudio
-

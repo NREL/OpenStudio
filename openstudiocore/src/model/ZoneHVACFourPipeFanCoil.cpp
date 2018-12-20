@@ -116,20 +116,20 @@ namespace detail {
 
   std::vector<IdfObject> ZoneHVACFourPipeFanCoil_Impl::remove()
   {
-    if( boost::optional<CoilHeatingWater> waterHeatingCoil =
-          heatingCoil().optionalCast<CoilHeatingWater>() )
-    {
-      if( boost::optional<PlantLoop> plantLoop = waterHeatingCoil->plantLoop() )
-      {
-        plantLoop->removeDemandBranchWithComponent( waterHeatingCoil.get() );
+    // Careful here, remove could be called during the Ctor, and the coils might not be set actually!
+    if (boost::optional<HVACComponent> _hc = optionalHeatingCoil()) {
+      if (boost::optional<CoilHeatingWater> waterHeatingCoil = _hc->optionalCast<CoilHeatingWater>()) {
+        if (boost::optional<PlantLoop> plantLoop = waterHeatingCoil->plantLoop()) {
+          plantLoop->removeDemandBranchWithComponent( waterHeatingCoil.get() );
+        }
       }
     }
-    if( boost::optional<CoilCoolingWater> waterCoolingCoil =
-          coolingCoil().optionalCast<CoilCoolingWater>() )
-    {
-      if( boost::optional<PlantLoop> plantLoop = waterCoolingCoil->plantLoop() )
-      {
-        plantLoop->removeDemandBranchWithComponent( waterCoolingCoil.get() );
+
+    if (boost::optional<HVACComponent> _cc = optionalCoolingCoil()) {
+      if (boost::optional<CoilCoolingWater> waterCoolingCoil = _cc->optionalCast<CoilCoolingWater>()) {
+        if (boost::optional<PlantLoop> plantLoop = waterCoolingCoil->plantLoop()) {
+          plantLoop->removeDemandBranchWithComponent( waterCoolingCoil.get() );
+        }
       }
     }
     return ZoneHVACComponent_Impl::remove();
@@ -231,11 +231,6 @@ namespace detail {
     return getDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirFlowRate,true);
   }
 
-  OSOptionalQuantity ZoneHVACFourPipeFanCoil_Impl::getMaximumSupplyAirFlowRate(bool returnIP) const {
-    OptionalDouble value = maximumSupplyAirFlowRate();
-    return getQuantityFromDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirFlowRate, value, returnIP);
-  }
-
   bool ZoneHVACFourPipeFanCoil_Impl::isMaximumSupplyAirFlowRateAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirFlowRate, true);
@@ -251,13 +246,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity ZoneHVACFourPipeFanCoil_Impl::getLowSpeedSupplyAirFlowRatio(bool returnIP) const {
-    OptionalDouble value = lowSpeedSupplyAirFlowRatio();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_FourPipeFanCoilFields::LowSpeedSupplyAirFlowRatio, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool ZoneHVACFourPipeFanCoil_Impl::isLowSpeedSupplyAirFlowRatioDefaulted() const {
     return isEmpty(OS_ZoneHVAC_FourPipeFanCoilFields::LowSpeedSupplyAirFlowRatio);
   }
@@ -268,24 +256,12 @@ namespace detail {
     return value.get();
   }
 
-  Quantity ZoneHVACFourPipeFanCoil_Impl::getMediumSpeedSupplyAirFlowRatio(bool returnIP) const {
-    OptionalDouble value = mediumSpeedSupplyAirFlowRatio();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MediumSpeedSupplyAirFlowRatio, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool ZoneHVACFourPipeFanCoil_Impl::isMediumSpeedSupplyAirFlowRatioDefaulted() const {
     return isEmpty(OS_ZoneHVAC_FourPipeFanCoilFields::MediumSpeedSupplyAirFlowRatio);
   }
 
   boost::optional<double> ZoneHVACFourPipeFanCoil_Impl::maximumOutdoorAirFlowRate() const {
     return getDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumOutdoorAirFlowRate,true);
-  }
-
-  OSOptionalQuantity ZoneHVACFourPipeFanCoil_Impl::getMaximumOutdoorAirFlowRate(bool returnIP) const {
-    OptionalDouble value = maximumOutdoorAirFlowRate();
-    return getQuantityFromDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumOutdoorAirFlowRate, value, returnIP);
   }
 
   bool ZoneHVACFourPipeFanCoil_Impl::isMaximumOutdoorAirFlowRateAutosized() const {
@@ -331,11 +307,6 @@ namespace detail {
     return getDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumColdWaterFlowRate,true);
   }
 
-  OSOptionalQuantity ZoneHVACFourPipeFanCoil_Impl::getMaximumColdWaterFlowRate(bool returnIP) const {
-    OptionalDouble value = maximumColdWaterFlowRate();
-    return getQuantityFromDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumColdWaterFlowRate, value, returnIP);
-  }
-
   bool ZoneHVACFourPipeFanCoil_Impl::isMaximumColdWaterFlowRateAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumColdWaterFlowRate, true);
@@ -351,13 +322,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity ZoneHVACFourPipeFanCoil_Impl::getMinimumColdWaterFlowRate(bool returnIP) const {
-    OptionalDouble value = minimumColdWaterFlowRate();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumColdWaterFlowRate, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool ZoneHVACFourPipeFanCoil_Impl::isMinimumColdWaterFlowRateDefaulted() const {
     return isEmpty(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumColdWaterFlowRate);
   }
@@ -366,13 +330,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_FourPipeFanCoilFields::CoolingConvergenceTolerance,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity ZoneHVACFourPipeFanCoil_Impl::getCoolingConvergenceTolerance(bool returnIP) const {
-    OptionalDouble value = coolingConvergenceTolerance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_FourPipeFanCoilFields::CoolingConvergenceTolerance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool ZoneHVACFourPipeFanCoil_Impl::isCoolingConvergenceToleranceDefaulted() const {
@@ -390,11 +347,6 @@ namespace detail {
     return getDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumHotWaterFlowRate,true);
   }
 
-  OSOptionalQuantity ZoneHVACFourPipeFanCoil_Impl::getMaximumHotWaterFlowRate(bool returnIP) const {
-    OptionalDouble value = maximumHotWaterFlowRate();
-    return getQuantityFromDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumHotWaterFlowRate, value, returnIP);
-  }
-
   bool ZoneHVACFourPipeFanCoil_Impl::isMaximumHotWaterFlowRateAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumHotWaterFlowRate, true);
@@ -410,13 +362,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity ZoneHVACFourPipeFanCoil_Impl::getMinimumHotWaterFlowRate(bool returnIP) const {
-    OptionalDouble value = minimumHotWaterFlowRate();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumHotWaterFlowRate, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool ZoneHVACFourPipeFanCoil_Impl::isMinimumHotWaterFlowRateDefaulted() const {
     return isEmpty(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumHotWaterFlowRate);
   }
@@ -425,13 +370,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_FourPipeFanCoilFields::HeatingConvergenceTolerance,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity ZoneHVACFourPipeFanCoil_Impl::getHeatingConvergenceTolerance(bool returnIP) const {
-    OptionalDouble value = heatingConvergenceTolerance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_FourPipeFanCoilFields::HeatingConvergenceTolerance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool ZoneHVACFourPipeFanCoil_Impl::isHeatingConvergenceToleranceDefaulted() const {
@@ -460,23 +398,6 @@ namespace detail {
     return result;
   }
 
-  bool ZoneHVACFourPipeFanCoil_Impl::setMaximumSupplyAirFlowRate(const OSOptionalQuantity& maximumSupplyAirFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumSupplyAirFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirFlowRate,maximumSupplyAirFlowRate.get());
-      if (value) {
-        setMaximumSupplyAirFlowRate(value);
-        result = true;
-      }
-    }
-    else {
-      setMaximumSupplyAirFlowRate(value);
-      result = true;
-    }
-    return result;
-  }
-
   void ZoneHVACFourPipeFanCoil_Impl::autosizeMaximumSupplyAirFlowRate() {
     bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumSupplyAirFlowRate, "autosize");
     OS_ASSERT(result);
@@ -487,14 +408,6 @@ namespace detail {
     return result;
   }
 
-  bool ZoneHVACFourPipeFanCoil_Impl::setLowSpeedSupplyAirFlowRatio(const Quantity& lowSpeedSupplyAirFlowRatio) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::LowSpeedSupplyAirFlowRatio,lowSpeedSupplyAirFlowRatio);
-    if (!value) {
-      return false;
-    }
-    return setLowSpeedSupplyAirFlowRatio(value.get());
-  }
-
   void ZoneHVACFourPipeFanCoil_Impl::resetLowSpeedSupplyAirFlowRatio() {
     bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::LowSpeedSupplyAirFlowRatio, "");
     OS_ASSERT(result);
@@ -503,14 +416,6 @@ namespace detail {
   bool ZoneHVACFourPipeFanCoil_Impl::setMediumSpeedSupplyAirFlowRatio(double mediumSpeedSupplyAirFlowRatio) {
     bool result = setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MediumSpeedSupplyAirFlowRatio, mediumSpeedSupplyAirFlowRatio);
     return result;
-  }
-
-  bool ZoneHVACFourPipeFanCoil_Impl::setMediumSpeedSupplyAirFlowRatio(const Quantity& mediumSpeedSupplyAirFlowRatio) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::MediumSpeedSupplyAirFlowRatio,mediumSpeedSupplyAirFlowRatio);
-    if (!value) {
-      return false;
-    }
-    return setMediumSpeedSupplyAirFlowRatio(value.get());
   }
 
   void ZoneHVACFourPipeFanCoil_Impl::resetMediumSpeedSupplyAirFlowRatio() {
@@ -524,23 +429,6 @@ namespace detail {
       result = setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumOutdoorAirFlowRate, maximumOutdoorAirFlowRate.get());
     }
     OS_ASSERT(result);
-    return result;
-  }
-
-  bool ZoneHVACFourPipeFanCoil_Impl::setMaximumOutdoorAirFlowRate(const OSOptionalQuantity& maximumOutdoorAirFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumOutdoorAirFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumOutdoorAirFlowRate,maximumOutdoorAirFlowRate.get());
-      if (value) {
-        setMaximumOutdoorAirFlowRate(value);
-        result = true;
-      }
-    }
-    else {
-      setMaximumOutdoorAirFlowRate(value);
-      result = true;
-    }
     return result;
   }
 
@@ -634,23 +522,6 @@ namespace detail {
     return result;
   }
 
-  bool ZoneHVACFourPipeFanCoil_Impl::setMaximumColdWaterFlowRate(const OSOptionalQuantity& maximumColdWaterFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumColdWaterFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumColdWaterFlowRate,maximumColdWaterFlowRate.get());
-      if (value) {
-        setMaximumColdWaterFlowRate(value);
-        result = true;
-      }
-    }
-    else {
-      setMaximumColdWaterFlowRate(value);
-      result = true;
-    }
-    return result;
-  }
-
   void ZoneHVACFourPipeFanCoil_Impl::autosizeMaximumColdWaterFlowRate() {
     bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumColdWaterFlowRate, "autosize");
     OS_ASSERT(result);
@@ -660,15 +531,6 @@ namespace detail {
     bool result = setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumColdWaterFlowRate, minimumColdWaterFlowRate);
     OS_ASSERT(result);
     return result;
-  }
-
-  bool ZoneHVACFourPipeFanCoil_Impl::setMinimumColdWaterFlowRate(const Quantity& minimumColdWaterFlowRate) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumColdWaterFlowRate,minimumColdWaterFlowRate);
-    if (!value) {
-      return false;
-    }
-    setMinimumColdWaterFlowRate(value.get());
-    return true;
   }
 
   void ZoneHVACFourPipeFanCoil_Impl::resetMinimumColdWaterFlowRate() {
@@ -681,14 +543,6 @@ namespace detail {
     return result;
   }
 
-  bool ZoneHVACFourPipeFanCoil_Impl::setCoolingConvergenceTolerance(const Quantity& coolingConvergenceTolerance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::CoolingConvergenceTolerance,coolingConvergenceTolerance);
-    if (!value) {
-      return false;
-    }
-    return setCoolingConvergenceTolerance(value.get());
-  }
-
   void ZoneHVACFourPipeFanCoil_Impl::resetCoolingConvergenceTolerance() {
     bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::CoolingConvergenceTolerance, "");
     OS_ASSERT(result);
@@ -696,7 +550,15 @@ namespace detail {
 
   bool ZoneHVACFourPipeFanCoil_Impl::setHeatingCoil( HVACComponent & heatingCoil )
   {
-    return setPointer(OS_ZoneHVAC_FourPipeFanCoilFields::HeatingCoilName,heatingCoil.handle());
+    bool result = false;
+
+    // Only accept if type is allowed
+    if ( ( heatingCoil.iddObjectType() == IddObjectType::OS_Coil_Heating_Water ) ||
+         ( heatingCoil.iddObjectType() == IddObjectType::OS_Coil_Heating_Electric ) ) {
+      result = setPointer(OS_ZoneHVAC_FourPipeFanCoilFields::HeatingCoilName, heatingCoil.handle());
+    }
+
+    return result;
   }
 
   bool ZoneHVACFourPipeFanCoil_Impl::setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate) {
@@ -705,23 +567,6 @@ namespace detail {
       result = setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumHotWaterFlowRate, maximumHotWaterFlowRate.get());
     }
     OS_ASSERT(result);
-    return result;
-  }
-
-  bool ZoneHVACFourPipeFanCoil_Impl::setMaximumHotWaterFlowRate(const OSOptionalQuantity& maximumHotWaterFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumHotWaterFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::MaximumHotWaterFlowRate,maximumHotWaterFlowRate.get());
-      if (value) {
-        setMaximumHotWaterFlowRate(value);
-        result = true;
-      }
-    }
-    else {
-      setMaximumHotWaterFlowRate(value);
-      result = true;
-    }
     return result;
   }
 
@@ -736,15 +581,6 @@ namespace detail {
     return result;
   }
 
-  bool ZoneHVACFourPipeFanCoil_Impl::setMinimumHotWaterFlowRate(const Quantity& minimumHotWaterFlowRate) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumHotWaterFlowRate,minimumHotWaterFlowRate);
-    if (!value) {
-      return false;
-    }
-    setMinimumHotWaterFlowRate(value.get());
-    return true;
-  }
-
   void ZoneHVACFourPipeFanCoil_Impl::resetMinimumHotWaterFlowRate() {
     bool result = setString(OS_ZoneHVAC_FourPipeFanCoilFields::MinimumHotWaterFlowRate, "");
     OS_ASSERT(result);
@@ -753,14 +589,6 @@ namespace detail {
   bool ZoneHVACFourPipeFanCoil_Impl::setHeatingConvergenceTolerance(double heatingConvergenceTolerance) {
     bool result = setDouble(OS_ZoneHVAC_FourPipeFanCoilFields::HeatingConvergenceTolerance, heatingConvergenceTolerance);
     return result;
-  }
-
-  bool ZoneHVACFourPipeFanCoil_Impl::setHeatingConvergenceTolerance(const Quantity& heatingConvergenceTolerance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_FourPipeFanCoilFields::HeatingConvergenceTolerance,heatingConvergenceTolerance);
-    if (!value) {
-      return false;
-    }
-    return setHeatingConvergenceTolerance(value.get());
   }
 
   void ZoneHVACFourPipeFanCoil_Impl::resetHeatingConvergenceTolerance() {
@@ -772,88 +600,8 @@ namespace detail {
     return ZoneHVACFourPipeFanCoil::capacityControlMethodValues();
   }
 
-  openstudio::OSOptionalQuantity ZoneHVACFourPipeFanCoil_Impl::maximumSupplyAirFlowRate_SI() const {
-    return getMaximumSupplyAirFlowRate(false);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACFourPipeFanCoil_Impl::maximumSupplyAirFlowRate_IP() const {
-    return getMaximumSupplyAirFlowRate(true);
-  }
-
-  openstudio::Quantity ZoneHVACFourPipeFanCoil_Impl::lowSpeedSupplyAirFlowRatio_SI() const {
-    return getLowSpeedSupplyAirFlowRatio(false);
-  }
-
-  openstudio::Quantity ZoneHVACFourPipeFanCoil_Impl::lowSpeedSupplyAirFlowRatio_IP() const {
-    return getLowSpeedSupplyAirFlowRatio(true);
-  }
-
-  openstudio::Quantity ZoneHVACFourPipeFanCoil_Impl::mediumSpeedSupplyAirFlowRatio_SI() const {
-    return getMediumSpeedSupplyAirFlowRatio(false);
-  }
-
-  openstudio::Quantity ZoneHVACFourPipeFanCoil_Impl::mediumSpeedSupplyAirFlowRatio_IP() const {
-    return getMediumSpeedSupplyAirFlowRatio(true);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACFourPipeFanCoil_Impl::maximumOutdoorAirFlowRate_SI() const {
-    return getMaximumOutdoorAirFlowRate(false);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACFourPipeFanCoil_Impl::maximumOutdoorAirFlowRate_IP() const {
-    return getMaximumOutdoorAirFlowRate(true);
-  }
-
   std::vector<std::string> ZoneHVACFourPipeFanCoil_Impl::outdoorAirMixerObjectTypeValues() const {
     return ZoneHVACFourPipeFanCoil::outdoorAirMixerObjectTypeValues();
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACFourPipeFanCoil_Impl::maximumColdWaterFlowRate_SI() const {
-    return getMaximumColdWaterFlowRate(false);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACFourPipeFanCoil_Impl::maximumColdWaterFlowRate_IP() const {
-    return getMaximumColdWaterFlowRate(true);
-  }
-
-  openstudio::Quantity ZoneHVACFourPipeFanCoil_Impl::minimumColdWaterFlowRate_SI() const {
-    return getMinimumColdWaterFlowRate(false);
-  }
-
-  openstudio::Quantity ZoneHVACFourPipeFanCoil_Impl::minimumColdWaterFlowRate_IP() const {
-    return getMinimumColdWaterFlowRate(true);
-  }
-
-  openstudio::Quantity ZoneHVACFourPipeFanCoil_Impl::coolingConvergenceTolerance_SI() const {
-    return getCoolingConvergenceTolerance(false);
-  }
-
-  openstudio::Quantity ZoneHVACFourPipeFanCoil_Impl::coolingConvergenceTolerance_IP() const {
-    return getCoolingConvergenceTolerance(true);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACFourPipeFanCoil_Impl::maximumHotWaterFlowRate_SI() const {
-    return getMaximumHotWaterFlowRate(false);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACFourPipeFanCoil_Impl::maximumHotWaterFlowRate_IP() const {
-    return getMaximumHotWaterFlowRate(true);
-  }
-
-  openstudio::Quantity ZoneHVACFourPipeFanCoil_Impl::minimumHotWaterFlowRate_SI() const {
-    return getMinimumHotWaterFlowRate(false);
-  }
-
-  openstudio::Quantity ZoneHVACFourPipeFanCoil_Impl::minimumHotWaterFlowRate_IP() const {
-    return getMinimumHotWaterFlowRate(true);
-  }
-
-  openstudio::Quantity ZoneHVACFourPipeFanCoil_Impl::heatingConvergenceTolerance_SI() const {
-    return getHeatingConvergenceTolerance(false);
-  }
-
-  openstudio::Quantity ZoneHVACFourPipeFanCoil_Impl::heatingConvergenceTolerance_IP() const {
-    return getHeatingConvergenceTolerance(true);
   }
 
   boost::optional<Schedule> ZoneHVACFourPipeFanCoil_Impl::optionalAvailabilitySchedule() const {
@@ -1123,10 +871,24 @@ ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(const Model& model,
 
   resetOutdoorAirSchedule();
   setOutdoorAirMixerObjectType("OutdoorAir:Mixer");
-  setSupplyAirFan(supplyAirFan);
-  setHeatingCoil(heatingCoil);
-  setCoolingCoil(coolingCoil);
-
+  ok = setSupplyAirFan(supplyAirFan);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s supply air fan to "
+                  << supplyAirFan.briefDescription() << ".");
+  }
+  ok = setHeatingCoil(heatingCoil);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s heating coil to "
+                  << heatingCoil.briefDescription() << ".");
+  }
+  ok = setCoolingCoil(coolingCoil);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s cooling coil to "
+                  << coolingCoil.briefDescription() << ".");
+  }
   autosizeMaximumSupplyAirFlowRate();
   autosizeMaximumOutdoorAirFlowRate();
   autosizeMaximumColdWaterFlowRate();
@@ -1161,20 +923,12 @@ boost::optional<double> ZoneHVACFourPipeFanCoil::maximumSupplyAirFlowRate() cons
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->maximumSupplyAirFlowRate();
 }
 
-OSOptionalQuantity ZoneHVACFourPipeFanCoil::getMaximumSupplyAirFlowRate(bool returnIP) const {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->getMaximumSupplyAirFlowRate(returnIP);
-}
-
 bool ZoneHVACFourPipeFanCoil::isMaximumSupplyAirFlowRateAutosized() const {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->isMaximumSupplyAirFlowRateAutosized();
 }
 
 double ZoneHVACFourPipeFanCoil::lowSpeedSupplyAirFlowRatio() const {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->lowSpeedSupplyAirFlowRatio();
-}
-
-Quantity ZoneHVACFourPipeFanCoil::getLowSpeedSupplyAirFlowRatio(bool returnIP) const {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->getLowSpeedSupplyAirFlowRatio(returnIP);
 }
 
 bool ZoneHVACFourPipeFanCoil::isLowSpeedSupplyAirFlowRatioDefaulted() const {
@@ -1185,20 +939,12 @@ double ZoneHVACFourPipeFanCoil::mediumSpeedSupplyAirFlowRatio() const {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->mediumSpeedSupplyAirFlowRatio();
 }
 
-Quantity ZoneHVACFourPipeFanCoil::getMediumSpeedSupplyAirFlowRatio(bool returnIP) const {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->getMediumSpeedSupplyAirFlowRatio(returnIP);
-}
-
 bool ZoneHVACFourPipeFanCoil::isMediumSpeedSupplyAirFlowRatioDefaulted() const {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->isMediumSpeedSupplyAirFlowRatioDefaulted();
 }
 
 boost::optional<double> ZoneHVACFourPipeFanCoil::maximumOutdoorAirFlowRate() const {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->maximumOutdoorAirFlowRate();
-}
-
-OSOptionalQuantity ZoneHVACFourPipeFanCoil::getMaximumOutdoorAirFlowRate(bool returnIP) const {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->getMaximumOutdoorAirFlowRate(returnIP);
 }
 
 bool ZoneHVACFourPipeFanCoil::isMaximumOutdoorAirFlowRateAutosized() const {
@@ -1231,10 +977,6 @@ boost::optional<double> ZoneHVACFourPipeFanCoil::maximumColdWaterFlowRate() cons
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->maximumColdWaterFlowRate();
 }
 
-OSOptionalQuantity ZoneHVACFourPipeFanCoil::getMaximumColdWaterFlowRate(bool returnIP) const {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->getMaximumColdWaterFlowRate(returnIP);
-}
-
 bool ZoneHVACFourPipeFanCoil::isMaximumColdWaterFlowRateAutosized() const {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->isMaximumColdWaterFlowRateAutosized();
 }
@@ -1243,20 +985,12 @@ double ZoneHVACFourPipeFanCoil::minimumColdWaterFlowRate() const {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->minimumColdWaterFlowRate();
 }
 
-Quantity ZoneHVACFourPipeFanCoil::getMinimumColdWaterFlowRate(bool returnIP) const {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->getMinimumColdWaterFlowRate(returnIP);
-}
-
 bool ZoneHVACFourPipeFanCoil::isMinimumColdWaterFlowRateDefaulted() const {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->isMinimumColdWaterFlowRateDefaulted();
 }
 
 double ZoneHVACFourPipeFanCoil::coolingConvergenceTolerance() const {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->coolingConvergenceTolerance();
-}
-
-Quantity ZoneHVACFourPipeFanCoil::getCoolingConvergenceTolerance(bool returnIP) const {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->getCoolingConvergenceTolerance(returnIP);
 }
 
 bool ZoneHVACFourPipeFanCoil::isCoolingConvergenceToleranceDefaulted() const {
@@ -1272,10 +1006,6 @@ boost::optional<double> ZoneHVACFourPipeFanCoil::maximumHotWaterFlowRate() const
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->maximumHotWaterFlowRate();
 }
 
-OSOptionalQuantity ZoneHVACFourPipeFanCoil::getMaximumHotWaterFlowRate(bool returnIP) const {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->getMaximumHotWaterFlowRate(returnIP);
-}
-
 bool ZoneHVACFourPipeFanCoil::isMaximumHotWaterFlowRateAutosized() const {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->isMaximumHotWaterFlowRateAutosized();
 }
@@ -1284,20 +1014,12 @@ double ZoneHVACFourPipeFanCoil::minimumHotWaterFlowRate() const {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->minimumHotWaterFlowRate();
 }
 
-Quantity ZoneHVACFourPipeFanCoil::getMinimumHotWaterFlowRate(bool returnIP) const {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->getMinimumHotWaterFlowRate(returnIP);
-}
-
 bool ZoneHVACFourPipeFanCoil::isMinimumHotWaterFlowRateDefaulted() const {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->isMinimumHotWaterFlowRateDefaulted();
 }
 
 double ZoneHVACFourPipeFanCoil::heatingConvergenceTolerance() const {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->heatingConvergenceTolerance();
-}
-
-Quantity ZoneHVACFourPipeFanCoil::getHeatingConvergenceTolerance(bool returnIP) const {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->getHeatingConvergenceTolerance(returnIP);
 }
 
 bool ZoneHVACFourPipeFanCoil::isHeatingConvergenceToleranceDefaulted() const {
@@ -1316,19 +1038,11 @@ bool ZoneHVACFourPipeFanCoil::setMaximumSupplyAirFlowRate(double maximumSupplyAi
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMaximumSupplyAirFlowRate(maximumSupplyAirFlowRate);
 }
 
-bool ZoneHVACFourPipeFanCoil::setMaximumSupplyAirFlowRate(const Quantity& maximumSupplyAirFlowRate) {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMaximumSupplyAirFlowRate(maximumSupplyAirFlowRate);
-}
-
 void ZoneHVACFourPipeFanCoil::autosizeMaximumSupplyAirFlowRate() {
   getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->autosizeMaximumSupplyAirFlowRate();
 }
 
 bool ZoneHVACFourPipeFanCoil::setLowSpeedSupplyAirFlowRatio(double lowSpeedSupplyAirFlowRatio) {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setLowSpeedSupplyAirFlowRatio(lowSpeedSupplyAirFlowRatio);
-}
-
-bool ZoneHVACFourPipeFanCoil::setLowSpeedSupplyAirFlowRatio(const Quantity& lowSpeedSupplyAirFlowRatio) {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setLowSpeedSupplyAirFlowRatio(lowSpeedSupplyAirFlowRatio);
 }
 
@@ -1340,19 +1054,11 @@ bool ZoneHVACFourPipeFanCoil::setMediumSpeedSupplyAirFlowRatio(double mediumSpee
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMediumSpeedSupplyAirFlowRatio(mediumSpeedSupplyAirFlowRatio);
 }
 
-bool ZoneHVACFourPipeFanCoil::setMediumSpeedSupplyAirFlowRatio(const Quantity& mediumSpeedSupplyAirFlowRatio) {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMediumSpeedSupplyAirFlowRatio(mediumSpeedSupplyAirFlowRatio);
-}
-
 void ZoneHVACFourPipeFanCoil::resetMediumSpeedSupplyAirFlowRatio() {
   getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->resetMediumSpeedSupplyAirFlowRatio();
 }
 
 bool ZoneHVACFourPipeFanCoil::setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate) {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMaximumOutdoorAirFlowRate(maximumOutdoorAirFlowRate);
-}
-
-bool ZoneHVACFourPipeFanCoil::setMaximumOutdoorAirFlowRate(const Quantity& maximumOutdoorAirFlowRate) {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMaximumOutdoorAirFlowRate(maximumOutdoorAirFlowRate);
 }
 
@@ -1390,10 +1096,6 @@ bool ZoneHVACFourPipeFanCoil::setMaximumColdWaterFlowRate(double maximumColdWate
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMaximumColdWaterFlowRate(maximumColdWaterFlowRate);
 }
 
-bool ZoneHVACFourPipeFanCoil::setMaximumColdWaterFlowRate(const Quantity& maximumColdWaterFlowRate) {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMaximumColdWaterFlowRate(maximumColdWaterFlowRate);
-}
-
 void ZoneHVACFourPipeFanCoil::autosizeMaximumColdWaterFlowRate() {
   getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->autosizeMaximumColdWaterFlowRate();
 }
@@ -1402,19 +1104,11 @@ bool ZoneHVACFourPipeFanCoil::setMinimumColdWaterFlowRate(double minimumColdWate
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMinimumColdWaterFlowRate(minimumColdWaterFlowRate);
 }
 
-bool ZoneHVACFourPipeFanCoil::setMinimumColdWaterFlowRate(const Quantity& minimumColdWaterFlowRate) {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMinimumColdWaterFlowRate(minimumColdWaterFlowRate);
-}
-
 void ZoneHVACFourPipeFanCoil::resetMinimumColdWaterFlowRate() {
   getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->resetMinimumColdWaterFlowRate();
 }
 
 bool ZoneHVACFourPipeFanCoil::setCoolingConvergenceTolerance(double coolingConvergenceTolerance) {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setCoolingConvergenceTolerance(coolingConvergenceTolerance);
-}
-
-bool ZoneHVACFourPipeFanCoil::setCoolingConvergenceTolerance(const Quantity& coolingConvergenceTolerance) {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setCoolingConvergenceTolerance(coolingConvergenceTolerance);
 }
 
@@ -1431,10 +1125,6 @@ bool ZoneHVACFourPipeFanCoil::setMaximumHotWaterFlowRate(double maximumHotWaterF
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMaximumHotWaterFlowRate(maximumHotWaterFlowRate);
 }
 
-bool ZoneHVACFourPipeFanCoil::setMaximumHotWaterFlowRate(const Quantity& maximumHotWaterFlowRate) {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMaximumHotWaterFlowRate(maximumHotWaterFlowRate);
-}
-
 void ZoneHVACFourPipeFanCoil::autosizeMaximumHotWaterFlowRate() {
   getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->autosizeMaximumHotWaterFlowRate();
 }
@@ -1443,19 +1133,11 @@ bool ZoneHVACFourPipeFanCoil::setMinimumHotWaterFlowRate(double minimumHotWaterF
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMinimumHotWaterFlowRate(minimumHotWaterFlowRate);
 }
 
-bool ZoneHVACFourPipeFanCoil::setMinimumHotWaterFlowRate(const Quantity& minimumHotWaterFlowRate) {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setMinimumHotWaterFlowRate(minimumHotWaterFlowRate);
-}
-
 void ZoneHVACFourPipeFanCoil::resetMinimumHotWaterFlowRate() {
   getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->resetMinimumHotWaterFlowRate();
 }
 
 bool ZoneHVACFourPipeFanCoil::setHeatingConvergenceTolerance(double heatingConvergenceTolerance) {
-  return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setHeatingConvergenceTolerance(heatingConvergenceTolerance);
-}
-
-bool ZoneHVACFourPipeFanCoil::setHeatingConvergenceTolerance(const Quantity& heatingConvergenceTolerance) {
   return getImpl<detail::ZoneHVACFourPipeFanCoil_Impl>()->setHeatingConvergenceTolerance(heatingConvergenceTolerance);
 }
 

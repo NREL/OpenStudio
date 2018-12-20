@@ -32,7 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "SpaceLoadInstance_Impl.hpp"
-#include "../utilities/units/Quantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -104,9 +103,6 @@ class MODEL_API WaterUseEquipment_Impl : public SpaceLoadInstance_Impl {
   private:
 
   REGISTER_LOGGER("openstudio.model.WaterUseEquipment");
-
-  openstudio::Quantity peakFlowRate_SI() const;
-  openstudio::Quantity peakFlowRate_IP() const;
 
   boost::optional<ModelObject> flowRateFractionScheduleAsModelObject() const;
 

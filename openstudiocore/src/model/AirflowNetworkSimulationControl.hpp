@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-//class Quantity;
-//class OSOptionalQuantity;
 
 namespace model {
 

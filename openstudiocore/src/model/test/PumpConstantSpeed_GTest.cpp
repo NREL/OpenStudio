@@ -35,10 +35,10 @@
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
-#include "../Schedule.hpp"
-#include "../Schedule_Impl.hpp"
+#include "../CurveLinear.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ThermalZone.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
-#include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
@@ -57,6 +57,159 @@ TEST_F(ModelFixture,PumpConstantSpeed_PumpConstantSpeed)
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
+
+TEST_F(ModelFixture,PumpConstantSpeed_GettersSetters) {
+
+  Model m;
+  PumpConstantSpeed pump(m);
+
+  // Inlet Node Name:  Object
+  // Outlet Node Name:  Object
+
+  // Rated Flow Rate: Optional Double
+  // Defaults to autosize in Ctor
+  EXPECT_TRUE(pump.isRatedFlowRateAutosized());
+  EXPECT_TRUE(pump.setRatedFlowRate(1.0));
+  ASSERT_TRUE(pump.ratedFlowRate());
+  EXPECT_EQ(1.0, pump.ratedFlowRate().get());
+  pump.resetRatedFlowRate();
+  EXPECT_FALSE(pump.ratedFlowRate());
+  // Test autosizing
+  EXPECT_TRUE(pump.setRatedFlowRate(1.0));
+  EXPECT_FALSE(pump.isRatedFlowRateAutosized());
+  pump.autosizeRatedFlowRate();
+  EXPECT_TRUE(pump.isRatedFlowRateAutosized());
+
+
+  // Rated Pump Head:  Double
+  // Check Idd default: 179352 (overriden in Ctor by same value)
+  EXPECT_EQ(179352, pump.ratedPumpHead());
+  EXPECT_TRUE(pump.setRatedPumpHead(179351.0));
+  EXPECT_EQ(179351.0, pump.ratedPumpHead());
+  pump.resetRatedPumpHead();
+  EXPECT_EQ(179352, pump.ratedPumpHead());
+
+
+  // Rated Power Consumption: Optional Double
+  // Defaults to autosize in Ctor
+  EXPECT_TRUE(pump.isRatedPowerConsumptionAutosized());
+  EXPECT_TRUE(pump.setRatedPowerConsumption(10.03));
+  ASSERT_TRUE(pump.ratedPowerConsumption());
+  EXPECT_EQ(10.03, pump.ratedPowerConsumption().get());
+  pump.resetRatedPowerConsumption();
+  EXPECT_FALSE(pump.ratedPowerConsumption());
+  // Test autosizing
+  EXPECT_TRUE(pump.setRatedPowerConsumption(10.03));
+  EXPECT_FALSE(pump.isRatedPowerConsumptionAutosized());
+  pump.autosizeRatedPowerConsumption();
+  EXPECT_TRUE(pump.isRatedPowerConsumptionAutosized());
+
+
+  // Motor Efficiency:  Double
+  // Check Idd default: 0.9 (overriden in Ctor by same value)
+  EXPECT_EQ(0.9, pump.motorEfficiency());
+  EXPECT_TRUE(pump.setMotorEfficiency(0.45));
+  EXPECT_EQ(0.45, pump.motorEfficiency());
+  pump.resetMotorEfficiency();
+  EXPECT_EQ(0.9, pump.motorEfficiency());
+
+
+  // Fraction of Motor Inefficiencies to Fluid Stream:  Double
+  // Check Idd default: 0.0 (overriden in Ctor by same value)
+  EXPECT_EQ(0.0, pump.fractionofMotorInefficienciestoFluidStream());
+  EXPECT_TRUE(pump.setFractionofMotorInefficienciestoFluidStream(0.5));
+  EXPECT_EQ(0.5, pump.fractionofMotorInefficienciestoFluidStream());
+  pump.resetFractionofMotorInefficienciestoFluidStream();
+  EXPECT_EQ(0.0, pump.fractionofMotorInefficienciestoFluidStream());
+
+
+  // Pump Control Type:  String
+  // Check Idd default: "Continuous", which is overriden by Ctor as Intermittent actually...
+  EXPECT_EQ("Intermittent", pump.pumpControlType());
+  // Test a valid choice
+  EXPECT_TRUE(pump.setPumpControlType("Continuous"));
+  EXPECT_EQ("Continuous", pump.pumpControlType());
+  // Test an invalid choice
+  EXPECT_FALSE(pump.setPumpControlType("BadChoice"));
+  EXPECT_EQ("Continuous", pump.pumpControlType());
+
+
+  // Pump Flow Rate Schedule: Optional Object
+  // No Default
+  EXPECT_FALSE(pump.pumpFlowRateSchedule());
+  ScheduleCompact sch_pump(m);
+  EXPECT_TRUE(pump.setPumpFlowRateSchedule(sch_pump));
+  ASSERT_TRUE(pump.pumpFlowRateSchedule());
+  EXPECT_EQ(sch_pump, pump.pumpFlowRateSchedule().get());
+
+
+  // Pump Curve: Optional Object
+  // No Default
+  EXPECT_FALSE(pump.pumpCurve());
+  CurveLinear c(m);
+  EXPECT_TRUE(pump.setPumpCurve(c));
+  ASSERT_TRUE(pump.pumpCurve());
+  EXPECT_EQ(c, pump.pumpCurve().get());
+
+
+  // Impeller Diameter: Optional Double
+  // No Default
+  EXPECT_TRUE(pump.setImpellerDiameter(10.03));
+  ASSERT_TRUE(pump.impellerDiameter());
+  EXPECT_EQ(10.03, pump.impellerDiameter().get());
+  pump.resetImpellerDiameter();
+  EXPECT_FALSE(pump.impellerDiameter());
+
+
+  // Rotational Speed: Optional Double
+  // No Default
+  EXPECT_TRUE(pump.setRotationalSpeed(10.03));
+  ASSERT_TRUE(pump.rotationalSpeed());
+  EXPECT_EQ(10.03, pump.rotationalSpeed().get());
+  pump.resetRotationalSpeed();
+  EXPECT_FALSE(pump.rotationalSpeed());
+
+
+  // Zone: Optional Object
+  // No Default
+  EXPECT_FALSE(pump.zone());
+  ThermalZone z(m);
+  EXPECT_TRUE(pump.setZone(z));
+  ASSERT_TRUE(pump.zone());
+  EXPECT_EQ(z, pump.zone().get());
+
+
+  // Skin Loss Radiative Fraction:  Double
+  // No Default
+  EXPECT_TRUE(pump.setSkinLossRadiativeFraction(0.5));
+  EXPECT_EQ(0.5, pump.skinLossRadiativeFraction());
+
+
+  // Design Power Sizing Method:  String
+  // Default to PowerPerFlowPerPressure in Ctor
+  EXPECT_EQ("PowerPerFlowPerPressure", pump.designPowerSizingMethod());
+  // Test a valid choice
+  EXPECT_TRUE(pump.setDesignPowerSizingMethod("PowerPerFlow"));
+  EXPECT_EQ("PowerPerFlow", pump.designPowerSizingMethod());
+  // Test an invalid choice
+  EXPECT_FALSE(pump.setDesignPowerSizingMethod("BadChoice"));
+  EXPECT_EQ("PowerPerFlow", pump.designPowerSizingMethod());
+
+
+  // Design Electric Power per Unit Flow Rate:  Double
+  // Defaults in Ctor
+  EXPECT_EQ(348701.1, pump.designElectricPowerPerUnitFlowRate());
+  EXPECT_TRUE(pump.setDesignElectricPowerPerUnitFlowRate(1.0));
+  EXPECT_EQ(1.0, pump.designElectricPowerPerUnitFlowRate());
+
+
+  // Design Shaft Power per Unit Flow Rate per Unit Head:  Double
+  // Defaults in Ctor
+  EXPECT_EQ(1.282051282, pump.designShaftPowerPerUnitFlowRatePerUnitHead());
+  EXPECT_TRUE(pump.setDesignShaftPowerPerUnitFlowRatePerUnitHead(1.0));
+  EXPECT_EQ(1.0, pump.designShaftPowerPerUnitFlowRatePerUnitHead());
+}
+
 
 TEST_F(ModelFixture,PumpConstantSpeed_flowRateSchedule) {
   Model m;
@@ -109,129 +262,3 @@ TEST_F(ModelFixture,PumpConstantSpeed_addToNode) {
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
 }
-
-TEST_F(ModelFixture,PumpConstantSpeed_RatedFlowRate_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  PumpConstantSpeed pumpConstantSpeed(model);
-
-  Unit units = pumpConstantSpeed.getRatedFlowRate(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(pumpConstantSpeed.setRatedFlowRate(testQ));
-  OSOptionalQuantity q = pumpConstantSpeed.getRatedFlowRate(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,PumpConstantSpeed_RatedPumpHead_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  PumpConstantSpeed pumpConstantSpeed(model);
-
-  Unit units = pumpConstantSpeed.getRatedPumpHead(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(pumpConstantSpeed.setRatedPumpHead(testQ));
-  Quantity q = pumpConstantSpeed.getRatedPumpHead(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,PumpConstantSpeed_RatedPowerConsumption_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  PumpConstantSpeed pumpConstantSpeed(model);
-
-  Unit units = pumpConstantSpeed.getRatedPowerConsumption(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(pumpConstantSpeed.setRatedPowerConsumption(testQ));
-  OSOptionalQuantity q = pumpConstantSpeed.getRatedPowerConsumption(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,PumpConstantSpeed_MotorEfficiency_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  PumpConstantSpeed pumpConstantSpeed(model);
-
-  Unit units = pumpConstantSpeed.getMotorEfficiency(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(pumpConstantSpeed.setMotorEfficiency(testQ));
-  Quantity q = pumpConstantSpeed.getMotorEfficiency(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,PumpConstantSpeed_FractionofMotorInefficienciestoFluidStream_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  PumpConstantSpeed pumpConstantSpeed(model);
-
-  Unit units = pumpConstantSpeed.getFractionofMotorInefficienciestoFluidStream(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(pumpConstantSpeed.setFractionofMotorInefficienciestoFluidStream(testQ));
-  Quantity q = pumpConstantSpeed.getFractionofMotorInefficienciestoFluidStream(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,PumpConstantSpeed_ImpellerDiameter_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  PumpConstantSpeed pumpConstantSpeed(model);
-
-  Unit units = pumpConstantSpeed.getImpellerDiameter(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(pumpConstantSpeed.setImpellerDiameter(testQ));
-  OSOptionalQuantity q = pumpConstantSpeed.getImpellerDiameter(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,PumpConstantSpeed_RotationalSpeed_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  PumpConstantSpeed pumpConstantSpeed(model);
-
-  Unit units = pumpConstantSpeed.getRotationalSpeed(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(pumpConstantSpeed.setRotationalSpeed(testQ));
-  OSOptionalQuantity q = pumpConstantSpeed.getRotationalSpeed(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,PumpConstantSpeed_SkinLossRadiativeFraction_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  PumpConstantSpeed pumpConstantSpeed(model);
-
-  Unit units = pumpConstantSpeed.getSkinLossRadiativeFraction(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(pumpConstantSpeed.setSkinLossRadiativeFraction(testQ));
-  OSOptionalQuantity q = pumpConstantSpeed.getSkinLossRadiativeFraction(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-

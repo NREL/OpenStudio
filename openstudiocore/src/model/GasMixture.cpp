@@ -402,32 +402,9 @@ namespace detail {
     return value.get();
   }
 
-  openstudio::Quantity GasMixture_Impl::thickness_SI() const {
-    return getThickness(false);
-  }
-
-  openstudio::Quantity GasMixture_Impl::thickness_IP() const {
-    return getThickness(true);
-  }
-
-  Quantity GasMixture_Impl::getThickness(bool returnIP) const {
-    OptionalDouble value = thickness();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GasMixtureFields::Thickness, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool GasMixture_Impl::setThickness(double thickness) {
     bool result = setDouble(OS_WindowMaterial_GasMixtureFields::Thickness, thickness);
     return result;
-  }
-
-  bool GasMixture_Impl::setThickness(const Quantity& thickness) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_GasMixtureFields::Thickness,thickness);
-    if (!value) {
-      return false;
-    }
-    return setThickness(value.get());
   }
 
   int GasMixture_Impl::numberofGasesinMixture() const {
@@ -453,13 +430,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity GasMixture_Impl::getGas1Fraction(bool returnIP) const {
-    OptionalDouble value = gas1Fraction();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GasMixtureFields::Gas1Fraction, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   std::string GasMixture_Impl::gas2Type() const {
     boost::optional<std::string> value = getString(OS_WindowMaterial_GasMixtureFields::Gas2Type,true);
     OS_ASSERT(value);
@@ -470,13 +440,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_WindowMaterial_GasMixtureFields::Gas2Fraction,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity GasMixture_Impl::getGas2Fraction(bool returnIP) const {
-    OptionalDouble value = gas2Fraction();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GasMixtureFields::Gas2Fraction, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   std::string GasMixture_Impl::gas3Type() const {
@@ -493,11 +456,6 @@ namespace detail {
     return getDouble(OS_WindowMaterial_GasMixtureFields::Gas3Fraction,true);
   }
 
-  OSOptionalQuantity GasMixture_Impl::getGas3Fraction(bool returnIP) const {
-    OptionalDouble value = gas3Fraction();
-    return getQuantityFromDouble(OS_WindowMaterial_GasMixtureFields::Gas3Fraction, value, returnIP);
-  }
-
   std::string GasMixture_Impl::gas4Type() const {
     boost::optional<std::string> value = getString(OS_WindowMaterial_GasMixtureFields::Gas4Type,true);
     if(value){
@@ -512,11 +470,6 @@ namespace detail {
     return getDouble(OS_WindowMaterial_GasMixtureFields::Gas4Fraction,true);
   }
 
-  OSOptionalQuantity GasMixture_Impl::getGas4Fraction(bool returnIP) const {
-    OptionalDouble value = gas4Fraction();
-    return getQuantityFromDouble(OS_WindowMaterial_GasMixtureFields::Gas4Fraction, value, returnIP);
-  }
-
   bool GasMixture_Impl::setGas1Type(std::string gas1Type) {
     bool result = setString(OS_WindowMaterial_GasMixtureFields::Gas1Type, gas1Type);
     return result;
@@ -527,14 +480,6 @@ namespace detail {
     return result;
   }
 
-  bool GasMixture_Impl::setGas1Fraction(const Quantity& gas1Fraction) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_GasMixtureFields::Gas1Fraction,gas1Fraction);
-    if (!value) {
-      return false;
-    }
-    return setGas1Fraction(value.get());
-  }
-
   bool GasMixture_Impl::setGas2Type(std::string gas2Type) {
     bool result = setString(OS_WindowMaterial_GasMixtureFields::Gas2Type, gas2Type);
     return result;
@@ -543,14 +488,6 @@ namespace detail {
   bool GasMixture_Impl::setGas2Fraction(double gas2Fraction) {
     bool result = setDouble(OS_WindowMaterial_GasMixtureFields::Gas2Fraction, gas2Fraction);
     return result;
-  }
-
-  bool GasMixture_Impl::setGas2Fraction(const Quantity& gas2Fraction) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_GasMixtureFields::Gas2Fraction,gas2Fraction);
-    if (!value) {
-      return false;
-    }
-    return setGas2Fraction(value.get());
   }
 
   bool GasMixture_Impl::setGas3Type(boost::optional<std::string> gas3Type) {
@@ -588,21 +525,6 @@ namespace detail {
     else {
       resetGas3Fraction();
       result = true;
-    }
-    return result;
-  }
-
-  bool GasMixture_Impl::setGas3Fraction(const OSOptionalQuantity& gas3Fraction) {
-    bool result(false);
-    OptionalDouble value;
-    if (gas3Fraction.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_GasMixtureFields::Gas3Fraction,gas3Fraction.get());
-      if (value) {
-        result = setGas3Fraction(value);
-      }
-    }
-    else {
-      result = setGas3Fraction(value);
     }
     return result;
   }
@@ -651,21 +573,6 @@ namespace detail {
     return result;
   }
 
-  bool GasMixture_Impl::setGas4Fraction(const OSOptionalQuantity& gas4Fraction) {
-    bool result(false);
-    OptionalDouble value;
-    if (gas4Fraction.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_GasMixtureFields::Gas4Fraction,gas4Fraction.get());
-      if (value) {
-        result = setGas4Fraction(value);
-      }
-    }
-    else {
-      result = setGas4Fraction(value);
-    }
-    return result;
-  }
-
   void GasMixture_Impl::resetGas4Fraction() {
     bool result = setString(OS_WindowMaterial_GasMixtureFields::Gas4Fraction, "");
     OS_ASSERT(result);
@@ -675,48 +582,16 @@ namespace detail {
     return GasMixture::gas1TypeValues();
   }
 
-  openstudio::Quantity GasMixture_Impl::gas1Fraction_SI() const {
-    return getGas1Fraction(false);
-  }
-
-  openstudio::Quantity GasMixture_Impl::gas1Fraction_IP() const {
-    return getGas1Fraction(true);
-  }
-
   std::vector<std::string> GasMixture_Impl::gas2TypeValues() const {
     return GasMixture::gas2TypeValues();
-  }
-
-  openstudio::Quantity GasMixture_Impl::gas2Fraction_SI() const {
-    return getGas2Fraction(false);
-  }
-
-  openstudio::Quantity GasMixture_Impl::gas2Fraction_IP() const {
-    return getGas2Fraction(true);
   }
 
   std::vector<std::string> GasMixture_Impl::gas3TypeValues() const {
     return GasMixture::gas3TypeValues();
   }
 
-  openstudio::OSOptionalQuantity GasMixture_Impl::gas3Fraction_SI() const {
-    return getGas3Fraction(false);
-  }
-
-  openstudio::OSOptionalQuantity GasMixture_Impl::gas3Fraction_IP() const {
-    return getGas3Fraction(true);
-  }
-
   std::vector<std::string> GasMixture_Impl::gas4TypeValues() const {
     return GasMixture::gas4TypeValues();
-  }
-
-  openstudio::OSOptionalQuantity GasMixture_Impl::gas4Fraction_SI() const {
-    return getGas4Fraction(false);
-  }
-
-  openstudio::OSOptionalQuantity GasMixture_Impl::gas4Fraction_IP() const {
-    return getGas4Fraction(true);
   }
 
 } // detail
@@ -860,15 +735,7 @@ double GasMixture::thickness() const {
   return getImpl<detail::GasMixture_Impl>()->thickness();
 }
 
-Quantity GasMixture::getThickness(bool returnIP) const {
-  return getImpl<detail::GasMixture_Impl>()->getThickness(returnIP);
-}
-
 bool GasMixture::setThickness(double thickness) {
-  return getImpl<detail::GasMixture_Impl>()->setThickness(thickness);
-}
-
-bool GasMixture::setThickness(const Quantity& thickness) {
   return getImpl<detail::GasMixture_Impl>()->setThickness(thickness);
 }
 
@@ -888,20 +755,12 @@ double GasMixture::gas1Fraction() const {
   return getImpl<detail::GasMixture_Impl>()->gas1Fraction();
 }
 
-Quantity GasMixture::getGas1Fraction(bool returnIP) const {
-  return getImpl<detail::GasMixture_Impl>()->getGas1Fraction(returnIP);
-}
-
 std::string GasMixture::gas2Type() const {
   return getImpl<detail::GasMixture_Impl>()->gas2Type();
 }
 
 double GasMixture::gas2Fraction() const {
   return getImpl<detail::GasMixture_Impl>()->gas2Fraction();
-}
-
-Quantity GasMixture::getGas2Fraction(bool returnIP) const {
-  return getImpl<detail::GasMixture_Impl>()->getGas2Fraction(returnIP);
 }
 
 std::string GasMixture::gas3Type() const {
@@ -912,20 +771,12 @@ boost::optional<double> GasMixture::gas3Fraction() const {
   return getImpl<detail::GasMixture_Impl>()->gas3Fraction();
 }
 
-OSOptionalQuantity GasMixture::getGas3Fraction(bool returnIP) const {
-  return getImpl<detail::GasMixture_Impl>()->getGas3Fraction(returnIP);
-}
-
 std::string GasMixture::gas4Type() const {
   return getImpl<detail::GasMixture_Impl>()->gas4Type();
 }
 
 boost::optional<double> GasMixture::gas4Fraction() const {
   return getImpl<detail::GasMixture_Impl>()->gas4Fraction();
-}
-
-OSOptionalQuantity GasMixture::getGas4Fraction(bool returnIP) const {
-  return getImpl<detail::GasMixture_Impl>()->getGas4Fraction(returnIP);
 }
 
 bool GasMixture::setGas1Type(std::string gas1Type) {
@@ -937,10 +788,6 @@ void GasMixture::resetGas1Type() {
 }
 
 bool GasMixture::setGas1Fraction(double gas1Fraction) {
-  return getImpl<detail::GasMixture_Impl>()->setGas1Fraction(gas1Fraction);
-}
-
-bool GasMixture::setGas1Fraction(const Quantity& gas1Fraction) {
   return getImpl<detail::GasMixture_Impl>()->setGas1Fraction(gas1Fraction);
 }
 
@@ -960,10 +807,6 @@ bool GasMixture::setGas2Fraction(double gas2Fraction) {
   return getImpl<detail::GasMixture_Impl>()->setGas2Fraction(gas2Fraction);
 }
 
-bool GasMixture::setGas2Fraction(const Quantity& gas2Fraction) {
-  return getImpl<detail::GasMixture_Impl>()->setGas2Fraction(gas2Fraction);
-}
-
 void GasMixture::resetGas2Fraction() {
   getImpl<detail::GasMixture_Impl>()->resetGas2Fraction();
 }
@@ -977,10 +820,6 @@ void GasMixture::resetGas3Type() {
 }
 
 bool GasMixture::setGas3Fraction(double gas3Fraction) {
-  return getImpl<detail::GasMixture_Impl>()->setGas3Fraction(gas3Fraction);
-}
-
-bool GasMixture::setGas3Fraction(const Quantity& gas3Fraction) {
   return getImpl<detail::GasMixture_Impl>()->setGas3Fraction(gas3Fraction);
 }
 
@@ -1000,10 +839,6 @@ bool GasMixture::setGas4Fraction(double gas4Fraction) {
   return getImpl<detail::GasMixture_Impl>()->setGas4Fraction(gas4Fraction);
 }
 
-bool GasMixture::setGas4Fraction(const Quantity& gas4Fraction) {
-  return getImpl<detail::GasMixture_Impl>()->setGas4Fraction(gas4Fraction);
-}
-
 void GasMixture::resetGas4Fraction() {
   getImpl<detail::GasMixture_Impl>()->resetGas4Fraction();
 }
@@ -1016,4 +851,3 @@ GasMixture::GasMixture(std::shared_ptr<detail::GasMixture_Impl> impl)
 
 } // model
 } // openstudio
-

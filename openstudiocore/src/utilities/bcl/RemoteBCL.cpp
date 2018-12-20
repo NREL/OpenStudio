@@ -65,7 +65,7 @@ namespace openstudio{
     return m_ofs.good();
   }
 
-  RemoteBCL::DownloadFile::DownloadFile(openstudio::path t_path) 
+  RemoteBCL::DownloadFile::DownloadFile(openstudio::path t_path)
     : m_fileName(std::move(t_path))
   {
   }
@@ -567,7 +567,8 @@ namespace openstudio{
   QString RemoteBCL::checkForRedirect(const QNetworkReply* reply) const
   {
     // In Qt > 5.3, use QNetworkRequest::FollowRedirectsAttribute instead
-    QVariant replyStatus = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    // TODO: JM 2018-12-14 QNetworkRequest will have to be removed anyway. Now just converting to int to remove last Q Variant
+    int replyStatus = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     if (replyStatus == 301 || replyStatus == 302) {
       return reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
     }
@@ -1130,9 +1131,9 @@ namespace openstudio{
       }
 
       if (componentType == "measure") {
-        emit measureDownloaded(m_downloadUid, m_lastMeasureDownload);
+        //emit measureDownloaded(m_downloadUid, m_lastMeasureDownload);
       } else {
-        emit componentDownloaded(m_downloadUid, m_lastComponentDownload);
+        //emit componentDownloaded(m_downloadUid, m_lastComponentDownload);
       }
 
       m_mutex.unlock();
@@ -1160,7 +1161,7 @@ namespace openstudio{
         setLastTotalResults(0);
       }
 
-      emit metaSearchCompleted(m_lastMetaSearch);
+      //emit metaSearchCompleted(m_lastMetaSearch);
 
       m_mutex.unlock();
     }
@@ -1181,7 +1182,7 @@ namespace openstudio{
         m_lastSearch = processSearchResponse(*remoteQueryResponse);
       }
 
-      emit searchCompleted(m_lastSearch);
+      //emit searchCompleted(m_lastSearch);
 
       m_mutex.unlock();
     }

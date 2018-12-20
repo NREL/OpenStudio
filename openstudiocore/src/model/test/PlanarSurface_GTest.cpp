@@ -86,4 +86,3 @@ TEST_F(ModelFixture, PlanarSurface_FilmResistanceConversions)
   EXPECT_EQ("s^3*K/kg",qc->standardUnitsString());
   EXPECT_NEAR(qc->value(),PlanarSurface::filmResistance(FilmResistanceType::MovingAir_7p5mph),1.0E-8);
 }
-

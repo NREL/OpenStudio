@@ -30,9 +30,23 @@
 #ifndef AIRFLOW_CONTAM_PRJDEFINES_HPP
 #define AIRFLOW_CONTAM_PRJDEFINES_HPP
 
-#define PRJFLOAT QString
-#define STR_TO_FLOAT(a) QString::fromStdString(a)
-#define FLOAT_CHECK(a,b) QString::fromStdString(a).toDouble(b)
+#include "../AirflowAPI.hpp"
+
+#include <string>
+
+namespace openstudio {
+  namespace contam {
+    namespace detail {
+      AIRFLOW_API double contamFloatNoCheck(const std::string& a);
+      AIRFLOW_API double contamFloatCheck(const std::string& a, bool* b);
+    }
+  }
+}
+
+#define PRJFLOAT std::string
+#define STR_TO_FLOAT(a) a
+#define FLOAT_NO_CHECK(a) openstudio::contam::detail::contamFloatNoCheck(a)
+#define FLOAT_CHECK(a,b) openstudio::contam::detail::contamFloatCheck(a,b)
 #define ANY_TO_STR openstudio::toString
 
 // CONTAM icon definitions

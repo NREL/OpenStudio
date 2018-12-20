@@ -101,7 +101,6 @@ namespace detail {
     /// Returns the value in effect at the given time.  If time is less than 0 days or greater than 1 day, 0 is returned.
     double getValue(const openstudio::Time& time) const;
 
-    boost::optional<Quantity> getValueAsQuantity(const openstudio::Time& time, bool returnIP=false) const;
 
     //@}
     /** @name Setters */
@@ -120,8 +119,6 @@ namespace detail {
     /// Returns false if time is less than 0 days or greater than 1 day.  Replaces existing value
     /// for same time if it exists.
     bool addValue(const openstudio::Time& untilTime, double value);
-
-    bool addValue(const openstudio::Time& untilTime, const Quantity& value);
 
     boost::optional<double> removeValue(const openstudio::Time& time);
 

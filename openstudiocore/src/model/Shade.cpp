@@ -74,20 +74,6 @@ namespace detail {
     return Shade::iddObjectType();
   }
 
-  Quantity Shade_Impl::getSolarTransmittance(bool returnIP) const {
-    OptionalDouble value = solarTransmittance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::SolarTransmittance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
-  Quantity Shade_Impl::getSolarReflectance(bool returnIP) const {
-    OptionalDouble value = solarReflectance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::SolarReflectance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double Shade_Impl::visibleTransmittance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::VisibleTransmittance,true);
     OS_ASSERT(value);
@@ -99,38 +85,10 @@ namespace detail {
     return od;
   }
 
-  Quantity Shade_Impl::getVisibleTransmittance(bool returnIP) const {
-    OptionalDouble value = visibleTransmittance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::VisibleTransmittance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
-  Quantity Shade_Impl::getVisibleReflectance(bool returnIP) const {
-    OptionalDouble value = visibleReflectance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::VisibleReflectance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double Shade_Impl::thermalHemisphericalEmissivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::ThermalHemisphericalEmissivity,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Shade_Impl::getThermalHemisphericalEmissivity(bool returnIP) const {
-    OptionalDouble value = thermalHemisphericalEmissivity();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::ThermalHemisphericalEmissivity, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
-  Quantity Shade_Impl::getThermalTransmittance(bool returnIP) const {
-    OptionalDouble value = thermalTransmittance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::ThermalTransmittance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   double Shade_Impl::thickness() const {
@@ -223,37 +181,16 @@ namespace detail {
     return setThickness(value/thermalResistivity());
   }
 
-  Quantity Shade_Impl::getThickness(bool returnIP) const {
-    OptionalDouble value = thickness();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::Thickness, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double Shade_Impl::conductivity() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::Conductivity,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  Quantity Shade_Impl::getConductivity(bool returnIP) const {
-    OptionalDouble value = conductivity();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::Conductivity, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double Shade_Impl::shadetoGlassDistance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::ShadetoGlassDistance,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Shade_Impl::getShadetoGlassDistance(bool returnIP) const {
-    OptionalDouble value = shadetoGlassDistance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::ShadetoGlassDistance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Shade_Impl::isShadetoGlassDistanceDefaulted() const {
@@ -266,13 +203,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Shade_Impl::getTopOpeningMultiplier(bool returnIP) const {
-    OptionalDouble value = topOpeningMultiplier();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::TopOpeningMultiplier, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool Shade_Impl::isTopOpeningMultiplierDefaulted() const {
     return isEmpty(OS_WindowMaterial_ShadeFields::TopOpeningMultiplier);
   }
@@ -281,13 +211,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::BottomOpeningMultiplier,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Shade_Impl::getBottomOpeningMultiplier(bool returnIP) const {
-    OptionalDouble value = bottomOpeningMultiplier();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::BottomOpeningMultiplier, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Shade_Impl::isBottomOpeningMultiplierDefaulted() const {
@@ -300,13 +223,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Shade_Impl::getLeftSideOpeningMultiplier(bool returnIP) const {
-    OptionalDouble value = leftSideOpeningMultiplier();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::LeftSideOpeningMultiplier, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool Shade_Impl::isLeftSideOpeningMultiplierDefaulted() const {
     return isEmpty(OS_WindowMaterial_ShadeFields::LeftSideOpeningMultiplier);
   }
@@ -315,13 +231,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_WindowMaterial_ShadeFields::RightSideOpeningMultiplier,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Shade_Impl::getRightSideOpeningMultiplier(bool returnIP) const {
-    OptionalDouble value = rightSideOpeningMultiplier();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::RightSideOpeningMultiplier, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Shade_Impl::isRightSideOpeningMultiplierDefaulted() const {
@@ -334,13 +243,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Shade_Impl::getAirflowPermeability(bool returnIP) const {
-    OptionalDouble value = airflowPermeability();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_ShadeFields::AirflowPermeability, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool Shade_Impl::isAirflowPermeabilityDefaulted() const {
     return isEmpty(OS_WindowMaterial_ShadeFields::AirflowPermeability);
   }
@@ -350,25 +252,9 @@ namespace detail {
     return result;
   }
 
-  bool Shade_Impl::setSolarTransmittance(const Quantity& solarTransmittance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::SolarTransmittance,solarTransmittance);
-    if (!value) {
-      return false;
-    }
-    return setSolarTransmittance(value.get());
-  }
-
   bool Shade_Impl::setSolarReflectance(double solarReflectance) {
     bool result = setDouble(OS_WindowMaterial_ShadeFields::SolarReflectance, solarReflectance);
     return result;
-  }
-
-  bool Shade_Impl::setSolarReflectance(const Quantity& solarReflectance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::SolarReflectance,solarReflectance);
-    if (!value) {
-      return false;
-    }
-    return setSolarReflectance(value.get());
   }
 
   bool Shade_Impl::setVisibleTransmittance(double visibleTransmittance) {
@@ -376,25 +262,9 @@ namespace detail {
     return result;
   }
 
-  bool Shade_Impl::setVisibleTransmittance(const Quantity& visibleTransmittance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::VisibleTransmittance,visibleTransmittance);
-    if (!value) {
-      return false;
-    }
-    return setVisibleTransmittance(value.get());
-  }
-
   bool Shade_Impl::setVisibleReflectance(double visibleReflectance) {
     bool result = setDouble(OS_WindowMaterial_ShadeFields::VisibleReflectance, visibleReflectance);
     return result;
-  }
-
-  bool Shade_Impl::setVisibleReflectance(const Quantity& visibleReflectance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::VisibleReflectance,visibleReflectance);
-    if (!value) {
-      return false;
-    }
-    return setVisibleReflectance(value.get());
   }
 
   bool Shade_Impl::setThermalHemisphericalEmissivity(double thermalHemisphericalEmissivity) {
@@ -402,25 +272,9 @@ namespace detail {
     return result;
   }
 
-  bool Shade_Impl::setThermalHemisphericalEmissivity(const Quantity& thermalHemisphericalEmissivity) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::ThermalHemisphericalEmissivity,thermalHemisphericalEmissivity);
-    if (!value) {
-      return false;
-    }
-    return setThermalHemisphericalEmissivity(value.get());
-  }
-
   bool Shade_Impl::setThermalTransmittance(double thermalTransmittance) {
     bool result = setDouble(OS_WindowMaterial_ShadeFields::ThermalTransmittance, thermalTransmittance);
     return result;
-  }
-
-  bool Shade_Impl::setThermalTransmittance(const Quantity& thermalTransmittance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::ThermalTransmittance,thermalTransmittance);
-    if (!value) {
-      return false;
-    }
-    return setThermalTransmittance(value.get());
   }
 
   bool Shade_Impl::setThickness(double thickness) {
@@ -428,38 +282,14 @@ namespace detail {
     return result;
   }
 
-  bool Shade_Impl::setThickness(const Quantity& thickness) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::Thickness,thickness);
-    if (!value) {
-      return false;
-    }
-    return setThickness(value.get());
-  }
-
   bool Shade_Impl::setConductivity(double conductivity) {
     bool result = setDouble(OS_WindowMaterial_ShadeFields::Conductivity, conductivity);
     return result;
   }
 
-  bool Shade_Impl::setConductivity(const Quantity& conductivity) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::Conductivity,conductivity);
-    if (!value) {
-      return false;
-    }
-    return setConductivity(value.get());
-  }
-
   bool Shade_Impl::setShadetoGlassDistance(double shadetoGlassDistance) {
     bool result = setDouble(OS_WindowMaterial_ShadeFields::ShadetoGlassDistance, shadetoGlassDistance);
     return result;
-  }
-
-  bool Shade_Impl::setShadetoGlassDistance(const Quantity& shadetoGlassDistance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::ShadetoGlassDistance,shadetoGlassDistance);
-    if (!value) {
-      return false;
-    }
-    return setShadetoGlassDistance(value.get());
   }
 
   void Shade_Impl::resetShadetoGlassDistance() {
@@ -472,14 +302,6 @@ namespace detail {
     return result;
   }
 
-  bool Shade_Impl::setTopOpeningMultiplier(const Quantity& topOpeningMultiplier) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::TopOpeningMultiplier,topOpeningMultiplier);
-    if (!value) {
-      return false;
-    }
-    return setTopOpeningMultiplier(value.get());
-  }
-
   void Shade_Impl::resetTopOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_ShadeFields::TopOpeningMultiplier, "");
     OS_ASSERT(result);
@@ -488,14 +310,6 @@ namespace detail {
   bool Shade_Impl::setBottomOpeningMultiplier(double bottomOpeningMultiplier) {
     bool result = setDouble(OS_WindowMaterial_ShadeFields::BottomOpeningMultiplier, bottomOpeningMultiplier);
     return result;
-  }
-
-  bool Shade_Impl::setBottomOpeningMultiplier(const Quantity& bottomOpeningMultiplier) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::BottomOpeningMultiplier,bottomOpeningMultiplier);
-    if (!value) {
-      return false;
-    }
-    return setBottomOpeningMultiplier(value.get());
   }
 
   void Shade_Impl::resetBottomOpeningMultiplier() {
@@ -508,14 +322,6 @@ namespace detail {
     return result;
   }
 
-  bool Shade_Impl::setLeftSideOpeningMultiplier(const Quantity& leftSideOpeningMultiplier) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::LeftSideOpeningMultiplier,leftSideOpeningMultiplier);
-    if (!value) {
-      return false;
-    }
-    return setLeftSideOpeningMultiplier(value.get());
-  }
-
   void Shade_Impl::resetLeftSideOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_ShadeFields::LeftSideOpeningMultiplier, "");
     OS_ASSERT(result);
@@ -524,14 +330,6 @@ namespace detail {
   bool Shade_Impl::setRightSideOpeningMultiplier(double rightSideOpeningMultiplier) {
     bool result = setDouble(OS_WindowMaterial_ShadeFields::RightSideOpeningMultiplier, rightSideOpeningMultiplier);
     return result;
-  }
-
-  bool Shade_Impl::setRightSideOpeningMultiplier(const Quantity& rightSideOpeningMultiplier) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::RightSideOpeningMultiplier,rightSideOpeningMultiplier);
-    if (!value) {
-      return false;
-    }
-    return setRightSideOpeningMultiplier(value.get());
   }
 
   void Shade_Impl::resetRightSideOpeningMultiplier() {
@@ -544,129 +342,9 @@ namespace detail {
     return result;
   }
 
-  bool Shade_Impl::setAirflowPermeability(const Quantity& airflowPermeability) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_ShadeFields::AirflowPermeability,airflowPermeability);
-    if (!value) {
-      return false;
-    }
-    return setAirflowPermeability(value.get());
-  }
-
   void Shade_Impl::resetAirflowPermeability() {
     bool result = setString(OS_WindowMaterial_ShadeFields::AirflowPermeability, "");
     OS_ASSERT(result);
-  }
-
-  openstudio::Quantity Shade_Impl::solarTransmittance_SI() const {
-    return getSolarTransmittance(false);
-  }
-
-  openstudio::Quantity Shade_Impl::solarTransmittance_IP() const {
-    return getSolarTransmittance(true);
-  }
-
-  openstudio::Quantity Shade_Impl::solarReflectance_SI() const {
-    return getSolarReflectance(false);
-  }
-
-  openstudio::Quantity Shade_Impl::solarReflectance_IP() const {
-    return getSolarReflectance(true);
-  }
-
-  openstudio::Quantity Shade_Impl::visibleTransmittance_SI() const {
-    return getVisibleTransmittance(false);
-  }
-
-  openstudio::Quantity Shade_Impl::visibleTransmittance_IP() const {
-    return getVisibleTransmittance(true);
-  }
-
-  openstudio::Quantity Shade_Impl::visibleReflectance_SI() const {
-    return getVisibleReflectance(false);
-  }
-
-  openstudio::Quantity Shade_Impl::visibleReflectance_IP() const {
-    return getVisibleReflectance(true);
-  }
-
-  openstudio::Quantity Shade_Impl::thermalHemisphericalEmissivity_SI() const {
-    return getThermalHemisphericalEmissivity(false);
-  }
-
-  openstudio::Quantity Shade_Impl::thermalHemisphericalEmissivity_IP() const {
-    return getThermalHemisphericalEmissivity(true);
-  }
-
-  openstudio::Quantity Shade_Impl::thermalTransmittance_SI() const {
-    return getThermalTransmittance(false);
-  }
-
-  openstudio::Quantity Shade_Impl::thermalTransmittance_IP() const {
-    return getThermalTransmittance(true);
-  }
-
-  openstudio::Quantity Shade_Impl::thickness_SI() const {
-    return getThickness(false);
-  }
-
-  openstudio::Quantity Shade_Impl::thickness_IP() const {
-    return getThickness(true);
-  }
-
-  openstudio::Quantity Shade_Impl::conductivity_SI() const {
-    return getConductivity(false);
-  }
-
-  openstudio::Quantity Shade_Impl::conductivity_IP() const {
-    return getConductivity(true);
-  }
-
-  openstudio::Quantity Shade_Impl::shadetoGlassDistance_SI() const {
-    return getShadetoGlassDistance(false);
-  }
-
-  openstudio::Quantity Shade_Impl::shadetoGlassDistance_IP() const {
-    return getShadetoGlassDistance(true);
-  }
-
-  openstudio::Quantity Shade_Impl::topOpeningMultiplier_SI() const {
-    return getTopOpeningMultiplier(false);
-  }
-
-  openstudio::Quantity Shade_Impl::topOpeningMultiplier_IP() const {
-    return getTopOpeningMultiplier(true);
-  }
-
-  openstudio::Quantity Shade_Impl::bottomOpeningMultiplier_SI() const {
-    return getBottomOpeningMultiplier(false);
-  }
-
-  openstudio::Quantity Shade_Impl::bottomOpeningMultiplier_IP() const {
-    return getBottomOpeningMultiplier(true);
-  }
-
-  openstudio::Quantity Shade_Impl::leftSideOpeningMultiplier_SI() const {
-    return getLeftSideOpeningMultiplier(false);
-  }
-
-  openstudio::Quantity Shade_Impl::leftSideOpeningMultiplier_IP() const {
-    return getLeftSideOpeningMultiplier(true);
-  }
-
-  openstudio::Quantity Shade_Impl::rightSideOpeningMultiplier_SI() const {
-    return getRightSideOpeningMultiplier(false);
-  }
-
-  openstudio::Quantity Shade_Impl::rightSideOpeningMultiplier_IP() const {
-    return getRightSideOpeningMultiplier(true);
-  }
-
-  openstudio::Quantity Shade_Impl::airflowPermeability_SI() const {
-    return getAirflowPermeability(false);
-  }
-
-  openstudio::Quantity Shade_Impl::airflowPermeability_IP() const {
-    return getAirflowPermeability(true);
   }
 
 } // detail
@@ -726,35 +404,12 @@ double Shade::thermalResistance() const {
   return getImpl<detail::Shade_Impl>()->thermalResistance();
 }
 
-Quantity Shade::getThermalTransmittance(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getThermalTransmittance(returnIP);
-}
-Quantity Shade::getSolarTransmittance(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getSolarTransmittance(returnIP);
-}
-
-Quantity Shade::getSolarReflectance(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getSolarReflectance(returnIP);
-}
-
 double Shade::visibleTransmittance() const {
   return getImpl<detail::Shade_Impl>()->visibleTransmittance();
 }
 
-Quantity Shade::getVisibleTransmittance(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getVisibleTransmittance(returnIP);
-}
-
-Quantity Shade::getVisibleReflectance(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getVisibleReflectance(returnIP);
-}
-
 double Shade::thermalHemisphericalEmissivity() const {
   return getImpl<detail::Shade_Impl>()->thermalHemisphericalEmissivity();
-}
-
-Quantity Shade::getThermalHemisphericalEmissivity(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getThermalHemisphericalEmissivity(returnIP);
 }
 
 double Shade::thermalTransmittance() const {
@@ -805,24 +460,12 @@ double Shade::thickness() const {
   return getImpl<detail::Shade_Impl>()->thickness();
 }
 
-Quantity Shade::getThickness(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getThickness(returnIP);
-}
-
 double Shade::conductivity() const {
   return getImpl<detail::Shade_Impl>()->conductivity();
 }
 
-Quantity Shade::getConductivity(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getConductivity(returnIP);
-}
-
 double Shade::shadetoGlassDistance() const {
   return getImpl<detail::Shade_Impl>()->shadetoGlassDistance();
-}
-
-Quantity Shade::getShadetoGlassDistance(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getShadetoGlassDistance(returnIP);
 }
 
 bool Shade::isShadetoGlassDistanceDefaulted() const {
@@ -833,20 +476,12 @@ double Shade::topOpeningMultiplier() const {
   return getImpl<detail::Shade_Impl>()->topOpeningMultiplier();
 }
 
-Quantity Shade::getTopOpeningMultiplier(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getTopOpeningMultiplier(returnIP);
-}
-
 bool Shade::isTopOpeningMultiplierDefaulted() const {
   return getImpl<detail::Shade_Impl>()->isTopOpeningMultiplierDefaulted();
 }
 
 double Shade::bottomOpeningMultiplier() const {
   return getImpl<detail::Shade_Impl>()->bottomOpeningMultiplier();
-}
-
-Quantity Shade::getBottomOpeningMultiplier(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getBottomOpeningMultiplier(returnIP);
 }
 
 bool Shade::isBottomOpeningMultiplierDefaulted() const {
@@ -857,20 +492,12 @@ double Shade::leftSideOpeningMultiplier() const {
   return getImpl<detail::Shade_Impl>()->leftSideOpeningMultiplier();
 }
 
-Quantity Shade::getLeftSideOpeningMultiplier(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getLeftSideOpeningMultiplier(returnIP);
-}
-
 bool Shade::isLeftSideOpeningMultiplierDefaulted() const {
   return getImpl<detail::Shade_Impl>()->isLeftSideOpeningMultiplierDefaulted();
 }
 
 double Shade::rightSideOpeningMultiplier() const {
   return getImpl<detail::Shade_Impl>()->rightSideOpeningMultiplier();
-}
-
-Quantity Shade::getRightSideOpeningMultiplier(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getRightSideOpeningMultiplier(returnIP);
 }
 
 bool Shade::isRightSideOpeningMultiplierDefaulted() const {
@@ -881,10 +508,6 @@ double Shade::airflowPermeability() const {
   return getImpl<detail::Shade_Impl>()->airflowPermeability();
 }
 
-Quantity Shade::getAirflowPermeability(bool returnIP) const {
-  return getImpl<detail::Shade_Impl>()->getAirflowPermeability(returnIP);
-}
-
 bool Shade::isAirflowPermeabilityDefaulted() const {
   return getImpl<detail::Shade_Impl>()->isAirflowPermeabilityDefaulted();
 }
@@ -893,15 +516,7 @@ bool Shade::setSolarTransmittance(double solarTransmittance) {
   return getImpl<detail::Shade_Impl>()->setSolarTransmittance(solarTransmittance);
 }
 
-bool Shade::setSolarTransmittance(const Quantity& solarTransmittance) {
-  return getImpl<detail::Shade_Impl>()->setSolarTransmittance(solarTransmittance);
-}
-
 bool Shade::setSolarReflectance(double solarReflectance) {
-  return getImpl<detail::Shade_Impl>()->setSolarReflectance(solarReflectance);
-}
-
-bool Shade::setSolarReflectance(const Quantity& solarReflectance) {
   return getImpl<detail::Shade_Impl>()->setSolarReflectance(solarReflectance);
 }
 
@@ -909,15 +524,7 @@ bool Shade::setVisibleTransmittance(double visibleTransmittance) {
   return getImpl<detail::Shade_Impl>()->setVisibleTransmittance(visibleTransmittance);
 }
 
-bool Shade::setVisibleTransmittance(const Quantity& visibleTransmittance) {
-  return getImpl<detail::Shade_Impl>()->setVisibleTransmittance(visibleTransmittance);
-}
-
 bool Shade::setVisibleReflectance(double visibleReflectance) {
-  return getImpl<detail::Shade_Impl>()->setVisibleReflectance(visibleReflectance);
-}
-
-bool Shade::setVisibleReflectance(const Quantity& visibleReflectance) {
   return getImpl<detail::Shade_Impl>()->setVisibleReflectance(visibleReflectance);
 }
 
@@ -925,19 +532,7 @@ bool Shade::setThermalHemisphericalEmissivity(double thermalHemisphericalEmissiv
   return getImpl<detail::Shade_Impl>()->setThermalHemisphericalEmissivity(thermalHemisphericalEmissivity);
 }
 
-bool Shade::setThermalHemisphericalEmissivity(const Quantity& thermalHemisphericalEmissivity) {
-  return getImpl<detail::Shade_Impl>()->setThermalHemisphericalEmissivity(thermalHemisphericalEmissivity);
-}
-
-bool Shade::setThermalTransmittance(const Quantity& thermalTransmittance) {
-  return getImpl<detail::Shade_Impl>()->setThermalTransmittance(thermalTransmittance);
-}
-
 bool Shade::setThickness(double thickness) {
-  return getImpl<detail::Shade_Impl>()->setThickness(thickness);
-}
-
-bool Shade::setThickness(const Quantity& thickness) {
   return getImpl<detail::Shade_Impl>()->setThickness(thickness);
 }
 
@@ -945,15 +540,7 @@ bool Shade::setConductivity(double conductivity) {
   return getImpl<detail::Shade_Impl>()->setConductivity(conductivity);
 }
 
-bool Shade::setConductivity(const Quantity& conductivity) {
-  return getImpl<detail::Shade_Impl>()->setConductivity(conductivity);
-}
-
 bool Shade::setShadetoGlassDistance(double shadetoGlassDistance) {
-  return getImpl<detail::Shade_Impl>()->setShadetoGlassDistance(shadetoGlassDistance);
-}
-
-bool Shade::setShadetoGlassDistance(const Quantity& shadetoGlassDistance) {
   return getImpl<detail::Shade_Impl>()->setShadetoGlassDistance(shadetoGlassDistance);
 }
 
@@ -965,19 +552,11 @@ bool Shade::setTopOpeningMultiplier(double topOpeningMultiplier) {
   return getImpl<detail::Shade_Impl>()->setTopOpeningMultiplier(topOpeningMultiplier);
 }
 
-bool Shade::setTopOpeningMultiplier(const Quantity& topOpeningMultiplier) {
-  return getImpl<detail::Shade_Impl>()->setTopOpeningMultiplier(topOpeningMultiplier);
-}
-
 void Shade::resetTopOpeningMultiplier() {
   getImpl<detail::Shade_Impl>()->resetTopOpeningMultiplier();
 }
 
 bool Shade::setBottomOpeningMultiplier(double bottomOpeningMultiplier) {
-  return getImpl<detail::Shade_Impl>()->setBottomOpeningMultiplier(bottomOpeningMultiplier);
-}
-
-bool Shade::setBottomOpeningMultiplier(const Quantity& bottomOpeningMultiplier) {
   return getImpl<detail::Shade_Impl>()->setBottomOpeningMultiplier(bottomOpeningMultiplier);
 }
 
@@ -989,10 +568,6 @@ bool Shade::setLeftSideOpeningMultiplier(double leftSideOpeningMultiplier) {
   return getImpl<detail::Shade_Impl>()->setLeftSideOpeningMultiplier(leftSideOpeningMultiplier);
 }
 
-bool Shade::setLeftSideOpeningMultiplier(const Quantity& leftSideOpeningMultiplier) {
-  return getImpl<detail::Shade_Impl>()->setLeftSideOpeningMultiplier(leftSideOpeningMultiplier);
-}
-
 void Shade::resetLeftSideOpeningMultiplier() {
   getImpl<detail::Shade_Impl>()->resetLeftSideOpeningMultiplier();
 }
@@ -1001,19 +576,11 @@ bool Shade::setRightSideOpeningMultiplier(double rightSideOpeningMultiplier) {
   return getImpl<detail::Shade_Impl>()->setRightSideOpeningMultiplier(rightSideOpeningMultiplier);
 }
 
-bool Shade::setRightSideOpeningMultiplier(const Quantity& rightSideOpeningMultiplier) {
-  return getImpl<detail::Shade_Impl>()->setRightSideOpeningMultiplier(rightSideOpeningMultiplier);
-}
-
 void Shade::resetRightSideOpeningMultiplier() {
   getImpl<detail::Shade_Impl>()->resetRightSideOpeningMultiplier();
 }
 
 bool Shade::setAirflowPermeability(double airflowPermeability) {
-  return getImpl<detail::Shade_Impl>()->setAirflowPermeability(airflowPermeability);
-}
-
-bool Shade::setAirflowPermeability(const Quantity& airflowPermeability) {
   return getImpl<detail::Shade_Impl>()->setAirflowPermeability(airflowPermeability);
 }
 
@@ -1029,4 +596,3 @@ Shade::Shade(std::shared_ptr<detail::Shade_Impl> impl)
 
 } // model
 } // openstudio
-

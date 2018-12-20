@@ -104,24 +104,10 @@ namespace detail {
     return value.get();
   }
 
-  Quantity SizingPlant_Impl::getDesignLoopExitTemperature(bool returnIP) const {
-    OptionalDouble value = designLoopExitTemperature();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_PlantFields::DesignLoopExitTemperature, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double SizingPlant_Impl::loopDesignTemperatureDifference() const {
     boost::optional<double> value = getDouble(OS_Sizing_PlantFields::LoopDesignTemperatureDifference,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity SizingPlant_Impl::getLoopDesignTemperatureDifference(bool returnIP) const {
-    OptionalDouble value = loopDesignTemperatureDifference();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_PlantFields::LoopDesignTemperatureDifference, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool SizingPlant_Impl::setPlantLoop(const PlantLoop& plantLoop) {
@@ -140,26 +126,9 @@ namespace detail {
     return result;
   }
 
-  bool SizingPlant_Impl::setDesignLoopExitTemperature(const Quantity& designLoopExitTemperature) {
-    OptionalDouble value = getDoubleFromQuantity(OS_Sizing_PlantFields::DesignLoopExitTemperature,designLoopExitTemperature);
-    if (!value) {
-      return false;
-    }
-    setDesignLoopExitTemperature(value.get());
-    return true;
-  }
-
   bool SizingPlant_Impl::setLoopDesignTemperatureDifference(double loopDesignTemperatureDifference) {
     bool result = setDouble(OS_Sizing_PlantFields::LoopDesignTemperatureDifference, loopDesignTemperatureDifference);
     return result;
-  }
-
-  bool SizingPlant_Impl::setLoopDesignTemperatureDifference(const Quantity& loopDesignTemperatureDifference) {
-    OptionalDouble value = getDoubleFromQuantity(OS_Sizing_PlantFields::LoopDesignTemperatureDifference,loopDesignTemperatureDifference);
-    if (!value) {
-      return false;
-    }
-    return setLoopDesignTemperatureDifference(value.get());
   }
 
   boost::optional<PlantLoop> SizingPlant_Impl::optionalPlantLoop() const {
@@ -168,22 +137,6 @@ namespace detail {
 
   std::vector<std::string> SizingPlant_Impl::loopTypeValues() const {
     return SizingPlant::loopTypeValues();
-  }
-
-  openstudio::Quantity SizingPlant_Impl::designLoopExitTemperature_SI() const {
-    return getDesignLoopExitTemperature(false);
-  }
-
-  openstudio::Quantity SizingPlant_Impl::designLoopExitTemperature_IP() const {
-    return getDesignLoopExitTemperature(true);
-  }
-
-  openstudio::Quantity SizingPlant_Impl::loopDesignTemperatureDifference_SI() const {
-    return getLoopDesignTemperatureDifference(false);
-  }
-
-  openstudio::Quantity SizingPlant_Impl::loopDesignTemperatureDifference_IP() const {
-    return getLoopDesignTemperatureDifference(true);
   }
 
   boost::optional<ModelObject> SizingPlant_Impl::plantLoopAsModelObject() const {
@@ -273,16 +226,8 @@ double SizingPlant::designLoopExitTemperature() const {
   return getImpl<detail::SizingPlant_Impl>()->designLoopExitTemperature();
 }
 
-Quantity SizingPlant::getDesignLoopExitTemperature(bool returnIP) const {
-  return getImpl<detail::SizingPlant_Impl>()->getDesignLoopExitTemperature(returnIP);
-}
-
 double SizingPlant::loopDesignTemperatureDifference() const {
   return getImpl<detail::SizingPlant_Impl>()->loopDesignTemperatureDifference();
-}
-
-Quantity SizingPlant::getLoopDesignTemperatureDifference(bool returnIP) const {
-  return getImpl<detail::SizingPlant_Impl>()->getLoopDesignTemperatureDifference(returnIP);
 }
 
 bool SizingPlant::setPlantLoop(const PlantLoop& plantLoop) {
@@ -297,15 +242,7 @@ bool SizingPlant::setDesignLoopExitTemperature(double designLoopExitTemperature)
   return getImpl<detail::SizingPlant_Impl>()->setDesignLoopExitTemperature(designLoopExitTemperature);
 }
 
-bool SizingPlant::setDesignLoopExitTemperature(const Quantity& designLoopExitTemperature) {
-  return getImpl<detail::SizingPlant_Impl>()->setDesignLoopExitTemperature(designLoopExitTemperature);
-}
-
 bool SizingPlant::setLoopDesignTemperatureDifference(double loopDesignTemperatureDifference) {
-  return getImpl<detail::SizingPlant_Impl>()->setLoopDesignTemperatureDifference(loopDesignTemperatureDifference);
-}
-
-bool SizingPlant::setLoopDesignTemperatureDifference(const Quantity& loopDesignTemperatureDifference) {
   return getImpl<detail::SizingPlant_Impl>()->setLoopDesignTemperatureDifference(loopDesignTemperatureDifference);
 }
 

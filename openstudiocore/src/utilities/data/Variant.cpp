@@ -69,12 +69,12 @@ namespace openstudio {
 
   bool Variant::valueAsBoolean() const
   {
-    return boost::get<bool>(m_value);
+    return std::get<bool>(m_value);
   }
 
   int Variant::valueAsInteger() const
   {
-    return boost::get<int>(m_value);
+    return std::get<int>(m_value);
   }
 
   double Variant::valueAsDouble() const
@@ -82,12 +82,12 @@ namespace openstudio {
     if (m_type == VariantType::Integer){
       return (double)valueAsInteger();
     }
-    return boost::get<double>(m_value);
+    return std::get<double>(m_value);
   }
 
   std::string Variant::valueAsString() const
   {
-    return boost::get<std::string>(m_value);
+    return std::get<std::string>(m_value);
   }
 
   std::ostream& operator<<(std::ostream& os, const Variant& variant)

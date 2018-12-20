@@ -18,7 +18,6 @@
   #include <model/ModelObject.hpp>
   #include <model/ModelObject_Impl.hpp>
   #include <model/ModelExtensibleGroup.hpp>
-//  #include <model/Relationship.hpp>
   #include <model/GenericModelObject.hpp>
   #include <model/GenericModelObject_Impl.hpp>
 
@@ -27,12 +26,8 @@
   // central list of all concrete ModelObject header files (_Impl and non-_Impl)
   #include <model/ConcreteModelObjects.hpp>
 
-  #include <utilities/data/Attribute.hpp>
   #include <utilities/data/EndUses.hpp>
 
-  #include <utilities/units/Quantity.hpp>
-  #include <utilities/units/OSOptionalQuantity.hpp>
-  #include <utilities/units/OSQuantityVector.hpp>
   #include <utilities/units/Unit.hpp>
   #include <utilities/units/SIUnit.hpp>
   #include <utilities/units/IPUnit.hpp>

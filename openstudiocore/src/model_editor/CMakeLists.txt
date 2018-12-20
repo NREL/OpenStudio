@@ -34,6 +34,8 @@ set(${target_name}_src
   OSProgressBar.cpp
   PathWatcher.hpp
   PathWatcher.cpp
+  QMetaTypes.hpp
+  QMetaTypes.cpp
   tablemodel.h
   tablemodel.cpp
   TableView.hpp
@@ -52,6 +54,8 @@ set(${target_name}_src
   TreeViewWidget.cpp
   ViewWidget.hpp
   ViewWidget.cpp
+  UserSettings.hpp
+  UserSettings.cpp
   IGPrecisionDialog.hpp
   IGPrecisionDialog.cpp
   IGLineEdit.hpp
@@ -72,6 +76,7 @@ set(${target_name}_moc
   ModelExplorer.hpp
   ObjectExplorer.hpp
   PathWatcher.hpp
+  # QMetaTypes.hpp # Not needed
   tablemodel.h
   TableView.hpp
   TableWidget.hpp
@@ -164,6 +169,7 @@ set(${target_name}_test_src
   test/InspectorDialog_GTest.cpp
   test/ModalDialogs_GTest.cpp
   test/PathWatcher_GTest.cpp
+  test/QMetaTypes_GTest.cpp
 )
 
 set(${target_name}_test_depends

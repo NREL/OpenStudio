@@ -71,15 +71,10 @@ class MODEL_API SpaceInfiltrationEffectiveLeakageArea : public SpaceLoad {
 
   double effectiveAirLeakageArea() const;
 
-  Quantity getEffectiveAirLeakageArea(bool returnIP=false) const;
-
   double stackCoefficient() const;
-
-  Quantity getStackCoefficient(bool returnIP=false) const;
 
   double windCoefficient() const;
 
-  Quantity getWindCoefficient(bool returnIP=false) const;
 
   //@}
   /** @name Setters */
@@ -93,15 +88,10 @@ class MODEL_API SpaceInfiltrationEffectiveLeakageArea : public SpaceLoad {
 
   bool setEffectiveAirLeakageArea(double effectiveAirLeakageArea);
 
-  bool setEffectiveAirLeakageArea(const Quantity& effectiveAirLeakageArea);
-
   bool setStackCoefficient(double stackCoefficient);
-
-  bool setStackCoefficient(const Quantity& stackCoefficient);
 
   bool setWindCoefficient(double windCoefficient);
 
-  bool setWindCoefficient(const Quantity& windCoefficient);
 
   //@}
  protected:
@@ -128,4 +118,3 @@ typedef std::vector<SpaceInfiltrationEffectiveLeakageArea> SpaceInfiltrationEffe
 } // openstudio
 
 #endif // MODEL_SPACEINFILTRATIONEFFECTIVELEAKAGEAREA_HPP
-

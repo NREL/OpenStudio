@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -67,13 +65,9 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
   /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Flow Rate" **/
   boost::optional<double> ratedFlowRate() const;
 
-  OSOptionalQuantity getRatedFlowRate(bool returnIP=false) const;
-
   bool isRatedFlowRateAutosized() const;
 
   bool setRatedFlowRate(double ratedFlowRate);
-
-  bool setRatedFlowRate(const Quantity& ratedFlowRate);
 
   void resetRatedFlowRate();
 
@@ -82,26 +76,18 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
   /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Pump Head" **/
   double ratedPumpHead() const;
 
-  Quantity getRatedPumpHead(bool returnIP=false) const;
-
   bool isRatedPumpHeadDefaulted() const;
 
   bool setRatedPumpHead(double ratedPumpHead);
-
-  bool setRatedPumpHead(const Quantity& ratedPumpHead);
 
   void resetRatedPumpHead();
 
   /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Power Consumption" **/
   boost::optional<double> ratedPowerConsumption() const;
 
-  OSOptionalQuantity getRatedPowerConsumption(bool returnIP=false) const;
-
   bool isRatedPowerConsumptionAutosized() const;
 
   bool setRatedPowerConsumption(double ratedPowerConsumption);
-
-  bool setRatedPowerConsumption(const Quantity& ratedPowerConsumption);
 
   void resetRatedPowerConsumption();
 
@@ -109,25 +95,17 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   double motorEfficiency() const;
 
-  Quantity getMotorEfficiency(bool returnIP=false) const;
-
   bool isMotorEfficiencyDefaulted() const;
 
   bool setMotorEfficiency(double motorEfficiency);
-
-  bool setMotorEfficiency(const Quantity& motorEfficiency);
 
   void resetMotorEfficiency();
 
   double fractionofMotorInefficienciestoFluidStream() const;
 
-  Quantity getFractionofMotorInefficienciestoFluidStream(bool returnIP=false) const;
-
   bool isFractionofMotorInefficienciestoFluidStreamDefaulted() const;
 
   bool setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream);
-
-  bool setFractionofMotorInefficienciestoFluidStream(const Quantity& fractionofMotorInefficienciestoFluidStream);
 
   void resetFractionofMotorInefficienciestoFluidStream();
 
@@ -153,37 +131,26 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   boost::optional<double> impellerDiameter() const;
 
-  OSOptionalQuantity getImpellerDiameter(bool returnIP=false) const;
-
   bool setImpellerDiameter(double impellerDiameter);
-
-  bool setImpellerDiameter(const Quantity& impellerDiameter);
 
   void resetImpellerDiameter();
 
   boost::optional<double> rotationalSpeed() const;
 
-  OSOptionalQuantity getRotationalSpeed(bool returnIP=false) const;
-
   bool setRotationalSpeed(double rotationalSpeed);
-
-  bool setRotationalSpeed(const Quantity& rotationalSpeed);
 
   void resetRotationalSpeed();
 
+  // TODO: this should be renamed ThermalZone for consistency
   boost::optional<ThermalZone> zone() const;
 
   boost::optional<double> skinLossRadiativeFraction() const;
-
-  OSOptionalQuantity getSkinLossRadiativeFraction(bool returnIP=false) const;
 
   bool setZone(const ThermalZone& thermalZone);
 
   void resetZone();
 
   bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
-
-  bool setSkinLossRadiativeFraction(const Quantity& skinLossRadiativeFraction);
 
   void resetSkinLossRadiativeFraction();
 

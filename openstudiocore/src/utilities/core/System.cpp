@@ -126,7 +126,7 @@ namespace openstudio{
   void System::setenv(const std::string &name, const std::string &value)
   {
 #ifdef _WINDOWS
-    if (const auto result = ::_setenv_s(name.c_str(), value.c_str()); result != 0) {
+    if (const auto result = ::_putenv_s(name.c_str(), value.c_str()); result != 0) {
       throw std::runtime_error("Unable to set environment variable: unknown error");
     }
 #else

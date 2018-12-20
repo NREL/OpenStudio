@@ -36,7 +36,7 @@
 #include "../core/Logger.hpp"
 #include "../core/Optional.hpp"
 
-#include <boost/variant.hpp>
+#include <variant>
 
 namespace openstudio {
 
@@ -92,12 +92,12 @@ class UTILITIES_API Variant {
   REGISTER_LOGGER("openstudio.Variant");
 
   VariantType m_type;
-  boost::variant< bool, int, double, std::string > m_value;
+  std::variant< bool, int, double, std::string > m_value;
 
 };
 
 /** \relates Variant */
-typedef boost::optional<Variant> OptionalVariant;
+typedef std::optional<Variant> OptionalVariant;
 
 /** \relates Variant */
 typedef std::vector<Variant> VariantVector;

@@ -67,7 +67,6 @@
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/units/QuantityConverter.hpp"
 
 #include <boost/optional.hpp>
 #include <boost/algorithm/string.hpp>
@@ -896,7 +895,7 @@ namespace detail {
       }
       LOG_AND_THROW("Calculation would require division by 0.");
     }
-    return convert(idfr/volume,"1/s","1/h").get();
+    return (idfr/volume) * 3600.0;
   }
 
   Transformation Building_Impl::transformation() const
@@ -908,46 +907,6 @@ namespace detail {
   std::vector<std::vector<Point3d> > Building_Impl::generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth, double desiredHeight) const
   {
     return openstudio::model::generateSkylightPattern(this->spaces(), 0.0, skylightToProjectedFloorRatio, desiredWidth, desiredHeight);
-  }
-
-  openstudio::Quantity Building_Impl::northAxis_SI() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_BuildingFields::NorthAxis,true,false);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  openstudio::Quantity Building_Impl::northAxis_IP() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_BuildingFields::NorthAxis,true,true);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  bool Building_Impl::setNorthAxis(const Quantity& northAxis)
-  {
-    bool result = setQuantity(OS_BuildingFields::NorthAxis, northAxis);
-    return result;
-  }
-
-  openstudio::Quantity Building_Impl::nominalFloortoFloorHeight_SI() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_BuildingFields::NominalFloortoFloorHeight,true,false);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  openstudio::Quantity Building_Impl::nominalFloortoFloorHeight_IP() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_BuildingFields::NominalFloortoFloorHeight,true,true);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  bool Building_Impl::setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight)
-  {
-    bool result = setQuantity(OS_BuildingFields::NominalFloortoFloorHeight, nominalFloortoFloorHeight);
-    return result;
   }
 
   boost::optional<ModelObject> Building_Impl::spaceTypeAsModelObject() const {

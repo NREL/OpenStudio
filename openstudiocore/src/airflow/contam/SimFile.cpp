@@ -29,14 +29,20 @@
 
 #include "SimFile.hpp"
 
-#include <QStringList>
-#include <QMap>
-
-#include <map>
-#include <vector>
+#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 namespace openstudio {
 namespace contam {
+
+int indexOf(const std::vector<int>& list, int target) {
+  for (size_t i = 0; i < list.size(); ++i){
+    if (list[i] == target) {
+      return i;
+    }
+  }
+  return -1;
+}
 
 SimFile::SimFile(openstudio::path path)
 {
@@ -46,34 +52,38 @@ SimFile::SimFile(openstudio::path path)
   // For now, we need to cheat and assume that the .lfr etc. actually exist
   // This means that simread has to have been run for this to work
   openstudio::path lfrPath = path.replace_extension(openstudio::toPath("lfr").string());
-  m_hasLfr = readLfr(openstudio::toQString(lfrPath));
+  m_hasLfr = readLfr(openstudio::toString(lfrPath));
   openstudio::path nfrPath = path.replace_extension(openstudio::toPath("nfr").string());
-  m_hasNfr = readNfr(openstudio::toQString(nfrPath));
+  m_hasNfr = readNfr(openstudio::toString(nfrPath));
 }
 
-bool SimFile::computeDateTimes(QVector<QString> day, QVector<QString> time)
+bool SimFile::computeDateTimes(const std::vector<std::string>& day, const std::vector<std::string>& time)
 {
-  bool ok;
-  QStringList split;
   int n = qMin(day.size(),time.size());
   for(int i=0;i<n;i++)
   {
-    split = day[i].split('/');
+    std::vector<std::string> split;
+    boost::split(split, day[i], boost::is_any_of("/"));
     if(split.size() != 2)
     {
       return false;
     }
-    unsigned month=split[0].toInt(&ok);
-    if(!ok || month > 12)
-    {
+
+    unsigned month;
+    unsigned dayOfMonth;
+    try {
+      month = std::stoul(split[0]);
+      dayOfMonth = std::stoul(split[1]);
+      // DLM: what about month == 0?
+      if (month > 12)
+      {
+        return false;
+      }
+
+      m_dateTimes.push_back(DateTime(Date(monthOfYear(month), dayOfMonth), Time(time[i])));
+    }catch (const std::exception&){
       return false;
     }
-    unsigned dayOfMonth=split[1].toInt(&ok);
-    if(!ok)
-    {
-      return false;
-    }
-    m_dateTimes.push_back(DateTime(Date(monthOfYear(month),dayOfMonth),Time(time[i].toStdString())));
   }
   return true;
 }
@@ -85,28 +95,29 @@ void SimFile::clearLfr()
   m_F1.clear();
 }
 
-bool SimFile::readLfr(QString fileName)
+bool SimFile::readLfr(const std::string& fileName)
 {
   clearLfr();
-  QVector<QString> day;
-  QVector<QString> time;
+  std::vector<std::string> day;
+  std::vector<std::string> time;
   openstudio::filesystem::ifstream file(openstudio::toPath(fileName));
   if(!file.is_open())
   {
-    LOG(Error,"Failed to open LFR file '" << fileName.toStdString() << "'");
+    LOG(Error,"Failed to open LFR file '" << fileName << "'");
     return false;
   }
   std::map<int,int> nrMap;
   // Read the header
   std::string headerstr;
   std::getline(file, headerstr);
-  QString header = openstudio::toQString(headerstr);
-  if(header.isNull() || header.isEmpty())
+  std::string header = headerstr;
+  if(header.empty())
   {
-    LOG(Error,"No data in LFR file '" << fileName.toStdString() << "'");
+    LOG(Error,"No data in LFR file '" << fileName << "'");
     return false;
   }
-  QStringList row = header.split('\t');
+  std::vector<std::string> row;
+  boost::split(row, header, boost::is_any_of("\t"));
   int ncols = 6;
   if(row.size() != ncols)
   {
@@ -118,8 +129,9 @@ bool SimFile::readLfr(QString fileName)
   {
     std::string linestr;
     std::getline(file, linestr);
-    QString line = openstudio::toQString(linestr);
-    QStringList row = line.split('\t');
+    std::string line = linestr;
+    std::vector<std::string> row;
+    boost::split(row, line, boost::is_any_of("\t"));
     if(row.size() != ncols)
     {
       clearLfr();
@@ -130,24 +142,25 @@ bool SimFile::readLfr(QString fileName)
     {
       if(time[time.size()-1] != row[1])
       {
-        day << row[0];
-        time << row[1];
+        day.push_back(row[0]);
+        time.push_back(row[1]);
       }
     }
     else
     {
-      day << row[0];
-      time << row[1];
+      day.push_back(row[0]);
+      time.push_back(row[1]);
     }
-    bool convOk;
-    int nr = row[2].toInt(&convOk);
-    if(!convOk)
-    {
+
+    int nr = 0;
+    try {
+      nr = std::stoi(row[2]);
+    }catch(const std::exception&){
       clearLfr();
-      LOG(Error,"Invalid link number '" << row[2].toStdString() << "'");
+      LOG(Error,"Invalid link number '" << row[2] << "'");
       return false;
     }
-    if(nrMap.count(nr) == 0)
+    if(nrMap.find(nr) == nrMap.end())
     {
       int sz = nrMap.size();
       nrMap[nr] = sz;
@@ -155,36 +168,47 @@ bool SimFile::readLfr(QString fileName)
       m_F0.resize(sz+1);
       m_F1.resize(sz+1);
     }
-    double dP = row[3].toDouble(&convOk);
-    if(!convOk)
-    {
+    double dP = 0;
+    try {
+      dP = std::stod(row[3]);
+    }catch(const std::exception&){
       clearLfr();
-      LOG(Error,"Invalid pressure difference '" << row[3].toStdString() << "'");
+      LOG(Error,"Invalid pressure difference '" << row[3] << "'");
       return false;
     }
-    double F0 = row[4].toDouble(&convOk);
-    if(!convOk)
-    {
+
+    double F0 = 0;
+    try {
+      F0 = std::stod(row[4]);
+    } catch (const std::exception&) {
       clearLfr();
-      LOG(Error,"Invalid flow 0 '" << row[4].toStdString() << "'");
+      LOG(Error,"Invalid flow 0 '" << row[4] << "'");
       return false;
     }
-    double F1 = row[5].toDouble(&convOk);
-    if(!convOk)
-    {
+
+    double F1 = 0;
+    try {
+      F1 = std::stod(row[5]);
+    } catch (const std::exception&) {
       clearLfr();
-      LOG(Error,"Invalid flow 1 '" << row[5].toStdString() << "'");
+      LOG(Error,"Invalid flow 1 '" << row[5] << "'");
       return false;
     }
+
     m_dP[nrMap[nr]].push_back(dP);
     m_F0[nrMap[nr]].push_back(F0);
     m_F1[nrMap[nr]].push_back(F1);
 
   }
   // Unwind the zone number map;
-  m_pathNr.resize(nrMap.size());
-  for(const auto &[key, value] : nrMap) {
-    m_pathNr[value] = key;
+  std::vector<int> keys;
+  for (const auto& pair : nrMap) {
+    keys.push_back(pair.first);
+  }
+  m_pathNr.resize(keys.size());
+  for(int i=0;i<keys.size();i++)
+  {
+    m_pathNr[nrMap[keys[i]]] = keys[i];
   }
   file.close();
   // Compute the required date/time objects - this needs to be moved elsewhere if the NCR and NFR are also read
@@ -205,15 +229,15 @@ void SimFile::clearNfr()
   m_D.clear();
 }
 
-bool SimFile::readNfr(QString fileName)
+bool SimFile::readNfr(const std::string& fileName)
 {
   clearNfr();
-  QVector<QString> day;
-  QVector<QString> time;
+  std::vector<std::string> day;
+  std::vector<std::string> time;
   openstudio::filesystem::ifstream file(openstudio::toPath(fileName));
   if(file.is_open())
   {
-    LOG(Error,"Failed to open NFR file '" << fileName.toStdString() << "'");
+    LOG(Error,"Failed to open NFR file '" << fileName << "'");
     return false;
   }
 
@@ -221,13 +245,14 @@ bool SimFile::readNfr(QString fileName)
   // Read the header
   std::string headerstr;
   std::getline(file, headerstr);
-  QString header = openstudio::toQString(headerstr);
-  if(header.isNull() || header.isEmpty())
+  std::string header = headerstr;
+  if(header.empty())
   {
-    LOG(Error,"No data in LFR file '" << fileName.toStdString() << "'");
+    LOG(Error,"No data in LFR file '" << fileName << "'");
     return false;
   }
-  QStringList row = header.split('\t');
+  std::vector<std::string> row;
+  boost::split(row, header, boost::is_any_of("\t"));
   int ncols = 6;
   if(row.size() != ncols && row.size() != ncols+2)
   {
@@ -239,9 +264,10 @@ bool SimFile::readNfr(QString fileName)
   {
     std::string linestr;
     std::getline(file, linestr);
-    QString line = openstudio::toQString(linestr);
+    std::string line = linestr;
 
-    QStringList row = line.split('\t');
+    std::vector<std::string> row;
+    boost::split(row, line, boost::is_any_of("\t"));
     if(row.size() != ncols && row.size() != ncols+2)
     {
       clearNfr();
@@ -252,24 +278,25 @@ bool SimFile::readNfr(QString fileName)
     {
       if(time[time.size()-1] != row[1])
       {
-        day << row[0];
-        time << row[1];
+        day.push_back(row[0]);
+        time.push_back(row[1]);
       }
     }
     else
     {
-      day << row[0];
-      time << row[1];
+      day.push_back(row[0]);
+      time.push_back(row[1]);
     }
-    bool convOk;
-    int nr = row[2].toInt(&convOk);
-    if(!convOk)
-    {
+
+    int nr = 0;
+    try {
+      nr = std::stoi(row[2]);
+    } catch(const std::exception&){
       clearNfr();
-      LOG(Error,"Invalid node number '" << row[2].toStdString() << "'");
+      LOG(Error,"Invalid node number '" << row[2] << "'");
       return false;
     }
-    if(nrMap.count(nr) == 0)
+    if(nrMap.find(nr) == nrMap.end())
     {
       int sz = nrMap.size();
       nrMap[nr] = sz;
@@ -277,23 +304,28 @@ bool SimFile::readNfr(QString fileName)
       m_P.resize(sz+1);
       m_D.resize(sz+1);
     }
-    double T = row[3].toDouble(&convOk);
-    if(!convOk)
-    {
+    double T = 0;
+    try {
+      T = std::stod(row[3]);
+    }catch(const std::exception&){
       clearNfr();
-      LOG(Error,"Invalid temperature '" << row[3].toStdString() << "'");
+      LOG(Error,"Invalid temperature '" << row[3] << "'");
       return false;
     }
-    double P = row[4].toDouble(&convOk);
-    if(!convOk)
-    {
+
+    double P = 0;
+    try {
+      P = std::stod(row[4]);
+    } catch (const std::exception&) {
       clearNfr();
-      LOG(Error,"Invalid pressure '" << row[4].toStdString() << "'");
+      LOG(Error,"Invalid pressure '" << row[4] << "'");
       return false;
     }
-    double D = row[5].toDouble(&convOk);
-    if(!convOk)
-    {
+
+    double D = 0;
+    try {
+      D = std::stod(row[5]);
+    } catch (const std::exception&) {
       if(nr==0)
       {
         D=0.0;
@@ -301,7 +333,7 @@ bool SimFile::readNfr(QString fileName)
       else
       {
         clearNfr();
-        LOG(Error,"Invalid density '" << row[5].toStdString() << "'");
+        LOG(Error,"Invalid density '" << row[5] << "'");
         return false;
       }
     }
@@ -311,9 +343,14 @@ bool SimFile::readNfr(QString fileName)
 
   }
   // Unwind the zone number map;
-  m_pathNr.resize(nrMap.size());
-  for(const auto &[key, value] : nrMap) {
-    m_pathNr[value] = key;
+  std::vector<int> keys;
+  for (const auto& pair : nrMap) {
+    keys.push_back(pair.first);
+  }
+  m_nodeNr.resize(keys.size());
+  for(int i=0;i<keys.size();i++)
+  {
+    m_nodeNr[nrMap[keys[i]]] = keys[i];
   }
   file.close();
   // Something should probably be done here to make sure that the times here match up with what we
@@ -352,7 +389,7 @@ static openstudio::TimeSeries convertData(std::vector<openstudio::DateTime> inpu
 
 boost::optional<openstudio::TimeSeries> SimFile::pathDeltaP(int nr) const
 {
-  int index = m_pathNr.indexOf(nr);
+  int index = indexOf(m_pathNr, nr);
   if(index == -1)
   {
     return boost::optional<openstudio::TimeSeries>();
@@ -363,7 +400,7 @@ boost::optional<openstudio::TimeSeries> SimFile::pathDeltaP(int nr) const
 
 boost::optional<openstudio::TimeSeries> SimFile::pathFlow0(int nr) const
 {
-  int index = m_pathNr.indexOf(nr);
+  int index = indexOf(m_pathNr, nr);
   if(index == -1)
   {
     return boost::optional<openstudio::TimeSeries>();
@@ -374,7 +411,7 @@ boost::optional<openstudio::TimeSeries> SimFile::pathFlow0(int nr) const
 
 boost::optional<openstudio::TimeSeries> SimFile::pathFlow1(int nr) const
 {
-  int index = m_pathNr.indexOf(nr);
+  int index = indexOf(m_pathNr, nr);
   if(index == -1)
   {
     return boost::optional<openstudio::TimeSeries>();
@@ -385,7 +422,7 @@ boost::optional<openstudio::TimeSeries> SimFile::pathFlow1(int nr) const
 
 boost::optional<openstudio::TimeSeries> SimFile::pathFlow(int nr) const
 {
-  int index = m_pathNr.indexOf(nr);
+  int index = indexOf(m_pathNr, nr);
   if(index == -1)
   {
     return boost::optional<openstudio::TimeSeries>();
@@ -402,7 +439,7 @@ boost::optional<openstudio::TimeSeries> SimFile::pathFlow(int nr) const
 
 boost::optional<openstudio::TimeSeries> SimFile::nodeTemperature(int nr) const
 {
-  int index = m_nodeNr.indexOf(nr);
+  int index = indexOf(m_nodeNr, nr);
   if(index == -1)
   {
     return boost::optional<openstudio::TimeSeries>();
@@ -413,7 +450,7 @@ boost::optional<openstudio::TimeSeries> SimFile::nodeTemperature(int nr) const
 
 boost::optional<openstudio::TimeSeries> SimFile::nodePressure(int nr) const
 {
-  int index = m_nodeNr.indexOf(nr);
+  int index = indexOf(m_nodeNr, nr);
   if(index == -1)
   {
     return boost::optional<openstudio::TimeSeries>();
@@ -424,7 +461,7 @@ boost::optional<openstudio::TimeSeries> SimFile::nodePressure(int nr) const
 
 boost::optional<openstudio::TimeSeries> SimFile::nodeDensity(int nr) const
 {
-  int index = m_nodeNr.indexOf(nr);
+  int index = indexOf(m_nodeNr, nr);
   if(index == -1)
   {
     return boost::optional<openstudio::TimeSeries>();
@@ -448,7 +485,7 @@ This code is a holdover from earlier versions that also read in contaminants. Ho
 version will not ever be needed. Also, the current OpenStudio implementation only supports airflow and
 no contaminant transport.
 
-bool Contaminants::read(QString fileName)
+bool Contaminants::read(std::string fileName)
 {
   bool ok=false;
   clear();
@@ -456,11 +493,11 @@ bool Contaminants::read(QString fileName)
   if(file.open(QFile::ReadOnly))
   {
     QTextStream textStream(&file);
-    QString line;
-    QString header = textStream.readLine();
+    std::string line;
+    std::string header = textStream.readLine();
     if(header.isNull())
       return false;
-    QStringList headerList = header.split('\t');
+    std::stringList headerList = header.split('\t');
     int ncols = headerList.size();
     for(int i=3;i<ncols;i++)
     {
@@ -471,7 +508,7 @@ bool Contaminants::read(QString fileName)
     m_mf.resize(ncols-3);
     while(!(line=textStream.readLine()).isNull())
     {
-      QStringList row = line.split('\t');
+      std::stringList row = line.split('\t');
       if(row.size() != ncols)
       {
         clear();

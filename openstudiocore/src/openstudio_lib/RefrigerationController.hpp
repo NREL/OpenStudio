@@ -33,6 +33,7 @@
 #include <QObject>
 #include <boost/optional.hpp>
 #include "../shared_gui_components/OSListController.hpp"
+#include "../model_editor/QMetaTypes.hpp"
 #include "model/RefrigerationSystem.hpp"
 
 class QGraphicsScene;

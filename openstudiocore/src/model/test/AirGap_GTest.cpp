@@ -32,27 +32,33 @@
 #include "ModelFixture.hpp"
 
 #include "../AirGap.hpp"
-#include "../AirGap_Impl.hpp"
-
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,AirGap_ThermalResistance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  AirGap airGap(model);
+TEST_F(ModelFixture, AirGap_Ctor) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Unit units = airGap.getThermalResistance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(airGap.setThermalResistance(testQ));
-  OSOptionalQuantity q = airGap.getThermalResistance(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  ASSERT_EXIT (
+  {
+    model::Model m;
+
+    model::AirGap airGap(m);
+
+    exit(0);
+  } ,
+  ::testing::ExitedWithCode(0), "" );
+}
+
+TEST_F(ModelFixture,AirGap_Getters_Setters) {
+  Model m;
+  AirGap airGap(m);
+
+  // Check Default
+  EXPECT_DOUBLE_EQ(0.1, airGap.thermalResistance());
+  EXPECT_TRUE(airGap.setThermalResistance(0.3));
+  EXPECT_DOUBLE_EQ(0.3, airGap.thermalResistance());
+  airGap.resetThermalResistance();
+  EXPECT_DOUBLE_EQ(0.1, airGap.thermalResistance());
 }
 

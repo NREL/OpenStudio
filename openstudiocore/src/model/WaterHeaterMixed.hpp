@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -82,8 +80,6 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   boost::optional<double> tankVolume() const;
 
-  OSOptionalQuantity getTankVolume(bool returnIP=false) const;
-
   bool isTankVolumeDefaulted() const;
 
   bool isTankVolumeAutosized() const;
@@ -92,13 +88,9 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   double deadbandTemperatureDifference() const;
 
-  Quantity getDeadbandTemperatureDifference(bool returnIP=false) const;
-
   bool isDeadbandTemperatureDifferenceDefaulted() const;
 
   boost::optional<double> maximumTemperatureLimit() const;
-
-  OSOptionalQuantity getMaximumTemperatureLimit(bool returnIP=false) const;
 
   std::string heaterControlType() const;
 
@@ -106,23 +98,15 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   boost::optional<double> heaterMaximumCapacity() const;
 
-  OSOptionalQuantity getHeaterMaximumCapacity(bool returnIP=false) const;
-
   bool isHeaterMaximumCapacityAutosized() const;
 
   boost::optional<double> heaterMinimumCapacity() const;
 
-  OSOptionalQuantity getHeaterMinimumCapacity(bool returnIP=false) const;
-
   double heaterIgnitionMinimumFlowRate() const;
-
-  Quantity getHeaterIgnitionMinimumFlowRate(bool returnIP=false) const;
 
   bool isHeaterIgnitionMinimumFlowRateDefaulted() const;
 
   double heaterIgnitionDelay() const;
-
-  Quantity getHeaterIgnitionDelay(bool returnIP=false) const;
 
   bool isHeaterIgnitionDelayDefaulted() const;
 
@@ -130,13 +114,9 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   boost::optional<double> heaterThermalEfficiency() const;
 
-  OSOptionalQuantity getHeaterThermalEfficiency(bool returnIP=false) const;
-
   boost::optional<CurveCubic> partLoadFactorCurve() const;
 
   double offCycleParasiticFuelConsumptionRate() const;
-
-  Quantity getOffCycleParasiticFuelConsumptionRate(bool returnIP=false) const;
 
   bool isOffCycleParasiticFuelConsumptionRateDefaulted() const;
 
@@ -144,21 +124,15 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   double offCycleParasiticHeatFractiontoTank() const;
 
-  Quantity getOffCycleParasiticHeatFractiontoTank(bool returnIP=false) const;
-
   bool isOffCycleParasiticHeatFractiontoTankDefaulted() const;
 
   double onCycleParasiticFuelConsumptionRate() const;
-
-  Quantity getOnCycleParasiticFuelConsumptionRate(bool returnIP=false) const;
 
   bool isOnCycleParasiticFuelConsumptionRateDefaulted() const;
 
   boost::optional<std::string> onCycleParasiticFuelType() const;
 
   double onCycleParasiticHeatFractiontoTank() const;
-
-  Quantity getOnCycleParasiticHeatFractiontoTank(bool returnIP=false) const;
 
   bool isOnCycleParasiticHeatFractiontoTankDefaulted() const;
 
@@ -172,27 +146,17 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   boost::optional<double> offCycleLossCoefficienttoAmbientTemperature() const;
 
-  OSOptionalQuantity getOffCycleLossCoefficienttoAmbientTemperature(bool returnIP=false) const;
-
   double offCycleLossFractiontoThermalZone() const;
-
-  Quantity getOffCycleLossFractiontoThermalZone(bool returnIP=false) const;
 
   bool isOffCycleLossFractiontoThermalZoneDefaulted() const;
 
   boost::optional<double> onCycleLossCoefficienttoAmbientTemperature() const;
 
-  OSOptionalQuantity getOnCycleLossCoefficienttoAmbientTemperature(bool returnIP=false) const;
-
   double onCycleLossFractiontoThermalZone() const;
-
-  Quantity getOnCycleLossFractiontoThermalZone(bool returnIP=false) const;
 
   bool isOnCycleLossFractiontoThermalZoneDefaulted() const;
 
   boost::optional<double> peakUseFlowRate() const;
-
-  OSOptionalQuantity getPeakUseFlowRate(bool returnIP=false) const;
 
   boost::optional<Schedule> useFlowRateFractionSchedule() const;
 
@@ -200,19 +164,13 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   double useSideEffectiveness() const;
 
-  Quantity getUseSideEffectiveness(bool returnIP=false) const;
-
   bool isUseSideEffectivenessDefaulted() const;
 
   double sourceSideEffectiveness() const;
 
-  Quantity getSourceSideEffectiveness(bool returnIP=false) const;
-
   bool isSourceSideEffectivenessDefaulted() const;
 
   boost::optional<double> useSideDesignFlowRate() const;
-
-  OSOptionalQuantity getUseSideDesignFlowRate(bool returnIP=false) const;
 
   bool isUseSideDesignFlowRateDefaulted() const;
 
@@ -220,15 +178,11 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   boost::optional<double> sourceSideDesignFlowRate() const;
 
-  OSOptionalQuantity getSourceSideDesignFlowRate(bool returnIP=false) const;
-
   bool isSourceSideDesignFlowRateDefaulted() const;
 
   bool isSourceSideDesignFlowRateAutosized() const;
 
   double indirectWaterHeatingRecoveryTime() const;
-
-  Quantity getIndirectWaterHeatingRecoveryTime(bool returnIP=false) const;
 
   bool isIndirectWaterHeatingRecoveryTimeDefaulted() const;
 
@@ -244,8 +198,6 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   bool setTankVolume(double tankVolume);
 
-  bool setTankVolume(const Quantity& tankVolume);
-
   void resetTankVolume();
 
   void autosizeTankVolume();
@@ -256,13 +208,9 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   bool setDeadbandTemperatureDifference(double deadbandTemperatureDifference);
 
-  bool setDeadbandTemperatureDifference(const Quantity& deadbandTemperatureDifference);
-
   void resetDeadbandTemperatureDifference();
 
   bool setMaximumTemperatureLimit(double maximumTemperatureLimit);
-
-  bool setMaximumTemperatureLimit(const Quantity& maximumTemperatureLimit);
 
   void resetMaximumTemperatureLimit();
 
@@ -272,35 +220,25 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   bool setHeaterMaximumCapacity(double heaterMaximumCapacity);
 
-  bool setHeaterMaximumCapacity(const Quantity& heaterMaximumCapacity);
-
   void resetHeaterMaximumCapacity();
 
   void autosizeHeaterMaximumCapacity();
 
   bool setHeaterMinimumCapacity(double heaterMinimumCapacity);
 
-  bool setHeaterMinimumCapacity(const Quantity& heaterMinimumCapacity);
-
   void resetHeaterMinimumCapacity();
 
   bool setHeaterIgnitionMinimumFlowRate(double heaterIgnitionMinimumFlowRate);
 
-  bool setHeaterIgnitionMinimumFlowRate(const Quantity& heaterIgnitionMinimumFlowRate);
-
   void resetHeaterIgnitionMinimumFlowRate();
 
   bool setHeaterIgnitionDelay(double heaterIgnitionDelay);
-
-  bool setHeaterIgnitionDelay(const Quantity& heaterIgnitionDelay);
 
   void resetHeaterIgnitionDelay();
 
   bool setHeaterFuelType(std::string heaterFuelType);
 
   bool setHeaterThermalEfficiency(double heaterThermalEfficiency);
-
-  bool setHeaterThermalEfficiency(const Quantity& heaterThermalEfficiency);
 
   void resetHeaterThermalEfficiency();
 
@@ -310,8 +248,6 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   bool setOffCycleParasiticFuelConsumptionRate(double offCycleParasiticFuelConsumptionRate);
 
-  bool setOffCycleParasiticFuelConsumptionRate(const Quantity& offCycleParasiticFuelConsumptionRate);
-
   void resetOffCycleParasiticFuelConsumptionRate();
 
   bool setOffCycleParasiticFuelType(std::string offCycleParasiticFuelType);
@@ -320,13 +256,9 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   bool setOffCycleParasiticHeatFractiontoTank(double offCycleParasiticHeatFractiontoTank);
 
-  bool setOffCycleParasiticHeatFractiontoTank(const Quantity& offCycleParasiticHeatFractiontoTank);
-
   void resetOffCycleParasiticHeatFractiontoTank();
 
   bool setOnCycleParasiticFuelConsumptionRate(double onCycleParasiticFuelConsumptionRate);
-
-  bool setOnCycleParasiticFuelConsumptionRate(const Quantity& onCycleParasiticFuelConsumptionRate);
 
   void resetOnCycleParasiticFuelConsumptionRate();
 
@@ -335,8 +267,6 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
   void resetOnCycleParasiticFuelType();
 
   bool setOnCycleParasiticHeatFractiontoTank(double onCycleParasiticHeatFractiontoTank);
-
-  bool setOnCycleParasiticHeatFractiontoTank(const Quantity& onCycleParasiticHeatFractiontoTank);
 
   void resetOnCycleParasiticHeatFractiontoTank();
 
@@ -356,31 +286,21 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   bool setOffCycleLossCoefficienttoAmbientTemperature(double offCycleLossCoefficienttoAmbientTemperature);
 
-  bool setOffCycleLossCoefficienttoAmbientTemperature(const Quantity& offCycleLossCoefficienttoAmbientTemperature);
-
   void resetOffCycleLossCoefficienttoAmbientTemperature();
 
   bool setOffCycleLossFractiontoThermalZone(double offCycleLossFractiontoThermalZone);
-
-  bool setOffCycleLossFractiontoThermalZone(const Quantity& offCycleLossFractiontoThermalZone);
 
   void resetOffCycleLossFractiontoThermalZone();
 
   bool setOnCycleLossCoefficienttoAmbientTemperature(double onCycleLossCoefficienttoAmbientTemperature);
 
-  bool setOnCycleLossCoefficienttoAmbientTemperature(const Quantity& onCycleLossCoefficienttoAmbientTemperature);
-
   void resetOnCycleLossCoefficienttoAmbientTemperature();
 
   bool setOnCycleLossFractiontoThermalZone(double onCycleLossFractiontoThermalZone);
 
-  bool setOnCycleLossFractiontoThermalZone(const Quantity& onCycleLossFractiontoThermalZone);
-
   void resetOnCycleLossFractiontoThermalZone();
 
   bool setPeakUseFlowRate(double peakUseFlowRate);
-
-  bool setPeakUseFlowRate(const Quantity& peakUseFlowRate);
 
   void resetPeakUseFlowRate();
 
@@ -394,19 +314,13 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   bool setUseSideEffectiveness(double useSideEffectiveness);
 
-  bool setUseSideEffectiveness(const Quantity& useSideEffectiveness);
-
   void resetUseSideEffectiveness();
 
   bool setSourceSideEffectiveness(double sourceSideEffectiveness);
 
-  bool setSourceSideEffectiveness(const Quantity& sourceSideEffectiveness);
-
   void resetSourceSideEffectiveness();
 
   bool setUseSideDesignFlowRate(double useSideDesignFlowRate);
-
-  bool setUseSideDesignFlowRate(const Quantity& useSideDesignFlowRate);
 
   void resetUseSideDesignFlowRate();
 
@@ -414,15 +328,11 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
 
   bool setSourceSideDesignFlowRate(double sourceSideDesignFlowRate);
 
-  bool setSourceSideDesignFlowRate(const Quantity& sourceSideDesignFlowRate);
-
   void resetSourceSideDesignFlowRate();
 
   void autosizeSourceSideDesignFlowRate();
 
   bool setIndirectWaterHeatingRecoveryTime(double indirectWaterHeatingRecoveryTime);
-
-  bool setIndirectWaterHeatingRecoveryTime(const Quantity& indirectWaterHeatingRecoveryTime);
 
   void resetIndirectWaterHeatingRecoveryTime();
 

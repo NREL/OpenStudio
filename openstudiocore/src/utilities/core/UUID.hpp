@@ -33,12 +33,13 @@
 #include "../UtilitiesAPI.hpp"
 #include <boost/regex.hpp>
 
-#include <QMetaType>
 #include <boost/optional.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <vector>
 #include <ostream>
 #include <string>
+
+class QString;
 
 namespace openstudio {
   class UTILITIES_API UUID;
@@ -119,8 +120,5 @@ namespace openstudio {
 
 
 } // openstudio
-
-Q_DECLARE_METATYPE(openstudio::UUID);
-
 
 #endif // UTILITIES_CORE_UUID_HPP

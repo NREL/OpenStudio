@@ -67,7 +67,6 @@
 #include "../DefaultSurfaceConstructions_Impl.hpp"
 #include "../SpaceType.hpp"
 #include "../SpaceType_Impl.hpp"
-// #include "../Relationship.hpp"
 #include "../DaylightingDeviceShelf.hpp"
 #include "../InteriorPartitionSurface.hpp"
 #include "../InteriorPartitionSurfaceGroup.hpp"
@@ -85,7 +84,6 @@
 #include "../AirflowNetworkExternalNode.hpp"
 #include "../AirflowNetworkExternalNode_Impl.hpp"
 
-#include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceWatcher.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"

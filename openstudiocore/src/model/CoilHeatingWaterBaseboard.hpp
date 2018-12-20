@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -89,8 +87,6 @@ class MODEL_API CoilHeatingWaterBaseboard : public StraightComponent {
 
   /** Returns the value of the MaximumWaterFlowRate field. **/
   boost::optional<double> maximumWaterFlowRate() const;
-
-  //OSOptionalQuantity getMaximumWaterFlowRate(bool returnIP=false) const;
 
   bool isMaximumWaterFlowRateDefaulted() const;
 

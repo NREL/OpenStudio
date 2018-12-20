@@ -35,8 +35,6 @@
 #include <iostream>
 #include <set>
 
-#include <QVariant>
-
 using std::cout;
 using openstudio::UUID;
 using openstudio::createUUID;
@@ -85,16 +83,6 @@ TEST(UUID, BigSet)
 
   // check no duplicates
   EXPECT_EQ(numUUIDS, uuids.size());
-}
-
-TEST(UUID, UUID_QVariant)
-{
-  UUID uuid = createUUID();
-  QVariant variant = QVariant::fromValue(uuid);
-  EXPECT_EQ("openstudio::UUID", std::string(variant.typeName()));
-  ASSERT_TRUE(variant.canConvert<UUID>());
-  UUID uuid2 = variant.value<UUID>();
-  EXPECT_TRUE(uuid == uuid2);
 }
 
 TEST(UUID, UUID_UID) {

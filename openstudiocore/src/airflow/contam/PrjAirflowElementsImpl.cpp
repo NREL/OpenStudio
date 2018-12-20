@@ -184,12 +184,12 @@ void PlrOrfImpl::setDesc(const std::string &desc)
 
 double PlrOrfImpl::lam() const
 {
-  return m_lam.toDouble();
+  return FLOAT_NO_CHECK(m_lam);
 }
 
 bool PlrOrfImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = std::to_string(lam);
   return true;
 }
 
@@ -207,12 +207,12 @@ bool PlrOrfImpl::setLam(const std::string &lam)
 
 double PlrOrfImpl::turb() const
 {
-  return m_turb.toDouble();
+  return FLOAT_NO_CHECK(m_turb);
 }
 
 bool PlrOrfImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = std::to_string(turb);
   return true;
 }
 
@@ -230,12 +230,12 @@ bool PlrOrfImpl::setTurb(const std::string &turb)
 
 double PlrOrfImpl::expt() const
 {
-  return m_expt.toDouble();
+  return FLOAT_NO_CHECK(m_expt);
 }
 
 bool PlrOrfImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = std::to_string(expt);
   return true;
 }
 
@@ -253,12 +253,12 @@ bool PlrOrfImpl::setExpt(const std::string &expt)
 
 double PlrOrfImpl::area() const
 {
-  return m_area.toDouble();
+  return FLOAT_NO_CHECK(m_area);
 }
 
 bool PlrOrfImpl::setArea(const double area)
 {
-  m_area = QString::number(area);
+  m_area = std::to_string(area);
   return true;
 }
 
@@ -276,12 +276,12 @@ bool PlrOrfImpl::setArea(const std::string &area)
 
 double PlrOrfImpl::dia() const
 {
-  return m_dia.toDouble();
+  return FLOAT_NO_CHECK(m_dia);
 }
 
 bool PlrOrfImpl::setDia(const double dia)
 {
-  m_dia = QString::number(dia);
+  m_dia = std::to_string(dia);
   return true;
 }
 
@@ -299,12 +299,12 @@ bool PlrOrfImpl::setDia(const std::string &dia)
 
 double PlrOrfImpl::coef() const
 {
-  return m_coef.toDouble();
+  return FLOAT_NO_CHECK(m_coef);
 }
 
 bool PlrOrfImpl::setCoef(const double coef)
 {
-  m_coef = QString::number(coef);
+  m_coef = std::to_string(coef);
   return true;
 }
 
@@ -322,12 +322,12 @@ bool PlrOrfImpl::setCoef(const std::string &coef)
 
 double PlrOrfImpl::Re() const
 {
-  return m_Re.toDouble();
+  return FLOAT_NO_CHECK(m_Re);
 }
 
 bool PlrOrfImpl::setRe(const double Re)
 {
-  m_Re = QString::number(Re);
+  m_Re = std::to_string(Re);
   return true;
 }
 
@@ -532,12 +532,12 @@ void PlrLeakImpl::setDesc(const std::string &desc)
 
 double PlrLeakImpl::lam() const
 {
-  return m_lam.toDouble();
+  return FLOAT_NO_CHECK(m_lam);
 }
 
 bool PlrLeakImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = std::to_string(lam);
   return true;
 }
 
@@ -555,12 +555,12 @@ bool PlrLeakImpl::setLam(const std::string &lam)
 
 double PlrLeakImpl::turb() const
 {
-  return m_turb.toDouble();
+  return FLOAT_NO_CHECK(m_turb);
 }
 
 bool PlrLeakImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = std::to_string(turb);
   return true;
 }
 
@@ -578,12 +578,12 @@ bool PlrLeakImpl::setTurb(const std::string &turb)
 
 double PlrLeakImpl::expt() const
 {
-  return m_expt.toDouble();
+  return FLOAT_NO_CHECK(m_expt);
 }
 
 bool PlrLeakImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = std::to_string(expt);
   return true;
 }
 
@@ -601,12 +601,12 @@ bool PlrLeakImpl::setExpt(const std::string &expt)
 
 double PlrLeakImpl::coef() const
 {
-  return m_coef.toDouble();
+  return FLOAT_NO_CHECK(m_coef);
 }
 
 bool PlrLeakImpl::setCoef(const double coef)
 {
-  m_coef = QString::number(coef);
+  m_coef = std::to_string(coef);
   return true;
 }
 
@@ -624,12 +624,12 @@ bool PlrLeakImpl::setCoef(const std::string &coef)
 
 double PlrLeakImpl::pres() const
 {
-  return m_pres.toDouble();
+  return FLOAT_NO_CHECK(m_pres);
 }
 
 bool PlrLeakImpl::setPres(const double pres)
 {
-  m_pres = QString::number(pres);
+  m_pres = std::to_string(pres);
   return true;
 }
 
@@ -647,12 +647,12 @@ bool PlrLeakImpl::setPres(const std::string &pres)
 
 double PlrLeakImpl::area1() const
 {
-  return m_area1.toDouble();
+  return FLOAT_NO_CHECK(m_area1);
 }
 
 bool PlrLeakImpl::setArea1(const double area1)
 {
-  m_area1 = QString::number(area1);
+  m_area1 = std::to_string(area1);
   return true;
 }
 
@@ -670,12 +670,12 @@ bool PlrLeakImpl::setArea1(const std::string &area1)
 
 double PlrLeakImpl::area2() const
 {
-  return m_area2.toDouble();
+  return FLOAT_NO_CHECK(m_area2);
 }
 
 bool PlrLeakImpl::setArea2(const double area2)
 {
-  m_area2 = QString::number(area2);
+  m_area2 = std::to_string(area2);
   return true;
 }
 
@@ -693,12 +693,12 @@ bool PlrLeakImpl::setArea2(const std::string &area2)
 
 double PlrLeakImpl::area3() const
 {
-  return m_area3.toDouble();
+  return FLOAT_NO_CHECK(m_area3);
 }
 
 bool PlrLeakImpl::setArea3(const double area3)
 {
-  m_area3 = QString::number(area3);
+  m_area3 = std::to_string(area3);
   return true;
 }
 
@@ -889,12 +889,12 @@ void PlrConnImpl::setDesc(const std::string &desc)
 
 double PlrConnImpl::lam() const
 {
-  return m_lam.toDouble();
+  return FLOAT_NO_CHECK(m_lam);
 }
 
 bool PlrConnImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = std::to_string(lam);
   return true;
 }
 
@@ -912,12 +912,12 @@ bool PlrConnImpl::setLam(const std::string &lam)
 
 double PlrConnImpl::turb() const
 {
-  return m_turb.toDouble();
+  return FLOAT_NO_CHECK(m_turb);
 }
 
 bool PlrConnImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = std::to_string(turb);
   return true;
 }
 
@@ -935,12 +935,12 @@ bool PlrConnImpl::setTurb(const std::string &turb)
 
 double PlrConnImpl::expt() const
 {
-  return m_expt.toDouble();
+  return FLOAT_NO_CHECK(m_expt);
 }
 
 bool PlrConnImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = std::to_string(expt);
   return true;
 }
 
@@ -958,12 +958,12 @@ bool PlrConnImpl::setExpt(const std::string &expt)
 
 double PlrConnImpl::area() const
 {
-  return m_area.toDouble();
+  return FLOAT_NO_CHECK(m_area);
 }
 
 bool PlrConnImpl::setArea(const double area)
 {
-  m_area = QString::number(area);
+  m_area = std::to_string(area);
   return true;
 }
 
@@ -981,12 +981,12 @@ bool PlrConnImpl::setArea(const std::string &area)
 
 double PlrConnImpl::coef() const
 {
-  return m_coef.toDouble();
+  return FLOAT_NO_CHECK(m_coef);
 }
 
 bool PlrConnImpl::setCoef(const double coef)
 {
-  m_coef = QString::number(coef);
+  m_coef = std::to_string(coef);
   return true;
 }
 
@@ -1129,12 +1129,12 @@ void PlrGeneralImpl::setDesc(const std::string &desc)
 
 double PlrGeneralImpl::lam() const
 {
-  return m_lam.toDouble();
+  return FLOAT_NO_CHECK(m_lam);
 }
 
 bool PlrGeneralImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = std::to_string(lam);
   return true;
 }
 
@@ -1152,12 +1152,12 @@ bool PlrGeneralImpl::setLam(const std::string &lam)
 
 double PlrGeneralImpl::turb() const
 {
-  return m_turb.toDouble();
+  return FLOAT_NO_CHECK(m_turb);
 }
 
 bool PlrGeneralImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = std::to_string(turb);
   return true;
 }
 
@@ -1175,12 +1175,12 @@ bool PlrGeneralImpl::setTurb(const std::string &turb)
 
 double PlrGeneralImpl::expt() const
 {
-  return m_expt.toDouble();
+  return FLOAT_NO_CHECK(m_expt);
 }
 
 bool PlrGeneralImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = std::to_string(expt);
   return true;
 }
 
@@ -1337,12 +1337,12 @@ void PlrTest1Impl::setDesc(const std::string &desc)
 
 double PlrTest1Impl::lam() const
 {
-  return m_lam.toDouble();
+  return FLOAT_NO_CHECK(m_lam);
 }
 
 bool PlrTest1Impl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = std::to_string(lam);
   return true;
 }
 
@@ -1360,12 +1360,12 @@ bool PlrTest1Impl::setLam(const std::string &lam)
 
 double PlrTest1Impl::turb() const
 {
-  return m_turb.toDouble();
+  return FLOAT_NO_CHECK(m_turb);
 }
 
 bool PlrTest1Impl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = std::to_string(turb);
   return true;
 }
 
@@ -1383,12 +1383,12 @@ bool PlrTest1Impl::setTurb(const std::string &turb)
 
 double PlrTest1Impl::expt() const
 {
-  return m_expt.toDouble();
+  return FLOAT_NO_CHECK(m_expt);
 }
 
 bool PlrTest1Impl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = std::to_string(expt);
   return true;
 }
 
@@ -1406,12 +1406,12 @@ bool PlrTest1Impl::setExpt(const std::string &expt)
 
 double PlrTest1Impl::dP() const
 {
-  return m_dP.toDouble();
+  return FLOAT_NO_CHECK(m_dP);
 }
 
 bool PlrTest1Impl::setDP(const double dP)
 {
-  m_dP = QString::number(dP);
+  m_dP = std::to_string(dP);
   return true;
 }
 
@@ -1429,12 +1429,12 @@ bool PlrTest1Impl::setDP(const std::string &dP)
 
 double PlrTest1Impl::Flow() const
 {
-  return m_Flow.toDouble();
+  return FLOAT_NO_CHECK(m_Flow);
 }
 
 bool PlrTest1Impl::setFlow(const double Flow)
 {
-  m_Flow = QString::number(Flow);
+  m_Flow = std::to_string(Flow);
   return true;
 }
 
@@ -1632,12 +1632,12 @@ void PlrTest2Impl::setDesc(const std::string &desc)
 
 double PlrTest2Impl::lam() const
 {
-  return m_lam.toDouble();
+  return FLOAT_NO_CHECK(m_lam);
 }
 
 bool PlrTest2Impl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = std::to_string(lam);
   return true;
 }
 
@@ -1655,12 +1655,12 @@ bool PlrTest2Impl::setLam(const std::string &lam)
 
 double PlrTest2Impl::turb() const
 {
-  return m_turb.toDouble();
+  return FLOAT_NO_CHECK(m_turb);
 }
 
 bool PlrTest2Impl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = std::to_string(turb);
   return true;
 }
 
@@ -1678,12 +1678,12 @@ bool PlrTest2Impl::setTurb(const std::string &turb)
 
 double PlrTest2Impl::expt() const
 {
-  return m_expt.toDouble();
+  return FLOAT_NO_CHECK(m_expt);
 }
 
 bool PlrTest2Impl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = std::to_string(expt);
   return true;
 }
 
@@ -1701,12 +1701,12 @@ bool PlrTest2Impl::setExpt(const std::string &expt)
 
 double PlrTest2Impl::dP1() const
 {
-  return m_dP1.toDouble();
+  return FLOAT_NO_CHECK(m_dP1);
 }
 
 bool PlrTest2Impl::setDP1(const double dP1)
 {
-  m_dP1 = QString::number(dP1);
+  m_dP1 = std::to_string(dP1);
   return true;
 }
 
@@ -1724,12 +1724,12 @@ bool PlrTest2Impl::setDP1(const std::string &dP1)
 
 double PlrTest2Impl::F1() const
 {
-  return m_F1.toDouble();
+  return FLOAT_NO_CHECK(m_F1);
 }
 
 bool PlrTest2Impl::setF1(const double F1)
 {
-  m_F1 = QString::number(F1);
+  m_F1 = std::to_string(F1);
   return true;
 }
 
@@ -1747,12 +1747,12 @@ bool PlrTest2Impl::setF1(const std::string &F1)
 
 double PlrTest2Impl::dP2() const
 {
-  return m_dP2.toDouble();
+  return FLOAT_NO_CHECK(m_dP2);
 }
 
 bool PlrTest2Impl::setDP2(const double dP2)
 {
-  m_dP2 = QString::number(dP2);
+  m_dP2 = std::to_string(dP2);
   return true;
 }
 
@@ -1770,12 +1770,12 @@ bool PlrTest2Impl::setDP2(const std::string &dP2)
 
 double PlrTest2Impl::F2() const
 {
-  return m_F2.toDouble();
+  return FLOAT_NO_CHECK(m_F2);
 }
 
 bool PlrTest2Impl::setF2(const double F2)
 {
-  m_F2 = QString::number(F2);
+  m_F2 = std::to_string(F2);
   return true;
 }
 
@@ -1972,12 +1972,12 @@ void PlrCrackImpl::setDesc(const std::string &desc)
 
 double PlrCrackImpl::lam() const
 {
-  return m_lam.toDouble();
+  return FLOAT_NO_CHECK(m_lam);
 }
 
 bool PlrCrackImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = std::to_string(lam);
   return true;
 }
 
@@ -1995,12 +1995,12 @@ bool PlrCrackImpl::setLam(const std::string &lam)
 
 double PlrCrackImpl::turb() const
 {
-  return m_turb.toDouble();
+  return FLOAT_NO_CHECK(m_turb);
 }
 
 bool PlrCrackImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = std::to_string(turb);
   return true;
 }
 
@@ -2018,12 +2018,12 @@ bool PlrCrackImpl::setTurb(const std::string &turb)
 
 double PlrCrackImpl::expt() const
 {
-  return m_expt.toDouble();
+  return FLOAT_NO_CHECK(m_expt);
 }
 
 bool PlrCrackImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = std::to_string(expt);
   return true;
 }
 
@@ -2041,12 +2041,12 @@ bool PlrCrackImpl::setExpt(const std::string &expt)
 
 double PlrCrackImpl::length() const
 {
-  return m_length.toDouble();
+  return FLOAT_NO_CHECK(m_length);
 }
 
 bool PlrCrackImpl::setLength(const double length)
 {
-  m_length = QString::number(length);
+  m_length = std::to_string(length);
   return true;
 }
 
@@ -2064,12 +2064,12 @@ bool PlrCrackImpl::setLength(const std::string &length)
 
 double PlrCrackImpl::width() const
 {
-  return m_width.toDouble();
+  return FLOAT_NO_CHECK(m_width);
 }
 
 bool PlrCrackImpl::setWidth(const double width)
 {
-  m_width = QString::number(width);
+  m_width = std::to_string(width);
   return true;
 }
 
@@ -2259,12 +2259,12 @@ void PlrStairImpl::setDesc(const std::string &desc)
 
 double PlrStairImpl::lam() const
 {
-  return m_lam.toDouble();
+  return FLOAT_NO_CHECK(m_lam);
 }
 
 bool PlrStairImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = std::to_string(lam);
   return true;
 }
 
@@ -2282,12 +2282,12 @@ bool PlrStairImpl::setLam(const std::string &lam)
 
 double PlrStairImpl::turb() const
 {
-  return m_turb.toDouble();
+  return FLOAT_NO_CHECK(m_turb);
 }
 
 bool PlrStairImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = std::to_string(turb);
   return true;
 }
 
@@ -2305,12 +2305,12 @@ bool PlrStairImpl::setTurb(const std::string &turb)
 
 double PlrStairImpl::expt() const
 {
-  return m_expt.toDouble();
+  return FLOAT_NO_CHECK(m_expt);
 }
 
 bool PlrStairImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = std::to_string(expt);
   return true;
 }
 
@@ -2328,12 +2328,12 @@ bool PlrStairImpl::setExpt(const std::string &expt)
 
 double PlrStairImpl::Ht() const
 {
-  return m_Ht.toDouble();
+  return FLOAT_NO_CHECK(m_Ht);
 }
 
 bool PlrStairImpl::setHt(const double Ht)
 {
-  m_Ht = QString::number(Ht);
+  m_Ht = std::to_string(Ht);
   return true;
 }
 
@@ -2351,12 +2351,12 @@ bool PlrStairImpl::setHt(const std::string &Ht)
 
 double PlrStairImpl::area() const
 {
-  return m_Area.toDouble();
+  return FLOAT_NO_CHECK(m_Area);
 }
 
 bool PlrStairImpl::setArea(const double Area)
 {
-  m_Area = QString::number(Area);
+  m_Area = std::to_string(Area);
   return true;
 }
 
@@ -2374,12 +2374,12 @@ bool PlrStairImpl::setArea(const std::string &Area)
 
 double PlrStairImpl::people() const
 {
-  return m_peo.toDouble();
+  return FLOAT_NO_CHECK(m_peo);
 }
 
 bool PlrStairImpl::setPeople(const double peo)
 {
-  m_peo = QString::number(peo);
+  m_peo = std::to_string(peo);
   return true;
 }
 
@@ -2587,12 +2587,12 @@ void PlrShaftImpl::setDesc(const std::string &desc)
 
 double PlrShaftImpl::lam() const
 {
-  return m_lam.toDouble();
+  return FLOAT_NO_CHECK(m_lam);
 }
 
 bool PlrShaftImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = std::to_string(lam);
   return true;
 }
 
@@ -2610,12 +2610,12 @@ bool PlrShaftImpl::setLam(const std::string &lam)
 
 double PlrShaftImpl::turb() const
 {
-  return m_turb.toDouble();
+  return FLOAT_NO_CHECK(m_turb);
 }
 
 bool PlrShaftImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = std::to_string(turb);
   return true;
 }
 
@@ -2633,12 +2633,12 @@ bool PlrShaftImpl::setTurb(const std::string &turb)
 
 double PlrShaftImpl::expt() const
 {
-  return m_expt.toDouble();
+  return FLOAT_NO_CHECK(m_expt);
 }
 
 bool PlrShaftImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = std::to_string(expt);
   return true;
 }
 
@@ -2656,12 +2656,12 @@ bool PlrShaftImpl::setExpt(const std::string &expt)
 
 double PlrShaftImpl::Ht() const
 {
-  return m_Ht.toDouble();
+  return FLOAT_NO_CHECK(m_Ht);
 }
 
 bool PlrShaftImpl::setHt(const double Ht)
 {
-  m_Ht = QString::number(Ht);
+  m_Ht = std::to_string(Ht);
   return true;
 }
 
@@ -2679,12 +2679,12 @@ bool PlrShaftImpl::setHt(const std::string &Ht)
 
 double PlrShaftImpl::area() const
 {
-  return m_area.toDouble();
+  return FLOAT_NO_CHECK(m_area);
 }
 
 bool PlrShaftImpl::setArea(const double area)
 {
-  m_area = QString::number(area);
+  m_area = std::to_string(area);
   return true;
 }
 
@@ -2702,12 +2702,12 @@ bool PlrShaftImpl::setArea(const std::string &area)
 
 double PlrShaftImpl::perim() const
 {
-  return m_perim.toDouble();
+  return FLOAT_NO_CHECK(m_perim);
 }
 
 bool PlrShaftImpl::setPerim(const double perim)
 {
-  m_perim = QString::number(perim);
+  m_perim = std::to_string(perim);
   return true;
 }
 
@@ -2725,12 +2725,12 @@ bool PlrShaftImpl::setPerim(const std::string &perim)
 
 double PlrShaftImpl::rough() const
 {
-  return m_rough.toDouble();
+  return FLOAT_NO_CHECK(m_rough);
 }
 
 bool PlrShaftImpl::setRough(const double rough)
 {
-  m_rough = QString::number(rough);
+  m_rough = std::to_string(rough);
   return true;
 }
 
@@ -2916,12 +2916,12 @@ void PlrBackDamperImpl::setDesc(const std::string &desc)
 
 double PlrBackDamperImpl::lam() const
 {
-  return m_lam.toDouble();
+  return FLOAT_NO_CHECK(m_lam);
 }
 
 bool PlrBackDamperImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = std::to_string(lam);
   return true;
 }
 
@@ -2939,12 +2939,12 @@ bool PlrBackDamperImpl::setLam(const std::string &lam)
 
 double PlrBackDamperImpl::Cp() const
 {
-  return m_Cp.toDouble();
+  return FLOAT_NO_CHECK(m_Cp);
 }
 
 bool PlrBackDamperImpl::setCp(const double Cp)
 {
-  m_Cp = QString::number(Cp);
+  m_Cp = std::to_string(Cp);
   return true;
 }
 
@@ -2962,12 +2962,12 @@ bool PlrBackDamperImpl::setCp(const std::string &Cp)
 
 double PlrBackDamperImpl::xp() const
 {
-  return m_xp.toDouble();
+  return FLOAT_NO_CHECK(m_xp);
 }
 
 bool PlrBackDamperImpl::setXp(const double xp)
 {
-  m_xp = QString::number(xp);
+  m_xp = std::to_string(xp);
   return true;
 }
 
@@ -2985,12 +2985,12 @@ bool PlrBackDamperImpl::setXp(const std::string &xp)
 
 double PlrBackDamperImpl::Cn() const
 {
-  return m_Cn.toDouble();
+  return FLOAT_NO_CHECK(m_Cn);
 }
 
 bool PlrBackDamperImpl::setCn(const double Cn)
 {
-  m_Cn = QString::number(Cn);
+  m_Cn = std::to_string(Cn);
   return true;
 }
 
@@ -3008,12 +3008,12 @@ bool PlrBackDamperImpl::setCn(const std::string &Cn)
 
 double PlrBackDamperImpl::xn() const
 {
-  return m_xn.toDouble();
+  return FLOAT_NO_CHECK(m_xn);
 }
 
 bool PlrBackDamperImpl::setXn(const double xn)
 {
-  m_xn = QString::number(xn);
+  m_xn = std::to_string(xn);
   return true;
 }
 
@@ -3141,12 +3141,12 @@ void QfrQuadraticImpl::setDesc(const std::string &desc)
 
 double QfrQuadraticImpl::a() const
 {
-  return m_a.toDouble();
+  return FLOAT_NO_CHECK(m_a);
 }
 
 bool QfrQuadraticImpl::setA(const double a)
 {
-  m_a = QString::number(a);
+  m_a = std::to_string(a);
   return true;
 }
 
@@ -3164,12 +3164,12 @@ bool QfrQuadraticImpl::setA(const std::string &a)
 
 double QfrQuadraticImpl::b() const
 {
-  return m_b.toDouble();
+  return FLOAT_NO_CHECK(m_b);
 }
 
 bool QfrQuadraticImpl::setB(const double b)
 {
-  m_b = QString::number(b);
+  m_b = std::to_string(b);
   return true;
 }
 
@@ -3336,12 +3336,12 @@ void QfrCrackImpl::setDesc(const std::string &desc)
 
 double QfrCrackImpl::a() const
 {
-  return m_a.toDouble();
+  return FLOAT_NO_CHECK(m_a);
 }
 
 bool QfrCrackImpl::setA(const double a)
 {
-  m_a = QString::number(a);
+  m_a = std::to_string(a);
   return true;
 }
 
@@ -3359,12 +3359,12 @@ bool QfrCrackImpl::setA(const std::string &a)
 
 double QfrCrackImpl::b() const
 {
-  return m_b.toDouble();
+  return FLOAT_NO_CHECK(m_b);
 }
 
 bool QfrCrackImpl::setB(const double b)
 {
-  m_b = QString::number(b);
+  m_b = std::to_string(b);
   return true;
 }
 
@@ -3382,12 +3382,12 @@ bool QfrCrackImpl::setB(const std::string &b)
 
 double QfrCrackImpl::length() const
 {
-  return m_length.toDouble();
+  return FLOAT_NO_CHECK(m_length);
 }
 
 bool QfrCrackImpl::setLength(const double length)
 {
-  m_length = QString::number(length);
+  m_length = std::to_string(length);
   return true;
 }
 
@@ -3405,12 +3405,12 @@ bool QfrCrackImpl::setLength(const std::string &length)
 
 double QfrCrackImpl::width() const
 {
-  return m_width.toDouble();
+  return FLOAT_NO_CHECK(m_width);
 }
 
 bool QfrCrackImpl::setWidth(const double width)
 {
-  m_width = QString::number(width);
+  m_width = std::to_string(width);
   return true;
 }
 
@@ -3428,12 +3428,12 @@ bool QfrCrackImpl::setWidth(const std::string &width)
 
 double QfrCrackImpl::depth() const
 {
-  return m_depth.toDouble();
+  return FLOAT_NO_CHECK(m_depth);
 }
 
 bool QfrCrackImpl::setDepth(const double depth)
 {
-  m_depth = QString::number(depth);
+  m_depth = std::to_string(depth);
   return true;
 }
 
@@ -3645,12 +3645,12 @@ void QfrTest2Impl::setDesc(const std::string &desc)
 
 double QfrTest2Impl::a() const
 {
-  return m_a.toDouble();
+  return FLOAT_NO_CHECK(m_a);
 }
 
 bool QfrTest2Impl::setA(const double a)
 {
-  m_a = QString::number(a);
+  m_a = std::to_string(a);
   return true;
 }
 
@@ -3668,12 +3668,12 @@ bool QfrTest2Impl::setA(const std::string &a)
 
 double QfrTest2Impl::b() const
 {
-  return m_b.toDouble();
+  return FLOAT_NO_CHECK(m_b);
 }
 
 bool QfrTest2Impl::setB(const double b)
 {
-  m_b = QString::number(b);
+  m_b = std::to_string(b);
   return true;
 }
 
@@ -3691,12 +3691,12 @@ bool QfrTest2Impl::setB(const std::string &b)
 
 double QfrTest2Impl::dP1() const
 {
-  return m_dP1.toDouble();
+  return FLOAT_NO_CHECK(m_dP1);
 }
 
 bool QfrTest2Impl::setDP1(const double dP1)
 {
-  m_dP1 = QString::number(dP1);
+  m_dP1 = std::to_string(dP1);
   return true;
 }
 
@@ -3714,12 +3714,12 @@ bool QfrTest2Impl::setDP1(const std::string &dP1)
 
 double QfrTest2Impl::F1() const
 {
-  return m_F1.toDouble();
+  return FLOAT_NO_CHECK(m_F1);
 }
 
 bool QfrTest2Impl::setF1(const double F1)
 {
-  m_F1 = QString::number(F1);
+  m_F1 = std::to_string(F1);
   return true;
 }
 
@@ -3737,12 +3737,12 @@ bool QfrTest2Impl::setF1(const std::string &F1)
 
 double QfrTest2Impl::dP2() const
 {
-  return m_dP2.toDouble();
+  return FLOAT_NO_CHECK(m_dP2);
 }
 
 bool QfrTest2Impl::setDP2(const double dP2)
 {
-  m_dP2 = QString::number(dP2);
+  m_dP2 = std::to_string(dP2);
   return true;
 }
 
@@ -3760,12 +3760,12 @@ bool QfrTest2Impl::setDP2(const std::string &dP2)
 
 double QfrTest2Impl::F2() const
 {
-  return m_F2.toDouble();
+  return FLOAT_NO_CHECK(m_F2);
 }
 
 bool QfrTest2Impl::setF2(const double F2)
 {
-  m_F2 = QString::number(F2);
+  m_F2 = std::to_string(F2);
   return true;
 }
 
@@ -3978,12 +3978,12 @@ void AfeDorImpl::setDesc(const std::string &desc)
 
 double AfeDorImpl::lam() const
 {
-  return m_lam.toDouble();
+  return FLOAT_NO_CHECK(m_lam);
 }
 
 bool AfeDorImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = std::to_string(lam);
   return true;
 }
 
@@ -4001,12 +4001,12 @@ bool AfeDorImpl::setLam(const std::string &lam)
 
 double AfeDorImpl::turb() const
 {
-  return m_turb.toDouble();
+  return FLOAT_NO_CHECK(m_turb);
 }
 
 bool AfeDorImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = std::to_string(turb);
   return true;
 }
 
@@ -4024,12 +4024,12 @@ bool AfeDorImpl::setTurb(const std::string &turb)
 
 double AfeDorImpl::expt() const
 {
-  return m_expt.toDouble();
+  return FLOAT_NO_CHECK(m_expt);
 }
 
 bool AfeDorImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = std::to_string(expt);
   return true;
 }
 
@@ -4047,12 +4047,12 @@ bool AfeDorImpl::setExpt(const std::string &expt)
 
 double AfeDorImpl::dTmin() const
 {
-  return m_dTmin.toDouble();
+  return FLOAT_NO_CHECK(m_dTmin);
 }
 
 bool AfeDorImpl::setDTmin(const double dTmin)
 {
-  m_dTmin = QString::number(dTmin);
+  m_dTmin = std::to_string(dTmin);
   return true;
 }
 
@@ -4070,12 +4070,12 @@ bool AfeDorImpl::setDTmin(const std::string &dTmin)
 
 double AfeDorImpl::height() const
 {
-  return m_ht.toDouble();
+  return FLOAT_NO_CHECK(m_ht);
 }
 
 bool AfeDorImpl::setHeight(const double ht)
 {
-  m_ht = QString::number(ht);
+  m_ht = std::to_string(ht);
   return true;
 }
 
@@ -4093,12 +4093,12 @@ bool AfeDorImpl::setHeight(const std::string &ht)
 
 double AfeDorImpl::width() const
 {
-  return m_wd.toDouble();
+  return FLOAT_NO_CHECK(m_wd);
 }
 
 bool AfeDorImpl::setWidth(const double wd)
 {
-  m_wd = QString::number(wd);
+  m_wd = std::to_string(wd);
   return true;
 }
 
@@ -4116,12 +4116,12 @@ bool AfeDorImpl::setWidth(const std::string &wd)
 
 double AfeDorImpl::cd() const
 {
-  return m_cd.toDouble();
+  return FLOAT_NO_CHECK(m_cd);
 }
 
 bool AfeDorImpl::setCd(const double cd)
 {
-  m_cd = QString::number(cd);
+  m_cd = std::to_string(cd);
   return true;
 }
 
@@ -4318,12 +4318,12 @@ void DrPl2Impl::setDesc(const std::string &desc)
 
 double DrPl2Impl::lam() const
 {
-  return m_lam.toDouble();
+  return FLOAT_NO_CHECK(m_lam);
 }
 
 bool DrPl2Impl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = std::to_string(lam);
   return true;
 }
 
@@ -4341,12 +4341,12 @@ bool DrPl2Impl::setLam(const std::string &lam)
 
 double DrPl2Impl::turb() const
 {
-  return m_turb.toDouble();
+  return FLOAT_NO_CHECK(m_turb);
 }
 
 bool DrPl2Impl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = std::to_string(turb);
   return true;
 }
 
@@ -4364,12 +4364,12 @@ bool DrPl2Impl::setTurb(const std::string &turb)
 
 double DrPl2Impl::expt() const
 {
-  return m_expt.toDouble();
+  return FLOAT_NO_CHECK(m_expt);
 }
 
 bool DrPl2Impl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = std::to_string(expt);
   return true;
 }
 
@@ -4387,12 +4387,12 @@ bool DrPl2Impl::setExpt(const std::string &expt)
 
 double DrPl2Impl::dH() const
 {
-  return m_dH.toDouble();
+  return FLOAT_NO_CHECK(m_dH);
 }
 
 bool DrPl2Impl::setDH(const double dH)
 {
-  m_dH = QString::number(dH);
+  m_dH = std::to_string(dH);
   return true;
 }
 
@@ -4410,12 +4410,12 @@ bool DrPl2Impl::setDH(const std::string &dH)
 
 double DrPl2Impl::height() const
 {
-  return m_ht.toDouble();
+  return FLOAT_NO_CHECK(m_ht);
 }
 
 bool DrPl2Impl::setHeight(const double ht)
 {
-  m_ht = QString::number(ht);
+  m_ht = std::to_string(ht);
   return true;
 }
 
@@ -4433,12 +4433,12 @@ bool DrPl2Impl::setHeight(const std::string &ht)
 
 double DrPl2Impl::width() const
 {
-  return m_wd.toDouble();
+  return FLOAT_NO_CHECK(m_wd);
 }
 
 bool DrPl2Impl::setWidth(const double wd)
 {
-  m_wd = QString::number(wd);
+  m_wd = std::to_string(wd);
   return true;
 }
 
@@ -4456,12 +4456,12 @@ bool DrPl2Impl::setWidth(const std::string &wd)
 
 double DrPl2Impl::cd() const
 {
-  return m_cd.toDouble();
+  return FLOAT_NO_CHECK(m_cd);
 }
 
 bool DrPl2Impl::setCd(const double cd)
 {
-  m_cd = QString::number(cd);
+  m_cd = std::to_string(cd);
   return true;
 }
 
@@ -4609,12 +4609,12 @@ void AfeFlowImpl::setDesc(const std::string &desc)
 
 double AfeFlowImpl::Flow() const
 {
-  return m_Flow.toDouble();
+  return FLOAT_NO_CHECK(m_Flow);
 }
 
 bool AfeFlowImpl::setFlow(const double Flow)
 {
-  m_Flow = QString::number(Flow);
+  m_Flow = std::to_string(Flow);
   return true;
 }
 
@@ -4834,12 +4834,12 @@ void AfeFanImpl::setDesc(const std::string &desc)
 
 double AfeFanImpl::lam() const
 {
-  return m_lam.toDouble();
+  return FLOAT_NO_CHECK(m_lam);
 }
 
 bool AfeFanImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = std::to_string(lam);
   return true;
 }
 
@@ -4857,12 +4857,12 @@ bool AfeFanImpl::setLam(const std::string &lam)
 
 double AfeFanImpl::turb() const
 {
-  return m_turb.toDouble();
+  return FLOAT_NO_CHECK(m_turb);
 }
 
 bool AfeFanImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = std::to_string(turb);
   return true;
 }
 
@@ -4880,12 +4880,12 @@ bool AfeFanImpl::setTurb(const std::string &turb)
 
 double AfeFanImpl::expt() const
 {
-  return m_expt.toDouble();
+  return FLOAT_NO_CHECK(m_expt);
 }
 
 bool AfeFanImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = std::to_string(expt);
   return true;
 }
 
@@ -4903,12 +4903,12 @@ bool AfeFanImpl::setExpt(const std::string &expt)
 
 double AfeFanImpl::rdens() const
 {
-  return m_rdens.toDouble();
+  return FLOAT_NO_CHECK(m_rdens);
 }
 
 bool AfeFanImpl::setRdens(const double rdens)
 {
-  m_rdens = QString::number(rdens);
+  m_rdens = std::to_string(rdens);
   return true;
 }
 
@@ -4926,12 +4926,12 @@ bool AfeFanImpl::setRdens(const std::string &rdens)
 
 double AfeFanImpl::fdf() const
 {
-  return m_fdf.toDouble();
+  return FLOAT_NO_CHECK(m_fdf);
 }
 
 bool AfeFanImpl::setFdf(const double fdf)
 {
-  m_fdf = QString::number(fdf);
+  m_fdf = std::to_string(fdf);
   return true;
 }
 
@@ -4949,12 +4949,12 @@ bool AfeFanImpl::setFdf(const std::string &fdf)
 
 double AfeFanImpl::sop() const
 {
-  return m_sop.toDouble();
+  return FLOAT_NO_CHECK(m_sop);
 }
 
 bool AfeFanImpl::setSop(const double sop)
 {
-  m_sop = QString::number(sop);
+  m_sop = std::to_string(sop);
   return true;
 }
 
@@ -4972,12 +4972,12 @@ bool AfeFanImpl::setSop(const std::string &sop)
 
 double AfeFanImpl::off() const
 {
-  return m_off.toDouble();
+  return FLOAT_NO_CHECK(m_off);
 }
 
 bool AfeFanImpl::setOff(const double off)
 {
-  m_off = QString::number(off);
+  m_off = std::to_string(off);
   return true;
 }
 
@@ -4998,7 +4998,7 @@ std::vector<double> AfeFanImpl::fpc() const
   std::vector<double> out;
   for(int i=0;i<4;i++)
   {
-    out.push_back(m_fpc[i].toDouble());
+    out.push_back(FLOAT_NO_CHECK(m_fpc[i]));
   }
   return out;
 }
@@ -5007,7 +5007,7 @@ bool AfeFanImpl::setFpc(const std::vector<double> &fpc)
 {
   for(int i=0;i<4;i++)
   {
-    m_fpc.push_back(QString::number(fpc[i]));
+    m_fpc.push_back(std::to_string(fpc[i]));
   }
   return true;
 }
@@ -5031,12 +5031,12 @@ bool AfeFanImpl::setFpc(const std::vector<std::string> &fpc)
 
 double AfeFanImpl::Sarea() const
 {
-  return m_Sarea.toDouble();
+  return FLOAT_NO_CHECK(m_Sarea);
 }
 
 bool AfeFanImpl::setSarea(const double Sarea)
 {
-  m_Sarea = QString::number(Sarea);
+  m_Sarea = std::to_string(Sarea);
   return true;
 }
 

@@ -77,13 +77,9 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeNoReheat : public StraightCom
 
   boost::optional<double> maximumAirFlowRate() const;
 
-  OSOptionalQuantity getMaximumAirFlowRate(bool returnIP=false) const;
-
   bool isMaximumAirFlowRateAutosized() const;
 
   bool setMaximumAirFlowRate(double maximumAirFlowRate);
-
-  bool setMaximumAirFlowRate(const Quantity& maximumAirFlowRate);
 
   void autosizeMaximumAirFlowRate();
 
@@ -120,4 +116,3 @@ typedef AirTerminalSingleDuctConstantVolumeNoReheat AirTerminalSingleDuctUncontr
 } // openstudio
 
 #endif // MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMENOREHEAT_HPP
-

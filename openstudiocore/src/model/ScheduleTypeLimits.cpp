@@ -35,7 +35,6 @@
 #include <utilities/idd/OS_ScheduleTypeLimits_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/units/SIUnit.hpp"
 #include "../utilities/units/IPUnit.hpp"
@@ -90,18 +89,8 @@ namespace detail {
     return getDouble(OS_ScheduleTypeLimitsFields::LowerLimitValue,true);
   }
 
-  OSOptionalQuantity ScheduleTypeLimits_Impl::getLowerLimitValue(bool returnIP) const {
-    OptionalDouble value = lowerLimitValue();
-    return getQuantityFromDouble(OS_ScheduleTypeLimitsFields::LowerLimitValue, value, returnIP);
-  }
-
   boost::optional<double> ScheduleTypeLimits_Impl::upperLimitValue() const {
     return getDouble(OS_ScheduleTypeLimitsFields::UpperLimitValue,true);
-  }
-
-  OSOptionalQuantity ScheduleTypeLimits_Impl::getUpperLimitValue(bool returnIP) const {
-    OptionalDouble value = upperLimitValue();
-    return getQuantityFromDouble(OS_ScheduleTypeLimitsFields::UpperLimitValue, value, returnIP);
   }
 
   boost::optional<std::string> ScheduleTypeLimits_Impl::numericType() const {
@@ -123,31 +112,9 @@ namespace detail {
     return ScheduleTypeLimits::units(unitType(), returnIP);
   }
 
-  bool ScheduleTypeLimits_Impl::setLowerLimitValue(boost::optional<double> lowerLimitValue) {
+  bool ScheduleTypeLimits_Impl::setLowerLimitValue(double lowerLimitValue) {
     bool result = false;
-    if (lowerLimitValue) {
-      result = setDouble(OS_ScheduleTypeLimitsFields::LowerLimitValue, lowerLimitValue.get());
-    } else {
-      result = setString(OS_ScheduleTypeLimitsFields::LowerLimitValue, "");
-    }
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool ScheduleTypeLimits_Impl::setLowerLimitValue(const OSOptionalQuantity& lowerLimitValue) {
-    bool result(false);
-    OptionalDouble value;
-    if (lowerLimitValue.isSet()) {
-      value = getDoubleFromQuantity(OS_ScheduleTypeLimitsFields::LowerLimitValue,lowerLimitValue.get());
-      if (value) {
-        setLowerLimitValue(value);
-        result = true;
-      }
-    }
-    else {
-      setLowerLimitValue(value);
-      result = true;
-    }
+    result = setDouble(OS_ScheduleTypeLimitsFields::LowerLimitValue, lowerLimitValue);
     return result;
   }
 
@@ -156,31 +123,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ScheduleTypeLimits_Impl::setUpperLimitValue(boost::optional<double> upperLimitValue) {
+  bool ScheduleTypeLimits_Impl::setUpperLimitValue(double upperLimitValue) {
     bool result = false;
-    if (upperLimitValue) {
-      result = setDouble(OS_ScheduleTypeLimitsFields::UpperLimitValue, upperLimitValue.get());
-    } else {
-      result = setString(OS_ScheduleTypeLimitsFields::UpperLimitValue, "");
-    }
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool ScheduleTypeLimits_Impl::setUpperLimitValue(const OSOptionalQuantity& upperLimitValue) {
-    bool result(false);
-    OptionalDouble value;
-    if (upperLimitValue.isSet()) {
-      value = getDoubleFromQuantity(OS_ScheduleTypeLimitsFields::UpperLimitValue,upperLimitValue.get());
-      if (value) {
-        setUpperLimitValue(value);
-        result = true;
-      }
-    }
-    else {
-      setUpperLimitValue(value);
-      result = true;
-    }
+    result = setDouble(OS_ScheduleTypeLimitsFields::UpperLimitValue, upperLimitValue);
     return result;
   }
 
@@ -189,13 +134,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ScheduleTypeLimits_Impl::setNumericType(boost::optional<std::string> numericType) {
+  bool ScheduleTypeLimits_Impl::setNumericType(std::string numericType) {
     bool result = false;
-    if (numericType) {
-      result = setString(OS_ScheduleTypeLimitsFields::NumericType, numericType.get());
-    } else {
-      result = setString(OS_ScheduleTypeLimitsFields::NumericType, "");
-    }
+    result = setString(OS_ScheduleTypeLimitsFields::NumericType, numericType);
     return result;
   }
 
@@ -212,75 +153,6 @@ namespace detail {
   void ScheduleTypeLimits_Impl::resetUnitType() {
     bool result = setString(OS_ScheduleTypeLimitsFields::UnitType, "");
     OS_ASSERT(result);
-  }
-
-  OSOptionalQuantity ScheduleTypeLimits_Impl::getQuantityFromDouble(unsigned index,
-                                                                    boost::optional<double> value,
-                                                                    bool returnIP) const
-  {
-    OptionalUnit siUnits = ScheduleTypeLimits::units(unitType(),false);
-    OS_ASSERT(siUnits);
-    OptionalUnit units = siUnits->clone();
-    if (returnIP) {
-      units = ScheduleTypeLimits::units(unitType(),true);
-      OS_ASSERT(units);
-    }
-    if (value) {
-      Quantity siQuantity(*value,*siUnits);
-      if (!returnIP || (siUnits.get() == units.get())) {
-        return OSOptionalQuantity(siQuantity);
-      }
-      else {
-        OptionalQuantity result = convert(siQuantity,*units);
-        OS_ASSERT(result);
-        return OSOptionalQuantity(*result);
-      }
-    }
-    return OSOptionalQuantity(*units);
-  }
-
-  boost::optional<double> ScheduleTypeLimits_Impl::getDoubleFromQuantity(unsigned index,
-                                                                         Quantity q) const
-  {
-    OptionalUnit siUnits = ScheduleTypeLimits::units(unitType(),false);
-    if (siUnits) {
-      if (q.units() == siUnits) {
-        return q.value();
-      }
-      else {
-        OptionalQuantity converted = convert(q,*siUnits);
-        if (converted) {
-          return q.value();
-        }
-      }
-    }
-    return boost::none;
-  }
-
-  openstudio::OSOptionalQuantity ScheduleTypeLimits_Impl::lowerLimitValue_SI() const {
-    return getLowerLimitValue(false);
-  }
-
-  openstudio::OSOptionalQuantity ScheduleTypeLimits_Impl::lowerLimitValue_IP() const {
-    return getLowerLimitValue(true);
-  }
-
-  openstudio::OSOptionalQuantity ScheduleTypeLimits_Impl::upperLimitValue_SI() const {
-    return getUpperLimitValue(false);
-  }
-
-  openstudio::OSOptionalQuantity ScheduleTypeLimits_Impl::upperLimitValue_IP() const {
-    return getUpperLimitValue(true);
-  }
-
-  // TODO: This is probably not needed here:
-  std::vector<std::string> ScheduleTypeLimits_Impl::numericTypeValues() const {
-    return ScheduleTypeLimits::numericTypeValues();
-  }
-
-  // TODO: This is probably not needed here:
-  std::vector<std::string> ScheduleTypeLimits_Impl::unitTypeValues() const {
-    return ScheduleTypeLimits::unitTypeValues();
   }
 
 } // detail
@@ -480,16 +352,8 @@ boost::optional<double> ScheduleTypeLimits::lowerLimitValue() const {
   return getImpl<detail::ScheduleTypeLimits_Impl>()->lowerLimitValue();
 }
 
-OSOptionalQuantity ScheduleTypeLimits::getLowerLimitValue(bool returnIP) const {
-  return getImpl<detail::ScheduleTypeLimits_Impl>()->getLowerLimitValue(returnIP);
-}
-
 boost::optional<double> ScheduleTypeLimits::upperLimitValue() const {
   return getImpl<detail::ScheduleTypeLimits_Impl>()->upperLimitValue();
-}
-
-OSOptionalQuantity ScheduleTypeLimits::getUpperLimitValue(bool returnIP) const {
-  return getImpl<detail::ScheduleTypeLimits_Impl>()->getUpperLimitValue(returnIP);
 }
 
 boost::optional<std::string> ScheduleTypeLimits::numericType() const {
@@ -512,19 +376,11 @@ bool ScheduleTypeLimits::setLowerLimitValue(double lowerLimitValue) {
   return getImpl<detail::ScheduleTypeLimits_Impl>()->setLowerLimitValue(lowerLimitValue);
 }
 
-bool ScheduleTypeLimits::setLowerLimitValue(const Quantity& lowerLimitValue) {
-  return getImpl<detail::ScheduleTypeLimits_Impl>()->setLowerLimitValue(lowerLimitValue);
-}
-
 void ScheduleTypeLimits::resetLowerLimitValue() {
   getImpl<detail::ScheduleTypeLimits_Impl>()->resetLowerLimitValue();
 }
 
 bool ScheduleTypeLimits::setUpperLimitValue(double upperLimitValue) {
-  return getImpl<detail::ScheduleTypeLimits_Impl>()->setUpperLimitValue(upperLimitValue);
-}
-
-bool ScheduleTypeLimits::setUpperLimitValue(const Quantity& upperLimitValue) {
   return getImpl<detail::ScheduleTypeLimits_Impl>()->setUpperLimitValue(upperLimitValue);
 }
 

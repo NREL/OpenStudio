@@ -345,12 +345,12 @@ std::string FanDataPoint::write()
 
 double FanDataPoint::mF() const
 {
-  return m_mF.toDouble();
+  return FLOAT_NO_CHECK(m_mF);
 }
 
 bool FanDataPoint::setMF(const double mF)
 {
-  m_mF = QString::number(mF);
+  m_mF = std::to_string(mF);
   return true;
 }
 
@@ -378,12 +378,12 @@ void FanDataPoint::setU_mF(const int u_mF)
 
 double FanDataPoint::dP() const
 {
-  return m_dP.toDouble();
+  return FLOAT_NO_CHECK(m_dP);
 }
 
 bool FanDataPoint::setDP(const double dP)
 {
-  m_dP = QString::number(dP);
+  m_dP = std::to_string(dP);
   return true;
 }
 
@@ -411,12 +411,12 @@ void FanDataPoint::setU_dP(const int u_dP)
 
 double FanDataPoint::rP() const
 {
-  return m_rP.toDouble();
+  return FLOAT_NO_CHECK(m_rP);
 }
 
 bool FanDataPoint::setRP(const double rP)
 {
-  m_rP = QString::number(rP);
+  m_rP = std::to_string(rP);
   return true;
 }
 
@@ -482,12 +482,12 @@ std::string XyDataPoint::write()
 
 double XyDataPoint::x() const
 {
-  return m_x.toDouble();
+  return FLOAT_NO_CHECK(m_x);
 }
 
 bool XyDataPoint::setX(const double x)
 {
-  m_x = QString::number(x);
+  m_x = std::to_string(x);
   return true;
 }
 
@@ -505,12 +505,12 @@ bool XyDataPoint::setX(const std::string &x)
 
 double XyDataPoint::y() const
 {
-  return m_y.toDouble();
+  return FLOAT_NO_CHECK(m_y);
 }
 
 bool XyDataPoint::setY(const double y)
 {
-  m_y = QString::number(y);
+  m_y = std::to_string(y);
   return true;
 }
 
@@ -580,12 +580,12 @@ void AirflowSubelementData::setNr(const int nr)
 
 double AirflowSubelementData::relHt() const
 {
-  return m_relHt.toDouble();
+  return FLOAT_NO_CHECK(m_relHt);
 }
 
 bool AirflowSubelementData::setRelHt(const double relHt)
 {
-  m_relHt = QString::number(relHt);
+  m_relHt = std::to_string(relHt);
   return true;
 }
 
@@ -651,12 +651,12 @@ std::string PressureCoefficientPoint::write()
 
 double PressureCoefficientPoint::azm() const
 {
-  return m_azm.toDouble();
+  return FLOAT_NO_CHECK(m_azm);
 }
 
 bool PressureCoefficientPoint::setAzm(const double azm)
 {
-  m_azm = QString::number(azm);
+  m_azm = std::to_string(azm);
   return true;
 }
 
@@ -674,12 +674,12 @@ bool PressureCoefficientPoint::setAzm(const std::string &azm)
 
 double PressureCoefficientPoint::coef() const
 {
-  return m_coef.toDouble();
+  return FLOAT_NO_CHECK(m_coef);
 }
 
 bool PressureCoefficientPoint::setCoef(const double coef)
 {
-  m_coef = QString::number(coef);
+  m_coef = std::to_string(coef);
   return true;
 }
 
@@ -745,12 +745,12 @@ void SchedulePoint::setTime(const std::string &time)
 
 double SchedulePoint::ctrl() const
 {
-  return m_ctrl.toDouble();
+  return FLOAT_NO_CHECK(m_ctrl);
 }
 
 bool SchedulePoint::setCtrl(const double ctrl)
 {
-  m_ctrl = QString::number(ctrl);
+  m_ctrl = std::to_string(ctrl);
   return true;
 }
 

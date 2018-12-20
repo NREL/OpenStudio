@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -63,13 +61,9 @@ class MODEL_API OutputControlReportingTolerances : public ModelObject {
 
   double toleranceforTimeHeatingSetpointNotMet() const;
 
-  Quantity getToleranceforTimeHeatingSetpointNotMet(bool returnIP=false) const;
-
   bool isToleranceforTimeHeatingSetpointNotMetDefaulted() const;
 
   double toleranceforTimeCoolingSetpointNotMet() const;
-
-  Quantity getToleranceforTimeCoolingSetpointNotMet(bool returnIP=false) const;
 
   bool isToleranceforTimeCoolingSetpointNotMetDefaulted() const;
 
@@ -79,13 +73,9 @@ class MODEL_API OutputControlReportingTolerances : public ModelObject {
 
   bool setToleranceforTimeHeatingSetpointNotMet(double toleranceforTimeHeatingSetpointNotMet);
 
-  bool setToleranceforTimeHeatingSetpointNotMet(const Quantity& toleranceforTimeHeatingSetpointNotMet);
-
   void resetToleranceforTimeHeatingSetpointNotMet();
 
   bool setToleranceforTimeCoolingSetpointNotMet(double toleranceforTimeCoolingSetpointNotMet);
-
-  bool setToleranceforTimeCoolingSetpointNotMet(const Quantity& toleranceforTimeCoolingSetpointNotMet);
 
   void resetToleranceforTimeCoolingSetpointNotMet();
 
@@ -121,4 +111,3 @@ typedef std::vector<OutputControlReportingTolerances> OutputControlReportingTole
 } // openstudio
 
 #endif // MODEL_OUTPUTCONTROLREPORTINGTOLERANCES_HPP
-

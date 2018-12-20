@@ -112,7 +112,6 @@ class MODEL_API PlanarSurface : public ParentObject {
   bool setVertices(const std::vector<Point3d>& vertices);
 
   /// Sets the construction object.
-  /// Relationship name: construction
   bool setConstruction(const ConstructionBase& construction);
 
   /// Resets the construction object.

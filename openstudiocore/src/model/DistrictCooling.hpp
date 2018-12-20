@@ -34,8 +34,6 @@
 #include "StraightComponent.hpp"
 
 namespace openstudio {
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -74,10 +72,6 @@ class MODEL_API DistrictCooling : public StraightComponent {
 
   bool isNominalCapacityAutosized() const;
 
-  //double nominalCapacity() const;
-
-  //Quantity getNominalCapacity(bool returnIP=false) const;
-
   //@}
   /** @name Setters */
   //@{
@@ -85,10 +79,6 @@ class MODEL_API DistrictCooling : public StraightComponent {
   bool setNominalCapacity(double nominalCapacity);
 
   void autosizeNominalCapacity();
-
-  //bool setNominalCapacity(double nominalCapacity);
-
-  //bool setNominalCapacity(const Quantity& nominalCapacity);
 
   //@}
   /** @name Other */
@@ -130,6 +120,5 @@ typedef std::vector<DistrictCooling> DistrictCoolingVector;
 } // openstudio
 
 #endif // MODEL_DISTRICTCOOLING_HPP
-
 
 

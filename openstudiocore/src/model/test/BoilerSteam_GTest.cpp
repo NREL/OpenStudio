@@ -36,8 +36,6 @@
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -54,6 +52,134 @@ TEST_F(ModelFixture,BoilerSteam_BoilerSteam)
      exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
+}
+
+TEST_F(ModelFixture,BoilerSteam_GettersSetters)
+{
+
+  Model m;
+  BoilerSteam boiler(m);
+
+  // Fuel Type:  String
+  // No Default
+  // Test a valid choice
+  EXPECT_TRUE(boiler.setFuelType("Electricity"));
+  EXPECT_EQ("Electricity", boiler.fuelType());
+  // Test an invalid choice
+  EXPECT_FALSE(boiler.setFuelType("BadChoice"));
+  EXPECT_EQ("Electricity", boiler.fuelType());
+
+
+  // Maximum Operating Pressure: Optional Double
+  // No Default
+  EXPECT_TRUE(boiler.setMaximumOperatingPressure(10.03));
+  ASSERT_TRUE(boiler.maximumOperatingPressure());
+  EXPECT_EQ(10.03, boiler.maximumOperatingPressure().get());
+  boiler.resetMaximumOperatingPressure();
+  EXPECT_FALSE(boiler.maximumOperatingPressure());
+
+
+  // Theoretical Efficiency: Optional Double
+  // No Default
+  EXPECT_TRUE(boiler.setTheoreticalEfficiency(0.5));
+  ASSERT_TRUE(boiler.theoreticalEfficiency());
+  EXPECT_EQ(0.5, boiler.theoreticalEfficiency().get());
+  boiler.resetTheoreticalEfficiency();
+  EXPECT_FALSE(boiler.theoreticalEfficiency());
+
+
+  // Design Outlet Steam Temperature: Optional Double
+  // No Default
+  EXPECT_TRUE(boiler.setDesignOutletSteamTemperature(10.03));
+  ASSERT_TRUE(boiler.designOutletSteamTemperature());
+  EXPECT_EQ(10.03, boiler.designOutletSteamTemperature().get());
+  boiler.resetDesignOutletSteamTemperature();
+  EXPECT_FALSE(boiler.designOutletSteamTemperature());
+
+
+  // Nominal Capacity: Optional Double
+  // No Default
+  EXPECT_TRUE(boiler.setNominalCapacity(10.03));
+  ASSERT_TRUE(boiler.nominalCapacity());
+  EXPECT_EQ(10.03, boiler.nominalCapacity().get());
+  boiler.resetNominalCapacity();
+  EXPECT_FALSE(boiler.nominalCapacity());
+
+
+  // Minimum Part Load Ratio: Optional Double
+  // No Default
+  EXPECT_TRUE(boiler.setMinimumPartLoadRatio(1.0));
+  ASSERT_TRUE(boiler.minimumPartLoadRatio());
+  EXPECT_EQ(1.0, boiler.minimumPartLoadRatio().get());
+  boiler.resetMinimumPartLoadRatio();
+  EXPECT_FALSE(boiler.minimumPartLoadRatio());
+
+
+  // Maximum Part Load Ratio: Optional Double
+  // No Default
+  EXPECT_TRUE(boiler.setMaximumPartLoadRatio(1.0));
+  ASSERT_TRUE(boiler.maximumPartLoadRatio());
+  EXPECT_EQ(1.0, boiler.maximumPartLoadRatio().get());
+  boiler.resetMaximumPartLoadRatio();
+  EXPECT_FALSE(boiler.maximumPartLoadRatio());
+
+
+  // Optimum Part Load Ratio: Optional Double
+  // No Default
+  EXPECT_TRUE(boiler.setOptimumPartLoadRatio(1.0));
+  ASSERT_TRUE(boiler.optimumPartLoadRatio());
+  EXPECT_EQ(1.0, boiler.optimumPartLoadRatio().get());
+  boiler.resetOptimumPartLoadRatio();
+  EXPECT_FALSE(boiler.optimumPartLoadRatio());
+
+
+  // Coefficient 1 of Fuel Use Function of Part Load Ratio Curve: Optional Double
+  // No Default
+  EXPECT_TRUE(boiler.setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(10.03));
+  ASSERT_TRUE(boiler.coefficient1ofFuelUseFunctionofPartLoadRatioCurve());
+  EXPECT_EQ(10.03, boiler.coefficient1ofFuelUseFunctionofPartLoadRatioCurve().get());
+  boiler.resetCoefficient1ofFuelUseFunctionofPartLoadRatioCurve();
+  EXPECT_FALSE(boiler.coefficient1ofFuelUseFunctionofPartLoadRatioCurve());
+
+
+  // Coefficient 2 of Fuel Use Function of Part Load Ratio Curve: Optional Double
+  // No Default
+  EXPECT_TRUE(boiler.setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(10.03));
+  ASSERT_TRUE(boiler.coefficient2ofFuelUseFunctionofPartLoadRatioCurve());
+  EXPECT_EQ(10.03, boiler.coefficient2ofFuelUseFunctionofPartLoadRatioCurve().get());
+  boiler.resetCoefficient2ofFuelUseFunctionofPartLoadRatioCurve();
+  EXPECT_FALSE(boiler.coefficient2ofFuelUseFunctionofPartLoadRatioCurve());
+
+
+  // Coefficient 3 of Fuel Use Function of Part Load Ratio Curve: Optional Double
+  // No Default
+  EXPECT_TRUE(boiler.setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(10.03));
+  ASSERT_TRUE(boiler.coefficient3ofFuelUseFunctionofPartLoadRatioCurve());
+  EXPECT_EQ(10.03, boiler.coefficient3ofFuelUseFunctionofPartLoadRatioCurve().get());
+  boiler.resetCoefficient3ofFuelUseFunctionofPartLoadRatioCurve();
+  EXPECT_FALSE(boiler.coefficient3ofFuelUseFunctionofPartLoadRatioCurve());
+
+
+  // Water Inlet Node Name:  Object
+
+  // Steam Outlet Node Name:  Object
+
+
+  // Sizing Factor:  Double
+  // Check Idd default: 1.0
+  EXPECT_EQ(1.0, boiler.sizingFactor());
+  EXPECT_TRUE(boiler.setSizingFactor(0.5));
+  EXPECT_EQ(0.5, boiler.sizingFactor());
+  boiler.resetSizingFactor();
+  EXPECT_EQ(1.0, boiler.sizingFactor());
+
+
+  // End-Use Subcategory:  String
+  // Check Idd default: "General"
+  EXPECT_EQ("General", boiler.endUseSubcategory());
+  EXPECT_TRUE(boiler.setEndUseSubcategory("SteamBoiler"));
+  EXPECT_EQ("SteamBoiler", boiler.endUseSubcategory());
+
 }
 
 TEST_F(ModelFixture,BoilerSteam_addToNode) {
@@ -87,179 +213,3 @@ TEST_F(ModelFixture,BoilerSteam_addToNode) {
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
 }
-
-TEST_F(ModelFixture,BoilerSteam_MaximumOperatingPressure_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  BoilerSteam boilerSteam(model);
-
-  Unit units = boilerSteam.getMaximumOperatingPressure(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(boilerSteam.setMaximumOperatingPressure(testQ));
-  OSOptionalQuantity q = boilerSteam.getMaximumOperatingPressure(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,BoilerSteam_TheoreticalEfficiency_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  BoilerSteam boilerSteam(model);
-
-  Unit units = boilerSteam.getTheoreticalEfficiency(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(boilerSteam.setTheoreticalEfficiency(testQ));
-  OSOptionalQuantity q = boilerSteam.getTheoreticalEfficiency(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,BoilerSteam_DesignOutletSteamTemperature_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  BoilerSteam boilerSteam(model);
-
-  Unit units = boilerSteam.getDesignOutletSteamTemperature(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(boilerSteam.setDesignOutletSteamTemperature(testQ));
-  OSOptionalQuantity q = boilerSteam.getDesignOutletSteamTemperature(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,BoilerSteam_NominalCapacity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  BoilerSteam boilerSteam(model);
-
-  Unit units = boilerSteam.getNominalCapacity(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(boilerSteam.setNominalCapacity(testQ));
-  OSOptionalQuantity q = boilerSteam.getNominalCapacity(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,BoilerSteam_MinimumPartLoadRatio_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  BoilerSteam boilerSteam(model);
-
-  Unit units = boilerSteam.getMinimumPartLoadRatio(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(boilerSteam.setMinimumPartLoadRatio(testQ));
-  OSOptionalQuantity q = boilerSteam.getMinimumPartLoadRatio(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,BoilerSteam_MaximumPartLoadRatio_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  BoilerSteam boilerSteam(model);
-
-  Unit units = boilerSteam.getMaximumPartLoadRatio(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(boilerSteam.setMaximumPartLoadRatio(testQ));
-  OSOptionalQuantity q = boilerSteam.getMaximumPartLoadRatio(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,BoilerSteam_OptimumPartLoadRatio_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  BoilerSteam boilerSteam(model);
-
-  Unit units = boilerSteam.getOptimumPartLoadRatio(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(boilerSteam.setOptimumPartLoadRatio(testQ));
-  OSOptionalQuantity q = boilerSteam.getOptimumPartLoadRatio(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,BoilerSteam_Coefficient1ofFuelUseFunctionofPartLoadRatioCurve_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  BoilerSteam boilerSteam(model);
-
-  Unit units = boilerSteam.getCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(boilerSteam.setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(testQ));
-  OSOptionalQuantity q = boilerSteam.getCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,BoilerSteam_Coefficient2ofFuelUseFunctionofPartLoadRatioCurve_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  BoilerSteam boilerSteam(model);
-
-  Unit units = boilerSteam.getCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(boilerSteam.setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(testQ));
-  OSOptionalQuantity q = boilerSteam.getCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,BoilerSteam_Coefficient3ofFuelUseFunctionofPartLoadRatioCurve_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  BoilerSteam boilerSteam(model);
-
-  Unit units = boilerSteam.getCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(boilerSteam.setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(testQ));
-  OSOptionalQuantity q = boilerSteam.getCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,BoilerSteam_SizingFactor_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  BoilerSteam boilerSteam(model);
-
-  Unit units = boilerSteam.getSizingFactor(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(boilerSteam.setSizingFactor(testQ));
-  Quantity q = boilerSteam.getSizingFactor(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-

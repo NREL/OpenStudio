@@ -34,8 +34,6 @@
 
 #include "Unit.hpp"
 
-#include <QMetaType>
-
 #include <boost/optional.hpp>
 
 namespace openstudio {
@@ -85,8 +83,4 @@ class UTILITIES_API OSOptionalQuantity {
 
 } // openstudio
 
-// declare this type so we can use it in properties
-Q_DECLARE_METATYPE(openstudio::OSOptionalQuantity);
-
 #endif // UTILITIES_UNITS_OSOPTIONALQUANTITY_HPP
-

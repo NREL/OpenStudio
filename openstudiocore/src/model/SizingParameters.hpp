@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -67,13 +65,9 @@ class MODEL_API SizingParameters : public ModelObject {
 
   double heatingSizingFactor() const;
 
-  Quantity getHeatingSizingFactor(bool returnIP=false) const;
-
   bool isHeatingSizingFactorDefaulted() const;
 
   double coolingSizingFactor() const;
-
-  Quantity getCoolingSizingFactor(bool returnIP=false) const;
 
   bool isCoolingSizingFactorDefaulted() const;
 
@@ -85,13 +79,9 @@ class MODEL_API SizingParameters : public ModelObject {
 
   bool setHeatingSizingFactor(double heatingSizingFactor);
 
-  bool setHeatingSizingFactor(const Quantity& heatingSizingFactor);
-
   void resetHeatingSizingFactor();
 
   bool setCoolingSizingFactor(double coolingSizingFactor);
-
-  bool setCoolingSizingFactor(const Quantity& coolingSizingFactor);
 
   void resetCoolingSizingFactor();
 
@@ -132,4 +122,3 @@ typedef std::vector<SizingParameters> SizingParametersVector;
 } // openstudio
 
 #endif // MODEL_SIZINGPARAMETERS_HPP
-

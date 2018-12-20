@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -115,33 +113,24 @@ class MODEL_API GasMixture : public GasLayer {
 
   double thickness() const;
 
-  Quantity getThickness(bool returnIP=false) const;
-
   int numberofGasesinMixture() const;
 
   std::string gas1Type() const;
 
   double gas1Fraction() const;
 
-  Quantity getGas1Fraction(bool returnIP=false) const;
-
   std::string gas2Type() const;
 
   double gas2Fraction() const;
-
-  Quantity getGas2Fraction(bool returnIP=false) const;
 
   std::string gas3Type() const;
 
   boost::optional<double> gas3Fraction() const;
 
-  OSOptionalQuantity getGas3Fraction(bool returnIP=false) const;
-
   std::string gas4Type() const;
 
   boost::optional<double> gas4Fraction() const;
 
-  OSOptionalQuantity getGas4Fraction(bool returnIP=false) const;
 
   //@}
   /** @name Setters */
@@ -169,8 +158,6 @@ class MODEL_API GasMixture : public GasLayer {
 
   bool setThickness(double thickness);
 
-  bool setThickness(const Quantity& thickness);
-
   bool setNumberofGasesinMixture(int numberofGasesinMixture);
 
   bool setGas1Type(std::string gas1Type);
@@ -178,8 +165,6 @@ class MODEL_API GasMixture : public GasLayer {
   void resetGas1Type();
 
   bool setGas1Fraction(double gas1Fraction);
-
-  bool setGas1Fraction(const Quantity& gas1Fraction);
 
   void resetGas1Fraction();
 
@@ -189,8 +174,6 @@ class MODEL_API GasMixture : public GasLayer {
 
   bool setGas2Fraction(double gas2Fraction);
 
-  bool setGas2Fraction(const Quantity& gas2Fraction);
-
   void resetGas2Fraction();
 
   bool setGas3Type(std::string gas3Type);
@@ -199,8 +182,6 @@ class MODEL_API GasMixture : public GasLayer {
 
   bool setGas3Fraction(double gas3Fraction);
 
-  bool setGas3Fraction(const Quantity& gas3Fraction);
-
   void resetGas3Fraction();
 
   bool setGas4Type(std::string gas4Type);
@@ -208,8 +189,6 @@ class MODEL_API GasMixture : public GasLayer {
   void resetGas4Type();
 
   bool setGas4Fraction(double gas4Fraction);
-
-  bool setGas4Fraction(const Quantity& gas4Fraction);
 
   void resetGas4Fraction();
 
@@ -249,4 +228,3 @@ typedef std::vector<GasMixture> GasMixtureVector;
 } // openstudio
 
 #endif // MODEL_GASMIXTURE_HPP
-

@@ -33,207 +33,208 @@
 
 #include "../StandardGlazing.hpp"
 #include "../StandardGlazing_Impl.hpp"
-
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
+#include "../MaterialPropertyGlazingSpectralData.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,StandardGlazing_Thickness_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  StandardGlazing standardGlazing(model);
+TEST_F(ModelFixture, StandardGlazing_DefaultConstructor)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Unit units = standardGlazing.getThickness(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(standardGlazing.setThickness(testQ));
-  Quantity q = standardGlazing.getThickness(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  ASSERT_EXIT (
+  {
+    Model m;
+    StandardGlazing standardGlazing(m);
+
+    exit(0);
+  } ,
+    ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,StandardGlazing_SolarTransmittanceatNormalIncidence_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  StandardGlazing standardGlazing(model);
+TEST_F(ModelFixture, StandardGlazing_GettersSetters)
+{
+  Model m;
+  StandardGlazing standardGlazing(m);
 
-  Unit units = standardGlazing.getSolarTransmittanceatNormalIncidence(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(standardGlazing.setSolarTransmittanceatNormalIncidence(testQ));
-  OSOptionalQuantity q = standardGlazing.getSolarTransmittanceatNormalIncidence(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
 
-TEST_F(ModelFixture,StandardGlazing_FrontSideSolarReflectanceatNormalIncidence_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  StandardGlazing standardGlazing(model);
+  // Ctor arg defaults
+  std::string opticalDataType = "SpectralAverage";
+  double thickness = 0.1;
 
-  Unit units = standardGlazing.getFrontSideSolarReflectanceatNormalIncidence(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(standardGlazing.setFrontSideSolarReflectanceatNormalIncidence(testQ));
-  OSOptionalQuantity q = standardGlazing.getFrontSideSolarReflectanceatNormalIncidence(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
+  // Optical Data Type:  String
+  // Default in Ctor arg
+  EXPECT_EQ("SpectralAverage", standardGlazing.opticalDataType());
+  // TODO: JM 2018-12-13 Setter needs to be removed!
+  // Test another valid choice
+  EXPECT_TRUE(standardGlazing.setOpticalDataType("Spectral"));
+  EXPECT_EQ("Spectral", standardGlazing.opticalDataType());
+  // Test an invalid choice
+  EXPECT_FALSE(standardGlazing.setOpticalDataType("BadChoice"));
+  EXPECT_EQ("Spectral", standardGlazing.opticalDataType());
+  EXPECT_TRUE(standardGlazing.setOpticalDataType("SpectralAverage"));
 
-TEST_F(ModelFixture,StandardGlazing_BackSideSolarReflectanceatNormalIncidence_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  StandardGlazing standardGlazing(model);
 
-  Unit units = standardGlazing.getBackSideSolarReflectanceatNormalIncidence(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(standardGlazing.setBackSideSolarReflectanceatNormalIncidence(testQ));
-  OSOptionalQuantity q = standardGlazing.getBackSideSolarReflectanceatNormalIncidence(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
 
-TEST_F(ModelFixture,StandardGlazing_VisibleTransmittanceatNormalIncidence_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  StandardGlazing standardGlazing(model);
+  // Window Glass Spectral Data Set Name: Optional Object
+  // No Default
+  EXPECT_FALSE(standardGlazing.windowGlassSpectralDataSet());
+  MaterialPropertyGlazingSpectralData spec(m);
+  // Setter/Resetter also change the opticalDataType
+  EXPECT_TRUE(standardGlazing.setWindowGlassSpectralDataSet(spec));
+  EXPECT_EQ("Spectral", standardGlazing.opticalDataType());
+  ASSERT_TRUE(standardGlazing.windowGlassSpectralDataSet());
+  EXPECT_EQ(spec, standardGlazing.windowGlassSpectralDataSet().get());
+  standardGlazing.resetWindowGlassSpectralDataSet();
+  EXPECT_EQ("SpectralAverage", standardGlazing.opticalDataType());
+  EXPECT_FALSE(standardGlazing.windowGlassSpectralDataSet());
 
-  Unit units = standardGlazing.getVisibleTransmittanceatNormalIncidence(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(standardGlazing.setVisibleTransmittanceatNormalIncidence(testQ));
-  OSOptionalQuantity q = standardGlazing.getVisibleTransmittanceatNormalIncidence(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
+  // Thickness:  Double
+  // Default in Ctor arg
+  EXPECT_EQ(thickness, standardGlazing.thickness());
+  EXPECT_TRUE(standardGlazing.setThickness(1.0));
+  EXPECT_EQ(1.0, standardGlazing.thickness());
 
-TEST_F(ModelFixture,StandardGlazing_FrontSideVisibleReflectanceatNormalIncidence_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  StandardGlazing standardGlazing(model);
 
-  Unit units = standardGlazing.getFrontSideVisibleReflectanceatNormalIncidence(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(standardGlazing.setFrontSideVisibleReflectanceatNormalIncidence(testQ));
-  OSOptionalQuantity q = standardGlazing.getFrontSideVisibleReflectanceatNormalIncidence(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
+  // Solar Transmittance at Normal Incidence: Optional Double
+  // No Default
+  EXPECT_TRUE(standardGlazing.setSolarTransmittanceatNormalIncidence(0.5));
+  ASSERT_TRUE(standardGlazing.solarTransmittanceatNormalIncidence());
+  EXPECT_EQ(0.5, standardGlazing.solarTransmittanceatNormalIncidence().get());
+  // Test reset
+  standardGlazing.resetSolarTransmittanceatNormalIncidence();
+  EXPECT_FALSE(standardGlazing.solarTransmittanceatNormalIncidence());
 
-TEST_F(ModelFixture,StandardGlazing_BackSideVisibleReflectanceatNormalIncidence_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  StandardGlazing standardGlazing(model);
 
-  Unit units = standardGlazing.getBackSideVisibleReflectanceatNormalIncidence(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(standardGlazing.setBackSideVisibleReflectanceatNormalIncidence(testQ));
-  OSOptionalQuantity q = standardGlazing.getBackSideVisibleReflectanceatNormalIncidence(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
+  // Front Side Solar Reflectance at Normal Incidence: Optional Double
+  // No Default
+  EXPECT_TRUE(standardGlazing.setFrontSideSolarReflectanceatNormalIncidence(0.5));
+  ASSERT_TRUE(standardGlazing.frontSideSolarReflectanceatNormalIncidence());
+  EXPECT_EQ(0.5, standardGlazing.frontSideSolarReflectanceatNormalIncidence().get());
+  // Test reset
+  standardGlazing.resetFrontSideSolarReflectanceatNormalIncidence();
+  EXPECT_FALSE(standardGlazing.frontSideSolarReflectanceatNormalIncidence());
 
-TEST_F(ModelFixture,StandardGlazing_InfraredTransmittanceatNormalIncidence_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  StandardGlazing standardGlazing(model);
 
-  Unit units = standardGlazing.getInfraredTransmittanceatNormalIncidence(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(standardGlazing.setInfraredTransmittanceatNormalIncidence(testQ));
-  Quantity q = standardGlazing.getInfraredTransmittanceatNormalIncidence(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
+  // Back Side Solar Reflectance at Normal Incidence: Optional Double
+  // No Default
+  EXPECT_TRUE(standardGlazing.setBackSideSolarReflectanceatNormalIncidence(0.5));
+  ASSERT_TRUE(standardGlazing.backSideSolarReflectanceatNormalIncidence());
+  EXPECT_EQ(0.5, standardGlazing.backSideSolarReflectanceatNormalIncidence().get());
+  // Test reset
+  standardGlazing.resetBackSideSolarReflectanceatNormalIncidence();
+  EXPECT_FALSE(standardGlazing.backSideSolarReflectanceatNormalIncidence());
 
-TEST_F(ModelFixture,StandardGlazing_FrontSideInfraredHemisphericalEmissivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  StandardGlazing standardGlazing(model);
 
-  Unit units = standardGlazing.getFrontSideInfraredHemisphericalEmissivity(true).units(); // Get IP units.
+  // Visible Transmittance at Normal Incidence: Optional Double
+  // No Default
+  EXPECT_TRUE(standardGlazing.setVisibleTransmittanceatNormalIncidence(0.5));
+  ASSERT_TRUE(standardGlazing.visibleTransmittanceatNormalIncidence());
+  EXPECT_EQ(0.5, standardGlazing.visibleTransmittanceatNormalIncidence().get());
+  // Test reset
+  standardGlazing.resetVisibleTransmittanceatNormalIncidence();
+  EXPECT_FALSE(standardGlazing.visibleTransmittanceatNormalIncidence());
 
-  // Bounds: 0.0 < value < 1.0
 
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(standardGlazing.setFrontSideInfraredHemisphericalEmissivity(testQ));
+  // Front Side Visible Reflectance at Normal Incidence: Optional Double
+  // No Default
+  EXPECT_TRUE(standardGlazing.setFrontSideVisibleReflectanceatNormalIncidence(0.5));
+  ASSERT_TRUE(standardGlazing.frontSideVisibleReflectanceatNormalIncidence());
+  EXPECT_EQ(0.5, standardGlazing.frontSideVisibleReflectanceatNormalIncidence().get());
+  // Test reset
+  standardGlazing.resetFrontSideVisibleReflectanceatNormalIncidence();
+  EXPECT_FALSE(standardGlazing.frontSideVisibleReflectanceatNormalIncidence());
 
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(standardGlazing.setFrontSideInfraredHemisphericalEmissivity(testQ2));
-  Quantity q2 = standardGlazing.getFrontSideInfraredHemisphericalEmissivity(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
 
-TEST_F(ModelFixture,StandardGlazing_BackSideInfraredHemisphericalEmissivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  StandardGlazing standardGlazing(model);
+  // Back Side Visible Reflectance at Normal Incidence: Optional Double
+  // No Default
+  EXPECT_TRUE(standardGlazing.setBackSideVisibleReflectanceatNormalIncidence(0.5));
+  ASSERT_TRUE(standardGlazing.backSideVisibleReflectanceatNormalIncidence());
+  EXPECT_EQ(0.5, standardGlazing.backSideVisibleReflectanceatNormalIncidence().get());
+  // Test reset
+  standardGlazing.resetBackSideVisibleReflectanceatNormalIncidence();
+  EXPECT_FALSE(standardGlazing.backSideVisibleReflectanceatNormalIncidence());
 
-  Unit units = standardGlazing.getBackSideInfraredHemisphericalEmissivity(true).units(); // Get IP units.
 
-  // Bounds: 0.0 < value < 1.0
+  // Infrared Transmittance at Normal Incidence:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(standardGlazing.isInfraredTransmittanceatNormalIncidenceDefaulted());
+  EXPECT_EQ(0.0, standardGlazing.infraredTransmittanceatNormalIncidence());
+  EXPECT_TRUE(standardGlazing.setInfraredTransmittanceatNormalIncidence(0.005));
+  EXPECT_FALSE(standardGlazing.isInfraredTransmittanceatNormalIncidenceDefaulted());
+  EXPECT_EQ(0.005, standardGlazing.infraredTransmittanceatNormalIncidence());
+  // Test reset
+  standardGlazing.resetInfraredTransmittanceatNormalIncidence();
+  EXPECT_EQ(0.0, standardGlazing.infraredTransmittanceatNormalIncidence());
+  EXPECT_TRUE(standardGlazing.isInfraredTransmittanceatNormalIncidenceDefaulted());
 
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(standardGlazing.setBackSideInfraredHemisphericalEmissivity(testQ));
 
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(standardGlazing.setBackSideInfraredHemisphericalEmissivity(testQ2));
-  Quantity q2 = standardGlazing.getBackSideInfraredHemisphericalEmissivity(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
+  // Front Side Infrared Hemispherical Emissivity:  Double
+  // Check Idd default: 0.84
+  EXPECT_TRUE(standardGlazing.isFrontSideInfraredHemisphericalEmissivityDefaulted());
+  EXPECT_EQ(0.84, standardGlazing.frontSideInfraredHemisphericalEmissivity());
+  EXPECT_TRUE(standardGlazing.setFrontSideInfraredHemisphericalEmissivity(0.24));
+  EXPECT_FALSE(standardGlazing.isFrontSideInfraredHemisphericalEmissivityDefaulted());
+  EXPECT_EQ(0.24, standardGlazing.frontSideInfraredHemisphericalEmissivity());
+  // Test reset
+  standardGlazing.resetFrontSideInfraredHemisphericalEmissivity();
+  EXPECT_EQ(0.84, standardGlazing.frontSideInfraredHemisphericalEmissivity());
+  EXPECT_TRUE(standardGlazing.isFrontSideInfraredHemisphericalEmissivityDefaulted());
 
-TEST_F(ModelFixture,StandardGlazing_Conductivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  StandardGlazing standardGlazing(model);
 
-  Unit units = standardGlazing.getConductivity(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(standardGlazing.setConductivity(testQ));
-  Quantity q = standardGlazing.getConductivity(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
+  // Back Side Infrared Hemispherical Emissivity:  Double
+  // Check Idd default: 0.84
+  EXPECT_TRUE(standardGlazing.isBackSideInfraredHemisphericalEmissivityDefaulted());
+  EXPECT_EQ(0.84, standardGlazing.backSideInfraredHemisphericalEmissivity());
+  EXPECT_TRUE(standardGlazing.setBackSideInfraredHemisphericalEmissivity(0.42));
+  EXPECT_FALSE(standardGlazing.isBackSideInfraredHemisphericalEmissivityDefaulted());
+  EXPECT_EQ(0.42, standardGlazing.backSideInfraredHemisphericalEmissivity());
+  // Test reset
+  standardGlazing.resetBackSideInfraredHemisphericalEmissivity();
+  EXPECT_EQ(0.84, standardGlazing.backSideInfraredHemisphericalEmissivity());
+  EXPECT_TRUE(standardGlazing.isBackSideInfraredHemisphericalEmissivityDefaulted());
 
-TEST_F(ModelFixture,StandardGlazing_DirtCorrectionFactorforSolarandVisibleTransmittance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  StandardGlazing standardGlazing(model);
 
-  Unit units = standardGlazing.getDirtCorrectionFactorforSolarandVisibleTransmittance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(standardGlazing.setDirtCorrectionFactorforSolarandVisibleTransmittance(testQ));
-  Quantity q = standardGlazing.getDirtCorrectionFactorforSolarandVisibleTransmittance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  // Conductivity:  Double
+  // Check Idd default: 0.9
+  EXPECT_TRUE(standardGlazing.isConductivityDefaulted());
+  EXPECT_EQ(0.9, standardGlazing.conductivity());
+  EXPECT_TRUE(standardGlazing.setConductivity(0.45));
+  EXPECT_FALSE(standardGlazing.isConductivityDefaulted());
+  EXPECT_EQ(0.45, standardGlazing.conductivity());
+  // Test reset
+  standardGlazing.resetConductivity();
+  EXPECT_EQ(0.9, standardGlazing.conductivity());
+  EXPECT_TRUE(standardGlazing.isConductivityDefaulted());
+
+
+  // Dirt Correction Factor for Solar and Visible Transmittance:  Double
+  // Check Idd default: 1.0
+  EXPECT_TRUE(standardGlazing.isDirtCorrectionFactorforSolarandVisibleTransmittanceDefaulted());
+  EXPECT_EQ(1.0, standardGlazing.dirtCorrectionFactorforSolarandVisibleTransmittance());
+  EXPECT_TRUE(standardGlazing.setDirtCorrectionFactorforSolarandVisibleTransmittance(0.5));
+  EXPECT_FALSE(standardGlazing.isDirtCorrectionFactorforSolarandVisibleTransmittanceDefaulted());
+  EXPECT_EQ(0.5, standardGlazing.dirtCorrectionFactorforSolarandVisibleTransmittance());
+  // Test reset
+  standardGlazing.resetDirtCorrectionFactorforSolarandVisibleTransmittance();
+  EXPECT_EQ(1.0, standardGlazing.dirtCorrectionFactorforSolarandVisibleTransmittance());
+  EXPECT_TRUE(standardGlazing.isDirtCorrectionFactorforSolarandVisibleTransmittanceDefaulted());
+
+
+  // Solar Diffusing:  Boolean
+  // Check Idd default: false
+  EXPECT_TRUE(standardGlazing.isSolarDiffusingDefaulted());
+  EXPECT_FALSE(standardGlazing.solarDiffusing());
+  // Test true
+  EXPECT_TRUE(standardGlazing.setSolarDiffusing(true));
+  EXPECT_TRUE(standardGlazing.solarDiffusing());
+  EXPECT_FALSE(standardGlazing.isSolarDiffusingDefaulted());
+  // Test false
+  EXPECT_TRUE(standardGlazing.setSolarDiffusing(false));
+  EXPECT_FALSE(standardGlazing.solarDiffusing());
+  // Test reset
+  standardGlazing.resetSolarDiffusing();
+  EXPECT_TRUE(standardGlazing.isSolarDiffusingDefaulted());
+  EXPECT_FALSE(standardGlazing.solarDiffusing());
+
 }

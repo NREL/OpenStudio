@@ -31,6 +31,7 @@
 #define MODELEDITOR_APPLICATION_HPP
 
 #include <utilities/core/Singleton.hpp>
+#include "QMetaTypes.hpp"
 
 #include <QApplication>
 
