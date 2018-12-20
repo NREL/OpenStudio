@@ -32,8 +32,6 @@
 
 #include "ResourceObject_Impl.hpp"
 
-#include <QObject>
-
 namespace openstudio {
 namespace model {
 

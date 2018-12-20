@@ -45,8 +45,6 @@
 #include "../utilities/time/Date.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
 
-#include <QMap>
-
 namespace openstudio{
 class ProgressBar;
 namespace model {

@@ -3,7 +3,6 @@
 
 %{
   #include <utilities/time/DateTime.hpp>
-  #include <QDateTime>
 %}
 
 // create an instantiation of the container classes

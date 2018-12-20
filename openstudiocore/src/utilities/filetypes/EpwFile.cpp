@@ -34,7 +34,6 @@
 #include "../core/Checksum.hpp"
 #include "../core/StringHelpers.hpp"
 #include "../core/Assert.hpp"
-#include <QStringList>
 
 
 namespace openstudio{

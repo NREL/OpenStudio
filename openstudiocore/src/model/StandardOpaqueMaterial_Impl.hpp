@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "OpaqueMaterial_Impl.hpp"
 
-#include <QObject>
-
 namespace openstudio {
 namespace model {
 
