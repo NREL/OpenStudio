@@ -68,21 +68,25 @@ namespace detail{
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
  *  \code
 OPENSTUDIO_ENUM( AttributeValueType,
-)  ((Boolean)(Boolean)(0))
+  ((Boolean)(Boolean)(0))
   ((Double)(Double)(1))
-  ((Integer)(Integer)(2))
-  ((Unsigned)(Unsigned)(3))
-  ((String)(String)(4))
-  ((AttributeVector)(AttributeVector)(5))
-;
+//((Quantity)(Quantity)(2))  // Deprecated
+//((Unit)(Unit)(3))          // Deprecated
+  ((Integer)(Integer)(4))
+  ((Unsigned)(Unsigned)(5))
+  ((String)(String)(6))
+  ((AttributeVector)(AttributeVector)(7))
+);
  *  \endcode */
 OPENSTUDIO_ENUM( AttributeValueType,
   ((Boolean)(Boolean)(0))
   ((Double)(Double)(1))
-  ((Integer)(Integer)(2))
-  ((Unsigned)(Unsigned)(3))
-  ((String)(String)(4))
-  ((AttributeVector)(AttributeVector)(5))
+//((Quantity)(Quantity)(2))  // Deprecated
+//((Unit)(Unit)(3))          // Deprecated
+  ((Integer)(Integer)(4))
+  ((Unsigned)(Unsigned)(5))
+  ((String)(String)(6))
+  ((AttributeVector)(AttributeVector)(7))
 );
 
 /** AttributeDescription describes what an acceptable Attribute is in a given context. At this
