@@ -51,6 +51,7 @@
 #include <QSplitter>
 #include <QStackedWidget>
 #include <QTableWidget>
+#include <QTextStream>
 #include <QTimer>
 #include <QTreeView>
 #include <QTextStream>

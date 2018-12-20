@@ -47,16 +47,10 @@ namespace openstudio {
       return buf;
     }
 
-    QByteArray read_as_QByteArray(openstudio::filesystem::ifstream &t_file)
-    {
-      const auto buf = read(t_file);
-      return QByteArray(&buf.front(), buf.size());
-    }
-
-    QByteArray read_as_QByteArray(const openstudio::path &t_path)
+    std::vector<char> read(const openstudio::path &t_path)
     {
       openstudio::filesystem::ifstream f(t_path, std::ios_base::binary);
-      return read_as_QByteArray(f);
+      return read(f);
     }
 
     std::string read_as_string(openstudio::filesystem::ifstream &t_file)

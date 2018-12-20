@@ -119,10 +119,10 @@ namespace openstudio{
 
   bool RemoteBCL::initializeSSL(const openstudio::path &t_pathToSSLLibraries)
   {
-    QByteArray oldpath = qgetenv("PATH");
+    const auto oldpath = System::getenv("PATH");
     if (!t_pathToSSLLibraries.empty())
     {
-      qputenv("PATH", openstudio::toQString(t_pathToSSLLibraries.string()).toUtf8());
+      System::setenv("PATH", t_pathToSSLLibraries.string());
     }
 
 #ifdef QT_NO_OPENSSL
@@ -131,9 +131,9 @@ namespace openstudio{
     bool opensslloaded = QSslSocket::supportsSsl();
 #endif
 
-    if (!t_pathToSSLLibraries.empty())
+    if (!t_pathToSSLLibraries.empty() && oldpath)
     {
-      qputenv("PATH", oldpath);
+      System::setenv("PATH", *oldpath);
     }
 
     return opensslloaded;

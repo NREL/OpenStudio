@@ -46,7 +46,6 @@ namespace openstudio{
   BCLComponent::BCLComponent(const openstudio::path& dir):
     m_directory(dir)
   {
-
     pugi::xml_document component;
     component.load_file((m_directory / "component.xml").c_str()); // No checking?
 

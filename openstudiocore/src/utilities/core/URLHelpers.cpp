@@ -84,7 +84,7 @@ QUrl toURL(const std::string& s) {
 std::string toString(const QUrl& url) {
   // reimplementation of toString(QString) b/c direct use of that method led to
   // MSVS warning C4717: recursive on all control paths
-  const QByteArray& qb = url.toString().toUtf8();
+  const auto& qb = url.toString().toUtf8();
   return std::string(qb.data());
 }
 
