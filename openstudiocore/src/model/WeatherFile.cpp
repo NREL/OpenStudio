@@ -161,7 +161,7 @@ namespace detail {
     boost::optional<openstudio::path> result;
     OptionalString oUrlStr = this->url();
     if (oUrlStr) {
-      result = toPath(QUrl(toQString(*oUrlStr)).toLocalFile());
+      result = toPath(*oUrlStr);
     }
     return result;
   }
@@ -317,7 +317,7 @@ namespace detail {
         newPath = relativePath(*currentPath,basePath);
       }
       if (!newPath.empty()) {
-        std::string weatherFileUrl = toString(toURL(newPath));
+        std::string weatherFileUrl = toString(newPath);
         LOG(Debug,"Setting weather file url to " << weatherFileUrl);
         return setString(OS_WeatherFileFields::Url,weatherFileUrl);
       }
@@ -349,7 +349,7 @@ namespace detail {
       if (newPath.empty() || !openstudio::filesystem::exists(newPath)) {
         return false;
       }
-      std::string weatherFileUrl = toString(toURL(newPath));
+      std::string weatherFileUrl = toString(newPath);
       LOG(Debug,"Setting weather file url to " << weatherFileUrl);
       return setString(OS_WeatherFileFields::Url,weatherFileUrl);
     }
@@ -408,7 +408,7 @@ boost::optional<WeatherFile> WeatherFile::setWeatherFile(Model& model, const ope
   weatherFile.setDouble(OS_WeatherFileFields::Longitude, epwFile.longitude());
   weatherFile.setDouble(OS_WeatherFileFields::TimeZone, epwFile.timeZone());
   weatherFile.setDouble(OS_WeatherFileFields::Elevation, epwFile.elevation());
-  weatherFile.setString(OS_WeatherFileFields::Url, toString(toURL(epwFile.path())));
+  weatherFile.setString(OS_WeatherFileFields::Url, toString(epwFile.path()));
   weatherFile.setString(OS_WeatherFileFields::Checksum, epwFile.checksum());
   return weatherFile;
 }

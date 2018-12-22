@@ -330,7 +330,7 @@ namespace detail {
     }
     return result;
   }
-
+  /*
   boost::optional<Url> IdfObject_Impl::getURL(unsigned index,
                                                bool returnDefault) const
   {
@@ -347,7 +347,7 @@ namespace detail {
     // bad value (for whatever reason)
     return boost::optional<Url>();
   }
-
+  */
   IdfExtensibleGroup IdfObject_Impl::getExtensibleGroup(unsigned groupIndex) const {
     unsigned n = numFields();
     unsigned i = n;
@@ -1180,15 +1180,15 @@ namespace detail {
       }
 
       // urls
-      if (oIddField && (oIddField->properties().type == IddFieldType::URLType)) {
-        OptionalUrl oMyUrlValue = getURL(i);
-        OptionalUrl oOtherUrlValue = other.getURL(i);
-        if (oMyUrlValue || oOtherUrlValue) {
-          if (!(oMyUrlValue && oOtherUrlValue)) { return false; }
-          if (oMyUrlValue.get() != oOtherUrlValue.get()) { return false; }
-          compareStrings = false;
-        }
-      }
+//      if (oIddField && (oIddField->properties().type == IddFieldType::URLType)) {
+//        OptionalUrl oMyUrlValue = getURL(i);
+//        OptionalUrl oOtherUrlValue = other.getURL(i);
+//        if (oMyUrlValue || oOtherUrlValue) {
+//          if (!(oMyUrlValue && oOtherUrlValue)) { return false; }
+//          if (oMyUrlValue.get() != oOtherUrlValue.get()) { return false; }
+//          compareStrings = false;
+//        }
+//      }
 
       // strings (case-insensitive)
       if (compareStrings) {
@@ -2193,10 +2193,10 @@ OptionalInt IdfObject::getInt(unsigned index, bool returnDefault) const {
   return m_impl->getInt(index,returnDefault);
 }
 
-boost::optional<Url> IdfObject::getURL(unsigned index, bool returnDefault) const
-{
-  return m_impl->getURL(index,returnDefault);
-}
+//boost::optional<Url> IdfObject::getURL(unsigned index, bool returnDefault) const
+//{
+//  return m_impl->getURL(index,returnDefault);
+//}
 
 IdfExtensibleGroup IdfObject::getExtensibleGroup(unsigned groupIndex) const {
   return m_impl->getExtensibleGroup(groupIndex);

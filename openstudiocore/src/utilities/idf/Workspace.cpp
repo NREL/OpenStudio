@@ -2386,7 +2386,7 @@ namespace detail {
       restoreObject(object);
     }
   }
-
+  /*
   std::vector<std::pair<Url, openstudio::path> > Workspace_Impl::locateUrls(
       const std::vector<URLSearchPath> &t_paths,
       bool t_create_relative_paths,
@@ -2463,7 +2463,7 @@ namespace detail {
           }
 
 
-          if (url->isRelative() || url->scheme().size() == 1 /*a single char scheme is probably a drive letter*/
+          if (url->isRelative() || url->scheme().size() == 1 //a single char scheme is probably a drive letter
                 || url->scheme() == "file")
           {
             LOG(Debug, "Url is relative or 'file'");
@@ -2548,7 +2548,7 @@ namespace detail {
     return retval;
 
   }
-
+  */
   // QUERIES
 
   std::string Workspace_Impl::constructNextName(const std::string& objectName,
@@ -3092,14 +3092,14 @@ boost::optional<Workspace> Workspace::load(const openstudio::path& p,
 IdfFile Workspace::toIdfFile() const {
   return m_impl->toIdfFile();
 }
-
+/*
 std::vector<std::pair<Url, openstudio::path> > Workspace::locateUrls(
     const std::vector<URLSearchPath> &t_paths, bool t_create_relative_paths,
     const openstudio::path &t_infile)
 {
   return m_impl->locateUrls(t_paths, t_create_relative_paths, t_infile);
 }
-
+*/
 // PROTECTED
 
 Workspace::Workspace(std::shared_ptr<detail::Workspace_Impl> impl)

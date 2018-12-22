@@ -694,7 +694,7 @@ IdfObject VersionTranslator::updateUrlField_0_7_1_to_0_7_2(const IdfObject& obje
   if (OptionalString os = object.getString(index)) {
     std::string original = *os;
     if (!original.empty()) {
-      std::string transformed = toString(toURL(toPath(original)));
+      std::string transformed = toString(toPath(original));
       if (!transformed.empty()) {
         IdfObject objCopy = object.clone();
         bool ok = objCopy.setString(index,transformed);

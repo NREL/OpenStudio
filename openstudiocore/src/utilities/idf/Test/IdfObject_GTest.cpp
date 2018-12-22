@@ -56,7 +56,7 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-
+/*
 TEST_F(IdfFixture,IdfObject_URL)
 {
 
@@ -71,7 +71,7 @@ TEST_F(IdfFixture,IdfObject_URL)
        << urlOpt->toString().toStdString()
        << endl;
 }
-
+*/
 TEST_F(IdfFixture, IdfObject_ConstructDefaultsFromIddObjectType) {
 
   // loop through each IddObject, create a default object, and print to a file.

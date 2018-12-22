@@ -36,7 +36,7 @@
 #include <vector>
 
 namespace openstudio {
-
+  /*
 /// Locates the given url (if relative) in one of the provided search paths and returns
 /// the completed url
 UTILITIES_API Url completeURL(const Url &t_source, const std::vector<Url> &t_searchPaths, bool throwOnFailure = true);
@@ -54,7 +54,7 @@ UTILITIES_API openstudio::path getOriginalPath(const Url& url);
 /// Attempts to extract original path from Url
 /// Useful for getting Windows style path out when running on Linux
 UTILITIES_API boost::optional<openstudio::path> getOptionalOriginalPath(const Url& url);
-
+*/
 } // openstudio
 
 #endif //UTILITIES_CORE_URLHELPERS_HPP

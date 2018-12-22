@@ -37,6 +37,7 @@
 
 namespace openstudio
 {
+  /*
   class URLSearchPath
   {
     public:
@@ -104,6 +105,7 @@ namespace openstudio
       boost::optional<IddObjectType> m_object_type;
 
   };
+  */
 
 }
 

@@ -32,7 +32,7 @@
 #include <boost/regex.hpp>
 
 namespace openstudio {
-
+/*
 QUrl completeURL(const QUrl &t_source, const std::vector<QUrl> &t_searchPaths, bool throwOnFailure)
 {
   if (t_source.scheme() == "file" || t_source.scheme().isEmpty())
@@ -115,6 +115,6 @@ boost::optional<openstudio::path> getOptionalOriginalPath(const Url& url)
   }
   return result;
 }
-
+*/
 } // openstudio
 

@@ -1481,7 +1481,7 @@ TEST_F(IdfFixture,Workspace_AddAndInsertWorkspaceObjects) {
   EXPECT_EQ("Lights 2",result[0].name().get());
   EXPECT_TRUE(result[1] == originalSchedule);
 }
-
+/*
 TEST_F(IdfFixture,Workspace_LocateURLs) {
   // DLM: replace with OS_WeatherFileFields
 
@@ -1561,7 +1561,7 @@ TEST_F(IdfFixture,Workspace_LocateURLs) {
   EXPECT_EQ(located[0].second, absoluteEpwFilePath);
 
 }
-
+*/
 
 TEST_F(IdfFixture, Workspace_GiveNames1) {
 

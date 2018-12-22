@@ -32,20 +32,20 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include <QUrl>
+//#include <QUrl>
 #include <boost/optional.hpp>
 #include <vector>
 
 namespace openstudio {
 
   /// Uniform resource locater
-  typedef QUrl Url;
+  //typedef QUrl Url;
 
   /// optional Url
-  typedef boost::optional<Url> OptionalUrl;
+  //typedef boost::optional<Url> OptionalUrl;
 
   /// vector of Url
-  typedef std::vector<Url> UrlVector;
+  //typedef std::vector<Url> UrlVector;
 
 } // openstudio
 
