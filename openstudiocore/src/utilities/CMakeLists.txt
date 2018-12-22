@@ -71,11 +71,8 @@ set(core_src
   core/System.cpp
   core/UpdateManager.hpp
   core/UpdateManager.cpp
-  core/Url.hpp
   core/UUID.hpp
   core/UUID.cpp
-  core/URLHelpers.hpp
-  core/URLHelpers.cpp
   core/UnzipFile.hpp
   core/UnzipFile.cpp
   core/ZipFile.hpp
@@ -475,7 +472,6 @@ set(${target_name}_swig_src
   core/Singleton.i
   core/System.i
   core/UpdateManager.i
-  core/Url.i
   core/UUID.i
   core/UnzipFile.i
   core/ZipFile.i

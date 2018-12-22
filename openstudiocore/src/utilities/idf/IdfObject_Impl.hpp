@@ -39,8 +39,6 @@
 #include <utilities/core/Containers.hpp>
 #include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 
-#include "../core/Url.hpp"
-
 #include <boost/optional.hpp>
 
 #include <string>
@@ -164,13 +162,6 @@ namespace detail {
      *  value for non-existent (non-extensible) fields and fields with empty data, if an
      *  int default exists. */
     boost::optional<int> getInt(unsigned index, bool returnDefault=false) const;
-
-    /** Get value of the field at index, converted to qurl, if possible. Returns an
-     *  uninitialized object if the conversion is unsuccessful for any reason. Logs a warning
-     *  if the conversion fails, the field is URLType. Optionally, if returnDefault is passed
-     *  in as true, getURL will return the default value for non-existent (non-extensible)
-     *  fields and fields with empty data, if a url default exists. */
-    boost::optional<Url> getURL(unsigned index, bool returnDefault=false) const;
 
     /** Returns the IdfExtensibleGroup at groupIndex, if it exists. Otherwise, return value will be
      *  .empty(). */
