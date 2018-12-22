@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -61,26 +59,18 @@ class MODEL_API DesignSpecificationZoneAirDistribution : public ModelObject {
 
   double zoneAirDistributionEffectivenessinCoolingMode() const;
 
-  Quantity getZoneAirDistributionEffectivenessinCoolingMode(bool returnIP=false) const;
-
   bool isZoneAirDistributionEffectivenessinCoolingModeDefaulted() const;
 
   bool setZoneAirDistributionEffectivenessinCoolingMode(double zoneAirDistributionEffectivenessinCoolingMode);
-
-  bool setZoneAirDistributionEffectivenessinCoolingMode(const Quantity& zoneAirDistributionEffectivenessinCoolingMode);
 
   void resetZoneAirDistributionEffectivenessinCoolingMode();
 
 
   double zoneAirDistributionEffectivenessinHeatingMode() const;
 
-  Quantity getZoneAirDistributionEffectivenessinHeatingMode(bool returnIP=false) const;
-
   bool isZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
 
   bool setZoneAirDistributionEffectivenessinHeatingMode(double zoneAirDistributionEffectivenessinHeatingMode);
-
-  bool setZoneAirDistributionEffectivenessinHeatingMode(const Quantity& zoneAirDistributionEffectivenessinHeatingMode);
 
   void resetZoneAirDistributionEffectivenessinHeatingMode();
 
@@ -94,13 +84,9 @@ class MODEL_API DesignSpecificationZoneAirDistribution : public ModelObject {
 
   double zoneSecondaryRecirculationFraction() const;
 
-  Quantity getZoneSecondaryRecirculationFraction(bool returnIP=false) const;
-
   bool isZoneSecondaryRecirculationFractionDefaulted() const;
 
   bool setZoneSecondaryRecirculationFraction(double zoneSecondaryRecirculationFraction);
-
-  bool setZoneSecondaryRecirculationFraction(const Quantity& zoneSecondaryRecirculationFraction);
 
   void resetZoneSecondaryRecirculationFraction();
 
@@ -129,4 +115,3 @@ typedef std::vector<DesignSpecificationZoneAirDistribution> DesignSpecificationZ
 } // openstudio
 
 #endif // MODEL_DESIGNSPECIFICATIONZONEAIRDISTRIBUTION_HPP
-

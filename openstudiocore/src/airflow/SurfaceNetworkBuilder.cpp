@@ -43,8 +43,6 @@
 
 #include <thread>
 
-#include <QVector>
-
 namespace openstudio {
 namespace airflow {
 
@@ -105,7 +103,7 @@ bool SurfaceNetworkBuilder::build(model::Model &model)
 {
   bool first = true;
   bool nowarnings = true;
-  QVector<openstudio::Handle> used;
+  std::vector<openstudio::Handle> used;
 
   m_logSink.setThreadId(std::this_thread::get_id());
   m_logSink.resetStringStream();
@@ -139,7 +137,7 @@ bool SurfaceNetworkBuilder::build(model::Model &model)
       for(model::SubSurface subSurface : surface.subSurfaces()) {
         linkExteriorSubSurface(thermalZone.get(),space.get(),surface,subSurface);
       }
-    } else if(!used.contains(surface.handle()) && bc == "Surface") {
+    } else if((std::find(used.begin(), used.end(), surface.handle())==used.end()) && (bc == "Surface")) {
       // Get the associated thermal zone
       boost::optional<openstudio::model::Space> space = surface.space();
       if(!space) {

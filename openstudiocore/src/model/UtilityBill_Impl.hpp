@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 
@@ -179,4 +177,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_UTILITYBILL_IMPL_HPP
-

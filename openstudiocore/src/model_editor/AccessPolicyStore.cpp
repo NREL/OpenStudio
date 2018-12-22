@@ -300,14 +300,14 @@ namespace openstudio
       return *s_instance;
     }
 
-    bool AccessPolicyStore::loadFile( const QByteArray &data)
+    bool AccessPolicyStore::loadFile( const std::vector<char> &data)
     {
       QXmlSimpleReader xmlReader;
       AccessParser ap;
       xmlReader.setContentHandler( &ap );
 
       QXmlInputSource source;
-      source.setData( data );
+      source.setData( QByteArray(data.data(), data.size()) );
       //LER:: add error handler
       if(!xmlReader.parse(source))
       {
@@ -319,17 +319,13 @@ namespace openstudio
 
     bool AccessPolicyStore::loadFile( openstudio::filesystem::ifstream& file)
     {
-      QXmlSimpleReader xmlReader;
-      AccessParser ap;
-      xmlReader.setContentHandler( &ap );
-
       if(!file.is_open())
       {
         LOG(Debug,"file was not found\n");
         return false;
       }
 
-      return loadFile(openstudio::filesystem::read_as_QByteArray(file));
+      return loadFile(openstudio::filesystem::read(file));
     }
 
     bool AccessPolicyStore::loadFile(const openstudio::path& path)

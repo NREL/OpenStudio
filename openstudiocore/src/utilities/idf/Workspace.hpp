@@ -36,6 +36,7 @@
 
 #include "../core/Logger.hpp"
 #include "../core/Path.hpp"
+#include "../core/Url.hpp"
 
 #include <string>
 #include <ostream>
@@ -441,7 +442,7 @@ class UTILITIES_API Workspace {
   ///            absolute
   /// \param[in] t_infile Path of this workspace object. Used during the calculation/searching of relative search paths
   /// \returns Vector of source/target pairs. The user will be responsible for ensuring that the results are copied into place
-  std::vector<std::pair<QUrl, openstudio::path> > locateUrls(const std::vector<URLSearchPath> &t_paths, bool t_create_relative_paths,
+  std::vector<std::pair<openstudio::Url, openstudio::path> > locateUrls(const std::vector<URLSearchPath> &t_paths, bool t_create_relative_paths,
       const openstudio::path &t_infile);
 
   //@}

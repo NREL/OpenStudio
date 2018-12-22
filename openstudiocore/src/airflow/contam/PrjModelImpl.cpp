@@ -229,7 +229,7 @@ bool IndexModelImpl::read(Reader &input)
   std::string dct = input.readSection(); // Skip it
   m_unsupported["DuctSegment"] = dct;
   // Section 20: Source/Sinks
-  //m_sourceSinks = input.readSectionVector<SourceSink>(QString("source/sink"));
+  //m_sourceSinks = input.readSectionVector<SourceSink>(std::string("source/sink"));
   std::string css = input.readSection(); // Skip it
   m_unsupported["SourceSink"] = css;
   // Section 21: Occupancy Schedules
@@ -1101,17 +1101,14 @@ void IndexModelImpl::readZoneIc(Reader &input)
     unsigned int nctm = contaminants().size();
     if(nn != nctm*m_zones.size())
     {
-      QString mesg("Mismatch between number of zones, contaminants, and initial conditions");
-      LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
+      LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator", "Mismatch between number of zones, contaminants, and initial conditions");
     }
     for(unsigned int i=0;i<m_zones.size();i++)
     {
       unsigned int nr = input.readUInt();
       if(nr != i+1)
       {
-        QString mesg = QString("Mismatch between zone IC number and zone number at line %1 ")
-          .arg(input.lineNumber());
-        LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator",mesg.toStdString());
+        LOG_FREE_AND_THROW("openstudio.contam.ForwardTranslator", "Mismatch between zone IC number and zone number at line " << input.lineNumber());
       }
       std::vector<std::string> ic;
       for(unsigned int j=0;j<nctm;j++)

@@ -34,37 +34,12 @@
 #include "Schedule_Impl.hpp"
 #include "Model.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
-
 #include "../utilities/core/Containers.hpp"
+// Used in isCompatible()
+#include "../utilities/units/Unit.hpp"
 
 namespace openstudio {
 namespace model {
-
-OSOptionalQuantity ScheduleType::getLowerLimitValue(bool returnIP) const {
-  if (OptionalUnit u = ScheduleTypeLimits::units(unitType,returnIP)) {
-    if (lowerLimitValue) {
-      return OSOptionalQuantity(Quantity(*lowerLimitValue,*u));
-    }
-    return OSOptionalQuantity(*u);
-  }
-  LOG_FREE_AND_THROW("openstudio.model.ScheduleTypeRegistry",
-                     "Cannot return any units for unitType " << unitType << ".");
-  return OSOptionalQuantity(UnitSystem(UnitSystem::SI));
-}
-
-OSOptionalQuantity ScheduleType::getUpperLimitValue(bool returnIP) const {
-  if (OptionalUnit u = ScheduleTypeLimits::units(unitType,returnIP)) {
-    if (upperLimitValue) {
-      return OSOptionalQuantity(Quantity(*upperLimitValue,*u));
-    }
-    return OSOptionalQuantity(*u);
-  }
-  LOG_FREE_AND_THROW("openstudio.model.ScheduleTypeRegistry",
-                     "Cannot return any units for unitType " << unitType << ".");
-  return OSOptionalQuantity(UnitSystem(UnitSystem::SI));
-}
 
 std::vector<std::string> ScheduleTypeRegistrySingleton::classNames() const {
   StringVector result;

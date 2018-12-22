@@ -31,7 +31,6 @@
 #define MODEL_MODELOBJECT_HPP
 
 #include "ModelAPI.hpp"
-#include "AccessPolicyStore.hpp"
 
 #include "../utilities/idf/WorkspaceObject.hpp"
 
@@ -101,89 +100,19 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   ModelObject clone(Model model) const;
 
   //@}
-  /** @name Components and Relationships
+  /** @name Components
    *
    *  Once a Component has been created, it can be saved to local and online %Building %Component
    *  Libraries (BCLs) for web-enabled storing and sharing. (At this time, only select BCL users
    *  have permissions to upload, but this capability is to be extended to all users in time.)
-   *  Components plus Relationships are the preferred method for specifying and swapping out
+   *  Components are the preferred method for specifying and swapping out
    *  groups of related ModelObjects (e.g. constructions, schedules, etc.) in higher-level
-   *  libraries such as standardsinterface and analysis. Like Attributes, Relationships provide
-   *  access to a related getter (required), setter (optional), and reset (optional) method
-   *  using a single string. Unlike Attributes, the Relationship methods all work off of
-   *  ModelObjects (not simple alpha or numeric data). */
+   *  libraries such as standardsinterface and analysis. */
   //@{
 
   /** Method for creating sharable Model snippets. Creates a Component with this ModelObject as
    *  the primary object. Uses the clone(Model&) method to select Component contents. */
   Component createComponent() const;
-
-  /** Return all valid relationship names. */
-  // std::vector<std::string> relationshipNames() const;
-
-  /** Return all \link Relationship relationships\endlink for this ModelObject. */
-  // std::vector<Relationship> relationships() const;
-
-  /** Get the \link Relationship relationship\endlink named name, if it exists. */
-  // boost::optional<Relationship> getRelationship(const std::string& name) const;
-
-  /** Set this ModelObject's relationship name to point to relatedModelObject (or clear the
-   *  relationship if relatedModelObject == boost::none). */
-  // bool setRelationship(const std::string& name, boost::optional<ModelObject> relatedModelObject);
-
-  /** Inserts component into this model and sets this ModelObject's relationship name to
-   *  point to component.primaryObject(). */
-  // bool setRelationship(const std::string& name, const Component& component);
-
-  //@}
-  /** @name Attributes
-   *
-   *  A single string provides access to a related getter (required), setter (optional), and
-   *  reset (optional) method for simple pieces of data such as a ThermalZone's lighting power
-   *  density or a fan's efficiency. Attributes are the preferred method for accessing basic
-   *  data (double, int, bool, and string) in higher-level libraries such as standardsinterface
-   *  and analysis. See the OpenStudio Utilities library documentation for information on the
-   *  Attribute class. */
-  //@{
-
-  /** Return all valid attribute names. */
-  // std::vector<std::string> attributeNames() const;
-
-  /** Return all \link Attribute Attributes\endlink for this ModelObject. */
-  // std::vector<openstudio::Attribute> attributes() const;
-
-  /** Get the \link Attribute attribute\endlink named name, if it exists. */
-  // boost::optional<openstudio::Attribute> getAttribute(const std::string& name) const;
-
-  /** Is the named attribute settable. */
-  // bool isSettableAttribute(const std::string& name) const;
-
-  /** Is the named attribute optional. */
-  // bool isOptionalAttribute(const std::string& name) const;
-
-  /** Set the attribute named name, if it exists. */
-  // bool setAttribute(const std::string& name, bool value);
-
-  /** \overload */
-  // bool setAttribute(const std::string& name, int value);
-
-  /** \overload */
-  // bool setAttribute(const std::string& name, unsigned value);
-
-  /** \overload */
-  // bool setAttribute(const std::string& name, double value);
-
-  /** \overload */
-  // bool setAttribute(const std::string& name, const Quantity& value);
-
-  /** \overload */
-  // bool setAttribute(const std::string& name, const std::string& value);
-
-  /** \overload */
-  // bool setAttribute(const std::string& name, const char* value);
-
-  /** Reset the attribute named name. Provided for optional types. */
-  // bool resetAttribute(const std::string& name);
 
   //@}
   /** @name Getters */
@@ -381,10 +310,5 @@ typedef std::vector<ModelObject> ModelObjectVector;
 
 } // model
 } // openstudio
-
-// declare types so we can use model objects in properties
-//Q_DECLARE_METATYPE(openstudio::model::ModelObject); // no default constructor
-// Q_DECLARE_METATYPE(boost::optional<openstudio::model::ModelObject>);
-// Q_DECLARE_METATYPE(std::vector<openstudio::model::ModelObject>);
 
 #endif // MODEL_MODELOBJECT_HPP

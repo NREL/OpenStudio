@@ -38,10 +38,11 @@
 
 #include <OpenStudio.hxx>
 
-#include <QSettings>
-
 #include <boost/regex.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 #include <src/utilities/embedded_files.hxx>
 
@@ -409,32 +410,41 @@ namespace openstudio{
 
   std::string BCLMeasure::makeClassName(const std::string& name)
   {
-    QString str = toQString(name);
+    std::string str(name);
 
     bool startsWithLetter = false;
     for (int i = 0; i < str.size(); ++i){
-      if (!str[i].isLetterOrNumber()){
+      if (!(isalpha(str[i]) || isdigit(str[i]))){
         str[i] = ' ';
       }else if(i == 0){
-        startsWithLetter = str[i].isLetter();
+        startsWithLetter = isalpha(str[i]);
       }
     }
 
-    QString result;
-    QStringList parts = str.split(' ', QString::SkipEmptyParts);
-    for (QString part : parts) {
-      part[0] = part[0].toUpper();
-      result.append(part);
+    std::string result;
+    std::vector<std::string> parts;
+    boost::split(parts, str, boost::is_any_of(" "));
+    for (auto& part : parts) {
+      boost::replace_all(part, " ", "");
+      boost::replace_all(part, "\n", "");
+      boost::replace_all(part, "\r", "");
+      boost::replace_all(part, "\t", "");
+      if (!part.empty()) {
+        part[0] = toupper(part[0]);
+        result.append(part);
+      }
     }
 
-    if (result.isEmpty()){
-      result = QString("A") + openstudio::toQString(createUUID());
-      result.replace('{',"").replace('}',"").replace('-',"");
+    if (result.empty()){
+      result = std::string("A") + openstudio::toString(createUUID());
+      boost::replace_all(result, "{", "");
+      boost::replace_all(result, "}", "");
+      boost::replace_all(result, "-", "");
     }else if (!startsWithLetter){
-      result.prepend("A");
+      result = std::string("A") + result;
     }
 
-    return result.toStdString();
+    return result;
   }
 
   boost::optional<BCLMeasure> BCLMeasure::load(const openstudio::path& dir)
@@ -446,90 +456,7 @@ namespace openstudio{
     }
     return result;
   }
-  /*
-  std::vector<BCLMeasure> BCLMeasure::patApplicationMeasures()
-  {
-    openstudio::path path = patApplicationMeasuresDir();
-    return getMeasuresInDir(path);
-  }
-  */
-  /*
-  openstudio::path BCLMeasure::patApplicationMeasuresDir()
-  {
-    openstudio::path result;
-    if (applicationIsRunningFromBuildDirectory()){
-      result = getApplicationSourceDirectory() / toPath("src/pat_app/Measures");
-    }else{
-      result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/pat/Measures");
-    }
-    return openstudio::filesystem::system_complete(result);
-  }
-  */
-  /*
-  BCLMeasure BCLMeasure::alternativeModelMeasure() {
-    return BCLMeasure(patApplicationMeasuresDir() / toPath("ReplaceModel"));
-  }
-
-  BCLMeasure BCLMeasure::reportRequestMeasure() {
-    return BCLMeasure(patApplicationMeasuresDir() / toPath("ReportRequest"));
-  }
-
-  BCLMeasure BCLMeasure::standardReportMeasure() {
-    return BCLMeasure(patApplicationMeasuresDir() / toPath("StandardReports"));
-  }
-
-  BCLMeasure BCLMeasure::calibrationReportMeasure() {
-    return BCLMeasure(patApplicationMeasuresDir() / toPath("CalibrationReports"));
-  }
-
-  BCLMeasure BCLMeasure::radianceMeasure() {
-    return BCLMeasure(patApplicationMeasuresDir() / toPath("RadianceMeasure"));
-  }
-  */
-  std::vector<BCLMeasure> BCLMeasure::localBCLMeasures()
-  {
-    return LocalBCL::instance().measures();
-  }
-
-  std::vector<BCLMeasure> BCLMeasure::userMeasures()
-  {
-    openstudio::path path = userMeasuresDir();
-    return getMeasuresInDir(path);
-  }
-
-  openstudio::path BCLMeasure::userMeasuresDir()
-  {
-    QSettings settings("OpenStudio", "BCLMeasure");
-    QString value = settings.value("userMeasuresDir", toQString(openstudio::filesystem::home_path() / toPath("OpenStudio/Measures"))).toString();
-    openstudio::path result = toPath(value);
-    return openstudio::filesystem::system_complete(result);
-  }
-
-  bool BCLMeasure::setUserMeasuresDir(const openstudio::path& userMeasuresDir)
-  {
-    if (!userMeasuresDir.is_complete()){
-      return false;
-    }
-    if (!exists(userMeasuresDir)){
-      if (!openstudio::filesystem::create_directories(userMeasuresDir)) {
-        return false;
-      }
-    }
-    if (!is_directory(userMeasuresDir)){
-      return false;
-    }
-
-    QSettings settings("OpenStudio", "BCLMeasure");
-    settings.setValue("userMeasuresDir", toQString(userMeasuresDir));
-    return true;
-  }
-
-  void BCLMeasure::clearUserMeasuresDir()
-  {
-    QSettings settings("OpenStudio", "BCLMeasure");
-    settings.remove("userMeasuresDir");
-  }
-
+ 
   std::vector<std::string> BCLMeasure::suggestedIntendedSoftwareTools()
   {
     std::vector<std::string> result;
@@ -628,7 +555,7 @@ namespace openstudio{
     return result;
   }
 
-  std::vector<BCLMeasure> BCLMeasure::getMeasuresInDir(openstudio::path dir)
+  std::vector<BCLMeasure> BCLMeasure::getMeasuresInDir(const openstudio::path& dir)
   {
     LOG(Debug, "Loading measures in path: " << openstudio::toString(dir));
     std::vector<BCLMeasure> result;
@@ -1002,11 +929,10 @@ namespace openstudio{
           }
         }
 
-        QString fileString;
         openstudio::filesystem::ifstream file(newPath, std::ios_base::binary);
         if (file.is_open()){
 
-          fileString = openstudio::filesystem::read_as_QByteArray(file);
+          QString fileString = toQString(openstudio::filesystem::read(file));
           if (!oldClassName.empty() && !newClassName.empty() && oldClassName != newClassName){
             // DLM: might also want to check that oldClassName is greater than 3 characters long?
             // should we be doing a more selective replace (like require leading space and trailing space, ., or :)?

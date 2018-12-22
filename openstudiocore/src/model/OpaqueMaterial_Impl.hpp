@@ -32,8 +32,6 @@
 
 #include "Material_Impl.hpp"
 
-#include <QObject>
-
 namespace openstudio {
 namespace model {
 

@@ -33,15 +33,6 @@
 
 #include "../CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
 #include "../CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp"
-#include "../PlantLoop.hpp"
-#include "../PlantLoop_Impl.hpp"
-#include "../Node.hpp"
-#include "../Node_Impl.hpp"
-#include "../Splitter.hpp"
-#include "../Splitter_Impl.hpp"
-
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

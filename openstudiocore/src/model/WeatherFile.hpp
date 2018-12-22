@@ -33,6 +33,8 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
+#include "../utilities/core/Path.hpp"
+
 namespace openstudio {
 
 class EpwFile;

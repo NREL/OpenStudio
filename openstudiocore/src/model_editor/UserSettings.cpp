@@ -27,53 +27,56 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "Tag.hpp"
+#include "UserSettings.hpp"
 
-#include "../core/String.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/FilesystemHelpers.hpp"
 
-#include <QVariant>
+#include <QString>
+#include <QSettings>
 
-namespace openstudio {
-
-Tag::Tag(const std::string& name)
-  : m_uuid(createUUID()), m_name(name)
-{}
-
-Tag::Tag(const UUID& uuid,const std::string& name)
-  : m_uuid(uuid), m_name(name)
-{}
-
-Tag Tag::clone() const {
-  Tag result(*this);
-  result.m_uuid = createUUID();
-  return result;
+std::vector<openstudio::BCLMeasure> localBCLMeasures()
+{
+  return openstudio::LocalBCL::instance().measures();
 }
 
-UUID Tag::uuid() const {
-  return m_uuid;
-}
-
-std::string Tag::name() const {
-  return m_name;
-}
-
-namespace detail {
-
-  QVariant toVariant(const Tag& tag) {
-    QVariantMap tagData;
-
-    tagData["uuid"] = toQString(removeBraces(tag.uuid()));
-    tagData["name"] = toQString(tag.name());
-
-    return QVariant(tagData);
+std::vector<openstudio::BCLMeasure> userMeasures()
+  {
+    openstudio::path path = userMeasuresDir();
+    return openstudio::BCLMeasure::getMeasuresInDir(path);
   }
 
-  Tag toTag(const QVariant& variant, const VersionString& version) {
-    QVariantMap map = variant.toMap();
-    return Tag(toUUID(map["uuid"].toString().toStdString()),
-               map["name"].toString().toStdString());
+  openstudio::path userMeasuresDir()
+  {
+    QSettings settings("OpenStudio", "BCLMeasure");
+    QString value = settings.value("userMeasuresDir", openstudio::toQString(openstudio::filesystem::home_path() / openstudio::toPath("OpenStudio/Measures"))).toString();
+    openstudio::path result = openstudio::toPath(value);
+    return openstudio::filesystem::system_complete(result);
   }
 
-} // detail
+  bool setUserMeasuresDir(const openstudio::path& userMeasuresDir)
+  {
+    if (!userMeasuresDir.is_complete()){
+      return false;
+    }
+    if (!exists(userMeasuresDir)){
+      if (!openstudio::filesystem::create_directories(userMeasuresDir)) {
+        return false;
+      }
+    }
+    if (!is_directory(userMeasuresDir)){
+      return false;
+    }
 
-} // openstudio
+    QSettings settings("OpenStudio", "BCLMeasure");
+    settings.setValue("userMeasuresDir", openstudio::toQString(userMeasuresDir));
+    return true;
+  }
+
+  void clearUserMeasuresDir()
+  {
+    QSettings settings("OpenStudio", "BCLMeasure");
+    settings.remove("userMeasuresDir");
+  }

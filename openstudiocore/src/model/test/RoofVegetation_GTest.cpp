@@ -32,333 +32,195 @@
 #include "ModelFixture.hpp"
 
 #include "../RoofVegetation.hpp"
-#include "../RoofVegetation_Impl.hpp"
 #include "../StandardsInformationMaterial.hpp"
-
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
-#include "../../utilities/units/UnitFactory.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,RoofVegetation_HeightofPlants_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
+TEST_F(ModelFixture, RoofVegetation_Ctor)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Unit units = roofVegetation.getHeightofPlants(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(roofVegetation.setHeightofPlants(testQ));
-  Quantity q = roofVegetation.getHeightofPlants(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  ASSERT_EXIT (
+  {
+     Model m;
+     RoofVegetation roofVegetation(m);
+
+     exit(0);
+  } ,
+    ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,RoofVegetation_LeafAreaIndex_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
+TEST_F(ModelFixture, RoofVegetation_GettersSetters)
+{
+  Model m;
+  RoofVegetation roofVegetation(m);
 
-  Unit units = roofVegetation.getLeafAreaIndex(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(roofVegetation.setLeafAreaIndex(testQ));
-  Quantity q = roofVegetation.getLeafAreaIndex(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  // Height of Plants:  Double
+  // Check Idd default: .2
+  EXPECT_EQ(.2, roofVegetation.heightofPlants());
+  EXPECT_TRUE(roofVegetation.setHeightofPlants(0.1));
+  EXPECT_EQ(0.1, roofVegetation.heightofPlants());
+  roofVegetation.resetHeightofPlants();
+  EXPECT_EQ(.2, roofVegetation.heightofPlants());
+
+
+  // Leaf Area Index:  Double
+  // Check Idd default: 1.0
+  EXPECT_EQ(1.0, roofVegetation.leafAreaIndex());
+  EXPECT_TRUE(roofVegetation.setLeafAreaIndex(0.5));
+  EXPECT_EQ(0.5, roofVegetation.leafAreaIndex());
+  roofVegetation.resetLeafAreaIndex();
+  EXPECT_EQ(1.0, roofVegetation.leafAreaIndex());
+
+
+  // Leaf Reflectivity:  Double
+  // Check Idd default: 0.22
+  EXPECT_EQ(0.22, roofVegetation.leafReflectivity());
+  EXPECT_TRUE(roofVegetation.setLeafReflectivity(0.14));
+  EXPECT_EQ(0.14, roofVegetation.leafReflectivity());
+  roofVegetation.resetLeafReflectivity();
+  EXPECT_EQ(0.22, roofVegetation.leafReflectivity());
+
+
+  // Leaf Emissivity:  Double
+  // Check Idd default: 0.95
+  EXPECT_EQ(0.95, roofVegetation.leafEmissivity());
+  EXPECT_TRUE(roofVegetation.setLeafEmissivity(0.88));
+  EXPECT_EQ(0.88, roofVegetation.leafEmissivity());
+  roofVegetation.resetLeafEmissivity();
+  EXPECT_EQ(0.95, roofVegetation.leafEmissivity());
+
+
+  // Minimum Stomatal Resistance:  Double
+  // Check Idd default: 180.0
+  EXPECT_EQ(180.0, roofVegetation.minimumStomatalResistance());
+  EXPECT_TRUE(roofVegetation.setMinimumStomatalResistance(115.0));
+  EXPECT_EQ(115.0, roofVegetation.minimumStomatalResistance());
+  roofVegetation.resetMinimumStomatalResistance();
+  EXPECT_EQ(180.0, roofVegetation.minimumStomatalResistance());
+
+
+  // Soil Layer Name:  String
+  // Check Idd default: "Green Roof Soil"
+  EXPECT_EQ("Green Roof Soil", roofVegetation.soilLayerName());
+  EXPECT_TRUE(roofVegetation.setSoilLayerName("Another name"));
+  EXPECT_EQ("Another name", roofVegetation.soilLayerName());
+
+
+  // Roughness:  String
+  // Check Idd default: "MediumRough"
+  // Note JM 2018-12-12: Actually Ctor arg (in hpp) overrides to Smooth
+  EXPECT_EQ("Smooth", roofVegetation.roughness());
+  // Test a valid choice
+  EXPECT_TRUE(roofVegetation.setRoughness("VeryRough"));
+  EXPECT_EQ("VeryRough", roofVegetation.roughness());
+  // Test an invalid choice
+  EXPECT_FALSE(roofVegetation.setRoughness("BadChoice"));
+  EXPECT_EQ("VeryRough", roofVegetation.roughness());
+
+
+  // Thickness:  Double
+  // Check Idd default: 0.1
+  EXPECT_EQ(0.1, roofVegetation.thickness());
+  EXPECT_TRUE(roofVegetation.setThickness(0.08));
+  EXPECT_EQ(0.08, roofVegetation.thickness());
+  roofVegetation.resetThickness();
+  EXPECT_EQ(0.1, roofVegetation.thickness());
+
+
+  // Conductivity of Dry Soil:  Double
+  // Check Idd default: 0.35
+  EXPECT_EQ(0.35, roofVegetation.conductivityofDrySoil());
+  EXPECT_TRUE(roofVegetation.setConductivityofDrySoil(0.28));
+  EXPECT_EQ(0.28, roofVegetation.conductivityofDrySoil());
+  roofVegetation.resetConductivityofDrySoil();
+  EXPECT_EQ(0.35, roofVegetation.conductivityofDrySoil());
+
+
+  // Density of Dry Soil:  Double
+  // Check Idd default: 1100.0
+  EXPECT_EQ(1100.0, roofVegetation.densityofDrySoil());
+  EXPECT_TRUE(roofVegetation.setDensityofDrySoil(700.0));
+  EXPECT_EQ(700.0, roofVegetation.densityofDrySoil());
+  roofVegetation.resetDensityofDrySoil();
+  EXPECT_EQ(1100.0, roofVegetation.densityofDrySoil());
+
+
+  // Specific Heat of Dry Soil:  Double
+  // Check Idd default: 1200.0
+  EXPECT_EQ(1200.0, roofVegetation.specificHeatofDrySoil());
+  EXPECT_TRUE(roofVegetation.setSpecificHeatofDrySoil(850.0));
+  EXPECT_EQ(850.0, roofVegetation.specificHeatofDrySoil());
+  roofVegetation.resetSpecificHeatofDrySoil();
+  EXPECT_EQ(1200.0, roofVegetation.specificHeatofDrySoil());
+
+
+  // Thermal Absorptance:  Double
+  // Check Idd default: .9
+  EXPECT_EQ(.9, roofVegetation.thermalAbsorptance());
+  EXPECT_TRUE(roofVegetation.setThermalAbsorptance(0.85));
+  EXPECT_EQ(0.85, roofVegetation.thermalAbsorptance());
+  roofVegetation.resetThermalAbsorptance();
+  EXPECT_EQ(.9, roofVegetation.thermalAbsorptance());
+
+
+  // Solar Absorptance:  Double
+  // Check Idd default: .70
+  EXPECT_EQ(.70, roofVegetation.solarAbsorptance());
+  EXPECT_TRUE(roofVegetation.setSolarAbsorptance(0.55));
+  EXPECT_EQ(0.55, roofVegetation.solarAbsorptance());
+  roofVegetation.resetSolarAbsorptance();
+  EXPECT_EQ(.70, roofVegetation.solarAbsorptance());
+
+
+  // Visible Absorptance:  Double
+  // Check Idd default: .75
+  EXPECT_EQ(.75, roofVegetation.visibleAbsorptance());
+  EXPECT_TRUE(roofVegetation.setVisibleAbsorptance(0.63));
+  EXPECT_EQ(0.63, roofVegetation.visibleAbsorptance());
+  roofVegetation.resetVisibleAbsorptance();
+  EXPECT_EQ(.75, roofVegetation.visibleAbsorptance());
+
+
+  // Saturation Volumetric Moisture Content of the Soil Layer:  Double
+  // Check Idd default: 0.3
+  EXPECT_EQ(0.3, roofVegetation.saturationVolumetricMoistureContentoftheSoilLayer());
+  EXPECT_TRUE(roofVegetation.setSaturationVolumetricMoistureContentoftheSoilLayer(0.2));
+  EXPECT_EQ(0.2, roofVegetation.saturationVolumetricMoistureContentoftheSoilLayer());
+  roofVegetation.resetSaturationVolumetricMoistureContentoftheSoilLayer();
+  EXPECT_EQ(0.3, roofVegetation.saturationVolumetricMoistureContentoftheSoilLayer());
+
+
+  // Residual Volumetric Moisture Content of the Soil Layer:  Double
+  // Check Idd default: 0.01
+  EXPECT_EQ(0.01, roofVegetation.residualVolumetricMoistureContentoftheSoilLayer());
+  EXPECT_TRUE(roofVegetation.setResidualVolumetricMoistureContentoftheSoilLayer(0.01));
+  EXPECT_EQ(0.01, roofVegetation.residualVolumetricMoistureContentoftheSoilLayer());
+  roofVegetation.resetResidualVolumetricMoistureContentoftheSoilLayer();
+  EXPECT_EQ(0.01, roofVegetation.residualVolumetricMoistureContentoftheSoilLayer());
+
+
+  // Initial Volumetric Moisture Content of the Soil Layer:  Double
+  // Check Idd default: 0.1
+  EXPECT_EQ(0.1, roofVegetation.initialVolumetricMoistureContentoftheSoilLayer());
+  EXPECT_TRUE(roofVegetation.setInitialVolumetricMoistureContentoftheSoilLayer(0.08));
+  EXPECT_EQ(0.08, roofVegetation.initialVolumetricMoistureContentoftheSoilLayer());
+  roofVegetation.resetInitialVolumetricMoistureContentoftheSoilLayer();
+  EXPECT_EQ(0.1, roofVegetation.initialVolumetricMoistureContentoftheSoilLayer());
+
+
+  // Moisture Diffusion Calculation Method:  String
+  // Check Idd default: "Advanced"
+  EXPECT_EQ("Advanced", roofVegetation.moistureDiffusionCalculationMethod());
+  // Test a valid choice
+  EXPECT_TRUE(roofVegetation.setMoistureDiffusionCalculationMethod("Simple"));
+  EXPECT_EQ("Simple", roofVegetation.moistureDiffusionCalculationMethod());
+  // Test an invalid choice
+  EXPECT_FALSE(roofVegetation.setMoistureDiffusionCalculationMethod("BadChoice"));
+  EXPECT_EQ("Simple", roofVegetation.moistureDiffusionCalculationMethod());
+
 }
-
-TEST_F(ModelFixture,RoofVegetation_LeafReflectivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
-
-  Unit units = roofVegetation.getLeafReflectivity(true).units(); // Get IP units.
-
-  // Bounds: 0.05 <= value <= 0.5
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(roofVegetation.setLeafReflectivity(testQ));
-
-  double value2(0.05);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(roofVegetation.setLeafReflectivity(testQ2));
-  Quantity q2 = roofVegetation.getLeafReflectivity(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,RoofVegetation_LeafEmissivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
-
-  Unit units = roofVegetation.getLeafEmissivity(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(roofVegetation.setLeafEmissivity(testQ));
-  Quantity q = roofVegetation.getLeafEmissivity(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,RoofVegetation_MinimumStomatalResistance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
-
-  Unit units = roofVegetation.getMinimumStomatalResistance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(roofVegetation.setMinimumStomatalResistance(testQ));
-  Quantity q = roofVegetation.getMinimumStomatalResistance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,RoofVegetation_Thickness_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
-
-  Unit units = roofVegetation.getThickness(true).units(); // Get IP units.
-
-  // Bounds: 0.05 < value <= 0.7 meters
-  // Bounds: 1.97 < value <= 27.56 inches
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(roofVegetation.setThickness(testQ));
-
-  double value2(2.0);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(roofVegetation.setThickness(testQ2));
-  Quantity q2 = roofVegetation.getThickness(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,RoofVegetation_ConductivityofDrySoil_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
-
-  Unit siUnits = roofVegetation.getConductivityofDrySoil(false).units(); // Get SI units.
-  Unit ipUnits = roofVegetation.getConductivityofDrySoil(true).units(); // Get IP units.
-
-  // \units W / m - K
-  // \ip - units Btu - in / hr - ft2 - R
-  // Bounds: 0.2 <= value <= 1.5 W / m - K
-  // to convert from SI to IP multiply by 6.9334713
-
-  double value(1.0);
-  EXPECT_TRUE(roofVegetation.setConductivityofDrySoil(value));
-
-  Quantity testQ(value, siUnits);
-  EXPECT_TRUE(roofVegetation.setConductivityofDrySoil(testQ));
-
-  testQ = Quantity(value, ipUnits);
-  EXPECT_FALSE(roofVegetation.setConductivityofDrySoil(testQ));
-
-  double value2(0.2);
-  Quantity testQ2(value2, siUnits);
-  EXPECT_TRUE(roofVegetation.setConductivityofDrySoil(testQ2));
-  Quantity q2 = roofVegetation.getConductivityofDrySoil(true);
-  EXPECT_NEAR(value2, q2.value(), 6.9334713*0.2);
-  EXPECT_EQ(ipUnits.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,RoofVegetation_DensityofDrySoil_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
-
-  Unit units = roofVegetation.getDensityofDrySoil(true).units(); // Get IP units.
-
-  // Bounds: 300 <= value <= 2000 kg/m^3
-  // Bounds: 18.73 <= value <= 124.86 lb_m/ft^3
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(roofVegetation.setDensityofDrySoil(testQ));
-
-  double value2(20);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(roofVegetation.setDensityofDrySoil(testQ2));
-  Quantity q2 = roofVegetation.getDensityofDrySoil(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,RoofVegetation_SpecificHeatofDrySoil_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
-
-  boost::optional<Unit> osiUnits = createUnit("m^2/s^2*K");
-  ASSERT_TRUE(osiUnits);
-  Unit siUnits = roofVegetation.getSpecificHeatofDrySoil(false).units(); // Get SI units.
-  EXPECT_EQ(osiUnits->standardString(),siUnits.standardString());
-
-  // m^2/s^2*K is equivalent to J/kg*K
-  osiUnits = createUnit("J/kg*K");
-  ASSERT_TRUE(osiUnits);
-  EXPECT_EQ(osiUnits->standardString(),siUnits.standardString());
-
-  boost::optional<Unit> oipUnits = createUnit("Btu/R*lb_m");
-  ASSERT_TRUE(oipUnits);
-  Unit ipUnits = roofVegetation.getSpecificHeatofDrySoil(true).units(); // Get IP units.
-  EXPECT_EQ(oipUnits->standardString(),ipUnits.standardString());
-
-  // Bounds: 500 < value <= 2000 m^2/s^2*K
-  // Bounds: 0.1194229483 < value <= 0.4776917933 ft^2/h^2*R
-
-  double value(1.0);
-  Quantity testQ(value,ipUnits);
-  EXPECT_FALSE(roofVegetation.setSpecificHeatofDrySoil(testQ));
-
-  double value2(0.2);
-  Quantity testQ2(value2,ipUnits);
-  EXPECT_TRUE(roofVegetation.setSpecificHeatofDrySoil(testQ2));
-  Quantity q2 = roofVegetation.getSpecificHeatofDrySoil(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(ipUnits.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,RoofVegetation_ThermalAbsorptance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
-
-  Unit units = roofVegetation.getThermalAbsorptance(true).units(); // Get IP units.
-
-  // Bounds: 0.8 < value <= 1.0
-
-  double value(0.1);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(roofVegetation.setThermalAbsorptance(testQ));
-
-  double value2(1.0);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(roofVegetation.setThermalAbsorptance(testQ2));
-  Quantity q2 = roofVegetation.getThermalAbsorptance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,RoofVegetation_SolarAbsorptance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
-
-  Unit units = roofVegetation.getSolarAbsorptance(true).units(); // Get IP units.
-
-  // Bounds: 0.4 <= value <= 0.9
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(roofVegetation.setSolarAbsorptance(testQ));
-
-  double value2(0.4);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(roofVegetation.setSolarAbsorptance(testQ2));
-  Quantity q2 = roofVegetation.getSolarAbsorptance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,RoofVegetation_VisibleAbsorptance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
-
-  Unit units = roofVegetation.getVisibleAbsorptance(true).units(); // Get IP units.
-
-  // Bounds: 0.5 < value <= 1.0
-
-  double value(0.5);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(roofVegetation.setVisibleAbsorptance(testQ));
-
-  double value2(1.0);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(roofVegetation.setVisibleAbsorptance(testQ2));
-  Quantity q2 = roofVegetation.getVisibleAbsorptance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,RoofVegetation_SaturationVolumetricMoistureContentoftheSoilLayer_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
-
-  Unit units = roofVegetation.getSaturationVolumetricMoistureContentoftheSoilLayer(true).units(); // Get IP units.
-
-  // Bounds: 0.1 < value <= 0.5
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(roofVegetation.setSaturationVolumetricMoistureContentoftheSoilLayer(testQ));
-
-  double value2(0.11);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(roofVegetation.setSaturationVolumetricMoistureContentoftheSoilLayer(testQ2));
-  Quantity q2 = roofVegetation.getSaturationVolumetricMoistureContentoftheSoilLayer(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,RoofVegetation_ResidualVolumetricMoistureContentoftheSoilLayer_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
-
-  Unit units = roofVegetation.getResidualVolumetricMoistureContentoftheSoilLayer(true).units(); // Get IP units.
-
-  // Bounds: 0.01 <= value <= 0.1
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(roofVegetation.setResidualVolumetricMoistureContentoftheSoilLayer(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(roofVegetation.setResidualVolumetricMoistureContentoftheSoilLayer(testQ2));
-  Quantity q2 = roofVegetation.getResidualVolumetricMoistureContentoftheSoilLayer(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,RoofVegetation_InitialVolumetricMoistureContentoftheSoilLayer_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RoofVegetation roofVegetation(model);
-
-  Unit units = roofVegetation.getInitialVolumetricMoistureContentoftheSoilLayer(true).units(); // Get IP units.
-
-  // Bounds: 0.05 < value <= 0.5
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(roofVegetation.setInitialVolumetricMoistureContentoftheSoilLayer(testQ));
-
-  double value2(0.5);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(roofVegetation.setInitialVolumetricMoistureContentoftheSoilLayer(testQ2));
-  Quantity q2 = roofVegetation.getInitialVolumetricMoistureContentoftheSoilLayer(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-
 
 
 TEST_F(ModelFixture, RoofVegetation_StandardsInformation) {

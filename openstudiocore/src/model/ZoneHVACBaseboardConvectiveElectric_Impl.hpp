@@ -32,8 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "ZoneHVACComponent_Impl.hpp"
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -81,13 +79,9 @@ namespace detail {
 
     boost::optional<double> nominalCapacity() const;
 
-    OSOptionalQuantity getNominalCapacity(bool returnIP=false) const;
-
     bool isNominalCapacityAutosized() const;
 
     double efficiency() const;
-
-    Quantity getEfficiency(bool returnIP=false) const;
 
     bool isEfficiencyDefaulted() const;
 
@@ -109,13 +103,9 @@ namespace detail {
 
     bool setNominalCapacity(boost::optional<double> nominalCapacity);
 
-    bool setNominalCapacity(const OSOptionalQuantity& nominalCapacity);
-
     void autosizeNominalCapacity();
 
     bool setEfficiency(double efficiency);
-
-    bool setEfficiency(const Quantity& efficiency);
 
     void resetEfficiency();
 
@@ -142,11 +132,6 @@ namespace detail {
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
     boost::optional<Schedule> optionalAvailabilitySchedule() const;
-
-    openstudio::OSOptionalQuantity nominalCapacity_SI() const;
-    openstudio::OSOptionalQuantity nominalCapacity_IP() const;
-    openstudio::Quantity efficiency_SI() const;
-    openstudio::Quantity efficiency_IP() const;
 
     boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 

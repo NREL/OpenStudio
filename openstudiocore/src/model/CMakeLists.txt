@@ -24,10 +24,6 @@ set(${target_name}_src
   GenericModelObject.hpp
   GenericModelObject_Impl.hpp
   GenericModelObject.cpp
-  AccessPolicyStore.hpp
-  AccessPolicyStore.cpp
-#  Relationship.hpp
-#  Relationship.cpp
   ScheduleTypeRegistry.hpp
   ScheduleTypeRegistry.cpp
   ModelObjectList.hpp
@@ -1983,6 +1979,7 @@ set(${target_name}_test_src
   test/SimpleGlazing_GTest.cpp
   test/SimulationControl_GTest.cpp
   test/Site_GTest.cpp
+  test/SiteGroundReflectance_GTest.cpp
   test/SiteGroundTemperatureDeep_GTest.cpp
   test/SiteGroundTemperatureFCfactorMethod_GTest.cpp
   test/SiteGroundTemperatureShallow_GTest.cpp

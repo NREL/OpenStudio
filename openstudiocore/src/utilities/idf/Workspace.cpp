@@ -2387,24 +2387,24 @@ namespace detail {
     }
   }
 
-  std::vector<std::pair<QUrl, openstudio::path> > Workspace_Impl::locateUrls(
+  std::vector<std::pair<Url, openstudio::path> > Workspace_Impl::locateUrls(
       const std::vector<URLSearchPath> &t_paths,
       bool t_create_relative_paths,
       const openstudio::path &t_infile,
       const openstudio::path &t_locationForRemoteUrls )
   {
-    std::vector<std::pair<QUrl, openstudio::path> > retval;
+    std::vector<std::pair<Url, openstudio::path> > retval;
 
     std::vector<WorkspaceObject> urlobjects = objectsWithURLFields();
 
-    std::vector<std::pair<boost::optional<IddObjectType>, QUrl> > search_paths;
+    std::vector<std::pair<boost::optional<IddObjectType>, Url> > search_paths;
 
     for (const auto & urlSearchPath : t_paths)
     {
-      QUrl searchurl = urlSearchPath.getUrl();
+      Url searchurl = urlSearchPath.getUrl();
       URLSearchPath::Relative relativity = urlSearchPath.getRelativity();
 
-      QUrl updatedsearchurl = searchurl;
+      Url updatedsearchurl = searchurl;
 
       //search for files here...
       /// \todo support remote urls
@@ -2425,10 +2425,10 @@ namespace detail {
           }
         }
 
-        updatedsearchurl = QUrl::fromLocalFile(toQString(completesearchpath));
+        updatedsearchurl = Url::fromLocalFile(toQString(completesearchpath));
       }
 
-      QUrl searchpath;
+      Url searchpath;
       search_paths.push_back(std::make_pair(urlSearchPath.getIddObjectType(), updatedsearchurl));
     }
 
@@ -2443,15 +2443,15 @@ namespace detail {
 
       for (unsigned int i = 0; i < numfields; ++i)
       {
-        boost::optional<QUrl> url = workspaceObject.getURL(i);
+        boost::optional<Url> url = workspaceObject.getURL(i);
 
         if (url)
         {
-          QUrl sourceurl;
+          Url sourceurl;
 
           LOG(Debug, "Url found in file: " << toString(url->toString()));
 
-          std::vector<QUrl> thisobjectssearchpaths;
+          std::vector<Url> thisobjectssearchpaths;
 
           for (const auto & searchPath : search_paths)
           {
@@ -2473,7 +2473,7 @@ namespace detail {
             {
               origpath = toPath(url->toLocalFile());
             } else {
-              // DLM: When using QUrl constructor from a string as in getURL, QUrl will assume the
+              // DLM: When using Url constructor from a string as in getURL, Url will assume the
               // drive letter in any file path is a scheme and automatically convert the scheme to lower case
               boost::optional<std::string> rawString = workspaceObject.getString(i);
               if (rawString && istringEqual(*rawString, url->toString().toStdString())){
@@ -2485,7 +2485,7 @@ namespace detail {
 
             if (!origpath.is_complete())
             {
-              QUrl tempUrl = completeURL(QUrl::fromLocalFile(toQString(origpath)), thisobjectssearchpaths, false);
+              Url tempUrl = completeURL(Url::fromLocalFile(toQString(origpath)), thisobjectssearchpaths, false);
               if (!tempUrl.isEmpty())
               {
                 sourceurl = tempUrl;
@@ -2493,7 +2493,7 @@ namespace detail {
             } else {
               // the url is a complete path, no reason to apply searches to it
               // in fact, we'll even trust that it's there
-              sourceurl = QUrl::fromLocalFile(toQString(origpath));
+              sourceurl = Url::fromLocalFile(toQString(origpath));
             }
           } else {
             // Not a local file or relative, trust it:
@@ -2507,7 +2507,7 @@ namespace detail {
           {
             // We've managed to complete the path
 
-            QUrl destinationURL;
+            Url destinationURL;
 
             openstudio::path relativepath = toPath(sourceurl.toLocalFile());
             openstudio::path filename = relativepath.filename();
@@ -2516,11 +2516,11 @@ namespace detail {
 
             if (t_create_relative_paths)
             {
-              destinationURL = QUrl::fromLocalFile(toQString(filename));
+              destinationURL = Url::fromLocalFile(toQString(filename));
             } else {
               if (sourceurl.scheme() != "file")
               {
-                destinationURL = QUrl::fromLocalFile(toQString(t_locationForRemoteUrls / filename));
+                destinationURL = Url::fromLocalFile(toQString(t_locationForRemoteUrls / filename));
               } else {
                 destinationURL = sourceurl;
               }
@@ -3093,7 +3093,7 @@ IdfFile Workspace::toIdfFile() const {
   return m_impl->toIdfFile();
 }
 
-std::vector<std::pair<QUrl, openstudio::path> > Workspace::locateUrls(
+std::vector<std::pair<Url, openstudio::path> > Workspace::locateUrls(
     const std::vector<URLSearchPath> &t_paths, bool t_create_relative_paths,
     const openstudio::path &t_infile)
 {

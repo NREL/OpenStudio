@@ -32,6 +32,8 @@
 #include "ModelAPI.hpp"
 #include "ResourceObject.hpp"
 
+#include "../utilities/core/Path.hpp"
+
 namespace openstudio {
 
 namespace model {

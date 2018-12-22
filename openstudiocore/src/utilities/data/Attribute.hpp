@@ -40,33 +40,38 @@
 
 #include <boost/optional.hpp>
 
-#include <QVariant>
-#include <QMetaType>
+#include <variant>
 
-class QDomDocument;
-class QDomElement;
+namespace pugi {
+  class xml_document;
+  class xml_node;
+}
 
 namespace openstudio {
 
-class Unit;
-class Quantity;
-class OSOptionalQuantity;
+class Attribute;
 
 namespace detail{
   class Attribute_Impl;
   class EndUsesAttribute_Impl;
 }
+  // TODO: do I really need to add 'unsigned int' as a type, or can I store as int instead (we store AttributeValueType too...)
+  // Note JM 2018-11-28:
+  // we add std::monostate to allow the variant to be empty basically
+  typedef std::variant<std::monostate, bool, double, int, unsigned, std::string, std::vector<Attribute> > OSAttributeVariant;
+
+  std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attribute);
+
 
 /** \class AttributeValueType
  *  \brief A listing of data types that can be held in an Attribute.
- *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
- *  call is:
+ *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
  *  \code
 OPENSTUDIO_ENUM( AttributeValueType,
   ((Boolean)(Boolean)(0))
   ((Double)(Double)(1))
-  ((Quantity)(Quantity)(2))
-  ((Unit)(Unit)(3))
+//((Quantity)(Quantity)(2))  // Deprecated
+//((Unit)(Unit)(3))          // Deprecated
   ((Integer)(Integer)(4))
   ((Unsigned)(Unsigned)(5))
   ((String)(String)(6))
@@ -76,8 +81,8 @@ OPENSTUDIO_ENUM( AttributeValueType,
 OPENSTUDIO_ENUM( AttributeValueType,
   ((Boolean)(Boolean)(0))
   ((Double)(Double)(1))
-  ((Quantity)(Quantity)(2))
-  ((Unit)(Unit)(3))
+//((Quantity)(Quantity)(2))  // Deprecated
+//((Unit)(Unit)(3))          // Deprecated
   ((Integer)(Integer)(4))
   ((Unsigned)(Unsigned)(5))
   ((String)(String)(6))
@@ -94,7 +99,7 @@ struct UTILITIES_API AttributeDescription {
   std::string description;
   std::vector<AttributeValueType> validValueTypes;
   bool required;
-  QVariant defaultValue;
+  OSAttributeVariant defaultValue;
 
   AttributeDescription(const std::string& t_name,
                        const std::string& t_displayName,
@@ -107,7 +112,7 @@ struct UTILITIES_API AttributeDescription {
                        const std::string& t_description,
                        const AttributeValueType& t_validValueType,
                        bool t_required,
-                       QVariant t_defaultValue);
+                       OSAttributeVariant t_defaultValue);
 
   AttributeDescription(const std::string& t_name,
                        const std::string& t_displayName,
@@ -120,7 +125,7 @@ struct UTILITIES_API AttributeDescription {
                        const std::string& t_description,
                        const std::vector<AttributeValueType>& t_validValueTypes,
                        bool t_required,
-                       QVariant t_defaultValue);
+                       OSAttributeVariant t_defaultValue);
 };
 
 /** \relates AttributeDescription */
@@ -141,6 +146,8 @@ class UTILITIES_API Attribute {
   typedef detail::Attribute_Impl ImplType;
 
   /// constructors
+
+  // AttributeValueType::Boolean
   Attribute(const std::string& name, bool value);
   Attribute(const std::string& name, bool value, const std::string& units);
   Attribute(const std::string& name, bool value, const boost::optional<std::string>& units);
@@ -152,6 +159,7 @@ class UTILITIES_API Attribute {
             const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
+  // AttributeValueType::Double
   Attribute(const std::string& name, double value);
   Attribute(const std::string& name, double value, const std::string& units);
   Attribute(const std::string& name, double value, const boost::optional<std::string>& units);
@@ -163,25 +171,7 @@ class UTILITIES_API Attribute {
             const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
-  /** Upon construction, will be of type Quantity or Unit, as appropriate. */
-  Attribute(const std::string& name, const OSOptionalQuantity& value);
-
-  Attribute(const std::string& name, const Quantity& value);
-  Attribute(const openstudio::UUID& uuid,
-            const openstudio::UUID& versionUUID,
-            const std::string& name,
-            const boost::optional<std::string>& displayName,
-            const Quantity& value,
-            const std::string& source = std::string());
-
-  Attribute(const std::string& name, const Unit& value);
-  Attribute(const openstudio::UUID& uuid,
-            const openstudio::UUID& versionUUID,
-            const std::string& name,
-            const boost::optional<std::string>& displayName,
-            const Unit& value,
-            const std::string& source = std::string());
-
+  // AttributeValueType::Integer
   Attribute(const std::string& name, int value);
   Attribute(const std::string& name, int value, const std::string& units);
   Attribute(const std::string& name, int value, const boost::optional<std::string>& units);
@@ -193,6 +183,7 @@ class UTILITIES_API Attribute {
             const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
+  // AttributeValueType::Unsigned
   Attribute(const std::string& name, unsigned value);
   Attribute(const std::string& name, unsigned value, const std::string& units);
   Attribute(const std::string& name, unsigned value, const boost::optional<std::string>& units);
@@ -204,6 +195,8 @@ class UTILITIES_API Attribute {
             const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
+  // AttributeValueType::String
+  // Const char overload is needed because otherwise it'll resolve to the bool constructor (implicit conversion of pointer to bool)
   Attribute(const std::string& name, const char* value);
   Attribute(const std::string& name, const char* value, const std::string& units);
   Attribute(const std::string& name, const char* value, const boost::optional<std::string>& units);
@@ -226,6 +219,7 @@ class UTILITIES_API Attribute {
             const boost::optional<std::string>& units,
             const std::string& source = std::string());
 
+  // AttributeValueType::AttributeVector
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value);
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value, const std::string& units);
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value, const boost::optional<std::string>& units);
@@ -241,21 +235,16 @@ class UTILITIES_API Attribute {
   // Destructor
   virtual ~Attribute() {}
 
-
-  explicit Attribute(const QDomElement& element);
+  // constructor from xml, throws if required arguments are missing
+  explicit Attribute(const pugi::xml_node& element);
 
   Attribute(const Attribute& other);
 
   Attribute clone() const;
 
-  /// static constructor from QVariant
-  static boost::optional<Attribute> fromQVariant(const std::string& name, const QVariant& value, const boost::optional<std::string>& units = boost::none);
-
+  // TODO: keep both? Keep public?
   /// static constructor from xml
   static boost::optional<Attribute> loadFromXml(const openstudio::path& path);
-
-  /// static constructor from loaded xml
-  static boost::optional<Attribute> loadFromXml(const QDomDocument& doc);
 
   openstudio::UUID uuid() const;
 
@@ -286,6 +275,9 @@ class UTILITIES_API Attribute {
   /// get the attribute value type
   AttributeValueType valueType() const;
 
+  /** Returns true if this Attribute value has been set. */
+  bool hasValue() const;
+
   /// get value as a bool
   bool valueAsBoolean() const;
 
@@ -310,18 +302,6 @@ class UTILITIES_API Attribute {
   /// set value. throws if wrong type.
   void setValue(double value);
 
-  /// get value as Quantity
-  Quantity valueAsQuantity() const;
-
-  /// set value. throws if wrong type.
-  void setValue(const Quantity& value);
-
-  /// get value as Unit
-  Unit valueAsUnit() const;
-
-  /// set value. throws if wrong type.
-  void setValue(const Unit& value);
-
   /// get value as string
   std::string valueAsString() const;
 
@@ -337,12 +317,6 @@ class UTILITIES_API Attribute {
   /// set value. throws if wrong type.
   void setValue(const std::vector<Attribute>& value);
 
-  /// get value as qvariant
-  QVariant valueAsQVariant() const;
-
-  // set value. throws if wrong type.
-  void setValue(const QVariant& value);
-
   /// find child attribute by name
   boost::optional<Attribute> findChildByName(const std::string& name) const;
 
@@ -356,9 +330,6 @@ class UTILITIES_API Attribute {
   *  simply as possible. Numeric types print in high precision. Attribute vectors are printed
   *  as XML. */
   std::string toString() const;
-
-  /// write object and all children to xml
-  QDomDocument toXml() const;
 
   /// write object and all children out as xml to path.
   bool saveToXml(const openstudio::path& path) const;
@@ -388,6 +359,11 @@ class UTILITIES_API Attribute {
   }
 
  protected:
+
+  friend std::ostream& operator<<(std::ostream& os, const Attribute& attribute);
+  // TODO: remove from public API or make protected/private
+  /// write object and all children to xml
+  pugi::xml_document toXml() const;
 
   friend class detail::Attribute_Impl;
   friend class EndUses;
@@ -435,71 +411,6 @@ UTILITIES_API std::vector<int> getIntVectorFromAttribute(const Attribute& attrib
 // DLM: can this be a member of Attribute?
 UTILITIES_API std::vector<double> getDoubleVectorFromAttribute(const Attribute& attribute);
 
-/** Returns true if candidate and description have matching names and types. \relates Attribute */
-// DLM: can this be a member of Attribute?
-UTILITIES_API bool isConsistent(const Attribute& candidate,const AttributeDescription& description);
-
-/** Copies description's display name over to attribute. Will return false if
- *  !isConsistent(attribute,description). \relates Attribute */
-// DLM: can this be a member of Attribute?
-UTILITIES_API bool prepareForDisplay(Attribute& attribute, const AttributeDescription& description);
-
-/** Saves attributes in a flat json file. Discards uuid and version_uuid information.
- *  Recasts Unsigned attributes as Integer attributes, Quantity attributes as Double
- *  attributes with units, Unit attributes as String attributes. \relates Attribute */
-UTILITIES_API bool saveJSON(const std::vector<Attribute>& attributes,
-                            const openstudio::path& p,
-                            bool overwrite=false);
-
-/** Puts attributes out to os in a flat json format. Discards uuid and version_uuid
- *  information. Recasts Unsigned attributes as Integer attributes, Quantity attributes
- *  as Double attributes with units, Unit attributes as String attributes.
- *  \relates Attribute */
-UTILITIES_API std::ostream& toJSON(const std::vector<Attribute>& attributes,
-                                   std::ostream& os);
-
-/** Returns attributes as a string in a flat json format. Discards uuid and version_uuid
- *  information. Recasts Unsigned attributes as Integer attributes, Quantity attributes
- *  as Double attributes with units, Unit attributes as String attributes.
- *  \relates Attribute */
-UTILITIES_API std::string toJSON(const std::vector<Attribute>& attributes);
-
-/** Returns attributes as a string in a flat json format. Discards uuid and version_uuid
-*  information. Recasts Unsigned attributes as Integer attributes, Quantity attributes
-*  as Double attributes with units, Unit attributes as String attributes. Does not print metadata.
-*  \relates Attribute */
-UTILITIES_API std::string toJSONWithoutMetadata(const std::vector<Attribute>& attributes);
-
-/** Deserializes the flat attribute json format. \relates Attribute */
-UTILITIES_API std::vector<Attribute> toVectorOfAttribute(const openstudio::path& pathToJson);
-
-/** Deserializes the flat attribute json format. \relates Attribute */
-UTILITIES_API std::vector<Attribute> toVectorOfAttribute(std::istream& json);
-
-/** Deserializes the flat attribute json format. \relates Attribute */
-UTILITIES_API std::vector<Attribute> toVectorOfAttribute(const std::string& json);
-
-namespace detail {
-  /** Places attribute's data in a QVariant for JSON serialization. */
-  UTILITIES_API QVariant toVariant(const Attribute& attribute);
-
-  /** Deserializes json variant to Attribute. */
-  UTILITIES_API Attribute toAttribute(const QVariant& variant, const VersionString& version);
-
-  /** Places a vector of attributes' data in a flat QVariant for JSON serialization. Discards
-   *  uuid and version_uuid information. Recasts Unsigned attributes as Integer attributes,
-   *  Quantity attributes as Double attributes with units, Unit attributes as String attributes. */
-  UTILITIES_API QVariant toVariant(const std::vector<Attribute>& attributes);
-
-  /** Deserializes (flat) json variant to std::vector<Attribute>. */
-  UTILITIES_API std::vector<Attribute> toVectorOfAttribute(const QVariant& variant, const VersionString& version);
-}
-
 } // openstudio
-
-// declare these types so we can use them as properties
-//Q_DECLARE_METATYPE(openstudio::Attribute);
-Q_DECLARE_METATYPE(boost::optional<openstudio::Attribute>);
-Q_DECLARE_METATYPE(std::vector<openstudio::Attribute>);
 
 #endif // UTILITIES_DATA_ATTRIBUTE_HPP

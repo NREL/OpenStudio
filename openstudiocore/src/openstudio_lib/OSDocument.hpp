@@ -33,6 +33,7 @@
 #include "OpenStudioAPI.hpp"
 
 #include "../shared_gui_components/OSQObjectController.hpp"
+#include "../model_editor/QMetaTypes.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"

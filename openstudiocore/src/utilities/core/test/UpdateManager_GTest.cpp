@@ -33,7 +33,6 @@
 #include "../System.hpp"
 #include <OpenStudio.hxx>
 
-#include <QApplication>
 #include <sstream>
 #include <time.h>
 

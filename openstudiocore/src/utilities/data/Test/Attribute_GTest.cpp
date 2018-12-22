@@ -32,13 +32,12 @@
 
 #include "../Attribute.hpp"
 
-#include "../../core/QJson.hpp"
 #include "../../core/StringHelpers.hpp"
-
-#include <QDomDocument>
 
 #include <boost/regex.hpp>
 
+#include <pugixml.hpp>
+#include <sstream>
 #include <limits>
 
 #include <OpenStudio.hxx>
@@ -182,6 +181,17 @@ TEST_F(DataFixture, Attribute_String)
     openstudio::filesystem::remove(xmlPath);
   }
 
+  {
+    // Call the std::string constructor, should be no problem
+    std::string value = "value";
+    Attribute attribute("string", value);
+    EXPECT_EQ("string", attribute.name());
+    EXPECT_EQ(AttributeValueType::String, attribute.valueType().value());
+    EXPECT_EQ("value", attribute.valueAsString());
+    EXPECT_FALSE(attribute.units());
+  }
+
+  // This one calls the const char * constructor, which is needed to avoid resolution to bool ctor
   Attribute attribute("string", "value");
   EXPECT_EQ("string", attribute.name());
   EXPECT_EQ(AttributeValueType::String, attribute.valueType().value());
@@ -272,73 +282,14 @@ TEST_F(DataFixture, Attribute_Throw)
   EXPECT_NO_THROW(attribute.valueAsAttributeVector());
 }
 
-TEST_F(DataFixture, Attribute_FromQVariant)
-{
-
-  QVariant value = QVariant::fromValue(false);
-  boost::optional<Attribute> attribute = Attribute::fromQVariant("bool", value);
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("bool", attribute->name());
-  EXPECT_EQ(AttributeValueType::Boolean, attribute->valueType().value());
-  EXPECT_FALSE(attribute->valueAsBoolean());
-  EXPECT_FALSE(attribute->units());
-
-  value = QVariant::fromValue(static_cast<int>(2));
-  attribute = Attribute::fromQVariant("int", value);
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("int", attribute->name());
-  EXPECT_EQ(AttributeValueType::Integer, attribute->valueType().value());
-  EXPECT_EQ(2, attribute->valueAsInteger());
-  EXPECT_FALSE(attribute->units());
-
-  value = QVariant::fromValue(static_cast<unsigned>(10));
-  attribute = Attribute::fromQVariant("unsigned", value, std::string("ft"));
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("unsigned", attribute->name());
-  EXPECT_EQ(AttributeValueType::Unsigned, attribute->valueType().value());
-  EXPECT_EQ(10u, attribute->valueAsUnsigned());
-  ASSERT_TRUE(attribute->units());
-  EXPECT_EQ("ft", attribute->units().get());
-
-  value = QVariant::fromValue(1.234);
-  attribute = Attribute::fromQVariant("double", value, std::string("m"));
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("double", attribute->name());
-  EXPECT_EQ(AttributeValueType::Double, attribute->valueType().value());
-  EXPECT_EQ(1.234, attribute->valueAsDouble());
-  ASSERT_TRUE(attribute->units());
-  EXPECT_EQ("m", attribute->units().get());
-
-  value = QVariant::fromValue(std::string("hello"));
-  attribute = Attribute::fromQVariant("std::string", value);
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("std::string", attribute->name());
-  EXPECT_EQ(AttributeValueType::String, attribute->valueType().value());
-  EXPECT_EQ("hello", attribute->valueAsString());
-  EXPECT_FALSE(attribute->units());
-
-  boost::optional<double> d = 1.234;
-  value = QVariant::fromValue(d);
-  attribute = Attribute::fromQVariant("set optional", value);
-  ASSERT_TRUE(attribute);
-  EXPECT_EQ("set optional", attribute->name());
-  EXPECT_EQ(AttributeValueType::Double, attribute->valueType().value());
-  EXPECT_EQ(1.234, attribute->valueAsDouble());
-  EXPECT_FALSE(attribute->units());
-
-  d.reset();
-  value = QVariant::fromValue(d);
-  attribute = Attribute::fromQVariant("unset optional", value);
-  EXPECT_FALSE(attribute);
-}
-
 TEST_F(DataFixture, Attribute_Equal)
 {
   EXPECT_TRUE(Attribute("name", false) == Attribute("name", false));
   EXPECT_TRUE(Attribute("name", static_cast<int>(1), std::string("m")) == Attribute("name", static_cast<int>(1), std::string("m")));
   EXPECT_TRUE(Attribute("name", static_cast<unsigned>(1), std::string("m")) == Attribute("name", static_cast<unsigned>(1), std::string("m")));
-  EXPECT_TRUE(Attribute("name", static_cast<int>(1)) == Attribute("name", static_cast<unsigned>(1))); // QVariant comparison does this
-  EXPECT_TRUE(Attribute("name", static_cast<int>(1)) == Attribute("name", 1.0)); // QVariant comparison does this
+  EXPECT_FALSE(Attribute("name", static_cast<int>(1)) == Attribute("name", static_cast<unsigned>(1))); // Types don't match
+  EXPECT_FALSE(Attribute("name", static_cast<int>(1)) == Attribute("name", 1.0)); // Types don't match
+
   EXPECT_TRUE(Attribute("name", "value") == Attribute("name", "value"));
   EXPECT_TRUE(Attribute("name", 1.23) == Attribute("name", 1.23));
 
@@ -381,13 +332,6 @@ TEST_F(DataFixture, Attribute_NumberFormatting) {
   EXPECT_EQ("3.14159E52",boost::regex_replace(str,boost::regex("\\+"),""));
 }
 
-TEST_F(DataFixture, Attribute_JsonSerialization) {
-  // right now, just test string because know that fails
-  Attribute attribute("EnergyPlusVersion","EnergyPlus-Windows-64 8.0.0.008, YMD=2013.10.02 16:22");
-  QVariant variant = detail::toVariant(attribute);
-  EXPECT_NO_THROW(toJSON(variant));
-}
-
 TEST_F(DataFixture, Attribute_DisplayName) {
   Attribute attribute("WWR",0.23);
   OptionalString displayName = attribute.displayName();
@@ -402,6 +346,12 @@ TEST_F(DataFixture, Attribute_DisplayName) {
 }
 
 TEST_F(DataFixture, Attribute_Source) {
+
+  openstudio::path xmlPath = openstudio::toPath("./report_attribute_source.xml");
+  if(openstudio::filesystem::exists(xmlPath)){
+    openstudio::filesystem::remove(xmlPath);
+  }
+
   AttributeVector attributes;
 
   // create vector of attributes with no sources
@@ -411,21 +361,15 @@ TEST_F(DataFixture, Attribute_Source) {
   attributes.push_back(Attribute("My String Attribute","flat finish"));
   attributes.push_back(Attribute("tricky_source","don't talk back"));
 
-  // xml and back
   Attribute container("Containing Attribute",attributes);
-  QDomDocument doc = container.toXml();
-  OptionalAttribute containerCopy = Attribute::loadFromXml(doc);
+
+  // save to xml
+  container.saveToXml(xmlPath);
+
+  // load back
+  boost::optional<Attribute> containerCopy = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(containerCopy);
   AttributeVector attributesCopy = containerCopy.get().valueAsAttributeVector();
-  EXPECT_EQ(attributes.size(),attributesCopy.size());
-  for (const Attribute& attributeCopy : attributesCopy) {
-    EXPECT_TRUE(attributeCopy.source().empty());
-  }
-
-  // json and back
-  QVariant variant = detail::toVariant(attributes);
-  int n = variant.toMap().size();
-  attributesCopy = detail::toVectorOfAttribute(variant,VersionString(openStudioVersion()));
   EXPECT_EQ(attributes.size(),attributesCopy.size());
   for (const Attribute& attributeCopy : attributesCopy) {
     EXPECT_TRUE(attributeCopy.source().empty());
@@ -437,19 +381,10 @@ TEST_F(DataFixture, Attribute_Source) {
   }
 
   // xml and back
-  doc = container.toXml();
-  containerCopy = Attribute::loadFromXml(doc);
+  container.saveToXml(xmlPath);
+  containerCopy = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(containerCopy);
   attributesCopy = containerCopy.get().valueAsAttributeVector();
-  EXPECT_EQ(attributes.size(),attributesCopy.size());
-  for (const Attribute& attributeCopy : attributesCopy) {
-    EXPECT_EQ("big data set",attributeCopy.source());
-  }
-
-  // json and back
-  variant = detail::toVariant(attributes);
-  EXPECT_EQ(n+1,variant.toMap().size());
-  attributesCopy = detail::toVectorOfAttribute(variant,VersionString(openStudioVersion()));
   EXPECT_EQ(attributes.size(),attributesCopy.size());
   for (const Attribute& attributeCopy : attributesCopy) {
     EXPECT_EQ("big data set",attributeCopy.source());
@@ -459,8 +394,8 @@ TEST_F(DataFixture, Attribute_Source) {
   attributes[2].setSource("a wiki");
 
   // xml and back
-  doc = container.toXml();
-  containerCopy = Attribute::loadFromXml(doc);
+  container.saveToXml(xmlPath);
+  containerCopy = Attribute::loadFromXml(xmlPath);
   ASSERT_TRUE(containerCopy);
   attributesCopy = containerCopy.get().valueAsAttributeVector();
   EXPECT_EQ(attributes.size(),attributesCopy.size());
@@ -469,14 +404,140 @@ TEST_F(DataFixture, Attribute_Source) {
   }
   EXPECT_EQ("a wiki",attributesCopy[2].source());
 
-  // json and back
-  variant = detail::toVariant(attributes);
-  EXPECT_EQ(n+attributes.size(),variant.toMap().size());
-  attributesCopy = detail::toVectorOfAttribute(variant,VersionString(openStudioVersion()));
-  EXPECT_EQ(attributes.size(),attributesCopy.size());
-  for (const Attribute& attributeCopy : attributesCopy) {
-    EXPECT_FALSE(attributeCopy.source().empty());
-  }
+
   // order is not guaranteed
 
 }
+
+
+TEST_F(DataFixture, Attribute_RequiredXMLNodes) {
+
+  pugi::xml_document attributeXML;
+
+  // Test that it works with something proper
+  {
+
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <ValueType>Double</ValueType>" << std::endl
+       << "  <Value>10.0</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    Attribute(attributeXML.child("Attribute"));
+  }
+
+  // Missing UUID
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <ValueType>Double</ValueType>" << std::endl
+       << "  <Value>10.0</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+  // Missing VersionUUID
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <ValueType>Double</ValueType>" << std::endl
+       << "  <Value>10.0</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+  // Missing Name
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <ValueType>Double</ValueType>" << std::endl
+       << "  <Value>10.0</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+
+  // Missing ValueType
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <Value>10.0</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+  // Wrong ValueType
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <ValueType>Something BAAAAAAAAAAAD</ValueType>" << std::endl
+       << "  <Value>10.0</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+  // Missing Value
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <ValueType>Double</ValueType>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+  // ValueType and Value Don't match: expect a double, but value is a string that doesn't represent a number instead
+  {
+    std::stringstream ss;
+    ss << "<Attribute>" << std::endl
+       << "  <UUID>{147d6341-c9a6-41e1-a1c9-fd051c2c7bf2}</UUID>" << std::endl
+       << "  <VersionUUID>{bd2b41f5-9183-4733-81e2-81ce19047e0e}</VersionUUID>" << std::endl
+       << "  <Name>A double argument</Name>" << std::endl
+       << "  <ValueType>Double</ValueType>" << std::endl
+       << "  <Value>Blabla</Value>" << std::endl
+       << "</Attribute>" << std::endl;
+
+    pugi::xml_parse_result success = attributeXML.load(ss);
+    ASSERT_TRUE(success);
+    EXPECT_THROW(Attribute(attributeXML.child("Attribute")), openstudio::Exception);
+  }
+
+}
+

@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ZoneHVACComponent_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -182,4 +180,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_ZONEHVACUNITHEATER_IMPL_HPP
-

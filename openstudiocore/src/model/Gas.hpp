@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -143,49 +141,26 @@ class MODEL_API Gas : public GasLayer {
 
   double thickness() const;
 
-  Quantity getThickness(bool returnIP=false) const;
-
   boost::optional<double> conductivityCoefficientA() const;
-
-  OSOptionalQuantity getConductivityCoefficientA(bool returnIP=false) const;
 
   boost::optional<double> conductivityCoefficientB() const;
 
-  OSOptionalQuantity getConductivityCoefficientB(bool returnIP=false) const;
-
   boost::optional<double> conductivityCoefficientC() const;
-
-  OSOptionalQuantity getConductivityCoefficientC(bool returnIP=false) const;
 
   boost::optional<double> viscosityCoefficientA() const;
 
-  OSOptionalQuantity getViscosityCoefficientA(bool returnIP=false) const;
-
   boost::optional<double> viscosityCoefficientB() const;
-
-  OSOptionalQuantity getViscosityCoefficientB(bool returnIP=false) const;
 
   boost::optional<double> viscosityCoefficientC() const;
 
-  OSOptionalQuantity getViscosityCoefficientC(bool returnIP=false) const;
-
   boost::optional<double> specificHeatCoefficientA() const;
-
-  OSOptionalQuantity getSpecificHeatCoefficientA(bool returnIP=false) const;
 
   boost::optional<double> specificHeatCoefficientB() const;
 
-  OSOptionalQuantity getSpecificHeatCoefficientB(bool returnIP=false) const;
-
   boost::optional<double> specificHeatCoefficientC() const;
-
-  OSOptionalQuantity getSpecificHeatCoefficientC(bool returnIP=false) const;
 
   boost::optional<double> molecularWeight() const;
 
-  OSOptionalQuantity getMolecularWeight(bool returnIP=false) const;
-
-  OSOptionalQuantity getSpecificHeatRatio(bool returnIP=false) const;
 
   //@}
   /** @name Setters */
@@ -207,71 +182,47 @@ class MODEL_API Gas : public GasLayer {
 
   bool setThickness(double thickness);
 
-  bool setThickness(const Quantity& thickness);
-
   bool setConductivityCoefficientA(double conductivityCoefficientA);
-
-  bool setConductivityCoefficientA(const Quantity& conductivityCoefficientA);
 
   void resetConductivityCoefficientA();
 
   bool setConductivityCoefficientB(double conductivityCoefficientB);
 
-  bool setConductivityCoefficientB(const Quantity& conductivityCoefficientB);
-
   void resetConductivityCoefficientB();
 
   bool setConductivityCoefficientC(double conductivityCoefficientC);
-
-  bool setConductivityCoefficientC(const Quantity& conductivityCoefficientC);
 
   void resetConductivityCoefficientC();
 
   bool setViscosityCoefficientA(double viscosityCoefficientA);
 
-  bool setViscosityCoefficientA(const Quantity& viscosityCoefficientA);
-
   void resetViscosityCoefficientA();
 
   bool setViscosityCoefficientB(double viscosityCoefficientB);
-
-  bool setViscosityCoefficientB(const Quantity& viscosityCoefficientB);
 
   void resetViscosityCoefficientB();
 
   bool setViscosityCoefficientC(double viscosityCoefficientC);
 
-  bool setViscosityCoefficientC(const Quantity& viscosityCoefficientC);
-
   void resetViscosityCoefficientC();
 
   bool setSpecificHeatCoefficientA(double specificHeatCoefficientA);
-
-  bool setSpecificHeatCoefficientA(const Quantity& specificHeatCoefficientA);
 
   void resetSpecificHeatCoefficientA();
 
   bool setSpecificHeatCoefficientB(double specificHeatCoefficientB);
 
-  bool setSpecificHeatCoefficientB(const Quantity& specificHeatCoefficientB);
-
   void resetSpecificHeatCoefficientB();
 
   bool setSpecificHeatCoefficientC(double specificHeatCoefficientC);
-
-  bool setSpecificHeatCoefficientC(const Quantity& specificHeatCoefficientC);
 
   void resetSpecificHeatCoefficientC();
 
   bool setMolecularWeight(double molecularWeight);
 
-  bool setMolecularWeight(const Quantity& molecularWeight);
-
   void resetMolecularWeight();
 
   bool setSpecificHeatRatio(double specificHeatRatio);
-
-  bool setSpecificHeatRatio(const Quantity& specificHeatRatio);
 
   void resetSpecificHeatRatio();
 

@@ -30,6 +30,8 @@
 #ifndef OPENSTUDIO_SCHEDULESVIEW_HPP
 #define OPENSTUDIO_SCHEDULESVIEW_HPP
 
+#include "../model_editor/QMetaTypes.hpp"
+
 #include "../model/Model.hpp"
 #include "../model/ScheduleDay.hpp"
 #include "../model/ScheduleDay_Impl.hpp"

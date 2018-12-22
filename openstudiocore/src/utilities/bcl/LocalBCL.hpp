@@ -146,8 +146,9 @@ namespace openstudio{
     /// Returns the path to the local BCL library
     openstudio::path libraryPath() const;
 
+    // DLM: removed for openstudio 3
     /// Relocates the local BCL library, stores the library path in user preferences
-    bool setLibraryPath(const openstudio::path& libraryPath);
+    //bool setLibraryPath(const openstudio::path& libraryPath);
 
     /// returns the fully qualified path of the current database file
     openstudio::filesystem::path dbPath() const;

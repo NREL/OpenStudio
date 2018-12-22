@@ -29,8 +29,8 @@
 
 #include "InspectorGadget.hpp"
 #include "InspectorDialog.hpp"
-
 #include "Application.hpp"
+#include "AccessPolicyStore.hpp"
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
@@ -38,7 +38,6 @@
 #include <model/ModelObject_Impl.hpp>
 #include <model/ResourceObject.hpp>
 #include <model/ResourceObject_Impl.hpp>
-#include <model/AccessPolicyStore.hpp>
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/idd/IddFile.hpp>
@@ -49,6 +48,7 @@
 #include <QIcon>
 #include <QListWidget>
 #include <QTimer>
+#include <QTextStream>
 #include <QStackedWidget>
 #include <QTableWidget>
 #include <QPushButton>
@@ -523,6 +523,9 @@ void InspectorDialog::init(InspectorDialogClient client)
 {
 
   QFile sketchUpPluginPolicy(":/SketchUpPluginPolicy.xml");
+  const auto toVector = [](const auto &data) {
+    return std::vector<char>(data.begin(), data.end());
+  };
 
   switch (client.value()){
     case InspectorDialogClient::AllOpenStudio:
@@ -539,7 +542,7 @@ void InspectorDialog::init(InspectorDialogClient client)
       break;
     case InspectorDialogClient::SketchUpPlugin:
 
-      openstudio::model::AccessPolicyStore::Instance().loadFile(sketchUpPluginPolicy.readAll());
+      openstudio::model::AccessPolicyStore::Instance().loadFile(toVector(sketchUpPluginPolicy.readAll()));
 
       m_iddFile = IddFactory::instance().getIddFile(IddFileType::OpenStudio);
 

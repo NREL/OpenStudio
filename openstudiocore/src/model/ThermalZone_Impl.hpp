@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "HVACComponent_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -106,15 +104,11 @@ namespace detail {
 
     boost::optional<double> ceilingHeight() const;
 
-    OSOptionalQuantity getCeilingHeight(bool returnIP=false) const;
-
     bool isCeilingHeightDefaulted() const;
 
     bool isCeilingHeightAutocalculated() const;
 
     boost::optional<double> volume() const;
-
-    OSOptionalQuantity getVolume(bool returnIP=false) const;
 
     bool isVolumeDefaulted() const;
 
@@ -136,13 +130,9 @@ namespace detail {
 
     double fractionofZoneControlledbyPrimaryDaylightingControl() const;
 
-    Quantity getFractionofZoneControlledbyPrimaryDaylightingControl(bool returnIP=false) const;
-
     bool isFractionofZoneControlledbyPrimaryDaylightingControlDefaulted() const;
 
     double fractionofZoneControlledbySecondaryDaylightingControl() const;
-
-    Quantity getFractionofZoneControlledbySecondaryDaylightingControl(bool returnIP=false) const;
 
     bool isFractionofZoneControlledbySecondaryDaylightingControlDefaulted() const;
 
@@ -162,8 +152,6 @@ namespace detail {
 
     bool setCeilingHeight(double ceilingHeight);
 
-    bool setCeilingHeight(const OSOptionalQuantity& ceilingHeight);
-
     void resetCeilingHeight();
 
     void autocalculateCeilingHeight();
@@ -171,8 +159,6 @@ namespace detail {
     bool setVolume(boost::optional<double> volume);
 
     bool setVolume(double volume);
-
-    bool setVolume(const OSOptionalQuantity& volume);
 
     void resetVolume();
 
@@ -210,13 +196,9 @@ namespace detail {
 
     bool setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl);
 
-    bool setFractionofZoneControlledbyPrimaryDaylightingControl(const Quantity& fractionofZoneControlledbyPrimaryDaylightingControl);
-
     void resetFractionofZoneControlledbyPrimaryDaylightingControl();
 
     bool setFractionofZoneControlledbySecondaryDaylightingControl(double fractionofZoneControlledbySecondaryDaylightingControl);
-
-    bool setFractionofZoneControlledbySecondaryDaylightingControl(const Quantity& fractionofZoneControlledbySecondaryDaylightingControl);
 
     void resetFractionofZoneControlledbySecondaryDaylightingControl();
 
@@ -438,15 +420,6 @@ namespace detail {
 
    private:
     REGISTER_LOGGER("openstudio.model.ThermalZone");
-
-    openstudio::OSOptionalQuantity ceilingHeight_SI() const;
-    openstudio::OSOptionalQuantity ceilingHeight_IP() const;
-    openstudio::OSOptionalQuantity volume_SI() const;
-    openstudio::OSOptionalQuantity volume_IP() const;
-    openstudio::Quantity fractionofZoneControlledbyPrimaryDaylightingControl_SI() const;
-    openstudio::Quantity fractionofZoneControlledbyPrimaryDaylightingControl_IP() const;
-    openstudio::Quantity fractionofZoneControlledbySecondaryDaylightingControl_SI() const;
-    openstudio::Quantity fractionofZoneControlledbySecondaryDaylightingControl_IP() const;
 
     boost::optional<ModelObject> thermostatSetpointDualSetpointAsModelObject() const;
     boost::optional<ModelObject> zoneControlHumidistatAsModelObject() const;

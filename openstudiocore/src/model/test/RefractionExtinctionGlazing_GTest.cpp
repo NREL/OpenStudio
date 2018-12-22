@@ -34,168 +34,114 @@
 #include "../RefractionExtinctionGlazing.hpp"
 #include "../RefractionExtinctionGlazing_Impl.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,RefractionExtinctionGlazing_Thickness_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RefractionExtinctionGlazing refractionExtinctionGlazing(model);
 
-  Unit units = refractionExtinctionGlazing.getThickness(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(refractionExtinctionGlazing.setThickness(testQ));
-  Quantity q = refractionExtinctionGlazing.getThickness(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+TEST_F(ModelFixture, RefractionExtinctionGlazing_Ctor)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT (
+  {
+     Model m;
+     RefractionExtinctionGlazing reg(m);
+
+     exit(0);
+  } ,
+    ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,RefractionExtinctionGlazing_SolarIndexofRefraction_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RefractionExtinctionGlazing refractionExtinctionGlazing(model);
+TEST_F(ModelFixture, RefractionExtinctionGlazing_GettersSetters)
+{
+  Model m;
 
-  Unit units = refractionExtinctionGlazing.getSolarIndexofRefraction(true).units(); // Get IP units.
 
-  // Bounds: 1.0 < value
+  // Ctors defaults
+  double thickness = 0.1;
+  double solarIndexofRefraction = 1.1;
+  double solarExtinctionCoefficient = 0.1;
+  double visibleIndexofRefraction = 1.1;
+  double visibleExtinctionCoefficient = 0.1;
+  RefractionExtinctionGlazing reg(m,
+      thickness, solarIndexofRefraction, solarExtinctionCoefficient,
+      visibleIndexofRefraction, visibleExtinctionCoefficient);
 
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(refractionExtinctionGlazing.setSolarIndexofRefraction(testQ));
 
-  double value2(1.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(refractionExtinctionGlazing.setSolarIndexofRefraction(testQ2));
-  Quantity q2 = refractionExtinctionGlazing.getSolarIndexofRefraction(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
+  // Thickness:  Double
+  EXPECT_EQ(thickness, reg.thickness());
+  EXPECT_TRUE(reg.setThickness(1.0));
+  EXPECT_EQ(1.0, reg.thickness());
+
+
+  // Solar Index of Refraction:  Double
+  EXPECT_EQ(solarIndexofRefraction, reg.solarIndexofRefraction());
+  EXPECT_TRUE(reg.setSolarIndexofRefraction(2.0));
+  EXPECT_EQ(2.0, reg.solarIndexofRefraction());
+
+
+  // Solar Extinction Coefficient:  Double
+  EXPECT_EQ(solarExtinctionCoefficient, reg.solarExtinctionCoefficient());
+  EXPECT_TRUE(reg.setSolarExtinctionCoefficient(1.1));
+  EXPECT_EQ(1.1, reg.solarExtinctionCoefficient());
+
+
+  // Visible Index of Refraction:  Double
+  EXPECT_EQ(visibleIndexofRefraction, reg.visibleIndexofRefraction());
+  EXPECT_TRUE(reg.setVisibleIndexofRefraction(2.1));
+  EXPECT_EQ(2.1, reg.visibleIndexofRefraction());
+
+
+  // Visible Extinction Coefficient:  Double
+  EXPECT_EQ(visibleExtinctionCoefficient, reg.visibleExtinctionCoefficient());
+  EXPECT_TRUE(reg.setVisibleExtinctionCoefficient(1.3));
+  EXPECT_EQ(1.3, reg.visibleExtinctionCoefficient());
+
+
+  // Infrared Transmittance at Normal Incidence:  Double
+  // Check Idd default: 0.0
+  EXPECT_EQ(0.0, reg.infraredTransmittanceatNormalIncidence());
+  EXPECT_TRUE(reg.setInfraredTransmittanceatNormalIncidence(0.2));
+  EXPECT_EQ(0.2, reg.infraredTransmittanceatNormalIncidence());
+  reg.resetInfraredTransmittanceatNormalIncidence();
+  EXPECT_EQ(0.0, reg.infraredTransmittanceatNormalIncidence());
+
+
+  // Infrared Hemispherical Emissivity:  Double
+  // Check Idd default: 0.84
+  EXPECT_EQ(0.84, reg.infraredHemisphericalEmissivity());
+  EXPECT_TRUE(reg.setInfraredHemisphericalEmissivity(0.42));
+  EXPECT_EQ(0.42, reg.infraredHemisphericalEmissivity());
+  reg.resetInfraredHemisphericalEmissivity();
+  EXPECT_EQ(0.84, reg.infraredHemisphericalEmissivity());
+
+
+  // Conductivity:  Double
+  // Check Idd default: 0.9
+  EXPECT_EQ(0.9, reg.conductivity());
+  EXPECT_TRUE(reg.setConductivity(0.45));
+  EXPECT_EQ(0.45, reg.conductivity());
+  reg.resetConductivity();
+  EXPECT_EQ(0.9, reg.conductivity());
+
+
+  // Dirt Correction Factor for Solar and Visible Transmittance:  Double
+  // Check Idd default: 1.0
+  EXPECT_EQ(1.0, reg.dirtCorrectionFactorforSolarandVisibleTransmittance());
+  EXPECT_TRUE(reg.setDirtCorrectionFactorforSolarandVisibleTransmittance(0.5));
+  EXPECT_EQ(0.5, reg.dirtCorrectionFactorforSolarandVisibleTransmittance());
+  reg.resetDirtCorrectionFactorforSolarandVisibleTransmittance();
+  EXPECT_EQ(1.0, reg.dirtCorrectionFactorforSolarandVisibleTransmittance());
+
+
+  // Solar Diffusing:  Boolean
+  // Check Idd default: "No"
+  EXPECT_FALSE(reg.solarDiffusing());
+
+  EXPECT_TRUE(reg.setSolarDiffusing(true));
+  EXPECT_TRUE(reg.solarDiffusing());
+
+  EXPECT_TRUE(reg.setSolarDiffusing(false));
+  EXPECT_FALSE(reg.solarDiffusing());
+
 }
-
-TEST_F(ModelFixture,RefractionExtinctionGlazing_SolarExtinctionCoefficient_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RefractionExtinctionGlazing refractionExtinctionGlazing(model);
-
-  Unit units = refractionExtinctionGlazing.getSolarExtinctionCoefficient(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(refractionExtinctionGlazing.setSolarExtinctionCoefficient(testQ));
-  Quantity q = refractionExtinctionGlazing.getSolarExtinctionCoefficient(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,RefractionExtinctionGlazing_VisibleIndexofRefraction_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RefractionExtinctionGlazing refractionExtinctionGlazing(model);
-
-  Unit units = refractionExtinctionGlazing.getVisibleIndexofRefraction(true).units(); // Get IP units.
-
-  // Bounds: 1.0 < value
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(refractionExtinctionGlazing.setVisibleIndexofRefraction(testQ));
-
-  double value2(1.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(refractionExtinctionGlazing.setVisibleIndexofRefraction(testQ2));
-  Quantity q2 = refractionExtinctionGlazing.getVisibleIndexofRefraction(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,RefractionExtinctionGlazing_VisibleExtinctionCoefficient_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RefractionExtinctionGlazing refractionExtinctionGlazing(model);
-
-  Unit units = refractionExtinctionGlazing.getVisibleExtinctionCoefficient(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(refractionExtinctionGlazing.setVisibleExtinctionCoefficient(testQ));
-  Quantity q = refractionExtinctionGlazing.getVisibleExtinctionCoefficient(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,RefractionExtinctionGlazing_InfraredTransmittanceatNormalIncidence_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RefractionExtinctionGlazing refractionExtinctionGlazing(model);
-
-  Unit units = refractionExtinctionGlazing.getInfraredTransmittanceatNormalIncidence(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(refractionExtinctionGlazing.setInfraredTransmittanceatNormalIncidence(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(refractionExtinctionGlazing.setInfraredTransmittanceatNormalIncidence(testQ2));
-  Quantity q2 = refractionExtinctionGlazing.getInfraredTransmittanceatNormalIncidence(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,RefractionExtinctionGlazing_InfraredHemisphericalEmissivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RefractionExtinctionGlazing refractionExtinctionGlazing(model);
-
-  Unit units = refractionExtinctionGlazing.getInfraredHemisphericalEmissivity(true).units(); // Get IP units.
-
-  // Bounds: 0.0 < value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(refractionExtinctionGlazing.setInfraredHemisphericalEmissivity(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(refractionExtinctionGlazing.setInfraredHemisphericalEmissivity(testQ2));
-  Quantity q2 = refractionExtinctionGlazing.getInfraredHemisphericalEmissivity(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,RefractionExtinctionGlazing_Conductivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RefractionExtinctionGlazing refractionExtinctionGlazing(model);
-
-  Unit units = refractionExtinctionGlazing.getConductivity(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(refractionExtinctionGlazing.setConductivity(testQ));
-  Quantity q = refractionExtinctionGlazing.getConductivity(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,RefractionExtinctionGlazing_DirtCorrectionFactorforSolarandVisibleTransmittance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  RefractionExtinctionGlazing refractionExtinctionGlazing(model);
-
-  Unit units = refractionExtinctionGlazing.getDirtCorrectionFactorforSolarandVisibleTransmittance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(refractionExtinctionGlazing.setDirtCorrectionFactorforSolarandVisibleTransmittance(testQ));
-  Quantity q = refractionExtinctionGlazing.getDirtCorrectionFactorforSolarandVisibleTransmittance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-

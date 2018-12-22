@@ -133,15 +133,5 @@ QString toQString(const std::wstring& w)
 
 }
 
-namespace detail{
-  StringMetaTypeInitializer::StringMetaTypeInitializer()
-  {
-    // int type;
-    /* type =*/ qRegisterMetaType<std::string>("std::string");
-    /* type =*/ qRegisterMetaType<std::vector<std::string> >("std::vector<std::string>");
-  }
-  static StringMetaTypeInitializer __stringMetaTypeInitializer__;
-}
-
 } // openstudio
 

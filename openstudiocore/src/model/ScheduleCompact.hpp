@@ -55,8 +55,6 @@ class MODEL_API ScheduleCompact : public Schedule {
   /** Creates a ScheduleCompact with constantValue applied to the entire year, if
    *  scheduleTypeLimits() and the units are compatible. Otherwise creates an empty
    *  ScheduleCompact. */
-  ScheduleCompact(const Model& model, const Quantity& constantValue);
-
   virtual ~ScheduleCompact() {}
 
   //@}
@@ -72,7 +70,6 @@ class MODEL_API ScheduleCompact : public Schedule {
 
   /** If value can be converted to scheduleTypeLimit()'s units, then all existing data is cleared
    *  and value is set (after unit conversion, if necessary). */
-  bool setToConstantValue(const Quantity& value);
 
   //@}
   /** @name Queries */
@@ -85,11 +82,6 @@ class MODEL_API ScheduleCompact : public Schedule {
   /** Returns this ScheduleCompact's constant value, if this ScheduleCompact conforms to that
    *  pattern. Otherwise returns boost::none (evaluates to false). */
   boost::optional<double> constantValue() const;
-
-  /** Returns this ScheduleCompact's constant value as a Quantity, if this ScheduleCompact
-   *  conforms to that pattern and scheduleTypeLimits() is set. Otherwise returns boost::none
-   *  (evaluates to false). */
-  boost::optional<Quantity> getConstantValue(bool returnIP=false) const;
 
   //@}
  protected:

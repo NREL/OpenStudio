@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -77,21 +75,11 @@ class MODEL_API SizingPlant : public ModelObject {
 
   double designLoopExitTemperature() const;
 
-  Quantity getDesignLoopExitTemperature(bool returnIP=false) const;
-
   bool setDesignLoopExitTemperature(double designLoopExitTemperature);
-
-  bool setDesignLoopExitTemperature(const Quantity& designLoopExitTemperature);
-
 
   double loopDesignTemperatureDifference() const;
 
-  Quantity getLoopDesignTemperatureDifference(bool returnIP=false) const;
-
   bool setLoopDesignTemperatureDifference(double loopDesignTemperatureDifference);
-
-  bool setLoopDesignTemperatureDifference(const Quantity& loopDesignTemperatureDifference);
-
 
   std::string sizingOption() const;
 

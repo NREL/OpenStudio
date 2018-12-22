@@ -230,39 +230,27 @@ namespace detail {
 
     boost::optional<double> ratedTotalCoolingCapacity() const;
 
-    OSOptionalQuantity getRatedTotalCoolingCapacity(bool returnIP=false) const;
-
     bool isRatedTotalCoolingCapacityAutosized() const;
 
     bool setRatedTotalCoolingCapacity(boost::optional<double> ratedTotalCoolingCapacity);
-
-    bool setRatedTotalCoolingCapacity(const OSOptionalQuantity& ratedTotalCoolingCapacity);
 
     void autosizeRatedTotalCoolingCapacity();
 
 
     boost::optional<double> ratedSensibleHeatRatio() const;
 
-    OSOptionalQuantity getRatedSensibleHeatRatio(bool returnIP=false) const;
-
     bool isRatedSensibleHeatRatioAutosized() const;
 
     bool setRatedSensibleHeatRatio(boost::optional<double> ratedSensibleHeatRatio);
-
-    bool setRatedSensibleHeatRatio(const OSOptionalQuantity& ratedSensibleHeatRatio);
 
     void autosizeRatedSensibleHeatRatio();
 
 
     boost::optional<double> ratedAirFlowRate() const;
 
-    OSOptionalQuantity getRatedAirFlowRate(bool returnIP=false) const;
-
     bool isRatedAirFlowRateAutosized() const;
 
     bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
-
-    bool setRatedAirFlowRate(const OSOptionalQuantity& ratedAirFlowRate);
 
     void autosizeRatedAirFlowRate();
 

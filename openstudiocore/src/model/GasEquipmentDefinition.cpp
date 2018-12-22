@@ -36,34 +36,12 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/math/FloatCompare.hpp"
-
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
-
-  ATTRIBUTE_IMPLEMENTATION(1,0,0,designLevel,DesignLevel,
-                           GasEquipmentDefinition,0,OS_GasEquipment_Definition,DesignLevel)
-
-  ATTRIBUTE_IMPLEMENTATION(1,0,0,wattsperSpaceFloorArea,WattsperSpaceFloorArea,
-                           GasEquipmentDefinition,0,OS_GasEquipment_Definition,WattsperSpaceFloorArea)
-
-  ATTRIBUTE_IMPLEMENTATION(1,0,0,wattsperPerson,WattsperPerson,
-                           GasEquipmentDefinition,0,OS_GasEquipment_Definition,WattsperPerson)
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,fractionRadiant,FractionRadiant,
-                           GasEquipmentDefinition,0,OS_GasEquipment_Definition,FractionRadiant)
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,fractionLatent,FractionLatent,
-                           GasEquipmentDefinition,0,OS_GasEquipment_Definition,FractionLatent)
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,fractionLost,FractionLost,
-                           GasEquipmentDefinition,0,OS_GasEquipment_Definition,FractionLost)
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,carbonDioxideGenerationRate,CarbonDioxideGenerationRate,
-                           GasEquipmentDefinition,0,OS_GasEquipment_Definition,CarbonDioxideGenerationRate)
 
   GasEquipmentDefinition_Impl::GasEquipmentDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
@@ -85,7 +63,6 @@ namespace detail {
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {}
 
-  // TODO: remove
   const std::vector<std::string>& GasEquipmentDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -136,9 +113,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool GasEquipmentDefinition_Impl::isFractionLatentDefaulted() const {
-  //  return isEmpty(OS_GasEquipment_DefinitionFields::FractionLatent);
-  //}
+  bool GasEquipmentDefinition_Impl::isFractionLatentDefaulted() const {
+    return isEmpty(OS_GasEquipment_DefinitionFields::FractionLatent);
+  }
 
   double GasEquipmentDefinition_Impl::fractionRadiant() const {
     boost::optional<double> value = getDouble(OS_GasEquipment_DefinitionFields::FractionRadiant,true);
@@ -146,9 +123,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool GasEquipmentDefinition_Impl::isFractionRadiantDefaulted() const {
-  //  return isEmpty(OS_GasEquipment_DefinitionFields::FractionRadiant);
-  //}
+  bool GasEquipmentDefinition_Impl::isFractionRadiantDefaulted() const {
+    return isEmpty(OS_GasEquipment_DefinitionFields::FractionRadiant);
+  }
 
   double GasEquipmentDefinition_Impl::fractionLost() const {
     boost::optional<double> value = getDouble(OS_GasEquipment_DefinitionFields::FractionLost,true);
@@ -156,9 +133,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool GasEquipmentDefinition_Impl::isFractionLostDefaulted() const {
-  //  return isEmpty(OS_GasEquipment_DefinitionFields::FractionLost);
-  //}
+  bool GasEquipmentDefinition_Impl::isFractionLostDefaulted() const {
+    return isEmpty(OS_GasEquipment_DefinitionFields::FractionLost);
+  }
 
   double GasEquipmentDefinition_Impl::carbonDioxideGenerationRate() const {
     boost::optional<double> value = getDouble(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate,true);
@@ -166,9 +143,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool GasEquipmentDefinition_Impl::isCarbonDioxideGenerationRateDefaulted() const {
-  //  return isEmpty(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate);
-  //}
+  bool GasEquipmentDefinition_Impl::isCarbonDioxideGenerationRateDefaulted() const {
+    return isEmpty(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate);
+  }
 
   bool GasEquipmentDefinition_Impl::setDesignLevel(boost::optional<double> designLevel) {
     bool result = true;
@@ -244,40 +221,40 @@ namespace detail {
     return result;
   }
 
-  //void GasEquipmentDefinition_Impl::resetFractionLatent() {
-  //  bool result = setString(OS_GasEquipment_DefinitionFields::FractionLatent, "");
-  //  OS_ASSERT(result);
-  //}
+  void GasEquipmentDefinition_Impl::resetFractionLatent() {
+    bool result = setString(OS_GasEquipment_DefinitionFields::FractionLatent, "");
+    OS_ASSERT(result);
+  }
 
   bool GasEquipmentDefinition_Impl::setFractionRadiant(double fractionRadiant) {
     bool result = setDouble(OS_GasEquipment_DefinitionFields::FractionRadiant, fractionRadiant);
     return result;
   }
 
-  //void GasEquipmentDefinition_Impl::resetFractionRadiant() {
-  //  bool result = setString(OS_GasEquipment_DefinitionFields::FractionRadiant, "");
-  //  OS_ASSERT(result);
-  //}
+  void GasEquipmentDefinition_Impl::resetFractionRadiant() {
+    bool result = setString(OS_GasEquipment_DefinitionFields::FractionRadiant, "");
+    OS_ASSERT(result);
+  }
 
   bool GasEquipmentDefinition_Impl::setFractionLost(double fractionLost) {
     bool result = setDouble(OS_GasEquipment_DefinitionFields::FractionLost, fractionLost);
     return result;
   }
 
-  //void GasEquipmentDefinition_Impl::resetFractionLost() {
-  //  bool result = setString(OS_GasEquipment_DefinitionFields::FractionLost, "");
-  //  OS_ASSERT(result);
-  //}
+  void GasEquipmentDefinition_Impl::resetFractionLost() {
+    bool result = setString(OS_GasEquipment_DefinitionFields::FractionLost, "");
+    OS_ASSERT(result);
+  }
 
   bool GasEquipmentDefinition_Impl::setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate) {
     bool result = setDouble(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate, carbonDioxideGenerationRate);
     return result;
   }
 
-  //void GasEquipmentDefinition_Impl::resetCarbonDioxideGenerationRate() {
-  //  bool result = setString(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate, "");
-  //  OS_ASSERT(result);
-  //}
+  void GasEquipmentDefinition_Impl::resetCarbonDioxideGenerationRate() {
+    bool result = setString(OS_GasEquipment_DefinitionFields::CarbonDioxideGenerationRate, "");
+    OS_ASSERT(result);
+  }
 
   double GasEquipmentDefinition_Impl::getDesignLevel(double floorArea, double numPeople) const
   {

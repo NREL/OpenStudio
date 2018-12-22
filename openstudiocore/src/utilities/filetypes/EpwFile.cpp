@@ -36,7 +36,6 @@
 #include "../core/Assert.hpp"
 
 
-
 namespace openstudio{
 
   static double psat(double T)

@@ -107,11 +107,6 @@ namespace detail {
     return getDouble(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::NominalCapacity,true);
   }
 
-  OSOptionalQuantity ZoneHVACBaseboardConvectiveElectric_Impl::getNominalCapacity(bool returnIP) const {
-    OptionalDouble value = nominalCapacity();
-    return getQuantityFromDouble(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::NominalCapacity, value, returnIP);
-  }
-
   bool ZoneHVACBaseboardConvectiveElectric_Impl::isNominalCapacityAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::NominalCapacity, true);
@@ -125,13 +120,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::Efficiency,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity ZoneHVACBaseboardConvectiveElectric_Impl::getEfficiency(bool returnIP) const {
-    OptionalDouble value = efficiency();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::Efficiency, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool ZoneHVACBaseboardConvectiveElectric_Impl::isEfficiencyDefaulted() const {
@@ -155,23 +143,6 @@ namespace detail {
     return result;
   }
 
-  bool ZoneHVACBaseboardConvectiveElectric_Impl::setNominalCapacity(const OSOptionalQuantity& nominalCapacity) {
-    bool result(false);
-    OptionalDouble value;
-    if (nominalCapacity.isSet()) {
-      value = getDoubleFromQuantity(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::NominalCapacity,nominalCapacity.get());
-      if (value) {
-        setNominalCapacity(value);
-        result = true;
-      }
-    }
-    else {
-      setNominalCapacity(value);
-      result = true;
-    }
-    return result;
-  }
-
   void ZoneHVACBaseboardConvectiveElectric_Impl::autosizeNominalCapacity() {
     bool result = setString(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::NominalCapacity, "autosize");
     OS_ASSERT(result);
@@ -182,14 +153,6 @@ namespace detail {
     return result;
   }
 
-  bool ZoneHVACBaseboardConvectiveElectric_Impl::setEfficiency(const Quantity& efficiency) {
-    OptionalDouble value = getDoubleFromQuantity(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::Efficiency,efficiency);
-    if (!value) {
-      return false;
-    }
-    return setEfficiency(value.get());
-  }
-
   void ZoneHVACBaseboardConvectiveElectric_Impl::resetEfficiency() {
     bool result = setString(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::Efficiency, "");
     OS_ASSERT(result);
@@ -197,22 +160,6 @@ namespace detail {
 
   boost::optional<Schedule> ZoneHVACBaseboardConvectiveElectric_Impl::optionalAvailabilitySchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_Baseboard_Convective_ElectricFields::AvailabilitySchedule);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACBaseboardConvectiveElectric_Impl::nominalCapacity_SI() const {
-    return getNominalCapacity(false);
-  }
-
-  openstudio::OSOptionalQuantity ZoneHVACBaseboardConvectiveElectric_Impl::nominalCapacity_IP() const {
-    return getNominalCapacity(true);
-  }
-
-  openstudio::Quantity ZoneHVACBaseboardConvectiveElectric_Impl::efficiency_SI() const {
-    return getEfficiency(false);
-  }
-
-  openstudio::Quantity ZoneHVACBaseboardConvectiveElectric_Impl::efficiency_IP() const {
-    return getEfficiency(true);
   }
 
   boost::optional<ModelObject> ZoneHVACBaseboardConvectiveElectric_Impl::availabilityScheduleAsModelObject() const {
@@ -343,20 +290,12 @@ boost::optional<double> ZoneHVACBaseboardConvectiveElectric::nominalCapacity() c
   return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->nominalCapacity();
 }
 
-OSOptionalQuantity ZoneHVACBaseboardConvectiveElectric::getNominalCapacity(bool returnIP) const {
-  return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->getNominalCapacity(returnIP);
-}
-
 bool ZoneHVACBaseboardConvectiveElectric::isNominalCapacityAutosized() const {
   return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->isNominalCapacityAutosized();
 }
 
 double ZoneHVACBaseboardConvectiveElectric::efficiency() const {
   return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->efficiency();
-}
-
-Quantity ZoneHVACBaseboardConvectiveElectric::getEfficiency(bool returnIP) const {
-  return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->getEfficiency(returnIP);
 }
 
 bool ZoneHVACBaseboardConvectiveElectric::isEfficiencyDefaulted() const {
@@ -371,19 +310,11 @@ bool ZoneHVACBaseboardConvectiveElectric::setNominalCapacity(double nominalCapac
   return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->setNominalCapacity(nominalCapacity);
 }
 
-bool ZoneHVACBaseboardConvectiveElectric::setNominalCapacity(const Quantity& nominalCapacity) {
-  return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->setNominalCapacity(nominalCapacity);
-}
-
 void ZoneHVACBaseboardConvectiveElectric::autosizeNominalCapacity() {
   getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->autosizeNominalCapacity();
 }
 
 bool ZoneHVACBaseboardConvectiveElectric::setEfficiency(double efficiency) {
-  return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->setEfficiency(efficiency);
-}
-
-bool ZoneHVACBaseboardConvectiveElectric::setEfficiency(const Quantity& efficiency) {
   return getImpl<detail::ZoneHVACBaseboardConvectiveElectric_Impl>()->setEfficiency(efficiency);
 }
 

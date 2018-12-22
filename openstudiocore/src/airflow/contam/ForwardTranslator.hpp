@@ -204,23 +204,22 @@ private:
   void clear() override;
 
   // Really need to look at these and determine if they are really needed
-  int tableLookup(QMap<std::string,int> map, std::string str, const char *name);
-  int tableLookup(QMap<Handle,int> map, Handle handle, const char *name);
+  int tableLookup(std::map<std::string,int> map, std::string str, const char *name);
   int tableLookup(std::map<Handle,int> map, Handle handle, const char *name);
-  std::string reverseLookup(QMap<std::string,int> map, int nr, const char *name);
-  Handle reverseLookup(QMap<Handle,int> map, int nr, const char *name);
+  std::string reverseLookup(std::map<std::string,int> map, int nr, const char *name);
+  Handle reverseLookup(std::map<Handle,int> map, int nr, const char *name);
 
   contam::IndexModel m_prjModel;
 
   // Maps - will be populated after a call of translateModel
   // All map to the CONTAM index (1,2,...,nElement)
   std::map<std::string,int> m_afeMap;  // Map from descriptor ("exterior", "floor", etc.) to CONTAM airflow element index
-  QMap <Handle, int> m_levelMap;      // Building story to level map by handle
+  std::map <Handle, int> m_levelMap;      // Building story to level map by handle
   std::map <Handle, int> m_zoneMap;       // Thermal zone to airflow zone map by handle
-  //QMap <std::string, int> volumeMap; // Map of AHS volumes - may not be needed
-  QMap <std::string, int> m_pathMap;  // AHS paths stored by name
+  //std::map <std::string, int> volumeMap; // Map of AHS volumes - may not be needed
+  std::map <std::string, int> m_pathMap;  // AHS paths stored by name
   std::map <Handle, int> m_surfaceMap;    // Surface paths stored by handle
-  QMap <Handle, int> m_ahsMap;        // Airloop to AHS map by handle
+  std::map <Handle, int> m_ahsMap;        // Airloop to AHS map by handle
 
   CvFile m_cvf;
   boost::optional<openstudio::DateTime> m_startDateTime;

@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ZoneHVACComponent_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -95,25 +93,17 @@ namespace detail {
 
     boost::optional<double> maximumSupplyAirFlowRate() const;
 
-    OSOptionalQuantity getMaximumSupplyAirFlowRate(bool returnIP=false) const;
-
     bool isMaximumSupplyAirFlowRateAutosized() const;
 
     double lowSpeedSupplyAirFlowRatio() const;
-
-    Quantity getLowSpeedSupplyAirFlowRatio(bool returnIP=false) const;
 
     bool isLowSpeedSupplyAirFlowRatioDefaulted() const;
 
     double mediumSpeedSupplyAirFlowRatio() const;
 
-    Quantity getMediumSpeedSupplyAirFlowRatio(bool returnIP=false) const;
-
     bool isMediumSpeedSupplyAirFlowRatioDefaulted() const;
 
     boost::optional<double> maximumOutdoorAirFlowRate() const;
-
-    OSOptionalQuantity getMaximumOutdoorAirFlowRate(bool returnIP=false) const;
 
     bool isMaximumOutdoorAirFlowRateAutosized() const;
 
@@ -129,19 +119,13 @@ namespace detail {
 
     boost::optional<double> maximumColdWaterFlowRate() const;
 
-    OSOptionalQuantity getMaximumColdWaterFlowRate(bool returnIP=false) const;
-
     bool isMaximumColdWaterFlowRateAutosized() const;
 
     double minimumColdWaterFlowRate() const;
 
-    Quantity getMinimumColdWaterFlowRate(bool returnIP=false) const;
-
     bool isMinimumColdWaterFlowRateDefaulted() const;
 
     double coolingConvergenceTolerance() const;
-
-    Quantity getCoolingConvergenceTolerance(bool returnIP=false) const;
 
     bool isCoolingConvergenceToleranceDefaulted() const;
 
@@ -149,19 +133,13 @@ namespace detail {
 
     boost::optional<double> maximumHotWaterFlowRate() const;
 
-    OSOptionalQuantity getMaximumHotWaterFlowRate(bool returnIP=false) const;
-
     bool isMaximumHotWaterFlowRateAutosized() const;
 
     double minimumHotWaterFlowRate() const;
 
-    Quantity getMinimumHotWaterFlowRate(bool returnIP=false) const;
-
     bool isMinimumHotWaterFlowRateDefaulted() const;
 
     double heatingConvergenceTolerance() const;
-
-    Quantity getHeatingConvergenceTolerance(bool returnIP=false) const;
 
     bool isHeatingConvergenceToleranceDefaulted() const;
 
@@ -191,25 +169,17 @@ namespace detail {
 
     bool setMaximumSupplyAirFlowRate(boost::optional<double> maximumSupplyAirFlowRate);
 
-    bool setMaximumSupplyAirFlowRate(const OSOptionalQuantity& maximumSupplyAirFlowRate);
-
     void autosizeMaximumSupplyAirFlowRate();
 
     bool setLowSpeedSupplyAirFlowRatio(double lowSpeedSupplyAirFlowRatio);
-
-    bool setLowSpeedSupplyAirFlowRatio(const Quantity& lowSpeedSupplyAirFlowRatio);
 
     void resetLowSpeedSupplyAirFlowRatio();
 
     bool setMediumSpeedSupplyAirFlowRatio(double mediumSpeedSupplyAirFlowRatio);
 
-    bool setMediumSpeedSupplyAirFlowRatio(const Quantity& mediumSpeedSupplyAirFlowRatio);
-
     void resetMediumSpeedSupplyAirFlowRatio();
 
     bool setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate);
-
-    bool setMaximumOutdoorAirFlowRate(const OSOptionalQuantity& maximumOutdoorAirFlowRate);
 
     void autosizeMaximumOutdoorAirFlowRate();
 
@@ -227,19 +197,13 @@ namespace detail {
 
     bool setMaximumColdWaterFlowRate(boost::optional<double> maximumColdWaterFlowRate);
 
-    bool setMaximumColdWaterFlowRate(const OSOptionalQuantity& maximumColdWaterFlowRate);
-
     void autosizeMaximumColdWaterFlowRate();
 
     bool setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
 
-    bool setMinimumColdWaterFlowRate(const Quantity& minimumColdWaterFlowRate);
-
     void resetMinimumColdWaterFlowRate();
 
     bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
-
-    bool setCoolingConvergenceTolerance(const Quantity& coolingConvergenceTolerance);
 
     void resetCoolingConvergenceTolerance();
 
@@ -247,19 +211,13 @@ namespace detail {
 
     bool setMaximumHotWaterFlowRate(boost::optional<double> maximumHotWaterFlowRate);
 
-    bool setMaximumHotWaterFlowRate(const OSOptionalQuantity& maximumHotWaterFlowRate);
-
     void autosizeMaximumHotWaterFlowRate();
 
     bool setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
 
-    bool setMinimumHotWaterFlowRate(const Quantity& minimumHotWaterFlowRate);
-
     void resetMinimumHotWaterFlowRate();
 
     bool setHeatingConvergenceTolerance(double heatingConvergenceTolerance);
-
-    bool setHeatingConvergenceTolerance(const Quantity& heatingConvergenceTolerance);
 
     void resetHeatingConvergenceTolerance();
 
@@ -295,28 +253,7 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.ZoneHVACFourPipeFanCoil");
 
     std::vector<std::string> capacityControlMethodValues() const;
-    openstudio::OSOptionalQuantity maximumSupplyAirFlowRate_SI() const;
-    openstudio::OSOptionalQuantity maximumSupplyAirFlowRate_IP() const;
-    openstudio::Quantity lowSpeedSupplyAirFlowRatio_SI() const;
-    openstudio::Quantity lowSpeedSupplyAirFlowRatio_IP() const;
-    openstudio::Quantity mediumSpeedSupplyAirFlowRatio_SI() const;
-    openstudio::Quantity mediumSpeedSupplyAirFlowRatio_IP() const;
-    openstudio::OSOptionalQuantity maximumOutdoorAirFlowRate_SI() const;
-    openstudio::OSOptionalQuantity maximumOutdoorAirFlowRate_IP() const;
     std::vector<std::string> outdoorAirMixerObjectTypeValues() const;
-    openstudio::OSOptionalQuantity maximumColdWaterFlowRate_SI() const;
-    openstudio::OSOptionalQuantity maximumColdWaterFlowRate_IP() const;
-    openstudio::Quantity minimumColdWaterFlowRate_SI() const;
-    openstudio::Quantity minimumColdWaterFlowRate_IP() const;
-    openstudio::Quantity coolingConvergenceTolerance_SI() const;
-    openstudio::Quantity coolingConvergenceTolerance_IP() const;
-    openstudio::OSOptionalQuantity maximumHotWaterFlowRate_SI() const;
-    openstudio::OSOptionalQuantity maximumHotWaterFlowRate_IP() const;
-    openstudio::Quantity minimumHotWaterFlowRate_SI() const;
-    openstudio::Quantity minimumHotWaterFlowRate_IP() const;
-    openstudio::Quantity heatingConvergenceTolerance_SI() const;
-    openstudio::Quantity heatingConvergenceTolerance_IP() const;
-
     // optional getters so can remove() if constructor fails
     boost::optional<Schedule> optionalAvailabilitySchedule() const;
     boost::optional<HVACComponent> optionalSupplyAirFan() const;

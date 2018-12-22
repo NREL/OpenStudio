@@ -42,8 +42,6 @@
 
 #include <cmath>
 
-int _QuantityType = qRegisterMetaType<openstudio::Quantity>("openstudio::Quantity");
-
 namespace openstudio{
 
 Quantity::Quantity(const UnitSystem& system)

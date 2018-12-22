@@ -2,10 +2,8 @@
 #define UTILITIES_DATA_DATA_I
 
 %{
-  #include <QDomDocument>
   #include <boost/function.hpp>
   #include <utilities/data/DataEnums.hpp>
-  #include <utilities/data/Tag.hpp>
   #include <utilities/data/Variant.hpp>
 
   #include <utilities/units/Quantity.hpp>
@@ -36,11 +34,6 @@
 %template(BuildingSectorVector) std::vector<openstudio::BuildingSector>;
 %template(OptionalBuildingSector) boost::optional<openstudio::BuildingSector>;
 
-%ignore std::vector<openstudio::Tag>::vector(size_type);
-%ignore std::vector<openstudio::Tag>::resize(size_type);
-%template(OptionalTag) boost::optional<openstudio::Tag>;
-%template(TagVector) std::vector<openstudio::Tag>;
-
 %include <utilities/data/DataEnums.hpp>
 %include <utilities/data/Attribute.i>
 %include <utilities/data/Variant.i>
@@ -49,6 +42,5 @@
 %include <utilities/data/Vector.i>
 %include <utilities/data/Matrix.i>
 %include <utilities/data/TimeSeries.i>
-%include <utilities/data/Tag.hpp>
 
 #endif //UTILITIES_DATA_DATA_I

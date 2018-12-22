@@ -45,7 +45,6 @@
 #include <QBoxLayout>
 #include <QDrag>
 #include <QLabel>
-#include <QMetaType>
 #include <QMimeData>
 #include <QMouseEvent>
 #include <QPaintEngine>
@@ -56,9 +55,6 @@
 #include <QStyleOption>
 
 namespace openstudio {
-
-int __OSItemId_type = qRegisterMetaType<OSItemId>("OSItemId");
-int __OSItemIdVector_type = qRegisterMetaType<std::vector<OSItemId> >("std::vector<OSItemId>");
 
 const QString OSItemId::BCL_SOURCE_ID = QString("BCL");
 

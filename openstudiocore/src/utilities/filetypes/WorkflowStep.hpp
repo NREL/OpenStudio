@@ -34,7 +34,6 @@
 
 #include "../core/Logger.hpp"
 #include "../data/Variant.hpp"
-#include "../data/Attribute.hpp"
 
 #include <jsoncpp/json.h>
 

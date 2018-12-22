@@ -32,88 +32,87 @@
 #include "ModelFixture.hpp"
 
 #include "../GasMixture.hpp"
-#include "../GasMixture_Impl.hpp"
-
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,GasMixture_Thickness_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  GasMixture gasMixture(model);
 
-  Unit units = gasMixture.getThickness(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(gasMixture.setThickness(testQ));
-  Quantity q = gasMixture.getThickness(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+TEST_F(ModelFixture, GasMixture) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT (
+    {
+      Model m;
+
+      GasMixture gasMixture(m);
+
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,GasMixture_Gas1Fraction_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  GasMixture gasMixture(model);
+TEST_F(ModelFixture, GasMixture_Getters_Setters) {
 
-  Unit units = gasMixture.getGas1Fraction(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(gasMixture.setGas1Fraction(testQ));
-  Quantity q = gasMixture.getGas1Fraction(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  Model m;
+  GasMixture gasMixture(m);
+
+  // Test defaults
+  EXPECT_DOUBLE_EQ(0.003, gasMixture.thickness());
+  EXPECT_EQ(4, gasMixture.numberofGasesinMixture());
+  EXPECT_EQ("Air", gasMixture.gas1Type());
+  EXPECT_DOUBLE_EQ(0.97, gasMixture.gas1Fraction());
+  EXPECT_EQ("Argon", gasMixture.gas2Type());
+  EXPECT_DOUBLE_EQ(0.01, gasMixture.gas2Fraction());
+
+  // Optional fractions
+  EXPECT_EQ("Krypton", gasMixture.gas3Type());
+  ASSERT_TRUE(gasMixture.gas3Fraction());
+  EXPECT_DOUBLE_EQ(0.01, gasMixture.gas3Fraction().get());
+
+  EXPECT_EQ("Xenon", gasMixture.gas4Type());
+  ASSERT_TRUE(gasMixture.gas4Fraction());
+  EXPECT_DOUBLE_EQ(0.01, gasMixture.gas4Fraction().get());
+
+
+
+  EXPECT_TRUE(gasMixture.setThickness(0.5));
+  EXPECT_DOUBLE_EQ(0.5, gasMixture.thickness());
+
+  EXPECT_FALSE(gasMixture.setNumberofGasesinMixture(150));
+  EXPECT_EQ(4, gasMixture.numberofGasesinMixture());
+  EXPECT_TRUE(gasMixture.setNumberofGasesinMixture(3));
+  EXPECT_EQ(3, gasMixture.numberofGasesinMixture());
+
+
+
+  EXPECT_TRUE(gasMixture.setGas1Fraction(0.9));
+  EXPECT_DOUBLE_EQ(0.9, gasMixture.gas1Fraction());
+  EXPECT_TRUE(gasMixture.setGas1Type("Krypton"));
+  EXPECT_EQ("Krypton", gasMixture.gas1Type());
+  EXPECT_FALSE(gasMixture.setGas1Type("BadValue"));
+  EXPECT_EQ("Krypton", gasMixture.gas1Type());
+
+  EXPECT_TRUE(gasMixture.setGas2Fraction(0.05));
+  EXPECT_DOUBLE_EQ(0.05, gasMixture.gas2Fraction());
+  EXPECT_TRUE(gasMixture.setGas2Type("Air"));
+  EXPECT_EQ("Air", gasMixture.gas2Type());
+  EXPECT_FALSE(gasMixture.setGas2Type("BadValue"));
+  EXPECT_EQ("Air", gasMixture.gas2Type());
+
+  EXPECT_TRUE(gasMixture.setGas3Fraction(0.02));
+  ASSERT_TRUE(gasMixture.gas3Fraction());
+  EXPECT_DOUBLE_EQ(0.02, gasMixture.gas3Fraction().get());
+  EXPECT_TRUE(gasMixture.setGas3Type("Xenon"));
+  EXPECT_EQ("Xenon", gasMixture.gas3Type());
+  EXPECT_FALSE(gasMixture.setGas3Type("BadValue"));
+  EXPECT_EQ("Xenon", gasMixture.gas3Type());
+
+  EXPECT_TRUE(gasMixture.setGas4Fraction(0.035));
+  ASSERT_TRUE(gasMixture.gas4Fraction());
+  EXPECT_DOUBLE_EQ(0.035, gasMixture.gas4Fraction().get());
+  EXPECT_TRUE(gasMixture.setGas4Type("Argon"));
+  EXPECT_EQ("Argon", gasMixture.gas4Type());
+  EXPECT_FALSE(gasMixture.setGas4Type("BadValue"));
+  EXPECT_EQ("Argon", gasMixture.gas4Type());
+
 }
-
-TEST_F(ModelFixture,GasMixture_Gas2Fraction_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  GasMixture gasMixture(model);
-
-  Unit units = gasMixture.getGas2Fraction(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(gasMixture.setGas2Fraction(testQ));
-  Quantity q = gasMixture.getGas2Fraction(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,GasMixture_Gas3Fraction_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  GasMixture gasMixture(model);
-
-  Unit units = gasMixture.getGas3Fraction(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(gasMixture.setGas3Fraction(testQ));
-  OSOptionalQuantity q = gasMixture.getGas3Fraction(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,GasMixture_Gas4Fraction_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  GasMixture gasMixture(model);
-
-  Unit units = gasMixture.getGas4Fraction(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(gasMixture.setGas4Fraction(testQ));
-  OSOptionalQuantity q = gasMixture.getGas4Fraction(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-

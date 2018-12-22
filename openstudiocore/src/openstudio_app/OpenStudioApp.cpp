@@ -35,6 +35,8 @@
 #include "../openstudio_lib/MainWindow.hpp"
 #include "../openstudio_lib/OSDocument.hpp"
 
+#include "../model_editor/AccessPolicyStore.hpp"
+
 #include "../shared_gui_components/WaitDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 
@@ -145,7 +147,8 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
 
   QFile f(":/library/OpenStudioPolicy.xml");
   if(f.open(QFile::ReadOnly)) {
-    openstudio::model::AccessPolicyStore::Instance().loadFile(f.readAll());
+    const auto data = f.readAll();
+    openstudio::model::AccessPolicyStore::Instance().loadFile(std::vector<char>{data.begin(), data.end()});
   }
 
   QFile data(":/openstudiolib.qss");

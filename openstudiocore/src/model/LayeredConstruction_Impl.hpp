@@ -32,8 +32,6 @@
 
 #include "ConstructionBase_Impl.hpp"
 
-#include <QObject>
-
 namespace openstudio {
 
 class ValidityReport;

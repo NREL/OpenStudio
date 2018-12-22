@@ -46,8 +46,6 @@
 #include <utilities/idd/OS_Schedule_Rule_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include "../utilities/units/OSQuantityVector.hpp"
-
 #include "../utilities/core/Assert.hpp"
 
 #include "../utilities/time/Time.hpp"
@@ -250,10 +248,6 @@ namespace detail {
     return result;
   }
 
-  boost::optional<Quantity> ScheduleDay_Impl::getValueAsQuantity(const openstudio::Time& time, bool returnIP) const {
-    return toQuantity(getValue(time),returnIP);
-  }
-
   bool ScheduleDay_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
     if (scheduleTypeLimits.model() != model()) {
       return false;
@@ -334,15 +328,6 @@ namespace detail {
 
     return result;
   }
-
-  bool ScheduleDay_Impl::addValue(const openstudio::Time& untilTime, const Quantity& value) {
-    OptionalDouble dval = toDouble(value);
-    if (dval) {
-      return addValue(untilTime,*dval);
-    }
-    return false;
-  }
-
 
   boost::optional<double> ScheduleDay_Impl::removeValue(const openstudio::Time& time){
 
@@ -472,18 +457,8 @@ std::vector<double> ScheduleDay::values() const {
   return getImpl<detail::ScheduleDay_Impl>()->values();
 }
 
-OSQuantityVector ScheduleDay::getValues(bool returnIP) const {
-  return getImpl<detail::ScheduleDay_Impl>()->getValues(returnIP);
-}
-
 double ScheduleDay::getValue(const openstudio::Time& time) const {
   return getImpl<detail::ScheduleDay_Impl>()->getValue(time);
-}
-
-boost::optional<Quantity> ScheduleDay::getValueAsQuantity(const openstudio::Time& time,
-                                                          bool returnIP) const
-{
-  return getImpl<detail::ScheduleDay_Impl>()->getValueAsQuantity(time,returnIP);
 }
 
 bool ScheduleDay::setInterpolatetoTimestep(bool interpolatetoTimestep) {
@@ -496,10 +471,6 @@ void ScheduleDay::resetInterpolatetoTimestep() {
 
 bool ScheduleDay::addValue(const openstudio::Time& untilTime, double value) {
   return getImpl<detail::ScheduleDay_Impl>()->addValue(untilTime, value);
-}
-
-bool ScheduleDay::addValue(const openstudio::Time& untilTime, const Quantity& value) {
-  return getImpl<detail::ScheduleDay_Impl>()->addValue(untilTime,value);
 }
 
 boost::optional<double> ScheduleDay::removeValue(const openstudio::Time& time){

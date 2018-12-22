@@ -32,7 +32,6 @@
 
 #include "ParentObject_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
 
 namespace openstudio {
 
@@ -232,14 +231,6 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.Building");
-
-    openstudio::Quantity northAxis_SI() const;
-    openstudio::Quantity northAxis_IP() const;
-    bool setNorthAxis(const Quantity& northAxis);
-
-    openstudio::Quantity nominalFloortoFloorHeight_SI() const;
-    openstudio::Quantity nominalFloortoFloorHeight_IP() const;
-    bool setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight);
 
     boost::optional<ModelObject> spaceTypeAsModelObject() const;
     boost::optional<ModelObject> defaultConstructionSetAsModelObject() const;

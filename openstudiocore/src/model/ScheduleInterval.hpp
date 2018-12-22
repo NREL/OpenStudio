@@ -43,9 +43,6 @@ namespace detail {
   class ScheduleInterval_Impl;
 } // detail
 
-// ETH@20120919 Perhaps all Schedules should be able to return their data as TimeSeries (and TimeSeries should be
-// convertible to and/or implemented using OSQuantityVector).
-
 /** ScheduleInterval is a Schedule that serves as an abstract base class for ScheduleFixedInterval
  *  and ScheduleVariableInterval. ScheduleIntervals may be constructed from TimeSeries, and can return
  *  their values as TimeSeries. */
@@ -99,4 +96,3 @@ typedef std::vector<ScheduleInterval> ScheduleIntervalVector;
 } // openstudio
 
 #endif // MODEL_SCHEDULEINTERVAL_HPP
-

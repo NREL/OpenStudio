@@ -33,8 +33,6 @@
 #include "ParentObject_Impl.hpp"
 #include "ModelObject_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -158,13 +156,9 @@ namespace detail {
 
     double loadsConvergenceToleranceValue() const;
 
-    Quantity getLoadsConvergenceToleranceValue(bool returnIP=false) const;
-
     bool isLoadsConvergenceToleranceValueDefaulted() const;
 
     double temperatureConvergenceToleranceValue() const;
-
-    Quantity getTemperatureConvergenceToleranceValue(bool returnIP=false) const;
 
     bool isTemperatureConvergenceToleranceValueDefaulted() const;
 
@@ -206,13 +200,9 @@ namespace detail {
 
     bool setLoadsConvergenceToleranceValue(double loadsConvergenceToleranceValue);
 
-    bool setLoadsConvergenceToleranceValue(const Quantity& loadsConvergenceToleranceValue);
-
     void resetLoadsConvergenceToleranceValue();
 
     bool setTemperatureConvergenceToleranceValue(double temperatureConvergenceToleranceValue);
-
-    bool setTemperatureConvergenceToleranceValue(const Quantity& temperatureConvergenceToleranceValue);
 
     void resetTemperatureConvergenceToleranceValue();
 
@@ -273,10 +263,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.SimulationControl");
 
-    openstudio::Quantity loadsConvergenceToleranceValue_SI() const;
-    openstudio::Quantity loadsConvergenceToleranceValue_IP() const;
-    openstudio::Quantity temperatureConvergenceToleranceValue_SI() const;
-    openstudio::Quantity temperatureConvergenceToleranceValue_IP() const;
     std::vector<std::string> solarDistributionValues() const;
   };
 

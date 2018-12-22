@@ -48,8 +48,6 @@
 
 #endif  // __APPLE__
 
-int _uuid_id = qRegisterMetaType<openstudio::UUID>("openstudio::UUID");
-
 namespace openstudio {
 
 #ifdef __APPLE__

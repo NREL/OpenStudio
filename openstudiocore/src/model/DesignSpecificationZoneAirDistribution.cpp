@@ -93,13 +93,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity DesignSpecificationZoneAirDistribution_Impl::getZoneAirDistributionEffectivenessinCoolingMode(bool returnIP) const {
-    OptionalDouble value = zoneAirDistributionEffectivenessinCoolingMode();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool DesignSpecificationZoneAirDistribution_Impl::isZoneAirDistributionEffectivenessinCoolingModeDefaulted() const {
     return isEmpty(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode);
   }
@@ -108,13 +101,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity DesignSpecificationZoneAirDistribution_Impl::getZoneAirDistributionEffectivenessinHeatingMode(bool returnIP) const {
-    OptionalDouble value = zoneAirDistributionEffectivenessinHeatingMode();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool DesignSpecificationZoneAirDistribution_Impl::isZoneAirDistributionEffectivenessinHeatingModeDefaulted() const {
@@ -131,13 +117,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity DesignSpecificationZoneAirDistribution_Impl::getZoneSecondaryRecirculationFraction(bool returnIP) const {
-    OptionalDouble value = zoneSecondaryRecirculationFraction();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool DesignSpecificationZoneAirDistribution_Impl::isZoneSecondaryRecirculationFractionDefaulted() const {
     return isEmpty(OS_DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction);
   }
@@ -145,14 +124,6 @@ namespace detail {
   bool DesignSpecificationZoneAirDistribution_Impl::setZoneAirDistributionEffectivenessinCoolingMode(double zoneAirDistributionEffectivenessinCoolingMode) {
     bool result = setDouble(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode, zoneAirDistributionEffectivenessinCoolingMode);
     return result;
-  }
-
-  bool DesignSpecificationZoneAirDistribution_Impl::setZoneAirDistributionEffectivenessinCoolingMode(const Quantity& zoneAirDistributionEffectivenessinCoolingMode) {
-    OptionalDouble value = getDoubleFromQuantity(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode,zoneAirDistributionEffectivenessinCoolingMode);
-    if (!value) {
-      return false;
-    }
-    return setZoneAirDistributionEffectivenessinCoolingMode(value.get());
   }
 
   void DesignSpecificationZoneAirDistribution_Impl::resetZoneAirDistributionEffectivenessinCoolingMode() {
@@ -163,14 +134,6 @@ namespace detail {
   bool DesignSpecificationZoneAirDistribution_Impl::setZoneAirDistributionEffectivenessinHeatingMode(double zoneAirDistributionEffectivenessinHeatingMode) {
     bool result = setDouble(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode, zoneAirDistributionEffectivenessinHeatingMode);
     return result;
-  }
-
-  bool DesignSpecificationZoneAirDistribution_Impl::setZoneAirDistributionEffectivenessinHeatingMode(const Quantity& zoneAirDistributionEffectivenessinHeatingMode) {
-    OptionalDouble value = getDoubleFromQuantity(OS_DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode,zoneAirDistributionEffectivenessinHeatingMode);
-    if (!value) {
-      return false;
-    }
-    return setZoneAirDistributionEffectivenessinHeatingMode(value.get());
   }
 
   void DesignSpecificationZoneAirDistribution_Impl::resetZoneAirDistributionEffectivenessinHeatingMode() {
@@ -196,41 +159,9 @@ namespace detail {
     return result;
   }
 
-  bool DesignSpecificationZoneAirDistribution_Impl::setZoneSecondaryRecirculationFraction(const Quantity& zoneSecondaryRecirculationFraction) {
-    OptionalDouble value = getDoubleFromQuantity(OS_DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction,zoneSecondaryRecirculationFraction);
-    if (!value) {
-      return false;
-    }
-    return setZoneSecondaryRecirculationFraction(value.get());
-  }
-
   void DesignSpecificationZoneAirDistribution_Impl::resetZoneSecondaryRecirculationFraction() {
     bool result = setString(OS_DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction, "");
     OS_ASSERT(result);
-  }
-
-  openstudio::Quantity DesignSpecificationZoneAirDistribution_Impl::zoneAirDistributionEffectivenessinCoolingMode_SI() const {
-    return getZoneAirDistributionEffectivenessinCoolingMode(false);
-  }
-
-  openstudio::Quantity DesignSpecificationZoneAirDistribution_Impl::zoneAirDistributionEffectivenessinCoolingMode_IP() const {
-    return getZoneAirDistributionEffectivenessinCoolingMode(true);
-  }
-
-  openstudio::Quantity DesignSpecificationZoneAirDistribution_Impl::zoneAirDistributionEffectivenessinHeatingMode_SI() const {
-    return getZoneAirDistributionEffectivenessinHeatingMode(false);
-  }
-
-  openstudio::Quantity DesignSpecificationZoneAirDistribution_Impl::zoneAirDistributionEffectivenessinHeatingMode_IP() const {
-    return getZoneAirDistributionEffectivenessinHeatingMode(true);
-  }
-
-  openstudio::Quantity DesignSpecificationZoneAirDistribution_Impl::zoneSecondaryRecirculationFraction_SI() const {
-    return getZoneSecondaryRecirculationFraction(false);
-  }
-
-  openstudio::Quantity DesignSpecificationZoneAirDistribution_Impl::zoneSecondaryRecirculationFraction_IP() const {
-    return getZoneSecondaryRecirculationFraction(true);
   }
 
   boost::optional<ModelObject> DesignSpecificationZoneAirDistribution_Impl::zoneAirDistributionEffectivenessScheduleAsModelObject() const {
@@ -276,20 +207,12 @@ double DesignSpecificationZoneAirDistribution::zoneAirDistributionEffectivenessi
   return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->zoneAirDistributionEffectivenessinCoolingMode();
 }
 
-Quantity DesignSpecificationZoneAirDistribution::getZoneAirDistributionEffectivenessinCoolingMode(bool returnIP) const {
-  return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->getZoneAirDistributionEffectivenessinCoolingMode(returnIP);
-}
-
 bool DesignSpecificationZoneAirDistribution::isZoneAirDistributionEffectivenessinCoolingModeDefaulted() const {
   return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->isZoneAirDistributionEffectivenessinCoolingModeDefaulted();
 }
 
 double DesignSpecificationZoneAirDistribution::zoneAirDistributionEffectivenessinHeatingMode() const {
   return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->zoneAirDistributionEffectivenessinHeatingMode();
-}
-
-Quantity DesignSpecificationZoneAirDistribution::getZoneAirDistributionEffectivenessinHeatingMode(bool returnIP) const {
-  return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->getZoneAirDistributionEffectivenessinHeatingMode(returnIP);
 }
 
 bool DesignSpecificationZoneAirDistribution::isZoneAirDistributionEffectivenessinHeatingModeDefaulted() const {
@@ -304,10 +227,6 @@ double DesignSpecificationZoneAirDistribution::zoneSecondaryRecirculationFractio
   return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->zoneSecondaryRecirculationFraction();
 }
 
-Quantity DesignSpecificationZoneAirDistribution::getZoneSecondaryRecirculationFraction(bool returnIP) const {
-  return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->getZoneSecondaryRecirculationFraction(returnIP);
-}
-
 bool DesignSpecificationZoneAirDistribution::isZoneSecondaryRecirculationFractionDefaulted() const {
   return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->isZoneSecondaryRecirculationFractionDefaulted();
 }
@@ -316,19 +235,11 @@ bool DesignSpecificationZoneAirDistribution::setZoneAirDistributionEffectiveness
   return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->setZoneAirDistributionEffectivenessinCoolingMode(zoneAirDistributionEffectivenessinCoolingMode);
 }
 
-bool DesignSpecificationZoneAirDistribution::setZoneAirDistributionEffectivenessinCoolingMode(const Quantity& zoneAirDistributionEffectivenessinCoolingMode) {
-  return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->setZoneAirDistributionEffectivenessinCoolingMode(zoneAirDistributionEffectivenessinCoolingMode);
-}
-
 void DesignSpecificationZoneAirDistribution::resetZoneAirDistributionEffectivenessinCoolingMode() {
   getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->resetZoneAirDistributionEffectivenessinCoolingMode();
 }
 
 bool DesignSpecificationZoneAirDistribution::setZoneAirDistributionEffectivenessinHeatingMode(double zoneAirDistributionEffectivenessinHeatingMode) {
-  return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->setZoneAirDistributionEffectivenessinHeatingMode(zoneAirDistributionEffectivenessinHeatingMode);
-}
-
-bool DesignSpecificationZoneAirDistribution::setZoneAirDistributionEffectivenessinHeatingMode(const Quantity& zoneAirDistributionEffectivenessinHeatingMode) {
   return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->setZoneAirDistributionEffectivenessinHeatingMode(zoneAirDistributionEffectivenessinHeatingMode);
 }
 
@@ -348,10 +259,6 @@ bool DesignSpecificationZoneAirDistribution::setZoneSecondaryRecirculationFracti
   return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->setZoneSecondaryRecirculationFraction(zoneSecondaryRecirculationFraction);
 }
 
-bool DesignSpecificationZoneAirDistribution::setZoneSecondaryRecirculationFraction(const Quantity& zoneSecondaryRecirculationFraction) {
-  return getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->setZoneSecondaryRecirculationFraction(zoneSecondaryRecirculationFraction);
-}
-
 void DesignSpecificationZoneAirDistribution::resetZoneSecondaryRecirculationFraction() {
   getImpl<detail::DesignSpecificationZoneAirDistribution_Impl>()->resetZoneSecondaryRecirculationFraction();
 }
@@ -364,4 +271,3 @@ DesignSpecificationZoneAirDistribution::DesignSpecificationZoneAirDistribution(s
 
 } // model
 } // openstudio
-

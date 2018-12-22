@@ -34,6 +34,7 @@
 #include "../openstudio_lib/OpenStudioAPI.hpp"
 #include "OpenStudioApp.hpp"
 #include "../model_editor/Application.hpp"
+#include "../model_editor/AccessPolicyStore.hpp"
 
 #include "../measure/OSArgument.hpp"
 
@@ -44,7 +45,6 @@
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/String.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
-#include "../model/AccessPolicyStore.hpp"
 
 #include <QAbstractButton>
 #include <QApplication>

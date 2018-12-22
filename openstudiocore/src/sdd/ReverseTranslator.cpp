@@ -121,6 +121,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/IPUnit.hpp"
 #include "../utilities/units/SIUnit.hpp"
 #include "../utilities/units/BTUUnit.hpp"
@@ -177,7 +178,7 @@ namespace sdd {
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()){
         QDomDocument doc;
-        bool ok = doc.setContent(openstudio::filesystem::read_as_QByteArray(file));
+        bool ok = doc.setContent(toQString(openstudio::filesystem::read_as_string(file)));
         file.close();
 
         if (ok) {

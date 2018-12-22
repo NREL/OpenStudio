@@ -30,7 +30,7 @@
 #ifndef MODEL_ACCESSPOLICYSTORE_HPP
 #define MODEL_ACCESSPOLICYSTORE_HPP
 
-#include "ModelAPI.hpp"
+#include "ModelEditorAPI.hpp"
 
 #include <map>
 
@@ -57,7 +57,7 @@ namespace openstudio
      * data manipulation side of things. The idea is that each program might have its
      * own XML file that tells the AccessPolicy how to display fields.
      */
-    class MODEL_API AccessPolicy
+    class MODELEDITOR_API AccessPolicy
     {
       friend class AccessParser;
 
@@ -94,7 +94,7 @@ namespace openstudio
    *
    *
    */
-    class MODEL_API AccessPolicyStore
+    class MODELEDITOR_API AccessPolicyStore
     {
       friend class AccessParser;
 
@@ -105,7 +105,7 @@ namespace openstudio
        */
       bool loadFile( openstudio::filesystem::ifstream & file );
       bool loadFile( const openstudio::path& path );
-      bool loadFile( const QByteArray &data );
+      bool loadFile( const std::vector<char> &data );
 
       /*!Each IddObjectType has a uniqueAcessPolicy. This function will retrieve it*/
       const AccessPolicy* getPolicy( const openstudio::IddObjectType& )const;

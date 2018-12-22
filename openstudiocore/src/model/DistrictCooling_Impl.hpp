@@ -32,7 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
-#include "../utilities/units/Quantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -81,11 +80,11 @@ namespace detail {
 
     bool isNominalCapacityAutosized() const;
 
-  boost::optional<double> autosizedNominalCapacity() const ;
+    boost::optional<double> autosizedNominalCapacity() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
 
     //@}
     /** @name Setters */
@@ -124,6 +123,5 @@ namespace detail {
 
 
 #endif // MODEL_DISTRICTCOOLING_IMPL_HPP
-
 
 
