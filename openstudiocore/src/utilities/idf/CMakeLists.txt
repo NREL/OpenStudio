@@ -2,7 +2,6 @@ set(idf_src
   idf/page.hpp
   idf/Handle.hpp
   idf/Handle.cpp
-  idf/URLSearchPath.hpp
   idf/IdfExtensibleGroup.hpp
   idf/IdfExtensibleGroup.cpp
   idf/IdfFile.hpp

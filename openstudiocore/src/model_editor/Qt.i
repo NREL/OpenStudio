@@ -203,8 +203,8 @@ class QApplication : public QCoreApplication
 //class QDomDocument : public QDomNode
 //{};
 
-//class QUrl
-//{};
+class QUrl
+{};
 
 //%nodefaultctor QNetworkRequest;
 //class QNetworkRequest

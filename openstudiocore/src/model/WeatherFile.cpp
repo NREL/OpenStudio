@@ -41,7 +41,6 @@
 #include "../utilities/filetypes/EpwFile.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
-#include "../utilities/core/URLHelpers.hpp"
 #include "../utilities/core/String.hpp"
 
 #include <boost/algorithm/string/replace.hpp>

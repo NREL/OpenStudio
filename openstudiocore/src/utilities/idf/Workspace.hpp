@@ -36,7 +36,6 @@
 
 #include "../core/Logger.hpp"
 #include "../core/Path.hpp"
-#include "../core/Url.hpp"
 
 #include <string>
 #include <ostream>
@@ -54,7 +53,6 @@ class IdfFile;
 class IdfObject;
 class WorkspaceObject;
 class WorkspaceObjectOrder;
-class URLSearchPath;
 class ValidityReport;
 class VersionString;
 
@@ -435,15 +433,6 @@ class UTILITIES_API Workspace {
    *  OpenStudio IDD), pointers between objects are serialized as handles, otherwise they are
    *  serialized as names. */
   IdfFile toIdfFile() const;
-
-  /// Find and update all relative (and remote) URLs to well defined locations based on the search paths supplied
-  /// \param[in] t_paths Paths to search for relative urls
-  /// \param[in] t_create_relative_paths If true, update paths to relative locations on the local filesystem, else, make internal urls
-  ///            absolute
-  /// \param[in] t_infile Path of this workspace object. Used during the calculation/searching of relative search paths
-  /// \returns Vector of source/target pairs. The user will be responsible for ensuring that the results are copied into place
-  //std::vector<std::pair<openstudio::Url, openstudio::path> > locateUrls(const std::vector<URLSearchPath> &t_paths, bool t_create_relative_paths,
-  //    const openstudio::path &t_infile);
 
   //@}
   /** @name GUI Helpers */

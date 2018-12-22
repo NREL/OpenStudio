@@ -56,22 +56,6 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-/*
-TEST_F(IdfFixture,IdfObject_URL)
-{
-
-  std::string text = "Schedule:File,Dan,,file:///home/ramey/schedule.csv,1;";
-
-
-  OptionalIdfObject oObj = IdfObject::load(text);
-  ASSERT_TRUE(oObj);
-  boost::optional<QUrl> urlOpt  = oObj->getURL(2);
-  EXPECT_TRUE(urlOpt);
-  cout <<"---------------------URL TEXT-------------------\n"
-       << urlOpt->toString().toStdString()
-       << endl;
-}
-*/
 TEST_F(IdfFixture, IdfObject_ConstructDefaultsFromIddObjectType) {
 
   // loop through each IddObject, create a default object, and print to a file.
