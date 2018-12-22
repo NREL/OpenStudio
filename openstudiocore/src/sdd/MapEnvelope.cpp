@@ -64,6 +64,7 @@
 #include "../utilities/units/BTUUnit.hpp"
 #include "../utilities/units/WhUnit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/StringHelpers.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>
@@ -684,7 +685,7 @@ namespace sdd {
         //if (extSolarAbsorptance){
         //  QDomElement solarAbsorptanceElement = doc.createElement("ExtSolAbs");
         //  result.appendChild(solarAbsorptanceElement);
-        //  solarAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extSolarAbsorptance)));
+        //  solarAbsorptanceElement.appendChild(doc.createTextNode(toQString(openstudio::number(*extSolarAbsorptance))));
         //}
 
         // DLM: Not input
@@ -692,7 +693,7 @@ namespace sdd {
         //if (extThermalAbsorptance){
         //  QDomElement thermalAbsorptanceElement = doc.createElement("ExtThrmlAbs");
         //  result.appendChild(thermalAbsorptanceElement);
-        //  thermalAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extThermalAbsorptance)));
+        //  thermalAbsorptanceElement.appendChild(doc.createTextNode(toQString(openstudio::number(*extThermalAbsorptance))));
         //}
 
         // DLM: Not input
@@ -700,7 +701,7 @@ namespace sdd {
         //if (extVisibleAbsorptance){
         //  QDomElement visibleAbsorptanceElement = doc.createElement("ExtVisAbs");
         //  result.appendChild(visibleAbsorptanceElement);
-        //  visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*extVisibleAbsorptance)));
+        //  visibleAbsorptanceElement.appendChild(doc.createTextNode(toQString(openstudio::number(*extVisibleAbsorptance))));
         //}
 
         // DLM: Not input
@@ -708,7 +709,7 @@ namespace sdd {
         //if (intSolarAbsorptance){
         //  QDomElement solarAbsorptanceElement = doc.createElement("IntSolAbs");
         //  result.appendChild(solarAbsorptanceElement);
-        //  solarAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intSolarAbsorptance)));
+        //  solarAbsorptanceElement.appendChild(doc.createTextNode(toQString(openstudio::number(*intSolarAbsorptance))));
         //}
 
         // DLM: Not input
@@ -716,7 +717,7 @@ namespace sdd {
         //if (intThermalAbsorptance){
         //  QDomElement thermalAbsorptanceElement = doc.createElement("IntThrmlAbs");
         //  result.appendChild(thermalAbsorptanceElement);
-        //  thermalAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intThermalAbsorptance)));
+        //  thermalAbsorptanceElement.appendChild(doc.createTextNode(toQString(openstudio::number(*intThermalAbsorptance))));
         //}
 
         // DLM: Not input
@@ -724,7 +725,7 @@ namespace sdd {
         //if (intVisibleAbsorptance){
         //  QDomElement visibleAbsorptanceElement = doc.createElement("IntVisAbs");
         //  result.appendChild(visibleAbsorptanceElement);
-        //  visibleAbsorptanceElement.appendChild(doc.createTextNode(QString::number(*intVisibleAbsorptance)));
+        //  visibleAbsorptanceElement.appendChild(doc.createTextNode(toQString(openstudio::number(*intVisibleAbsorptance))));
         //}
       }
 
@@ -766,7 +767,7 @@ namespace sdd {
       //OptionalQuantity fFactorIP = QuantityConverter::instance().convert(fFactorSI, UnitSystem(UnitSystem::BTU));
       //OS_ASSERT(fFactorIP);
       //OS_ASSERT(fFactorIP->units() == BTUUnit(BTUExpnt(1,-1,-1,-1)));
-      //fFactorElement.appendChild(doc.createTextNode(QString::number(fFactorIP->value())));
+      //fFactorElement.appendChild(doc.createTextNode(toQString(openstudio::number(fFactorIP->value()))));
 
       // DLM: cannot write out
       //<IntSolAbs>0.7</IntSolAbs>
@@ -804,7 +805,7 @@ namespace sdd {
       //OptionalQuantity cFactorIP = QuantityConverter::instance().convert(cFactorSI, UnitSystem(UnitSystem::BTU));
       //OS_ASSERT(cFactorIP);
       //OS_ASSERT(cFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
-      //cFactorElement.appendChild(doc.createTextNode(QString::number(cFactorIP->value())));
+      //cFactorElement.appendChild(doc.createTextNode(toQString(openstudio::number(cFactorIP->value()))));
 
       // DLM: cannot write out
       //<IntSolAbs>0.7</IntSolAbs>
@@ -895,7 +896,7 @@ namespace sdd {
       if (uFactor){
         QDomElement uFactorElement = doc.createElement("UFactor");
         result->appendChild(uFactorElement);
-        uFactorElement.appendChild(doc.createTextNode(QString::number(*uFactor)));
+        uFactorElement.appendChild(doc.createTextNode(toQString(openstudio::number(*uFactor))));
       } else{
         //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
         //LOG(Error, "Could not calculate UFactor for DrCons '" << name << "'");
@@ -1169,7 +1170,7 @@ namespace sdd {
       if (shgc){
         QDomElement shgcElement = doc.createElement("SHGC");
         result->appendChild(shgcElement);
-        shgcElement.appendChild(doc.createTextNode(QString::number(*shgc)));
+        shgcElement.appendChild(doc.createTextNode(toQString(openstudio::number(*shgc))));
       } else{
         //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
         //LOG(Error, "Could not calculate SHGC for FenCons '" << name << "'");
@@ -1177,7 +1178,7 @@ namespace sdd {
       if (uFactor){
         QDomElement uFactorElement = doc.createElement("UFactor");
         result->appendChild(uFactorElement);
-        uFactorElement.appendChild(doc.createTextNode(QString::number(*uFactor)));
+        uFactorElement.appendChild(doc.createTextNode(toQString(openstudio::number(*uFactor))));
       } else{
         //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
         //LOG(Error, "Could not calculate UFactor for FenCons '" << name << "'");
@@ -1185,7 +1186,7 @@ namespace sdd {
       if (vt){
         QDomElement vtElement = doc.createElement("VT");
         result->appendChild(vtElement);
-        vtElement.appendChild(doc.createTextNode(QString::number(*vt)));
+        vtElement.appendChild(doc.createTextNode(toQString(openstudio::number(*vt))));
       } else{
         //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
         //LOG(Error, "Could not calculate VT for FenCons '" << name << "'");

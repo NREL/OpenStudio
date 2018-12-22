@@ -34,6 +34,7 @@
 #include "../core/Containers.hpp"
 #include "../core/QJson.hpp"
 #include "../core/FilesystemHelpers.hpp"
+#include "../core/StringHelpers.hpp"
 
 #include "../units/QuantityFactory.hpp"
 #include "../units/OSOptionalQuantity.hpp"
@@ -856,24 +857,24 @@ namespace detail{
       childElement.appendChild(text);
       break;
     case AttributeValueType::Integer:
-      text = doc.createTextNode(QString::number(this->valueAsInteger()));
+      text = doc.createTextNode(openstudio::toQString(openstudio::number(this->valueAsInteger())));
       childElement.appendChild(text);
       break;
     case AttributeValueType::Unsigned:
-      text = doc.createTextNode(QString::number(this->valueAsUnsigned()));
+      text = doc.createTextNode(openstudio::toQString(openstudio::number(this->valueAsUnsigned())));
       childElement.appendChild(text);
       break;
     case AttributeValueType::Double:
-      temp = boost::regex_replace(openstudio::toString(QString::number(this->valueAsDouble(),
-                                                                       'G',
+      temp = boost::regex_replace(openstudio::toString(openstudio::number(this->valueAsDouble(),
+                                                                       FloatFormat::general_capital,
                                                                        std::numeric_limits<double>::digits10)),
                                   boost::regex("\\+"),"");
       text = doc.createTextNode(toQString(temp));
       childElement.appendChild(text);
       break;
     case AttributeValueType::Quantity:
-      temp = boost::regex_replace(openstudio::toString(QString::number(this->valueAsQuantity().value(),
-                                                                       'G',
+      temp = boost::regex_replace(openstudio::toString(openstudio::number(this->valueAsQuantity().value(),
+                                                                       FloatFormat::general_capital,
                                                                        std::numeric_limits<double>::digits10)),
                                   boost::regex("\\+"),"");
       text = doc.createTextNode(toQString(temp));

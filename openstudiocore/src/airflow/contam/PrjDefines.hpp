@@ -30,9 +30,34 @@
 #ifndef AIRFLOW_CONTAM_PRJDEFINES_HPP
 #define AIRFLOW_CONTAM_PRJDEFINES_HPP
 
-#define PRJFLOAT QString
-#define STR_TO_FLOAT(a) QString::fromStdString(a)
-#define FLOAT_CHECK(a,b) QString::fromStdString(a).toDouble(b)
+#include <string>
+#include <boost/lexical_cast.hpp>
+
+using PRJFLOAT = std::string;
+
+template<typename DesiredType, typename InputType>
+bool is_valid(const InputType &input)
+{
+  try {
+    boost::lexical_cast<DesiredType>(input);
+    return true;
+  } catch (const boost::bad_lexical_cast &) {
+    return false;
+  }
+}
+
+template<typename DesiredType, typename InputType, typename DestinationType>
+bool assign_if_valid(const InputType &input, DestinationType &dest)
+{
+  if (is_valid<DesiredType>(input)) {
+    dest = input;
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
 #define ANY_TO_STR openstudio::toString
 
 // CONTAM icon definitions

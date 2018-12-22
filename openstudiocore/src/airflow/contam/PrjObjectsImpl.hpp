@@ -213,9 +213,9 @@ public:
   /** Sets the initial condition of contaminant i. */
   bool setIc(const int i, const std::string &value);
   /** Sets the contaminant initial condition vector. */
-  bool setIc(std::vector<double> &ic);
+  bool setIc(const std::vector<double> &ic);
   /** Sets the contaminant initial condition vector. */
-  bool setIc(std::vector<std::string> &ic);
+  bool setIc(const std::vector<std::string> &ic);
 
 private:
   void setDefaults();
@@ -250,7 +250,7 @@ private:
   int m_u_aD;  // units of axial diffusion (I2)
   int m_u_L;  // units of c/d axis limits (I2)
 
-  QVector<PRJFLOAT> m_ic;
+  std::vector<PRJFLOAT> m_ic;
 
 };
 

@@ -218,6 +218,7 @@
 #include "../utilities/units/MPHUnit.hpp"
 #include "../utilities/units/WhUnit.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/StringHelpers.hpp"
 #include "../utilities/time/Time.hpp"
 #include "../utilities/time/Date.hpp"
 #include "../utilities/units/UnitFactory.hpp"
@@ -327,7 +328,7 @@ model::ScheduleYear deepScheduleYearClone(const model::ScheduleYear & scheduleYe
   for( const auto & scheduleWeek : scheduleWeeks)
   {
     model::ScheduleWeek scheduleWeekClone = scheduleWeek.clone(model).cast<model::ScheduleWeek>();
-    scheduleWeekClone.setName(name + " Week " + QString::number(i).toStdString());
+    scheduleWeekClone.setName(name + " Week " + openstudio::number(i));
     scheduleYearClone.addScheduleWeek(*dateIt,scheduleWeekClone);
 
     boost::optional<model::ScheduleDay> scheduleDay;
@@ -335,84 +336,84 @@ model::ScheduleYear deepScheduleYearClone(const model::ScheduleYear & scheduleYe
     if( (scheduleDay = scheduleWeek.sundaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
-      s.setName(name + " Week " + QString::number(i).toStdString() + " Sunday");
+      s.setName(name + " Week " + openstudio::number(i) + " Sunday");
       scheduleWeekClone.setSundaySchedule(s);
     }
 
     if( (scheduleDay = scheduleWeek.mondaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
-      s.setName(name + " Week " + QString::number(i).toStdString() + " Monday");
+      s.setName(name + " Week " + openstudio::number(i) + " Monday");
       scheduleWeekClone.setMondaySchedule(s);
     }
 
     if( (scheduleDay = scheduleWeek.tuesdaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
-      s.setName(name + " Week " + QString::number(i).toStdString() + " Tuesday");
+      s.setName(name + " Week " + openstudio::number(i) + " Tuesday");
       scheduleWeekClone.setTuesdaySchedule(s);
     }
 
     if( (scheduleDay = scheduleWeek.wednesdaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
-      s.setName(name + " Week " + QString::number(i).toStdString() + " Wednesday");
+      s.setName(name + " Week " + openstudio::number(i) + " Wednesday");
       scheduleWeekClone.setWednesdaySchedule(s);
     }
 
     if( (scheduleDay = scheduleWeek.thursdaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
-      s.setName(name + " Week " + QString::number(i).toStdString() + " Thursday");
+      s.setName(name + " Week " + openstudio::number(i) + " Thursday");
       scheduleWeekClone.setThursdaySchedule(s);
     }
 
     if( (scheduleDay = scheduleWeek.fridaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
-      s.setName(name + " Week " + QString::number(i).toStdString() + " Friday");
+      s.setName(name + " Week " + openstudio::number(i) + " Friday");
       scheduleWeekClone.setFridaySchedule(s);
     }
 
     if( (scheduleDay = scheduleWeek.saturdaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
-      s.setName(name + " Week " + QString::number(i).toStdString() + " Saturday");
+      s.setName(name + " Week " + openstudio::number(i) + " Saturday");
       scheduleWeekClone.setSaturdaySchedule(s);
     }
 
     if( (scheduleDay = scheduleWeek.holidaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
-      s.setName(name + " Week " + QString::number(i).toStdString() + " Holiday");
+      s.setName(name + " Week " + openstudio::number(i) + " Holiday");
       scheduleWeekClone.setHolidaySchedule(s);
     }
 
     if( (scheduleDay = scheduleWeek.summerDesignDaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
-      s.setName(name + " Week " + QString::number(i).toStdString() + " Summer");
+      s.setName(name + " Week " + openstudio::number(i) + " Summer");
       scheduleWeekClone.setSummerDesignDaySchedule(s);
     }
 
     if( (scheduleDay = scheduleWeek.winterDesignDaySchedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
-      s.setName(name + " Week " + QString::number(i).toStdString() + " Winter");
+      s.setName(name + " Week " + openstudio::number(i) + " Winter");
       scheduleWeekClone.setWinterDesignDaySchedule(s);
     }
 
     if( (scheduleDay = scheduleWeek.customDay1Schedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
-      s.setName(name + " Week " + QString::number(i).toStdString() + " Custom 1");
+      s.setName(name + " Week " + openstudio::number(i) + " Custom 1");
       scheduleWeekClone.setCustomDay1Schedule(s);
     }
 
     if( (scheduleDay = scheduleWeek.customDay2Schedule()) )
     {
       model::ScheduleDay s = scheduleDay->clone(model).cast<model::ScheduleDay>();
-      s.setName(name + " Week " + QString::number(i).toStdString() + " Custom 2");
+      s.setName(name + " Week " + openstudio::number(i) + " Custom 2");
       scheduleWeekClone.setCustomDay2Schedule(s);
     }
 
@@ -5869,7 +5870,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     std::vector<QDomElement> eqpListNameElements;
     for( int j = 0; j != childNodes.count(); ++j ) {
       auto element = childNodes.at(j).toElement();
-      if( element.nodeName().compare(QString("EqpList") + QString::number(i + 1) + QString("Name")) == 0 ) {
+      if( element.nodeName().compare(QString("EqpList") + toQString(openstudio::number(i + 1)) + QString("Name")) == 0 ) {
         eqpListNameElements.push_back(element);
       }
     }
@@ -9512,22 +9513,22 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
         auto clRstSupHiElement = doc.createElement("ClRstSupHi");
         result.appendChild(clRstSupHiElement);
         auto clRstSupHi = convert(tempSPM->setpointatOutdoorHighTemperature(),"C","F").get();
-        clRstSupHiElement.appendChild(doc.createTextNode(QString::number(clRstSupHi)));
+        clRstSupHiElement.appendChild(doc.createTextNode(toQString(openstudio::number(clRstSupHi))));
 
         auto clRstSupLowElement = doc.createElement("ClRstSupLow");
         result.appendChild(clRstSupLowElement);
         auto clRstSupLow = convert(tempSPM->setpointatOutdoorLowTemperature(),"C","F").get();
-        clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
+        clRstSupLowElement.appendChild(doc.createTextNode(toQString(openstudio::number(clRstSupLow))));
 
         auto clRstOutdrHiElement = doc.createElement("ClRstOutdrHi");
         result.appendChild(clRstOutdrHiElement);
         auto clRstOutdrHi = convert(tempSPM->outdoorHighTemperature(),"C","F").get();
-        clRstOutdrHiElement.appendChild(doc.createTextNode(QString::number(clRstOutdrHi)));
+        clRstOutdrHiElement.appendChild(doc.createTextNode(toQString(openstudio::number(clRstOutdrHi))));
 
         auto clRstOutdrLowElement = doc.createElement("ClRstOutdrLow");
         result.appendChild(clRstOutdrLowElement);
         auto clRstOutdrLow = convert(tempSPM->outdoorHighTemperature(),"C","F").get();
-        clRstOutdrLowElement.appendChild(doc.createTextNode(QString::number(clRstOutdrLow)));
+        clRstOutdrLowElement.appendChild(doc.createTextNode(toQString(openstudio::number(clRstOutdrLow))));
 
         m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
       } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerScheduled>() ) {
@@ -9561,17 +9562,17 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
         auto clRstSupHiElement = doc.createElement("ClRstSupHi");
         result.appendChild(clRstSupHiElement);
         auto clRstSupHi = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
-        clRstSupHiElement.appendChild(doc.createTextNode(QString::number(clRstSupHi)));
+        clRstSupHiElement.appendChild(doc.createTextNode(toQString(openstudio::number(clRstSupHi))));
 
         auto clRstSupLowElement = doc.createElement("ClRstSupLow");
         result.appendChild(clRstSupLowElement);
         auto clRstSupLow = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
-        clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
+        clRstSupLowElement.appendChild(doc.createTextNode(toQString(openstudio::number(clRstSupLow))));
 
         auto dsgnAirFlowMinElement = doc.createElement("DsgnAirFlowMin");
         result.appendChild(dsgnAirFlowMinElement);
         auto dsgnAirFlowMin = tempSPM->minimumTurndownRatio();
-        dsgnAirFlowMinElement.appendChild(doc.createTextNode(QString::number(dsgnAirFlowMin)));
+        dsgnAirFlowMinElement.appendChild(doc.createTextNode(toQString(openstudio::number(dsgnAirFlowMin))));
 
         m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
       } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerWarmest>() ) {
@@ -9582,12 +9583,12 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVAC(const model
         auto clRstSupHiElement = doc.createElement("ClRstSupHi");
         result.appendChild(clRstSupHiElement);
         auto clRstSupHi = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
-        clRstSupHiElement.appendChild(doc.createTextNode(QString::number(clRstSupHi)));
+        clRstSupHiElement.appendChild(doc.createTextNode(toQString(openstudio::number(clRstSupHi))));
 
         auto clRstSupLowElement = doc.createElement("ClRstSupLow");
         result.appendChild(clRstSupLowElement);
         auto clRstSupLow = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
-        clRstSupLowElement.appendChild(doc.createTextNode(QString::number(clRstSupLow)));
+        clRstSupLowElement.appendChild(doc.createTextNode(toQString(openstudio::number(clRstSupLow))));
 
         m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
       } else {
@@ -9661,13 +9662,13 @@ boost::optional<QDomElement> ForwardTranslator::translateCoilHeatingGas(const op
   } else if( auto value = coil.nominalCapacity() ) {
     auto capTotGrossRtdElement = doc.createElement("CapTotGrossRtd");
     result.appendChild(capTotGrossRtdElement);
-    capTotGrossRtdElement.appendChild(doc.createTextNode(QString::number(convert(value.get(),"W","Btu/h").get())));
+    capTotGrossRtdElement.appendChild(doc.createTextNode(toQString(openstudio::number(convert(value.get(),"W","Btu/h").get()))));
   }
 
   // FurnThrmlEff
   auto furnThrmlEffElement = doc.createElement("FurnThrmlEff");
   result.appendChild(furnThrmlEffElement);
-  furnThrmlEffElement.appendChild(doc.createTextNode(QString::number(convert(coil.gasBurnerEfficiency(),"W","Btu/h").get())));
+  furnThrmlEffElement.appendChild(doc.createTextNode(toQString(openstudio::number(convert(coil.gasBurnerEfficiency(),"W","Btu/h").get()))));
 
   return result;
 }
@@ -9694,7 +9695,7 @@ boost::optional<QDomElement> ForwardTranslator::translateCoilCoolingDXSingleSpee
   } else if( auto value = coil.ratedTotalCoolingCapacity() ) {
     auto capTotGrossRtdElement = doc.createElement("CapTotGrossRtd");
     result.appendChild(capTotGrossRtdElement);
-    capTotGrossRtdElement.appendChild(doc.createTextNode(QString::number(convert(value.get(),"W","Btu/h").get())));
+    capTotGrossRtdElement.appendChild(doc.createTextNode(toQString(openstudio::number(convert(value.get(),"W","Btu/h").get()))));
   }
 
   // DXEER
@@ -9704,7 +9705,7 @@ boost::optional<QDomElement> ForwardTranslator::translateCoilCoolingDXSingleSpee
 
     auto dxEERElement = doc.createElement("DXEER");
     result.appendChild(dxEERElement);
-    dxEERElement.appendChild(doc.createTextNode(QString::number(eer)));
+    dxEERElement.appendChild(doc.createTextNode(toQString(openstudio::number(eer))));
   } else {
     m_autoEfficiency = true;
   }
@@ -9745,24 +9746,24 @@ boost::optional<QDomElement> ForwardTranslator::translateFanConstantVolume(const
   } else if( auto value = fan.maximumFlowRate() ) {
     auto flowCapElement = doc.createElement("FlowCap");
     result.appendChild(flowCapElement);
-    flowCapElement.appendChild(doc.createTextNode(QString::number(convert(value.get(),"m^3/s","cfm").get())));
+    flowCapElement.appendChild(doc.createTextNode(toQString(openstudio::number(convert(value.get(),"m^3/s","cfm").get()))));
   }
 
   // FlowEff
   auto flowEffElement = doc.createElement("FlowEff");
   result.appendChild(flowEffElement);
-  flowEffElement.appendChild(doc.createTextNode(QString::number(fan.fanEfficiency())));
+  flowEffElement.appendChild(doc.createTextNode(toQString(openstudio::number(fan.fanEfficiency()))));
 
   // TotStaticPress
   auto totStaticPressElement = doc.createElement("TotStaticPress");
   result.appendChild(totStaticPressElement);
   // Convert in PA to WC
-  totStaticPressElement.appendChild(doc.createTextNode(QString::number(fan.pressureRise() / 249.0889)));
+  totStaticPressElement.appendChild(doc.createTextNode(toQString(openstudio::number(fan.pressureRise() / 249.0889))));
 
   // MtrEff
   auto mtrEffElement = doc.createElement("MtrEff");
   result.appendChild(mtrEffElement);
-  mtrEffElement.appendChild(doc.createTextNode(QString::number(fan.motorEfficiency())));
+  mtrEffElement.appendChild(doc.createTextNode(toQString(openstudio::number(fan.motorEfficiency()))));
 
   // MtrPos
   auto mtrPosElement = doc.createElement("MtrfPos");

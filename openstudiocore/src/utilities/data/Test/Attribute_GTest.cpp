@@ -33,6 +33,7 @@
 #include "../Attribute.hpp"
 
 #include "../../core/QJson.hpp"
+#include "../../core/StringHelpers.hpp"
 
 #include <QDomDocument>
 
@@ -373,11 +374,11 @@ TEST_F(DataFixture, Attribute_NotEqual)
 TEST_F(DataFixture, Attribute_NumberFormatting) {
   double value(3.14159e52);
 
-  QString str = QString::number(value);
-  EXPECT_EQ("3.14159e+52",toString(str)); // original behavior, bad for http
+  auto str = openstudio::number(value);
+  EXPECT_EQ("3.14159e+52",str); // original behavior, bad for http
 
-  str = QString::number(value,'G',std::numeric_limits<double>::digits10);
-  EXPECT_EQ("3.14159E52",boost::regex_replace(toString(str),boost::regex("\\+"),""));
+  str = openstudio::number(value,FloatFormat::general_capital,std::numeric_limits<double>::digits10);
+  EXPECT_EQ("3.14159E52",boost::regex_replace(str,boost::regex("\\+"),""));
 }
 
 TEST_F(DataFixture, Attribute_JsonSerialization) {

@@ -131,6 +131,22 @@ namespace openstudio {
    */
   UTILITIES_API std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string delimiters=" +-*/^=<>&|");
 
+
+  enum struct FloatFormat {
+    fixed,
+    general,
+    general_capital
+  };
+
+  /** Converts a number into a string, replicating the behavior of QString::number.
+   *  This is necessary because QString does *not* respect the locale, and stringstring
+   *  and std::string::to_string *do* respect the locale
+   */
+  UTILITIES_API std::string number(std::int32_t, int base = 10);
+  UTILITIES_API std::string number(std::uint32_t, int base = 10);
+  UTILITIES_API std::string number(std::int64_t, int base = 10);
+  UTILITIES_API std::string number(std::uint64_t, int base = 10);
+  UTILITIES_API std::string number(double, FloatFormat format = FloatFormat::general, int presision = 6);
 }
 
 #endif // UTILITIES_CORE_STRINGHELPERS_HPP

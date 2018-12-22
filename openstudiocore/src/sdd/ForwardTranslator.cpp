@@ -302,18 +302,18 @@ namespace sdd {
       double latitude = site->latitude();
       QDomElement latElement = doc.createElement("Lat");
       projectElement.appendChild(latElement);
-      latElement.appendChild( doc.createTextNode(QString::number(latitude)));
+      latElement.appendChild( doc.createTextNode(openstudio::number(latitude)));
 
       double longitude = site->longitude();
       QDomElement longElement = doc.createElement("Long");
       projectElement.appendChild(longElement);
-      longElement.appendChild( doc.createTextNode(QString::number(longitude)));
+      longElement.appendChild( doc.createTextNode(openstudio::number(longitude)));
 
       double elevationSI = site->elevation();
       double elevationIP = elevationSI/0.3048;
       QDomElement elevationElement = doc.createElement("Elevation");
       projectElement.appendChild(elevationElement);
-      elevationElement.appendChild( doc.createTextNode(QString::number(elevationIP)));
+      elevationElement.appendChild( doc.createTextNode(openstudio::number(elevationIP)));
 
       m_translatedObjects[site.handle()] = latElement;
     }

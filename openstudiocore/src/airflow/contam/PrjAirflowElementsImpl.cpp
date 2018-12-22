@@ -27,7 +27,10 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include <algorithm>
+
 #include "PrjAirflowElementsImpl.hpp"
+#include "../../utilities/core/StringHelpers.hpp"
 
 namespace openstudio {
 namespace contam {
@@ -184,163 +187,114 @@ void PlrOrfImpl::setDesc(const std::string &desc)
 
 double PlrOrfImpl::lam() const
 {
-  return m_lam.toDouble();
+  return boost::lexical_cast<double>(m_lam);
 }
 
 bool PlrOrfImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = openstudio::number(lam);
   return true;
 }
 
 bool PlrOrfImpl::setLam(const std::string &lam)
 {
-  bool ok;
-  FLOAT_CHECK(lam,&ok);
-  if(ok)
-  {
-    m_lam = STR_TO_FLOAT(lam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lam, m_lam);
 }
 
 double PlrOrfImpl::turb() const
 {
-  return m_turb.toDouble();
+  return boost::lexical_cast<double>(m_turb);
 }
 
 bool PlrOrfImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = openstudio::number(turb);
   return true;
 }
 
 bool PlrOrfImpl::setTurb(const std::string &turb)
 {
-  bool ok;
-  FLOAT_CHECK(turb,&ok);
-  if(ok)
-  {
-    m_turb = STR_TO_FLOAT(turb);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(turb, m_turb);
 }
 
 double PlrOrfImpl::expt() const
 {
-  return m_expt.toDouble();
+  return boost::lexical_cast<double>(m_expt);
 }
 
 bool PlrOrfImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = openstudio::number(expt);
   return true;
 }
 
 bool PlrOrfImpl::setExpt(const std::string &expt)
 {
-  bool ok;
-  FLOAT_CHECK(expt,&ok);
-  if(ok)
-  {
-    m_expt = STR_TO_FLOAT(expt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(expt, m_expt);
 }
 
 double PlrOrfImpl::area() const
 {
-  return m_area.toDouble();
+  return boost::lexical_cast<double>(m_area);
 }
 
 bool PlrOrfImpl::setArea(const double area)
 {
-  m_area = QString::number(area);
+  m_area = openstudio::number(area);
   return true;
 }
 
 bool PlrOrfImpl::setArea(const std::string &area)
 {
-  bool ok;
-  FLOAT_CHECK(area,&ok);
-  if(ok)
-  {
-    m_area = STR_TO_FLOAT(area);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(area, m_area);
 }
 
 double PlrOrfImpl::dia() const
 {
-  return m_dia.toDouble();
+  return boost::lexical_cast<double>(m_dia);
 }
 
 bool PlrOrfImpl::setDia(const double dia)
 {
-  m_dia = QString::number(dia);
+  m_dia = openstudio::number(dia);
   return true;
 }
 
 bool PlrOrfImpl::setDia(const std::string &dia)
 {
-  bool ok;
-  FLOAT_CHECK(dia,&ok);
-  if(ok)
-  {
-    m_dia = STR_TO_FLOAT(dia);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(dia, m_dia);
 }
 
 double PlrOrfImpl::coef() const
 {
-  return m_coef.toDouble();
+  return boost::lexical_cast<double>(m_coef);
 }
 
 bool PlrOrfImpl::setCoef(const double coef)
 {
-  m_coef = QString::number(coef);
+  m_coef = openstudio::number(coef);
   return true;
 }
 
 bool PlrOrfImpl::setCoef(const std::string &coef)
 {
-  bool ok;
-  FLOAT_CHECK(coef,&ok);
-  if(ok)
-  {
-    m_coef = STR_TO_FLOAT(coef);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(coef, m_coef);
 }
 
 double PlrOrfImpl::Re() const
 {
-  return m_Re.toDouble();
+  return boost::lexical_cast<double>(m_Re);
 }
 
 bool PlrOrfImpl::setRe(const double Re)
 {
-  m_Re = QString::number(Re);
+  m_Re = openstudio::number(Re);
   return true;
 }
 
 bool PlrOrfImpl::setRe(const std::string &Re)
 {
-  bool ok;
-  FLOAT_CHECK(Re,&ok);
-  if(ok)
-  {
-    m_Re = STR_TO_FLOAT(Re);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Re, m_Re);
 }
 
 int PlrOrfImpl::u_A() const
@@ -532,186 +486,130 @@ void PlrLeakImpl::setDesc(const std::string &desc)
 
 double PlrLeakImpl::lam() const
 {
-  return m_lam.toDouble();
+  return boost::lexical_cast<double>(m_lam);
 }
 
 bool PlrLeakImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = openstudio::number(lam);
   return true;
 }
 
 bool PlrLeakImpl::setLam(const std::string &lam)
 {
-  bool ok;
-  FLOAT_CHECK(lam,&ok);
-  if(ok)
-  {
-    m_lam = STR_TO_FLOAT(lam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lam, m_lam);
 }
 
 double PlrLeakImpl::turb() const
 {
-  return m_turb.toDouble();
+  return boost::lexical_cast<double>(m_turb);
 }
 
 bool PlrLeakImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = openstudio::number(turb);
   return true;
 }
 
 bool PlrLeakImpl::setTurb(const std::string &turb)
 {
-  bool ok;
-  FLOAT_CHECK(turb,&ok);
-  if(ok)
-  {
-    m_turb = STR_TO_FLOAT(turb);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(turb, m_turb);
 }
 
 double PlrLeakImpl::expt() const
 {
-  return m_expt.toDouble();
+  return boost::lexical_cast<double>(m_expt);
 }
 
 bool PlrLeakImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = openstudio::number(expt);
   return true;
 }
 
 bool PlrLeakImpl::setExpt(const std::string &expt)
 {
-  bool ok;
-  FLOAT_CHECK(expt,&ok);
-  if(ok)
-  {
-    m_expt = STR_TO_FLOAT(expt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(expt, m_expt);
 }
 
 double PlrLeakImpl::coef() const
 {
-  return m_coef.toDouble();
+  return boost::lexical_cast<double>(m_coef);
 }
 
 bool PlrLeakImpl::setCoef(const double coef)
 {
-  m_coef = QString::number(coef);
+  m_coef = openstudio::number(coef);
   return true;
 }
 
 bool PlrLeakImpl::setCoef(const std::string &coef)
 {
-  bool ok;
-  FLOAT_CHECK(coef,&ok);
-  if(ok)
-  {
-    m_coef = STR_TO_FLOAT(coef);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(coef, m_coef);
 }
 
 double PlrLeakImpl::pres() const
 {
-  return m_pres.toDouble();
+  return boost::lexical_cast<double>(m_pres);
 }
 
 bool PlrLeakImpl::setPres(const double pres)
 {
-  m_pres = QString::number(pres);
+  m_pres = openstudio::number(pres);
   return true;
 }
 
 bool PlrLeakImpl::setPres(const std::string &pres)
 {
-  bool ok;
-  FLOAT_CHECK(pres,&ok);
-  if(ok)
-  {
-    m_pres = STR_TO_FLOAT(pres);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(pres, m_pres);
 }
 
 double PlrLeakImpl::area1() const
 {
-  return m_area1.toDouble();
+  return boost::lexical_cast<double>(m_area1);
 }
 
 bool PlrLeakImpl::setArea1(const double area1)
 {
-  m_area1 = QString::number(area1);
+  m_area1 = openstudio::number(area1);
   return true;
 }
 
 bool PlrLeakImpl::setArea1(const std::string &area1)
 {
-  bool ok;
-  FLOAT_CHECK(area1,&ok);
-  if(ok)
-  {
-    m_area1 = STR_TO_FLOAT(area1);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(area1, m_area1);
 }
 
 double PlrLeakImpl::area2() const
 {
-  return m_area2.toDouble();
+  return boost::lexical_cast<double>(m_area2);
 }
 
 bool PlrLeakImpl::setArea2(const double area2)
 {
-  m_area2 = QString::number(area2);
+  m_area2 = openstudio::number(area2);
   return true;
 }
 
 bool PlrLeakImpl::setArea2(const std::string &area2)
 {
-  bool ok;
-  FLOAT_CHECK(area2,&ok);
-  if(ok)
-  {
-    m_area2 = STR_TO_FLOAT(area2);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(area2, m_area2);
 }
 
 double PlrLeakImpl::area3() const
 {
-  return m_area3.toDouble();
+  return boost::lexical_cast<double>(m_area3);
 }
 
 bool PlrLeakImpl::setArea3(const double area3)
 {
-  m_area3 = QString::number(area3);
+  m_area3 = openstudio::number(area3);
   return true;
 }
 
 bool PlrLeakImpl::setArea3(const std::string &area3)
 {
-  bool ok;
-  FLOAT_CHECK(area3,&ok);
-  if(ok)
-  {
-    m_area3 = STR_TO_FLOAT(area3);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(area3, m_area3);
 }
 
 int PlrLeakImpl::u_A1() const
@@ -889,117 +787,82 @@ void PlrConnImpl::setDesc(const std::string &desc)
 
 double PlrConnImpl::lam() const
 {
-  return m_lam.toDouble();
+  return boost::lexical_cast<double>(m_lam);
 }
 
 bool PlrConnImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = openstudio::number(lam);
   return true;
 }
 
 bool PlrConnImpl::setLam(const std::string &lam)
 {
-  bool ok;
-  FLOAT_CHECK(lam,&ok);
-  if(ok)
-  {
-    m_lam = STR_TO_FLOAT(lam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lam, m_lam);
 }
 
 double PlrConnImpl::turb() const
 {
-  return m_turb.toDouble();
+  return boost::lexical_cast<double>(m_turb);
 }
 
 bool PlrConnImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = openstudio::number(turb);
   return true;
 }
 
 bool PlrConnImpl::setTurb(const std::string &turb)
 {
-  bool ok;
-  FLOAT_CHECK(turb,&ok);
-  if(ok)
-  {
-    m_turb = STR_TO_FLOAT(turb);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(turb, m_turb);
 }
 
 double PlrConnImpl::expt() const
 {
-  return m_expt.toDouble();
+  return boost::lexical_cast<double>(m_expt);
 }
 
 bool PlrConnImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = openstudio::number(expt);
   return true;
 }
 
 bool PlrConnImpl::setExpt(const std::string &expt)
 {
-  bool ok;
-  FLOAT_CHECK(expt,&ok);
-  if(ok)
-  {
-    m_expt = STR_TO_FLOAT(expt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(expt, m_expt);
 }
 
 double PlrConnImpl::area() const
 {
-  return m_area.toDouble();
+  return boost::lexical_cast<double>(m_area);
 }
 
 bool PlrConnImpl::setArea(const double area)
 {
-  m_area = QString::number(area);
+  m_area = openstudio::number(area);
   return true;
 }
 
 bool PlrConnImpl::setArea(const std::string &area)
 {
-  bool ok;
-  FLOAT_CHECK(area,&ok);
-  if(ok)
-  {
-    m_area = STR_TO_FLOAT(area);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(area, m_area);
 }
 
 double PlrConnImpl::coef() const
 {
-  return m_coef.toDouble();
+  return boost::lexical_cast<double>(m_coef);
 }
 
 bool PlrConnImpl::setCoef(const double coef)
 {
-  m_coef = QString::number(coef);
+  m_coef = openstudio::number(coef);
   return true;
 }
 
 bool PlrConnImpl::setCoef(const std::string &coef)
 {
-  bool ok;
-  FLOAT_CHECK(coef,&ok);
-  if(ok)
-  {
-    m_coef = STR_TO_FLOAT(coef);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(coef, m_coef);
 }
 
 int PlrConnImpl::u_A() const
@@ -1129,71 +992,50 @@ void PlrGeneralImpl::setDesc(const std::string &desc)
 
 double PlrGeneralImpl::lam() const
 {
-  return m_lam.toDouble();
+  return boost::lexical_cast<double>(m_lam);
 }
 
 bool PlrGeneralImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = openstudio::number(lam);
   return true;
 }
 
 bool PlrGeneralImpl::setLam(const std::string &lam)
 {
-  bool ok;
-  FLOAT_CHECK(lam,&ok);
-  if(ok)
-  {
-    m_lam = STR_TO_FLOAT(lam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lam, m_lam);
 }
 
 double PlrGeneralImpl::turb() const
 {
-  return m_turb.toDouble();
+  return boost::lexical_cast<double>(m_turb);
 }
 
 bool PlrGeneralImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = openstudio::number(turb);
   return true;
 }
 
 bool PlrGeneralImpl::setTurb(const std::string &turb)
 {
-  bool ok;
-  FLOAT_CHECK(turb,&ok);
-  if(ok)
-  {
-    m_turb = STR_TO_FLOAT(turb);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(turb, m_turb);
 }
 
 double PlrGeneralImpl::expt() const
 {
-  return m_expt.toDouble();
+  return boost::lexical_cast<double>(m_expt);
 }
 
 bool PlrGeneralImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = openstudio::number(expt);
   return true;
 }
 
 bool PlrGeneralImpl::setExpt(const std::string &expt)
 {
-  bool ok;
-  FLOAT_CHECK(expt,&ok);
-  if(ok)
-  {
-    m_expt = STR_TO_FLOAT(expt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(expt, m_expt);
 }
 
 void PlrTest1Impl::setDefaults()
@@ -1337,117 +1179,82 @@ void PlrTest1Impl::setDesc(const std::string &desc)
 
 double PlrTest1Impl::lam() const
 {
-  return m_lam.toDouble();
+  return boost::lexical_cast<double>(m_lam);
 }
 
 bool PlrTest1Impl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = openstudio::number(lam);
   return true;
 }
 
 bool PlrTest1Impl::setLam(const std::string &lam)
 {
-  bool ok;
-  FLOAT_CHECK(lam,&ok);
-  if(ok)
-  {
-    m_lam = STR_TO_FLOAT(lam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lam, m_lam);
 }
 
 double PlrTest1Impl::turb() const
 {
-  return m_turb.toDouble();
+  return boost::lexical_cast<double>(m_turb);
 }
 
 bool PlrTest1Impl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = openstudio::number(turb);
   return true;
 }
 
 bool PlrTest1Impl::setTurb(const std::string &turb)
 {
-  bool ok;
-  FLOAT_CHECK(turb,&ok);
-  if(ok)
-  {
-    m_turb = STR_TO_FLOAT(turb);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(turb, m_turb);
 }
 
 double PlrTest1Impl::expt() const
 {
-  return m_expt.toDouble();
+  return boost::lexical_cast<double>(m_expt);
 }
 
 bool PlrTest1Impl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = openstudio::number(expt);
   return true;
 }
 
 bool PlrTest1Impl::setExpt(const std::string &expt)
 {
-  bool ok;
-  FLOAT_CHECK(expt,&ok);
-  if(ok)
-  {
-    m_expt = STR_TO_FLOAT(expt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(expt, m_expt);
 }
 
 double PlrTest1Impl::dP() const
 {
-  return m_dP.toDouble();
+  return boost::lexical_cast<double>(m_dP);
 }
 
 bool PlrTest1Impl::setDP(const double dP)
 {
-  m_dP = QString::number(dP);
+  m_dP = openstudio::number(dP);
   return true;
 }
 
 bool PlrTest1Impl::setDP(const std::string &dP)
 {
-  bool ok;
-  FLOAT_CHECK(dP,&ok);
-  if(ok)
-  {
-    m_dP = STR_TO_FLOAT(dP);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(dP, m_dP);
 }
 
 double PlrTest1Impl::Flow() const
 {
-  return m_Flow.toDouble();
+  return boost::lexical_cast<double>(m_Flow);
 }
 
 bool PlrTest1Impl::setFlow(const double Flow)
 {
-  m_Flow = QString::number(Flow);
+  m_Flow = openstudio::number(Flow);
   return true;
 }
 
 bool PlrTest1Impl::setFlow(const std::string &Flow)
 {
-  bool ok;
-  FLOAT_CHECK(Flow,&ok);
-  if(ok)
-  {
-    m_Flow = STR_TO_FLOAT(Flow);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Flow, m_Flow);
 }
 
 int PlrTest1Impl::u_P() const
@@ -1632,163 +1439,114 @@ void PlrTest2Impl::setDesc(const std::string &desc)
 
 double PlrTest2Impl::lam() const
 {
-  return m_lam.toDouble();
+  return boost::lexical_cast<double>(m_lam);
 }
 
 bool PlrTest2Impl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = openstudio::number(lam);
   return true;
 }
 
 bool PlrTest2Impl::setLam(const std::string &lam)
 {
-  bool ok;
-  FLOAT_CHECK(lam,&ok);
-  if(ok)
-  {
-    m_lam = STR_TO_FLOAT(lam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lam, m_lam);
 }
 
 double PlrTest2Impl::turb() const
 {
-  return m_turb.toDouble();
+  return boost::lexical_cast<double>(m_turb);
 }
 
 bool PlrTest2Impl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = openstudio::number(turb);
   return true;
 }
 
 bool PlrTest2Impl::setTurb(const std::string &turb)
 {
-  bool ok;
-  FLOAT_CHECK(turb,&ok);
-  if(ok)
-  {
-    m_turb = STR_TO_FLOAT(turb);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(turb, m_turb);
 }
 
 double PlrTest2Impl::expt() const
 {
-  return m_expt.toDouble();
+  return boost::lexical_cast<double>(m_expt);
 }
 
 bool PlrTest2Impl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = openstudio::number(expt);
   return true;
 }
 
 bool PlrTest2Impl::setExpt(const std::string &expt)
 {
-  bool ok;
-  FLOAT_CHECK(expt,&ok);
-  if(ok)
-  {
-    m_expt = STR_TO_FLOAT(expt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(expt, m_expt);
 }
 
 double PlrTest2Impl::dP1() const
 {
-  return m_dP1.toDouble();
+  return boost::lexical_cast<double>(m_dP1);
 }
 
 bool PlrTest2Impl::setDP1(const double dP1)
 {
-  m_dP1 = QString::number(dP1);
+  m_dP1 = openstudio::number(dP1);
   return true;
 }
 
 bool PlrTest2Impl::setDP1(const std::string &dP1)
 {
-  bool ok;
-  FLOAT_CHECK(dP1,&ok);
-  if(ok)
-  {
-    m_dP1 = STR_TO_FLOAT(dP1);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(dP1, m_dP1);
 }
 
 double PlrTest2Impl::F1() const
 {
-  return m_F1.toDouble();
+  return boost::lexical_cast<double>(m_F1);
 }
 
 bool PlrTest2Impl::setF1(const double F1)
 {
-  m_F1 = QString::number(F1);
+  m_F1 = openstudio::number(F1);
   return true;
 }
 
 bool PlrTest2Impl::setF1(const std::string &F1)
 {
-  bool ok;
-  FLOAT_CHECK(F1,&ok);
-  if(ok)
-  {
-    m_F1 = STR_TO_FLOAT(F1);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(F1, m_F1);
 }
 
 double PlrTest2Impl::dP2() const
 {
-  return m_dP2.toDouble();
+  return boost::lexical_cast<double>(m_dP2);
 }
 
 bool PlrTest2Impl::setDP2(const double dP2)
 {
-  m_dP2 = QString::number(dP2);
+  m_dP2 = openstudio::number(dP2);
   return true;
 }
 
 bool PlrTest2Impl::setDP2(const std::string &dP2)
 {
-  bool ok;
-  FLOAT_CHECK(dP2,&ok);
-  if(ok)
-  {
-    m_dP2 = STR_TO_FLOAT(dP2);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(dP2, m_dP2);
 }
 
 double PlrTest2Impl::F2() const
 {
-  return m_F2.toDouble();
+  return boost::lexical_cast<double>(m_F2);
 }
 
 bool PlrTest2Impl::setF2(const double F2)
 {
-  m_F2 = QString::number(F2);
+  m_F2 = openstudio::number(F2);
   return true;
 }
 
 bool PlrTest2Impl::setF2(const std::string &F2)
 {
-  bool ok;
-  FLOAT_CHECK(F2,&ok);
-  if(ok)
-  {
-    m_F2 = STR_TO_FLOAT(F2);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(F2, m_F2);
 }
 
 int PlrTest2Impl::u_P1() const
@@ -1972,117 +1730,82 @@ void PlrCrackImpl::setDesc(const std::string &desc)
 
 double PlrCrackImpl::lam() const
 {
-  return m_lam.toDouble();
+  return boost::lexical_cast<double>(m_lam);
 }
 
 bool PlrCrackImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = openstudio::number(lam);
   return true;
 }
 
 bool PlrCrackImpl::setLam(const std::string &lam)
 {
-  bool ok;
-  FLOAT_CHECK(lam,&ok);
-  if(ok)
-  {
-    m_lam = STR_TO_FLOAT(lam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lam, m_lam);
 }
 
 double PlrCrackImpl::turb() const
 {
-  return m_turb.toDouble();
+  return boost::lexical_cast<double>(m_turb);
 }
 
 bool PlrCrackImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = openstudio::number(turb);
   return true;
 }
 
 bool PlrCrackImpl::setTurb(const std::string &turb)
 {
-  bool ok;
-  FLOAT_CHECK(turb,&ok);
-  if(ok)
-  {
-    m_turb = STR_TO_FLOAT(turb);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(turb, m_turb);
 }
 
 double PlrCrackImpl::expt() const
 {
-  return m_expt.toDouble();
+  return boost::lexical_cast<double>(m_expt);
 }
 
 bool PlrCrackImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = openstudio::number(expt);
   return true;
 }
 
 bool PlrCrackImpl::setExpt(const std::string &expt)
 {
-  bool ok;
-  FLOAT_CHECK(expt,&ok);
-  if(ok)
-  {
-    m_expt = STR_TO_FLOAT(expt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(expt, m_expt);
 }
 
 double PlrCrackImpl::length() const
 {
-  return m_length.toDouble();
+  return boost::lexical_cast<double>(m_length);
 }
 
 bool PlrCrackImpl::setLength(const double length)
 {
-  m_length = QString::number(length);
+  m_length = openstudio::number(length);
   return true;
 }
 
 bool PlrCrackImpl::setLength(const std::string &length)
 {
-  bool ok;
-  FLOAT_CHECK(length,&ok);
-  if(ok)
-  {
-    m_length = STR_TO_FLOAT(length);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(length, m_length);
 }
 
 double PlrCrackImpl::width() const
 {
-  return m_width.toDouble();
+  return boost::lexical_cast<double>(m_width);
 }
 
 bool PlrCrackImpl::setWidth(const double width)
 {
-  m_width = QString::number(width);
+  m_width = openstudio::number(width);
   return true;
 }
 
 bool PlrCrackImpl::setWidth(const std::string &width)
 {
-  bool ok;
-  FLOAT_CHECK(width,&ok);
-  if(ok)
-  {
-    m_width = STR_TO_FLOAT(width);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(width, m_width);
 }
 
 int PlrCrackImpl::u_L() const
@@ -2259,140 +1982,98 @@ void PlrStairImpl::setDesc(const std::string &desc)
 
 double PlrStairImpl::lam() const
 {
-  return m_lam.toDouble();
+  return boost::lexical_cast<double>(m_lam);
 }
 
 bool PlrStairImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = openstudio::number(lam);
   return true;
 }
 
 bool PlrStairImpl::setLam(const std::string &lam)
 {
-  bool ok;
-  FLOAT_CHECK(lam,&ok);
-  if(ok)
-  {
-    m_lam = STR_TO_FLOAT(lam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lam, m_lam);
 }
 
 double PlrStairImpl::turb() const
 {
-  return m_turb.toDouble();
+  return boost::lexical_cast<double>(m_turb);
 }
 
 bool PlrStairImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = openstudio::number(turb);
   return true;
 }
 
 bool PlrStairImpl::setTurb(const std::string &turb)
 {
-  bool ok;
-  FLOAT_CHECK(turb,&ok);
-  if(ok)
-  {
-    m_turb = STR_TO_FLOAT(turb);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(turb, m_turb);
 }
 
 double PlrStairImpl::expt() const
 {
-  return m_expt.toDouble();
+  return boost::lexical_cast<double>(m_expt);
 }
 
 bool PlrStairImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = openstudio::number(expt);
   return true;
 }
 
 bool PlrStairImpl::setExpt(const std::string &expt)
 {
-  bool ok;
-  FLOAT_CHECK(expt,&ok);
-  if(ok)
-  {
-    m_expt = STR_TO_FLOAT(expt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(expt, m_expt);
 }
 
 double PlrStairImpl::Ht() const
 {
-  return m_Ht.toDouble();
+  return boost::lexical_cast<double>(m_Ht);
 }
 
 bool PlrStairImpl::setHt(const double Ht)
 {
-  m_Ht = QString::number(Ht);
+  m_Ht = openstudio::number(Ht);
   return true;
 }
 
 bool PlrStairImpl::setHt(const std::string &Ht)
 {
-  bool ok;
-  FLOAT_CHECK(Ht,&ok);
-  if(ok)
-  {
-    m_Ht = STR_TO_FLOAT(Ht);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Ht, m_Ht);
 }
 
 double PlrStairImpl::area() const
 {
-  return m_Area.toDouble();
+  return boost::lexical_cast<double>(m_Area);
 }
 
 bool PlrStairImpl::setArea(const double Area)
 {
-  m_Area = QString::number(Area);
+  m_Area = openstudio::number(Area);
   return true;
 }
 
 bool PlrStairImpl::setArea(const std::string &Area)
 {
-  bool ok;
-  FLOAT_CHECK(Area,&ok);
-  if(ok)
-  {
-    m_Area = STR_TO_FLOAT(Area);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Area, m_Area);
 }
 
 double PlrStairImpl::people() const
 {
-  return m_peo.toDouble();
+  return boost::lexical_cast<double>(m_peo);
 }
 
 bool PlrStairImpl::setPeople(const double peo)
 {
-  m_peo = QString::number(peo);
+  m_peo = openstudio::number(peo);
   return true;
 }
 
 bool PlrStairImpl::setPeople(const std::string &peo)
 {
-  bool ok;
-  FLOAT_CHECK(peo,&ok);
-  if(ok)
-  {
-    m_peo = STR_TO_FLOAT(peo);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(peo, m_peo);
 }
 
 int PlrStairImpl::tread() const
@@ -2587,163 +2268,114 @@ void PlrShaftImpl::setDesc(const std::string &desc)
 
 double PlrShaftImpl::lam() const
 {
-  return m_lam.toDouble();
+  return boost::lexical_cast<double>(m_lam);
 }
 
 bool PlrShaftImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = openstudio::number(lam);
   return true;
 }
 
 bool PlrShaftImpl::setLam(const std::string &lam)
 {
-  bool ok;
-  FLOAT_CHECK(lam,&ok);
-  if(ok)
-  {
-    m_lam = STR_TO_FLOAT(lam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lam, m_lam);
 }
 
 double PlrShaftImpl::turb() const
 {
-  return m_turb.toDouble();
+  return boost::lexical_cast<double>(m_turb);
 }
 
 bool PlrShaftImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = openstudio::number(turb);
   return true;
 }
 
 bool PlrShaftImpl::setTurb(const std::string &turb)
 {
-  bool ok;
-  FLOAT_CHECK(turb,&ok);
-  if(ok)
-  {
-    m_turb = STR_TO_FLOAT(turb);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(turb, m_turb);
 }
 
 double PlrShaftImpl::expt() const
 {
-  return m_expt.toDouble();
+  return boost::lexical_cast<double>(m_expt);
 }
 
 bool PlrShaftImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = openstudio::number(expt);
   return true;
 }
 
 bool PlrShaftImpl::setExpt(const std::string &expt)
 {
-  bool ok;
-  FLOAT_CHECK(expt,&ok);
-  if(ok)
-  {
-    m_expt = STR_TO_FLOAT(expt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(expt, m_expt);
 }
 
 double PlrShaftImpl::Ht() const
 {
-  return m_Ht.toDouble();
+  return boost::lexical_cast<double>(m_Ht);
 }
 
 bool PlrShaftImpl::setHt(const double Ht)
 {
-  m_Ht = QString::number(Ht);
+  m_Ht = openstudio::number(Ht);
   return true;
 }
 
 bool PlrShaftImpl::setHt(const std::string &Ht)
 {
-  bool ok;
-  FLOAT_CHECK(Ht,&ok);
-  if(ok)
-  {
-    m_Ht = STR_TO_FLOAT(Ht);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Ht, m_Ht);
 }
 
 double PlrShaftImpl::area() const
 {
-  return m_area.toDouble();
+  return boost::lexical_cast<double>(m_area);
 }
 
 bool PlrShaftImpl::setArea(const double area)
 {
-  m_area = QString::number(area);
+  m_area = openstudio::number(area);
   return true;
 }
 
 bool PlrShaftImpl::setArea(const std::string &area)
 {
-  bool ok;
-  FLOAT_CHECK(area,&ok);
-  if(ok)
-  {
-    m_area = STR_TO_FLOAT(area);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(area, m_area);
 }
 
 double PlrShaftImpl::perim() const
 {
-  return m_perim.toDouble();
+  return boost::lexical_cast<double>(m_perim);
 }
 
 bool PlrShaftImpl::setPerim(const double perim)
 {
-  m_perim = QString::number(perim);
+  m_perim = openstudio::number(perim);
   return true;
 }
 
 bool PlrShaftImpl::setPerim(const std::string &perim)
 {
-  bool ok;
-  FLOAT_CHECK(perim,&ok);
-  if(ok)
-  {
-    m_perim = STR_TO_FLOAT(perim);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(perim, m_perim);
 }
 
 double PlrShaftImpl::rough() const
 {
-  return m_rough.toDouble();
+  return boost::lexical_cast<double>(m_rough);
 }
 
 bool PlrShaftImpl::setRough(const double rough)
 {
-  m_rough = QString::number(rough);
+  m_rough = openstudio::number(rough);
   return true;
 }
 
 bool PlrShaftImpl::setRough(const std::string &rough)
 {
-  bool ok;
-  FLOAT_CHECK(rough,&ok);
-  if(ok)
-  {
-    m_rough = STR_TO_FLOAT(rough);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(rough, m_rough);
 }
 
 int PlrShaftImpl::u_A() const
@@ -2916,117 +2548,82 @@ void PlrBackDamperImpl::setDesc(const std::string &desc)
 
 double PlrBackDamperImpl::lam() const
 {
-  return m_lam.toDouble();
+  return boost::lexical_cast<double>(m_lam);
 }
 
 bool PlrBackDamperImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = openstudio::number(lam);
   return true;
 }
 
 bool PlrBackDamperImpl::setLam(const std::string &lam)
 {
-  bool ok;
-  FLOAT_CHECK(lam,&ok);
-  if(ok)
-  {
-    m_lam = STR_TO_FLOAT(lam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lam, m_lam);
 }
 
 double PlrBackDamperImpl::Cp() const
 {
-  return m_Cp.toDouble();
+  return boost::lexical_cast<double>(m_Cp);
 }
 
 bool PlrBackDamperImpl::setCp(const double Cp)
 {
-  m_Cp = QString::number(Cp);
+  m_Cp = openstudio::number(Cp);
   return true;
 }
 
 bool PlrBackDamperImpl::setCp(const std::string &Cp)
 {
-  bool ok;
-  FLOAT_CHECK(Cp,&ok);
-  if(ok)
-  {
-    m_Cp = STR_TO_FLOAT(Cp);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Cp, m_Cp);
 }
 
 double PlrBackDamperImpl::xp() const
 {
-  return m_xp.toDouble();
+  return boost::lexical_cast<double>(m_xp);
 }
 
 bool PlrBackDamperImpl::setXp(const double xp)
 {
-  m_xp = QString::number(xp);
+  m_xp = openstudio::number(xp);
   return true;
 }
 
 bool PlrBackDamperImpl::setXp(const std::string &xp)
 {
-  bool ok;
-  FLOAT_CHECK(xp,&ok);
-  if(ok)
-  {
-    m_xp = STR_TO_FLOAT(xp);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(xp, m_xp);
 }
 
 double PlrBackDamperImpl::Cn() const
 {
-  return m_Cn.toDouble();
+  return boost::lexical_cast<double>(m_Cn);
 }
 
 bool PlrBackDamperImpl::setCn(const double Cn)
 {
-  m_Cn = QString::number(Cn);
+  m_Cn = openstudio::number(Cn);
   return true;
 }
 
 bool PlrBackDamperImpl::setCn(const std::string &Cn)
 {
-  bool ok;
-  FLOAT_CHECK(Cn,&ok);
-  if(ok)
-  {
-    m_Cn = STR_TO_FLOAT(Cn);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Cn, m_Cn);
 }
 
 double PlrBackDamperImpl::xn() const
 {
-  return m_xn.toDouble();
+  return boost::lexical_cast<double>(m_xn);
 }
 
 bool PlrBackDamperImpl::setXn(const double xn)
 {
-  m_xn = QString::number(xn);
+  m_xn = openstudio::number(xn);
   return true;
 }
 
 bool PlrBackDamperImpl::setXn(const std::string &xn)
 {
-  bool ok;
-  FLOAT_CHECK(xn,&ok);
-  if(ok)
-  {
-    m_xn = STR_TO_FLOAT(xn);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(xn, m_xn);
 }
 
 void QfrQuadraticImpl::setDefaults()
@@ -3141,48 +2738,34 @@ void QfrQuadraticImpl::setDesc(const std::string &desc)
 
 double QfrQuadraticImpl::a() const
 {
-  return m_a.toDouble();
+  return boost::lexical_cast<double>(m_a);
 }
 
 bool QfrQuadraticImpl::setA(const double a)
 {
-  m_a = QString::number(a);
+  m_a = openstudio::number(a);
   return true;
 }
 
 bool QfrQuadraticImpl::setA(const std::string &a)
 {
-  bool ok;
-  FLOAT_CHECK(a,&ok);
-  if(ok)
-  {
-    m_a = STR_TO_FLOAT(a);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(a, m_a);
 }
 
 double QfrQuadraticImpl::b() const
 {
-  return m_b.toDouble();
+  return boost::lexical_cast<double>(m_b);
 }
 
 bool QfrQuadraticImpl::setB(const double b)
 {
-  m_b = QString::number(b);
+  m_b = openstudio::number(b);
   return true;
 }
 
 bool QfrQuadraticImpl::setB(const std::string &b)
 {
-  bool ok;
-  FLOAT_CHECK(b,&ok);
-  if(ok)
-  {
-    m_b = STR_TO_FLOAT(b);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(b, m_b);
 }
 
 void QfrCrackImpl::setDefaults()
@@ -3336,117 +2919,82 @@ void QfrCrackImpl::setDesc(const std::string &desc)
 
 double QfrCrackImpl::a() const
 {
-  return m_a.toDouble();
+  return boost::lexical_cast<double>(m_a);
 }
 
 bool QfrCrackImpl::setA(const double a)
 {
-  m_a = QString::number(a);
+  m_a = openstudio::number(a);
   return true;
 }
 
 bool QfrCrackImpl::setA(const std::string &a)
 {
-  bool ok;
-  FLOAT_CHECK(a,&ok);
-  if(ok)
-  {
-    m_a = STR_TO_FLOAT(a);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(a, m_a);
 }
 
 double QfrCrackImpl::b() const
 {
-  return m_b.toDouble();
+  return boost::lexical_cast<double>(m_b);
 }
 
 bool QfrCrackImpl::setB(const double b)
 {
-  m_b = QString::number(b);
+  m_b = openstudio::number(b);
   return true;
 }
 
 bool QfrCrackImpl::setB(const std::string &b)
 {
-  bool ok;
-  FLOAT_CHECK(b,&ok);
-  if(ok)
-  {
-    m_b = STR_TO_FLOAT(b);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(b, m_b);
 }
 
 double QfrCrackImpl::length() const
 {
-  return m_length.toDouble();
+  return boost::lexical_cast<double>(m_length);
 }
 
 bool QfrCrackImpl::setLength(const double length)
 {
-  m_length = QString::number(length);
+  m_length = openstudio::number(length);
   return true;
 }
 
 bool QfrCrackImpl::setLength(const std::string &length)
 {
-  bool ok;
-  FLOAT_CHECK(length,&ok);
-  if(ok)
-  {
-    m_length = STR_TO_FLOAT(length);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(length, m_length);
 }
 
 double QfrCrackImpl::width() const
 {
-  return m_width.toDouble();
+  return boost::lexical_cast<double>(m_width);
 }
 
 bool QfrCrackImpl::setWidth(const double width)
 {
-  m_width = QString::number(width);
+  m_width = openstudio::number(width);
   return true;
 }
 
 bool QfrCrackImpl::setWidth(const std::string &width)
 {
-  bool ok;
-  FLOAT_CHECK(width,&ok);
-  if(ok)
-  {
-    m_width = STR_TO_FLOAT(width);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(width, m_width);
 }
 
 double QfrCrackImpl::depth() const
 {
-  return m_depth.toDouble();
+  return boost::lexical_cast<double>(m_depth);
 }
 
 bool QfrCrackImpl::setDepth(const double depth)
 {
-  m_depth = QString::number(depth);
+  m_depth = openstudio::number(depth);
   return true;
 }
 
 bool QfrCrackImpl::setDepth(const std::string &depth)
 {
-  bool ok;
-  FLOAT_CHECK(depth,&ok);
-  if(ok)
-  {
-    m_depth = STR_TO_FLOAT(depth);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(depth, m_depth);
 }
 
 int QfrCrackImpl::nB() const
@@ -3645,140 +3193,98 @@ void QfrTest2Impl::setDesc(const std::string &desc)
 
 double QfrTest2Impl::a() const
 {
-  return m_a.toDouble();
+  return boost::lexical_cast<double>(m_a);
 }
 
 bool QfrTest2Impl::setA(const double a)
 {
-  m_a = QString::number(a);
+  m_a = openstudio::number(a);
   return true;
 }
 
 bool QfrTest2Impl::setA(const std::string &a)
 {
-  bool ok;
-  FLOAT_CHECK(a,&ok);
-  if(ok)
-  {
-    m_a = STR_TO_FLOAT(a);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(a, m_a);
 }
 
 double QfrTest2Impl::b() const
 {
-  return m_b.toDouble();
+  return boost::lexical_cast<double>(m_b);
 }
 
 bool QfrTest2Impl::setB(const double b)
 {
-  m_b = QString::number(b);
+  m_b = openstudio::number(b);
   return true;
 }
 
 bool QfrTest2Impl::setB(const std::string &b)
 {
-  bool ok;
-  FLOAT_CHECK(b,&ok);
-  if(ok)
-  {
-    m_b = STR_TO_FLOAT(b);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(b, m_b);
 }
 
 double QfrTest2Impl::dP1() const
 {
-  return m_dP1.toDouble();
+  return boost::lexical_cast<double>(m_dP1);
 }
 
 bool QfrTest2Impl::setDP1(const double dP1)
 {
-  m_dP1 = QString::number(dP1);
+  m_dP1 = openstudio::number(dP1);
   return true;
 }
 
 bool QfrTest2Impl::setDP1(const std::string &dP1)
 {
-  bool ok;
-  FLOAT_CHECK(dP1,&ok);
-  if(ok)
-  {
-    m_dP1 = STR_TO_FLOAT(dP1);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(dP1, m_dP1);
 }
 
 double QfrTest2Impl::F1() const
 {
-  return m_F1.toDouble();
+  return boost::lexical_cast<double>(m_F1);
 }
 
 bool QfrTest2Impl::setF1(const double F1)
 {
-  m_F1 = QString::number(F1);
+  m_F1 = openstudio::number(F1);
   return true;
 }
 
 bool QfrTest2Impl::setF1(const std::string &F1)
 {
-  bool ok;
-  FLOAT_CHECK(F1,&ok);
-  if(ok)
-  {
-    m_F1 = STR_TO_FLOAT(F1);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(F1, m_F1);
 }
 
 double QfrTest2Impl::dP2() const
 {
-  return m_dP2.toDouble();
+  return boost::lexical_cast<double>(m_dP2);
 }
 
 bool QfrTest2Impl::setDP2(const double dP2)
 {
-  m_dP2 = QString::number(dP2);
+  m_dP2 = openstudio::number(dP2);
   return true;
 }
 
 bool QfrTest2Impl::setDP2(const std::string &dP2)
 {
-  bool ok;
-  FLOAT_CHECK(dP2,&ok);
-  if(ok)
-  {
-    m_dP2 = STR_TO_FLOAT(dP2);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(dP2, m_dP2);
 }
 
 double QfrTest2Impl::F2() const
 {
-  return m_F2.toDouble();
+  return boost::lexical_cast<double>(m_F2);
 }
 
 bool QfrTest2Impl::setF2(const double F2)
 {
-  m_F2 = QString::number(F2);
+  m_F2 = openstudio::number(F2);
   return true;
 }
 
 bool QfrTest2Impl::setF2(const std::string &F2)
 {
-  bool ok;
-  FLOAT_CHECK(F2,&ok);
-  if(ok)
-  {
-    m_F2 = STR_TO_FLOAT(F2);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(F2, m_F2);
 }
 
 int QfrTest2Impl::u_P1() const
@@ -3978,163 +3484,114 @@ void AfeDorImpl::setDesc(const std::string &desc)
 
 double AfeDorImpl::lam() const
 {
-  return m_lam.toDouble();
+  return boost::lexical_cast<double>(m_lam);
 }
 
 bool AfeDorImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = openstudio::number(lam);
   return true;
 }
 
 bool AfeDorImpl::setLam(const std::string &lam)
 {
-  bool ok;
-  FLOAT_CHECK(lam,&ok);
-  if(ok)
-  {
-    m_lam = STR_TO_FLOAT(lam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lam, m_lam);
 }
 
 double AfeDorImpl::turb() const
 {
-  return m_turb.toDouble();
+  return boost::lexical_cast<double>(m_turb);
 }
 
 bool AfeDorImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = openstudio::number(turb);
   return true;
 }
 
 bool AfeDorImpl::setTurb(const std::string &turb)
 {
-  bool ok;
-  FLOAT_CHECK(turb,&ok);
-  if(ok)
-  {
-    m_turb = STR_TO_FLOAT(turb);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(turb, m_turb);
 }
 
 double AfeDorImpl::expt() const
 {
-  return m_expt.toDouble();
+  return boost::lexical_cast<double>(m_expt);
 }
 
 bool AfeDorImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = openstudio::number(expt);
   return true;
 }
 
 bool AfeDorImpl::setExpt(const std::string &expt)
 {
-  bool ok;
-  FLOAT_CHECK(expt,&ok);
-  if(ok)
-  {
-    m_expt = STR_TO_FLOAT(expt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(expt, m_expt);
 }
 
 double AfeDorImpl::dTmin() const
 {
-  return m_dTmin.toDouble();
+  return boost::lexical_cast<double>(m_dTmin);
 }
 
 bool AfeDorImpl::setDTmin(const double dTmin)
 {
-  m_dTmin = QString::number(dTmin);
+  m_dTmin = openstudio::number(dTmin);
   return true;
 }
 
 bool AfeDorImpl::setDTmin(const std::string &dTmin)
 {
-  bool ok;
-  FLOAT_CHECK(dTmin,&ok);
-  if(ok)
-  {
-    m_dTmin = STR_TO_FLOAT(dTmin);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(dTmin, m_dTmin);
 }
 
 double AfeDorImpl::height() const
 {
-  return m_ht.toDouble();
+  return boost::lexical_cast<double>(m_ht);
 }
 
 bool AfeDorImpl::setHeight(const double ht)
 {
-  m_ht = QString::number(ht);
+  m_ht = openstudio::number(ht);
   return true;
 }
 
 bool AfeDorImpl::setHeight(const std::string &ht)
 {
-  bool ok;
-  FLOAT_CHECK(ht,&ok);
-  if(ok)
-  {
-    m_ht = STR_TO_FLOAT(ht);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(ht, m_ht);
 }
 
 double AfeDorImpl::width() const
 {
-  return m_wd.toDouble();
+  return boost::lexical_cast<double>(m_wd);
 }
 
 bool AfeDorImpl::setWidth(const double wd)
 {
-  m_wd = QString::number(wd);
+  m_wd = openstudio::number(wd);
   return true;
 }
 
 bool AfeDorImpl::setWidth(const std::string &wd)
 {
-  bool ok;
-  FLOAT_CHECK(wd,&ok);
-  if(ok)
-  {
-    m_wd = STR_TO_FLOAT(wd);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(wd, m_wd);
 }
 
 double AfeDorImpl::cd() const
 {
-  return m_cd.toDouble();
+  return boost::lexical_cast<double>(m_cd);
 }
 
 bool AfeDorImpl::setCd(const double cd)
 {
-  m_cd = QString::number(cd);
+  m_cd = openstudio::number(cd);
   return true;
 }
 
 bool AfeDorImpl::setCd(const std::string &cd)
 {
-  bool ok;
-  FLOAT_CHECK(cd,&ok);
-  if(ok)
-  {
-    m_cd = STR_TO_FLOAT(cd);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(cd, m_cd);
 }
 
 int AfeDorImpl::u_T() const
@@ -4318,163 +3775,114 @@ void DrPl2Impl::setDesc(const std::string &desc)
 
 double DrPl2Impl::lam() const
 {
-  return m_lam.toDouble();
+  return boost::lexical_cast<double>(m_lam);
 }
 
 bool DrPl2Impl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = openstudio::number(lam);
   return true;
 }
 
 bool DrPl2Impl::setLam(const std::string &lam)
 {
-  bool ok;
-  FLOAT_CHECK(lam,&ok);
-  if(ok)
-  {
-    m_lam = STR_TO_FLOAT(lam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lam, m_lam);
 }
 
 double DrPl2Impl::turb() const
 {
-  return m_turb.toDouble();
+  return boost::lexical_cast<double>(m_turb);
 }
 
 bool DrPl2Impl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = openstudio::number(turb);
   return true;
 }
 
 bool DrPl2Impl::setTurb(const std::string &turb)
 {
-  bool ok;
-  FLOAT_CHECK(turb,&ok);
-  if(ok)
-  {
-    m_turb = STR_TO_FLOAT(turb);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(turb, m_turb);
 }
 
 double DrPl2Impl::expt() const
 {
-  return m_expt.toDouble();
+  return boost::lexical_cast<double>(m_expt);
 }
 
 bool DrPl2Impl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = openstudio::number(expt);
   return true;
 }
 
 bool DrPl2Impl::setExpt(const std::string &expt)
 {
-  bool ok;
-  FLOAT_CHECK(expt,&ok);
-  if(ok)
-  {
-    m_expt = STR_TO_FLOAT(expt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(expt, m_expt);
 }
 
 double DrPl2Impl::dH() const
 {
-  return m_dH.toDouble();
+  return boost::lexical_cast<double>(m_dH);
 }
 
 bool DrPl2Impl::setDH(const double dH)
 {
-  m_dH = QString::number(dH);
+  m_dH = openstudio::number(dH);
   return true;
 }
 
 bool DrPl2Impl::setDH(const std::string &dH)
 {
-  bool ok;
-  FLOAT_CHECK(dH,&ok);
-  if(ok)
-  {
-    m_dH = STR_TO_FLOAT(dH);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(dH, m_dH);
 }
 
 double DrPl2Impl::height() const
 {
-  return m_ht.toDouble();
+  return boost::lexical_cast<double>(m_ht);
 }
 
 bool DrPl2Impl::setHeight(const double ht)
 {
-  m_ht = QString::number(ht);
+  m_ht = openstudio::number(ht);
   return true;
 }
 
 bool DrPl2Impl::setHeight(const std::string &ht)
 {
-  bool ok;
-  FLOAT_CHECK(ht,&ok);
-  if(ok)
-  {
-    m_ht = STR_TO_FLOAT(ht);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(ht, m_ht);
 }
 
 double DrPl2Impl::width() const
 {
-  return m_wd.toDouble();
+  return boost::lexical_cast<double>(m_wd);
 }
 
 bool DrPl2Impl::setWidth(const double wd)
 {
-  m_wd = QString::number(wd);
+  m_wd = openstudio::number(wd);
   return true;
 }
 
 bool DrPl2Impl::setWidth(const std::string &wd)
 {
-  bool ok;
-  FLOAT_CHECK(wd,&ok);
-  if(ok)
-  {
-    m_wd = STR_TO_FLOAT(wd);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(wd, m_wd);
 }
 
 double DrPl2Impl::cd() const
 {
-  return m_cd.toDouble();
+  return boost::lexical_cast<double>(m_cd);
 }
 
 bool DrPl2Impl::setCd(const double cd)
 {
-  m_cd = QString::number(cd);
+  m_cd = openstudio::number(cd);
   return true;
 }
 
 bool DrPl2Impl::setCd(const std::string &cd)
 {
-  bool ok;
-  FLOAT_CHECK(cd,&ok);
-  if(ok)
-  {
-    m_cd = STR_TO_FLOAT(cd);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(cd, m_cd);
 }
 
 int DrPl2Impl::u_H() const
@@ -4609,25 +4017,18 @@ void AfeFlowImpl::setDesc(const std::string &desc)
 
 double AfeFlowImpl::Flow() const
 {
-  return m_Flow.toDouble();
+  return boost::lexical_cast<double>(m_Flow);
 }
 
 bool AfeFlowImpl::setFlow(const double Flow)
 {
-  m_Flow = QString::number(Flow);
+  m_Flow = openstudio::number(Flow);
   return true;
 }
 
 bool AfeFlowImpl::setFlow(const std::string &Flow)
 {
-  bool ok;
-  FLOAT_CHECK(Flow,&ok);
-  if(ok)
-  {
-    m_Flow = STR_TO_FLOAT(Flow);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Flow, m_Flow);
 }
 
 int AfeFlowImpl::u_F() const
@@ -4834,163 +4235,114 @@ void AfeFanImpl::setDesc(const std::string &desc)
 
 double AfeFanImpl::lam() const
 {
-  return m_lam.toDouble();
+  return boost::lexical_cast<double>(m_lam);
 }
 
 bool AfeFanImpl::setLam(const double lam)
 {
-  m_lam = QString::number(lam);
+  m_lam = openstudio::number(lam);
   return true;
 }
 
 bool AfeFanImpl::setLam(const std::string &lam)
 {
-  bool ok;
-  FLOAT_CHECK(lam,&ok);
-  if(ok)
-  {
-    m_lam = STR_TO_FLOAT(lam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lam, m_lam);
 }
 
 double AfeFanImpl::turb() const
 {
-  return m_turb.toDouble();
+  return boost::lexical_cast<double>(m_turb);
 }
 
 bool AfeFanImpl::setTurb(const double turb)
 {
-  m_turb = QString::number(turb);
+  m_turb = openstudio::number(turb);
   return true;
 }
 
 bool AfeFanImpl::setTurb(const std::string &turb)
 {
-  bool ok;
-  FLOAT_CHECK(turb,&ok);
-  if(ok)
-  {
-    m_turb = STR_TO_FLOAT(turb);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(turb, m_turb);
 }
 
 double AfeFanImpl::expt() const
 {
-  return m_expt.toDouble();
+  return boost::lexical_cast<double>(m_expt);
 }
 
 bool AfeFanImpl::setExpt(const double expt)
 {
-  m_expt = QString::number(expt);
+  m_expt = openstudio::number(expt);
   return true;
 }
 
 bool AfeFanImpl::setExpt(const std::string &expt)
 {
-  bool ok;
-  FLOAT_CHECK(expt,&ok);
-  if(ok)
-  {
-    m_expt = STR_TO_FLOAT(expt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(expt, m_expt);
 }
 
 double AfeFanImpl::rdens() const
 {
-  return m_rdens.toDouble();
+  return boost::lexical_cast<double>(m_rdens);
 }
 
 bool AfeFanImpl::setRdens(const double rdens)
 {
-  m_rdens = QString::number(rdens);
+  m_rdens = openstudio::number(rdens);
   return true;
 }
 
 bool AfeFanImpl::setRdens(const std::string &rdens)
 {
-  bool ok;
-  FLOAT_CHECK(rdens,&ok);
-  if(ok)
-  {
-    m_rdens = STR_TO_FLOAT(rdens);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(rdens, m_rdens);
 }
 
 double AfeFanImpl::fdf() const
 {
-  return m_fdf.toDouble();
+  return boost::lexical_cast<double>(m_fdf);
 }
 
 bool AfeFanImpl::setFdf(const double fdf)
 {
-  m_fdf = QString::number(fdf);
+  m_fdf = openstudio::number(fdf);
   return true;
 }
 
 bool AfeFanImpl::setFdf(const std::string &fdf)
 {
-  bool ok;
-  FLOAT_CHECK(fdf,&ok);
-  if(ok)
-  {
-    m_fdf = STR_TO_FLOAT(fdf);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(fdf, m_fdf);
 }
 
 double AfeFanImpl::sop() const
 {
-  return m_sop.toDouble();
+  return boost::lexical_cast<double>(m_sop);
 }
 
 bool AfeFanImpl::setSop(const double sop)
 {
-  m_sop = QString::number(sop);
+  m_sop = openstudio::number(sop);
   return true;
 }
 
 bool AfeFanImpl::setSop(const std::string &sop)
 {
-  bool ok;
-  FLOAT_CHECK(sop,&ok);
-  if(ok)
-  {
-    m_sop = STR_TO_FLOAT(sop);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(sop, m_sop);
 }
 
 double AfeFanImpl::off() const
 {
-  return m_off.toDouble();
+  return boost::lexical_cast<double>(m_off);
 }
 
 bool AfeFanImpl::setOff(const double off)
 {
-  m_off = QString::number(off);
+  m_off = openstudio::number(off);
   return true;
 }
 
 bool AfeFanImpl::setOff(const std::string &off)
 {
-  bool ok;
-  FLOAT_CHECK(off,&ok);
-  if(ok)
-  {
-    m_off = STR_TO_FLOAT(off);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(off, m_off);
 }
 
 std::vector<double> AfeFanImpl::fpc() const
@@ -4998,7 +4350,7 @@ std::vector<double> AfeFanImpl::fpc() const
   std::vector<double> out;
   for(int i=0;i<4;i++)
   {
-    out.push_back(m_fpc[i].toDouble());
+    out.push_back(boost::lexical_cast<double>(m_fpc[i]));
   }
   return out;
 }
@@ -5007,49 +4359,36 @@ bool AfeFanImpl::setFpc(const std::vector<double> &fpc)
 {
   for(int i=0;i<4;i++)
   {
-    m_fpc.push_back(QString::number(fpc[i]));
+    m_fpc.push_back(openstudio::number(fpc[i]));
   }
   return true;
 }
 
 bool AfeFanImpl::setFpc(const std::vector<std::string> &fpc)
 {
-  std::vector<PRJFLOAT> in;
-  for(int i=0;i<4;i++)
+  if (std::all_of(fpc.begin(), fpc.end(), is_valid<double, std::string>))
   {
-    bool ok;
-    FLOAT_CHECK(fpc[i],&ok);
-    if(!ok)
-    {
-      return false;
-    }
-    in.push_back(STR_TO_FLOAT(fpc[i]));
+    m_fpc = fpc;
+    return true;
+  } else {
+    return false;
   }
-  m_fpc = in;
-  return true;
 }
 
 double AfeFanImpl::Sarea() const
 {
-  return m_Sarea.toDouble();
+  return boost::lexical_cast<double>(m_Sarea);
 }
 
 bool AfeFanImpl::setSarea(const double Sarea)
 {
-  m_Sarea = QString::number(Sarea);
+  m_Sarea = openstudio::number(Sarea);
   return true;
 }
 
 bool AfeFanImpl::setSarea(const std::string &Sarea)
 {
-  bool ok;
-  FLOAT_CHECK(Sarea,&ok);
-  if(ok)
-  {
-    m_Sarea = STR_TO_FLOAT(Sarea);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Sarea, m_Sarea);
 }
 
 int AfeFanImpl::u_Sa() const
