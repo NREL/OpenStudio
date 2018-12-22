@@ -34,7 +34,6 @@
 #include "CoreFixture.hpp"
 #include "../Path.hpp"
 #include "../PathHelpers.hpp"
-#include "../URLHelpers.hpp"
 #include "../Filesystem.hpp"
 #include "utilities/sql/SqlFileDataDictionary.hpp"
 
@@ -279,29 +278,6 @@ TEST_F(CoreFixture, Path_WindowsPathOnUnix)
   EXPECT_TRUE(file.is_relative());
 #endif
 
-}
-
-TEST_F(CoreFixture, OriginalPath_FromUrl)
-{
-  // mimics code in ToolBasedJob::acquireRequiredFiles
-  // want to make sure we do not end up with "/E:/test/CloudTest/scripts/StandardReports/measure.rb"
-  openstudio::Url url("file:///E:/test/CloudTest/scripts/StandardReports/measure.rb");
-  openstudio::path file = openstudio::getOriginalPath(url);
-  std::string str = openstudio::toString(file);
-  //EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", str);
-  // DLM: unclear if this is a change in Qt but drive letters appear to come out lowercase now
-  EXPECT_EQ("e:/test/CloudTest/scripts/StandardReports/measure.rb", str);
-}
-
-TEST_F(CoreFixture, OriginalPath_FromUrl2)
-{
-  openstudio::Url url = openstudio::Url::fromLocalFile("E:/test/CloudTest/scripts/StandardReports/measure.rb");
-  EXPECT_EQ("file:///E:/test/CloudTest/scripts/StandardReports/measure.rb", url.toString().toStdString());
-  openstudio::path file = openstudio::getOriginalPath(url);
-  std::string str = openstudio::toString(file);
-  //EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", str);
-  // DLM: unclear if this is a change in Qt but drive letters appear to come out lowercase now
-  EXPECT_EQ("e:/test/CloudTest/scripts/StandardReports/measure.rb", str);
 }
 
 TEST_F(CoreFixture, WindowsDriveLetter)

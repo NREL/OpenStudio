@@ -436,8 +436,8 @@ namespace model {
  *  \li The url field may contain the UUID of a file in a Building Component Library (e.g.
  *      '{550e8400-e29b-41d4-a716-446655440000}'). (This is not yet implemented).
  *
- *  Url fields are implemented with three overloaded set methods which each return void; one taking
- *  a string, one taking an openstudio::path, and one taking a QUrl. The get method returns a
+ *  Url fields are implemented with two overloaded set methods which each return void; one taking
+ *  a string and one taking an openstudio::path. The get method returns a
  *  string.  Normal rules for required and default fields apply.
  *
  *  \subsubsection otherFields Other Fields

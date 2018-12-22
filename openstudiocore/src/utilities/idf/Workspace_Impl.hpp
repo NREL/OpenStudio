@@ -51,6 +51,8 @@
 #include <map>
 #include <unordered_map>
 
+#include <QObject>
+
 namespace openstudio {
 
 // forward declarations
@@ -443,8 +445,8 @@ namespace detail {
     IdfFile toIdfFile();
 
     /// Locates and updates urls in the workspace
-    std::vector<std::pair<openstudio::Url, openstudio::path> > locateUrls(const std::vector<URLSearchPath> &t_paths, bool t_create_relative_paths,
-     const openstudio::path &t_infile, const openstudio::path &t_locationForRemoteUrls = openstudio::path());
+    //std::vector<std::pair<openstudio::Url, openstudio::path> > locateUrls(const std::vector<URLSearchPath> &t_paths, bool t_create_relative_paths,
+    // const openstudio::path &t_infile, const openstudio::path &t_locationForRemoteUrls = openstudio::path());
 
     //@}
 

@@ -37,6 +37,8 @@
 
 #include "../utilities/core/Optional.hpp"
 
+#include <QObject>
+
 namespace openstudio {
 
 class Attribute;

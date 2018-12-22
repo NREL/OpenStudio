@@ -18,7 +18,6 @@
   #include <utilities/idf/ValidityEnums.hpp>
   #include <utilities/idf/ValidityReport.hpp>
   #include <utilities/idf/DataError.hpp>
-  #include <utilities/idf/URLSearchPath.hpp>
 
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
@@ -118,9 +117,6 @@
 %include <utilities/idf/ValidityReport.hpp>
 %include <utilities/idf/IdfObject.hpp>
 
-%template(QUrlPathPair) std::pair<QUrl, openstudio::path>;
-%template(QUrlPathPairVector) std::vector<std::pair<QUrl, openstudio::path> >;
-
 // template non-member function for extracting handles from objects
 %template(getIdfObjectHandles) openstudio::getHandles<openstudio::IdfObject>;
 %template(getWorkspaceObjectHandles) openstudio::getHandles<openstudio::WorkspaceObject>;
@@ -128,12 +124,6 @@
 %template(HandleSet) std::set<openstudio::UUID>;
 %template(HandleMap) std::map<openstudio::UUID,openstudio::UUID>;
 //%ignore openstudio::applyHandleMap;
-
-%ignore std::vector<openstudio::URLSearchPath>::vector(size_type);
-%ignore std::vector<openstudio::URLSearchPath>::resize(size_type);
-%template(URLSearchPathVector) std::vector<openstudio::URLSearchPath>;
-%template(OptionalURLSearchPath) boost::optional<openstudio::URLSearchPath>;
-%include <utilities/idf/URLSearchPath.hpp>
 
 %include <utilities/idf/IdfExtensibleGroup.hpp>
 %include <utilities/idf/ImfFile.hpp>

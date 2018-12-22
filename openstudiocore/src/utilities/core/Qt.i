@@ -31,7 +31,6 @@ namespace Qt{
   #include <QObject>
   #include <QDateTime>
   #include <QDomElement>
-  #include <QUrl>
   #include <QNetworkRequest>
   #include <QNetworkReply>
   #include <QNetworkAccessManager>
@@ -59,9 +58,6 @@ class QDomElement : public QDomNode
 {};
 
 class QDomDocument : public QDomNode
-{};
-
-class QUrl
 {};
 
 %nodefaultctor QNetworkRequest;
