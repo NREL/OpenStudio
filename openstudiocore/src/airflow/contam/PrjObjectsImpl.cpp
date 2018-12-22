@@ -265,7 +265,7 @@ void ZoneImpl::setPl(const int pl)
 
 double ZoneImpl::relHt() const
 {
-  return boost::lexical_cast<double>(m_relHt);
+  return openstudio::contam::to<double>(m_relHt);
 }
 
 bool ZoneImpl::setRelHt(const double relHt)
@@ -281,7 +281,7 @@ bool ZoneImpl::setRelHt(const std::string &relHt)
 
 double ZoneImpl::Vol() const
 {
-  return boost::lexical_cast<double>(m_Vol);
+  return openstudio::contam::to<double>(m_Vol);
 }
 
 bool ZoneImpl::setVol(const double Vol)
@@ -297,7 +297,7 @@ bool ZoneImpl::setVol(const std::string &Vol)
 
 double ZoneImpl::T0() const
 {
-  return boost::lexical_cast<double>(m_T0);
+  return openstudio::contam::to<double>(m_T0);
 }
 
 bool ZoneImpl::setT0(const double T0)
@@ -313,7 +313,7 @@ bool ZoneImpl::setT0(const std::string &T0)
 
 double ZoneImpl::P0() const
 {
-  return boost::lexical_cast<double>(m_P0);
+  return openstudio::contam::to<double>(m_P0);
 }
 
 bool ZoneImpl::setP0(const double P0)
@@ -419,7 +419,7 @@ void ZoneImpl::setCfdname(const std::string &cfdname)
 
 double ZoneImpl::X1() const
 {
-  return boost::lexical_cast<double>(m_X1);
+  return openstudio::contam::to<double>(m_X1);
 }
 
 bool ZoneImpl::setX1(const double X1)
@@ -435,7 +435,7 @@ bool ZoneImpl::setX1(const std::string &X1)
 
 double ZoneImpl::Y1() const
 {
-  return boost::lexical_cast<double>(m_Y1);
+  return openstudio::contam::to<double>(m_Y1);
 }
 
 bool ZoneImpl::setY1(const double Y1)
@@ -451,7 +451,7 @@ bool ZoneImpl::setY1(const std::string &Y1)
 
 double ZoneImpl::H1() const
 {
-  return boost::lexical_cast<double>(m_H1);
+  return openstudio::contam::to<double>(m_H1);
 }
 
 bool ZoneImpl::setH1(const double H1)
@@ -467,7 +467,7 @@ bool ZoneImpl::setH1(const std::string &H1)
 
 double ZoneImpl::X2() const
 {
-  return boost::lexical_cast<double>(m_X2);
+  return openstudio::contam::to<double>(m_X2);
 }
 
 bool ZoneImpl::setX2(const double X2)
@@ -483,7 +483,7 @@ bool ZoneImpl::setX2(const std::string &X2)
 
 double ZoneImpl::Y2() const
 {
-  return boost::lexical_cast<double>(m_Y2);
+  return openstudio::contam::to<double>(m_Y2);
 }
 
 bool ZoneImpl::setY2(const double Y2)
@@ -499,7 +499,7 @@ bool ZoneImpl::setY2(const std::string &Y2)
 
 double ZoneImpl::H2() const
 {
-  return boost::lexical_cast<double>(m_H2);
+  return openstudio::contam::to<double>(m_H2);
 }
 
 bool ZoneImpl::setH2(const double H2)
@@ -515,7 +515,7 @@ bool ZoneImpl::setH2(const std::string &H2)
 
 double ZoneImpl::celldx() const
 {
-  return boost::lexical_cast<double>(m_celldx);
+  return openstudio::contam::to<double>(m_celldx);
 }
 
 bool ZoneImpl::setCelldx(const double celldx)
@@ -531,7 +531,7 @@ bool ZoneImpl::setCelldx(const std::string &celldx)
 
 double ZoneImpl::axialD() const
 {
-  return boost::lexical_cast<double>(m_axialD);
+  return openstudio::contam::to<double>(m_axialD);
 }
 
 bool ZoneImpl::setAxialD(const double axialD)
@@ -606,7 +606,7 @@ bool ZoneImpl::system() const
 
 double ZoneImpl::ic(const int i) const
 {
-  return boost::lexical_cast<double>(m_ic[i]);
+  return openstudio::contam::to<double>(m_ic[i]);
 }
 
 std::vector<double> ZoneImpl::ic() const
@@ -614,7 +614,7 @@ std::vector<double> ZoneImpl::ic() const
   std::vector<double> out;
   for(std::size_t i=0;i<m_ic.size();i++)
   {
-    out.push_back(boost::lexical_cast<double>(m_ic[i]));
+    out.push_back(openstudio::contam::to<double>(m_ic[i]));
   }
   return out;
 }
@@ -783,7 +783,7 @@ void SpeciesImpl::setNtflag(const bool ntflag)
 
 double SpeciesImpl::molwt() const
 {
-  return boost::lexical_cast<double>(m_molwt);
+  return openstudio::contam::to<double>(m_molwt);
 }
 
 bool SpeciesImpl::setMolwt(const double molwt)
@@ -799,7 +799,7 @@ bool SpeciesImpl::setMolwt(const std::string &molwt)
 
 double SpeciesImpl::mdiam() const
 {
-  return boost::lexical_cast<double>(m_mdiam);
+  return openstudio::contam::to<double>(m_mdiam);
 }
 
 bool SpeciesImpl::setMdiam(const double mdiam)
@@ -815,7 +815,7 @@ bool SpeciesImpl::setMdiam(const std::string &mdiam)
 
 double SpeciesImpl::edens() const
 {
-  return boost::lexical_cast<double>(m_edens);
+  return openstudio::contam::to<double>(m_edens);
 }
 
 bool SpeciesImpl::setEdens(const double edens)
@@ -831,7 +831,7 @@ bool SpeciesImpl::setEdens(const std::string &edens)
 
 double SpeciesImpl::decay() const
 {
-  return boost::lexical_cast<double>(m_decay);
+  return openstudio::contam::to<double>(m_decay);
 }
 
 bool SpeciesImpl::setDecay(const double decay)
@@ -847,7 +847,7 @@ bool SpeciesImpl::setDecay(const std::string &decay)
 
 double SpeciesImpl::Dm() const
 {
-  return boost::lexical_cast<double>(m_Dm);
+  return openstudio::contam::to<double>(m_Dm);
 }
 
 bool SpeciesImpl::setDm(const double Dm)
@@ -863,7 +863,7 @@ bool SpeciesImpl::setDm(const std::string &Dm)
 
 double SpeciesImpl::ccdef() const
 {
-  return boost::lexical_cast<double>(m_ccdef);
+  return openstudio::contam::to<double>(m_ccdef);
 }
 
 bool SpeciesImpl::setCcdef(const double ccdef)
@@ -879,7 +879,7 @@ bool SpeciesImpl::setCcdef(const std::string &ccdef)
 
 double SpeciesImpl::Cp() const
 {
-  return boost::lexical_cast<double>(m_Cp);
+  return openstudio::contam::to<double>(m_Cp);
 }
 
 bool SpeciesImpl::setCp(const double Cp)
@@ -1381,7 +1381,7 @@ void AirflowPathImpl::setPld(const int pld)
 
 double AirflowPathImpl::X() const
 {
-  return boost::lexical_cast<double>(m_X);
+  return openstudio::contam::to<double>(m_X);
 }
 
 bool AirflowPathImpl::setX(const double X)
@@ -1397,7 +1397,7 @@ bool AirflowPathImpl::setX(const std::string &X)
 
 double AirflowPathImpl::Y() const
 {
-  return boost::lexical_cast<double>(m_Y);
+  return openstudio::contam::to<double>(m_Y);
 }
 
 bool AirflowPathImpl::setY(const double Y)
@@ -1413,7 +1413,7 @@ bool AirflowPathImpl::setY(const std::string &Y)
 
 double AirflowPathImpl::relHt() const
 {
-  return boost::lexical_cast<double>(m_relHt);
+  return openstudio::contam::to<double>(m_relHt);
 }
 
 bool AirflowPathImpl::setRelHt(const double relHt)
@@ -1429,7 +1429,7 @@ bool AirflowPathImpl::setRelHt(const std::string &relHt)
 
 double AirflowPathImpl::mult() const
 {
-  return boost::lexical_cast<double>(m_mult);
+  return openstudio::contam::to<double>(m_mult);
 }
 
 bool AirflowPathImpl::setMult(const double mult)
@@ -1445,7 +1445,7 @@ bool AirflowPathImpl::setMult(const std::string &mult)
 
 double AirflowPathImpl::wPset() const
 {
-  return boost::lexical_cast<double>(m_wPset);
+  return openstudio::contam::to<double>(m_wPset);
 }
 
 bool AirflowPathImpl::setWPset(const double wPset)
@@ -1461,7 +1461,7 @@ bool AirflowPathImpl::setWPset(const std::string &wPset)
 
 double AirflowPathImpl::wPmod() const
 {
-  return boost::lexical_cast<double>(m_wPmod);
+  return openstudio::contam::to<double>(m_wPmod);
 }
 
 bool AirflowPathImpl::setWPmod(const double wPmod)
@@ -1477,7 +1477,7 @@ bool AirflowPathImpl::setWPmod(const std::string &wPmod)
 
 double AirflowPathImpl::wazm() const
 {
-  return boost::lexical_cast<double>(m_wazm);
+  return openstudio::contam::to<double>(m_wazm);
 }
 
 bool AirflowPathImpl::setWazm(const double wazm)
@@ -1493,7 +1493,7 @@ bool AirflowPathImpl::setWazm(const std::string &wazm)
 
 double AirflowPathImpl::Fahs() const
 {
-  return boost::lexical_cast<double>(m_Fahs);
+  return openstudio::contam::to<double>(m_Fahs);
 }
 
 bool AirflowPathImpl::setFahs(const double Fahs)
@@ -1509,7 +1509,7 @@ bool AirflowPathImpl::setFahs(const std::string &Fahs)
 
 double AirflowPathImpl::Xmax() const
 {
-  return boost::lexical_cast<double>(m_Xmax);
+  return openstudio::contam::to<double>(m_Xmax);
 }
 
 bool AirflowPathImpl::setXmax(const double Xmax)
@@ -1525,7 +1525,7 @@ bool AirflowPathImpl::setXmax(const std::string &Xmax)
 
 double AirflowPathImpl::Xmin() const
 {
-  return boost::lexical_cast<double>(m_Xmin);
+  return openstudio::contam::to<double>(m_Xmin);
 }
 
 bool AirflowPathImpl::setXmin(const double Xmin)
@@ -2268,7 +2268,7 @@ void RunControlImpl::setAfmaxi(const int afmaxi)
 
 double RunControlImpl::afrcnvg() const
 {
-  return boost::lexical_cast<double>(m_afrcnvg);
+  return openstudio::contam::to<double>(m_afrcnvg);
 }
 
 bool RunControlImpl::setAfrcnvg(const double afrcnvg)
@@ -2284,7 +2284,7 @@ bool RunControlImpl::setAfrcnvg(const std::string &afrcnvg)
 
 double RunControlImpl::afacnvg() const
 {
-  return boost::lexical_cast<double>(m_afacnvg);
+  return openstudio::contam::to<double>(m_afacnvg);
 }
 
 bool RunControlImpl::setAfacnvg(const double afacnvg)
@@ -2300,7 +2300,7 @@ bool RunControlImpl::setAfacnvg(const std::string &afacnvg)
 
 double RunControlImpl::afrelax() const
 {
-  return boost::lexical_cast<double>(m_afrelax);
+  return openstudio::contam::to<double>(m_afrelax);
 }
 
 bool RunControlImpl::setAfrelax(const double afrelax)
@@ -2326,7 +2326,7 @@ void RunControlImpl::setUac2(const int uac2)
 
 double RunControlImpl::Pres() const
 {
-  return boost::lexical_cast<double>(m_Pres);
+  return openstudio::contam::to<double>(m_Pres);
 }
 
 bool RunControlImpl::setPres(const double Pres)
@@ -2382,7 +2382,7 @@ void RunControlImpl::setAflmaxi(const int aflmaxi)
 
 double RunControlImpl::aflcnvg() const
 {
-  return boost::lexical_cast<double>(m_aflcnvg);
+  return openstudio::contam::to<double>(m_aflcnvg);
 }
 
 bool RunControlImpl::setAflcnvg(const double aflcnvg)
@@ -2438,7 +2438,7 @@ void RunControlImpl::setCcmaxi(const int ccmaxi)
 
 double RunControlImpl::ccrcnvg() const
 {
-  return boost::lexical_cast<double>(m_ccrcnvg);
+  return openstudio::contam::to<double>(m_ccrcnvg);
 }
 
 bool RunControlImpl::setCcrcnvg(const double ccrcnvg)
@@ -2454,7 +2454,7 @@ bool RunControlImpl::setCcrcnvg(const std::string &ccrcnvg)
 
 double RunControlImpl::ccacnvg() const
 {
-  return boost::lexical_cast<double>(m_ccacnvg);
+  return openstudio::contam::to<double>(m_ccacnvg);
 }
 
 bool RunControlImpl::setCcacnvg(const double ccacnvg)
@@ -2470,7 +2470,7 @@ bool RunControlImpl::setCcacnvg(const std::string &ccacnvg)
 
 double RunControlImpl::ccrelax() const
 {
-  return boost::lexical_cast<double>(m_ccrelax);
+  return openstudio::contam::to<double>(m_ccrelax);
 }
 
 bool RunControlImpl::setCcrelax(const double ccrelax)
@@ -2526,7 +2526,7 @@ void RunControlImpl::setMfnmaxi(const int mfnmaxi)
 
 double RunControlImpl::mfnrcnvg() const
 {
-  return boost::lexical_cast<double>(m_mfnrcnvg);
+  return openstudio::contam::to<double>(m_mfnrcnvg);
 }
 
 bool RunControlImpl::setMfnrcnvg(const double mfnrcnvg)
@@ -2542,7 +2542,7 @@ bool RunControlImpl::setMfnrcnvg(const std::string &mfnrcnvg)
 
 double RunControlImpl::mfnacnvg() const
 {
-  return boost::lexical_cast<double>(m_mfnacnvg);
+  return openstudio::contam::to<double>(m_mfnacnvg);
 }
 
 bool RunControlImpl::setMfnacnvg(const double mfnacnvg)
@@ -2558,7 +2558,7 @@ bool RunControlImpl::setMfnacnvg(const std::string &mfnacnvg)
 
 double RunControlImpl::mfnrelax() const
 {
-  return boost::lexical_cast<double>(m_mfnrelax);
+  return openstudio::contam::to<double>(m_mfnrelax);
 }
 
 bool RunControlImpl::setMfnrelax(const double mfnrelax)
@@ -2574,7 +2574,7 @@ bool RunControlImpl::setMfnrelax(const std::string &mfnrelax)
 
 double RunControlImpl::mfngamma() const
 {
-  return boost::lexical_cast<double>(m_mfngamma);
+  return openstudio::contam::to<double>(m_mfngamma);
 }
 
 bool RunControlImpl::setMfngamma(const double mfngamma)
@@ -2630,7 +2630,7 @@ void RunControlImpl::setMftmaxi(const int mftmaxi)
 
 double RunControlImpl::mftrcnvg() const
 {
-  return boost::lexical_cast<double>(m_mftrcnvg);
+  return openstudio::contam::to<double>(m_mftrcnvg);
 }
 
 bool RunControlImpl::setMftrcnvg(const double mftrcnvg)
@@ -2646,7 +2646,7 @@ bool RunControlImpl::setMftrcnvg(const std::string &mftrcnvg)
 
 double RunControlImpl::mftacnvg() const
 {
-  return boost::lexical_cast<double>(m_mftacnvg);
+  return openstudio::contam::to<double>(m_mftacnvg);
 }
 
 bool RunControlImpl::setMftacnvg(const double mftacnvg)
@@ -2662,7 +2662,7 @@ bool RunControlImpl::setMftacnvg(const std::string &mftacnvg)
 
 double RunControlImpl::mftrelax() const
 {
-  return boost::lexical_cast<double>(m_mftrelax);
+  return openstudio::contam::to<double>(m_mftrelax);
 }
 
 bool RunControlImpl::setMftrelax(const double mftrelax)
@@ -2678,7 +2678,7 @@ bool RunControlImpl::setMftrelax(const std::string &mftrelax)
 
 double RunControlImpl::mftgamma() const
 {
-  return boost::lexical_cast<double>(m_mftgamma);
+  return openstudio::contam::to<double>(m_mftgamma);
 }
 
 bool RunControlImpl::setMftgamma(const double mftgamma)
@@ -2734,7 +2734,7 @@ void RunControlImpl::setMfvmaxi(const int mfvmaxi)
 
 double RunControlImpl::mfvrcnvg() const
 {
-  return boost::lexical_cast<double>(m_mfvrcnvg);
+  return openstudio::contam::to<double>(m_mfvrcnvg);
 }
 
 bool RunControlImpl::setMfvrcnvg(const double mfvrcnvg)
@@ -2750,7 +2750,7 @@ bool RunControlImpl::setMfvrcnvg(const std::string &mfvrcnvg)
 
 double RunControlImpl::mfvacnvg() const
 {
-  return boost::lexical_cast<double>(m_mfvacnvg);
+  return openstudio::contam::to<double>(m_mfvacnvg);
 }
 
 bool RunControlImpl::setMfvacnvg(const double mfvacnvg)
@@ -2766,7 +2766,7 @@ bool RunControlImpl::setMfvacnvg(const std::string &mfvacnvg)
 
 double RunControlImpl::mfvrelax() const
 {
-  return boost::lexical_cast<double>(m_mfvrelax);
+  return openstudio::contam::to<double>(m_mfvrelax);
 }
 
 bool RunControlImpl::setMfvrelax(const double mfvrelax)
@@ -2822,7 +2822,7 @@ void RunControlImpl::setSim_1dd(const int sim_1dd)
 
 double RunControlImpl::celldx() const
 {
-  return boost::lexical_cast<double>(m_celldx);
+  return openstudio::contam::to<double>(m_celldx);
 }
 
 bool RunControlImpl::setCelldx(const double celldx)
@@ -2868,7 +2868,7 @@ void RunControlImpl::setCvode_mth(const int cvode_mth)
 
 double RunControlImpl::cvode_rcnvg() const
 {
-  return boost::lexical_cast<double>(m_cvode_rcnvg);
+  return openstudio::contam::to<double>(m_cvode_rcnvg);
 }
 
 bool RunControlImpl::setCvode_rcnvg(const double cvode_rcnvg)
@@ -2884,7 +2884,7 @@ bool RunControlImpl::setCvode_rcnvg(const std::string &cvode_rcnvg)
 
 double RunControlImpl::cvode_acnvg() const
 {
-  return boost::lexical_cast<double>(m_cvode_acnvg);
+  return openstudio::contam::to<double>(m_cvode_acnvg);
 }
 
 bool RunControlImpl::setCvode_acnvg(const double cvode_acnvg)
@@ -2900,7 +2900,7 @@ bool RunControlImpl::setCvode_acnvg(const std::string &cvode_acnvg)
 
 double RunControlImpl::cvode_dtmax() const
 {
-  return boost::lexical_cast<double>(m_cvode_dtmax);
+  return openstudio::contam::to<double>(m_cvode_dtmax);
 }
 
 bool RunControlImpl::setCvode_dtmax(const double cvode_dtmax)
@@ -2926,7 +2926,7 @@ void RunControlImpl::setTsdens(const int tsdens)
 
 double RunControlImpl::tsrelax() const
 {
-  return boost::lexical_cast<double>(m_tsrelax);
+  return openstudio::contam::to<double>(m_tsrelax);
 }
 
 bool RunControlImpl::setTsrelax(const double tsrelax)
@@ -3315,7 +3315,7 @@ std::vector<double> RunControlImpl::rvals() const
   std::vector<double> out;
   for(const auto &val : m_rvals)
   {
-    out.push_back(boost::lexical_cast<double>(val));
+    out.push_back(openstudio::contam::to<double>(val));
   }
   return out;
 }
@@ -3383,7 +3383,7 @@ void RunControlImpl::setCfd_ctype(const int cfd_ctype)
 
 double RunControlImpl::cfd_convcpl() const
 {
-  return boost::lexical_cast<double>(m_cfd_convcpl);
+  return openstudio::contam::to<double>(m_cfd_convcpl);
 }
 
 bool RunControlImpl::setCfd_convcpl(const double cfd_convcpl)
@@ -3518,7 +3518,7 @@ void LevelImpl::setNr(const int nr)
 
 double LevelImpl::refht() const
 {
-  return boost::lexical_cast<double>(m_refht);
+  return openstudio::contam::to<double>(m_refht);
 }
 
 bool LevelImpl::setRefht(const double refht)
@@ -3534,7 +3534,7 @@ bool LevelImpl::setRefht(const std::string &refht)
 
 double LevelImpl::delht() const
 {
-  return boost::lexical_cast<double>(m_delht);
+  return openstudio::contam::to<double>(m_delht);
 }
 
 bool LevelImpl::setDelht(const double delht)

@@ -107,7 +107,7 @@ std::string WeatherDataImpl::write()
 
 double WeatherDataImpl::Tambt() const
 {
-  return boost::lexical_cast<double>(m_Tambt);
+  return openstudio::contam::to<double>(m_Tambt);
 }
 
 bool WeatherDataImpl::setTambt(const double Tambt)
@@ -123,7 +123,7 @@ bool WeatherDataImpl::setTambt(const std::string &Tambt)
 
 double WeatherDataImpl::barpres() const
 {
-  return boost::lexical_cast<double>(m_barpres);
+  return openstudio::contam::to<double>(m_barpres);
 }
 
 bool WeatherDataImpl::setBarpres(const double barpres)
@@ -139,7 +139,7 @@ bool WeatherDataImpl::setBarpres(const std::string &barpres)
 
 double WeatherDataImpl::windspd() const
 {
-  return boost::lexical_cast<double>(m_windspd);
+  return openstudio::contam::to<double>(m_windspd);
 }
 
 bool WeatherDataImpl::setWindspd(const double windspd)
@@ -155,7 +155,7 @@ bool WeatherDataImpl::setWindspd(const std::string &windspd)
 
 double WeatherDataImpl::winddir() const
 {
-  return boost::lexical_cast<double>(m_winddir);
+  return openstudio::contam::to<double>(m_winddir);
 }
 
 bool WeatherDataImpl::setWinddir(const double winddir)
@@ -171,7 +171,7 @@ bool WeatherDataImpl::setWinddir(const std::string &winddir)
 
 double WeatherDataImpl::relhum() const
 {
-  return boost::lexical_cast<double>(m_relhum);
+  return openstudio::contam::to<double>(m_relhum);
 }
 
 bool WeatherDataImpl::setRelhum(const double relhum)

@@ -31,17 +31,33 @@
 #define AIRFLOW_CONTAM_PRJDEFINES_HPP
 
 #include <string>
-#include <boost/lexical_cast.hpp>
+#include <sstream>
 
 using PRJFLOAT = std::string;
+
+namespace openstudio::contam {
+
+template<typename DesiredType, typename InputType>
+DesiredType to(const InputType &inp)
+{
+  std::stringstream ss;
+  ss.imbue(std::locale::classic());
+  ss.str(inp);
+  DesiredType o;
+  ss >> o;
+  if (!ss.eof() || ss.fail()) {
+    throw std::bad_cast();
+  }
+  return o;
+}
 
 template<typename DesiredType, typename InputType>
 bool is_valid(const InputType &input)
 {
   try {
-    boost::lexical_cast<DesiredType>(input);
+    to<DesiredType>(input);
     return true;
-  } catch (const boost::bad_lexical_cast &) {
+  } catch (const std::bad_cast &) {
     return false;
   }
 }
@@ -57,6 +73,7 @@ bool assign_if_valid(const InputType &input, DestinationType &dest)
   }
 }
 
+}
 
 #define ANY_TO_STR openstudio::toString
 

@@ -347,7 +347,7 @@ std::string FanDataPoint::write()
 
 double FanDataPoint::mF() const
 {
-  return boost::lexical_cast<double>(m_mF);
+  return openstudio::contam::to<double>(m_mF);
 }
 
 bool FanDataPoint::setMF(const double mF)
@@ -373,7 +373,7 @@ void FanDataPoint::setU_mF(const int u_mF)
 
 double FanDataPoint::dP() const
 {
-  return boost::lexical_cast<double>(m_dP);
+  return openstudio::contam::to<double>(m_dP);
 }
 
 bool FanDataPoint::setDP(const double dP)
@@ -399,7 +399,7 @@ void FanDataPoint::setU_dP(const int u_dP)
 
 double FanDataPoint::rP() const
 {
-  return boost::lexical_cast<double>(m_rP);
+  return openstudio::contam::to<double>(m_rP);
 }
 
 bool FanDataPoint::setRP(const double rP)
@@ -463,7 +463,7 @@ std::string XyDataPoint::write()
 
 double XyDataPoint::x() const
 {
-  return boost::lexical_cast<double>(m_x);
+  return openstudio::contam::to<double>(m_x);
 }
 
 bool XyDataPoint::setX(const double x)
@@ -479,7 +479,7 @@ bool XyDataPoint::setX(const std::string &x)
 
 double XyDataPoint::y() const
 {
-  return boost::lexical_cast<double>(m_y);
+  return openstudio::contam::to<double>(m_y);
 }
 
 bool XyDataPoint::setY(const double y)
@@ -547,7 +547,7 @@ void AirflowSubelementData::setNr(const int nr)
 
 double AirflowSubelementData::relHt() const
 {
-  return boost::lexical_cast<double>(m_relHt);
+  return openstudio::contam::to<double>(m_relHt);
 }
 
 bool AirflowSubelementData::setRelHt(const double relHt)
@@ -611,7 +611,7 @@ std::string PressureCoefficientPoint::write()
 
 double PressureCoefficientPoint::azm() const
 {
-  return boost::lexical_cast<double>(m_azm);
+  return openstudio::contam::to<double>(m_azm);
 }
 
 bool PressureCoefficientPoint::setAzm(const double azm)
@@ -627,7 +627,7 @@ bool PressureCoefficientPoint::setAzm(const std::string &azm)
 
 double PressureCoefficientPoint::coef() const
 {
-  return boost::lexical_cast<double>(m_coef);
+  return openstudio::contam::to<double>(m_coef);
 }
 
 bool PressureCoefficientPoint::setCoef(const double coef)
@@ -691,7 +691,7 @@ void SchedulePoint::setTime(const std::string &time)
 
 double SchedulePoint::ctrl() const
 {
-  return boost::lexical_cast<double>(m_ctrl);
+  return openstudio::contam::to<double>(m_ctrl);
 }
 
 bool SchedulePoint::setCtrl(const double ctrl)

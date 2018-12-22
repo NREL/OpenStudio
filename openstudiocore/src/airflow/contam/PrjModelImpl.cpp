@@ -418,7 +418,7 @@ void IndexModelImpl::setDef_flows(const int def_flows)
 
 double IndexModelImpl::def_T() const
 {
-  return boost::lexical_cast<double>(m_def_T);
+  return openstudio::contam::to<double>(m_def_T);
 }
 
 bool IndexModelImpl::setDef_T(const double def_T)
@@ -444,7 +444,7 @@ void IndexModelImpl::setUdefT(const int udefT)
 
 double IndexModelImpl::rel_N() const
 {
-  return boost::lexical_cast<double>(m_rel_N);
+  return openstudio::contam::to<double>(m_rel_N);
 }
 
 bool IndexModelImpl::setRel_N(const double rel_N)
@@ -460,7 +460,7 @@ bool IndexModelImpl::setRel_N(const std::string &rel_N)
 
 double IndexModelImpl::wind_H() const
 {
-  return boost::lexical_cast<double>(m_wind_H);
+  return openstudio::contam::to<double>(m_wind_H);
 }
 
 bool IndexModelImpl::setWind_H(const double wind_H)
@@ -486,7 +486,7 @@ void IndexModelImpl::setUwH(const int uwH)
 
 double IndexModelImpl::wind_Ao() const
 {
-  return boost::lexical_cast<double>(m_wind_Ao);
+  return openstudio::contam::to<double>(m_wind_Ao);
 }
 
 bool IndexModelImpl::setWind_Ao(const double wind_Ao)
@@ -502,7 +502,7 @@ bool IndexModelImpl::setWind_Ao(const std::string &wind_Ao)
 
 double IndexModelImpl::wind_a() const
 {
-  return boost::lexical_cast<double>(m_wind_a);
+  return openstudio::contam::to<double>(m_wind_a);
 }
 
 bool IndexModelImpl::setWind_a(const double wind_a)
@@ -518,7 +518,7 @@ bool IndexModelImpl::setWind_a(const std::string &wind_a)
 
 double IndexModelImpl::scale() const
 {
-  return boost::lexical_cast<double>(m_scale);
+  return openstudio::contam::to<double>(m_scale);
 }
 
 bool IndexModelImpl::setScale(const double scale)
@@ -674,7 +674,7 @@ void IndexModelImpl::setWPCdesc(const std::string &WPCdesc)
 
 double IndexModelImpl::X0() const
 {
-  return boost::lexical_cast<double>(m_X0);
+  return openstudio::contam::to<double>(m_X0);
 }
 
 bool IndexModelImpl::setX0(const double X0)
@@ -690,7 +690,7 @@ bool IndexModelImpl::setX0(const std::string &X0)
 
 double IndexModelImpl::Y0() const
 {
-  return boost::lexical_cast<double>(m_Y0);
+  return openstudio::contam::to<double>(m_Y0);
 }
 
 bool IndexModelImpl::setY0(const double Y0)
@@ -706,7 +706,7 @@ bool IndexModelImpl::setY0(const std::string &Y0)
 
 double IndexModelImpl::Z0() const
 {
-  return boost::lexical_cast<double>(m_Z0);
+  return openstudio::contam::to<double>(m_Z0);
 }
 
 bool IndexModelImpl::setZ0(const double Z0)
@@ -722,7 +722,7 @@ bool IndexModelImpl::setZ0(const std::string &Z0)
 
 double IndexModelImpl::angle() const
 {
-  return boost::lexical_cast<double>(m_angle);
+  return openstudio::contam::to<double>(m_angle);
 }
 
 bool IndexModelImpl::setAngle(const double angle)
@@ -748,7 +748,7 @@ void IndexModelImpl::setU_XYZ(const int u_XYZ)
 
 double IndexModelImpl::epsPath() const
 {
-  return boost::lexical_cast<double>(m_epsPath);
+  return openstudio::contam::to<double>(m_epsPath);
 }
 
 bool IndexModelImpl::setEpsPath(const double epsPath)
@@ -764,7 +764,7 @@ bool IndexModelImpl::setEpsPath(const std::string &epsPath)
 
 double IndexModelImpl::epsSpcs() const
 {
-  return boost::lexical_cast<double>(m_epsSpcs);
+  return openstudio::contam::to<double>(m_epsSpcs);
 }
 
 bool IndexModelImpl::setEpsSpcs(const double epsSpcs)
@@ -840,7 +840,7 @@ void IndexModelImpl::setWpctrig(const int wpctrig)
 
 double IndexModelImpl::latd() const
 {
-  return boost::lexical_cast<double>(m_latd);
+  return openstudio::contam::to<double>(m_latd);
 }
 
 bool IndexModelImpl::setLatd(const double latd)
@@ -856,7 +856,7 @@ bool IndexModelImpl::setLatd(const std::string &latd)
 
 double IndexModelImpl::lgtd() const
 {
-  return boost::lexical_cast<double>(m_lgtd);
+  return openstudio::contam::to<double>(m_lgtd);
 }
 
 bool IndexModelImpl::setLgtd(const double lgtd)
@@ -872,7 +872,7 @@ bool IndexModelImpl::setLgtd(const std::string &lgtd)
 
 double IndexModelImpl::Tznr() const
 {
-  return boost::lexical_cast<double>(m_Tznr);
+  return openstudio::contam::to<double>(m_Tznr);
 }
 
 bool IndexModelImpl::setTznr(const double Tznr)
@@ -888,7 +888,7 @@ bool IndexModelImpl::setTznr(const std::string &Tznr)
 
 double IndexModelImpl::altd() const
 {
-  return boost::lexical_cast<double>(m_altd);
+  return openstudio::contam::to<double>(m_altd);
 }
 
 bool IndexModelImpl::setAltd(const double altd)
@@ -904,7 +904,7 @@ bool IndexModelImpl::setAltd(const std::string &altd)
 
 double IndexModelImpl::Tgrnd() const
 {
-  return boost::lexical_cast<double>(m_Tgrnd);
+  return openstudio::contam::to<double>(m_Tgrnd);
 }
 
 bool IndexModelImpl::setTgrnd(const double Tgrnd)

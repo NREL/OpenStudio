@@ -53,13 +53,12 @@ Reader::~Reader()
 
 double Reader::readDouble()
 {
-  bool ok;
-  std::string string = readString();
-  double value = FLOAT_CHECK(string, &ok);
-  if(!ok) {
+  const auto string = readString();
+  try {
+    return openstudio::contam::to<double>(string);
+  } catch (const std::bad_cast &) {
     LOG_AND_THROW("Floating point (double) conversion error at line " << m_lineNumber << " for \"" << string << "\"");
   }
-  return value;
 }
 
 std::string Reader::readString()
@@ -242,10 +241,8 @@ template <> double Reader::readNumber<double>()
 
 template <> std::string Reader::readNumber<std::string>()
 {
-  bool ok;
   std::string string = readString();
-  FLOAT_CHECK(string, &ok);
-  if(!ok) {
+  if(!openstudio::contam::is_valid<double>(string)) {
     LOG_AND_THROW("Invalid number \"" << string << "\" on line " << m_lineNumber);
   }
   return string;
