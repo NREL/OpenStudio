@@ -149,7 +149,7 @@ void ResultsView::openDViewClicked()
 {
   LOG(Debug, "openDViewClicked");
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_DARWIN
   openstudio::path dview
     = openstudio::toPath(QCoreApplication::applicationDirPath()) / openstudio::toPath("../../../DView.app/Contents/MacOS/DView");
 #else

@@ -161,7 +161,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
     setStyleSheet(style);
   }
 
-  #ifdef Q_OS_MAC
+  #ifdef Q_OS_DARWIN
     std::stringstream webenginePath;
     webenginePath << QCoreApplication::applicationDirPath().toStdString();
     webenginePath << "/../Frameworks/QtWebEngineCore.framework/Versions/5/Helpers/QtWebEngineProcess.app/Contents/MacOS/QtWebEngineProcess";
@@ -781,7 +781,7 @@ void OpenStudioApp::onCloseClicked()
 {
   if( closeDocument() )
   {
-    #ifndef Q_OS_MAC
+    #ifndef Q_OS_DARWIN
       QApplication::quit();
     #endif
   }

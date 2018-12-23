@@ -33,7 +33,7 @@ namespace openstudio{
 
 // platform specific
 
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
 
   #include <Windows.h> // for SetConsoleOutputCP
 

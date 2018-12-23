@@ -56,7 +56,7 @@ OSDialog::OSDialog(bool isIP,
 {
   setStyleSheet("openstudio--OSDialog { background: #E6E6E6; }");
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_DARWIN
   setWindowFlags(Qt::FramelessWindowHint);
 #else
   setWindowFlags(Qt::CustomizeWindowHint);
@@ -160,7 +160,7 @@ void OSDialog::mouseMoveEvent(QMouseEvent *event)
 
 void OSDialog::resizeEvent(QResizeEvent * event)
 {
-#ifdef Q_OS_MAC
+#ifdef Q_OS_DARWIN
   QPainterPath path;
   path.addRoundedRect(rect(),9.0,9.0);
   QPolygon p = path.toFillPolygon().toPolygon();

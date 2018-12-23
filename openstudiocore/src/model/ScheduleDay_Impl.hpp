@@ -134,7 +134,8 @@ namespace detail {
 
     virtual bool okToResetScheduleTypeLimits() const override;
 
-   private slots:
+   //private slots:
+   private:
 
     void clearCachedVariables();
 

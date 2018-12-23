@@ -36,7 +36,6 @@
 namespace openstudio {
 
 class UTILITIES_API WorkspaceObjectWatcher : public IdfObjectWatcher {
-  // Q_OBJECT;
  public:
 
   /// constructor with IdfObject to watch

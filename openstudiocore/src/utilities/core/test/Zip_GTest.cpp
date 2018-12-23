@@ -38,7 +38,7 @@
 #include "../ZipFile.hpp"
 
 
-#ifdef Q_OS_WIN
+#if (defined (_WIN32) || defined (_WIN64))
 std::ostream& operator<<(std::ostream& t_o, const openstudio::path &t_path)
 {
   return t_o << openstudio::toString(t_path);
