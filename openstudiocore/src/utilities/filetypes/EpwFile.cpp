@@ -35,6 +35,9 @@
 #include "../core/StringHelpers.hpp"
 #include "../core/Assert.hpp"
 
+#define FMT_HEADER_ONLY
+
+#include <fmt/format.h>
 
 namespace openstudio{
 
@@ -1551,10 +1554,9 @@ namespace openstudio{
 
   boost::optional<std::string> EpwDataPoint::toWthString() const
   {
-    std::string date = QString("%1/%2").arg(m_month).arg(m_day).toStdString();
+    std::string date = fmt::format("{}/{}", m_month, m_day);
     std::string string = date;
-    QString qhms = QString().sprintf("%02d:%02d:00", m_hour, m_minute);
-    std::string hms = qhms.toStdString();
+    std::string hms = fmt::format("{:02d}:{:02d}:00", m_hour, m_minute);
     string += '\t' + hms;
     boost::optional<double> value = dryBulbTemperature();
     if(!value) {
@@ -4196,16 +4198,16 @@ namespace openstudio{
 
     fp << "WeatherFile ContamW 2.0\n";
     fp << description << "\n";
-    fp << toString(QString("%1/%2\t!start date\n").arg(openstudio::month(startDate().monthOfYear())).arg(startDate().dayOfMonth()));
-    fp << toString(QString("%1/%2\t!end date\n").arg(openstudio::month(endDate().monthOfYear())).arg(endDate().dayOfMonth()));
+    fp << fmt::format("{}/{}\t!start date\n", openstudio::month(startDate().monthOfYear()), startDate().dayOfMonth());
+    fp << fmt::format("%1/%2\t!end date\n", openstudio::month(endDate().monthOfYear()), endDate().dayOfMonth());
     fp << "!Date\tDofW\tDtype\tDST\tTgrnd [K]\n";
     openstudio::Time delta(1,0);
     int dayofweek = startDayOfWeek().value()+1;
     for(openstudio::Date current=startDate();current<=endDate();current += delta) {
-      fp << toString(QString("%1/%2\t%3\t%3\t0\t283.15\n")
-          .arg(openstudio::month(current.monthOfYear()))
-          .arg(current.dayOfMonth())
-          .arg(dayofweek));
+      fp << fmt::format("%1/%2\t%3\t%3\t0\t283.15\n",
+          openstudio::month(current.monthOfYear()),
+          current.dayOfMonth(),
+          dayofweek);
       dayofweek++;
       if(dayofweek > 7) {
         dayofweek=1;

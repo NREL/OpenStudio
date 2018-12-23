@@ -1375,6 +1375,9 @@ include_directories("${CMAKE_HOME_DIRECTORY}/src/qtwinmigrate")
 # XML
 include_directories("${CMAKE_HOME_DIRECTORY}/src/pugixml/src")
 
+# fmtlib
+include_directories("${CMAKE_HOME_DIRECTORY}/src/fmtlib/include")
+
 # Project binary directory
 include_directories("${CMAKE_BINARY_DIR}/src/")
 ###############################################################################
