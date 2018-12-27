@@ -463,16 +463,17 @@ std::string number_formatter(const Value value, const FloatFormat format, const 
   }
 }
 
+namespace string_conversions {
+  std::string number(const std::uint32_t value, const int base) { return number_formatter(value, base); }
+  std::string number(const std::int32_t value, const int base) { return number_formatter(value, base); }
+  std::string number(const std::uint64_t value, const int base) { return number_formatter(value, base); }
+  std::string number(const std::int64_t value, const int base) { return number_formatter(value, base); }
 
-std::string number(const std::uint32_t value, const int base) { return number_formatter(value, base); }
-std::string number(const std::int32_t value, const int base) { return number_formatter(value, base); }
-std::string number(const std::uint64_t value, const int base) { return number_formatter(value, base); }
-std::string number(const std::int64_t value, const int base) { return number_formatter(value, base); }
+  std::string number(const double value, const FloatFormat format, const int precision)
+  {
+    return number_formatter(value, format, precision); 
+  }
 
-std::string number(const double value, const FloatFormat format, const int precision)
-{
-  return number_formatter(value, format, precision); 
 }
-
 
 } // openstudio

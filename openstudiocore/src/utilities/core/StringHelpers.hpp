@@ -138,15 +138,53 @@ namespace openstudio {
     general_capital
   };
 
-  /** Converts a number into a string, replicating the behavior of QString::number.
-   *  This is necessary because QString does *not* respect the locale, and stringstring
-   *  and std::string::to_string *do* respect the locale
-   */
-  UTILITIES_API std::string number(std::int32_t, int base = 10);
-  UTILITIES_API std::string number(std::uint32_t, int base = 10);
-  UTILITIES_API std::string number(std::int64_t, int base = 10);
-  UTILITIES_API std::string number(std::uint64_t, int base = 10);
-  UTILITIES_API std::string number(double, FloatFormat format = FloatFormat::general, int presision = 6);
+  namespace string_conversions {
+    /** Converts a number into a string, replicating the behavior of QString::number.
+     *  This is necessary because QString does *not* respect the locale, and stringstring
+     *  and std::string::to_string *do* respect the locale
+     */
+    UTILITIES_API std::string number(std::int32_t, int base = 10);
+    UTILITIES_API std::string number(std::uint32_t, int base = 10);
+    UTILITIES_API std::string number(std::int64_t, int base = 10);
+    UTILITIES_API std::string number(std::uint64_t, int base = 10);
+    UTILITIES_API std::string number(double, FloatFormat format = FloatFormat::general, int presision = 6);
+
+    template<typename DesiredType, typename InputType>
+    DesiredType to(const InputType &inp)
+    {
+      std::stringstream ss;
+      ss.imbue(std::locale::classic());
+      ss.str(inp);
+      DesiredType o;
+      ss >> o;
+      if (!ss.eof() || ss.fail()) {
+        throw std::bad_cast();
+      }
+      return o;
+    }
+
+    template<typename DesiredType, typename InputType>
+    bool is_valid(const InputType &input)
+    {
+      try {
+        to<DesiredType>(input);
+        return true;
+      } catch (const std::bad_cast &) {
+        return false;
+      }
+    }
+
+    template<typename DesiredType, typename InputType, typename DestinationType>
+    bool assign_if_valid(const InputType &input, DestinationType &dest)
+    {
+      if (is_valid<DesiredType>(input)) {
+        dest = input;
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
 }
 
 #endif // UTILITIES_CORE_STRINGHELPERS_HPP

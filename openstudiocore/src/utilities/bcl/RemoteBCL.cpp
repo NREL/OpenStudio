@@ -734,7 +734,7 @@ namespace openstudio{
       url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&fq[]=tid:%3&api_version=%4").arg(
         toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
         toQString(filterType),
-        toQString(openstudio::number(componentTypeTID)),
+        toQString(openstudio::string_conversions::number(componentTypeTID)),
         toQString(m_apiVersion)
       );
     }
@@ -774,8 +774,8 @@ namespace openstudio{
         toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
         toQString(filterType),
         toQString(m_apiVersion),
-        toQString(openstudio::number(m_numResultsPerQuery)),
-        toQString(openstudio::number(page))
+        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+        toQString(openstudio::string_conversions::number(page))
       );
     }else{
       url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&fq[]=%3:\"%4\""
@@ -785,8 +785,8 @@ namespace openstudio{
         (filterType == "nrel_component" ? "sm_vid_Component_Tags" : "sm_vid_Measure_Tags"),
         toQString(componentType),
         toQString(m_apiVersion),
-        toQString(openstudio::number(m_numResultsPerQuery)),
-        toQString(openstudio::number(page))
+        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+        toQString(openstudio::string_conversions::number(page))
       );
     }
     //LOG(Warn, toString(url));
@@ -825,17 +825,17 @@ namespace openstudio{
         toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
         toQString(filterType),
         toQString(m_apiVersion),
-        toQString(openstudio::number(m_numResultsPerQuery)),
-        toQString(openstudio::number(page))
+        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+        toQString(openstudio::string_conversions::number(page))
       );
     }else{
       url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&fq[]=tid:%3&api_version=%4&show_rows=%5&page=%6").arg(
         toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
         toQString(filterType),
-        toQString(openstudio::number(componentTypeTID)),
+        toQString(openstudio::string_conversions::number(componentTypeTID)),
         toQString(m_apiVersion),
-        toQString(openstudio::number(m_numResultsPerQuery)),
-        toQString(openstudio::number(page))
+        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+        toQString(openstudio::string_conversions::number(page))
       );
     }
     //LOG(Warn, toString(url));

@@ -347,12 +347,12 @@ std::string FanDataPoint::write()
 
 double FanDataPoint::mF() const
 {
-  return openstudio::contam::to<double>(m_mF);
+  return openstudio::string_conversions::to<double>(m_mF);
 }
 
 bool FanDataPoint::setMF(const double mF)
 {
-  m_mF = openstudio::number(mF);
+  m_mF = openstudio::string_conversions::number(mF);
   return true;
 }
 
@@ -373,12 +373,12 @@ void FanDataPoint::setU_mF(const int u_mF)
 
 double FanDataPoint::dP() const
 {
-  return openstudio::contam::to<double>(m_dP);
+  return openstudio::string_conversions::to<double>(m_dP);
 }
 
 bool FanDataPoint::setDP(const double dP)
 {
-  m_dP = openstudio::number(dP);
+  m_dP = openstudio::string_conversions::number(dP);
   return true;
 }
 
@@ -399,12 +399,12 @@ void FanDataPoint::setU_dP(const int u_dP)
 
 double FanDataPoint::rP() const
 {
-  return openstudio::contam::to<double>(m_rP);
+  return openstudio::string_conversions::to<double>(m_rP);
 }
 
 bool FanDataPoint::setRP(const double rP)
 {
-  m_rP = openstudio::number(rP);
+  m_rP = openstudio::string_conversions::number(rP);
   return true;
 }
 
@@ -463,12 +463,12 @@ std::string XyDataPoint::write()
 
 double XyDataPoint::x() const
 {
-  return openstudio::contam::to<double>(m_x);
+  return openstudio::string_conversions::to<double>(m_x);
 }
 
 bool XyDataPoint::setX(const double x)
 {
-  m_x = openstudio::number(x);
+  m_x = openstudio::string_conversions::number(x);
   return true;
 }
 
@@ -479,12 +479,12 @@ bool XyDataPoint::setX(const std::string &x)
 
 double XyDataPoint::y() const
 {
-  return openstudio::contam::to<double>(m_y);
+  return openstudio::string_conversions::to<double>(m_y);
 }
 
 bool XyDataPoint::setY(const double y)
 {
-  m_y = openstudio::number(y);
+  m_y = openstudio::string_conversions::number(y);
   return true;
 }
 
@@ -547,12 +547,12 @@ void AirflowSubelementData::setNr(const int nr)
 
 double AirflowSubelementData::relHt() const
 {
-  return openstudio::contam::to<double>(m_relHt);
+  return openstudio::string_conversions::to<double>(m_relHt);
 }
 
 bool AirflowSubelementData::setRelHt(const double relHt)
 {
-  m_relHt = openstudio::number(relHt);
+  m_relHt = openstudio::string_conversions::number(relHt);
   return true;
 }
 
@@ -611,12 +611,12 @@ std::string PressureCoefficientPoint::write()
 
 double PressureCoefficientPoint::azm() const
 {
-  return openstudio::contam::to<double>(m_azm);
+  return openstudio::string_conversions::to<double>(m_azm);
 }
 
 bool PressureCoefficientPoint::setAzm(const double azm)
 {
-  m_azm = openstudio::number(azm);
+  m_azm = openstudio::string_conversions::number(azm);
   return true;
 }
 
@@ -627,12 +627,12 @@ bool PressureCoefficientPoint::setAzm(const std::string &azm)
 
 double PressureCoefficientPoint::coef() const
 {
-  return openstudio::contam::to<double>(m_coef);
+  return openstudio::string_conversions::to<double>(m_coef);
 }
 
 bool PressureCoefficientPoint::setCoef(const double coef)
 {
-  m_coef = openstudio::number(coef);
+  m_coef = openstudio::string_conversions::number(coef);
   return true;
 }
 
@@ -691,12 +691,12 @@ void SchedulePoint::setTime(const std::string &time)
 
 double SchedulePoint::ctrl() const
 {
-  return openstudio::contam::to<double>(m_ctrl);
+  return openstudio::string_conversions::to<double>(m_ctrl);
 }
 
 bool SchedulePoint::setCtrl(const double ctrl)
 {
-  m_ctrl = openstudio::number(ctrl);
+  m_ctrl = openstudio::string_conversions::number(ctrl);
   return true;
 }
 

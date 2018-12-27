@@ -55,7 +55,7 @@ double Reader::readDouble()
 {
   const auto string = readString();
   try {
-    return openstudio::contam::to<double>(string);
+    return openstudio::string_conversions::to<double>(string);
   } catch (const std::bad_cast &) {
     LOG_AND_THROW("Floating point (double) conversion error at line " << m_lineNumber << " for \"" << string << "\"");
   }

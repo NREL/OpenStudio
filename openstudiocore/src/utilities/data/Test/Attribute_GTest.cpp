@@ -325,10 +325,10 @@ TEST_F(DataFixture, Attribute_NotEqual)
 TEST_F(DataFixture, Attribute_NumberFormatting) {
   double value(3.14159e52);
 
-  auto str = openstudio::number(value);
+  auto str = openstudio::string_conversions::number(value);
   EXPECT_EQ("3.14159e+52",str); // original behavior, bad for http
 
-  str = openstudio::number(value,FloatFormat::general_capital,std::numeric_limits<double>::digits10);
+  str = openstudio::string_conversions::number(value,FloatFormat::general_capital,std::numeric_limits<double>::digits10);
   EXPECT_EQ("3.14159E52",boost::regex_replace(str,boost::regex("\\+"),""));
 }
 

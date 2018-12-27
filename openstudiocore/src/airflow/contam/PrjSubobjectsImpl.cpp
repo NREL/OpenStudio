@@ -107,12 +107,12 @@ std::string WeatherDataImpl::write()
 
 double WeatherDataImpl::Tambt() const
 {
-  return openstudio::contam::to<double>(m_Tambt);
+  return openstudio::string_conversions::to<double>(m_Tambt);
 }
 
 bool WeatherDataImpl::setTambt(const double Tambt)
 {
-  m_Tambt = openstudio::number(Tambt);
+  m_Tambt = openstudio::string_conversions::number(Tambt);
   return true;
 }
 
@@ -123,12 +123,12 @@ bool WeatherDataImpl::setTambt(const std::string &Tambt)
 
 double WeatherDataImpl::barpres() const
 {
-  return openstudio::contam::to<double>(m_barpres);
+  return openstudio::string_conversions::to<double>(m_barpres);
 }
 
 bool WeatherDataImpl::setBarpres(const double barpres)
 {
-  m_barpres = openstudio::number(barpres);
+  m_barpres = openstudio::string_conversions::number(barpres);
   return true;
 }
 
@@ -139,12 +139,12 @@ bool WeatherDataImpl::setBarpres(const std::string &barpres)
 
 double WeatherDataImpl::windspd() const
 {
-  return openstudio::contam::to<double>(m_windspd);
+  return openstudio::string_conversions::to<double>(m_windspd);
 }
 
 bool WeatherDataImpl::setWindspd(const double windspd)
 {
-  m_windspd = openstudio::number(windspd);
+  m_windspd = openstudio::string_conversions::number(windspd);
   return true;
 }
 
@@ -155,12 +155,12 @@ bool WeatherDataImpl::setWindspd(const std::string &windspd)
 
 double WeatherDataImpl::winddir() const
 {
-  return openstudio::contam::to<double>(m_winddir);
+  return openstudio::string_conversions::to<double>(m_winddir);
 }
 
 bool WeatherDataImpl::setWinddir(const double winddir)
 {
-  m_winddir = openstudio::number(winddir);
+  m_winddir = openstudio::string_conversions::number(winddir);
   return true;
 }
 
@@ -171,12 +171,12 @@ bool WeatherDataImpl::setWinddir(const std::string &winddir)
 
 double WeatherDataImpl::relhum() const
 {
-  return openstudio::contam::to<double>(m_relhum);
+  return openstudio::string_conversions::to<double>(m_relhum);
 }
 
 bool WeatherDataImpl::setRelhum(const double relhum)
 {
-  m_relhum = openstudio::number(relhum);
+  m_relhum = openstudio::string_conversions::number(relhum);
   return true;
 }
 

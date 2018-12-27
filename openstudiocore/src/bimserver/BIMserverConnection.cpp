@@ -188,7 +188,7 @@ namespace bimserver {
         foreach(const QJsonValue & value, result) {
           QJsonObject ifcProject = value.toObject();
           int oid = ifcProject["oid"].toInt();
-          QString projectID = toQString(openstudio::number(oid));
+          QString projectID = toQString(openstudio::string_conversions::number(oid));
           QString projectName = ifcProject["name"].toString();
           QString project = projectID.append(":").append(projectName);
           projectList.append(project);
@@ -258,7 +258,7 @@ namespace bimserver {
       if (!containsError(response))
       {
         QJsonObject result = response["result"].toObject();
-        m_serializerOid = toQString(openstudio::number(result["oid"].toInt()));
+        m_serializerOid = toQString(openstudio::string_conversions::number(result["oid"].toInt()));
         sendDownloadRequest();
       } else {
         emitErrorMessage(response);
@@ -307,7 +307,7 @@ namespace bimserver {
       QJsonObject response = downloadResponse["response"].toObject();
 
       if (!containsError(response)) {
-        m_actionId = toQString(openstudio::number(response["result"].toInt()));
+        m_actionId = toQString(openstudio::string_conversions::number(response["result"].toInt()));
         sendGetProgressRequest(m_actionId, QString("download"));
       } else {
         emitErrorMessage(response);
@@ -560,7 +560,7 @@ namespace bimserver {
 
       if (!containsError(response)) {
         QJsonObject result = response["result"].toObject();
-        m_deserializerOid = toQString(openstudio::number(result["oid"].toInt()));
+        m_deserializerOid = toQString(openstudio::string_conversions::number(result["oid"].toInt()));
         sendCheckInIFCRequest(m_filePath);
       } else {
         emitErrorMessage(response);
@@ -583,7 +583,7 @@ namespace bimserver {
     parameters["poid"] = QJsonValue(m_poid);
     parameters["comment"] = QJsonValue(QString(""));
     parameters["deserializerOid"] = QJsonValue(m_deserializerOid);
-    parameters["fileSize"] = QJsonValue(toQString(openstudio::number(openstudio::filesystem::file_size(path))));
+    parameters["fileSize"] = QJsonValue(toQString(openstudio::string_conversions::number(openstudio::filesystem::file_size(path))));
     parameters["fileName"] = QJsonValue(openstudio::toQString(path.stem()));
     //encode file into Base64
     std::vector<char> data = openstudio::filesystem::read(file);
@@ -625,7 +625,7 @@ namespace bimserver {
       QJsonObject response = checkInIFCResponse["response"].toObject();
 
       if (!containsError(response)) {
-        QString topicId = toQString(openstudio::number(response["result"].toInt()));
+        QString topicId = toQString(openstudio::string_conversions::number(response["result"].toInt()));
         sendGetProgressRequest(topicId, "checkInIFC");
       } else {
         emitErrorMessage(response);
@@ -687,7 +687,7 @@ namespace bimserver {
         QStringList revisionList;
         foreach(const QJsonValue & value, result) {
           QJsonObject ifcRevision = value.toObject();
-          QString revision = toQString(openstudio::number(ifcRevision["oid"].toInt()));
+          QString revision = toQString(openstudio::string_conversions::number(ifcRevision["oid"].toInt()));
           double time = ifcRevision["date"].toDouble();
           QDateTime timestamp;
           timestamp.setTime_t(static_cast<unsigned int>(time / 1000 + 0.5));

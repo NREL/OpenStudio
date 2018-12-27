@@ -418,12 +418,12 @@ void IndexModelImpl::setDef_flows(const int def_flows)
 
 double IndexModelImpl::def_T() const
 {
-  return openstudio::contam::to<double>(m_def_T);
+  return openstudio::string_conversions::to<double>(m_def_T);
 }
 
 bool IndexModelImpl::setDef_T(const double def_T)
 {
-  m_def_T = openstudio::number(def_T);
+  m_def_T = openstudio::string_conversions::number(def_T);
   return true;
 }
 
@@ -444,12 +444,12 @@ void IndexModelImpl::setUdefT(const int udefT)
 
 double IndexModelImpl::rel_N() const
 {
-  return openstudio::contam::to<double>(m_rel_N);
+  return openstudio::string_conversions::to<double>(m_rel_N);
 }
 
 bool IndexModelImpl::setRel_N(const double rel_N)
 {
-  m_rel_N = openstudio::number(rel_N);
+  m_rel_N = openstudio::string_conversions::number(rel_N);
   return true;
 }
 
@@ -460,12 +460,12 @@ bool IndexModelImpl::setRel_N(const std::string &rel_N)
 
 double IndexModelImpl::wind_H() const
 {
-  return openstudio::contam::to<double>(m_wind_H);
+  return openstudio::string_conversions::to<double>(m_wind_H);
 }
 
 bool IndexModelImpl::setWind_H(const double wind_H)
 {
-  m_wind_H = openstudio::number(wind_H);
+  m_wind_H = openstudio::string_conversions::number(wind_H);
   return true;
 }
 
@@ -486,12 +486,12 @@ void IndexModelImpl::setUwH(const int uwH)
 
 double IndexModelImpl::wind_Ao() const
 {
-  return openstudio::contam::to<double>(m_wind_Ao);
+  return openstudio::string_conversions::to<double>(m_wind_Ao);
 }
 
 bool IndexModelImpl::setWind_Ao(const double wind_Ao)
 {
-  m_wind_Ao = openstudio::number(wind_Ao);
+  m_wind_Ao = openstudio::string_conversions::number(wind_Ao);
   return true;
 }
 
@@ -502,12 +502,12 @@ bool IndexModelImpl::setWind_Ao(const std::string &wind_Ao)
 
 double IndexModelImpl::wind_a() const
 {
-  return openstudio::contam::to<double>(m_wind_a);
+  return openstudio::string_conversions::to<double>(m_wind_a);
 }
 
 bool IndexModelImpl::setWind_a(const double wind_a)
 {
-  m_wind_a = openstudio::number(wind_a);
+  m_wind_a = openstudio::string_conversions::number(wind_a);
   return true;
 }
 
@@ -518,12 +518,12 @@ bool IndexModelImpl::setWind_a(const std::string &wind_a)
 
 double IndexModelImpl::scale() const
 {
-  return openstudio::contam::to<double>(m_scale);
+  return openstudio::string_conversions::to<double>(m_scale);
 }
 
 bool IndexModelImpl::setScale(const double scale)
 {
-  m_scale = openstudio::number(scale);
+  m_scale = openstudio::string_conversions::number(scale);
   return true;
 }
 
@@ -674,12 +674,12 @@ void IndexModelImpl::setWPCdesc(const std::string &WPCdesc)
 
 double IndexModelImpl::X0() const
 {
-  return openstudio::contam::to<double>(m_X0);
+  return openstudio::string_conversions::to<double>(m_X0);
 }
 
 bool IndexModelImpl::setX0(const double X0)
 {
-  m_X0 = openstudio::number(X0);
+  m_X0 = openstudio::string_conversions::number(X0);
   return true;
 }
 
@@ -690,12 +690,12 @@ bool IndexModelImpl::setX0(const std::string &X0)
 
 double IndexModelImpl::Y0() const
 {
-  return openstudio::contam::to<double>(m_Y0);
+  return openstudio::string_conversions::to<double>(m_Y0);
 }
 
 bool IndexModelImpl::setY0(const double Y0)
 {
-  m_Y0 = openstudio::number(Y0);
+  m_Y0 = openstudio::string_conversions::number(Y0);
   return true;
 }
 
@@ -706,12 +706,12 @@ bool IndexModelImpl::setY0(const std::string &Y0)
 
 double IndexModelImpl::Z0() const
 {
-  return openstudio::contam::to<double>(m_Z0);
+  return openstudio::string_conversions::to<double>(m_Z0);
 }
 
 bool IndexModelImpl::setZ0(const double Z0)
 {
-  m_Z0 = openstudio::number(Z0);
+  m_Z0 = openstudio::string_conversions::number(Z0);
   return true;
 }
 
@@ -722,12 +722,12 @@ bool IndexModelImpl::setZ0(const std::string &Z0)
 
 double IndexModelImpl::angle() const
 {
-  return openstudio::contam::to<double>(m_angle);
+  return openstudio::string_conversions::to<double>(m_angle);
 }
 
 bool IndexModelImpl::setAngle(const double angle)
 {
-  m_angle = openstudio::number(angle);
+  m_angle = openstudio::string_conversions::number(angle);
   return true;
 }
 
@@ -748,12 +748,12 @@ void IndexModelImpl::setU_XYZ(const int u_XYZ)
 
 double IndexModelImpl::epsPath() const
 {
-  return openstudio::contam::to<double>(m_epsPath);
+  return openstudio::string_conversions::to<double>(m_epsPath);
 }
 
 bool IndexModelImpl::setEpsPath(const double epsPath)
 {
-  m_epsPath = openstudio::number(epsPath);
+  m_epsPath = openstudio::string_conversions::number(epsPath);
   return true;
 }
 
@@ -764,12 +764,12 @@ bool IndexModelImpl::setEpsPath(const std::string &epsPath)
 
 double IndexModelImpl::epsSpcs() const
 {
-  return openstudio::contam::to<double>(m_epsSpcs);
+  return openstudio::string_conversions::to<double>(m_epsSpcs);
 }
 
 bool IndexModelImpl::setEpsSpcs(const double epsSpcs)
 {
-  m_epsSpcs = openstudio::number(epsSpcs);
+  m_epsSpcs = openstudio::string_conversions::number(epsSpcs);
   return true;
 }
 
@@ -840,12 +840,12 @@ void IndexModelImpl::setWpctrig(const int wpctrig)
 
 double IndexModelImpl::latd() const
 {
-  return openstudio::contam::to<double>(m_latd);
+  return openstudio::string_conversions::to<double>(m_latd);
 }
 
 bool IndexModelImpl::setLatd(const double latd)
 {
-  m_latd = openstudio::number(latd);
+  m_latd = openstudio::string_conversions::number(latd);
   return true;
 }
 
@@ -856,12 +856,12 @@ bool IndexModelImpl::setLatd(const std::string &latd)
 
 double IndexModelImpl::lgtd() const
 {
-  return openstudio::contam::to<double>(m_lgtd);
+  return openstudio::string_conversions::to<double>(m_lgtd);
 }
 
 bool IndexModelImpl::setLgtd(const double lgtd)
 {
-  m_lgtd = openstudio::number(lgtd);
+  m_lgtd = openstudio::string_conversions::number(lgtd);
   return true;
 }
 
@@ -872,12 +872,12 @@ bool IndexModelImpl::setLgtd(const std::string &lgtd)
 
 double IndexModelImpl::Tznr() const
 {
-  return openstudio::contam::to<double>(m_Tznr);
+  return openstudio::string_conversions::to<double>(m_Tznr);
 }
 
 bool IndexModelImpl::setTznr(const double Tznr)
 {
-  m_Tznr = openstudio::number(Tznr);
+  m_Tznr = openstudio::string_conversions::number(Tznr);
   return true;
 }
 
@@ -888,12 +888,12 @@ bool IndexModelImpl::setTznr(const std::string &Tznr)
 
 double IndexModelImpl::altd() const
 {
-  return openstudio::contam::to<double>(m_altd);
+  return openstudio::string_conversions::to<double>(m_altd);
 }
 
 bool IndexModelImpl::setAltd(const double altd)
 {
-  m_altd = openstudio::number(altd);
+  m_altd = openstudio::string_conversions::number(altd);
   return true;
 }
 
@@ -904,12 +904,12 @@ bool IndexModelImpl::setAltd(const std::string &altd)
 
 double IndexModelImpl::Tgrnd() const
 {
-  return openstudio::contam::to<double>(m_Tgrnd);
+  return openstudio::string_conversions::to<double>(m_Tgrnd);
 }
 
 bool IndexModelImpl::setTgrnd(const double Tgrnd)
 {
-  m_Tgrnd = openstudio::number(Tgrnd);
+  m_Tgrnd = openstudio::string_conversions::number(Tgrnd);
   return true;
 }
 

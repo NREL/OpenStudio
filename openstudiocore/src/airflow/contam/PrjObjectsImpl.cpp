@@ -265,12 +265,12 @@ void ZoneImpl::setPl(const int pl)
 
 double ZoneImpl::relHt() const
 {
-  return openstudio::contam::to<double>(m_relHt);
+  return openstudio::string_conversions::to<double>(m_relHt);
 }
 
 bool ZoneImpl::setRelHt(const double relHt)
 {
-  m_relHt = openstudio::number(relHt);
+  m_relHt = openstudio::string_conversions::number(relHt);
   return true;
 }
 
@@ -281,12 +281,12 @@ bool ZoneImpl::setRelHt(const std::string &relHt)
 
 double ZoneImpl::Vol() const
 {
-  return openstudio::contam::to<double>(m_Vol);
+  return openstudio::string_conversions::to<double>(m_Vol);
 }
 
 bool ZoneImpl::setVol(const double Vol)
 {
-  m_Vol = openstudio::number(Vol);
+  m_Vol = openstudio::string_conversions::number(Vol);
   return true;
 }
 
@@ -297,12 +297,12 @@ bool ZoneImpl::setVol(const std::string &Vol)
 
 double ZoneImpl::T0() const
 {
-  return openstudio::contam::to<double>(m_T0);
+  return openstudio::string_conversions::to<double>(m_T0);
 }
 
 bool ZoneImpl::setT0(const double T0)
 {
-  m_T0 = openstudio::number(T0);
+  m_T0 = openstudio::string_conversions::number(T0);
   return true;
 }
 
@@ -313,12 +313,12 @@ bool ZoneImpl::setT0(const std::string &T0)
 
 double ZoneImpl::P0() const
 {
-  return openstudio::contam::to<double>(m_P0);
+  return openstudio::string_conversions::to<double>(m_P0);
 }
 
 bool ZoneImpl::setP0(const double P0)
 {
-  m_P0 = openstudio::number(P0);
+  m_P0 = openstudio::string_conversions::number(P0);
   return true;
 }
 
@@ -419,12 +419,12 @@ void ZoneImpl::setCfdname(const std::string &cfdname)
 
 double ZoneImpl::X1() const
 {
-  return openstudio::contam::to<double>(m_X1);
+  return openstudio::string_conversions::to<double>(m_X1);
 }
 
 bool ZoneImpl::setX1(const double X1)
 {
-  m_X1 = openstudio::number(X1);
+  m_X1 = openstudio::string_conversions::number(X1);
   return true;
 }
 
@@ -435,12 +435,12 @@ bool ZoneImpl::setX1(const std::string &X1)
 
 double ZoneImpl::Y1() const
 {
-  return openstudio::contam::to<double>(m_Y1);
+  return openstudio::string_conversions::to<double>(m_Y1);
 }
 
 bool ZoneImpl::setY1(const double Y1)
 {
-  m_Y1 = openstudio::number(Y1);
+  m_Y1 = openstudio::string_conversions::number(Y1);
   return true;
 }
 
@@ -451,12 +451,12 @@ bool ZoneImpl::setY1(const std::string &Y1)
 
 double ZoneImpl::H1() const
 {
-  return openstudio::contam::to<double>(m_H1);
+  return openstudio::string_conversions::to<double>(m_H1);
 }
 
 bool ZoneImpl::setH1(const double H1)
 {
-  m_H1 = openstudio::number(H1);
+  m_H1 = openstudio::string_conversions::number(H1);
   return true;
 }
 
@@ -467,12 +467,12 @@ bool ZoneImpl::setH1(const std::string &H1)
 
 double ZoneImpl::X2() const
 {
-  return openstudio::contam::to<double>(m_X2);
+  return openstudio::string_conversions::to<double>(m_X2);
 }
 
 bool ZoneImpl::setX2(const double X2)
 {
-  m_X2 = openstudio::number(X2);
+  m_X2 = openstudio::string_conversions::number(X2);
   return true;
 }
 
@@ -483,12 +483,12 @@ bool ZoneImpl::setX2(const std::string &X2)
 
 double ZoneImpl::Y2() const
 {
-  return openstudio::contam::to<double>(m_Y2);
+  return openstudio::string_conversions::to<double>(m_Y2);
 }
 
 bool ZoneImpl::setY2(const double Y2)
 {
-  m_Y2 = openstudio::number(Y2);
+  m_Y2 = openstudio::string_conversions::number(Y2);
   return true;
 }
 
@@ -499,12 +499,12 @@ bool ZoneImpl::setY2(const std::string &Y2)
 
 double ZoneImpl::H2() const
 {
-  return openstudio::contam::to<double>(m_H2);
+  return openstudio::string_conversions::to<double>(m_H2);
 }
 
 bool ZoneImpl::setH2(const double H2)
 {
-  m_H2 = openstudio::number(H2);
+  m_H2 = openstudio::string_conversions::number(H2);
   return true;
 }
 
@@ -515,12 +515,12 @@ bool ZoneImpl::setH2(const std::string &H2)
 
 double ZoneImpl::celldx() const
 {
-  return openstudio::contam::to<double>(m_celldx);
+  return openstudio::string_conversions::to<double>(m_celldx);
 }
 
 bool ZoneImpl::setCelldx(const double celldx)
 {
-  m_celldx = openstudio::number(celldx);
+  m_celldx = openstudio::string_conversions::number(celldx);
   return true;
 }
 
@@ -531,12 +531,12 @@ bool ZoneImpl::setCelldx(const std::string &celldx)
 
 double ZoneImpl::axialD() const
 {
-  return openstudio::contam::to<double>(m_axialD);
+  return openstudio::string_conversions::to<double>(m_axialD);
 }
 
 bool ZoneImpl::setAxialD(const double axialD)
 {
-  m_axialD = openstudio::number(axialD);
+  m_axialD = openstudio::string_conversions::number(axialD);
   return true;
 }
 
@@ -606,7 +606,7 @@ bool ZoneImpl::system() const
 
 double ZoneImpl::ic(const int i) const
 {
-  return openstudio::contam::to<double>(m_ic[i]);
+  return openstudio::string_conversions::to<double>(m_ic[i]);
 }
 
 std::vector<double> ZoneImpl::ic() const
@@ -614,14 +614,14 @@ std::vector<double> ZoneImpl::ic() const
   std::vector<double> out;
   for(std::size_t i=0;i<m_ic.size();i++)
   {
-    out.push_back(openstudio::contam::to<double>(m_ic[i]));
+    out.push_back(openstudio::string_conversions::to<double>(m_ic[i]));
   }
   return out;
 }
 
 bool ZoneImpl::setIc(const int i, const double value)
 {
-  m_ic[i] = openstudio::number(value);
+  m_ic[i] = openstudio::string_conversions::number(value);
   return true;
 }
 
@@ -634,7 +634,7 @@ bool ZoneImpl::setIc(const std::vector<double> &ic)
 {
   std::vector<std::string> in;
   for(const auto &input : ic) {
-    in.push_back(openstudio::number(input));
+    in.push_back(openstudio::string_conversions::number(input));
   }
   return true;
 }
@@ -783,12 +783,12 @@ void SpeciesImpl::setNtflag(const bool ntflag)
 
 double SpeciesImpl::molwt() const
 {
-  return openstudio::contam::to<double>(m_molwt);
+  return openstudio::string_conversions::to<double>(m_molwt);
 }
 
 bool SpeciesImpl::setMolwt(const double molwt)
 {
-  m_molwt = openstudio::number(molwt);
+  m_molwt = openstudio::string_conversions::number(molwt);
   return true;
 }
 
@@ -799,12 +799,12 @@ bool SpeciesImpl::setMolwt(const std::string &molwt)
 
 double SpeciesImpl::mdiam() const
 {
-  return openstudio::contam::to<double>(m_mdiam);
+  return openstudio::string_conversions::to<double>(m_mdiam);
 }
 
 bool SpeciesImpl::setMdiam(const double mdiam)
 {
-  m_mdiam = openstudio::number(mdiam);
+  m_mdiam = openstudio::string_conversions::number(mdiam);
   return true;
 }
 
@@ -815,12 +815,12 @@ bool SpeciesImpl::setMdiam(const std::string &mdiam)
 
 double SpeciesImpl::edens() const
 {
-  return openstudio::contam::to<double>(m_edens);
+  return openstudio::string_conversions::to<double>(m_edens);
 }
 
 bool SpeciesImpl::setEdens(const double edens)
 {
-  m_edens = openstudio::number(edens);
+  m_edens = openstudio::string_conversions::number(edens);
   return true;
 }
 
@@ -831,7 +831,7 @@ bool SpeciesImpl::setEdens(const std::string &edens)
 
 double SpeciesImpl::decay() const
 {
-  return openstudio::contam::to<double>(m_decay);
+  return openstudio::string_conversions::to<double>(m_decay);
 }
 
 bool SpeciesImpl::setDecay(const double decay)
@@ -847,12 +847,12 @@ bool SpeciesImpl::setDecay(const std::string &decay)
 
 double SpeciesImpl::Dm() const
 {
-  return openstudio::contam::to<double>(m_Dm);
+  return openstudio::string_conversions::to<double>(m_Dm);
 }
 
 bool SpeciesImpl::setDm(const double Dm)
 {
-  m_Dm = openstudio::number(Dm);
+  m_Dm = openstudio::string_conversions::number(Dm);
   return true;
 }
 
@@ -863,12 +863,12 @@ bool SpeciesImpl::setDm(const std::string &Dm)
 
 double SpeciesImpl::ccdef() const
 {
-  return openstudio::contam::to<double>(m_ccdef);
+  return openstudio::string_conversions::to<double>(m_ccdef);
 }
 
 bool SpeciesImpl::setCcdef(const double ccdef)
 {
-  m_ccdef = openstudio::number(ccdef);
+  m_ccdef = openstudio::string_conversions::number(ccdef);
   return true;
 }
 
@@ -879,12 +879,12 @@ bool SpeciesImpl::setCcdef(const std::string &ccdef)
 
 double SpeciesImpl::Cp() const
 {
-  return openstudio::contam::to<double>(m_Cp);
+  return openstudio::string_conversions::to<double>(m_Cp);
 }
 
 bool SpeciesImpl::setCp(const double Cp)
 {
-  m_Cp = openstudio::number(Cp);
+  m_Cp = openstudio::string_conversions::number(Cp);
   return true;
 }
 
@@ -1381,12 +1381,12 @@ void AirflowPathImpl::setPld(const int pld)
 
 double AirflowPathImpl::X() const
 {
-  return openstudio::contam::to<double>(m_X);
+  return openstudio::string_conversions::to<double>(m_X);
 }
 
 bool AirflowPathImpl::setX(const double X)
 {
-  m_X = openstudio::number(X);
+  m_X = openstudio::string_conversions::number(X);
   return true;
 }
 
@@ -1397,12 +1397,12 @@ bool AirflowPathImpl::setX(const std::string &X)
 
 double AirflowPathImpl::Y() const
 {
-  return openstudio::contam::to<double>(m_Y);
+  return openstudio::string_conversions::to<double>(m_Y);
 }
 
 bool AirflowPathImpl::setY(const double Y)
 {
-  m_Y = openstudio::number(Y);
+  m_Y = openstudio::string_conversions::number(Y);
   return true;
 }
 
@@ -1413,12 +1413,12 @@ bool AirflowPathImpl::setY(const std::string &Y)
 
 double AirflowPathImpl::relHt() const
 {
-  return openstudio::contam::to<double>(m_relHt);
+  return openstudio::string_conversions::to<double>(m_relHt);
 }
 
 bool AirflowPathImpl::setRelHt(const double relHt)
 {
-  m_relHt = openstudio::number(relHt);
+  m_relHt = openstudio::string_conversions::number(relHt);
   return true;
 }
 
@@ -1429,12 +1429,12 @@ bool AirflowPathImpl::setRelHt(const std::string &relHt)
 
 double AirflowPathImpl::mult() const
 {
-  return openstudio::contam::to<double>(m_mult);
+  return openstudio::string_conversions::to<double>(m_mult);
 }
 
 bool AirflowPathImpl::setMult(const double mult)
 {
-  m_mult = openstudio::number(mult);
+  m_mult = openstudio::string_conversions::number(mult);
   return true;
 }
 
@@ -1445,12 +1445,12 @@ bool AirflowPathImpl::setMult(const std::string &mult)
 
 double AirflowPathImpl::wPset() const
 {
-  return openstudio::contam::to<double>(m_wPset);
+  return openstudio::string_conversions::to<double>(m_wPset);
 }
 
 bool AirflowPathImpl::setWPset(const double wPset)
 {
-  m_wPset = openstudio::number(wPset);
+  m_wPset = openstudio::string_conversions::number(wPset);
   return true;
 }
 
@@ -1461,12 +1461,12 @@ bool AirflowPathImpl::setWPset(const std::string &wPset)
 
 double AirflowPathImpl::wPmod() const
 {
-  return openstudio::contam::to<double>(m_wPmod);
+  return openstudio::string_conversions::to<double>(m_wPmod);
 }
 
 bool AirflowPathImpl::setWPmod(const double wPmod)
 {
-  m_wPmod = openstudio::number(wPmod);
+  m_wPmod = openstudio::string_conversions::number(wPmod);
   return true;
 }
 
@@ -1477,12 +1477,12 @@ bool AirflowPathImpl::setWPmod(const std::string &wPmod)
 
 double AirflowPathImpl::wazm() const
 {
-  return openstudio::contam::to<double>(m_wazm);
+  return openstudio::string_conversions::to<double>(m_wazm);
 }
 
 bool AirflowPathImpl::setWazm(const double wazm)
 {
-  m_wazm = openstudio::number(wazm);
+  m_wazm = openstudio::string_conversions::number(wazm);
   return true;
 }
 
@@ -1493,12 +1493,12 @@ bool AirflowPathImpl::setWazm(const std::string &wazm)
 
 double AirflowPathImpl::Fahs() const
 {
-  return openstudio::contam::to<double>(m_Fahs);
+  return openstudio::string_conversions::to<double>(m_Fahs);
 }
 
 bool AirflowPathImpl::setFahs(const double Fahs)
 {
-  m_Fahs = openstudio::number(Fahs);
+  m_Fahs = openstudio::string_conversions::number(Fahs);
   return true;
 }
 
@@ -1509,12 +1509,12 @@ bool AirflowPathImpl::setFahs(const std::string &Fahs)
 
 double AirflowPathImpl::Xmax() const
 {
-  return openstudio::contam::to<double>(m_Xmax);
+  return openstudio::string_conversions::to<double>(m_Xmax);
 }
 
 bool AirflowPathImpl::setXmax(const double Xmax)
 {
-  m_Xmax = openstudio::number(Xmax);
+  m_Xmax = openstudio::string_conversions::number(Xmax);
   return true;
 }
 
@@ -1525,12 +1525,12 @@ bool AirflowPathImpl::setXmax(const std::string &Xmax)
 
 double AirflowPathImpl::Xmin() const
 {
-  return openstudio::contam::to<double>(m_Xmin);
+  return openstudio::string_conversions::to<double>(m_Xmin);
 }
 
 bool AirflowPathImpl::setXmin(const double Xmin)
 {
-  m_Xmin = openstudio::number(Xmin);
+  m_Xmin = openstudio::string_conversions::number(Xmin);
   return true;
 }
 
@@ -2268,12 +2268,12 @@ void RunControlImpl::setAfmaxi(const int afmaxi)
 
 double RunControlImpl::afrcnvg() const
 {
-  return openstudio::contam::to<double>(m_afrcnvg);
+  return openstudio::string_conversions::to<double>(m_afrcnvg);
 }
 
 bool RunControlImpl::setAfrcnvg(const double afrcnvg)
 {
-  m_afrcnvg = openstudio::number(afrcnvg);
+  m_afrcnvg = openstudio::string_conversions::number(afrcnvg);
   return true;
 }
 
@@ -2284,12 +2284,12 @@ bool RunControlImpl::setAfrcnvg(const std::string &afrcnvg)
 
 double RunControlImpl::afacnvg() const
 {
-  return openstudio::contam::to<double>(m_afacnvg);
+  return openstudio::string_conversions::to<double>(m_afacnvg);
 }
 
 bool RunControlImpl::setAfacnvg(const double afacnvg)
 {
-  m_afacnvg = openstudio::number(afacnvg);
+  m_afacnvg = openstudio::string_conversions::number(afacnvg);
   return true;
 }
 
@@ -2300,12 +2300,12 @@ bool RunControlImpl::setAfacnvg(const std::string &afacnvg)
 
 double RunControlImpl::afrelax() const
 {
-  return openstudio::contam::to<double>(m_afrelax);
+  return openstudio::string_conversions::to<double>(m_afrelax);
 }
 
 bool RunControlImpl::setAfrelax(const double afrelax)
 {
-  m_afrelax = openstudio::number(afrelax);
+  m_afrelax = openstudio::string_conversions::number(afrelax);
   return true;
 }
 
@@ -2326,12 +2326,12 @@ void RunControlImpl::setUac2(const int uac2)
 
 double RunControlImpl::Pres() const
 {
-  return openstudio::contam::to<double>(m_Pres);
+  return openstudio::string_conversions::to<double>(m_Pres);
 }
 
 bool RunControlImpl::setPres(const double Pres)
 {
-  m_Pres = openstudio::number(Pres);
+  m_Pres = openstudio::string_conversions::number(Pres);
   return true;
 }
 
@@ -2382,12 +2382,12 @@ void RunControlImpl::setAflmaxi(const int aflmaxi)
 
 double RunControlImpl::aflcnvg() const
 {
-  return openstudio::contam::to<double>(m_aflcnvg);
+  return openstudio::string_conversions::to<double>(m_aflcnvg);
 }
 
 bool RunControlImpl::setAflcnvg(const double aflcnvg)
 {
-  m_aflcnvg = openstudio::number(aflcnvg);
+  m_aflcnvg = openstudio::string_conversions::number(aflcnvg);
   return true;
 }
 
@@ -2438,12 +2438,12 @@ void RunControlImpl::setCcmaxi(const int ccmaxi)
 
 double RunControlImpl::ccrcnvg() const
 {
-  return openstudio::contam::to<double>(m_ccrcnvg);
+  return openstudio::string_conversions::to<double>(m_ccrcnvg);
 }
 
 bool RunControlImpl::setCcrcnvg(const double ccrcnvg)
 {
-  m_ccrcnvg = openstudio::number(ccrcnvg);
+  m_ccrcnvg = openstudio::string_conversions::number(ccrcnvg);
   return true;
 }
 
@@ -2454,12 +2454,12 @@ bool RunControlImpl::setCcrcnvg(const std::string &ccrcnvg)
 
 double RunControlImpl::ccacnvg() const
 {
-  return openstudio::contam::to<double>(m_ccacnvg);
+  return openstudio::string_conversions::to<double>(m_ccacnvg);
 }
 
 bool RunControlImpl::setCcacnvg(const double ccacnvg)
 {
-  m_ccacnvg = openstudio::number(ccacnvg);
+  m_ccacnvg = openstudio::string_conversions::number(ccacnvg);
   return true;
 }
 
@@ -2470,12 +2470,12 @@ bool RunControlImpl::setCcacnvg(const std::string &ccacnvg)
 
 double RunControlImpl::ccrelax() const
 {
-  return openstudio::contam::to<double>(m_ccrelax);
+  return openstudio::string_conversions::to<double>(m_ccrelax);
 }
 
 bool RunControlImpl::setCcrelax(const double ccrelax)
 {
-  m_ccrelax = openstudio::number(ccrelax);
+  m_ccrelax = openstudio::string_conversions::number(ccrelax);
   return true;
 }
 
@@ -2526,12 +2526,12 @@ void RunControlImpl::setMfnmaxi(const int mfnmaxi)
 
 double RunControlImpl::mfnrcnvg() const
 {
-  return openstudio::contam::to<double>(m_mfnrcnvg);
+  return openstudio::string_conversions::to<double>(m_mfnrcnvg);
 }
 
 bool RunControlImpl::setMfnrcnvg(const double mfnrcnvg)
 {
-  m_mfnrcnvg = openstudio::number(mfnrcnvg);
+  m_mfnrcnvg = openstudio::string_conversions::number(mfnrcnvg);
   return true;
 }
 
@@ -2542,12 +2542,12 @@ bool RunControlImpl::setMfnrcnvg(const std::string &mfnrcnvg)
 
 double RunControlImpl::mfnacnvg() const
 {
-  return openstudio::contam::to<double>(m_mfnacnvg);
+  return openstudio::string_conversions::to<double>(m_mfnacnvg);
 }
 
 bool RunControlImpl::setMfnacnvg(const double mfnacnvg)
 {
-  m_mfnacnvg = openstudio::number(mfnacnvg);
+  m_mfnacnvg = openstudio::string_conversions::number(mfnacnvg);
   return true;
 }
 
@@ -2558,12 +2558,12 @@ bool RunControlImpl::setMfnacnvg(const std::string &mfnacnvg)
 
 double RunControlImpl::mfnrelax() const
 {
-  return openstudio::contam::to<double>(m_mfnrelax);
+  return openstudio::string_conversions::to<double>(m_mfnrelax);
 }
 
 bool RunControlImpl::setMfnrelax(const double mfnrelax)
 {
-  m_mfnrelax = openstudio::number(mfnrelax);
+  m_mfnrelax = openstudio::string_conversions::number(mfnrelax);
   return true;
 }
 
@@ -2574,12 +2574,12 @@ bool RunControlImpl::setMfnrelax(const std::string &mfnrelax)
 
 double RunControlImpl::mfngamma() const
 {
-  return openstudio::contam::to<double>(m_mfngamma);
+  return openstudio::string_conversions::to<double>(m_mfngamma);
 }
 
 bool RunControlImpl::setMfngamma(const double mfngamma)
 {
-  m_mfngamma = openstudio::number(mfngamma);
+  m_mfngamma = openstudio::string_conversions::number(mfngamma);
   return true;
 }
 
@@ -2630,12 +2630,12 @@ void RunControlImpl::setMftmaxi(const int mftmaxi)
 
 double RunControlImpl::mftrcnvg() const
 {
-  return openstudio::contam::to<double>(m_mftrcnvg);
+  return openstudio::string_conversions::to<double>(m_mftrcnvg);
 }
 
 bool RunControlImpl::setMftrcnvg(const double mftrcnvg)
 {
-  m_mftrcnvg = openstudio::number(mftrcnvg);
+  m_mftrcnvg = openstudio::string_conversions::number(mftrcnvg);
   return true;
 }
 
@@ -2646,12 +2646,12 @@ bool RunControlImpl::setMftrcnvg(const std::string &mftrcnvg)
 
 double RunControlImpl::mftacnvg() const
 {
-  return openstudio::contam::to<double>(m_mftacnvg);
+  return openstudio::string_conversions::to<double>(m_mftacnvg);
 }
 
 bool RunControlImpl::setMftacnvg(const double mftacnvg)
 {
-  m_mftacnvg = openstudio::number(mftacnvg);
+  m_mftacnvg = openstudio::string_conversions::number(mftacnvg);
   return true;
 }
 
@@ -2662,12 +2662,12 @@ bool RunControlImpl::setMftacnvg(const std::string &mftacnvg)
 
 double RunControlImpl::mftrelax() const
 {
-  return openstudio::contam::to<double>(m_mftrelax);
+  return openstudio::string_conversions::to<double>(m_mftrelax);
 }
 
 bool RunControlImpl::setMftrelax(const double mftrelax)
 {
-  m_mftrelax = openstudio::number(mftrelax);
+  m_mftrelax = openstudio::string_conversions::number(mftrelax);
   return true;
 }
 
@@ -2678,12 +2678,12 @@ bool RunControlImpl::setMftrelax(const std::string &mftrelax)
 
 double RunControlImpl::mftgamma() const
 {
-  return openstudio::contam::to<double>(m_mftgamma);
+  return openstudio::string_conversions::to<double>(m_mftgamma);
 }
 
 bool RunControlImpl::setMftgamma(const double mftgamma)
 {
-  m_mftgamma = openstudio::number(mftgamma);
+  m_mftgamma = openstudio::string_conversions::number(mftgamma);
   return true;
 }
 
@@ -2734,12 +2734,12 @@ void RunControlImpl::setMfvmaxi(const int mfvmaxi)
 
 double RunControlImpl::mfvrcnvg() const
 {
-  return openstudio::contam::to<double>(m_mfvrcnvg);
+  return openstudio::string_conversions::to<double>(m_mfvrcnvg);
 }
 
 bool RunControlImpl::setMfvrcnvg(const double mfvrcnvg)
 {
-  m_mfvrcnvg = openstudio::number(mfvrcnvg);
+  m_mfvrcnvg = openstudio::string_conversions::number(mfvrcnvg);
   return true;
 }
 
@@ -2750,12 +2750,12 @@ bool RunControlImpl::setMfvrcnvg(const std::string &mfvrcnvg)
 
 double RunControlImpl::mfvacnvg() const
 {
-  return openstudio::contam::to<double>(m_mfvacnvg);
+  return openstudio::string_conversions::to<double>(m_mfvacnvg);
 }
 
 bool RunControlImpl::setMfvacnvg(const double mfvacnvg)
 {
-  m_mfvacnvg = openstudio::number(mfvacnvg);
+  m_mfvacnvg = openstudio::string_conversions::number(mfvacnvg);
   return true;
 }
 
@@ -2766,12 +2766,12 @@ bool RunControlImpl::setMfvacnvg(const std::string &mfvacnvg)
 
 double RunControlImpl::mfvrelax() const
 {
-  return openstudio::contam::to<double>(m_mfvrelax);
+  return openstudio::string_conversions::to<double>(m_mfvrelax);
 }
 
 bool RunControlImpl::setMfvrelax(const double mfvrelax)
 {
-  m_mfvrelax = openstudio::number(mfvrelax);
+  m_mfvrelax = openstudio::string_conversions::number(mfvrelax);
   return true;
 }
 
@@ -2822,12 +2822,12 @@ void RunControlImpl::setSim_1dd(const int sim_1dd)
 
 double RunControlImpl::celldx() const
 {
-  return openstudio::contam::to<double>(m_celldx);
+  return openstudio::string_conversions::to<double>(m_celldx);
 }
 
 bool RunControlImpl::setCelldx(const double celldx)
 {
-  m_celldx = openstudio::number(celldx);
+  m_celldx = openstudio::string_conversions::number(celldx);
   return true;
 }
 
@@ -2868,12 +2868,12 @@ void RunControlImpl::setCvode_mth(const int cvode_mth)
 
 double RunControlImpl::cvode_rcnvg() const
 {
-  return openstudio::contam::to<double>(m_cvode_rcnvg);
+  return openstudio::string_conversions::to<double>(m_cvode_rcnvg);
 }
 
 bool RunControlImpl::setCvode_rcnvg(const double cvode_rcnvg)
 {
-  m_cvode_rcnvg = openstudio::number(cvode_rcnvg);
+  m_cvode_rcnvg = openstudio::string_conversions::number(cvode_rcnvg);
   return true;
 }
 
@@ -2884,12 +2884,12 @@ bool RunControlImpl::setCvode_rcnvg(const std::string &cvode_rcnvg)
 
 double RunControlImpl::cvode_acnvg() const
 {
-  return openstudio::contam::to<double>(m_cvode_acnvg);
+  return openstudio::string_conversions::to<double>(m_cvode_acnvg);
 }
 
 bool RunControlImpl::setCvode_acnvg(const double cvode_acnvg)
 {
-  m_cvode_acnvg = openstudio::number(cvode_acnvg);
+  m_cvode_acnvg = openstudio::string_conversions::number(cvode_acnvg);
   return true;
 }
 
@@ -2900,12 +2900,12 @@ bool RunControlImpl::setCvode_acnvg(const std::string &cvode_acnvg)
 
 double RunControlImpl::cvode_dtmax() const
 {
-  return openstudio::contam::to<double>(m_cvode_dtmax);
+  return openstudio::string_conversions::to<double>(m_cvode_dtmax);
 }
 
 bool RunControlImpl::setCvode_dtmax(const double cvode_dtmax)
 {
-  m_cvode_dtmax = openstudio::number(cvode_dtmax);
+  m_cvode_dtmax = openstudio::string_conversions::number(cvode_dtmax);
   return true;
 }
 
@@ -2926,12 +2926,12 @@ void RunControlImpl::setTsdens(const int tsdens)
 
 double RunControlImpl::tsrelax() const
 {
-  return openstudio::contam::to<double>(m_tsrelax);
+  return openstudio::string_conversions::to<double>(m_tsrelax);
 }
 
 bool RunControlImpl::setTsrelax(const double tsrelax)
 {
-  m_tsrelax = openstudio::number(tsrelax);
+  m_tsrelax = openstudio::string_conversions::number(tsrelax);
   return true;
 }
 
@@ -3315,7 +3315,7 @@ std::vector<double> RunControlImpl::rvals() const
   std::vector<double> out;
   for(const auto &val : m_rvals)
   {
-    out.push_back(openstudio::contam::to<double>(val));
+    out.push_back(openstudio::string_conversions::to<double>(val));
   }
   return out;
 }
@@ -3325,7 +3325,7 @@ bool RunControlImpl::setRvals(const std::vector<double> &rvals)
   std::vector<std::string> new_vals;
   for(const auto &val : rvals)
   {
-    new_vals.push_back(openstudio::number(val));
+    new_vals.push_back(openstudio::string_conversions::number(val));
   }
   m_rvals = new_vals;
   return true;
@@ -3383,12 +3383,12 @@ void RunControlImpl::setCfd_ctype(const int cfd_ctype)
 
 double RunControlImpl::cfd_convcpl() const
 {
-  return openstudio::contam::to<double>(m_cfd_convcpl);
+  return openstudio::string_conversions::to<double>(m_cfd_convcpl);
 }
 
 bool RunControlImpl::setCfd_convcpl(const double cfd_convcpl)
 {
-  m_cfd_convcpl = openstudio::number(cfd_convcpl);
+  m_cfd_convcpl = openstudio::string_conversions::number(cfd_convcpl);
   return true;
 }
 
@@ -3518,12 +3518,12 @@ void LevelImpl::setNr(const int nr)
 
 double LevelImpl::refht() const
 {
-  return openstudio::contam::to<double>(m_refht);
+  return openstudio::string_conversions::to<double>(m_refht);
 }
 
 bool LevelImpl::setRefht(const double refht)
 {
-  m_refht = openstudio::number(refht);
+  m_refht = openstudio::string_conversions::number(refht);
   return true;
 }
 
@@ -3534,12 +3534,12 @@ bool LevelImpl::setRefht(const std::string &refht)
 
 double LevelImpl::delht() const
 {
-  return openstudio::contam::to<double>(m_delht);
+  return openstudio::string_conversions::to<double>(m_delht);
 }
 
 bool LevelImpl::setDelht(const double delht)
 {
-  m_delht = openstudio::number(delht);
+  m_delht = openstudio::string_conversions::number(delht);
   return true;
 }
 

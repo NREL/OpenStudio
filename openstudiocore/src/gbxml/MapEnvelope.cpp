@@ -315,7 +315,7 @@ namespace gbxml {
       if (visibleTransmittance){
         QDomElement element = doc.createElement("Transmittance");
         result->appendChild(element);
-        element.appendChild(doc.createTextNode(toQString(openstudio::number(*visibleTransmittance))));
+        element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*visibleTransmittance))));
         element.setAttribute("unit", "Fraction");
         element.setAttribute("type", "Visible");
         element.setAttribute("surfaceType", "Both");
@@ -324,14 +324,14 @@ namespace gbxml {
       if (uFactor){
         QDomElement element = doc.createElement("U-value");
         result->appendChild(element);
-        element.appendChild(doc.createTextNode(toQString(openstudio::number(*uFactor))));
+        element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*uFactor))));
         element.setAttribute("unit", "WPerSquareMeterK");
       }
 
       if (solarHeatGainCoefficient){
         QDomElement element = doc.createElement("SolarHeatGainCoeff");
         result->appendChild(element);
-        element.appendChild(doc.createTextNode(toQString(openstudio::number(*solarHeatGainCoefficient))));
+        element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*solarHeatGainCoefficient))));
         element.setAttribute("unit", "Fraction");
       }
     }
@@ -420,14 +420,14 @@ namespace gbxml {
     if (thermalReflectance){
       QDomElement element = doc.createElement("Reflectance");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*thermalReflectance))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*thermalReflectance))));
       element.setAttribute("unit", "Fraction");
       element.setAttribute("type", "ExtIR");
       element.setAttribute("surfaceType", "Both");
 
       element = doc.createElement("Reflectance");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*thermalReflectance))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*thermalReflectance))));
       element.setAttribute("unit", "Fraction");
       element.setAttribute("type", "IntIR");
       element.setAttribute("surfaceType", "Both");
@@ -436,14 +436,14 @@ namespace gbxml {
     if (solarReflectance){
       QDomElement element = doc.createElement("Reflectance");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*solarReflectance))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*solarReflectance))));
       element.setAttribute("unit", "Fraction");
       element.setAttribute("type", "ExtSolar");
       element.setAttribute("surfaceType", "Both");
 
       element = doc.createElement("Reflectance");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*solarReflectance))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*solarReflectance))));
       element.setAttribute("unit", "Fraction");
       element.setAttribute("type", "IntSolar");
       element.setAttribute("surfaceType", "Both");
@@ -452,14 +452,14 @@ namespace gbxml {
     if (visibleReflectance){
       QDomElement element = doc.createElement("Reflectance");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*visibleReflectance))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*visibleReflectance))));
       element.setAttribute("unit", "Fraction");
       element.setAttribute("type", "ExtVisible");
       element.setAttribute("surfaceType", "Both");
 
       element = doc.createElement("Reflectance");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*visibleReflectance))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*visibleReflectance))));
       element.setAttribute("unit", "Fraction");
       element.setAttribute("type", "IntVisible");
       element.setAttribute("surfaceType", "Both");
@@ -474,48 +474,48 @@ namespace gbxml {
     if (thickness){
       QDomElement element = doc.createElement("Thickness");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*thickness))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*thickness))));
       element.setAttribute("unit", "Meters");
     }
 
     if (conductivity){
       QDomElement element = doc.createElement("Conductivity");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*conductivity))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*conductivity))));
       element.setAttribute("unit", "WPerMeterK");
     }
 
     if (resistance){
       QDomElement element = doc.createElement("R-value");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*resistance))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*resistance))));
       element.setAttribute("unit", "SquareMeterKPerW");
     }
 
     if (density){
       QDomElement element = doc.createElement("Density");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*density))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*density))));
       element.setAttribute("unit", "KgPerCubicM");
     }
 
     if (specificHeat){
       QDomElement element = doc.createElement("SpecificHeat");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*specificHeat))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*specificHeat))));
       element.setAttribute("unit", "JPerKgK");
     }
 
     if (thermalAbsorptance){
       QDomElement element = doc.createElement("Absorptance");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*thermalAbsorptance))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*thermalAbsorptance))));
       element.setAttribute("unit", "Fraction");
       element.setAttribute("type", "ExtIR");
 
       element = doc.createElement("Absorptance");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*thermalAbsorptance))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*thermalAbsorptance))));
       element.setAttribute("unit", "Fraction");
       element.setAttribute("type", "IntIR");
     }
@@ -523,12 +523,12 @@ namespace gbxml {
     if (solarAbsorptance){
       QDomElement element = doc.createElement("Absorptance");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*solarAbsorptance))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*solarAbsorptance))));
       element.setAttribute("unit", "Fraction");
       element.setAttribute("type", "ExtSolar");
       element = doc.createElement("Absorptance");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*solarAbsorptance))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*solarAbsorptance))));
       element.setAttribute("unit", "Fraction");
       element.setAttribute("type", "IntSolar");
     }
@@ -536,12 +536,12 @@ namespace gbxml {
     if (visibleAbsorptance){
       QDomElement element = doc.createElement("Absorptance");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*visibleAbsorptance))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*visibleAbsorptance))));
       element.setAttribute("unit", "Fraction");
       element.setAttribute("type", "ExtVisible");
       element = doc.createElement("Absorptance");
       result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::number(*visibleAbsorptance))));
+      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*visibleAbsorptance))));
       element.setAttribute("unit", "Fraction");
       element.setAttribute("type", "IntVisible");
     }
