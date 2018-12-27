@@ -29,6 +29,7 @@
 
 #include "BCLFileReference.hpp"
 #include "../core/Checksum.hpp"
+#include "../core/StringHelpers.hpp"
 
 #include <pugixml.hpp>
 
@@ -99,7 +100,7 @@ namespace openstudio{
 
   std::string BCLFileReference::fileType() const
   {
-    return toString(toQString(m_path.extension()).replace(".", ""));
+    return openstudio::replace(openstudio::toString(m_path.extension()), ".", "");
   }
 
   std::string BCLFileReference::usageType() const

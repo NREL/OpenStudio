@@ -131,6 +131,8 @@ namespace openstudio {
    */
   UTILITIES_API std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string delimiters=" +-*/^=<>&|");
 
+  UTILITIES_API std::string replace(std::string input, const std::string &before, const std::string &after);
+
 
   enum struct FloatFormat {
     fixed,
@@ -150,7 +152,7 @@ namespace openstudio {
     UTILITIES_API std::string number(double, FloatFormat format = FloatFormat::general, int presision = 6);
 
     template<typename DesiredType, typename InputType>
-    DesiredType to(const InputType &inp)
+    boost::optional<DesiredType> to_no_throw(const InputType &inp)
     {
       std::stringstream ss;
       ss.imbue(std::locale::classic());
@@ -158,10 +160,22 @@ namespace openstudio {
       DesiredType o;
       ss >> o;
       if (!ss.eof() || ss.fail()) {
-        throw std::bad_cast();
+        return {};
       }
       return o;
     }
+
+    template<typename DesiredType, typename InputType>
+    DesiredType to(const InputType &inp)
+    {
+      const auto result = to_no_throw<DesiredType>(inp);
+      if (result) {
+        return result.value();
+      } else {
+        throw std::bad_cast{};
+      }
+    }
+
 
     template<typename DesiredType, typename InputType>
     bool is_valid(const InputType &input)

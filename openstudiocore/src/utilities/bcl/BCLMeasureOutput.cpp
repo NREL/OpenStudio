@@ -50,7 +50,7 @@ namespace openstudio{
 
     m_units = element.child("units").text().as_string();
 
-    QString test = element.child("model_dependent").text().as_string();
+    const std::string test = element.child("model_dependent").text().as_string();
     m_modelDependent = false;
     if (test == "true"){
       m_modelDependent = true;

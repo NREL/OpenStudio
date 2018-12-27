@@ -392,6 +392,20 @@ std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std
   return tokens;
 }
 
+std::string replace(std::string input, const std::string &before, const std::string &after)
+{
+  std::size_t loc = 0;
+
+  while (true) {
+    loc = input.find(before, loc);
+
+    if (loc == std::string::npos) { break; }
+
+    input.replace(loc, before.size(), after);
+  }
+
+  return input;
+}
 
 template<typename Value>
 std::string number_formatter(const Value value, const int base)
