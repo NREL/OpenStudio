@@ -118,7 +118,7 @@ bool SimFile::readLfr(const std::string& fileName)
   }
   std::vector<std::string> row;
   boost::split(row, header, boost::is_any_of("\t"));
-  int ncols = 6;
+  unsigned ncols = 6;
   if(row.size() != ncols)
   {
     LOG(Error,"LFR file has " << row.size() << " columns, not the expected " << ncols);
@@ -206,7 +206,7 @@ bool SimFile::readLfr(const std::string& fileName)
     keys.push_back(pair.first);
   }
   m_pathNr.resize(keys.size());
-  for(int i=0;i<keys.size();i++)
+  for(std::vector<int>::size_type i=0; i < keys.size(); ++i)
   {
     m_pathNr[nrMap[keys[i]]] = keys[i];
   }
@@ -253,7 +253,7 @@ bool SimFile::readNfr(const std::string& fileName)
   }
   std::vector<std::string> row;
   boost::split(row, header, boost::is_any_of("\t"));
-  int ncols = 6;
+  unsigned ncols = 6;
   if(row.size() != ncols && row.size() != ncols+2)
   {
     LOG(Error,"NFR file has " << row.size() << " columns, not the expected " << ncols);
@@ -348,7 +348,7 @@ bool SimFile::readNfr(const std::string& fileName)
     keys.push_back(pair.first);
   }
   m_nodeNr.resize(keys.size());
-  for(int i=0;i<keys.size();i++)
+  for(std::vector<int>::size_type i=0; i < keys.size(); ++i)
   {
     m_nodeNr[nrMap[keys[i]]] = keys[i];
   }

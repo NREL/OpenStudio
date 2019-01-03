@@ -719,7 +719,7 @@ double ZoneImpl::ic(const int i) const
 std::vector<double> ZoneImpl::ic() const
 {
   std::vector<double> out;
-  for(int i=0;i<m_ic.size();i++)
+  for(std::vector<PRJFLOAT>::size_type i=0; i < m_ic.size(); ++i)
   {
     out.push_back(FLOAT_NO_CHECK(m_ic[i]));
   }
