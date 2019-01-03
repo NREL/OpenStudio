@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 ########################################################################################################################
 #  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #

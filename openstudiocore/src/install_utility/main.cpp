@@ -68,10 +68,10 @@ int main(int argc, char *argv[])
 #ifdef __APPLE__
   if (argc > 1u) {
     openstudio::filesystem::path appDir = openstudio::filesystem::path(applicationFilePath()).parent_path();
-		openstudio::filesystem::path cliPath = appDir / "openstudio";
-		openstudio::filesystem::path appPath = appDir.parent_path() / "OpenStudioApp.app";
+    openstudio::filesystem::path cliPath = appDir / "openstudio";
+    openstudio::filesystem::path appPath = appDir.parent_path() / "OpenStudioApp.app";
 
-  	if (std::string(argv[1]) == "Install") {
+    if (std::string(argv[1]) == "Install") {
       try {
         if( openstudio::filesystem::exists(cliPath) ) {
           openstudio::filesystem::path dir("/usr/local/bin");
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
         }
       } catch(...) {}
 
-		} else if (std::string(argv[1]) == "Remove") {
+    } else if (std::string(argv[1]) == "Remove") {
       try {
         openstudio::filesystem::remove("/usr/local/bin/openstudio");
       } catch(...) {}
@@ -94,34 +94,34 @@ int main(int argc, char *argv[])
 #endif
 
 #if defined _WIN32
-	if (argc > 1u) {
- 		if (std::string(argv[1]) == "Install"){
-			openstudio::filesystem::path appDir = openstudio::filesystem::path(applicationFilePath()).parent_path();
-			openstudio::filesystem::path cliPath = appDir / "openstudio.exe";
-			openstudio::filesystem::path mongoPath = appDir.parent_path() / "pat\\mongo\\bin\\mongod.exe";
-			
-			std::ostringstream oss;
-			oss << "netsh advfirewall firewall add rule name=\"Allow OpenStudio CLI\" dir=in program="\
-				<< "\"" << cliPath.string() << "\" "\
-				<< "action=allow";
-			std::system(oss.str().c_str());
-			
-			std::ostringstream oss2;
-			oss2 << "netsh advfirewall firewall add rule name=\"Allow OpenStudio Mongo\" dir=in program="\
-			<< "\"" << mongoPath.string() << "\" "\
-			<< "action=allow";
-			std::system(oss2.str().c_str());
-			
-		} else if (std::string(argv[1]) == "Remove") {
-			std::ostringstream oss;
-			oss << "netsh advfirewall firewall delete rule name=\"Allow OpenStudio CLI\"";
-			std::system(oss.str().c_str());
+  if (argc > 1u) {
+     if (std::string(argv[1]) == "Install"){
+      openstudio::filesystem::path appDir = openstudio::filesystem::path(applicationFilePath()).parent_path();
+      openstudio::filesystem::path cliPath = appDir / "openstudio.exe";
+      openstudio::filesystem::path mongoPath = appDir.parent_path() / "pat\\mongo\\bin\\mongod.exe";
+      
+      std::ostringstream oss;
+      oss << "netsh advfirewall firewall add rule name=\"Allow OpenStudio CLI\" dir=in program="\
+        << "\"" << cliPath.string() << "\" "\
+        << "action=allow";
+      std::system(oss.str().c_str());
+      
+      std::ostringstream oss2;
+      oss2 << "netsh advfirewall firewall add rule name=\"Allow OpenStudio Mongo\" dir=in program="\
+      << "\"" << mongoPath.string() << "\" "\
+      << "action=allow";
+      std::system(oss2.str().c_str());
+      
+    } else if (std::string(argv[1]) == "Remove") {
+      std::ostringstream oss;
+      oss << "netsh advfirewall firewall delete rule name=\"Allow OpenStudio CLI\"";
+      std::system(oss.str().c_str());
 
-			std::ostringstream oss2;
-			oss2 << "netsh advfirewall firewall delete rule name=\"Allow OpenStudio Mongo\"";
-			std::system(oss2.str().c_str());
-		}
-	}
+      std::ostringstream oss2;
+      oss2 << "netsh advfirewall firewall delete rule name=\"Allow OpenStudio Mongo\"";
+      std::system(oss2.str().c_str());
+    }
+  }
 #endif
 
   return 0;
