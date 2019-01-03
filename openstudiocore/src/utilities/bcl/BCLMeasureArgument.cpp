@@ -49,7 +49,7 @@ namespace openstudio{
     m_units = element.child("units").text().as_string();
 
     m_required = false;
-    auto test = element.child("required").text().as_string();
+    std::string test = element.child("required").text().as_string();
     if (test == "true"){
       m_required = true;
     }
