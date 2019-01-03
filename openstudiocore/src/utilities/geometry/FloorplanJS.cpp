@@ -224,11 +224,12 @@ namespace openstudio{
   FloorplanJS::FloorplanJS(const std::string& s)
     : m_lastId(0)
   {
-    Json::Reader reader;
-    bool parsingSuccessful = reader.parse(s, m_value);
+    Json::CharReaderBuilder rbuilder;
+    std::istringstream ss(s);
+    std::string formattedErrors;
+    bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &m_value, &formattedErrors);
 
     if (!parsingSuccessful){
-      std::string errors = reader.getFormattedErrorMessages();
 
       // see if this is a path
       openstudio::path p = toPath(s);
@@ -236,11 +237,12 @@ namespace openstudio{
         // open file
         std::ifstream ifs(openstudio::toSystemFilename(p));
         m_value.clear();
-        parsingSuccessful = reader.parse(ifs, m_value);
+        formattedErrors.clear();
+        parsingSuccessful = Json::parseFromStream(rbuilder, ifs, &m_value, &formattedErrors);
       }
 
       if (!parsingSuccessful){
-        LOG_AND_THROW("ThreeJS JSON cannot be processed, " << errors);
+        LOG_AND_THROW("ThreeJS JSON cannot be processed, " << formattedErrors);
       }
     }
 

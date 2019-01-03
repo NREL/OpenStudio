@@ -474,12 +474,15 @@ std::vector<measure::OSArgument> MeasureManager::getArguments(const BCLMeasure &
     LOG_AND_THROW("Error computing arguments: " << s)
   }
 
-  std::string errorString;
+
   std::vector<measure::OSArgument> result;
 
-  Json::Reader reader;
+  Json::CharReaderBuilder rbuilder;
+  std::istringstream ss(s);
+  std::string errorString;
   Json::Value json;
-  bool parsingSuccessful = reader.parse(s, json);
+  bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &json, &errorString);
+
   if (parsingSuccessful){
 
     Json::Value arguments = json.get("arguments",  Json::Value(Json::arrayValue));

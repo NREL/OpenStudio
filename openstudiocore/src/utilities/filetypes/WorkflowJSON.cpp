@@ -68,23 +68,26 @@ namespace detail{
 
   WorkflowJSON_Impl::WorkflowJSON_Impl(const std::string& s)
   {
-    Json::Reader reader;
-    bool parsingSuccessful = reader.parse(s, m_value);
+
+    Json::CharReaderBuilder rbuilder;
+    std::istringstream ss(s);
+    std::string formattedErrors;
+    bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &m_value, &formattedErrors);
+
     if (!parsingSuccessful){
-      std::string errors = reader.getFormattedErrorMessages();
 
       // see if this is a path
       openstudio::path p = toPath(s);
       if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
         // open file
         std::ifstream ifs(openstudio::toSystemFilename(p));
-
         m_value.clear();
-        parsingSuccessful = reader.parse(ifs, m_value);
+        formattedErrors.clear();
+        parsingSuccessful = Json::parseFromStream(rbuilder, ifs, &m_value, &formattedErrors);
       }
 
       if (!parsingSuccessful){
-        LOG_AND_THROW("WorkflowJSON cannot be processed, " << errors);
+        LOG_AND_THROW("WorkflowJSON cannot be processed, " << formattedErrors);
       }
     }
 
@@ -101,11 +104,11 @@ namespace detail{
     // open file
     std::ifstream ifs(openstudio::toSystemFilename(p));
 
-    Json::Reader reader;
-    bool parsingSuccessful = reader.parse(ifs, m_value);
+    Json::CharReaderBuilder rbuilder;
+    std::string formattedErrors;
+    bool parsingSuccessful = Json::parseFromStream(rbuilder, ifs, &m_value, &formattedErrors);
     if (!parsingSuccessful){
-      std::string errors = reader.getFormattedErrorMessages();
-      LOG_AND_THROW("WorkflowJSON '" << toString(p) << "' cannot be processed, " << errors);
+      LOG_AND_THROW("WorkflowJSON '" << toString(p) << "' cannot be processed, " << formattedErrors);
     }
 
     parseSteps();
@@ -138,21 +141,32 @@ namespace detail{
     Json::Value steps(Json::arrayValue);
     for (const auto& step : m_steps){
 
-      Json::Reader reader;
+      // We let it fail but with a warning (this shouldn't ever happen really)
+      Json::CharReaderBuilder rbuilder;
+      std::istringstream ss(step.string());
+      std::string formattedErrors;
       Json::Value stepValue;
-      bool parsingSuccessful = reader.parse(step.string(), stepValue);
-      if (parsingSuccessful){
+      bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &stepValue, &formattedErrors);
+      if (parsingSuccessful) {
         steps.append(stepValue);
+      } else {
+        LOG(Warn, "Couldn't parse WorkflowJSON Step s='" << step.string() << "'. Error: '" << formattedErrors << "'.");
       }
     }
     clone["steps"] = steps;
 
     if (m_runOptions){
-      Json::Reader reader;
+
+      // We let it fail but with a warning (this shouldn't ever happen really)
+      Json::CharReaderBuilder rbuilder;
+      std::istringstream ss(m_runOptions->string());
+      std::string formattedErrors;
       Json::Value options;
-      bool parsingSuccessful = reader.parse(m_runOptions->string(), options);
-      if (parsingSuccessful){
+      bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &options, &formattedErrors);
+      if (parsingSuccessful) {
         clone["run_options"] = options;
+      } else {
+        LOG(Warn, "Couldn't parse WorkflowJSON Run Options='" << m_runOptions->string() << "'. Error: '" << formattedErrors << "'.");
       }
     }
 

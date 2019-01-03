@@ -289,12 +289,13 @@ namespace openstudio{
   ThreeScene::ThreeScene(const std::string& s)
     : m_metadata(std::vector<std::string>(), ThreeBoundingBox(0,0,0,0,0,0,0,0,0,0), std::vector<ThreeModelObjectMetadata>()), m_sceneObject(ThreeSceneObject("", std::vector<ThreeSceneChild>()))
   {
+    Json::CharReaderBuilder rbuilder;
+    std::istringstream ss(s);
+    std::string formattedErrors;
     Json::Value root;
-    Json::Reader reader;
-    bool parsingSuccessful = reader.parse(s, root);
+    bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &root, &formattedErrors);
 
     if (!parsingSuccessful){
-      std::string errors = reader.getFormattedErrorMessages();
 
       // see if this is a path
       openstudio::path p = toPath(s);
@@ -302,11 +303,12 @@ namespace openstudio{
         // open file
         std::ifstream ifs(openstudio::toSystemFilename(p));
         root.clear();
-        parsingSuccessful = reader.parse(ifs, root);
+        formattedErrors.clear();
+        parsingSuccessful = Json::parseFromStream(rbuilder, ifs, &root, &formattedErrors);
       }
 
       if (!parsingSuccessful){
-        LOG_AND_THROW("ThreeJS JSON cannot be processed, " << errors);
+        LOG_AND_THROW("ThreeJS JSON cannot be processed, " << formattedErrors);
       }
     }
 

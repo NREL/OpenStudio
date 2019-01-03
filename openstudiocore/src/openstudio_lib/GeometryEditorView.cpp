@@ -206,7 +206,7 @@ std::map<UUID, UUID> BaseEditor::exportModelHandleMapping() const
 }
 
 void BaseEditor::onChanged()
-{  
+{
   emit changed();
   //m_document->markAsModified();
 }
@@ -403,12 +403,14 @@ document.head.appendChild(style);\n";
 
       std::string json = floorplan.toJSON(false);
       // DLM: temp
-      //Json::Value value;
-      //Json::Reader reader;
-      //bool parsingSuccessful = reader.parse(json, value);
-      //value.removeMember("stories");
-      //Json::FastWriter writer;
-      //json = writer.write(value);
+      // Json::CharReaderBuilder rbuilder;
+      // std::istringstream ss(json);
+      // std::string errorString;
+      // Json::Value value;
+      // bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &errorString);
+      // value.removeMember("stories");
+      // Json::FastWriter writer;
+      // json = writer.write(value);
 
       QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
       m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
@@ -1143,7 +1145,7 @@ EditorWebView::~EditorWebView()
     QString mergeWarnKeyName("geometryMergeWarn");
     bool settingsMergeWarn = settings.value(mergeWarnKeyName, true).toBool();
     if (settingsMergeWarn){
-      QMessageBox msg(QMessageBox::Question, "Unmerged Changes", "Your geometry may include unmerged changes.  Merge with Current OSM now?  Choose Ignore to skip this message in the future.", 
+      QMessageBox msg(QMessageBox::Question, "Unmerged Changes", "Your geometry may include unmerged changes.  Merge with Current OSM now?  Choose Ignore to skip this message in the future.",
         QMessageBox::Yes | QMessageBox::No | QMessageBox::Ignore, this, Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
       msg.setDefaultButton(QMessageBox::No);
       msg.setEscapeButton(QMessageBox::No);

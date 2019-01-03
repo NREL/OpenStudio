@@ -104,11 +104,17 @@ namespace detail{
 
     boost::optional<WorkflowStepResult> workflowStepResult = this->result();
     if (workflowStepResult){
-      Json::Reader reader;
-      Json::Value v;
-      bool parsingSuccessful = reader.parse(workflowStepResult->string(), v);
-      if (parsingSuccessful){
-        result["result"] = v;
+
+      // We let it fail but with a warning (this shouldn't ever happen really)
+      Json::CharReaderBuilder rbuilder;
+      std::istringstream ss(workflowStepResult->string());
+      std::string formattedErrors;
+      Json::Value value;
+      bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
+      if (parsingSuccessful) {
+        result["result"] = value;
+      } else {
+        LOG(Warn, "Couldn't parse workflowStepResult s='" << workflowStepResult->string() << "'. Error: '" << formattedErrors << "'.");
       }
     }
 
@@ -249,10 +255,15 @@ boost::optional<WorkflowStep> WorkflowStep::fromString(const std::string& s)
 {
   boost::optional<WorkflowStep> result;
 
-  Json::Reader reader;
+
+  // We let it fail with a warning message
+  Json::CharReaderBuilder rbuilder;
+  std::istringstream ss(s);
+  std::string formattedErrors;
   Json::Value value;
-  bool parsingSuccessful = reader.parse(s, value);
-  if (!parsingSuccessful){
+  bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
+  if (!parsingSuccessful) {
+    LOG(Warn, "Couldn't parse WorkflowStep from string s='" << s << "'. Error: '" << formattedErrors << "'.");
     return result;
   }
 
