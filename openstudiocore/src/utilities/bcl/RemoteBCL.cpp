@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,6 +31,7 @@
 #include "RemoteBCL.hpp"
 #include "../core/Assert.hpp"
 #include "../core/PathHelpers.hpp"
+#include "../core/StringHelpers.hpp"
 #include "../core/System.hpp"
 #include "../core/UnzipFile.hpp"
 
@@ -733,7 +734,7 @@ namespace openstudio{
       url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&fq[]=tid:%3&api_version=%4").arg(
         toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
         toQString(filterType),
-        QString::number(componentTypeTID),
+        toQString(openstudio::string_conversions::number(componentTypeTID)),
         toQString(m_apiVersion)
       );
     }
@@ -773,8 +774,8 @@ namespace openstudio{
         toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
         toQString(filterType),
         toQString(m_apiVersion),
-        QString::number(m_numResultsPerQuery),
-        QString::number(page)
+        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+        toQString(openstudio::string_conversions::number(page))
       );
     }else{
       url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&fq[]=%3:\"%4\""
@@ -784,8 +785,8 @@ namespace openstudio{
         (filterType == "nrel_component" ? "sm_vid_Component_Tags" : "sm_vid_Measure_Tags"),
         toQString(componentType),
         toQString(m_apiVersion),
-        QString::number(m_numResultsPerQuery),
-        QString::number(page)
+        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+        toQString(openstudio::string_conversions::number(page))
       );
     }
     //LOG(Warn, toString(url));
@@ -824,17 +825,17 @@ namespace openstudio{
         toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
         toQString(filterType),
         toQString(m_apiVersion),
-        QString::number(m_numResultsPerQuery),
-        QString::number(page)
+        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+        toQString(openstudio::string_conversions::number(page))
       );
     }else{
       url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&fq[]=tid:%3&api_version=%4&show_rows=%5&page=%6").arg(
         toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
         toQString(filterType),
-        QString::number(componentTypeTID),
+        toQString(openstudio::string_conversions::number(componentTypeTID)),
         toQString(m_apiVersion),
-        QString::number(m_numResultsPerQuery),
-        QString::number(page)
+        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+        toQString(openstudio::string_conversions::number(page))
       );
     }
     //LOG(Warn, toString(url));

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -306,7 +306,7 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
 
 void BCLMeasureDialog::init()
 {
-#ifdef Q_OS_MAC
+#ifdef Q_OS_DARWIN
   int btnHeight = 44;
 #else
   int btnHeight = 34;
@@ -470,7 +470,7 @@ void BCLMeasureDialog::init()
   this->setWindowModality(Qt::ApplicationModal);
   //this->setSizeGripEnabled(true);
 
-  #ifdef Q_OS_MAC
+  #ifdef Q_OS_DARWIN
     setWindowFlags(Qt::FramelessWindowHint);
   #else
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);

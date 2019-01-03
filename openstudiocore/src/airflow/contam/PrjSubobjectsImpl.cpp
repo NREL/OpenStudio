@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -28,7 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "PrjSubobjectsImpl.hpp"
-
+#include "../../utilities/core/StringHelpers.hpp"
 namespace openstudio {
 namespace contam {
 namespace detail {
@@ -107,117 +107,82 @@ std::string WeatherDataImpl::write()
 
 double WeatherDataImpl::Tambt() const
 {
-  return FLOAT_NO_CHECK(m_Tambt);
+  return openstudio::string_conversions::to<double>(m_Tambt);
 }
 
 bool WeatherDataImpl::setTambt(const double Tambt)
 {
-  m_Tambt = std::to_string(Tambt);
+  m_Tambt = openstudio::string_conversions::number(Tambt);
   return true;
 }
 
 bool WeatherDataImpl::setTambt(const std::string &Tambt)
 {
-  bool ok;
-  FLOAT_CHECK(Tambt,&ok);
-  if(ok)
-  {
-    m_Tambt = STR_TO_FLOAT(Tambt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Tambt, m_Tambt);
 }
 
 double WeatherDataImpl::barpres() const
 {
-  return FLOAT_NO_CHECK(m_barpres);
+  return openstudio::string_conversions::to<double>(m_barpres);
 }
 
 bool WeatherDataImpl::setBarpres(const double barpres)
 {
-  m_barpres = std::to_string(barpres);
+  m_barpres = openstudio::string_conversions::number(barpres);
   return true;
 }
 
 bool WeatherDataImpl::setBarpres(const std::string &barpres)
 {
-  bool ok;
-  FLOAT_CHECK(barpres,&ok);
-  if(ok)
-  {
-    m_barpres = STR_TO_FLOAT(barpres);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(barpres, m_barpres);
 }
 
 double WeatherDataImpl::windspd() const
 {
-  return FLOAT_NO_CHECK(m_windspd);
+  return openstudio::string_conversions::to<double>(m_windspd);
 }
 
 bool WeatherDataImpl::setWindspd(const double windspd)
 {
-  m_windspd = std::to_string(windspd);
+  m_windspd = openstudio::string_conversions::number(windspd);
   return true;
 }
 
 bool WeatherDataImpl::setWindspd(const std::string &windspd)
 {
-  bool ok;
-  FLOAT_CHECK(windspd,&ok);
-  if(ok)
-  {
-    m_windspd = STR_TO_FLOAT(windspd);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(windspd, m_windspd);
 }
 
 double WeatherDataImpl::winddir() const
 {
-  return FLOAT_NO_CHECK(m_winddir);
+  return openstudio::string_conversions::to<double>(m_winddir);
 }
 
 bool WeatherDataImpl::setWinddir(const double winddir)
 {
-  m_winddir = std::to_string(winddir);
+  m_winddir = openstudio::string_conversions::number(winddir);
   return true;
 }
 
 bool WeatherDataImpl::setWinddir(const std::string &winddir)
 {
-  bool ok;
-  FLOAT_CHECK(winddir,&ok);
-  if(ok)
-  {
-    m_winddir = STR_TO_FLOAT(winddir);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(winddir, m_winddir);
 }
 
 double WeatherDataImpl::relhum() const
 {
-  return FLOAT_NO_CHECK(m_relhum);
+  return openstudio::string_conversions::to<double>(m_relhum);
 }
 
 bool WeatherDataImpl::setRelhum(const double relhum)
 {
-  m_relhum = std::to_string(relhum);
+  m_relhum = openstudio::string_conversions::number(relhum);
   return true;
 }
 
 bool WeatherDataImpl::setRelhum(const std::string &relhum)
 {
-  bool ok;
-  FLOAT_CHECK(relhum,&ok);
-  if(ok)
-  {
-    m_relhum = STR_TO_FLOAT(relhum);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(relhum, m_relhum);
 }
 
 int WeatherDataImpl::daytyp() const

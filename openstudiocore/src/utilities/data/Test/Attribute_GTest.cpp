@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,6 +31,8 @@
 #include "DataFixture.hpp"
 
 #include "../Attribute.hpp"
+
+#include "../../core/StringHelpers.hpp"
 
 #include <boost/regex.hpp>
 
@@ -323,11 +325,11 @@ TEST_F(DataFixture, Attribute_NotEqual)
 TEST_F(DataFixture, Attribute_NumberFormatting) {
   double value(3.14159e52);
 
-  QString str = QString::number(value);
-  EXPECT_EQ("3.14159e+52",toString(str)); // original behavior, bad for http
+  auto str = openstudio::string_conversions::number(value);
+  EXPECT_EQ("3.14159e+52",str); // original behavior, bad for http
 
-  str = QString::number(value,'G',std::numeric_limits<double>::digits10);
-  EXPECT_EQ("3.14159E52",boost::regex_replace(toString(str),boost::regex("\\+"),""));
+  str = openstudio::string_conversions::number(value,FloatFormat::general_capital,std::numeric_limits<double>::digits10);
+  EXPECT_EQ("3.14159E52",boost::regex_replace(str,boost::regex("\\+"),""));
 }
 
 TEST_F(DataFixture, Attribute_DisplayName) {

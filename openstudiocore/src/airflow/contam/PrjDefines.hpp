@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,23 +30,51 @@
 #ifndef AIRFLOW_CONTAM_PRJDEFINES_HPP
 #define AIRFLOW_CONTAM_PRJDEFINES_HPP
 
-#include "../AirflowAPI.hpp"
-
 #include <string>
+#include <sstream>
 
-namespace openstudio {
-  namespace contam {
-    namespace detail {
-      AIRFLOW_API double contamFloatNoCheck(const std::string& a);
-      AIRFLOW_API double contamFloatCheck(const std::string& a, bool* b);
-    }
+using PRJFLOAT = std::string;
+
+namespace openstudio::contam {
+
+template<typename DesiredType, typename InputType>
+DesiredType to(const InputType &inp)
+{
+  std::stringstream ss;
+  ss.imbue(std::locale::classic());
+  ss.str(inp);
+  DesiredType o;
+  ss >> o;
+  if (!ss.eof() || ss.fail()) {
+    throw std::bad_cast();
+  }
+  return o;
+}
+
+template<typename DesiredType, typename InputType>
+bool is_valid(const InputType &input)
+{
+  try {
+    to<DesiredType>(input);
+    return true;
+  } catch (const std::bad_cast &) {
+    return false;
   }
 }
 
-#define PRJFLOAT std::string
-#define STR_TO_FLOAT(a) a
-#define FLOAT_NO_CHECK(a) openstudio::contam::detail::contamFloatNoCheck(a)
-#define FLOAT_CHECK(a,b) openstudio::contam::detail::contamFloatCheck(a,b)
+template<typename DesiredType, typename InputType, typename DestinationType>
+bool assign_if_valid(const InputType &input, DestinationType &dest)
+{
+  if (is_valid<DesiredType>(input)) {
+    dest = input;
+    return true;
+  } else {
+    return false;
+  }
+}
+
+}
+
 #define ANY_TO_STR openstudio::toString
 
 // CONTAM icon definitions

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -111,6 +111,7 @@
 #include "../utilities/units/TemperatureUnit_Impl.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/StringHelpers.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>
@@ -637,7 +638,7 @@ namespace sdd {
             openstudio::model::SpaceInfiltrationDesignFlowRate spaceInfiltrationDesignFlowRate(model);
             std::string infName;
             if( hasIndex ) {
-              infName = name + " Space Infiltration Design Flow Rate " + QString::number(infIndex + 1).toStdString();
+              infName = name + " Space Infiltration Design Flow Rate " + openstudio::string_conversions::number(infIndex + 1);
             }
             else
             {
@@ -1831,7 +1832,7 @@ namespace sdd {
     double buildingAzimuth = fixAngle(building.northAxis());
     QDomElement buildingAzimuthElement = doc.createElement("BldgAz");
     result.appendChild(buildingAzimuthElement);
-    buildingAzimuthElement.appendChild(doc.createTextNode(QString::number(buildingAzimuth)));
+    buildingAzimuthElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(buildingAzimuth))));
 
     // TotStoryCnt - required, Standards Number of Stories
     // AboveGrdStoryCnt - required, Standards Number of Above Ground Stories
@@ -1861,7 +1862,7 @@ namespace sdd {
 
     QDomElement aboveGradeStoryCountElement = doc.createElement("AboveGrdStoryCnt");
     result.appendChild(aboveGradeStoryCountElement);
-    aboveGradeStoryCountElement.appendChild(doc.createTextNode(QString::number(numAboveGroundStories)));
+    aboveGradeStoryCountElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(numAboveGroundStories)));
     */
 
     // translate building shading
@@ -2187,7 +2188,7 @@ namespace sdd {
     OS_ASSERT(volumeIP->units() == IPUnit(IPExpnt(0,3,0)));
     QDomElement volumeElement = doc.createElement("Vol");
     result.appendChild(volumeElement);
-    volumeElement.appendChild(doc.createTextNode(QString::number(volumeIP->value())));
+    volumeElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(volumeIP->value()))));
 
     // log warning if volume is 0
     if (volumeIP->value() < std::numeric_limits<double>::epsilon()){
@@ -2202,7 +2203,7 @@ namespace sdd {
     OS_ASSERT(floorAreaIP->units() == IPUnit(IPExpnt(0,2,0)));
     QDomElement floorAreaElement = doc.createElement("Area");  // SAC 3/14/14
     result.appendChild(floorAreaElement);
-    floorAreaElement.appendChild(doc.createTextNode(QString::number(floorAreaIP->value())));
+    floorAreaElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(floorAreaIP->value()))));
 
     // log warning if area is 0
     if (floorAreaIP->value() < std::numeric_limits<double>::epsilon()){
@@ -2236,15 +2237,15 @@ namespace sdd {
 
       QDomElement coordinateXElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.x())));
+      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.x()))));
 
       QDomElement coordinateYElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.y())));
+      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.y()))));
 
       QDomElement coordinateZElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.z())));
+      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.z()))));
     }
 
     // thermal zone
@@ -2438,7 +2439,7 @@ namespace sdd {
           double perimeterExposedIP = meterToFoot*perimeterExposedSI;
           QDomElement perimExposedElement = doc.createElement("PerimExposed");
           result->appendChild(perimExposedElement);
-          perimExposedElement.appendChild(doc.createTextNode(QString::number(perimeterExposedIP)));
+          perimExposedElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(perimeterExposedIP))));
         }else{
           //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
           //LOG(Error, "Cannot compute exposed perimeter for surface '" << name << "'.");
@@ -2461,7 +2462,7 @@ namespace sdd {
           double heightIP = meterToFoot*heightSI;
           QDomElement heightElement = doc.createElement("Hgt");
           result->appendChild(heightElement);
-          heightElement.appendChild(doc.createTextNode(QString::number(heightIP)));
+          heightElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(heightIP))));
         }else{
           //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
           //LOG(Error, "Cannot compute height for surface '" << name << "'.");
@@ -2512,28 +2513,28 @@ namespace sdd {
 
       QDomElement coordinateXElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(xIP->value())));
+      coordinateXElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(xIP->value())));
 
       QDomElement coordinateYElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(yIP->value())));
+      coordinateYElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(yIP->value())));
 
       QDomElement coordinateZElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(zIP->value())));
+      coordinateZElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(zIP->value())));
       */
 
       QDomElement coordinateXElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.x())));
+      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.x()))));
 
       QDomElement coordinateYElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.y())));
+      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.y()))));
 
       QDomElement coordinateZElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.z())));
+      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.z()))));
     }
 
     // translate sub surfaces
@@ -2654,28 +2655,28 @@ namespace sdd {
 
       QDomElement coordinateXElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(xIP->value())));
+      coordinateXElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(xIP->value())));
 
       QDomElement coordinateYElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(yIP->value())));
+      coordinateYElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(yIP->value())));
 
       QDomElement coordinateZElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(zIP->value())));
+      coordinateZElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(zIP->value())));
       */
 
       QDomElement coordinateXElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.x())));
+      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.x()))));
 
       QDomElement coordinateYElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.y())));
+      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.y()))));
 
       QDomElement coordinateZElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.z())));
+      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.z()))));
     }
 
     return result;
@@ -2773,11 +2774,11 @@ namespace sdd {
 
     QDomElement solReflElement = doc.createElement("SolRefl");
     result->appendChild(solReflElement);
-    solReflElement.appendChild(doc.createTextNode(QString::number(solRefl)));
+    solReflElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(solRefl))));
 
     QDomElement visReflElement = doc.createElement("VisRefl");
     result->appendChild(visReflElement);
-    visReflElement.appendChild(doc.createTextNode(QString::number(visRefl)));
+    visReflElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(visRefl))));
 
     // translate vertices
     Point3dVector vertices = transformation*shadingSurface.vertices();
@@ -2807,28 +2808,28 @@ namespace sdd {
 
       QDomElement coordinateXElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(xIP->value())));
+      coordinateXElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(xIP->value())));
 
       QDomElement coordinateYElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(yIP->value())));
+      coordinateYElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(yIP->value())));
 
       QDomElement coordinateZElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(zIP->value())));
+      coordinateZElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(zIP->value())));
       */
 
       QDomElement coordinateXElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.x())));
+      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.x()))));
 
       QDomElement coordinateYElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.y())));
+      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.y()))));
 
       QDomElement coordinateZElement = doc.createElement("Coord");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(meterToFoot*vertex.z())));
+      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.z()))));
     }
 
     return result;
@@ -2860,7 +2861,7 @@ namespace sdd {
     // Mult
     //QDomElement multElement = doc.createElement("Mult");
     //result.appendChild(multElement);
-    //multElement.appendChild(doc.createTextNode(QString::number(thermalZone.multiplier())));
+    //multElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(thermalZone.multiplier())));
 
     return result;
   }

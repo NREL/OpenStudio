@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1667,15 +1667,15 @@ namespace radiance {
 
 										// read BSDF from resource dll
 										// must be referenced in openstudiocore/src/radiance/radiance.qrc
-										QString defaultFile
-                                                                                  = toQString(::openstudioradiance::embedded_files::getFileAsString(":/resources/" + shadeBSDF));
+										const auto defaultFile
+                                                                                  = ::openstudioradiance::embedded_files::getFileAsString(":/resources/" + shadeBSDF);
 
 										// write shade BSDF
                                                                                 openstudio::filesystem::ofstream outfile(shadeBSDFPath);
 										if (!outfile.is_open()){
 											LOG_AND_THROW("Cannot write file to '" << toString(shadeBSDFPath) << "'");
 										}
-                                                                                openstudio::filesystem::write(outfile, defaultFile);
+                                                                                outfile << defaultFile;
 										outfile.close();
 
 									}
@@ -1693,15 +1693,15 @@ namespace radiance {
 
 									// read BSDF from resource dll
 									// must be in openstudiocore/src/radiance/radiance.qrc
-									QString defaultFile
-                                                                                  = toQString(::openstudioradiance::embedded_files::getFileAsString(":/resources/air.xml"));
+									const auto defaultFile
+                                                                                  = ::openstudioradiance::embedded_files::getFileAsString(":/resources/air.xml");
 
 									// write shade BSDF
                                                                         openstudio::filesystem::ofstream outFileAir(airBSDFPath);
 									if (!outFileAir.is_open()){
 										LOG_AND_THROW("Cannot write file to '" << toString(airBSDFPath) << "'");
 									}
-                                                                        openstudio::filesystem::write(outFileAir, defaultFile);
+                                                                        outFileAir << defaultFile;
 									outFileAir.close();
 
 								}

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,6 +33,8 @@
 #include "RemoteBCL.hpp"
 
 #include "../core/Assert.hpp"
+#include "../core/StringHelpers.hpp"
+
 #include <pugixml.hpp>
 
 namespace openstudio{
@@ -457,32 +459,29 @@ namespace openstudio{
         // Units are optional
         std::string units = attributeElement.child("units").text().as_string();
 
-        bool doubleOk;
-        double doubleValue = toQString(value).toDouble(&doubleOk);
+        const auto doubleValue = openstudio::string_conversions::to_no_throw<double>(value);
+        const auto intValue = openstudio::string_conversions::to_no_throw<int>(value);
 
-        bool intOk;
-        int intValue = toQString(value).toInt(&intOk);
-
-        if (datatype == "float" && doubleOk)
+        if (datatype == "float" && doubleValue)
         {
           if (units.empty())
           {
-            Attribute attr(name, doubleValue);
+            Attribute attr(name, *doubleValue);
             m_attributes.push_back(attr);
           } else
           {
-            Attribute attr(name, doubleValue, units);
+            Attribute attr(name, *doubleValue, units);
             m_attributes.push_back(attr);
           }
-        } else if (datatype == "int" && intOk)
+        } else if (datatype == "int" && intValue)
         {
           if (units.empty())
           {
-            Attribute attr(name, intValue);
+            Attribute attr(name, *intValue);
             m_attributes.push_back(attr);
           } else
           {
-            Attribute attr(name, intValue, units);
+            Attribute attr(name, *intValue, units);
             m_attributes.push_back(attr);
           }
         }

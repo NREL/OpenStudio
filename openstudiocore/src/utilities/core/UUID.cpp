@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,42 +37,7 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/thread/tss.hpp>
 
-#ifdef __APPLE__
-
-#include <QtGlobal>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <math.h>
-
-
-#endif  // __APPLE__
-
 namespace openstudio {
-
-#ifdef __APPLE__
-
-  namespace detail {
-
-    // if you do not initialize random number generator on Mac you will generate same sequence of UUIDs
-    // this issue is addressed in Qt 4.7 by using /dev/urandom
-    struct RandomNumberInitializer
-    {
-      RandomNumberInitializer(){
-        FILE *urandom;
-        unsigned int seed;
-        urandom = fopen ("/dev/urandom", "r");
-        fread(&seed, sizeof (seed), 1, urandom);
-        fclose(urandom);
-        qsrand(seed);
-      }
-    };
-
-    RandomNumberInitializer _randomNumberInitializer;
-
-  }
-
-#endif  // __APPLE__
 
   namespace detail {
     struct BoostGeneratorsInitializer : StaticInitializer<BoostGeneratorsInitializer>

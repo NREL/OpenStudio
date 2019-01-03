@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -213,9 +213,9 @@ public:
   /** Sets the initial condition of contaminant i. */
   bool setIc(const int i, const std::string &value);
   /** Sets the contaminant initial condition vector. */
-  bool setIc(std::vector<double> &ic);
+  bool setIc(const std::vector<double> &ic);
   /** Sets the contaminant initial condition vector. */
-  bool setIc(std::vector<std::string> &ic);
+  bool setIc(const std::vector<std::string> &ic);
 
 private:
   void setDefaults();

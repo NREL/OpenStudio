@@ -1,5 +1,5 @@
-﻿/***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -214,7 +214,7 @@ TEST_F(CoreFixture, Path_WindowsPathOnUnix)
   EXPECT_EQ("measure", openstudio::toString(file.stem()));
   EXPECT_TRUE(file.has_extension());
   EXPECT_EQ(".rb", openstudio::toString(file.extension()));
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
   EXPECT_TRUE(file.has_root_name());
   EXPECT_EQ("E:", openstudio::toString(file.root_name()));
   EXPECT_TRUE(file.has_root_directory());
@@ -242,7 +242,7 @@ TEST_F(CoreFixture, Path_WindowsPathOnUnix)
   EXPECT_FALSE(file.empty());
   EXPECT_TRUE(file.has_extension());
   EXPECT_EQ(".rb", openstudio::toString(file.extension()));
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
   EXPECT_EQ("E:/test/CloudTest/scripts/StandardReports/measure.rb", openstudio::toString(file));
   EXPECT_EQ("measure.rb", openstudio::toString(file.filename()));
   EXPECT_TRUE(file.has_root_name());
@@ -322,7 +322,7 @@ TEST_F(CoreFixture, IsNetworkPath)
 {
   openstudio::path path;
 
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
   path = toPath("C:/");
 #else
   path = toPath("/");

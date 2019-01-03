@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,7 +54,7 @@ StartupView::StartupView( QWidget * parent )
 
   setStyleSheet("openstudio--StartupView { background: #E6E6E6; }");
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_DARWIN
   setWindowFlags(Qt::FramelessWindowHint);
 #else
   setWindowFlags(Qt::CustomizeWindowHint);
@@ -132,7 +132,7 @@ StartupView::StartupView( QWidget * parent )
     cancelButton->setText("Cancel");
     connect(cancelButton, &QPushButton::clicked, this, &StartupView::hide);
   #else
-    #ifdef Q_OS_MAC
+    #ifdef Q_OS_DARWIN
       cancelButton->setText("Quit");
     #else
       cancelButton->setText("Exit");
@@ -183,7 +183,7 @@ StartupView::StartupView( QWidget * parent )
 
 void StartupView::resizeEvent(QResizeEvent * event)
 {
-#ifdef Q_OS_MAC
+#ifdef Q_OS_DARWIN
   QPainterPath path;
   path.addRoundedRect(rect(),9.0,9.0);
   QPolygon p = path.toFillPolygon().toPolygon();
