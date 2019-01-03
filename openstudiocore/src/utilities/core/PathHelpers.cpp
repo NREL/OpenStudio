@@ -33,7 +33,7 @@
 
 #include <boost/regex.hpp>
 
-#ifdef Q_OS_WIN
+#if (defined (_WIN32) || defined (_WIN64))
 #include <Windows.h>
 #endif
 
@@ -358,7 +358,7 @@ bool isNetworkPath(const path& p)
     return false;
   }
 
-#ifdef Q_OS_WIN
+#if (defined (_WIN32) || defined (_WIN64))
 
   // TODO: JM 2018-11-06: couldn't this entire block be replaced by "PathIsNetworkPath"?
 
@@ -389,7 +389,7 @@ bool isNetworkPathAvailable(const path& p)
     return false;
   }
 
-#ifdef Q_OS_WIN
+#if (defined (_WIN32) || defined (_WIN64))
 
   std::string fullyQualifiedName;
 

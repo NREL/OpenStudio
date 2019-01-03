@@ -28,17 +28,8 @@
 
 #include "init_openstudio.hpp"
 #include <RubyAPI.hpp>
-#include <QtPlugin>
 #include <iostream>
 #include <ruby.h>
-
-#if defined(Q_OS_OSX)
-  Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
-#elif defined(Q_OS_WIN)
-  Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
-#elif defined(Q_OS_LINUX)
-  Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);
-#endif
 
 extern "C" {
 

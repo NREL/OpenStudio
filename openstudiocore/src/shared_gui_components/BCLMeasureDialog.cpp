@@ -306,7 +306,7 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
 
 void BCLMeasureDialog::init()
 {
-#ifdef Q_OS_MAC
+#ifdef Q_OS_DARWIN
   int btnHeight = 44;
 #else
   int btnHeight = 34;
@@ -470,7 +470,7 @@ void BCLMeasureDialog::init()
   this->setWindowModality(Qt::ApplicationModal);
   //this->setSizeGripEnabled(true);
 
-  #ifdef Q_OS_MAC
+  #ifdef Q_OS_DARWIN
     setWindowFlags(Qt::FramelessWindowHint);
   #else
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);

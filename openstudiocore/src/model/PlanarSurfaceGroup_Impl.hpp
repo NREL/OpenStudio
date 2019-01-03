@@ -116,7 +116,8 @@ namespace detail {
     virtual openstudio::BoundingBox boundingBox() const = 0;
 
     //@}
-   private slots:
+   //private slots:
+   private:
 
     void clearCachedVariables();
 
