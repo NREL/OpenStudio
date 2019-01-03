@@ -1,3 +1,7 @@
+# Remove -Werror to avoid warnings treated as errors coming from this
+# TODO @jmarrec: try to Disable only Wregister later
+string(REPLACE " -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(Apple)?Clang$")
   # using Clang
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -undefined dynamic_lookup")
