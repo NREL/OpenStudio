@@ -2536,6 +2536,8 @@ Eelec_dhw  = v_Q_dhw_elec/In.cond_flr_area;
 
     return allResults;
 
+    // Note JM 2019-01-03: commented out any code after the existing, above return statement
+
 /*
 %Etotal_elec=Eelec_ht + Eelec_cl+Eelec_int_lt+Eelec_ext_lt+Eelec_fan+Eelec_pump+Eelec_plug;
 
@@ -2547,14 +2549,15 @@ Egas_dhw = v_Q_dhw_gas./In.cond_flr_area; % total monthly dhw gas plugloads
 Z=zeros(size(Eelec_ht));
 
 */
-    Vector Etot_ht = sum(Eelec_ht, Egas_ht);
-    Vector Etot_cl = sum(Eelec_cl, Egas_cl);
-    Vector Etot_int_lt = Eelec_int_lt; //% Total monthly electric usage density for interior lighting
-    Vector Etot_ext_lt = Eelec_ext_lt; //% Total monthly electric usage for exterior lights
-    Vector Etot_fan = Eelec_fan; //%Total monthly elec usage for fans
-    Vector Etot_pump = Eelec_pump; //% Total monthly elec usage for pumps
-    Vector Etot_plug = sum(v_Q_plug_elec, v_Q_plug_gas); //% Total monthly elec usage for elec plugloads
-    Vector Etot_dhw  = sum(v_Q_dhw_elec, v_Q_plug_elec);
+    //Vector Etot_ht = sum(Eelec_ht, Egas_ht);
+    //Vector Etot_cl = sum(Eelec_cl, Egas_cl);
+    //Vector Etot_int_lt = Eelec_int_lt; //% Total monthly electric usage density for interior lighting
+    //Vector Etot_ext_lt = Eelec_ext_lt; //% Total monthly electric usage for exterior lights
+    //Vector Etot_fan = Eelec_fan; //%Total monthly elec usage for fans
+    //Vector Etot_pump = Eelec_pump; //% Total monthly elec usage for pumps
+    //Vector Etot_plug = sum(v_Q_plug_elec, v_Q_plug_gas); //% Total monthly elec usage for elec plugloads
+    //Vector Etot_dhw  = sum(v_Q_dhw_elec, v_Q_plug_elec);
+
 /*
 Ebldg.elec=[Eelec_ht,Eelec_cl,Eelec_int_lt,Eelec_ext_lt,Eelec_fan,Eelec_pump,Eelec_plug,Eelec_dhw];
 Ebldg.gas=[Egas_ht,Egas_cl,Z,Z,Z,Z,Egas_plug,Egas_dhw];
@@ -2564,14 +2567,14 @@ Ebldg.rows=['Jan';'Feb';'Mar';'Apr';'May';'Jun';'Jul';'Aug';'Sep';'Oct';'Nov';'D
 
 
 */
-    double yrSum = 0;
-    Vector monthly(Etot_ht.size());
-    for(size_t i = 0;i<Etot_ht.size();i++)
-    {
-        monthly[i] = Etot_ht[i] + Etot_cl[i] + Etot_int_lt[i] + Etot_ext_lt[i] +
-                     Etot_fan[i] + Etot_pump[i] + Etot_plug[i] + Etot_dhw[i];
-        yrSum += monthly[i];
-    }
+    //double yrSum = 0;
+    //Vector monthly(Etot_ht.size());
+    //for(size_t i = 0;i<Etot_ht.size();i++)
+    //{
+        //monthly[i] = Etot_ht[i] + Etot_cl[i] + Etot_int_lt[i] + Etot_ext_lt[i] +
+                     //Etot_fan[i] + Etot_pump[i] + Etot_plug[i] + Etot_dhw[i];
+        //yrSum += monthly[i];
+    //}
 
 /*
 % Find the totals for each month by summing across the columns
