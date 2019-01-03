@@ -70,9 +70,8 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
 
   Json::CharReaderBuilder rbuilder;
   std::istringstream ss(json);
-  std::string formattedErrors;
   Json::Value value;
-  ASSERT_TRUE(Json::parseFromStream(rbuilder, ss, &value, &formattedErrors));
+  ASSERT_TRUE(Json::parseFromStream(rbuilder, ss, &value, nullptr));
 
   ASSERT_TRUE(value.isMember("stories"));
   ASSERT_TRUE(value["stories"].isArray());
@@ -166,7 +165,8 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   model::FloorplanJSForwardTranslator ft;
   FloorplanJS floorplan2 = ft.updateFloorplanJS(*floorplan, *model, false);
 
-  ASSERT_TRUE(reader.parse(floorplan2.toJSON(), value));
+  std::stringstream ss2(floorplan2.toJSON());
+  ASSERT_TRUE(Json::parseFromStream(rbuilder, ss2, &value, nullptr));
   ASSERT_TRUE(value.isMember("stories"));
   ASSERT_TRUE(value["stories"].isArray());
   ASSERT_EQ(1u, value["stories"].size());
@@ -232,7 +232,8 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
 
   FloorplanJS floorplan3 = ft.updateFloorplanJS(floorplan2, *model, false);
 
-  ASSERT_TRUE(reader.parse(floorplan3.toJSON(), value));
+  std::stringstream ss3(floorplan3.toJSON());
+  ASSERT_TRUE(Json::parseFromStream(rbuilder, ss3, &value, nullptr));
   ASSERT_TRUE(value.isMember("stories"));
   ASSERT_TRUE(value["stories"].isArray());
   ASSERT_EQ(1u, value["stories"].size());
@@ -298,7 +299,8 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
 
   FloorplanJS floorplan4 = ft.updateFloorplanJS(floorplan3, *model, true);
 
-  ASSERT_TRUE(reader.parse(floorplan4.toJSON(), value));
+  std::stringstream ss4(floorplan4.toJSON());
+  ASSERT_TRUE(Json::parseFromStream(rbuilder, ss4, &value, nullptr));
   ASSERT_TRUE(value.isMember("stories"));
   ASSERT_TRUE(value["stories"].isArray());
   ASSERT_EQ(1u, value["stories"].size());
