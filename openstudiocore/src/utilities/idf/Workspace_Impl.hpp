@@ -51,8 +51,6 @@
 #include <map>
 #include <unordered_map>
 
-#include <QObject>
-
 namespace openstudio {
 
 // forward declarations
@@ -489,7 +487,7 @@ namespace detail {
     //@}
 
 
-   public slots:
+   //public slots:
 
     void change();
 

@@ -31,7 +31,7 @@
 #include "String.hpp"
 
 
-#ifdef Q_OS_WIN
+#if (defined (_WIN32) || defined (_WIN64))
 #include <locale>
 #include <codecvt>
 #endif
@@ -59,7 +59,7 @@ std::ostream& operator<<(std::ostream& os, const path& p)
 /** QString to path*/
 path toPath(const QString& q)
 {
-  #ifdef Q_OS_WIN
+  #if (defined (_WIN32) || defined (_WIN64))
     return path(q.toStdWString());
   #endif
 
@@ -75,7 +75,7 @@ path tempDir()
 /** path to UTF-8 encoding. */
 std::string toString(const path& p)
 {
-  #ifdef Q_OS_WIN
+  #if (defined (_WIN32) || defined (_WIN64))
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>,wchar_t> converter;
     std::string s = converter.to_bytes(p.generic_wstring());
     return s;
@@ -87,7 +87,7 @@ std::string toString(const path& p)
 /** path to QString. */
 QString toQString(const path& p)
 {
-  #ifdef Q_OS_WIN
+  #if (defined (_WIN32) || defined (_WIN64))
     return QString::fromStdWString(p.generic_wstring());
   #endif
   return QString::fromUtf8(p.generic_string().c_str());
@@ -102,7 +102,7 @@ path toPath(const char* s)
 /** UTF-8 encoded std::string to path*/
 path toPath(const std::string& s)
 {
-  #ifdef Q_OS_WIN
+  #if (defined (_WIN32) || defined (_WIN64))
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>,wchar_t> converter;
     std::wstring wstr = converter.from_bytes(s);
     return path(wstr);
@@ -112,7 +112,7 @@ path toPath(const std::string& s)
   return path(s);
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 /** UTF-16 encoded std::wstring for opening fstreams*/
 std::wstring toSystemFilename(const path& p)
 {

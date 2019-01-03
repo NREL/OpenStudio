@@ -184,7 +184,8 @@ namespace detail {
 
     boost::optional<ModelObject> spaceAsModelObject() const;
 
-   private slots:
+   //private slots:
+   private:
 
     void clearCachedVariables();
 

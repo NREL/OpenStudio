@@ -39,7 +39,7 @@ TEST(System, IdleTime)
   // system idle time should not be unset for platforms it is implemented on
   boost::optional<Time> idleTime = System::systemIdleTime();
 
-  #ifdef _WINDOWS
+  #if (defined (_WIN32) || defined (_WIN64))
     EXPECT_TRUE(idleTime);
   #else
 

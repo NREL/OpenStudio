@@ -43,7 +43,7 @@
 namespace boost{
 namespace program_options{
 
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
   typedef std::wstring string;
   typedef std::vector<std::wstring> string_vector;
 

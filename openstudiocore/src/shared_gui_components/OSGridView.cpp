@@ -56,7 +56,7 @@
 #include <QShowEvent>
 #include <QStackedWidget>
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_DARWIN
   #define WIDTH  110
   #define HEIGHT 60
   #define WIDTH_DZ 98

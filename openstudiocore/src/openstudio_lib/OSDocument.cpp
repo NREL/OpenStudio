@@ -129,7 +129,7 @@
 #include <QInputDialog>
 #include <QSettings>
 
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
 #include <windows.h>
 #endif
 
@@ -1636,7 +1636,7 @@ namespace openstudio {
 
           openstudio::path oscPath = toPath(oscFiles[0]);
 
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
 
           if (oscPath.string().size() > MAX_PATH){
             if (oscPath.is_complete()){

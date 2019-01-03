@@ -85,7 +85,7 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
       QCoreApplication::addLibraryPath(toQString(openstudioDirPath));
 
       // Make the ruby path the default plugin search location
-//#if defined(Q_OS_MAC)
+//#if defined(Q_OS_DARWIN)
 //      openstudio::path p = getApplicationRunDirectory().parent_path().parent_path().parent_path() / toPath("Ruby/openstudio");
 //      QCoreApplication::addLibraryPath(toQString(p));
 //#elif defined(Q_OS_WIN)

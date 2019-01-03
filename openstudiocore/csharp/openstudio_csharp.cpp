@@ -2,11 +2,11 @@
 
 #include <QtPlugin>
 
-#if defined(Q_OS_OSX)
+#if defined(__APPLE__)
   Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
-#elif defined(Q_OS_WIN)
+#elif (defined (_WIN32) || defined (_WIN64))
   Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
-#elif defined(Q_OS_LINUX)
+#elif defined(__linux__)
   Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);
 #endif
 

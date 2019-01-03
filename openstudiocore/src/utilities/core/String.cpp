@@ -105,7 +105,7 @@ std::string toString(std::istream& s) {
 /** QString to wstring. */
 std::wstring toWString(const QString& q)
 {
-#if defined(Q_OS_WIN)
+#if (defined (_WIN32) || defined (_WIN64))
   static_assert(sizeof(wchar_t) == sizeof(unsigned short), "Wide characters must have the same size as unsigned shorts");
   std::wstring w(reinterpret_cast<const wchar_t *>(q.utf16()), q.length());
   return w;
@@ -124,7 +124,7 @@ QString toQString(const std::string& s)
 /** wstring to QString. */
 QString toQString(const std::wstring& w)
 {
-#if defined(Q_OS_WIN)
+#if (defined (_WIN32) || defined (_WIN64))
   static_assert(sizeof(wchar_t) == sizeof(unsigned short), "Wide characters must have the same size as unsigned shorts");
   return QString::fromUtf16(reinterpret_cast<const unsigned short *>(w.data()), w.length());
 #else

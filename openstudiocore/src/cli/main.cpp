@@ -40,9 +40,6 @@
 #include <dirent.h>
 #else
 #include <windows.h>
-#endif
-
-#ifdef Q_OS_WIN
 #pragma warning(disable : 4930 )
 #pragma warning(disable : 4101 )
 #endif
@@ -153,7 +150,7 @@ extern "C" {
   void Init_openssl(void);
   void Init_nonblock(void);
 
-  #ifndef WIN32
+  #ifndef _WIN32
     void Init_console(void);
     void Init_dbm(void);
     void Init_gdbm(void);
@@ -507,7 +504,7 @@ int main(int argc, char *argv[])
     rb_provide("io/nonblock");
     rb_provide("io/nonblock.so");
 
-   #ifndef WIN32
+   #ifndef _WIN32
 
     // DLM: we have Init_console on Windows but crashes when try to init it, fails to load openssl
      Init_console();

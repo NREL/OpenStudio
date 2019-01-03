@@ -63,7 +63,7 @@ UTILITIES_API path toPath(const std::string& s);
 /** QString to path*/
 UTILITIES_API path toPath(const QString& q);
 
-#ifdef WIN32
+#ifdef _WIN32
 /** UTF-16 encoded std::wstring for opening fstreams*/
 UTILITIES_API std::wstring toSystemFilename(const path& p);
 #else

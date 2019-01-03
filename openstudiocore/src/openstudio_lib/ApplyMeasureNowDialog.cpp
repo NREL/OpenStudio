@@ -280,7 +280,7 @@ void ApplyMeasureNowDialog::createWidgets()
 
   // OS SETTINGS
 
-  #ifdef Q_OS_MAC
+  #ifdef Q_OS_DARWIN
     setWindowFlags(Qt::FramelessWindowHint);
   #elif defined(Q_OS_WIN)
     setWindowFlags(Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);

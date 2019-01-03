@@ -42,8 +42,8 @@ namespace openstudio{
  *  virtual method onBecomeDirty is called only after dirty transitions from false to true.  Alternatively, the
  *  virtual method onBecomeClean is called only after dirty transitions from true to false.
  *
- *  WorkspaceWatcher an atypical QObject because it is designed to be stack allocated.  In many cases it
- *  would be preferred to connect your own heap allocated QObject to the Workspace signals directly rather
+ *  WorkspaceWatcher an atypical object because it is designed to be stack allocated.  In many cases it
+ *  would be preferred to connect your own heap allocated object to the Workspace signals directly rather
  *  than using this convenience class.
  **/
 class UTILITIES_API WorkspaceWatcher {
