@@ -197,19 +197,19 @@ namespace detail {
   bool ElectricEquipmentITEAirCooled_Impl::hardApplySchedules() {
     bool result = true;
 
-    //optional in EnergyPlus
+    // optional in EnergyPlus
     boost::optional<Schedule> designPowerInputSchedule = this->designPowerInputSchedule();
     if (designPowerInputSchedule) {
-      this->setDesignPowerInputSchedule(*designPowerInputSchedule);
+      result = result && this->setDesignPowerInputSchedule(*designPowerInputSchedule);
     }
 
-    //optional in EnergyPlus
+    // optional in EnergyPlus
     boost::optional<Schedule> cPULoadingSchedule = this->cPULoadingSchedule();
     if (cPULoadingSchedule) {
-      this->setCPULoadingSchedule(*cPULoadingSchedule);
+      result = result && this->setCPULoadingSchedule(*cPULoadingSchedule);
     }
 
-    return true;
+    return result;
   }
 
   double ElectricEquipmentITEAirCooled_Impl::multiplier() const {
@@ -383,7 +383,7 @@ namespace detail {
     bool result = setString(OS_ElectricEquipment_ITE_AirCooledFields::ElectricPowerSupplyEndUseSubcategory, "");
     OS_ASSERT(result);
   }
-  
+
   int ElectricEquipmentITEAirCooled_Impl::spaceIndex() const {
     return OS_ElectricEquipment_ITE_AirCooledFields::SpaceorSpaceTypeName;
   }
