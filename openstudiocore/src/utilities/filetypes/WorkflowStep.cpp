@@ -118,8 +118,12 @@ namespace detail{
       }
     }
 
-    Json::StyledWriter writer;
-    return writer.write(result);
+    Json::StreamWriterBuilder wbuilder;
+    // mimic the old StyledWriter behavior:
+    wbuilder["indentation"] = "   ";
+    std::string resultString = Json::writeString(wbuilder, result);
+
+    return resultString;
   }
 
 
@@ -305,9 +309,14 @@ boost::optional<WorkflowStep> WorkflowStep::fromString(const std::string& s)
   }
 
   if (value.isMember("result")){
-    Json::StyledWriter writer;
+
     Json::Value v = value["result"];
-    std::string s = writer.write(v);
+
+    Json::StreamWriterBuilder wbuilder;
+    // mimic the old StyledWriter behavior:
+    wbuilder["indentation"] = "   ";
+    std::string s = Json::writeString(wbuilder, v);
+
     boost::optional<WorkflowStepResult> workflowStepResult = WorkflowStepResult::fromString(s);
     if (workflowStepResult){
       result->setResult(*workflowStepResult);

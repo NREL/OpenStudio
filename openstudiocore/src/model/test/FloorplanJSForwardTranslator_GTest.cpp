@@ -396,8 +396,9 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Colors) {
   greenSpaceTypeValue["color"] = "#00FF00";
   value["space_types"].append(greenSpaceTypeValue);
 
-  Json::FastWriter writer;
-  FloorplanJS floorplan2(writer.write(value));
+  Json::StreamWriterBuilder wbuilder;
+  const std::string json_string = Json::writeString(wbuilder, value);
+  FloorplanJS floorplan2(json_string);
 
   ThreeScene scene2 = floorplan2.toThreeScene(true);
 

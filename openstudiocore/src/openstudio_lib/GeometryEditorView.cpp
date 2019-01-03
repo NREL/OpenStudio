@@ -312,8 +312,18 @@ void FloorspaceEditor::loadEditor()
 
     config["initialNorthAxis"] = m_model.getUniqueModelObject<model::Building>().northAxis();
 
-    Json::FastWriter writer;
-    std::string json = writer.write(config);
+    Json::StreamWriterBuilder wbuilder;
+
+    // mimic the old FastWriter behavior:
+    wbuilder["commentStyle"] = "None";
+    wbuilder["indentation"] = "";
+    // These defaults are already fine:
+    //wbuilder["enableYAMLCompatibility"] = false;
+    //wbuilder["dropNullPlaceholders"] = false;
+    //wbuilder["useSpecialFloats"] = false;
+    //wbuilder["precision"] = 17;
+
+    const std::string json = Json::writeString(wbuilder, config);
 
     QString javascript = QString("window.api.setConfig(") + QString::fromStdString(json) + QString(");");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
@@ -402,6 +412,7 @@ document.head.appendChild(style);\n";
       m_javascriptRunning = true;
 
       std::string json = floorplan.toJSON(false);
+      // TODO: @macumber: delete this now?
       // DLM: temp
       // Json::CharReaderBuilder rbuilder;
       // std::istringstream ss(json);
@@ -409,8 +420,11 @@ document.head.appendChild(style);\n";
       // Json::Value value;
       // bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &errorString);
       // value.removeMember("stories");
-      // Json::FastWriter writer;
-      // json = writer.write(value);
+      // Json::StreamWriterBuilder wbuilder;
+      // // mimic the old FastWriter behavior:
+      // wbuilder["commentStyle"] = "None";
+      // wbuilder["indentation"] = "";
+      // const std::string json = Json::writeString(wbuilder, value);
 
       QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
       m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });

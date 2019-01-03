@@ -65,10 +65,14 @@ namespace detail {
       value["value"] = m_value.valueAsBoolean();
     }
 
-    Json::StyledWriter writer;
-    std::string result = writer.write(value);
+    // Write to string
+    Json::StreamWriterBuilder wbuilder;
+    // mimic the old StyledWriter behavior:
+    wbuilder["indentation"] = "   ";
+    std::string result = Json::writeString(wbuilder, value);
 
-    return result;  }
+    return result;
+  }
 
   std::string WorkflowStepValue_Impl::name() const
   {
@@ -271,8 +275,11 @@ namespace detail {
       value["stderr"] = stdErr().get();
     }
 
-    Json::StyledWriter writer;
-    std::string result = writer.write(value);
+    // Write to string
+    Json::StreamWriterBuilder wbuilder;
+    // mimic the old StyledWriter behavior:
+    wbuilder["indentation"] = "   ";
+    std::string result = Json::writeString(wbuilder, value);
 
     return result;
   }
@@ -1021,12 +1028,17 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
 
     Json::Value stepValues = value.get("step_values", defaultArrayValue);
     n = stepValues.size();
-    for (Json::ArrayIndex i = 0; i < n; ++i){
-      Json::StyledWriter writer;
-      std::string s = writer.write(stepValues[i]);
-      boost::optional<WorkflowStepValue> workflowStepValue = WorkflowStepValue::fromString(s);
-      if (workflowStepValue){
-        result.addStepValue(*workflowStepValue);
+
+    if (n > 0) {
+      Json::StreamWriterBuilder wbuilder;
+      // mimic the old StyledWriter behavior:
+      wbuilder["indentation"] = "   ";
+      for (Json::ArrayIndex i = 0; i < n; ++i){
+        std::string s = Json::writeString(wbuilder, stepValues[i]);
+        boost::optional<WorkflowStepValue> workflowStepValue = WorkflowStepValue::fromString(s);
+        if (workflowStepValue){
+          result.addStepValue(*workflowStepValue);
+        }
       }
     }
 

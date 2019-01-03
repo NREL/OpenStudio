@@ -170,8 +170,10 @@ namespace detail{
       }
     }
 
-    Json::StyledWriter writer;
-    std::string result = writer.write(clone);
+    Json::StreamWriterBuilder wbuilder;
+    // mimic the old StyledWriter behavior:
+    wbuilder["indentation"] = "   ";
+    std::string result = Json::writeString(wbuilder, clone);
 
     return result;
   }
@@ -831,17 +833,25 @@ namespace detail{
     Json::Value steps = m_value.get("steps", defaultValue);
 
     Json::ArrayIndex n = steps.size();
-    for (Json::ArrayIndex i = 0; i < n; ++i){
-      Json::Value step = steps[i];
 
-      Json::FastWriter writer;
-      std::string s = writer.write(step);
+    if (n > 0) {
+      Json::StreamWriterBuilder wbuilder;
 
-      boost::optional<WorkflowStep> workflowStep = WorkflowStep::fromString(s);
-      if (workflowStep){
-        m_steps.push_back(*workflowStep);
-      }else{
-        LOG_AND_THROW("Step " << i << " cannot be processed");
+      // mimic the old FastWriter behavior:
+      wbuilder["commentStyle"] = "None";
+      wbuilder["indentation"] = "";
+
+      for (Json::ArrayIndex i = 0; i < n; ++i){
+        Json::Value step = steps[i];
+
+        std::string s = Json::writeString(wbuilder, step);
+
+        boost::optional<WorkflowStep> workflowStep = WorkflowStep::fromString(s);
+        if (workflowStep){
+          m_steps.push_back(*workflowStep);
+        }else{
+          LOG_AND_THROW("Step " << i << " cannot be processed");
+        }
       }
     }
 
@@ -875,8 +885,12 @@ namespace detail{
     if (m_value.isMember("run_options")){
       Json::Value options = m_value["run_options"];
 
-      Json::FastWriter writer;
-      std::string s = writer.write(options);
+      Json::StreamWriterBuilder wbuilder;
+      // mimic the old FastWriter behavior:
+      wbuilder["commentStyle"] = "None";
+      wbuilder["indentation"] = "";
+
+      std::string s = Json::writeString(wbuilder, options);
 
       m_runOptions = RunOptions::fromString(s);
       if (!m_runOptions){

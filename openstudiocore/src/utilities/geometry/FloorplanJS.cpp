@@ -277,15 +277,21 @@ namespace openstudio{
 
   std::string FloorplanJS::toJSON(bool prettyPrint) const
   {
-    // write to string
-    std::string result;
-    if (prettyPrint){
-      Json::StyledWriter writer;
-      result = writer.write(m_value);
-    } else{
-      Json::FastWriter writer;
-      result = writer.write(m_value);
+    // Write to string
+    Json::StreamWriterBuilder wbuilder;
+
+    if (prettyPrint) {
+      // mimic the old StyledWriter behavior:
+      wbuilder["commentStyle"] = "All";
+      // From source, it seems indentation was set to 3 spaces, rather than the new default of '\t'
+      wbuilder["indentation"] = "   ";
+    } else {
+      // mimic the old FastWriter behavior:
+      wbuilder["commentStyle"] = "None";
+      wbuilder["indentation"] = "";
     }
+
+    std::string result = Json::writeString(wbuilder, m_value);
 
     return result;
   }
