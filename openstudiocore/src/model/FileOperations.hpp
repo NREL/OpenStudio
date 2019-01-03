@@ -36,8 +36,6 @@
 
 #include <boost/optional.hpp>
 
-#include <QString>
-
 #include <map>
 #include <vector>
 
