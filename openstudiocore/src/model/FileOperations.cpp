@@ -92,7 +92,7 @@ namespace model {
     const auto dest = openstudio::filesystem::canonical(destinationDir);
 
     if (src == dest) {
-      LOG_FREE(Warn, "replaceDir", "Refusing to copy directory '" << toString(sourceDir) << "' only itself '" << toString(destinationDir) 
+      LOG_FREE(Warn, "replaceDir", "Refusing to copy directory '" << toString(sourceDir) << "' only itself '" << toString(destinationDir)
           << "' canonical path: '" << toString(src) << "'");
       return true; // there is no error, just nothing to do
     }
@@ -142,7 +142,7 @@ namespace model {
       }
     }
 
-    return true;
+    return result;
   }
 
   bool removeDir(const openstudio::path &path)
