@@ -1954,7 +1954,7 @@ namespace detail {
       std::string strSuffix = objectName.substr(found+1);
       const char *p = strSuffix.c_str();
       int suffix = 0;
-      int count = 0;
+      unsigned count = 0;
       while (*p >= '0' && *p <= '9') {
           suffix = (suffix * 10) + (*p - '0');
           ++p;
@@ -1982,7 +1982,7 @@ namespace detail {
       std::string strSuffix = objectName.substr(found+1);
       const char *p = strSuffix.c_str();
       int suffix = 0;
-      int count = 0;
+      unsigned count = 0;
       while (*p >= '0' && *p <= '9') {
           suffix = (suffix * 10) + (*p - '0');
           ++p;
@@ -2384,7 +2384,7 @@ namespace detail {
       restoreObject(object);
     }
   }
-  
+
   // QUERIES
 
   std::string Workspace_Impl::constructNextName(const std::string& objectName,
