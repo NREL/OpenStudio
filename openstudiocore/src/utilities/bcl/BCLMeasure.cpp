@@ -413,7 +413,7 @@ namespace openstudio{
     std::string str(name);
 
     bool startsWithLetter = false;
-    for (int i = 0; i < str.size(); ++i){
+    for (std::string::size_type i = 0; i < str.size(); ++i){
       if (!(isalpha(str[i]) || isdigit(str[i]))){
         str[i] = ' ';
       }else if(i == 0){
@@ -456,7 +456,7 @@ namespace openstudio{
     }
     return result;
   }
- 
+
   std::vector<std::string> BCLMeasure::suggestedIntendedSoftwareTools()
   {
     std::vector<std::string> result;
