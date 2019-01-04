@@ -86,9 +86,7 @@ namespace openstudio {
 
     UTILITIES_API friend UUID openstudio::createUUID();
     UTILITIES_API friend UUID openstudio::toUUID(const std::string& str);
-    //UTILITIES_API friend UUID openstudio::toUUID(const QString& str);
     UTILITIES_API friend std::string openstudio::toString(const UUID& uuid);
-    //UTILITIES_API friend QString openstudio::toQString(const UUID& uuid);
     UTILITIES_API friend std::string openstudio::createUniqueName(const std::string& prefix);
     UTILITIES_API friend std::string openstudio::removeBraces(const UUID& uuid);
     UTILITIES_API friend bool openstudio::operator!= (const UUID & lhs, const UUID & rhs);

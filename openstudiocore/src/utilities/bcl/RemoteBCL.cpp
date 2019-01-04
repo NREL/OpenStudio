@@ -40,9 +40,11 @@
 #define REMOTE_PRODUCTION_SERVER "https://bcl.nrel.gov"
 #define REMOTE_DEVELOPMENT_SERVER "http://bcl7.development.nrel.gov"
 
-// temporary placeholder 
-auto toQString = [](const std::string &s) {
-  return QString::fromUtf8(s.data(), s.size());
+///
+/// TODO: Remove this helper when Qt is fully removed
+///
+static auto toQString(const std::string &s) {
+  return QString::fromStdString(s);
 };
 
 namespace openstudio{
