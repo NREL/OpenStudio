@@ -68,7 +68,7 @@ namespace openstudio {
     UTILITIES_API bool copy_file_no_throw(const openstudio::path &t_src, const openstudio::path &t_dest);
 
     // consider making this a operator<< overload. Did it this way for now to keep the changes straight
-    UTILITIES_API void write(openstudio::filesystem::ofstream &t_file, const QString &);
+    //UTILITIES_API void write(openstudio::filesystem::ofstream &t_file, const QString &);
 
     UTILITIES_API time_t last_write_time_as_time_t(const openstudio::path &t_path);
 

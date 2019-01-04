@@ -29,6 +29,8 @@
 
 #include "OSQuantityEdit.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include "../model/ModelObject_Impl.hpp"
 
 #include "../utilities/core/Containers.hpp"

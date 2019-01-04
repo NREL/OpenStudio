@@ -127,6 +127,7 @@
 #include "../model/ZoneHVACWaterToAirHeatPump_Impl.hpp"
 
 #include "../model_editor/InspectorGadget.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include "../utilities/core/Assert.hpp"
 

@@ -87,6 +87,8 @@
 #include "../model/DesignSpecificationOutdoorAir.hpp"
 #include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
 #include <utilities/idd/OS_BuildingStory_FieldEnums.hxx>
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>

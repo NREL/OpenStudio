@@ -24,7 +24,6 @@
   %ignore openstudio::toString(const std::string&);
   %ignore openstudio::toString(const std::wstring&);
   %ignore openstudio::toString(const char *);
-  %ignore openstudio::toQString(const std::wstring& w);
 #endif
 
 %ignore openstudio::getApplicationSourceDirectory();

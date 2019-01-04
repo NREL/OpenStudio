@@ -40,6 +40,8 @@
 #include "../model/WeatherFile.hpp"
 #include "../model/WeatherFile_Impl.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
 #include "../utilities/idd/IddEnums.hxx"

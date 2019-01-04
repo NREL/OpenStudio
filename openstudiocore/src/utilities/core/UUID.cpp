@@ -97,10 +97,6 @@ UUID createUUID()
   return UUID::random_generate();
 }
 
-UUID toUUID(const QString &str)
-{
-  return toUUID(toString(str));
-}
 
 UUID toUUID(const std::string& str)
 {
@@ -140,11 +136,6 @@ std::string toString(const UUID& uuid)
   boost::uuids::operator<<(ss, uuid);
   ss << '}';
   return ss.str();
-}
-
-QString toQString(const UUID& uuid)
-{
-  return toQString(toString(uuid));
 }
 
 

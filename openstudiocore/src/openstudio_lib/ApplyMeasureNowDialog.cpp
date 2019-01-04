@@ -43,6 +43,7 @@
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSItem.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"

@@ -326,8 +326,8 @@ namespace openstudio{
     return txt;
 
     // http://stackoverflow.com/questions/2083754/why-shouldnt-apos-be-used-to-escape-single-quotes
-    QString result = toQString(txt);//.replace("'", "#x27;");
-    return result.toStdString();
+//    QString result = toQString(txt);//.replace("'", "#x27;");
+//    return result.toStdString();
   }
 
   std::string BCLXML::decodeString(const std::string& txt)
@@ -336,8 +336,8 @@ namespace openstudio{
     // only thing that can't be in the text node on disk are '<' (should be '&lt;') and '&' (should be '&amp;')
     return txt;
 
-    QString result = toQString(txt);//.replace("#x27;", "'");
-    return result.toStdString();
+//    QString result = toQString(txt);//.replace("#x27;", "'");
+//    return result.toStdString();
   }
 
   std::string BCLXML::uid() const

@@ -36,6 +36,9 @@
 #include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../model/AirLoopHVACZoneMixer.hpp"
 #include "../model/AirLoopHVACZoneMixer_Impl.hpp"
+
+#include "../model_editor/Utilities.hpp"
+
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QStyleOption>

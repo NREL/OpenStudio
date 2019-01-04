@@ -233,6 +233,14 @@
 #include <cmath>
 #include <functional>
 
+
+///
+/// TODO: Remove this helper when Qt is fully removed
+///
+auto toQString(const std::string &s) {
+  return QString::fromUtf8(s.data(), s.size());
+};
+
 namespace openstudio {
 namespace sdd {
 
@@ -4084,7 +4092,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }else if (typeElement.text() == "Plenum"){
       // no thermostat
     }else{
-      LOG(Error, "Unknown thermal zone type '" << toString(typeElement.text()) << "'");
+      LOG(Error, "Unknown thermal zone type '" << typeElement.text().toStdString() << "'");
     }
   }
 
@@ -4349,7 +4357,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   }
   boost::optional<std::string> daylightingControlType;
   if (!daylightingControlTypeElement.isNull()){
-    daylightingControlType = toString(daylightingControlTypeElement.text());
+    daylightingControlType = daylightingControlTypeElement.text().toStdString();
   }
   boost::optional<int> daylightingNumberOfControlSteps;
   if (!daylightingNumberOfControlStepsElement.isNull()){

@@ -56,16 +56,6 @@ std::ostream& operator<<(std::ostream& os, const path& p)
   return os;
 }
 
-/** QString to path*/
-path toPath(const QString& q)
-{
-  #if (defined (_WIN32) || defined (_WIN64))
-    return path(q.toStdWString());
-  #endif
-
-  return path(q.toStdString());
-}
-
 /** path to a temporary directory. */
 path tempDir()
 {
@@ -84,14 +74,6 @@ std::string toString(const path& p)
   return p.generic_string();
 }
 
-/** path to QString. */
-QString toQString(const path& p)
-{
-  #if (defined (_WIN32) || defined (_WIN64))
-    return QString::fromStdWString(p.generic_wstring());
-  #endif
-  return QString::fromUtf8(p.generic_string().c_str());
-}
 
 /** UTF-8 encoded char* to path*/
 path toPath(const char* s)

@@ -27,43 +27,77 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_CORE_STRING_HPP
-#define UTILITIES_CORE_STRING_HPP
-
-#include "../UtilitiesAPI.hpp"
-
-#include <string>
-#include <vector>
-
-#include <QString>
-
-/** \file String.hpp
- *
- *  All strings are assumed to be UTF-8 encoded std::string.  Note that length of the std::string
- *  may therefore not match number of characters in the std::string. */
+#include "Utilities.hpp"
 
 namespace openstudio {
-
-  /** string to std::string. */
-  UTILITIES_API std::string toString(const std::string& s);
-
-  /** char* to std::string. */
-  UTILITIES_API std::string toString(const char* s);
-
-  /** wstring to std::string. */
-  UTILITIES_API std::string toString(const std::wstring& w);
-
-  /** wchar_t* to std::string. */
-  UTILITIES_API std::string toString(const wchar_t* w);
+  /** QString to UTF-8 encoded std::string. */
+  std::string toString(const QString& q)
+  {
+    const QByteArray& qb = q.toUtf8();
+    return std::string(qb.data());
+  }
 
 
-  /** Double to std::string at full precision. */
-  UTILITIES_API std::string toString(double v);
 
-  /** Load data in istream into string. */
-  UTILITIES_API std::string toString(std::istream& s);
+  /** QString to wstring. */
+  std::wstring toWString(const QString& q)
+  {
+#if (defined (_WIN32) || defined (_WIN64))
+    static_assert(sizeof(wchar_t) == sizeof(unsigned short), "Wide characters must have the same size as unsigned shorts");
+    std::wstring w(reinterpret_cast<const wchar_t *>(q.utf16()), q.length());
+    return w;
+#else
+    std::wstring w = q.toStdWString();
+    return w;
+#endif
+  }
+
+  /** UTF-8 encoded std::string to QString. */
+  QString toQString(const std::string& s)
+  {
+    return QString::fromUtf8(s.c_str());
+  }
+
+  /** wstring to QString. */
+  QString toQString(const std::wstring& w)
+  {
+#if (defined (_WIN32) || defined (_WIN64))
+    static_assert(sizeof(wchar_t) == sizeof(unsigned short), "Wide characters must have the same size as unsigned shorts");
+    return QString::fromUtf16(reinterpret_cast<const unsigned short *>(w.data()), w.length());
+#else
+    return QString::fromStdWString(w);
+#endif
+
+  }
+
+  UUID toUUID(const QString &str)
+  {
+    return toUUID(toString(str));
+  }
+
+  QString toQString(const UUID& uuid)
+  {
+    return toQString(toString(uuid));
+  }
+
+  /** path to QString. */
+  QString toQString(const path& p)
+  {
+#if (defined (_WIN32) || defined (_WIN64))
+    return QString::fromStdWString(p.generic_wstring());
+#endif
+    return QString::fromUtf8(p.generic_string().c_str());
+  }
+
+  /** QString to path*/
+  path toPath(const QString& q)
+  {
+#if (defined (_WIN32) || defined (_WIN64))
+    return path(q.toStdWString());
+#endif
+
+    return path(q.toStdString());
+  }
 
 
-} // openstudio
-
-#endif // UTILITIES_CORE_STRING_HPP
+}

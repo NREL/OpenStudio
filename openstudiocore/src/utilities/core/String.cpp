@@ -31,7 +31,7 @@
 
 #include "Logger.hpp"
 
-
+#include <codecvt>
 #include <iomanip>
 
 namespace openstudio {
@@ -54,18 +54,7 @@ std::string toString(const wchar_t* w)
   return toString(std::wstring(w));
 }
 
-/** wstring to std::string. */
-std::string toString(const std::wstring& w)
-{
-  return toString(toQString(w));
-}
 
-/** QString to UTF-8 encoded std::string. */
-std::string toString(const QString& q)
-{
-  const QByteArray& qb = q.toUtf8();
-  return std::string(qb.data());
-}
 
 std::string toString(double v) {
 
@@ -102,36 +91,39 @@ std::string toString(std::istream& s) {
   return contents;
 }
 
-/** QString to wstring. */
-std::wstring toWString(const QString& q)
+
+///
+/// Note that MSVC has linker issues with wchars for some weird reason
+/// Hence these ifdef workarounds https://stackoverflow.com/questions/32055357/visual-studio-c-2015-stdcodecvt-with-char16-t-or-char32-t
+///
+
+std::wstring toWString(const std::string& q)
 {
-#if (defined (_WIN32) || defined (_WIN64))
-  static_assert(sizeof(wchar_t) == sizeof(unsigned short), "Wide characters must have the same size as unsigned shorts");
-  std::wstring w(reinterpret_cast<const wchar_t *>(q.utf16()), q.length());
-  return w;
+#if _MSC_VER >= 1900
+  std::wstring_convert<std::codecvt_utf8_utf16<int16_t>, int16_t> convert;
+  const auto u16_conv = convert.from_bytes(q);
+  return { u16_conv.begin(), u16_conv.end() };
 #else
-  std::wstring w = q.toStdWString();
-  return w;
+  std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+  const auto u16_conv = convert.from_bytes(q);
+  return { u16_conv.begin(), u16_conv.end() };
 #endif
 }
 
-/** UTF-8 encoded std::string to QString. */
-QString toQString(const std::string& s)
-{
-  return QString::fromUtf8(s.c_str());
-}
 
-/** wstring to QString. */
-QString toQString(const std::wstring& w)
+
+std::string toString(const std::wstring &utf16_string)
 {
-#if (defined (_WIN32) || defined (_WIN64))
-  static_assert(sizeof(wchar_t) == sizeof(unsigned short), "Wide characters must have the same size as unsigned shorts");
-  return QString::fromUtf16(reinterpret_cast<const unsigned short *>(w.data()), w.length());
+#if _MSC_VER >= 1900
+  std::wstring_convert<std::codecvt_utf8_utf16<int16_t>, int16_t> convert;
+  auto p = reinterpret_cast<const int16_t *>(utf16_string.data());
+  return convert.to_bytes(p, p + utf16_string.size());
 #else
-  return QString::fromStdWString(w);
+  std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+  return convert.to_bytes(utf16_string);
 #endif
-
 }
+
 
 } // openstudio
 

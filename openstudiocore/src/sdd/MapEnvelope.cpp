@@ -70,6 +70,13 @@
 #include <QDomDocument>
 #include <QDomElement>
 
+///
+/// TODO: Remove this helper when Qt is fully removed
+///
+static auto toQString(const std::string &s) {
+  return QString::fromUtf8(s.data(), s.size());
+};
+
 namespace openstudio {
 namespace sdd {
 

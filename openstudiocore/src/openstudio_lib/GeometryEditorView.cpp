@@ -58,6 +58,8 @@
 #include "../model/ShadingSurface.hpp"
 #include "../model/ShadingSurface_Impl.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include "../gbxml/ReverseTranslator.hpp"
 #include "../energyplus/ReverseTranslator.hpp"
 #include "../osversion/VersionTranslator.hpp"
@@ -90,7 +92,14 @@
 #include <QProcessEnvironment>
 #include <QDesktopServices>
 
-int CHECKFORUPDATEMSEC = 5000;
+const int CHECKFORUPDATEMSEC = 5000;
+
+///
+/// TODO: Remove this helper when Qt is fully removed
+///
+static auto toQString(const std::string &s) {
+  return QString::fromUtf8(s.data(), s.size());
+};
 
 namespace openstudio {
 

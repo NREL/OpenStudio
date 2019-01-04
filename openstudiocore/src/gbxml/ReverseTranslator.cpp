@@ -605,7 +605,7 @@ namespace gbxml {
         QString spaceId1 = adjacentSpaceElements.at(0).toElement().attribute("spaceIdRef");
         QString spaceId2 = adjacentSpaceElements.at(1).toElement().attribute("spaceIdRef");
         if (spaceId1 == spaceId2){
-          LOG(Warn, "Surface has two adjacent spaces which are the same space '" << toString(spaceId2) << "', will not be translated.");
+          LOG(Warn, "Surface has two adjacent spaces which are the same space '" << spaceId2.toStdString() << "', will not be translated.");
           return boost::none;
         }
       }else if (adjacentSpaceElements.size() > 2){
@@ -817,12 +817,12 @@ namespace gbxml {
                   // one of the spaces lists this as a wall or some other surfaceType
                   // we could try to reapply the surfaceType from the gbXML back here, but then we would be in the same problem as before
                   // at least now we have a surface type that matches the vertex outward normal
-                  LOG(Warn, "Adjacent surfaceTypes '" << toString(spaceSurfaceType) << "' and  '" << toString(adjacentSpaceSurfaceType) << "' listed for '" << surface.name().get() << "' do not match vertices");
+                  LOG(Warn, "Adjacent surfaceTypes '" << spaceSurfaceType.toStdString() << "' and  '" << adjacentSpaceSurfaceType.toStdString() << "' listed for '" << surface.name().get() << "' do not match vertices");
 
                 } else if (spaceSurfaceType == adjacentSpaceSurfaceType) {
 
                   // both spaceSurfaceType and adjacentSpaceSurfaceType are either InteriorFloor or Ceiling, not allowed
-                  LOG(Warn, "Duplicate surfaceType '" << toString(spaceSurfaceType) << "' listed for '" << surface.name().get() << "'");
+                  LOG(Warn, "Duplicate surfaceType '" << spaceSurfaceType.toStdString() << "' listed for '" << surface.name().get() << "'");
 
                 } else {
 
@@ -841,7 +841,7 @@ namespace gbxml {
 
                       // Schema says, "The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element,
                       // is always pointing away from the first AdjacentSpaceID listed." but this does not match surfaceType in the first AdjacentSpaceID
-                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType '" << toString(spaceSurfaceType) << "' attribute of first AdjacentSpaceID");
+                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType '" << spaceSurfaceType.toStdString() << "' attribute of first AdjacentSpaceID");
 
                       // construction listed in order for first space which is now the adjacent space
                       reverseConstruction = true;
@@ -861,7 +861,7 @@ namespace gbxml {
 
                       // Schema says, "The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element,
                       // is always pointing away from the first AdjacentSpaceID listed." but this does not match surfaceType in the first AdjacentSpaceID
-                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType attribute '" << toString(spaceSurfaceType) << "' of first AdjacentSpaceID");
+                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType attribute '" << spaceSurfaceType.toStdString() << "' of first AdjacentSpaceID");
 
                       // construction listed in order for first space which is now the adjacent space
                       reverseConstruction = true;
@@ -1048,11 +1048,11 @@ namespace gbxml {
 
     QString cadObjectId = element.text();
     if (!cadObjectId.isEmpty()) {
-      result.setFeature("CADObjectId", toString(cadObjectId));
+      result.setFeature("CADObjectId", cadObjectId.toStdString());
 
       QString programIdRef = element.attribute("programIdRef");
       if (!programIdRef.isEmpty()) {
-        result.setFeature("programIdRef", toString(programIdRef));
+        result.setFeature("programIdRef", programIdRef.toStdString());
       }
     }
 

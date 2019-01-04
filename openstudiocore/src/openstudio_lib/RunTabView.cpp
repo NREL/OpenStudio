@@ -62,6 +62,7 @@
 #include "../energyplus/ForwardTranslator.hpp"
 
 #include "../model_editor/Application.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include <QButtonGroup>
 #include <QDir>

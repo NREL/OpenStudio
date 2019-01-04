@@ -49,6 +49,13 @@
 #include <iostream>
 #include <boost/none.hpp>
 
+///
+/// TODO: Remove this helper when Qt is fully removed
+///
+static auto toQString(const std::string &s) {
+  return QString::fromUtf8(s.data(), s.size());
+};
+
 
 namespace openstudio {
 namespace bimserver {
@@ -572,7 +579,7 @@ namespace bimserver {
   }
 
   void BIMserverConnection::sendCheckInIFCRequest(QString IFCFilePath) {
-    const auto path = openstudio::toPath(IFCFilePath);
+    const auto path = openstudio::toPath(IFCFilePath.toStdString());
     openstudio::filesystem::ifstream file(path);
     if (!file.is_open()) {
       emit errorOccured(QString("Cannot open file, please verify and try again"));
@@ -584,7 +591,7 @@ namespace bimserver {
     parameters["comment"] = QJsonValue(QString(""));
     parameters["deserializerOid"] = QJsonValue(m_deserializerOid);
     parameters["fileSize"] = QJsonValue(toQString(openstudio::string_conversions::number(openstudio::filesystem::file_size(path))));
-    parameters["fileName"] = QJsonValue(openstudio::toQString(path.stem()));
+    parameters["fileName"] = QJsonValue(toQString(toString(path.stem())));
     //encode file into Base64
     std::vector<char> data = openstudio::filesystem::read(file);
     QByteArray fileArrayEncoded = QByteArray(data.data(), data.size()).toBase64();

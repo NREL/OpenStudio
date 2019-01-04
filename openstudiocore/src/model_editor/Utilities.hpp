@@ -27,43 +27,42 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_CORE_STRING_HPP
-#define UTILITIES_CORE_STRING_HPP
-
-#include "../UtilitiesAPI.hpp"
+#ifndef MODELEDITOR_UTILITIES_HPP
+#define MODELEDITOR_UTILITIES_HPP
 
 #include <string>
-#include <vector>
-
 #include <QString>
 
-/** \file String.hpp
- *
- *  All strings are assumed to be UTF-8 encoded std::string.  Note that length of the std::string
- *  may therefore not match number of characters in the std::string. */
+#include "ModelEditorAPI.hpp"
+
 
 namespace openstudio {
+  /** QString to UTF-8 encoded std::string. */
+  MODELEDITOR_API std::string toString(const QString& q);
 
-  /** string to std::string. */
-  UTILITIES_API std::string toString(const std::string& s);
+  /** QString to wstring. */
+  MODELEDITOR_API std::wstring toWString(const QString& q);
 
-  /** char* to std::string. */
-  UTILITIES_API std::string toString(const char* s);
+  /** UTF-8 encoded std::string to QString. */
+  MODELEDITOR_API QString toQString(const std::string& s);
 
-  /** wstring to std::string. */
-  UTILITIES_API std::string toString(const std::wstring& w);
-
-  /** wchar_t* to std::string. */
-  UTILITIES_API std::string toString(const wchar_t* w);
-
-
-  /** Double to std::string at full precision. */
-  UTILITIES_API std::string toString(double v);
-
-  /** Load data in istream into string. */
-  UTILITIES_API std::string toString(std::istream& s);
+  /** wstring to QString. */
+  MODELEDITOR_API QString toQString(const std::wstring& w);
 
 
-} // openstudio
+  /// create a UUID from a std::string, does not throw, may return a null UUID
+  MODELEDITOR_API UUID toUUID(const QString& str);
 
-#endif // UTILITIES_CORE_STRING_HPP
+  /// create a QString from a UUID
+  MODELEDITOR_API QString toQString(const UUID& uuid);
+
+  /** path to QString. */
+  MODELEDITOR_API QString toQString(const path& p);
+
+  /** QString to path*/
+  MODELEDITOR_API path toPath(const QString& q);
+
+
+}
+
+#endif

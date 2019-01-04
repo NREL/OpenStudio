@@ -38,8 +38,8 @@
 #include "OSDialog.hpp"
 
 #include "../model_editor/Application.hpp"
-
 #include "../model_editor/UserSettings.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include "../measure/OSArgument.hpp"
 

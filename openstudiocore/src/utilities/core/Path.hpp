@@ -37,8 +37,6 @@
 
 #include "Filesystem.hpp"
 
-// forward declarations
-class QString;
 
 namespace openstudio {
 
@@ -51,8 +49,6 @@ UTILITIES_API path tempDir();
 /** path to std::string. */
 UTILITIES_API std::string toString(const path& p);
 
-/** path to QString. */
-UTILITIES_API QString toQString(const path& p);
 
 /** UTF-8 encoded char* to path*/
 UTILITIES_API path toPath(const char* s);
@@ -60,8 +56,6 @@ UTILITIES_API path toPath(const char* s);
 /** UTF-8 encoded std::string to path*/
 UTILITIES_API path toPath(const std::string& s);
 
-/** QString to path*/
-UTILITIES_API path toPath(const QString& q);
 
 #ifdef _WIN32
 /** UTF-16 encoded std::wstring for opening fstreams*/

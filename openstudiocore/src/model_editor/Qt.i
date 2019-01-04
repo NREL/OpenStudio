@@ -161,12 +161,12 @@ class QComboBox : public QWidget
 
 //class QString{};
 
-//%extend QString{
-//  // to std::string
-//  std::string __str__() const{
-//    return toString(*self);
-//  }
-//}
+%extend QString{
+  // to std::string
+  std::string __str__() const{
+    return toString(*self);
+  }
+}
 
 //class QModelIndex{};
 
