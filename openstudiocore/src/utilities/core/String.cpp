@@ -116,11 +116,11 @@ std::string toString(const std::wstring &utf16_string)
 {
 #if _MSC_VER >= 1900
   std::wstring_convert<std::codecvt_utf8_utf16<int16_t>, int16_t> convert;
-  auto p = reinterpret_cast<const int16_t *>(utf16_string.data());
-  return convert.to_bytes(p, p + utf16_string.size());
+  return convert.to_bytes(utf16_string.data(), utf16_string.data() + utf16_string.size());
 #else
   std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
-  return convert.to_bytes(utf16_string);
+  const std::u16string u16string{utf16_string.begin(), utf16_string.end()};
+  return convert.to_bytes(u16string);
 #endif
 }
 
