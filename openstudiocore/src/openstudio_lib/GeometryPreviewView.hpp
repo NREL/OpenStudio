@@ -53,8 +53,8 @@ class GeometryPreviewView : public QWidget
   public:
 
     GeometryPreviewView(bool isIP,
-                      const openstudio::model::Model& model,
-                      QWidget * parent = nullptr);
+                        const openstudio::model::Model& model,
+                        QWidget * parent = nullptr);
 
     virtual ~GeometryPreviewView();
 

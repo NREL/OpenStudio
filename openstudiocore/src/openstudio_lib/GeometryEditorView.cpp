@@ -443,6 +443,8 @@ document.head.appendChild(style);\n";
 
 void FloorspaceEditor::doExport()
 {
+  bool t = true;
+
   if (m_editorLoaded && !m_javascriptRunning){
     m_javascriptRunning = true;
     m_document->disable();
@@ -462,13 +464,15 @@ void FloorspaceEditor::doExport()
 
     if (!m_floorplan){
       // DLM: This is an error
-      bool t = false;
+      t = false;
     }
 
   } else{
       // DLM: This is an error
-      bool t = false;
+      t = false;
   }
+
+  OS_ASSERT(t);
 }
 
 void FloorspaceEditor::saveExport()
@@ -768,7 +772,7 @@ IdfEditor::IdfEditor(const openstudio::path& idfPath, bool forceConvert, bool is
           // if still running just kill it
           runner.kill();
         }
-        int result = runner.exitCode();
+        //int result = runner.exitCode();
         QString error(runner.readAllStandardError());
         QString output(runner.readAllStandardOutput());
 
@@ -983,10 +987,10 @@ void OsmEditor::checkForUpdate()
 
 EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
-    m_model(model),
     m_baseEditor(nullptr),
     m_isIP(isIP),
     m_mergeWarn(false),
+    m_model(model),
     m_geometrySourceComboBox(new QComboBox()),
     m_newImportGeometry(new QPushButton("New")),
     m_progressBar(new QProgressBar()),

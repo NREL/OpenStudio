@@ -62,8 +62,8 @@ ConstructionInternalSourceInspectorView::ConstructionInternalSourceInspectorView
     m_nameEdit(nullptr),
     m_standardsInformationWidget(nullptr),
     m_constructionDZ(nullptr),
-    m_sourcePresentAfterLayerNumberEdit(nullptr),
     m_constructionVC(nullptr),
+    m_sourcePresentAfterLayerNumberEdit(nullptr),
     m_temperatureCalculationRequestedAfterLayerNumberEdit(nullptr),
     m_dimensionsForTheCTFCalculationEdit(nullptr),
     m_tubeSpacingEdit(nullptr)
