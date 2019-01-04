@@ -272,7 +272,6 @@ if(UNIX)
 
   # all warnings
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor")
-  # TODO: make it an option?
   # Treat all warnings as errors
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   if(APPLE)
