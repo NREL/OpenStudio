@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -85,7 +85,7 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
       QCoreApplication::addLibraryPath(toQString(openstudioDirPath));
 
       // Make the ruby path the default plugin search location
-//#if defined(Q_OS_MAC)
+//#if defined(Q_OS_DARWIN)
 //      openstudio::path p = getApplicationRunDirectory().parent_path().parent_path().parent_path() / toPath("Ruby/openstudio");
 //      QCoreApplication::addLibraryPath(toQString(p));
 //#elif defined(Q_OS_WIN)

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,6 +31,8 @@
 #include "PrjReader.hpp"
 #include "SimFile.hpp"
 #include <algorithm>
+
+#include "../../utilities/core/StringHelpers.hpp"
 
 namespace openstudio {
 namespace contam {
@@ -416,25 +418,18 @@ void IndexModelImpl::setDef_flows(const int def_flows)
 
 double IndexModelImpl::def_T() const
 {
-  return FLOAT_NO_CHECK(m_def_T);
+  return openstudio::string_conversions::to<double>(m_def_T);
 }
 
 bool IndexModelImpl::setDef_T(const double def_T)
 {
-  m_def_T = std::to_string(def_T);
+  m_def_T = openstudio::string_conversions::number(def_T);
   return true;
 }
 
 bool IndexModelImpl::setDef_T(const std::string &def_T)
 {
-  bool ok;
-  FLOAT_CHECK(def_T,&ok);
-  if(ok)
-  {
-    m_def_T = STR_TO_FLOAT(def_T);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(def_T, m_def_T);
 }
 
 int IndexModelImpl::udefT() const
@@ -449,48 +444,34 @@ void IndexModelImpl::setUdefT(const int udefT)
 
 double IndexModelImpl::rel_N() const
 {
-  return FLOAT_NO_CHECK(m_rel_N);
+  return openstudio::string_conversions::to<double>(m_rel_N);
 }
 
 bool IndexModelImpl::setRel_N(const double rel_N)
 {
-  m_rel_N = std::to_string(rel_N);
+  m_rel_N = openstudio::string_conversions::number(rel_N);
   return true;
 }
 
 bool IndexModelImpl::setRel_N(const std::string &rel_N)
 {
-  bool ok;
-  FLOAT_CHECK(rel_N,&ok);
-  if(ok)
-  {
-    m_rel_N = STR_TO_FLOAT(rel_N);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(rel_N, m_rel_N);
 }
 
 double IndexModelImpl::wind_H() const
 {
-  return FLOAT_NO_CHECK(m_wind_H);
+  return openstudio::string_conversions::to<double>(m_wind_H);
 }
 
 bool IndexModelImpl::setWind_H(const double wind_H)
 {
-  m_wind_H = std::to_string(wind_H);
+  m_wind_H = openstudio::string_conversions::number(wind_H);
   return true;
 }
 
 bool IndexModelImpl::setWind_H(const std::string &wind_H)
 {
-  bool ok;
-  FLOAT_CHECK(wind_H,&ok);
-  if(ok)
-  {
-    m_wind_H = STR_TO_FLOAT(wind_H);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(wind_H, m_wind_H);
 }
 
 int IndexModelImpl::uwH() const
@@ -505,71 +486,50 @@ void IndexModelImpl::setUwH(const int uwH)
 
 double IndexModelImpl::wind_Ao() const
 {
-  return FLOAT_NO_CHECK(m_wind_Ao);
+  return openstudio::string_conversions::to<double>(m_wind_Ao);
 }
 
 bool IndexModelImpl::setWind_Ao(const double wind_Ao)
 {
-  m_wind_Ao = std::to_string(wind_Ao);
+  m_wind_Ao = openstudio::string_conversions::number(wind_Ao);
   return true;
 }
 
 bool IndexModelImpl::setWind_Ao(const std::string &wind_Ao)
 {
-  bool ok;
-  FLOAT_CHECK(wind_Ao,&ok);
-  if(ok)
-  {
-    m_wind_Ao = STR_TO_FLOAT(wind_Ao);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(wind_Ao, m_wind_Ao);
 }
 
 double IndexModelImpl::wind_a() const
 {
-  return FLOAT_NO_CHECK(m_wind_a);
+  return openstudio::string_conversions::to<double>(m_wind_a);
 }
 
 bool IndexModelImpl::setWind_a(const double wind_a)
 {
-  m_wind_a = std::to_string(wind_a);
+  m_wind_a = openstudio::string_conversions::number(wind_a);
   return true;
 }
 
 bool IndexModelImpl::setWind_a(const std::string &wind_a)
 {
-  bool ok;
-  FLOAT_CHECK(wind_a,&ok);
-  if(ok)
-  {
-    m_wind_a = STR_TO_FLOAT(wind_a);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(wind_a, m_wind_a);
 }
 
 double IndexModelImpl::scale() const
 {
-  return FLOAT_NO_CHECK(m_scale);
+  return openstudio::string_conversions::to<double>(m_scale);
 }
 
 bool IndexModelImpl::setScale(const double scale)
 {
-  m_scale = std::to_string(scale);
+  m_scale = openstudio::string_conversions::number(scale);
   return true;
 }
 
 bool IndexModelImpl::setScale(const std::string &scale)
 {
-  bool ok;
-  FLOAT_CHECK(scale,&ok);
-  if(ok)
-  {
-    m_scale = STR_TO_FLOAT(scale);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(scale, m_scale);
 }
 
 int IndexModelImpl::uScale() const
@@ -714,94 +674,66 @@ void IndexModelImpl::setWPCdesc(const std::string &WPCdesc)
 
 double IndexModelImpl::X0() const
 {
-  return FLOAT_NO_CHECK(m_X0);
+  return openstudio::string_conversions::to<double>(m_X0);
 }
 
 bool IndexModelImpl::setX0(const double X0)
 {
-  m_X0 = std::to_string(X0);
+  m_X0 = openstudio::string_conversions::number(X0);
   return true;
 }
 
 bool IndexModelImpl::setX0(const std::string &X0)
 {
-  bool ok;
-  FLOAT_CHECK(X0,&ok);
-  if(ok)
-  {
-    m_X0 = STR_TO_FLOAT(X0);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(X0, m_X0);
 }
 
 double IndexModelImpl::Y0() const
 {
-  return FLOAT_NO_CHECK(m_Y0);
+  return openstudio::string_conversions::to<double>(m_Y0);
 }
 
 bool IndexModelImpl::setY0(const double Y0)
 {
-  m_Y0 = std::to_string(Y0);
+  m_Y0 = openstudio::string_conversions::number(Y0);
   return true;
 }
 
 bool IndexModelImpl::setY0(const std::string &Y0)
 {
-  bool ok;
-  FLOAT_CHECK(Y0,&ok);
-  if(ok)
-  {
-    m_Y0 = STR_TO_FLOAT(Y0);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Y0, m_Y0);
 }
 
 double IndexModelImpl::Z0() const
 {
-  return FLOAT_NO_CHECK(m_Z0);
+  return openstudio::string_conversions::to<double>(m_Z0);
 }
 
 bool IndexModelImpl::setZ0(const double Z0)
 {
-  m_Z0 = std::to_string(Z0);
+  m_Z0 = openstudio::string_conversions::number(Z0);
   return true;
 }
 
 bool IndexModelImpl::setZ0(const std::string &Z0)
 {
-  bool ok;
-  FLOAT_CHECK(Z0,&ok);
-  if(ok)
-  {
-    m_Z0 = STR_TO_FLOAT(Z0);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Z0, m_Z0);
 }
 
 double IndexModelImpl::angle() const
 {
-  return FLOAT_NO_CHECK(m_angle);
+  return openstudio::string_conversions::to<double>(m_angle);
 }
 
 bool IndexModelImpl::setAngle(const double angle)
 {
-  m_angle = std::to_string(angle);
+  m_angle = openstudio::string_conversions::number(angle);
   return true;
 }
 
 bool IndexModelImpl::setAngle(const std::string &angle)
 {
-  bool ok;
-  FLOAT_CHECK(angle,&ok);
-  if(ok)
-  {
-    m_angle = STR_TO_FLOAT(angle);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(angle, m_angle);
 }
 
 int IndexModelImpl::u_XYZ() const
@@ -816,48 +748,34 @@ void IndexModelImpl::setU_XYZ(const int u_XYZ)
 
 double IndexModelImpl::epsPath() const
 {
-  return FLOAT_NO_CHECK(m_epsPath);
+  return openstudio::string_conversions::to<double>(m_epsPath);
 }
 
 bool IndexModelImpl::setEpsPath(const double epsPath)
 {
-  m_epsPath = std::to_string(epsPath);
+  m_epsPath = openstudio::string_conversions::number(epsPath);
   return true;
 }
 
 bool IndexModelImpl::setEpsPath(const std::string &epsPath)
 {
-  bool ok;
-  FLOAT_CHECK(epsPath,&ok);
-  if(ok)
-  {
-    m_epsPath = STR_TO_FLOAT(epsPath);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(epsPath, m_epsPath);
 }
 
 double IndexModelImpl::epsSpcs() const
 {
-  return FLOAT_NO_CHECK(m_epsSpcs);
+  return openstudio::string_conversions::to<double>(m_epsSpcs);
 }
 
 bool IndexModelImpl::setEpsSpcs(const double epsSpcs)
 {
-  m_epsSpcs = std::to_string(epsSpcs);
+  m_epsSpcs = openstudio::string_conversions::number(epsSpcs);
   return true;
 }
 
 bool IndexModelImpl::setEpsSpcs(const std::string &epsSpcs)
 {
-  bool ok;
-  FLOAT_CHECK(epsSpcs,&ok);
-  if(ok)
-  {
-    m_epsSpcs = STR_TO_FLOAT(epsSpcs);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(epsSpcs, m_epsSpcs);
 }
 
 std::string IndexModelImpl::tShift() const
@@ -922,117 +840,82 @@ void IndexModelImpl::setWpctrig(const int wpctrig)
 
 double IndexModelImpl::latd() const
 {
-  return FLOAT_NO_CHECK(m_latd);
+  return openstudio::string_conversions::to<double>(m_latd);
 }
 
 bool IndexModelImpl::setLatd(const double latd)
 {
-  m_latd = std::to_string(latd);
+  m_latd = openstudio::string_conversions::number(latd);
   return true;
 }
 
 bool IndexModelImpl::setLatd(const std::string &latd)
 {
-  bool ok;
-  FLOAT_CHECK(latd,&ok);
-  if(ok)
-  {
-    m_latd = STR_TO_FLOAT(latd);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(latd, m_latd);
 }
 
 double IndexModelImpl::lgtd() const
 {
-  return FLOAT_NO_CHECK(m_lgtd);
+  return openstudio::string_conversions::to<double>(m_lgtd);
 }
 
 bool IndexModelImpl::setLgtd(const double lgtd)
 {
-  m_lgtd = std::to_string(lgtd);
+  m_lgtd = openstudio::string_conversions::number(lgtd);
   return true;
 }
 
 bool IndexModelImpl::setLgtd(const std::string &lgtd)
 {
-  bool ok;
-  FLOAT_CHECK(lgtd,&ok);
-  if(ok)
-  {
-    m_lgtd = STR_TO_FLOAT(lgtd);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(lgtd, m_lgtd);
 }
 
 double IndexModelImpl::Tznr() const
 {
-  return FLOAT_NO_CHECK(m_Tznr);
+  return openstudio::string_conversions::to<double>(m_Tznr);
 }
 
 bool IndexModelImpl::setTznr(const double Tznr)
 {
-  m_Tznr = std::to_string(Tznr);
+  m_Tznr = openstudio::string_conversions::number(Tznr);
   return true;
 }
 
 bool IndexModelImpl::setTznr(const std::string &Tznr)
 {
-  bool ok;
-  FLOAT_CHECK(Tznr,&ok);
-  if(ok)
-  {
-    m_Tznr = STR_TO_FLOAT(Tznr);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Tznr, m_Tznr);
 }
 
 double IndexModelImpl::altd() const
 {
-  return FLOAT_NO_CHECK(m_altd);
+  return openstudio::string_conversions::to<double>(m_altd);
 }
 
 bool IndexModelImpl::setAltd(const double altd)
 {
-  m_altd = std::to_string(altd);
+  m_altd = openstudio::string_conversions::number(altd);
   return true;
 }
 
 bool IndexModelImpl::setAltd(const std::string &altd)
 {
-  bool ok;
-  FLOAT_CHECK(altd,&ok);
-  if(ok)
-  {
-    m_altd = STR_TO_FLOAT(altd);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(altd, m_altd);
 }
 
 double IndexModelImpl::Tgrnd() const
 {
-  return FLOAT_NO_CHECK(m_Tgrnd);
+  return openstudio::string_conversions::to<double>(m_Tgrnd);
 }
 
 bool IndexModelImpl::setTgrnd(const double Tgrnd)
 {
-  m_Tgrnd = std::to_string(Tgrnd);
+  m_Tgrnd = openstudio::string_conversions::number(Tgrnd);
   return true;
 }
 
 bool IndexModelImpl::setTgrnd(const std::string &Tgrnd)
 {
-  bool ok;
-  FLOAT_CHECK(Tgrnd,&ok);
-  if(ok)
-  {
-    m_Tgrnd = STR_TO_FLOAT(Tgrnd);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Tgrnd, m_Tgrnd);
 }
 
 int IndexModelImpl::utg() const

@@ -87,7 +87,7 @@ configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStu
 if(APPLE)
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPENSTUDIO_VERSION}")
   set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION_BUILD}")
-  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2008-2018, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.")
+  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.")
 endif()
 
 # compiler id for about boxes
@@ -1377,6 +1377,9 @@ include_directories("${CMAKE_HOME_DIRECTORY}/src/qtwinmigrate")
 
 # XML
 include_directories("${CMAKE_HOME_DIRECTORY}/src/pugixml/src")
+
+# fmtlib
+include_directories("${CMAKE_HOME_DIRECTORY}/src/fmtlib/include")
 
 # Project binary directory
 include_directories("${CMAKE_BINARY_DIR}/src/")

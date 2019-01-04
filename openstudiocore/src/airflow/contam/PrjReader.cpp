@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,6 +33,7 @@
 
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
+#include "../utilities/core/StringHelpers.hpp"
 
 namespace openstudio {
 namespace contam {
@@ -53,13 +54,12 @@ Reader::~Reader()
 
 double Reader::readDouble()
 {
-  bool ok;
-  std::string string = readString();
-  double value = FLOAT_CHECK(string, &ok);
-  if(!ok) {
+  const auto string = readString();
+  try {
+    return openstudio::string_conversions::to<double>(string);
+  } catch (const std::bad_cast &) {
     LOG_AND_THROW("Floating point (double) conversion error at line " << m_lineNumber << " for \"" << string << "\"");
   }
-  return value;
 }
 
 std::string Reader::readString()
@@ -242,10 +242,8 @@ template <> double Reader::readNumber<double>()
 
 template <> std::string Reader::readNumber<std::string>()
 {
-  bool ok;
   std::string string = readString();
-  FLOAT_CHECK(string, &ok);
-  if(!ok) {
+  if(!openstudio::contam::is_valid<double>(string)) {
     LOG_AND_THROW("Invalid number \"" << string << "\" on line " << m_lineNumber);
   }
   return string;

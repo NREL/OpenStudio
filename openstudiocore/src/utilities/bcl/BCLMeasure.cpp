@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -107,10 +107,10 @@ namespace openstudio{
     std::string docTemplate = ":/templates/common/docs/.gitkeep";;
     std::string testTemplate;
 
-    QString templateClassName;
-    QString templateName = "NAME_TEXT";
-    QString templateDescription = "DESCRIPTION_TEXT";
-    QString templateModelerDescription = "MODELER_DESCRIPTION_TEXT";
+    std::string templateClassName;
+    std::string templateName = "NAME_TEXT";
+    std::string templateDescription = "DESCRIPTION_TEXT";
+    std::string templateModelerDescription = "MODELER_DESCRIPTION_TEXT";
     std::vector<BCLMeasureArgument> arguments;
     std::vector<BCLMeasureOutput> outputs;
     std::string testOSM;
@@ -180,49 +180,48 @@ namespace openstudio{
 
     }
 
-    QString measureString;
+    std::string measureString;
     if (!measureTemplate.empty()){
-      measureString = toQString(::openstudio::embedded_files::getFileAsString(measureTemplate));
-      measureString.replace(templateClassName, toQString(className));
-      measureString.replace(templateName, toQString(name));
-      measureString.replace(templateModelerDescription, toQString(modelerDescription)); // put first as this includes description tag
-      measureString.replace(templateDescription, toQString(description));
+      measureString = ::openstudio::embedded_files::getFileAsString(measureTemplate);
+      measureString = openstudio::replace(measureString, templateClassName, className);
+      measureString = openstudio::replace(measureString, templateName, name);
+      measureString = openstudio::replace(measureString, templateModelerDescription, modelerDescription); // put first as this includes description tag
+      measureString = openstudio::replace(measureString, templateDescription, description);
     }
 
-    QString licenseString;
+    std::string licenseString;
     if (!licenseTemplate.empty()){
-      licenseString = toQString(::openstudio::embedded_files::getFileAsString(licenseTemplate));
+      licenseString = ::openstudio::embedded_files::getFileAsString(licenseTemplate);
     }
 
-    QString readmeString;
+    std::string readmeString;
     if (!readmeTemplate.empty()){
-      readmeString = toQString(::openstudio::embedded_files::getFileAsString(readmeTemplate));
+      readmeString = ::openstudio::embedded_files::getFileAsString(readmeTemplate);
     }
 
-    QString docString;
+    std::string docString;
     if (!docTemplate.empty()){
-      docString = toQString(::openstudio::embedded_files::getFileAsString(docTemplate));
+      docString = ::openstudio::embedded_files::getFileAsString(docTemplate);
     }
 
-    QString testString;
+    std::string testString;
     if (!testTemplate.empty()){
-      testString = toQString(::openstudio::embedded_files::getFileAsString(testTemplate));
-      testString.replace(templateClassName, toQString(className));
+      testString = openstudio::replace(::openstudio::embedded_files::getFileAsString(testTemplate), templateClassName, className);
     }
 
-    QString testOSMString;
+    std::string testOSMString;
     if (!testOSM.empty()){
-      testOSMString = toQString(::openstudio::embedded_files::getFileAsString(testOSM));
+      testOSMString = ::openstudio::embedded_files::getFileAsString(testOSM);
     }
 
-    QString testEPWString;
+    std::string testEPWString;
     if (!testEPW.empty()){
-      testEPWString = toQString(::openstudio::embedded_files::getFileAsString(testEPW));
+      testEPWString = ::openstudio::embedded_files::getFileAsString(testEPW);
     }
 
-    QString resourceFileString;
+    std::string resourceFileString;
     if (!resourceFile.empty()){
-      resourceFileString = toQString(::openstudio::embedded_files::getFileAsString(resourceFile));
+      resourceFileString = ::openstudio::embedded_files::getFileAsString(resourceFile);
     }
 
     // write files
@@ -239,7 +238,7 @@ namespace openstudio{
       if (!file.is_open()){
         LOG_AND_THROW("Cannot write measure.rb to '" << toString(measureScriptPath) << "'");
       }
-      openstudio::filesystem::write(file, measureString);
+      file << measureString;
       file.close();
 
       BCLFileReference measureScriptFileReference(measureScriptPath, true);
@@ -254,7 +253,7 @@ namespace openstudio{
       if (!file.is_open()){
         LOG_AND_THROW("Cannot write LICENSE.md to '" << toString(measureLicensePath) << "'");
       }
-      openstudio::filesystem::write(file, licenseString);
+      file << licenseString;
       file.close();
 
       BCLFileReference measureLicenseFileReference(measureLicensePath, true);
@@ -268,7 +267,7 @@ namespace openstudio{
       if (!file.is_open()){
         LOG_AND_THROW("Cannot write README.md.erb to '" << toString(measureReadmePath) << "'");
       }
-      openstudio::filesystem::write(file, readmeString);
+      file << readmeString;
       file.close();
 
       BCLFileReference measureReadmeFileReference(measureReadmePath, true);
@@ -282,7 +281,7 @@ namespace openstudio{
       if (!file.is_open()){
         LOG_AND_THROW("Cannot write doc file to '" << toString(measureDocPath) << "'");
       }
-      openstudio::filesystem::write(file, docString);
+      file << docString;
       file.close();
 
       BCLFileReference measureDocFileReference(measureDocPath, true);
@@ -296,7 +295,7 @@ namespace openstudio{
       if (!file.is_open()){
         LOG_AND_THROW("Cannot write test file to '" << toString(measureTestPath) << "'");
       }
-      openstudio::filesystem::write(file, testString);
+      file << testString;
       file.close();
 
       BCLFileReference measureTestFileReference(measureTestPath, true);
@@ -306,12 +305,12 @@ namespace openstudio{
 
     // write test osm
     {
-      if (!testOSMString.isEmpty()){
+      if (!testOSMString.empty()){
         openstudio::filesystem::ofstream file(testOSMPath, std::ios_base::binary);
         if (!file.is_open()){
           LOG_AND_THROW("Cannot write test osm file to '" << toString(testOSMPath) << "'");
         }
-        openstudio::filesystem::write(file, testOSMString);
+        file << testOSMString;
         file.close();
 
         BCLFileReference measureTestOSMFileReference(testOSMPath, true);
@@ -322,7 +321,7 @@ namespace openstudio{
 
     // write test epw
     {
-      if (!testEPWString.isEmpty()){
+      if (!testEPWString.empty()){
         openstudio::filesystem::ofstream file(testEPWPath);
         if (!file.good()){
           LOG_AND_THROW("Cannot write test epw file to '" << toString(testEPWPath) << "'");
@@ -339,12 +338,12 @@ namespace openstudio{
 
     // write resource
     {
-      if (!resourceFileString.isEmpty()){
+      if (!resourceFileString.empty()){
         openstudio::filesystem::ofstream file(resourceFilePath, std::ios_base::binary);
         if (!file.is_open()){
           LOG_AND_THROW("Cannot write resource file to '" << toString(resourceFilePath) << "'");
         }
-        openstudio::filesystem::write(file, resourceFileString);
+        file << resourceFileString;
         file.close();
 
         BCLFileReference resourceFileReference(resourceFilePath, true);
@@ -413,7 +412,7 @@ namespace openstudio{
     std::string str(name);
 
     bool startsWithLetter = false;
-    for (std::string::size_type i = 0; i < str.size(); ++i){
+    for (std::size_t i = 0; i < str.size(); ++i){
       if (!(isalpha(str[i]) || isdigit(str[i]))){
         str[i] = ' ';
       }else if(i == 0){
@@ -910,13 +909,13 @@ namespace openstudio{
         openstudio::path oldPath = fileRef.path();
         openstudio::path newPath = oldPath;
 
-        QString oldFileName = toQString(fileRef.path().filename());
-        QString newFileName = oldFileName;
+        const auto oldFileName = fileRef.path().filename();
+        auto newFileName = toString(oldFileName);
         if (!oldLowerClassName.empty() && !newLowerClassName.empty() && oldLowerClassName != newLowerClassName){
-          QString temp = toQString(oldLowerClassName);
-          int index = newFileName.lastIndexOf(temp);
-          if (index >= 0){
-            newFileName.replace(index, temp.size(), toQString(newLowerClassName));
+          auto temp = oldLowerClassName;
+          const auto index = newFileName.rfind(temp);
+          if (index != std::string::npos){
+            newFileName.replace(index, temp.size(), newLowerClassName);
             newPath = oldPath.parent_path() / toPath(newFileName);
 
             if (openstudio::filesystem::exists(newPath)) {
@@ -932,17 +931,17 @@ namespace openstudio{
         openstudio::filesystem::ifstream file(newPath, std::ios_base::binary);
         if (file.is_open()){
 
-          QString fileString = toQString(openstudio::filesystem::read(file));
+          auto fileString = openstudio::filesystem::read_as_string(file);
           if (!oldClassName.empty() && !newClassName.empty() && oldClassName != newClassName){
             // DLM: might also want to check that oldClassName is greater than 3 characters long?
             // should we be doing a more selective replace (like require leading space and trailing space, ., or :)?
-            fileString.replace(toQString(oldClassName), toQString(newClassName));
+            fileString = openstudio::replace(fileString, oldClassName, newClassName);
           }
           file.close();
 
           openstudio::filesystem::ofstream file2(newPath, std::ios_base::binary);
           if (file2.is_open()){
-            openstudio::filesystem::write(file2, fileString);
+            file2 << fileString;
             file2.close();
 
           } else {

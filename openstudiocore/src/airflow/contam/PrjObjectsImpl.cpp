@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -27,36 +27,13 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include "../../utilities/core/StringHelpers.hpp"
+
 #include "PrjObjectsImpl.hpp"
 
 namespace openstudio {
 namespace contam {
 namespace detail {
-
-double contamFloatCheck(const std::string& a, bool* b) {
-  double result = 0.0;
-  try {
-    result = std::stod(a);
-    if (b != nullptr) {
-      *b = true;
-    }
-  } catch (const std::exception&) {
-    if (b != nullptr) {
-      *b = false;
-    }
-  }
-  return result;
-}
-
-double contamFloatNoCheck(const std::string& a) {
-  double result = 0.0;
-  try {
-    result = std::stod(a);
-  }
-  catch (const std::exception&) {
-  }
-  return result;
-}
 
 void ZoneImpl::setDefaults()
 {
@@ -288,94 +265,66 @@ void ZoneImpl::setPl(const int pl)
 
 double ZoneImpl::relHt() const
 {
-  return FLOAT_NO_CHECK(m_relHt);
+  return openstudio::string_conversions::to<double>(m_relHt);
 }
 
 bool ZoneImpl::setRelHt(const double relHt)
 {
-  m_relHt = std::to_string(relHt);
+  m_relHt = openstudio::string_conversions::number(relHt);
   return true;
 }
 
 bool ZoneImpl::setRelHt(const std::string &relHt)
 {
-  bool ok;
-  FLOAT_CHECK(relHt,&ok);
-  if(ok)
-  {
-    m_relHt = STR_TO_FLOAT(relHt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(relHt, m_relHt);
 }
 
 double ZoneImpl::Vol() const
 {
-  return FLOAT_NO_CHECK(m_Vol);
+  return openstudio::string_conversions::to<double>(m_Vol);
 }
 
 bool ZoneImpl::setVol(const double Vol)
 {
-  m_Vol = std::to_string(Vol);
+  m_Vol = openstudio::string_conversions::number(Vol);
   return true;
 }
 
 bool ZoneImpl::setVol(const std::string &Vol)
 {
-  bool ok;
-  FLOAT_CHECK(Vol,&ok);
-  if(ok)
-  {
-    m_Vol = STR_TO_FLOAT(Vol);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Vol, m_Vol);
 }
 
 double ZoneImpl::T0() const
 {
-  return FLOAT_NO_CHECK(m_T0);
+  return openstudio::string_conversions::to<double>(m_T0);
 }
 
 bool ZoneImpl::setT0(const double T0)
 {
-  m_T0 = std::to_string(T0);
+  m_T0 = openstudio::string_conversions::number(T0);
   return true;
 }
 
 bool ZoneImpl::setT0(const std::string &T0)
 {
-  bool ok;
-  FLOAT_CHECK(T0,&ok);
-  if(ok)
-  {
-    m_T0 = STR_TO_FLOAT(T0);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(T0, m_T0);
 }
 
 double ZoneImpl::P0() const
 {
-  return FLOAT_NO_CHECK(m_P0);
+  return openstudio::string_conversions::to<double>(m_P0);
 }
 
 bool ZoneImpl::setP0(const double P0)
 {
-  m_P0 = std::to_string(P0);
+  m_P0 = openstudio::string_conversions::number(P0);
   return true;
 }
 
 bool ZoneImpl::setP0(const std::string &P0)
 {
-  bool ok;
-  FLOAT_CHECK(P0,&ok);
-  if(ok)
-  {
-    m_P0 = STR_TO_FLOAT(P0);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(P0, m_P0);
 }
 
 std::string ZoneImpl::name() const
@@ -470,186 +419,130 @@ void ZoneImpl::setCfdname(const std::string &cfdname)
 
 double ZoneImpl::X1() const
 {
-  return FLOAT_NO_CHECK(m_X1);
+  return openstudio::string_conversions::to<double>(m_X1);
 }
 
 bool ZoneImpl::setX1(const double X1)
 {
-  m_X1 = std::to_string(X1);
+  m_X1 = openstudio::string_conversions::number(X1);
   return true;
 }
 
 bool ZoneImpl::setX1(const std::string &X1)
 {
-  bool ok;
-  FLOAT_CHECK(X1,&ok);
-  if(ok)
-  {
-    m_X1 = STR_TO_FLOAT(X1);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(X1, m_X1);
 }
 
 double ZoneImpl::Y1() const
 {
-  return FLOAT_NO_CHECK(m_Y1);
+  return openstudio::string_conversions::to<double>(m_Y1);
 }
 
 bool ZoneImpl::setY1(const double Y1)
 {
-  m_Y1 = std::to_string(Y1);
+  m_Y1 = openstudio::string_conversions::number(Y1);
   return true;
 }
 
 bool ZoneImpl::setY1(const std::string &Y1)
 {
-  bool ok;
-  FLOAT_CHECK(Y1,&ok);
-  if(ok)
-  {
-    m_Y1 = STR_TO_FLOAT(Y1);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Y1, m_Y1);
 }
 
 double ZoneImpl::H1() const
 {
-  return FLOAT_NO_CHECK(m_H1);
+  return openstudio::string_conversions::to<double>(m_H1);
 }
 
 bool ZoneImpl::setH1(const double H1)
 {
-  m_H1 = std::to_string(H1);
+  m_H1 = openstudio::string_conversions::number(H1);
   return true;
 }
 
 bool ZoneImpl::setH1(const std::string &H1)
 {
-  bool ok;
-  FLOAT_CHECK(H1,&ok);
-  if(ok)
-  {
-    m_H1 = STR_TO_FLOAT(H1);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(H1, m_H1);
 }
 
 double ZoneImpl::X2() const
 {
-  return FLOAT_NO_CHECK(m_X2);
+  return openstudio::string_conversions::to<double>(m_X2);
 }
 
 bool ZoneImpl::setX2(const double X2)
 {
-  m_X2 = std::to_string(X2);
+  m_X2 = openstudio::string_conversions::number(X2);
   return true;
 }
 
 bool ZoneImpl::setX2(const std::string &X2)
 {
-  bool ok;
-  FLOAT_CHECK(X2,&ok);
-  if(ok)
-  {
-    m_X2 = STR_TO_FLOAT(X2);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(X2, m_X2);
 }
 
 double ZoneImpl::Y2() const
 {
-  return FLOAT_NO_CHECK(m_Y2);
+  return openstudio::string_conversions::to<double>(m_Y2);
 }
 
 bool ZoneImpl::setY2(const double Y2)
 {
-  m_Y2 = std::to_string(Y2);
+  m_Y2 = openstudio::string_conversions::number(Y2);
   return true;
 }
 
 bool ZoneImpl::setY2(const std::string &Y2)
 {
-  bool ok;
-  FLOAT_CHECK(Y2,&ok);
-  if(ok)
-  {
-    m_Y2 = STR_TO_FLOAT(Y2);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Y2, m_Y2);
 }
 
 double ZoneImpl::H2() const
 {
-  return FLOAT_NO_CHECK(m_H2);
+  return openstudio::string_conversions::to<double>(m_H2);
 }
 
 bool ZoneImpl::setH2(const double H2)
 {
-  m_H2 = std::to_string(H2);
+  m_H2 = openstudio::string_conversions::number(H2);
   return true;
 }
 
 bool ZoneImpl::setH2(const std::string &H2)
 {
-  bool ok;
-  FLOAT_CHECK(H2,&ok);
-  if(ok)
-  {
-    m_H2 = STR_TO_FLOAT(H2);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(H2, m_H2);
 }
 
 double ZoneImpl::celldx() const
 {
-  return FLOAT_NO_CHECK(m_celldx);
+  return openstudio::string_conversions::to<double>(m_celldx);
 }
 
 bool ZoneImpl::setCelldx(const double celldx)
 {
-  m_celldx = std::to_string(celldx);
+  m_celldx = openstudio::string_conversions::number(celldx);
   return true;
 }
 
 bool ZoneImpl::setCelldx(const std::string &celldx)
 {
-  bool ok;
-  FLOAT_CHECK(celldx,&ok);
-  if(ok)
-  {
-    m_celldx = STR_TO_FLOAT(celldx);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(celldx, m_celldx);
 }
 
 double ZoneImpl::axialD() const
 {
-  return FLOAT_NO_CHECK(m_axialD);
+  return openstudio::string_conversions::to<double>(m_axialD);
 }
 
 bool ZoneImpl::setAxialD(const double axialD)
 {
-  m_axialD = std::to_string(axialD);
+  m_axialD = openstudio::string_conversions::number(axialD);
   return true;
 }
 
 bool ZoneImpl::setAxialD(const std::string &axialD)
 {
-  bool ok;
-  FLOAT_CHECK(axialD,&ok);
-  if(ok)
-  {
-    m_axialD = STR_TO_FLOAT(axialD);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(axialD, m_axialD);
 }
 
 int ZoneImpl::u_aD() const
@@ -713,62 +606,47 @@ bool ZoneImpl::system() const
 
 double ZoneImpl::ic(const int i) const
 {
-  return FLOAT_NO_CHECK(m_ic[i]);
+  return openstudio::string_conversions::to<double>(m_ic[i]);
 }
 
 std::vector<double> ZoneImpl::ic() const
 {
   std::vector<double> out;
-  for(std::vector<PRJFLOAT>::size_type i=0; i < m_ic.size(); ++i)
+  for(std::size_t i=0;i<m_ic.size();i++)
   {
-    out.push_back(FLOAT_NO_CHECK(m_ic[i]));
+    out.push_back(openstudio::string_conversions::to<double>(m_ic[i]));
   }
   return out;
 }
 
 bool ZoneImpl::setIc(const int i, const double value)
 {
-  m_ic[i] = std::to_string(value);
+  m_ic[i] = openstudio::string_conversions::number(value);
   return true;
 }
 
 bool ZoneImpl::setIc(const int i, const std::string &value)
 {
-  bool ok;
-  FLOAT_CHECK(value,&ok);
-  if(ok)
-  {
-    m_ic[i] = STR_TO_FLOAT(value);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(value, m_ic[i]);
 }
 
-bool ZoneImpl::setIc(std::vector<double> &ic)
+bool ZoneImpl::setIc(const std::vector<double> &ic)
 {
   std::vector<std::string> in;
-  for(unsigned i=0;i<ic.size();i++)
-  {
-    in.push_back(std::to_string(ic[i]));
+  for(const auto &input : ic) {
+    in.push_back(openstudio::string_conversions::number(input));
   }
-  m_ic = in;
   return true;
 }
 
-bool ZoneImpl::setIc(std::vector<std::string> &ic)
+bool ZoneImpl::setIc(const std::vector<std::string> &ic)
 {
-  std::vector<std::string> in;
-  for(unsigned i=0;i<ic.size();i++)
-  {
-    bool ok;
-    FLOAT_CHECK(ic[i],&ok);
-    if(!ok)
-    {
+  for(const auto &input : ic) {
+    if (!is_valid<double>(input)) {
       return false;
     }
-    in.push_back(STR_TO_FLOAT(ic[i]));
   }
-  m_ic = in;
+  m_ic = ic;
   return true;
 }
 
@@ -890,7 +768,7 @@ bool SpeciesImpl::sflag() const
 
 void SpeciesImpl::setSflag(const bool sflag)
 {
-  m_sflag = (int)sflag;
+  m_sflag = sflag?1:0;
 }
 
 bool SpeciesImpl::ntflag() const
@@ -905,76 +783,55 @@ void SpeciesImpl::setNtflag(const bool ntflag)
 
 double SpeciesImpl::molwt() const
 {
-  return FLOAT_NO_CHECK(m_molwt);
+  return openstudio::string_conversions::to<double>(m_molwt);
 }
 
 bool SpeciesImpl::setMolwt(const double molwt)
 {
-  m_molwt = std::to_string(molwt);
+  m_molwt = openstudio::string_conversions::number(molwt);
   return true;
 }
 
 bool SpeciesImpl::setMolwt(const std::string &molwt)
 {
-  bool ok;
-  FLOAT_CHECK(molwt,&ok);
-  if(ok)
-  {
-    m_molwt = STR_TO_FLOAT(molwt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(molwt, m_molwt);
 }
 
 double SpeciesImpl::mdiam() const
 {
-  return FLOAT_NO_CHECK(m_mdiam);
+  return openstudio::string_conversions::to<double>(m_mdiam);
 }
 
 bool SpeciesImpl::setMdiam(const double mdiam)
 {
-  m_mdiam = std::to_string(mdiam);
+  m_mdiam = openstudio::string_conversions::number(mdiam);
   return true;
 }
 
 bool SpeciesImpl::setMdiam(const std::string &mdiam)
 {
-  bool ok;
-  FLOAT_CHECK(mdiam,&ok);
-  if(ok)
-  {
-    m_mdiam = STR_TO_FLOAT(mdiam);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mdiam, m_mdiam);
 }
 
 double SpeciesImpl::edens() const
 {
-  return FLOAT_NO_CHECK(m_edens);
+  return openstudio::string_conversions::to<double>(m_edens);
 }
 
 bool SpeciesImpl::setEdens(const double edens)
 {
-  m_edens = std::to_string(edens);
+  m_edens = openstudio::string_conversions::number(edens);
   return true;
 }
 
 bool SpeciesImpl::setEdens(const std::string &edens)
 {
-  bool ok;
-  FLOAT_CHECK(edens,&ok);
-  if(ok)
-  {
-    m_edens = STR_TO_FLOAT(edens);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(edens, m_edens);
 }
 
 double SpeciesImpl::decay() const
 {
-  return FLOAT_NO_CHECK(m_decay);
+  return openstudio::string_conversions::to<double>(m_decay);
 }
 
 bool SpeciesImpl::setDecay(const double decay)
@@ -985,83 +842,55 @@ bool SpeciesImpl::setDecay(const double decay)
 
 bool SpeciesImpl::setDecay(const std::string &decay)
 {
-  bool ok;
-  FLOAT_CHECK(decay,&ok);
-  if(ok)
-  {
-    m_decay = STR_TO_FLOAT(decay);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(decay, m_decay);
 }
 
 double SpeciesImpl::Dm() const
 {
-  return FLOAT_NO_CHECK(m_Dm);
+  return openstudio::string_conversions::to<double>(m_Dm);
 }
 
 bool SpeciesImpl::setDm(const double Dm)
 {
-  m_Dm = std::to_string(Dm);
+  m_Dm = openstudio::string_conversions::number(Dm);
   return true;
 }
 
 bool SpeciesImpl::setDm(const std::string &Dm)
 {
-  bool ok;
-  FLOAT_CHECK(Dm,&ok);
-  if(ok)
-  {
-    m_Dm = STR_TO_FLOAT(Dm);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Dm, m_Dm);
 }
 
 double SpeciesImpl::ccdef() const
 {
-  return FLOAT_NO_CHECK(m_ccdef);
+  return openstudio::string_conversions::to<double>(m_ccdef);
 }
 
 bool SpeciesImpl::setCcdef(const double ccdef)
 {
-  m_ccdef = std::to_string(ccdef);
+  m_ccdef = openstudio::string_conversions::number(ccdef);
   return true;
 }
 
 bool SpeciesImpl::setCcdef(const std::string &ccdef)
 {
-  bool ok;
-  FLOAT_CHECK(ccdef,&ok);
-  if(ok)
-  {
-    m_ccdef = STR_TO_FLOAT(ccdef);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(ccdef, m_ccdef);
 }
 
 double SpeciesImpl::Cp() const
 {
-  return FLOAT_NO_CHECK(m_Cp);
+  return openstudio::string_conversions::to<double>(m_Cp);
 }
 
 bool SpeciesImpl::setCp(const double Cp)
 {
-  m_Cp = Cp;
+  m_Cp = openstudio::string_conversions::number(Cp);
   return true;
 }
 
 bool SpeciesImpl::setCp(const std::string &Cp)
 {
-  bool ok;
-  FLOAT_CHECK(Cp,&ok);
-  if(ok)
-  {
-    m_Cp = STR_TO_FLOAT(Cp);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Cp, m_Cp);
 }
 
 int SpeciesImpl::ucc() const
@@ -1552,232 +1381,162 @@ void AirflowPathImpl::setPld(const int pld)
 
 double AirflowPathImpl::X() const
 {
-  return FLOAT_NO_CHECK(m_X);
+  return openstudio::string_conversions::to<double>(m_X);
 }
 
 bool AirflowPathImpl::setX(const double X)
 {
-  m_X = std::to_string(X);
+  m_X = openstudio::string_conversions::number(X);
   return true;
 }
 
 bool AirflowPathImpl::setX(const std::string &X)
 {
-  bool ok;
-  FLOAT_CHECK(X,&ok);
-  if(ok)
-  {
-    m_X = STR_TO_FLOAT(X);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(X, m_X);
 }
 
 double AirflowPathImpl::Y() const
 {
-  return FLOAT_NO_CHECK(m_Y);
+  return openstudio::string_conversions::to<double>(m_Y);
 }
 
 bool AirflowPathImpl::setY(const double Y)
 {
-  m_Y = std::to_string(Y);
+  m_Y = openstudio::string_conversions::number(Y);
   return true;
 }
 
 bool AirflowPathImpl::setY(const std::string &Y)
 {
-  bool ok;
-  FLOAT_CHECK(Y,&ok);
-  if(ok)
-  {
-    m_Y = STR_TO_FLOAT(Y);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Y, m_Y);
 }
 
 double AirflowPathImpl::relHt() const
 {
-  return FLOAT_NO_CHECK(m_relHt);
+  return openstudio::string_conversions::to<double>(m_relHt);
 }
 
 bool AirflowPathImpl::setRelHt(const double relHt)
 {
-  m_relHt = std::to_string(relHt);
+  m_relHt = openstudio::string_conversions::number(relHt);
   return true;
 }
 
 bool AirflowPathImpl::setRelHt(const std::string &relHt)
 {
-  bool ok;
-  FLOAT_CHECK(relHt,&ok);
-  if(ok)
-  {
-    m_relHt = STR_TO_FLOAT(relHt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(relHt, m_relHt);
 }
 
 double AirflowPathImpl::mult() const
 {
-  return FLOAT_NO_CHECK(m_mult);
+  return openstudio::string_conversions::to<double>(m_mult);
 }
 
 bool AirflowPathImpl::setMult(const double mult)
 {
-  m_mult = std::to_string(mult);
+  m_mult = openstudio::string_conversions::number(mult);
   return true;
 }
 
 bool AirflowPathImpl::setMult(const std::string &mult)
 {
-  bool ok;
-  FLOAT_CHECK(mult,&ok);
-  if(ok)
-  {
-    m_mult = STR_TO_FLOAT(mult);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mult, m_mult);
 }
 
 double AirflowPathImpl::wPset() const
 {
-  return FLOAT_NO_CHECK(m_wPset);
+  return openstudio::string_conversions::to<double>(m_wPset);
 }
 
 bool AirflowPathImpl::setWPset(const double wPset)
 {
-  m_wPset = std::to_string(wPset);
+  m_wPset = openstudio::string_conversions::number(wPset);
   return true;
 }
 
 bool AirflowPathImpl::setWPset(const std::string &wPset)
 {
-  bool ok;
-  FLOAT_CHECK(wPset,&ok);
-  if(ok)
-  {
-    m_wPset = STR_TO_FLOAT(wPset);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(wPset, m_wPset);
 }
 
 double AirflowPathImpl::wPmod() const
 {
-  return FLOAT_NO_CHECK(m_wPmod);
+  return openstudio::string_conversions::to<double>(m_wPmod);
 }
 
 bool AirflowPathImpl::setWPmod(const double wPmod)
 {
-  m_wPmod = std::to_string(wPmod);
+  m_wPmod = openstudio::string_conversions::number(wPmod);
   return true;
 }
 
 bool AirflowPathImpl::setWPmod(const std::string &wPmod)
 {
-  bool ok;
-  FLOAT_CHECK(wPmod,&ok);
-  if(ok)
-  {
-    m_wPmod = STR_TO_FLOAT(wPmod);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(wPmod, m_wPmod);
 }
 
 double AirflowPathImpl::wazm() const
 {
-  return FLOAT_NO_CHECK(m_wazm);
+  return openstudio::string_conversions::to<double>(m_wazm);
 }
 
 bool AirflowPathImpl::setWazm(const double wazm)
 {
-  m_wazm = std::to_string(wazm);
+  m_wazm = openstudio::string_conversions::number(wazm);
   return true;
 }
 
 bool AirflowPathImpl::setWazm(const std::string &wazm)
 {
-  bool ok;
-  FLOAT_CHECK(wazm,&ok);
-  if(ok)
-  {
-    m_wazm = STR_TO_FLOAT(wazm);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(wazm, m_wazm);
 }
 
 double AirflowPathImpl::Fahs() const
 {
-  return FLOAT_NO_CHECK(m_Fahs);
+  return openstudio::string_conversions::to<double>(m_Fahs);
 }
 
 bool AirflowPathImpl::setFahs(const double Fahs)
 {
-  m_Fahs = std::to_string(Fahs);
+  m_Fahs = openstudio::string_conversions::number(Fahs);
   return true;
 }
 
 bool AirflowPathImpl::setFahs(const std::string &Fahs)
 {
-  bool ok;
-  FLOAT_CHECK(Fahs,&ok);
-  if(ok)
-  {
-    m_Fahs = STR_TO_FLOAT(Fahs);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Fahs, m_Fahs);
 }
 
 double AirflowPathImpl::Xmax() const
 {
-  return FLOAT_NO_CHECK(m_Xmax);
+  return openstudio::string_conversions::to<double>(m_Xmax);
 }
 
 bool AirflowPathImpl::setXmax(const double Xmax)
 {
-  m_Xmax = std::to_string(Xmax);
+  m_Xmax = openstudio::string_conversions::number(Xmax);
   return true;
 }
 
 bool AirflowPathImpl::setXmax(const std::string &Xmax)
 {
-  bool ok;
-  FLOAT_CHECK(Xmax,&ok);
-  if(ok)
-  {
-    m_Xmax = STR_TO_FLOAT(Xmax);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Xmax, m_Xmax);
 }
 
 double AirflowPathImpl::Xmin() const
 {
-  return FLOAT_NO_CHECK(m_Xmin);
+  return openstudio::string_conversions::to<double>(m_Xmin);
 }
 
 bool AirflowPathImpl::setXmin(const double Xmin)
 {
-  m_Xmin = std::to_string(Xmin);
+  m_Xmin = openstudio::string_conversions::number(Xmin);
   return true;
 }
 
 bool AirflowPathImpl::setXmin(const std::string &Xmin)
 {
-  bool ok;
-  FLOAT_CHECK(Xmin,&ok);
-  if(ok)
-  {
-    m_Xmin = STR_TO_FLOAT(Xmin);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Xmin, m_Xmin);
 }
 
 unsigned int AirflowPathImpl::icon() const
@@ -2509,71 +2268,50 @@ void RunControlImpl::setAfmaxi(const int afmaxi)
 
 double RunControlImpl::afrcnvg() const
 {
-  return FLOAT_NO_CHECK(m_afrcnvg);
+  return openstudio::string_conversions::to<double>(m_afrcnvg);
 }
 
 bool RunControlImpl::setAfrcnvg(const double afrcnvg)
 {
-  m_afrcnvg = std::to_string(afrcnvg);
+  m_afrcnvg = openstudio::string_conversions::number(afrcnvg);
   return true;
 }
 
 bool RunControlImpl::setAfrcnvg(const std::string &afrcnvg)
 {
-  bool ok;
-  FLOAT_CHECK(afrcnvg,&ok);
-  if(ok)
-  {
-    m_afrcnvg = STR_TO_FLOAT(afrcnvg);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(afrcnvg, m_afrcnvg);
 }
 
 double RunControlImpl::afacnvg() const
 {
-  return FLOAT_NO_CHECK(m_afacnvg);
+  return openstudio::string_conversions::to<double>(m_afacnvg);
 }
 
 bool RunControlImpl::setAfacnvg(const double afacnvg)
 {
-  m_afacnvg = std::to_string(afacnvg);
+  m_afacnvg = openstudio::string_conversions::number(afacnvg);
   return true;
 }
 
 bool RunControlImpl::setAfacnvg(const std::string &afacnvg)
 {
-  bool ok;
-  FLOAT_CHECK(afacnvg,&ok);
-  if(ok)
-  {
-    m_afacnvg = STR_TO_FLOAT(afacnvg);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(afacnvg, m_afacnvg);
 }
 
 double RunControlImpl::afrelax() const
 {
-  return FLOAT_NO_CHECK(m_afrelax);
+  return openstudio::string_conversions::to<double>(m_afrelax);
 }
 
 bool RunControlImpl::setAfrelax(const double afrelax)
 {
-  m_afrelax = std::to_string(afrelax);
+  m_afrelax = openstudio::string_conversions::number(afrelax);
   return true;
 }
 
 bool RunControlImpl::setAfrelax(const std::string &afrelax)
 {
-  bool ok;
-  FLOAT_CHECK(afrelax,&ok);
-  if(ok)
-  {
-    m_afrelax = STR_TO_FLOAT(afrelax);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(afrelax, m_afrelax);
 }
 
 int RunControlImpl::uac2() const
@@ -2588,25 +2326,18 @@ void RunControlImpl::setUac2(const int uac2)
 
 double RunControlImpl::Pres() const
 {
-  return FLOAT_NO_CHECK(m_Pres);
+  return openstudio::string_conversions::to<double>(m_Pres);
 }
 
 bool RunControlImpl::setPres(const double Pres)
 {
-  m_Pres = std::to_string(Pres);
+  m_Pres = openstudio::string_conversions::number(Pres);
   return true;
 }
 
 bool RunControlImpl::setPres(const std::string &Pres)
 {
-  bool ok;
-  FLOAT_CHECK(Pres,&ok);
-  if(ok)
-  {
-    m_Pres = STR_TO_FLOAT(Pres);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(Pres, m_Pres);
 }
 
 int RunControlImpl::uPres() const
@@ -2651,25 +2382,18 @@ void RunControlImpl::setAflmaxi(const int aflmaxi)
 
 double RunControlImpl::aflcnvg() const
 {
-  return FLOAT_NO_CHECK(m_aflcnvg);
+  return openstudio::string_conversions::to<double>(m_aflcnvg);
 }
 
 bool RunControlImpl::setAflcnvg(const double aflcnvg)
 {
-  m_aflcnvg = std::to_string(aflcnvg);
+  m_aflcnvg = openstudio::string_conversions::number(aflcnvg);
   return true;
 }
 
 bool RunControlImpl::setAflcnvg(const std::string &aflcnvg)
 {
-  bool ok;
-  FLOAT_CHECK(aflcnvg,&ok);
-  if(ok)
-  {
-    m_aflcnvg = STR_TO_FLOAT(aflcnvg);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(aflcnvg, m_aflcnvg);
 }
 
 int RunControlImpl::aflinit() const
@@ -2714,71 +2438,50 @@ void RunControlImpl::setCcmaxi(const int ccmaxi)
 
 double RunControlImpl::ccrcnvg() const
 {
-  return FLOAT_NO_CHECK(m_ccrcnvg);
+  return openstudio::string_conversions::to<double>(m_ccrcnvg);
 }
 
 bool RunControlImpl::setCcrcnvg(const double ccrcnvg)
 {
-  m_ccrcnvg = std::to_string(ccrcnvg);
+  m_ccrcnvg = openstudio::string_conversions::number(ccrcnvg);
   return true;
 }
 
 bool RunControlImpl::setCcrcnvg(const std::string &ccrcnvg)
 {
-  bool ok;
-  FLOAT_CHECK(ccrcnvg,&ok);
-  if(ok)
-  {
-    m_ccrcnvg = STR_TO_FLOAT(ccrcnvg);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(ccrcnvg, m_ccrcnvg);
 }
 
 double RunControlImpl::ccacnvg() const
 {
-  return FLOAT_NO_CHECK(m_ccacnvg);
+  return openstudio::string_conversions::to<double>(m_ccacnvg);
 }
 
 bool RunControlImpl::setCcacnvg(const double ccacnvg)
 {
-  m_ccacnvg = std::to_string(ccacnvg);
+  m_ccacnvg = openstudio::string_conversions::number(ccacnvg);
   return true;
 }
 
 bool RunControlImpl::setCcacnvg(const std::string &ccacnvg)
 {
-  bool ok;
-  FLOAT_CHECK(ccacnvg,&ok);
-  if(ok)
-  {
-    m_ccacnvg = STR_TO_FLOAT(ccacnvg);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(ccacnvg, m_ccacnvg);
 }
 
 double RunControlImpl::ccrelax() const
 {
-  return FLOAT_NO_CHECK(m_ccrelax);
+  return openstudio::string_conversions::to<double>(m_ccrelax);
 }
 
 bool RunControlImpl::setCcrelax(const double ccrelax)
 {
-  m_ccrelax = std::to_string(ccrelax);
+  m_ccrelax = openstudio::string_conversions::number(ccrelax);
   return true;
 }
 
 bool RunControlImpl::setCcrelax(const std::string &ccrelax)
 {
-  bool ok;
-  FLOAT_CHECK(ccrelax,&ok);
-  if(ok)
-  {
-    m_ccrelax = STR_TO_FLOAT(ccrelax);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(ccrelax, m_ccrelax);
 }
 
 int RunControlImpl::uccc() const
@@ -2823,94 +2526,66 @@ void RunControlImpl::setMfnmaxi(const int mfnmaxi)
 
 double RunControlImpl::mfnrcnvg() const
 {
-  return FLOAT_NO_CHECK(m_mfnrcnvg);
+  return openstudio::string_conversions::to<double>(m_mfnrcnvg);
 }
 
 bool RunControlImpl::setMfnrcnvg(const double mfnrcnvg)
 {
-  m_mfnrcnvg = std::to_string(mfnrcnvg);
+  m_mfnrcnvg = openstudio::string_conversions::number(mfnrcnvg);
   return true;
 }
 
 bool RunControlImpl::setMfnrcnvg(const std::string &mfnrcnvg)
 {
-  bool ok;
-  FLOAT_CHECK(mfnrcnvg,&ok);
-  if(ok)
-  {
-    m_mfnrcnvg = STR_TO_FLOAT(mfnrcnvg);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mfnrcnvg, m_mfnrcnvg);
 }
 
 double RunControlImpl::mfnacnvg() const
 {
-  return FLOAT_NO_CHECK(m_mfnacnvg);
+  return openstudio::string_conversions::to<double>(m_mfnacnvg);
 }
 
 bool RunControlImpl::setMfnacnvg(const double mfnacnvg)
 {
-  m_mfnacnvg = std::to_string(mfnacnvg);
+  m_mfnacnvg = openstudio::string_conversions::number(mfnacnvg);
   return true;
 }
 
 bool RunControlImpl::setMfnacnvg(const std::string &mfnacnvg)
 {
-  bool ok;
-  FLOAT_CHECK(mfnacnvg,&ok);
-  if(ok)
-  {
-    m_mfnacnvg = STR_TO_FLOAT(mfnacnvg);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mfnacnvg, m_mfnacnvg);
 }
 
 double RunControlImpl::mfnrelax() const
 {
-  return FLOAT_NO_CHECK(m_mfnrelax);
+  return openstudio::string_conversions::to<double>(m_mfnrelax);
 }
 
 bool RunControlImpl::setMfnrelax(const double mfnrelax)
 {
-  m_mfnrelax = std::to_string(mfnrelax);
+  m_mfnrelax = openstudio::string_conversions::number(mfnrelax);
   return true;
 }
 
 bool RunControlImpl::setMfnrelax(const std::string &mfnrelax)
 {
-  bool ok;
-  FLOAT_CHECK(mfnrelax,&ok);
-  if(ok)
-  {
-    m_mfnrelax = STR_TO_FLOAT(mfnrelax);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mfnrelax, m_mfnrelax);
 }
 
 double RunControlImpl::mfngamma() const
 {
-  return FLOAT_NO_CHECK(m_mfngamma);
+  return openstudio::string_conversions::to<double>(m_mfngamma);
 }
 
 bool RunControlImpl::setMfngamma(const double mfngamma)
 {
-  m_mfngamma = std::to_string(mfngamma);
+  m_mfngamma = openstudio::string_conversions::number(mfngamma);
   return true;
 }
 
 bool RunControlImpl::setMfngamma(const std::string &mfngamma)
 {
-  bool ok;
-  FLOAT_CHECK(mfngamma,&ok);
-  if(ok)
-  {
-    m_mfngamma = STR_TO_FLOAT(mfngamma);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mfngamma, m_mfngamma);
 }
 
 int RunControlImpl::uccn() const
@@ -2955,94 +2630,66 @@ void RunControlImpl::setMftmaxi(const int mftmaxi)
 
 double RunControlImpl::mftrcnvg() const
 {
-  return FLOAT_NO_CHECK(m_mftrcnvg);
+  return openstudio::string_conversions::to<double>(m_mftrcnvg);
 }
 
 bool RunControlImpl::setMftrcnvg(const double mftrcnvg)
 {
-  m_mftrcnvg = std::to_string(mftrcnvg);
+  m_mftrcnvg = openstudio::string_conversions::number(mftrcnvg);
   return true;
 }
 
 bool RunControlImpl::setMftrcnvg(const std::string &mftrcnvg)
 {
-  bool ok;
-  FLOAT_CHECK(mftrcnvg,&ok);
-  if(ok)
-  {
-    m_mftrcnvg = STR_TO_FLOAT(mftrcnvg);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mftrcnvg, m_mftrcnvg);
 }
 
 double RunControlImpl::mftacnvg() const
 {
-  return FLOAT_NO_CHECK(m_mftacnvg);
+  return openstudio::string_conversions::to<double>(m_mftacnvg);
 }
 
 bool RunControlImpl::setMftacnvg(const double mftacnvg)
 {
-  m_mftacnvg = std::to_string(mftacnvg);
+  m_mftacnvg = openstudio::string_conversions::number(mftacnvg);
   return true;
 }
 
 bool RunControlImpl::setMftacnvg(const std::string &mftacnvg)
 {
-  bool ok;
-  FLOAT_CHECK(mftacnvg,&ok);
-  if(ok)
-  {
-    m_mftacnvg = STR_TO_FLOAT(mftacnvg);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mftacnvg, m_mftacnvg);
 }
 
 double RunControlImpl::mftrelax() const
 {
-  return FLOAT_NO_CHECK(m_mftrelax);
+  return openstudio::string_conversions::to<double>(m_mftrelax);
 }
 
 bool RunControlImpl::setMftrelax(const double mftrelax)
 {
-  m_mftrelax = std::to_string(mftrelax);
+  m_mftrelax = openstudio::string_conversions::number(mftrelax);
   return true;
 }
 
 bool RunControlImpl::setMftrelax(const std::string &mftrelax)
 {
-  bool ok;
-  FLOAT_CHECK(mftrelax,&ok);
-  if(ok)
-  {
-    m_mftrelax = STR_TO_FLOAT(mftrelax);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mftrelax, m_mftrelax);
 }
 
 double RunControlImpl::mftgamma() const
 {
-  return FLOAT_NO_CHECK(m_mftgamma);
+  return openstudio::string_conversions::to<double>(m_mftgamma);
 }
 
 bool RunControlImpl::setMftgamma(const double mftgamma)
 {
-  m_mftgamma = std::to_string(mftgamma);
+  m_mftgamma = openstudio::string_conversions::number(mftgamma);
   return true;
 }
 
 bool RunControlImpl::setMftgamma(const std::string &mftgamma)
 {
-  bool ok;
-  FLOAT_CHECK(mftgamma,&ok);
-  if(ok)
-  {
-    m_mftgamma = STR_TO_FLOAT(mftgamma);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mftgamma, m_mftgamma);
 }
 
 int RunControlImpl::ucct() const
@@ -3087,71 +2734,50 @@ void RunControlImpl::setMfvmaxi(const int mfvmaxi)
 
 double RunControlImpl::mfvrcnvg() const
 {
-  return FLOAT_NO_CHECK(m_mfvrcnvg);
+  return openstudio::string_conversions::to<double>(m_mfvrcnvg);
 }
 
 bool RunControlImpl::setMfvrcnvg(const double mfvrcnvg)
 {
-  m_mfvrcnvg = std::to_string(mfvrcnvg);
+  m_mfvrcnvg = openstudio::string_conversions::number(mfvrcnvg);
   return true;
 }
 
 bool RunControlImpl::setMfvrcnvg(const std::string &mfvrcnvg)
 {
-  bool ok;
-  FLOAT_CHECK(mfvrcnvg,&ok);
-  if(ok)
-  {
-    m_mfvrcnvg = STR_TO_FLOAT(mfvrcnvg);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mfvrcnvg, m_mfvrcnvg);
 }
 
 double RunControlImpl::mfvacnvg() const
 {
-  return FLOAT_NO_CHECK(m_mfvacnvg);
+  return openstudio::string_conversions::to<double>(m_mfvacnvg);
 }
 
 bool RunControlImpl::setMfvacnvg(const double mfvacnvg)
 {
-  m_mfvacnvg = std::to_string(mfvacnvg);
+  m_mfvacnvg = openstudio::string_conversions::number(mfvacnvg);
   return true;
 }
 
 bool RunControlImpl::setMfvacnvg(const std::string &mfvacnvg)
 {
-  bool ok;
-  FLOAT_CHECK(mfvacnvg,&ok);
-  if(ok)
-  {
-    m_mfvacnvg = STR_TO_FLOAT(mfvacnvg);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mfvacnvg, m_mfvacnvg);
 }
 
 double RunControlImpl::mfvrelax() const
 {
-  return FLOAT_NO_CHECK(m_mfvrelax);
+  return openstudio::string_conversions::to<double>(m_mfvrelax);
 }
 
 bool RunControlImpl::setMfvrelax(const double mfvrelax)
 {
-  m_mfvrelax = std::to_string(mfvrelax);
+  m_mfvrelax = openstudio::string_conversions::number(mfvrelax);
   return true;
 }
 
 bool RunControlImpl::setMfvrelax(const std::string &mfvrelax)
 {
-  bool ok;
-  FLOAT_CHECK(mfvrelax,&ok);
-  if(ok)
-  {
-    m_mfvrelax = STR_TO_FLOAT(mfvrelax);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mfvrelax, m_mfvrelax);
 }
 
 int RunControlImpl::uccv() const
@@ -3196,25 +2822,18 @@ void RunControlImpl::setSim_1dd(const int sim_1dd)
 
 double RunControlImpl::celldx() const
 {
-  return FLOAT_NO_CHECK(m_celldx);
+  return openstudio::string_conversions::to<double>(m_celldx);
 }
 
 bool RunControlImpl::setCelldx(const double celldx)
 {
-  m_celldx = std::to_string(celldx);
+  m_celldx = openstudio::string_conversions::number(celldx);
   return true;
 }
 
 bool RunControlImpl::setCelldx(const std::string &celldx)
 {
-  bool ok;
-  FLOAT_CHECK(celldx,&ok);
-  if(ok)
-  {
-    m_celldx = STR_TO_FLOAT(celldx);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(celldx, m_celldx);
 }
 
 int RunControlImpl::sim_vjt() const
@@ -3249,71 +2868,50 @@ void RunControlImpl::setCvode_mth(const int cvode_mth)
 
 double RunControlImpl::cvode_rcnvg() const
 {
-  return FLOAT_NO_CHECK(m_cvode_rcnvg);
+  return openstudio::string_conversions::to<double>(m_cvode_rcnvg);
 }
 
 bool RunControlImpl::setCvode_rcnvg(const double cvode_rcnvg)
 {
-  m_cvode_rcnvg = std::to_string(cvode_rcnvg);
+  m_cvode_rcnvg = openstudio::string_conversions::number(cvode_rcnvg);
   return true;
 }
 
 bool RunControlImpl::setCvode_rcnvg(const std::string &cvode_rcnvg)
 {
-  bool ok;
-  FLOAT_CHECK(cvode_rcnvg,&ok);
-  if(ok)
-  {
-    m_cvode_rcnvg = STR_TO_FLOAT(cvode_rcnvg);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(cvode_rcnvg, m_cvode_rcnvg);
 }
 
 double RunControlImpl::cvode_acnvg() const
 {
-  return FLOAT_NO_CHECK(m_cvode_acnvg);
+  return openstudio::string_conversions::to<double>(m_cvode_acnvg);
 }
 
 bool RunControlImpl::setCvode_acnvg(const double cvode_acnvg)
 {
-  m_cvode_acnvg = std::to_string(cvode_acnvg);
+  m_cvode_acnvg = openstudio::string_conversions::number(cvode_acnvg);
   return true;
 }
 
 bool RunControlImpl::setCvode_acnvg(const std::string &cvode_acnvg)
 {
-  bool ok;
-  FLOAT_CHECK(cvode_acnvg,&ok);
-  if(ok)
-  {
-    m_cvode_acnvg = STR_TO_FLOAT(cvode_acnvg);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(cvode_acnvg, m_cvode_acnvg);
 }
 
 double RunControlImpl::cvode_dtmax() const
 {
-  return FLOAT_NO_CHECK(m_cvode_dtmax);
+  return openstudio::string_conversions::to<double>(m_cvode_dtmax);
 }
 
 bool RunControlImpl::setCvode_dtmax(const double cvode_dtmax)
 {
-  m_cvode_dtmax = std::to_string(cvode_dtmax);
+  m_cvode_dtmax = openstudio::string_conversions::number(cvode_dtmax);
   return true;
 }
 
 bool RunControlImpl::setCvode_dtmax(const std::string &cvode_dtmax)
 {
-  bool ok;
-  FLOAT_CHECK(cvode_dtmax,&ok);
-  if(ok)
-  {
-    m_cvode_dtmax = STR_TO_FLOAT(cvode_dtmax);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(cvode_dtmax, m_cvode_dtmax);
 }
 
 int RunControlImpl::tsdens() const
@@ -3328,25 +2926,18 @@ void RunControlImpl::setTsdens(const int tsdens)
 
 double RunControlImpl::tsrelax() const
 {
-  return FLOAT_NO_CHECK(m_tsrelax);
+  return openstudio::string_conversions::to<double>(m_tsrelax);
 }
 
 bool RunControlImpl::setTsrelax(const double tsrelax)
 {
-  m_tsrelax = std::to_string(tsrelax);
+  m_tsrelax = openstudio::string_conversions::number(tsrelax);
   return true;
 }
 
 bool RunControlImpl::setTsrelax(const std::string &tsrelax)
 {
-  bool ok;
-  FLOAT_CHECK(tsrelax,&ok);
-  if(ok)
-  {
-    m_tsrelax = STR_TO_FLOAT(tsrelax);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(tsrelax, m_tsrelax);
 }
 
 int RunControlImpl::tsmaxi() const
@@ -3722,37 +3313,32 @@ void RunControlImpl::setSave(const std::vector<int> &save)
 std::vector<double> RunControlImpl::rvals() const
 {
   std::vector<double> out;
-  for(unsigned i=0;i<m_rvals.size();i++)
+  for(const auto &val : m_rvals)
   {
-    out.push_back(FLOAT_NO_CHECK(m_rvals[i]));
+    out.push_back(openstudio::string_conversions::to<double>(val));
   }
   return out;
 }
 
 bool RunControlImpl::setRvals(const std::vector<double> &rvals)
 {
-  for(unsigned i=0;i<rvals.size();i++)
+  std::vector<std::string> new_vals;
+  for(const auto &val : rvals)
   {
-    m_rvals.push_back(std::to_string(rvals[i]));
+    new_vals.push_back(openstudio::string_conversions::number(val));
   }
+  m_rvals = new_vals;
   return true;
 }
 
 bool RunControlImpl::setRvals(const std::vector<std::string> &rvals)
 {
-  std::vector<PRJFLOAT> in;
-  for(unsigned i=0;i<rvals.size();i++)
-  {
-    bool ok;
-    FLOAT_CHECK(rvals[i],&ok);
-    if(!ok)
-    {
-      return false;
-    }
-    in.push_back(STR_TO_FLOAT(rvals[i]));
+  if (std::all_of(rvals.begin(), rvals.end(), is_valid<double, std::string>)) {
+    m_rvals = rvals;
+    return true;
+  } else {
+    return false;
   }
-  m_rvals = in;
-  return true;
 }
 
 int RunControlImpl::BldgFlowZ() const
@@ -3797,25 +3383,18 @@ void RunControlImpl::setCfd_ctype(const int cfd_ctype)
 
 double RunControlImpl::cfd_convcpl() const
 {
-  return FLOAT_NO_CHECK(m_cfd_convcpl);
+  return openstudio::string_conversions::to<double>(m_cfd_convcpl);
 }
 
 bool RunControlImpl::setCfd_convcpl(const double cfd_convcpl)
 {
-  m_cfd_convcpl = std::to_string(cfd_convcpl);
+  m_cfd_convcpl = openstudio::string_conversions::number(cfd_convcpl);
   return true;
 }
 
 bool RunControlImpl::setCfd_convcpl(const std::string &cfd_convcpl)
 {
-  bool ok;
-  FLOAT_CHECK(cfd_convcpl,&ok);
-  if(ok)
-  {
-    m_cfd_convcpl = STR_TO_FLOAT(cfd_convcpl);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(cfd_convcpl, m_cfd_convcpl);
 }
 
 int RunControlImpl::cfd_var() const
@@ -3939,48 +3518,34 @@ void LevelImpl::setNr(const int nr)
 
 double LevelImpl::refht() const
 {
-  return FLOAT_NO_CHECK(m_refht);
+  return openstudio::string_conversions::to<double>(m_refht);
 }
 
 bool LevelImpl::setRefht(const double refht)
 {
-  m_refht = std::to_string(refht);
+  m_refht = openstudio::string_conversions::number(refht);
   return true;
 }
 
 bool LevelImpl::setRefht(const std::string &refht)
 {
-  bool ok;
-  FLOAT_CHECK(refht,&ok);
-  if(ok)
-  {
-    m_refht = STR_TO_FLOAT(refht);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(refht, m_refht);
 }
 
 double LevelImpl::delht() const
 {
-  return FLOAT_NO_CHECK(m_delht);
+  return openstudio::string_conversions::to<double>(m_delht);
 }
 
 bool LevelImpl::setDelht(const double delht)
 {
-  m_delht = std::to_string(delht);
+  m_delht = openstudio::string_conversions::number(delht);
   return true;
 }
 
 bool LevelImpl::setDelht(const std::string &delht)
 {
-  bool ok;
-  FLOAT_CHECK(delht,&ok);
-  if(ok)
-  {
-    m_delht = STR_TO_FLOAT(delht);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(delht, m_delht);
 }
 
 int LevelImpl::u_rfht() const

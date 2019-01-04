@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,7 +36,7 @@
 
 namespace openstudio{
 
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
 
   #define _WIN32_WINNT 0x0500
 
@@ -100,7 +100,7 @@ namespace openstudio{
         }
       }
 
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
         Sleep(timetosleep);
 #else
         usleep(timetosleep * 1000);
@@ -125,7 +125,7 @@ namespace openstudio{
   /// \note not using string_view because we need null terminated strings
   void System::setenv(const std::string &name, const std::string &value)
   {
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
     if (const auto result = ::_putenv_s(name.c_str(), value.c_str()); result != 0) {
       throw std::runtime_error("Unable to set environment variable: unknown error");
     }

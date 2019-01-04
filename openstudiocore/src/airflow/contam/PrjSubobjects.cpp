@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -26,6 +26,8 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
+
+#include "../../utilities/core/StringHelpers.hpp"
 
 #include "PrjSubobjects.hpp"
 #include "PrjSubobjectsImpl.hpp"
@@ -345,25 +347,18 @@ std::string FanDataPoint::write()
 
 double FanDataPoint::mF() const
 {
-  return FLOAT_NO_CHECK(m_mF);
+  return openstudio::string_conversions::to<double>(m_mF);
 }
 
 bool FanDataPoint::setMF(const double mF)
 {
-  m_mF = std::to_string(mF);
+  m_mF = openstudio::string_conversions::number(mF);
   return true;
 }
 
 bool FanDataPoint::setMF(const std::string &mF)
 {
-  bool ok;
-  FLOAT_CHECK(mF,&ok);
-  if(ok)
-  {
-    m_mF = STR_TO_FLOAT(mF);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(mF, m_mF);
 }
 
 int FanDataPoint::u_mF() const
@@ -378,25 +373,18 @@ void FanDataPoint::setU_mF(const int u_mF)
 
 double FanDataPoint::dP() const
 {
-  return FLOAT_NO_CHECK(m_dP);
+  return openstudio::string_conversions::to<double>(m_dP);
 }
 
 bool FanDataPoint::setDP(const double dP)
 {
-  m_dP = std::to_string(dP);
+  m_dP = openstudio::string_conversions::number(dP);
   return true;
 }
 
 bool FanDataPoint::setDP(const std::string &dP)
 {
-  bool ok;
-  FLOAT_CHECK(dP,&ok);
-  if(ok)
-  {
-    m_dP = STR_TO_FLOAT(dP);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(dP, m_dP);
 }
 
 int FanDataPoint::u_dP() const
@@ -411,25 +399,18 @@ void FanDataPoint::setU_dP(const int u_dP)
 
 double FanDataPoint::rP() const
 {
-  return FLOAT_NO_CHECK(m_rP);
+  return openstudio::string_conversions::to<double>(m_rP);
 }
 
 bool FanDataPoint::setRP(const double rP)
 {
-  m_rP = std::to_string(rP);
+  m_rP = openstudio::string_conversions::number(rP);
   return true;
 }
 
 bool FanDataPoint::setRP(const std::string &rP)
 {
-  bool ok;
-  FLOAT_CHECK(rP,&ok);
-  if(ok)
-  {
-    m_rP = STR_TO_FLOAT(rP);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(rP, m_rP);
 }
 
 int FanDataPoint::u_rP() const
@@ -482,48 +463,34 @@ std::string XyDataPoint::write()
 
 double XyDataPoint::x() const
 {
-  return FLOAT_NO_CHECK(m_x);
+  return openstudio::string_conversions::to<double>(m_x);
 }
 
 bool XyDataPoint::setX(const double x)
 {
-  m_x = std::to_string(x);
+  m_x = openstudio::string_conversions::number(x);
   return true;
 }
 
 bool XyDataPoint::setX(const std::string &x)
 {
-  bool ok;
-  FLOAT_CHECK(x,&ok);
-  if(ok)
-  {
-    m_x = STR_TO_FLOAT(x);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(x, m_x);
 }
 
 double XyDataPoint::y() const
 {
-  return FLOAT_NO_CHECK(m_y);
+  return openstudio::string_conversions::to<double>(m_y);
 }
 
 bool XyDataPoint::setY(const double y)
 {
-  m_y = std::to_string(y);
+  m_y = openstudio::string_conversions::number(y);
   return true;
 }
 
 bool XyDataPoint::setY(const std::string &y)
 {
-  bool ok;
-  FLOAT_CHECK(y,&ok);
-  if(ok)
-  {
-    m_y = STR_TO_FLOAT(y);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(y, m_y);
 }
 
 void AirflowSubelementData::setDefaults()
@@ -580,25 +547,18 @@ void AirflowSubelementData::setNr(const int nr)
 
 double AirflowSubelementData::relHt() const
 {
-  return FLOAT_NO_CHECK(m_relHt);
+  return openstudio::string_conversions::to<double>(m_relHt);
 }
 
 bool AirflowSubelementData::setRelHt(const double relHt)
 {
-  m_relHt = std::to_string(relHt);
+  m_relHt = openstudio::string_conversions::number(relHt);
   return true;
 }
 
 bool AirflowSubelementData::setRelHt(const std::string &relHt)
 {
-  bool ok;
-  FLOAT_CHECK(relHt,&ok);
-  if(ok)
-  {
-    m_relHt = STR_TO_FLOAT(relHt);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(relHt, m_relHt);
 }
 
 int AirflowSubelementData::filt() const
@@ -651,48 +611,34 @@ std::string PressureCoefficientPoint::write()
 
 double PressureCoefficientPoint::azm() const
 {
-  return FLOAT_NO_CHECK(m_azm);
+  return openstudio::string_conversions::to<double>(m_azm);
 }
 
 bool PressureCoefficientPoint::setAzm(const double azm)
 {
-  m_azm = std::to_string(azm);
+  m_azm = openstudio::string_conversions::number(azm);
   return true;
 }
 
 bool PressureCoefficientPoint::setAzm(const std::string &azm)
 {
-  bool ok;
-  FLOAT_CHECK(azm,&ok);
-  if(ok)
-  {
-    m_azm = STR_TO_FLOAT(azm);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(azm, m_azm);
 }
 
 double PressureCoefficientPoint::coef() const
 {
-  return FLOAT_NO_CHECK(m_coef);
+  return openstudio::string_conversions::to<double>(m_coef);
 }
 
 bool PressureCoefficientPoint::setCoef(const double coef)
 {
-  m_coef = std::to_string(coef);
+  m_coef = openstudio::string_conversions::number(coef);
   return true;
 }
 
 bool PressureCoefficientPoint::setCoef(const std::string &coef)
 {
-  bool ok;
-  FLOAT_CHECK(coef,&ok);
-  if(ok)
-  {
-    m_coef = STR_TO_FLOAT(coef);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(coef, m_coef);
 }
 
 void SchedulePoint::setDefaults()
@@ -745,25 +691,18 @@ void SchedulePoint::setTime(const std::string &time)
 
 double SchedulePoint::ctrl() const
 {
-  return FLOAT_NO_CHECK(m_ctrl);
+  return openstudio::string_conversions::to<double>(m_ctrl);
 }
 
 bool SchedulePoint::setCtrl(const double ctrl)
 {
-  m_ctrl = std::to_string(ctrl);
+  m_ctrl = openstudio::string_conversions::number(ctrl);
   return true;
 }
 
 bool SchedulePoint::setCtrl(const std::string &ctrl)
 {
-  bool ok;
-  FLOAT_CHECK(ctrl,&ok);
-  if(ok)
-  {
-    m_ctrl = STR_TO_FLOAT(ctrl);
-    return true;
-  }
-  return false;
+  return assign_if_valid<double>(ctrl, m_ctrl);
 }
 
 } // contam
