@@ -1,7 +1,3 @@
-# Remove -Werror to avoid warnings treated as errors coming from this
-# TODO @jmarrec: try to Disable only Wregister later
-string(REPLACE " -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(Apple)?Clang$")
   # using Clang
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -undefined dynamic_lookup")
@@ -23,7 +19,13 @@ add_library( init_openstudio STATIC
 )
 
 if(MSVC)
+  # TODO: JM 2019-01-04: @macumber it seems like all three targets use the same COMPILE_FLAGS,
+  # so instead of defining that three times, perhaps modify CMAKE_CXX_FLAGS?
+  # wd4996=no deprecated warnings ; wd5033=register
   set_target_properties(init_openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
+elseif (UNIX)
+  # Disable register warnings
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=register")
 endif()
 
 target_link_libraries(init_openstudio
@@ -150,7 +152,7 @@ if( UNIX AND NOT APPLE )
   target_link_libraries(openstudio_modeleditor_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libxcb-static.a" -Wl,--no-whole-archive
   )
-  
+
 #target_link_libraries(openstudio_rb
 #    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a" -Wl,--no-whole-archive
 #  )
@@ -161,27 +163,27 @@ if( UNIX AND NOT APPLE )
   target_link_libraries(openstudio_modeleditor_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5FontDatabaseSupport.a" -Wl,--no-whole-archive
   )
-  
+
   target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5EventDispatcherSupport.a" -Wl,--no-whole-archive
   )
   target_link_libraries(openstudio_modeleditor_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5EventDispatcherSupport.a" -Wl,--no-whole-archive
   )
-  
+
   target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5ThemeSupport.a" -Wl,--no-whole-archive
   )
   target_link_libraries(openstudio_modeleditor_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5ThemeSupport.a" -Wl,--no-whole-archive
   )
-  
+
   target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a" -Wl,--no-whole-archive
   )
   target_link_libraries(openstudio_modeleditor_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a" -Wl,--no-whole-archive
-  ) 
+  )
 endif()
 
 if( WIN32 )
