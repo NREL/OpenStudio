@@ -25,7 +25,7 @@ if(MSVC)
   set_target_properties(init_openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
 elseif (UNIX)
   # Disable register warnings
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=register")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=register -Wno-register")
 endif()
 
 target_link_libraries(init_openstudio
