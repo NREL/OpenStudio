@@ -180,42 +180,43 @@ namespace gbxml {
     // gbXML attributes not mapped directly to IDF, but needed to map
 
     // {F, C, K, R}
-    std::string temperatureUnit = toUpper(std::string(root.attribute("temperatureUnit").value()));
-    if (temperatureUnit.find("F") != std::string::npos) {
+    // JWD: the previous check was not great, this one is better and more true to the schema
+    std::string temperatureUnit{ root.attribute("temperatureUnit").value() };
+    if (temperatureUnit == "F") {
       m_temperatureUnit = UnitFactory::instance().createUnit("F").get();
-    } else if (temperatureUnit.find("C") != std::string::npos) {
+    } else if (temperatureUnit == "C") {
       m_temperatureUnit = UnitFactory::instance().createUnit("C").get();
-    } else if (temperatureUnit.find("K") != std::string::npos) {
+    } else if (temperatureUnit == "K") {
       m_temperatureUnit = UnitFactory::instance().createUnit("K").get();
-    } else if (temperatureUnit.find("R") != std::string::npos) {
+    } else if (temperatureUnit == "R") {
       m_temperatureUnit = UnitFactory::instance().createUnit("R").get();
     } else {
-      LOG(Warn, "No temperature unit specified, using C");
+      LOG(Warn, "No recognized temperature unit specified, using C");
       m_temperatureUnit = UnitFactory::instance().createUnit("C").get();
     }
 
     // {Kilometers, Centimeters, Millimeters, Meters, Miles, Yards, Feet, Inches}
-    // TODO: still need some help with some units
-    std::string lengthUnit = toUpper(std::string(root.attribute("lengthUnit").value()));
-    if (lengthUnit.find("KILOMETERS") != std::string::npos) {
+    // JWD: the previous check was not great, this one is better, though still not exactly true to the schema
+    std::string lengthUnit{ root.attribute("lengthUnit").value() };
+    if (istringEqual(lengthUnit, "Kilometers")) {
       m_nonBaseMultiplier = 1000.0;
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
-    } else if (lengthUnit.find("CENTIMETERS") != std::string::npos) {
+    } else if (istringEqual(lengthUnit, "Centimeters")) {
       m_nonBaseMultiplier = 1.0e-2;
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
-    } else if (lengthUnit.find("MILLIMETERS") != std::string::npos) {
+    } else if (istringEqual(lengthUnit, "Millimeters")) {
       m_nonBaseMultiplier = 1.0e-3;
       m_lengthUnit = UnitFactory::instance().createUnit("K").get();
-    } else if (lengthUnit.find("METERS") != std::string::npos) {
+    } else if (istringEqual(lengthUnit, "Meters")) {
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
-    } else if (lengthUnit.find("MILES") != std::string::npos) {
+    } else if (istringEqual(lengthUnit, "Miles")) {
       m_lengthUnit = UnitFactory::instance().createUnit("mi").get();
-    } else if (lengthUnit.find("YARDS") != std::string::npos) {
+    } else if (istringEqual(lengthUnit, "Yards")) {
       m_nonBaseMultiplier = 3.0;
       m_lengthUnit = UnitFactory::instance().createUnit("ft").get();
-    } else if (lengthUnit.find("FEET") != std::string::npos) {
+    } else if (istringEqual(lengthUnit, "Feet")) {
       m_lengthUnit = UnitFactory::instance().createUnit("ft").get();
-    } else if (lengthUnit.find("INCHES") != std::string::npos) {
+    } else if (istringEqual(lengthUnit, "Inches")) {
       m_lengthUnit = UnitFactory::instance().createUnit("in").get();
     } else {
       LOG(Warn, "No length unit specified, using Meters");
@@ -236,8 +237,8 @@ namespace gbxml {
 
     // {true, false}
     m_useSIUnitsForResults = true;
-    std::string useSIUnitsForResults = toUpper(std::string(root.attribute("useSIUnitsForResults").value()));
-    if (useSIUnitsForResults.find("FALSE") != std::string::npos) {
+    std::string useSIUnitsForResults{ root.attribute("useSIUnitsForResults").value() };
+    if (istringEqual(useSIUnitsForResults, "False")) {
       m_useSIUnitsForResults = false;
     }
 

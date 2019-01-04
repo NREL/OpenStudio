@@ -81,6 +81,7 @@
 
 #include <boost/math/constants/constants.hpp>
 
+#include <pugixml.hpp>
 #include <QDomDocument>
 #include <QDomElement>
 #include <thread>
@@ -171,6 +172,28 @@ namespace gbxml {
     //result.replace(".", "_"); // ok
     result.replace(":", "_");
     result.replace(";", "_");
+    return result;
+  }
+
+  std::string ForwardTranslator::escapeNameS(const std::string& name)
+  {
+    std::string result;
+    if (std::regex_match(name, std::regex("^\\d.*"))) {
+      result = "id_" + name;
+    }
+    std::replace(result.begin(), result.end(), " ", "_");
+    std::replace(result.begin(), result.end(), "(", "_");
+    std::replace(result.begin(), result.end(), ")", "_");
+    std::replace(result.begin(), result.end(), "[", "_");
+    std::replace(result.begin(), result.end(), "]", "_");
+    std::replace(result.begin(), result.end(), "{", "_");
+    std::replace(result.begin(), result.end(), "}", "_");
+    std::replace(result.begin(), result.end(), "/", "_");
+    std::replace(result.begin(), result.end(), "\\", "_");
+    //std::replace(result.begin(), result.end(),"-", "_"); // ok
+    //std::replace(result.begin(), result.end(),".", "_"); // ok
+    std::replace(result.begin(), result.end(), ":", "_");
+    std::replace(result.begin(), result.end(), ";", "_");
     return result;
   }
 
@@ -1456,6 +1479,29 @@ namespace gbxml {
 
           parentElement.appendChild(cadObjectIdElement);
           result = cadObjectIdElement;
+        }
+      }
+    }
+    return result;
+  }
+
+  boost::optional<pugi::xml_node> ForwardTranslator::translateCADObjectId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement)
+  {
+    boost::optional<pugi::xml_node> result;
+
+    if (modelObject.hasAdditionalProperties()) {
+      model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
+      if (additionalProperties.hasFeature("CADObjectId")) {
+        boost::optional<std::string> cadObjectId = additionalProperties.getFeatureAsString("CADObjectId");
+        if (cadObjectId) {
+          if (additionalProperties.hasFeature("programIdRef")) {
+            boost::optional<std::string> programIdRef = additionalProperties.getFeatureAsString("programIdRef");
+            if (programIdRef) {
+              auto cadObjectIdElement = parentElement.append_child("CADObjectId");
+              cadObjectIdElement.append_attribute("programIdRef") = (*programIdRef).c_str();
+              result = cadObjectIdElement;
+            }
+          }
         }
       }
     }

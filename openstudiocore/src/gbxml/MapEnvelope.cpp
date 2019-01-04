@@ -50,6 +50,8 @@
 #include "../model/ModelPartitionMaterial_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 
+#include <QDomElement>
+
 #include <pugixml.hpp>
 
 namespace openstudio {
@@ -328,6 +330,89 @@ namespace gbxml {
     return result;
   }
 
+  boost::optional<pugi::xml_node> ForwardTranslator::translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, pugi::xml_node& root)
+  {
+    boost::optional<pugi::xml_node> result;
+
+    bool isOpaque = constructionBase.isOpaque();
+
+    if (isOpaque) {
+      result = root.append_child("Construction");
+      m_translatedObjectsS[constructionBase.handle()] = *result;
+    } else {
+      result = root.append_child("WindowType");
+      m_translatedObjectsS[constructionBase.handle()] = *result;
+    }
+
+    std::string name = constructionBase.name().get();
+
+    // id
+    result->attribute("id") = escapeNameS(name).c_str();
+
+    // name
+    auto nameElement = result->append_child("Name");
+    nameElement.text() = name.c_str();
+
+    if (isOpaque) {
+      if (constructionBase.optionalCast<model::LayeredConstruction>()) {
+        for (const auto& layer : constructionBase.cast<model::LayeredConstruction>().layers()) {
+          auto layerIdElement = result->append_child("LayerId");
+          layerIdElement.attribute("layerIdRef") = escapeNameS(layer.name().get() + " Layer").c_str();
+
+          m_materials.insert(layer);
+        }
+      }
+    } else {
+      boost::optional<double> visibleTransmittance;
+      boost::optional<double> uFactor;
+      boost::optional<double> solarHeatGainCoefficient;
+
+      if (constructionBase.optionalCast<model::LayeredConstruction>()) {
+        std::vector<model::Material> layers = constructionBase.cast<model::LayeredConstruction>().layers();
+        if (layers.size() == 1u) {
+          if (layers[0].optionalCast<model::SimpleGlazing>()) {
+            model::SimpleGlazing glazing = layers[0].cast<model::SimpleGlazing>();
+            visibleTransmittance = glazing.visibleTransmittance();
+            uFactor = glazing.uFactor();
+            solarHeatGainCoefficient = glazing.solarHeatGainCoefficient();
+          }
+        }
+      }
+
+      if (!visibleTransmittance) {
+        visibleTransmittance = constructionBase.visibleTransmittance();
+      }
+      if (!uFactor) {
+        uFactor = constructionBase.uFactor();
+      }
+      //if (!solarHeatGainCoefficient){
+      //  solarHeatGainCoefficient = constructionBase.solarHeatGainCoefficient();
+      //}
+
+
+      if (visibleTransmittance) {
+        auto element = result->append_child("Transmittance");
+        element.text() = *visibleTransmittance;
+        element.attribute("unit") = "Fraction";
+        element.attribute("type") = "Visible";
+        element.attribute("surfaceType") = "Both";
+      }
+
+      if (uFactor) {
+        auto element = result->append_child("U-value");
+        element.text() = *uFactor;
+        element.attribute("unit") = "WPerSquareMeterK";
+      }
+
+      if (solarHeatGainCoefficient) {
+        auto element = result->append_child("SolarHeatGainCoeff");
+        element.text() = *solarHeatGainCoefficient;
+        element.attribute("unit") = "Fraction";
+      }
+    }
+    return result;
+  }
+
   boost::optional<QDomElement> ForwardTranslator::translateLayer(const openstudio::model::Material& material, QDomDocument& doc)
   {
     boost::optional<QDomElement> result;
@@ -534,6 +619,194 @@ namespace gbxml {
       element.appendChild(doc.createTextNode(QString::number(*visibleAbsorptance)));
       element.setAttribute("unit", "Fraction");
       element.setAttribute("type", "IntVisible");
+    }
+    return result;
+  }
+
+
+  boost::optional<pugi::xml_node> ForwardTranslator::translateLayer(const openstudio::model::Material& material, pugi::xml_node& root)
+  {
+    auto result = root.append_child("Layer");
+
+    std::string materialName = material.name().get();
+    std::string layerName = materialName + " Layer";
+
+    // id
+    result.attribute("id") = escapeNameS(layerName).c_str();
+
+    // name
+    auto nameElement = result.append_child("Name");
+    nameElement.text() = layerName.c_str();
+
+    // name
+    auto materialIdElement = result.append_child("MaterialId");
+    materialIdElement.attribute("materialIdRef") = escapeNameS(materialName).c_str();
+
+    return result;
+  }
+
+  boost::optional<pugi::xml_node> ForwardTranslator::translateMaterial(const openstudio::model::Material& material, pugi::xml_node& root)
+  {
+    auto result = root.append_child("Material");
+
+    std::string name = material.name().get();
+
+    // id
+    result.attribute("id") = escapeNameS(name).c_str();
+
+    // name 
+    auto nameElement = result.append_child("Name");
+    nameElement.text() = name.c_str();
+
+    boost::optional<double> thermalReflectance;
+    boost::optional<double> solarReflectance;
+    boost::optional<double> visibleReflectance;
+    boost::optional<std::string> roughness;
+    boost::optional<double> thickness;
+    boost::optional<double> conductivity;
+    boost::optional<double> resistance;
+    boost::optional<double> density;
+    boost::optional<double> specificHeat;
+    boost::optional<double> thermalAbsorptance;
+    boost::optional<double> solarAbsorptance;
+    boost::optional<double> visibleAbsorptance;
+
+    if (material.optionalCast<openstudio::model::StandardOpaqueMaterial>()) {
+      openstudio::model::StandardOpaqueMaterial som = material.cast<openstudio::model::StandardOpaqueMaterial>();
+      thermalReflectance = som.thermalReflectance();
+      solarReflectance = som.solarReflectance();
+      visibleReflectance = som.visibleReflectance();
+      roughness = som.roughness();
+      thickness = som.thickness();
+      conductivity = som.conductivity();
+      density = som.density();
+      specificHeat = som.specificHeat();
+      thermalAbsorptance = som.thermalAbsorptance();
+      solarAbsorptance = som.solarAbsorptance();
+      visibleAbsorptance = som.visibleAbsorptance();
+    } else if (material.optionalCast<openstudio::model::MasslessOpaqueMaterial>()) {
+      openstudio::model::MasslessOpaqueMaterial mom = material.cast<openstudio::model::MasslessOpaqueMaterial>();
+      roughness = mom.roughness();
+      resistance = mom.thermalResistance();
+      thermalAbsorptance = mom.thermalAbsorptance();
+      solarAbsorptance = mom.solarAbsorptance();
+      visibleAbsorptance = mom.visibleAbsorptance();
+    } else if (material.optionalCast<openstudio::model::AirGap>()) {
+      openstudio::model::AirGap gap = material.cast<openstudio::model::AirGap>();
+      resistance = gap.thermalResistance();
+    }
+
+    if (thermalReflectance) {
+      auto element = result.append_child("Reflectance");
+      element.text() = *thermalReflectance;
+      element.attribute("unit") = "Fraction";
+      element.attribute("type") = "ExtIR";
+      element.attribute("surfaceType") = "Both";
+
+      element = result.append_child("Reflectance");
+      element.text() = *thermalReflectance;
+      element.attribute("unit") = "Fraction";
+      element.attribute("type") = "IntIR";
+      element.attribute("surfaceType") = "Both";
+    }
+
+    if (solarReflectance) {
+      auto element = result.append_child("Reflectance");
+      element.text() = *solarReflectance;
+      element.attribute("unit") = "Fraction";
+      element.attribute("type") = "ExtSolar";
+      element.attribute("surfaceType") = "Both";
+
+      element = result.append_child("Reflectance");
+      element.text() = *solarReflectance;
+      element.attribute("unit") = "Fraction";
+      element.attribute("type") = "IntSolar";
+      element.attribute("surfaceType") = "Both";
+    }
+
+    if (visibleReflectance) {
+      auto element = result.append_child("Reflectance");
+      element.text() = *visibleReflectance;
+      element.attribute("unit") = "Fraction";
+      element.attribute("type") = "ExtVisible";
+      element.attribute("surfaceType") = "Both";
+
+      element = result.append_child("Reflectance");
+      element.text() = *visibleReflectance;
+      element.attribute("unit") = "Fraction";
+      element.attribute("type") = "IntVisible";
+      element.attribute("surfaceType") = "Both";
+    }
+
+    if (roughness) {
+      auto element = result.append_child("Roughness");
+      element.attribute("value") = (*roughness).c_str();
+    }
+
+    if (thickness) {
+      auto element = result.append_child("Thickness");
+      element.text() = *thickness;
+      element.attribute("unit") = "Meters";
+    }
+
+    if (conductivity) {
+      auto element = result.append_child("Conductivity");
+      element.text() = *conductivity;
+      element.attribute("unit") = "WPerMeterK";
+    }
+
+    if (resistance) {
+      auto element = result.append_child("R-value");
+      element.text() = *resistance;
+      element.attribute("unit") = "SquareMeterKPerW";
+    }
+
+    if (density) {
+      auto element = result.append_child("Density");
+      element.text() = *density;
+      element.attribute("unit") = "KgPerCubicM";
+    }
+
+    if (specificHeat) {
+      auto element = result.append_child("SpecificHeat");
+      element.text() = *specificHeat;
+      element.attribute("unit") = "JPerKgK";
+    }
+
+    if (thermalAbsorptance) {
+      auto element = result.append_child("Absorptance");
+      element.text() = *thermalAbsorptance;
+      element.attribute("unit") = "Fraction";
+      element.attribute("type") = "ExtIR";
+
+      element = result.append_child("Absorptance");
+      element.text() = *thermalAbsorptance;
+      element.attribute("unit") = "Fraction";
+      element.attribute("type") = "IntIR";
+    }
+
+    if (solarAbsorptance) {
+      auto element = result.append_child("Absorptance");
+      element.text() = *solarAbsorptance;
+      element.attribute("unit") = "Fraction";
+      element.attribute("type") = "ExtSolar";
+
+      element = result.append_child("Absorptance");
+      element.text() = *solarAbsorptance;
+      element.attribute("unit") = "Fraction";
+      element.attribute("type") = "IntSolar";
+    }
+
+    if (visibleAbsorptance) {
+      auto element = result.append_child("Absorptance");
+      element.text() = *visibleAbsorptance;
+      element.attribute("unit") = "Fraction";
+      element.attribute("type") = "ExtVisible";
+
+      element = result.append_child("Absorptance");
+      element.text() = *visibleAbsorptance;
+      element.attribute("unit") = "Fraction";
+      element.attribute("type") = "IntVisible";
     }
     return result;
   }

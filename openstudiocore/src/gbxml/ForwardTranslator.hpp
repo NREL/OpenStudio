@@ -45,6 +45,10 @@ class QDomDocument;
 class QDomElement;
 class QDomNodeList;
 
+namespace pugi {
+  class xml_node;
+}
+
 namespace openstudio {
 
   class ProgressBar;
@@ -87,6 +91,7 @@ namespace gbxml {
   private:
 
     QString escapeName(const std::string& name);
+    std::string escapeNameS(const std::string& name);
 
     // listed in translation order
     boost::optional<QDomDocument> translateModel(const openstudio::model::Model& model);
@@ -104,7 +109,13 @@ namespace gbxml {
     boost::optional<QDomElement> translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, QDomDocument& doc);
     boost::optional<QDomElement> translateCADObjectId(const openstudio::model::ModelObject& modelObject, QDomElement& parentElement, QDomDocument& doc);
 
+    boost::optional<pugi::xml_node> translateLayer(const openstudio::model::Material& material, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateMaterial(const openstudio::model::Material& material, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateCADObjectId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
+
     std::map<openstudio::Handle, QDomElement> m_translatedObjects;
+    std::map<openstudio::Handle, pugi::xml_node> m_translatedObjectsS;
 
     std::set<openstudio::model::Material, openstudio::IdfObjectImplLess> m_materials;
 

@@ -232,6 +232,8 @@
 #include <cmath>
 #include <functional>
 
+#include <pugixml.hpp>
+
 namespace openstudio {
 namespace sdd {
 
