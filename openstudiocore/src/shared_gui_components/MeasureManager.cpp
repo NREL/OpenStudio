@@ -375,7 +375,7 @@ void MeasureManager::updateMeasures(const std::vector<BCLMeasure>& newMeasures, 
   }
 
   auto progress = new ProcessEventsProgressBar();
-  progress->setMaximum(std::numeric_limits<double>::max());
+  progress->setMaximum(std::numeric_limits<int>::max());
 
   size_t loc = 0;
   std::vector<std::string> failMessages;
