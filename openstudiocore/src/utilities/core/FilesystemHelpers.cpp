@@ -162,11 +162,6 @@ namespace openstudio {
       }
     }
 
-//    void write(openstudio::filesystem::ofstream &t_file, const QString &s)
-//    {
-//      t_file << openstudio::toString(s);
-//    }
-
     time_t to_time_t(time_t t) {
       return t;
     }
