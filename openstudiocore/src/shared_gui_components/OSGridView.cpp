@@ -349,10 +349,11 @@ void OSGridView::doRefresh()
     return;
   }
 
-  bool has_add_row = false;
-  bool has_remove_row = false;
-  bool has_refresh_grid = false;
-  bool has_refresh_all = false;
+  // TODO: JM 2019-01-03 : Unused!
+  [[maybe_unused]] bool has_add_row = false;
+  [[maybe_unused]] bool has_remove_row = false;
+  [[maybe_unused]] bool has_refresh_grid = false;
+  [[maybe_unused]] bool has_refresh_all = false;
 
   for (const auto &r : m_queueRequests)
   {

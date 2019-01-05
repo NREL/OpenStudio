@@ -215,7 +215,7 @@ std::map<UUID, UUID> BaseEditor::exportModelHandleMapping() const
 }
 
 void BaseEditor::onChanged()
-{  
+{
   emit changed();
   //m_document->markAsModified();
 }
@@ -321,8 +321,18 @@ void FloorspaceEditor::loadEditor()
 
     config["initialNorthAxis"] = m_model.getUniqueModelObject<model::Building>().northAxis();
 
-    Json::FastWriter writer;
-    std::string json = writer.write(config);
+    Json::StreamWriterBuilder wbuilder;
+
+    // mimic the old FastWriter behavior:
+    wbuilder["commentStyle"] = "None";
+    wbuilder["indentation"] = "";
+    // These defaults are already fine:
+    //wbuilder["enableYAMLCompatibility"] = false;
+    //wbuilder["dropNullPlaceholders"] = false;
+    //wbuilder["useSpecialFloats"] = false;
+    //wbuilder["precision"] = 17;
+
+    const std::string json = Json::writeString(wbuilder, config);
 
     QString javascript = QString("window.api.setConfig(") + QString::fromStdString(json) + QString(");");
     m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
@@ -411,13 +421,19 @@ document.head.appendChild(style);\n";
       m_javascriptRunning = true;
 
       std::string json = floorplan.toJSON(false);
+      // TODO: @macumber: delete this now?
       // DLM: temp
-      //Json::Value value;
-      //Json::Reader reader;
-      //bool parsingSuccessful = reader.parse(json, value);
-      //value.removeMember("stories");
-      //Json::FastWriter writer;
-      //json = writer.write(value);
+      // Json::CharReaderBuilder rbuilder;
+      // std::istringstream ss(json);
+      // std::string errorString;
+      // Json::Value value;
+      // bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &errorString);
+      // value.removeMember("stories");
+      // Json::StreamWriterBuilder wbuilder;
+      // // mimic the old FastWriter behavior:
+      // wbuilder["commentStyle"] = "None";
+      // wbuilder["indentation"] = "";
+      // const std::string json = Json::writeString(wbuilder, value);
 
       QString javascript = QString("window.api.importLibrary(JSON.stringify(") + QString::fromStdString(json) + QString("));");
       m_view->page()->runJavaScript(javascript, [this](const QVariant &v) {m_javascriptRunning = false; });
@@ -436,6 +452,8 @@ document.head.appendChild(style);\n";
 
 void FloorspaceEditor::doExport()
 {
+  bool t = true;
+
   if (m_editorLoaded && !m_javascriptRunning){
     m_javascriptRunning = true;
     m_document->disable();
@@ -455,13 +473,15 @@ void FloorspaceEditor::doExport()
 
     if (!m_floorplan){
       // DLM: This is an error
-      bool t = false;
+      t = false;
     }
 
   } else{
       // DLM: This is an error
-      bool t = false;
+      t = false;
   }
+
+  OS_ASSERT(t);
 }
 
 void FloorspaceEditor::saveExport()
@@ -761,7 +781,7 @@ IdfEditor::IdfEditor(const openstudio::path& idfPath, bool forceConvert, bool is
           // if still running just kill it
           runner.kill();
         }
-        int result = runner.exitCode();
+        //int result = runner.exitCode();
         QString error(runner.readAllStandardError());
         QString output(runner.readAllStandardOutput());
 
@@ -976,10 +996,10 @@ void OsmEditor::checkForUpdate()
 
 EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
-    m_model(model),
     m_baseEditor(nullptr),
     m_isIP(isIP),
     m_mergeWarn(false),
+    m_model(model),
     m_geometrySourceComboBox(new QComboBox()),
     m_newImportGeometry(new QPushButton("New")),
     m_progressBar(new QProgressBar()),
@@ -1152,7 +1172,7 @@ EditorWebView::~EditorWebView()
     QString mergeWarnKeyName("geometryMergeWarn");
     bool settingsMergeWarn = settings.value(mergeWarnKeyName, true).toBool();
     if (settingsMergeWarn){
-      QMessageBox msg(QMessageBox::Question, "Unmerged Changes", "Your geometry may include unmerged changes.  Merge with Current OSM now?  Choose Ignore to skip this message in the future.", 
+      QMessageBox msg(QMessageBox::Question, "Unmerged Changes", "Your geometry may include unmerged changes.  Merge with Current OSM now?  Choose Ignore to skip this message in the future.",
         QMessageBox::Yes | QMessageBox::No | QMessageBox::Ignore, this, Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
       msg.setDefaultButton(QMessageBox::No);
       msg.setEscapeButton(QMessageBox::No);

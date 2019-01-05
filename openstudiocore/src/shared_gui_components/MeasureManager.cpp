@@ -375,7 +375,7 @@ void MeasureManager::updateMeasures(const std::vector<BCLMeasure>& newMeasures, 
   }
 
   auto progress = new ProcessEventsProgressBar();
-  progress->setMaximum(std::numeric_limits<double>::max());
+  progress->setMaximum(std::numeric_limits<int>::max());
 
   size_t loc = 0;
   std::vector<std::string> failMessages;
@@ -474,12 +474,15 @@ std::vector<measure::OSArgument> MeasureManager::getArguments(const BCLMeasure &
     LOG_AND_THROW("Error computing arguments: " << s)
   }
 
-  std::string errorString;
+
   std::vector<measure::OSArgument> result;
 
-  Json::Reader reader;
+  Json::CharReaderBuilder rbuilder;
+  std::istringstream ss(s);
+  std::string errorString;
   Json::Value json;
-  bool parsingSuccessful = reader.parse(s, json);
+  bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &json, &errorString);
+
   if (parsingSuccessful){
 
     Json::Value arguments = json.get("arguments",  Json::Value(Json::arrayValue));

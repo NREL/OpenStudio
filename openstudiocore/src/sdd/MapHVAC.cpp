@@ -5857,11 +5857,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       ldRngLimElements.push_back(element);
     }
   }
-  for( int i = 0; i != ldRngLimElements.size(); ++i ) {
-    for( int j = 0; j != ldRngLimElements.size(); ++j ) {
+  for( std::vector<QDomElement>::size_type i = 0; i != ldRngLimElements.size(); ++i ) {
+    for( std::vector<QDomElement>::size_type j = 0; j != ldRngLimElements.size(); ++j ) {
       auto element = childNodes.at(j).toElement();
       auto index = element.attribute("index").toInt(&ok);
-      if( ok && (index == i) ) {
+      if( ok && (index > 0) && (static_cast<unsigned>(index) == i) ) {
         auto value = element.text().toDouble(&ok);
         if( ok ) {
           value = unitToUnit(value,"Btu/h","W").get();
@@ -5873,7 +5873,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   }
 
   // Try to get an equipment list for each load range
-  for( int i = 0; i != ldRngLims.size(); ++i ) {
+  for( std::vector<double>::size_type i = 0; i != ldRngLims.size(); ++i ) {
     // EqpList1Name
     // Get an unordered list of the equipment list elements for this range
     std::vector<QDomElement> eqpListNameElements;
@@ -5886,10 +5886,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     EquipmentList equipmentList;
     // Now put eqpListNameElements in order according to the index attribute
-    for( int j = 0; j != eqpListNameElements.size(); ++j ) {
+    for( std::vector<QDomElement>::size_type j = 0; j != eqpListNameElements.size(); ++j ) {
       for( auto & eqpListNameElement : eqpListNameElements ) {
         auto index = eqpListNameElement.attribute("index").toInt(&ok);
-        if( ok && (index == j) ) {
+        if( ok && (index > 0) && (static_cast<unsigned>(index) == j) ) {
           equipmentList.push_back(eqpListNameElement.text().toStdString());
           break;
         }
@@ -5918,7 +5918,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
 
     if( scheme ) {
-      for( int i = 0; i != ldRngLims.size(); ++i ) {
+      for( std::vector<double>::size_type i = 0; i != ldRngLims.size(); ++i ) {
         std::vector<model::HVACComponent> equipment;
         auto ldRngLim = ldRngLims[i];
         auto equipmentList = equipmentLists[i];
@@ -9147,7 +9147,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvM
     return table;
   }
 
-  for(int i = 0; i != arrayVar1Elements.size(); i++) {
+  for(std::vector<QDomElement>::size_type i = 0; i != arrayVar1Elements.size(); i++) {
     bool var1Ok = false;
     bool var2Ok = false;
     bool outOk = false;
@@ -9245,7 +9245,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvM
     return table;
   }
 
-  for(int i = 0; i != arrayVar1Elements.size(); i++) {
+  for(std::vector<QDomElement>::size_type i = 0; i != arrayVar1Elements.size(); i++) {
     bool varOk = false;
     bool outOk = false;
     auto arrayVar1 = arrayVar1Elements.at(i).toElement().text().toDouble(&varOk);

@@ -50,26 +50,26 @@ namespace detail{
 
   std::string RunOptions_Impl::string() const
   {
-    Json::Value result;
+    Json::Value value;
 
     if (m_debug){
-      result["debug"] = m_debug;
+      value["debug"] = m_debug;
     }
 
     if (m_fast){
-      result["fast"] = m_fast;
+      value["fast"] = m_fast;
     }
 
     if (m_preserveRunDir){
-      result["preserve_run_dir"] = m_preserveRunDir;
+      value["preserve_run_dir"] = m_preserveRunDir;
     }
 
     if (m_skipExpandObjects){
-      result["skip_expand_objects"] = m_skipExpandObjects;
+      value["skip_expand_objects"] = m_skipExpandObjects;
     }
 
     if (m_skipEnergyPlusPreprocess){
-      result["skip_energyplus_preprocess"] = m_skipEnergyPlusPreprocess;
+      value["skip_energyplus_preprocess"] = m_skipEnergyPlusPreprocess;
     }
 
     if (m_customOutputAdapter){
@@ -77,19 +77,27 @@ namespace detail{
       outputAdapter["custom_file_name"] = m_customOutputAdapter->customFileName();
       outputAdapter["class_name"] = m_customOutputAdapter->className();
 
-      Json::Reader reader;
+      Json::CharReaderBuilder rbuilder;
+      std::istringstream ss(m_customOutputAdapter->options());
+      std::string formattedErrors;
       Json::Value options;
-
-      bool parsingSuccessful = reader.parse(m_customOutputAdapter->options(), options);
-      if (parsingSuccessful){
+      bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &options, &formattedErrors);
+      if (parsingSuccessful) {
         outputAdapter["options"] = options;
+      } else {
+        LOG(Warn, "Couldn't parse CustomOutputAdapter's options='" << m_customOutputAdapter->options() << "'. Error: '" << formattedErrors << "'.");
       }
 
-      result["output_adapter"] = outputAdapter;
+      value["output_adapter"] = outputAdapter;
     }
 
-    Json::StyledWriter writer;
-    return writer.write(result);
+    // Write to string
+    Json::StreamWriterBuilder wbuilder;
+    // mimic the old StyledWriter behavior:
+    wbuilder["indentation"] = "   ";
+    std::string result = Json::writeString(wbuilder, value);
+
+    return result;
   }
 
   bool RunOptions_Impl::debug() const
@@ -252,10 +260,14 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s)
 {
   boost::optional<RunOptions> result;
 
-  Json::Reader reader;
+  // We let it fail with a warning message
+  Json::CharReaderBuilder rbuilder;
+  std::istringstream ss(s);
+  std::string formattedErrors;
   Json::Value value;
-  bool parsingSuccessful = reader.parse(s, value);
-  if (!parsingSuccessful){
+  bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
+  if (!parsingSuccessful) {
+    LOG(Warn, "Couldn't parse RunOptions from string s='" << s << "'. Error: '" << formattedErrors << "'.");
     return result;
   }
 
@@ -288,8 +300,10 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s)
       std::string className = outputAdapter["class_name"].asString();
       Json::Value options = outputAdapter["options"];
 
-      Json::StyledWriter writer;
-      std::string optionString = writer.write(options);
+      Json::StreamWriterBuilder wbuilder;
+      // mimic the old StyledWriter behavior:
+      wbuilder["indentation"] = "   ";
+      std::string optionString = Json::writeString(wbuilder, options);
 
       CustomOutputAdapter coa(customFileName, className, optionString);
       result->setCustomOutputAdapter(coa);
