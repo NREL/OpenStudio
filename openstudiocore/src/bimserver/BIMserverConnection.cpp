@@ -30,6 +30,7 @@
 #include "BIMserverConnection.hpp"
 
 #include "../model_editor/Application.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include "../utilities/core/System.hpp"
 #include "../utilities/core/Path.hpp"
@@ -48,13 +49,6 @@
 #include <QByteArray>
 #include <iostream>
 #include <boost/none.hpp>
-
-///
-/// TODO: Remove this helper when Qt is fully removed
-///
-static auto toQString(const std::string &s) {
-  return QString::fromUtf8(s.data(), s.size());
-};
 
 
 namespace openstudio {
