@@ -57,7 +57,7 @@
 ///
 /// TODO: Remove this helper when Qt is fully removed
 ///
-auto toQString = [](const std::string &s) {
+static auto toQString(const std::string &s) {
   return QString::fromUtf8(s.data(), s.size());
 };
 
