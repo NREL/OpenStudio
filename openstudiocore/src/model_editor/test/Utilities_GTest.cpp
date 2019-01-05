@@ -41,7 +41,7 @@ using openstudio::toQString;
 using openstudio::toPath;
 
 
-TEST(ModelEditorFixture, SimpleConversions)
+TEST_F(ModelEditorFixture, SimpleConversions)
 {
   std::string s("Hello world");
   const char* const cStr = "Hello world";
