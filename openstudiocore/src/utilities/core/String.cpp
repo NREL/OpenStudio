@@ -100,7 +100,7 @@ std::string toString(std::istream& s) {
 std::wstring toWString(const std::string& q)
 {
 #if _MSC_VER >= 1900
-  std::wstring_convert<std::codecvt_utf8_utf16<int16_t>, int16_t> convert;
+  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
   const auto u16_conv = convert.from_bytes(q);
   return { u16_conv.begin(), u16_conv.end() };
 #else
@@ -115,7 +115,7 @@ std::wstring toWString(const std::string& q)
 std::string toString(const std::wstring &utf16_string)
 {
 #if _MSC_VER >= 1900
-  std::wstring_convert<std::codecvt_utf8_utf16<int16_t>, int16_t> convert;
+  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
   return convert.to_bytes(utf16_string.data(), utf16_string.data() + utf16_string.size());
 #else
   std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
