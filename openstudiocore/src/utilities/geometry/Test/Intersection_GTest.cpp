@@ -32,15 +32,19 @@
 #include "GeometryFixture.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
-#pragma warning(push)
-#pragma warning(disable:4244)
+#if defined(_MSC_VER)
+  #pragma warning(push)
+  #pragma warning(disable:4244)
+#endif
 #include <boost/geometry/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
 #include <boost/geometry/geometries/ring.hpp>
 #include <boost/geometry/multi/geometries/multi_polygon.hpp>
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>
-#pragma warning(pop)
+#if defined(_MSC_VER)
+  #pragma warning(pop)
+#endif
 
 typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
 typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;

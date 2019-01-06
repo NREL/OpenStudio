@@ -763,10 +763,10 @@ namespace isomodel {
       double max_sum = 0.0;
       int max_index = 0;
 
-      for (size_t start_hour = 0; start_hour <= 23-num_occ_hours; ++start_hour) {
+      for (int start_hour = 0; start_hour <= 23-num_occ_hours; ++start_hour) {
         double temp_sum = 0.0;
 
-        for (size_t i = start_hour; i <= start_hour + num_occ_hours; ++i) {
+        for (int i = start_hour; i <= start_hour + num_occ_hours; ++i) {
           temp_sum += avg_occupied_schedule[i];
         }
 
