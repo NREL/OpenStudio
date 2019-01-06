@@ -239,7 +239,7 @@ namespace detail {
     if (m_directOrder) {
       auto loc = getIterator(handle);
       if (loc != m_directOrder->end()) {
-        return (loc - m_directOrder->begin());
+        return (unsigned)(loc - m_directOrder->begin());
       }
     }
     return boost::none;

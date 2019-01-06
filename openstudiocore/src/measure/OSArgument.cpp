@@ -456,7 +456,7 @@ bool OSArgument::setValue(double value) {
 
   } else if (m_type == OSArgumentType::Integer) {
     // Let a double be assigned to an int, only if said double is really an integer expressed as a double
-    int test = floor(value);
+    int test = (int)floor(value);
     if (test == value){
       result = setValue(test);
     } else {
@@ -537,7 +537,7 @@ bool OSArgument::setDefaultValue(double defaultValue) {
     result = true;
   } else if (m_type == OSArgumentType::Integer) {
     // Let a double be assigned to an int, only if said double is really an integer expressed as a double
-    int test = floor(defaultValue);
+    int test = (int)floor(defaultValue);
     if (test == defaultValue) {
       result = setDefaultValue(test);
     } else {
@@ -725,7 +725,7 @@ void OSArgument::clearDomain() {
 bool OSArgument::setMinValue(double minValue)
 {
   if (m_type == OSArgumentType::Integer){
-    int test = floor(minValue);
+    int test = (int)floor(minValue);
     if (test == minValue) {
       // If int expressed as double (eg: 1.0 when type = int)
       // Then we call the int overload instead
@@ -785,7 +785,7 @@ bool OSArgument::setMinValue(int minValue)
 bool OSArgument::setMaxValue(double maxValue)
 {
   if (m_type == OSArgumentType::Integer){
-    int test = floor(maxValue);
+    int test = (int)floor(maxValue);
     if (test == maxValue){
       return setMaxValue(test);
     }

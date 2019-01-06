@@ -35,8 +35,6 @@
 #include <string>
 #include <vector>
 
-#include <QString>
-
 /** \file String.hpp
  *
  *  All strings are assumed to be UTF-8 encoded std::string.  Note that length of the std::string

@@ -173,7 +173,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSecondarySys
 //NumberofPumpsinLoop
   i = modelObject.numberofPumpsinLoop();
   if (i) {
-    refrigerationSecondarySystem.setInt(Refrigeration_SecondarySystemFields::NumberofPumpsinLoop,d.get());
+    refrigerationSecondarySystem.setInt(Refrigeration_SecondarySystemFields::NumberofPumpsinLoop,i.get());
   }
 
 //TotalPumpFlowRate

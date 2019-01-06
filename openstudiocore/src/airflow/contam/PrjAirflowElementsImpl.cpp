@@ -4157,7 +4157,7 @@ std::string AfeFanImpl::write()
   for(int i=0;i<4;i++)
     string += ANY_TO_STR(m_fpc[i]) + ' ';
   string += '\n';
-  string += ANY_TO_STR(m_data.size()) + ' ' + ANY_TO_STR(m_Sarea) + ' ' + ANY_TO_STR(m_u_Sa) + '\n';
+  string += ANY_TO_STR((int)m_data.size()) + ' ' + ANY_TO_STR(m_Sarea) + ' ' + ANY_TO_STR(m_u_Sa) + '\n';
   for(unsigned int i=0;i<m_data.size();i++)
   {
     string += m_data[i].write();
@@ -4483,7 +4483,7 @@ std::string AfeCsfImpl::write(std::string datatype)
   std::string string;
   string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + ' ' + datatype + ' ' + m_name + '\n';
   string += m_desc + '\n';
-  string += ANY_TO_STR(m_data.size()) + ' ' + ANY_TO_STR(m_u_x) + ' ' + ANY_TO_STR(m_u_y) + '\n';
+  string += ANY_TO_STR((int)m_data.size()) + ' ' + ANY_TO_STR(m_u_x) + ' ' + ANY_TO_STR(m_u_y) + '\n';
   for(unsigned int i=0;i<m_data.size();i++)
   {
     string += m_data[i].write();
@@ -4621,7 +4621,7 @@ std::string AfeSupImpl::write()
   std::string string;
   string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_icon) + " sup_afe " + m_name + '\n';
   string += m_desc + '\n';
-  string += ANY_TO_STR(m_subelements.size()) + ' ' + ANY_TO_STR(m_sched) + ' ' + ANY_TO_STR(m_u_H) + '\n';
+  string += ANY_TO_STR((int)m_subelements.size()) + ' ' + ANY_TO_STR(m_sched) + ' ' + ANY_TO_STR(m_u_H) + '\n';
   for(unsigned int i=0;i<m_subelements.size();i++)
   {
     string += m_subelements[i].write();

@@ -53,7 +53,7 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImport) {
   EXPECT_TRUE(eifmui.isFMUTimeoutDefaulted());
   eifmui.setFMULoggingOn(1);
   EXPECT_EQ(1, eifmui.fMULoggingOn());
-  eifmui.setFMULoggingOn(2.0);
+  eifmui.setFMULoggingOn(2);
   EXPECT_EQ(2, eifmui.fMULoggingOn());
   eifmui.resetFMULoggingOn();
   EXPECT_TRUE(eifmui.isFMUTimeoutDefaulted());

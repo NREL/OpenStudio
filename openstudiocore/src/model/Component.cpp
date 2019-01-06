@@ -292,7 +292,7 @@ Component::Component(const std::vector<ModelObject>& contents)
   OS_ASSERT(cdTemp.size() == 1);
   ComponentData componentData = cdTemp[0];
   componentData.setString(OS_ComponentDataFields::UUID,toString(createUUID()));
-  componentData.setInt(OS_ComponentDataFields::CreationTimestamp,time(nullptr));
+  componentData.setInt(OS_ComponentDataFields::CreationTimestamp,(int)time(nullptr));
   componentData.createVersionUUID();
 
   // clone objects

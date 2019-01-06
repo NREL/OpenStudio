@@ -84,7 +84,7 @@ namespace detail {
 
   int ExteriorLoadInstance_Impl::quantity() const
   {
-    return this->multiplier();
+    return (int)this->multiplier();
   }
 
 } // detail

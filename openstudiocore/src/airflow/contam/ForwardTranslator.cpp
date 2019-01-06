@@ -1014,7 +1014,7 @@ bool ForwardTranslator::linkExteriorSurface(openstudio::model::ThermalZone zone,
   double area = surface.grossArea();
   std::string type = surface.surfaceType();
   double averageZ = 0;
-  double numVertices = surface.vertices().size();
+  double numVertices = (double)surface.vertices().size();
   for(const Point3d& point : surface.vertices()) {
     averageZ += point.z();
   }
@@ -1058,7 +1058,7 @@ bool ForwardTranslator::linkInteriorSurface(openstudio::model::ThermalZone zone,
   double area = 0.5*(surface.grossArea() + adjacentSurface.grossArea());
   std::string type = surface.surfaceType();
   double averageZ = 0;
-  double numVertices = surface.vertices().size();
+  double numVertices = (double)surface.vertices().size();
   for(const Point3d& point : surface.vertices()) {
     averageZ += point.z();
   }

@@ -42,6 +42,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
+#include <QString>
+
 using namespace openstudio::model;
 
 using namespace std;

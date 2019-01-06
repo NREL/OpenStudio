@@ -2410,7 +2410,7 @@ namespace openstudio{
               DateTime firstDateTime = this->firstDateTime(false, dataDictionary.envPeriodIndex);
               DateTime lastDateTime = this->lastDateTime(false, dataDictionary.envPeriodIndex);
               Time deltaT = lastDateTime - firstDateTime;
-              intervalMinutes = deltaT.totalMinutes() + 60;
+              intervalMinutes = (unsigned)deltaT.totalMinutes() + 60;
             }
           }
 
