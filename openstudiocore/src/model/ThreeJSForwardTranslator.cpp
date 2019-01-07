@@ -464,7 +464,7 @@ namespace openstudio
       std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
       std::vector<DefaultConstructionSet> defaultConstructionSets = model.getConcreteModelObjects<DefaultConstructionSet>();
       double n = 0;
-      double N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + buildingUnits.size() + thermalZones.size() + spaceTypes.size() + defaultConstructionSets.size() + 1;
+      std::vector<PlanarSurface>::size_type N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + buildingUnits.size() + thermalZones.size() + spaceTypes.size() + defaultConstructionSets.size() + 1;
 
       // loop over all surfaces
       for (const auto& planarSurface : planarSurfaces)

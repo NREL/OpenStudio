@@ -291,7 +291,7 @@ namespace detail {
     }
 
     int untilHours = untilTime.hours() + 24*untilTime.days();
-    int untilMinutes = untilTime.minutes() + floor((untilTime.seconds()/60.0) + 0.5);
+    int untilMinutes = untilTime.minutes() + (int)floor((untilTime.seconds()/60.0) + 0.5);
 
     if (untilMinutes >= 60){
       untilHours += 1;
@@ -307,7 +307,7 @@ namespace detail {
     }
 
     insertResult = times.insert(untilTime);
-    unsigned index = std::distance<std::set<openstudio::Time>::const_iterator>(times.begin(),insertResult.first);
+    unsigned index = (unsigned)std::distance<std::set<openstudio::Time>::const_iterator>(times.begin(),insertResult.first);
     OS_ASSERT(index <= numExtensibleGroups());
     bool result(true);
     if (insertResult.second) {

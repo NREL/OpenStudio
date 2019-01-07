@@ -43,8 +43,6 @@
 
 #include <ctime>
 
-class QDateTime;
-
 namespace openstudio{
 
 /// DateTime is an absolute unit of time, resolution to the second
@@ -159,8 +157,13 @@ class UTILITIES_API DateTime {
   // ensure that stored time is less than 24 hrs and adjust date accordingly
   void normalize();
 
+  int utcOffsetHours() const;
+  int utcOffsetMinutes() const;
+
   Date m_date;
   Time m_time;
+
+  // utc offset in hours, some places have half hour offsets
   double m_utcOffset;
 };
 

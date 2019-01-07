@@ -400,7 +400,7 @@ namespace isomodel {
 
     LOG(Debug, "Terrain class value set to " << terrain_class);
 
-    int number_of_people=building.numberOfPeople();
+    int number_of_people = (int)building.numberOfPeople();
     // get the total nominal population;
     LOG(Debug, "Nominal Number of people = " << number_of_people);
 
@@ -722,8 +722,8 @@ namespace isomodel {
 
 
       // now find the first and last occupied day of the week assuming a continuous stream
-      int first_occ_day = std::distance(day_occ.begin(), std::find(day_occ.begin(), day_occ.end(), 1));   //find the first instance of 1 in the day_occ array
-      int last_occ_day = 6 - std::distance(day_occ.rbegin(), std::find(day_occ.rbegin(), day_occ.rend(), 1));  // find the last instance of 1 by reversing array to find how far from the end the last occupied day is
+      int first_occ_day = (int)std::distance(day_occ.begin(), std::find(day_occ.begin(), day_occ.end(), 1));   //find the first instance of 1 in the day_occ array
+      int last_occ_day = 6 - (int)std::distance(day_occ.rbegin(), std::find(day_occ.rbegin(), day_occ.rend(), 1));  // find the last instance of 1 by reversing array to find how far from the end the last occupied day is
 
 
       // now, for the days considered occupied, find an "average" occupancy schedule to estimate the best starting and stopping times
@@ -754,7 +754,7 @@ namespace isomodel {
       //print "\n"
 
       // now estimate the average number of fully occupied hours per day by rounding down the sum to the nearest number of hours
-      double num_occ_hours = ::floor(avg_occ_sum);
+      int num_occ_hours = (int)std::floor(avg_occ_sum);
 
       // now we find the best start time for the occupancy by matching a sliding window of full occupancy to the average occupancy
       // we maximize the sum of the product of actual occupancy and the sliding window to get the best hours of operation
@@ -763,10 +763,10 @@ namespace isomodel {
       double max_sum = 0.0;
       int max_index = 0;
 
-      for (size_t start_hour = 0; start_hour <= 23-num_occ_hours; ++start_hour) {
+      for (int start_hour = 0; start_hour <= 23-num_occ_hours; ++start_hour) {
         double temp_sum = 0.0;
 
-        for (size_t i = start_hour; i <= start_hour + num_occ_hours; ++i) {
+        for (int i = start_hour; i <= start_hour + num_occ_hours; ++i) {
           temp_sum += avg_occupied_schedule[i];
         }
 
@@ -782,7 +782,7 @@ namespace isomodel {
       occupancy_day_start = first_occ_day;                 // set starting day for occupancy
       occupancy_day_end = last_occ_day;                    // set the ending day for occupancy
       occupancy_hour_start = max_index;                    // set starting hour for occupied day
-      occupancy_hour_end = max_index+ num_occ_hours + 1;   // set ending hour for an occupied day.   Add one because we want occupancy to drop at that time
+      occupancy_hour_end = max_index + num_occ_hours + 1;   // set ending hour for an occupied day.   Add one because we want occupancy to drop at that time
 
     }
 

@@ -39,7 +39,6 @@
 #include <ostream>
 #include <string>
 
-
 namespace openstudio {
   class UTILITIES_API UUID;
 

@@ -4078,7 +4078,7 @@ namespace openstudio{
         }
       }
       if(values.size()) {
-        DateTime start = dates[1] - Time(0, 0, 0, 3600.0 / m_recordsPerHour);
+        DateTime start = dates[1] - Time(0, 0, 0, 3600 / m_recordsPerHour);
         dates[0] = start; // Overwrite the placeholder
         return boost::optional<TimeSeries>(TimeSeries(dates,openstudio::createVector(values),units));
       }
@@ -4152,7 +4152,7 @@ namespace openstudio{
       }
     }
     if (values.size()) {
-      DateTime start = dates[1] - Time(0, 0, 0, 3600.0 / m_recordsPerHour);
+      DateTime start = dates[1] - Time(0, 0, 0, 3600 / m_recordsPerHour);
       dates[0] = start; // Overwrite the placeholder
       return boost::optional<TimeSeries>(TimeSeries(dates, openstudio::createVector(values), units));
     }

@@ -59,7 +59,7 @@ SimFile::SimFile(openstudio::path path)
 
 bool SimFile::computeDateTimes(const std::vector<std::string>& day, const std::vector<std::string>& time)
 {
-  int n = qMin(day.size(),time.size());
+  int n = std::min((int)day.size(),(int)time.size());
   for(int i=0;i<n;i++)
   {
     std::vector<std::string> split;

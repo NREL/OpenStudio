@@ -32,7 +32,6 @@
 
 #include "Filesystem.hpp"
 
-
 namespace openstudio {
   namespace filesystem {
     /// reads entire file from the current read position until the end of file
@@ -40,7 +39,7 @@ namespace openstudio {
     UTILITIES_API std::vector<char> read(openstudio::filesystem::ifstream &t_path);
 
     /// reads entire file from the current read position until the end of file
-    /// and returns as QByteArray
+    /// and returns as std::vector<char>
     UTILITIES_API std::vector<char> read(const openstudio::path &t_path);
 
     /// reads entire file from the current read position until the end of file
