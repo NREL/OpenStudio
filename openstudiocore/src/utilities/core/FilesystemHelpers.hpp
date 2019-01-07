@@ -32,7 +32,6 @@
 
 #include "Filesystem.hpp"
 
-class QString;
 
 namespace openstudio {
   namespace filesystem {

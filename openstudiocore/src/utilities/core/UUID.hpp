@@ -39,7 +39,6 @@
 #include <ostream>
 #include <string>
 
-class QString;
 
 namespace openstudio {
   class UTILITIES_API UUID;
