@@ -115,7 +115,6 @@ if(MSVC)
     csharp_OpenStudioModelStraightComponent_wrap.cxx
     csharp_OpenStudioModelZoneHVAC_wrap.cxx
     csharp_OpenStudioOSVersion_wrap.cxx
-    csharp_OpenStudioModelEditor_wrap.cxx
   )
 
   set(utilities_wrappers
