@@ -42,7 +42,10 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-#include <QString>
+
+#define FMT_HEADER_ONLY
+#include <fmt/format.h>
+#include <fmt/printf.h>
 
 
 using namespace openstudio::model;
@@ -55,8 +58,8 @@ namespace energyplus {
 
 static unsigned startNewDay(IdfObject &idfObject,unsigned fieldIndex,Date date)
 {
-  QString string = QString().sprintf("Through: %02d/%02d",date.monthOfYear().value(),date.dayOfMonth());
-  idfObject.setString(fieldIndex, string.toStdString());
+  std::string string = fmt::sprintf("Through: %02d/%02d",date.monthOfYear().value(),date.dayOfMonth());
+  idfObject.setString(fieldIndex, string);
   ++fieldIndex;
   idfObject.setString(fieldIndex, "For: AllDays");
   ++fieldIndex;
@@ -65,8 +68,8 @@ static unsigned startNewDay(IdfObject &idfObject,unsigned fieldIndex,Date date)
 
 static unsigned addUntil(IdfObject &idfObject,unsigned fieldIndex,int hours,int minutes,double value)
 {
-  QString string = QString().sprintf("Until: %02d:%02d",hours,minutes);
-  idfObject.setString(fieldIndex, string.toStdString());
+  std::string string = fmt::sprintf("Until: %02d:%02d",hours,minutes);
+  idfObject.setString(fieldIndex, string);
   ++fieldIndex;
   idfObject.setDouble(fieldIndex, value);
   ++fieldIndex;
