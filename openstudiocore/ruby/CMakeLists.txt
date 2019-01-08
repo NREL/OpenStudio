@@ -157,7 +157,7 @@ if( UNIX AND NOT APPLE )
 #    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a" -Wl,--no-whole-archive
 #  )
   target_link_libraries(openstudio_modeleditor_rb
-    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a" -Wl,--no-whole-archive
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformCompositorSupport.a" -Wl,--no-whole-archive
   )
 
 #target_link_libraries(openstudio_rb
