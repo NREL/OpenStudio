@@ -524,7 +524,17 @@ namespace detail{
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::findFile(const std::string& fileName) const
   {
-    return findFile(toPath(fileName));
+    boost::optional<openstudio::path> result;
+
+    // if it starts with file://
+    if (fileName.rfind("file://", 0) == 0) {
+      // We strip it
+      result = findFile(toPath(fileName.substr(7)));
+    } else {
+      result = findFile(toPath(fileName));
+    }
+
+    return result;
   }
 
   std::vector<openstudio::path> WorkflowJSON_Impl::measurePaths() const
