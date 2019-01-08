@@ -2,6 +2,8 @@
 #define UTILITIES_IDF_I
 
 %{
+  #include <utilities/core/Checksum.hpp>
+  
   #include <utilities/idf/Handle.hpp>
   #include <utilities/idf/IdfExtensibleGroup.hpp>
   #include <utilities/idf/IdfObject.hpp>
@@ -179,7 +181,7 @@
   // for Array.uniq
   int __hash__() const {
     std::string uuid(openstudio::toString(self->handle()));
-    return qChecksum(uuid.c_str(), uuid.size());
+    return openstudio::crc16(uuid.c_str(), uuid.size());
   }
 
   // for Marshal mixin

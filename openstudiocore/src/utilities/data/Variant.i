@@ -27,7 +27,7 @@
   }
 
   float __float__() const{
-    return self->valueAsDouble();
+    return static_cast<float>(self->valueAsDouble());
   }
 };
 
