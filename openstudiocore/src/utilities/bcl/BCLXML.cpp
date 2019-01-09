@@ -95,8 +95,6 @@ namespace openstudio{
       }
     }
 
-    // added in schema version 3
-    m_error = decodeString(element.child("error").text().as_string());
 
     m_name = decodeString(element.child("name").text().as_string());
 
@@ -106,6 +104,15 @@ namespace openstudio{
 
     if (m_name.empty() || m_uid.empty() || m_versionId.empty()){
       LOG_AND_THROW("'" << toString(xmlPath) << "' is not a correct BCL XML");
+    }
+
+    // added in schema version 3
+    // error is only present if something went wrong, so we check if it exists first
+    // to avoid always initializing m_error to a string (even if empty)
+    // note: decodeString(element.child("error").text().as_string()) would always return a string even if 'error' key didn't exist
+    pugi::xml_node  errorElement = element.child("error");
+    if (errorElement) {
+      m_error = errorElement.text().as_string();
     }
 
     subelement = element.child("version_modified");
