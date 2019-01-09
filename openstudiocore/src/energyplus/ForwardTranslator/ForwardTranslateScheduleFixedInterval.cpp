@@ -42,7 +42,9 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-#include <QString>
+#define FMT_HEADER_ONLY
+#include <fmt/format.h>
+#include <fmt/printf.h>
 
 using namespace openstudio::model;
 
@@ -54,8 +56,8 @@ namespace energyplus {
 
 static unsigned startNewDay(IdfObject &idfObject,unsigned fieldIndex,Date date)
 {
-  QString string = QString().sprintf("Through: %02d/%02d",date.monthOfYear().value(),date.dayOfMonth());
-  idfObject.setString(fieldIndex, string.toStdString());
+  std::string string = fmt::sprintf("Through: %02d/%02d",date.monthOfYear().value(),date.dayOfMonth());
+  idfObject.setString(fieldIndex, string);
   ++fieldIndex;
   idfObject.setString(fieldIndex, "For: AllDays");
   ++fieldIndex;
@@ -64,8 +66,8 @@ static unsigned startNewDay(IdfObject &idfObject,unsigned fieldIndex,Date date)
 
 static unsigned addUntil(IdfObject &idfObject,unsigned fieldIndex,int hours,int minutes,double value)
 {
-  QString string = QString().sprintf("Until: %02d:%02d",hours,minutes);
-  idfObject.setString(fieldIndex, string.toStdString());
+  std::string string = fmt::sprintf("Until: %02d:%02d",hours,minutes);
+  idfObject.setString(fieldIndex, string);
   ++fieldIndex;
   idfObject.setDouble(fieldIndex, value);
   ++fieldIndex;
@@ -168,7 +170,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
       // Write out the current entry
       Time time(0,0,0,secondsFromStartOfDay);
       int hours = time.hours();
-      int minutes = time.minutes() + floor((time.seconds()/60.0) + 0.5);
+      int minutes = time.minutes() + (int)floor((time.seconds()/60.0) + 0.5);
       // This is a little dangerous, but all of the problematic 24:00
       // times that might need to cause a day++ should be caught above.
       if(minutes==60)

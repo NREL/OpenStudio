@@ -35,7 +35,6 @@
 
 #include <string>
 #include <vector>
-#include <QObject>
 
 class QNetworkRequest;
 class QNetworkReply;
@@ -47,10 +46,7 @@ namespace openstudio {
   /** Class for checking whether a new version of OpenStudio is available
       for download.
   **/
-  class UTILITIES_API UpdateManager : public QObject{
-
-    Q_OBJECT;
-
+  class UTILITIES_API UpdateManager {
   public:
 
     /// Constructor with application name
@@ -96,16 +92,6 @@ namespace openstudio {
     /// manager must have finished checking for updates with no errors
     std::vector<std::string> updateMessages() const;
 
-  public slots:
-
-    void replyFinished(QNetworkReply* reply);
-
-    // override in ruby classes
-    virtual void replyProcessed();
-
-  signals:
-
-    void processed();
 
   private:
 

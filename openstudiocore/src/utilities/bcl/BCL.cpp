@@ -56,7 +56,7 @@ namespace openstudio{
     while (itemElement)
     {
       std::string value = itemElement.child("value").text().as_string();
-      uint count = itemElement.child("count").text().as_uint();
+      unsigned count = itemElement.child("count").text().as_uint();
       m_items.push_back(std::make_pair(value, count));
       itemElement = itemElement.next_sibling("item");
     }
@@ -72,7 +72,7 @@ namespace openstudio{
     return m_label;
   }
 
-  std::vector<std::pair<std::string, uint> > BCLFacet::items() const
+  std::vector<std::pair<std::string, unsigned> > BCLFacet::items() const
   {
     return m_items;
   }
@@ -595,8 +595,7 @@ namespace openstudio{
     return m_costs;
   }
 
-  BCL::BCL(QObject * parent):
-    QObject(parent)
+  BCL::BCL()
   {
   }
 

@@ -58,9 +58,6 @@ namespace openstudio{
 
   /// Class for accessing the remote BCL.
   class UTILITIES_API RemoteBCL : public BCL {
-
-    Q_OBJECT
-
   public:
 
     /** @name Constructor */
@@ -218,7 +215,7 @@ namespace openstudio{
     bool startComponentLibrarySearch(const std::string& searchTerm, const unsigned componentTypeTID, const std::string& filterType, const unsigned page = 0);
 
     //@}
-  signals:
+  //signals:
 
     /// Emitted when a component download completes
     //void componentDownloaded(const std::string& uid, const boost::optional<BCLComponent>& component) const;
@@ -232,19 +229,19 @@ namespace openstudio{
     /// Emitted when a search request completes
     //void searchCompleted(const std::vector<BCLSearchResult>& searchResults) const;
 
-  protected slots:
+  //protected slots:
 
-    void downloadData();
+    //void downloadData();
 
-    void onDownloadComplete(QNetworkReply* reply);
+    //void onDownloadComplete(QNetworkReply* reply);
 
-    void onMetaSearchResponseComplete(QNetworkReply* reply);
+    //void onMetaSearchResponseComplete(QNetworkReply* reply);
 
-    void onSearchResponseComplete(QNetworkReply* reply);
+    //void onSearchResponseComplete(QNetworkReply* reply);
 
-  private slots:
+  //private slots:
 
-    void catchSslErrors(QNetworkReply* reply, const QList<QSslError>& errorList);
+    //void catchSslErrors(QNetworkReply* reply, const QList<QSslError>& errorList);
 
   private:
 
@@ -257,7 +254,7 @@ namespace openstudio{
     /// Validate an OAuth key
     bool validateAuthKey(const std::string& authKey, const std::string& remoteUrl);
 
-    QString checkForRedirect(const QNetworkReply* reply) const;
+    //QString checkForRedirect(const QNetworkReply* reply) const;
 
     bool waitForLock(int msec) const;
 
