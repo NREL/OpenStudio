@@ -88,22 +88,25 @@ namespace openstudio {
 namespace model {
   bool replaceDir(const openstudio::path &sourceDir, const openstudio::path &destinationDir)
   {
-    const auto src = openstudio::filesystem::canonical(sourceDir);
-    const auto dest = openstudio::filesystem::canonical(destinationDir);
+    // Path **must** exist for `canonical()` to work, `weakly_canonical()` doesn't require this
+    const auto src = openstudio::filesystem::weakly_canonical(sourceDir);
+    const auto dest = openstudio::filesystem::weakly_canonical(destinationDir);
 
+    // If both are the same canonical paths, we do nothing
     if (src == dest) {
       LOG_FREE(Warn, "replaceDir", "Refusing to copy directory '" << toString(sourceDir) << "' only itself '" << toString(destinationDir)
           << "' canonical path: '" << toString(src) << "'");
       return true; // there is no error, just nothing to do
     }
 
-
+    // If the source dir doesn't exist, there's a problem
     if (!openstudio::filesystem::exists(src) || !openstudio::filesystem::is_directory(src))
     {
       LOG_FREE(Error, "replaceDir", "Source directory does not exist: " << toString(src));
       return false;
     }
 
+    // If the dest dir exists, remove it
     if (openstudio::filesystem::exists(dest))
     {
       if (openstudio::filesystem::is_directory(dest)) {
@@ -119,13 +122,12 @@ namespace model {
       }
     }
 
+    // Now we recreate it, and it must work!
     if (!openstudio::filesystem::create_directory(dest))
     {
       LOG_FREE(Error, "replaceDir", "Could not create destination directory: " << toString(dest));
       return false;
     }
-
-
 
     bool result = true;
     for (const auto& dirEnt : openstudio::filesystem::recursive_directory_iterator{src})
