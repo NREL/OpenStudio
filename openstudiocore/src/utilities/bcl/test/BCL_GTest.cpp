@@ -345,7 +345,7 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
 
   RemoteBCL remoteBCL;
 
-  typedef std::pair<std::string, uint> PairType;
+  typedef std::pair<std::string, unsigned> PairType;
 
   // get all constructions, via empty first arg and tid
   bool test = remoteBCL.metaSearchComponentLibrary("",127).has_value();

@@ -41,14 +41,14 @@ namespace openstudio{
   UpdateManager::UpdateManager(const std::string& appName)
     : m_appName(appName), m_finished(false), m_error(false),
       m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false),
-      m_mostRecentVersion(openStudioVersion()), m_manager(new QNetworkAccessManager(this))
+      m_mostRecentVersion(openStudioVersion()), m_manager(new QNetworkAccessManager())
   {
     // TODO: QT-Separation-Move
     //Application::instance().processEvents(); // a kludge to make sure that updatemanager works correctly in a non-application environment on unix
 
-    connect(m_manager, &QNetworkAccessManager::finished, this, &UpdateManager::replyFinished);
+    //connect(m_manager, &QNetworkAccessManager::finished, this, &UpdateManager::replyFinished);
 
-    connect(this, &UpdateManager::processed, this, &UpdateManager::replyProcessed);
+    //connect(this, &UpdateManager::processed, this, &UpdateManager::replyProcessed);
 
     QUrl url(QString::fromStdString(updateUrl()));
 
@@ -62,14 +62,14 @@ namespace openstudio{
   UpdateManager::UpdateManager(const std::string& appName, const std::string& url)
     : m_appName(appName), m_finished(false), m_error(false),
       m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false),
-      m_mostRecentVersion(openStudioVersion()), m_manager(new QNetworkAccessManager(this))
+      m_mostRecentVersion(openStudioVersion()), m_manager(new QNetworkAccessManager())
   {
     //TODO: QT - Separation - Move
     //Application::instance().processEvents(); // a kludge to make sure that updatemanager works correctly in a non-application environment on unix
 
-    connect(m_manager, &QNetworkAccessManager::finished, this, &UpdateManager::replyFinished);
+    //connect(m_manager, &QNetworkAccessManager::finished, this, &UpdateManager::replyFinished);
 
-    connect(this, &UpdateManager::processed, this, &UpdateManager::replyProcessed);
+    //connect(this, &UpdateManager::processed, this, &UpdateManager::replyProcessed);
 
     m_request = new QNetworkRequest(QUrl(QString::fromStdString(url)));
 
@@ -127,50 +127,50 @@ namespace openstudio{
     return std::string("https://www.openstudio.net/update.html?app=") + appName() + std::string("&version=") + openStudioVersion();
   }
 
-  void UpdateManager::replyFinished(QNetworkReply* reply)
-  {
-    // finished after this
-    m_finished = true;
+  //void UpdateManager::replyFinished(QNetworkReply* reply)
+  //{
+  //  // finished after this
+  //  m_finished = true;
+  //
+  //  if (reply){
+  //    // don't delete here
+  //    reply->deleteLater();
+  //
+  //    m_error = (reply->error() != QNetworkReply::NoError);
+  //    if (!m_error){
+  //
+  //      // create xml document to read the response
+  //      QDomDocument document;
+  //      document.setContent(reply->readAll());
+  //      QDomNodeList openstudioelements = document.elementsByTagName("openstudio");
+  //
+  //      if (openstudioelements.size() > 0)
+  //      {
+  //        // Only process the first one for now
+  //        QDomNodeList nodes = openstudioelements.at(0).childNodes();
+  //
+  //        // all child nodes will be releases
+  //        for(int i = 0; i < nodes.size(); ++i){
+  //          QDomElement release = nodes.at(i).toElement();
+  //          if (!release.isNull()){
+  //            if (!checkRelease(release)){
+  //              // break if not newer than current
+  //              break;
+  //            }
+  //          }
+  //        }
+  //      }
+  //    }else{
+  //      LOG(Error, "QNetworkReply " << reply->error());
+  //    }
+  //  }
+  //
+  //  emit processed();
+  //}
 
-    if (reply){
-      // don't delete here
-      reply->deleteLater();
-
-      m_error = (reply->error() != QNetworkReply::NoError);
-      if (!m_error){
-
-        // create xml document to read the response
-        QDomDocument document;
-        document.setContent(reply->readAll());
-        QDomNodeList openstudioelements = document.elementsByTagName("openstudio");
-
-        if (openstudioelements.size() > 0)
-        {
-          // Only process the first one for now
-          QDomNodeList nodes = openstudioelements.at(0).childNodes();
-
-          // all child nodes will be releases
-          for(int i = 0; i < nodes.size(); ++i){
-            QDomElement release = nodes.at(i).toElement();
-            if (!release.isNull()){
-              if (!checkRelease(release)){
-                // break if not newer than current
-                break;
-              }
-            }
-          }
-        }
-      }else{
-        LOG(Error, "QNetworkReply " << reply->error());
-      }
-    }
-
-    emit processed();
-  }
-
-  void UpdateManager::replyProcessed()
-  {
-  }
+  //void UpdateManager::replyProcessed()
+  //{
+  //}
 
   bool UpdateManager::checkRelease(const QDomElement& release)
   {
