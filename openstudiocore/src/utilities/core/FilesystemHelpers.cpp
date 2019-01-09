@@ -236,6 +236,7 @@ namespace openstudio {
         }
       };
 
+      // TODO: instead of trace, just comment out?
       if (const auto home = build_path("USERPROFILE"); !home.empty()) {
         LOG_FREE(Trace, "FilesystemHelpers", "home_path USERPROFILE: " << toString(home));
         return home;
