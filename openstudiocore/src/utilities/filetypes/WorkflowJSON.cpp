@@ -519,22 +519,19 @@ namespace detail{
         return canonicalOrAbsolute(p);
       }
     }
+
+    // Extra check: if it starts with file://
+    std::string fileName = toString(file);
+    if (fileName.rfind("file://", 0) == 0) {
+      // We strip it, and try again
+      return findFile(toPath(fileName.substr(7)));
+    }
     return boost::none;
   }
 
   boost::optional<openstudio::path> WorkflowJSON_Impl::findFile(const std::string& fileName) const
   {
-    boost::optional<openstudio::path> result;
-
-    // if it starts with file://
-    if (fileName.rfind("file://", 0) == 0) {
-      // We strip it
-      result = findFile(toPath(fileName.substr(7)));
-    } else {
-      result = findFile(toPath(fileName));
-    }
-
-    return result;
+    return findFile(toPath(fileName));
   }
 
   std::vector<openstudio::path> WorkflowJSON_Impl::measurePaths() const
