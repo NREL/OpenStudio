@@ -99,4 +99,12 @@ namespace openstudio {
     return result;
   }
 
+  int crc16(const char *ptr, int count) {
+    // Simulate CRC-CCITT
+    boost::crc_basic<16>  crc_ccitt1(0x1021, 0xFFFF, 0, false, false);
+    crc_ccitt1.process_bytes(ptr, count);
+    int result = crc_ccitt1.checksum();
+    return result;
+  }
+
 } // openstudio

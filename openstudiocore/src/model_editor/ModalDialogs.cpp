@@ -30,6 +30,7 @@
 #include "ModalDialogs.hpp"
 
 #include "Application.hpp"
+#include "Utilities.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"

@@ -175,7 +175,7 @@ OptionalUnsigned ObjectOrderBase::indexInOrder(const IddObjectType& type) const 
   if (m_orderByIddEnum) { return static_cast<unsigned>(type.value()); }
   if (m_iddOrder) {
     auto it = getIterator(type);
-    return (it - m_iddOrder->begin());
+    return (unsigned)(it - m_iddOrder->begin());
   }
   return boost::none;
 }

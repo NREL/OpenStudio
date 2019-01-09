@@ -30,6 +30,7 @@
 #include "ResultsTabView.hpp"
 #include "OSDocument.hpp"
 #include "OSAppBase.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include <QFile>
 #include <QBoxLayout>

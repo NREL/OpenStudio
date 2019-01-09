@@ -40,8 +40,8 @@
 
     // Recursively deletes the contents of p if it exists, then deletes file p itself.
     // Returns the number of files removed.
-    unsigned long remove_all(const path& p){
-      return boost::filesystem::remove_all(p);
+    unsigned remove_all(const path& p){
+      return static_cast<unsigned>(boost::filesystem::remove_all(p));
     }
 
     // The contents and attributes of the file from_fp resolves to are copied to the file to_fp resolves to.
@@ -151,7 +151,7 @@ namespace openstudio {
 
   // Recursively deletes the contents of p if it exists, then deletes file p itself.
   // Returns the number of files removed.
-  unsigned long remove_all(const path& p);
+  unsigned remove_all(const path& p);
 
   // The contents and attributes of the file from_fp resolves to are copied to the file to_fp resolves to.
   void copy_file(const path& from_path, const path& to_path);

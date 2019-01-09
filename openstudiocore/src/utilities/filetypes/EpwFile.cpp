@@ -98,8 +98,8 @@ namespace openstudio{
     return fp*psat;
   }
 
-  // TODO: Warning -Wunused-function
-  static double enthalpy(double T, double p, double phi)
+  // Note JM 2019-01-03: suppress -Wunused-function warning for this API function
+  [[maybe_unused]] static double enthalpy(double T, double p, double phi)
   {
     // Compute moist air enthalpy, eqns 5, 6, 22, 24, and 32 from ASHRAE Fundamentals 2009 Ch. 1
     double pw = phi*psat(T); // Partial pressure of water vapor, eqn 24 (uses eqns 5 and 6)
@@ -107,8 +107,7 @@ namespace openstudio{
     return 1.006*T + W*(2501 + 1.86*T); // Moist air specific enthalpy, eqn 32
   }
 
-  // TODO: Warning -Wunused-function
-  static double enthalpyFromDewPoint(double T, double p, double Tdewpoint)
+  [[maybe_unused]] static double enthalpyFromDewPoint(double T, double p, double Tdewpoint)
   {
     // Compute moist air enthalpy, eqns 5, 6, 22, 32, and 38 from ASHRAE Fundamentals 2009 Ch. 1
     double pw = openstudio::psat(Tdewpoint); // Partial pressure of water vapor, eqn 38 (uses eqns 5 and 6)
@@ -4079,7 +4078,7 @@ namespace openstudio{
         }
       }
       if(values.size()) {
-        DateTime start = dates[1] - Time(0, 0, 0, 3600.0 / m_recordsPerHour);
+        DateTime start = dates[1] - Time(0, 0, 0, 3600 / m_recordsPerHour);
         dates[0] = start; // Overwrite the placeholder
         return boost::optional<TimeSeries>(TimeSeries(dates,openstudio::createVector(values),units));
       }
@@ -4153,7 +4152,7 @@ namespace openstudio{
       }
     }
     if (values.size()) {
-      DateTime start = dates[1] - Time(0, 0, 0, 3600.0 / m_recordsPerHour);
+      DateTime start = dates[1] - Time(0, 0, 0, 3600 / m_recordsPerHour);
       dates[0] = start; // Overwrite the placeholder
       return boost::optional<TimeSeries>(TimeSeries(dates, openstudio::createVector(values), units));
     }

@@ -77,8 +77,8 @@ GeometryPreviewView::~GeometryPreviewView()
 
 PreviewWebView::PreviewWebView(bool isIP, const model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
-    m_model(model),
     m_isIP(isIP),
+    m_model(model),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh"))
 {

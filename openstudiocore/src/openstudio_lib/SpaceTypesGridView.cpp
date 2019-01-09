@@ -102,6 +102,8 @@
 #include "../model/SteamEquipmentDefinition_Impl.hpp"
 #include "../model/SteamEquipment_Impl.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include "../utilities/idd/IddEnums.hxx"
 #include "../utilities/idd/OS_SpaceType_FieldEnums.hxx"
 

@@ -30,7 +30,10 @@
 #ifndef MODELEDITOR_APPLICATION_HPP
 #define MODELEDITOR_APPLICATION_HPP
 
+#include "ModelEditorAPI.hpp"
+
 #include <utilities/core/Singleton.hpp>
+
 #include "QMetaTypes.hpp"
 
 #include <QApplication>
@@ -110,12 +113,6 @@ namespace openstudio{
   };
 
   typedef openstudio::Singleton<ApplicationSingleton> Application;
-
-#if defined(model_editor_EXPORTS)
-  #define MODELEDITOR_TEMPLATE_EXT
-#else
-  #define MODELEDITOR_TEMPLATE_EXT extern
-#endif
 
 #if _WIN32 || _MSC_VER
   /// Explicitly instantiate and export ApplicationSingleton Singleton template instance

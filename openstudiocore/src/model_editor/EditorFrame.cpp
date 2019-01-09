@@ -60,6 +60,7 @@
 #include "../utilities/core/Assert.hpp"
 
 #include "EditorFrame.hpp"
+#include "Utilities.hpp"
 
 
 namespace modeleditor

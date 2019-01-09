@@ -67,7 +67,7 @@ TEST_F(ModelFixture,PlantEquipmentOperationCoolingLoad) {
     EXPECT_TRUE(plantOperationScheme.addLoadRange(1000.0,equipment));
     upperLimits = plantOperationScheme.loadRangeUpperLimits();
     EXPECT_EQ(2u,upperLimits.size());
-    EXPECT_FLOAT_EQ(1000.0,upperLimits[0]);
+    EXPECT_DOUBLE_EQ(1000.0,upperLimits[0]);
     EXPECT_EQ(1u,plantOperationScheme.equipment(upperLimits[0]).size());
     EXPECT_EQ(1u,plantOperationScheme.equipment(upperLimits[1]).size());
 
@@ -84,7 +84,7 @@ TEST_F(ModelFixture,PlantEquipmentOperationCoolingLoad) {
     EXPECT_TRUE(plantOperationScheme.addLoadRange(1000.0,equipment));
     upperLimits = plantOperationScheme.loadRangeUpperLimits();
     EXPECT_EQ(2u,upperLimits.size());
-    EXPECT_FLOAT_EQ(1000.0,upperLimits[0]);
+    EXPECT_DOUBLE_EQ(1000.0,upperLimits[0]);
     EXPECT_EQ(1u,plantOperationScheme.equipment(upperLimits[0]).size());
     EXPECT_EQ(2u,plantOperationScheme.equipment(upperLimits[1]).size());
 

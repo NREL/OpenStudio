@@ -42,6 +42,8 @@
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/core/Assert.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include <QBoxLayout>
 #include <QDrag>
 #include <QLabel>

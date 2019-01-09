@@ -34,6 +34,8 @@
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/OutputVariable_Impl.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include "../utilities/sql/SqlFileEnums.hpp"
 
 #include <QHBoxLayout>

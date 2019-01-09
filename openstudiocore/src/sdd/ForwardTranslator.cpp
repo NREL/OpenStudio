@@ -209,7 +209,7 @@ namespace sdd {
 
     openstudio::filesystem::ofstream file(path, std::ios_base::binary);
     if (file.is_open()){
-      openstudio::filesystem::write(file, doc->toString(2));
+      file << doc->toString(2).toStdString();
       file.close();
       return true;
     }
@@ -245,7 +245,8 @@ namespace sdd {
 
   QString ForwardTranslator::escapeName(const std::string& name)
   {
-    return toQString(name);
+    /// JMT: I don't think this function does what its name implies
+    return QString::fromStdString(name);
   }
 
   boost::optional<QDomDocument> ForwardTranslator::translateModel(const openstudio::model::Model& model)
@@ -280,7 +281,7 @@ namespace sdd {
       if (zones.size() > 0 && !zones[0].value().empty()){
 
         bool isNumber;
-        QString value = toQString(zones[0].value());
+        QString value = QString::fromStdString(zones[0].value());
         value.toInt(&isNumber);
         if (isNumber){
           value = QString("ClimateZone") + value;

@@ -27,103 +27,77 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "String.hpp"
-
-#include "Logger.hpp"
-
-#include <codecvt>
-#include <iomanip>
+#include "Utilities.hpp"
 
 namespace openstudio {
-
-/** char* to std::string. */
-std::string toString(const char* s)
-{
-  return std::string(s);
-}
-
-/** string to std::string. */
-std::string toString(const std::string& s)
-{
-  return s;
-}
-
-/** wchar_t* to std::string. */
-std::string toString(const wchar_t* w)
-{
-  return toString(std::wstring(w));
-}
+  /** QString to UTF-8 encoded std::string. */
+  std::string toString(const QString& q)
+  {
+    const QByteArray& qb = q.toUtf8();
+    return std::string(qb.data());
+  }
 
 
 
-std::string toString(double v) {
+  /** QString to wstring. */
+  std::wstring toWString(const QString& q)
+  {
+#if (defined (_WIN32) || defined (_WIN64))
+    static_assert(sizeof(wchar_t) == sizeof(unsigned short), "Wide characters must have the same size as unsigned shorts");
+    std::wstring w(reinterpret_cast<const wchar_t *>(q.utf16()), q.length());
+    return w;
+#else
+    std::wstring w = q.toStdWString();
+    return w;
+#endif
+  }
 
-  std::string result;
+  /** UTF-8 encoded std::string to QString. */
+  QString toQString(const std::string& s)
+  {
+    return QString::fromUtf8(s.c_str());
+  }
 
-  // Return Infinity or NaN as strings, getDouble in IdfObject will fail to convert to double which will cause setDouble to fail
-  if (std::isinf(v)) {
-    if (v < 0){
-      result = "-Infinity";
-    } else{
-      result = "Infinity";
-    }
-  } else if (std::isnan(v)) {
-    result = "NaN";
-  } else {
-
-    std::stringstream ss;
-    ss << std::setprecision(std::numeric_limits<double>::digits10) << v;
-    result = ss.str();
+  /** wstring to QString. */
+  QString toQString(const std::wstring& w)
+  {
+#if (defined (_WIN32) || defined (_WIN64))
+    static_assert(sizeof(wchar_t) == sizeof(unsigned short), "Wide characters must have the same size as unsigned shorts");
+    return QString::fromUtf16(reinterpret_cast<const unsigned short *>(w.data()), w.length());
+#else
+    return QString::fromStdWString(w);
+#endif
 
   }
 
-  return result;
-}
+  UUID toUUID(const QString &str)
+  {
+    return toUUID(toString(str));
+  }
 
-std::string toString(std::istream& s) {
-  // istream -> string code from
-  // http://stackoverflow.com/questions/2602013/read-whole-ascii-file-into-c-stdstring
-  std::string contents;
-  s.seekg(0, std::ios::end);
-  contents.resize(s.tellg());
-  s.seekg(0, std::ios::beg);
-  s.read(&contents[0], contents.size());
-  return contents;
-}
+  QString toQString(const UUID& uuid)
+  {
+    return toQString(toString(uuid));
+  }
 
-
-///
-/// Note that MSVC has linker issues with wchars for some weird reason
-/// Hence these ifdef workarounds https://stackoverflow.com/questions/32055357/visual-studio-c-2015-stdcodecvt-with-char16-t-or-char32-t
-///
-
-std::wstring toWString(const std::string& q)
-{
-#if _MSC_VER >= 1900
-  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
-  const auto u16_conv = convert.from_bytes(q);
-  return { u16_conv.begin(), u16_conv.end() };
-#else
-  std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
-  const auto u16_conv = convert.from_bytes(q);
-  return { u16_conv.begin(), u16_conv.end() };
+  /** path to QString. */
+  QString toQString(const path& p)
+  {
+#if (defined (_WIN32) || defined (_WIN64))
+    return QString::fromStdWString(p.generic_wstring());
 #endif
-}
+    return QString::fromUtf8(p.generic_string().c_str());
+  }
 
-
-
-std::string toString(const std::wstring &utf16_string)
-{
-#if _MSC_VER >= 1900
-  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
-  return convert.to_bytes(utf16_string.data(), utf16_string.data() + utf16_string.size());
-#else
-  std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
-  const std::u16string u16string{utf16_string.begin(), utf16_string.end()};
-  return convert.to_bytes(u16string);
+  /** QString to path*/
+  path toPath(const QString& q)
+  {
+#if (defined (_WIN32) || defined (_WIN64))
+    return path(q.toStdWString());
 #endif
+
+    return path(q.toStdString());
+  }
+
+
 }
-
-
-} // openstudio
-

@@ -178,7 +178,7 @@ namespace sdd {
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()){
         QDomDocument doc;
-        bool ok = doc.setContent(toQString(openstudio::filesystem::read_as_string(file)));
+        bool ok = doc.setContent(QString::fromStdString(openstudio::filesystem::read_as_string(file)));
         file.close();
 
         if (ok) {
@@ -1883,7 +1883,7 @@ namespace sdd {
       std::string runPeriodName = "Run Period";
       QDomElement annualWeatherFileElement = element.firstChildElement("AnnualWeatherFile");
       if (!annualWeatherFileElement.isNull()){
-        runPeriodName = openstudio::toString(openstudio::toPath(annualWeatherFileElement.text()).stem());
+        runPeriodName = openstudio::toString(openstudio::toPath(annualWeatherFileElement.text().toStdString()).stem());
       }
 
       model::RunPeriod runPeriod = model.getUniqueModelObject<model::RunPeriod>();
@@ -1986,7 +1986,7 @@ namespace sdd {
       return result;
     }
 
-    openstudio::path ddyFilePath = toPath(ddWeatherFileElement.text());
+    openstudio::path ddyFilePath = toPath(ddWeatherFileElement.text().toStdString());
     if (!ddyFilePath.is_complete()){
       ddyFilePath = complete(ddyFilePath, m_path.parent_path());
     }
@@ -2024,7 +2024,7 @@ namespace sdd {
       return boost::none;
     }
 
-    openstudio::path epwFilePath = toPath(annualWeatherFileElement.text());
+    openstudio::path epwFilePath = toPath(annualWeatherFileElement.text().toStdString());
     if (!epwFilePath.is_complete()){
       epwFilePath = complete(epwFilePath, m_path.parent_path());
     }

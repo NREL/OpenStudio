@@ -27,49 +27,42 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <gtest/gtest.h>
+#ifndef MODELEDITOR_UTILITIES_HPP
+#define MODELEDITOR_UTILITIES_HPP
 
-#include "ModelFixture.hpp"
+#include <string>
+#include <QString>
 
-#include "../ExternalInterfaceFunctionalMockupUnitImport.hpp"
-#include "../ExternalInterfaceFunctionalMockupUnitImport_Impl.hpp"
+#include "ModelEditorAPI.hpp"
 
-using namespace openstudio;
-using namespace openstudio::model;
-using std::string;
 
-TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImport) {
-  Model model;
+namespace openstudio {
+  /** QString to UTF-8 encoded std::string. */
+  MODELEDITOR_API std::string toString(const QString& q);
 
-  ExternalInterfaceFunctionalMockupUnitImport eifmui(model, "test name");
-  EXPECT_EQ("test name", eifmui.fMUFileName());
-  EXPECT_TRUE(eifmui.isFMUTimeoutDefaulted());
-  EXPECT_EQ(0.0, eifmui.fMUTimeout());
-  EXPECT_TRUE(eifmui.isFMULoggingOnDefaulted());
-  EXPECT_EQ(0, eifmui.fMULoggingOn());
-  eifmui.setFMUTimeout(100);
-  EXPECT_EQ(100.0, eifmui.fMUTimeout());
-  eifmui.resetFMUTimeout();
-  EXPECT_TRUE(eifmui.isFMUTimeoutDefaulted());
-  eifmui.setFMULoggingOn(1);
-  EXPECT_EQ(1, eifmui.fMULoggingOn());
-  eifmui.setFMULoggingOn(2);
-  EXPECT_EQ(2, eifmui.fMULoggingOn());
-  eifmui.resetFMULoggingOn();
-  EXPECT_TRUE(eifmui.isFMUTimeoutDefaulted());
-  EXPECT_TRUE(eifmui.setFMUFileName("Test Name"));
-  EXPECT_NE("test name", eifmui.fMUFileName());
-  EXPECT_EQ("Test Name", eifmui.fMUFileName());
+  /** QString to wstring. */
+  MODELEDITOR_API std::wstring toWString(const QString& q);
+
+  /** UTF-8 encoded std::string to QString. */
+  MODELEDITOR_API QString toQString(const std::string& s);
+
+  /** wstring to QString. */
+  MODELEDITOR_API QString toQString(const std::wstring& w);
+
+
+  /// create a UUID from a std::string, does not throw, may return a null UUID
+  MODELEDITOR_API UUID toUUID(const QString& str);
+
+  /// create a QString from a UUID
+  MODELEDITOR_API QString toQString(const UUID& uuid);
+
+  /** path to QString. */
+  MODELEDITOR_API QString toQString(const path& p);
+
+  /** QString to path*/
+  MODELEDITOR_API path toPath(const QString& q);
+
+
 }
 
-TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImport2) {
-  Model model;
-
-  ExternalInterfaceFunctionalMockupUnitImport eifmui(model, "c:\\Program Files\\Test\\blah.fmu");
-  EXPECT_EQ("c:\\Program Files\\Test\\blah.fmu", eifmui.fMUFileName());
-  EXPECT_EQ("External Interface Functional Mockup Unit Import 1", eifmui.nameString());
-  EXPECT_TRUE(eifmui.setFMUFileName("c:/Program Files/Test/blah.fmu"));
-  EXPECT_EQ("c:/Program Files/Test/blah.fmu", eifmui.fMUFileName());
-}
-
-
+#endif

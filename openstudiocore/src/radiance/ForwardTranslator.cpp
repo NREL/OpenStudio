@@ -1428,7 +1428,7 @@ namespace radiance {
                                         formatString(exteriorVisibleReflectance, 3) + " " + \
                                         formatString(exteriorVisibleReflectance, 3) + " 0 0\n\n");
                   // write polygon
-                  m_radSpaces[space_name] += "refl_" + formatString(exteriorVisibleReflectance, 3) + " polygon outside_reveal_" + subSurface_name + formatString(i, 0) + "\n";
+                  m_radSpaces[space_name] += "refl_" + formatString(exteriorVisibleReflectance, 3) + " polygon outside_reveal_" + subSurface_name + std::to_string(i) + "\n";
                   m_radSpaces[space_name] += "0\n0\n" + formatString(4 * 3) + "\n";
                   m_radSpaces[space_name] += formatString(vertex1.x()) + " " + formatString(vertex1.y()) + " " + formatString(vertex1.z()) + "\n\n";
                   m_radSpaces[space_name] += formatString(vertex2.x()) + " " + formatString(vertex2.y()) + " " + formatString(vertex2.z()) + "\n\n";
@@ -1458,7 +1458,7 @@ namespace radiance {
                                         formatString(interiorVisibleReflectance, 3) + " " + \
                                         formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
                   // write polygon
-                  m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon inside_reveal_" + subSurface_name + formatString(i, 0) + "\n";
+                  m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon inside_reveal_" + subSurface_name + std::to_string(i) + "\n";
                   m_radSpaces[space_name] += "0\n0\n" + formatString(4 * 3) + "\n";
                   m_radSpaces[space_name] += formatString(vertex1.x()) + " " + formatString(vertex1.y()) + " " + formatString(vertex1.z()) + "\n\n";
                   m_radSpaces[space_name] += formatString(vertex2.x()) + " " + formatString(vertex2.y()) + " " + formatString(vertex2.z()) + "\n\n";
@@ -1487,7 +1487,7 @@ namespace radiance {
                                         formatString(interiorVisibleReflectance, 3) + " " + \
                                         formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
                   // write polygon
-                  m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon inside_sill_" + subSurface_name + formatString(i, 0) + "\n";
+                  m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon inside_sill_" + subSurface_name + std::to_string(i) + "\n";
                   m_radSpaces[space_name] += "0\n0\n" + formatString(4 * 3) + "\n";
                   m_radSpaces[space_name] += formatString(vertex1.x()) + " " + formatString(vertex1.y()) + " " + formatString(vertex1.z()) + "\n\n";
                   m_radSpaces[space_name] += formatString(vertex2.x()) + " " + formatString(vertex2.y()) + " " + formatString(vertex2.z()) + "\n\n";

@@ -836,7 +836,7 @@ double SpeciesImpl::decay() const
 
 bool SpeciesImpl::setDecay(const double decay)
 {
-  m_decay = decay;
+  m_decay = openstudio::string_conversions::number(decay);
   return true;
 }
 
@@ -2226,7 +2226,7 @@ std::string RunControlImpl::write()
   for(int i=0;i<16;i++)
     string += ANY_TO_STR(m_save[i]) + ' ';
   string += '\n';
-  string += ANY_TO_STR(m_rvals.size()) + '\n';
+  string += ANY_TO_STR((int)m_rvals.size()) + '\n';
   for(unsigned int i=0;i<m_rvals.size();i++)
     string += ANY_TO_STR(m_rvals[i]) + ' ';
   string += '\n';
@@ -3497,7 +3497,7 @@ void LevelImpl::read(Reader &input)
 std::string LevelImpl::write()
 {
   std::string string;
-  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_refht) + ' ' + ANY_TO_STR(m_delht) + ' ' + ANY_TO_STR(m_icons.size())
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_refht) + ' ' + ANY_TO_STR(m_delht) + ' ' + ANY_TO_STR((int)m_icons.size())
     + ' ' + ANY_TO_STR(m_u_rfht) + ' ' + ANY_TO_STR(m_u_dlht) + ' ' + ANY_TO_STR(m_name) + '\n';
   for(unsigned i=0;i<m_icons.size();i++)
   {
@@ -3637,7 +3637,7 @@ void DayScheduleImpl::read(Reader &input)
 std::string DayScheduleImpl::write()
 {
   std::string string;
-  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_points.size()) + ' ' + ANY_TO_STR(m_shape) + ' ' + ANY_TO_STR(m_utyp) + ' ' + ANY_TO_STR(m_ucnv) + ' ' + m_name + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR((int)m_points.size()) + ' ' + ANY_TO_STR(m_shape) + ' ' + ANY_TO_STR(m_utyp) + ' ' + ANY_TO_STR(m_ucnv) + ' ' + m_name + '\n';
   string += m_desc + '\n';
   for(unsigned i=0;i<m_points.size();i++)
   {
@@ -3869,7 +3869,7 @@ void WindPressureProfileImpl::read(Reader &input)
 std::string WindPressureProfileImpl::write()
 {
   std::string string;
-  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_coeffs.size()) + ' ' + ANY_TO_STR(m_type) + ' ' + m_name + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR((int)m_coeffs.size()) + ' ' + ANY_TO_STR(m_type) + ' ' + m_name + '\n';
   string += m_desc + '\n';
   for(unsigned i=0;i<m_coeffs.size();i++)
   {

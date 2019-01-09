@@ -30,6 +30,7 @@
 #include "NetworkProxyDialog.hpp"
 
 #include "../model_editor/Application.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include "../utilities/core/String.hpp"
 

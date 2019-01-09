@@ -47,6 +47,9 @@
 #include "../model/Component_Impl.hpp"
 #include "../model/ComponentData.hpp"
 #include "../model/ComponentData_Impl.hpp"
+
+#include "../model_editor/Utilities.hpp"
+
 #include "../utilities/core/Compare.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>

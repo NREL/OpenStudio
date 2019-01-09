@@ -34,12 +34,14 @@
 
 #include <boost/core/null_deleter.hpp>
 
+#include <QtGlobal>
 
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
 
 namespace openstudio{
 
+  // TODO: QT-Separation-Move
   // handle Qt messages
   void logQtMessage(QtMsgType type, const char *msg)
   {
@@ -64,6 +66,7 @@ namespace openstudio{
     }
   }
 
+  // TODO: QT-Separation-Move
   // handle Qt messages after logger is destroyed
   void consoleLogQtMessage(QtMsgType type, const char *msg)
   {

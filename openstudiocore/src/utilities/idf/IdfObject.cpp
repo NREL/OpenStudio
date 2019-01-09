@@ -2008,7 +2008,6 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
   std::string IdfObject_Impl::encodeString(const std::string& value) const
   {
     std::string result;
-    result.reserve(value.size() * 1.25);
     for (auto const & s : value) {
       switch (s) {
         case '\n':

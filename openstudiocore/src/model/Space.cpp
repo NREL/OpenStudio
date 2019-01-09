@@ -129,12 +129,19 @@
 #include "../utilities/core/Assert.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
+#if defined(_MSC_VER)
+  #pragma warning(push)
+  #pragma warning(disable:4244)
+#endif
 #include <boost/geometry/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
 #include <boost/geometry/geometries/ring.hpp>
 #include <boost/geometry/multi/geometries/multi_polygon.hpp>
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>
+#if defined(_MSC_VER)
+  #pragma warning(pop)
+#endif
 
 #include <cmath>
 

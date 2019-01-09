@@ -48,9 +48,6 @@ namespace openstudio{
   ///       this would avoid all known problems with threading. The Singleton<> template cannot be used because
   ///       of static initialize and destruction order problems caused by statics used in the QDatabase stuff
   class UTILITIES_API LocalBCL : public BCL {
-
-    Q_OBJECT
-
   public:
 
     /** @name Constructor */
@@ -175,7 +172,7 @@ namespace openstudio{
       const std::vector<std::pair<std::string, std::string> >& searchTerms,
       const std::string& componentType) const;
 
-    std::string formatString(double d, uint prec = 15);
+    std::string formatString(double d, unsigned prec = 15);
 
 
     static std::shared_ptr<LocalBCL> &instanceInternal();

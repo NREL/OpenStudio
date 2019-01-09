@@ -31,6 +31,8 @@
 
 #include "OSItem.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSSwitch.hpp"

@@ -40,6 +40,13 @@
 #define REMOTE_PRODUCTION_SERVER "https://bcl.nrel.gov"
 #define REMOTE_DEVELOPMENT_SERVER "http://bcl7.development.nrel.gov"
 
+///
+/// TODO: Remove this helper when Qt is fully removed
+///
+static auto toQString(const std::string &s) {
+  return QString::fromStdString(s);
+};
+
 namespace openstudio{
 
   std::ostream& operator<<(std::ostream& os, const pugi::xml_document& element)
@@ -108,9 +115,9 @@ namespace openstudio{
 
     useRemoteProductionUrl();
 
-#ifndef QT_NO_OPENSSL
-    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
-#endif
+//#ifndef QT_NO_OPENSSL
+//    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
+//#endif
   }
 
   RemoteBCL::~RemoteBCL()
@@ -258,7 +265,7 @@ namespace openstudio{
       }
 
       // disconnect all signals from m_networkManager to this
-      disconnect(m_networkManager, nullptr, this, nullptr); // returns a bool, but was not checking, so removed
+      //disconnect(m_networkManager, nullptr, this, nullptr); // returns a bool, but was not checking, so removed
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
@@ -269,11 +276,11 @@ namespace openstudio{
       //LOG(Warn, toString(url));
 
       // when the reply is finished call onSearchResponseComplete
-      connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
+      //connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
 
-#ifndef QT_NO_OPENSSL
-      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
-#endif
+//#ifndef QT_NO_OPENSSL
+//      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
+//#endif
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
       request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -299,7 +306,7 @@ namespace openstudio{
       }
 
       // disconnect all signals from m_networkManager to this
-      disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but no check, so removed
+      //disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but no check, so removed
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
@@ -310,11 +317,11 @@ namespace openstudio{
       //LOG(Warn, toString(url));
 
       // when the reply is finished call onSearchResponseComplete
-      connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
+      //connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
 
-#ifndef QT_NO_OPENSSL
-      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
-#endif
+//#ifndef QT_NO_OPENSSL
+//      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
+//#endif
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
       request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -534,14 +541,14 @@ namespace openstudio{
       //LOG(Warn, toString(url));
 
       // disconnect all signals from m_networkManager to this
-      disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
+      //disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
 
       // when the reply is finished call onSearchResponseComplete
-      connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
+      //connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
 
-#ifndef QT_NO_OPENSSL
-      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
-#endif
+//#ifndef QT_NO_OPENSSL
+//      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
+//#endif
 
       QNetworkRequest request = QNetworkRequest(QUrl(url));
       request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -565,16 +572,16 @@ namespace openstudio{
     return false;
   }
 
-  QString RemoteBCL::checkForRedirect(const QNetworkReply* reply) const
-  {
-    // In Qt > 5.3, use QNetworkRequest::FollowRedirectsAttribute instead
-    // TODO: JM 2018-12-14 QNetworkRequest will have to be removed anyway. Now just converting to int to remove last Q Variant
-    int replyStatus = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    if (replyStatus == 301 || replyStatus == 302) {
-      return reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
-    }
-    return QString();
-  }
+  //QString RemoteBCL::checkForRedirect(const QNetworkReply* reply) const
+  //{
+  //  // In Qt > 5.3, use QNetworkRequest::FollowRedirectsAttribute instead
+  //  // TODO: JM 2018-12-14 QNetworkRequest will have to be removed anyway. Now just converting to int to remove last Q Variant
+  //  int replyStatus = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+  //  if (replyStatus == 301 || replyStatus == 302) {
+  //    return reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
+  //  }
+  //  return QString();
+  //}
 
   boost::optional<BCLComponent> RemoteBCL::waitForComponentDownload(int msec) const
   {
@@ -640,15 +647,15 @@ namespace openstudio{
     request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
+    //disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onDownloadComplete
-    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onDownloadComplete);
+    //connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onDownloadComplete);
 
-#ifndef QT_NO_OPENSSL
-    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
-#endif
+//#ifndef QT_NO_OPENSSL
+//    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
+//#endif
 
     m_downloadReply = m_networkManager->get(request);
     if (!m_downloadReply->isRunning()){
@@ -658,7 +665,7 @@ namespace openstudio{
       return false;
     }
 
-    connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
+    //connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
 
     return true;
   }
@@ -696,15 +703,15 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
+    //disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
-    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onMetaSearchResponseComplete);
+    //connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onMetaSearchResponseComplete);
 
-#ifndef QT_NO_OPENSSL
-    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
-#endif
+//#ifndef QT_NO_OPENSSL
+//    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
+//#endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -741,15 +748,15 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
+    //disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
-    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onMetaSearchResponseComplete);
+    //connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onMetaSearchResponseComplete);
 
-#ifndef QT_NO_OPENSSL
-    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
-#endif
+//#ifndef QT_NO_OPENSSL
+//    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
+//#endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -792,15 +799,15 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
+    //disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete
-    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
+    //connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
 
-#ifndef QT_NO_OPENSSL
-    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
-#endif
+//#ifndef QT_NO_OPENSSL
+//    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
+//#endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -841,15 +848,15 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
+    //disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete
-    connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
+    //connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onSearchResponseComplete);
 
-#ifndef QT_NO_OPENSSL
-    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
-#endif
+//#ifndef QT_NO_OPENSSL
+//    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
+//#endif
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
@@ -999,202 +1006,202 @@ namespace openstudio{
   /// Slots
   ///////////////////////////////////////////////////////////////////////////
 
-  void RemoteBCL::downloadData()
-  {
-    OS_ASSERT(m_downloadReply);
-    const auto result = m_downloadReply->readAll();
-    const auto string = std::string{result.begin(), result.end()};
-    m_downloadFile->write(string);
-  }
+  //void RemoteBCL::downloadData()
+  //{
+  //  OS_ASSERT(m_downloadReply);
+  //  const auto result = m_downloadReply->readAll();
+  //  const auto string = std::string{result.begin(), result.end()};
+  //  m_downloadFile->write(string);
+  //}
 
-  void RemoteBCL::onDownloadComplete(QNetworkReply* reply)
-  {
-    QString redirect = this->checkForRedirect(reply);
-    if (!redirect.isEmpty()) {
-      QNetworkRequest request = QNetworkRequest(QUrl(redirect));
-      request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-      m_downloadReply = m_networkManager->get(request);
-      connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
-    } else {
-      const auto src = m_downloadFile->fileName();
-      m_downloadFile->flush();
-      m_downloadFile->close();
-      std::string componentType;
+  ///void RemoteBCL::onDownloadComplete(QNetworkReply* reply)
+  //{
+  //  QString redirect = this->checkForRedirect(reply);
+  //  if (!redirect.isEmpty()) {
+  //    QNetworkRequest request = QNetworkRequest(QUrl(redirect));
+  //    request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+  //    m_downloadReply = m_networkManager->get(request);
+  //    connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
+  //  } else {
+  //    const auto src = m_downloadFile->fileName();
+  //    m_downloadFile->flush();
+  //    m_downloadFile->close();
+  //    std::string componentType;
 
-      if (!reply) {
-        LOG(Error, "Empty reply");
-      } else {
-        if (reply->error() == QNetworkReply::NoError) {
-          //Print response headers
-        /*for(int i=0; i<reply->rawHeaderList().size(); ++i){
-            QString str(reply->rawHeaderList()[i].constData());
-            std::cout << toString(str) << ": " << toString(reply->rawHeader(reply->rawHeaderList()[i] ).constData()) << std::endl;
-        }*/
+  //   if (!reply) {
+  //      LOG(Error, "Empty reply");
+  //    } else {
+  //      if (reply->error() == QNetworkReply::NoError) {
+  //        //Print response headers
+  //     /*for(int i=0; i<reply->rawHeaderList().size(); ++i){
+  //          QString str(reply->rawHeaderList()[i].constData());
+  //          std::cout << toString(str) << ": " << toString(reply->rawHeader(reply->rawHeaderList()[i] ).constData()) << std::endl;
+  //      }*/
+  //
+  //        // Extract the files to a temp location
+  //        openstudio::path tempDest = openstudio::filesystem::temp_directory_path() / toPath(m_downloadUid  + '/');
+  //
+  //        if (openstudio::filesystem::is_directory(tempDest)) {
+  //          removeDirectory(tempDest);
+  //        }
+  //        openstudio::filesystem::create_directories(tempDest);
+  //
+  //        std::vector<openstudio::path> createdFiles;
+  //        try {
+  //          openstudio::UnzipFile uf(src);
+  //          createdFiles = uf.extractAllFiles(tempDest);
+  //        } catch (const std::exception &e) {
+  //          LOG(Error, "Cannot unzip file: " << e.what());
+  //        }
+  //        openstudio::filesystem::remove(src);
+  //
+  //        // search for component.xml or measure.xml file
+  //        boost::optional<openstudio::path> xmlPath;
+  //
+  //        for (const openstudio::path& path : createdFiles) {
+  //          if (path.filename() == toPath("component.xml")) {
+  //            componentType = "component";
+  //            m_lastComponentDownload.reset();
+  //            xmlPath = path;
+  //            break;
+  //          } else if (path.filename() == toPath("measure.xml")) {
+  //            componentType = "measure";
+  //            m_lastMeasureDownload.reset();
+  //            xmlPath = path;
+  //            break;
+  //          }
+  //        }
+  //
+  //        if (xmlPath) {
+  //          path src = xmlPath->parent_path();
+  //          path dest = src.parent_path();
+  //          openstudio::filesystem::remove(dest / toPath("DISCLAIMER.txt"));
+  //          openstudio::filesystem::remove(dest / toPath("README.txt"));
+  //          openstudio::filesystem::remove(dest / toPath("output.xml"));
+  //          copyDirectory(src, dest);
+  //          removeDirectory(src);
+  // 
+  //          if (componentType == "component")
+  //          {
+  //            path componentXmlPath = dest / toPath("component.xml");
+  //            // open the component to figure out uid and vid
+  //            BCLComponent component(toString(componentXmlPath.parent_path()));
+  //            std::string uid = component.uid();
+  //            std::string versionId = component.versionId();
+  //
+  //            // check if component has proper uid and vid
+  //            if (!uid.empty() && !versionId.empty()) {
+  //             dest = LocalBCL::instance().libraryPath() / uid / versionId;
+  //
+  //              removeDirectory(dest);
+  //              if (copyDirectory(componentXmlPath.parent_path(), dest))
+  //              {
+  //                // Add to LocalBCL
+  //                m_lastComponentDownload = BCLComponent(toString(dest));
+  //                LocalBCL::instance().addComponent(*m_lastComponentDownload);
+  //              }
+  //            }
+  //          } else if (componentType == "measure") {
+  //            path measureXmlPath = dest / toPath("measure.xml");
+  //            // open the measure to figure out uid and vid
+  //            boost::optional<BCLMeasure> measure;
+  //            try {
+  //              measure = BCLMeasure(measureXmlPath.parent_path());
+  //
+  //              std::string uid = measure->uid();
+  //              std::string versionId = measure->versionId();
+  //
+  //              // check if component has proper uid and vid
+  //              if (!uid.empty() && !versionId.empty()) {
+  //                dest = LocalBCL::instance().libraryPath() / uid / versionId;
+  //                removeDirectory(dest);
+  //                if (copyDirectory(measureXmlPath.parent_path(), dest))
+  //                {
+  //                  // Add to LocalBCL
+  //                  m_lastMeasureDownload = BCLMeasure(dest);
+  //                  LocalBCL::instance().addMeasure(*m_lastMeasureDownload);
+  //                }
+  //              }
+  //            } catch (const std::exception&) {
+  //              LOG(Error, "Unable to create measure from download: " + toString(measureXmlPath.parent_path()));
+  //            }
+  //          }
+  //        } else {
+  //          LOG(Error, "No component.xml or measure.xml file found in downloaded contents");
+  //        }
+  //
+  //        // delete the temp unzip directory
+  //        removeDirectory(tempDest);
+  //
+  //      } else {
+  //        LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt());
+  //      }
+  //    }
+  //
+  //    if (componentType == "measure") {
+  //      //emit measureDownloaded(m_downloadUid, m_lastMeasureDownload);
+  //    } else {
+  //      //emit componentDownloaded(m_downloadUid, m_lastComponentDownload);
+  //    }
+  //
+  //    m_mutex.unlock();
+  //  }
+  //  reply->deleteLater();
+  //}
 
-          // Extract the files to a temp location
-          openstudio::path tempDest = openstudio::filesystem::temp_directory_path() / toPath(m_downloadUid  + '/');
+  //void RemoteBCL::onMetaSearchResponseComplete(QNetworkReply* reply)
+  //{
+  //  QString redirect = this->checkForRedirect(reply);
+  //  if (!redirect.isEmpty()) {
+  //    QNetworkRequest request = QNetworkRequest(QUrl(redirect));
+  //    request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+  //    request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+  //    m_networkManager->get(request);
+  //  } else {
+  //    boost::optional<RemoteQueryResponse> remoteQueryResponse = this->processReply(reply);
+  //    if (remoteQueryResponse) {
+  //      m_lastMetaSearch = processMetaSearchResponse(*remoteQueryResponse);
+  //    }
+  //
+  //    if (m_lastMetaSearch) {
+  //      setLastTotalResults(m_lastMetaSearch->numResults());
+  //    } else {
+  //      setLastTotalResults(0);
+  //    }
+  //
+  //    //emit metaSearchCompleted(m_lastMetaSearch);
+  //
+  //    m_mutex.unlock();
+  //  }
+  //  reply->deleteLater();
+  //}
 
-          if (openstudio::filesystem::is_directory(tempDest)) {
-            removeDirectory(tempDest);
-          }
-          openstudio::filesystem::create_directories(tempDest);
+  //void RemoteBCL::onSearchResponseComplete(QNetworkReply* reply)
+  //{
+  //  QString redirect = this->checkForRedirect(reply);
+  //  if (!redirect.isEmpty()) {
+  //    QNetworkRequest request = QNetworkRequest(QUrl(redirect));
+  //    request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+  //    request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+  //    m_networkManager->get(request);
+  //  } else {
+  //    boost::optional<RemoteQueryResponse> remoteQueryResponse = this->processReply(reply);
+  //    if (remoteQueryResponse) {
+  //      m_lastSearch = processSearchResponse(*remoteQueryResponse);
+  //    }
+  //
+  //    //emit searchCompleted(m_lastSearch);
+  //
+  //    m_mutex.unlock();
+  //  }
+  //  reply->deleteLater();
+  //}
 
-          std::vector<openstudio::path> createdFiles;
-          try {
-            openstudio::UnzipFile uf(src);
-            createdFiles = uf.extractAllFiles(tempDest);
-          } catch (const std::exception &e) {
-            LOG(Error, "Cannot unzip file: " << e.what());
-          }
-          openstudio::filesystem::remove(src);
-
-          // search for component.xml or measure.xml file
-          boost::optional<openstudio::path> xmlPath;
-
-          for (const openstudio::path& path : createdFiles) {
-            if (path.filename() == toPath("component.xml")) {
-              componentType = "component";
-              m_lastComponentDownload.reset();
-              xmlPath = path;
-              break;
-            } else if (path.filename() == toPath("measure.xml")) {
-              componentType = "measure";
-              m_lastMeasureDownload.reset();
-              xmlPath = path;
-              break;
-            }
-          }
-
-          if (xmlPath) {
-            path src = xmlPath->parent_path();
-            path dest = src.parent_path();
-            openstudio::filesystem::remove(dest / toPath("DISCLAIMER.txt"));
-            openstudio::filesystem::remove(dest / toPath("README.txt"));
-            openstudio::filesystem::remove(dest / toPath("output.xml"));
-            copyDirectory(src, dest);
-            removeDirectory(src);
-
-            if (componentType == "component")
-            {
-              path componentXmlPath = dest / toPath("component.xml");
-              // open the component to figure out uid and vid
-              BCLComponent component(toString(componentXmlPath.parent_path()));
-              std::string uid = component.uid();
-              std::string versionId = component.versionId();
-
-              // check if component has proper uid and vid
-              if (!uid.empty() && !versionId.empty()) {
-                dest = LocalBCL::instance().libraryPath() / uid / versionId;
-
-                removeDirectory(dest);
-                if (copyDirectory(componentXmlPath.parent_path(), dest))
-                {
-                  // Add to LocalBCL
-                  m_lastComponentDownload = BCLComponent(toString(dest));
-                  LocalBCL::instance().addComponent(*m_lastComponentDownload);
-                }
-              }
-            } else if (componentType == "measure") {
-              path measureXmlPath = dest / toPath("measure.xml");
-              // open the measure to figure out uid and vid
-              boost::optional<BCLMeasure> measure;
-              try {
-                measure = BCLMeasure(measureXmlPath.parent_path());
-
-                std::string uid = measure->uid();
-                std::string versionId = measure->versionId();
-
-                // check if component has proper uid and vid
-                if (!uid.empty() && !versionId.empty()) {
-                  dest = LocalBCL::instance().libraryPath() / uid / versionId;
-                  removeDirectory(dest);
-                  if (copyDirectory(measureXmlPath.parent_path(), dest))
-                  {
-                    // Add to LocalBCL
-                    m_lastMeasureDownload = BCLMeasure(dest);
-                    LocalBCL::instance().addMeasure(*m_lastMeasureDownload);
-                  }
-                }
-              } catch (const std::exception&) {
-                LOG(Error, "Unable to create measure from download: " + toString(measureXmlPath.parent_path()));
-              }
-            }
-          } else {
-            LOG(Error, "No component.xml or measure.xml file found in downloaded contents");
-          }
-
-          // delete the temp unzip directory
-          removeDirectory(tempDest);
-
-        } else {
-          LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt());
-        }
-      }
-
-      if (componentType == "measure") {
-        //emit measureDownloaded(m_downloadUid, m_lastMeasureDownload);
-      } else {
-        //emit componentDownloaded(m_downloadUid, m_lastComponentDownload);
-      }
-
-      m_mutex.unlock();
-    }
-    reply->deleteLater();
-  }
-
-  void RemoteBCL::onMetaSearchResponseComplete(QNetworkReply* reply)
-  {
-    QString redirect = this->checkForRedirect(reply);
-    if (!redirect.isEmpty()) {
-      QNetworkRequest request = QNetworkRequest(QUrl(redirect));
-      request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-      request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-      m_networkManager->get(request);
-    } else {
-      boost::optional<RemoteQueryResponse> remoteQueryResponse = this->processReply(reply);
-      if (remoteQueryResponse) {
-        m_lastMetaSearch = processMetaSearchResponse(*remoteQueryResponse);
-      }
-
-      if (m_lastMetaSearch) {
-        setLastTotalResults(m_lastMetaSearch->numResults());
-      } else {
-        setLastTotalResults(0);
-      }
-
-      //emit metaSearchCompleted(m_lastMetaSearch);
-
-      m_mutex.unlock();
-    }
-    reply->deleteLater();
-  }
-
-  void RemoteBCL::onSearchResponseComplete(QNetworkReply* reply)
-  {
-    QString redirect = this->checkForRedirect(reply);
-    if (!redirect.isEmpty()) {
-      QNetworkRequest request = QNetworkRequest(QUrl(redirect));
-      request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-      request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-      m_networkManager->get(request);
-    } else {
-      boost::optional<RemoteQueryResponse> remoteQueryResponse = this->processReply(reply);
-      if (remoteQueryResponse) {
-        m_lastSearch = processSearchResponse(*remoteQueryResponse);
-      }
-
-      //emit searchCompleted(m_lastSearch);
-
-      m_mutex.unlock();
-    }
-    reply->deleteLater();
-  }
-
-  void RemoteBCL::catchSslErrors(QNetworkReply* reply, const QList<QSslError>& errorList)
-  {
-    for (const QSslError& error : errorList) {
-      LOG(Error, error.errorString().toStdString());
-    }
-  }
+  //void RemoteBCL::catchSslErrors(QNetworkReply* reply, const QList<QSslError>& errorList)
+  //{
+  //  for (const QSslError& error : errorList) {
+  //    LOG(Error, error.errorString().toStdString());
+  //  }
+  //}
 
 } // openstudio

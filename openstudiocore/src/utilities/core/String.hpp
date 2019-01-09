@@ -35,8 +35,6 @@
 #include <string>
 #include <vector>
 
-#include <QString>
-
 /** \file String.hpp
  *
  *  All strings are assumed to be UTF-8 encoded std::string.  Note that length of the std::string
@@ -56,8 +54,6 @@ namespace openstudio {
   /** wchar_t* to std::string. */
   UTILITIES_API std::string toString(const wchar_t* w);
 
-  /** QString to UTF-8 encoded std::string. */
-  UTILITIES_API std::string toString(const QString& q);
 
   /** Double to std::string at full precision. */
   UTILITIES_API std::string toString(double v);
@@ -65,14 +61,6 @@ namespace openstudio {
   /** Load data in istream into string. */
   UTILITIES_API std::string toString(std::istream& s);
 
-  /** QString to wstring. */
-  UTILITIES_API std::wstring toWString(const QString& q);
-
-  /** UTF-8 encoded std::string to QString. */
-  UTILITIES_API QString toQString(const std::string& s);
-
-  /** wstring to QString. */
-  UTILITIES_API QString toQString(const std::wstring& w);
 
 } // openstudio
 

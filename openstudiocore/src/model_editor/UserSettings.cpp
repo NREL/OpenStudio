@@ -34,6 +34,8 @@
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include <QString>
 #include <QSettings>
 

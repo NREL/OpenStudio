@@ -28,6 +28,8 @@
 ***********************************************************************************************************************/
 
 #include "./LibraryDialog.hpp"
+#include "../model_editor/Utilities.hpp"
+
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include <QVBoxLayout>

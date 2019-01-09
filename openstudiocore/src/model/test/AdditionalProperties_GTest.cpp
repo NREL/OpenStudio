@@ -150,7 +150,7 @@ TEST_F(ModelFixture, AdditionalProperties_Features) {
   ASSERT_TRUE(dblValue);
   boost::optional<int> intValue = props.getFeatureAsInteger("NumberOfBathrooms");
   ASSERT_FALSE(intValue);
-  ASSERT_FLOAT_EQ(*dblValue, 1.5);
+  ASSERT_DOUBLE_EQ(*dblValue, 1.5);
 
   // Test setting a feature to a value of a different type
   EXPECT_TRUE(props.setFeature("NumberOfBedrooms", 3));

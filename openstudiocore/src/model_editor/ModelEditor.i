@@ -27,6 +27,7 @@
   #include <model_editor/ModalDialogs.hpp>
   #include <model_editor/OSProgressBar.hpp>
   #include <model_editor/PathWatcher.hpp>
+  #include <model_editor/Utilities.hpp>
  
   #include <model/Model.hpp>
   #include <model/ModelObject.hpp>
@@ -74,6 +75,8 @@
 %include <model_editor/AccessPolicyStore.hpp>
 
 %include <model_editor/InspectorGadget.hpp>
+
+%include <model_editor/Utilities.hpp>
 
 %feature("director") InspectorDialog;
 %include <model_editor/InspectorDialog.hpp>

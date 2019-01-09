@@ -218,7 +218,7 @@ double DateTime::utcOffset() const
 /// convert to string
 std::string DateTime::toString() const
 {
-  boost::posix_time::ptime pt(m_date.impl(), m_time.impl() - boost::posix_time::time_duration(m_utcOffset, 0, 0, 0));
+  boost::posix_time::ptime pt(m_date.impl(), m_time.impl() - boost::posix_time::time_duration(utcOffsetHours(), utcOffsetMinutes(), 0, 0));
   return boost::posix_time::to_simple_string(pt);
 }
 
@@ -228,7 +228,7 @@ std::string DateTime::toISO8601() const {
   if (m_utcOffset == 0.0){
     result += "Z";
   } else{
-    Time temp(0,m_utcOffset,0,0);
+    Time temp(0,utcOffsetHours(),utcOffsetMinutes(),0);
     char buffer[64];
     if (temp.totalHours() < 0){
       sprintf(buffer, "-%02d%02d", std::abs(temp.hours()), std::abs(temp.minutes()));
@@ -245,7 +245,7 @@ std::string DateTime::toXsdDateTime() const
 {
   // 2016-07-13T16:08:43-06:00
   char buffer[64];
-  Time temp(0, m_utcOffset, 0, 0);
+  Time temp(0, utcOffsetHours(), utcOffsetMinutes(), 0);
   if (temp.totalHours() < 0){
     sprintf(buffer, "%04d-%02d-%02dT%02d:%02d:%02d-%02d:%02d", m_date.year(), m_date.monthOfYear().value(), m_date.dayOfMonth(), m_time.hours(), m_time.minutes(), m_time.seconds(), std::abs(temp.hours()), std::abs(temp.minutes()));
   } else{
@@ -258,7 +258,7 @@ std::string DateTime::toXsdDateTime() const
 
 std::time_t DateTime::toEpoch() const {
   // credit: http://stackoverflow.com/questions/4461586/how-do-i-convert-boostposix-timeptime-to-time-t
-  boost::posix_time::ptime pt(m_date.impl(), m_time.impl() - boost::posix_time::time_duration(m_utcOffset, 0, 0, 0));
+  boost::posix_time::ptime pt(m_date.impl(), m_time.impl() - boost::posix_time::time_duration(utcOffsetHours(), utcOffsetMinutes(), 0, 0));
   boost::posix_time::ptime epoch(boost::gregorian::date(1970,1,1));
   boost::posix_time::time_duration::sec_type x = (pt - epoch).total_seconds();
   return std::time_t(x);
@@ -347,6 +347,17 @@ void DateTime::normalize()
     m_date -= adjustTime;
     m_time += adjustTime;
   }
+}
+
+int DateTime::utcOffsetHours() const
+{
+  return (int) m_utcOffset;
+}
+
+int DateTime::utcOffsetMinutes() const
+{
+  double minutes = 60*(m_utcOffset - utcOffsetHours());
+  return (int) minutes;
 }
 
 // std::ostream operator<<

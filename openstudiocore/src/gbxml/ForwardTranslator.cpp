@@ -88,6 +88,13 @@
 
 #include <regex>
 
+///
+/// TODO: Remove this helper when Qt is fully removed
+///
+static auto toQString(const std::string &s) {
+  return QString::fromUtf8(s.data(), s.size());
+};
+
 namespace openstudio {
 namespace gbxml {
 
@@ -117,7 +124,7 @@ namespace gbxml {
 
     openstudio::filesystem::ofstream file(path, std::ios_base::binary);
     if (file.is_open()){
-      openstudio::filesystem::write(file, doc->toString(2));
+      file << doc->toString(2).toStdString();
       file.close();
       return true;
     }
