@@ -144,6 +144,10 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   QCoreApplication::setOrganizationDomain("nrel.gov");
   setApplicationName("OpenStudioApp");
 
+  // Don't use native menu bar, necessary on Ubuntu 16.04
+  // TODO: check for adverse side effects on other OSes
+  QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar, true);
+
   readSettings();
 
   QFile f(":/library/OpenStudioPolicy.xml");

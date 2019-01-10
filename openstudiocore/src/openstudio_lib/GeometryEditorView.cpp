@@ -1083,9 +1083,10 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
   connect(m_page, &OSWebEnginePage::renderProcessTerminated, this, &EditorWebView::onRenderProcessTerminated);
 
   // Qt 5.8 and higher
-  //m_view->setAttribute(QWebEngineSettings::WebAttribute::AllowRunningInsecureContent, true);
+  m_view->settings()->setAttribute(QWebEngineSettings::AllowRunningInsecureContent, true);
+  // Force QWebEngineView to fill the rest of the space
+  m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-  //m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   m_view->setContextMenuPolicy(Qt::NoContextMenu);
 
   //mainLayout->addWidget(m_view, 10, Qt::AlignTop);
