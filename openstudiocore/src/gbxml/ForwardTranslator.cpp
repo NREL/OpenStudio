@@ -1459,6 +1459,69 @@ namespace gbxml {
     return result;
   }
 
+  boost::optional<pugi::xml_node> ForwardTranslator::translateThermalZone(const openstudio::model::ThermalZone& thermalZone, pugi::xml_node& parent)
+  {
+    auto result = parent.append_child("Zone");
+    m_translatedObjectsS[thermalZone.handle()] = result;
+
+    // id
+    std::string name = thermalZone.name().get();
+    result.attribute("id") = escapeNameS(name).c_str();
+
+    // name
+    auto nameElement = result.append_child("Name");
+    nameElement.text() = name.c_str();
+
+    // heating setpoint
+    boost::optional<double> designHeatT;
+    boost::optional<double> designCoolT;
+    boost::optional<model::Thermostat> thermostat = thermalZone.thermostat();
+    if (thermostat && thermostat->optionalCast<model::ThermostatSetpointDualSetpoint>()) {
+      model::ThermostatSetpointDualSetpoint thermostatDualSetpoint = thermostat->cast<model::ThermostatSetpointDualSetpoint>();
+
+      boost::optional<model::Schedule> heatingSchedule = thermostatDualSetpoint.heatingSetpointTemperatureSchedule();
+      if (heatingSchedule) {
+        if (heatingSchedule->optionalCast<model::ScheduleRuleset>()) {
+          model::ScheduleRuleset scheduleRuleset = heatingSchedule->cast<model::ScheduleRuleset>();
+          model::ScheduleDay winterDesignDaySchedule = scheduleRuleset.winterDesignDaySchedule();
+          std::vector<double> values = winterDesignDaySchedule.values();
+          if (!values.empty()) {
+            designHeatT = *std::max_element(values.begin(), values.end());
+          }
+        }
+      }
+
+      boost::optional<model::Schedule> coolingSchedule = thermostatDualSetpoint.coolingSetpointTemperatureSchedule();
+      if (coolingSchedule) {
+        if (coolingSchedule->optionalCast<model::ScheduleRuleset>()) {
+          model::ScheduleRuleset scheduleRuleset = coolingSchedule->cast<model::ScheduleRuleset>();
+          model::ScheduleDay summerDesignDaySchedule = scheduleRuleset.summerDesignDaySchedule();
+          std::vector<double> values = summerDesignDaySchedule.values();
+          if (!values.empty()) {
+            designCoolT = *std::min_element(values.begin(), values.end());
+          }
+        }
+      }
+    }
+
+    if (designHeatT) {
+      auto designHeatTElement = result.append_child("DesignHeatT");
+      designHeatTElement.attribute("unit") = "C";
+      designHeatTElement.text() = openstudio::string_conversions::number(*designHeatT, FloatFormat::fixed).c_str();
+    }
+
+    if (designCoolT) {
+      auto designCoolTElement = result.append_child("DesignCoolT");
+      designCoolTElement.attribute("unit") = "C";
+      designCoolTElement.text() = openstudio::string_conversions::number(*designCoolT, FloatFormat::fixed).c_str();
+    }
+
+    // export CADObjectId if present
+    translateCADObjectId(thermalZone, result);
+
+    return result;
+  }
+
   boost::optional<QDomElement> ForwardTranslator::translateCADObjectId(const openstudio::model::ModelObject& modelObject, QDomElement& parentElement, QDomDocument& doc)
   {
     boost::optional<QDomElement> result;
