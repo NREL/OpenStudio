@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,140 +33,122 @@
 
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
+#include "../utilities/core/StringHelpers.hpp"
 
 namespace openstudio {
 namespace contam {
 
 Reader::Reader( openstudio::filesystem::ifstream &file )
-  : m_stream(openstudio::filesystem::read_as_QByteArray(file)), m_lineNumber(0)
+  : m_stream(openstudio::filesystem::read_as_string(file)), m_lineNumber(0)
 {
 }
 
-Reader::Reader(QString *string, int starting) : m_lineNumber(starting)
+Reader::Reader(const std::string& string, int starting) : m_lineNumber(starting)
 {
-  m_stream.setString(string);
+  m_stream.str(string);
 }
 
 Reader::~Reader()
 {
 }
 
-float Reader::readFloat()
-{
-  bool ok;
-  QString string = readQString();
-  float value = string.toFloat(&ok);
-  if(!ok) {
-    QString mesg=QString("Floating point (float) conversion error at line %1 for \"%2\"")
-      .arg(m_lineNumber).arg(string);
-    LOG_AND_THROW(mesg.toStdString());
-  }
-  return value;
-}
-
 double Reader::readDouble()
 {
-  bool ok;
-  QString string = readQString();
-  double value = string.toDouble(&ok);
-  if(!ok) {
-    QString mesg=QString("Floating point (double) conversion error at line %1 for \"%2\"")
-      .arg(m_lineNumber).arg(string);
-    LOG_AND_THROW(mesg.toStdString());
+  const auto string = readString();
+  try {
+    return openstudio::string_conversions::to<double>(string);
+  } catch (const std::bad_cast &) {
+    LOG_AND_THROW("Floating point (double) conversion error at line " << m_lineNumber << " for \"" << string << "\"");
   }
-  return value;
 }
 
-QString Reader::readQString()
+std::string Reader::readString()
 {
   while(1) {
     while(m_entries.size() == 0) {
-      QString input = m_stream.readLine();
-      LOG(Debug, "Line read: " << input.toStdString());
-      if(input.isNull()) {
-        QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
-        LOG_AND_THROW(mesg.toStdString());
+      std::string input;
+      std::getline(m_stream, input);
+      LOG(Debug, "Line read: " << input);
+      if(!m_stream) {
+        LOG_AND_THROW("Failed to read input at line " << m_lineNumber);
       }
       m_lineNumber++;
       while(input[0]=='!') {
-        input = m_stream.readLine();
-        LOG(Debug, "Line read: " << input.toStdString());
-        if(input.isNull()) {
-          QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
-          LOG_AND_THROW(mesg.toStdString());
+        std::getline(m_stream, input);
+        LOG(Debug, "Line read: " << input);
+        if(!m_stream) {
+          LOG_AND_THROW("Failed to read input at line " << m_lineNumber);
         }
         m_lineNumber++;
       }
-      m_entries = input.split(" ",QString::SkipEmptyParts);
+
+      std::vector<std::string> strs;
+      boost::split(strs,input,boost::is_any_of(" "));
+
+      m_entries.clear();
+      for (const auto &s : strs) {
+        std::string s2 = boost::replace_all_copy(s, " ", "");
+        boost::replace_all(s2, "\r", "");
+        boost::replace_all(s2, "\n", "");
+        boost::replace_all(s2, "\t", "");
+        if (!s2.empty()) {
+          m_entries.push_back(s2);
+        }
+      }
     }
-    QString out = m_entries.takeFirst();
+    std::string out = m_entries.front();
+    m_entries.pop_front();
     if(out[0] == '!') {
       m_entries.clear();
     } else {
-      LOG(Debug, "String return: " << out.toStdString());
+      LOG(Debug, "String return: " << out);
       return out;
     }
   }
 }
 
-std::string Reader::readStdString()
-{
-  return readQString().toStdString();
-}
-
-std::string Reader::readString()
-{
-  return readQString().toStdString();
-}
-
 int Reader::readInt()
 {
-  bool ok;
-  QString string = readQString();
-  int value = string.toInt(&ok);
-  if(!ok) {
-    QString mesg=QString("Integer conversion error at line %1 for \"%2\"").arg(m_lineNumber).arg(string);
-    LOG_AND_THROW(mesg.toStdString());
+  std::string string = readString();
+  int value = 0;
+  try {
+    value = std::stoi(string);
+  }catch(const std::exception&){
+    LOG_AND_THROW("Integer conversion error at line " << m_lineNumber << " for \"" << string << "\"");
   }
   return value;
 }
 
 unsigned int Reader::readUInt()
 {
-  bool ok;
-  QString string = readQString();
-  int value = string.toUInt(&ok);
-  if(!ok) {
-    QString mesg=QString("Unsigned integer conversion error at line %1 for \"%2\"").arg(m_lineNumber).arg(string);
-    LOG_AND_THROW(mesg.toStdString());
+  std::string string = readString();
+  int value = 0;
+  try {
+    value = std::stoul(string);
+  } catch (const std::exception&) {
+    LOG_AND_THROW("Unsigned Integer conversion error at line " << m_lineNumber << " for \"" << string << "\"");
   }
   return value;
 }
 
 std::string Reader::readLine()
 {
-  return readLineQString().toStdString();
-}
-
-QString Reader::readLineQString()
-{
   /* Dump any other input */
   if(m_entries.size()) {
     m_entries.clear();
   }
-  QString input = m_stream.readLine();
-  LOG(Debug, "Line read: " << input.toStdString());
-  if(input.isNull()) {
-    QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
-    LOG_AND_THROW(mesg.toStdString());
+  std::string input;
+  std::getline(m_stream, input);
+  LOG(Debug, "Line read: " << input);
+  if(!m_stream) {
+    LOG_AND_THROW("Failed to read input at line " << m_lineNumber);
   }
   m_lineNumber++;
   while(input[0]=='!') {
-    input = m_stream.readLine();
-    LOG(Debug, "Line read: " << input.toStdString());
-    if(input.isNull()) {
-      QString mesg=QString("Failed to read input at line %1").arg(m_lineNumber);
-      LOG_AND_THROW(mesg.toStdString());
+    std::getline(m_stream, input);
+    LOG(Debug, "Line read: " << input);
+    if(!m_stream) {
+      LOG_AND_THROW("Failed to read input at line " << m_lineNumber);
     }
     m_lineNumber++;
   }
@@ -175,28 +157,25 @@ QString Reader::readLineQString()
 
 void Reader::read999()
 {
-  QString input = readLineQString();
-  if(!input.startsWith(QString("-999"))) {
-    QString mesg=QString("Failed to read -999 at line %1").arg(m_lineNumber);
-    LOG_AND_THROW(mesg.toStdString());
+  std::string input = readLine();
+  if(!boost::starts_with(input, "-999")) {
+    LOG_AND_THROW("Failed to read -999 at line " << m_lineNumber);
   }
 }
 
 void Reader::read999(std::string mesg)
 {
-  QString input = readLineQString();
-  if(!input.startsWith(QString("-999"))) {
-    QString errmesg = QString().fromStdString(mesg) + QString(" at line %1").arg(m_lineNumber);
-    LOG_AND_THROW(errmesg.toStdString());
+  std::string input = readLine();
+  if (!boost::starts_with(input, "-999")) {
+    LOG_AND_THROW(mesg << " at line " << m_lineNumber);
   }
 }
 
 void Reader::readEnd()
 {
-  QString input = readLineQString();
-  if(!input.startsWith(QString("* end project file."))) {
-    QString mesg = QString("Failed to read file end at line %1").arg(m_lineNumber);
-    LOG_AND_THROW(mesg.toStdString());
+  std::string input = readLine();
+  if (!boost::starts_with(input, "* end project file.")) {
+    LOG_AND_THROW("Failed to read file end at line " << m_lineNumber);
   }
 }
 
@@ -207,20 +186,20 @@ void Reader::skipSection()
 
 std::string Reader::readSection()
 {
-  QString section;
+  std::string section;
   while(1) {
-    QString input = m_stream.readLine();
-    if(input.isNull()) {
-      QString mesg = QString("Failed to read input at line %1").arg(m_lineNumber);
-      LOG_AND_THROW(mesg.toStdString());
+    std::string input;
+    std::getline(m_stream, input);
+    if(!m_stream) {
+      LOG_AND_THROW("Failed to read input at line " << m_lineNumber);
     }
     m_lineNumber++;
-    section += input + '\n';
-    if(input.startsWith(QString("-999"))) {
+    section += std::string(input + '\n');
+    if(input.find("-999") == 0) {
       break;
     }
   }
-  return section.toStdString();
+  return section;
 }
 
 std::vector<int> Reader::readIntVector(bool terminated)
@@ -251,19 +230,9 @@ template <> double Reader::read<double>()
   return readDouble();
 }
 
-template <> float Reader::read<float>()
-{
-  return readFloat();
-}
-
-template <> QString Reader::read<QString>()
-{
-  return readQString();
-}
-
 template <> std::string Reader::read<std::string>()
 {
-  return readStdString();
+  return readString();
 }
 
 template <> double Reader::readNumber<double>()
@@ -271,33 +240,13 @@ template <> double Reader::readNumber<double>()
   return readInt();
 }
 
-template <> float Reader::readNumber<float>()
-{
-  return readFloat();
-}
-
-template <> QString Reader::readNumber<QString>()
-{
-  bool ok;
-  QString string = readQString();
-  string.toDouble(&ok);
-  if(!ok) {
-    QString mesg = QString("Invalid number \"%2\" on line %1").arg(m_lineNumber).arg(string);
-    LOG_AND_THROW(mesg.toStdString());
-  }
-  return string;
-}
-
 template <> std::string Reader::readNumber<std::string>()
 {
-  bool ok;
-  QString string = readQString();
-  string.toDouble(&ok);
-  if(!ok) {
-    QString mesg = QString("Invalid number \"%2\" on line %1").arg(m_lineNumber).arg(string);
-    LOG_AND_THROW(mesg.toStdString());
+  std::string string = readString();
+  if(!openstudio::contam::is_valid<double>(string)) {
+    LOG_AND_THROW("Invalid number \"" << string << "\" on line " << m_lineNumber);
   }
-  return string.toStdString();
+  return string;
 }
 
 } // contam

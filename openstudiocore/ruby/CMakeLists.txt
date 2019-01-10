@@ -29,7 +29,7 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioUtilitiesCore
  ruby_OpenStudioUtilitiesPlot
  ruby_OpenStudioEnergyPlus
- ##ruby_OpenStudioModelEditor # linked by openstudio.so only, for SketchUp plugin
+ ##ruby_OpenStudioModelEditor # linked by openstudio_modeleditor.so only, for SketchUp plugin
  ruby_OpenStudioOSVersion
  ruby_OpenStudioUtilitiesData
  ruby_OpenStudioUtilitiesSql
@@ -64,33 +64,53 @@ target_link_libraries(init_openstudio
 
 # openstudio ruby bindings to load into normal ruby
 
-add_library(
-  openstudio_rb
-  MODULE
+add_library(openstudio_rb MODULE
+  RubyAPI.hpp
   openstudio_rb.cpp
 )
 
 set_target_properties(openstudio_rb PROPERTIES PREFIX "")
 set_target_properties(openstudio_rb PROPERTIES OUTPUT_NAME openstudio)
 
+add_library(openstudio_modeleditor_rb MODULE
+  RubyAPI.hpp
+  openstudio_modeleditor_rb.cpp
+)
+
+set_target_properties(openstudio_modeleditor_rb PROPERTIES PREFIX "")
+set_target_properties(openstudio_modeleditor_rb PROPERTIES OUTPUT_NAME openstudio_modeleditor)
+
 # change output directory so the openstudio.pdb file does not conflict between this target and the CLI
 set_target_properties(openstudio_rb PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/ruby/")
 set_target_properties(openstudio_rb PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
 set_target_properties(openstudio_rb PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
+set_target_properties(openstudio_modeleditor_rb PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/ruby/")
+set_target_properties(openstudio_modeleditor_rb PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
+set_target_properties(openstudio_modeleditor_rb PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
+
 if(APPLE)
   set_target_properties(openstudio_rb PROPERTIES SUFFIX ".bundle" )
+  set_target_properties(openstudio_modeleditor_rb PROPERTIES SUFFIX ".bundle" )
 else()
   set_target_properties(openstudio_rb PROPERTIES SUFFIX ".so" )
+  set_target_properties(openstudio_modeleditor_rb PROPERTIES SUFFIX ".so" )
 endif()
 
 if(MSVC)
   set_target_properties(openstudio_rb PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
+  set_target_properties(openstudio_modeleditor_rb PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
 endif()
 
 add_custom_command(TARGET openstudio_rb
   POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb $<TARGET_FILE_DIR:openstudio_rb>/openstudio.rb
 )
+
+add_custom_command(TARGET openstudio_modeleditor_rb
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/openstudio_modeleditor.rb $<TARGET_FILE_DIR:openstudio_modeleditor_rb>/openstudio_modeleditor.rb
+)
+
 
 file(GLOB_RECURSE OPENSTUDIO_FILES FOLLOW_SYMLINKS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/" "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/**/*.*")
 foreach(OPENSTUDIO_FILE ${OPENSTUDIO_FILES})
@@ -102,7 +122,6 @@ endforeach()
 
 target_link_libraries(openstudio_rb
   init_openstudio
-  ruby_OpenStudioModelEditor
   openstudio_airflow_static
   openstudio_model_static
   openstudio_energyplus_static
@@ -112,6 +131,10 @@ target_link_libraries(openstudio_rb
   openstudio_isomodel_static
   openstudio_gbxml_static
   openstudio_radiance_static
+)
+
+target_link_libraries(openstudio_modeleditor_rb
+  ruby_OpenStudioModelEditor
   openstudio_modeleditor_static
 )
 
@@ -120,32 +143,56 @@ if( UNIX AND NOT APPLE )
   target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libxcb-static.a" -Wl,--no-whole-archive
   )
+  target_link_libraries(openstudio_modeleditor_rb
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libxcb-static.a" -Wl,--no-whole-archive
+  )
+  
 #target_link_libraries(openstudio_rb
 #    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a" -Wl,--no-whole-archive
 #  )
+
   target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5FontDatabaseSupport.a" -Wl,--no-whole-archive
   )
+  target_link_libraries(openstudio_modeleditor_rb
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5FontDatabaseSupport.a" -Wl,--no-whole-archive
+  )
+  
   target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5EventDispatcherSupport.a" -Wl,--no-whole-archive
   )
+  target_link_libraries(openstudio_modeleditor_rb
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5EventDispatcherSupport.a" -Wl,--no-whole-archive
+  )
+  
   target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5ThemeSupport.a" -Wl,--no-whole-archive
   )
-
+  target_link_libraries(openstudio_modeleditor_rb
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5ThemeSupport.a" -Wl,--no-whole-archive
+  )
+  
   target_link_libraries(openstudio_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a" -Wl,--no-whole-archive
   )
+  target_link_libraries(openstudio_modeleditor_rb
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a" -Wl,--no-whole-archive
+  ) 
 endif()
 
 if( WIN32 )
   target_link_libraries(openstudio_rb ${RUBY_MINGW_STUB_LIB})
+  target_link_libraries(openstudio_modeleditor_rb ${RUBY_MINGW_STUB_LIB})
 endif()
 
 install(TARGETS openstudio_rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(FILES openstudio.rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(DIRECTORY openstudio DESTINATION Ruby COMPONENT "RubyAPI")
 
+install(TARGETS openstudio_modeleditor_rb DESTINATION Ruby COMPONENT "RubyAPI")
+install(FILES openstudio_modeleditor.rb DESTINATION Ruby COMPONENT "RubyAPI")
+
+# don't need modeleditor libs in pat
 if( BUILD_PAT )
   if( APPLE )
     install(TARGETS openstudio_rb

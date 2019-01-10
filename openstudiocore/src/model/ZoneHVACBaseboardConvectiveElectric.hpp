@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -68,25 +66,17 @@ class MODEL_API ZoneHVACBaseboardConvectiveElectric : public ZoneHVACComponent {
   **/
   boost::optional<double> nominalCapacity() const;
 
-  OSOptionalQuantity getNominalCapacity(bool returnIP=false) const;
-
   bool isNominalCapacityAutosized() const;
 
   bool setNominalCapacity(double nominalCapacity);
-
-  bool setNominalCapacity(const Quantity& nominalCapacity);
 
   void autosizeNominalCapacity();
 
   double efficiency() const;
 
-  Quantity getEfficiency(bool returnIP=false) const;
-
   bool isEfficiencyDefaulted() const;
 
   bool setEfficiency(double efficiency);
-
-  bool setEfficiency(const Quantity& efficiency);
 
   void resetEfficiency();
 

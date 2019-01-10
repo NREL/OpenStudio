@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -71,11 +71,8 @@ class MODEL_API SiteWaterMainsTemperature : public ModelObject {
 
   boost::optional<double> annualAverageOutdoorAirTemperature() const;
 
-  OSOptionalQuantity getAnnualAverageOutdoorAirTemperature(bool returnIP=false) const;
-
   boost::optional<double> maximumDifferenceInMonthlyAverageOutdoorAirTemperatures() const;
 
-  OSOptionalQuantity getMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(bool returnIP=false) const;
 
   //@}
   /** @name Setters */
@@ -92,16 +89,12 @@ class MODEL_API SiteWaterMainsTemperature : public ModelObject {
   bool setAnnualAverageOutdoorAirTemperature(double annualAverageOutdoorAirTemperature);
 
   /** Also sets calculation method to 'Correlation'. */
-  bool setAnnualAverageOutdoorAirTemperature(const Quantity& annualAverageOutdoorAirTemperature);
-
   void resetAnnualAverageOutdoorAirTemperature();
 
   /** Also sets calculation method to 'Correlation'. */
   bool setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(double maximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
 
   /** Also sets calculation method to 'Correlation'. */
-  bool setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(const Quantity& maximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
-
   void resetMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures();
 
   //@}

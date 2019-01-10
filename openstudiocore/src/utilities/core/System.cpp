@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -27,17 +27,16 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include "stdlib.h"
 #include "System.hpp"
-#include "Application.hpp"
 
 #include <boost/thread.hpp>
-
 #include <boost/numeric/ublas/lu.hpp>
 
 
 namespace openstudio{
 
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
 
   #define _WIN32_WINNT 0x0500
 
@@ -83,7 +82,9 @@ namespace openstudio{
     int remainingtime = msecs;
     while ( remainingtime > 0 )
     {
-      bool didwork = openstudio::Application::instance().processEvents(remainingtime);
+      //TODO: QT - Separation - Move
+      //bool didwork = openstudio::Application::instance().processEvents(remainingtime);
+      bool didwork = false;
       remainingtime = msecs - (boost::posix_time::microsec_clock::universal_time() - start).total_milliseconds();
 //      std::cout << "time " << msecs << " remainingtime " << remainingtime << std::endl;
 
@@ -99,15 +100,47 @@ namespace openstudio{
         }
       }
 
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
         Sleep(timetosleep);
 #else
         usleep(timetosleep * 1000);
 #endif
     }
 
-    openstudio::Application::instance().processEvents(); // process any outstanding events
+    // TODO: QT-Separation-Move
+    //openstudio::Application::instance().processEvents(); // process any outstanding events
   }
+
+  /// \note not using string_view because we need null terminated strings
+  boost::optional<std::string> System::getenv(const std::string &name) noexcept
+  {
+    const char *ptr = std::getenv(name.c_str());
+    if (ptr) {
+      return std::string{ptr};
+    } else {
+      return {};
+    }
+  }
+
+  /// \note not using string_view because we need null terminated strings
+  void System::setenv(const std::string &name, const std::string &value)
+  {
+#if (defined (_WIN32) || defined (_WIN64))
+    if (const auto result = ::_putenv_s(name.c_str(), value.c_str()); result != 0) {
+      throw std::runtime_error("Unable to set environment variable: unknown error");
+    }
+#else
+    if (const auto result = ::setenv(name.c_str(), value.c_str(), 1); result == EINVAL) {
+      throw std::runtime_error("Unable to set environment variable: invalid value: " + name);
+    } else if (result == ENOMEM) {
+      throw std::runtime_error("Unable to set environment variable: insufficient memory");
+    } else if (result != 0) {
+      throw std::runtime_error("Unable to set environment variable: unknown error");
+    }
+#endif
+
+  }
+
 
   unsigned System::numberOfProcessors()
   {

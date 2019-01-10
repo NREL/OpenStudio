@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -137,25 +137,17 @@ class MODEL_API ControllerOutdoorAir_Impl : public ParentObject_Impl {
 
   boost::optional<double> minimumOutdoorAirFlowRate() const;
 
-  OSOptionalQuantity getMinimumOutdoorAirFlowRate(bool returnIP=false) const;
-
   bool isMinimumOutdoorAirFlowRateAutosized() const;
 
   bool setMinimumOutdoorAirFlowRate(boost::optional<double> minimumOutdoorAirFlowRate);
-
-  bool setMinimumOutdoorAirFlowRate(const OSOptionalQuantity& minimumOutdoorAirFlowRate);
 
   void autosizeMinimumOutdoorAirFlowRate();
 
   boost::optional<double> maximumOutdoorAirFlowRate() const;
 
-  OSOptionalQuantity getMaximumOutdoorAirFlowRate(bool returnIP=false) const;
-
   bool isMaximumOutdoorAirFlowRateAutosized() const;
 
   bool setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate);
-
-  bool setMaximumOutdoorAirFlowRate(const OSOptionalQuantity& maximumOutdoorAirFlowRate);
 
   void autosizeMaximumOutdoorAirFlowRate();
 

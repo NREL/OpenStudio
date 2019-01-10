@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -67,7 +67,6 @@
 #include "../DefaultSurfaceConstructions_Impl.hpp"
 #include "../SpaceType.hpp"
 #include "../SpaceType_Impl.hpp"
-// #include "../Relationship.hpp"
 #include "../DaylightingDeviceShelf.hpp"
 #include "../InteriorPartitionSurface.hpp"
 #include "../InteriorPartitionSurfaceGroup.hpp"
@@ -76,7 +75,6 @@
 #include "../SurfacePropertyOtherSideCoefficients.hpp"
 #include "../SurfacePropertyOtherSideConditionsModel.hpp"
 
-#include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceWatcher.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
@@ -591,67 +589,6 @@ TEST_F(ModelFixture, Surface_Clone) {
   ASSERT_TRUE(clone2.model() == surface.model());
   ASSERT_TRUE(clone2.construction());
   EXPECT_TRUE(clone2.construction().get() == construction);
-}
-
-TEST_F(ModelFixture, Surface_Construction_Relationship)
-{
-  Model model;
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,0,1));
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(1,0,1));
-  Surface surface(vertices, model);
-
-  // Removed due to removal of attributes
-  // can't get relationship as attribute
-  // boost::optional<Attribute> attribute = surface.getAttribute("construction");
-  // EXPECT_FALSE(attribute);
-
-  // can't get attributes as relationship
-  // EXPECT_TRUE(surface.getAttribute("name"));
-  // EXPECT_FALSE(surface.getRelationship("name"));
-  // EXPECT_TRUE(surface.getAttribute("grossArea"));
-  // EXPECT_FALSE(surface.getRelationship("grossArea"));
-
-  // Removed due to phasing out Relationships
-  // no construction yet
-  // StringVector relationshipNames = surface.relationshipNames();
-  // EXPECT_FALSE(std::find(relationshipNames.begin(),
-  //                        relationshipNames.end(),
-  //                        "construction") == relationshipNames.end());
-  // RelationshipVector relationships = surface.relationships();
-  // NameFinder<Relationship> finder("construction");
-  // EXPECT_FALSE(std::find_if(relationships.begin(),
-  //                           relationships.end(),
-  //                           finder) == relationships.end());
-  // boost::optional<Relationship> relationship = surface.getRelationship("construction");
-  // ASSERT_TRUE(relationship);
-  // EXPECT_EQ(surface.handle(), relationship->modelObject().handle());
-  // ASSERT_TRUE(relationship->isSingular());
-  // ASSERT_TRUE(relationship->isSettable());
-  // EXPECT_FALSE(relationship->relatedModelObject());
-  // EXPECT_TRUE(relationship->resetRelatedModelObject());
-  // EXPECT_FALSE(relationship->relatedModelObject());
-
-  // // make material
-  // StandardOpaqueMaterial material(model);
-
-  // EXPECT_FALSE(relationship->setRelatedModelObject(material));
-  // EXPECT_FALSE(relationship->relatedModelObject());
-
-  // // make construction
-  // Construction construction(model);
-
-  // EXPECT_TRUE(relationship->setRelatedModelObject(construction));
-  // ASSERT_TRUE(relationship->relatedModelObject());
-  // EXPECT_EQ(construction.handle(), relationship->relatedModelObject()->handle());
-  // ASSERT_TRUE(surface.construction());
-  // EXPECT_EQ(construction.handle(), surface.construction()->handle());
-
-  // not yet implemented
-  //EXPECT_TRUE(relationship->resetRelatedModelObject());
-  //EXPECT_FALSE(relationship->relatedModelObject());
 }
 
 TEST_F(ModelFixture, OutsideBoundaryConditionCapitalization)

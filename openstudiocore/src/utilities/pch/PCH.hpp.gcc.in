@@ -507,9 +507,6 @@
 #include <typeinfo>
 #include <utility>
 #include <vector>
-#include <QMetaType>
 #include <QObject>
 #include <QString>
-#include <QTextStream>
 #include <QUrl>
-#include <QVariant>

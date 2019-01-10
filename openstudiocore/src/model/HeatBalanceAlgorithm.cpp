@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -112,13 +112,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity HeatBalanceAlgorithm_Impl::getSurfaceTemperatureUpperLimit(bool returnIP) const {
-    OptionalDouble value = surfaceTemperatureUpperLimit();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_HeatBalanceAlgorithmFields::SurfaceTemperatureUpperLimit, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool HeatBalanceAlgorithm_Impl::isSurfaceTemperatureUpperLimitDefaulted() const {
     return isEmpty(OS_HeatBalanceAlgorithmFields::SurfaceTemperatureUpperLimit);
   }
@@ -129,13 +122,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity HeatBalanceAlgorithm_Impl::getMinimumSurfaceConvectionHeatTransferCoefficientValue(bool returnIP) const {
-    OptionalDouble value = minimumSurfaceConvectionHeatTransferCoefficientValue();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_HeatBalanceAlgorithmFields::MinimumSurfaceConvectionHeatTransferCoefficientValue, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool HeatBalanceAlgorithm_Impl::isMinimumSurfaceConvectionHeatTransferCoefficientValueDefaulted() const {
     return isEmpty(OS_HeatBalanceAlgorithmFields::MinimumSurfaceConvectionHeatTransferCoefficientValue);
   }
@@ -144,13 +130,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_HeatBalanceAlgorithmFields::MaximumSurfaceConvectionHeatTransferCoefficientValue,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity HeatBalanceAlgorithm_Impl::getMaximumSurfaceConvectionHeatTransferCoefficientValue(bool returnIP) const {
-    OptionalDouble value = maximumSurfaceConvectionHeatTransferCoefficientValue();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_HeatBalanceAlgorithmFields::MaximumSurfaceConvectionHeatTransferCoefficientValue, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool HeatBalanceAlgorithm_Impl::isMaximumSurfaceConvectionHeatTransferCoefficientValueDefaulted() const {
@@ -172,14 +151,6 @@ namespace detail {
     return result;
   }
 
-  bool HeatBalanceAlgorithm_Impl::setSurfaceTemperatureUpperLimit(const Quantity& surfaceTemperatureUpperLimit) {
-    OptionalDouble value = getDoubleFromQuantity(OS_HeatBalanceAlgorithmFields::SurfaceTemperatureUpperLimit,surfaceTemperatureUpperLimit);
-    if (!value) {
-      return false;
-    }
-    return setSurfaceTemperatureUpperLimit(value.get());
-  }
-
   void HeatBalanceAlgorithm_Impl::resetSurfaceTemperatureUpperLimit() {
     bool result = setString(OS_HeatBalanceAlgorithmFields::SurfaceTemperatureUpperLimit, "");
     OS_ASSERT(result);
@@ -188,14 +159,6 @@ namespace detail {
   bool HeatBalanceAlgorithm_Impl::setMinimumSurfaceConvectionHeatTransferCoefficientValue(double minimumSurfaceConvectionHeatTransferCoefficientValue) {
     bool result = setDouble(OS_HeatBalanceAlgorithmFields::MinimumSurfaceConvectionHeatTransferCoefficientValue, minimumSurfaceConvectionHeatTransferCoefficientValue);
     return result;
-  }
-
-  bool HeatBalanceAlgorithm_Impl::setMinimumSurfaceConvectionHeatTransferCoefficientValue(const Quantity& minimumSurfaceConvectionHeatTransferCoefficientValue) {
-    OptionalDouble value = getDoubleFromQuantity(OS_HeatBalanceAlgorithmFields::MinimumSurfaceConvectionHeatTransferCoefficientValue,minimumSurfaceConvectionHeatTransferCoefficientValue);
-    if (!value) {
-      return false;
-    }
-    return setMinimumSurfaceConvectionHeatTransferCoefficientValue(value.get());
   }
 
   void HeatBalanceAlgorithm_Impl::resetMinimumSurfaceConvectionHeatTransferCoefficientValue() {
@@ -208,14 +171,6 @@ namespace detail {
     return result;
   }
 
-  bool HeatBalanceAlgorithm_Impl::setMaximumSurfaceConvectionHeatTransferCoefficientValue(const Quantity& maximumSurfaceConvectionHeatTransferCoefficientValue) {
-    OptionalDouble value = getDoubleFromQuantity(OS_HeatBalanceAlgorithmFields::MaximumSurfaceConvectionHeatTransferCoefficientValue,maximumSurfaceConvectionHeatTransferCoefficientValue);
-    if (!value) {
-      return false;
-    }
-    return setMaximumSurfaceConvectionHeatTransferCoefficientValue(value.get());
-  }
-
   void HeatBalanceAlgorithm_Impl::resetMaximumSurfaceConvectionHeatTransferCoefficientValue() {
     bool result = setString(OS_HeatBalanceAlgorithmFields::MaximumSurfaceConvectionHeatTransferCoefficientValue, "");
     OS_ASSERT(result);
@@ -223,30 +178,6 @@ namespace detail {
 
   std::vector<std::string> HeatBalanceAlgorithm_Impl::algorithmValues() const {
     return HeatBalanceAlgorithm::algorithmValues();
-  }
-
-  openstudio::Quantity HeatBalanceAlgorithm_Impl::surfaceTemperatureUpperLimit_SI() const {
-    return getSurfaceTemperatureUpperLimit(false);
-  }
-
-  openstudio::Quantity HeatBalanceAlgorithm_Impl::surfaceTemperatureUpperLimit_IP() const {
-    return getSurfaceTemperatureUpperLimit(true);
-  }
-
-  openstudio::Quantity HeatBalanceAlgorithm_Impl::minimumSurfaceConvectionHeatTransferCoefficientValue_SI() const {
-    return getMinimumSurfaceConvectionHeatTransferCoefficientValue(false);
-  }
-
-  openstudio::Quantity HeatBalanceAlgorithm_Impl::minimumSurfaceConvectionHeatTransferCoefficientValue_IP() const {
-    return getMinimumSurfaceConvectionHeatTransferCoefficientValue(true);
-  }
-
-  openstudio::Quantity HeatBalanceAlgorithm_Impl::maximumSurfaceConvectionHeatTransferCoefficientValue_SI() const {
-    return getMaximumSurfaceConvectionHeatTransferCoefficientValue(false);
-  }
-
-  openstudio::Quantity HeatBalanceAlgorithm_Impl::maximumSurfaceConvectionHeatTransferCoefficientValue_IP() const {
-    return getMaximumSurfaceConvectionHeatTransferCoefficientValue(true);
   }
 
 } // detail
@@ -272,10 +203,6 @@ double HeatBalanceAlgorithm::surfaceTemperatureUpperLimit() const {
   return getImpl<detail::HeatBalanceAlgorithm_Impl>()->surfaceTemperatureUpperLimit();
 }
 
-Quantity HeatBalanceAlgorithm::getSurfaceTemperatureUpperLimit(bool returnIP) const {
-  return getImpl<detail::HeatBalanceAlgorithm_Impl>()->getSurfaceTemperatureUpperLimit(returnIP);
-}
-
 bool HeatBalanceAlgorithm::isSurfaceTemperatureUpperLimitDefaulted() const {
   return getImpl<detail::HeatBalanceAlgorithm_Impl>()->isSurfaceTemperatureUpperLimitDefaulted();
 }
@@ -284,20 +211,12 @@ double HeatBalanceAlgorithm::minimumSurfaceConvectionHeatTransferCoefficientValu
   return getImpl<detail::HeatBalanceAlgorithm_Impl>()->minimumSurfaceConvectionHeatTransferCoefficientValue();
 }
 
-Quantity HeatBalanceAlgorithm::getMinimumSurfaceConvectionHeatTransferCoefficientValue(bool returnIP) const {
-  return getImpl<detail::HeatBalanceAlgorithm_Impl>()->getMinimumSurfaceConvectionHeatTransferCoefficientValue(returnIP);
-}
-
 bool HeatBalanceAlgorithm::isMinimumSurfaceConvectionHeatTransferCoefficientValueDefaulted() const {
   return getImpl<detail::HeatBalanceAlgorithm_Impl>()->isMinimumSurfaceConvectionHeatTransferCoefficientValueDefaulted();
 }
 
 double HeatBalanceAlgorithm::maximumSurfaceConvectionHeatTransferCoefficientValue() const {
   return getImpl<detail::HeatBalanceAlgorithm_Impl>()->maximumSurfaceConvectionHeatTransferCoefficientValue();
-}
-
-Quantity HeatBalanceAlgorithm::getMaximumSurfaceConvectionHeatTransferCoefficientValue(bool returnIP) const {
-  return getImpl<detail::HeatBalanceAlgorithm_Impl>()->getMaximumSurfaceConvectionHeatTransferCoefficientValue(returnIP);
 }
 
 bool HeatBalanceAlgorithm::isMaximumSurfaceConvectionHeatTransferCoefficientValueDefaulted() const {
@@ -316,10 +235,6 @@ bool HeatBalanceAlgorithm::setSurfaceTemperatureUpperLimit(double surfaceTempera
   return getImpl<detail::HeatBalanceAlgorithm_Impl>()->setSurfaceTemperatureUpperLimit(surfaceTemperatureUpperLimit);
 }
 
-bool HeatBalanceAlgorithm::setSurfaceTemperatureUpperLimit(const Quantity& surfaceTemperatureUpperLimit) {
-  return getImpl<detail::HeatBalanceAlgorithm_Impl>()->setSurfaceTemperatureUpperLimit(surfaceTemperatureUpperLimit);
-}
-
 void HeatBalanceAlgorithm::resetSurfaceTemperatureUpperLimit() {
   getImpl<detail::HeatBalanceAlgorithm_Impl>()->resetSurfaceTemperatureUpperLimit();
 }
@@ -328,19 +243,11 @@ bool HeatBalanceAlgorithm::setMinimumSurfaceConvectionHeatTransferCoefficientVal
   return getImpl<detail::HeatBalanceAlgorithm_Impl>()->setMinimumSurfaceConvectionHeatTransferCoefficientValue(minimumSurfaceConvectionHeatTransferCoefficientValue);
 }
 
-bool HeatBalanceAlgorithm::setMinimumSurfaceConvectionHeatTransferCoefficientValue(const Quantity& minimumSurfaceConvectionHeatTransferCoefficientValue) {
-  return getImpl<detail::HeatBalanceAlgorithm_Impl>()->setMinimumSurfaceConvectionHeatTransferCoefficientValue(minimumSurfaceConvectionHeatTransferCoefficientValue);
-}
-
 void HeatBalanceAlgorithm::resetMinimumSurfaceConvectionHeatTransferCoefficientValue() {
   getImpl<detail::HeatBalanceAlgorithm_Impl>()->resetMinimumSurfaceConvectionHeatTransferCoefficientValue();
 }
 
 bool HeatBalanceAlgorithm::setMaximumSurfaceConvectionHeatTransferCoefficientValue(double maximumSurfaceConvectionHeatTransferCoefficientValue) {
-  return getImpl<detail::HeatBalanceAlgorithm_Impl>()->setMaximumSurfaceConvectionHeatTransferCoefficientValue(maximumSurfaceConvectionHeatTransferCoefficientValue);
-}
-
-bool HeatBalanceAlgorithm::setMaximumSurfaceConvectionHeatTransferCoefficientValue(const Quantity& maximumSurfaceConvectionHeatTransferCoefficientValue) {
   return getImpl<detail::HeatBalanceAlgorithm_Impl>()->setMaximumSurfaceConvectionHeatTransferCoefficientValue(maximumSurfaceConvectionHeatTransferCoefficientValue);
 }
 
@@ -370,4 +277,3 @@ HeatBalanceAlgorithm::HeatBalanceAlgorithm(Model& model)
 
 } // model
 } // openstudio
-

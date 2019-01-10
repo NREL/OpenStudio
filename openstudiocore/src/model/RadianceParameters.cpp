@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -95,13 +95,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity RadianceParameters_Impl::getDirectThreshold(bool returnIP) const {
-    OptionalDouble value = directThreshold();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_RadianceParametersFields::DirectThreshold, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool RadianceParameters_Impl::isDirectThresholdDefaulted() const {
     return isEmpty(OS_RadianceParametersFields::DirectThreshold);
   }
@@ -110,13 +103,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_RadianceParametersFields::DirectCertainty,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity RadianceParameters_Impl::getDirectCertainty(bool returnIP) const {
-    OptionalDouble value = directCertainty();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_RadianceParametersFields::DirectCertainty, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool RadianceParameters_Impl::isDirectCertaintyDefaulted() const {
@@ -129,13 +115,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity RadianceParameters_Impl::getDirectJitter(bool returnIP) const {
-    OptionalDouble value = directJitter();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_RadianceParametersFields::DirectJitter, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool RadianceParameters_Impl::isDirectJitterDefaulted() const {
     return isEmpty(OS_RadianceParametersFields::DirectJitter);
   }
@@ -144,13 +123,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_RadianceParametersFields::DirectPretest,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity RadianceParameters_Impl::getDirectPretest(bool returnIP) const {
-    OptionalDouble value = directPretest();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_RadianceParametersFields::DirectPretest, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool RadianceParameters_Impl::isDirectPretestDefaulted() const {
@@ -213,13 +185,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity RadianceParameters_Impl::getLimitWeightVMX(bool returnIP) const {
-    OptionalDouble value = limitWeightVMX();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_RadianceParametersFields::LimitWeightVMX, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool RadianceParameters_Impl::isLimitWeightVMXDefaulted() const {
     return isEmpty(OS_RadianceParametersFields::LimitWeightVMX);
   }
@@ -228,13 +193,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_RadianceParametersFields::LimitWeightDMX,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity RadianceParameters_Impl::getLimitWeightDMX(bool returnIP) const {
-    OptionalDouble value = limitWeightDMX();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_RadianceParametersFields::LimitWeightDMX, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool RadianceParameters_Impl::isLimitWeightDMXDefaulted() const {
@@ -286,14 +244,6 @@ namespace detail {
     return result;
   }
 
-  bool RadianceParameters_Impl::setDirectThreshold(const Quantity& directThreshold) {
-    OptionalDouble value = getDoubleFromQuantity(OS_RadianceParametersFields::DirectThreshold,directThreshold);
-    if (!value) {
-      return false;
-    }
-    return setDirectThreshold(value.get());
-  }
-
   void RadianceParameters_Impl::resetDirectThreshold() {
     bool result = setString(OS_RadianceParametersFields::DirectThreshold, "");
     OS_ASSERT(result);
@@ -302,14 +252,6 @@ namespace detail {
   bool RadianceParameters_Impl::setDirectCertainty(double directCertainty) {
     bool result = setDouble(OS_RadianceParametersFields::DirectCertainty, directCertainty);
     return result;
-  }
-
-  bool RadianceParameters_Impl::setDirectCertainty(const Quantity& directCertainty) {
-    OptionalDouble value = getDoubleFromQuantity(OS_RadianceParametersFields::DirectCertainty,directCertainty);
-    if (!value) {
-      return false;
-    }
-    return setDirectCertainty(value.get());
   }
 
   void RadianceParameters_Impl::resetDirectCertainty() {
@@ -322,14 +264,6 @@ namespace detail {
     return result;
   }
 
-  bool RadianceParameters_Impl::setDirectJitter(const Quantity& directJitter) {
-    OptionalDouble value = getDoubleFromQuantity(OS_RadianceParametersFields::DirectJitter,directJitter);
-    if (!value) {
-      return false;
-    }
-    return setDirectJitter(value.get());
-  }
-
   void RadianceParameters_Impl::resetDirectJitter() {
     bool result = setString(OS_RadianceParametersFields::DirectJitter, "");
     OS_ASSERT(result);
@@ -338,14 +272,6 @@ namespace detail {
   bool RadianceParameters_Impl::setDirectPretest(double directPretest) {
     bool result = setDouble(OS_RadianceParametersFields::DirectPretest, directPretest);
     return result;
-  }
-
-  bool RadianceParameters_Impl::setDirectPretest(const Quantity& directPretest) {
-    OptionalDouble value = getDoubleFromQuantity(OS_RadianceParametersFields::DirectPretest,directPretest);
-    if (!value) {
-      return false;
-    }
-    return setDirectPretest(value.get());
   }
 
   void RadianceParameters_Impl::resetDirectPretest() {
@@ -409,14 +335,6 @@ namespace detail {
     return result;
   }
 
-  bool RadianceParameters_Impl::setLimitWeightVMX(const Quantity& LimitWeightVMX) {
-    OptionalDouble value = getDoubleFromQuantity(OS_RadianceParametersFields::LimitWeightVMX,LimitWeightVMX);
-    if (!value) {
-      return false;
-    }
-    return setLimitWeightVMX(value.get());
-  }
-
   void RadianceParameters_Impl::resetLimitWeightVMX() {
     bool result = setString(OS_RadianceParametersFields::LimitWeightVMX, "");
     OS_ASSERT(result);
@@ -426,15 +344,6 @@ namespace detail {
     bool result = setDouble(OS_RadianceParametersFields::LimitWeightDMX, LimitWeightDMX);
     OS_ASSERT(result);
     return result;
-  }
-
-  bool RadianceParameters_Impl::setLimitWeightDMX(const Quantity& LimitWeightDMX) {
-    OptionalDouble value = getDoubleFromQuantity(OS_RadianceParametersFields::LimitWeightDMX,LimitWeightDMX);
-    if (!value) {
-      return false;
-    }
-    setLimitWeightDMX(value.get());
-    return true;
   }
 
   void RadianceParameters_Impl::resetLimitWeightDMX() {
@@ -450,54 +359,6 @@ namespace detail {
   void RadianceParameters_Impl::resetKlemsSamplingDensity() {
     bool result = setString(OS_RadianceParametersFields::KlemsSamplingDensity, "");
     OS_ASSERT(result);
-  }
-
-  openstudio::Quantity RadianceParameters_Impl::directThreshold_SI() const {
-    return getDirectThreshold(false);
-  }
-
-  openstudio::Quantity RadianceParameters_Impl::directThreshold_IP() const {
-    return getDirectThreshold(true);
-  }
-
-  openstudio::Quantity RadianceParameters_Impl::directCertainty_SI() const {
-    return getDirectCertainty(false);
-  }
-
-  openstudio::Quantity RadianceParameters_Impl::directCertainty_IP() const {
-    return getDirectCertainty(true);
-  }
-
-  openstudio::Quantity RadianceParameters_Impl::directJitter_SI() const {
-    return getDirectJitter(false);
-  }
-
-  openstudio::Quantity RadianceParameters_Impl::directJitter_IP() const {
-    return getDirectJitter(true);
-  }
-
-  openstudio::Quantity RadianceParameters_Impl::directPretest_SI() const {
-    return getDirectPretest(false);
-  }
-
-  openstudio::Quantity RadianceParameters_Impl::directPretest_IP() const {
-    return getDirectPretest(true);
-  }
-
-  openstudio::Quantity RadianceParameters_Impl::limitWeightVMX_SI() const {
-    return getLimitWeightVMX(false);
-  }
-
-  openstudio::Quantity RadianceParameters_Impl::limitWeightVMX_IP() const {
-    return getLimitWeightVMX(true);
-  }
-
-  openstudio::Quantity RadianceParameters_Impl::limitWeightDMX_SI() const {
-    return getLimitWeightDMX(false);
-  }
-
-  openstudio::Quantity RadianceParameters_Impl::limitWeightDMX_IP() const {
-    return getLimitWeightDMX(true);
   }
 
   void RadianceParameters_Impl::applyCoarseSettings()
@@ -604,20 +465,12 @@ double RadianceParameters::directThreshold() const {
   return getImpl<detail::RadianceParameters_Impl>()->directThreshold();
 }
 
-Quantity RadianceParameters::getDirectThreshold(bool returnIP) const {
-  return getImpl<detail::RadianceParameters_Impl>()->getDirectThreshold(returnIP);
-}
-
 bool RadianceParameters::isDirectThresholdDefaulted() const {
   return getImpl<detail::RadianceParameters_Impl>()->isDirectThresholdDefaulted();
 }
 
 double RadianceParameters::directCertainty() const {
   return getImpl<detail::RadianceParameters_Impl>()->directCertainty();
-}
-
-Quantity RadianceParameters::getDirectCertainty(bool returnIP) const {
-  return getImpl<detail::RadianceParameters_Impl>()->getDirectCertainty(returnIP);
 }
 
 bool RadianceParameters::isDirectCertaintyDefaulted() const {
@@ -628,20 +481,12 @@ double RadianceParameters::directJitter() const {
   return getImpl<detail::RadianceParameters_Impl>()->directJitter();
 }
 
-Quantity RadianceParameters::getDirectJitter(bool returnIP) const {
-  return getImpl<detail::RadianceParameters_Impl>()->getDirectJitter(returnIP);
-}
-
 bool RadianceParameters::isDirectJitterDefaulted() const {
   return getImpl<detail::RadianceParameters_Impl>()->isDirectJitterDefaulted();
 }
 
 double RadianceParameters::directPretest() const {
   return getImpl<detail::RadianceParameters_Impl>()->directPretest();
-}
-
-Quantity RadianceParameters::getDirectPretest(bool returnIP) const {
-  return getImpl<detail::RadianceParameters_Impl>()->getDirectPretest(returnIP);
 }
 
 bool RadianceParameters::isDirectPretestDefaulted() const {
@@ -692,20 +537,12 @@ double RadianceParameters::limitWeightVMX() const {
   return getImpl<detail::RadianceParameters_Impl>()->limitWeightVMX();
 }
 
-Quantity RadianceParameters::getLimitWeightVMX(bool returnIP) const {
-  return getImpl<detail::RadianceParameters_Impl>()->getLimitWeightVMX(returnIP);
-}
-
 bool RadianceParameters::isLimitWeightVMXDefaulted() const {
   return getImpl<detail::RadianceParameters_Impl>()->isLimitWeightVMXDefaulted();
 }
 
 double RadianceParameters::limitWeightDMX() const {
   return getImpl<detail::RadianceParameters_Impl>()->limitWeightDMX();
-}
-
-Quantity RadianceParameters::getLimitWeightDMX(bool returnIP) const {
-  return getImpl<detail::RadianceParameters_Impl>()->getLimitWeightDMX(returnIP);
 }
 
 bool RadianceParameters::isLimitWeightDMXDefaulted() const {
@@ -751,19 +588,11 @@ bool RadianceParameters::setDirectThreshold(double directThreshold) {
   return getImpl<detail::RadianceParameters_Impl>()->setDirectThreshold(directThreshold);
 }
 
-bool RadianceParameters::setDirectThreshold(const Quantity& directThreshold) {
-  return getImpl<detail::RadianceParameters_Impl>()->setDirectThreshold(directThreshold);
-}
-
 void RadianceParameters::resetDirectThreshold() {
   getImpl<detail::RadianceParameters_Impl>()->resetDirectThreshold();
 }
 
 bool RadianceParameters::setDirectCertainty(double directCertainty) {
-  return getImpl<detail::RadianceParameters_Impl>()->setDirectCertainty(directCertainty);
-}
-
-bool RadianceParameters::setDirectCertainty(const Quantity& directCertainty) {
   return getImpl<detail::RadianceParameters_Impl>()->setDirectCertainty(directCertainty);
 }
 
@@ -775,19 +604,11 @@ bool RadianceParameters::setDirectJitter(double directJitter) {
   return getImpl<detail::RadianceParameters_Impl>()->setDirectJitter(directJitter);
 }
 
-bool RadianceParameters::setDirectJitter(const Quantity& directJitter) {
-  return getImpl<detail::RadianceParameters_Impl>()->setDirectJitter(directJitter);
-}
-
 void RadianceParameters::resetDirectJitter() {
   getImpl<detail::RadianceParameters_Impl>()->resetDirectJitter();
 }
 
 bool RadianceParameters::setDirectPretest(double directPretest) {
-  return getImpl<detail::RadianceParameters_Impl>()->setDirectPretest(directPretest);
-}
-
-bool RadianceParameters::setDirectPretest(const Quantity& directPretest) {
   return getImpl<detail::RadianceParameters_Impl>()->setDirectPretest(directPretest);
 }
 
@@ -839,19 +660,11 @@ bool RadianceParameters::setLimitWeightVMX(double LimitWeightVMX) {
   return getImpl<detail::RadianceParameters_Impl>()->setLimitWeightVMX(LimitWeightVMX);
 }
 
-bool RadianceParameters::setLimitWeightVMX(const Quantity& LimitWeightVMX) {
-  return getImpl<detail::RadianceParameters_Impl>()->setLimitWeightVMX(LimitWeightVMX);
-}
-
 void RadianceParameters::resetLimitWeightVMX() {
   getImpl<detail::RadianceParameters_Impl>()->resetLimitWeightVMX();
 }
 
 bool RadianceParameters::setLimitWeightDMX(double LimitWeightDMX) {
-  return getImpl<detail::RadianceParameters_Impl>()->setLimitWeightDMX(LimitWeightDMX);
-}
-
-bool RadianceParameters::setLimitWeightDMX(const Quantity& LimitWeightDMX) {
   return getImpl<detail::RadianceParameters_Impl>()->setLimitWeightDMX(LimitWeightDMX);
 }
 

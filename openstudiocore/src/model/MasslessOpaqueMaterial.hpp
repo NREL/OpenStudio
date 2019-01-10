@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -71,37 +69,24 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
 
   double thermalResistance() const;
 
-  Quantity getThermalResistance(bool returnIP=false) const;
-
   boost::optional<double> thermalAbsorptance() const;
-
-  Quantity getThermalAbsorptance(bool returnIP=false) const;
 
   bool isThermalAbsorptanceDefaulted() const;
 
   boost::optional<double> solarAbsorptance() const;
 
-  Quantity getSolarAbsorptance(bool returnIP=false) const;
-
   bool isSolarAbsorptanceDefaulted() const;
 
   boost::optional<double> visibleAbsorptance() const;
-
-  Quantity getVisibleAbsorptance(bool returnIP=false) const;
 
   bool isVisibleAbsorptanceDefaulted() const;
 
   double conductivity() const;
 
-  Quantity getConductivity(bool returnIP=false) const;
-
   double density() const;
-
-  Quantity getDensity(bool returnIP=false) const;
 
   double specificHeat() const;
 
-  Quantity getSpecificHeat(bool returnIP=false) const;
 
   //@}
   /** @name Setters */
@@ -111,37 +96,24 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
 
   bool setThermalResistance(double thermalResistance);
 
-  bool setThermalResistance(const Quantity& thermalResistance);
-
   bool setThermalAbsorptance(double thermalAbsorptance);
-
-  bool setThermalAbsorptance(const Quantity& thermalAbsorptance);
 
   void resetThermalAbsorptance();
 
   bool setSolarAbsorptance(double solarAbsorptance);
 
-  bool setSolarAbsorptance(const Quantity& solarAbsorptance);
-
   void resetSolarAbsorptance();
 
   bool setVisibleAbsorptance(double visibleAbsorptance);
-
-  bool setVisibleAbsorptance(const Quantity& visibleAbsorptance);
 
   void resetVisibleAbsorptance();
 
   bool setConductivity(double conductivity);
 
-  bool setConductivity(const Quantity& conductivity);
-
   bool setDensity(double density);
-
-  bool setDensity(const Quantity& density);
 
   bool setSpecificHeat(double specificHeat);
 
-  bool setSpecificHeat(const Quantity& specificHeat);
 
   //@}
   /** @name Other */
@@ -173,4 +145,3 @@ typedef std::vector<MasslessOpaqueMaterial> MasslessOpaqueMaterialVector;
 } // openstudio
 
 #endif // MODEL_MASSLESSOPAQUEMATERIAL_HPP
-

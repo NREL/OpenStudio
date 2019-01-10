@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -239,13 +239,6 @@ namespace detail{
     return value.get();
   }
 
-  Quantity SimulationControl_Impl::getLoadsConvergenceToleranceValue(bool returnIP) const {
-    OptionalDouble value = loadsConvergenceToleranceValue();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_SimulationControlFields::LoadsConvergenceToleranceValue, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool SimulationControl_Impl::isLoadsConvergenceToleranceValueDefaulted() const {
     return isEmpty(OS_SimulationControlFields::LoadsConvergenceToleranceValue);
   }
@@ -254,13 +247,6 @@ namespace detail{
     boost::optional<double> value = getDouble(OS_SimulationControlFields::TemperatureConvergenceToleranceValue,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity SimulationControl_Impl::getTemperatureConvergenceToleranceValue(bool returnIP) const {
-    OptionalDouble value = temperatureConvergenceToleranceValue();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_SimulationControlFields::TemperatureConvergenceToleranceValue, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool SimulationControl_Impl::isTemperatureConvergenceToleranceValueDefaulted() const {
@@ -382,14 +368,6 @@ namespace detail{
     return result;
   }
 
-  bool SimulationControl_Impl::setLoadsConvergenceToleranceValue(const Quantity& loadsConvergenceToleranceValue) {
-    OptionalDouble value = getDoubleFromQuantity(OS_SimulationControlFields::LoadsConvergenceToleranceValue,loadsConvergenceToleranceValue);
-    if (!value) {
-      return false;
-    }
-    return setLoadsConvergenceToleranceValue(value.get());
-  }
-
   void SimulationControl_Impl::resetLoadsConvergenceToleranceValue() {
     bool result = setString(OS_SimulationControlFields::LoadsConvergenceToleranceValue, "");
     OS_ASSERT(result);
@@ -398,14 +376,6 @@ namespace detail{
   bool SimulationControl_Impl::setTemperatureConvergenceToleranceValue(double temperatureConvergenceToleranceValue) {
     bool result = setDouble(OS_SimulationControlFields::TemperatureConvergenceToleranceValue, temperatureConvergenceToleranceValue);
     return result;
-  }
-
-  bool SimulationControl_Impl::setTemperatureConvergenceToleranceValue(const Quantity& temperatureConvergenceToleranceValue) {
-    OptionalDouble value = getDoubleFromQuantity(OS_SimulationControlFields::TemperatureConvergenceToleranceValue,temperatureConvergenceToleranceValue);
-    if (!value) {
-      return false;
-    }
-    return setTemperatureConvergenceToleranceValue(value.get());
   }
 
   void SimulationControl_Impl::resetTemperatureConvergenceToleranceValue() {
@@ -441,22 +411,6 @@ namespace detail{
   void SimulationControl_Impl::resetMinimumNumberofWarmupDays() {
     bool result = setString(OS_SimulationControlFields::MinimumNumberofWarmupDays, "");
     OS_ASSERT(result);
-  }
-
-  openstudio::Quantity SimulationControl_Impl::loadsConvergenceToleranceValue_SI() const {
-    return getLoadsConvergenceToleranceValue(false);
-  }
-
-  openstudio::Quantity SimulationControl_Impl::loadsConvergenceToleranceValue_IP() const {
-    return getLoadsConvergenceToleranceValue(true);
-  }
-
-  openstudio::Quantity SimulationControl_Impl::temperatureConvergenceToleranceValue_SI() const {
-    return getTemperatureConvergenceToleranceValue(false);
-  }
-
-  openstudio::Quantity SimulationControl_Impl::temperatureConvergenceToleranceValue_IP() const {
-    return getTemperatureConvergenceToleranceValue(true);
   }
 
   std::vector<std::string> SimulationControl_Impl::solarDistributionValues() const {
@@ -680,20 +634,12 @@ double SimulationControl::loadsConvergenceToleranceValue() const {
   return getImpl<detail::SimulationControl_Impl>()->loadsConvergenceToleranceValue();
 }
 
-Quantity SimulationControl::getLoadsConvergenceToleranceValue(bool returnIP) const {
-  return getImpl<detail::SimulationControl_Impl>()->getLoadsConvergenceToleranceValue(returnIP);
-}
-
 bool SimulationControl::isLoadsConvergenceToleranceValueDefaulted() const {
   return getImpl<detail::SimulationControl_Impl>()->isLoadsConvergenceToleranceValueDefaulted();
 }
 
 double SimulationControl::temperatureConvergenceToleranceValue() const {
   return getImpl<detail::SimulationControl_Impl>()->temperatureConvergenceToleranceValue();
-}
-
-Quantity SimulationControl::getTemperatureConvergenceToleranceValue(bool returnIP) const {
-  return getImpl<detail::SimulationControl_Impl>()->getTemperatureConvergenceToleranceValue(returnIP);
 }
 
 bool SimulationControl::isTemperatureConvergenceToleranceValueDefaulted() const {
@@ -793,19 +739,11 @@ bool SimulationControl::setLoadsConvergenceToleranceValue(double loadsConvergenc
   return getImpl<detail::SimulationControl_Impl>()->setLoadsConvergenceToleranceValue(loadsConvergenceToleranceValue);
 }
 
-bool SimulationControl::setLoadsConvergenceToleranceValue(const Quantity& loadsConvergenceToleranceValue) {
-  return getImpl<detail::SimulationControl_Impl>()->setLoadsConvergenceToleranceValue(loadsConvergenceToleranceValue);
-}
-
 void SimulationControl::resetLoadsConvergenceToleranceValue() {
   getImpl<detail::SimulationControl_Impl>()->resetLoadsConvergenceToleranceValue();
 }
 
 bool SimulationControl::setTemperatureConvergenceToleranceValue(double temperatureConvergenceToleranceValue) {
-  return getImpl<detail::SimulationControl_Impl>()->setTemperatureConvergenceToleranceValue(temperatureConvergenceToleranceValue);
-}
-
-bool SimulationControl::setTemperatureConvergenceToleranceValue(const Quantity& temperatureConvergenceToleranceValue) {
   return getImpl<detail::SimulationControl_Impl>()->setTemperatureConvergenceToleranceValue(temperatureConvergenceToleranceValue);
 }
 

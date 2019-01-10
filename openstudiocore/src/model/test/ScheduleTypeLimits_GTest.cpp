@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,44 +32,65 @@
 #include "ModelFixture.hpp"
 
 #include "../ScheduleTypeLimits.hpp"
-#include "../ScheduleTypeLimits_Impl.hpp"
-
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ScheduleTypeLimits_LowerLimitValue_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  ScheduleTypeLimits scheduleTypeLimits(model);
+TEST_F(ModelFixture, ScheduleTypeLimits_Ctor)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Unit units = scheduleTypeLimits.getLowerLimitValue(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(scheduleTypeLimits.setLowerLimitValue(testQ));
-  ASSERT_TRUE(scheduleTypeLimits.lowerLimitValue());
-  EXPECT_EQ(1.0,scheduleTypeLimits.lowerLimitValue().get());
-  OSOptionalQuantity q = scheduleTypeLimits.getLowerLimitValue(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  ASSERT_EXIT (
+  {
+     Model m;
+     ScheduleTypeLimits sch_lim(m);
+
+     exit(0);
+  } ,
+    ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,ScheduleTypeLimits_UpperLimitValue_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  ScheduleTypeLimits scheduleTypeLimits(model);
+TEST_F(ModelFixture, ScheduleTypeLimits_GettersSetters)
+{
+  Model m;
+  ScheduleTypeLimits sch_lim(m);
 
-  Unit units = scheduleTypeLimits.getUpperLimitValue(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(scheduleTypeLimits.setUpperLimitValue(testQ));
-  OSOptionalQuantity q = scheduleTypeLimits.getUpperLimitValue(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  // Lower Limit Value: Optional Double
+  // No Default
+  EXPECT_TRUE(sch_lim.setLowerLimitValue(0.03));
+  ASSERT_TRUE(sch_lim.lowerLimitValue());
+  EXPECT_EQ(0.03, sch_lim.lowerLimitValue().get());
+  sch_lim.resetLowerLimitValue();
+  EXPECT_FALSE(sch_lim.lowerLimitValue());
+
+
+  // Upper Limit Value: Optional Double
+  // No Default
+  EXPECT_TRUE(sch_lim.setUpperLimitValue(10.03));
+  ASSERT_TRUE(sch_lim.upperLimitValue());
+  EXPECT_EQ(10.03, sch_lim.upperLimitValue().get());
+  sch_lim.resetUpperLimitValue();
+  EXPECT_FALSE(sch_lim.upperLimitValue());
+
+
+  // Numeric Type: Optional String
+  // No Default
+  // Test a valid choice
+  EXPECT_TRUE(sch_lim.setNumericType("Continuous"));
+  ASSERT_TRUE(sch_lim.numericType());
+  EXPECT_EQ("Continuous", sch_lim.numericType().get());
+  // Test an invalid choice
+  EXPECT_FALSE(sch_lim.setNumericType("BadChoice"));
+  EXPECT_EQ("Continuous", sch_lim.numericType().get());
+
+
+  // Unit Type:  String
+  // Check Idd default: "Dimensionless"
+  EXPECT_EQ("Dimensionless", sch_lim.unitType());
+  // Test a valid choice
+  EXPECT_TRUE(sch_lim.setUnitType("Temperature"));
+  EXPECT_EQ("Temperature", sch_lim.unitType());
+  // Test an invalid choice
+  EXPECT_FALSE(sch_lim.setUnitType("BadChoice"));
+  EXPECT_EQ("Temperature", sch_lim.unitType());
 }
-

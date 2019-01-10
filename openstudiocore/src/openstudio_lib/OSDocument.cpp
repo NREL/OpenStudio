@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -70,6 +70,8 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/WaitDialog.hpp"
 
+#include "../model_editor/UserSettings.hpp"
+
 //#include "../analysis/Analysis.hpp"
 
 #include "../model/FileOperations.hpp"
@@ -80,7 +82,6 @@
 #include "../utilities/bcl/BCLComponent.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/bcl/RemoteBCL.hpp"
-#include "../utilities/core/Application.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Checksum.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -104,6 +105,8 @@
 
 //#include "../runmanager/lib/WorkItem.hpp"
 
+#include "../model_editor/Application.hpp"
+
 #include <OpenStudio.hxx>
 
 #include "../energyplus/ForwardTranslator.hpp"
@@ -122,8 +125,11 @@
 #include <QString>
 #include <QTimer>
 #include <QWidget>
+#include <QIcon>
+#include <QInputDialog>
+#include <QSettings>
 
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
 #include <windows.h>
 #endif
 
@@ -1630,7 +1636,7 @@ namespace openstudio {
 
           openstudio::path oscPath = toPath(oscFiles[0]);
 
-#ifdef _WINDOWS
+#if (defined (_WIN32) || defined (_WIN64))
 
           if (oscPath.string().size() > MAX_PATH){
             if (oscPath.is_complete()){
@@ -1704,29 +1710,29 @@ namespace openstudio {
 
   void OSDocument::openChangeMeasuresDirDlg()
   {
-    openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+    openstudio::path umd = userMeasuresDir();
 
     QString dirName("");
 
-    if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    if (isNetworkPath(umd) && !isNetworkPathAvailable(umd)) {
       dirName = QFileDialog::getExistingDirectory(this->mainWindow(),
         tr("Select My Measures Directory"));
     }
     else {
       dirName = QFileDialog::getExistingDirectory(this->mainWindow(),
         tr("Select My Measures Directory"),
-        toQString(userMeasuresDir));
+        toQString(umd));
     }
 
-    userMeasuresDir = toPath(dirName);
+    umd = toPath(dirName);
 
-    if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+    if (isNetworkPath(umd) && !isNetworkPathAvailable(umd)) {
       QMessageBox::information(this->mainWindow(), "Invalid Directory", "The My Measures Directory you chose appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
       return;
     }
 
-    if (!userMeasuresDir.empty()){
-      if (BCLMeasure::setUserMeasuresDir(userMeasuresDir)){
+    if (!umd.empty()){
+      if (setUserMeasuresDir(umd)){
         OSAppBase::instance()->currentDocument()->disable();
         OSAppBase::instance()->measureManager().updateMeasuresLists();
         OSAppBase::instance()->currentDocument()->enable();
@@ -1760,11 +1766,42 @@ namespace openstudio {
     m_subTabIds.at(m_verticalId) = id;
   }
 
+  bool prodAuthKeyUserPrompt(QWidget* parent)
+  {
+    // make sure application is initialized
+    Application::instance().application(false);
+
+    QInputDialog inputDlg(parent);
+    inputDlg.setInputMode(QInputDialog::TextInput);
+    inputDlg.setLabelText("BCL Auth Key:                                            ");
+    inputDlg.setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
+    inputDlg.setWindowTitle("Enter Your BCL Auth Key");
+    if (Application::instance().isDefaultInstance())
+    {
+      QIcon icon = QIcon(":/images/os_16.png");
+      icon.addPixmap(QPixmap(":/images/os_32.png"));
+      icon.addPixmap(QPixmap(":/images/os_48.png"));
+      icon.addPixmap(QPixmap(":/images/os_64.png"));
+      icon.addPixmap(QPixmap(":/images/os_128.png"));
+      icon.addPixmap(QPixmap(":/images/os_256.png"));
+      inputDlg.setWindowIcon(icon);
+    }
+    bool result = inputDlg.exec();
+    QString text = inputDlg.textValue();
+
+    if (result && !text.isEmpty()) {
+      std::string authKey = toString(text);
+      result = LocalBCL::instance().setProdAuthKey(authKey);
+    }
+
+    return result;
+  }
+
   void OSDocument::openBclDlg()
   {
     std::string authKey = LocalBCL::instance().prodAuthKey();
     if (!LocalBCL::instance().setProdAuthKey(authKey)){
-      LocalBCL::instance().prodAuthKeyUserPrompt(m_mainWindow);
+      prodAuthKeyUserPrompt(m_mainWindow);
       authKey = LocalBCL::instance().prodAuthKey();
 
       while (!LocalBCL::instance().setProdAuthKey(authKey)){
@@ -1784,7 +1821,7 @@ namespace openstudio {
           return;
         }
         else if (ret == QMessageBox::Retry){
-          LocalBCL::instance().prodAuthKeyUserPrompt(m_mainWindow);
+          prodAuthKeyUserPrompt(m_mainWindow);
           authKey = LocalBCL::instance().prodAuthKey();
         }
         else{
@@ -1835,7 +1872,7 @@ namespace openstudio {
   {
     std::string authKey = LocalBCL::instance().prodAuthKey();
     if (!LocalBCL::instance().setProdAuthKey(authKey)){
-      LocalBCL::instance().prodAuthKeyUserPrompt(m_mainWindow);
+      prodAuthKeyUserPrompt(m_mainWindow);
       authKey = LocalBCL::instance().prodAuthKey();
 
       while (!LocalBCL::instance().setProdAuthKey(authKey)){
@@ -1855,7 +1892,7 @@ namespace openstudio {
           return;
         }
         else if (ret == QMessageBox::Retry){
-          LocalBCL::instance().prodAuthKeyUserPrompt(m_mainWindow);
+          prodAuthKeyUserPrompt(m_mainWindow);
           authKey = LocalBCL::instance().prodAuthKey();
         }
         else{

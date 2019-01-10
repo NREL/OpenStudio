@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -98,21 +96,15 @@ namespace detail {
 
     double zoneAirDistributionEffectivenessinCoolingMode() const;
 
-    Quantity getZoneAirDistributionEffectivenessinCoolingMode(bool returnIP=false) const;
-
     bool isZoneAirDistributionEffectivenessinCoolingModeDefaulted() const;
 
     double zoneAirDistributionEffectivenessinHeatingMode() const;
-
-    Quantity getZoneAirDistributionEffectivenessinHeatingMode(bool returnIP=false) const;
 
     bool isZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
 
     boost::optional<Schedule> zoneAirDistributionEffectivenessSchedule() const;
 
     double zoneSecondaryRecirculationFraction() const;
-
-    Quantity getZoneSecondaryRecirculationFraction(bool returnIP=false) const;
 
     bool isZoneSecondaryRecirculationFractionDefaulted() const;
 
@@ -122,13 +114,9 @@ namespace detail {
 
     bool setZoneAirDistributionEffectivenessinCoolingMode(double zoneAirDistributionEffectivenessinCoolingMode);
 
-    bool setZoneAirDistributionEffectivenessinCoolingMode(const Quantity& zoneAirDistributionEffectivenessinCoolingMode);
-
     void resetZoneAirDistributionEffectivenessinCoolingMode();
 
     bool setZoneAirDistributionEffectivenessinHeatingMode(double zoneAirDistributionEffectivenessinHeatingMode);
-
-    bool setZoneAirDistributionEffectivenessinHeatingMode(const Quantity& zoneAirDistributionEffectivenessinHeatingMode);
 
     void resetZoneAirDistributionEffectivenessinHeatingMode();
 
@@ -137,8 +125,6 @@ namespace detail {
     void resetZoneAirDistributionEffectivenessSchedule();
 
     bool setZoneSecondaryRecirculationFraction(double zoneSecondaryRecirculationFraction);
-
-    bool setZoneSecondaryRecirculationFraction(const Quantity& zoneSecondaryRecirculationFraction);
 
     void resetZoneSecondaryRecirculationFraction();
 
@@ -151,13 +137,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.DesignSpecificationZoneAirDistribution");
 
-    openstudio::Quantity zoneAirDistributionEffectivenessinCoolingMode_SI() const;
-    openstudio::Quantity zoneAirDistributionEffectivenessinCoolingMode_IP() const;
-    openstudio::Quantity zoneAirDistributionEffectivenessinHeatingMode_SI() const;
-    openstudio::Quantity zoneAirDistributionEffectivenessinHeatingMode_IP() const;
-    openstudio::Quantity zoneSecondaryRecirculationFraction_SI() const;
-    openstudio::Quantity zoneSecondaryRecirculationFraction_IP() const;
-
     boost::optional<ModelObject> zoneAirDistributionEffectivenessScheduleAsModelObject() const;
 
     bool setZoneAirDistributionEffectivenessScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
@@ -169,4 +148,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_DESIGNSPECIFICATIONZONEAIRDISTRIBUTION_IMPL_HPP
-

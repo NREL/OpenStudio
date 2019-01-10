@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -115,7 +115,6 @@
 #include "../utilities/geometry/Vector3d.hpp"
 
 #include "../utilities/units/Unit.hpp"
-#include "../utilities/units/QuantityConverter.hpp"
 
 #include "../utilities/math/FloatCompare.hpp"
 
@@ -173,6 +172,10 @@ namespace detail {
       result.push_back(afnz.get());
     }
 
+    if ( boost::optional<ZoneHVACEquipmentList> z_eq = this->zoneHVACEquipmentList() ) {
+      result.push_back(z_eq.get());
+    }
+
     return result;
   }
 
@@ -191,6 +194,7 @@ namespace detail {
     // DLM: this does not seem to agree with implementation of children()
     result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
     result.push_back(IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint);
+    result.push_back(IddObjectType::OS_ZoneHVAC_EquipmentList);
     return result;
   }
 
@@ -610,11 +614,6 @@ namespace detail {
     return getDouble(OS_ThermalZoneFields::CeilingHeight,true);
   }
 
-  OSOptionalQuantity ThermalZone_Impl::getCeilingHeight(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_ThermalZoneFields::CeilingHeight,true,returnIP);
-    return value;
-  }
-
   bool ThermalZone_Impl::isCeilingHeightDefaulted() const {
     return isEmpty(OS_ThermalZoneFields::CeilingHeight);
   }
@@ -630,11 +629,6 @@ namespace detail {
 
   boost::optional<double> ThermalZone_Impl::volume() const {
     return getDouble(OS_ThermalZoneFields::Volume,true);
-  }
-
-  OSOptionalQuantity ThermalZone_Impl::getVolume(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_ThermalZoneFields::Volume,true,returnIP);
-    return value;
   }
 
   bool ThermalZone_Impl::isVolumeDefaulted() const {
@@ -670,12 +664,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity ThermalZone_Impl::getFractionofZoneControlledbyPrimaryDaylightingControl(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl,true,returnIP);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
   bool ThermalZone_Impl::isFractionofZoneControlledbyPrimaryDaylightingControlDefaulted() const {
     return isEmpty(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl);
   }
@@ -683,12 +671,6 @@ namespace detail {
   double ThermalZone_Impl::fractionofZoneControlledbySecondaryDaylightingControl() const {
     boost::optional<double> value = getDouble(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl,true);
     OS_ASSERT(value);
-    return value.get();
-  }
-
-  Quantity ThermalZone_Impl::getFractionofZoneControlledbySecondaryDaylightingControl(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl,true,returnIP);
-    OS_ASSERT(value.isSet());
     return value.get();
   }
 
@@ -723,16 +705,6 @@ namespace detail {
     return result;
   }
 
-  bool ThermalZone_Impl::setCeilingHeight(const OSOptionalQuantity& ceilingHeight) {
-    bool result;
-    if (ceilingHeight.isSet()) {
-      result = setQuantity(OS_ThermalZoneFields::CeilingHeight,ceilingHeight.get());
-    } else {
-      result = setString(OS_ThermalZoneFields::CeilingHeight, "");
-    }
-    return result;
-  }
-
   void ThermalZone_Impl::resetCeilingHeight() {
     bool result = setString(OS_ThermalZoneFields::CeilingHeight, "");
     OS_ASSERT(result);
@@ -757,16 +729,6 @@ namespace detail {
   bool ThermalZone_Impl::setVolume(double volume) {
     bool result = setDouble(OS_ThermalZoneFields::Volume, volume);
     OS_ASSERT(result);
-    return result;
-  }
-
-  bool ThermalZone_Impl::setVolume(const OSOptionalQuantity& volume) {
-    bool result;
-    if (volume.isSet()) {
-      result = setQuantity(OS_ThermalZoneFields::Volume,volume.get());
-    } else {
-      result = setString(OS_ThermalZoneFields::Volume, "");
-    }
     return result;
   }
 
@@ -839,18 +801,6 @@ namespace detail {
     return result;
   }
 
-  bool ThermalZone_Impl::setFractionofZoneControlledbyPrimaryDaylightingControl(const Quantity& fractionofZoneControlledbyPrimaryDaylightingControl) {
-    // Get double
-    OptionalDouble value = getDoubleFromQuantity(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl,
-                                                 fractionofZoneControlledbyPrimaryDaylightingControl);
-    if (!value) {
-      return false;
-    } else {
-      // Call the method with the double, where the sanity check is
-      return setFractionofZoneControlledbyPrimaryDaylightingControl(value.get());
-    }
-  }
-
   void ThermalZone_Impl::resetFractionofZoneControlledbyPrimaryDaylightingControl() {
     bool result = setString(OS_ThermalZoneFields::FractionofZoneControlledbyPrimaryDaylightingControl, "");
     OS_ASSERT(result);
@@ -866,18 +816,6 @@ namespace detail {
     }
     bool result = setDouble(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl, fractionofZoneControlledbySecondaryDaylightingControl);
     return result;
-  }
-
-  bool ThermalZone_Impl::setFractionofZoneControlledbySecondaryDaylightingControl(const Quantity& fractionofZoneControlledbySecondaryDaylightingControl) {
-    // Get double
-    OptionalDouble value = getDoubleFromQuantity(OS_ThermalZoneFields::FractionofZoneControlledbySecondaryDaylightingControl,
-                                                 fractionofZoneControlledbySecondaryDaylightingControl);
-    if (!value) {
-      return false;
-    } else {
-      // Call the method with the double, where the sanity check is
-      return setFractionofZoneControlledbySecondaryDaylightingControl(value.get());
-    }
   }
 
   void ThermalZone_Impl::resetFractionofZoneControlledbySecondaryDaylightingControl() {
@@ -1270,7 +1208,7 @@ namespace detail {
       }
       LOG_AND_THROW("Calculation would require division by 0.");
     }
-    return convert(idfr/volume,"1/s","1/h").get();
+    return (idfr/volume) * 3600.0;
   }
 
   boost::optional<std::string> ThermalZone_Impl::isConditioned() const {
@@ -1850,8 +1788,8 @@ namespace detail {
     inletPortList().remove();
     exhaustPortList().remove();
 
-    // remove ZoneHVACEquipmentList
-    zoneHVACEquipmentList().remove();
+    // remove ZoneHVACEquipmentList: handled already by the fact that it's a child of this ParentObject
+    // zoneHVACEquipmentList().remove();
 
     // remove ZoneMixing objects
     for (auto mixing : this->zoneMixing()) {
@@ -1914,38 +1852,6 @@ namespace detail {
       result &= setString(OS_ThermalZoneFields::UseIdealAirLoads, "No");
     }
     return result;
-  }
-
-  openstudio::OSOptionalQuantity ThermalZone_Impl::ceilingHeight_SI() const {
-    return getCeilingHeight(false);
-  }
-
-  openstudio::OSOptionalQuantity ThermalZone_Impl::ceilingHeight_IP() const {
-    return getCeilingHeight(true);
-  }
-
-  openstudio::OSOptionalQuantity ThermalZone_Impl::volume_SI() const {
-    return getVolume(false);
-  }
-
-  openstudio::OSOptionalQuantity ThermalZone_Impl::volume_IP() const {
-    return getVolume(true);
-  }
-
-  openstudio::Quantity ThermalZone_Impl::fractionofZoneControlledbyPrimaryDaylightingControl_SI() const {
-    return getFractionofZoneControlledbyPrimaryDaylightingControl(false);
-  }
-
-  openstudio::Quantity ThermalZone_Impl::fractionofZoneControlledbyPrimaryDaylightingControl_IP() const {
-    return getFractionofZoneControlledbyPrimaryDaylightingControl(true);
-  }
-
-  openstudio::Quantity ThermalZone_Impl::fractionofZoneControlledbySecondaryDaylightingControl_SI() const {
-    return getFractionofZoneControlledbySecondaryDaylightingControl(false);
-  }
-
-  openstudio::Quantity ThermalZone_Impl::fractionofZoneControlledbySecondaryDaylightingControl_IP() const {
-    return getFractionofZoneControlledbySecondaryDaylightingControl(true);
   }
 
 
@@ -2919,10 +2825,6 @@ boost::optional<double> ThermalZone::ceilingHeight() const {
   return getImpl<detail::ThermalZone_Impl>()->ceilingHeight();
 }
 
-OSOptionalQuantity ThermalZone::getCeilingHeight(bool returnIP) const {
-  return getImpl<detail::ThermalZone_Impl>()->getCeilingHeight(returnIP);
-}
-
 bool ThermalZone::isCeilingHeightDefaulted() const {
   return getImpl<detail::ThermalZone_Impl>()->isCeilingHeightDefaulted();
 }
@@ -2933,10 +2835,6 @@ bool ThermalZone::isCeilingHeightAutocalculated() const {
 
 boost::optional<double> ThermalZone::volume() const {
   return getImpl<detail::ThermalZone_Impl>()->volume();
-}
-
-OSOptionalQuantity ThermalZone::getVolume(bool returnIP) const {
-  return getImpl<detail::ThermalZone_Impl>()->getVolume(returnIP);
 }
 
 bool ThermalZone::isVolumeDefaulted() const {
@@ -2963,20 +2861,12 @@ double ThermalZone::fractionofZoneControlledbyPrimaryDaylightingControl() const 
   return getImpl<detail::ThermalZone_Impl>()->fractionofZoneControlledbyPrimaryDaylightingControl();
 }
 
-Quantity ThermalZone::getFractionofZoneControlledbyPrimaryDaylightingControl(bool returnIP) const {
-  return getImpl<detail::ThermalZone_Impl>()->getFractionofZoneControlledbyPrimaryDaylightingControl(returnIP);
-}
-
 bool ThermalZone::isFractionofZoneControlledbyPrimaryDaylightingControlDefaulted() const {
   return getImpl<detail::ThermalZone_Impl>()->isFractionofZoneControlledbyPrimaryDaylightingControlDefaulted();
 }
 
 double ThermalZone::fractionofZoneControlledbySecondaryDaylightingControl() const {
   return getImpl<detail::ThermalZone_Impl>()->fractionofZoneControlledbySecondaryDaylightingControl();
-}
-
-Quantity ThermalZone::getFractionofZoneControlledbySecondaryDaylightingControl(bool returnIP) const {
-  return getImpl<detail::ThermalZone_Impl>()->getFractionofZoneControlledbySecondaryDaylightingControl(returnIP);
 }
 
 bool ThermalZone::isFractionofZoneControlledbySecondaryDaylightingControlDefaulted() const {
@@ -2999,10 +2889,6 @@ bool ThermalZone::setCeilingHeight(double ceilingHeight) {
   return getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
 }
 
-bool ThermalZone::setCeilingHeight(const Quantity& ceilingHeight) {
-  return getImpl<detail::ThermalZone_Impl>()->setCeilingHeight(ceilingHeight);
-}
-
 void ThermalZone::resetCeilingHeight() {
   getImpl<detail::ThermalZone_Impl>()->resetCeilingHeight();
 }
@@ -3016,10 +2902,6 @@ bool ThermalZone::setVolume(boost::optional<double> volume) {
 }
 
 bool ThermalZone::setVolume(double volume) {
-  return getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
-}
-
-bool ThermalZone::setVolume(const Quantity& volume) {
   return getImpl<detail::ThermalZone_Impl>()->setVolume(volume);
 }
 
@@ -3063,19 +2945,11 @@ bool ThermalZone::setFractionofZoneControlledbyPrimaryDaylightingControl(double 
   return getImpl<detail::ThermalZone_Impl>()->setFractionofZoneControlledbyPrimaryDaylightingControl(fractionofZoneControlledbyPrimaryDaylightingControl);
 }
 
-bool ThermalZone::setFractionofZoneControlledbyPrimaryDaylightingControl(const Quantity& fractionofZoneControlledbyPrimaryDaylightingControl) {
-  return getImpl<detail::ThermalZone_Impl>()->setFractionofZoneControlledbyPrimaryDaylightingControl(fractionofZoneControlledbyPrimaryDaylightingControl);
-}
-
 void ThermalZone::resetFractionofZoneControlledbyPrimaryDaylightingControl() {
   getImpl<detail::ThermalZone_Impl>()->resetFractionofZoneControlledbyPrimaryDaylightingControl();
 }
 
 bool ThermalZone::setFractionofZoneControlledbySecondaryDaylightingControl(double fractionofZoneControlledbySecondaryDaylightingControl) {
-  return getImpl<detail::ThermalZone_Impl>()->setFractionofZoneControlledbySecondaryDaylightingControl(fractionofZoneControlledbySecondaryDaylightingControl);
-}
-
-bool ThermalZone::setFractionofZoneControlledbySecondaryDaylightingControl(const Quantity& fractionofZoneControlledbySecondaryDaylightingControl) {
   return getImpl<detail::ThermalZone_Impl>()->setFractionofZoneControlledbySecondaryDaylightingControl(fractionofZoneControlledbySecondaryDaylightingControl);
 }
 

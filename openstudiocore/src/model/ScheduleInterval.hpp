@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,9 +42,6 @@ namespace model {
 namespace detail {
   class ScheduleInterval_Impl;
 } // detail
-
-// ETH@20120919 Perhaps all Schedules should be able to return their data as TimeSeries (and TimeSeries should be
-// convertible to and/or implemented using OSQuantityVector).
 
 /** ScheduleInterval is a Schedule that serves as an abstract base class for ScheduleFixedInterval
  *  and ScheduleVariableInterval. ScheduleIntervals may be constructed from TimeSeries, and can return
@@ -99,4 +96,3 @@ typedef std::vector<ScheduleInterval> ScheduleIntervalVector;
 } // openstudio
 
 #endif // MODEL_SCHEDULEINTERVAL_HPP
-

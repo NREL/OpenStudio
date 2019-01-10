@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,11 +30,9 @@
 #include <gtest/gtest.h>
 
 #include "../UpdateManager.hpp"
-#include "../Application.hpp"
 #include "../System.hpp"
 #include <OpenStudio.hxx>
 
-#include <QApplication>
 #include <sstream>
 #include <time.h>
 
@@ -43,9 +41,11 @@ namespace openstudio
 
   TEST(UpdateManager, GeneralTest)
   {
+    FAIL() << "UpdateManager currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
     UpdateManager manager("GTest");
     EXPECT_EQ("GTest", manager.appName());
     while (!manager.finished()){
+      // DLM: no longer calls Application::instance().processEvents(msecPerLoop);
       System::msleep(100);
     }
     EXPECT_TRUE(manager.finished());
@@ -54,10 +54,12 @@ namespace openstudio
 
   TEST(UpdateManager, ExpandedTest)
   {
+    FAIL() << "UpdateManager currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
     std::string url = "https://www.openstudio.net/updateGTest.html?app=GTest&version=0.0.0";
     UpdateManager manager("GTest", url);
     EXPECT_EQ("GTest", manager.appName());
     while (!manager.finished()){
+      // DLM: no longer calls Application::instance().processEvents(msecPerLoop);
       System::msleep(100);
     }
     EXPECT_TRUE(manager.finished());

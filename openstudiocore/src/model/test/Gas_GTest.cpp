@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,142 +34,141 @@
 #include "../Gas.hpp"
 #include "../Gas_Impl.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,Gas_Thickness_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Gas gas(model);
+TEST_F(ModelFixture, Gas_Gas)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Unit units = gas.getThickness(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(gas.setThickness(testQ));
-  Quantity q = gas.getThickness(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  ASSERT_EXIT (
+  {
+     Model m;
+     Gas gas(m);
+
+     exit(0);
+  } ,
+    ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,Gas_ConductivityCoefficientA_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Gas gas(model);
+TEST_F(ModelFixture, Gas_GettersSetters)
+{
 
-  Unit units = gas.getConductivityCoefficientA(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(gas.setConductivityCoefficientA(testQ));
-  OSOptionalQuantity q = gas.getConductivityCoefficientA(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  Model m;
+  Gas gas(m);
+
+  // Gas Type:  String
+  // No Default
+  // Test a valid choice
+  EXPECT_TRUE(gas.setGasType("Air"));
+  EXPECT_EQ("Air", gas.gasType());
+  // Test an invalid choice
+  EXPECT_FALSE(gas.setGasType("BadChoice"));
+  EXPECT_EQ("Air", gas.gasType());
+
+
+  // Thickness:  Double
+  // No Default
+  EXPECT_TRUE(gas.setThickness(1.1));
+  EXPECT_EQ(1.1, gas.thickness());
+
+
+  // Conductivity Coefficient A: Optional Double
+  // No Default
+  EXPECT_TRUE(gas.setConductivityCoefficientA(10.03));
+  ASSERT_TRUE(gas.conductivityCoefficientA());
+  EXPECT_EQ(10.03, gas.conductivityCoefficientA().get());
+  gas.resetConductivityCoefficientA();
+  EXPECT_FALSE(gas.conductivityCoefficientA());
+
+
+  // Conductivity Coefficient B: Optional Double
+  // No Default
+  EXPECT_TRUE(gas.setConductivityCoefficientB(11.03));
+  ASSERT_TRUE(gas.conductivityCoefficientB());
+  EXPECT_EQ(11.03, gas.conductivityCoefficientB().get());
+  gas.resetConductivityCoefficientB();
+  EXPECT_FALSE(gas.conductivityCoefficientB());
+
+
+  // Conductivity Coefficient C: Optional Double
+  // No Default
+  EXPECT_TRUE(gas.setConductivityCoefficientC(12.03));
+  ASSERT_TRUE(gas.conductivityCoefficientC());
+  EXPECT_EQ(12.03, gas.conductivityCoefficientC().get());
+  gas.resetConductivityCoefficientC();
+  EXPECT_FALSE(gas.conductivityCoefficientC());
+
+
+  // Viscosity Coefficient A: Optional Double
+  // No Default
+  EXPECT_TRUE(gas.setViscosityCoefficientA(1.0));
+  ASSERT_TRUE(gas.viscosityCoefficientA());
+  EXPECT_EQ(1.0, gas.viscosityCoefficientA().get());
+  gas.resetViscosityCoefficientA();
+  EXPECT_FALSE(gas.viscosityCoefficientA());
+
+
+  // Viscosity Coefficient B: Optional Double
+  // No Default
+  EXPECT_TRUE(gas.setViscosityCoefficientB(13.03));
+  ASSERT_TRUE(gas.viscosityCoefficientB());
+  EXPECT_EQ(13.03, gas.viscosityCoefficientB().get());
+  gas.resetViscosityCoefficientB();
+  EXPECT_FALSE(gas.viscosityCoefficientB());
+
+
+  // Viscosity Coefficient C: Optional Double
+  // No Default
+  EXPECT_TRUE(gas.setViscosityCoefficientC(14.03));
+  ASSERT_TRUE(gas.viscosityCoefficientC());
+  EXPECT_EQ(14.03, gas.viscosityCoefficientC().get());
+  gas.resetViscosityCoefficientC();
+  EXPECT_FALSE(gas.viscosityCoefficientC());
+
+
+  // Specific Heat Coefficient A: Optional Double
+  // No Default
+  EXPECT_TRUE(gas.setSpecificHeatCoefficientA(1.3));
+  ASSERT_TRUE(gas.specificHeatCoefficientA());
+  EXPECT_EQ(1.3, gas.specificHeatCoefficientA().get());
+  gas.resetSpecificHeatCoefficientA();
+  EXPECT_FALSE(gas.specificHeatCoefficientA());
+
+
+  // Specific Heat Coefficient B: Optional Double
+  // No Default
+  EXPECT_TRUE(gas.setSpecificHeatCoefficientB(15.03));
+  ASSERT_TRUE(gas.specificHeatCoefficientB());
+  EXPECT_EQ(15.03, gas.specificHeatCoefficientB().get());
+  gas.resetSpecificHeatCoefficientB();
+  EXPECT_FALSE(gas.specificHeatCoefficientB());
+
+
+  // Specific Heat Coefficient C: Optional Double
+  // No Default
+  EXPECT_TRUE(gas.setSpecificHeatCoefficientC(16.03));
+  ASSERT_TRUE(gas.specificHeatCoefficientC());
+  EXPECT_EQ(16.03, gas.specificHeatCoefficientC().get());
+  gas.resetSpecificHeatCoefficientC();
+  EXPECT_FALSE(gas.specificHeatCoefficientC());
+
+
+  // Molecular Weight: Optional Double
+  // No Default
+  EXPECT_TRUE(gas.setMolecularWeight(110.0));
+  ASSERT_TRUE(gas.molecularWeight());
+  EXPECT_EQ(110.0, gas.molecularWeight().get());
+  gas.resetMolecularWeight();
+  EXPECT_FALSE(gas.molecularWeight());
+
+
+  // Specific Heat Ratio: Optional Double
+  // No Default
+  EXPECT_TRUE(gas.setSpecificHeatRatio(2.0));
+  ASSERT_TRUE(gas.specificHeatRatio());
+  EXPECT_EQ(2.0, gas.specificHeatRatio().get());
+  gas.resetSpecificHeatRatio();
+  EXPECT_FALSE(gas.specificHeatRatio());
+
 }
-
-TEST_F(ModelFixture,Gas_ConductivityCoefficientB_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Gas gas(model);
-
-  Unit units = gas.getConductivityCoefficientB(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(gas.setConductivityCoefficientB(testQ));
-  OSOptionalQuantity q = gas.getConductivityCoefficientB(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Gas_ViscosityCoefficientA_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Gas gas(model);
-
-  Unit units = gas.getViscosityCoefficientA(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(gas.setViscosityCoefficientA(testQ));
-  OSOptionalQuantity q = gas.getViscosityCoefficientA(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Gas_ViscosityCoefficientB_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Gas gas(model);
-
-  Unit units = gas.getViscosityCoefficientB(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(gas.setViscosityCoefficientB(testQ));
-  OSOptionalQuantity q = gas.getViscosityCoefficientB(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Gas_SpecificHeatCoefficientA_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Gas gas(model);
-
-  Unit units = gas.getSpecificHeatCoefficientA(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(gas.setSpecificHeatCoefficientA(testQ));
-  OSOptionalQuantity q = gas.getSpecificHeatCoefficientA(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Gas_SpecificHeatCoefficientB_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Gas gas(model);
-
-  Unit units = gas.getSpecificHeatCoefficientB(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(gas.setSpecificHeatCoefficientB(testQ));
-  OSOptionalQuantity q = gas.getSpecificHeatCoefficientB(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Gas_MolecularWeight_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Gas gas(model);
-
-  Unit units = gas.getMolecularWeight(true).units(); // Get IP units.
-
-  // Bounds: 20 <= value <= 200)
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(gas.setMolecularWeight(testQ));
-
-  double value2(20.0);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(gas.setMolecularWeight(testQ2));
-  OSOptionalQuantity q = gas.getMolecularWeight(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value2,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-

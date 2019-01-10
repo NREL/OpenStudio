@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,7 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "SpaceLoadDefinition_Impl.hpp"
-#include "attributes.hpp"
 
 namespace openstudio {
 namespace model {
@@ -43,55 +42,6 @@ namespace detail {
 
   /** LightsDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for LightsDefinition.*/
   class MODEL_API LightsDefinition_Impl : public SpaceLoadDefinition_Impl {
-
-
-    Q_PROPERTY(openstudio::OSOptionalQuantity lightingLevel_SI
-               READ lightingLevel_SI
-               WRITE setLightingLevel);
-    Q_PROPERTY(openstudio::OSOptionalQuantity lightingLevel_IP
-               READ lightingLevel_IP
-               WRITE setLightingLevel);
-
-
-    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperSpaceFloorArea_SI
-               READ wattsperSpaceFloorArea_SI
-               WRITE setWattsperSpaceFloorArea);
-    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperSpaceFloorArea_IP
-               READ wattsperSpaceFloorArea_IP
-               WRITE setWattsperSpaceFloorArea);
-
-
-    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperPerson_SI
-               READ wattsperPerson_SI
-               WRITE setWattsperPerson);
-    Q_PROPERTY(openstudio::OSOptionalQuantity wattsperPerson_IP
-               READ wattsperPerson_IP
-               WRITE setWattsperPerson);
-
-
-    Q_PROPERTY(openstudio::Quantity fractionRadiant_SI
-               READ fractionRadiant_SI
-               WRITE setFractionRadiant);
-    Q_PROPERTY(openstudio::Quantity fractionRadiant_IP
-               READ fractionRadiant_IP
-               WRITE setFractionRadiant);
-
-
-    Q_PROPERTY(openstudio::Quantity fractionVisible_SI
-               READ fractionVisible_SI
-               WRITE setFractionVisible);
-    Q_PROPERTY(openstudio::Quantity fractionVisible_IP
-               READ fractionVisible_IP
-               WRITE setFractionVisible);
-
-
-    Q_PROPERTY(openstudio::Quantity returnAirFraction_SI
-               READ returnAirFraction_SI
-               WRITE setReturnAirFraction);
-    Q_PROPERTY(openstudio::Quantity returnAirFraction_IP
-               READ returnAirFraction_IP
-               WRITE setReturnAirFraction);
-
 
    public:
     /** @name Constructors and Destructors */
@@ -109,20 +59,10 @@ namespace detail {
 
     virtual ~LightsDefinition_Impl() {}
 
-    // Attributes
-
-    ATTRIBUTE_DEFINITION(1,0,0,lightingLevel,LightingLevel)
-    ATTRIBUTE_DEFINITION(1,0,0,wattsperPerson,WattsperPerson)
-    ATTRIBUTE_DEFINITION(1,0,0,wattsperSpaceFloorArea,WattsperSpaceFloorArea)
-    ATTRIBUTE_DEFINITION(0,1,0,fractionRadiant,FractionRadiant)
-    ATTRIBUTE_DEFINITION(0,1,0,fractionVisible,FractionVisible)
-    ATTRIBUTE_DEFINITION(0,1,0,returnAirFraction,ReturnAirFraction)
-
     //@}
     /** @name Virtual Methods */
     //@{
 
-    // TODO: remove (unused)
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
@@ -132,69 +72,54 @@ namespace detail {
     //@{
 
     std::string designLevelCalculationMethod() const;
+    boost::optional<double> lightingLevel() const;
+    boost::optional<double> wattsperSpaceFloorArea() const;
+    boost::optional<double> wattsperPerson() const;
 
-    //boost::optional<double> lightingLevel() const;
+    double fractionRadiant() const;
+    bool isFractionRadiantDefaulted() const;
 
-    //boost::optional<double> wattsperSpaceFloorArea() const;
+    double fractionVisible() const;
+    bool isFractionVisibleDefaulted() const;
 
-    //boost::optional<double> wattsperPerson() const;
-
-    //double fractionRadiant() const;
-
-    //bool isFractionRadiantDefaulted() const;
-
-    //double fractionVisible() const;
-
-    //bool isFractionVisibleDefaulted() const;
-
-    //double returnAirFraction() const;
-
-    //bool isReturnAirFractionDefaulted() const;
+    double returnAirFraction() const;
+    bool isReturnAirFractionDefaulted() const;
 
     bool returnAirFractionCalculatedfromPlenumTemperature() const;
-
     bool isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted() const;
 
     double returnAirFractionFunctionofPlenumTemperatureCoefficient1() const;
-
     bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted() const;
 
     double returnAirFractionFunctionofPlenumTemperatureCoefficient2() const;
-
     bool isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    //bool setLightingLevel(boost::optional<double> lightingLevel);
+    bool setLightingLevel(boost::optional<double> lightingLevel);
 
-    //bool setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea);
+    bool setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea);
 
-    //bool setWattsperPerson(boost::optional<double> wattsperPerson);
+    bool setWattsperPerson(boost::optional<double> wattsperPerson);
 
-    //bool setFractionRadiant(double fractionRadiant);
+    bool setFractionRadiant(double fractionRadiant);
+    void resetFractionRadiant();
 
-    //void resetFractionRadiant();
+    bool setFractionVisible(double fractionVisible);
+    void resetFractionVisible();
 
-    //bool setFractionVisible(double fractionVisible);
-
-    //void resetFractionVisible();
-
-    //bool setReturnAirFraction(double returnAirFraction);
-
-    //void resetReturnAirFraction();
+    bool setReturnAirFraction(double returnAirFraction);
+    void resetReturnAirFraction();
 
     bool setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature);
-
     void resetReturnAirFractionCalculatedfromPlenumTemperature();
 
     bool setReturnAirFractionFunctionofPlenumTemperatureCoefficient1(double returnAirFractionFunctionofPlenumTemperatureCoefficient1);
-
     void resetReturnAirFractionFunctionofPlenumTemperatureCoefficient1();
 
     bool setReturnAirFractionFunctionofPlenumTemperatureCoefficient2(double returnAirFractionFunctionofPlenumTemperatureCoefficient2);
-
     void resetReturnAirFractionFunctionofPlenumTemperatureCoefficient2();
 
     //@}

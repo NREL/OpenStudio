@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,11 +37,14 @@
 #include "BuildingComponentDialog.hpp"
 #include "OSDialog.hpp"
 
+#include "../model_editor/Application.hpp"
+
+#include "../model_editor/UserSettings.hpp"
+
 #include "../measure/OSArgument.hpp"
 
 #include "../model/Model.hpp"
 
-#include "../utilities/core/Application.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/core/RubyException.hpp"
@@ -125,8 +128,7 @@ void MeasureManager::waitForStarted(int msec)
     if (error == QNetworkReply::NoError){
       success = true;
     } else{
-      // this calls process events
-      System::msleep(msecPerLoop);
+      Application::instance().processEvents(msecPerLoop);
     }
 
     ++current;
@@ -539,7 +541,8 @@ boost::optional<measure::OSArgument> MeasureManager::getArgument(const measure::
     }
 
   } else if (type.value() == measure::OSArgumentType::Quantity){
-    result = measure::OSArgument::makeQuantityArgument(name, required, modelDependent);
+    LOG(Warn, "Mapping deprecated OSArgumentType::Quantity to Double");
+    result = measure::OSArgument::makeDoubleArgument(name, required, modelDependent);
 
     if (argument.isMember("default_value")){
       double defaultValue = argument.get("default_value", Json::Value(0.0)).asDouble();
@@ -719,10 +722,10 @@ bool MeasureManager::isMeasureSelected()
 
 void MeasureManager::updateMeasuresLists()
 {
-  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+  openstudio::path umd = userMeasuresDir();
 
   auto updateUserMeasures = true;
-  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+  if (isNetworkPath(umd) && !isNetworkPathAvailable(umd)) {
     updateUserMeasures = false;
   }
 
@@ -734,7 +737,7 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
   checkForLocalBCLUpdates();
 
   if (updateUserMeasures) {
-    checkForUpdates(BCLMeasure::userMeasuresDir(), false);
+    checkForUpdates(userMeasuresDir(), false);
   }
 
   if (!m_mutex.tryLock()) {
@@ -746,8 +749,8 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
   m_measureArguments.clear();
 
   if (updateUserMeasures) {
-   std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
-    for( auto & measure : userMeasures )
+   std::vector<BCLMeasure> uMeasures = userMeasures();
+    for( auto & measure : uMeasures)
     {
       bool updateUUID = false;
       if (m_myMeasures.find(measure.uuid()) != m_myMeasures.end()){
@@ -766,8 +769,8 @@ void MeasureManager::updateMeasuresLists(bool updateUserMeasures)
     }
   }
 
-  std::vector<BCLMeasure> localBCLMeasures = BCLMeasure::localBCLMeasures();
-  for( auto & measure : localBCLMeasures )
+  std::vector<BCLMeasure> lbm = localBCLMeasures();
+  for( auto & measure : lbm)
   {
     auto it = m_bclMeasures.find(measure.uuid());
     if (it != m_bclMeasures.end()){

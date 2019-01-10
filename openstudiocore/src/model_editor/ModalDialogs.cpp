@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -29,6 +29,8 @@
 
 #include "ModalDialogs.hpp"
 
+#include "Application.hpp"
+
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelObject.hpp"
@@ -56,7 +58,6 @@
 #include "../model/People.hpp"
 #include "../model/PeopleDefinition.hpp"
 
-#include "../utilities/core/Application.hpp"
 #include "../utilities/core/System.hpp"
 #include "../utilities/core/Assert.hpp"
 
@@ -81,6 +82,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QIcon>
+#include <QTextStream>
 
 #include <algorithm>
 
@@ -348,8 +350,7 @@ void ensureThermalZone(openstudio::model::Space& space)
     ModelObjectSelectorDialogWatcher watcher(dialog);
 
     while (!watcher.isSelectionFinal()){
-      // msleep calls processEvents
-      openstudio::System::msleep(1);
+      Application::instance().processEvents(1);
     }
 
     selectedModelObject = watcher.selectedModelObject();
@@ -434,8 +435,7 @@ void ensureSpaceLoadDefinition(openstudio::model::SpaceLoadInstance& instance)
     ModelObjectSelectorDialogWatcher watcher(dialog);
 
     while (!watcher.isSelectionFinal()){
-      // msleep calls processEvents
-      openstudio::System::msleep(1);
+      Application::instance().processEvents(1);
     }
 
     boost::optional<ModelObject> selectedModelObject = watcher.selectedModelObject();

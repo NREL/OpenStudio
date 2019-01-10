@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -187,14 +187,7 @@ class UTILITIES_API IdfObject {
    *  value for non-existent (non-extensible) fields and fields with empty data, if an
    *  int default exists. */
   boost::optional<int> getInt(unsigned index, bool returnDefault=false) const;
-
-  /** Get value of the field at index, converted to qurl, if possible. Returns an
-   *  uninitialized object if the conversion is unsuccessful for any reason. Logs a warning
-   *  if the conversion fails, the field is URLType. Optionally, if returnDefault is passed
-   *  in as true, getURL will return the default value for non-existent (non-extensible)
-   *  fields and fields with empty data, if a url default exists. */
-  boost::optional<QUrl> getURL(unsigned index, bool returnDefault=false) const;
-
+  
   /** Returns the IdfExtensibleGroup at groupIndex, if it exists. Otherwise, return value will be
    *  .empty(). */
   IdfExtensibleGroup getExtensibleGroup(unsigned groupIndex) const;

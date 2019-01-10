@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,7 +53,6 @@
 
 #include "../../energyplus/ReverseTranslator.hpp"
 
-#include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idd/IddKey.hpp"
 #include <utilities/idd/OS_WindowMaterial_Blind_FieldEnums.hxx>
@@ -115,31 +114,6 @@ TEST_F(ModelFixture, FenestrationMaterial_Blind_Constructors)
   EXPECT_TRUE(blind.iddObject().type() == IddObjectType::OS_WindowMaterial_Blind);
 }
 
-TEST_F(ModelFixture, FenestrationMaterial_Blind_Attributes)
-{
-  // construct
-  Model model;
-  Blind blind(model);
-
-  /// Commented out due to removal of .getAttribute()
-
-  // at material level, thickness attribute is equivalent to blind width field
-  // ASSERT_TRUE(blind.getAttribute("thickness"));
-  // Attribute blindThickness = blind.getAttribute("thickness").get();
-  // EXPECT_TRUE(blindThickness.valueType() == AttributeValueType::Double);
-
-  // EXPECT_DOUBLE_EQ(0.001, blindThickness.valueAsDouble());
-  // EXPECT_TRUE(blind.getDouble(OS_WindowMaterial_BlindFields::SlatWidth));
-
-  // should be settable
-  // EXPECT_TRUE(blind.setAttribute("thickness", 0.0025));
-
-  // ASSERT_TRUE(blind.getAttribute("thickness"));
-  // blindThickness = blind.getAttribute("thickness").get();
-  // EXPECT_TRUE(blindThickness.valueType() == AttributeValueType::Double);
-  // EXPECT_DOUBLE_EQ(0.0025, blindThickness.valueAsDouble());
-}
-
 TEST_F(ModelFixture, FenestrationMaterial_Gas_Constructors)
 {
   // construct from scratch
@@ -175,29 +149,6 @@ TEST_F(ModelFixture, FenestrationMaterial_Gas_KeyFields) {
   ASSERT_TRUE(gasTypeIddField.getKey("Krypton"));
   ASSERT_TRUE(gasTypeIddField.getKey("Xenon"));
   ASSERT_TRUE(gasTypeIddField.getKey("Custom"));
-}
-
-TEST_F(ModelFixture, FenestrationMaterial_Gas_Attributes)
-{
-  // construct
-  Model model;
-  Gas gas(model);
-
-  // thickness attribute equivalent to thickness field
-  //TODO: fix this, thickness should return an optional rather than throw here
-  //ASSERT_TRUE(gas.getAttribute("thickness"));
-  //Attribute gasThickness = gas.getAttribute("thickness").get();
-  //EXPECT_TRUE(gasThickness.valueType() == AttributeValueType::Double);
-
-
-  // Removed due to removal of attributes
-  // should be settable
-  // EXPECT_TRUE(gas.setAttribute("thickness", 0.001));
-
-  // ASSERT_TRUE(gas.getAttribute("thickness"));
-  // Attribute gasThickness = gas.getAttribute("thickness").get();
-  // EXPECT_DOUBLE_EQ(0.001, gasThickness.valueAsDouble());
-
 }
 
 TEST_F(ModelFixture,FenestrationMaterial_Gas_Validity)
@@ -279,29 +230,6 @@ TEST_F(ModelFixture, FenestrationMaterial_GasMixture_IddAssumptions) {
   ASSERT_EQ(12u,gasMixture.iddObject().numFields());
 }
 
-TEST_F(ModelFixture, FenestrationMaterial_GasMixture_Attributes)
-{
-  // construct
-  Model model;
-  GasMixture gasMixture(model);
-
-  // thickness attribute equivalent to thickness field
-  //TODO: fix this, thickness should return an optional rather than throw here
-  //ASSERT_TRUE(gasMixture.getAttribute("thickness"));
-  //Attribute gasMixtureThickness = gasMixture.getAttribute("thickness").get();
-  //EXPECT_TRUE(gasMixtureThickness.valueType() == AttributeValueType::Double);
-  //EXPECT_DOUBLE_EQ(0.0,gasMixtureThickness.valueAsDouble());
-
-  // Removed due to removal of attributes
-  // should be settable
-  // EXPECT_TRUE(gasMixture.setAttribute("thickness", 0.001));
-
-  // ASSERT_TRUE(gasMixture.getAttribute("thickness"));
-  // Attribute gasMixtureThickness = gasMixture.getAttribute("thickness").get();
-  // EXPECT_TRUE(gasMixtureThickness.valueType() == AttributeValueType::Double);
-  // EXPECT_DOUBLE_EQ(0.001,gasMixtureThickness.valueAsDouble());
-}
-
 TEST_F(ModelFixture, FenestrationMaterial_RefractionExtinctionGlazing_Constructors)
 {
   // construct from scratch
@@ -326,31 +254,6 @@ TEST_F(ModelFixture, FenestrationMaterial_RefractionExtinctionGlazing_Constructo
               IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod);
 }
 
-TEST_F(ModelFixture, FenestrationMaterial_RefractionExtinctionGlazing_Attributes)
-{
-  // construct
-  Model model;
-  RefractionExtinctionGlazing refractionExtinctionGlazing(model);
-
-  // thickness attribute equivalent to thickness field
-  //TODO: fix this, thickness should return an optional rather than throw here
-  //ASSERT_TRUE(refractionExtinctionGlazing.getAttribute("thickness"));
-  //Attribute refractionExtinctionGlazingThickness =
-  //    refractionExtinctionGlazing.getAttribute("thickness").get();
-  //EXPECT_TRUE(refractionExtinctionGlazingThickness.valueType() == AttributeValueType::Double);
-  //EXPECT_DOUBLE_EQ(0.0,refractionExtinctionGlazingThickness.valueAsDouble());
-
-  // Removed due to removal of attributes
-  // should be settable
-  // EXPECT_TRUE(refractionExtinctionGlazing.setAttribute("thickness", 0.001));
-
-  // ASSERT_TRUE(refractionExtinctionGlazing.getAttribute("thickness"));
-  // Attribute refractionExtinctionGlazingThickness =
-      // refractionExtinctionGlazing.getAttribute("thickness").get();
-  // EXPECT_TRUE(refractionExtinctionGlazingThickness.valueType() == AttributeValueType::Double);
-  // EXPECT_DOUBLE_EQ(0.001,refractionExtinctionGlazingThickness.valueAsDouble());
-}
-
 TEST_F(ModelFixture, FenestrationMaterial_Screen_Constructors)
 {
   // construct from scratch
@@ -370,29 +273,6 @@ TEST_F(ModelFixture, FenestrationMaterial_Screen_Constructors)
   screen = screens[0];
   EXPECT_FALSE(screen.model() == model);
   EXPECT_TRUE(screen.iddObject().type() == IddObjectType::OS_WindowMaterial_Screen);
-}
-
-TEST_F(ModelFixture, FenestrationMaterial_Screen_Attributes)
-{
-  // construct
-  Model model;
-  Screen screen(model);
-
-  // at material level, thickness attribute is equivalent to screen material diameter field
-  //TODO: fix this, thickness should return an optional rather than throw here
-  //ASSERT_TRUE(screen.getAttribute("thickness"));
-  //Attribute screenThickness = screen.getAttribute("thickness").get();
-  //EXPECT_TRUE(screenThickness.valueType() == AttributeValueType::Double);
-  //EXPECT_DOUBLE_EQ(0.0,screenThickness.valueAsDouble());
-
-  // Removed due to removal of attributes
-  // should be settable
-  // EXPECT_TRUE(screen.setAttribute("thickness", 0.001));
-
-  // ASSERT_TRUE(screen.getAttribute("thickness"));
-  // Attribute screenThickness = screen.getAttribute("thickness").get();
-  // EXPECT_TRUE(screenThickness.valueType() == AttributeValueType::Double);
-  // EXPECT_DOUBLE_EQ(0.001,screenThickness.valueAsDouble());
 }
 
 TEST_F(ModelFixture, FenestrationMaterial_Shade_Constructors)
@@ -416,29 +296,6 @@ TEST_F(ModelFixture, FenestrationMaterial_Shade_Constructors)
   EXPECT_TRUE(shade.iddObject().type() == IddObjectType::OS_WindowMaterial_Shade);
 }
 
-TEST_F(ModelFixture, FenestrationMaterial_Shade_Attributes)
-{
-  // construct
-  Model model;
-  Shade shade(model);
-
-  // at material level, thickness attribute is equivalent to shade thickness field
-  //TODO: fix this, thickness should return an optional rather than throw here
-  //ASSERT_TRUE(shade.getAttribute("thickness"));
-  //Attribute shadeThickness = shade.getAttribute("thickness").get();
-  //EXPECT_TRUE(shadeThickness.valueType() == AttributeValueType::Double);
-  //EXPECT_DOUBLE_EQ(0.001,shadeThickness.valueAsDouble());
-
-  // Removed due to removal of attributes
-  // should be settable
-  // EXPECT_TRUE(shade.setAttribute("thickness", 0.001));
-
-  // ASSERT_TRUE(shade.getAttribute("thickness"));
-  // Attribute shadeThickness = shade.getAttribute("thickness").get();
-  // EXPECT_TRUE(shadeThickness.valueType() == AttributeValueType::Double);
-  // EXPECT_DOUBLE_EQ(0.001,shadeThickness.valueAsDouble());
-}
-
 TEST_F(ModelFixture, FenestrationMaterial_SimpleGlazing_Constructors)
 {
   // construct from scratch
@@ -460,28 +317,6 @@ TEST_F(ModelFixture, FenestrationMaterial_SimpleGlazing_Constructors)
   EXPECT_TRUE(glazing.iddObject().type() == IddObjectType::OS_WindowMaterial_SimpleGlazingSystem);
 }
 
-TEST_F(ModelFixture, FenestrationMaterial_SimpleGlazing_Attributes)
-{
-  // construct
-  Model model;
-  SimpleGlazing simpleGlazing(model);
-
-  // no thickness field--defaults to 0.0 and cannot be set
-  //TODO: fix this, thickness should return an optional rather than throw here
-  //ASSERT_TRUE(simpleGlazing.getAttribute("thickness"));
-  //Attribute simpleGlazingThickness = simpleGlazing.getAttribute("thickness").get();
-  //EXPECT_TRUE(simpleGlazingThickness.valueType() == AttributeValueType::Double);
-  //EXPECT_DOUBLE_EQ(0.0,simpleGlazingThickness.valueAsDouble());
-
-  // Removed due to removal of attributes
-  // EXPECT_FALSE(simpleGlazing.setAttribute("thickness", 0.001));
-
-  // ASSERT_TRUE(simpleGlazing.getAttribute("thickness"));
-  // Attribute simpleGlazingThickness = simpleGlazing.getAttribute("thickness").get();
-  // EXPECT_TRUE(simpleGlazingThickness.valueType() == AttributeValueType::Double);
-  // EXPECT_DOUBLE_EQ(0.0,simpleGlazingThickness.valueAsDouble());
-}
-
 TEST_F(ModelFixture, FenestrationMaterial_StandardGlazing_Constructors)
 {
   // construct from scratch
@@ -501,29 +336,6 @@ TEST_F(ModelFixture, FenestrationMaterial_StandardGlazing_Constructors)
   glazing = glazings[0];
   EXPECT_FALSE(glazing.model() == model);
   EXPECT_TRUE(glazing.iddObject().type() == IddObjectType::OS_WindowMaterial_Glazing);
-}
-
-TEST_F(ModelFixture, FenestrationMaterial_StandardGlazing_Attributes)
-{
-  // construct
-  Model model;
-  StandardGlazing standardGlazing(model);
-
-  // thickness attribute equivalent to thickness field
-  //TODO: fix this, thickness should return an optional rather than throw here
-  //ASSERT_TRUE(standardGlazing.getAttribute("thickness"));
-  //Attribute standardGlazingThickness = standardGlazing.getAttribute("thickness").get();
-  //EXPECT_TRUE(standardGlazingThickness.valueType() == AttributeValueType::Double);
-  //EXPECT_DOUBLE_EQ(0.0,standardGlazingThickness.valueAsDouble());
-
-  // Removed due to removal of attributes
-  // should be settable
-  // EXPECT_TRUE(standardGlazing.setAttribute("thickness", 0.001));
-
-  // ASSERT_TRUE(standardGlazing.getAttribute("thickness"));
-  // Attribute standardGlazingThickness = standardGlazing.getAttribute("thickness").get();
-  // EXPECT_TRUE(standardGlazingThickness.valueType() == AttributeValueType::Double);
-  // EXPECT_DOUBLE_EQ(0.001,standardGlazingThickness.valueAsDouble());
 }
 
 TEST_F(ModelFixture, FenestrationMaterial_ThermochromicGlazing_Constructors)
@@ -573,16 +385,4 @@ TEST_F(ModelFixture, FenestrationMaterial_ThermochromicGlazing_Attributes)
   groupValues[1] = glazingAtTemp3.name().get();
   glazing.pushExtensibleGroup(groupValues);
 
-  // Removed due to removal of attributes
-  // thickness is average of composite glazings (should also log warning)
-  // ASSERT_TRUE(glazing.getAttribute("thickness"));
-  // Attribute glazingThickness = glazing.getAttribute("thickness").get();
-  // EXPECT_TRUE(glazingThickness.valueType() == AttributeValueType::Double);
-  // EXPECT_DOUBLE_EQ(0.002,glazingThickness.valueAsDouble());
-
-  // setter works and acts on all glazings pointed to
-  // EXPECT_TRUE(glazing.setAttribute("thickness", 0.001));
-  // EXPECT_DOUBLE_EQ(0.001,glazingAtTemp1.thickness());
-  // EXPECT_DOUBLE_EQ(0.001,glazingAtTemp2.thickness());
-  // EXPECT_DOUBLE_EQ(0.001,glazingAtTemp3.thickness());
 }

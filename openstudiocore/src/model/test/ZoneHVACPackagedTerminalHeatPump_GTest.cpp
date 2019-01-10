@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,7 +50,6 @@
 #include "../ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "../ScheduleCompact.hpp"
 #include <utilities/idd/OS_Curve_Biquadratic_FieldEnums.hxx>
-#include "../../utilities/units/Quantity.hpp"
 
 using namespace openstudio;
 
@@ -261,19 +260,6 @@ TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_Clone)
   totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient5yPOW2(0.000148716);
   totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient6xTIMESY(0.0);
 
-  //ASSERT_NO_THROW(totalHeatingCapacityFunctionofTemperatureCurve.getQuantity(
-  //  OS_Curve_BiquadraticFields::Coefficient1Constant,true));
-  //ASSERT_NO_THROW(totalHeatingCapacityFunctionofTemperatureCurve.getQuantity(
-  //  OS_Curve_BiquadraticFields::Coefficient2x,true));
-  //ASSERT_NO_THROW(totalHeatingCapacityFunctionofTemperatureCurve.getQuantity(
-  //  OS_Curve_BiquadraticFields::Coefficient3x_POW_2,true));
-  //ASSERT_NO_THROW(totalHeatingCapacityFunctionofTemperatureCurve.getQuantity(
-  //  OS_Curve_BiquadraticFields::Coefficient4y,true));
-  //ASSERT_NO_THROW(totalHeatingCapacityFunctionofTemperatureCurve.getQuantity(
-  //  OS_Curve_BiquadraticFields::Coefficient5y_POW_2,true));
-  //ASSERT_NO_THROW(totalHeatingCapacityFunctionofTemperatureCurve.getQuantity(
-  //  OS_Curve_BiquadraticFields::Coefficient6x_TIMES_y,true));
-
   CurveQuadratic  totalHeatingCapacityFunctionofFlowFractionCurve(m);
   totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient1Constant(0.84);
   totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient2x(0.16);
@@ -326,4 +312,3 @@ TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_Clone)
 
   pthp2.remove();
 }
-

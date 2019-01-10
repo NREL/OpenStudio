@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -76,17 +76,13 @@ class MODEL_API ControllerOutdoorAir : public ParentObject {
   void resetTimeofDayEconomizerControlSchedule();
 
   boost::optional<double> minimumOutdoorAirFlowRate() const;
-  OSOptionalQuantity getMinimumOutdoorAirFlowRate(bool returnIP=false) const;
   bool isMinimumOutdoorAirFlowRateAutosized() const;
   bool setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate);
-  bool setMinimumOutdoorAirFlowRate(const Quantity& minimumOutdoorAirFlowRate);
   void autosizeMinimumOutdoorAirFlowRate();
 
   boost::optional<double> maximumOutdoorAirFlowRate() const;
-  OSOptionalQuantity getMaximumOutdoorAirFlowRate(bool returnIP=false) const;
   bool isMaximumOutdoorAirFlowRateAutosized() const;
   bool setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate);
-  bool setMaximumOutdoorAirFlowRate(const Quantity& maximumOutdoorAirFlowRate);
   void autosizeMaximumOutdoorAirFlowRate();
 
   ControllerMechanicalVentilation controllerMechanicalVentilation() const;
@@ -133,13 +129,13 @@ class MODEL_API ControllerOutdoorAir : public ParentObject {
   //Zone getHumidistatControlZone() const;
   //bool setHumidistatControlZone(Zone z)
 
-  OptionalDouble getHighHumidityOutdoorAirFlowRatio() const;
+  boost::optional<double> getHighHumidityOutdoorAirFlowRatio() const;
   bool setHighHumidityOutdoorAirFlowRatio(double v);
 
   boost::optional<bool> getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const;
   bool setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v);
 
-  OptionalString getHeatRecoveryBypassControlType() const;
+  boost::optional<std::string> getHeatRecoveryBypassControlType() const;
   bool setHeatRecoveryBypassControlType(const std::string& v);
 
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;

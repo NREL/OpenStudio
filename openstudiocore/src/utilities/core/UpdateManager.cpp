@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -29,9 +29,7 @@
 
 #include "UpdateManager.hpp"
 #include "Assert.hpp"
-#include "Application.hpp"
 #include <OpenStudio.hxx>
-
 #include <QNetworkReply>
 #include <QDomDocument>
 
@@ -45,7 +43,8 @@ namespace openstudio{
       m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false),
       m_mostRecentVersion(openStudioVersion()), m_manager(new QNetworkAccessManager(this))
   {
-    Application::instance().processEvents(); // a kludge to make sure that updatemanager works correctly in a non-application environment on unix
+    // TODO: QT-Separation-Move
+    //Application::instance().processEvents(); // a kludge to make sure that updatemanager works correctly in a non-application environment on unix
 
     connect(m_manager, &QNetworkAccessManager::finished, this, &UpdateManager::replyFinished);
 
@@ -65,9 +64,8 @@ namespace openstudio{
       m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false),
       m_mostRecentVersion(openStudioVersion()), m_manager(new QNetworkAccessManager(this))
   {
-    Application::instance().processEvents(); // a kludge to make sure that updatemanager works correctly in a non-application environment on unix
-
-
+    //TODO: QT - Separation - Move
+    //Application::instance().processEvents(); // a kludge to make sure that updatemanager works correctly in a non-application environment on unix
 
     connect(m_manager, &QNetworkAccessManager::finished, this, &UpdateManager::replyFinished);
 

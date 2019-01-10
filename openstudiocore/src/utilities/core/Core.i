@@ -17,7 +17,6 @@
   #include <utilities/math/FloatCompare.hpp>
 
   #include <OpenStudio.hxx>
-  #include <QAction>
 %}
 
 #if defined(SWIGJAVA)
@@ -39,14 +38,11 @@
 %include <utilities/core/Path.i>
 %include <OpenStudio.hxx>
 %include <utilities/core/ApplicationPathHelpers.hpp>
-%include <utilities/core/PathWatcher.i>
 %include <utilities/core/String.hpp>
 %include <utilities/core/StringHelpers.hpp>
 %include <utilities/core/Singleton.i>
-%include <utilities/core/Application.i>
 %include <utilities/core/Logger.i>
 %include <utilities/core/UpdateManager.i>
-%include <utilities/core/Url.i>
 %include <utilities/core/UUID.i>
 %include <utilities/core/Checksum.i>
 %include <utilities/core/Optional.hpp>
@@ -64,8 +60,6 @@
 %ignore std::vector<openstudio::FileReference>::resize(size_type);
 %template(FileReferenceVector) std::vector<openstudio::FileReference>;
 %template(OptionalFileReference) boost::optional<openstudio::FileReference>;
-%template(OptionalQUrl) boost::optional<QUrl>;
-%template(OptionalQVariant) boost::optional<QVariant>;
 %template(OptionalVersionString) boost::optional<openstudio::VersionString>;
 
 %include <utilities/core/FileReference.hpp>

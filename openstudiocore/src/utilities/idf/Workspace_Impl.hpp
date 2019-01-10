@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -443,8 +443,8 @@ namespace detail {
     IdfFile toIdfFile();
 
     /// Locates and updates urls in the workspace
-    std::vector<std::pair<QUrl, openstudio::path> > locateUrls(const std::vector<URLSearchPath> &t_paths, bool t_create_relative_paths,
-     const openstudio::path &t_infile, const openstudio::path &t_locationForRemoteUrls = openstudio::path());
+    //std::vector<std::pair<openstudio::Url, openstudio::path> > locateUrls(const std::vector<URLSearchPath> &t_paths, bool t_create_relative_paths,
+    // const openstudio::path &t_infile, const openstudio::path &t_locationForRemoteUrls = openstudio::path());
 
     //@}
 
@@ -462,7 +462,7 @@ namespace detail {
 
     /// report caption describing what we are currently doing
     // void progressCaption(const QString& caption) const;
-    mutable Nano::Signal<void(const QString&)> progressCaption;
+    mutable Nano::Signal<void(const std::string&)> progressCaption;
 
     /** Emitted on any change to this Workspace and its contents. */
     // void onChange() const;
@@ -487,7 +487,7 @@ namespace detail {
     //@}
 
 
-   public slots:
+   //public slots:
 
     void change();
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,8 +31,6 @@
 #include "ModelFixture.hpp"
 #include "../ZoneHVACBaseboardConvectiveElectric.hpp"
 #include "../ZoneHVACBaseboardConvectiveElectric_Impl.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
 #include "../ThermalZone.hpp"
@@ -70,4 +68,3 @@ TEST_F(ModelFixture,ZoneHVACBaseboardConvectiveElectric_Test) {
   // check to see if it doesn't have a thermal zone
   EXPECT_FALSE(zoneHVACBBConv.thermalZone());
 }
-

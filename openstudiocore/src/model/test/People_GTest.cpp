@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,12 +40,6 @@
 #include "../ScheduleRuleset.hpp"
 #include "../ScheduleDay.hpp"
 #include "../ScheduleTypeRegistry.hpp"
-
-#include "../../utilities/units/QuantityConverter.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/OSQuantityVector.hpp"
-#include "../../utilities/units/SIUnit.hpp"
-#include "../../utilities/units/BTUUnit.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -211,11 +205,10 @@ TEST_F(ModelFixture,People_Schedule_Quantities) {
   ScheduleRuleset activityLevelSchedule(model);
   EXPECT_TRUE(checkOrAssignScheduleTypeLimits("People","Activity Level",activityLevelSchedule));
   ScheduleDay defaultSchedule = activityLevelSchedule.defaultDaySchedule();
-  defaultSchedule.addValue(Time(0,24,0,0),Quantity(150.0,createSIPower()/createSIPeople()));
+  defaultSchedule.addValue(Time(0,24,0,0), 150.0);
   EXPECT_TRUE(people.setActivityLevelSchedule(activityLevelSchedule));
-  OSQuantityVector ipValues = defaultSchedule.getValues(true);
-  EXPECT_EQ("W/person",ipValues.units().prettyString());
-  EXPECT_DOUBLE_EQ(150.0,ipValues.values()[0]);
+  std::vector<double> values = defaultSchedule.values();
+  EXPECT_DOUBLE_EQ(150.0, values[0]);
 }
 
 TEST_F(ModelFixture,People_Clone) {

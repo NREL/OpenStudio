@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -301,110 +301,48 @@ namespace detail {
     return setDouble(OS_WindowMaterial_GasFields::MolecularWeight,value);
   }
 
-  Quantity Gas_Impl::getThickness(bool returnIP) const {
-    OptionalDouble value = thickness();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_GasFields::Thickness, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   boost::optional<double> Gas_Impl::conductivityCoefficientA() const {
     return getDouble(OS_WindowMaterial_GasFields::ConductivityCoefficientA,true);
-  }
-
-  OSOptionalQuantity Gas_Impl::getConductivityCoefficientA(bool returnIP) const {
-    OptionalDouble value = conductivityCoefficientA();
-    return getQuantityFromDouble(OS_WindowMaterial_GasFields::ConductivityCoefficientA, value, returnIP);
   }
 
   boost::optional<double> Gas_Impl::conductivityCoefficientB() const {
     return getDouble(OS_WindowMaterial_GasFields::ConductivityCoefficientB,true);
   }
 
-  OSOptionalQuantity Gas_Impl::getConductivityCoefficientB(bool returnIP) const {
-    OptionalDouble value = conductivityCoefficientB();
-    return getQuantityFromDouble(OS_WindowMaterial_GasFields::ConductivityCoefficientB, value, returnIP);
-  }
-
   boost::optional<double> Gas_Impl::conductivityCoefficientC() const {
     return getDouble(OS_WindowMaterial_GasFields::ConductivityCoefficientC,true);
-  }
-
-  OSOptionalQuantity Gas_Impl::getConductivityCoefficientC(bool returnIP) const {
-    OptionalDouble value = conductivityCoefficientC();
-    return getQuantityFromDouble(OS_WindowMaterial_GasFields::ConductivityCoefficientC, value, returnIP);
   }
 
   boost::optional<double> Gas_Impl::viscosityCoefficientA() const {
     return getDouble(OS_WindowMaterial_GasFields::ViscosityCoefficientA,true);
   }
 
-  OSOptionalQuantity Gas_Impl::getViscosityCoefficientA(bool returnIP) const {
-    OptionalDouble value = viscosityCoefficientA();
-    return getQuantityFromDouble(OS_WindowMaterial_GasFields::ViscosityCoefficientA, value, returnIP);
-  }
-
   boost::optional<double> Gas_Impl::viscosityCoefficientB() const {
     return getDouble(OS_WindowMaterial_GasFields::ViscosityCoefficientB,true);
-  }
-
-  OSOptionalQuantity Gas_Impl::getViscosityCoefficientB(bool returnIP) const {
-    OptionalDouble value = viscosityCoefficientB();
-    return getQuantityFromDouble(OS_WindowMaterial_GasFields::ViscosityCoefficientB, value, returnIP);
   }
 
   boost::optional<double> Gas_Impl::viscosityCoefficientC() const {
     return getDouble(OS_WindowMaterial_GasFields::ViscosityCoefficientC,true);
   }
 
-  OSOptionalQuantity Gas_Impl::getViscosityCoefficientC(bool returnIP) const {
-    OptionalDouble value = viscosityCoefficientC();
-    return getQuantityFromDouble(OS_WindowMaterial_GasFields::ViscosityCoefficientC, value, returnIP);
-  }
-
   boost::optional<double> Gas_Impl::specificHeatCoefficientA() const {
     return getDouble(OS_WindowMaterial_GasFields::SpecificHeatCoefficientA,true);
-  }
-
-  OSOptionalQuantity Gas_Impl::getSpecificHeatCoefficientA(bool returnIP) const {
-    OptionalDouble value = specificHeatCoefficientA();
-    return getQuantityFromDouble(OS_WindowMaterial_GasFields::SpecificHeatCoefficientA, value, returnIP);
   }
 
   boost::optional<double> Gas_Impl::specificHeatCoefficientB() const {
     return getDouble(OS_WindowMaterial_GasFields::SpecificHeatCoefficientB,true);
   }
 
-  OSOptionalQuantity Gas_Impl::getSpecificHeatCoefficientB(bool returnIP) const {
-    OptionalDouble value = specificHeatCoefficientB();
-    return getQuantityFromDouble(OS_WindowMaterial_GasFields::SpecificHeatCoefficientB, value, returnIP);
-  }
-
   boost::optional<double> Gas_Impl::specificHeatCoefficientC() const {
     return getDouble(OS_WindowMaterial_GasFields::SpecificHeatCoefficientC,true);
-  }
-
-  OSOptionalQuantity Gas_Impl::getSpecificHeatCoefficientC(bool returnIP) const {
-    OptionalDouble value = specificHeatCoefficientC();
-    return getQuantityFromDouble(OS_WindowMaterial_GasFields::SpecificHeatCoefficientC, value, returnIP);
   }
 
   boost::optional<double> Gas_Impl::molecularWeight() const {
     return getDouble(OS_WindowMaterial_GasFields::MolecularWeight,true);
   }
 
-  OSOptionalQuantity Gas_Impl::getMolecularWeight(bool returnIP) const {
-    OptionalDouble value = molecularWeight();
-    return getQuantityFromDouble(OS_WindowMaterial_GasFields::MolecularWeight, value, returnIP);
-  }
-
   boost::optional<double> Gas_Impl::specificHeatRatio() const {
     return getDouble(OS_WindowMaterial_GasFields::SpecificHeatRatio,true);
-  }
-
-  OSOptionalQuantity Gas_Impl::getSpecificHeatRatio(bool returnIP) const {
-    OptionalDouble value = specificHeatRatio();
-    return getQuantityFromDouble(OS_WindowMaterial_GasFields::SpecificHeatRatio, value, returnIP);
   }
 
   bool Gas_Impl::setGasType(std::string gasType) {
@@ -417,14 +355,6 @@ namespace detail {
     return result;
   }
 
-  bool Gas_Impl::setThickness(const Quantity& thickness) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_GasFields::Thickness,thickness);
-    if (!value) {
-      return false;
-    }
-    return setThickness(value.get());
-  }
-
   bool Gas_Impl::setConductivityCoefficientA(boost::optional<double> conductivityCoefficientA) {
     bool result(false);
     if (conductivityCoefficientA) {
@@ -435,23 +365,6 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
-    return result;
-  }
-
-  bool Gas_Impl::setConductivityCoefficientA(const OSOptionalQuantity& conductivityCoefficientA) {
-    bool result(false);
-    OptionalDouble value;
-    if (conductivityCoefficientA.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_GasFields::ConductivityCoefficientA,conductivityCoefficientA.get());
-      if (value) {
-        setConductivityCoefficientA(value);
-        result = true;
-      }
-    }
-    else {
-      setConductivityCoefficientA(value);
-      result = true;
-    }
     return result;
   }
 
@@ -473,23 +386,6 @@ namespace detail {
     return result;
   }
 
-  bool Gas_Impl::setConductivityCoefficientB(const OSOptionalQuantity& conductivityCoefficientB) {
-    bool result(false);
-    OptionalDouble value;
-    if (conductivityCoefficientB.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_GasFields::ConductivityCoefficientB,conductivityCoefficientB.get());
-      if (value) {
-        setConductivityCoefficientB(value);
-        result = true;
-      }
-    }
-    else {
-      setConductivityCoefficientB(value);
-      result = true;
-    }
-    return result;
-  }
-
   void Gas_Impl::resetConductivityCoefficientB() {
     bool result = setString(OS_WindowMaterial_GasFields::ConductivityCoefficientB, "");
     OS_ASSERT(result);
@@ -508,23 +404,6 @@ namespace detail {
     return result;
   }
 
-  bool Gas_Impl::setConductivityCoefficientC(const OSOptionalQuantity& conductivityCoefficientC) {
-    bool result(false);
-    OptionalDouble value;
-    if (conductivityCoefficientC.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_GasFields::ConductivityCoefficientC,conductivityCoefficientC.get());
-      if (value) {
-        setConductivityCoefficientC(value);
-        result = true;
-      }
-    }
-    else {
-      setConductivityCoefficientC(value);
-      result = true;
-    }
-    return result;
-  }
-
   void Gas_Impl::resetConductivityCoefficientC() {
     bool result = setString(OS_WindowMaterial_GasFields::ConductivityCoefficientC, "");
     OS_ASSERT(result);
@@ -538,21 +417,6 @@ namespace detail {
     else {
       resetViscosityCoefficientA();
       result = true;
-    }
-    return result;
-  }
-
-  bool Gas_Impl::setViscosityCoefficientA(const OSOptionalQuantity& viscosityCoefficientA) {
-    bool result(false);
-    OptionalDouble value;
-    if (viscosityCoefficientA.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_GasFields::ViscosityCoefficientA,viscosityCoefficientA.get());
-      if (value) {
-        result = setViscosityCoefficientA(value);
-      }
-    }
-    else {
-      result = setViscosityCoefficientA(value);
     }
     return result;
   }
@@ -575,23 +439,6 @@ namespace detail {
     return result;
   }
 
-  bool Gas_Impl::setViscosityCoefficientB(const OSOptionalQuantity& viscosityCoefficientB) {
-    bool result(false);
-    OptionalDouble value;
-    if (viscosityCoefficientB.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_GasFields::ViscosityCoefficientB,viscosityCoefficientB.get());
-      if (value) {
-        setViscosityCoefficientB(value);
-        result = true;
-      }
-    }
-    else {
-      setViscosityCoefficientB(value);
-      result = true;
-    }
-    return result;
-  }
-
   void Gas_Impl::resetViscosityCoefficientB() {
     bool result = setString(OS_WindowMaterial_GasFields::ViscosityCoefficientB, "");
     OS_ASSERT(result);
@@ -610,23 +457,6 @@ namespace detail {
     return result;
   }
 
-  bool Gas_Impl::setViscosityCoefficientC(const OSOptionalQuantity& viscosityCoefficientC) {
-    bool result(false);
-    OptionalDouble value;
-    if (viscosityCoefficientC.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_GasFields::ViscosityCoefficientC,viscosityCoefficientC.get());
-      if (value) {
-        setViscosityCoefficientC(value);
-        result = true;
-      }
-    }
-    else {
-      setViscosityCoefficientC(value);
-      result = true;
-    }
-    return result;
-  }
-
   void Gas_Impl::resetViscosityCoefficientC() {
     bool result = setString(OS_WindowMaterial_GasFields::ViscosityCoefficientC, "");
     OS_ASSERT(result);
@@ -640,21 +470,6 @@ namespace detail {
     else {
       resetSpecificHeatCoefficientA();
       result = true;
-    }
-    return result;
-  }
-
-  bool Gas_Impl::setSpecificHeatCoefficientA(const OSOptionalQuantity& specificHeatCoefficientA) {
-    bool result(false);
-    OptionalDouble value;
-    if (specificHeatCoefficientA.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_GasFields::SpecificHeatCoefficientA,specificHeatCoefficientA.get());
-      if (value) {
-        result = setSpecificHeatCoefficientA(value);
-      }
-    }
-    else {
-      result = setSpecificHeatCoefficientA(value);
     }
     return result;
   }
@@ -677,23 +492,6 @@ namespace detail {
     return result;
   }
 
-  bool Gas_Impl::setSpecificHeatCoefficientB(const OSOptionalQuantity& specificHeatCoefficientB) {
-    bool result(false);
-    OptionalDouble value;
-    if (specificHeatCoefficientB.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_GasFields::SpecificHeatCoefficientB,specificHeatCoefficientB.get());
-      if (value) {
-        setSpecificHeatCoefficientB(value);
-        result = true;
-      }
-    }
-    else {
-      setSpecificHeatCoefficientB(value);
-      result = true;
-    }
-    return result;
-  }
-
   void Gas_Impl::resetSpecificHeatCoefficientB() {
     bool result = setString(OS_WindowMaterial_GasFields::SpecificHeatCoefficientB, "");
     OS_ASSERT(result);
@@ -712,23 +510,6 @@ namespace detail {
     return result;
   }
 
-  bool Gas_Impl::setSpecificHeatCoefficientC(const OSOptionalQuantity& specificHeatCoefficientC) {
-    bool result(false);
-    OptionalDouble value;
-    if (specificHeatCoefficientC.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_GasFields::SpecificHeatCoefficientC,specificHeatCoefficientC.get());
-      if (value) {
-        setSpecificHeatCoefficientC(value);
-        result = true;
-      }
-    }
-    else {
-      setSpecificHeatCoefficientC(value);
-      result = true;
-    }
-    return result;
-  }
-
   void Gas_Impl::resetSpecificHeatCoefficientC() {
     bool result = setString(OS_WindowMaterial_GasFields::SpecificHeatCoefficientC, "");
     OS_ASSERT(result);
@@ -742,21 +523,6 @@ namespace detail {
     else {
       resetMolecularWeight();
       result = true;
-    }
-    return result;
-  }
-
-  bool Gas_Impl::setMolecularWeight(const OSOptionalQuantity& molecularWeight) {
-    bool result(false);
-    OptionalDouble value;
-    if (molecularWeight.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_GasFields::MolecularWeight,molecularWeight.get());
-      if (value) {
-        result = setMolecularWeight(value);
-      }
-    }
-    else {
-      result = setMolecularWeight(value);
     }
     return result;
   }
@@ -778,21 +544,6 @@ namespace detail {
     return result;
   }
 
-  bool Gas_Impl::setSpecificHeatRatio(const OSOptionalQuantity& specificHeatRatio) {
-    bool result(false);
-    OptionalDouble value;
-    if (specificHeatRatio.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_GasFields::SpecificHeatRatio,specificHeatRatio.get());
-      if (value) {
-        result = setSpecificHeatRatio(value);
-      }
-    }
-    else {
-      result = setSpecificHeatRatio(value);
-    }
-    return result;
-  }
-
   void Gas_Impl::resetSpecificHeatRatio() {
     bool result = setString(OS_WindowMaterial_GasFields::SpecificHeatRatio, "");
     OS_ASSERT(result);
@@ -800,102 +551,6 @@ namespace detail {
 
   std::vector<std::string> Gas_Impl::gasTypeValues() const {
     return Gas::gasTypeValues();
-  }
-
-  openstudio::Quantity Gas_Impl::thickness_SI() const {
-    return getThickness(false);
-  }
-
-  openstudio::Quantity Gas_Impl::thickness_IP() const {
-    return getThickness(true);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::conductivityCoefficientA_SI() const {
-    return getConductivityCoefficientA(false);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::conductivityCoefficientA_IP() const {
-    return getConductivityCoefficientA(true);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::conductivityCoefficientB_SI() const {
-    return getConductivityCoefficientB(false);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::conductivityCoefficientB_IP() const {
-    return getConductivityCoefficientB(true);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::conductivityCoefficientC_SI() const {
-    return getConductivityCoefficientC(false);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::conductivityCoefficientC_IP() const {
-    return getConductivityCoefficientC(true);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::viscosityCoefficientA_SI() const {
-    return getViscosityCoefficientA(false);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::viscosityCoefficientA_IP() const {
-    return getViscosityCoefficientA(true);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::viscosityCoefficientB_SI() const {
-    return getViscosityCoefficientB(false);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::viscosityCoefficientB_IP() const {
-    return getViscosityCoefficientB(true);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::viscosityCoefficientC_SI() const {
-    return getViscosityCoefficientC(false);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::viscosityCoefficientC_IP() const {
-    return getViscosityCoefficientC(true);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::specificHeatCoefficientA_SI() const {
-    return getSpecificHeatCoefficientA(false);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::specificHeatCoefficientA_IP() const {
-    return getSpecificHeatCoefficientA(true);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::specificHeatCoefficientB_SI() const {
-    return getSpecificHeatCoefficientB(false);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::specificHeatCoefficientB_IP() const {
-    return getSpecificHeatCoefficientB(true);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::specificHeatCoefficientC_SI() const {
-    return getSpecificHeatCoefficientC(false);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::specificHeatCoefficientC_IP() const {
-    return getSpecificHeatCoefficientC(true);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::molecularWeight_SI() const {
-    return getMolecularWeight(false);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::molecularWeight_IP() const {
-    return getMolecularWeight(true);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::specificHeatRatio_SI() const {
-    return getSpecificHeatRatio(false);
-  }
-
-  openstudio::OSOptionalQuantity Gas_Impl::specificHeatRatio_IP() const {
-    return getSpecificHeatRatio(true);
   }
 
 } // detail
@@ -1008,96 +663,48 @@ double Gas::thickness() const {
   return getImpl<detail::Gas_Impl>()->thickness();
 }
 
-Quantity Gas::getThickness(bool returnIP) const {
-  return getImpl<detail::Gas_Impl>()->getThickness(returnIP);
-}
-
 boost::optional<double> Gas::conductivityCoefficientA() const {
   return getImpl<detail::Gas_Impl>()->conductivityCoefficientA();
-}
-
-OSOptionalQuantity Gas::getConductivityCoefficientA(bool returnIP) const {
-  return getImpl<detail::Gas_Impl>()->getConductivityCoefficientA(returnIP);
 }
 
 boost::optional<double> Gas::conductivityCoefficientB() const {
   return getImpl<detail::Gas_Impl>()->conductivityCoefficientB();
 }
 
-OSOptionalQuantity Gas::getConductivityCoefficientB(bool returnIP) const {
-  return getImpl<detail::Gas_Impl>()->getConductivityCoefficientB(returnIP);
-}
-
 boost::optional<double> Gas::conductivityCoefficientC() const {
   return getImpl<detail::Gas_Impl>()->conductivityCoefficientC();
-}
-
-OSOptionalQuantity Gas::getConductivityCoefficientC(bool returnIP) const {
-  return getImpl<detail::Gas_Impl>()->getConductivityCoefficientC(returnIP);
 }
 
 boost::optional<double> Gas::viscosityCoefficientA() const {
   return getImpl<detail::Gas_Impl>()->viscosityCoefficientA();
 }
 
-OSOptionalQuantity Gas::getViscosityCoefficientA(bool returnIP) const {
-  return getImpl<detail::Gas_Impl>()->getViscosityCoefficientA(returnIP);
-}
-
 boost::optional<double> Gas::viscosityCoefficientB() const {
   return getImpl<detail::Gas_Impl>()->viscosityCoefficientB();
-}
-
-OSOptionalQuantity Gas::getViscosityCoefficientB(bool returnIP) const {
-  return getImpl<detail::Gas_Impl>()->getViscosityCoefficientB(returnIP);
 }
 
 boost::optional<double> Gas::viscosityCoefficientC() const {
   return getImpl<detail::Gas_Impl>()->viscosityCoefficientC();
 }
 
-OSOptionalQuantity Gas::getViscosityCoefficientC(bool returnIP) const {
-  return getImpl<detail::Gas_Impl>()->getViscosityCoefficientC(returnIP);
-}
-
 boost::optional<double> Gas::specificHeatCoefficientA() const {
   return getImpl<detail::Gas_Impl>()->specificHeatCoefficientA();
-}
-
-OSOptionalQuantity Gas::getSpecificHeatCoefficientA(bool returnIP) const {
-  return getImpl<detail::Gas_Impl>()->getSpecificHeatCoefficientA(returnIP);
 }
 
 boost::optional<double> Gas::specificHeatCoefficientB() const {
   return getImpl<detail::Gas_Impl>()->specificHeatCoefficientB();
 }
 
-OSOptionalQuantity Gas::getSpecificHeatCoefficientB(bool returnIP) const {
-  return getImpl<detail::Gas_Impl>()->getSpecificHeatCoefficientB(returnIP);
-}
-
 boost::optional<double> Gas::specificHeatCoefficientC() const {
   return getImpl<detail::Gas_Impl>()->specificHeatCoefficientC();
-}
-
-OSOptionalQuantity Gas::getSpecificHeatCoefficientC(bool returnIP) const {
-  return getImpl<detail::Gas_Impl>()->getSpecificHeatCoefficientC(returnIP);
 }
 
 boost::optional<double> Gas::molecularWeight() const {
   return getImpl<detail::Gas_Impl>()->molecularWeight();
 }
 
-OSOptionalQuantity Gas::getMolecularWeight(bool returnIP) const {
-  return getImpl<detail::Gas_Impl>()->getMolecularWeight(returnIP);
-}
-
 boost::optional<double> Gas::specificHeatRatio() const {
   return getImpl<detail::Gas_Impl>()->specificHeatRatio();
-}
-
-OSOptionalQuantity Gas::getSpecificHeatRatio(bool returnIP) const {
-  return getImpl<detail::Gas_Impl>()->getSpecificHeatRatio(returnIP);
 }
 
 bool Gas::setGasType(std::string gasType) {
@@ -1124,15 +731,7 @@ bool Gas::setThickness(double thickness) {
   return getImpl<detail::Gas_Impl>()->setThickness(thickness);
 }
 
-bool Gas::setThickness(const Quantity& thickness) {
-  return getImpl<detail::Gas_Impl>()->setThickness(thickness);
-}
-
 bool Gas::setConductivityCoefficientA(double conductivityCoefficientA) {
-  return getImpl<detail::Gas_Impl>()->setConductivityCoefficientA(conductivityCoefficientA);
-}
-
-bool Gas::setConductivityCoefficientA(const Quantity& conductivityCoefficientA) {
   return getImpl<detail::Gas_Impl>()->setConductivityCoefficientA(conductivityCoefficientA);
 }
 
@@ -1144,19 +743,11 @@ bool Gas::setConductivityCoefficientB(double conductivityCoefficientB) {
   return getImpl<detail::Gas_Impl>()->setConductivityCoefficientB(conductivityCoefficientB);
 }
 
-bool Gas::setConductivityCoefficientB(const Quantity& conductivityCoefficientB) {
-  return getImpl<detail::Gas_Impl>()->setConductivityCoefficientB(conductivityCoefficientB);
-}
-
 void Gas::resetConductivityCoefficientB() {
   getImpl<detail::Gas_Impl>()->resetConductivityCoefficientB();
 }
 
 bool Gas::setConductivityCoefficientC(double conductivityCoefficientC) {
-  return getImpl<detail::Gas_Impl>()->setConductivityCoefficientC(conductivityCoefficientC);
-}
-
-bool Gas::setConductivityCoefficientC(const Quantity& conductivityCoefficientC) {
   return getImpl<detail::Gas_Impl>()->setConductivityCoefficientC(conductivityCoefficientC);
 }
 
@@ -1168,19 +759,11 @@ bool Gas::setViscosityCoefficientA(double viscosityCoefficientA) {
   return getImpl<detail::Gas_Impl>()->setViscosityCoefficientA(viscosityCoefficientA);
 }
 
-bool Gas::setViscosityCoefficientA(const Quantity& viscosityCoefficientA) {
-  return getImpl<detail::Gas_Impl>()->setViscosityCoefficientA(viscosityCoefficientA);
-}
-
 void Gas::resetViscosityCoefficientA() {
   getImpl<detail::Gas_Impl>()->resetViscosityCoefficientA();
 }
 
 bool Gas::setViscosityCoefficientB(double viscosityCoefficientB) {
-  return getImpl<detail::Gas_Impl>()->setViscosityCoefficientB(viscosityCoefficientB);
-}
-
-bool Gas::setViscosityCoefficientB(const Quantity& viscosityCoefficientB) {
   return getImpl<detail::Gas_Impl>()->setViscosityCoefficientB(viscosityCoefficientB);
 }
 
@@ -1192,19 +775,11 @@ bool Gas::setViscosityCoefficientC(double viscosityCoefficientC) {
   return getImpl<detail::Gas_Impl>()->setViscosityCoefficientC(viscosityCoefficientC);
 }
 
-bool Gas::setViscosityCoefficientC(const Quantity& viscosityCoefficientC) {
-  return getImpl<detail::Gas_Impl>()->setViscosityCoefficientC(viscosityCoefficientC);
-}
-
 void Gas::resetViscosityCoefficientC() {
   getImpl<detail::Gas_Impl>()->resetViscosityCoefficientC();
 }
 
 bool Gas::setSpecificHeatCoefficientA(double specificHeatCoefficientA) {
-  return getImpl<detail::Gas_Impl>()->setSpecificHeatCoefficientA(specificHeatCoefficientA);
-}
-
-bool Gas::setSpecificHeatCoefficientA(const Quantity& specificHeatCoefficientA) {
   return getImpl<detail::Gas_Impl>()->setSpecificHeatCoefficientA(specificHeatCoefficientA);
 }
 
@@ -1216,19 +791,11 @@ bool Gas::setSpecificHeatCoefficientB(double specificHeatCoefficientB) {
   return getImpl<detail::Gas_Impl>()->setSpecificHeatCoefficientB(specificHeatCoefficientB);
 }
 
-bool Gas::setSpecificHeatCoefficientB(const Quantity& specificHeatCoefficientB) {
-  return getImpl<detail::Gas_Impl>()->setSpecificHeatCoefficientB(specificHeatCoefficientB);
-}
-
 void Gas::resetSpecificHeatCoefficientB() {
   getImpl<detail::Gas_Impl>()->resetSpecificHeatCoefficientB();
 }
 
 bool Gas::setSpecificHeatCoefficientC(double specificHeatCoefficientC) {
-  return getImpl<detail::Gas_Impl>()->setSpecificHeatCoefficientC(specificHeatCoefficientC);
-}
-
-bool Gas::setSpecificHeatCoefficientC(const Quantity& specificHeatCoefficientC) {
   return getImpl<detail::Gas_Impl>()->setSpecificHeatCoefficientC(specificHeatCoefficientC);
 }
 
@@ -1240,19 +807,11 @@ bool Gas::setMolecularWeight(double molecularWeight) {
   return getImpl<detail::Gas_Impl>()->setMolecularWeight(molecularWeight);
 }
 
-bool Gas::setMolecularWeight(const Quantity& molecularWeight) {
-  return getImpl<detail::Gas_Impl>()->setMolecularWeight(molecularWeight);
-}
-
 void Gas::resetMolecularWeight() {
   getImpl<detail::Gas_Impl>()->resetMolecularWeight();
 }
 
 bool Gas::setSpecificHeatRatio(double specificHeatRatio) {
-  return getImpl<detail::Gas_Impl>()->setSpecificHeatRatio(specificHeatRatio);
-}
-
-bool Gas::setSpecificHeatRatio(const Quantity& specificHeatRatio) {
   return getImpl<detail::Gas_Impl>()->setSpecificHeatRatio(specificHeatRatio);
 }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,7 +31,6 @@
 #include "WorkflowStep_Impl.hpp"
 
 #include "../core/Assert.hpp"
-
 
 namespace openstudio{
 namespace detail{
@@ -67,54 +66,6 @@ namespace detail{
   MeasureStep_Impl::MeasureStep_Impl(const std::string& measureDirName)
     : m_measureDirName(measureDirName)
   {}
-  /*
-  MeasureStep_Impl::MeasureStep_Impl(const Attribute& step)
-  {
-  boost::optional<Attribute> measureDirNameAttribute = step.findChildByName("measure_dir_name");
-  if (measureDirNameAttribute && (measureDirNameAttribute->valueType().value() == AttributeValueType::String)){
-  m_measureDirName = measureDirNameAttribute->valueAsString();
-  } else{
-  LOG_AND_THROW("Missing 'measure_dir_name' attribute");
-  }
-
-  boost::optional<Attribute> arguments = step.findChildByName("arguments");
-  if (!arguments){
-  LOG_AND_THROW("Missing 'arguments' attribute");
-  } else if (arguments->valueType().value() != AttributeValueType::AttributeVector){
-  LOG_AND_THROW("Attribute 'arguments' is not an AttributeVector");
-  }
-
-  for (const auto& argument : arguments->valueAsAttributeVector()){
-
-  boost::optional<Attribute> name = argument.findChildByName("name");
-  if (!name || name->valueType().value() != AttributeValueType::String){
-  continue;
-  }
-
-  std::string nameString = name->valueAsString();
-  boost::optional<Variant> variant;
-
-  boost::optional<Attribute> value = argument.findChildByName("value");
-  if (!value){
-  continue;
-  } else if (value->valueType().value() == AttributeValueType::Boolean){
-  variant = Variant(value->valueAsBoolean());
-  } else if (value->valueType().value() == AttributeValueType::Double){
-  variant = Variant(value->valueAsDouble());
-  } else if (value->valueType().value() == AttributeValueType::Integer){
-  variant = Variant(value->valueAsInteger());
-  } else if (value->valueType().value() == AttributeValueType::Unsigned){
-  variant = Variant((int)value->valueAsUnsigned());
-  } else if (value->valueType().value() == AttributeValueType::String){
-  variant = Variant(value->valueAsString());
-  }
-
-  if (variant){
-  m_arguments.insert(std::make_pair(nameString, *variant));
-  }
-  }
-  }
-  */
 
   std::string MeasureStep_Impl::string() const
   {

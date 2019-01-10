@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,7 +32,6 @@
 
 #include "ParentObject_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
 
 namespace openstudio {
 
@@ -232,14 +231,6 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.Building");
-
-    openstudio::Quantity northAxis_SI() const;
-    openstudio::Quantity northAxis_IP() const;
-    bool setNorthAxis(const Quantity& northAxis);
-
-    openstudio::Quantity nominalFloortoFloorHeight_SI() const;
-    openstudio::Quantity nominalFloortoFloorHeight_IP() const;
-    bool setNominalFloortoFloorHeight(const Quantity& nominalFloortoFloorHeight);
 
     boost::optional<ModelObject> spaceTypeAsModelObject() const;
     boost::optional<ModelObject> defaultConstructionSetAsModelObject() const;

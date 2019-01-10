@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,8 +33,6 @@
 #include "../UtilitiesAPI.hpp"
 
 #include "Unit.hpp"
-
-#include <QMetaType>
 
 #include <boost/optional.hpp>
 
@@ -85,8 +83,4 @@ class UTILITIES_API OSOptionalQuantity {
 
 } // openstudio
 
-// declare this type so we can use it in properties
-Q_DECLARE_METATYPE(openstudio::OSOptionalQuantity);
-
 #endif // UTILITIES_UNITS_OSOPTIONALQUANTITY_HPP
-

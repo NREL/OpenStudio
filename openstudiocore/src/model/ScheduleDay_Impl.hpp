@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -101,7 +101,6 @@ namespace detail {
     /// Returns the value in effect at the given time.  If time is less than 0 days or greater than 1 day, 0 is returned.
     double getValue(const openstudio::Time& time) const;
 
-    boost::optional<Quantity> getValueAsQuantity(const openstudio::Time& time, bool returnIP=false) const;
 
     //@}
     /** @name Setters */
@@ -121,8 +120,6 @@ namespace detail {
     /// for same time if it exists.
     bool addValue(const openstudio::Time& untilTime, double value);
 
-    bool addValue(const openstudio::Time& untilTime, const Quantity& value);
-
     boost::optional<double> removeValue(const openstudio::Time& time);
 
     /// Clear all values from this schedule.
@@ -137,7 +134,8 @@ namespace detail {
 
     virtual bool okToResetScheduleTypeLimits() const override;
 
-   private slots:
+   //private slots:
+   private:
 
     void clearCachedVariables();
 

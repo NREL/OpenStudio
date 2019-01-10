@@ -142,12 +142,8 @@ namespace model {
  *
  *  \subsection other_links Other Links
  *
- *  The following links may also be of general interest. Attributes and relationships are a way to
- *  access simple (no arguments to get, and one argument to set) ModelObject methods using strings,
- *  rather than directly navigating the inheritance hierarchy.
+ *  The following links may also be of general interest:
  *
- *  \li \ref attributes "Attribute"
- *  \li \ref attributes "Relationship"
  *  \li \ref components
  *  \li \link ConcreteModelObjects.hpp Alphabetical List of Concrete ModelObjects \endlink
  *  \li \ref modelobject_hierachy "Concrete ModelObjects in Parent-Child Tree"
@@ -440,8 +436,8 @@ namespace model {
  *  \li The url field may contain the UUID of a file in a Building Component Library (e.g.
  *      '{550e8400-e29b-41d4-a716-446655440000}'). (This is not yet implemented).
  *
- *  Url fields are implemented with three overloaded set methods which each return void; one taking
- *  a string, one taking an openstudio::path, and one taking a QUrl. The get method returns a
+ *  Url fields are implemented with two overloaded set methods which each return void; one taking
+ *  a string and one taking an openstudio::path. The get method returns a
  *  string.  Normal rules for required and default fields apply.
  *
  *  \subsubsection otherFields Other Fields
@@ -1201,39 +1197,6 @@ namespace model {
  *  OS_ASSERT(!modelObjects[0].initialized()); // Model_Impl destructor disconnects objects
  *
  *  \endcode
- *
- *  \section attributes What are Attributes and Relationships?
- *
- *  The concept of Attributes and Relationships have recently been added to ModelObject for generic
- *  access to object methods for user interface development, constructing (energy-efficiency) measures,
- *  and writing codes and standards.  Attributes and Relationships are both implemented using the Qt
- *  property system.  A Qt property can be read and written using the generic functions without knowing
- *  anything about the owning class except the property's name.  For example, the Space ModelObject has
- *  a method named floorArea.  This method can be accessed through the typed interface as:
- *
- *  \code
- *  Space space(model);
- *  double floorArea = space.floorArea();
- *  \endcode
-
- *  This same method can be accessed through attributes as:
- *
- *  \code
- *  Space space(model);
- *  boost::optional<Attribute> floorAreaAttribute = space.getAttribute(“floorArea”)
- *  OS_ASSERT(floorAreaAttribute);
- *  double floorArea = floorAreaAttribute.valueAsDouble();
- *  \endcode
- *
- *  Attributes can be read only, or allow read and write access (limited to calling a setter
- *  function taking a single argument).  A list of all attribute names for each ModelObject can be
- *  accessed using ModelObject::attributeNames, the user can check if the attribute is settable using
- *  ModelObject::isSettableAttribute(const std::string& name), and the user can check if the
- *  attribute is optional using isOptionalAttribute(const std::string& name).  Relationships are very
- *  similar to Attributes except that Attributes deal with simple, plain-old-data (POD) values (e.g.
- *  bool, int, double, OSOptionalQuantity etc.) while Relationships deal with ModelObject values.
- *  The Attribute class is documented in the utilities sub-project, the Relationship class is
- *  documented in the model sub-project.
  *
  *  \section components What is a Component?
  *

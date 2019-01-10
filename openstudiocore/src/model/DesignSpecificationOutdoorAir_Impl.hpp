@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ResourceObject_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -109,25 +107,17 @@ namespace detail {
 
     double outdoorAirFlowperPerson() const;
 
-    Quantity getOutdoorAirFlowperPerson(bool returnIP=false) const;
-
     bool isOutdoorAirFlowperPersonDefaulted() const;
 
     double outdoorAirFlowperFloorArea() const;
-
-    Quantity getOutdoorAirFlowperFloorArea(bool returnIP=false) const;
 
     bool isOutdoorAirFlowperFloorAreaDefaulted() const;
 
     double outdoorAirFlowRate() const;
 
-    Quantity getOutdoorAirFlowRate(bool returnIP=false) const;
-
     bool isOutdoorAirFlowRateDefaulted() const;
 
     double outdoorAirFlowAirChangesperHour() const;
-
-    Quantity getOutdoorAirFlowAirChangesperHour(bool returnIP=false) const;
 
     bool isOutdoorAirFlowAirChangesperHourDefaulted() const;
 
@@ -143,25 +133,17 @@ namespace detail {
 
     bool setOutdoorAirFlowperPerson(double outdoorAirFlowperPerson);
 
-    bool setOutdoorAirFlowperPerson(const Quantity& outdoorAirFlowperPerson);
-
     void resetOutdoorAirFlowperPerson();
 
     bool setOutdoorAirFlowperFloorArea(double outdoorAirFlowperFloorArea);
-
-    bool setOutdoorAirFlowperFloorArea(const Quantity& outdoorAirFlowperFloorArea);
 
     void resetOutdoorAirFlowperFloorArea();
 
     bool setOutdoorAirFlowRate(double outdoorAirFlowRate);
 
-    bool setOutdoorAirFlowRate(const Quantity& outdoorAirFlowRate);
-
     void resetOutdoorAirFlowRate();
 
     bool setOutdoorAirFlowAirChangesperHour(double outdoorAirFlowAirChangesperHour);
-
-    bool setOutdoorAirFlowAirChangesperHour(const Quantity& outdoorAirFlowAirChangesperHour);
 
     void resetOutdoorAirFlowAirChangesperHour();
 
@@ -179,15 +161,6 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.DesignSpecificationOutdoorAir");
 
     std::vector<std::string> outdoorAirMethodValues() const;
-    openstudio::Quantity outdoorAirFlowperPerson_SI() const;
-    openstudio::Quantity outdoorAirFlowperPerson_IP() const;
-    openstudio::Quantity outdoorAirFlowperFloorArea_SI() const;
-    openstudio::Quantity outdoorAirFlowperFloorArea_IP() const;
-    openstudio::Quantity outdoorAirFlowRate_SI() const;
-    openstudio::Quantity outdoorAirFlowRate_IP() const;
-    openstudio::Quantity outdoorAirFlowAirChangesperHour_SI() const;
-    openstudio::Quantity outdoorAirFlowAirChangesperHour_IP() const;
-
     boost::optional<ModelObject> outdoorAirFlowRateFractionScheduleAsModelObject() const;
 
     bool setOutdoorAirFlowRateFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
@@ -199,4 +172,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_DESIGNSPECIFICATIONOUTDOORAIR_IMPL_HPP
-

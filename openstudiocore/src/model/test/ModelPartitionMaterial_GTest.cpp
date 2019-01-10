@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,8 +36,6 @@
 #include "../InfraredTransparentMaterial.hpp"
 #include "../InfraredTransparentMaterial_Impl.hpp"
 #include "../Model_Impl.hpp"
-
-#include "../../utilities/data/Attribute.hpp"
 
 #include "../../energyplus/ReverseTranslator.hpp"
 
@@ -82,28 +80,6 @@ TEST_F(ModelFixture, ModelPartitionMaterial_AirWallMaterial_Constructors)
   EXPECT_TRUE(airWallMaterial.iddObject().type() == IddObjectType::OS_Material_AirWall);
 }
 
-TEST_F(ModelFixture, ModelPartitionMaterial_AirWallMaterial_Attributes)
-{
-  // Removed due to removal of attributes
-
-  // construct
-  // Model model;
-  // AirWallMaterial airWallMaterial (model);
-
-  // thickness--should always be 0.0, say "settable", but set always returns false
-  // ASSERT_TRUE(airWallMaterial.getAttribute("thickness"));
-  // Attribute airWallThickness = airWallMaterial.getAttribute("thickness").get();
-  // ASSERT_TRUE(airWallThickness.valueType() == AttributeValueType::Double);
-  // EXPECT_DOUBLE_EQ(0.0,airWallThickness.valueAsDouble());
-
-  // EXPECT_FALSE(airWallMaterial.setAttribute("thickness", 0.01));
-
-  // ASSERT_TRUE(airWallMaterial.getAttribute("thickness"));
-  // airWallThickness = airWallMaterial.getAttribute("thickness").get();
-  // ASSERT_TRUE(airWallThickness.valueType() == AttributeValueType::Double);
-  // EXPECT_DOUBLE_EQ(0.0,airWallThickness.valueAsDouble());
-}
-
 TEST_F(ModelFixture, ModelPartitionMaterial_InfraredTransparentMaterial_Constructors)
 {
     // construct from scratch
@@ -126,29 +102,4 @@ TEST_F(ModelFixture, ModelPartitionMaterial_InfraredTransparentMaterial_Construc
   EXPECT_FALSE(infraredTransparentMaterial.model() == model);
   EXPECT_TRUE(infraredTransparentMaterial.iddObject().type() ==
               IddObjectType::OS_Material_InfraredTransparent);
-}
-
-TEST_F(ModelFixture, ModelPartitionMaterial_InfraredTransparentMaterial_Attributes)
-{
-  // Removed due to removal of attributes
-
-  // construct
-  // Model model;
-  // InfraredTransparentMaterial infraredTransparentMaterial (model);
-
-  // thickness--should always be 0.0, say "settable", but set always returns false
-  // ASSERT_TRUE(infraredTransparentMaterial.getAttribute("thickness"));
-  // Attribute infraredTransparentMaterialThickness =
-  //     infraredTransparentMaterial.getAttribute("thickness").get();
-  // ASSERT_TRUE(infraredTransparentMaterialThickness.valueType() == AttributeValueType::Double);
-  // EXPECT_DOUBLE_EQ(0.0,infraredTransparentMaterialThickness.valueAsDouble());
-
-  // EXPECT_FALSE(infraredTransparentMaterial.setAttribute("thickness", 0.01));
-
-  // ASSERT_TRUE(infraredTransparentMaterial.getAttribute("thickness"));
-  // infraredTransparentMaterialThickness =
-  //     infraredTransparentMaterial.getAttribute("thickness").get();
-  // ASSERT_TRUE(infraredTransparentMaterialThickness.valueType() == AttributeValueType::Double);
-  // EXPECT_DOUBLE_EQ(0.0,infraredTransparentMaterialThickness.valueAsDouble());
-
 }

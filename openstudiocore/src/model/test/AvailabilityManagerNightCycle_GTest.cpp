@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,10 +30,7 @@
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
 #include "../AvailabilityManagerNightCycle.hpp"
-#include "../AvailabilityManagerNightCycle_Impl.hpp"
 #include "../ThermalZone.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -65,14 +62,6 @@ TEST_F(ModelFixture, AvailabilityManagerNightCycle_zoneLists)
   ThermalZone z4(m);
   ThermalZone z5(m);
 
-  // Deprecated
-  // Cannot run this on Windows, treats warnings as errors
-  // EXPECT_TRUE(avm.setControlThermalZone(z1));
-  // EXPECT_TRUE(avm.controlThermalZone());
-  // EXPECT_EQ(avm.controlThermalZone().get(), z1);
-  // EXPECT_EQ(1, avm.controlThermalZones().size());
-  // EXPECT_EQ(z1, avm.controlThermalZones()[0]);
-
   std::vector<ThermalZone> v;
   v.push_back(z1);
   v.push_back(z2);
@@ -81,11 +70,6 @@ TEST_F(ModelFixture, AvailabilityManagerNightCycle_zoneLists)
   EXPECT_EQ(0, avm.coolingControlThermalZones().size());
   EXPECT_EQ(0, avm.heatingControlThermalZones().size());
   EXPECT_EQ(0, avm.heatingZoneFansOnlyThermalZones().size());
-
-  // Deprecated method should return the first zone if more than one
-  // Cannot run this on Windows, treats warnings as errors
-  // EXPECT_TRUE(avm.controlThermalZone());
-  // EXPECT_EQ(avm.controlThermalZone().get(), z1);
 
   avm.resetControlThermalZones();
   EXPECT_EQ(0, avm.controlThermalZones().size());
@@ -116,7 +100,6 @@ TEST_F(ModelFixture, AvailabilityManagerNightCycle_zoneLists)
   EXPECT_EQ(2, avm.coolingControlThermalZones().size());
   EXPECT_EQ(3, avm.heatingControlThermalZones().size());
   EXPECT_EQ(1, avm.heatingZoneFansOnlyThermalZones().size());
-
 
   avm.resetCoolingControlThermalZones();
   EXPECT_EQ(0, avm.controlThermalZones().size());

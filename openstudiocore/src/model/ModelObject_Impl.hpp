@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,15 +31,11 @@
 #define MODEL_MODELOBJECT_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject.hpp" // required for Q_PROPERTY
-#include "../nano/nano_signal_slot.hpp" // Signal-Slot replacement
-
 #include "../utilities/idf/WorkspaceObject_Impl.hpp"
 
-#include "../utilities/core/Optional.hpp"
+#include "../nano/nano_signal_slot.hpp" // Signal-Slot replacement
 
-// #include <QVariant>
-// #include <QStringList>
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 
@@ -49,13 +45,17 @@ class TimeSeries;
 namespace model {
 
 class Model;
+class ModelObject;
+
 class Component;
-class LifeCycleCosts;
+class LifeCycleCost;
 
 class FieldViewer;
 
 class ParentObject;
 class ResourceObject;
+
+class Schedule;
 
 class OutputVariable;
 class Meter;
@@ -65,20 +65,19 @@ class EMSActuatorNames;
 
 class AdditionalProperties;
 
+
+/** Typedef for ScheduleTypeRegistry key. First is a string representation of the class name.
+ *  Second is a display name for the schedule. \relates ModelObject */
+typedef std::pair<std::string,std::string> ScheduleTypeKey;
+
 namespace detail {
 
   class Model_Impl;
 
-  /** Implemetation class for ModelObject. Each class deriving from ModelObject
+  /** Implementation class for ModelObject. Each class deriving from ModelObject
    *  should provide an implementation class that derives from ModelObject_Impl. */
   class MODEL_API ModelObject_Impl : public openstudio::detail::WorkspaceObject_Impl {
 
-    //
-    //
-    //
-
-    //
-    //
    public:
 
     /** @name Constructors and Destructors */
@@ -107,11 +106,11 @@ namespace detail {
     virtual std::vector<IdfObject> remove() override;
 
     //@}
-    /** @name Components and Relationships
+    /** @name Components
      *
      *  Once a Component has been created, it can be saved to a ProjectDatabase for local storing
      *  and sharing, and can be uploaded to the online Building Component Library for web-enabled
-     *  storing and sharing. Components plus Relationships are the preferred method for specifying
+     *  storing and sharing. Components are the preferred method for specifying
      *  and inserting alternative pieces of a model (constructions, schedules, etc.) in higher-level
      *  libraries such as standardsinterface and analysis. */
     //@{
@@ -119,70 +118,6 @@ namespace detail {
     /** Method with virtual implementation for creating sharable Model snippets. Creates a component
      *  with this ModelObject as the primary object. Clones all data. */
     virtual Component createComponent() const;
-
-    /** Return all valid relationship names. */
-    // std::vector<std::string> relationshipNames() const;
-
-    /** Return all \link Relationship relationships\endlink for this ModelObject. */
-    // std::vector<Relationship> relationships() const;
-
-    /** Get the \link Relationship relationship\endlink named name, if it exists. */
-    // boost::optional<Relationship> getRelationship(const std::string& name) const;
-
-    // bool setRelationship(const std::string& name, boost::optional<ModelObject> relatedModelObject);
-
-    // bool setRelationship(const std::string& name, const Component& component);
-
-    //@}
-    /** @name Attributes
-     *
-     *  String-based getters and setters for commonly used attributes, such as a zone's lighting
-     *  power density or a fan's efficiency. Attributes are the preferred method for accessing
-     *  basic data (double, int, bool, and string) in higher-level libraries such as
-     *  standardsinterface and analysis. */
-    //@{
-
-    /** Return all valid attribute names. */
-    // std::vector<std::string> attributeNames() const;
-
-    /** Return all \link Attribute Attributes\endlink for this ModelObject. */
-    // std::vector<openstudio::Attribute> attributes() const;
-
-    /** Get the attribute named name, if it exists. */
-    // boost::optional<openstudio::Attribute> getAttribute(const std::string& name) const;
-
-    /** Is the named attribute settable. */
-    // bool isSettableAttribute(const std::string& name) const;
-
-    /** Is the named attribute optional. */
-    // bool isOptionalAttribute(const std::string& name) const;
-
-    /** Set the attribute named name, if it exists. */
-    // bool setAttribute(const std::string& name, bool value);
-
-    /** \overload */
-    // bool setAttribute(const std::string& name, int value);
-
-    /** \overload */
-    // bool setAttribute(const std::string& name, unsigned value);
-
-    /** \overload */
-    // bool setAttribute(const std::string& name, double value);
-
-    /** \overload */
-    // bool setAttribute(const std::string& name, const Quantity& value);
-
-    /** \overload */
-    // bool setAttribute(const std::string& name, const std::string& value);
-
-    /** \overload */
-    // bool setAttribute(const std::string& name, const char* value);
-
-    /** \overload */
-    // bool setAttribute(const std::string& name, const QVariant& value);
-
-    /** Reset the attribute attribute, e.g. for optional types. */
-    // bool resetAttribute(const std::string& name);
 
     //@}
     /** @name Getters */
@@ -257,13 +192,7 @@ namespace detail {
     /** @name Nano Signals */
     //@{
 
-    // Nano::Signal<void(const QVariantMap&)> reportProperties;
-
     //@}
-
-    // void requestProperties(const QStringList& names);
-
-    // bool setProperties(const QVariantMap& properties);
 
     /** Gets the autosized component value from the sql file **/
     boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString) const;

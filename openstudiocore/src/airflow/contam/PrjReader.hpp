@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,9 +30,7 @@
 #ifndef AIRFLOW_CONTAM_PRJREADER_HPP
 #define AIRFLOW_CONTAM_PRJREADER_HPP
 
-#include <QStringList>
-#include <QVector>
-#include <QSharedPointer>
+#include <sstream>
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Filesystem.hpp"
 
@@ -45,10 +43,9 @@ class Reader
 {
 public:
   explicit Reader(openstudio::filesystem::ifstream &file);
-  explicit Reader(QString *string, int starting=0);
+  explicit Reader(const std::string& string, int starting=0);
   ~Reader();
 
-  float readFloat();
   double readDouble();
   std::string readString();
   int readInt();
@@ -73,19 +70,16 @@ public:
   //    template <class T> QVector<T> readSectionQVector(STRING name=STRING_INIT);
   //    template <class T> std::vector<T> readSectionStdVector(STRING name=STRING_INIT);
   template <class T> std::vector<std::shared_ptr<T> > readElementVector(std::string name = std::string());
-  template <class T> QVector<QSharedPointer<T> > readElementQVector(std::string name=std::string());
-
   template <class T> T read();
   template <class T> T readNumber();
 
 private:
-  QString readQString();
   std::string readStdString();
-  QString readLineQString();
+  std::string readLineString();
 
-  QTextStream m_stream;
+  std::stringstream m_stream;
   int m_lineNumber;
-  QStringList m_entries;
+  std::list<std::string> m_entries;
 
   REGISTER_LOGGER("openstudio.contam.Reader");
 };
@@ -200,6 +194,7 @@ template <class T> std::vector<std::shared_ptr<T> > Reader::readElementVector(st
   return vector;
 }
 
+/*
 template <class T> QVector<QSharedPointer<T> > Reader::readElementQVector(std::string name)
 {
   int n = readInt();
@@ -217,6 +212,7 @@ template <class T> QVector<QSharedPointer<T> > Reader::readElementQVector(std::s
     read999("Failed to find " + name + " section termination");
   return vector;
 }
+*/
 
 } // contam
 } // openstudio

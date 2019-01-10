@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -80,13 +80,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity OutputControlReportingTolerances_Impl::getToleranceforTimeHeatingSetpointNotMet(bool returnIP) const {
-    OptionalDouble value = toleranceforTimeHeatingSetpointNotMet();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool OutputControlReportingTolerances_Impl::isToleranceforTimeHeatingSetpointNotMetDefaulted() const {
     return isEmpty(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet);
   }
@@ -97,13 +90,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity OutputControlReportingTolerances_Impl::getToleranceforTimeCoolingSetpointNotMet(bool returnIP) const {
-    OptionalDouble value = toleranceforTimeCoolingSetpointNotMet();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool OutputControlReportingTolerances_Impl::isToleranceforTimeCoolingSetpointNotMetDefaulted() const {
     return isEmpty(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet);
   }
@@ -111,14 +97,6 @@ namespace detail {
   bool OutputControlReportingTolerances_Impl::setToleranceforTimeHeatingSetpointNotMet(double toleranceforTimeHeatingSetpointNotMet) {
     bool result = setDouble(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, toleranceforTimeHeatingSetpointNotMet);
     return result;
-  }
-
-  bool OutputControlReportingTolerances_Impl::setToleranceforTimeHeatingSetpointNotMet(const Quantity& toleranceforTimeHeatingSetpointNotMet) {
-    OptionalDouble value = getDoubleFromQuantity(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet,toleranceforTimeHeatingSetpointNotMet);
-    if (!value) {
-      return false;
-    }
-    return setToleranceforTimeHeatingSetpointNotMet(value.get());
   }
 
   void OutputControlReportingTolerances_Impl::resetToleranceforTimeHeatingSetpointNotMet() {
@@ -131,33 +109,9 @@ namespace detail {
     return result;
   }
 
-  bool OutputControlReportingTolerances_Impl::setToleranceforTimeCoolingSetpointNotMet(const Quantity& toleranceforTimeCoolingSetpointNotMet) {
-    OptionalDouble value = getDoubleFromQuantity(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet,toleranceforTimeCoolingSetpointNotMet);
-    if (!value) {
-      return false;
-    }
-    return setToleranceforTimeCoolingSetpointNotMet(value.get());
-  }
-
   void OutputControlReportingTolerances_Impl::resetToleranceforTimeCoolingSetpointNotMet() {
     bool result = setString(OS_OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet, "");
     OS_ASSERT(result);
-  }
-
-  openstudio::Quantity OutputControlReportingTolerances_Impl::toleranceforTimeHeatingSetpointNotMet_SI() const {
-    return getToleranceforTimeHeatingSetpointNotMet(false);
-  }
-
-  openstudio::Quantity OutputControlReportingTolerances_Impl::toleranceforTimeHeatingSetpointNotMet_IP() const {
-    return getToleranceforTimeHeatingSetpointNotMet(true);
-  }
-
-  openstudio::Quantity OutputControlReportingTolerances_Impl::toleranceforTimeCoolingSetpointNotMet_SI() const {
-    return getToleranceforTimeCoolingSetpointNotMet(false);
-  }
-
-  openstudio::Quantity OutputControlReportingTolerances_Impl::toleranceforTimeCoolingSetpointNotMet_IP() const {
-    return getToleranceforTimeCoolingSetpointNotMet(true);
   }
 
 } // detail
@@ -170,20 +124,12 @@ double OutputControlReportingTolerances::toleranceforTimeHeatingSetpointNotMet()
   return getImpl<detail::OutputControlReportingTolerances_Impl>()->toleranceforTimeHeatingSetpointNotMet();
 }
 
-Quantity OutputControlReportingTolerances::getToleranceforTimeHeatingSetpointNotMet(bool returnIP) const {
-  return getImpl<detail::OutputControlReportingTolerances_Impl>()->getToleranceforTimeHeatingSetpointNotMet(returnIP);
-}
-
 bool OutputControlReportingTolerances::isToleranceforTimeHeatingSetpointNotMetDefaulted() const {
   return getImpl<detail::OutputControlReportingTolerances_Impl>()->isToleranceforTimeHeatingSetpointNotMetDefaulted();
 }
 
 double OutputControlReportingTolerances::toleranceforTimeCoolingSetpointNotMet() const {
   return getImpl<detail::OutputControlReportingTolerances_Impl>()->toleranceforTimeCoolingSetpointNotMet();
-}
-
-Quantity OutputControlReportingTolerances::getToleranceforTimeCoolingSetpointNotMet(bool returnIP) const {
-  return getImpl<detail::OutputControlReportingTolerances_Impl>()->getToleranceforTimeCoolingSetpointNotMet(returnIP);
 }
 
 bool OutputControlReportingTolerances::isToleranceforTimeCoolingSetpointNotMetDefaulted() const {
@@ -194,19 +140,11 @@ bool OutputControlReportingTolerances::setToleranceforTimeHeatingSetpointNotMet(
   return getImpl<detail::OutputControlReportingTolerances_Impl>()->setToleranceforTimeHeatingSetpointNotMet(toleranceforTimeHeatingSetpointNotMet);
 }
 
-bool OutputControlReportingTolerances::setToleranceforTimeHeatingSetpointNotMet(const Quantity& toleranceforTimeHeatingSetpointNotMet) {
-  return getImpl<detail::OutputControlReportingTolerances_Impl>()->setToleranceforTimeHeatingSetpointNotMet(toleranceforTimeHeatingSetpointNotMet);
-}
-
 void OutputControlReportingTolerances::resetToleranceforTimeHeatingSetpointNotMet() {
   getImpl<detail::OutputControlReportingTolerances_Impl>()->resetToleranceforTimeHeatingSetpointNotMet();
 }
 
 bool OutputControlReportingTolerances::setToleranceforTimeCoolingSetpointNotMet(double toleranceforTimeCoolingSetpointNotMet) {
-  return getImpl<detail::OutputControlReportingTolerances_Impl>()->setToleranceforTimeCoolingSetpointNotMet(toleranceforTimeCoolingSetpointNotMet);
-}
-
-bool OutputControlReportingTolerances::setToleranceforTimeCoolingSetpointNotMet(const Quantity& toleranceforTimeCoolingSetpointNotMet) {
   return getImpl<detail::OutputControlReportingTolerances_Impl>()->setToleranceforTimeCoolingSetpointNotMet(toleranceforTimeCoolingSetpointNotMet);
 }
 
@@ -226,4 +164,3 @@ OutputControlReportingTolerances::OutputControlReportingTolerances(Model& model)
 
 } // model
 } // openstudio
-

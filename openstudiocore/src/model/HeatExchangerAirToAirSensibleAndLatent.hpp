@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -70,87 +68,47 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
 
   boost::optional<double> nominalSupplyAirFlowRate() const;
 
-  OSOptionalQuantity getNominalSupplyAirFlowRate(bool returnIP=false) const;
-
   bool isNominalSupplyAirFlowRateAutosized() const;
 
   bool setNominalSupplyAirFlowRate(double nominalSupplyAirFlowRate);
-
-  bool setNominalSupplyAirFlowRate(const Quantity& nominalSupplyAirFlowRate);
 
   void autosizeNominalSupplyAirFlowRate();
 
   double sensibleEffectivenessat100HeatingAirFlow() const;
 
-  Quantity getSensibleEffectivenessat100HeatingAirFlow(bool returnIP=false) const;
-
   bool setSensibleEffectivenessat100HeatingAirFlow(double sensibleEffectivenessat100HeatingAirFlow);
-
-  bool setSensibleEffectivenessat100HeatingAirFlow(const Quantity& sensibleEffectivenessat100HeatingAirFlow);
 
   double latentEffectivenessat100HeatingAirFlow() const;
 
-  Quantity getLatentEffectivenessat100HeatingAirFlow(bool returnIP=false) const;
-
   bool setLatentEffectivenessat100HeatingAirFlow(double latentEffectivenessat100HeatingAirFlow);
-
-  bool setLatentEffectivenessat100HeatingAirFlow(const Quantity& latentEffectivenessat100HeatingAirFlow);
 
   double sensibleEffectivenessat75HeatingAirFlow() const;
 
-  Quantity getSensibleEffectivenessat75HeatingAirFlow(bool returnIP=false) const;
-
   bool setSensibleEffectivenessat75HeatingAirFlow(double sensibleEffectivenessat75HeatingAirFlow);
-
-  bool setSensibleEffectivenessat75HeatingAirFlow(const Quantity& sensibleEffectivenessat75HeatingAirFlow);
 
   double latentEffectivenessat75HeatingAirFlow() const;
 
-  Quantity getLatentEffectivenessat75HeatingAirFlow(bool returnIP=false) const;
-
   bool setLatentEffectivenessat75HeatingAirFlow(double latentEffectivenessat75HeatingAirFlow);
-
-  bool setLatentEffectivenessat75HeatingAirFlow(const Quantity& latentEffectivenessat75HeatingAirFlow);
 
   double sensibleEffectivenessat100CoolingAirFlow() const;
 
-  Quantity getSensibleEffectivenessat100CoolingAirFlow(bool returnIP=false) const;
-
   bool setSensibleEffectivenessat100CoolingAirFlow(double sensibleEffectivenessat100CoolingAirFlow);
-
-  bool setSensibleEffectivenessat100CoolingAirFlow(const Quantity& sensibleEffectivenessat100CoolingAirFlow);
 
   double latentEffectivenessat100CoolingAirFlow() const;
 
-  Quantity getLatentEffectivenessat100CoolingAirFlow(bool returnIP=false) const;
-
   bool setLatentEffectivenessat100CoolingAirFlow(double latentEffectivenessat100CoolingAirFlow);
-
-  bool setLatentEffectivenessat100CoolingAirFlow(const Quantity& latentEffectivenessat100CoolingAirFlow);
 
   double sensibleEffectivenessat75CoolingAirFlow() const;
 
-  Quantity getSensibleEffectivenessat75CoolingAirFlow(bool returnIP=false) const;
-
   bool setSensibleEffectivenessat75CoolingAirFlow(double sensibleEffectivenessat75CoolingAirFlow);
-
-  bool setSensibleEffectivenessat75CoolingAirFlow(const Quantity& sensibleEffectivenessat75CoolingAirFlow);
 
   double latentEffectivenessat75CoolingAirFlow() const;
 
-  Quantity getLatentEffectivenessat75CoolingAirFlow(bool returnIP=false) const;
-
   bool setLatentEffectivenessat75CoolingAirFlow(double latentEffectivenessat75CoolingAirFlow);
-
-  bool setLatentEffectivenessat75CoolingAirFlow(const Quantity& latentEffectivenessat75CoolingAirFlow);
 
   double nominalElectricPower() const;
 
-  Quantity getNominalElectricPower(bool returnIP=false) const;
-
   bool setNominalElectricPower(double nominalElectricPower);
-
-  bool setNominalElectricPower(const Quantity& nominalElectricPower);
 
   bool supplyAirOutletTemperatureControl() const;
 
@@ -166,33 +124,21 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
 
   double thresholdTemperature() const;
 
-  Quantity getThresholdTemperature(bool returnIP=false) const;
-
   bool isThresholdTemperatureDefaulted() const;
 
   bool setThresholdTemperature(double thresholdTemperature);
-
-  bool setThresholdTemperature(const Quantity& thresholdTemperature);
 
   void resetThresholdTemperature();
 
   boost::optional<double> initialDefrostTimeFraction() const;
 
-  OSOptionalQuantity getInitialDefrostTimeFraction(bool returnIP=false) const;
-
   bool setInitialDefrostTimeFraction(double initialDefrostTimeFraction);
-
-  bool setInitialDefrostTimeFraction(const Quantity& initialDefrostTimeFraction);
 
   void resetInitialDefrostTimeFraction();
 
   boost::optional<double> rateofDefrostTimeFractionIncrease() const;
 
-  OSOptionalQuantity getRateofDefrostTimeFractionIncrease(bool returnIP=false) const;
-
   bool setRateofDefrostTimeFractionIncrease(double rateofDefrostTimeFractionIncrease);
-
-  bool setRateofDefrostTimeFractionIncrease(const Quantity& rateofDefrostTimeFractionIncrease);
 
   void resetRateofDefrostTimeFractionIncrease();
 

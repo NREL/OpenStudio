@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,6 +37,7 @@
 #include "../openstudio_lib/OSDocument.hpp"
 #include "LocalLibraryController.hpp"
 #include "WorkflowTools.hpp"
+#include "../model_editor/OSProgressBar.hpp"
 
 #include "../energyplus/ForwardTranslator.hpp"
 
@@ -47,7 +48,6 @@
 #include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/filetypes/WorkflowStep_Impl.hpp"
-#include "../utilities/plot/ProgressBar.hpp"
 
 #include <QByteArray>
 #include <QDialog>

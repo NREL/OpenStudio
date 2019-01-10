@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,9 +36,6 @@
 #include "../StandardsInformationMaterial.hpp"
 #include "../StandardsInformationMaterial_Impl.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
-
 //#include <utilities/embedded_files.hxx>
 
 using namespace openstudio;
@@ -48,72 +45,69 @@ using namespace openstudio::model;
   //ASSERT_TRUE(::openstudiomodel::embedded_files::hasFile(":/Resources/standards/OpenStudio_Standards_materials_merged.json"));
 //}
 
-TEST_F(ModelFixture,MasslessOpaqueMaterial_ThermalResistance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  MasslessOpaqueMaterial masslessOpaqueMaterial(model);
+TEST_F(ModelFixture, MasslessOpaqueMaterial_Ctor)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Unit units = masslessOpaqueMaterial.getThermalResistance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(masslessOpaqueMaterial.setThermalResistance(testQ));
-  Quantity q = masslessOpaqueMaterial.getThermalResistance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  ASSERT_EXIT (
+  {
+     Model m;
+     MasslessOpaqueMaterial mat(m);
+
+     exit(0);
+  } ,
+    ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,MasslessOpaqueMaterial_ThermalAbsorptance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  MasslessOpaqueMaterial masslessOpaqueMaterial(model);
+TEST_F(ModelFixture, MasslessOpaqueMaterial_GettersSetters)
+{
+  Model m;
+  MasslessOpaqueMaterial mat(m);
 
-  Unit units = masslessOpaqueMaterial.getThermalAbsorptance(true).units(); // Get IP units.
+  // Roughness:  String
+  // Default in Ctor argument
+  EXPECT_EQ("Smooth", mat.roughness());
+  // Test a valid choice
+  EXPECT_TRUE(mat.setRoughness("VeryRough"));
+  EXPECT_EQ("VeryRough", mat.roughness());
+  // Test an invalid choice
+  EXPECT_FALSE(mat.setRoughness("BadChoice"));
+  EXPECT_EQ("VeryRough", mat.roughness());
 
-  // Bounds: 0.0 <= value <= 0.99999
 
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(masslessOpaqueMaterial.setThermalAbsorptance(testQ));
+  // Thermal Resistance:  Double
+  // Default in Ctor argument
+  EXPECT_EQ(0.1, mat.thermalResistance());
+  EXPECT_TRUE(mat.setThermalResistance(1.0));
+  EXPECT_EQ(1.0, mat.thermalResistance());
 
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(masslessOpaqueMaterial.setThermalAbsorptance(testQ2));
-  Quantity q2 = masslessOpaqueMaterial.getThermalAbsorptance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
 
-TEST_F(ModelFixture,MasslessOpaqueMaterial_SolarAbsorptance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  MasslessOpaqueMaterial masslessOpaqueMaterial(model);
+  // Thermal Absorptance:  Double
+  // Check Idd default: .9
+  EXPECT_EQ(.9, mat.thermalAbsorptance());
+  EXPECT_TRUE(mat.setThermalAbsorptance(0.45));
+  EXPECT_EQ(0.45, mat.thermalAbsorptance());
+  mat.resetThermalAbsorptance();
+  EXPECT_EQ(.9, mat.thermalAbsorptance());
 
-  Unit units = masslessOpaqueMaterial.getSolarAbsorptance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(masslessOpaqueMaterial.setSolarAbsorptance(testQ));
-  Quantity q = masslessOpaqueMaterial.getSolarAbsorptance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
 
-TEST_F(ModelFixture,MasslessOpaqueMaterial_VisibleAbsorptance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  MasslessOpaqueMaterial masslessOpaqueMaterial(model);
+  // Solar Absorptance:  Double
+  // Check Idd default: .7
+  EXPECT_EQ(.7, mat.solarAbsorptance());
+  EXPECT_TRUE(mat.setSolarAbsorptance(0.35));
+  EXPECT_EQ(0.35, mat.solarAbsorptance());
+  mat.resetSolarAbsorptance();
+  EXPECT_EQ(.7, mat.solarAbsorptance());
 
-  Unit units = masslessOpaqueMaterial.getVisibleAbsorptance(true).units(); // Get IP units.
 
-  // Bounds: 0.0 <= value <= 1.0
+  // Visible Absorptance:  Double
+  // Check Idd default: .7
+  EXPECT_EQ(.7, mat.visibleAbsorptance());
+  EXPECT_TRUE(mat.setVisibleAbsorptance(0.36));
+  EXPECT_EQ(0.36, mat.visibleAbsorptance());
+  mat.resetVisibleAbsorptance();
+  EXPECT_EQ(.7, mat.visibleAbsorptance());
 
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(masslessOpaqueMaterial.setVisibleAbsorptance(testQ));
-  Quantity q = masslessOpaqueMaterial.getVisibleAbsorptance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
 }
 
 TEST_F(ModelFixture, MasslessOpaqueMaterial_StandardsInformation)
@@ -152,4 +146,3 @@ TEST_F(ModelFixture, MasslessOpaqueMaterial_StandardsInformation)
   EXPECT_EQ(0u, info.suggestedCompositeFramingSizes().size());
   EXPECT_EQ(0u, info.suggestedCompositeCavityInsulations().size());
 }
-

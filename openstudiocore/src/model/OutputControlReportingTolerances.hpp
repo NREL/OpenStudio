@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -63,13 +61,9 @@ class MODEL_API OutputControlReportingTolerances : public ModelObject {
 
   double toleranceforTimeHeatingSetpointNotMet() const;
 
-  Quantity getToleranceforTimeHeatingSetpointNotMet(bool returnIP=false) const;
-
   bool isToleranceforTimeHeatingSetpointNotMetDefaulted() const;
 
   double toleranceforTimeCoolingSetpointNotMet() const;
-
-  Quantity getToleranceforTimeCoolingSetpointNotMet(bool returnIP=false) const;
 
   bool isToleranceforTimeCoolingSetpointNotMetDefaulted() const;
 
@@ -79,13 +73,9 @@ class MODEL_API OutputControlReportingTolerances : public ModelObject {
 
   bool setToleranceforTimeHeatingSetpointNotMet(double toleranceforTimeHeatingSetpointNotMet);
 
-  bool setToleranceforTimeHeatingSetpointNotMet(const Quantity& toleranceforTimeHeatingSetpointNotMet);
-
   void resetToleranceforTimeHeatingSetpointNotMet();
 
   bool setToleranceforTimeCoolingSetpointNotMet(double toleranceforTimeCoolingSetpointNotMet);
-
-  bool setToleranceforTimeCoolingSetpointNotMet(const Quantity& toleranceforTimeCoolingSetpointNotMet);
 
   void resetToleranceforTimeCoolingSetpointNotMet();
 
@@ -121,4 +111,3 @@ typedef std::vector<OutputControlReportingTolerances> OutputControlReportingTole
 } // openstudio
 
 #endif // MODEL_OUTPUTCONTROLREPORTINGTOLERANCES_HPP
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -91,13 +91,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity SizingParameters_Impl::getHeatingSizingFactor(bool returnIP) const {
-    OptionalDouble value = heatingSizingFactor();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ParametersFields::HeatingSizingFactor, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool SizingParameters_Impl::isHeatingSizingFactorDefaulted() const {
     return isEmpty(OS_Sizing_ParametersFields::HeatingSizingFactor);
   }
@@ -106,13 +99,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_Sizing_ParametersFields::CoolingSizingFactor,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity SizingParameters_Impl::getCoolingSizingFactor(bool returnIP) const {
-    OptionalDouble value = coolingSizingFactor();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_Sizing_ParametersFields::CoolingSizingFactor, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool SizingParameters_Impl::isCoolingSizingFactorDefaulted() const {
@@ -128,14 +114,6 @@ namespace detail {
     return result;
   }
 
-  bool SizingParameters_Impl::setHeatingSizingFactor(const Quantity& heatingSizingFactor) {
-    OptionalDouble value = getDoubleFromQuantity(OS_Sizing_ParametersFields::HeatingSizingFactor,heatingSizingFactor);
-    if (!value) {
-      return false;
-    }
-    return setHeatingSizingFactor(value.get());
-  }
-
   void SizingParameters_Impl::resetHeatingSizingFactor() {
     bool result = setString(OS_Sizing_ParametersFields::HeatingSizingFactor, "");
     OS_ASSERT(result);
@@ -144,14 +122,6 @@ namespace detail {
   bool SizingParameters_Impl::setCoolingSizingFactor(double coolingSizingFactor) {
     bool result = setDouble(OS_Sizing_ParametersFields::CoolingSizingFactor, coolingSizingFactor);
     return result;
-  }
-
-  bool SizingParameters_Impl::setCoolingSizingFactor(const Quantity& coolingSizingFactor) {
-    OptionalDouble value = getDoubleFromQuantity(OS_Sizing_ParametersFields::CoolingSizingFactor,coolingSizingFactor);
-    if (!value) {
-      return false;
-    }
-    return setCoolingSizingFactor(value.get());
   }
 
   void SizingParameters_Impl::resetCoolingSizingFactor() {
@@ -175,22 +145,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  openstudio::Quantity SizingParameters_Impl::heatingSizingFactor_SI() const {
-    return getHeatingSizingFactor(false);
-  }
-
-  openstudio::Quantity SizingParameters_Impl::heatingSizingFactor_IP() const {
-    return getHeatingSizingFactor(true);
-  }
-
-  openstudio::Quantity SizingParameters_Impl::coolingSizingFactor_SI() const {
-    return getCoolingSizingFactor(false);
-  }
-
-  openstudio::Quantity SizingParameters_Impl::coolingSizingFactor_IP() const {
-    return getCoolingSizingFactor(true);
-  }
-
 } // detail
 
 IddObjectType SizingParameters::iddObjectType() {
@@ -201,20 +155,12 @@ double SizingParameters::heatingSizingFactor() const {
   return getImpl<detail::SizingParameters_Impl>()->heatingSizingFactor();
 }
 
-Quantity SizingParameters::getHeatingSizingFactor(bool returnIP) const {
-  return getImpl<detail::SizingParameters_Impl>()->getHeatingSizingFactor(returnIP);
-}
-
 bool SizingParameters::isHeatingSizingFactorDefaulted() const {
   return getImpl<detail::SizingParameters_Impl>()->isHeatingSizingFactorDefaulted();
 }
 
 double SizingParameters::coolingSizingFactor() const {
   return getImpl<detail::SizingParameters_Impl>()->coolingSizingFactor();
-}
-
-Quantity SizingParameters::getCoolingSizingFactor(bool returnIP) const {
-  return getImpl<detail::SizingParameters_Impl>()->getCoolingSizingFactor(returnIP);
 }
 
 bool SizingParameters::isCoolingSizingFactorDefaulted() const {
@@ -229,19 +175,11 @@ bool SizingParameters::setHeatingSizingFactor(double heatingSizingFactor) {
   return getImpl<detail::SizingParameters_Impl>()->setHeatingSizingFactor(heatingSizingFactor);
 }
 
-bool SizingParameters::setHeatingSizingFactor(const Quantity& heatingSizingFactor) {
-  return getImpl<detail::SizingParameters_Impl>()->setHeatingSizingFactor(heatingSizingFactor);
-}
-
 void SizingParameters::resetHeatingSizingFactor() {
   getImpl<detail::SizingParameters_Impl>()->resetHeatingSizingFactor();
 }
 
 bool SizingParameters::setCoolingSizingFactor(double coolingSizingFactor) {
-  return getImpl<detail::SizingParameters_Impl>()->setCoolingSizingFactor(coolingSizingFactor);
-}
-
-bool SizingParameters::setCoolingSizingFactor(const Quantity& coolingSizingFactor) {
   return getImpl<detail::SizingParameters_Impl>()->setCoolingSizingFactor(coolingSizingFactor);
 }
 
@@ -274,4 +212,3 @@ SizingParameters::SizingParameters(Model& model)
 
 } // model
 } // openstudio
-

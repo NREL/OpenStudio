@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -69,8 +69,6 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 
@@ -433,11 +431,6 @@ namespace detail {
     return getDouble(OS_Fan_ConstantVolumeFields::MaximumFlowRate,true);
   }
 
-  OSOptionalQuantity FanConstantVolume_Impl::getMaximumFlowRate(bool returnIP) const {
-    OptionalDouble value = maximumFlowRate();
-    return getQuantityFromDouble(OS_Fan_ConstantVolumeFields::MaximumFlowRate, value, returnIP);
-  }
-
   bool FanConstantVolume_Impl::isMaximumFlowRateAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_Fan_ConstantVolumeFields::MaximumFlowRate, true);
@@ -455,21 +448,6 @@ namespace detail {
     else {
       resetMaximumFlowRate();
       result = true;
-    }
-    return result;
-  }
-
-  bool FanConstantVolume_Impl::setMaximumFlowRate(const OSOptionalQuantity& maximumFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_Fan_ConstantVolumeFields::MaximumFlowRate,maximumFlowRate.get());
-      if (value) {
-        result = setMaximumFlowRate(value);
-      }
-    }
-    else {
-      result = setMaximumFlowRate(value);
     }
     return result;
   }
@@ -643,19 +621,11 @@ boost::optional<double> FanConstantVolume::maximumFlowRate() const {
   return getImpl<detail::FanConstantVolume_Impl>()->maximumFlowRate();
 }
 
-OSOptionalQuantity FanConstantVolume::getMaximumFlowRate(bool returnIP) const {
-  return getImpl<detail::FanConstantVolume_Impl>()->getMaximumFlowRate(returnIP);
-}
-
 bool FanConstantVolume::isMaximumFlowRateAutosized() const {
   return getImpl<detail::FanConstantVolume_Impl>()->isMaximumFlowRateAutosized();
 }
 
 bool FanConstantVolume::setMaximumFlowRate(double maximumFlowRate) {
-  return getImpl<detail::FanConstantVolume_Impl>()->setMaximumFlowRate(maximumFlowRate);
-}
-
-bool FanConstantVolume::setMaximumFlowRate(const Quantity& maximumFlowRate) {
   return getImpl<detail::FanConstantVolume_Impl>()->setMaximumFlowRate(maximumFlowRate);
 }
 

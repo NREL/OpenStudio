@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -78,39 +76,27 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   boost::optional<double> designWaterFlowRate() const;
 
-  OSOptionalQuantity getDesignWaterFlowRate(bool returnIP=false) const;
-
   bool isDesignWaterFlowRateAutosized() const;
 
   boost::optional<double> designAirFlowRate() const;
-
-  OSOptionalQuantity getDesignAirFlowRate(bool returnIP=false) const;
 
   bool isDesignAirFlowRateAutosized() const;
 
   boost::optional<double> fanPoweratDesignAirFlowRate() const;
 
-  OSOptionalQuantity getFanPoweratDesignAirFlowRate(bool returnIP=false) const;
-
   bool isFanPoweratDesignAirFlowRateAutosized() const;
 
   boost::optional<double> uFactorTimesAreaValueatDesignAirFlowRate() const;
 
-  OSOptionalQuantity getUFactorTimesAreaValueatDesignAirFlowRate(bool returnIP=false) const;
-
   bool isUFactorTimesAreaValueatDesignAirFlowRateAutosized() const;
 
   boost::optional<double> airFlowRateinFreeConvectionRegime() const;
-
-  OSOptionalQuantity getAirFlowRateinFreeConvectionRegime(bool returnIP=false) const;
 
   bool isAirFlowRateinFreeConvectionRegimeDefaulted() const;
 
   bool isAirFlowRateinFreeConvectionRegimeAutosized() const;
 
   boost::optional<double> uFactorTimesAreaValueatFreeConvectionAirFlowRate() const;
-
-  OSOptionalQuantity getUFactorTimesAreaValueatFreeConvectionAirFlowRate(bool returnIP=false) const;
 
   bool isUFactorTimesAreaValueatFreeConvectionAirFlowRateDefaulted() const;
 
@@ -122,21 +108,13 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   boost::optional<double> nominalCapacity() const;
 
-  OSOptionalQuantity getNominalCapacity(bool returnIP=false) const;
-
   boost::optional<double> freeConvectionCapacity() const;
 
-  OSOptionalQuantity getFreeConvectionCapacity(bool returnIP=false) const;
-
   double basinHeaterCapacity() const;
-
-  Quantity getBasinHeaterCapacity(bool returnIP=false) const;
 
   bool isBasinHeaterCapacityDefaulted() const;
 
   double basinHeaterSetpointTemperature() const;
-
-  Quantity getBasinHeaterSetpointTemperature(bool returnIP=false) const;
 
   bool isBasinHeaterSetpointTemperatureDefaulted() const;
 
@@ -146,21 +124,15 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   double evaporationLossFactor() const;
 
-  Quantity getEvaporationLossFactor(bool returnIP=false) const;
-
   bool isEvaporationLossFactorDefaulted() const;
 
   double driftLossPercent() const;
-
-  Quantity getDriftLossPercent(bool returnIP=false) const;
 
   bool isDriftLossPercentDefaulted() const;
 
   boost::optional<std::string> blowdownCalculationMode() const;
 
   double blowdownConcentrationRatio() const;
-
-  Quantity getBlowdownConcentrationRatio(bool returnIP=false) const;
 
   bool isBlowdownConcentrationRatioDefaulted() const;
 
@@ -180,19 +152,13 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   double cellMinimumWaterFlowRateFraction() const;
 
-  Quantity getCellMinimumWaterFlowRateFraction(bool returnIP=false) const;
-
   bool isCellMinimumWaterFlowRateFractionDefaulted() const;
 
   double cellMaximumWaterFlowRateFraction() const;
 
-  Quantity getCellMaximumWaterFlowRateFraction(bool returnIP=false) const;
-
   bool isCellMaximumWaterFlowRateFractionDefaulted() const;
 
   double sizingFactor() const;
-
-  Quantity getSizingFactor(bool returnIP=false) const;
 
   bool isSizingFactorDefaulted() const;
 
@@ -202,27 +168,19 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   bool setDesignWaterFlowRate(double designWaterFlowRate);
 
-  bool setDesignWaterFlowRate(const Quantity& designWaterFlowRate);
-
   void resetDesignWaterFlowRate();
 
   void autosizeDesignWaterFlowRate();
 
   bool setDesignAirFlowRate(double designAirFlowRate);
 
-  bool setDesignAirFlowRate(const Quantity& designAirFlowRate);
-
   void autosizeDesignAirFlowRate();
 
   bool setFanPoweratDesignAirFlowRate(double fanPoweratDesignAirFlowRate);
 
-  bool setFanPoweratDesignAirFlowRate(const Quantity& fanPoweratDesignAirFlowRate);
-
   void autosizeFanPoweratDesignAirFlowRate();
 
   bool setUFactorTimesAreaValueatDesignAirFlowRate(double uFactorTimesAreaValueatDesignAirFlowRate);
-
-  bool setUFactorTimesAreaValueatDesignAirFlowRate(const Quantity& uFactorTimesAreaValueatDesignAirFlowRate);
 
   void resetUFactorTimesAreaValueatDesignAirFlowRate();
 
@@ -230,15 +188,11 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   bool setAirFlowRateinFreeConvectionRegime(double airFlowRateinFreeConvectionRegime);
 
-  bool setAirFlowRateinFreeConvectionRegime(const Quantity& airFlowRateinFreeConvectionRegime);
-
   void resetAirFlowRateinFreeConvectionRegime();
 
   void autosizeAirFlowRateinFreeConvectionRegime();
 
   bool setUFactorTimesAreaValueatFreeConvectionAirFlowRate(double uFactorTimesAreaValueatFreeConvectionAirFlowRate);
-
-  bool setUFactorTimesAreaValueatFreeConvectionAirFlowRate(const Quantity& uFactorTimesAreaValueatFreeConvectionAirFlowRate);
 
   void resetUFactorTimesAreaValueatFreeConvectionAirFlowRate();
 
@@ -250,25 +204,17 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   bool setNominalCapacity(double nominalCapacity);
 
-  bool setNominalCapacity(const Quantity& nominalCapacity);
-
   void resetNominalCapacity();
 
   bool setFreeConvectionCapacity(double freeConvectionCapacity);
-
-  bool setFreeConvectionCapacity(const Quantity& freeConvectionCapacity);
 
   void resetFreeConvectionCapacity();
 
   bool setBasinHeaterCapacity(double basinHeaterCapacity);
 
-  bool setBasinHeaterCapacity(const Quantity& basinHeaterCapacity);
-
   void resetBasinHeaterCapacity();
 
   bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
-
-  bool setBasinHeaterSetpointTemperature(const Quantity& basinHeaterSetpointTemperature);
 
   void resetBasinHeaterSetpointTemperature();
 
@@ -282,13 +228,9 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   bool setEvaporationLossFactor(double evaporationLossFactor);
 
-  bool setEvaporationLossFactor(const Quantity& evaporationLossFactor);
-
   void resetEvaporationLossFactor();
 
   bool setDriftLossPercent(double driftLossPercent);
-
-  bool setDriftLossPercent(const Quantity& driftLossPercent);
 
   void resetDriftLossPercent();
 
@@ -297,8 +239,6 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
   void resetBlowdownCalculationMode();
 
   bool setBlowdownConcentrationRatio(double blowdownConcentrationRatio);
-
-  bool setBlowdownConcentrationRatio(const Quantity& blowdownConcentrationRatio);
 
   void resetBlowdownConcentrationRatio();
 
@@ -320,19 +260,13 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
 
   bool setCellMinimumWaterFlowRateFraction(double cellMinimumWaterFlowRateFraction);
 
-  bool setCellMinimumWaterFlowRateFraction(const Quantity& cellMinimumWaterFlowRateFraction);
-
   void resetCellMinimumWaterFlowRateFraction();
 
   bool setCellMaximumWaterFlowRateFraction(double cellMaximumWaterFlowRateFraction);
 
-  bool setCellMaximumWaterFlowRateFraction(const Quantity& cellMaximumWaterFlowRateFraction);
-
   void resetCellMaximumWaterFlowRateFraction();
 
   bool setSizingFactor(double sizingFactor);
-
-  bool setSizingFactor(const Quantity& sizingFactor);
 
   void resetSizingFactor();
 

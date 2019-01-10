@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -67,15 +67,11 @@ class MODEL_API CoilHeatingLowTempRadiantVarFlow : public StraightComponent {
 
   boost::optional<double> maximumHotWaterFlow() const;
 
-  //OSOptionalQuantity getMaximumHotWaterFlow(bool returnIP=false) const;
-
   bool isMaximumHotWaterFlowDefaulted() const;
 
   bool isMaximumHotWaterFlowAutosized() const;
 
   double heatingControlThrottlingRange() const;
-
-  //Quantity getHeatingControlThrottlingRange(bool returnIP=false) const;
 
   bool isHeatingControlThrottlingRangeDefaulted() const;
 
@@ -87,15 +83,11 @@ class MODEL_API CoilHeatingLowTempRadiantVarFlow : public StraightComponent {
 
   bool setMaximumHotWaterFlow(double maximumHotWaterFlow);
 
-  //bool setMaximumHotWaterFlow(const Quantity& maximumHotWaterFlow);
-
   void resetMaximumHotWaterFlow();
 
   void autosizeMaximumHotWaterFlow();
 
   bool setHeatingControlThrottlingRange(double heatingControlThrottlingRange);
-
-  //bool setHeatingControlThrottlingRange(const Quantity& heatingControlThrottlingRange);
 
   void resetHeatingControlThrottlingRange();
 
@@ -142,4 +134,3 @@ typedef std::vector<CoilHeatingLowTempRadiantVarFlow> CoilHeatingLowTempRadiantV
 } // openstudio
 
 #endif // MODEL_COILHEATINGLOWTEMPRADIANTVARFLOW_HPP
-

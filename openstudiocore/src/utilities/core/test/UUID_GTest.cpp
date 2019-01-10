@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,8 +34,6 @@
 
 #include <iostream>
 #include <set>
-
-#include <QVariant>
 
 using std::cout;
 using openstudio::UUID;
@@ -85,16 +83,6 @@ TEST(UUID, BigSet)
 
   // check no duplicates
   EXPECT_EQ(numUUIDS, uuids.size());
-}
-
-TEST(UUID, UUID_QVariant)
-{
-  UUID uuid = createUUID();
-  QVariant variant = QVariant::fromValue(uuid);
-  EXPECT_EQ("openstudio::UUID", std::string(variant.typeName()));
-  ASSERT_TRUE(variant.canConvert<UUID>());
-  UUID uuid2 = variant.value<UUID>();
-  EXPECT_TRUE(uuid == uuid2);
 }
 
 TEST(UUID, UUID_UID) {

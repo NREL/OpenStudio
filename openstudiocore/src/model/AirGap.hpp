@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -66,7 +64,6 @@ class MODEL_API AirGap : public OpaqueMaterial {
 
   double thermalResistance() const;
 
-  OSOptionalQuantity getThermalResistance(bool returnIP=false) const;
 
   //@}
   /** @name Setters */
@@ -74,8 +71,7 @@ class MODEL_API AirGap : public OpaqueMaterial {
 
   bool setThermalResistance(double thermalResistance);
 
-  bool setThermalResistance(const Quantity& thermalResistance);
-
+  // Resets the thermal resistance to the default of 0.1 m2-K/W
   void resetThermalResistance();
 
   //@}
@@ -108,4 +104,3 @@ typedef std::vector<AirGap> AirGapVector;
 } // openstudio
 
 #endif // MODEL_AIRGAP_HPP
-

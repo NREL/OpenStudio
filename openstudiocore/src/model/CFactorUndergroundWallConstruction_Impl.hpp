@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,8 +32,6 @@
 
 #include "ConstructionBase_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -89,25 +87,14 @@ namespace detail {
 
     /// Returns cFactor.
     virtual double cFactor() const;
-    virtual Quantity getCFactor(bool returnIP = false) const;
     virtual bool setCFactor(double cFactor);
-    virtual bool setCFactor(const Quantity& cFactor);
-
     /// Returns height.
     virtual double height() const;
-    virtual Quantity getHeight(bool returnIP = false) const;
     virtual bool setHeight(double height);
-    virtual bool setHeight(const Quantity& height);
 
     //@}
 
   private:
-    openstudio::Quantity cFactor_SI() const;
-    openstudio::Quantity cFactor_IP() const;
-
-    openstudio::Quantity height_SI() const;
-    openstudio::Quantity height_IP() const;
-
     REGISTER_LOGGER("openstudio.model.CFactorUndergroundWallConstruction");
   };
 

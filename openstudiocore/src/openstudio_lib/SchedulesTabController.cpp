@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,6 +56,7 @@
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/units/OSOptionalQuantity.hpp"
 #include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
 
 #include "../energyplus/ReverseTranslator.hpp"
 
@@ -220,17 +221,27 @@ void SchedulesTabController::onDayScheduleSceneChanged( DayScheduleScene * scene
   {
     openstudio::Time time(0,0,0,(*it)->endTime());
 
-    float scaledvalue = (*it)->value();
+    double scaledvalue = (*it)->value();
 
-    float value = lowerLimitValue + scaledvalue * (upperLimitValue - lowerLimitValue);
+    double value = lowerLimitValue + scaledvalue * (upperLimitValue - lowerLimitValue);
 
     if (units) {
-      scheduleDay.addValue(time,Quantity(value,*units)); // going to be slower than it has to be
-                                                         // better to assemble all values into OSQuantityVector and then set
+      // Now, if we need and can convert, we do it
+      if (boost::optional<model::ScheduleTypeLimits> _scheduleTypeLimits = scheduleDay.scheduleTypeLimits()) {
+
+        boost::optional<Unit> _siUnits = _scheduleTypeLimits->units(false);
+        if (units.get() != _siUnits.get()) {
+          Quantity q = Quantity(value, units.get());
+          OptionalQuantity result = openstudio::convert(q, _siUnits.get());
+          OS_ASSERT(result);
+          value = result.get().value();
+        }
+
+      }
     }
-    else {
-      scheduleDay.addValue(time,value);
-    }
+
+    scheduleDay.addValue(time,value);
+
   }
 }
 

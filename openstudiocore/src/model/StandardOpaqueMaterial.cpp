@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -94,24 +94,10 @@ namespace detail {
     return value.get();
   }
 
-  Quantity StandardOpaqueMaterial_Impl::getThickness(bool returnIP) const {
-    OptionalDouble value = thickness();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::Thickness, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double StandardOpaqueMaterial_Impl::conductivity() const {
     boost::optional<double> value = getDouble(OS_MaterialFields::Conductivity,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity StandardOpaqueMaterial_Impl::getConductivity(bool returnIP) const {
-    OptionalDouble value = conductivity();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::Conductivity, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   double StandardOpaqueMaterial_Impl::thermalConductivity() const {
@@ -141,24 +127,10 @@ namespace detail {
     return value.get();
   }
 
-  Quantity StandardOpaqueMaterial_Impl::getDensity(bool returnIP) const {
-    OptionalDouble value = density();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::Density, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double StandardOpaqueMaterial_Impl::specificHeat() const {
     boost::optional<double> value = getDouble(OS_MaterialFields::SpecificHeat,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity StandardOpaqueMaterial_Impl::getSpecificHeat(bool returnIP) const {
-    OptionalDouble value = specificHeat();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::SpecificHeat, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   double StandardOpaqueMaterial_Impl::thermalAbsorptance() const {
@@ -176,13 +148,6 @@ namespace detail {
     return result;
   }
 
-  Quantity StandardOpaqueMaterial_Impl::getThermalAbsorptance(bool returnIP) const {
-    OptionalDouble value = thermalAbsorptance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::ThermalAbsorptance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool StandardOpaqueMaterial_Impl::isThermalAbsorptanceDefaulted() const {
     return isEmpty(OS_MaterialFields::ThermalAbsorptance);
   }
@@ -191,13 +156,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_MaterialFields::SolarAbsorptance,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity StandardOpaqueMaterial_Impl::getSolarAbsorptance(bool returnIP) const {
-    OptionalDouble value = solarAbsorptance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::SolarAbsorptance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool StandardOpaqueMaterial_Impl::isSolarAbsorptanceDefaulted() const {
@@ -234,13 +192,6 @@ namespace detail {
     return result;
   }
 
-  Quantity StandardOpaqueMaterial_Impl::getVisibleAbsorptance(bool returnIP) const {
-    OptionalDouble value = visibleAbsorptance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_MaterialFields::VisibleAbsorptance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool StandardOpaqueMaterial_Impl::isVisibleAbsorptanceDefaulted() const {
     return isEmpty(OS_MaterialFields::VisibleAbsorptance);
   }
@@ -255,25 +206,9 @@ namespace detail {
     return result;
   }
 
-  bool StandardOpaqueMaterial_Impl::setThickness(const Quantity& thickness) {
-    OptionalDouble value = getDoubleFromQuantity(OS_MaterialFields::Thickness,thickness);
-    if (!value) {
-      return false;
-    }
-    return setThickness(value.get());
-  }
-
   bool StandardOpaqueMaterial_Impl::setConductivity(double conductivity) {
     bool result = setDouble(OS_MaterialFields::Conductivity, conductivity);
     return result;
-  }
-
-  bool StandardOpaqueMaterial_Impl::setConductivity(const Quantity& conductivity) {
-    OptionalDouble value = getDoubleFromQuantity(OS_MaterialFields::Conductivity,conductivity);
-    if (!value) {
-      return false;
-    }
-    return setConductivity(value.get());
   }
 
   bool StandardOpaqueMaterial_Impl::setThermalConductivity(double value) {
@@ -298,14 +233,6 @@ namespace detail {
   bool StandardOpaqueMaterial_Impl::setDensity(double density) {
     bool result = setDouble(OS_MaterialFields::Density, density);
     return result;
-  }
-
-  bool StandardOpaqueMaterial_Impl::setDensity(const Quantity& density) {
-    OptionalDouble value = getDoubleFromQuantity(OS_MaterialFields::Density,density);
-    if (!value) {
-      return false;
-    }
-    return setDensity(value.get());
   }
 
   bool StandardOpaqueMaterial_Impl::setSpecificHeat(double specificHeat) {
@@ -351,25 +278,9 @@ namespace detail {
     return setVisibleAbsorptance(od);
   }
 
-  bool StandardOpaqueMaterial_Impl::setSpecificHeat(const Quantity& specificHeat) {
-    OptionalDouble value = getDoubleFromQuantity(OS_MaterialFields::SpecificHeat,specificHeat);
-    if (!value) {
-      return false;
-    }
-    return setSpecificHeat(value.get());
-  }
-
   bool StandardOpaqueMaterial_Impl::setThermalAbsorptance(double thermalAbsorptance) {
     bool result = setDouble(OS_MaterialFields::ThermalAbsorptance, thermalAbsorptance);
     return result;
-  }
-
-  bool StandardOpaqueMaterial_Impl::setThermalAbsorptance(const Quantity& thermalAbsorptance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_MaterialFields::ThermalAbsorptance,thermalAbsorptance);
-    if (!value) {
-      return false;
-    }
-    return this->setThermalAbsorptance(value.get());
   }
 
   void StandardOpaqueMaterial_Impl::resetThermalAbsorptance() {
@@ -382,14 +293,6 @@ namespace detail {
     return result;
   }
 
-  bool StandardOpaqueMaterial_Impl::setSolarAbsorptance(const Quantity& solarAbsorptance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_MaterialFields::SolarAbsorptance,solarAbsorptance);
-    if (!value) {
-      return false;
-    }
-    return setSolarAbsorptance(value.get());
-  }
-
   void StandardOpaqueMaterial_Impl::resetSolarAbsorptance() {
     bool result = setString(OS_MaterialFields::SolarAbsorptance, "");
     OS_ASSERT(result);
@@ -400,14 +303,6 @@ namespace detail {
     return result;
   }
 
-  bool StandardOpaqueMaterial_Impl::setVisibleAbsorptance(const Quantity& visibleAbsorptance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_MaterialFields::VisibleAbsorptance,visibleAbsorptance);
-    if (!value) {
-      return false;
-    }
-    return setVisibleAbsorptance(value.get());
-  }
-
   void StandardOpaqueMaterial_Impl::resetVisibleAbsorptance() {
     bool result = setString(OS_MaterialFields::VisibleAbsorptance, "");
     OS_ASSERT(result);
@@ -415,62 +310,6 @@ namespace detail {
 
   std::vector<std::string> StandardOpaqueMaterial_Impl::roughnessValues() const {
     return StandardOpaqueMaterial::roughnessValues();
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::thickness_SI() const {
-    return getThickness(false);
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::thickness_IP() const {
-    return getThickness(true);
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::conductivity_SI() const {
-    return getConductivity(false);
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::conductivity_IP() const {
-    return getConductivity(true);
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::density_SI() const {
-    return getDensity(false);
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::density_IP() const {
-    return getDensity(true);
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::specificHeat_SI() const {
-    return getSpecificHeat(false);
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::specificHeat_IP() const {
-    return getSpecificHeat(true);
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::thermalAbsorptance_SI() const {
-    return getThermalAbsorptance(false);
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::thermalAbsorptance_IP() const {
-    return getThermalAbsorptance(true);
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::solarAbsorptance_SI() const {
-    return getSolarAbsorptance(false);
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::solarAbsorptance_IP() const {
-    return getSolarAbsorptance(true);
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::visibleAbsorptance_SI() const {
-    return getVisibleAbsorptance(false);
-  }
-
-  openstudio::Quantity StandardOpaqueMaterial_Impl::visibleAbsorptance_IP() const {
-    return getVisibleAbsorptance(true);
   }
 
   std::vector<EMSActuatorNames> StandardOpaqueMaterial_Impl::emsActuatorNames() const {
@@ -602,40 +441,20 @@ double StandardOpaqueMaterial::thickness() const {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->thickness();
 }
 
-Quantity StandardOpaqueMaterial::getThickness(bool returnIP) const {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->getThickness(returnIP);
-}
-
 double StandardOpaqueMaterial::conductivity() const {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->conductivity();
-}
-
-Quantity StandardOpaqueMaterial::getConductivity(bool returnIP) const {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->getConductivity(returnIP);
 }
 
 double StandardOpaqueMaterial::density() const {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->density();
 }
 
-Quantity StandardOpaqueMaterial::getDensity(bool returnIP) const {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->getDensity(returnIP);
-}
-
 double StandardOpaqueMaterial::specificHeat() const {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->specificHeat();
 }
 
-Quantity StandardOpaqueMaterial::getSpecificHeat(bool returnIP) const {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->getSpecificHeat(returnIP);
-}
-
 double StandardOpaqueMaterial::thermalAbsorptance() const {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->thermalAbsorptance();
-}
-
-Quantity StandardOpaqueMaterial::getThermalAbsorptance(bool returnIP) const {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->getThermalAbsorptance(returnIP);
 }
 
 bool StandardOpaqueMaterial::isThermalAbsorptanceDefaulted() const {
@@ -646,20 +465,12 @@ double StandardOpaqueMaterial::solarAbsorptance() const {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->solarAbsorptance();
 }
 
-Quantity StandardOpaqueMaterial::getSolarAbsorptance(bool returnIP) const {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->getSolarAbsorptance(returnIP);
-}
-
 bool StandardOpaqueMaterial::isSolarAbsorptanceDefaulted() const {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->isSolarAbsorptanceDefaulted();
 }
 
 double StandardOpaqueMaterial::visibleAbsorptance() const {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->visibleAbsorptance();
-}
-
-Quantity StandardOpaqueMaterial::getVisibleAbsorptance(bool returnIP) const {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->getVisibleAbsorptance(returnIP);
 }
 
 bool StandardOpaqueMaterial::isVisibleAbsorptanceDefaulted() const {
@@ -674,15 +485,7 @@ bool StandardOpaqueMaterial::setThickness(double thickness) {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->setThickness(thickness);
 }
 
-bool StandardOpaqueMaterial::setThickness(const Quantity& thickness) {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->setThickness(thickness);
-}
-
 bool StandardOpaqueMaterial::setConductivity(double conductivity) {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->setConductivity(conductivity);
-}
-
-bool StandardOpaqueMaterial::setConductivity(const Quantity& conductivity) {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->setConductivity(conductivity);
 }
 
@@ -690,23 +493,11 @@ bool StandardOpaqueMaterial::setDensity(double density) {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->setDensity(density);
 }
 
-bool StandardOpaqueMaterial::setDensity(const Quantity& density) {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->setDensity(density);
-}
-
 bool StandardOpaqueMaterial::setSpecificHeat(double specificHeat) {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->setSpecificHeat(specificHeat);
 }
 
-bool StandardOpaqueMaterial::setSpecificHeat(const Quantity& specificHeat) {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->setSpecificHeat(specificHeat);
-}
-
 bool StandardOpaqueMaterial::setThermalAbsorptance(double thermalAbsorptance) {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->setThermalAbsorptance(thermalAbsorptance);
-}
-
-bool StandardOpaqueMaterial::setThermalAbsorptance(const Quantity& thermalAbsorptance) {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->setThermalAbsorptance(thermalAbsorptance);
 }
 
@@ -718,19 +509,11 @@ bool StandardOpaqueMaterial::setSolarAbsorptance(double solarAbsorptance) {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->setSolarAbsorptance(solarAbsorptance);
 }
 
-bool StandardOpaqueMaterial::setSolarAbsorptance(const Quantity& solarAbsorptance) {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->setSolarAbsorptance(solarAbsorptance);
-}
-
 void StandardOpaqueMaterial::resetSolarAbsorptance() {
   getImpl<detail::StandardOpaqueMaterial_Impl>()->resetSolarAbsorptance();
 }
 
 bool StandardOpaqueMaterial::setVisibleAbsorptance(double visibleAbsorptance) {
-  return getImpl<detail::StandardOpaqueMaterial_Impl>()->setVisibleAbsorptance(visibleAbsorptance);
-}
-
-bool StandardOpaqueMaterial::setVisibleAbsorptance(const Quantity& visibleAbsorptance) {
   return getImpl<detail::StandardOpaqueMaterial_Impl>()->setVisibleAbsorptance(visibleAbsorptance);
 }
 
@@ -746,4 +529,3 @@ StandardOpaqueMaterial::StandardOpaqueMaterial(std::shared_ptr<detail::StandardO
 
 } // model
 } // openstudio
-

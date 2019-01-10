@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,262 +34,153 @@
 #include "../Shade.hpp"
 #include "../Shade_Impl.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,Shade_SolarTransmittance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
+TEST_F(ModelFixture, Shade_DefaultConstructor)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Unit units = shade.getSolarTransmittance(true).units(); // Get IP units.
+  ASSERT_EXIT (
+  {
+    Model m;
+    Shade shade(m);
 
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(shade.setSolarTransmittance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(shade.setSolarTransmittance(testQ2));
-  Quantity q2 = shade.getSolarTransmittance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
+    exit(0);
+  } ,
+    ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,Shade_SolarReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
+TEST_F(ModelFixture, Shade_GettersSetters)
+{
+  Model m;
+  Shade shade(m);
 
-  Unit units = shade.getSolarReflectance(true).units(); // Get IP units.
+  // Ctor argument defaults
+  double solarTransmittance = 0.4;
+  double solarReflectance = 0.5;
+  double visibleTransmittance = 0.4;
+  double visibleReflectance = 0.5;
+  double thermalHemisphericalEmissivity = 0.9;
+  double thermalTransmittance = 0.0;
+  double thickness = 0.005;
+  double conductivity = 0.1;
 
-  // Bounds: 0.0 <= value < 1.0
+  // Solar Transmittance:  Double
+  // Check Idd default: 0.4, overriden by ctor arg with same value
+  EXPECT_EQ(solarTransmittance, shade.solarTransmittance());
+  EXPECT_TRUE(shade.setSolarTransmittance(0.2));
+  EXPECT_EQ(0.2, shade.solarTransmittance());
 
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(shade.setSolarReflectance(testQ));
+  // Solar Reflectance:  Double
+  // Check Idd default: 0.5, overriden by ctor arg with same value
+  EXPECT_EQ(solarReflectance, shade.solarReflectance());
+  EXPECT_TRUE(shade.setSolarReflectance(0.25));
+  EXPECT_EQ(0.25, shade.solarReflectance());
 
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(shade.setSolarReflectance(testQ2));
-  Quantity q2 = shade.getSolarReflectance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
+  // Visible Transmittance:  Double
+  // Check Idd default: 0.4, overriden by ctor arg with same value
+  EXPECT_EQ(visibleTransmittance, shade.visibleTransmittance());
+  EXPECT_TRUE(shade.setVisibleTransmittance(0.225));
+  EXPECT_EQ(0.225, shade.visibleTransmittance());
+
+  // Visible Reflectance:  Double
+  // Check Idd default: 0.5, overriden by ctor arg with same value
+  EXPECT_EQ(visibleReflectance, shade.visibleReflectance());
+  EXPECT_TRUE(shade.setVisibleReflectance(0.245));
+  EXPECT_EQ(0.245, shade.visibleReflectance());
+
+  // Thermal Hemispherical Emissivity:  Double
+  // Check Idd default: 0.9, overriden by ctor arg with same value
+  EXPECT_EQ(thermalHemisphericalEmissivity, shade.thermalHemisphericalEmissivity());
+  EXPECT_TRUE(shade.setThermalHemisphericalEmissivity(0.45));
+  EXPECT_EQ(0.45, shade.thermalHemisphericalEmissivity());
+
+
+  // Thermal Transmittance:  Double
+  // Check Idd default: 0.0, overriden by ctor arg with same value
+  EXPECT_EQ(thermalTransmittance, shade.thermalTransmittance());
+  EXPECT_TRUE(shade.setThermalTransmittance(0.6));
+  EXPECT_EQ(0.6, shade.thermalTransmittance());
+
+
+  // Thickness:  Double
+  // Check Idd default: 0.005, overriden by ctor arg with same value
+  EXPECT_EQ(thickness, shade.thickness());
+  EXPECT_TRUE(shade.setThickness(0.05));
+  EXPECT_EQ(0.05, shade.thickness());
+
+
+  // Conductivity:  Double
+  // Check Idd default: 0.1, overriden by ctor arg with same value
+  EXPECT_EQ(conductivity, shade.conductivity());
+  EXPECT_TRUE(shade.setConductivity(0.05));
+  EXPECT_EQ(0.05, shade.conductivity());
+
+
+  // Shade to Glass Distance:  Double
+  // Check Idd default: 0.050
+  EXPECT_TRUE(shade.isShadetoGlassDistanceDefaulted());
+  EXPECT_EQ(0.050, shade.shadetoGlassDistance());
+  EXPECT_TRUE(shade.setShadetoGlassDistance(0.03));
+  EXPECT_FALSE(shade.isShadetoGlassDistanceDefaulted());
+  EXPECT_EQ(0.03, shade.shadetoGlassDistance());
+  shade.resetShadetoGlassDistance();
+  EXPECT_EQ(0.050, shade.shadetoGlassDistance());
+
+
+  // Top Opening Multiplier:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(shade.isTopOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, shade.topOpeningMultiplier());
+  EXPECT_TRUE(shade.setTopOpeningMultiplier(0.0));
+  EXPECT_FALSE(shade.isTopOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, shade.topOpeningMultiplier());
+  shade.resetTopOpeningMultiplier();
+  EXPECT_EQ(0.0, shade.topOpeningMultiplier());
+
+
+  // Bottom Opening Multiplier:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(shade.isBottomOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, shade.bottomOpeningMultiplier());
+  EXPECT_TRUE(shade.setBottomOpeningMultiplier(0.0));
+  EXPECT_FALSE(shade.isBottomOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, shade.bottomOpeningMultiplier());
+  shade.resetBottomOpeningMultiplier();
+  EXPECT_EQ(0.0, shade.bottomOpeningMultiplier());
+
+
+  // Left-Side Opening Multiplier:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(shade.isLeftSideOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, shade.leftSideOpeningMultiplier());
+  EXPECT_TRUE(shade.setLeftSideOpeningMultiplier(0.0));
+  EXPECT_FALSE(shade.isLeftSideOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, shade.leftSideOpeningMultiplier());
+  shade.resetLeftSideOpeningMultiplier();
+  EXPECT_EQ(0.0, shade.leftSideOpeningMultiplier());
+
+
+  // Right-Side Opening Multiplier:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(shade.isRightSideOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, shade.rightSideOpeningMultiplier());
+  EXPECT_TRUE(shade.setRightSideOpeningMultiplier(0.0));
+  EXPECT_FALSE(shade.isRightSideOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, shade.rightSideOpeningMultiplier());
+  shade.resetRightSideOpeningMultiplier();
+  EXPECT_EQ(0.0, shade.rightSideOpeningMultiplier());
+
+
+  // Airflow Permeability:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(shade.isAirflowPermeabilityDefaulted());
+  EXPECT_EQ(0.0, shade.airflowPermeability());
+  EXPECT_TRUE(shade.setAirflowPermeability(0.0));
+  EXPECT_FALSE(shade.isAirflowPermeabilityDefaulted());
+  EXPECT_EQ(0.0, shade.airflowPermeability());
+  shade.resetAirflowPermeability();
+  EXPECT_EQ(0.0, shade.airflowPermeability());
+
 }
-
-TEST_F(ModelFixture,Shade_VisibleTransmittance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
-
-  Unit units = shade.getVisibleTransmittance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(shade.setVisibleTransmittance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(shade.setVisibleTransmittance(testQ2));
-  Quantity q2 = shade.getVisibleTransmittance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Shade_VisibleReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
-
-  Unit units = shade.getVisibleReflectance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(shade.setVisibleReflectance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(shade.setVisibleReflectance(testQ2));
-  Quantity q2 = shade.getVisibleReflectance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Shade_ThermalHemisphericalEmissivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
-
-  Unit units = shade.getThermalHemisphericalEmissivity(true).units(); // Get IP units.
-
-  // Bounds: 0.0 < value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(shade.setThermalHemisphericalEmissivity(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(shade.setThermalHemisphericalEmissivity(testQ2));
-  Quantity q2 = shade.getThermalHemisphericalEmissivity(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Shade_ThermalTransmittance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
-
-  Unit units = shade.getThermalTransmittance(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(shade.setThermalTransmittance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(shade.setThermalTransmittance(testQ2));
-  Quantity q2 = shade.getThermalTransmittance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Shade_Thickness_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
-
-  Unit units = shade.getThickness(true).units(); // Get IP units.
-
-  // \minimum> 0
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(shade.setThickness(testQ));
-  Quantity q = shade.getThickness(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Shade_Conductivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
-
-  Unit units = shade.getConductivity(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(shade.setConductivity(testQ));
-  Quantity q = shade.getConductivity(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Shade_ShadetoGlassDistance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
-
-  Unit units = shade.getShadetoGlassDistance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(shade.setShadetoGlassDistance(testQ));
-  Quantity q = shade.getShadetoGlassDistance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Shade_TopOpeningMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
-
-  Unit units = shade.getTopOpeningMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(shade.setTopOpeningMultiplier(testQ));
-  Quantity q = shade.getTopOpeningMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Shade_BottomOpeningMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
-
-  Unit units = shade.getBottomOpeningMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(shade.setBottomOpeningMultiplier(testQ));
-  Quantity q = shade.getBottomOpeningMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Shade_LeftSideOpeningMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
-
-  Unit units = shade.getLeftSideOpeningMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(shade.setLeftSideOpeningMultiplier(testQ));
-  Quantity q = shade.getLeftSideOpeningMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Shade_RightSideOpeningMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
-
-  Unit units = shade.getRightSideOpeningMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(shade.setRightSideOpeningMultiplier(testQ));
-  Quantity q = shade.getRightSideOpeningMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Shade_AirflowPermeability_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Shade shade(model);
-
-  Unit units = shade.getAirflowPermeability(true).units(); // Get IP units.
-
-  // Bounds: 0.0 <= value <= 0.8
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(shade.setAirflowPermeability(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(shade.setAirflowPermeability(testQ2));
-  Quantity q2 = shade.getAirflowPermeability(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-

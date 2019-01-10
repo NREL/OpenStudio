@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,7 +39,6 @@
 
 // forward declarations
 class QString;
-class QTextStream;
 
 namespace openstudio {
 
@@ -64,7 +63,7 @@ UTILITIES_API path toPath(const std::string& s);
 /** QString to path*/
 UTILITIES_API path toPath(const QString& q);
 
-#ifdef WIN32
+#ifdef _WIN32
 /** UTF-16 encoded std::wstring for opening fstreams*/
 UTILITIES_API std::wstring toSystemFilename(const path& p);
 #else
@@ -81,9 +80,6 @@ typedef std::pair<path,path> PathPair;
 //UTILITIES_API QString longPathName(const QString& path);
 
 } // openstudio
-
-// allow path to be written to QTextStream
-QTextStream& operator<<(QTextStream& qts, const openstudio::path& p);
 
 
 #endif // UTILITIES_CORE_PATH_HPP

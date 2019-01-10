@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,53 +34,51 @@
 #include "../ZoneCapacitanceMultiplierResearchSpecial.hpp"
 #include "../ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ZoneCapacitanceMultiplierResearchSpecial_TemperatureCapacityMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  ZoneCapacitanceMultiplierResearchSpecial zoneCapacitanceMultiplierResearchSpecial = model.getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
-  Unit units = zoneCapacitanceMultiplierResearchSpecial.getTemperatureCapacityMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(zoneCapacitanceMultiplierResearchSpecial.setTemperatureCapacityMultiplier(testQ));
-  Quantity q = zoneCapacitanceMultiplierResearchSpecial.getTemperatureCapacityMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+TEST_F(ModelFixture, ZoneCapacitanceMultiplierResearchSpecial_GettersSetters) {
+
+  Model m;
+  ZoneCapacitanceMultiplierResearchSpecial zcap = m.getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
+
+
+  // Temperature Capacity Multiplier:  Double
+  // Check Idd default: 1.0
+  EXPECT_TRUE(zcap.isTemperatureCapacityMultiplierDefaulted());
+  EXPECT_EQ(1.0, zcap.temperatureCapacityMultiplier());
+  EXPECT_TRUE(zcap.setTemperatureCapacityMultiplier(0.5));
+  EXPECT_FALSE(zcap.isTemperatureCapacityMultiplierDefaulted());
+  EXPECT_EQ(0.5, zcap.temperatureCapacityMultiplier());
+  // Test reset
+  zcap.resetTemperatureCapacityMultiplier();
+  EXPECT_EQ(1.0, zcap.temperatureCapacityMultiplier());
+  EXPECT_TRUE(zcap.isTemperatureCapacityMultiplierDefaulted());
+
+
+  // Humidity Capacity Multiplier:  Double
+  // Check Idd default: 1.0
+  EXPECT_TRUE(zcap.isHumidityCapacityMultiplierDefaulted());
+  EXPECT_EQ(1.0, zcap.humidityCapacityMultiplier());
+  EXPECT_TRUE(zcap.setHumidityCapacityMultiplier(0.5));
+  EXPECT_FALSE(zcap.isHumidityCapacityMultiplierDefaulted());
+  EXPECT_EQ(0.5, zcap.humidityCapacityMultiplier());
+  // Test reset
+  zcap.resetHumidityCapacityMultiplier();
+  EXPECT_EQ(1.0, zcap.humidityCapacityMultiplier());
+  EXPECT_TRUE(zcap.isHumidityCapacityMultiplierDefaulted());
+
+
+  // Carbon Dioxide Capacity Multiplier:  Double
+  // Check Idd default: 1.0
+  EXPECT_TRUE(zcap.isCarbonDioxideCapacityMultiplierDefaulted());
+  EXPECT_EQ(1.0, zcap.carbonDioxideCapacityMultiplier());
+  EXPECT_TRUE(zcap.setCarbonDioxideCapacityMultiplier(0.5));
+  EXPECT_FALSE(zcap.isCarbonDioxideCapacityMultiplierDefaulted());
+  EXPECT_EQ(0.5, zcap.carbonDioxideCapacityMultiplier());
+  // Test reset
+  zcap.resetCarbonDioxideCapacityMultiplier();
+  EXPECT_EQ(1.0, zcap.carbonDioxideCapacityMultiplier());
+  EXPECT_TRUE(zcap.isCarbonDioxideCapacityMultiplierDefaulted());
+
 }
-
-TEST_F(ModelFixture,ZoneCapacitanceMultiplierResearchSpecial_HumidityCapacityMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  ZoneCapacitanceMultiplierResearchSpecial zoneCapacitanceMultiplierResearchSpecial = model.getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
-
-  Unit units = zoneCapacitanceMultiplierResearchSpecial.getHumidityCapacityMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(zoneCapacitanceMultiplierResearchSpecial.setHumidityCapacityMultiplier(testQ));
-  Quantity q = zoneCapacitanceMultiplierResearchSpecial.getHumidityCapacityMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,ZoneCapacitanceMultiplierResearchSpecial_CarbonDioxideCapacityMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  ZoneCapacitanceMultiplierResearchSpecial zoneCapacitanceMultiplierResearchSpecial = model.getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
-
-  Unit units = zoneCapacitanceMultiplierResearchSpecial.getCarbonDioxideCapacityMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(zoneCapacitanceMultiplierResearchSpecial.setCarbonDioxideCapacityMultiplier(testQ));
-  Quantity q = zoneCapacitanceMultiplierResearchSpecial.getCarbonDioxideCapacityMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-

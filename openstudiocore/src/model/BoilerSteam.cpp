@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -128,36 +128,16 @@ namespace detail {
     return getDouble(OS_Boiler_SteamFields::MaximumOperatingPressure,true);
   }
 
-  OSOptionalQuantity BoilerSteam_Impl::getMaximumOperatingPressure(bool returnIP) const {
-    OptionalDouble value = maximumOperatingPressure();
-    return getQuantityFromDouble(OS_Boiler_SteamFields::MaximumOperatingPressure, value, returnIP);
-  }
-
   boost::optional<double> BoilerSteam_Impl::theoreticalEfficiency() const {
     return getDouble(OS_Boiler_SteamFields::TheoreticalEfficiency,true);
-  }
-
-  OSOptionalQuantity BoilerSteam_Impl::getTheoreticalEfficiency(bool returnIP) const {
-    OptionalDouble value = theoreticalEfficiency();
-    return getQuantityFromDouble(OS_Boiler_SteamFields::TheoreticalEfficiency, value, returnIP);
   }
 
   boost::optional<double> BoilerSteam_Impl::designOutletSteamTemperature() const {
     return getDouble(OS_Boiler_SteamFields::DesignOutletSteamTemperature,true);
   }
 
-  OSOptionalQuantity BoilerSteam_Impl::getDesignOutletSteamTemperature(bool returnIP) const {
-    OptionalDouble value = designOutletSteamTemperature();
-    return getQuantityFromDouble(OS_Boiler_SteamFields::DesignOutletSteamTemperature, value, returnIP);
-  }
-
   boost::optional<double> BoilerSteam_Impl::nominalCapacity() const {
     return getDouble(OS_Boiler_SteamFields::NominalCapacity,true);
-  }
-
-  OSOptionalQuantity BoilerSteam_Impl::getNominalCapacity(bool returnIP) const {
-    OptionalDouble value = nominalCapacity();
-    return getQuantityFromDouble(OS_Boiler_SteamFields::NominalCapacity, value, returnIP);
   }
 
   bool BoilerSteam_Impl::isNominalCapacityAutosized() const {
@@ -173,67 +153,30 @@ namespace detail {
     return getDouble(OS_Boiler_SteamFields::MinimumPartLoadRatio,true);
   }
 
-  OSOptionalQuantity BoilerSteam_Impl::getMinimumPartLoadRatio(bool returnIP) const {
-    OptionalDouble value = minimumPartLoadRatio();
-    return getQuantityFromDouble(OS_Boiler_SteamFields::MinimumPartLoadRatio, value, returnIP);
-  }
-
   boost::optional<double> BoilerSteam_Impl::maximumPartLoadRatio() const {
     return getDouble(OS_Boiler_SteamFields::MaximumPartLoadRatio,true);
-  }
-
-  OSOptionalQuantity BoilerSteam_Impl::getMaximumPartLoadRatio(bool returnIP) const {
-    OptionalDouble value = maximumPartLoadRatio();
-    return getQuantityFromDouble(OS_Boiler_SteamFields::MaximumPartLoadRatio, value, returnIP);
   }
 
   boost::optional<double> BoilerSteam_Impl::optimumPartLoadRatio() const {
     return getDouble(OS_Boiler_SteamFields::OptimumPartLoadRatio,true);
   }
 
-  OSOptionalQuantity BoilerSteam_Impl::getOptimumPartLoadRatio(bool returnIP) const {
-    OptionalDouble value = optimumPartLoadRatio();
-    return getQuantityFromDouble(OS_Boiler_SteamFields::OptimumPartLoadRatio, value, returnIP);
-  }
-
   boost::optional<double> BoilerSteam_Impl::coefficient1ofFuelUseFunctionofPartLoadRatioCurve() const {
     return getDouble(OS_Boiler_SteamFields::Coefficient1ofFuelUseFunctionofPartLoadRatioCurve,true);
-  }
-
-  OSOptionalQuantity BoilerSteam_Impl::getCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP) const {
-    OptionalDouble value = coefficient1ofFuelUseFunctionofPartLoadRatioCurve();
-    return getQuantityFromDouble(OS_Boiler_SteamFields::Coefficient1ofFuelUseFunctionofPartLoadRatioCurve, value, returnIP);
   }
 
   boost::optional<double> BoilerSteam_Impl::coefficient2ofFuelUseFunctionofPartLoadRatioCurve() const {
     return getDouble(OS_Boiler_SteamFields::Coefficient2ofFuelUseFunctionofPartLoadRatioCurve,true);
   }
 
-  OSOptionalQuantity BoilerSteam_Impl::getCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP) const {
-    OptionalDouble value = coefficient2ofFuelUseFunctionofPartLoadRatioCurve();
-    return getQuantityFromDouble(OS_Boiler_SteamFields::Coefficient2ofFuelUseFunctionofPartLoadRatioCurve, value, returnIP);
-  }
-
   boost::optional<double> BoilerSteam_Impl::coefficient3ofFuelUseFunctionofPartLoadRatioCurve() const {
     return getDouble(OS_Boiler_SteamFields::Coefficient3ofFuelUseFunctionofPartLoadRatioCurve,true);
-  }
-
-  OSOptionalQuantity BoilerSteam_Impl::getCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP) const {
-    OptionalDouble value = coefficient3ofFuelUseFunctionofPartLoadRatioCurve();
-    return getQuantityFromDouble(OS_Boiler_SteamFields::Coefficient3ofFuelUseFunctionofPartLoadRatioCurve, value, returnIP);
   }
 
   double BoilerSteam_Impl::sizingFactor() const {
     boost::optional<double> value = getDouble(OS_Boiler_SteamFields::SizingFactor,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity BoilerSteam_Impl::getSizingFactor(bool returnIP) const {
-    OptionalDouble value = sizingFactor();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_Boiler_SteamFields::SizingFactor, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool BoilerSteam_Impl::isSizingFactorDefaulted() const {
@@ -258,24 +201,6 @@ namespace detail {
     return result;
   }
 
-  bool BoilerSteam_Impl::setMaximumOperatingPressure(const OSOptionalQuantity& maximumOperatingPressure) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumOperatingPressure.isSet()) {
-      value = getDoubleFromQuantity(OS_Boiler_SteamFields::MaximumOperatingPressure,maximumOperatingPressure.get());
-      if (value) {
-        setMaximumOperatingPressure(value);
-
-        result = true;
-      }
-    }
-    else {
-      setMaximumOperatingPressure(value);
-      result = true;
-    }
-    return result;
-  }
-
   void BoilerSteam_Impl::resetMaximumOperatingPressure() {
     bool result = setString(OS_Boiler_SteamFields::MaximumOperatingPressure, "");
     OS_ASSERT(result);
@@ -289,21 +214,6 @@ namespace detail {
     else {
       resetTheoreticalEfficiency();
       result = true;
-    }
-    return result;
-  }
-
-  bool BoilerSteam_Impl::setTheoreticalEfficiency(const OSOptionalQuantity& theoreticalEfficiency) {
-    bool result(false);
-    OptionalDouble value;
-    if (theoreticalEfficiency.isSet()) {
-      value = getDoubleFromQuantity(OS_Boiler_SteamFields::TheoreticalEfficiency,theoreticalEfficiency.get());
-      if (value) {
-        result = setTheoreticalEfficiency(value);
-      }
-    }
-    else {
-      result = setTheoreticalEfficiency(value);
     }
     return result;
   }
@@ -326,24 +236,6 @@ namespace detail {
     return result;
   }
 
-  bool BoilerSteam_Impl::setDesignOutletSteamTemperature(const OSOptionalQuantity& designOutletSteamTemperature) {
-    bool result(false);
-    OptionalDouble value;
-    if (designOutletSteamTemperature.isSet()) {
-      value = getDoubleFromQuantity(OS_Boiler_SteamFields::DesignOutletSteamTemperature,designOutletSteamTemperature.get());
-      if (value) {
-        setDesignOutletSteamTemperature(value);
-
-        result = true;
-      }
-    }
-    else {
-      setDesignOutletSteamTemperature(value);
-      result = true;
-    }
-    return result;
-  }
-
   void BoilerSteam_Impl::resetDesignOutletSteamTemperature() {
     bool result = setString(OS_Boiler_SteamFields::DesignOutletSteamTemperature, "");
     OS_ASSERT(result);
@@ -359,24 +251,6 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
-    return result;
-  }
-
-  bool BoilerSteam_Impl::setNominalCapacity(const OSOptionalQuantity& nominalCapacity) {
-    bool result(false);
-    OptionalDouble value;
-    if (nominalCapacity.isSet()) {
-      value = getDoubleFromQuantity(OS_Boiler_SteamFields::NominalCapacity,nominalCapacity.get());
-      if (value) {
-        setNominalCapacity(value);
-
-        result = true;
-      }
-    }
-    else {
-      setNominalCapacity(value);
-      result = true;
-    }
     return result;
   }
 
@@ -402,21 +276,6 @@ namespace detail {
     return result;
   }
 
-  bool BoilerSteam_Impl::setMinimumPartLoadRatio(const OSOptionalQuantity& minimumPartLoadRatio) {
-    bool result(false);
-    OptionalDouble value;
-    if (minimumPartLoadRatio.isSet()) {
-      value = getDoubleFromQuantity(OS_Boiler_SteamFields::MinimumPartLoadRatio,minimumPartLoadRatio.get());
-      if (value) {
-        result = setMinimumPartLoadRatio(value);
-      }
-    }
-    else {
-      result = setMinimumPartLoadRatio(value);
-    }
-    return result;
-  }
-
   void BoilerSteam_Impl::resetMinimumPartLoadRatio() {
     bool result = setString(OS_Boiler_SteamFields::MinimumPartLoadRatio, "");
     OS_ASSERT(result);
@@ -434,21 +293,6 @@ namespace detail {
     return result;
   }
 
-  bool BoilerSteam_Impl::setMaximumPartLoadRatio(const OSOptionalQuantity& maximumPartLoadRatio) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumPartLoadRatio.isSet()) {
-      value = getDoubleFromQuantity(OS_Boiler_SteamFields::MaximumPartLoadRatio,maximumPartLoadRatio.get());
-      if (value) {
-        result = setMaximumPartLoadRatio(value);
-      }
-    }
-    else {
-      result = setMaximumPartLoadRatio(value);
-    }
-    return result;
-  }
-
   void BoilerSteam_Impl::resetMaximumPartLoadRatio() {
     bool result = setString(OS_Boiler_SteamFields::MaximumPartLoadRatio, "");
     OS_ASSERT(result);
@@ -462,21 +306,6 @@ namespace detail {
     else {
       resetOptimumPartLoadRatio();
       result = true;
-    }
-    return result;
-  }
-
-  bool BoilerSteam_Impl::setOptimumPartLoadRatio(const OSOptionalQuantity& optimumPartLoadRatio) {
-    bool result(false);
-    OptionalDouble value;
-    if (optimumPartLoadRatio.isSet()) {
-      value = getDoubleFromQuantity(OS_Boiler_SteamFields::OptimumPartLoadRatio,optimumPartLoadRatio.get());
-      if (value) {
-        result = setOptimumPartLoadRatio(value);
-      }
-    }
-    else {
-      result = setOptimumPartLoadRatio(value);
     }
     return result;
   }
@@ -499,24 +328,6 @@ namespace detail {
     return result;
   }
 
-  bool BoilerSteam_Impl::setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(const OSOptionalQuantity& coefficient1ofFuelUseFunctionofPartLoadRatioCurve) {
-    bool result(false);
-    OptionalDouble value;
-    if (coefficient1ofFuelUseFunctionofPartLoadRatioCurve.isSet()) {
-      value = getDoubleFromQuantity(OS_Boiler_SteamFields::Coefficient1ofFuelUseFunctionofPartLoadRatioCurve,coefficient1ofFuelUseFunctionofPartLoadRatioCurve.get());
-      if (value) {
-        setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(value);
-
-        result = true;
-      }
-    }
-    else {
-      setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(value);
-      result = true;
-    }
-    return result;
-  }
-
   void BoilerSteam_Impl::resetCoefficient1ofFuelUseFunctionofPartLoadRatioCurve() {
     bool result = setString(OS_Boiler_SteamFields::Coefficient1ofFuelUseFunctionofPartLoadRatioCurve, "");
     OS_ASSERT(result);
@@ -532,24 +343,6 @@ namespace detail {
       result = true;
     }
     OS_ASSERT(result);
-    return result;
-  }
-
-  bool BoilerSteam_Impl::setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(const OSOptionalQuantity& coefficient2ofFuelUseFunctionofPartLoadRatioCurve) {
-    bool result(false);
-    OptionalDouble value;
-    if (coefficient2ofFuelUseFunctionofPartLoadRatioCurve.isSet()) {
-      value = getDoubleFromQuantity(OS_Boiler_SteamFields::Coefficient2ofFuelUseFunctionofPartLoadRatioCurve,coefficient2ofFuelUseFunctionofPartLoadRatioCurve.get());
-      if (value) {
-        setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(value);
-
-        result = true;
-      }
-    }
-    else {
-      setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(value);
-      result = true;
-    }
     return result;
   }
 
@@ -571,24 +364,6 @@ namespace detail {
     return result;
   }
 
-  bool BoilerSteam_Impl::setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(const OSOptionalQuantity& coefficient3ofFuelUseFunctionofPartLoadRatioCurve) {
-    bool result(false);
-    OptionalDouble value;
-    if (coefficient3ofFuelUseFunctionofPartLoadRatioCurve.isSet()) {
-      value = getDoubleFromQuantity(OS_Boiler_SteamFields::Coefficient3ofFuelUseFunctionofPartLoadRatioCurve,coefficient3ofFuelUseFunctionofPartLoadRatioCurve.get());
-      if (value) {
-        setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(value);
-
-        result = true;
-      }
-    }
-    else {
-      setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(value);
-      result = true;
-    }
-    return result;
-  }
-
   void BoilerSteam_Impl::resetCoefficient3ofFuelUseFunctionofPartLoadRatioCurve() {
     bool result = setString(OS_Boiler_SteamFields::Coefficient3ofFuelUseFunctionofPartLoadRatioCurve, "");
     OS_ASSERT(result);
@@ -599,14 +374,6 @@ namespace detail {
     return result;
   }
 
-  bool BoilerSteam_Impl::setSizingFactor(const Quantity& sizingFactor) {
-    OptionalDouble value = getDoubleFromQuantity(OS_Boiler_SteamFields::SizingFactor,sizingFactor);
-    if (!value) {
-      return false;
-    }
-    return setSizingFactor(value.get());
-  }
-
   void BoilerSteam_Impl::resetSizingFactor() {
     bool result = setString(OS_Boiler_SteamFields::SizingFactor, "");
     OS_ASSERT(result);
@@ -614,94 +381,6 @@ namespace detail {
 
   std::vector<std::string> BoilerSteam_Impl::fuelTypeValues() const {
     return BoilerSteam::fuelTypeValues();
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::maximumOperatingPressure_SI() const {
-    return getMaximumOperatingPressure(false);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::maximumOperatingPressure_IP() const {
-    return getMaximumOperatingPressure(true);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::theoreticalEfficiency_SI() const {
-    return getTheoreticalEfficiency(false);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::theoreticalEfficiency_IP() const {
-    return getTheoreticalEfficiency(true);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::designOutletSteamTemperature_SI() const {
-    return getDesignOutletSteamTemperature(false);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::designOutletSteamTemperature_IP() const {
-    return getDesignOutletSteamTemperature(true);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::nominalCapacity_SI() const {
-    return getNominalCapacity(false);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::nominalCapacity_IP() const {
-    return getNominalCapacity(true);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::minimumPartLoadRatio_SI() const {
-    return getMinimumPartLoadRatio(false);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::minimumPartLoadRatio_IP() const {
-    return getMinimumPartLoadRatio(true);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::maximumPartLoadRatio_SI() const {
-    return getMaximumPartLoadRatio(false);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::maximumPartLoadRatio_IP() const {
-    return getMaximumPartLoadRatio(true);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::optimumPartLoadRatio_SI() const {
-    return getOptimumPartLoadRatio(false);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::optimumPartLoadRatio_IP() const {
-    return getOptimumPartLoadRatio(true);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::coefficient1ofFuelUseFunctionofPartLoadRatioCurve_SI() const {
-    return getCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(false);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::coefficient1ofFuelUseFunctionofPartLoadRatioCurve_IP() const {
-    return getCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(true);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::coefficient2ofFuelUseFunctionofPartLoadRatioCurve_SI() const {
-    return getCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(false);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::coefficient2ofFuelUseFunctionofPartLoadRatioCurve_IP() const {
-    return getCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(true);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::coefficient3ofFuelUseFunctionofPartLoadRatioCurve_SI() const {
-    return getCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(false);
-  }
-
-  openstudio::OSOptionalQuantity BoilerSteam_Impl::coefficient3ofFuelUseFunctionofPartLoadRatioCurve_IP() const {
-    return getCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(true);
-  }
-
-  openstudio::Quantity BoilerSteam_Impl::sizingFactor_SI() const {
-    return getSizingFactor(false);
-  }
-
-  openstudio::Quantity BoilerSteam_Impl::sizingFactor_IP() const {
-    return getSizingFactor(true);
   }
 
   unsigned BoilerSteam_Impl::inletPort() const
@@ -800,32 +479,16 @@ boost::optional<double> BoilerSteam::maximumOperatingPressure() const {
   return getImpl<detail::BoilerSteam_Impl>()->maximumOperatingPressure();
 }
 
-OSOptionalQuantity BoilerSteam::getMaximumOperatingPressure(bool returnIP) const {
-  return getImpl<detail::BoilerSteam_Impl>()->getMaximumOperatingPressure(returnIP);
-}
-
 boost::optional<double> BoilerSteam::theoreticalEfficiency() const {
   return getImpl<detail::BoilerSteam_Impl>()->theoreticalEfficiency();
-}
-
-OSOptionalQuantity BoilerSteam::getTheoreticalEfficiency(bool returnIP) const {
-  return getImpl<detail::BoilerSteam_Impl>()->getTheoreticalEfficiency(returnIP);
 }
 
 boost::optional<double> BoilerSteam::designOutletSteamTemperature() const {
   return getImpl<detail::BoilerSteam_Impl>()->designOutletSteamTemperature();
 }
 
-OSOptionalQuantity BoilerSteam::getDesignOutletSteamTemperature(bool returnIP) const {
-  return getImpl<detail::BoilerSteam_Impl>()->getDesignOutletSteamTemperature(returnIP);
-}
-
 boost::optional<double> BoilerSteam::nominalCapacity() const {
   return getImpl<detail::BoilerSteam_Impl>()->nominalCapacity();
-}
-
-OSOptionalQuantity BoilerSteam::getNominalCapacity(bool returnIP) const {
-  return getImpl<detail::BoilerSteam_Impl>()->getNominalCapacity(returnIP);
 }
 
 bool BoilerSteam::isNominalCapacityAutosized() const {
@@ -836,56 +499,28 @@ boost::optional<double> BoilerSteam::minimumPartLoadRatio() const {
   return getImpl<detail::BoilerSteam_Impl>()->minimumPartLoadRatio();
 }
 
-OSOptionalQuantity BoilerSteam::getMinimumPartLoadRatio(bool returnIP) const {
-  return getImpl<detail::BoilerSteam_Impl>()->getMinimumPartLoadRatio(returnIP);
-}
-
 boost::optional<double> BoilerSteam::maximumPartLoadRatio() const {
   return getImpl<detail::BoilerSteam_Impl>()->maximumPartLoadRatio();
-}
-
-OSOptionalQuantity BoilerSteam::getMaximumPartLoadRatio(bool returnIP) const {
-  return getImpl<detail::BoilerSteam_Impl>()->getMaximumPartLoadRatio(returnIP);
 }
 
 boost::optional<double> BoilerSteam::optimumPartLoadRatio() const {
   return getImpl<detail::BoilerSteam_Impl>()->optimumPartLoadRatio();
 }
 
-OSOptionalQuantity BoilerSteam::getOptimumPartLoadRatio(bool returnIP) const {
-  return getImpl<detail::BoilerSteam_Impl>()->getOptimumPartLoadRatio(returnIP);
-}
-
 boost::optional<double> BoilerSteam::coefficient1ofFuelUseFunctionofPartLoadRatioCurve() const {
   return getImpl<detail::BoilerSteam_Impl>()->coefficient1ofFuelUseFunctionofPartLoadRatioCurve();
-}
-
-OSOptionalQuantity BoilerSteam::getCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP) const {
-  return getImpl<detail::BoilerSteam_Impl>()->getCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(returnIP);
 }
 
 boost::optional<double> BoilerSteam::coefficient2ofFuelUseFunctionofPartLoadRatioCurve() const {
   return getImpl<detail::BoilerSteam_Impl>()->coefficient2ofFuelUseFunctionofPartLoadRatioCurve();
 }
 
-OSOptionalQuantity BoilerSteam::getCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP) const {
-  return getImpl<detail::BoilerSteam_Impl>()->getCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(returnIP);
-}
-
 boost::optional<double> BoilerSteam::coefficient3ofFuelUseFunctionofPartLoadRatioCurve() const {
   return getImpl<detail::BoilerSteam_Impl>()->coefficient3ofFuelUseFunctionofPartLoadRatioCurve();
 }
 
-OSOptionalQuantity BoilerSteam::getCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP) const {
-  return getImpl<detail::BoilerSteam_Impl>()->getCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(returnIP);
-}
-
 double BoilerSteam::sizingFactor() const {
   return getImpl<detail::BoilerSteam_Impl>()->sizingFactor();
-}
-
-Quantity BoilerSteam::getSizingFactor(bool returnIP) const {
-  return getImpl<detail::BoilerSteam_Impl>()->getSizingFactor(returnIP);
 }
 
 bool BoilerSteam::isSizingFactorDefaulted() const {
@@ -900,19 +535,11 @@ bool BoilerSteam::setMaximumOperatingPressure(double maximumOperatingPressure) {
   return getImpl<detail::BoilerSteam_Impl>()->setMaximumOperatingPressure(maximumOperatingPressure);
 }
 
-bool BoilerSteam::setMaximumOperatingPressure(const Quantity& maximumOperatingPressure) {
-  return getImpl<detail::BoilerSteam_Impl>()->setMaximumOperatingPressure(maximumOperatingPressure);
-}
-
 void BoilerSteam::resetMaximumOperatingPressure() {
   getImpl<detail::BoilerSteam_Impl>()->resetMaximumOperatingPressure();
 }
 
 bool BoilerSteam::setTheoreticalEfficiency(double theoreticalEfficiency) {
-  return getImpl<detail::BoilerSteam_Impl>()->setTheoreticalEfficiency(theoreticalEfficiency);
-}
-
-bool BoilerSteam::setTheoreticalEfficiency(const Quantity& theoreticalEfficiency) {
   return getImpl<detail::BoilerSteam_Impl>()->setTheoreticalEfficiency(theoreticalEfficiency);
 }
 
@@ -924,19 +551,11 @@ bool BoilerSteam::setDesignOutletSteamTemperature(double designOutletSteamTemper
   return getImpl<detail::BoilerSteam_Impl>()->setDesignOutletSteamTemperature(designOutletSteamTemperature);
 }
 
-bool BoilerSteam::setDesignOutletSteamTemperature(const Quantity& designOutletSteamTemperature) {
-  return getImpl<detail::BoilerSteam_Impl>()->setDesignOutletSteamTemperature(designOutletSteamTemperature);
-}
-
 void BoilerSteam::resetDesignOutletSteamTemperature() {
   getImpl<detail::BoilerSteam_Impl>()->resetDesignOutletSteamTemperature();
 }
 
 bool BoilerSteam::setNominalCapacity(double nominalCapacity) {
-  return getImpl<detail::BoilerSteam_Impl>()->setNominalCapacity(nominalCapacity);
-}
-
-bool BoilerSteam::setNominalCapacity(const Quantity& nominalCapacity) {
   return getImpl<detail::BoilerSteam_Impl>()->setNominalCapacity(nominalCapacity);
 }
 
@@ -952,19 +571,11 @@ bool BoilerSteam::setMinimumPartLoadRatio(double minimumPartLoadRatio) {
   return getImpl<detail::BoilerSteam_Impl>()->setMinimumPartLoadRatio(minimumPartLoadRatio);
 }
 
-bool BoilerSteam::setMinimumPartLoadRatio(const Quantity& minimumPartLoadRatio) {
-  return getImpl<detail::BoilerSteam_Impl>()->setMinimumPartLoadRatio(minimumPartLoadRatio);
-}
-
 void BoilerSteam::resetMinimumPartLoadRatio() {
   getImpl<detail::BoilerSteam_Impl>()->resetMinimumPartLoadRatio();
 }
 
 bool BoilerSteam::setMaximumPartLoadRatio(double maximumPartLoadRatio) {
-  return getImpl<detail::BoilerSteam_Impl>()->setMaximumPartLoadRatio(maximumPartLoadRatio);
-}
-
-bool BoilerSteam::setMaximumPartLoadRatio(const Quantity& maximumPartLoadRatio) {
   return getImpl<detail::BoilerSteam_Impl>()->setMaximumPartLoadRatio(maximumPartLoadRatio);
 }
 
@@ -976,19 +587,11 @@ bool BoilerSteam::setOptimumPartLoadRatio(double optimumPartLoadRatio) {
   return getImpl<detail::BoilerSteam_Impl>()->setOptimumPartLoadRatio(optimumPartLoadRatio);
 }
 
-bool BoilerSteam::setOptimumPartLoadRatio(const Quantity& optimumPartLoadRatio) {
-  return getImpl<detail::BoilerSteam_Impl>()->setOptimumPartLoadRatio(optimumPartLoadRatio);
-}
-
 void BoilerSteam::resetOptimumPartLoadRatio() {
   getImpl<detail::BoilerSteam_Impl>()->resetOptimumPartLoadRatio();
 }
 
 bool BoilerSteam::setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(double coefficient1ofFuelUseFunctionofPartLoadRatioCurve) {
-  return getImpl<detail::BoilerSteam_Impl>()->setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
-}
-
-bool BoilerSteam::setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(const Quantity& coefficient1ofFuelUseFunctionofPartLoadRatioCurve) {
   return getImpl<detail::BoilerSteam_Impl>()->setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
 }
 
@@ -1000,10 +603,6 @@ bool BoilerSteam::setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(double co
   return getImpl<detail::BoilerSteam_Impl>()->setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
 }
 
-bool BoilerSteam::setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(const Quantity& coefficient2ofFuelUseFunctionofPartLoadRatioCurve) {
-  return getImpl<detail::BoilerSteam_Impl>()->setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
-}
-
 void BoilerSteam::resetCoefficient2ofFuelUseFunctionofPartLoadRatioCurve() {
   getImpl<detail::BoilerSteam_Impl>()->resetCoefficient2ofFuelUseFunctionofPartLoadRatioCurve();
 }
@@ -1012,19 +611,11 @@ bool BoilerSteam::setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(double co
   return getImpl<detail::BoilerSteam_Impl>()->setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
 }
 
-bool BoilerSteam::setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(const Quantity& coefficient3ofFuelUseFunctionofPartLoadRatioCurve) {
-  return getImpl<detail::BoilerSteam_Impl>()->setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
-}
-
 void BoilerSteam::resetCoefficient3ofFuelUseFunctionofPartLoadRatioCurve() {
   getImpl<detail::BoilerSteam_Impl>()->resetCoefficient3ofFuelUseFunctionofPartLoadRatioCurve();
 }
 
 bool BoilerSteam::setSizingFactor(double sizingFactor) {
-  return getImpl<detail::BoilerSteam_Impl>()->setSizingFactor(sizingFactor);
-}
-
-bool BoilerSteam::setSizingFactor(const Quantity& sizingFactor) {
   return getImpl<detail::BoilerSteam_Impl>()->setSizingFactor(sizingFactor);
 }
 

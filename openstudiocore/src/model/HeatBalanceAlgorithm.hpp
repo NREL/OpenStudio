@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -79,19 +77,13 @@ class MODEL_API HeatBalanceAlgorithm : public ModelObject {
 
   double surfaceTemperatureUpperLimit() const;
 
-  Quantity getSurfaceTemperatureUpperLimit(bool returnIP=false) const;
-
   bool isSurfaceTemperatureUpperLimitDefaulted() const;
 
   double minimumSurfaceConvectionHeatTransferCoefficientValue() const;
 
-  Quantity getMinimumSurfaceConvectionHeatTransferCoefficientValue(bool returnIP=false) const;
-
   bool isMinimumSurfaceConvectionHeatTransferCoefficientValueDefaulted() const;
 
   double maximumSurfaceConvectionHeatTransferCoefficientValue() const;
-
-  Quantity getMaximumSurfaceConvectionHeatTransferCoefficientValue(bool returnIP=false) const;
 
   bool isMaximumSurfaceConvectionHeatTransferCoefficientValueDefaulted() const;
 
@@ -105,19 +97,13 @@ class MODEL_API HeatBalanceAlgorithm : public ModelObject {
 
   bool setSurfaceTemperatureUpperLimit(double surfaceTemperatureUpperLimit);
 
-  bool setSurfaceTemperatureUpperLimit(const Quantity& surfaceTemperatureUpperLimit);
-
   void resetSurfaceTemperatureUpperLimit();
 
   bool setMinimumSurfaceConvectionHeatTransferCoefficientValue(double minimumSurfaceConvectionHeatTransferCoefficientValue);
 
-  bool setMinimumSurfaceConvectionHeatTransferCoefficientValue(const Quantity& minimumSurfaceConvectionHeatTransferCoefficientValue);
-
   void resetMinimumSurfaceConvectionHeatTransferCoefficientValue();
 
   bool setMaximumSurfaceConvectionHeatTransferCoefficientValue(double maximumSurfaceConvectionHeatTransferCoefficientValue);
-
-  bool setMaximumSurfaceConvectionHeatTransferCoefficientValue(const Quantity& maximumSurfaceConvectionHeatTransferCoefficientValue);
 
   void resetMaximumSurfaceConvectionHeatTransferCoefficientValue();
 
@@ -163,4 +149,3 @@ typedef std::vector<HeatBalanceAlgorithm> HeatBalanceAlgorithmVector;
 } // openstudio
 
 #endif // MODEL_HEATBALANCEALGORITHM_HPP
-

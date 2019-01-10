@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,7 +39,7 @@ TEST(System, IdleTime)
   // system idle time should not be unset for platforms it is implemented on
   boost::optional<Time> idleTime = System::systemIdleTime();
 
-  #ifdef _WINDOWS
+  #if (defined (_WIN32) || defined (_WIN64))
     EXPECT_TRUE(idleTime);
   #else
 
@@ -53,5 +53,10 @@ TEST(System, ExceptionHandling)
   System::testExceptions3();
   System::testExceptions4();
   System::testExceptions5();
+}
 
+TEST(System, MSleep)
+{
+  // make sure this doesn't timeout
+  System::msleep(10);
 }

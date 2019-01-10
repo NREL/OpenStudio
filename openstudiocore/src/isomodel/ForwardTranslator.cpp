@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -158,8 +158,6 @@
 #include "../model/ZoneHVACWaterToAirHeatPump.hpp"
 #include "../model/ZoneHVACWaterToAirHeatPump_Impl.hpp"
 
-#include <QElapsedTimer>
-
 #include <math.h>
 
 namespace openstudio {
@@ -181,9 +179,6 @@ namespace isomodel {
 
     /// \todo this should probably be a clone in case the uniqueModelObject calls manipulate the model?
     openstudio::model::Model model = t_model;
-
-    QElapsedTimer et;
-    et.start();
 
 
     LOG(Debug, "...Setting() Defaults");
@@ -341,8 +336,6 @@ namespace isomodel {
 
     LOG(Debug, "...Parsing() Model");
 
-    LOG(Debug, et.restart() << "ms setting defaults");
-
     LOG(Debug, "*****************************");
     LOG(Debug, "  Parsing Model");
     LOG(Debug, "*****************************");
@@ -411,7 +404,6 @@ namespace isomodel {
     // get the total nominal population;
     LOG(Debug, "Nominal Number of people = " << number_of_people);
 
-    LOG(Debug, et.restart() << "ms parsing model");
     LOG(Debug, "*****************************");
     LOG(Debug, "  Analyzing Construction");
     LOG(Debug, "*****************************");
@@ -794,8 +786,6 @@ namespace isomodel {
 
     }
 
-    LOG(Debug, et.restart() << "ms analyzing construction");
-
     LOG(Debug, "*******************************");
     LOG(Debug, " Calculating Schedule Averages");
     LOG(Debug, "*******************************");
@@ -870,7 +860,6 @@ namespace isomodel {
     double frac_year_unocc = unoccupied_hours/8760.0;
 
     LOG(Debug, "Fraction of year occupied = " << frac_year_occ << " and Fraction of year unoccupied = " << frac_year_unocc);
-    LOG(Debug, et.restart() << "ms calculating scheule averages");
 
     LOG(Debug, "...Calculating() Electric and Gas Loads");
     LOG(Debug, "*****************************");
@@ -1055,8 +1044,6 @@ namespace isomodel {
       LOG(Debug, "Warning: Luminaires defined in OSM but not currently translated into ISO");
     }
 
-
-    LOG(Debug, et.restart() << "ms calculating gas and electric loads");
     LOG(Debug, "...Calculating() Thermostats");
     LOG(Debug, "*****************************");
     LOG(Debug, "  Calculating Thermostats");
@@ -1160,7 +1147,6 @@ namespace isomodel {
       daylight_sensors=1;
     }
 
-    LOG(Debug, et.restart() << "ms calculating thermostats");
     LOG(Debug, "...Parsing() Geometry");
 
     LOG(Debug, "*****************************");
@@ -1435,7 +1421,6 @@ namespace isomodel {
     double interior_heat_capacity = (interior_HC_sum +internal_mass_HC_sum)/building.floorArea();
     LOG(Debug, "Interior  Heat Capacity = " << interior_heat_capacity << " J/K/m2 based on floor area");
 
-    LOG(Debug, et.restart() << "ms parsing geometry");
     LOG(Debug, "...Calculating() Infiltration");
     LOG(Debug, "*****************************");
     LOG(Debug, "   Calculating Infiltration");
@@ -1556,7 +1541,6 @@ namespace isomodel {
     }
 
     LOG(Debug, "Infiltration rate set to " << infiltration_rate << " m3/h/m2 @ 75 Pa");
-    LOG(Debug, et.restart() << "ms calculating infiltration");
 
     LOG(Debug, "...Parsing() HVAC Info");
     LOG(Debug, "*****************************");
@@ -2101,8 +2085,6 @@ namespace isomodel {
     LOG(Debug, "DHW: Fuel Type = " << dhw_fuel_type << ", System Efficiency = " << dhw_system_efficiency << " Distribution Efficiency = " << dhw_distribution_efficiency << ", Demand = " << dhw_demand << " m3/yr");
 
     // create output file and start writing out;
-
-    LOG(Debug, et.restart() << "ms analyzing HVAC");
 
     // get the current system clock time;
     openstudio::Time time;

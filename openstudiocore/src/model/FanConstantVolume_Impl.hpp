@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,15 +36,12 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class AirflowNetworkFan;
 
 namespace detail {
 
   class MODEL_API FanConstantVolume_Impl : public StraightComponent_Impl {
 
-    // TODO: @macumber, isn't this deprecated now?!
-    Q_PROPERTY( boost::optional<openstudio::model::ModelObject> availabilitySchedule
-                READ availabilityScheduleAsModelObject
-                WRITE setAvailibiltyScheduleAsModelObject);
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -125,13 +122,9 @@ namespace detail {
 
     boost::optional<double> maximumFlowRate() const;
 
-    OSOptionalQuantity getMaximumFlowRate(bool returnIP=false) const;
-
     bool isMaximumFlowRateAutosized() const;
 
     bool setMaximumFlowRate(boost::optional<double> maximumFlowRate);
-
-    bool setMaximumFlowRate(const OSOptionalQuantity& maximumFlowRate);
 
     void resetMaximumFlowRate();
 
@@ -175,4 +168,3 @@ namespace detail {
 } // openstudio
 
 #endif // MODEL_FANCONSTANTVOLUME_IMPL_HPP
-

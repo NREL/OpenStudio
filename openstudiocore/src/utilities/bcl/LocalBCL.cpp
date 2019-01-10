@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -29,7 +29,6 @@
 
 #include "LocalBCL.hpp"
 #include "RemoteBCL.hpp"
-#include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 #include "../time/DateTime.hpp"
 #include "../core/PathHelpers.hpp"
@@ -39,10 +38,6 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
-#include <QIcon>
-#include <QInputDialog>
-#include <QSettings>
-
 namespace openstudio{
 
   LocalBCL::LocalBCL(const path& libraryPath):
@@ -51,8 +46,9 @@ namespace openstudio{
     m_dbVersion("1.3"),
     m_connectionOpen(false)
   {
+    //TODO: QT - Separation - Move
     //Make sure a QApplication exists
-    openstudio::Application::instance().application(false);
+    //openstudio::Application::instance().application(false);
 
     //Check for BCL directory
     if (!openstudio::filesystem::is_directory(m_libraryPath) || !openstudio::filesystem::exists(m_libraryPath)) {
@@ -134,10 +130,8 @@ namespace openstudio{
   {
     std::shared_ptr<LocalBCL> &ptr = instanceInternal();
     if (!ptr) {
-      QSettings settings("OpenStudio", "LocalBCL");
       // DLM: might want to put this somewhere a little more hidden
-      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(
-          toPath(settings.value("libraryPath", toQString(openstudio::filesystem::home_path() / toPath("BCL"))).toString())));
+      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(openstudio::filesystem::home_path() / toPath("BCL")));
     }
     return *ptr;
   }
@@ -1488,69 +1482,6 @@ namespace openstudio{
     return s;
   }
 
-
-  bool LocalBCL::prodAuthKeyUserPrompt(QWidget* parent)
-  {
-    // make sure application is initialized
-    Application::instance().application(false);
-
-    QInputDialog inputDlg(parent);
-    inputDlg.setInputMode(QInputDialog::TextInput);
-    inputDlg.setLabelText("BCL Auth Key:                                            ");
-    inputDlg.setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
-    inputDlg.setWindowTitle("Enter Your BCL Auth Key");
-    if (Application::instance().isDefaultInstance())
-    {
-      QIcon icon = QIcon(":/images/os_16.png");
-      icon.addPixmap(QPixmap(":/images/os_32.png"));
-      icon.addPixmap(QPixmap(":/images/os_48.png"));
-      icon.addPixmap(QPixmap(":/images/os_64.png"));
-      icon.addPixmap(QPixmap(":/images/os_128.png"));
-      icon.addPixmap(QPixmap(":/images/os_256.png"));
-      inputDlg.setWindowIcon(icon);
-    }
-    bool result = inputDlg.exec();
-    QString text = inputDlg.textValue();
-
-    if (result && !text.isEmpty()){
-      std::string authKey = toString(text);
-      result = setProdAuthKey(authKey);
-    }
-
-    return result;
-  }
-
-  bool LocalBCL::devAuthKeyUserPrompt(QWidget* parent)
-  {
-    // make sure application is initialized
-    openstudio::Application::instance().application(false);
-
-    QInputDialog inputDlg(parent);
-    inputDlg.setInputMode(QInputDialog::TextInput);
-    inputDlg.setLabelText("BCL Dev Auth Key:                                            ");
-    inputDlg.setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
-    inputDlg.setWindowTitle("Enter Your BCL Dev Auth Key");
-    if (Application::instance().isDefaultInstance())
-    {
-      QIcon icon = QIcon(":/images/os_16.png");
-      icon.addPixmap(QPixmap(":/images/os_32.png"));
-      icon.addPixmap(QPixmap(":/images/os_48.png"));
-      icon.addPixmap(QPixmap(":/images/os_64.png"));
-      icon.addPixmap(QPixmap(":/images/os_128.png"));
-      icon.addPixmap(QPixmap(":/images/os_256.png"));
-      inputDlg.setWindowIcon(icon);
-    }
-    bool result = inputDlg.exec();
-    QString text = inputDlg.textValue();
-
-    if (result && !text.isEmpty()){
-      std::string devAuthKey = toString(text);
-      result = setDevAuthKey(devAuthKey);
-    }
-
-    return result;
-  }
-
   std::string LocalBCL::prodAuthKey() const
   {
     return m_prodAuthKey;
@@ -1613,53 +1544,5 @@ namespace openstudio{
   {
     return m_libraryPath;
   }
-
-  bool LocalBCL::setLibraryPath(const path& libraryPath)
-  {
-
-    // TODO: JM 2018-11-14 Can't we just call this? then write the settings
-    // &LocalBCL::instance(libraryPath):
-
-    // cleanup old staggling one if it exists
-    close();
-
-    const auto path = libraryPath.lexically_normal();
-    
-    openstudio::filesystem::create_directories(path);
-    if (!openstudio::filesystem::is_directory(path))
-    {
-      const bool success = openstudio::filesystem::create_directories(path);
-      if (!success) return false;
-    }
-    m_libraryPath = path;
-
-    m_sqliteFilePath = m_libraryPath / m_dbName;
-    m_sqliteFilename = toString(m_sqliteFilePath.make_preferred().native());
-
-    //Check for local database
-    bool initschema = !openstudio::filesystem::exists(m_sqliteFilePath);
-
-    // Open the database
-    int success = sqlite3_open_v2(m_sqliteFilename.c_str(), &m_db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_EXCLUSIVE, nullptr);
-    if (success != SQLITE_OK) {
-      LOG(Error, "Unable to open connection for LocalBCL at '" << m_sqliteFilename << "'.");
-      return false;
-    } else {
-      m_connectionOpen = true;
-    }
-
-    // If need to create it, and it didn't go well, throw
-    if (initschema && !initializeLocalDb()) {
-      LOG(Error, "Unable to initialize Local Database");
-    }
-
-    // TODO: JM 2018-11-14 In old implementation using Qt, there's no update call!
-
-    QSettings settings("OpenStudio", "LocalBCL");
-    settings.setValue("libraryPath", toQString(m_libraryPath));
-
-    return true;
-  }
-
 
 } // openstudio

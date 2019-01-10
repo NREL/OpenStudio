@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,96 +46,10 @@
 #include "../Model_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
-#include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/data/EndUses.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;
-
-/*
-TEST_F(ModelFixture, FacilityTest) {
-  Workspace workspace(idfFile);
-
-  // translate energyplus simulation to Facility model
-  energyplus::ReverseTranslator reverseTranslator(workspace);
-  OptionalModel optionalModel = reverseTranslator.convert();
-  ASSERT_TRUE(optionalModel)<< "OptModel not reverse translated - Facility";
-  Model model(*optionalModel);
-
-  Facility facility = model.getUniqueModelObject<Facility>();
-
-  EXPECT_FALSE(facility.getAttribute("notAnAttribute"));
-  EXPECT_FALSE(facility.isSettableAttribute("notAnAttribute"));
-  EXPECT_FALSE(facility.isOptionalAttribute("notAnAttribute"));
-
-  // cannot get results before sql file is loaded
-  EXPECT_FALSE(facility.totalSiteEnergy());
-  EXPECT_FALSE(facility.isSettableAttribute("totalSiteEnergy"));
-  EXPECT_TRUE(facility.isOptionalAttribute("totalSiteEnergy"));
-  EXPECT_FALSE(facility.getAttribute("totalSiteEnergy"));
-  EXPECT_FALSE(facility.isSettableAttribute("endUsesAttribute"));
-  EXPECT_TRUE(facility.isOptionalAttribute("endUsesAttribute"));
-  EXPECT_FALSE(facility.getAttribute("endUsesAttribute"));
-
-  // check getters
-  openstudio::path sqlPath = resourcesPath() / toPath("energyplus/5ZoneAirCooled/eplusout.sql");
-  SqlFile sqlFile(sqlPath);
-  ASSERT_TRUE(sqlFile.connectionOpen()) << "sqlFile connection not opened";
-  model.setSqlFile(sqlFile);
-
-  // get results
-  OptionalDouble totalSiteEnergy = facility.totalSiteEnergy();
-  ASSERT_TRUE(totalSiteEnergy);
-  EXPECT_TRUE(*totalSiteEnergy > 0);
-
-  OptionalDouble netSiteEnergy = facility.netSiteEnergy();
-  ASSERT_TRUE(netSiteEnergy);
-  EXPECT_TRUE(*netSiteEnergy > 0);
-
-  OptionalDouble totalSourceEnergy = facility.totalSourceEnergy();
-  ASSERT_TRUE(totalSourceEnergy);
-  EXPECT_TRUE(*totalSourceEnergy > 0);
-
-  OptionalDouble netSourceEnergy = facility.netSourceEnergy();
-  ASSERT_TRUE(netSourceEnergy);
-  EXPECT_TRUE(*netSourceEnergy > 0);
-
-  boost::optional<EndUses> endUses = facility.endUses();
-  ASSERT_TRUE(endUses);
-  EXPECT_NEAR(*totalSiteEnergy, endUses->getEndUseByFuelType(EndUseFuelType::Electricity) +
-                                endUses->getEndUseByFuelType(EndUseFuelType::Gas) +
-                                endUses->getEndUseByFuelType(EndUseFuelType::OtherFuel) +
-                                endUses->getEndUseByFuelType(EndUseFuelType::DistrictCooling) +
-                                endUses->getEndUseByFuelType(EndUseFuelType::DistrictHeating), 0.01*(*totalSiteEnergy));
-
-  EXPECT_TRUE(*totalSiteEnergy >= *netSiteEnergy);
-  EXPECT_TRUE(*totalSourceEnergy >= *netSourceEnergy);
-  EXPECT_TRUE(*totalSourceEnergy >= *totalSiteEnergy);
-  EXPECT_TRUE(*netSourceEnergy >= *netSiteEnergy);
-
-  // no utility data in model
-  OptionalDouble annualElectricTotalCost = facility.annualElectricTotalCost();
-  EXPECT_FALSE(annualElectricTotalCost);
-
-  // get results using attributes
-  ASSERT_TRUE(facility.getAttribute("totalSiteEnergy"));
-  Attribute attribute = facility.getAttribute("totalSiteEnergy").get();
-  EXPECT_EQ(AttributeValueType::Double, attribute.valueType().value());
-  EXPECT_EQ(*totalSiteEnergy, attribute.valueAsDouble());
-
-  ASSERT_TRUE(facility.getAttribute("netSiteEnergy"));
-  attribute = facility.getAttribute("netSiteEnergy").get();
-  EXPECT_EQ(AttributeValueType::Double, attribute.valueType().value());
-  EXPECT_EQ(*netSiteEnergy, attribute.valueAsDouble());
-
-  ASSERT_TRUE(facility.getAttribute("endUsesAttribute"));
-  attribute = facility.getAttribute("endUsesAttribute").get();
-  ASSERT_TRUE(EndUses::fromAttribute(attribute));
-
-  // no utility data in model
-  EXPECT_FALSE(facility.getAttribute("annualElectricTotalCost"));
-}
-*/
 
 /*
 TEST_F(ModelFixture, Facility_EconomicsTest) {

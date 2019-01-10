@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,9 +38,6 @@
 #include "../PlantLoop.hpp"
 #include "../Schedule.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -51,11 +48,100 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_DefaultConstructor)
   ASSERT_EXIT (
   {
     Model m;
-    SetpointManagerOutdoorAirReset testObject(m);
+    SetpointManagerOutdoorAirReset spm(m);
 
     exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
+}
+
+TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_GettersSetters)
+{
+  Model m;
+  SetpointManagerOutdoorAirReset spm(m);
+
+  // Control Variable:  String
+  // Check Idd default: "Temperature"
+  EXPECT_EQ("Temperature", spm.controlVariable());
+  // There aren't any other choices possible to test... Temperature is the only one
+  EXPECT_TRUE(spm.setControlVariable("Temperature"));
+
+
+  // Setpoint at Outdoor Low Temperature:  Double
+  // Defaults in Ctor
+  EXPECT_EQ(22.0 , spm.setpointatOutdoorLowTemperature());
+  EXPECT_TRUE(spm.setSetpointatOutdoorLowTemperature(10.03));
+  EXPECT_EQ(10.03, spm.setpointatOutdoorLowTemperature());
+
+
+  // Outdoor Low Temperature:  Double
+  // Defaults in Ctor
+  EXPECT_EQ(10.0, spm.outdoorLowTemperature());
+  EXPECT_TRUE(spm.setOutdoorLowTemperature(12.03));
+  EXPECT_EQ(12.03, spm.outdoorLowTemperature());
+
+
+  // Setpoint at Outdoor High Temperature:  Double
+  // Defaults in Ctor
+  EXPECT_EQ(10.00, spm.setpointatOutdoorHighTemperature());
+  EXPECT_TRUE(spm.setSetpointatOutdoorHighTemperature(14.03));
+  EXPECT_EQ(14.03, spm.setpointatOutdoorHighTemperature());
+
+
+  // Outdoor High Temperature:  Double
+  // No Default
+  EXPECT_EQ(24.0, spm.outdoorHighTemperature());
+  EXPECT_TRUE(spm.setOutdoorHighTemperature(25.03));
+  EXPECT_EQ(25.03, spm.outdoorHighTemperature());
+
+
+  // Setpoint Node or NodeList Name: Optional Object
+  // see addToNode
+
+  // Schedule Name: Optional Object
+  // No Default
+  EXPECT_FALSE(spm.schedule());
+  Schedule sch(m.alwaysOnDiscreteSchedule());
+  EXPECT_TRUE(spm.setSchedule(sch));
+  ASSERT_TRUE(spm.schedule());
+  EXPECT_EQ(sch, spm.schedule().get());
+
+
+  // Setpoint at Outdoor Low Temperature 2: Optional Double
+  // No Default
+  EXPECT_TRUE(spm.setSetpointatOutdoorLowTemperature2(10.03));
+  ASSERT_TRUE(spm.setpointatOutdoorLowTemperature2());
+  EXPECT_EQ(10.03, spm.setpointatOutdoorLowTemperature2().get());
+  spm.resetSetpointatOutdoorLowTemperature2();
+  EXPECT_FALSE(spm.setpointatOutdoorLowTemperature2());
+
+
+  // Outdoor Low Temperature 2: Optional Double
+  // No Default
+  EXPECT_TRUE(spm.setOutdoorLowTemperature2(10.03));
+  ASSERT_TRUE(spm.outdoorLowTemperature2());
+  EXPECT_EQ(10.03, spm.outdoorLowTemperature2().get());
+  spm.resetOutdoorLowTemperature2();
+  EXPECT_FALSE(spm.outdoorLowTemperature2());
+
+
+  // Setpoint at Outdoor High Temperature 2: Optional Double
+  // No Default
+  EXPECT_TRUE(spm.setSetpointatOutdoorHighTemperature2(10.03));
+  ASSERT_TRUE(spm.setpointatOutdoorHighTemperature2());
+  EXPECT_EQ(10.03, spm.setpointatOutdoorHighTemperature2().get());
+  spm.resetSetpointatOutdoorHighTemperature2();
+  EXPECT_FALSE(spm.setpointatOutdoorHighTemperature2());
+
+
+  // Outdoor High Temperature 2: Optional Double
+  // No Default
+  EXPECT_TRUE(spm.setOutdoorHighTemperature2(10.03));
+  ASSERT_TRUE(spm.outdoorHighTemperature2());
+  EXPECT_EQ(10.03, spm.outdoorHighTemperature2().get());
+  spm.resetOutdoorHighTemperature2();
+  EXPECT_FALSE(spm.outdoorHighTemperature2());
+
 }
 
 TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_addToNode)
@@ -185,86 +271,4 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_customDataClone)
   EXPECT_EQ(999.9, testObjectClone.outdoorHighTemperature());
   EXPECT_EQ(s, testObjectClone.schedule());
   EXPECT_EQ(999.9, testObjectClone.setpointatOutdoorLowTemperature2().get());
-}
-
-TEST_F(ModelFixture,SetpointManagerOutdoorAirReset_Fields_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SetpointManagerOutdoorAirReset setpointManagerOutdoorAirReset(model);
-
-  Unit units = setpointManagerOutdoorAirReset.getSetpointatOutdoorLowTemperature(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(setpointManagerOutdoorAirReset.setSetpointatOutdoorLowTemperature(testQ));
-  Quantity q = setpointManagerOutdoorAirReset.getSetpointatOutdoorLowTemperature(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-
-  units = setpointManagerOutdoorAirReset.getOutdoorLowTemperature(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  value = 1.0;
-  testQ = Quantity(value,units);
-  EXPECT_TRUE(setpointManagerOutdoorAirReset.setOutdoorLowTemperature(testQ));
-  q = setpointManagerOutdoorAirReset.getOutdoorLowTemperature(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-
-  units = setpointManagerOutdoorAirReset.getSetpointatOutdoorHighTemperature(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  value = 1.0;
-  testQ = Quantity(value,units);
-  EXPECT_TRUE(setpointManagerOutdoorAirReset.setSetpointatOutdoorHighTemperature(testQ));
-  q = setpointManagerOutdoorAirReset.getSetpointatOutdoorHighTemperature(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-
-  units = setpointManagerOutdoorAirReset.getOutdoorHighTemperature(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  value = 1.0;
-  testQ = Quantity(value,units);
-  EXPECT_TRUE(setpointManagerOutdoorAirReset.setOutdoorHighTemperature(testQ));
-  q = setpointManagerOutdoorAirReset.getOutdoorHighTemperature(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-
-  units = setpointManagerOutdoorAirReset.getSetpointatOutdoorLowTemperature2(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  value = 1.0;
-  testQ = Quantity(value,units);
-  EXPECT_TRUE(setpointManagerOutdoorAirReset.setSetpointatOutdoorLowTemperature2(testQ));
-  OSOptionalQuantity optq = setpointManagerOutdoorAirReset.getSetpointatOutdoorLowTemperature2(true);
-  ASSERT_TRUE(optq.isSet());
-  EXPECT_NEAR(value,optq.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),optq.units().standardString());
-
-  units = setpointManagerOutdoorAirReset.getOutdoorLowTemperature2(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  value = 1.0;
-  testQ = Quantity(value,units);
-  EXPECT_TRUE(setpointManagerOutdoorAirReset.setOutdoorLowTemperature2(testQ));
-  optq = setpointManagerOutdoorAirReset.getOutdoorLowTemperature2(true);
-  ASSERT_TRUE(optq.isSet());
-  EXPECT_NEAR(value,optq.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),optq.units().standardString());
-
-  units = setpointManagerOutdoorAirReset.getSetpointatOutdoorHighTemperature2(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  value = 1.0;
-  testQ = Quantity(value,units);
-  EXPECT_TRUE(setpointManagerOutdoorAirReset.setSetpointatOutdoorHighTemperature2(testQ));
-  optq = setpointManagerOutdoorAirReset.getSetpointatOutdoorHighTemperature2(true);
-  ASSERT_TRUE(optq.isSet());
-  EXPECT_NEAR(value,optq.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),optq.units().standardString());
-
-  units = setpointManagerOutdoorAirReset.getOutdoorHighTemperature2(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  value = 1.0;
-  testQ = Quantity(value,units);
-  EXPECT_TRUE(setpointManagerOutdoorAirReset.setOutdoorHighTemperature2(testQ));
-  optq = setpointManagerOutdoorAirReset.getOutdoorHighTemperature2(true);
-  ASSERT_TRUE(optq.isSet());
-  EXPECT_NEAR(value,optq.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),optq.units().standardString());
 }

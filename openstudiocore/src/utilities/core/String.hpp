@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,8 +36,6 @@
 #include <vector>
 
 #include <QString>
-#include <QTextStream>
-#include <QMetaType>
 
 /** \file String.hpp
  *
@@ -77,22 +75,5 @@ namespace openstudio {
   UTILITIES_API QString toQString(const std::wstring& w);
 
 } // openstudio
-
-// declare these types so we can use them as properties
-Q_DECLARE_METATYPE(std::string);
-Q_DECLARE_METATYPE(std::vector<std::string>);
-
-// allow string to be written to QTextStream
-UTILITIES_API QTextStream& operator<<(QTextStream& qts, const std::string& s);
-
-namespace openstudio {
-namespace detail {
-
-  // register meta datatypes
-  struct StringMetaTypeInitializer{
-    StringMetaTypeInitializer();
-  };
-}
-}
 
 #endif // UTILITIES_CORE_STRING_HPP

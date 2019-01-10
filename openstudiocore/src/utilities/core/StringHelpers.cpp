@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -388,7 +388,105 @@ std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std
     } else {
       ++it;
     }
-  } return tokens;
+  }
+  return tokens;
+}
+
+std::string replace(std::string input, const std::string &before, const std::string &after)
+{
+  std::size_t loc = 0;
+
+  while (true) {
+    loc = input.find(before, loc);
+
+    if (loc == std::string::npos) { break; }
+
+    input.replace(loc, before.size(), after);
+  }
+
+  return input;
+}
+
+template<typename Value>
+std::string number_formatter(const Value value, const int base)
+{
+  std::stringstream ss;
+  ss.imbue(std::locale::classic());
+  ss << std::setbase(base);
+  ss << value;
+  return ss.str();
+}
+
+template<typename Value>
+std::string number_formatter(const Value value, const FloatFormat format, const int precision)
+{
+  // set up several lambdas so we delay calculating anything that
+  // doesn't need to be calculated
+
+  const auto make_stream = [&](){
+    std::stringstream ss;
+    ss.imbue(std::locale::classic());
+    if (format == FloatFormat::general_capital) {
+      ss << std::uppercase;
+    }
+
+    ss << std::setprecision(precision);
+    return ss;
+  };
+
+  const auto make_defaultfloat = [&](){
+    auto ss = make_stream();
+    ss << value;
+    return ss.str();
+  };
+
+  const auto make_fixed = [&](){
+    auto ss = make_stream();
+    ss << std::fixed;
+    ss << value;
+    return ss.str();
+  };
+
+  const auto make_scientific = [&](){
+    auto ss = make_stream();
+    ss << std::scientific;
+    ss << value;
+    return ss.str();
+  };
+
+  const auto make_most_compact = [&](){
+    const auto df = make_defaultfloat();
+    const auto s = make_scientific();
+
+    if (df.size() < s.size()) {
+      return df;
+    } else {
+      return s;
+    }
+  };
+
+  switch (format) {
+    case FloatFormat::fixed:
+      return make_fixed();
+    case FloatFormat::general:
+    case FloatFormat::general_capital:
+      return make_most_compact();
+    default:
+      OS_ASSERT(false); // unhandled format
+      return make_defaultfloat();
+  }
+}
+
+namespace string_conversions {
+  std::string number(const std::uint32_t value, const int base) { return number_formatter(value, base); }
+  std::string number(const std::int32_t value, const int base) { return number_formatter(value, base); }
+  std::string number(const std::uint64_t value, const int base) { return number_formatter(value, base); }
+  std::string number(const std::int64_t value, const int base) { return number_formatter(value, base); }
+
+  std::string number(const double value, const FloatFormat format, const int precision)
+  {
+    return number_formatter(value, format, precision); 
+  }
 
 }
 

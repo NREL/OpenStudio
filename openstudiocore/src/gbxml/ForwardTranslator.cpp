@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -76,6 +76,7 @@
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
+#include "../utilities/core/StringHelpers.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -181,19 +182,19 @@ namespace gbxml {
     if (std::regex_match(name, std::regex("^\\d.*"))) {
       result = "id_" + name;
     }
-    std::replace(result.begin(), result.end(), " ", "_");
-    std::replace(result.begin(), result.end(), "(", "_");
-    std::replace(result.begin(), result.end(), ")", "_");
-    std::replace(result.begin(), result.end(), "[", "_");
-    std::replace(result.begin(), result.end(), "]", "_");
-    std::replace(result.begin(), result.end(), "{", "_");
-    std::replace(result.begin(), result.end(), "}", "_");
-    std::replace(result.begin(), result.end(), "/", "_");
-    std::replace(result.begin(), result.end(), "\\", "_");
-    //std::replace(result.begin(), result.end(),"-", "_"); // ok
-    //std::replace(result.begin(), result.end(),".", "_"); // ok
-    std::replace(result.begin(), result.end(), ":", "_");
-    std::replace(result.begin(), result.end(), ";", "_");
+    std::replace(result.begin(), result.end(), ' ', '_');
+    std::replace(result.begin(), result.end(), '(', '_');
+    std::replace(result.begin(), result.end(), ')', '_');
+    std::replace(result.begin(), result.end(), '[', '_');
+    std::replace(result.begin(), result.end(), ']', '_');
+    std::replace(result.begin(), result.end(), '{', '_');
+    std::replace(result.begin(), result.end(), '}', '_');
+    std::replace(result.begin(), result.end(), '/', '_');
+    std::replace(result.begin(), result.end(), '\\', '_');
+    //std::replace(result.begin(), result.end(),'-', '_'); // ok
+    //std::replace(result.begin(), result.end(),'.', '_'); // ok
+    std::replace(result.begin(), result.end(), ':', '_');
+    std::replace(result.begin(), result.end(), ';', '_');
     return result;
   }
 
@@ -430,7 +431,7 @@ namespace gbxml {
 
           QDomElement valueElement = doc.createElement("Value");
           resultsElement.appendChild(valueElement);
-          valueElement.appendChild(doc.createTextNode(QString::number(*heatLoad/1000.0, 'f')));
+          valueElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*heatLoad/1000.0, FloatFormat::fixed))));
         }
 
         if (coolingLoad){
@@ -446,7 +447,7 @@ namespace gbxml {
 
           QDomElement valueElement = doc.createElement("Value");
           resultsElement.appendChild(valueElement);
-          valueElement.appendChild(doc.createTextNode(QString::number(*coolingLoad/1000.0, 'f')));
+          valueElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*coolingLoad/1000.0, FloatFormat::fixed))));
         }
 
         if (flow){
@@ -462,7 +463,7 @@ namespace gbxml {
 
           QDomElement valueElement = doc.createElement("Value");
           resultsElement.appendChild(valueElement);
-          valueElement.appendChild(doc.createTextNode(QString::number(*flow*3600, 'f')));
+          valueElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*flow*3600, FloatFormat::fixed))));
         }
 
         if (m_progressBar){
@@ -598,7 +599,7 @@ namespace gbxml {
       }
     }
 
-    areaElement.appendChild(doc.createTextNode(QString::number(floorArea, 'f')));
+    areaElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(floorArea, FloatFormat::fixed))));
 
     // translate spaces
     if (m_progressBar){
@@ -701,13 +702,13 @@ namespace gbxml {
     // append floor area
     double area = space.floorArea();
     QDomElement areaElement = doc.createElement("Area");
-    areaElement.appendChild(doc.createTextNode(QString::number(area, 'f')));
+    areaElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(area, FloatFormat::fixed))));
     result.appendChild(areaElement);
 
     // append volume
     double volume = space.volume();
     QDomElement volumeElement = doc.createElement("Volume");
-    volumeElement.appendChild(doc.createTextNode(QString::number(volume, 'f')));
+    volumeElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(volume, FloatFormat::fixed))));
     result.appendChild(volumeElement);
 
     // Lighting
@@ -722,7 +723,7 @@ namespace gbxml {
       double floorAreaPerPerson = space.floorAreaPerPerson();
       QDomElement peopleNumberElement = doc.createElement("PeopleNumber");
       peopleNumberElement.setAttribute("unit", "SquareMPerPerson");
-      peopleNumberElement.appendChild(doc.createTextNode(QString::number(floorAreaPerPerson, 'f')));
+      peopleNumberElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(floorAreaPerPerson, FloatFormat::fixed))));
       result.appendChild(peopleNumberElement);
     }
 
@@ -735,7 +736,7 @@ namespace gbxml {
     if (lightingPowerPerFloorArea > 0){
       QDomElement lightPowerPerAreaElement = doc.createElement("LightPowerPerArea");
       lightPowerPerAreaElement.setAttribute("unit", "WattPerSquareMeter");
-      lightPowerPerAreaElement.appendChild(doc.createTextNode(QString::number(lightingPowerPerFloorArea, 'f')));
+      lightPowerPerAreaElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(lightingPowerPerFloorArea, FloatFormat::fixed))));
       result.appendChild(lightPowerPerAreaElement);
     }
 
@@ -744,7 +745,7 @@ namespace gbxml {
     if (electricEquipmentPowerPerFloorArea > 0){
       QDomElement equipPowerPerAreaElement = doc.createElement("EquipPowerPerArea");
       equipPowerPerAreaElement.setAttribute("unit", "WattPerSquareMeter");
-      equipPowerPerAreaElement.appendChild(doc.createTextNode(QString::number(electricEquipmentPowerPerFloorArea, 'f')));
+      equipPowerPerAreaElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(electricEquipmentPowerPerFloorArea, FloatFormat::fixed))));
       result.appendChild(equipPowerPerAreaElement);
     }
 
@@ -816,7 +817,7 @@ namespace gbxml {
 
     // append level
     QDomElement levelElement = doc.createElement("Level");
-    levelElement.appendChild(doc.createTextNode(QString::number(*zLevel, 'f')));
+    levelElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*zLevel, FloatFormat::fixed))));
     result.appendChild(levelElement);
 
     return result;
@@ -985,34 +986,34 @@ namespace gbxml {
 
       QDomElement azimuthElement = doc.createElement("Azimuth");
       rectangularGeometryElement.appendChild(azimuthElement);
-      azimuthElement.appendChild(doc.createTextNode(QString::number(radToDeg(azimuthRadians), 'g')));
+      azimuthElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(radToDeg(azimuthRadians), FloatFormat::general))));
 
       QDomElement cartesianPointElement = doc.createElement("CartesianPoint");
       rectangularGeometryElement.appendChild(cartesianPointElement);
 
       QDomElement coordinateXElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
+      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.x(), FloatFormat::fixed))));
 
       QDomElement coordinateYElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
+      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.y(), FloatFormat::fixed))));
 
       QDomElement coordinateZElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
+      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.z(), FloatFormat::fixed))));
 
       QDomElement tiltElement = doc.createElement("Tilt");
       rectangularGeometryElement.appendChild(tiltElement);
-      tiltElement.appendChild(doc.createTextNode(QString::number(radToDeg(tiltRadians), 'g')));
+      tiltElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(radToDeg(tiltRadians), FloatFormat::general))));
 
       QDomElement widthElement = doc.createElement("Width");
       rectangularGeometryElement.appendChild(widthElement);
-      widthElement.appendChild(doc.createTextNode(QString::number(areaCorrection*width, 'f')));
+      widthElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(areaCorrection*width, FloatFormat::fixed))));
 
       QDomElement heightElement = doc.createElement("Height");
       rectangularGeometryElement.appendChild(heightElement);
-      heightElement.appendChild(doc.createTextNode(QString::number(areaCorrection*height, 'f')));
+      heightElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(areaCorrection*height, FloatFormat::fixed))));
     }
 
     // planar geometry
@@ -1027,15 +1028,15 @@ namespace gbxml {
 
       QDomElement coordinateXElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
+      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.x(), FloatFormat::fixed))));
 
       QDomElement coordinateYElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
+      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.y(), FloatFormat::fixed))));
 
       QDomElement coordinateZElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
+      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.z(), FloatFormat::fixed))));
     }
 
     // export CADObjectId if present
@@ -1162,34 +1163,34 @@ namespace gbxml {
 
       QDomElement azimuthElement = doc.createElement("Azimuth");
       rectangularGeometryElement.appendChild(azimuthElement);
-      azimuthElement.appendChild(doc.createTextNode(QString::number(radToDeg(azimuthRadians), 'g')));
+      azimuthElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(radToDeg(azimuthRadians), FloatFormat::general))));
 
       QDomElement cartesianPointElement = doc.createElement("CartesianPoint");
       rectangularGeometryElement.appendChild(cartesianPointElement);
 
       QDomElement coordinateXElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
+      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.x(), FloatFormat::fixed))));
 
       QDomElement coordinateYElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
+      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.y(), FloatFormat::fixed))));
 
       QDomElement coordinateZElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
+      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.z(), FloatFormat::fixed))));
 
       QDomElement tiltElement = doc.createElement("Tilt");
       rectangularGeometryElement.appendChild(tiltElement);
-      tiltElement.appendChild(doc.createTextNode(QString::number(radToDeg(tiltRadians), 'g')));
+      tiltElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(radToDeg(tiltRadians), FloatFormat::general))));
 
       QDomElement widthElement = doc.createElement("Width");
       rectangularGeometryElement.appendChild(widthElement);
-      widthElement.appendChild(doc.createTextNode(QString::number(areaCorrection*width, 'f')));
+      widthElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(areaCorrection*width, FloatFormat::fixed))));
 
       QDomElement heightElement = doc.createElement("Height");
       rectangularGeometryElement.appendChild(heightElement);
-      heightElement.appendChild(doc.createTextNode(QString::number(areaCorrection*height, 'f')));
+      heightElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(areaCorrection*height, FloatFormat::fixed))));
     }
 
     // planar geometry
@@ -1205,15 +1206,15 @@ namespace gbxml {
 
       QDomElement coordinateXElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
+      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.x(), FloatFormat::fixed))));
 
       QDomElement coordinateYElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
+      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.y(), FloatFormat::fixed))));
 
       QDomElement coordinateZElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
+      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.z(), FloatFormat::fixed))));
     }
 
     // export CADObjectId if present
@@ -1333,34 +1334,34 @@ namespace gbxml {
 
       QDomElement azimuthElement = doc.createElement("Azimuth");
       rectangularGeometryElement.appendChild(azimuthElement);
-      azimuthElement.appendChild(doc.createTextNode(QString::number(radToDeg(azimuthRadians), 'g')));
+      azimuthElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(radToDeg(azimuthRadians), FloatFormat::general))));
 
       QDomElement cartesianPointElement = doc.createElement("CartesianPoint");
       rectangularGeometryElement.appendChild(cartesianPointElement);
 
       QDomElement coordinateXElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
+      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.x(), FloatFormat::fixed))));
 
       QDomElement coordinateYElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
+      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.y(), FloatFormat::fixed))));
 
       QDomElement coordinateZElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
+      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.z(), FloatFormat::fixed))));
 
       QDomElement tiltElement = doc.createElement("Tilt");
       rectangularGeometryElement.appendChild(tiltElement);
-      tiltElement.appendChild(doc.createTextNode(QString::number(radToDeg(tiltRadians), 'g')));
+      tiltElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(radToDeg(tiltRadians), FloatFormat::general))));
 
       QDomElement widthElement = doc.createElement("Width");
       rectangularGeometryElement.appendChild(widthElement);
-      widthElement.appendChild(doc.createTextNode(QString::number(areaCorrection*width, 'f')));
+      widthElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(areaCorrection*width, FloatFormat::fixed))));
 
       QDomElement heightElement = doc.createElement("Height");
       rectangularGeometryElement.appendChild(heightElement);
-      heightElement.appendChild(doc.createTextNode(QString::number(areaCorrection*height, 'f')));
+      heightElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(areaCorrection*height, FloatFormat::fixed))));
     }
 
     // planar geometry
@@ -1375,15 +1376,15 @@ namespace gbxml {
 
       QDomElement coordinateXElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(QString::number(vertex.x(), 'f')));
+      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.x(), FloatFormat::fixed))));
 
       QDomElement coordinateYElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(QString::number(vertex.y(), 'f')));
+      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.y(), FloatFormat::fixed))));
 
       QDomElement coordinateZElement = doc.createElement("Coordinate");
       cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(QString::number(vertex.z(), 'f')));
+      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(vertex.z(), FloatFormat::fixed))));
     }
 
     // export CADObjectId if present
@@ -1441,14 +1442,14 @@ namespace gbxml {
     if (designHeatT){
       QDomElement designHeatTElement = doc.createElement("DesignHeatT");
       designHeatTElement.setAttribute("unit", "C");
-      designHeatTElement.appendChild(doc.createTextNode(QString::number(*designHeatT, 'f')));
+      designHeatTElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*designHeatT, FloatFormat::fixed))));
       result.appendChild(designHeatTElement);
     }
 
     if (designCoolT){
       QDomElement designCoolTElement = doc.createElement("DesignCoolT");
       designCoolTElement.setAttribute("unit", "C");
-      designCoolTElement.appendChild(doc.createTextNode(QString::number(*designCoolT, 'f')));
+      designCoolTElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*designCoolT, FloatFormat::fixed))));
       result.appendChild(designCoolTElement);
     }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -125,7 +125,7 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   /** Returns the value of the latentCapacityTimeConstant field. **/
   boost::optional<double> latentCapacityTimeConstant()const;
 
-  OptionalString condenserAirInletNodeName()const;
+  boost::optional<std::string> condenserAirInletNodeName() const;
 
   /** Returns the value of the CondenserType field. **/
   std::string condenserType()const;
@@ -195,7 +195,7 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   boost::optional<double> getLatentCapacityTimeConstant()const;
 
   /** \deprecated */
-  OptionalString getCondenserAirInletNodeName()const;
+  boost::optional<std::string> getCondenserAirInletNodeName()const;
 
   /** \deprecated */
   std::string getCondenserType()const;
@@ -336,39 +336,27 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
 
   boost::optional<double> ratedTotalCoolingCapacity() const;
 
-  OSOptionalQuantity getRatedTotalCoolingCapacity(bool returnIP=false) const;
-
   bool isRatedTotalCoolingCapacityAutosized() const;
 
   bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
-
-  bool setRatedTotalCoolingCapacity(const Quantity& ratedTotalCoolingCapacity);
 
   void autosizeRatedTotalCoolingCapacity();
 
 
   boost::optional<double> ratedSensibleHeatRatio() const;
 
-  OSOptionalQuantity getRatedSensibleHeatRatio(bool returnIP=false) const;
-
   bool isRatedSensibleHeatRatioAutosized() const;
 
   bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
-
-  bool setRatedSensibleHeatRatio(const Quantity& ratedSensibleHeatRatio);
 
   void autosizeRatedSensibleHeatRatio();
 
 
   boost::optional<double> ratedAirFlowRate() const;
 
-  OSOptionalQuantity getRatedAirFlowRate(bool returnIP=false) const;
-
   bool isRatedAirFlowRateAutosized() const;
 
   bool setRatedAirFlowRate(double ratedAirFlowRate);
-
-  bool setRatedAirFlowRate(const Quantity& ratedAirFlowRate);
 
   void autosizeRatedAirFlowRate();
 

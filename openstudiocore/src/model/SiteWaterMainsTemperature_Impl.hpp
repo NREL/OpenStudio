@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -96,11 +94,8 @@ namespace detail {
 
     boost::optional<double> annualAverageOutdoorAirTemperature() const;
 
-    OSOptionalQuantity getAnnualAverageOutdoorAirTemperature(bool returnIP=false) const;
-
     boost::optional<double> maximumDifferenceInMonthlyAverageOutdoorAirTemperatures() const;
 
-    OSOptionalQuantity getMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(bool returnIP=false) const;
 
     //@}
     /** @name Setters */
@@ -114,13 +109,9 @@ namespace detail {
 
     bool setAnnualAverageOutdoorAirTemperature(boost::optional<double> annualAverageOutdoorAirTemperature);
 
-    bool setAnnualAverageOutdoorAirTemperature(const OSOptionalQuantity& annualAverageOutdoorAirTemperature);
-
     void resetAnnualAverageOutdoorAirTemperature();
 
     bool setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(boost::optional<double> maximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
-
-    bool setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(const OSOptionalQuantity& maximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
 
     void resetMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures();
 
@@ -131,11 +122,6 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.SiteWaterMainsTemperature");
 
     std::vector<std::string> calculationMethodValues() const;
-    openstudio::OSOptionalQuantity annualAverageOutdoorAirTemperature_SI() const;
-    openstudio::OSOptionalQuantity annualAverageOutdoorAirTemperature_IP() const;
-    openstudio::OSOptionalQuantity maximumDifferenceInMonthlyAverageOutdoorAirTemperatures_SI() const;
-    openstudio::OSOptionalQuantity maximumDifferenceInMonthlyAverageOutdoorAirTemperatures_IP() const;
-
     boost::optional<ModelObject> temperatureScheduleAsModelObject() const;
 
     bool setTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& temperatureSchedule);

@@ -132,10 +132,6 @@ namespace openstudio {
   // DLM: deprecate in favor of path.to_s
   std::string toString(const path& p);
 
-  // path to QString.
-  // DLM: deprecate
-  //QString toQString(const path& p);
-
   // UTF-8 encoded char* to path
   // DLM: deprecate
   path toPath(const char* s);
@@ -143,10 +139,6 @@ namespace openstudio {
   // UTF-8 encoded std::string to path
   // DLM: deprecate in favor of Path.new(string)
   path toPath(const std::string& s);
-
-  // QString to path
-  // DLM: deprecate
-  //path toPath(const QString& q);
 
   // does the path exist
   bool exists(const path& p);

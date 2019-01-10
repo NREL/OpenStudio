@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -89,59 +87,37 @@ class MODEL_API Screen : public ShadingMaterial {
 
   double diffuseSolarReflectance() const;
 
-  Quantity getDiffuseSolarReflectance(bool returnIP=false) const;
-
   double diffuseVisibleReflectance() const;
 
-  Quantity getDiffuseVisibleReflectance(bool returnIP=false) const;
-
   double thermalHemisphericalEmissivity() const;
-
-  Quantity getThermalHemisphericalEmissivity(bool returnIP=false) const;
 
   bool isThermalHemisphericalEmissivityDefaulted() const;
 
   double conductivity() const;
 
-  Quantity getConductivity(bool returnIP=false) const;
-
   bool isConductivityDefaulted() const;
 
   double screenMaterialSpacing() const;
 
-  Quantity getScreenMaterialSpacing(bool returnIP=false) const;
-
   double screenMaterialDiameter() const;
 
-  Quantity getScreenMaterialDiameter(bool returnIP=false) const;
-
   double screentoGlassDistance() const;
-
-  Quantity getScreentoGlassDistance(bool returnIP=false) const;
 
   bool isScreentoGlassDistanceDefaulted() const;
 
   double topOpeningMultiplier() const;
 
-  Quantity getTopOpeningMultiplier(bool returnIP=false) const;
-
   bool isTopOpeningMultiplierDefaulted() const;
 
   double bottomOpeningMultiplier() const;
-
-  Quantity getBottomOpeningMultiplier(bool returnIP=false) const;
 
   bool isBottomOpeningMultiplierDefaulted() const;
 
   double leftSideOpeningMultiplier() const;
 
-  Quantity getLeftSideOpeningMultiplier(bool returnIP=false) const;
-
   bool isLeftSideOpeningMultiplierDefaulted() const;
 
   double rightSideOpeningMultiplier() const;
-
-  Quantity getRightSideOpeningMultiplier(bool returnIP=false) const;
 
   bool isRightSideOpeningMultiplierDefaulted() const;
 
@@ -165,59 +141,37 @@ class MODEL_API Screen : public ShadingMaterial {
 
   bool setDiffuseSolarReflectance(double diffuseSolarReflectance);
 
-  bool setDiffuseSolarReflectance(const Quantity& diffuseSolarReflectance);
-
   bool setDiffuseVisibleReflectance(double diffuseVisibleReflectance);
 
-  bool setDiffuseVisibleReflectance(const Quantity& diffuseVisibleReflectance);
-
   bool setThermalHemisphericalEmissivity(double thermalHemisphericalEmissivity);
-
-  bool setThermalHemisphericalEmissivity(const Quantity& thermalHemisphericalEmissivity);
 
   void resetThermalHemisphericalEmissivity();
 
   bool setConductivity(double conductivity);
 
-  bool setConductivity(const Quantity& conductivity);
-
   void resetConductivity();
 
   bool setScreenMaterialSpacing(double screenMaterialSpacing);
 
-  bool setScreenMaterialSpacing(const Quantity& screenMaterialSpacing);
-
   bool setScreenMaterialDiameter(double screenMaterialDiameter);
 
-  bool setScreenMaterialDiameter(const Quantity& screenMaterialDiameter);
-
   bool setScreentoGlassDistance(double screentoGlassDistance);
-
-  bool setScreentoGlassDistance(const Quantity& screentoGlassDistance);
 
   void resetScreentoGlassDistance();
 
   bool setTopOpeningMultiplier(double topOpeningMultiplier);
 
-  bool setTopOpeningMultiplier(const Quantity& topOpeningMultiplier);
-
   void resetTopOpeningMultiplier();
 
   bool setBottomOpeningMultiplier(double bottomOpeningMultiplier);
-
-  bool setBottomOpeningMultiplier(const Quantity& bottomOpeningMultiplier);
 
   void resetBottomOpeningMultiplier();
 
   bool setLeftSideOpeningMultiplier(double leftSideOpeningMultiplier);
 
-  bool setLeftSideOpeningMultiplier(const Quantity& leftSideOpeningMultiplier);
-
   void resetLeftSideOpeningMultiplier();
 
   bool setRightSideOpeningMultiplier(double rightSideOpeningMultiplier);
-
-  bool setRightSideOpeningMultiplier(const Quantity& rightSideOpeningMultiplier);
 
   void resetRightSideOpeningMultiplier();
 
@@ -255,4 +209,3 @@ typedef std::vector<Screen> ScreenVector;
 } // openstudio
 
 #endif // MODEL_SCREEN_HPP
-

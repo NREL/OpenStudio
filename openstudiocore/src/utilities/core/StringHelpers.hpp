@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -131,6 +131,74 @@ namespace openstudio {
    */
   UTILITIES_API std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string delimiters=" +-*/^=<>&|");
 
+  UTILITIES_API std::string replace(std::string input, const std::string &before, const std::string &after);
+
+
+  enum struct FloatFormat {
+    fixed,
+    general,
+    general_capital
+  };
+
+  namespace string_conversions {
+    /** Converts a number into a string, replicating the behavior of QString::number.
+     *  This is necessary because QString does *not* respect the locale, and stringstring
+     *  and std::string::to_string *do* respect the locale
+     */
+    UTILITIES_API std::string number(std::int32_t, int base = 10);
+    UTILITIES_API std::string number(std::uint32_t, int base = 10);
+    UTILITIES_API std::string number(std::int64_t, int base = 10);
+    UTILITIES_API std::string number(std::uint64_t, int base = 10);
+    UTILITIES_API std::string number(double, FloatFormat format = FloatFormat::general, int presision = 6);
+
+    template<typename DesiredType, typename InputType>
+    boost::optional<DesiredType> to_no_throw(const InputType &inp)
+    {
+      std::stringstream ss;
+      ss.imbue(std::locale::classic());
+      ss.str(inp);
+      DesiredType o;
+      ss >> o;
+      if (!ss.eof() || ss.fail()) {
+        return {};
+      }
+      return o;
+    }
+
+    template<typename DesiredType, typename InputType>
+    DesiredType to(const InputType &inp)
+    {
+      const auto result = to_no_throw<DesiredType>(inp);
+      if (result) {
+        return result.value();
+      } else {
+        throw std::bad_cast{};
+      }
+    }
+
+
+    template<typename DesiredType, typename InputType>
+    bool is_valid(const InputType &input)
+    {
+      try {
+        to<DesiredType>(input);
+        return true;
+      } catch (const std::bad_cast &) {
+        return false;
+      }
+    }
+
+    template<typename DesiredType, typename InputType, typename DestinationType>
+    bool assign_if_valid(const InputType &input, DestinationType &dest)
+    {
+      if (is_valid<DesiredType>(input)) {
+        dest = input;
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
 }
 
 #endif // UTILITIES_CORE_STRINGHELPERS_HPP

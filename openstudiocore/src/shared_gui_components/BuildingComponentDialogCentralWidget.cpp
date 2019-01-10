@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,9 +42,9 @@
 #include "../utilities/bcl/BCL.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/bcl/RemoteBCL.hpp"
-#include "../utilities/data/Attribute.hpp"
-#include "../utilities/core/Application.hpp"
 #include "../utilities/core/Assert.hpp"
+
+#include "../model_editor/Application.hpp"
 
 #include <QApplication>
 #include <QBoxLayout>
@@ -268,7 +268,8 @@ void BuildingComponentDialogCentralWidget::lowerPushButtonClicked()
 
       if (m_filterType == "components")
       {
-        connect(remoteBCL, &RemoteBCL::componentDownloaded, this, &BuildingComponentDialogCentralWidget::componentDownloadComplete);
+        // DLM: replace with Nano Signal
+        //connect(remoteBCL, &RemoteBCL::componentDownloaded, this, &BuildingComponentDialogCentralWidget::componentDownloadComplete);
 
         bool downloadStarted = remoteBCL->downloadComponent(component->uid());
         if (downloadStarted){
@@ -293,7 +294,8 @@ void BuildingComponentDialogCentralWidget::lowerPushButtonClicked()
       }
       else if (m_filterType == "measures")
       {
-        connect(remoteBCL, &RemoteBCL::measureDownloaded, this, &BuildingComponentDialogCentralWidget::measureDownloadComplete);
+        // DLM: replace with Nano Signal
+        //connect(remoteBCL, &RemoteBCL::measureDownloaded, this, &BuildingComponentDialogCentralWidget::measureDownloadComplete);
 
         bool downloadStarted = remoteBCL->downloadMeasure(component->uid());
         if (downloadStarted){

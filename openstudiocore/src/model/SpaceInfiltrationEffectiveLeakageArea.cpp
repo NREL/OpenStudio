@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -129,24 +129,10 @@ namespace detail {
     return value.get();
   }
 
-  Quantity SpaceInfiltrationEffectiveLeakageArea_Impl::getEffectiveAirLeakageArea(bool returnIP) const {
-    OptionalDouble value = effectiveAirLeakageArea();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_SpaceInfiltration_EffectiveLeakageAreaFields::EffectiveAirLeakageArea, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double SpaceInfiltrationEffectiveLeakageArea_Impl::stackCoefficient() const {
     boost::optional<double> value = getDouble(OS_SpaceInfiltration_EffectiveLeakageAreaFields::StackCoefficient,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity SpaceInfiltrationEffectiveLeakageArea_Impl::getStackCoefficient(bool returnIP) const {
-    OptionalDouble value = stackCoefficient();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_SpaceInfiltration_EffectiveLeakageAreaFields::StackCoefficient, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   double SpaceInfiltrationEffectiveLeakageArea_Impl::windCoefficient() const {
@@ -155,24 +141,9 @@ namespace detail {
     return value.get();
   }
 
-  Quantity SpaceInfiltrationEffectiveLeakageArea_Impl::getWindCoefficient(bool returnIP) const {
-    OptionalDouble value = windCoefficient();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_SpaceInfiltration_EffectiveLeakageAreaFields::WindCoefficient, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool SpaceInfiltrationEffectiveLeakageArea_Impl::setEffectiveAirLeakageArea(double effectiveAirLeakageArea) {
     bool result = setDouble(OS_SpaceInfiltration_EffectiveLeakageAreaFields::EffectiveAirLeakageArea, effectiveAirLeakageArea);
     return result;
-  }
-
-  bool SpaceInfiltrationEffectiveLeakageArea_Impl::setEffectiveAirLeakageArea(const Quantity& effectiveAirLeakageArea) {
-    OptionalDouble value = getDoubleFromQuantity(OS_SpaceInfiltration_EffectiveLeakageAreaFields::EffectiveAirLeakageArea,effectiveAirLeakageArea);
-    if (!value) {
-      return false;
-    }
-    return setEffectiveAirLeakageArea(value.get());
   }
 
   bool SpaceInfiltrationEffectiveLeakageArea_Impl::setStackCoefficient(double stackCoefficient) {
@@ -180,25 +151,9 @@ namespace detail {
     return result;
   }
 
-  bool SpaceInfiltrationEffectiveLeakageArea_Impl::setStackCoefficient(const Quantity& stackCoefficient) {
-    OptionalDouble value = getDoubleFromQuantity(OS_SpaceInfiltration_EffectiveLeakageAreaFields::StackCoefficient,stackCoefficient);
-    if (!value) {
-      return false;
-    }
-    return setStackCoefficient(value.get());
-  }
-
   bool SpaceInfiltrationEffectiveLeakageArea_Impl::setWindCoefficient(double windCoefficient) {
     bool result = setDouble(OS_SpaceInfiltration_EffectiveLeakageAreaFields::WindCoefficient, windCoefficient);
     return result;
-  }
-
-  bool SpaceInfiltrationEffectiveLeakageArea_Impl::setWindCoefficient(const Quantity& windCoefficient) {
-    OptionalDouble value = getDoubleFromQuantity(OS_SpaceInfiltration_EffectiveLeakageAreaFields::WindCoefficient,windCoefficient);
-    if (!value) {
-      return false;
-    }
-    return setWindCoefficient(value.get());
   }
 
   int SpaceInfiltrationEffectiveLeakageArea_Impl::spaceIndex() const {
@@ -239,30 +194,6 @@ namespace detail {
   {
     bool result = setString(OS_SpaceInfiltration_EffectiveLeakageAreaFields::ScheduleName, "");
     OS_ASSERT(result);
-  }
-
-  openstudio::Quantity SpaceInfiltrationEffectiveLeakageArea_Impl::effectiveAirLeakageArea_SI() const {
-    return getEffectiveAirLeakageArea(false);
-  }
-
-  openstudio::Quantity SpaceInfiltrationEffectiveLeakageArea_Impl::effectiveAirLeakageArea_IP() const {
-    return getEffectiveAirLeakageArea(true);
-  }
-
-  openstudio::Quantity SpaceInfiltrationEffectiveLeakageArea_Impl::stackCoefficient_SI() const {
-    return getStackCoefficient(false);
-  }
-
-  openstudio::Quantity SpaceInfiltrationEffectiveLeakageArea_Impl::stackCoefficient_IP() const {
-    return getStackCoefficient(true);
-  }
-
-  openstudio::Quantity SpaceInfiltrationEffectiveLeakageArea_Impl::windCoefficient_SI() const {
-    return getWindCoefficient(false);
-  }
-
-  openstudio::Quantity SpaceInfiltrationEffectiveLeakageArea_Impl::windCoefficient_IP() const {
-    return getWindCoefficient(true);
   }
 
   boost::optional<ModelObject> SpaceInfiltrationEffectiveLeakageArea_Impl::scheduleAsModelObject() const {
@@ -322,24 +253,12 @@ double SpaceInfiltrationEffectiveLeakageArea::effectiveAirLeakageArea() const {
   return getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>()->effectiveAirLeakageArea();
 }
 
-Quantity SpaceInfiltrationEffectiveLeakageArea::getEffectiveAirLeakageArea(bool returnIP) const {
-  return getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>()->getEffectiveAirLeakageArea(returnIP);
-}
-
 double SpaceInfiltrationEffectiveLeakageArea::stackCoefficient() const {
   return getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>()->stackCoefficient();
 }
 
-Quantity SpaceInfiltrationEffectiveLeakageArea::getStackCoefficient(bool returnIP) const {
-  return getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>()->getStackCoefficient(returnIP);
-}
-
 double SpaceInfiltrationEffectiveLeakageArea::windCoefficient() const {
   return getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>()->windCoefficient();
-}
-
-Quantity SpaceInfiltrationEffectiveLeakageArea::getWindCoefficient(bool returnIP) const {
-  return getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>()->getWindCoefficient(returnIP);
 }
 
 bool SpaceInfiltrationEffectiveLeakageArea::setSchedule(Schedule& schedule) {
@@ -354,23 +273,11 @@ bool SpaceInfiltrationEffectiveLeakageArea::setEffectiveAirLeakageArea(double ef
   return getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>()->setEffectiveAirLeakageArea(effectiveAirLeakageArea);
 }
 
-bool SpaceInfiltrationEffectiveLeakageArea::setEffectiveAirLeakageArea(const Quantity& effectiveAirLeakageArea) {
-  return getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>()->setEffectiveAirLeakageArea(effectiveAirLeakageArea);
-}
-
 bool SpaceInfiltrationEffectiveLeakageArea::setStackCoefficient(double stackCoefficient) {
   return getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>()->setStackCoefficient(stackCoefficient);
 }
 
-bool SpaceInfiltrationEffectiveLeakageArea::setStackCoefficient(const Quantity& stackCoefficient) {
-  return getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>()->setStackCoefficient(stackCoefficient);
-}
-
 bool SpaceInfiltrationEffectiveLeakageArea::setWindCoefficient(double windCoefficient) {
-  return getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>()->setWindCoefficient(windCoefficient);
-}
-
-bool SpaceInfiltrationEffectiveLeakageArea::setWindCoefficient(const Quantity& windCoefficient) {
   return getImpl<detail::SpaceInfiltrationEffectiveLeakageArea_Impl>()->setWindCoefficient(windCoefficient);
 }
 
@@ -383,4 +290,3 @@ SpaceInfiltrationEffectiveLeakageArea::SpaceInfiltrationEffectiveLeakageArea(
 
 } // model
 } // openstudio
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -103,7 +103,7 @@ bool SurfaceNetworkBuilder::build(model::Model &model)
 {
   bool first = true;
   bool nowarnings = true;
-  QVector<openstudio::Handle> used;
+  std::vector<openstudio::Handle> used;
 
   m_logSink.setThreadId(std::this_thread::get_id());
   m_logSink.resetStringStream();
@@ -137,7 +137,7 @@ bool SurfaceNetworkBuilder::build(model::Model &model)
       for(model::SubSurface subSurface : surface.subSurfaces()) {
         linkExteriorSubSurface(thermalZone.get(),space.get(),surface,subSurface);
       }
-    } else if(!used.contains(surface.handle()) && bc == "Surface") {
+    } else if((std::find(used.begin(), used.end(), surface.handle())==used.end()) && (bc == "Surface")) {
       // Get the associated thermal zone
       boost::optional<openstudio::model::Space> space = surface.space();
       if(!space) {

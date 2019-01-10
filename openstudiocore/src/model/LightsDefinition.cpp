@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,31 +36,13 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/math/FloatCompare.hpp"
-
+#include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
-
-  ATTRIBUTE_IMPLEMENTATION(1,0,0,lightingLevel,LightingLevel,
-                           LightsDefinition,0,OS_Lights_Definition,LightingLevel)
-
-  ATTRIBUTE_IMPLEMENTATION(1,0,0,wattsperSpaceFloorArea,WattsperSpaceFloorArea,
-                           LightsDefinition,0,OS_Lights_Definition,WattsperSpaceFloorArea)
-
-  ATTRIBUTE_IMPLEMENTATION(1,0,0,wattsperPerson,WattsperPerson,
-                           LightsDefinition,0,OS_Lights_Definition,WattsperPerson)
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,fractionRadiant,FractionRadiant,
-                           LightsDefinition,0,OS_Lights_Definition,FractionRadiant)
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,fractionVisible,FractionVisible,
-                           LightsDefinition,0,OS_Lights_Definition,FractionVisible)
-
-  ATTRIBUTE_IMPLEMENTATION(0,1,0,returnAirFraction,ReturnAirFraction,
-                           LightsDefinition,0,OS_Lights_Definition,ReturnAirFraction)
 
   LightsDefinition_Impl::LightsDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)
@@ -82,7 +64,6 @@ namespace detail {
     : SpaceLoadDefinition_Impl(other,model,keepHandle)
   {}
 
-  // TODO: remove
   const std::vector<std::string>& LightsDefinition_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -133,9 +114,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool LightsDefinition_Impl::isFractionRadiantDefaulted() const {
-  //  return isEmpty(OS_Lights_DefinitionFields::FractionRadiant);
-  //}
+  bool LightsDefinition_Impl::isFractionRadiantDefaulted() const {
+    return isEmpty(OS_Lights_DefinitionFields::FractionRadiant);
+  }
 
   double LightsDefinition_Impl::fractionVisible() const {
     boost::optional<double> value = getDouble(OS_Lights_DefinitionFields::FractionVisible,true);
@@ -143,9 +124,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool LightsDefinition_Impl::isFractionVisibleDefaulted() const {
-  //  return isEmpty(OS_Lights_DefinitionFields::FractionVisible);
-  //}
+  bool LightsDefinition_Impl::isFractionVisibleDefaulted() const {
+    return isEmpty(OS_Lights_DefinitionFields::FractionVisible);
+  }
 
   double LightsDefinition_Impl::returnAirFraction() const {
     boost::optional<double> value = getDouble(OS_Lights_DefinitionFields::ReturnAirFraction,true);
@@ -153,9 +134,9 @@ namespace detail {
     return value.get();
   }
 
-  //bool LightsDefinition_Impl::isReturnAirFractionDefaulted() const {
-  //  return isEmpty(OS_Lights_DefinitionFields::ReturnAirFraction);
-  //}
+  bool LightsDefinition_Impl::isReturnAirFractionDefaulted() const {
+    return isEmpty(OS_Lights_DefinitionFields::ReturnAirFraction);
+  }
 
   bool LightsDefinition_Impl::returnAirFractionCalculatedfromPlenumTemperature() const {
     boost::optional<std::string> value = getString(OS_Lights_DefinitionFields::ReturnAirFractionCalculatedfromPlenumTemperature,true);
@@ -267,30 +248,30 @@ namespace detail {
     return result;
   }
 
-  //void LightsDefinition_Impl::resetFractionRadiant() {
-  //  bool result = setString(OS_Lights_DefinitionFields::FractionRadiant, "");
-  //  OS_ASSERT(result);
-  //}
+  void LightsDefinition_Impl::resetFractionRadiant() {
+    bool result = setString(OS_Lights_DefinitionFields::FractionRadiant, "");
+    OS_ASSERT(result);
+  }
 
   bool LightsDefinition_Impl::setFractionVisible(double fractionVisible) {
     bool result = setDouble(OS_Lights_DefinitionFields::FractionVisible, fractionVisible);
     return result;
   }
 
-  //void LightsDefinition_Impl::resetFractionVisible() {
-  //  bool result = setString(OS_Lights_DefinitionFields::FractionVisible, "");
-  //  OS_ASSERT(result);
-  //}
+  void LightsDefinition_Impl::resetFractionVisible() {
+    bool result = setString(OS_Lights_DefinitionFields::FractionVisible, "");
+    OS_ASSERT(result);
+  }
 
   bool LightsDefinition_Impl::setReturnAirFraction(double returnAirFraction) {
     bool result = setDouble(OS_Lights_DefinitionFields::ReturnAirFraction, returnAirFraction);
     return result;
   }
 
-  //void LightsDefinition_Impl::resetReturnAirFraction() {
-  //  bool result = setString(OS_Lights_DefinitionFields::ReturnAirFraction, "");
-  //  OS_ASSERT(result);
-  //}
+  void LightsDefinition_Impl::resetReturnAirFraction() {
+    bool result = setString(OS_Lights_DefinitionFields::ReturnAirFraction, "");
+    OS_ASSERT(result);
+  }
 
   bool LightsDefinition_Impl::setReturnAirFractionCalculatedfromPlenumTemperature(bool returnAirFractionCalculatedfromPlenumTemperature) {
     bool result = false;
@@ -331,13 +312,13 @@ namespace detail {
   double LightsDefinition_Impl::getLightingPower(double floorArea, double numPeople) const {
     std::string method = designLevelCalculationMethod();
 
-    if (method == "LightingLevel") {
+    if (openstudio::istringEqual("LightingLevel", method)) {
       return lightingLevel().get();
     }
-    else if (method == "Watts/Area") {
+    else if (openstudio::istringEqual("Watts/Area", method)) {
       return wattsperSpaceFloorArea().get() * floorArea;
     }
-    else if (method == "Watts/Person") {
+    else if (openstudio::istringEqual("Watts/Person", method)) {
       return wattsperPerson().get() * numPeople;
     }
 
@@ -349,16 +330,16 @@ namespace detail {
   {
     std::string method = designLevelCalculationMethod();
 
-    if (method == "LightingLevel") {
+    if (openstudio::istringEqual("LightingLevel", method)) {
       if (equal(floorArea,0.0)) {
         LOG_AND_THROW("Calculation would require division by zero.");
       }
       return lightingLevel().get() / floorArea;
     }
-    else if (method == "Watts/Area") {
+    else if (openstudio::istringEqual("Watts/Area", method)) {
       return wattsperSpaceFloorArea().get();
     }
-    else if (method == "Watts/Person") {
+    else if (openstudio::istringEqual("Watts/Person", method)) {
       if (equal(floorArea,0.0)) {
         LOG_AND_THROW("Calculation would require division by zero.");
       }
@@ -372,19 +353,19 @@ namespace detail {
   double LightsDefinition_Impl::getPowerPerPerson(double floorArea, double numPeople) const {
     std::string method = designLevelCalculationMethod();
 
-    if (method == "LightingLevel") {
+    if (openstudio::istringEqual("LightingLevel", method)) {
       if (equal(numPeople,0.0)) {
         LOG_AND_THROW("Calculation would require division by zero.");
       }
       return lightingLevel().get() / numPeople;
     }
-    else if (method == "Watts/Area") {
+    else if (openstudio::istringEqual("Watts/Area", method)) {
       if (equal(numPeople,0.0)) {
         LOG_AND_THROW("Calculation would require division by zero.");
       }
       return wattsperSpaceFloorArea().get() * floorArea / numPeople;
     }
-    else if (method == "Watts/Person") {
+    else if (openstudio::istringEqual("Watts/Person", method)) {
       return wattsperPerson().get();
     }
 
@@ -396,16 +377,14 @@ namespace detail {
                                                               double floorArea,
                                                               double numPeople)
   {
-    std::string wmethod(method);
-    boost::to_lower(wmethod);
 
-    if (wmethod == "lightinglevel") {
+    if (openstudio::istringEqual("lightinglevel", method)) {
       return setLightingLevel(getLightingPower(floorArea,numPeople));
     }
-    else if (wmethod == "watts/area") {
+    else if (openstudio::istringEqual("watts/area", method)) {
       return setWattsperSpaceFloorArea(getPowerPerFloorArea(floorArea,numPeople));
     }
-    else if (wmethod == "watts/person") {
+    else if (openstudio::istringEqual("watts/person", method)) {
       return setWattsperPerson(getPowerPerPerson(floorArea,numPeople));
     }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,6 +40,8 @@
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "../shared_gui_components/WaitDialog.hpp"
 
+#include "../model_editor/UserSettings.hpp"
+
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 
@@ -53,15 +55,15 @@ namespace openstudio {
 OSAppBase::OSAppBase( int & argc, char ** argv, const QSharedPointer<MeasureManager> &t_measureManager )
   : QApplication(argc, argv), m_measureManager(t_measureManager)
 {
-  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+  openstudio::path umd = userMeasuresDir();
 
-  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+  if (isNetworkPath(umd) && !isNetworkPathAvailable(umd)) {
     QTimer::singleShot(0, this, SLOT(showMeasureUpdateDlg()));
   }
   else {
-    LOG(Debug, "Measures dir: " << openstudio::toString(userMeasuresDir));
-    if (!QDir().exists(toQString(userMeasuresDir))){
-      BCLMeasure::setUserMeasuresDir(userMeasuresDir);
+    LOG(Debug, "Measures dir: " << openstudio::toString(umd));
+    if (!QDir().exists(toQString(umd))){
+      setUserMeasuresDir(umd);
     }
   }
 

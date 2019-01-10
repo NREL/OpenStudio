@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,6 +34,8 @@
 #include "LibraryDialog.hpp"
 #include "../openstudio_lib/MainWindow.hpp"
 #include "../openstudio_lib/OSDocument.hpp"
+
+#include "../model_editor/AccessPolicyStore.hpp"
 
 #include "../shared_gui_components/WaitDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
@@ -145,7 +147,8 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
 
   QFile f(":/library/OpenStudioPolicy.xml");
   if(f.open(QFile::ReadOnly)) {
-    openstudio::model::AccessPolicyStore::Instance().loadFile(f.readAll());
+    const auto data = f.readAll();
+    openstudio::model::AccessPolicyStore::Instance().loadFile(std::vector<char>{data.begin(), data.end()});
   }
 
   QFile data(":/openstudiolib.qss");
@@ -158,7 +161,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
     setStyleSheet(style);
   }
 
-  #ifdef Q_OS_MAC
+  #ifdef Q_OS_DARWIN
     std::stringstream webenginePath;
     webenginePath << QCoreApplication::applicationDirPath().toStdString();
     webenginePath << "/../Frameworks/QtWebEngineCore.framework/Versions/5/Helpers/QtWebEngineProcess.app/Contents/MacOS/QtWebEngineProcess";
@@ -778,7 +781,7 @@ void OpenStudioApp::onCloseClicked()
 {
   if( closeDocument() )
   {
-    #ifndef Q_OS_MAC
+    #ifndef Q_OS_DARWIN
       QApplication::quit();
     #endif
   }

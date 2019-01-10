@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,192 +34,160 @@
 #include "../Screen.hpp"
 #include "../Screen_Impl.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,Screen_DiffuseSolarReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Screen screen(model);
+TEST_F(ModelFixture, Screen_DefaultConstructor)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Unit units = screen.getDiffuseSolarReflectance(true).units(); // Get IP units.
+  ASSERT_EXIT (
+  {
+    Model m;
+    Screen screen(m);
 
-  // Bounds: 0.0 <= value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(screen.setDiffuseSolarReflectance(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(screen.setDiffuseSolarReflectance(testQ2));
-  Quantity q2 = screen.getDiffuseSolarReflectance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
+    exit(0);
+  } ,
+    ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,Screen_DiffuseVisibleReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Screen screen(model);
+TEST_F(ModelFixture, Screen_GettersSetters)
+{
+  Model m;
+  Screen screen(m);
 
-  Unit units = screen.getDiffuseVisibleReflectance(true).units(); // Get IP units.
+  // Ctor defaults
+  double diffuseSolarReflectance = 0.08;
+  double diffuseVisibleReflectance = 0.08;
+  double screenMaterialSpacing = 0.00157;
+  double screenMaterialDiameter = 0.000381;
 
-  // Bounds: 0.0 <= value < 1.0
+  // Reflected Beam Transmittance Accounting Method:  String
+  // Check Idd default: "ModelAsDiffuse"
+  EXPECT_TRUE(screen.isReflectedBeamTransmittanceAccountingMethodDefaulted());
+  EXPECT_EQ("ModelAsDiffuse", screen.reflectedBeamTransmittanceAccountingMethod());
+  // Test a valid choice
+  EXPECT_TRUE(screen.setReflectedBeamTransmittanceAccountingMethod("DoNotModel"));
+  EXPECT_FALSE(screen.isReflectedBeamTransmittanceAccountingMethodDefaulted());
+  EXPECT_EQ("DoNotModel", screen.reflectedBeamTransmittanceAccountingMethod());
+  // Test an invalid choice
+  EXPECT_FALSE(screen.setReflectedBeamTransmittanceAccountingMethod("BadChoice"));
+  EXPECT_EQ("DoNotModel", screen.reflectedBeamTransmittanceAccountingMethod());
 
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(screen.setDiffuseVisibleReflectance(testQ));
 
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(screen.setDiffuseVisibleReflectance(testQ2));
-  Quantity q2 = screen.getDiffuseVisibleReflectance(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
+  // Diffuse Solar Reflectance:  Double
+  // Check Idd default: 0.08, overriden by ctor arg with same value
+  EXPECT_EQ(diffuseSolarReflectance, screen.diffuseSolarReflectance());
+  EXPECT_TRUE(screen.setDiffuseSolarReflectance(0.04));
+  EXPECT_EQ(0.04, screen.diffuseSolarReflectance());
+
+
+  // Diffuse Visible Reflectance:  Double
+  // Check Idd default: 0.08, overriden by ctor arg with same value
+  EXPECT_EQ(diffuseVisibleReflectance, screen.diffuseVisibleReflectance());
+  EXPECT_TRUE(screen.setDiffuseVisibleReflectance(0.04));
+  EXPECT_EQ(0.04, screen.diffuseVisibleReflectance());
+
+  // Thermal Hemispherical Emissivity:  Double
+  // Check Idd default: 0.9
+  EXPECT_TRUE(screen.isThermalHemisphericalEmissivityDefaulted());
+  EXPECT_EQ(0.9, screen.thermalHemisphericalEmissivity());
+  EXPECT_TRUE(screen.setThermalHemisphericalEmissivity(0.45));
+  EXPECT_FALSE(screen.isThermalHemisphericalEmissivityDefaulted());
+  EXPECT_EQ(0.45, screen.thermalHemisphericalEmissivity());
+  screen.resetThermalHemisphericalEmissivity();
+  EXPECT_EQ(0.9, screen.thermalHemisphericalEmissivity());
+
+
+  // Conductivity:  Double
+  // Check Idd default: 221.0
+  EXPECT_TRUE(screen.isConductivityDefaulted());
+  EXPECT_EQ(221.0, screen.conductivity());
+  EXPECT_TRUE(screen.setConductivity(110.5));
+  EXPECT_FALSE(screen.isConductivityDefaulted());
+  EXPECT_EQ(110.5, screen.conductivity());
+  screen.resetConductivity();
+  EXPECT_EQ(221.0, screen.conductivity());
+
+
+  // Screen Material Spacing:  Double
+  // Check Idd default: 0.00157, overriden by ctor arg with same value
+  EXPECT_EQ(screenMaterialSpacing, screen.screenMaterialSpacing());
+  EXPECT_TRUE(screen.setScreenMaterialSpacing(0.1));
+  EXPECT_EQ(0.1, screen.screenMaterialSpacing());
+
+  // Screen Material Diameter:  Double
+  // Check Idd default: 0.000381, overriden by ctor arg with same value
+  EXPECT_EQ(screenMaterialDiameter, screen.screenMaterialDiameter());
+  EXPECT_TRUE(screen.setScreenMaterialDiameter(0.01));
+  EXPECT_EQ(0.01, screen.screenMaterialDiameter());
+
+
+  // Screen to Glass Distance:  Double
+  // Check Idd default: 0.025
+  EXPECT_TRUE(screen.isScreentoGlassDistanceDefaulted());
+  EXPECT_EQ(0.025, screen.screentoGlassDistance());
+  EXPECT_TRUE(screen.setScreentoGlassDistance(0.01));
+  EXPECT_FALSE(screen.isScreentoGlassDistanceDefaulted());
+  EXPECT_EQ(0.01, screen.screentoGlassDistance());
+  screen.resetScreentoGlassDistance();
+  EXPECT_EQ(0.025, screen.screentoGlassDistance());
+
+
+  // Top Opening Multiplier:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(screen.isTopOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, screen.topOpeningMultiplier());
+  EXPECT_TRUE(screen.setTopOpeningMultiplier(0.0));
+  EXPECT_FALSE(screen.isTopOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, screen.topOpeningMultiplier());
+  screen.resetTopOpeningMultiplier();
+  EXPECT_EQ(0.0, screen.topOpeningMultiplier());
+
+
+  // Bottom Opening Multiplier:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(screen.isBottomOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, screen.bottomOpeningMultiplier());
+  EXPECT_TRUE(screen.setBottomOpeningMultiplier(0.0));
+  EXPECT_FALSE(screen.isBottomOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, screen.bottomOpeningMultiplier());
+  screen.resetBottomOpeningMultiplier();
+  EXPECT_EQ(0.0, screen.bottomOpeningMultiplier());
+
+
+  // Left Side Opening Multiplier:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(screen.isLeftSideOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, screen.leftSideOpeningMultiplier());
+  EXPECT_TRUE(screen.setLeftSideOpeningMultiplier(0.0));
+  EXPECT_FALSE(screen.isLeftSideOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, screen.leftSideOpeningMultiplier());
+  screen.resetLeftSideOpeningMultiplier();
+  EXPECT_EQ(0.0, screen.leftSideOpeningMultiplier());
+
+
+  // Right Side Opening Multiplier:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(screen.isRightSideOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, screen.rightSideOpeningMultiplier());
+  EXPECT_TRUE(screen.setRightSideOpeningMultiplier(0.0));
+  EXPECT_FALSE(screen.isRightSideOpeningMultiplierDefaulted());
+  EXPECT_EQ(0.0, screen.rightSideOpeningMultiplier());
+  screen.resetRightSideOpeningMultiplier();
+  EXPECT_EQ(0.0, screen.rightSideOpeningMultiplier());
+
+
+  // Angle of Resolution for Screen Transmittance Output Map:  String
+  // Check Idd default: "0"
+  EXPECT_TRUE(screen.isAngleofResolutionforScreenTransmittanceOutputMapDefaulted());
+  EXPECT_EQ("0", screen.angleofResolutionforScreenTransmittanceOutputMap());
+  // Test a valid choice
+  EXPECT_TRUE(screen.setAngleofResolutionforScreenTransmittanceOutputMap("1"));
+  EXPECT_FALSE(screen.isAngleofResolutionforScreenTransmittanceOutputMapDefaulted());
+  EXPECT_EQ("1", screen.angleofResolutionforScreenTransmittanceOutputMap());
+  // Test an invalid choice
+  EXPECT_FALSE(screen.setAngleofResolutionforScreenTransmittanceOutputMap("BadChoice"));
+  EXPECT_EQ("1", screen.angleofResolutionforScreenTransmittanceOutputMap());
+
 }
-
-TEST_F(ModelFixture,Screen_ThermalHemisphericalEmissivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Screen screen(model);
-
-  Unit units = screen.getThermalHemisphericalEmissivity(true).units(); // Get IP units.
-
-  // Bounds: 0.0 < value < 1.0
-
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_FALSE(screen.setThermalHemisphericalEmissivity(testQ));
-
-  double value2(0.1);
-  Quantity testQ2(value2,units);
-  EXPECT_TRUE(screen.setThermalHemisphericalEmissivity(testQ2));
-  Quantity q2 = screen.getThermalHemisphericalEmissivity(true);
-  EXPECT_NEAR(value2,q2.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q2.units().standardString());
-}
-
-TEST_F(ModelFixture,Screen_Conductivity_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Screen screen(model);
-
-  Unit units = screen.getConductivity(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(screen.setConductivity(testQ));
-  Quantity q = screen.getConductivity(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Screen_ScreenMaterialSpacing_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Screen screen(model);
-
-  Unit units = screen.getScreenMaterialSpacing(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(screen.setScreenMaterialSpacing(testQ));
-  Quantity q = screen.getScreenMaterialSpacing(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Screen_ScreenMaterialDiameter_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Screen screen(model);
-
-  Unit units = screen.getScreenMaterialDiameter(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(screen.setScreenMaterialDiameter(testQ));
-  Quantity q = screen.getScreenMaterialDiameter(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Screen_ScreentoGlassDistance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Screen screen(model);
-
-  Unit units = screen.getScreentoGlassDistance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(screen.setScreentoGlassDistance(testQ));
-  Quantity q = screen.getScreentoGlassDistance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Screen_TopOpeningMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Screen screen(model);
-
-  Unit units = screen.getTopOpeningMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(screen.setTopOpeningMultiplier(testQ));
-  Quantity q = screen.getTopOpeningMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Screen_BottomOpeningMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Screen screen(model);
-
-  Unit units = screen.getBottomOpeningMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(screen.setBottomOpeningMultiplier(testQ));
-  Quantity q = screen.getBottomOpeningMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Screen_LeftSideOpeningMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Screen screen(model);
-
-  Unit units = screen.getLeftSideOpeningMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(screen.setLeftSideOpeningMultiplier(testQ));
-  Quantity q = screen.getLeftSideOpeningMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,Screen_RightSideOpeningMultiplier_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  Screen screen(model);
-
-  Unit units = screen.getRightSideOpeningMultiplier(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(screen.setRightSideOpeningMultiplier(testQ));
-  Quantity q = screen.getRightSideOpeningMultiplier(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-

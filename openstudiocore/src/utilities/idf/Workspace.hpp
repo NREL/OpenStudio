@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,7 +53,6 @@ class IdfFile;
 class IdfObject;
 class WorkspaceObject;
 class WorkspaceObjectOrder;
-class URLSearchPath;
 class ValidityReport;
 class VersionString;
 
@@ -434,15 +433,6 @@ class UTILITIES_API Workspace {
    *  OpenStudio IDD), pointers between objects are serialized as handles, otherwise they are
    *  serialized as names. */
   IdfFile toIdfFile() const;
-
-  /// Find and update all relative (and remote) URLs to well defined locations based on the search paths supplied
-  /// \param[in] t_paths Paths to search for relative urls
-  /// \param[in] t_create_relative_paths If true, update paths to relative locations on the local filesystem, else, make internal urls
-  ///            absolute
-  /// \param[in] t_infile Path of this workspace object. Used during the calculation/searching of relative search paths
-  /// \returns Vector of source/target pairs. The user will be responsible for ensuring that the results are copied into place
-  std::vector<std::pair<QUrl, openstudio::path> > locateUrls(const std::vector<URLSearchPath> &t_paths, bool t_create_relative_paths,
-      const openstudio::path &t_infile);
 
   //@}
   /** @name GUI Helpers */

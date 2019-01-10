@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,8 +47,6 @@
 
 #include <resources.hxx>
 
-#include <QVariant>
-
 #include <boost/lexical_cast.hpp>
 
 #include <sstream>
@@ -57,22 +55,6 @@
 using namespace std;
 using namespace boost;
 using namespace openstudio;
-
-
-TEST_F(IdfFixture,IdfObject_URL)
-{
-
-  std::string text = "Schedule:File,Dan,,file:///home/ramey/schedule.csv,1;";
-
-
-  OptionalIdfObject oObj = IdfObject::load(text);
-  ASSERT_TRUE(oObj);
-  boost::optional<QUrl> urlOpt  = oObj->getURL(2);
-  EXPECT_TRUE(urlOpt);
-  cout <<"---------------------URL TEXT-------------------\n"
-       << urlOpt->toString().toStdString()
-       << endl;
-}
 
 TEST_F(IdfFixture, IdfObject_ConstructDefaultsFromIddObjectType) {
 
@@ -714,16 +696,6 @@ TEST_F(IdfFixture, IdfObject_ScheduleFileWithUrl)
 
   ASSERT_TRUE(object->getString(6));
   EXPECT_EQ("Comma", object->getString(6).get());
-}
-
-TEST_F(IdfFixture, Handle_QVariant)
-{
-  Handle handle = createUUID();
-  QVariant variant = QVariant::fromValue(handle);
-  EXPECT_EQ("openstudio::UUID", std::string(variant.typeName()));
-  ASSERT_TRUE(variant.canConvert<Handle>());
-  Handle handle2 = variant.value<Handle>();
-  EXPECT_TRUE(handle == handle2);
 }
 
 TEST_F(IdfFixture, DoubleDisplayedAsString) {

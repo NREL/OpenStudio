@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,16 +47,10 @@ namespace openstudio {
       return buf;
     }
 
-    QByteArray read_as_QByteArray(openstudio::filesystem::ifstream &t_file)
-    {
-      const auto buf = read(t_file);
-      return QByteArray(&buf.front(), buf.size());
-    }
-
-    QByteArray read_as_QByteArray(const openstudio::path &t_path)
+    std::vector<char> read(const openstudio::path &t_path)
     {
       openstudio::filesystem::ifstream f(t_path, std::ios_base::binary);
-      return read_as_QByteArray(f);
+      return read(f);
     }
 
     std::string read_as_string(openstudio::filesystem::ifstream &t_file)

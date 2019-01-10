@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -189,7 +189,7 @@ TEST_F(MeasureFixture, OSArgument_Domain) {
   EXPECT_EQ(0.0, doubleArg.domainAsDouble()[0]);
   EXPECT_EQ(std::numeric_limits<double>::max(), doubleArg.domainAsDouble()[1]);
   EXPECT_EQ(0, integerArg.domainAsInteger()[0]);
-  EXPECT_EQ(std::numeric_limits<int>::max(), integerArg.domainAsDouble()[1]);
+  EXPECT_EQ(std::numeric_limits<int>::max(), integerArg.domainAsInteger()[1]);
 
   d = 1.0;
   i = 1;
@@ -205,7 +205,7 @@ TEST_F(MeasureFixture, OSArgument_Domain) {
   EXPECT_EQ(0.0, doubleArg.domainAsDouble()[0]);
   EXPECT_EQ(1.0, doubleArg.domainAsDouble()[1]);
   EXPECT_EQ(0, integerArg.domainAsInteger()[0]);
-  EXPECT_EQ(1, integerArg.domainAsDouble()[1]);
+  EXPECT_EQ(1, integerArg.domainAsInteger()[1]);
 
   // the domain is not currently used to validate these values
   EXPECT_TRUE(doubleArg.setValue(-1.0));

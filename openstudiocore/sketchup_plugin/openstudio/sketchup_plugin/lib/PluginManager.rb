@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -7,26 +7,28 @@
 #  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
 #  disclaimer.
 #
-#  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-#  following disclaimer in the documentation and/or other materials provided with the distribution.
+#  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+#  disclaimer in the documentation and/or other materials provided with the distribution.
 #
-#  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
-#  products derived from this software without specific prior written permission from the respective party.
+#  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+#  derived from this software without specific prior written permission from the respective party.
 #
-#  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
-#  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
-#  specific prior written permission from Alliance for Sustainable Energy, LLC.
+#  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+#  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+#  written permission from Alliance for Sustainable Energy, LLC.
 #
-#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 #  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
-#  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
-#  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+#  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+#  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+#  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+#  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
 require("openstudio")
+require("openstudio_modeleditor")
 require("openstudio/sketchup_plugin/lib/AnimationManager")
 require("openstudio/sketchup_plugin/lib/CommandManager")
 require("openstudio/sketchup_plugin/lib/DialogManager")
@@ -212,7 +214,7 @@ module OpenStudio
 
       # process events in OpenStudio Model
       # this may add events to the Plugin event_queue
-      OpenStudio::Application.instance.processEvents
+      OpenStudio::Modeleditor::Application.instance.processEvents
 
       @model_manager.model_interfaces.each do |model_interface|
         model_interface.model_watcher.processAddedObjects
@@ -523,14 +525,15 @@ module OpenStudio
   end
 
   # initialize QApplication
-  Application::instance.application(true)
-  Application::instance.application.setOrganizationName("NREL")
-  Application::instance.application.setOrganizationDomain("nrel.gov")
-  Application::instance.application.setApplicationName("OpenStudio")
+  Modeleditor::Application::instance.application(true)
+  Modeleditor::Application::instance.application.setOrganizationName("NREL")
+  Modeleditor::Application::instance.application.setOrganizationDomain("nrel.gov")
+  Modeleditor::Application::instance.application.setApplicationName("OpenStudio")
 
   # get SketchUp Qt Widget if possible
-  SketchUpWidget = Application::instance.sketchUpWidget
-  SketchUpWidget.hide if SketchUpWidget
+  SketchUpWidget = Modeleditor::Application::instance.sketchUpWidget
+  # DLM: TODO, SWIG is not detecting methdods from the base class QWidget
+  #SketchUpWidget.hide if SketchUpWidget
 
   # Create a module constant to reference the plugin object anywhere within the module.
   Plugin = PluginManager.new

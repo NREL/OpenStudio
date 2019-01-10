@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,9 +38,6 @@
 #include <vector>
 
 struct sqlite3;
-
-class QSqlDatabase;
-class QWidget;
 
 namespace openstudio{
 
@@ -134,11 +131,6 @@ namespace openstudio{
     /// Search for measures with attributes matching those in searchTerms
     std::vector<BCLMeasure> measureAttributeSearch(const std::vector<std::pair<std::string, std::string> >& searchTerms) const;
 
-    /// Prompt the user for auth key using a modal dialog, this is a blocking call that requires user input.
-    /// If user enters input returns the value of setAuthKey, otherwise returns false
-    bool prodAuthKeyUserPrompt(QWidget* parent = nullptr);
-    bool devAuthKeyUserPrompt(QWidget* parent = nullptr);
-
     /// Return production OAuth key
     std::string prodAuthKey() const;
 
@@ -154,12 +146,12 @@ namespace openstudio{
     /// Returns the path to the local BCL library
     openstudio::path libraryPath() const;
 
+    // DLM: removed for openstudio 3
     /// Relocates the local BCL library, stores the library path in user preferences
-    bool setLibraryPath(const openstudio::path& libraryPath);
+    //bool setLibraryPath(const openstudio::path& libraryPath);
 
     /// returns the fully qualified path of the current database file
     openstudio::filesystem::path dbPath() const;
-
 
     //@}
   private:

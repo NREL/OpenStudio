@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -134,24 +134,10 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Luminaire_Impl::getPositionXcoordinate(bool returnIP) const {
-    OptionalDouble value = positionXcoordinate();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_LuminaireFields::PositionXcoordinate, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double Luminaire_Impl::positionYcoordinate() const {
     boost::optional<double> value = getDouble(OS_LuminaireFields::PositionYcoordinate,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Luminaire_Impl::getPositionYcoordinate(bool returnIP) const {
-    OptionalDouble value = positionYcoordinate();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_LuminaireFields::PositionYcoordinate, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   double Luminaire_Impl::positionZcoordinate() const {
@@ -160,24 +146,10 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Luminaire_Impl::getPositionZcoordinate(bool returnIP) const {
-    OptionalDouble value = positionZcoordinate();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_LuminaireFields::PositionZcoordinate, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double Luminaire_Impl::psiRotationAroundXaxis() const {
     boost::optional<double> value = getDouble(OS_LuminaireFields::PsiRotationAroundXaxis,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Luminaire_Impl::getPsiRotationAroundXaxis(bool returnIP) const {
-    OptionalDouble value = psiRotationAroundXaxis();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_LuminaireFields::PsiRotationAroundXaxis, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Luminaire_Impl::isPsiRotationAroundXaxisDefaulted() const {
@@ -190,13 +162,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Luminaire_Impl::getThetaRotationAroundYaxis(bool returnIP) const {
-    OptionalDouble value = thetaRotationAroundYaxis();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_LuminaireFields::ThetaRotationAroundYaxis, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool Luminaire_Impl::isThetaRotationAroundYaxisDefaulted() const {
     return isEmpty(OS_LuminaireFields::ThetaRotationAroundYaxis);
   }
@@ -207,13 +172,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Luminaire_Impl::getPhiRotationAroundZaxis(bool returnIP) const {
-    OptionalDouble value = phiRotationAroundZaxis();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_LuminaireFields::PhiRotationAroundZaxis, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool Luminaire_Impl::isPhiRotationAroundZaxisDefaulted() const {
     return isEmpty(OS_LuminaireFields::PhiRotationAroundZaxis);
   }
@@ -222,13 +180,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_LuminaireFields::FractionReplaceable,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Luminaire_Impl::getFractionReplaceable(bool returnIP) const {
-    OptionalDouble value = fractionReplaceable();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_LuminaireFields::FractionReplaceable, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Luminaire_Impl::isFractionReplaceableDefaulted() const {
@@ -265,28 +216,10 @@ namespace detail {
     return result;
   }
 
-  bool Luminaire_Impl::setPositionXcoordinate(const Quantity& positionXcoordinate) {
-    OptionalDouble value = getDoubleFromQuantity(OS_LuminaireFields::PositionXcoordinate,positionXcoordinate);
-    if (!value) {
-      return false;
-    }
-    setPositionXcoordinate(value.get());
-    return true;
-  }
-
   bool Luminaire_Impl::setPositionYcoordinate(double positionYcoordinate) {
     bool result = setDouble(OS_LuminaireFields::PositionYcoordinate, positionYcoordinate);
     OS_ASSERT(result);
     return result;
-  }
-
-  bool Luminaire_Impl::setPositionYcoordinate(const Quantity& positionYcoordinate) {
-    OptionalDouble value = getDoubleFromQuantity(OS_LuminaireFields::PositionYcoordinate,positionYcoordinate);
-    if (!value) {
-      return false;
-    }
-    setPositionYcoordinate(value.get());
-    return true;
   }
 
   bool Luminaire_Impl::setPositionZcoordinate(double positionZcoordinate) {
@@ -295,28 +228,10 @@ namespace detail {
     return result;
   }
 
-  bool Luminaire_Impl::setPositionZcoordinate(const Quantity& positionZcoordinate) {
-    OptionalDouble value = getDoubleFromQuantity(OS_LuminaireFields::PositionZcoordinate,positionZcoordinate);
-    if (!value) {
-      return false;
-    }
-    setPositionZcoordinate(value.get());
-    return true;
-  }
-
   bool Luminaire_Impl::setPsiRotationAroundXaxis(double psiRotationAroundXaxis) {
     bool result = setDouble(OS_LuminaireFields::PsiRotationAroundXaxis, psiRotationAroundXaxis);
     OS_ASSERT(result);
     return result;
-  }
-
-  bool Luminaire_Impl::setPsiRotationAroundXaxis(const Quantity& psiRotationAroundXaxis) {
-    OptionalDouble value = getDoubleFromQuantity(OS_LuminaireFields::PsiRotationAroundXaxis,psiRotationAroundXaxis);
-    if (!value) {
-      return false;
-    }
-    setPsiRotationAroundXaxis(value.get());
-    return true;
   }
 
   void Luminaire_Impl::resetPsiRotationAroundXaxis() {
@@ -330,15 +245,6 @@ namespace detail {
     return result;
   }
 
-  bool Luminaire_Impl::setThetaRotationAroundYaxis(const Quantity& thetaRotationAroundYaxis) {
-    OptionalDouble value = getDoubleFromQuantity(OS_LuminaireFields::ThetaRotationAroundYaxis,thetaRotationAroundYaxis);
-    if (!value) {
-      return false;
-    }
-    setThetaRotationAroundYaxis(value.get());
-    return true;
-  }
-
   void Luminaire_Impl::resetThetaRotationAroundYaxis() {
     bool result = setString(OS_LuminaireFields::ThetaRotationAroundYaxis, "");
     OS_ASSERT(result);
@@ -350,15 +256,6 @@ namespace detail {
     return result;
   }
 
-  bool Luminaire_Impl::setPhiRotationAroundZaxis(const Quantity& phiRotationAroundZaxis) {
-    OptionalDouble value = getDoubleFromQuantity(OS_LuminaireFields::PhiRotationAroundZaxis,phiRotationAroundZaxis);
-    if (!value) {
-      return false;
-    }
-    setPhiRotationAroundZaxis(value.get());
-    return true;
-  }
-
   void Luminaire_Impl::resetPhiRotationAroundZaxis() {
     bool result = setString(OS_LuminaireFields::PhiRotationAroundZaxis, "");
     OS_ASSERT(result);
@@ -367,14 +264,6 @@ namespace detail {
   bool Luminaire_Impl::setFractionReplaceable(double fractionReplaceable) {
     bool result = setDouble(OS_LuminaireFields::FractionReplaceable, fractionReplaceable);
     return result;
-  }
-
-  bool Luminaire_Impl::setFractionReplaceable(const Quantity& fractionReplaceable) {
-    OptionalDouble value = getDoubleFromQuantity(OS_LuminaireFields::FractionReplaceable,fractionReplaceable);
-    if (!value) {
-      return false;
-    }
-    return setFractionReplaceable(value.get());
   }
 
   void Luminaire_Impl::resetFractionReplaceable() {
@@ -526,62 +415,6 @@ namespace detail {
     return lightingPower() / numPeople;
   }
 
-  openstudio::Quantity Luminaire_Impl::positionXcoordinate_SI() const {
-    return getPositionXcoordinate(false);
-  }
-
-  openstudio::Quantity Luminaire_Impl::positionXcoordinate_IP() const {
-    return getPositionXcoordinate(true);
-  }
-
-  openstudio::Quantity Luminaire_Impl::positionYcoordinate_SI() const {
-    return getPositionYcoordinate(false);
-  }
-
-  openstudio::Quantity Luminaire_Impl::positionYcoordinate_IP() const {
-    return getPositionYcoordinate(true);
-  }
-
-  openstudio::Quantity Luminaire_Impl::positionZcoordinate_SI() const {
-    return getPositionZcoordinate(false);
-  }
-
-  openstudio::Quantity Luminaire_Impl::positionZcoordinate_IP() const {
-    return getPositionZcoordinate(true);
-  }
-
-  openstudio::Quantity Luminaire_Impl::psiRotationAroundXaxis_SI() const {
-    return getPsiRotationAroundXaxis(false);
-  }
-
-  openstudio::Quantity Luminaire_Impl::psiRotationAroundXaxis_IP() const {
-    return getPsiRotationAroundXaxis(true);
-  }
-
-  openstudio::Quantity Luminaire_Impl::thetaRotationAroundYaxis_SI() const {
-    return getThetaRotationAroundYaxis(false);
-  }
-
-  openstudio::Quantity Luminaire_Impl::thetaRotationAroundYaxis_IP() const {
-    return getThetaRotationAroundYaxis(true);
-  }
-
-  openstudio::Quantity Luminaire_Impl::phiRotationAroundZaxis_SI() const {
-    return getPhiRotationAroundZaxis(false);
-  }
-
-  openstudio::Quantity Luminaire_Impl::phiRotationAroundZaxis_IP() const {
-    return getPhiRotationAroundZaxis(true);
-  }
-
-  openstudio::Quantity Luminaire_Impl::fractionReplaceable_SI() const {
-    return getFractionReplaceable(false);
-  }
-
-  openstudio::Quantity Luminaire_Impl::fractionReplaceable_IP() const {
-    return getFractionReplaceable(true);
-  }
-
   boost::optional<ModelObject> Luminaire_Impl::luminaireDefinitionAsModelObject() const {
     OptionalModelObject result = luminaireDefinition();
     return result;
@@ -661,32 +494,16 @@ double Luminaire::positionXcoordinate() const {
   return getImpl<detail::Luminaire_Impl>()->positionXcoordinate();
 }
 
-Quantity Luminaire::getPositionXcoordinate(bool returnIP) const {
-  return getImpl<detail::Luminaire_Impl>()->getPositionXcoordinate(returnIP);
-}
-
 double Luminaire::positionYcoordinate() const {
   return getImpl<detail::Luminaire_Impl>()->positionYcoordinate();
-}
-
-Quantity Luminaire::getPositionYcoordinate(bool returnIP) const {
-  return getImpl<detail::Luminaire_Impl>()->getPositionYcoordinate(returnIP);
 }
 
 double Luminaire::positionZcoordinate() const {
   return getImpl<detail::Luminaire_Impl>()->positionZcoordinate();
 }
 
-Quantity Luminaire::getPositionZcoordinate(bool returnIP) const {
-  return getImpl<detail::Luminaire_Impl>()->getPositionZcoordinate(returnIP);
-}
-
 double Luminaire::psiRotationAroundXaxis() const {
   return getImpl<detail::Luminaire_Impl>()->psiRotationAroundXaxis();
-}
-
-Quantity Luminaire::getPsiRotationAroundXaxis(bool returnIP) const {
-  return getImpl<detail::Luminaire_Impl>()->getPsiRotationAroundXaxis(returnIP);
 }
 
 bool Luminaire::isPsiRotationAroundXaxisDefaulted() const {
@@ -697,10 +514,6 @@ double Luminaire::thetaRotationAroundYaxis() const {
   return getImpl<detail::Luminaire_Impl>()->thetaRotationAroundYaxis();
 }
 
-Quantity Luminaire::getThetaRotationAroundYaxis(bool returnIP) const {
-  return getImpl<detail::Luminaire_Impl>()->getThetaRotationAroundYaxis(returnIP);
-}
-
 bool Luminaire::isThetaRotationAroundYaxisDefaulted() const {
   return getImpl<detail::Luminaire_Impl>()->isThetaRotationAroundYaxisDefaulted();
 }
@@ -709,20 +522,12 @@ double Luminaire::phiRotationAroundZaxis() const {
   return getImpl<detail::Luminaire_Impl>()->phiRotationAroundZaxis();
 }
 
-Quantity Luminaire::getPhiRotationAroundZaxis(bool returnIP) const {
-  return getImpl<detail::Luminaire_Impl>()->getPhiRotationAroundZaxis(returnIP);
-}
-
 bool Luminaire::isPhiRotationAroundZaxisDefaulted() const {
   return getImpl<detail::Luminaire_Impl>()->isPhiRotationAroundZaxisDefaulted();
 }
 
 double Luminaire::fractionReplaceable() const {
   return getImpl<detail::Luminaire_Impl>()->fractionReplaceable();
-}
-
-Quantity Luminaire::getFractionReplaceable(bool returnIP) const {
-  return getImpl<detail::Luminaire_Impl>()->getFractionReplaceable(returnIP);
 }
 
 bool Luminaire::isFractionReplaceableDefaulted() const {
@@ -741,15 +546,7 @@ bool Luminaire::setPositionXcoordinate(double positionXcoordinate) {
   return getImpl<detail::Luminaire_Impl>()->setPositionXcoordinate(positionXcoordinate);
 }
 
-bool Luminaire::setPositionXcoordinate(const Quantity& positionXcoordinate) {
-  return getImpl<detail::Luminaire_Impl>()->setPositionXcoordinate(positionXcoordinate);
-}
-
 bool Luminaire::setPositionYcoordinate(double positionYcoordinate) {
-  return getImpl<detail::Luminaire_Impl>()->setPositionYcoordinate(positionYcoordinate);
-}
-
-bool Luminaire::setPositionYcoordinate(const Quantity& positionYcoordinate) {
   return getImpl<detail::Luminaire_Impl>()->setPositionYcoordinate(positionYcoordinate);
 }
 
@@ -757,15 +554,7 @@ bool Luminaire::setPositionZcoordinate(double positionZcoordinate) {
   return getImpl<detail::Luminaire_Impl>()->setPositionZcoordinate(positionZcoordinate);
 }
 
-bool Luminaire::setPositionZcoordinate(const Quantity& positionZcoordinate) {
-  return getImpl<detail::Luminaire_Impl>()->setPositionZcoordinate(positionZcoordinate);
-}
-
 bool Luminaire::setPsiRotationAroundXaxis(double psiRotationAroundXaxis) {
-  return getImpl<detail::Luminaire_Impl>()->setPsiRotationAroundXaxis(psiRotationAroundXaxis);
-}
-
-bool Luminaire::setPsiRotationAroundXaxis(const Quantity& psiRotationAroundXaxis) {
   return getImpl<detail::Luminaire_Impl>()->setPsiRotationAroundXaxis(psiRotationAroundXaxis);
 }
 
@@ -777,10 +566,6 @@ bool Luminaire::setThetaRotationAroundYaxis(double thetaRotationAroundYaxis) {
   return getImpl<detail::Luminaire_Impl>()->setThetaRotationAroundYaxis(thetaRotationAroundYaxis);
 }
 
-bool Luminaire::setThetaRotationAroundYaxis(const Quantity& thetaRotationAroundYaxis) {
-  return getImpl<detail::Luminaire_Impl>()->setThetaRotationAroundYaxis(thetaRotationAroundYaxis);
-}
-
 void Luminaire::resetThetaRotationAroundYaxis() {
   getImpl<detail::Luminaire_Impl>()->resetThetaRotationAroundYaxis();
 }
@@ -789,19 +574,11 @@ bool Luminaire::setPhiRotationAroundZaxis(double phiRotationAroundZaxis) {
   return getImpl<detail::Luminaire_Impl>()->setPhiRotationAroundZaxis(phiRotationAroundZaxis);
 }
 
-bool Luminaire::setPhiRotationAroundZaxis(const Quantity& phiRotationAroundZaxis) {
-  return getImpl<detail::Luminaire_Impl>()->setPhiRotationAroundZaxis(phiRotationAroundZaxis);
-}
-
 void Luminaire::resetPhiRotationAroundZaxis() {
   getImpl<detail::Luminaire_Impl>()->resetPhiRotationAroundZaxis();
 }
 
 bool Luminaire::setFractionReplaceable(double fractionReplaceable) {
-  return getImpl<detail::Luminaire_Impl>()->setFractionReplaceable(fractionReplaceable);
-}
-
-bool Luminaire::setFractionReplaceable(const Quantity& fractionReplaceable) {
   return getImpl<detail::Luminaire_Impl>()->setFractionReplaceable(fractionReplaceable);
 }
 

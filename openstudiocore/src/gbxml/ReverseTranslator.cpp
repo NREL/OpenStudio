@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,7 +62,7 @@
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
-#include "../utilities/core/StringHelpers.hpp"
+#include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/UnitFactory.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
@@ -114,7 +114,6 @@ namespace gbxml {
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()) {
-       
         pugi::xml_document doc;
         auto load_result = doc.load(file);
         if (load_result) {
@@ -760,16 +759,16 @@ namespace gbxml {
 
         // From the GbXML Schema (v6.01):
         //
-        // First AdjacentSpaceId entered will determine how the referenced construction layers are ordered with the first construction layer 
-        // being in contact with the outside or 2nd space listed and the last layer in contact with the first space listed. 
+        // First AdjacentSpaceId entered will determine how the referenced construction layers are ordered with the first construction layer
+        // being in contact with the outside or 2nd space listed and the last layer in contact with the first space listed.
         //
-        // References the ID of a Space that is bounded by this surface. First AdjacentSpaceId entered will determine how the referenced construction 
-        // layers are ordered with the first construction layer being in contact with the outside or 2nd space listed and the last layer in contact with 
-        // the first space listed. The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element, 
+        // References the ID of a Space that is bounded by this surface. First AdjacentSpaceId entered will determine how the referenced construction
+        // layers are ordered with the first construction layer being in contact with the outside or 2nd space listed and the last layer in contact with
+        // the first space listed. The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element,
         // is always pointing away from the first AdjacentSpaceID listed.
         //
-        // With interior horizontal surfaces, this attribute can distinguish between ceiling and floor surfaces to avoid double-counting of floor areas, etc. 
-        // If not present, the surface type can be assumed based on the description of the surface type enums. When the surfaceTypeEnum is provided and the 
+        // With interior horizontal surfaces, this attribute can distinguish between ceiling and floor surfaces to avoid double-counting of floor areas, etc.
+        // If not present, the surface type can be assumed based on the description of the surface type enums. When the surfaceTypeEnum is provided and the
         // surface attributes (i.e. adjacency, tilt angle) do not match the enumeration's description, the enumeration should have precedence.
 
         std::string adjacentSpaceId = adjacentSpaceElements.at(1).attribute("spaceIdRef").value();
@@ -809,6 +808,7 @@ namespace gbxml {
             bool reverseConstruction = false;
 
             if (spaceSurfaceType.empty() && adjacentSpaceSurfaceType.empty()) {
+
               // this is ok but gives us no new information, no warning issued
 
             } else if (spaceSurfaceType.empty() && !adjacentSpaceSurfaceType.empty()) {
@@ -855,7 +855,7 @@ namespace gbxml {
                       adjacentSpace = temp;
                       figuredOut = true;
 
-                      // Schema says, "The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element, 
+                      // Schema says, "The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element,
                       // is always pointing away from the first AdjacentSpaceID listed." but this does not match surfaceType in the first AdjacentSpaceID
                       LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType '" << toString(spaceSurfaceType) << "' attribute of first AdjacentSpaceID");
 
@@ -875,7 +875,7 @@ namespace gbxml {
                       adjacentSpace = temp;
                       figuredOut = true;
 
-                      // Schema says, "The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element, 
+                      // Schema says, "The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element,
                       // is always pointing away from the first AdjacentSpaceID listed." but this does not match surfaceType in the first AdjacentSpaceID
                       LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType attribute '" << toString(spaceSurfaceType) << "' of first AdjacentSpaceID");
 

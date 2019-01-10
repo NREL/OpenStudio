@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,21 +39,12 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/math/FloatCompare.hpp"
-
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
 
 namespace detail {
-
-  ATTRIBUTE_IMPLEMENTATION(1,0,0,surfaceArea,SurfaceArea,InternalMassDefinition,0,OS_InternalMass_Definition,SurfaceArea)
-
-  ATTRIBUTE_IMPLEMENTATION(1,0,0,surfaceAreaperSpaceFloorArea,SurfaceAreaperSpaceFloorArea,
-                           InternalMassDefinition,0,OS_InternalMass_Definition,SurfaceAreaperSpaceFloorArea)
-
-  ATTRIBUTE_IMPLEMENTATION(1,0,0,surfaceAreaperPerson,SurfaceAreaperPerson,
-                           InternalMassDefinition,0,OS_InternalMass_Definition,SurfaceAreaperPerson)
 
   InternalMassDefinition_Impl::InternalMassDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
     : SpaceLoadDefinition_Impl(idfObject,model,keepHandle)

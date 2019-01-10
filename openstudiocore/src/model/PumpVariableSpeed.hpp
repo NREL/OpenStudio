@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -78,8 +78,6 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Maximum Flow Rate" **/
   boost::optional<double> ratedFlowRate() const;
 
-  OSOptionalQuantity getRatedFlowRate(bool returnIP=false) const;
-
   bool isRatedFlowRateDefaulted() const;
 
   bool isRatedFlowRateAutosized() const;
@@ -87,14 +85,10 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Pump Head" **/
   double ratedPumpHead() const;
 
-  Quantity getRatedPumpHead(bool returnIP=false) const;
-
   bool isRatedPumpHeadDefaulted() const;
 
   /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Power Consumption" **/
   boost::optional<double> ratedPowerConsumption() const;
-
-  OSOptionalQuantity getRatedPowerConsumption(bool returnIP=false) const;
 
   bool isRatedPowerConsumptionDefaulted() const;
 
@@ -102,44 +96,30 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   double motorEfficiency() const;
 
-  Quantity getMotorEfficiency(bool returnIP=false) const;
-
   bool isMotorEfficiencyDefaulted() const;
 
   double fractionofMotorInefficienciestoFluidStream() const;
-
-  Quantity getFractionofMotorInefficienciestoFluidStream(bool returnIP=false) const;
 
   bool isFractionofMotorInefficienciestoFluidStreamDefaulted() const;
 
   double coefficient1ofthePartLoadPerformanceCurve() const;
 
-  Quantity getCoefficient1ofthePartLoadPerformanceCurve(bool returnIP=false) const;
-
   bool isCoefficient1ofthePartLoadPerformanceCurveDefaulted() const;
 
   double coefficient2ofthePartLoadPerformanceCurve() const;
-
-  Quantity getCoefficient2ofthePartLoadPerformanceCurve(bool returnIP=false) const;
 
   bool isCoefficient2ofthePartLoadPerformanceCurveDefaulted() const;
 
   double coefficient3ofthePartLoadPerformanceCurve() const;
 
-  Quantity getCoefficient3ofthePartLoadPerformanceCurve(bool returnIP=false) const;
-
   bool isCoefficient3ofthePartLoadPerformanceCurveDefaulted() const;
 
   double coefficient4ofthePartLoadPerformanceCurve() const;
-
-  Quantity getCoefficient4ofthePartLoadPerformanceCurve(bool returnIP=false) const;
 
   bool isCoefficient4ofthePartLoadPerformanceCurveDefaulted() const;
 
   /** In EnergyPlus 8.5.0 and above this property maps to the EnergyPlus field "Design Minimum Flow Rate" **/
   double minimumFlowRate() const;
-
-  Quantity getMinimumFlowRate(bool returnIP=false) const;
 
   bool isMinimumFlowRateDefaulted() const;
 
@@ -152,8 +132,6 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   boost::optional<Curve> pumpCurve() const;
 
   boost::optional<double> impellerDiameter() const;
-
-  OSOptionalQuantity getImpellerDiameter(bool returnIP=false) const;
 
   boost::optional<std::string> vFDControlType() const;
 
@@ -173,21 +151,15 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   bool setRatedFlowRate(double ratedFlowRate);
 
-  bool setRatedFlowRate(const Quantity& ratedFlowRate);
-
   void resetRatedFlowRate();
 
   void autosizeRatedFlowRate();
 
   bool setRatedPumpHead(double ratedPumpHead);
 
-  bool setRatedPumpHead(const Quantity& ratedPumpHead);
-
   void resetRatedPumpHead();
 
   bool setRatedPowerConsumption(double ratedPowerConsumption);
-
-  bool setRatedPowerConsumption(const Quantity& ratedPowerConsumption);
 
   void resetRatedPowerConsumption();
 
@@ -195,43 +167,29 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   bool setMotorEfficiency(double motorEfficiency);
 
-  bool setMotorEfficiency(const Quantity& motorEfficiency);
-
   void resetMotorEfficiency();
 
   bool setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream);
-
-  bool setFractionofMotorInefficienciestoFluidStream(const Quantity& fractionofMotorInefficienciestoFluidStream);
 
   void resetFractionofMotorInefficienciestoFluidStream();
 
   bool setCoefficient1ofthePartLoadPerformanceCurve(double coefficient1ofthePartLoadPerformanceCurve);
 
-  bool setCoefficient1ofthePartLoadPerformanceCurve(const Quantity& coefficient1ofthePartLoadPerformanceCurve);
-
   void resetCoefficient1ofthePartLoadPerformanceCurve();
 
   bool setCoefficient2ofthePartLoadPerformanceCurve(double coefficient2ofthePartLoadPerformanceCurve);
-
-  bool setCoefficient2ofthePartLoadPerformanceCurve(const Quantity& coefficient2ofthePartLoadPerformanceCurve);
 
   void resetCoefficient2ofthePartLoadPerformanceCurve();
 
   bool setCoefficient3ofthePartLoadPerformanceCurve(double coefficient3ofthePartLoadPerformanceCurve);
 
-  bool setCoefficient3ofthePartLoadPerformanceCurve(const Quantity& coefficient3ofthePartLoadPerformanceCurve);
-
   void resetCoefficient3ofthePartLoadPerformanceCurve();
 
   bool setCoefficient4ofthePartLoadPerformanceCurve(double coefficient4ofthePartLoadPerformanceCurve);
 
-  bool setCoefficient4ofthePartLoadPerformanceCurve(const Quantity& coefficient4ofthePartLoadPerformanceCurve);
-
   void resetCoefficient4ofthePartLoadPerformanceCurve();
 
   bool setMinimumFlowRate(double minimumFlowRate);
-
-  bool setMinimumFlowRate(const Quantity& minimumFlowRate);
 
   void resetMinimumFlowRate();
 
@@ -249,8 +207,6 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   void resetPumpCurve();
 
   bool setImpellerDiameter(double impellerDiameter);
-
-  bool setImpellerDiameter(const Quantity& impellerDiameter);
 
   void resetImpellerDiameter();
 

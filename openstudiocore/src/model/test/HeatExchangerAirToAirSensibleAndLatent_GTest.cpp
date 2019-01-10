@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,11 +42,173 @@
 #include "../EvaporativeCoolerDirectResearchSpecial.hpp"
 #include "../EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
 #include "../HVACTemplates.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
+#include "../ScheduleCompact.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+
+TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_Ctor)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT (
+  {
+     Model m;
+     HeatExchangerAirToAirSensibleAndLatent hx(m);
+
+     exit(0);
+  } ,
+    ::testing::ExitedWithCode(0), "" );
+}
+
+TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_GettersSetters)
+{
+  Model m;
+  HeatExchangerAirToAirSensibleAndLatent hx(m);
+
+  // Availability Schedule:  Object
+  // Default in Ctor is m.alwaysOnDiscreteSchedule
+  EXPECT_EQ(m.alwaysOnDiscreteSchedule(), hx.availabilitySchedule());
+  ScheduleCompact sch(m);
+  EXPECT_TRUE(hx.setAvailabilitySchedule(sch));
+  EXPECT_EQ(sch, hx.availabilitySchedule());
+
+
+  // Nominal Supply Air Flow Rate: Optional Double
+  // No Default
+  EXPECT_TRUE(hx.setNominalSupplyAirFlowRate(1.0));
+  ASSERT_TRUE(hx.nominalSupplyAirFlowRate());
+  EXPECT_EQ(1.0, hx.nominalSupplyAirFlowRate().get());
+
+
+  // Sensible Effectiveness at 100% Heating Air Flow:  Double
+  // No Default
+  EXPECT_TRUE(hx.setSensibleEffectivenessat100HeatingAirFlow(0.5));
+  EXPECT_EQ(0.5, hx.sensibleEffectivenessat100HeatingAirFlow());
+
+
+  // Latent Effectiveness at 100% Heating Air Flow:  Double
+  // No Default
+  EXPECT_TRUE(hx.setLatentEffectivenessat100HeatingAirFlow(0.5));
+  EXPECT_EQ(0.5, hx.latentEffectivenessat100HeatingAirFlow());
+
+
+  // Sensible Effectiveness at 75% Heating Air Flow:  Double
+  // No Default
+  EXPECT_TRUE(hx.setSensibleEffectivenessat75HeatingAirFlow(0.5));
+  EXPECT_EQ(0.5, hx.sensibleEffectivenessat75HeatingAirFlow());
+
+
+  // Latent Effectiveness at 75% Heating Air Flow:  Double
+  // No Default
+  EXPECT_TRUE(hx.setLatentEffectivenessat75HeatingAirFlow(0.5));
+  EXPECT_EQ(0.5, hx.latentEffectivenessat75HeatingAirFlow());
+
+
+  // Sensible Effectiveness at 100% Cooling Air Flow:  Double
+  // No Default
+  EXPECT_TRUE(hx.setSensibleEffectivenessat100CoolingAirFlow(0.5));
+  EXPECT_EQ(0.5, hx.sensibleEffectivenessat100CoolingAirFlow());
+
+
+  // Latent Effectiveness at 100% Cooling Air Flow:  Double
+  // No Default
+  EXPECT_TRUE(hx.setLatentEffectivenessat100CoolingAirFlow(0.5));
+  EXPECT_EQ(0.5, hx.latentEffectivenessat100CoolingAirFlow());
+
+
+  // Sensible Effectiveness at 75% Cooling Air Flow:  Double
+  // No Default
+  EXPECT_TRUE(hx.setSensibleEffectivenessat75CoolingAirFlow(0.5));
+  EXPECT_EQ(0.5, hx.sensibleEffectivenessat75CoolingAirFlow());
+
+
+  // Latent Effectiveness at 75% Cooling Air Flow:  Double
+  // No Default
+  EXPECT_TRUE(hx.setLatentEffectivenessat75CoolingAirFlow(0.5));
+  EXPECT_EQ(0.5, hx.latentEffectivenessat75CoolingAirFlow());
+
+
+  // Supply Air Inlet Node: Optional Object
+
+  // Supply Air Outlet Node: Optional Object
+
+  // Exhaust Air Inlet Node: Optional Object
+
+  // Exhaust Air Outlet Node: Optional Object
+
+
+  // Nominal Electric Power:  Double
+  // No Default
+  EXPECT_TRUE(hx.setNominalElectricPower(1.0));
+  EXPECT_EQ(1.0, hx.nominalElectricPower());
+
+
+  // Supply Air Outlet Temperature Control:  Boolean
+  // No Default
+  EXPECT_TRUE(hx.setSupplyAirOutletTemperatureControl(true));
+  EXPECT_EQ(true, hx.supplyAirOutletTemperatureControl());
+  EXPECT_TRUE(hx.setSupplyAirOutletTemperatureControl(false));
+  EXPECT_EQ(false, hx.supplyAirOutletTemperatureControl());
+
+
+  // Heat Exchanger Type:  String
+  // No Default
+  // Test a valid choice
+  EXPECT_TRUE(hx.setHeatExchangerType("Plate"));
+  EXPECT_EQ("Plate", hx.heatExchangerType());
+  // Test an invalid choice
+  EXPECT_FALSE(hx.setHeatExchangerType("BadChoice"));
+  EXPECT_EQ("Plate", hx.heatExchangerType());
+
+
+  // Frost Control Type:  String
+  // No Default
+  // Test a valid choice
+  EXPECT_TRUE(hx.setFrostControlType("None"));
+  EXPECT_EQ("None", hx.frostControlType());
+  // Test an invalid choice
+  EXPECT_FALSE(hx.setFrostControlType("BadChoice"));
+  EXPECT_EQ("None", hx.frostControlType());
+
+
+  // Threshold Temperature:  Double
+  // Check Idd default: 1.7
+  EXPECT_EQ(1.7, hx.thresholdTemperature());
+  EXPECT_TRUE(hx.setThresholdTemperature(0.7));
+  EXPECT_EQ(0.7, hx.thresholdTemperature());
+  hx.resetThresholdTemperature();
+  EXPECT_EQ(1.7, hx.thresholdTemperature());
+
+
+  // Initial Defrost Time Fraction: Optional Double
+  // No Default
+  EXPECT_TRUE(hx.setInitialDefrostTimeFraction(0.5));
+  ASSERT_TRUE(hx.initialDefrostTimeFraction());
+  EXPECT_EQ(0.5, hx.initialDefrostTimeFraction().get());
+  hx.resetInitialDefrostTimeFraction();
+  EXPECT_FALSE(hx.initialDefrostTimeFraction());
+
+
+  // Rate of Defrost Time Fraction Increase: Optional Double
+  // No Default
+  EXPECT_TRUE(hx.setRateofDefrostTimeFractionIncrease(1.0));
+  ASSERT_TRUE(hx.rateofDefrostTimeFractionIncrease());
+  EXPECT_EQ(1.0, hx.rateofDefrostTimeFractionIncrease().get());
+  hx.resetRateofDefrostTimeFractionIncrease();
+  EXPECT_FALSE(hx.rateofDefrostTimeFractionIncrease());
+
+
+  // Economizer Lockout:  Boolean
+  // No Default
+  EXPECT_TRUE(hx.setEconomizerLockout(true));
+  EXPECT_EQ(true, hx.economizerLockout());
+  EXPECT_TRUE(hx.setEconomizerLockout(false));
+  EXPECT_EQ(false, hx.economizerLockout());
+
+}
+
 
 TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_addToNode) {
   Model model;
@@ -145,176 +307,3 @@ TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_remove) {
 
   EXPECT_TRUE(loop.remove().size() > 0);
 }
-
-TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_NominalSupplyAirFlowRate_Quantity) {
-  Model model;
-  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
-
-  Unit units = heatExchangerAirToAirSensibleAndLatent.getNominalSupplyAirFlowRate(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(heatExchangerAirToAirSensibleAndLatent.setNominalSupplyAirFlowRate(testQ));
-  OSOptionalQuantity q = heatExchangerAirToAirSensibleAndLatent.getNominalSupplyAirFlowRate(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_SensibleEffectivenessat100HeatingAirFlow_Quantity) {
-  Model model;
-  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
-
-  Unit units = heatExchangerAirToAirSensibleAndLatent.getSensibleEffectivenessat100HeatingAirFlow(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(heatExchangerAirToAirSensibleAndLatent.setSensibleEffectivenessat100HeatingAirFlow(testQ));
-  Quantity q = heatExchangerAirToAirSensibleAndLatent.getSensibleEffectivenessat100HeatingAirFlow(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_LatentEffectivenessat100HeatingAirFlow_Quantity) {
-  Model model;
-  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
-
-  Unit units = heatExchangerAirToAirSensibleAndLatent.getLatentEffectivenessat100HeatingAirFlow(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(heatExchangerAirToAirSensibleAndLatent.setLatentEffectivenessat100HeatingAirFlow(testQ));
-  Quantity q = heatExchangerAirToAirSensibleAndLatent.getLatentEffectivenessat100HeatingAirFlow(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_SensibleEffectivenessat75HeatingAirFlow_Quantity) {
-  Model model;
-  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
-
-  Unit units = heatExchangerAirToAirSensibleAndLatent.getSensibleEffectivenessat75HeatingAirFlow(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(heatExchangerAirToAirSensibleAndLatent.setSensibleEffectivenessat75HeatingAirFlow(testQ));
-  Quantity q = heatExchangerAirToAirSensibleAndLatent.getSensibleEffectivenessat75HeatingAirFlow(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_LatentEffectivenessat75HeatingAirFlow_Quantity) {
-  Model model;
-  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
-
-  Unit units = heatExchangerAirToAirSensibleAndLatent.getLatentEffectivenessat75HeatingAirFlow(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(heatExchangerAirToAirSensibleAndLatent.setLatentEffectivenessat75HeatingAirFlow(testQ));
-  Quantity q = heatExchangerAirToAirSensibleAndLatent.getLatentEffectivenessat75HeatingAirFlow(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_SensibleEffectivenessat100CoolingAirFlow_Quantity) {
-  Model model;
-  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
-
-  Unit units = heatExchangerAirToAirSensibleAndLatent.getSensibleEffectivenessat100CoolingAirFlow(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(heatExchangerAirToAirSensibleAndLatent.setSensibleEffectivenessat100CoolingAirFlow(testQ));
-  Quantity q = heatExchangerAirToAirSensibleAndLatent.getSensibleEffectivenessat100CoolingAirFlow(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_LatentEffectivenessat100CoolingAirFlow_Quantity) {
-  Model model;
-  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
-
-  Unit units = heatExchangerAirToAirSensibleAndLatent.getLatentEffectivenessat100CoolingAirFlow(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(heatExchangerAirToAirSensibleAndLatent.setLatentEffectivenessat100CoolingAirFlow(testQ));
-  Quantity q = heatExchangerAirToAirSensibleAndLatent.getLatentEffectivenessat100CoolingAirFlow(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_SensibleEffectivenessat75CoolingAirFlow_Quantity) {
-  Model model;
-  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
-
-  Unit units = heatExchangerAirToAirSensibleAndLatent.getSensibleEffectivenessat75CoolingAirFlow(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(heatExchangerAirToAirSensibleAndLatent.setSensibleEffectivenessat75CoolingAirFlow(testQ));
-  Quantity q = heatExchangerAirToAirSensibleAndLatent.getSensibleEffectivenessat75CoolingAirFlow(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_LatentEffectivenessat75CoolingAirFlow_Quantity) {
-  Model model;
-  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
-
-  Unit units = heatExchangerAirToAirSensibleAndLatent.getLatentEffectivenessat75CoolingAirFlow(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(heatExchangerAirToAirSensibleAndLatent.setLatentEffectivenessat75CoolingAirFlow(testQ));
-  Quantity q = heatExchangerAirToAirSensibleAndLatent.getLatentEffectivenessat75CoolingAirFlow(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_NominalElectricPower_Quantity) {
-  Model model;
-  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
-
-  Unit units = heatExchangerAirToAirSensibleAndLatent.getNominalElectricPower(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(heatExchangerAirToAirSensibleAndLatent.setNominalElectricPower(testQ));
-  Quantity q = heatExchangerAirToAirSensibleAndLatent.getNominalElectricPower(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_ThresholdTemperature_Quantity) {
-  Model model;
-  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
-
-  Unit units = heatExchangerAirToAirSensibleAndLatent.getThresholdTemperature(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(heatExchangerAirToAirSensibleAndLatent.setThresholdTemperature(testQ));
-  Quantity q = heatExchangerAirToAirSensibleAndLatent.getThresholdTemperature(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_InitialDefrostTimeFraction_Quantity) {
-  Model model;
-  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
-
-  Unit units = heatExchangerAirToAirSensibleAndLatent.getInitialDefrostTimeFraction(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(heatExchangerAirToAirSensibleAndLatent.setInitialDefrostTimeFraction(testQ));
-  OSOptionalQuantity q = heatExchangerAirToAirSensibleAndLatent.getInitialDefrostTimeFraction(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,HeatExchangerAirToAirSensibleAndLatent_RateofDefrostTimeFractionIncrease_Quantity) {
-  Model model;
-  HeatExchangerAirToAirSensibleAndLatent heatExchangerAirToAirSensibleAndLatent(model);
-
-  Unit units = heatExchangerAirToAirSensibleAndLatent.getRateofDefrostTimeFractionIncrease(true).units(); // Get IP units.
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(heatExchangerAirToAirSensibleAndLatent.setRateofDefrostTimeFractionIncrease(testQ));
-  OSOptionalQuantity q = heatExchangerAirToAirSensibleAndLatent.getRateofDefrostTimeFractionIncrease(true);
-  ASSERT_TRUE(q.isSet());
-  EXPECT_NEAR(value,q.get().value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-

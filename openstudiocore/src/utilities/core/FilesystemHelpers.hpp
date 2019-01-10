@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,7 +31,8 @@
 #define UTILITIES_CORE_FILESYSTEMHELPERS_HPP
 
 #include "Filesystem.hpp"
-#include <QByteArray>
+
+class QString;
 
 namespace openstudio {
   namespace filesystem {
@@ -41,11 +42,7 @@ namespace openstudio {
 
     /// reads entire file from the current read position until the end of file
     /// and returns as QByteArray
-    UTILITIES_API QByteArray read_as_QByteArray(openstudio::filesystem::ifstream &t_file);
-
-    /// reads entire file from the current read position until the end of file
-    /// and returns as QByteArray
-    UTILITIES_API QByteArray read_as_QByteArray(const openstudio::path &t_path);
+    UTILITIES_API std::vector<char> read(const openstudio::path &t_path);
 
     /// reads entire file from the current read position until the end of file
     /// and returns as std::string

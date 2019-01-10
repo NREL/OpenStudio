@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,8 +62,6 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
 
@@ -812,11 +810,6 @@ namespace detail{
     return getDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedTotalCoolingCapacity,true);
   }
 
-  OSOptionalQuantity CoilCoolingDXSingleSpeed_Impl::getRatedTotalCoolingCapacity(bool returnIP) const {
-    OptionalDouble value = ratedTotalCoolingCapacity();
-    return getQuantityFromDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedTotalCoolingCapacity, value, returnIP);
-  }
-
   bool CoilCoolingDXSingleSpeed_Impl::isRatedTotalCoolingCapacityAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_SingleSpeedFields::RatedTotalCoolingCapacity, true);
@@ -834,21 +827,6 @@ namespace detail{
     return result;
   }
 
-  bool CoilCoolingDXSingleSpeed_Impl::setRatedTotalCoolingCapacity(const OSOptionalQuantity& ratedTotalCoolingCapacity) {
-    bool result(false);
-    OptionalDouble value;
-    if (ratedTotalCoolingCapacity.isSet()) {
-      value = getDoubleFromQuantity(OS_Coil_Cooling_DX_SingleSpeedFields::RatedTotalCoolingCapacity,ratedTotalCoolingCapacity.get());
-      if (value) {
-        result = setRatedTotalCoolingCapacity(value);
-      }
-    }
-    else {
-      result = setRatedTotalCoolingCapacity(value);
-    }
-    return result;
-  }
-
   void CoilCoolingDXSingleSpeed_Impl::autosizeRatedTotalCoolingCapacity() {
     bool result = setString(OS_Coil_Cooling_DX_SingleSpeedFields::RatedTotalCoolingCapacity, "autosize");
     OS_ASSERT(result);
@@ -856,11 +834,6 @@ namespace detail{
 
   boost::optional<double> CoilCoolingDXSingleSpeed_Impl::ratedSensibleHeatRatio() const {
     return getDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedSensibleHeatRatio,true);
-  }
-
-  OSOptionalQuantity CoilCoolingDXSingleSpeed_Impl::getRatedSensibleHeatRatio(bool returnIP) const {
-    OptionalDouble value = ratedSensibleHeatRatio();
-    return getQuantityFromDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedSensibleHeatRatio, value, returnIP);
   }
 
   bool CoilCoolingDXSingleSpeed_Impl::isRatedSensibleHeatRatioAutosized() const {
@@ -880,21 +853,6 @@ namespace detail{
     return result;
   }
 
-  bool CoilCoolingDXSingleSpeed_Impl::setRatedSensibleHeatRatio(const OSOptionalQuantity& ratedSensibleHeatRatio) {
-    bool result(false);
-    OptionalDouble value;
-    if (ratedSensibleHeatRatio.isSet()) {
-      value = getDoubleFromQuantity(OS_Coil_Cooling_DX_SingleSpeedFields::RatedSensibleHeatRatio,ratedSensibleHeatRatio.get());
-      if (value) {
-        result = setRatedSensibleHeatRatio(value);
-      }
-    }
-    else {
-      result = setRatedSensibleHeatRatio(value);
-    }
-    return result;
-  }
-
   void CoilCoolingDXSingleSpeed_Impl::autosizeRatedSensibleHeatRatio() {
     bool result = setString(OS_Coil_Cooling_DX_SingleSpeedFields::RatedSensibleHeatRatio, "autosize");
     OS_ASSERT(result);
@@ -902,11 +860,6 @@ namespace detail{
 
   boost::optional<double> CoilCoolingDXSingleSpeed_Impl::ratedAirFlowRate() const {
     return getDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedAirFlowRate,true);
-  }
-
-  OSOptionalQuantity CoilCoolingDXSingleSpeed_Impl::getRatedAirFlowRate(bool returnIP) const {
-    OptionalDouble value = ratedAirFlowRate();
-    return getQuantityFromDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedAirFlowRate, value, returnIP);
   }
 
   bool CoilCoolingDXSingleSpeed_Impl::isRatedAirFlowRateAutosized() const {
@@ -922,21 +875,6 @@ namespace detail{
     bool result(false);
     if (ratedAirFlowRate) {
       result = setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedAirFlowRate, ratedAirFlowRate.get());
-    }
-    return result;
-  }
-
-  bool CoilCoolingDXSingleSpeed_Impl::setRatedAirFlowRate(const OSOptionalQuantity& ratedAirFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (ratedAirFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_Coil_Cooling_DX_SingleSpeedFields::RatedAirFlowRate,ratedAirFlowRate.get());
-      if (value) {
-        result = setRatedAirFlowRate(value);
-      }
-    }
-    else {
-      result = setRatedAirFlowRate(value);
     }
     return result;
   }
@@ -1386,12 +1324,12 @@ bool CoilCoolingDXSingleSpeed::setLatentCapacityTimeConstant( double value )
 }
 
 
-OptionalString CoilCoolingDXSingleSpeed::condenserAirInletNodeName()const
+boost::optional<std::string> CoilCoolingDXSingleSpeed::condenserAirInletNodeName()const
 {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->condenserAirInletNodeName();
 }
 // deprecated
-OptionalString CoilCoolingDXSingleSpeed::getCondenserAirInletNodeName()const
+boost::optional<std::string> CoilCoolingDXSingleSpeed::getCondenserAirInletNodeName()const
 {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->condenserAirInletNodeName();
 }
@@ -1587,19 +1525,11 @@ boost::optional<double> CoilCoolingDXSingleSpeed::ratedTotalCoolingCapacity() co
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->ratedTotalCoolingCapacity();
 }
 
-OSOptionalQuantity CoilCoolingDXSingleSpeed::getRatedTotalCoolingCapacity(bool returnIP) const {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->getRatedTotalCoolingCapacity(returnIP);
-}
-
 bool CoilCoolingDXSingleSpeed::isRatedTotalCoolingCapacityAutosized() const {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->isRatedTotalCoolingCapacityAutosized();
 }
 
 bool CoilCoolingDXSingleSpeed::setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity) {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedTotalCoolingCapacity(ratedTotalCoolingCapacity);
-}
-
-bool CoilCoolingDXSingleSpeed::setRatedTotalCoolingCapacity(const Quantity& ratedTotalCoolingCapacity) {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedTotalCoolingCapacity(ratedTotalCoolingCapacity);
 }
 
@@ -1611,19 +1541,11 @@ boost::optional<double> CoilCoolingDXSingleSpeed::ratedSensibleHeatRatio() const
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->ratedSensibleHeatRatio();
 }
 
-OSOptionalQuantity CoilCoolingDXSingleSpeed::getRatedSensibleHeatRatio(bool returnIP) const {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->getRatedSensibleHeatRatio(returnIP);
-}
-
 bool CoilCoolingDXSingleSpeed::isRatedSensibleHeatRatioAutosized() const {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->isRatedSensibleHeatRatioAutosized();
 }
 
 bool CoilCoolingDXSingleSpeed::setRatedSensibleHeatRatio(double ratedSensibleHeatRatio) {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedSensibleHeatRatio(ratedSensibleHeatRatio);
-}
-
-bool CoilCoolingDXSingleSpeed::setRatedSensibleHeatRatio(const Quantity& ratedSensibleHeatRatio) {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedSensibleHeatRatio(ratedSensibleHeatRatio);
 }
 
@@ -1635,19 +1557,11 @@ boost::optional<double> CoilCoolingDXSingleSpeed::ratedAirFlowRate() const {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->ratedAirFlowRate();
 }
 
-OSOptionalQuantity CoilCoolingDXSingleSpeed::getRatedAirFlowRate(bool returnIP) const {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->getRatedAirFlowRate(returnIP);
-}
-
 bool CoilCoolingDXSingleSpeed::isRatedAirFlowRateAutosized() const {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->isRatedAirFlowRateAutosized();
 }
 
 bool CoilCoolingDXSingleSpeed::setRatedAirFlowRate(double ratedAirFlowRate) {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedAirFlowRate(ratedAirFlowRate);
-}
-
-bool CoilCoolingDXSingleSpeed::setRatedAirFlowRate(const Quantity& ratedAirFlowRate) {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedAirFlowRate(ratedAirFlowRate);
 }
 

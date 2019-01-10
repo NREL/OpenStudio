@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -81,7 +81,7 @@ namespace radiance {
     /// subtract subsurfaces from surface polygon and return
     /// resulting polygons as vector of Point3dVector, these vertices
     /// will be in absolute coodinates
-    static openstudio::Point3dVector getPolygon(const openstudio::model::Surface& surface);
+    static openstudio::Point3dVectorVector getPolygons(const openstudio::model::Surface& surface);
 
     /// convert subsurface vertices to absolute coodinates
     static openstudio::Point3dVector getPolygon(const openstudio::model::SubSurface& subSurface);

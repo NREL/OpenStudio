@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -414,7 +414,6 @@ private:
   std::string writeZoneIc(int start=0);
   template <class T> std::string writeSectionVector(std::vector<T> vector, std::string label=std::string(), int start=0);
   template <class T> std::string writeSectionVector(std::vector<std::shared_ptr<T> > vector, std::string label = std::string(), int start = 0);
-  template <class T> std::string writeSectionVector(QVector<QSharedPointer<T> > vector, std::string label=std::string(), int start=0);
   template <class T> std::string writeArray(std::vector<T> vector, std::string label=std::string(), int start=0);
   template <class T> void renumberVector(std::vector<T> &vector);
 
@@ -519,27 +518,6 @@ template <class T> std::string IndexModelImpl::writeSectionVector(std::vector<st
     string += openstudio::toString(number) + " ! " + label + '\n';
   }
   for(unsigned int i = start; i<vector.size(); i++)
-  {
-    string += vector[i]->write();
-  }
-  string += "-999\n";
-  return string;
-}
-
-template <class T> std::string IndexModelImpl::writeSectionVector(QVector<QSharedPointer<T> > vector,
-  std::string label, int start)
-{
-  std::string string;
-  int number = vector.size()-start;
-  if(label.empty())
-  {
-    string += openstudio::toString(number) + '\n';
-  }
-  else
-  {
-    string += openstudio::toString(number) + " ! " + label + '\n';
-  }
-  for(int i=start;i<vector.size();i++)
   {
     string += vector[i]->write();
   }

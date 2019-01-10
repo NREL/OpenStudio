@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -167,16 +167,6 @@ typedef boost::optional<FileReference> OptionalFileReference;
 
 /** \relates FileReference*/
 typedef std::vector<FileReference> FileReferenceVector;
-
-namespace detail {
-
-  /** Places attribute's data in a QVariant for JSON serialization. */
-  UTILITIES_API QVariant toVariant(const FileReference& fileReference);
-
-  /** Deserializes json variant to FileReference. */
-  UTILITIES_API FileReference toFileReference(const QVariant& variant, const VersionString& version);
-
-}
 
 } // openstudio
 

@@ -39,10 +39,10 @@ ruby_copyright += "#############################################################
 # exceptions are files that are not part of OpenStudio
 exceptions = [basepath + "/src/geographic_lib/",
               basepath + "/src/google_test/",
-              basepath + "/src/install_utility/",
               basepath + "/src/jsoncpp/",
               basepath + "/src/nano/",
               basepath + "/src/polypartition/",
+              basepath + "/src/pugixml/",
               basepath + "/src/qtwinmigrate/",
               basepath + "/src/qwt/",    
               basepath + "/src/sqlite/",       
@@ -53,6 +53,9 @@ exceptions = [basepath + "/src/geographic_lib/",
 
 # glob for hpp and cpp
 files = Dir.glob(basepath + "/src/**/*.[ch]pp")
+files.concat Dir.glob(basepath + "/ruby/**/*.[ch]pp")
+files.concat Dir.glob(basepath + "/src/**/*.cxx.in")
+files.concat Dir.glob(basepath + "/src/**/*.tmp")
 
 # reject exceptions
 files.reject! do |p|
@@ -103,8 +106,9 @@ end
 # exceptions are files that are not part of OpenStudio
 exceptions = []
 
-# glob for hpp and cpp
+# glob for rb
 files = Dir.glob(basepath + "/ruby/**/*.rb")
+files.concat Dir.glob(basepath + "/sketchup_plugin/**/*.rb")
 
 # reject exceptions
 files.reject! do |p|

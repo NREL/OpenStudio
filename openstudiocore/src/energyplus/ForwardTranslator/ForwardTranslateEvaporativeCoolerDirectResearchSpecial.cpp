@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,7 +50,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectResearchSpecial( EvaporativeCoolerDirectResearchSpecial & modelObject )
 {
   OptionalString s;
-  OptionalDouble OptD;
+  OptionalDouble optD;
   OptionalModelObject temp;
   double value;
 
@@ -77,8 +77,15 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectRe
   // RecirculatingWaterPumpPowerConsumption
   if ( modelObject.isRecirculatingWaterPumpPowerConsumptionAutosized() ) {
     idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,"autosize");
-  } else if( (OptD = modelObject.recirculatingWaterPumpPowerConsumption()) ) {
-    idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower,OptD.get());
+  } else if( (optD = modelObject.recirculatingWaterPumpPowerConsumption()) ) {
+    idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::RecirculatingWaterPumpDesignPower, optD.get());
+  }
+
+  // Primary Air Design Flow Rate
+  if ( modelObject.isPrimaryAirDesignFlowRateAutosized() ) {
+    idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate,"Autosize");
+  } else if( (optD = modelObject.primaryAirDesignFlowRate()) ) {
+    idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate, optD.get());
   }
 
   // AirInletNodeName

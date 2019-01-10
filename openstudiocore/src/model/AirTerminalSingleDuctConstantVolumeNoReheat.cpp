@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -279,11 +279,6 @@ namespace detail{
     return getDouble(OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate,true);
   }
 
-  OSOptionalQuantity AirTerminalSingleDuctConstantVolumeNoReheat_Impl::getMaximumAirFlowRate(bool returnIP) const {
-    OptionalDouble value = maximumAirFlowRate();
-    return getQuantityFromDouble(OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate, value, returnIP);
-  }
-
   bool AirTerminalSingleDuctConstantVolumeNoReheat_Impl::isMaximumAirFlowRateAutosized() const {
     bool result = false;
     boost::optional<std::string> value = getString(OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate, true);
@@ -298,21 +293,6 @@ namespace detail{
     bool result(false);
     if (maximumAirFlowRate) {
       result = setDouble(OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate, maximumAirFlowRate.get());
-    }
-    return result;
-  }
-
-  bool AirTerminalSingleDuctConstantVolumeNoReheat_Impl::setMaximumAirFlowRate(const OSOptionalQuantity& maximumAirFlowRate) {
-    bool result(false);
-    OptionalDouble value;
-    if (maximumAirFlowRate.isSet()) {
-      value = getDoubleFromQuantity(OS_AirTerminal_SingleDuct_ConstantVolume_NoReheatFields::MaximumAirFlowRate,maximumAirFlowRate.get());
-      if (value) {
-        result = setMaximumAirFlowRate(value);
-      }
-    }
-    else {
-      result = setMaximumAirFlowRate(value);
     }
     return result;
   }
@@ -381,19 +361,11 @@ boost::optional<double> AirTerminalSingleDuctConstantVolumeNoReheat::maximumAirF
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->maximumAirFlowRate();
 }
 
-OSOptionalQuantity AirTerminalSingleDuctConstantVolumeNoReheat::getMaximumAirFlowRate(bool returnIP) const {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->getMaximumAirFlowRate(returnIP);
-}
-
 bool AirTerminalSingleDuctConstantVolumeNoReheat::isMaximumAirFlowRateAutosized() const {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->isMaximumAirFlowRateAutosized();
 }
 
 bool AirTerminalSingleDuctConstantVolumeNoReheat::setMaximumAirFlowRate(double maximumAirFlowRate) {
-  return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->setMaximumAirFlowRate(maximumAirFlowRate);
-}
-
-bool AirTerminalSingleDuctConstantVolumeNoReheat::setMaximumAirFlowRate(const Quantity& maximumAirFlowRate) {
   return getImpl<detail::AirTerminalSingleDuctConstantVolumeNoReheat_Impl>()->setMaximumAirFlowRate(maximumAirFlowRate);
 }
 

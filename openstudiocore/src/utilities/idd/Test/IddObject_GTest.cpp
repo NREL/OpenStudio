@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,20 +39,18 @@
 #include <sstream>
 #include <string>
 
-#include <QVariant>
-
 using namespace openstudio;
 
 
 TEST_F(IddFixture,IddObject_URL)
 {
-OptionalIddObject object1 =
+  OptionalIddObject object1 =
   IddFactory::instance().getObject(IddObjectType::Schedule_File);
- ASSERT_TRUE(object1);
- EXPECT_TRUE(object1->hasURL());
- UnsignedVector vec  = object1->urlFields();
- EXPECT_TRUE(vec.size() == 1);
- EXPECT_TRUE(vec[0] == 2);
+  ASSERT_TRUE(object1);
+  EXPECT_TRUE(object1->hasURL());
+  UnsignedVector vec  = object1->urlFields();
+  EXPECT_TRUE(vec.size() == 1);
+  EXPECT_TRUE(vec[0] == 2);
 }
 
 TEST_F(IddFixture,IddObject_EqualityOperators) {
@@ -124,16 +122,6 @@ TEST_F(IddFixture,IddObjectVector_GetTypes) {
   EXPECT_EQ(2*objects.size(),typeVector.size());
   IddObjectTypeSet typeSet = getIddObjectTypeSet(roundtripObjects);
   EXPECT_EQ(objects.size(),typeSet.size());
-}
-
-TEST_F(IddFixture,IddObjectType_QVariant)
-{
-  IddObjectType type(IddObjectType::Zone);
-  QVariant variant = QVariant::fromValue(type);
-  EXPECT_EQ("openstudio::IddObjectType", std::string(variant.typeName()));
-  ASSERT_TRUE(variant.canConvert<IddObjectType>());
-  IddObjectType type2 = variant.value<IddObjectType>();
-  EXPECT_EQ(type.value(), type2.value());
 }
 
 TEST_F(IddFixture,IddObject_InsertHandleField) {

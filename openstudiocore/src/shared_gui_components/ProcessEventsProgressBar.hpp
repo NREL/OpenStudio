@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,14 +30,14 @@
 #ifndef SHAREDGUICOMPONENTS_PROCESSEVENTSPROGRESSBAR_HPP
 #define SHAREDGUICOMPONENTS_PROCESSEVENTSPROGRESSBAR_HPP
 
-#include "../utilities/plot/ProgressBar.hpp"
+#include "../model_editor/OSProgressBar.hpp"
 
 namespace openstudio {
 
 
 // uses the progress bar interface in energy plus and version translators
 // to call process events
-class ProcessEventsProgressBar : public openstudio::ProgressBar
+class ProcessEventsProgressBar : public OSProgressBar
 {
 public:
   ProcessEventsProgressBar();

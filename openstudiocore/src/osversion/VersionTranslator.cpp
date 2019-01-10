@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,7 +52,6 @@
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../utilities/idf/ValidityReport.hpp"
 #include "../utilities/core/PathHelpers.hpp"
-#include "../utilities/core/URLHelpers.hpp"
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -694,7 +693,7 @@ IdfObject VersionTranslator::updateUrlField_0_7_1_to_0_7_2(const IdfObject& obje
   if (OptionalString os = object.getString(index)) {
     std::string original = *os;
     if (!original.empty()) {
-      std::string transformed = toString(toURL(toPath(original)));
+      std::string transformed = toString(toPath(original));
       if (!transformed.empty()) {
         IdfObject objCopy = object.clone();
         bool ok = objCopy.setString(index,transformed);

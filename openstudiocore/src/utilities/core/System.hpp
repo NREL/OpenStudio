@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,6 +48,12 @@ namespace openstudio {
 
     /// Returns the number of processors on this computer
     static unsigned numberOfProcessors();
+
+    /// \note not using string_view because we need null terminated strings
+    static boost::optional<std::string> getenv(const std::string &name) noexcept;
+
+    /// \note not using string_view because we need null terminated strings
+    static void setenv(const std::string &name, const std::string &value);
 
     /// Utility for testing exception handling within the system
     static void testExceptions1();

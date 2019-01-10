@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -29,9 +29,9 @@
 
 #include "LocalBCL.hpp"
 #include "RemoteBCL.hpp"
-#include "../core/Application.hpp"
 #include "../core/Assert.hpp"
 #include "../core/PathHelpers.hpp"
+#include "../core/StringHelpers.hpp"
 #include "../core/System.hpp"
 #include "../core/UnzipFile.hpp"
 
@@ -66,7 +66,7 @@ namespace openstudio{
     return m_ofs.good();
   }
 
-  RemoteBCL::DownloadFile::DownloadFile(openstudio::path t_path) 
+  RemoteBCL::DownloadFile::DownloadFile(openstudio::path t_path)
     : m_fileName(std::move(t_path))
   {
   }
@@ -97,8 +97,9 @@ namespace openstudio{
     m_numResultsPerQuery(10),
     m_apiVersion("2.0")
   {
+    // TODO: QT-Separation-Move
     // make sure application is initialized
-    openstudio::Application::instance().application(false);
+    //openstudio::Application::instance().application(false);
 
     m_prodAuthKey = LocalBCL::instance().prodAuthKey();
     m_devAuthKey = LocalBCL::instance().devAuthKey();
@@ -119,10 +120,10 @@ namespace openstudio{
 
   bool RemoteBCL::initializeSSL(const openstudio::path &t_pathToSSLLibraries)
   {
-    QByteArray oldpath = qgetenv("PATH");
+    const auto oldpath = System::getenv("PATH");
     if (!t_pathToSSLLibraries.empty())
     {
-      qputenv("PATH", openstudio::toQString(t_pathToSSLLibraries.string()).toUtf8());
+      System::setenv("PATH", t_pathToSSLLibraries.string());
     }
 
 #ifdef QT_NO_OPENSSL
@@ -131,9 +132,9 @@ namespace openstudio{
     bool opensslloaded = QSslSocket::supportsSsl();
 #endif
 
-    if (!t_pathToSSLLibraries.empty())
+    if (!t_pathToSSLLibraries.empty() && oldpath)
     {
-      qputenv("PATH", oldpath);
+      System::setenv("PATH", *oldpath);
     }
 
     return opensslloaded;
@@ -567,7 +568,8 @@ namespace openstudio{
   QString RemoteBCL::checkForRedirect(const QNetworkReply* reply) const
   {
     // In Qt > 5.3, use QNetworkRequest::FollowRedirectsAttribute instead
-    QVariant replyStatus = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+    // TODO: JM 2018-12-14 QNetworkRequest will have to be removed anyway. Now just converting to int to remove last Q Variant
+    int replyStatus = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     if (replyStatus == 301 || replyStatus == 302) {
       return reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toString();
     }
@@ -732,7 +734,7 @@ namespace openstudio{
       url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&fq[]=tid:%3&api_version=%4").arg(
         toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
         toQString(filterType),
-        QString::number(componentTypeTID),
+        toQString(openstudio::string_conversions::number(componentTypeTID)),
         toQString(m_apiVersion)
       );
     }
@@ -772,8 +774,8 @@ namespace openstudio{
         toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
         toQString(filterType),
         toQString(m_apiVersion),
-        QString::number(m_numResultsPerQuery),
-        QString::number(page)
+        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+        toQString(openstudio::string_conversions::number(page))
       );
     }else{
       url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&fq[]=%3:\"%4\""
@@ -783,8 +785,8 @@ namespace openstudio{
         (filterType == "nrel_component" ? "sm_vid_Component_Tags" : "sm_vid_Measure_Tags"),
         toQString(componentType),
         toQString(m_apiVersion),
-        QString::number(m_numResultsPerQuery),
-        QString::number(page)
+        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+        toQString(openstudio::string_conversions::number(page))
       );
     }
     //LOG(Warn, toString(url));
@@ -823,17 +825,17 @@ namespace openstudio{
         toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
         toQString(filterType),
         toQString(m_apiVersion),
-        QString::number(m_numResultsPerQuery),
-        QString::number(page)
+        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+        toQString(openstudio::string_conversions::number(page))
       );
     }else{
       url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&fq[]=tid:%3&api_version=%4&show_rows=%5&page=%6").arg(
         toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
         toQString(filterType),
-        QString::number(componentTypeTID),
+        toQString(openstudio::string_conversions::number(componentTypeTID)),
         toQString(m_apiVersion),
-        QString::number(m_numResultsPerQuery),
-        QString::number(page)
+        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+        toQString(openstudio::string_conversions::number(page))
       );
     }
     //LOG(Warn, toString(url));
@@ -871,6 +873,7 @@ namespace openstudio{
         return true;
       }
 
+      // DLM: no longer calls Application::instance().processEvents(msecPerLoop);
       // this calls process events
       System::msleep(msecPerLoop);
 
@@ -933,7 +936,6 @@ namespace openstudio{
         LOG(Error, "Network Error: Host " << remoteUrl() << " not found");
       }else if (reply->error() == QNetworkReply::UnknownNetworkError && reply->errorString().startsWith("Error creating SSL context")){
         LOG(Error, "Network Error: Unable to create SSL connection.  Verify that SSL libraries are in the system path.");
-        //QMessageBox::warning(0, "Unable to Create SSL Connection", "Verify that SSL libraries are in the system path");
       }else{
         LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << " - " << reply->errorString().toStdString());
       }
@@ -1130,9 +1132,9 @@ namespace openstudio{
       }
 
       if (componentType == "measure") {
-        emit measureDownloaded(m_downloadUid, m_lastMeasureDownload);
+        //emit measureDownloaded(m_downloadUid, m_lastMeasureDownload);
       } else {
-        emit componentDownloaded(m_downloadUid, m_lastComponentDownload);
+        //emit componentDownloaded(m_downloadUid, m_lastComponentDownload);
       }
 
       m_mutex.unlock();
@@ -1160,7 +1162,7 @@ namespace openstudio{
         setLastTotalResults(0);
       }
 
-      emit metaSearchCompleted(m_lastMetaSearch);
+      //emit metaSearchCompleted(m_lastMetaSearch);
 
       m_mutex.unlock();
     }
@@ -1181,7 +1183,7 @@ namespace openstudio{
         m_lastSearch = processSearchResponse(*remoteQueryResponse);
       }
 
-      emit searchCompleted(m_lastSearch);
+      //emit searchCompleted(m_lastSearch);
 
       m_mutex.unlock();
     }

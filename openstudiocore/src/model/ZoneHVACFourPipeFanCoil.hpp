@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -89,25 +87,17 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   boost::optional<double> maximumSupplyAirFlowRate() const;
 
-  OSOptionalQuantity getMaximumSupplyAirFlowRate(bool returnIP=false) const;
-
   bool isMaximumSupplyAirFlowRateAutosized() const;
 
   double lowSpeedSupplyAirFlowRatio() const;
-
-  Quantity getLowSpeedSupplyAirFlowRatio(bool returnIP=false) const;
 
   bool isLowSpeedSupplyAirFlowRatioDefaulted() const;
 
   double mediumSpeedSupplyAirFlowRatio() const;
 
-  Quantity getMediumSpeedSupplyAirFlowRatio(bool returnIP=false) const;
-
   bool isMediumSpeedSupplyAirFlowRatioDefaulted() const;
 
   boost::optional<double> maximumOutdoorAirFlowRate() const;
-
-  OSOptionalQuantity getMaximumOutdoorAirFlowRate(bool returnIP=false) const;
 
   bool isMaximumOutdoorAirFlowRateAutosized() const;
 
@@ -123,19 +113,13 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   boost::optional<double> maximumColdWaterFlowRate() const;
 
-  OSOptionalQuantity getMaximumColdWaterFlowRate(bool returnIP=false) const;
-
   bool isMaximumColdWaterFlowRateAutosized() const;
 
   double minimumColdWaterFlowRate() const;
 
-  Quantity getMinimumColdWaterFlowRate(bool returnIP=false) const;
-
   bool isMinimumColdWaterFlowRateDefaulted() const;
 
   double coolingConvergenceTolerance() const;
-
-  Quantity getCoolingConvergenceTolerance(bool returnIP=false) const;
 
   bool isCoolingConvergenceToleranceDefaulted() const;
 
@@ -143,19 +127,13 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   boost::optional<double> maximumHotWaterFlowRate() const;
 
-  OSOptionalQuantity getMaximumHotWaterFlowRate(bool returnIP=false) const;
-
   bool isMaximumHotWaterFlowRateAutosized() const;
 
   double minimumHotWaterFlowRate() const;
 
-  Quantity getMinimumHotWaterFlowRate(bool returnIP=false) const;
-
   bool isMinimumHotWaterFlowRateDefaulted() const;
 
   double heatingConvergenceTolerance() const;
-
-  Quantity getHeatingConvergenceTolerance(bool returnIP=false) const;
 
   bool isHeatingConvergenceToleranceDefaulted() const;
 
@@ -179,25 +157,17 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   bool setMaximumSupplyAirFlowRate(double maximumSupplyAirFlowRate);
 
-  bool setMaximumSupplyAirFlowRate(const Quantity& maximumSupplyAirFlowRate);
-
   void autosizeMaximumSupplyAirFlowRate();
 
   bool setLowSpeedSupplyAirFlowRatio(double lowSpeedSupplyAirFlowRatio);
-
-  bool setLowSpeedSupplyAirFlowRatio(const Quantity& lowSpeedSupplyAirFlowRatio);
 
   void resetLowSpeedSupplyAirFlowRatio();
 
   bool setMediumSpeedSupplyAirFlowRatio(double mediumSpeedSupplyAirFlowRatio);
 
-  bool setMediumSpeedSupplyAirFlowRatio(const Quantity& mediumSpeedSupplyAirFlowRatio);
-
   void resetMediumSpeedSupplyAirFlowRatio();
 
   bool setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate);
-
-  bool setMaximumOutdoorAirFlowRate(const Quantity& maximumOutdoorAirFlowRate);
 
   void autosizeMaximumOutdoorAirFlowRate();
 
@@ -215,19 +185,13 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   bool setMaximumColdWaterFlowRate(double maximumColdWaterFlowRate);
 
-  bool setMaximumColdWaterFlowRate(const Quantity& maximumColdWaterFlowRate);
-
   void autosizeMaximumColdWaterFlowRate();
 
   bool setMinimumColdWaterFlowRate(double minimumColdWaterFlowRate);
 
-  bool setMinimumColdWaterFlowRate(const Quantity& minimumColdWaterFlowRate);
-
   void resetMinimumColdWaterFlowRate();
 
   bool setCoolingConvergenceTolerance(double coolingConvergenceTolerance);
-
-  bool setCoolingConvergenceTolerance(const Quantity& coolingConvergenceTolerance);
 
   void resetCoolingConvergenceTolerance();
 
@@ -235,19 +199,13 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
 
   bool setMaximumHotWaterFlowRate(double maximumHotWaterFlowRate);
 
-  bool setMaximumHotWaterFlowRate(const Quantity& maximumHotWaterFlowRate);
-
   void autosizeMaximumHotWaterFlowRate();
 
   bool setMinimumHotWaterFlowRate(double minimumHotWaterFlowRate);
 
-  bool setMinimumHotWaterFlowRate(const Quantity& minimumHotWaterFlowRate);
-
   void resetMinimumHotWaterFlowRate();
 
   bool setHeatingConvergenceTolerance(double heatingConvergenceTolerance);
-
-  bool setHeatingConvergenceTolerance(const Quantity& heatingConvergenceTolerance);
 
   void resetHeatingConvergenceTolerance();
 

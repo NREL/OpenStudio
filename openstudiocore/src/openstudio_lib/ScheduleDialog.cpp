@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,6 +37,7 @@
 
 #include "../utilities/units/OSOptionalQuantity.hpp"
 #include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/time/Time.hpp"
 #include "../utilities/core/Assert.hpp"
 
@@ -252,14 +253,18 @@ void ScheduleDialog::onCurrentIndexChanged(int index)
   m_scheduleTypeLimits = m_model.getModelObject<model::ScheduleTypeLimits>(handle);
   OS_ASSERT(m_scheduleTypeLimits);
 
-  boost::optional<Unit> units = m_scheduleTypeLimits->units(m_isIP);
+  // Get as SI units for potential conversion
+  boost::optional<Unit> _siUnits = m_scheduleTypeLimits->units(false);
+  // Get as target units (depends on m_isIP)
+  boost::optional<Unit> _toUnits = m_scheduleTypeLimits->units(m_isIP);
+
   QString unitsLabel;
-  if (units){
+  if (_toUnits){
     QString temp;
-    if (!units->prettyString().empty()){
-      temp = toQString(units->prettyString());
-    } else if (!units->standardString().empty()){
-      temp = toQString(units->standardString());
+    if (!_toUnits->prettyString().empty()){
+      temp = toQString(_toUnits->prettyString());
+    } else if (!_toUnits->standardString().empty()){
+      temp = toQString(_toUnits->standardString());
     }
 
     if (temp.isEmpty()){
@@ -284,25 +289,54 @@ void ScheduleDialog::onCurrentIndexChanged(int index)
   numericTypeLabel.append(unitsLabel);
   m_numericTypeLabel->setText(numericTypeLabel);
 
-  OSOptionalQuantity lowerLimit = m_scheduleTypeLimits->getLowerLimitValue(m_isIP);
+
+  // Lower Limit
+  boost::optional<double>  _value = m_scheduleTypeLimits->lowerLimitValue();
+
   QString lowerLimitLabel;
-  if (lowerLimit.isSet()){
-    lowerLimitLabel.append(QString::number(lowerLimit.get().value()));
+  if (_value.is_initialized()) {
+    if (!m_isIP || (_siUnits.get() == _toUnits.get())) {
+      // No conversion needed
+      lowerLimitLabel.append(QString::number(_value.get()));
+    } else {
+      Quantity q = openstudio::Quantity(_value.get(), _siUnits.get());
+      OptionalQuantity result = openstudio::convert(q, _toUnits.get());
+      OS_ASSERT(result);
+      lowerLimitLabel.append(QString::number(result.get().value()));
+    }
+
+    // Both case, we append the unit label
     lowerLimitLabel.append(unitsLabel);
-  } else{
+
+  } else {
     lowerLimitLabel.append("None");
   }
   m_lowerLimitLabel->setText(lowerLimitLabel);
 
-  OSOptionalQuantity upperLimit = m_scheduleTypeLimits->getUpperLimitValue(m_isIP);
+
+  // Upper Limit
+  _value = m_scheduleTypeLimits->upperLimitValue();
   QString upperLimitLabel;
-  if (upperLimit.isSet()){
-    upperLimitLabel.append(QString::number(upperLimit.get().value()));
+  if (_value.is_initialized()) {
+    if (!m_isIP || (_siUnits.get() == _toUnits.get())) {
+      // No conversion needed
+      upperLimitLabel.append(QString::number(_value.get()));
+    } else {
+      Quantity q = openstudio::Quantity(_value.get(), _siUnits.get());
+      OptionalQuantity result = openstudio::convert(q, _toUnits.get());
+      OS_ASSERT(result);
+      upperLimitLabel.append(QString::number(result.get().value()));
+    }
+
+    // Both case, we append the unit label
     upperLimitLabel.append(unitsLabel);
-  } else{
+
+  } else {
     upperLimitLabel.append("None");
   }
   m_upperLimitLabel->setText(upperLimitLabel);
+
+
 }
 
 void ScheduleDialog::on_okButton(bool checked)

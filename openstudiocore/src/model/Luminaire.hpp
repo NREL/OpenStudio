@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -79,37 +79,23 @@ class MODEL_API Luminaire : public SpaceLoadInstance {
 
   double positionXcoordinate() const;
 
-  Quantity getPositionXcoordinate(bool returnIP=false) const;
-
   double positionYcoordinate() const;
-
-  Quantity getPositionYcoordinate(bool returnIP=false) const;
 
   double positionZcoordinate() const;
 
-  Quantity getPositionZcoordinate(bool returnIP=false) const;
-
   double psiRotationAroundXaxis() const;
-
-  Quantity getPsiRotationAroundXaxis(bool returnIP=false) const;
 
   bool isPsiRotationAroundXaxisDefaulted() const;
 
   double thetaRotationAroundYaxis() const;
 
-  Quantity getThetaRotationAroundYaxis(bool returnIP=false) const;
-
   bool isThetaRotationAroundYaxisDefaulted() const;
 
   double phiRotationAroundZaxis() const;
 
-  Quantity getPhiRotationAroundZaxis(bool returnIP=false) const;
-
   bool isPhiRotationAroundZaxisDefaulted() const;
 
   double fractionReplaceable() const;
-
-  Quantity getFractionReplaceable(bool returnIP=false) const;
 
   bool isFractionReplaceableDefaulted() const;
 
@@ -132,37 +118,23 @@ class MODEL_API Luminaire : public SpaceLoadInstance {
 
   bool setPositionXcoordinate(double positionXcoordinate);
 
-  bool setPositionXcoordinate(const Quantity& positionXcoordinate);
-
   bool setPositionYcoordinate(double positionYcoordinate);
-
-  bool setPositionYcoordinate(const Quantity& positionYcoordinate);
 
   bool setPositionZcoordinate(double positionZcoordinate);
 
-  bool setPositionZcoordinate(const Quantity& positionZcoordinate);
-
   bool setPsiRotationAroundXaxis(double psiRotationAroundXaxis);
-
-  bool setPsiRotationAroundXaxis(const Quantity& psiRotationAroundXaxis);
 
   void resetPsiRotationAroundXaxis();
 
   bool setThetaRotationAroundYaxis(double thetaRotationAroundYaxis);
 
-  bool setThetaRotationAroundYaxis(const Quantity& thetaRotationAroundYaxis);
-
   void resetThetaRotationAroundYaxis();
 
   bool setPhiRotationAroundZaxis(double phiRotationAroundZaxis);
 
-  bool setPhiRotationAroundZaxis(const Quantity& phiRotationAroundZaxis);
-
   void resetPhiRotationAroundZaxis();
 
   bool setFractionReplaceable(double fractionReplaceable);
-
-  bool setFractionReplaceable(const Quantity& fractionReplaceable);
 
   void resetFractionReplaceable();
 

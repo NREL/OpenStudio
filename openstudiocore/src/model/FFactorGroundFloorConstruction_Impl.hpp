@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,8 +32,6 @@
 
 #include "ConstructionBase_Impl.hpp"
 
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -94,34 +92,17 @@ namespace detail {
 
     /// Returns fFactor.
     virtual double fFactor() const;
-    virtual Quantity getFFactor(bool returnIP = false) const;
     virtual bool setFFactor(double fFactor);
-    virtual bool setFFactor(const Quantity& fFactor);
-
     /// Returns area.
     virtual double area() const;
-    virtual Quantity getArea(bool returnIP = false) const;
     virtual bool setArea(double area);
-    virtual bool setArea(const Quantity& area);
-
     /// Returns perimeterExposed.
     virtual double perimeterExposed() const;
-    virtual Quantity getPerimeterExposed(bool returnIP = false) const;
     virtual bool setPerimeterExposed(double perimeterExposed);
-    virtual bool setPerimeterExposed(const Quantity& perimeterExposed);
 
     //@}
 
   private:
-    openstudio::Quantity fFactor_SI() const;
-    openstudio::Quantity fFactor_IP() const;
-
-    openstudio::Quantity area_SI() const;
-    openstudio::Quantity area_IP() const;
-
-    openstudio::Quantity perimeterExposed_SI() const;
-    openstudio::Quantity perimeterExposed_IP() const;
-
     REGISTER_LOGGER("openstudio.model.FFactorGroundFloorConstruction");
   };
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,8 +32,6 @@
 #include "modeltest.h"
 
 #include "../utilities/core/Assert.hpp"
-
-Q_DECLARE_METATYPE(QModelIndex)
 
 /*!
     Connect to all of the models signals.  Whenever anything happens recheck everything.
@@ -528,4 +526,5 @@ void ModelTest::rowsRemoved(const QModelIndex & parent, int start, int end)
     OS_ASSERT(c.last == model->data(model->index(start - 1, 0, c.parent)));
     OS_ASSERT(c.next == model->data(model->index(start, 0, c.parent)));
 }
+
 

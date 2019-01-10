@@ -10,13 +10,9 @@
   #include <utilities/bcl/BCLMeasure.hpp>
   #include <utilities/bcl/LocalBCL.hpp>
   #include <utilities/bcl/RemoteBCL.hpp>
-  #include <utilities/core/PathWatcher.hpp>
   #include <utilities/core/FileReference.hpp>
-  #include <QAction>
   #include <utilities/plot/ProgressBar.hpp>
   #include <utilities/core/UpdateManager.hpp>
-  #include <QComboBox>
-  #include <QMainWindow>
 %}
 
 %ignore std::vector<openstudio::RemoteQueryResponse>::vector(size_type);

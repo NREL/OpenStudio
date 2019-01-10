@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -89,45 +87,27 @@ class MODEL_API RefractionExtinctionGlazing : public Glazing {
 
   double thickness() const;
 
-  Quantity getThickness(bool returnIP=false) const;
-
   double solarIndexofRefraction() const;
-
-  Quantity getSolarIndexofRefraction(bool returnIP=false) const;
 
   double solarExtinctionCoefficient() const;
 
-  Quantity getSolarExtinctionCoefficient(bool returnIP=false) const;
-
   double visibleIndexofRefraction() const;
-
-  Quantity getVisibleIndexofRefraction(bool returnIP=false) const;
 
   double visibleExtinctionCoefficient() const;
 
-  Quantity getVisibleExtinctionCoefficient(bool returnIP=false) const;
-
   double infraredTransmittanceatNormalIncidence() const;
-
-  Quantity getInfraredTransmittanceatNormalIncidence(bool returnIP=false) const;
 
   bool isInfraredTransmittanceatNormalIncidenceDefaulted() const;
 
   double infraredHemisphericalEmissivity() const;
 
-  Quantity getInfraredHemisphericalEmissivity(bool returnIP=false) const;
-
   bool isInfraredHemisphericalEmissivityDefaulted() const;
 
   double conductivity() const;
 
-  Quantity getConductivity(bool returnIP=false) const;
-
   bool isConductivityDefaulted() const;
 
   double dirtCorrectionFactorforSolarandVisibleTransmittance() const;
-
-  Quantity getDirtCorrectionFactorforSolarandVisibleTransmittance(bool returnIP=false) const;
 
   bool isDirtCorrectionFactorforSolarandVisibleTransmittanceDefaulted() const;
 
@@ -155,45 +135,27 @@ class MODEL_API RefractionExtinctionGlazing : public Glazing {
 
   bool setThickness(double thickness);
 
-  bool setThickness(const Quantity& thickness);
-
   bool setSolarIndexofRefraction(double solarIndexofRefraction);
-
-  bool setSolarIndexofRefraction(const Quantity& solarIndexofRefraction);
 
   bool setSolarExtinctionCoefficient(double solarExtinctionCoefficient);
 
-  bool setSolarExtinctionCoefficient(const Quantity& solarExtinctionCoefficient);
-
   bool setVisibleIndexofRefraction(double visibleIndexofRefraction);
-
-  bool setVisibleIndexofRefraction(const Quantity& visibleIndexofRefraction);
 
   bool setVisibleExtinctionCoefficient(double visibleExtinctionCoefficient);
 
-  bool setVisibleExtinctionCoefficient(const Quantity& visibleExtinctionCoefficient);
-
   bool setInfraredTransmittanceatNormalIncidence(double infraredTransmittanceatNormalIncidence);
-
-  bool setInfraredTransmittanceatNormalIncidence(const Quantity& infraredTransmittanceatNormalIncidence);
 
   void resetInfraredTransmittanceatNormalIncidence();
 
   bool setInfraredHemisphericalEmissivity(double infraredHemisphericalEmissivity);
 
-  bool setInfraredHemisphericalEmissivity(const Quantity& infraredHemisphericalEmissivity);
-
   void resetInfraredHemisphericalEmissivity();
 
   bool setConductivity(double conductivity);
 
-  bool setConductivity(const Quantity& conductivity);
-
   void resetConductivity();
 
   bool setDirtCorrectionFactorforSolarandVisibleTransmittance(double dirtCorrectionFactorforSolarandVisibleTransmittance);
-
-  bool setDirtCorrectionFactorforSolarandVisibleTransmittance(const Quantity& dirtCorrectionFactorforSolarandVisibleTransmittance);
 
   void resetDirtCorrectionFactorforSolarandVisibleTransmittance();
 

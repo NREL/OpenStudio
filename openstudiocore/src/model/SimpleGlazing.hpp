@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -67,15 +65,10 @@ class MODEL_API SimpleGlazing : public Glazing {
 
   double uFactor() const;
 
-  Quantity getUFactor(bool returnIP=false) const;
-
   double solarHeatGainCoefficient() const;
-
-  Quantity getSolarHeatGainCoefficient(bool returnIP=false) const;
 
   boost::optional<double> visibleTransmittance() const;
 
-  OSOptionalQuantity getVisibleTransmittance(bool returnIP=false) const;
 
   //@}
   /** @name Setters */
@@ -83,15 +76,9 @@ class MODEL_API SimpleGlazing : public Glazing {
 
   bool setUFactor(double uFactor);
 
-  bool setUFactor(const Quantity& uFactor);
-
   bool setSolarHeatGainCoefficient(double solarHeatGainCoefficient);
 
-  bool setSolarHeatGainCoefficient(const Quantity& solarHeatGainCoefficient);
-
   bool setVisibleTransmittance(double visibleTransmittance);
-
-  bool setVisibleTransmittance(const Quantity& visibleTransmittance);
 
   void resetVisibleTransmittance();
 
@@ -125,4 +112,3 @@ typedef std::vector<SimpleGlazing> SimpleGlazingVector;
 } // openstudio
 
 #endif // MODEL_SIMPLEGLAZING_HPP
-

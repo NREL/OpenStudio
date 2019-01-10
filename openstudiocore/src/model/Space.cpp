@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -2432,86 +2432,6 @@ namespace detail {
       result.push_back(planarSurface.cast<Surface>());
     }
 
-    return result;
-  }
-
-  openstudio::Quantity Space_Impl::directionofRelativeNorth_SI() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_SpaceFields::DirectionofRelativeNorth,true,false);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  openstudio::Quantity Space_Impl::directionofRelativeNorth_IP() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_SpaceFields::DirectionofRelativeNorth,true,true);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  bool Space_Impl::setDirectionofRelativeNorth(const Quantity& directionofRelativeNorth)
-  {
-    bool result = setQuantity(OS_SpaceFields::DirectionofRelativeNorth, directionofRelativeNorth);
-    return result;
-  }
-
-  openstudio::Quantity Space_Impl::xOrigin_SI() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_SpaceFields::XOrigin,true,false);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  openstudio::Quantity Space_Impl::xOrigin_IP() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_SpaceFields::XOrigin,true,true);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  bool Space_Impl::setXOrigin(const Quantity& xOrigin)
-  {
-    bool result = setQuantity(OS_SpaceFields::XOrigin, xOrigin);
-    return result;
-  }
-
-  openstudio::Quantity Space_Impl::yOrigin_SI() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_SpaceFields::YOrigin,true,false);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  openstudio::Quantity Space_Impl::yOrigin_IP() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_SpaceFields::YOrigin,true,true);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  bool Space_Impl::setYOrigin(const Quantity& yOrigin)
-  {
-    bool result = setQuantity(OS_SpaceFields::YOrigin, yOrigin);
-    return result;
-  }
-
-  openstudio::Quantity Space_Impl::zOrigin_SI() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_SpaceFields::ZOrigin,true,false);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  openstudio::Quantity Space_Impl::zOrigin_IP() const
-  {
-    OSOptionalQuantity value = getQuantity(OS_SpaceFields::ZOrigin,true,true);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  bool Space_Impl::setZOrigin(const Quantity& zOrigin)
-  {
-    bool result = setQuantity(OS_SpaceFields::ZOrigin, zOrigin);
     return result;
   }
 

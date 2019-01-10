@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -163,31 +163,9 @@ namespace detail {
     return value.get();
   }
 
-  Quantity ConstructionWithInternalSource_Impl::getTubeSpacing(bool returnIP) const {
-    OSOptionalQuantity value = getQuantity(OS_Construction_InternalSourceFields::TubeSpacing,true,returnIP);
-    OS_ASSERT(value.isSet());
-    return value.get();
-  }
-
-  openstudio::Quantity ConstructionWithInternalSource_Impl::tubeSpacing_SI() const {
-    return getTubeSpacing(false);
-  }
-
-  openstudio::Quantity ConstructionWithInternalSource_Impl::tubeSpacing_IP() const {
-    return getTubeSpacing(true);
-  }
-
   bool ConstructionWithInternalSource_Impl::setTubeSpacing(double tubeSpacing) {
     bool result = setDouble(OS_Construction_InternalSourceFields::TubeSpacing,tubeSpacing);
     return result;
-  }
-
-  bool ConstructionWithInternalSource_Impl::setTubeSpacing(const Quantity& tubeSpacing) {
-    OptionalDouble value = getDoubleFromQuantity(OS_Construction_InternalSourceFields::TubeSpacing,tubeSpacing);
-    if (!value) {
-      return false;
-    }
-    return setTubeSpacing(value.get());
   }
 
   ConstructionWithInternalSource ConstructionWithInternalSource_Impl::reverseConstructionWithInternalSource() const

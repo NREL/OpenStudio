@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,19 +62,6 @@ namespace openstudio {
       os << x.get();
     }
     return os;
-  }
-
-  namespace detail{
-    OptionalMetaTypeInitializer::OptionalMetaTypeInitializer()
-    {
-      // int type;
-      /* type = */ qRegisterMetaType<boost::optional<double> >("boost::optional<double>");
-      /* type = */ qRegisterMetaType<boost::optional<unsigned> >("boost::optional<unsigned>");
-      /* type = */ qRegisterMetaType<boost::optional<int> >("boost::optional<int>");
-      /* type = */ qRegisterMetaType<boost::optional<std::string> >("boost::optional<std::string>");
-    }
-
-     static OptionalMetaTypeInitializer __optionalMetaTypeInitializer__;
   }
 
 } // openstudio

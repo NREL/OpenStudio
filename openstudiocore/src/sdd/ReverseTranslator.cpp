@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -122,6 +122,7 @@
 #include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/core/StringHelpers.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/IPUnit.hpp"
 #include "../utilities/units/SIUnit.hpp"
 #include "../utilities/units/BTUUnit.hpp"
@@ -135,7 +136,10 @@
 
 #include <QDomDocument>
 #include <QDomElement>
+#include <QTextStream>
+
 #include <pugixml.hpp>
+
 
 namespace openstudio {
 namespace sdd {
@@ -178,7 +182,7 @@ namespace sdd {
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()){
         QDomDocument doc;
-        bool ok = doc.setContent(openstudio::filesystem::read_as_QByteArray(file));
+        bool ok = doc.setContent(toQString(openstudio::filesystem::read_as_string(file)));
         file.close();
 
         if (ok) {
@@ -2187,9 +2191,9 @@ pugi::xml_node ReverseTranslator::supplySegment(const std::string & fluidSegment
       auto nameElement = fluidSegmentElement.child("Name");
       auto typeElement = fluidSegmentElement.child("Type");
 
-      if ((toUpper(typeElement.text().as_string()) == "SECONDARYSUPPLY" ||
-        toUpper(typeElement.text().as_string()) == "PRIMARYSUPPLY") &&
-        toUpper(nameElement.text().as_string()) == toUpper(fluidSegmentName)) {
+      if ((istringEqual(typeElement.text().as_string(), "SECONDARYSUPPLY") ||
+        istringEqual(typeElement.text().as_string(), "PRIMARYSUPPLY")) &&
+        istringEqual(nameElement.text().as_string(), fluidSegmentName)) {
         return fluidSegmentElement;
       }
     }
@@ -2217,16 +2221,16 @@ boost::optional<model::PlantLoop> ReverseTranslator::serviceHotWaterLoopForSuppl
 
     auto fluidSysTypeElement = fluidSysElement.child("Type");
 
-    if (toUpper(fluidSysTypeElement.text().as_string()) == "SERVICEHOTWATER")
+    if (istringEqual(fluidSysTypeElement.text().as_string(), "SERVICEHOTWATER"))
     {
       for(auto& fluidSegmentElement : fluidSysElement.children("FluidSeg")) {
 
         auto nameElement = fluidSegmentElement.child("Name");
         auto typeElement = fluidSegmentElement.child("Type");
 
-        if ((toUpper(typeElement.text().as_string()) == "SECONDARYSUPPLY" ||
-          toUpper(typeElement.text().as_string()) == "PRIMARYSUPPLY") &&
-          toUpper(nameElement.text().as_string()) == toUpper(fluidSegmentName)
+        if ((istringEqual(typeElement.text().as_string(), "SECONDARYSUPPLY") ||
+          istringEqual(typeElement.text().as_string(), "PRIMARYSUPPLY")) &&
+          istringEqual(nameElement.text().as_string(), fluidSegmentName)
           ) {
           if (boost::optional<model::PlantLoop> loop = model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string())) {
             return loop;

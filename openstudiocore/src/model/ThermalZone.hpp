@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -86,15 +84,11 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   boost::optional<double> ceilingHeight() const;
 
-  OSOptionalQuantity getCeilingHeight(bool returnIP=false) const;
-
   bool isCeilingHeightDefaulted() const;
 
   bool isCeilingHeightAutocalculated() const;
 
   boost::optional<double> volume() const;
-
-  OSOptionalQuantity getVolume(bool returnIP=false) const;
 
   bool isVolumeDefaulted() const;
 
@@ -116,13 +110,9 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   double fractionofZoneControlledbyPrimaryDaylightingControl() const;
 
-  Quantity getFractionofZoneControlledbyPrimaryDaylightingControl(bool returnIP=false) const;
-
   bool isFractionofZoneControlledbyPrimaryDaylightingControlDefaulted() const;
 
   double fractionofZoneControlledbySecondaryDaylightingControl() const;
-
-  Quantity getFractionofZoneControlledbySecondaryDaylightingControl(bool returnIP=false) const;
 
   bool isFractionofZoneControlledbySecondaryDaylightingControlDefaulted() const;
 
@@ -140,8 +130,6 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   bool setCeilingHeight(double ceilingHeight);
 
-  bool setCeilingHeight(const Quantity& ceilingHeight);
-
   void resetCeilingHeight();
 
   void autocalculateCeilingHeight();
@@ -149,8 +137,6 @@ class MODEL_API ThermalZone : public HVACComponent {
   bool setVolume(boost::optional<double> volume);
 
   bool setVolume(double volume);
-
-  bool setVolume(const Quantity& volume);
 
   void resetVolume();
 
@@ -190,13 +176,9 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   bool setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl);
 
-  bool setFractionofZoneControlledbyPrimaryDaylightingControl(const Quantity& fractionofZoneControlledbyPrimaryDaylightingControl);
-
   void resetFractionofZoneControlledbyPrimaryDaylightingControl();
 
   bool setFractionofZoneControlledbySecondaryDaylightingControl(double fractionofZoneControlledbySecondaryDaylightingControl);
-
-  bool setFractionofZoneControlledbySecondaryDaylightingControl(const Quantity& fractionofZoneControlledbySecondaryDaylightingControl);
 
   void resetFractionofZoneControlledbySecondaryDaylightingControl();
 

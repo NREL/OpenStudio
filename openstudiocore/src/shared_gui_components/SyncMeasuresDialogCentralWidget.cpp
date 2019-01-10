@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,12 +37,12 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/SyncMeasuresDialog.hpp"
 
-#include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QProgressBar>
 
 #define NUM_COMPONENTS_DISPLAYED 10
 

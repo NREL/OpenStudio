@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,7 +42,6 @@
 
 namespace openstudio {
 
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -69,13 +68,6 @@ struct MODEL_API ScheduleType {
   boost::optional<double> lowerLimitValue;
   /** Maximum value for this schedule type (or unbounded if == boost::none). */
   boost::optional<double> upperLimitValue;
-
-  /** Returns the lowerLimitValue as an OSOptionalQuantity by using static methods on
-   *  ScheduleTypeLimits. */
-  OSOptionalQuantity getLowerLimitValue(bool returnIP=false) const;
-  /** Returns the upperLimitValue as an OSOptionalQuantity by using static methods on
-   *  ScheduleTypeLimits. */
-  OSOptionalQuantity getUpperLimitValue(bool returnIP=false) const;
 };
 
 /** \relates ScheduleType */
@@ -164,4 +156,3 @@ MODEL_API std::vector<Schedule> getCompatibleSchedules(
 } // openstudio
 
 #endif // MODEL_SCHEDULETYPEREGISTRY_HPP
-

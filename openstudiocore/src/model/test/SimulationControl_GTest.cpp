@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,40 +35,163 @@
 #include "../SimulationControl_Impl.hpp"
 #include "../LifeCycleCost.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,SimulationControl_LoadsConvergenceToleranceValue_Quantity) {
+TEST_F(ModelFixture,SimulationControl_GettersSetters) {
   Model model;
 
   SimulationControl simulationControl = model.getUniqueModelObject<SimulationControl>();
 
-  Unit units = simulationControl.getLoadsConvergenceToleranceValue(true).units(); // Get IP units.
+  // Do Zone Sizing Calculation:  Boolean
+  // Check Idd default: false
+  EXPECT_TRUE(simulationControl.isDoZoneSizingCalculationDefaulted());
+  EXPECT_FALSE(simulationControl.doZoneSizingCalculation());
+  // Test true
+  EXPECT_TRUE(simulationControl.setDoZoneSizingCalculation(true));
+  EXPECT_TRUE(simulationControl.doZoneSizingCalculation());
+  EXPECT_FALSE(simulationControl.isDoZoneSizingCalculationDefaulted());
+  // Test false
+  EXPECT_TRUE(simulationControl.setDoZoneSizingCalculation(false));
+  EXPECT_FALSE(simulationControl.doZoneSizingCalculation());
+  // Test reset
+  simulationControl.resetDoZoneSizingCalculation();
+  EXPECT_TRUE(simulationControl.isDoZoneSizingCalculationDefaulted());
+  EXPECT_FALSE(simulationControl.doZoneSizingCalculation());
 
-  double value(0.3);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(simulationControl.setLoadsConvergenceToleranceValue(testQ));
-  Quantity q = simulationControl.getLoadsConvergenceToleranceValue(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
 
-TEST_F(ModelFixture,SimulationControl_TemperatureConvergenceToleranceValue_Quantity) {
-  Model model;
+  // Do System Sizing Calculation:  Boolean
+  // Check Idd default: false
+  EXPECT_TRUE(simulationControl.isDoSystemSizingCalculationDefaulted());
+  EXPECT_FALSE(simulationControl.doSystemSizingCalculation());
+  // Test true
+  EXPECT_TRUE(simulationControl.setDoSystemSizingCalculation(true));
+  EXPECT_TRUE(simulationControl.doSystemSizingCalculation());
+  EXPECT_FALSE(simulationControl.isDoSystemSizingCalculationDefaulted());
+  // Test false
+  EXPECT_TRUE(simulationControl.setDoSystemSizingCalculation(false));
+  EXPECT_FALSE(simulationControl.doSystemSizingCalculation());
+  // Test reset
+  simulationControl.resetDoSystemSizingCalculation();
+  EXPECT_TRUE(simulationControl.isDoSystemSizingCalculationDefaulted());
+  EXPECT_FALSE(simulationControl.doSystemSizingCalculation());
 
-  SimulationControl simulationControl = model.getUniqueModelObject<SimulationControl>();
 
-  Unit units = simulationControl.getTemperatureConvergenceToleranceValue(true).units(); // Get IP units.
+  // Do Plant Sizing Calculation:  Boolean
+  // Check Idd default: false
+  EXPECT_TRUE(simulationControl.isDoPlantSizingCalculationDefaulted());
+  EXPECT_FALSE(simulationControl.doPlantSizingCalculation());
+  // Test true
+  EXPECT_TRUE(simulationControl.setDoPlantSizingCalculation(true));
+  EXPECT_TRUE(simulationControl.doPlantSizingCalculation());
+  EXPECT_FALSE(simulationControl.isDoPlantSizingCalculationDefaulted());
+  // Test false
+  EXPECT_TRUE(simulationControl.setDoPlantSizingCalculation(false));
+  EXPECT_FALSE(simulationControl.doPlantSizingCalculation());
+  // Test reset
+  simulationControl.resetDoPlantSizingCalculation();
+  EXPECT_TRUE(simulationControl.isDoPlantSizingCalculationDefaulted());
+  EXPECT_FALSE(simulationControl.doPlantSizingCalculation());
 
-  double value(0.3);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(simulationControl.setTemperatureConvergenceToleranceValue(testQ));
-  Quantity q = simulationControl.getTemperatureConvergenceToleranceValue(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+
+  // Run Simulation for Sizing Periods:  Boolean
+  // Check Idd default: true
+  EXPECT_TRUE(simulationControl.isRunSimulationforSizingPeriodsDefaulted());
+  EXPECT_TRUE(simulationControl.runSimulationforSizingPeriods());
+  // Test true
+  EXPECT_TRUE(simulationControl.setRunSimulationforSizingPeriods(true));
+  EXPECT_TRUE(simulationControl.runSimulationforSizingPeriods());
+  EXPECT_FALSE(simulationControl.isRunSimulationforSizingPeriodsDefaulted());
+  // Test false
+  EXPECT_TRUE(simulationControl.setRunSimulationforSizingPeriods(false));
+  EXPECT_FALSE(simulationControl.runSimulationforSizingPeriods());
+  // Test reset
+  simulationControl.resetRunSimulationforSizingPeriods();
+  EXPECT_TRUE(simulationControl.isRunSimulationforSizingPeriodsDefaulted());
+  EXPECT_TRUE(simulationControl.runSimulationforSizingPeriods());
+
+
+  // Run Simulation for Weather File Run Periods:  Boolean
+  // Check Idd default: true
+  EXPECT_TRUE(simulationControl.isRunSimulationforWeatherFileRunPeriodsDefaulted());
+  EXPECT_TRUE(simulationControl.runSimulationforWeatherFileRunPeriods());
+  // Test true
+  EXPECT_TRUE(simulationControl.setRunSimulationforWeatherFileRunPeriods(true));
+  EXPECT_TRUE(simulationControl.runSimulationforWeatherFileRunPeriods());
+  EXPECT_FALSE(simulationControl.isRunSimulationforWeatherFileRunPeriodsDefaulted());
+  // Test false
+  EXPECT_TRUE(simulationControl.setRunSimulationforWeatherFileRunPeriods(false));
+  EXPECT_FALSE(simulationControl.runSimulationforWeatherFileRunPeriods());
+  // Test reset
+  simulationControl.resetRunSimulationforWeatherFileRunPeriods();
+  EXPECT_TRUE(simulationControl.isRunSimulationforWeatherFileRunPeriodsDefaulted());
+  EXPECT_TRUE(simulationControl.runSimulationforWeatherFileRunPeriods());
+
+
+  // Loads Convergence Tolerance Value:  Double
+  // Check Idd default: .04
+  EXPECT_TRUE(simulationControl.isLoadsConvergenceToleranceValueDefaulted());
+  EXPECT_EQ(.04, simulationControl.loadsConvergenceToleranceValue());
+  EXPECT_TRUE(simulationControl.setLoadsConvergenceToleranceValue(0.02));
+  EXPECT_FALSE(simulationControl.isLoadsConvergenceToleranceValueDefaulted());
+  EXPECT_EQ(0.02, simulationControl.loadsConvergenceToleranceValue());
+  // Test reset
+  simulationControl.resetLoadsConvergenceToleranceValue();
+  EXPECT_EQ(.04, simulationControl.loadsConvergenceToleranceValue());
+  EXPECT_TRUE(simulationControl.isLoadsConvergenceToleranceValueDefaulted());
+
+
+  // Temperature Convergence Tolerance Value:  Double
+  // Check Idd default: .4
+  EXPECT_TRUE(simulationControl.isTemperatureConvergenceToleranceValueDefaulted());
+  EXPECT_EQ(.4, simulationControl.temperatureConvergenceToleranceValue());
+  EXPECT_TRUE(simulationControl.setTemperatureConvergenceToleranceValue(0.2));
+  EXPECT_FALSE(simulationControl.isTemperatureConvergenceToleranceValueDefaulted());
+  EXPECT_EQ(0.2, simulationControl.temperatureConvergenceToleranceValue());
+  // Test reset
+  simulationControl.resetTemperatureConvergenceToleranceValue();
+  EXPECT_EQ(.4, simulationControl.temperatureConvergenceToleranceValue());
+  EXPECT_TRUE(simulationControl.isTemperatureConvergenceToleranceValueDefaulted());
+
+
+  // Solar Distribution:  String
+  // Check Idd default: "FullExterior"
+  EXPECT_TRUE(simulationControl.isSolarDistributionDefaulted());
+  EXPECT_EQ("FullExterior", simulationControl.solarDistribution());
+  // Test a valid choice
+  EXPECT_TRUE(simulationControl.setSolarDistribution("MinimalShadowing"));
+  EXPECT_FALSE(simulationControl.isSolarDistributionDefaulted());
+  EXPECT_EQ("MinimalShadowing", simulationControl.solarDistribution());
+  // Test an invalid choice
+  EXPECT_FALSE(simulationControl.setSolarDistribution("BadChoice"));
+  EXPECT_EQ("MinimalShadowing", simulationControl.solarDistribution());
+
+
+  // Maximum Number of Warmup Days:  Integer
+  // Check Idd default: 25
+  EXPECT_TRUE(simulationControl.isMaximumNumberofWarmupDaysDefaulted());
+  EXPECT_EQ(25, simulationControl.maximumNumberofWarmupDays());
+  EXPECT_TRUE(simulationControl.setMaximumNumberofWarmupDays(12));
+  EXPECT_FALSE(simulationControl.isMaximumNumberofWarmupDaysDefaulted());
+  EXPECT_EQ(12, simulationControl.maximumNumberofWarmupDays());
+  // Test reset
+  simulationControl.resetMaximumNumberofWarmupDays();
+  EXPECT_EQ(25, simulationControl.maximumNumberofWarmupDays());
+  EXPECT_TRUE(simulationControl.isMaximumNumberofWarmupDaysDefaulted());
+
+
+  // Minimum Number of Warmup Days:  Integer
+  // Check Idd default: 6
+  EXPECT_TRUE(simulationControl.isMinimumNumberofWarmupDaysDefaulted());
+  EXPECT_EQ(6, simulationControl.minimumNumberofWarmupDays());
+  EXPECT_TRUE(simulationControl.setMinimumNumberofWarmupDays(3));
+  EXPECT_FALSE(simulationControl.isMinimumNumberofWarmupDaysDefaulted());
+  EXPECT_EQ(3, simulationControl.minimumNumberofWarmupDays());
+  // Test reset
+  simulationControl.resetMinimumNumberofWarmupDays();
+  EXPECT_EQ(6, simulationControl.minimumNumberofWarmupDays());
+  EXPECT_TRUE(simulationControl.isMinimumNumberofWarmupDaysDefaulted());
+
 }
 
 TEST_F(ModelFixture,SimulationControl_LifeCycleCost) {

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,8 +34,6 @@
 
 #include "../utilities/data/TimeSeries.hpp"
 #include "../utilities/core/Path.hpp"
-
-#include <QVector>
 
 #include "../AirflowAPI.hpp"
 
@@ -95,16 +93,16 @@ public:
 
 private:
   void clearLfr();
-  bool readLfr(QString fileName);
+  bool readLfr(const std::string& fileName);
   void clearNfr();
-  bool readNfr(QString fileName);
-  bool computeDateTimes(QVector<QString> day, QVector<QString> time);
+  bool readNfr(const std::string& fileName);
+  bool computeDateTimes(const std::vector<std::string>& day, const std::vector<std::string>& time);
 
-  QVector<int> m_pathNr;  // the CONTAM path index
+  std::vector<int> m_pathNr;  // the CONTAM path index
   std::vector<std::vector<double> > m_dP;
   std::vector<std::vector<double> > m_F0;
   std::vector<std::vector<double> > m_F1;
-  QVector<int> m_nodeNr;  // the CONTAM node index
+  std::vector<int> m_nodeNr;  // the CONTAM node index
   std::vector<std::vector<double> > m_T;
   std::vector<std::vector<double> > m_P;
   std::vector<std::vector<double> > m_D;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,8 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
-#include "../utilities/units/Quantity.hpp"
-#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -89,49 +87,27 @@ namespace detail {
 
     boost::optional<double> maximumOperatingPressure() const;
 
-    OSOptionalQuantity getMaximumOperatingPressure(bool returnIP=false) const;
-
     boost::optional<double> theoreticalEfficiency() const;
-
-    OSOptionalQuantity getTheoreticalEfficiency(bool returnIP=false) const;
 
     boost::optional<double> designOutletSteamTemperature() const;
 
-    OSOptionalQuantity getDesignOutletSteamTemperature(bool returnIP=false) const;
-
     boost::optional<double> nominalCapacity() const;
-
-    OSOptionalQuantity getNominalCapacity(bool returnIP=false) const;
 
     bool isNominalCapacityAutosized() const;
 
     boost::optional<double> minimumPartLoadRatio() const;
 
-    OSOptionalQuantity getMinimumPartLoadRatio(bool returnIP=false) const;
-
     boost::optional<double> maximumPartLoadRatio() const;
-
-    OSOptionalQuantity getMaximumPartLoadRatio(bool returnIP=false) const;
 
     boost::optional<double> optimumPartLoadRatio() const;
 
-    OSOptionalQuantity getOptimumPartLoadRatio(bool returnIP=false) const;
-
     boost::optional<double> coefficient1ofFuelUseFunctionofPartLoadRatioCurve() const;
-
-    OSOptionalQuantity getCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP=false) const;
 
     boost::optional<double> coefficient2ofFuelUseFunctionofPartLoadRatioCurve() const;
 
-    OSOptionalQuantity getCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP=false) const;
-
     boost::optional<double> coefficient3ofFuelUseFunctionofPartLoadRatioCurve() const;
 
-    OSOptionalQuantity getCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(bool returnIP=false) const;
-
     double sizingFactor() const;
-
-    Quantity getSizingFactor(bool returnIP=false) const;
 
     bool isSizingFactorDefaulted() const;
 
@@ -148,25 +124,17 @@ namespace detail {
 
     bool setMaximumOperatingPressure(boost::optional<double> maximumOperatingPressure);
 
-    bool setMaximumOperatingPressure(const OSOptionalQuantity& maximumOperatingPressure);
-
     void resetMaximumOperatingPressure();
 
     bool setTheoreticalEfficiency(boost::optional<double> theoreticalEfficiency);
-
-    bool setTheoreticalEfficiency(const OSOptionalQuantity& theoreticalEfficiency);
 
     void resetTheoreticalEfficiency();
 
     bool setDesignOutletSteamTemperature(boost::optional<double> designOutletSteamTemperature);
 
-    bool setDesignOutletSteamTemperature(const OSOptionalQuantity& designOutletSteamTemperature);
-
     void resetDesignOutletSteamTemperature();
 
     bool setNominalCapacity(boost::optional<double> nominalCapacity);
-
-    bool setNominalCapacity(const OSOptionalQuantity& nominalCapacity);
 
     void resetNominalCapacity();
 
@@ -174,43 +142,29 @@ namespace detail {
 
     bool setMinimumPartLoadRatio(boost::optional<double> minimumPartLoadRatio);
 
-    bool setMinimumPartLoadRatio(const OSOptionalQuantity& minimumPartLoadRatio);
-
     void resetMinimumPartLoadRatio();
 
     bool setMaximumPartLoadRatio(boost::optional<double> maximumPartLoadRatio);
-
-    bool setMaximumPartLoadRatio(const OSOptionalQuantity& maximumPartLoadRatio);
 
     void resetMaximumPartLoadRatio();
 
     bool setOptimumPartLoadRatio(boost::optional<double> optimumPartLoadRatio);
 
-    bool setOptimumPartLoadRatio(const OSOptionalQuantity& optimumPartLoadRatio);
-
     void resetOptimumPartLoadRatio();
 
     bool setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(boost::optional<double> coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
-
-    bool setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(const OSOptionalQuantity& coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
 
     void resetCoefficient1ofFuelUseFunctionofPartLoadRatioCurve();
 
     bool setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(boost::optional<double> coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
 
-    bool setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(const OSOptionalQuantity& coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
-
     void resetCoefficient2ofFuelUseFunctionofPartLoadRatioCurve();
 
     bool setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(boost::optional<double> coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
 
-    bool setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(const OSOptionalQuantity& coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
-
     void resetCoefficient3ofFuelUseFunctionofPartLoadRatioCurve();
 
     bool setSizingFactor(double sizingFactor);
-
-    bool setSizingFactor(const Quantity& sizingFactor);
 
     void resetSizingFactor();
 
@@ -228,29 +182,6 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.BoilerSteam");
 
     std::vector<std::string> fuelTypeValues() const;
-    openstudio::OSOptionalQuantity maximumOperatingPressure_SI() const;
-    openstudio::OSOptionalQuantity maximumOperatingPressure_IP() const;
-    openstudio::OSOptionalQuantity theoreticalEfficiency_SI() const;
-    openstudio::OSOptionalQuantity theoreticalEfficiency_IP() const;
-    openstudio::OSOptionalQuantity designOutletSteamTemperature_SI() const;
-    openstudio::OSOptionalQuantity designOutletSteamTemperature_IP() const;
-    openstudio::OSOptionalQuantity nominalCapacity_SI() const;
-    openstudio::OSOptionalQuantity nominalCapacity_IP() const;
-    openstudio::OSOptionalQuantity minimumPartLoadRatio_SI() const;
-    openstudio::OSOptionalQuantity minimumPartLoadRatio_IP() const;
-    openstudio::OSOptionalQuantity maximumPartLoadRatio_SI() const;
-    openstudio::OSOptionalQuantity maximumPartLoadRatio_IP() const;
-    openstudio::OSOptionalQuantity optimumPartLoadRatio_SI() const;
-    openstudio::OSOptionalQuantity optimumPartLoadRatio_IP() const;
-    openstudio::OSOptionalQuantity coefficient1ofFuelUseFunctionofPartLoadRatioCurve_SI() const;
-    openstudio::OSOptionalQuantity coefficient1ofFuelUseFunctionofPartLoadRatioCurve_IP() const;
-    openstudio::OSOptionalQuantity coefficient2ofFuelUseFunctionofPartLoadRatioCurve_SI() const;
-    openstudio::OSOptionalQuantity coefficient2ofFuelUseFunctionofPartLoadRatioCurve_IP() const;
-    openstudio::OSOptionalQuantity coefficient3ofFuelUseFunctionofPartLoadRatioCurve_SI() const;
-    openstudio::OSOptionalQuantity coefficient3ofFuelUseFunctionofPartLoadRatioCurve_IP() const;
-    openstudio::Quantity sizingFactor_SI() const;
-    openstudio::Quantity sizingFactor_IP() const;
-
   };
 
 } // detail

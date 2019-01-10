@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -106,13 +106,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity AvailabilityManagerNightCycle_Impl::getThermostatTolerance(bool returnIP) const {
-    OptionalDouble value = thermostatTolerance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_AvailabilityManager_NightCycleFields::ThermostatTolerance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool AvailabilityManagerNightCycle_Impl::isThermostatToleranceDefaulted() const {
     return isEmpty(OS_AvailabilityManager_NightCycleFields::ThermostatTolerance);
   }
@@ -121,13 +114,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_AvailabilityManager_NightCycleFields::CyclingRunTime,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity AvailabilityManagerNightCycle_Impl::getCyclingRunTime(bool returnIP) const {
-    OptionalDouble value = cyclingRunTime();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_AvailabilityManager_NightCycleFields::CyclingRunTime, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool AvailabilityManagerNightCycle_Impl::isCyclingRunTimeDefaulted() const {
@@ -149,15 +135,6 @@ namespace detail {
     return result;
   }
 
-  bool AvailabilityManagerNightCycle_Impl::setThermostatTolerance(const Quantity& thermostatTolerance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_AvailabilityManager_NightCycleFields::ThermostatTolerance,thermostatTolerance);
-    if (!value) {
-      return false;
-    }
-    setThermostatTolerance(value.get());
-    return true;
-  }
-
   void AvailabilityManagerNightCycle_Impl::resetThermostatTolerance() {
     bool result = setString(OS_AvailabilityManager_NightCycleFields::ThermostatTolerance, "");
     OS_ASSERT(result);
@@ -166,15 +143,6 @@ namespace detail {
   bool AvailabilityManagerNightCycle_Impl::setCyclingRunTime(double cyclingRunTime) {
     bool result = setDouble(OS_AvailabilityManager_NightCycleFields::CyclingRunTime, cyclingRunTime);
     return result;
-  }
-
-  bool AvailabilityManagerNightCycle_Impl::setCyclingRunTime(const Quantity& cyclingRunTime) {
-    OptionalDouble value = getDoubleFromQuantity(OS_AvailabilityManager_NightCycleFields::CyclingRunTime,cyclingRunTime);
-    if (!value) {
-      return false;
-    }
-    setCyclingRunTime(value.get());
-    return true;
   }
 
   void AvailabilityManagerNightCycle_Impl::resetCyclingRunTime() {
@@ -215,22 +183,6 @@ namespace detail {
   }
 
 
-
-  openstudio::Quantity AvailabilityManagerNightCycle_Impl::thermostatTolerance_SI() const {
-    return getThermostatTolerance(false);
-  }
-
-  openstudio::Quantity AvailabilityManagerNightCycle_Impl::thermostatTolerance_IP() const {
-    return getThermostatTolerance(true);
-  }
-
-  openstudio::Quantity AvailabilityManagerNightCycle_Impl::cyclingRunTime_SI() const {
-    return getCyclingRunTime(false);
-  }
-
-  openstudio::Quantity AvailabilityManagerNightCycle_Impl::cyclingRunTime_IP() const {
-    return getCyclingRunTime(true);
-  }
 
 
 
@@ -525,20 +477,12 @@ double AvailabilityManagerNightCycle::thermostatTolerance() const {
   return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->thermostatTolerance();
 }
 
-Quantity AvailabilityManagerNightCycle::getThermostatTolerance(bool returnIP) const {
-  return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->getThermostatTolerance(returnIP);
-}
-
 bool AvailabilityManagerNightCycle::isThermostatToleranceDefaulted() const {
   return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->isThermostatToleranceDefaulted();
 }
 
 double AvailabilityManagerNightCycle::cyclingRunTime() const {
   return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->cyclingRunTime();
-}
-
-Quantity AvailabilityManagerNightCycle::getCyclingRunTime(bool returnIP) const {
-  return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->getCyclingRunTime(returnIP);
 }
 
 bool AvailabilityManagerNightCycle::isCyclingRunTimeDefaulted() const {
@@ -557,19 +501,11 @@ bool AvailabilityManagerNightCycle::setThermostatTolerance(double thermostatTole
   return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setThermostatTolerance(thermostatTolerance);
 }
 
-bool AvailabilityManagerNightCycle::setThermostatTolerance(const Quantity& thermostatTolerance) {
-  return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setThermostatTolerance(thermostatTolerance);
-}
-
 void AvailabilityManagerNightCycle::resetThermostatTolerance() {
   getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetThermostatTolerance();
 }
 
 bool AvailabilityManagerNightCycle::setCyclingRunTime(double cyclingRunTime) {
-  return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setCyclingRunTime(cyclingRunTime);
-}
-
-bool AvailabilityManagerNightCycle::setCyclingRunTime(const Quantity& cyclingRunTime) {
   return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setCyclingRunTime(cyclingRunTime);
 }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,7 +36,6 @@
 namespace openstudio {
 
 class Time;
-class OSQuantityVector;
 
 namespace model {
 
@@ -85,16 +84,8 @@ class MODEL_API ScheduleDay : public ScheduleBase {
   /// Returns a vector of values in the same order and with the same number of elements as times.
   std::vector<double> values() const;
 
-  /** Returns an OSQuantityVector in the same order and with the same number of elements as times.
-   *  Otherwise (if units cannot be deduced), the return value will be .empty(). */
-  OSQuantityVector getValues(bool returnIP=false) const;
-
   /// Returns the value in effect at the given time.  If time is less than 0 days or greater than 1 day, 0 is returned.
   double getValue(const openstudio::Time& time) const;
-
-  /** Returns the value in effect at time, if possible. Otherwise, return value evaluates to
-   *  false. */
-  boost::optional<Quantity> getValueAsQuantity(const openstudio::Time& time, bool returnIP=false) const;
 
   //@}
   /** @name Setters */
@@ -107,11 +98,6 @@ class MODEL_API ScheduleDay : public ScheduleBase {
   /** Returns false if time is less than 0 days or greater than 1 day.  Replaces existing value
    *  for same time. */
   bool addValue(const openstudio::Time& untilTime, double value);
-
-  /** Returns false if time is less than 0 days or greater than 1 day, or if there are no
-   *  scheduleTypeLimits() set, or if value cannot be converted to the 'SI' units implied by
-   *  scheduleTypeLimits(). Otherwise, converts value appropriately and then sets the value. */
-  bool addValue(const openstudio::Time& untilTime, const Quantity& value);
 
   /** Remove a value added by addValue at the exact time.  Returns the removed
    *  value if there was one. */

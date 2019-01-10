@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -28,6 +28,8 @@
 ***********************************************************************************************************************/
 
 #include "BCLMeasureDialog.hpp"
+
+#include "../model_editor/UserSettings.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/StringHelpers.hpp"
@@ -134,9 +136,9 @@ QSize BCLMeasureDialog::sizeHint() const
 
 boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
 {
-  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+  openstudio::path umd = userMeasuresDir();
 
-  if (isNetworkPath(userMeasuresDir) && !isNetworkPathAvailable(userMeasuresDir)) {
+  if (isNetworkPath(umd) && !isNetworkPathAvailable(umd)) {
     QMessageBox::information(this, "Cannot Create Measure", "Your My Measures Directory appears to be on a network drive that is not currently available.\nYou can change your specified My Measures Directory using 'Preferences->Change My Measures Directory'.", QMessageBox::Ok);
     return boost::optional<openstudio::BCLMeasure>();
   }
@@ -160,14 +162,14 @@ boost::optional<openstudio::BCLMeasure> BCLMeasureDialog::createMeasure()
   }
 
   QString folderName = toQString(lowerClassName).append("/");
-  openstudio::path measureDir = userMeasuresDir / toPath(folderName);
+  openstudio::path measureDir = umd / toPath(folderName);
 
   // prompt user ???
   if (openstudio::filesystem::exists(measureDir)){
     int i = 1;
     while (openstudio::filesystem::exists(measureDir)){
       folderName = toQString(lowerClassName).append(" ").append(QString::number(i)).append("/");
-      measureDir = userMeasuresDir / toPath(folderName);
+      measureDir = umd / toPath(folderName);
       ++i;
     }
     // DLM: do we want to alter the class name to indicate this copy?
@@ -304,7 +306,7 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
 
 void BCLMeasureDialog::init()
 {
-#ifdef Q_OS_MAC
+#ifdef Q_OS_DARWIN
   int btnHeight = 44;
 #else
   int btnHeight = 34;
@@ -468,7 +470,7 @@ void BCLMeasureDialog::init()
   this->setWindowModality(Qt::ApplicationModal);
   //this->setSizeGripEnabled(true);
 
-  #ifdef Q_OS_MAC
+  #ifdef Q_OS_DARWIN
     setWindowFlags(Qt::FramelessWindowHint);
   #else
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);

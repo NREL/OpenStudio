@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -89,8 +89,6 @@ namespace detail {
 
     bool setToConstantValue(double value);
 
-    bool setToConstantValue(const Quantity& value);
-
     // ensure that this object does not contain the date 2/29
     virtual void ensureNoLeapDays() override;
 
@@ -102,7 +100,6 @@ namespace detail {
 
     boost::optional<double> constantValue() const;
 
-    boost::optional<Quantity> getConstantValue(bool returnIP=false) const;
 
     //@}
    private:

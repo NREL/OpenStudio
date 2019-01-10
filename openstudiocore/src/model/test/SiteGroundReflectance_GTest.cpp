@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,189 +34,168 @@
 #include "../SiteGroundReflectance.hpp"
 #include "../SiteGroundReflectance_Impl.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,SiteGroundReflectance_JanuaryGroundReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SiteGroundReflectance siteGroundReflectance(model);
+TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
+{
+  Model m;
 
-  Unit units = siteGroundReflectance.getJanuaryGroundReflectance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(siteGroundReflectance.setJanuaryGroundReflectance(testQ));
-  Quantity q = siteGroundReflectance.getJanuaryGroundReflectance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
+  SiteGroundReflectance siteGroundReflectance = m.getUniqueModelObject<SiteGroundReflectance>();
+
+  // January Ground Reflectance:  Double
+  // Check Idd default: 0.2
+  EXPECT_TRUE(siteGroundReflectance.isJanuaryGroundReflectanceDefaulted());
+  EXPECT_EQ(0.2, siteGroundReflectance.januaryGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.setJanuaryGroundReflectance(0.1));
+  EXPECT_FALSE(siteGroundReflectance.isJanuaryGroundReflectanceDefaulted());
+  EXPECT_EQ(0.1, siteGroundReflectance.januaryGroundReflectance());
+  // Test reset
+  siteGroundReflectance.resetJanuaryGroundReflectance();
+  EXPECT_EQ(0.2, siteGroundReflectance.januaryGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.isJanuaryGroundReflectanceDefaulted());
+
+
+  // February Ground Reflectance:  Double
+  // Check Idd default: 0.2
+  EXPECT_TRUE(siteGroundReflectance.isFebruaryGroundReflectanceDefaulted());
+  EXPECT_EQ(0.2, siteGroundReflectance.februaryGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.setFebruaryGroundReflectance(0.1));
+  EXPECT_FALSE(siteGroundReflectance.isFebruaryGroundReflectanceDefaulted());
+  EXPECT_EQ(0.1, siteGroundReflectance.februaryGroundReflectance());
+  // Test reset
+  siteGroundReflectance.resetFebruaryGroundReflectance();
+  EXPECT_EQ(0.2, siteGroundReflectance.februaryGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.isFebruaryGroundReflectanceDefaulted());
+
+
+  // March Ground Reflectance:  Double
+  // Check Idd default: 0.2
+  EXPECT_TRUE(siteGroundReflectance.isMarchGroundReflectanceDefaulted());
+  EXPECT_EQ(0.2, siteGroundReflectance.marchGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.setMarchGroundReflectance(0.1));
+  EXPECT_FALSE(siteGroundReflectance.isMarchGroundReflectanceDefaulted());
+  EXPECT_EQ(0.1, siteGroundReflectance.marchGroundReflectance());
+  // Test reset
+  siteGroundReflectance.resetMarchGroundReflectance();
+  EXPECT_EQ(0.2, siteGroundReflectance.marchGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.isMarchGroundReflectanceDefaulted());
+
+
+  // April Ground Reflectance:  Double
+  // Check Idd default: 0.2
+  EXPECT_TRUE(siteGroundReflectance.isAprilGroundReflectanceDefaulted());
+  EXPECT_EQ(0.2, siteGroundReflectance.aprilGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.setAprilGroundReflectance(0.1));
+  EXPECT_FALSE(siteGroundReflectance.isAprilGroundReflectanceDefaulted());
+  EXPECT_EQ(0.1, siteGroundReflectance.aprilGroundReflectance());
+  // Test reset
+  siteGroundReflectance.resetAprilGroundReflectance();
+  EXPECT_EQ(0.2, siteGroundReflectance.aprilGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.isAprilGroundReflectanceDefaulted());
+
+
+  // May Ground Reflectance:  Double
+  // Check Idd default: 0.2
+  EXPECT_TRUE(siteGroundReflectance.isMayGroundReflectanceDefaulted());
+  EXPECT_EQ(0.2, siteGroundReflectance.mayGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.setMayGroundReflectance(0.1));
+  EXPECT_FALSE(siteGroundReflectance.isMayGroundReflectanceDefaulted());
+  EXPECT_EQ(0.1, siteGroundReflectance.mayGroundReflectance());
+  // Test reset
+  siteGroundReflectance.resetMayGroundReflectance();
+  EXPECT_EQ(0.2, siteGroundReflectance.mayGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.isMayGroundReflectanceDefaulted());
+
+
+  // June Ground Reflectance:  Double
+  // Check Idd default: 0.2
+  EXPECT_TRUE(siteGroundReflectance.isJuneGroundReflectanceDefaulted());
+  EXPECT_EQ(0.2, siteGroundReflectance.juneGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.setJuneGroundReflectance(0.1));
+  EXPECT_FALSE(siteGroundReflectance.isJuneGroundReflectanceDefaulted());
+  EXPECT_EQ(0.1, siteGroundReflectance.juneGroundReflectance());
+  // Test reset
+  siteGroundReflectance.resetJuneGroundReflectance();
+  EXPECT_EQ(0.2, siteGroundReflectance.juneGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.isJuneGroundReflectanceDefaulted());
+
+
+  // July Ground Reflectance:  Double
+  // Check Idd default: 0.2
+  EXPECT_TRUE(siteGroundReflectance.isJulyGroundReflectanceDefaulted());
+  EXPECT_EQ(0.2, siteGroundReflectance.julyGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.setJulyGroundReflectance(0.1));
+  EXPECT_FALSE(siteGroundReflectance.isJulyGroundReflectanceDefaulted());
+  EXPECT_EQ(0.1, siteGroundReflectance.julyGroundReflectance());
+  // Test reset
+  siteGroundReflectance.resetJulyGroundReflectance();
+  EXPECT_EQ(0.2, siteGroundReflectance.julyGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.isJulyGroundReflectanceDefaulted());
+
+
+  // August Ground Reflectance:  Double
+  // Check Idd default: 0.2
+  EXPECT_TRUE(siteGroundReflectance.isAugustGroundReflectanceDefaulted());
+  EXPECT_EQ(0.2, siteGroundReflectance.augustGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.setAugustGroundReflectance(0.1));
+  EXPECT_FALSE(siteGroundReflectance.isAugustGroundReflectanceDefaulted());
+  EXPECT_EQ(0.1, siteGroundReflectance.augustGroundReflectance());
+  // Test reset
+  siteGroundReflectance.resetAugustGroundReflectance();
+  EXPECT_EQ(0.2, siteGroundReflectance.augustGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.isAugustGroundReflectanceDefaulted());
+
+
+  // September Ground Reflectance:  Double
+  // Check Idd default: 0.2
+  EXPECT_TRUE(siteGroundReflectance.isSeptemberGroundReflectanceDefaulted());
+  EXPECT_EQ(0.2, siteGroundReflectance.septemberGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.setSeptemberGroundReflectance(0.1));
+  EXPECT_FALSE(siteGroundReflectance.isSeptemberGroundReflectanceDefaulted());
+  EXPECT_EQ(0.1, siteGroundReflectance.septemberGroundReflectance());
+  // Test reset
+  siteGroundReflectance.resetSeptemberGroundReflectance();
+  EXPECT_EQ(0.2, siteGroundReflectance.septemberGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.isSeptemberGroundReflectanceDefaulted());
+
+
+  // October Ground Reflectance:  Double
+  // Check Idd default: 0.2
+  EXPECT_TRUE(siteGroundReflectance.isOctoberGroundReflectanceDefaulted());
+  EXPECT_EQ(0.2, siteGroundReflectance.octoberGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.setOctoberGroundReflectance(0.1));
+  EXPECT_FALSE(siteGroundReflectance.isOctoberGroundReflectanceDefaulted());
+  EXPECT_EQ(0.1, siteGroundReflectance.octoberGroundReflectance());
+  // Test reset
+  siteGroundReflectance.resetOctoberGroundReflectance();
+  EXPECT_EQ(0.2, siteGroundReflectance.octoberGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.isOctoberGroundReflectanceDefaulted());
+
+
+  // November Ground Reflectance:  Double
+  // Check Idd default: 0.2
+  EXPECT_TRUE(siteGroundReflectance.isNovemberGroundReflectanceDefaulted());
+  EXPECT_EQ(0.2, siteGroundReflectance.novemberGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.setNovemberGroundReflectance(0.1));
+  EXPECT_FALSE(siteGroundReflectance.isNovemberGroundReflectanceDefaulted());
+  EXPECT_EQ(0.1, siteGroundReflectance.novemberGroundReflectance());
+  // Test reset
+  siteGroundReflectance.resetNovemberGroundReflectance();
+  EXPECT_EQ(0.2, siteGroundReflectance.novemberGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.isNovemberGroundReflectanceDefaulted());
+
+
+  // December Ground Reflectance:  Double
+  // Check Idd default: 0.2
+  EXPECT_TRUE(siteGroundReflectance.isDecemberGroundReflectanceDefaulted());
+  EXPECT_EQ(0.2, siteGroundReflectance.decemberGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.setDecemberGroundReflectance(0.1));
+  EXPECT_FALSE(siteGroundReflectance.isDecemberGroundReflectanceDefaulted());
+  EXPECT_EQ(0.1, siteGroundReflectance.decemberGroundReflectance());
+  // Test reset
+  siteGroundReflectance.resetDecemberGroundReflectance();
+  EXPECT_EQ(0.2, siteGroundReflectance.decemberGroundReflectance());
+  EXPECT_TRUE(siteGroundReflectance.isDecemberGroundReflectanceDefaulted());
+
 }
-
-TEST_F(ModelFixture,SiteGroundReflectance_FebruaryGroundReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SiteGroundReflectance siteGroundReflectance(model);
-
-  Unit units = siteGroundReflectance.getFebruaryGroundReflectance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(siteGroundReflectance.setFebruaryGroundReflectance(testQ));
-  Quantity q = siteGroundReflectance.getFebruaryGroundReflectance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,SiteGroundReflectance_MarchGroundReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SiteGroundReflectance siteGroundReflectance(model);
-
-  Unit units = siteGroundReflectance.getMarchGroundReflectance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(siteGroundReflectance.setMarchGroundReflectance(testQ));
-  Quantity q = siteGroundReflectance.getMarchGroundReflectance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,SiteGroundReflectance_AprilGroundReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SiteGroundReflectance siteGroundReflectance(model);
-
-  Unit units = siteGroundReflectance.getAprilGroundReflectance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(siteGroundReflectance.setAprilGroundReflectance(testQ));
-  Quantity q = siteGroundReflectance.getAprilGroundReflectance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,SiteGroundReflectance_MayGroundReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SiteGroundReflectance siteGroundReflectance(model);
-
-  Unit units = siteGroundReflectance.getMayGroundReflectance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(siteGroundReflectance.setMayGroundReflectance(testQ));
-  Quantity q = siteGroundReflectance.getMayGroundReflectance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,SiteGroundReflectance_JuneGroundReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SiteGroundReflectance siteGroundReflectance(model);
-
-  Unit units = siteGroundReflectance.getJuneGroundReflectance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(siteGroundReflectance.setJuneGroundReflectance(testQ));
-  Quantity q = siteGroundReflectance.getJuneGroundReflectance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,SiteGroundReflectance_JulyGroundReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SiteGroundReflectance siteGroundReflectance(model);
-
-  Unit units = siteGroundReflectance.getJulyGroundReflectance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(siteGroundReflectance.setJulyGroundReflectance(testQ));
-  Quantity q = siteGroundReflectance.getJulyGroundReflectance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,SiteGroundReflectance_AugustGroundReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SiteGroundReflectance siteGroundReflectance(model);
-
-  Unit units = siteGroundReflectance.getAugustGroundReflectance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(siteGroundReflectance.setAugustGroundReflectance(testQ));
-  Quantity q = siteGroundReflectance.getAugustGroundReflectance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,SiteGroundReflectance_SeptemberGroundReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SiteGroundReflectance siteGroundReflectance(model);
-
-  Unit units = siteGroundReflectance.getSeptemberGroundReflectance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(siteGroundReflectance.setSeptemberGroundReflectance(testQ));
-  Quantity q = siteGroundReflectance.getSeptemberGroundReflectance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,SiteGroundReflectance_OctoberGroundReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SiteGroundReflectance siteGroundReflectance(model);
-
-  Unit units = siteGroundReflectance.getOctoberGroundReflectance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(siteGroundReflectance.setOctoberGroundReflectance(testQ));
-  Quantity q = siteGroundReflectance.getOctoberGroundReflectance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,SiteGroundReflectance_NovemberGroundReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SiteGroundReflectance siteGroundReflectance(model);
-
-  Unit units = siteGroundReflectance.getNovemberGroundReflectance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(siteGroundReflectance.setNovemberGroundReflectance(testQ));
-  Quantity q = siteGroundReflectance.getNovemberGroundReflectance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-
-TEST_F(ModelFixture,SiteGroundReflectance_DecemberGroundReflectance_Quantity) {
-  Model model;
-  // TODO: Check constructor.
-  SiteGroundReflectance siteGroundReflectance(model);
-
-  Unit units = siteGroundReflectance.getDecemberGroundReflectance(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
-  Quantity testQ(value,units);
-  EXPECT_TRUE(siteGroundReflectance.setDecemberGroundReflectance(testQ));
-  Quantity q = siteGroundReflectance.getDecemberGroundReflectance(true);
-  EXPECT_NEAR(value,q.value(),1.0E-8);
-  EXPECT_EQ(units.standardString(),q.units().standardString());
-}
-

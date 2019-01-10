@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,8 +37,6 @@
 
 #include <vector>
 #include <set>
-
-#include <QMetaType>
 
 namespace openstudio {
 
@@ -153,8 +151,5 @@ typedef boost::optional<std::vector<IddObjectType> > OptionalIddObjectTypeVector
 typedef boost::optional<std::set<IddObjectType> > OptionalIddObjectTypeSet;
 
 } // openstudio
-
-Q_DECLARE_METATYPE(openstudio::IddFileType)
-Q_DECLARE_METATYPE(openstudio::IddObjectType)
 
 #endif // UTILITIES_IDD_IDDENUMS_HXX

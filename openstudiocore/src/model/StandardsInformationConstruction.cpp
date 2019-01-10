@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -253,16 +253,7 @@ namespace detail {
     // include values from json
     //parseStandardsMap();
 
-    //QMap<QString, QVariant> materials = m_standardsMap["materials"].toMap();
-    //for (QString material_name : materials.uniqueKeys()) {
-    //  QMap<QString, QVariant> material = materials[material_name].toMap();
-    //  QString tmp = material["material_standard"].toString();
-    //  if (!tmp.isEmpty()){
-    //    result.push_back(toString(tmp));
-    //  }
-    //}
-
-    // todo: pull from standards JSON file, for now just hard code here
+    // TODO: pull from standards JSON file, for now just hard code here
     result.push_back("CEC Title24-2013");
 
     // include values from model

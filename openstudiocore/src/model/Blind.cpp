@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -110,37 +110,16 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Blind_Impl::getSlatWidth(bool returnIP) const {
-    OptionalDouble value = slatWidth();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatWidth, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double Blind_Impl::slatSeparation() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatSeparation,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  Quantity Blind_Impl::getSlatSeparation(bool returnIP) const {
-    OptionalDouble value = slatSeparation();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatSeparation, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double Blind_Impl::slatThickness() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatThickness,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Blind_Impl::getSlatThickness(bool returnIP) const {
-    OptionalDouble value = slatThickness();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatThickness, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Blind_Impl::isSlatThicknessDefaulted() const {
@@ -153,13 +132,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Blind_Impl::getSlatAngle(bool returnIP) const {
-    OptionalDouble value = slatAngle();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatAngle, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool Blind_Impl::isSlatAngleDefaulted() const {
     return isEmpty(OS_WindowMaterial_BlindFields::SlatAngle);
   }
@@ -168,13 +140,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatConductivity,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Blind_Impl::getSlatConductivity(bool returnIP) const {
-    OptionalDouble value = slatConductivity();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatConductivity, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Blind_Impl::isSlatConductivityDefaulted() const {
@@ -187,13 +152,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Blind_Impl::getSlatBeamSolarTransmittance(bool returnIP) const {
-    OptionalDouble value = slatBeamSolarTransmittance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatBeamSolarTransmittance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool Blind_Impl::isSlatBeamSolarTransmittanceDefaulted() const {
     return isEmpty(OS_WindowMaterial_BlindFields::SlatBeamSolarTransmittance);
   }
@@ -204,37 +162,16 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Blind_Impl::getFrontSideSlatBeamSolarReflectance(bool returnIP) const {
-    OptionalDouble value = frontSideSlatBeamSolarReflectance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::FrontSideSlatBeamSolarReflectance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double Blind_Impl::backSideSlatBeamSolarReflectance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::BackSideSlatBeamSolarReflectance,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  Quantity Blind_Impl::getBackSideSlatBeamSolarReflectance(bool returnIP) const {
-    OptionalDouble value = backSideSlatBeamSolarReflectance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BackSideSlatBeamSolarReflectance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double Blind_Impl::slatDiffuseSolarTransmittance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatDiffuseSolarTransmittance,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Blind_Impl::getSlatDiffuseSolarTransmittance(bool returnIP) const {
-    OptionalDouble value = slatDiffuseSolarTransmittance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatDiffuseSolarTransmittance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Blind_Impl::isSlatDiffuseSolarTransmittanceDefaulted() const {
@@ -247,24 +184,10 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Blind_Impl::getFrontSideSlatDiffuseSolarReflectance(bool returnIP) const {
-    OptionalDouble value = frontSideSlatDiffuseSolarReflectance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::FrontSideSlatDiffuseSolarReflectance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   double Blind_Impl::backSideSlatDiffuseSolarReflectance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseSolarReflectance,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Blind_Impl::getBackSideSlatDiffuseSolarReflectance(bool returnIP) const {
-    OptionalDouble value = backSideSlatDiffuseSolarReflectance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseSolarReflectance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   double Blind_Impl::slatBeamVisibleTransmittance() const {
@@ -273,42 +196,18 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Blind_Impl::getSlatBeamVisibleTransmittance(bool returnIP) const {
-    OptionalDouble value = slatBeamVisibleTransmittance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatBeamVisibleTransmittance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   boost::optional<double> Blind_Impl::frontSideSlatBeamVisibleReflectance() const {
     return getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatBeamVisibleReflectance,true);
-  }
-
-  OSOptionalQuantity Blind_Impl::getFrontSideSlatBeamVisibleReflectance(bool returnIP) const {
-    OptionalDouble value = frontSideSlatBeamVisibleReflectance();
-    return getQuantityFromDouble(OS_WindowMaterial_BlindFields::FrontSideSlatBeamVisibleReflectance, value, returnIP);
   }
 
   boost::optional<double> Blind_Impl::backSideSlatBeamVisibleReflectance() const {
     return getDouble(OS_WindowMaterial_BlindFields::BackSideSlatBeamVisibleReflectance,true);
   }
 
-  OSOptionalQuantity Blind_Impl::getBackSideSlatBeamVisibleReflectance(bool returnIP) const {
-    OptionalDouble value = backSideSlatBeamVisibleReflectance();
-    return getQuantityFromDouble(OS_WindowMaterial_BlindFields::BackSideSlatBeamVisibleReflectance, value, returnIP);
-  }
-
   double Blind_Impl::slatDiffuseVisibleTransmittance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatDiffuseVisibleTransmittance,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Blind_Impl::getSlatDiffuseVisibleTransmittance(bool returnIP) const {
-    OptionalDouble value = slatDiffuseVisibleTransmittance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatDiffuseVisibleTransmittance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Blind_Impl::isSlatDiffuseVisibleTransmittanceDefaulted() const {
@@ -319,31 +218,14 @@ namespace detail {
     return getDouble(OS_WindowMaterial_BlindFields::FrontSideSlatDiffuseVisibleReflectance,true);
   }
 
-  OSOptionalQuantity Blind_Impl::getFrontSideSlatDiffuseVisibleReflectance(bool returnIP) const {
-    OptionalDouble value = frontSideSlatDiffuseVisibleReflectance();
-    return getQuantityFromDouble(OS_WindowMaterial_BlindFields::FrontSideSlatDiffuseVisibleReflectance, value, returnIP);
-  }
-
   boost::optional<double> Blind_Impl::backSideSlatDiffuseVisibleReflectance() const {
     return getDouble(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseVisibleReflectance,true);
-  }
-
-  OSOptionalQuantity Blind_Impl::getBackSideSlatDiffuseVisibleReflectance(bool returnIP) const {
-    OptionalDouble value = backSideSlatDiffuseVisibleReflectance();
-    return getQuantityFromDouble(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseVisibleReflectance, value, returnIP);
   }
 
   double Blind_Impl::slatInfraredHemisphericalTransmittance() const {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Blind_Impl::getSlatInfraredHemisphericalTransmittance(bool returnIP) const {
-    OptionalDouble value = slatInfraredHemisphericalTransmittance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Blind_Impl::isSlatInfraredHemisphericalTransmittanceDefaulted() const {
@@ -356,13 +238,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Blind_Impl::getFrontSideSlatInfraredHemisphericalEmissivity(bool returnIP) const {
-    OptionalDouble value = frontSideSlatInfraredHemisphericalEmissivity();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool Blind_Impl::isFrontSideSlatInfraredHemisphericalEmissivityDefaulted() const {
     return isEmpty(OS_WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity);
   }
@@ -371,13 +246,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Blind_Impl::getBackSideSlatInfraredHemisphericalEmissivity(bool returnIP) const {
-    OptionalDouble value = backSideSlatInfraredHemisphericalEmissivity();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Blind_Impl::isBackSideSlatInfraredHemisphericalEmissivityDefaulted() const {
@@ -390,13 +258,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Blind_Impl::getBlindtoGlassDistance(bool returnIP) const {
-    OptionalDouble value = blindtoGlassDistance();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BlindtoGlassDistance, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool Blind_Impl::isBlindtoGlassDistanceDefaulted() const {
     return isEmpty(OS_WindowMaterial_BlindFields::BlindtoGlassDistance);
   }
@@ -405,13 +266,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::BlindTopOpeningMultiplier,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Blind_Impl::getBlindTopOpeningMultiplier(bool returnIP) const {
-    OptionalDouble value = blindTopOpeningMultiplier();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BlindTopOpeningMultiplier, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Blind_Impl::isBlindTopOpeningMultiplierDefaulted() const {
@@ -424,13 +278,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Blind_Impl::getBlindBottomOpeningMultiplier(bool returnIP) const {
-    OptionalDouble value = blindBottomOpeningMultiplier();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BlindBottomOpeningMultiplier, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool Blind_Impl::isBlindBottomOpeningMultiplierDefaulted() const {
     return isEmpty(OS_WindowMaterial_BlindFields::BlindBottomOpeningMultiplier);
   }
@@ -439,13 +286,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Blind_Impl::getBlindLeftSideOpeningMultiplier(bool returnIP) const {
-    OptionalDouble value = blindLeftSideOpeningMultiplier();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Blind_Impl::isBlindLeftSideOpeningMultiplierDefaulted() const {
@@ -458,13 +298,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Blind_Impl::getBlindRightSideOpeningMultiplier(bool returnIP) const {
-    OptionalDouble value = blindRightSideOpeningMultiplier();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::BlindRightSideOpeningMultiplier, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool Blind_Impl::isBlindRightSideOpeningMultiplierDefaulted() const {
     return isEmpty(OS_WindowMaterial_BlindFields::BlindRightSideOpeningMultiplier);
   }
@@ -475,13 +308,6 @@ namespace detail {
     return value.get();
   }
 
-  Quantity Blind_Impl::getMinimumSlatAngle(bool returnIP) const {
-    OptionalDouble value = minimumSlatAngle();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::MinimumSlatAngle, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
-  }
-
   bool Blind_Impl::isMinimumSlatAngleDefaulted() const {
     return isEmpty(OS_WindowMaterial_BlindFields::MinimumSlatAngle);
   }
@@ -490,13 +316,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_WindowMaterial_BlindFields::MaximumSlatAngle,true);
     OS_ASSERT(value);
     return value.get();
-  }
-
-  Quantity Blind_Impl::getMaximumSlatAngle(bool returnIP) const {
-    OptionalDouble value = maximumSlatAngle();
-    OSOptionalQuantity result = getQuantityFromDouble(OS_WindowMaterial_BlindFields::MaximumSlatAngle, value, returnIP);
-    OS_ASSERT(result.isSet());
-    return result.get();
   }
 
   bool Blind_Impl::isMaximumSlatAngleDefaulted() const {
@@ -518,38 +337,14 @@ namespace detail {
     return result;
   }
 
-  bool Blind_Impl::setSlatWidth(const Quantity& slatWidth) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::SlatWidth,slatWidth);
-    if (!value) {
-      return false;
-    }
-    return setSlatWidth(value.get());
-  }
-
   bool Blind_Impl::setSlatSeparation(double slatSeparation) {
     bool result = setDouble(OS_WindowMaterial_BlindFields::SlatSeparation, slatSeparation);
     return result;
   }
 
-  bool Blind_Impl::setSlatSeparation(const Quantity& slatSeparation) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::SlatSeparation,slatSeparation);
-    if (!value) {
-      return false;
-    }
-    return setSlatSeparation(value.get());
-  }
-
   bool Blind_Impl::setSlatThickness(double slatThickness) {
     bool result = setDouble(OS_WindowMaterial_BlindFields::SlatThickness, slatThickness);
     return result;
-  }
-
-  bool Blind_Impl::setSlatThickness(const Quantity& slatThickness) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::SlatThickness,slatThickness);
-    if (!value) {
-      return false;
-    }
-    return setSlatThickness(value.get());
   }
 
   void Blind_Impl::resetSlatThickness() {
@@ -562,14 +357,6 @@ namespace detail {
     return result;
   }
 
-  bool Blind_Impl::setSlatAngle(const Quantity& slatAngle) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::SlatAngle,slatAngle);
-    if (!value) {
-      return false;
-    }
-    return setSlatAngle(value.get());
-  }
-
   void Blind_Impl::resetSlatAngle() {
     bool result = setString(OS_WindowMaterial_BlindFields::SlatAngle, "");
     OS_ASSERT(result);
@@ -578,14 +365,6 @@ namespace detail {
   bool Blind_Impl::setSlatConductivity(double slatConductivity) {
     bool result = setDouble(OS_WindowMaterial_BlindFields::SlatConductivity, slatConductivity);
     return result;
-  }
-
-  bool Blind_Impl::setSlatConductivity(const Quantity& slatConductivity) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::SlatConductivity,slatConductivity);
-    if (!value) {
-      return false;
-    }
-    return setSlatConductivity(value.get());
   }
 
   void Blind_Impl::resetSlatConductivity() {
@@ -598,14 +377,6 @@ namespace detail {
     return result;
   }
 
-  bool Blind_Impl::setSlatBeamSolarTransmittance(const Quantity& slatBeamSolarTransmittance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::SlatBeamSolarTransmittance,slatBeamSolarTransmittance);
-    if (!value) {
-      return false;
-    }
-    return setSlatBeamSolarTransmittance(value.get());
-  }
-
   void Blind_Impl::resetSlatBeamSolarTransmittance() {
     bool result = setString(OS_WindowMaterial_BlindFields::SlatBeamSolarTransmittance, "");
     OS_ASSERT(result);
@@ -616,38 +387,14 @@ namespace detail {
     return result;
   }
 
-  bool Blind_Impl::setFrontSideSlatBeamSolarReflectance(const Quantity& frontSideSlatBeamSolarReflectance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::FrontSideSlatBeamSolarReflectance,frontSideSlatBeamSolarReflectance);
-    if (!value) {
-      return false;
-    }
-    return setFrontSideSlatBeamSolarReflectance(value.get());
-  }
-
   bool Blind_Impl::setBackSideSlatBeamSolarReflectance(double backSideSlatBeamSolarReflectance) {
     bool result = setDouble(OS_WindowMaterial_BlindFields::BackSideSlatBeamSolarReflectance, backSideSlatBeamSolarReflectance);
     return result;
   }
 
-  bool Blind_Impl::setBackSideSlatBeamSolarReflectance(const Quantity& backSideSlatBeamSolarReflectance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::BackSideSlatBeamSolarReflectance,backSideSlatBeamSolarReflectance);
-    if (!value) {
-      return false;
-    }
-    return setBackSideSlatBeamSolarReflectance(value.get());
-  }
-
   bool Blind_Impl::setSlatDiffuseSolarTransmittance(double slatDiffuseSolarTransmittance) {
     bool result = setDouble(OS_WindowMaterial_BlindFields::SlatDiffuseSolarTransmittance, slatDiffuseSolarTransmittance);
     return result;
-  }
-
-  bool Blind_Impl::setSlatDiffuseSolarTransmittance(const Quantity& slatDiffuseSolarTransmittance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::SlatDiffuseSolarTransmittance,slatDiffuseSolarTransmittance);
-    if (!value) {
-      return false;
-    }
-    return setSlatDiffuseSolarTransmittance(value.get());
   }
 
   void Blind_Impl::resetSlatDiffuseSolarTransmittance() {
@@ -660,38 +407,14 @@ namespace detail {
     return result;
   }
 
-  bool Blind_Impl::setFrontSideSlatDiffuseSolarReflectance(const Quantity& frontSideSlatDiffuseSolarReflectance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::FrontSideSlatDiffuseSolarReflectance,frontSideSlatDiffuseSolarReflectance);
-    if (!value) {
-      return false;
-    }
-    return setFrontSideSlatDiffuseSolarReflectance(value.get());
-  }
-
   bool Blind_Impl::setBackSideSlatDiffuseSolarReflectance(double backSideSlatDiffuseSolarReflectance) {
     bool result = setDouble(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseSolarReflectance, backSideSlatDiffuseSolarReflectance);
     return result;
   }
 
-  bool Blind_Impl::setBackSideSlatDiffuseSolarReflectance(const Quantity& backSideSlatDiffuseSolarReflectance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseSolarReflectance,backSideSlatDiffuseSolarReflectance);
-    if (!value) {
-      return false;
-    }
-    return setBackSideSlatDiffuseSolarReflectance(value.get());
-  }
-
   bool Blind_Impl::setSlatBeamVisibleTransmittance(double slatBeamVisibleTransmittance) {
     bool result = setDouble(OS_WindowMaterial_BlindFields::SlatBeamVisibleTransmittance, slatBeamVisibleTransmittance);
     return result;
-  }
-
-  bool Blind_Impl::setSlatBeamVisibleTransmittance(const Quantity& slatBeamVisibleTransmittance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::SlatBeamVisibleTransmittance,slatBeamVisibleTransmittance);
-    if (!value) {
-      return false;
-    }
-    return setSlatBeamVisibleTransmittance(value.get());
   }
 
   bool Blind_Impl::setFrontSideSlatBeamVisibleReflectance(boost::optional<double> frontSideSlatBeamVisibleReflectance) {
@@ -702,21 +425,6 @@ namespace detail {
     else {
       resetFrontSideSlatBeamVisibleReflectance();
       result = true;
-    }
-    return result;
-  }
-
-  bool Blind_Impl::setFrontSideSlatBeamVisibleReflectance(const OSOptionalQuantity& frontSideSlatBeamVisibleReflectance) {
-    bool result(false);
-    OptionalDouble value;
-    if (frontSideSlatBeamVisibleReflectance.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::FrontSideSlatBeamVisibleReflectance,frontSideSlatBeamVisibleReflectance.get());
-      if (value) {
-        result = setFrontSideSlatBeamVisibleReflectance(value);
-      }
-    }
-    else {
-      result = setFrontSideSlatBeamVisibleReflectance(value);
     }
     return result;
   }
@@ -738,21 +446,6 @@ namespace detail {
     return result;
   }
 
-  bool Blind_Impl::setBackSideSlatBeamVisibleReflectance(const OSOptionalQuantity& backSideSlatBeamVisibleReflectance) {
-    bool result(false);
-    OptionalDouble value;
-    if (backSideSlatBeamVisibleReflectance.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::BackSideSlatBeamVisibleReflectance,backSideSlatBeamVisibleReflectance.get());
-      if (value) {
-        result = setBackSideSlatBeamVisibleReflectance(value);
-      }
-    }
-    else {
-      result = setBackSideSlatBeamVisibleReflectance(value);
-    }
-    return result;
-  }
-
   void Blind_Impl::resetBackSideSlatBeamVisibleReflectance() {
     bool result = setString(OS_WindowMaterial_BlindFields::BackSideSlatBeamVisibleReflectance, "");
     OS_ASSERT(result);
@@ -761,14 +454,6 @@ namespace detail {
   bool Blind_Impl::setSlatDiffuseVisibleTransmittance(double slatDiffuseVisibleTransmittance) {
     bool result = setDouble(OS_WindowMaterial_BlindFields::SlatDiffuseVisibleTransmittance, slatDiffuseVisibleTransmittance);
     return result;
-  }
-
-  bool Blind_Impl::setSlatDiffuseVisibleTransmittance(const Quantity& slatDiffuseVisibleTransmittance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::SlatDiffuseVisibleTransmittance,slatDiffuseVisibleTransmittance);
-    if (!value) {
-      return false;
-    }
-    return setSlatDiffuseVisibleTransmittance(value.get());
   }
 
   void Blind_Impl::resetSlatDiffuseVisibleTransmittance() {
@@ -784,21 +469,6 @@ namespace detail {
     else {
       resetFrontSideSlatDiffuseVisibleReflectance();
       result = true;
-    }
-    return result;
-  }
-
-  bool Blind_Impl::setFrontSideSlatDiffuseVisibleReflectance(const OSOptionalQuantity& frontSideSlatDiffuseVisibleReflectance) {
-    bool result(false);
-    OptionalDouble value;
-    if (frontSideSlatDiffuseVisibleReflectance.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::FrontSideSlatDiffuseVisibleReflectance,frontSideSlatDiffuseVisibleReflectance.get());
-      if (value) {
-        result = setFrontSideSlatDiffuseVisibleReflectance(value);
-      }
-    }
-    else {
-      result = setFrontSideSlatDiffuseVisibleReflectance(value);
     }
     return result;
   }
@@ -820,21 +490,6 @@ namespace detail {
     return result;
   }
 
-  bool Blind_Impl::setBackSideSlatDiffuseVisibleReflectance(const OSOptionalQuantity& backSideSlatDiffuseVisibleReflectance) {
-    bool result(false);
-    OptionalDouble value;
-    if (backSideSlatDiffuseVisibleReflectance.isSet()) {
-      value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseVisibleReflectance,backSideSlatDiffuseVisibleReflectance.get());
-      if (value) {
-        result = setBackSideSlatDiffuseVisibleReflectance(value);
-      }
-    }
-    else {
-      result = setBackSideSlatDiffuseVisibleReflectance(value);
-    }
-    return result;
-  }
-
   void Blind_Impl::resetBackSideSlatDiffuseVisibleReflectance() {
     bool result = setString(OS_WindowMaterial_BlindFields::BackSideSlatDiffuseVisibleReflectance, "");
     OS_ASSERT(result);
@@ -843,14 +498,6 @@ namespace detail {
   bool Blind_Impl::setSlatInfraredHemisphericalTransmittance(double slatInfraredHemisphericalTransmittance) {
     bool result = setDouble(OS_WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance, slatInfraredHemisphericalTransmittance);
     return result;
-  }
-
-  bool Blind_Impl::setSlatInfraredHemisphericalTransmittance(const Quantity& slatInfraredHemisphericalTransmittance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::SlatInfraredHemisphericalTransmittance,slatInfraredHemisphericalTransmittance);
-    if (!value) {
-      return false;
-    }
-    return setSlatInfraredHemisphericalTransmittance(value.get());
   }
 
   void Blind_Impl::resetSlatInfraredHemisphericalTransmittance() {
@@ -863,14 +510,6 @@ namespace detail {
     return result;
   }
 
-  bool Blind_Impl::setFrontSideSlatInfraredHemisphericalEmissivity(const Quantity& frontSideSlatInfraredHemisphericalEmissivity) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity,frontSideSlatInfraredHemisphericalEmissivity);
-    if (!value) {
-      return false;
-    }
-    return setFrontSideSlatInfraredHemisphericalEmissivity(value.get());
-  }
-
   void Blind_Impl::resetFrontSideSlatInfraredHemisphericalEmissivity() {
     bool result = setString(OS_WindowMaterial_BlindFields::FrontSideSlatInfraredHemisphericalEmissivity, "");
     OS_ASSERT(result);
@@ -879,14 +518,6 @@ namespace detail {
   bool Blind_Impl::setBackSideSlatInfraredHemisphericalEmissivity(double backSideSlatInfraredHemisphericalEmissivity) {
     bool result = setDouble(OS_WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity, backSideSlatInfraredHemisphericalEmissivity);
     return result;
-  }
-
-  bool Blind_Impl::setBackSideSlatInfraredHemisphericalEmissivity(const Quantity& backSideSlatInfraredHemisphericalEmissivity) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::BackSideSlatInfraredHemisphericalEmissivity,backSideSlatInfraredHemisphericalEmissivity);
-    if (!value) {
-      return false;
-    }
-    return setBackSideSlatInfraredHemisphericalEmissivity(value.get());
   }
 
   void Blind_Impl::resetBackSideSlatInfraredHemisphericalEmissivity() {
@@ -899,14 +530,6 @@ namespace detail {
     return result;
   }
 
-  bool Blind_Impl::setBlindtoGlassDistance(const Quantity& blindtoGlassDistance) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::BlindtoGlassDistance,blindtoGlassDistance);
-    if (!value) {
-      return false;
-    }
-    return setBlindtoGlassDistance(value.get());
-  }
-
   void Blind_Impl::resetBlindtoGlassDistance() {
     bool result = setString(OS_WindowMaterial_BlindFields::BlindtoGlassDistance, "");
     OS_ASSERT(result);
@@ -915,14 +538,6 @@ namespace detail {
   bool Blind_Impl::setBlindTopOpeningMultiplier(double blindTopOpeningMultiplier) {
     bool result = setDouble(OS_WindowMaterial_BlindFields::BlindTopOpeningMultiplier, blindTopOpeningMultiplier);
     return result;
-  }
-
-  bool Blind_Impl::setBlindTopOpeningMultiplier(const Quantity& blindTopOpeningMultiplier) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::BlindTopOpeningMultiplier,blindTopOpeningMultiplier);
-    if (!value) {
-      return false;
-    }
-    return setBlindTopOpeningMultiplier(value.get());
   }
 
   void Blind_Impl::resetBlindTopOpeningMultiplier() {
@@ -935,14 +550,6 @@ namespace detail {
     return result;
   }
 
-  bool Blind_Impl::setBlindBottomOpeningMultiplier(const Quantity& blindBottomOpeningMultiplier) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::BlindBottomOpeningMultiplier,blindBottomOpeningMultiplier);
-    if (!value) {
-      return false;
-    }
-    return setBlindBottomOpeningMultiplier(value.get());
-  }
-
   void Blind_Impl::resetBlindBottomOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_BlindFields::BlindBottomOpeningMultiplier, "");
     OS_ASSERT(result);
@@ -951,14 +558,6 @@ namespace detail {
   bool Blind_Impl::setBlindLeftSideOpeningMultiplier(double blindLeftSideOpeningMultiplier) {
     bool result = setDouble(OS_WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier, blindLeftSideOpeningMultiplier);
     return result;
-  }
-
-  bool Blind_Impl::setBlindLeftSideOpeningMultiplier(const Quantity& blindLeftSideOpeningMultiplier) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::BlindLeftSideOpeningMultiplier,blindLeftSideOpeningMultiplier);
-    if (!value) {
-      return false;
-    }
-    return setBlindLeftSideOpeningMultiplier(value.get());
   }
 
   void Blind_Impl::resetBlindLeftSideOpeningMultiplier() {
@@ -971,14 +570,6 @@ namespace detail {
     return result;
   }
 
-  bool Blind_Impl::setBlindRightSideOpeningMultiplier(const Quantity& blindRightSideOpeningMultiplier) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::BlindRightSideOpeningMultiplier,blindRightSideOpeningMultiplier);
-    if (!value) {
-      return false;
-    }
-    return setBlindRightSideOpeningMultiplier(value.get());
-  }
-
   void Blind_Impl::resetBlindRightSideOpeningMultiplier() {
     bool result = setString(OS_WindowMaterial_BlindFields::BlindRightSideOpeningMultiplier, "");
     OS_ASSERT(result);
@@ -987,14 +578,6 @@ namespace detail {
   bool Blind_Impl::setMinimumSlatAngle(double minimumSlatAngle) {
     bool result = setDouble(OS_WindowMaterial_BlindFields::MinimumSlatAngle, minimumSlatAngle);
     return result;
-  }
-
-  bool Blind_Impl::setMinimumSlatAngle(const Quantity& minimumSlatAngle) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::MinimumSlatAngle,minimumSlatAngle);
-    if (!value) {
-      return false;
-    }
-    return setMinimumSlatAngle(value.get());
   }
 
   void Blind_Impl::resetMinimumSlatAngle() {
@@ -1007,14 +590,6 @@ namespace detail {
     return result;
   }
 
-  bool Blind_Impl::setMaximumSlatAngle(const Quantity& maximumSlatAngle) {
-    OptionalDouble value = getDoubleFromQuantity(OS_WindowMaterial_BlindFields::MaximumSlatAngle,maximumSlatAngle);
-    if (!value) {
-      return false;
-    }
-    return setMaximumSlatAngle(value.get());
-  }
-
   void Blind_Impl::resetMaximumSlatAngle() {
     bool result = setString(OS_WindowMaterial_BlindFields::MaximumSlatAngle, "");
     OS_ASSERT(result);
@@ -1022,222 +597,6 @@ namespace detail {
 
   std::vector<std::string> Blind_Impl::slatOrientationValues() const {
     return Blind::slatOrientationValues();
-  }
-
-  openstudio::Quantity Blind_Impl::slatWidth_SI() const {
-    return getSlatWidth(false);
-  }
-
-  openstudio::Quantity Blind_Impl::slatWidth_IP() const {
-    return getSlatWidth(true);
-  }
-
-  openstudio::Quantity Blind_Impl::slatSeparation_SI() const {
-    return getSlatSeparation(false);
-  }
-
-  openstudio::Quantity Blind_Impl::slatSeparation_IP() const {
-    return getSlatSeparation(true);
-  }
-
-  openstudio::Quantity Blind_Impl::slatThickness_SI() const {
-    return getSlatThickness(false);
-  }
-
-  openstudio::Quantity Blind_Impl::slatThickness_IP() const {
-    return getSlatThickness(true);
-  }
-
-  openstudio::Quantity Blind_Impl::slatAngle_SI() const {
-    return getSlatAngle(false);
-  }
-
-  openstudio::Quantity Blind_Impl::slatAngle_IP() const {
-    return getSlatAngle(true);
-  }
-
-  openstudio::Quantity Blind_Impl::slatConductivity_SI() const {
-    return getSlatConductivity(false);
-  }
-
-  openstudio::Quantity Blind_Impl::slatConductivity_IP() const {
-    return getSlatConductivity(true);
-  }
-
-  openstudio::Quantity Blind_Impl::slatBeamSolarTransmittance_SI() const {
-    return getSlatBeamSolarTransmittance(false);
-  }
-
-  openstudio::Quantity Blind_Impl::slatBeamSolarTransmittance_IP() const {
-    return getSlatBeamSolarTransmittance(true);
-  }
-
-  openstudio::Quantity Blind_Impl::frontSideSlatBeamSolarReflectance_SI() const {
-    return getFrontSideSlatBeamSolarReflectance(false);
-  }
-
-  openstudio::Quantity Blind_Impl::frontSideSlatBeamSolarReflectance_IP() const {
-    return getFrontSideSlatBeamSolarReflectance(true);
-  }
-
-  openstudio::Quantity Blind_Impl::backSideSlatBeamSolarReflectance_SI() const {
-    return getBackSideSlatBeamSolarReflectance(false);
-  }
-
-  openstudio::Quantity Blind_Impl::backSideSlatBeamSolarReflectance_IP() const {
-    return getBackSideSlatBeamSolarReflectance(true);
-  }
-
-  openstudio::Quantity Blind_Impl::slatDiffuseSolarTransmittance_SI() const {
-    return getSlatDiffuseSolarTransmittance(false);
-  }
-
-  openstudio::Quantity Blind_Impl::slatDiffuseSolarTransmittance_IP() const {
-    return getSlatDiffuseSolarTransmittance(true);
-  }
-
-  openstudio::Quantity Blind_Impl::frontSideSlatDiffuseSolarReflectance_SI() const {
-    return getFrontSideSlatDiffuseSolarReflectance(false);
-  }
-
-  openstudio::Quantity Blind_Impl::frontSideSlatDiffuseSolarReflectance_IP() const {
-    return getFrontSideSlatDiffuseSolarReflectance(true);
-  }
-
-  openstudio::Quantity Blind_Impl::backSideSlatDiffuseSolarReflectance_SI() const {
-    return getBackSideSlatDiffuseSolarReflectance(false);
-  }
-
-  openstudio::Quantity Blind_Impl::backSideSlatDiffuseSolarReflectance_IP() const {
-    return getBackSideSlatDiffuseSolarReflectance(true);
-  }
-
-  openstudio::Quantity Blind_Impl::slatBeamVisibleTransmittance_SI() const {
-    return getSlatBeamVisibleTransmittance(false);
-  }
-
-  openstudio::Quantity Blind_Impl::slatBeamVisibleTransmittance_IP() const {
-    return getSlatBeamVisibleTransmittance(true);
-  }
-
-  openstudio::OSOptionalQuantity Blind_Impl::frontSideSlatBeamVisibleReflectance_SI() const {
-    return getFrontSideSlatBeamVisibleReflectance(false);
-  }
-
-  openstudio::OSOptionalQuantity Blind_Impl::frontSideSlatBeamVisibleReflectance_IP() const {
-    return getFrontSideSlatBeamVisibleReflectance(true);
-  }
-
-  openstudio::OSOptionalQuantity Blind_Impl::backSideSlatBeamVisibleReflectance_SI() const {
-    return getBackSideSlatBeamVisibleReflectance(false);
-  }
-
-  openstudio::OSOptionalQuantity Blind_Impl::backSideSlatBeamVisibleReflectance_IP() const {
-    return getBackSideSlatBeamVisibleReflectance(true);
-  }
-
-  openstudio::Quantity Blind_Impl::slatDiffuseVisibleTransmittance_SI() const {
-    return getSlatDiffuseVisibleTransmittance(false);
-  }
-
-  openstudio::Quantity Blind_Impl::slatDiffuseVisibleTransmittance_IP() const {
-    return getSlatDiffuseVisibleTransmittance(true);
-  }
-
-  openstudio::OSOptionalQuantity Blind_Impl::frontSideSlatDiffuseVisibleReflectance_SI() const {
-    return getFrontSideSlatDiffuseVisibleReflectance(false);
-  }
-
-  openstudio::OSOptionalQuantity Blind_Impl::frontSideSlatDiffuseVisibleReflectance_IP() const {
-    return getFrontSideSlatDiffuseVisibleReflectance(true);
-  }
-
-  openstudio::OSOptionalQuantity Blind_Impl::backSideSlatDiffuseVisibleReflectance_SI() const {
-    return getBackSideSlatDiffuseVisibleReflectance(false);
-  }
-
-  openstudio::OSOptionalQuantity Blind_Impl::backSideSlatDiffuseVisibleReflectance_IP() const {
-    return getBackSideSlatDiffuseVisibleReflectance(true);
-  }
-
-  openstudio::Quantity Blind_Impl::slatInfraredHemisphericalTransmittance_SI() const {
-    return getSlatInfraredHemisphericalTransmittance(false);
-  }
-
-  openstudio::Quantity Blind_Impl::slatInfraredHemisphericalTransmittance_IP() const {
-    return getSlatInfraredHemisphericalTransmittance(true);
-  }
-
-  openstudio::Quantity Blind_Impl::frontSideSlatInfraredHemisphericalEmissivity_SI() const {
-    return getFrontSideSlatInfraredHemisphericalEmissivity(false);
-  }
-
-  openstudio::Quantity Blind_Impl::frontSideSlatInfraredHemisphericalEmissivity_IP() const {
-    return getFrontSideSlatInfraredHemisphericalEmissivity(true);
-  }
-
-  openstudio::Quantity Blind_Impl::backSideSlatInfraredHemisphericalEmissivity_SI() const {
-    return getBackSideSlatInfraredHemisphericalEmissivity(false);
-  }
-
-  openstudio::Quantity Blind_Impl::backSideSlatInfraredHemisphericalEmissivity_IP() const {
-    return getBackSideSlatInfraredHemisphericalEmissivity(true);
-  }
-
-  openstudio::Quantity Blind_Impl::blindtoGlassDistance_SI() const {
-    return getBlindtoGlassDistance(false);
-  }
-
-  openstudio::Quantity Blind_Impl::blindtoGlassDistance_IP() const {
-    return getBlindtoGlassDistance(true);
-  }
-
-  openstudio::Quantity Blind_Impl::blindTopOpeningMultiplier_SI() const {
-    return getBlindTopOpeningMultiplier(false);
-  }
-
-  openstudio::Quantity Blind_Impl::blindTopOpeningMultiplier_IP() const {
-    return getBlindTopOpeningMultiplier(true);
-  }
-
-  openstudio::Quantity Blind_Impl::blindBottomOpeningMultiplier_SI() const {
-    return getBlindBottomOpeningMultiplier(false);
-  }
-
-  openstudio::Quantity Blind_Impl::blindBottomOpeningMultiplier_IP() const {
-    return getBlindBottomOpeningMultiplier(true);
-  }
-
-  openstudio::Quantity Blind_Impl::blindLeftSideOpeningMultiplier_SI() const {
-    return getBlindLeftSideOpeningMultiplier(false);
-  }
-
-  openstudio::Quantity Blind_Impl::blindLeftSideOpeningMultiplier_IP() const {
-    return getBlindLeftSideOpeningMultiplier(true);
-  }
-
-  openstudio::Quantity Blind_Impl::blindRightSideOpeningMultiplier_SI() const {
-    return getBlindRightSideOpeningMultiplier(false);
-  }
-
-  openstudio::Quantity Blind_Impl::blindRightSideOpeningMultiplier_IP() const {
-    return getBlindRightSideOpeningMultiplier(true);
-  }
-
-  openstudio::Quantity Blind_Impl::minimumSlatAngle_SI() const {
-    return getMinimumSlatAngle(false);
-  }
-
-  openstudio::Quantity Blind_Impl::minimumSlatAngle_IP() const {
-    return getMinimumSlatAngle(true);
-  }
-
-  openstudio::Quantity Blind_Impl::maximumSlatAngle_SI() const {
-    return getMaximumSlatAngle(false);
-  }
-
-  openstudio::Quantity Blind_Impl::maximumSlatAngle_IP() const {
-    return getMaximumSlatAngle(true);
   }
 
 } // detail
@@ -1295,24 +654,12 @@ double Blind::slatWidth() const {
   return getImpl<detail::Blind_Impl>()->slatWidth();
 }
 
-Quantity Blind::getSlatWidth(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getSlatWidth(returnIP);
-}
-
 double Blind::slatSeparation() const {
   return getImpl<detail::Blind_Impl>()->slatSeparation();
 }
 
-Quantity Blind::getSlatSeparation(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getSlatSeparation(returnIP);
-}
-
 double Blind::slatThickness() const {
   return getImpl<detail::Blind_Impl>()->slatThickness();
-}
-
-Quantity Blind::getSlatThickness(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getSlatThickness(returnIP);
 }
 
 bool Blind::isSlatThicknessDefaulted() const {
@@ -1323,20 +670,12 @@ double Blind::slatAngle() const {
   return getImpl<detail::Blind_Impl>()->slatAngle();
 }
 
-Quantity Blind::getSlatAngle(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getSlatAngle(returnIP);
-}
-
 bool Blind::isSlatAngleDefaulted() const {
   return getImpl<detail::Blind_Impl>()->isSlatAngleDefaulted();
 }
 
 double Blind::slatConductivity() const {
   return getImpl<detail::Blind_Impl>()->slatConductivity();
-}
-
-Quantity Blind::getSlatConductivity(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getSlatConductivity(returnIP);
 }
 
 bool Blind::isSlatConductivityDefaulted() const {
@@ -1347,10 +686,6 @@ double Blind::slatBeamSolarTransmittance() const {
   return getImpl<detail::Blind_Impl>()->slatBeamSolarTransmittance();
 }
 
-Quantity Blind::getSlatBeamSolarTransmittance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getSlatBeamSolarTransmittance(returnIP);
-}
-
 bool Blind::isSlatBeamSolarTransmittanceDefaulted() const {
   return getImpl<detail::Blind_Impl>()->isSlatBeamSolarTransmittanceDefaulted();
 }
@@ -1359,24 +694,12 @@ double Blind::frontSideSlatBeamSolarReflectance() const {
   return getImpl<detail::Blind_Impl>()->frontSideSlatBeamSolarReflectance();
 }
 
-Quantity Blind::getFrontSideSlatBeamSolarReflectance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getFrontSideSlatBeamSolarReflectance(returnIP);
-}
-
 double Blind::backSideSlatBeamSolarReflectance() const {
   return getImpl<detail::Blind_Impl>()->backSideSlatBeamSolarReflectance();
 }
 
-Quantity Blind::getBackSideSlatBeamSolarReflectance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getBackSideSlatBeamSolarReflectance(returnIP);
-}
-
 double Blind::slatDiffuseSolarTransmittance() const {
   return getImpl<detail::Blind_Impl>()->slatDiffuseSolarTransmittance();
-}
-
-Quantity Blind::getSlatDiffuseSolarTransmittance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getSlatDiffuseSolarTransmittance(returnIP);
 }
 
 bool Blind::isSlatDiffuseSolarTransmittanceDefaulted() const {
@@ -1387,48 +710,24 @@ double Blind::frontSideSlatDiffuseSolarReflectance() const {
   return getImpl<detail::Blind_Impl>()->frontSideSlatDiffuseSolarReflectance();
 }
 
-Quantity Blind::getFrontSideSlatDiffuseSolarReflectance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getFrontSideSlatDiffuseSolarReflectance(returnIP);
-}
-
 double Blind::backSideSlatDiffuseSolarReflectance() const {
   return getImpl<detail::Blind_Impl>()->backSideSlatDiffuseSolarReflectance();
-}
-
-Quantity Blind::getBackSideSlatDiffuseSolarReflectance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getBackSideSlatDiffuseSolarReflectance(returnIP);
 }
 
 double Blind::slatBeamVisibleTransmittance() const {
   return getImpl<detail::Blind_Impl>()->slatBeamVisibleTransmittance();
 }
 
-Quantity Blind::getSlatBeamVisibleTransmittance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getSlatBeamVisibleTransmittance(returnIP);
-}
-
 boost::optional<double> Blind::frontSideSlatBeamVisibleReflectance() const {
   return getImpl<detail::Blind_Impl>()->frontSideSlatBeamVisibleReflectance();
-}
-
-OSOptionalQuantity Blind::getFrontSideSlatBeamVisibleReflectance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getFrontSideSlatBeamVisibleReflectance(returnIP);
 }
 
 boost::optional<double> Blind::backSideSlatBeamVisibleReflectance() const {
   return getImpl<detail::Blind_Impl>()->backSideSlatBeamVisibleReflectance();
 }
 
-OSOptionalQuantity Blind::getBackSideSlatBeamVisibleReflectance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getBackSideSlatBeamVisibleReflectance(returnIP);
-}
-
 double Blind::slatDiffuseVisibleTransmittance() const {
   return getImpl<detail::Blind_Impl>()->slatDiffuseVisibleTransmittance();
-}
-
-Quantity Blind::getSlatDiffuseVisibleTransmittance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getSlatDiffuseVisibleTransmittance(returnIP);
 }
 
 bool Blind::isSlatDiffuseVisibleTransmittanceDefaulted() const {
@@ -1439,24 +738,12 @@ boost::optional<double> Blind::frontSideSlatDiffuseVisibleReflectance() const {
   return getImpl<detail::Blind_Impl>()->frontSideSlatDiffuseVisibleReflectance();
 }
 
-OSOptionalQuantity Blind::getFrontSideSlatDiffuseVisibleReflectance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getFrontSideSlatDiffuseVisibleReflectance(returnIP);
-}
-
 boost::optional<double> Blind::backSideSlatDiffuseVisibleReflectance() const {
   return getImpl<detail::Blind_Impl>()->backSideSlatDiffuseVisibleReflectance();
 }
 
-OSOptionalQuantity Blind::getBackSideSlatDiffuseVisibleReflectance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getBackSideSlatDiffuseVisibleReflectance(returnIP);
-}
-
 double Blind::slatInfraredHemisphericalTransmittance() const {
   return getImpl<detail::Blind_Impl>()->slatInfraredHemisphericalTransmittance();
-}
-
-Quantity Blind::getSlatInfraredHemisphericalTransmittance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getSlatInfraredHemisphericalTransmittance(returnIP);
 }
 
 bool Blind::isSlatInfraredHemisphericalTransmittanceDefaulted() const {
@@ -1467,20 +754,12 @@ double Blind::frontSideSlatInfraredHemisphericalEmissivity() const {
   return getImpl<detail::Blind_Impl>()->frontSideSlatInfraredHemisphericalEmissivity();
 }
 
-Quantity Blind::getFrontSideSlatInfraredHemisphericalEmissivity(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getFrontSideSlatInfraredHemisphericalEmissivity(returnIP);
-}
-
 bool Blind::isFrontSideSlatInfraredHemisphericalEmissivityDefaulted() const {
   return getImpl<detail::Blind_Impl>()->isFrontSideSlatInfraredHemisphericalEmissivityDefaulted();
 }
 
 double Blind::backSideSlatInfraredHemisphericalEmissivity() const {
   return getImpl<detail::Blind_Impl>()->backSideSlatInfraredHemisphericalEmissivity();
-}
-
-Quantity Blind::getBackSideSlatInfraredHemisphericalEmissivity(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getBackSideSlatInfraredHemisphericalEmissivity(returnIP);
 }
 
 bool Blind::isBackSideSlatInfraredHemisphericalEmissivityDefaulted() const {
@@ -1491,20 +770,12 @@ double Blind::blindtoGlassDistance() const {
   return getImpl<detail::Blind_Impl>()->blindtoGlassDistance();
 }
 
-Quantity Blind::getBlindtoGlassDistance(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getBlindtoGlassDistance(returnIP);
-}
-
 bool Blind::isBlindtoGlassDistanceDefaulted() const {
   return getImpl<detail::Blind_Impl>()->isBlindtoGlassDistanceDefaulted();
 }
 
 double Blind::blindTopOpeningMultiplier() const {
   return getImpl<detail::Blind_Impl>()->blindTopOpeningMultiplier();
-}
-
-Quantity Blind::getBlindTopOpeningMultiplier(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getBlindTopOpeningMultiplier(returnIP);
 }
 
 bool Blind::isBlindTopOpeningMultiplierDefaulted() const {
@@ -1515,20 +786,12 @@ double Blind::blindBottomOpeningMultiplier() const {
   return getImpl<detail::Blind_Impl>()->blindBottomOpeningMultiplier();
 }
 
-Quantity Blind::getBlindBottomOpeningMultiplier(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getBlindBottomOpeningMultiplier(returnIP);
-}
-
 bool Blind::isBlindBottomOpeningMultiplierDefaulted() const {
   return getImpl<detail::Blind_Impl>()->isBlindBottomOpeningMultiplierDefaulted();
 }
 
 double Blind::blindLeftSideOpeningMultiplier() const {
   return getImpl<detail::Blind_Impl>()->blindLeftSideOpeningMultiplier();
-}
-
-Quantity Blind::getBlindLeftSideOpeningMultiplier(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getBlindLeftSideOpeningMultiplier(returnIP);
 }
 
 bool Blind::isBlindLeftSideOpeningMultiplierDefaulted() const {
@@ -1539,10 +802,6 @@ double Blind::blindRightSideOpeningMultiplier() const {
   return getImpl<detail::Blind_Impl>()->blindRightSideOpeningMultiplier();
 }
 
-Quantity Blind::getBlindRightSideOpeningMultiplier(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getBlindRightSideOpeningMultiplier(returnIP);
-}
-
 bool Blind::isBlindRightSideOpeningMultiplierDefaulted() const {
   return getImpl<detail::Blind_Impl>()->isBlindRightSideOpeningMultiplierDefaulted();
 }
@@ -1551,20 +810,12 @@ double Blind::minimumSlatAngle() const {
   return getImpl<detail::Blind_Impl>()->minimumSlatAngle();
 }
 
-Quantity Blind::getMinimumSlatAngle(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getMinimumSlatAngle(returnIP);
-}
-
 bool Blind::isMinimumSlatAngleDefaulted() const {
   return getImpl<detail::Blind_Impl>()->isMinimumSlatAngleDefaulted();
 }
 
 double Blind::maximumSlatAngle() const {
   return getImpl<detail::Blind_Impl>()->maximumSlatAngle();
-}
-
-Quantity Blind::getMaximumSlatAngle(bool returnIP) const {
-  return getImpl<detail::Blind_Impl>()->getMaximumSlatAngle(returnIP);
 }
 
 bool Blind::isMaximumSlatAngleDefaulted() const {
@@ -1583,23 +834,11 @@ bool Blind::setSlatWidth(double slatWidth) {
   return getImpl<detail::Blind_Impl>()->setSlatWidth(slatWidth);
 }
 
-bool Blind::setSlatWidth(const Quantity& slatWidth) {
-  return getImpl<detail::Blind_Impl>()->setSlatWidth(slatWidth);
-}
-
 bool Blind::setSlatSeparation(double slatSeparation) {
   return getImpl<detail::Blind_Impl>()->setSlatSeparation(slatSeparation);
 }
 
-bool Blind::setSlatSeparation(const Quantity& slatSeparation) {
-  return getImpl<detail::Blind_Impl>()->setSlatSeparation(slatSeparation);
-}
-
 bool Blind::setSlatThickness(double slatThickness) {
-  return getImpl<detail::Blind_Impl>()->setSlatThickness(slatThickness);
-}
-
-bool Blind::setSlatThickness(const Quantity& slatThickness) {
   return getImpl<detail::Blind_Impl>()->setSlatThickness(slatThickness);
 }
 
@@ -1611,19 +850,11 @@ bool Blind::setSlatAngle(double slatAngle) {
   return getImpl<detail::Blind_Impl>()->setSlatAngle(slatAngle);
 }
 
-bool Blind::setSlatAngle(const Quantity& slatAngle) {
-  return getImpl<detail::Blind_Impl>()->setSlatAngle(slatAngle);
-}
-
 void Blind::resetSlatAngle() {
   getImpl<detail::Blind_Impl>()->resetSlatAngle();
 }
 
 bool Blind::setSlatConductivity(double slatConductivity) {
-  return getImpl<detail::Blind_Impl>()->setSlatConductivity(slatConductivity);
-}
-
-bool Blind::setSlatConductivity(const Quantity& slatConductivity) {
   return getImpl<detail::Blind_Impl>()->setSlatConductivity(slatConductivity);
 }
 
@@ -1635,10 +866,6 @@ bool Blind::setSlatBeamSolarTransmittance(double slatBeamSolarTransmittance) {
   return getImpl<detail::Blind_Impl>()->setSlatBeamSolarTransmittance(slatBeamSolarTransmittance);
 }
 
-bool Blind::setSlatBeamSolarTransmittance(const Quantity& slatBeamSolarTransmittance) {
-  return getImpl<detail::Blind_Impl>()->setSlatBeamSolarTransmittance(slatBeamSolarTransmittance);
-}
-
 void Blind::resetSlatBeamSolarTransmittance() {
   getImpl<detail::Blind_Impl>()->resetSlatBeamSolarTransmittance();
 }
@@ -1647,23 +874,11 @@ bool Blind::setFrontSideSlatBeamSolarReflectance(double frontSideSlatBeamSolarRe
   return getImpl<detail::Blind_Impl>()->setFrontSideSlatBeamSolarReflectance(frontSideSlatBeamSolarReflectance);
 }
 
-bool Blind::setFrontSideSlatBeamSolarReflectance(const Quantity& frontSideSlatBeamSolarReflectance) {
-  return getImpl<detail::Blind_Impl>()->setFrontSideSlatBeamSolarReflectance(frontSideSlatBeamSolarReflectance);
-}
-
 bool Blind::setBackSideSlatBeamSolarReflectance(double backSideSlatBeamSolarReflectance) {
   return getImpl<detail::Blind_Impl>()->setBackSideSlatBeamSolarReflectance(backSideSlatBeamSolarReflectance);
 }
 
-bool Blind::setBackSideSlatBeamSolarReflectance(const Quantity& backSideSlatBeamSolarReflectance) {
-  return getImpl<detail::Blind_Impl>()->setBackSideSlatBeamSolarReflectance(backSideSlatBeamSolarReflectance);
-}
-
 bool Blind::setSlatDiffuseSolarTransmittance(double slatDiffuseSolarTransmittance) {
-  return getImpl<detail::Blind_Impl>()->setSlatDiffuseSolarTransmittance(slatDiffuseSolarTransmittance);
-}
-
-bool Blind::setSlatDiffuseSolarTransmittance(const Quantity& slatDiffuseSolarTransmittance) {
   return getImpl<detail::Blind_Impl>()->setSlatDiffuseSolarTransmittance(slatDiffuseSolarTransmittance);
 }
 
@@ -1675,15 +890,7 @@ bool Blind::setFrontSideSlatDiffuseSolarReflectance(double frontSideSlatDiffuseS
   return getImpl<detail::Blind_Impl>()->setFrontSideSlatDiffuseSolarReflectance(frontSideSlatDiffuseSolarReflectance);
 }
 
-bool Blind::setFrontSideSlatDiffuseSolarReflectance(const Quantity& frontSideSlatDiffuseSolarReflectance) {
-  return getImpl<detail::Blind_Impl>()->setFrontSideSlatDiffuseSolarReflectance(frontSideSlatDiffuseSolarReflectance);
-}
-
 bool Blind::setBackSideSlatDiffuseSolarReflectance(double backSideSlatDiffuseSolarReflectance) {
-  return getImpl<detail::Blind_Impl>()->setBackSideSlatDiffuseSolarReflectance(backSideSlatDiffuseSolarReflectance);
-}
-
-bool Blind::setBackSideSlatDiffuseSolarReflectance(const Quantity& backSideSlatDiffuseSolarReflectance) {
   return getImpl<detail::Blind_Impl>()->setBackSideSlatDiffuseSolarReflectance(backSideSlatDiffuseSolarReflectance);
 }
 
@@ -1691,15 +898,7 @@ bool Blind::setSlatBeamVisibleTransmittance(double slatBeamVisibleTransmittance)
   return getImpl<detail::Blind_Impl>()->setSlatBeamVisibleTransmittance(slatBeamVisibleTransmittance);
 }
 
-bool Blind::setSlatBeamVisibleTransmittance(const Quantity& slatBeamVisibleTransmittance) {
-  return getImpl<detail::Blind_Impl>()->setSlatBeamVisibleTransmittance(slatBeamVisibleTransmittance);
-}
-
 bool Blind::setFrontSideSlatBeamVisibleReflectance(double frontSideSlatBeamVisibleReflectance) {
-  return getImpl<detail::Blind_Impl>()->setFrontSideSlatBeamVisibleReflectance(frontSideSlatBeamVisibleReflectance);
-}
-
-bool Blind::setFrontSideSlatBeamVisibleReflectance(const Quantity& frontSideSlatBeamVisibleReflectance) {
   return getImpl<detail::Blind_Impl>()->setFrontSideSlatBeamVisibleReflectance(frontSideSlatBeamVisibleReflectance);
 }
 
@@ -1711,19 +910,11 @@ bool Blind::setBackSideSlatBeamVisibleReflectance(double backSideSlatBeamVisible
   return getImpl<detail::Blind_Impl>()->setBackSideSlatBeamVisibleReflectance(backSideSlatBeamVisibleReflectance);
 }
 
-bool Blind::setBackSideSlatBeamVisibleReflectance(const Quantity& backSideSlatBeamVisibleReflectance) {
-  return getImpl<detail::Blind_Impl>()->setBackSideSlatBeamVisibleReflectance(backSideSlatBeamVisibleReflectance);
-}
-
 void Blind::resetBackSideSlatBeamVisibleReflectance() {
   getImpl<detail::Blind_Impl>()->resetBackSideSlatBeamVisibleReflectance();
 }
 
 bool Blind::setSlatDiffuseVisibleTransmittance(double slatDiffuseVisibleTransmittance) {
-  return getImpl<detail::Blind_Impl>()->setSlatDiffuseVisibleTransmittance(slatDiffuseVisibleTransmittance);
-}
-
-bool Blind::setSlatDiffuseVisibleTransmittance(const Quantity& slatDiffuseVisibleTransmittance) {
   return getImpl<detail::Blind_Impl>()->setSlatDiffuseVisibleTransmittance(slatDiffuseVisibleTransmittance);
 }
 
@@ -1735,19 +926,11 @@ bool Blind::setFrontSideSlatDiffuseVisibleReflectance(double frontSideSlatDiffus
   return getImpl<detail::Blind_Impl>()->setFrontSideSlatDiffuseVisibleReflectance(frontSideSlatDiffuseVisibleReflectance);
 }
 
-bool Blind::setFrontSideSlatDiffuseVisibleReflectance(const Quantity& frontSideSlatDiffuseVisibleReflectance) {
-  return getImpl<detail::Blind_Impl>()->setFrontSideSlatDiffuseVisibleReflectance(frontSideSlatDiffuseVisibleReflectance);
-}
-
 void Blind::resetFrontSideSlatDiffuseVisibleReflectance() {
   getImpl<detail::Blind_Impl>()->resetFrontSideSlatDiffuseVisibleReflectance();
 }
 
 bool Blind::setBackSideSlatDiffuseVisibleReflectance(double backSideSlatDiffuseVisibleReflectance) {
-  return getImpl<detail::Blind_Impl>()->setBackSideSlatDiffuseVisibleReflectance(backSideSlatDiffuseVisibleReflectance);
-}
-
-bool Blind::setBackSideSlatDiffuseVisibleReflectance(const Quantity& backSideSlatDiffuseVisibleReflectance) {
   return getImpl<detail::Blind_Impl>()->setBackSideSlatDiffuseVisibleReflectance(backSideSlatDiffuseVisibleReflectance);
 }
 
@@ -1759,19 +942,11 @@ bool Blind::setSlatInfraredHemisphericalTransmittance(double slatInfraredHemisph
   return getImpl<detail::Blind_Impl>()->setSlatInfraredHemisphericalTransmittance(slatInfraredHemisphericalTransmittance);
 }
 
-bool Blind::setSlatInfraredHemisphericalTransmittance(const Quantity& slatInfraredHemisphericalTransmittance) {
-  return getImpl<detail::Blind_Impl>()->setSlatInfraredHemisphericalTransmittance(slatInfraredHemisphericalTransmittance);
-}
-
 void Blind::resetSlatInfraredHemisphericalTransmittance() {
   getImpl<detail::Blind_Impl>()->resetSlatInfraredHemisphericalTransmittance();
 }
 
 bool Blind::setFrontSideSlatInfraredHemisphericalEmissivity(double frontSideSlatInfraredHemisphericalEmissivity) {
-  return getImpl<detail::Blind_Impl>()->setFrontSideSlatInfraredHemisphericalEmissivity(frontSideSlatInfraredHemisphericalEmissivity);
-}
-
-bool Blind::setFrontSideSlatInfraredHemisphericalEmissivity(const Quantity& frontSideSlatInfraredHemisphericalEmissivity) {
   return getImpl<detail::Blind_Impl>()->setFrontSideSlatInfraredHemisphericalEmissivity(frontSideSlatInfraredHemisphericalEmissivity);
 }
 
@@ -1783,19 +958,11 @@ bool Blind::setBackSideSlatInfraredHemisphericalEmissivity(double backSideSlatIn
   return getImpl<detail::Blind_Impl>()->setBackSideSlatInfraredHemisphericalEmissivity(backSideSlatInfraredHemisphericalEmissivity);
 }
 
-bool Blind::setBackSideSlatInfraredHemisphericalEmissivity(const Quantity& backSideSlatInfraredHemisphericalEmissivity) {
-  return getImpl<detail::Blind_Impl>()->setBackSideSlatInfraredHemisphericalEmissivity(backSideSlatInfraredHemisphericalEmissivity);
-}
-
 void Blind::resetBackSideSlatInfraredHemisphericalEmissivity() {
   getImpl<detail::Blind_Impl>()->resetBackSideSlatInfraredHemisphericalEmissivity();
 }
 
 bool Blind::setBlindtoGlassDistance(double blindtoGlassDistance) {
-  return getImpl<detail::Blind_Impl>()->setBlindtoGlassDistance(blindtoGlassDistance);
-}
-
-bool Blind::setBlindtoGlassDistance(const Quantity& blindtoGlassDistance) {
   return getImpl<detail::Blind_Impl>()->setBlindtoGlassDistance(blindtoGlassDistance);
 }
 
@@ -1807,19 +974,11 @@ bool Blind::setBlindTopOpeningMultiplier(double blindTopOpeningMultiplier) {
   return getImpl<detail::Blind_Impl>()->setBlindTopOpeningMultiplier(blindTopOpeningMultiplier);
 }
 
-bool Blind::setBlindTopOpeningMultiplier(const Quantity& blindTopOpeningMultiplier) {
-  return getImpl<detail::Blind_Impl>()->setBlindTopOpeningMultiplier(blindTopOpeningMultiplier);
-}
-
 void Blind::resetBlindTopOpeningMultiplier() {
   getImpl<detail::Blind_Impl>()->resetBlindTopOpeningMultiplier();
 }
 
 bool Blind::setBlindBottomOpeningMultiplier(double blindBottomOpeningMultiplier) {
-  return getImpl<detail::Blind_Impl>()->setBlindBottomOpeningMultiplier(blindBottomOpeningMultiplier);
-}
-
-bool Blind::setBlindBottomOpeningMultiplier(const Quantity& blindBottomOpeningMultiplier) {
   return getImpl<detail::Blind_Impl>()->setBlindBottomOpeningMultiplier(blindBottomOpeningMultiplier);
 }
 
@@ -1831,19 +990,11 @@ bool Blind::setBlindLeftSideOpeningMultiplier(double blindLeftSideOpeningMultipl
   return getImpl<detail::Blind_Impl>()->setBlindLeftSideOpeningMultiplier(blindLeftSideOpeningMultiplier);
 }
 
-bool Blind::setBlindLeftSideOpeningMultiplier(const Quantity& blindLeftSideOpeningMultiplier) {
-  return getImpl<detail::Blind_Impl>()->setBlindLeftSideOpeningMultiplier(blindLeftSideOpeningMultiplier);
-}
-
 void Blind::resetBlindLeftSideOpeningMultiplier() {
   getImpl<detail::Blind_Impl>()->resetBlindLeftSideOpeningMultiplier();
 }
 
 bool Blind::setBlindRightSideOpeningMultiplier(double blindRightSideOpeningMultiplier) {
-  return getImpl<detail::Blind_Impl>()->setBlindRightSideOpeningMultiplier(blindRightSideOpeningMultiplier);
-}
-
-bool Blind::setBlindRightSideOpeningMultiplier(const Quantity& blindRightSideOpeningMultiplier) {
   return getImpl<detail::Blind_Impl>()->setBlindRightSideOpeningMultiplier(blindRightSideOpeningMultiplier);
 }
 
@@ -1855,19 +1006,11 @@ bool Blind::setMinimumSlatAngle(double minimumSlatAngle) {
   return getImpl<detail::Blind_Impl>()->setMinimumSlatAngle(minimumSlatAngle);
 }
 
-bool Blind::setMinimumSlatAngle(const Quantity& minimumSlatAngle) {
-  return getImpl<detail::Blind_Impl>()->setMinimumSlatAngle(minimumSlatAngle);
-}
-
 void Blind::resetMinimumSlatAngle() {
   getImpl<detail::Blind_Impl>()->resetMinimumSlatAngle();
 }
 
 bool Blind::setMaximumSlatAngle(double maximumSlatAngle) {
-  return getImpl<detail::Blind_Impl>()->setMaximumSlatAngle(maximumSlatAngle);
-}
-
-bool Blind::setMaximumSlatAngle(const Quantity& maximumSlatAngle) {
   return getImpl<detail::Blind_Impl>()->setMaximumSlatAngle(maximumSlatAngle);
 }
 
@@ -1883,4 +1026,3 @@ Blind::Blind(std::shared_ptr<detail::Blind_Impl> impl)
 
 } // model
 } // openstudio
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,21 +57,13 @@ class MODEL_API FFactorGroundFloorConstruction : public ConstructionBase {
 
   /** Attribute Name: 'fFactor' */
   virtual double fFactor() const;
-  virtual Quantity getFFactor(bool returnIP = false) const;
   virtual bool setFFactor(double fFactor);
-  virtual bool setFFactor(const Quantity& fFactor);
-
   /** Attribute Name: 'area' */
   virtual double area() const;
-  virtual Quantity getArea(bool returnIP = false) const;
   virtual bool setArea(double area);
-  virtual bool setArea(const Quantity& area);
-
   /** Attribute Name: 'perimeterExposed' */
   virtual double perimeterExposed() const;
-  virtual Quantity getPerimeterExposed(bool returnIP = false) const;
   virtual bool setPerimeterExposed(double perimeterExposed);
-  virtual bool setPerimeterExposed(const Quantity& perimeterExposed);
 
   //@}
   /** @name Static Methods */

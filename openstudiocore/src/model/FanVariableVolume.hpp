@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,8 +34,6 @@
 #include "StraightComponent.hpp"
 
 namespace openstudio {
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -78,19 +76,12 @@ class MODEL_API FanVariableVolume : public StraightComponent {
   double fanTotalEfficiency() const;
   double fanEfficiency() const;
 
-  Quantity getFanTotalEfficiency(bool returnIP=false) const;
-  Quantity getFanEfficiency(bool returnIP=false) const;
-
   bool isFanTotalEfficiencyDefaulted() const;
   bool isFanEfficiencyDefaulted() const;
 
   double pressureRise() const;
 
-  Quantity getPressureRise(bool returnIP=false) const;
-
   boost::optional<double> maximumFlowRate() const;
-
-  OSOptionalQuantity getMaximumFlowRate(bool returnIP=false) const;
 
   bool isMaximumFlowRateAutosized() const;
 
@@ -100,45 +91,27 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   double fanPowerMinimumFlowFraction() const;
 
-  Quantity getFanPowerMinimumFlowFraction(bool returnIP=false) const;
-
   bool isFanPowerMinimumFlowFractionDefaulted() const;
 
   boost::optional<double> fanPowerMinimumAirFlowRate() const;
 
-  OSOptionalQuantity getFanPowerMinimumAirFlowRate(bool returnIP=false) const;
-
   double motorEfficiency() const;
-
-  Quantity getMotorEfficiency(bool returnIP=false) const;
 
   bool isMotorEfficiencyDefaulted() const;
 
   double motorInAirstreamFraction() const;
 
-  Quantity getMotorInAirstreamFraction(bool returnIP=false) const;
-
   bool isMotorInAirstreamFractionDefaulted() const;
 
   boost::optional<double> fanPowerCoefficient1() const;
 
-  OSOptionalQuantity getFanPowerCoefficient1(bool returnIP=false) const;
-
   boost::optional<double> fanPowerCoefficient2() const;
-
-  OSOptionalQuantity getFanPowerCoefficient2(bool returnIP=false) const;
 
   boost::optional<double> fanPowerCoefficient3() const;
 
-  OSOptionalQuantity getFanPowerCoefficient3(bool returnIP=false) const;
-
   boost::optional<double> fanPowerCoefficient4() const;
 
-  OSOptionalQuantity getFanPowerCoefficient4(bool returnIP=false) const;
-
   boost::optional<double> fanPowerCoefficient5() const;
-
-  OSOptionalQuantity getFanPowerCoefficient5(bool returnIP=false) const;
 
   std::string endUseSubcategory() const;
 
@@ -151,20 +124,14 @@ class MODEL_API FanVariableVolume : public StraightComponent {
   bool setAvailabilitySchedule(Schedule& schedule);
 
   bool setFanTotalEfficiency(double fanTotalEfficiency);
-  bool setFanTotalEfficiency(const Quantity& fanTotalEfficiency);
   void resetFanTotalEfficiency();
 
   bool setFanEfficiency(double fanTotalEfficiency);
-  bool setFanEfficiency(const Quantity& fanTotalEfficiency);
   void resetFanEfficiency();
 
   bool setPressureRise(double pressureRise);
 
-  bool setPressureRise(const Quantity& pressureRise);
-
   bool setMaximumFlowRate(double maximumFlowRate);
-
-  bool setMaximumFlowRate(const Quantity& maximumFlowRate);
 
   void resetMaximumFlowRate();
 
@@ -176,55 +143,37 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   bool setFanPowerMinimumFlowFraction(double fanPowerMinimumFlowFraction);
 
-  bool setFanPowerMinimumFlowFraction(const Quantity& fanPowerMinimumFlowFraction);
-
   void resetFanPowerMinimumFlowFraction();
 
   bool setFanPowerMinimumAirFlowRate(double fanPowerMinimumAirFlowRate);
-
-  bool setFanPowerMinimumAirFlowRate(const Quantity& fanPowerMinimumAirFlowRate);
 
   void resetFanPowerMinimumAirFlowRate();
 
   bool setMotorEfficiency(double motorEfficiency);
 
-  bool setMotorEfficiency(const Quantity& motorEfficiency);
-
   void resetMotorEfficiency();
 
   bool setMotorInAirstreamFraction(double motorInAirstreamFraction);
-
-  bool setMotorInAirstreamFraction(const Quantity& motorInAirstreamFraction);
 
   void resetMotorInAirstreamFraction();
 
   bool setFanPowerCoefficient1(double fanPowerCoefficient1);
 
-  bool setFanPowerCoefficient1(const Quantity& fanPowerCoefficient1);
-
   void resetFanPowerCoefficient1();
 
   bool setFanPowerCoefficient2(double fanPowerCoefficient2);
-
-  bool setFanPowerCoefficient2(const Quantity& fanPowerCoefficient2);
 
   void resetFanPowerCoefficient2();
 
   bool setFanPowerCoefficient3(double fanPowerCoefficient3);
 
-  bool setFanPowerCoefficient3(const Quantity& fanPowerCoefficient3);
-
   void resetFanPowerCoefficient3();
 
   bool setFanPowerCoefficient4(double fanPowerCoefficient4);
 
-  bool setFanPowerCoefficient4(const Quantity& fanPowerCoefficient4);
-
   void resetFanPowerCoefficient4();
 
   bool setFanPowerCoefficient5(double fanPowerCoefficient5);
-
-  bool setFanPowerCoefficient5(const Quantity& fanPowerCoefficient5);
 
   void resetFanPowerCoefficient5();
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,7 +44,6 @@
 #include "../math/FloatCompare.hpp"
 #include "../core/Finder.hpp"
 #include "../core/Assert.hpp"
-#include "../core/Url.hpp"
 
 #include "../units/Quantity.hpp"
 #include "../units/OSOptionalQuantity.hpp"
@@ -330,24 +329,7 @@ namespace detail {
     }
     return result;
   }
-
-  boost::optional<QUrl> IdfObject_Impl::getURL(unsigned index,
-                                               bool returnDefault) const
-  {
-    UnsignedVector urlIdx = m_iddObject.urlFields();
-    auto i= find( urlIdx.begin(), urlIdx.end(), index );
-    if( i != urlIdx.end() ) {
-      OptionalString value = getString(index, returnDefault, false);
-      if (value) {
-        boost::optional<QUrl> result(QString(value->c_str()));
-        if( result->isValid() ) { return result; }
-      }
-    }
-
-    // bad value (for whatever reason)
-    return boost::optional<QUrl>();
-  }
-
+  
   IdfExtensibleGroup IdfObject_Impl::getExtensibleGroup(unsigned groupIndex) const {
     unsigned n = numFields();
     unsigned i = n;
@@ -1180,15 +1162,16 @@ namespace detail {
       }
 
       // urls
-      if (oIddField && (oIddField->properties().type == IddFieldType::URLType)) {
-        OptionalUrl oMyUrlValue = getURL(i);
-        OptionalUrl oOtherUrlValue = other.getURL(i);
-        if (oMyUrlValue || oOtherUrlValue) {
-          if (!(oMyUrlValue && oOtherUrlValue)) { return false; }
-          if (oMyUrlValue.get() != oOtherUrlValue.get()) { return false; }
-          compareStrings = false;
-        }
-      }
+      // DLM: just treat these as strings 
+//      if (oIddField && (oIddField->properties().type == IddFieldType::URLType)) {
+//        OptionalUrl oMyUrlValue = getURL(i);
+//        OptionalUrl oOtherUrlValue = other.getURL(i);
+//        if (oMyUrlValue || oOtherUrlValue) {
+//          if (!(oMyUrlValue && oOtherUrlValue)) { return false; }
+//          if (oMyUrlValue.get() != oOtherUrlValue.get()) { return false; }
+//          compareStrings = false;
+//        }
+//      }
 
       // strings (case-insensitive)
       if (compareStrings) {
@@ -2191,11 +2174,6 @@ OptionalUnsigned IdfObject::getUnsigned(unsigned index, bool returnDefault) cons
 
 OptionalInt IdfObject::getInt(unsigned index, bool returnDefault) const {
   return m_impl->getInt(index,returnDefault);
-}
-
-boost::optional<QUrl> IdfObject::getURL(unsigned index, bool returnDefault) const
-{
-  return m_impl->getURL(index,returnDefault);
 }
 
 IdfExtensibleGroup IdfObject::getExtensibleGroup(unsigned groupIndex) const {

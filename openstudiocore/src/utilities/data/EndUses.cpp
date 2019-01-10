@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -183,30 +183,35 @@ namespace openstudio {
   {
     std::string units = this->getUnitsForFuelType(fuelType);
 
+    // Try to find an existing fuelType attribute
     boost::optional<Attribute> fuelTypeAttribute = m_attribute.findChildByName(fuelType.valueName());
-    if(!fuelTypeAttribute){
+    if (!fuelTypeAttribute) {
+      // If you can't, then add a new Attribute to the std::vector of Attribute
       std::vector<Attribute> fuelTypeAttributes = m_attribute.valueAsAttributeVector();
       fuelTypeAttributes.push_back(Attribute(fuelType.valueName(), std::vector<Attribute>()));
       std::sort(fuelTypeAttributes.begin(), fuelTypeAttributes.end(), FuelTypeAttributeSorter());
-      m_attribute.setValue(QVariant::fromValue(fuelTypeAttributes));
+      m_attribute.setValue(fuelTypeAttributes);
       fuelTypeAttribute = m_attribute.findChildByName(fuelType.valueName());
     }
     OS_ASSERT(fuelTypeAttribute);
 
+    // Within the FuelTypeAttribute, we look if the EndUseCategory actually exists
     boost::optional<Attribute> categoryAttribute = fuelTypeAttribute->findChildByName(category.valueName());
-    if(!categoryAttribute){
+    if (!categoryAttribute) {
+      // Otherwise we add it
       std::vector<Attribute> categoryAttributes = fuelTypeAttribute->valueAsAttributeVector();
       categoryAttributes.push_back(Attribute(category.valueName(), std::vector<Attribute>()));
       std::sort(categoryAttributes.begin(), categoryAttributes.end(), CategoryAttributeSorter());
-      fuelTypeAttribute->setValue(QVariant::fromValue(categoryAttributes));
+      fuelTypeAttribute->setValue(categoryAttributes);
       categoryAttribute = fuelTypeAttribute->findChildByName(category.valueName());
     }
     OS_ASSERT(categoryAttribute);
 
+    // Within that category, if we find an existing SubCategory, then we add our value that category
     bool found = false;
     std::vector<Attribute> subCategories = categoryAttribute->valueAsAttributeVector();
     std::vector<Attribute> newSubCategories = subCategories;
-    for(unsigned i = 0; i < subCategories.size(); ++i){
+    for (unsigned i = 0; i < subCategories.size(); ++i) {
       if (subCategories[i].name() == subCategory){
         OS_ASSERT(!found);
         newSubCategories[i] = Attribute(subCategory, subCategories[i].valueAsDouble() + value, subCategories[i].units());
@@ -214,12 +219,13 @@ namespace openstudio {
       }
     }
 
+    // If we didn't find the proper Subcategory, we create it
     if (!found){
       newSubCategories.push_back(Attribute(subCategory, value, units));
       std::sort(newSubCategories.begin(), newSubCategories.end(), SubCategoryAttributeSorter());
     }
 
-    categoryAttribute->setValue(QVariant::fromValue(newSubCategories));
+    categoryAttribute->setValue(newSubCategories);
   }
 
   double EndUses::getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category, const std::string& subCategory) const

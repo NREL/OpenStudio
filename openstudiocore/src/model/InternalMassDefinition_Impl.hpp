@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,7 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "SpaceLoadDefinition_Impl.hpp"
-#include "attributes.hpp"
 
 namespace openstudio {
 namespace model {
@@ -44,49 +43,6 @@ namespace detail {
 
   /** InternalMassDefinition_Impl is a SpaceLoadDefinition_Impl that is the implementation class for InternalMassDefinition.*/
   class MODEL_API InternalMassDefinition_Impl : public SpaceLoadDefinition_Impl {
-
-
-
-
-
-    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceArea_SI
-               READ surfaceArea_SI
-               WRITE setSurfaceArea);
-    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceArea_IP
-               READ surfaceArea_IP
-               WRITE setSurfaceArea);
-
-    Q_PROPERTY(boost::optional<double> surfaceAreaperSpaceFloorArea
-               READ surfaceAreaperSpaceFloorArea
-               WRITE setSurfaceAreaperSpaceFloorArea);
-    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceAreaperSpaceFloorArea_SI
-               READ surfaceAreaperSpaceFloorArea_SI
-               WRITE setSurfaceAreaperSpaceFloorArea);
-    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceAreaperSpaceFloorArea_IP
-               READ surfaceAreaperSpaceFloorArea_IP
-               WRITE setSurfaceAreaperSpaceFloorArea);
-
-    Q_PROPERTY(boost::optional<double> surfaceAreaperPerson
-               READ surfaceAreaperPerson
-               WRITE setSurfaceAreaperPerson);
-    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceAreaperPerson_SI
-               READ surfaceAreaperPerson_SI
-               WRITE setSurfaceAreaperPerson);
-    Q_PROPERTY(openstudio::OSOptionalQuantity surfaceAreaperPerson_IP
-               READ surfaceAreaperPerson_IP
-               WRITE setSurfaceAreaperPerson);
-
-    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> construction
-               READ constructionAsModelObject
-               WRITE setConstructionAsModelObject
-               RESET resetConstruction);
-
-
-//
-//
-//
-//
-
 
    public:
     /** @name Constructors and Destructors */
@@ -112,12 +68,6 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
-    // Attributes
-
-    ATTRIBUTE_DEFINITION(1,0,0,surfaceArea,SurfaceArea)
-    ATTRIBUTE_DEFINITION(1,0,0,surfaceAreaperSpaceFloorArea,SurfaceAreaperSpaceFloorArea)
-    ATTRIBUTE_DEFINITION(1,0,0,surfaceAreaperPerson,SurfaceAreaperPerson)
-
     //@}
     /** @name Getters */
     //@{
@@ -129,12 +79,9 @@ namespace detail {
     bool isConstructionDefaulted() const;
 
     std::string designLevelCalculationMethod() const;
-
-    //boost::optional<double> surfaceArea() const;
-
-    //boost::optional<double> surfaceAreaperSpaceFloorArea() const;
-
-    //boost::optional<double> surfaceAreaperPerson() const;
+    boost::optional<double> surfaceArea() const;
+    boost::optional<double> surfaceAreaperSpaceFloorArea() const;
+    boost::optional<double> surfaceAreaperPerson() const;
 
     //@}
     /** @name Setters */
@@ -148,15 +95,15 @@ namespace detail {
 
     /// Sets designLevelCalculationMethod to 'SurfaceArea', clears surfaceAreaperSpaceFloorArea
     /// and surfaceAreaperPerson, and sets surfaceArea.
-    //bool setSurfaceArea(boost::optional<double> surfaceArea);
+    bool setSurfaceArea(boost::optional<double> surfaceArea);
 
     /// Sets designLevelCalculationMethod to 'SurfaceArea/Area', clears surfaceArea
     /// and surfaceAreaperPerson, and sets surfaceAreaperSpaceFloorArea.
-    //bool setSurfaceAreaperSpaceFloorArea(boost::optional<double> surfaceAreaperSpaceFloorArea);
+    bool setSurfaceAreaperSpaceFloorArea(boost::optional<double> surfaceAreaperSpaceFloorArea);
 
     /// Sets designLevelCalculationMethod to 'SurfaceArea/Person', clears surfaceArea
     /// and surfaceAreaperSpaceFloorArea, and sets surfaceAreaperPerson.
-    //bool setSurfaceAreaperPerson(boost::optional<double> surfaceAreaperPerson);
+    bool setSurfaceAreaperPerson(boost::optional<double> surfaceAreaperPerson);
 
     //@}
     /** @name Other */

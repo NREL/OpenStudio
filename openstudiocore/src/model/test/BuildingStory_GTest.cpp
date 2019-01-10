@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,18 +34,13 @@
 #include "../BuildingStory.hpp"
 #include "../BuildingStory_Impl.hpp"
 
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
-
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture,BuildingStory_NominalZCoordinate) {
   Model model;
-  // TODO: Check constructor.
   BuildingStory buildingStory(model);
 
-  // TODO: Check that value is appropriate (within bounds)
   double value(1.0);
   buildingStory.setNominalZCoordinate(value);
   boost::optional<double> result = buildingStory.nominalZCoordinate();

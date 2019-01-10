@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,8 +31,6 @@
 #include "ModelFixture.hpp"
 #include "../DistrictCooling.hpp"
 #include "../DistrictCooling_Impl.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
@@ -101,7 +99,7 @@ TEST_F(ModelFixture,DistrictCooling_connections)
 }
 
 //test setting and getting the nominal capacity
-TEST_F(ModelFixture,DistrictCooling_NominalCapacity_Quantity) {
+TEST_F(ModelFixture,DistrictCooling_NominalCapacity) {
   Model m;
   DistrictCooling testObject(m);
 

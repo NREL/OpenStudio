@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,8 +34,8 @@
 #include "ResourceObject.hpp"
 
 namespace openstudio {
-class Quantity;
-class OSOptionalQuantity;
+  class Unit;
+
 namespace model {
 
 namespace detail {
@@ -71,11 +71,7 @@ class MODEL_API ScheduleTypeLimits : public ResourceObject {
 
   boost::optional<double> lowerLimitValue() const;
 
-  OSOptionalQuantity getLowerLimitValue(bool returnIP=false) const;
-
   boost::optional<double> upperLimitValue() const;
-
-  OSOptionalQuantity getUpperLimitValue(bool returnIP=false) const;
 
   boost::optional<std::string> numericType() const;
 
@@ -94,13 +90,9 @@ class MODEL_API ScheduleTypeLimits : public ResourceObject {
 
   bool setLowerLimitValue(double lowerLimitValue);
 
-  bool setLowerLimitValue(const Quantity& lowerLimitValue);
-
   void resetLowerLimitValue();
 
   bool setUpperLimitValue(double upperLimitValue);
-
-  bool setUpperLimitValue(const Quantity& upperLimitValue);
 
   void resetUpperLimitValue();
 

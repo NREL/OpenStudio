@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,6 @@
 
 namespace openstudio {
 
-class Quantity;
-class OSOptionalQuantity;
 
 namespace model {
 
@@ -69,25 +67,17 @@ class MODEL_API RadianceParameters : public ModelObject {
 
   double directThreshold() const;
 
-  Quantity getDirectThreshold(bool returnIP=false) const;
-
   bool isDirectThresholdDefaulted() const;
 
   double directCertainty() const;
-
-  Quantity getDirectCertainty(bool returnIP=false) const;
 
   bool isDirectCertaintyDefaulted() const;
 
   double directJitter() const;
 
-  Quantity getDirectJitter(bool returnIP=false) const;
-
   bool isDirectJitterDefaulted() const;
 
   double directPretest() const;
-
-  Quantity getDirectPretest(bool returnIP=false) const;
 
   bool isDirectPretestDefaulted() const;
 
@@ -113,13 +103,9 @@ class MODEL_API RadianceParameters : public ModelObject {
 
   double limitWeightVMX() const;
 
-  Quantity getLimitWeightVMX(bool returnIP=false) const;
-
   bool isLimitWeightVMXDefaulted() const;
 
   double limitWeightDMX() const;
-
-  Quantity getLimitWeightDMX(bool returnIP=false) const;
 
   bool isLimitWeightDMXDefaulted() const;
 
@@ -127,6 +113,7 @@ class MODEL_API RadianceParameters : public ModelObject {
 
   bool isKlemsSamplingDensityDefaulted() const;
 
+  // Note JM 2018-12-12: It's a discrete choice field of numbers, perhaps we should return as an int?
   std::string skyDiscretizationResolution() const;
 
   bool isCoarseSettings();
@@ -143,25 +130,17 @@ class MODEL_API RadianceParameters : public ModelObject {
 
   bool setDirectThreshold(double directThreshold);
 
-  bool setDirectThreshold(const Quantity& directThreshold);
-
   void resetDirectThreshold();
 
   bool setDirectCertainty(double directCertainty);
-
-  bool setDirectCertainty(const Quantity& directCertainty);
 
   void resetDirectCertainty();
 
   bool setDirectJitter(double directJitter);
 
-  bool setDirectJitter(const Quantity& directJitter);
-
   void resetDirectJitter();
 
   bool setDirectPretest(double directPretest);
-
-  bool setDirectPretest(const Quantity& directPretest);
 
   void resetDirectPretest();
 
@@ -187,13 +166,9 @@ class MODEL_API RadianceParameters : public ModelObject {
 
   bool setLimitWeightVMX(double limitWeightVMX);
 
-  bool setLimitWeightVMX(const Quantity& limitWeightVMX);
-
   void resetLimitWeightVMX();
 
   bool setLimitWeightDMX(double limitWeightDMX);
-
-  bool setLimitWeightDMX(const Quantity& limitWeightDMX);
 
   void resetLimitWeightDMX();
 
