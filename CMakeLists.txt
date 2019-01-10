@@ -277,6 +277,9 @@ elseif(WIN32)
     set(OPENSSL_ARCH 32)
     set(OPENSSL_EXPECTED_HASH DOES_NOT_EXIST_fb2aa1a8ceb85f68055044a85f1dbc94)
   endif()
+
+
+
   set(OPENSSL_PATH "OpenSSL-Win${OPENSSL_ARCH}")
   set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
 
@@ -374,7 +377,7 @@ if( BUILD_RUBY )
     ExternalProject_Add(ZLib
       URL_HASH SHA256=c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1
       URL http://zlib.net/zlib-1.2.11.tar.gz
-      BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-build" --config Release --config Debug --target INSTALL
+      BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-build" --config $<CONFIG> --target INSTALL
       CMAKE_CACHE_ARGS
         -DINSTALL_BIN_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/bin/
         -DINSTALL_INC_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/include/
@@ -388,16 +391,15 @@ if( BUILD_RUBY )
       URL https://github.com/winlibs/libffi/archive/libffi-3.2.1.zip
       CONFIGURE_COMMAND ""
       BUILD_COMMAND devenv /upgrade ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/libffi-msvc.sln 
-        COMMAND msbuild ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/libffi-msvc.sln /p:Configuration=Debug /p:DefineConstants="FFI_BUILDING"
-        COMMAND msbuild ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/libffi-msvc.sln /p:Configuration=Release /p:DefineConstants="FFI_BUILDING"
+        COMMAND msbuild ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/libffi-msvc.sln /p:Configuration=$<CONFIG> /p:DefineConstants="FFI_BUILDING" "/p:Platform=${CMAKE_VS_PLATFORM_NAME}" "/p:WindowsTargetPlatformVersion=${CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION}"
       INSTALL_COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/include ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/include
         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/fficonfig.h ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/include/fficonfig.h         
         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/src/x86/ffitarget.h ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/include/ffitarget.h                 
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/lib
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/x64/Debug/libffi.lib ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/lib/libffid.lib 
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/x64/Release/libffi.lib ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/lib/libffi.lib
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/x64/$<CONFIG>/libffi.lib ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/lib/libffi-$<CONFIG>.lib 
+#        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/x64/Release/libffi.lib ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/lib/libffi.lib
     )
 
     configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.bat.in" "${CMAKE_BINARY_DIR}/build_ruby.bat")
@@ -419,10 +421,10 @@ if( BUILD_RUBY )
       PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.wopen.patch
 
       CONFIGURE_COMMAND ""
-      BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat"
+      BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat" "$<CONFIG>"
       INSTALL_COMMAND ""
     )
-    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install")
+    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/$<CONFIG>")
   endif()
 endif()
 

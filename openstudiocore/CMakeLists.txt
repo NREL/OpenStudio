@@ -573,6 +573,8 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
   endif()
 endif()
 
+message(STATUS "ruby_install_dir ${RUBY_INSTALL_DIR}")
+
 list(INSERT CMAKE_PREFIX_PATH 0 "${RUBY_INSTALL_DIR}")
 if( WIN32 )
   find_package(Ruby 2.5 REQUIRED)
