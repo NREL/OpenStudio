@@ -547,7 +547,16 @@ int main(int argc, char *argv[])
   // DLM: we could restore external encoding here, argv is already tagged with encoding
 
   try{
-    rubyInterpreter.evalString("begin \n (require 'openstudio_cli') \n rescue Exception => e \n puts \n puts \"Error: #{e.message}\" \n puts \"Backtrace:\n\t\" + e.backtrace.join(\"\\n\\t\") \n raise \n end");
+    rubyInterpreter.evalString(R"(
+       begin
+         (require 'openstudio_cli')
+       rescue Exception => e
+         puts
+         puts "Error: #{e.message}"
+         puts "Backtrace:\n\t" + e.backtrace.join("\n\t")
+         raise
+       end
+     )");
   } catch (const std::exception& e){
     rubyInterpreter.evalString(R"(STDOUT.flush)");
     std::cout << "Exception: " << e.what() << std::endl; // endl will flush
