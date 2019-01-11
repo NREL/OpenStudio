@@ -348,7 +348,7 @@ namespace gbxml {
     std::string name = constructionBase.name().get();
 
     // id
-    result->attribute("id") = escapeNameS(name).c_str();
+    result->append_attribute("id") = escapeNameS(name).c_str();
 
     // name
     auto nameElement = result->append_child("Name");
@@ -358,7 +358,7 @@ namespace gbxml {
       if (constructionBase.optionalCast<model::LayeredConstruction>()) {
         for (const auto& layer : constructionBase.cast<model::LayeredConstruction>().layers()) {
           auto layerIdElement = result->append_child("LayerId");
-          layerIdElement.attribute("layerIdRef") = escapeNameS(layer.name().get() + " Layer").c_str();
+          layerIdElement.append_attribute("layerIdRef") = escapeNameS(layer.name().get() + " Layer").c_str();
 
           m_materials.insert(layer);
         }
@@ -394,21 +394,21 @@ namespace gbxml {
       if (visibleTransmittance) {
         auto element = result->append_child("Transmittance");
         element.text() = *visibleTransmittance;
-        element.attribute("unit") = "Fraction";
-        element.attribute("type") = "Visible";
-        element.attribute("surfaceType") = "Both";
+        element.append_attribute("unit") = "Fraction";
+        element.append_attribute("type") = "Visible";
+        element.append_attribute("surfaceType") = "Both";
       }
 
       if (uFactor) {
         auto element = result->append_child("U-value");
         element.text() = *uFactor;
-        element.attribute("unit") = "WPerSquareMeterK";
+        element.append_attribute("unit") = "WPerSquareMeterK";
       }
 
       if (solarHeatGainCoefficient) {
         auto element = result->append_child("SolarHeatGainCoeff");
         element.text() = *solarHeatGainCoefficient;
-        element.attribute("unit") = "Fraction";
+        element.append_attribute("unit") = "Fraction";
       }
     }
     return result;
@@ -633,7 +633,7 @@ namespace gbxml {
     std::string layerName = materialName + " Layer";
 
     // id
-    result.attribute("id") = escapeNameS(layerName).c_str();
+    result.append_attribute("id") = escapeNameS(layerName).c_str();
 
     // name
     auto nameElement = result.append_child("Name");
@@ -641,7 +641,7 @@ namespace gbxml {
 
     // name
     auto materialIdElement = result.append_child("MaterialId");
-    materialIdElement.attribute("materialIdRef") = escapeNameS(materialName).c_str();
+    materialIdElement.append_attribute("materialIdRef") = escapeNameS(materialName).c_str();
 
     return result;
   }
@@ -653,7 +653,7 @@ namespace gbxml {
     std::string name = material.name().get();
 
     // id
-    result.attribute("id") = escapeNameS(name).c_str();
+    result.append_attribute("id") = escapeNameS(name).c_str();
 
     // name 
     auto nameElement = result.append_child("Name");
@@ -700,114 +700,114 @@ namespace gbxml {
     if (thermalReflectance) {
       auto element = result.append_child("Reflectance");
       element.text() = *thermalReflectance;
-      element.attribute("unit") = "Fraction";
-      element.attribute("type") = "ExtIR";
-      element.attribute("surfaceType") = "Both";
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "ExtIR";
+      element.append_attribute("surfaceType") = "Both";
 
       element = result.append_child("Reflectance");
       element.text() = *thermalReflectance;
-      element.attribute("unit") = "Fraction";
-      element.attribute("type") = "IntIR";
-      element.attribute("surfaceType") = "Both";
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "IntIR";
+      element.append_attribute("surfaceType") = "Both";
     }
 
     if (solarReflectance) {
       auto element = result.append_child("Reflectance");
       element.text() = *solarReflectance;
-      element.attribute("unit") = "Fraction";
-      element.attribute("type") = "ExtSolar";
-      element.attribute("surfaceType") = "Both";
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "ExtSolar";
+      element.append_attribute("surfaceType") = "Both";
 
       element = result.append_child("Reflectance");
       element.text() = *solarReflectance;
-      element.attribute("unit") = "Fraction";
-      element.attribute("type") = "IntSolar";
-      element.attribute("surfaceType") = "Both";
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "IntSolar";
+      element.append_attribute("surfaceType") = "Both";
     }
 
     if (visibleReflectance) {
       auto element = result.append_child("Reflectance");
       element.text() = *visibleReflectance;
-      element.attribute("unit") = "Fraction";
-      element.attribute("type") = "ExtVisible";
-      element.attribute("surfaceType") = "Both";
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "ExtVisible";
+      element.append_attribute("surfaceType") = "Both";
 
       element = result.append_child("Reflectance");
       element.text() = *visibleReflectance;
-      element.attribute("unit") = "Fraction";
-      element.attribute("type") = "IntVisible";
-      element.attribute("surfaceType") = "Both";
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "IntVisible";
+      element.append_attribute("surfaceType") = "Both";
     }
 
     if (roughness) {
       auto element = result.append_child("Roughness");
-      element.attribute("value") = (*roughness).c_str();
+      element.append_attribute("value") = (*roughness).c_str();
     }
 
     if (thickness) {
       auto element = result.append_child("Thickness");
       element.text() = *thickness;
-      element.attribute("unit") = "Meters";
+      element.append_attribute("unit") = "Meters";
     }
 
     if (conductivity) {
       auto element = result.append_child("Conductivity");
       element.text() = *conductivity;
-      element.attribute("unit") = "WPerMeterK";
+      element.append_attribute("unit") = "WPerMeterK";
     }
 
     if (resistance) {
       auto element = result.append_child("R-value");
       element.text() = *resistance;
-      element.attribute("unit") = "SquareMeterKPerW";
+      element.append_attribute("unit") = "SquareMeterKPerW";
     }
 
     if (density) {
       auto element = result.append_child("Density");
       element.text() = *density;
-      element.attribute("unit") = "KgPerCubicM";
+      element.append_attribute("unit") = "KgPerCubicM";
     }
 
     if (specificHeat) {
       auto element = result.append_child("SpecificHeat");
       element.text() = *specificHeat;
-      element.attribute("unit") = "JPerKgK";
+      element.append_attribute("unit") = "JPerKgK";
     }
 
     if (thermalAbsorptance) {
       auto element = result.append_child("Absorptance");
       element.text() = *thermalAbsorptance;
-      element.attribute("unit") = "Fraction";
-      element.attribute("type") = "ExtIR";
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "ExtIR";
 
       element = result.append_child("Absorptance");
       element.text() = *thermalAbsorptance;
-      element.attribute("unit") = "Fraction";
-      element.attribute("type") = "IntIR";
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "IntIR";
     }
 
     if (solarAbsorptance) {
       auto element = result.append_child("Absorptance");
       element.text() = *solarAbsorptance;
-      element.attribute("unit") = "Fraction";
-      element.attribute("type") = "ExtSolar";
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "ExtSolar";
 
       element = result.append_child("Absorptance");
       element.text() = *solarAbsorptance;
-      element.attribute("unit") = "Fraction";
-      element.attribute("type") = "IntSolar";
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "IntSolar";
     }
 
     if (visibleAbsorptance) {
       auto element = result.append_child("Absorptance");
       element.text() = *visibleAbsorptance;
-      element.attribute("unit") = "Fraction";
-      element.attribute("type") = "ExtVisible";
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "ExtVisible";
 
       element = result.append_child("Absorptance");
       element.text() = *visibleAbsorptance;
-      element.attribute("unit") = "Fraction";
-      element.attribute("type") = "IntVisible";
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "IntVisible";
     }
     return result;
   }

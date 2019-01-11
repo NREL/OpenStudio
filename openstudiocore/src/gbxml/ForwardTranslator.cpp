@@ -111,17 +111,27 @@ namespace gbxml {
 
     m_logSink.resetStringStream();
 
-    boost::optional<QDomDocument> doc = this->translateModel(model);
-    if (!doc){
-      return false;
-    }
+    pugi::xml_document doc;
+    bool result = this->translateModel(model, doc);
 
     openstudio::filesystem::ofstream file(path, std::ios_base::binary);
-    if (file.is_open()){
-      openstudio::filesystem::write(file, doc->toString(2));
+    if (file.is_open()) {
+      doc.save(file, "  ");
       file.close();
       return true;
     }
+
+    //boost::optional<QDomDocument> doc = this->translateModel(model);
+    //if (!doc){
+    //  return false;
+    //}
+
+    //openstudio::filesystem::ofstream file(path, std::ios_base::binary);
+    //if (file.is_open()){
+    //  openstudio::filesystem::write(file, doc->toString(2));
+    //  file.close();
+    //  return true;
+    //}
 
     return false;
   }
@@ -181,6 +191,8 @@ namespace gbxml {
     std::string result;
     if (std::regex_match(name, std::regex("^\\d.*"))) {
       result = "id_" + name;
+    } else {
+      result = name;
     }
     std::replace(result.begin(), result.end(), ' ', '_');
     std::replace(result.begin(), result.end(), '(', '_');
@@ -481,18 +493,18 @@ namespace gbxml {
     //doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
 
     auto gbXMLElement = document.append_child("gbXML");
-    gbXMLElement.attribute("xmlns") = "http://www.gbxml.org/schema";
-    gbXMLElement.attribute("xmlns:xhtml") = "http://www.w3.org/1999/xhtml";
-    gbXMLElement.attribute("xmlns:xsi") = "http://www.w3.org/2001/XMLSchema-instance";
-    gbXMLElement.attribute("xmlns:xsd") = "http://www.w3.org/2001/XMLSchema";
-    gbXMLElement.attribute("xsi:schemaLocation") = "http://www.gbxml.org/schema http://gbxml.org/schema/6-01/GreenBuildingXML_Ver6.01.xsd";
-    gbXMLElement.attribute("temperatureUnit") = "C";
-    gbXMLElement.attribute("lengthUnit") = "Meters";
-    gbXMLElement.attribute("areaUnit") = "SquareMeters";
-    gbXMLElement.attribute("volumeUnit") = "CubicMeters";
-    gbXMLElement.attribute("useSIUnitsForResults") = "true";
-    gbXMLElement.attribute("version") = "6.01";
-    gbXMLElement.attribute("SurfaceReferenceLocation") = "Centerline";
+    gbXMLElement.append_attribute("xmlns") = "http://www.gbxml.org/schema";
+    gbXMLElement.append_attribute("xmlns:xhtml") = "http://www.w3.org/1999/xhtml";
+    gbXMLElement.append_attribute("xmlns:xsi") = "http://www.w3.org/2001/XMLSchema-instance";
+    gbXMLElement.append_attribute("xmlns:xsd") = "http://www.w3.org/2001/XMLSchema";
+    gbXMLElement.append_attribute("xsi:schemaLocation") = "http://www.gbxml.org/schema http://gbxml.org/schema/6-01/GreenBuildingXML_Ver6.01.xsd";
+    gbXMLElement.append_attribute("temperatureUnit") = "C";
+    gbXMLElement.append_attribute("lengthUnit") = "Meters";
+    gbXMLElement.append_attribute("areaUnit") = "SquareMeters";
+    gbXMLElement.append_attribute("volumeUnit") = "CubicMeters";
+    gbXMLElement.append_attribute("useSIUnitsForResults") = "true";
+    gbXMLElement.append_attribute("version") = "6.01";
+    gbXMLElement.append_attribute("SurfaceReferenceLocation") = "Centerline";
 
     boost::optional<model::Facility> facility = model.getOptionalUniqueModelObject<model::Facility>();
     if (facility) {
@@ -568,12 +580,12 @@ namespace gbxml {
     auto documentHistoryElement = gbXMLElement.append_child("DocumentHistory");
 
     auto createdByElement = documentHistoryElement.append_child("CreatedBy");
-    createdByElement.attribute("programId") = "openstudio";
-    createdByElement.attribute("date") = DateTime::now().toXsdDateTime().c_str();
-    createdByElement.attribute("personId") = "unknown";
+    createdByElement.append_attribute("programId") = "openstudio";
+    createdByElement.append_attribute("date") = DateTime::now().toXsdDateTime().c_str();
+    createdByElement.append_attribute("personId") = "unknown";
 
     auto programInfoElement = documentHistoryElement.append_child("ProgramInfo");
-    programInfoElement.attribute("id") = "openstudio";
+    programInfoElement.append_attribute("id") = "openstudio";
 
     auto productNameElement = programInfoElement.append_child("ProductName");
     productNameElement.text() = "OpenStudio";
@@ -593,7 +605,7 @@ namespace gbxml {
     auto projectEntityElement = programInfoElement.append_child("ProjectEntity");
 
     auto personInfoElement = documentHistoryElement.append_child("PersonInfo");
-    personInfoElement.attribute("id") = "unknown";
+    personInfoElement.append_attribute("id") = "unknown";
 
     auto firstNameElement = personInfoElement.append_child("FirstName");
     firstNameElement.text() = "Unknown";
@@ -671,9 +683,9 @@ namespace gbxml {
 
         if (heatLoad) {
           auto resultsElement = gbXMLElement.append_child("Results");
-          resultsElement.attribute("id") = (thermalZoneId + "HeatLoad").c_str();
-          resultsElement.attribute("resultsType") = "HeatLoad";
-          resultsElement.attribute("unit") = "Kilowatt";
+          resultsElement.append_attribute("id") = (thermalZoneId + "HeatLoad").c_str();
+          resultsElement.append_attribute("resultsType") = "HeatLoad";
+          resultsElement.append_attribute("unit") = "Kilowatt";
 
           auto objectIdElement = resultsElement.append_child("ObjectId");
           objectIdElement.text() = thermalZoneId.c_str();
@@ -684,9 +696,9 @@ namespace gbxml {
 
         if (coolingLoad) {
           auto resultsElement = gbXMLElement.append_child("Results");
-          resultsElement.attribute("id") = (thermalZoneId + "CoolingLoad").c_str();
-          resultsElement.attribute("resultsType") = "CoolingLoad";
-          resultsElement.attribute("unit") = "Kilowatt";
+          resultsElement.append_attribute("id") = (thermalZoneId + "CoolingLoad").c_str();
+          resultsElement.append_attribute("resultsType") = "CoolingLoad";
+          resultsElement.append_attribute("unit") = "Kilowatt";
 
           auto objectIdElement = resultsElement.append_child("ObjectId");
           objectIdElement.text() = thermalZoneId.c_str();
@@ -697,9 +709,9 @@ namespace gbxml {
 
         if (flow) {
           auto resultsElement = gbXMLElement.append_child("Results");
-          resultsElement.attribute("id") = (thermalZoneId + "Flow").c_str();
-          resultsElement.attribute("resultsType") = "Flow";
-          resultsElement.attribute("unit") = "CubicMPerHr";
+          resultsElement.append_attribute("id") = (thermalZoneId + "Flow").c_str();
+          resultsElement.append_attribute("resultsType") = "Flow";
+          resultsElement.append_attribute("unit") = "CubicMPerHr";
 
           auto objectIdElement = resultsElement.append_child("ObjectId");
           objectIdElement.text() = thermalZoneId.c_str();
@@ -800,7 +812,7 @@ namespace gbxml {
     boost::optional<std::string> name = facility.name();
 
     // id
-    result.attribute("id") = "Facility";
+    result.append_attribute("id") = "Facility";
 
     // name
     auto nameElement = result.append_child("Name");
@@ -978,16 +990,16 @@ namespace gbxml {
 
     // id
     std::string name = building.name().get();
-    result.attribute("id") = escapeNameS(name).c_str();
+    result.append_attribute("id") = escapeNameS(name).c_str();
 
     // building type
-    //result.attribute("buildingType") = "Office";
-    result.attribute("buildingType") = "Unknown";
+    //result.append_attribute("buildingType") = "Office";
+    result.append_attribute("buildingType") = "Unknown";
 
     boost::optional<std::string> standardsBuildingType = building.standardsBuildingType();
     if (standardsBuildingType) {
       // todo: map to gbXML types
-      //result.attribute("buildingType") = escapeName(spaceTypeName).c_str();
+      //result.append_attribute("buildingType") = escapeName(spaceTypeName).c_str();
     }
 
     // space type
@@ -995,7 +1007,7 @@ namespace gbxml {
     if (spaceType) {
       //std::string spaceTypeName = spaceType->name().get();
       // todo: map to gbXML types
-      //result.attribute("buildingType", escapeName(spaceTypeName));
+      //result.append_attribute("buildingType", escapeName(spaceTypeName));
     }
 
     // name
@@ -1175,7 +1187,7 @@ namespace gbxml {
 
     // id
     std::string name = space.name().get();
-    result.attribute("id") = escapeNameS(name).c_str();
+    result.append_attribute("id") = escapeNameS(name).c_str();
 
     // space type
     //boost::optional<model::SpaceType> spaceType = space.spaceType();
@@ -1189,14 +1201,14 @@ namespace gbxml {
     boost::optional<model::ThermalZone> thermalZone = space.thermalZone();
     if (thermalZone) {
       std::string thermalZoneName = thermalZone->name().get();
-      result.attribute("zoneIdRef") = escapeNameS(thermalZoneName).c_str();
+      result.append_attribute("zoneIdRef") = escapeNameS(thermalZoneName).c_str();
     }
 
     // building story
     boost::optional<model::BuildingStory> story = space.buildingStory();
     if (story) {
       std::string storyName = story->name().get();
-      result.attribute("buildingStoreyIdRef") = escapeNameS(storyName).c_str();
+      result.append_attribute("buildingStoreyIdRef") = escapeNameS(storyName).c_str();
     }
 
     // name
@@ -1224,7 +1236,7 @@ namespace gbxml {
     if (numberOfPeople > 0) {
       double floorAreaPerPerson = space.floorAreaPerPerson();
       auto peopleNumberElement = result.append_child("PeopleNumber");
-      peopleNumberElement.attribute("unit") = "SquareMPerPerson";
+      peopleNumberElement.append_attribute("unit") = "SquareMPerPerson";
       peopleNumberElement.text() = openstudio::string_conversions::number(floorAreaPerPerson, FloatFormat::fixed).c_str();
     }
 
@@ -1236,7 +1248,7 @@ namespace gbxml {
     double lightingPowerPerFloorArea = space.lightingPowerPerFloorArea();
     if (lightingPowerPerFloorArea > 0) {
       auto lightPowerPerAreaElement = result.append_child("LightPowerPerArea");
-      lightPowerPerAreaElement.attribute("unit") = "WattPerSquareMeter";
+      lightPowerPerAreaElement.append_attribute("unit") = "WattPerSquareMeter";
       lightPowerPerAreaElement.text() = openstudio::string_conversions::number(lightingPowerPerFloorArea, FloatFormat::fixed).c_str();
     }
 
@@ -1244,7 +1256,7 @@ namespace gbxml {
     double electricEquipmentPowerPerFloorArea = space.electricEquipmentPowerPerFloorArea();
     if (electricEquipmentPowerPerFloorArea > 0) {
       auto equipPowerPerAreaElement = result.append_child("EquipPowerPerArea");
-      equipPowerPerAreaElement.attribute("unit") = "WattPerSquareMeter";
+      equipPowerPerAreaElement.append_attribute("unit") = "WattPerSquareMeter";
       equipPowerPerAreaElement.text() = openstudio::string_conversions::number(electricEquipmentPowerPerFloorArea, FloatFormat::fixed).c_str();
     }
 
@@ -1289,7 +1301,7 @@ namespace gbxml {
 
     // id
     std::string name = shadingSurfaceGroup.name().get();
-    result.attribute("id") = escapeNameS(name).c_str();
+    result.append_attribute("id") = escapeNameS(name).c_str();
 
     // name
     auto nameElement = result.append_child("Name");
@@ -1371,7 +1383,7 @@ namespace gbxml {
 
     // id
     std::string name = story.name().get();
-    result.attribute("id") = escapeNameS(name).c_str();
+    result.append_attribute("id") = escapeNameS(name).c_str();
 
     // name
     auto nameElement = result.append_child("Name");
@@ -1967,7 +1979,7 @@ namespace gbxml {
 
     // id
     std::string name = surface.name().get();
-    result.attribute("id") = escapeNameS(name).c_str();
+    result.append_attribute("id") = escapeNameS(name).c_str();
 
     // DLM: currently unhandled
     //FreestandingColumn
@@ -1976,40 +1988,40 @@ namespace gbxml {
     bool checkSlabOnGrade = false;
 
     if (surface.isAirWall()) {
-      result.attribute("surfaceType") = "Air";
+      result.append_attribute("surfaceType") = "Air";
     } else {
       std::string surfaceType = surface.surfaceType();
       std::string outsideBoundaryCondition = surface.outsideBoundaryCondition();
       if (istringEqual("Wall", surfaceType)) {
         if (istringEqual("Outdoors", outsideBoundaryCondition)) {
-          result.attribute("surfaceType") = "ExteriorWall";
+          result.append_attribute("surfaceType") = "ExteriorWall";
         } else if (istringEqual("Surface", outsideBoundaryCondition)) {
-          result.attribute("surfaceType") = "InteriorWall";
+          result.append_attribute("surfaceType") = "InteriorWall";
         } else if (surface.isGroundSurface()) {
-          result.attribute("surfaceType") = "UndergroundWall";
+          result.append_attribute("surfaceType") = "UndergroundWall";
         } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
-          result.attribute("surfaceType") = "InteriorWall";
+          result.append_attribute("surfaceType") = "InteriorWall";
         }
       } else if (istringEqual("RoofCeiling", surfaceType)) {
         if (istringEqual("Outdoors", outsideBoundaryCondition)) {
-          result.attribute("surfaceType") = "Roof";
+          result.append_attribute("surfaceType") = "Roof";
         } else if (istringEqual("Surface", outsideBoundaryCondition)) {
-          result.attribute("surfaceType") = "Ceiling";
+          result.append_attribute("surfaceType") = "Ceiling";
         } else if (surface.isGroundSurface()) {
-          result.attribute("surfaceType") = "UndergroundCeiling";
+          result.append_attribute("surfaceType") = "UndergroundCeiling";
         } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
-          result.attribute("surfaceType") = "InteriorWall";
+          result.append_attribute("surfaceType") = "InteriorWall";
         }
       } else if (istringEqual("Floor", surfaceType)) {
         if (istringEqual("Outdoors", outsideBoundaryCondition)) {
-          result.attribute("surfaceType") = "RaisedFloor";
+          result.append_attribute("surfaceType") = "RaisedFloor";
         } else if (surface.isGroundSurface()) {
           checkSlabOnGrade = true;
-          result.attribute("surfaceType") = "UndergroundSlab"; // might be SlabOnGrade, check vertices later
+          result.append_attribute("surfaceType") = "UndergroundSlab"; // might be SlabOnGrade, check vertices later
         } else if (istringEqual("Surface", outsideBoundaryCondition)) {
-          result.attribute("surfaceType") = "InteriorFloor";
+          result.append_attribute("surfaceType") = "InteriorFloor";
         } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
-          result.attribute("surfaceType") = "InteriorWall";
+          result.append_attribute("surfaceType") = "InteriorWall";
         }
       }
     }
@@ -2019,9 +2031,9 @@ namespace gbxml {
     if (construction) {
       std::string constructionName = construction->name().get();
       if (construction->isOpaque()) {
-        result.attribute("constructionIdRef") = escapeNameS(constructionName).c_str();
+        result.append_attribute("constructionIdRef") = escapeNameS(constructionName).c_str();
       } else {
-        result.attribute("constructionIdRef") = escapeNameS(constructionName).c_str();
+        result.append_attribute("constructionIdRef") = escapeNameS(constructionName).c_str();
       }
     }
 
@@ -2033,7 +2045,7 @@ namespace gbxml {
 
       std::string spaceName = space->name().get();
       auto adjacentSpaceIdElement = result.append_child("AdjacentSpaceId");
-      adjacentSpaceIdElement.attribute("spaceIdRef") = escapeNameS(spaceName).c_str();
+      adjacentSpaceIdElement.append_attribute("spaceIdRef") = escapeNameS(spaceName).c_str();
     }
 
     // adjacent surface
@@ -2043,7 +2055,7 @@ namespace gbxml {
       if (adjacentSpace) {
         std::string adjacentSpaceName = adjacentSpace->name().get();
         auto adjacentSpaceIdElement = result.append_child("AdjacentSpaceId");
-        adjacentSpaceIdElement.attribute("spaceIdRef") = escapeNameS(adjacentSpaceName).c_str();
+        adjacentSpaceIdElement.append_attribute("spaceIdRef") = escapeNameS(adjacentSpaceName).c_str();
 
         // count adjacent surface as translated
         m_translatedObjectsS[adjacentSurface->handle()] = result;
@@ -2061,7 +2073,7 @@ namespace gbxml {
         maxZ = std::max(maxZ, vertex.z());
       }
       if ((maxZ <= 0.01) && (minZ >= -0.01)) {
-        result.attribute("surfaceType") = "SlabOnGrade";
+        result.append_attribute("surfaceType") = "SlabOnGrade";
       }
     }
 
@@ -2182,16 +2194,16 @@ namespace gbxml {
 
     // id
     std::string name = subSurface.name().get();
-    result.attribute("id") = escapeNameS(name).c_str();
+    result.append_attribute("id") = escapeNameS(name).c_str();
 
     // construction
     boost::optional<model::ConstructionBase> construction = subSurface.construction();
     if (construction) {
       std::string constructionName = construction->name().get();
       if (construction->isOpaque()) {
-        result.attribute("constructionIdRef") = escapeNameS(constructionName).c_str();
+        result.append_attribute("constructionIdRef") = escapeNameS(constructionName).c_str();
       } else {
-        result.attribute("windowTypeIdRef") = escapeNameS(constructionName).c_str();
+        result.append_attribute("windowTypeIdRef") = escapeNameS(constructionName).c_str();
       }
     }
 
@@ -2200,25 +2212,25 @@ namespace gbxml {
     // SlidingDoor
 
     if (subSurface.isAirWall()) {
-      result.attribute("openingType") = "Air";
+      result.append_attribute("openingType") = "Air";
     } else {
       std::string subSurfaceType = subSurface.subSurfaceType();
       if (istringEqual("FixedWindow", subSurfaceType)) {
-        result.attribute("openingType") = "FixedWindow";
+        result.append_attribute("openingType") = "FixedWindow";
       } else if (istringEqual("OperableWindow", subSurfaceType)) {
-        result.attribute("openingType") = "OperableWindow";
+        result.append_attribute("openingType") = "OperableWindow";
       } else if (istringEqual("Door", subSurfaceType)) {
-        result.attribute("openingType") = "NonSlidingDoor";
+        result.append_attribute("openingType") = "NonSlidingDoor";
       } else if (istringEqual("GlassDoor", subSurfaceType)) {
-        result.attribute("openingType") = "SlidingDoor";
+        result.append_attribute("openingType") = "SlidingDoor";
       } else if (istringEqual("OverheadDoor", subSurfaceType)) {
-        result.attribute("openingType") = "NonSlidingDoor";
+        result.append_attribute("openingType") = "NonSlidingDoor";
       } else if (istringEqual("Skylight", subSurfaceType)) {
-        result.attribute("openingType") = "FixedSkylight";
+        result.append_attribute("openingType") = "FixedSkylight";
       } else if (istringEqual("TubularDaylightDome", subSurfaceType)) {
-        result.attribute("openingType") = "FixedSkylight";
+        result.append_attribute("openingType") = "FixedSkylight";
       } else if (istringEqual("TubularDaylightDiffuser", subSurfaceType)) {
-        result.attribute("openingType") = "FixedSkylight";
+        result.append_attribute("openingType") = "FixedSkylight";
       }
     }
 
@@ -2336,18 +2348,18 @@ namespace gbxml {
 
     // id
     std::string name = shadingSurface.name().get();
-    result.attribute("id") = escapeNameS(name).c_str();
+    result.append_attribute("id") = escapeNameS(name).c_str();
 
-    result.attribute("surfaceType") = "Shade";
+    result.append_attribute("surfaceType") = "Shade";
 
     // construction
     boost::optional<model::ConstructionBase> construction = shadingSurface.construction();
     if (construction) {
       std::string constructionName = construction->name().get();
       if (construction->isOpaque()) {
-        result.attribute("constructionIdRef") = escapeNameS(constructionName).c_str();
+        result.append_attribute("constructionIdRef") = escapeNameS(constructionName).c_str();
       } else {
-        result.attribute("windowTypeIdRef") = escapeNameS(constructionName).c_str();
+        result.append_attribute("windowTypeIdRef") = escapeNameS(constructionName).c_str();
       }
     }
 
@@ -2364,7 +2376,7 @@ namespace gbxml {
 
       std::string spaceName = space->name().get();
       auto adjacentSpaceIdElement = result.append_child("AdjacentSpaceId");
-      adjacentSpaceIdElement.attribute("spaceIdRef") = escapeNameS(spaceName).c_str();
+      adjacentSpaceIdElement.append_attribute("spaceIdRef") = escapeNameS(spaceName).c_str();
     } else {
       boost::optional<model::ShadingSurfaceGroup> shadingSurfaceGroup = shadingSurface.shadingSurfaceGroup();
       if (shadingSurfaceGroup) {
@@ -2372,7 +2384,7 @@ namespace gbxml {
 
         std::string spaceName = shadingSurfaceGroup->name().get();
         auto adjacentSpaceIdElement = result.append_child("AdjacentSpaceId");
-        adjacentSpaceIdElement.attribute("spaceIdRef") = escapeNameS(spaceName).c_str();
+        adjacentSpaceIdElement.append_attribute("spaceIdRef") = escapeNameS(spaceName).c_str();
       }
     }
 
@@ -2547,7 +2559,7 @@ namespace gbxml {
 
     // id
     std::string name = thermalZone.name().get();
-    result.attribute("id") = escapeNameS(name).c_str();
+    result.append_attribute("id") = escapeNameS(name).c_str();
 
     // name
     auto nameElement = result.append_child("Name");
@@ -2587,13 +2599,13 @@ namespace gbxml {
 
     if (designHeatT) {
       auto designHeatTElement = result.append_child("DesignHeatT");
-      designHeatTElement.attribute("unit") = "C";
+      designHeatTElement.append_attribute("unit") = "C";
       designHeatTElement.text() = openstudio::string_conversions::number(*designHeatT, FloatFormat::fixed).c_str();
     }
 
     if (designCoolT) {
       auto designCoolTElement = result.append_child("DesignCoolT");
-      designCoolTElement.attribute("unit") = "C";
+      designCoolTElement.append_attribute("unit") = "C";
       designCoolTElement.text() = openstudio::string_conversions::number(*designCoolT, FloatFormat::fixed).c_str();
     }
 
