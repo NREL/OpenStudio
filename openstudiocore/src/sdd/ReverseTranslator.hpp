@@ -48,6 +48,10 @@ class QDomElement;
 class QDomNodeList;
 class QString;
 
+namespace pugi {
+  class xml_node;
+}
+
 namespace openstudio {
 
 class ProgressBar;
@@ -94,6 +98,9 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateWaterMainsTemperature(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     std::vector<openstudio::WorkspaceObject> translateDesignDays(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateWeatherFile(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
+
+    boost::optional<openstudio::model::ModelObject> translateWeatherFile(const pugi::xml_node& element, openstudio::model::Model& model);
+
     boost::optional<openstudio::model::ModelObject> translateMaterial(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateConstructAssembly(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateScheduleDay(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
@@ -143,14 +150,17 @@ namespace sdd {
     // If found then looks for a model::Loop with that name and returns it
     // This is useful for hooking water coils up to their plant and maybe other things.
     boost::optional<model::PlantLoop> loopForSupplySegment(const QString & fluidSegmentName, const QDomDocument& doc, openstudio::model::Model& model);
+    boost::optional<model::PlantLoop> loopForSupplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root, openstudio::model::Model& model);
 
     // Return the supply segment by name
     QDomElement supplySegment(const QString & fluidSegmentName, const QDomDocument& doc);
+    pugi::xml_node supplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root);
 
     // Retruns the ServiceHotWater loop in the SDD instance with a segment named fluidSegmentName
     // If the loop is not found in the model, this function will attempt to translate it out of the SDD.
     // If the loop is found in the model it will simply be returned.
     boost::optional<model::PlantLoop> serviceHotWaterLoopForSupplySegment(const QString & fluidSegmentName, const QDomDocument & doc, openstudio::model::Model& model);
+    boost::optional<model::PlantLoop> serviceHotWaterLoopForSupplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root, openstudio::model::Model& model);
 
     // Return the "ZnSys" element with the name znSysName.
     QDomElement findZnSysElement(const QString & znSysName,const QDomDocument & doc);

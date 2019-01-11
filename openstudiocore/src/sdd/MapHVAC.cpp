@@ -233,7 +233,6 @@
 #include <cmath>
 #include <functional>
 
-
 ///
 /// TODO: Remove this helper when Qt is fully removed
 ///

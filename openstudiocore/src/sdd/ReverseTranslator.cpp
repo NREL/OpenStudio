@@ -120,6 +120,7 @@
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
+#include "../utilities/core/StringHelpers.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/IPUnit.hpp"
@@ -136,6 +137,9 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QTextStream>
+
+#include <pugixml.hpp>
+
 
 namespace openstudio {
 namespace sdd {
@@ -2129,6 +2133,115 @@ boost::optional<model::PlantLoop> ReverseTranslator::serviceHotWaterLoopForSuppl
             {
               return mo->optionalCast<model::PlantLoop>();
             }
+          }
+        }
+      }
+    }
+  }
+
+  return result;
+}
+
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWeatherFile(const pugi::xml_node& element,  openstudio::model::Model& model)
+{
+  //<AnnualWeatherFile>F:/360Local/AEC/CBECCn/CBECC Source Files/CBECC-Com13/Data/EPW/SACRAMENTO-EXECUTIVE_724830_CZ2010.epw</AnnualWeatherFile>
+
+  auto annualWeatherFileElement = element.child("AnnualWeatherFile");
+
+  if (!annualWeatherFileElement) {
+    LOG(Error, "No annual weather file specified");
+    return boost::none;
+  }
+
+  openstudio::path epwFilePath = toPath(annualWeatherFileElement.text().as_string());
+  if (!epwFilePath.is_complete()) {
+    epwFilePath = complete(epwFilePath, m_path.parent_path());
+  }
+
+  if (!exists(epwFilePath)) {
+    LOG(Error, "Annual weather file '" << toString(epwFilePath) << "' does not exist");
+    return boost::none;
+  }
+
+  boost::optional<EpwFile> epwFile;
+  try {
+    epwFile = EpwFile(epwFilePath);
+  } catch (std::exception&) {
+    LOG(Error, "Could not open epw file '" << toString(epwFilePath) << "'");
+  }
+
+  if (!epwFile) {
+    return boost::none;
+  }
+
+  // set weatherfile
+  boost::optional<model::WeatherFile> weatherFile = model::WeatherFile::setWeatherFile(model, *epwFile);
+  if (!weatherFile) {
+    LOG(Error, "Failed to set weather file for model");
+    return boost::none;
+  }
+
+  return weatherFile.get();
+}
+
+pugi::xml_node ReverseTranslator::supplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root)
+{
+  for(auto& fluidSysElement : root.child("Proj").children("FluidSys")) {
+    for(auto& fluidSegmentElement : fluidSysElement.children("FluidSeg")) {
+      auto nameElement = fluidSegmentElement.child("Name");
+      auto typeElement = fluidSegmentElement.child("Type");
+
+      if ((istringEqual(typeElement.text().as_string(), "SECONDARYSUPPLY") ||
+        istringEqual(typeElement.text().as_string(), "PRIMARYSUPPLY")) &&
+        istringEqual(nameElement.text().as_string(), fluidSegmentName)) {
+        return fluidSegmentElement;
+      }
+    }
+  }
+
+  return pugi::xml_node();
+}
+
+boost::optional<model::PlantLoop> ReverseTranslator::loopForSupplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root, openstudio::model::Model& model)
+{
+  auto fluidSegmentElement = supplySegment(fluidSegmentName, root);
+  auto fluidSysElement = fluidSegmentElement.parent();
+  auto fluidSysNameElement = fluidSysElement.child("Name");
+
+  return model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string());
+}
+
+boost::optional<model::PlantLoop> ReverseTranslator::serviceHotWaterLoopForSupplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root, openstudio::model::Model& model)
+{
+  boost::optional<model::PlantLoop> result;
+
+  for(auto& fluidSysElement : root.child("Proj").children("FluidSys")) {
+
+    auto fluidSysNameElement = fluidSysElement.child("Name");
+
+    auto fluidSysTypeElement = fluidSysElement.child("Type");
+
+    if (istringEqual(fluidSysTypeElement.text().as_string(), "SERVICEHOTWATER"))
+    {
+      for(auto& fluidSegmentElement : fluidSysElement.children("FluidSeg")) {
+
+        auto nameElement = fluidSegmentElement.child("Name");
+        auto typeElement = fluidSegmentElement.child("Type");
+
+        if ((istringEqual(typeElement.text().as_string(), "SECONDARYSUPPLY") ||
+          istringEqual(typeElement.text().as_string(), "PRIMARYSUPPLY")) &&
+          istringEqual(nameElement.text().as_string(), fluidSegmentName)
+          ) {
+          if (boost::optional<model::PlantLoop> loop = model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string())) {
+            return loop;
+          } else {
+            QDomDocument THISNEEDSTOBEFIXED;
+            /*
+            if (boost::optional<model::ModelObject> mo = translateFluidSys(fluidSysElement, root, model))
+            {
+              return mo->optionalCast<model::PlantLoop>();
+            }
+            */
           }
         }
       }
