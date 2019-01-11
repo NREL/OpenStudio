@@ -35,17 +35,15 @@
 #include "../core/System.hpp"
 #include "../core/UnzipFile.hpp"
 
-#include <QNetworkReply>
-
 #define REMOTE_PRODUCTION_SERVER "https://bcl.nrel.gov"
 #define REMOTE_DEVELOPMENT_SERVER "http://bcl7.development.nrel.gov"
 
 ///
 /// TODO: Remove this helper when Qt is fully removed
 ///
-static auto toQString(const std::string &s) {
-  return QString::fromStdString(s);
-};
+//static auto toQString(const std::string &s) {
+//  return QString::fromStdString(s);
+//};
 
 namespace openstudio{
 
@@ -100,7 +98,7 @@ namespace openstudio{
 
 
   RemoteBCL::RemoteBCL():
-    m_networkManager(new QNetworkAccessManager()),
+   // m_networkManager(new QNetworkAccessManager()),
     m_numResultsPerQuery(10),
     m_apiVersion("2.0")
   {
@@ -122,7 +120,7 @@ namespace openstudio{
 
   RemoteBCL::~RemoteBCL()
   {
-    delete m_networkManager;
+    //delete m_networkManager;
   }
 
   bool RemoteBCL::initializeSSL(const openstudio::path &t_pathToSSLLibraries)
@@ -133,11 +131,11 @@ namespace openstudio{
       System::setenv("PATH", t_pathToSSLLibraries.string());
     }
 
-#ifdef QT_NO_OPENSSL
+//#ifdef QT_NO_OPENSSL
     bool opensslloaded = false;
-#else
-    bool opensslloaded = QSslSocket::supportsSsl();
-#endif
+//#else
+//    bool opensslloaded = QSslSocket::supportsSsl();
+//#endif
 
     if (!t_pathToSSLLibraries.empty() && oldpath)
     {
@@ -269,10 +267,10 @@ namespace openstudio{
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
-      QString url = toQString(remoteUrl() + "/api/search/?fq[]=ss_uuid:%1&api_version=%2").arg(
-        toQString(component.uid()),
-        toQString(m_apiVersion)
-      );
+      //QString url = toQString(remoteUrl() + "/api/search/?fq[]=ss_uuid:%1&api_version=%2").arg(
+      //  toQString(component.uid()),
+      //  toQString(m_apiVersion)
+      //);
       //LOG(Warn, toString(url));
 
       // when the reply is finished call onSearchResponseComplete
@@ -282,14 +280,14 @@ namespace openstudio{
 //      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 //#endif
 
-      QNetworkRequest request = QNetworkRequest(QUrl(url));
-      request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-      request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-      m_networkManager->get(request);
-      std::vector<BCLSearchResult> result = waitForSearch();
-      if (result.size() > 0 && result[0].versionId() != component.versionId()){
-        m_componentsWithUpdates.push_back(result[0]);
-      }
+      //QNetworkRequest request = QNetworkRequest(QUrl(url));
+      //request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+      //request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+      //m_networkManager->get(request);
+      //std::vector<BCLSearchResult> result = waitForSearch();
+      //if (result.size() > 0 && result[0].versionId() != component.versionId()){
+       // m_componentsWithUpdates.push_back(result[0]);
+      //}
     }
 
     return m_componentsWithUpdates.size();
@@ -310,10 +308,10 @@ namespace openstudio{
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
-      QString url = toQString(remoteUrl() + "/api/search/?fq[]=ss_uuid:%1&api_version=%2").arg(
-        toQString(measure.uid()),
-        toQString(m_apiVersion)
-      );
+      //QString url = toQString(remoteUrl() + "/api/search/?fq[]=ss_uuid:%1&api_version=%2").arg(
+      //  toQString(measure.uid()),
+      //  toQString(m_apiVersion)
+      //);
       //LOG(Warn, toString(url));
 
       // when the reply is finished call onSearchResponseComplete
@@ -323,14 +321,14 @@ namespace openstudio{
 //      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 //#endif
 
-      QNetworkRequest request = QNetworkRequest(QUrl(url));
-      request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-      request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-      m_networkManager->get(request);
-      std::vector<BCLSearchResult> result = waitForSearch();
-      if (result.size() > 0 && result[0].versionId() != measure.versionId()){
-        m_measuresWithUpdates.push_back(result[0]);
-      }
+      //QNetworkRequest request = QNetworkRequest(QUrl(url));
+      //request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+      //request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+      //m_networkManager->get(request);
+      //std::vector<BCLSearchResult> result = waitForSearch();
+      //if (result.size() > 0 && result[0].versionId() != measure.versionId()){
+      //  m_measuresWithUpdates.push_back(result[0]);
+      //}
     }
 
     return m_measuresWithUpdates.size();
@@ -392,9 +390,9 @@ namespace openstudio{
 
   bool RemoteBCL::isOnline() const
   {
-    if (m_networkManager->networkAccessible() == QNetworkAccessManager::NotAccessible){
-      return false;
-    }
+    //if (m_networkManager->networkAccessible() == QNetworkAccessManager::NotAccessible){
+    //  return false;
+    //}
     return true;
   }
 
@@ -535,9 +533,9 @@ namespace openstudio{
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
-      QString url = toQString(remoteUrl + "/api/search/?api_version=%1&show_rows=0").arg(
-        toQString(m_apiVersion)
-      );
+      //QString url = toQString(remoteUrl + "/api/search/?api_version=%1&show_rows=0").arg(
+      //  toQString(m_apiVersion)
+      //);
       //LOG(Warn, toString(url));
 
       // disconnect all signals from m_networkManager to this
@@ -550,11 +548,11 @@ namespace openstudio{
 //      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 //#endif
 
-      QNetworkRequest request = QNetworkRequest(QUrl(url));
-      request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-      request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-      m_networkManager->get(request);
-      waitForSearch();
+      //QNetworkRequest request = QNetworkRequest(QUrl(url));
+      //request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+      //request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+      //m_networkManager->get(request);
+      //waitForSearch();
 
       // Restore url
       if (previousUrl == remoteDevelopmentUrl()){
@@ -640,11 +638,11 @@ namespace openstudio{
 
     m_downloadUid = uid;
 
-    QString url = toQString(remoteUrl() + "/api/component/download?uids=" + uid);
+    //QString url = toQString(remoteUrl() + "/api/component/download?uids=" + uid);
     //LOG(Warn, toString(url));
 
-    QNetworkRequest request = QNetworkRequest(QUrl(url));
-    request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+    //QNetworkRequest request = QNetworkRequest(QUrl(url));
+    //request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
 
     // disconnect all signals from m_networkManager to this
     //disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
@@ -657,13 +655,13 @@ namespace openstudio{
 //    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 //#endif
 
-    m_downloadReply = m_networkManager->get(request);
-    if (!m_downloadReply->isRunning()){
-      m_mutex.unlock();
-      m_downloadReply->deleteLater();
-      m_downloadReply = nullptr;
-      return false;
-    }
+    //m_downloadReply = m_networkManager->get(request);
+    //if (!m_downloadReply->isRunning()){
+    //  m_mutex.unlock();
+    //  m_downloadReply->deleteLater();
+    //  m_downloadReply = nullptr;
+    //  return false;
+    //}
 
     //connect(m_downloadReply, &QNetworkReply::readyRead, this, &RemoteBCL::downloadData);
 
@@ -684,22 +682,22 @@ namespace openstudio{
 
     m_lastMetaSearch.reset();
 
-    QString url;
-    if (componentType.empty() || componentType == "*"){
-      url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&api_version=%3").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
-        toQString(filterType),
-        toQString(m_apiVersion)
-      );
-    }else{
-      url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&fq[]=%3:\"%4\"&api_version=%5").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
-        toQString(filterType),
-        (filterType == "nrel_component" ? "sm_vid_Component_Tags" : "sm_vid_Measure_Tags"),
-        toQString(componentType),
-        toQString(m_apiVersion)
-      );
-    }
+    //QString url;
+    //if (componentType.empty() || componentType == "*"){
+    //  url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&api_version=%3").arg(
+    //    toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+    //    toQString(filterType),
+    //    toQString(m_apiVersion)
+    //  );
+    //}else{
+    //  url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&fq[]=%3:\"%4\"&api_version=%5").arg(
+    //    toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+    //    toQString(filterType),
+    //    (filterType == "nrel_component" ? "sm_vid_Component_Tags" : "sm_vid_Measure_Tags"),
+    //    toQString(componentType),
+    //    toQString(m_apiVersion)
+    //  );
+    //}
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
@@ -713,10 +711,10 @@ namespace openstudio{
 //    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 //#endif
 
-    QNetworkRequest request = QNetworkRequest(QUrl(url));
-    request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-    request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-    m_networkManager->get(request);
+    //QNetworkRequest request = QNetworkRequest(QUrl(url));
+    //request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+    //request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+    //m_networkManager->get(request);
 
     return true;
   }
@@ -730,21 +728,21 @@ namespace openstudio{
 
     m_lastMetaSearch.reset();
 
-    QString url;
-    if (componentTypeTID == 0){
-      url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&api_version=%3").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
-        toQString(filterType),
-        toQString(m_apiVersion)
-      );
-    }else{
-      url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&fq[]=tid:%3&api_version=%4").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
-        toQString(filterType),
-        toQString(openstudio::string_conversions::number(componentTypeTID)),
-        toQString(m_apiVersion)
-      );
-    }
+    //QString url;
+    //if (componentTypeTID == 0){
+    //  url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&api_version=%3").arg(
+    //    toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+    //    toQString(filterType),
+    //    toQString(m_apiVersion)
+    //  );
+    //}else{
+    //  url = toQString(remoteUrl() + "/api/metasearch/%1?fq[]=bundle:%2&fq[]=tid:%3&api_version=%4").arg(
+    //    toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+    //    toQString(filterType),
+    //    toQString(openstudio::string_conversions::number(componentTypeTID)),
+    //    toQString(m_apiVersion)
+    //  );
+    //}
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
@@ -758,10 +756,10 @@ namespace openstudio{
 //    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 //#endif
 
-    QNetworkRequest request = QNetworkRequest(QUrl(url));
-    request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-    request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-    m_networkManager->get(request);
+    //QNetworkRequest request = QNetworkRequest(QUrl(url));
+    //request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+    //request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+    //m_networkManager->get(request);
 
     return true;
   }
@@ -775,27 +773,27 @@ namespace openstudio{
 
     m_lastSearch.clear();
 
-    QString url;
-    if (componentType.empty() || componentType == "*"){
-      url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&api_version=%3&show_rows=%4&page=%5").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
-        toQString(filterType),
-        toQString(m_apiVersion),
-        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
-        toQString(openstudio::string_conversions::number(page))
-      );
-    }else{
-      url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&fq[]=%3:\"%4\""
-        "&api_version=%5&show_rows=%6&page=%7").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
-        toQString(filterType),
-        (filterType == "nrel_component" ? "sm_vid_Component_Tags" : "sm_vid_Measure_Tags"),
-        toQString(componentType),
-        toQString(m_apiVersion),
-        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
-        toQString(openstudio::string_conversions::number(page))
-      );
-    }
+    //QString url;
+    //if (componentType.empty() || componentType == "*"){
+    //  url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&api_version=%3&show_rows=%4&page=%5").arg(
+    //    toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+    //    toQString(filterType),
+    //    toQString(m_apiVersion),
+    //    toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+    //    toQString(openstudio::string_conversions::number(page))
+    // );
+    //}else{
+    //  url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&fq[]=%3:\"%4\""
+    //    "&api_version=%5&show_rows=%6&page=%7").arg(
+    //    toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+    //    toQString(filterType),
+    //    (filterType == "nrel_component" ? "sm_vid_Component_Tags" : "sm_vid_Measure_Tags"),
+    //    toQString(componentType),
+    //    toQString(m_apiVersion),
+    //    toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+    //    toQString(openstudio::string_conversions::number(page))
+    //  );
+    //}
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
@@ -809,10 +807,10 @@ namespace openstudio{
 //    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 //#endif
 
-    QNetworkRequest request = QNetworkRequest(QUrl(url));
-    request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-    request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-    m_networkManager->get(request);
+    //QNetworkRequest request = QNetworkRequest(QUrl(url));
+    //request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+    //request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+    //m_networkManager->get(request);
 
     return true;
   }
@@ -826,25 +824,25 @@ namespace openstudio{
 
     m_lastSearch.clear();
 
-    QString url;
-    if (componentTypeTID == 0){
-      url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&api_version=%3&show_rows=%4&page=%5").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
-        toQString(filterType),
-        toQString(m_apiVersion),
-        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
-        toQString(openstudio::string_conversions::number(page))
-      );
-    }else{
-      url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&fq[]=tid:%3&api_version=%4&show_rows=%5&page=%6").arg(
-        toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
-        toQString(filterType),
-        toQString(openstudio::string_conversions::number(componentTypeTID)),
-        toQString(m_apiVersion),
-        toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
-        toQString(openstudio::string_conversions::number(page))
-      );
-    }
+    //QString url;
+    //if (componentTypeTID == 0){
+    //  url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&api_version=%3&show_rows=%4&page=%5").arg(
+    //    toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+    //    toQString(filterType),
+    //    toQString(m_apiVersion),
+    //    toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+    //    toQString(openstudio::string_conversions::number(page))
+    //  );
+    //}else{
+    //  url = toQString(remoteUrl() + "/api/search/%1?fq[]=bundle:%2&fq[]=tid:%3&api_version=%4&show_rows=%5&page=%6").arg(
+    //    toQString(searchTerm == "*" ? "" : searchTerm != "" ? searchTerm + ".xml" : "").replace("+", "%2B"),
+    //    toQString(filterType),
+    //    toQString(openstudio::string_conversions::number(componentTypeTID)),
+    //    toQString(m_apiVersion),
+    //    toQString(openstudio::string_conversions::number(m_numResultsPerQuery)),
+    //    toQString(openstudio::string_conversions::number(page))
+    //  );
+    //}
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
@@ -858,10 +856,10 @@ namespace openstudio{
 //    connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 //#endif
 
-    QNetworkRequest request = QNetworkRequest(QUrl(url));
-    request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-    request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-    m_networkManager->get(request);
+    //QNetworkRequest request = QNetworkRequest(QUrl(url));
+    //request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+    //request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+    //m_networkManager->get(request);
 
     return true;
   }
@@ -906,46 +904,46 @@ namespace openstudio{
         QString str(reply->rawHeaderList()[i].constData());
         std::cout << toString(str) << ": " << toString(reply->rawHeader(reply->rawHeaderList()[i] ).constData()) << std::endl;
       }*/
-      if (reply->error() == QNetworkReply::NoError){
-        std::shared_ptr<pugi::xml_document> document = std::make_shared<pugi::xml_document>();
-        auto result = document->load_string(reply->readAll().data());
-        if (!result) {
-          LOG(Error, "Bad XML Response: " << result.description());
-        } else {
-          if (!m_useRemoteDevelopmentUrl){
-            validProdAuthKey = true;
-          } else {
-            validDevAuthKey = true;
-          }
-          return RemoteQueryResponse(document);
-        }
-      } else if (reply->error() == QNetworkReply::AuthenticationRequiredError){
-        if (!m_useRemoteDevelopmentUrl){
-          if (m_prodAuthKey.empty()){
-            LOG(Error, "Error: prodAuthKey missing");
-          }else{
-            LOG(Error, "Error: Invalid prodAuthKey");
-          }
-          validProdAuthKey = false;
-        }else{
-          if (m_devAuthKey.empty()){
-            LOG(Error, "Error: devAuthKey missing");
-          }else{
-            LOG(Error, "Error: Invalid devAuthKey");
-          }
-          validDevAuthKey = false;
-        }
-      }else if (reply->error() == QNetworkReply::ConnectionRefusedError){
-        LOG(Error, "Network Error: " << "Connection failed");
-      }else if (reply->error() == QNetworkReply::UnknownContentError){
-        LOG(Error, "Network Error: Unknown Content.  Verify the User-Agent request header");
-      }else if (reply->error() == QNetworkReply::HostNotFoundError){
-        LOG(Error, "Network Error: Host " << remoteUrl() << " not found");
-      }else if (reply->error() == QNetworkReply::UnknownNetworkError && reply->errorString().startsWith("Error creating SSL context")){
-        LOG(Error, "Network Error: Unable to create SSL connection.  Verify that SSL libraries are in the system path.");
-      }else{
-        LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << " - " << reply->errorString().toStdString());
-      }
+      //if (reply->error() == QNetworkReply::NoError){
+      //  std::shared_ptr<pugi::xml_document> document = std::make_shared<pugi::xml_document>();
+      //  auto result = document->load_string(reply->readAll().data());
+      //  if (!result) {
+      //    LOG(Error, "Bad XML Response: " << result.description());
+      //  } else {
+      //    if (!m_useRemoteDevelopmentUrl){
+      //      validProdAuthKey = true;
+      //    } else {
+      //      validDevAuthKey = true;
+      //    }
+      //    return RemoteQueryResponse(document);
+      //  }
+      //} else if (reply->error() == QNetworkReply::AuthenticationRequiredError){
+      //  if (!m_useRemoteDevelopmentUrl){
+      //    if (m_prodAuthKey.empty()){
+      //      LOG(Error, "Error: prodAuthKey missing");
+      //    }else{
+      //      LOG(Error, "Error: Invalid prodAuthKey");
+      //    }
+      //    validProdAuthKey = false;
+      //  }else{
+      //    if (m_devAuthKey.empty()){
+      //      LOG(Error, "Error: devAuthKey missing");
+      //    }else{
+      //      LOG(Error, "Error: Invalid devAuthKey");
+      //    }
+      //    validDevAuthKey = false;
+      //  }
+      //}else if (reply->error() == QNetworkReply::ConnectionRefusedError){
+      //  LOG(Error, "Network Error: " << "Connection failed");
+      //}else if (reply->error() == QNetworkReply::UnknownContentError){
+      //  LOG(Error, "Network Error: Unknown Content.  Verify the User-Agent request header");
+      //}else if (reply->error() == QNetworkReply::HostNotFoundError){
+      //  LOG(Error, "Network Error: Host " << remoteUrl() << " not found");
+      //}else if (reply->error() == QNetworkReply::UnknownNetworkError && reply->errorString().startsWith("Error creating SSL context")){
+      //  LOG(Error, "Network Error: Unable to create SSL connection.  Verify that SSL libraries are in the system path.");
+      //}else{
+      //  LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << " - " << reply->errorString().toStdString());
+      //}
     }
     return boost::none;
   }

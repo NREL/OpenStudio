@@ -37,9 +37,9 @@
 #include <mutex>
 #include <memory>
 
-class QNetworkAccessManager;
-class QNetworkRequest;
-class QSslError;
+//class QNetworkAccessManager;
+//class QNetworkRequest;
+//class QSslError;
 
 namespace openstudio{
 
@@ -270,9 +270,9 @@ namespace openstudio{
 
     // members
 
-    QNetworkAccessManager* m_networkManager;
+    //QNetworkAccessManager* m_networkManager;
 
-    QNetworkReply* m_downloadReply;
+    //QNetworkReply* m_downloadReply;
 
     mutable std::mutex m_mutex;
 

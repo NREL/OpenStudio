@@ -34,13 +34,11 @@
 
 #include <boost/core/null_deleter.hpp>
 
-#include <QtGlobal>
-
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
 
 namespace openstudio{
-
+  /*
   // TODO: QT-Separation-Move
   // handle Qt messages
   void logQtMessage(QtMsgType type, const char *msg)
@@ -72,6 +70,7 @@ namespace openstudio{
   {
     std::cout << "[Qt] <" << type << "> " << msg << std::endl;
   }
+  */
 
   /// convenience function for SWIG, prefer macros in C++
   void logFree(LogLevel level, const std::string& channel, const std::string& message)

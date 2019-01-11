@@ -664,7 +664,7 @@ else()
   endif()
 
   find_library(FFI libffi.lib PATHS "${CMAKE_BINARY_DIR}/FFI-install/lib" )
-  set(ADDITIONAL_RUBY_LIBS ${FFI})
+  set(ADDITIONAL_RUBY_LIBS ${FFI} Iphlpapi)
 endif()
 
 # openstudio gems
@@ -1012,70 +1012,70 @@ add_definitions(-DBOOST_SERIALIZATION_NO_LIB)
 # SQLite definitions, used in sqlite and litesql
 add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 
-# Qt
-set(QT_INSTALL_DIR "" CACHE PATH "Path to Qt Install")
-mark_as_advanced(QT_INSTALL_DIR)
-
-if(NOT EXISTS ${QT_INSTALL_DIR})
-  # download qt
-  if( WIN32 )
-    if(CMAKE_CL_64)
-      set(QT_ZIP_FILENAME "qt_5_11_msvc2017_64_shared.zip")
-      set(QT_ZIP_EXPECTED_MD5 "82f44a8decf101ca7cb7efafd899e8ee")
-    else()
-      set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_msvc2017_32_shared.zip")
-      set(QT_ZIP_EXPECTED_MD5 "25abd383e7db2dfd971b4a4ef145002b")
-    endif()
-  elseif( APPLE )
-      set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_osx_shared.tar.gz")
-      set(QT_ZIP_EXPECTED_MD5 "326887393d55b5da97a1be9764fb0d1b")
-  elseif(EXISTS "/etc/redhat-release")
-    set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_redhat_shared.tar.gz")
-    set(QT_ZIP_EXPECTED_MD5 "b0610716854ed91a003347c455b22eb8")
-  else()
-    if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
-      set(QT_ZIP_FILENAME "qt_5_11_linux_shared.tar.gz")
-      set(QT_ZIP_EXPECTED_MD5 "33c5a562935612625ec5e41fe4b75e17")
-    else()
-      # 16.04
-      set(QT_ZIP_FILENAME "qt_5_11_linux_shared_xenial.tar.gz")
-      set(QT_ZIP_EXPECTED_MD5 "9b0e89433cf1a79c84f84f85c8fef168")
-    endif()
-
-  endif()
-
-  set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_ZIP_FILENAME}")
-  if(EXISTS "${QT_ZIP_LOCAL_PATH}")
-    file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
-  endif()
-
-  if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
-      ${QT_ZIP_LOCAL_PATH}
-      INACTIVITY_TIMEOUT 120
-      SHOW_PROGRESS
-      EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-
-  set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-install/")
-endif()
-
-find_package(Qt5Core 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Widgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Sql 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Network 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Xml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Concurrent 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5PrintSupport 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Gui 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Quick 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5QuickWidgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Qml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5WebChannel 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-find_package(Qt5Positioning 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-
 if(BUILD_OS_APP)
+  # Qt
+  set(QT_INSTALL_DIR "" CACHE PATH "Path to Qt Install")
+  mark_as_advanced(QT_INSTALL_DIR)
+
+  if(NOT EXISTS ${QT_INSTALL_DIR})
+    # download qt
+    if( WIN32 )
+      if(CMAKE_CL_64)
+        set(QT_ZIP_FILENAME "qt_5_11_msvc2017_64_shared.zip")
+        set(QT_ZIP_EXPECTED_MD5 "82f44a8decf101ca7cb7efafd899e8ee")
+      else()
+        set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_msvc2017_32_shared.zip")
+        set(QT_ZIP_EXPECTED_MD5 "25abd383e7db2dfd971b4a4ef145002b")
+      endif()
+    elseif( APPLE )
+        set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_osx_shared.tar.gz")
+        set(QT_ZIP_EXPECTED_MD5 "326887393d55b5da97a1be9764fb0d1b")
+    elseif(EXISTS "/etc/redhat-release")
+      set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_redhat_shared.tar.gz")
+      set(QT_ZIP_EXPECTED_MD5 "b0610716854ed91a003347c455b22eb8")
+    else()
+      if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
+        set(QT_ZIP_FILENAME "qt_5_11_linux_shared.tar.gz")
+        set(QT_ZIP_EXPECTED_MD5 "33c5a562935612625ec5e41fe4b75e17")
+      else()
+        # 16.04
+        set(QT_ZIP_FILENAME "qt_5_11_linux_shared_xenial.tar.gz")
+        set(QT_ZIP_EXPECTED_MD5 "9b0e89433cf1a79c84f84f85c8fef168")
+      endif()
+
+    endif()
+
+    set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_ZIP_FILENAME}")
+    if(EXISTS "${QT_ZIP_LOCAL_PATH}")
+      file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
+    endif()
+
+    if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
+        ${QT_ZIP_LOCAL_PATH}
+        INACTIVITY_TIMEOUT 120
+        SHOW_PROGRESS
+        EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    endif()
+
+    set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-install/")
+  endif()
+
+  find_package(Qt5Core 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Widgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Sql 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Network 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Xml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Concurrent 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5PrintSupport 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Gui 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Quick 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5QuickWidgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Qml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5WebChannel 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Positioning 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+
   find_package(Qt5WebEngine 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
   find_package(Qt5WebEngineWidgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
   #find_package(Qt53DCore 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
@@ -1373,9 +1373,6 @@ add_subdirectory(src/pugixml)
 # Project source directory
 include_directories("${CMAKE_HOME_DIRECTORY}/src/")
 
-# For QWinWidget
-include_directories("${CMAKE_HOME_DIRECTORY}/src/qtwinmigrate")
-
 # XML
 include_directories("${CMAKE_HOME_DIRECTORY}/src/pugixml/src")
 
@@ -1407,21 +1404,22 @@ set(project_directories
   model
   energyplus
   radiance
-  gbxml
+ # gbxml #DLM: temp code
   airflow
   isomodel
   osversion
   measure
-  sdd
+#  sdd # DLM: temp code
   cli
-  model_editor
   install_utility
 )
-if(WIN32)
-  list(APPEND project_directories "qtwinmigrate")
-endif()
 
 if(BUILD_OS_APP)
+  if(WIN32)
+    include_directories("${CMAKE_HOME_DIRECTORY}/src/qtwinmigrate") 
+    list(APPEND project_directories "qtwinmigrate")
+  endif()
+  list(APPEND project_directories "model_editor")
   list(APPEND project_directories "bimserver")
   list(APPEND project_directories "openstudio_lib")
   list(APPEND project_directories "openstudio_app")
@@ -1432,7 +1430,9 @@ add_subdirectory(resources)
 
 add_subdirectory(ruby)
 
-add_subdirectory(sketchup_plugin)
+if(BUILD_OS_APP)
+  add_subdirectory(sketchup_plugin)
+endif()
 
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
@@ -1475,6 +1475,7 @@ if(BUILD_CSHARP_BINDINGS)
   add_custom_target(ALL_CSHARP_BINDINGS)
   add_dependencies(ALL_CSHARP_BINDINGS csharp_sdk ${ALL_CSHARP_BINDING_TARGETS})
 endif()
+
 
 if(BUILD_JAVA_BINDINGS)
   add_custom_target(ALL_JAVA_BINDINGS)
@@ -1559,7 +1560,7 @@ if(BUILD_DOCUMENTATION)
   endforeach()
 
   # Set up dependencies after all targets have been created
-  add_dependencies(openstudio_utilities
+  add_dependencies(openstudio_utilities_static
     CreateEmbeddedSource
   )
   add_dependencies(openstudio_utilities_doc
@@ -1611,27 +1612,26 @@ endif()
 set(TARGETS_FILE ${CMAKE_BINARY_DIR}/OpenStudioTargets.cmake)
 
 set(all_lib_targets
-  openstudio_osversion
-  openstudio_model
-  openstudio_utilities
-  openstudio_energyplus
-  openstudio_measure
-  openstudio_radiance
-  openstudio_gbxml
-  openstudio_isomodel
-  openstudio_sdd
-  openstudio_airflow
+  openstudio_osversion_static
+  openstudio_model_static
+  openstudio_utilities_static
+  openstudio_energyplus_static
+  openstudio_measure_static
+  openstudio_radiance_static
+#  openstudio_gbxml_static # DLM: temp code
+  openstudio_isomodel_static
+#  openstudio_sdd_static # DLM: temp code
+  openstudio_airflow_static
   miniziplib
   sqlite
   jsoncpp
   ${ALL_RUBY_BINDING_TARGETS}
 )
 
-if(WIN32)
-  list(APPEND all_lib_targets "qtwinmigrate")
-endif()
-
 if(BUILD_OS_APP)
+  if(WIN32)
+    list(APPEND all_lib_targets "qtwinmigrate")
+  endif()
   list(APPEND all_lib_targets "openstudio_modeleditor")
   list(APPEND all_lib_targets "openstudio_bimserver")
   list(APPEND all_lib_targets "openstudio_lib")

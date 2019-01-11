@@ -47,17 +47,17 @@ set(${target_name}_swig_src
   ISOModel.i
 )
 
-set(${target_name}_depends
-  ${Boost_LIBRARIES}
-  ${CMAKE_THREAD_LIBS}
-  openstudio_utilities
-  openstudio_model
-  #zkexpat
-)
+#set(${target_name}_depends
+#  ${Boost_LIBRARIES}
+#  ${CMAKE_THREAD_LIBS}
+#  openstudio_utilities
+#  openstudio_model
+#  #zkexpat
+#)
 
-add_library(${target_name} ${${target_name}_src})
-target_link_libraries(${target_name} ${${target_name}_depends})
-AddPCH(${target_name})
+#add_library(${target_name} ${${target_name}_src})
+#target_link_libraries(${target_name} ${${target_name}_depends})
+#AddPCH(${target_name})
 
 set(${target_name}_static_depends
   openstudio_model_static
@@ -78,9 +78,9 @@ CREATE_SRC_GROUPS("${${target_name}_src}")
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
-CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 if(BUILD_TESTING)
-  add_dependencies(${target_name}_tests openstudio_isomodel_resources)
+  CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_static_depends}")
+  add_dependencies(${target_name}_static_tests openstudio_isomodel_resources)
 endif()
 
 MAKE_SWIG_TARGET(OpenStudioISOModel ISOModel "${CMAKE_CURRENT_SOURCE_DIR}/ISOModel.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioModel)

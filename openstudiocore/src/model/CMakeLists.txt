@@ -1608,9 +1608,9 @@ set(${target_name}_swig_src
 
 #qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
-set(${target_name}_depends
-  openstudio_utilities
-)
+#set(${target_name}_depends
+#  openstudio_utilities
+#)
 
 # Embed resource files
 # Glob all files inside model/Resources
@@ -1635,10 +1635,9 @@ embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudiomodel)
 source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
 
-
-add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
-target_link_libraries(${target_name} "${${target_name}_depends}")
-AddPCH(${target_name})
+#add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
+#target_link_libraries(${target_name} "${${target_name}_depends}")
+#AddPCH(${target_name})
 
 set(${target_name}_static_depends
   openstudio_utilities_static
@@ -1715,7 +1714,6 @@ set(${target_name}_test_src
   test/AvailabilityManagerScheduled_GTest.cpp
   test/AvailabilityManagerScheduledOn_GTest.cpp
   test/AvailabilityManagerScheduledOff_GTest.cpp
-
   test/Blind_GTest.cpp
   test/BoilerHotWater_GTest.cpp
   test/BoilerSteam_GTest.cpp
@@ -2046,14 +2044,16 @@ set(${target_name}_test_src
 )
 
 set(${target_name}_test_depends
-  ${${target_name}_depends}
+  ${${target_name}_static_depends}
 )
 
-CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
+
 if(BUILD_TESTING)
 
-  add_dependencies("${target_name}_tests"
+  CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_test_depends}")
+
+  add_dependencies("${target_name}_static_tests"
     openstudio_model_resources
     openstudio_utilities_resources
   )

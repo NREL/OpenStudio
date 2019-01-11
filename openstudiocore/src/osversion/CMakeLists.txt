@@ -18,17 +18,17 @@ set(${target_name}_swig_src
   OSVersion.i
 )
 
-set(${target_name}_depends
-  openstudio_model
-)
+#set(${target_name}_depends
+#  openstudio_model
+#)
 
-add_library(${target_name}
-  ${${target_name}_src}
-)
+#add_library(${target_name}
+#  ${${target_name}_src}
+#)
 
-AddPCH(${target_name})
+#AddPCH(${target_name})
 
-target_link_libraries(${target_name} ${${target_name}_depends})
+#target_link_libraries(${target_name} ${${target_name}_depends})
 
 # No need to install static lib
 #if(NOT APPLE)
@@ -38,9 +38,9 @@ target_link_libraries(${target_name} ${${target_name}_depends})
 #  )
 #endif()
 
-set(${target_name}_test_depends
-  ${${target_name}_depends}
-)
+#set(${target_name}_test_depends
+#  ${${target_name}_depends}
+#)
 
 add_library(${target_name}_static
   ${${target_name}_src}
@@ -56,9 +56,10 @@ CREATE_SRC_GROUPS("${${target_name}_src}")
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
-CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 if(BUILD_TESTING)
 
+  CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_static_depends}")
+  
   #add_dependencies("${target_name}_tests"
   #  openstudio_osversion_resources
   #)

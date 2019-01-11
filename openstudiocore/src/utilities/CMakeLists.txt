@@ -218,10 +218,10 @@ set(${target_name}_depends
   # ${CMAKE_THREAD_LIBS}
 )
 
-if(WIN32)
-  list(APPEND ${target_name}_depends qtwinmigrate)
-  list(APPEND ${target_name}_depends mpr)
-endif()
+#if(WIN32)
+#  list(APPEND ${target_name}_depends qtwinmigrate)
+#  list(APPEND ${target_name}_depends mpr)
+#endif()
 
 # moc files
 #set(bcl_moc
@@ -468,7 +468,7 @@ set(${target_name}_swig_src
   core/Exception.i
   core/Logger.i
   core/Path.i
-  core/Qt.i
+#  core/Qt.i
   core/Singleton.i
   core/System.i
   core/UpdateManager.i
@@ -508,16 +508,16 @@ set(${target_name}_swig_src
 #include subdir for pch
 add_subdirectory(pch)
 
-add_library(${target_name}
-  ${${target_name}_src}
-)
-add_dependencies("${target_name}" GenerateIddFactoryRun)
+#add_library(${target_name}
+#  ${${target_name}_src}
+#)
+#add_dependencies("${target_name}" GenerateIddFactoryRun)
 
-if(UNIX)
-  add_dependencies("${target_name}" SWIG)
-endif()
+#if(UNIX)
+#  add_dependencies("${target_name}" SWIG)
+#endif()
 
-AddPCH(${target_name})
+#AddPCH(${target_name})
 
 # No need to install static lib
 #if(NOT APPLE)
@@ -527,10 +527,10 @@ AddPCH(${target_name})
 #  )
 #endif()
 
-target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} GeographicLib_STATIC ${QT_LIBS})
+#target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} GeographicLib_STATIC)
 
-CREATE_SRC_GROUPS("${${target_name}_test_src}")
-CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+#CREATE_SRC_GROUPS("${${target_name}_test_src}")
+#CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 
 set(${target_name}_static_depends
   sqlite
@@ -541,7 +541,7 @@ set(${target_name}_static_depends
 )
 
 if(WIN32)
-  list(APPEND ${target_name}_static_depends qtwinmigrate_static)
+#  list(APPEND ${target_name}_static_depends qtwinmigrate_static)
   list(APPEND ${target_name}_static_depends mpr)
 endif()
 
@@ -552,30 +552,31 @@ add_dependencies("${target_name}_static" GenerateIddFactoryRun)
 
 target_link_libraries(${target_name}_static ${${target_name}_static_depends} GeographicLib_STATIC)
 
-target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
+#target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
 
-list(LENGTH QT_STATIC_LIBS QT_STATIC_LIBS_LENGTH)
-list(LENGTH QT_STATIC_LIBS_D QT_STATIC_LIBS_D_LENGTH)
-if (NOT ${QT_STATIC_LIBS_LENGTH} EQUAL ${QT_STATIC_LIBS_D_LENGTH})
-  message(FATAL_ERROR "Mismatched sizes QT_STATIC_LIBS ${QT_STATIC_LIBS_LENGTH} != QT_STATIC_LIBS_D #{QT_STATIC_LIBS_D_LENGTH}")
-endif()
+#list(LENGTH QT_STATIC_LIBS QT_STATIC_LIBS_LENGTH)
+#list(LENGTH QT_STATIC_LIBS_D QT_STATIC_LIBS_D_LENGTH)
+#if (NOT ${QT_STATIC_LIBS_LENGTH} EQUAL ${QT_STATIC_LIBS_D_LENGTH})
+#  message(FATAL_ERROR "Mismatched sizes QT_STATIC_LIBS ${QT_STATIC_LIBS_LENGTH} != QT_STATIC_LIBS_D #{QT_STATIC_LIBS_D_LENGTH}")
+#endif()
 
-math(EXPR N "${QT_STATIC_LIBS_LENGTH} - 1")
-foreach(i RANGE ${N})
-  list(GET QT_STATIC_LIBS ${i} lib_)
-  list(GET QT_STATIC_LIBS_D ${i} libd)
-  target_link_libraries(${target_name}_static optimized ${lib_} debug ${libd})
-endforeach()
+#math(EXPR N "${QT_STATIC_LIBS_LENGTH} - 1")
+#foreach(i RANGE ${N})
+#  list(GET QT_STATIC_LIBS ${i} lib_)
+#  list(GET QT_STATIC_LIBS_D ${i} libd)
+#  target_link_libraries(${target_name}_static optimized ${lib_} debug ${libd})
+#endforeach()
 
-target_compile_definitions(${target_name}_static PUBLIC ${QT_DEFS})
+#target_compile_definitions(${target_name}_static PUBLIC ${QT_DEFS})
 
 if(NOT BUILD_SHARED_LIBS)
-  target_compile_definitions(${target_name} PUBLIC openstudio_utilities_EXPORTS)
+  #target_compile_definitions(${target_name} PUBLIC openstudio_utilities_EXPORTS)
   target_compile_definitions(${target_name}_static PUBLIC openstudio_utilities_EXPORTS)
 endif()
 
 if(BUILD_TESTING)
-  add_dependencies("${target_name}_tests" openstudio_energyplus_resources)
+  CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_static_depends}")
+  add_dependencies("${target_name}_static_tests" openstudio_energyplus_resources)
 endif()
 
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")

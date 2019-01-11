@@ -42,13 +42,13 @@ extern "C" {
   void Init_openstudioosversion(void);
   void Init_openstudioutilitiesdata(void);
   void Init_openstudioutilitiessql(void);
-  void Init_openstudiogbxml(void);
+  //void Init_openstudiogbxml(void);  // DLM: temp code
   void Init_openstudiomodelgenerators(void);
   void Init_openstudioradiance(void);
   void Init_openstudioutilitiestime(void);
   void Init_openstudioisomodel(void);
   void Init_openstudiomodelgeometry(void);
-  void Init_openstudiosdd(void);
+  //void Init_openstudiosdd(void); //DLM: temp code
   void Init_openstudioutilitiesfiletypes(void);
   void Init_openstudioutilitiesunits(void);
   void Init_openstudiomodelhvac(void);
@@ -155,9 +155,10 @@ void init_openstudio_internal() {
   Init_openstudioradiance();
   rb_provide("openstudioradiance");
   rb_provide("openstudioradiance.so");
-  Init_openstudiogbxml();
-  rb_provide("openstudiogbxml");
-  rb_provide("openstudiogbxml.so");
+  // DLM: temp code
+  //Init_openstudiogbxml();
+  //rb_provide("openstudiogbxml");
+  //rb_provide("openstudiogbxml.so");
   Init_openstudioairflow();
   rb_provide("openstudioairflow");
   rb_provide("openstudioairflow.so");
@@ -170,9 +171,10 @@ void init_openstudio_internal() {
   Init_openstudioisomodel();
   rb_provide("openstudioisomodel");
   rb_provide("openstudioisomodel.so");
-  Init_openstudiosdd();
-  rb_provide("openstudiosdd");
-  rb_provide("openstudiosdd.so");
+  // DLM: temp code
+  //Init_openstudiosdd();
+  //rb_provide("openstudiosdd");
+  //rb_provide("openstudiosdd.so");
 
   //Init_openstudiomodeleditor(); # happens separately in openstudio.so only, for SketchUp plug-in
   //rb_provide("openstudiomodeleditor");

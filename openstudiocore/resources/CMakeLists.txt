@@ -110,23 +110,6 @@ add_custom_target(openstudio_model_resources
 
 CREATE_SRC_GROUPS("${model_resources_src}")
 
-# modeleditor resources
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-set(ENERGYPLUS_OUTPUTS "")
-
-set(modeleditor_resources_src)
-
-# update the resources
-UPDATE_RESOURCES("${modeleditor_resources_src}")
-
-# add target
-add_custom_target(openstudio_modeleditor_resources
-  DEPENDS ${modeleditor_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${modeleditor_resources_src}
-)
-
-CREATE_SRC_GROUPS("${modeleditor_resources_src}")
-
 ########################################################
 # openstudio resources
 set(openstudio_resources_src)
@@ -141,24 +124,6 @@ add_custom_target(OpenStudio_resources
 )
 
 CREATE_SRC_GROUPS("${openstudio_resources_src}")
-
-########################################################
-# openstudio_lib resources
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-set(ENERGYPLUS_OUTPUTS "")
-
-set(openstudio_lib_resources_src)
-
-# update the resources
-UPDATE_RESOURCES("${openstudio_lib_resources_src}")
-
-# add target
-add_custom_target(openstudio_lib_resources
-  DEPENDS ${openstudio_lib_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${openstudio_lib_resources_src}
-)
-
-CREATE_SRC_GROUPS("${openstudio_lib_resources_src}")
 
 ########################################################
 # measure resources
@@ -358,25 +323,6 @@ add_custom_target(openstudio_isomodel_resources
 )
 
 CREATE_SRC_GROUPS("${isomodel_resources_src}")
-
-########################################################
-# bimserver resources
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-set(ENERGYPLUS_OUTPUTS "")
-
-set(bimserver_resources_src
-)
-
-# update the resources
-UPDATE_RESOURCES("${bimserver_resources_src}")
-
-# add target
-add_custom_target(openstudio_bimserver_resources
-  DEPENDS ${bimserver_resources_src} ${ENERGYPLUS_OUTPUTS}
-  SOURCES ${bimserver_resources_src}
-)
-
-CREATE_SRC_GROUPS("${bimserver_resources_src}")
 
 ########################################################
 # CONTAM resources
