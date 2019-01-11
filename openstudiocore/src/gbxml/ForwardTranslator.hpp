@@ -41,10 +41,6 @@
 
 #include <map>
 
-class QDomDocument;
-class QDomElement;
-class QDomNodeList;
-
 namespace pugi {
   class xml_node;
   class xml_document;
@@ -91,25 +87,9 @@ namespace gbxml {
 
   private:
 
-    QString escapeName(const std::string& name);
-    std::string escapeNameS(const std::string& name);
+    std::string escapeName(const std::string& name);
 
     // listed in translation order
-    boost::optional<QDomDocument> translateModel(const openstudio::model::Model& model);
-    boost::optional<QDomElement> translateFacility(const openstudio::model::Facility& facility, QDomDocument& doc);
-    boost::optional<QDomElement> translateBuilding(const openstudio::model::Building& building, QDomDocument& doc);
-    boost::optional<QDomElement> translateSpace(const openstudio::model::Space& space, QDomDocument& doc);
-    boost::optional<QDomElement> translateShadingSurfaceGroup(const openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup, QDomDocument& doc);
-    boost::optional<QDomElement> translateBuildingStory(const openstudio::model::BuildingStory& story, QDomDocument& doc);
-    boost::optional<QDomElement> translateSurface(const openstudio::model::Surface& surface, QDomDocument& doc);
-    boost::optional<QDomElement> translateSubSurface(const openstudio::model::SubSurface& subSurface, const openstudio::Transformation& transformation, QDomDocument& doc);
-    boost::optional<QDomElement> translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface, QDomDocument& doc);
-    boost::optional<QDomElement> translateThermalZone(const openstudio::model::ThermalZone& thermalZone, QDomDocument& doc);
-    boost::optional<QDomElement> translateLayer(const openstudio::model::Material& material, QDomDocument& doc);
-    boost::optional<QDomElement> translateMaterial(const openstudio::model::Material& material, QDomDocument& doc);
-    boost::optional<QDomElement> translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, QDomDocument& doc);
-    boost::optional<QDomElement> translateCADObjectId(const openstudio::model::ModelObject& modelObject, QDomElement& parentElement, QDomDocument& doc);
-
     bool translateModel(const openstudio::model::Model& model, pugi::xml_document& document);
     boost::optional<pugi::xml_node> translateFacility(const openstudio::model::Facility& facility, pugi::xml_node& parent);
     boost::optional<pugi::xml_node> translateBuilding(const openstudio::model::Building& building, pugi::xml_node& parent);
@@ -125,8 +105,7 @@ namespace gbxml {
     boost::optional<pugi::xml_node> translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, pugi::xml_node& parent);
     boost::optional<pugi::xml_node> translateCADObjectId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
 
-    std::map<openstudio::Handle, QDomElement> m_translatedObjects;
-    std::map<openstudio::Handle, pugi::xml_node> m_translatedObjectsS;
+    std::map<openstudio::Handle, pugi::xml_node> m_translatedObjects;
 
     std::set<openstudio::model::Material, openstudio::IdfObjectImplLess> m_materials;
 
