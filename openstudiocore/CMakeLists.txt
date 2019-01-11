@@ -159,7 +159,7 @@ option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
 
 # Build the OpenStudio Application
 # This option will require shared libs
-option(BUILD_OS_APP "Build OS App" ON)
+option(BUILD_OS_APP "Build OS App" OFF)
 
 if (BUILD_SHARED_LIBS)
   add_definitions("-DSHARED_OS_LIBS")
