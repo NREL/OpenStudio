@@ -265,7 +265,7 @@ if( UNIX )
 else()
  LINK_DEBUG_AND_RELEASE(openstudio "${EXTENSION_LIBS_DEBUG}" "${EXTENSION_LIBS_RELEASE}")
  LINK_DEBUG_AND_RELEASE(openstudio "${ENC_LIBS_DEBUG}" "${ENC_LIBS_RELEASE}")
- target_link_libraries(openstudio ${ADDITIONAL_RUBY_LIBS})
+ LINK_DEBUG_AND_RELEASE(openstudio "${ADDITIONAL_RUBY_LIBS_DEBUG}" "${ADDITIONAL_RUBY_LIBS_RELEASE}")
 endif()
 
 target_link_libraries(openstudio

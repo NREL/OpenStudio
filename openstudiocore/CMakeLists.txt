@@ -647,14 +647,16 @@ if( UNIX )
     set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML} )
   endif()
 else()
-  set(FFI_ZIP_FILENAME "FFI_3_2_1-msvc2017.zip")
-  set(FFI_ZIP_EXPECTED_MD5 "a375aa12367becd107defb7fd6f9df8d")
+  set(FFI_ZIP_FILENAME "FFI_3_2_1-msvc2017_v2.zip")
+  set(FFI_ZIP_EXPECTED_MD5 "9d43417932447eb5830a389273954a75")
   set(FFI_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${FFI_ZIP_FILENAME}")
   if(EXISTS "${FFI_ZIP_LOCAL_PATH}")
     file(MD5 "${FFI_ZIP_LOCAL_PATH}" FFI_ZIP_MD5)
   endif()
 
   if( NOT FFI_ZIP_MD5 STREQUAL FFI_ZIP_EXPECTED_MD5)
+    unset(FFI CACHE)
+    unset(FFID CACHE)
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${FFI_ZIP_FILENAME}"
       ${FFI_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -665,8 +667,10 @@ else()
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${FFI_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
 
-  find_library(FFI libffi.lib PATHS "${CMAKE_BINARY_DIR}/FFI-install/lib" )
-  set(ADDITIONAL_RUBY_LIBS ${FFI})
+  find_library(FFI libffi.lib PATHS "${CMAKE_BINARY_DIR}/FFI-install/Release/lib" )
+  find_library(FFID libffi.lib PATHS "${CMAKE_BINARY_DIR}/FFI-install/Debug/lib" )
+  set(ADDITIONAL_RUBY_LIBS_RELEASE ${FFI})
+  set(ADDITIONAL_RUBY_LIBS_DEBUG ${FFID})
 endif()
 
 # openstudio gems
