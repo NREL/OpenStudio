@@ -29,6 +29,9 @@
 
 #include "Component.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
+
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/core/Assert.hpp"

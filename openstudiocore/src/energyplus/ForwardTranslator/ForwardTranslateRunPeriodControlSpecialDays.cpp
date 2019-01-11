@@ -32,6 +32,7 @@
 #include <utilities/idd/RunPeriodControl_SpecialDays_FieldEnums.hxx>
 #include <utilities/idd/OS_RunPeriodControl_SpecialDays_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/core/StringHelpers.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -56,9 +57,8 @@ boost::optional<IdfObject> ForwardTranslator::translateRunPeriodControlSpecialDa
   s = modelObject.getString(OS_RunPeriodControl_SpecialDaysFields::StartDate);
   if( s )
   {
-    QString temp = toQString(s.get());
-    temp.replace("5th", "Last");
-    idfObject.setString(RunPeriodControl_SpecialDaysFields::StartDate,temp.toStdString());
+    const auto temp = openstudio::replace(s.get(), "5th", "Last");
+    idfObject.setString(RunPeriodControl_SpecialDaysFields::StartDate,temp);
   }
 
   s = modelObject.getString(OS_RunPeriodControl_SpecialDaysFields::Duration);

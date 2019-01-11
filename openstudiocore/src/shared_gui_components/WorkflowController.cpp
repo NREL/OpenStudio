@@ -38,6 +38,7 @@
 #include "LocalLibraryController.hpp"
 #include "WorkflowTools.hpp"
 #include "../model_editor/OSProgressBar.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include "../energyplus/ForwardTranslator.hpp"
 

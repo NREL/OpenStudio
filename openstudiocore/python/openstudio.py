@@ -10,7 +10,6 @@ import .openstudiolib as lib
 import .openstudiomeasure as measure
 import .openstudiomodel as model
 # import openstudiomodelcore as modelcore
-import .openstudiomodeleditor as modeleditor
 # import openstudiomodelgenerators as modelgenerators
 # import openstudiomodelgeometry as modelgeometry
 # import openstudiomodelhvac as modelhvac
@@ -20,6 +19,7 @@ import .openstudiomodeleditor as modeleditor
 import .openstudioosversion as osversion
 import .openstudioradiance as radiance
 import .openstudiosdd as sdd
+# import .openstudiomodeleditor as modeleditor
 
 from .openstudioutilities import *
 from .openstudioutilitiesbcl import *

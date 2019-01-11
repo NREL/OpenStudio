@@ -32,6 +32,8 @@
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/String.hpp>
 
+#include "Utilities.hpp"
+
 #include <QSettings>
 
 #if _WIN32 || _MSC_VER

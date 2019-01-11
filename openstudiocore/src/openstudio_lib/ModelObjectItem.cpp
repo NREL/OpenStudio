@@ -38,6 +38,9 @@
 #include "../model/ComponentData.hpp"
 #include "../model/ComponentData_Impl.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
+
 #include <QLabel>
 
 #include "../utilities/core/Assert.hpp"

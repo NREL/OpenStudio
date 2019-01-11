@@ -35,6 +35,10 @@
 #include "../core/Logger.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
+#if defined(_MSC_VER)
+  #pragma warning(push)
+  #pragma warning(disable:4244)
+#endif
 #include <boost/geometry/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
@@ -45,6 +49,9 @@
 #include <boost/geometry/strategies/cartesian/point_in_poly_crossings_multiply.hpp>
 #include <boost/geometry/algorithms/within.hpp>
 #include <boost/geometry/algorithms/simplify.hpp>
+#if defined(_MSC_VER)
+  #pragma warning(pop)
+#endif
 
 typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
 typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;

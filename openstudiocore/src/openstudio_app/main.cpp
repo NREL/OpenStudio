@@ -35,6 +35,7 @@
 #include "OpenStudioApp.hpp"
 #include "../model_editor/Application.hpp"
 #include "../model_editor/AccessPolicyStore.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include "../measure/OSArgument.hpp"
 

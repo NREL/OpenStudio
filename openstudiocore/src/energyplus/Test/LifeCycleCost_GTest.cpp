@@ -330,7 +330,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Lights_Multiplier)
   Model model;
 
   ThermalZone thermalZone(model);
-  thermalZone.setMultiplier(2.0);
+  thermalZone.setMultiplier(2);
 
   Space space(model);
   space.setThermalZone(thermalZone);

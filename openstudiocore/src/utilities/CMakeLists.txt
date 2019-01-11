@@ -224,11 +224,11 @@ if(WIN32)
 endif()
 
 # moc files
-set(bcl_moc
-  bcl/BCL.hpp
-  bcl/LocalBCL.hpp
-  bcl/RemoteBCL.hpp
-)
+#set(bcl_moc
+#  bcl/BCL.hpp
+#  bcl/LocalBCL.hpp
+#  bcl/RemoteBCL.hpp
+#)
 
 #set(cloud_moc
 #  cloud/AWSProvider_Impl.hpp
@@ -237,22 +237,22 @@ set(bcl_moc
 #  cloud/VagrantProvider_Impl.hpp
 #)
 
-set(core_moc
-  core/UpdateManager.hpp
-)
+#set(core_moc
+#  core/UpdateManager.hpp
+#)
 
-set(idf_moc
+#set(idf_moc
 #  idf/IdfObject_Impl.hpp
 #  idf/IdfObjectWatcher.hpp
 #  idf/WorkspaceObjectWatcher.hpp
 #  idf/WorkspaceObject_Impl.hpp
 #  idf/Workspace_Impl.hpp
 #  idf/WorkspaceWatcher.hpp
-)
+#)
 
-set(data_moc
+#set(data_moc
 #  data/Attribute_Impl.hpp
-)
+#)
 
 ###############################################################################
 # idf_moc files include generated source code.  It is important that these
@@ -281,11 +281,11 @@ set(data_moc
 ###############################################################################
 
 ## Qt MOC generation
-qt5_wrap_cpp_minimally(bcl_moc_src ${bcl_moc})
+#qt5_wrap_cpp_minimally(bcl_moc_src ${bcl_moc})
 #qt5_wrap_cpp_minimally(cloud_moc_src ${cloud_moc})
-qt5_wrap_cpp_minimally(core_moc_src ${core_moc}) # RM
-qt5_wrap_cpp_minimally(idf_moc_src ${idfxx_moc})
-qt5_wrap_cpp_minimally(data_moc_src ${data_moc}) # RM
+#qt5_wrap_cpp_minimally(core_moc_src ${core_moc}) # RM
+#qt5_wrap_cpp_minimally(idf_moc_src ${idfxx_moc})
+#qt5_wrap_cpp_minimally(data_moc_src ${data_moc}) # RM
 
 
 # embedded files, bump again to update common files
@@ -342,18 +342,18 @@ set(${target_name}_src
   UtilitiesAPI.hpp
   "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx" # referenced here to make sure it is generated when and where we expect
   ${bcl_src}
-  ${bcl_moc_src}
+#  ${bcl_moc_src}
 #  ${cloud_src}
 #  ${cloud_moc_src}
   ${core_src}
-  ${core_moc_src}
+#  ${core_moc_src}
   ${data_src}
-  ${data_moc_src}
+#  ${data_moc_src}
   ${documentation_src}
   ${filetypes_src}
   ${idd_src}
   ${idf_src}
-  ${idf_moc_src}
+#  ${idf_moc_src}
   ${sql_src}
   ${geometry_src}
   ${math_src}
@@ -366,7 +366,7 @@ set(${target_name}_src
 set(${target_name}_test_src
   ${idd_test_src}
   ${idf_test_src}
-  ${idf_test_moc_src}
+#  ${idf_test_moc_src}
   ${sql_test_src}
 
 #  cloud/test/AWSProvider_GTest.cpp

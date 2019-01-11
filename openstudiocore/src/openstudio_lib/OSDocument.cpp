@@ -71,6 +71,8 @@
 #include "../shared_gui_components/WaitDialog.hpp"
 
 #include "../model_editor/UserSettings.hpp"
+#include "../model_editor/Utilities.hpp"
+
 
 //#include "../analysis/Analysis.hpp"
 

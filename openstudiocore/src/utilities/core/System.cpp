@@ -85,7 +85,7 @@ namespace openstudio{
       //TODO: QT - Separation - Move
       //bool didwork = openstudio::Application::instance().processEvents(remainingtime);
       bool didwork = false;
-      remainingtime = msecs - (boost::posix_time::microsec_clock::universal_time() - start).total_milliseconds();
+      remainingtime = msecs - (int)(boost::posix_time::microsec_clock::universal_time() - start).total_milliseconds();
 //      std::cout << "time " << msecs << " remainingtime " << remainingtime << std::endl;
 
       int timetosleep = 0;

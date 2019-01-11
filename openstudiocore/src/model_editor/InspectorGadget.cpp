@@ -38,6 +38,8 @@
 #include "../model/ParentObject.hpp"
 #include "../model/ParentObject_Impl.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/StringHelpers.hpp"

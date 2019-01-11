@@ -59,6 +59,8 @@
 #include "../model/WeatherFile_Impl.hpp"
 #include "../model/YearDescription_Impl.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include "../energyplus/ReverseTranslator.hpp"
 
 //#include "../runmanager/lib/ConfigOptions.hpp"

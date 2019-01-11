@@ -45,6 +45,7 @@
 #include "MeasureBadge.hpp"
 
 #include "../model_editor/UserSettings.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/core/Assert.hpp"

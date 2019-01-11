@@ -695,10 +695,10 @@ TEST_F(GeometryFixture, Plane_ProblemSurface2)
     double footToMeter =  0.3048;
 
     std::vector<Point3d> points;
-    points.push_back(Point3d(footToMeter*QString("288.818").toDouble(), footToMeter*QString("1193.02").toDouble(), footToMeter*QString("18").toDouble()));
-    points.push_back(Point3d(footToMeter*QString("288.818").toDouble(), footToMeter*QString("1193.02").toDouble(), footToMeter*QString("9").toDouble()));
-    points.push_back(Point3d(footToMeter*QString("288.818").toDouble(), footToMeter*QString("1188.52").toDouble(), footToMeter*QString("9").toDouble()));
-    points.push_back(Point3d(footToMeter*QString("288.818").toDouble(), footToMeter*QString("1188.52").toDouble(), footToMeter*QString("18").toDouble()));
+    points.push_back(Point3d(footToMeter*288.818, footToMeter*1193.02, footToMeter*18));
+    points.push_back(Point3d(footToMeter*288.818, footToMeter*1193.02, footToMeter*9));
+    points.push_back(Point3d(footToMeter*288.818, footToMeter*1188.52, footToMeter*9));
+    points.push_back(Point3d(footToMeter*288.818, footToMeter*1188.52, footToMeter*18));
 
     std::vector<Point3d> points2 = points;
     points2.pop_back();

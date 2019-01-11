@@ -29,6 +29,7 @@
 
 #include "ScheduleDayView.hpp"
 #include "SchedulesView.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include "../shared_gui_components/OSCheckBox.hpp"
 #include "OSItem.hpp"

@@ -1459,7 +1459,7 @@ namespace openstudio{
     return uids;
   }
 
-  std::string LocalBCL::formatString(double d, uint prec)
+  std::string LocalBCL::formatString(double d, unsigned prec)
   {
     std::stringstream ss;
     ss << std::setprecision(prec) << std::showpoint << d;

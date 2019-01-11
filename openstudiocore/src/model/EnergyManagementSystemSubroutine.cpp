@@ -111,7 +111,8 @@ namespace detail {
   bool EnergyManagementSystemSubroutine_Impl::setBody(const std::string& body) {
     //set body of program to input string
     bool result = false;
-    bool comment_result = false;
+    // TODO: JM 2019-01-03: This is unused
+    [[maybe_unused]] bool comment_result = false;
     //if body string empty then return false
     if (body.empty()) {
       return false;
@@ -191,7 +192,8 @@ namespace detail {
   bool EnergyManagementSystemSubroutine_Impl::addLine(const std::string& line) {
     //add line to end of program body
     bool result = true;
-    bool comment_result = false;
+    // TODO: JM 2019-01-03: This is unused
+    [[maybe_unused]] bool comment_result = false;
     std::string comment;
 
     // remove '\r' from the line string

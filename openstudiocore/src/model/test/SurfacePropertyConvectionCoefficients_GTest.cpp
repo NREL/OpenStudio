@@ -176,7 +176,7 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ASSERT_TRUE(cc.setConvectionCoefficient1(1.0));
   coef = cc.convectionCoefficient1();
   ASSERT_TRUE(coef);
-  ASSERT_FLOAT_EQ(*coef, 1.0);
+  ASSERT_DOUBLE_EQ(*coef, 1.0);
   cc.resetConvectionCoefficient1();
   coef = cc.convectionCoefficient1();
   ASSERT_FALSE(coef);
@@ -186,7 +186,7 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ASSERT_TRUE(cc.setConvectionCoefficient2(2.0));
   coef = cc.convectionCoefficient2();
   ASSERT_TRUE(coef);
-  ASSERT_FLOAT_EQ(*coef, 2.0);
+  ASSERT_DOUBLE_EQ(*coef, 2.0);
   cc.resetConvectionCoefficient2();
   coef = cc.convectionCoefficient2();
   ASSERT_FALSE(coef);

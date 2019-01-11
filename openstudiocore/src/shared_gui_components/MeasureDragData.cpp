@@ -32,6 +32,9 @@
 #include <QDomElement>
 #include <QDomText>
 
+#include "../model_editor/Utilities.hpp"
+
+
 namespace openstudio {
 
 QString MeasureDragData::mimeType() { return "MeasureDragData"; }

@@ -46,6 +46,7 @@
 class QDomDocument;
 class QDomElement;
 class QDomNodeList;
+class QString;
 
 namespace pugi {
   class xml_node;

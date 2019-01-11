@@ -56,7 +56,6 @@ namespace openstudio {
 // forward declarations
 class IdfFile;
 class VersionString;
-class URLSearchPath;
 
 // private namespace
 namespace detail {

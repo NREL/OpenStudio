@@ -68,9 +68,11 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   boost::optional<FloorplanJS> floorplan = FloorplanJS::load(json);
   ASSERT_TRUE(floorplan);
 
-  Json::Reader reader;
+  Json::CharReaderBuilder rbuilder;
+  std::istringstream ss(json);
   Json::Value value;
-  ASSERT_TRUE(reader.parse(json, value));
+  ASSERT_TRUE(Json::parseFromStream(rbuilder, ss, &value, nullptr));
+
   ASSERT_TRUE(value.isMember("stories"));
   ASSERT_TRUE(value["stories"].isArray());
   ASSERT_EQ(1u, value["stories"].size());
@@ -163,7 +165,8 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
   model::FloorplanJSForwardTranslator ft;
   FloorplanJS floorplan2 = ft.updateFloorplanJS(*floorplan, *model, false);
 
-  ASSERT_TRUE(reader.parse(floorplan2.toJSON(), value));
+  std::stringstream ss2(floorplan2.toJSON());
+  ASSERT_TRUE(Json::parseFromStream(rbuilder, ss2, &value, nullptr));
   ASSERT_TRUE(value.isMember("stories"));
   ASSERT_TRUE(value["stories"].isArray());
   ASSERT_EQ(1u, value["stories"].size());
@@ -229,7 +232,8 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
 
   FloorplanJS floorplan3 = ft.updateFloorplanJS(floorplan2, *model, false);
 
-  ASSERT_TRUE(reader.parse(floorplan3.toJSON(), value));
+  std::stringstream ss3(floorplan3.toJSON());
+  ASSERT_TRUE(Json::parseFromStream(rbuilder, ss3, &value, nullptr));
   ASSERT_TRUE(value.isMember("stories"));
   ASSERT_TRUE(value["stories"].isArray());
   ASSERT_EQ(1u, value["stories"].size());
@@ -295,7 +299,8 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
 
   FloorplanJS floorplan4 = ft.updateFloorplanJS(floorplan3, *model, true);
 
-  ASSERT_TRUE(reader.parse(floorplan4.toJSON(), value));
+  std::stringstream ss4(floorplan4.toJSON());
+  ASSERT_TRUE(Json::parseFromStream(rbuilder, ss4, &value, nullptr));
   ASSERT_TRUE(value.isMember("stories"));
   ASSERT_TRUE(value["stories"].isArray());
   ASSERT_EQ(1u, value["stories"].size());
@@ -351,10 +356,12 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Colors) {
   model::FloorplanJSForwardTranslator ft;
   floorplan = ft.updateFloorplanJS(floorplan, model, false);
 
-  Json::Reader reader;
+  Json::CharReaderBuilder rbuilder;
+  std::istringstream ss(floorplan.toJSON());
+  std::string formattedErrors;
   Json::Value value;
+  ASSERT_TRUE(Json::parseFromStream(rbuilder, ss, &value, &formattedErrors));
 
-  ASSERT_TRUE(reader.parse(floorplan.toJSON(), value));
   ASSERT_TRUE(value.isMember("space_types"));
   ASSERT_TRUE(value["space_types"].isArray());
 
@@ -389,8 +396,9 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Colors) {
   greenSpaceTypeValue["color"] = "#00FF00";
   value["space_types"].append(greenSpaceTypeValue);
 
-  Json::FastWriter writer;
-  FloorplanJS floorplan2(writer.write(value));
+  Json::StreamWriterBuilder wbuilder;
+  const std::string json_string = Json::writeString(wbuilder, value);
+  FloorplanJS floorplan2(json_string);
 
   ThreeScene scene2 = floorplan2.toThreeScene(true);
 

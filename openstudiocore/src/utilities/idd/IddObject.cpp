@@ -545,7 +545,7 @@ namespace detail {
     if (m_properties.minFields > 0){
       unsigned minFields = m_properties.minFields;
       if (minFields > m_fields.size()) {
-        double numerator(minFields-m_fields.size());
+        double numerator(minFields-(unsigned)m_fields.size());
         double denominator(numExtensible);
         m_properties.numExtensibleGroupsRequired = unsigned(std::ceil(numerator/denominator));
       }

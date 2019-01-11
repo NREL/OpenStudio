@@ -30,6 +30,8 @@
 #include "PathWatcher.hpp"
 #include "Application.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include <utilities/core/Checksum.hpp>
 #include <utilities/core/Assert.hpp>
 

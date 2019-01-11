@@ -70,6 +70,13 @@
 #include <QDomDocument>
 #include <QDomElement>
 
+///
+/// TODO: Remove this helper when Qt is fully removed
+///
+static auto toQString(const std::string &s) {
+  return QString::fromUtf8(s.data(), s.size());
+};
+
 namespace openstudio {
 namespace sdd {
 
@@ -552,7 +559,8 @@ namespace sdd {
       model::LayeredConstruction construction = constructionBase.cast<model::LayeredConstruction>();
       model::StandardsInformationConstruction info = constructionBase.standardsInformation();
 
-      bool heated = false;
+      // TODO: unused
+      [[maybe_unused]] bool heated = false;
       if (construction.optionalCast<model::Construction>()){
         heated = false;
       } else if (construction.optionalCast<model::ConstructionWithInternalSource>()){

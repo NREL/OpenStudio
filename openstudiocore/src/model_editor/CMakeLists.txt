@@ -58,6 +58,8 @@ set(${target_name}_src
   ViewWidget.cpp
   UserSettings.hpp
   UserSettings.cpp
+  Utilities.hpp
+  Utilities.cpp
   IGPrecisionDialog.hpp
   IGPrecisionDialog.cpp
   IGLineEdit.hpp
@@ -86,6 +88,7 @@ set(${target_name}_moc
   treemodel.h
   TreeView.hpp
   TreeViewWidget.hpp
+  Utilities.hpp
   ViewWidget.hpp
   IGPrecisionDialog.hpp
   IGLineEdit.hpp
@@ -172,6 +175,7 @@ set(${target_name}_test_src
   test/ModalDialogs_GTest.cpp
   test/PathWatcher_GTest.cpp
   test/QMetaTypes_GTest.cpp
+  test/Utilities_GTest.cpp
 )
 
 set(${target_name}_test_depends

@@ -40,6 +40,8 @@
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include "../utilities/core/Assert.hpp"
 
 #include <boost/optional.hpp>

@@ -46,6 +46,8 @@
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
 
+#include "../../utilities/core/StringHelpers.hpp"
+
 #include "../../utilities/bcl/RemoteBCL.hpp"
 #include "../../utilities/bcl/LocalBCL.hpp"
 #include "../../utilities/bcl/BCLComponent.hpp"
@@ -72,8 +74,8 @@ void testExampleModel(int minor, int major) {
   for (openstudio::filesystem::directory_iterator it(resources); it != openstudio::filesystem::directory_iterator(); ++it) {
     if (openstudio::filesystem::is_directory(it->status())) {
 
-      QString stem = toQString(it->path().stem()).replace("_", ".");
-      VersionString vs(toString(stem));
+      const auto stem = openstudio::replace(openstudio::toString(it->path().stem()), "_", ".");
+      VersionString vs(stem);
       if (vs.major() == major && vs.minor() == minor){
 
         // run version translator on each example.osm
@@ -154,9 +156,8 @@ void testExampleComponent(int major, int minor) {
   openstudio::path resources = resourcesPath() / toPath("osversion");
   for (openstudio::filesystem::directory_iterator it(resources); it != openstudio::filesystem::directory_iterator(); ++it) {
     if (openstudio::filesystem::is_directory(it->status())) {
-
-      QString stem = toQString(it->path().stem()).replace("_", ".");
-      VersionString vs(toString(stem));
+      const auto stem = openstudio::replace(openstudio::toString(it->path().stem()), "_", ".");
+      VersionString vs(stem);
       if (vs.major() == major && vs.minor() == minor){
 
         // run version translator on each example.osm
