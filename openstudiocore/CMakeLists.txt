@@ -1404,7 +1404,7 @@ set(project_directories
   model
   energyplus
   radiance
- # gbxml #DLM: temp code
+  gbxml 
   airflow
   isomodel
   osversion
@@ -1618,7 +1618,7 @@ set(all_lib_targets
   openstudio_energyplus_static
   openstudio_measure_static
   openstudio_radiance_static
-#  openstudio_gbxml_static # DLM: temp code
+  openstudio_gbxml_static 
   openstudio_isomodel_static
 #  openstudio_sdd_static # DLM: temp code
   openstudio_airflow_static

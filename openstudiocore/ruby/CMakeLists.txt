@@ -39,7 +39,7 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioOSVersion
  ruby_OpenStudioUtilitiesData
  ruby_OpenStudioUtilitiesSql
-# ruby_OpenStudioGBXML # DLM: temp code
+ ruby_OpenStudioGBXML 
  ruby_OpenStudioModelGenerators
  ruby_OpenStudioRadiance
  ruby_OpenStudioUtilitiesTime
@@ -144,7 +144,7 @@ target_link_libraries(openstudio_rb
   openstudio_osversion_static
 #  openstudio_sdd_static # DLM: temp code
   openstudio_isomodel_static
-#  openstudio_gbxml_static # DLM: temp code
+  openstudio_gbxml_static 
   openstudio_radiance_static
 )
 

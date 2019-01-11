@@ -276,7 +276,7 @@ target_link_libraries(openstudio
  openstudio_osversion_static
 # openstudio_sdd_static # DLM: temp code
  openstudio_isomodel_static
-# openstudio_gbxml_static # DLM: temp code
+ openstudio_gbxml_static 
  openstudio_radiance_static
 )
 
