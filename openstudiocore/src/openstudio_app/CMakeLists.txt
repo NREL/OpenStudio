@@ -1,6 +1,7 @@
 set(target_name OpenStudioApp)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${QT_INCLUDES})
 
 # source files
 set(${target_name}_SRC
@@ -184,12 +185,12 @@ endif()
 
 set(depends
   openstudio_lib
-  openstudio_osversion
-  openstudio_model
-  openstudio_energyplus
-  openstudio_modeleditor
-  openstudio_sdd
-  openstudio_gbxml
+  openstudio_osversion_static
+  openstudio_model_static
+  openstudio_energyplus_static
+  openstudio_modeleditor_static
+  #openstudio_sdd_static # DLM: temp code
+  openstudio_gbxml_static
   openstudio_bimserver
   ${QT_WEB_LIBS}
   #${QT_PLUGIN_LIBS}

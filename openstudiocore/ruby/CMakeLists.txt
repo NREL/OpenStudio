@@ -152,6 +152,8 @@ if(BUILD_OS_APP)
   target_link_libraries(openstudio_modeleditor_rb
     ruby_OpenStudioModelEditor
     openstudio_modeleditor_static
+    ${QT_LIBS}
+    qtwinmigrate_static  
   )
 
   if( UNIX AND NOT APPLE )

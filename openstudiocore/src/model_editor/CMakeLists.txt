@@ -1,6 +1,7 @@
 set(target_name openstudio_modeleditor)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${QT_INCLUDES})
 
 #--------------------------------------------------------------------------------
 # First the library
@@ -132,8 +133,10 @@ add_library(${target_name}
 
 # lib dependencies
 set(${target_name}_depends
-  openstudio_energyplus
-  openstudio_model
+  openstudio_energyplus_static
+  openstudio_model_static
+  ${QT_LIBS}
+  qtwinmigrate_static  
 )
 
 add_dependencies(${target_name} ${${target_name}_depends})
@@ -154,6 +157,8 @@ add_library(${target_name}_static
 set(${target_name}_static_depends
   openstudio_energyplus_static
   openstudio_model_static
+  ${QT_LIBS}
+  qtwinmigrate_static    
 )
 
 target_link_libraries(${target_name}_static ${${target_name}_static_depends})
@@ -184,13 +189,6 @@ set(${target_name}_test_depends
 
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
-if(BUILD_TESTING)
-
-  add_dependencies("${target_name}_tests"
-    openstudio_modeleditor_resources
-  )
-
-endif()
 
 # lib swig files
 set(${target_name}_swig_src
