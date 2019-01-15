@@ -9643,6 +9643,7 @@ boost::optional<QDomElement> ForwardTranslator::translateAirLoopHVACOutdoorAirSy
 
 boost::optional<QDomElement> ForwardTranslator::translateCoilHeatingGas(const openstudio::model::CoilHeatingGas& coil, QDomElement & airSegElement, QDomDocument& doc)
 {
+  // TODO: JM this is a typo!
   auto result = doc.createElement("CoilClg");
   airSegElement.appendChild(result);
   m_translatedObjects[coil.handle()] = result;
